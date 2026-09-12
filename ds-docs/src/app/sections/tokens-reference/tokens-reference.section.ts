@@ -109,7 +109,10 @@ export class TokensReferenceSection {
     }
 
     // var() references to a colour role or ramp — not size vars like --icon-2xs.
-    return /var\(--(brand|danger|primary|secondary|tertiary|accent|success|warning|error|info|link|status|text-|icon-(default|strong|muted|subtle|on)|surface-|border-|neutral-|blue-|red-|green-|yellow-|orange-|sky-|static-)/.test(
+    // `chart-` is matched by shape rather than by name: --ds-chart-* resolves to a
+    // palette entry that is a colour ramp stop or carries -color, while the rest of
+    // that namespace is geometry (--chart-bar-gap, --chart-dot-radius).
+    return /var\(--(brand|danger|primary|secondary|tertiary|accent|success|warning|error|info|link|status|text-|icon-(default|strong|muted|subtle|on)|surface-|border-|neutral-|blue-|red-|green-|yellow-|orange-|sky-|static-|chart-(categorical|sequential|divergent)|chart-[a-z0-9-]*color)/.test(
       value,
     );
   }

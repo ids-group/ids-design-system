@@ -45,6 +45,7 @@ the release commit — one timeline, two audiences.
   for a backticked `on…Change` the component does not have, not only the tsx examples — that shape
   alone, because every backticked identifier reports 46 findings on this tree and almost none are
   defects, while this reports none.
+- **`docs/BarChart.md` was added, documenting the newly-registered `ds-bar-chart`.**
 
 ### Build
 

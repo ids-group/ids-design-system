@@ -11,18 +11,22 @@ interface AxisToken {
 
 const AXIS_TOKENS: readonly AxisToken[] = [
   {
-    token: '--chart-axis-line',
+    token: '--chart-axis-line-color',
     role: 'Axis baseline + tick lines',
     value: 'neutral-300',
   },
-  { token: '--chart-axis-label', role: 'Tick labels', value: 'text-tertiary' },
   {
-    token: '--chart-grid-line',
+    token: '--chart-axis-label-color',
+    role: 'Tick labels',
+    value: 'text-tertiary',
+  },
+  {
+    token: '--chart-grid-line-color',
     role: 'Horizontal grid lines',
     value: 'neutral-150',
   },
   {
-    token: '--chart-cursor-line',
+    token: '--chart-cursor-line-color',
     role: 'Hover cursor / crosshair',
     value: 'neutral-400',
   },
@@ -32,12 +36,12 @@ const AXIS_TOKENS: readonly AxisToken[] = [
     value: 'neutral-900 → neutral-0 (inverted)',
   },
   {
-    token: '--chart-line-w',
+    token: '--chart-line-width',
     role: 'Line stroke width',
     value: '2 px (3 px bold)',
   },
   {
-    token: '--chart-dot-r',
+    token: '--chart-dot-radius',
     role: 'Data-point radius',
     value: '4 px (6 px active)',
   },
@@ -77,9 +81,9 @@ interface DonutSeg {
   readonly c: string;
 }
 const DONUT: readonly DonutSeg[] = [
-  { label: 'Ready', v: 64, c: 'var(--chart-cat-1)' },
-  { label: 'Pre-build', v: 22, c: 'var(--chart-cat-2)' },
-  { label: 'Out', v: 14, c: 'var(--chart-cat-3)' },
+  { label: 'Ready', v: 64, c: 'var(--chart-categorical-1)' },
+  { label: 'Pre-build', v: 22, c: 'var(--chart-categorical-2)' },
+  { label: 'Out', v: 14, c: 'var(--chart-categorical-3)' },
 ];
 
 interface StackRow {
@@ -268,9 +272,9 @@ export class ChartsSection {
 
   protected divToken(value: number): string {
     if (value < 0) {
-      return `var(--chart-div--${Math.abs(value)})`;
+      return `var(--chart-divergent--${Math.abs(value)})`;
     }
 
-    return `var(--chart-div-${value})`;
+    return `var(--chart-divergent-${value})`;
   }
 }

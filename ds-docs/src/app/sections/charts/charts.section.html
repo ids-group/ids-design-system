@@ -1,0 +1,123 @@
+<docs-section
+  anchor="bar-chart"
+  eyebrow="Charts"
+  title="Bar chart">
+
+  <span lede>
+    Horizontal bar chart. Each row draws its value as a share of the longest
+    row, with an optional data table underneath and a loading skeleton for data
+    still arriving.
+  </span>
+
+  <h3 class="block-title t-h4">
+    States
+  </h3>
+
+  <div class="states">
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        specimen · visitor funnel
+      </code>
+
+      <ds-bar-chart
+        caption="Visitor funnel"
+        [data]="specimenRows" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        empty
+      </code>
+
+      <ds-bar-chart [data]="emptyRows" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        loading
+      </code>
+
+      <ds-bar-chart
+        loading
+        [data]="specimenRows" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        one row
+      </code>
+
+      <ds-bar-chart [data]="oneRow" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        all zeros
+      </code>
+
+      <ds-bar-chart [data]="allZerosRows" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        negative
+      </code>
+
+      <ds-bar-chart [data]="negativeRows" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        huge outlier
+      </code>
+
+      <ds-bar-chart [data]="hugeOutlierRows" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        long label
+      </code>
+
+      <ds-bar-chart [data]="longLabelRows" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        nine-digit value
+      </code>
+
+      <ds-bar-chart [data]="nineDigitValueRows" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        custom colour
+      </code>
+
+      <ds-bar-chart [data]="customColorRows" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        data table · visible
+      </code>
+
+      <ds-bar-chart
+        caption="Long label and nine-digit value together, table forced open"
+        dataTable="visible"
+        [data]="dataTableRows" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        max below data
+      </code>
+
+      <ds-bar-chart
+        caption="Max set below the largest value — bars clip at the track edge"
+        [data]="maxBelowDataRows"
+        [max]="200" />
+    </div>
+  </div>
+</docs-section>

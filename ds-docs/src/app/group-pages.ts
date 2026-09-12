@@ -71,6 +71,8 @@ import { FilterBarSection as ComponentsFilterBarSection } from './sections/compo
 import { PageFooterSection } from './sections/components/page-footer/page-footer.section';
 import { PageHeaderSection as ComponentsPageHeaderSection } from './sections/components/page-header/page-header.section';
 
+import { BarChartSection } from './sections/charts/charts.section';
+
 import { BordersSection } from './sections/foundations/borders/borders.section';
 import { BrowserTabSection } from './sections/foundations/browser-tab/browser-tab.section';
 import { ChartsSection } from './sections/foundations/charts/charts.section';
@@ -218,6 +220,11 @@ export const GROUP_PAGES: readonly GroupPageDef[] = [
       PageFooterSection,
       ComponentsPageHeaderSection,
     ],
+  },
+  {
+    path: 'charts',
+    title: 'Charts',
+    sections: [BarChartSection],
   },
   {
     path: 'foundations',

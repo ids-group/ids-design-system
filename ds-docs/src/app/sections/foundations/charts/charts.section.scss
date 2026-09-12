@@ -90,14 +90,14 @@
         display: block;
 
         .axis line,
-        .axis path { stroke: var(--chart-axis-line); }
+        .axis path { stroke: var(--chart-axis-line-color); }
 
         .axis text {
-          fill: var(--chart-axis-label);
-          font: var(--font-weight-medium) var(--chart-axis-fs) / 1 var(--font-sans);
+          fill: var(--chart-axis-label-color);
+          font: var(--font-weight-medium) var(--chart-axis-font-size) / 1 var(--font-sans);
         }
 
-        .grid line { stroke: var(--chart-grid-line); }
+        .grid line { stroke: var(--chart-grid-line-color); }
       }
 
       &.empty .body {

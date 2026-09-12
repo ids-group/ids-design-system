@@ -42,7 +42,36 @@
   `ds-button` the `active` class is painted by nothing at all. If a test asserted
   `aria-current="page"` on a section link, it now reads `true`.
 
+- **Thirty-three chart palette tokens are renamed, and an override written against an old name
+  stops applying in silence.** A custom property that no longer resolves is invalid at
+  computed-value time, so the whole declaration around it is dropped: `background:
+  var(--chart-cat-3)` paints nothing, a `:root` override of `--chart-cat-3` simply never reaches
+  the chart, and neither reports an error. Five groups:
+
+  - Categorical series — `--chart-cat-1` … `--chart-cat-8` become `--chart-categorical-1` …
+    `--chart-categorical-8`.
+  - Sequential ramp — `--chart-seq-1` … `--chart-seq-6` become `--chart-sequential-1` …
+    `--chart-sequential-6`.
+  - Divergent ramp — `--chart-div--3` … `--chart-div-3` become `--chart-divergent--3` …
+    `--chart-divergent-3`, signed suffix and all.
+  - Colours taking the `-color` the rest of the library carries — `--chart-axis-line`,
+    `--chart-axis-label`, `--chart-axis-title`, `--chart-grid-line`, `--chart-grid-line-strong`,
+    `--chart-cursor-line` and `--chart-tooltip-border`.
+  - Abbreviations spelled out — `--chart-axis-fs` becomes `--chart-axis-font-size`,
+    `--chart-line-w` becomes `--chart-line-width`, `--chart-line-w-bold` becomes
+    `--chart-line-width-bold`, `--chart-dot-r` becomes `--chart-dot-radius`, and
+    `--chart-dot-r-active` becomes `--chart-dot-radius-active`.
+
+  Rename `--chart-grid-line-strong` before `--chart-grid-line`: the short name is a prefix of the
+  long one, and a prefix-blind sweep turns the emphasised gridline into a name that does not exist.
+
+  Every value is unchanged in both themes, and `--chart-bar-gap`, `--chart-tick-size`,
+  `--chart-hover-bg-color`, `--chart-tooltip-bg-color` and `--chart-tooltip-text-color` keep their
+  names. Recolouring a series is better done through the `--ds-chart-` layer below than through the
+  palette.
+
 ### Added
+
 
 - **`ds-field-group` takes `error`, `hint` and `warning`, so the error it shows has words.** The
   group suppresses its segments' own labels and message rows — they would break the glued line — and
@@ -142,6 +171,10 @@
   `isTextClipped(element)` is exported from `/core` behind it: true when the element, or anything it
   renders, is showing less than it holds. Horizontal only — a clamped block hides whole lines and
   its `scrollWidth` matches its `clientWidth`.
+
+
+- `ds-bar-chart` — horizontal bars with label, value and percentage per row. Colours come from
+  `--ds-chart-series-N-color` and can be overridden per row with `color`.
 
 ### What you can now DELETE
 

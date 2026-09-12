@@ -998,6 +998,114 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       }
     ]
   },
+  "bar-chart": {
+    "key": "bar-chart",
+    "selector": "ds-bar-chart",
+    "isElement": true,
+    "className": "BarChartComponent",
+    "status": "stable",
+    "importName": "BarChartComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "data",
+        "kind": "input-required",
+        "type": "readonly BarChartRow[]",
+        "union": null,
+        "default": null,
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "max",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Track length is relative to this. Null uses the largest value, so the longest row always fills its track."
+      },
+      {
+        "name": "caption",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "summary",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Accessible name. Generated from the data when omitted."
+      },
+      {
+        "name": "dataTable",
+        "kind": "input",
+        "type": "'toggle' | 'visible' | 'none'",
+        "union": [
+          "toggle",
+          "visible",
+          "none"
+        ],
+        "default": "'toggle'",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "showPercent",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "loading",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "emptyText",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "'No data'",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "valueFormat",
+        "kind": "input",
+        "type": "(value: number) => string",
+        "union": null,
+        "default": "(value) =>\n    formatValue(value)",
+        "required": false,
+        "description": ""
+      }
+    ],
+    "outputs": [
+      {
+        "name": "rowClick",
+        "kind": "output",
+        "type": "BarChartRow",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
   "bottom-sheet": {
     "key": "bottom-sheet",
     "selector": "ds-bottom-sheet",

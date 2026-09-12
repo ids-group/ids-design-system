@@ -96,3 +96,6 @@ Anton_local
 /.design-sync/elements/dist/
 /.design-sync/elements/demo/dist/
 /out-tsc/
+
+# Subagent-driven-development scratch: ledger, briefs, reports, review packages.
+.superpowers/

@@ -21,11 +21,11 @@
       <div class="swatch">
         <div
           class="swatch-chip"
-          [style.background]="'var(--chart-cat-' + n + ')'">
+          [style.background]="'var(--chart-categorical-' + n + ')'">
         </div>
 
         <code class="t-mono-inline">
-          --chart-cat-{{ n }}
+          --chart-categorical-{{ n }}
         </code>
       </div>
     }
@@ -45,11 +45,11 @@
       <div class="swatch">
         <div
           class="swatch-chip"
-          [style.background]="'var(--chart-seq-' + n + ')'">
+          [style.background]="'var(--chart-sequential-' + n + ')'">
         </div>
 
         <code class="t-mono-inline">
-          --chart-seq-{{ n }}
+          --chart-sequential-{{ n }}
         </code>
       </div>
     }
@@ -182,7 +182,7 @@
 
       <path
         fill="none"
-        stroke="var(--chart-cat-1)"
+        stroke="var(--chart-categorical-1)"
         stroke-width="2"
         stroke-linecap="round"
         stroke-linejoin="round"
@@ -191,7 +191,7 @@
       @for (p of linePoints(); track $index) {
         <circle
           r="3"
-          fill="var(--chart-cat-1)"
+          fill="var(--chart-categorical-1)"
           [attr.cx]="p.x"
           [attr.cy]="p.y" />
       }
@@ -201,7 +201,7 @@
       <span class="item">
         <span
           class="dot"
-          style="background: var(--chart-cat-1)">
+          style="background: var(--chart-categorical-1)">
         </span>
         Allocations
       </span>
@@ -261,7 +261,7 @@
 
         @for (b of barRects(); track b.label) {
           <rect
-            fill="var(--chart-cat-1)"
+            fill="var(--chart-categorical-1)"
             rx="2"
             [attr.x]="b.x"
             [attr.y]="b.y"
@@ -361,21 +361,21 @@
 
       @for (s of stackBars(); track s.label) {
         <rect
-          fill="var(--chart-cat-1)"
+          fill="var(--chart-categorical-1)"
           [attr.x]="s.x"
           [attr.y]="s.yA"
           [attr.width]="stackW"
           [attr.height]="s.hA" />
 
         <rect
-          fill="var(--chart-cat-2)"
+          fill="var(--chart-categorical-2)"
           [attr.x]="s.x"
           [attr.y]="s.yB"
           [attr.width]="stackW"
           [attr.height]="s.hB" />
 
         <rect
-          fill="var(--chart-cat-3)"
+          fill="var(--chart-categorical-3)"
           [attr.x]="s.x"
           [attr.y]="s.yC"
           [attr.width]="stackW"
@@ -387,7 +387,7 @@
       <span class="item">
         <span
           class="dot"
-          style="background: var(--chart-cat-1)">
+          style="background: var(--chart-categorical-1)">
         </span
         >Audio
       </span>
@@ -395,7 +395,7 @@
       <span class="item">
         <span
           class="dot"
-          style="background: var(--chart-cat-2)">
+          style="background: var(--chart-categorical-2)">
         </span
         >Lighting
       </span>
@@ -403,7 +403,7 @@
       <span class="item">
         <span
           class="dot"
-          style="background: var(--chart-cat-3)">
+          style="background: var(--chart-categorical-3)">
         </span
         >Video
       </span>
