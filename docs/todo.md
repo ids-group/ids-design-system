@@ -14,7 +14,7 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**99 open — 1 P1, 32 P2, 66 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**98 open — 1 P1, 32 P2, 65 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 1
 
@@ -66,7 +66,7 @@ item and nothing else.
 - **Localization — every user-visible string is a hardcoded literal (recorded 2026-08-27, from the ITB Workspace picker report)**
   - Every user-visible string in the library is a hardcoded English literal — VALIDATED 2026-08-27 against 0.11.0; Stas: defer the whole thing, no code
 
-### P3 — 66
+### P3 — 65
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - A whole-page keyboard walk is not measurable with the tools here, and the failed
@@ -108,8 +108,6 @@ item and nothing else.
   - Three edges left open on `ds-table` row expansion and the resize handle, each a judgement call rather than a defect
   - `ds-number-stepper` — optional numeric formatting (locale / currency / decimals / grouping), ref https://primeng.dev/inputnumber
   - Forms — `ds-select` native `multi` — RESEARCHED 2026-08-06; Stas: keep it in the backlog with the deck attached (not built, not closed)
-- **`TableRowAction` cannot express a per-row menu, so `rowActions` is adopted nowhere (from mm-broker, 2026-08-18)**
-  - The two row-action halves left open on purpose: a per-row `label`, and a divider or …
 - **DS-docs**
   - Fourteen focusable elements in ds-docs still have no accessible name, on two components that always could
   - ds-docs renders a space before punctuation after any inline `<code>` (found 2026-09-01)
@@ -894,20 +892,6 @@ A0 first, which touches none of it, or wait for that lane to land.
 
 Three defects the port surfaced by reading every component's template + SCSS against each other. All three still reproduce on `dev` at 0.11.1; line numbers below are that tree's.
 
-## `TableRowAction` cannot express a per-row menu, so `rowActions` is adopted nowhere (from mm-broker, 2026-08-18)
-
-- [ ] **[P3] The two row-action halves left open on purpose: a per-row `label`, and a divider or
-  `group` (split out of the item above 2026-08-21, when `hidden` and `disabledReason` shipped).**
-  `label: string | ((row) => string)` blocked 4 of the eleven menus — Deactivate/Reactivate,
-  Activate/Deactivate, Add fee/Edit fee — and is expressible today as two ids each carrying its own
-  `hidden`, which is why the original counted it the cheapest of the four to decline. The divider
-  blocked 2, where the destructive tail is separated by a `ds-menu-divider`, and ordering the items
-  destructive-last covers it without new API. **Both are P3 until a consumer says the workaround is
-  the thing stopping them** — the two that actually blocked adoption have shipped, so the next word
-  on these should come from a migrated screen, not from the original count. **GATE HELD 2026-08-25
-  (Stas), asked explicitly — and put to him again on 2026-09-12 as deck `table-row-action-halves`,
-  because the migrated screen the gate was waiting on never said anything.** _(The done kebab-token sub-item moved to `done.md` 2026-08-26.)_
-
 ## DS-docs
 
 - [ ] **[P3] Fourteen focusable elements in ds-docs still have no accessible name, on two components that always could.** Nine `ds-select` instances — the ones carrying a `value` and no `placeholder`, because `placeholder` is a name source there and `value` is not — and five `ds-number-stepper` instances in the size and behaviour demos. Both components have taken an `ariaLabel` since long before this; the demos simply never set one, so this is ds-docs authoring and not a library gap. Left rather than auto-filled because neither sits in a `state-cell` with a caption to borrow, so each needs a written name. Measured on `/components/autocomplete`, where the count went 31 → 14 once checkbox, radio and switch got theirs.
@@ -1012,7 +996,7 @@ None of these is blocked on effort. Each is a verdict, and most carry a deck tha
 
 ## Decks awaiting a verdict (re-audited 2026-09-12)
 
-**Eight** decks carry `ds-deck-status: open` — counted on disk, not from this list, which has been
+**Seven** decks carry `ds-deck-status: open` — counted on disk, not from this list, which has been
 short before. **The rank is the filename**: an open deck is `<rank>-<slug>.html`, ranked by what
 answering it unblocks, so the folder listing IS the queue. Ranks are renumbered when the queue
 changes and a stale one is never kept to preserve a link; `deck-lint` fails a duplicate rank, a gap
@@ -1028,7 +1012,6 @@ file** — the number moves; cite the filename.
 | 5 | `5-select-native-multi` | Whether `ds-select` native `multi` is worth building. | already *Parked* — "keep parked" closes both |
 | 6 | `6-warning-text-colour` | Which colour goes on the warning tint. Four candidates, each rendered in itself. | the warning pair under *Bugs* |
 | 7 | `7-docs-chapter-nav` | Where the chapter list lives. Four mutually-exclusive variants left after seven were rejected. | the docs-nav P3s under *Records* |
-| 8 | `8-table-row-action-halves` | Whether `TableRowAction` gets a per-row `label` and a divider — the last two halves of the mm-broker Ask, gated since 2026-08-25. | the `TableRowAction` P3 under *Asks* |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
@@ -1037,7 +1020,7 @@ carries it: the item fills with `--accent-subtitle`, the group never fills) and 
 (one line plus a tip on hover, three hooks over it). `5-rejected-with-numbers` left the queue the
 same day as a `tool` — it asks nothing, so a rank on it claimed a verdict was owed.
 
-**Six of the eight have a twin on this board, so one answer closes two lines** — which is what
+**Five of the seven have a twin on this board, so one answer closes two lines** — which is what
 makes them the cheapest thing here. Rank 5 is the cheapest of all: "keep parked" is a complete
 answer, and it has already been given — the deck stays only because closing it was declined.
 

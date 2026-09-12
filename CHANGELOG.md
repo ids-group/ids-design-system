@@ -72,6 +72,28 @@
 
 ### Added
 
+- **A `TableRowAction` can name itself per row, and can open a divider.** `label` takes
+  `(row) => string` as well as a string, so one action reads Pause on a live row and Resume on a
+  paused one under the SAME `id` — `rowActionSelected` still fires once with that id, instead of the
+  consumer declaring two actions whose `hidden` predicates have to be kept exact opposites by hand.
+  `divider: true` draws a line above an item, for the destructive tail that colour alone was
+  separating.
+
+  ```ts
+  rowActions: TableRowAction<Run>[] = [
+    { id: 'suspend', label: (row) => (row.active ? 'Pause' : 'Resume'), icon: 'refresh' },
+    { id: 'delete', label: 'Delete', icon: 'trash', error: true, divider: true },
+  ];
+  ```
+
+  A divider on the FIRST item is ignored: a line at the top of a menu has nothing on one side of it.
+  Measured in the docs app across four rows — the label reads Pause on the active row and Resume on
+  the other three, and every menu renders exactly one divider, in document order between the last
+  ordinary item and Delete.
+
+  These are the last two of the four pieces asked for on 2026-08-18; `hidden` and `disabledReason`
+  shipped on 2026-08-21.
+
 
 - **`ds-field-group` takes `error`, `hint` and `warning`, so the error it shows has words.** The
   group suppresses its segments' own labels and message rows — they would break the glued line — and

@@ -359,6 +359,29 @@
         "--chart-dot-r"
       ],
       "verify": "No stylesheet names `--chart-axis-fs`, `--chart-line-w` or `--chart-dot-r`, and axis labels, line strokes and data-point dots keep the sizes they had."
+    },
+    {
+      "id": "table-row-action-label-accepts-a-function",
+      "kind": "behavior",
+      "old": "TableRowAction",
+      "new": null,
+      "surface": "typescript",
+      "action": "Narrow `action.label` before using it as a string wherever you read one back off a `TableRowAction`.",
+      "appliesWhen": "Only code that READS `label` off the type — a `rowActionSelected` handler branching on the text, a test asserting it, a custom renderer. Writing it is unaffected: every string that worked still works.",
+      "pitfall": "A widened union is source-compatible for whoever writes the value, so this surfaces far from the declaration — a template interpolating `action.label` prints the function source instead of failing.",
+      "restore": null,
+      "searchHints": [
+        "TableRowAction",
+        "rowActions",
+        "rowActionSelected"
+      ],
+      "detect": [
+        ".label",
+        "action.label",
+        "rowActionSelected"
+      ],
+      "verify": "No read of a row action’s `label` assumes a string without narrowing.",
+      "note": "`label: string` became `string | ((row: T) => string)`, the same widening `disabledReason` already carries. It exists so one action can read two ways under one id — the alternative was two ids with mirrored `hidden` predicates. Branch on `id`, never on the label text."
     }
   ],
   "informational": [
@@ -369,7 +392,8 @@
     "`routerLinkActiveOptions` and `ariaCurrent` are public on the same three components — the first moves what the `active` class matches, the second overrides what the link announces. Neither is needed for the corrected default.",
     "`ds-field-group` takes `error`, `hint` and `warning` — the same message inputs every field takes, resolved by the same code. `error` turns the state on and carries the text; `invalid` stays the flag for when the text lives in a form-level summary. Every segment gains `aria-invalid` while the group is in error and points at the one message through `aria-describedby`. Additive: a group binding neither renders exactly as before.",
     "`ds-bar-chart` is new — horizontal bars with a label, a value and a percentage per row, an optional data table, and a `color` override per row.",
-    "A public override layer sits over the chart palette: `--ds-chart-series-1-color` through `--ds-chart-series-8-color`, plus `--ds-chart-axis-line-color`, `--ds-chart-axis-label-color`, `--ds-chart-axis-title-color`, `--ds-chart-axis-font-size`, `--ds-chart-grid-line-color`, `--ds-chart-grid-line-strong-color`, `--ds-chart-hover-bg-color`, `--ds-chart-cursor-line-color`, `--ds-chart-tooltip-bg-color`, `--ds-chart-tooltip-text-color`, `--ds-chart-tooltip-border-color`, `--ds-chart-bar-gap`, `--ds-chart-line-width`, `--ds-chart-line-width-bold`, `--ds-chart-dot-radius`, `--ds-chart-dot-radius-active` and `--ds-chart-tick-size`. Each defaults to the palette token behind it, so nothing moves until you set one; set these rather than the palette, and recolouring one series costs one declaration instead of the whole ramp."
+    "A public override layer sits over the chart palette: `--ds-chart-series-1-color` through `--ds-chart-series-8-color`, plus `--ds-chart-axis-line-color`, `--ds-chart-axis-label-color`, `--ds-chart-axis-title-color`, `--ds-chart-axis-font-size`, `--ds-chart-grid-line-color`, `--ds-chart-grid-line-strong-color`, `--ds-chart-hover-bg-color`, `--ds-chart-cursor-line-color`, `--ds-chart-tooltip-bg-color`, `--ds-chart-tooltip-text-color`, `--ds-chart-tooltip-border-color`, `--ds-chart-bar-gap`, `--ds-chart-line-width`, `--ds-chart-line-width-bold`, `--ds-chart-dot-radius`, `--ds-chart-dot-radius-active` and `--ds-chart-tick-size`. Each defaults to the palette token behind it, so nothing moves until you set one; set these rather than the palette, and recolouring one series costs one declaration instead of the whole ramp.",
+    "`TableRowAction` gains `divider?: boolean`, which draws a line above the item — for the destructive tail that colour alone was separating. Additive, and ignored on the first item because a line at the top of a menu has nothing on one side of it."
   ],
   "deleteList": [
     {
