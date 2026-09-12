@@ -82,6 +82,7 @@
     "picker-parity": "node tools/picker-parity.mjs",
     "prepublishOnly": "node -e \"console.error('Publish from dist/ds (npm publish ./dist/ds), not the repo root.'); process.exit(1)\"",
     "preversion": "node tools/preflight.mjs",
+    "probe:bar-chart-math": "node --experimental-strip-types tools/probes/bar-chart-math.probe.mjs",
     "probe:charts-format": "node --experimental-strip-types tools/probes/charts-format.probe.mjs",
     "probe:charts-scale": "node --experimental-strip-types tools/probes/charts-scale.probe.mjs",
     "probe:charts-summary": "node --experimental-strip-types tools/probes/charts-summary.probe.mjs",
