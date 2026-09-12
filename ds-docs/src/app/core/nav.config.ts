@@ -136,6 +136,12 @@ export const NAV: NavGroup[] = [
     ],
   },
   {
+    title: 'Charts',
+    path: 'charts',
+    kind: 'component',
+    items: [{ label: 'Bar chart', anchor: 'bar-chart' }],
+  },
+  {
     title: 'Foundations',
     path: 'foundations',
     items: [
