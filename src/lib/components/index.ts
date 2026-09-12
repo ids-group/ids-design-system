@@ -1,4 +1,11 @@
 export { resolveBrandValue } from './brand-defaults';
+export { CHART_SERIES_COLORS, chartColors } from './chart-palette.generated';
+export { formatPercent, formatTick, formatValue, largestRemainder } from './charts-format';
+export { elementWidth } from './charts-measure';
+export { bandScale, linearScale, niceMax, ticks } from './charts-scale';
+export type { BandScale } from './charts-scale';
+export { describeSeries } from './charts-summary';
+export type { SummaryPoint } from './charts-summary';
 export { chipFit } from './chip-overflow';
 export { DsChipTemplateDirective } from './chip-template.directive';
 export {
