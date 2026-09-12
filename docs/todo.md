@@ -1086,7 +1086,7 @@ file** — the number moves; cite the filename.
 | 5 | `5-select-native-multi` | Whether `ds-select` native `multi` is worth building. | already *Parked* — "keep parked" closes both |
 | 6 | `6-warning-text-colour` | Which colour goes on the warning tint. Four candidates, each rendered in itself. | the warning pair under *Bugs* |
 | 7 | `7-docs-chapter-nav` | Where the chapter list lives. Four mutually-exclusive variants left after seven were rejected. | the docs-nav P3s under *Records* |
-| 8 | `8-field-group-invalid-voice` | How an invalid `ds-field-group` SAYS it is invalid — it has no text channel and sets no `aria-invalid`. Five variants, recommendation D. | the `[~]` field-group P2 under *Bugs* |
+| 8 | `8-field-group-invalid-voice` | Does a group get its own error row. Five variants as a ladder of four channels; only the top two change the screen. Recommendation D with E's `error` input. | the `[~]` field-group P2 under *Bugs* |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
