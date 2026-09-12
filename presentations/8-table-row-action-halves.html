@@ -2,7 +2,7 @@
 <html lang="ru">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Меню строки таблицы — две половины, отклонённые в августе</title>
+<title>Меню строки таблицы — две отклонённые половины</title>
 <meta name="ds-deck-status" content="open">
 <meta name="ds-deck-evidence" content="src/lib/components/table/table.types.ts - src/lib/components/table/table.component.html - src/lib/components/menu/menu-divider.component.scss - docs/todo.md">
 <link rel="stylesheet" href="ds.css">
@@ -13,7 +13,6 @@
     display: flex;
     flex-direction: column;
     gap: var(--space-0-5);
-    width: 200px;
     background: var(--surface-default);
     border: var(--border-width-default) solid var(--border-divider);
     border-radius: var(--radius-md);
@@ -23,23 +22,19 @@
   .mi {
     display: flex;
     align-items: center;
-    gap: var(--space-2-5);
     width: 100%;
     padding: var(--space-2) var(--space-3);
     background: transparent;
     border: 0;
-    border-radius: 0;
     font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-base) var(--font-sans);
     color: var(--text-primary);
     text-align: left;
   }
 
   .mi.error { color: var(--error-text); }
-  .mi.gone { display: none; }
 
   .mdiv {
     margin-block: calc(-1 * var(--space-0-5));
-    padding: 0;
   }
 
   .mdiv hr {
@@ -48,30 +43,35 @@
     border-top: var(--border-width-default) solid var(--border-divider);
   }
 
-  .kebab {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 28px;
-    height: 28px;
-    border: var(--border-width-default) solid var(--border-divider);
-    border-radius: var(--radius-sm);
-    background: var(--surface-default);
-    color: var(--text-secondary);
-    font-size: var(--font-size-m);
+  /* The four pieces of the Ask, two shipped and two declined. */
+  .ask {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--space-3);
+    margin: var(--space-4) 0 var(--space-6);
   }
 
-  .rowline {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-4);
-    padding: var(--space-2) var(--space-3);
-    background: var(--surface-default);
+  .piece {
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-md);
     border: var(--border-width-default) solid var(--border-divider);
-    border-radius: var(--radius-sm);
-    font-size: var(--font-size-s);
-    margin-bottom: var(--space-2);
+    background: var(--surface-default);
+  }
+
+  .piece.shipped {
+    border-color: var(--success);
+    background: var(--success-subtitle);
+  }
+
+  .piece h4 {
+    margin: 0 0 var(--space-1);
+    font: var(--font-weight-bold) var(--font-size-s) / var(--line-height-tight) var(--font-mono);
+  }
+
+  .piece p {
+    margin: 0;
+    font-size: var(--font-size-2xs);
+    color: var(--text-secondary);
   }
 </style>
 
@@ -79,98 +79,97 @@
   <header class="masthead">
     <div class="chips">
       <span class="chip is-open">нужен вердикт</span>
-      <span class="chip is-done">2 из 4 отгружены — hidden, disabledReason</span>
+      <span class="chip">гейт держится 18 дней</span>
       <span class="chip">последний открытый внешний аск</span>
     </div>
 
     <h1>Меню строки: одно действие с двумя именами, и куда девать «Удалить»</h1>
 
     <p class="lede">
-      <b>Одно решение:</b> достраиваем ли <code>TableRowAction</code> двумя последними половинами,
-      или гейт держим дальше. Аск от mm-broker, 2026-08-18; гейт держит Стас с 2026-08-25.
+      <b>Одно решение:</b> достраиваем две последние половины <code>TableRowAction</code> или нет.
     </p>
   </header>
 
-  <h2>Что просили и что уже отдали</h2>
+  <h2>Аск: четыре части, две отдали, две заблокировали</h2>
 
   <p>
-    Из одиннадцати меню потребителя четыре упирались в <b>имя, зависящее от строки</b>
-    (Deactivate/Reactivate, Activate/Deactivate, Add fee/Edit fee), два — в <b>разделитель</b> перед
-    деструктивным хвостом. Две другие половины — <code>hidden</code> и <code>disabledReason</code> —
-    отгружены в августе, и именно они блокировали внедрение. Эти две не блокировали: у обеих есть
-    обход, и он работает сегодня.
+    mm-broker, 18 августа: <b><code>rowActions</code> не используют нигде</b> — тип не выражает меню,
+    которое зависит от строки. Попросили четыре вещи.
   </p>
 
-  <div class="stage">
-    <div class="spec">
-      <p class="cap">строка живая</p>
-      <div class="rowline"><span>Acme Ltd · активен</span><span class="kebab">⋮</span></div>
-      <div class="menu">
-        <button class="mi" type="button">Edit</button>
-        <button class="mi" type="button">Deactivate</button>
-        <button class="mi error" type="button">Delete</button>
-      </div>
+  <div class="ask">
+    <div class="piece shipped">
+      <h4>hidden ✓</h4>
+      <p>Пункт не для этой строки. <b>Отдали 21 августа.</b></p>
     </div>
 
-    <div class="spec">
-      <p class="cap">строка отключена — то же меню, другой набор</p>
-      <div class="rowline"><span>Globex · отключён</span><span class="kebab">⋮</span></div>
-      <div class="menu">
-        <button class="mi" type="button">Edit</button>
-        <button class="mi" type="button">Reactivate</button>
-        <button class="mi error" type="button">Delete</button>
-      </div>
-      <p class="says" style="margin-top:var(--space-2)">
-        сегодня это ДВА пункта с разными <code>id</code>, каждый со своим <code>hidden</code>
-      </p>
+    <div class="piece shipped">
+      <h4>disabledReason ✓</h4>
+      <p>Почему пункт серый. <b>Отдали 21 августа.</b></p>
+    </div>
+
+    <div class="piece">
+      <h4>label функцией</h4>
+      <p>Имя от строки. <b>Отклонили:</b> обходится двумя пунктами с зеркальными
+        <code>hidden</code>. Блокировало 4 меню из 11.</p>
+    </div>
+
+    <div class="piece">
+      <h4>divider</h4>
+      <p>Линия перед «Удалить». <b>Отклонили:</b> обходится порядком — деструктивные в конец.
+        Блокировало 2 меню из 11.</p>
     </div>
   </div>
 
-  <h2>Между чем выбираем</h2>
+  <div class="panel">
+    <p>
+      <b>Почему заблокировали.</b> Две отданные половины были теми, что реально мешали внедрению; у
+      двух оставшихся есть работающий обход. Решили ждать слова от <b>мигрировавшего экрана</b>, а
+      не от исходного счёта — гейт держит Стас с 25 августа, спрошено прямо. За 18 дней слова не
+      пришло.
+    </p>
+  </div>
 
-  <p>
-    Все четыре рисуют работающее меню — обходы не сломаны. Отличается то, <b>что пишет
-    потребитель</b> и <b>меняется ли картинка</b>.
-  </p>
+  <h2>Между чем выбираем</h2>
 
   <div class="opts">
     <div class="opt is-today">
       <h3>Держим гейт</h3>
       <span class="badge is-same">сегодня</span>
 
-      <div class="menu">
+      <div class="menu" style="width:176px">
         <button class="mi" type="button">Edit</button>
         <button class="mi" type="button">Deactivate</button>
         <button class="mi error" type="button">Delete</button>
       </div>
 
       <dl class="layer">
-        <dt>Пишет</dt>
-        <dd class="none">два пункта с зеркальными hidden</dd>
-        <dt>Картинка</dt>
+        <dt>Код</dt>
+        <dd class="none">два id, зеркальные hidden</dd>
+        <dt>Вид</dt>
         <dd class="none">без изменений</dd>
       </dl>
     </div>
     <div class="opt">
       <h3>Имя функцией</h3>
 
-      <div class="menu">
+      <div class="menu" style="width:176px">
         <button class="mi" type="button">Edit</button>
         <button class="mi" type="button">Deactivate</button>
         <button class="mi error" type="button">Delete</button>
       </div>
 
       <dl class="layer">
-        <dt>Пишет</dt>
-        <dd class="gain">один пункт, имя считается от строки</dd>
-        <dt>Картинка</dt>
-        <dd class="none">та же — меню не меняется</dd>
+        <dt>Код</dt>
+        <dd class="gain">label: (row) =&gt; …</dd>
+        <dt>Вид</dt>
+        <dd class="none">та же</dd>
       </dl>
     </div>
     <div class="opt">
       <h3>Разделитель</h3>
 
-      <div class="menu">
+      <div class="menu" style="width:176px">
         <button class="mi" type="button">Edit</button>
         <button class="mi" type="button">Deactivate</button>
         <div class="mdiv"><hr></div>
@@ -178,17 +177,17 @@
       </div>
 
       <dl class="layer">
-        <dt>Пишет</dt>
-        <dd class="none">divider: true на деструктивном</dd>
-        <dt>Картинка</dt>
-        <dd class="gain">хвост отделён линией</dd>
+        <dt>Код</dt>
+        <dd class="none">divider: true</dd>
+        <dt>Вид</dt>
+        <dd class="gain">хвост отделён</dd>
       </dl>
     </div>
     <div class="opt is-pick">
       <h3>Обе половины</h3>
       <span class="badge is-pick">рекомендую</span>
 
-      <div class="menu">
+      <div class="menu" style="width:176px">
         <button class="mi" type="button">Edit</button>
         <button class="mi" type="button">Deactivate</button>
         <div class="mdiv"><hr></div>
@@ -196,101 +195,61 @@
       </div>
 
       <dl class="layer">
-        <dt>Пишет</dt>
-        <dd class="gain">один пункт + отделённый хвост</dd>
-        <dt>Картинка</dt>
-        <dd class="gain">хвост отделён линией</dd>
+        <dt>Код</dt>
+        <dd class="gain">один пункт + divider</dd>
+        <dt>Вид</dt>
+        <dd class="gain">хвост отделён</dd>
       </dl>
     </div>
   </div>
 
   <div class="panel">
     <p>
-      <b>Две половины разные по природе.</b> Имя функцией картинку не меняет вообще — меню
-      выглядит одинаково, отличается только код у потребителя: один пункт вместо двух с
-      зеркальными <code>hidden</code>. Разделитель картинку меняет: без него деструктивный пункт
-      стоит впритык к обычным, и «Удалить» отделено только цветом.
+      <b>Половины разные по природе.</b> Имя функцией не меняет ни пикселя — меняется только код у
+      потребителя. Разделитель меняет вид: без него «Удалить» отделено одним цветом.
     </p>
   </div>
 
-  <h2>Что даёт каждый</h2>
+  <h2>Чем платим</h2>
 
   <table>
     <thead>
-      <tr>
-        <th>Что делаем</th>
-        <th class="mid">Меняет<br>картинку</th>
-        <th class="mid">Убирает<br>зеркальные пары</th>
-        <th class="mid">Новое<br>поле</th>
-        <th>Что пишет потребитель для Deactivate/Reactivate</th>
-      </tr>
+      <tr><th>Что делаем</th><th class="mid">Вид</th><th class="mid">Новое поле</th><th>Цена</th></tr>
     </thead>
     <tbody>
       <tr class="row-today">
         <td class="rowlabel">Держим гейт</td>
         <td class="mid"><span class="dot off"></span></td>
         <td class="mid"><span class="dot off"></span></td>
-        <td class="mid"><span class="dot off"></span></td>
-        <td class="says">два id, два hidden, зеркальные предикаты</td>
+        <td>Зеркальные предикаты в 4 меню: поменял условие в одном <code>hidden</code> — получил два пункта сразу или ни одного</td>
       </tr>
       <tr>
         <td class="rowlabel">Имя функцией</td>
         <td class="mid"><span class="dot off"></span></td>
-        <td class="mid"><span class="dot on"></span></td>
         <td class="mid"><span class="dot on"></span> тип <code>label</code></td>
-        <td class="says">label: (row) =&gt; row.active ? 'Deactivate' : 'Reactivate'</td>
+        <td>Ломающее для того, кто читает <code>action.label</code> как строку. Форма та же, что у <code>disabledReason</code></td>
       </tr>
       <tr>
         <td class="rowlabel">Разделитель</td>
         <td class="mid"><span class="dot on"></span></td>
-        <td class="mid"><span class="dot off"></span></td>
         <td class="mid"><span class="dot on"></span> <code>divider</code></td>
-        <td class="says">без изменений — это про другой пункт</td>
+        <td>Аддитивно. <code>ds-menu-divider</code> уже есть и гасит зазор меню — только прокинуть</td>
       </tr>
       <tr class="row-pick">
         <td class="rowlabel">Обе половины</td>
         <td class="mid"><span class="dot on"></span></td>
-        <td class="mid"><span class="dot on"></span></td>
         <td class="mid"><span class="dot on"></span> оба</td>
-        <td class="says">одна строка, и хвост отделён</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <h2>Чем платим</h2>
-
-  <table>
-    <tbody>
-      <tr>
-        <td class="rowlabel">Держим гейт</td>
-        <td>Ноль кода. Аск остаётся открытым тринадцатый месяц подряд, и у потребителя в четырёх
-          меню живут зеркальные предикаты, которые легко рассинхронить: поменял условие в одном
-          <code>hidden</code> — получил либо два пункта сразу, либо ни одного.</td>
-      </tr>
-      <tr>
-        <td class="rowlabel">Имя функцией</td>
-        <td>Тип <code>label</code> расширяется до <code>string | ((row) =&gt; string)</code> — то же
-          расширение, что уже сделано для <code>disabledReason</code>, так что форма в интерфейсе
-          не новая. Ломающее только для того, кто ЧИТАЕТ <code>action.label</code> как строку.</td>
-      </tr>
-      <tr>
-        <td class="rowlabel">Разделитель</td>
-        <td>Новое поле в <code>TableRowAction</code>. <code>ds-menu-divider</code> уже существует и
-          умеет схлопывать зазор меню — рисовать нечего, только прокинуть.</td>
+        <td>Сумма двух строк выше</td>
       </tr>
     </tbody>
   </table>
 
   <div class="panel good">
     <p>
-      <b>Рекомендую обе половины.</b> Обе дешёвые, обе снимают с потребителя работу, которую
-      библиотека может сделать один раз. Имя функцией — то же расширение типа, что
-      <code>disabledReason</code> уже получил, то есть не новая идея в API, а недоведённая до конца
-      старая. Разделитель — единственная из четырёх половин, которая вообще меняет то, что видно, и
-      без него деструктивный пункт отделён только цветом, что само по себе провал 1.4.1 в миниатюре.
-      <b>Против «держим гейт»:</b> он ждал слова от мигрировавшего экрана, и это слово не пришло за
-      три недели — а зеркальные предикаты в четырёх меню продолжают быть тем, что мы попросили
-      потребителя написать вместо нас.
+      <b>Рекомендую обе.</b> Имя функцией — то же расширение типа, что <code>disabledReason</code>
+      уже получил: не новая идея, а недоведённая старая. Разделитель аддитивен и рисовать нечего.
+      Гейт ждал возражения от мигрировавшего экрана — за 18 дней его нет, а зеркальные предикаты
+      в четырёх меню мы попросили потребителя написать вместо нас.
     </p>
   </div>
 
@@ -300,25 +259,19 @@
     <thead><tr><th>Вопрос</th><th>Варианты</th></tr></thead>
     <tbody>
       <tr>
-        <td><b>Достраиваем ли <code>TableRowAction</code></b></td>
-        <td>
-          <b>обе половины</b> ·
-          только имя функцией ·
-          только разделитель ·
-          держим гейт
-        </td>
+        <td><b>Достраиваем <code>TableRowAction</code></b></td>
+        <td><b>обе половины</b> · только имя функцией · только разделитель · держим гейт</td>
       </tr>
     </tbody>
   </table>
 
   <p class="sources">
-    Проверено в коде 2026-09-12: <code>table.types.ts:110-130</code> (<code>TableRowAction</code> —
-    <code>label</code> строка, <code>hidden</code> и <code>disabledReason</code> уже функции),
-    <code>table.component.html:540-556</code> (меню строки, разделителя в цикле нет),
-    <code>menu-divider.component.scss</code> (компонент есть и гасит зазор меню) ·
-    исходный аск и счёт «4 из 11 / 2 из 11» — <code>docs/todo.md</code>, mm-broker 2026-08-18 ·
-    меню и пункты пересобраны из <code>menu.component.scss</code> и
-    <code>menu-item.component.scss</code>
+    Проверено в коде 2026-09-12: <code>table.types.ts:110-130</code> — <code>label</code> строка,
+    <code>hidden</code> и <code>disabledReason</code> уже функции;
+    <code>table.component.html:540-556</code> — разделителя в цикле нет;
+    <code>menu-divider.component.scss</code> — компонент есть ·
+    даты и счёт «4 и 2 из 11» — из записи аска в <code>docs/todo.md</code> ·
+    меню пересобрано из <code>menu.component.scss</code> и <code>menu-item.component.scss</code>
   </p>
 
 </main>

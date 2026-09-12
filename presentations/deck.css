@@ -659,15 +659,18 @@ tr.row-today { background: var(--error-subtitle); }
 
 /* The layers under the specimen: what the DOM gains, what a screen reader says. An option whose
    difference is invisible still has to be visible SOMEWHERE, or it cannot be compared. */
+/* Label ABOVE its value, not beside it: a two-column grid has to guess a width for the label, and
+   any label longer than the guess overlaps the value instead of wrapping. */
 .layer {
-  display: grid;
-  grid-template-columns: 46px 1fr;
-  gap: var(--space-2);
-  align-items: start;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
   padding-top: var(--space-2);
   border-top: var(--border-width-default) dashed var(--border-divider);
   font-size: var(--font-size-2xs);
 }
+
+.layer dd + dt { margin-top: var(--space-2); }
 
 .layer dt {
   margin: 0;
