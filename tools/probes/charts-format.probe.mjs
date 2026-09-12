@@ -79,6 +79,13 @@ check(
   largestRemainder([1, 2, 4]),
   [14, 29, 57],
 );
+// Seven equal shares floor to 14 each (98 total), leaving a remainder of 2 — the only
+// case among the assertions above where more than one index needs bumping.
+check(
+  'largestRemainder redistributes a remainder of two or more',
+  largestRemainder([1, 1, 1, 1, 1, 1, 1]),
+  [15, 15, 14, 14, 14, 14, 14],
+);
 
 // The tick label's precision follows the step, not the value: a step of 500 puts every
 // label on one decimal, so 2500 reads 2.5K and 2000 reads 2.0K.
