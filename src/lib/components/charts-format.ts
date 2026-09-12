@@ -24,7 +24,14 @@ export function formatPercent(value: number, total: number): string {
     return '—';
   }
 
-  return `${((value / total) * 100).toFixed(1)}%`;
+  const percent = (value / total) * 100;
+  // A real share must never print as an exact zero: at one decimal, 214 of 987,654,321 rounds to
+  // "0.0%" beside a bar too short to see, and the row reads as nothing when it is not nothing.
+  if (percent !== 0 && Math.abs(percent) < 0.05) {
+    return percent > 0 ? '<0.1%' : '>-0.1%';
+  }
+
+  return `${percent.toFixed(1)}%`;
 }
 
 /** Whole percentages that sum to exactly 100. Rounding each share on its own

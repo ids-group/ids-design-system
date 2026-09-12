@@ -44,6 +44,10 @@ check(
 
 check('formatPercent rounds to one place', formatPercent(1961, 3204), '61.2%');
 check('formatPercent guards a zero total', formatPercent(5, 0), '—');
+// A share too small for one decimal must not print as a flat zero — 214 of 987,654,321 sits on
+// the docs page beside a bar too short to see, and "0.0%" would read as nothing at all.
+check('formatPercent marks a share below one decimal', formatPercent(214, 987654321), '<0.1%');
+check('formatPercent still prints a real zero as zero', formatPercent(0, 100), '0.0%');
 check('formatPercent guards a non-finite value', formatPercent(NaN, 100), '—');
 check(
   'formatPercent guards a non-finite total',
