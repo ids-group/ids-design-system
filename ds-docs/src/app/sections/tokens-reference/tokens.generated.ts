@@ -2429,14 +2429,14 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Label colour while pressed. Defaults to --ds-button-label-color."
       },
       {
-        "name": "--ds-button-border",
+        "name": "--ds-button-border-color",
         "value": "transparent",
         "notes": "Border colour (outline variant overrides)."
       },
       {
         "name": "--ds-button-border-width",
         "value": "var(--border-width-default)",
-        "notes": "The button border's WIDTH, where --ds-button-border is its colour. Defaults to --border-width-default; set it rather than redefining that scale step for a subtree."
+        "notes": "The button border's WIDTH, where --ds-button-border-color is its colour. Defaults to --border-width-default; set it rather than redefining that scale step for a subtree."
       },
       {
         "name": "--ds-button-press-scale",
@@ -2514,7 +2514,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Disabled label — ONE recipe for every variant, oklch(from accent 70% 0.035 h). 70% because the old 58%/52% pair sat where a saturated accent already is, so a disabled coloured button barely differed from its live self."
       },
       {
-        "name": "--ds-button-border-disabled",
+        "name": "--ds-button-border-color-disabled",
         "value": "oklch(from var(--_button-accent) 86% 0.04 h)",
         "notes": "Disabled border — a pale tint of the accent for solid, color-mix(border 55%, surface-disabled) for outline."
       },

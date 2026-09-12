@@ -5,15 +5,20 @@
   @case ('routerLink') {
     <a
       #btn
-      #rla="routerLinkActive"
       routerLinkActive="active"
       [class]="classes()"
       [routerLink]="disabled() ? null : routerLink()"
+      [routerLinkActiveOptions]="routerLinkActiveOptions()"
+      [fragment]="fragment()"
+      [queryParams]="queryParams()"
+      [queryParamsHandling]="queryParamsHandling()"
+      [target]="target()"
+      [attr.rel]="rel()"
       [attr.aria-label]="ariaLabel()"
       [attr.aria-haspopup]="ariaHasPopup()"
       [attr.aria-expanded]="ariaExpanded()"
       [attr.aria-controls]="ariaControls()"
-      [attr.aria-current]="rla.isActive ? 'page' : null"
+      [ariaCurrentWhenActive]="ariaCurrentResolved()"
       [attr.aria-disabled]="disabled() ? 'true' : null"
       [attr.tabindex]="disabled() ? -1 : null"
       [attr.aria-describedby]="describedBy()"
@@ -26,6 +31,8 @@
       #btn
       [class]="classes()"
       [href]="href()"
+      [attr.target]="target()"
+      [attr.rel]="rel()"
       [attr.aria-label]="ariaLabel()"
       [attr.aria-haspopup]="ariaHasPopup()"
       [attr.aria-expanded]="ariaExpanded()"

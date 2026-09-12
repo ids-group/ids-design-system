@@ -1210,11 +1210,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "routerLink",
         "kind": "input",
-        "type": "string | readonly unknown[] | null",
+        "type": "DsRouterLink",
         "union": null,
         "default": "null",
         "required": false,
-        "description": "`RouterLink` target. Set it and the button renders an `<a [routerLink]>` with `routerLinkActive`: middle-click, open-in-new-tab and the announced \"link\" role depend on the element, not on the look."
+        "description": "`RouterLink` target. Set it and the button renders an `<a [routerLink]>` with `routerLinkActive`: middle-click, open-in-new-tab and the announced \"link\" role depend on the element, not on the look. Accepts a `UrlTree` as well as a path or a command array — `Router.createUrlTree` is the way to reach the `UrlCreationOptions` that have no input of their own here (`relativeTo`, `preserveFragment`)."
       },
       {
         "name": "href",
@@ -1224,6 +1224,76 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Plain `href` target, used when `routerLink` is not set — an external address or a download. Renders an `<a href>`; same reasoning as `routerLink`."
+      },
+      {
+        "name": "fragment",
+        "kind": "input",
+        "type": "string | undefined",
+        "union": null,
+        "default": "undefined",
+        "required": false,
+        "description": "Hash to append to a `routerLink` destination — the section of the page to land on. routerLink-only: on an `href` put it in the URL, and on a plain button it is ignored with a dev warning."
+      },
+      {
+        "name": "queryParams",
+        "kind": "input",
+        "type": "Params | null | undefined",
+        "union": null,
+        "default": "undefined",
+        "required": false,
+        "description": "Query parameters for a `routerLink` destination. routerLink-only, same as `fragment`."
+      },
+      {
+        "name": "queryParamsHandling",
+        "kind": "input",
+        "type": "QueryParamsHandling | null | undefined",
+        "union": null,
+        "default": "undefined",
+        "required": false,
+        "description": "How the destination's query merges with the current one — `'merge'`, `'preserve'` or `'replace'`. routerLink-only."
+      },
+      {
+        "name": "target",
+        "kind": "input",
+        "type": "string | undefined",
+        "union": null,
+        "default": "undefined",
+        "required": false,
+        "description": "Browsing context for the link — `'_blank'` and the rest. Both link destinations take it; on a plain button it is ignored with a dev warning."
+      },
+      {
+        "name": "rel",
+        "kind": "input",
+        "type": "string | undefined",
+        "union": null,
+        "default": "undefined",
+        "required": false,
+        "description": "`rel` for the link. Pair it with `target=\"_blank\"`: without `noopener` the opened page can reach back through `window.opener`. Both link destinations take it."
+      },
+      {
+        "name": "routerLinkActiveOptions",
+        "kind": "input",
+        "type": "{ exact: boolean } | IsActiveMatchOptions",
+        "union": null,
+        "default": "{ exact: false }",
+        "required": false,
+        "description": "How `routerLinkActive` decides the `active` CLASS — prefix by default, so a section link stays lit inside its own pages. It does NOT decide `aria-current`, which is exact by construction; see `ariaCurrent`."
+      },
+      {
+        "name": "ariaCurrent",
+        "kind": "input",
+        "type": "DsAriaCurrent | null | undefined",
+        "union": [
+          "page",
+          "step",
+          "location",
+          "date",
+          "time",
+          "true"
+        ],
+        "default": "undefined",
+        "required": false,
+        "description": "Overrides what the link announces. Unset, an exact match announces `page` and a prefix match announces `true`, which is what ARIA means by each; pass `null` to announce nothing, or one of the other values when the link is a step or a location rather than a page."
       },
       {
         "name": "type",
@@ -5628,11 +5698,27 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "routerLink",
         "kind": "input",
-        "type": "string | readonly unknown[] | null",
+        "type": "DsRouterLink",
         "union": null,
         "default": "null",
         "required": false,
         "description": "Makes the group a destination of its own as well as a container: the header navigates here and the caret becomes a separate control, because one control cannot both go somewhere and stay to open something. Unset (the default) the whole header only expands — a heading that navigates closes the page being read the moment someone reaches for the group beneath it."
+      },
+      {
+        "name": "ariaCurrent",
+        "kind": "input",
+        "type": "DsAriaCurrent | null | undefined",
+        "union": [
+          "page",
+          "step",
+          "location",
+          "date",
+          "time",
+          "true"
+        ],
+        "default": "undefined",
+        "required": false,
+        "description": "Overrides what the group header announces when it is itself a destination. Unset, the page the reader is on announces `page` and the section containing it announces `true`."
       },
       {
         "name": "expanded",
@@ -5686,7 +5772,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "routerLink",
         "kind": "input",
-        "type": "string | readonly unknown[] | null",
+        "type": "DsRouterLink",
         "union": null,
         "default": "null",
         "required": false,
@@ -5700,6 +5786,22 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Applies the active style; also drives `aria-current` when not using `routerLink`."
+      },
+      {
+        "name": "ariaCurrent",
+        "kind": "input",
+        "type": "DsAriaCurrent | null | undefined",
+        "union": [
+          "page",
+          "step",
+          "location",
+          "date",
+          "time",
+          "true"
+        ],
+        "default": "undefined",
+        "required": false,
+        "description": "Overrides what an active item announces. Unset, an exact match announces `page` and a prefix match announces `true` — in a sidenav the prefix case is \"you are in this section\", which is exactly what `true` means."
       },
       {
         "name": "badge",
