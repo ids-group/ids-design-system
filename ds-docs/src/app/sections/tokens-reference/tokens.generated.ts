@@ -899,6 +899,131 @@ export const CHARTS: readonly ColourRow[] = [
     "name": "--chart-dot-radius-active",
     "value": "6px",
     "notes": "Chart line/scatter series dot radius, active/hover state (6px)."
+  },
+  {
+    "name": "--ds-chart-series-1-color",
+    "value": "var(--chart-categorical-1)",
+    "notes": "Colour of the first chart series. Set this, not --chart-categorical-1."
+  },
+  {
+    "name": "--ds-chart-series-2-color",
+    "value": "var(--chart-categorical-2)",
+    "notes": "Colour of the second chart series. Set this, not --chart-categorical-2."
+  },
+  {
+    "name": "--ds-chart-series-3-color",
+    "value": "var(--chart-categorical-3)",
+    "notes": "Colour of the third chart series. Set this, not --chart-categorical-3."
+  },
+  {
+    "name": "--ds-chart-series-4-color",
+    "value": "var(--chart-categorical-4)",
+    "notes": "Colour of the fourth chart series. Set this, not --chart-categorical-4."
+  },
+  {
+    "name": "--ds-chart-series-5-color",
+    "value": "var(--chart-categorical-5)",
+    "notes": "Colour of the fifth chart series. Set this, not --chart-categorical-5."
+  },
+  {
+    "name": "--ds-chart-series-6-color",
+    "value": "var(--chart-categorical-6)",
+    "notes": "Colour of the sixth chart series. Set this, not --chart-categorical-6."
+  },
+  {
+    "name": "--ds-chart-series-7-color",
+    "value": "var(--chart-categorical-7)",
+    "notes": "Colour of the seventh chart series. Set this, not --chart-categorical-7."
+  },
+  {
+    "name": "--ds-chart-series-8-color",
+    "value": "var(--chart-categorical-8)",
+    "notes": "Colour of the eighth chart series. Set this, not --chart-categorical-8."
+  },
+  {
+    "name": "--ds-chart-axis-line-color",
+    "value": "var(--chart-axis-line-color)",
+    "notes": "Chart axis line colour. Set this, not --chart-axis-line-color."
+  },
+  {
+    "name": "--ds-chart-axis-label-color",
+    "value": "var(--chart-axis-label-color)",
+    "notes": "Chart axis tick-label colour. Set this, not --chart-axis-label-color."
+  },
+  {
+    "name": "--ds-chart-axis-title-color",
+    "value": "var(--chart-axis-title-color)",
+    "notes": "Chart axis title colour. Set this, not --chart-axis-title-color."
+  },
+  {
+    "name": "--ds-chart-axis-font-size",
+    "value": "var(--chart-axis-font-size)",
+    "notes": "Chart axis label size. Set this, not --chart-axis-font-size."
+  },
+  {
+    "name": "--ds-chart-grid-line-color",
+    "value": "var(--chart-grid-line-color)",
+    "notes": "Chart gridline colour. Set this, not --chart-grid-line-color."
+  },
+  {
+    "name": "--ds-chart-grid-line-strong-color",
+    "value": "var(--chart-grid-line-strong-color)",
+    "notes": "Emphasised chart gridline colour. Set this, not --chart-grid-line-strong-color."
+  },
+  {
+    "name": "--ds-chart-hover-bg-color",
+    "value": "var(--chart-hover-bg-color)",
+    "notes": "Chart hover highlight wash. Set this, not --chart-hover-bg-color."
+  },
+  {
+    "name": "--ds-chart-cursor-line-color",
+    "value": "var(--chart-cursor-line-color)",
+    "notes": "Chart crosshair line colour. Set this, not --chart-cursor-line-color."
+  },
+  {
+    "name": "--ds-chart-tooltip-bg-color",
+    "value": "var(--chart-tooltip-bg-color)",
+    "notes": "Chart tooltip fill. Set this, not --chart-tooltip-bg-color."
+  },
+  {
+    "name": "--ds-chart-tooltip-text-color",
+    "value": "var(--chart-tooltip-text-color)",
+    "notes": "Chart tooltip text colour. Set this, not --chart-tooltip-text-color."
+  },
+  {
+    "name": "--ds-chart-tooltip-border-color",
+    "value": "var(--chart-tooltip-border-color)",
+    "notes": "Chart tooltip border colour. Set this, not --chart-tooltip-border-color."
+  },
+  {
+    "name": "--ds-chart-bar-gap",
+    "value": "var(--chart-bar-gap)",
+    "notes": "Gap between bars in a chart series. Set this, not --chart-bar-gap."
+  },
+  {
+    "name": "--ds-chart-line-width",
+    "value": "var(--chart-line-width)",
+    "notes": "Chart line-series stroke width. Set this, not --chart-line-width."
+  },
+  {
+    "name": "--ds-chart-line-width-bold",
+    "value": "var(--chart-line-width-bold)",
+    "notes": "Emphasised chart line-series stroke width. Set this, not --chart-line-width-bold."
+  },
+  {
+    "name": "--ds-chart-dot-radius",
+    "value": "var(--chart-dot-radius)",
+    "notes": "Chart data-point dot radius. Set this, not --chart-dot-radius."
+  },
+  {
+    "name": "--ds-chart-dot-radius-active",
+    "value": "var(--chart-dot-radius-active)",
+    "notes": "Chart data-point dot radius while active. Set this, not --chart-dot-radius-active."
+  },
+  {
+    "name": "--ds-chart-tick-size",
+    "value": "var(--chart-tick-size)",
+    "notes": "Chart axis tick-mark length. Set this, not --chart-tick-size."
   }
 ];
 
@@ -2287,17 +2412,17 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-bar-chart-track-color",
         "value": "var(--chart-grid-line-color)",
-        "notes": ""
+        "notes": "Unfilled part of a ds-bar-chart bar (default --chart-grid-line-color)."
       },
       {
         "name": "--ds-bar-chart-track-height",
         "value": "8px",
-        "notes": ""
+        "notes": "Thickness of a ds-bar-chart bar and its track (default 8px)."
       },
       {
         "name": "--ds-bar-chart-row-gap",
         "value": "var(--space-3)",
-        "notes": ""
+        "notes": "Vertical gap between ds-bar-chart rows (default --space-3)."
       }
     ]
   },
@@ -7175,131 +7300,6 @@ export const NEW_TOKENS: readonly NewToken[] = [
     "name": "--dodont-stage-minh",
     "value": "100px",
     "kind": "length"
-  },
-  {
-    "name": "--ds-chart-axis-font-size",
-    "value": "var(--chart-axis-font-size)",
-    "kind": "other"
-  },
-  {
-    "name": "--ds-chart-axis-label-color",
-    "value": "var(--chart-axis-label-color)",
-    "kind": "other"
-  },
-  {
-    "name": "--ds-chart-axis-line-color",
-    "value": "var(--chart-axis-line-color)",
-    "kind": "other"
-  },
-  {
-    "name": "--ds-chart-axis-title-color",
-    "value": "var(--chart-axis-title-color)",
-    "kind": "other"
-  },
-  {
-    "name": "--ds-chart-bar-gap",
-    "value": "var(--chart-bar-gap)",
-    "kind": "other"
-  },
-  {
-    "name": "--ds-chart-cursor-line-color",
-    "value": "var(--chart-cursor-line-color)",
-    "kind": "other"
-  },
-  {
-    "name": "--ds-chart-dot-radius",
-    "value": "var(--chart-dot-radius)",
-    "kind": "other"
-  },
-  {
-    "name": "--ds-chart-dot-radius-active",
-    "value": "var(--chart-dot-radius-active)",
-    "kind": "other"
-  },
-  {
-    "name": "--ds-chart-grid-line-color",
-    "value": "var(--chart-grid-line-color)",
-    "kind": "other"
-  },
-  {
-    "name": "--ds-chart-grid-line-strong-color",
-    "value": "var(--chart-grid-line-strong-color)",
-    "kind": "other"
-  },
-  {
-    "name": "--ds-chart-hover-bg-color",
-    "value": "var(--chart-hover-bg-color)",
-    "kind": "other"
-  },
-  {
-    "name": "--ds-chart-line-width",
-    "value": "var(--chart-line-width)",
-    "kind": "other"
-  },
-  {
-    "name": "--ds-chart-line-width-bold",
-    "value": "var(--chart-line-width-bold)",
-    "kind": "other"
-  },
-  {
-    "name": "--ds-chart-series-1-color",
-    "value": "var(--chart-categorical-1)",
-    "kind": "other"
-  },
-  {
-    "name": "--ds-chart-series-2-color",
-    "value": "var(--chart-categorical-2)",
-    "kind": "other"
-  },
-  {
-    "name": "--ds-chart-series-3-color",
-    "value": "var(--chart-categorical-3)",
-    "kind": "other"
-  },
-  {
-    "name": "--ds-chart-series-4-color",
-    "value": "var(--chart-categorical-4)",
-    "kind": "other"
-  },
-  {
-    "name": "--ds-chart-series-5-color",
-    "value": "var(--chart-categorical-5)",
-    "kind": "other"
-  },
-  {
-    "name": "--ds-chart-series-6-color",
-    "value": "var(--chart-categorical-6)",
-    "kind": "other"
-  },
-  {
-    "name": "--ds-chart-series-7-color",
-    "value": "var(--chart-categorical-7)",
-    "kind": "other"
-  },
-  {
-    "name": "--ds-chart-series-8-color",
-    "value": "var(--chart-categorical-8)",
-    "kind": "other"
-  },
-  {
-    "name": "--ds-chart-tick-size",
-    "value": "var(--chart-tick-size)",
-    "kind": "other"
-  },
-  {
-    "name": "--ds-chart-tooltip-bg-color",
-    "value": "var(--chart-tooltip-bg-color)",
-    "kind": "other"
-  },
-  {
-    "name": "--ds-chart-tooltip-border-color",
-    "value": "var(--chart-tooltip-border-color)",
-    "kind": "other"
-  },
-  {
-    "name": "--ds-chart-tooltip-text-color",
-    "value": "var(--chart-tooltip-text-color)",
-    "kind": "other"
   },
   {
     "name": "--ds-control-focus-shadow",
