@@ -14,14 +14,14 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**98 open — 1 P1, 32 P2, 65 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**97 open — 1 P1, 31 P2, 65 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 1
 
 - **Framework & forms**
   - Upgrade to Angular 22 — and re-verify the signal-forms work against it, because one of its breaking changes lands exactly there
 
-### P2 — 32
+### P2 — 31
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Nothing catches a shell that rings on `:focus-within` when it means the keyboard
@@ -29,7 +29,6 @@ item and nothing else.
   - Transitions are missing or wrong in places, and nothing says where (Stas, 2026-09-04)
   - `.design-sync/upload/_ds_bundle.css` is frozen against a rule the library no longer …
   - `_focus.scss`'s top-level CSS is copied into 33 component style strings
-  - `ds-select` and `ds-autocomplete` announce a disabled trigger as invalid
   - Warning and success fields show a mismatched halo
   - Zone COLOUR and `data-focus` SHAPE cannot both reach one role, and the reason is a …
 - **Manifest-shape defects the two-wave plugin review surfaced (2026-09-04)**
@@ -289,15 +288,6 @@ fix. The record cannot be corrected (a published manifest is frozen, `AUTHORING.
 `CONTRIBUTING.md:168-174` forbids describing it in a new entry, so the new item carries `supersedes`
 and says nothing about the old one. Measured on three grounds: `presentations/focus-ring-gap.png`.
 
-
-- [ ] **[P2] `ds-select` and `ds-autocomplete` announce a disabled trigger as invalid.** Both keep
-  `aria-invalid="true"` beside `aria-disabled="true"` on the trigger, and the trigger is a `div`
-  taking `tabindex="-1"` rather than a natively disabled control — so it stays in the virtual cursor
-  and reads as "invalid, dimmed" with no way to act on it. The other seven fields carry the same
-  `[attr.aria-invalid]` binding but disable natively, which takes the element out of reach, so the
-  attribute is inert there. Surfaced beside the paint fix above: the paint stopped, the announcement
-  did not. Fix is `invalidResolved() && !isDisabled()` in the two templates, plus a `### Fixed` line
-  — an announcement change is consumer-visible.
 
 - [ ] **[P2] Warning and success fields show a mismatched halo.** `_field-state.scss` gives error a
   nested focus block and gives warning/success none, so a focused warning field is a yellow border

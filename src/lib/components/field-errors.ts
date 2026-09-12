@@ -90,6 +90,13 @@ export interface DsFieldMessageSources {
   error: Signal<string>;
   errors: Signal<readonly DsFieldError[]>;
   invalid: Signal<boolean>;
+  /** The control's own disabled state. A disabled control is neither submitted nor validated, so
+   *  it is not announced as invalid — the same reasoning `_field-state.scss` uses to keep the error
+   *  paint off it. Optional only because a host without a disabled state has nothing to pass.
+   *  A plain getter rather than a `Signal` so a caller can hand it over before its own
+   *  `isDisabled` field is initialised — this resolver is usually assigned near the top of a
+   *  component and the disabled computed near the bottom. */
+  disabled?: () => boolean;
   success?: Signal<string>;
   /** The field's own touched state, if it tracks one (CVA blur). */
   touchedSelf?: Signal<boolean>;
@@ -198,11 +205,16 @@ export function resolveFieldMessage(
 
   // Advisory errors are deliberately absent: a warning does not make a control
   // invalid, so it never sets aria-invalid and never blocks a submit guard.
+  // Disabled wins over every source of invalidity. Measured in Chrome's accessibility tree:
+  // `aria-invalid` on a NATIVELY disabled input still reports invalid=true and the node is not
+  // ignored, so disabling does not make the attribute inert — the reader still hears "invalid" on
+  // a control they cannot act on.
   const invalid = computed(
     () =>
-      sources.invalid() ||
-      sources.error().length > 0 ||
-      (blocking().length > 0 && interacted()),
+      !(sources.disabled?.() ?? false) &&
+      (sources.invalid() ||
+        sources.error().length > 0 ||
+        (blocking().length > 0 && interacted())),
   );
 
   // Message inputs trim via `trimmedText`, so a non-empty string here is real

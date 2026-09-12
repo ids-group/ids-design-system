@@ -198,6 +198,24 @@
 - `ds-bar-chart` — horizontal bars with label, value and percentage per row. Colours come from
   `--ds-chart-series-N-color` and can be overridden per row with `color`.
 
+### Fixed
+
+- **A disabled field is no longer announced as invalid.** Every field bound `aria-invalid` from its
+  error state alone, so a control that was disabled AND carried an error told a screen reader
+  "invalid" about something the reader cannot act on. Nothing on screen changed — the error paint
+  already excluded disabled — which is why it went unseen.
+
+  The belief that a natively disabled control made the attribute inert is wrong, and that is what
+  kept the defect narrow in the record: measured in Chrome's accessibility tree, a disabled
+  `<input aria-invalid="true">` reports `invalid=true` and is NOT ignored. Disabling removes an
+  element from the tab order, not from the tree. So this reached all fifteen fields, not the two
+  first reported.
+
+  The rule lives in one place — the shared message resolver — rather than in fifteen templates: a
+  disabled control is neither submitted nor validated, the same reasoning `_field-state.scss`
+  already uses to keep the error paint off it. The message TEXT still shows: a refused field may
+  still need to say why.
+
 ### What you can now DELETE
 
 | your workaround | why it is unnecessary | replace with |

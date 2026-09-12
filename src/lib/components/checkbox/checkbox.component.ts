@@ -69,6 +69,7 @@ export class CheckboxComponent extends DsBooleanControlValueAccessor {
     this.message().text ? `${this.uid}-hint` : null,
   );
   private readonly fieldMessage = resolveFieldMessage({
+    disabled: () => this.isDisabled(),
     hint: this.hint,
     warning: this.warning,
     error: this.error,

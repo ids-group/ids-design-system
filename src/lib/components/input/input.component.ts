@@ -222,6 +222,7 @@ export class InputComponent extends DsControlValueAccessor<string> {
     );
   });
   private readonly fieldMessage = resolveFieldMessage({
+    disabled: () => this.isDisabled(),
     hint: this.hint,
     warning: this.warning,
     error: this.error,

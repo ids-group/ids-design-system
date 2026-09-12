@@ -286,6 +286,7 @@ export class DatePickerComponent
     () => this.invalid() || this.typedInvalid() || this.rangeInvalid(),
   );
   private readonly fieldMessage = resolveFieldMessage({
+    disabled: () => this.isDisabled(),
     hint: this.hint,
     warning: this.warning,
     error: this.localError,
