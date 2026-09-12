@@ -17,6 +17,10 @@ and token names.** These leaves are for orientation and usage.
 - [Foundations — Grid](foundations/grid.md)
 - [Foundations — Global helper classes](foundations/global-helper-classes.md)
 
+## charts
+
+- [<ds-bar-chart> — BarChartComponent](charts/ds-bar-chart.md) — Row: BarChartRow = { label: string; value: number; percent?: number; color?: string }. percent is derived from
+
 ## domain
 
 - [<ds-w3w> — W3wComponent](domain/ds-w3w.md) — What3Words address chip — branded display for ///word.word.word addresses; click-to-copy.

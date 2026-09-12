@@ -97,6 +97,7 @@ const GROUP_DIR = {
   Surfaces: 'surfaces',
   Overlay: 'overlays',
   Tables: 'tables',
+  Charts: 'charts',
   Domain: 'domain',
 };
 

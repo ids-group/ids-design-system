@@ -456,6 +456,15 @@ Tokens: `--ds-table-border: var(--border-default)`, `--ds-table-radius: var(--ra
 
 ---
 
+### Charts
+
+#### `<ds-bar-chart>` — `BarChartComponent`
+Inputs: `data: readonly BarChartRow[]` (required), `max: number | null = null` (track length is relative to this; null uses the largest value, so the longest row always fills its track — a max BELOW the largest value is allowed and its bar clips at the track edge), `caption: string | null = null`, `summary: string | null = null` (accessible name; generated from the data when omitted), `dataTable: 'toggle' | 'visible' | 'none' = 'toggle'` (`'toggle'` renders a closed `<details>`; `'none'` is only correct when the same numbers are already in the DOM nearby), `showPercent: boolean = true`, `loading: boolean = false`, `emptyText: string = 'No data'`, `valueFormat: (value: number) => string`
+Output: `(rowClick): BarChartRow` — emits the clicked row. Mouse only today: the row is not keyboard-operable and sits inside `role="img"`, recorded as accepted debt.
+Row: `BarChartRow = { label: string; value: number; percent?: number; color?: string }`. `percent` is derived from `value / max` when omitted; `color` overrides that row's colour and there is no separate accent flag.
+Behaviour: a non-finite value draws no bar and prints `—`; a negative value clamps to an empty bar; a share too small for one decimal prints `<0.1%` rather than `0.0%`.
+Tokens: series colours come from `--ds-chart-series-1-color` … `--ds-chart-series-8-color` — set these, never the `--chart-categorical-*` palette behind them. Per-component: `--ds-bar-chart-track-color`, `--ds-bar-chart-track-height`, `--ds-bar-chart-row-gap`.
+
 ### Domain
 
 #### `<ds-w3w>` — `W3wComponent`
