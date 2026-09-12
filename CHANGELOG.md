@@ -1,40 +1,76 @@
-# Changelog
-
-All notable changes to `@ids-group-ltd/ids-design-system` are documented here.
-
-Versioning follows [SemVer](https://semver.org). Mapping from commit types:
-`fix` → patch, `feat` → minor, breaking change (API or visual) → major.
-While the package is on `0.x`, minor releases may contain breaking changes.
-
 ## Unreleased
 
 ### Breaking
 
-- **A `ds-stat` label and value clip to one line and disclose the rest on hover.** Both used to run
-  past the tile: the value carried `white-space: nowrap` with no overflow rule at all, so
-  "Feb 1 – Feb 28, 2026" at the default size painted 158px beyond a 240px card and over whatever
-  sat beside it. They now take the same `single-line-ellipsis` treatment the other eleven
-  text-bearing components already use, and a clipped one opens a tooltip with the full text on
-  hover and on keyboard focus.
-
-  Every tile whose value is longer than its card changes visually. Nothing is lost to assistive
-  technology — the truncation is optical, so the full string stays in the DOM — but a value that
-  used to be readable by escaping its card is now an ellipsis plus a tooltip.
+- **`--ds-button-border` is `--ds-button-border-color`, and `--ds-button-border-disabled` is
+  `--ds-button-border-color-disabled`.** Both name a COLOUR, and since the width moved out to
+  `--ds-button-border-width` beside them the old names read like a `border` shorthand — set
+  `2px solid red` on one and nothing happens. The values and defaults are unchanged; only the
+  names moved.
 
   ```scss
-  /* every character visible, at the cost of the tile's height */
-  ds-stat { --ds-stat-value-white-space: normal; }
+  /* before */            /* after */
+  ds-button {             ds-button {
+    --ds-button-border: var(--brand);   --ds-button-border-color: var(--brand);
+  }                       }
   ```
 
-- **A clipped `ds-table` cell discloses on hover, not on click, and carries no `title`.** The cell
-  used to set `title` unconditionally and open a popover when you clicked it; the header set
-  `title` on pointer-enter through a handler of its own. All three are one directive now, so the
-  disclosure arrives at 120ms on hover AND on focus rather than needing a mouse, and it stays shut
-  for a cell that already reads in full. A flow that clicked a cell to read it, or a test asserting
-  `title` on `.cell-clip`, has to follow the tooltip instead.
+- **A `ds-button`, `ds-sidenav-item` or `ds-sidenav-group` link no longer claims to be a page it
+  is only inside of.** `aria-current` was derived from `routerLinkActive`, which matches by
+  PREFIX — so a "back to the section" link on `/case-studies/retail` announced
+  `aria-current="page"` for `/case-studies`, a page the reader was leaving rather than on. It now
+  says what ARIA means: an exact match announces `page`, a prefix match announces `true`, anything
+  else announces nothing. The `active` CLASS still matches by prefix, so nothing changes visually.
+
+  Only a screen reader hears the difference, which is why it went unnoticed for so long — on
+  `ds-button` the `active` class is painted by nothing at all. If a test asserted
+  `aria-current="page"` on a section link, it now reads `true`.
 
 ### Added
 
+- **`ds-button` forwards everything else a link can carry: `fragment`, `queryParams`,
+  `queryParamsHandling`, `target` and `rel`.** Each is a pass-through to the anchor the component
+  already renders, so a call-to-action with a destination modifier stays a `ds-button` instead of
+  falling back to a hand-written class.
+
+  ```html
+  <ds-button [routerLink]="['/ai-solutions', slug]" fragment="enquiry">Talk to us</ds-button>
+  <ds-button [href]="demoUrl" target="_blank" rel="noopener">Open the demo</ds-button>
+  ```
+
+  `fragment`, `queryParams` and `queryParamsHandling` belong to a `routerLink` destination and
+  dev-warn on any other; `target` and `rel` work on both link destinations and dev-warn on a plain
+  button.
+
+- **`routerLink` accepts a `UrlTree`** on `ds-button`, `ds-sidenav-item` and `ds-sidenav-group`, so
+  the `UrlCreationOptions` with no input of their own — `relativeTo`, `preserveFragment` — are
+  reachable without waiting for one.
+
+  ```ts
+  protected readonly enquiry = this.router.createUrlTree(['/ai-solutions', slug], {
+    fragment: 'enquiry',
+  });
+  ```
+
+- **`routerLinkActiveOptions` and `ariaCurrent` on the same three components.** The first moves
+  what the `active` CLASS matches; the second overrides what the link announces, including `null`
+  for "announce nothing" and `'step'` or `'location'` where the link is not a page. Left alone, the
+  announcement follows the exact/prefix rule above and needs nothing from the consumer.
+
+- **Five classes grew their member surface, which breaks a subclass that declares the same name.**
+  Subclassing a DS component is unsupported (`design-system.md` § Components), so this reaches only
+  a consumer who does it — and there it is a build error, not a silent change. `ButtonComponent`
+  gained `fragment`, `queryParams`, `queryParamsHandling`, `target`, `rel`,
+  `routerLinkActiveOptions`, `ariaCurrent`, `linkModifiers` and `ariaCurrentResolved`;
+  `SidenavItemComponent` and `SidenavGroupComponent` each gained `ariaCurrent`, `noModifiers` and
+  `ariaCurrentResolved`; `TooltipDirective` gained `dsTooltipWhenClipped` and `tipText`;
+  `TableComponent` LOST `cellPopoverText`, `isClipped`, `onCellClipClick` and `onHeaderEnter`, so a
+  subclass that overrode one now overrides nothing. Being public API or not is no protection:
+  `private` and `protected` collide with TS2415 exactly as a public name does.
+
+  `routerLink` also widened on the three navigating components — `string | readonly unknown[] |
+  null` became `DsRouterLink`, which adds `UrlTree`. Writing it is unaffected; code that READS the
+  value back, or overrides the input, has a new union member to handle.
 - **`ds-stat` takes `--ds-stat-value-lines` and `--ds-stat-value-wrap`, which compose with the
   `white-space` hook.** The three cover the shapes a KPI value actually needs: clip to one line
   (the default), wrap freely, wrap and put the ellipsis on the line you name, or break a word wider
@@ -68,33 +104,12 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 | your workaround | why it is unnecessary | replace with |
 | --- | --- | --- |
+| a hand-written `.btn` class kept only for controls that need `fragment`, `queryParams`, `target` or `rel` | those reach `ds-button` now, so the control can move with the rest | `ds-button` with the matching input |
+| `[routerLink]="'/path?a=1#b'"` — a query or hash folded into the link string | the string was percent-encoded into the path and never worked; the inputs carry them properly | `[queryParams]` and `fragment` |
+| importing `RouterLink` in your own component to write `[queryParams]` on a `<ds-button>` | that put a second `RouterLink` on the host, disagreeing with the anchor's about the destination | the component's own inputs |
 | `ds-stat { --ds-stat-value-white-space: normal; }` written only to stop a long value painting over the tile beside it | the value clips by default, so it no longer escapes its card | nothing — keep the hook only where you want the value wrapped and the tile taller |
 | `ds-stat .value { overflow: hidden; text-overflow: ellipsis; }` — your own clip on the value | the component clips it, and with `overflow: clip` plus a clip margin, so descenders survive where `hidden` shaved them | nothing |
 | `.cell-text-pop` — a rule sizing or colouring the table's full-value popover | the popover is gone; a clipped cell opens a tooltip instead | `--ds-tooltip-*`, if the panel needs changing at all |
-
-
-- **Five `ds-button` tokens that closed the last holes in its surface: `--ds-button-font-family`,
-  `--ds-button-line-height`, `--ds-button-border-width`, `--ds-button-label-color-hover` and
-  `--ds-button-label-color-active`.** Each defaults to what the stylesheet read before it —
-  `--font-sans`, `--line-height-flat`, `--border-width-default`, and the resting label for both
-  states — so a button that sets none of them renders exactly as it did.
-
-  They exist because the alternative was re-pointing a THEME role inside the component. Branding a
-  button to a face other than the body one meant `ds-button { --font-sans: … }`, which also reaches
-  the icon and the message row inside it; changing its edge meant redefining `--border-width-default`
-  for the subtree, which moves a scale step for everything under it.
-
-  ```scss
-  ds-button {
-    --ds-button-font-family: var(--app-font-heading);
-    --ds-button-border-width: 2px;
-    --ds-button-label-color-hover: var(--surface-default);
-  }
-  ```
-
-  `--ds-button-border` names the border's COLOUR and keeps that meaning; the width is the new token
-  beside it. `variant="text"` now takes its hover colour from the same resolver as every other
-  variant, so the hook reaches it too — its default is unchanged.
 
 ## 0.12.3 — 2026-09-10
 

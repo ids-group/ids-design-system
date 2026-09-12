@@ -14,14 +14,14 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**106 open — 1 P1, 38 P2, 67 P3**, 1 of them half-done and waiting on a deck verdict. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**105 open — 1 P1, 37 P2, 67 P3**, 1 of them half-done and waiting on a deck verdict. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 1
 
 - **Framework & forms**
   - Upgrade to Angular 22 — and re-verify the signal-forms work against it, because one of its breaking changes lands exactly there
 
-### P2 — 38
+### P2 — 37
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Nothing catches a shell that rings on `:focus-within` when it means the keyboard
@@ -55,7 +55,6 @@ item and nothing else.
   - An md ARCHITECTURE for the whole design system — cross-linked like a graph, not a pile of files (Stas, 2026-09-01, re-scoped 2026-09-02). NEXT UP, and the first step is RESEARCH, not code
   - There is no page-level design approach an agent can follow — only per-token and per-component rules (Stas, 2026-09-01)
 - **Component feature gaps**
-  - `ds-button` has a destination but nothing to modify it with, and a back-link announces itself as the current page — deck `button-destination-api`
   - One entry point for the whole library means a consumer cannot keep the DS out of their initial bundle (2026-08-03, Stas — mm-broker MBP-133 review)
 - **The field system — the two controls outside it, and the five with no box to paint**
   - `ds-number-stepper` and `ds-dropzone` are outside the field-message system entirely — bring them in, or say they are not fields (Stas asked 2026-08-20)
@@ -904,10 +903,6 @@ A0 first, which touches none of it, or wait for that lane to land.
 
 ## Component feature gaps
 
-- [ ] **[P2] `ds-button` has a destination but nothing to modify it with, and a back-link announces itself as the current page — deck `button-destination-api`.** Two Asks from the marketing-site consumer, both filed after the 0.12.3 destination work landed. 18 of their 31 button-styled controls moved with no visual change; **13 cannot**, because the `routerLink` branch binds only `[routerLink]` and the `href` branch only `[href]` — six need `fragment`, five `queryParams`, three `target`+`rel`. Separately, `routerLinkActive="active"` is hardcoded with prefix matching and `aria-current` derived from it, so a "back to the section" link claims `aria-current="page"` on every detail page; `.active` has no rule in the button's stylesheet, which is what makes it invisible to everyone except the users it misleads.
-  **Three findings the Asks did not have**, read in `@angular/router@21.2.22`'s own typings: `routerLink` already accepts a `UrlTree`, so widening our input's type covers all five `UrlCreationOptions` with no new inputs; `RouterLinkActive` has an `ariaCurrentWhenActive` input, so the value we hand-roll is the directive's to write; and `isActive(url, router, options)` is exported as a `Signal<boolean>`, which is how one component can ask for exact AND prefix matching without a second directive. Plus the ARIA rule that settles it: `page` is the page you are on, `true` is the current section or ancestor.
-  **Four decisions in `presentations/9-button-destination-api.html`** — what modifies a destination (5 variants), what an active link announces (5), which of the three destination-bearing components it reaches (3), and whether `--ds-button-border` keeps a name that promises a shorthand (3). Recommendation A1+A3, B3, C3, D2.
-
 - [ ] **[P3] `ds-select` cannot offer "create «what I typed»", and the reason is that it has no place to type (recorded 2026-09-09, Stas).** `[dsCreateTemplate]` and `[dsChipTemplate]` exist in the library and `ds-select` reads neither — correctly, because both decorate features it does not have. Chips show MANY values and a single select holds one; create needs typed text and `ds-select`'s template contains **no `<input>` at all**. What looks like typing there is `createTypeAhead`, a keystroke buffer that jumps to the option whose label matches, so there is no query to turn into a new value.
   **So this is a feature request, not a missing template binding, and it arrives in that order:** first a panel filter field (the thing `ds-multi-select` already has as `.search-row`), then `allowCreate` plus a `created` output and the no-match branch — `ds-autocomplete` carries all three already and is the model to copy rather than re-derive. Only then does reading `[dsCreateTemplate]` mean anything.
   **The product question to settle first:** should a single select have a filter field at all? A short list does not need one and gains a control to tab through; a long one is unusable without it. `ds-autocomplete` already exists for "type to narrow, maybe create", so the honest answer may be to send consumers there instead of growing `ds-select` toward it. Settle that before writing code, or the field lands and then has to be argued about.
@@ -1075,7 +1070,7 @@ None of these is blocked on effort. Each is a verdict, and most carry a deck tha
 
 ## Decks awaiting a verdict (re-audited 2026-09-12)
 
-**Nine** decks carry `ds-deck-status: open` — counted on disk, not from this list, which has been
+**Eight** decks carry `ds-deck-status: open` — counted on disk, not from this list, which has been
 short before. **The rank is the filename**: an open deck is `<rank>-<slug>.html`, ranked by what
 answering it unblocks, so the folder listing IS the queue. Ranks are renumbered when the queue
 changes and a stale one is never kept to preserve a link; `deck-lint` fails a duplicate rank, a gap
@@ -1092,20 +1087,19 @@ file** — the number moves; cite the filename.
 | 6 | `6-warning-text-colour` | Which colour goes on the warning tint. Four candidates, each rendered in itself. | the warning pair under *Bugs* |
 | 7 | `7-docs-chapter-nav` | Where the chapter list lives. Four mutually-exclusive variants left after seven were rejected. | the docs-nav P3s under *Records* |
 | 8 | `8-field-group-invalid-voice` | How an invalid `ds-field-group` SAYS it is invalid — it has no text channel and sets no `aria-invalid`. Five variants, recommendation D. | the `[~]` field-group P2 under *Bugs* |
-| 9 | `9-button-destination-api` | One question: how a consumer modifies a destination. The `aria-current` claim and the token rename are stated as calls made, for a veto. | the two `ds-button` P2s under *Asks* |
 
-**Closed on 2026-09-12 and moved to `implemented/`:** `opt-in-seam` (all three questions answered —
+**Closed on 2026-09-12 and moved to `implemented/`:** `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
 CSS rejected at 1 kB for a consumer who does not exist), `sidebar-states` (variant E, and the code
 carries it: the item fills with `--accent-subtitle`, the group never fills) and `stat-value-overflow`
 (one line plus a tip on hover, three hooks over it). `5-rejected-with-numbers` left the queue the
 same day as a `tool` — it asks nothing, so a rank on it claimed a verdict was owed.
 
-**Seven of the nine have a twin on this board, so one answer closes two lines** — which is what
+**Six of the eight have a twin on this board, so one answer closes two lines** — which is what
 makes them the cheapest thing here. Rank 5 is the cheapest of all: "keep parked" is a complete
 answer, and it has already been given — the deck stays only because closing it was declined.
 
-**Ranks 1–4 are written in Russian and share `presentations/deck.css`**; 6–9 carry their own inline
+**Ranks 1–4 are written in Russian and share `presentations/deck.css`**; 6–8 carry their own inline
 styles. `presentations/README.md` holds the authoring contract and the fifteen lint rules.
 
 ## The field system — the two controls outside it, and the five with no box to paint

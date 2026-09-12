@@ -59,3 +59,32 @@ writes. Overriding `aria-current` from outside would mean reaching past the publ
 
 `ds-sidenav-item` should be checked for the same shape at the same time: a sidenav item legitimately
 wants prefix-active for its highlight, but the same question applies to what it announces.
+
+## Answered 2026-09-12 — the class and the claim stopped sharing a matcher
+
+`aria-current` is no longer derived from `routerLinkActive`. An EXACT match announces `page`, a
+PREFIX match announces `true`, and anything else announces nothing — which is what ARIA means by
+each: `page` is the page you are on, `true` is the current section or an ancestor of it. So a
+"back to the section" link now says it is the section, which it is.
+
+The `active` CLASS still matches by prefix, so nothing moved on screen. Two inputs are public for
+the cases the default cannot know: `routerLinkActiveOptions` moves what the class matches, and
+`ariaCurrent` overrides what the link announces — `null` to say nothing, `'step'` or `'location'`
+where the link is not a page.
+
+**Measured in the built docs app, on `/components/button`:** a button to `/components/button`
+announces `aria-current="page"`; a button to `/` announces `aria-current="true"`; the three buttons
+pointing elsewhere carry no attribute at all. Both active links keep the `active` class, so the
+prefix behaviour the class is there for is intact.
+
+**The same fix landed on `ds-sidenav-item` and `ds-sidenav-group`**, which had the identical
+construction — and in the sidenav it was visible, because there the `active` class is painted.
+`ds-sidenav-group` announced nothing at all before; its header now follows the same rule.
+
+**One mechanism detail worth recording, because it cost an afternoon.**
+`RouterLinkActive.update()` calls `removeAttribute('aria-current')` on its host in a microtask
+whenever its own `ariaCurrentWhenActive` is unset. A template binding of `[attr.aria-current]` on
+the same element is therefore written and then silently wiped — which is why the first
+implementation measured correct values internally and rendered no attribute. The value has to go
+through `ariaCurrentWhenActive`, and `docs/agent/` says so now.
+

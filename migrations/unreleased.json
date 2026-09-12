@@ -67,20 +67,113 @@
       "searchHints": [
         "extends TooltipDirective",
         "extends TableComponent",
+        "extends ButtonComponent",
+        "extends SidenavItemComponent",
+        "extends SidenavGroupComponent",
         "extends "
       ],
       "detect": [
         "extends TooltipDirective",
-        "extends TableComponent"
+        "extends TableComponent",
+        "extends ButtonComponent",
+        "extends SidenavItemComponent",
+        "extends SidenavGroupComponent"
       ],
       "verify": "The consumer app type-checks, and no subclass declares `override` on a member the base no longer has.",
-      "note": "TooltipDirective gained `dsTooltipWhenClipped` and `tipText`. TableComponent lost `cellPopoverText`, `isClipped`, `onCellClipClick` and `onHeaderEnter` — the three hand-rolled disclosures it carried, now one directive. The compiler enumerates every collision on the first build, which is why the names live here and not in the action."
+      "note": "TooltipDirective gained `dsTooltipWhenClipped` and `tipText`; ButtonComponent gained the five destination modifiers plus `routerLinkActiveOptions`, `ariaCurrent` and two resolvers; SidenavItemComponent and SidenavGroupComponent each gained `ariaCurrent` and two resolvers. TableComponent lost `cellPopoverText`, `isClipped`, `onCellClipClick` and `onHeaderEnter` — the three hand-rolled disclosures it carried, now one directive. The compiler enumerates every collision on the first build, which is why the names live here and not in the action."
+    },
+    {
+      "id": "button-border-token-names-the-colour",
+      "kind": "token-rename",
+      "old": "--ds-button-border",
+      "new": "--ds-button-border-color",
+      "surface": "style",
+      "action": "Rename the token where you set it.",
+      "appliesWhen": "Only a stylesheet that sets `--ds-button-border`. `--ds-button-border-width` is a different token and is NOT renamed — check the word boundary before replacing.",
+      "pitfall": "A blind replace of `--ds-button-border` also rewrites `--ds-button-border-width` into `--ds-button-border-color-width`, which resolves to nothing and drops the declaration.",
+      "restore": null,
+      "searchHints": [
+        "--ds-button-border"
+      ],
+      "detect": [
+        "--ds-button-border"
+      ],
+      "verify": "No stylesheet names `--ds-button-border` without the `-color` or `-width` suffix.",
+      "note": "The token sets the border COLOUR, and since the width moved out to `--ds-button-border-width` the bare name read as a `border` shorthand. Rename the longer `--ds-button-border-disabled` first — it is a separate entry, and the shorter name is a prefix of it."
+    },
+    {
+      "id": "button-border-disabled-token-names-the-colour",
+      "kind": "token-rename",
+      "old": "--ds-button-border-disabled",
+      "new": "--ds-button-border-color-disabled",
+      "surface": "style",
+      "action": "Rename the token where you set it.",
+      "appliesWhen": "Only a stylesheet that sets `--ds-button-border-disabled`.",
+      "pitfall": null,
+      "restore": null,
+      "searchHints": [
+        "--ds-button-border-disabled"
+      ],
+      "detect": [
+        "--ds-button-border-disabled"
+      ],
+      "verify": "No stylesheet names `--ds-button-border-disabled`.",
+      "note": "Same correction as the resting colour beside it. Rename this one FIRST: the shorter `--ds-button-border` is a prefix of it, so the other entry run first would corrupt this name."
+    },
+    {
+      "id": "link-aria-current-is-exact",
+      "kind": "behavior",
+      "old": "ds-button[routerLink]",
+      "new": null,
+      "surface": [
+        "typescript",
+        "none"
+      ],
+      "action": "Update any assertion that expected `aria-current=\"page\"` on a link whose destination is a PREFIX of the current URL — it reads `true` now.",
+      "appliesWhen": "Only a `routerLink` destination on `ds-button`, `ds-sidenav-item` or `ds-sidenav-group`, and only where the destination is an ancestor of the current URL. An exact destination still announces `page`. Nothing changes on screen: the `active` class still matches by prefix.",
+      "pitfall": "Nothing renders differently, so a screen is no evidence either way — the only readers are a screen reader and a test that reads the attribute.",
+      "restore": "ariaCurrent=\"page\"",
+      "searchHints": [
+        "aria-current",
+        "routerLinkActive"
+      ],
+      "detect": [
+        "aria-current=\"page\"",
+        "getAttribute('aria-current')",
+        "toHaveAttribute('aria-current'"
+      ],
+      "verify": "A link whose destination IS the current URL announces `page`; a link to a section the reader is inside announces `true`; every other link announces nothing.",
+      "note": "`aria-current` was derived from `routerLinkActive`, which matches by prefix, so a back-link claimed to be the page the reader was leaving. ARIA separates them: `page` is the page you are on, `true` is the current section or an ancestor. `ariaCurrent` overrides the result where a link is a step or a location rather than a page, and `null` silences it."
+    },
+    {
+      "id": "router-link-input-accepts-a-urltree",
+      "kind": "behavior",
+      "old": "ds-button[routerLink]",
+      "new": null,
+      "surface": "typescript",
+      "action": "Handle `UrlTree` where you read a `routerLink` value back off one of these components, or override the input in a subclass.",
+      "appliesWhen": "Only code that READS or OVERRIDES `routerLink` on `ds-button`, `ds-sidenav-item` or `ds-sidenav-group`. Writing it is unaffected — every value that worked before still works.",
+      "pitfall": "A widened union is source-compatible for whoever writes the value and breaking for whoever reads it back, so a consumer feels this only in a type error far from the binding — `link.split('/')` on a value that may now be a `UrlTree`.",
+      "restore": null,
+      "searchHints": [
+        "routerLink"
+      ],
+      "detect": [
+        ".routerLink()",
+        "extends ButtonComponent",
+        "extends SidenavItemComponent",
+        "extends SidenavGroupComponent"
+      ],
+      "verify": "The consumer app type-checks with no cast added at a routerLink read.",
+      "note": "`string | readonly unknown[] | null` became `DsRouterLink`, which adds `UrlTree`. It is what makes `relativeTo` and `preserveFragment` reachable without an input each. A subclass overriding the input breaks on the invariant `equal` position of `InputSignalWithTransform` even where the values are compatible."
     }
   ],
   "informational": [
     "`ds-button` takes five more style hooks — `--ds-button-font-family`, `--ds-button-line-height`, `--ds-button-border-width`, `--ds-button-label-color-hover` and `--ds-button-label-color-active`. Every one defaults to the value the stylesheet read before it, so nothing moves for a button that sets none of them. Worth knowing if you reached the same values the hard way: `ds-button { --font-sans: … }` and a subtree override of `--border-width-default` both have a hook of their own now, and neither of those workarounds stops working.",
     "`ds-stat` takes two more hooks beside the existing `--ds-stat-value-white-space`: `--ds-stat-value-lines` puts the ellipsis on the line you name once the value wraps, and `--ds-stat-value-wrap: anywhere` breaks a word wider than the tile. Both default to the shape the component already had, so a tile that sets neither is unaffected by them.",
-    "`dsTooltipWhenClipped` is public on the tooltip directive: the tip opens only while its host is showing less text than it holds, and with no `dsTooltip` text it discloses the host's own text. `isTextClipped(element)` from `/core` is the same test on its own — horizontal only, descendants included. Additive; an existing `[dsTooltip]` binding behaves exactly as before."
+    "`dsTooltipWhenClipped` is public on the tooltip directive: the tip opens only while its host is showing less text than it holds, and with no `dsTooltip` text it discloses the host's own text. `isTextClipped(element)` from `/core` is the same test on its own — horizontal only, descendants included. Additive; an existing `[dsTooltip]` binding behaves exactly as before.",
+    "`ds-button` forwards `fragment`, `queryParams`, `queryParamsHandling`, `target` and `rel` to the anchor it renders, and `routerLink` on it, `ds-sidenav-item` and `ds-sidenav-group` now also accepts a `UrlTree` for the options with no input of their own. All additive. If you kept a hand-written button class for controls that needed one of these, it can go (delete list: hand-written-button-class-for-modifiers).",
+    "`routerLinkActiveOptions` and `ariaCurrent` are public on the same three components — the first moves what the `active` class matches, the second overrides what the link announces. Neither is needed for the corrected default."
   ],
   "deleteList": [
     {
@@ -112,6 +205,30 @@
       ],
       "why": "the full-value popover is gone; a clipped cell opens a tooltip instead",
       "replaceWith": "the tooltip panel, if the disclosure needs styling at all"
+    },
+    {
+      "id": "hand-written-button-class-for-modifiers",
+      "surface": [
+        "style",
+        "template"
+      ],
+      "find": [
+        "class=\"btn",
+        "class=\"btn btn--",
+        ".btn--primary"
+      ],
+      "why": "the destination modifiers that forced a control to stay hand-written — `fragment`, `queryParams`, `target`, `rel` — are inputs on `ds-button` now",
+      "replaceWith": "`ds-button` with the matching input; keep the class only for a control that is genuinely not a button"
+    },
+    {
+      "id": "routerlink-imported-for-extra-inputs",
+      "surface": "typescript",
+      "find": [
+        "RouterLink",
+        "imports: [RouterLink"
+      ],
+      "why": "importing it to write `[queryParams]` or `[fragment]` on a `<ds-button>` put a second RouterLink on the host that disagreed with the anchor\\u2019s about the destination",
+      "replaceWith": "the component\\u2019s own inputs; keep the import where you use `RouterLink` on your own anchors"
     }
   ]
 }
