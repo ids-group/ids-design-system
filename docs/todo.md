@@ -157,20 +157,19 @@ item and nothing else.
 
 <!-- todo-index:end -->
 
-## What is actionable today (recut 2026-09-10)
+## What is actionable today (recut 2026-09-12)
 
-**The board is not waiting on hands, it is waiting on verdicts.** Twelve decks are open against it
-and nine of them have a twin here, so one answer closes two lines. Nothing in *Decisions* is blocked
-on effort.
+**The board is waiting on verdicts, not on hands.** Seven decks are open against it and five have a
+twin here, so one answer closes two lines. Nothing in *Decisions* is blocked on effort.
 
 **The one P1 is the only item where somebody cannot use the library at all.** The peers declare
 `^21.2.0`, so an app on Angular 22 needs `--legacy-peer-deps` to install this package. It is DECIDED
 as not-now and kept so the decision is not re-litigated; the probe behind it is in the item, along
 with the price — TypeScript 6.0 is mandatory and the 22 CLI wants Node ≥ 24.15.0.
 
-**Every *Ask* is gated on something outside this repo.** Three gate themselves on a first consumer
-request, which Stas held when asked directly, and the rest hang off deck verdicts. So no ask is
-buildable today without either a consumer report or a decision.
+**No consumer Ask is open.** The last one — `TableRowAction`'s per-row label and divider — closed on
+2026-09-12 when both refused halves shipped. What remains under *Asks* is our own work and Stas's
+own requests, and those hang off deck verdicts.
 
 **The three token items are ONE story and must not be taken separately.** The single-source colour
 engine is the spec; "theme recipe vs hand-tuned picks" is a question INSIDE that spec, by its own
