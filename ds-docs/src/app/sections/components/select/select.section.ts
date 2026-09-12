@@ -5,10 +5,6 @@ import { SelectComponent } from 'ds/select';
 import type { SelectOption } from 'ds/select';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import { DocsNonmodalNoteComponent } from '../../../shared/docs-nonmodal-note.component';
-import {
-  DocsTruncationComponent,
-  TruncationRule,
-} from '../../../shared/docs-truncation.component';
 
 @Component({
   selector: 'section-components-select',
@@ -18,7 +14,6 @@ import {
     DsPanelFooterTemplateDirective,
     SelectComponent,
     DocsSectionComponent,
-    DocsTruncationComponent,
     DocsNonmodalNoteComponent,
   ],
   encapsulation: ViewEncapsulation.Emulated,
@@ -127,17 +122,5 @@ export class SelectSection {
     { label: 'Viewer', value: 'viewer', icon: 'eye' },
     { label: 'Editor', value: 'editor', icon: 'edit' },
     { label: 'Admin', value: 'admin', icon: 'lock' },
-  ];
-
-  protected readonly truncationRules: TruncationRule[] = [
-    {
-      field: 'Option label',
-      behaviour:
-        'Single line, ellipsis at control width. Panel scrolls internally past its 320px max-height.',
-    },
-    {
-      field: 'Selected value',
-      behaviour: 'Single line, ellipsis when overflowing the control.',
-    },
   ];
 }

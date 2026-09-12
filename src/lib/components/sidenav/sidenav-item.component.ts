@@ -1,3 +1,9 @@
+import { dsAriaCurrent } from '@ids-group-ltd/ids-design-system/components';
+import type {
+  DsAriaCurrent,
+  DsLinkModifiers,
+  DsRouterLink,
+} from '@ids-group-ltd/ids-design-system/components';
 import { NgTemplateOutlet } from '@angular/common';
 import {
   Component,
@@ -36,9 +42,13 @@ export class SidenavItemComponent {
   /** Plain `href` target, used when `routerLink` is not set. */
   readonly href = input<string>('');
   /** Angular `RouterLink` target — string or array form for dynamic segments. */
-  readonly routerLink = input<string | readonly unknown[] | null>(null);
+  readonly routerLink = input<DsRouterLink>(null);
   /** Applies the active style; also drives `aria-current` when not using `routerLink`. */
   readonly active = input(false, { transform: booleanAttribute });
+  /** Overrides what an active item announces. Unset, an exact match announces `page` and a prefix
+   *  match announces `true` — in a sidenav the prefix case is "you are in this section", which is
+   *  exactly what `true` means. */
+  readonly ariaCurrent = input<DsAriaCurrent | null | undefined>(undefined);
   /** Numeric count shown at the end of the item. */
   readonly badge = input<number | null>(null);
   /** Shows an alert dot alongside the badge. */
@@ -59,6 +69,13 @@ export class SidenavItemComponent {
   });
 
   private readonly sidenav = inject(SIDENAV, { optional: true });
+
+  private readonly noModifiers = computed<DsLinkModifiers>(() => ({}));
+  protected readonly ariaCurrentResolved = dsAriaCurrent(
+    this.routerLink,
+    this.noModifiers,
+    this.ariaCurrent,
+  );
 
   protected readonly railResolved = computed(
     () => this.rail() ?? this.sidenav?.rail() ?? true,

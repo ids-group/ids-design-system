@@ -96,3 +96,46 @@ The token surface has four holes of its own, found while branding the button to 
 The consumer is at 18 of 31 today and holds a hand-written `.btn` class for the other 13 — the same
 class the previous Ask retired for the first 18. Preference 1 closes it: all 31 controls on one
 component, and the class deleted rather than kept at a third of its former size.
+
+## Answered 2026-09-12 — preference 1, and the `UrlTree` behind it
+
+`fragment`, `queryParams`, `queryParamsHandling`, `target` and `rel` are inputs on `ds-button`.
+Each is a pass-through to the anchor the component already renders, and each is the same shape as
+`type` and `loading`: meaningless on a destination that cannot carry it, and dev-warned there
+rather than silently dropped — `fragment` and the two query inputs need a `routerLink`, `target`
+and `rel` work on either link.
+
+**`routerLink` also accepts a `UrlTree` now**, which is the cheaper half of the same answer: it
+reaches the `UrlCreationOptions` that have no input here — `relativeTo`, `preserveFragment` — with
+no new surface at all.
+
+```html
+<ds-button [routerLink]="['/ai-solutions', slug]" fragment="enquiry">Talk to us</ds-button>
+<ds-button [href]="demoUrl" target="_blank" rel="noopener">Open the demo</ds-button>
+```
+
+```ts
+// for the options with no input of their own
+protected readonly enquiry = this.router.createUrlTree(['/ai-solutions', slug], {
+  fragment: 'enquiry',
+});
+```
+
+**Measured in the built docs app, all three arms:** `[queryParams]="{ from: 'buttons' }"` renders
+`href="/components/input?from=buttons"`; `target="_blank" rel="noopener"` reach the anchor
+verbatim; and the plain `routerLink` destination is unchanged.
+
+**The same widening landed on `ds-sidenav-item` and `ds-sidenav-group`**, because the Ask is right
+that this was a library-wide shape rather than a button oversight. The modifier INPUTS stayed on
+the button, where the request was measured — the two sidenav components take the `UrlTree`, which
+covers the routed half of the gap for them at no cost.
+
+Preference 2 (one `destination` object) was declined: it closes the same gap while forcing a field
+in the class where an attribute used to do, and leaves two roads to the same destination inside the
+component. Preference 3 was declined because it would put back the hand-written class the previous
+Ask retired.
+
+**The `.btn` class can go.** All 31 controls move now (delete list:
+`hand-written-button-class-for-modifiers`), and so can any `RouterLink` import added solely to
+write the missing inputs on a `<ds-button>` (delete list: `routerlink-imported-for-extra-inputs`).
+

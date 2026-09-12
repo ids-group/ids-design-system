@@ -1,3 +1,9 @@
+/* Truncation contract:
+   Token chip in the input — Single line, ellipsis at ~16 ch. Tooltip on hover when clipped.
+   Option label in dropdown — Single line, ellipsis. Tooltip on hover always (the popover is
+     narrow).
+   Secondary metadata — Single line, ellipsis. Drop before the primary label clips. */
+
 /* The listbox panel is portaled through a TemplatePortal, so its DOM still carries
    this component's encapsulation attributes — which is why both halves are styled
    here rather than the panel living in a global partial. */

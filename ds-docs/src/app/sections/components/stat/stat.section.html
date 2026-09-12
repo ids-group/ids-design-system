@@ -2,8 +2,6 @@
   anchor="stat"
   eyebrow="Components"
   title="Stats">
-  <docs-truncation [rules]="truncationRules" />
-
   <span lede>
     Headline metric with an optional delta. Up/down arrows for movement vs a
     baseline.
@@ -112,48 +110,75 @@
   </h3>
 
   <p class="block-desc t-s">
-    The value line is
-    <code class="t-mono-inline">
-      white-space: nowrap
-    </code>, which is right for
-    the number this tile was built around and wrong for a date range or a status
-    phrase — that used to be a reason to reach for the slot above and undo it.
-    Two hooks instead:
+    The value clips to one line and discloses the rest on hover and on keyboard
+    focus, the same treatment every other text-bearing component in the library
+    uses. Three hooks reshape that, and they compose:
     <code class="t-mono-inline">
       --ds-stat-value-white-space
-    </code> and
+    </code> wraps instead of clipping,
     <code class="t-mono-inline">
-      --ds-stat-value-font-size
-    </code>, the second
-    working at every <code class="t-mono-inline">size</code> rather than only
-    the default.
+      --ds-stat-value-lines
+    </code> then puts the ellipsis on the line you name, and
+    <code class="t-mono-inline">
+      --ds-stat-value-wrap
+    </code> breaks a word wider than the tile.
   </p>
 
   <div class="phrase-row">
     <div class="phrase-cell">
-      <ds-stat
-        label="Enrollment window"
-        value="Feb 1 – Feb 28, 2026"
-        class="stat-phrase" />
-    </div>
+      <p class="phrase-note t-xs">
+        default
+      </p>
 
-    <div class="phrase-cell">
       <ds-stat
         label="Enrollment window"
         value="Feb 1 – Feb 28, 2026" />
     </div>
+
+    <div class="phrase-cell">
+      <p class="phrase-note t-xs">
+        white-space: normal
+      </p>
+
+      <ds-stat
+        label="Enrollment window"
+        value="Feb 1 – Feb 28, 2026"
+        class="stat-wrap" />
+    </div>
+
+    <div class="phrase-cell">
+      <p class="phrase-note t-xs">
+        + lines: 2
+      </p>
+
+      <ds-stat
+        label="Enrollment window"
+        value="Feb 1 – Feb 28, 2026"
+        class="stat-clamp" />
+    </div>
+
+    <div class="phrase-cell">
+      <p class="phrase-note t-xs">
+        + wrap: anywhere
+      </p>
+
+      <ds-stat
+        label="Территория"
+        value="Северо-Западный федеральный округ"
+        class="stat-anywhere" />
+    </div>
   </div>
 
   <p class="block-desc t-s">
-    Left: both hooks set. Right: the same value untouched — with
+    The dashed outline marks where the 240px column ends. Wrapping alone does not
+    keep a value inside it — a single word wider than the tile still paints past
+    the edge, which is what the fourth hook is for. Note that
+    <code class="t-mono-inline">
+      lines
+    </code> only bites once the value wraps: a clamp on a
     <code class="t-mono-inline">
       nowrap
-    </code> and no
-    <code class="t-mono-inline">
-      overflow
-    </code> on the card, the phrase spills
-    straight past the tile's edge. That is the behaviour every existing tile
-    keeps, since the defaults did not move.
+    </code> box has nothing to clamp.
   </p>
 
   <h3 class="block-title t-h4">

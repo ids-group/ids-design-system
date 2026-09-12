@@ -1,3 +1,6 @@
+/* Truncation contract:
+   Status pill — No clip — lifecycle labels are fixed and short (Planning, Active, etc.). */
+
 /* Status dot atom — ported verbatim from vendor/claude-design-ds/components.css */
 :host {
   --_status-dot-color: var(--ds-status-dot-color, var(--icon-muted));

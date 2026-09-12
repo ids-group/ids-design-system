@@ -34,7 +34,12 @@ import { NgTemplateOutlet } from '@angular/common';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { SpinnerComponent } from '@ids-group-ltd/ids-design-system/components/spinner';
 import { DsControlValueAccessor } from '@ids-group-ltd/ids-design-system/components';
-import { inFieldGroup } from '@ids-group-ltd/ids-design-system/components/field-group';
+import {
+  describedByIds,
+  groupInvalid,
+  groupMessageId,
+  inFieldGroup,
+} from '@ids-group-ltd/ids-design-system/components/field-group';
 import { DsStaticPreview } from '@ids-group-ltd/ids-design-system/components';
 import {
   isSelectOptionGroup,
@@ -222,7 +227,9 @@ export class SelectComponent
   });
   protected readonly message = this.fieldMessage.message;
   protected readonly controlState = this.fieldMessage.controlState;
-  protected readonly invalidResolved = this.fieldMessage.invalid;
+  protected readonly groupMessage = groupMessageId();
+  protected readonly describedByIds = describedByIds;
+  protected readonly invalidResolved = groupInvalid(this.fieldMessage.invalid);
   protected optionId(flatIndex: number): string {
     return `${this.uid}-opt-${flatIndex}`;
   }

@@ -1,9 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
-import {
-  DocsTruncationComponent,
-  TruncationRule,
-} from '../../../shared/docs-truncation.component';
 
 interface Breakpoint {
   readonly token: string;
@@ -98,7 +94,7 @@ const COL_CAPS: readonly ColumnCap[] = [
 @Component({
   selector: 'section-foundations-layout',
   standalone: true,
-  imports: [DocsSectionComponent, DocsTruncationComponent],
+  imports: [DocsSectionComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './layout.section.html',
   styleUrl: './layout.section.scss',
@@ -107,22 +103,6 @@ export class LayoutSection {
   protected readonly breakpoints = BREAKPOINTS;
   protected readonly tiers = TIERS;
   protected readonly colCaps = COL_CAPS;
-
-  protected readonly truncationRules: TruncationRule[] = [
-    {
-      field: 'Breakpoint label',
-      behaviour: 'Single line, ellipsis. Token names are short — never wrap.',
-    },
-    {
-      field: 'Grid tier description',
-      behaviour:
-        'Wraps to two lines max. Never clipped — the card grows vertically.',
-    },
-    {
-      field: 'Cap row use',
-      behaviour: 'Wraps freely; the row grows vertically to fit.',
-    },
-  ];
 
   protected cols(count: number): readonly null[] {
     return Array.from({ length: count }, () => null);

@@ -68,7 +68,12 @@ import { DsPanelFooterTemplateDirective } from '@ids-group-ltd/ids-design-system
 import { DsGroupLabelTemplateDirective } from '@ids-group-ltd/ids-design-system/components';
 import { DsCreateTemplateDirective } from '@ids-group-ltd/ids-design-system/components';
 import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
-import { inFieldGroup } from '@ids-group-ltd/ids-design-system/components/field-group';
+import {
+  describedByIds,
+  groupInvalid,
+  groupMessageId,
+  inFieldGroup,
+} from '@ids-group-ltd/ids-design-system/components/field-group';
 import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 
 let nextId = 0;
@@ -262,7 +267,9 @@ export class AutocompleteComponent<T = unknown>
   });
   protected readonly message = this.fieldMessage.message;
   protected readonly controlState = this.fieldMessage.controlState;
-  protected readonly invalidResolved = this.fieldMessage.invalid;
+  protected readonly groupMessage = groupMessageId();
+  protected readonly describedByIds = describedByIds;
+  protected readonly invalidResolved = groupInvalid(this.fieldMessage.invalid);
 
   protected readonly optionTemplate = contentChild(DsOptionTemplateDirective, {
     read: TemplateRef,

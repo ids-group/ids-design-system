@@ -1,5 +1,9 @@
 @use '../../styles/focus' as focus;
 
+/* Truncation contract:
+   Head label — Single line, ellipsis. Tooltip on hover when clipped.
+   Body — Wraps, no clip — the panel exists to give body text room. */
+
 :host {
   --_accordion-header-bg-color:       var(--ds-accordion-header-bg-color,       var(--surface-default));
   --_accordion-header-text-color:     var(--ds-accordion-header-text-color,     var(--text-primary));

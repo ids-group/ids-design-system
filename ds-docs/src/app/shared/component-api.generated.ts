@@ -1318,11 +1318,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "routerLink",
         "kind": "input",
-        "type": "string | readonly unknown[] | null",
+        "type": "DsRouterLink",
         "union": null,
         "default": "null",
         "required": false,
-        "description": "`RouterLink` target. Set it and the button renders an `<a [routerLink]>` with `routerLinkActive`: middle-click, open-in-new-tab and the announced \"link\" role depend on the element, not on the look."
+        "description": "`RouterLink` target. Set it and the button renders an `<a [routerLink]>` with `routerLinkActive`: middle-click, open-in-new-tab and the announced \"link\" role depend on the element, not on the look. Accepts a `UrlTree` as well as a path or a command array — `Router.createUrlTree` is the way to reach the `UrlCreationOptions` that have no input of their own here (`relativeTo`, `preserveFragment`)."
       },
       {
         "name": "href",
@@ -1332,6 +1332,76 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Plain `href` target, used when `routerLink` is not set — an external address or a download. Renders an `<a href>`; same reasoning as `routerLink`."
+      },
+      {
+        "name": "fragment",
+        "kind": "input",
+        "type": "string | undefined",
+        "union": null,
+        "default": "undefined",
+        "required": false,
+        "description": "Hash to append to a `routerLink` destination — the section of the page to land on. routerLink-only: on an `href` put it in the URL, and on a plain button it is ignored with a dev warning."
+      },
+      {
+        "name": "queryParams",
+        "kind": "input",
+        "type": "Params | null | undefined",
+        "union": null,
+        "default": "undefined",
+        "required": false,
+        "description": "Query parameters for a `routerLink` destination. routerLink-only, same as `fragment`."
+      },
+      {
+        "name": "queryParamsHandling",
+        "kind": "input",
+        "type": "QueryParamsHandling | null | undefined",
+        "union": null,
+        "default": "undefined",
+        "required": false,
+        "description": "How the destination's query merges with the current one — `'merge'`, `'preserve'` or `'replace'`. routerLink-only."
+      },
+      {
+        "name": "target",
+        "kind": "input",
+        "type": "string | undefined",
+        "union": null,
+        "default": "undefined",
+        "required": false,
+        "description": "Browsing context for the link — `'_blank'` and the rest. Both link destinations take it; on a plain button it is ignored with a dev warning."
+      },
+      {
+        "name": "rel",
+        "kind": "input",
+        "type": "string | undefined",
+        "union": null,
+        "default": "undefined",
+        "required": false,
+        "description": "`rel` for the link. Pair it with `target=\"_blank\"`: without `noopener` the opened page can reach back through `window.opener`. Both link destinations take it."
+      },
+      {
+        "name": "routerLinkActiveOptions",
+        "kind": "input",
+        "type": "{ exact: boolean } | IsActiveMatchOptions",
+        "union": null,
+        "default": "{ exact: false }",
+        "required": false,
+        "description": "How `routerLinkActive` decides the `active` CLASS — prefix by default, so a section link stays lit inside its own pages. It does NOT decide `aria-current`, which is exact by construction; see `ariaCurrent`."
+      },
+      {
+        "name": "ariaCurrent",
+        "kind": "input",
+        "type": "DsAriaCurrent | null | undefined",
+        "union": [
+          "page",
+          "step",
+          "location",
+          "date",
+          "time",
+          "true"
+        ],
+        "default": "undefined",
+        "required": false,
+        "description": "Overrides what the link announces. Unset, an exact match announces `page` and a prefix match announces `true`, which is what ARIA means by each; pass `null` to announce nothing, or one of the other values when the link is a step or a location rather than a page."
       },
       {
         "name": "type",
@@ -2511,6 +2581,51 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
+        "name": "hint",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Helper text shown below the control."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
+      },
+      {
+        "name": "warning",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph here alone."
+      },
+      {
         "name": "size",
         "kind": "input",
         "type": "DsSize | null",
@@ -2530,7 +2645,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Draws the error border on the whole group. A single segment cannot be invalid on its own: the border belongs to the group."
+        "description": "Paints the error state WITHOUT a message of its own — for when the text lives in a form-level summary. Use `error` to show text; binding either one is enough, exactly as on a field. Segments read `invalidResolved`, not this, so an `error` string announces itself without the flag beside it."
       },
       {
         "name": "disabled",
@@ -5736,11 +5851,27 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "routerLink",
         "kind": "input",
-        "type": "string | readonly unknown[] | null",
+        "type": "DsRouterLink",
         "union": null,
         "default": "null",
         "required": false,
         "description": "Makes the group a destination of its own as well as a container: the header navigates here and the caret becomes a separate control, because one control cannot both go somewhere and stay to open something. Unset (the default) the whole header only expands — a heading that navigates closes the page being read the moment someone reaches for the group beneath it."
+      },
+      {
+        "name": "ariaCurrent",
+        "kind": "input",
+        "type": "DsAriaCurrent | null | undefined",
+        "union": [
+          "page",
+          "step",
+          "location",
+          "date",
+          "time",
+          "true"
+        ],
+        "default": "undefined",
+        "required": false,
+        "description": "Overrides what the group header announces when it is itself a destination. Unset, the page the reader is on announces `page` and the section containing it announces `true`."
       },
       {
         "name": "expanded",
@@ -5794,7 +5925,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "routerLink",
         "kind": "input",
-        "type": "string | readonly unknown[] | null",
+        "type": "DsRouterLink",
         "union": null,
         "default": "null",
         "required": false,
@@ -5808,6 +5939,22 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Applies the active style; also drives `aria-current` when not using `routerLink`."
+      },
+      {
+        "name": "ariaCurrent",
+        "kind": "input",
+        "type": "DsAriaCurrent | null | undefined",
+        "union": [
+          "page",
+          "step",
+          "location",
+          "date",
+          "time",
+          "true"
+        ],
+        "default": "undefined",
+        "required": false,
+        "description": "Overrides what an active item announces. Unset, an exact match announces `page` and a prefix match announces `true` — in a sidenav the prefix case is \"you are in this section\", which is exactly what `true` means."
       },
       {
         "name": "badge",
@@ -8428,6 +8575,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "120",
         "required": false,
         "description": "Milliseconds before the tip appears. Hiding is immediate — this delay only ever suppresses a tip the pointer passed over on its way somewhere else."
+      },
+      {
+        "name": "dsTooltipWhenClipped",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Show the tip only while the host is actually showing less text than it holds. For a label that already reads in full, a tip repeating it is noise — which is why an unconditional tip on clipped text was never offered as the default. Re-tested on every open, so a tip appears and stops appearing as the column, panel or window is resized, with no observer to run. With this on, `dsTooltip` may be left empty and the host's own text is disclosed. That is what makes it usable on projected content, where the component holding the tip cannot know what it was handed."
       }
     ],
     "outputs": []

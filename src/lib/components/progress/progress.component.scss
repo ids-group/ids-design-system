@@ -1,3 +1,7 @@
+/* Truncation contract:
+   Value — Clamped to 0..100 in the wrapper. Pass percentages, not absolute counts.
+   Indeterminate — Width input is ignored. Animation runs at --duration-loop-slow. */
+
 :host {
   --_progress-height:      var(--ds-progress-height,      var(--progress-h));
   --_progress-track-color: var(--ds-progress-track-color, var(--surface-muted));

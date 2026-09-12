@@ -1,3 +1,9 @@
+import { dsAriaCurrent } from '@ids-group-ltd/ids-design-system/components';
+import type {
+  DsAriaCurrent,
+  DsLinkModifiers,
+  DsRouterLink,
+} from '@ids-group-ltd/ids-design-system/components';
 import {
   Component,
   ViewEncapsulation,
@@ -30,11 +36,21 @@ export class SidenavGroupComponent {
    *  and the caret becomes a separate control, because one control cannot both go somewhere and
    *  stay to open something. Unset (the default) the whole header only expands — a heading that
    *  navigates closes the page being read the moment someone reaches for the group beneath it. */
-  readonly routerLink = input<string | readonly unknown[] | null>(null);
+  readonly routerLink = input<DsRouterLink>(null);
+  /** Overrides what the group header announces when it is itself a destination. Unset, the page
+   *  the reader is on announces `page` and the section containing it announces `true`. */
+  readonly ariaCurrent = input<DsAriaCurrent | null | undefined>(undefined);
   /** Two-way bindable open state; defaults open so a non-expandable group always shows its items. */
   readonly expanded = model<boolean>(true);
 
   /** A header that navigates hands the caret its own button; one that does not is the button. */
+  private readonly noModifiers = computed<DsLinkModifiers>(() => ({}));
+  protected readonly ariaCurrentResolved = dsAriaCurrent(
+    this.routerLink,
+    this.noModifiers,
+    this.ariaCurrent,
+  );
+
   protected readonly headerNavigates = computed(
     () => this.expandable() && this.routerLink() !== null,
   );

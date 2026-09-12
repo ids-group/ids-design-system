@@ -7,10 +7,6 @@ import { InputComponent } from 'ds/input';
 import { ModalCardComponent, ModalComponent, ModalService } from 'ds/modal';
 import { SelectComponent } from 'ds/select';
 import type { SelectOption } from 'ds/select';
-import {
-  DocsTruncationComponent,
-  TruncationRule,
-} from '../../../shared/docs-truncation.component';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({
@@ -20,7 +16,6 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
     BadgeComponent,
     BannerComponent,
     ButtonComponent,
-    DocsTruncationComponent,
     SelectComponent,
     InputComponent,
     ModalCardComponent,
@@ -32,29 +27,6 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   styleUrls: ['../../../shared/section-demo.scss', './modal.section.scss'],
 })
 export class ModalSection {
-  protected readonly truncationRules: TruncationRule[] = [
-    {
-      field: 'Title',
-      behaviour:
-        'Single line, ellipsis on overflow. Tooltip on hover when clipped. Keep the close button visible.',
-    },
-    {
-      field: 'Body',
-      behaviour:
-        'Wrap, no clip. Scrolls inside the body when content exceeds the modal height.',
-    },
-    {
-      field: 'Actions',
-      behaviour:
-        'Single line per label. If the row overflows, stack vertically full-width.',
-    },
-    {
-      field: 'Form fields inside body',
-      behaviour:
-        'Inherit field truncation rules. Hints wrap to 2 lines; errors never clip.',
-    },
-  ];
-
   protected readonly statusSpecimens: {
     status: DsStatus;
     role: string;

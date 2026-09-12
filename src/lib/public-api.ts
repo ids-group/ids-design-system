@@ -315,8 +315,13 @@ export {
   flattenDsOptions,
   inheritDsConfig,
   isDsOptionGroup,
+  isTextClipped,
   provideDsConfig,
 } from '@ids-group-ltd/ids-design-system/core';
+export type {
+  DsAriaCurrent,
+  DsRouterLink,
+} from '@ids-group-ltd/ids-design-system/components';
 export type {
   DsConfig,
   DsControlWidth,

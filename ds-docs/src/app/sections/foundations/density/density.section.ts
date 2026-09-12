@@ -1,9 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
-import {
-  DocsTruncationComponent,
-  TruncationRule,
-} from '../../../shared/docs-truncation.component';
 
 interface Tier {
   readonly key: 'ultra-compact' | 'compact' | 'cozy' | 'comfy';
@@ -47,28 +43,11 @@ const TIERS: readonly Tier[] = [
 @Component({
   selector: 'section-foundations-density',
   standalone: true,
-  imports: [DocsSectionComponent, DocsTruncationComponent],
+  imports: [DocsSectionComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './density.section.html',
   styleUrl: './density.section.scss',
 })
 export class DensitySection {
   protected readonly tiers = TIERS;
-
-  protected readonly truncationRules: TruncationRule[] = [
-    {
-      field: 'Sandbox label',
-      behaviour:
-        'Single line, ellipsis. Tier names are short by design — no wrap needed.',
-    },
-    {
-      field: 'Demo button label',
-      behaviour:
-        'Inherits Button truncation — single line, ellipsis on overflow.',
-    },
-    {
-      field: 'Demo list row',
-      behaviour: 'Label single line with ellipsis; trailing meta never clips.',
-    },
-  ];
 }

@@ -93,3 +93,26 @@ what it says — which is the failure the three-tier token architecture exists t
 
 Each gap is one `var(--ds-button-…, <current value>)` at the point the value is already read, so no
 default moves and nothing needs a migration entry.
+
+## Answered 2026-09-11 — all four, as asked
+
+`--ds-button-font-family`, `--ds-button-line-height`, `--ds-button-border-width`,
+`--ds-button-label-color-hover` and `--ds-button-label-color-active` are public. Each is read where
+the value was already read, and each defaults to what was hardcoded there, so no default moved and
+no migration item was needed.
+
+**Measured in a browser, both arms.** With none of them set: Mulish, line-height 16px, border 1px,
+and a hover label identical to the resting one — the values the old rules produced. Set one at a
+time: the family becomes Courier New with line-height, border and colour unmoved; the line-height
+becomes 48px with the family unmoved; the border width becomes 5px on solid and outline both; and
+the hover label becomes the set colour on solid AND on `variant="text"`.
+
+**One thing changed beyond the ask, and it is why the text variant obeys the hook.** `.v-text` set
+its hover colour as a `color` declaration at `.button.v-text:hover`, which out-ranks the base rule —
+so `--ds-button-label-color-hover` could never have been seen there. It now rebinds the resolver
+instead, like every other variant does. Its default is unchanged: measured `rgb(46, 84, 255)` on
+hover before and after.
+
+**Gap 3's wider question is not closed by this.** The hook makes the inverting outline button
+expressible again, but whether the DS's own outline treatment should invert is a design decision,
+not a token — that conversation is now possible rather than settled.

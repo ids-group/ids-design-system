@@ -8,10 +8,6 @@ import { Component, ViewEncapsulation } from '@angular/core';
 import { BadgeComponent } from 'ds/badge';
 import { StatComponent } from 'ds/stat';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
-import {
-  DocsTruncationComponent,
-  TruncationRule,
-} from '../../../shared/docs-truncation.component';
 
 @Component({
   selector: 'section-components-stat',
@@ -20,7 +16,6 @@ import {
     BadgeComponent,
     StatComponent,
     DocsSectionComponent,
-    DocsTruncationComponent,
     CurrencyPipe,
     DatePipe,
     DecimalPipe,
@@ -35,16 +30,4 @@ export class StatSection {
   protected readonly premium = 4830000;
   protected readonly renewalRate = 0.867;
   protected readonly nextRecompute = new Date('2026-09-01T09:00:00Z');
-
-  protected readonly truncationRules: TruncationRule[] = [
-    {
-      field: 'Stat label',
-      behaviour: 'Single line, ellipsis. Tooltip on hover when clipped.',
-    },
-    {
-      field: 'Stat value',
-      behaviour:
-        'No clip. Use compact notation (₤ 1.2k) before letting numbers wrap.',
-    },
-  ];
 }

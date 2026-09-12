@@ -31,7 +31,8 @@
     <a
       class="group-header"
       routerLinkActive="active"
-      [routerLink]="routerLink()">
+      [routerLink]="routerLink()"
+      [ariaCurrentWhenActive]="ariaCurrentResolved()">
       <ng-container [ngTemplateOutlet]="headerContent" />
     </a>
 

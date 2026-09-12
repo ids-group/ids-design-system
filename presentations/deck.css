@@ -546,3 +546,142 @@ pre strong {
   color: #9fe6b4;
   font-weight: var(--font-weight-bold);
 }
+
+/* ---- decision vocabulary ------------------------------------------------ */
+
+/* Added 2026-09-12, out of three decks that each had to be rebuilt: the patterns below are the
+   ones that turned a wall of lettered options into something answerable at a glance. */
+
+/* Two specimens side by side. The problem is SHOWN here, not described above it. */
+.stage {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+  padding: var(--space-5);
+  margin: var(--space-4) 0 var(--space-5);
+  background: var(--surface-muted);
+  border-radius: var(--radius-md);
+}
+.stage .spec { min-width: 240px; }
+
+/* The line under a specimen saying what it is. Never a sentence. */
+.cap {
+  margin: 0 0 var(--space-2);
+  font: var(--font-weight-bold) var(--font-size-2xs) / var(--line-height-base) var(--font-sans);
+  letter-spacing: var(--letter-spacing-wider);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+/* The ladder: one dot per capability per option, so "how far does each go" is one glance.
+   Filled/empty beats yes/no text — the eye reads the shape of the column, not the words. */
+.dot {
+  display: inline-block;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  vertical-align: -1px;
+}
+.dot.on { background: var(--success); }
+.dot.off {
+  background: var(--neutral-200);
+  box-shadow: inset 0 0 0 1px var(--neutral-300);
+}
+
+/* The verdict sits ON the option, not in a paragraph after all of them. */
+.badge {
+  display: inline-block;
+  margin-bottom: var(--space-2);
+  padding: 3px var(--space-2-5);
+  border-radius: var(--radius-sm);
+  font: var(--font-weight-bold) var(--font-size-2xs) / 1.6 var(--font-sans);
+  letter-spacing: var(--letter-spacing-wider);
+  text-transform: uppercase;
+}
+.badge.is-pick { background: var(--success); color: var(--surface-default); }
+.badge.is-no { background: var(--neutral-300); color: var(--text-secondary); }
+.badge.is-same { background: var(--neutral-200); color: var(--text-secondary); }
+
+/* The first column of a comparison table: the option's name, never wrapped. */
+.rowlabel {
+  font-weight: var(--font-weight-bold);
+  white-space: nowrap;
+}
+
+/* Rows the reader should land on. */
+tr.row-pick { background: var(--success-subtitle); }
+tr.row-today { background: var(--error-subtitle); }
+
+/* For the half that has no picture: what a screen reader says, what the console prints. */
+.says {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-2xs);
+  color: var(--text-secondary);
+}
+
+/* A comparison table keeps its columns and scrolls in its own box; the page never does. */
+@media (max-width: 720px) {
+  table { display: block; overflow-x: auto; }
+}
+
+/* Every option gets a drawn card, and the table is a summary AFTER them — never instead.
+   Added 2026-09-12: «ты предлагаешь выбирать из вариантов, а сами варианты не отрисованы». */
+.opts {
+  display: grid;
+  /* 200px, not more: five options have to share one row or they cannot be compared at a glance.
+     At 1120px that resolves to 211px a card; anything wider drops the fifth onto its own line. */
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-4);
+  margin: var(--space-4) 0 var(--space-6);
+}
+
+.opt {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  background: var(--surface-default);
+  border: var(--border-width-default) solid var(--border-divider);
+  border-radius: var(--ds-radius-panel);
+}
+
+.opt.is-pick {
+  border-color: var(--success);
+  box-shadow: inset 0 0 0 1px var(--success);
+}
+
+.opt.is-today { background: var(--surface-muted); }
+
+.opt > h3 {
+  margin: 0;
+  font: var(--font-weight-bold) var(--font-size-s) / var(--line-height-tight) var(--font-sans);
+}
+
+/* The layers under the specimen: what the DOM gains, what a screen reader says. An option whose
+   difference is invisible still has to be visible SOMEWHERE, or it cannot be compared. */
+.layer {
+  display: grid;
+  grid-template-columns: 46px 1fr;
+  gap: var(--space-2);
+  align-items: start;
+  padding-top: var(--space-2);
+  border-top: var(--border-width-default) dashed var(--border-divider);
+  font-size: var(--font-size-2xs);
+}
+
+.layer dt {
+  margin: 0;
+  font-weight: var(--font-weight-bold);
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wider);
+}
+
+.layer dd {
+  margin: 0;
+  font-family: var(--font-mono);
+  color: var(--text-secondary);
+}
+
+.layer dd.none { color: var(--text-tertiary); font-family: var(--font-sans); font-style: italic; }
+.layer dd.gain { color: var(--success-text); }

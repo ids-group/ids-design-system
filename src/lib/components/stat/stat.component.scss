@@ -1,3 +1,13 @@
+@use '../../styles/text-clip' as text-clip;
+
+/* Truncation contract:
+   Stat label — single line, ellipsis; tip on hover when clipped.
+   Stat value — single line, ellipsis; tip on hover when clipped. Three hooks reshape it and they
+     compose: `--ds-stat-value-white-space: normal` wraps instead of clipping,
+     `--ds-stat-value-lines: N` then puts the ellipsis on line N, and
+     `--ds-stat-value-wrap: anywhere` breaks a word wider than the tile. `lines` only bites once
+     the value wraps — a clamp on a `nowrap` box has nothing to clamp. */
+
 :host {
   --_stat-bg-color:          var(--ds-stat-bg-color,          var(--surface-default));
   --_stat-border:      var(--ds-stat-border,      var(--border-divider));
@@ -7,9 +17,9 @@
   --_stat-value-color: var(--ds-stat-value-color, var(--text-primary));
   --_stat-value-font-size: var(--ds-stat-value-font-size, var(--font-size-h2));
 
-  /* `nowrap` is right for a number and wrong for a phrase, and nothing clips: a long value runs
-     past the tile. The default is open — see docs/todo.md and deck 12. */
   --_stat-value-white-space: var(--ds-stat-value-white-space, nowrap);
+  --_stat-value-lines: var(--ds-stat-value-lines, none);
+  --_stat-value-wrap: var(--ds-stat-value-wrap, normal);
   --_stat-up-color:    var(--ds-stat-up-color,    var(--success-text));
   --_stat-down-color:  var(--ds-stat-down-color,  var(--error-text));
 
@@ -49,6 +59,8 @@
   height: 100%;
 
   .label {
+    @include text-clip.single-line-ellipsis;
+
     font: var(--font-weight-bold) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
     letter-spacing: var(--letter-spacing-wider);
     text-transform: uppercase;
@@ -57,11 +69,21 @@
   }
 
   .value {
+    @include text-clip.single-line-ellipsis;
+
     font: var(--font-weight-extrabold) var(--_stat-value-font-size) / var(--line-height-flat) var(--font-sans);
     letter-spacing: var(--letter-spacing-snug);
     color: var(--_stat-value-color);
     margin: 0;
     white-space: var(--_stat-value-white-space);
+    overflow-wrap: var(--_stat-value-wrap);
+
+    /* Declared even when nothing is clamped: measured against plain `block` on a number, a phrase
+       and projected element content, the box display moves no geometry while the clamp is `none`,
+       so binding it to the hook would buy a style query and nothing else. */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: var(--_stat-value-lines);
   }
 
   .delta {

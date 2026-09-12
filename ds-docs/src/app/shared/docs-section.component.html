@@ -7,13 +7,20 @@
   </div>
 
   <h2 class="t-h2">
-    {{ title() }}<ng-content select="docs-truncation" />
+    {{ title() }}
   </h2>
 
-  @if (primaryKey(); as pk) {
-    <docs-component-meta
-      [key]="pk"
-      [attr.data-key]="pk" />
+  <!-- `data-key` is unused by the docs site. It is what lets a Claude Design card keep the chip of
+       the component it is ABOUT and drop the chapter's: a ToggleButton card used to open with
+       Button's name and tag. -->
+  @if (metaKeys().length) {
+    <div class="tagrow">
+      @for (key of metaKeys(); track key) {
+        <docs-component-meta
+          [key]="key"
+          [attr.data-key]="key" />
+      }
+    </div>
   }
 
   <p class="lede t-m">
@@ -21,25 +28,6 @@
   </p>
 
   <ng-content />
-
-  <!-- `data-key` is unused by the docs site. It is what lets a Claude Design card keep the chip
-       and the API table of the component it is ABOUT and drop the chapter's: a ToggleButton card
-       used to open with Button's name and tag. -->
-  @if (primaryKey(); as pk) {
-    <docs-api-table
-      [key]="pk"
-      [attr.data-key]="pk" />
-  }
-
-  @for (key of secondaryKeys(); track key) {
-    <div
-      class="api-sub"
-      [attr.data-key]="key">
-      <docs-component-meta [key]="key" />
-
-      <docs-api-table [key]="key" />
-    </div>
-  }
 
   @for (name of serviceNames(); track name) {
     <docs-api-table [service]="name" />

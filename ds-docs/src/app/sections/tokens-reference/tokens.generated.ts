@@ -2566,9 +2566,24 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Active/pressed fill — derived from the resolved bg unless set."
       },
       {
-        "name": "--ds-button-border",
+        "name": "--ds-button-label-color-hover",
+        "value": "var(--_button-label-color)",
+        "notes": "Label colour under the cursor. Defaults to --ds-button-label-color, so a button that does not set it does not change on hover."
+      },
+      {
+        "name": "--ds-button-label-color-active",
+        "value": "var(--_button-label-color)",
+        "notes": "Label colour while pressed. Defaults to --ds-button-label-color."
+      },
+      {
+        "name": "--ds-button-border-color",
         "value": "transparent",
         "notes": "Border colour (outline variant overrides)."
+      },
+      {
+        "name": "--ds-button-border-width",
+        "value": "var(--border-width-default)",
+        "notes": "The button border's WIDTH, where --ds-button-border-color is its colour. Defaults to --border-width-default; set it rather than redefining that scale step for a subtree."
       },
       {
         "name": "--ds-button-press-scale",
@@ -2594,6 +2609,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-button-radius",
         "value": "var(--ds-radius-control)",
         "notes": "Corner radius."
+      },
+      {
+        "name": "--ds-button-font-family",
+        "value": "var(--font-sans)",
+        "notes": "The button label's family. Defaults to --font-sans; set it where buttons follow the heading face rather than the body one, instead of re-pointing --font-sans inside the component."
+      },
+      {
+        "name": "--ds-button-line-height",
+        "value": "var(--line-height-flat)",
+        "notes": "The button label's line height. Defaults to --line-height-flat."
       },
       {
         "name": "--ds-button-font-size",
@@ -2636,7 +2661,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Disabled label — ONE recipe for every variant, oklch(from accent 70% 0.035 h). 70% because the old 58%/52% pair sat where a saturated accent already is, so a disabled coloured button barely differed from its live self."
       },
       {
-        "name": "--ds-button-border-disabled",
+        "name": "--ds-button-border-color-disabled",
         "value": "oklch(from var(--_button-accent) 86% 0.04 h)",
         "notes": "Disabled border — a pale tint of the accent for solid, color-mix(border 55%, surface-disabled) for outline."
       },
@@ -3539,7 +3564,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-field-group-focus-shadow-error",
         "value": "var(--ds-field-focus-shadow-error)",
-        "notes": ""
+        "notes": "The halo a ds-field-group draws while invalid AND focused. Defaults to --ds-field-focus-shadow-error, the halo a single error field uses."
       },
       {
         "name": "--ds-field-group-divider-color",
@@ -5436,6 +5461,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-stat-value-white-space",
         "value": "nowrap",
         "notes": "Wrapping of the value line (default `nowrap`). Set `normal` when the value is a phrase — a date range or a status — rather than the number the tile was built around. Without it the line does not wrap and, since `.stat` sets no `overflow`, the text runs OUT of the tile rather than being clipped inside it."
+      },
+      {
+        "name": "--ds-stat-value-lines",
+        "value": "none",
+        "notes": ""
+      },
+      {
+        "name": "--ds-stat-value-wrap",
+        "value": "normal",
+        "notes": ""
       },
       {
         "name": "--ds-stat-up-color",

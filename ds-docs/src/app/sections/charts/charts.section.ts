@@ -1,10 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { BarChartComponent } from 'ds/bar-chart';
 import type { BarChartRow } from 'ds/bar-chart';
-import {
-  DocsTruncationComponent,
-  TruncationRule,
-} from '../../shared/docs-truncation.component';
 import { DocsSectionComponent } from '../../shared/docs-section.component';
 
 const SPECIMEN_ROWS: readonly BarChartRow[] = [
@@ -69,7 +65,7 @@ const MAX_BELOW_DATA_ROWS: readonly BarChartRow[] = [
 @Component({
   selector: 'section-charts-bar-chart',
   standalone: true,
-  imports: [BarChartComponent, DocsTruncationComponent, DocsSectionComponent],
+  imports: [BarChartComponent, DocsSectionComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './charts.section.html',
   styleUrl: './charts.section.scss',
@@ -86,17 +82,4 @@ export class BarChartSection {
   protected readonly customColorRows = CUSTOM_COLOR_ROWS;
   protected readonly dataTableRows = DATA_TABLE_ROWS;
   protected readonly maxBelowDataRows = MAX_BELOW_DATA_ROWS;
-
-  protected readonly truncationRules: TruncationRule[] = [
-    {
-      field: 'Value',
-      behaviour:
-        'A negative value draws no bar — the track clamps to zero width — but its printed percent is not clamped and can still read negative.',
-    },
-    {
-      field: 'Max',
-      behaviour:
-        'Null uses the largest value in the data, so the longest row always fills the track.',
-    },
-  ];
 }

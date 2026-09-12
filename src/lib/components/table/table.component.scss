@@ -4,6 +4,12 @@
 @use '../../styles/visually-hidden' as visually-hidden;
 @use '../../styles/text-clip' as text-clip;
 
+/* Truncation contract:
+   Cell text — Single line, ellipsis at column width (truncate + width). Tooltip on hover; click
+     a clipped cell for a full-value popover.
+   Header label — Single line, no clip.
+   Action column — No clip — icon-only buttons. */
+
 // Positioned to contain the absolute `.visually-hidden` nodes below; without it they resolve against
 // the initial containing block and grow the consuming PAGE's root scroller into a second scrollbar.
 :host {
@@ -624,13 +630,6 @@
   &:focus-visible {
     @include focus.ring;
   }
-}
-
-.cell-text-pop {
-  max-width: 360px;
-  overflow-wrap: anywhere;
-  font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
-  color: var(--text-primary);
 }
 
 /* Pinned cells need an opaque background and a raised z to survive sideways scroll. Sticky

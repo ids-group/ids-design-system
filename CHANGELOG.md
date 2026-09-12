@@ -1,14 +1,46 @@
-# Changelog
-
-All notable changes to `@ids-group-ltd/ids-design-system` are documented here.
-
-Versioning follows [SemVer](https://semver.org). Mapping from commit types:
-`fix` → patch, `feat` → minor, breaking change (API or visual) → major.
-While the package is on `0.x`, minor releases may contain breaking changes.
-
 ## Unreleased
 
 ### Breaking
+
+- **`ds-field-group` renders its chrome on an inner row, not on the host.** The border, radius,
+  focus ring and the divider between segments moved from `:host` to `.row`, because the group now
+  carries a message of its own and that line has to sit OUTSIDE the bordered box. A stylesheet that
+  reached `ds-field-group` to change its border, radius or padding now targets a box that no longer
+  has them.
+
+  ```scss
+  /* before */                      /* after — or better, use the tokens */
+  ds-field-group { border: 0; }     ds-field-group .row { border: 0; }
+  ```
+
+  Every `--ds-field-group-*` token is unchanged and still declared on the host, so an override
+  written through the tokens needs nothing. The host's own box is unchanged too while the group has
+  no message: measured in the docs app, the row stays 40px and the host stays 40px — it grows to
+  57px only once `error` or `hint` is bound.
+
+- **`--ds-button-border` is `--ds-button-border-color`, and `--ds-button-border-disabled` is
+  `--ds-button-border-color-disabled`.** Both name a COLOUR, and since the width moved out to
+  `--ds-button-border-width` beside them the old names read like a `border` shorthand — set
+  `2px solid red` on one and nothing happens. The values and defaults are unchanged; only the
+  names moved.
+
+  ```scss
+  /* before */            /* after */
+  ds-button {             ds-button {
+    --ds-button-border: var(--brand);   --ds-button-border-color: var(--brand);
+  }                       }
+  ```
+
+- **A `ds-button`, `ds-sidenav-item` or `ds-sidenav-group` link no longer claims to be a page it
+  is only inside of.** `aria-current` was derived from `routerLinkActive`, which matches by
+  PREFIX — so a "back to the section" link on `/case-studies/retail` announced
+  `aria-current="page"` for `/case-studies`, a page the reader was leaving rather than on. It now
+  says what ARIA means: an exact match announces `page`, a prefix match announces `true`, anything
+  else announces nothing. The `active` CLASS still matches by prefix, so nothing changes visually.
+
+  Only a screen reader hears the difference, which is why it went unnoticed for so long — on
+  `ds-button` the `active` class is painted by nothing at all. If a test asserted
+  `aria-current="page"` on a section link, it now reads `true`.
 
 - **Thirty-three chart palette tokens are renamed, and an override written against an old name
   stops applying in silence.** A custom property that no longer resolves is invalid at
@@ -40,8 +72,120 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ### Added
 
+
+- **`ds-field-group` takes `error`, `hint` and `warning`, so the error it shows has words.** The
+  group suppresses its segments' own labels and message rows — they would break the glued line — and
+  until now it had nowhere for the text to go, which left colour as the only channel and 1.4.1
+  failing. It carries the same pair every field carries: `error` is a string that turns the state on
+  AND says what is wrong, `invalid` stays the flag for when the text lives in a form-level summary.
+
+  ```html
+  <ds-field-group error="Введите сумму больше нуля">
+    <ds-select [options]="currencies" />
+    <ds-input grow [(value)]="amount" />
+  </ds-field-group>
+  ```
+
+  **Every segment announces it, not just the first.** Each carries `aria-invalid` while the group is
+  in error and points at the one message through `aria-describedby`, so a reader who tabs straight to
+  the second segment hears it too — the group's border is not something a screen reader can see.
+  Measured in the docs app: both segments of an `error` group report `aria-invalid="true"` and the
+  same `aria-describedby`, and a `hint` group links the message without claiming an error.
+
+  The `invalid` input on every field already described this arrangement in its own documentation —
+  *"for when the text lives elsewhere, such as a form-level error summary or one message covering a
+  whole field group"*. The group was the half that had never been built.
+
+- **`ds-button` forwards everything else a link can carry: `fragment`, `queryParams`,
+  `queryParamsHandling`, `target` and `rel`.** Each is a pass-through to the anchor the component
+  already renders, so a call-to-action with a destination modifier stays a `ds-button` instead of
+  falling back to a hand-written class.
+
+  ```html
+  <ds-button [routerLink]="['/ai-solutions', slug]" fragment="enquiry">Talk to us</ds-button>
+  <ds-button [href]="demoUrl" target="_blank" rel="noopener">Open the demo</ds-button>
+  ```
+
+  `fragment`, `queryParams` and `queryParamsHandling` belong to a `routerLink` destination and
+  dev-warn on any other; `target` and `rel` work on both link destinations and dev-warn on a plain
+  button.
+
+- **`routerLink` accepts a `UrlTree`** on `ds-button`, `ds-sidenav-item` and `ds-sidenav-group`, so
+  the `UrlCreationOptions` with no input of their own — `relativeTo`, `preserveFragment` — are
+  reachable without waiting for one.
+
+  ```ts
+  protected readonly enquiry = this.router.createUrlTree(['/ai-solutions', slug], {
+    fragment: 'enquiry',
+  });
+  ```
+
+- **`routerLinkActiveOptions` and `ariaCurrent` on the same three components.** The first moves
+  what the `active` CLASS matches; the second overrides what the link announces, including `null`
+  for "announce nothing" and `'step'` or `'location'` where the link is not a page. Left alone, the
+  announcement follows the exact/prefix rule above and needs nothing from the consumer.
+
+- **Ten classes grew their member surface, which breaks a subclass that declares the same name.**
+  Subclassing a DS component is unsupported (`design-system.md` § Components), so this reaches only
+  a consumer who does it — and there it is a build error, not a silent change. `ButtonComponent`
+  gained `fragment`, `queryParams`, `queryParamsHandling`, `target`, `rel`,
+  `routerLinkActiveOptions`, `ariaCurrent`, `linkModifiers` and `ariaCurrentResolved`;
+  `SidenavItemComponent` and `SidenavGroupComponent` each gained `ariaCurrent`, `noModifiers` and
+  `ariaCurrentResolved`; `TooltipDirective` gained `dsTooltipWhenClipped` and `tipText`;
+  `TableComponent` LOST `cellPopoverText`, `isClipped`, `onCellClipClick` and `onHeaderEnter`, so a
+  subclass that overrode one now overrides nothing. `FieldGroupComponent` gained `error`, `hint`,
+  `warning`, `messageIcon`, `reserveMessage`, `reserveMessageResolved`, `invalidResolved`,
+  `messageId`, `message`, `fieldMessage` and `uid` — it shares the fields' message base now;
+  `InputComponent` gained `groupMessage`, and `SelectComponent`, `AutocompleteComponent` and
+  `DatePickerComponent` gained `groupMessage` and `describedByIds`. Being public API or not is no protection:
+  `private` and `protected` collide with TS2415 exactly as a public name does.
+
+  `routerLink` also widened on the three navigating components — `string | readonly unknown[] |
+  null` became `DsRouterLink`, which adds `UrlTree`. Writing it is unaffected; code that READS the
+  value back, or overrides the input, has a new union member to handle.
+- **`ds-stat` takes `--ds-stat-value-lines` and `--ds-stat-value-wrap`, which compose with the
+  `white-space` hook.** The three cover the shapes a KPI value actually needs: clip to one line
+  (the default), wrap freely, wrap and put the ellipsis on the line you name, or break a word wider
+  than the tile.
+
+  ```scss
+  ds-stat { --ds-stat-value-white-space: normal; }                              /* wraps */
+  ds-stat { --ds-stat-value-white-space: normal; --ds-stat-value-lines: 2; }    /* … then clips */
+  ds-stat { --ds-stat-value-white-space: normal; --ds-stat-value-wrap: anywhere; }
+  ```
+
+  `--ds-stat-value-lines` only bites once the value wraps: a clamp on a `nowrap` box has nothing to
+  clamp. And wrapping alone does not keep a long value inside the card — a single word wider than
+  the tile still paints past the edge, which is what `--ds-stat-value-wrap: anywhere` is for.
+
+- **`dsTooltipWhenClipped`, so any host can disclose only what it is actually hiding.** With it the
+  tip opens only while the host shows less text than it holds, re-tested on every open — so it
+  appears and stops appearing as a column, panel or window is resized, with no observer to run. Left
+  with no `dsTooltip` text it discloses the host's own text, which is what makes it usable on
+  projected content.
+
+  ```html
+  <span class="cell" dsTooltipWhenClipped [dsTooltip]="row.name">{{ row.name }}</span>
+  ```
+
+  `isTextClipped(element)` is exported from `/core` behind it: true when the element, or anything it
+  renders, is showing less than it holds. Horizontal only — a clamped block hides whole lines and
+  its `scrollWidth` matches its `clientWidth`.
+
+
 - `ds-bar-chart` — horizontal bars with label, value and percentage per row. Colours come from
   `--ds-chart-series-N-color` and can be overridden per row with `color`.
+
+### What you can now DELETE
+
+| your workaround | why it is unnecessary | replace with |
+| --- | --- | --- |
+| a hand-written `.btn` class kept only for controls that need `fragment`, `queryParams`, `target` or `rel` | those reach `ds-button` now, so the control can move with the rest | `ds-button` with the matching input |
+| `[routerLink]="'/path?a=1#b'"` — a query or hash folded into the link string | the string was percent-encoded into the path and never worked; the inputs carry them properly | `[queryParams]` and `fragment` |
+| importing `RouterLink` in your own component to write `[queryParams]` on a `<ds-button>` | that put a second `RouterLink` on the host, disagreeing with the anchor's about the destination | the component's own inputs |
+| `ds-stat { --ds-stat-value-white-space: normal; }` written only to stop a long value painting over the tile beside it | the value clips by default, so it no longer escapes its card | nothing — keep the hook only where you want the value wrapped and the tile taller |
+| `ds-stat .value { overflow: hidden; text-overflow: ellipsis; }` — your own clip on the value | the component clips it, and with `overflow: clip` plus a clip margin, so descenders survive where `hidden` shaved them | nothing |
+| `.cell-text-pop` — a rule sizing or colouring the table's full-value popover | the popover is gone; a clipped cell opens a tooltip instead | `--ds-tooltip-*`, if the panel needs changing at all |
 
 ## 0.12.3 — 2026-09-10
 

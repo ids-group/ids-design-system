@@ -24,7 +24,12 @@ import { nextControlId } from '@ids-group-ltd/ids-design-system/components';
 import { FieldClickFocusDirective } from '@ids-group-ltd/ids-design-system/components';
 import type { InputType } from './input.types';
 import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
-import { inFieldGroup } from '@ids-group-ltd/ids-design-system/components/field-group';
+import {
+  describedByIds,
+  groupInvalid,
+  groupMessageId,
+  inFieldGroup,
+} from '@ids-group-ltd/ids-design-system/components/field-group';
 import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 
 @Component({
@@ -210,9 +215,11 @@ export class InputComponent extends DsControlValueAccessor<string> {
     this.message().text ? `${this.uid}-hint` : null,
   );
   protected readonly describedBy = computed(() => {
-    const ids = [this.hintId(), this.ariaDescribedBy()].filter(Boolean);
-
-    return ids.length ? ids.join(' ') : null;
+    return describedByIds(
+      this.hintId(),
+      this.groupMessage(),
+      this.ariaDescribedBy(),
+    );
   });
   private readonly fieldMessage = resolveFieldMessage({
     hint: this.hint,
@@ -226,7 +233,8 @@ export class InputComponent extends DsControlValueAccessor<string> {
   });
   protected readonly message = this.fieldMessage.message;
   protected readonly controlState = this.fieldMessage.controlState;
-  protected readonly invalidResolved = this.fieldMessage.invalid;
+  protected readonly groupMessage = groupMessageId();
+  protected readonly invalidResolved = groupInvalid(this.fieldMessage.invalid);
   /** Only name via aria-label when there's no visible `<label for>`. */
   protected readonly resolvedAriaLabel = computed(() =>
     this.label() ? null : this.ariaLabel() || this.placeholder() || null,

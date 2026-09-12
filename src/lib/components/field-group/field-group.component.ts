@@ -3,12 +3,19 @@ import {
   Component,
   ViewEncapsulation,
   booleanAttribute,
+  computed,
   forwardRef,
   input,
 } from '@angular/core';
 import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
 import { DS_FIELD_GROUP, type DsFieldGroupContext } from './field-group.token';
 import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
+import { DsMessageBase } from '@ids-group-ltd/ids-design-system/components';
+import {
+  nextControlId,
+  resolveFieldMessage,
+} from '@ids-group-ltd/ids-design-system/components';
+import { FieldMessageComponent } from '@ids-group-ltd/ids-design-system/components/field-message';
 
 /**
  * One bordered control out of several: `select + input`, `search + button`,
@@ -19,28 +26,30 @@ import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
  * one that should take the slack with `grow`:
  *
  * ```html
- * <ds-field-group>
- *   <ds-select [options]="scopes" />
- *   <ds-input grow placeholder="Search…" />
+ * <ds-field-group error="Введите сумму больше нуля">
+ *   <ds-select [options]="currencies" />
+ *   <ds-input grow [(value)]="amount" />
  * </ds-field-group>
  * ```
  *
  * A control knows it is a segment by injecting `DS_FIELD_GROUP` — see the token
- * for why that is DI and not an input. Grouped controls must not carry a `label`
- * or a `hint`: their own message row would break the glued line, so it is
- * suppressed and a group-level one is not built yet.
+ * for why that is DI and not an input. A segment's own label and message stay
+ * suppressed: they would break the glued line, which is why the group carries
+ * the pair every field has — `error` for state WITH text, `invalid` for state
+ * whose text lives elsewhere.
  */
 @Component({
   selector: 'ds-field-group',
   standalone: true,
-  template: '<ng-content></ng-content>',
+  imports: [FieldMessageComponent],
+  templateUrl: './field-group.component.html',
   styleUrl: './field-group.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     role: 'group',
     '[class]': 'sizeResolved()',
-    '[class.invalid]': 'invalid()',
+    '[class.invalid]': 'invalidResolved()',
     '[class.disabled]': 'disabled()',
     '[class.full-width]': 'fullWidth()',
   },
@@ -51,7 +60,10 @@ import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
     },
   ],
 })
-export class FieldGroupComponent implements DsFieldGroupContext {
+export class FieldGroupComponent
+  extends DsMessageBase
+  implements DsFieldGroupContext
+{
   /** Segment height — the field family's scale, so a group lines up with a
    *  plain field beside it.
    *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
@@ -61,12 +73,32 @@ export class FieldGroupComponent implements DsFieldGroupContext {
     (config) => config.control?.size,
     'md' as DsSize,
   );
-  /** Draws the error border on the whole group. A single segment cannot be
-   *  invalid on its own: the border belongs to the group. */
+  /** Paints the error state WITHOUT a message of its own — for when the text
+   *  lives in a form-level summary. Use `error` to show text; binding either one
+   *  is enough, exactly as on a field.
+   *
+   *  Segments read `invalidResolved`, not this, so an `error` string announces
+   *  itself without the flag beside it. */
   readonly invalid = input(false, { transform: booleanAttribute });
   /** Dims the group. Disable the CONTROLS too — this is the chrome, not their
    *  interactivity. */
   readonly disabled = input(false, { transform: booleanAttribute });
   /** Fills the container instead of hugging its segments. */
   readonly fullWidth = input(false, { transform: booleanAttribute });
+
+  private readonly uid = nextControlId('ds-field-group');
+  // No `errors`/`touched` here: a group has no form control of its own, so its
+  // state is only ever what the consumer bound.
+  private readonly fieldMessage = resolveFieldMessage({
+    hint: this.hint,
+    warning: this.warning,
+    error: this.error,
+    errors: computed(() => []),
+    invalid: this.invalid,
+  });
+  protected readonly message = this.fieldMessage.message;
+  readonly invalidResolved = this.fieldMessage.invalid;
+  readonly messageId = computed(() =>
+    this.message().text ? `${this.uid}-hint` : null,
+  );
 }

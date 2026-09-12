@@ -3,6 +3,7 @@ import {
   ElementRef,
   HostListener,
   OnDestroy,
+  booleanAttribute,
   inject,
   input,
 } from '@angular/core';
@@ -10,6 +11,7 @@ import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { TooltipPanelComponent } from './tooltip-panel.component';
 import { prepareOverlayEnter } from '@ids-group-ltd/ids-design-system/components';
+import { isTextClipped } from '@ids-group-ltd/ids-design-system/core';
 import type { TooltipPlacement } from './tooltip.types';
 
 let nextId = 0;
@@ -32,6 +34,24 @@ export class TooltipDirective implements OnDestroy {
   /** Milliseconds before the tip appears. Hiding is immediate — this delay only ever
    *  suppresses a tip the pointer passed over on its way somewhere else. */
   readonly dsTooltipDelay = input<number>(120);
+  /** Show the tip only while the host is actually showing less text than it holds. For a label
+   *  that already reads in full, a tip repeating it is noise — which is why an unconditional tip
+   *  on clipped text was never offered as the default. Re-tested on every open, so a tip appears
+   *  and stops appearing as the column, panel or window is resized, with no observer to run.
+   *
+   *  With this on, `dsTooltip` may be left empty and the host's own text is disclosed. That is
+   *  what makes it usable on projected content, where the component holding the tip cannot know
+   *  what it was handed. */
+  readonly dsTooltipWhenClipped = input(false, { transform: booleanAttribute });
+
+  private tipText(): string {
+    const given = this.dsTooltip();
+    if (given || !this.dsTooltipWhenClipped()) {
+      return given;
+    }
+
+    return (this.host.nativeElement.textContent ?? '').trim();
+  }
 
   private ref: OverlayRef | null = null;
   private timer: number | null = null;
@@ -77,7 +97,13 @@ export class TooltipDirective implements OnDestroy {
   }
 
   private scheduleShow(): void {
-    if (!this.dsTooltip()) {
+    if (!this.tipText()) {
+      return;
+    }
+    if (
+      this.dsTooltipWhenClipped() &&
+      !isTextClipped(this.host.nativeElement)
+    ) {
       return;
     }
     if (this.timer !== null) {
@@ -144,7 +170,7 @@ export class TooltipDirective implements OnDestroy {
     prepareOverlayEnter(this.ref, this.host.nativeElement, positionStrategy);
 
     const cmpRef = this.ref.attach(new ComponentPortal(TooltipPanelComponent));
-    cmpRef.setInput('text', this.dsTooltip());
+    cmpRef.setInput('text', this.tipText());
     cmpRef.setInput('placement', placement);
     cmpRef.setInput('panelId', this.tipId);
     const described = this.focusedTarget ?? this.host.nativeElement;

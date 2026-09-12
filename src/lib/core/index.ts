@@ -8,6 +8,7 @@ export { boundOr, optionalBound } from './field-bounds';
 export { ICONS } from './icon-names';
 export type { IconName } from './icon-names';
 export { isTextEntryTarget } from './key-target';
+export { isTextClipped } from './text-clip';
 export {
   firstEnabledIndex,
   lastEnabledIndex,

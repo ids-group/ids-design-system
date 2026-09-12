@@ -1,3 +1,9 @@
+/* Truncation contract:
+   Title — Wraps to a second line if needed. Never clip — the user needs the full sentence to
+     understand the state.
+   CTA label — Short verb phrases only (Retry, Allocate resources). If the action needs a
+     sentence, the empty state copy is wrong. */
+
 :host {
   --_es-tile-bg-color:   var(--ds-empty-state-tile-bg-color,  var(--accent-surface-tint));
   --_es-tile-icon-color:   var(--ds-empty-state-tile-icon-color,  var(--text-secondary));
