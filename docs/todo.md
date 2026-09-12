@@ -14,14 +14,14 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**108 open — 1 P1, 40 P2, 67 P3**, 2 of them half-done and waiting on a deck verdict. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**106 open — 1 P1, 38 P2, 67 P3**, 1 of them half-done and waiting on a deck verdict. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 1
 
 - **Framework & forms**
   - Upgrade to Angular 22 — and re-verify the signal-forms work against it, because one of its breaking changes lands exactly there
 
-### P2 — 40
+### P2 — 38
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Nothing catches a shell that rings on `:focus-within` when it means the keyboard
@@ -30,14 +30,12 @@ item and nothing else.
   - `.design-sync/upload/_ds_bundle.css` is frozen against a rule the library no longer …
   - `_focus.scss`'s top-level CSS is copied into 33 component style strings
   - `ds-select` and `ds-autocomplete` announce a disabled trigger as invalid
-  - ½ `ds-field-group[invalid]` loses its error border on hover and on focus — BORDER FIXED 2026-09-10, the announcement half is deck 11
+  - ½ `ds-field-group[invalid]` loses its error border on hover and on focus — BORDER FIXED 2026-09-10, the announcement half is deck `field-group-invalid-voice`
   - Warning and success fields show a mismatched halo
   - Zone COLOUR and `data-focus` SHAPE cannot both reach one role, and the reason is a …
 - **Manifest-shape defects the two-wave plugin review surfaced (2026-09-04)**
   - The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27 in a real browser, 4.42:1 against the 4.5:1 threshold
 - **Reported by Stas from the docs site, 2026-09-05**
-  - ½ A `ds-stat` value longer than its tile spills out of the card — MEASURED, and the choice of default is deck 12
-- **`triggerDisplay="labels"` measured a box its own output resized — FIXED 2026-08-31**
   - The `labels` trigger collapses to one label regardless of free space, because the measurement reads a `fit-content` box that the cut itself narrows
 - **Four files style one portaled panel at equal specificity (recorded 2026-08-31, from the branch review)**
   - The dropdown panel is styled by `styles/_dropdown-overlay.scss` AND by three component stylesheets, and nothing decides which wins except the order the stylesheets happen to load
@@ -47,7 +45,7 @@ item and nothing else.
   - `ds-toast-region`'s dev-warning strip is unverified
 - **Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)**
   - A1 - build the seam and ONE directive, and measure what the seam itself costs
-  - A3 — per-component entry points. DECIDED 2026-09-04 by Stas: option D, with the SHORT-ALIAS shape (deck 6, variant 4). Build it
+  - A3 — per-component entry points. DECIDED 2026-09-04 by Stas: option D, with the SHORT-ALIAS shape (deck `entry-point-shape`, variant 4). Build it
   - Build-time `define` flag: a consumer CAN strip library code from `angular.json` — measured
   - A3+ — the top layer MUST be per-component, measured 2026-09-01, not a preference
   - The boundary guard cannot be flipped to `'error'` as it shipped — five defects found by …
@@ -57,9 +55,8 @@ item and nothing else.
   - An md ARCHITECTURE for the whole design system — cross-linked like a graph, not a pile of files (Stas, 2026-09-01, re-scoped 2026-09-02). NEXT UP, and the first step is RESEARCH, not code
   - There is no page-level design approach an agent can follow — only per-token and per-component rules (Stas, 2026-09-01)
 - **Component feature gaps**
-  - `ds-button` has a destination but nothing to modify it with, and a back-link announces itself as the current page — deck 13
+  - `ds-button` has a destination but nothing to modify it with, and a back-link announces itself as the current page — deck `button-destination-api`
   - One entry point for the whole library means a consumer cannot keep the DS out of their initial bundle (2026-08-03, Stas — mm-broker MBP-133 review)
-  - The table's opt-in behaviours become separately-importable directives. DECIDED 2026-09-04 by Stas on deck 7: form
 - **The field system — the two controls outside it, and the five with no box to paint**
   - `ds-number-stepper` and `ds-dropzone` are outside the field-message system entirely — bring them in, or say they are not fields (Stas asked 2026-08-20)
   - Single-source colour engine — collapse `--primary` + `--primary-h/s/l` into ONE token, derive the rest with `color-mix()` + relative-colour (idea 2026-06-24)
@@ -143,7 +140,7 @@ item and nothing else.
   - Re-wrap `CHANGELOG.md` to ~100 columns (Stas, 2026-08-31: "запиши пока в туду … щас не будем")
   - Does a release note owe the reader a WHY, or only a what-and-what-to-do? (Stas, 2026-08-28, left open on purpose during the public-surface sweep.)
   - ds-docs still writes BEM MODIFIERS as `--suffix`, and a state should be its own class (Stas, 2026-08-26 — the `__` half is done and archived)
-  - Eight manifest-format practices the audit marked *Adopt*, and nobody has ratified any of them (filed 2026-08-27 out of `presentations/6-migration-manifest-audit.html`)
+  - Eight manifest-format practices the audit marked *Adopt*, and nobody has ratified any of them (filed 2026-08-27 out of `presentations/4-migration-manifest-audit.html`)
 - **Framework & forms**
   - Three signal-forms contract members are unimplemented, and all three are blocked on a LOOK, not on wiring
 - **ds-auth-layout — residue from the 0.8.0/0.9.0 audit (recorded 2026-08-11, from the ai-sdlc-prototype side)**
@@ -316,8 +313,8 @@ and says nothing about the old one. Measured on three grounds: `presentations/fo
   did not. Fix is `invalidResolved() && !isDisabled()` in the two templates, plus a `### Fixed` line
   — an announcement change is consumer-visible.
 
-- [~] **[P2] `ds-field-group[invalid]` loses its error border on hover and on focus — BORDER FIXED 2026-09-10, the announcement half is deck 11.** `:host(:hover:not(.disabled))` and `:host(:focus-within:not(.disabled))` were (0,3,0) against `:host(.invalid)` at (0,2,0), so the only error affordance the group has vanished exactly when the user reached the control. Fixed by exclusion, not by weight: hover and focus no longer match an invalid group, and the focus halo takes the error tint through the new `--ds-field-group-focus-shadow-error`. Measured in a browser with forced pseudo-states, both arms: invalid+hover and invalid+focus stay `rgb(219, 31, 31)` with a red halo, while a valid group still hovers to `--border-strong` and focuses to the accent. `.invalid` also stopped depending on line order to lose to `.disabled`.
-  **What is still open, and it is a design decision:** the group sets no `aria-invalid` anywhere, and `_field-group-segment.scss` hides `.label` and `ds-field-message` on every segment, so an invalid group has NO text channel at all — colour is the whole signal, which is a 1.4.1 failure, and ARIA21 puts `aria-invalid` on the field rather than on a `role="group"` container. Five variants in `presentations/11-field-group-invalid-voice.html`, recommendation D.
+- [~] **[P2] `ds-field-group[invalid]` loses its error border on hover and on focus — BORDER FIXED 2026-09-10, the announcement half is deck `field-group-invalid-voice`.** `:host(:hover:not(.disabled))` and `:host(:focus-within:not(.disabled))` were (0,3,0) against `:host(.invalid)` at (0,2,0), so the only error affordance the group has vanished exactly when the user reached the control. Fixed by exclusion, not by weight: hover and focus no longer match an invalid group, and the focus halo takes the error tint through the new `--ds-field-group-focus-shadow-error`. Measured in a browser with forced pseudo-states, both arms: invalid+hover and invalid+focus stay `rgb(219, 31, 31)` with a red halo, while a valid group still hovers to `--border-strong` and focuses to the accent. `.invalid` also stopped depending on line order to lose to `.disabled`.
+  **What is still open, and it is a design decision:** the group sets no `aria-invalid` anywhere, and `_field-group-segment.scss` hides `.label` and `ds-field-message` on every segment, so an invalid group has NO text channel at all — colour is the whole signal, which is a 1.4.1 failure, and ARIA21 puts `aria-invalid` on the field rather than on a `role="group"` container. Five variants in `presentations/8-field-group-invalid-voice.html`, recommendation D.
 
 - [ ] **[P2] Warning and success fields show a mismatched halo.** `_field-state.scss` gives error a
   nested focus block and gives warning/success none, so a focused warning field is a yellow border
@@ -415,11 +412,6 @@ and says nothing about the old one. Measured on three grounds: `presentations/fo
   No cheap fix: the alternative is the shared `:root` driver this replaced, which invalidated the
   whole document every frame. Worth a note in the skeleton's docs page before it is worth code.
 
-
-- [~] **[P2] A `ds-stat` value longer than its tile spills out of the card — MEASURED, and the choice of default is deck 12.** Measured on the real docs tile: card 240px, inner width 190px, «Feb 1 – Feb 28, 2026» at 36px is 348px of text, so it runs **157px past the inner edge** and under whatever tile sits beside it. Five candidate defaults rendered and measured in `presentations/12-stat-value-overflow.html` — today 111px tall; wrap 183px and 3 lines; ellipsis 111px and 45% of the line hidden; wrap-then-clamp-2 147px and the year lost; fit-to-width 92px at 17.1px type. Recommendation 4, with 3 as the zero-geometry-change alternative. Every answer is a visual breaking change for every existing tile, which is why it is a deck and not a fix.
-  **Two measurement traps recorded there**, both of which produced a wrong line before the tiles were rendered: `scrollWidth > clientWidth` answers only HORIZONTAL clipping and calls a `-webkit-line-clamp` truncation invisible, and `scrollHeight > clientHeight` is true for all five variants because `--line-height-flat` is shorter than the glyph box. Only comparing line counts against the unclamped count works.
-
-## `triggerDisplay="labels"` measured a box its own output resized — FIXED 2026-08-31
 
 - [ ] **[P2] The `labels` trigger collapses to one label regardless of free space, because the measurement reads a `fit-content` box that the cut itself narrows.** `:host(.compact-trigger)` sets `width: fit-content` (`multi-select.component.scss:36`), and `labels` renders a `#chipRow` of `data-chip` spans (`multi-select.component.html:61-83`), so `chipFit` measures `trigger.clientWidth` of a box whose width is decided by the chips it is about to cut. **This is the exact case `chip-overflow.ts:13` names as its INVARIANT** — "nothing here may measure something the cut itself changes". The `lastWidth`/`lastCount` guard stops it hanging, so the symptom is a wrong converged value rather than a frozen page: pass 1 measures the full width, cuts to N, the trigger shrinks, pass 2 cuts again, and it settles at one label plus "+N".
 
@@ -646,7 +638,7 @@ the service was just the one somebody noticed. Full table and every tested hypot
   `truncate` stay in the base table, and do row actions and inline cell editing come out too? Both are
   equally advanced and were left IN, which is why 18.9 KB is a floor and not a ceiling.
 
-- [ ] **[P2] A3 — per-component entry points. DECIDED 2026-09-04 by Stas: option D, with the SHORT-ALIAS shape (deck 6, variant 4). Build it.**
+- [ ] **[P2] A3 — per-component entry points. DECIDED 2026-09-04 by Stas: option D, with the SHORT-ALIAS shape (deck `entry-point-shape`, variant 4). Build it.**
 
   **What was decided, and what it is worth.** Measured on the real library, not modelled: a genuine 73-entry-point ng-packagr build cuts `ds-docs`'s initial bundle from **273 KB to 136 KB gzip, −50%**, with total weight unchanged (+0.07%) and no duplicated classes. The synthetic probe agrees on every anchor: the eager-services case goes 199 951 → 84 410 B gzip, 11 of 11 heavy components leave the initial bundle. **Option F (ship the package unflattened, one entry point) was measured and rejected**: it matches D on the synthetic probe but does nothing for `ds-docs` (+5%), because a root barrel over 256 small modules stays reachable from the eager graph. **Option G (entry points plus shared chunks, the Angular Material shape) was measured and rejected**: it only works through deep specifiers — through the root facade it is as bad as today — and it needs a rollup pass ng-packagr does not have.
 
@@ -912,9 +904,9 @@ A0 first, which touches none of it, or wait for that lane to land.
 
 ## Component feature gaps
 
-- [ ] **[P2] `ds-button` has a destination but nothing to modify it with, and a back-link announces itself as the current page — deck 13.** Two Asks from the marketing-site consumer, both filed after the 0.12.3 destination work landed. 18 of their 31 button-styled controls moved with no visual change; **13 cannot**, because the `routerLink` branch binds only `[routerLink]` and the `href` branch only `[href]` — six need `fragment`, five `queryParams`, three `target`+`rel`. Separately, `routerLinkActive="active"` is hardcoded with prefix matching and `aria-current` derived from it, so a "back to the section" link claims `aria-current="page"` on every detail page; `.active` has no rule in the button's stylesheet, which is what makes it invisible to everyone except the users it misleads.
+- [ ] **[P2] `ds-button` has a destination but nothing to modify it with, and a back-link announces itself as the current page — deck `button-destination-api`.** Two Asks from the marketing-site consumer, both filed after the 0.12.3 destination work landed. 18 of their 31 button-styled controls moved with no visual change; **13 cannot**, because the `routerLink` branch binds only `[routerLink]` and the `href` branch only `[href]` — six need `fragment`, five `queryParams`, three `target`+`rel`. Separately, `routerLinkActive="active"` is hardcoded with prefix matching and `aria-current` derived from it, so a "back to the section" link claims `aria-current="page"` on every detail page; `.active` has no rule in the button's stylesheet, which is what makes it invisible to everyone except the users it misleads.
   **Three findings the Asks did not have**, read in `@angular/router@21.2.22`'s own typings: `routerLink` already accepts a `UrlTree`, so widening our input's type covers all five `UrlCreationOptions` with no new inputs; `RouterLinkActive` has an `ariaCurrentWhenActive` input, so the value we hand-roll is the directive's to write; and `isActive(url, router, options)` is exported as a `Signal<boolean>`, which is how one component can ask for exact AND prefix matching without a second directive. Plus the ARIA rule that settles it: `page` is the page you are on, `true` is the current section or ancestor.
-  **Four decisions in `presentations/13-button-destination-api.html`** — what modifies a destination (5 variants), what an active link announces (5), which of the three destination-bearing components it reaches (3), and whether `--ds-button-border` keeps a name that promises a shorthand (3). Recommendation A1+A3, B3, C3, D2.
+  **Four decisions in `presentations/9-button-destination-api.html`** — what modifies a destination (5 variants), what an active link announces (5), which of the three destination-bearing components it reaches (3), and whether `--ds-button-border` keeps a name that promises a shorthand (3). Recommendation A1+A3, B3, C3, D2.
 
 - [ ] **[P3] `ds-select` cannot offer "create «what I typed»", and the reason is that it has no place to type (recorded 2026-09-09, Stas).** `[dsCreateTemplate]` and `[dsChipTemplate]` exist in the library and `ds-select` reads neither — correctly, because both decorate features it does not have. Chips show MANY values and a single select holds one; create needs typed text and `ds-select`'s template contains **no `<input>` at all**. What looks like typing there is `createTypeAhead`, a keystroke buffer that jumps to the option whose label matches, so there is no query to turn into a new value.
   **So this is a feature request, not a missing template binding, and it arrives in that order:** first a panel filter field (the thing `ds-multi-select` already has as `.search-row`), then `allowCreate` plus a `created` output and the no-match branch — `ds-autocomplete` carries all three already and is the model to copy rather than re-derive. Only then does reading `[dsCreateTemplate]` mean anything.
@@ -946,12 +938,6 @@ A0 first, which touches none of it, or wait for that lane to land.
 
 - [ ] **[P3] Portaled CSS as opt-in — PARKED 2026-09-04 by Stas.** 1 055 B of the 2 793 B global sheet is the only part that could move behind an opt-in: `dropdown-overlay`, `overlay-motion`, `toast-overlay`. It saves only a consumer with no picker, no toast and no modal, which is close to nobody, and the cost is one more import in everyone else's bootstrap. The measurement stands if the balance ever changes; the AG Grid route (CSS inside the component) stays rejected because Angular injects those as runtime tags and a strict CSP under SSR blocks them.
 
-- [ ] **[P2] The table's opt-in behaviours become separately-importable directives. DECIDED 2026-09-04 by Stas on deck 7: form **a**, directives.**
-
-  `<ds-table dsResizable dsExport>` — each feature is a directive the consumer puts in `imports`, and its options are ordinary inputs on that directive. The three forms cost the same bytes, so the choice was ergonomics: under **b** (`[features]="[withResize()]"`) every live option sits inside an array literal Angular rebuilds each change-detection cycle, so changing one means remembering `computed`; under **c** (`provideDsTable(...)`) the scope is the route, which makes two differently-configured tables on one screen impossible. **a** trades those for one weakness — binding a feature you did not import fails silently — and that is answerable: the table knows which contributions are registered, so a dev-mode warning names the missing directive. **Still open on the same deck: the button's message row (11.3 KB) and the portaled CSS (1.1 KB).**
-
-  Original framing: measure the table's opt-in behaviours as separately-importable directives (Stas, 2026-09-01: «затести и померяй»).** The one shape from the basic/advanced proposal that survives the numbers (`basic-advanced-split-audit.md` §7). Today every opt-in feature's code ships whether or not its `input(false)` is set, so `ds-table`'s **32 KB gzip marginal cost** is paid in full by a prototype that uses none of them. Candidates to extract: `DsTableResizable` (`resizableColumns`+`columnWidths`), `DsTableReorderable` (`reorderableColumns`+`columnOrder`+`hiddenKeys`), `DsTableExport` (`exportButton`/`exportFilename`/`exportFetcher`), `DsTableColumnFilters` (`columnFilters`+`HeaderFilterDirective`), `DsTablePersistLayout` (`persistLayout`+`storageKey`). **ABLATION DONE 2026-09-01 — the prize is real: 18.9 KB gzip.** Branch `probe/table-feature-directives`, built from `dev` at `5783c830`; full record in `basic-advanced-split-audit.md` §9. Deleting resize + reorder/picker + column filters + CSV export + layout persistence + truncate-popover (1 063 source lines across .ts/.html/.scss) took `ds-table`'s marginal cost from **31 428 B → 12 125 B gzip, −61%**. That is MORE than the whole basic/advanced package split targets (18.2 KB), inside one component, with nothing to mirror. And it is a FLOOR, not a ceiling — row actions and inline cell editing are equally advanced and were left in. **The catch the ablation exposed, and the actual design work:** the features are not cleanly separable today — `clipWidth`/`fitsContent` serve both truncate and resize, `orderedColumns`/`visibleColumns` are the same computed chain the picker writes to, `filteredData` folds set filters into the substring search, `statusMessage` folds export state into the live region. So the split needs a seam — most likely a small internal layout/state service the directives write into and the table reads — not a method-by-method move. Next: design that seam, then build `DsTableResizable` / `DsTableReorderable` / `DsTableExport` / `DsTableColumnFilters` / `DsTablePersistLayout` against it.
-
 - [ ] **[P3] Split «design system» from «UI kit» as two packages (Mikhail, 2026-08-30).** His words: «Можете тогда вообще ui kit и дизайн систему на разные пакеты разнести?» — the UI kit being the whole component library, and the design system being the rules, tokens, themes and guides. **Partly true already:** tokens and themes ship as SCSS assets under `styles/*` and `themes/*` behind their own `exports` entries, and the rules/guides live in the deployed docs site rather than in the package. So the question to study is narrow: is there a real consumer who wants the tokens WITHOUT the components (a non-Angular app, a Figma/CSS-only pipeline, another framework), and does that consumer exist today? If yes, a tokens-only package is cheap and has no mirror-maintenance problem — unlike the basic/advanced table split, nothing is duplicated. If no, the current `exports` map already covers it. **Interacts with the entry-point work above:** a layered `core ← services ← components` partition and a tokens-only package are the same question asked twice, and should be designed together rather than separately.
 
 - [ ] **[P3] `DS_CONFIG` prototype mode — `prototype: true` (Mikhail's original framing, endorsed by Stas 2026-09-01: «ds config тоже можно. как я и говорю prototype: true»).** One flag in the existing `DS_CONFIG` that puts the whole library in prototype mode instead of asking a consumer to pick a package. **The honest caveat, and it must be settled before this is built:** a runtime config flag CANNOT reduce the bundle — the code for the features it disables is still imported and still ships, so `prototype: true` buys behaviour, not bytes. Only the directive split above removes bytes. So decide what the flag is actually FOR: (a) turning off advanced affordances so a prototype's UI stays simple and demo-able — a real and useful thing, unrelated to size; (b) build-time dead-code elimination, which would need it to be a compile-time constant a bundler can fold, not a DI value. Do not ship (a) while implying it does (b). `DS_CONFIG` already resolves per-component defaults via `resolveWithConfig`, so (a) is a small build.
@@ -965,7 +951,7 @@ A0 first, which touches none of it, or wait for that lane to land.
 
 - [ ] **[P3] `ds-number-stepper` — optional numeric formatting (locale / currency / decimals / grouping), ref https://primeng.dev/inputnumber.** Today it's a raw `value: number` + `min`/`max`/`step` + spinner, no display formatting. PrimeNG InputNumber's value-add is a formatted numeric field: thousands grouping, fixed decimals, currency/percent, locale-aware, parsed back to a number on edit. Add opt-in `mode` (decimal/currency/percent) + `locale`/`currency`/`minFractionDigits`/`maxFractionDigits`/`useGrouping`; format on display/blur, parse on focus/input. Masking prior art in-house: [[reference-masked-input-dom-writeback]] (pinkmoon phone/w3w imperative `element.value` write-back). No active request — likely pulled by the financial-admin consumers (mm-broker admin, pinkmoon amounts/rates/%); gate on the first such form. **GATE HELD 2026-08-25 (Stas), asked explicitly.**
 
-- [ ] **[P3] Forms — `ds-select` native `multi` — RESEARCHED 2026-08-06; Stas: keep it in the backlog with the deck attached (not built, not closed).** Deck: `presentations/7-select-native-multi.html` — three variants live, comparison matrix and sources; it is the prepared answer if a consumer ever pulls on this. Native `<select multiple>` is not a cheaper spelling of the same control, it is a documented antipattern: multi-selection is reachable only through Ctrl/Cmd- or Shift-click with nothing in the control announcing it, an unmodified click **discards the entire prior selection**, non-adjacent options cannot be selected from the keyboard at all, and screen readers handle it worse than a single `<select>`. The consensus alternative is a checkbox list — which is exactly what `ds-multi-select` already is.
+- [ ] **[P3] Forms — `ds-select` native `multi` — RESEARCHED 2026-08-06; Stas: keep it in the backlog with the deck attached (not built, not closed).** Deck: `presentations/5-select-native-multi.html` — three variants live, comparison matrix and sources; it is the prepared answer if a consumer ever pulls on this. Native `<select multiple>` is not a cheaper spelling of the same control, it is a documented antipattern: multi-selection is reachable only through Ctrl/Cmd- or Shift-click with nothing in the control announcing it, an unmodified click **discards the entire prior selection**, non-adjacent options cannot be selected from the keyboard at all, and screen readers handle it worse than a single `<select>`. The consensus alternative is a checkbox list — which is exactly what `ds-multi-select` already is.
   **The soft version of the ask does not survive either:** the moment a hypothetical `ds-select multi` is made usable it has to open a checkbox list, i.e. it becomes `ds-multi-select`, and the only genuine difference left is chips-in-trigger vs an "N selected" summary. If a consumer ever wants the compact trigger, the honest answer is an input (`[triggerDisplay]="'summary'"`) on the existing component, not a second component and a fork in the docs. The one case where nativeness would really matter — a plain HTTP form POST with no JS — is solved by a hidden `<select multiple>` inside `ds-multi-select`, not by changing the UI.
 
 ### Found while porting the design-sync React bindings (2026-07-28, re-verified 2026-09-01)
@@ -1087,34 +1073,39 @@ Three defects the port surfaced by reading every component's template + SCSS aga
 
 None of these is blocked on effort. Each is a verdict, and most carry a deck that renders the options.
 
-## Decks awaiting a verdict (re-audited 2026-09-10)
+## Decks awaiting a verdict (re-audited 2026-09-12)
 
-**Twelve** decks carry `ds-deck-status: open` — counted on disk, not from this list, which has been
+**Nine** decks carry `ds-deck-status: open` — counted on disk, not from this list, which has been
 short before. **The rank is the filename**: an open deck is `<rank>-<slug>.html`, ranked by what
 answering it unblocks, so the folder listing IS the queue. Ranks are renumbered when the queue
 changes and a stale one is never kept to preserve a link; `deck-lint` fails a duplicate rank, a gap
-in 1..N, and an `implemented` deck still carrying one.
+in 1..N, and an `implemented` deck still carrying one. **Never cite a deck by number from this
+file** — the number moves; cite the filename.
 
 | # | Deck | Asks | Twin on this board |
 | --- | --- | --- | --- |
 | 1 | `1-color-engine-derivation` | One source token per role, derived. | the colour-engine P2 |
 | 2 | `2-color-engine-relative` | The prototype half of the same question. | as above |
 | 3 | `3-interaction-formula` | State interactions by formula, calibrated against the drawn ramp. | the `.ds-interactive` P2 |
-| 4 | `4-opt-in-seam` | Which form the table's feature opt-in takes — **decided 2026-09-04: directives**. Two verdicts still open: the button's message row (11.0 KB) and the portaled CSS (1.1 KB). | the opt-in P2s under *Asks* |
-| 5 | `5-rejected-with-numbers` | Every idea this backlog has rejected, with the measurement that rejected it and what would reopen it. | *Parked* and *Records* |
-| 6 | `6-migration-manifest-audit` | The tail of the audit — ten format practices marked *Adopt* and never ratified. | the manifest-practices P3 |
-| 7 | `7-select-native-multi` | Whether `ds-select` native `multi` is worth building. | already *Parked* — "keep parked" closes both |
-| 8 | `8-warning-text-colour` | Which colour goes on the warning tint. Four candidates, each rendered in itself. | the warning pair under *Bugs* |
-| 9 | `9-sidebar-states` | **Answered 2026-09-06: variant E**, a fill on the item and never on the group. Open until the `ds-sidenav-item` follow-up ships and it moves. | — |
-| 10 | `10-docs-chapter-nav` | Where the chapter list lives and what makes a sub-item a sub-item. Six variants left after four were rejected. | the docs-nav P3s under *Records* |
-| 11 | `11-field-group-invalid-voice` | How an invalid `ds-field-group` SAYS it is invalid — it has no text channel and sets no `aria-invalid`. Five variants, recommendation D. | the `[~]` field-group P2 under *Bugs* |
-| 12 | `12-stat-value-overflow` | Which default a too-long `ds-stat` value takes. Five candidates measured on the real 240px tile. | the `[~]` stat P2 under *Bugs* |
+| 4 | `4-migration-manifest-audit` | Which of eight format practices marked *Adopt* are worth the tooling. | the manifest-practices P3 |
+| 5 | `5-select-native-multi` | Whether `ds-select` native `multi` is worth building. | already *Parked* — "keep parked" closes both |
+| 6 | `6-warning-text-colour` | Which colour goes on the warning tint. Four candidates, each rendered in itself. | the warning pair under *Bugs* |
+| 7 | `7-docs-chapter-nav` | Where the chapter list lives. Four mutually-exclusive variants left after seven were rejected. | the docs-nav P3s under *Records* |
+| 8 | `8-field-group-invalid-voice` | How an invalid `ds-field-group` SAYS it is invalid — it has no text channel and sets no `aria-invalid`. Five variants, recommendation D. | the `[~]` field-group P2 under *Bugs* |
+| 9 | `9-button-destination-api` | What modifies a destination, what an active link announces, which components it reaches, and whether `--ds-button-border` keeps its name. | the two `ds-button` P2s under *Asks* |
 
-**Nine of the twelve have a twin on this board, so one answer closes two lines** — which is what
-makes them the cheapest thing here. Ranks 7 and 9 are the cheapest of all: "keep parked" and "it
-already shipped" are complete answers.
+**Closed on 2026-09-12 and moved to `implemented/`:** `opt-in-seam` (all three questions answered —
+directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
+CSS rejected at 1 kB for a consumer who does not exist), `sidebar-states` (variant E, and the code
+carries it: the item fills with `--accent-subtitle`, the group never fills) and `stat-value-overflow`
+(one line plus a tip on hover, three hooks over it). `5-rejected-with-numbers` left the queue the
+same day as a `tool` — it asks nothing, so a rank on it claimed a verdict was owed.
 
-**Ranks 1–6 are written in Russian and share `presentations/deck.css`**; 9–12 carry their own inline
+**Seven of the nine have a twin on this board, so one answer closes two lines** — which is what
+makes them the cheapest thing here. Rank 5 is the cheapest of all: "keep parked" is a complete
+answer, and it has already been given — the deck stays only because closing it was declined.
+
+**Ranks 1–4 are written in Russian and share `presentations/deck.css`**; 6–9 carry their own inline
 styles. `presentations/README.md` holds the authoring contract and the fifteen lint rules.
 
 ## The field system — the two controls outside it, and the five with no box to paint
@@ -1226,7 +1217,7 @@ the rest, plus one defect the move introduced. Each has its own write-up in `doc
   **The fix is one glob, and it needs a decision because it is a policy file.** Drop `html` from `format:fix` so prettier owns ts/json/md and the two `ds/template/*` rules own templates, which is the shape `lint:all` already assumes. The alternatives are to drop the two ds rules and let prettier own html (bigger diff, loses the attribute-order convention the repo chose), or to leave it and say so in the script so nobody expects `fix:all` to converge.
   **Earlier measurements, still valid as evidence:** prettier reformatted 140 files (115 html + 25 ts) and eslint pulled 77 back (2026-08-25); in the order prettier → stylelint → eslint, `eslint --fix` reverted 111 of prettier's 112, leaving 8 files of whitespace inside inline elements that Angular discards. The tree has been in eslint's shape all along.
 
-- [ ] **[P3] Eight manifest-format practices the audit marked *Adopt*, and nobody has ratified any of them (filed 2026-08-27 out of `presentations/6-migration-manifest-audit.html`).** The audit's own header says it: "the verdict column is a judgement about this repo, not about the practice." So *Adopt* there is a recommendation, not a decision — and the recommendations have sat only inside a deck since 2026-08-25, which is the shape of a verdict nobody executes. **The decision is which of the ten, if any**, not whether each is defensible; every one was sourced from a primary doc, so they are all defensible and adopting all ten is a tooling project no consumer is pulling on.
+- [ ] **[P3] Eight manifest-format practices the audit marked *Adopt*, and nobody has ratified any of them (filed 2026-08-27 out of `presentations/4-migration-manifest-audit.html`).** The audit's own header says it: "the verdict column is a judgement about this repo, not about the practice." So *Adopt* there is a recommendation, not a decision — and the recommendations have sat only inside a deck since 2026-08-25, which is the shape of a verdict nobody executes. **The decision is which of the ten, if any**, not whether each is defensible; every one was sourced from a primary doc, so they are all defensible and adopting all ten is a tooling project no consumer is pulling on.
   **Three of the thirteen are already settled and are NOT part of this item:** the instruction/rationale split shipped as `action` (the prose-split pass, 2026-08-25); package reachability shipped — `package.json` already exports `"./migrations/*"`; and `schemaVersion` was **rejected** in the prose-split session along with `author`, `place`, `outcome`, `unchanged` and `source`.
   **The ten, with what each would cost, verified as absent today** (grep: none of these keys or checks exists in `tools/migration-lint.mjs` or `migrations/AUTHORING.md`):
   (1) **precondition guard** — a no-op check each runbook opens with, so an item cannot half-apply (OpenRewrite `Preconditions.check`, Nx agentic runbooks); (2) **`replaceIn` polarity** — CDK's `CssTokenUpgradeData` defaults to ALL files and narrows, ours is a whitelist that silently excludes, which is a wrong-by-default surface; (3) **executable verification** — Polaris ships a literal alternation `RegExp` per token group, where our `verify` is prose; (4) **runtime signal ids** — Vue/Ember collect what actually fired per app, and `devWarn` already exists here, so this is wiring rather than a mechanism; (5) **escalation marker** — Next.js codemods write a comment that breaks the build until removed (adopt the comment half only); (6) **explicit "no replacement"** — ESLint's `replacedBy` may be an empty array to SAY there is none, and 0 of 22 manifests would fail the check; (7) **`deprecatedIn`** — one half of ESLint `deprecatedSince` / Ember RFC 0649 `since`; the `availableUntil` half was rejected; (8) **provenance link** — CDK makes the PR link a required member; adopt it optional and lint it only on `unreleased`; (9) **`ng-update` requirements key** — the hard pre-flight the Angular CLI enforces (adopt the key, NOT a port to real schematics); (10) **dry-run hit counts** — jscodeshift prints per-file outcomes and Next.js warns that a wrong path reports 0 rather than failing; this one lands in the plugin, not the lint.
