@@ -1,99 +1,15 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
-<head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="color-scheme" content="light only">
 <title>Ошибка у ds-field-group — видно, но не слышно</title>
 <meta name="ds-deck-status" content="open">
 <meta name="ds-deck-evidence" content="src/lib/components/field-group/field-group.component.ts - src/lib/styles/_field-group-segment.scss - src/lib/components/field-group/field-group.token.ts - docs/todo.md">
 <link rel="stylesheet" href="ds.css">
+<link rel="stylesheet" href="deck.css">
 <style>
-  body {
-    margin: 0;
-    padding: var(--space-8) var(--space-6) var(--space-12);
-    background: var(--surface-canvas);
-    color: var(--text-primary);
-    font-family: var(--font-sans);
-    font-size: var(--font-size-m);
-    line-height: var(--line-height-base);
-  }
-
-  .wrap { max-width: 1020px; margin: 0 auto; }
-
-  h1 {
-    margin: 0 0 var(--space-3);
-    font-size: var(--font-size-h2);
-    font-weight: var(--font-weight-bold);
-    letter-spacing: var(--letter-spacing-tight);
-  }
-
-  h2 {
-    margin: var(--space-10) 0 var(--space-3);
-    font-size: var(--font-size-h3);
-    font-weight: var(--font-weight-bold);
-  }
-
-  p { margin: 0 0 var(--space-3); max-width: 78ch; }
-  .lede { color: var(--text-secondary); font-size: var(--font-size-l); }
-
-  code {
-    font-family: var(--font-mono);
-    font-size: var(--font-size-s);
-    background: var(--surface-muted);
-    padding: 1px 4px;
-    border-radius: var(--radius-sm);
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: var(--space-4) 0 var(--space-5);
-    font-size: var(--font-size-s);
-  }
-
-  th, td {
-    padding: var(--space-2-5) var(--space-3);
-    border-bottom: var(--border-width-default) solid var(--border-divider);
-    text-align: left;
-    vertical-align: middle;
-  }
-
-  th { color: var(--text-tertiary); font-weight: var(--font-weight-bold); }
-  td.mid, th.mid { text-align: center; }
-
-  .panel {
-    padding: var(--space-4);
-    border-left: 3px solid var(--border-strong);
-    background: var(--surface-muted);
-    border-radius: var(--radius-sm);
-    margin: var(--space-4) 0;
-  }
-  .panel p:last-child { margin-bottom: 0; }
-  .panel.good { border-left-color: var(--success); background: var(--success-subtitle); }
-  .panel.bad  { border-left-color: var(--error);   background: var(--error-subtitle); }
-
-  /* ── field + group, rebuilt from field-group.component.scss and _field-state.scss ── */
-  .stage {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-8);
-    padding: var(--space-5);
-    background: var(--surface-muted);
-    border-radius: var(--radius-md);
-    margin: var(--space-4) 0 var(--space-5);
-  }
-
-  .spec { min-width: 260px; }
-
-  .cap {
-    margin: 0 0 var(--space-2);
-    font: var(--font-weight-bold) var(--font-size-2xs) / var(--line-height-base) var(--font-sans);
-    letter-spacing: var(--letter-spacing-wider);
-    text-transform: uppercase;
-    color: var(--text-tertiary);
-  }
-
+  /* The field and the group, rebuilt from field-group.component.scss and _field-state.scss so the
+     two specimens carry the system's own tokens rather than a similar red. */
   .flabel {
     display: block;
     margin-bottom: var(--space-1-5);
@@ -139,6 +55,7 @@
     font: var(--font-weight-regular) var(--font-size-m) / 1 var(--font-sans);
     color: var(--text-primary);
   }
+
   .group .seg + .seg { border-left: var(--border-width-default) solid var(--border-divider); }
   .group .seg.pick { color: var(--text-secondary); }
 
@@ -150,6 +67,7 @@
     font: var(--font-weight-regular) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
     color: var(--error-text);
   }
+
   .msg::before {
     content: '!';
     display: inline-flex;
@@ -166,55 +84,23 @@
 
   .msg.ghost { color: var(--text-tertiary); }
   .msg.ghost::before { background: var(--neutral-300); color: var(--text-tertiary); content: '?'; }
-
-  /* ── the channel ladder ── */
-  .dot {
-    display: inline-block;
-    width: 13px;
-    height: 13px;
-    border-radius: 50%;
-    vertical-align: -1px;
-  }
-  .on  { background: var(--success); }
-  .off { background: var(--neutral-200); box-shadow: inset 0 0 0 1px var(--neutral-300); }
-
-  .rowlabel { font-weight: var(--font-weight-bold); white-space: nowrap; }
-  tr.pickrow { background: var(--success-subtitle); }
-  tr.todayrow { background: var(--error-subtitle); }
-
-  .says {
-    font-family: var(--font-mono);
-    font-size: var(--font-size-2xs);
-    color: var(--text-secondary);
-  }
-
-  .tag {
-    display: inline-block;
-    padding: 2px var(--space-2);
-    border-radius: var(--radius-sm);
-    font: var(--font-weight-bold) var(--font-size-2xs) / 1.6 var(--font-sans);
-    letter-spacing: var(--letter-spacing-wider);
-    text-transform: uppercase;
-  }
-  .tag.same { background: var(--neutral-200); color: var(--text-secondary); }
-  .tag.new  { background: var(--success); color: var(--surface-default); }
-
-  .sources { color: var(--text-tertiary); font-size: var(--font-size-s); }
-  .sources a { color: inherit; }
-
-  @media (max-width: 760px) {
-    table { display: block; overflow-x: auto; }
-  }
 </style>
-</head>
-<body>
-<div class="wrap">
 
-  <h1>Ошибка у <code>ds-field-group</code> — её видно, но её нечем прочитать</h1>
+<main>
 
-  <p class="lede">
-    Одно решение: даёт ли группа собственную строку ошибки. Всё остальное из него следует.
-  </p>
+  <header class="masthead">
+    <div class="chips">
+      <span class="chip is-open">нужен вердикт</span>
+      <span class="chip is-done">рамка починена 2026-09-10</span>
+      <span class="chip">1 решение · 4 канала · 5 вариантов</span>
+    </div>
+
+    <h1>Ошибка у <code>ds-field-group</code> — её видно, но её нечем прочитать</h1>
+
+    <p class="lede">
+      <b>Одно решение:</b> даёт ли группа собственную строку ошибки. Всё остальное из него следует.
+    </p>
+  </header>
 
   <h2>Вот вся проблема, в двух картинках</h2>
 
@@ -276,7 +162,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr class="todayrow">
+      <tr class="row-today">
         <td class="rowlabel">Сегодня · A</td>
         <td class="mid"><span class="dot on"></span></td>
         <td class="mid"><span class="dot off"></span></td>
@@ -300,7 +186,7 @@
         <td class="mid"><span class="dot off"></span></td>
         <td class="says">«Сумма, поле ввода, <b>недопустимое значение</b>»</td>
       </tr>
-      <tr class="pickrow">
+      <tr class="row-pick">
         <td class="rowlabel">D · C + строка группы</td>
         <td class="mid"><span class="dot on"></span></td>
         <td class="mid"><span class="dot on"></span></td>
@@ -308,7 +194,7 @@
         <td class="mid"><span class="dot on"></span></td>
         <td class="says">«…недопустимое значение, <b>введите сумму больше нуля</b>»</td>
       </tr>
-      <tr class="pickrow">
+      <tr class="row-pick">
         <td class="rowlabel">E · D, и вход <code>error</code></td>
         <td class="mid"><span class="dot on"></span></td>
         <td class="mid"><span class="dot on"></span></td>
@@ -332,7 +218,7 @@
 
   <div class="stage">
     <div class="spec">
-      <p class="cap">A · B · C <span class="tag same">как сейчас</span></p>
+      <p class="cap">A · B · C <span class="badge is-same">как сейчас</span></p>
       <span class="flabel">Сумма</span>
       <div class="group error">
         <div class="seg pick">USD ▾</div>
@@ -342,7 +228,7 @@
     </div>
 
     <div class="spec">
-      <p class="cap">D · E <span class="tag new">строка группы</span></p>
+      <p class="cap">D · E <span class="badge is-pick">строка группы</span></p>
       <span class="flabel">Сумма</span>
       <div class="group error">
         <div class="seg pick">USD ▾</div>
@@ -375,7 +261,7 @@
         <td>одно поле в <code>DsFieldGroupContext</code>, по строке в шести полях</td>
         <td>механизм уже есть (им передаётся <code>sizeResolved</code>); 1.4.1 не закрыт — текста по-прежнему нет</td>
       </tr>
-      <tr class="pickrow">
+      <tr class="row-pick">
         <td class="rowlabel">D</td>
         <td>C + слот сообщения в шаблоне группы, <code>id</code> раздаётся сегментам</td>
         <td>группа перестаёт быть одной строкой по высоте; следом попросят <code>hint</code> — это уже небольшая фича, а не фикс</td>
@@ -435,6 +321,4 @@
     поле и группа пересобраны из <code>field-group.component.scss</code> и <code>_field-state.scss</code>
   </p>
 
-</div>
-</body>
-</html>
+</main>
