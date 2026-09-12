@@ -36,7 +36,10 @@ const files = [
     report
       .split('\n')
       .filter((line) => /^ {2}\S.*\.ts/.test(line))
-      .filter((line) => !/\(new or renamed file\)/.test(line))
+      // Both spellings: class-surface-diff said "new or renamed file" until 001d9efb narrowed
+      // the label to "new file", and this filter kept matching only the old one — so every new
+      // component file was reported as a collision risk from then until 2026-09-12.
+      .filter((line) => !/\(new( or renamed)? file\)/.test(line))
       .map((line) => line.trim().replace(/\s+\(.*\)$/, '')),
   ),
 ];
