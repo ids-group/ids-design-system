@@ -7,7 +7,7 @@ export {
   largestRemainder,
 } from './charts-format';
 export { elementWidth } from './charts-measure';
-export { bandScale, linearScale, niceMax, ticks } from './charts-scale';
+export { bandScale, linearScale, niceMax, tickValues } from './charts-scale';
 export type { BandScale } from './charts-scale';
 export { describeSeries } from './charts-summary';
 export type { SummaryPoint } from './charts-summary';

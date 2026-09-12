@@ -13,7 +13,7 @@ function tickIncrement(domainMax: number, targetCount: number): number {
   return factor * Math.pow(10, power);
 }
 
-export function ticks(domainMax: number, targetCount: number): number[] {
+export function tickValues(domainMax: number, targetCount: number): number[] {
   if (!Number.isFinite(domainMax) || domainMax <= 0) {
     return [0];
   }
