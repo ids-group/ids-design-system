@@ -71,7 +71,12 @@ import type {
   RangeValue,
 } from './date-picker.types';
 import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
-import { inFieldGroup } from '@ids-group-ltd/ids-design-system/components/field-group';
+import {
+  describedByIds,
+  groupInvalid,
+  groupMessageId,
+  inFieldGroup,
+} from '@ids-group-ltd/ids-design-system/components/field-group';
 import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 
 let nextId = 0;
@@ -292,7 +297,9 @@ export class DatePickerComponent
   });
   protected readonly message = this.fieldMessage.message;
   protected readonly controlState = this.fieldMessage.controlState;
-  protected readonly invalidResolved = this.fieldMessage.invalid;
+  protected readonly groupMessage = groupMessageId();
+  protected readonly describedByIds = describedByIds;
+  protected readonly invalidResolved = groupInvalid(this.fieldMessage.invalid);
 
   readonly resolvedLocale = computed(
     () => this.locale() ?? this.config.datePicker?.locale ?? 'en-US',

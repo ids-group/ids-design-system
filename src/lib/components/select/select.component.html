@@ -32,7 +32,7 @@
   [attr.aria-labelledby]="label() ? labelId : null"
   [attr.aria-label]="resolvedAriaLabel()"
   [attr.aria-invalid]="invalidResolved() ? 'true' : null"
-  [attr.aria-describedby]="hintId()"
+  [attr.aria-describedby]="describedByIds(hintId(), groupMessage())"
   [attr.aria-required]="required() ? 'true' : null"
   [attr.aria-disabled]="isDisabled() ? 'true' : null"
   (click)="toggle()"

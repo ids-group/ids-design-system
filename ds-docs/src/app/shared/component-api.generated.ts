@@ -2473,6 +2473,51 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
+        "name": "hint",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Helper text shown below the control."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
+      },
+      {
+        "name": "warning",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph here alone."
+      },
+      {
         "name": "size",
         "kind": "input",
         "type": "DsSize | null",
@@ -2492,7 +2537,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Draws the error border on the whole group. A single segment cannot be invalid on its own: the border belongs to the group."
+        "description": "Paints the error state WITHOUT a message of its own — for when the text lives in a form-level summary. Use `error` to show text; binding either one is enough, exactly as on a field. Segments read `invalidResolved`, not this, so an `error` string announces itself without the flag beside it."
       },
       {
         "name": "disabled",
