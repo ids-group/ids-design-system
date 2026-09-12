@@ -148,126 +148,201 @@
     осталось.
   </p>
 
-  <h2>Пять вариантов — это лестница из четырёх каналов</h2>
+  <h2>Между чем выбираем</h2>
+
+  <p>
+    Одна и та же группа с ошибкой во всех пяти. Отличается то, что под ней: <b>что появляется на
+    экране</b>, <b>что появляется в DOM</b> и <b>что услышит скринридер</b>. Два варианта меняют
+    картинку, три — только звук.
+  </p>
+
+  <div class="opts">
+    <div class="opt is-today">
+      <h3>Ничего</h3>
+      <span class="badge is-same">сегодня</span>
+
+      <div>
+        <div class="group error">
+          <div class="seg pick">USD ▾</div>
+          <div class="seg">1 200,00</div>
+        </div>
+      </div>
+
+      <dl class="layer">
+        <dt>DOM</dt>
+        <dd class="none">без изменений</dd>
+        <dt>Голос</dt>
+        <dd class="">«Сумма, поле ввода, 1 200,00»</dd>
+      </dl>
+    </div>
+    <div class="opt">
+      <h3>Атрибут на группе</h3>
+
+      <div>
+        <div class="group error">
+          <div class="seg pick">USD ▾</div>
+          <div class="seg">1 200,00</div>
+        </div>
+      </div>
+
+      <dl class="layer">
+        <dt>DOM</dt>
+        <dd class="gain">aria-invalid="true"<br>на &lt;ds-field-group&gt;</dd>
+        <dt>Голос</dt>
+        <dd class="none">то же самое — на role="group" состояние не читают</dd>
+      </dl>
+    </div>
+    <div class="opt">
+      <h3>Озвучить сегментам</h3>
+
+      <div>
+        <div class="group error">
+          <div class="seg pick">USD ▾</div>
+          <div class="seg">1 200,00</div>
+        </div>
+      </div>
+
+      <dl class="layer">
+        <dt>DOM</dt>
+        <dd class="gain">aria-invalid="true"<br>на каждом контроле</dd>
+        <dt>Голос</dt>
+        <dd class="gain">«…поле ввода, <b>недопустимое значение</b>»</dd>
+      </dl>
+    </div>
+    <div class="opt is-pick">
+      <h3>Строка ошибки</h3>
+      <span class="badge is-pick">рекомендую</span>
+
+      <div>
+        <div class="group error">
+          <div class="seg pick">USD ▾</div>
+          <div class="seg">1 200,00</div>
+        </div>
+        <p class="msg">Введите сумму больше нуля</p>
+      </div>
+
+      <dl class="layer">
+        <dt>DOM</dt>
+        <dd class="gain">aria-describedby → id строки</dd>
+        <dt>Голос</dt>
+        <dd class="gain">«…недопустимое значение, <b>введите сумму больше нуля</b>»</dd>
+      </dl>
+    </div>
+    <div class="opt">
+      <h3>Строка + вход <code>error</code></h3>
+
+      <div>
+        <div class="group error">
+          <div class="seg pick">USD ▾</div>
+          <div class="seg">1 200,00</div>
+        </div>
+        <p class="msg">Введите сумму больше нуля</p>
+      </div>
+
+      <dl class="layer">
+        <dt>DOM</dt>
+        <dd class="none">то же, что слева</dd>
+        <dt>Голос</dt>
+        <dd class="none">то же, что слева</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="panel">
+    <p>
+      <b>Выбор не между пятью, а между двумя:</b> получает группа свою строку ошибки или нет.
+      «Ничего», «атрибут на группе» и «озвучить сегментам» дают один и тот же экран — отличаются
+      только тем, что слышно. «Строка + вход <code>error</code>» рисует то же, что «строка ошибки»:
+      разница в том, что пишет потребитель, и она ниже.
+    </p>
+  </div>
+
+  <h2>Что даёт каждый</h2>
 
   <table>
     <thead>
       <tr>
-        <th>Вариант</th>
+        <th>Что делаем</th>
         <th class="mid">Рамка</th>
         <th class="mid">Текст<br>ошибки</th>
-        <th class="mid">Озвучено<br>скринридеру</th>
+        <th class="mid">Озвучено</th>
         <th class="mid">Связано<br>с полем</th>
-        <th>Что услышит скринридер на сегменте</th>
+        <th>Что пишет потребитель</th>
       </tr>
     </thead>
     <tbody>
       <tr class="row-today">
-        <td class="rowlabel">Сегодня · A</td>
+        <td class="rowlabel">Ничего</td>
         <td class="mid"><span class="dot on"></span></td>
         <td class="mid"><span class="dot off"></span></td>
         <td class="mid"><span class="dot off"></span></td>
         <td class="mid"><span class="dot off"></span></td>
-        <td class="says">«Сумма, поле ввода, 1 200,00»</td>
+        <td class="says">[invalid]="true" и свою строку рядом, руками</td>
       </tr>
       <tr>
-        <td class="rowlabel">B · <code>aria-invalid</code> на хосте</td>
+        <td class="rowlabel">Атрибут на группе</td>
         <td class="mid"><span class="dot on"></span></td>
         <td class="mid"><span class="dot off"></span></td>
         <td class="mid"><span class="dot off"></span></td>
         <td class="mid"><span class="dot off"></span></td>
-        <td class="says">то же самое — на <code>role="group"</code> состояние не читается</td>
+        <td class="says">то же самое</td>
       </tr>
       <tr>
-        <td class="rowlabel">C · invalid в сегменты</td>
+        <td class="rowlabel">Озвучить сегментам</td>
         <td class="mid"><span class="dot on"></span></td>
         <td class="mid"><span class="dot off"></span></td>
         <td class="mid"><span class="dot on"></span></td>
         <td class="mid"><span class="dot off"></span></td>
-        <td class="says">«Сумма, поле ввода, <b>недопустимое значение</b>»</td>
+        <td class="says">то же самое</td>
       </tr>
       <tr class="row-pick">
-        <td class="rowlabel">D · C + строка группы</td>
+        <td class="rowlabel">Строка ошибки</td>
         <td class="mid"><span class="dot on"></span></td>
         <td class="mid"><span class="dot on"></span></td>
         <td class="mid"><span class="dot on"></span></td>
         <td class="mid"><span class="dot on"></span></td>
-        <td class="says">«…недопустимое значение, <b>введите сумму больше нуля</b>»</td>
+        <td class="says">[invalid]="true" error="Введите сумму…"</td>
       </tr>
       <tr class="row-pick">
-        <td class="rowlabel">E · D, и вход <code>error</code></td>
+        <td class="rowlabel">Строка + вход <code>error</code></td>
         <td class="mid"><span class="dot on"></span></td>
         <td class="mid"><span class="dot on"></span></td>
         <td class="mid"><span class="dot on"></span></td>
         <td class="mid"><span class="dot on"></span></td>
-        <td class="says">то же, что D — отличается только API</td>
+        <td class="says">error="Введите сумму…" — и всё</td>
       </tr>
     </tbody>
   </table>
-
-  <div class="panel">
-    <p>
-      <b>Главное, что видно из таблицы:</b> на экране меняют что-то только D и E. A, B и C дают
-      ровно ту же картинку, что сегодня — они отличаются лишь тем, что слышно. Поэтому выбор не
-      между пятью вариантами, а между <b>«группа получает свою строку ошибки»</b> и
-      <b>«не получает»</b>; C — половинчатый компромисс для случая, когда текст живёт у потребителя.
-    </p>
-  </div>
-
-  <h2>Что появится на экране</h2>
-
-  <div class="stage">
-    <div class="spec">
-      <p class="cap">A · B · C <span class="badge is-same">как сейчас</span></p>
-      <span class="flabel">Сумма</span>
-      <div class="group error">
-        <div class="seg pick">USD ▾</div>
-        <div class="seg">1 200,00</div>
-      </div>
-      <p class="cap" style="margin-top:var(--space-3)">ничего не прибавилось</p>
-    </div>
-
-    <div class="spec">
-      <p class="cap">D · E <span class="badge is-pick">строка группы</span></p>
-      <span class="flabel">Сумма</span>
-      <div class="group error">
-        <div class="seg pick">USD ▾</div>
-        <div class="seg">1 200,00</div>
-      </div>
-      <p class="msg">Введите сумму больше нуля</p>
-      <p class="cap" style="margin-top:var(--space-3)">одна строка на группу, а не по одной на сегмент</p>
-    </div>
-  </div>
 
   <h2>Чем платим</h2>
 
   <table>
     <thead>
-      <tr><th>Вариант</th><th>Работа</th><th>Цена</th></tr>
+      <tr><th>Что делаем</th><th>Работа</th><th>Цена</th></tr>
     </thead>
     <tbody>
       <tr>
-        <td class="rowlabel">A</td>
+        <td class="rowlabel">Ничего</td>
         <td>ноль кода, дописать в доку</td>
         <td>ловушка остаётся: <code>invalid</code> выглядит полноценным состоянием, а даёт четверть</td>
       </tr>
       <tr>
-        <td class="rowlabel">B</td>
+        <td class="rowlabel">Атрибут на группе</td>
         <td>одна строка в <code>host</code></td>
         <td>галочка для автотестов; человеку ноль — и опаснее, чем ничего, если после неё пункт закроют</td>
       </tr>
       <tr>
-        <td class="rowlabel">C</td>
+        <td class="rowlabel">Озвучить сегментам</td>
         <td>одно поле в <code>DsFieldGroupContext</code>, по строке в шести полях</td>
         <td>механизм уже есть (им передаётся <code>sizeResolved</code>); 1.4.1 не закрыт — текста по-прежнему нет</td>
       </tr>
       <tr class="row-pick">
-        <td class="rowlabel">D</td>
+        <td class="rowlabel">Строка ошибки</td>
         <td>C + слот сообщения в шаблоне группы, <code>id</code> раздаётся сегментам</td>
         <td>группа перестаёт быть одной строкой по высоте; следом попросят <code>hint</code> — это уже небольшая фича, а не фикс</td>
       </tr>
       <tr>
-        <td class="rowlabel">E</td>
+        <td class="rowlabel">Строка + вход <code>error</code></td>
         <td>D, но <code>invalid: boolean</code> заменяется на <code>error: string</code></td>
         <td>ломающее для каждого потребителя, и теряется случай «рамку хочу, текст свой снаружи»</td>
       </tr>
@@ -276,8 +351,8 @@
 
   <div class="panel good">
     <p>
-      <b>Рекомендую D, с входом <code>error</code> из E, но сохранив <code>invalid</code>.</b>
-      Только D закрывает то, из-за чего пункт вообще в P2: сегодня об ошибке группы нельзя узнать
+      <b>Рекомендую «строку ошибки» со входом <code>error</code>, сохранив <code>invalid</code>.</b>
+      Только она закрывает то, из-за чего пункт вообще в P2: сегодня об ошибке группы нельзя узнать
       иначе как увидев цвет. <code>error: string</code> делает текст условием состояния — включить
       ошибку и не сказать, в чём она, становится невозможно, и это совпадает с полями, где
       <code>error</code> уже строка. <code>invalid: boolean</code> остаётся ровно для одного
@@ -293,18 +368,18 @@
       <tr>
         <td><b>Получает ли группа свою строку ошибки</b></td>
         <td>
-          <b>да — D с входом <code>error</code>, <code>invalid</code> остаётся</b> ·
-          да, но только D как есть ·
-          нет, хватит озвучивания (C) ·
-          нет, оставляем как есть (A)
+          <b>да — строка со входом <code>error</code>, <code>invalid</code> остаётся</b> ·
+          да — строка, но вход остаётся <code>invalid</code> ·
+          нет — хватит озвучить сегментам ·
+          нет — оставляем как есть
         </td>
       </tr>
       <tr>
-        <td>Если да — <code>hint</code> тем же слотом</td>
+        <td>Если строка — <code>hint</code> тем же слотом</td>
         <td>сразу · потом, по запросу</td>
       </tr>
       <tr>
-        <td>Если да или C — <code>aria-invalid</code> на сегментах</td>
+        <td>Если строка или озвучивание — <code>aria-invalid</code> на сегментах</td>
         <td>на всех (буква ARIA21) · только на первом (одно объявление на группу)</td>
       </tr>
     </tbody>
