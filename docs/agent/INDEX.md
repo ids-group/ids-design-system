@@ -59,7 +59,7 @@ and token names.** These leaves are for orientation and usage.
 
 - [<ds-sidenav> — SidenavComponent](navigation/ds-sidenav.md) — Content: default slot for groups/items + custom brand/footer rows
 - [<ds-sidenav-group> — SidenavGroupComponent](navigation/ds-sidenav-group.md) — When expandable=true renders header button with toggle + caret; collapses body when not expanded.
-- [<ds-sidenav-item> — SidenavItemComponent](navigation/ds-sidenav-item.md) — **Three elements, decided by destination.** routerLink → an <a [routerLink]> with routerLinkActive; href → a p
+- [<ds-sidenav-item> — SidenavItemComponent](navigation/ds-sidenav-item.md) — **What an active item announces.** An EXACT match on the item's destination announces aria-current="page"; a P
 - [<ds-topbar> — TopBarComponent](navigation/ds-topbar.md) — No inputs.
 - [<ds-app-layout> — AppLayoutComponent](navigation/ds-app-layout.md) — Reads: railId and the read-only railOverlay signal, for a consumer-built burger; dsRailTrigger wires one for y
 - [<ds-auth-layout> — AuthLayoutComponent](navigation/ds-auth-layout.md) — landmark="main" only when the page has no other <main>; the sign-in card is not automatically the document's m

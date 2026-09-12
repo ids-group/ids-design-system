@@ -1,5 +1,6 @@
 import { computed, inject, type Signal } from '@angular/core';
 import {
+  ActivatedRoute,
   Router,
   UrlTree,
   type IsActiveMatchOptions,
@@ -92,6 +93,11 @@ export function dsAriaCurrent(
   override: Signal<DsAriaCurrent | null | undefined>,
 ): Signal<DsAriaCurrent | undefined> {
   const router = inject(Router, { optional: true });
+  // `RouterLink` resolves its commands against the route it sits on, so a relative destination
+  // (`routerLink="."`, `['..', 'sibling']`) means something different from the root. Resolving it
+  // here without the same base made `.` land on `/` — a prefix of every page, so the item that WAS
+  // the current page announced `true` instead of `page`.
+  const route = inject(ActivatedRoute, { optional: true });
 
   return computed<DsAriaCurrent | undefined>(() => {
     // `null` is the consumer's way of saying "announce nothing"; the directive spells that
@@ -110,6 +116,7 @@ export function dsAriaCurrent(
       link instanceof UrlTree
         ? link
         : router.createUrlTree(Array.isArray(link) ? [...link] : [link], {
+            relativeTo: route ?? undefined,
             ...modifiers(),
           });
 
