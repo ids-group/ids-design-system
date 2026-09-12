@@ -1,0 +1,134 @@
+{
+  "version": "unreleased",
+  "items": [
+    {
+      "id": "chart-categorical-tokens-renamed",
+      "kind": "token-rename",
+      "surface": "style",
+      "old": "--chart-cat-1, --chart-cat-2, --chart-cat-3, --chart-cat-4, --chart-cat-5, --chart-cat-6, --chart-cat-7, --chart-cat-8",
+      "new": "--chart-categorical-1, --chart-categorical-2, --chart-categorical-3, --chart-categorical-4, --chart-categorical-5, --chart-categorical-6, --chart-categorical-7, --chart-categorical-8",
+      "action": "Replace the prefix `--chart-cat-` with `--chart-categorical-` on all eight series tokens, keeping the number.",
+      "appliesWhen": "Any stylesheet of yours that reads or re-declares one of the eight, including a theme block. A `--chart-cat-` variable of your own is out of scope, and the eight `--ds-chart-series-1-color` … `--ds-chart-series-8-color` hooks are new rather than renamed.",
+      "pitfall": "The old name is inert, not invalid. A `var()` on it resolves to nothing, which makes the declaration holding it invalid at computed-value time and drops it whole — a series loses its fill rather than falling back to a default, and nothing is reported.",
+      "note": "The palette is spelled out end to end now, so a name can be searched for without being decoded first. Values are identical in both the light and the dark theme.",
+      "searchHints": ["--chart-cat-", "chart-cat"],
+      "detect": ["--chart-cat-"],
+      "verify": "No stylesheet names a `--chart-cat-` token, and every series that took its colour from one still paints."
+    },
+    {
+      "id": "chart-sequential-tokens-renamed",
+      "kind": "token-rename",
+      "surface": "style",
+      "old": "--chart-seq-1, --chart-seq-2, --chart-seq-3, --chart-seq-4, --chart-seq-5, --chart-seq-6",
+      "new": "--chart-sequential-1, --chart-sequential-2, --chart-sequential-3, --chart-sequential-4, --chart-sequential-5, --chart-sequential-6",
+      "action": "Replace the prefix `--chart-seq-` with `--chart-sequential-` on all six ramp stops, keeping the number.",
+      "appliesWhen": "Any stylesheet of yours that reads or re-declares one of the six, including a theme block. The ramp is six stops in both themes and neither gained nor lost one.",
+      "pitfall": "The old name is inert, not invalid. A `var()` on it resolves to nothing, which makes the declaration holding it invalid at computed-value time and drops it whole — a heat scale renders unpainted rather than falling back, and nothing is reported.",
+      "note": "Single-hue ramp for ordinal magnitudes, low to high. Values are identical in both the light and the dark theme, where the ramp runs the other way round by design.",
+      "searchHints": ["--chart-seq-", "chart-seq"],
+      "detect": ["--chart-seq-"],
+      "verify": "No stylesheet names a `--chart-seq-` token, and a sequential scale still paints across all six stops."
+    },
+    {
+      "id": "chart-divergent-tokens-renamed",
+      "kind": "token-rename",
+      "surface": "style",
+      "old": "--chart-div--3, --chart-div--2, --chart-div--1, --chart-div-0, --chart-div-1, --chart-div-2, --chart-div-3",
+      "new": "--chart-divergent--3, --chart-divergent--2, --chart-divergent--1, --chart-divergent-0, --chart-divergent-1, --chart-divergent-2, --chart-divergent-3",
+      "action": "Replace the prefix `--chart-div-` with `--chart-divergent-` on all seven steps, keeping the suffix exactly as it is.",
+      "appliesWhen": "Any stylesheet of yours that reads or re-declares one of the seven, including a theme block. Only the prefix moves; the signed suffix is untouched.",
+      "pitfall": "The negative steps carry a double hyphen — `--chart-div--3` becomes `--chart-divergent--3`, not `--chart-divergent-3`. Collapsing it points the worst negative step at the best positive one, which is a readable chart with the sign inverted and no way to notice from the code.",
+      "note": "Red through neutral to green for signed data. The three negative steps, the zero step and the three positive steps all keep their meaning and their value in both themes.",
+      "searchHints": ["--chart-div-", "chart-div"],
+      "detect": ["--chart-div-"],
+      "verify": "No stylesheet names a `--chart-div-` token, and a signed scale still shows its negative steps in red and its positive steps in green."
+    },
+    {
+      "id": "chart-grid-line-strong-gains-color",
+      "kind": "token-rename",
+      "surface": "style",
+      "old": "--chart-grid-line-strong",
+      "new": "--chart-grid-line-strong-color",
+      "action": "Rename `--chart-grid-line-strong` to `--chart-grid-line-strong-color`, before renaming the shorter `--chart-grid-line`.",
+      "appliesWhen": "Any stylesheet of yours that reads or re-declares the emphasised gridline colour. The plain `--chart-grid-line` is a separate token with its own entry.",
+      "pitfall": "`--chart-grid-line` is a prefix of this name, so a sweep that renames the shorter one first leaves `--chart-grid-line-color-strong` — a name nothing declares. The emphasised gridline then disappears while the plain one looks right, which reads as a styling choice.",
+      "note": "It is a colour, and every other colour token in the library already carries `-color`. The value is unchanged.",
+      "searchHints": ["--chart-grid-line-strong", "grid-line-strong"],
+      "detect": ["--chart-grid-line-strong"],
+      "verify": "No stylesheet names `--chart-grid-line-strong` without the `-color` suffix, and the emphasised gridline still paints."
+    },
+    {
+      "id": "chart-color-tokens-gain-color-suffix",
+      "kind": "token-rename",
+      "surface": "style",
+      "old": "--chart-axis-line, --chart-axis-label, --chart-axis-title, --chart-grid-line, --chart-cursor-line, --chart-tooltip-border",
+      "new": "--chart-axis-line-color, --chart-axis-label-color, --chart-axis-title-color, --chart-grid-line-color, --chart-cursor-line-color, --chart-tooltip-border-color",
+      "action": "Add `-color` to the end of all six names, after renaming `--chart-grid-line-strong`.",
+      "appliesWhen": "Any stylesheet of yours that reads or re-declares one of the six, including a theme block. `--chart-hover-bg-color`, `--chart-tooltip-bg-color` and `--chart-tooltip-text-color` already carried the suffix and keep their names.",
+      "pitfall": "The old name is inert, not invalid: a gridline or an axis rule simply stops being painted, and an axis with no line reads as a deliberately minimal chart rather than as a broken override.",
+      "note": "`--chart-grid-line` is a prefix of `--chart-grid-line-strong`, so rename the longer identifier first — it has an entry of its own. The six values are unchanged in both themes.",
+      "searchHints": [
+        "--chart-axis-",
+        "--chart-grid-line",
+        "--chart-cursor-line",
+        "--chart-tooltip-border"
+      ],
+      "detect": [
+        "--chart-axis-line",
+        "--chart-axis-label",
+        "--chart-axis-title",
+        "--chart-grid-line",
+        "--chart-cursor-line",
+        "--chart-tooltip-border"
+      ],
+      "verify": "Every chart colour token in your styles ends in `-color`, and axis lines, gridlines, the crosshair and the tooltip border all still paint."
+    },
+    {
+      "id": "chart-line-width-bold-token-renamed",
+      "kind": "token-rename",
+      "surface": "style",
+      "old": "--chart-line-w-bold",
+      "new": "--chart-line-width-bold",
+      "action": "Rename `--chart-line-w-bold` to `--chart-line-width-bold`, before renaming the shorter `--chart-line-w`.",
+      "appliesWhen": "Any stylesheet of yours that sets the emphasised line-series stroke width. The plain `--chart-line-w` is a separate token with its own entry.",
+      "pitfall": "The old name is inert, not invalid: the stroke falls back to whatever the rule around it declared, so an emphasised line comes out the same weight as the rest and the chart still looks finished.",
+      "note": "`w` was the only abbreviation in the geometry set that a reader had to expand before searching for it. The value is unchanged at 3px.",
+      "searchHints": ["--chart-line-w-bold", "line-w-bold"],
+      "detect": ["--chart-line-w-bold"],
+      "verify": "No stylesheet names `--chart-line-w-bold`, and an emphasised line still draws heavier than a plain one."
+    },
+    {
+      "id": "chart-dot-radius-active-token-renamed",
+      "kind": "token-rename",
+      "surface": "style",
+      "old": "--chart-dot-r-active",
+      "new": "--chart-dot-radius-active",
+      "action": "Rename `--chart-dot-r-active` to `--chart-dot-radius-active`, before renaming the shorter `--chart-dot-r`.",
+      "appliesWhen": "Any stylesheet of yours that sets the hovered or selected data-point radius. The resting `--chart-dot-r` is a separate token with its own entry.",
+      "pitfall": "The old name is inert, not invalid: the active dot keeps the resting radius, so hovering a point gives no size feedback at all while everything else about the interaction still works.",
+      "note": "`r` read as a radius only if you already knew the set. The value is unchanged at 6px.",
+      "searchHints": ["--chart-dot-r-active", "dot-r-active"],
+      "detect": ["--chart-dot-r-active"],
+      "verify": "No stylesheet names `--chart-dot-r-active`, and a hovered data point still grows."
+    },
+    {
+      "id": "chart-geometry-abbreviations-spelled-out",
+      "kind": "token-rename",
+      "surface": "style",
+      "old": "--chart-axis-fs, --chart-line-w, --chart-dot-r",
+      "new": "--chart-axis-font-size, --chart-line-width, --chart-dot-radius",
+      "action": "Rename `--chart-axis-fs` to `--chart-axis-font-size`, `--chart-line-w` to `--chart-line-width` and `--chart-dot-r` to `--chart-dot-radius`.",
+      "appliesWhen": "Any stylesheet of yours that sets the axis label size, the line-series stroke width or the resting data-point radius. `--chart-tick-size` and `--chart-bar-gap` were never abbreviated and keep their names.",
+      "pitfall": "The old name is inert, not invalid: an axis label falls back to the surrounding font size and a dot to whatever the rule around it declared, so the chart still renders and only its proportions are wrong.",
+      "note": "Rename the two longer identifiers first — `--chart-line-w-bold` and `--chart-dot-r-active` each have an entry of their own, and a sweep that starts with the short names relies on replace order rather than on matching a whole name. All three values are unchanged.",
+      "searchHints": ["--chart-axis-fs", "--chart-line-w", "--chart-dot-r"],
+      "detect": ["--chart-axis-fs", "--chart-line-w", "--chart-dot-r"],
+      "verify": "No stylesheet names `--chart-axis-fs`, `--chart-line-w` or `--chart-dot-r`, and axis labels, line strokes and data-point dots keep the sizes they had."
+    }
+  ],
+  "deleteList": [],
+  "informational": [
+    "`ds-bar-chart` is new — horizontal bars with a label, a value and a percentage per row, an optional data table, and a `color` override per row.",
+    "A public override layer sits over the chart palette: `--ds-chart-series-1-color` through `--ds-chart-series-8-color`, plus `--ds-chart-axis-line-color`, `--ds-chart-axis-label-color`, `--ds-chart-axis-title-color`, `--ds-chart-axis-font-size`, `--ds-chart-grid-line-color`, `--ds-chart-grid-line-strong-color`, `--ds-chart-hover-bg-color`, `--ds-chart-cursor-line-color`, `--ds-chart-tooltip-bg-color`, `--ds-chart-tooltip-text-color`, `--ds-chart-tooltip-border-color`, `--ds-chart-bar-gap`, `--ds-chart-line-width`, `--ds-chart-line-width-bold`, `--ds-chart-dot-radius`, `--ds-chart-dot-radius-active` and `--ds-chart-tick-size`. Each defaults to the palette token behind it, so nothing moves until you set one; set these rather than the palette, and recolouring one series costs one declaration instead of the whole ramp."
+  ]
+}

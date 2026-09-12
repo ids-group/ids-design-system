@@ -8,6 +8,36 @@ While the package is on `0.x`, minor releases may contain breaking changes.
 
 ## Unreleased
 
+### Breaking
+
+- **Thirty-three chart palette tokens are renamed, and an override written against an old name
+  stops applying in silence.** A custom property that no longer resolves is invalid at
+  computed-value time, so the whole declaration around it is dropped: `background:
+  var(--chart-cat-3)` paints nothing, a `:root` override of `--chart-cat-3` simply never reaches
+  the chart, and neither reports an error. Five groups:
+
+  - Categorical series — `--chart-cat-1` … `--chart-cat-8` become `--chart-categorical-1` …
+    `--chart-categorical-8`.
+  - Sequential ramp — `--chart-seq-1` … `--chart-seq-6` become `--chart-sequential-1` …
+    `--chart-sequential-6`.
+  - Divergent ramp — `--chart-div--3` … `--chart-div-3` become `--chart-divergent--3` …
+    `--chart-divergent-3`, signed suffix and all.
+  - Colours taking the `-color` the rest of the library carries — `--chart-axis-line`,
+    `--chart-axis-label`, `--chart-axis-title`, `--chart-grid-line`, `--chart-grid-line-strong`,
+    `--chart-cursor-line` and `--chart-tooltip-border`.
+  - Abbreviations spelled out — `--chart-axis-fs` becomes `--chart-axis-font-size`,
+    `--chart-line-w` becomes `--chart-line-width`, `--chart-line-w-bold` becomes
+    `--chart-line-width-bold`, `--chart-dot-r` becomes `--chart-dot-radius`, and
+    `--chart-dot-r-active` becomes `--chart-dot-radius-active`.
+
+  Rename `--chart-grid-line-strong` before `--chart-grid-line`: the short name is a prefix of the
+  long one, and a prefix-blind sweep turns the emphasised gridline into a name that does not exist.
+
+  Every value is unchanged in both themes, and `--chart-bar-gap`, `--chart-tick-size`,
+  `--chart-hover-bg-color`, `--chart-tooltip-bg-color` and `--chart-tooltip-text-color` keep their
+  names. Recolouring a series is better done through the `--ds-chart-` layer below than through the
+  palette.
+
 ### Added
 
 - `ds-bar-chart` — horizontal bars with label, value and percentage per row. Colours come from
