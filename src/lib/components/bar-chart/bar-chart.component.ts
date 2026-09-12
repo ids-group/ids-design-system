@@ -13,6 +13,7 @@ import {
   formatPercent,
   formatValue,
 } from '@ids-group-ltd/ids-design-system/components';
+import { resolveMax, widthPercent } from './bar-chart.math';
 import type { BarChartRow } from './bar-chart.types';
 
 @Component({
@@ -45,15 +46,12 @@ export class BarChartComponent {
 
   readonly rowClick = output<BarChartRow>();
 
-  protected readonly resolvedMax = computed(() => {
-    const explicit = this.max();
-    if (explicit !== null && explicit > 0) {
-      return explicit;
-    }
-    const values = this.data().map((row) => row.value);
-
-    return values.length ? Math.max(...values) : 0;
-  });
+  protected readonly resolvedMax = computed(() =>
+    resolveMax(
+      this.max(),
+      this.data().map((row) => row.value),
+    ),
+  );
 
   protected readonly rows = computed(() => {
     const max = this.resolvedMax();
@@ -61,7 +59,7 @@ export class BarChartComponent {
 
     return this.data().map((row, index) => ({
       row,
-      widthPercent: max > 0 ? Math.max((row.value / max) * 100, 0) : 0,
+      widthPercent: widthPercent(row.value, max),
       formattedValue: format(row.value),
       formattedPercent:
         row.percent !== undefined
