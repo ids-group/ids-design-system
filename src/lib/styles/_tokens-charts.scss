@@ -14,55 +14,94 @@
 
 :root {
   /* CATEGORICAL (8) ----------------------------------------- */
-  --chart-cat-1: hsl(229deg 100% 59%);   /* blue (primary) */
-  --chart-cat-2: hsl(165deg  72% 38%);   /* teal */
-  --chart-cat-3: hsl( 24deg  95% 55%);   /* orange */
-  --chart-cat-4: hsl(330deg  82% 55%);   /* magenta */
-  --chart-cat-5: hsl(45deg   95% 50%);   /* amber */
-  --chart-cat-6: hsl(190deg  85% 45%);   /* cyan */
-  --chart-cat-7: hsl(280deg  60% 60%);   /* lavender */
-  --chart-cat-8: hsl(130deg  45% 50%);   /* moss */
+  --chart-categorical-1: hsl(229deg 100% 59%);   /* blue (primary) */
+  --chart-categorical-2: hsl(165deg  72% 38%);   /* teal */
+  --chart-categorical-3: hsl( 24deg  95% 55%);   /* orange */
+  --chart-categorical-4: hsl(330deg  82% 55%);   /* magenta */
+  --chart-categorical-5: hsl(45deg   95% 50%);   /* amber */
+  --chart-categorical-6: hsl(190deg  85% 45%);   /* cyan */
+  --chart-categorical-7: hsl(280deg  60% 60%);   /* lavender */
+  --chart-categorical-8: hsl(130deg  45% 50%);   /* moss */
 
   /* SEQUENTIAL — single-hue, light → dark */
-  --chart-seq-1: var(--blue-100);
-  --chart-seq-2: var(--blue-200);
-  --chart-seq-3: var(--blue-300);
-  --chart-seq-4: var(--blue-500);
-  --chart-seq-5: var(--blue-700);
-  --chart-seq-6: var(--blue-900);
+  --chart-sequential-1: var(--blue-100);
+  --chart-sequential-2: var(--blue-200);
+  --chart-sequential-3: var(--blue-300);
+  --chart-sequential-4: var(--blue-500);
+  --chart-sequential-5: var(--blue-700);
+  --chart-sequential-6: var(--blue-900);
 
   /* DIVERGENT — red ← neutral → green
      Explicit HSL keeps the ramp
      independent of palette retunes — re-skinning brand/red/green
      should not shift the dataviz colour story. */
-  --chart-div--3: hsl(0deg 70% 40%);       /* large negative (worst) */
-  --chart-div--2: hsl(0deg 60% 58%);
-  --chart-div--1: hsl(0deg 50% 80%);
-  --chart-div-0:  hsl(225deg 8% 92%);      /* zero */
-  --chart-div-1:  hsl(140deg 35% 80%);
-  --chart-div-2:  hsl(140deg 45% 55%);
-  --chart-div-3:  hsl(140deg 55% 35%);     /* large positive (best) */
+  --chart-divergent--3: hsl(0deg 70% 40%);       /* large negative (worst) */
+  --chart-divergent--2: hsl(0deg 60% 58%);
+  --chart-divergent--1: hsl(0deg 50% 80%);
+  --chart-divergent-0:  hsl(225deg 8% 92%);      /* zero */
+  --chart-divergent-1:  hsl(140deg 35% 80%);
+  --chart-divergent-2:  hsl(140deg 45% 55%);
+  --chart-divergent-3:  hsl(140deg 55% 35%);     /* large positive (best) */
 
   /* AXIS / GRID / LEGEND */
-  --chart-axis-line:    var(--neutral-300);
-  --chart-axis-label:   var(--text-tertiary);
-  --chart-axis-title:   var(--text-secondary);
-  --chart-grid-line:    var(--neutral-150);
-  --chart-grid-line-strong: var(--neutral-200);
+  --chart-axis-line-color:    var(--neutral-300);
+  --chart-axis-label-color:   var(--text-tertiary);
+  --chart-axis-title-color:   var(--text-secondary);
+  --chart-grid-line-color:    var(--neutral-150);
+  --chart-grid-line-strong-color: var(--neutral-200);
   --chart-tick-size:    4px;
-  --chart-axis-fs:      var(--font-size-2xs);
+  --chart-axis-font-size:      var(--font-size-2xs);
 
   /* HIGHLIGHT / HOVER */
   --chart-hover-bg-color:     hsl(225deg 39% 7% / 4%);
-  --chart-cursor-line:  var(--neutral-400);
+  --chart-cursor-line-color:  var(--neutral-400);
   --chart-tooltip-bg-color:   var(--neutral-900);
   --chart-tooltip-text-color:   var(--neutral-0);
-  --chart-tooltip-border: var(--neutral-700);
+  --chart-tooltip-border-color: var(--neutral-700);
 
   /* DIMENSIONS */
   --chart-bar-gap:      4px;
-  --chart-line-w:       2px;
-  --chart-line-w-bold:  3px;
-  --chart-dot-r:        4px;
-  --chart-dot-r-active: 6px;
+  --chart-line-width:       2px;
+  --chart-line-width-bold:  3px;
+  --chart-dot-radius:        4px;
+  --chart-dot-radius-active: 6px;
+}
+
+/* Public override layer.
+   The block above is the palette; this block is the contract. A consumer sets
+   --ds-chart-*, never the palette itself, so recolouring one series costs one
+   declaration instead of the whole ramp. Series slots are numbered rather than
+   named after a hue: --ds-chart-series-3-color stays meaningful after a retune,
+   --ds-chart-orange-color would not.
+   ============================================================ */
+
+:root {
+  --ds-chart-series-1-color: var(--chart-categorical-1);
+  --ds-chart-series-2-color: var(--chart-categorical-2);
+  --ds-chart-series-3-color: var(--chart-categorical-3);
+  --ds-chart-series-4-color: var(--chart-categorical-4);
+  --ds-chart-series-5-color: var(--chart-categorical-5);
+  --ds-chart-series-6-color: var(--chart-categorical-6);
+  --ds-chart-series-7-color: var(--chart-categorical-7);
+  --ds-chart-series-8-color: var(--chart-categorical-8);
+
+  --ds-chart-axis-line-color: var(--chart-axis-line-color);
+  --ds-chart-axis-label-color: var(--chart-axis-label-color);
+  --ds-chart-axis-title-color: var(--chart-axis-title-color);
+  --ds-chart-axis-font-size: var(--chart-axis-font-size);
+  --ds-chart-grid-line-color: var(--chart-grid-line-color);
+  --ds-chart-grid-line-strong-color: var(--chart-grid-line-strong-color);
+
+  --ds-chart-hover-bg-color: var(--chart-hover-bg-color);
+  --ds-chart-cursor-line-color: var(--chart-cursor-line-color);
+  --ds-chart-tooltip-bg-color: var(--chart-tooltip-bg-color);
+  --ds-chart-tooltip-text-color: var(--chart-tooltip-text-color);
+  --ds-chart-tooltip-border-color: var(--chart-tooltip-border-color);
+
+  --ds-chart-bar-gap: var(--chart-bar-gap);
+  --ds-chart-line-width: var(--chart-line-width);
+  --ds-chart-line-width-bold: var(--chart-line-width-bold);
+  --ds-chart-dot-radius: var(--chart-dot-radius);
+  --ds-chart-dot-radius-active: var(--chart-dot-radius-active);
+  --ds-chart-tick-size: var(--chart-tick-size);
 }

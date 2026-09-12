@@ -711,132 +711,132 @@ export const CHARTS: readonly ColourRow[] = [
     "notes": "Chart legend swatch dot size (defaults to --icon-2xs, showcase)."
   },
   {
-    "name": "--chart-cat-1",
+    "name": "--chart-categorical-1",
     "value": "hsl(229deg 100% 59%)",
     "notes": "Categorical chart series colour 1."
   },
   {
-    "name": "--chart-cat-2",
+    "name": "--chart-categorical-2",
     "value": "hsl(165deg  72% 38%)",
     "notes": "Categorical chart series colour 2."
   },
   {
-    "name": "--chart-cat-3",
+    "name": "--chart-categorical-3",
     "value": "hsl( 24deg  95% 55%)",
     "notes": "Categorical chart series colour 3."
   },
   {
-    "name": "--chart-cat-4",
+    "name": "--chart-categorical-4",
     "value": "hsl(330deg  82% 55%)",
     "notes": "Categorical chart series colour 4."
   },
   {
-    "name": "--chart-cat-5",
+    "name": "--chart-categorical-5",
     "value": "hsl(45deg   95% 50%)",
     "notes": "Categorical chart series colour 5."
   },
   {
-    "name": "--chart-cat-6",
+    "name": "--chart-categorical-6",
     "value": "hsl(190deg  85% 45%)",
     "notes": "Categorical chart series colour 6."
   },
   {
-    "name": "--chart-cat-7",
+    "name": "--chart-categorical-7",
     "value": "hsl(280deg  60% 60%)",
     "notes": "Categorical chart series colour 7."
   },
   {
-    "name": "--chart-cat-8",
+    "name": "--chart-categorical-8",
     "value": "hsl(130deg  45% 50%)",
     "notes": "Categorical chart series colour 8."
   },
   {
-    "name": "--chart-seq-1",
+    "name": "--chart-sequential-1",
     "value": "var(--blue-100)",
     "notes": "Sequential chart scale colour, step 1 (lightest)."
   },
   {
-    "name": "--chart-seq-2",
+    "name": "--chart-sequential-2",
     "value": "var(--blue-200)",
     "notes": "Sequential chart scale colour, step 2."
   },
   {
-    "name": "--chart-seq-3",
+    "name": "--chart-sequential-3",
     "value": "var(--blue-300)",
     "notes": "Sequential chart scale colour, step 3."
   },
   {
-    "name": "--chart-seq-4",
+    "name": "--chart-sequential-4",
     "value": "var(--blue-500)",
     "notes": "Sequential chart scale colour, step 4."
   },
   {
-    "name": "--chart-seq-5",
+    "name": "--chart-sequential-5",
     "value": "var(--blue-700)",
     "notes": "Sequential chart scale colour, step 5."
   },
   {
-    "name": "--chart-seq-6",
+    "name": "--chart-sequential-6",
     "value": "var(--blue-900)",
     "notes": "Sequential chart scale colour, step 6 (darkest)."
   },
   {
-    "name": "--chart-div--3",
+    "name": "--chart-divergent--3",
     "value": "hsl(0deg 70% 40%)",
     "notes": "Diverging chart scale colour, negative extreme (step -3)."
   },
   {
-    "name": "--chart-div--2",
+    "name": "--chart-divergent--2",
     "value": "hsl(0deg 60% 58%)",
     "notes": "Diverging chart scale colour, negative step -2."
   },
   {
-    "name": "--chart-div--1",
+    "name": "--chart-divergent--1",
     "value": "hsl(0deg 50% 80%)",
     "notes": "Diverging chart scale colour, negative step -1."
   },
   {
-    "name": "--chart-div-0",
+    "name": "--chart-divergent-0",
     "value": "hsl(225deg 8% 92%)",
     "notes": "Diverging chart scale colour, neutral midpoint."
   },
   {
-    "name": "--chart-div-1",
+    "name": "--chart-divergent-1",
     "value": "hsl(140deg 35% 80%)",
     "notes": "Diverging chart scale colour, positive step 1."
   },
   {
-    "name": "--chart-div-2",
+    "name": "--chart-divergent-2",
     "value": "hsl(140deg 45% 55%)",
     "notes": "Diverging chart scale colour, positive step 2."
   },
   {
-    "name": "--chart-div-3",
+    "name": "--chart-divergent-3",
     "value": "hsl(140deg 55% 35%)",
     "notes": "Diverging chart scale colour, positive extreme (step 3)."
   },
   {
-    "name": "--chart-axis-line",
+    "name": "--chart-axis-line-color",
     "value": "var(--neutral-300)",
     "notes": "Chart axis line colour."
   },
   {
-    "name": "--chart-axis-label",
+    "name": "--chart-axis-label-color",
     "value": "var(--text-tertiary)",
     "notes": "Chart axis tick label colour."
   },
   {
-    "name": "--chart-axis-title",
+    "name": "--chart-axis-title-color",
     "value": "var(--text-secondary)",
     "notes": "Chart axis title colour."
   },
   {
-    "name": "--chart-grid-line",
+    "name": "--chart-grid-line-color",
     "value": "var(--neutral-150)",
     "notes": "Chart background grid line colour."
   },
   {
-    "name": "--chart-grid-line-strong",
+    "name": "--chart-grid-line-strong-color",
     "value": "var(--neutral-200)",
     "notes": "Chart background grid line colour, emphasised (e.g. zero line)."
   },
@@ -846,7 +846,7 @@ export const CHARTS: readonly ColourRow[] = [
     "notes": "Chart axis tick mark length (4px)."
   },
   {
-    "name": "--chart-axis-fs",
+    "name": "--chart-axis-font-size",
     "value": "var(--font-size-2xs)",
     "notes": "Chart axis label font size (var(--font-size-2xs))."
   },
@@ -856,7 +856,7 @@ export const CHARTS: readonly ColourRow[] = [
     "notes": "Chart hover-state highlight background colour."
   },
   {
-    "name": "--chart-cursor-line",
+    "name": "--chart-cursor-line-color",
     "value": "var(--neutral-400)",
     "notes": "Chart crosshair/cursor line colour."
   },
@@ -871,7 +871,7 @@ export const CHARTS: readonly ColourRow[] = [
     "notes": "Chart tooltip text colour."
   },
   {
-    "name": "--chart-tooltip-border",
+    "name": "--chart-tooltip-border-color",
     "value": "var(--neutral-700)",
     "notes": "Chart tooltip border colour."
   },
@@ -881,22 +881,22 @@ export const CHARTS: readonly ColourRow[] = [
     "notes": "Chart bar-series inter-bar gap (4px)."
   },
   {
-    "name": "--chart-line-w",
+    "name": "--chart-line-width",
     "value": "2px",
     "notes": "Chart line series stroke width (2px)."
   },
   {
-    "name": "--chart-line-w-bold",
+    "name": "--chart-line-width-bold",
     "value": "3px",
     "notes": "Chart line series stroke width, emphasised (3px)."
   },
   {
-    "name": "--chart-dot-r",
+    "name": "--chart-dot-radius",
     "value": "4px",
     "notes": "Chart line/scatter series dot radius (4px)."
   },
   {
-    "name": "--chart-dot-r-active",
+    "name": "--chart-dot-radius-active",
     "value": "6px",
     "notes": "Chart line/scatter series dot radius, active/hover state (6px)."
   }
@@ -3388,6 +3388,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-field-group-focus-shadow",
         "value": "var(--ds-field-focus-shadow)",
         "notes": "The ONE focus ring for the group (default --ds-field-focus-shadow) — segments suppress their own."
+      },
+      {
+        "name": "--ds-field-group-focus-shadow-error",
+        "value": "var(--ds-field-focus-shadow-error)",
+        "notes": ""
       },
       {
         "name": "--ds-field-group-divider-color",
@@ -7148,6 +7153,131 @@ export const NEW_TOKENS: readonly NewToken[] = [
     "name": "--dodont-stage-minh",
     "value": "100px",
     "kind": "length"
+  },
+  {
+    "name": "--ds-chart-axis-font-size",
+    "value": "var(--chart-axis-font-size)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-chart-axis-label-color",
+    "value": "var(--chart-axis-label-color)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-chart-axis-line-color",
+    "value": "var(--chart-axis-line-color)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-chart-axis-title-color",
+    "value": "var(--chart-axis-title-color)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-chart-bar-gap",
+    "value": "var(--chart-bar-gap)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-chart-cursor-line-color",
+    "value": "var(--chart-cursor-line-color)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-chart-dot-radius",
+    "value": "var(--chart-dot-radius)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-chart-dot-radius-active",
+    "value": "var(--chart-dot-radius-active)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-chart-grid-line-color",
+    "value": "var(--chart-grid-line-color)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-chart-grid-line-strong-color",
+    "value": "var(--chart-grid-line-strong-color)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-chart-hover-bg-color",
+    "value": "var(--chart-hover-bg-color)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-chart-line-width",
+    "value": "var(--chart-line-width)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-chart-line-width-bold",
+    "value": "var(--chart-line-width-bold)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-chart-series-1-color",
+    "value": "var(--chart-categorical-1)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-chart-series-2-color",
+    "value": "var(--chart-categorical-2)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-chart-series-3-color",
+    "value": "var(--chart-categorical-3)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-chart-series-4-color",
+    "value": "var(--chart-categorical-4)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-chart-series-5-color",
+    "value": "var(--chart-categorical-5)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-chart-series-6-color",
+    "value": "var(--chart-categorical-6)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-chart-series-7-color",
+    "value": "var(--chart-categorical-7)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-chart-series-8-color",
+    "value": "var(--chart-categorical-8)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-chart-tick-size",
+    "value": "var(--chart-tick-size)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-chart-tooltip-bg-color",
+    "value": "var(--chart-tooltip-bg-color)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-chart-tooltip-border-color",
+    "value": "var(--chart-tooltip-border-color)",
+    "kind": "other"
+  },
+  {
+    "name": "--ds-chart-tooltip-text-color",
+    "value": "var(--chart-tooltip-text-color)",
+    "kind": "other"
   },
   {
     "name": "--ds-control-focus-shadow",
