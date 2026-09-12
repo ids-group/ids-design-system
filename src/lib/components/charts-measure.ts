@@ -8,11 +8,9 @@ import {
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 
-/** Container width as a signal. Stays 0 under SSR, in a hidden tab and before the
- *  first observation — callers must not render a chart at width 0, or every scale
- *  divides by zero. Writes happen outside the observer callback because writing
- *  geometry inside it is what produces "ResizeObserver loop completed with
- *  undelivered notifications". */
+/** Container width as a signal. It is 0 under SSR, while the container is
+ *  `display: none`, and before the first observation — a caller that draws at
+ *  width 0 divides by zero in every scale. */
 export function elementWidth(host: ElementRef<HTMLElement>): Signal<number> {
   const width = signal(0);
   if (!isPlatformBrowser(inject(PLATFORM_ID))) {
@@ -20,8 +18,7 @@ export function elementWidth(host: ElementRef<HTMLElement>): Signal<number> {
   }
 
   const observer = new ResizeObserver((entries) => {
-    const measured = Math.round(entries[0]?.contentRect.width ?? 0);
-    queueMicrotask(() => width.set(measured));
+    width.set(Math.round(entries[0]?.contentRect.width ?? 0));
   });
   observer.observe(host.nativeElement);
   inject(DestroyRef).onDestroy(() => observer.disconnect());
