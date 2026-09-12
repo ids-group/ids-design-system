@@ -19,7 +19,7 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 | 6 | `6-warning-text-colour` | one colour on one tint, each candidate rendered in itself. It ends "name a number: 1, 2, 3 or 4" |
 | 7 | `7-docs-chapter-nav` | where the chapter list lives and what makes a sub-item a sub-item. Seven variants rejected, four left, and they are mutually exclusive: 11, 12, 13 and 14 each answer "where do 38 rows live" differently |
 | 8 | `8-field-group-invalid-voice` | the error border is fixed; what is open is how a group SAYS it is invalid — it has no text channel at all and sets no `aria-invalid`, so colour is the only signal |
-| 9 | `9-button-destination-api` | four questions from two consumer Asks: what modifies a destination, what an active link announces, which of the three destination-bearing components it reaches, and whether the border token keeps a name that promises a shorthand |
+| 9 | `9-button-destination-api` | one question: how a consumer modifies a destination, with the same CTA written all three ways. The `aria-current` half is a bug with one correct fix and the token rename is a call already made — both stated for a veto, not put to a vote |
 
 **Ranks 1-3 are the two biggest lanes** — the colour engine, then the interaction formula that reads
 its ramp. Three closed on 2026-09-12: `opt-in-seam` (the table's features became directives and the
