@@ -56,6 +56,16 @@ const CUSTOM_COLOR_ROWS: readonly BarChartRow[] = [
   { label: 'Referral', value: 275, color: 'var(--chart-categorical-5)' },
 ];
 
+const DATA_TABLE_ROWS: readonly BarChartRow[] = [
+  ...LONG_LABEL_ROWS,
+  ...NINE_DIGIT_VALUE_ROWS,
+];
+
+const MAX_BELOW_DATA_ROWS: readonly BarChartRow[] = [
+  { label: 'This quarter', value: 350 },
+  { label: 'Last quarter', value: 150 },
+];
+
 @Component({
   selector: 'section-charts-bar-chart',
   standalone: true,
@@ -74,6 +84,8 @@ export class BarChartSection {
   protected readonly longLabelRows = LONG_LABEL_ROWS;
   protected readonly nineDigitValueRows = NINE_DIGIT_VALUE_ROWS;
   protected readonly customColorRows = CUSTOM_COLOR_ROWS;
+  protected readonly dataTableRows = DATA_TABLE_ROWS;
+  protected readonly maxBelowDataRows = MAX_BELOW_DATA_ROWS;
 
   protected readonly truncationRules: TruncationRule[] = [
     {

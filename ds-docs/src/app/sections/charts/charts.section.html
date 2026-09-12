@@ -98,5 +98,27 @@
 
       <ds-bar-chart [data]="customColorRows" />
     </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        data table · visible
+      </code>
+
+      <ds-bar-chart
+        caption="Long label and nine-digit value together, table forced open"
+        dataTable="visible"
+        [data]="dataTableRows" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        max below data
+      </code>
+
+      <ds-bar-chart
+        caption="Max set below the largest value — bars clip at the track edge"
+        [data]="maxBelowDataRows"
+        [max]="200" />
+    </div>
   </div>
 </docs-section>
