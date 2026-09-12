@@ -573,18 +573,24 @@ export class TableSection {
     { id: 'duplicate', label: 'Duplicate', icon: 'copy' },
     { id: 'archive', label: 'Archive', icon: 'archive' },
     {
-      id: 'delete',
-      label: 'Delete',
-      icon: 'trash',
-      error: true,
-      disabled: (row) => row.status === 'completed',
-      disabledReason: 'A completed run is kept for the audit trail',
-    },
-    {
       id: 'relaunch',
       label: 'Relaunch',
       icon: 'refresh',
       hidden: (row) => row.status !== 'completed',
+    },
+    {
+      id: 'suspend',
+      label: (row) => (row.status === 'active' ? 'Pause' : 'Resume'),
+      icon: 'refresh',
+    },
+    {
+      id: 'delete',
+      label: 'Delete',
+      icon: 'trash',
+      error: true,
+      divider: true,
+      disabled: (row) => row.status === 'completed',
+      disabledReason: 'A completed run is kept for the audit trail',
     },
   ];
 

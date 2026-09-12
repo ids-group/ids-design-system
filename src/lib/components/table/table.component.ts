@@ -32,6 +32,7 @@ import { PopoverComponent } from '@ids-group-ltd/ids-design-system/components/po
 import { TooltipDirective } from '@ids-group-ltd/ids-design-system/components/tooltip';
 import { MenuComponent } from '@ids-group-ltd/ids-design-system/components/menu';
 import { MenuItemComponent } from '@ids-group-ltd/ids-design-system/components/menu';
+import { MenuDividerComponent } from '@ids-group-ltd/ids-design-system/components/menu';
 import { CellTemplateDirective } from './cell-template.directive';
 import { HeaderFilterDirective } from './header-filter.directive';
 import { DsTableLayout } from './table-layout';
@@ -117,6 +118,7 @@ function compareSortValues(
     TooltipDirective,
     MenuComponent,
     MenuItemComponent,
+    MenuDividerComponent,
     // Only instantiated when a column sets `link`, so a consumer app with no router
     // provided still renders the table — the directive is never constructed.
     RouterLink,
@@ -1536,6 +1538,16 @@ export class TableComponent<T extends object> {
       return row === null ? [] : this.actionsFor(row);
     },
   );
+
+  protected actionLabel(action: TableRowAction<T>): string {
+    const label = action.label;
+    if (typeof label !== 'function') {
+      return label;
+    }
+    const row = this.menuRow();
+
+    return row === null ? '' : label(row);
+  }
 
   /** Empty unless the item is actually disabled for this row: a reason on a live
    *  item would read as a caveat on something that works. */

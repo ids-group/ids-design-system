@@ -111,10 +111,17 @@ export interface SortChangeEvent {
 export interface TableRowAction<T = unknown> {
   /** Stable identifier — use it to branch in `rowActionSelected`. */
   id: string;
-  label: string;
+  /** Per-row where one action reads two ways: Deactivate on a live row and
+   *  Reactivate on a suspended one. It is ONE action — the same `id` reaches
+   *  `rowActionSelected` either way — so the alternative was two ids with mirrored
+   *  `hidden` predicates that have to be kept opposite by hand. */
+  label: string | ((row: T) => string);
   icon?: IconName;
   /** Renders the item in the destructive style. */
   error?: boolean;
+  /** Draws a divider ABOVE this item. For the destructive tail, where colour
+   *  alone is the only thing separating Delete from the actions above it. */
+  divider?: boolean;
   /** Per-row predicate — return true to disable the item for that row. */
   disabled?: (row: T) => boolean;
   /** Per-row predicate — return true to leave the item OUT for that row. Use it
