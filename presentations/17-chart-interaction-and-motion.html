@@ -9,29 +9,43 @@
 <link rel="stylesheet" href="deck.css">
 
 <style>
-  .three { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); margin-top: var(--space-4); }
+  .ax { font: 9px var(--font-sans); fill: #9ca3af; }
+  .val { font: var(--font-weight-bold) 9px var(--font-sans); fill: #8a1c10; }
+  .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-3); margin-top: var(--space-3); }
+  @media (max-width: 1100px) { .grid4 { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 620px) { .grid4 { grid-template-columns: 1fr; } }
+  .three { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); margin-top: var(--space-3); }
   @media (max-width: 1000px) { .three { grid-template-columns: 1fr; } }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); margin-top: var(--space-3); }
+  @media (max-width: 900px) { .two { grid-template-columns: 1fr; } }
+
   .card {
+    position: relative;
     padding: var(--space-4);
     border-radius: var(--radius-md);
     border: var(--border-width-default) solid var(--border-divider);
     background: linear-gradient(var(--surface-default), var(--surface-default));
   }
-  .card h3 { margin: 0 0 var(--space-1); font: var(--font-weight-bold) var(--font-size-s) / 1.3 var(--font-sans); }
-  .card .sub { margin: 0 0 var(--space-3); font: var(--font-size-xs) / 1.4 var(--font-mono); color: var(--text-secondary); }
-  .card svg { display: block; inline-size: 100%; block-size: auto; }
-  .card .read { margin-top: var(--space-2); font: var(--font-size-xs) / 1.45 var(--font-sans); color: var(--text-secondary); }
-  .ax { font: 9px var(--font-sans); fill: #9ca3af; }
-  .val { font: var(--font-weight-bold) 9px var(--font-sans); fill: #8a1c10; }
-  .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-3); margin-top: var(--space-4); }
-  @media (max-width: 1100px) { .grid4 { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 620px) { .grid4 { grid-template-columns: 1fr; } }
   .card.compact { padding: var(--space-3); }
-  .card.compact h3 { font: var(--font-weight-bold) var(--font-size-xs) / 1.3 var(--font-sans); }
-  .card.compact .sub { margin-bottom: var(--space-2); font-size: 11px; }
-  .sub-h { margin: var(--space-5) 0 var(--space-1); font: var(--font-weight-bold) var(--font-size-s) / 1.3 var(--font-sans); }
+  .card h3 { margin: 0 0 var(--space-2); font: var(--font-weight-bold) var(--font-size-s) / 1.3 var(--font-sans); }
+  .card.compact h3 { margin-bottom: var(--space-1); font: var(--font-weight-bold) var(--font-size-xs) / 1.3 var(--font-sans); }
+  .card .sub { margin: 0 0 var(--space-2); font: 11px / 1.4 var(--font-mono); color: var(--text-secondary); }
+  .card .read { margin: var(--space-2) 0 0; font: var(--font-size-xs) / 1.45 var(--font-sans); color: var(--text-secondary); }
+  .card svg { display: block; inline-size: 100%; block-size: auto; }
+  .card.is-pick { border-color: #11a793; border-width: 2px; }
+  .card.is-pick::after {
+    content: "выбрано";
+    position: absolute;
+    inset-block-start: -0.6rem;
+    inset-inline-end: var(--space-3);
+    padding: 1px var(--space-2);
+    border-radius: var(--radius-sm);
+    background: linear-gradient(#11a793, #11a793);
+    color: #fff;
+    font: var(--font-weight-bold) 10px var(--font-sans);
+  }
 
-  .measure {
+  .note {
     margin-top: var(--space-3);
     padding: var(--space-2) var(--space-3);
     border-radius: var(--radius-sm);
@@ -39,58 +53,73 @@
     font: var(--font-weight-bold) var(--font-size-xs) / 1.5 var(--font-sans);
     color: #8a1c10;
   }
-  .measure.is-fine { background: linear-gradient(#e8f5ee, #e8f5ee); color: #14532d; }
-  .measure.is-note { background: linear-gradient(#eef1f6, #eef1f6); color: #1f2430; }
+  .note.ok { background: linear-gradient(#e8f5ee, #e8f5ee); color: #14532d; }
+  .note.flat { background: linear-gradient(#eef1f6, #eef1f6); color: #1f2430; }
 
-  .split { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); margin-top: var(--space-4); }
-  @media (max-width: 1000px) { .split { grid-template-columns: 1fr; } }
-  .lane {
-    padding: var(--space-4);
-    border-radius: var(--radius-md);
-    border: var(--border-width-default) solid var(--border-divider);
-    background: linear-gradient(var(--surface-default), var(--surface-default));
-  }
-  .lane .tag {
-    display: inline-block;
-    margin-bottom: var(--space-2);
-    padding: 2px var(--space-2);
-    border-radius: var(--radius-sm);
-    font: var(--font-weight-bold) var(--font-size-xs) var(--font-sans);
-  }
-  .lane .tag.owned { background: linear-gradient(#e8f5ee, #e8f5ee); color: #14532d; }
-  .lane .tag.blocked { background: linear-gradient(#f6efe4, #f6efe4); color: #7a4a09; }
-  .lane .tag.free { background: linear-gradient(#e6f0fb, #e6f0fb); color: #10396b; }
-  .lane h3 { margin: 0 0 var(--space-2); font: var(--font-weight-bold) var(--font-size-s) / 1.3 var(--font-sans); }
-  .lane ul { margin: 0; padding-inline-start: 1.1rem; font: var(--font-size-xs) / 1.6 var(--font-sans); color: var(--text-secondary); }
-
-  pre.api {
-    margin: var(--space-3) 0 0;
-    padding: var(--space-3);
-    overflow-x: auto;
-    border-radius: var(--radius-sm);
-    background: linear-gradient(#f4f5f7, #f4f5f7);
-    font: var(--font-size-xs) / 1.6 var(--font-mono);
-    color: #1f2430;
-  }
-  code.tok { font: var(--font-size-xs) var(--font-mono); }
   .keyline { display: flex; flex-wrap: wrap; gap: var(--space-4); margin-top: var(--space-2); }
   .keyline span { display: inline-flex; align-items: center; gap: var(--space-1); font: var(--font-size-xs) var(--font-sans); color: var(--text-secondary); }
   .keyline i { inline-size: 0.85rem; block-size: 0.85rem; border-radius: 3px; }
+  code.tok { font: var(--font-size-xs) var(--font-mono); }
+  .sub-h { margin: var(--space-5) 0 var(--space-1); font: var(--font-weight-bold) var(--font-size-s) / 1.3 var(--font-sans); }
+
+  /* --- stagger demo --- */
+  .replay {
+    margin-top: var(--space-3);
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-sm);
+    border: var(--border-width-default) solid var(--border-divider);
+    background: linear-gradient(#f4f5f7, #f4f5f7);
+    font: var(--font-weight-bold) var(--font-size-xs) var(--font-sans);
+    color: #1f2430;
+    cursor: pointer;
+  }
+  .bars { display: flex; align-items: flex-end; gap: 6px; block-size: 120px; }
+  .bars i {
+    display: block;
+    inline-size: 26px;
+    border-radius: 3px 3px 0 0;
+    background: linear-gradient(#1682ca, #1682ca);
+    transform-origin: bottom;
+  }
+  .is-running .bars i { animation: grow 420ms cubic-bezier(0, 0, 0, 1) both; }
+  .is-running .stagger-none i { animation-delay: 0ms; }
+  .is-running .stagger-40 i:nth-child(1) { animation-delay: 0ms; }
+  .is-running .stagger-40 i:nth-child(2) { animation-delay: 40ms; }
+  .is-running .stagger-40 i:nth-child(3) { animation-delay: 80ms; }
+  .is-running .stagger-40 i:nth-child(4) { animation-delay: 120ms; }
+  .is-running .stagger-40 i:nth-child(5) { animation-delay: 160ms; }
+  .is-running .stagger-40 i:nth-child(6) { animation-delay: 200ms; }
+  .is-running .stagger-40 i:nth-child(7) { animation-delay: 240ms; }
+  .is-running .stagger-40 i:nth-child(8) { animation-delay: 280ms; }
+  @keyframes grow { from { transform: scaleY(0); opacity: 0; } to { transform: scaleY(1); opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) {
+    .is-running .bars i { animation: none; }
+  }
+
+  /* --- bar cap demo --- */
+  .caps { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); margin-top: var(--space-3); }
+  @media (max-width: 900px) { .caps { grid-template-columns: 1fr; } }
+  .caps > .card { min-inline-size: 0; }
+  .cap-stage { overflow: hidden; padding: var(--space-4) 0; }
+  .cap-bar {
+    block-size: 64px;
+    inline-size: 220px;
+    border-radius: 32px;
+    background: linear-gradient(#1682ca, #1682ca);
+    transform-origin: left center;
+  }
+  .cap-bar.is-scaled { inline-size: 1100px; transform: scaleX(0.2); }
 </style>
 
 <main>
   <div class="masthead">
     <h1>Интеракция и движение</h1>
-    <p class="lede">
-      Под одним словом лежат три разные вещи. Стас, 2026-09-13: <strong>интеракция и движение — своя
-      фаза, и она идёт ДО фазы 2</strong>, а ховер чарты делают свой и мигрируют на
-      <code class="tok">.ds-interactive</code> позже. Осталось выбрать глазом: насколько гасить
-      соседей и что делает наведённая марка. Все варианты ниже.
-    </p>
     <div class="chips">
-      <span class="chip is-done">Фаза решена — своя, до фазы 2</span>
-      <span class="chip is-open">Выбрать гашение и обращение</span>
-      <span class="chip">замерено 2026-09-13</span>
+      <span class="chip is-done">Своя фаза, до фазы 2</span>
+      <span class="chip is-done">Гашение 30 %</span>
+      <span class="chip is-done">Прямая подпись</span>
+      <span class="chip is-done">Линия+точки и полоса — обе</span>
+      <span class="chip is-open">Стаггер и торец столбца — §4 и §5</span>
     </div>
   </div>
 
@@ -98,80 +127,25 @@
     <h2>1 · Что чарты делают сегодня</h2>
     <table>
       <thead>
-        <tr><th>Чарт</th><th>Ховер</th><th>Что анимируется</th><th>Ключ в <code class="tok">@for</code></th></tr>
+        <tr><th>Чарт</th><th>Ховер</th><th>Анимируется</th><th>Ключ <code class="tok">@for</code></th></tr>
       </thead>
       <tbody>
-        <tr>
-          <td><code class="tok">ds-bar-chart</code></td>
-          <td class="no">нет ни одного правила</td>
-          <td class="no"><code class="tok">inline-size</code> — раскладка</td>
-          <td class="no"><code class="tok">$index</code></td>
-        </tr>
-        <tr>
-          <td><code class="tok">ds-column-chart</code></td>
-          <td class="no">нет ни одного правила</td>
-          <td class="no"><code class="tok">block-size</code> — раскладка</td>
-          <td class="no"><code class="tok">$index</code></td>
-        </tr>
-        <tr>
-          <td><code class="tok">ds-donut-chart</code></td>
-          <td class="yes"><code class="tok">opacity: 0.85</code></td>
-          <td class="yes"><code class="tok">opacity</code></td>
-          <td class="yes"><code class="tok">slice.id</code></td>
-        </tr>
-        <tr>
-          <td><code class="tok">ds-funnel-chart</code></td>
-          <td class="yes"><code class="tok">opacity: 0.85</code></td>
-          <td class="yes"><code class="tok">opacity</code></td>
-          <td class="yes"><code class="tok">stage.id</code></td>
-        </tr>
-        <tr>
-          <td><code class="tok">ds-line-chart</code></td>
-          <td class="no">нет — и нет самой интерактивности</td>
-          <td class="no">ничего</td>
-          <td>серии по <code class="tok">id</code>, точки по <code class="tok">$index</code></td>
-        </tr>
+        <tr><td><code class="tok">ds-bar-chart</code></td><td class="no">нет</td><td class="no"><code class="tok">inline-size</code></td><td class="no"><code class="tok">$index</code></td></tr>
+        <tr><td><code class="tok">ds-column-chart</code></td><td class="no">нет</td><td class="no"><code class="tok">block-size</code></td><td class="no"><code class="tok">$index</code></td></tr>
+        <tr><td><code class="tok">ds-donut-chart</code></td><td class="yes"><code class="tok">opacity .85</code></td><td class="yes"><code class="tok">opacity</code></td><td class="yes"><code class="tok">slice.id</code></td></tr>
+        <tr><td><code class="tok">ds-funnel-chart</code></td><td class="yes"><code class="tok">opacity .85</code></td><td class="yes"><code class="tok">opacity</code></td><td class="yes"><code class="tok">stage.id</code></td></tr>
+        <tr><td><code class="tok">ds-line-chart</code></td><td class="no">нет</td><td class="no">ничего</td><td>точки по <code class="tok">$index</code></td></tr>
       </tbody>
     </table>
-
-    <div class="measure">
-      Три чарта из пяти на наведение не отвечают ничем. Два анимируют свойство раскладки, то есть
-      считают геометрию каждый кадр. Два трекают данные по <code class="tok">$index</code> — любая
-      перестановка переписывает все узлы вместо того, чтобы их переиспользовать.
+    <div class="note">
+      3 из 5 не отвечают на наведение · 2 анимируют раскладку · 2 переписывают DOM при перестановке ·
+      6 из 10 токенов-сирот — это слой интеракции · 4 блока <code class="tok">prefers-reduced-motion</code>
+      дублируют глобальное правило
     </div>
-
-    <p style="margin-top:var(--space-4)">
-      При этом словарь движения в системе уже полный: пять длительностей
-      (<code class="tok">--duration-instant…-slower</code>, 80–400 мс), пять кривых
-      (<code class="tok">--ease-standard…-spring</code>) и роли
-      <code class="tok">--ds-motion-enter-*</code> / <code class="tok">--ds-motion-exit-*</code>.
-      <strong>Ни один чарт ни одну роль не использует</strong> — каждый пишет
-      <code class="tok">var(--duration-base) var(--ease-decelerate)</code> руками.
-    </p>
-
-    <div class="measure is-note">
-      <code class="tok">_tokens.scss:490-509</code> уже обнуляет все длительности под
-      <code class="tok">prefers-reduced-motion</code> и ставит
-      <code class="tok">transition-duration: 0ms !important</code> на всё. Значит четыре
-      персональных блока <code class="tok">@media (prefers-reduced-motion)</code> в чартах —
-      дубликат глобального правила и могут быть удалены.
-    </div>
-
-    <p style="margin-top:var(--space-4)">
-      И ещё: из сорока токенов <code class="tok">--ds-chart-*</code> десять объявлены и не читаются
-      ни одним правилом. <strong>Шесть из десяти — это ровно слой интеракции</strong>:
-      <code class="tok">hover-bg-color</code>, <code class="tok">cursor-line-color</code>,
-      <code class="tok">dot-radius-active</code> и три токена тултипа. Тема уже обещает то, чего в
-      компонентах нет.
-    </p>
   </section>
 
   <section class="panel">
-    <h2>2 · Насколько гасить остальные серии</h2>
-    <p>
-      Одни и те же данные, курсор на «Юге», восемь значений прозрачности для остальных трёх серий.
-      Смотреть на две вещи: насколько «Юг» выделился и что осталось от силуэта остальных.
-    </p>
+    <h2>2 · Гашение соседей <span class="chip is-done">30 %</span></h2>
 
     <div class="grid4">
       <div class="card compact" data-dim="1">
@@ -214,7 +188,7 @@
           <text class="ax" x="37" y="114" text-anchor="middle">I</text><text class="ax" x="96" y="114" text-anchor="middle">II</text><text class="ax" x="154" y="114" text-anchor="middle">III</text><text class="ax" x="213" y="114" text-anchor="middle">IV</text>
         </svg>
       </div>
-      <div class="card compact" data-dim="0.3">
+      <div class="card compact is-pick" data-dim="0.3">
         <h3>Гасить до 30 %</h3>
         <p class="sub">30 % — Carbon</p>
         <svg viewBox="0 0 260 120" role="img" aria-label="Наведение на Юг, остальные серии на 30 процентов прозрачности.">
@@ -263,62 +237,29 @@
       <span><i style="background:linear-gradient(#1682ca,#1682ca)"></i> Восток</span>
     </div>
 
-    <h3 class="sub-h">Что при этом происходит с числами</h3>
-    <p>
-      Замерено 2026-09-13, OKLab ΔE×100, цвет скомпонован на поверхности
-      <code class="tok">#fcfcfb</code>. Левая колонка — различимы ли приглушённые серии
-      <em>между собой</em>. Правая — насколько наведённая серия отделилась от них.
-    </p>
-
-    <table>
+    <table style="margin-top:var(--space-4)">
       <thead>
-        <tr>
-          <th>Прозрачность</th>
-          <th>Худшая пара среди приглушённых</th>
-          <th>ΔE до наведённой серии</th>
-          <th>Контраст к поверхности</th>
-        </tr>
+        <tr><th>Прозрачность</th><th>Худшая пара среди приглушённых</th><th>ΔE до наведённой</th></tr>
       </thead>
       <tbody>
-        <tr><td>100 % — не гасить</td><td class="yes">14,8</td><td>25,5</td><td>2,93–6,12</td></tr>
-        <tr><td>60 %</td><td class="no">5,2</td><td>22,7</td><td>1,65–2,01</td></tr>
-        <tr><td>50 %</td><td class="no">4,0</td><td>25,4</td><td>1,49–1,72</td></tr>
-        <tr><td>40 %</td><td class="no">3,0</td><td>28,3</td><td>1,36–1,50</td></tr>
-        <tr><td>30 % — Carbon</td><td class="no">2,1</td><td>31,1</td><td>1,25–1,34</td></tr>
-        <tr><td>25 %</td><td class="no">1,7</td><td>32,5</td><td>1,20–1,26</td></tr>
-        <tr><td>20 % — Highcharts</td><td class="no">1,3</td><td>33,9</td><td>1,17–1,20</td></tr>
-        <tr><td>15 %</td><td class="no">1,0</td><td>35,3</td><td>1,11–1,14</td></tr>
+        <tr><td>100 %</td><td class="yes">14,8</td><td>25,5</td></tr>
+        <tr><td>60 %</td><td class="no">5,2</td><td>22,7</td></tr>
+        <tr><td>50 %</td><td class="no">4,0</td><td>25,4</td></tr>
+        <tr><td>40 %</td><td class="no">3,0</td><td>28,3</td></tr>
+        <tr><td><strong>30 %</strong></td><td class="no">2,1</td><td>31,1</td></tr>
+        <tr><td>25 %</td><td class="no">1,7</td><td>32,5</td></tr>
+        <tr><td>20 %</td><td class="no">1,3</td><td>33,9</td></tr>
+        <tr><td>15 %</td><td class="no">1,0</td><td>35,3</td></tr>
       </tbody>
     </table>
-
-    <div class="measure">
-      Приглушение <strong>убивает различимость между приглушёнными сразу</strong>. Уже на 60 % худшая
-      пара падает с 14,8 до 5,2 — ниже порога 8, на котором категориальные цвета ещё считаются
-      разными. Ни одно значение из восьми контекст не сохраняет.
-    </div>
-
-    <p style="margin-top:var(--space-4)">
-      Значит выбор не между «сохранить контекст» и «не сохранить» — контекст как <em>набор
-      различимых серий</em> теряется при любом гашении. Остаётся выбор между тем, насколько громко
-      выделена наведённая серия, и тем, сколько силуэта остаётся от остальных. Это вопрос вкуса,
-      честно, — и поэтому он тут картинками, а не числом.
-    </p>
-
-    <div class="measure is-note">
-      Порог 1.4.11 (3:1 для нетекстовой графики) здесь ничего не решает: ниже него оказываются
-      <em>все</em> восемь значений, и даже при 100 % два цвета из четырёх уже под ним (бирюза 2,93).
-      Это отдельный долг палитры, а не аргумент в пользу какого-то уровня гашения.
+    <div class="note flat">
+      OKLab ΔE×100, замерено 2026-09-13. Порог различимости категориальных цветов — 8. Ни один
+      уровень гашения его не держит: приглушённые перестают отличаться друг от друга сразу.
     </div>
   </section>
 
   <section class="panel">
-    <h2>2b · Что при этом делает сама наведённая серия</h2>
-    <p>
-      Гашение соседей и подсветка наведённой — независимые решения; MUI&nbsp;X так и разделяет их на
-      <code class="tok">highlight</code> и <code class="tok">fade</code>. Ниже соседи держатся на
-      30 %, меняется только обращение с наведённой серией.
-    </p>
-
+    <h2>2b · Наведённая марка <span class="chip is-done">прямая подпись</span></h2>
     <div class="grid4">
       <div class="card compact">
         <h3>Только соседи гаснут</h3>
@@ -330,7 +271,7 @@
           <text class="ax" x="37" y="114" text-anchor="middle">I</text><text class="ax" x="96" y="114" text-anchor="middle">II</text><text class="ax" x="154" y="114" text-anchor="middle">III</text><text class="ax" x="213" y="114" text-anchor="middle">IV</text>
         </svg>
       </div>
-      <div class="card compact">
+      <div class="card compact is-pick">
         <h3>Прямая подпись значения</h3>
         <p class="sub">второй канал, не только цвет</p>
         <svg viewBox="0 0 260 120" role="img" aria-label="Наведение на Юг: прямая подпись значения.">
@@ -371,21 +312,14 @@
         </svg>
       </div>
     </div>
-
-    <p style="margin-top:var(--space-4)">
-      Варианты складываются: подпись плюс обводка, осветление плюс подпись. Важно одно —
-      <strong>прямая подпись единственная из пяти, которая работает без цвета</strong>: она же
-      закрывает требование второго канала кодирования для пар в полосе ΔE 6–8 из деки 9.
-    </p>
+    <div class="note flat">
+      Единственный вариант, который работает без цвета — и он же закрывает второй канал кодирования
+      для пар ΔE 6–8 из деки 9. Складывается с остальными.
+    </div>
   </section>
 
   <section class="panel">
-    <h2>2c · Ховер у линейного чарта</h2>
-    <p>
-      У линии нет марки под курсором — есть категория. Поэтому здесь три своих варианта, и один из
-      них уже обещан токеном <code class="tok">--ds-chart-cursor-line-color</code>, который объявлен
-      и не читается ничем.
-    </p>
+    <h2>2c · Ховер линии <span class="chip is-done">обе</span></h2>
 
     <div class="three">
       <div class="card">
@@ -398,12 +332,12 @@
           <polyline fill="none" stroke="#11a793" stroke-width="2" points="14,50 60.8,56 107.6,46 154.4,58 201.2,66 248,60"/>
           <text class="ax" x="154.4" y="114" text-anchor="middle">Апр</text>
         </svg>
-        <p class="read">Минимум. Показывает, какая категория читается, но не какие значения.</p>
+        <p class="read">Не выбран: показывает категорию, но не значения.</p>
       </div>
 
-      <div class="card">
+      <div class="card is-pick">
         <h3>Линия и точки</h3>
-        <p class="sub">+ --ds-chart-dot-radius-active</p>
+        <p class="sub">--ds-chart-dot-radius-active</p>
         <svg viewBox="0 0 260 120" role="img" aria-label="Вертикальная линия курсора с отмеченными точками на обеих сериях.">
           <line x1="14" y1="100" x2="248" y2="100" stroke="#d1d5db" stroke-width="1"/>
           <line x1="154.4" y1="16" x2="154.4" y2="100" stroke="#9ca3af" stroke-width="1"/>
@@ -413,10 +347,10 @@
           <circle cx="154.4" cy="58" r="5" fill="#11a793" stroke="#fcfcfb" stroke-width="2"/>
           <text class="ax" x="154.4" y="114" text-anchor="middle">Апр</text>
         </svg>
-        <p class="read">Точки становятся якорем для тултипа и целью для фокуса с клавиатуры.</p>
+        <p class="read">Мышь и клавиатура: точка — якорь тултипа и цель фокуса.</p>
       </div>
 
-      <div class="card">
+      <div class="card is-pick">
         <h3>Полоса категории</h3>
         <p class="sub">--ds-chart-hover-bg-color</p>
         <svg viewBox="0 0 260 120" role="img" aria-label="Подсвеченная полоса на всю высоту плота под четвёртой категорией.">
@@ -428,156 +362,153 @@
           <circle cx="154.4" cy="58" r="5" fill="#11a793" stroke="#fcfcfb" stroke-width="2"/>
           <text class="ax" x="154.4" y="114" text-anchor="middle">Апр</text>
         </svg>
-        <p class="read">Читается на касании, где тонкая линия под пальцем не видна. Дороже на глаз.</p>
+        <p class="read">Касание: палец накрывает линию, полосу — нет.</p>
       </div>
+    </div>
+
+    <div class="note ok">
+      Обе реализуются и включаются вместе: полоса ловит касание, точки держат тултип и фокус.
+      Токены <code class="tok">--ds-chart-cursor-line-color</code>,
+      <code class="tok">--ds-chart-dot-radius-active</code> и
+      <code class="tok">--ds-chart-hover-bg-color</code> перестают быть сиротами.
     </div>
   </section>
 
+  <section class="panel" id="stagger">
+    <h2>4 · Стаггер <span class="chip is-open">решить</span></h2>
+    <p>Марки при появлении выезжают все разом или по очереди. Нажми — проиграет обе.</p>
 
-  <section class="panel">
-    <h2>3 · Что умеет браузер — замерено, а не процитировано</h2>
-    <p>
-      Прежде чем спорить о том, как анимировать столбцы и линии, надо знать, что вообще
-      интерполируется. Замерено в Chrome 153 на этой машине, 2026-09-13: элемент с
-      <code class="tok">transition: &lt;свойство&gt; 600ms linear</code>, значение снято на 250 мс.
-    </p>
+    <div class="two">
+      <div class="card">
+        <h3>Без стаггера</h3>
+        <p class="sub">delay 0 мс · все 8 стартуют вместе</p>
+        <div class="bars stagger-none">
+          <i style="block-size:46%"></i><i style="block-size:64%"></i><i style="block-size:54%"></i><i style="block-size:80%"></i>
+          <i style="block-size:70%"></i><i style="block-size:92%"></i><i style="block-size:60%"></i><i style="block-size:76%"></i>
+        </div>
+        <p class="read">420 мс от начала до конца. Читается как «данные пришли».</p>
+      </div>
 
-    <table>
+      <div class="card">
+        <h3>Стаггер 40 мс на марку</h3>
+        <p class="sub">delay 0…280 мс · последняя ждёт 280</p>
+        <div class="bars stagger-40">
+          <i style="block-size:46%"></i><i style="block-size:64%"></i><i style="block-size:54%"></i><i style="block-size:80%"></i>
+          <i style="block-size:70%"></i><i style="block-size:92%"></i><i style="block-size:60%"></i><i style="block-size:76%"></i>
+        </div>
+        <p class="read">700 мс до полной картины. Читается как «чарт строится».</p>
+      </div>
+    </div>
+
+    <button class="replay" type="button" data-replay>▶ Проиграть обе</button>
+
+    <div class="note flat">
+      Вопрос — только дефолт. Вход <code class="tok">staggerMs</code> будет в любом случае. Ни одна
+      из десяти обследованных библиотек стаггер по умолчанию не включает. При 30 марках стаггер 40 мс
+      даёт 1,6 с до полной картины — поэтому задержка в плане ограничена сверху.
+    </div>
+  </section>
+
+  <section class="panel" id="cap">
+    <h2>5 · Торец столбца <span class="chip is-open">решить</span></h2>
+    <p>Столбец растёт при смене данных. Растить его можно двумя способами, и они дают разный торец.</p>
+
+    <div class="caps">
+      <div class="card">
+        <h3>Растим <code class="tok">inline-size</code></h3>
+        <p class="sub">как сейчас · ширина 220px, радиус 32px</p>
+        <div class="cap-stage"><div class="cap-bar"></div></div>
+        <p class="read">Торец — полукруг. Раскладка пересчитывается каждый кадр.</p>
+      </div>
+      <div class="card">
+        <h3>Растим <code class="tok">transform: scaleX</code></h3>
+        <p class="sub">1100px × 0.2 — та же итоговая ширина</p>
+        <div class="cap-stage"><div class="cap-bar is-scaled"></div></div>
+        <p class="read">Торец сплющен: радиус по горизонтали ужался вместе с телом, 32px → 6,4px.</p>
+      </div>
+    </div>
+
+    <table style="margin-top:var(--space-4)">
       <thead>
-        <tr><th>Свойство</th><th>Старт → цель</th><th>На 250 мс</th><th>Вывод</th></tr>
+        <tr><th>Вариант</th><th>Цена кадра</th><th>Торец</th><th>Работы</th></tr>
       </thead>
       <tbody>
-        <tr><td><code class="tok">width</code> (rect)</td><td>10 → 200px</td><td>89,2px</td><td class="yes">интерполируется</td></tr>
-        <tr><td><code class="tok">height</code> (rect)</td><td>10 → 80px</td><td>39,2px</td><td class="yes">интерполируется</td></tr>
-        <tr><td><code class="tok">r</code> (circle)</td><td>4 → 40px</td><td>19,0px</td><td class="yes">интерполируется</td></tr>
-        <tr><td><code class="tok">cx</code> (circle)</td><td>10 → 200px</td><td>89,2px</td><td class="yes">интерполируется</td></tr>
-        <tr><td><code class="tok">d</code>, одинаковые команды</td><td>3 точки → 3 точки</td><td><code class="tok">M 0 0 L 47.5 26.7 L 95 0</code></td><td class="yes">интерполируется</td></tr>
-        <tr><td><code class="tok">d</code>, разное число точек</td><td>3 точки → 4 точки</td><td class="no">сразу цель</td><td class="no">прыгает</td></tr>
-        <tr><td><code class="tok">d</code>, прямая → кривая</td><td><code class="tok">L</code> → <code class="tok">C</code></td><td class="no">сразу цель</td><td class="no">прыгает</td></tr>
+        <tr>
+          <td>Оставить <code class="tok">inline-size</code></td>
+          <td class="no">раскладка каждый кадр</td>
+          <td class="yes">правильный</td>
+          <td class="yes">ноль — записать причину</td>
+        </tr>
+        <tr>
+          <td>Перестроить: тело <code class="tok">scaleX</code>, торец отдельным элементом</td>
+          <td class="yes">компоновщик</td>
+          <td class="yes">правильный</td>
+          <td class="no">переделка марки в bar и column</td>
+        </tr>
+        <tr>
+          <td>Просто <code class="tok">scaleX</code></td>
+          <td class="yes">компоновщик</td>
+          <td class="no">сплющен</td>
+          <td class="yes">ноль</td>
+        </tr>
       </tbody>
     </table>
-
-    <div class="measure">
-      Морфинг <code class="tok">d</code> работает только при совпадающем списке команд. У линейного
-      чарта число категорий меняется — значит путь морфить нельзя, и это не вопрос вкуса.
-    </div>
-
-    <div class="measure is-note">
-      Отдельно и не проверено здесь: по данным caniuse Safari не поддерживает
-      <code class="tok">d</code> как CSS-свойство ни в одной версии, а Firefox добавил его позже
-      Chrome. Если это подтвердится, CSS-морфинг пути отпадает не потому, что он дорогой, а потому
-      что он не кроссбраузерный. <strong>Проверить до того, как это станет решением.</strong>
-    </div>
-
-    <p style="margin-top:var(--space-4)">
-      Второй слой — цена. На компоновщике бесплатны только
-      <code class="tok">transform</code> и <code class="tok">opacity</code>; всё остальное,
-      включая <code class="tok">width</code>, <code class="tok">r</code> и
-      <code class="tok">d</code>, считает раскладку или отрисовку каждый кадр. Наши столбцы уже
-      анимируют <code class="tok">inline-size</code> — и не по недосмотру: под
-      <code class="tok">transform: scaleX()</code> скруглённый торец столбца сплющится. Это настоящий
-      размен, и он должен быть записан, а не найден заново.
-    </p>
   </section>
 
   <section class="panel">
-    <h2>4 · Три вещи под одним словом</h2>
-    <p>
-      «Добавить интеракцию» распадается на три задачи с разными владельцами, и это и есть ответ на
-      вопрос про фазу.
-    </p>
-
-    <div class="split">
-      <div class="lane">
-        <span class="tag free">переезжает в фазу интеракции</span>
-        <h3>Чтение значения</h3>
-        <ul>
-          <li>тултип: <code class="tok">'item' | 'axis' | 'none'</code></li>
-          <li>раскрытие по фокусу, не только по курсору</li>
-          <li>подсветка и гашение от легенды</li>
-          <li>кольцо фокуса на марке</li>
-        </ul>
-        <p class="read" style="margin-top:var(--space-3)">
-          Сейчас это §3.1, §3.2 и §7 спеки фазы 2. Раз фаза интеракции идёт раньше — они переезжают
-          в неё целиком вместе с тремя дефектами клавиатуры из §0.3.
-        </p>
-      </div>
-
-      <div class="lane">
-        <span class="tag blocked">решено: не ждём</span>
-        <h3>Формула состояний</h3>
-        <ul>
-          <li>как выводится hover из базового цвета</li>
-          <li>есть ли pressed у нейтральных поверхностей</li>
-          <li>шаг оттенка: 28 % или 34 %</li>
-          <li>форма ручного переопределения</li>
-        </ul>
-        <p class="read" style="margin-top:var(--space-3)">
-          Стас, 2026-09-13: чарты делают свой ховер и мигрируют потом. Значит формула чарта живёт в
-          одном месте — одна переменная на уровне <code class="tok">:host</code>, — чтобы миграция
-          на <code class="tok">.ds-interactive</code> была заменой одного файла, а не пяти.
-        </p>
-      </div>
-
-      <div class="lane">
-        <span class="tag free">свободно — новая фаза</span>
-        <h3>Движение и касание</h3>
-        <ul>
-          <li>вход, обновление, выход данных</li>
-          <li>стаггер и переход «скелет → данные»</li>
-          <li>прерываемость на лету</li>
-          <li>касание там, где курсора нет</li>
-          <li>чарты начинают читать <code class="tok">--ds-motion-*</code></li>
-        </ul>
-        <p class="read" style="margin-top:var(--space-3)">
-          Ничем не занято и ни в одной спеке не описано. Вот это — настоящая отдельная фаза.
-        </p>
-      </div>
-    </div>
-
-    <p style="margin-top:var(--space-5)">
-      Порядок при этом сходится сам: <strong>тултипу нужна цель наведения</strong>, а ховеру нужен
-      маршрут с клавиатуры, которого у воронки и линии нет. Три дефекта клавиатуры, ховер, тултип,
-      легенда, фокус и движение — это один связный кусок работы, и он честно становится фазой
-      раньше композиции и новых марок.
-    </p>
-  </section>
-
-  <section class="panel">
-    <h2>5 · Что делает поле с движением данных</h2>
+    <h2>6 · Что умеет браузер</h2>
+    <p>Chrome 153, <code class="tok">transition: &lt;свойство&gt; 600ms linear</code>, снято на 250 мс.</p>
     <table>
-      <thead>
-        <tr><th>Библиотека</th><th>Что документировано</th></tr>
-      </thead>
+      <thead><tr><th>Свойство</th><th>На 250 мс</th><th>Вывод</th></tr></thead>
       <tbody>
-        <tr><td>Chart.js</td><td>по умолчанию <strong>1000 мс</strong>, <code class="tok">easeOutQuart</code>; в документации по производительности сама же советует выключать анимацию на больших данных</td></tr>
-        <tr><td>ECharts</td><td>анимирует «положение, масштаб и <em>форму</em>» на добавлении, обновлении и удалении; задержка на марку — функция индекса</td></tr>
-        <tr><td>AG&nbsp;Charts</td><td>обновление разбито на три фазы подряд: удалить → обновить → добавить</td></tr>
-        <tr><td>Recharts, MUI&nbsp;X</td><td>заявляют поддержку <code class="tok">prefers-reduced-motion</code>; у MUI&nbsp;X при этом открыт баг, что первая анимация всё равно проигрывается</td></tr>
-        <tr><td>Vega-Lite</td><td>грамматики анимации нет вообще — обновление данных просто перерисовывает</td></tr>
-        <tr class="dead"><td>все десять</td><td class="no">ни одна не документирует, что происходит при смене данных <em>посреди</em> анимации</td></tr>
+        <tr><td><code class="tok">width</code> 10→200px</td><td>89,2px</td><td class="yes">интерполируется</td></tr>
+        <tr><td><code class="tok">height</code> 10→80px</td><td>39,2px</td><td class="yes">интерполируется</td></tr>
+        <tr><td><code class="tok">r</code> 4→40px</td><td>19,0px</td><td class="yes">интерполируется</td></tr>
+        <tr><td><code class="tok">cx</code> 10→200px</td><td>89,2px</td><td class="yes">интерполируется</td></tr>
+        <tr><td><code class="tok">d</code>, одинаковые команды</td><td><code class="tok">M 0 0 L 47.5 26.7 L 95 0</code></td><td class="yes">интерполируется</td></tr>
+        <tr><td><code class="tok">d</code>, 3 точки → 4 точки</td><td class="no">сразу цель</td><td class="no">прыгает</td></tr>
+        <tr><td><code class="tok">d</code>, <code class="tok">L</code> → <code class="tok">C</code></td><td class="no">сразу цель</td><td class="no">прыгает</td></tr>
       </tbody>
     </table>
+    <div class="note">
+      Морфинг пути требует совпадающего списка команд. У линии число категорий меняется — значит путь
+      морфить нельзя.
+    </div>
+    <div class="note flat">
+      Не проверено: по caniuse Safari не поддерживает <code class="tok">d</code> как CSS-свойство ни в
+      одной версии. Подтвердить до того, как это станет решением.
+    </div>
+  </section>
 
-    <p style="margin-top:var(--space-4)">
-      Стаггера по умолчанию нет ни у кого: ECharts и Chart.js дают колбэк от индекса, значение
-      выбирает потребитель. Касание везде решено одинаково и скучно — <strong>тап работает как
-      наведение</strong> (Highcharts, Chart.js, ECharts), а не как отдельный жест.
-    </p>
-
-    <p style="margin-top:var(--space-4)">
-      Контраргумент, который стоит держать рядом: Heer и Robertson (IEEE&nbsp;TVCG 2007) показали,
-      что анимированный переход помогает пониманию <em>только</em> при разбиении на простые
-      подшаги; непрерывная анимация без стадий даёт мало. А Chart.js в собственной документации по
-      производительности советует анимацию отключать. Движение здесь — не украшение и не данность,
-      а решение с ценой.
-    </p>
-
-    <p class="pick">
-      <strong>Что осталось выбрать:</strong> уровень гашения из восьми в разделе 2, обращение с
-      наведённой маркой из пяти в разделе 2b и ховер линии из трёх в разделе 2c. Всё остальное
-      решено: своя фаза до фазы 2, свой ховер с миграцией позже, и в этой же фазе чарты начинают
-      читать <code class="tok">--ds-motion-*</code> вместо рукописных длительностей.
-    </p>
+  <section class="panel">
+    <h2>7 · Что делает поле</h2>
+    <table>
+      <thead><tr><th>Библиотека</th><th>Документировано</th></tr></thead>
+      <tbody>
+        <tr><td>Highcharts</td><td>гашение остальных <code class="tok">inactive.opacity</code> = 0.2 по умолчанию</td></tr>
+        <tr><td>Carbon (IBM)</td><td>гашение 30 % при наведении на легенду</td></tr>
+        <tr><td>MUI&nbsp;X</td><td><code class="tok">highlightScope: { highlight, fade }</code> — две независимые оси</td></tr>
+        <tr><td>ECharts</td><td><code class="tok">emphasis.focus</code> + <code class="tok">blurScope</code>; анимирует положение, масштаб и форму</td></tr>
+        <tr><td>Chart.js</td><td>1000 мс <code class="tok">easeOutQuart</code>; сама советует выключать анимацию на больших данных</td></tr>
+        <tr><td>AG&nbsp;Charts</td><td>три фазы подряд: удалить → обновить → добавить</td></tr>
+        <tr><td>nivo</td><td><code class="tok">activeOuterRadiusOffset</code> — наведение двигает геометрию</td></tr>
+        <tr><td>Vega-Lite</td><td>грамматики анимации нет</td></tr>
+        <tr class="dead"><td>все десять</td><td class="no">стаггер по умолчанию — ни у кого · поведение при смене данных посреди анимации — не документирует никто</td></tr>
+      </tbody>
+    </table>
+    <div class="note flat">
+      Касание везде одинаково: <strong>тап работает как наведение</strong> (Highcharts, Chart.js,
+      ECharts). Heer &amp; Robertson, IEEE TVCG 2007: анимированный переход помогает пониманию только
+      при разбиении на простые подшаги.
+    </div>
   </section>
 </main>
+
+<script>
+  document.querySelector('[data-replay]').addEventListener('click', (event) => {
+    const main = event.target.closest('main');
+    main.classList.remove('is-running');
+    void main.offsetWidth;
+    main.classList.add('is-running');
+  });
+</script>
