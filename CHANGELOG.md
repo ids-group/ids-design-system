@@ -228,12 +228,13 @@
   legend and an annex table all run into the page without an edge. One already sitting in a card
   drops it with `--ds-chart-frame-border-width: 0` and `--ds-chart-frame-padding: 0`.
 
-  Two geometry rules are worth knowing because they are not preferences. `ds-donut-chart` caps
-  `thickness` so a hole always remains: the centre value renders unconditionally, and a band that
-  closed over the hole would drop that number onto the slices, where no text colour saves it — the
-  ground under it is three different hues. And `ds-bar-chart` keeps a label far closer to its own bar
-  than to the next row, because levelling the two makes the eye group a bar with the label BELOW it
-  and read every row off by one.
+  Two geometry rules are worth knowing because they are not preferences. `ds-donut-chart` holds its
+  centre content to the square that fits inside the hole, so a long `centerLabel` wraps instead of
+  running out over the ring, and the text carries a halo of the chart's own background — at
+  `thickness: 1` it sits on the slices, where no single text colour is readable against three
+  different hues. And `ds-bar-chart` keeps a label far closer to its own bar than to the next row,
+  because levelling the two makes the eye group a bar with the label BELOW it and read every row off
+  by one.
 
 
 - **Chart colour is three families, and reaching for the wrong one is the usual chart bug.** The

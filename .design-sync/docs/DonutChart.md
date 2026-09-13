@@ -6,7 +6,7 @@ A ring that splits one total into its parts. Each slice carries its share as a w
 - `data` (required): `{ id, label, value, slot? }[]`. `slot` is a 1-based palette slot — pinning a slice keeps every other slice's colour where it is when one is filtered out of `data`; left off, the colour follows the index and the whole ring repaints.
 - `centerValue` / `centerLabel`: the headline figure in the middle of the ring, and the word under it.
 - `legend`: `'end'` (default, beside the ring) | `'bottom'` | `'none'`.
-- `thickness`: the ring's stroke as a share of its radius, capped so a hole always remains. The centre value renders unconditionally — it falls back to the formatted total — and a band that closed over the hole would drop that number onto the slices, where no text colour saves it because the ground under it is three different hues. `thickness={1}` draws the thickest ring, not a pie.
+- `thickness`: the ring's stroke as a share of its radius. `thickness={1}` closes the hole into a pie; the centre value still prints, over the slices, carrying a halo of the chart's own background because no single text colour is readable against three different hues.
 - `caption`: shown above the ring and reused as the data table's caption.
 - `summary`: the accessible name; generated from `data` when omitted.
 - `valueFormat`: `(value: number) => string`, defaults to `Intl.NumberFormat`.
