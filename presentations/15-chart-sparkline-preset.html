@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="ru">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Спарклайн — пресет или свой компонент</title>
+<meta name="ds-deck-status" content="open">
+<meta name="ds-deck-evidence" content="src/lib/components/line-chart/line-chart.component.ts">
+<link rel="stylesheet" href="ds.css">
+<link rel="stylesheet" href="deck.css">
+
+<style>
+  .tiles {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-4);
+    margin-top: var(--space-4);
+  }
+  @media (max-width: 900px) { .tiles { grid-template-columns: 1fr; } }
+  .tile {
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+    border: var(--border-width-default) solid var(--border-divider);
+    background: linear-gradient(var(--surface-default), var(--surface-default));
+  }
+  .tile .k {
+    margin: 0;
+    font: var(--font-weight-regular) var(--font-size-xs) / 1.3 var(--font-sans);
+    color: var(--text-secondary);
+  }
+  .tile .n {
+    margin: var(--space-1) 0 0;
+    font: var(--font-weight-bold) 1.75rem / 1.1 var(--font-sans);
+    font-variant-numeric: tabular-nums;
+  }
+  .tile .d {
+    margin: 2px 0 var(--space-2);
+    font: var(--font-weight-bold) var(--font-size-xs) / 1.3 var(--font-sans);
+  }
+  .tile .d.up { color: #14532d; }
+  .tile .d.down { color: #8a1c10; }
+  .tile svg { display: block; inline-size: 100%; max-inline-size: 216px; block-size: auto; }
+
+  .art {
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+    border: var(--border-width-default) solid var(--border-divider);
+    background: linear-gradient(var(--surface-default), var(--surface-default));
+    margin-top: var(--space-3);
+  }
+  .art svg { display: block; inline-size: 100%; block-size: auto; }
+  .art figcaption {
+    margin-top: var(--space-2);
+    font: var(--font-weight-regular) var(--font-size-xs) / 1.45 var(--font-sans);
+    color: var(--text-secondary);
+  }
+  .ax { font: 10px var(--font-sans); fill: #6b7280; }
+  .lg { font: 11px var(--font-sans); fill: #374151; }
+  pre.api {
+    margin: var(--space-3) 0 0;
+    padding: var(--space-3);
+    overflow-x: auto;
+    border-radius: var(--radius-sm);
+    background: linear-gradient(#f4f5f7, #f4f5f7);
+    font: var(--font-size-xs) / 1.6 var(--font-mono);
+    color: #1f2430;
+  }
+  code.tok { font: var(--font-size-xs) var(--font-mono); }
+</style>
+
+<main>
+  <div class="masthead">
+    <h1>Спарклайн: пресет или свой компонент</h1>
+    <p class="lede">
+      Спарклайн отличается от линии не геометрией, а тем, что у него <em>выключено</em>. Вопрос
+      ровно в этом: «всё выключено» — это набор значений по умолчанию или новая марка.
+    </p>
+    <div class="chips">
+      <span class="chip is-open">Нужно решение</span>
+      <span class="chip">§4.1 спеки, вопрос 7</span>
+      <span class="chip">геометрия та же самая</span>
+    </div>
+  </div>
+
+  <section class="panel">
+    <h2>Где он живёт на самом деле</h2>
+    <p>
+      Не сам по себе, а внутри плитки показателя — под числом, как след того, чем это число было
+      последние двенадцать месяцев. Размер настоящий: 216×38.
+    </p>
+
+    <div class="tiles">
+      <div class="tile">
+        <p class="k">Отправления</p>
+        <p class="n">1 248</p>
+        <p class="d up">+12 % к прошлому году</p>
+        <svg viewBox="0 0 216 38" role="img" aria-label="Отправления росли двенадцать месяцев подряд с 40 до 63.">
+          <polyline fill="none" stroke="#11a793" stroke-width="2" stroke-linejoin="round"
+            points="8,30 26.2,26 44.4,29 62.5,22 80.7,18 98.9,21 117.1,15 135.3,12 153.5,16 171.6,9 189.8,4 208,7"/>
+          <circle cx="208" cy="7" r="3" fill="#11a793"/>
+        </svg>
+      </div>
+      <div class="tile">
+        <p class="k">Средний чек</p>
+        <p class="n">₽ 4 310</p>
+        <p class="d up">+31 % к прошлому году</p>
+        <svg viewBox="0 0 216 38" role="img" aria-label="Средний чек рос двенадцать месяцев с 20 до 47.">
+          <polyline fill="none" stroke="#11a793" stroke-width="2" stroke-linejoin="round"
+            points="8,30 26.2,24.2 44.4,26.1 62.5,20.4 80.7,22.3 98.9,16.5 117.1,19.4 135.3,13.6 153.5,10.7 171.6,12.7 189.8,6.9 208,4"/>
+          <circle cx="208" cy="4" r="3" fill="#11a793"/>
+        </svg>
+      </div>
+      <div class="tile">
+        <p class="k">Возвраты</p>
+        <p class="n">38</p>
+        <p class="d down">−42 % к прошлому году</p>
+        <svg viewBox="0 0 216 38" role="img" aria-label="Возвраты падали двенадцать месяцев с 66 до 38.">
+          <polyline fill="none" stroke="#e75740" stroke-width="2" stroke-linejoin="round"
+            points="8,4 26.2,7.7 44.4,5.9 62.5,11.4 80.7,14.2 98.9,12.4 117.1,18.9 135.3,21.6 153.5,19.8 171.6,25.4 189.8,28.1 208,30"/>
+          <circle cx="208" cy="30" r="3" fill="#e75740"/>
+        </svg>
+      </div>
+    </div>
+
+    <p style="margin-top:var(--space-4)">
+      Направление несёт и цвет, и подпись «+12 %» — цвет один смысл здесь не носит. Последняя точка
+      помечена кружком: без неё читатель не знает, где кончается ряд.
+    </p>
+  </section>
+
+  <section class="panel">
+    <h2>Те же данные полноразмерным чартом</h2>
+    <p>Первая плитка, развёрнутая: оси, сетка, подписи, рамка, подсказка, маршрут с клавиатуры.</p>
+
+    <figure class="art">
+      <svg viewBox="0 0 540 195" role="img" aria-label="Полноразмерный линейный чарт тех же двенадцати месяцев с осями и сеткой.">
+        <line x1="56" y1="20" x2="512" y2="20" stroke="#eceff3" stroke-width="1"/>
+        <line x1="56" y1="52.5" x2="512" y2="52.5" stroke="#eceff3" stroke-width="1"/>
+        <line x1="56" y1="85" x2="512" y2="85" stroke="#eceff3" stroke-width="1"/>
+        <line x1="56" y1="117.5" x2="512" y2="117.5" stroke="#eceff3" stroke-width="1"/>
+        <line x1="56" y1="150" x2="512" y2="150" stroke="#d1d5db" stroke-width="1"/>
+        <polyline fill="none" stroke="#11a793" stroke-width="2.5" stroke-linejoin="round"
+          points="56,85 97.5,78.5 138.9,83.4 180.4,72 221.8,65.5 263.3,70.4 304.7,60.6 346.2,55.7 387.6,62.2 429.1,50.9 470.5,42.7 512,47.6"/>
+        <circle cx="56" cy="85" r="4" fill="#11a793"/>
+        <circle cx="180.4" cy="72" r="4" fill="#11a793"/>
+        <circle cx="304.7" cy="60.6" r="4" fill="#11a793"/>
+        <circle cx="429.1" cy="50.9" r="4" fill="#11a793"/>
+        <circle cx="512" cy="47.6" r="4" fill="#11a793"/>
+        <text class="ax" x="50" y="24" text-anchor="end">80</text>
+        <text class="ax" x="50" y="56" text-anchor="end">60</text>
+        <text class="ax" x="50" y="89" text-anchor="end">40</text>
+        <text class="ax" x="50" y="121" text-anchor="end">20</text>
+        <text class="ax" x="50" y="153" text-anchor="end">0</text>
+        <text class="ax" x="56" y="166">Янв</text>
+        <text class="ax" x="138.9" y="166">Мар</text>
+        <text class="ax" x="221.8" y="166">Май</text>
+        <text class="ax" x="304.7" y="166">Июл</text>
+        <text class="ax" x="387.6" y="166">Сен</text>
+        <text class="ax" x="470.5" y="166">Ноя</text>
+        <line x1="56" y1="184" x2="72" y2="184" stroke="#11a793" stroke-width="3"/>
+        <text class="lg" x="78" y="188">Отправления, тыс.</text>
+      </svg>
+      <figcaption>
+        Ломаная — та же самая, точка в точку. Отличается всё вокруг неё.
+      </figcaption>
+    </figure>
+  </section>
+
+  <section class="panel">
+    <h2>Разница — это список выключенного</h2>
+    <table>
+      <thead>
+        <tr><th>Часть</th><th>Полный чарт</th><th>Спарклайн</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Геометрия ломаной</td><td class="yes">есть</td><td class="yes">та же</td></tr>
+        <tr><td>Оси и подписи</td><td class="yes">есть</td><td class="no">нет</td></tr>
+        <tr><td>Сетка</td><td class="yes">есть</td><td class="no">нет</td></tr>
+        <tr><td>Легенда</td><td class="yes">есть</td><td class="no">нет — число над ней и есть подпись</td></tr>
+        <tr><td>Рамка и отступы карточки</td><td class="yes">есть</td><td class="no">нет — карточка своя</td></tr>
+        <tr><td>Подсказка</td><td class="yes">есть</td><td class="no">нет — негде разместить</td></tr>
+        <tr><td>Маршрут с клавиатуры</td><td class="yes">есть</td><td class="no">нет — плитка сама не интерактивна</td></tr>
+        <tr><td>Таблица-приложение</td><td class="yes">есть</td><td class="yes">есть, скрытая — иначе ряд недоступен вовсе</td></tr>
+        <tr><td>Размер</td><td>по контейнеру</td><td>фиксированный маленький</td></tr>
+      </tbody>
+    </table>
+
+    <p style="margin-top:var(--space-4)">
+      Ни одна строка не говорит «другая марка». Все говорят «другие значения по умолчанию» — кроме
+      последней строки таблицы-приложения, которая остаётся включённой в обоих случаях, потому что
+      без неё двенадцать чисел не существуют ни для кого, кроме зрячего.
+    </p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-5);margin-top:var(--space-4)">
+      <div>
+        <pre class="api">&lt;ds-line-chart
+  variant="spark"
+  [series]="[{ data: months }]" /&gt;</pre>
+        <p style="margin-top:var(--space-2);font:var(--font-size-xs)/1.5 var(--font-sans);color:var(--text-secondary)">
+          Пресет. Двенадцать входов линии остаются доступными — плитка может включить обратно то,
+          что ей нужно, например подсказку.
+        </p>
+      </div>
+      <div>
+        <pre class="api">&lt;ds-sparkline
+  [data]="months" /&gt;</pre>
+        <p style="margin-top:var(--space-2);font:var(--font-size-xs)/1.5 var(--font-sans);color:var(--text-secondary)">
+          Свой компонент. Короче в разметке и честнее в автодополнении, но входы придётся заводить
+          заново по одному — и каждый раз решать, нужен ли он тут.
+        </p>
+      </div>
+    </div>
+
+    <p class="pick">
+      <strong>Рекомендация — пресет.</strong> <code class="tok">variant="spark"</code> на линии и на
+      столбцах. Это та же ручка, что <code class="tok">variant</code> у кнопки: не другой
+      компонент, а другой набор значений по умолчанию. Если окажется, что плиткам регулярно нужен
+      ровно один и тот же набор дополнительных настроек, тонкий пресет
+      <code class="tok">ds-sparkline</code> над той же линией можно добавить потом, не ломая ничего.
+    </p>
+  </section>
+</main>
