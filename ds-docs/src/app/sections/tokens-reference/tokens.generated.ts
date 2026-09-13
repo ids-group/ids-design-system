@@ -2411,7 +2411,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "tokens": [
       {
         "name": "--ds-bar-chart-track-color",
-        "value": "var(--chart-grid-line-color)",
+        "value": "var(--ds-chart-grid-line-color)",
         "notes": "Unfilled part of a ds-bar-chart bar (default --chart-grid-line-color)."
       },
       {
@@ -2421,7 +2421,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-bar-chart-row-gap",
-        "value": "var(--space-3)",
+        "value": "var(--space-4)",
         "notes": "Vertical gap between ds-bar-chart rows (default --space-3)."
       }
     ]
@@ -2986,6 +2986,38 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
+    "component": "Column Chart",
+    "selector": ".column-chart",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-column-chart-plot-height",
+        "value": "200px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-column-chart-column-gap",
+        "value": "var(--ds-chart-bar-gap)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-column-chart-column-width",
+        "value": "80%",
+        "notes": ""
+      },
+      {
+        "name": "--ds-column-chart-grid-line-color",
+        "value": "var(--ds-chart-grid-line-color)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-column-chart-value-space",
+        "value": "var(--space-5)",
+        "notes": ""
+      }
+    ]
+  },
+  {
     "component": "Date Picker",
     "selector": ".date-picker",
     "description": "",
@@ -3188,6 +3220,38 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-divider-strong-color",
         "value": "var(--border-default)",
         "notes": "Divider line colour (defaults to --border-default)."
+      }
+    ]
+  },
+  {
+    "component": "Donut Chart",
+    "selector": ".donut-chart",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-donut-chart-size",
+        "value": "180px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-donut-chart-gap",
+        "value": "var(--space-5)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-donut-chart-legend-row-gap",
+        "value": "var(--space-2)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-donut-chart-legend-row-height",
+        "value": "16px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-donut-chart-swatch-size",
+        "value": "10px",
+        "notes": ""
       }
     ]
   },
@@ -3618,6 +3682,28 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
+    "component": "Funnel Chart",
+    "selector": ".funnel-chart",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-funnel-chart-stage-height",
+        "value": "44px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-funnel-chart-stage-gap",
+        "value": "var(--ds-chart-bar-gap)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-funnel-chart-row-gap",
+        "value": "var(--space-4)",
+        "notes": ""
+      }
+    ]
+  },
+  {
     "component": "Icon Base",
     "selector": ".icon-base",
     "description": "",
@@ -3827,6 +3913,53 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-stack-gap",
         "value": "var(--space-stack)",
         "notes": "Default gap for vertically stacked layouts (defaults to --space-stack)."
+      }
+    ]
+  },
+  {
+    "component": "Line Chart",
+    "selector": ".line-chart",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-line-chart-grid-line-color",
+        "value": "var(--ds-chart-grid-line-color)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-line-chart-axis-line-color",
+        "value": "var(--ds-chart-axis-line-color)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-line-chart-axis-label-color",
+        "value": "var(--ds-chart-axis-label-color)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-line-chart-axis-font-size",
+        "value": "var(--ds-chart-axis-font-size)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-line-chart-line-width",
+        "value": "var(--ds-chart-line-width)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-line-chart-dot-radius",
+        "value": "var(--ds-chart-dot-radius)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-line-chart-area-opacity",
+        "value": "0.16",
+        "notes": ""
+      },
+      {
+        "name": "--ds-line-chart-plot-height",
+        "value": "240px",
+        "notes": ""
       }
     ]
   },

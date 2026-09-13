@@ -2,7 +2,6 @@
   anchor="bar-chart"
   eyebrow="Charts"
   title="Bar chart">
-
   <span lede>
     Horizontal bar chart. Each row draws its value as a share of the longest
     row, with an optional data table underneath and a loading skeleton for data
@@ -20,6 +19,7 @@
       </code>
 
       <ds-bar-chart
+        dataTable="none"
         caption="Visitor funnel"
         [data]="specimenRows" />
     </div>
@@ -29,7 +29,9 @@
         empty
       </code>
 
-      <ds-bar-chart [data]="emptyRows" />
+      <ds-bar-chart
+        dataTable="none"
+        [data]="emptyRows" />
     </div>
 
     <div class="state">
@@ -38,6 +40,7 @@
       </code>
 
       <ds-bar-chart
+        dataTable="none"
         loading
         [data]="specimenRows" />
     </div>
@@ -47,7 +50,9 @@
         one row
       </code>
 
-      <ds-bar-chart [data]="oneRow" />
+      <ds-bar-chart
+        dataTable="none"
+        [data]="oneRow" />
     </div>
 
     <div class="state">
@@ -55,7 +60,9 @@
         all zeros
       </code>
 
-      <ds-bar-chart [data]="allZerosRows" />
+      <ds-bar-chart
+        dataTable="none"
+        [data]="allZerosRows" />
     </div>
 
     <div class="state">
@@ -63,7 +70,9 @@
         negative
       </code>
 
-      <ds-bar-chart [data]="negativeRows" />
+      <ds-bar-chart
+        dataTable="none"
+        [data]="negativeRows" />
     </div>
 
     <div class="state">
@@ -71,7 +80,9 @@
         huge outlier
       </code>
 
-      <ds-bar-chart [data]="hugeOutlierRows" />
+      <ds-bar-chart
+        dataTable="none"
+        [data]="hugeOutlierRows" />
     </div>
 
     <div class="state">
@@ -79,7 +90,9 @@
         long label
       </code>
 
-      <ds-bar-chart [data]="longLabelRows" />
+      <ds-bar-chart
+        dataTable="none"
+        [data]="longLabelRows" />
     </div>
 
     <div class="state">
@@ -87,7 +100,9 @@
         nine-digit value
       </code>
 
-      <ds-bar-chart [data]="nineDigitValueRows" />
+      <ds-bar-chart
+        dataTable="none"
+        [data]="nineDigitValueRows" />
     </div>
 
     <div class="state">
@@ -95,7 +110,9 @@
         custom colour
       </code>
 
-      <ds-bar-chart [data]="customColorRows" />
+      <ds-bar-chart
+        dataTable="none"
+        [data]="customColorRows" />
     </div>
 
     <div class="state">
@@ -115,6 +132,7 @@
       </code>
 
       <ds-bar-chart
+        dataTable="none"
         caption="Max set below the largest value — bars clip at the track edge"
         [data]="maxBelowDataRows"
         [max]="200" />

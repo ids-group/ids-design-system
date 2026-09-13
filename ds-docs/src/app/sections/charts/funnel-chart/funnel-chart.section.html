@@ -1,0 +1,172 @@
+<docs-section
+  anchor="funnel-chart"
+  eyebrow="Charts"
+  title="Funnel chart">
+  <span lede>
+    The stages of a journey, drawn top to bottom in the order you give them —
+    they are never sorted, because the order is the meaning. Under the funnel an
+    aligned table repeats each stage's value, its share of the first stage, and
+    how much fell away since the stage above it.
+  </span>
+
+  <h3 class="block-title t-h4">
+    States
+  </h3>
+
+  <div class="states">
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        specimen · checkout funnel
+      </code>
+
+      <ds-funnel-chart
+        dataTable="none"
+        caption="Checkout funnel"
+        [data]="specimenStages" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        empty
+      </code>
+
+      <ds-funnel-chart
+        dataTable="none"
+        [data]="emptyStages" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        loading
+      </code>
+
+      <ds-funnel-chart
+        dataTable="none"
+        loading
+        [data]="specimenStages" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        one stage
+      </code>
+
+      <ds-funnel-chart
+        dataTable="none"
+        [data]="oneStage" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        all zeros
+      </code>
+
+      <ds-funnel-chart
+        dataTable="none"
+        [data]="allZerosStages" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        shape · taper (default)
+      </code>
+
+      <p class="block-desc t-s">
+        Width encodes nothing here. The silhouette is fixed — full width at the
+        top, a constant tail at the bottom — and every stage is given the same
+        depth however large or small its value is. Read the numbers from the
+        table, never from how wide a band looks. Switch the shape to width or to
+        area when you need the geometry itself to carry the value.
+      </p>
+
+      <ds-funnel-chart
+        dataTable="none"
+        shape="taper"
+        [data]="specimenStages" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        shape · width
+      </code>
+
+      <ds-funnel-chart
+        dataTable="none"
+        shape="width"
+        [data]="specimenStages" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        shape · area
+      </code>
+
+      <ds-funnel-chart
+        dataTable="none"
+        shape="area"
+        [data]="specimenStages" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        steep drop · width
+      </code>
+
+      <ds-funnel-chart
+        dataTable="none"
+        caption="1,000 down to 10 — width collapses the tail"
+        shape="width"
+        [data]="steepDropStages" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        steep drop · area
+      </code>
+
+      <ds-funnel-chart
+        dataTable="none"
+        caption="The same 1,000 down to 10 — area keeps the tail wide enough to label"
+        shape="area"
+        [data]="steepDropStages" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        zero first stage
+      </code>
+
+      <ds-funnel-chart
+        dataTable="none"
+        caption="Nothing to be a share of — the percentage column reads an em dash"
+        [data]="zeroFirstStageStages" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        showTable · off
+      </code>
+
+      <ds-funnel-chart
+        dataTable="none"
+        [data]="specimenStages"
+        [showTable]="false" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        data table · toggle
+      </code>
+
+      <p class="block-desc t-s">
+        The disclosure appears only where the stage table is off — with both on,
+        the same numbers would print twice.
+      </p>
+
+      <ds-funnel-chart
+        caption="The annex table, collapsed until asked for"
+        [data]="specimenStages"
+        [showTable]="false" />
+    </div>
+  </div>
+</docs-section>

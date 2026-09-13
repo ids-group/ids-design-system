@@ -4,16 +4,7 @@ import {
   largestRemainder,
   formatTick,
 } from '../../src/lib/components/charts-format.ts';
-
-let failures = 0;
-const check = (name, actual, expected) => {
-  const a = JSON.stringify(actual),
-    e = JSON.stringify(expected);
-  if (a !== e) {
-    failures++;
-    console.error(`FAIL ${name}\n  expected ${e}\n  actual   ${a}`);
-  } else console.log(`ok   ${name}`);
-};
+import { check, finish } from './probe-check.mjs';
 
 check('formatValue groups thousands', formatValue(55910, 'en-US'), '55,910');
 check('formatValue leaves small numbers alone', formatValue(75, 'en-US'), '75');
@@ -95,6 +86,14 @@ check(
 // label on one decimal, so 2500 reads 2.5K and 2000 reads 2.0K.
 check('formatTick uses the step for precision', formatTick(2500, 500), '2.5K');
 check('formatTick below a thousand', formatTick(80, 20), '80');
+// The suffix follows the STEP so one axis never mixes units: a step of 200M labels 1e9 as
+// 1000M, not 1B beside 800M. Before this, formatTick knew only K and printed 200000K.
+check('formatTick uses millions when the step does', formatTick(200000000, 200000000), '200M');
+check('formatTick stays in millions past a billion', formatTick(1000000000, 200000000), '1000M');
+check('formatTick uses billions when the step does', formatTick(2000000000, 1000000000), '2B');
+// A tick is normally a multiple of its step; a caller passing a raw datum must still not get
+// every digit of the division on an axis label.
+check('formatTick rounds a non-multiple to whole units', formatTick(987654321, 200000000), '988M');
 check('formatTick guards a NaN value', formatTick(NaN, 500), '');
 check('formatTick guards an infinite value', formatTick(Infinity, 500), '');
 // A step that divides 1000 evenly reads as whole thousands, not one decimal.
@@ -104,8 +103,4 @@ check(
   '2K',
 );
 
-if (failures) {
-  console.error(`\n${failures} failure(s)`);
-  process.exit(1);
-}
-console.log('\ncharts-format: all assertions passed');
+finish('charts-format');

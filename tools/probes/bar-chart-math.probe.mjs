@@ -2,16 +2,7 @@ import {
   resolveMax,
   widthPercent,
 } from '../../src/lib/components/bar-chart/bar-chart.math.ts';
-
-let failures = 0;
-const check = (name, actual, expected) => {
-  const a = JSON.stringify(actual),
-    e = JSON.stringify(expected);
-  if (a !== e) {
-    failures++;
-    console.error(`FAIL ${name}\n  expected ${e}\n  actual   ${a}`);
-  } else console.log(`ok   ${name}`);
-};
+import { check, finish } from './probe-check.mjs';
 
 // A normal dataset: the largest row fills the track, the rest take their share.
 check('resolveMax takes the largest value', resolveMax(null, [40, 45, 50]), 50);
@@ -81,8 +72,4 @@ check(
   20,
 );
 
-if (failures) {
-  console.error(`\n${failures} failure(s)`);
-  process.exit(1);
-}
-console.log('\nbar-chart-math: all assertions passed');
+finish('bar-chart-math');

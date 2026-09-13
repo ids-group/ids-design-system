@@ -1,0 +1,151 @@
+<figure class="donut-chart">
+  @if (caption()) {
+    <figcaption>
+      {{ caption() }}
+    </figcaption>
+  }
+
+  @if (loading()) {
+    <div
+      class="skeleton"
+      aria-hidden="true"
+      [class.legend-bottom]="legend() === 'bottom'">
+      <ds-skeleton
+        circle
+        width="var(--_donut-chart-size)"
+        height="var(--_donut-chart-size)" />
+
+      @if (legend() !== 'none') {
+        <div class="skeleton-legend">
+          @for (placeholder of skeletonRows(); track $index) {
+            <ds-skeleton height="var(--_donut-chart-legend-row-height)" />
+          }
+        </div>
+      }
+    </div>
+  } @else if (isEmpty()) {
+    <p class="empty">
+      {{ emptyText() }}
+    </p>
+  } @else {
+    <div
+      class="chart"
+      [attr.role]="interactive() ? 'group' : 'img'"
+      [class.legend-bottom]="legend() === 'bottom'"
+      [attr.aria-label]="accessibleName()">
+      <div class="ring">
+        <svg
+          class="ring-svg"
+          aria-hidden="true"
+          [attr.viewBox]="viewBox">
+          @for (entry of slices(); track entry.slice.id) {
+            <path
+              class="slice"
+              [class.interactive]="interactive()"
+              [attr.d]="entry.path"
+              [style.fill]="entry.color"
+              (click)="sliceClicked.emit(entry.slice)">
+            </path>
+          }
+        </svg>
+
+        <div class="center">
+          <span class="center-value">
+            {{ resolvedCenterValue() }}
+          </span>
+
+          @if (centerLabel()) {
+            <span class="center-label">
+              {{ centerLabel() }}
+            </span>
+          }
+        </div>
+      </div>
+
+      @if (legend() !== 'none') {
+        <ul class="legend">
+          @for (entry of slices(); track entry.slice.id) {
+            <li
+              class="legend-item"
+              [class.interactive]="interactive()"
+              [attr.role]="interactive() ? 'button' : null"
+              [attr.tabindex]="interactive() ? 0 : null"
+              [attr.aria-label]="interactive() ? entryLabel(entry) : null"
+              (click)="sliceClicked.emit(entry.slice)"
+              (keydown.enter)="onSliceKey(entry.slice, $event)"
+              (keydown.space)="onSliceKey(entry.slice, $event)">
+              <span
+                class="swatch"
+                [style.background]="entry.color">
+              </span>
+
+              <span class="legend-label">
+                {{ entry.slice.label }}
+              </span>
+
+              <span class="legend-value">
+                {{ entry.formattedValue }}
+              </span>
+
+              <span class="legend-percent">
+                {{ entry.formattedPercent }}
+              </span>
+            </li>
+          }
+        </ul>
+      }
+    </div>
+
+    @if (dataTable() !== 'none') {
+      <details
+        class="data-table"
+        [open]="dataTable() === 'visible'">
+        <summary>
+          Data table
+        </summary>
+
+        <table>
+          <caption>
+            {{
+              caption() ?? 'Chart data'
+            }}
+          </caption>
+
+          <thead>
+            <tr>
+              <th scope="col">
+                Label
+              </th>
+
+              <th scope="col">
+                Value
+              </th>
+
+              <th scope="col">
+                Share
+              </th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (entry of slices(); track entry.slice.id) {
+              <tr>
+                <td>
+                  {{ entry.slice.label }}
+                </td>
+
+                <td>
+                  {{ entry.formattedValue }}
+                </td>
+
+                <td>
+                  {{ entry.formattedPercent }}
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </details>
+    }
+  }
+</figure>

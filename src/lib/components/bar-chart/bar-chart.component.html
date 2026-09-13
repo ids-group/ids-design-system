@@ -20,12 +20,18 @@
   } @else {
     <div
       class="rows"
-      role="img"
+      [attr.role]="interactive() ? 'group' : 'img'"
       [attr.aria-label]="accessibleName()">
       @for (entry of rows(); track $index) {
         <div
           class="row"
-          (click)="rowClick.emit(entry.row)">
+          [class.interactive]="interactive()"
+          [attr.role]="interactive() ? 'button' : null"
+          [attr.tabindex]="interactive() ? 0 : null"
+          [attr.aria-label]="interactive() ? entryLabel(entry) : null"
+          (click)="rowClicked.emit(entry.row)"
+          (keydown.enter)="onRowKey(entry.row, $event)"
+          (keydown.space)="onRowKey(entry.row, $event)">
           <span class="label">
             {{ entry.row.label }}
           </span>

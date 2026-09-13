@@ -37,6 +37,14 @@ export function niceMax(domainMax: number, targetCount: number): number {
   return Math.ceil(domainMax / step) * step;
 }
 
+/** Distance between two ticks, which `formatTick` needs to pick a precision. A
+ *  degenerate series yields a single tick and therefore no step.
+ *
+ *  @internal Reachable from the `components` entry point because the chart entry points import it across the boundary; not part of the package surface. */
+export function tickStep(ticks: readonly number[]): number {
+  return ticks.length > 1 ? ticks[1] - ticks[0] : 0;
+}
+
 /** @internal Reachable from the `components` entry point because the chart entry points import it across the boundary; not part of the package surface. */
 export function linearScale(
   domainMax: number,

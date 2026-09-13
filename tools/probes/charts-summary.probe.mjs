@@ -1,4 +1,5 @@
 import { registerHooks } from 'node:module';
+import { check, finish } from './probe-check.mjs';
 
 // node --experimental-strip-types cannot resolve charts-summary.ts's own extensionless
 // import of "./charts-format" (nodejs/node#61229); retry such a failure with ".ts" appended
@@ -26,14 +27,6 @@ const { describeSeries } = await import(
 const { formatValue } = await import(
   new URL('../../src/lib/components/charts-format.ts', import.meta.url).href
 );
-
-let failures = 0;
-const check = (name, actual, expected) => {
-  if (actual !== expected) {
-    failures++;
-    console.error(`FAIL ${name}\n  expected ${expected}\n  actual   ${actual}`);
-  } else console.log(`ok   ${name}`);
-};
 
 const points = [
   { label: 'Sep', value: 1620 },
@@ -123,8 +116,4 @@ check(
   'Weekly. 6 points, from 500 at Mon to 300 at Sat. Lowest 100 at Tue, highest 900 at Thu.',
 );
 
-if (failures) {
-  console.error(`\n${failures} failure(s)`);
-  process.exit(1);
-}
-console.log('\ncharts-summary: all assertions passed');
+finish('charts-summary');

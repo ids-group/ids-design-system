@@ -1,9 +1,20 @@
 /* Chart and dataviz tokens.
 
-   Categorical: 8 hues, ordered by perceptual distance not
-   ramp position. First six are AA against both light and
-   dark surface-default; the last two are reserved for
-   "rest" / "other" buckets where contrast is less critical.
+   Categorical: led by the coral and teal the product's own
+   screens are built on. NO HUE BETWEEN 35 and 130: yellow and
+   lime sit at high luminance by nature, so dragging one down
+   to clear 3:1 on white turns it to mustard — an earlier set
+   tried, and the donut read as mud. Every hue clears 3:1 for
+   WCAG 1.4.11 and sits in a narrow perceptual band (L* 56-62)
+   so no series shouts over another; an older set ran 45% to
+   100% saturation and the first bar drowned the last.
+   Slot 8 is the "rest" / "other" bucket: neutral, and darker
+   than the band on purpose. Neutral, because every eighth HUE
+   that clears the floor lands within dE 4 of one of the seven
+   under protanopia or deuteranopia. Darker, because a mid
+   grey is not safe either — colour-vision deficiency drains
+   the emerald toward grey, and only the lightness gap keeps
+   the two apart.
 
    Sequential: single-hue ramp (blue) for ordinal data —
    "low → high" magnitudes.
@@ -14,14 +25,36 @@
 
 :root {
   /* CATEGORICAL (8) ----------------------------------------- */
-  --chart-categorical-1: hsl(229deg 100% 59%);   /* blue (primary) */
-  --chart-categorical-2: hsl(165deg  72% 38%);   /* teal */
-  --chart-categorical-3: hsl( 24deg  95% 55%);   /* orange */
-  --chart-categorical-4: hsl(330deg  82% 55%);   /* magenta */
-  --chart-categorical-5: hsl(45deg   95% 50%);   /* amber */
-  --chart-categorical-6: hsl(190deg  85% 45%);   /* cyan */
-  --chart-categorical-7: hsl(280deg  60% 60%);   /* lavender */
-  --chart-categorical-8: hsl(130deg  45% 50%);   /* moss */
+  --chart-categorical-1: hsl(  8deg 78% 58%);   /* coral */
+  --chart-categorical-2: hsl(172deg 82% 36%);   /* teal */
+  --chart-categorical-3: hsl(222deg 70% 62%);   /* blue */
+  --chart-categorical-4: hsl(266deg 62% 66%);   /* violet */
+  --chart-categorical-5: hsl(330deg 70% 62%);   /* pink */
+  --chart-categorical-6: hsl(152deg 58% 41%);   /* emerald */
+  --chart-categorical-7: hsl(300deg 62% 60%);   /* orchid */
+  --chart-categorical-8: hsl(222deg 14% 29%);   /* slate */
+
+  /* SINGLE SERIES — every row of ONE series, plus the accent that marks the
+     row the reader is meant to land on. A categorical slot is the wrong tool
+     here: those separate series from each other, not rows within one. */
+  --chart-series-default: hsl(222deg 16% 42%);
+  --chart-series-accent:  var(--chart-categorical-2);
+
+  /* RAMP — one hue, light → deep, for the ordered stages of a single
+     quantity. Shares the lead hue so a funnel reads as one object rather
+     than as eight unrelated categories. Contrast on white is NOT held at
+     3:1 across the ramp: a sequential scale that clears the floor at every
+     step has to compress into its dark half, and then consecutive stages
+     stop being separable from each other, which is the distinction the
+     ramp exists to carry. */
+  --chart-ramp-1: hsl(  8deg 78% 76%);
+  --chart-ramp-2: hsl(  8deg 78% 72%);
+  --chart-ramp-3: hsl(  8deg 78% 69%);
+  --chart-ramp-4: hsl(  8deg 78% 65%);
+  --chart-ramp-5: hsl(  8deg 78% 62%);
+  --chart-ramp-6: hsl(  8deg 77% 58%);
+  --chart-ramp-7: hsl(  8deg 75% 55%);
+  --chart-ramp-8: hsl(  8deg 72% 51%);
 
   /* SEQUENTIAL — single-hue, light → dark */
   --chart-sequential-1: var(--blue-100);
@@ -35,13 +68,13 @@
      Explicit HSL keeps the ramp
      independent of palette retunes — re-skinning brand/red/green
      should not shift the dataviz colour story. */
-  --chart-divergent--3: hsl(0deg 70% 40%);       /* large negative (worst) */
-  --chart-divergent--2: hsl(0deg 60% 58%);
-  --chart-divergent--1: hsl(0deg 50% 80%);
-  --chart-divergent-0:  hsl(225deg 8% 92%);      /* zero */
-  --chart-divergent-1:  hsl(140deg 35% 80%);
-  --chart-divergent-2:  hsl(140deg 45% 55%);
-  --chart-divergent-3:  hsl(140deg 55% 35%);     /* large positive (best) */
+  --chart-divergent--3: hsl(  8deg 48% 38%);      /* large negative (worst) */
+  --chart-divergent--2: hsl(  8deg 42% 56%);
+  --chart-divergent--1: hsl(  8deg 34% 80%);
+  --chart-divergent-0:  hsl(225deg  8% 92%);      /* zero */
+  --chart-divergent-1:  hsl(145deg 28% 80%);
+  --chart-divergent-2:  hsl(145deg 38% 52%);
+  --chart-divergent-3:  hsl(145deg 46% 34%);      /* large positive (best) */
 
   /* AXIS / GRID / LEGEND */
   --chart-axis-line-color:    var(--neutral-300);
@@ -84,6 +117,17 @@
   --ds-chart-series-6-color: var(--chart-categorical-6);
   --ds-chart-series-7-color: var(--chart-categorical-7);
   --ds-chart-series-8-color: var(--chart-categorical-8);
+  --ds-chart-series-default-color: var(--chart-series-default);
+  --ds-chart-series-accent-color: var(--chart-series-accent);
+
+  --ds-chart-ramp-1-color: var(--chart-ramp-1);
+  --ds-chart-ramp-2-color: var(--chart-ramp-2);
+  --ds-chart-ramp-3-color: var(--chart-ramp-3);
+  --ds-chart-ramp-4-color: var(--chart-ramp-4);
+  --ds-chart-ramp-5-color: var(--chart-ramp-5);
+  --ds-chart-ramp-6-color: var(--chart-ramp-6);
+  --ds-chart-ramp-7-color: var(--chart-ramp-7);
+  --ds-chart-ramp-8-color: var(--chart-ramp-8);
 
   --ds-chart-axis-line-color: var(--chart-axis-line-color);
   --ds-chart-axis-label-color: var(--chart-axis-label-color);

@@ -86,6 +86,8 @@ export type {
 } from '@ids-group-ltd/ids-design-system/components/card';
 export { CheckboxComponent } from '@ids-group-ltd/ids-design-system/components/checkbox';
 export { ColorPickerComponent } from '@ids-group-ltd/ids-design-system/components/color-picker';
+export { ColumnChartComponent } from '@ids-group-ltd/ids-design-system/components/column-chart';
+export type { ColumnChartPoint } from '@ids-group-ltd/ids-design-system/components/column-chart';
 export { DatePickerComponent } from '@ids-group-ltd/ids-design-system/components/date-picker';
 export type {
   DatePickerMode,
@@ -104,6 +106,8 @@ export type {
   DividerSpacing,
   DividerVariant,
 } from '@ids-group-ltd/ids-design-system/components/divider';
+export { DonutChartComponent } from '@ids-group-ltd/ids-design-system/components/donut-chart';
+export type { DonutChartSlice } from '@ids-group-ltd/ids-design-system/components/donut-chart';
 export { DrawerComponent } from '@ids-group-ltd/ids-design-system/components/drawer';
 export type { DrawerPlacement } from '@ids-group-ltd/ids-design-system/components/drawer';
 export { DropzoneComponent } from '@ids-group-ltd/ids-design-system/components/dropzone';
@@ -122,6 +126,11 @@ export {
   FilterBarComponent,
   FilterItemDirective,
 } from '@ids-group-ltd/ids-design-system/components/filter-bar';
+export { FunnelChartComponent } from '@ids-group-ltd/ids-design-system/components/funnel-chart';
+export type {
+  FunnelChartShape,
+  FunnelChartStage,
+} from '@ids-group-ltd/ids-design-system/components/funnel-chart';
 export { IconButtonComponent } from '@ids-group-ltd/ids-design-system/components/icon-button';
 export type {
   IconButtonType,
@@ -140,6 +149,12 @@ export type {
   LayoutGap,
   LayoutJustify,
 } from '@ids-group-ltd/ids-design-system/components/layout';
+export { LineChartComponent } from '@ids-group-ltd/ids-design-system/components/line-chart';
+export type {
+  LineChartAxisMode,
+  LineChartGaps,
+  LineChartSeries,
+} from '@ids-group-ltd/ids-design-system/components/line-chart';
 export {
   ListComponent,
   ListItemComponent,

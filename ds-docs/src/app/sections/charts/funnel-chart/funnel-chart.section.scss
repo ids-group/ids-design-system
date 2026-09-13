@@ -1,0 +1,5 @@
+@use '../../../../styles/chart-states' as chart-states;
+
+// Five 44px stages: across the full column the silhouette flattens to 4:1 and stops reading as a
+// funnel. 560px puts it near 2.5:1, and the four-column stage table under it still has room.
+@include chart-states.states('ds-funnel-chart', 560px);

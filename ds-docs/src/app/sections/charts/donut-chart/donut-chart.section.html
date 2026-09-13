@@ -1,0 +1,178 @@
+<docs-section
+  anchor="donut-chart"
+  eyebrow="Charts"
+  title="Donut chart">
+  <span lede>
+    A ring that splits one total into its parts. Each slice carries its share as
+    a whole percentage and the percentages always add up to exactly 100, so a
+    legend never visibly loses a point. The middle of the ring is free for the
+    total or for a headline figure of your own.
+  </span>
+
+  <h3 class="block-title t-h4">
+    States
+  </h3>
+
+  <div class="states">
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        specimen · accounts by plan
+      </code>
+
+      <ds-donut-chart
+        dataTable="none"
+        caption="Accounts by plan"
+        [data]="specimenSlices" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        empty
+      </code>
+
+      <ds-donut-chart
+        dataTable="none"
+        [data]="emptySlices" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        loading
+      </code>
+
+      <ds-donut-chart
+        dataTable="none"
+        loading
+        [data]="specimenSlices" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        one slice
+      </code>
+
+      <ds-donut-chart
+        dataTable="none"
+        [data]="oneSlice" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        all zeros
+      </code>
+
+      <ds-donut-chart
+        dataTable="none"
+        [data]="allZerosSlices" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        negative
+      </code>
+
+      <ds-donut-chart
+        dataTable="none"
+        [data]="negativeSlices" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        nine slices
+      </code>
+
+      <ds-donut-chart
+        dataTable="none"
+        caption="More slices than the eight-colour palette holds"
+        [data]="nineSlices" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        legend · bottom
+      </code>
+
+      <ds-donut-chart
+        dataTable="none"
+        legend="bottom"
+        [data]="specimenSlices" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        legend · none
+      </code>
+
+      <ds-donut-chart
+        dataTable="none"
+        legend="none"
+        [data]="specimenSlices" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        thickness · 0.1
+      </code>
+
+      <ds-donut-chart
+        dataTable="none"
+        [data]="specimenSlices"
+        [thickness]="0.1" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        thickness · 1
+      </code>
+
+      <ds-donut-chart
+        dataTable="none"
+        [data]="specimenSlices"
+        [thickness]="1" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        centre · centerValue and centerLabel
+      </code>
+
+      <ds-donut-chart
+        dataTable="none"
+        centerLabel="Annual recurring revenue"
+        centerValue="£1.2M"
+        [data]="specimenSlices" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        centre · default
+      </code>
+
+      <ds-donut-chart
+        dataTable="none"
+        centerLabel="Accounts"
+        [data]="specimenSlices" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        slots
+      </code>
+
+      <ds-donut-chart
+        dataTable="none"
+        caption="Two slices pinned to palette slots 6 and 8"
+        [data]="slotSlices" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        data table · toggle
+      </code>
+
+      <ds-donut-chart
+        caption="The annex table, collapsed until asked for"
+        [data]="specimenSlices" />
+    </div>
+  </div>
+</docs-section>

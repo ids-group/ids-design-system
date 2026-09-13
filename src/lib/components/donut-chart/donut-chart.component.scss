@@ -1,0 +1,149 @@
+@use '../../styles/chart-data-table' as chart-data-table;
+@include chart-data-table.chart-data-table;
+
+:host {
+  display: block;
+}
+
+.donut-chart {
+  --_donut-chart-size: var(--ds-donut-chart-size, 180px);
+  --_donut-chart-gap: var(--ds-donut-chart-gap, var(--space-5));
+  --_donut-chart-legend-row-gap: var(--ds-donut-chart-legend-row-gap, var(--space-2));
+  --_donut-chart-legend-row-height: var(--ds-donut-chart-legend-row-height, 16px);
+  --_donut-chart-swatch-size: var(--ds-donut-chart-swatch-size, 10px);
+
+  margin: 0;
+}
+
+figcaption {
+  margin-block-end: var(--space-3);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.empty {
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+.chart,
+.skeleton {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--_donut-chart-gap);
+  align-items: center;
+}
+
+.chart.legend-bottom,
+.skeleton.legend-bottom {
+  flex-direction: column;
+}
+
+.ring {
+  position: relative;
+  flex: none;
+  inline-size: var(--_donut-chart-size);
+  block-size: var(--_donut-chart-size);
+}
+
+.ring-svg {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.slice {
+  transition: opacity var(--duration-base) var(--ease-decelerate);
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+.slice.interactive {
+  cursor: pointer;
+}
+
+.slice.interactive:hover {
+  opacity: 0.85;
+}
+
+.center {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  text-align: center;
+  pointer-events: none;
+}
+
+.center-value {
+  color: var(--text-primary);
+  font-size: var(--font-size-h4);
+  font-weight: 700;
+}
+
+.center-label {
+  color: var(--text-tertiary);
+  font-size: var(--font-size-xs);
+}
+
+.legend,
+.skeleton-legend {
+  display: grid;
+  row-gap: var(--_donut-chart-legend-row-gap);
+  min-inline-size: 0;
+}
+
+.legend {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.skeleton-legend {
+  flex: 1 1 auto;
+}
+
+.legend-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  column-gap: var(--space-2);
+  align-items: baseline;
+}
+
+.legend-item.interactive {
+  cursor: pointer;
+}
+
+.swatch {
+  align-self: center;
+  inline-size: var(--_donut-chart-swatch-size);
+  block-size: var(--_donut-chart-swatch-size);
+  border-radius: var(--radius-pill);
+}
+
+.legend-label {
+  color: var(--text-secondary);
+}
+
+.legend-value {
+  font-weight: 700;
+}
+
+.legend-percent {
+  color: var(--text-tertiary);
+  font-size: var(--font-size-xs);
+}
+
+.legend-bottom .legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--_donut-chart-legend-row-gap) var(--space-4);
+}
+
+.legend-bottom .legend-item {
+  display: flex;
+  column-gap: var(--space-2);
+}

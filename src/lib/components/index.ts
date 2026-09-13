@@ -1,5 +1,9 @@
 export { resolveBrandValue } from './brand-defaults';
-export { CHART_SERIES_COLORS, chartColors } from './chart-palette.generated';
+export {
+  CHART_RAMP_COLORS,
+  CHART_SERIES_COLORS,
+  chartColors,
+} from './chart-palette.generated';
 export {
   formatPercent,
   formatTick,
@@ -7,7 +11,13 @@ export {
   largestRemainder,
 } from './charts-format';
 export { elementWidth } from './charts-measure';
-export { bandScale, linearScale, niceMax, tickValues } from './charts-scale';
+export {
+  bandScale,
+  linearScale,
+  niceMax,
+  tickStep,
+  tickValues,
+} from './charts-scale';
 export type { BandScale } from './charts-scale';
 export { describeSeries } from './charts-summary';
 export type { SummaryPoint } from './charts-summary';

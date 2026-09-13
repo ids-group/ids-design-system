@@ -11,7 +11,7 @@ const SPECIMEN_ROWS: readonly BarChartRow[] = [
   {
     label: 'Requested an agent',
     value: 702,
-    color: 'var(--ds-chart-series-2-color)',
+    color: 'var(--ds-chart-series-accent-color)',
   },
 ];
 
@@ -49,7 +49,7 @@ const NINE_DIGIT_VALUE_ROWS: readonly BarChartRow[] = [
 const CUSTOM_COLOR_ROWS: readonly BarChartRow[] = [
   { label: 'Organic', value: 620 },
   { label: 'Paid', value: 410 },
-  { label: 'Referral', value: 275, color: 'var(--chart-categorical-5)' },
+  { label: 'Referral', value: 275, color: 'var(--ds-chart-series-5-color)' },
 ];
 
 const DATA_TABLE_ROWS: readonly BarChartRow[] = [

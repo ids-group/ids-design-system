@@ -1,0 +1,130 @@
+@use '../../styles/chart-data-table' as chart-data-table;
+@include chart-data-table.chart-data-table;
+
+:host {
+  display: block;
+}
+
+.column-chart {
+  --_column-chart-plot-height: var(--ds-column-chart-plot-height, 200px);
+  --_column-chart-column-gap: var(--ds-column-chart-column-gap, var(--ds-chart-bar-gap));
+  --_column-chart-column-width: var(--ds-column-chart-column-width, 80%);
+  --_column-chart-column-max-width: var(--ds-column-chart-column-max-width, 48px);
+  --_column-chart-grid-line-color: var(--ds-column-chart-grid-line-color, var(--ds-chart-grid-line-color));
+  --_column-chart-value-space: var(--ds-column-chart-value-space, var(--space-5));
+
+  margin: 0;
+}
+
+figcaption {
+  margin-block-end: var(--space-3);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.empty {
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+// The padding is headroom for the value printed above a column: a column that
+// reaches the top gridline is the full plot height, leaving its own label nowhere
+// to go but outside the plot.
+.chart {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: var(--space-2);
+  padding-block-start: var(--_column-chart-value-space);
+}
+
+.tick-labels {
+  position: relative;
+  block-size: var(--_column-chart-plot-height);
+}
+
+.tick-label {
+  position: absolute;
+  inset-inline-end: 0;
+  transform: translateY(50%);
+  color: var(--ds-chart-axis-label-color);
+  font-size: var(--ds-chart-axis-font-size);
+  white-space: nowrap;
+}
+
+.canvas {
+  position: relative;
+}
+
+.grid-lines {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 0;
+  block-size: var(--_column-chart-plot-height);
+}
+
+.grid-line {
+  position: absolute;
+  inset-inline: 0;
+  border-block-start: 1px solid var(--_column-chart-grid-line-color);
+}
+
+// Positioned so the columns paint over the grid rather than under it. `.grid-lines` is absolute,
+// and an unpositioned sibling sits in the layer beneath it whatever the DOM order — every column
+// came out ruled with the tick lines.
+.columns {
+  position: relative;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  column-gap: var(--_column-chart-column-gap);
+}
+
+.column {
+  display: grid;
+  row-gap: var(--space-2);
+}
+
+.column.interactive {
+  cursor: pointer;
+}
+
+.plot-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  block-size: var(--_column-chart-plot-height);
+}
+
+.value {
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+// The cap, not the percentage, is what keeps this reading as a chart: at five categories 80% of
+// the cell is a slab wider than its own label, and the eye stops seeing a series.
+.bar {
+  inline-size: var(--_column-chart-column-width);
+  max-inline-size: var(--_column-chart-column-max-width);
+  border-start-start-radius: var(--radius-sm);
+  border-start-end-radius: var(--radius-sm);
+  transition: block-size var(--duration-base) var(--ease-decelerate);
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+.category-label {
+  color: var(--text-secondary);
+  font-size: var(--ds-chart-axis-font-size);
+  text-align: center;
+}
+
+.skeleton {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  column-gap: var(--_column-chart-column-gap);
+}

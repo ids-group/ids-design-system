@@ -3,17 +3,9 @@ import {
   bandScale,
   tickValues,
   niceMax,
+  tickStep,
 } from '../../src/lib/components/charts-scale.ts';
-
-let failures = 0;
-const check = (name, actual, expected) => {
-  const a = JSON.stringify(actual),
-    e = JSON.stringify(expected);
-  if (a !== e) {
-    failures++;
-    console.error(`FAIL ${name}\n  expected ${e}\n  actual   ${a}`);
-  } else console.log(`ok   ${name}`);
-};
+import { check, finish } from './probe-check.mjs';
 
 check(
   'tickValues picks a round step',
@@ -23,6 +15,15 @@ check(
 check('tickValues on a small domain', tickValues(75, 5), [0, 20, 40, 60, 80]);
 check('niceMax rounds up', niceMax(2410, 5), 2500);
 check('niceMax leaves a round max alone', niceMax(2500, 5), 2500);
+
+check(
+  'tickStep reads the distance between two ticks',
+  tickStep(tickValues(2410, 5)),
+  500,
+);
+// A degenerate series yields one tick, and `ticks[1] - ticks[0]` would be NaN.
+check('tickStep of a single tick is zero', tickStep([0]), 0);
+check('tickStep of no ticks is zero', tickStep([]), 0);
 
 // 2410 and 75 both land on factor 5 or 2 — factor 1 and factor 10 need their own domains.
 check(
@@ -92,8 +93,4 @@ check(
   [0, 100],
 );
 
-if (failures) {
-  console.error(`\n${failures} failure(s)`);
-  process.exit(1);
-}
-console.log('\ncharts-scale: all assertions passed');
+finish('charts-scale');

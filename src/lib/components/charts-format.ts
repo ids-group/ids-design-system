@@ -71,7 +71,23 @@ export function formatTick(value: number, step: number): string {
   if (Math.abs(value) < 1000) {
     return String(value);
   }
-  const thousands = value / 1000;
 
-  return step % 1000 === 0 ? `${thousands}K` : `${thousands.toFixed(1)}K`;
+  // The unit follows the STEP, not the value, so every label on one axis carries the same suffix:
+  // a step of 200M labels 1e9 as 1000M, never 1B beside 800M.
+  const units = [
+    { suffix: 'B', scale: 1e9 },
+    { suffix: 'M', scale: 1e6 },
+    { suffix: 'K', scale: 1e3 },
+  ];
+  const unit =
+    units.find((candidate) => Math.abs(step) >= candidate.scale) ?? units[2];
+  const scaled = value / unit.scale;
+
+  // A step that divides its unit evenly needs no decimal; one that does not needs exactly one on
+  // EVERY label, so an axis reads 1.0K · 1.5K · 2.0K rather than mixing 1K with 1.5K. Rounding the
+  // whole branch matters too: a caller passing a raw datum instead of a tick would otherwise print
+  // every digit of the division, as 987.654321M.
+  return step % unit.scale === 0
+    ? `${Math.round(scaled)}${unit.suffix}`
+    : `${scaled.toFixed(1)}${unit.suffix}`;
 }

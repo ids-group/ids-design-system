@@ -1,0 +1,166 @@
+<docs-section
+  anchor="column-chart"
+  eyebrow="Charts"
+  title="Column chart">
+  <span lede>
+    Vertical columns for a short series read left to right — months, stages,
+    teams. Every column is measured against one value axis whose ticks snap to
+    round numbers, each column prints its own value above itself, and a skeleton
+    holds the space while the numbers are still arriving.
+  </span>
+
+  <h3 class="block-title t-h4">
+    States
+  </h3>
+
+  <div class="states">
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        specimen · new accounts by month
+      </code>
+
+      <ds-column-chart
+        dataTable="none"
+        caption="New accounts by month"
+        [data]="specimenPoints" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        empty
+      </code>
+
+      <ds-column-chart
+        dataTable="none"
+        [data]="emptyPoints" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        loading
+      </code>
+
+      <ds-column-chart
+        dataTable="none"
+        loading
+        [data]="specimenPoints" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        one point
+      </code>
+
+      <ds-column-chart
+        dataTable="none"
+        [data]="onePoint" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        all zeros
+      </code>
+
+      <ds-column-chart
+        dataTable="none"
+        [data]="allZerosPoints" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        negative
+      </code>
+
+      <ds-column-chart
+        dataTable="none"
+        [data]="negativePoints" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        huge outlier
+      </code>
+
+      <ds-column-chart
+        dataTable="none"
+        [data]="hugeOutlierPoints" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        long label
+      </code>
+
+      <ds-column-chart
+        dataTable="none"
+        [data]="longLabelPoints" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        nine-digit value
+      </code>
+
+      <ds-column-chart
+        dataTable="none"
+        [data]="nineDigitValuePoints" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        custom colour
+      </code>
+
+      <ds-column-chart
+        dataTable="none"
+        [data]="customColorPoints" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        showValues · off
+      </code>
+
+      <ds-column-chart
+        dataTable="none"
+        [data]="specimenPoints"
+        [showValues]="false" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        tickCount · 3 and 10
+      </code>
+
+      <p class="block-desc t-s">
+        The same data under two tick counts. The count is a hint: ticks snap to
+        a round step, so an axis asked for three ends up with five and one asked
+        for ten stops at eight.
+      </p>
+
+      <div class="tick-count-pair">
+        <ds-column-chart
+          dataTable="none"
+          caption="tickCount 3"
+          [data]="specimenPoints"
+          [tickCount]="3" />
+
+        <ds-column-chart
+          dataTable="none"
+          caption="tickCount 10"
+          [data]="specimenPoints"
+          [tickCount]="10" />
+      </div>
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        data table · toggle
+      </code>
+
+      <ds-column-chart
+        caption="The annex table, collapsed until asked for"
+        [data]="specimenPoints" />
+    </div>
+  </div>
+</docs-section>
