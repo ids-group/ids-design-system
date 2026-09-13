@@ -228,6 +228,11 @@
   legend and an annex table all run into the page without an edge. One already sitting in a card
   drops it with `--ds-chart-frame-border-width: 0` and `--ds-chart-frame-padding: 0`.
 
+  `ds-donut-chart` also takes `maxSlices`, which caps the legend: past it the smallest slices are
+  summed into one named by `otherLabel`, on the neutral eighth palette colour. Off by default —
+  grouping changes what the chart says, so it is the consumer's call — and the tail is summed rather
+  than dropped, so the total never moves.
+
   Two geometry rules are worth knowing because they are not preferences. `ds-donut-chart` holds its
   centre content to the square that fits inside the hole, so a long `centerLabel` wraps instead of
   running out over the ring, and the text carries a halo of the chart's own background — at
