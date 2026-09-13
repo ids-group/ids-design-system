@@ -1,9 +1,8 @@
 @use '../../styles/chart-data-table' as chart-data-table;
+@use '../../styles/chart-frame' as chart-frame;
+@include chart-frame.chart-frame;
 @include chart-data-table.chart-data-table;
 
-:host {
-  display: block;
-}
 
 .column-chart {
   --_column-chart-plot-height: var(--ds-column-chart-plot-height, 200px);

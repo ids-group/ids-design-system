@@ -9,7 +9,7 @@ import {
   output,
 } from '@angular/core';
 import {
-  chartColors,
+  CHART_SERIES_COLORS,
   describeSeries,
   formatTick,
   formatValue,
@@ -88,11 +88,12 @@ export class ColumnChartComponent {
     const axisMax = this.axisMax();
     const format = this.valueFormat();
 
-    return this.data().map((point) => ({
+    return this.data().map((point, index) => ({
       point,
       heightPercent: heightPercent(point.value, axisMax),
       formattedValue: format(point.value),
-      color: point.color ?? chartColors.seriesDefault,
+      color:
+        point.color ?? CHART_SERIES_COLORS[index % CHART_SERIES_COLORS.length],
     }));
   });
 
