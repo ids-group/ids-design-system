@@ -18,6 +18,7 @@ import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/s
 import {
   DEFAULT_THICKNESS,
   arcPath,
+  holeFraction,
   paletteIndex,
   positiveValues,
   resolveInnerRadius,
@@ -120,6 +121,8 @@ export class DonutChartComponent {
         this.valueFormat(),
       ),
   );
+
+  protected readonly hole = computed(() => holeFraction(this.thickness()));
 
   protected entryLabel(entry: {
     slice: DonutChartSlice;

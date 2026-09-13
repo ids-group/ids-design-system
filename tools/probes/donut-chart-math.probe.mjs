@@ -1,6 +1,6 @@
 import {
-  MAX_THICKNESS,
   arcPath,
+  holeFraction,
   paletteIndex,
   positiveValues,
   resolveInnerRadius,
@@ -43,14 +43,22 @@ check(
 );
 
 // A normal series: the shares are proportional and the last arc closes the ring.
-check('positiveValues passes a normal series through', positiveValues([40, 35, 25]), [40, 35, 25]);
+check(
+  'positiveValues passes a normal series through',
+  positiveValues([40, 35, 25]),
+  [40, 35, 25],
+);
 check('resolveTotal sums a normal series', resolveTotal([40, 35, 25]), 100);
-check('four equal slices take a quarter turn each', sliceArcs([25, 25, 25, 25]), [
-  { startAngle: 0, endAngle: QUARTER_TURN },
-  { startAngle: QUARTER_TURN, endAngle: HALF_TURN },
-  { startAngle: HALF_TURN, endAngle: THREE_QUARTER_TURN },
-  { startAngle: THREE_QUARTER_TURN, endAngle: FULL_TURN },
-]);
+check(
+  'four equal slices take a quarter turn each',
+  sliceArcs([25, 25, 25, 25]),
+  [
+    { startAngle: 0, endAngle: QUARTER_TURN },
+    { startAngle: QUARTER_TURN, endAngle: HALF_TURN },
+    { startAngle: HALF_TURN, endAngle: THREE_QUARTER_TURN },
+    { startAngle: THREE_QUARTER_TURN, endAngle: FULL_TURN },
+  ],
+);
 check(
   'a quarter segment is drawn with the short arc',
   arcPath(CENTER, CENTER, OUTER_RADIUS, INNER_RADIUS, 0, QUARTER_TURN),
@@ -102,8 +110,16 @@ check(
 );
 
 // A negative datum would sweep backwards, which draws the slice over its neighbour.
-check('a negative slice is worth nothing', positiveValues([10, -5, 10]), [10, 0, 10]);
-check('a negative slice is left out of the total', resolveTotal([10, -5, 10]), 20);
+check(
+  'a negative slice is worth nothing',
+  positiveValues([10, -5, 10]),
+  [10, 0, 10],
+);
+check(
+  'a negative slice is left out of the total',
+  resolveTotal([10, -5, 10]),
+  20,
+);
 check('a negative slice takes no arc', sliceArcs([10, -5, 10]), [
   { startAngle: 0, endAngle: HALF_TURN },
   { startAngle: HALF_TURN, endAngle: HALF_TURN },
@@ -112,7 +128,11 @@ check('a negative slice takes no arc', sliceArcs([10, -5, 10]), [
 
 // NaN: one bad datum reaches every OTHER slice through the total, and `d="…NaN…"`
 // is dropped silently — the chart renders blank with no error anywhere.
-check('a NaN slice is worth nothing', positiveValues([10, NaN, 10]), [10, 0, 10]);
+check(
+  'a NaN slice is worth nothing',
+  positiveValues([10, NaN, 10]),
+  [10, 0, 10],
+);
 check('the slices beside a NaN keep their halves', sliceArcs([10, NaN, 10]), [
   { startAngle: 0, endAngle: HALF_TURN },
   { startAngle: HALF_TURN, endAngle: HALF_TURN },
@@ -126,12 +146,24 @@ check(
 
 // Infinity is the datum that made the bar chart LIE: it became the scale, so its
 // own geometry came out NaN while every honest slice beside it collapsed to zero.
-check('an Infinity slice is worth nothing', positiveValues([10, Infinity]), [10, 0]);
-check('an Infinity slice is left out of the total', resolveTotal([10, Infinity]), 10);
-check('the slice beside an Infinity keeps the whole ring', sliceArcs([10, Infinity]), [
-  { startAngle: 0, endAngle: FULL_TURN },
-  { startAngle: FULL_TURN, endAngle: FULL_TURN },
-]);
+check(
+  'an Infinity slice is worth nothing',
+  positiveValues([10, Infinity]),
+  [10, 0],
+);
+check(
+  'an Infinity slice is left out of the total',
+  resolveTotal([10, Infinity]),
+  10,
+);
+check(
+  'the slice beside an Infinity keeps the whole ring',
+  sliceArcs([10, Infinity]),
+  [
+    { startAngle: 0, endAngle: FULL_TURN },
+    { startAngle: FULL_TURN, endAngle: FULL_TURN },
+  ],
+);
 check(
   'an Infinity radius draws nothing rather than a NaN path',
   arcPath(CENTER, CENTER, Infinity, INNER_RADIUS, 0, QUARTER_TURN),
@@ -173,27 +205,56 @@ check(
 
 // Thickness. Outside (0, 1] there is no ring to draw, and a chart that silently
 // renders nothing is the failure this file exists to prevent.
-check('the default thickness leaves a 34 unit hole', resolveInnerRadius(50, 0.32), 34);
-check('a NaN thickness falls back to the default', resolveInnerRadius(50, NaN), 34);
-check('a zero thickness falls back to the default', resolveInnerRadius(50, 0), 34);
-check('a thickness above 1 falls back to the default', resolveInnerRadius(50, 2), 34);
-// The hole is where the centre value goes, and that value always renders — so the band is capped
-// rather than allowed to close over it. A thickness of 1 asks for a pie and gets the thickest ring.
 check(
-  'a thickness of 1 still leaves a hole for the centre value',
+  'the default thickness leaves a 34 unit hole',
+  resolveInnerRadius(50, 0.32),
+  34,
+);
+check(
+  'a NaN thickness falls back to the default',
+  resolveInnerRadius(50, NaN),
+  34,
+);
+check(
+  'a zero thickness falls back to the default',
+  resolveInnerRadius(50, 0),
+  34,
+);
+check(
+  'a thickness above 1 falls back to the default',
+  resolveInnerRadius(50, 2),
+  34,
+);
+check(
+  'a thickness of 1 closes the hole into a pie',
   resolveInnerRadius(50, 1),
-  50 * (1 - MAX_THICKNESS),
+  0,
 );
-check('a thickness under the cap is untouched', resolveInnerRadius(50, 0.4), 30);
-// The negative arm: the cap must not be the default fallback wearing a different name, or the three
-// invalid-input assertions above would also pass a capped implementation that rejected everything.
+
+// The hole fraction drives how wide the centre content may be, so a wrong one either overlaps the
+// slices or wraps text that had room.
 check(
-  'the cap is not the default fallback',
-  resolveInnerRadius(50, 1) === resolveInnerRadius(50, 0.32),
-  false,
+  'the default thickness leaves 68% of the diameter',
+  holeFraction(0.32),
+  0.68,
 );
-check('a non-positive outer radius has no hole', resolveInnerRadius(-10, 0.32), 0);
-check('an Infinity outer radius has no hole', resolveInnerRadius(Infinity, 0.32), 0);
+check('a pie leaves no hole to hold the centre text', holeFraction(1), 0);
+check(
+  'an out-of-range thickness falls back with the radius',
+  holeFraction(2),
+  0.68,
+);
+check('a NaN thickness falls back with the radius', holeFraction(NaN), 0.68);
+check(
+  'a non-positive outer radius has no hole',
+  resolveInnerRadius(-10, 0.32),
+  0,
+);
+check(
+  'an Infinity outer radius has no hole',
+  resolveInnerRadius(Infinity, 0.32),
+  0,
+);
 
 // Slots pin a slice to a palette colour, so filtering one out does not repaint
 // the rest. They are 1-based; the index fallback is 0-based.

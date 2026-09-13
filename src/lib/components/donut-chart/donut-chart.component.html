@@ -24,16 +24,26 @@
       }
     </div>
   } @else if (isEmpty()) {
-    <p class="empty">
-      {{ emptyText() }}
-    </p>
+    <div class="empty">
+      <div
+        class="empty-ring"
+        aria-hidden="true">
+      </div>
+
+      <p class="empty-text">
+        {{ emptyText() }}
+      </p>
+    </div>
   } @else {
     <div
       class="chart"
       [attr.role]="interactive() ? 'group' : 'img'"
       [class.legend-bottom]="legend() === 'bottom'"
       [attr.aria-label]="accessibleName()">
-      <div class="ring">
+      <div
+        class="ring"
+        [class.ring-outline]="total() === 0"
+        [style.--_donut-chart-hole-fraction]="hole()">
         <svg
           class="ring-svg"
           aria-hidden="true"

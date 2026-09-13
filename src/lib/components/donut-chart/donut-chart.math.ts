@@ -3,11 +3,16 @@ const FULL_TURN_EPSILON = 1e-9;
 
 export const DEFAULT_THICKNESS = 0.32;
 
-/** The band never closes over the hole, because the hole is where the centre value goes — and that
- *  value always renders, falling back to the formatted total. At `thickness: 1` the hole shuts and
- *  the number lands on top of the slices, unreadable against whatever colours it happens to cover;
- *  no text colour saves it, because the ground underneath is three different hues. */
-export const MAX_THICKNESS = 0.55;
+/** Diameter of the hole, as a fraction of the ring's own diameter. The centre content is held to
+ *  the square that fits inside it. */
+export function holeFraction(thickness: number): number {
+  const ratio =
+    Number.isFinite(thickness) && thickness > 0 && thickness <= 1
+      ? thickness
+      : DEFAULT_THICKNESS;
+
+  return round(1 - ratio);
+}
 
 export interface DonutArc {
   readonly startAngle: number;
@@ -59,7 +64,7 @@ export function resolveInnerRadius(
       ? thickness
       : DEFAULT_THICKNESS;
 
-  return outerRadius * (1 - Math.min(ratio, MAX_THICKNESS));
+  return outerRadius * (1 - ratio);
 }
 
 export function paletteIndex(
