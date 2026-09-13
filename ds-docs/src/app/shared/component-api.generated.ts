@@ -2523,6 +2523,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Logical placement, so a right-to-left page needs no second value."
       },
       {
+        "name": "maxSlices",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Longest legend to draw. Past it the smallest slices are summed into one, so a long tail does not become a legend nobody reads. Off by default: grouping changes what the chart says, and that is the consumer's call. Values below 2 are ignored — one slice is not a donut."
+      },
+      {
+        "name": "otherLabel",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "'Other'",
+        "required": false,
+        "description": "Names the grouped slice."
+      },
+      {
         "name": "thickness",
         "kind": "input",
         "type": "number",
@@ -3027,9 +3045,9 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
           "width",
           "area"
         ],
-        "default": "'taper'",
+        "default": "'area'",
         "required": false,
-        "description": "What the silhouette encodes. `'taper'` encodes NOTHING in the stage widths — it is a fixed shape, and the numbers are read from the table. `'width'` makes each stage's width proportional to its value. `'area'` makes each stage's area proportional to its value, which keeps a small tail wide enough to label."
+        "description": "What the silhouette encodes. `'area'`, the default, makes each stage's AREA proportional to its value, which is the honest encoding that still leaves a tail wide enough to label. `'width'` reads the widths straight off the values, which collapses the tail of a steep funnel below a labellable width. `'taper'` encodes NOTHING: the shape is fixed whatever the data, and the numbers are read from the table beside it."
       },
       {
         "name": "showTable",

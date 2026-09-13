@@ -3417,6 +3417,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-donut-chart-swatch-size",
         "value": "10px",
         "notes": ""
+      },
+      {
+        "name": "--ds-donut-chart-outline-width",
+        "value": "calc(var(--border-width-strong) + var(--border-width-default))",
+        "notes": ""
       }
     ]
   },
