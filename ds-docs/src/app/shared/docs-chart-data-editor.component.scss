@@ -1,0 +1,24 @@
+@use '../../styles/chart-editor-disclosure' as chart-editor-disclosure;
+
+// Chart values run to nine digits in the edge-case specimens, which the stepper's default field is
+// not scaled for.
+:host {
+  --ds-number-stepper-field-width: 10ch;
+
+  display: block;
+}
+
+@include chart-editor-disclosure.disclosure;
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.empty {
+  margin: 0;
+  color: var(--text-tertiary);
+  font-size: var(--font-size-xs);
+}

@@ -1,0 +1,91 @@
+<details
+  #disclosure
+  class="editor"
+  (toggle)="open.set(disclosure.open)">
+  <summary>
+    Edit data
+  </summary>
+
+  @if (open()) {
+    <div class="body">
+      <div class="scroll">
+        <div
+          class="matrix"
+          [style.grid-template-columns]="gridColumns()">
+          <span class="corner"></span>
+
+          @for (category of categories(); track $index) {
+            <div class="category">
+              <ds-input
+                ariaLabel="Category name"
+                placeholder="Category"
+                size="sm"
+                [value]="category"
+                (valueChange)="setCategory($index, $event)" />
+
+              <ds-icon-button
+                ariaLabel="Remove category"
+                icon="x"
+                size="sm"
+                (pressed)="removeCategory($index)" />
+            </div>
+          }
+
+          <span class="corner"></span>
+
+          @for (entry of series(); track entry.id; let seriesIndex = $index) {
+            <ds-input
+              ariaLabel="Series name"
+              placeholder="Series"
+              size="sm"
+              [value]="entry.label"
+              (valueChange)="setSeriesLabel(seriesIndex, $event)" />
+
+            @for (category of categories(); track $index) {
+              <ds-input
+                ariaLabel="Reading"
+                placeholder="—"
+                size="sm"
+                type="number"
+                [clearable]="true"
+                [value]="readingText(entry, $index)"
+                (valueChange)="setReading(seriesIndex, $index, $event)" />
+            }
+
+            <ds-icon-button
+              ariaLabel="Remove series"
+              icon="trash"
+              size="sm"
+              (pressed)="removeSeries(seriesIndex)" />
+          }
+        </div>
+      </div>
+
+      @if (!series().length) {
+        <p class="empty">
+          No series — the chart is showing its empty state.
+        </p>
+      }
+
+      <div class="actions">
+        <ds-button
+          color="secondary"
+          icon="plus"
+          size="sm"
+          variant="outline"
+          (pressed)="addCategory()">
+          Add category
+        </ds-button>
+
+        <ds-button
+          color="secondary"
+          icon="plus"
+          size="sm"
+          variant="outline"
+          (pressed)="addSeries()">
+          Add series
+        </ds-button>
+      </div>
+    </div>
+  }
+</details>

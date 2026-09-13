@@ -1,0 +1,95 @@
+@use 'visually-hidden';
+
+// The annex table every chart offers under a disclosure. All five render the same markup, so the
+// rules live here rather than five times over.
+@mixin chart-data-table {
+  .data-table {
+    // Half the marker triangle's height. A border-drawn triangle has no token equivalent — these
+    // are the arrow's own geometry, not spacing — so the two numbers behind it live in one name.
+    --_chart-data-table-marker: var(--space-1);
+
+    margin-block-start: var(--space-4);
+    color: var(--text-secondary);
+    font-size: var(--font-size-s);
+  }
+
+  .data-table > summary {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding-block: var(--space-1);
+    color: var(--text-tertiary);
+    font-size: var(--font-size-xs);
+    cursor: pointer;
+    list-style: none;
+  }
+
+  // Safari still draws the default triangle through `list-style: none`.
+  .data-table > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .data-table > summary::before {
+    content: '';
+    inline-size: 0;
+    block-size: 0;
+    border-block-start: var(--_chart-data-table-marker) solid transparent;
+    border-block-end: var(--_chart-data-table-marker) solid transparent;
+    border-inline-start: calc(var(--_chart-data-table-marker) * 1.25) solid
+      currentcolor;
+    transition: transform var(--duration-fast) var(--ease-standard);
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+  }
+
+  .data-table[open] > summary::before {
+    transform: rotate(90deg);
+  }
+
+  // An outline follows the border-radius of the box it is painted on, and the focus catch-all in
+  // `styles/focus` rings this summary without any help; a square-cornered box would ring square.
+  .data-table > summary {
+    border-radius: var(--radius-sm);
+  }
+
+  // The caption repeats the figure's own caption directly beneath it. Kept for a screen reader
+  // reaching the table out of context, hidden for the eye — same call as ds-table.
+  .data-table caption {
+    @include visually-hidden.visually-hidden;
+  }
+
+  .data-table table {
+    inline-size: 100%;
+    margin-block-start: var(--space-2);
+    border-collapse: collapse;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .data-table th,
+  .data-table td {
+    padding-block: var(--space-2);
+    border-block-end: var(--border-width-default) solid
+      var(--ds-chart-grid-line-color);
+    text-align: end;
+  }
+
+  .data-table thead th {
+    color: var(--text-tertiary);
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+  }
+
+  .data-table th:first-child,
+  .data-table td:first-child {
+    text-align: start;
+  }
+
+  // Numeric columns end-align, so without a start gutter two adjacent figures touch as soon as the
+  // measure tightens. Body cells only, and never the first: the header labels set the table's
+  // minimum width, and a gutter on the first column indents the labels off their own heading.
+  .data-table td + td {
+    padding-inline-start: var(--space-3);
+  }
+}

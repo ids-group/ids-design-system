@@ -1,0 +1,64 @@
+// A reader meets two disclosures per chart specimen, so this one mirrors the geometry of the
+// chart's own annex table in `src/lib/styles/_chart-data-table.scss` rather than inventing a
+// second look.
+@mixin disclosure {
+  .editor {
+    --_chart-editor-marker: var(--space-1);
+
+    margin-block-start: var(--space-4);
+  }
+
+  // A control, not a caption. As tertiary micro-text beside a chart this read as a footnote, and it
+  // is the one thing on the page a reader is meant to click.
+  .editor > summary {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4);
+    background: var(--surface-default);
+    border: var(--border-width-default) solid var(--border-default);
+    border-radius: var(--radius-pill);
+    color: var(--text-primary);
+    font-size: var(--font-size-s);
+    font-weight: 600;
+    cursor: pointer;
+    list-style: none;
+
+    &:hover {
+      background: var(--surface-secondary);
+      border-color: var(--border-strong);
+    }
+  }
+
+  // Safari still draws the default triangle through `list-style: none`.
+  .editor > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .editor > summary::before {
+    content: '';
+    inline-size: 0;
+    block-size: 0;
+    border-block-start: var(--_chart-editor-marker) solid transparent;
+    border-block-end: var(--_chart-editor-marker) solid transparent;
+    border-inline-start: calc(var(--_chart-editor-marker) * 1.25) solid
+      currentcolor;
+    transition: transform var(--duration-fast) var(--ease-standard);
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+  }
+
+  .editor[open] > summary::before {
+    transform: rotate(90deg);
+  }
+
+  .body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    align-items: flex-start;
+    margin-block-start: var(--space-2);
+  }
+}

@@ -13,8 +13,38 @@ export const chartColors = {
   series6: 'var(--ds-chart-series-6-color)',
   series7: 'var(--ds-chart-series-7-color)',
   series8: 'var(--ds-chart-series-8-color)',
+  seriesDefault: 'var(--ds-chart-series-default-color)',
+  seriesAccent: 'var(--ds-chart-series-accent-color)',
+  ramp1: 'var(--ds-chart-ramp-1-color)',
+  ramp2: 'var(--ds-chart-ramp-2-color)',
+  ramp3: 'var(--ds-chart-ramp-3-color)',
+  ramp4: 'var(--ds-chart-ramp-4-color)',
+  ramp5: 'var(--ds-chart-ramp-5-color)',
+  ramp6: 'var(--ds-chart-ramp-6-color)',
+  ramp7: 'var(--ds-chart-ramp-7-color)',
+  ramp8: 'var(--ds-chart-ramp-8-color)',
 } as const;
 
 /** @internal See chartColors. */
-export const CHART_SERIES_COLORS: readonly string[] =
-  Object.values(chartColors);
+export const CHART_SERIES_COLORS: readonly string[] = [
+  chartColors.series1,
+  chartColors.series2,
+  chartColors.series3,
+  chartColors.series4,
+  chartColors.series5,
+  chartColors.series6,
+  chartColors.series7,
+  chartColors.series8,
+];
+
+/** @internal See chartColors. */
+export const CHART_RAMP_COLORS: readonly string[] = [
+  chartColors.ramp1,
+  chartColors.ramp2,
+  chartColors.ramp3,
+  chartColors.ramp4,
+  chartColors.ramp5,
+  chartColors.ramp6,
+  chartColors.ramp7,
+  chartColors.ramp8,
+];

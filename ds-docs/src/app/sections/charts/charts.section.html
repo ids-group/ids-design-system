@@ -1,123 +1,185 @@
 <docs-section
   anchor="bar-chart"
   eyebrow="Charts"
-  title="Bar chart">
-
+  title="Bar chart"
+  [chapters]="true">
   <span lede>
-    Horizontal bar chart. Each row draws its value as a share of the longest
-    row, with an optional data table underneath and a loading skeleton for data
-    still arriving.
+    Horizontal bars: each row draws its value as a share of the longest row.
   </span>
 
   <h3 class="block-title t-h4">
-    States
+    Default
   </h3>
 
-  <div class="states">
-    <div class="state">
-      <code class="t-mono-inline state-lbl">
-        specimen · visitor funnel
-      </code>
+  <p class="block-desc t-s">
+    Rows keep the order you pass them — the chart never sorts. Track length is a
+    share of the largest value in the set, not of a total, so the longest row
+    always fills its track.
+  </p>
 
+  <ds-bar-chart
+    caption="Visitor funnel"
+    dataTable="none"
+    [data]="specimenRows()" />
+
+  <docs-chart-data-editor [(rows)]="specimenRows" />
+
+  <h3 class="block-title t-h4">
+    Row colour
+  </h3>
+
+  <p class="block-desc t-s">
+    Every row takes the same single-series colour; a row that sets
+    <code class="t-mono-inline">
+      color
+    </code> opts out.
+  </p>
+
+  <ds-bar-chart
+    dataTable="none"
+    [data]="customColorRows()" />
+
+  <docs-chart-data-editor [(rows)]="customColorRows" />
+
+  <h3 class="block-title t-h4">
+    Data table
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      toggle
+    </code>, the default, leaves the
+    disclosure closed; <code class="t-mono-inline">visible</code> renders it
+    open; <code class="t-mono-inline">none</code> leaves it out.
+  </p>
+
+  <ds-bar-chart
+    caption="Long label and nine-digit value together, table forced open"
+    dataTable="visible"
+    [data]="dataTableRows()" />
+
+  <docs-chart-data-editor [(rows)]="dataTableRows" />
+
+  <h3 class="block-title t-h4">
+    Edge cases
+  </h3>
+
+  <p class="block-desc t-s">
+    A value at or below zero draws an empty track rather than dropping the row,
+    so its label survives; one value far above the rest flattens every other
+    track.
+  </p>
+
+  <div class="states states--cols-2">
+    <div class="state-cell">
       <ds-bar-chart
-        caption="Visitor funnel"
-        [data]="specimenRows" />
+        dataTable="none"
+        [data]="emptyRows()" />
+
+      <div class="state-cell-label">
+        Empty
+      </div>
+
+      <docs-chart-data-editor [(rows)]="emptyRows" />
     </div>
 
-    <div class="state">
-      <code class="t-mono-inline state-lbl">
-        empty
-      </code>
-
-      <ds-bar-chart [data]="emptyRows" />
-    </div>
-
-    <div class="state">
-      <code class="t-mono-inline state-lbl">
+    <div class="state-cell">
+      <ds-bar-chart
+        dataTable="none"
         loading
-      </code>
+        [data]="loadingRows()" />
 
+      <div class="state-cell-label">
+        Loading
+      </div>
+
+      <docs-chart-data-editor [(rows)]="loadingRows" />
+    </div>
+
+    <div class="state-cell">
       <ds-bar-chart
-        loading
-        [data]="specimenRows" />
+        dataTable="none"
+        [data]="oneRow()" />
+
+      <div class="state-cell-label">
+        One row
+      </div>
+
+      <docs-chart-data-editor [(rows)]="oneRow" />
     </div>
 
-    <div class="state">
-      <code class="t-mono-inline state-lbl">
-        one row
-      </code>
-
-      <ds-bar-chart [data]="oneRow" />
-    </div>
-
-    <div class="state">
-      <code class="t-mono-inline state-lbl">
-        all zeros
-      </code>
-
-      <ds-bar-chart [data]="allZerosRows" />
-    </div>
-
-    <div class="state">
-      <code class="t-mono-inline state-lbl">
-        negative
-      </code>
-
-      <ds-bar-chart [data]="negativeRows" />
-    </div>
-
-    <div class="state">
-      <code class="t-mono-inline state-lbl">
-        huge outlier
-      </code>
-
-      <ds-bar-chart [data]="hugeOutlierRows" />
-    </div>
-
-    <div class="state">
-      <code class="t-mono-inline state-lbl">
-        long label
-      </code>
-
-      <ds-bar-chart [data]="longLabelRows" />
-    </div>
-
-    <div class="state">
-      <code class="t-mono-inline state-lbl">
-        nine-digit value
-      </code>
-
-      <ds-bar-chart [data]="nineDigitValueRows" />
-    </div>
-
-    <div class="state">
-      <code class="t-mono-inline state-lbl">
-        custom colour
-      </code>
-
-      <ds-bar-chart [data]="customColorRows" />
-    </div>
-
-    <div class="state">
-      <code class="t-mono-inline state-lbl">
-        data table · visible
-      </code>
-
+    <div class="state-cell">
       <ds-bar-chart
-        caption="Long label and nine-digit value together, table forced open"
-        dataTable="visible"
-        [data]="dataTableRows" />
+        dataTable="none"
+        [data]="allZerosRows()" />
+
+      <div class="state-cell-label">
+        All zeros
+      </div>
+
+      <docs-chart-data-editor [(rows)]="allZerosRows" />
     </div>
 
-    <div class="state">
-      <code class="t-mono-inline state-lbl">
-        max below data
-      </code>
+    <div class="state-cell">
+      <ds-bar-chart
+        dataTable="none"
+        [data]="negativeRows()" />
 
+      <div class="state-cell-label">
+        Negative value
+      </div>
+
+      <docs-chart-data-editor [(rows)]="negativeRows" />
+    </div>
+
+    <div class="state-cell">
+      <ds-bar-chart
+        dataTable="none"
+        [data]="hugeOutlierRows()" />
+
+      <div class="state-cell-label">
+        Huge outlier
+      </div>
+
+      <docs-chart-data-editor [(rows)]="hugeOutlierRows" />
+    </div>
+
+    <div class="state-cell">
+      <ds-bar-chart
+        dataTable="none"
+        [data]="longLabelRows()" />
+
+      <div class="state-cell-label">
+        Long label
+      </div>
+
+      <docs-chart-data-editor [(rows)]="longLabelRows" />
+    </div>
+
+    <div class="state-cell">
+      <ds-bar-chart
+        dataTable="none"
+        [data]="nineDigitValueRows()" />
+
+      <div class="state-cell-label">
+        Nine-digit value
+      </div>
+
+      <docs-chart-data-editor [(rows)]="nineDigitValueRows" />
+    </div>
+
+    <div class="state-cell">
       <ds-bar-chart
         caption="Max set below the largest value — bars clip at the track edge"
-        [data]="maxBelowDataRows"
+        dataTable="none"
+        [data]="maxBelowDataRows()"
         [max]="200" />
+
+      <div class="state-cell-label">
+        Max below the data
+      </div>
+
+      <docs-chart-data-editor [(rows)]="maxBelowDataRows" />
     </div>
   </div>
 </docs-section>

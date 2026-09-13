@@ -203,6 +203,7 @@ New: `autosize: boolean = false` (grows with content; forces `resize='none'`), `
 Spinbox for bounded quantities — −/+ buttons around a numeric value.
 Inputs: `value: model<number> = 0`, `min: number = 0`, `max: number | null = null`, `step: number = 1`, `size: 'sm' | 'md' | 'lg' = 'md'`, `disabled: boolean = false`
 Methods: `inc()`, `dec()` (clamp to min/max). Buttons disable at the bounds.
+Tokens: `--ds-number-stepper-field-width` sizes the number itself and is derived from the box height by default — a value with more digits than that width holds is clipped rather than wrapped, so widen it for large quantities. Also `--ds-number-stepper-bg-color`, `--ds-number-stepper-border-color`, `--ds-number-stepper-step-bg-color-active`, `--ds-number-stepper-focus-shadow`.
 
 #### `<ds-checkbox>` — `CheckboxComponent`
 Inputs: `checked: model<boolean>`, `indeterminate: boolean = false`, `disabled: boolean = false`, `name: string | null = null`, `inputId: string | null = null`
@@ -460,10 +461,64 @@ Tokens: `--ds-table-border: var(--border-default)`, `--ds-table-radius: var(--ra
 
 #### `<ds-bar-chart>` — `BarChartComponent`
 Inputs: `data: readonly BarChartRow[]` (required), `max: number | null = null` (track length is relative to this; null uses the largest value, so the longest row always fills its track — a max BELOW the largest value is allowed and its bar clips at the track edge), `caption: string | null = null`, `summary: string | null = null` (accessible name; generated from the data when omitted), `dataTable: 'toggle' | 'visible' | 'none' = 'toggle'` (`'toggle'` renders a closed `<details>`; `'none'` is only correct when the same numbers are already in the DOM nearby), `showPercent: boolean = true`, `loading: boolean = false`, `emptyText: string = 'No data'`, `valueFormat: (value: number) => string`
-Output: `(rowClick): BarChartRow` — emits the clicked row. Mouse only today: the row is not keyboard-operable and sits inside `role="img"`, recorded as accepted debt.
-Row: `BarChartRow = { label: string; value: number; percent?: number; color?: string }`. `percent` is derived from `value / max` when omitted; `color` overrides that row's colour and there is no separate accent flag.
+Output: `(rowClicked): BarChartRow` — emits the clicked row. It fires whether or not `interactive` is set, so binding it without the flag still receives every click; the flag turns on the affordance (pointer cursor, hover tint) AND the keyboard route — with it each row becomes a `role="button"` in the tab order and the container announces itself as a `group` rather than an `img`.
+Row: `BarChartRow = { label: string; value: number; percent?: number; color?: string }`. `percent` is derived from `value / max` when omitted.
+Colour: the rows are ONE series, so they all take `--ds-chart-series-default-color`. Set `color` on the single row the reader should land on, usually to `var(--ds-chart-series-accent-color)`. There is no accent flag — the accent is a colour, so a boolean would only be a less flexible way of setting one. Do NOT reach for `--ds-chart-series-1-color` … `-8-color` here: those separate series from one another, and a bar chart's rows are not separate series.
 Behaviour: a non-finite value draws no bar and prints `—`; a negative value clamps to an empty bar; a share too small for one decimal prints `<0.1%` rather than `0.0%`.
-Tokens: series colours come from `--ds-chart-series-1-color` … `--ds-chart-series-8-color` — set these, never the `--chart-categorical-*` palette behind them. Per-component: `--ds-bar-chart-track-color`, `--ds-bar-chart-track-height`, `--ds-bar-chart-row-gap`.
+Rhythm: a label belongs to the bar under it, so `--ds-bar-chart-label-gap` is deliberately much smaller than `--ds-bar-chart-row-gap`. Level the two and the eye starts grouping a bar with the label BELOW it, which reads every row off by one.
+Tokens: `--ds-bar-chart-track-color`, `--ds-bar-chart-track-height`, `--ds-bar-chart-row-gap`, `--ds-bar-chart-label-gap`.
+
+#### `<ds-column-chart>` — `ColumnChartComponent`
+Vertical columns for a short series read left to right — months, stages, teams — measured against one value axis whose ticks snap to round numbers.
+Inputs: `data: readonly ColumnChartPoint[]` (required), `showValues: boolean = true` (each column prints its own value above itself), `tickCount: number = 5` (a hint: ticks snap to a round step, so an axis asked for three ends up with five and one asked for ten stops at eight), `caption: string | null = null`, `summary: string | null = null`, `dataTable: 'toggle' | 'visible' | 'none' = 'toggle'`, `loading: boolean = false`, `emptyText: string = 'No data'`, `valueFormat: (value: number) => string`, `interactive: boolean = false`
+Output: `(pointClicked): ColumnChartPoint` — same contract as `ds-bar-chart`'s `rowClicked`, keyboard route included.
+Point: `ColumnChartPoint = { label: string; value: number; color?: string }`
+Colour: the categorical palette by position — `--ds-chart-series-1-color` onward. Set `color` on a column that carries a meaning its position does not, such as `var(--ds-chart-series-accent-color)` on the period the reader should land on. This is the one chart where the default is a judgement call rather than a rule: columns often ARE separate things (revenue by region), and where they are one quantity over time, `color` puts every column on `--ds-chart-series-default-color` in one pass.
+Tokens: `--ds-column-chart-plot-height`, `--ds-column-chart-column-width` (share of its own cell), `--ds-column-chart-column-max-width` (the cap that stops a five-column chart drawing slabs wider than their labels), `--ds-column-chart-column-gap`, `--ds-column-chart-grid-line-color`, `--ds-column-chart-value-space` (headroom for the value printed above a full-height column).
+
+#### `<ds-donut-chart>` — `DonutChartComponent`
+A ring that splits one total into its parts, with the middle free for the total or a headline figure of your own.
+Inputs: `data: readonly DonutChartSlice[]` (required), `centerValue: string | null = null`, `centerLabel: string | null = null`, `legend: 'end' | 'bottom' | 'none' = 'end'`, `maxSlices: number | null = null`, `otherLabel: string = 'Other'`, `thickness: number`, `caption: string | null = null`, `summary: string | null = null`, `dataTable: 'toggle' | 'visible' | 'none' = 'toggle'`, `loading: boolean = false`, `emptyText: string = 'No data'`, `valueFormat: (value: number) => string`, `interactive: boolean = false`
+Output: `(sliceClicked): DonutChartSlice`
+Slice: `DonutChartSlice = { id: string; label: string; value: number; slot?: number }`. `slot` is a 1-based palette slot: pinning a slice keeps every other slice's colour where it is when one is filtered out of `data`; left off, the colour follows the index and the whole ring repaints.
+Colour: slices ARE different things, so this is the chart the categorical palette exists for — `--ds-chart-series-1-color` … `--ds-chart-series-8-color`.
+Behaviour: percentages use largest-remainder rounding, so a legend's shares add up to exactly 100 and a real non-zero slice never prints `0%`.
+`maxSlices` caps the legend: past it the smallest slices are summed into one named by `otherLabel`, which takes the neutral eighth palette slot. Off by default, because grouping changes what the chart says. The kept slices stay in the order given rather than being re-sorted by value, and the total is unchanged — the tail is summed, never dropped. A limit below 2 is ignored.
+`thickness: 1` closes the hole into a pie. The centre value renders unconditionally either way, falling back to the formatted total, so over a pie it sits on the slices and carries a halo of the chart's own background — no single text colour is readable against three different hues. The centre box is held to the square that fits inside the hole, so a long `centerLabel` wraps rather than running out over the ring.
+Tokens: `--ds-donut-chart-size`, `--ds-donut-chart-gap`, `--ds-donut-chart-swatch-size`, `--ds-donut-chart-legend-row-gap`, `--ds-donut-chart-legend-row-height`.
+
+#### `<ds-funnel-chart>` — `FunnelChartComponent`
+Stages of a journey, drawn top to bottom in the order you give them — they are never sorted, because the order is the meaning.
+Inputs: `data: readonly FunnelChartStage[]` (required), `shape: 'taper' | 'width' | 'area' = 'taper'`, `showTable: boolean = true` (the aligned stage table under the funnel: value, share of the first stage, and how much fell away since the stage above), `caption: string | null = null`, `summary: string | null = null`, `dataTable: 'toggle' | 'visible' | 'none' = 'toggle'`, `loading: boolean = false`, `emptyText: string = 'No data'`, `valueFormat: (value: number) => string`, `interactive: boolean = false`
+Output: `(stageClicked): FunnelChartStage`
+Stage: `FunnelChartStage = { id: string; label: string; value: number }`
+Shape: `'taper'` is a fixed silhouette where width encodes NOTHING and the table carries the numbers; `'width'` reads every boundary straight off the values, which collapses the tail of a steep funnel below a labellable width; `'area'` keeps the fixed silhouette and moves the stage boundaries so each band's AREA is proportional to its value — the honest encoding that still leaves a labellable tail.
+`dataTable` is suppressed while `showTable` is on: with both, the same numbers print twice.
+Colour: the stages are one quantity draining, not N categories, so they take the single-hue ramp `--ds-chart-ramp-1-color` … `--ds-chart-ramp-8-color`, spread across however many stages there are. The LAST stage leaves the ramp for `--ds-chart-series-accent-color` — it is the outcome the funnel is read for.
+Tokens: `--ds-funnel-chart-stage-height`, `--ds-funnel-chart-stage-gap`, `--ds-funnel-chart-row-gap`.
+
+#### `<ds-line-chart>` — `LineChartComponent`
+One or more series plotted over a shared set of categories.
+Inputs: `categories: readonly string[]` (required), `series: readonly LineChartSeries[]` (required), `yAxisMode: 'rounded' | 'exact' | 'independent' | 'stacked' = 'rounded'`, `showMarkers: boolean = true`, `gaps: 'break' | 'zero' = 'break'`, `tickCount: number`, `caption: string | null = null`, `summary: string | null = null`, `dataTable: 'toggle' | 'visible' | 'none' = 'toggle'`, `loading: boolean = false`, `emptyText: string = 'No data'`, `valueFormat: (value: number) => string`
+Series: `LineChartSeries = { id: string; label: string; data: readonly (number | null)[]; axis?: 'primary' | 'secondary'; area?: boolean; slot?: number }`. A `null` is a missing reading and `gaps` decides what it draws — `'break'` leaves a hole in the line, `'zero'` plants a point on the baseline. `area` fills the band between the line and its axis baseline. `slot` pins a palette slot, so hiding one series leaves every other series' colour alone.
+`yAxisMode` only matters once a series sets `axis: 'secondary'`: `'rounded'` shares one set of gridlines and rounds the secondary step up, so that series stops short of the top; `'exact'` shares the gridlines but ends the secondary axis on its largest reading, so it uses the full height and its labels are not round; `'independent'` scales and grids each axis on its own; `'stacked'` draws two plots one above the other, sharing the category axis.
+Colour: series ARE different things, so the categorical palette applies — `--ds-chart-series-1-color` onward, by position or by `slot`.
+Tokens: `--ds-line-chart-plot-height`, `--ds-line-chart-line-width`, `--ds-line-chart-dot-radius`, `--ds-line-chart-area-opacity`, `--ds-line-chart-swatch-size`, `--ds-line-chart-grid-line-color`, `--ds-line-chart-axis-line-color`, `--ds-line-chart-axis-label-color`, `--ds-line-chart-axis-font-size`.
+
+#### Chart frame — the box a chart draws around itself
+Every chart paints its own border, radius, padding and `--surface-default` background, on by default. That is unusual here — most components resist owning chrome — and a chart earns the exception because it is read as an OBJECT: a plot with axes, a legend and an annex table, whose parts run into the page without an edge. A chart that already sits inside a card drops the frame with two declarations rather than a mode flag:
+
+```scss
+ds-bar-chart { --ds-chart-frame-border-width: 0; --ds-chart-frame-padding: 0; }
+```
+
+Tokens: `--ds-chart-frame-border-color`, `--ds-chart-frame-border-width`, `--ds-chart-frame-radius`, `--ds-chart-frame-padding`, `--ds-chart-frame-bg-color`.
+
+#### Chart colour — which palette a chart takes
+Three families, and reaching for the wrong one is the usual chart bug. Set the `--ds-chart-*` contract tokens, never the `--chart-categorical-*` / `--chart-ramp-*` palette behind them.
+- **Categorical** — `--ds-chart-series-1-color` … `--ds-chart-series-8-color`, for marks that are DIFFERENT THINGS: donut slices, line series. Eight hues, each clearing 3:1 on white for WCAG 1.4.11 and at least dE 15 from every other under normal, deuteranope and protanope vision. No hue between 35 and 130: a yellow or a lime cannot be both rich and 3:1 on white, and forcing one past the floor turns it to mustard. Slots 7 and 8 are the "rest" / "other" buckets, and slot 8 is a neutral on purpose — every eighth HUE that clears the floor lands within dE 4 of one of the other seven under some colour-vision deficiency.
+- **Single series** — `--ds-chart-series-default-color` plus `--ds-chart-series-accent-color`, for marks that are ONE thing measured repeatedly: bar rows, columns. One colour for all of them, and the accent on the one the reader should land on.
+- **Ramp** — `--ds-chart-ramp-1-color` … `--ds-chart-ramp-8-color`, one hue light to deep, for the ORDERED stages of a single quantity: the funnel.
 
 ### Domain
 

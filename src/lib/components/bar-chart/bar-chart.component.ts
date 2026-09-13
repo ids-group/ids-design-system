@@ -5,10 +5,11 @@ import {
   booleanAttribute,
   computed,
   input,
+  numberAttribute,
   output,
 } from '@angular/core';
 import {
-  CHART_SERIES_COLORS,
+  chartColors,
   describeSeries,
   formatPercent,
   formatValue,
@@ -16,6 +17,8 @@ import {
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import { resolveMax, widthPercent } from './bar-chart.math';
 import type { BarChartRow } from './bar-chart.types';
+
+const defaultValueFormat = (value: number) => formatValue(value);
 
 @Component({
   selector: 'ds-bar-chart',
@@ -31,7 +34,9 @@ export class BarChartComponent {
 
   /** Track length is relative to this. Null uses the largest value, so the
    *  longest row always fills its track. */
-  readonly max = input<number | null>(null);
+  readonly max = input<number | null>(null, {
+    transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
+  });
 
   readonly caption = input<string | null>(null);
 
@@ -42,11 +47,14 @@ export class BarChartComponent {
   readonly showPercent = input(true, { transform: booleanAttribute });
   readonly loading = input(false, { transform: booleanAttribute });
   readonly emptyText = input<string>('No data');
-  readonly valueFormat = input<(value: number) => string>((value) =>
-    formatValue(value),
-  );
+  readonly valueFormat = input<(value: number) => string>(defaultValueFormat);
 
-  readonly rowClick = output<BarChartRow>();
+  /** Turns on the click affordance — the pointer cursor and any hover tint.
+   *  The click output fires whether or not this is set, so a consumer that
+   *  binds the output and forgets the flag still receives every click. */
+  readonly interactive = input(false, { transform: booleanAttribute });
+
+  readonly rowClicked = output<BarChartRow>();
 
   protected readonly resolvedMax = computed(() =>
     resolveMax(
@@ -59,16 +67,15 @@ export class BarChartComponent {
     const max = this.resolvedMax();
     const format = this.valueFormat();
 
-    return this.data().map((row, index) => ({
+    return this.data().map((row) => ({
       row,
       widthPercent: widthPercent(row.value, max),
       formattedValue: format(row.value),
       formattedPercent:
         row.percent !== undefined
-          ? `${row.percent.toFixed(1)}%`
+          ? formatPercent(row.percent, 100)
           : formatPercent(row.value, max),
-      color:
-        row.color ?? CHART_SERIES_COLORS[index % CHART_SERIES_COLORS.length],
+      color: row.color ?? chartColors.seriesDefault,
     }));
   });
 
@@ -81,6 +88,20 @@ export class BarChartComponent {
         this.valueFormat(),
       ),
   );
+
+  protected entryLabel(entry: { row: BarChartRow; formattedValue: string }) {
+    return `${entry.row.label}, ${entry.formattedValue}`;
+  }
+
+  protected onRowKey(row: BarChartRow, event: Event): void {
+    // Only the row's own key opens the row: a key pressed on a control inside it belongs to that
+    // control.
+    if (!this.interactive() || event.target !== event.currentTarget) {
+      return;
+    }
+    event.preventDefault();
+    this.rowClicked.emit(row);
+  }
 
   protected readonly isEmpty = computed(() => this.data().length === 0);
 

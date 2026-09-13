@@ -712,43 +712,93 @@ export const CHARTS: readonly ColourRow[] = [
   },
   {
     "name": "--chart-categorical-1",
-    "value": "hsl(229deg 100% 59%)",
+    "value": "hsl(  8deg 78% 58%)",
     "notes": "Categorical chart series colour 1."
   },
   {
     "name": "--chart-categorical-2",
-    "value": "hsl(165deg  72% 38%)",
+    "value": "hsl(172deg 82% 36%)",
     "notes": "Categorical chart series colour 2."
   },
   {
     "name": "--chart-categorical-3",
-    "value": "hsl( 24deg  95% 55%)",
+    "value": "hsl(222deg 70% 62%)",
     "notes": "Categorical chart series colour 3."
   },
   {
     "name": "--chart-categorical-4",
-    "value": "hsl(330deg  82% 55%)",
+    "value": "hsl(266deg 62% 66%)",
     "notes": "Categorical chart series colour 4."
   },
   {
     "name": "--chart-categorical-5",
-    "value": "hsl(45deg   95% 50%)",
+    "value": "hsl(330deg 70% 62%)",
     "notes": "Categorical chart series colour 5."
   },
   {
     "name": "--chart-categorical-6",
-    "value": "hsl(190deg  85% 45%)",
+    "value": "hsl(152deg 58% 41%)",
     "notes": "Categorical chart series colour 6."
   },
   {
     "name": "--chart-categorical-7",
-    "value": "hsl(280deg  60% 60%)",
+    "value": "hsl(300deg 62% 60%)",
     "notes": "Categorical chart series colour 7."
   },
   {
     "name": "--chart-categorical-8",
-    "value": "hsl(130deg  45% 50%)",
+    "value": "hsl(222deg 14% 29%)",
     "notes": "Categorical chart series colour 8."
+  },
+  {
+    "name": "--chart-series-default",
+    "value": "hsl(222deg 16% 42%)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-series-accent",
+    "value": "var(--chart-categorical-2)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-ramp-1",
+    "value": "hsl(  8deg 78% 76%)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-ramp-2",
+    "value": "hsl(  8deg 78% 72%)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-ramp-3",
+    "value": "hsl(  8deg 78% 69%)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-ramp-4",
+    "value": "hsl(  8deg 78% 65%)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-ramp-5",
+    "value": "hsl(  8deg 78% 62%)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-ramp-6",
+    "value": "hsl(  8deg 77% 58%)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-ramp-7",
+    "value": "hsl(  8deg 75% 55%)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-ramp-8",
+    "value": "hsl(  8deg 72% 51%)",
+    "notes": ""
   },
   {
     "name": "--chart-sequential-1",
@@ -782,38 +832,63 @@ export const CHARTS: readonly ColourRow[] = [
   },
   {
     "name": "--chart-divergent--3",
-    "value": "hsl(0deg 70% 40%)",
+    "value": "hsl(  8deg 48% 38%)",
     "notes": "Diverging chart scale colour, negative extreme (step -3)."
   },
   {
     "name": "--chart-divergent--2",
-    "value": "hsl(0deg 60% 58%)",
+    "value": "hsl(  8deg 42% 56%)",
     "notes": "Diverging chart scale colour, negative step -2."
   },
   {
     "name": "--chart-divergent--1",
-    "value": "hsl(0deg 50% 80%)",
+    "value": "hsl(  8deg 34% 80%)",
     "notes": "Diverging chart scale colour, negative step -1."
   },
   {
     "name": "--chart-divergent-0",
-    "value": "hsl(225deg 8% 92%)",
+    "value": "hsl(225deg  8% 92%)",
     "notes": "Diverging chart scale colour, neutral midpoint."
   },
   {
     "name": "--chart-divergent-1",
-    "value": "hsl(140deg 35% 80%)",
+    "value": "hsl(145deg 28% 80%)",
     "notes": "Diverging chart scale colour, positive step 1."
   },
   {
     "name": "--chart-divergent-2",
-    "value": "hsl(140deg 45% 55%)",
+    "value": "hsl(145deg 38% 52%)",
     "notes": "Diverging chart scale colour, positive step 2."
   },
   {
     "name": "--chart-divergent-3",
-    "value": "hsl(140deg 55% 35%)",
+    "value": "hsl(145deg 46% 34%)",
     "notes": "Diverging chart scale colour, positive extreme (step 3)."
+  },
+  {
+    "name": "--chart-frame-border-color",
+    "value": "var(--border-default)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-frame-border-width",
+    "value": "var(--border-width-default)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-frame-radius",
+    "value": "var(--radius-lg)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-frame-padding",
+    "value": "var(--space-5)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-frame-bg-color",
+    "value": "var(--surface-default)",
+    "notes": ""
   },
   {
     "name": "--chart-axis-line-color",
@@ -939,6 +1014,81 @@ export const CHARTS: readonly ColourRow[] = [
     "name": "--ds-chart-series-8-color",
     "value": "var(--chart-categorical-8)",
     "notes": "Colour of the eighth chart series. Set this, not --chart-categorical-8."
+  },
+  {
+    "name": "--ds-chart-series-default-color",
+    "value": "var(--chart-series-default)",
+    "notes": ""
+  },
+  {
+    "name": "--ds-chart-series-accent-color",
+    "value": "var(--chart-series-accent)",
+    "notes": ""
+  },
+  {
+    "name": "--ds-chart-ramp-1-color",
+    "value": "var(--chart-ramp-1)",
+    "notes": ""
+  },
+  {
+    "name": "--ds-chart-ramp-2-color",
+    "value": "var(--chart-ramp-2)",
+    "notes": ""
+  },
+  {
+    "name": "--ds-chart-ramp-3-color",
+    "value": "var(--chart-ramp-3)",
+    "notes": ""
+  },
+  {
+    "name": "--ds-chart-ramp-4-color",
+    "value": "var(--chart-ramp-4)",
+    "notes": ""
+  },
+  {
+    "name": "--ds-chart-ramp-5-color",
+    "value": "var(--chart-ramp-5)",
+    "notes": ""
+  },
+  {
+    "name": "--ds-chart-ramp-6-color",
+    "value": "var(--chart-ramp-6)",
+    "notes": ""
+  },
+  {
+    "name": "--ds-chart-ramp-7-color",
+    "value": "var(--chart-ramp-7)",
+    "notes": ""
+  },
+  {
+    "name": "--ds-chart-ramp-8-color",
+    "value": "var(--chart-ramp-8)",
+    "notes": ""
+  },
+  {
+    "name": "--ds-chart-frame-border-color",
+    "value": "var(--chart-frame-border-color)",
+    "notes": ""
+  },
+  {
+    "name": "--ds-chart-frame-border-width",
+    "value": "var(--chart-frame-border-width)",
+    "notes": ""
+  },
+  {
+    "name": "--ds-chart-frame-radius",
+    "value": "var(--chart-frame-radius)",
+    "notes": ""
+  },
+  {
+    "name": "--ds-chart-frame-padding",
+    "value": "var(--chart-frame-padding)",
+    "notes": ""
+  },
+  {
+    "name": "--ds-chart-frame-bg-color",
+    "value": "var(--chart-frame-bg-color)",
+    "notes": ""
   },
   {
     "name": "--ds-chart-axis-line-color",
@@ -2411,18 +2561,23 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "tokens": [
       {
         "name": "--ds-bar-chart-track-color",
-        "value": "var(--chart-grid-line-color)",
+        "value": "var(--ds-chart-grid-line-color)",
         "notes": "Unfilled part of a ds-bar-chart bar (default --chart-grid-line-color)."
       },
       {
         "name": "--ds-bar-chart-track-height",
-        "value": "8px",
+        "value": "12px",
         "notes": "Thickness of a ds-bar-chart bar and its track (default 8px)."
       },
       {
         "name": "--ds-bar-chart-row-gap",
-        "value": "var(--space-3)",
+        "value": "var(--space-5)",
         "notes": "Vertical gap between ds-bar-chart rows (default --space-3)."
+      },
+      {
+        "name": "--ds-bar-chart-label-gap",
+        "value": "var(--space-1)",
+        "notes": ""
       }
     ]
   },
@@ -2986,6 +3141,48 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
+    "component": "Column Chart",
+    "selector": ".column-chart",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-column-chart-plot-height",
+        "value": "200px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-column-chart-column-gap",
+        "value": "var(--ds-chart-bar-gap)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-column-chart-column-width",
+        "value": "80%",
+        "notes": ""
+      },
+      {
+        "name": "--ds-column-chart-column-max-width",
+        "value": "48px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-column-chart-grid-line-color",
+        "value": "var(--ds-chart-grid-line-color)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-column-chart-value-space",
+        "value": "var(--space-5)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-column-chart-axis-width",
+        "value": "40px",
+        "notes": ""
+      }
+    ]
+  },
+  {
     "component": "Date Picker",
     "selector": ".date-picker",
     "description": "",
@@ -3188,6 +3385,38 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-divider-strong-color",
         "value": "var(--border-default)",
         "notes": "Divider line colour (defaults to --border-default)."
+      }
+    ]
+  },
+  {
+    "component": "Donut Chart",
+    "selector": ".donut-chart",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-donut-chart-size",
+        "value": "180px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-donut-chart-gap",
+        "value": "var(--space-5)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-donut-chart-legend-row-gap",
+        "value": "var(--space-2)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-donut-chart-legend-row-height",
+        "value": "16px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-donut-chart-swatch-size",
+        "value": "10px",
+        "notes": ""
       }
     ]
   },
@@ -3618,6 +3847,28 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
+    "component": "Funnel Chart",
+    "selector": ".funnel-chart",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-funnel-chart-stage-height",
+        "value": "44px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-funnel-chart-stage-gap",
+        "value": "var(--ds-chart-bar-gap)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-funnel-chart-row-gap",
+        "value": "var(--space-4)",
+        "notes": ""
+      }
+    ]
+  },
+  {
     "component": "Icon Base",
     "selector": ".icon-base",
     "description": "",
@@ -3827,6 +4078,58 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-stack-gap",
         "value": "var(--space-stack)",
         "notes": "Default gap for vertically stacked layouts (defaults to --space-stack)."
+      }
+    ]
+  },
+  {
+    "component": "Line Chart",
+    "selector": ".line-chart",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-line-chart-grid-line-color",
+        "value": "var(--ds-chart-grid-line-color)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-line-chart-axis-line-color",
+        "value": "var(--ds-chart-axis-line-color)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-line-chart-axis-label-color",
+        "value": "var(--ds-chart-axis-label-color)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-line-chart-axis-font-size",
+        "value": "var(--ds-chart-axis-font-size)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-line-chart-line-width",
+        "value": "var(--ds-chart-line-width)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-line-chart-dot-radius",
+        "value": "var(--ds-chart-dot-radius)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-line-chart-area-opacity",
+        "value": "0.16",
+        "notes": ""
+      },
+      {
+        "name": "--ds-line-chart-plot-height",
+        "value": "240px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-line-chart-swatch-size",
+        "value": "10px",
+        "notes": ""
       }
     ]
   },
@@ -4421,6 +4724,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-number-stepper-step-bg-color-active",
         "value": "var(--accent-muted)",
         "notes": "Number stepper increment/decrement button fill when pressed (defaults to --accent-muted)."
+      },
+      {
+        "name": "--ds-number-stepper-field-width",
+        "value": "calc(var(--_field-box-height) * 1.25)",
+        "notes": ""
       }
     ]
   },

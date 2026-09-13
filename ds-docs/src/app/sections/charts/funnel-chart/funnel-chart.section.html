@@ -1,0 +1,220 @@
+<docs-section
+  anchor="funnel-chart"
+  eyebrow="Charts"
+  title="Funnel chart"
+  [chapters]="true">
+  <span lede>
+    The stages of a journey, drawn top to bottom in the order you give them —
+    never sorted, because the order is the meaning.
+  </span>
+
+  <h3 class="block-title t-h4">
+    Default
+  </h3>
+
+  <p class="block-desc t-s">
+    The default <code class="t-mono-inline">taper</code> shape gives every stage
+    the same depth whatever its value, so everything quantitative comes from the
+    table under it. Editing the data moves the table, not the shape, because
+    <code class="t-mono-inline">
+      taper
+    </code> encodes nothing in width.
+  </p>
+
+  <ds-funnel-chart
+    caption="Checkout funnel"
+    dataTable="none"
+    [data]="specimenStages()" />
+
+  <docs-chart-data-editor [(rows)]="specimenStages" />
+
+  <h3 class="block-title t-h4">
+    Shape · taper (default)
+  </h3>
+
+  <p class="block-desc t-s">
+    Switch to width or area when the geometry itself has to carry the value.
+  </p>
+
+  <ds-funnel-chart
+    dataTable="none"
+    shape="taper"
+    [data]="taperStages()" />
+
+  <docs-chart-data-editor [(rows)]="taperStages" />
+
+  <h3 class="block-title t-h4">
+    Shape · width
+  </h3>
+
+  <p class="block-desc t-s">
+    Every boundary is read off the values as a fraction of the largest stage, so
+    a stage that has lost nearly everything collapses to a sliver with no room
+    for its label.
+  </p>
+
+  <ds-funnel-chart
+    dataTable="none"
+    shape="width"
+    [data]="widthStages()" />
+
+  <docs-chart-data-editor [(rows)]="widthStages" />
+
+  <h3 class="block-title t-h4">
+    Shape · area
+  </h3>
+
+  <p class="block-desc t-s">
+    The fixed silhouette of taper with the boundaries moved so each band's area
+    is proportional to its value — a small stage buys its area back in depth
+    rather than shrinking to nothing sideways.
+  </p>
+
+  <ds-funnel-chart
+    dataTable="none"
+    shape="area"
+    [data]="areaStages()" />
+
+  <docs-chart-data-editor [(rows)]="areaStages" />
+
+  <h3 class="block-title t-h4">
+    Steep drop
+  </h3>
+
+  <div class="states states--cols-2">
+    <div class="state-cell">
+      <ds-funnel-chart
+        dataTable="none"
+        shape="width"
+        [data]="steepDropWidthStages()" />
+
+      <div class="state-cell-label">
+        width — the tail collapses
+      </div>
+
+      <docs-chart-data-editor [(rows)]="steepDropWidthStages" />
+    </div>
+
+    <div class="state-cell">
+      <ds-funnel-chart
+        dataTable="none"
+        shape="area"
+        [data]="steepDropAreaStages()" />
+
+      <div class="state-cell-label">
+        area — the tail stays labelled
+      </div>
+
+      <docs-chart-data-editor [(rows)]="steepDropAreaStages" />
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Stage table
+  </h3>
+
+  <p class="block-desc t-s">
+    On by default, and under <code class="t-mono-inline">taper</code> it is the
+    only place the values exist — turn
+    <code class="t-mono-inline">
+      showTable
+    </code> off only with a shape that
+    carries them.
+  </p>
+
+  <ds-funnel-chart
+    dataTable="none"
+    [data]="stageTableStages()"
+    [showTable]="false" />
+
+  <docs-chart-data-editor [(rows)]="stageTableStages" />
+
+  <h3 class="block-title t-h4">
+    Data table
+  </h3>
+
+  <p class="block-desc t-s">
+    The disclosure appears only where the stage table is off; with both on, the
+    same numbers would print twice.
+  </p>
+
+  <ds-funnel-chart
+    caption="The annex table, collapsed until asked for"
+    [data]="dataTableStages()"
+    [showTable]="false" />
+
+  <docs-chart-data-editor [(rows)]="dataTableStages" />
+
+  <h3 class="block-title t-h4">
+    Edge cases
+  </h3>
+
+  <p class="block-desc t-s">
+    Every share is measured against the first stage, so a first stage of zero
+    leaves the percentage column with nothing to divide by.
+  </p>
+
+  <div class="states states--cols-2">
+    <div class="state-cell">
+      <ds-funnel-chart
+        dataTable="none"
+        [data]="emptyStages()" />
+
+      <div class="state-cell-label">
+        Empty
+      </div>
+
+      <docs-chart-data-editor [(rows)]="emptyStages" />
+    </div>
+
+    <div class="state-cell">
+      <ds-funnel-chart
+        dataTable="none"
+        loading
+        [data]="loadingStages()" />
+
+      <div class="state-cell-label">
+        Loading
+      </div>
+
+      <docs-chart-data-editor [(rows)]="loadingStages" />
+    </div>
+
+    <div class="state-cell">
+      <ds-funnel-chart
+        dataTable="none"
+        [data]="oneStage()" />
+
+      <div class="state-cell-label">
+        One stage
+      </div>
+
+      <docs-chart-data-editor [(rows)]="oneStage" />
+    </div>
+
+    <div class="state-cell">
+      <ds-funnel-chart
+        dataTable="none"
+        [data]="allZerosStages()" />
+
+      <div class="state-cell-label">
+        All zeros
+      </div>
+
+      <docs-chart-data-editor [(rows)]="allZerosStages" />
+    </div>
+
+    <div class="state-cell">
+      <ds-funnel-chart
+        caption="Nothing to be a share of — the percentage column reads an em dash"
+        dataTable="none"
+        [data]="zeroFirstStageStages()" />
+
+      <div class="state-cell-label">
+        Zero first stage
+      </div>
+
+      <docs-chart-data-editor [(rows)]="zeroFirstStageStages" />
+    </div>
+  </div>
+</docs-section>

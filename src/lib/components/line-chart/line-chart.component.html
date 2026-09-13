@@ -1,0 +1,215 @@
+<figure class="line-chart">
+  @if (caption()) {
+    <figcaption>
+      {{ caption() }}
+    </figcaption>
+  }
+
+  @if (loading()) {
+    <div
+      class="skeleton"
+      aria-hidden="true">
+      <ds-skeleton height="var(--_line-chart-plot-height)" />
+
+      @if (skeletonSeries().length > 1) {
+        <div class="skeleton-legend">
+          @for (placeholder of skeletonSeries(); track $index) {
+            <ds-skeleton
+              width="var(--space-16)"
+              height="var(--space-3)" />
+          }
+        </div>
+      }
+    </div>
+  } @else if (isEmpty()) {
+    <p class="empty">
+      {{ emptyText() }}
+    </p>
+  } @else {
+    <div
+      class="plot"
+      role="img"
+      [attr.aria-label]="accessibleName()">
+      <svg
+        class="canvas"
+        aria-hidden="true"
+        preserveAspectRatio="xMidYMid meet"
+        [attr.viewBox]="viewBox">
+        @for (tick of primaryTicks(); track $index) {
+          <line
+            class="grid-line"
+            [attr.x1]="plotLeft()"
+            [attr.x2]="plotRight()"
+            [attr.y1]="tick.y"
+            [attr.y2]="tick.y" />
+        }
+
+        @if (showSecondaryGridlines()) {
+          @for (tick of secondaryTicks(); track $index) {
+            <line
+              class="grid-line"
+              [attr.x1]="plotLeft()"
+              [attr.x2]="plotRight()"
+              [attr.y1]="tick.y"
+              [attr.y2]="tick.y"
+              [class.secondary]="!stacked()" />
+          }
+        }
+
+        <line
+          class="axis-line"
+          [attr.x1]="plotLeft()"
+          [attr.x2]="plotRight()"
+          [attr.y1]="primaryBaselineY()"
+          [attr.y2]="primaryBaselineY()" />
+
+        <line
+          class="axis-line"
+          [attr.x1]="plotLeft()"
+          [attr.x2]="plotLeft()"
+          [attr.y1]="primaryTopY()"
+          [attr.y2]="primaryBaselineY()" />
+
+        @if (stacked()) {
+          <line
+            class="axis-line"
+            [attr.x1]="plotLeft()"
+            [attr.x2]="plotRight()"
+            [attr.y1]="secondaryBaselineY()"
+            [attr.y2]="secondaryBaselineY()" />
+
+          <line
+            class="axis-line"
+            [attr.x1]="plotLeft()"
+            [attr.x2]="plotLeft()"
+            [attr.y1]="secondaryTopY()"
+            [attr.y2]="secondaryBaselineY()" />
+        }
+
+        @for (entry of plottedSeries(); track entry.series.id) {
+          @for (path of entry.areaPaths; track $index) {
+            <path
+              class="series-area"
+              [attr.d]="path"
+              [attr.fill]="entry.color" />
+          }
+        }
+
+        @for (entry of plottedSeries(); track entry.series.id) {
+          @for (points of entry.polylines; track $index) {
+            <polyline
+              class="series-line"
+              [attr.points]="points"
+              [attr.stroke]="entry.color" />
+          }
+        }
+
+        @if (showMarkers()) {
+          @for (entry of plottedSeries(); track entry.series.id) {
+            @for (marker of entry.markers; track $index) {
+              <circle
+                class="series-marker"
+                [attr.cx]="marker.x"
+                [attr.cy]="marker.y"
+                [attr.fill]="entry.color" />
+            }
+          }
+        }
+
+        @for (tick of primaryTicks(); track $index) {
+          <text
+            class="axis-label"
+            text-anchor="end"
+            [attr.x]="primaryLabelX()"
+            [attr.y]="tick.y">
+            {{ tick.label }}
+          </text>
+        }
+
+        @for (tick of secondaryTicks(); track $index) {
+          <text
+            class="axis-label"
+            [attr.text-anchor]="secondaryLabelAnchor()"
+            [attr.x]="secondaryLabelX()"
+            [attr.y]="tick.y">
+            {{ tick.label }}
+          </text>
+        }
+
+        @for (label of categoryLabels(); track $index) {
+          <text
+            class="category-label"
+            text-anchor="middle"
+            [attr.x]="label.x"
+            [attr.y]="categoryLabelY()">
+            {{ label.text }}
+          </text>
+        }
+      </svg>
+    </div>
+
+    @if (showLegend()) {
+      <ul class="legend">
+        @for (entry of resolvedSeries(); track entry.series.id) {
+          <li class="legend-item">
+            <span
+              class="legend-swatch"
+              aria-hidden="true"
+              [style.background]="entry.color">
+            </span>
+
+            {{ entry.series.label }}
+          </li>
+        }
+      </ul>
+    }
+
+    @if (dataTable() !== 'none') {
+      <details
+        class="data-table"
+        [open]="dataTable() === 'visible'">
+        <summary>
+          Data table
+        </summary>
+
+        <table>
+          <caption>
+            {{
+              caption() ?? 'Chart data'
+            }}
+          </caption>
+
+          <thead>
+            <tr>
+              <th scope="col">
+                Category
+              </th>
+
+              @for (entry of resolvedSeries(); track entry.series.id) {
+                <th scope="col">
+                  {{ entry.series.label }}
+                </th>
+              }
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (row of tableRows(); track $index) {
+              <tr>
+                <th scope="row">
+                  {{ row.category }}
+                </th>
+
+                @for (cell of row.cells; track $index) {
+                  <td>
+                    {{ cell }}
+                  </td>
+                }
+              </tr>
+            }
+          </tbody>
+        </table>
+      </details>
+    }
+  }
+</figure>

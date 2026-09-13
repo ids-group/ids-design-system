@@ -1,6 +1,7 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation, signal } from '@angular/core';
 import { BarChartComponent } from 'ds/bar-chart';
 import type { BarChartRow } from 'ds/bar-chart';
+import { DocsChartDataEditorComponent } from '../../shared/docs-chart-data-editor.component';
 import { DocsSectionComponent } from '../../shared/docs-section.component';
 
 const SPECIMEN_ROWS: readonly BarChartRow[] = [
@@ -11,7 +12,7 @@ const SPECIMEN_ROWS: readonly BarChartRow[] = [
   {
     label: 'Requested an agent',
     value: 702,
-    color: 'var(--ds-chart-series-2-color)',
+    color: 'var(--ds-chart-series-accent-color)',
   },
 ];
 
@@ -49,7 +50,7 @@ const NINE_DIGIT_VALUE_ROWS: readonly BarChartRow[] = [
 const CUSTOM_COLOR_ROWS: readonly BarChartRow[] = [
   { label: 'Organic', value: 620 },
   { label: 'Paid', value: 410 },
-  { label: 'Referral', value: 275, color: 'var(--chart-categorical-5)' },
+  { label: 'Referral', value: 275, color: 'var(--ds-chart-series-5-color)' },
 ];
 
 const DATA_TABLE_ROWS: readonly BarChartRow[] = [
@@ -65,21 +66,37 @@ const MAX_BELOW_DATA_ROWS: readonly BarChartRow[] = [
 @Component({
   selector: 'section-charts-bar-chart',
   standalone: true,
-  imports: [BarChartComponent, DocsSectionComponent],
+  imports: [
+    BarChartComponent,
+    DocsChartDataEditorComponent,
+    DocsSectionComponent,
+  ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './charts.section.html',
-  styleUrl: './charts.section.scss',
+  styleUrls: ['../../shared/section-demo.scss', './charts.section.scss'],
 })
 export class BarChartSection {
-  protected readonly specimenRows = SPECIMEN_ROWS;
-  protected readonly emptyRows: readonly BarChartRow[] = [];
-  protected readonly oneRow = ONE_ROW;
-  protected readonly allZerosRows = ALL_ZEROS_ROWS;
-  protected readonly negativeRows = NEGATIVE_ROWS;
-  protected readonly hugeOutlierRows = HUGE_OUTLIER_ROWS;
-  protected readonly longLabelRows = LONG_LABEL_ROWS;
-  protected readonly nineDigitValueRows = NINE_DIGIT_VALUE_ROWS;
-  protected readonly customColorRows = CUSTOM_COLOR_ROWS;
-  protected readonly dataTableRows = DATA_TABLE_ROWS;
-  protected readonly maxBelowDataRows = MAX_BELOW_DATA_ROWS;
+  protected readonly specimenRows =
+    signal<readonly BarChartRow[]>(SPECIMEN_ROWS);
+  protected readonly customColorRows =
+    signal<readonly BarChartRow[]>(CUSTOM_COLOR_ROWS);
+  protected readonly dataTableRows =
+    signal<readonly BarChartRow[]>(DATA_TABLE_ROWS);
+  protected readonly emptyRows = signal<readonly BarChartRow[]>([]);
+  protected readonly loadingRows =
+    signal<readonly BarChartRow[]>(SPECIMEN_ROWS);
+  protected readonly oneRow = signal<readonly BarChartRow[]>(ONE_ROW);
+  protected readonly allZerosRows =
+    signal<readonly BarChartRow[]>(ALL_ZEROS_ROWS);
+  protected readonly negativeRows =
+    signal<readonly BarChartRow[]>(NEGATIVE_ROWS);
+  protected readonly hugeOutlierRows =
+    signal<readonly BarChartRow[]>(HUGE_OUTLIER_ROWS);
+  protected readonly longLabelRows =
+    signal<readonly BarChartRow[]>(LONG_LABEL_ROWS);
+  protected readonly nineDigitValueRows = signal<readonly BarChartRow[]>(
+    NINE_DIGIT_VALUE_ROWS,
+  );
+  protected readonly maxBelowDataRows =
+    signal<readonly BarChartRow[]>(MAX_BELOW_DATA_ROWS);
 }

@@ -1,0 +1,203 @@
+@use '../../styles/chart-data-table' as chart-data-table;
+@use '../../styles/chart-frame' as chart-frame;
+@include chart-frame.chart-frame;
+@include chart-data-table.chart-data-table;
+
+
+.donut-chart {
+  --_donut-chart-size: var(--ds-donut-chart-size, 180px);
+  --_donut-chart-gap: var(--ds-donut-chart-gap, var(--space-5));
+  --_donut-chart-legend-row-gap: var(--ds-donut-chart-legend-row-gap, var(--space-2));
+  --_donut-chart-legend-row-height: var(--ds-donut-chart-legend-row-height, 16px);
+  --_donut-chart-swatch-size: var(--ds-donut-chart-swatch-size, 10px);
+  --_donut-chart-outline-width: var(--ds-donut-chart-outline-width, calc(var(--border-width-strong) + var(--border-width-default)));
+
+  margin: 0;
+}
+
+figcaption {
+  margin-block-end: var(--space-3);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+// The outline is only in the empty state. A ring with slices already draws its own shape, so a
+// border there would be a second edge around one the data supplies.
+.empty {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+// Also when every slice is zero: there is data, so this is not the empty state, but no arc has any
+// sweep and the ring's box would otherwise be blank.
+.empty-ring,
+.ring-outline {
+  position: relative;
+  inline-size: var(--_donut-chart-size);
+  block-size: var(--_donut-chart-size);
+  border: var(--_donut-chart-outline-width) solid var(--border-divider);
+  border-radius: var(--radius-pill);
+}
+
+// The hole, so the placeholder reads as this chart rather than as any round thing. Drawn at the
+// ring's real thickness, so a chart set to a pie shows no hole to promise one.
+.empty-ring::before,
+.ring-outline::before {
+  content: '';
+  position: absolute;
+  inset: calc((100% - var(--_donut-chart-hole-fraction) * 100%) / 2);
+  border: calc(
+      var(--_donut-chart-hole-fraction) * var(--_donut-chart-outline-width)
+    )
+    solid var(--border-divider);
+  border-radius: var(--radius-pill);
+}
+
+.empty-text {
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+// Centred whatever `legend` is — the ring alone, the ring beside its legend, or the ring above it.
+// The pair is one object and sits in the middle of whatever width it gets, rather than pinned to
+// the start with a dead strip beside it.
+.chart,
+.skeleton {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--_donut-chart-gap);
+  align-items: center;
+  justify-content: center;
+}
+
+.chart.legend-bottom,
+.skeleton.legend-bottom {
+  flex-direction: column;
+}
+
+.ring {
+  position: relative;
+  flex: none;
+  inline-size: var(--_donut-chart-size);
+  block-size: var(--_donut-chart-size);
+}
+
+.ring-svg {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.slice {
+  transition: opacity var(--duration-base) var(--ease-decelerate);
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+.slice.interactive {
+  cursor: pointer;
+}
+
+.slice.interactive:hover {
+  opacity: 0.85;
+}
+
+// Held to the square that fits inside the hole (d / √2), so a long centre label wraps instead of
+// running out over the slices. The hole fraction comes from the component, which is the only place
+// that knows the thickness.
+.center {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  inline-size: max(56%, calc(var(--_donut-chart-hole-fraction) * 70%));
+  margin-inline: auto;
+  overflow-wrap: anywhere;
+  text-align: center;
+  pointer-events: none;
+}
+
+// At a thickness that closes the hole the text sits on the slices, where no single colour is
+// readable against three different hues. A halo of the frame's own background carries it instead,
+// and is invisible over the hole where there is nothing to separate it from.
+.center-value,
+.center-label {
+  text-shadow:
+    0 0 var(--space-1) var(--ds-chart-frame-bg-color),
+    0 0 var(--space-0-5) var(--ds-chart-frame-bg-color);
+}
+
+.center-value {
+  color: var(--text-primary);
+  font-size: var(--font-size-h4);
+  font-weight: 700;
+}
+
+.center-label {
+  color: var(--text-tertiary);
+  font-size: var(--font-size-xs);
+}
+
+.legend,
+.skeleton-legend {
+  display: grid;
+  row-gap: var(--_donut-chart-legend-row-gap);
+  min-inline-size: 0;
+}
+
+.legend {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.skeleton-legend {
+  flex: 1 1 auto;
+}
+
+.legend-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  column-gap: var(--space-2);
+  align-items: baseline;
+}
+
+.legend-item.interactive {
+  cursor: pointer;
+}
+
+.swatch {
+  align-self: center;
+  inline-size: var(--_donut-chart-swatch-size);
+  block-size: var(--_donut-chart-swatch-size);
+  border-radius: var(--radius-pill);
+}
+
+.legend-label {
+  color: var(--text-secondary);
+}
+
+.legend-value {
+  font-weight: 700;
+}
+
+.legend-percent {
+  color: var(--text-tertiary);
+  font-size: var(--font-size-xs);
+}
+
+.legend-bottom .legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--_donut-chart-legend-row-gap) var(--space-4);
+}
+
+.legend-bottom .legend-item {
+  display: flex;
+  column-gap: var(--space-2);
+}

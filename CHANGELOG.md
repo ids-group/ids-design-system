@@ -65,10 +65,11 @@
   Rename `--chart-grid-line-strong` before `--chart-grid-line`: the short name is a prefix of the
   long one, and a prefix-blind sweep turns the emphasised gridline into a name that does not exist.
 
-  Every value is unchanged in both themes, and `--chart-bar-gap`, `--chart-tick-size`,
-  `--chart-hover-bg-color`, `--chart-tooltip-bg-color` and `--chart-tooltip-text-color` keep their
-  names. Recolouring a series is better done through the `--ds-chart-` layer below than through the
-  palette.
+  The sequential and divergent VALUES are unchanged in both themes; the eight categorical values are
+  not — they are retuned in this same release, so a rename there lands a different colour rather than
+  the same one under a new name. `--chart-bar-gap`, `--chart-tick-size`, `--chart-hover-bg-color`,
+  `--chart-tooltip-bg-color` and `--chart-tooltip-text-color` keep their names. Recolouring a series
+  is better done through the `--ds-chart-` layer below than through the palette.
 
 ### Added
 
@@ -195,8 +196,79 @@
   its `scrollWidth` matches its `clientWidth`.
 
 
-- `ds-bar-chart` — horizontal bars with label, value and percentage per row. Colours come from
-  `--ds-chart-series-N-color` and can be overridden per row with `color`.
+- **Five charts: `ds-bar-chart`, `ds-column-chart`, `ds-donut-chart`, `ds-funnel-chart` and
+  `ds-line-chart`.** Each takes a `caption`, a `summary` for the accessible name, a `loading`
+  skeleton sized to the real data so the chart does not resize when the numbers land, an `emptyText`
+  and a `valueFormat` — and each offers its numbers again as a table under a
+  `dataTable: 'toggle' | 'visible' | 'none'` disclosure, because a chart that only draws is a chart
+  a screen reader cannot read.
+
+  ```html
+  <ds-bar-chart caption="Visitor funnel" [data]="rows" />
+  <ds-line-chart [categories]="months" [series]="series" yAxisMode="rounded" />
+  ```
+
+  The two that carry real geometry are worth knowing about. `ds-funnel-chart` has a `shape`:
+  `'taper'` is a fixed silhouette where width encodes NOTHING and the table carries the numbers,
+  `'width'` reads every boundary off the values — which collapses the tail of a steep funnel below a
+  labellable width — and `'area'` keeps the silhouette while moving the stage boundaries so each
+  band's AREA is proportional to its value, the honest encoding that still leaves a tail you can put
+  a label on. `ds-line-chart` has a `yAxisMode` that only matters once a series sets
+  `axis: 'secondary'`: `'rounded'` and `'exact'` share one set of gridlines and differ in whether the
+  second axis rounds its step up or ends on its largest reading, `'independent'` grids each axis on
+  its own, and `'stacked'` draws two plots sharing the category axis.
+
+  Set `interactive` and every mark joins the tab order as a `role="button"` answering Enter and Space,
+  with the container announcing itself as a `group` rather than an `img`. The click output fires with
+  or without the flag.
+
+  **Each chart draws its own frame** — border, radius, padding and an `--surface-default` background
+  — which is unusual in this library, where a component resists owning chrome. A chart earns the
+  exception because it is read as an object rather than as a block of text: a plot, its axes, a
+  legend and an annex table all run into the page without an edge. One already sitting in a card
+  drops it with `--ds-chart-frame-border-width: 0` and `--ds-chart-frame-padding: 0`.
+
+  `ds-donut-chart` also takes `maxSlices`, which caps the legend: past it the smallest slices are
+  summed into one named by `otherLabel`, on the neutral eighth palette colour. Off by default —
+  grouping changes what the chart says, so it is the consumer's call — and the tail is summed rather
+  than dropped, so the total never moves.
+
+  Two geometry rules are worth knowing because they are not preferences. `ds-donut-chart` holds its
+  centre content to the square that fits inside the hole, so a long `centerLabel` wraps instead of
+  running out over the ring, and the text carries a halo of the chart's own background — at
+  `thickness: 1` it sits on the slices, where no single text colour is readable against three
+  different hues. And `ds-bar-chart` keeps a label far closer to its own bar than to the next row,
+  because levelling the two makes the eye group a bar with the label BELOW it and read every row off
+  by one.
+
+
+- **Chart colour is three families, and reaching for the wrong one is the usual chart bug.** The
+  eight `--ds-chart-series-N-color` hooks are CATEGORICAL — they separate marks that are DIFFERENT
+  THINGS, such as donut slices or line series. A bar chart's rows are not different things; they are
+  one series measured five times, and painting them from a categorical palette says five categories
+  where there is one. So a single series has hooks of its own, and ordered stages have a third set:
+
+  ```scss
+  /* different things          */  --ds-chart-series-1-color … --ds-chart-series-8-color
+  /* one thing, measured often */  --ds-chart-series-default-color + --ds-chart-series-accent-color
+  /* ordered stages of one     */  --ds-chart-ramp-1-color … --ds-chart-ramp-8-color
+  ```
+
+  `ds-bar-chart` takes the single-series pair: every row shares `--ds-chart-series-default-color`, and
+  setting `color` on one row marks the one the reader should land on — usually
+  `var(--ds-chart-series-accent-color)`. There is no accent flag, because the accent is a colour and a
+  boolean would only be a less flexible way of setting one. `ds-funnel-chart` takes the ramp, spread
+  across however many stages there are, with the last stage leaving it for the accent.
+  `ds-donut-chart`, `ds-line-chart` and `ds-column-chart` take the categorical set — a column often IS
+  a separate thing (revenue by region), and where a column chart is instead one quantity over time,
+  `color` puts every column on the single-series colour in one pass.
+
+  The categorical eight are retuned with this: led by coral and teal, each clearing 3:1 on white for
+  WCAG 1.4.11 and at least dE 15 from every other under normal, deuteranope and protanope vision. No
+  hue sits between 35 and 130 — a yellow or a lime is high-luminance by nature, and dragging one down
+  to clear the contrast floor turns it to mustard. Slot 8 is a neutral rather than a ninth hue: every
+  eighth HUE that clears the floor lands within dE 4 of one of the other seven under some colour-vision
+  deficiency, so the honest eighth is one that has no hue to collide with.
 
 ### Fixed
 

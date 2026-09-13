@@ -1089,14 +1089,23 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "kind": "input",
         "type": "(value: number) => string",
         "union": null,
-        "default": "(value) =>\n    formatValue(value)",
+        "default": "defaultValueFormat",
         "required": false,
         "description": ""
+      },
+      {
+        "name": "interactive",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
       }
     ],
     "outputs": [
       {
-        "name": "rowClick",
+        "name": "rowClicked",
         "kind": "output",
         "type": "BarChartRow",
         "union": null,
@@ -1938,6 +1947,123 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     ],
     "outputs": []
   },
+  "column-chart": {
+    "key": "column-chart",
+    "selector": "ds-column-chart",
+    "isElement": true,
+    "className": "ColumnChartComponent",
+    "status": "stable",
+    "importName": "ColumnChartComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "data",
+        "kind": "input-required",
+        "type": "readonly ColumnChartPoint[]",
+        "union": null,
+        "default": null,
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "showValues",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Prints each column's value above the column."
+      },
+      {
+        "name": "tickCount",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "5",
+        "required": false,
+        "description": "How many value-axis ticks to aim for. A hint, not a count: ticks are snapped to a round step, so the axis may carry one more or one fewer."
+      },
+      {
+        "name": "caption",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "summary",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Accessible name. Generated from the data when omitted."
+      },
+      {
+        "name": "dataTable",
+        "kind": "input",
+        "type": "'toggle' | 'visible' | 'none'",
+        "union": [
+          "toggle",
+          "visible",
+          "none"
+        ],
+        "default": "'toggle'",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "loading",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "emptyText",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "'No data'",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "valueFormat",
+        "kind": "input",
+        "type": "(value: number) => string",
+        "union": null,
+        "default": "defaultValueFormat",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "interactive",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
+      }
+    ],
+    "outputs": [
+      {
+        "name": "pointClicked",
+        "kind": "output",
+        "type": "ColumnChartPoint",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
   "create-template": {
     "key": "create-template",
     "selector": "[dsCreateTemplate]",
@@ -2346,6 +2472,145 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     ],
     "outputs": []
   },
+  "donut-chart": {
+    "key": "donut-chart",
+    "selector": "ds-donut-chart",
+    "isElement": true,
+    "className": "DonutChartComponent",
+    "status": "stable",
+    "importName": "DonutChartComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "data",
+        "kind": "input-required",
+        "type": "readonly DonutChartSlice[]",
+        "union": null,
+        "default": null,
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "centerValue",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Printed inside the ring. Null prints the sum through `valueFormat`."
+      },
+      {
+        "name": "centerLabel",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "legend",
+        "kind": "input",
+        "type": "'end' | 'bottom' | 'none'",
+        "union": [
+          "end",
+          "bottom",
+          "none"
+        ],
+        "default": "'end'",
+        "required": false,
+        "description": "Logical placement, so a right-to-left page needs no second value."
+      },
+      {
+        "name": "thickness",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "DEFAULT_THICKNESS",
+        "required": false,
+        "description": "Ring width as a fraction of the radius."
+      },
+      {
+        "name": "caption",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "summary",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Accessible name. Generated from the data when omitted."
+      },
+      {
+        "name": "dataTable",
+        "kind": "input",
+        "type": "'toggle' | 'visible' | 'none'",
+        "union": [
+          "toggle",
+          "visible",
+          "none"
+        ],
+        "default": "'toggle'",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "loading",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "emptyText",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "'No data'",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "valueFormat",
+        "kind": "input",
+        "type": "(value: number) => string",
+        "union": null,
+        "default": "defaultValueFormat",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "interactive",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
+      }
+    ],
+    "outputs": [
+      {
+        "name": "sliceClicked",
+        "kind": "output",
+        "type": "DonutChartSlice",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
   "drawer": {
     "key": "drawer",
     "selector": "ds-drawer",
@@ -2733,6 +2998,127 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       }
     ],
     "outputs": []
+  },
+  "funnel-chart": {
+    "key": "funnel-chart",
+    "selector": "ds-funnel-chart",
+    "isElement": true,
+    "className": "FunnelChartComponent",
+    "status": "stable",
+    "importName": "FunnelChartComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "data",
+        "kind": "input-required",
+        "type": "readonly FunnelChartStage[]",
+        "union": null,
+        "default": null,
+        "required": true,
+        "description": "Drawn in the order given. The order of a funnel's stages is its meaning, so they are never sorted."
+      },
+      {
+        "name": "shape",
+        "kind": "input",
+        "type": "FunnelChartShape",
+        "union": [
+          "taper",
+          "width",
+          "area"
+        ],
+        "default": "'taper'",
+        "required": false,
+        "description": "What the silhouette encodes. `'taper'` encodes NOTHING in the stage widths — it is a fixed shape, and the numbers are read from the table. `'width'` makes each stage's width proportional to its value. `'area'` makes each stage's area proportional to its value, which keeps a small tail wide enough to label."
+      },
+      {
+        "name": "showTable",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "The value, percent and drop table printed under the funnel. It supersedes `dataTable`: while this is on, the disclosure every chart carries would repeat a strict subset of these same numbers, so it is not rendered."
+      },
+      {
+        "name": "caption",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "summary",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Accessible name. Generated from the data when omitted."
+      },
+      {
+        "name": "dataTable",
+        "kind": "input",
+        "type": "'toggle' | 'visible' | 'none'",
+        "union": [
+          "toggle",
+          "visible",
+          "none"
+        ],
+        "default": "'toggle'",
+        "required": false,
+        "description": "The label-and-value disclosure every chart carries. Ignored while `showTable` is on, which already prints every label and value."
+      },
+      {
+        "name": "loading",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "emptyText",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "'No data'",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "valueFormat",
+        "kind": "input",
+        "type": "(value: number) => string",
+        "union": null,
+        "default": "defaultValueFormat",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "interactive",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
+      }
+    ],
+    "outputs": [
+      {
+        "name": "stageClicked",
+        "kind": "output",
+        "type": "FunnelChartStage",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": ""
+      }
+    ]
   },
   "group-label-template": {
     "key": "group-label-template",
@@ -3407,6 +3793,139 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Cross-axis alignment — horizontal, for a column."
+      }
+    ],
+    "outputs": []
+  },
+  "line-chart": {
+    "key": "line-chart",
+    "selector": "ds-line-chart",
+    "isElement": true,
+    "className": "LineChartComponent",
+    "status": "stable",
+    "importName": "LineChartComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "categories",
+        "kind": "input-required",
+        "type": "readonly string[]",
+        "union": null,
+        "default": null,
+        "required": true,
+        "description": "X labels. Every series' `data` is read against this length."
+      },
+      {
+        "name": "series",
+        "kind": "input-required",
+        "type": "readonly LineChartSeries[]",
+        "union": null,
+        "default": null,
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "yAxisMode",
+        "kind": "input",
+        "type": "LineChartAxisMode",
+        "union": [
+          "rounded",
+          "exact",
+          "independent",
+          "stacked"
+        ],
+        "default": "'rounded'",
+        "required": false,
+        "description": "How a secondary axis relates to the primary one."
+      },
+      {
+        "name": "showMarkers",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "gaps",
+        "kind": "input",
+        "type": "LineChartGaps",
+        "union": [
+          "break",
+          "zero"
+        ],
+        "default": "'break'",
+        "required": false,
+        "description": "What a `null` reading draws. The default refuses to assert that a missing reading is a zero."
+      },
+      {
+        "name": "tickCount",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "LINE_CHART_DEFAULT_TICK_COUNT",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "caption",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "summary",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Accessible name. Generated from the data when omitted."
+      },
+      {
+        "name": "dataTable",
+        "kind": "input",
+        "type": "'toggle' | 'visible' | 'none'",
+        "union": [
+          "toggle",
+          "visible",
+          "none"
+        ],
+        "default": "'toggle'",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "loading",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "emptyText",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "'No data'",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "valueFormat",
+        "kind": "input",
+        "type": "(value: number) => string",
+        "union": null,
+        "default": "defaultValueFormat",
+        "required": false,
+        "description": ""
       }
     ],
     "outputs": []

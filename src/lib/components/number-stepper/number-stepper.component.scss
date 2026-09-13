@@ -31,21 +31,18 @@
     @include field-box.field-box-height(sm);
 
     .step { width: var(--_field-box-height); }
-    .qty  { width: calc(var(--_field-box-height) * 1.25); }
   }
 
   &.size-md {
     @include field-box.field-box-height(md);
 
     .step { width: var(--_field-box-height); }
-    .qty  { width: calc(var(--_field-box-height) * 1.25); }
   }
 
   &.size-lg {
     @include field-box.field-box-height(lg);
 
     .step { width: var(--_field-box-height); }
-    .qty  { width: calc(var(--_field-box-height) * 1.25); }
   }
 
   &.disabled {
@@ -97,6 +94,9 @@
 }
 
 .qty {
+  // Sized from the box height, which is what the three size blocks change. A value wider than the
+  // digits it was scaled for clips, so the width is a hook rather than a constant.
+  inline-size: var(--ds-number-stepper-field-width, calc(var(--_field-box-height) * 1.25));
   flex: 1;
   min-width: 0;
   border: 0;
