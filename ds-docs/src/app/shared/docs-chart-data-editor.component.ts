@@ -22,8 +22,7 @@ const VALUE_BOUND = 1_000_000_000;
 
 let nextRowId = 0;
 
-/** A step of 1 is invisible on a nine-digit value; this lands between a tenth and a hundredth of
- *  the magnitude, which is the smallest increment that visibly moves the chart. */
+// A step of 1 is invisible on a nine-digit value, so the exponent drops one below the magnitude.
 function magnitudeStep(magnitude: number): number {
   if (!Number.isFinite(magnitude) || Math.abs(magnitude) < 100) {
     return 1;
