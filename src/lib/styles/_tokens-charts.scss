@@ -76,6 +76,17 @@
   --chart-divergent-2:  hsl(145deg 38% 52%);
   --chart-divergent-3:  hsl(145deg 46% 34%);      /* large positive (best) */
 
+  /* FRAME — the box a chart draws around itself. On by default: a chart is
+     read as an object on the page, not as a block of text, and without an
+     edge it bleeds into whatever sits under it. A chart already inside a
+     card drops it with --ds-chart-frame-border-width: 0 and
+     --ds-chart-frame-padding: 0. */
+  --chart-frame-border-color: var(--border-default);
+  --chart-frame-border-width: var(--border-width-default);
+  --chart-frame-radius: var(--radius-lg);
+  --chart-frame-padding: var(--space-5);
+  --chart-frame-bg-color: var(--surface-default);
+
   /* AXIS / GRID / LEGEND */
   --chart-axis-line-color:    var(--neutral-300);
   --chart-axis-label-color:   var(--text-tertiary);
@@ -128,6 +139,12 @@
   --ds-chart-ramp-6-color: var(--chart-ramp-6);
   --ds-chart-ramp-7-color: var(--chart-ramp-7);
   --ds-chart-ramp-8-color: var(--chart-ramp-8);
+
+  --ds-chart-frame-border-color: var(--chart-frame-border-color);
+  --ds-chart-frame-border-width: var(--chart-frame-border-width);
+  --ds-chart-frame-radius: var(--chart-frame-radius);
+  --ds-chart-frame-padding: var(--chart-frame-padding);
+  --ds-chart-frame-bg-color: var(--chart-frame-bg-color);
 
   --ds-chart-axis-line-color: var(--chart-axis-line-color);
   --ds-chart-axis-label-color: var(--chart-axis-label-color);

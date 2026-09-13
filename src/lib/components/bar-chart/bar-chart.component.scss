@@ -1,14 +1,19 @@
 @use '../../styles/chart-data-table' as chart-data-table;
+@use '../../styles/chart-frame' as chart-frame;
+@include chart-frame.chart-frame;
 @include chart-data-table.chart-data-table;
 
-:host {
-  display: block;
-}
 
 .bar-chart {
   --_bar-chart-track-color: var(--ds-bar-chart-track-color, var(--ds-chart-grid-line-color));
   --_bar-chart-track-height: var(--ds-bar-chart-track-height, 12px);
-  --_bar-chart-row-gap: var(--ds-bar-chart-row-gap, var(--space-4));
+
+  // Two gaps, and the ratio between them is what does the work. A label belongs to the bar under
+  // it, so it sits closer to that bar than the bar sits to the next row — otherwise the eye groups
+  // a bar with the label BELOW it and reads every row off by one. The row gap follows the standard
+  // bar-chart guidance of roughly half the bar's own thickness again.
+  --_bar-chart-row-gap: var(--ds-bar-chart-row-gap, var(--space-5));
+  --_bar-chart-label-gap: var(--ds-bar-chart-label-gap, var(--space-1));
 
   margin: 0;
 }
@@ -32,7 +37,7 @@ figcaption {
 .row {
   display: grid;
   grid-template-columns: 1fr auto auto;
-  column-gap: var(--space-2);
+  gap: var(--_bar-chart-label-gap) var(--space-2);
   align-items: baseline;
 }
 
