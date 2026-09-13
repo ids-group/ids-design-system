@@ -99,16 +99,44 @@
   /* --- bar cap demo --- */
   .caps { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); margin-top: var(--space-3); }
   @media (max-width: 900px) { .caps { grid-template-columns: 1fr; } }
-  .caps > .card { min-inline-size: 0; }
-  .cap-stage { overflow: hidden; padding: var(--space-4) 0; }
-  .cap-bar {
-    block-size: 64px;
-    inline-size: 220px;
-    border-radius: 32px;
+  .caps > .card { min-inline-size: 0; overflow: hidden; }
+
+  /* Real ds-bar-chart geometry: track 12px tall, radius = half of it. */
+  .rowset { display: grid; gap: 10px; }
+  .rowlabel { font: var(--font-size-xs) var(--font-sans); color: var(--text-secondary); margin-bottom: 2px; }
+  .track {
+    position: relative;
+    block-size: 12px;
+    border-radius: 6px;
+    background: linear-gradient(#eef1f6, #eef1f6);
+    overflow: hidden;
+  }
+  .fill {
+    block-size: 100%;
+    border-radius: 6px;
     background: linear-gradient(#1682ca, #1682ca);
     transform-origin: left center;
   }
-  .cap-bar.is-scaled { inline-size: 1100px; transform: scaleX(0.2); }
+  .grows .fill { transition: inline-size 700ms cubic-bezier(0, 0, 0, 1); }
+  .scales .fill { transition: transform 700ms cubic-bezier(0, 0, 0, 1); }
+  .is-grown .grows .fill { inline-size: var(--to) !important; }
+  .is-grown .scales .fill { transform: scaleX(var(--k)) !important; }
+
+  /* 4x magnifier on the right cap. */
+  .zoom { display: flex; align-items: center; gap: var(--space-3); margin-top: var(--space-3); }
+  .zoom figure { margin: 0; }
+  .zoom figcaption { font: 10px var(--font-sans); color: var(--text-secondary); margin-top: 4px; }
+  .lens { inline-size: 96px; block-size: 48px; overflow: hidden; border-radius: var(--radius-sm); background: linear-gradient(#eef1f6, #eef1f6); }
+  .lens > span {
+    display: block;
+    block-size: 48px;
+    inline-size: 400px;
+    margin-inline-start: -304px;
+    border-radius: 24px;
+    background: linear-gradient(#1682ca, #1682ca);
+    transform-origin: left center;
+  }
+  .lens > span.sq { inline-size: 1000px; margin-inline-start: -304px; transform: scaleX(0.4); }
 </style>
 
 <main>
@@ -411,21 +439,59 @@
 
   <section class="panel" id="cap">
     <h2>5 · Торец столбца <span class="chip is-open">решить</span></h2>
-    <p>Столбец растёт при смене данных. Растить его можно двумя способами, и они дают разный торец.</p>
+
+    <p>
+      <strong>Где это.</strong> <code class="tok">ds-bar-chart</code>: дорожка 12px высотой, радиус
+      6px, у столбика скруглённый правый торец. При смене данных столбик едет
+      (<code class="tok">bar-chart.component.scss:78</code>). То же у
+      <code class="tok">ds-column-chart</code> — там скруглены два верхних угла на 4px, и колонка
+      растёт вверх (<code class="tok">column-chart.component.scss:116</code>).
+    </p>
+    <p>Жми — обе карточки проиграют одну и ту же смену данных, разными способами.</p>
 
     <div class="caps">
-      <div class="card">
-        <h3>Растим <code class="tok">inline-size</code></h3>
-        <p class="sub">как сейчас · ширина 220px, радиус 32px</p>
-        <div class="cap-stage"><div class="cap-bar"></div></div>
-        <p class="read">Торец — полукруг. Раскладка пересчитывается каждый кадр.</p>
+      <div class="card grows">
+        <h3>Как сейчас: едет <code class="tok">inline-size</code></h3>
+        <p class="sub">раскладка каждый кадр</p>
+        <div class="rowset">
+          <div><div class="rowlabel">Москва</div><div class="track"><div class="fill" style="inline-size:38%;--to:86%"></div></div></div>
+          <div><div class="rowlabel">Питер</div><div class="track"><div class="fill" style="inline-size:30%;--to:64%"></div></div></div>
+          <div><div class="rowlabel">Казань</div><div class="track"><div class="fill" style="inline-size:22%;--to:47%"></div></div></div>
+          <div><div class="rowlabel">Самара</div><div class="track"><div class="fill" style="inline-size:15%;--to:33%"></div></div></div>
+        </div>
+        <div class="zoom">
+          <figure>
+            <div class="lens"><span></span></div>
+            <figcaption>торец ×4</figcaption>
+          </figure>
+          <p class="read" style="margin:0">Полукруг остаётся полукругом на любой длине.</p>
+        </div>
       </div>
-      <div class="card">
-        <h3>Растим <code class="tok">transform: scaleX</code></h3>
-        <p class="sub">1100px × 0.2 — та же итоговая ширина</p>
-        <div class="cap-stage"><div class="cap-bar is-scaled"></div></div>
-        <p class="read">Торец сплющен: радиус по горизонтали ужался вместе с телом, 32px → 6,4px.</p>
+
+      <div class="card scales">
+        <h3>Дёшево: едет <code class="tok">transform: scaleX</code></h3>
+        <p class="sub">компоновщик, без раскладки</p>
+        <div class="rowset">
+          <div><div class="rowlabel">Москва</div><div class="track"><div class="fill" style="inline-size:100%;transform:scaleX(.38);--k:.86"></div></div></div>
+          <div><div class="rowlabel">Питер</div><div class="track"><div class="fill" style="inline-size:100%;transform:scaleX(.30);--k:.64"></div></div></div>
+          <div><div class="rowlabel">Казань</div><div class="track"><div class="fill" style="inline-size:100%;transform:scaleX(.22);--k:.47"></div></div></div>
+          <div><div class="rowlabel">Самара</div><div class="track"><div class="fill" style="inline-size:100%;transform:scaleX(.15);--k:.33"></div></div></div>
+        </div>
+        <div class="zoom">
+          <figure>
+            <div class="lens"><span class="sq"></span></div>
+            <figcaption>торец ×4</figcaption>
+          </figure>
+          <p class="read" style="margin:0">Радиус жмётся вместе с телом: чем короче столбик, тем прямее торец.</p>
+        </div>
       </div>
+    </div>
+
+    <button class="replay" type="button" data-grow>▶ Сменить данные</button>
+
+    <div class="note flat">
+      На 12px эффект мелкий — потому и лупа ×4. Зато он <strong>меняется вместе с длиной</strong>:
+      короткий столбик получает торец прямее длинного, и в одном чарте строки выглядят по-разному.
     </div>
 
     <table style="margin-top:var(--space-4)">
@@ -510,5 +576,10 @@
     main.classList.remove('is-running');
     void main.offsetWidth;
     main.classList.add('is-running');
+  });
+
+  document.querySelector('[data-grow]').addEventListener('click', (event) => {
+    const section = event.target.closest('section');
+    section.classList.toggle('is-grown');
   });
 </script>
