@@ -203,6 +203,7 @@ New: `autosize: boolean = false` (grows with content; forces `resize='none'`), `
 Spinbox for bounded quantities — −/+ buttons around a numeric value.
 Inputs: `value: model<number> = 0`, `min: number = 0`, `max: number | null = null`, `step: number = 1`, `size: 'sm' | 'md' | 'lg' = 'md'`, `disabled: boolean = false`
 Methods: `inc()`, `dec()` (clamp to min/max). Buttons disable at the bounds.
+Tokens: `--ds-number-stepper-field-width` sizes the number itself and is derived from the box height by default — a value with more digits than that width holds is clipped rather than wrapped, so widen it for large quantities. Also `--ds-number-stepper-bg-color`, `--ds-number-stepper-border-color`, `--ds-number-stepper-step-bg-color-active`, `--ds-number-stepper-focus-shadow`.
 
 #### `<ds-checkbox>` — `CheckboxComponent`
 Inputs: `checked: model<boolean>`, `indeterminate: boolean = false`, `disabled: boolean = false`, `name: string | null = null`, `inputId: string | null = null`

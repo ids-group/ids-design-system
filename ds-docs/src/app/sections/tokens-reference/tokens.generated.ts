@@ -3174,6 +3174,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-column-chart-value-space",
         "value": "var(--space-5)",
         "notes": ""
+      },
+      {
+        "name": "--ds-column-chart-axis-width",
+        "value": "40px",
+        "notes": ""
       }
     ]
   },
@@ -4719,6 +4724,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-number-stepper-step-bg-color-active",
         "value": "var(--accent-muted)",
         "notes": "Number stepper increment/decrement button fill when pressed (defaults to --accent-muted)."
+      },
+      {
+        "name": "--ds-number-stepper-field-width",
+        "value": "calc(var(--_field-box-height) * 1.25)",
+        "notes": ""
       }
     ]
   },
