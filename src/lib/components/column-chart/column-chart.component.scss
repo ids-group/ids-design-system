@@ -11,6 +11,7 @@
   --_column-chart-column-max-width: var(--ds-column-chart-column-max-width, 48px);
   --_column-chart-grid-line-color: var(--ds-column-chart-grid-line-color, var(--ds-chart-grid-line-color));
   --_column-chart-value-space: var(--ds-column-chart-value-space, var(--space-5));
+  --_column-chart-axis-width: var(--ds-column-chart-axis-width, 40px);
 
   margin: 0;
 }
@@ -36,8 +37,12 @@ figcaption {
   padding-block-start: var(--_column-chart-value-space);
 }
 
+// Every tick label is absolutely positioned, so none of them contributes width and the `auto` grid
+// column resolves to zero — the labels then hang outside the chart's own box.
+// ponytail: a fixed width, widen the token if a custom valueFormat prints longer ticks.
 .tick-labels {
   position: relative;
+  inline-size: var(--_column-chart-axis-width);
   block-size: var(--_column-chart-plot-height);
 }
 
