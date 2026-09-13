@@ -4,6 +4,10 @@
 // rules live here rather than five times over.
 @mixin chart-data-table {
   .data-table {
+    // Half the marker triangle's height. A border-drawn triangle has no token equivalent — these
+    // are the arrow's own geometry, not spacing — so the two numbers behind it live in one name.
+    --_chart-data-table-marker: var(--space-1);
+
     margin-block-start: var(--space-4);
     color: var(--text-secondary);
     font-size: var(--font-size-s);
@@ -29,9 +33,10 @@
     content: '';
     inline-size: 0;
     block-size: 0;
-    border-block-start: 4px solid transparent;
-    border-block-end: 4px solid transparent;
-    border-inline-start: 5px solid currentcolor;
+    border-block-start: var(--_chart-data-table-marker) solid transparent;
+    border-block-end: var(--_chart-data-table-marker) solid transparent;
+    border-inline-start: calc(var(--_chart-data-table-marker) * 1.25) solid
+      currentcolor;
     transition: transform var(--duration-fast) var(--ease-standard);
 
     @media (prefers-reduced-motion: reduce) {
