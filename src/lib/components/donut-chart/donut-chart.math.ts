@@ -1,3 +1,5 @@
+import type { DonutChartSlice } from './donut-chart.types';
+
 const FULL_TURN = Math.PI * 2;
 const FULL_TURN_EPSILON = 1e-9;
 
@@ -12,6 +14,35 @@ export function holeFraction(thickness: number): number {
       : DEFAULT_THICKNESS;
 
   return round(1 - ratio);
+}
+
+/** The slices a legend can carry, with everything past `limit` summed into one. The kept slices stay
+ *  in the order given — a ring is read against its legend top to bottom, so reordering by value
+ *  would move every other slice to make room for the grouping. The remainder takes the neutral
+ *  eighth palette slot, which is what that slot is for. */
+export function groupSmallest(
+  slices: readonly DonutChartSlice[],
+  limit: number | null,
+  otherLabel: string,
+): DonutChartSlice[] {
+  if (limit === null || !Number.isInteger(limit) || limit < 2) {
+    return [...slices];
+  }
+  if (slices.length <= limit) {
+    return [...slices];
+  }
+  const ranked = [...slices]
+    .map((slice, index) => ({ index, value: positiveValues([slice.value])[0] }))
+    .sort((a, b) => b.value - a.value || a.index - b.index);
+  const kept = new Set(ranked.slice(0, limit - 1).map((entry) => entry.index));
+  const remainder = slices
+    .filter((unusedSlice, index) => !kept.has(index))
+    .reduce((sum, slice) => sum + positiveValues([slice.value])[0], 0);
+
+  return [
+    ...slices.filter((unusedSlice, index) => kept.has(index)),
+    { id: 'ds-donut-other', label: otherLabel, value: remainder, slot: 8 },
+  ];
 }
 
 export interface DonutArc {

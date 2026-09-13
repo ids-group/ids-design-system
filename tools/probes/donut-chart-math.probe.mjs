@@ -1,5 +1,6 @@
 import {
   arcPath,
+  groupSmallest,
   holeFraction,
   paletteIndex,
   positiveValues,
@@ -280,6 +281,36 @@ check(
   'a segment with no hole closes through the centre',
   arcPath(CENTER, CENTER, OUTER_RADIUS, 0, 0, QUARTER_TURN),
   'M 50 0 A 50 50 0 0 1 100 50 L 50 50 Z',
+);
+
+// Legend grouping. The tail is summed, never dropped: a donut that quietly loses slices is a chart
+// that lies about its own total.
+const TAIL = [
+  { id: 'a', label: 'A', value: 50 },
+  { id: 'b', label: 'B', value: 30 },
+  { id: 'c', label: 'C', value: 8 },
+  { id: 'd', label: 'D', value: 7 },
+  { id: 'e', label: 'E', value: 5 },
+];
+const grouped = groupSmallest(TAIL, 3, 'Other');
+check('grouping keeps the limit as the slice count', grouped.length, 3);
+check(
+  'the largest slices survive, in the order they were given',
+  grouped.slice(0, 2).map((slice) => slice.id),
+  ['a', 'b'],
+);
+check('the tail is summed, not dropped', grouped[2].value, 20);
+check('the total is unchanged by grouping', resolveTotal(grouped.map((s) => s.value)), resolveTotal(TAIL.map((s) => s.value)));
+check('the grouped slice takes the neutral slot', grouped[2].slot, 8);
+check('the grouped slice is named by the caller', groupSmallest(TAIL, 3, 'Прочее')[2].label, 'Прочее');
+// The negative arms: off by default, and never firing when there is nothing to group.
+check('no limit leaves the data alone', groupSmallest(TAIL, null, 'Other').length, 5);
+check('a limit at or above the count leaves the data alone', groupSmallest(TAIL, 5, 'Other').length, 5);
+check('a limit below two is ignored', groupSmallest(TAIL, 1, 'Other').length, 5);
+check(
+  'a negative slice contributes nothing to the tail rather than shrinking it',
+  groupSmallest([...TAIL.slice(0, 4), { id: 'f', label: 'F', value: -100 }], 3, 'Other')[2].value,
+  15,
 );
 
 finish('donut-chart-math');

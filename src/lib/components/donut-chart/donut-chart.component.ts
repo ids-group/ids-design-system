@@ -18,6 +18,7 @@ import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/s
 import {
   DEFAULT_THICKNESS,
   arcPath,
+  groupSmallest,
   holeFraction,
   paletteIndex,
   positiveValues,
@@ -53,6 +54,16 @@ export class DonutChartComponent {
   /** Logical placement, so a right-to-left page needs no second value. */
   readonly legend = input<'end' | 'bottom' | 'none'>('end');
 
+  /** Longest legend to draw. Past it the smallest slices are summed into one, so a long tail does
+   *  not become a legend nobody reads. Off by default: grouping changes what the chart says, and
+   *  that is the consumer's call. Values below 2 are ignored — one slice is not a donut. */
+  readonly maxSlices = input<number | null>(null, {
+    transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
+  });
+
+  /** Names the grouped slice. */
+  readonly otherLabel = input<string>('Other');
+
   /** Ring width as a fraction of the radius. */
   readonly thickness = input(DEFAULT_THICKNESS, { transform: numberAttribute });
 
@@ -79,14 +90,19 @@ export class DonutChartComponent {
     resolveTotal(this.data().map((slice) => slice.value)),
   );
 
+  protected readonly visibleSlices = computed(() =>
+    groupSmallest(this.data(), this.maxSlices(), this.otherLabel()),
+  );
+
   protected readonly slices = computed(() => {
-    const values = this.data().map((slice) => slice.value);
+    const data = this.visibleSlices();
+    const values = data.map((slice) => slice.value);
     const arcs = sliceArcs(values);
     const percents = largestRemainder(positiveValues(values));
     const innerRadius = resolveInnerRadius(RING_OUTER_RADIUS, this.thickness());
     const format = this.valueFormat();
 
-    return this.data().map((slice, index) => ({
+    return data.map((slice, index) => ({
       slice,
       path: arcPath(
         RING_CENTER,
