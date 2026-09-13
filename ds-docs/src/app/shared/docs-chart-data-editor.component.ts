@@ -50,6 +50,16 @@ export class DocsChartDataEditorComponent<TRow extends ChartDataEditorRow> {
     this.patch(index, { value });
   }
 
+  /** A step of 1 is invisible on a nine-digit value — roughly a hundredth of the magnitude is the
+   *  smallest increment that moves the chart. */
+  protected stepFor(value: number): number {
+    if (!Number.isFinite(value) || Math.abs(value) < 100) {
+      return 1;
+    }
+
+    return 10 ** (Math.floor(Math.log10(Math.abs(value))) - 1);
+  }
+
   protected removeRow(index: number): void {
     this.rows.update((rows) =>
       rows.filter((unusedRow, position) => position !== index),

@@ -8,16 +8,26 @@
     margin-block-start: var(--space-4);
   }
 
+  // A control, not a caption. As tertiary micro-text beside a chart this read as a footnote, and it
+  // is the one thing on the page a reader is meant to click.
   .editor > summary {
     display: inline-flex;
     align-items: center;
-    gap: var(--space-1);
-    padding-block: var(--space-1);
-    border-radius: var(--radius-sm);
-    color: var(--text-tertiary);
-    font-size: var(--font-size-xs);
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4);
+    background: var(--surface-default);
+    border: var(--border-width-default) solid var(--border-default);
+    border-radius: var(--radius-pill);
+    color: var(--text-primary);
+    font-size: var(--font-size-s);
+    font-weight: 600;
     cursor: pointer;
     list-style: none;
+
+    &:hover {
+      background: var(--surface-secondary);
+      border-color: var(--border-strong);
+    }
   }
 
   // Safari still draws the default triangle through `list-style: none`.

@@ -5,9 +5,7 @@
   [chapters]="true">
   <span lede>
     Vertical columns for a short series read left to right — months, stages,
-    teams. Every column is measured against one value axis whose ticks snap to
-    round numbers, each column prints its own value above itself, and a skeleton
-    holds the space while the numbers are still arriving.
+    teams.
   </span>
 
   <h3 class="block-title t-h4">
@@ -15,10 +13,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    Columns keep the order you pass them and share one axis, niced up from the
-    largest value to a round step. That is why the tallest column usually stops
-    short of the top gridline: the gap is the axis staying readable, not a
-    margin you can tune away.
+    Columns keep the order you pass them and share one axis niced to a round
+    step, which is why the tallest column usually stops short of the top
+    gridline.
   </p>
 
   <ds-column-chart
@@ -33,7 +30,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    The same data under two tick counts. The count is a hint: ticks snap to a
+    <code class="t-mono-inline">
+      tickCount
+    </code> is a hint: ticks snap to a
     round step, so an axis asked for three ends up with five and one asked for
     ten stops at eight.
   </p>
@@ -59,13 +58,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    A figure above each column is what lets a reader take a number off the chart
-    without tracking back to the axis. Turn
-    <code class="t-mono-inline">
-      showValues
-    </code> off where the columns are
-    too narrow to hold one, or where an open annex table already prints the same
-    numbers a few pixels below.
+    Turn <code class="t-mono-inline">showValues</code> off where the columns are
+    too narrow to hold a figure, or where an open annex table already prints the
+    same numbers.
   </p>
 
   <ds-column-chart
@@ -80,14 +75,11 @@
   </h3>
 
   <p class="block-desc t-s">
-    Columns take the palette in list order and wrap past the eighth, so a
-    column's colour records its position and says nothing about its value —
-    dropping a point recolours everything after it. A point that sets
+    Columns take the categorical palette in list order and wrap past the eighth,
+    so dropping a point recolours everything after it; a point that sets
     <code class="t-mono-inline">
       color
-    </code> pins its own, which is what keeps
-    a category the same colour across two charts that do not hold the same
-    points.
+    </code> pins its own.
   </p>
 
   <ds-column-chart
@@ -101,8 +93,6 @@
   </h3>
 
   <p class="block-desc t-s">
-    The plot is one image with a generated description, so the annex table is
-    not what makes the chart readable — it is what makes the figures selectable.
     <code class="t-mono-inline">
       toggle
     </code>, the default, leaves the
@@ -122,9 +112,7 @@
 
   <p class="block-desc t-s">
     The axis starts at zero and never goes below it, so a negative point keeps
-    its label and its value and draws no column at all. Where one value dwarfs
-    the rest the axis is honest and the short columns vanish — that is the
-    signal to split the series, not to rescale it.
+    its label and draws no column at all.
   </p>
 
   <div class="states states--cols-2">

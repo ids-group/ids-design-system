@@ -4,10 +4,8 @@
   title="Line chart"
   [chapters]="true">
   <span lede>
-    One or more series plotted over a shared set of categories. A series can be
-    measured against a second y axis when it is in different units, a missing
-    reading can break the line or sit at zero, and the category labels thin out
-    rather than crowd once the series gets long.
+    One or more series plotted over a shared set of categories, with an optional
+    second y axis for a series in different units.
   </span>
 
   <h3 class="block-title t-h4">
@@ -15,10 +13,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    Series share one set of categories and take palette colours in the order you
-    pass them. The specimen mixes one filled series with one plain, which is how
-    you say that the filled one is the context the other is read against rather
-    than its equal.
+    Series share one set of categories and take categorical palette colours in
+    the order you pass them.
   </p>
 
   <ds-line-chart
@@ -39,17 +35,15 @@
     A <code class="t-mono-inline">null</code> reading is a hole, not a zero, and
     <code class="t-mono-inline">
       gaps
-    </code> decides what that hole looks like.
+    </code> decides what it draws:
     <code class="t-mono-inline">
       break
-    </code> stops the line and picks it up
-    after; <code class="t-mono-inline">zero</code> draws through the baseline
-    and is honest only where a missing reading really does mean nothing
-    happened. Anything that is not a finite number takes the same route, so a
+    </code>, the default, stops the line and
+    picks it up after; <code class="t-mono-inline">zero</code> draws through the
+    baseline. Any non-finite value takes the same route, so an upstream
     <code class="t-mono-inline">
       NaN
-    </code> from a division upstream lands here
-    too.
+    </code> lands here too.
   </p>
 
   <div class="states states--cols-2">
@@ -96,14 +90,13 @@
     A series in other units sets
     <code class="t-mono-inline">
       axis: 'secondary'
-    </code> and is measured
-    against the right-hand scale;
+    </code> and is measured against
+    the right-hand scale;
     <code class="t-mono-inline">
       yAxisMode
-    </code> decides how the two scales are
-    reconciled. Rounded keeps one set of gridlines for both and rounds the
-    secondary step up, so against a peak of 75 the right-hand axis labels
-    0·20·40·60·80·100 and the conversion line stops short of the top.
+    </code> reconciles the two. Rounded
+    keeps one set of gridlines and rounds the secondary step up, so that line
+    stops short of the top.
   </p>
 
   <ds-line-chart
@@ -122,10 +115,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    The same gridlines and the same data, with the secondary step taken straight
-    from the peak: 0·15·30·45·60·75. The conversion line now uses the full
-    height, and the labels are no longer round numbers. Pick it when the shape
-    of the secondary series matters more than reading values off its axis.
+    The secondary step is taken straight from the peak, so that series uses the
+    full height and its labels are no longer round numbers.
   </p>
 
   <ds-line-chart
@@ -144,10 +135,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    Neither axis is forced through the other's intervals: each is niced on its
-    own and both series use the full height. The cost is two sets of gridlines
-    in one plot, so the secondary's are dashed — without that the reader has no
-    way to tell which lines the right-hand labels belong to.
+    Each axis is niced on its own and both series use the full height, at the
+    price of two sets of gridlines — the secondary's are dashed so the
+    right-hand labels can be told apart.
   </p>
 
   <ds-line-chart
@@ -166,11 +156,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    Two plots one above the other over a shared category axis, labelled under
-    the lower plot only. Nothing overlaps, which makes it the safe mode when the
-    two series would otherwise cross repeatedly — at the price of the one thing
-    a dual axis is usually for, reading the two shapes against each other at a
-    glance.
+    Two plots over a shared category axis, labelled under the lower one only:
+    nothing overlaps, but the two shapes can no longer be read against each
+    other.
   </p>
 
   <ds-line-chart
@@ -189,13 +177,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    A marker per reading says where the data actually is, as opposed to where
-    the line interpolates. Turn
-    <code class="t-mono-inline">
-      showMarkers
-    </code> off once the readings are
-    dense enough that the markers merge into a band, which is roughly where the
-    category labels start thinning.
+    Turn <code class="t-mono-inline">showMarkers</code> off once the readings
+    are dense enough that the markers merge into a band.
   </p>
 
   <ds-line-chart
@@ -217,8 +200,8 @@
       area: true
     </code> fills the series down to its
     axis baseline, which asserts that zero means something for it — wrong for a
-    rate or an index. Fill one series at most: two translucent fills overlap,
-    and the overlap reads as a third quantity that is not there.
+    rate or an index. Fill one series at most: two translucent fills overlap
+    into a third quantity that is not there.
   </p>
 
   <ds-line-chart
@@ -236,10 +219,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    At most twelve category labels are drawn, whatever the length: the chart
-    keeps every nth and drops the rest, because every label at thirty-six days
-    is a grey smear that says less than none. The line itself still carries
-    every reading.
+    At most twelve category labels are drawn whatever the length — the chart
+    keeps every nth and drops the rest — while the line still carries every
+    reading.
   </p>
 
   <ds-line-chart
@@ -257,8 +239,6 @@
   </h3>
 
   <p class="block-desc t-s">
-    The plot is one image with a generated description, so the annex table is
-    not what makes the chart readable — it is what makes the figures selectable.
     <code class="t-mono-inline">
       toggle
     </code>, the default, leaves the
@@ -280,10 +260,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    Loading swaps the plot for a skeleton at the height the plot will be, so the
-    page does not jump when the numbers land. Empty cannot do the same: the axes
-    are derived from the series, so with nothing to scale there is nothing to
-    draw and the chart falls back to its
+    Loading holds the plot's height with a skeleton; empty has no series to
+    derive axes from, so the chart falls back to its
     <code class="t-mono-inline">
       emptyText
     </code> line.

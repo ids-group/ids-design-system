@@ -4,9 +4,7 @@
   title="Bar chart"
   [chapters]="true">
   <span lede>
-    Horizontal bar chart. Each row draws its value as a share of the longest
-    row, with an optional data table underneath and a loading skeleton for data
-    still arriving.
+    Horizontal bars: each row draws its value as a share of the longest row.
   </span>
 
   <h3 class="block-title t-h4">
@@ -14,10 +12,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    Rows stay in the order you pass them — the chart never sorts, because the
-    order is usually the point. Track length is a share of the largest value in
-    the set, not of a total, so the longest row always fills its track and the
-    chart says nothing about what is missing from the list.
+    Rows keep the order you pass them — the chart never sorts. Track length is a
+    share of the largest value in the set, not of a total, so the longest row
+    always fills its track.
   </p>
 
   <ds-bar-chart
@@ -32,10 +29,10 @@
   </h3>
 
   <p class="block-desc t-s">
-    Every row takes the same series colour. Hue carries no meaning in a bar
-    chart, and giving each row its own only invites the reader to hunt for one.
-    A row that sets <code class="t-mono-inline">color</code> opts out — that is
-    how you mark the single row the surrounding copy is about.
+    Every row takes the same single-series colour; a row that sets
+    <code class="t-mono-inline">
+      color
+    </code> opts out.
   </p>
 
   <ds-bar-chart
@@ -49,13 +46,11 @@
   </h3>
 
   <p class="block-desc t-s">
-    The plot is already one image with a generated description, so the annex
-    table is not what makes the chart readable — it is what makes the figures
-    selectable. <code class="t-mono-inline">toggle</code>, the default, leaves
-    the disclosure closed; <code class="t-mono-inline">visible</code> renders
-    the same disclosure open; <code class="t-mono-inline">none</code> leaves it
-    out, which is right only where the numbers are already elsewhere on the
-    page.
+    <code class="t-mono-inline">
+      toggle
+    </code>, the default, leaves the
+    disclosure closed; <code class="t-mono-inline">visible</code> renders it
+    open; <code class="t-mono-inline">none</code> leaves it out.
   </p>
 
   <ds-bar-chart
@@ -70,10 +65,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    What the chart does when the data is awkward. A value at or below zero draws
-    an empty track rather than dropping the row, so its label survives; one
-    value far above the rest flattens every other track, which is the honest
-    reading and the reason to split the series instead.
+    A value at or below zero draws an empty track rather than dropping the row,
+    so its label survives; one value far above the rest flattens every other
+    track.
   </p>
 
   <div class="states states--cols-2">

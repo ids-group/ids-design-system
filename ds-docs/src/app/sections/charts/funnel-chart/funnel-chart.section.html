@@ -5,9 +5,7 @@
   [chapters]="true">
   <span lede>
     The stages of a journey, drawn top to bottom in the order you give them —
-    they are never sorted, because the order is the meaning. Under the funnel an
-    aligned table repeats each stage's value, its share of the first stage, and
-    how much fell away since the stage above it.
+    never sorted, because the order is the meaning.
   </span>
 
   <h3 class="block-title t-h4">
@@ -15,12 +13,12 @@
   </h3>
 
   <p class="block-desc t-s">
-    Out of the box the silhouette is decoration: the default
+    The default <code class="t-mono-inline">taper</code> shape gives every stage
+    the same depth whatever its value, so everything quantitative comes from the
+    table under it. Editing the data moves the table, not the shape, because
     <code class="t-mono-inline">
       taper
-    </code> shape gives every stage the same
-    depth whatever its value, so everything quantitative comes from the table
-    under it. The two shapes below hand that job back to the geometry.
+    </code> encodes nothing in width.
   </p>
 
   <ds-funnel-chart
@@ -35,11 +33,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    Width encodes nothing here. The silhouette is fixed — full width at the top,
-    a constant tail at the bottom — and every stage is given the same depth
-    however large or small its value is. Read the numbers from the table, never
-    from how wide a band looks. Switch the shape to width or to area when you
-    need the geometry itself to carry the value.
+    Switch to width or area when the geometry itself has to carry the value.
   </p>
 
   <ds-funnel-chart
@@ -54,10 +48,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    The fixed silhouette is abandoned and every boundary is read straight off
-    the values, as a fraction of the largest stage. Band widths become directly
-    comparable, and a stage that has lost nearly everything collapses to a
-    sliver with no room for its own label.
+    Every boundary is read off the values as a fraction of the largest stage, so
+    a stage that has lost nearly everything collapses to a sliver with no room
+    for its label.
   </p>
 
   <ds-funnel-chart
@@ -72,10 +65,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    The same fixed silhouette as taper, with the stage boundaries moved to the
-    depths that make each band's area proportional to its value. Size still
-    reads as quantity, but nothing can disappear: a small stage buys its area
-    back in depth instead of shrinking to nothing sideways.
+    The fixed silhouette of taper with the boundaries moved so each band's area
+    is proportional to its value — a small stage buys its area back in depth
+    rather than shrinking to nothing sideways.
   </p>
 
   <ds-funnel-chart
@@ -88,13 +80,6 @@
   <h3 class="block-title t-h4">
     Steep drop
   </h3>
-
-  <p class="block-desc t-s">
-    A thousand down to ten, under both of the value-carrying shapes. Width is
-    the more literal picture and the less usable one; area spends depth to keep
-    the tail labelled. Choose by what the reader is meant to take away — the
-    size of the collapse, or the stages that survive it.
-  </p>
 
   <div class="states states--cols-2">
     <div class="state-cell">
@@ -129,13 +114,12 @@
   </h3>
 
   <p class="block-desc t-s">
-    The aligned table under the funnel is on by default, and under
+    On by default, and under <code class="t-mono-inline">taper</code> it is the
+    only place the values exist — turn
     <code class="t-mono-inline">
-      taper
-    </code> it is the only place the values
-    exist. Turn <code class="t-mono-inline">showTable</code> off for a tile
-    whose numbers already sit beside it — and check first that the shape you
-    chose is one that carries them.
+      showTable
+    </code> off only with a shape that
+    carries them.
   </p>
 
   <ds-funnel-chart
@@ -150,7 +134,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    The disclosure appears only where the stage table is off — with both on, the
+    The disclosure appears only where the stage table is off; with both on, the
     same numbers would print twice.
   </p>
 
@@ -167,9 +151,7 @@
 
   <p class="block-desc t-s">
     Every share is measured against the first stage, so a first stage of zero
-    leaves the percentage column with nothing to divide by. A funnel of one
-    stage is still drawn rather than refused: it is what a filtered report looks
-    like before the filter is loosened.
+    leaves the percentage column with nothing to divide by.
   </p>
 
   <div class="states states--cols-2">

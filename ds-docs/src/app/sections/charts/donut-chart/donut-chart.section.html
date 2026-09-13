@@ -4,10 +4,8 @@
   title="Donut chart"
   [chapters]="true">
   <span lede>
-    A ring that splits one total into its parts. Each slice carries its share as
-    a whole percentage and the percentages always add up to exactly 100, so a
-    legend never visibly loses a point. The middle of the ring is free for the
-    total or for a headline figure of your own.
+    A ring that splits one total into its parts, each slice carrying its share
+    as a whole percentage.
   </span>
 
   <h3 class="block-title t-h4">
@@ -15,11 +13,10 @@
   </h3>
 
   <p class="block-desc t-s">
-    Slices run clockwise from twelve o'clock in the order you pass them and take
-    palette colours in that same order. The shares are whole numbers settled by
-    largest remainder rather than rounded one at a time, which is what makes
-    them total 100 — and why a slice can print a percentage one off the value
-    you would get by rounding it yourself.
+    Slices run clockwise from twelve o'clock in the order you pass them. Shares
+    are settled by largest remainder so they total exactly 100, which is why a
+    slice can print a percentage one off the value you would get by rounding it
+    yourself.
   </p>
 
   <ds-donut-chart
@@ -34,10 +31,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    The ring alone names nothing, so the legend is the chart's only labelling.
     <code class="t-mono-inline">
       end
-    </code> is the default and the widest;
+    </code> is the default;
     <code class="t-mono-inline">
       bottom
     </code> is for a narrow column, where
@@ -45,7 +41,7 @@
     <code class="t-mono-inline">
       none
     </code> is only safe where the parts are
-    named elsewhere — in an open data table, or in the copy beside the chart.
+    named elsewhere.
   </p>
 
   <div class="states">
@@ -94,13 +90,10 @@
   </h3>
 
   <p class="block-desc t-s">
-    The band's width as a fraction of the radius, 0.32 by default.
+    The band's width as a fraction of the radius, 0.32 by default;
     <code class="t-mono-inline">
       1
     </code> closes the hole and gives you a pie.
-    The centre value still prints there, over the slices rather than over a
-    hole, so it carries a halo of the chart's own background — no single text
-    colour is readable against three different hues.
   </p>
 
   <div class="states states--cols-2">
@@ -136,13 +129,14 @@
   </h3>
 
   <p class="block-desc t-s">
-    The middle always prints something: your
+    The middle always prints something — your
     <code class="t-mono-inline">
       centerValue
     </code> when you give one, the
-    formatted total when you do not. There is no empty-hole state to design
-    around. <code class="t-mono-inline">centerLabel</code> adds the caption
-    under it, and is what turns a bare number into a figure a reader can name.
+    formatted total when you do not — and
+    <code class="t-mono-inline">
+      centerLabel
+    </code> captions it.
   </p>
 
   <div class="states states--cols-2">
@@ -175,18 +169,53 @@
   </div>
 
   <h3 class="block-title t-h4">
+    Legend length
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      maxSlices
+    </code> caps the legend and sums the
+    smallest slices into one, named by
+    <code class="t-mono-inline">
+      otherLabel
+    </code>. Off by default, the tail is
+    summed rather than dropped, and the slices you keep stay in the order you
+    gave them.
+  </p>
+
+  <div class="states states--cols-2">
+    <div class="state-cell">
+      <ds-donut-chart
+        dataTable="none"
+        [data]="nineSlices()" />
+
+      <div class="state-cell-label">
+        nine slices, uncapped
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-donut-chart
+        dataTable="none"
+        [data]="nineSlices()"
+        [maxSlices]="5" />
+
+      <div class="state-cell-label">
+        maxSlices 5
+      </div>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
     Palette slots
   </h3>
 
   <p class="block-desc t-s">
-    A slice takes the palette colour at its position in the list, so dropping
-    one recolours everything after it. Setting
-    <code class="t-mono-inline">
-      slot
-    </code> pins a slice to a fixed palette
-    position instead — the way to keep a category the same colour across two
-    charts that do not hold the same slices. Slots count from one and wrap past
-    the eighth.
+    Slices take the categorical palette by position, so dropping one recolours
+    everything after it; <code class="t-mono-inline">slot</code> pins a slice to
+    a fixed palette position instead. Slots count from one and wrap past the
+    eighth.
   </p>
 
   <ds-donut-chart
@@ -201,8 +230,6 @@
   </h3>
 
   <p class="block-desc t-s">
-    The plot is one image with a generated description, so the annex table is
-    not what makes the chart readable — it is what makes the figures selectable.
     <code class="t-mono-inline">
       toggle
     </code>, the default, leaves the
@@ -221,10 +248,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    A ring is a part-to-whole picture, so anything that is not a positive number
-    counts as zero: a negative slice keeps its legend row and draws no arc at
-    all. Past the eighth slice the palette starts over, which is the point at
-    which the data has outgrown a donut.
+    Anything that is not a positive number counts as zero: a negative slice
+    keeps its legend row and draws no arc.
   </p>
 
   <div class="states states--cols-2">

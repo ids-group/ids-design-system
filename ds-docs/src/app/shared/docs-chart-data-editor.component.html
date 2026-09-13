@@ -23,6 +23,7 @@
               size="sm"
               [max]="valueBound"
               [min]="-valueBound"
+              [step]="stepFor(row.value)"
               [value]="row.value"
               (valueChange)="setValue($index, $event)" />
 
