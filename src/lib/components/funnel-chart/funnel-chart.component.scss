@@ -1,3 +1,4 @@
+@use '../../styles/focus' as focus;
 @use '../../styles/visually-hidden' as visually-hidden;
 @use '../../styles/chart-data-table' as chart-data-table;
 @use '../../styles/chart-frame' as chart-frame;
@@ -9,6 +10,8 @@
   --_funnel-chart-stage-height: var(--ds-funnel-chart-stage-height, 44px);
   --_funnel-chart-stage-gap: var(--ds-funnel-chart-stage-gap, var(--ds-chart-bar-gap));
   --_funnel-chart-row-gap: var(--ds-funnel-chart-row-gap, var(--space-4));
+  --_funnel-chart-focus-color: var(--ds-funnel-chart-focus-color, var(--focus-ring-color));
+  --_funnel-chart-focus-width: var(--ds-funnel-chart-focus-width, var(--focus-ring-width));
 
   // Contains the absolutely-positioned caption below; without it the caption resolves against the
   // initial containing block and can grow the consuming page's root scroller.
@@ -58,6 +61,18 @@ svg {
 
 .stage.interactive:hover {
   opacity: 0.85;
+}
+
+/* focus-ring-guard: an outline on an SVG element paints its BOUNDING BOX, not its silhouette —
+   measured in Chrome 153, a funnel stage rings as a flat bar across the trapezoid. The ring is a
+   stroke on the shape instead; `own-indicator` keeps the outline under forced colours, where
+   `stroke` is not remapped. */
+.stage.interactive:focus-visible {
+  @include focus.own-indicator;
+
+  stroke: var(--_funnel-chart-focus-color);
+  stroke-width: var(--_funnel-chart-focus-width);
+  paint-order: stroke;
 }
 
 .skeleton {

@@ -129,6 +129,23 @@ export class FunnelChartComponent {
       ),
   );
 
+  protected entryLabel(entry: {
+    stage: FunnelChartStage;
+    formattedValue: string;
+  }): string {
+    return `${entry.stage.label}, ${entry.formattedValue}`;
+  }
+
+  protected onStageKey(stage: FunnelChartStage, event: Event): void {
+    // Only the stage's own key opens the stage: a key pressed on a control inside it belongs to
+    // that control.
+    if (!this.interactive() || event.target !== event.currentTarget) {
+      return;
+    }
+    event.preventDefault();
+    this.stageClicked.emit(stage);
+  }
+
   protected readonly isEmpty = computed(() => this.data().length === 0);
 
   protected readonly showDataTable = computed(

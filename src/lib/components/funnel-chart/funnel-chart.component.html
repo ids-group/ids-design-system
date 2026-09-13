@@ -22,11 +22,11 @@
   } @else {
     <div
       class="shape"
-      role="img"
+      [attr.role]="interactive() ? 'group' : 'img'"
       [attr.aria-label]="accessibleName()">
       <svg
         preserveAspectRatio="none"
-        aria-hidden="true"
+        [attr.aria-hidden]="interactive() ? null : true"
         [attr.viewBox]="viewBox"
         [style.block-size]="chartHeight()">
         @for (entry of stages(); track entry.stage.id) {
@@ -35,7 +35,12 @@
             [class.interactive]="interactive()"
             [attr.points]="entry.points"
             [attr.fill]="entry.color"
-            (click)="stageClicked.emit(entry.stage)">
+            [attr.role]="interactive() ? 'button' : null"
+            [attr.tabindex]="interactive() ? 0 : null"
+            [attr.aria-label]="interactive() ? entryLabel(entry) : null"
+            (click)="stageClicked.emit(entry.stage)"
+            (keydown.enter)="onStageKey(entry.stage, $event)"
+            (keydown.space)="onStageKey(entry.stage, $event)">
           </polygon>
         }
       </svg>
