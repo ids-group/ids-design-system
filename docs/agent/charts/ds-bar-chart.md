@@ -8,4 +8,5 @@ Output: `(rowClicked): BarChartRow` — emits the clicked row. It fires whether 
 Row: `BarChartRow = { label: string; value: number; percent?: number; color?: string }`. `percent` is derived from `value / max` when omitted.
 Colour: the rows are ONE series, so they all take `--ds-chart-series-default-color`. Set `color` on the single row the reader should land on, usually to `var(--ds-chart-series-accent-color)`. There is no accent flag — the accent is a colour, so a boolean would only be a less flexible way of setting one. Do NOT reach for `--ds-chart-series-1-color` … `-8-color` here: those separate series from one another, and a bar chart's rows are not separate series.
 Behaviour: a non-finite value draws no bar and prints `—`; a negative value clamps to an empty bar; a share too small for one decimal prints `<0.1%` rather than `0.0%`.
-Tokens: `--ds-bar-chart-track-color`, `--ds-bar-chart-track-height`, `--ds-bar-chart-row-gap`.
+Rhythm: a label belongs to the bar under it, so `--ds-bar-chart-label-gap` is deliberately much smaller than `--ds-bar-chart-row-gap`. Level the two and the eye starts grouping a bar with the label BELOW it, which reads every row off by one.
+Tokens: `--ds-bar-chart-track-color`, `--ds-bar-chart-track-height`, `--ds-bar-chart-row-gap`, `--ds-bar-chart-label-gap`.

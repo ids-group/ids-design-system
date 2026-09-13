@@ -9,4 +9,5 @@ Output: `(sliceClicked): DonutChartSlice`
 Slice: `DonutChartSlice = { id: string; label: string; value: number; slot?: number }`. `slot` is a 1-based palette slot: pinning a slice keeps every other slice's colour where it is when one is filtered out of `data`; left off, the colour follows the index and the whole ring repaints.
 Colour: slices ARE different things, so this is the chart the categorical palette exists for — `--ds-chart-series-1-color` … `--ds-chart-series-8-color`.
 Behaviour: percentages use largest-remainder rounding, so a legend's shares add up to exactly 100 and a real non-zero slice never prints `0%`.
+`thickness` is capped so a hole always remains. The centre value renders unconditionally, falling back to the formatted total, and a band that closed over the hole would drop that number onto the slices — where no text colour saves it, because the ground under it is three different hues. `thickness: 1` therefore draws the thickest ring this component has, not a pie.
 Tokens: `--ds-donut-chart-size`, `--ds-donut-chart-gap`, `--ds-donut-chart-swatch-size`, `--ds-donut-chart-legend-row-gap`, `--ds-donut-chart-legend-row-height`.

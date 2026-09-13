@@ -464,14 +464,15 @@ Output: `(rowClicked): BarChartRow` — emits the clicked row. It fires whether 
 Row: `BarChartRow = { label: string; value: number; percent?: number; color?: string }`. `percent` is derived from `value / max` when omitted.
 Colour: the rows are ONE series, so they all take `--ds-chart-series-default-color`. Set `color` on the single row the reader should land on, usually to `var(--ds-chart-series-accent-color)`. There is no accent flag — the accent is a colour, so a boolean would only be a less flexible way of setting one. Do NOT reach for `--ds-chart-series-1-color` … `-8-color` here: those separate series from one another, and a bar chart's rows are not separate series.
 Behaviour: a non-finite value draws no bar and prints `—`; a negative value clamps to an empty bar; a share too small for one decimal prints `<0.1%` rather than `0.0%`.
-Tokens: `--ds-bar-chart-track-color`, `--ds-bar-chart-track-height`, `--ds-bar-chart-row-gap`.
+Rhythm: a label belongs to the bar under it, so `--ds-bar-chart-label-gap` is deliberately much smaller than `--ds-bar-chart-row-gap`. Level the two and the eye starts grouping a bar with the label BELOW it, which reads every row off by one.
+Tokens: `--ds-bar-chart-track-color`, `--ds-bar-chart-track-height`, `--ds-bar-chart-row-gap`, `--ds-bar-chart-label-gap`.
 
 #### `<ds-column-chart>` — `ColumnChartComponent`
 Vertical columns for a short series read left to right — months, stages, teams — measured against one value axis whose ticks snap to round numbers.
 Inputs: `data: readonly ColumnChartPoint[]` (required), `showValues: boolean = true` (each column prints its own value above itself), `tickCount: number = 5` (a hint: ticks snap to a round step, so an axis asked for three ends up with five and one asked for ten stops at eight), `caption: string | null = null`, `summary: string | null = null`, `dataTable: 'toggle' | 'visible' | 'none' = 'toggle'`, `loading: boolean = false`, `emptyText: string = 'No data'`, `valueFormat: (value: number) => string`, `interactive: boolean = false`
 Output: `(pointClicked): ColumnChartPoint` — same contract as `ds-bar-chart`'s `rowClicked`, keyboard route included.
 Point: `ColumnChartPoint = { label: string; value: number; color?: string }`
-Colour: one series, so the same rule as `ds-bar-chart` — `--ds-chart-series-default-color` for every column, `color` on the one that carries the point.
+Colour: the categorical palette by position — `--ds-chart-series-1-color` onward. Set `color` on a column that carries a meaning its position does not, such as `var(--ds-chart-series-accent-color)` on the period the reader should land on. This is the one chart where the default is a judgement call rather than a rule: columns often ARE separate things (revenue by region), and where they are one quantity over time, `color` puts every column on `--ds-chart-series-default-color` in one pass.
 Tokens: `--ds-column-chart-plot-height`, `--ds-column-chart-column-width` (share of its own cell), `--ds-column-chart-column-max-width` (the cap that stops a five-column chart drawing slabs wider than their labels), `--ds-column-chart-column-gap`, `--ds-column-chart-grid-line-color`, `--ds-column-chart-value-space` (headroom for the value printed above a full-height column).
 
 #### `<ds-donut-chart>` — `DonutChartComponent`
@@ -481,6 +482,7 @@ Output: `(sliceClicked): DonutChartSlice`
 Slice: `DonutChartSlice = { id: string; label: string; value: number; slot?: number }`. `slot` is a 1-based palette slot: pinning a slice keeps every other slice's colour where it is when one is filtered out of `data`; left off, the colour follows the index and the whole ring repaints.
 Colour: slices ARE different things, so this is the chart the categorical palette exists for — `--ds-chart-series-1-color` … `--ds-chart-series-8-color`.
 Behaviour: percentages use largest-remainder rounding, so a legend's shares add up to exactly 100 and a real non-zero slice never prints `0%`.
+`thickness` is capped so a hole always remains. The centre value renders unconditionally, falling back to the formatted total, and a band that closed over the hole would drop that number onto the slices — where no text colour saves it, because the ground under it is three different hues. `thickness: 1` therefore draws the thickest ring this component has, not a pie.
 Tokens: `--ds-donut-chart-size`, `--ds-donut-chart-gap`, `--ds-donut-chart-swatch-size`, `--ds-donut-chart-legend-row-gap`, `--ds-donut-chart-legend-row-height`.
 
 #### `<ds-funnel-chart>` — `FunnelChartComponent`
@@ -500,6 +502,15 @@ Series: `LineChartSeries = { id: string; label: string; data: readonly (number |
 `yAxisMode` only matters once a series sets `axis: 'secondary'`: `'rounded'` shares one set of gridlines and rounds the secondary step up, so that series stops short of the top; `'exact'` shares the gridlines but ends the secondary axis on its largest reading, so it uses the full height and its labels are not round; `'independent'` scales and grids each axis on its own; `'stacked'` draws two plots one above the other, sharing the category axis.
 Colour: series ARE different things, so the categorical palette applies — `--ds-chart-series-1-color` onward, by position or by `slot`.
 Tokens: `--ds-line-chart-plot-height`, `--ds-line-chart-line-width`, `--ds-line-chart-dot-radius`, `--ds-line-chart-area-opacity`, `--ds-line-chart-swatch-size`, `--ds-line-chart-grid-line-color`, `--ds-line-chart-axis-line-color`, `--ds-line-chart-axis-label-color`, `--ds-line-chart-axis-font-size`.
+
+#### Chart frame — the box a chart draws around itself
+Every chart paints its own border, radius, padding and `--surface-default` background, on by default. That is unusual here — most components resist owning chrome — and a chart earns the exception because it is read as an OBJECT: a plot with axes, a legend and an annex table, whose parts run into the page without an edge. A chart that already sits inside a card drops the frame with two declarations rather than a mode flag:
+
+```scss
+ds-bar-chart { --ds-chart-frame-border-width: 0; --ds-chart-frame-padding: 0; }
+```
+
+Tokens: `--ds-chart-frame-border-color`, `--ds-chart-frame-border-width`, `--ds-chart-frame-radius`, `--ds-chart-frame-padding`, `--ds-chart-frame-bg-color`.
 
 #### Chart colour — which palette a chart takes
 Three families, and reaching for the wrong one is the usual chart bug. Set the `--ds-chart-*` contract tokens, never the `--chart-categorical-*` / `--chart-ramp-*` palette behind them.

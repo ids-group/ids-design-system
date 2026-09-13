@@ -222,6 +222,19 @@
   with the container announcing itself as a `group` rather than an `img`. The click output fires with
   or without the flag.
 
+  **Each chart draws its own frame** — border, radius, padding and an `--surface-default` background
+  — which is unusual in this library, where a component resists owning chrome. A chart earns the
+  exception because it is read as an object rather than as a block of text: a plot, its axes, a
+  legend and an annex table all run into the page without an edge. One already sitting in a card
+  drops it with `--ds-chart-frame-border-width: 0` and `--ds-chart-frame-padding: 0`.
+
+  Two geometry rules are worth knowing because they are not preferences. `ds-donut-chart` caps
+  `thickness` so a hole always remains: the centre value renders unconditionally, and a band that
+  closed over the hole would drop that number onto the slices, where no text colour saves it — the
+  ground under it is three different hues. And `ds-bar-chart` keeps a label far closer to its own bar
+  than to the next row, because levelling the two makes the eye group a bar with the label BELOW it
+  and read every row off by one.
+
 
 - **Chart colour is three families, and reaching for the wrong one is the usual chart bug.** The
   eight `--ds-chart-series-N-color` hooks are CATEGORICAL — they separate marks that are DIFFERENT
@@ -235,12 +248,14 @@
   /* ordered stages of one     */  --ds-chart-ramp-1-color … --ds-chart-ramp-8-color
   ```
 
-  `ds-bar-chart` and `ds-column-chart` take the single-series pair: every mark shares
-  `--ds-chart-series-default-color`, and setting `color` on one row or point marks the one the reader
-  should land on — usually `var(--ds-chart-series-accent-color)`. There is no accent flag, because the
-  accent is a colour and a boolean would only be a less flexible way of setting one. `ds-funnel-chart`
-  takes the ramp, spread across however many stages there are, with the last stage leaving it for the
-  accent. `ds-donut-chart` and `ds-line-chart` take the categorical set.
+  `ds-bar-chart` takes the single-series pair: every row shares `--ds-chart-series-default-color`, and
+  setting `color` on one row marks the one the reader should land on — usually
+  `var(--ds-chart-series-accent-color)`. There is no accent flag, because the accent is a colour and a
+  boolean would only be a less flexible way of setting one. `ds-funnel-chart` takes the ramp, spread
+  across however many stages there are, with the last stage leaving it for the accent.
+  `ds-donut-chart`, `ds-line-chart` and `ds-column-chart` take the categorical set — a column often IS
+  a separate thing (revenue by region), and where a column chart is instead one quantity over time,
+  `color` puts every column on the single-series colour in one pass.
 
   The categorical eight are retuned with this: led by coral and teal, each clearing 3:1 on white for
   WCAG 1.4.11 and at least dE 15 from every other under normal, deuteranope and protanope vision. No
