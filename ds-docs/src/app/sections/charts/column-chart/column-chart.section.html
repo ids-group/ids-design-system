@@ -24,7 +24,9 @@
   <ds-column-chart
     caption="New accounts by month"
     dataTable="none"
-    [data]="specimenPoints" />
+    [data]="specimenPoints()" />
+
+  <docs-chart-data-editor [(rows)]="specimenPoints" />
 
   <h3 class="block-title t-h4">
     Tick count
@@ -40,15 +42,17 @@
     <ds-column-chart
       caption="tickCount 3"
       dataTable="none"
-      [data]="specimenPoints"
+      [data]="tickCountPoints()"
       [tickCount]="3" />
 
     <ds-column-chart
       caption="tickCount 10"
       dataTable="none"
-      [data]="specimenPoints"
+      [data]="tickCountPoints()"
       [tickCount]="10" />
   </div>
+
+  <docs-chart-data-editor [(rows)]="tickCountPoints" />
 
   <h3 class="block-title t-h4">
     Column values
@@ -66,8 +70,10 @@
 
   <ds-column-chart
     dataTable="none"
-    [data]="specimenPoints"
+    [data]="showValuesPoints()"
     [showValues]="false" />
+
+  <docs-chart-data-editor [(rows)]="showValuesPoints" />
 
   <h3 class="block-title t-h4">
     Column colour
@@ -79,13 +85,16 @@
     dropping a point recolours everything after it. A point that sets
     <code class="t-mono-inline">
       color
-    </code> pins its own, which is what keeps a
-    category the same colour across two charts that do not hold the same points.
+    </code> pins its own, which is what keeps
+    a category the same colour across two charts that do not hold the same
+    points.
   </p>
 
   <ds-column-chart
     dataTable="none"
-    [data]="customColorPoints" />
+    [data]="customColorPoints()" />
+
+  <docs-chart-data-editor [(rows)]="customColorPoints" />
 
   <h3 class="block-title t-h4">
     Data table
@@ -103,7 +112,9 @@
 
   <ds-column-chart
     caption="The annex table, collapsed until asked for"
-    [data]="specimenPoints" />
+    [data]="dataTablePoints()" />
+
+  <docs-chart-data-editor [(rows)]="dataTablePoints" />
 
   <h3 class="block-title t-h4">
     Edge cases
@@ -120,82 +131,98 @@
     <div class="state-cell">
       <ds-column-chart
         dataTable="none"
-        [data]="emptyPoints" />
+        [data]="emptyPoints()" />
 
       <div class="state-cell-label">
         Empty
       </div>
+
+      <docs-chart-data-editor [(rows)]="emptyPoints" />
     </div>
 
     <div class="state-cell">
       <ds-column-chart
         dataTable="none"
         loading
-        [data]="specimenPoints" />
+        [data]="loadingPoints()" />
 
       <div class="state-cell-label">
         Loading
       </div>
+
+      <docs-chart-data-editor [(rows)]="loadingPoints" />
     </div>
 
     <div class="state-cell">
       <ds-column-chart
         dataTable="none"
-        [data]="onePoint" />
+        [data]="onePoint()" />
 
       <div class="state-cell-label">
         One point
       </div>
+
+      <docs-chart-data-editor [(rows)]="onePoint" />
     </div>
 
     <div class="state-cell">
       <ds-column-chart
         dataTable="none"
-        [data]="allZerosPoints" />
+        [data]="allZerosPoints()" />
 
       <div class="state-cell-label">
         All zeros
       </div>
+
+      <docs-chart-data-editor [(rows)]="allZerosPoints" />
     </div>
 
     <div class="state-cell">
       <ds-column-chart
         dataTable="none"
-        [data]="negativePoints" />
+        [data]="negativePoints()" />
 
       <div class="state-cell-label">
         Negative value
       </div>
+
+      <docs-chart-data-editor [(rows)]="negativePoints" />
     </div>
 
     <div class="state-cell">
       <ds-column-chart
         dataTable="none"
-        [data]="hugeOutlierPoints" />
+        [data]="hugeOutlierPoints()" />
 
       <div class="state-cell-label">
         Huge outlier
       </div>
+
+      <docs-chart-data-editor [(rows)]="hugeOutlierPoints" />
     </div>
 
     <div class="state-cell">
       <ds-column-chart
         dataTable="none"
-        [data]="longLabelPoints" />
+        [data]="longLabelPoints()" />
 
       <div class="state-cell-label">
         Long label
       </div>
+
+      <docs-chart-data-editor [(rows)]="longLabelPoints" />
     </div>
 
     <div class="state-cell">
       <ds-column-chart
         dataTable="none"
-        [data]="nineDigitValuePoints" />
+        [data]="nineDigitValuePoints()" />
 
       <div class="state-cell-label">
         Nine-digit value
       </div>
+
+      <docs-chart-data-editor [(rows)]="nineDigitValuePoints" />
     </div>
   </div>
 </docs-section>

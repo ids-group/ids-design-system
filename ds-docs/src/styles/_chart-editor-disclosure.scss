@@ -1,0 +1,54 @@
+// A reader meets two disclosures per chart specimen, so this one mirrors the geometry of the
+// chart's own annex table in `src/lib/styles/_chart-data-table.scss` rather than inventing a
+// second look.
+@mixin disclosure {
+  .editor {
+    --_chart-editor-marker: var(--space-1);
+
+    margin-block-start: var(--space-4);
+  }
+
+  .editor > summary {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding-block: var(--space-1);
+    border-radius: var(--radius-sm);
+    color: var(--text-tertiary);
+    font-size: var(--font-size-xs);
+    cursor: pointer;
+    list-style: none;
+  }
+
+  // Safari still draws the default triangle through `list-style: none`.
+  .editor > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .editor > summary::before {
+    content: '';
+    inline-size: 0;
+    block-size: 0;
+    border-block-start: var(--_chart-editor-marker) solid transparent;
+    border-block-end: var(--_chart-editor-marker) solid transparent;
+    border-inline-start: calc(var(--_chart-editor-marker) * 1.25) solid
+      currentcolor;
+    transition: transform var(--duration-fast) var(--ease-standard);
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+  }
+
+  .editor[open] > summary::before {
+    transform: rotate(90deg);
+  }
+
+  .body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    align-items: flex-start;
+    margin-block-start: var(--space-2);
+  }
+}

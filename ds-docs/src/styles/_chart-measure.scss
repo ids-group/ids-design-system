@@ -8,9 +8,12 @@
 // measure its own geometry wants. Inside a multi-column tray the cell is already narrower, so the
 // measure caps the width rather than setting it.
 // The cell takes the cap as well as the chart: `.state-cell-label` centres itself in the cell, so a
-// cell left wider than the chart drifts its caption away from the specimen it names.
+// cell left wider than the chart drifts its caption away from the specimen it names. The data editor
+// under a chart takes it too — a row of controls running wider than the chart it edits reads as
+// belonging to the page rather than to the specimen.
 @mixin measure($chart-selector, $chart-measure) {
   #{$chart-selector},
+  .chart-data-editor,
   .state-cell {
     max-inline-size: $chart-measure;
   }

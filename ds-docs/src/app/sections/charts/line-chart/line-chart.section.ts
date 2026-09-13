@@ -1,6 +1,7 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation, signal } from '@angular/core';
 import { LineChartComponent } from 'ds/line-chart';
 import type { LineChartSeries } from 'ds/line-chart';
+import { DocsLineChartDataEditorComponent } from '../../../shared/docs-line-chart-data-editor.component';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 const MANY_CATEGORY_COUNT = 36;
@@ -96,20 +97,81 @@ const MANY_CATEGORY_SERIES: readonly LineChartSeries[] = [
 @Component({
   selector: 'section-charts-line-chart',
   standalone: true,
-  imports: [LineChartComponent, DocsSectionComponent],
+  imports: [
+    DocsLineChartDataEditorComponent,
+    DocsSectionComponent,
+    LineChartComponent,
+  ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './line-chart.section.html',
   styleUrls: ['../../../shared/section-demo.scss', './line-chart.section.scss'],
 })
 export class LineChartSection {
-  protected readonly specimenCategories = SPECIMEN_CATEGORIES;
-  protected readonly specimenSeries = SPECIMEN_SERIES;
-  protected readonly emptySeries: readonly LineChartSeries[] = [];
-  protected readonly oneSeries = ONE_SERIES;
-  protected readonly areaSeries = AREA_SERIES;
-  protected readonly dualAxisSeries = DUAL_AXIS_SERIES;
-  protected readonly gapCategories = GAP_CATEGORIES;
-  protected readonly gapSeries = GAP_SERIES;
-  protected readonly manyCategories = MANY_CATEGORIES;
-  protected readonly manyCategorySeries = MANY_CATEGORY_SERIES;
+  protected readonly specimenCategories =
+    signal<readonly string[]>(SPECIMEN_CATEGORIES);
+  protected readonly specimenSeries =
+    signal<readonly LineChartSeries[]>(SPECIMEN_SERIES);
+
+  protected readonly gapBreakCategories =
+    signal<readonly string[]>(GAP_CATEGORIES);
+  protected readonly gapBreakSeries =
+    signal<readonly LineChartSeries[]>(GAP_SERIES);
+
+  protected readonly gapZeroCategories =
+    signal<readonly string[]>(GAP_CATEGORIES);
+  protected readonly gapZeroSeries =
+    signal<readonly LineChartSeries[]>(GAP_SERIES);
+
+  protected readonly roundedCategories =
+    signal<readonly string[]>(SPECIMEN_CATEGORIES);
+  protected readonly roundedSeries =
+    signal<readonly LineChartSeries[]>(DUAL_AXIS_SERIES);
+
+  protected readonly exactCategories =
+    signal<readonly string[]>(SPECIMEN_CATEGORIES);
+  protected readonly exactSeries =
+    signal<readonly LineChartSeries[]>(DUAL_AXIS_SERIES);
+
+  protected readonly independentCategories =
+    signal<readonly string[]>(SPECIMEN_CATEGORIES);
+  protected readonly independentSeries =
+    signal<readonly LineChartSeries[]>(DUAL_AXIS_SERIES);
+
+  protected readonly stackedCategories =
+    signal<readonly string[]>(SPECIMEN_CATEGORIES);
+  protected readonly stackedSeries =
+    signal<readonly LineChartSeries[]>(DUAL_AXIS_SERIES);
+
+  protected readonly markersCategories =
+    signal<readonly string[]>(SPECIMEN_CATEGORIES);
+  protected readonly markersSeries =
+    signal<readonly LineChartSeries[]>(SPECIMEN_SERIES);
+
+  protected readonly areaFillCategories =
+    signal<readonly string[]>(SPECIMEN_CATEGORIES);
+  protected readonly areaFillSeries =
+    signal<readonly LineChartSeries[]>(AREA_SERIES);
+
+  protected readonly manyCategories =
+    signal<readonly string[]>(MANY_CATEGORIES);
+  protected readonly manyCategorySeries =
+    signal<readonly LineChartSeries[]>(MANY_CATEGORY_SERIES);
+
+  protected readonly dataTableCategories =
+    signal<readonly string[]>(SPECIMEN_CATEGORIES);
+  protected readonly dataTableSeries =
+    signal<readonly LineChartSeries[]>(SPECIMEN_SERIES);
+
+  protected readonly emptyCategories =
+    signal<readonly string[]>(SPECIMEN_CATEGORIES);
+  protected readonly emptySeries = signal<readonly LineChartSeries[]>([]);
+
+  protected readonly loadingCategories =
+    signal<readonly string[]>(SPECIMEN_CATEGORIES);
+  protected readonly loadingSeries =
+    signal<readonly LineChartSeries[]>(SPECIMEN_SERIES);
+
+  protected readonly oneSeriesCategories =
+    signal<readonly string[]>(SPECIMEN_CATEGORIES);
+  protected readonly oneSeries = signal<readonly LineChartSeries[]>(ONE_SERIES);
 }

@@ -25,7 +25,9 @@
   <ds-donut-chart
     caption="Accounts by plan"
     dataTable="none"
-    [data]="specimenSlices" />
+    [data]="specimenSlices()" />
+
+  <docs-chart-data-editor [(rows)]="specimenSlices" />
 
   <h3 class="block-title t-h4">
     Legend placement
@@ -51,33 +53,39 @@
       <ds-donut-chart
         dataTable="none"
         legend="end"
-        [data]="specimenSlices" />
+        [data]="legendEndSlices()" />
 
       <div class="state-cell-label">
         end (default)
       </div>
+
+      <docs-chart-data-editor [(rows)]="legendEndSlices" />
     </div>
 
     <div class="state-cell">
       <ds-donut-chart
         dataTable="none"
         legend="bottom"
-        [data]="specimenSlices" />
+        [data]="legendBottomSlices()" />
 
       <div class="state-cell-label">
         bottom
       </div>
+
+      <docs-chart-data-editor [(rows)]="legendBottomSlices" />
     </div>
 
     <div class="state-cell">
       <ds-donut-chart
         dataTable="none"
         legend="none"
-        [data]="specimenSlices" />
+        [data]="legendNoneSlices()" />
 
       <div class="state-cell-label">
         none
       </div>
+
+      <docs-chart-data-editor [(rows)]="legendNoneSlices" />
     </div>
   </div>
 
@@ -99,23 +107,27 @@
     <div class="state-cell">
       <ds-donut-chart
         dataTable="none"
-        [data]="specimenSlices"
+        [data]="thinRingSlices()"
         [thickness]="0.1" />
 
       <div class="state-cell-label">
         thickness 0.1
       </div>
+
+      <docs-chart-data-editor [(rows)]="thinRingSlices" />
     </div>
 
     <div class="state-cell">
       <ds-donut-chart
         dataTable="none"
-        [data]="specimenSlices"
+        [data]="pieSlices()"
         [thickness]="1" />
 
       <div class="state-cell-label">
         thickness 1 · a pie
       </div>
+
+      <docs-chart-data-editor [(rows)]="pieSlices" />
     </div>
   </div>
 
@@ -138,11 +150,13 @@
       <ds-donut-chart
         centerLabel="Accounts"
         dataTable="none"
-        [data]="specimenSlices" />
+        [data]="centerLabelSlices()" />
 
       <div class="state-cell-label">
         Label only — the total fills in
       </div>
+
+      <docs-chart-data-editor [(rows)]="centerLabelSlices" />
     </div>
 
     <div class="state-cell">
@@ -150,11 +164,13 @@
         centerLabel="Annual recurring revenue"
         centerValue="£1.2M"
         dataTable="none"
-        [data]="specimenSlices" />
+        [data]="centerValueSlices()" />
 
       <div class="state-cell-label">
         Value and label
       </div>
+
+      <docs-chart-data-editor [(rows)]="centerValueSlices" />
     </div>
   </div>
 
@@ -176,7 +192,9 @@
   <ds-donut-chart
     caption="Two slices pinned to palette slots 6 and 8"
     dataTable="none"
-    [data]="slotSlices" />
+    [data]="slotSlices()" />
+
+  <docs-chart-data-editor [(rows)]="slotSlices" />
 
   <h3 class="block-title t-h4">
     Data table
@@ -194,7 +212,9 @@
 
   <ds-donut-chart
     caption="The annex table, collapsed until asked for"
-    [data]="specimenSlices" />
+    [data]="dataTableSlices()" />
+
+  <docs-chart-data-editor [(rows)]="dataTableSlices" />
 
   <h3 class="block-title t-h4">
     Edge cases
@@ -211,63 +231,75 @@
     <div class="state-cell">
       <ds-donut-chart
         dataTable="none"
-        [data]="emptySlices" />
+        [data]="emptySlices()" />
 
       <div class="state-cell-label">
         Empty
       </div>
+
+      <docs-chart-data-editor [(rows)]="emptySlices" />
     </div>
 
     <div class="state-cell">
       <ds-donut-chart
         dataTable="none"
         loading
-        [data]="specimenSlices" />
+        [data]="loadingSlices()" />
 
       <div class="state-cell-label">
         Loading
       </div>
+
+      <docs-chart-data-editor [(rows)]="loadingSlices" />
     </div>
 
     <div class="state-cell">
       <ds-donut-chart
         dataTable="none"
-        [data]="oneSlice" />
+        [data]="oneSlice()" />
 
       <div class="state-cell-label">
         One slice
       </div>
+
+      <docs-chart-data-editor [(rows)]="oneSlice" />
     </div>
 
     <div class="state-cell">
       <ds-donut-chart
         dataTable="none"
-        [data]="allZerosSlices" />
+        [data]="allZerosSlices()" />
 
       <div class="state-cell-label">
         All zeros
       </div>
+
+      <docs-chart-data-editor [(rows)]="allZerosSlices" />
     </div>
 
     <div class="state-cell">
       <ds-donut-chart
         dataTable="none"
-        [data]="negativeSlices" />
+        [data]="negativeSlices()" />
 
       <div class="state-cell-label">
         Negative value
       </div>
+
+      <docs-chart-data-editor [(rows)]="negativeSlices" />
     </div>
 
     <div class="state-cell">
       <ds-donut-chart
         caption="More slices than the eight-colour palette holds"
         dataTable="none"
-        [data]="nineSlices" />
+        [data]="nineSlices()" />
 
       <div class="state-cell-label">
         Nine slices
       </div>
+
+      <docs-chart-data-editor [(rows)]="nineSlices" />
     </div>
   </div>
 </docs-section>

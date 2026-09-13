@@ -23,7 +23,9 @@
   <ds-bar-chart
     caption="Visitor funnel"
     dataTable="none"
-    [data]="specimenRows" />
+    [data]="specimenRows()" />
+
+  <docs-chart-data-editor [(rows)]="specimenRows" />
 
   <h3 class="block-title t-h4">
     Row colour
@@ -38,7 +40,9 @@
 
   <ds-bar-chart
     dataTable="none"
-    [data]="customColorRows" />
+    [data]="customColorRows()" />
+
+  <docs-chart-data-editor [(rows)]="customColorRows" />
 
   <h3 class="block-title t-h4">
     Data table
@@ -57,7 +61,9 @@
   <ds-bar-chart
     caption="Long label and nine-digit value together, table forced open"
     dataTable="visible"
-    [data]="dataTableRows" />
+    [data]="dataTableRows()" />
+
+  <docs-chart-data-editor [(rows)]="dataTableRows" />
 
   <h3 class="block-title t-h4">
     Edge cases
@@ -74,94 +80,112 @@
     <div class="state-cell">
       <ds-bar-chart
         dataTable="none"
-        [data]="emptyRows" />
+        [data]="emptyRows()" />
 
       <div class="state-cell-label">
         Empty
       </div>
+
+      <docs-chart-data-editor [(rows)]="emptyRows" />
     </div>
 
     <div class="state-cell">
       <ds-bar-chart
         dataTable="none"
         loading
-        [data]="specimenRows" />
+        [data]="loadingRows()" />
 
       <div class="state-cell-label">
         Loading
       </div>
+
+      <docs-chart-data-editor [(rows)]="loadingRows" />
     </div>
 
     <div class="state-cell">
       <ds-bar-chart
         dataTable="none"
-        [data]="oneRow" />
+        [data]="oneRow()" />
 
       <div class="state-cell-label">
         One row
       </div>
+
+      <docs-chart-data-editor [(rows)]="oneRow" />
     </div>
 
     <div class="state-cell">
       <ds-bar-chart
         dataTable="none"
-        [data]="allZerosRows" />
+        [data]="allZerosRows()" />
 
       <div class="state-cell-label">
         All zeros
       </div>
+
+      <docs-chart-data-editor [(rows)]="allZerosRows" />
     </div>
 
     <div class="state-cell">
       <ds-bar-chart
         dataTable="none"
-        [data]="negativeRows" />
+        [data]="negativeRows()" />
 
       <div class="state-cell-label">
         Negative value
       </div>
+
+      <docs-chart-data-editor [(rows)]="negativeRows" />
     </div>
 
     <div class="state-cell">
       <ds-bar-chart
         dataTable="none"
-        [data]="hugeOutlierRows" />
+        [data]="hugeOutlierRows()" />
 
       <div class="state-cell-label">
         Huge outlier
       </div>
+
+      <docs-chart-data-editor [(rows)]="hugeOutlierRows" />
     </div>
 
     <div class="state-cell">
       <ds-bar-chart
         dataTable="none"
-        [data]="longLabelRows" />
+        [data]="longLabelRows()" />
 
       <div class="state-cell-label">
         Long label
       </div>
+
+      <docs-chart-data-editor [(rows)]="longLabelRows" />
     </div>
 
     <div class="state-cell">
       <ds-bar-chart
         dataTable="none"
-        [data]="nineDigitValueRows" />
+        [data]="nineDigitValueRows()" />
 
       <div class="state-cell-label">
         Nine-digit value
       </div>
+
+      <docs-chart-data-editor [(rows)]="nineDigitValueRows" />
     </div>
 
     <div class="state-cell">
       <ds-bar-chart
         caption="Max set below the largest value — bars clip at the track edge"
         dataTable="none"
-        [data]="maxBelowDataRows"
+        [data]="maxBelowDataRows()"
         [max]="200" />
 
       <div class="state-cell-label">
         Max below the data
       </div>
+
+      <docs-chart-data-editor [(rows)]="maxBelowDataRows" />
     </div>
   </div>
 </docs-section>

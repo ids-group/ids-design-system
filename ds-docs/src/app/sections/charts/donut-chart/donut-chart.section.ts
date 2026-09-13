@@ -1,6 +1,7 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation, signal } from '@angular/core';
 import { DonutChartComponent } from 'ds/donut-chart';
 import type { DonutChartSlice } from 'ds/donut-chart';
+import { DocsChartDataEditorComponent } from '../../../shared/docs-chart-data-editor.component';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 const SPECIMEN_SLICES: readonly DonutChartSlice[] = [
@@ -48,7 +49,11 @@ const SLOT_SLICES: readonly DonutChartSlice[] = [
 @Component({
   selector: 'section-charts-donut-chart',
   standalone: true,
-  imports: [DonutChartComponent, DocsSectionComponent],
+  imports: [
+    DocsChartDataEditorComponent,
+    DocsSectionComponent,
+    DonutChartComponent,
+  ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './donut-chart.section.html',
   styleUrls: [
@@ -57,11 +62,34 @@ const SLOT_SLICES: readonly DonutChartSlice[] = [
   ],
 })
 export class DonutChartSection {
-  protected readonly specimenSlices = SPECIMEN_SLICES;
-  protected readonly emptySlices: readonly DonutChartSlice[] = [];
-  protected readonly oneSlice = ONE_SLICE;
-  protected readonly allZerosSlices = ALL_ZEROS_SLICES;
-  protected readonly negativeSlices = NEGATIVE_SLICES;
-  protected readonly nineSlices = NINE_SLICES;
-  protected readonly slotSlices = SLOT_SLICES;
+  protected readonly specimenSlices =
+    signal<readonly DonutChartSlice[]>(SPECIMEN_SLICES);
+  protected readonly legendEndSlices =
+    signal<readonly DonutChartSlice[]>(SPECIMEN_SLICES);
+  protected readonly legendBottomSlices =
+    signal<readonly DonutChartSlice[]>(SPECIMEN_SLICES);
+  protected readonly legendNoneSlices =
+    signal<readonly DonutChartSlice[]>(SPECIMEN_SLICES);
+  protected readonly thinRingSlices =
+    signal<readonly DonutChartSlice[]>(SPECIMEN_SLICES);
+  protected readonly pieSlices =
+    signal<readonly DonutChartSlice[]>(SPECIMEN_SLICES);
+  protected readonly centerLabelSlices =
+    signal<readonly DonutChartSlice[]>(SPECIMEN_SLICES);
+  protected readonly centerValueSlices =
+    signal<readonly DonutChartSlice[]>(SPECIMEN_SLICES);
+  protected readonly slotSlices =
+    signal<readonly DonutChartSlice[]>(SLOT_SLICES);
+  protected readonly dataTableSlices =
+    signal<readonly DonutChartSlice[]>(SPECIMEN_SLICES);
+  protected readonly emptySlices = signal<readonly DonutChartSlice[]>([]);
+  protected readonly loadingSlices =
+    signal<readonly DonutChartSlice[]>(SPECIMEN_SLICES);
+  protected readonly oneSlice = signal<readonly DonutChartSlice[]>(ONE_SLICE);
+  protected readonly allZerosSlices =
+    signal<readonly DonutChartSlice[]>(ALL_ZEROS_SLICES);
+  protected readonly negativeSlices =
+    signal<readonly DonutChartSlice[]>(NEGATIVE_SLICES);
+  protected readonly nineSlices =
+    signal<readonly DonutChartSlice[]>(NINE_SLICES);
 }

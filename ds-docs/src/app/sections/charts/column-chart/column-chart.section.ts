@@ -1,6 +1,7 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation, signal } from '@angular/core';
 import { ColumnChartComponent } from 'ds/column-chart';
 import type { ColumnChartPoint } from 'ds/column-chart';
+import { DocsChartDataEditorComponent } from '../../../shared/docs-chart-data-editor.component';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 const SPECIMEN_POINTS: readonly ColumnChartPoint[] = [
@@ -52,7 +53,11 @@ const CUSTOM_COLOR_POINTS: readonly ColumnChartPoint[] = [
 @Component({
   selector: 'section-charts-column-chart',
   standalone: true,
-  imports: [ColumnChartComponent, DocsSectionComponent],
+  imports: [
+    ColumnChartComponent,
+    DocsChartDataEditorComponent,
+    DocsSectionComponent,
+  ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './column-chart.section.html',
   styleUrls: [
@@ -61,13 +66,29 @@ const CUSTOM_COLOR_POINTS: readonly ColumnChartPoint[] = [
   ],
 })
 export class ColumnChartSection {
-  protected readonly specimenPoints = SPECIMEN_POINTS;
-  protected readonly emptyPoints: readonly ColumnChartPoint[] = [];
-  protected readonly onePoint = ONE_POINT;
-  protected readonly allZerosPoints = ALL_ZEROS_POINTS;
-  protected readonly negativePoints = NEGATIVE_POINTS;
-  protected readonly hugeOutlierPoints = HUGE_OUTLIER_POINTS;
-  protected readonly longLabelPoints = LONG_LABEL_POINTS;
-  protected readonly nineDigitValuePoints = NINE_DIGIT_VALUE_POINTS;
-  protected readonly customColorPoints = CUSTOM_COLOR_POINTS;
+  protected readonly specimenPoints =
+    signal<readonly ColumnChartPoint[]>(SPECIMEN_POINTS);
+  protected readonly tickCountPoints =
+    signal<readonly ColumnChartPoint[]>(SPECIMEN_POINTS);
+  protected readonly showValuesPoints =
+    signal<readonly ColumnChartPoint[]>(SPECIMEN_POINTS);
+  protected readonly customColorPoints =
+    signal<readonly ColumnChartPoint[]>(CUSTOM_COLOR_POINTS);
+  protected readonly dataTablePoints =
+    signal<readonly ColumnChartPoint[]>(SPECIMEN_POINTS);
+  protected readonly emptyPoints = signal<readonly ColumnChartPoint[]>([]);
+  protected readonly loadingPoints =
+    signal<readonly ColumnChartPoint[]>(SPECIMEN_POINTS);
+  protected readonly onePoint = signal<readonly ColumnChartPoint[]>(ONE_POINT);
+  protected readonly allZerosPoints =
+    signal<readonly ColumnChartPoint[]>(ALL_ZEROS_POINTS);
+  protected readonly negativePoints =
+    signal<readonly ColumnChartPoint[]>(NEGATIVE_POINTS);
+  protected readonly hugeOutlierPoints =
+    signal<readonly ColumnChartPoint[]>(HUGE_OUTLIER_POINTS);
+  protected readonly longLabelPoints =
+    signal<readonly ColumnChartPoint[]>(LONG_LABEL_POINTS);
+  protected readonly nineDigitValuePoints = signal<readonly ColumnChartPoint[]>(
+    NINE_DIGIT_VALUE_POINTS,
+  );
 }

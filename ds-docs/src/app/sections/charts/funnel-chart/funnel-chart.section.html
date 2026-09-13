@@ -26,7 +26,9 @@
   <ds-funnel-chart
     caption="Checkout funnel"
     dataTable="none"
-    [data]="specimenStages" />
+    [data]="specimenStages()" />
+
+  <docs-chart-data-editor [(rows)]="specimenStages" />
 
   <h3 class="block-title t-h4">
     Shape · taper (default)
@@ -43,7 +45,9 @@
   <ds-funnel-chart
     dataTable="none"
     shape="taper"
-    [data]="specimenStages" />
+    [data]="taperStages()" />
+
+  <docs-chart-data-editor [(rows)]="taperStages" />
 
   <h3 class="block-title t-h4">
     Shape · width
@@ -59,7 +63,9 @@
   <ds-funnel-chart
     dataTable="none"
     shape="width"
-    [data]="specimenStages" />
+    [data]="widthStages()" />
+
+  <docs-chart-data-editor [(rows)]="widthStages" />
 
   <h3 class="block-title t-h4">
     Shape · area
@@ -75,7 +81,9 @@
   <ds-funnel-chart
     dataTable="none"
     shape="area"
-    [data]="specimenStages" />
+    [data]="areaStages()" />
+
+  <docs-chart-data-editor [(rows)]="areaStages" />
 
   <h3 class="block-title t-h4">
     Steep drop
@@ -93,22 +101,26 @@
       <ds-funnel-chart
         dataTable="none"
         shape="width"
-        [data]="steepDropStages" />
+        [data]="steepDropWidthStages()" />
 
       <div class="state-cell-label">
         width — the tail collapses
       </div>
+
+      <docs-chart-data-editor [(rows)]="steepDropWidthStages" />
     </div>
 
     <div class="state-cell">
       <ds-funnel-chart
         dataTable="none"
         shape="area"
-        [data]="steepDropStages" />
+        [data]="steepDropAreaStages()" />
 
       <div class="state-cell-label">
         area — the tail stays labelled
       </div>
+
+      <docs-chart-data-editor [(rows)]="steepDropAreaStages" />
     </div>
   </div>
 
@@ -128,8 +140,10 @@
 
   <ds-funnel-chart
     dataTable="none"
-    [data]="specimenStages"
+    [data]="stageTableStages()"
     [showTable]="false" />
+
+  <docs-chart-data-editor [(rows)]="stageTableStages" />
 
   <h3 class="block-title t-h4">
     Data table
@@ -142,8 +156,10 @@
 
   <ds-funnel-chart
     caption="The annex table, collapsed until asked for"
-    [data]="specimenStages"
+    [data]="dataTableStages()"
     [showTable]="false" />
+
+  <docs-chart-data-editor [(rows)]="dataTableStages" />
 
   <h3 class="block-title t-h4">
     Edge cases
@@ -160,53 +176,63 @@
     <div class="state-cell">
       <ds-funnel-chart
         dataTable="none"
-        [data]="emptyStages" />
+        [data]="emptyStages()" />
 
       <div class="state-cell-label">
         Empty
       </div>
+
+      <docs-chart-data-editor [(rows)]="emptyStages" />
     </div>
 
     <div class="state-cell">
       <ds-funnel-chart
         dataTable="none"
         loading
-        [data]="specimenStages" />
+        [data]="loadingStages()" />
 
       <div class="state-cell-label">
         Loading
       </div>
+
+      <docs-chart-data-editor [(rows)]="loadingStages" />
     </div>
 
     <div class="state-cell">
       <ds-funnel-chart
         dataTable="none"
-        [data]="oneStage" />
+        [data]="oneStage()" />
 
       <div class="state-cell-label">
         One stage
       </div>
+
+      <docs-chart-data-editor [(rows)]="oneStage" />
     </div>
 
     <div class="state-cell">
       <ds-funnel-chart
         dataTable="none"
-        [data]="allZerosStages" />
+        [data]="allZerosStages()" />
 
       <div class="state-cell-label">
         All zeros
       </div>
+
+      <docs-chart-data-editor [(rows)]="allZerosStages" />
     </div>
 
     <div class="state-cell">
       <ds-funnel-chart
         caption="Nothing to be a share of — the percentage column reads an em dash"
         dataTable="none"
-        [data]="zeroFirstStageStages" />
+        [data]="zeroFirstStageStages()" />
 
       <div class="state-cell-label">
         Zero first stage
       </div>
+
+      <docs-chart-data-editor [(rows)]="zeroFirstStageStages" />
     </div>
   </div>
 </docs-section>

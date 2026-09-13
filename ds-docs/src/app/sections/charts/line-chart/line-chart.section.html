@@ -24,8 +24,12 @@
   <ds-line-chart
     caption="Sessions and signups by month"
     dataTable="none"
-    [categories]="specimenCategories"
-    [series]="specimenSeries" />
+    [categories]="specimenCategories()"
+    [series]="specimenSeries()" />
+
+  <docs-line-chart-data-editor
+    [(categories)]="specimenCategories"
+    [(series)]="specimenSeries" />
 
   <h3 class="block-title t-h4">
     Missing readings
@@ -54,12 +58,16 @@
         caption="Wednesday has no reading — the line stops and picks up again"
         dataTable="none"
         gaps="break"
-        [categories]="gapCategories"
-        [series]="gapSeries" />
+        [categories]="gapBreakCategories()"
+        [series]="gapBreakSeries()" />
 
       <div class="state-cell-label">
         break (default)
       </div>
+
+      <docs-line-chart-data-editor
+        [(categories)]="gapBreakCategories"
+        [(series)]="gapBreakSeries" />
     </div>
 
     <div class="state-cell">
@@ -67,12 +75,16 @@
         caption="The same missing Wednesday, read as a zero"
         dataTable="none"
         gaps="zero"
-        [categories]="gapCategories"
-        [series]="gapSeries" />
+        [categories]="gapZeroCategories()"
+        [series]="gapZeroSeries()" />
 
       <div class="state-cell-label">
         zero
       </div>
+
+      <docs-line-chart-data-editor
+        [(categories)]="gapZeroCategories"
+        [(series)]="gapZeroSeries" />
     </div>
   </div>
 
@@ -84,20 +96,26 @@
     A series in other units sets
     <code class="t-mono-inline">
       axis: 'secondary'
-    </code> and is measured against
-    the right-hand scale; <code class="t-mono-inline">yAxisMode</code> decides
-    how the two scales are reconciled. Rounded keeps one set of gridlines for
-    both and rounds the secondary step up, so against a peak of 75 the
-    right-hand axis labels 0·20·40·60·80·100 and the conversion line stops short
-    of the top.
+    </code> and is measured
+    against the right-hand scale;
+    <code class="t-mono-inline">
+      yAxisMode
+    </code> decides how the two scales are
+    reconciled. Rounded keeps one set of gridlines for both and rounds the
+    secondary step up, so against a peak of 75 the right-hand axis labels
+    0·20·40·60·80·100 and the conversion line stops short of the top.
   </p>
 
   <ds-line-chart
     caption="Sessions against conversion rate, rounded secondary axis"
     dataTable="none"
     yAxisMode="rounded"
-    [categories]="specimenCategories"
-    [series]="dualAxisSeries" />
+    [categories]="roundedCategories()"
+    [series]="roundedSeries()" />
+
+  <docs-line-chart-data-editor
+    [(categories)]="roundedCategories"
+    [(series)]="roundedSeries" />
 
   <h3 class="block-title t-h4">
     Second axis · exact
@@ -114,8 +132,12 @@
     caption="Sessions against conversion rate, exact secondary axis"
     dataTable="none"
     yAxisMode="exact"
-    [categories]="specimenCategories"
-    [series]="dualAxisSeries" />
+    [categories]="exactCategories()"
+    [series]="exactSeries()" />
+
+  <docs-line-chart-data-editor
+    [(categories)]="exactCategories"
+    [(series)]="exactSeries" />
 
   <h3 class="block-title t-h4">
     Second axis · independent
@@ -132,8 +154,12 @@
     caption="Each axis scaled and gridded on its own, the secondary dashed"
     dataTable="none"
     yAxisMode="independent"
-    [categories]="specimenCategories"
-    [series]="dualAxisSeries" />
+    [categories]="independentCategories()"
+    [series]="independentSeries()" />
+
+  <docs-line-chart-data-editor
+    [(categories)]="independentCategories"
+    [(series)]="independentSeries" />
 
   <h3 class="block-title t-h4">
     Second axis · stacked
@@ -151,8 +177,12 @@
     caption="Two plots sharing one category axis, labelled under the lower plot only"
     dataTable="none"
     yAxisMode="stacked"
-    [categories]="specimenCategories"
-    [series]="dualAxisSeries" />
+    [categories]="stackedCategories()"
+    [series]="stackedSeries()" />
+
+  <docs-line-chart-data-editor
+    [(categories)]="stackedCategories"
+    [(series)]="stackedSeries" />
 
   <h3 class="block-title t-h4">
     Markers
@@ -170,9 +200,13 @@
 
   <ds-line-chart
     dataTable="none"
-    [categories]="specimenCategories"
-    [series]="specimenSeries"
+    [categories]="markersCategories()"
+    [series]="markersSeries()"
     [showMarkers]="false" />
+
+  <docs-line-chart-data-editor
+    [(categories)]="markersCategories"
+    [(series)]="markersSeries" />
 
   <h3 class="block-title t-h4">
     Area fill
@@ -190,8 +224,12 @@
   <ds-line-chart
     caption="A series with area on, filling down to its axis baseline"
     dataTable="none"
-    [categories]="specimenCategories"
-    [series]="areaSeries" />
+    [categories]="areaFillCategories()"
+    [series]="areaFillSeries()" />
+
+  <docs-line-chart-data-editor
+    [(categories)]="areaFillCategories"
+    [(series)]="areaFillSeries" />
 
   <h3 class="block-title t-h4">
     Long series
@@ -207,8 +245,12 @@
   <ds-line-chart
     caption="Thirty-six days — every third category label is drawn"
     dataTable="none"
-    [categories]="manyCategories"
-    [series]="manyCategorySeries" />
+    [categories]="manyCategories()"
+    [series]="manyCategorySeries()" />
+
+  <docs-line-chart-data-editor
+    [(categories)]="manyCategories"
+    [(series)]="manyCategorySeries" />
 
   <h3 class="block-title t-h4">
     Data table
@@ -226,8 +268,12 @@
 
   <ds-line-chart
     caption="The annex table, collapsed until asked for"
-    [categories]="specimenCategories"
-    [series]="specimenSeries" />
+    [categories]="dataTableCategories()"
+    [series]="dataTableSeries()" />
+
+  <docs-line-chart-data-editor
+    [(categories)]="dataTableCategories"
+    [(series)]="dataTableSeries" />
 
   <h3 class="block-title t-h4">
     Edge cases
@@ -247,36 +293,48 @@
     <div class="state-cell">
       <ds-line-chart
         dataTable="none"
-        [categories]="specimenCategories"
-        [series]="emptySeries" />
+        [categories]="emptyCategories()"
+        [series]="emptySeries()" />
 
       <div class="state-cell-label">
         Empty
       </div>
+
+      <docs-line-chart-data-editor
+        [(categories)]="emptyCategories"
+        [(series)]="emptySeries" />
     </div>
 
     <div class="state-cell">
       <ds-line-chart
         dataTable="none"
         loading
-        [categories]="specimenCategories"
-        [series]="specimenSeries" />
+        [categories]="loadingCategories()"
+        [series]="loadingSeries()" />
 
       <div class="state-cell-label">
         Loading
       </div>
+
+      <docs-line-chart-data-editor
+        [(categories)]="loadingCategories"
+        [(series)]="loadingSeries" />
     </div>
 
     <div class="state-cell">
       <ds-line-chart
         caption="A single series carries no legend, and the axes are still drawn"
         dataTable="none"
-        [categories]="specimenCategories"
-        [series]="oneSeries" />
+        [categories]="oneSeriesCategories()"
+        [series]="oneSeries()" />
 
       <div class="state-cell-label">
         One series
       </div>
+
+      <docs-line-chart-data-editor
+        [(categories)]="oneSeriesCategories"
+        [(series)]="oneSeries" />
     </div>
   </div>
 </docs-section>

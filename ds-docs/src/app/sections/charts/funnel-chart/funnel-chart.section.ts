@@ -1,6 +1,7 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation, signal } from '@angular/core';
 import { FunnelChartComponent } from 'ds/funnel-chart';
 import type { FunnelChartStage } from 'ds/funnel-chart';
+import { DocsChartDataEditorComponent } from '../../../shared/docs-chart-data-editor.component';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 const SPECIMEN_STAGES: readonly FunnelChartStage[] = [
@@ -35,7 +36,11 @@ const ZERO_FIRST_STAGE_STAGES: readonly FunnelChartStage[] = [
 @Component({
   selector: 'section-charts-funnel-chart',
   standalone: true,
-  imports: [FunnelChartComponent, DocsSectionComponent],
+  imports: [
+    DocsChartDataEditorComponent,
+    DocsSectionComponent,
+    FunnelChartComponent,
+  ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './funnel-chart.section.html',
   styleUrls: [
@@ -44,10 +49,29 @@ const ZERO_FIRST_STAGE_STAGES: readonly FunnelChartStage[] = [
   ],
 })
 export class FunnelChartSection {
-  protected readonly specimenStages = SPECIMEN_STAGES;
-  protected readonly emptyStages: readonly FunnelChartStage[] = [];
-  protected readonly oneStage = ONE_STAGE;
-  protected readonly allZerosStages = ALL_ZEROS_STAGES;
-  protected readonly steepDropStages = STEEP_DROP_STAGES;
-  protected readonly zeroFirstStageStages = ZERO_FIRST_STAGE_STAGES;
+  protected readonly specimenStages =
+    signal<readonly FunnelChartStage[]>(SPECIMEN_STAGES);
+  protected readonly taperStages =
+    signal<readonly FunnelChartStage[]>(SPECIMEN_STAGES);
+  protected readonly widthStages =
+    signal<readonly FunnelChartStage[]>(SPECIMEN_STAGES);
+  protected readonly areaStages =
+    signal<readonly FunnelChartStage[]>(SPECIMEN_STAGES);
+  protected readonly steepDropWidthStages =
+    signal<readonly FunnelChartStage[]>(STEEP_DROP_STAGES);
+  protected readonly steepDropAreaStages =
+    signal<readonly FunnelChartStage[]>(STEEP_DROP_STAGES);
+  protected readonly stageTableStages =
+    signal<readonly FunnelChartStage[]>(SPECIMEN_STAGES);
+  protected readonly dataTableStages =
+    signal<readonly FunnelChartStage[]>(SPECIMEN_STAGES);
+  protected readonly emptyStages = signal<readonly FunnelChartStage[]>([]);
+  protected readonly loadingStages =
+    signal<readonly FunnelChartStage[]>(SPECIMEN_STAGES);
+  protected readonly oneStage = signal<readonly FunnelChartStage[]>(ONE_STAGE);
+  protected readonly allZerosStages =
+    signal<readonly FunnelChartStage[]>(ALL_ZEROS_STAGES);
+  protected readonly zeroFirstStageStages = signal<readonly FunnelChartStage[]>(
+    ZERO_FIRST_STAGE_STAGES,
+  );
 }
