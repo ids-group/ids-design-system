@@ -65,10 +65,11 @@
   Rename `--chart-grid-line-strong` before `--chart-grid-line`: the short name is a prefix of the
   long one, and a prefix-blind sweep turns the emphasised gridline into a name that does not exist.
 
-  Every value is unchanged in both themes, and `--chart-bar-gap`, `--chart-tick-size`,
-  `--chart-hover-bg-color`, `--chart-tooltip-bg-color` and `--chart-tooltip-text-color` keep their
-  names. Recolouring a series is better done through the `--ds-chart-` layer below than through the
-  palette.
+  The sequential and divergent VALUES are unchanged in both themes; the eight categorical values are
+  not — they are retuned in this same release, so a rename there lands a different colour rather than
+  the same one under a new name. `--chart-bar-gap`, `--chart-tick-size`, `--chart-hover-bg-color`,
+  `--chart-tooltip-bg-color` and `--chart-tooltip-text-color` keep their names. Recolouring a series
+  is better done through the `--ds-chart-` layer below than through the palette.
 
 ### Added
 
@@ -195,8 +196,58 @@
   its `scrollWidth` matches its `clientWidth`.
 
 
-- `ds-bar-chart` — horizontal bars with label, value and percentage per row. Colours come from
-  `--ds-chart-series-N-color` and can be overridden per row with `color`.
+- **Five charts: `ds-bar-chart`, `ds-column-chart`, `ds-donut-chart`, `ds-funnel-chart` and
+  `ds-line-chart`.** Each takes a `caption`, a `summary` for the accessible name, a `loading`
+  skeleton sized to the real data so the chart does not resize when the numbers land, an `emptyText`
+  and a `valueFormat` — and each offers its numbers again as a table under a
+  `dataTable: 'toggle' | 'visible' | 'none'` disclosure, because a chart that only draws is a chart
+  a screen reader cannot read.
+
+  ```html
+  <ds-bar-chart caption="Visitor funnel" [data]="rows" />
+  <ds-line-chart [categories]="months" [series]="series" yAxisMode="rounded" />
+  ```
+
+  The two that carry real geometry are worth knowing about. `ds-funnel-chart` has a `shape`:
+  `'taper'` is a fixed silhouette where width encodes NOTHING and the table carries the numbers,
+  `'width'` reads every boundary off the values — which collapses the tail of a steep funnel below a
+  labellable width — and `'area'` keeps the silhouette while moving the stage boundaries so each
+  band's AREA is proportional to its value, the honest encoding that still leaves a tail you can put
+  a label on. `ds-line-chart` has a `yAxisMode` that only matters once a series sets
+  `axis: 'secondary'`: `'rounded'` and `'exact'` share one set of gridlines and differ in whether the
+  second axis rounds its step up or ends on its largest reading, `'independent'` grids each axis on
+  its own, and `'stacked'` draws two plots sharing the category axis.
+
+  Set `interactive` and every mark joins the tab order as a `role="button"` answering Enter and Space,
+  with the container announcing itself as a `group` rather than an `img`. The click output fires with
+  or without the flag.
+
+
+- **Chart colour is three families, and reaching for the wrong one is the usual chart bug.** The
+  eight `--ds-chart-series-N-color` hooks are CATEGORICAL — they separate marks that are DIFFERENT
+  THINGS, such as donut slices or line series. A bar chart's rows are not different things; they are
+  one series measured five times, and painting them from a categorical palette says five categories
+  where there is one. So a single series has hooks of its own, and ordered stages have a third set:
+
+  ```scss
+  /* different things          */  --ds-chart-series-1-color … --ds-chart-series-8-color
+  /* one thing, measured often */  --ds-chart-series-default-color + --ds-chart-series-accent-color
+  /* ordered stages of one     */  --ds-chart-ramp-1-color … --ds-chart-ramp-8-color
+  ```
+
+  `ds-bar-chart` and `ds-column-chart` take the single-series pair: every mark shares
+  `--ds-chart-series-default-color`, and setting `color` on one row or point marks the one the reader
+  should land on — usually `var(--ds-chart-series-accent-color)`. There is no accent flag, because the
+  accent is a colour and a boolean would only be a less flexible way of setting one. `ds-funnel-chart`
+  takes the ramp, spread across however many stages there are, with the last stage leaving it for the
+  accent. `ds-donut-chart` and `ds-line-chart` take the categorical set.
+
+  The categorical eight are retuned with this: led by coral and teal, each clearing 3:1 on white for
+  WCAG 1.4.11 and at least dE 15 from every other under normal, deuteranope and protanope vision. No
+  hue sits between 35 and 130 — a yellow or a lime is high-luminance by nature, and dragging one down
+  to clear the contrast floor turns it to mustard. Slot 8 is a neutral rather than a ninth hue: every
+  eighth HUE that clears the floor lands within dE 4 of one of the other seven under some colour-vision
+  deficiency, so the honest eighth is one that has no hue to collide with.
 
 ### Fixed
 

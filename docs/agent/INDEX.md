@@ -20,6 +20,11 @@ and token names.** These leaves are for orientation and usage.
 ## charts
 
 - [<ds-bar-chart> — BarChartComponent](charts/ds-bar-chart.md) — Row: BarChartRow = { label: string; value: number; percent?: number; color?: string }. percent is derived from
+- [<ds-column-chart> — ColumnChartComponent](charts/ds-column-chart.md) — Vertical columns for a short series read left to right — months, stages, teams — measured against one value ax
+- [<ds-donut-chart> — DonutChartComponent](charts/ds-donut-chart.md) — A ring that splits one total into its parts, with the middle free for the total or a headline figure of your o
+- [<ds-funnel-chart> — FunnelChartComponent](charts/ds-funnel-chart.md) — Stages of a journey, drawn top to bottom in the order you give them — they are never sorted, because the order
+- [<ds-line-chart> — LineChartComponent](charts/ds-line-chart.md) — One or more series plotted over a shared set of categories.
+- [Chart colour — which palette a chart takes](charts/chart-colour-which-palette-a-chart-takes.md) — Three families, and reaching for the wrong one is the usual chart bug. Set the --ds-chart-* contract tokens, n
 
 ## domain
 
