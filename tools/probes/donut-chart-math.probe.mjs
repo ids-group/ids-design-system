@@ -1,4 +1,5 @@
 import {
+  MAX_THICKNESS,
   arcPath,
   paletteIndex,
   positiveValues,
@@ -176,7 +177,21 @@ check('the default thickness leaves a 34 unit hole', resolveInnerRadius(50, 0.32
 check('a NaN thickness falls back to the default', resolveInnerRadius(50, NaN), 34);
 check('a zero thickness falls back to the default', resolveInnerRadius(50, 0), 34);
 check('a thickness above 1 falls back to the default', resolveInnerRadius(50, 2), 34);
-check('a thickness of 1 is a pie, not a fallback', resolveInnerRadius(50, 1), 0);
+// The hole is where the centre value goes, and that value always renders — so the band is capped
+// rather than allowed to close over it. A thickness of 1 asks for a pie and gets the thickest ring.
+check(
+  'a thickness of 1 still leaves a hole for the centre value',
+  resolveInnerRadius(50, 1),
+  50 * (1 - MAX_THICKNESS),
+);
+check('a thickness under the cap is untouched', resolveInnerRadius(50, 0.4), 30);
+// The negative arm: the cap must not be the default fallback wearing a different name, or the three
+// invalid-input assertions above would also pass a capped implementation that rejected everything.
+check(
+  'the cap is not the default fallback',
+  resolveInnerRadius(50, 1) === resolveInnerRadius(50, 0.32),
+  false,
+);
 check('a non-positive outer radius has no hole', resolveInnerRadius(-10, 0.32), 0);
 check('an Infinity outer radius has no hole', resolveInnerRadius(Infinity, 0.32), 0);
 
