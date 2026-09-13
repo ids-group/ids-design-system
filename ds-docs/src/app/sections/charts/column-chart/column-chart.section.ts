@@ -55,7 +55,10 @@ const CUSTOM_COLOR_POINTS: readonly ColumnChartPoint[] = [
   imports: [ColumnChartComponent, DocsSectionComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './column-chart.section.html',
-  styleUrl: './column-chart.section.scss',
+  styleUrls: [
+    '../../../shared/section-demo.scss',
+    './column-chart.section.scss',
+  ],
 })
 export class ColumnChartSection {
   protected readonly specimenPoints = SPECIMEN_POINTS;

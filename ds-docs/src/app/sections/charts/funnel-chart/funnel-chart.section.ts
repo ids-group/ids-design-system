@@ -38,7 +38,10 @@ const ZERO_FIRST_STAGE_STAGES: readonly FunnelChartStage[] = [
   imports: [FunnelChartComponent, DocsSectionComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './funnel-chart.section.html',
-  styleUrl: './funnel-chart.section.scss',
+  styleUrls: [
+    '../../../shared/section-demo.scss',
+    './funnel-chart.section.scss',
+  ],
 })
 export class FunnelChartSection {
   protected readonly specimenStages = SPECIMEN_STAGES;

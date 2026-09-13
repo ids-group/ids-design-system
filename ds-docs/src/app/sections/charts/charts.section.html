@@ -1,7 +1,8 @@
 <docs-section
   anchor="bar-chart"
   eyebrow="Charts"
-  title="Bar chart">
+  title="Bar chart"
+  [chapters]="true">
   <span lede>
     Horizontal bar chart. Each row draws its value as a share of the longest
     row, with an optional data table underneath and a loading skeleton for data
@@ -9,133 +10,158 @@
   </span>
 
   <h3 class="block-title t-h4">
-    States
+    Default
   </h3>
 
-  <div class="states">
-    <div class="state">
-      <code class="t-mono-inline state-lbl">
-        specimen · visitor funnel
-      </code>
+  <p class="block-desc t-s">
+    Rows stay in the order you pass them — the chart never sorts, because the
+    order is usually the point. Track length is a share of the largest value in
+    the set, not of a total, so the longest row always fills its track and the
+    chart says nothing about what is missing from the list.
+  </p>
 
-      <ds-bar-chart
-        dataTable="none"
-        caption="Visitor funnel"
-        [data]="specimenRows" />
-    </div>
+  <ds-bar-chart
+    caption="Visitor funnel"
+    dataTable="none"
+    [data]="specimenRows" />
 
-    <div class="state">
-      <code class="t-mono-inline state-lbl">
-        empty
-      </code>
+  <h3 class="block-title t-h4">
+    Row colour
+  </h3>
 
+  <p class="block-desc t-s">
+    Every row takes the same series colour. Hue carries no meaning in a bar
+    chart, and giving each row its own only invites the reader to hunt for one.
+    A row that sets <code class="t-mono-inline">color</code> opts out — that is
+    how you mark the single row the surrounding copy is about.
+  </p>
+
+  <ds-bar-chart
+    dataTable="none"
+    [data]="customColorRows" />
+
+  <h3 class="block-title t-h4">
+    Data table
+  </h3>
+
+  <p class="block-desc t-s">
+    The plot is already one image with a generated description, so the annex
+    table is not what makes the chart readable — it is what makes the figures
+    selectable. <code class="t-mono-inline">toggle</code>, the default, leaves
+    the disclosure closed; <code class="t-mono-inline">visible</code> renders
+    the same disclosure open; <code class="t-mono-inline">none</code> leaves it
+    out, which is right only where the numbers are already elsewhere on the
+    page.
+  </p>
+
+  <ds-bar-chart
+    caption="Long label and nine-digit value together, table forced open"
+    dataTable="visible"
+    [data]="dataTableRows" />
+
+  <h3 class="block-title t-h4">
+    Edge cases
+  </h3>
+
+  <p class="block-desc t-s">
+    What the chart does when the data is awkward. A value at or below zero draws
+    an empty track rather than dropping the row, so its label survives; one
+    value far above the rest flattens every other track, which is the honest
+    reading and the reason to split the series instead.
+  </p>
+
+  <div class="states states--cols-2">
+    <div class="state-cell">
       <ds-bar-chart
         dataTable="none"
         [data]="emptyRows" />
+
+      <div class="state-cell-label">
+        Empty
+      </div>
     </div>
 
-    <div class="state">
-      <code class="t-mono-inline state-lbl">
-        loading
-      </code>
-
+    <div class="state-cell">
       <ds-bar-chart
         dataTable="none"
         loading
         [data]="specimenRows" />
+
+      <div class="state-cell-label">
+        Loading
+      </div>
     </div>
 
-    <div class="state">
-      <code class="t-mono-inline state-lbl">
-        one row
-      </code>
-
+    <div class="state-cell">
       <ds-bar-chart
         dataTable="none"
         [data]="oneRow" />
+
+      <div class="state-cell-label">
+        One row
+      </div>
     </div>
 
-    <div class="state">
-      <code class="t-mono-inline state-lbl">
-        all zeros
-      </code>
-
+    <div class="state-cell">
       <ds-bar-chart
         dataTable="none"
         [data]="allZerosRows" />
+
+      <div class="state-cell-label">
+        All zeros
+      </div>
     </div>
 
-    <div class="state">
-      <code class="t-mono-inline state-lbl">
-        negative
-      </code>
-
+    <div class="state-cell">
       <ds-bar-chart
         dataTable="none"
         [data]="negativeRows" />
+
+      <div class="state-cell-label">
+        Negative value
+      </div>
     </div>
 
-    <div class="state">
-      <code class="t-mono-inline state-lbl">
-        huge outlier
-      </code>
-
+    <div class="state-cell">
       <ds-bar-chart
         dataTable="none"
         [data]="hugeOutlierRows" />
+
+      <div class="state-cell-label">
+        Huge outlier
+      </div>
     </div>
 
-    <div class="state">
-      <code class="t-mono-inline state-lbl">
-        long label
-      </code>
-
+    <div class="state-cell">
       <ds-bar-chart
         dataTable="none"
         [data]="longLabelRows" />
+
+      <div class="state-cell-label">
+        Long label
+      </div>
     </div>
 
-    <div class="state">
-      <code class="t-mono-inline state-lbl">
-        nine-digit value
-      </code>
-
+    <div class="state-cell">
       <ds-bar-chart
         dataTable="none"
         [data]="nineDigitValueRows" />
+
+      <div class="state-cell-label">
+        Nine-digit value
+      </div>
     </div>
 
-    <div class="state">
-      <code class="t-mono-inline state-lbl">
-        custom colour
-      </code>
-
+    <div class="state-cell">
       <ds-bar-chart
-        dataTable="none"
-        [data]="customColorRows" />
-    </div>
-
-    <div class="state">
-      <code class="t-mono-inline state-lbl">
-        data table · visible
-      </code>
-
-      <ds-bar-chart
-        caption="Long label and nine-digit value together, table forced open"
-        dataTable="visible"
-        [data]="dataTableRows" />
-    </div>
-
-    <div class="state">
-      <code class="t-mono-inline state-lbl">
-        max below data
-      </code>
-
-      <ds-bar-chart
-        dataTable="none"
         caption="Max set below the largest value — bars clip at the track edge"
+        dataTable="none"
         [data]="maxBelowDataRows"
         [max]="200" />
+
+      <div class="state-cell-label">
+        Max below the data
+      </div>
     </div>
   </div>
 </docs-section>

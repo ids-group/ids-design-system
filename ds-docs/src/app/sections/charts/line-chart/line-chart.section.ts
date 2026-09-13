@@ -99,7 +99,7 @@ const MANY_CATEGORY_SERIES: readonly LineChartSeries[] = [
   imports: [LineChartComponent, DocsSectionComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './line-chart.section.html',
-  styleUrl: './line-chart.section.scss',
+  styleUrls: ['../../../shared/section-demo.scss', './line-chart.section.scss'],
 })
 export class LineChartSection {
   protected readonly specimenCategories = SPECIMEN_CATEGORIES;

@@ -1,0 +1,17 @@
+// A chart draws its own frame — border, radius, padding, surface — from `src/lib/styles/
+// _chart-frame.scss`. That is why chart specimens skip `.state-cell-stage`: the stage's border and
+// white ground would ring every chart a second time. The `.states` tray stays, because its recessed
+// background is what makes a framed chart read as a specimen rather than as page content.
+//
+// `$chart-measure` is per page on purpose: a chart is not body text, and left to fill the content
+// column a funnel comes out a letterbox while a donut floats in dead space. Each page picks the
+// measure its own geometry wants. Inside a multi-column tray the cell is already narrower, so the
+// measure caps the width rather than setting it.
+// The cell takes the cap as well as the chart: `.state-cell-label` centres itself in the cell, so a
+// cell left wider than the chart drifts its caption away from the specimen it names.
+@mixin measure($chart-selector, $chart-measure) {
+  #{$chart-selector},
+  .state-cell {
+    max-inline-size: $chart-measure;
+  }
+}

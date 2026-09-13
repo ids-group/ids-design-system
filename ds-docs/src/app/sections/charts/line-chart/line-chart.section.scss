@@ -1,5 +1,5 @@
-@use '../../../../styles/chart-states' as chart-states;
+@use '../../../../styles/chart-measure' as chart-measure;
 
 // The widest of the five. A series read over time is the one chart that earns its width — the
-// many-categories state draws 36 days — so it is capped only enough to keep a margin.
-@include chart-states.states('ds-line-chart', 860px);
+// many-categories block draws 36 days — so it is capped only enough to keep a margin.
+@include chart-measure.measure('ds-line-chart', 860px);

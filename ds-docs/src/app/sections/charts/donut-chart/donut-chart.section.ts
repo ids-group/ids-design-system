@@ -51,7 +51,10 @@ const SLOT_SLICES: readonly DonutChartSlice[] = [
   imports: [DonutChartComponent, DocsSectionComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './donut-chart.section.html',
-  styleUrl: './donut-chart.section.scss',
+  styleUrls: [
+    '../../../shared/section-demo.scss',
+    './donut-chart.section.scss',
+  ],
 })
 export class DonutChartSection {
   protected readonly specimenSlices = SPECIMEN_SLICES;

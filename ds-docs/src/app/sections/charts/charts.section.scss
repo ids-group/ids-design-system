@@ -1,5 +1,5 @@
-@use '../../../styles/chart-states' as chart-states;
+@use '../../../styles/chart-measure' as chart-measure;
 
 // A bar row reads label, then track, then value, so it tolerates the text measure; wider than that
 // and the value drifts a column away from the label it belongs to.
-@include chart-states.states('ds-bar-chart', var(--col-cap-text));
+@include chart-measure.measure('ds-bar-chart', var(--col-cap-text));

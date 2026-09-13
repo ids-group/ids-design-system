@@ -68,7 +68,7 @@ const MAX_BELOW_DATA_ROWS: readonly BarChartRow[] = [
   imports: [BarChartComponent, DocsSectionComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './charts.section.html',
-  styleUrl: './charts.section.scss',
+  styleUrls: ['../../shared/section-demo.scss', './charts.section.scss'],
 })
 export class BarChartSection {
   protected readonly specimenRows = SPECIMEN_ROWS;
