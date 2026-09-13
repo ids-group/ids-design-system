@@ -13,12 +13,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    The default <code class="t-mono-inline">taper</code> shape gives every stage
-    the same depth whatever its value, so everything quantitative comes from the
-    table under it. Editing the data moves the table, not the shape, because
-    <code class="t-mono-inline">
-      taper
-    </code> encodes nothing in width.
+    The default <code class="t-mono-inline">area</code> shape gives each stage a
+    band whose area is proportional to its value, so a small stage buys its area
+    back in depth rather than shrinking to a sliver.
   </p>
 
   <ds-funnel-chart
@@ -29,11 +26,13 @@
   <docs-chart-data-editor [(rows)]="specimenStages" />
 
   <h3 class="block-title t-h4">
-    Shape · taper (default)
+    Shape · taper
   </h3>
 
   <p class="block-desc t-s">
-    Switch to width or area when the geometry itself has to carry the value.
+    A fixed silhouette: editing the data moves the table under it and never the
+    shape, because <code class="t-mono-inline">taper</code> encodes nothing in
+    width. Reach for it only when the numbers are read from the table.
   </p>
 
   <ds-funnel-chart
@@ -65,9 +64,8 @@
   </h3>
 
   <p class="block-desc t-s">
-    The fixed silhouette of taper with the boundaries moved so each band's area
-    is proportional to its value — a small stage buys its area back in depth
-    rather than shrinking to nothing sideways.
+    The default. The silhouette of taper with the boundaries moved so each
+    band's area is proportional to its value.
   </p>
 
   <ds-funnel-chart

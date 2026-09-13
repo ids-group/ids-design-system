@@ -208,12 +208,13 @@
   <ds-line-chart [categories]="months" [series]="series" yAxisMode="rounded" />
   ```
 
-  The two that carry real geometry are worth knowing about. `ds-funnel-chart` has a `shape`:
-  `'taper'` is a fixed silhouette where width encodes NOTHING and the table carries the numbers,
-  `'width'` reads every boundary off the values — which collapses the tail of a steep funnel below a
-  labellable width — and `'area'` keeps the silhouette while moving the stage boundaries so each
-  band's AREA is proportional to its value, the honest encoding that still leaves a tail you can put
-  a label on. `ds-line-chart` has a `yAxisMode` that only matters once a series sets
+  The two that carry real geometry are worth knowing about. `ds-funnel-chart` has a `shape`, and it
+  defaults to `'area'` — the silhouette with the stage boundaries moved so each band's AREA is
+  proportional to its value, the honest encoding that still leaves a tail you can put a label on.
+  `'width'` reads every boundary off the values, which collapses the tail of a steep funnel below a
+  labellable width. `'taper'` encodes NOTHING: the silhouette is fixed whatever the data, so editing
+  the values moves the table under it and never the shape — reach for it only where the numbers are
+  read from that table. `ds-line-chart` has a `yAxisMode` that only matters once a series sets
   `axis: 'secondary'`: `'rounded'` and `'exact'` share one set of gridlines and differ in whether the
   second axis rounds its step up or ends on its largest reading, `'independent'` grids each axis on
   its own, and `'stacked'` draws two plots sharing the category axis.
