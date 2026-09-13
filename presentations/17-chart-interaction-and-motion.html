@@ -117,10 +117,6 @@
     background: linear-gradient(#1682ca, #1682ca);
     transform-origin: left center;
   }
-  .grows .fill { transition: inline-size 700ms cubic-bezier(0, 0, 0, 1); }
-  .scales .fill { transition: transform 700ms cubic-bezier(0, 0, 0, 1); }
-  .is-grown .grows .fill { inline-size: var(--to) !important; }
-  .is-grown .scales .fill { transform: scaleX(var(--k)) !important; }
 
   /* 4x magnifier on the right cap. */
   .zoom { display: flex; align-items: center; gap: var(--space-3); margin-top: var(--space-3); }
@@ -137,6 +133,18 @@
     transform-origin: left center;
   }
   .lens > span.sq { inline-size: 1000px; margin-inline-start: -304px; transform: scaleX(0.4); }
+  .shapes { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-3); margin-top: var(--space-3); }
+  @media (max-width: 1100px) { .shapes { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 620px) { .shapes { grid-template-columns: 1fr; } }
+  .shapes .fill { transition: none; }
+  .r-pill .fill { border-radius: 6px; }
+  .r-outer .fill { border-radius: 0 6px 6px 0; }
+  .r-soft .fill { border-radius: 3px; }
+  .r-square .fill { border-radius: 0; }
+  .lens.r-pill > span { border-radius: 24px; }
+  .lens.r-outer > span { border-radius: 0 24px 24px 0; }
+  .lens.r-soft > span { border-radius: 12px; }
+  .lens.r-square > span { border-radius: 0; }
 </style>
 
 <main>
@@ -441,84 +449,101 @@
     <h2>5 · Торец столбца <span class="chip is-open">решить</span></h2>
 
     <p>
-      <strong>Где это.</strong> <code class="tok">ds-bar-chart</code>: дорожка 12px высотой, радиус
-      6px, у столбика скруглённый правый торец. При смене данных столбик едет
-      (<code class="tok">bar-chart.component.scss:78</code>). То же у
-      <code class="tok">ds-column-chart</code> — там скруглены два верхних угла на 4px, и колонка
-      растёт вверх (<code class="tok">column-chart.component.scss:116</code>).
+      <strong>Где это.</strong> <code class="tok">ds-bar-chart</code>: дорожка 12px, радиус 6px,
+      столбик со скруглённым правым торцом, едет при смене данных
+      (<code class="tok">bar-chart.component.scss:66-78</code>). У
+      <code class="tok">ds-column-chart</code> скруглены два верхних угла на 4px, колонка растёт
+      вверх (<code class="tok">column-chart.component.scss:116</code>).
     </p>
-    <p>Жми — обе карточки проиграют одну и ту же смену данных, разными способами.</p>
 
-    <div class="caps">
-      <div class="card grows">
-        <h3>Как сейчас: едет <code class="tok">inline-size</code></h3>
-        <p class="sub">раскладка каждый кадр</p>
-        <div class="rowset">
-          <div><div class="rowlabel">Москва</div><div class="track"><div class="fill" style="inline-size:38%;--to:86%"></div></div></div>
-          <div><div class="rowlabel">Питер</div><div class="track"><div class="fill" style="inline-size:30%;--to:64%"></div></div></div>
-          <div><div class="rowlabel">Казань</div><div class="track"><div class="fill" style="inline-size:22%;--to:47%"></div></div></div>
-          <div><div class="rowlabel">Самара</div><div class="track"><div class="fill" style="inline-size:15%;--to:33%"></div></div></div>
-        </div>
-        <div class="zoom">
-          <figure>
-            <div class="lens"><span></span></div>
-            <figcaption>торец ×4</figcaption>
-          </figure>
-          <p class="read" style="margin:0">Полукруг остаётся полукругом на любой длине.</p>
-        </div>
-      </div>
-
-      <div class="card scales">
-        <h3>Дёшево: едет <code class="tok">transform: scaleX</code></h3>
-        <p class="sub">компоновщик, без раскладки</p>
-        <div class="rowset">
-          <div><div class="rowlabel">Москва</div><div class="track"><div class="fill" style="inline-size:100%;transform:scaleX(.38);--k:.86"></div></div></div>
-          <div><div class="rowlabel">Питер</div><div class="track"><div class="fill" style="inline-size:100%;transform:scaleX(.30);--k:.64"></div></div></div>
-          <div><div class="rowlabel">Казань</div><div class="track"><div class="fill" style="inline-size:100%;transform:scaleX(.22);--k:.47"></div></div></div>
-          <div><div class="rowlabel">Самара</div><div class="track"><div class="fill" style="inline-size:100%;transform:scaleX(.15);--k:.33"></div></div></div>
-        </div>
-        <div class="zoom">
-          <figure>
-            <div class="lens"><span class="sq"></span></div>
-            <figcaption>торец ×4</figcaption>
-          </figure>
-          <p class="read" style="margin:0">Радиус жмётся вместе с телом: чем короче столбик, тем прямее торец.</p>
-        </div>
-      </div>
-    </div>
-
-    <button class="replay" type="button" data-grow>▶ Сменить данные</button>
-
-    <div class="note flat">
-      На 12px эффект мелкий — потому и лупа ×4. Зато он <strong>меняется вместе с длиной</strong>:
-      короткий столбик получает торец прямее длинного, и в одном чарте строки выглядят по-разному.
-    </div>
-
-    <table style="margin-top:var(--space-4)">
-      <thead>
-        <tr><th>Вариант</th><th>Цена кадра</th><th>Торец</th><th>Работы</th></tr>
-      </thead>
+    <h3 class="sub-h">Чем двигать — измерено, 300 столбиков, Chrome 153</h3>
+    <p>Переход 700 мс, три прогона, медиана. Кадр дисплея здесь 5,6 мс.</p>
+    <table>
+      <thead><tr><th>Механизм</th><th>p50 кадра</th><th>p95 кадра</th><th>Торец</th><th>Элементов на столбик</th></tr></thead>
       <tbody>
-        <tr>
-          <td>Оставить <code class="tok">inline-size</code></td>
-          <td class="no">раскладка каждый кадр</td>
-          <td class="yes">правильный</td>
-          <td class="yes">ноль — записать причину</td>
-        </tr>
-        <tr>
-          <td>Перестроить: тело <code class="tok">scaleX</code>, торец отдельным элементом</td>
-          <td class="yes">компоновщик</td>
-          <td class="yes">правильный</td>
-          <td class="no">переделка марки в bar и column</td>
-        </tr>
-        <tr>
-          <td>Просто <code class="tok">scaleX</code></td>
-          <td class="yes">компоновщик</td>
-          <td class="no">сплющен</td>
-          <td class="yes">ноль</td>
-        </tr>
+        <tr><td><code class="tok">inline-size</code> — как сейчас</td><td class="yes">5,6 мс</td><td class="yes">11,1 мс</td><td class="yes">верный</td><td class="yes">1</td></tr>
+        <tr><td><code class="tok">transform: scaleX</code></td><td class="yes">5,6 мс</td><td class="yes">11,1 мс</td><td class="no">сплющен</td><td class="yes">1</td></tr>
+        <tr><td><code class="tok">clip-path: inset(… round)</code></td><td class="yes">5,7 мс</td><td>16,7 мс</td><td class="yes">верный</td><td class="yes">1</td></tr>
+        <tr><td>Тело <code class="tok">scaleX</code> + торец отдельно</td><td class="no">11,1 мс</td><td class="no">22,2 мс</td><td class="yes">верный</td><td class="no">2</td></tr>
       </tbody>
     </table>
+
+    <div class="note ok">
+      Разницы нет. «Раскладка каждый кадр» здесь ничего не стоит: заливка лежит внутри дорожки
+      фиксированного размера с <code class="tok">overflow: hidden</code>, поэтому её ширина пачкает
+      только саму себя. А «дешёвый» вариант с отдельным торцом оказался
+      <strong>вдвое дороже всех</strong> — он удваивает число элементов.
+    </div>
+
+    <div class="note flat">
+      На 2000 столбиках <code class="tok">scaleX</code> уже проигрывает: p50 38,9 мс против 27,8 у
+      <code class="tok">inline-size</code>. Растянутый на всю ширину элемент рисуется целиком, а
+      узкий — нет. <strong>Вывод: механизм выбирать не по скорости. Остаётся
+      <code class="tok">inline-size</code> — верный торец, один элемент, ноль работы.</strong>
+    </div>
+
+    <h3 class="sub-h">Как красивее — форма торца</h3>
+    <p>Одни и те же четыре строки, 86 / 52 / 24 / 9 %. Короткая строка — там, где форма видна сильнее всего.</p>
+
+    <div class="shapes">
+      <div class="card compact r-pill">
+        <h3>Таблетка — сейчас</h3>
+        <div class="rowset">
+          <div><div class="rowlabel">Москва</div><div class="track"><div class="fill" style="inline-size:86%"></div></div></div>
+          <div><div class="rowlabel">Питер</div><div class="track"><div class="fill" style="inline-size:52%"></div></div></div>
+          <div><div class="rowlabel">Казань</div><div class="track"><div class="fill" style="inline-size:24%"></div></div></div>
+          <div><div class="rowlabel">Самара</div><div class="track"><div class="fill" style="inline-size:9%"></div></div></div>
+        </div>
+        <div class="zoom">
+          <figure><div class="lens r-pill"><span></span></div><figcaption>×4</figcaption></figure>
+          <p class="read" style="margin:0">Радиус = половина высоты. Мягко, но короткий столбик превращается в точку.</p>
+        </div>
+      </div>
+      <div class="card compact r-outer">
+        <h3>Скруглён только торец</h3>
+        <div class="rowset">
+          <div><div class="rowlabel">Москва</div><div class="track"><div class="fill" style="inline-size:86%"></div></div></div>
+          <div><div class="rowlabel">Питер</div><div class="track"><div class="fill" style="inline-size:52%"></div></div></div>
+          <div><div class="rowlabel">Казань</div><div class="track"><div class="fill" style="inline-size:24%"></div></div></div>
+          <div><div class="rowlabel">Самара</div><div class="track"><div class="fill" style="inline-size:9%"></div></div></div>
+        </div>
+        <div class="zoom">
+          <figure><div class="lens r-outer"><span></span></div><figcaption>×4</figcaption></figure>
+          <p class="read" style="margin:0">Слева упирается в ноль, справа скруглён. Короткий столбик остаётся столбиком.</p>
+        </div>
+      </div>
+      <div class="card compact r-soft">
+        <h3>Мягкий 3px</h3>
+        <div class="rowset">
+          <div><div class="rowlabel">Москва</div><div class="track"><div class="fill" style="inline-size:86%"></div></div></div>
+          <div><div class="rowlabel">Питер</div><div class="track"><div class="fill" style="inline-size:52%"></div></div></div>
+          <div><div class="rowlabel">Казань</div><div class="track"><div class="fill" style="inline-size:24%"></div></div></div>
+          <div><div class="rowlabel">Самара</div><div class="track"><div class="fill" style="inline-size:9%"></div></div></div>
+        </div>
+        <div class="zoom">
+          <figure><div class="lens r-soft"><span></span></div><figcaption>×4</figcaption></figure>
+          <p class="read" style="margin:0">Половина текущего радиуса. Форма читается на любой длине.</p>
+        </div>
+      </div>
+      <div class="card compact r-square">
+        <h3>Прямой</h3>
+        <div class="rowset">
+          <div><div class="rowlabel">Москва</div><div class="track"><div class="fill" style="inline-size:86%"></div></div></div>
+          <div><div class="rowlabel">Питер</div><div class="track"><div class="fill" style="inline-size:52%"></div></div></div>
+          <div><div class="rowlabel">Казань</div><div class="track"><div class="fill" style="inline-size:24%"></div></div></div>
+          <div><div class="rowlabel">Самара</div><div class="track"><div class="fill" style="inline-size:9%"></div></div></div>
+        </div>
+        <div class="zoom">
+          <figure><div class="lens r-square"><span></span></div><figcaption>×4</figcaption></figure>
+          <p class="read" style="margin:0">Как у колонок до скругления. Самый «данные», меньше всего украшения.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="note flat">
+      Ключ — нижняя строка, 9 %. При радиусе 6px на 12px дорожке столбик короче 12px перестаёт быть
+      прямоугольником и становится кружком: длина читается хуже, чем у соседей.
+    </div>
   </section>
 
   <section class="panel">
@@ -576,10 +601,5 @@
     main.classList.remove('is-running');
     void main.offsetWidth;
     main.classList.add('is-running');
-  });
-
-  document.querySelector('[data-grow]').addEventListener('click', (event) => {
-    const section = event.target.closest('section');
-    section.classList.toggle('is-grown');
   });
 </script>
