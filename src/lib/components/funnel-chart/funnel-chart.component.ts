@@ -44,12 +44,12 @@ export class FunnelChartComponent {
    *  so they are never sorted. */
   readonly data = input.required<readonly FunnelChartStage[]>();
 
-  /** What the silhouette encodes. `'taper'` encodes NOTHING in the stage
-   *  widths — it is a fixed shape, and the numbers are read from the table.
-   *  `'width'` makes each stage's width proportional to its value. `'area'`
-   *  makes each stage's area proportional to its value, which keeps a small
-   *  tail wide enough to label. */
-  readonly shape = input<FunnelChartShape>('taper');
+  /** What the silhouette encodes. `'area'`, the default, makes each stage's AREA proportional to
+   *  its value, which is the honest encoding that still leaves a tail wide enough to label.
+   *  `'width'` reads the widths straight off the values, which collapses the tail of a steep
+   *  funnel below a labellable width. `'taper'` encodes NOTHING: the shape is fixed whatever the
+   *  data, and the numbers are read from the table beside it. */
+  readonly shape = input<FunnelChartShape>('area');
 
   /** The value, percent and drop table printed under the funnel. It supersedes
    *  `dataTable`: while this is on, the disclosure every chart carries would
