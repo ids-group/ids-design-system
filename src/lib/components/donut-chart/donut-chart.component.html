@@ -1,4 +1,6 @@
-<figure class="donut-chart">
+<figure
+  class="donut-chart"
+  [style.--_donut-chart-hole-fraction]="hole()">
   @if (caption()) {
     <figcaption>
       {{ caption() }}
@@ -42,8 +44,7 @@
       [attr.aria-label]="accessibleName()">
       <div
         class="ring"
-        [class.ring-outline]="total() === 0"
-        [style.--_donut-chart-hole-fraction]="hole()">
+        [class.ring-outline]="total() === 0">
         <svg
           class="ring-svg"
           aria-hidden="true"

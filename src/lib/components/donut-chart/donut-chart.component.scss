@@ -33,9 +33,22 @@ figcaption {
 // sweep and the ring's box would otherwise be blank.
 .empty-ring,
 .ring-outline {
+  position: relative;
   inline-size: var(--_donut-chart-size);
   block-size: var(--_donut-chart-size);
   border: var(--border-width-strong) dashed var(--border-divider);
+  border-radius: var(--radius-pill);
+}
+
+// The hole, so the placeholder reads as this chart rather than as any round thing. Drawn at the
+// ring's real thickness, so a chart set to a pie shows no hole to promise one.
+.empty-ring::before,
+.ring-outline::before {
+  content: '';
+  position: absolute;
+  inset: calc((100% - var(--_donut-chart-hole-fraction) * 100%) / 2);
+  border: calc(var(--_donut-chart-hole-fraction) * var(--border-width-strong))
+    dashed var(--border-divider);
   border-radius: var(--radius-pill);
 }
 
