@@ -321,14 +321,16 @@ check(
   '0,0 100,0 75,50 25,50',
 );
 check(
-  'the gap is taken off both ends of the stage',
+  'the gap insets both ends of the stage ALONG the silhouette',
   stagePolygonPoints(
     { topWidth: 1, bottomWidth: 0.5, top: 0, bottom: 0.5 },
     100,
     100,
     10,
   ),
-  '0,5 100,5 75,45 25,45',
+  // Not the boundary widths at the inset depths: a band running 1.0 to 0.5 over 50 units is 0.95
+  // wide 5 units in and 0.55 wide 5 units short of its end.
+  '2.5,5 97.5,5 77.5,45 22.5,45',
 );
 // A band shallower than the gap it must leave would otherwise cross its own
 // edges and draw a bow tie.
@@ -340,7 +342,8 @@ check(
     100,
     10,
   ),
-  '0,51 100,51 75,51 25,51',
+  // One line at the band's own middle width, not four corners of a bow tie.
+  '12.5,51 87.5,51 87.5,51 12.5,51',
 );
 for (const bad of [NaN, Infinity, -Infinity]) {
   check(
@@ -406,6 +409,55 @@ check(
 check('no stages leave no gap', stageGapUnits(0, 100), 0);
 check('a NaN stage count leaves no gap', stageGapUnits(NaN, 100), 0);
 check('a NaN viewBox leaves no gap', stageGapUnits(3, NaN), 0);
+
+// ---- the gap must inset the edges ALONG the silhouette ----------------------
+// The defect this catches: the gap moved each band's drawn edges inwards but the widths were still
+// read off the un-inset boundaries, so every band overhung the silhouette at its top and fell short
+// at its bottom. The stack read as a fir tree with a jag at each seam.
+const cornersOf = (points) =>
+  points.split(' ').map((pair) => pair.split(',').map(Number));
+// Every corner of every band, as { depth, halfWidth } in viewBox units.
+const drawnCorners = (values, shape, gapUnits) => {
+  const geometry = funnelGeometry(values, shape);
+
+  return geometry.flatMap((band) =>
+    cornersOf(stagePolygonPoints(band, 100, 100, gapUnits)).map(([x, y]) => ({
+      depth: round(y, 4),
+      halfWidth: round(Math.abs(x - 50), 4),
+    })),
+  );
+};
+// The taper silhouette, which 'taper' and 'area' both draw: full width at the mouth, tail width at
+// the bottom, linear in between.
+const silhouetteHalfWidth = (depth) =>
+  round((50 * (1 - (1 - FUNNEL_TAIL_WIDTH) * (depth / 100))).toFixed(4), 4);
+
+for (const shape of ['taper', 'area']) {
+  check(
+    `every drawn corner sits on the silhouette in '${shape}'`,
+    drawnCorners(FUNNEL, shape, 7).every(
+      (corner) =>
+        Math.abs(corner.halfWidth - silhouetteHalfWidth(corner.depth)) < 0.01,
+    ),
+    true,
+  );
+}
+// The negative arm: with no gap there is nothing to inset, so the corners are the boundary widths
+// and the assertion above would pass on the broken code too.
+check(
+  'a gap of zero leaves the boundary widths untouched',
+  cornersOf(stagePolygonPoints(funnelGeometry(FUNNEL, 'taper')[1], 100, 100, 0))
+    .map(([x]) => round(Math.abs(x - 50), 4))
+    .filter((_, index) => index === 1 || index === 2),
+  [round(50 * funnelGeometry(FUNNEL, 'taper')[1].topWidth, 4), round(50 * funnelGeometry(FUNNEL, 'taper')[1].bottomWidth, 4)],
+);
+check(
+  'a band narrower than its own gap collapses instead of crossing its edges',
+  cornersOf(
+    stagePolygonPoints({ top: 0.5, bottom: 0.52, topWidth: 0.8, bottomWidth: 0.7 }, 100, 100, 40),
+  ).every(([, y], _, all) => y === all[0][1]),
+  true,
+);
 
 // ---- the ramp spread -------------------------------------------------------
 check('the first ramped stage takes the light end', rampPosition(0, 7, 8), 0);

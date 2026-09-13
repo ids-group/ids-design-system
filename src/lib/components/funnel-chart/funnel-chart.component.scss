@@ -1,10 +1,9 @@
 @use '../../styles/visually-hidden' as visually-hidden;
 @use '../../styles/chart-data-table' as chart-data-table;
+@use '../../styles/chart-frame' as chart-frame;
+@include chart-frame.chart-frame;
 @include chart-data-table.chart-data-table;
 
-:host {
-  display: block;
-}
 
 .funnel-chart {
   --_funnel-chart-stage-height: var(--ds-funnel-chart-stage-height, 44px);

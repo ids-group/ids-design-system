@@ -239,8 +239,10 @@ export function stagePolygonPoints(
     return '';
   }
   const halfGap = Math.max(gapUnits, 0) / 2;
-  let top = clampFraction(geometry.top) * viewBoxHeight + halfGap;
-  let bottom = clampFraction(geometry.bottom) * viewBoxHeight - halfGap;
+  const bandTop = clampFraction(geometry.top) * viewBoxHeight;
+  const bandBottom = clampFraction(geometry.bottom) * viewBoxHeight;
+  let top = bandTop + halfGap;
+  let bottom = bandBottom - halfGap;
   if (bottom < top) {
     // A band shallower than the gap it has to leave. Collapse it to a line
     // instead of letting the edges cross and draw a bow tie.
@@ -249,9 +251,21 @@ export function stagePolygonPoints(
     bottom = middle;
   }
   const horizontalCentre = viewBoxWidth / 2;
-  const halfTopWidth = (clampFraction(geometry.topWidth) * viewBoxWidth) / 2;
-  const halfBottomWidth =
-    (clampFraction(geometry.bottomWidth) * viewBoxWidth) / 2;
+  const topWidth = clampFraction(geometry.topWidth);
+  const bottomWidth = clampFraction(geometry.bottomWidth);
+  // The widths belong to the band's own boundaries, and the gap moves the drawn edges INSIDE them.
+  // Drawing the boundary widths at the inset depths makes every band overhang the silhouette at its
+  // top and fall short of it at its bottom, so the stack reads as a fir tree rather than a funnel.
+  // The silhouette is linear in depth for every shape, so the inset widths interpolate exactly.
+  const bandDepth = bandBottom - bandTop;
+  // Capped at half: past that the band has collapsed to a line, and an uncapped fraction would
+  // swap the two edges and draw the bow tie the collapse exists to prevent.
+  const inset =
+    bandDepth > 0 ? Math.min(Math.max(halfGap / bandDepth, 0), 0.5) : 0;
+  const widthAt = (fraction: number) =>
+    topWidth + (bottomWidth - topWidth) * fraction;
+  const halfTopWidth = (widthAt(inset) * viewBoxWidth) / 2;
+  const halfBottomWidth = (widthAt(1 - inset) * viewBoxWidth) / 2;
 
   return [
     `${roundCoordinate(horizontalCentre - halfTopWidth)},${roundCoordinate(top)}`,
