@@ -6,6 +6,7 @@ import {
   computed,
   input,
   numberAttribute,
+  output,
 } from '@angular/core';
 import {
   CHART_SERIES_COLORS,
@@ -38,6 +39,7 @@ import {
 import type {
   LineChartAxisMode,
   LineChartGaps,
+  LineChartPoint,
   LineChartSeries,
 } from './line-chart.types';
 
@@ -89,6 +91,15 @@ export class LineChartComponent {
   readonly yAxisMode = input<LineChartAxisMode>('rounded');
 
   readonly showMarkers = input(true, { transform: booleanAttribute });
+
+  /** Makes every reading focusable and clickable. A series drawn without markers grows invisible
+   *  ones so there is something to land on; they appear on hover and on focus.
+   *
+   *  The click output fires whether or not this is set, so a consumer that binds the output and
+   *  forgets the flag still receives every click. */
+  readonly interactive = input(false, { transform: booleanAttribute });
+
+  readonly pointClicked = output<LineChartPoint>();
 
   /** What a `null` reading draws. The default refuses to assert that a missing
    *  reading is a zero. */
@@ -291,6 +302,33 @@ export class LineChartComponent {
       ? describeSeries(title, [], format)
       : `${title}. ${sentences.join(' ')}`;
   });
+
+  protected pointOf(entry: PlottedSeries, marker: LinePoint): LineChartPoint {
+    return {
+      series: entry.series,
+      categoryIndex: marker.categoryIndex,
+      category: this.categories()[marker.categoryIndex] ?? '',
+      value: marker.value,
+    };
+  }
+
+  protected markerLabel(entry: PlottedSeries, marker: LinePoint): string {
+    const point = this.pointOf(entry, marker);
+
+    return `${entry.series.label}, ${point.category}, ${this.valueFormat()(marker.value)}`;
+  }
+
+  protected onMarkerKey(
+    entry: PlottedSeries,
+    marker: LinePoint,
+    event: Event,
+  ): void {
+    if (!this.interactive() || event.target !== event.currentTarget) {
+      return;
+    }
+    event.preventDefault();
+    this.pointClicked.emit(this.pointOf(entry, marker));
+  }
 
   protected readonly isEmpty = computed(
     () => this.series().length === 0 || this.categories().length === 0,

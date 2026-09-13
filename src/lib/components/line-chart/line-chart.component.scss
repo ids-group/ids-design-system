@@ -1,3 +1,4 @@
+@use '../../styles/focus' as focus;
 @use '../../styles/chart-data-table' as chart-data-table;
 @use '../../styles/chart-frame' as chart-frame;
 @include chart-frame.chart-frame;
@@ -11,6 +12,9 @@
   --_line-chart-axis-font-size: var(--ds-line-chart-axis-font-size, var(--ds-chart-axis-font-size));
   --_line-chart-line-width: var(--ds-line-chart-line-width, var(--ds-chart-line-width));
   --_line-chart-dot-radius: var(--ds-line-chart-dot-radius, var(--ds-chart-dot-radius));
+  --_line-chart-dot-radius-active: var(--ds-line-chart-dot-radius-active, var(--ds-chart-dot-radius-active));
+  --_line-chart-focus-color: var(--ds-line-chart-focus-color, var(--focus-ring-color));
+  --_line-chart-focus-width: var(--ds-line-chart-focus-width, var(--focus-ring-width));
   --_line-chart-area-opacity: var(--ds-line-chart-area-opacity, 0.16);
   --_line-chart-plot-height: var(--ds-line-chart-plot-height, 240px);
   --_line-chart-swatch-size: var(--ds-line-chart-swatch-size, 10px);
@@ -73,6 +77,33 @@ figcaption {
 
 .series-marker {
   r: var(--_line-chart-dot-radius);
+}
+
+.series-marker.interactive {
+  cursor: pointer;
+}
+
+// Grown only so `interactive` has something to land on when the series draws no markers: present
+// in the DOM and in the tab order, painted only under the pointer or the caret.
+.series-marker.ghost {
+  fill-opacity: 0;
+}
+
+.series-marker.ghost:hover,
+.series-marker.ghost:focus-visible {
+  fill-opacity: 1;
+}
+
+/* focus-ring-guard: an outline on an SVG element paints its BOUNDING BOX, not its silhouette, so a
+   marker would ring as a square. The ring is a stroke on the circle instead; `own-indicator` keeps
+   the outline under forced colours, where `stroke` is not remapped. */
+.series-marker.interactive:focus-visible {
+  @include focus.own-indicator;
+
+  r: var(--_line-chart-dot-radius-active);
+  stroke: var(--_line-chart-focus-color);
+  stroke-width: var(--_line-chart-focus-width);
+  paint-order: stroke;
 }
 
 .legend {

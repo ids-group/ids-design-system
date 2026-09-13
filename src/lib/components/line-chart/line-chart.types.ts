@@ -24,3 +24,11 @@ export type LineChartAxisMode = 'rounded' | 'exact' | 'independent' | 'stacked';
 
 /** What a `null` reading draws: a hole in the line, or a point at zero. */
 export type LineChartGaps = 'break' | 'zero';
+
+/** One reading, named by the series it belongs to and the category it sits under. */
+export interface LineChartPoint {
+  readonly series: LineChartSeries;
+  readonly categoryIndex: number;
+  readonly category: string;
+  readonly value: number;
+}

@@ -28,12 +28,12 @@
   } @else {
     <div
       class="plot"
-      role="img"
+      [attr.role]="interactive() ? 'group' : 'img'"
       [attr.aria-label]="accessibleName()">
       <svg
         class="canvas"
-        aria-hidden="true"
         preserveAspectRatio="xMidYMid meet"
+        [attr.aria-hidden]="interactive() ? null : true"
         [attr.viewBox]="viewBox">
         @for (tick of primaryTicks(); track $index) {
           <line
@@ -104,14 +104,24 @@
           }
         }
 
-        @if (showMarkers()) {
+        @if (showMarkers() || interactive()) {
           @for (entry of plottedSeries(); track entry.series.id) {
-            @for (marker of entry.markers; track $index) {
+            @for (marker of entry.markers; track marker.categoryIndex) {
               <circle
                 class="series-marker"
+                [class.ghost]="!showMarkers()"
+                [class.interactive]="interactive()"
                 [attr.cx]="marker.x"
                 [attr.cy]="marker.y"
-                [attr.fill]="entry.color" />
+                [attr.fill]="entry.color"
+                [attr.role]="interactive() ? 'button' : null"
+                [attr.tabindex]="interactive() ? 0 : null"
+                [attr.aria-label]="
+                  interactive() ? markerLabel(entry, marker) : null
+                "
+                (click)="pointClicked.emit(pointOf(entry, marker))"
+                (keydown.enter)="onMarkerKey(entry, marker, $event)"
+                (keydown.space)="onMarkerKey(entry, marker, $event)" />
             }
           }
         }

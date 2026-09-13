@@ -73,6 +73,20 @@
 
 ### Added
 
+- **`ds-line-chart` takes `interactive` and emits `pointClicked`.** Every reading becomes a focusable
+  button carrying its series, its category and its value, so a click and a keyboard activation reach
+  the consumer the same way they already do on `ds-bar-chart`. A series drawn with
+  `showMarkers="false"` grows invisible markers when `interactive` is set, so there is something to
+  land on; they appear on hover and on focus.
+
+  ```html
+  <ds-line-chart
+    interactive
+    [series]="series"
+    [categories]="months"
+    (pointClicked)="openMonth($event)" />
+  ```
+
 - **A `TableRowAction` can name itself per row, and can open a divider.** `label` takes
   `(row) => string` as well as a string, so one action reads Pause on a live row and Resume on a
   paused one under the SAME `id` — `rowActionSelected` still fires once with that id, instead of the
