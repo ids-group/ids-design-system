@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   ViewEncapsulation,
+  computed,
   model,
   signal,
 } from '@angular/core';
@@ -20,6 +21,16 @@ export interface ChartDataEditorRow {
 const VALUE_BOUND = 1_000_000_000;
 
 let nextRowId = 0;
+
+/** A step of 1 is invisible on a nine-digit value; this lands between a tenth and a hundredth of
+ *  the magnitude, which is the smallest increment that visibly moves the chart. */
+function magnitudeStep(magnitude: number): number {
+  if (!Number.isFinite(magnitude) || Math.abs(magnitude) < 100) {
+    return 1;
+  }
+
+  return 10 ** (Math.floor(Math.log10(Math.abs(magnitude))) - 1);
+}
 
 @Component({
   selector: 'docs-chart-data-editor',
@@ -50,14 +61,10 @@ export class DocsChartDataEditorComponent<TRow extends ChartDataEditorRow> {
     this.patch(index, { value });
   }
 
-  /** A step of 1 is invisible on a nine-digit value — roughly a hundredth of the magnitude is the
-   *  smallest increment that moves the chart. */
+  // Zero carries no magnitude of its own, so it borrows the series' — otherwise a fresh row in a
+  // chart of thousands steps by 1 and the stepper looks broken.
   protected stepFor(value: number): number {
-    if (!Number.isFinite(value) || Math.abs(value) < 100) {
-      return 1;
-    }
-
-    return 10 ** (Math.floor(Math.log10(Math.abs(value))) - 1);
+    return magnitudeStep(value || this.typicalMagnitude());
   }
 
   protected removeRow(index: number): void {
@@ -68,16 +75,29 @@ export class DocsChartDataEditorComponent<TRow extends ChartDataEditorRow> {
 
   protected addRow(): void {
     nextRowId += 1;
+    const magnitude = this.typicalMagnitude();
+    const step = magnitudeStep(magnitude);
     // Donut and funnel track by `id`; bar and column ignore the key entirely, so one
     // shape of added row serves all four.
     const added = {
       id: `docs-editor-row-${nextRowId}`,
       label: `Row ${nextRowId}`,
-      value: 0,
+      value: Math.round(magnitude / step) * step,
     } as unknown as TRow;
 
     this.rows.update((rows) => [...rows, added]);
   }
+
+  private readonly typicalMagnitude = computed(() => {
+    const magnitudes = this.rows()
+      .map((row) => Math.abs(row.value))
+      .filter((magnitude) => Number.isFinite(magnitude) && magnitude > 0)
+      .sort((left, right) => left - right);
+
+    return magnitudes.length === 0
+      ? 0
+      : magnitudes[Math.floor(magnitudes.length / 2)];
+  });
 
   // Spread, never rebuild: `id`, `color`, `slot` and `percent` are keys the editor
   // does not show and must not drop.
