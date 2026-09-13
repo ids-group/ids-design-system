@@ -41,8 +41,18 @@ function extractComponentTokens(scssText, component) {
   return out;
 }
 
+// A comment that shows how to set a token — `--ds-chart-frame-padding: 0` — is otherwise read as a
+// declaration of it, and since the match runs to the first `;` it swallows the real declaration
+// underneath and publishes one token holding the other's value.
+function withoutComments(scssText) {
+  return scssText
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/(^|\s)\/\/[^\n]*/g, '$1');
+}
+
 // Matches `  --name: value;` declaration lines (not `var(--name` reads).
-function extractRootDeclarations(scssText) {
+function extractRootDeclarations(rawScssText) {
+  const scssText = withoutComments(rawScssText);
   const out = [];
   const re = /(^|\n)\s*(--[a-z0-9-]+)\s*:\s*([^;]+);/gi;
   let m;
