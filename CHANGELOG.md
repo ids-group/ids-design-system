@@ -219,9 +219,11 @@
   second axis rounds its step up or ends on its largest reading, `'independent'` grids each axis on
   its own, and `'stacked'` draws two plots sharing the category axis.
 
-  Set `interactive` and every mark joins the tab order as a `role="button"` answering Enter and Space,
-  with the container announcing itself as a `group` rather than an `img`. The click output fires with
-  or without the flag.
+  On `ds-bar-chart`, `ds-column-chart` and `ds-donut-chart`, setting `interactive` puts every mark in
+  the tab order as a `role="button"` answering Enter and Space, and the container announces itself as
+  a `group` rather than an `img`; the click output fires with or without the flag. `ds-funnel-chart`
+  takes the flag and emits the click but has no keyboard route, and `ds-line-chart` has neither the
+  flag nor an output — treat both as mouse-only for now.
 
   **Each chart draws its own frame** — border, radius, padding and an `--surface-default` background
   — which is unusual in this library, where a component resists owning chrome. A chart earns the
