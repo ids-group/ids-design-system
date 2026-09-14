@@ -51,6 +51,14 @@
             [attr.y]="primaryTopY()"
             [attr.width]="activeBandWidth()"
             [attr.height]="primaryBaselineY() - primaryTopY()" />
+
+          <line
+            class="cursor-line"
+            aria-hidden="true"
+            [attr.x1]="activeCategoryX()"
+            [attr.x2]="activeCategoryX()"
+            [attr.y1]="primaryTopY()"
+            [attr.y2]="primaryBaselineY()" />
         }
 
         @for (tick of primaryTicks(); track $index) {

@@ -239,6 +239,10 @@ export class LineChartComponent {
     () => this.categoryBands().bandWidth,
   );
 
+  protected readonly activeCategoryX = computed(
+    () => this.activeBandX() + this.activeBandWidth() / 2,
+  );
+
   protected onPlotPointer(event: PointerEvent): void {
     const canvas = event.currentTarget as SVGSVGElement;
     const screen = canvas.getScreenCTM();
