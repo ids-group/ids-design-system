@@ -2785,7 +2785,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "0",
         "required": false,
-        "description": "Milliseconds between one mark's entrance and the next. `0`, the default, is no stagger at all; `40` is the documented non-zero step. The total is capped, so a long series does not crawl in."
+        "description": "Accepted for parity with the other four charts and deliberately without effect here: a ring arrives as ONE object, because arcs share their edges and fading them one at a time lets the background through every seam. There is nothing to stagger."
       },
       {
         "name": "tooltip",

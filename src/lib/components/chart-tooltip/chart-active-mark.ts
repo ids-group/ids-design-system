@@ -1,5 +1,6 @@
 import { DestroyRef, Signal, inject, signal } from '@angular/core';
 
+/** @internal */
 export interface ChartActiveMark {
   /** Index of the mark under the pointer or holding focus; `-1` when none is. */
   readonly index: Signal<number>;

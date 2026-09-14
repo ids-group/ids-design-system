@@ -19,7 +19,6 @@ import {
   focusMark,
   largestRemainder,
   nextRovingIndex,
-  staggerDelay,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
@@ -159,14 +158,10 @@ export class DonutChartComponent {
    *  and pays for it with the rest of the chart. */
   readonly dimOthers = input(false, { transform: booleanAttribute });
 
-  /** Milliseconds between one mark's entrance and the next. `0`, the default, is no stagger at
-   *  all; `40` is the documented non-zero step. The total is capped, so a long series does not
-   *  crawl in. */
+  /** Accepted for parity with the other four charts and deliberately without effect here: a ring
+   *  arrives as ONE object, because arcs share their edges and fading them one at a time lets the
+   *  background through every seam. There is nothing to stagger. */
   readonly staggerMs = input(0, { transform: numberAttribute });
-
-  protected markStagger(index: number): string {
-    return `${staggerDelay(index, this.staggerMs())}ms`;
-  }
 
   /** Whether a hovered or focused slice opens a tooltip. `'axis'` is not offered — a ring
    *  has no axis to group readings under. */

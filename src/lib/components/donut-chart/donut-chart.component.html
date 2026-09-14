@@ -63,7 +63,6 @@
           @for (entry of slices(); track entry.slice.id; let index = $index) {
             <path
               class="slice"
-              [style.--_chart-mark-stagger]="markStagger(index)"
               [class.interactive]="interactive()"
               [class.focusable]="ringCarriesTheRoute()"
               [attr.d]="entry.path"

@@ -86,7 +86,6 @@ export type {
 } from '@ids-group-ltd/ids-design-system/components/card';
 export type { ChartLegendItem } from '@ids-group-ltd/ids-design-system/components/chart-legend';
 export type {
-  ChartActiveMark,
   ChartItemTooltipTrigger,
   ChartTooltipContext,
   ChartTooltipEntry,
