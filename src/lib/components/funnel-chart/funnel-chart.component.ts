@@ -209,6 +209,7 @@ export class FunnelChartComponent {
           value: stage.value,
         })),
         this.valueFormat(),
+        this.showTable() || this.dataTable() !== 'none',
       ),
   );
 

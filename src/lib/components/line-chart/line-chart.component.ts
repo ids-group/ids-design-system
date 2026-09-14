@@ -554,6 +554,8 @@ export class LineChartComponent {
     const title = this.caption() ?? 'Chart';
     const format = this.valueFormat();
     const categories = this.categories();
+    // The pointer belongs to the WHOLE chart, not to each series, or a two-series plot promises
+    // the table twice.
     const sentences = this.resolvedSeries().map((entry) =>
       describeSeries(
         entry.series.label,
@@ -561,12 +563,15 @@ export class LineChartComponent {
           value === null ? [] : [{ label: categories[index] ?? '', value }],
         ),
         format,
+        false,
       ),
     );
+    const pointer =
+      this.dataTable() === 'none' ? '' : ' Full values in the table below.';
 
     return sentences.length === 0
-      ? describeSeries(title, [], format)
-      : `${title}. ${sentences.join(' ')}`;
+      ? describeSeries(title, [], format, this.dataTable() !== 'none')
+      : `${title}. ${sentences.join(' ')}${pointer}`;
   });
 
   protected pointOf(entry: PlottedSeries, marker: LinePoint): LineChartPoint {

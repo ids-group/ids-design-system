@@ -220,6 +220,7 @@ export class DonutChartComponent {
           value: slice.value,
         })),
         this.valueFormat(),
+        this.dataTable() !== 'none',
       ),
   );
 

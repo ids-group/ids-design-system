@@ -190,6 +190,7 @@ export class ColumnChartComponent {
           value: point.value,
         })),
         this.valueFormat(),
+        this.dataTable() !== 'none',
       ),
   );
 

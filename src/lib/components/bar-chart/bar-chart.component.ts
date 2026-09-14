@@ -169,6 +169,7 @@ export class BarChartComponent {
         this.caption() ?? 'Chart',
         this.data().map((row) => ({ label: row.label, value: row.value })),
         this.valueFormat(),
+        this.dataTable() !== 'none',
       ),
   );
 

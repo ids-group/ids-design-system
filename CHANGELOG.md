@@ -536,6 +536,20 @@
 
 ### Changed
 
+- **A chart's generated description leads with what the chart says, not with how it is drawn.** The
+  order is now: what it is and its scale, the trend, the extremes, then where the numbers are —
+  `"Visits by month, 3 points, 1,620 to 2,410. Rising throughout. Highest in Nov at 2,410, lowest
+  in Sep at 1,620. Full values in the table below."` It used to recite first-to-last and then the
+  extremes, which is a recital of the encoding, and blind readers rank that lowest of the four
+  levels of chart description — the encoding is the one thing a screen-reader user cannot use.
+
+  The trend is named rather than implied: a series that only ever rises reads "Rising throughout",
+  one that dips on the way up reads "Rising overall", and one that returns to its starting value
+  reads "Ending where it started".
+
+  The closing pointer follows the table: a chart at `dataTable="none"` no longer promises a table
+  that is not rendered. `summary` still overrides the whole sentence.
+
 - **An `interactive` chart is one tab stop, not one per mark.** Arrow keys walk the marks, Home and
   End reach the extremes, and the ends wrap the way `ds-radio-group`'s do. `ds-line-chart` keeps one
   stop PER SERIES, so a two-series plot is two stops and each line is a strand the arrows walk;

@@ -38,16 +38,64 @@ const points = [
 // describeSeries() asserts different digits on a de-DE box than on an en-US one.
 const englishFormat = (value) => formatValue(value, 'en-US');
 
+// The ORDER is what is asserted: scale, then trend, then extremes, then the pointer. A recital of
+// the encoding is what this replaced, and it is the level blind readers rank lowest.
 check(
-  'describes a series',
+  'leads with the scale and the trend, not the encoding',
   describeSeries('Visits by month', points, englishFormat),
-  'Visits by month. 3 points, from 1,620 at Sep to 2,410 at Nov. Lowest 1,620 at Sep, highest 2,410 at Nov.',
+  'Visits by month, 3 points, 1,620 to 2,410. Rising throughout. Highest in Nov at 2,410, lowest in Sep at 1,620. Full values in the table below.',
+);
+
+check(
+  'names a fall',
+  describeSeries(
+    'Visits by month',
+    [...points].reverse(),
+    englishFormat,
+  ),
+  'Visits by month, 3 points, 1,620 to 2,410. Falling throughout. Highest in Nov at 2,410, lowest in Sep at 1,620. Full values in the table below.',
+);
+
+// A series that ends above where it started but dips on the way is NOT "rising throughout".
+check(
+  'separates an overall rise from a monotonic one',
+  describeSeries(
+    'Visits',
+    [
+      { label: 'Sep', value: 100 },
+      { label: 'Oct', value: 50 },
+      { label: 'Nov', value: 300 },
+    ],
+    englishFormat,
+  ),
+  'Visits, 3 points, 50 to 300. Rising overall. Highest in Nov at 300, lowest in Oct at 50. Full values in the table below.',
+);
+
+check(
+  'names a series that ends where it started',
+  describeSeries(
+    'Visits',
+    [
+      { label: 'Sep', value: 100 },
+      { label: 'Oct', value: 50 },
+      { label: 'Nov', value: 100 },
+    ],
+    englishFormat,
+  ),
+  'Visits, 3 points, 50 to 100. Ending where it started. Highest in Sep at 100, lowest in Oct at 50. Full values in the table below.',
+);
+
+// A chart rendered with `dataTable="none"` has no table, so the sentence must not promise one.
+check(
+  'drops the pointer when no table follows',
+  describeSeries('Visits by month', points, englishFormat, false),
+  'Visits by month, 3 points, 1,620 to 2,410. Rising throughout. Highest in Nov at 2,410, lowest in Sep at 1,620.',
 );
 
 check(
   'handles a single point',
   describeSeries('Visits', [{ label: 'Sep', value: 5 }], englishFormat),
-  'Visits. 1 point: 5 at Sep.',
+  'Visits, one point: 5 at Sep. Full values in the table below.',
 );
 
 check(
@@ -71,12 +119,10 @@ check(
     [{ label: 'Sep', value: 1620 }],
     (value) => `£${value}`,
   ),
-  'Revenue. 1 point: £1620 at Sep.',
+  'Revenue, one point: £1620 at Sep. Full values in the table below.',
 );
 
-// The brief's own series has its minimum first and its maximum last, so it cannot tell
-// "lowest" apart from "first" nor "highest" apart from "last". This series puts both
-// extremes in the middle, where only a correct reduce can find them.
+// This series puts both extremes in the middle, where only a correct reduce can find them.
 const middleExtremes = [
   { label: 'Jan', value: 500 },
   { label: 'Feb', value: 100 },
@@ -85,22 +131,22 @@ const middleExtremes = [
 ];
 
 check(
-  'distinguishes lowest and highest from first and last',
+  'finds extremes that are neither first nor last',
   describeSeries('Quarterly', middleExtremes, englishFormat),
-  'Quarterly. 4 points, from 500 at Jan to 300 at Apr. Lowest 100 at Feb, highest 900 at Mar.',
+  'Quarterly, 4 points, 100 to 900. Falling overall. Highest in Mar at 900, lowest in Feb at 100. Full values in the table below.',
 );
 
-// Same series, a formatter with a distinct shape ($ instead of a plain number) so a bypass
-// of the format parameter on any one of first/last/lowest/highest shows up as a mismatch.
+// A formatter with a distinct shape, so a bypass of the format parameter on any one of
+// scale/highest/lowest shows up as a mismatch.
 check(
   'host formatter reaches every value in a multi-point series',
   describeSeries('Quarterly', middleExtremes, (value) => `$${value}`),
-  'Quarterly. 4 points, from $500 at Jan to $300 at Apr. Lowest $100 at Feb, highest $900 at Mar.',
+  'Quarterly, 4 points, $100 to $900. Falling overall. Highest in Mar at $900, lowest in Feb at $100. Full values in the table below.',
 );
 
-// Two labels tie for the minimum (100) and two tie for the maximum (900), neither pair at the
-// array's ends. Strict "<"/">" keeps the first tied label, matching reading order, so the
-// sentence must read "Tue"/"Thu" — a "<="/">=" mutation would silently read "Wed"/"Fri" instead.
+// Two labels tie for the minimum (100) and two for the maximum (900), neither pair at the array's
+// ends. Strict "<"/">" keeps the first tied label, matching reading order, so the sentence must
+// read "Tue"/"Thu" — a "<="/">=" mutation would silently read "Wed"/"Fri" instead.
 const tiedExtremes = [
   { label: 'Mon', value: 500 },
   { label: 'Tue', value: 100 },
@@ -113,7 +159,7 @@ const tiedExtremes = [
 check(
   'breaks a tie by keeping the first occurrence',
   describeSeries('Weekly', tiedExtremes, englishFormat),
-  'Weekly. 6 points, from 500 at Mon to 300 at Sat. Lowest 100 at Tue, highest 900 at Thu.',
+  'Weekly, 6 points, 100 to 900. Falling overall. Highest in Thu at 900, lowest in Tue at 100. Full values in the table below.',
 );
 
 finish('charts-summary');
