@@ -11,7 +11,7 @@
     <p
       class="empty is-error"
       role="status">
-      {{ errorText() }}
+      {{ errorTextResolved() }}
     </p>
   } @else if (loading()) {
     <div
@@ -39,7 +39,7 @@
       </div>
 
       <p class="empty-text">
-        {{ emptyText() }}
+        {{ emptyTextResolved() }}
       </p>
     </div>
   } @else {
@@ -147,10 +147,10 @@
       }
     </div>
 
-    @if (dataTable() !== 'none') {
+    @if (dataTableResolved() !== 'none') {
       <details
         class="data-table"
-        [open]="dataTable() === 'visible'">
+        [open]="dataTableResolved() === 'visible'">
         <summary>
           Data table
         </summary>

@@ -24,6 +24,11 @@ import {
   tickStep,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
+import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
+import type {
+  ChartDataTable,
+  ChartValueFormat,
+} from '@ids-group-ltd/ids-design-system/core';
 import { ChartTooltipDirective } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import { ChartLegendComponent } from '@ids-group-ltd/ids-design-system/components/chart-legend';
 import type { ChartLegendItem } from '@ids-group-ltd/ids-design-system/components/chart-legend';
@@ -156,24 +161,49 @@ export class LineChartComponent {
 
   /** The label-and-value table under the plot: `'toggle'` puts it behind a disclosure,
    *  `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so
-   *  `'none'` belongs only where the same data is already in a table on the page. */
-  readonly dataTable = input<'toggle' | 'visible' | 'none'>('toggle');
+   *  `'none'` belongs only where the same data is already in a table on the page.
+   *  Unset falls back to `DS_CONFIG.chart.dataTable`, then `'toggle'`. */
+  readonly dataTable = input<ChartDataTable | null>(null);
   /** Draws skeleton marks in place of the data, at the same count, so the chart does not resize
    *  when the data lands. */
   readonly loading = input(false, { transform: booleanAttribute });
-  /** Shown in place of the plot when `data` is empty. */
-  readonly emptyText = input<string>('No data');
+  /** Shown in place of the plot when `data` is empty. Unset falls back to
+   *  `DS_CONFIG.chart.emptyText`, then `'No data'`. */
+  readonly emptyText = input<string | null>(null);
 
   /** Shows `errorText` in place of the plot. Separate from `loading` and from an empty `data`,
    *  because "the request failed" and "there is nothing to show" read the same to a reader and
    *  mean opposite things. */
   readonly error = input(false, { transform: booleanAttribute });
 
-  /** The message the error state prints. */
-  readonly errorText = input<string>('Could not load the data');
+  /** The message the error state prints. Unset falls back to `DS_CONFIG.chart.errorText`, then
+   *  `'Could not load the data'`. */
+  readonly errorText = input<string | null>(null);
   /** Formats every value the chart prints, the annex table and the generated description
-   *  included. Defaults to the browser's locale grouping with a K/M/B suffix past four digits. */
-  readonly valueFormat = input<(value: number) => string>(defaultValueFormat);
+   *  included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then the browser's locale
+   *  grouping with a K/M/B suffix past four digits. */
+  readonly valueFormat = input<ChartValueFormat | null>(null);
+
+  readonly dataTableResolved = resolveWithConfig(
+    this.dataTable,
+    (config) => config.chart?.dataTable,
+    'toggle' as ChartDataTable,
+  );
+  readonly emptyTextResolved = resolveWithConfig(
+    this.emptyText,
+    (config) => config.chart?.emptyText,
+    'No data',
+  );
+  readonly errorTextResolved = resolveWithConfig(
+    this.errorText,
+    (config) => config.chart?.errorText,
+    'Could not load the data',
+  );
+  readonly valueFormatResolved = resolveWithConfig(
+    this.valueFormat,
+    (config) => config.chart?.valueFormat,
+    defaultValueFormat as ChartValueFormat,
+  );
 
   protected readonly viewBox = `0 0 ${LINE_CHART_VIEW_WIDTH} ${LINE_CHART_VIEW_HEIGHT}`;
 
@@ -502,7 +532,7 @@ export class LineChartComponent {
       ) {
         return null;
       }
-      const format = this.valueFormat();
+      const format = this.valueFormatResolved();
       const focusedSeries = this.activeSeries();
       const perSeries =
         this.tooltip() === 'item' || focusedSeries >= 0
@@ -587,7 +617,7 @@ export class LineChartComponent {
   });
 
   protected readonly tableRows = computed(() => {
-    const format = this.valueFormat();
+    const format = this.valueFormatResolved();
 
     return this.categories().map((category, index) => ({
       category,
@@ -606,7 +636,7 @@ export class LineChartComponent {
     }
 
     const title = this.caption() ?? 'Chart';
-    const format = this.valueFormat();
+    const format = this.valueFormatResolved();
     const categories = this.categories();
     // The pointer belongs to the WHOLE chart, not to each series, or a two-series plot promises
     // the table twice.
@@ -621,10 +651,12 @@ export class LineChartComponent {
       ),
     );
     const pointer =
-      this.dataTable() === 'none' ? '' : ' Full values in the table below.';
+      this.dataTableResolved() === 'none'
+        ? ''
+        : ' Full values in the table below.';
 
     return sentences.length === 0
-      ? describeSeries(title, [], format, this.dataTable() !== 'none')
+      ? describeSeries(title, [], format, this.dataTableResolved() !== 'none')
       : `${title}. ${sentences.join(' ')}${pointer}`;
   });
 
@@ -640,7 +672,7 @@ export class LineChartComponent {
   protected markerLabel(entry: PlottedSeries, marker: LinePoint): string {
     const point = this.pointOf(entry, marker);
 
-    return `${entry.series.label}, ${point.category}, ${this.valueFormat()(marker.value)}`;
+    return `${entry.series.label}, ${point.category}, ${this.valueFormatResolved()(marker.value)}`;
   }
 
   protected onMarkerKey(
@@ -687,7 +719,7 @@ export class LineChartComponent {
   ): AxisTick[] {
     const plot = this.plotFor(onSecondaryAxis);
     const step = tickStep(ticks);
-    const format = this.valueFormat();
+    const format = this.valueFormatResolved();
 
     return ticks.map((value) => ({
       y: valueY(value, axisMax, plot),

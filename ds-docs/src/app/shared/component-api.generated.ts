@@ -1047,15 +1047,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "dataTable",
         "kind": "input",
-        "type": "'toggle' | 'visible' | 'none'",
+        "type": "ChartDataTable | null",
         "union": [
           "toggle",
           "visible",
           "none"
         ],
-        "default": "'toggle'",
+        "default": "null",
         "required": false,
-        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page."
+        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'toggle'`."
       },
       {
         "name": "showPercent",
@@ -1078,11 +1078,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "emptyText",
         "kind": "input",
-        "type": "string",
+        "type": "string | null",
         "union": null,
-        "default": "'No data'",
+        "default": "null",
         "required": false,
-        "description": "Shown in place of the plot when `data` is empty."
+        "description": "Shown in place of the plot when `data` is empty. Unset falls back to `DS_CONFIG.chart.emptyText`, then `'No data'`."
       },
       {
         "name": "error",
@@ -1096,20 +1096,20 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "errorText",
         "kind": "input",
-        "type": "string",
+        "type": "string | null",
         "union": null,
-        "default": "'Could not load the data'",
+        "default": "null",
         "required": false,
-        "description": "The message the error state prints."
+        "description": "The message the error state prints. Unset falls back to `DS_CONFIG.chart.errorText`, then `'Could not load the data'`."
       },
       {
         "name": "valueFormat",
         "kind": "input",
-        "type": "(value: number) => string",
+        "type": "ChartValueFormat | null",
         "union": null,
-        "default": "defaultValueFormat",
+        "default": "null",
         "required": false,
-        "description": "Formats every value the chart prints, the annex table and the generated description included. Defaults to the browser's locale grouping with a K/M/B suffix past four digits."
+        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then the browser's locale grouping with a K/M/B suffix past four digits."
       },
       {
         "name": "interactive",
@@ -2044,15 +2044,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "dataTable",
         "kind": "input",
-        "type": "'toggle' | 'visible' | 'none'",
+        "type": "ChartDataTable | null",
         "union": [
           "toggle",
           "visible",
           "none"
         ],
-        "default": "'toggle'",
+        "default": "null",
         "required": false,
-        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page."
+        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'toggle'`."
       },
       {
         "name": "loading",
@@ -2066,11 +2066,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "emptyText",
         "kind": "input",
-        "type": "string",
+        "type": "string | null",
         "union": null,
-        "default": "'No data'",
+        "default": "null",
         "required": false,
-        "description": "Shown in place of the plot when `data` is empty."
+        "description": "Shown in place of the plot when `data` is empty. Unset falls back to `DS_CONFIG.chart.emptyText`, then `'No data'`."
       },
       {
         "name": "error",
@@ -2084,20 +2084,20 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "errorText",
         "kind": "input",
-        "type": "string",
+        "type": "string | null",
         "union": null,
-        "default": "'Could not load the data'",
+        "default": "null",
         "required": false,
-        "description": "The message the error state prints."
+        "description": "The message the error state prints. Unset falls back to `DS_CONFIG.chart.errorText`, then `'Could not load the data'`."
       },
       {
         "name": "valueFormat",
         "kind": "input",
-        "type": "(value: number) => string",
+        "type": "ChartValueFormat | null",
         "union": null,
-        "default": "defaultValueFormat",
+        "default": "null",
         "required": false,
-        "description": "Formats every value the chart prints, the annex table and the generated description included. Defaults to the browser's locale grouping with a K/M/B suffix past four digits."
+        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then the browser's locale grouping with a K/M/B suffix past four digits."
       },
       {
         "name": "interactive",
@@ -2660,15 +2660,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "dataTable",
         "kind": "input",
-        "type": "'toggle' | 'visible' | 'none'",
+        "type": "ChartDataTable | null",
         "union": [
           "toggle",
           "visible",
           "none"
         ],
-        "default": "'toggle'",
+        "default": "null",
         "required": false,
-        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page."
+        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'toggle'`."
       },
       {
         "name": "loading",
@@ -2682,11 +2682,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "emptyText",
         "kind": "input",
-        "type": "string",
+        "type": "string | null",
         "union": null,
-        "default": "'No data'",
+        "default": "null",
         "required": false,
-        "description": "Shown in place of the plot when `data` is empty."
+        "description": "Shown in place of the plot when `data` is empty. Unset falls back to `DS_CONFIG.chart.emptyText`, then `'No data'`."
       },
       {
         "name": "error",
@@ -2700,20 +2700,20 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "errorText",
         "kind": "input",
-        "type": "string",
+        "type": "string | null",
         "union": null,
-        "default": "'Could not load the data'",
+        "default": "null",
         "required": false,
-        "description": "The message the error state prints."
+        "description": "The message the error state prints. Unset falls back to `DS_CONFIG.chart.errorText`, then `'Could not load the data'`."
       },
       {
         "name": "valueFormat",
         "kind": "input",
-        "type": "(value: number) => string",
+        "type": "ChartValueFormat | null",
         "union": null,
-        "default": "defaultValueFormat",
+        "default": "null",
         "required": false,
-        "description": "Formats every value the chart prints, the annex table and the generated description included. Defaults to the browser's locale grouping with a K/M/B suffix past four digits."
+        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then the browser's locale grouping with a K/M/B suffix past four digits."
       },
       {
         "name": "interactive",
@@ -3208,15 +3208,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "dataTable",
         "kind": "input",
-        "type": "'toggle' | 'visible' | 'none'",
+        "type": "ChartDataTable | null",
         "union": [
           "toggle",
           "visible",
           "none"
         ],
-        "default": "'toggle'",
+        "default": "null",
         "required": false,
-        "description": "The label-and-value disclosure every chart carries. Ignored while `showTable` is on, which already prints every label and value."
+        "description": "The label-and-value disclosure every chart carries. Ignored while `showTable` is on, which already prints every label and value. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'toggle'`."
       },
       {
         "name": "loading",
@@ -3230,11 +3230,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "emptyText",
         "kind": "input",
-        "type": "string",
+        "type": "string | null",
         "union": null,
-        "default": "'No data'",
+        "default": "null",
         "required": false,
-        "description": "Shown in place of the plot when `data` is empty."
+        "description": "Shown in place of the plot when `data` is empty. Unset falls back to `DS_CONFIG.chart.emptyText`, then `'No data'`."
       },
       {
         "name": "error",
@@ -3248,20 +3248,20 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "errorText",
         "kind": "input",
-        "type": "string",
+        "type": "string | null",
         "union": null,
-        "default": "'Could not load the data'",
+        "default": "null",
         "required": false,
-        "description": "The message the error state prints."
+        "description": "The message the error state prints. Unset falls back to `DS_CONFIG.chart.errorText`, then `'Could not load the data'`."
       },
       {
         "name": "valueFormat",
         "kind": "input",
-        "type": "(value: number) => string",
+        "type": "ChartValueFormat | null",
         "union": null,
-        "default": "defaultValueFormat",
+        "default": "null",
         "required": false,
-        "description": "Formats every value the chart prints, the annex table and the generated description included. Defaults to the browser's locale grouping with a K/M/B suffix past four digits."
+        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then the browser's locale grouping with a K/M/B suffix past four digits."
       },
       {
         "name": "interactive",
@@ -4085,15 +4085,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "dataTable",
         "kind": "input",
-        "type": "'toggle' | 'visible' | 'none'",
+        "type": "ChartDataTable | null",
         "union": [
           "toggle",
           "visible",
           "none"
         ],
-        "default": "'toggle'",
+        "default": "null",
         "required": false,
-        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page."
+        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'toggle'`."
       },
       {
         "name": "loading",
@@ -4107,11 +4107,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "emptyText",
         "kind": "input",
-        "type": "string",
+        "type": "string | null",
         "union": null,
-        "default": "'No data'",
+        "default": "null",
         "required": false,
-        "description": "Shown in place of the plot when `data` is empty."
+        "description": "Shown in place of the plot when `data` is empty. Unset falls back to `DS_CONFIG.chart.emptyText`, then `'No data'`."
       },
       {
         "name": "error",
@@ -4125,20 +4125,20 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "errorText",
         "kind": "input",
-        "type": "string",
+        "type": "string | null",
         "union": null,
-        "default": "'Could not load the data'",
+        "default": "null",
         "required": false,
-        "description": "The message the error state prints."
+        "description": "The message the error state prints. Unset falls back to `DS_CONFIG.chart.errorText`, then `'Could not load the data'`."
       },
       {
         "name": "valueFormat",
         "kind": "input",
-        "type": "(value: number) => string",
+        "type": "ChartValueFormat | null",
         "union": null,
-        "default": "defaultValueFormat",
+        "default": "null",
         "required": false,
-        "description": "Formats every value the chart prints, the annex table and the generated description included. Defaults to the browser's locale grouping with a K/M/B suffix past four digits."
+        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then the browser's locale grouping with a K/M/B suffix past four digits."
       },
       {
         "name": "hiddenSeries",

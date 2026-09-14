@@ -2,6 +2,37 @@
 
 ### Added
 
+- **`DS_CONFIG` takes a `chart` section.** Four inputs now resolve through it, because each is one
+  decision per APP rather than per plot: `valueFormat` — a number reads one way in a product, and a
+  formatter passed per chart drifts as soon as there are two screens; `dataTable` — whether the
+  numbers behind a plot have a non-visual route is an accessibility policy, not a per-chart taste;
+  and `emptyText` / `errorText`, which is where localisation lands.
+
+  ```ts
+  providers: [
+    provideDsConfig({
+      chart: {
+        valueFormat: (value) => value.toLocaleString('de-DE'),
+        dataTable: 'visible',
+      },
+    }),
+  ];
+  ```
+
+  Precedence is the input, then the config, then the built-in default, so binding one on a single
+  chart still wins. The four inputs are typed `T | null` and default to `null` — that is what lets
+  a chart tell "not set" from an explicit value — and each chart exposes the settled value as
+  `dataTableResolved`, `emptyTextResolved`, `errorTextResolved` and `valueFormatResolved`. A
+  subclass that read the raw input now reads `null` until something binds it.
+
+  `ChartDataTable` and `ChartValueFormat` are exported from the package root.
+
+  The member surface of `BarChartComponent`, `ColumnChartComponent`, `DonutChartComponent`,
+  `FunnelChartComponent` and `LineChartComponent` grows by these readbacks, and so does
+  `ChartTooltipDirective`, which is internal — the charts apply it themselves and the package root
+  does not export it. A subclass of any of the five inherits the new members; a class that
+  IMPLEMENTS one by hand has four more to satisfy.
+
 - **The tooltip is pinned to the mark, not to the cursor, and both charts that had a say now take
   an option.** `ds-line-chart` gains `tooltipAnchor`: `'point'`, the default, pins the panel over
   the highest reading in the category, so it stays still while the pointer travels within one band;

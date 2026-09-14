@@ -1,6 +1,38 @@
 {
   "version": "unreleased",
-  "items": [],
+  "items": [
+    {
+      "id": "chart-defaults-resolve-through-config",
+      "kind": "behavior",
+      "old": "BarChartComponent",
+      "new": null,
+      "surface": "typescript",
+      "action": "Only if you SUBCLASS a chart or read its inputs from a template reference: read `dataTableResolved()`, `emptyTextResolved()`, `errorTextResolved()` or `valueFormatResolved()` instead of the raw input. Binding the inputs is unchanged.",
+      "appliesWhen": "Only where code reads `dataTable()`, `emptyText()`, `errorText()` or `valueFormat()` off a chart instance. Every template that BINDS them — `dataTable=\"none\"`, `[valueFormat]=\"fn\"` — needs nothing.",
+      "pitfall": "The raw input now answers `null` until something binds it, and `null` is a legitimate value rather than an error — a subclass reading it gets no exception, just a missing string where a default used to be.",
+      "restore": null,
+      "searchHints": [
+        "dataTable()",
+        "emptyText()",
+        "errorText()",
+        "valueFormat()"
+      ],
+      "detect": [
+        ".dataTable()",
+        ".emptyText()",
+        ".errorText()",
+        ".valueFormat()",
+        "BarChartComponent",
+        "ColumnChartComponent",
+        "DonutChartComponent",
+        "FunnelChartComponent",
+        "LineChartComponent",
+        "ChartTooltipDirective"
+      ],
+      "verify": "No code reads a chart's `dataTable`, `emptyText`, `errorText` or `valueFormat` input directly; every read goes through the matching `*Resolved` signal.",
+      "note": "The four moved onto the library's internal config resolver, which requires the input to be `T | null` defaulting to `null`: a signal input cannot report whether it was bound, so `null` is what separates \"not set\" from an explicit value. Same shape as `ds-card`'s `elevation` / `padding` and `ds-button`'s `size`."
+    }
+  ],
   "informational": [
     "Every DS surface that used to travel on its way in now fades instead. `ds-overlay-pane` — the select, autocomplete, multi-select, date-picker, time-picker, colour-picker, popover, menu-submenu and tooltip panels — plus `ds-alert`, `ds-banner` and `ds-toast` defaulted to `ds-slide-in`, which offsets the surface and slides it into place; they default to `ds-fade-in` now, at the same duration and easing. `ds-drawer` and `ds-bottom-sheet` are unchanged (`ds-slide-edge-in`), and so is `ds-modal` (`ds-scale-in`). Nothing in your code changes. If you want the travel back it is one declaration at the root — `:root { --ds-overlay-enter-keyframes: ds-slide-in; }` — or per surface, `ds-toast { --ds-toast-enter-keyframes: ds-slide-in; }`.",
     "A chart mark now arrives by growing from its own baseline rather than by scaling about its centre: a `ds-column-chart` column grows up out of the category axis, a `ds-bar-chart` row grows out from the value axis, and `ds-donut-chart`, `ds-funnel-chart` and `ds-line-chart` marks fade because they have no baseline to grow from. Nothing in your code changes, and `staggerMs` is unaffected.",

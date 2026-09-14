@@ -24,6 +24,7 @@ and token names.** These leaves are for orientation and usage.
 - [<ds-donut-chart> — DonutChartComponent](charts/ds-donut-chart.md) — A ring that splits one total into its parts, with the middle free for the total or a headline figure of your o
 - [<ds-funnel-chart> — FunnelChartComponent](charts/ds-funnel-chart.md) — Stages of a journey, drawn top to bottom in the order you give them — they are never sorted, because the order
 - [<ds-line-chart> — LineChartComponent](charts/ds-line-chart.md) — One or more series plotted over a shared set of categories.
+- [Chart defaults — what DS_CONFIG decides once](charts/ds-config.md) — Four chart inputs resolve through DS_CONFIG.chart because they are one decision per APP, not per plot: valueFo
 - [Chart frame — the box a chart draws around itself](charts/chart-frame-the-box-a-chart-draws-around-itself.md) — Every chart paints its own border, radius, padding and --surface-default background, on by default. That is un
 - [Chart colour — which palette a chart takes](charts/chart-colour-which-palette-a-chart-takes.md) — Three families, and reaching for the wrong one is the usual chart bug. Set the --ds-chart-* contract tokens, n
 

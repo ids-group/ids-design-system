@@ -21,6 +21,11 @@ import {
   staggerDelay,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
+import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
+import type {
+  ChartDataTable,
+  ChartValueFormat,
+} from '@ids-group-ltd/ids-design-system/core';
 import {
   ChartTooltipDirective,
   chartActiveMark,
@@ -93,24 +98,49 @@ export class DonutChartComponent {
 
   /** The label-and-value table under the plot: `'toggle'` puts it behind a disclosure,
    *  `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so
-   *  `'none'` belongs only where the same data is already in a table on the page. */
-  readonly dataTable = input<'toggle' | 'visible' | 'none'>('toggle');
+   *  `'none'` belongs only where the same data is already in a table on the page.
+   *  Unset falls back to `DS_CONFIG.chart.dataTable`, then `'toggle'`. */
+  readonly dataTable = input<ChartDataTable | null>(null);
   /** Draws skeleton marks in place of the data, at the same count, so the chart does not resize
    *  when the data lands. */
   readonly loading = input(false, { transform: booleanAttribute });
-  /** Shown in place of the plot when `data` is empty. */
-  readonly emptyText = input<string>('No data');
+  /** Shown in place of the plot when `data` is empty. Unset falls back to
+   *  `DS_CONFIG.chart.emptyText`, then `'No data'`. */
+  readonly emptyText = input<string | null>(null);
 
   /** Shows `errorText` in place of the plot. Separate from `loading` and from an empty `data`,
    *  because "the request failed" and "there is nothing to show" read the same to a reader and
    *  mean opposite things. */
   readonly error = input(false, { transform: booleanAttribute });
 
-  /** The message the error state prints. */
-  readonly errorText = input<string>('Could not load the data');
+  /** The message the error state prints. Unset falls back to `DS_CONFIG.chart.errorText`, then
+   *  `'Could not load the data'`. */
+  readonly errorText = input<string | null>(null);
   /** Formats every value the chart prints, the annex table and the generated description
-   *  included. Defaults to the browser's locale grouping with a K/M/B suffix past four digits. */
-  readonly valueFormat = input<(value: number) => string>(defaultValueFormat);
+   *  included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then the browser's locale
+   *  grouping with a K/M/B suffix past four digits. */
+  readonly valueFormat = input<ChartValueFormat | null>(null);
+
+  readonly dataTableResolved = resolveWithConfig(
+    this.dataTable,
+    (config) => config.chart?.dataTable,
+    'toggle' as ChartDataTable,
+  );
+  readonly emptyTextResolved = resolveWithConfig(
+    this.emptyText,
+    (config) => config.chart?.emptyText,
+    'No data',
+  );
+  readonly errorTextResolved = resolveWithConfig(
+    this.errorText,
+    (config) => config.chart?.errorText,
+    'Could not load the data',
+  );
+  readonly valueFormatResolved = resolveWithConfig(
+    this.valueFormat,
+    (config) => config.chart?.valueFormat,
+    defaultValueFormat as ChartValueFormat,
+  );
 
   /** Turns on the click affordance — the pointer cursor and any hover tint.
    *  The click output fires whether or not this is set, so a consumer that
@@ -204,7 +234,7 @@ export class DonutChartComponent {
     const arcs = sliceArcs(values);
     const percents = largestRemainder(positiveValues(values));
     const innerRadius = resolveInnerRadius(RING_OUTER_RADIUS, this.thickness());
-    const format = this.valueFormat();
+    const format = this.valueFormatResolved();
 
     return data.map((slice, index) => ({
       slice,
@@ -226,7 +256,7 @@ export class DonutChartComponent {
   });
 
   protected readonly resolvedCenterValue = computed(
-    () => this.centerValue() ?? this.valueFormat()(this.total()),
+    () => this.centerValue() ?? this.valueFormatResolved()(this.total()),
   );
 
   protected readonly accessibleName = computed(
@@ -238,8 +268,8 @@ export class DonutChartComponent {
           label: slice.label,
           value: slice.value,
         })),
-        this.valueFormat(),
-        this.dataTable() !== 'none',
+        this.valueFormatResolved(),
+        this.dataTableResolved() !== 'none',
       ),
   );
 

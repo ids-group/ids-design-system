@@ -9,7 +9,7 @@
     <p
       class="empty is-error"
       role="status">
-      {{ errorText() }}
+      {{ errorTextResolved() }}
     </p>
   } @else if (loading()) {
     <div
@@ -29,7 +29,7 @@
     </div>
   } @else if (isEmpty()) {
     <p class="empty">
-      {{ emptyText() }}
+      {{ emptyTextResolved() }}
     </p>
   } @else if (noVisibleSeries()) {
     <p
@@ -252,10 +252,10 @@
         [(highlighted)]="highlightedSeries" />
     }
 
-    @if (dataTable() !== 'none') {
+    @if (dataTableResolved() !== 'none') {
       <details
         class="data-table"
-        [open]="dataTable() === 'visible'">
+        [open]="dataTableResolved() === 'visible'">
         <summary>
           Data table
         </summary>

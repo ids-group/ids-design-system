@@ -521,6 +521,15 @@ Series: `LineChartSeries = { id: string; label: string; data: readonly (number |
 Colour: series ARE different things, so the categorical palette applies — `--ds-chart-series-1-color` onward, by position or by `slot`.
 Tokens: `--ds-line-chart-plot-height`, `--ds-line-chart-line-width`, `--ds-line-chart-dot-radius`, `--ds-line-chart-area-opacity`, `--ds-line-chart-swatch-size`, `--ds-line-chart-grid-line-color`, `--ds-line-chart-axis-line-color`, `--ds-line-chart-axis-label-color`, `--ds-line-chart-axis-font-size`.
 
+#### Chart defaults — what `DS_CONFIG` decides once
+Four chart inputs resolve through `DS_CONFIG.chart` because they are one decision per APP, not per plot: `valueFormat` (a number reads one way in a product; a formatter passed per chart drifts as soon as there are two screens), `dataTable` (whether the numbers behind a plot have a non-visual route is an accessibility policy), `emptyText` and `errorText` (copy, and the place localisation lands). Precedence is the input, then the config, then the built-in — so binding one on a single chart still wins.
+
+```ts
+providers: [provideDsConfig({ chart: { valueFormat: v => v.toLocaleString('de-DE'), dataTable: 'visible' } })]
+```
+
+Everything else stays per chart: `interactive`, `tooltip`, `staggerMs`, `legend`, `tickCount` and the geometry inputs each answer a question about one plot.
+
 #### Chart frame — the box a chart draws around itself
 Every chart paints its own border, radius, padding and `--surface-default` background, on by default. That is unusual here — most components resist owning chrome — and a chart earns the exception because it is read as an OBJECT: a plot with axes, a legend and an annex table, whose parts run into the page without an edge. A chart that already sits inside a card drops the frame with two declarations rather than a mode flag:
 
