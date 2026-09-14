@@ -2504,6 +2504,36 @@
       "subtitle": "[divider]='true' draws a hairline rule beneath the meta row, separating the header from the page content."
     },
     {
+      "path": "components/charts/BarChart/Bar Chart.html",
+      "group": "charts",
+      "name": "Bar chart"
+    },
+    {
+      "path": "components/charts/ColumnChart/Column Chart.html",
+      "group": "charts",
+      "name": "Column chart"
+    },
+    {
+      "path": "components/charts/DonutChart/Donut Chart.html",
+      "group": "charts",
+      "name": "Donut chart"
+    },
+    {
+      "path": "components/charts/FunnelChart/Funnel Chart.html",
+      "group": "charts",
+      "name": "Funnel chart"
+    },
+    {
+      "path": "components/charts/ChartTooltipPanel/Chart Tooltip Panel.html",
+      "group": "charts",
+      "name": "Line chart"
+    },
+    {
+      "path": "components/charts/LineChart/Line Chart.html",
+      "group": "charts",
+      "name": "Line chart"
+    },
+    {
       "path": "components/foundations/Divider/Divider - Divider component.html",
       "group": "foundations",
       "viewport": "1200x558",
@@ -2566,6 +2596,12 @@
       "group": "foundations",
       "viewport": "1200x441",
       "name": "Charts & dataviz - empty & loading states"
+    },
+    {
+      "path": "guides/foundations/Charts & dataviz/Charts & dataviz - App-wide chart defaults.html",
+      "group": "foundations",
+      "name": "Charts & dataviz - app-wide chart defaults",
+      "subtitle": "Four things are the same decision for every chart in an app rather than a choice per plot, so they resolve through DS_CONFIG: valueFormat (a number reads one way in a product, and…"
     },
     {
       "path": "guides/foundations/Colour/Colour - Secondary role.html",
@@ -9285,6 +9321,12 @@
       "definedIn": "_ds_bundle.css"
     },
     {
+      "name": "--chart-mark-cap-radius",
+      "value": "3px",
+      "kind": "radius",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
       "name": "--chart-bar-gap",
       "value": "4px",
       "kind": "spacing",
@@ -9522,6 +9564,12 @@
       "name": "--ds-chart-tooltip-border-color",
       "value": "var(--chart-tooltip-border-color)",
       "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--ds-chart-mark-cap-radius",
+      "value": "var(--chart-mark-cap-radius)",
+      "kind": "radius",
       "definedIn": "_ds_bundle.css"
     },
     {
@@ -10129,9 +10177,51 @@
       "scope": ".ds-dropdown-panel"
     },
     {
+      "name": "--_option-weight",
+      "value": "var(--ds-option-weight, var(--font-weight-medium))",
+      "kind": "font",
+      "definedIn": "_ds_bundle.css",
+      "scope": ".ds-dropdown-panel"
+    },
+    {
+      "name": "--_option-font-size",
+      "value": "var(--ds-option-font-size, var(--font-size-s))",
+      "kind": "font",
+      "definedIn": "_ds_bundle.css",
+      "scope": ".ds-dropdown-panel"
+    },
+    {
+      "name": "--_option-line-height",
+      "value": "var(--ds-option-line-height, var(--line-height-flat))",
+      "kind": "font",
+      "definedIn": "_ds_bundle.css",
+      "scope": ".ds-dropdown-panel"
+    },
+    {
+      "name": "--_option-font-family",
+      "value": "var(--ds-option-font-family, var(--font-sans))",
+      "kind": "font",
+      "definedIn": "_ds_bundle.css",
+      "scope": ".ds-dropdown-panel"
+    },
+    {
       "name": "--_dropdown-panel-bg-color",
       "value": "var(--ds-dropdown-panel-bg-color, var(--surface-overlay))",
       "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ".ds-dropdown-panel"
+    },
+    {
+      "name": "--_dropdown-panel-border-color",
+      "value": "var(--ds-dropdown-panel-border-color, var(--border-default))",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ".ds-dropdown-panel"
+    },
+    {
+      "name": "--_dropdown-panel-shadow",
+      "value": "var(--ds-dropdown-panel-shadow, var(--shadow-popover))",
+      "kind": "shadow",
       "definedIn": "_ds_bundle.css",
       "scope": ".ds-dropdown-panel"
     },
@@ -10186,7 +10276,7 @@
     },
     {
       "name": "--_overlay-enter-keyframes",
-      "value": "var(--ds-overlay-enter-keyframes, ds-slide-in)",
+      "value": "var(--ds-overlay-enter-keyframes, ds-fade-in)",
       "kind": "color",
       "definedIn": "_ds_bundle.css",
       "scope": ".cdk-overlay-pane.ds-overlay-pane"

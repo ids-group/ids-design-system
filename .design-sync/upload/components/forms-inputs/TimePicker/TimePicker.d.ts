@@ -46,6 +46,8 @@ export interface TimePickerProps {
   required?: boolean;
   /** Shows an "(optional)" marker beside the label — ignored when `required` is set. */
   optional?: boolean;
+  /** Extra classes for the portaled panel, beside `ds-dropdown-panel`, `ds-overlay-pane` and this component's own `ds-time-picker-panel`. The panel is portaled out of the host, so a class on the pane is the only way a consumer stylesheet reaches ONE instance of it. */
+  panelClass?: string | readonly string[];
   /** Disables the picker and blocks all interaction. */
   disabled?: boolean;
   /** Confirmation text, shown when there is no error or warning — and it paints the field's success border. A string like `warning`: the text IS the state. */

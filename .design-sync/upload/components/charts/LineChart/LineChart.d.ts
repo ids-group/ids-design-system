@@ -17,6 +17,8 @@ export interface LineChartProps {
   interactive?: boolean;
   /** The point that was clicked, or activated with Enter or Space. Fires whether or not `interactive` is set. */
   onPointClicked?: (value: unknown) => void;
+  /** Dims every OTHER mark while one is hovered or focused, so the reader's eye is held on the one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed marks — measured 2026-09-13, the worst pair of three dimmed series falls from dE 14.8 at full opacity to 2.1 at `--ds-chart-dim-opacity`'s default 0.3 — so it buys loudness for one mark and pays for it with the rest of the chart. */
+  dimOthers?: boolean;
   /** What a `null` reading draws. The default refuses to assert that a missing reading is a zero. */
   gaps?: ('break' | 'zero');
   /** How many value-axis ticks to aim for. A hint, not a count: ticks snap to a round step, so the axis may carry one more or one fewer. */
@@ -25,17 +27,17 @@ export interface LineChartProps {
   caption?: string | null;
   /** Accessible name. Generated from the data when omitted. */
   summary?: string | null;
-  /** The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page. */
-  dataTable?: 'toggle' | 'visible' | 'none';
+  /** The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'toggle'`. */
+  dataTable?: ('toggle' | 'visible' | 'none') | null;
   /** Draws skeleton marks in place of the data, at the same count, so the chart does not resize when the data lands. */
   loading?: boolean;
-  /** Shown in place of the plot when `data` is empty. */
-  emptyText?: string;
+  /** Shown in place of the plot when `data` is empty. Unset falls back to `DS_CONFIG.chart.emptyText`, then `'No data'`. */
+  emptyText?: string | null;
   /** Shows `errorText` in place of the plot. Separate from `loading` and from an empty `data`, because "the request failed" and "there is nothing to show" read the same to a reader and mean opposite things. */
   error?: boolean;
-  /** The message the error state prints. */
-  errorText?: string;
-  /** Formats every value the chart prints, the annex table and the generated description included. Defaults to the browser's locale grouping with a K/M/B suffix past four digits. */
+  /** The message the error state prints. Unset falls back to `DS_CONFIG.chart.errorText`, then `'Could not load the data'`. */
+  errorText?: string | null;
+  /** Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then the browser's locale grouping with a K/M/B suffix past four digits. */
   valueFormat?: unknown;
   /** Ids of the series the legend has switched off. Two-way, so a page can drive it from a URL parameter and read back what the reader chose. */
   hiddenSeries?: readonly string[];
@@ -52,6 +54,8 @@ export interface LineChartProps {
   staggerMs?: number;
   /** Whether the plot opens a tooltip, and for what. `'axis'` names every series at the category under the pointer, which is the reading a multi-series line is compared on; `'item'` names only the marker itself. */
   tooltip?: ('item' | 'axis' | 'none');
+  /** Where the tooltip is pinned. `'point'`, the default, is the highest reading in the category, so the panel stays put while the pointer moves within one band. `'pointer'` follows the cursor. */
+  tooltipAnchor?: 'point' | 'pointer';
   /** Element content. */
   children?: React.ReactNode;
   className?: string;

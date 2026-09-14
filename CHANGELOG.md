@@ -1,5 +1,7 @@
 ## Unreleased
 
+## 0.13.1 — 2026-09-14
+
 ### Added
 
 - **A picker's panel can be styled without painting every other picker's.** Each portaled pane

@@ -23,23 +23,25 @@ export interface DonutChartProps {
   caption?: string | null;
   /** Accessible name. Generated from the data when omitted. */
   summary?: string | null;
-  /** The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page. */
-  dataTable?: 'toggle' | 'visible' | 'none';
+  /** The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'toggle'`. */
+  dataTable?: ('toggle' | 'visible' | 'none') | null;
   /** Draws skeleton marks in place of the data, at the same count, so the chart does not resize when the data lands. */
   loading?: boolean;
-  /** Shown in place of the plot when `data` is empty. */
-  emptyText?: string;
+  /** Shown in place of the plot when `data` is empty. Unset falls back to `DS_CONFIG.chart.emptyText`, then `'No data'`. */
+  emptyText?: string | null;
   /** Shows `errorText` in place of the plot. Separate from `loading` and from an empty `data`, because "the request failed" and "there is nothing to show" read the same to a reader and mean opposite things. */
   error?: boolean;
-  /** The message the error state prints. */
-  errorText?: string;
-  /** Formats every value the chart prints, the annex table and the generated description included. Defaults to the browser's locale grouping with a K/M/B suffix past four digits. */
+  /** The message the error state prints. Unset falls back to `DS_CONFIG.chart.errorText`, then `'Could not load the data'`. */
+  errorText?: string | null;
+  /** Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then the browser's locale grouping with a K/M/B suffix past four digits. */
   valueFormat?: unknown;
   /** Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click. */
   interactive?: boolean;
   /** The slice that was clicked, or activated with Enter or Space. Fires whether or not `interactive` is set. */
   onSliceClicked?: (value: unknown) => void;
-  /** Milliseconds between one mark's entrance and the next. `0`, the default, is no stagger at all; `40` is the documented non-zero step. The total is capped, so a long series does not crawl in. */
+  /** Dims every OTHER mark while one is hovered or focused, so the reader's eye is held on the one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed marks — measured 2026-09-13, the worst pair of three dimmed series falls from dE 14.8 at full opacity to 2.1 at `--ds-chart-dim-opacity`'s default 0.3 — so it buys loudness for one mark and pays for it with the rest of the chart. */
+  dimOthers?: boolean;
+  /** Accepted for parity with the other four charts and deliberately without effect here: a ring arrives as ONE object, because arcs share their edges and fading them one at a time lets the background through every seam. There is nothing to stagger. */
   staggerMs?: number;
   /** Whether a hovered or focused slice opens a tooltip. `'axis'` is not offered — a ring has no axis to group readings under. */
   tooltip?: ('item' | 'none');
