@@ -76,8 +76,6 @@ export class DonutChartComponent {
   readonly loading = input(false, { transform: booleanAttribute });
   readonly emptyText = input<string>('No data');
 
-  /** A load that failed is not a load that returned nothing: without this the chart says
-   *  "No data" when the truth is "could not load". */
   readonly error = input(false, { transform: booleanAttribute });
 
   readonly errorText = input<string>('Could not load the data');
@@ -164,9 +162,8 @@ export class DonutChartComponent {
     this.sliceClicked.emit(slice);
   }
 
-  /** Exactly one keyboard route to a slice, never two: the legend items already carry it, so the
-   *  arcs take it only when there is no legend. Without this the ring is unreachable at
-   *  `legend="none"`, and with both the tab order doubles. */
+  // Both focusable would double the tab order; the legend items already carry the route.
+  // Without this the ring is unreachable at `legend="none"`.
   protected readonly ringCarriesTheRoute = computed(
     () => this.interactive() && this.legend() === 'none',
   );

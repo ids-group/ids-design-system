@@ -120,8 +120,6 @@ export class LineChartComponent {
   readonly loading = input(false, { transform: booleanAttribute });
   readonly emptyText = input<string>('No data');
 
-  /** A load that failed is not a load that returned nothing: without this the chart says
-   *  "No data" when the truth is "could not load". */
   readonly error = input(false, { transform: booleanAttribute });
 
   readonly errorText = input<string>('Could not load the data');
@@ -224,8 +222,7 @@ export class LineChartComponent {
     () => this.layout().categoryLabelY,
   );
 
-  /** The category under the pointer, or -1. A line has no mark between two readings, so the hover
-   *  target is the category band, not the point. */
+  /** The category under the pointer, or -1. */
   protected readonly activeCategory = signal(-1);
 
   protected readonly categoryBands = computed(() =>
@@ -248,9 +245,7 @@ export class LineChartComponent {
     if (!screen) {
       return;
     }
-    // Client pixels are not viewBox units: the plot is scaled to whatever width the card gives it,
-    // so the pointer has to come back through the SVG's own matrix before it can be compared with
-    // the plot geometry.
+    // Client pixels are not viewBox units — the plot scales to the card's width.
     const point = new DOMPoint(event.clientX, event.clientY).matrixTransform(
       screen.inverse(),
     );

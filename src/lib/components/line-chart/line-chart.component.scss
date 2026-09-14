@@ -89,8 +89,7 @@ figcaption {
     var(--ds-motion-chart-state-easing);
 }
 
-// A finger covers a 1px cursor line and the band under it; the marker is what stays readable, so
-// the active category grows its points whether the pointer or the caret put it there.
+// A finger covers a 1px cursor line; the grown marker is what stays readable under it.
 .series-marker.is-active {
   r: var(--_line-chart-dot-radius-active);
 }
@@ -103,8 +102,6 @@ figcaption {
   cursor: pointer;
 }
 
-// Grown only so `interactive` has something to land on when the series draws no markers: present
-// in the DOM and in the tab order, painted only under the pointer or the caret.
 .series-marker.ghost {
   fill-opacity: 0;
 }

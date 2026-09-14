@@ -67,8 +67,6 @@ export class FunnelChartComponent {
   readonly loading = input(false, { transform: booleanAttribute });
   readonly emptyText = input<string>('No data');
 
-  /** A load that failed is not a load that returned nothing: without this the chart says
-   *  "No data" when the truth is "could not load". */
   readonly error = input(false, { transform: booleanAttribute });
 
   readonly errorText = input<string>('Could not load the data');
@@ -143,8 +141,7 @@ export class FunnelChartComponent {
   }
 
   protected onStageKey(stage: FunnelChartStage, event: Event): void {
-    // Only the stage's own key opens the stage: a key pressed on a control inside it belongs to
-    // that control.
+    // A key pressed on a control inside the stage belongs to that control.
     if (!this.interactive() || event.target !== event.currentTarget) {
       return;
     }

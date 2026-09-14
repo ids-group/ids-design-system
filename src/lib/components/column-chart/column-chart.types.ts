@@ -1,6 +1,5 @@
 export interface ColumnChartPoint {
-  /** A stable key across renders, so reordering the columns moves the DOM nodes instead of
-   *  rewriting them. Falls back to the column's position when left out. */
+  /** Falls back to the column's position when left out, so a reorder rewrites the DOM. */
   id?: string;
   label: string;
   value: number;
