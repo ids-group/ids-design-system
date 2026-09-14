@@ -40,7 +40,19 @@
         class="canvas"
         preserveAspectRatio="xMidYMid meet"
         [attr.aria-hidden]="interactive() ? null : true"
-        [attr.viewBox]="viewBox">
+        [attr.viewBox]="viewBox"
+        (pointermove)="onPlotPointer($event)"
+        (pointerleave)="clearActiveCategory()">
+        @if (activeCategory() >= 0) {
+          <rect
+            class="category-band"
+            aria-hidden="true"
+            [attr.x]="activeBandX()"
+            [attr.y]="primaryTopY()"
+            [attr.width]="activeBandWidth()"
+            [attr.height]="primaryBaselineY() - primaryTopY()" />
+        }
+
         @for (tick of primaryTicks(); track $index) {
           <line
             class="grid-line"
@@ -117,6 +129,7 @@
                 class="series-marker"
                 [class.ghost]="!showMarkers()"
                 [class.interactive]="interactive()"
+                [class.is-active]="marker.categoryIndex === activeCategory()"
                 [attr.cx]="marker.x"
                 [attr.cy]="marker.y"
                 [attr.fill]="entry.color"

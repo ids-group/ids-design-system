@@ -7,10 +7,12 @@ import {
   input,
   numberAttribute,
   output,
+  signal,
 } from '@angular/core';
 import {
   CHART_SERIES_COLORS,
   describeSeries,
+  bandScale,
   formatTick,
   formatValue,
   tickStep,
@@ -221,6 +223,44 @@ export class LineChartComponent {
   protected readonly categoryLabelY = computed(
     () => this.layout().categoryLabelY,
   );
+
+  /** The category under the pointer, or -1. A line has no mark between two readings, so the hover
+   *  target is the category band, not the point. */
+  protected readonly activeCategory = signal(-1);
+
+  protected readonly categoryBands = computed(() =>
+    bandScale(this.categories().length, this.layout().primaryPlot.width, 0),
+  );
+
+  protected readonly activeBandX = computed(
+    () =>
+      this.layout().primaryPlot.left +
+      this.categoryBands().position(this.activeCategory()),
+  );
+
+  protected readonly activeBandWidth = computed(
+    () => this.categoryBands().bandWidth,
+  );
+
+  protected onPlotPointer(event: PointerEvent): void {
+    const canvas = event.currentTarget as SVGSVGElement;
+    const screen = canvas.getScreenCTM();
+    if (!screen) {
+      return;
+    }
+    // Client pixels are not viewBox units: the plot is scaled to whatever width the card gives it,
+    // so the pointer has to come back through the SVG's own matrix before it can be compared with
+    // the plot geometry.
+    const point = new DOMPoint(event.clientX, event.clientY).matrixTransform(
+      screen.inverse(),
+    );
+    const plot = this.layout().primaryPlot;
+    this.activeCategory.set(this.categoryBands().indexAt(point.x - plot.left));
+  }
+
+  protected clearActiveCategory(): void {
+    this.activeCategory.set(-1);
+  }
 
   protected readonly plotLeft = computed(() => this.layout().primaryPlot.left);
   protected readonly plotRight = computed(

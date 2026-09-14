@@ -73,6 +73,13 @@
 
 ### Added
 
+- **`ds-line-chart` highlights the category under the pointer.** A line has no mark between two
+  readings, so the hover target is the whole category: a band paints behind the plot and every
+  series' reading at that category grows to the active dot radius. The band is what survives a
+  finger covering it on touch, and the grown markers are what the tooltip will anchor to.
+  `--ds-chart-hover-bg-color`, `--ds-chart-cursor-line-color` and `--ds-chart-dot-radius-active`
+  were declared and reached no rule until now.
+
 - **Every chart takes `error` and `errorText`.** A failed fetch had to render as `emptyText`, which
   says "No data" when the truth is "could not load". The branch renders ahead of `loading` and
   carries `role="status"`, so the message is announced when it replaces a spinner.

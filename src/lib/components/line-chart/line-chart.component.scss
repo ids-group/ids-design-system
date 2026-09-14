@@ -13,6 +13,7 @@
   --_line-chart-line-width: var(--ds-line-chart-line-width, var(--ds-chart-line-width));
   --_line-chart-dot-radius: var(--ds-line-chart-dot-radius, var(--ds-chart-dot-radius));
   --_line-chart-dot-radius-active: var(--ds-line-chart-dot-radius-active, var(--ds-chart-dot-radius-active));
+  --_line-chart-hover-bg-color: var(--ds-line-chart-hover-bg-color, var(--ds-chart-hover-bg-color));
   --_line-chart-focus-color: var(--ds-line-chart-focus-color, var(--focus-ring-color));
   --_line-chart-focus-width: var(--ds-line-chart-focus-width, var(--focus-ring-width));
   --_line-chart-area-opacity: var(--ds-line-chart-area-opacity, 0.16);
@@ -77,6 +78,25 @@ figcaption {
 
 .series-marker {
   r: var(--_line-chart-dot-radius);
+}
+
+.category-band {
+  fill: var(--_line-chart-hover-bg-color);
+}
+
+.series-marker {
+  transition: r var(--ds-motion-chart-state-duration)
+    var(--ds-motion-chart-state-easing);
+}
+
+// A finger covers a 1px cursor line and the band under it; the marker is what stays readable, so
+// the active category grows its points whether the pointer or the caret put it there.
+.series-marker.is-active {
+  r: var(--_line-chart-dot-radius-active);
+}
+
+.series-marker.ghost.is-active {
+  fill-opacity: 1;
 }
 
 .series-marker.interactive {
