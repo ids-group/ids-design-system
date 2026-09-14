@@ -1,8 +1,6 @@
 // The ONLY place a chart derives a hover state.
 //
-// TODO(ds-interactive): when the `.ds-interactive` verdicts B1-B5 on presentations/3-interaction-formula
-// close and `_interaction.scss` exists, this file is what migrates onto it. Keeping the derivation
-// here — rather than in five component stylesheets — is what makes that one file instead of five.
+// TODO(ds-interactive): migrate this onto `_interaction.scss` once that file exists.
 //
 // Only the fade half lives here. Singling a mark OUT is a direct value label, which the component
 // renders as markup, because a label has to be a node a screen reader can reach — an ::after

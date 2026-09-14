@@ -42,7 +42,7 @@
 }
 
 // A shell that rings on its control's behalf, and silences $control in the same call — a shell
-// that rings without silencing paints two, which `tools/check-focus-rings.mjs` checks for.
+// that rings without silencing paints two rings.
 //
 // `:has(:focus-visible)`, NOT `:focus-within`: the latter matches a pointer focus too, and a
 // checkbox is not granted `:focus-visible` on click, so a clicked control kept its ring until
