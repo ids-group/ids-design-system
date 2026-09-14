@@ -10,7 +10,7 @@
         "template",
         "style"
       ],
-      "action": "Look at every screen with a ds-stat whose value is longer than its tile, and decide per tile whether the clipped value is acceptable or the value should wrap.",
+      "action": "Look at every screen with a ds-stat whose value is longer than its tile, and decide per tile whether the clipped value is acceptable or the value should wrap. Shorten any label that was relying on two lines, or widen its tile — the label clips with no hook to undo it.",
       "appliesWhen": "Any ds-stat, and only where the label or value is wider than the card. A tile whose value fits renders identically and needs nothing. Tiles that already set --ds-stat-value-white-space are unaffected in shape — they wrapped before and wrap now.",
       "pitfall": "Nothing fails to build and nothing is lost to a screen reader, so this only shows on the screen: a tile that read in full because its value painted over the neighbouring card now ends in an ellipsis, and the text is reachable only by hovering or focusing it.",
       "restore": "ds-stat { --ds-stat-value-white-space: normal; }",
@@ -382,6 +382,31 @@
       ],
       "verify": "No read of a row action’s `label` assumes a string without narrowing.",
       "note": "`label: string` became `string | ((row: T) => string)`, the same widening `disabledReason` already carries. It exists so one action can read two ways under one id — the alternative was two ids with mirrored `hidden` predicates. Branch on `id`, never on the label text."
+    },
+    {
+      "id": "field-group-context-gains-two-members",
+      "kind": "behavior",
+      "old": "DsFieldGroupContext",
+      "new": null,
+      "surface": [
+        "typescript"
+      ],
+      "action": "Add `invalidResolved: () => boolean` and `messageId: () => string | null` to every object you provide for `DS_FIELD_GROUP`.",
+      "appliesWhen": "Only a wrapper that PROVIDES `DS_FIELD_GROUP` so that DS fields behave as segments inside it. Injecting the token to read the context is unaffected, and so is every consumer who only uses `ds-field-group` itself.",
+      "pitfall": "`() => true` on `invalidResolved` paints every segment invalid and sets `aria-invalid` on all of them; `() => 'x'` on `messageId` points each segment's `aria-describedby` at an element that does not exist, which a screen reader reads as no description at all. Neither fails the build.",
+      "restore": "invalidResolved: () => false, messageId: () => null",
+      "searchHints": [
+        "DS_FIELD_GROUP",
+        "DsFieldGroupContext",
+        "sizeResolved"
+      ],
+      "detect": [
+        "provide: DS_FIELD_GROUP",
+        "satisfies DsFieldGroupContext",
+        "sizeResolved:"
+      ],
+      "verify": "A wrapper providing the token compiles, and a segment inside it carries `aria-invalid` only while the wrapper reports itself invalid.",
+      "note": "A segment has to read the group's resolved error state — an `error` string counts, not only the `invalid` flag — and has to add the group's one message to its own `aria-describedby`. The interface could not carry either before, so a segment inside a custom wrapper announced nothing. `() => false` and `() => null` reproduce the old behaviour exactly."
     }
   ],
   "informational": [

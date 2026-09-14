@@ -71,14 +71,81 @@
   `--chart-tooltip-bg-color` and `--chart-tooltip-text-color` keep their names. Recolouring a series
   is better done through the `--ds-chart-` layer below than through the palette.
 
+- **`DsFieldGroupContext` carries two more members, and a class that IMPLEMENTS it no longer
+  compiles.** The interface behind `DS_FIELD_GROUP` had one member, `sizeResolved`; it now also
+  declares `invalidResolved: () => boolean` and `messageId: () => string | null`, because a segment
+  has to read the group's RESOLVED error state — an `error` string counts, not only the `invalid`
+  flag — and has to add the group's one message to its own `aria-describedby`. Anyone who provides
+  `DS_FIELD_GROUP` from their own wrapper so that DS fields behave as segments inside it gets
+  TS2420 until both are supplied: a compile error, not a silent change.
+
+  ```ts
+  providers: [{ provide: DS_FIELD_GROUP, useValue: {
+    sizeResolved: () => 'md',
+    invalidResolved: () => this.invalid(),
+    messageId: () => this.messageId(),
+  } satisfies DsFieldGroupContext }]
+  ```
+
+  `() => false` and `() => null` reproduce the old behaviour exactly. Only a consumer who PROVIDES
+  the token is affected; injecting it to read the context is unchanged and gains two members.
+
+- **`TableRowAction.label` is `string | ((row: T) => string)`, which breaks code that READS it.**
+  Writing an action is unaffected — a plain string still compiles. But `rowActionSelected` hands
+  back the action, and `event.action.label` is now a union: assigning it to a `string`, or calling
+  a string method on it, is a compile error rather than a silent wrong value.
+
+  ```ts
+  const label = typeof event.action.label === 'string'
+    ? event.action.label
+    : event.action.label(event.row);
+  ```
+
+  Branch on `event.action.id` instead wherever the label was only standing in for the identity —
+  that is what `id` is for, and it stayed a `string`.
+
+- **A `ds-stat` label clips to one line.** It wrapped freely before, so a two-word label took two
+  lines and made its tile taller than the ones beside it; it now truncates with an ellipsis and
+  discloses the full text in a tooltip on hover. There is no hook to put the wrapping back — the
+  value's `--ds-stat-value-white-space`, `--ds-stat-value-lines` and `--ds-stat-value-wrap` govern
+  the value alone. A label that was relying on two lines needs shortening, or a wider tile.
+
 ### Added
+
+- **Hovering or focusing one mark dims the others.** With `interactive` set on `ds-bar-chart`,
+  `ds-column-chart`, `ds-donut-chart` or `ds-funnel-chart`, the mark under the pointer or under
+  focus keeps its colour and every other mark drops to `--ds-chart-dim-opacity`, default `0.3` —
+  the highlight is a fade of the rest rather than a change to the thing being pointed at, so the
+  colour a reader is matching against the legend stays the colour it was. Without `interactive`
+  nothing dims: a chart nobody can click has no mark to single out.
+
+  ```scss
+  /* a denser chart wants a deeper fade */
+  ds-donut-chart { --ds-chart-dim-opacity: 0.15; }
+  ```
+
+  The fade runs on `--ds-motion-chart-state-duration` and `--ds-motion-chart-state-easing`, so a
+  consumer who slows or flattens chart state changes does it in one place for all four. Reduced
+  motion needs nothing from the chart — the library's global rule already zeroes every duration.
+
+- **`ds-number-stepper` takes `--ds-number-stepper-field-width`.** The number between the two step
+  buttons is sized from the control's own box height — 1.25× it — which is right for two or three
+  digits and clips a five-digit quantity. The hook is that width, and the default is the value the
+  three sizes carried before, so nothing moved.
+
+  ```scss
+  ds-number-stepper { --ds-number-stepper-field-width: 5ch; }
+  ```
 
 - **`ds-line-chart` highlights the category under the pointer.** A line has no mark between two
   readings, so the hover target is the whole category: a band paints behind the plot and every
   series' reading at that category grows to the active dot radius. The band is what survives a
   finger covering it on touch, and the grown markers are what the tooltip will anchor to.
-  `--ds-chart-hover-bg-color`, `--ds-chart-cursor-line-color` and `--ds-chart-dot-radius-active`
-  were declared and reached no rule until now.
+  `--ds-chart-hover-bg-color` paints the band, `--ds-chart-cursor-line-color` the rule down its
+  centre and `--ds-chart-dot-radius-active` sizes the grown reading; all three were declared and
+  reached no rule until now. `--ds-line-chart-hover-bg-color`, `--ds-line-chart-cursor-line-color`
+  and `--ds-line-chart-dot-radius-active` override any of them for this chart alone. The band is
+  what survives a finger covering it, which a 1px rule on its own does not.
 
 - **Every chart takes `error` and `errorText`.** A failed fetch had to render as `emptyText`, which
   says "No data" when the truth is "could not load". The branch renders ahead of `loading` and
@@ -146,6 +213,10 @@
   </ds-field-group>
   ```
 
+  It takes the rest of that base too: `reserveMessage` holds the message row's height while the
+  group is clean, so binding an error later does not push the form below it down, and
+  `messageIcon` overrides the glyph the state resolves to, or removes it with `false`.
+
   **Every segment announces it, not just the first.** Each carries `aria-invalid` while the group is
   in error and points at the one message through `aria-describedby`, so a reader who tabs straight to
   the second segment hears it too — the group's border is not something a screen reader can see.
@@ -180,10 +251,17 @@
   });
   ```
 
-- **`routerLinkActiveOptions` and `ariaCurrent` on the same three components.** The first moves
-  what the `active` CLASS matches; the second overrides what the link announces, including `null`
-  for "announce nothing" and `'step'` or `'location'` where the link is not a page. Left alone, the
-  announcement follows the exact/prefix rule above and needs nothing from the consumer.
+- **`ariaCurrent` on `ds-button`, `ds-sidenav-item` and `ds-sidenav-group`, and
+  `routerLinkActiveOptions` on `ds-button`.** `ariaCurrent` overrides what the link announces,
+  including `null` for "announce nothing" and `'step'` or `'location'` where the link is not a
+  page. Left alone, the announcement follows the exact/prefix rule above and needs nothing from
+  the consumer.
+
+  `routerLinkActiveOptions` moves what the `active` CLASS matches — and, because the announcement
+  is written by the same directive, it also bounds the announcement: narrow it to
+  `{ exact: true }` and a prefix match is no longer active, so the link announces nothing at all
+  rather than `true`. Set it to change the highlight, and pass `ariaCurrent` alongside it if the
+  ancestor announcement still matters.
 
 - **Ten classes grew their member surface, which breaks a subclass that declares the same name.**
   Subclassing a DS component is unsupported (`design-system.md` § Components), so this reaches only
@@ -192,8 +270,9 @@
   `routerLinkActiveOptions`, `ariaCurrent`, `linkModifiers` and `ariaCurrentResolved`;
   `SidenavItemComponent` and `SidenavGroupComponent` each gained `ariaCurrent`, `noModifiers` and
   `ariaCurrentResolved`; `TooltipDirective` gained `dsTooltipWhenClipped` and `tipText`;
-  `TableComponent` LOST `cellPopoverText`, `isClipped`, `onCellClipClick` and `onHeaderEnter`, so a
-  subclass that overrode one now overrides nothing. `FieldGroupComponent` gained `error`, `hint`,
+  `TableComponent` gained `actionLabel` and LOST `cellPopoverText`, `cellTextPopover`, `isClipped`,
+  `onCellClipClick` and `onHeaderEnter`, so a subclass that overrode one of the five now overrides
+  nothing. `FieldGroupComponent` gained `error`, `hint`,
   `warning`, `messageIcon`, `reserveMessage`, `reserveMessageResolved`, `invalidResolved`,
   `messageId`, `message`, `fieldMessage` and `uid` — it shares the fields' message base now;
   `InputComponent` gained `groupMessage`, and `SelectComponent`, `AutocompleteComponent` and
@@ -217,6 +296,9 @@
   `--ds-stat-value-lines` only bites once the value wraps: a clamp on a `nowrap` box has nothing to
   clamp. And wrapping alone does not keep a long value inside the card — a single word wider than
   the tile still paints past the edge, which is what `--ds-stat-value-wrap: anywhere` is for.
+
+  Whatever is clipped is still readable: the label and the value each disclose their full text in a
+  tooltip on hover, and only when they are actually clipped, so a tile that fits shows no tip.
 
 - **`dsTooltipWhenClipped`, so any host can disclose only what it is actually hiding.** With it the
   tip opens only while the host shows less text than it holds, re-tested on every open — so it
@@ -256,11 +338,25 @@
   second axis rounds its step up or ends on its largest reading, `'independent'` grids each axis on
   its own, and `'stacked'` draws two plots sharing the category axis.
 
-  On `ds-bar-chart`, `ds-column-chart` and `ds-donut-chart`, setting `interactive` puts every mark in
-  the tab order as a `role="button"` answering Enter and Space, and the container announces itself as
-  a `group` rather than an `img`; the click output fires with or without the flag. `ds-funnel-chart`
-  takes the flag and emits the click but has no keyboard route, and `ds-line-chart` has neither the
-  flag nor an output — treat both as mouse-only for now.
+  All five take `interactive`, and it is the keyboard switch rather than the click switch: the click
+  output — `rowClicked`, `pointClicked`, `sliceClicked`, `stageClicked` and `ds-line-chart`'s own
+  `pointClicked` — fires with or without the flag. With it set, every mark joins the tab order as a
+  `role="button"` answering Enter and Space, and the container announces itself as a `group` rather
+  than an `img`; that swap is load-bearing rather than cosmetic, because `role="img"` makes a
+  browser treat everything inside as presentational, and a focusable mark inside one is not
+  reachable at all.
+
+  `ds-donut-chart` is the exception, and deliberately: its arcs take the keyboard route only when
+  `legend="none"`. Where a legend is drawn, its rows already carry the route, and making both
+  focusable would give a four-slice chart eight tab stops for four things.
+
+  The focus ring on an SVG mark is a drawn stroke, not an `outline` — an outline on an SVG element
+  paints its BOUNDING BOX rather than its silhouette, so a funnel stage would ring as a flat bar
+  across its trapezoid. `--ds-funnel-chart-focus-color` and `--ds-funnel-chart-focus-width`,
+  `--ds-line-chart-focus-color` and `--ds-line-chart-focus-width`, and
+  `--ds-donut-chart-focus-color` and `--ds-donut-chart-focus-width` set it, each falling back to
+  `--focus-ring-color` and `--focus-ring-width`. Under forced colours the outline is kept instead,
+  where `stroke` is not remapped.
 
   **Each chart draws its own frame** — border, radius, padding and an `--surface-default` background
   — which is unusual in this library, where a component resists owning chrome. A chart earns the
