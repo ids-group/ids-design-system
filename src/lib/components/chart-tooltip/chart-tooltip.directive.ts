@@ -86,6 +86,7 @@ export class ChartTooltipDirective {
   private overlayRef: OverlayRef | null = null;
   private panelRef: ComponentRef<ChartTooltipPanelComponent> | null = null;
   private detachScrollClose: (() => void) | null = null;
+  private detachEscape: (() => void) | null = null;
 
   constructor() {
     effect(() => {
@@ -121,6 +122,7 @@ export class ChartTooltipDirective {
       this.detachScrollClose = closeOnScroll(this.overlayRef, () =>
         this.close(),
       );
+      this.detachEscape = this.closeOnEscape();
     } else {
       this.overlayRef.updatePositionStrategy(this.strategyFor(origin));
     }
@@ -139,7 +141,27 @@ export class ChartTooltipDirective {
       .withPositions(positionsFor(gap));
   }
 
+  // WCAG 1.4.13 wants the panel dismissable WITHOUT moving the pointer or the focus, which rules
+  // out "move off the mark". Nothing re-opens it afterwards: the effect re-runs on a CHANGE to the
+  // context or the origin, and neither changes while the pointer rests where it already is — so the
+  // reader keeps the screen they cleared until they visit another mark.
+  private closeOnEscape(): () => void {
+    if (typeof document === 'undefined') {
+      return () => undefined;
+    }
+    const onKeydown = (event: KeyboardEvent): void => {
+      if (event.key === 'Escape') {
+        this.close();
+      }
+    };
+    document.addEventListener('keydown', onKeydown, true);
+
+    return () => document.removeEventListener('keydown', onKeydown, true);
+  }
+
   private close(): void {
+    this.detachEscape?.();
+    this.detachEscape = null;
     this.detachScrollClose?.();
     this.detachScrollClose = null;
     this.overlayRef?.dispose();
