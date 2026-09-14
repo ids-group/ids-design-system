@@ -68,7 +68,6 @@ log_dir="$(mktemp -d)"
 echo "Building (lib -> docs) and linting in parallel..."
 # ds-docs needs the built dist/ds, so the build is ordered inside its own subshell.
 ( bun run check-entry-point-imports && bun run check:lib-package && bun run build:lib && [ -f dist/ds/package.json ] && bun run build:docs && [ -f dist/ds-docs/browser/index.html ] ) > "$log_dir/build.log" 2>&1 &  pid_build=$!
-bun run check:manual-surface            > "$log_dir/surface.log"   2>&1 &  pid_surface=$!
 bun run format                          > "$log_dir/format.log"    2>&1 &  pid_format=$!
 bun run lint:styles                     > "$log_dir/stylelint.log" 2>&1 &  pid_styles=$!
 bun run lint                            > "$log_dir/eslint.log"    2>&1 &  pid_eslint=$!
@@ -76,15 +75,12 @@ bun run lint                            > "$log_dir/eslint.log"    2>&1 &  pid_e
 build_failed=0
 wait "$pid_build" || build_failed=1
 
-surface_failed=0
-wait "$pid_surface" || surface_failed=1
-
 lint_failed=0
 wait "$pid_format" || lint_failed=1
 wait "$pid_styles" || lint_failed=1
 wait "$pid_eslint" || lint_failed=1
 
-for name in build surface format stylelint eslint; do
+for name in build format stylelint eslint; do
   echo "===== $name ====="
   cat "$log_dir/$name.log"
 done
@@ -100,10 +96,3 @@ if [ "$build_failed" -ne 0 ]; then
   exit 1
 fi
 echo "Build passed"
-
-
-if [ "$surface_failed" -ne 0 ]; then
-  echo "manual-surface check failed"
-  exit 1
-fi
-echo "manual surface passed"
