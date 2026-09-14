@@ -48,10 +48,20 @@
 // data before reaching the next component. The heading stays an `h3.block-title` inside the
 // summary so the chapter rail still lists it and still scrolls to it.
 :host ::ng-deep .edge-cases {
+  margin-block-start: var(--space-8);
+
+  // A row that looks like something to press, not a heading with a speck beside it. The first
+  // version put a 7px triangle to the left of an `h3` that carried its own top margin, so the mark
+  // sat above the text and read as a stray glyph — nobody would have opened it.
   > summary {
     display: flex;
     align-items: center;
-    gap: var(--space-2);
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding: var(--space-3) var(--space-4);
+    background: var(--surface-default);
+    border: var(--border-width-default) solid var(--border-default);
+    border-radius: var(--radius-md);
     cursor: pointer;
     list-style: none;
 
@@ -59,21 +69,56 @@
       display: none;
     }
 
-    // A disclosure triangle drawn from borders: there is no token for one, and the two numbers
-    // here are the arrow's own geometry rather than spacing.
-    &::before {
+    &:hover {
+      background: var(--surface-secondary);
+      border-color: var(--border-strong);
+    }
+
+    // The heading keeps being the chapter the nav rail scrolls to; it just stops adding the
+    // margin that pushed it away from the marker.
+    .block-title {
+      margin: 0;
+    }
+  }
+
+  // Says what pressing does, in words, because a glyph alone did not carry it.
+  > summary .chapter-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--text-secondary);
+    font-size: var(--font-size-s);
+    font-weight: 600;
+
+    &::after {
       content: "";
       inline-size: 0;
       block-size: 0;
-      border-block-start: 5px solid transparent;
-      border-block-end: 5px solid transparent;
-      border-inline-start: 7px solid var(--icon-muted);
+      border-inline-start: 5px solid transparent;
+      border-inline-end: 5px solid transparent;
+      border-block-start: 7px solid var(--icon-muted);
       transition: rotate var(--ds-motion-chart-state-duration)
         var(--ds-motion-chart-state-easing);
     }
   }
 
-  &[open] > summary::before {
-    rotate: 90deg;
+  &[open] > summary .chapter-toggle::after {
+    rotate: 180deg;
   }
+}
+
+// "Show" while closed, "Hide" while open: the word is the affordance, so it has to say which way
+// the press goes. Swapped in CSS rather than bound, because `<details>` already holds the state and
+// a second copy in the component would be a second thing to keep in step.
+:host ::ng-deep .edge-cases > summary .chapter-toggle {
+  font-size: 0;
+
+  &::before {
+    content: "Show";
+    font-size: var(--font-size-s);
+  }
+}
+
+:host ::ng-deep .edge-cases[open] > summary .chapter-toggle::before {
+  content: "Hide";
 }
