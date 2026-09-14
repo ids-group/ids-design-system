@@ -206,8 +206,15 @@ need an input-based open state before a design can use them.
 
 ## Keeping this honest
 
-Run `bun run check:manual-surface` (wired into `infrastructure/scripts/ci-pr.sh`
-in `ci-pr.sh`). It fails when a new component starts projecting inside
-a control-flow block, when a new attribute directive appears, when a recorded
-entry disappears, or when a recorded component is not mentioned in this file.
-Triage first, edit this file, then `--bless`.
+Run `npm run check:cards`. It builds the elements surface first, because
+`check-manual-surface.mjs` reads the gitignored `elements/gen/sections.json` and
+cannot run without it — `bun run check:manual-surface` alone works only in a tree
+that has already built. The gate itself fails when a new component starts
+projecting inside a control-flow block, when a new attribute directive appears,
+when a recorded entry disappears, or when a recorded component is not mentioned
+in this file. Triage first, edit this file, then `--bless`.
+
+CI runs it in `build-design-sync.sh`, which is the `after-release` pipeline: a
+failure there leaves the published package and the deployed docs alone and stops
+only the upload tree from being rebuilt. So the release does not wait on it, and
+running `check:cards` before a release is what keeps a gap out of one.

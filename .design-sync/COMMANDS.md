@@ -106,6 +106,10 @@ node .design-sync/elements/tools/build-bundle.mjs    # → dist/ds-bundle.js (II
 bun run check:manual-surface                         # watch-list + doc coverage — see MANUAL-SURFACE.md
 ```
 
+`npm run check:cards` is the whole chain above in one command, and the only form
+that works in a tree which has not built yet: the check reads `gen/sections.json`,
+which is gitignored.
+
 Nothing here is hand-maintained, so there is no parity gate to run: `gen.mjs`
 regenerates the whole surface from source every time. What it cannot cover is in
 `MANUAL-SURFACE.md`, and `check-manual-surface.mjs` is what keeps that list from

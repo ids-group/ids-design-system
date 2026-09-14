@@ -55,6 +55,7 @@
     "check-manifest-coverage:selftest": "node tools/check-manifest-coverage-selftest.mjs",
     "check-tools-parse": "node tools/check-tools-parse.mjs",
     "check:agent-catalogue": "node tools/split-agent-catalogue.mjs --check",
+    "check:cards": "node .design-sync/tools/bootstrap.mjs && npm run build:elements && npm run check:manual-surface && node .design-sync/tools/check-doc-api.mjs",
     "check:manual-surface": "node .design-sync/tools/check-manual-surface.mjs",
     "design-sync-plan": "node tools/design-sync-upload-plan.mjs",
     "design-sync-plan:record": "node tools/design-sync-upload-plan.mjs --record",

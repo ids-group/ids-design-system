@@ -53,6 +53,14 @@ the release commit — one timeline, two audiences.
 
 ### Build
 
+- **`npm run check:cards` runs the card gates outside CI.** `check-manual-surface.mjs` reads
+  `elements/gen/sections.json`, which is gitignored, so the check on its own works only in a tree
+  that has already built; `check:cards` bootstraps, builds the elements surface, then runs it and
+  `check-doc-api.mjs`. `ci-pr.sh` carries neither, because nothing there builds `gen/`. CI runs both
+  in `build-design-sync.sh`, beside the build that feeds them — an `after-release` step, so a gap
+  they catch holds back the upload tree and leaves the published package and the deployed docs
+  alone.
+
 - **The shared stylesheet is the union over every rendered card, not the frozen ones.** A block
   qualifies for it on carrying a scope attribute anywhere in it, and some carry document-level rules
   alongside — `:root` custom properties, keyframes, `::ng-deep` output. Taking the union from the
