@@ -1119,6 +1119,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
+      },
+      {
+        "name": "tooltip",
+        "kind": "input",
+        "type": "Exclude<ChartTooltipTrigger, 'axis'>",
+        "union": [
+          "item",
+          "none"
+        ],
+        "default": "'item'",
+        "required": false,
+        "description": "Whether a hovered or focused row opens a tooltip. `'axis'` is not offered — a bar chart's marks ARE its categories, so an axis tooltip would repeat the item one."
       }
     ],
     "outputs": [
@@ -1635,6 +1647,37 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       }
     ]
   },
+  "chart-tooltip": {
+    "key": "chart-tooltip",
+    "selector": "ds-chart-tooltip-panel",
+    "isElement": true,
+    "className": "ChartTooltipPanelComponent",
+    "status": "stable",
+    "importName": "ChartTooltipPanelComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "context",
+        "kind": "input-required",
+        "type": "ChartTooltipContext",
+        "union": null,
+        "default": null,
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "template",
+        "kind": "input",
+        "type": "TemplateRef<{\n    $implicit: ChartTooltipContext;\n  }> | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": ""
+      }
+    ],
+    "outputs": []
+  },
   "checkbox": {
     "key": "checkbox",
     "selector": "ds-checkbox",
@@ -2086,6 +2129,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
+      },
+      {
+        "name": "tooltip",
+        "kind": "input",
+        "type": "Exclude<ChartTooltipTrigger, 'axis'>",
+        "union": [
+          "item",
+          "none"
+        ],
+        "default": "'item'",
+        "required": false,
+        "description": "Whether a hovered or focused column opens a tooltip. `'axis'` is not offered — a column chart's marks ARE its categories, so an axis tooltip would repeat the item one."
       }
     ],
     "outputs": [
@@ -2669,6 +2724,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
+      },
+      {
+        "name": "tooltip",
+        "kind": "input",
+        "type": "Exclude<ChartTooltipTrigger, 'axis'>",
+        "union": [
+          "item",
+          "none"
+        ],
+        "default": "'item'",
+        "required": false,
+        "description": "Whether a hovered or focused slice opens a tooltip. `'axis'` is not offered — a ring has no axis to group readings under."
       }
     ],
     "outputs": [
@@ -3196,6 +3263,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
+      },
+      {
+        "name": "tooltip",
+        "kind": "input",
+        "type": "Exclude<ChartTooltipTrigger, 'axis'>",
+        "union": [
+          "item",
+          "none"
+        ],
+        "default": "'item'",
+        "required": false,
+        "description": "Whether a hovered or focused stage opens a tooltip. `'axis'` is not offered — a funnel's stages are its categories, so an axis tooltip would repeat the item one."
       }
     ],
     "outputs": [
@@ -4043,6 +4122,64 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "defaultValueFormat",
         "required": false,
         "description": ""
+      },
+      {
+        "name": "hiddenSeries",
+        "kind": "model",
+        "type": "readonly string[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Ids of the series the legend has switched off. Two-way, so a page can drive it from a URL parameter and read back what the reader chose."
+      },
+      {
+        "name": "rescaleOnHide",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether hiding a series re-scales the value axis to what is left. Default `false`: a silent rescale turns a period-over-period comparison into a different claim, and a comparison dashboard is the common case."
+      },
+      {
+        "name": "legendFilters",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the legend switches series off. Off leaves it a plain key."
+      },
+      {
+        "name": "noVisibleSeriesText",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "'All series are hidden'",
+        "required": false,
+        "description": "Shown in place of the plot once the legend has switched every series off. Without it the reader is left with an empty grid and nothing saying why."
+      },
+      {
+        "name": "highlightedSeries",
+        "kind": "model",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "tooltip",
+        "kind": "input",
+        "type": "ChartTooltipTrigger",
+        "union": [
+          "item",
+          "axis",
+          "none"
+        ],
+        "default": "'axis'",
+        "required": false,
+        "description": "Whether the plot opens a tooltip, and for what. `'axis'` names every series at the category under the pointer, which is the reading a multi-series line is compared on; `'item'` names only the marker itself."
       }
     ],
     "outputs": [

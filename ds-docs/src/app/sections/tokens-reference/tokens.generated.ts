@@ -2982,6 +2982,23 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
+    "component": "Chart Tooltip",
+    "selector": ".chart-tooltip",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-radius-control",
+        "value": "—",
+        "notes": "Radius role for controls and field frames — buttons, inputs, selects, both picker triggers, tooltips. Defaults to --radius-md."
+      },
+      {
+        "name": "--ds-elevation-overlay",
+        "value": "—",
+        "notes": "Elevation role for a panel anchored to a trigger — popovers, menus, dropdowns, tooltips. Defaults to --shadow-2."
+      }
+    ]
+  },
+  {
     "component": "Checkbox",
     "selector": ".checkbox",
     "description": "",
@@ -5529,11 +5546,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Brand mark label."
       },
       {
-        "name": "--ds-radius-control",
-        "value": "—",
-        "notes": "Radius role for controls and field frames — buttons, inputs, selects, both picker triggers, tooltips. Defaults to --radius-md."
-      },
-      {
         "name": "--ds-sidenav-brand-max-height",
         "value": "none",
         "notes": "Height cap for a logo projected into the [brand] slot; `none` by default, so an oversized logo sets the brand row's height until you set this. Height only — an image with no CSS width keeps its ratio on its own."
@@ -7306,11 +7318,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "selector": ".tokens",
     "description": "",
     "tokens": [
-      {
-        "name": "--ds-elevation-overlay",
-        "value": "—",
-        "notes": "Elevation role for a panel anchored to a trigger — popovers, menus, dropdowns, tooltips. Defaults to --shadow-2."
-      },
       {
         "name": "--ds-elevation-modal",
         "value": "—",
