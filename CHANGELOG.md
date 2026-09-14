@@ -42,7 +42,7 @@
   `ds-button` the `active` class is painted by nothing at all. If a test asserted
   `aria-current="page"` on a section link, it now reads `true`.
 
-- **Thirty-three chart palette tokens are renamed, and an override written against an old name
+- **Thirty-one chart palette tokens are renamed, and an override written against an old name
   stops applying in silence.** A custom property that no longer resolves is invalid at
   computed-value time, so the whole declaration around it is dropped: `background:
   var(--chart-cat-3)` paints nothing, a `:root` override of `--chart-cat-3` simply never reaches
@@ -55,20 +55,22 @@
   - Divergent ramp — `--chart-div--3` … `--chart-div-3` become `--chart-divergent--3` …
     `--chart-divergent-3`, signed suffix and all.
   - Colours taking the `-color` the rest of the library carries — `--chart-axis-line`,
-    `--chart-axis-label`, `--chart-axis-title`, `--chart-grid-line`, `--chart-grid-line-strong`,
-    `--chart-cursor-line` and `--chart-tooltip-border`.
+    `--chart-axis-label`, `--chart-grid-line`, `--chart-cursor-line` and `--chart-tooltip-border`.
   - Abbreviations spelled out — `--chart-axis-fs` becomes `--chart-axis-font-size`,
     `--chart-line-w` becomes `--chart-line-width`, `--chart-line-w-bold` becomes
     `--chart-line-width-bold`, `--chart-dot-r` becomes `--chart-dot-radius`, and
     `--chart-dot-r-active` becomes `--chart-dot-radius-active`.
 
-  Rename `--chart-grid-line-strong` before `--chart-grid-line`: the short name is a prefix of the
-  long one, and a prefix-blind sweep turns the emphasised gridline into a name that does not exist.
+  Three more are REMOVED rather than renamed, because no chart draws what they named and the
+  `--ds-chart-*` token each fed reached no rule: `--chart-axis-title`, `--chart-grid-line-strong`
+  and `--chart-tick-size`. Handle `--chart-grid-line-strong` before `--chart-grid-line`: the short
+  name is a prefix of the long one, and a prefix-blind sweep renames this one instead of deleting
+  it.
 
   The sequential and divergent VALUES are unchanged in both themes; the eight categorical values are
   not — they are retuned in this same release, so a rename there lands a different colour rather than
-  the same one under a new name. `--chart-bar-gap`, `--chart-tick-size`, `--chart-hover-bg-color`,
-  `--chart-tooltip-bg-color` and `--chart-tooltip-text-color` keep their names. Recolouring a series
+  the same one under a new name. `--chart-bar-gap`, `--chart-hover-bg-color`, `--chart-tooltip-bg-color` and
+  `--chart-tooltip-text-color` keep their names. Recolouring a series
   is better done through the `--ds-chart-` layer below than through the palette.
 
 - **`DsFieldGroupContext` carries two more members, and a class that IMPLEMENTS it no longer

@@ -256,15 +256,16 @@
       "verify": "No stylesheet names a `--chart-div-` token, and a signed scale still shows its negative steps in red and its positive steps in green."
     },
     {
-      "id": "chart-grid-line-strong-gains-color",
-      "kind": "token-rename",
+      "id": "chart-strong-gridline-token-removed",
+      "kind": "removed-api",
       "surface": "style",
       "old": "--chart-grid-line-strong",
-      "new": "--chart-grid-line-strong-color",
-      "action": "Rename `--chart-grid-line-strong` to `--chart-grid-line-strong-color`, before renaming the shorter `--chart-grid-line`.",
-      "appliesWhen": "Any stylesheet of yours that reads or re-declares the emphasised gridline colour. The plain `--chart-grid-line` is a separate token with its own entry.",
-      "pitfall": "`--chart-grid-line` is a prefix of this name, so a sweep that renames the shorter one first leaves `--chart-grid-line-color-strong` — a name nothing declares. The emphasised gridline then disappears while the plain one looks right, which reads as a styling choice.",
-      "note": "It is a colour, and every other colour token in the library already carries `-color`. The value is unchanged.",
+      "new": null,
+      "action": "Delete the declaration. No chart draws an emphasised gridline, so the token fed nothing.",
+      "appliesWhen": "Any stylesheet of yours that declares `--chart-grid-line-strong`. The plain `--chart-grid-line` is a separate token, is renamed rather than removed, and has its own entry.",
+      "pitfall": "`--chart-grid-line` is a prefix of this name, so a sweep that renames the shorter one first rewrites this one into `--chart-grid-line-color-strong` instead of deleting it, and leaves a declaration nothing reads.",
+      "restore": null,
+      "note": "The token fed `--ds-chart-grid-line-strong-color`, which reached no rule, so setting either already painted nothing.",
       "searchHints": [
         "--chart-grid-line-strong",
         "grid-line-strong"
@@ -272,18 +273,18 @@
       "detect": [
         "--chart-grid-line-strong"
       ],
-      "verify": "No stylesheet names `--chart-grid-line-strong` without the `-color` suffix, and the emphasised gridline still paints."
+      "verify": "No stylesheet names `--chart-grid-line-strong`."
     },
     {
       "id": "chart-color-tokens-gain-color-suffix",
       "kind": "token-rename",
       "surface": "style",
-      "old": "--chart-axis-line, --chart-axis-label, --chart-axis-title, --chart-grid-line, --chart-cursor-line, --chart-tooltip-border",
-      "new": "--chart-axis-line-color, --chart-axis-label-color, --chart-axis-title-color, --chart-grid-line-color, --chart-cursor-line-color, --chart-tooltip-border-color",
-      "action": "Add `-color` to the end of all six names, after renaming `--chart-grid-line-strong`.",
-      "appliesWhen": "Any stylesheet of yours that reads or re-declares one of the six, including a theme block. `--chart-hover-bg-color`, `--chart-tooltip-bg-color` and `--chart-tooltip-text-color` already carried the suffix and keep their names.",
+      "old": "--chart-axis-line, --chart-axis-label, --chart-grid-line, --chart-cursor-line, --chart-tooltip-border",
+      "new": "--chart-axis-line-color, --chart-axis-label-color, --chart-grid-line-color, --chart-cursor-line-color, --chart-tooltip-border-color",
+      "action": "Add `-color` to the end of all five names, after renaming `--chart-grid-line-strong`.",
+      "appliesWhen": "Any stylesheet of yours that reads or re-declares one of the five, including a theme block. `--chart-hover-bg-color`, `--chart-tooltip-bg-color` and `--chart-tooltip-text-color` already carried the suffix and keep their names; `--chart-axis-title` is removed rather than renamed and has its own entry.",
       "pitfall": "The old name is inert, not invalid: a gridline or an axis rule simply stops being painted, and an axis with no line reads as a deliberately minimal chart rather than as a broken override.",
-      "note": "`--chart-grid-line` is a prefix of `--chart-grid-line-strong`, so rename the longer identifier first — it has an entry of its own. The six values are unchanged in both themes.",
+      "note": "`--chart-grid-line` is a prefix of `--chart-grid-line-strong`, so handle the longer identifier first — it has an entry of its own. The five values are unchanged in both themes.",
       "searchHints": [
         "--chart-axis-",
         "--chart-grid-line",
@@ -293,12 +294,30 @@
       "detect": [
         "--chart-axis-line",
         "--chart-axis-label",
-        "--chart-axis-title",
         "--chart-grid-line",
         "--chart-cursor-line",
         "--chart-tooltip-border"
       ],
       "verify": "Every chart colour token in your styles ends in `-color`, and axis lines, gridlines, the crosshair and the tooltip border all still paint."
+    },
+    {
+      "id": "chart-axis-title-token-removed",
+      "kind": "removed-api",
+      "surface": "style",
+      "old": "--chart-axis-title",
+      "new": null,
+      "action": "Delete the declaration. No chart draws an axis title, so the token fed nothing.",
+      "appliesWhen": "Any stylesheet of yours that declares `--chart-axis-title`.",
+      "pitfall": "It is a prefix of nothing and nothing is a prefix of it, so a sweep is safe — but the neighbouring `--chart-axis-line` and `--chart-axis-label` are RENAMED rather than removed, and deleting those loses the axis.",
+      "restore": null,
+      "note": "The token fed `--ds-chart-axis-title-color`, which reached no rule, so setting either already painted nothing.",
+      "searchHints": [
+        "--chart-axis-title"
+      ],
+      "detect": [
+        "--chart-axis-title"
+      ],
+      "verify": "No stylesheet names `--chart-axis-title`."
     },
     {
       "id": "chart-line-width-bold-token-renamed",
