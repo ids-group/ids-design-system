@@ -1,96 +1,16 @@
-<!-- @dsCard group="data-display" viewport="1200x644" name="Timeline - activity feed" subtitle="Each step carries a heading, time, an optional icon, and a tone that maps to semantic colour tokens." --><!doctype html>
+<!-- @dsCard group="data-display" viewport="1200x574" name="Timeline - activity feed" subtitle="Each step carries a heading, time, an optional icon, and a tone that maps to semantic colour tokens." --><!DOCTYPE html>
 <html data-theme="light"><head><meta charset="utf-8">
   <title>Timeline</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>
-    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-    .ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
-    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
-  </style>
-</head><body>
-  <div class="ds-page"><ds-docs-components-timeline></ds-docs-components-timeline></div>
-  <script>window.__dsSectionsOnly = true</script>
-  <script src="../../../_ds_bundle.js"></script>
-  <script>
-    (function () {
-      var OWNS = "";
-      var INDEX = 0;
-      var KEY = "timeline";
-      var TABLE = true;
-      var HEAD = null;
-      var BLOCK = "activity feed";
-      var REACT = "Timeline";
-      var WHOLE = OWNS === null;
-      var LEDE = WHOLE || (OWNS === '' && INDEX <= 0);
-      var KEEP = LEDE ? 'h2, p.lede' : 'h2';
-      var DROP_ALWAYS = '.eyebrow' + (LEDE ? '' : ', p.lede');
-      var API = '[data-key]';
-      var host = document.querySelector("ds-docs-components-timeline");
-      var start = Date.now();
-      (function slice() {
-        var section = host && host.querySelector('.section');
-        if (!section) {
-          if (Date.now() - start < 8000) setTimeout(slice, 50);
-          return;
-        }
-        var owner = '';
-        var doomed = [];
-        var apis = [];
-        var ordinal = -1;
-        var heading = null;
-        for (var node = section.firstElementChild; node; node = node.nextElementSibling) {
-          if (node.matches(DROP_ALWAYS)) { doomed.push(node); continue; }
-          if (WHOLE) continue;
-          if (node.matches(KEEP)) continue;
-          if (node.matches(API)) { apis.push(node); continue; }
-          var marked = node.getAttribute('data-for');
-          var starts = marked !== null || node.matches('h3.block-title');
-          if (marked !== null) owner = marked;
-          else if (node.matches('h3.block-title')) owner = '';
-          if (starts && owner === OWNS) ordinal += 1;
-          if (owner !== OWNS || ordinal !== INDEX) doomed.push(node);
-          else if (starts && node.matches('h3.block-title')) heading = node;
-        }
-        var mine = KEY === '' ? [] : apis.filter(function (n) { return n.getAttribute('data-key') === KEY; });
-        var keepApi = KEY === '' ? [] : (mine.length ? mine : apis.slice(0, 1));
-        if (!WHOLE) {
-          for (var a = 0; a < apis.length; a++) {
-            if (keepApi.indexOf(apis[a]) < 0) { doomed.push(apis[a]); continue; }
-            if (TABLE) continue;
-            if (apis[a].matches('docs-api-table')) { doomed.push(apis[a]); continue; }
-            var nested = apis[a].querySelector('docs-api-table');
-            if (nested) doomed.push(nested);
-          }
-        }
-        var title = section.querySelector('h2');
-        var label = null;
-        for (var c = 0; title && c < title.childNodes.length; c++) {
-          if (title.childNodes[c].nodeType === 3) { label = title.childNodes[c]; break; }
-        }
-        if (title && label === null) {
-          label = document.createTextNode('');
-          title.insertBefore(label, title.firstChild);
-        }
-        if (label) {
-          var head = HEAD || label.nodeValue.trim();
-          label.nodeValue = BLOCK ? head + ' - ' + BLOCK : head;
-          if (BLOCK && heading) doomed.push(heading);
-        }
-        for (var i = 0; i < doomed.length; i++) doomed[i].remove();
-        var wrapper = KEY === '' ? null : section.querySelector('.api-sub[data-key="' + KEY + '"]');
-        var chip = wrapper ? wrapper.querySelector('docs-component-meta') : null;
-        if (chip && title) title.parentNode.insertBefore(chip, title.nextSibling);
-        if (wrapper && wrapper.firstElementChild === null) wrapper.remove();
-        var named = section.querySelector('docs-component-meta .chip .tag');
-        if (REACT && named) named.textContent = '<' + REACT + ' />';
-        var kept = 0;
-        for (var k = section.firstElementChild; k; k = k.nextElementSibling) {
-          if (!k.matches(KEEP) && !k.matches(API) && !k.matches('docs-component-meta')) kept += 1;
-        }
-        document.documentElement.setAttribute('data-ds-sliced', String(doomed.length));
-        document.documentElement.setAttribute('data-ds-kept', String(kept));
-      })();
-    })();
-  </script>
+  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
+<link rel="stylesheet" href="../../../_ds_cards.css"><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}</style></head><body>
+  <div class="ds-page"><ds-docs-components-timeline _nghost-c32=""><docs-section _ngcontent-c32="" anchor="timeline" eyebrow="Components" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-timeline" data-anchor="timeline"><h2 _ngcontent-c1="" class="t-h2">Timeline - activity feed</h2><p _ngcontent-c1="" class="lede t-m"><span _ngcontent-c32="" lede=""> A vertical activity feed that sequences events with headings, timestamps, icons, and semantic tone colours. </span></p><p _ngcontent-c32="" class="block-desc t-s"> Each step carries a <code _ngcontent-c32="">heading</code>, <code _ngcontent-c32="">time</code>, an optional <code _ngcontent-c32=""> icon </code>, and a <code _ngcontent-c32="">tone</code> that maps to semantic colour tokens. </p><div _ngcontent-c32="" class="demo-panel"><ds-timeline _ngcontent-c32="" role="list" _nghost-c33=""><ds-timeline-item _ngcontent-c32="" role="listitem" heading="Order confirmed" time="Today · 09:41" icon="check" tone="primary" _nghost-c34="" data-tone="primary"><div _ngcontent-c34="" class="node-col"><span _ngcontent-c34="" class="node"><ds-icon _ngcontent-c34=""><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 15px;" width="15" height="15" stroke-width="1.75" aria-hidden="true"><path d="m4 12 5 5L20 6"></path></svg></ds-icon></span><span _ngcontent-c34="" class="spine"></span></div><div _ngcontent-c34="" class="content"><span _ngcontent-c34="" class="heading"> Order confirmed </span><span _ngcontent-c34="" class="time"> Today · 09:41 </span></div></ds-timeline-item><ds-timeline-item _ngcontent-c32="" role="listitem" heading="Packed &amp; ready" time="Today · 11:20" icon="folder" tone="success" _nghost-c34="" data-tone="success"><div _ngcontent-c34="" class="node-col"><span _ngcontent-c34="" class="node"><ds-icon _ngcontent-c34=""><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 15px;" width="15" height="15" stroke-width="1.75" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg></ds-icon></span><span _ngcontent-c34="" class="spine"></span></div><div _ngcontent-c34="" class="content"><span _ngcontent-c34="" class="heading"> Packed &amp; ready </span> 3 items · Warehouse B <span _ngcontent-c34="" class="time"> Today · 11:20 </span></div></ds-timeline-item><ds-timeline-item _ngcontent-c32="" role="listitem" heading="Out for delivery" time="Pending" icon="clock" tone="muted" _nghost-c34="" data-tone="muted"><div _ngcontent-c34="" class="node-col"><span _ngcontent-c34="" class="node"><ds-icon _ngcontent-c34=""><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 15px;" width="15" height="15" stroke-width="1.75" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg></ds-icon></span><span _ngcontent-c34="" class="spine"></span></div><div _ngcontent-c34="" class="content"><span _ngcontent-c34="" class="heading"> Out for delivery </span><span _ngcontent-c34="" class="time"> Pending </span></div></ds-timeline-item><ds-timeline-item _ngcontent-c32="" role="listitem" heading="Delivered" time="Estimated: Tomorrow" icon="flag" tone="default" _nghost-c34="" data-tone="default"><div _ngcontent-c34="" class="node-col"><span _ngcontent-c34="" class="node"><ds-icon _ngcontent-c34=""><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 15px;" width="15" height="15" stroke-width="1.75" aria-hidden="true"><path d="M5 21V5a14 14 0 0 1 14 0v9a14 14 0 0 1-14 0z"></path></svg></ds-icon></span><span _ngcontent-c34="" class="spine"></span></div><div _ngcontent-c34="" class="content"><span _ngcontent-c34="" class="heading"> Delivered </span><span _ngcontent-c34="" class="time"> Estimated: Tomorrow </span></div></ds-timeline-item></ds-timeline></div></section></docs-section></ds-docs-components-timeline></div>
+  
+  
+  
+
+
 </body></html>

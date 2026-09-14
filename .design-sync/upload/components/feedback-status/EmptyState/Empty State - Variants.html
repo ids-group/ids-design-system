@@ -1,96 +1,16 @@
-<!-- @dsCard group="feedback-status" viewport="1200x686" name="Empty state - variants" subtitle="Five canonical variants." --><!doctype html>
+<!-- @dsCard group="feedback-status" viewport="1200x554" name="Empty state - variants" subtitle="Five canonical variants." --><!DOCTYPE html>
 <html data-theme="light"><head><meta charset="utf-8">
   <title>EmptyState</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>
-    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-    .ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
-    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
-  </style>
-</head><body>
-  <div class="ds-page"><ds-docs-components-empty-state></ds-docs-components-empty-state></div>
-  <script>window.__dsSectionsOnly = true</script>
-  <script src="../../../_ds_bundle.js"></script>
-  <script>
-    (function () {
-      var OWNS = "";
-      var INDEX = 0;
-      var KEY = "empty-state";
-      var TABLE = true;
-      var HEAD = null;
-      var BLOCK = "variants";
-      var REACT = "EmptyState";
-      var WHOLE = OWNS === null;
-      var LEDE = WHOLE || (OWNS === '' && INDEX <= 0);
-      var KEEP = LEDE ? 'h2, p.lede' : 'h2';
-      var DROP_ALWAYS = '.eyebrow' + (LEDE ? '' : ', p.lede');
-      var API = '[data-key]';
-      var host = document.querySelector("ds-docs-components-empty-state");
-      var start = Date.now();
-      (function slice() {
-        var section = host && host.querySelector('.section');
-        if (!section) {
-          if (Date.now() - start < 8000) setTimeout(slice, 50);
-          return;
-        }
-        var owner = '';
-        var doomed = [];
-        var apis = [];
-        var ordinal = -1;
-        var heading = null;
-        for (var node = section.firstElementChild; node; node = node.nextElementSibling) {
-          if (node.matches(DROP_ALWAYS)) { doomed.push(node); continue; }
-          if (WHOLE) continue;
-          if (node.matches(KEEP)) continue;
-          if (node.matches(API)) { apis.push(node); continue; }
-          var marked = node.getAttribute('data-for');
-          var starts = marked !== null || node.matches('h3.block-title');
-          if (marked !== null) owner = marked;
-          else if (node.matches('h3.block-title')) owner = '';
-          if (starts && owner === OWNS) ordinal += 1;
-          if (owner !== OWNS || ordinal !== INDEX) doomed.push(node);
-          else if (starts && node.matches('h3.block-title')) heading = node;
-        }
-        var mine = KEY === '' ? [] : apis.filter(function (n) { return n.getAttribute('data-key') === KEY; });
-        var keepApi = KEY === '' ? [] : (mine.length ? mine : apis.slice(0, 1));
-        if (!WHOLE) {
-          for (var a = 0; a < apis.length; a++) {
-            if (keepApi.indexOf(apis[a]) < 0) { doomed.push(apis[a]); continue; }
-            if (TABLE) continue;
-            if (apis[a].matches('docs-api-table')) { doomed.push(apis[a]); continue; }
-            var nested = apis[a].querySelector('docs-api-table');
-            if (nested) doomed.push(nested);
-          }
-        }
-        var title = section.querySelector('h2');
-        var label = null;
-        for (var c = 0; title && c < title.childNodes.length; c++) {
-          if (title.childNodes[c].nodeType === 3) { label = title.childNodes[c]; break; }
-        }
-        if (title && label === null) {
-          label = document.createTextNode('');
-          title.insertBefore(label, title.firstChild);
-        }
-        if (label) {
-          var head = HEAD || label.nodeValue.trim();
-          label.nodeValue = BLOCK ? head + ' - ' + BLOCK : head;
-          if (BLOCK && heading) doomed.push(heading);
-        }
-        for (var i = 0; i < doomed.length; i++) doomed[i].remove();
-        var wrapper = KEY === '' ? null : section.querySelector('.api-sub[data-key="' + KEY + '"]');
-        var chip = wrapper ? wrapper.querySelector('docs-component-meta') : null;
-        if (chip && title) title.parentNode.insertBefore(chip, title.nextSibling);
-        if (wrapper && wrapper.firstElementChild === null) wrapper.remove();
-        var named = section.querySelector('docs-component-meta .chip .tag');
-        if (REACT && named) named.textContent = '<' + REACT + ' />';
-        var kept = 0;
-        for (var k = section.firstElementChild; k; k = k.nextElementSibling) {
-          if (!k.matches(KEEP) && !k.matches(API) && !k.matches('docs-component-meta')) kept += 1;
-        }
-        document.documentElement.setAttribute('data-ds-sliced', String(doomed.length));
-        document.documentElement.setAttribute('data-ds-kept', String(kept));
-      })();
-    })();
-  </script>
+  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
+<link rel="stylesheet" href="../../../_ds_cards.css"><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}</style></head><body>
+  <div class="ds-page"><ds-docs-components-empty-state _nghost-c3b=""><docs-section _ngcontent-c3b="" anchor="empty-state" eyebrow="Components" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-empty-state" data-anchor="empty-state"><h2 _ngcontent-c1="" class="t-h2">Empty state - variants</h2><p _ngcontent-c1="" class="lede t-m"><span _ngcontent-c3b="" lede=""> The base component for any "nothing-to-show" state. One icon, a title that names what is missing, one sentence of body, and at most two actions. For richer scenarios (loading overlay, error retry, permission denied) see <a _ngcontent-c3b="" routerlink="/patterns/pattern-empty-state" class="link" href="http://127.0.0.1:4579/patterns/pattern-empty-state"> Patterns › Empty-state variants </a>. </span></p><p _ngcontent-c3b="" class="block-desc t-s"> Five canonical variants. Each ships a distinct icon-tile tint. </p><div _ngcontent-c3b="" class="variants-grid"><div _ngcontent-c3b="" class="variant-card"><ds-empty-state _ngcontent-c3b="" variant="none" body="The default — section is empty." _nghost-c2v=""><ds-loading-overlay _ngcontent-c2v="" spinnersize="lg" _nghost-c2x=""><div _ngcontent-c2x="" class="content"><span _ngcontent-c2v="" class="empty-state"><span _ngcontent-c2v="" class="icon-tile"><ds-icon _ngcontent-c2v=""><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 28px;" width="28" height="28" stroke-width="1.75" aria-hidden="true"><path d="M3 7v10l9 4 9-4V7l-9-4z"></path><path d="m3 7 9 5 9-5M12 12v9"></path></svg></ds-icon></span><span _ngcontent-c2v="" class="title"> No data </span><span _ngcontent-c2v="" class="body"> The default — section is empty. </span><span _ngcontent-c2v="" class="cta"></span></span></div></ds-loading-overlay></ds-empty-state></div><div _ngcontent-c3b="" class="variant-card"><ds-empty-state _ngcontent-c3b="" variant="loading" body="Data refetching." _nghost-c2v=""><ds-loading-overlay _ngcontent-c2v="" spinnersize="lg" _nghost-c2x="" aria-busy="true"><div _ngcontent-c2x="" class="content" inert=""><span _ngcontent-c2v="" class="empty-state loading"><span _ngcontent-c2v="" class="icon-tile"><ds-icon _ngcontent-c2v=""><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 28px;" width="28" height="28" stroke-width="1.75" aria-hidden="true"><path d="M3 7v10l9 4 9-4V7l-9-4z"></path><path d="m3 7 9 5 9-5M12 12v9"></path></svg></ds-icon></span><span _ngcontent-c2v="" class="title"> Loading </span><span _ngcontent-c2v="" class="body"> Data refetching. </span><span _ngcontent-c2v="" class="cta"></span></span></div><div _ngcontent-c2x="" class="scrim blur" style="top: 0px;"><ds-spinner _ngcontent-c2x="" role="status" aria-label="Loading" _nghost-c11="" class="lg"></ds-spinner></div></ds-loading-overlay></ds-empty-state></div><div _ngcontent-c3b="" class="variant-card"><ds-empty-state _ngcontent-c3b="" variant="error" body="Something went wrong." _nghost-c2v=""><ds-loading-overlay _ngcontent-c2v="" spinnersize="lg" _nghost-c2x=""><div _ngcontent-c2x="" class="content"><span _ngcontent-c2v="" class="empty-state error"><span _ngcontent-c2v="" class="icon-tile"><ds-icon _ngcontent-c2v=""><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 28px;" width="28" height="28" stroke-width="1.75" aria-hidden="true"><path d="M12 3 2 21h20L12 3z"></path><path d="M12 10v4M12 18v.01"></path></svg></ds-icon></span><span _ngcontent-c2v="" class="title"> Error </span><span _ngcontent-c2v="" class="body"> Something went wrong. </span><span _ngcontent-c2v="" class="cta"></span></span></div></ds-loading-overlay></ds-empty-state></div><div _ngcontent-c3b="" class="variant-card"><ds-empty-state _ngcontent-c3b="" variant="locked" body="Permission denied." _nghost-c2v=""><ds-loading-overlay _ngcontent-c2v="" spinnersize="lg" _nghost-c2x=""><div _ngcontent-c2x="" class="content"><span _ngcontent-c2v="" class="empty-state locked"><span _ngcontent-c2v="" class="icon-tile"><ds-icon _ngcontent-c2v=""><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 28px;" width="28" height="28" stroke-width="1.75" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg></ds-icon></span><span _ngcontent-c2v="" class="title"> No access </span><span _ngcontent-c2v="" class="body"> Permission denied. </span><span _ngcontent-c2v="" class="cta"></span></span></div></ds-loading-overlay></ds-empty-state></div></div></section></docs-section></ds-docs-components-empty-state></div>
+  
+  
+  
+
+
 </body></html>
