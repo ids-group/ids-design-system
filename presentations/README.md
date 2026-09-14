@@ -18,6 +18,15 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 | 5 | `5-select-native-multi` | the cheapest to close: "keep parked" is a complete answer, and it is the answer already given — it stays only because closing it was declined |
 | 6 | `6-warning-text-colour` | one colour on one tint, each candidate rendered in itself. It ends "name a number: 1, 2, 3 or 4" |
 | 7 | `7-docs-chapter-nav` | where the chapter list lives and what makes a sub-item a sub-item. Seven variants rejected, four left, and they are mutually exclusive: 11, 12, 13 and 14 each answer "where do 38 rows live" differently |
+| 8 | `8-chart-dual-axis` | ANSWERED — all four `yAxisMode` values stay, documented; the deck is the artefact the docs card carries |
+| 9 | `9-chart-palette-v2` | whether the eight categorical hues are re-derived against the validator, which costs a slot |
+| 10 | `10-chart-phase-2-marks` | which marks phase 2 adds — area, waterfall, heatmap — and the ramp measurement behind them |
+| 11 | `11-chart-composition-model` | projected children versus a series array; everything downstream of phase 2 reads this |
+| 12 | `12-chart-axis-mode-names` | three candidate name sets for `yAxisMode`, which is already public API |
+| 13 | `13-chart-area-mode-or-component` | area as a mode of the line or a component of its own, with the input count measured |
+| 14 | `14-chart-rescale-on-hide` | ANSWERED — the axis holds still; `rescaleOnHide` opts into the other reading |
+| 15 | `15-chart-sparkline-preset` | `variant="spark"` or a separate `ds-sparkline` |
+| 16 | `16-chart-scatter-phase` | scatter in phase 2 or phase 3, and the decimation it drags in |
 
 **Ranks 1-3 are the two biggest lanes** — the colour engine, then the interaction formula that reads
 its ramp. Five closed on 2026-09-12: `field-group-invalid-voice` (the group takes `error` and a message row, and every segment announces it), `button-destination-api` (the modifiers ship as flat inputs, `routerLink` takes a `UrlTree`, and an exact match announces `page` where a prefix announces `true`), `opt-in-seam` (the table's features became directives and the
