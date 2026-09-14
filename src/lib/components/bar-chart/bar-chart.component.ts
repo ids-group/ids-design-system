@@ -15,7 +15,7 @@ import {
   chartColors,
   describeSeries,
   formatPercent,
-  describeStanding,
+  describeShare,
   focusMark,
   formatValue,
   nextRovingIndex,
@@ -188,7 +188,7 @@ export class BarChartComponent {
             value: entry.row.value,
             formatted: entry.formattedValue,
             color: entry.color,
-            detail: describeStanding(
+            detail: describeShare(
               this.data().map((row) => row.value),
               this.activeMark.index(),
             ),

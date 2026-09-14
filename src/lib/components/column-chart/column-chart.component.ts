@@ -18,7 +18,7 @@ import {
   formatValue,
   niceMax,
   tickStep,
-  describeStanding,
+  describeShare,
   focusMark,
   nextRovingIndex,
   staggerDelay,
@@ -203,7 +203,7 @@ export class ColumnChartComponent {
             value: entry.point.value,
             formatted: entry.formattedValue,
             color: entry.color,
-            detail: describeStanding(
+            detail: describeShare(
               this.data().map((point) => point.value),
               this.activeMark.index(),
             ),
