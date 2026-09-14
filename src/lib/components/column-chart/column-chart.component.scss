@@ -91,30 +91,23 @@ figcaption {
 }
 
 // The cell is layout, not a target: its own box is the whole category slot, and answering the
-// pointer across all of it puts the hover metres from the column it is about. The two children
-// below take the pointer back — the column's own width plus one gap, and the label under it.
+// pointer across all of it puts the hover metres from the column it is about. The target below
+// takes the pointer back over a column-wide strip, and the label takes whatever of itself sticks
+// out past that strip.
+//
+// The strip spans the cell's FULL height — plot, axis gap and label — rather than the plot alone.
+// Split across two boxes it left the row gap answering nothing, so a pointer travelling from the
+// label to the column crossed a band where the tooltip closed and reopened.
 .column {
+  position: relative;
   display: grid;
   row-gap: var(--space-2);
   pointer-events: none;
-}
-
-
-
-
-.plot-cell {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  block-size: var(--_column-chart-plot-height);
 
   &::after {
     content: "";
     position: absolute;
-    inset-block: 0;
-    inset-inline: 0;
+    inset: 0;
     margin-inline: auto;
     inline-size: min(
       100%,
@@ -124,6 +117,14 @@ figcaption {
     );
     pointer-events: auto;
   }
+}
+
+.plot-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  block-size: var(--_column-chart-plot-height);
 }
 
 .value {
