@@ -478,7 +478,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'ellipsis'",
         "required": false,
-        "description": "What a settled single value does when it is wider than the trigger. Defaults to `ellipsis`; `wrap` restores the pre-0.12 behaviour, where the value broke onto a second line and pushed the chevron onto a third. Multi mode is unaffected — its chips have their own measured cap."
+        "description": "What a settled single value does when it is wider than the trigger. Defaults to `ellipsis`; `wrap` lets the value break onto a second line and pushes the chevron down. Multi mode is unaffected — its chips have their own measured cap."
       },
       {
         "name": "placeholder",
@@ -559,7 +559,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "The contract spelling of `readOnly`, a second input because signal forms binds by NAME — a `readonly()` rule was reaching nothing before this existed."
+        "description": "The contract spelling of `readOnly`: signal forms binds by NAME, so a `readonly()` rule reaches nothing without it."
       },
       {
         "name": "clearable",
@@ -577,7 +577,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Placeholder while the field is being typed in, when a value is already settled — `placeholder` is the empty-field caption and cannot be both. Empty (the default) keeps `placeholder` doing both jobs, as before."
+        "description": "Placeholder while the field is being typed in, when a value is already settled — `placeholder` is the empty-field caption and cannot be both. Empty (the default) keeps `placeholder` doing both jobs."
       },
       {
         "name": "filterWith",
@@ -1085,6 +1085,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": ""
       },
       {
+        "name": "error",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "errorText",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "'Could not load the data'",
+        "required": false,
+        "description": ""
+      },
+      {
         "name": "valueFormat",
         "kind": "input",
         "type": "(value: number) => string",
@@ -1394,7 +1412,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "{ exact: false }",
         "required": false,
-        "description": "How `routerLinkActive` decides the `active` CLASS — prefix by default, so a section link stays lit inside its own pages. It does NOT decide `aria-current`, which is exact by construction; see `ariaCurrent`."
+        "description": "How `routerLinkActive` decides the `active` CLASS — prefix by default, so a section link stays lit inside its own pages. It also bounds the announcement, because the same directive writes it: narrowed to `{ exact: true }`, a prefix match is no longer active and the link announces nothing rather than `true`. Pass `ariaCurrent` alongside to keep one."
       },
       {
         "name": "ariaCurrent",
@@ -2034,6 +2052,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": ""
       },
       {
+        "name": "error",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "errorText",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "'Could not load the data'",
+        "required": false,
+        "description": ""
+      },
+      {
         "name": "valueFormat",
         "kind": "input",
         "type": "(value: number) => string",
@@ -2599,6 +2635,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": ""
       },
       {
+        "name": "error",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "errorText",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "'Could not load the data'",
+        "required": false,
+        "description": ""
+      },
+      {
         "name": "valueFormat",
         "kind": "input",
         "type": "(value: number) => string",
@@ -3108,6 +3162,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": ""
       },
       {
+        "name": "error",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "errorText",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "'Could not load the data'",
+        "required": false,
+        "description": ""
+      },
+      {
         "name": "valueFormat",
         "kind": "input",
         "type": "(value: number) => string",
@@ -3466,7 +3538,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "The contract spelling of `readOnly`, a second input because signal forms binds by NAME — a `readonly()` rule was reaching nothing before this existed."
+        "description": "The contract spelling of `readOnly`: signal forms binds by NAME, so a `readonly()` rule reaches nothing without it."
       },
       {
         "name": "success",
@@ -3645,7 +3717,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Show an inline clear (×) button when the input has a non-empty value. Mirrors the Material/PrimeNG pattern: explicit button (not native search cancel) so the affordance is consistent across browsers and styled with DS tokens. Defaults to true when type='search', false otherwise — pass an explicit boolean to override."
+        "description": "Show an inline clear (×) button when the input has a non-empty value. Defaults to true when `type=\"search\"`, false otherwise — pass an explicit boolean to override."
       },
       {
         "name": "passwordToggle",
@@ -3867,6 +3939,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": ""
       },
       {
+        "name": "interactive",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Makes every reading focusable and clickable. A series drawn without markers grows invisible ones so there is something to land on; they appear on hover and on focus. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
+      },
+      {
         "name": "gaps",
         "kind": "input",
         "type": "LineChartGaps",
@@ -3937,6 +4018,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": ""
       },
       {
+        "name": "error",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "errorText",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "'Could not load the data'",
+        "required": false,
+        "description": ""
+      },
+      {
         "name": "valueFormat",
         "kind": "input",
         "type": "(value: number) => string",
@@ -3946,7 +4045,17 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": ""
       }
     ],
-    "outputs": []
+    "outputs": [
+      {
+        "name": "pointClicked",
+        "kind": "output",
+        "type": "LineChartPoint",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": ""
+      }
+    ]
   },
   "list": {
     "key": "list",
@@ -6191,7 +6300,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "The contract spelling of `readOnly`, a second input because signal forms binds by NAME — a `readonly()` rule was reaching nothing before this existed."
+        "description": "The contract spelling of `readOnly`: signal forms binds by NAME, so a `readonly()` rule reaches nothing without it."
       },
       {
         "name": "success",
@@ -7474,7 +7583,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Opt-in outer border + radius. Off by default so tables flush inside a `<ds-card padding=\"none\">` don't double-border. When `true`, the scroll-wrap gets a `var(--border-default)` outline and `var(--radius-md)` radius — useful when the table stands alone in a padded card. Unset falls back to `DS_CONFIG.table.bordered`, then `false`."
+        "description": "Opt-in outer border + radius. Off by default so tables flush inside a `<ds-card padding=\"none\">` don't double-border. Unset falls back to `DS_CONFIG.table.bordered`, then `false`."
       },
       {
         "name": "loading",
@@ -7615,7 +7724,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "When true, each row becomes a keyboard-operable control (role=button, tabindex, Enter/Space → rowClicked) with an accessible name from the first column. Off by default so non-navigating tables don't advertise a false click affordance. Also the gate for the hover/pressed row tints."
+        "description": "When true, each row becomes a keyboard-operable control (tabindex, Enter/Space → rowClicked) with an accessible name from the first column. Off by default so non-navigating tables don't advertise a false click affordance. Also the gate for the hover/pressed row tints."
       },
       {
         "name": "activeRowId",
@@ -9120,7 +9229,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Show the tip only while the host is actually showing less text than it holds. For a label that already reads in full, a tip repeating it is noise — which is why an unconditional tip on clipped text was never offered as the default. Re-tested on every open, so a tip appears and stops appearing as the column, panel or window is resized, with no observer to run. With this on, `dsTooltip` may be left empty and the host's own text is disclosed. That is what makes it usable on projected content, where the component holding the tip cannot know what it was handed."
+        "description": "Show the tip only while the host is actually showing less text than it holds. For a label that already reads in full, a tip repeating it is noise. Re-tested on every open, so a tip appears and stops appearing as the column, panel or window is resized, with no observer to run. With this on, `dsTooltip` may be left empty and the host's own text is disclosed. That is what makes it usable on projected content, where the component holding the tip cannot know what it was handed."
       }
     ],
     "outputs": []

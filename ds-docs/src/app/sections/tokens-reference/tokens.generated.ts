@@ -926,6 +926,11 @@ export const CHARTS: readonly ColourRow[] = [
     "notes": "Chart axis label font size (var(--font-size-2xs))."
   },
   {
+    "name": "--chart-dim-opacity",
+    "value": "0.3",
+    "notes": ""
+  },
+  {
     "name": "--chart-hover-bg-color",
     "value": "hsl(225deg 39% 7% / 4%)",
     "notes": "Chart hover-state highlight background colour."
@@ -1119,6 +1124,11 @@ export const CHARTS: readonly ColourRow[] = [
     "name": "--ds-chart-grid-line-strong-color",
     "value": "var(--chart-grid-line-strong-color)",
     "notes": "Emphasised chart gridline colour. Set this, not --chart-grid-line-strong-color."
+  },
+  {
+    "name": "--ds-chart-dim-opacity",
+    "value": "var(--chart-dim-opacity)",
+    "notes": ""
   },
   {
     "name": "--ds-chart-hover-bg-color",
@@ -2578,6 +2588,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-bar-chart-label-gap",
         "value": "var(--space-1)",
         "notes": ""
+      },
+      {
+        "name": "--ds-motion-chart-mark-duration",
+        "value": "—",
+        "notes": ""
+      },
+      {
+        "name": "--ds-motion-chart-mark-easing",
+        "value": "—",
+        "notes": ""
       }
     ]
   },
@@ -3419,6 +3439,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": ""
       },
       {
+        "name": "--ds-donut-chart-focus-color",
+        "value": "var(--focus-ring-color)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-donut-chart-focus-width",
+        "value": "var(--focus-ring-width)",
+        "notes": ""
+      },
+      {
         "name": "--ds-donut-chart-outline-width",
         "value": "calc(var(--border-width-strong) + var(--border-width-default))",
         "notes": ""
@@ -3870,6 +3900,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-funnel-chart-row-gap",
         "value": "var(--space-4)",
         "notes": ""
+      },
+      {
+        "name": "--ds-funnel-chart-focus-color",
+        "value": "var(--focus-ring-color)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-funnel-chart-focus-width",
+        "value": "var(--focus-ring-width)",
+        "notes": ""
       }
     ]
   },
@@ -4122,6 +4162,31 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": ""
       },
       {
+        "name": "--ds-line-chart-dot-radius-active",
+        "value": "var(--ds-chart-dot-radius-active)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-line-chart-hover-bg-color",
+        "value": "var(--ds-chart-hover-bg-color)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-line-chart-cursor-line-color",
+        "value": "var(--ds-chart-cursor-line-color)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-line-chart-focus-color",
+        "value": "var(--focus-ring-color)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-line-chart-focus-width",
+        "value": "var(--focus-ring-width)",
+        "notes": ""
+      },
+      {
         "name": "--ds-line-chart-area-opacity",
         "value": "0.16",
         "notes": ""
@@ -4134,6 +4199,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-line-chart-swatch-size",
         "value": "10px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-motion-chart-state-duration",
+        "value": "—",
+        "notes": ""
+      },
+      {
+        "name": "--ds-motion-chart-state-easing",
+        "value": "—",
         "notes": ""
       }
     ]
