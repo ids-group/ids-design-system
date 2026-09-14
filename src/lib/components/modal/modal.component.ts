@@ -25,9 +25,8 @@ import { backdropDismiss } from '@ids-group-ltd/ids-design-system/core';
   imports: [ModalCardComponent, A11yModule],
   templateUrl: './modal.component.html',
   styleUrl: './modal.component.scss',
-  // `title` is a global HTML attribute, so a static `title="…"` feeding the input below ALSO
-  // stays in the DOM — a native browser tooltip covering the whole component, naming it rather than
-  // whatever the pointer is resting on.
+  // A static `title="…"` feeding the input below ALSO stays in the DOM as the global attribute,
+  // which makes the host a native browser tooltip over everything inside it.
   host: { '[attr.title]': 'null' },
   encapsulation: ViewEncapsulation.Emulated,
   hostDirectives: [{ directive: DsStaticPreview, inputs: ['staticPreview'] }],
