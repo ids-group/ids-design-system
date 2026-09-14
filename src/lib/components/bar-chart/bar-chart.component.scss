@@ -90,3 +90,5 @@ figcaption {
 .empty.is-error {
   color: var(--error);
 }
+
+@include chart-frame.forced-colors;

@@ -66,7 +66,22 @@ interface ResolvedSeries {
   readonly values: readonly (number | null)[];
   readonly onSecondaryAxis: boolean;
   readonly color: string;
+  /** `null` while `patterns` is off, which is what keeps a solid line solid. */
+  readonly dash: string | null;
 }
+
+// One dash per palette slot, in the same order the colours are. Slot 1 stays solid so a
+// single-series chart is unchanged by turning patterns on.
+const SERIES_DASH_ARRAYS = [
+  'none',
+  '7 4',
+  '2 3',
+  '11 4 2 4',
+  '1 4',
+  '8 3 2 3',
+  '4 2',
+  '14 5',
+];
 
 interface PlottedSeries extends ResolvedSeries {
   readonly polylines: readonly string[];
@@ -146,15 +161,23 @@ export class LineChartComponent {
       const categoryCount = this.categories().length;
       const gaps = this.gaps();
 
-      return this.series().map((series, index) => ({
-        series,
-        values: alignSeriesValues(series.data, categoryCount, gaps),
-        onSecondaryAxis: series.axis === 'secondary',
-        color:
-          CHART_SERIES_COLORS[
-            paletteIndexFor(series.slot, index, CHART_SERIES_COLORS.length)
-          ],
-      }));
+      const patterns = this.patterns();
+
+      return this.series().map((series, index) => {
+        const slot = paletteIndexFor(
+          series.slot,
+          index,
+          CHART_SERIES_COLORS.length,
+        );
+
+        return {
+          series,
+          values: alignSeriesValues(series.data, categoryCount, gaps),
+          onSecondaryAxis: series.axis === 'secondary',
+          color: CHART_SERIES_COLORS[slot],
+          dash: patterns ? SERIES_DASH_ARRAYS[slot] : null,
+        };
+      });
     },
   );
 
@@ -173,6 +196,12 @@ export class LineChartComponent {
   /** Shown in place of the plot once the legend has switched every series off. Without it the
    *  reader is left with an empty grid and nothing saying why. */
   readonly noVisibleSeriesText = input<string>('All series are hidden');
+
+  /** Gives every series a dash pattern of its own, so the lines are told apart by shape as well
+   *  as by colour — WCAG technique G111. Off by default: the shipped palette clears the
+   *  colour-blind separation threshold on its own, so the patterns are for monochrome print, for a
+   *  retuned palette, and for a reader who asks for them. */
+  readonly patterns = input(false, { transform: booleanAttribute });
 
   /** Milliseconds between one series' entrance and the next. `0`, the default, is no stagger at
    *  all; `40` is the documented non-zero step. The total is capped, so a long list of series does

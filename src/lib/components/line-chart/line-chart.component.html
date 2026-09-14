@@ -154,6 +154,7 @@
             <polyline
               class="series-line"
               animate.enter="mark-enter"
+              [attr.stroke-dasharray]="entry.dash"
               animate.leave="mark-leave"
               [style.--_chart-mark-stagger]="markStagger(seriesIndex)"
               [class.is-dimmed]="isDimmed(entry.series.id)"

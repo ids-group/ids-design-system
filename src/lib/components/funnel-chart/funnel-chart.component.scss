@@ -59,10 +59,7 @@ svg {
    `stroke` is not remapped. */
 .stage.interactive:focus-visible {
   @include focus.own-indicator;
-
-  stroke: var(--_funnel-chart-focus-color);
-  stroke-width: var(--_funnel-chart-focus-width);
-  paint-order: stroke;
+  @include chart-frame.drawn-focus-ring;
 }
 
 .skeleton {
@@ -123,3 +120,5 @@ svg {
   @include chart-interactive.fades('.stage');
   @include chart-interactive.clickable('.stage');
 }
+
+@include chart-frame.forced-colors;

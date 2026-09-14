@@ -100,12 +100,13 @@ figcaption {
 /* focus-ring-guard: an outline on an SVG element paints its BOUNDING BOX, not its silhouette — an
    arc would ring as the whole square the ring sits in. The ring is a stroke on the arc instead;
    `own-indicator` keeps the outline under forced colours, where `stroke` is not remapped. */
+
+/* focus-ring-guard: an outline on an SVG element paints its BOUNDING BOX, not its silhouette, so
+   a slice would ring as a rectangle. `own-indicator` keeps the outline under forced colours, where
+   `stroke` is not remapped. */
 .slice.focusable:focus-visible {
   @include focus.own-indicator;
-
-  stroke: var(--_donut-chart-focus-color);
-  stroke-width: var(--_donut-chart-focus-width);
-  paint-order: stroke;
+  @include chart-frame.drawn-focus-ring;
 }
 
 // `70%` is the square that fits inside the hole (1/√2), and the hole fraction comes from the
@@ -212,3 +213,5 @@ figcaption {
   @include chart-interactive.fades('.slice');
   @include chart-interactive.clickable('.slice');
 }
+
+@include chart-frame.forced-colors;

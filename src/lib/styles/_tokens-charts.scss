@@ -105,6 +105,13 @@
   --chart-dim-opacity:        0.3;
   --chart-hover-bg-color:     hsl(225deg 39% 7% / 4%);
   --chart-cursor-line-color:  var(--neutral-400);
+
+  /* The focus indicator is TWO tones, not one: a light stroke with a dark halo around it. A
+     single accent ring disappears on a mark of the same hue family, and a chart's marks are
+     exactly the surfaces a ring has to survive. */
+  --chart-focus-ring-color:  white;
+  --chart-focus-halo-color:  var(--static-ink);
+
   --chart-tooltip-bg-color:   var(--neutral-900);
   --chart-tooltip-text-color:   var(--neutral-0);
   --chart-tooltip-border-color: var(--neutral-700);
@@ -162,6 +169,8 @@
   --ds-chart-dim-opacity: var(--chart-dim-opacity);
   --ds-chart-hover-bg-color: var(--chart-hover-bg-color);
   --ds-chart-cursor-line-color: var(--chart-cursor-line-color);
+  --ds-chart-focus-ring-color: var(--chart-focus-ring-color);
+  --ds-chart-focus-halo-color: var(--chart-focus-halo-color);
   --ds-chart-tooltip-bg-color: var(--chart-tooltip-bg-color);
   --ds-chart-tooltip-text-color: var(--chart-tooltip-text-color);
   --ds-chart-tooltip-border-color: var(--chart-tooltip-border-color);

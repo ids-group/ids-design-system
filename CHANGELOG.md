@@ -112,6 +112,36 @@
 
 ### Added
 
+- **The focus ring on a chart mark is two tones, and it is drawn rather than outlined.** A white
+  stroke with a dark halo around it, because one tone is not enough: an accent ring disappears on a
+  mark of its own hue family, and a chart's marks are exactly the surfaces a ring has to survive.
+  Measured in Chrome on 2026-09-14, WCAG contrast against each of the eight categorical colours:
+  the white stroke runs 3.01 – 9.45 and the halo 1.83 – 5.75, so every series colour clears 3:1
+  against at least one tone, and the halo clears 17.32 against the chart's own surface.
+  `--ds-chart-focus-ring-color` and `--ds-chart-focus-halo-color` are the hooks.
+
+  `outline` is not the mechanism because on an SVG element it paints the BOUNDING BOX rather than
+  the silhouette — a donut slice would ring as a rectangle.
+
+  **Forced colours are handled explicitly.** `fill` and `stroke` are not remapped by Windows High
+  Contrast, so a chart keeps every series colour, they all resolve to the same one against the
+  forced background, and nothing reports a problem. Axes, gridlines and labels now take `CanvasText`
+  and the focus ring takes `Highlight` under `(forced-colors: active)`.
+
+- **`ds-line-chart` takes `patterns`, a second encoding channel.** Each series gets a dash of its
+  own from a fixed list, in the same order as the palette slots, so the lines are told apart by
+  shape as well as by colour — WCAG technique G111. Slot 1 stays solid, so a single-series chart is
+  unchanged by turning it on. Off by default: the shipped palette clears the colour-blind
+  separation threshold on its own, and this is for monochrome print, a retuned palette, or a reader
+  who asks for it.
+
+  ```html
+  <ds-line-chart patterns [series]="series" [categories]="months" />
+  ```
+
+  The other four charts print a label beside every mark already — a bar's row, a column's category,
+  a donut's legend row, a funnel's stage — so colour is not what identifies a mark there.
+
 - **A tap answers the way a hover does, and stays put.** Tapping a mark opens its tooltip and
   LATCHES it: a touch fires `pointerleave` the instant the finger lifts, so without this the panel
   would flash and vanish. The next tap outside the mark releases it. On `ds-line-chart` a tap

@@ -147,11 +147,9 @@ figcaption {
    the outline under forced colours, where `stroke` is not remapped. */
 .series-marker.interactive:focus-visible {
   @include focus.own-indicator;
+  @include chart-frame.drawn-focus-ring;
 
   r: var(--_line-chart-dot-radius-active);
-  stroke: var(--_line-chart-focus-color);
-  stroke-width: var(--_line-chart-focus-width);
-  paint-order: stroke;
 }
 
 .legend {
@@ -192,3 +190,5 @@ figcaption {
 .empty.is-error {
   color: var(--error);
 }
+
+@include chart-frame.forced-colors;

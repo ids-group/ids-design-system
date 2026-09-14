@@ -16,3 +16,38 @@
     border-radius: var(--ds-chart-frame-radius);
   }
 }
+
+// The focus indicator, drawn rather than outlined: `outline` on an SVG element paints its BOUNDING
+// BOX, not its silhouette, so a slice would ring as a rectangle. Two tones, because one is not
+// enough — a light stroke carries against a dark mark, the dark halo around it carries against a
+// light one and against the surface, and between them the ring clears 3:1 on every series colour
+// the palette holds. `drop-shadow` rather than a second stroke: an SVG shape has one stroke.
+@mixin drawn-focus-ring {
+  stroke: var(--ds-chart-focus-ring-color);
+  stroke-width: var(--focus-ring-width);
+  paint-order: stroke;
+  filter: drop-shadow(0 0 1px var(--ds-chart-focus-halo-color))
+    drop-shadow(0 0 1px var(--ds-chart-focus-halo-color));
+}
+
+// `fill` and `stroke` are NOT remapped by forced colours: the chart keeps every series colour and
+// they all become the same one against the forced background, with nothing reporting a problem.
+// The system keywords are what put the structure back.
+@mixin forced-colors {
+  @media (forced-colors: active) {
+    .axis-line,
+    .grid-line {
+      stroke: CanvasText;
+    }
+
+    .axis-label,
+    .category-label {
+      fill: CanvasText;
+    }
+
+    :focus-visible {
+      stroke: Highlight;
+      filter: none;
+    }
+  }
+}
