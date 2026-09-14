@@ -1,6 +1,7 @@
 @use '../../styles/focus' as focus;
 @use '../../styles/chart-data-table' as chart-data-table;
 @use '../../styles/chart-frame' as chart-frame;
+@use '../../styles/chart-interactive' as chart-interactive;
 @include chart-frame.chart-frame;
 @include chart-data-table.chart-data-table;
 
@@ -64,6 +65,10 @@ figcaption {
 .axis-label {
   dominant-baseline: middle;
 }
+
+@include chart-interactive.dims('.series-area');
+@include chart-interactive.dims('.series-line');
+@include chart-interactive.dims('.series-marker');
 
 .series-area {
   fill-opacity: var(--_line-chart-area-opacity);

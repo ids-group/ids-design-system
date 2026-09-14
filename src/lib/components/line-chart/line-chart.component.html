@@ -31,6 +31,18 @@
     <p class="empty">
       {{ emptyText() }}
     </p>
+  } @else if (noVisibleSeries()) {
+    <p
+      class="empty"
+      role="status">
+      {{ noVisibleSeriesText() }}
+    </p>
+
+    <ds-chart-legend
+      [items]="legendItems()"
+      [toggleable]="legendFilters()"
+      [(hidden)]="hiddenSeries"
+      [(highlighted)]="highlightedSeries" />
   } @else {
     <div
       class="plot"
@@ -119,6 +131,7 @@
           @for (path of entry.areaPaths; track $index) {
             <path
               class="series-area"
+              [class.is-dimmed]="isDimmed(entry.series.id)"
               [attr.d]="path"
               [attr.fill]="entry.color" />
           }
@@ -128,6 +141,7 @@
           @for (points of entry.polylines; track $index) {
             <polyline
               class="series-line"
+              [class.is-dimmed]="isDimmed(entry.series.id)"
               [attr.points]="points"
               [attr.stroke]="entry.color" />
           }
@@ -142,6 +156,7 @@
             @for (marker of entry.markers; track marker.categoryIndex) {
               <circle
                 class="series-marker"
+                [class.is-dimmed]="isDimmed(entry.series.id)"
                 [class.ghost]="!showMarkers()"
                 [class.interactive]="interactive()"
                 [class.is-active]="marker.categoryIndex === activeCategory()"
@@ -197,19 +212,11 @@
     </div>
 
     @if (showLegend()) {
-      <ul class="legend">
-        @for (entry of resolvedSeries(); track entry.series.id) {
-          <li class="legend-item">
-            <span
-              class="legend-swatch"
-              aria-hidden="true"
-              [style.background]="entry.color">
-            </span>
-
-            {{ entry.series.label }}
-          </li>
-        }
-      </ul>
+      <ds-chart-legend
+        [items]="legendItems()"
+        [toggleable]="legendFilters()"
+        [(hidden)]="hiddenSeries"
+        [(highlighted)]="highlightedSeries" />
     }
 
     @if (dataTable() !== 'none') {

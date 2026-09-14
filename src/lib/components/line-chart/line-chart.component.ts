@@ -7,6 +7,7 @@ import {
   computed,
   contentChild,
   input,
+  model,
   numberAttribute,
   output,
   signal,
@@ -21,6 +22,8 @@ import {
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import { ChartTooltipDirective } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
+import { ChartLegendComponent } from '@ids-group-ltd/ids-design-system/components/chart-legend';
+import type { ChartLegendItem } from '@ids-group-ltd/ids-design-system/components/chart-legend';
 import type {
   ChartTooltipContext,
   ChartTooltipOrigin,
@@ -85,7 +88,7 @@ function baselineOf(plot: PlotArea): number {
 @Component({
   selector: 'ds-line-chart',
   standalone: true,
-  imports: [SkeletonComponent, ChartTooltipDirective],
+  imports: [SkeletonComponent, ChartTooltipDirective, ChartLegendComponent],
   templateUrl: './line-chart.component.html',
   styleUrl: './line-chart.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -152,8 +155,48 @@ export class LineChartComponent {
     },
   );
 
+  /** Ids of the series the legend has switched off. Two-way, so a page can drive it from a URL
+   *  parameter and read back what the reader chose. */
+  readonly hiddenSeries = model<readonly string[]>([]);
+
+  /** Whether hiding a series re-scales the value axis to what is left. Default `false`: a silent
+   *  rescale turns a period-over-period comparison into a different claim, and a comparison
+   *  dashboard is the common case. */
+  readonly rescaleOnHide = input(false, { transform: booleanAttribute });
+
+  /** Whether the legend switches series off. Off leaves it a plain key. */
+  readonly legendFilters = input(false, { transform: booleanAttribute });
+
+  /** Shown in place of the plot once the legend has switched every series off. Without it the
+   *  reader is left with an empty grid and nothing saying why. */
+  readonly noVisibleSeriesText = input<string>('All series are hidden');
+
+  protected readonly highlightedSeries = model<string | null>(null);
+
+  protected readonly visibleSeries = computed<readonly ResolvedSeries[]>(() => {
+    const hidden = this.hiddenSeries();
+
+    return this.resolvedSeries().filter(
+      (entry) => !hidden.includes(entry.series.id),
+    );
+  });
+
+  protected readonly legendItems = computed<readonly ChartLegendItem[]>(() =>
+    this.resolvedSeries().map((entry) => ({
+      id: entry.series.id,
+      label: entry.series.label,
+      color: entry.color,
+    })),
+  );
+
+  protected isDimmed(seriesId: string): boolean {
+    const highlighted = this.highlightedSeries();
+
+    return highlighted !== null && highlighted !== seriesId;
+  }
+
   protected readonly hasSecondaryAxis = computed(() =>
-    this.resolvedSeries().some((entry) => entry.onSecondaryAxis),
+    this.visibleSeries().some((entry) => entry.onSecondaryAxis),
   );
 
   protected readonly layout = computed(() =>
@@ -161,7 +204,11 @@ export class LineChartComponent {
   );
 
   protected readonly axes = computed(() => {
-    const entries = this.resolvedSeries();
+    // The axis is scaled from every series unless `rescaleOnHide` says otherwise, so switching one
+    // off does not move the gridlines under the ones still drawn.
+    const entries = this.rescaleOnHide()
+      ? this.visibleSeries()
+      : this.resolvedSeries();
     const valuesOn = (secondary: boolean) =>
       entries
         .filter((entry) => entry.onSecondaryAxis === secondary)
@@ -183,7 +230,7 @@ export class LineChartComponent {
     const axes = this.axes();
     const centers = this.categoryPositions();
 
-    return this.resolvedSeries().map((entry) => {
+    return this.visibleSeries().map((entry) => {
       const plot = this.plotFor(entry.onSecondaryAxis);
       const axisMax =
         entry.onSecondaryAxis && axes.secondary
@@ -319,11 +366,11 @@ export class LineChartComponent {
       const focusedSeries = this.activeSeries();
       const perSeries =
         this.tooltip() === 'item' || focusedSeries >= 0
-          ? this.resolvedSeries().slice(
+          ? this.visibleSeries().slice(
               Math.max(focusedSeries, 0),
               Math.max(focusedSeries, 0) + 1,
             )
-          : this.resolvedSeries();
+          : this.visibleSeries();
 
       return {
         category: categories[categoryIndex],
@@ -468,6 +515,10 @@ export class LineChartComponent {
   );
 
   protected readonly showLegend = computed(() => this.series().length > 1);
+
+  protected readonly noVisibleSeries = computed(
+    () => this.series().length > 0 && this.visibleSeries().length === 0,
+  );
 
   /** Placeholder legend rows while loading. Follows the real series count so the
    *  chart does not resize when the data lands; falls back to three when `series`

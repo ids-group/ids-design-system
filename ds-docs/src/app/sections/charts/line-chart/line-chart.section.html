@@ -256,6 +256,59 @@
     [(series)]="dataTableSeries" />
 
   <h3 class="block-title t-h4">
+    Filtering legend
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      legendFilters
+    </code> turns each legend entry
+    into a checkbox that switches its series off, and
+    <code class="t-mono-inline">
+      hiddenSeries
+    </code> is two-way, so a page can
+    drive it from a URL parameter. The value axis is scaled from every series,
+    hidden or not, unless
+    <code class="t-mono-inline">
+      rescaleOnHide
+    </code> says
+    otherwise — a silent rescale turns a period-over-period comparison into a
+    different claim. Hovering an entry dims the other series. Switch them all
+    off and the plot is replaced by an explanation rather than an empty grid.
+  </p>
+
+  <div class="states states--cols-2">
+    <div class="state-cell">
+      <ds-line-chart
+        caption="Hiding a series leaves the axis where it was"
+        dataTable="none"
+        legendFilters
+        [categories]="legendCategories()"
+        [series]="legendSeries()"
+        [(hiddenSeries)]="hiddenSeries" />
+
+      <div class="state-cell-label">
+        rescaleOnHide = false (default)
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-line-chart
+        caption="Hiding a series re-scales the axis to what is left"
+        dataTable="none"
+        legendFilters
+        rescaleOnHide
+        [categories]="legendCategories()"
+        [series]="legendSeries()"
+        [(hiddenSeries)]="rescaledHiddenSeries" />
+
+      <div class="state-cell-label">
+        rescaleOnHide
+      </div>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
     Edge cases
   </h3>
 

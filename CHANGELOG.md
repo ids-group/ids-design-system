@@ -112,6 +112,32 @@
 
 ### Added
 
+- **`ds-line-chart`'s legend can switch a series off.** `legendFilters` turns each entry into a
+  real `<input type="checkbox">` — keyboard-operable and correctly announced without inventing a
+  role — and `hiddenSeries` is a two-way `model`, so a page can drive the filter from a URL
+  parameter and read back what the reader chose. Hovering or focusing an entry dims every other
+  series to `--ds-chart-dim-opacity`.
+
+  ```html
+  <ds-line-chart
+    legendFilters
+    [(hiddenSeries)]="hidden"
+    [series]="series"
+    [categories]="months" />
+  ```
+
+  **The value axis does not move when a series is hidden.** `rescaleOnHide` opts into the other
+  behaviour, and it is off by default because a silent rescale turns a period-over-period
+  comparison into a different claim — measured on the docs card, hiding one series with the
+  default leaves the axis at `0 … 5K`, and with `rescaleOnHide` it becomes `0 … 1.6K`.
+
+  Switching every series off replaces the plot with `noVisibleSeriesText` — "All series are
+  hidden" by default — carried on a `role="status"` line, with the legend still rendered so the
+  reader can switch one back on. Without it the reader is left looking at an empty grid.
+
+  A legend without a filter is unchanged: `ds-line-chart` still draws one whenever there is more
+  than one series, and it is now `ds-chart-legend` rather than markup of its own.
+
 - **Every chart answers a hover, a tap and a keyboard focus with a tooltip.** `ds-bar-chart`,
   `ds-column-chart`, `ds-donut-chart` and `ds-funnel-chart` default to `tooltip="item"` — the mark
   under the pointer, or the one holding focus. `ds-line-chart` defaults to `tooltip="axis"`: a

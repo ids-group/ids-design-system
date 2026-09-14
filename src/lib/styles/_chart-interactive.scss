@@ -6,21 +6,29 @@
 // renders as markup, because a label has to be a node a screen reader can reach — an ::after
 // cannot be.
 
-// Include on the CONTAINER, never on the mark: `:has()` asks the container whether anything inside
-// it is hovered, which is what lets a pointer highlight work with no component state. `.is-dimmed`
-// is the second entry point, for a highlight driven from outside — a legend, or a consumer.
-//
-// Usage: `.columns { @include chart-interactive.fades('.column'); }`
-@mixin fades($mark) {
+// `.is-dimmed` alone, for a mark whose highlight only ever comes from outside — a legend, or a
+// consumer. A line has no mark between two readings, so it has no `:hover` half to derive.
+@mixin dims($mark) {
   #{$mark} {
     transition: opacity var(--ds-motion-chart-state-duration)
       var(--ds-motion-chart-state-easing);
   }
 
+  #{$mark}.is-dimmed {
+    opacity: var(--ds-chart-dim-opacity);
+  }
+}
+
+// Include on the CONTAINER, never on the mark: `:has()` asks the container whether anything inside
+// it is hovered, which is what lets a pointer highlight work with no component state.
+//
+// Usage: `.columns { @include chart-interactive.fades('.column'); }`
+@mixin fades($mark) {
+  @include dims($mark);
+
   &:has(#{$mark}.interactive:hover) #{$mark}.interactive:not(:hover),
   &:has(#{$mark}.interactive:focus-visible)
-    #{$mark}.interactive:not(:focus-visible),
-  #{$mark}.is-dimmed {
+    #{$mark}.interactive:not(:focus-visible) {
     opacity: var(--ds-chart-dim-opacity);
   }
 }

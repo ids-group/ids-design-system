@@ -174,4 +174,11 @@ export class LineChartSection {
   protected readonly oneSeriesCategories =
     signal<readonly string[]>(SPECIMEN_CATEGORIES);
   protected readonly oneSeries = signal<readonly LineChartSeries[]>(ONE_SERIES);
+
+  protected readonly legendCategories =
+    signal<readonly string[]>(SPECIMEN_CATEGORIES);
+  protected readonly legendSeries =
+    signal<readonly LineChartSeries[]>(SPECIMEN_SERIES);
+  protected readonly hiddenSeries = signal<readonly string[]>([]);
+  protected readonly rescaledHiddenSeries = signal<readonly string[]>([]);
 }
