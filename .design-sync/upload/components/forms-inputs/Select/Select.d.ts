@@ -48,7 +48,7 @@ export interface SelectProps {
   scrollActiveIntoView?: boolean;
   /** Prevents opening the dropdown while still allowing focus. */
   readOnly?: boolean;
-  /** The contract spelling of `readOnly`, a second input because signal forms binds by NAME — a `readonly()` rule was reaching nothing before this existed. */
+  /** The contract spelling of `readOnly`: signal forms binds by NAME, so a `readonly()` rule reaches nothing without it. */
   readonlyBinding?: boolean;
   /** Confirmation text, shown when there is no error or warning — and it paints the field's success border. A string like `warning`: the text IS the state. */
   success?: string;

@@ -21,10 +21,24 @@ export interface ButtonProps {
   variant?: ('solid' | 'tonal' | 'ghost' | 'outline' | 'text');
   /** Button height — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
   size?: ('sm' | 'md' | 'lg') | null;
-  /** `RouterLink` target. Set it and the button renders an `<a [routerLink]>` with `routerLinkActive`: middle-click, open-in-new-tab and the announced "link" role depend on the element, not on the look. */
-  routerLink?: string | readonly unknown[] | null;
+  /** `RouterLink` target. Set it and the button renders an `<a [routerLink]>` with `routerLinkActive`: middle-click, open-in-new-tab and the announced "link" role depend on the element, not on the look. Accepts a `UrlTree` as well as a path or a command array — `Router.createUrlTree` is the way to reach the `UrlCreationOptions` that have no input of their own here (`relativeTo`, `preserveFragment`). */
+  routerLink?: unknown;
   /** Plain `href` target, used when `routerLink` is not set — an external address or a download. Renders an `<a href>`; same reasoning as `routerLink`. */
   href?: string;
+  /** Hash to append to a `routerLink` destination — the section of the page to land on. routerLink-only: on an `href` put it in the URL, and on a plain button it is ignored with a dev warning. */
+  fragment?: string | undefined;
+  /** Query parameters for a `routerLink` destination. routerLink-only, same as `fragment`. */
+  queryParams?: unknown;
+  /** How the destination's query merges with the current one — `'merge'`, `'preserve'` or `'replace'`. routerLink-only. */
+  queryParamsHandling?: unknown;
+  /** Browsing context for the link — `'_blank'` and the rest. Both link destinations take it; on a plain button it is ignored with a dev warning. */
+  target?: string | undefined;
+  /** `rel` for the link. Pair it with `target="_blank"`: without `noopener` the opened page can reach back through `window.opener`. Both link destinations take it. */
+  rel?: string | undefined;
+  /** How `routerLinkActive` decides the `active` CLASS — prefix by default, so a section link stays lit inside its own pages. It also bounds the announcement, because the same directive writes it: narrowed to `{ exact: true }`, a prefix match is no longer active and the link announces nothing rather than `true`. Pass `ariaCurrent` alongside to keep one. */
+  routerLinkActiveOptions?: unknown;
+  /** Overrides what the link announces. Unset, an exact match announces `page` and a prefix match announces `true`, which is what ARIA means by each; pass `null` to announce nothing, or one of the other values when the link is a step or a location rather than a page. */
+  ariaCurrent?: ('page' | 'step' | 'location' | 'date' | 'time' | true) | null | undefined;
   /** Native `type`, defaulting to `'button'` so it never submits an ancestor form by accident. Button-only: ignored on a link, with a dev warning. */
   type?: ('button' | 'submit' | 'reset');
   /** Disables the button and blocks `pressed`. */

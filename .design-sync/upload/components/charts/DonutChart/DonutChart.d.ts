@@ -1,0 +1,52 @@
+import * as React from 'react';
+
+/**
+ * DonutChart — the real DonutChartComponent, run by Angular behind `<ds-donut-chart>`.
+ * A ring that splits one total into its parts. Each slice carries its share as a whole percentage, and the percentages always add up to exactly 100, so a legend never visibly loses a point. The middle of the ring is free for the total or for a headline figure of your own.
+ */
+export interface DonutChartProps {
+  /** One slice per entry. A non-positive or non-finite value counts as zero — a ring is a part-to-whole picture and has no way to draw a negative share. */
+  data?: unknown;
+  /** Printed inside the ring. Null prints the sum through `valueFormat`. */
+  centerValue?: string | null;
+  /** Caption under the centre value. */
+  centerLabel?: string | null;
+  /** Logical placement, so a right-to-left page needs no second value. */
+  legend?: 'end' | 'bottom' | 'none';
+  /** Longest legend to draw. Past it the smallest slices are summed into one, so a long tail does not become a legend nobody reads. Off by default: grouping changes what the chart says, and that is the consumer's call. Values below 2 are ignored — one slice is not a donut. */
+  maxSlices?: number | null;
+  /** Names the grouped slice. */
+  otherLabel?: string;
+  /** Ring width as a fraction of the radius. */
+  thickness?: number;
+  /** Printed above the plot as the chart's visible title, and reused as the annex table's caption. */
+  caption?: string | null;
+  /** Accessible name. Generated from the data when omitted. */
+  summary?: string | null;
+  /** The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page. */
+  dataTable?: 'toggle' | 'visible' | 'none';
+  /** Draws skeleton marks in place of the data, at the same count, so the chart does not resize when the data lands. */
+  loading?: boolean;
+  /** Shown in place of the plot when `data` is empty. */
+  emptyText?: string;
+  /** Shows `errorText` in place of the plot. Separate from `loading` and from an empty `data`, because "the request failed" and "there is nothing to show" read the same to a reader and mean opposite things. */
+  error?: boolean;
+  /** The message the error state prints. */
+  errorText?: string;
+  /** Formats every value the chart prints, the annex table and the generated description included. Defaults to the browser's locale grouping with a K/M/B suffix past four digits. */
+  valueFormat?: unknown;
+  /** Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click. */
+  interactive?: boolean;
+  /** The slice that was clicked, or activated with Enter or Space. Fires whether or not `interactive` is set. */
+  onSliceClicked?: (value: unknown) => void;
+  /** Milliseconds between one mark's entrance and the next. `0`, the default, is no stagger at all; `40` is the documented non-zero step. The total is capped, so a long series does not crawl in. */
+  staggerMs?: number;
+  /** Whether a hovered or focused slice opens a tooltip. `'axis'` is not offered — a ring has no axis to group readings under. */
+  tooltip?: ('item' | 'none');
+  /** Element content. */
+  children?: React.ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
+}
+
+export declare const DonutChart: React.ComponentType<DonutChartProps>;

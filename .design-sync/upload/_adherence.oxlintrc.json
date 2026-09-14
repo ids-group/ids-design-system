@@ -67,27 +67,33 @@
               "components/*/AvatarGroup/**",
               "components/*/Badge/**",
               "components/*/Banner/**",
+              "components/*/BarChart/**",
               "components/*/BottomSheet/**",
               "components/*/Breadcrumbs/**",
               "components/*/Button/**",
               "components/*/ButtonGroup/**",
               "components/*/Card/**",
+              "components/*/ChartTooltipPanel/**",
               "components/*/Checkbox/**",
               "components/*/ColorPicker/**",
+              "components/*/ColumnChart/**",
               "components/*/Container/**",
               "components/*/DatePicker/**",
               "components/*/DescriptionItem/**",
               "components/*/DescriptionList/**",
               "components/*/Divider/**",
+              "components/*/DonutChart/**",
               "components/*/Drawer/**",
               "components/*/Dropzone/**",
               "components/*/EmptyState/**",
               "components/*/FieldGroup/**",
               "components/*/FilterBar/**",
+              "components/*/FunnelChart/**",
               "components/*/Icon/**",
               "components/*/IconButton/**",
               "components/*/Inline/**",
               "components/*/Input/**",
+              "components/*/LineChart/**",
               "components/*/List/**",
               "components/*/ListItem/**",
               "components/*/LoadingOverlay/**",
@@ -201,6 +207,10 @@
         "message": "<Banner> doesn't accept that prop. Declared props: variant, title, dismissible, icon, compact, layout, accentRail, onClosed, announce, actions, children."
       },
       {
+        "selector": "JSXOpeningElement[name.name='BarChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:data|max|caption|summary|dataTable|showPercent|loading|emptyText|error|errorText|valueFormat|interactive|onRowClicked|staggerMs|tooltip|children|key|ref|className|style)$/]",
+        "message": "<BarChart> doesn't accept that prop. Declared props: data, max, caption, summary, dataTable, showPercent, loading, emptyText, error, errorText, valueFormat, interactive, onRowClicked, staggerMs, tooltip, children."
+      },
+      {
         "selector": "JSXOpeningElement[name.name='BottomSheet'] > JSXAttribute > JSXIdentifier[name!=/^(?:open|title|onClosed|snapPoints|onOpenChange|actions|children|key|ref|className|style)$/]",
         "message": "<BottomSheet> doesn't accept that prop. Declared props: open, title, onClosed, snapPoints, onOpenChange, actions, children."
       },
@@ -209,8 +219,8 @@
         "message": "<Breadcrumbs> doesn't accept that prop. Declared props: items, separator, clickable, maxItems, onNavigate, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='Button'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|color|variant|size|routerLink|href|type|disabled|loading|fullWidth|ariaLabel|icon|trailingIcon|ariaHasPopup|ariaExpanded|ariaControls|disabledReason|ariaDescribedBy|onPressed|subtext|children|key|ref|className|style)$/]",
-        "message": "<Button> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, color, variant, size, routerLink, href, type, disabled, loading, fullWidth, ariaLabel, icon, trailingIcon, ariaHasPopup, ariaExpanded, ariaControls, disabledReason, ariaDescribedBy, onPressed, subtext, children."
+        "selector": "JSXOpeningElement[name.name='Button'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|color|variant|size|routerLink|href|fragment|queryParams|queryParamsHandling|target|rel|routerLinkActiveOptions|ariaCurrent|type|disabled|loading|fullWidth|ariaLabel|icon|trailingIcon|ariaHasPopup|ariaExpanded|ariaControls|disabledReason|ariaDescribedBy|onPressed|subtext|children|key|ref|className|style)$/]",
+        "message": "<Button> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, color, variant, size, routerLink, href, fragment, queryParams, queryParamsHandling, target, rel, routerLinkActiveOptions, ariaCurrent, type, disabled, loading, fullWidth, ariaLabel, icon, trailingIcon, ariaHasPopup, ariaExpanded, ariaControls, disabledReason, ariaDescribedBy, onPressed, subtext, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='ButtonGroup'] > JSXAttribute > JSXIdentifier[name!=/^(?:ariaLabel|children|key|ref|className|style)$/]",
@@ -221,12 +231,20 @@
         "message": "<Card> doesn't accept that prop. Declared props: elevation, padding, onPressed, children."
       },
       {
+        "selector": "JSXOpeningElement[name.name='ChartTooltipPanel'] > JSXAttribute > JSXIdentifier[name!=/^(?:context|template|children|key|ref|className|style)$/]",
+        "message": "<ChartTooltipPanel> doesn't accept that prop. Declared props: context, template, children."
+      },
+      {
         "selector": "JSXOpeningElement[name.name='Checkbox'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|touched|hidden|checked|indeterminate|disabled|name|inputId|size|required|label|ariaLabel|onCheckedChange|children|key|ref|className|style)$/]",
         "message": "<Checkbox> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, touched, hidden, checked, indeterminate, disabled, name, inputId, size, required, label, ariaLabel, onCheckedChange, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='ColorPicker'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|touched|hidden|value|presets|disabled|ariaLabel|success|onValueChange|children|key|ref|className|style)$/]",
         "message": "<ColorPicker> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, touched, hidden, value, presets, disabled, ariaLabel, success, onValueChange, children."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='ColumnChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:data|showValues|tickCount|caption|summary|dataTable|loading|emptyText|error|errorText|valueFormat|interactive|onPointClicked|staggerMs|tooltip|children|key|ref|className|style)$/]",
+        "message": "<ColumnChart> doesn't accept that prop. Declared props: data, showValues, tickCount, caption, summary, dataTable, loading, emptyText, error, errorText, valueFormat, interactive, onPointClicked, staggerMs, tooltip, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='Container'] > JSXAttribute > JSXIdentifier[name!=/^(?:size|children|key|ref|className|style)$/]",
@@ -249,6 +267,10 @@
         "message": "<Divider> doesn't accept that prop. Declared props: variant, spacing, children."
       },
       {
+        "selector": "JSXOpeningElement[name.name='DonutChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:data|centerValue|centerLabel|legend|maxSlices|otherLabel|thickness|caption|summary|dataTable|loading|emptyText|error|errorText|valueFormat|interactive|onSliceClicked|staggerMs|tooltip|children|key|ref|className|style)$/]",
+        "message": "<DonutChart> doesn't accept that prop. Declared props: data, centerValue, centerLabel, legend, maxSlices, otherLabel, thickness, caption, summary, dataTable, loading, emptyText, error, errorText, valueFormat, interactive, onSliceClicked, staggerMs, tooltip, children."
+      },
+      {
         "selector": "JSXOpeningElement[name.name='Drawer'] > JSXAttribute > JSXIdentifier[name!=/^(?:open|size|placement|title|onClosed|onOpenChange|drawerBody|drawerFooter|children|key|ref|className|style)$/]",
         "message": "<Drawer> doesn't accept that prop. Declared props: open, size, placement, title, onClosed, onOpenChange, drawerBody, drawerFooter, children."
       },
@@ -261,12 +283,16 @@
         "message": "<EmptyState> doesn't accept that prop. Declared props: variant, icon, title, body, actions, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='FieldGroup'] > JSXAttribute > JSXIdentifier[name!=/^(?:size|invalid|disabled|fullWidth|children|key|ref|className|style)$/]",
-        "message": "<FieldGroup> doesn't accept that prop. Declared props: size, invalid, disabled, fullWidth, children."
+        "selector": "JSXOpeningElement[name.name='FieldGroup'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|size|invalid|disabled|fullWidth|children|key|ref|className|style)$/]",
+        "message": "<FieldGroup> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, size, invalid, disabled, fullWidth, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='FilterBar'] > JSXAttribute > JSXIdentifier[name!=/^(?:moreLabel|panelLabel|triggerSize|trailing|children|key|ref|className|style)$/]",
         "message": "<FilterBar> doesn't accept that prop. Declared props: moreLabel, panelLabel, triggerSize, trailing, children."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='FunnelChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:data|shape|showTable|caption|summary|dataTable|loading|emptyText|error|errorText|valueFormat|interactive|onStageClicked|staggerMs|tooltip|children|key|ref|className|style)$/]",
+        "message": "<FunnelChart> doesn't accept that prop. Declared props: data, shape, showTable, caption, summary, dataTable, loading, emptyText, error, errorText, valueFormat, interactive, onStageClicked, staggerMs, tooltip, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='Icon'] > JSXAttribute > JSXIdentifier[name!=/^(?:name|size|stroke|ariaLabel|children|key|ref|className|style)$/]",
@@ -283,6 +309,10 @@
       {
         "selector": "JSXOpeningElement[name.name='Input'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|touched|hidden|value|type|size|label|placeholder|disabled|readOnly|readonlyBinding|success|loading|required|optional|name|min|max|step|autocomplete|autofocus|ariaLabel|ariaDescribedBy|maxLength|minLength|pattern|enterKeyHint|inputMode|onBlurred|clearable|passwordToggle|passwordVisible|onValueChange|onPasswordVisibleChange|prefix|suffix|children|key|ref|className|style)$/]",
         "message": "<Input> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, touched, hidden, value, type, size, label, placeholder, disabled, readOnly, readonlyBinding, success, loading, required, optional, name, min, max, step, autocomplete, autofocus, ariaLabel, ariaDescribedBy, maxLength, minLength, pattern, enterKeyHint, inputMode, onBlurred, clearable, passwordToggle, passwordVisible, onValueChange, onPasswordVisibleChange, prefix, suffix, children."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='LineChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:categories|series|yAxisMode|showMarkers|interactive|onPointClicked|gaps|tickCount|caption|summary|dataTable|loading|emptyText|error|errorText|valueFormat|hiddenSeries|rescaleOnHide|legendFilters|noVisibleSeriesText|patterns|staggerMs|tooltip|onHiddenSeriesChange|children|key|ref|className|style)$/]",
+        "message": "<LineChart> doesn't accept that prop. Declared props: categories, series, yAxisMode, showMarkers, interactive, onPointClicked, gaps, tickCount, caption, summary, dataTable, loading, emptyText, error, errorText, valueFormat, hiddenSeries, rescaleOnHide, legendFilters, noVisibleSeriesText, patterns, staggerMs, tooltip, onHiddenSeriesChange, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='List'] > JSXAttribute > JSXIdentifier[name!=/^(?:dividers|children|key|ref|className|style)$/]",
@@ -385,12 +415,12 @@
         "message": "<SidenavFooter> doesn't accept that prop. Declared props: userName, userRole, alerts, collapsed, searchProvider, alertItems, profileRoute, onCollapseToggled, onAlertsOpened, onSignOutSelected, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='SidenavGroup'] > JSXAttribute > JSXIdentifier[name!=/^(?:label|icon|expandable|routerLink|expanded|onExpandedChange|dsGroupIcon|children|key|ref|className|style)$/]",
-        "message": "<SidenavGroup> doesn't accept that prop. Declared props: label, icon, expandable, routerLink, expanded, onExpandedChange, dsGroupIcon, children."
+        "selector": "JSXOpeningElement[name.name='SidenavGroup'] > JSXAttribute > JSXIdentifier[name!=/^(?:label|icon|expandable|routerLink|ariaCurrent|expanded|onExpandedChange|dsGroupIcon|children|key|ref|className|style)$/]",
+        "message": "<SidenavGroup> doesn't accept that prop. Declared props: label, icon, expandable, routerLink, ariaCurrent, expanded, onExpandedChange, dsGroupIcon, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='SidenavItem'] > JSXAttribute > JSXIdentifier[name!=/^(?:icon|label|href|routerLink|active|badge|hasAlert|disabled|onActivate|rail|iconContent|trailing|children|key|ref|className|style)$/]",
-        "message": "<SidenavItem> doesn't accept that prop. Declared props: icon, label, href, routerLink, active, badge, hasAlert, disabled, onActivate, rail, iconContent, trailing, children."
+        "selector": "JSXOpeningElement[name.name='SidenavItem'] > JSXAttribute > JSXIdentifier[name!=/^(?:icon|label|href|routerLink|active|ariaCurrent|badge|hasAlert|disabled|onActivate|rail|iconContent|trailing|children|key|ref|className|style)$/]",
+        "message": "<SidenavItem> doesn't accept that prop. Declared props: icon, label, href, routerLink, active, ariaCurrent, badge, hasAlert, disabled, onActivate, rail, iconContent, trailing, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='Skeleton'] > JSXAttribute > JSXIdentifier[name!=/^(?:width|height|circle|inline|children|key|ref|className|style)$/]",
@@ -536,6 +566,9 @@
       "Banner": {
         "replaces": []
       },
+      "BarChart": {
+        "replaces": []
+      },
       "BottomSheet": {
         "replaces": []
       },
@@ -553,12 +586,18 @@
       "Card": {
         "replaces": []
       },
+      "ChartTooltipPanel": {
+        "replaces": []
+      },
       "Checkbox": {
         "replaces": [
           "input[type=checkbox]"
         ]
       },
       "ColorPicker": {
+        "replaces": []
+      },
+      "ColumnChart": {
         "replaces": []
       },
       "Container": {
@@ -576,6 +615,9 @@
       "Divider": {
         "replaces": []
       },
+      "DonutChart": {
+        "replaces": []
+      },
       "Drawer": {
         "replaces": []
       },
@@ -591,6 +633,9 @@
       "FilterBar": {
         "replaces": []
       },
+      "FunnelChart": {
+        "replaces": []
+      },
       "Icon": {
         "replaces": []
       },
@@ -604,6 +649,9 @@
         "replaces": [
           "input"
         ]
+      },
+      "LineChart": {
+        "replaces": []
       },
       "List": {
         "replaces": [
@@ -905,46 +953,61 @@
       "--calendar-rowlabel-w",
       "--card-hover-lift",
       "--card-title-fs",
-      "--chart-axis-fs",
-      "--chart-axis-label",
-      "--chart-axis-line",
-      "--chart-axis-title",
+      "--chart-axis-font-size",
+      "--chart-axis-label-color",
+      "--chart-axis-line-color",
       "--chart-bar-gap",
-      "--chart-cat-1",
-      "--chart-cat-2",
-      "--chart-cat-3",
-      "--chart-cat-4",
-      "--chart-cat-5",
-      "--chart-cat-6",
-      "--chart-cat-7",
-      "--chart-cat-8",
-      "--chart-cursor-line",
-      "--chart-div--1",
-      "--chart-div--2",
-      "--chart-div--3",
-      "--chart-div-0",
-      "--chart-div-1",
-      "--chart-div-2",
-      "--chart-div-3",
-      "--chart-dot-r",
-      "--chart-dot-r-active",
+      "--chart-categorical-1",
+      "--chart-categorical-2",
+      "--chart-categorical-3",
+      "--chart-categorical-4",
+      "--chart-categorical-5",
+      "--chart-categorical-6",
+      "--chart-categorical-7",
+      "--chart-categorical-8",
+      "--chart-cursor-line-color",
+      "--chart-dim-opacity",
+      "--chart-divergent--1",
+      "--chart-divergent--2",
+      "--chart-divergent--3",
+      "--chart-divergent-0",
+      "--chart-divergent-1",
+      "--chart-divergent-2",
+      "--chart-divergent-3",
+      "--chart-dot-radius",
+      "--chart-dot-radius-active",
       "--chart-empty-h",
-      "--chart-grid-line",
-      "--chart-grid-line-strong",
+      "--chart-focus-halo-color",
+      "--chart-focus-ring-color",
+      "--chart-frame-bg-color",
+      "--chart-frame-border-color",
+      "--chart-frame-border-width",
+      "--chart-frame-padding",
+      "--chart-frame-radius",
+      "--chart-grid-line-color",
       "--chart-hover-bg-color",
       "--chart-legend-dot",
-      "--chart-line-w",
-      "--chart-line-w-bold",
-      "--chart-seq-1",
-      "--chart-seq-2",
-      "--chart-seq-3",
-      "--chart-seq-4",
-      "--chart-seq-5",
-      "--chart-seq-6",
+      "--chart-line-width",
+      "--chart-line-width-bold",
+      "--chart-ramp-1",
+      "--chart-ramp-2",
+      "--chart-ramp-3",
+      "--chart-ramp-4",
+      "--chart-ramp-5",
+      "--chart-ramp-6",
+      "--chart-ramp-7",
+      "--chart-ramp-8",
+      "--chart-sequential-1",
+      "--chart-sequential-2",
+      "--chart-sequential-3",
+      "--chart-sequential-4",
+      "--chart-sequential-5",
+      "--chart-sequential-6",
+      "--chart-series-accent",
+      "--chart-series-default",
       "--chart-skeleton-h",
-      "--chart-tick-size",
       "--chart-tooltip-bg-color",
-      "--chart-tooltip-border",
+      "--chart-tooltip-border-color",
       "--chart-tooltip-text-color",
       "--check-bw",
       "--check-glyph-lg",
@@ -989,6 +1052,46 @@
       "--drawer-w-sm",
       "--ds-badge-bg-color",
       "--ds-badge-label-color",
+      "--ds-chart-axis-font-size",
+      "--ds-chart-axis-label-color",
+      "--ds-chart-axis-line-color",
+      "--ds-chart-bar-gap",
+      "--ds-chart-cursor-line-color",
+      "--ds-chart-dim-opacity",
+      "--ds-chart-dot-radius",
+      "--ds-chart-dot-radius-active",
+      "--ds-chart-focus-halo-color",
+      "--ds-chart-focus-ring-color",
+      "--ds-chart-frame-bg-color",
+      "--ds-chart-frame-border-color",
+      "--ds-chart-frame-border-width",
+      "--ds-chart-frame-padding",
+      "--ds-chart-frame-radius",
+      "--ds-chart-grid-line-color",
+      "--ds-chart-hover-bg-color",
+      "--ds-chart-line-width",
+      "--ds-chart-line-width-bold",
+      "--ds-chart-ramp-1-color",
+      "--ds-chart-ramp-2-color",
+      "--ds-chart-ramp-3-color",
+      "--ds-chart-ramp-4-color",
+      "--ds-chart-ramp-5-color",
+      "--ds-chart-ramp-6-color",
+      "--ds-chart-ramp-7-color",
+      "--ds-chart-ramp-8-color",
+      "--ds-chart-series-1-color",
+      "--ds-chart-series-2-color",
+      "--ds-chart-series-3-color",
+      "--ds-chart-series-4-color",
+      "--ds-chart-series-5-color",
+      "--ds-chart-series-6-color",
+      "--ds-chart-series-7-color",
+      "--ds-chart-series-8-color",
+      "--ds-chart-series-accent-color",
+      "--ds-chart-series-default-color",
+      "--ds-chart-tooltip-bg-color",
+      "--ds-chart-tooltip-border-color",
+      "--ds-chart-tooltip-text-color",
       "--ds-check-mark-enter-duration",
       "--ds-check-mark-enter-easing",
       "--ds-check-mark-exit-duration",
@@ -1019,6 +1122,14 @@
       "--ds-link-color",
       "--ds-link-color-active",
       "--ds-link-color-hover",
+      "--ds-motion-chart-mark-duration",
+      "--ds-motion-chart-mark-easing",
+      "--ds-motion-chart-mark-enter-duration",
+      "--ds-motion-chart-mark-enter-easing",
+      "--ds-motion-chart-mark-exit-duration",
+      "--ds-motion-chart-mark-exit-easing",
+      "--ds-motion-chart-state-duration",
+      "--ds-motion-chart-state-easing",
       "--ds-motion-check-enter-duration",
       "--ds-motion-check-enter-easing",
       "--ds-motion-check-exit-duration",
@@ -1875,20 +1986,30 @@
       "--chart-hover-bg-color": "color",
       "--chart-tooltip-bg-color": "other",
       "--chart-tooltip-text-color": "other",
-      "--chart-tooltip-border": "other",
-      "--chart-seq-1": "other",
-      "--chart-seq-2": "other",
-      "--chart-seq-3": "other",
-      "--chart-seq-4": "other",
-      "--chart-seq-5": "other",
-      "--chart-seq-6": "other",
-      "--chart-div--3": "color",
-      "--chart-div--2": "color",
-      "--chart-div--1": "color",
-      "--chart-div-0": "color",
-      "--chart-div-1": "color",
-      "--chart-div-2": "color",
-      "--chart-div-3": "color",
+      "--chart-tooltip-border-color": "other",
+      "--chart-categorical-8": "color",
+      "--chart-series-default": "color",
+      "--chart-ramp-1": "color",
+      "--chart-ramp-2": "color",
+      "--chart-ramp-3": "color",
+      "--chart-ramp-4": "color",
+      "--chart-ramp-5": "color",
+      "--chart-ramp-6": "color",
+      "--chart-ramp-7": "color",
+      "--chart-ramp-8": "color",
+      "--chart-sequential-1": "other",
+      "--chart-sequential-2": "other",
+      "--chart-sequential-3": "other",
+      "--chart-sequential-4": "other",
+      "--chart-sequential-5": "other",
+      "--chart-sequential-6": "other",
+      "--chart-divergent--3": "color",
+      "--chart-divergent--2": "color",
+      "--chart-divergent--1": "color",
+      "--chart-divergent-0": "color",
+      "--chart-divergent-1": "color",
+      "--chart-divergent-2": "color",
+      "--chart-divergent-3": "color",
       "--space-0": "number",
       "--space-px": "length",
       "--space-0-5": "length",
@@ -1983,6 +2104,14 @@
       "--ds-motion-check-enter-easing": "other",
       "--ds-motion-check-exit-duration": "other",
       "--ds-motion-check-exit-easing": "other",
+      "--ds-motion-chart-state-duration": "other",
+      "--ds-motion-chart-state-easing": "other",
+      "--ds-motion-chart-mark-duration": "other",
+      "--ds-motion-chart-mark-easing": "other",
+      "--ds-motion-chart-mark-enter-duration": "other",
+      "--ds-motion-chart-mark-enter-easing": "other",
+      "--ds-motion-chart-mark-exit-duration": "other",
+      "--ds-motion-chart-mark-exit-easing": "other",
       "--opacity-disabled": "number",
       "--opacity-text-disabled": "number",
       "--opacity-scrim": "number",
@@ -2226,27 +2355,72 @@
       "--scroll-spec-h": "length",
       "--tab-spec-maxw": "length",
       "--tab-spec-dot-offset": "other",
-      "--chart-cat-1": "color",
-      "--chart-cat-2": "color",
-      "--chart-cat-3": "color",
-      "--chart-cat-4": "color",
-      "--chart-cat-5": "color",
-      "--chart-cat-6": "color",
-      "--chart-cat-7": "color",
-      "--chart-cat-8": "color",
-      "--chart-axis-line": "other",
-      "--chart-axis-label": "other",
-      "--chart-axis-title": "other",
-      "--chart-grid-line": "other",
-      "--chart-grid-line-strong": "other",
-      "--chart-tick-size": "length",
-      "--chart-axis-fs": "other",
-      "--chart-cursor-line": "other",
+      "--chart-categorical-1": "color",
+      "--chart-categorical-2": "color",
+      "--chart-categorical-3": "color",
+      "--chart-categorical-4": "color",
+      "--chart-categorical-5": "color",
+      "--chart-categorical-6": "color",
+      "--chart-categorical-7": "color",
+      "--chart-series-accent": "other",
+      "--chart-frame-border-color": "other",
+      "--chart-frame-border-width": "other",
+      "--chart-frame-radius": "other",
+      "--chart-frame-padding": "other",
+      "--chart-frame-bg-color": "other",
+      "--chart-axis-line-color": "other",
+      "--chart-axis-label-color": "other",
+      "--chart-grid-line-color": "other",
+      "--chart-axis-font-size": "other",
+      "--chart-dim-opacity": "number",
+      "--chart-cursor-line-color": "other",
+      "--chart-focus-ring-color": "other",
+      "--chart-focus-halo-color": "other",
       "--chart-bar-gap": "length",
-      "--chart-line-w": "length",
-      "--chart-line-w-bold": "length",
-      "--chart-dot-r": "length",
-      "--chart-dot-r-active": "length",
+      "--chart-line-width": "length",
+      "--chart-line-width-bold": "length",
+      "--chart-dot-radius": "length",
+      "--chart-dot-radius-active": "length",
+      "--ds-chart-series-1-color": "other",
+      "--ds-chart-series-2-color": "other",
+      "--ds-chart-series-3-color": "other",
+      "--ds-chart-series-4-color": "other",
+      "--ds-chart-series-5-color": "other",
+      "--ds-chart-series-6-color": "other",
+      "--ds-chart-series-7-color": "other",
+      "--ds-chart-series-8-color": "other",
+      "--ds-chart-series-default-color": "other",
+      "--ds-chart-series-accent-color": "other",
+      "--ds-chart-ramp-1-color": "other",
+      "--ds-chart-ramp-2-color": "other",
+      "--ds-chart-ramp-3-color": "other",
+      "--ds-chart-ramp-4-color": "other",
+      "--ds-chart-ramp-5-color": "other",
+      "--ds-chart-ramp-6-color": "other",
+      "--ds-chart-ramp-7-color": "other",
+      "--ds-chart-ramp-8-color": "other",
+      "--ds-chart-frame-border-color": "other",
+      "--ds-chart-frame-border-width": "other",
+      "--ds-chart-frame-radius": "other",
+      "--ds-chart-frame-padding": "other",
+      "--ds-chart-frame-bg-color": "other",
+      "--ds-chart-axis-line-color": "other",
+      "--ds-chart-axis-label-color": "other",
+      "--ds-chart-axis-font-size": "other",
+      "--ds-chart-grid-line-color": "other",
+      "--ds-chart-dim-opacity": "other",
+      "--ds-chart-hover-bg-color": "other",
+      "--ds-chart-cursor-line-color": "other",
+      "--ds-chart-focus-ring-color": "other",
+      "--ds-chart-focus-halo-color": "other",
+      "--ds-chart-tooltip-bg-color": "other",
+      "--ds-chart-tooltip-text-color": "other",
+      "--ds-chart-tooltip-border-color": "other",
+      "--ds-chart-bar-gap": "other",
+      "--ds-chart-line-width": "other",
+      "--ds-chart-line-width-bold": "other",
+      "--ds-chart-dot-radius": "other",
+      "--ds-chart-dot-radius-active": "other",
       "--_link-color": "other",
       "--_link-color-hover": "other",
       "--_link-color-active": "other",

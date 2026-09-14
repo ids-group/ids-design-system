@@ -38,7 +38,7 @@ export interface AutocompleteProps {
   size?: ('sm' | 'md' | 'lg') | null;
   /** Trigger width — `fill` stretches to the container, `content` hugs the value. */
   width?: (('fill' | 'content'));
-  /** What a settled single value does when it is wider than the trigger. Defaults to `ellipsis`; `wrap` restores the pre-0.12 behaviour, where the value broke onto a second line and pushed the chevron onto a third. Multi mode is unaffected — its chips have their own measured cap. */
+  /** What a settled single value does when it is wider than the trigger. Defaults to `ellipsis`; `wrap` lets the value break onto a second line and pushes the chevron down. Multi mode is unaffected — its chips have their own measured cap. */
   valueOverflow?: ('ellipsis' | 'wrap');
   /** Placeholder shown in the input when empty. */
   placeholder?: string;
@@ -56,11 +56,11 @@ export interface AutocompleteProps {
   name?: string | null;
   /** Prevents opening the panel while still allowing focus. */
   readOnly?: boolean;
-  /** The contract spelling of `readOnly`, a second input because signal forms binds by NAME — a `readonly()` rule was reaching nothing before this existed. */
+  /** The contract spelling of `readOnly`: signal forms binds by NAME, so a `readonly()` rule reaches nothing without it. */
   readonlyBinding?: boolean;
   /** Shows a clear affordance once there is something to clear. */
   clearable?: boolean;
-  /** Placeholder while the field is being typed in, when a value is already settled — `placeholder` is the empty-field caption and cannot be both. Empty (the default) keeps `placeholder` doing both jobs, as before. */
+  /** Placeholder while the field is being typed in, when a value is already settled — `placeholder` is the empty-field caption and cannot be both. Empty (the default) keeps `placeholder` doing both jobs. */
   searchPlaceholder?: string;
   /** How the typed query narrows the list. The default matches a case-insensitive substring of `label`. Pass a predicate to match on anything else — a second field, ignoring diacritics, a fuzzy score. Pass `'none'` when the list arrives already filtered, which is what a server-side search needs: the query is reported through `filterChange` and every option given is rendered. */
   filterWith?: unknown;

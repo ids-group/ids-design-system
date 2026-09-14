@@ -1,5 +1,7 @@
 ## Unreleased
 
+## 0.13.0 — 2026-09-14
+
 ### Breaking
 
 - **`ds-field-group` renders its chrome on an inner row, not on the host.** The border, radius,

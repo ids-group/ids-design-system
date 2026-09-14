@@ -1,16 +1,96 @@
-<!-- @dsCard group="data-display" viewport="1200x510" name="Table - inline editing" subtitle="Columns marked editable: true (Record, Venue, Capacity here) turn into an input on double-click; Enter or blur commits, Escape cancels." --><!DOCTYPE html>
+<!-- @dsCard group="data-display" viewport="1200x510" name="Table - inline editing" subtitle="Columns marked editable: true (Record, Venue, Capacity here) turn into an input on double-click; Enter or blur commits, Escape cancels." --><!doctype html>
 <html data-theme="light"><head><meta charset="utf-8">
   <title>Table</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
-.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
-<style></style><link rel="stylesheet" href="../../../_ds_cards.css"><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}</style></head><body>
-  <div class="ds-page"><ds-docs-components-table _nghost-c2u=""><docs-section _ngcontent-c2u="" anchor="table" eyebrow="Components" title="Table" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-table" data-anchor="table"><h2 _ngcontent-c1="" class="t-h2">Table - inline editing<docs-truncation _ngcontent-c2u="" _nghost-c2=""><button _ngcontent-c2="" type="button" aria-label="Truncation rules" class="i"><ds-icon _ngcontent-c2="" name="info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 18px;" width="18" height="18" stroke-width="1.75" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v.01M11 12h1v4h1"></path></svg></ds-icon></button><div _ngcontent-c2="" role="tooltip" class="panel"><div _ngcontent-c2="" class="panel-title"><ds-icon _ngcontent-c2="" name="filter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 13px;" width="13" height="13" stroke-width="1.75" aria-hidden="true"><path d="M3 5h18l-7 9v6l-4-2v-4z"></path></svg></ds-icon> Truncation </div><ul _ngcontent-c2="" class="list"><li _ngcontent-c2=""><span _ngcontent-c2="" class="field"> Cell text </span><span _ngcontent-c2="" class="behaviour"> Single line, ellipsis at column width (truncate + width). Tooltip on hover; click a clipped cell for a full-value popover. </span></li><li _ngcontent-c2=""><span _ngcontent-c2="" class="field"> Header label </span><span _ngcontent-c2="" class="behaviour"> Single line, no clip. </span></li><li _ngcontent-c2=""><span _ngcontent-c2="" class="field"> Action column </span><span _ngcontent-c2="" class="behaviour"> No clip — icon-only buttons. </span></li></ul></div></docs-truncation></h2><docs-component-meta _ngcontent-c1="" _nghost-c8="" data-key="table"><div _ngcontent-c8="" class="meta"><div _ngcontent-c8="" class="row"><span _ngcontent-c8="" class="chip tagchip"><span _ngcontent-c8="" class="tag">&lt;Table /&gt;</span></span></div></div></docs-component-meta><p _ngcontent-c2u="" class="block-desc t-s"> Columns marked <code _ngcontent-c2u="" class="t-mono-inline">editable: true</code> (Record, Venue, Capacity here) turn into an input on double-click; Enter or blur commits, Escape cancels. The table stays data-agnostic — it emits <code _ngcontent-c2u="" class="t-mono-inline"> (cellEdited)="…" </code> with <code _ngcontent-c2u="" class="t-mono-inline"> { row, key, value } </code> and the consumer applies the update. </p><ds-table _ngcontent-c2u="" caption="Records" _nghost-c2v="" style="--_table-scroller-pad-bottom: 0px; --_table-head-h: 41.65625px;"><div _ngcontent-c2v="" class="table-toolbar"><div _ngcontent-c2v="" class="toolbar-slot"></div></div><ds-loading-overlay _ngcontent-c2v="" _nghost-c2y=""><div _ngcontent-c2y="" class="content"><div _ngcontent-c2v="" class="scroll-wrap"><div _ngcontent-c2v="" role="status" aria-live="polite" class="visually-hidden">  </div><table _ngcontent-c2v="" class="table" style="--_table-virtual-row-h: 44px;"><caption _ngcontent-c2v="" class="visually-hidden"> Records </caption><thead _ngcontent-c2v=""><tr _ngcontent-c2v=""><th _ngcontent-c2v="" scope="col" data-col-key="project"><span _ngcontent-c2v="" class="th-label"> Record </span></th><th _ngcontent-c2v="" scope="col" data-col-key="venue"><span _ngcontent-c2v="" class="th-label"> Venue </span></th><th _ngcontent-c2v="" scope="col" data-col-key="statusLabel"><span _ngcontent-c2v="" class="th-label"> Status </span></th><th _ngcontent-c2v="" scope="col" class="numeric" data-col-key="capacity"><span _ngcontent-c2v="" class="th-label"> Capacity </span></th></tr></thead><tbody _ngcontent-c2v=""><tr _ngcontent-c2v=""><td _ngcontent-c2v="" class="editable-cell"> Project Alpha </td><td _ngcontent-c2v="" class="editable-cell"> North Site </td><td _ngcontent-c2v=""> Active </td><td _ngcontent-c2v="" class="numeric editable-cell"> 1,200 </td></tr><tr _ngcontent-c2v=""><td _ngcontent-c2v="" class="editable-cell"> Project Beta </td><td _ngcontent-c2v="" class="editable-cell"> East Campus </td><td _ngcontent-c2v=""> Confirmed </td><td _ngcontent-c2v="" class="numeric editable-cell"> 680 </td></tr><tr _ngcontent-c2v=""><td _ngcontent-c2v="" class="editable-cell"> Q3 Initiative </td><td _ngcontent-c2v="" class="editable-cell"> South Hub </td><td _ngcontent-c2v=""> Confirmed </td><td _ngcontent-c2v="" class="numeric editable-cell"> 420 </td></tr><tr _ngcontent-c2v=""><td _ngcontent-c2v="" class="editable-cell"> Annual Summit </td><td _ngcontent-c2v="" class="editable-cell"> HQ Auditorium </td><td _ngcontent-c2v=""> Planning </td><td _ngcontent-c2v="" class="numeric editable-cell"> 900 </td></tr></tbody></table></div></div></ds-loading-overlay></ds-table></section></docs-section></ds-docs-components-table></div>
-  
-  <div aria-live="polite" aria-atomic="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border: 0px; margin: -1px; padding: 0px;"></div><div aria-live="polite" aria-atomic="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border: 0px; margin: -1px; padding: 0px;"></div>
-  
-
-
+  <style>
+    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+    .ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
+  </style>
+</head><body>
+  <div class="ds-page"><ds-docs-components-table></ds-docs-components-table></div>
+  <script>window.__dsSectionsOnly = true</script>
+  <script src="../../../_ds_bundle.js"></script>
+  <script>
+    (function () {
+      var OWNS = "";
+      var INDEX = 24;
+      var KEY = "table";
+      var TABLE = false;
+      var HEAD = null;
+      var BLOCK = "inline editing";
+      var REACT = "Table";
+      var WHOLE = OWNS === null;
+      var LEDE = WHOLE || (OWNS === '' && INDEX <= 0);
+      var KEEP = LEDE ? 'h2, p.lede' : 'h2';
+      var DROP_ALWAYS = '.eyebrow' + (LEDE ? '' : ', p.lede');
+      var API = '[data-key]';
+      var host = document.querySelector("ds-docs-components-table");
+      var start = Date.now();
+      (function slice() {
+        var section = host && host.querySelector('.section');
+        if (!section) {
+          if (Date.now() - start < 8000) setTimeout(slice, 50);
+          return;
+        }
+        var owner = '';
+        var doomed = [];
+        var apis = [];
+        var ordinal = -1;
+        var heading = null;
+        for (var node = section.firstElementChild; node; node = node.nextElementSibling) {
+          if (node.matches(DROP_ALWAYS)) { doomed.push(node); continue; }
+          if (WHOLE) continue;
+          if (node.matches(KEEP)) continue;
+          if (node.matches(API)) { apis.push(node); continue; }
+          var marked = node.getAttribute('data-for');
+          var starts = marked !== null || node.matches('h3.block-title');
+          if (marked !== null) owner = marked;
+          else if (node.matches('h3.block-title')) owner = '';
+          if (starts && owner === OWNS) ordinal += 1;
+          if (owner !== OWNS || ordinal !== INDEX) doomed.push(node);
+          else if (starts && node.matches('h3.block-title')) heading = node;
+        }
+        var mine = KEY === '' ? [] : apis.filter(function (n) { return n.getAttribute('data-key') === KEY; });
+        var keepApi = KEY === '' ? [] : (mine.length ? mine : apis.slice(0, 1));
+        if (!WHOLE) {
+          for (var a = 0; a < apis.length; a++) {
+            if (keepApi.indexOf(apis[a]) < 0) { doomed.push(apis[a]); continue; }
+            if (TABLE) continue;
+            if (apis[a].matches('docs-api-table')) { doomed.push(apis[a]); continue; }
+            var nested = apis[a].querySelector('docs-api-table');
+            if (nested) doomed.push(nested);
+          }
+        }
+        var title = section.querySelector('h2');
+        var label = null;
+        for (var c = 0; title && c < title.childNodes.length; c++) {
+          if (title.childNodes[c].nodeType === 3) { label = title.childNodes[c]; break; }
+        }
+        if (title && label === null) {
+          label = document.createTextNode('');
+          title.insertBefore(label, title.firstChild);
+        }
+        if (label) {
+          var head = HEAD || label.nodeValue.trim();
+          label.nodeValue = BLOCK ? head + ' - ' + BLOCK : head;
+          if (BLOCK && heading) doomed.push(heading);
+        }
+        for (var i = 0; i < doomed.length; i++) doomed[i].remove();
+        var wrapper = KEY === '' ? null : section.querySelector('.api-sub[data-key="' + KEY + '"]');
+        var chip = wrapper ? wrapper.querySelector('docs-component-meta') : null;
+        if (chip && title) title.parentNode.insertBefore(chip, title.nextSibling);
+        if (wrapper && wrapper.firstElementChild === null) wrapper.remove();
+        var named = section.querySelector('docs-component-meta .chip .tag');
+        if (REACT && named) named.textContent = '<' + REACT + ' />';
+        var kept = 0;
+        for (var k = section.firstElementChild; k; k = k.nextElementSibling) {
+          if (!k.matches(KEEP) && !k.matches(API) && !k.matches('docs-component-meta')) kept += 1;
+        }
+        document.documentElement.setAttribute('data-ds-sliced', String(doomed.length));
+        document.documentElement.setAttribute('data-ds-kept', String(kept));
+      })();
+    })();
+  </script>
 </body></html>
