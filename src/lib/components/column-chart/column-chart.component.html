@@ -56,6 +56,9 @@
           @for (entry of columns(); track entry.key; let index = $index) {
             <div
               class="column"
+              animate.enter="mark-enter"
+              animate.leave="mark-leave"
+              [style.--_chart-mark-stagger]="markStagger(index)"
               [class.interactive]="interactive()"
               [attr.role]="interactive() ? 'button' : null"
               [attr.tabindex]="interactive() ? 0 : null"

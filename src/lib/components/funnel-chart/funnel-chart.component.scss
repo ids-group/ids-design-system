@@ -3,6 +3,8 @@
 @use '../../styles/chart-data-table' as chart-data-table;
 @use '../../styles/chart-frame' as chart-frame;
 @use '../../styles/chart-interactive' as chart-interactive;
+@use '../../styles/chart-motion' as chart-motion;
+@include chart-motion.staged('.stage');
 @include chart-frame.chart-frame;
 @include chart-data-table.chart-data-table;
 

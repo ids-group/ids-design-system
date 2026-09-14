@@ -91,4 +91,9 @@ export class ColumnChartSection {
   protected readonly nineDigitValuePoints = signal<readonly ColumnChartPoint[]>(
     NINE_DIGIT_VALUE_POINTS,
   );
+
+  protected readonly staggerOffPoints =
+    signal<readonly ColumnChartPoint[]>(SPECIMEN_POINTS);
+  protected readonly staggerOnPoints =
+    signal<readonly ColumnChartPoint[]>(SPECIMEN_POINTS);
 }

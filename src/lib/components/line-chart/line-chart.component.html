@@ -127,20 +127,34 @@
             [attr.y2]="secondaryBaselineY()" />
         }
 
-        @for (entry of plottedSeries(); track entry.series.id) {
+        @for (
+          entry of plottedSeries();
+          track entry.series.id;
+          let seriesIndex = $index
+        ) {
           @for (path of entry.areaPaths; track $index) {
             <path
               class="series-area"
+              animate.enter="mark-enter"
+              animate.leave="mark-leave"
+              [style.--_chart-mark-stagger]="markStagger(seriesIndex)"
               [class.is-dimmed]="isDimmed(entry.series.id)"
               [attr.d]="path"
               [attr.fill]="entry.color" />
           }
         }
 
-        @for (entry of plottedSeries(); track entry.series.id) {
+        @for (
+          entry of plottedSeries();
+          track entry.series.id;
+          let seriesIndex = $index
+        ) {
           @for (points of entry.polylines; track $index) {
             <polyline
               class="series-line"
+              animate.enter="mark-enter"
+              animate.leave="mark-leave"
+              [style.--_chart-mark-stagger]="markStagger(seriesIndex)"
               [class.is-dimmed]="isDimmed(entry.series.id)"
               [attr.points]="points"
               [attr.stroke]="entry.color" />

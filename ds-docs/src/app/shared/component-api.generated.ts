@@ -1121,6 +1121,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
       },
       {
+        "name": "staggerMs",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "0",
+        "required": false,
+        "description": "Milliseconds between one mark's entrance and the next. `0`, the default, is no stagger at all; `40` is the documented non-zero step. The total is capped, so a long series does not crawl in."
+      },
+      {
         "name": "tooltip",
         "kind": "input",
         "type": "Exclude<ChartTooltipTrigger, 'axis'>",
@@ -2131,6 +2140,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
       },
       {
+        "name": "staggerMs",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "0",
+        "required": false,
+        "description": "Milliseconds between one mark's entrance and the next. `0`, the default, is no stagger at all; `40` is the documented non-zero step. The total is capped, so a long series does not crawl in."
+      },
+      {
         "name": "tooltip",
         "kind": "input",
         "type": "Exclude<ChartTooltipTrigger, 'axis'>",
@@ -2726,6 +2744,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
       },
       {
+        "name": "staggerMs",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "0",
+        "required": false,
+        "description": "Milliseconds between one mark's entrance and the next. `0`, the default, is no stagger at all; `40` is the documented non-zero step. The total is capped, so a long series does not crawl in."
+      },
+      {
         "name": "tooltip",
         "kind": "input",
         "type": "Exclude<ChartTooltipTrigger, 'axis'>",
@@ -3263,6 +3290,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
+      },
+      {
+        "name": "staggerMs",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "0",
+        "required": false,
+        "description": "Milliseconds between one mark's entrance and the next. `0`, the default, is no stagger at all; `40` is the documented non-zero step. The total is capped, so a long series does not crawl in."
       },
       {
         "name": "tooltip",
@@ -4158,6 +4194,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "'All series are hidden'",
         "required": false,
         "description": "Shown in place of the plot once the legend has switched every series off. Without it the reader is left with an empty grid and nothing saying why."
+      },
+      {
+        "name": "staggerMs",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "0",
+        "required": false,
+        "description": "Milliseconds between one series' entrance and the next. `0`, the default, is no stagger at all; `40` is the documented non-zero step. The total is capped, so a long list of series does not crawl in."
       },
       {
         "name": "highlightedSeries",

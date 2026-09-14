@@ -19,6 +19,7 @@ export {
   tickValues,
 } from './charts-scale';
 export type { BandScale } from './charts-scale';
+export { staggerDelay } from './charts-motion';
 export { describeSeries } from './charts-summary';
 export type { SummaryPoint } from './charts-summary';
 export { chipFit } from './chip-overflow';

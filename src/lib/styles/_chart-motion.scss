@@ -1,0 +1,45 @@
+// Mark enter and exit, in one place for all five charts.
+//
+// The enter is DELAYED by the exit duration, and that delay is what stages the three phases:
+// removals finish before additions start, so a vanishing mark and an arriving one are never on
+// screen together. Angular's `animate.enter` / `animate.leave` own the classes; this file owns
+// what they mean.
+//
+// `prefers-reduced-motion` is handled globally in `_tokens.scss` — nothing here re-handles it.
+
+@keyframes ds-chart-mark-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+}
+
+@keyframes ds-chart-mark-exit {
+  to {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+}
+
+@mixin staged($mark) {
+  #{$mark} {
+    // An SVG shape's transform box is the whole viewBox, so without this a mark scales about the
+    // chart's origin and flies in from the corner instead of growing in place.
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  // The delay is the exit duration plus this mark's own stagger step, which the component sets
+  // per mark. Unset, `0ms` leaves the staging and adds nothing.
+  #{$mark}.mark-enter {
+    animation: ds-chart-mark-enter var(--ds-motion-chart-mark-enter-duration)
+      var(--ds-motion-chart-mark-enter-easing)
+      calc(var(--ds-motion-chart-mark-exit-duration) + var(--_chart-mark-stagger, 0ms))
+      both;
+  }
+
+  #{$mark}.mark-leave {
+    animation: ds-chart-mark-exit var(--ds-motion-chart-mark-exit-duration)
+      var(--ds-motion-chart-mark-exit-easing) both;
+  }
+}

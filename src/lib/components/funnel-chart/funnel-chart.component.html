@@ -41,6 +41,9 @@
         @for (entry of stages(); track entry.stage.id; let index = $index) {
           <polygon
             class="stage"
+            animate.enter="mark-enter"
+            animate.leave="mark-leave"
+            [style.--_chart-mark-stagger]="markStagger(index)"
             [class.interactive]="interactive()"
             [attr.points]="entry.points"
             [attr.fill]="entry.color"

@@ -18,6 +18,7 @@ import {
   bandScale,
   formatTick,
   formatValue,
+  staggerDelay,
   tickStep,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
@@ -170,6 +171,15 @@ export class LineChartComponent {
   /** Shown in place of the plot once the legend has switched every series off. Without it the
    *  reader is left with an empty grid and nothing saying why. */
   readonly noVisibleSeriesText = input<string>('All series are hidden');
+
+  /** Milliseconds between one series' entrance and the next. `0`, the default, is no stagger at
+   *  all; `40` is the documented non-zero step. The total is capped, so a long list of series does
+   *  not crawl in. */
+  readonly staggerMs = input(0, { transform: numberAttribute });
+
+  protected markStagger(index: number): string {
+    return `${staggerDelay(index, this.staggerMs())}ms`;
+  }
 
   protected readonly highlightedSeries = model<string | null>(null);
 

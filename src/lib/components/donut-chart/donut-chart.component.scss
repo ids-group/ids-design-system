@@ -2,6 +2,8 @@
 @use '../../styles/focus' as focus;
 @use '../../styles/chart-frame' as chart-frame;
 @use '../../styles/chart-interactive' as chart-interactive;
+@use '../../styles/chart-motion' as chart-motion;
+@include chart-motion.staged('.slice');
 @include chart-frame.chart-frame;
 @include chart-data-table.chart-data-table;
 

@@ -1,6 +1,8 @@
 @use '../../styles/chart-data-table' as chart-data-table;
 @use '../../styles/chart-frame' as chart-frame;
 @use '../../styles/chart-interactive' as chart-interactive;
+@use '../../styles/chart-motion' as chart-motion;
+@include chart-motion.staged('.row');
 @include chart-frame.chart-frame;
 @include chart-data-table.chart-data-table;
 
@@ -76,6 +78,11 @@ figcaption {
   display: block;
   block-size: 100%;
   border-radius: inherit;
+
+  // NOTE(chart-layout-transition): `inline-size`, not `transform: scaleX()`, and it is a
+  // considered trade — Stas 2026-09-14, keep the current cap for now. Under a scaled transform the
+  // rounded data-end squashes with the body, so the cap's radius changes shape for the length of
+  // the animation. The cost is a layout pass per frame on one property.
   transition: inline-size var(--ds-motion-chart-mark-duration)
     var(--ds-motion-chart-mark-easing);
 }

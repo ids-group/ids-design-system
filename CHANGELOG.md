@@ -112,6 +112,30 @@
 
 ### Added
 
+- **A mark that arrives and a mark that leaves are now two staged phases.** Removals run first, at
+  `--ds-motion-chart-mark-exit-duration`; additions wait that long and then run at
+  `--ds-motion-chart-mark-enter-duration`, so a vanishing mark and an arriving one are never on
+  screen together. The update phase — a mark changing size — is unchanged and still runs on
+  `--ds-motion-chart-mark-duration`.
+
+  `staggerMs` spaces the arrivals out on all five charts. `0` is the default and means no stagger;
+  `40` is the documented step, and the total delay is capped at 300ms so a hundred-mark series does
+  not take three seconds to appear. Measured on the docs card at `staggerMs="40"`: five columns
+  resolve to 0, 40, 80, 120 and 160ms.
+
+  ```html
+  <ds-column-chart staggerMs="40" [data]="points" />
+  ```
+
+  Every transition retargets rather than queues: a data change mid-animation continues from where
+  the mark actually is. Measured on the column chart's docs card — a bar caught at 163.4px when the
+  second change landed carried on to 169.6px, with no jump back to the first target.
+
+  `prefers-reduced-motion` needs nothing from the charts. The durations are tokens, the library's
+  global rule already zeroes them, and each mark then lands straight on its final size — measured
+  with the tokens zeroed: `animation-duration: 0s`, `animation-delay: 0s`, `opacity: 1`,
+  `transform: none`.
+
 - **`ds-line-chart`'s legend can switch a series off.** `legendFilters` turns each entry into a
   real `<input type="checkbox">` — keyboard-operable and correctly announced without inventing a
   role — and `hiddenSeries` is a two-way `model`, so a page can drive the filter from a URL

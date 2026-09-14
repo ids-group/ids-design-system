@@ -1,6 +1,8 @@
 @use '../../styles/chart-data-table' as chart-data-table;
 @use '../../styles/chart-frame' as chart-frame;
 @use '../../styles/chart-interactive' as chart-interactive;
+@use '../../styles/chart-motion' as chart-motion;
+@include chart-motion.staged('.column');
 @include chart-frame.chart-frame;
 @include chart-data-table.chart-data-table;
 
@@ -114,6 +116,11 @@ figcaption {
   max-inline-size: var(--_column-chart-column-max-width);
   border-start-start-radius: var(--radius-sm);
   border-start-end-radius: var(--radius-sm);
+
+  // NOTE(chart-layout-transition): `block-size`, not `transform: scaleY()`, and it is a
+  // considered trade — Stas 2026-09-14, keep the current cap for now. Under a scaled transform the
+  // rounded top squashes with the body, so the cap's radius changes shape for the length of the
+  // animation. The cost is a layout pass per frame on one property.
   transition: block-size var(--ds-motion-chart-mark-duration)
     var(--ds-motion-chart-mark-easing);
 }

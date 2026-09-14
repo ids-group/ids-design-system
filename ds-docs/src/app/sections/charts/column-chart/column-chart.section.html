@@ -107,6 +107,59 @@
   <docs-chart-data-editor [(rows)]="dataTablePoints" />
 
   <h3 class="block-title t-h4">
+    Stagger
+  </h3>
+
+  <p class="block-desc t-s">
+    A mark that leaves finishes leaving before a mark that arrives starts, so a
+    vanishing column and a new one are never on screen together.
+    <code class="t-mono-inline">
+      staggerMs
+    </code> spaces the arrivals out —
+    <code class="t-mono-inline">
+      0
+    </code>, the default, is no stagger at all, and
+    <code class="t-mono-inline">
+      40
+    </code> is the documented step. The total delay is
+    capped at 300ms, so a long series does not crawl in. Edit the data below to
+    watch it. Under
+    <code class="t-mono-inline">
+      prefers-reduced-motion
+    </code> every
+    duration is zero and each column lands straight on its final size.
+  </p>
+
+  <div class="states states--cols-2">
+    <div class="state-cell">
+      <ds-column-chart
+        caption="No stagger — every column arrives together"
+        dataTable="none"
+        [data]="staggerOffPoints()" />
+
+      <div class="state-cell-label">
+        staggerMs = 0 (default)
+      </div>
+
+      <docs-chart-data-editor [(rows)]="staggerOffPoints" />
+    </div>
+
+    <div class="state-cell">
+      <ds-column-chart
+        caption="Columns arrive 40ms apart"
+        dataTable="none"
+        staggerMs="40"
+        [data]="staggerOnPoints()" />
+
+      <div class="state-cell-label">
+        staggerMs = 40
+      </div>
+
+      <docs-chart-data-editor [(rows)]="staggerOnPoints" />
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
     Edge cases
   </h3>
 

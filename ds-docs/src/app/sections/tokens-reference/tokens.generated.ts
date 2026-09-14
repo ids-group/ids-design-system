@@ -2982,6 +2982,33 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
+    "component": "Chart Motion",
+    "selector": ".chart-motion",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-motion-chart-mark-enter-duration",
+        "value": "—",
+        "notes": ""
+      },
+      {
+        "name": "--ds-motion-chart-mark-enter-easing",
+        "value": "—",
+        "notes": ""
+      },
+      {
+        "name": "--ds-motion-chart-mark-exit-duration",
+        "value": "—",
+        "notes": ""
+      },
+      {
+        "name": "--ds-motion-chart-mark-exit-easing",
+        "value": "—",
+        "notes": ""
+      }
+    ]
+  },
+  {
     "component": "Chart Tooltip",
     "selector": ".chart-tooltip",
     "description": "",

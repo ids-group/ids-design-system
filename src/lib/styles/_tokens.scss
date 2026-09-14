@@ -162,6 +162,13 @@
   --ds-motion-chart-mark-duration:    var(--duration-base);
   --ds-motion-chart-mark-easing:      var(--ease-decelerate);
 
+  /* A mark arriving and a mark leaving are separate roles because the enter waits out the exit:
+     the two durations are added, and one role could not carry both halves of that sum. */
+  --ds-motion-chart-mark-enter-duration: var(--duration-base);
+  --ds-motion-chart-mark-enter-easing:   var(--ease-decelerate);
+  --ds-motion-chart-mark-exit-duration:  var(--duration-fast);
+  --ds-motion-chart-mark-exit-easing:    var(--ease-accelerate);
+
   --opacity-disabled:        0.5;
   --opacity-text-disabled:   0.38;  /* WCAG-derived */
   --opacity-scrim:           0.55;
