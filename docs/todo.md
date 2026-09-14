@@ -14,14 +14,14 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**97 open — 1 P1, 31 P2, 65 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**98 open — 1 P1, 32 P2, 65 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 1
 
 - **Framework & forms**
   - Upgrade to Angular 22 — and re-verify the signal-forms work against it, because one of its breaking changes lands exactly there
 
-### P2 — 31
+### P2 — 32
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Nothing catches a shell that rings on `:focus-within` when it means the keyboard
@@ -59,6 +59,7 @@ item and nothing else.
   - Shared picker internals — DECIDED 2026-09-02 (Stas): BUILD IT
   - The button's colour-family slots are named `--c-*`, which is not an acceptable name
 - **Tooling**
+  - Publishing to npm stops working in January 2027 and the replacement is not chosen
   - Nothing catches a stale `presentations/ds.css`, and two gates read it as the truth
   - Publishing to Claude Design cannot run from Bitbucket, and Stas wants the CI route looked at again (recorded 2026-09-02)
   - `fix:all` reformats HTML that eslint then fights, and it is `fix:all` alone — `lint:all` is green
@@ -1054,6 +1055,11 @@ styles. `presentations/README.md` holds the authoring contract and the fifteen l
 - [ ] **[P3] CDK Menu adoption (option B) — parked.** ONLY if/when nested submenus, a menubar, or context menus are needed. `ds-menu` = native roving + `DsOverlayCloseRef` (verified still native, 2026-07-24 — correct for flat menus). Plan: `docs/superpowers/cdk-menu-adoption.md`. When we move, prefer `@angular/aria` `ngMenu` over CDK Menu; gated on a real need or `@angular/aria` going stable.
 
 ## Tooling
+
+- [ ] **[P2] Publishing to npm stops working in January 2027 and the replacement is not chosen.** `publish.sh` authenticates with `NPM_TOKEN`, a granular token with **Bypass 2FA** on. npm removes direct publish for such a token in January 2027, leaving it able to read private packages and to stage a publish that a maintainer then approves with 2FA. Two failure shapes mark the token itself, and both fail the tag pipeline at `npm publish` with a tarball already built: `E404` on the `PUT` is an expired or revoked token, `EOTP` is a token whose Bypass 2FA is off — npm's default for a newly generated one.
+  **The fork:** staged publishing, where the tag pipeline stages and a maintainer approves each release by hand, against trusted publishing over OIDC, which needs no token at all. `bitbucket-pipelines.yml` records that Bitbucket is not an npm trusted publisher, so the OIDC route has to be re-checked before it is ruled out rather than assumed gone.
+  **Whichever wins, the 90-day rotation goes away with it** — that cap is npm's on a write-enabled granular token, and it is the only reason a release can fail on a date nobody touched.
+  Stas 2026-09-14: keep the token, decide the route later.
 
 - [ ] **[P3] Three `ds-table` paths have never been driven by automation, and five component groups have never been clicked through.** The paths: dragging a column by its handle to reorder, drag-resizing a column, and CSV export — each is pointer-sequence or file-download work that every sweep so far has read statically or skipped. The groups whose demos no automated pass has ever exercised: `actions`, `navigation`, `feedback-status`, `overlays`, `page-structure`. Recorded so the coverage is a known hole rather than an assumption: the focus and accessible-name sweeps DID load all thirteen group pages, so what is missing is interaction, not rendering.
 
