@@ -1,6 +1,6 @@
 export { ChartTooltipDirective } from './chart-tooltip.directive';
-export { ChartTooltipPanelComponent } from './chart-tooltip-panel.component';
 export type {
+  ChartItemTooltipTrigger,
   ChartTooltipContext,
   ChartTooltipEntry,
   ChartTooltipOrigin,

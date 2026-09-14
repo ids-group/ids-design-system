@@ -29,8 +29,8 @@ import {
   chartActiveMark,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import type {
+  ChartItemTooltipTrigger,
   ChartTooltipContext,
-  ChartTooltipTrigger,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import { heightPercent, resolveDomainMax } from './column-chart.math';
 import type { ColumnChartPoint } from './column-chart.types';
@@ -105,7 +105,7 @@ export class ColumnChartComponent {
 
   /** Whether a hovered or focused column opens a tooltip. `'axis'` is not offered — a
    *  column chart's marks ARE its categories, so an axis tooltip would repeat the item one. */
-  readonly tooltip = input<Exclude<ChartTooltipTrigger, 'axis'>>('item');
+  readonly tooltip = input<ChartItemTooltipTrigger>('item');
 
   protected readonly tooltipTemplate =
     contentChild<TemplateRef<{ $implicit: ChartTooltipContext }>>(

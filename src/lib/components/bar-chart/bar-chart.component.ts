@@ -26,8 +26,8 @@ import {
   chartActiveMark,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import type {
+  ChartItemTooltipTrigger,
   ChartTooltipContext,
-  ChartTooltipTrigger,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import { resolveMax, widthPercent } from './bar-chart.math';
 import type { BarChartRow } from './bar-chart.types';
@@ -103,7 +103,7 @@ export class BarChartComponent {
 
   /** Whether a hovered or focused row opens a tooltip. `'axis'` is not offered — a bar
    *  chart's marks ARE its categories, so an axis tooltip would repeat the item one. */
-  readonly tooltip = input<Exclude<ChartTooltipTrigger, 'axis'>>('item');
+  readonly tooltip = input<ChartItemTooltipTrigger>('item');
 
   protected readonly tooltipTemplate =
     contentChild<TemplateRef<{ $implicit: ChartTooltipContext }>>(

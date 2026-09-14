@@ -85,9 +85,9 @@ export type {
   CardPadding,
 } from '@ids-group-ltd/ids-design-system/components/card';
 export type { ChartLegendItem } from '@ids-group-ltd/ids-design-system/components/chart-legend';
-export { ChartTooltipPanelComponent } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 export type {
   ChartActiveMark,
+  ChartItemTooltipTrigger,
   ChartTooltipContext,
   ChartTooltipEntry,
   ChartTooltipOrigin,

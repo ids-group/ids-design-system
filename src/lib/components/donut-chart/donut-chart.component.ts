@@ -26,8 +26,8 @@ import {
   chartActiveMark,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import type {
+  ChartItemTooltipTrigger,
   ChartTooltipContext,
-  ChartTooltipTrigger,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import {
   DEFAULT_THICKNESS,
@@ -132,7 +132,7 @@ export class DonutChartComponent {
 
   /** Whether a hovered or focused slice opens a tooltip. `'axis'` is not offered — a ring
    *  has no axis to group readings under. */
-  readonly tooltip = input<Exclude<ChartTooltipTrigger, 'axis'>>('item');
+  readonly tooltip = input<ChartItemTooltipTrigger>('item');
 
   protected readonly tooltipTemplate =
     contentChild<TemplateRef<{ $implicit: ChartTooltipContext }>>(

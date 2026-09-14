@@ -3,6 +3,11 @@
  *  chart needs and a bar chart does not. */
 export type ChartTooltipTrigger = 'item' | 'axis' | 'none';
 
+/** The subset a chart whose marks ARE its categories offers. Spelled out rather than written as
+ *  `Exclude<ChartTooltipTrigger, 'axis'>`: the React wrapper generator cannot resolve a built-in
+ *  utility type, so the conditional collapses the whole input to `unknown` on that side. */
+export type ChartItemTooltipTrigger = 'item' | 'none';
+
 export interface ChartTooltipEntry {
   readonly label: string;
   readonly value: number;

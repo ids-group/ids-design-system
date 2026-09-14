@@ -27,8 +27,8 @@ import {
   chartActiveMark,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import type {
+  ChartItemTooltipTrigger,
   ChartTooltipContext,
-  ChartTooltipTrigger,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import {
   FUNNEL_VIEW_BOX_HEIGHT,
@@ -118,7 +118,7 @@ export class FunnelChartComponent {
 
   /** Whether a hovered or focused stage opens a tooltip. `'axis'` is not offered — a
    *  funnel's stages are its categories, so an axis tooltip would repeat the item one. */
-  readonly tooltip = input<Exclude<ChartTooltipTrigger, 'axis'>>('item');
+  readonly tooltip = input<ChartItemTooltipTrigger>('item');
 
   protected readonly tooltipTemplate =
     contentChild<TemplateRef<{ $implicit: ChartTooltipContext }>>(
