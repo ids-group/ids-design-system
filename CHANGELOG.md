@@ -332,7 +332,7 @@
 
 | your workaround | why it is unnecessary | replace with |
 | --- | --- | --- |
-| a hand-written `.btn` class kept only for controls that need `fragment`, `queryParams`, `target` or `rel` | those reach `ds-button` now, so the control can move with the rest | `ds-button` with the matching input |
+| `class="btn` — a hand-written button class kept only for controls that need `fragment`, `queryParams`, `target` or `rel` | those reach `ds-button` now, so the control can move with the rest | `ds-button` with the matching input |
 | `[routerLink]="'/path?a=1#b'"` — a query or hash folded into the link string | the string was percent-encoded into the path and never worked; the inputs carry them properly | `[queryParams]` and `fragment` |
 | importing `RouterLink` in your own component to write `[queryParams]` on a `<ds-button>` | that put a second `RouterLink` on the host, disagreeing with the anchor's about the destination | the component's own inputs |
 | `ds-stat { --ds-stat-value-white-space: normal; }` written only to stop a long value painting over the tile beside it | the value clips by default, so it no longer escapes its card | nothing — keep the hook only where you want the value wrapped and the tile taller |
