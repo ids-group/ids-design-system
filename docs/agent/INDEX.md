@@ -19,7 +19,7 @@ and token names.** These leaves are for orientation and usage.
 
 ## charts
 
-- [<ds-bar-chart> — BarChartComponent](charts/ds-bar-chart.md) — Row: BarChartRow = { label: string; value: number; percent?: number; color?: string }. percent is derived from
+- [<ds-bar-chart> — BarChartComponent](charts/ds-bar-chart.md) — Interaction: interactive: boolean = false turns on the affordance — pointer cursor, hover tint and the keyboar
 - [<ds-column-chart> — ColumnChartComponent](charts/ds-column-chart.md) — Vertical columns for a short series read left to right — months, stages, teams — measured against one value ax
 - [<ds-donut-chart> — DonutChartComponent](charts/ds-donut-chart.md) — A ring that splits one total into its parts, with the middle free for the total or a headline figure of your o
 - [<ds-funnel-chart> — FunnelChartComponent](charts/ds-funnel-chart.md) — Stages of a journey, drawn top to bottom in the order you give them — they are never sorted, because the order

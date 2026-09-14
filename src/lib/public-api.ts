@@ -162,6 +162,7 @@ export { LineChartComponent } from '@ids-group-ltd/ids-design-system/components/
 export type {
   LineChartAxisMode,
   LineChartGaps,
+  LineChartPoint,
   LineChartSeries,
 } from '@ids-group-ltd/ids-design-system/components/line-chart';
 export {

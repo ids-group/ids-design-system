@@ -901,24 +901,9 @@ export const CHARTS: readonly ColourRow[] = [
     "notes": "Chart axis tick label colour."
   },
   {
-    "name": "--chart-axis-title-color",
-    "value": "var(--text-secondary)",
-    "notes": "Chart axis title colour."
-  },
-  {
     "name": "--chart-grid-line-color",
     "value": "var(--neutral-150)",
     "notes": "Chart background grid line colour."
-  },
-  {
-    "name": "--chart-grid-line-strong-color",
-    "value": "var(--neutral-200)",
-    "notes": "Chart background grid line colour, emphasised (e.g. zero line)."
-  },
-  {
-    "name": "--chart-tick-size",
-    "value": "4px",
-    "notes": "Chart axis tick mark length (4px)."
   },
   {
     "name": "--chart-axis-font-size",
@@ -939,6 +924,16 @@ export const CHARTS: readonly ColourRow[] = [
     "name": "--chart-cursor-line-color",
     "value": "var(--neutral-400)",
     "notes": "Chart crosshair/cursor line colour."
+  },
+  {
+    "name": "--chart-focus-ring-color",
+    "value": "white",
+    "notes": ""
+  },
+  {
+    "name": "--chart-focus-halo-color",
+    "value": "var(--static-ink)",
+    "notes": ""
   },
   {
     "name": "--chart-tooltip-bg-color",
@@ -1106,11 +1101,6 @@ export const CHARTS: readonly ColourRow[] = [
     "notes": "Chart axis tick-label colour. Set this, not --chart-axis-label-color."
   },
   {
-    "name": "--ds-chart-axis-title-color",
-    "value": "var(--chart-axis-title-color)",
-    "notes": "Chart axis title colour. Set this, not --chart-axis-title-color."
-  },
-  {
     "name": "--ds-chart-axis-font-size",
     "value": "var(--chart-axis-font-size)",
     "notes": "Chart axis label size. Set this, not --chart-axis-font-size."
@@ -1119,11 +1109,6 @@ export const CHARTS: readonly ColourRow[] = [
     "name": "--ds-chart-grid-line-color",
     "value": "var(--chart-grid-line-color)",
     "notes": "Chart gridline colour. Set this, not --chart-grid-line-color."
-  },
-  {
-    "name": "--ds-chart-grid-line-strong-color",
-    "value": "var(--chart-grid-line-strong-color)",
-    "notes": "Emphasised chart gridline colour. Set this, not --chart-grid-line-strong-color."
   },
   {
     "name": "--ds-chart-dim-opacity",
@@ -1139,6 +1124,16 @@ export const CHARTS: readonly ColourRow[] = [
     "name": "--ds-chart-cursor-line-color",
     "value": "var(--chart-cursor-line-color)",
     "notes": "Chart crosshair line colour. Set this, not --chart-cursor-line-color."
+  },
+  {
+    "name": "--ds-chart-focus-ring-color",
+    "value": "var(--chart-focus-ring-color)",
+    "notes": ""
+  },
+  {
+    "name": "--ds-chart-focus-halo-color",
+    "value": "var(--chart-focus-halo-color)",
+    "notes": ""
   },
   {
     "name": "--ds-chart-tooltip-bg-color",
@@ -1179,11 +1174,6 @@ export const CHARTS: readonly ColourRow[] = [
     "name": "--ds-chart-dot-radius-active",
     "value": "var(--chart-dot-radius-active)",
     "notes": "Chart data-point dot radius while active. Set this, not --chart-dot-radius-active."
-  },
-  {
-    "name": "--ds-chart-tick-size",
-    "value": "var(--chart-tick-size)",
-    "notes": "Chart axis tick-mark length. Set this, not --chart-tick-size."
   }
 ];
 
@@ -4218,6 +4208,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-line-chart-cursor-line-color",
         "value": "var(--ds-chart-cursor-line-color)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-line-chart-line-width-bold",
+        "value": "var(--ds-chart-line-width-bold)",
         "notes": ""
       },
       {

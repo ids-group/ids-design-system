@@ -214,5 +214,16 @@
 
       <docs-chart-data-editor [(rows)]="zeroFirstStageStages" />
     </div>
+
+    <div class="state-cell">
+      <ds-funnel-chart
+        dataTable="none"
+        error
+        [data]="specimenStages()" />
+
+      <div class="state-cell-label">
+        Error
+      </div>
+    </div>
   </div>
 </docs-section>

@@ -181,5 +181,16 @@
 
       <docs-chart-data-editor [(rows)]="maxBelowDataRows" />
     </div>
+
+    <div class="state-cell">
+      <ds-bar-chart
+        dataTable="none"
+        error
+        [data]="specimenRows()" />
+
+      <div class="state-cell-label">
+        Error
+      </div>
+    </div>
   </div>
 </docs-section>

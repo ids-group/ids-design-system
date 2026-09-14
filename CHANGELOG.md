@@ -112,6 +112,10 @@
 
 ### Added
 
+- **`LineChartPoint` is exported.** `(pointClicked)` on `ds-line-chart` has always emitted it, and
+  the type was reachable from nowhere — a consumer typing the handler had to restate the shape by
+  hand.
+
 - **The focus ring on a chart mark is two tones, and it is drawn rather than outlined.** A white
   stroke with a dark halo around it, because one tone is not enough: an accent ring disappears on a
   mark of its own hue family, and a chart's marks are exactly the surfaces a ring has to survive.

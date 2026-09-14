@@ -24,7 +24,9 @@ import type { ChartTooltipContext } from './chart-tooltip.types';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChartTooltipPanelComponent {
+  /** The category and the readings the panel prints. */
   readonly context = input.required<ChartTooltipContext>();
+  /** The chart's projected `#dsChartTooltip` template. Null renders the built-in rows. */
   readonly template = input<TemplateRef<{
     $implicit: ChartTooltipContext;
   }> | null>(null);

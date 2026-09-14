@@ -71,6 +71,8 @@ export class FunnelChartComponent {
    *  repeat a strict subset of these same numbers, so it is not rendered. */
   readonly showTable = input(true, { transform: booleanAttribute });
 
+  /** Printed above the plot as the chart's visible title, and reused as the annex table's
+   *  caption. */
   readonly caption = input<string | null>(null);
 
   /** Accessible name. Generated from the data when omitted. */
@@ -79,12 +81,21 @@ export class FunnelChartComponent {
   /** The label-and-value disclosure every chart carries. Ignored while
    *  `showTable` is on, which already prints every label and value. */
   readonly dataTable = input<'toggle' | 'visible' | 'none'>('toggle');
+  /** Draws skeleton marks in place of the data, at the same count, so the chart does not resize
+   *  when the data lands. */
   readonly loading = input(false, { transform: booleanAttribute });
+  /** Shown in place of the plot when `data` is empty. */
   readonly emptyText = input<string>('No data');
 
+  /** Shows `errorText` in place of the plot. Separate from `loading` and from an empty `data`,
+   *  because "the request failed" and "there is nothing to show" read the same to a reader and
+   *  mean opposite things. */
   readonly error = input(false, { transform: booleanAttribute });
 
+  /** The message the error state prints. */
   readonly errorText = input<string>('Could not load the data');
+  /** Formats every value the chart prints, the annex table and the generated description
+   *  included. Defaults to the browser's locale grouping with a K/M/B suffix past four digits. */
   readonly valueFormat = input<(value: number) => string>(defaultValueFormat);
 
   /** Turns on the click affordance — the pointer cursor and any hover tint.
@@ -92,6 +103,8 @@ export class FunnelChartComponent {
    *  binds the output and forgets the flag still receives every click. */
   readonly interactive = input(false, { transform: booleanAttribute });
 
+  /** The stage that was clicked, or activated with Enter or Space. Fires whether or not
+   *  `interactive` is set. */
   readonly stageClicked = output<FunnelChartStage>();
 
   /** Milliseconds between one mark's entrance and the next. `0`, the default, is no stagger at

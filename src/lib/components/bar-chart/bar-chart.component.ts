@@ -44,6 +44,7 @@ const defaultValueFormat = (value: number) => formatValue(value);
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BarChartComponent {
+  /** One row per bar, drawn in the order given. */
   readonly data = input.required<readonly BarChartRow[]>();
 
   /** Track length is relative to this. Null uses the largest value, so the
@@ -52,19 +53,34 @@ export class BarChartComponent {
     transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
   });
 
+  /** Printed above the plot as the chart's visible title, and reused as the annex table's
+   *  caption. */
   readonly caption = input<string | null>(null);
 
   /** Accessible name. Generated from the data when omitted. */
   readonly summary = input<string | null>(null);
 
+  /** The label-and-value table under the plot: `'toggle'` puts it behind a disclosure,
+   *  `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so
+   *  `'none'` belongs only where the same data is already in a table on the page. */
   readonly dataTable = input<'toggle' | 'visible' | 'none'>('toggle');
+  /** Prints each row's share of `max` beside its value. */
   readonly showPercent = input(true, { transform: booleanAttribute });
+  /** Draws skeleton marks in place of the data, at the same count, so the chart does not resize
+   *  when the data lands. */
   readonly loading = input(false, { transform: booleanAttribute });
+  /** Shown in place of the plot when `data` is empty. */
   readonly emptyText = input<string>('No data');
 
+  /** Shows `errorText` in place of the plot. Separate from `loading` and from an empty `data`,
+   *  because "the request failed" and "there is nothing to show" read the same to a reader and
+   *  mean opposite things. */
   readonly error = input(false, { transform: booleanAttribute });
 
+  /** The message the error state prints. */
   readonly errorText = input<string>('Could not load the data');
+  /** Formats every value the chart prints, the annex table and the generated description
+   *  included. Defaults to the browser's locale grouping with a K/M/B suffix past four digits. */
   readonly valueFormat = input<(value: number) => string>(defaultValueFormat);
 
   /** Turns on the click affordance — the pointer cursor and any hover tint.
@@ -72,6 +88,8 @@ export class BarChartComponent {
    *  binds the output and forgets the flag still receives every click. */
   readonly interactive = input(false, { transform: booleanAttribute });
 
+  /** The row that was clicked, or activated with Enter or Space. Fires whether or not
+   *  `interactive` is set. */
   readonly rowClicked = output<BarChartRow>();
 
   /** Milliseconds between one mark's entrance and the next. `0`, the default, is no stagger at

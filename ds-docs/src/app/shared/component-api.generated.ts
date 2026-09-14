@@ -1015,7 +1015,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": true,
-        "description": ""
+        "description": "One row per bar, drawn in the order given."
       },
       {
         "name": "max",
@@ -1033,7 +1033,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Printed above the plot as the chart's visible title, and reused as the annex table's caption."
       },
       {
         "name": "summary",
@@ -1055,7 +1055,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'toggle'",
         "required": false,
-        "description": ""
+        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page."
       },
       {
         "name": "showPercent",
@@ -1064,7 +1064,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "true",
         "required": false,
-        "description": ""
+        "description": "Prints each row's share of `max` beside its value."
       },
       {
         "name": "loading",
@@ -1073,7 +1073,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize when the data lands."
       },
       {
         "name": "emptyText",
@@ -1082,7 +1082,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "'No data'",
         "required": false,
-        "description": ""
+        "description": "Shown in place of the plot when `data` is empty."
       },
       {
         "name": "error",
@@ -1091,7 +1091,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from an empty `data`, because \"the request failed\" and \"there is nothing to show\" read the same to a reader and mean opposite things."
       },
       {
         "name": "errorText",
@@ -1100,7 +1100,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "'Could not load the data'",
         "required": false,
-        "description": ""
+        "description": "The message the error state prints."
       },
       {
         "name": "valueFormat",
@@ -1109,7 +1109,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "defaultValueFormat",
         "required": false,
-        "description": ""
+        "description": "Formats every value the chart prints, the annex table and the generated description included. Defaults to the browser's locale grouping with a K/M/B suffix past four digits."
       },
       {
         "name": "interactive",
@@ -1150,7 +1150,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": ""
+        "description": "The row that was clicked, or activated with Enter or Space. Fires whether or not `interactive` is set."
       }
     ]
   },
@@ -1673,7 +1673,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": true,
-        "description": ""
+        "description": "The category and the readings the panel prints."
       },
       {
         "name": "template",
@@ -1682,7 +1682,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "The chart's projected `#dsChartTooltip` template. Null renders the built-in rows."
       }
     ],
     "outputs": []
@@ -2034,7 +2034,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": true,
-        "description": ""
+        "description": "One column per point, drawn in the order given."
       },
       {
         "name": "showValues",
@@ -2061,7 +2061,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Printed above the plot as the chart's visible title, and reused as the annex table's caption."
       },
       {
         "name": "summary",
@@ -2083,7 +2083,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'toggle'",
         "required": false,
-        "description": ""
+        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page."
       },
       {
         "name": "loading",
@@ -2092,7 +2092,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize when the data lands."
       },
       {
         "name": "emptyText",
@@ -2101,7 +2101,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "'No data'",
         "required": false,
-        "description": ""
+        "description": "Shown in place of the plot when `data` is empty."
       },
       {
         "name": "error",
@@ -2110,7 +2110,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from an empty `data`, because \"the request failed\" and \"there is nothing to show\" read the same to a reader and mean opposite things."
       },
       {
         "name": "errorText",
@@ -2119,7 +2119,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "'Could not load the data'",
         "required": false,
-        "description": ""
+        "description": "The message the error state prints."
       },
       {
         "name": "valueFormat",
@@ -2128,7 +2128,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "defaultValueFormat",
         "required": false,
-        "description": ""
+        "description": "Formats every value the chart prints, the annex table and the generated description included. Defaults to the browser's locale grouping with a K/M/B suffix past four digits."
       },
       {
         "name": "interactive",
@@ -2169,7 +2169,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": ""
+        "description": "The point that was clicked, or activated with Enter or Space. Fires whether or not `interactive` is set."
       }
     ]
   },
@@ -2598,7 +2598,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": true,
-        "description": ""
+        "description": "One slice per entry. A non-positive or non-finite value counts as zero — a ring is a part-to-whole picture and has no way to draw a negative share."
       },
       {
         "name": "centerValue",
@@ -2616,7 +2616,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Caption under the centre value."
       },
       {
         "name": "legend",
@@ -2665,7 +2665,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Printed above the plot as the chart's visible title, and reused as the annex table's caption."
       },
       {
         "name": "summary",
@@ -2687,7 +2687,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'toggle'",
         "required": false,
-        "description": ""
+        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page."
       },
       {
         "name": "loading",
@@ -2696,7 +2696,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize when the data lands."
       },
       {
         "name": "emptyText",
@@ -2705,7 +2705,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "'No data'",
         "required": false,
-        "description": ""
+        "description": "Shown in place of the plot when `data` is empty."
       },
       {
         "name": "error",
@@ -2714,7 +2714,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from an empty `data`, because \"the request failed\" and \"there is nothing to show\" read the same to a reader and mean opposite things."
       },
       {
         "name": "errorText",
@@ -2723,7 +2723,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "'Could not load the data'",
         "required": false,
-        "description": ""
+        "description": "The message the error state prints."
       },
       {
         "name": "valueFormat",
@@ -2732,7 +2732,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "defaultValueFormat",
         "required": false,
-        "description": ""
+        "description": "Formats every value the chart prints, the annex table and the generated description included. Defaults to the browser's locale grouping with a K/M/B suffix past four digits."
       },
       {
         "name": "interactive",
@@ -2773,7 +2773,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": ""
+        "description": "The slice that was clicked, or activated with Enter or Space. Fires whether or not `interactive` is set."
       }
     ]
   },
@@ -3213,7 +3213,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Printed above the plot as the chart's visible title, and reused as the annex table's caption."
       },
       {
         "name": "summary",
@@ -3244,7 +3244,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize when the data lands."
       },
       {
         "name": "emptyText",
@@ -3253,7 +3253,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "'No data'",
         "required": false,
-        "description": ""
+        "description": "Shown in place of the plot when `data` is empty."
       },
       {
         "name": "error",
@@ -3262,7 +3262,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from an empty `data`, because \"the request failed\" and \"there is nothing to show\" read the same to a reader and mean opposite things."
       },
       {
         "name": "errorText",
@@ -3271,7 +3271,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "'Could not load the data'",
         "required": false,
-        "description": ""
+        "description": "The message the error state prints."
       },
       {
         "name": "valueFormat",
@@ -3280,7 +3280,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "defaultValueFormat",
         "required": false,
-        "description": ""
+        "description": "Formats every value the chart prints, the annex table and the generated description included. Defaults to the browser's locale grouping with a K/M/B suffix past four digits."
       },
       {
         "name": "interactive",
@@ -3321,7 +3321,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": ""
+        "description": "The stage that was clicked, or activated with Enter or Space. Fires whether or not `interactive` is set."
       }
     ]
   },
@@ -4028,7 +4028,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": true,
-        "description": ""
+        "description": "One line per entry. Every series is read against `categories`, so a series longer than it loses its tail and a shorter one ends early."
       },
       {
         "name": "yAxisMode",
@@ -4051,7 +4051,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "true",
         "required": false,
-        "description": ""
+        "description": "Draws a dot at every reading. Off, the dots appear on hover and on focus only."
       },
       {
         "name": "interactive",
@@ -4081,7 +4081,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "LINE_CHART_DEFAULT_TICK_COUNT",
         "required": false,
-        "description": ""
+        "description": "How many value-axis ticks to aim for. A hint, not a count: ticks snap to a round step, so the axis may carry one more or one fewer."
       },
       {
         "name": "caption",
@@ -4090,7 +4090,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": ""
+        "description": "Printed above the plot as the chart's visible title, and reused as the annex table's caption."
       },
       {
         "name": "summary",
@@ -4112,7 +4112,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'toggle'",
         "required": false,
-        "description": ""
+        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page."
       },
       {
         "name": "loading",
@@ -4121,7 +4121,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize when the data lands."
       },
       {
         "name": "emptyText",
@@ -4130,7 +4130,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "'No data'",
         "required": false,
-        "description": ""
+        "description": "Shown in place of the plot when `data` is empty."
       },
       {
         "name": "error",
@@ -4139,7 +4139,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": ""
+        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from an empty `data`, because \"the request failed\" and \"there is nothing to show\" read the same to a reader and mean opposite things."
       },
       {
         "name": "errorText",
@@ -4148,7 +4148,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "'Could not load the data'",
         "required": false,
-        "description": ""
+        "description": "The message the error state prints."
       },
       {
         "name": "valueFormat",
@@ -4157,7 +4157,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "defaultValueFormat",
         "required": false,
-        "description": ""
+        "description": "Formats every value the chart prints, the annex table and the generated description included. Defaults to the browser's locale grouping with a K/M/B suffix past four digits."
       },
       {
         "name": "hiddenSeries",
@@ -4196,6 +4196,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Shown in place of the plot once the legend has switched every series off. Without it the reader is left with an empty grid and nothing saying why."
       },
       {
+        "name": "patterns",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Gives every series a dash pattern of its own, so the lines are told apart by shape as well as by colour — WCAG technique G111. Off by default: the shipped palette clears the colour-blind separation threshold on its own, so the patterns are for monochrome print, for a retuned palette, and for a reader who asks for them."
+      },
+      {
         "name": "staggerMs",
         "kind": "input",
         "type": "number",
@@ -4203,15 +4212,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "0",
         "required": false,
         "description": "Milliseconds between one series' entrance and the next. `0`, the default, is no stagger at all; `40` is the documented non-zero step. The total is capped, so a long list of series does not crawl in."
-      },
-      {
-        "name": "highlightedSeries",
-        "kind": "model",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": ""
       },
       {
         "name": "tooltip",
@@ -4235,7 +4235,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": ""
+        "description": "The point that was clicked, or activated with Enter or Space. Fires whether or not `interactive` is set."
       }
     ]
   },

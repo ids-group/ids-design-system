@@ -116,11 +116,14 @@ export class LineChartComponent {
   /** X labels. Every series' `data` is read against this length. */
   readonly categories = input.required<readonly string[]>();
 
+  /** One line per entry. Every series is read against `categories`, so a series longer than it
+   *  loses its tail and a shorter one ends early. */
   readonly series = input.required<readonly LineChartSeries[]>();
 
   /** How a secondary axis relates to the primary one. */
   readonly yAxisMode = input<LineChartAxisMode>('rounded');
 
+  /** Draws a dot at every reading. Off, the dots appear on hover and on focus only. */
   readonly showMarkers = input(true, { transform: booleanAttribute });
 
   /** Makes every reading focusable and clickable. A series drawn without markers grows invisible
@@ -130,28 +133,46 @@ export class LineChartComponent {
    *  forgets the flag still receives every click. */
   readonly interactive = input(false, { transform: booleanAttribute });
 
+  /** The point that was clicked, or activated with Enter or Space. Fires whether or not
+   *  `interactive` is set. */
   readonly pointClicked = output<LineChartPoint>();
 
   /** What a `null` reading draws. The default refuses to assert that a missing
    *  reading is a zero. */
   readonly gaps = input<LineChartGaps>('break');
 
+  /** How many value-axis ticks to aim for. A hint, not a count: ticks snap to a round step, so
+   *  the axis may carry one more or one fewer. */
   readonly tickCount = input(LINE_CHART_DEFAULT_TICK_COUNT, {
     transform: numberAttribute,
   });
 
+  /** Printed above the plot as the chart's visible title, and reused as the annex table's
+   *  caption. */
   readonly caption = input<string | null>(null);
 
   /** Accessible name. Generated from the data when omitted. */
   readonly summary = input<string | null>(null);
 
+  /** The label-and-value table under the plot: `'toggle'` puts it behind a disclosure,
+   *  `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so
+   *  `'none'` belongs only where the same data is already in a table on the page. */
   readonly dataTable = input<'toggle' | 'visible' | 'none'>('toggle');
+  /** Draws skeleton marks in place of the data, at the same count, so the chart does not resize
+   *  when the data lands. */
   readonly loading = input(false, { transform: booleanAttribute });
+  /** Shown in place of the plot when `data` is empty. */
   readonly emptyText = input<string>('No data');
 
+  /** Shows `errorText` in place of the plot. Separate from `loading` and from an empty `data`,
+   *  because "the request failed" and "there is nothing to show" read the same to a reader and
+   *  mean opposite things. */
   readonly error = input(false, { transform: booleanAttribute });
 
+  /** The message the error state prints. */
   readonly errorText = input<string>('Could not load the data');
+  /** Formats every value the chart prints, the annex table and the generated description
+   *  included. Defaults to the browser's locale grouping with a K/M/B suffix past four digits. */
   readonly valueFormat = input<(value: number) => string>(defaultValueFormat);
 
   protected readonly viewBox = `0 0 ${LINE_CHART_VIEW_WIDTH} ${LINE_CHART_VIEW_HEIGHT}`;
@@ -212,7 +233,7 @@ export class LineChartComponent {
     return `${staggerDelay(index, this.staggerMs())}ms`;
   }
 
-  protected readonly highlightedSeries = model<string | null>(null);
+  protected readonly highlightedSeries = signal<string | null>(null);
 
   protected readonly visibleSeries = computed<readonly ResolvedSeries[]>(() => {
     const hidden = this.hiddenSeries();

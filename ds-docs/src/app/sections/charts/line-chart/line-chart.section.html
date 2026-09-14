@@ -288,6 +288,48 @@
   </p>
 
   <h3 class="block-title t-h4">
+    Patterns
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      patterns
+    </code> gives every series a dash of
+    its own, in palette-slot order, so the lines are told apart by shape as well
+    as by colour — WCAG technique G111. Slot 1 stays solid, so a single-series
+    chart is unchanged by turning it on. Off by default: the shipped palette
+    clears the colour-blind separation threshold on its own, and this is for
+    monochrome print, a retuned palette, or a reader who asks for it.
+  </p>
+
+  <div class="states states--cols-2">
+    <div class="state-cell">
+      <ds-line-chart
+        caption="Colour alone separates the series"
+        dataTable="none"
+        [categories]="patternCategories()"
+        [series]="patternSeries()" />
+
+      <div class="state-cell-label">
+        patterns = false (default)
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-line-chart
+        caption="Shape separates them too"
+        dataTable="none"
+        patterns
+        [categories]="patternCategories()"
+        [series]="patternSeries()" />
+
+      <div class="state-cell-label">
+        patterns
+      </div>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
     Filtering legend
   </h3>
 
@@ -398,6 +440,18 @@
       <docs-line-chart-data-editor
         [(categories)]="oneSeriesCategories"
         [(series)]="oneSeries" />
+    </div>
+
+    <div class="state-cell">
+      <ds-line-chart
+        dataTable="none"
+        error
+        [categories]="specimenCategories()"
+        [series]="specimenSeries()" />
+
+      <div class="state-cell-label">
+        Error
+      </div>
     </div>
   </div>
 </docs-section>

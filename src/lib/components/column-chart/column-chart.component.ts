@@ -47,6 +47,7 @@ const defaultValueFormat = (value: number) => formatValue(value);
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ColumnChartComponent {
+  /** One column per point, drawn in the order given. */
   readonly data = input.required<readonly ColumnChartPoint[]>();
 
   /** Prints each column's value above the column. */
@@ -56,18 +57,32 @@ export class ColumnChartComponent {
    *  snapped to a round step, so the axis may carry one more or one fewer. */
   readonly tickCount = input(5, { transform: numberAttribute });
 
+  /** Printed above the plot as the chart's visible title, and reused as the annex table's
+   *  caption. */
   readonly caption = input<string | null>(null);
 
   /** Accessible name. Generated from the data when omitted. */
   readonly summary = input<string | null>(null);
 
+  /** The label-and-value table under the plot: `'toggle'` puts it behind a disclosure,
+   *  `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so
+   *  `'none'` belongs only where the same data is already in a table on the page. */
   readonly dataTable = input<'toggle' | 'visible' | 'none'>('toggle');
+  /** Draws skeleton marks in place of the data, at the same count, so the chart does not resize
+   *  when the data lands. */
   readonly loading = input(false, { transform: booleanAttribute });
+  /** Shown in place of the plot when `data` is empty. */
   readonly emptyText = input<string>('No data');
 
+  /** Shows `errorText` in place of the plot. Separate from `loading` and from an empty `data`,
+   *  because "the request failed" and "there is nothing to show" read the same to a reader and
+   *  mean opposite things. */
   readonly error = input(false, { transform: booleanAttribute });
 
+  /** The message the error state prints. */
   readonly errorText = input<string>('Could not load the data');
+  /** Formats every value the chart prints, the annex table and the generated description
+   *  included. Defaults to the browser's locale grouping with a K/M/B suffix past four digits. */
   readonly valueFormat = input<(value: number) => string>(defaultValueFormat);
 
   /** Turns on the click affordance — the pointer cursor and any hover tint.
@@ -75,6 +90,8 @@ export class ColumnChartComponent {
    *  binds the output and forgets the flag still receives every click. */
   readonly interactive = input(false, { transform: booleanAttribute });
 
+  /** The point that was clicked, or activated with Enter or Space. Fires whether or not
+   *  `interactive` is set. */
   readonly pointClicked = output<ColumnChartPoint>();
 
   /** Milliseconds between one mark's entrance and the next. `0`, the default, is no stagger at

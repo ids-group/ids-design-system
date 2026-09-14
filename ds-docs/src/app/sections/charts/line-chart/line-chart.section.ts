@@ -185,5 +185,9 @@ export class LineChartSection {
   protected readonly interactiveSeries =
     signal<readonly LineChartSeries[]>(SPECIMEN_SERIES);
   protected readonly lastPoint = signal('');
+  protected readonly patternCategories =
+    signal<readonly string[]>(SPECIMEN_CATEGORIES);
+  protected readonly patternSeries =
+    signal<readonly LineChartSeries[]>(SPECIMEN_SERIES);
   protected readonly rescaledHiddenSeries = signal<readonly string[]>([]);
 }

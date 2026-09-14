@@ -265,5 +265,16 @@
 
       <docs-chart-data-editor [(rows)]="nineDigitValuePoints" />
     </div>
+
+    <div class="state-cell">
+      <ds-column-chart
+        dataTable="none"
+        error
+        [data]="specimenPoints()" />
+
+      <div class="state-cell-label">
+        Error
+      </div>
+    </div>
   </div>
 </docs-section>

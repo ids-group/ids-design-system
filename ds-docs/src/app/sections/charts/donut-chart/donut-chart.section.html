@@ -327,5 +327,16 @@
 
       <docs-chart-data-editor [(rows)]="nineSlices" />
     </div>
+
+    <div class="state-cell">
+      <ds-donut-chart
+        dataTable="none"
+        error
+        [data]="specimenSlices()" />
+
+      <div class="state-cell-label">
+        Error
+      </div>
+    </div>
   </div>
 </docs-section>
