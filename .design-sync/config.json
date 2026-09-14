@@ -14,6 +14,7 @@
     "BarChart": "charts",
     "ButtonGroup": "components/segmented",
     "CalendarDay": "components/date-picker",
+    "ChartLegend": "charts/line-chart",
     "ChartTooltipPanel": "charts/line-chart",
     "ColumnChart": "charts/column-chart",
     "Container": "components/layout-primitives",

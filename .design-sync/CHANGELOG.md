@@ -46,6 +46,10 @@ the release commit — one timeline, two audiences.
   alone, because every backticked identifier reports 46 findings on this tree and almost none are
   defects, while this reports none.
 - **`docs/BarChart.md` was added, documenting the newly-registered `ds-bar-chart`.**
+- **`docs/ChartLegend.md` was added and `ChartLegend` points at `charts/line-chart`.** The legend is
+  `@internal` and registers as no element, but LineChart renders it, so it reaches a card the way
+  `CalendarDay` and `FieldMessage` do — which is the pair `check-manual-surface.mjs` demands: a doc
+  the design agent can read, and a section whose chapter the card is cut from.
 
 ### Build
 
