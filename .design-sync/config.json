@@ -11,13 +11,19 @@
   "sections": {
     "AccordionItem": "components/accordion",
     "AvatarGroup": "components/avatar",
+    "BarChart": "charts",
     "ButtonGroup": "components/segmented",
     "CalendarDay": "components/date-picker",
+    "ChartTooltipPanel": "charts/line-chart",
+    "ColumnChart": "charts/column-chart",
     "Container": "components/layout-primitives",
     "DescriptionItem": "components/description-list",
     "Divider": "foundations/borders",
+    "DonutChart": "charts/donut-chart",
     "FieldMessage": "components/input",
+    "FunnelChart": "charts/funnel-chart",
     "Inline": "components/layout-primitives",
+    "LineChart": "charts/line-chart",
     "ListItem": "components/list",
     "MenuDivider": "components/menu",
     "MenuItem": "components/menu",
@@ -36,16 +42,56 @@
     "TooltipPanel": "components/tooltip"
   },
   "overrides": {
-    "Button": { "replaces": ["button"] },
-    "Checkbox": { "replaces": ["input[type=checkbox]"] },
-    "Input": { "replaces": ["input"] },
-    "List": { "replaces": ["ul"] },
-    "Modal": { "replaces": ["dialog"] },
-    "Radio": { "replaces": ["input[type=radio]"] },
-    "Select": { "replaces": ["select"] },
-    "Slider": { "replaces": ["input[type=range]"] },
-    "Table": { "replaces": ["table"] },
-    "Textarea": { "replaces": ["textarea"] }
+    "Button": {
+      "replaces": [
+        "button"
+      ]
+    },
+    "Checkbox": {
+      "replaces": [
+        "input[type=checkbox]"
+      ]
+    },
+    "Input": {
+      "replaces": [
+        "input"
+      ]
+    },
+    "List": {
+      "replaces": [
+        "ul"
+      ]
+    },
+    "Modal": {
+      "replaces": [
+        "dialog"
+      ]
+    },
+    "Radio": {
+      "replaces": [
+        "input[type=radio]"
+      ]
+    },
+    "Select": {
+      "replaces": [
+        "select"
+      ]
+    },
+    "Slider": {
+      "replaces": [
+        "input[type=range]"
+      ]
+    },
+    "Table": {
+      "replaces": [
+        "table"
+      ]
+    },
+    "Textarea": {
+      "replaces": [
+        "textarea"
+      ]
+    }
   },
   "buildCmd": "node .design-sync/elements/tools/gen.mjs && npx ng build ds-elements && node .design-sync/elements/tools/build-bundle.mjs"
 }
