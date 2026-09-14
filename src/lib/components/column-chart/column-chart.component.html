@@ -48,14 +48,22 @@
           }
         </div>
 
-        <div class="columns">
-          @for (entry of columns(); track entry.key) {
+        <div
+          class="columns"
+          [dsChartTooltip]="tooltipContext()"
+          [dsChartTooltipOrigin]="activeMark.origin()"
+          [dsChartTooltipTemplate]="tooltipTemplate() ?? null">
+          @for (entry of columns(); track entry.key; let index = $index) {
             <div
               class="column"
               [class.interactive]="interactive()"
               [attr.role]="interactive() ? 'button' : null"
               [attr.tabindex]="interactive() ? 0 : null"
               [attr.aria-label]="interactive() ? entryLabel(entry) : null"
+              (pointerenter)="activeMark.enter(index, $event)"
+              (pointerleave)="activeMark.leave()"
+              (focus)="activeMark.enter(index, $event)"
+              (blur)="activeMark.leave()"
               (click)="pointClicked.emit(entry.point)"
               (keydown.enter)="onPointKey(entry.point, $event)"
               (keydown.space)="onPointKey(entry.point, $event)">

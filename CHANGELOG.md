@@ -112,6 +112,42 @@
 
 ### Added
 
+- **Every chart answers a hover, a tap and a keyboard focus with a tooltip.** `ds-bar-chart`,
+  `ds-column-chart`, `ds-donut-chart` and `ds-funnel-chart` default to `tooltip="item"` — the mark
+  under the pointer, or the one holding focus. `ds-line-chart` defaults to `tooltip="axis"`: a
+  pointer names every series at the category under it, while tabbing to a marker names that series
+  alone, because focus is already on one reading. `tooltip="none"` turns it off.
+
+  The panel is portaled out of the chart's box, so a chart inside a small dashboard card is not
+  what clips it — with no room above the mark it flips below, then to either side, and is pushed
+  back on screen rather than cut. On a coarse pointer it clears the tap point by 48px instead of
+  12, so the panel is not under the finger.
+
+  ```html
+  <ds-line-chart [series]="series" [categories]="months" tooltip="axis" />
+  <ds-donut-chart [data]="slices" tooltip="none" />
+  ```
+
+  The content is a projected template, never a formatter string, so a tooltip can hold components
+  and markup rather than escaped text:
+
+  ```html
+  <ds-column-chart [data]="points">
+    <ng-template #dsChartTooltip let-tip>
+      <strong>{{ tip.category }}</strong>
+      @for (entry of tip.entries; track entry.label) {
+        <p>{{ entry.label }}: {{ entry.formatted }}</p>
+      }
+    </ng-template>
+  </ds-column-chart>
+  ```
+
+  Three tokens paint it — `--ds-chart-tooltip-bg-color`, `--ds-chart-tooltip-text-color` and
+  `--ds-chart-tooltip-border-color`. They were declared before this and reached no rule; they reach
+  one now. The panel carries `aria-hidden`, because every interactive mark already puts the same
+  label and value in its own accessible name and a screen reader would otherwise read each reading
+  twice.
+
 - **Hovering or focusing one mark dims the others.** With `interactive` set on `ds-bar-chart`,
   `ds-column-chart`, `ds-donut-chart` or `ds-funnel-chart`, the mark under the pointer or under
   focus keeps its colour and every other mark drops to `--ds-chart-dim-opacity`, default `0.3` —

@@ -35,7 +35,10 @@
     <div
       class="plot"
       [attr.role]="interactive() ? 'group' : 'img'"
-      [attr.aria-label]="accessibleName()">
+      [attr.aria-label]="accessibleName()"
+      [dsChartTooltip]="tooltipContext()"
+      [dsChartTooltipOrigin]="tooltipOrigin()"
+      [dsChartTooltipTemplate]="tooltipTemplate() ?? null">
       <svg
         class="canvas"
         preserveAspectRatio="xMidYMid meet"
@@ -131,7 +134,11 @@
         }
 
         @if (showMarkers() || interactive()) {
-          @for (entry of plottedSeries(); track entry.series.id) {
+          @for (
+            entry of plottedSeries();
+            track entry.series.id;
+            let seriesIndex = $index
+          ) {
             @for (marker of entry.markers; track marker.categoryIndex) {
               <circle
                 class="series-marker"
@@ -146,6 +153,10 @@
                 [attr.aria-label]="
                   interactive() ? markerLabel(entry, marker) : null
                 "
+                (focus)="
+                  onMarkerFocus(seriesIndex, marker.categoryIndex, $event)
+                "
+                (blur)="onMarkerBlur()"
                 (click)="pointClicked.emit(pointOf(entry, marker))"
                 (keydown.enter)="onMarkerKey(entry, marker, $event)"
                 (keydown.space)="onMarkerKey(entry, marker, $event)" />

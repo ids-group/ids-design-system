@@ -1,9 +1,11 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  TemplateRef,
   ViewEncapsulation,
   booleanAttribute,
   computed,
+  contentChild,
   input,
   numberAttribute,
   output,
@@ -18,6 +20,12 @@ import {
   tickStep,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
+import { ChartTooltipDirective } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
+import type {
+  ChartTooltipContext,
+  ChartTooltipOrigin,
+  ChartTooltipTrigger,
+} from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import {
   LINE_CHART_AXIS_LABEL_GAP,
   LINE_CHART_DEFAULT_TICK_COUNT,
@@ -77,7 +85,7 @@ function baselineOf(plot: PlotArea): number {
 @Component({
   selector: 'ds-line-chart',
   standalone: true,
-  imports: [SkeletonComponent],
+  imports: [SkeletonComponent, ChartTooltipDirective],
   templateUrl: './line-chart.component.html',
   styleUrl: './line-chart.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -255,11 +263,91 @@ export class LineChartComponent {
     );
     const plot = this.layout().primaryPlot;
     this.activeCategory.set(this.categoryBands().indexAt(point.x - plot.left));
+    this.tooltipOrigin.set({ x: event.clientX, y: event.clientY });
   }
 
   protected clearActiveCategory(): void {
     this.activeCategory.set(-1);
+    this.tooltipOrigin.set(null);
   }
+
+  /** Whether the plot opens a tooltip, and for what. `'axis'` names every series at the
+   *  category under the pointer, which is the reading a multi-series line is compared on;
+   *  `'item'` names only the marker itself. */
+  readonly tooltip = input<ChartTooltipTrigger>('axis');
+
+  protected readonly tooltipTemplate =
+    contentChild<TemplateRef<{ $implicit: ChartTooltipContext }>>(
+      'dsChartTooltip',
+    );
+
+  protected readonly tooltipOrigin = signal<ChartTooltipOrigin | null>(null);
+
+  /** The series focus is on, or -1 for the whole category. A pointer answers for every
+   *  series at once; a focused marker answers for its own. */
+  protected readonly activeSeries = signal(-1);
+
+  protected onMarkerFocus(
+    seriesIndex: number,
+    categoryIndex: number,
+    event: FocusEvent,
+  ): void {
+    if (event.currentTarget instanceof Element) {
+      this.tooltipOrigin.set(event.currentTarget);
+    }
+    this.activeSeries.set(seriesIndex);
+    this.activeCategory.set(categoryIndex);
+  }
+
+  protected onMarkerBlur(): void {
+    this.activeSeries.set(-1);
+    this.clearActiveCategory();
+  }
+
+  protected readonly tooltipContext = computed<ChartTooltipContext | null>(
+    () => {
+      const categoryIndex = this.activeCategory();
+      const categories = this.categories();
+      if (
+        this.tooltip() === 'none' ||
+        categoryIndex < 0 ||
+        categoryIndex >= categories.length
+      ) {
+        return null;
+      }
+      const format = this.valueFormat();
+      const focusedSeries = this.activeSeries();
+      const perSeries =
+        this.tooltip() === 'item' || focusedSeries >= 0
+          ? this.resolvedSeries().slice(
+              Math.max(focusedSeries, 0),
+              Math.max(focusedSeries, 0) + 1,
+            )
+          : this.resolvedSeries();
+
+      return {
+        category: categories[categoryIndex],
+        entries: perSeries
+          .map((entry) => ({ entry, value: entry.values[categoryIndex] }))
+          .filter(
+            (
+              reading,
+            ): reading is {
+              entry: (typeof perSeries)[number];
+              value: number;
+            } =>
+              typeof reading.value === 'number' &&
+              Number.isFinite(reading.value),
+          )
+          .map(({ entry, value }) => ({
+            label: entry.series.label,
+            value,
+            formatted: format(value),
+            color: entry.color,
+          })),
+      };
+    },
+  );
 
   protected readonly plotLeft = computed(() => this.layout().primaryPlot.left);
   protected readonly plotRight = computed(

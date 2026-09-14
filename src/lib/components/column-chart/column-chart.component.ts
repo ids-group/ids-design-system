@@ -1,9 +1,11 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  TemplateRef,
   ViewEncapsulation,
   booleanAttribute,
   computed,
+  contentChild,
   input,
   numberAttribute,
   output,
@@ -18,6 +20,14 @@ import {
   tickValues,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
+import {
+  ChartTooltipDirective,
+  chartActiveMark,
+} from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
+import type {
+  ChartTooltipContext,
+  ChartTooltipTrigger,
+} from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import { heightPercent, resolveDomainMax } from './column-chart.math';
 import type { ColumnChartPoint } from './column-chart.types';
 
@@ -26,7 +36,7 @@ const defaultValueFormat = (value: number) => formatValue(value);
 @Component({
   selector: 'ds-column-chart',
   standalone: true,
-  imports: [SkeletonComponent],
+  imports: [SkeletonComponent, ChartTooltipDirective],
   templateUrl: './column-chart.component.html',
   styleUrl: './column-chart.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -62,6 +72,38 @@ export class ColumnChartComponent {
   readonly interactive = input(false, { transform: booleanAttribute });
 
   readonly pointClicked = output<ColumnChartPoint>();
+
+  /** Whether a hovered or focused column opens a tooltip. `'axis'` is not offered — a
+   *  column chart's marks ARE its categories, so an axis tooltip would repeat the item one. */
+  readonly tooltip = input<Exclude<ChartTooltipTrigger, 'axis'>>('item');
+
+  protected readonly tooltipTemplate =
+    contentChild<TemplateRef<{ $implicit: ChartTooltipContext }>>(
+      'dsChartTooltip',
+    );
+
+  protected readonly activeMark = chartActiveMark();
+
+  protected readonly tooltipContext = computed<ChartTooltipContext | null>(
+    () => {
+      const entry = this.columns()[this.activeMark.index()];
+      if (this.tooltip() === 'none' || !entry) {
+        return null;
+      }
+
+      return {
+        category: '',
+        entries: [
+          {
+            label: entry.point.label,
+            value: entry.point.value,
+            formatted: entry.formattedValue,
+            color: entry.color,
+          },
+        ],
+      };
+    },
+  );
 
   protected readonly domainMax = computed(() =>
     resolveDomainMax(this.data().map((point) => point.value)),

@@ -1,9 +1,11 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  TemplateRef,
   ViewEncapsulation,
   booleanAttribute,
   computed,
+  contentChild,
   input,
   output,
 } from '@angular/core';
@@ -15,6 +17,14 @@ import {
   formatValue,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
+import {
+  ChartTooltipDirective,
+  chartActiveMark,
+} from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
+import type {
+  ChartTooltipContext,
+  ChartTooltipTrigger,
+} from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import {
   FUNNEL_VIEW_BOX_HEIGHT,
   FUNNEL_VIEW_BOX_WIDTH,
@@ -33,7 +43,7 @@ const SKELETON_STAGE_WIDTHS = ['88%', '62%', '80%', '54%', '72%'] as const;
 @Component({
   selector: 'ds-funnel-chart',
   standalone: true,
-  imports: [SkeletonComponent],
+  imports: [SkeletonComponent, ChartTooltipDirective],
   templateUrl: './funnel-chart.component.html',
   styleUrl: './funnel-chart.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -78,6 +88,38 @@ export class FunnelChartComponent {
   readonly interactive = input(false, { transform: booleanAttribute });
 
   readonly stageClicked = output<FunnelChartStage>();
+
+  /** Whether a hovered or focused stage opens a tooltip. `'axis'` is not offered — a
+   *  funnel's stages are its categories, so an axis tooltip would repeat the item one. */
+  readonly tooltip = input<Exclude<ChartTooltipTrigger, 'axis'>>('item');
+
+  protected readonly tooltipTemplate =
+    contentChild<TemplateRef<{ $implicit: ChartTooltipContext }>>(
+      'dsChartTooltip',
+    );
+
+  protected readonly activeMark = chartActiveMark();
+
+  protected readonly tooltipContext = computed<ChartTooltipContext | null>(
+    () => {
+      const entry = this.stages()[this.activeMark.index()];
+      if (this.tooltip() === 'none' || !entry) {
+        return null;
+      }
+
+      return {
+        category: '',
+        entries: [
+          {
+            label: entry.stage.label,
+            value: entry.stage.value,
+            formatted: `${entry.formattedValue} · ${entry.formattedPercent}`,
+            color: entry.color,
+          },
+        ],
+      };
+    },
+  );
 
   protected readonly viewBox = `0 0 ${FUNNEL_VIEW_BOX_WIDTH} ${FUNNEL_VIEW_BOX_HEIGHT}`;
 

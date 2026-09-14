@@ -27,14 +27,21 @@
     <div
       class="rows"
       [attr.role]="interactive() ? 'group' : 'img'"
-      [attr.aria-label]="accessibleName()">
-      @for (entry of rows(); track $index) {
+      [attr.aria-label]="accessibleName()"
+      [dsChartTooltip]="tooltipContext()"
+      [dsChartTooltipOrigin]="activeMark.origin()"
+      [dsChartTooltipTemplate]="tooltipTemplate() ?? null">
+      @for (entry of rows(); track entry.key; let index = $index) {
         <div
           class="row"
           [class.interactive]="interactive()"
           [attr.role]="interactive() ? 'button' : null"
           [attr.tabindex]="interactive() ? 0 : null"
           [attr.aria-label]="interactive() ? entryLabel(entry) : null"
+          (pointerenter)="activeMark.enter(index, $event)"
+          (pointerleave)="activeMark.leave()"
+          (focus)="activeMark.enter(index, $event)"
+          (blur)="activeMark.leave()"
           (click)="rowClicked.emit(entry.row)"
           (keydown.enter)="onRowKey(entry.row, $event)"
           (keydown.space)="onRowKey(entry.row, $event)">
@@ -91,7 +98,7 @@
           </thead>
 
           <tbody>
-            @for (entry of rows(); track $index) {
+            @for (entry of rows(); track entry.key) {
               <tr>
                 <td>
                   {{ entry.row.label }}

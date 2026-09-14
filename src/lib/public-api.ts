@@ -84,6 +84,14 @@ export type {
   CardElevation,
   CardPadding,
 } from '@ids-group-ltd/ids-design-system/components/card';
+export { ChartTooltipPanelComponent } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
+export type {
+  ChartActiveMark,
+  ChartTooltipContext,
+  ChartTooltipEntry,
+  ChartTooltipOrigin,
+  ChartTooltipTrigger,
+} from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 export { CheckboxComponent } from '@ids-group-ltd/ids-design-system/components/checkbox';
 export { ColorPickerComponent } from '@ids-group-ltd/ids-design-system/components/color-picker';
 export { ColumnChartComponent } from '@ids-group-ltd/ids-design-system/components/column-chart';

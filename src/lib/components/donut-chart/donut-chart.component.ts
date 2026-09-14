@@ -1,9 +1,11 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  TemplateRef,
   ViewEncapsulation,
   booleanAttribute,
   computed,
+  contentChild,
   input,
   numberAttribute,
   output,
@@ -15,6 +17,14 @@ import {
   largestRemainder,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
+import {
+  ChartTooltipDirective,
+  chartActiveMark,
+} from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
+import type {
+  ChartTooltipContext,
+  ChartTooltipTrigger,
+} from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import {
   DEFAULT_THICKNESS,
   arcPath,
@@ -37,7 +47,7 @@ const RING_OUTER_RADIUS = RING_VIEW_BOX_SIZE / 2;
 @Component({
   selector: 'ds-donut-chart',
   standalone: true,
-  imports: [SkeletonComponent],
+  imports: [SkeletonComponent, ChartTooltipDirective],
   templateUrl: './donut-chart.component.html',
   styleUrl: './donut-chart.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -87,6 +97,38 @@ export class DonutChartComponent {
   readonly interactive = input(false, { transform: booleanAttribute });
 
   readonly sliceClicked = output<DonutChartSlice>();
+
+  /** Whether a hovered or focused slice opens a tooltip. `'axis'` is not offered — a ring
+   *  has no axis to group readings under. */
+  readonly tooltip = input<Exclude<ChartTooltipTrigger, 'axis'>>('item');
+
+  protected readonly tooltipTemplate =
+    contentChild<TemplateRef<{ $implicit: ChartTooltipContext }>>(
+      'dsChartTooltip',
+    );
+
+  protected readonly activeMark = chartActiveMark();
+
+  protected readonly tooltipContext = computed<ChartTooltipContext | null>(
+    () => {
+      const entry = this.slices()[this.activeMark.index()];
+      if (this.tooltip() === 'none' || !entry) {
+        return null;
+      }
+
+      return {
+        category: '',
+        entries: [
+          {
+            label: entry.slice.label,
+            value: entry.slice.value,
+            formatted: `${entry.formattedValue} · ${entry.formattedPercent}`,
+            color: entry.color,
+          },
+        ],
+      };
+    },
+  );
 
   protected readonly viewBox = `0 0 ${RING_VIEW_BOX_SIZE} ${RING_VIEW_BOX_SIZE}`;
 
