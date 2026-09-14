@@ -253,10 +253,8 @@
      the crisp ring. Components default their own --ds-*-focus-shadow to these,
      so a consumer can retune a whole family or a single component. */
 
-  /* The flat tokens, NOT the --accent-focus-* aliases — see docs/todo.md, "zone colour and
-     data-focus shape cannot both reach one role". A `var()` inside a custom property is
-     substituted where it is DECLARED, so a ds-color zone can never reach what is written here;
-     the switch wins because it is the documented one. */
+  /* The flat tokens, NOT the --accent-focus-* aliases. A `var()` inside a custom property is
+     substituted where it is DECLARED, so a ds-color zone can never reach what is written here. */
   --ds-field-focus-shadow:         var(--focus-field);
   --ds-field-focus-shadow-error:   var(--focus-field-error);
   --ds-control-focus-shadow:       var(--focus-ring);

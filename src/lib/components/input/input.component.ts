@@ -84,12 +84,10 @@ export class InputComponent extends DsControlValueAccessor<string> {
   /** Prevents editing while still allowing focus and selection. */
   readonly readOnly = input(false, { transform: booleanAttribute });
   /**
-   * The contract spelling of `readOnly`, a second input because signal forms binds
-   * by NAME — a `readonly()` rule was reaching nothing before this existed.
+   * The contract spelling of `readOnly`: signal forms binds by NAME, so a
+   * `readonly()` rule reaches nothing without it.
    */
   readonly readonlyBinding = input(false, {
-    // The alias IS the point: signal forms binds by name, and the contract
-    // spells it `readonly` where the DS spells it `readOnly`.
     // eslint-disable-next-line @angular-eslint/no-input-rename
     alias: 'readonly',
     transform: booleanAttribute,
@@ -139,7 +137,7 @@ export class InputComponent extends DsControlValueAccessor<string> {
     transform: optionalBound,
   });
   // Signal forms binds these by name; without them a `pattern()` or `minLength()`
-  // rule validated in the form model while the native element advertised nothing.
+  // rule validates in the form model while the native element advertises nothing.
   /** Native `minlength` attribute. */
   readonly minLength = input<number | null, number | null | undefined>(null, {
     transform: optionalBound,
@@ -176,10 +174,8 @@ export class InputComponent extends DsControlValueAccessor<string> {
   readonly blurred = output<void>();
   /**
    * Show an inline clear (×) button when the input has a non-empty value.
-   * Mirrors the Material/PrimeNG pattern: explicit button (not native search
-   * cancel) so the affordance is consistent across browsers and styled with
-   * DS tokens. Defaults to true when type='search', false otherwise — pass
-   * an explicit boolean to override.
+   * Defaults to true when `type="search"`, false otherwise — pass an explicit
+   * boolean to override.
    */
   readonly clearable = input<boolean | null>(null);
 
@@ -241,7 +237,6 @@ export class InputComponent extends DsControlValueAccessor<string> {
     this.label() ? null : this.ariaLabel() || this.placeholder() || null,
   );
 
-  /** Effective disabled — own `disabled` input OR the reactive-forms state. */
   protected readonly isDisabled = computed(
     () => this.disabled() || this.formDisabled(),
   );

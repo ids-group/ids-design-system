@@ -160,8 +160,8 @@ export class SelectComponent
   /** Prevents opening the dropdown while still allowing focus. */
   readonly readOnly = input(false, { transform: booleanAttribute });
   /**
-   * The contract spelling of `readOnly`, a second input because signal forms binds
-   * by NAME — a `readonly()` rule was reaching nothing before this existed.
+   * The contract spelling of `readOnly`: signal forms binds by NAME, so a
+   * `readonly()` rule reaches nothing without it.
    */
   readonly readonlyBinding = input(false, {
     // eslint-disable-next-line @angular-eslint/no-input-rename

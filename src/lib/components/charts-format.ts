@@ -11,7 +11,7 @@ function numberFormatter(locale: string | undefined): Intl.NumberFormat {
   return formatter;
 }
 
-/** @internal Reachable from the `components` entry point because the chart entry points import it across the boundary; not part of the package surface. */
+/** @internal */
 export function formatValue(value: number, locale?: string): string {
   if (!Number.isFinite(value)) {
     return '—';
@@ -20,7 +20,7 @@ export function formatValue(value: number, locale?: string): string {
   return numberFormatter(locale).format(value);
 }
 
-/** @internal Reachable from the `components` entry point because the chart entry points import it across the boundary; not part of the package surface. */
+/** @internal */
 export function formatPercent(value: number, total: number): string {
   if (!total || !Number.isFinite(value) || !Number.isFinite(total)) {
     return '—';
@@ -63,7 +63,7 @@ export function largestRemainder(values: readonly number[]): number[] {
   return result;
 }
 
-/** @internal Reachable from the `components` entry point because the chart entry points import it across the boundary; not part of the package surface. */
+/** @internal */
 export function formatTick(value: number, step: number): string {
   if (!Number.isFinite(value)) {
     return '';

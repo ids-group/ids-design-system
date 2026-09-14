@@ -1,19 +1,10 @@
-// =========================================================================
-// Dark theme — Tier 2 role overrides.
+// Dark theme — Tier 2 role overrides. Activation (:root[data-theme='dark']) lives in
+// styles/_theme-activation.scss; dark is opt-in, with no prefers-color-scheme switch.
 //
-// Composes the dark palette (neutral ramp + shadow-l 95%) with the shared
-// role structure, then overrides only the roles whose VALUES differ from
-// the light defaults. The activation selector (:root[data-theme='dark'])
-// lives in styles/_theme-activation.scss. Dark is opt-in — light is the
-// default; there is no automatic prefers-color-scheme switch.
-//
-// Most roles follow the inverted --neutral-* ramp automatically (custom
-// props resolve at use-time). This file overrides ONLY roles that can't
-// follow the flip: tint/subtle surfaces (near-white *-50 picks → dark hue
-// tints), on-tint text (*-text / *-strong → lighter stops), hover/pressed
-// direction, scrim (must stay dark), focus halo alpha, and charts.
+// Most roles follow the inverted --neutral-* ramp on their own, because custom props resolve at
+// use-time. Overridden here are ONLY the roles that cannot follow the flip: tint/subtle surfaces,
+// on-tint text, hover/pressed direction, scrim (must stay dark), focus halo alpha, and charts.
 // On-dark-fill text points at --static-ink; on-light-fill uses literal white.
-// =========================================================================
 
 @use 'palette';
 @use '../semantic';
@@ -60,7 +51,6 @@
   --text-link:            hsl(var(--primary-h) 90% 74%);
   --link-visited:         hsl(var(--primary-h) 50% 70%);
 
-  // Status families: dark tint bg + border, lighter text.
   --success-subtitle:     hsl(132deg 38% 14%);
   --success-muted:        hsl(132deg 34% 20%);
   --success-muted-strong: hsl(132deg 30% 28%);

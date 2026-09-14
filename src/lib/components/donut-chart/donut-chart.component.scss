@@ -25,8 +25,6 @@ figcaption {
   font-weight: 600;
 }
 
-// The outline is only in the empty state. A ring with slices already draws its own shape, so a
-// border there would be a second edge around one the data supplies.
 .empty {
   display: flex;
   flex-direction: column;
@@ -108,9 +106,9 @@ figcaption {
   paint-order: stroke;
 }
 
-// Held to the square that fits inside the hole (d / √2), so a long centre label wraps instead of
-// running out over the slices. The hole fraction comes from the component, which is the only place
-// that knows the thickness.
+// `70%` is the square that fits inside the hole (1/√2), and the hole fraction comes from the
+// component, the only place that knows the thickness. The 56% floor overrides it at the default
+// thickness, so a long label does overhang the slices — the halo below is what carries it there.
 .center {
   position: absolute;
   inset: 0;

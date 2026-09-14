@@ -51,7 +51,6 @@
   --_button-bg-color-hover:  var(--ds-button-bg-color-hover,  color-mix(in srgb, var(--_button-bg-color) 88%, black));
   --_button-bg-color-active: var(--ds-button-bg-color-active, color-mix(in srgb, var(--_button-bg-color) 76%, black));
 
-  /* Default to the resting label, so a button that does not set them is unchanged. */
   --_button-label-color-hover: var(--ds-button-label-color-hover, var(--_button-label-color));
   --_button-label-color-active: var(--ds-button-label-color-active, var(--_button-label-color));
 
@@ -64,11 +63,10 @@
      edge is redefining --border-width-default for the subtree, which moves a scale step. */
   --_button-border-width: var(--ds-button-border-width, var(--border-width-default));
 
-  /* Press darkens and scales down; the halo is opt-in — set --ds-button-pressed-shadow. */
+  /* Press darkens and scales down. */
   --_button-press-scale: var(--ds-button-press-scale, 0.98);
   --_button-pressed-shadow: var(--ds-button-pressed-shadow, none);
 
-  /* Default `none`, so a button carries no shadow unless an app asks for one. */
   --_button-shadow:       var(--ds-button-shadow,       none);
   --_button-shadow-hover: var(--ds-button-shadow-hover, var(--_button-shadow));
   --_button-radius:    var(--ds-button-radius,    var(--ds-radius-control));
@@ -178,9 +176,8 @@
   }
 
 
-  /* Sizes — sm/md/lg (32/40/48), default md. Each re-resolves the locals with
-     the public hook still first, so a consumer override is not undone by the
-     size class the way a plain `height:` here would undo it. */
+  /* Each size re-resolves the locals with the public hook still first, so a consumer
+     override is not undone the way a plain `height:` here would undo it. */
   &.lg {
     --_button-font-size: var(--ds-button-font-size, var(--font-size-m));
     --_button-height:    var(--ds-button-height,    var(--field-h-lg));
@@ -288,8 +285,7 @@
     --_button-label-color-disabled: var(--ds-button-label-color-disabled, color-mix(in srgb, var(--_button-label-color) 40%, var(--surface-default)));
   }
 
-  /* text — no chrome, underlined (a link-styled button). Colour-aware: label
-     follows the colour's --c-strong. Coexists with the global .link class. */
+  /* text — no chrome, underlined (a link-styled button). */
   &.v-text {
     --_button-bg-color:        var(--ds-button-bg-color,        transparent);
     --_button-label-color:     var(--ds-button-label-color,     var(--c-strong));
@@ -305,8 +301,8 @@
     text-underline-offset: var(--btn-link-uloff);
 
     /* Through the resolver like every other variant, so --ds-button-label-color-hover reaches a
-       text button too; as a `color` on `.button.v-text:hover` it out-ranked the base rule and the
-       hook could never be seen here. */
+       text button too; as a `color` on `.button.v-text:hover` it would out-rank the base rule and
+       the hook would never be seen here. */
     --_button-label-color-hover: var(--ds-button-label-color-hover, var(--c-base));
   }
 

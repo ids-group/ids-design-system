@@ -3,7 +3,8 @@ export interface BarChartRow {
   id?: string;
   label: string;
   value: number;
-  /** Printed at the row's end. Derived from `value / max` when omitted. */
+  /** A percentage already out of 100, not a fraction: `42`, never `0.42`. Printed at
+   *  the row's end while `showPercent` is on; derived from `value / max` when omitted. */
   percent?: number;
   /** Overrides this row's colour. The rows are one series, so they share one
    *  colour by default; set this on the row the reader should land on, usually

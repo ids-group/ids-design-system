@@ -176,7 +176,7 @@ export class DatePickerComponent
   private readonly config = inject(DS_CONFIG);
   private readonly host = inject(ElementRef<HTMLElement>);
   /** Public panel tokens forwarded onto the portaled overlay pane on open so
-   *  a consumer's `ds-date-picker { --ds-date-picker-panel-*: … }` reaches it. */
+   *  a consumer's `ds-date-picker { --ds-date-picker-*: … }` reaches it. */
   private readonly panelTokens = [
     '--ds-date-picker-bg-color',
     '--ds-date-picker-border',
@@ -762,7 +762,7 @@ export class DatePickerComponent
     );
     // Syncs on every detach of the CURRENT overlay, whatever caused it, so a stray CDK detach
     // cannot leave a stale `overlayRef` wedging this method's reopen guard — and skips a
-    // superseded one, which used to strand the panel that replaced it.
+    // superseded one, which would otherwise strand the panel that replaced it.
     clearOnDetach(this.overlayRef, {
       current: () => this.overlayRef,
       always: removeScrollClose,

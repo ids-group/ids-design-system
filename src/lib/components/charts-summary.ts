@@ -1,6 +1,6 @@
 import { formatValue } from './charts-format';
 
-/** @internal Reachable from the `components` entry point because the chart entry points import it across the boundary; not part of the package surface. */
+/** @internal */
 export interface SummaryPoint {
   readonly label: string;
   readonly value: number;

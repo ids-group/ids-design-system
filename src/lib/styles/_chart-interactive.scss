@@ -4,14 +4,13 @@
 // close and `_interaction.scss` exists, this file is what migrates onto it. Keeping the derivation
 // here — rather than in five component stylesheets — is what makes that one file instead of five.
 //
-// Only the fade half of `highlightScope` lives here. The highlight half is a direct value label,
-// which the component renders as markup, because a label has to be a node a screen reader can
-// reach — an ::after cannot be.
+// Only the fade half lives here. Singling a mark OUT is a direct value label, which the component
+// renders as markup, because a label has to be a node a screen reader can reach — an ::after
+// cannot be.
 
 // Include on the CONTAINER, never on the mark: `:has()` asks the container whether anything inside
 // it is hovered, which is what lets a pointer highlight work with no component state. `.is-dimmed`
-// is the second entry point, for a highlight driven from outside — the legend, or a controlled
-// `highlightScope`.
+// is the second entry point, for a highlight driven from outside — a legend, or a consumer.
 //
 // Usage: `.columns { @include chart-interactive.fades('.column'); }`
 @mixin fades($mark) {

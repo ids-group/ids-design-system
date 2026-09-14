@@ -95,8 +95,8 @@ export function dsAriaCurrent(
   const router = inject(Router, { optional: true });
   // `RouterLink` resolves its commands against the route it sits on, so a relative destination
   // (`routerLink="."`, `['..', 'sibling']`) means something different from the root. Resolving it
-  // here without the same base made `.` land on `/` — a prefix of every page, so the item that WAS
-  // the current page announced `true` instead of `page`.
+  // here without the same base would make `.` land on `/` — a prefix of every page, so the item
+  // that IS the current page would announce `true` instead of `page`.
   const route = inject(ActivatedRoute, { optional: true });
 
   return computed<DsAriaCurrent | undefined>(() => {

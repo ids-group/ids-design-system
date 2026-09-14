@@ -305,8 +305,7 @@ export class ButtonComponent extends DsMessageBase {
     // A soft-disabled button is only `aria-disabled`, so the browser still
     // dispatches the click — this is what stops it.
     if (this.disabled() || this.loading()) {
-      // `aria-disabled` is a label, not a behaviour, so a disabled `<a href>` would still
-      // navigate. The routerLink branch binds `null` instead.
+      // The routerLink branch binds `null`; an `<a href>` still navigates.
       if (this.destination() === 'href') {
         event.preventDefault();
       }

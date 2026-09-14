@@ -105,7 +105,6 @@ export interface DsFieldMessageSources {
 }
 
 export interface DsFieldMessageResolution {
-  /** Text + state for `ds-field-message`. */
   readonly message: Signal<DsFieldMessage>;
   /** `invalid` folded together with whatever the control reports. */
   readonly invalid: Signal<boolean>;

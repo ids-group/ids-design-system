@@ -14,6 +14,8 @@ import { prepareOverlayEnter } from '@ids-group-ltd/ids-design-system/components
 import { isTextClipped } from '@ids-group-ltd/ids-design-system/core';
 import type { TooltipPlacement } from './tooltip.types';
 
+const TRIGGER_GAP_PX = 8;
+
 let nextId = 0;
 
 @Directive({
@@ -35,9 +37,9 @@ export class TooltipDirective implements OnDestroy {
    *  suppresses a tip the pointer passed over on its way somewhere else. */
   readonly dsTooltipDelay = input<number>(120);
   /** Show the tip only while the host is actually showing less text than it holds. For a label
-   *  that already reads in full, a tip repeating it is noise — which is why an unconditional tip
-   *  on clipped text was never offered as the default. Re-tested on every open, so a tip appears
-   *  and stops appearing as the column, panel or window is resized, with no observer to run.
+   *  that already reads in full, a tip repeating it is noise. Re-tested on every open, so a tip
+   *  appears and stops appearing as the column, panel or window is resized, with no observer to
+   *  run.
    *
    *  With this on, `dsTooltip` may be left empty and the host's own text is disclosed. That is
    *  what makes it usable on projected content, where the component holding the tip cannot know
@@ -190,7 +192,7 @@ export class TooltipDirective implements OnDestroy {
           originY: 'top' as const,
           overlayX: 'center' as const,
           overlayY: 'bottom' as const,
-          offsetY: -8,
+          offsetY: -TRIGGER_GAP_PX,
         };
       case 'bottom':
         return {
@@ -198,7 +200,7 @@ export class TooltipDirective implements OnDestroy {
           originY: 'bottom' as const,
           overlayX: 'center' as const,
           overlayY: 'top' as const,
-          offsetY: 8,
+          offsetY: TRIGGER_GAP_PX,
         };
       case 'left':
         return {
@@ -206,7 +208,7 @@ export class TooltipDirective implements OnDestroy {
           originY: 'center' as const,
           overlayX: 'end' as const,
           overlayY: 'center' as const,
-          offsetX: -8,
+          offsetX: -TRIGGER_GAP_PX,
         };
       case 'right':
         return {
@@ -214,7 +216,7 @@ export class TooltipDirective implements OnDestroy {
           originY: 'center' as const,
           overlayX: 'start' as const,
           overlayY: 'center' as const,
-          offsetX: 8,
+          offsetX: TRIGGER_GAP_PX,
         };
     }
   }

@@ -13,7 +13,7 @@ function tickIncrement(domainMax: number, targetCount: number): number {
   return factor * Math.pow(10, power);
 }
 
-/** @internal Reachable from the `components` entry point because the chart entry points import it across the boundary; not part of the package surface. */
+/** @internal */
 export function tickValues(domainMax: number, targetCount: number): number[] {
   if (!Number.isFinite(domainMax) || domainMax <= 0) {
     return [0];
@@ -27,7 +27,7 @@ export function tickValues(domainMax: number, targetCount: number): number[] {
   return out;
 }
 
-/** @internal Reachable from the `components` entry point because the chart entry points import it across the boundary; not part of the package surface. */
+/** @internal */
 export function niceMax(domainMax: number, targetCount: number): number {
   if (!Number.isFinite(domainMax) || domainMax <= 0) {
     return 0;
@@ -40,12 +40,12 @@ export function niceMax(domainMax: number, targetCount: number): number {
 /** Distance between two ticks, which `formatTick` needs to pick a precision. A
  *  degenerate series yields a single tick and therefore no step.
  *
- *  @internal Reachable from the `components` entry point because the chart entry points import it across the boundary; not part of the package surface. */
+ *  @internal */
 export function tickStep(ticks: readonly number[]): number {
   return ticks.length > 1 ? ticks[1] - ticks[0] : 0;
 }
 
-/** @internal Reachable from the `components` entry point because the chart entry points import it across the boundary; not part of the package surface. */
+/** @internal */
 export function linearScale(
   domainMax: number,
   rangeSize: number,
@@ -57,7 +57,7 @@ export function linearScale(
   return (value) => (value / domainMax) * rangeSize;
 }
 
-/** @internal Reachable from the `components` entry point because the chart entry points import it across the boundary; not part of the package surface. */
+/** @internal */
 export interface BandScale {
   readonly bandWidth: number;
   /** Centre to centre, so it exceeds `bandWidth` by the padding. */
@@ -70,7 +70,7 @@ export interface BandScale {
   indexAt(offset: number): number;
 }
 
-/** @internal Reachable from the `components` entry point because the chart entry points import it across the boundary; not part of the package surface. */
+/** @internal */
 export function bandScale(
   count: number,
   rangeSize: number,
