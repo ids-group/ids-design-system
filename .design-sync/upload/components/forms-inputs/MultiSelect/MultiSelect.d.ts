@@ -36,6 +36,8 @@ export interface MultiSelectProps {
   searchable?: boolean | number | null;
   /** Native `name` attribute forwarded to the trigger. */
   name?: string | null;
+  /** Extra classes for the portaled panel, beside `ds-dropdown-panel`, `ds-overlay-pane` and this component's own `ds-multi-select-panel`. The panel is portaled out of the host, so a class on the pane is the only way a consumer stylesheet reaches ONE instance of it. */
+  panelClass?: string | readonly string[];
   /** Prevents opening the panel while still allowing focus. */
   readOnly?: boolean;
   /** The contract spelling of `readOnly`, a second input because signal forms binds by NAME — a `readonly()` rule was reaching nothing before this existed. */

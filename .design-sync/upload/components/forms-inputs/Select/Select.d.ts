@@ -46,6 +46,8 @@ export interface SelectProps {
   onClosed?: (value: void) => void;
   /** Scrolls the keyboard cursor's row into view. On by default: a list longer than the panel otherwise walks the cursor out of sight. Set `false` only if you are driving the scroll position yourself. */
   scrollActiveIntoView?: boolean;
+  /** Extra classes for the portaled panel, beside `ds-dropdown-panel`, `ds-overlay-pane` and this component's own `ds-select-panel`. The panel is portaled out of the host, so a class on the pane is the only way a consumer stylesheet reaches ONE instance of it. */
+  panelClass?: string | readonly string[];
   /** Prevents opening the dropdown while still allowing focus. */
   readOnly?: boolean;
   /** The contract spelling of `readOnly`: signal forms binds by NAME, so a `readonly()` rule reaches nothing without it. */

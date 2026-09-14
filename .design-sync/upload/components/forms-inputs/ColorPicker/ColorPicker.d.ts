@@ -28,6 +28,8 @@ export interface ColorPickerProps {
   onValueChange?: (value: string) => void;
   /** Swatches shown in the panel — defaults to a built-in palette. */
   presets?: readonly string[];
+  /** Extra classes for the portaled panel, beside `ds-dropdown-panel`, `ds-overlay-pane` and this component's own `ds-color-picker-panel`. The panel is portaled out of the host, so a class on the pane is the only way a consumer stylesheet reaches ONE instance of it. */
+  panelClass?: string | readonly string[];
   /** Disables the trigger and blocks all interaction. */
   disabled?: boolean;
   /** Accessible name for the trigger button and panel. */
