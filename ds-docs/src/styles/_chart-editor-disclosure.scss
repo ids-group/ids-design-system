@@ -66,6 +66,10 @@
 // The replay control sits beside the editor's own pill rather than under it: both are things the
 // reader clicks on the same specimen, and a second row of chrome under every chart is noise.
 @mixin replay-row {
+  :host > .replay {
+    margin-block-start: 0;
+  }
+
   .editor-row {
     display: flex;
     flex-wrap: wrap;

@@ -210,7 +210,7 @@ figcaption {
 }
 
 .ring-svg {
-  @include chart-interactive.fades('.slice');
+  @include chart-interactive.fades('.slice', ', fill var(--ds-motion-chart-mark-duration) var(--ds-motion-chart-mark-easing)');
   @include chart-interactive.clickable('.slice');
 }
 

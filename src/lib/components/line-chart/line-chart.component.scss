@@ -74,9 +74,15 @@ figcaption {
   dominant-baseline: middle;
 }
 
-@include chart-interactive.dims('.series-area');
-@include chart-interactive.dims('.series-line');
-@include chart-interactive.dims('.series-marker');
+@include chart-interactive.dims('.series-area', ', fill var(--ds-motion-chart-mark-duration) var(--ds-motion-chart-mark-easing)');
+@include chart-interactive.dims(
+  '.series-line',
+  ', stroke var(--ds-motion-chart-mark-duration) var(--ds-motion-chart-mark-easing), stroke-width var(--ds-motion-chart-state-duration) var(--ds-motion-chart-state-easing)'
+);
+@include chart-interactive.dims(
+  '.series-marker',
+  ', fill var(--ds-motion-chart-mark-duration) var(--ds-motion-chart-mark-easing), r var(--ds-motion-chart-state-duration) var(--ds-motion-chart-state-easing)'
+);
 
 .series-area {
   fill-opacity: var(--_line-chart-area-opacity);
@@ -88,8 +94,6 @@ figcaption {
   stroke-width: var(--_line-chart-line-width);
   stroke-linecap: round;
   stroke-linejoin: round;
-  transition: stroke-width var(--ds-motion-chart-state-duration)
-    var(--ds-motion-chart-state-easing);
 }
 
 /* The singled-out series thickens as well as keeping its colour, so the highlight survives a
@@ -126,11 +130,6 @@ figcaption {
 .cursor-line {
   stroke: var(--_line-chart-cursor-line-color);
   stroke-width: 1;
-}
-
-.series-marker {
-  transition: r var(--ds-motion-chart-state-duration)
-    var(--ds-motion-chart-state-easing);
 }
 
 // A finger covers a 1px cursor line; the grown marker is what stays readable under it.

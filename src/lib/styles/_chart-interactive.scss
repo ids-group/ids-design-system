@@ -8,10 +8,14 @@
 
 // `.is-dimmed` alone, for a mark whose highlight only ever comes from outside — a legend, or a
 // consumer. A line has no mark between two readings, so it has no `:hover` half to derive.
-@mixin dims($mark) {
+//
+// `$also` is how a mark adds its OWN animated properties to the same declaration — a second
+// `transition` on the same selector replaces this one rather than adding to it, and the fade then
+// disappears with nothing reporting it. Pass a leading comma: `', fill 180ms ease'`.
+@mixin dims($mark, $also: '') {
   #{$mark} {
     transition: opacity var(--ds-motion-chart-state-duration)
-      var(--ds-motion-chart-state-easing);
+      var(--ds-motion-chart-state-easing) #{$also};
   }
 
   #{$mark}.is-dimmed {
@@ -23,8 +27,8 @@
 // it is hovered, which is what lets a pointer highlight work with no component state.
 //
 // Usage: `.columns { @include chart-interactive.fades('.column'); }`
-@mixin fades($mark) {
-  @include dims($mark);
+@mixin fades($mark, $also: '') {
+  @include dims($mark, $also);
 
   &:has(#{$mark}.interactive:hover) #{$mark}.interactive:not(:hover),
   &:has(#{$mark}.interactive:focus-visible)

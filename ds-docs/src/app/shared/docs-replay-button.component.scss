@@ -1,0 +1,8 @@
+@use '../../styles/chart-editor-disclosure' as chart-editor-disclosure;
+
+:host {
+  display: block;
+  margin-block-start: var(--space-4);
+}
+
+@include chart-editor-disclosure.replay-row;

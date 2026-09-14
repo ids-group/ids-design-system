@@ -90,8 +90,11 @@ figcaption {
   // is a considered trade — under a scaled transform the rounded data-end squashes with the body,
   // so the cap changes shape for the length of the animation. The cost is a layout pass per frame
   // on one property. The mark's ARRIVAL does scale, where the squash is worth the compositor.
-  transition: inline-size var(--ds-motion-chart-mark-duration)
-    var(--ds-motion-chart-mark-easing);
+  transition:
+    inline-size var(--ds-motion-chart-mark-duration)
+      var(--ds-motion-chart-mark-easing),
+    background-color var(--ds-motion-chart-mark-duration)
+      var(--ds-motion-chart-mark-easing);
 }
 
 .empty.is-error {

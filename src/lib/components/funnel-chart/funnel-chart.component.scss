@@ -122,7 +122,7 @@ svg {
 }
 
 .shape {
-  @include chart-interactive.fades('.stage');
+  @include chart-interactive.fades('.stage', ', fill var(--ds-motion-chart-mark-duration) var(--ds-motion-chart-mark-easing)');
   @include chart-interactive.clickable('.stage');
 }
 

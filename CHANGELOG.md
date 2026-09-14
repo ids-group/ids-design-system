@@ -79,6 +79,13 @@
   nothing. `ds-bar-chart`'s row gap moved from `row-gap` on the list to padding on each row, for
   the same reason: a reader aiming between two bars used to hit neither.
 
+- **A mark's colour change eases instead of jumping,** and a dimmed line fades again. Each mark
+  animated exactly one property, because a second `transition` on the same selector REPLACES the
+  first rather than adding to it: `ds-line-chart`'s line kept `stroke-width` and lost the dim fade,
+  its marker kept `r` and lost the same, and no mark eased its paint at all. Every mark now carries
+  one declaration naming opacity, its geometry and its colour — so recolouring a row, pinning a
+  palette slot, or adding a funnel stage and re-spreading the ramp all ease.
+
 - **A chart tooltip closes when the page scrolls.** CDK's reposition strategy watches `window` and
   registered `cdkScrollable`s only, so an app's own `overflow: auto` container left the panel
   pinned in space while the chart scrolled out from under it. It reopens on the next pointer move.

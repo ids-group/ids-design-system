@@ -2,6 +2,7 @@ import { Component, ViewEncapsulation, signal } from '@angular/core';
 import { DonutChartComponent } from 'ds/donut-chart';
 import type { DonutChartSlice } from 'ds/donut-chart';
 import { DocsChartDataEditorComponent } from '../../../shared/docs-chart-data-editor.component';
+import { DocsReplayButtonComponent } from '../../../shared/docs-replay-button.component';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 const SPECIMEN_SLICES: readonly DonutChartSlice[] = [
@@ -50,6 +51,7 @@ const SLOT_SLICES: readonly DonutChartSlice[] = [
   selector: 'section-charts-donut-chart',
   standalone: true,
   imports: [
+    DocsReplayButtonComponent,
     DocsChartDataEditorComponent,
     DocsSectionComponent,
     DonutChartComponent,
