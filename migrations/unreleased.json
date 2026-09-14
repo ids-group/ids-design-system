@@ -31,6 +31,52 @@
       ],
       "verify": "No code reads a chart's `dataTable`, `emptyText`, `errorText` or `valueFormat` input directly; every read goes through the matching `*Resolved` signal.",
       "note": "The four moved onto the library's internal config resolver, which requires the input to be `T | null` defaulting to `null`: a signal input cannot report whether it was bound, so `null` is what separates \"not set\" from an explicit value. Same shape as `ds-card`'s `elevation` / `padding` and `ds-button`'s `size`."
+    },
+    {
+      "id": "picker-panel-class-input-added",
+      "kind": "behavior",
+      "old": "SelectComponent",
+      "new": null,
+      "surface": "typescript",
+      "action": "Only if you SUBCLASS one of the six pickers and declare a member called `panelClass`: rename yours, or add `override` where your member genuinely means the panel class.",
+      "appliesWhen": "Only a class extending SelectComponent, MultiSelectComponent, AutocompleteComponent, ColorPickerComponent, DatePickerComponent or TimePickerComponent. A template that uses the pickers needs nothing, and neither does code that reads their other inputs.",
+      "pitfall": "The collision is a compile error, not a silent one — TS4114 for a same-named member, TS2416 where the signature differs — so a build that passes has none.",
+      "restore": null,
+      "searchHints": [
+        "panelClass"
+      ],
+      "detect": [
+        "extends SelectComponent",
+        "extends MultiSelectComponent",
+        "extends AutocompleteComponent",
+        "extends ColorPickerComponent",
+        "extends DatePickerComponent",
+        "extends TimePickerComponent",
+        "extends "
+      ],
+      "verify": "No subclass of the six pickers declares a member named `panelClass` of its own; the app builds with no TS4114 or TS2416 on those classes.",
+      "note": "Each picker gained one input, `panelClass`, so a consumer can name the portaled pane. Subclassing a DS component is unsupported, but a release that only adds can still fail such a build on a name collision, which is why the addition is listed here rather than in the additive notes."
+    },
+    {
+      "id": "date-time-picker-panes-carry-dropdown-panel-class",
+      "kind": "behavior",
+      "old": "DatePickerComponent",
+      "new": null,
+      "surface": "style",
+      "action": "Check any rule of yours written against `.ds-dropdown-panel`: it now also matches the date picker and time picker panes. Narrow it to the picker you meant with that picker’s own pane class.",
+      "appliesWhen": "Only a stylesheet naming `.ds-dropdown-panel`. The DS skin is keyed on a `.dropdown-panel` child that neither picker renders, so our own appearance is unchanged and no template or TypeScript is affected.",
+      "pitfall": "Nothing errors and nothing logs — the date or time panel simply picks up a treatment written for an option list, and only a look at the two panels shows it.",
+      "restore": null,
+      "searchHints": [
+        ".ds-dropdown-panel",
+        "ds-dropdown-panel"
+      ],
+      "detect": [
+        ".ds-dropdown-panel",
+        "ds-dropdown-panel"
+      ],
+      "verify": "Every consumer rule on `.ds-dropdown-panel` is either intended for all six pickers, or names one pane class — `ds-select-panel`, `ds-multi-select-panel`, `ds-autocomplete-panel`, `ds-color-picker-panel`, `ds-date-picker-panel` or `ds-time-picker-panel`.",
+      "note": "The date and time pickers used to pass a panel class that REPLACED the shared pair, so their panes carried `ds-overlay-pane` alone. The shared pair is now unconditional and a caller adds to it, which is what lets each pane also carry a class of its own. This is the inbound direction of a widening: an existing rule starts matching a panel it never matched."
     }
   ],
   "informational": [
@@ -40,7 +86,40 @@
     "`ds-funnel-chart`'s inter-stage gaps and `ds-bar-chart`'s row gap now belong to the marks either side of them, so a pointer between two marks answers for one of them instead of for nothing. Both gaps look exactly as they did; only what the pointer hits changed. A test that asserted a pointer between two bars hits neither will now see the nearer one.",
     "`ds-line-chart`'s crosshair moved into a group that carries a `translateX`, so it glides between categories instead of jumping. A stylesheet that reached `.category-band` or `.cursor-line` to position them by hand is now positioning them inside that group; the classes themselves are unchanged.",
     "A chart tooltip closes when the page scrolls and reopens on the next pointer move. It used to stay pinned in space while the chart scrolled away, because CDK's reposition strategy watches `window` and registered `cdkScrollable`s only and misses an app's own `overflow: auto` container.",
-    "`ds-chart-legend`'s checkboxes were painting the focus ring at all times rather than under `:focus-visible`, so every legend row looked focused. The component's own rule is gone — the library's global `:where(:focus-visible)` already rings them — and nothing in your code changes. A screenshot test of a chart legend will differ."
+    "`ds-chart-legend`'s checkboxes were painting the focus ring at all times rather than under `:focus-visible`, so every legend row looked focused. The component's own rule is gone — the library's global `:where(:focus-visible)` already rings them — and nothing in your code changes. A screenshot test of a chart legend will differ.",
+    "The dropdown panel gained `--ds-dropdown-panel-border-color` and `--ds-dropdown-panel-shadow`, and a dropdown option gained `--ds-option-weight`, `--ds-option-font-size`, `--ds-option-line-height` and `--ds-option-font-family`. Each defaults to the value that was hardcoded before, and each forwards from the host onto the portaled pane like the panel tokens already there, so one picker can be retyped without a global rule (delete list: deep-option-type-rule).",
+    "`ds-modal` gained `--ds-modal-title-font-family`, defaulting to `--font-heading`. It is the one title property that had no hook, which is why a display face needed the doubled `.title.title` selector (delete list: modal-title-doubled-class).",
+    "`ds-table`'s pagination footer insets from `--ds-table-cell-pad-left` and `--ds-table-cell-pad-right` when they are set, falling back to `--ds-table-cell-pad-x` as before. A table using only `-x` is unchanged; one with a per-side gutter gets a footer that lines up with column one instead of sitting at the default (delete list: table-pagination-footer-local-inset).",
+    "Fading the other marks on hover is now the `dimOthers` input rather than something `interactive` brought with it, and it is OFF by default on all five charts. The fade costs the separation between the faded marks — measured 2026-09-13, the worst pair of three dimmed series falls from dE 14.8 at full opacity to 2.1 at the default dim opacity — so it is a trade to make deliberately. A chart that had it back: `<ds-donut-chart interactive dimOthers …>`.",
+    "Every chart holds the height of its plot while it shows a message — empty data, an error, or a legend that switched the last series off. They used to shrink to a line of text. A layout that relied on a chart collapsing in those states will now see a reserved box; the height comes from the chart's own plot-height token, so `--ds-line-chart-plot-height` and its siblings size it."
   ],
-  "deleteList": []
+  "deleteList": [
+    {
+      "id": "deep-option-type-rule",
+      "surface": "style",
+      "find": [
+        ".ds-overlay-pane .dropdown-panel .option"
+      ],
+      "why": "the row's weight, size, line-height and family are public hooks that forward per instance, so no deep selector is needed",
+      "replaceWith": "`--ds-option-weight`, `--ds-option-font-size`, `--ds-option-line-height` and `--ds-option-font-family`"
+    },
+    {
+      "id": "modal-title-doubled-class",
+      "surface": "style",
+      "find": [
+        "ds-modal .title.title"
+      ],
+      "why": "the title reads a family hook, so the class no longer has to be doubled to out-specify the component's own rule",
+      "replaceWith": "`--ds-modal-title-font-family`"
+    },
+    {
+      "id": "table-pagination-footer-local-inset",
+      "surface": "style",
+      "find": [
+        ".pagination-footer"
+      ],
+      "why": "the footer resolves the same per-side chain the cells do, so it lines up with column one on its own",
+      "replaceWith": "nothing, unless the footer is deliberately meant to disagree with the columns"
+    }
+  ]
 }

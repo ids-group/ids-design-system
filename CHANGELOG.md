@@ -2,6 +2,43 @@
 
 ### Added
 
+- **A picker's panel can be styled without painting every other picker's.** Each portaled pane
+  carries its own class beside the shared `ds-dropdown-panel` and `ds-overlay-pane` —
+  `ds-select-panel`, `ds-multi-select-panel`, `ds-autocomplete-panel`, `ds-color-picker-panel`,
+  `ds-date-picker-panel`, `ds-time-picker-panel` — and every one of the six also takes a
+  `panelClass` input for a class of your own:
+
+  ```html
+  <ds-autocomplete panelClass="search-panel" [options]="options" />
+  ```
+
+  ```scss
+  .ds-autocomplete-panel .option { font-size: 15px; }
+  ```
+
+  The panel is portaled to `document.body`, outside the host, so a class on the pane is the only
+  route a consumer stylesheet has to ONE instance of it. `panelClass` takes a string or an array.
+
+  Two panes gain `ds-dropdown-panel` that did not carry it: the date picker's and the time picker's.
+  Our own skin is keyed on a `.dropdown-panel` child that neither renders, so neither changes
+  appearance — but a rule of yours written against `.ds-dropdown-panel` now matches them too.
+
+  `SelectComponent`, `MultiSelectComponent`, `AutocompleteComponent`, `ColorPickerComponent`,
+  `DatePickerComponent` and `TimePickerComponent` each grow by this one input. A subclass of any of
+  the six that declares its own `panelClass` stops building until it renames the member or marks it
+  `override`.
+
+- **The dropdown panel's border and shadow, and the option's type, read `--ds-*` hooks.**
+  `--ds-dropdown-panel-border-color` and `--ds-dropdown-panel-shadow` join the five box hooks the
+  panel already had; `--ds-option-weight`, `--ds-option-font-size`, `--ds-option-line-height` and
+  `--ds-option-font-family` replace the literal `font` shorthand on a row. All six forward per
+  instance like the rest of the panel tokens, so they reach one pane from one host and need no
+  global rule. Defaults are today's values, so an untouched theme is unchanged.
+
+- **`--ds-modal-title-font-family`.** The title had weight, size and colour hooks and read
+  `--font-heading` literally, so a display face meant `ds-modal .title.title { font-family: … }` —
+  the class doubled to clear the component's own rule. Defaults to `--font-heading`.
+
 - **`DS_CONFIG` takes a `chart` section.** Four inputs now resolve through it, because each is one
   decision per APP rather than per plot: `valueFormat` — a number reads one way in a product, and a
   formatter passed per chart drifts as soon as there are two screens; `dataTable` — whether the
@@ -79,6 +116,25 @@
   nothing. `ds-bar-chart`'s row gap moved from `row-gap` on the list to padding on each row, for
   the same reason: a reader aiming between two bars used to hit neither.
 
+- **A chart keeps its height in every state.** An empty `data`, a failed request, or a legend that
+  switched the last series off used to shrink the chart to a line of text, which drags the page up
+  under the reader at exactly the moment they are being told something. The message now stands in a
+  box the size of the plot it replaces.
+
+- **Dimming the other marks is a separate opt-in, and it is off.** `dimOthers` on all five charts
+  fades every mark but the hovered or focused one; it used to ride along with `interactive`. It is
+  off by default because the fade costs the separation BETWEEN the faded marks — measured
+  2026-09-13, the worst pair of three dimmed series falls from dE 14.8 at full opacity to 2.1 at
+  `--ds-chart-dim-opacity`'s default — so it buys loudness for one mark and pays for it with the
+  rest of the chart. A chart that had the fade gets it back with one attribute.
+
+  ```html
+  <ds-donut-chart interactive dimOthers [data]="slices" />
+  ```
+
+- **A hidden legend row is no longer struck through.** The unchecked box says what happened and the
+  muted label agrees with it; a strike-through says the label itself is wrong.
+
 - **A chart tooltip no longer fights the pointer that opened it.** The panel opens under the
   cursor, and the CDK pane it is portaled into takes pointer events by default — so the panel
   covered the plot, the plot took a `pointerleave`, the chart cleared its hover, the panel closed,
@@ -116,6 +172,22 @@
 - **`ds-line-chart`'s crosshair glides between categories instead of jumping,** and fades on the
   way in and out. The band and the cursor line are one group carrying a `translateX`, so the move
   is a transform rather than four attribute writes.
+
+### Fixed
+
+- **`ds-table`'s pagination footer insets per side, so the summary lines up with column one.** The
+  footer read `--ds-table-cell-pad-x` alone while the cells resolve `--ds-table-cell-pad-left` and
+  `-right` separately. A table asking for a flush first column — `--ds-table-cell-pad-left: 0`
+  with `-right` set and `-x` unset — got a footer at the 16px default while the column sat at 0.
+  The footer now walks the same per-side chain; `-x` still works as the shorthand for both.
+
+### What you can now DELETE
+
+| your workaround | why it is unnecessary | replace with |
+| --- | --- | --- |
+| `.ds-overlay-pane .dropdown-panel .option` — a deep rule retyping dropdown rows | the row's weight, size, line-height and family are hooks that forward per instance | `--ds-option-weight`, `--ds-option-font-size`, `--ds-option-line-height`, `--ds-option-font-family` |
+| `ds-modal .title.title` — the class doubled only to set `font-family` | the title reads a family hook | `--ds-modal-title-font-family` |
+| `.pagination-footer` — a local rule re-insetting the table's footer to match a per-side gutter | the footer resolves the same left/right chain the cells do | nothing — keep the rule only if the footer is meant to disagree with the columns |
 
 ## 0.13.0 — 2026-09-14
 
