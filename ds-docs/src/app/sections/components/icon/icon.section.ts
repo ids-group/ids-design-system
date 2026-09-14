@@ -3,10 +3,6 @@ import { RouterLink } from '@angular/router';
 import type { IconName } from 'ds/core';
 import { IconComponent } from 'ds/icons';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
-import {
-  DocsTruncationComponent,
-  TruncationRule,
-} from '../../../shared/docs-truncation.component';
 
 interface IconSize {
   readonly token: string;
@@ -40,12 +36,7 @@ const SAMPLES: readonly IconName[] = [
 @Component({
   selector: 'section-components-icon',
   standalone: true,
-  imports: [
-    DocsSectionComponent,
-    DocsTruncationComponent,
-    IconComponent,
-    RouterLink,
-  ],
+  imports: [DocsSectionComponent, IconComponent, RouterLink],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './icon.section.html',
   styleUrl: './icon.section.scss',
@@ -62,18 +53,5 @@ export class IconSection {
     'chart',
     'edit',
     'truck',
-  ];
-
-  protected readonly truncationRules: TruncationRule[] = [
-    {
-      field: 'Glyph',
-      behaviour:
-        'Never clipped — the SVG sits in a square frame at one of the fixed sizes.',
-    },
-    {
-      field: 'Icon + text pair',
-      behaviour:
-        'Glyph fixed; text label takes the remaining width and clips with ellipsis.',
-    },
   ];
 }

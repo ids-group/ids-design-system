@@ -68,7 +68,12 @@ import { DsPanelFooterTemplateDirective } from '@ids-group-ltd/ids-design-system
 import { DsGroupLabelTemplateDirective } from '@ids-group-ltd/ids-design-system/components';
 import { DsCreateTemplateDirective } from '@ids-group-ltd/ids-design-system/components';
 import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
-import { inFieldGroup } from '@ids-group-ltd/ids-design-system/components/field-group';
+import {
+  describedByIds,
+  groupInvalid,
+  groupMessageId,
+  inFieldGroup,
+} from '@ids-group-ltd/ids-design-system/components/field-group';
 import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 
 let nextId = 0;
@@ -111,8 +116,8 @@ export class AutocompleteComponent<T = unknown>
   private readonly overlay = inject(Overlay);
   private readonly vcr = inject(ViewContainerRef);
   private readonly host = inject(ElementRef<HTMLElement>);
-  /** Public panel tokens forwarded onto the portaled overlay pane on open so
-   *  a consumer's `ds-autocomplete { --ds-autocomplete-panel-*: … }` reaches it. */
+  /** Public panel tokens forwarded onto the portaled overlay pane on open, so a consumer's
+   *  `ds-autocomplete { --ds-autocomplete-panel-bg-color | -radius | -maxh: … }` reaches it. */
   private readonly panelTokens = [
     '--ds-dropdown-panel-bg-color',
     '--ds-dropdown-panel-radius',
@@ -161,10 +166,9 @@ export class AutocompleteComponent<T = unknown>
   );
   /** Trigger width — `fill` stretches to the container, `content` hugs the value. */
   readonly width = input<AutocompleteWidth>('fill');
-  /** What a settled single value does when it is wider than the trigger. Defaults
-   *  to `ellipsis`; `wrap` restores the pre-0.12 behaviour, where the value broke
-   *  onto a second line and pushed the chevron onto a third. Multi mode is
-   *  unaffected — its chips have their own measured cap. */
+  /** What a settled single value does when it is wider than the trigger. Defaults to
+   *  `ellipsis`; `wrap` lets the value break onto a second line and pushes the chevron
+   *  down. Multi mode is unaffected — its chips have their own measured cap. */
   readonly valueOverflow = input<AutocompleteValueOverflow>('ellipsis');
   /** Placeholder shown in the input when empty. */
   readonly placeholder = input<string>('Select…');
@@ -192,8 +196,8 @@ export class AutocompleteComponent<T = unknown>
   /** Prevents opening the panel while still allowing focus. */
   readonly readOnly = input(false, { transform: booleanAttribute });
   /**
-   * The contract spelling of `readOnly`, a second input because signal forms binds
-   * by NAME — a `readonly()` rule was reaching nothing before this existed.
+   * The contract spelling of `readOnly`: signal forms binds by NAME, so a
+   * `readonly()` rule reaches nothing without it.
    */
   readonly readonlyBinding = input(false, {
     // eslint-disable-next-line @angular-eslint/no-input-rename
@@ -204,7 +208,7 @@ export class AutocompleteComponent<T = unknown>
   readonly clearable = input(false, { transform: booleanAttribute });
   /** Placeholder while the field is being typed in, when a value is already
    *  settled — `placeholder` is the empty-field caption and cannot be both.
-   *  Empty (the default) keeps `placeholder` doing both jobs, as before. */
+   *  Empty (the default) keeps `placeholder` doing both jobs. */
   readonly searchPlaceholder = input<string>('');
 
   /** How the typed query narrows the list.
@@ -251,6 +255,7 @@ export class AutocompleteComponent<T = unknown>
     this.message().text ? `${this.uid}-hint` : null,
   );
   private readonly fieldMessage = resolveFieldMessage({
+    disabled: () => this.isDisabled(),
     hint: this.hint,
     warning: this.warning,
     error: this.error,
@@ -262,7 +267,9 @@ export class AutocompleteComponent<T = unknown>
   });
   protected readonly message = this.fieldMessage.message;
   protected readonly controlState = this.fieldMessage.controlState;
-  protected readonly invalidResolved = this.fieldMessage.invalid;
+  protected readonly groupMessage = groupMessageId();
+  protected readonly describedByIds = describedByIds;
+  protected readonly invalidResolved = groupInvalid(this.fieldMessage.invalid);
 
   protected readonly optionTemplate = contentChild(DsOptionTemplateDirective, {
     read: TemplateRef,
@@ -493,7 +500,7 @@ export class AutocompleteComponent<T = unknown>
       parts.push('is-disabled');
     }
     // The shared panel partial paints the selected row off this class, not off
-    // `aria-selected`, so a picker that only set the attribute went unpainted.
+    // `aria-selected`, so setting the attribute alone leaves the row unpainted.
     if (this.isSelected(option)) {
       parts.push('is-selected');
     }

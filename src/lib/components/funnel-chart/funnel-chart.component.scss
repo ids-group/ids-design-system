@@ -1,0 +1,124 @@
+@use '../../styles/focus' as focus;
+@use '../../styles/visually-hidden' as visually-hidden;
+@use '../../styles/chart-data-table' as chart-data-table;
+@use '../../styles/chart-frame' as chart-frame;
+@use '../../styles/chart-interactive' as chart-interactive;
+@use '../../styles/chart-motion' as chart-motion;
+@include chart-motion.staged('.stage');
+@include chart-frame.chart-frame;
+@include chart-data-table.chart-data-table;
+
+
+.funnel-chart {
+  --_funnel-chart-stage-height: var(--ds-funnel-chart-stage-height, 44px);
+  --_funnel-chart-stage-gap: var(--ds-funnel-chart-stage-gap, var(--ds-chart-bar-gap));
+  --_funnel-chart-row-gap: var(--ds-funnel-chart-row-gap, var(--space-4));
+  --_funnel-chart-focus-color: var(--ds-funnel-chart-focus-color, var(--focus-ring-color));
+  --_funnel-chart-focus-width: var(--ds-funnel-chart-focus-width, var(--focus-ring-width));
+
+  // Contains the absolutely-positioned caption below; without it the caption resolves against the
+  // initial containing block and can grow the consuming page's root scroller.
+  position: relative;
+
+  // Four end-aligned columns have a hard minimum width, and below it the stage table would spill
+  // past whatever the chart is sitting in. Scrolling the annex table is what ds-table does too.
+  overflow-x: auto;
+  margin: 0;
+}
+
+.visually-hidden {
+  @include visually-hidden.visually-hidden;
+}
+
+figcaption {
+  margin-block-end: var(--space-3);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.empty {
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+.shape {
+  display: block;
+}
+
+svg {
+  display: block;
+  inline-size: 100%;
+}
+
+
+
+
+/* focus-ring-guard: an outline on an SVG element paints its BOUNDING BOX, not its silhouette —
+   measured in Chrome 153, a funnel stage rings as a flat bar across the trapezoid. The ring is a
+   stroke on the shape instead; `own-indicator` keeps the outline under forced colours, where
+   `stroke` is not remapped. */
+.stage.interactive:focus-visible {
+  @include focus.own-indicator;
+  @include chart-frame.drawn-focus-ring;
+}
+
+.skeleton {
+  display: grid;
+  row-gap: var(--_funnel-chart-stage-gap);
+}
+
+.stage-table {
+  inline-size: 100%;
+  margin-block-start: var(--_funnel-chart-row-gap);
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.stage-table th,
+.stage-table td {
+  padding-block: var(--space-2);
+  border-block-end: var(--border-width-default) solid var(--ds-chart-grid-line-color);
+  text-align: end;
+}
+
+.stage-table thead th {
+  color: var(--text-tertiary);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+}
+
+.stage-table thead th:first-child {
+  text-align: start;
+}
+
+// The numeric columns end-align, so with no start gutter a percent and the drop beside it touch as
+// soon as the measure tightens. On the body cells only: the header labels set the table's minimum
+// width, and padding those as well would widen that minimum and start the scroll earlier.
+.stage-table td {
+  padding-inline-start: var(--space-3);
+}
+
+.stage-table th[scope='row'] {
+  color: var(--text-secondary);
+  font-weight: 400;
+  text-align: start;
+}
+
+.swatch {
+  display: inline-block;
+  inline-size: var(--space-2);
+  block-size: var(--space-2);
+  margin-inline-end: var(--space-2);
+  border-radius: var(--radius-sm);
+}
+
+.empty.is-error {
+  color: var(--error);
+}
+
+.shape {
+  @include chart-interactive.fades('.stage');
+  @include chart-interactive.clickable('.stage');
+}
+
+@include chart-frame.forced-colors;

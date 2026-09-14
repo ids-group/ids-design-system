@@ -41,8 +41,18 @@ function extractComponentTokens(scssText, component) {
   return out;
 }
 
+// A comment that shows how to set a token — `--ds-chart-frame-padding: 0` — is otherwise read as a
+// declaration of it, and since the match runs to the first `;` it swallows the real declaration
+// underneath and publishes one token holding the other's value.
+function withoutComments(scssText) {
+  return scssText
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/(^|\s)\/\/[^\n]*/g, '$1');
+}
+
 // Matches `  --name: value;` declaration lines (not `var(--name` reads).
-function extractRootDeclarations(scssText) {
+function extractRootDeclarations(rawScssText) {
+  const scssText = withoutComments(rawScssText);
   const out = [];
   const re = /(^|\n)\s*(--[a-z0-9-]+)\s*:\s*([^;]+);/gi;
   let m;
@@ -124,8 +134,11 @@ function typographyNote(name) {
   return `Per-axis override for the \`.t-${util}\` utility's ${label}.`;
 }
 
+// `chart` cannot join the family list below: half that namespace is geometry
+// (--chart-bar-gap, --chart-dot-radius), so it is matched by the two shapes a
+// chart COLOUR actually takes — a named ramp stop, or a `-color` suffix.
 const COLOR_VALUE =
-  /(#[0-9a-f]{3,8}\b|\brgb|\bhsl|\boklch|color-mix|var\(--(?:accent|primary|secondary|tertiary|success|warning|error|info|surface|text|icon|border|focus|link|static|neutral|blue|red|green|yellow|orange|sky)\b)/i;
+  /(#[0-9a-f]{3,8}\b|\brgb|\bhsl|\boklch|color-mix|var\(--chart-(?:categorical|sequential|divergent)\b|var\(--chart-[a-z0-9-]*color\b|var\(--(?:accent|primary|secondary|tertiary|success|warning|error|info|surface|text|icon|border|focus|link|static|neutral|blue|red|green|yellow|orange|sky)\b)/i;
 function kindOf(name, value, category) {
   const v = value.trim();
   if (/^-?[\d.]+$/.test(v)) return 'other'; // unitless (alpha, 0, etc.)
@@ -318,7 +331,10 @@ const SEMANTIC_LINK = pick(/^--link/).map(colourRow);
 
 // ---- Charts (ColourRow; mostly colour, a few sizes — size rows just render
 // without a swatch since ColourRow has no renderAs) ----------------------
-const CHARTS = pick(/^--chart-/).map(colourRow);
+// Both layers: `--chart-*` is the palette and `--ds-chart-*` is the contract a
+// consumer is told to set. Routing only the palette left the contract in
+// NEW_TOKENS, i.e. the one thing documented as public rendered as unresolved.
+const CHARTS = pick(/^--(?:ds-)?chart-/).map(colourRow);
 
 // ---- Colour ramps (RampSpec) ----------------------------------------------
 // Fixed labels/prefixes/notes VERBATIM from the original; stops auto-derived

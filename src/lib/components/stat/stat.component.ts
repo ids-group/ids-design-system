@@ -1,11 +1,12 @@
 import { Component, ViewEncapsulation, computed, input } from '@angular/core';
 import { devWarn } from '@ids-group-ltd/ids-design-system/core';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
+import { TooltipDirective } from '@ids-group-ltd/ids-design-system/components/tooltip';
 
 @Component({
   selector: 'ds-stat',
   standalone: true,
-  imports: [IconComponent],
+  imports: [IconComponent, TooltipDirective],
   templateUrl: './stat.component.html',
   styleUrl: './stat.component.scss',
   encapsulation: ViewEncapsulation.Emulated,

@@ -15,6 +15,15 @@ the release commit — one timeline, two audiences.
 
 ## Unreleased
 
+### Upload
+
+- **The project holds the 0.12.3 tree: 1091 files, 16 of them new.** Every card, prompt note, type
+  stub, wrapper, font and the bundle went up in five batches under one plan; a read-back of
+  `list_files` afterwards shows nothing local missing from the project. What the run could NOT do is
+  remove anything: `delete_files` is refused for a non-owner, so the **thirteen** paths the build no
+  longer produces are still there and are all listed in `obsolete.txt` for the owner to clear —
+  ten of them were added to that list by this run, having been left behind by earlier renames.
+
 ### Cards
 
 - **A card whose control owns a dropdown stays live, so the dropdown still opens.** What freezing
@@ -36,6 +45,7 @@ the release commit — one timeline, two audiences.
   for a backticked `on…Change` the component does not have, not only the tsx examples — that shape
   alone, because every backticked identifier reports 46 findings on this tree and almost none are
   defects, while this reports none.
+- **`docs/BarChart.md` was added, documenting the newly-registered `ds-bar-chart`.**
 
 ### Build
 

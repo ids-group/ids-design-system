@@ -6,10 +6,6 @@ import type {
   AutocompleteOptionGroup,
 } from 'ds/autocomplete';
 import { ButtonComponent } from 'ds/button';
-import {
-  DocsTruncationComponent,
-  TruncationRule,
-} from '../../../shared/docs-truncation.component';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import { DocsNonmodalNoteComponent } from '../../../shared/docs-nonmodal-note.component';
 
@@ -92,7 +88,6 @@ const VENUE_GROUPS: AutocompleteOptionGroup<string>[] = [
   imports: [
     AutocompleteComponent,
     ButtonComponent,
-    DocsTruncationComponent,
     DocsSectionComponent,
     DocsNonmodalNoteComponent,
   ],
@@ -150,23 +145,6 @@ export class AutocompleteSection {
     ],
   );
   protected readonly tagValue = signal<readonly string[]>([]);
-
-  protected readonly truncationRules: TruncationRule[] = [
-    {
-      field: 'Token chip in the input',
-      behaviour:
-        'Single line, ellipsis at ~16 ch. Tooltip on hover when clipped.',
-    },
-    {
-      field: 'Option label in dropdown',
-      behaviour:
-        'Single line, ellipsis. Tooltip on hover always (the popover is narrow).',
-    },
-    {
-      field: 'Secondary metadata',
-      behaviour: 'Single line, ellipsis. Drop before the primary label clips.',
-    },
-  ];
 
   protected onCreateTag(label: string): void {
     const newOption: AutocompleteOption<string> = {

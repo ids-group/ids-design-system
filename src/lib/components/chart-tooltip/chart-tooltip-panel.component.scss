@@ -1,0 +1,51 @@
+:host {
+  /* Portaled through the CDK overlay, so a `--ds-chart-tooltip-*` override has to be
+     theme-level (`:root`) rather than set on the chart element. */
+  --_chart-tooltip-bg-color: var(--ds-chart-tooltip-bg-color);
+  --_chart-tooltip-text-color: var(--ds-chart-tooltip-text-color);
+  --_chart-tooltip-border-color: var(--ds-chart-tooltip-border-color);
+
+  display: block;
+  background: var(--_chart-tooltip-bg-color);
+  color: var(--_chart-tooltip-text-color);
+  border: var(--border-width-default) solid var(--_chart-tooltip-border-color);
+  border-radius: var(--ds-radius-control);
+  box-shadow: var(--ds-elevation-overlay);
+  padding: var(--space-2) var(--space-2-5);
+  max-width: var(--tooltip-maxw);
+  z-index: var(--layer-tooltip);
+  font: var(--font-weight-regular) var(--font-size-xs) / var(--line-height-base)
+    var(--font-sans);
+  pointer-events: none;
+}
+
+.category {
+  margin: 0 0 var(--space-1-5);
+  font-weight: var(--font-weight-medium);
+}
+
+.entries {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.entry {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.swatch {
+  inline-size: var(--space-2);
+  block-size: var(--space-2);
+  border-radius: var(--radius-pill);
+}
+
+.value {
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--font-weight-medium);
+}

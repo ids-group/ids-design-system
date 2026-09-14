@@ -1,0 +1,30 @@
+@if (template(); as projected) {
+  <ng-container
+    [ngTemplateOutlet]="projected"
+    [ngTemplateOutletContext]="{ $implicit: context() }" />
+} @else {
+  @if (context().category) {
+    <p class="category">
+      {{ context().category }}
+    </p>
+  }
+
+  <ul class="entries">
+    @for (entry of context().entries; track entry.label) {
+      <li class="entry">
+        <span
+          class="swatch"
+          [style.background]="entry.color">
+        </span>
+
+        <span class="label">
+          {{ entry.label }}
+        </span>
+
+        <span class="value">
+          {{ entry.formatted }}
+        </span>
+      </li>
+    }
+  </ul>
+}

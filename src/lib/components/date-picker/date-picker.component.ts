@@ -71,7 +71,12 @@ import type {
   RangeValue,
 } from './date-picker.types';
 import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
-import { inFieldGroup } from '@ids-group-ltd/ids-design-system/components/field-group';
+import {
+  describedByIds,
+  groupInvalid,
+  groupMessageId,
+  inFieldGroup,
+} from '@ids-group-ltd/ids-design-system/components/field-group';
 import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 
 let nextId = 0;
@@ -171,7 +176,7 @@ export class DatePickerComponent
   private readonly config = inject(DS_CONFIG);
   private readonly host = inject(ElementRef<HTMLElement>);
   /** Public panel tokens forwarded onto the portaled overlay pane on open so
-   *  a consumer's `ds-date-picker { --ds-date-picker-panel-*: … }` reaches it. */
+   *  a consumer's `ds-date-picker { --ds-date-picker-*: … }` reaches it. */
   private readonly panelTokens = [
     '--ds-date-picker-bg-color',
     '--ds-date-picker-border',
@@ -281,6 +286,7 @@ export class DatePickerComponent
     () => this.invalid() || this.typedInvalid() || this.rangeInvalid(),
   );
   private readonly fieldMessage = resolveFieldMessage({
+    disabled: () => this.isDisabled(),
     hint: this.hint,
     warning: this.warning,
     error: this.localError,
@@ -292,7 +298,9 @@ export class DatePickerComponent
   });
   protected readonly message = this.fieldMessage.message;
   protected readonly controlState = this.fieldMessage.controlState;
-  protected readonly invalidResolved = this.fieldMessage.invalid;
+  protected readonly groupMessage = groupMessageId();
+  protected readonly describedByIds = describedByIds;
+  protected readonly invalidResolved = groupInvalid(this.fieldMessage.invalid);
 
   readonly resolvedLocale = computed(
     () => this.locale() ?? this.config.datePicker?.locale ?? 'en-US',
@@ -754,7 +762,7 @@ export class DatePickerComponent
     );
     // Syncs on every detach of the CURRENT overlay, whatever caused it, so a stray CDK detach
     // cannot leave a stale `overlayRef` wedging this method's reopen guard — and skips a
-    // superseded one, which used to strand the panel that replaced it.
+    // superseded one, which would otherwise strand the panel that replaced it.
     clearOnDetach(this.overlayRef, {
       current: () => this.overlayRef,
       always: removeScrollClose,

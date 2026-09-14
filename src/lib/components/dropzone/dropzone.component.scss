@@ -1,6 +1,11 @@
 @use '../../styles/focus' as focus;
 @use '../../styles/press' as press;
 
+/* Truncation contract:
+   File name — Single line, ellipsis. Tooltip on hover with full name.
+   Progress percentage — Numeric — no clip.
+   Error message — Wrap, no clip — must remain visible. */
+
 :host {
   --_dropzone-bg-color:               var(--ds-dropzone-bg-color,               var(--surface-default));
   --_dropzone-bg-color-hover:         var(--ds-dropzone-bg-color-hover,         var(--accent-subtitle));

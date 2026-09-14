@@ -5,13 +5,12 @@
      #content template so the inner markup isn't duplicated. -->
 @if (routerLink()) {
   <a
-    #rla="routerLinkActive"
     routerLinkActive="active"
     dsTooltipPlacement="right"
     [routerLink]="disabled() ? null : routerLink()"
     [class]="linkClasses()"
     [attr.aria-label]="collapsedAriaLabel()"
-    [attr.aria-current]="rla.isActive ? 'page' : null"
+    [ariaCurrentWhenActive]="ariaCurrentResolved()"
     [attr.aria-disabled]="disabled() ? 'true' : null"
     [attr.tabindex]="disabled() ? -1 : null"
     [dsTooltip]="collapsedTooltip()"

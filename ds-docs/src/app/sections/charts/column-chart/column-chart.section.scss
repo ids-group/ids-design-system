@@ -1,0 +1,17 @@
+@use 'styles/breakpoints' as bp;
+@use '../../../../styles/chart-measure' as chart-measure;
+
+// Five columns across the full content column come out 150px wide each and read as slabs rather
+// than as a series. 620px brings a column back to roughly the width of its own label.
+@include chart-measure.measure('ds-column-chart', 620px);
+
+.tick-count-pair {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-5);
+  inline-size: 100%;
+
+  @include bp.up(md) {
+    grid-template-columns: 1fr 1fr;
+  }
+}

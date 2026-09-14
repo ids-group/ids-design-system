@@ -1,3 +1,8 @@
+/* Truncation contract:
+   Badge / tag label — Single line, ellipsis at ~22 ch. Tooltip on hover when clipped.
+   Status pill — No clip — lifecycle labels are fixed and short (Planning, Active, etc.).
+   w3w — No clip — the three-word address is a fixed length. */
+
 /* Badge chip. Colour comes from the consumer's [data-status] wiring (see
    styles/status) via the public --ds-badge-bg-color / --ds-badge-label-color
    tokens; no factory status variants. `.solid` and `.count` are form options. */

@@ -1,0 +1,12 @@
+<!-- The border, radius and focus ring live on `.row`, not on the host: the message has to sit
+     OUTSIDE the bordered box, and the host is what stacks the two. -->
+<div class="row">
+  <ng-content></ng-content>
+</div>
+
+<ds-field-message
+  [icon]="messageIcon()"
+  [text]="message().text"
+  [state]="message().state"
+  [messageId]="messageId()"
+  [reserve]="reserveMessageResolved()" />

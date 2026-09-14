@@ -1,5 +1,3 @@
-// Button has two orthogonal axes: color (brand/status hue family) and variant
-// (fill pattern solid/tonal/ghost/outline, plus `text` — a link-styled button).
 // `text` coexists with the global `.link` class: use `.link` on bare <a>/<button>;
 // use variant="text" for the ds-button API (loading, fullWidth, color, typed) on
 // a link look. All color×variant pairs render; some are UX-discouraged and

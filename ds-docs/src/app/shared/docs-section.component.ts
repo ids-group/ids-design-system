@@ -18,7 +18,7 @@ import { COMPONENT_API, SERVICE_API } from './component-api.generated';
 import { DocsComponentMetaComponent } from './docs-component-meta.component';
 import { DocsApiTableComponent } from './docs-api-table.component';
 
-/** Section wrapper shared by every docs section. Auto-renders the matching component's meta + Inputs/Outputs table when `anchor` hits a component-API key; `[api]="false"` opts out, `[apiKeys]` adds extras. */
+/** Section wrapper shared by every docs section. Auto-renders the matching component's tag chip when `anchor` hits a component-API key; `[api]="false"` opts out, `[apiKeys]` adds extras. */
 @Component({
   selector: 'docs-section',
   standalone: true,
@@ -35,7 +35,7 @@ export class DocsSectionComponent {
   /** Opt out of the auto API surface — for a non-component section whose anchor
    *  collides with a component key (e.g. the Layout foundation vs `layout`). */
   readonly api = input(true, { transform: booleanAttribute });
-  /** Extra component-API keys to append as their own blocks — for sub-components
+  /** Extra component-API keys whose tags join the header row — for sub-components
    *  that live in a sibling folder and are documented inside this section (e.g.
    *  the Button section adds `button-group`, `toggle-button`; layout-primitives
    *  adds the whole `layout` family). The anchor's own component stays primary. */
@@ -49,7 +49,7 @@ export class DocsSectionComponent {
    *  next one's 14. */
   readonly chapters = input(false, { transform: booleanAttribute });
 
-  /** The anchor's own component, shown under the title + as the first table. */
+  /** The anchor's own component, whose tag leads the header row. */
   protected readonly primaryKey = computed(() => {
     if (!this.api()) {
       return null;
@@ -58,8 +58,9 @@ export class DocsSectionComponent {
     return COMPONENT_API[this.anchor()] ? this.anchor() : null;
   });
 
-  /** Same-folder secondaries (`<anchor>:*`) plus the explicit `apiKeys` extras,
-   *  each rendered as its own meta + table block after the primary table. */
+  /** Same-folder secondaries (`<anchor>:*`) plus the explicit `apiKeys` extras. An aggregator and
+   *  the item it holds are one subject, so their tags share the header row rather than sitting in
+   *  separate blocks down the page. */
   protected readonly secondaryKeys = computed(() => {
     if (!this.api()) {
       return [];
@@ -78,6 +79,12 @@ export class DocsSectionComponent {
 
     return keys;
   });
+  protected readonly metaKeys = computed(() => {
+    const primary = this.primaryKey();
+
+    return primary ? [primary, ...this.secondaryKeys()] : this.secondaryKeys();
+  });
+
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly chapterRegistry = inject(SectionChaptersService);
 

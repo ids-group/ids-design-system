@@ -1,0 +1,40 @@
+// The ONLY place a chart derives a hover state.
+//
+// TODO(ds-interactive): migrate this onto `_interaction.scss` once that file exists.
+//
+// Only the fade half lives here. Singling a mark OUT is a direct value label, which the component
+// renders as markup, because a label has to be a node a screen reader can reach — an ::after
+// cannot be.
+
+// `.is-dimmed` alone, for a mark whose highlight only ever comes from outside — a legend, or a
+// consumer. A line has no mark between two readings, so it has no `:hover` half to derive.
+@mixin dims($mark) {
+  #{$mark} {
+    transition: opacity var(--ds-motion-chart-state-duration)
+      var(--ds-motion-chart-state-easing);
+  }
+
+  #{$mark}.is-dimmed {
+    opacity: var(--ds-chart-dim-opacity);
+  }
+}
+
+// Include on the CONTAINER, never on the mark: `:has()` asks the container whether anything inside
+// it is hovered, which is what lets a pointer highlight work with no component state.
+//
+// Usage: `.columns { @include chart-interactive.fades('.column'); }`
+@mixin fades($mark) {
+  @include dims($mark);
+
+  &:has(#{$mark}.interactive:hover) #{$mark}.interactive:not(:hover),
+  &:has(#{$mark}.interactive:focus-visible)
+    #{$mark}.interactive:not(:focus-visible) {
+    opacity: var(--ds-chart-dim-opacity);
+  }
+}
+
+@mixin clickable($mark) {
+  #{$mark}.interactive {
+    cursor: pointer;
+  }
+}

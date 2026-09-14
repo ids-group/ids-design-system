@@ -71,6 +71,12 @@ import { FilterBarSection as ComponentsFilterBarSection } from './sections/compo
 import { PageFooterSection } from './sections/components/page-footer/page-footer.section';
 import { PageHeaderSection as ComponentsPageHeaderSection } from './sections/components/page-header/page-header.section';
 
+import { BarChartSection } from './sections/charts/charts.section';
+import { ColumnChartSection } from './sections/charts/column-chart/column-chart.section';
+import { DonutChartSection } from './sections/charts/donut-chart/donut-chart.section';
+import { FunnelChartSection } from './sections/charts/funnel-chart/funnel-chart.section';
+import { LineChartSection } from './sections/charts/line-chart/line-chart.section';
+
 import { BordersSection } from './sections/foundations/borders/borders.section';
 import { BrowserTabSection } from './sections/foundations/browser-tab/browser-tab.section';
 import { ChartsSection } from './sections/foundations/charts/charts.section';
@@ -217,6 +223,17 @@ export const GROUP_PAGES: readonly GroupPageDef[] = [
       ComponentsFilterBarSection,
       PageFooterSection,
       ComponentsPageHeaderSection,
+    ],
+  },
+  {
+    path: 'charts',
+    title: 'Charts',
+    sections: [
+      BarChartSection,
+      ColumnChartSection,
+      DonutChartSection,
+      FunnelChartSection,
+      LineChartSection,
     ],
   },
   {

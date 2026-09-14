@@ -71,6 +71,7 @@ export class RadioGroupComponent
     this.message().text ? `${this.uid}-hint` : null,
   );
   private readonly fieldMessage = resolveFieldMessage({
+    disabled: () => this.isDisabled(),
     hint: this.hint,
     warning: this.warning,
     error: this.error,
@@ -83,8 +84,6 @@ export class RadioGroupComponent
   protected readonly invalidResolved = this.fieldMessage.invalid;
   protected readonly controlState = this.fieldMessage.controlState;
 
-  // contentChildren gives us references to all projected RadioComponents
-  // so the group can drive roving tabindex and forward keyboard events.
   private readonly radios = contentChildren(RadioComponent);
 
   private get enabledRadios(): RadioGroupChild[] {
@@ -97,7 +96,6 @@ export class RadioGroupComponent
     const currentValue = this.value();
     const allRadios = this.radios() as unknown as RadioGroupChild[];
 
-    // The checked radio is tabbable; if none checked, the first enabled radio.
     if (currentValue !== null && currentValue !== undefined) {
       const matchIndex = allRadios.findIndex((r) => r.value() === currentValue);
       if (matchIndex !== -1) {
@@ -114,7 +112,6 @@ export class RadioGroupComponent
     this.value.set(value);
     this.markTouched();
 
-    // Focus the newly selected radio so keyboard users stay on track.
     const selected = (this.radios() as unknown as RadioGroupChild[]).find(
       (radio) => radio.value() === value,
     );
@@ -143,11 +140,8 @@ export class RadioGroupComponent
     event.preventDefault();
 
     if (key === ' ') {
-      // Select whichever radio currently has DOM focus.
       const allRadios = this.radios() as unknown as RadioGroupChild[];
       const focused = allRadios.find((radio) => {
-        // We rely on the radio exposing focus() which targets its inner input.
-        // To detect which radio's input is focused we cast to the concrete type.
         const component = radio as unknown as RadioComponent;
 
         return (
@@ -164,7 +158,6 @@ export class RadioGroupComponent
     const forward = key === 'ArrowDown' || key === 'ArrowRight';
     const currentValue = this.value();
 
-    // Find the index of the currently focused/selected radio among enabled ones.
     let currentIndex = enabled.findIndex((radio) => {
       const component = radio as unknown as RadioComponent;
 
@@ -172,7 +165,6 @@ export class RadioGroupComponent
     });
 
     if (currentIndex === -1) {
-      // Fall back to the selected radio's index in the enabled list.
       currentIndex = enabled.findIndex(
         (radio) => radio.value() === currentValue,
       );
@@ -180,7 +172,6 @@ export class RadioGroupComponent
 
     let nextIndex: number;
     if (currentIndex === -1) {
-      // Nothing focused/selected yet: forward → first, backward → last.
       nextIndex = forward ? 0 : enabled.length - 1;
     } else {
       nextIndex = forward

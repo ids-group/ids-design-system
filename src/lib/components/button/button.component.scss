@@ -1,6 +1,12 @@
 @use '../../styles/focus' as focus;
 @use '../../styles/field-group-segment' as field-group-segment;
 
+/* Truncation contract:
+   Label — Single line, ellipsis on overflow. Buttons must fit — rephrase if you need multi-line.
+     No tooltip.
+   Icon-only — No visible label; full label MUST live in aria-label and tooltip-on-hover.
+   Split-button menu items — Single line, ellipsis. Tooltip on hover when clipped. */
+
 :host {
   display: inline-flex;
 
@@ -45,22 +51,30 @@
   --_button-bg-color-hover:  var(--ds-button-bg-color-hover,  color-mix(in srgb, var(--_button-bg-color) 88%, black));
   --_button-bg-color-active: var(--ds-button-bg-color-active, color-mix(in srgb, var(--_button-bg-color) 76%, black));
 
+  --_button-label-color-hover: var(--ds-button-label-color-hover, var(--_button-label-color));
+  --_button-label-color-active: var(--ds-button-label-color-active, var(--_button-label-color));
+
   /* Hue source for the muted disabled tone — the fill for solid, the label
      accent for tonal/ghost/outline (set on those fill classes). */
   --_button-accent: var(--_button-bg-color);
-  --_button-border:    var(--ds-button-border,    transparent);
+  --_button-border-color:    var(--ds-button-border-color,    transparent);
 
-  /* Press darkens and scales down; the halo is opt-in — set --ds-button-pressed-shadow. */
+  /* The WIDTH; the colour is --ds-button-border-color beside it. Without this the only way to change a button's
+     edge is redefining --border-width-default for the subtree, which moves a scale step. */
+  --_button-border-width: var(--ds-button-border-width, var(--border-width-default));
+
+  /* Press darkens and scales down. */
   --_button-press-scale: var(--ds-button-press-scale, 0.98);
   --_button-pressed-shadow: var(--ds-button-pressed-shadow, none);
 
-  /* Default `none`, so a button carries no shadow unless an app asks for one. */
   --_button-shadow:       var(--ds-button-shadow,       none);
   --_button-shadow-hover: var(--ds-button-shadow-hover, var(--_button-shadow));
   --_button-radius:    var(--ds-button-radius,    var(--ds-radius-control));
 
   /* The size classes below re-resolve these with the hook first, so --ds-button-* wins over the
      size it would otherwise pick. */
+  --_button-font-family: var(--ds-button-font-family, var(--font-sans));
+  --_button-line-height: var(--ds-button-line-height, var(--line-height-flat));
   --_button-font-size: var(--ds-button-font-size, var(--font-size-m));
   --_button-weight:    var(--ds-button-weight,    var(--font-weight-extrabold));
   --_button-tracking:  var(--ds-button-tracking,  var(--letter-spacing-wide));
@@ -73,17 +87,17 @@
      (2.1–2.7:1) and buys a state that cannot be mistaken for the live button; that is the trade. */
   --_button-bg-color-disabled: var(--ds-button-bg-color-disabled, oklch(from var(--_button-accent) 92% 0.03 h));
   --_button-label-color-disabled: var(--ds-button-label-color-disabled, oklch(from var(--_button-accent) 70% 0.035 h));
-  --_button-border-disabled: var(--ds-button-border-disabled, oklch(from var(--_button-accent) 86% 0.04 h));
+  --_button-border-color-disabled: var(--ds-button-border-color-disabled, oklch(from var(--_button-accent) 86% 0.04 h));
 
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  font: var(--_button-weight) var(--_button-font-size) / var(--line-height-flat) var(--font-sans);
+  font: var(--_button-weight) var(--_button-font-size) / var(--_button-line-height) var(--_button-font-family);
   letter-spacing: var(--_button-tracking);
   color: var(--_button-label-color);
   background-color: var(--_button-bg-color);
-  border: var(--border-width-default) solid var(--_button-border);
+  border: var(--_button-border-width) solid var(--_button-border-color);
   border-radius: var(--_button-radius);
   padding: var(--_button-pad-y) var(--_button-pad-x);
   height: var(--_button-height);
@@ -108,14 +122,14 @@
   /* All one class deep, so SOURCE ORDER decides: disabled beats hover/active, and the focus ring
      beats disabled — a soft-disabled button still takes focus. Do NOT add `:not()` to hover to
      exclude disabled: it raises hover above the ring and silently deletes it. */
-  &:hover  { background-color: var(--_button-bg-color-hover); box-shadow: var(--_button-shadow-hover); }
-  &:active { background-color: var(--_button-bg-color-active); box-shadow: var(--_button-pressed-shadow); transform: scale(var(--_button-press-scale)); }
+  &:hover  { background-color: var(--_button-bg-color-hover); color: var(--_button-label-color-hover); box-shadow: var(--_button-shadow-hover); }
+  &:active { background-color: var(--_button-bg-color-active); color: var(--_button-label-color-active); box-shadow: var(--_button-pressed-shadow); transform: scale(var(--_button-press-scale)); }
 
   &[disabled],
   &[aria-disabled='true'] {
     background-color: var(--_button-bg-color-disabled);
     color: var(--_button-label-color-disabled);
-    border-color: var(--_button-border-disabled);
+    border-color: var(--_button-border-color-disabled);
     cursor: not-allowed;
 
     /* An aria-disabled button DOES receive the pointer, so without these it would
@@ -139,7 +153,7 @@
   .subtext-slot:empty { display: none; }
   .subtext-slot,
   .reason {
-    font: var(--font-weight-medium) var(--font-size-2xs) / var(--line-height-tight) var(--font-sans);
+    font: var(--font-weight-medium) var(--font-size-2xs) / var(--line-height-tight) var(--_button-font-family);
     letter-spacing: var(--letter-spacing-normal);
     text-align: center;
   }
@@ -162,9 +176,8 @@
   }
 
 
-  /* Sizes — sm/md/lg (32/40/48), default md. Each re-resolves the locals with
-     the public hook still first, so a consumer override is not undone by the
-     size class the way a plain `height:` here would undo it. */
+  /* Each size re-resolves the locals with the public hook still first, so a consumer
+     override is not undone the way a plain `height:` here would undo it. */
   &.lg {
     --_button-font-size: var(--ds-button-font-size, var(--font-size-m));
     --_button-height:    var(--ds-button-height,    var(--field-h-lg));
@@ -241,7 +254,7 @@
     --_button-bg-color-active: var(--ds-button-bg-color-active, var(--c-muted));
     --_button-accent: var(--_button-label-color);
     --_button-bg-color-disabled: var(--ds-button-bg-color-disabled, transparent);
-    --_button-border-disabled: var(--ds-button-border-disabled, transparent);
+    --_button-border-color-disabled: var(--ds-button-border-color-disabled, transparent);
 
     /* Only the surface knows which way to flip: the dark accent is already light, so the shared
        recipe's fixed L 70% lands 1.11:1 from the enabled label. Solid cannot use this — a white
@@ -255,7 +268,7 @@
   &.v-outline {
     --_button-bg-color:        var(--ds-button-bg-color,        transparent);
     --_button-label-color:     var(--ds-button-label-color,     var(--c-strong));
-    --_button-border:          var(--ds-button-border,          var(--c-outline-border));
+    --_button-border-color:          var(--ds-button-border-color,          var(--c-outline-border));
     --_button-bg-color-hover:  var(--ds-button-bg-color-hover,  var(--c-subtitle));
     --_button-bg-color-active: var(--ds-button-bg-color-active, var(--c-muted));
     --_button-accent: var(--_button-label-color);
@@ -264,7 +277,7 @@
        disabled surface would produce a 72%-alpha box. The border and the label carry
        the state instead, as they do on ghost. */
     --_button-bg-color-disabled: var(--ds-button-bg-color-disabled, transparent);
-    --_button-border-disabled: var(--ds-button-border-disabled, color-mix(in srgb, var(--_button-border) 55%, var(--surface-disabled)));
+    --_button-border-color-disabled: var(--ds-button-border-color-disabled, color-mix(in srgb, var(--_button-border-color) 55%, var(--surface-disabled)));
 
     /* Same mix as ghost, same reason. The border above does not cover for it: at
        1.30:1 against the page it is fainter than this variant's own enabled border,
@@ -272,8 +285,7 @@
     --_button-label-color-disabled: var(--ds-button-label-color-disabled, color-mix(in srgb, var(--_button-label-color) 40%, var(--surface-default)));
   }
 
-  /* text — no chrome, underlined (a link-styled button). Colour-aware: label
-     follows the colour's --c-strong. Coexists with the global .link class. */
+  /* text — no chrome, underlined (a link-styled button). */
   &.v-text {
     --_button-bg-color:        var(--ds-button-bg-color,        transparent);
     --_button-label-color:     var(--ds-button-label-color,     var(--c-strong));
@@ -281,14 +293,17 @@
     --_button-bg-color-active: var(--ds-button-bg-color-active, transparent);
     --_button-accent: var(--_button-label-color);
     --_button-bg-color-disabled: var(--ds-button-bg-color-disabled, transparent);
-    --_button-border-disabled: var(--ds-button-border-disabled, transparent);
+    --_button-border-color-disabled: var(--ds-button-border-color-disabled, transparent);
     --_button-label-color-disabled: var(--ds-button-label-color-disabled, color-mix(in srgb, var(--_button-label-color) 40%, var(--surface-default)));
 
     padding: 0; height: auto; width: auto;
     text-decoration: underline;
     text-underline-offset: var(--btn-link-uloff);
 
-    &:hover { color: var(--c-base); }
+    /* Through the resolver like every other variant, so --ds-button-label-color-hover reaches a
+       text button too; as a `color` on `.button.v-text:hover` it would out-rank the base rule and
+       the hook would never be seen here. */
+    --_button-label-color-hover: var(--ds-button-label-color-hover, var(--c-base));
   }
 
   &.loading {
@@ -298,7 +313,7 @@
     /* The [disabled] attr is set while loading — keep the variant fill, not
        the disabled gray; the spinner takes the variant's label color. */
     background-color: var(--_button-bg-color);
-    border-color: var(--_button-border);
+    border-color: var(--_button-border-color);
 
     &::after {
       content: ""; position: absolute;

@@ -17,6 +17,16 @@ and token names.** These leaves are for orientation and usage.
 - [Foundations — Grid](foundations/grid.md)
 - [Foundations — Global helper classes](foundations/global-helper-classes.md)
 
+## charts
+
+- [<ds-bar-chart> — BarChartComponent](charts/ds-bar-chart.md) — Interaction: interactive: boolean = false turns on the affordance — pointer cursor, hover tint and the keyboar
+- [<ds-column-chart> — ColumnChartComponent](charts/ds-column-chart.md) — Vertical columns for a short series read left to right — months, stages, teams — measured against one value ax
+- [<ds-donut-chart> — DonutChartComponent](charts/ds-donut-chart.md) — A ring that splits one total into its parts, with the middle free for the total or a headline figure of your o
+- [<ds-funnel-chart> — FunnelChartComponent](charts/ds-funnel-chart.md) — Stages of a journey, drawn top to bottom in the order you give them — they are never sorted, because the order
+- [<ds-line-chart> — LineChartComponent](charts/ds-line-chart.md) — One or more series plotted over a shared set of categories.
+- [Chart frame — the box a chart draws around itself](charts/chart-frame-the-box-a-chart-draws-around-itself.md) — Every chart paints its own border, radius, padding and --surface-default background, on by default. That is un
+- [Chart colour — which palette a chart takes](charts/chart-colour-which-palette-a-chart-takes.md) — Three families, and reaching for the wrong one is the usual chart bug. Set the --ds-chart-* contract tokens, n
+
 ## domain
 
 - [<ds-w3w> — W3wComponent](domain/ds-w3w.md) — What3Words address chip — branded display for ///word.word.word addresses; click-to-copy.
@@ -59,7 +69,7 @@ and token names.** These leaves are for orientation and usage.
 
 - [<ds-sidenav> — SidenavComponent](navigation/ds-sidenav.md) — Content: default slot for groups/items + custom brand/footer rows
 - [<ds-sidenav-group> — SidenavGroupComponent](navigation/ds-sidenav-group.md) — When expandable=true renders header button with toggle + caret; collapses body when not expanded.
-- [<ds-sidenav-item> — SidenavItemComponent](navigation/ds-sidenav-item.md) — **Three elements, decided by destination.** routerLink → an <a [routerLink]> with routerLinkActive; href → a p
+- [<ds-sidenav-item> — SidenavItemComponent](navigation/ds-sidenav-item.md) — **What an active item announces.** An EXACT match on the item's destination announces aria-current="page"; a P
 - [<ds-topbar> — TopBarComponent](navigation/ds-topbar.md) — No inputs.
 - [<ds-app-layout> — AppLayoutComponent](navigation/ds-app-layout.md) — Reads: railId and the read-only railOverlay signal, for a consumer-built burger; dsRailTrigger wires one for y
 - [<ds-auth-layout> — AuthLayoutComponent](navigation/ds-auth-layout.md) — landmark="main" only when the page has no other <main>; the sign-in card is not automatically the document's m

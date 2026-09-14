@@ -478,7 +478,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'ellipsis'",
         "required": false,
-        "description": "What a settled single value does when it is wider than the trigger. Defaults to `ellipsis`; `wrap` restores the pre-0.12 behaviour, where the value broke onto a second line and pushed the chevron onto a third. Multi mode is unaffected — its chips have their own measured cap."
+        "description": "What a settled single value does when it is wider than the trigger. Defaults to `ellipsis`; `wrap` lets the value break onto a second line and pushes the chevron down. Multi mode is unaffected — its chips have their own measured cap."
       },
       {
         "name": "placeholder",
@@ -559,7 +559,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "The contract spelling of `readOnly`, a second input because signal forms binds by NAME — a `readonly()` rule was reaching nothing before this existed."
+        "description": "The contract spelling of `readOnly`: signal forms binds by NAME, so a `readonly()` rule reaches nothing without it."
       },
       {
         "name": "clearable",
@@ -577,7 +577,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Placeholder while the field is being typed in, when a value is already settled — `placeholder` is the empty-field caption and cannot be both. Empty (the default) keeps `placeholder` doing both jobs, as before."
+        "description": "Placeholder while the field is being typed in, when a value is already settled — `placeholder` is the empty-field caption and cannot be both. Empty (the default) keeps `placeholder` doing both jobs."
       },
       {
         "name": "filterWith",
@@ -998,6 +998,162 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       }
     ]
   },
+  "bar-chart": {
+    "key": "bar-chart",
+    "selector": "ds-bar-chart",
+    "isElement": true,
+    "className": "BarChartComponent",
+    "status": "stable",
+    "importName": "BarChartComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "data",
+        "kind": "input-required",
+        "type": "readonly BarChartRow[]",
+        "union": null,
+        "default": null,
+        "required": true,
+        "description": "One row per bar, drawn in the order given."
+      },
+      {
+        "name": "max",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Track length is relative to this. Null uses the largest value, so the longest row always fills its track."
+      },
+      {
+        "name": "caption",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Printed above the plot as the chart's visible title, and reused as the annex table's caption."
+      },
+      {
+        "name": "summary",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Accessible name. Generated from the data when omitted."
+      },
+      {
+        "name": "dataTable",
+        "kind": "input",
+        "type": "'toggle' | 'visible' | 'none'",
+        "union": [
+          "toggle",
+          "visible",
+          "none"
+        ],
+        "default": "'toggle'",
+        "required": false,
+        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page."
+      },
+      {
+        "name": "showPercent",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Prints each row's share of `max` beside its value."
+      },
+      {
+        "name": "loading",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize when the data lands."
+      },
+      {
+        "name": "emptyText",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "'No data'",
+        "required": false,
+        "description": "Shown in place of the plot when `data` is empty."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from an empty `data`, because \"the request failed\" and \"there is nothing to show\" read the same to a reader and mean opposite things."
+      },
+      {
+        "name": "errorText",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "'Could not load the data'",
+        "required": false,
+        "description": "The message the error state prints."
+      },
+      {
+        "name": "valueFormat",
+        "kind": "input",
+        "type": "(value: number) => string",
+        "union": null,
+        "default": "defaultValueFormat",
+        "required": false,
+        "description": "Formats every value the chart prints, the annex table and the generated description included. Defaults to the browser's locale grouping with a K/M/B suffix past four digits."
+      },
+      {
+        "name": "interactive",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
+      },
+      {
+        "name": "staggerMs",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "0",
+        "required": false,
+        "description": "Milliseconds between one mark's entrance and the next. `0`, the default, is no stagger at all; `40` is the documented non-zero step. The total is capped, so a long series does not crawl in."
+      },
+      {
+        "name": "tooltip",
+        "kind": "input",
+        "type": "Exclude<ChartTooltipTrigger, 'axis'>",
+        "union": [
+          "item",
+          "none"
+        ],
+        "default": "'item'",
+        "required": false,
+        "description": "Whether a hovered or focused row opens a tooltip. `'axis'` is not offered — a bar chart's marks ARE its categories, so an axis tooltip would repeat the item one."
+      }
+    ],
+    "outputs": [
+      {
+        "name": "rowClicked",
+        "kind": "output",
+        "type": "BarChartRow",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The row that was clicked, or activated with Enter or Space. Fires whether or not `interactive` is set."
+      }
+    ]
+  },
   "bottom-sheet": {
     "key": "bottom-sheet",
     "selector": "ds-bottom-sheet",
@@ -1065,7 +1221,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "When omitted, the component reads from `BreadcrumbsService.items`. Pass an explicit array to opt out of the service (per-page override)."
+        "description": "Omitted, the component reads `BreadcrumbsService.items`; an explicit array opts out."
       },
       {
         "name": "separator",
@@ -1092,7 +1248,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Caps how many crumbs render, collapsing the middle into an ellipsis — the first and the LAST always survive. Null (default) renders every crumb. Worth setting on any trail that can get deep: the row is `nowrap` with `overflow: hidden`, so without a cap an overlong trail is clipped from the END, which is the current page — the one crumb the reader needs most."
+        "description": "Caps how many crumbs render, collapsing the middle — the first and the LAST always survive. Worth setting on any deep trail: the row is `nowrap` with `overflow: hidden`, so uncapped it is clipped from the END, which is the current page."
       }
     ],
     "outputs": [
@@ -1192,7 +1348,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'solid'",
         "required": false,
-        "description": "Fill pattern: solid | tonal | ghost | outline | text. All color×variant pairs render; some are UX-discouraged and emit a dev-mode warning naming the reason — they work, but read poorly. `text` is discouraged for ALL colours — prefer the global `.link` class; it stays for cases needing the ds-button API (loading/fullWidth/typed pressed)."
+        "description": "Fill pattern. Every color×variant pair renders; the discouraged ones dev-warn with the reason. `text` is discouraged for every colour — prefer the global `.link` class, and keep this one only where the ds-button API is needed."
       },
       {
         "name": "size",
@@ -1210,11 +1366,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "routerLink",
         "kind": "input",
-        "type": "string | readonly unknown[] | null",
+        "type": "DsRouterLink",
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Angular `RouterLink` target — string or array form for dynamic segments. Set it and the button renders an `<a [routerLink]>` that also takes `routerLinkActive`, because a control that navigates must be a link: middle-click, open-in-new-tab, copy-link-address and the \"link\" role a screen reader announces all depend on the element, not on the look."
+        "description": "`RouterLink` target. Set it and the button renders an `<a [routerLink]>` with `routerLinkActive`: middle-click, open-in-new-tab and the announced \"link\" role depend on the element, not on the look. Accepts a `UrlTree` as well as a path or a command array — `Router.createUrlTree` is the way to reach the `UrlCreationOptions` that have no input of their own here (`relativeTo`, `preserveFragment`)."
       },
       {
         "name": "href",
@@ -1224,6 +1380,76 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Plain `href` target, used when `routerLink` is not set — an external address or a download. Renders an `<a href>`; same reasoning as `routerLink`."
+      },
+      {
+        "name": "fragment",
+        "kind": "input",
+        "type": "string | undefined",
+        "union": null,
+        "default": "undefined",
+        "required": false,
+        "description": "Hash to append to a `routerLink` destination — the section of the page to land on. routerLink-only: on an `href` put it in the URL, and on a plain button it is ignored with a dev warning."
+      },
+      {
+        "name": "queryParams",
+        "kind": "input",
+        "type": "Params | null | undefined",
+        "union": null,
+        "default": "undefined",
+        "required": false,
+        "description": "Query parameters for a `routerLink` destination. routerLink-only, same as `fragment`."
+      },
+      {
+        "name": "queryParamsHandling",
+        "kind": "input",
+        "type": "QueryParamsHandling | null | undefined",
+        "union": null,
+        "default": "undefined",
+        "required": false,
+        "description": "How the destination's query merges with the current one — `'merge'`, `'preserve'` or `'replace'`. routerLink-only."
+      },
+      {
+        "name": "target",
+        "kind": "input",
+        "type": "string | undefined",
+        "union": null,
+        "default": "undefined",
+        "required": false,
+        "description": "Browsing context for the link — `'_blank'` and the rest. Both link destinations take it; on a plain button it is ignored with a dev warning."
+      },
+      {
+        "name": "rel",
+        "kind": "input",
+        "type": "string | undefined",
+        "union": null,
+        "default": "undefined",
+        "required": false,
+        "description": "`rel` for the link. Pair it with `target=\"_blank\"`: without `noopener` the opened page can reach back through `window.opener`. Both link destinations take it."
+      },
+      {
+        "name": "routerLinkActiveOptions",
+        "kind": "input",
+        "type": "{ exact: boolean } | IsActiveMatchOptions",
+        "union": null,
+        "default": "{ exact: false }",
+        "required": false,
+        "description": "How `routerLinkActive` decides the `active` CLASS — prefix by default, so a section link stays lit inside its own pages. It also bounds the announcement, because the same directive writes it: narrowed to `{ exact: true }`, a prefix match is no longer active and the link announces nothing rather than `true`. Pass `ariaCurrent` alongside to keep one."
+      },
+      {
+        "name": "ariaCurrent",
+        "kind": "input",
+        "type": "DsAriaCurrent | null | undefined",
+        "union": [
+          "page",
+          "step",
+          "location",
+          "date",
+          "time",
+          "true"
+        ],
+        "default": "undefined",
+        "required": false,
+        "description": "Overrides what the link announces. Unset, an exact match announces `page` and a prefix match announces `true`, which is what ARIA means by each; pass `null` to announce nothing, or one of the other values when the link is a step or a location rather than a page."
       },
       {
         "name": "type",
@@ -1236,7 +1462,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'button'",
         "required": false,
-        "description": "Native `<button>` `type`; defaults to `'button'` (not `'submit'`) so it never submits an ancestor form by accident. Button-only — an anchor has no form to submit, so it is ignored with a dev-mode warning."
+        "description": "Native `type`, defaulting to `'button'` so it never submits an ancestor form by accident. Button-only: ignored on a link, with a dev warning."
       },
       {
         "name": "disabled",
@@ -1263,7 +1489,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Stretch the button to fill its container — the host becomes block-level and 100% wide (the inner control is already full-width). Use for mobile primary CTAs and full-bleed form submit buttons."
+        "description": "Stretch to fill the container: the host becomes block-level and 100% wide."
       },
       {
         "name": "ariaLabel",
@@ -1272,7 +1498,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Accessible name — forwarded to the inner <button> as aria-label. Use when the visible label is absent or non-descriptive."
+        "description": "Accessible name, forwarded as `aria-label`. For an icon-only or non-descriptive label."
       },
       {
         "name": "icon",
@@ -1333,7 +1559,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Why the button is refused, shown as its second line. Read only while `disabled` — a greyed control that does not say why is a dead end. Setting it also changes HOW the button is disabled: it takes `aria-disabled` instead of the native attribute, because a natively disabled button cannot be focused and the reason would never be announced. The click is swallowed in `onClick` instead. Leave it unset and nothing changes. Length is deliberately not capped: the text wraps and the button grows. Same name and meaning as `TableRowAction.disabledReason`."
+        "description": "Why the button is refused, shown as its second line and read only while `disabled`. Setting it also changes HOW the button is disabled — `aria-disabled` instead of the native attribute, because a natively disabled button cannot be focused and the reason would never be announced, so the click is swallowed in `onClick` instead. Uncapped: the text wraps and the button grows. Same name and meaning as `TableRowAction.disabledReason`."
       },
       {
         "name": "ariaDescribedBy",
@@ -1429,6 +1655,37 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Fires the click event when `elevation` is `interactive`."
       }
     ]
+  },
+  "chart-tooltip": {
+    "key": "chart-tooltip",
+    "selector": "ds-chart-tooltip-panel",
+    "isElement": true,
+    "className": "ChartTooltipPanelComponent",
+    "status": "stable",
+    "importName": "ChartTooltipPanelComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "context",
+        "kind": "input-required",
+        "type": "ChartTooltipContext",
+        "union": null,
+        "default": null,
+        "required": true,
+        "description": "The category and the readings the panel prints."
+      },
+      {
+        "name": "template",
+        "kind": "input",
+        "type": "TemplateRef<{\n    $implicit: ChartTooltipContext;\n  }> | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "The chart's projected `#dsChartTooltip` template. Null renders the built-in rows."
+      }
+    ],
+    "outputs": []
   },
   "checkbox": {
     "key": "checkbox",
@@ -1596,6 +1853,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Inline label rendered beside the box and wired via for/id. Omit to bring your own <label>."
+      },
+      {
+        "name": "ariaLabel",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Accessible name for a control with no visible label — the row's `<label>` collapses when it is empty, leaving nothing to name it. Set beside a label it OVERRIDES the label, per ARIA."
       }
     ],
     "outputs": []
@@ -1750,6 +2016,162 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       }
     ],
     "outputs": []
+  },
+  "column-chart": {
+    "key": "column-chart",
+    "selector": "ds-column-chart",
+    "isElement": true,
+    "className": "ColumnChartComponent",
+    "status": "stable",
+    "importName": "ColumnChartComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "data",
+        "kind": "input-required",
+        "type": "readonly ColumnChartPoint[]",
+        "union": null,
+        "default": null,
+        "required": true,
+        "description": "One column per point, drawn in the order given."
+      },
+      {
+        "name": "showValues",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Prints each column's value above the column."
+      },
+      {
+        "name": "tickCount",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "5",
+        "required": false,
+        "description": "How many value-axis ticks to aim for. A hint, not a count: ticks are snapped to a round step, so the axis may carry one more or one fewer."
+      },
+      {
+        "name": "caption",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Printed above the plot as the chart's visible title, and reused as the annex table's caption."
+      },
+      {
+        "name": "summary",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Accessible name. Generated from the data when omitted."
+      },
+      {
+        "name": "dataTable",
+        "kind": "input",
+        "type": "'toggle' | 'visible' | 'none'",
+        "union": [
+          "toggle",
+          "visible",
+          "none"
+        ],
+        "default": "'toggle'",
+        "required": false,
+        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page."
+      },
+      {
+        "name": "loading",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize when the data lands."
+      },
+      {
+        "name": "emptyText",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "'No data'",
+        "required": false,
+        "description": "Shown in place of the plot when `data` is empty."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from an empty `data`, because \"the request failed\" and \"there is nothing to show\" read the same to a reader and mean opposite things."
+      },
+      {
+        "name": "errorText",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "'Could not load the data'",
+        "required": false,
+        "description": "The message the error state prints."
+      },
+      {
+        "name": "valueFormat",
+        "kind": "input",
+        "type": "(value: number) => string",
+        "union": null,
+        "default": "defaultValueFormat",
+        "required": false,
+        "description": "Formats every value the chart prints, the annex table and the generated description included. Defaults to the browser's locale grouping with a K/M/B suffix past four digits."
+      },
+      {
+        "name": "interactive",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
+      },
+      {
+        "name": "staggerMs",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "0",
+        "required": false,
+        "description": "Milliseconds between one mark's entrance and the next. `0`, the default, is no stagger at all; `40` is the documented non-zero step. The total is capped, so a long series does not crawl in."
+      },
+      {
+        "name": "tooltip",
+        "kind": "input",
+        "type": "Exclude<ChartTooltipTrigger, 'axis'>",
+        "union": [
+          "item",
+          "none"
+        ],
+        "default": "'item'",
+        "required": false,
+        "description": "Whether a hovered or focused column opens a tooltip. `'axis'` is not offered — a column chart's marks ARE its categories, so an axis tooltip would repeat the item one."
+      }
+    ],
+    "outputs": [
+      {
+        "name": "pointClicked",
+        "kind": "output",
+        "type": "ColumnChartPoint",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The point that was clicked, or activated with Enter or Space. Fires whether or not `interactive` is set."
+      }
+    ]
   },
   "create-template": {
     "key": "create-template",
@@ -2159,6 +2581,202 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     ],
     "outputs": []
   },
+  "donut-chart": {
+    "key": "donut-chart",
+    "selector": "ds-donut-chart",
+    "isElement": true,
+    "className": "DonutChartComponent",
+    "status": "stable",
+    "importName": "DonutChartComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "data",
+        "kind": "input-required",
+        "type": "readonly DonutChartSlice[]",
+        "union": null,
+        "default": null,
+        "required": true,
+        "description": "One slice per entry. A non-positive or non-finite value counts as zero — a ring is a part-to-whole picture and has no way to draw a negative share."
+      },
+      {
+        "name": "centerValue",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Printed inside the ring. Null prints the sum through `valueFormat`."
+      },
+      {
+        "name": "centerLabel",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Caption under the centre value."
+      },
+      {
+        "name": "legend",
+        "kind": "input",
+        "type": "'end' | 'bottom' | 'none'",
+        "union": [
+          "end",
+          "bottom",
+          "none"
+        ],
+        "default": "'end'",
+        "required": false,
+        "description": "Logical placement, so a right-to-left page needs no second value."
+      },
+      {
+        "name": "maxSlices",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Longest legend to draw. Past it the smallest slices are summed into one, so a long tail does not become a legend nobody reads. Off by default: grouping changes what the chart says, and that is the consumer's call. Values below 2 are ignored — one slice is not a donut."
+      },
+      {
+        "name": "otherLabel",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "'Other'",
+        "required": false,
+        "description": "Names the grouped slice."
+      },
+      {
+        "name": "thickness",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "DEFAULT_THICKNESS",
+        "required": false,
+        "description": "Ring width as a fraction of the radius."
+      },
+      {
+        "name": "caption",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Printed above the plot as the chart's visible title, and reused as the annex table's caption."
+      },
+      {
+        "name": "summary",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Accessible name. Generated from the data when omitted."
+      },
+      {
+        "name": "dataTable",
+        "kind": "input",
+        "type": "'toggle' | 'visible' | 'none'",
+        "union": [
+          "toggle",
+          "visible",
+          "none"
+        ],
+        "default": "'toggle'",
+        "required": false,
+        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page."
+      },
+      {
+        "name": "loading",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize when the data lands."
+      },
+      {
+        "name": "emptyText",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "'No data'",
+        "required": false,
+        "description": "Shown in place of the plot when `data` is empty."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from an empty `data`, because \"the request failed\" and \"there is nothing to show\" read the same to a reader and mean opposite things."
+      },
+      {
+        "name": "errorText",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "'Could not load the data'",
+        "required": false,
+        "description": "The message the error state prints."
+      },
+      {
+        "name": "valueFormat",
+        "kind": "input",
+        "type": "(value: number) => string",
+        "union": null,
+        "default": "defaultValueFormat",
+        "required": false,
+        "description": "Formats every value the chart prints, the annex table and the generated description included. Defaults to the browser's locale grouping with a K/M/B suffix past four digits."
+      },
+      {
+        "name": "interactive",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
+      },
+      {
+        "name": "staggerMs",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "0",
+        "required": false,
+        "description": "Milliseconds between one mark's entrance and the next. `0`, the default, is no stagger at all; `40` is the documented non-zero step. The total is capped, so a long series does not crawl in."
+      },
+      {
+        "name": "tooltip",
+        "kind": "input",
+        "type": "Exclude<ChartTooltipTrigger, 'axis'>",
+        "union": [
+          "item",
+          "none"
+        ],
+        "default": "'item'",
+        "required": false,
+        "description": "Whether a hovered or focused slice opens a tooltip. `'axis'` is not offered — a ring has no axis to group readings under."
+      }
+    ],
+    "outputs": [
+      {
+        "name": "sliceClicked",
+        "kind": "output",
+        "type": "DonutChartSlice",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The slice that was clicked, or activated with Enter or Space. Fires whether or not `interactive` is set."
+      }
+    ]
+  },
   "drawer": {
     "key": "drawer",
     "selector": "ds-drawer",
@@ -2394,6 +3012,51 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
+        "name": "hint",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Helper text shown below the control."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Error text. Shown immediately — binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
+      },
+      {
+        "name": "warning",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "''",
+        "required": false,
+        "description": "Advisory text, shown when there is no error."
+      },
+      {
+        "name": "reserveMessage",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. Falls back to `DS_CONFIG.field.reserveMessage`, then off."
+      },
+      {
+        "name": "messageIcon",
+        "kind": "input",
+        "type": "IconName | false | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Glyph on the message line, overriding what the state resolves to. Unset follows `DS_CONFIG.field.stateIcons`; `false` removes the glyph here alone."
+      },
+      {
         "name": "size",
         "kind": "input",
         "type": "DsSize | null",
@@ -2413,7 +3076,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Draws the error border on the whole group. A single segment cannot be invalid on its own: the border belongs to the group."
+        "description": "Paints the error state WITHOUT a message of its own — for when the text lives in a form-level summary. Use `error` to show text; binding either one is enough, exactly as on a field. Segments read `invalidResolved`, not this, so an `error` string announces itself without the flag beside it."
       },
       {
         "name": "disabled",
@@ -2501,6 +3164,166 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       }
     ],
     "outputs": []
+  },
+  "funnel-chart": {
+    "key": "funnel-chart",
+    "selector": "ds-funnel-chart",
+    "isElement": true,
+    "className": "FunnelChartComponent",
+    "status": "stable",
+    "importName": "FunnelChartComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "data",
+        "kind": "input-required",
+        "type": "readonly FunnelChartStage[]",
+        "union": null,
+        "default": null,
+        "required": true,
+        "description": "Drawn in the order given. The order of a funnel's stages is its meaning, so they are never sorted."
+      },
+      {
+        "name": "shape",
+        "kind": "input",
+        "type": "FunnelChartShape",
+        "union": [
+          "taper",
+          "width",
+          "area"
+        ],
+        "default": "'area'",
+        "required": false,
+        "description": "What the silhouette encodes. `'area'`, the default, makes each stage's AREA proportional to its value, which is the honest encoding that still leaves a tail wide enough to label. `'width'` reads the widths straight off the values, which collapses the tail of a steep funnel below a labellable width. `'taper'` encodes NOTHING: the shape is fixed whatever the data, and the numbers are read from the table beside it."
+      },
+      {
+        "name": "showTable",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "The value, percent and drop table printed under the funnel. It supersedes `dataTable`: while this is on, the disclosure every chart carries would repeat a strict subset of these same numbers, so it is not rendered."
+      },
+      {
+        "name": "caption",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Printed above the plot as the chart's visible title, and reused as the annex table's caption."
+      },
+      {
+        "name": "summary",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Accessible name. Generated from the data when omitted."
+      },
+      {
+        "name": "dataTable",
+        "kind": "input",
+        "type": "'toggle' | 'visible' | 'none'",
+        "union": [
+          "toggle",
+          "visible",
+          "none"
+        ],
+        "default": "'toggle'",
+        "required": false,
+        "description": "The label-and-value disclosure every chart carries. Ignored while `showTable` is on, which already prints every label and value."
+      },
+      {
+        "name": "loading",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize when the data lands."
+      },
+      {
+        "name": "emptyText",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "'No data'",
+        "required": false,
+        "description": "Shown in place of the plot when `data` is empty."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from an empty `data`, because \"the request failed\" and \"there is nothing to show\" read the same to a reader and mean opposite things."
+      },
+      {
+        "name": "errorText",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "'Could not load the data'",
+        "required": false,
+        "description": "The message the error state prints."
+      },
+      {
+        "name": "valueFormat",
+        "kind": "input",
+        "type": "(value: number) => string",
+        "union": null,
+        "default": "defaultValueFormat",
+        "required": false,
+        "description": "Formats every value the chart prints, the annex table and the generated description included. Defaults to the browser's locale grouping with a K/M/B suffix past four digits."
+      },
+      {
+        "name": "interactive",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
+      },
+      {
+        "name": "staggerMs",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "0",
+        "required": false,
+        "description": "Milliseconds between one mark's entrance and the next. `0`, the default, is no stagger at all; `40` is the documented non-zero step. The total is capped, so a long series does not crawl in."
+      },
+      {
+        "name": "tooltip",
+        "kind": "input",
+        "type": "Exclude<ChartTooltipTrigger, 'axis'>",
+        "union": [
+          "item",
+          "none"
+        ],
+        "default": "'item'",
+        "required": false,
+        "description": "Whether a hovered or focused stage opens a tooltip. `'axis'` is not offered — a funnel's stages are its categories, so an axis tooltip would repeat the item one."
+      }
+    ],
+    "outputs": [
+      {
+        "name": "stageClicked",
+        "kind": "output",
+        "type": "FunnelChartStage",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The stage that was clicked, or activated with Enter or Space. Fires whether or not `interactive` is set."
+      }
+    ]
   },
   "group-label-template": {
     "key": "group-label-template",
@@ -2830,7 +3653,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "The contract spelling of `readOnly`, a second input because signal forms binds by NAME — a `readonly()` rule was reaching nothing before this existed."
+        "description": "The contract spelling of `readOnly`: signal forms binds by NAME, so a `readonly()` rule reaches nothing without it."
       },
       {
         "name": "success",
@@ -3009,7 +3832,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Show an inline clear (×) button when the input has a non-empty value. Mirrors the Material/PrimeNG pattern: explicit button (not native search cancel) so the affordance is consistent across browsers and styled with DS tokens. Defaults to true when type='search', false otherwise — pass an explicit boolean to override."
+        "description": "Show an inline clear (×) button when the input has a non-empty value. Defaults to true when `type=\"search\"`, false otherwise — pass an explicit boolean to override."
       },
       {
         "name": "passwordToggle",
@@ -3178,6 +4001,243 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       }
     ],
     "outputs": []
+  },
+  "line-chart": {
+    "key": "line-chart",
+    "selector": "ds-line-chart",
+    "isElement": true,
+    "className": "LineChartComponent",
+    "status": "stable",
+    "importName": "LineChartComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "categories",
+        "kind": "input-required",
+        "type": "readonly string[]",
+        "union": null,
+        "default": null,
+        "required": true,
+        "description": "X labels. Every series' `data` is read against this length."
+      },
+      {
+        "name": "series",
+        "kind": "input-required",
+        "type": "readonly LineChartSeries[]",
+        "union": null,
+        "default": null,
+        "required": true,
+        "description": "One line per entry. Every series is read against `categories`, so a series longer than it loses its tail and a shorter one ends early."
+      },
+      {
+        "name": "yAxisMode",
+        "kind": "input",
+        "type": "LineChartAxisMode",
+        "union": [
+          "rounded",
+          "exact",
+          "independent",
+          "stacked"
+        ],
+        "default": "'rounded'",
+        "required": false,
+        "description": "How a secondary axis relates to the primary one."
+      },
+      {
+        "name": "showMarkers",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Draws a dot at every reading. Off, the dots appear on hover and on focus only."
+      },
+      {
+        "name": "interactive",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Makes every reading focusable and clickable. A series drawn without markers grows invisible ones so there is something to land on; they appear on hover and on focus. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
+      },
+      {
+        "name": "gaps",
+        "kind": "input",
+        "type": "LineChartGaps",
+        "union": [
+          "break",
+          "zero"
+        ],
+        "default": "'break'",
+        "required": false,
+        "description": "What a `null` reading draws. The default refuses to assert that a missing reading is a zero."
+      },
+      {
+        "name": "tickCount",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "LINE_CHART_DEFAULT_TICK_COUNT",
+        "required": false,
+        "description": "How many value-axis ticks to aim for. A hint, not a count: ticks snap to a round step, so the axis may carry one more or one fewer."
+      },
+      {
+        "name": "caption",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Printed above the plot as the chart's visible title, and reused as the annex table's caption."
+      },
+      {
+        "name": "summary",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Accessible name. Generated from the data when omitted."
+      },
+      {
+        "name": "dataTable",
+        "kind": "input",
+        "type": "'toggle' | 'visible' | 'none'",
+        "union": [
+          "toggle",
+          "visible",
+          "none"
+        ],
+        "default": "'toggle'",
+        "required": false,
+        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page."
+      },
+      {
+        "name": "loading",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize when the data lands."
+      },
+      {
+        "name": "emptyText",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "'No data'",
+        "required": false,
+        "description": "Shown in place of the plot when `data` is empty."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from an empty `data`, because \"the request failed\" and \"there is nothing to show\" read the same to a reader and mean opposite things."
+      },
+      {
+        "name": "errorText",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "'Could not load the data'",
+        "required": false,
+        "description": "The message the error state prints."
+      },
+      {
+        "name": "valueFormat",
+        "kind": "input",
+        "type": "(value: number) => string",
+        "union": null,
+        "default": "defaultValueFormat",
+        "required": false,
+        "description": "Formats every value the chart prints, the annex table and the generated description included. Defaults to the browser's locale grouping with a K/M/B suffix past four digits."
+      },
+      {
+        "name": "hiddenSeries",
+        "kind": "model",
+        "type": "readonly string[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Ids of the series the legend has switched off. Two-way, so a page can drive it from a URL parameter and read back what the reader chose."
+      },
+      {
+        "name": "rescaleOnHide",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether hiding a series re-scales the value axis to what is left. Default `false`: a silent rescale turns a period-over-period comparison into a different claim, and a comparison dashboard is the common case."
+      },
+      {
+        "name": "legendFilters",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the legend switches series off. Off leaves it a plain key."
+      },
+      {
+        "name": "noVisibleSeriesText",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "'All series are hidden'",
+        "required": false,
+        "description": "Shown in place of the plot once the legend has switched every series off. Without it the reader is left with an empty grid and nothing saying why."
+      },
+      {
+        "name": "patterns",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Gives every series a dash pattern of its own, so the lines are told apart by shape as well as by colour — WCAG technique G111. Off by default: the shipped palette clears the colour-blind separation threshold on its own, so the patterns are for monochrome print, for a retuned palette, and for a reader who asks for them."
+      },
+      {
+        "name": "staggerMs",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "0",
+        "required": false,
+        "description": "Milliseconds between one series' entrance and the next. `0`, the default, is no stagger at all; `40` is the documented non-zero step. The total is capped, so a long list of series does not crawl in."
+      },
+      {
+        "name": "tooltip",
+        "kind": "input",
+        "type": "ChartTooltipTrigger",
+        "union": [
+          "item",
+          "axis",
+          "none"
+        ],
+        "default": "'axis'",
+        "required": false,
+        "description": "Whether the plot opens a tooltip, and for what. `'axis'` names every series at the category under the pointer, which is the reading a multi-series line is compared on; `'item'` names only the marker itself."
+      }
+    ],
+    "outputs": [
+      {
+        "name": "pointClicked",
+        "kind": "output",
+        "type": "LineChartPoint",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The point that was clicked, or activated with Enter or Space. Fires whether or not `interactive` is set."
+      }
+    ]
   },
   "list": {
     "key": "list",
@@ -4730,7 +5790,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Standalone two-way binding, and the ONLY way to drive a lone radio: this component is deliberately not a `ControlValueAccessor`, so `[formControl]` and `ngModel` do not bind to it. Inside `ds-radio-group` the GROUP is the form control — a radio is one option of a choice, not a value of its own — and a second accessor on the option would fight it. A lone radio in a form binds through `[(checked)]`, or becomes a one-option `ds-radio-group`. When inside `ds-radio-group`, `isChecked()` derives from the group value and this input is not read."
+        "description": "The ONLY way to drive a lone radio: this is deliberately not a `ControlValueAccessor`, so `[formControl]` and `ngModel` do not bind to it — inside `ds-radio-group` the GROUP is the form control, and a second accessor on one option would fight it. Inside a group this input is not read at all."
       },
       {
         "name": "deselectable",
@@ -4807,6 +5867,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Inline label rendered beside the dot and wired via for/id. Omit to bring your own <label>."
+      },
+      {
+        "name": "ariaLabel",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Accessible name for a control with no visible label — the row's `<label>` collapses when it is empty, leaving nothing to name it. Set beside a label it OVERRIDES the label, per ARIA."
       }
     ],
     "outputs": []
@@ -5413,7 +6482,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "The contract spelling of `readOnly`, a second input because signal forms binds by NAME — a `readonly()` rule was reaching nothing before this existed."
+        "description": "The contract spelling of `readOnly`: signal forms binds by NAME, so a `readonly()` rule reaches nothing without it."
       },
       {
         "name": "success",
@@ -5610,11 +6679,27 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "routerLink",
         "kind": "input",
-        "type": "string | readonly unknown[] | null",
+        "type": "DsRouterLink",
         "union": null,
         "default": "null",
         "required": false,
         "description": "Makes the group a destination of its own as well as a container: the header navigates here and the caret becomes a separate control, because one control cannot both go somewhere and stay to open something. Unset (the default) the whole header only expands — a heading that navigates closes the page being read the moment someone reaches for the group beneath it."
+      },
+      {
+        "name": "ariaCurrent",
+        "kind": "input",
+        "type": "DsAriaCurrent | null | undefined",
+        "union": [
+          "page",
+          "step",
+          "location",
+          "date",
+          "time",
+          "true"
+        ],
+        "default": "undefined",
+        "required": false,
+        "description": "Overrides what the group header announces when it is itself a destination. Unset, the page the reader is on announces `page` and the section containing it announces `true`."
       },
       {
         "name": "expanded",
@@ -5668,7 +6753,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "routerLink",
         "kind": "input",
-        "type": "string | readonly unknown[] | null",
+        "type": "DsRouterLink",
         "union": null,
         "default": "null",
         "required": false,
@@ -5682,6 +6767,22 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Applies the active style; also drives `aria-current` when not using `routerLink`."
+      },
+      {
+        "name": "ariaCurrent",
+        "kind": "input",
+        "type": "DsAriaCurrent | null | undefined",
+        "union": [
+          "page",
+          "step",
+          "location",
+          "date",
+          "time",
+          "true"
+        ],
+        "default": "undefined",
+        "required": false,
+        "description": "Overrides what an active item announces. Unset, an exact match announces `page` and a prefix match announces `true` — in a sidenav the prefix case is \"you are in this section\", which is exactly what `true` means."
       },
       {
         "name": "badge",
@@ -6545,6 +7646,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Inline label rendered beside the track and wired via for/id. Omit to bring your own <label>."
+      },
+      {
+        "name": "ariaLabel",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Accessible name for a control with no visible label — the row's `<label>` collapses when it is empty, leaving nothing to name it. Set beside a label it OVERRIDES the label, per ARIA."
       }
     ],
     "outputs": []
@@ -6655,7 +7765,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Opt-in outer border + radius. Off by default so tables flush inside a `<ds-card padding=\"none\">` don't double-border. When `true`, the scroll-wrap gets a `var(--border-default)` outline and `var(--radius-md)` radius — useful when the table stands alone in a padded card. Unset falls back to `DS_CONFIG.table.bordered`, then `false`."
+        "description": "Opt-in outer border + radius. Off by default so tables flush inside a `<ds-card padding=\"none\">` don't double-border. Unset falls back to `DS_CONFIG.table.bordered`, then `false`."
       },
       {
         "name": "loading",
@@ -6796,7 +7906,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "When true, each row becomes a keyboard-operable control (role=button, tabindex, Enter/Space → rowClicked) with an accessible name from the first column. Off by default so non-navigating tables don't advertise a false click affordance. Also the gate for the hover/pressed row tints."
+        "description": "When true, each row becomes a keyboard-operable control (tabindex, Enter/Space → rowClicked) with an accessible name from the first column. Off by default so non-navigating tables don't advertise a false click affordance. Also the gate for the hover/pressed row tints."
       },
       {
         "name": "activeRowId",
@@ -8293,6 +9403,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "120",
         "required": false,
         "description": "Milliseconds before the tip appears. Hiding is immediate — this delay only ever suppresses a tip the pointer passed over on its way somewhere else."
+      },
+      {
+        "name": "dsTooltipWhenClipped",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Show the tip only while the host is actually showing less text than it holds. For a label that already reads in full, a tip repeating it is noise. Re-tested on every open, so a tip appears and stops appearing as the column, panel or window is resized, with no observer to run. With this on, `dsTooltip` may be left empty and the host's own text is disclosed. That is what makes it usable on projected content, where the component holding the tip cannot know what it was handed."
       }
     ],
     "outputs": []

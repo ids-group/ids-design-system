@@ -731,20 +731,30 @@
   --chart-hover-bg-color: hsl(0deg 0% 100% / 6%);
   --chart-tooltip-bg-color: var(--surface-overlay);
   --chart-tooltip-text-color: var(--text-primary);
-  --chart-tooltip-border: var(--border-strong);
-  --chart-seq-1: var(--blue-800);
-  --chart-seq-2: var(--blue-700);
-  --chart-seq-3: var(--blue-600);
-  --chart-seq-4: var(--blue-500);
-  --chart-seq-5: var(--blue-400);
-  --chart-seq-6: var(--blue-300);
-  --chart-div--3: hsl(0deg 70% 62%);
-  --chart-div--2: hsl(0deg 55% 46%);
-  --chart-div--1: hsl(0deg 45% 32%);
-  --chart-div-0: var(--neutral-150);
-  --chart-div-1: hsl(140deg 40% 32%);
-  --chart-div-2: hsl(140deg 48% 46%);
-  --chart-div-3: hsl(140deg 55% 60%);
+  --chart-tooltip-border-color: var(--border-strong);
+  --chart-categorical-8: hsl(222deg 14% 60%);
+  --chart-series-default: hsl(222deg 14% 64%);
+  --chart-ramp-1: hsl( 8deg 52% 32%);
+  --chart-ramp-2: hsl( 8deg 56% 37%);
+  --chart-ramp-3: hsl( 8deg 61% 42%);
+  --chart-ramp-4: hsl( 8deg 66% 47%);
+  --chart-ramp-5: hsl( 8deg 70% 53%);
+  --chart-ramp-6: hsl( 8deg 75% 58%);
+  --chart-ramp-7: hsl( 8deg 79% 64%);
+  --chart-ramp-8: hsl( 8deg 84% 70%);
+  --chart-sequential-1: var(--blue-800);
+  --chart-sequential-2: var(--blue-700);
+  --chart-sequential-3: var(--blue-600);
+  --chart-sequential-4: var(--blue-500);
+  --chart-sequential-5: var(--blue-400);
+  --chart-sequential-6: var(--blue-300);
+  --chart-divergent--3: hsl(0deg 70% 62%);
+  --chart-divergent--2: hsl(0deg 55% 46%);
+  --chart-divergent--1: hsl(0deg 45% 32%);
+  --chart-divergent-0: var(--neutral-150);
+  --chart-divergent-1: hsl(140deg 40% 32%);
+  --chart-divergent-2: hsl(140deg 48% 46%);
+  --chart-divergent-3: hsl(140deg 55% 60%);
 }
 
 /* The theme-INDEPENDENT layer. Tier 1 primitives live in ../themes/_base-palette.scss and each
@@ -882,6 +892,13 @@
   --ds-motion-check-enter-easing: var(--ease-spring);
   --ds-motion-check-exit-duration: var(--duration-fast);
   --ds-motion-check-exit-easing: var(--ease-accelerate);
+  /* `state` is a hover or focus answering a pointer, so it runs at the fast step — anything slower
+     reads as lag on a mark the cursor is already leaving. `mark` is a datum changing size, which is
+     a redraw the reader is meant to follow rather than catch up with. */
+  --ds-motion-chart-state-duration: var(--duration-fast);
+  --ds-motion-chart-state-easing: var(--ease-standard);
+  --ds-motion-chart-mark-duration: var(--duration-base);
+  --ds-motion-chart-mark-easing: var(--ease-decelerate);
   --opacity-disabled: 0.5;
   --opacity-text-disabled: 0.38; /* WCAG-derived */
   --opacity-scrim: 0.55;
@@ -1226,10 +1243,21 @@
 
 /* Chart and dataviz tokens.
 
-   Categorical: 8 hues, ordered by perceptual distance not
-   ramp position. First six are AA against both light and
-   dark surface-default; the last two are reserved for
-   "rest" / "other" buckets where contrast is less critical.
+   Categorical: led by the coral and teal the product's own
+   screens are built on. NO HUE BETWEEN 35 and 130: yellow and
+   lime sit at high luminance by nature, so dragging one down
+   to clear 3:1 on white turns it to mustard — an earlier set
+   tried, and the donut read as mud. Every hue clears 3:1 for
+   WCAG 1.4.11 and sits in a narrow perceptual band (L* 56-62)
+   so no series shouts over another; an older set ran 45% to
+   100% saturation and the first bar drowned the last.
+   Slot 8 is the "rest" / "other" bucket: neutral, and darker
+   than the band on purpose. Neutral, because every eighth HUE
+   that clears the floor lands within dE 4 of one of the seven
+   under protanopia or deuteranopia. Darker, because a mid
+   grey is not safe either — colour-vision deficiency drains
+   the emerald toward grey, and only the lightness gap keeps
+   the two apart.
 
    Sequential: single-hue ramp (blue) for ordinal data —
    "low → high" magnitudes.
@@ -1239,52 +1267,138 @@
    ============================================================ */
 :root {
   /* CATEGORICAL (8) ----------------------------------------- */
-  --chart-cat-1: hsl(229deg 100% 59%); /* blue (primary) */
-  --chart-cat-2: hsl(165deg 72% 38%); /* teal */
-  --chart-cat-3: hsl( 24deg 95% 55%); /* orange */
-  --chart-cat-4: hsl(330deg 82% 55%); /* magenta */
-  --chart-cat-5: hsl(45deg 95% 50%); /* amber */
-  --chart-cat-6: hsl(190deg 85% 45%); /* cyan */
-  --chart-cat-7: hsl(280deg 60% 60%); /* lavender */
-  --chart-cat-8: hsl(130deg 45% 50%); /* moss */
+  --chart-categorical-1: hsl( 8deg 78% 58%); /* coral */
+  --chart-categorical-2: hsl(172deg 82% 36%); /* teal */
+  --chart-categorical-3: hsl(222deg 70% 62%); /* blue */
+  --chart-categorical-4: hsl(266deg 62% 66%); /* violet */
+  --chart-categorical-5: hsl(330deg 70% 62%); /* pink */
+  --chart-categorical-6: hsl(152deg 58% 41%); /* emerald */
+  --chart-categorical-7: hsl(300deg 62% 60%); /* orchid */
+  --chart-categorical-8: hsl(222deg 14% 29%); /* slate */
+  /* SINGLE SERIES — every row of ONE series, plus the accent that marks the
+     row the reader is meant to land on. A categorical slot is the wrong tool
+     here: those separate series from each other, not rows within one. */
+  --chart-series-default: hsl(222deg 16% 42%);
+  --chart-series-accent: var(--chart-categorical-2);
+  /* RAMP — one hue, light → deep, for the ordered stages of a single
+     quantity. Shares the lead hue so a funnel reads as one object rather
+     than as eight unrelated categories. Contrast on white is NOT held at
+     3:1 across the ramp: a sequential scale that clears the floor at every
+     step has to compress into its dark half, and then consecutive stages
+     stop being separable from each other, which is the distinction the
+     ramp exists to carry. */
+  --chart-ramp-1: hsl( 8deg 78% 76%);
+  --chart-ramp-2: hsl( 8deg 78% 72%);
+  --chart-ramp-3: hsl( 8deg 78% 69%);
+  --chart-ramp-4: hsl( 8deg 78% 65%);
+  --chart-ramp-5: hsl( 8deg 78% 62%);
+  --chart-ramp-6: hsl( 8deg 77% 58%);
+  --chart-ramp-7: hsl( 8deg 75% 55%);
+  --chart-ramp-8: hsl( 8deg 72% 51%);
   /* SEQUENTIAL — single-hue, light → dark */
-  --chart-seq-1: var(--blue-100);
-  --chart-seq-2: var(--blue-200);
-  --chart-seq-3: var(--blue-300);
-  --chart-seq-4: var(--blue-500);
-  --chart-seq-5: var(--blue-700);
-  --chart-seq-6: var(--blue-900);
+  --chart-sequential-1: var(--blue-100);
+  --chart-sequential-2: var(--blue-200);
+  --chart-sequential-3: var(--blue-300);
+  --chart-sequential-4: var(--blue-500);
+  --chart-sequential-5: var(--blue-700);
+  --chart-sequential-6: var(--blue-900);
   /* DIVERGENT — red ← neutral → green
      Explicit HSL keeps the ramp
      independent of palette retunes — re-skinning brand/red/green
      should not shift the dataviz colour story. */
-  --chart-div--3: hsl(0deg 70% 40%); /* large negative (worst) */
-  --chart-div--2: hsl(0deg 60% 58%);
-  --chart-div--1: hsl(0deg 50% 80%);
-  --chart-div-0: hsl(225deg 8% 92%); /* zero */
-  --chart-div-1: hsl(140deg 35% 80%);
-  --chart-div-2: hsl(140deg 45% 55%);
-  --chart-div-3: hsl(140deg 55% 35%); /* large positive (best) */
+  --chart-divergent--3: hsl( 8deg 48% 38%); /* large negative (worst) */
+  --chart-divergent--2: hsl( 8deg 42% 56%);
+  --chart-divergent--1: hsl( 8deg 34% 80%);
+  --chart-divergent-0: hsl(225deg 8% 92%); /* zero */
+  --chart-divergent-1: hsl(145deg 28% 80%);
+  --chart-divergent-2: hsl(145deg 38% 52%);
+  --chart-divergent-3: hsl(145deg 46% 34%); /* large positive (best) */
+  /* FRAME — the box a chart draws around itself. On by default: a chart is
+     read as an object on the page, not as a block of text, and without an
+     edge it bleeds into whatever sits under it. A chart already inside a
+     card drops it with --ds-chart-frame-border-width: 0 and
+     --ds-chart-frame-padding: 0. */
+  --chart-frame-border-color: var(--border-default);
+  --chart-frame-border-width: var(--border-width-default);
+  --chart-frame-radius: var(--radius-lg);
+  --chart-frame-padding: var(--space-5);
+  --chart-frame-bg-color: var(--surface-default);
   /* AXIS / GRID / LEGEND */
-  --chart-axis-line: var(--neutral-300);
-  --chart-axis-label: var(--text-tertiary);
-  --chart-axis-title: var(--text-secondary);
-  --chart-grid-line: var(--neutral-150);
-  --chart-grid-line-strong: var(--neutral-200);
+  --chart-axis-line-color: var(--neutral-300);
+  --chart-axis-label-color: var(--text-tertiary);
+  --chart-axis-title-color: var(--text-secondary);
+  --chart-grid-line-color: var(--neutral-150);
+  --chart-grid-line-strong-color: var(--neutral-200);
   --chart-tick-size: 4px;
-  --chart-axis-fs: var(--font-size-2xs);
+  --chart-axis-font-size: var(--font-size-2xs);
   /* HIGHLIGHT / HOVER */
+  /* Every level of dimming costs the separation BETWEEN the dimmed series: measured 2026-09-13,
+     OKLab dE x100, the worst pair of three dimmed series falls from 14.8 at full opacity to 5.2 at
+     60% and 2.1 at 30%. There is no level that keeps them apart, so this number buys accent
+     loudness, not readable context. 30% is Carbon's. */
+  --chart-dim-opacity: 0.3;
   --chart-hover-bg-color: hsl(225deg 39% 7% / 4%);
-  --chart-cursor-line: var(--neutral-400);
+  --chart-cursor-line-color: var(--neutral-400);
   --chart-tooltip-bg-color: var(--neutral-900);
   --chart-tooltip-text-color: var(--neutral-0);
-  --chart-tooltip-border: var(--neutral-700);
+  --chart-tooltip-border-color: var(--neutral-700);
   /* DIMENSIONS */
   --chart-bar-gap: 4px;
-  --chart-line-w: 2px;
-  --chart-line-w-bold: 3px;
-  --chart-dot-r: 4px;
-  --chart-dot-r-active: 6px;
+  --chart-line-width: 2px;
+  --chart-line-width-bold: 3px;
+  --chart-dot-radius: 4px;
+  --chart-dot-radius-active: 6px;
+}
+
+/* Public override layer.
+   The block above is the palette; this block is the contract. A consumer sets
+   --ds-chart-*, never the palette itself, so recolouring one series costs one
+   declaration instead of the whole ramp. Series slots are numbered rather than
+   named after a hue: --ds-chart-series-3-color stays meaningful after a retune,
+   --ds-chart-orange-color would not.
+   ============================================================ */
+:root {
+  --ds-chart-series-1-color: var(--chart-categorical-1);
+  --ds-chart-series-2-color: var(--chart-categorical-2);
+  --ds-chart-series-3-color: var(--chart-categorical-3);
+  --ds-chart-series-4-color: var(--chart-categorical-4);
+  --ds-chart-series-5-color: var(--chart-categorical-5);
+  --ds-chart-series-6-color: var(--chart-categorical-6);
+  --ds-chart-series-7-color: var(--chart-categorical-7);
+  --ds-chart-series-8-color: var(--chart-categorical-8);
+  --ds-chart-series-default-color: var(--chart-series-default);
+  --ds-chart-series-accent-color: var(--chart-series-accent);
+  --ds-chart-ramp-1-color: var(--chart-ramp-1);
+  --ds-chart-ramp-2-color: var(--chart-ramp-2);
+  --ds-chart-ramp-3-color: var(--chart-ramp-3);
+  --ds-chart-ramp-4-color: var(--chart-ramp-4);
+  --ds-chart-ramp-5-color: var(--chart-ramp-5);
+  --ds-chart-ramp-6-color: var(--chart-ramp-6);
+  --ds-chart-ramp-7-color: var(--chart-ramp-7);
+  --ds-chart-ramp-8-color: var(--chart-ramp-8);
+  --ds-chart-frame-border-color: var(--chart-frame-border-color);
+  --ds-chart-frame-border-width: var(--chart-frame-border-width);
+  --ds-chart-frame-radius: var(--chart-frame-radius);
+  --ds-chart-frame-padding: var(--chart-frame-padding);
+  --ds-chart-frame-bg-color: var(--chart-frame-bg-color);
+  --ds-chart-axis-line-color: var(--chart-axis-line-color);
+  --ds-chart-axis-label-color: var(--chart-axis-label-color);
+  --ds-chart-axis-title-color: var(--chart-axis-title-color);
+  --ds-chart-axis-font-size: var(--chart-axis-font-size);
+  --ds-chart-grid-line-color: var(--chart-grid-line-color);
+  --ds-chart-grid-line-strong-color: var(--chart-grid-line-strong-color);
+  --ds-chart-dim-opacity: var(--chart-dim-opacity);
+  --ds-chart-hover-bg-color: var(--chart-hover-bg-color);
+  --ds-chart-cursor-line-color: var(--chart-cursor-line-color);
+  --ds-chart-tooltip-bg-color: var(--chart-tooltip-bg-color);
+  --ds-chart-tooltip-text-color: var(--chart-tooltip-text-color);
+  --ds-chart-tooltip-border-color: var(--chart-tooltip-border-color);
+  --ds-chart-bar-gap: var(--chart-bar-gap);
+  --ds-chart-line-width: var(--chart-line-width);
+  --ds-chart-line-width-bold: var(--chart-line-width-bold);
+  --ds-chart-dot-radius: var(--chart-dot-radius);
+  --ds-chart-dot-radius-active: var(--chart-dot-radius-active);
+  --ds-chart-tick-size: var(--chart-tick-size);
 }
 
 @font-face {

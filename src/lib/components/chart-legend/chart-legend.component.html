@@ -1,0 +1,37 @@
+<ul class="legend">
+  @for (item of items(); track item.id) {
+    <li
+      class="legend-item"
+      [class.is-hidden]="isHidden(item.id)"
+      (pointerenter)="highlighted.set(item.id)"
+      (pointerleave)="highlighted.set(null)">
+      @if (toggleable()) {
+        <label class="legend-toggle">
+          <input
+            type="checkbox"
+            class="legend-check"
+            [checked]="!isHidden(item.id)"
+            [style.--ds-checkbox-selected-bg-color]="item.color"
+            [style.--ds-checkbox-selected-border-color]="item.color"
+            (change)="toggle(item.id)"
+            (focus)="highlighted.set(item.id)"
+            (blur)="highlighted.set(null)" />
+
+          <span class="legend-label">
+            {{ item.label }}
+          </span>
+        </label>
+      } @else {
+        <span
+          class="legend-swatch"
+          aria-hidden="true"
+          [style.background]="item.color">
+        </span>
+
+        <span class="legend-label">
+          {{ item.label }}
+        </span>
+      }
+    </li>
+  }
+</ul>

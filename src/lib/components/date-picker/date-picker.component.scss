@@ -6,6 +6,11 @@
 @use '../../styles/visually-hidden' as visually-hidden;
 @use '../../styles/focus' as focus;
 
+/* Truncation contract:
+   Selected-date label — Numeric date only — no clip.
+   Range label — "Start – End" format — no clip; abbreviates year if same.
+   Calendar day — Single digit/two digits — no clip ever. */
+
 :host {
   --_date-picker-focus-shadow: var(--ds-date-picker-focus-shadow, var(--ds-field-focus-shadow));
   --_date-picker-trigger-bg-color: var(--ds-date-picker-trigger-bg-color, var(--surface-default));

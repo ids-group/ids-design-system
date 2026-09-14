@@ -1,0 +1,49 @@
+@use '../../styles/chart-editor-disclosure' as chart-editor-disclosure;
+
+:host {
+  display: block;
+}
+
+@include chart-editor-disclosure.disclosure;
+
+.scroll {
+  max-inline-size: 100%;
+  overflow-x: auto;
+}
+
+.matrix {
+  display: grid;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+// A field's intrinsic width is its own text box, far wider than a matrix column, so every
+// field has to be allowed below it or the cell overflows instead of the track scrolling. The
+// icon buttons keep theirs: they sit in the `auto` track, which collapses to nothing if its
+// content may shrink.
+ds-input {
+  min-inline-size: 0;
+}
+
+.category {
+  display: flex;
+  gap: var(--space-1);
+  align-items: center;
+  min-inline-size: 0;
+}
+
+.category ds-input {
+  flex: 1;
+}
+
+.empty {
+  margin: 0;
+  color: var(--text-tertiary);
+  font-size: var(--font-size-xs);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}

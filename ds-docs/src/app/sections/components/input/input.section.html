@@ -3,8 +3,6 @@
   eyebrow="Components"
   title="Input"
   [apiKeys]="['field-click-focus']">
-  <docs-truncation [rules]="truncationRules" />
-
   <span lede>
     Single-line text, prefix/suffix add-ons, six states.
   </span>
@@ -90,6 +88,20 @@
 
       <div class="state-cell-label">
         Disabled
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage">
+        <ds-input
+          label="Project ID"
+          value="ORD-2026"
+          error="Must be a full order reference"
+          [disabled]="true" />
+      </div>
+
+      <div class="state-cell-label">
+        Disabled, with an error bound
       </div>
     </div>
 

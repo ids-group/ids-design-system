@@ -1,5 +1,10 @@
 @use '../../styles/focus' as focus;
 
+/* Truncation contract:
+   Header title — Single line, ellipsis at ~32 ch. Tooltip on hover when clipped.
+   Body copy — Wrap freely. No line clamp by default; consumer applies clamp if needed.
+   Footer actions — Stay below; collapse to icon-only on narrow widths. */
+
 /* Ported verbatim from vendor/claude-design-ds/components.css (lines 603-614).
    padding-none/-sm/-md/-lg are our addition; base .card's padding already equals .padding-md. */
 :host {

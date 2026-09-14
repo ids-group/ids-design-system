@@ -34,7 +34,12 @@ import { NgTemplateOutlet } from '@angular/common';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { SpinnerComponent } from '@ids-group-ltd/ids-design-system/components/spinner';
 import { DsControlValueAccessor } from '@ids-group-ltd/ids-design-system/components';
-import { inFieldGroup } from '@ids-group-ltd/ids-design-system/components/field-group';
+import {
+  describedByIds,
+  groupInvalid,
+  groupMessageId,
+  inFieldGroup,
+} from '@ids-group-ltd/ids-design-system/components/field-group';
 import { DsStaticPreview } from '@ids-group-ltd/ids-design-system/components';
 import {
   isSelectOptionGroup,
@@ -155,8 +160,8 @@ export class SelectComponent
   /** Prevents opening the dropdown while still allowing focus. */
   readonly readOnly = input(false, { transform: booleanAttribute });
   /**
-   * The contract spelling of `readOnly`, a second input because signal forms binds
-   * by NAME — a `readonly()` rule was reaching nothing before this existed.
+   * The contract spelling of `readOnly`: signal forms binds by NAME, so a
+   * `readonly()` rule reaches nothing without it.
    */
   readonly readonlyBinding = input(false, {
     // eslint-disable-next-line @angular-eslint/no-input-rename
@@ -211,6 +216,7 @@ export class SelectComponent
     this.message().text ? `${this.uid}-hint` : null,
   );
   private readonly fieldMessage = resolveFieldMessage({
+    disabled: () => this.isDisabled(),
     hint: this.hint,
     warning: this.warning,
     error: this.error,
@@ -222,7 +228,9 @@ export class SelectComponent
   });
   protected readonly message = this.fieldMessage.message;
   protected readonly controlState = this.fieldMessage.controlState;
-  protected readonly invalidResolved = this.fieldMessage.invalid;
+  protected readonly groupMessage = groupMessageId();
+  protected readonly describedByIds = describedByIds;
+  protected readonly invalidResolved = groupInvalid(this.fieldMessage.invalid);
   protected optionId(flatIndex: number): string {
     return `${this.uid}-opt-${flatIndex}`;
   }

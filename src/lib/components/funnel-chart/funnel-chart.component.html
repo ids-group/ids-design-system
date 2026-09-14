@@ -1,0 +1,170 @@
+<figure class="funnel-chart">
+  @if (caption()) {
+    <figcaption>
+      {{ caption() }}
+    </figcaption>
+  }
+
+  @if (error()) {
+    <p
+      class="empty is-error"
+      role="status">
+      {{ errorText() }}
+    </p>
+  } @else if (loading()) {
+    <div
+      class="skeleton"
+      aria-hidden="true">
+      @for (placeholderWidth of skeletonStages(); track $index) {
+        <ds-skeleton
+          height="calc(var(--_funnel-chart-stage-height) - var(--_funnel-chart-stage-gap))"
+          [width]="placeholderWidth" />
+      }
+    </div>
+  } @else if (isEmpty()) {
+    <p class="empty">
+      {{ emptyText() }}
+    </p>
+  } @else {
+    <div
+      class="shape"
+      [attr.role]="interactive() ? 'group' : 'img'"
+      [attr.aria-label]="accessibleName()"
+      [dsChartTooltip]="tooltipContext()"
+      [dsChartTooltipOrigin]="activeMark.origin()"
+      [dsChartTooltipTemplate]="tooltipTemplate() ?? null">
+      <svg
+        preserveAspectRatio="none"
+        [attr.aria-hidden]="interactive() ? null : true"
+        [attr.viewBox]="viewBox"
+        [style.block-size]="chartHeight()">
+        @for (entry of stages(); track entry.stage.id; let index = $index) {
+          <polygon
+            class="stage"
+            animate.enter="mark-enter"
+            animate.leave="mark-leave"
+            [style.--_chart-mark-stagger]="markStagger(index)"
+            [class.interactive]="interactive()"
+            [attr.points]="entry.points"
+            [attr.fill]="entry.color"
+            [attr.role]="interactive() ? 'button' : null"
+            [attr.tabindex]="
+              interactive() ? (index === tabStopIndex() ? 0 : -1) : null
+            "
+            [attr.data-mark-index]="index"
+            [attr.aria-label]="interactive() ? entryLabel(entry) : null"
+            (pointerenter)="activeMark.enter(index, $event)"
+            (pointerleave)="activeMark.leave()"
+            (focus)="onMarkFocus(index, $event)"
+            (blur)="activeMark.leave()"
+            (keydown)="onMarkNavigation($event, index)"
+            (click)="stageClicked.emit(entry.stage)"
+            (keydown.enter)="onStageKey(entry.stage, $event)"
+            (keydown.space)="onStageKey(entry.stage, $event)">
+          </polygon>
+        }
+      </svg>
+    </div>
+
+    @if (showTable()) {
+      <table class="stage-table">
+        <caption class="visually-hidden">
+          Each stage as a percentage of the first, and the drop from the stage
+          above it.
+        </caption>
+
+        <thead>
+          <tr>
+            <th scope="col">
+              Stage
+            </th>
+
+            <th scope="col">
+              Value
+            </th>
+
+            <th scope="col">
+              Percent
+            </th>
+
+            <th scope="col">
+              Drop
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (entry of stages(); track entry.stage.id) {
+            <tr>
+              <th scope="row">
+                <span
+                  class="swatch"
+                  aria-hidden="true"
+                  [style.background]="entry.color">
+                </span>
+
+                {{ entry.stage.label }}
+              </th>
+
+              <td>
+                {{ entry.formattedValue }}
+              </td>
+
+              <td>
+                {{ entry.formattedPercent }}
+              </td>
+
+              <td>
+                {{ entry.formattedDrop }}
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+
+    @if (showDataTable()) {
+      <details
+        class="data-table"
+        [open]="dataTable() === 'visible'">
+        <summary>
+          Data table
+        </summary>
+
+        <table>
+          <caption>
+            {{
+              caption() ?? 'Chart data'
+            }}
+          </caption>
+
+          <thead>
+            <tr>
+              <th scope="col">
+                Label
+              </th>
+
+              <th scope="col">
+                Value
+              </th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (entry of stages(); track entry.stage.id) {
+              <tr>
+                <td>
+                  {{ entry.stage.label }}
+                </td>
+
+                <td>
+                  {{ entry.formattedValue }}
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </details>
+    }
+  }
+</figure>

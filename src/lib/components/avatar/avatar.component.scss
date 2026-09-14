@@ -1,3 +1,8 @@
+/* Truncation contract:
+   Initials fallback — 2 chars max — no clip. Generated from first + last name.
+   Adjacent name label — Single line, ellipsis. Tooltip on hover with full name.
+   +N overflow — Numeric only — no clip. Hidden member names are not surfaced by the component. */
+
 // Group-overlap visuals live in avatar-group.component.scss, reaching this host
 // via ::ng-deep — emulated encapsulation otherwise scopes the two stylesheets
 // independently.

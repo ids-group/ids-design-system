@@ -1,0 +1,53 @@
+// The box a chart draws around itself. All five draw the same one, so the rules live here.
+//
+// On by default, which is unusual for this library: most components resist owning chrome. A chart
+// is the exception because it is read as an OBJECT — a plot with axes, a legend and an annex table
+// — and without an edge those parts run into whatever sits beside them on the page. A chart already
+// inside a card drops the frame with two declarations rather than a mode flag:
+//
+//   ds-bar-chart { --ds-chart-frame-border-width: 0; --ds-chart-frame-padding: 0; }
+@mixin chart-frame {
+  :host {
+    display: block;
+    padding: var(--ds-chart-frame-padding);
+    background: var(--ds-chart-frame-bg-color);
+    border: var(--ds-chart-frame-border-width) solid
+      var(--ds-chart-frame-border-color);
+    border-radius: var(--ds-chart-frame-radius);
+  }
+}
+
+// The focus indicator, drawn rather than outlined: `outline` on an SVG element paints its BOUNDING
+// BOX, not its silhouette, so a slice would ring as a rectangle. Two tones, because one is not
+// enough — a light stroke carries against a dark mark, the dark halo around it carries against a
+// light one and against the surface, and between them the ring clears 3:1 on every series colour
+// the palette holds. `drop-shadow` rather than a second stroke: an SVG shape has one stroke.
+@mixin drawn-focus-ring {
+  stroke: var(--ds-chart-focus-ring-color);
+  stroke-width: var(--focus-ring-width);
+  paint-order: stroke;
+  filter: drop-shadow(0 0 1px var(--ds-chart-focus-halo-color))
+    drop-shadow(0 0 1px var(--ds-chart-focus-halo-color));
+}
+
+// `fill` and `stroke` are NOT remapped by forced colours: the chart keeps every series colour and
+// they all become the same one against the forced background, with nothing reporting a problem.
+// The system keywords are what put the structure back.
+@mixin forced-colors {
+  @media (forced-colors: active) {
+    .axis-line,
+    .grid-line {
+      stroke: CanvasText;
+    }
+
+    .axis-label,
+    .category-label {
+      fill: CanvasText;
+    }
+
+    :focus-visible {
+      stroke: Highlight;
+      filter: none;
+    }
+  }
+}

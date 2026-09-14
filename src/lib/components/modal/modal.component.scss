@@ -1,5 +1,13 @@
 @use '../../styles/press' as press;
 
+/* Truncation contract:
+   Title — Single line, ellipsis on overflow. Tooltip on hover when clipped. Keep the close
+     button visible.
+   Body — Wrap, no clip. Scrolls inside the body when content exceeds the modal height.
+   Actions — Single line per label. If the row overflows, stack vertically full-width.
+   Form fields inside body — Inherit field truncation rules. Hints wrap to 2 lines; errors never
+     clip. */
+
 :host {
   --_modal-bg-color:              var(--ds-modal-bg-color,              var(--surface-overlay));
   --_modal-radius:          var(--ds-modal-radius,          var(--ds-radius-panel));

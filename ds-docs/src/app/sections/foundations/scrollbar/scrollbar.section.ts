@@ -1,9 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
-import {
-  DocsTruncationComponent,
-  TruncationRule,
-} from '../../../shared/docs-truncation.component';
 
 interface ScrollToken {
   readonly token: string;
@@ -26,7 +22,7 @@ const TOKENS: readonly ScrollToken[] = [
 @Component({
   selector: 'section-foundations-scrollbar',
   standalone: true,
-  imports: [DocsSectionComponent, DocsTruncationComponent],
+  imports: [DocsSectionComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './scrollbar.section.html',
   styleUrl: './scrollbar.section.scss',
@@ -35,24 +31,6 @@ export class ScrollbarSection {
   protected readonly tokens = TOKENS;
   protected readonly rows = Array.from({ length: 30 }, (_, i) => i + 1);
   protected readonly cols = Array.from({ length: 12 }, (_, i) => i + 1);
-
-  protected readonly truncationRules: TruncationRule[] = [
-    {
-      field: 'Scroll-pane content',
-      behaviour:
-        'Never clipped horizontally — the pane scrolls instead. Rows wrap inside the pane.',
-    },
-    {
-      field: 'Row label',
-      behaviour:
-        'Single line, ellipsis. Long labels truncate before causing horizontal scroll inside a vertical pane.',
-    },
-    {
-      field: 'Horizontal column',
-      behaviour:
-        'Fixed width; pane scrolls horizontally to reveal more columns.',
-    },
-  ];
 
   protected pad(num: number): string {
     return String(num).padStart(2, '0');

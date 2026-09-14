@@ -1,0 +1,52 @@
+@use '../../styles/check-box' as check-box;
+@use '../../styles/focus' as focus;
+
+:host {
+  display: block;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.legend-item {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+  color: var(--text-secondary);
+  font-size: var(--font-size-xs);
+}
+
+.legend-toggle {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+  cursor: pointer;
+}
+
+.legend-check {
+  /* No `check-box.resolvers` on the scope on purpose: the mixin's `--_checkbox-*` locals would
+     outrank the `--ds-checkbox-selected-*` pair the template sets per item, and every box would
+     come out in `--accent` instead of its own series colour. */
+  @include check-box.box;
+  @include focus.ring;
+}
+
+.legend-swatch {
+  flex: none;
+  inline-size: var(--space-2-5);
+  block-size: var(--space-2-5);
+  border-radius: var(--radius-pill);
+}
+
+/* Hiding a series is a filter, not a disabled control — the item stays operable and says so by
+   losing the colour it contributed. */
+.legend-item.is-hidden .legend-label {
+  color: var(--text-disabled);
+  text-decoration: line-through;
+}

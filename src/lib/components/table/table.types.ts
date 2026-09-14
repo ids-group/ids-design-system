@@ -40,9 +40,8 @@ export interface TableColumn<T = unknown> {
   /** Adds a header filter menu. `'set'` lists the column's distinct values as
    *  a searchable checkbox list; a row passes when its value stays checked. */
   filter?: 'set';
-  /** Ellipsis-clip long cell text at `width` (240px when unset) — full value
-   *  in the title tooltip, and clicking a clipped cell opens it in a popover.
-   *  Text cells only — template cells own their overflow. */
+  /** Ellipsis-clip long cell text at `width` (240px when unset); the full value
+   *  reaches a tooltip on hover and focus. */
   truncate?: boolean;
   /** Column width in px — also the clip width for `truncate`.
    *
@@ -111,10 +110,16 @@ export interface SortChangeEvent {
 export interface TableRowAction<T = unknown> {
   /** Stable identifier — use it to branch in `rowActionSelected`. */
   id: string;
-  label: string;
+  /** Per-row where one action reads two ways: Deactivate on a live row and
+   *  Reactivate on a suspended one. It is ONE action — the same `id` reaches
+   *  `rowActionSelected` either way. */
+  label: string | ((row: T) => string);
   icon?: IconName;
   /** Renders the item in the destructive style. */
   error?: boolean;
+  /** Draws a divider ABOVE this item. For the destructive tail, where colour
+   *  alone is the only thing separating Delete from the actions above it. */
+  divider?: boolean;
   /** Per-row predicate — return true to disable the item for that row. */
   disabled?: (row: T) => boolean;
   /** Per-row predicate — return true to leave the item OUT for that row. Use it

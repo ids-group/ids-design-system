@@ -14,30 +14,40 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 | 1 | `1-color-engine-derivation` | the head of the biggest lane: three P2 decisions and one measured WCAG AA failure sit downstream of the colour-space choice |
 | 2 | `2-color-engine-relative` | the same decision, prototype half — ranked next so the pair is read together |
 | 3 | `3-interaction-formula` | `.ds-interactive`, five verdicts B1-B5; agreed in principle, and `_interaction.scss` still does not exist |
-| 4 | `4-opt-in-seam` | ~31 KB of opt-in surface. Its first verdict is in (directives); two are open and nothing blocks them |
-| 5 | `5-rejected-with-numbers` | every idea this backlog has rejected, with the measurement that rejected it and what would reopen it |
-| 6 | `6-migration-manifest-audit` | eight format practices to ratify - tooling, no consumer pulling on it |
-| 7 | `7-select-native-multi` | the cheapest to close: "keep parked" is a complete answer |
-| 8 | `8-warning-text-colour` | one colour on one tint, each candidate rendered in itself |
-| 9 | `9-sidebar-states` | ANSWERED 2026-09-06: variant E, a fill on the item and never on the group. Kept here until it moves to `implemented/` with the ds-sidenav-item follow-up |
-| 10 | `10-docs-chapter-nav` | the chapter list shipped as a flat 38-item wall with six labels truncated mid-word; ten ways to shape it - five on where the list lives, five on what makes a sub-item a sub-item - each rendered live at the rail's real width |
-| 11 | `11-field-group-invalid-voice` | the error border is fixed; what is open is how a group SAYS it is invalid — it has no text channel at all and sets no `aria-invalid`, so colour is the only signal |
-| 12 | `12-stat-value-overflow` | one default, five candidates, each rendered on the real 240px tile — the value runs 157px past the card today, and every answer is a visual breaking change |
+| 4 | `4-migration-manifest-audit` | eight format practices to ratify — tooling, no consumer pulling on it |
+| 5 | `5-select-native-multi` | the cheapest to close: "keep parked" is a complete answer, and it is the answer already given — it stays only because closing it was declined |
+| 6 | `6-warning-text-colour` | one colour on one tint, each candidate rendered in itself. It ends "name a number: 1, 2, 3 or 4" |
+| 7 | `7-docs-chapter-nav` | where the chapter list lives and what makes a sub-item a sub-item. Seven variants rejected, four left, and they are mutually exclusive: 11, 12, 13 and 14 each answer "where do 38 rows live" differently |
+| 8 | `8-chart-dual-axis` | ANSWERED — all four `yAxisMode` values stay, documented; the deck is the artefact the docs card carries |
+| 9 | `9-chart-palette-v2` | whether the eight categorical hues are re-derived against the validator, which costs a slot |
+| 10 | `10-chart-phase-2-marks` | which marks phase 2 adds — area, waterfall, heatmap — and the ramp measurement behind them |
+| 11 | `11-chart-composition-model` | projected children versus a series array; everything downstream of phase 2 reads this |
+| 12 | `12-chart-axis-mode-names` | three candidate name sets for `yAxisMode`, which is already public API |
+| 13 | `13-chart-area-mode-or-component` | area as a mode of the line or a component of its own, with the input count measured |
+| 14 | `14-chart-rescale-on-hide` | ANSWERED — the axis holds still; `rescaleOnHide` opts into the other reading |
+| 15 | `15-chart-sparkline-preset` | `variant="spark"` or a separate `ds-sparkline` |
+| 16 | `16-chart-scatter-phase` | scatter in phase 2 or phase 3, and the decimation it drags in |
 
-**Ranks 4 and 5 are what is left of the packaging lane and are kept adjacent** — the opt-in seam,
-then what was rejected and why. `focus-ring-radius` closed on 2026-09-10: 4px everywhere, and the measuring found four of its
-seven hosts already had a shape their ring follows, so only three needed the token.
-`selection-focus-ring` closed on 2026-09-04 and moved on 2026-09-10 — the ring is on the row in
-`_control-line.scss`, which is what the deck asked for. The three that closed on 2026-09-04 are in `implemented/`
-(`packaging-entry-points`, `basic-advanced-split`, `entry-point-shape`); read them in that order for
-the mechanism, the split question and the layout. All of them are written in Russian and share
-`deck.css`, which sits beside `ds.css` and carries the shell they use; the other decks keep their own
-inline styles.
+**Ranks 1-3 are the two biggest lanes** — the colour engine, then the interaction formula that reads
+its ramp. Five closed on 2026-09-12: `field-group-invalid-voice` (the group takes `error` and a message row, and every segment announces it), `button-destination-api` (the modifiers ship as flat inputs, `routerLink` takes a `UrlTree`, and an exact match announces `page` where a prefix announces `true`), `opt-in-seam` (the table's features became directives and the
+other two questions were answered with a measurement — the button's message row was built and
+reverted, the portaled CSS rejected at 1 kB), `sidebar-states` (variant E, in the code as the item's
+`--accent-subtitle` fill with no fill on the group) and `stat-value-overflow` (one line and a tip on
+hover, with three hooks over it). `focus-ring-radius` closed on 2026-09-10: 4px everywhere, and the
+measuring found four of its seven hosts already had a shape their ring follows, so only three needed
+the token. `selection-focus-ring` closed on 2026-09-04 and moved on 2026-09-10 — the ring is on the
+row in `_control-line.scss`, which is what the deck asked for. The three that closed on 2026-09-04
+are in `implemented/` (`packaging-entry-points`, `basic-advanced-split`, `entry-point-shape`); read
+them in that order for the mechanism, the split question and the layout. Ranks 1-4 are written in
+Russian and share `deck.css`, which sits beside `ds.css` and carries the shell they use; the rest
+keep their own inline styles.
 
-**A `tool` here takes no number.** `backlog-board.html` is the only one left — it is read whenever
-rather than at a moment, so it stays unnumbered and sorts below the queue. A tool that is RUN rather
-than read does not belong in this folder at all: `tools/overlay-guard-harness.html` moved out on
-2026-09-02 for exactly that reason.
+**A `tool` here takes no number.** `backlog-board.html` and `rejected-with-numbers.html` — both are
+read whenever rather than at a moment, so they stay unnumbered and sort below the queue.
+`rejected-with-numbers` held rank 5 until 2026-09-12 while asking nothing: it is the register of what
+this backlog has turned down and the measurement that turned it down, so a rank on it made the queue
+claim a verdict was owed where none was. A tool that is RUN rather than read does not belong in this
+folder at all: `tools/overlay-guard-harness.html` moved out on 2026-09-02 for exactly that reason.
 
 **Ranks are renumbered when the queue changes** — a closed deck moves to `implemented/` and DROPS its
 number on the way (D009: a rank is a queue position and it has left the queue), and the rest close the

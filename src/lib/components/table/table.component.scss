@@ -4,6 +4,11 @@
 @use '../../styles/visually-hidden' as visually-hidden;
 @use '../../styles/text-clip' as text-clip;
 
+/* Truncation contract:
+   Cell text — Single line, ellipsis at column width (truncate + width), full value in a tooltip.
+   Header label — Single line, no clip.
+   Action column — No clip — icon-only buttons. */
+
 // Positioned to contain the absolute `.visually-hidden` nodes below; without it they resolve against
 // the initial containing block and grow the consuming PAGE's root scroller into a second scrollbar.
 :host {
@@ -36,8 +41,6 @@
   @include visually-hidden.visually-hidden;
 }
 
-/* Opt-in outer frame via `[bordered]="true"`. Off by default so a table flush
-   inside `<ds-card padding="none">` does not double-border. */
 :host(.bordered) .scroll-wrap {
   border: var(--border-width-default) solid var(--_table-border);
   border-radius: var(--_table-radius);
@@ -73,7 +76,7 @@
   }
 }
 
-/* Drag-to-resize handles (opt-in `resizableColumns`). The header clips its
+/* Drag-to-resize handles (opt-in via the `dsTableResize` directive). The header clips its
    label so a narrowed column can't spill into its neighbour. */
 :host(.resizable) thead th {
   position: relative;
@@ -82,7 +85,7 @@
 
 /* A coarse pointer paints no `:hover`, so the handle is invisible while `touch-action: none` still
    eats the swipe that scrolls the table. The column panel is the touch path instead.
-   Matches `coarsePointer` in the .ts. */
+   Matches `coarsePointer` in table-columns.directive.ts. */
 @media (hover: none) and (pointer: coarse) {
   .col-resize {
     display: none;
@@ -419,7 +422,7 @@
       display: block;
 
       /* `scrollWidth > clientWidth` still reports true under `clip`, checked in
-         Chromium — which is how a clipped cell earns its full-text popover. */
+         Chromium — which is how `dsTooltipWhenClipped` sees a clipped cell. */
       @include text-clip.single-line-ellipsis;
     }
   }
@@ -624,13 +627,6 @@
   &:focus-visible {
     @include focus.ring;
   }
-}
-
-.cell-text-pop {
-  max-width: 360px;
-  overflow-wrap: anywhere;
-  font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
-  color: var(--text-primary);
 }
 
 /* Pinned cells need an opaque background and a raised z to survive sideways scroll. Sticky

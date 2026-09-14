@@ -1,5 +1,12 @@
 @use '../../styles/text-clip' as text-clip;
 
+/* Truncation contract:
+   App / account label — Single line, ellipsis at ~20 ch. Tooltip on hover when clipped.
+   Search input — Single line, no clip while focused. Placeholder ellipses if the bar shrinks.
+   Breadcrumb segments — Middle segments collapse to … before the leaf clips. Leaf truncates last
+     with a tooltip.
+   Action icons — No visible label — full label lives in aria-label and tooltip-on-hover. */
+
 :host {
   --_topbar-height:   var(--ds-topbar-height,   var(--topbar-h));
   --_topbar-bg-color:       var(--ds-topbar-bg-color,       var(--surface-default));

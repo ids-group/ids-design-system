@@ -262,6 +262,24 @@ write_files { planId, files: [{ path, localPath }] }
 delete_files { planId, paths }
 ```
 
+- **Send only what changed — `npm run design-sync-plan`.** It diffs `.design-sync/upload` between
+  the commit recorded in `last-upload.json` and HEAD, and writes ready-to-send `write_files` batches
+  under `.claude/local/design-sync-batches/`. `--all` for the whole tree, `--remote <list_files
+  json>` to fold in anything the project is missing and count its orphans, `--record` after every
+  batch has succeeded. It refuses to guess: an uncommitted `upload/` or a recorded commit that is no
+  longer an ancestor both stop it and name `--all`.
+- **The plan prints its own cost against a full send, and says when it is not worth it.** A release
+  needs 5-9% of the tree; the widest range this repo has sits at 83%, and above 75% the run says
+  SAVES NOTHING and names `--all` — a full send needs no pointer to be right and cannot miss a file.
+- **`--remote` also writes the owner's delete request**,
+  `.claude/local/design-sync-batches/owner-delete-request.txt`: `obsolete.txt` intersected with what
+  `list_files` still shows, so a path the owner has already cleared is not asked for twice, and an
+  orphan nobody declared is reported as a gap in the list rather than folded into the request.
+- **Do NOT compare content with the project to decide what to send.** `list_files` returns paths and
+  nothing else — no size, no hash, no mtime — so a content comparison means `get_file` per path,
+  which is 6.2 MB of card HTML through the session against 170 KB of path JSON for sending the whole
+  tree blind. Reading it back to save writing costs 36× what it saves. The comparison that IS cheap
+  is git, because the upload tree is committed.
 - Prefer `localPath` over inline `data`: the tool reads, encodes and uploads
   straight from disk, so file contents never enter the model context.
 - Max 256 files per call — split larger bundles across several `write_files`

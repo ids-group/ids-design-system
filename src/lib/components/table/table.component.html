@@ -79,6 +79,7 @@
           @for (col of visibleColumns(); track col.key; let first = $first) {
             <th
               scope="col"
+              dsTooltipWhenClipped
               [class]="headerClasses(col)"
               [class.numeric]="col.align === 'right'"
               [class.pin-first]="first && stickyFirstColumn()"
@@ -88,7 +89,7 @@
               [style.max-width.px]="columnWidth(col)"
               [attr.aria-sort]="ariaSort(col)"
               [attr.data-col-key]="col.key"
-              (pointerenter)="onHeaderEnter($event, col)">
+              [dsTooltip]="col.label">
               @if (sortableCol(col)) {
                 <button
                   type="button"
@@ -295,12 +296,11 @@
                         (blur)="commitEdit(row, col)" />
                     } @else if (cellTemplate(col); as tpl) {
                       @if (col.truncate) {
-                        <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- same pointer-only enhancement as the plain truncate branch below; the value stays in the DOM for AT -->
                         <span
                           class="cell-clip"
+                          dsTooltipWhenClipped
                           [style.max-width.px]="clipWidth(col)"
-                          [attr.title]="cellValue(row, col)"
-                          (click)="onCellClipClick(row, col, $event)">
+                          [dsTooltip]="cellValue(row, col)">
                           <ng-container
                             [ngTemplateOutlet]="tpl"
                             [ngTemplateOutletContext]="{
@@ -319,12 +319,11 @@
                         </ng-container>
                       }
                     } @else if (col.truncate) {
-                      <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- pointer-only enhancement: the clip is visual (CSS ellipsis), keyboard/AT users already get the full DOM text + title; a tab stop per cell would wreck keyboard traversal -->
                       <span
                         class="cell-clip"
+                        dsTooltipWhenClipped
                         [style.max-width.px]="clipWidth(col)"
-                        [attr.title]="cellValue(row, col)"
-                        (click)="onCellClipClick(row, col, $event)">
+                        [dsTooltip]="cellValue(row, col)">
                         @if (cellLink(row, col); as target) {
                           <a
                             class="cell-link"
@@ -442,14 +441,6 @@
   </div>
 }
 
-@if (hasTruncate()) {
-  <ds-popover #cellTextPopover>
-    <div class="cell-text-pop">
-      {{ cellPopoverText() }}
-    </div>
-  </ds-popover>
-}
-
 @if (hasAnyColumnFilter()) {
   <ds-popover
     #columnFilterPopover
@@ -551,14 +542,20 @@
     #rowMenuPopover
     align="end">
     <ds-menu>
-      @for (action of visibleRowActions(); track action.id) {
+      @for (action of visibleRowActions(); track action.id; let first = $first) {
+        <!-- Not before the first item: a divider at the top of a menu separates the menu from its
+             own edge, which is a line with nothing on one side of it. -->
+        @if (action.divider && !first) {
+          <ds-menu-divider />
+        }
+
         <ds-menu-item
           [icon]="action.icon ?? null"
           [error]="action.error ?? false"
           [disabled]="isActionDisabled(action)"
           [description]="actionReason(action)"
           (pressed)="onRowAction(action)">
-          {{ action.label }}
+          {{ actionLabel(action) }}
         </ds-menu-item>
       }
     </ds-menu>

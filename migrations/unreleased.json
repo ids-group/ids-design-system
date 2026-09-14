@@ -1,0 +1,530 @@
+{
+  "version": "unreleased",
+  "items": [
+    {
+      "id": "stat-value-clips-to-one-line",
+      "kind": "behavior",
+      "old": "ds-stat",
+      "new": null,
+      "surface": [
+        "template",
+        "style"
+      ],
+      "action": "Look at every screen with a ds-stat whose value is longer than its tile, and decide per tile whether the clipped value is acceptable or the value should wrap. Shorten any label that was relying on two lines, or widen its tile — the label clips with no hook to undo it.",
+      "appliesWhen": "Any ds-stat, and only where the label or value is wider than the card. A tile whose value fits renders identically and needs nothing. Tiles that already set --ds-stat-value-white-space are unaffected in shape — they wrapped before and wrap now.",
+      "pitfall": "Nothing fails to build and nothing is lost to a screen reader, so this only shows on the screen: a tile that read in full because its value painted over the neighbouring card now ends in an ellipsis, and the text is reachable only by hovering or focusing it.",
+      "restore": "ds-stat { --ds-stat-value-white-space: normal; }",
+      "searchHints": [
+        "ds-stat",
+        "--ds-stat-value-white-space",
+        "--ds-stat-value-font-size"
+      ],
+      "detect": [
+        "<ds-stat",
+        "ds-stat {",
+        "ds-stat["
+      ],
+      "verify": "No ds-stat value paints outside its own card at any viewport width, and every tile whose value is clipped opens a tooltip carrying the full value on hover.",
+      "note": "The value carried `white-space: nowrap` and no overflow rule, so a phrase ran past the card and over its neighbour — 158px past a 240px tile at the default size. It now takes the same single-line ellipsis the other eleven text-bearing components use. The restore snippet keeps every character visible by wrapping, which grows the tile instead; there is no hook that brings back the value escaping the card, because that was the defect. Three hooks shape it and they compose: `white-space`, `--ds-stat-value-lines` for the ellipsis on line N, and `--ds-stat-value-wrap: anywhere` for a word wider than the tile (delete list: stat-wrap-hook-for-spill)."
+    },
+    {
+      "id": "table-cell-discloses-on-hover",
+      "kind": "behavior",
+      "old": "ds-table",
+      "new": null,
+      "surface": [
+        "typescript",
+        "style"
+      ],
+      "action": "Replace any flow or test that clicked a truncated cell, or read its `title`, with one that hovers or focuses it and reads the tooltip.",
+      "appliesWhen": "Only where a column sets `truncate`. A table without truncated columns never rendered the popover and sets no `title`, so nothing changes for it.",
+      "pitfall": "An end-to-end test that asserted `title` on `.cell-clip` now reads null and a click on the cell opens nothing — both pass as \"no error\" while the assertion silently stops testing disclosure.",
+      "restore": null,
+      "searchHints": [
+        "cell-clip",
+        "cell-text-pop",
+        "truncate"
+      ],
+      "detect": [
+        ".cell-clip",
+        "getAttribute('title')",
+        "cell-text-pop",
+        "toHaveAttribute('title'"
+      ],
+      "verify": "Hovering a truncated cell shows the full value, and a cell that already reads in full shows nothing.",
+      "note": "The cell set `title` on every truncated cell and opened a popover on click; the header set `title` from its own pointer-enter handler. All three are `dsTooltipWhenClipped` now, which fires on hover and on focus and stays shut when the text already fits — so the disclosure reaches the keyboard, which the click popover never did. `title` is dropped deliberately: together with a tooltip it renders the same text twice, once styled and once by the OS (delete list: table-cell-text-pop-styling)."
+    },
+    {
+      "id": "exported-class-members-changed",
+      "kind": "behavior",
+      "old": "TooltipDirective",
+      "new": null,
+      "surface": "typescript",
+      "action": "Rename your subclass member where it collides, or add `override` where the base member genuinely matches; drop an override of a member that no longer exists on the base.",
+      "appliesWhen": "Only a class that extends one of the two named below. Subclassing a DS component is unsupported (design-system.md § Components), so most consumers are unaffected.",
+      "pitfall": "A gained name fails the build loudly (TS4114 / TS2416), but a LOST one does not: an `override` of a member the base no longer declares is an error, while a method that merely shadowed one now runs as your own code with nothing calling it.",
+      "restore": null,
+      "searchHints": [
+        "extends TooltipDirective",
+        "extends TableComponent",
+        "extends ButtonComponent",
+        "extends SidenavItemComponent",
+        "extends SidenavGroupComponent",
+        "extends AutocompleteComponent",
+        "extends DatePickerComponent",
+        "extends FieldGroupComponent",
+        "extends InputComponent",
+        "extends SelectComponent",
+        "extends "
+      ],
+      "detect": [
+        "extends TooltipDirective",
+        "extends TableComponent",
+        "extends ButtonComponent",
+        "extends SidenavItemComponent",
+        "extends SidenavGroupComponent",
+        "extends AutocompleteComponent",
+        "extends DatePickerComponent",
+        "extends FieldGroupComponent",
+        "extends InputComponent",
+        "extends SelectComponent"
+      ],
+      "verify": "The consumer app type-checks, and no subclass declares `override` on a member the base no longer has.",
+      "note": "TooltipDirective gained `dsTooltipWhenClipped` and `tipText`; ButtonComponent gained the five destination modifiers plus `routerLinkActiveOptions`, `ariaCurrent` and two resolvers; SidenavItemComponent and SidenavGroupComponent each gained `ariaCurrent` and two resolvers. TableComponent lost `cellPopoverText`, `isClipped`, `onCellClipClick` and `onHeaderEnter` — the three hand-rolled disclosures it carried, now one directive. The compiler enumerates every collision on the first build, which is why the names live here and not in the action."
+    },
+    {
+      "id": "button-border-token-names-the-colour",
+      "kind": "token-rename",
+      "old": "--ds-button-border",
+      "new": "--ds-button-border-color",
+      "surface": "style",
+      "action": "Rename the token where you set it.",
+      "appliesWhen": "Only a stylesheet that sets `--ds-button-border`. `--ds-button-border-width` is a different token and is NOT renamed — check the word boundary before replacing.",
+      "pitfall": "A blind replace of `--ds-button-border` also rewrites `--ds-button-border-width` into `--ds-button-border-color-width`, which resolves to nothing and drops the declaration.",
+      "restore": null,
+      "searchHints": [
+        "--ds-button-border"
+      ],
+      "detect": [
+        "--ds-button-border"
+      ],
+      "verify": "No stylesheet names `--ds-button-border` without the `-color` or `-width` suffix.",
+      "note": "The token sets the border COLOUR, and since the width moved out to `--ds-button-border-width` the bare name read as a `border` shorthand. Rename the longer `--ds-button-border-disabled` first — it is a separate entry, and the shorter name is a prefix of it."
+    },
+    {
+      "id": "button-border-disabled-token-names-the-colour",
+      "kind": "token-rename",
+      "old": "--ds-button-border-disabled",
+      "new": "--ds-button-border-color-disabled",
+      "surface": "style",
+      "action": "Rename the token where you set it.",
+      "appliesWhen": "Only a stylesheet that sets `--ds-button-border-disabled`.",
+      "pitfall": null,
+      "restore": null,
+      "searchHints": [
+        "--ds-button-border-disabled"
+      ],
+      "detect": [
+        "--ds-button-border-disabled"
+      ],
+      "verify": "No stylesheet names `--ds-button-border-disabled`.",
+      "note": "Same correction as the resting colour beside it. Rename this one FIRST: the shorter `--ds-button-border` is a prefix of it, so the other entry run first would corrupt this name."
+    },
+    {
+      "id": "link-aria-current-is-exact",
+      "kind": "behavior",
+      "old": "ds-button[routerLink]",
+      "new": null,
+      "surface": [
+        "typescript",
+        "none"
+      ],
+      "action": "Update any assertion that expected `aria-current=\"page\"` on a link whose destination is a PREFIX of the current URL — it reads `true` now.",
+      "appliesWhen": "Only a `routerLink` destination on `ds-button`, `ds-sidenav-item` or `ds-sidenav-group`, and only where the destination is an ancestor of the current URL. An exact destination still announces `page`. Nothing changes on screen: the `active` class still matches by prefix.",
+      "pitfall": "Nothing renders differently, so a screen is no evidence either way — the only readers are a screen reader and a test that reads the attribute.",
+      "restore": "ariaCurrent=\"page\"",
+      "searchHints": [
+        "aria-current",
+        "routerLinkActive"
+      ],
+      "detect": [
+        "aria-current=\"page\"",
+        "getAttribute('aria-current')",
+        "toHaveAttribute('aria-current'"
+      ],
+      "verify": "A link whose destination IS the current URL announces `page`; a link to a section the reader is inside announces `true`; every other link announces nothing.",
+      "note": "`aria-current` was derived from `routerLinkActive`, which matches by prefix, so a back-link claimed to be the page the reader was leaving. ARIA separates them: `page` is the page you are on, `true` is the current section or an ancestor. `ariaCurrent` overrides the result where a link is a step or a location rather than a page, and `null` silences it."
+    },
+    {
+      "id": "router-link-input-accepts-a-urltree",
+      "kind": "behavior",
+      "old": "ds-button[routerLink]",
+      "new": null,
+      "surface": "typescript",
+      "action": "Handle `UrlTree` where you read a `routerLink` value back off one of these components, or override the input in a subclass.",
+      "appliesWhen": "Only code that READS or OVERRIDES `routerLink` on `ds-button`, `ds-sidenav-item` or `ds-sidenav-group`. Writing it is unaffected — every value that worked before still works.",
+      "pitfall": "A widened union is source-compatible for whoever writes the value and breaking for whoever reads it back, so a consumer feels this only in a type error far from the binding — `link.split('/')` on a value that may now be a `UrlTree`.",
+      "restore": null,
+      "searchHints": [
+        "routerLink"
+      ],
+      "detect": [
+        ".routerLink()",
+        "extends ButtonComponent",
+        "extends SidenavItemComponent",
+        "extends SidenavGroupComponent"
+      ],
+      "verify": "The consumer app type-checks with no cast added at a routerLink read.",
+      "note": "`string | readonly unknown[] | null` became `DsRouterLink`, which adds `UrlTree`. It is what makes `relativeTo` and `preserveFragment` reachable without an input each. A subclass overriding the input breaks on the invariant `equal` position of `InputSignalWithTransform` even where the values are compatible."
+    },
+    {
+      "id": "field-group-chrome-moves-to-an-inner-row",
+      "kind": "behavior",
+      "old": "ds-field-group",
+      "new": null,
+      "surface": "style",
+      "action": "Re-point any rule that styles the group’s box at `ds-field-group .row`, or replace it with the matching `--ds-field-group-*` token.",
+      "appliesWhen": "Only a stylesheet that reaches `ds-field-group` itself to change the border, radius, padding, background or overflow. Overrides written through `--ds-field-group-*` tokens need nothing — the tokens are still declared on the host. Layout properties on the host (width, margin, display) are unaffected.",
+      "pitfall": "The rule still matches an element, so nothing errors and the selector does not go red in a linter — it simply styles a box that no longer draws the border.",
+      "restore": null,
+      "searchHints": [
+        "ds-field-group"
+      ],
+      "detect": [
+        "ds-field-group {",
+        "ds-field-group.",
+        "::ng-deep ds-field-group"
+      ],
+      "verify": "The group renders with your border/radius as before, and the message row sits outside the bordered box.",
+      "note": "The group carries its own message row now, and that line has to sit outside the border — so the host became the column that stacks the two and `.row` became the bordered box. A group with no message keeps the same outer box it had: measured at 40px row and 40px host, growing to 57px only once `error` or `hint` is bound."
+    },
+    {
+      "id": "chart-categorical-tokens-renamed",
+      "kind": "token-rename",
+      "surface": "style",
+      "old": "--chart-cat-1, --chart-cat-2, --chart-cat-3, --chart-cat-4, --chart-cat-5, --chart-cat-6, --chart-cat-7, --chart-cat-8",
+      "new": "--chart-categorical-1, --chart-categorical-2, --chart-categorical-3, --chart-categorical-4, --chart-categorical-5, --chart-categorical-6, --chart-categorical-7, --chart-categorical-8",
+      "action": "Replace the prefix `--chart-cat-` with `--chart-categorical-` on all eight series tokens, keeping the number.",
+      "appliesWhen": "Any stylesheet of yours that reads or re-declares one of the eight, including a theme block. A `--chart-cat-` variable of your own is out of scope, and the eight `--ds-chart-series-1-color` … `--ds-chart-series-8-color` hooks are new rather than renamed.",
+      "pitfall": "The old name is inert, not invalid. A `var()` on it resolves to nothing, which makes the declaration holding it invalid at computed-value time and drops it whole — a series loses its fill rather than falling back to a default, and nothing is reported.",
+      "note": "The palette is spelled out end to end now, so a name can be searched for without being decoded first. The eight VALUES are retuned in the same release, so the rename lands a different colour rather than the same one under a new name: the set is rebuilt around coral and teal, every hue clears 3:1 on white, and no hue falls between 35 and 130, where a colour cannot be both rich and legible. Slot 8 is a neutral now. Read each value back from the installed package rather than assuming the one you saw before.",
+      "searchHints": [
+        "--chart-cat-",
+        "chart-cat"
+      ],
+      "detect": [
+        "--chart-cat-"
+      ],
+      "verify": "No stylesheet names a `--chart-cat-` token, and every series that took its colour from one still paints."
+    },
+    {
+      "id": "chart-sequential-tokens-renamed",
+      "kind": "token-rename",
+      "surface": "style",
+      "old": "--chart-seq-1, --chart-seq-2, --chart-seq-3, --chart-seq-4, --chart-seq-5, --chart-seq-6",
+      "new": "--chart-sequential-1, --chart-sequential-2, --chart-sequential-3, --chart-sequential-4, --chart-sequential-5, --chart-sequential-6",
+      "action": "Replace the prefix `--chart-seq-` with `--chart-sequential-` on all six ramp stops, keeping the number.",
+      "appliesWhen": "Any stylesheet of yours that reads or re-declares one of the six, including a theme block. The ramp is six stops in both themes and neither gained nor lost one.",
+      "pitfall": "The old name is inert, not invalid. A `var()` on it resolves to nothing, which makes the declaration holding it invalid at computed-value time and drops it whole — a heat scale renders unpainted rather than falling back, and nothing is reported.",
+      "note": "Single-hue ramp for ordinal magnitudes, low to high. Values are identical in both the light and the dark theme, where the ramp runs the other way round by design.",
+      "searchHints": [
+        "--chart-seq-",
+        "chart-seq"
+      ],
+      "detect": [
+        "--chart-seq-"
+      ],
+      "verify": "No stylesheet names a `--chart-seq-` token, and a sequential scale still paints across all six stops."
+    },
+    {
+      "id": "chart-divergent-tokens-renamed",
+      "kind": "token-rename",
+      "surface": "style",
+      "old": "--chart-div--3, --chart-div--2, --chart-div--1, --chart-div-0, --chart-div-1, --chart-div-2, --chart-div-3",
+      "new": "--chart-divergent--3, --chart-divergent--2, --chart-divergent--1, --chart-divergent-0, --chart-divergent-1, --chart-divergent-2, --chart-divergent-3",
+      "action": "Replace the prefix `--chart-div-` with `--chart-divergent-` on all seven steps, keeping the suffix exactly as it is.",
+      "appliesWhen": "Any stylesheet of yours that reads or re-declares one of the seven, including a theme block. Only the prefix moves; the signed suffix is untouched.",
+      "pitfall": "The negative steps carry a double hyphen — `--chart-div--3` becomes `--chart-divergent--3`, not `--chart-divergent-3`. Collapsing it points the worst negative step at the best positive one, which is a readable chart with the sign inverted and no way to notice from the code.",
+      "note": "Red through neutral to green for signed data. The three negative steps, the zero step and the three positive steps all keep their meaning and their value in both themes.",
+      "searchHints": [
+        "--chart-div-",
+        "chart-div"
+      ],
+      "detect": [
+        "--chart-div-"
+      ],
+      "verify": "No stylesheet names a `--chart-div-` token, and a signed scale still shows its negative steps in red and its positive steps in green."
+    },
+    {
+      "id": "chart-strong-gridline-token-removed",
+      "kind": "removed-api",
+      "surface": "style",
+      "old": "--chart-grid-line-strong",
+      "new": null,
+      "action": "Delete the declaration. No chart draws an emphasised gridline, so the token fed nothing.",
+      "appliesWhen": "Any stylesheet of yours that declares `--chart-grid-line-strong`. The plain `--chart-grid-line` is a separate token, is renamed rather than removed, and has its own entry.",
+      "pitfall": "`--chart-grid-line` is a prefix of this name, so a sweep that renames the shorter one first rewrites this one into `--chart-grid-line-color-strong` instead of deleting it, and leaves a declaration nothing reads.",
+      "restore": null,
+      "note": "The token fed `--ds-chart-grid-line-strong-color`, which reached no rule, so setting either already painted nothing.",
+      "searchHints": [
+        "--chart-grid-line-strong",
+        "grid-line-strong"
+      ],
+      "detect": [
+        "--chart-grid-line-strong"
+      ],
+      "verify": "No stylesheet names `--chart-grid-line-strong`."
+    },
+    {
+      "id": "chart-color-tokens-gain-color-suffix",
+      "kind": "token-rename",
+      "surface": "style",
+      "old": "--chart-axis-line, --chart-axis-label, --chart-grid-line, --chart-cursor-line, --chart-tooltip-border",
+      "new": "--chart-axis-line-color, --chart-axis-label-color, --chart-grid-line-color, --chart-cursor-line-color, --chart-tooltip-border-color",
+      "action": "Add `-color` to the end of all five names, after renaming `--chart-grid-line-strong`.",
+      "appliesWhen": "Any stylesheet of yours that reads or re-declares one of the five, including a theme block. `--chart-hover-bg-color`, `--chart-tooltip-bg-color` and `--chart-tooltip-text-color` already carried the suffix and keep their names; `--chart-axis-title` is removed rather than renamed and has its own entry.",
+      "pitfall": "The old name is inert, not invalid: a gridline or an axis rule simply stops being painted, and an axis with no line reads as a deliberately minimal chart rather than as a broken override.",
+      "note": "`--chart-grid-line` is a prefix of `--chart-grid-line-strong`, so handle the longer identifier first — it has an entry of its own. The five values are unchanged in both themes.",
+      "searchHints": [
+        "--chart-axis-",
+        "--chart-grid-line",
+        "--chart-cursor-line",
+        "--chart-tooltip-border"
+      ],
+      "detect": [
+        "--chart-axis-line",
+        "--chart-axis-label",
+        "--chart-grid-line",
+        "--chart-cursor-line",
+        "--chart-tooltip-border"
+      ],
+      "verify": "Every chart colour token in your styles ends in `-color`, and axis lines, gridlines, the crosshair and the tooltip border all still paint."
+    },
+    {
+      "id": "chart-axis-title-token-removed",
+      "kind": "removed-api",
+      "surface": "style",
+      "old": "--chart-axis-title",
+      "new": null,
+      "action": "Delete the declaration. No chart draws an axis title, so the token fed nothing.",
+      "appliesWhen": "Any stylesheet of yours that declares `--chart-axis-title`.",
+      "pitfall": "It is a prefix of nothing and nothing is a prefix of it, so a sweep is safe — but the neighbouring `--chart-axis-line` and `--chart-axis-label` are RENAMED rather than removed, and deleting those loses the axis.",
+      "restore": null,
+      "note": "The token fed `--ds-chart-axis-title-color`, which reached no rule, so setting either already painted nothing.",
+      "searchHints": [
+        "--chart-axis-title"
+      ],
+      "detect": [
+        "--chart-axis-title"
+      ],
+      "verify": "No stylesheet names `--chart-axis-title`."
+    },
+    {
+      "id": "chart-line-width-bold-token-renamed",
+      "kind": "token-rename",
+      "surface": "style",
+      "old": "--chart-line-w-bold",
+      "new": "--chart-line-width-bold",
+      "action": "Rename `--chart-line-w-bold` to `--chart-line-width-bold`, before renaming the shorter `--chart-line-w`.",
+      "appliesWhen": "Any stylesheet of yours that sets the emphasised line-series stroke width. The plain `--chart-line-w` is a separate token with its own entry.",
+      "pitfall": "The old name is inert, not invalid: the stroke falls back to whatever the rule around it declared, so an emphasised line comes out the same weight as the rest and the chart still looks finished.",
+      "note": "`w` was the only abbreviation in the geometry set that a reader had to expand before searching for it. The value is unchanged at 3px.",
+      "searchHints": [
+        "--chart-line-w-bold",
+        "line-w-bold"
+      ],
+      "detect": [
+        "--chart-line-w-bold"
+      ],
+      "verify": "No stylesheet names `--chart-line-w-bold`, and an emphasised line still draws heavier than a plain one."
+    },
+    {
+      "id": "chart-dot-radius-active-token-renamed",
+      "kind": "token-rename",
+      "surface": "style",
+      "old": "--chart-dot-r-active",
+      "new": "--chart-dot-radius-active",
+      "action": "Rename `--chart-dot-r-active` to `--chart-dot-radius-active`, before renaming the shorter `--chart-dot-r`.",
+      "appliesWhen": "Any stylesheet of yours that sets the hovered or selected data-point radius. The resting `--chart-dot-r` is a separate token with its own entry.",
+      "pitfall": "The old name is inert, not invalid: the active dot keeps the resting radius, so hovering a point gives no size feedback at all while everything else about the interaction still works.",
+      "note": "`r` read as a radius only if you already knew the set. The value is unchanged at 6px.",
+      "searchHints": [
+        "--chart-dot-r-active",
+        "dot-r-active"
+      ],
+      "detect": [
+        "--chart-dot-r-active"
+      ],
+      "verify": "No stylesheet names `--chart-dot-r-active`, and a hovered data point still grows."
+    },
+    {
+      "id": "chart-geometry-abbreviations-spelled-out",
+      "kind": "token-rename",
+      "surface": "style",
+      "old": "--chart-axis-fs, --chart-line-w, --chart-dot-r",
+      "new": "--chart-axis-font-size, --chart-line-width, --chart-dot-radius",
+      "action": "Rename `--chart-axis-fs` to `--chart-axis-font-size`, `--chart-line-w` to `--chart-line-width` and `--chart-dot-r` to `--chart-dot-radius`.",
+      "appliesWhen": "Any stylesheet of yours that sets the axis label size, the line-series stroke width or the resting data-point radius. `--chart-tick-size` and `--chart-bar-gap` were never abbreviated and keep their names.",
+      "pitfall": "The old name is inert, not invalid: an axis label falls back to the surrounding font size and a dot to whatever the rule around it declared, so the chart still renders and only its proportions are wrong.",
+      "note": "Rename the two longer identifiers first — `--chart-line-w-bold` and `--chart-dot-r-active` each have an entry of their own, and a sweep that starts with the short names relies on replace order rather than on matching a whole name. All three values are unchanged.",
+      "searchHints": [
+        "--chart-axis-fs",
+        "--chart-line-w",
+        "--chart-dot-r"
+      ],
+      "detect": [
+        "--chart-axis-fs",
+        "--chart-line-w",
+        "--chart-dot-r"
+      ],
+      "verify": "No stylesheet names `--chart-axis-fs`, `--chart-line-w` or `--chart-dot-r`, and axis labels, line strokes and data-point dots keep the sizes they had."
+    },
+    {
+      "id": "table-row-action-label-accepts-a-function",
+      "kind": "behavior",
+      "old": "TableRowAction",
+      "new": null,
+      "surface": "typescript",
+      "action": "Narrow `action.label` before using it as a string wherever you read one back off a `TableRowAction`.",
+      "appliesWhen": "Only code that READS `label` off the type — a `rowActionSelected` handler branching on the text, a test asserting it, a custom renderer. Writing it is unaffected: every string that worked still works.",
+      "pitfall": "A widened union is source-compatible for whoever writes the value, so this surfaces far from the declaration — a template interpolating `action.label` prints the function source instead of failing.",
+      "restore": null,
+      "searchHints": [
+        "TableRowAction",
+        "rowActions",
+        "rowActionSelected"
+      ],
+      "detect": [
+        ".label",
+        "action.label",
+        "rowActionSelected"
+      ],
+      "verify": "No read of a row action’s `label` assumes a string without narrowing.",
+      "note": "`label: string` became `string | ((row: T) => string)`, the same widening `disabledReason` already carries. It exists so one action can read two ways under one id — the alternative was two ids with mirrored `hidden` predicates. Branch on `id`, never on the label text."
+    },
+    {
+      "id": "field-group-context-gains-two-members",
+      "kind": "behavior",
+      "old": "DsFieldGroupContext",
+      "new": null,
+      "surface": [
+        "typescript"
+      ],
+      "action": "Add `invalidResolved: () => boolean` and `messageId: () => string | null` to every object you provide for `DS_FIELD_GROUP`.",
+      "appliesWhen": "Only a wrapper that PROVIDES `DS_FIELD_GROUP` so that DS fields behave as segments inside it. Injecting the token to read the context is unaffected, and so is every consumer who only uses `ds-field-group` itself.",
+      "pitfall": "`() => true` on `invalidResolved` paints every segment invalid and sets `aria-invalid` on all of them; `() => 'x'` on `messageId` points each segment's `aria-describedby` at an element that does not exist, which a screen reader reads as no description at all. Neither fails the build.",
+      "restore": "invalidResolved: () => false, messageId: () => null",
+      "searchHints": [
+        "DS_FIELD_GROUP",
+        "DsFieldGroupContext",
+        "sizeResolved"
+      ],
+      "detect": [
+        "provide: DS_FIELD_GROUP",
+        "satisfies DsFieldGroupContext",
+        "sizeResolved:"
+      ],
+      "verify": "A wrapper providing the token compiles, and a segment inside it carries `aria-invalid` only while the wrapper reports itself invalid.",
+      "note": "A segment has to read the group's resolved error state — an `error` string counts, not only the `invalid` flag — and has to add the group's one message to its own `aria-describedby`. The interface could not carry either before, so a segment inside a custom wrapper announced nothing. `() => false` and `() => null` reproduce the old behaviour exactly."
+    }
+  ],
+  "informational": [
+    "`ds-button` takes five more style hooks — `--ds-button-font-family`, `--ds-button-line-height`, `--ds-button-border-width`, `--ds-button-label-color-hover` and `--ds-button-label-color-active`. Every one defaults to the value the stylesheet read before it, so nothing moves for a button that sets none of them. Worth knowing if you reached the same values the hard way: `ds-button { --font-sans: … }` and a subtree override of `--border-width-default` both have a hook of their own now, and neither of those workarounds stops working.",
+    "`ds-stat` takes two more hooks beside the existing `--ds-stat-value-white-space`: `--ds-stat-value-lines` puts the ellipsis on the line you name once the value wraps, and `--ds-stat-value-wrap: anywhere` breaks a word wider than the tile. Both default to the shape the component already had, so a tile that sets neither is unaffected by them.",
+    "`dsTooltipWhenClipped` is public on the tooltip directive: the tip opens only while its host is showing less text than it holds, and with no `dsTooltip` text it discloses the host's own text. `isTextClipped(element)` from `/core` is the same test on its own — horizontal only, descendants included. Additive; an existing `[dsTooltip]` binding behaves exactly as before.",
+    "`ds-button` forwards `fragment`, `queryParams`, `queryParamsHandling`, `target` and `rel` to the anchor it renders, and `routerLink` on it, `ds-sidenav-item` and `ds-sidenav-group` now also accepts a `UrlTree` for the options with no input of their own. All additive. If you kept a hand-written button class for controls that needed one of these, it can go (delete list: hand-written-button-class-for-modifiers).",
+    "`routerLinkActiveOptions` and `ariaCurrent` are public on the same three components — the first moves what the `active` class matches, the second overrides what the link announces. Neither is needed for the corrected default.",
+    "`ds-field-group` takes `error`, `hint` and `warning` — the same message inputs every field takes, resolved by the same code. `error` turns the state on and carries the text; `invalid` stays the flag for when the text lives in a form-level summary. Every segment gains `aria-invalid` while the group is in error and points at the one message through `aria-describedby`. Additive: a group binding neither renders exactly as before.",
+    "`ds-bar-chart` is new — horizontal bars with a label, a value and a percentage per row, an optional data table, and a `color` override per row.",
+    "A public override layer sits over the chart palette: `--ds-chart-series-1-color` through `--ds-chart-series-8-color`, plus `--ds-chart-axis-line-color`, `--ds-chart-axis-label-color`, `--ds-chart-axis-title-color`, `--ds-chart-axis-font-size`, `--ds-chart-grid-line-color`, `--ds-chart-grid-line-strong-color`, `--ds-chart-hover-bg-color`, `--ds-chart-cursor-line-color`, `--ds-chart-tooltip-bg-color`, `--ds-chart-tooltip-text-color`, `--ds-chart-tooltip-border-color`, `--ds-chart-bar-gap`, `--ds-chart-line-width`, `--ds-chart-line-width-bold`, `--ds-chart-dot-radius`, `--ds-chart-dot-radius-active` and `--ds-chart-tick-size`. Each defaults to the palette token behind it, so nothing moves until you set one; set these rather than the palette, and recolouring one series costs one declaration instead of the whole ramp.",
+    "`TableRowAction` gains `divider?: boolean`, which draws a line above the item — for the destructive tail that colour alone was separating. Additive, and ignored on the first item because a line at the top of a menu has nothing on one side of it.",
+    "A field that is disabled no longer sets `aria-invalid`, on all fifteen. Nothing renders differently — the error paint already excluded disabled — and the message text still shows. Only a test asserting `aria-invalid` on a disabled control is affected.",
+    "Five chart components ship: `ds-bar-chart`, `ds-column-chart`, `ds-donut-chart`, `ds-funnel-chart` and `ds-line-chart`. Each takes a `caption`, a `summary` for the accessible name, a `loading` skeleton, an `emptyText` and a `valueFormat`, and each offers its numbers again as a table under a `dataTable: 'toggle' | 'visible' | 'none'` disclosure. All new; nothing existing changes.",
+    "Chart colour is three families now, and picking the wrong one is the usual chart bug. `--ds-chart-series-1-color` … `--ds-chart-series-8-color` are CATEGORICAL — for marks that are different things, such as donut slices and line series. `--ds-chart-series-default-color` with `--ds-chart-series-accent-color` is a SINGLE SERIES measured repeatedly — bar rows, columns — where every mark shares one colour and the accent marks the one to land on. `--ds-chart-ramp-1-color` … `--ds-chart-ramp-8-color` is one hue light to deep, for the ordered stages of a single quantity. The default and accent tokens and the eight ramp tokens are new; the eight series tokens keep their names.",
+    "Every interactive chart is keyboard-operable. Set `interactive` on `ds-bar-chart`, `ds-column-chart`, `ds-donut-chart` or `ds-funnel-chart` and each mark joins the tab order as a `role=\"button\"`, answering Enter and Space with the same output a click emits, while the container announces itself as a `group` rather than an `img`. Without the flag the chart stays one image to a screen reader and the annex table carries the numbers. The click output fires either way, so a binding written without the flag is unaffected.",
+    "`ds-donut-chart` takes `maxSlices` and `otherLabel`: past the cap the smallest slices are summed into one slice on the neutral eighth palette colour. Off by default, so an existing ring is unaffected. `ds-number-stepper` takes `--ds-number-stepper-field-width`, defaulting to the width it already had — set it where values carry more digits than that width holds, since a longer one is clipped rather than wrapped."
+  ],
+  "deleteList": [
+    {
+      "id": "stat-wrap-hook-for-spill",
+      "surface": "style",
+      "find": [
+        "--ds-stat-value-white-space: normal",
+        "--ds-stat-value-white-space:normal"
+      ],
+      "why": "the value clips by default now, so the hook is no longer what stops it painting over the tile beside it",
+      "replaceWith": "nothing where it was written only to contain the value; keep it where the tile is meant to wrap and grow taller, which is still the only way to show every character"
+    },
+    {
+      "id": "stat-own-value-clip",
+      "surface": "style",
+      "find": [
+        "ds-stat .value",
+        "::ng-deep ds-stat"
+      ],
+      "why": "the component clips the value itself, through `overflow: clip` with a clip margin — a hand-written `overflow: hidden` on the same element shaves the descenders the component now keeps",
+      "replaceWith": "nothing"
+    },
+    {
+      "id": "table-cell-text-pop-styling",
+      "surface": "style",
+      "find": [
+        ".cell-text-pop",
+        "ds-table .cell-text-pop"
+      ],
+      "why": "the full-value popover is gone; a clipped cell opens a tooltip instead",
+      "replaceWith": "the tooltip panel, if the disclosure needs styling at all"
+    },
+    {
+      "id": "hand-written-button-class-for-modifiers",
+      "surface": [
+        "style",
+        "template"
+      ],
+      "find": [
+        "class=\"btn",
+        "class=\"btn btn--",
+        ".btn--primary"
+      ],
+      "why": "the destination modifiers that forced a control to stay hand-written — `fragment`, `queryParams`, `target`, `rel` — are inputs on `ds-button` now",
+      "replaceWith": "`ds-button` with the matching input; keep the class only for a control that is genuinely not a button"
+    },
+    {
+      "id": "routerlink-imported-for-extra-inputs",
+      "surface": "typescript",
+      "find": [
+        "RouterLink",
+        "imports: [RouterLink"
+      ],
+      "why": "importing it to write `[queryParams]` or `[fragment]` on a `<ds-button>` put a second RouterLink on the host that disagreed with the anchor\\u2019s about the destination",
+      "replaceWith": "the component\\u2019s own inputs; keep the import where you use `RouterLink` on your own anchors"
+    },
+    {
+      "id": "chart-axis-title-colour-hook",
+      "surface": "style",
+      "find": [
+        "--ds-chart-axis-title-color"
+      ],
+      "why": "no chart draws an axis title, so the token reached no rule and setting it changed nothing",
+      "replaceWith": "nothing"
+    },
+    {
+      "id": "chart-strong-gridline-hook",
+      "surface": "style",
+      "find": [
+        "--ds-chart-grid-line-strong-color"
+      ],
+      "why": "no chart draws a strong gridline, so the token reached no rule and setting it changed nothing",
+      "replaceWith": "nothing"
+    },
+    {
+      "id": "chart-axis-tick-size-hook",
+      "surface": "style",
+      "find": [
+        "--ds-chart-tick-size"
+      ],
+      "why": "no chart draws tick marks on its axes, so the token reached no rule and setting it changed nothing",
+      "replaceWith": "nothing"
+    }
+  ]
+}

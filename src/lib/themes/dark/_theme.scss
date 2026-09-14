@@ -1,19 +1,10 @@
-// =========================================================================
-// Dark theme — Tier 2 role overrides.
+// Dark theme — Tier 2 role overrides. Activation (:root[data-theme='dark']) lives in
+// styles/_theme-activation.scss; dark is opt-in, with no prefers-color-scheme switch.
 //
-// Composes the dark palette (neutral ramp + shadow-l 95%) with the shared
-// role structure, then overrides only the roles whose VALUES differ from
-// the light defaults. The activation selector (:root[data-theme='dark'])
-// lives in styles/_theme-activation.scss. Dark is opt-in — light is the
-// default; there is no automatic prefers-color-scheme switch.
-//
-// Most roles follow the inverted --neutral-* ramp automatically (custom
-// props resolve at use-time). This file overrides ONLY roles that can't
-// follow the flip: tint/subtle surfaces (near-white *-50 picks → dark hue
-// tints), on-tint text (*-text / *-strong → lighter stops), hover/pressed
-// direction, scrim (must stay dark), focus halo alpha, and charts.
+// Most roles follow the inverted --neutral-* ramp on their own, because custom props resolve at
+// use-time. Overridden here are ONLY the roles that cannot follow the flip: tint/subtle surfaces,
+// on-tint text, hover/pressed direction, scrim (must stay dark), focus halo alpha, and charts.
 // On-dark-fill text points at --static-ink; on-light-fill uses literal white.
-// =========================================================================
 
 @use 'palette';
 @use '../semantic';
@@ -60,7 +51,6 @@
   --text-link:            hsl(var(--primary-h) 90% 74%);
   --link-visited:         hsl(var(--primary-h) 50% 70%);
 
-  // Status families: dark tint bg + border, lighter text.
   --success-subtitle:     hsl(132deg 38% 14%);
   --success-muted:        hsl(132deg 34% 20%);
   --success-muted-strong: hsl(132deg 30% 28%);
@@ -95,22 +85,40 @@
   --chart-hover-bg-color:     hsl(0deg 0% 100% / 6%); // light wash (default dark wash is invisible on dark)
   --chart-tooltip-bg-color:   var(--surface-overlay);  // native dark tooltip, not an inverted light box
   --chart-tooltip-text-color: var(--text-primary);
-  --chart-tooltip-border:     var(--border-strong);
+  --chart-tooltip-border-color:     var(--border-strong);
+
+  // The two neutrals of the chart palette. Both are pushed dark on light so a lightness gap keeps
+  // them off the emerald; on a dark canvas that gap points the wrong way and they read as holes in
+  // the chart, so both flip. Slot 8 lands at dE 12 from the orchid under protanopia rather than the
+  // dE 15 the rest of the set holds — the orchid desaturates almost to grey there, and 7 and 8 are
+  // the "rest" / "other" buckets where such a collision is placed on purpose.
+  --chart-categorical-8: hsl(222deg 14% 60%);
+  --chart-series-default: hsl(222deg 14% 64%);
+
+  // Ramp — flip so first → last reads deep → bright on a dark canvas.
+  --chart-ramp-1: hsl(  8deg 52% 32%);
+  --chart-ramp-2: hsl(  8deg 56% 37%);
+  --chart-ramp-3: hsl(  8deg 61% 42%);
+  --chart-ramp-4: hsl(  8deg 66% 47%);
+  --chart-ramp-5: hsl(  8deg 70% 53%);
+  --chart-ramp-6: hsl(  8deg 75% 58%);
+  --chart-ramp-7: hsl(  8deg 79% 64%);
+  --chart-ramp-8: hsl(  8deg 84% 70%);
 
   // Sequential — flip so low → high reads dark → bright on a dark canvas.
-  --chart-seq-1: var(--blue-800);
-  --chart-seq-2: var(--blue-700);
-  --chart-seq-3: var(--blue-600);
-  --chart-seq-4: var(--blue-500);
-  --chart-seq-5: var(--blue-400);
-  --chart-seq-6: var(--blue-300);
+  --chart-sequential-1: var(--blue-800);
+  --chart-sequential-2: var(--blue-700);
+  --chart-sequential-3: var(--blue-600);
+  --chart-sequential-4: var(--blue-500);
+  --chart-sequential-5: var(--blue-400);
+  --chart-sequential-6: var(--blue-300);
 
   // Divergent — bright red ← dark-neutral zero → bright green (|value| → brightness).
-  --chart-div--3: hsl(0deg 70% 62%);
-  --chart-div--2: hsl(0deg 55% 46%);
-  --chart-div--1: hsl(0deg 45% 32%);
-  --chart-div-0:  var(--neutral-150);
-  --chart-div-1:  hsl(140deg 40% 32%);
-  --chart-div-2:  hsl(140deg 48% 46%);
-  --chart-div-3:  hsl(140deg 55% 60%);
+  --chart-divergent--3: hsl(0deg 70% 62%);
+  --chart-divergent--2: hsl(0deg 55% 46%);
+  --chart-divergent--1: hsl(0deg 45% 32%);
+  --chart-divergent-0:  var(--neutral-150);
+  --chart-divergent-1:  hsl(140deg 40% 32%);
+  --chart-divergent-2:  hsl(140deg 48% 46%);
+  --chart-divergent-3:  hsl(140deg 55% 60%);
 }

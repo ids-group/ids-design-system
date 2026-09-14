@@ -1,4 +1,28 @@
 export { resolveBrandValue } from './brand-defaults';
+export {
+  CHART_RAMP_COLORS,
+  CHART_SERIES_COLORS,
+  chartColors,
+} from './chart-palette.generated';
+export {
+  formatPercent,
+  formatTick,
+  formatValue,
+  largestRemainder,
+} from './charts-format';
+export { elementWidth } from './charts-measure';
+export {
+  bandScale,
+  linearScale,
+  niceMax,
+  tickStep,
+  tickValues,
+} from './charts-scale';
+export type { BandScale } from './charts-scale';
+export { staggerDelay } from './charts-motion';
+export { focusMark, nextRovingIndex } from './charts-roving';
+export { describeSeries } from './charts-summary';
+export type { SummaryPoint } from './charts-summary';
 export { chipFit } from './chip-overflow';
 export { DsChipTemplateDirective } from './chip-template.directive';
 export {
@@ -7,8 +31,13 @@ export {
   valueControlBridge,
 } from './control-value-accessor';
 export { DsCreateTemplateDirective } from './create-template.directive';
-export { dsDestination } from './destination';
-export type { DsDestination } from './destination';
+export { dsAriaCurrent, dsDestination } from './destination';
+export type {
+  DsAriaCurrent,
+  DsDestination,
+  DsLinkModifiers,
+  DsRouterLink,
+} from './destination';
 export { DsEmptyTemplateDirective } from './empty-template.directive';
 export { DsFieldBase } from './field-base';
 export { FieldClickFocusDirective } from './field-click-focus.directive';

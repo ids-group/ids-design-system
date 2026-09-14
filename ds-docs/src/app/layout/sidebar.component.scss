@@ -277,6 +277,19 @@
     border-color var(--duration-fast) var(--ease-standard);
 }
 
+/* A tick off the thread, stopping short of the label: the line alone joins the chapters to each
+   other, this joins each chapter to the line. */
+.chapter::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: var(--space-2-5);
+  height: var(--border-width-default);
+  background: var(--border-divider);
+  transition: background-color var(--duration-fast) var(--ease-standard);
+}
+
 .chapter:hover {
   color: var(--text-primary);
   background: var(--surface-secondary);
@@ -286,6 +299,10 @@
   color: var(--accent-strong);
   border-left-color: var(--accent-strong);
   font-weight: var(--font-weight-bold);
+}
+
+.chapter.is-active::before {
+  background: var(--accent-strong);
 }
 
 .start-link {

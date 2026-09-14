@@ -711,144 +711,209 @@ export const CHARTS: readonly ColourRow[] = [
     "notes": "Chart legend swatch dot size (defaults to --icon-2xs, showcase)."
   },
   {
-    "name": "--chart-cat-1",
-    "value": "hsl(229deg 100% 59%)",
+    "name": "--chart-categorical-1",
+    "value": "hsl(  8deg 78% 58%)",
     "notes": "Categorical chart series colour 1."
   },
   {
-    "name": "--chart-cat-2",
-    "value": "hsl(165deg  72% 38%)",
+    "name": "--chart-categorical-2",
+    "value": "hsl(172deg 82% 36%)",
     "notes": "Categorical chart series colour 2."
   },
   {
-    "name": "--chart-cat-3",
-    "value": "hsl( 24deg  95% 55%)",
+    "name": "--chart-categorical-3",
+    "value": "hsl(222deg 70% 62%)",
     "notes": "Categorical chart series colour 3."
   },
   {
-    "name": "--chart-cat-4",
-    "value": "hsl(330deg  82% 55%)",
+    "name": "--chart-categorical-4",
+    "value": "hsl(266deg 62% 66%)",
     "notes": "Categorical chart series colour 4."
   },
   {
-    "name": "--chart-cat-5",
-    "value": "hsl(45deg   95% 50%)",
+    "name": "--chart-categorical-5",
+    "value": "hsl(330deg 70% 62%)",
     "notes": "Categorical chart series colour 5."
   },
   {
-    "name": "--chart-cat-6",
-    "value": "hsl(190deg  85% 45%)",
+    "name": "--chart-categorical-6",
+    "value": "hsl(152deg 58% 41%)",
     "notes": "Categorical chart series colour 6."
   },
   {
-    "name": "--chart-cat-7",
-    "value": "hsl(280deg  60% 60%)",
+    "name": "--chart-categorical-7",
+    "value": "hsl(300deg 62% 60%)",
     "notes": "Categorical chart series colour 7."
   },
   {
-    "name": "--chart-cat-8",
-    "value": "hsl(130deg  45% 50%)",
+    "name": "--chart-categorical-8",
+    "value": "hsl(222deg 14% 29%)",
     "notes": "Categorical chart series colour 8."
   },
   {
-    "name": "--chart-seq-1",
+    "name": "--chart-series-default",
+    "value": "hsl(222deg 16% 42%)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-series-accent",
+    "value": "var(--chart-categorical-2)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-ramp-1",
+    "value": "hsl(  8deg 78% 76%)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-ramp-2",
+    "value": "hsl(  8deg 78% 72%)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-ramp-3",
+    "value": "hsl(  8deg 78% 69%)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-ramp-4",
+    "value": "hsl(  8deg 78% 65%)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-ramp-5",
+    "value": "hsl(  8deg 78% 62%)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-ramp-6",
+    "value": "hsl(  8deg 77% 58%)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-ramp-7",
+    "value": "hsl(  8deg 75% 55%)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-ramp-8",
+    "value": "hsl(  8deg 72% 51%)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-sequential-1",
     "value": "var(--blue-100)",
     "notes": "Sequential chart scale colour, step 1 (lightest)."
   },
   {
-    "name": "--chart-seq-2",
+    "name": "--chart-sequential-2",
     "value": "var(--blue-200)",
     "notes": "Sequential chart scale colour, step 2."
   },
   {
-    "name": "--chart-seq-3",
+    "name": "--chart-sequential-3",
     "value": "var(--blue-300)",
     "notes": "Sequential chart scale colour, step 3."
   },
   {
-    "name": "--chart-seq-4",
+    "name": "--chart-sequential-4",
     "value": "var(--blue-500)",
     "notes": "Sequential chart scale colour, step 4."
   },
   {
-    "name": "--chart-seq-5",
+    "name": "--chart-sequential-5",
     "value": "var(--blue-700)",
     "notes": "Sequential chart scale colour, step 5."
   },
   {
-    "name": "--chart-seq-6",
+    "name": "--chart-sequential-6",
     "value": "var(--blue-900)",
     "notes": "Sequential chart scale colour, step 6 (darkest)."
   },
   {
-    "name": "--chart-div--3",
-    "value": "hsl(0deg 70% 40%)",
+    "name": "--chart-divergent--3",
+    "value": "hsl(  8deg 48% 38%)",
     "notes": "Diverging chart scale colour, negative extreme (step -3)."
   },
   {
-    "name": "--chart-div--2",
-    "value": "hsl(0deg 60% 58%)",
+    "name": "--chart-divergent--2",
+    "value": "hsl(  8deg 42% 56%)",
     "notes": "Diverging chart scale colour, negative step -2."
   },
   {
-    "name": "--chart-div--1",
-    "value": "hsl(0deg 50% 80%)",
+    "name": "--chart-divergent--1",
+    "value": "hsl(  8deg 34% 80%)",
     "notes": "Diverging chart scale colour, negative step -1."
   },
   {
-    "name": "--chart-div-0",
-    "value": "hsl(225deg 8% 92%)",
+    "name": "--chart-divergent-0",
+    "value": "hsl(225deg  8% 92%)",
     "notes": "Diverging chart scale colour, neutral midpoint."
   },
   {
-    "name": "--chart-div-1",
-    "value": "hsl(140deg 35% 80%)",
+    "name": "--chart-divergent-1",
+    "value": "hsl(145deg 28% 80%)",
     "notes": "Diverging chart scale colour, positive step 1."
   },
   {
-    "name": "--chart-div-2",
-    "value": "hsl(140deg 45% 55%)",
+    "name": "--chart-divergent-2",
+    "value": "hsl(145deg 38% 52%)",
     "notes": "Diverging chart scale colour, positive step 2."
   },
   {
-    "name": "--chart-div-3",
-    "value": "hsl(140deg 55% 35%)",
+    "name": "--chart-divergent-3",
+    "value": "hsl(145deg 46% 34%)",
     "notes": "Diverging chart scale colour, positive extreme (step 3)."
   },
   {
-    "name": "--chart-axis-line",
+    "name": "--chart-frame-border-color",
+    "value": "var(--border-default)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-frame-border-width",
+    "value": "var(--border-width-default)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-frame-radius",
+    "value": "var(--radius-lg)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-frame-padding",
+    "value": "var(--space-5)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-frame-bg-color",
+    "value": "var(--surface-default)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-axis-line-color",
     "value": "var(--neutral-300)",
     "notes": "Chart axis line colour."
   },
   {
-    "name": "--chart-axis-label",
+    "name": "--chart-axis-label-color",
     "value": "var(--text-tertiary)",
     "notes": "Chart axis tick label colour."
   },
   {
-    "name": "--chart-axis-title",
-    "value": "var(--text-secondary)",
-    "notes": "Chart axis title colour."
-  },
-  {
-    "name": "--chart-grid-line",
+    "name": "--chart-grid-line-color",
     "value": "var(--neutral-150)",
     "notes": "Chart background grid line colour."
   },
   {
-    "name": "--chart-grid-line-strong",
-    "value": "var(--neutral-200)",
-    "notes": "Chart background grid line colour, emphasised (e.g. zero line)."
-  },
-  {
-    "name": "--chart-tick-size",
-    "value": "4px",
-    "notes": "Chart axis tick mark length (4px)."
-  },
-  {
-    "name": "--chart-axis-fs",
+    "name": "--chart-axis-font-size",
     "value": "var(--font-size-2xs)",
     "notes": "Chart axis label font size (var(--font-size-2xs))."
+  },
+  {
+    "name": "--chart-dim-opacity",
+    "value": "0.3",
+    "notes": ""
   },
   {
     "name": "--chart-hover-bg-color",
@@ -856,9 +921,19 @@ export const CHARTS: readonly ColourRow[] = [
     "notes": "Chart hover-state highlight background colour."
   },
   {
-    "name": "--chart-cursor-line",
+    "name": "--chart-cursor-line-color",
     "value": "var(--neutral-400)",
     "notes": "Chart crosshair/cursor line colour."
+  },
+  {
+    "name": "--chart-focus-ring-color",
+    "value": "white",
+    "notes": ""
+  },
+  {
+    "name": "--chart-focus-halo-color",
+    "value": "var(--static-ink)",
+    "notes": ""
   },
   {
     "name": "--chart-tooltip-bg-color",
@@ -871,7 +946,7 @@ export const CHARTS: readonly ColourRow[] = [
     "notes": "Chart tooltip text colour."
   },
   {
-    "name": "--chart-tooltip-border",
+    "name": "--chart-tooltip-border-color",
     "value": "var(--neutral-700)",
     "notes": "Chart tooltip border colour."
   },
@@ -881,24 +956,224 @@ export const CHARTS: readonly ColourRow[] = [
     "notes": "Chart bar-series inter-bar gap (4px)."
   },
   {
-    "name": "--chart-line-w",
+    "name": "--chart-line-width",
     "value": "2px",
     "notes": "Chart line series stroke width (2px)."
   },
   {
-    "name": "--chart-line-w-bold",
+    "name": "--chart-line-width-bold",
     "value": "3px",
     "notes": "Chart line series stroke width, emphasised (3px)."
   },
   {
-    "name": "--chart-dot-r",
+    "name": "--chart-dot-radius",
     "value": "4px",
     "notes": "Chart line/scatter series dot radius (4px)."
   },
   {
-    "name": "--chart-dot-r-active",
+    "name": "--chart-dot-radius-active",
     "value": "6px",
     "notes": "Chart line/scatter series dot radius, active/hover state (6px)."
+  },
+  {
+    "name": "--ds-chart-series-1-color",
+    "value": "var(--chart-categorical-1)",
+    "notes": "Colour of the first chart series. Set this, not --chart-categorical-1."
+  },
+  {
+    "name": "--ds-chart-series-2-color",
+    "value": "var(--chart-categorical-2)",
+    "notes": "Colour of the second chart series. Set this, not --chart-categorical-2."
+  },
+  {
+    "name": "--ds-chart-series-3-color",
+    "value": "var(--chart-categorical-3)",
+    "notes": "Colour of the third chart series. Set this, not --chart-categorical-3."
+  },
+  {
+    "name": "--ds-chart-series-4-color",
+    "value": "var(--chart-categorical-4)",
+    "notes": "Colour of the fourth chart series. Set this, not --chart-categorical-4."
+  },
+  {
+    "name": "--ds-chart-series-5-color",
+    "value": "var(--chart-categorical-5)",
+    "notes": "Colour of the fifth chart series. Set this, not --chart-categorical-5."
+  },
+  {
+    "name": "--ds-chart-series-6-color",
+    "value": "var(--chart-categorical-6)",
+    "notes": "Colour of the sixth chart series. Set this, not --chart-categorical-6."
+  },
+  {
+    "name": "--ds-chart-series-7-color",
+    "value": "var(--chart-categorical-7)",
+    "notes": "Colour of the seventh chart series. Set this, not --chart-categorical-7."
+  },
+  {
+    "name": "--ds-chart-series-8-color",
+    "value": "var(--chart-categorical-8)",
+    "notes": "Colour of the eighth chart series. Set this, not --chart-categorical-8."
+  },
+  {
+    "name": "--ds-chart-series-default-color",
+    "value": "var(--chart-series-default)",
+    "notes": ""
+  },
+  {
+    "name": "--ds-chart-series-accent-color",
+    "value": "var(--chart-series-accent)",
+    "notes": ""
+  },
+  {
+    "name": "--ds-chart-ramp-1-color",
+    "value": "var(--chart-ramp-1)",
+    "notes": ""
+  },
+  {
+    "name": "--ds-chart-ramp-2-color",
+    "value": "var(--chart-ramp-2)",
+    "notes": ""
+  },
+  {
+    "name": "--ds-chart-ramp-3-color",
+    "value": "var(--chart-ramp-3)",
+    "notes": ""
+  },
+  {
+    "name": "--ds-chart-ramp-4-color",
+    "value": "var(--chart-ramp-4)",
+    "notes": ""
+  },
+  {
+    "name": "--ds-chart-ramp-5-color",
+    "value": "var(--chart-ramp-5)",
+    "notes": ""
+  },
+  {
+    "name": "--ds-chart-ramp-6-color",
+    "value": "var(--chart-ramp-6)",
+    "notes": ""
+  },
+  {
+    "name": "--ds-chart-ramp-7-color",
+    "value": "var(--chart-ramp-7)",
+    "notes": ""
+  },
+  {
+    "name": "--ds-chart-ramp-8-color",
+    "value": "var(--chart-ramp-8)",
+    "notes": ""
+  },
+  {
+    "name": "--ds-chart-frame-border-color",
+    "value": "var(--chart-frame-border-color)",
+    "notes": ""
+  },
+  {
+    "name": "--ds-chart-frame-border-width",
+    "value": "var(--chart-frame-border-width)",
+    "notes": ""
+  },
+  {
+    "name": "--ds-chart-frame-radius",
+    "value": "var(--chart-frame-radius)",
+    "notes": ""
+  },
+  {
+    "name": "--ds-chart-frame-padding",
+    "value": "var(--chart-frame-padding)",
+    "notes": ""
+  },
+  {
+    "name": "--ds-chart-frame-bg-color",
+    "value": "var(--chart-frame-bg-color)",
+    "notes": ""
+  },
+  {
+    "name": "--ds-chart-axis-line-color",
+    "value": "var(--chart-axis-line-color)",
+    "notes": "Chart axis line colour. Set this, not --chart-axis-line-color."
+  },
+  {
+    "name": "--ds-chart-axis-label-color",
+    "value": "var(--chart-axis-label-color)",
+    "notes": "Chart axis tick-label colour. Set this, not --chart-axis-label-color."
+  },
+  {
+    "name": "--ds-chart-axis-font-size",
+    "value": "var(--chart-axis-font-size)",
+    "notes": "Chart axis label size. Set this, not --chart-axis-font-size."
+  },
+  {
+    "name": "--ds-chart-grid-line-color",
+    "value": "var(--chart-grid-line-color)",
+    "notes": "Chart gridline colour. Set this, not --chart-grid-line-color."
+  },
+  {
+    "name": "--ds-chart-dim-opacity",
+    "value": "var(--chart-dim-opacity)",
+    "notes": ""
+  },
+  {
+    "name": "--ds-chart-hover-bg-color",
+    "value": "var(--chart-hover-bg-color)",
+    "notes": "Chart hover highlight wash. Set this, not --chart-hover-bg-color."
+  },
+  {
+    "name": "--ds-chart-cursor-line-color",
+    "value": "var(--chart-cursor-line-color)",
+    "notes": "Chart crosshair line colour. Set this, not --chart-cursor-line-color."
+  },
+  {
+    "name": "--ds-chart-focus-ring-color",
+    "value": "var(--chart-focus-ring-color)",
+    "notes": ""
+  },
+  {
+    "name": "--ds-chart-focus-halo-color",
+    "value": "var(--chart-focus-halo-color)",
+    "notes": ""
+  },
+  {
+    "name": "--ds-chart-tooltip-bg-color",
+    "value": "var(--chart-tooltip-bg-color)",
+    "notes": "Chart tooltip fill. Set this, not --chart-tooltip-bg-color."
+  },
+  {
+    "name": "--ds-chart-tooltip-text-color",
+    "value": "var(--chart-tooltip-text-color)",
+    "notes": "Chart tooltip text colour. Set this, not --chart-tooltip-text-color."
+  },
+  {
+    "name": "--ds-chart-tooltip-border-color",
+    "value": "var(--chart-tooltip-border-color)",
+    "notes": "Chart tooltip border colour. Set this, not --chart-tooltip-border-color."
+  },
+  {
+    "name": "--ds-chart-bar-gap",
+    "value": "var(--chart-bar-gap)",
+    "notes": "Gap between bars in a chart series. Set this, not --chart-bar-gap."
+  },
+  {
+    "name": "--ds-chart-line-width",
+    "value": "var(--chart-line-width)",
+    "notes": "Chart line-series stroke width. Set this, not --chart-line-width."
+  },
+  {
+    "name": "--ds-chart-line-width-bold",
+    "value": "var(--chart-line-width-bold)",
+    "notes": "Emphasised chart line-series stroke width. Set this, not --chart-line-width-bold."
+  },
+  {
+    "name": "--ds-chart-dot-radius",
+    "value": "var(--chart-dot-radius)",
+    "notes": "Chart data-point dot radius. Set this, not --chart-dot-radius."
+  },
+  {
+    "name": "--ds-chart-dot-radius-active",
+    "value": "var(--chart-dot-radius-active)",
+    "notes": "Chart data-point dot radius while active. Set this, not --chart-dot-radius-active."
   }
 ];
 
@@ -2280,6 +2555,43 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
+    "component": "Bar Chart",
+    "selector": ".bar-chart",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-bar-chart-track-color",
+        "value": "var(--ds-chart-grid-line-color)",
+        "notes": "Unfilled part of a ds-bar-chart bar (default --chart-grid-line-color)."
+      },
+      {
+        "name": "--ds-bar-chart-track-height",
+        "value": "12px",
+        "notes": "Thickness of a ds-bar-chart bar and its track (default 8px)."
+      },
+      {
+        "name": "--ds-bar-chart-row-gap",
+        "value": "var(--space-5)",
+        "notes": "Vertical gap between ds-bar-chart rows (default --space-3)."
+      },
+      {
+        "name": "--ds-bar-chart-label-gap",
+        "value": "var(--space-1)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-motion-chart-mark-duration",
+        "value": "—",
+        "notes": ""
+      },
+      {
+        "name": "--ds-motion-chart-mark-easing",
+        "value": "—",
+        "notes": ""
+      }
+    ]
+  },
+  {
     "component": "Bottom Sheet",
     "selector": ".bottom-sheet",
     "description": "",
@@ -2419,9 +2731,24 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Active/pressed fill — derived from the resolved bg unless set."
       },
       {
-        "name": "--ds-button-border",
+        "name": "--ds-button-label-color-hover",
+        "value": "var(--_button-label-color)",
+        "notes": "Label colour under the cursor. Defaults to --ds-button-label-color, so a button that does not set it does not change on hover."
+      },
+      {
+        "name": "--ds-button-label-color-active",
+        "value": "var(--_button-label-color)",
+        "notes": "Label colour while pressed. Defaults to --ds-button-label-color."
+      },
+      {
+        "name": "--ds-button-border-color",
         "value": "transparent",
         "notes": "Border colour (outline variant overrides)."
+      },
+      {
+        "name": "--ds-button-border-width",
+        "value": "var(--border-width-default)",
+        "notes": "The button border's WIDTH, where --ds-button-border-color is its colour. Defaults to --border-width-default; set it rather than redefining that scale step for a subtree."
       },
       {
         "name": "--ds-button-press-scale",
@@ -2447,6 +2774,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-button-radius",
         "value": "var(--ds-radius-control)",
         "notes": "Corner radius."
+      },
+      {
+        "name": "--ds-button-font-family",
+        "value": "var(--font-sans)",
+        "notes": "The button label's family. Defaults to --font-sans; set it where buttons follow the heading face rather than the body one, instead of re-pointing --font-sans inside the component."
+      },
+      {
+        "name": "--ds-button-line-height",
+        "value": "var(--line-height-flat)",
+        "notes": "The button label's line height. Defaults to --line-height-flat."
       },
       {
         "name": "--ds-button-font-size",
@@ -2489,7 +2826,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Disabled label — ONE recipe for every variant, oklch(from accent 70% 0.035 h). 70% because the old 58%/52% pair sat where a saturated accent already is, so a disabled coloured button barely differed from its live self."
       },
       {
-        "name": "--ds-button-border-disabled",
+        "name": "--ds-button-border-color-disabled",
         "value": "oklch(from var(--_button-accent) 86% 0.04 h)",
         "notes": "Disabled border — a pale tint of the accent for solid, color-mix(border 55%, surface-disabled) for outline."
       },
@@ -2631,6 +2968,50 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--card-title-fs",
         "value": "var(--font-size-h4)",
         "notes": "Card title font size (defaults to --font-size-h4)."
+      }
+    ]
+  },
+  {
+    "component": "Chart Motion",
+    "selector": ".chart-motion",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-motion-chart-mark-enter-duration",
+        "value": "—",
+        "notes": ""
+      },
+      {
+        "name": "--ds-motion-chart-mark-enter-easing",
+        "value": "—",
+        "notes": ""
+      },
+      {
+        "name": "--ds-motion-chart-mark-exit-duration",
+        "value": "—",
+        "notes": ""
+      },
+      {
+        "name": "--ds-motion-chart-mark-exit-easing",
+        "value": "—",
+        "notes": ""
+      }
+    ]
+  },
+  {
+    "component": "Chart Tooltip",
+    "selector": ".chart-tooltip",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-radius-control",
+        "value": "—",
+        "notes": "Radius role for controls and field frames — buttons, inputs, selects, both picker triggers, tooltips. Defaults to --radius-md."
+      },
+      {
+        "name": "--ds-elevation-overlay",
+        "value": "—",
+        "notes": "Elevation role for a panel anchored to a trigger — popovers, menus, dropdowns, tooltips. Defaults to --shadow-2."
       }
     ]
   },
@@ -2810,6 +3191,48 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--color-picker-thumb",
         "value": "14px",
         "notes": "Colour Picker slider thumb geometry (14px)."
+      }
+    ]
+  },
+  {
+    "component": "Column Chart",
+    "selector": ".column-chart",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-column-chart-plot-height",
+        "value": "200px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-column-chart-column-gap",
+        "value": "var(--ds-chart-bar-gap)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-column-chart-column-width",
+        "value": "80%",
+        "notes": ""
+      },
+      {
+        "name": "--ds-column-chart-column-max-width",
+        "value": "48px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-column-chart-grid-line-color",
+        "value": "var(--ds-chart-grid-line-color)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-column-chart-value-space",
+        "value": "var(--space-5)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-column-chart-axis-width",
+        "value": "40px",
+        "notes": ""
       }
     ]
   },
@@ -3016,6 +3439,53 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-divider-strong-color",
         "value": "var(--border-default)",
         "notes": "Divider line colour (defaults to --border-default)."
+      }
+    ]
+  },
+  {
+    "component": "Donut Chart",
+    "selector": ".donut-chart",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-donut-chart-size",
+        "value": "180px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-donut-chart-gap",
+        "value": "var(--space-5)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-donut-chart-legend-row-gap",
+        "value": "var(--space-2)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-donut-chart-legend-row-height",
+        "value": "16px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-donut-chart-swatch-size",
+        "value": "10px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-donut-chart-focus-color",
+        "value": "var(--focus-ring-color)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-donut-chart-focus-width",
+        "value": "var(--focus-ring-width)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-donut-chart-outline-width",
+        "value": "calc(var(--border-width-strong) + var(--border-width-default))",
+        "notes": ""
       }
     ]
   },
@@ -3390,6 +3860,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "The ONE focus ring for the group (default --ds-field-focus-shadow) — segments suppress their own."
       },
       {
+        "name": "--ds-field-group-focus-shadow-error",
+        "value": "var(--ds-field-focus-shadow-error)",
+        "notes": "The halo a ds-field-group draws while invalid AND focused. Defaults to --ds-field-focus-shadow-error, the halo a single error field uses."
+      },
+      {
         "name": "--ds-field-group-divider-color",
         "value": "var(--border-divider)",
         "notes": "Hairline between adjacent segments (default --border-divider)."
@@ -3437,6 +3912,38 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-filter-bar-panel-gap",
         "value": "var(--space-4)",
         "notes": "Vertical space between filters stacked in the overflow panel (defaults to --space-4, looser than the row because they read as a form there)."
+      }
+    ]
+  },
+  {
+    "component": "Funnel Chart",
+    "selector": ".funnel-chart",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-funnel-chart-stage-height",
+        "value": "44px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-funnel-chart-stage-gap",
+        "value": "var(--ds-chart-bar-gap)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-funnel-chart-row-gap",
+        "value": "var(--space-4)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-funnel-chart-focus-color",
+        "value": "var(--focus-ring-color)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-funnel-chart-focus-width",
+        "value": "var(--focus-ring-width)",
+        "notes": ""
       }
     ]
   },
@@ -3650,6 +4157,98 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-stack-gap",
         "value": "var(--space-stack)",
         "notes": "Default gap for vertically stacked layouts (defaults to --space-stack)."
+      }
+    ]
+  },
+  {
+    "component": "Line Chart",
+    "selector": ".line-chart",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-line-chart-grid-line-color",
+        "value": "var(--ds-chart-grid-line-color)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-line-chart-axis-line-color",
+        "value": "var(--ds-chart-axis-line-color)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-line-chart-axis-label-color",
+        "value": "var(--ds-chart-axis-label-color)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-line-chart-axis-font-size",
+        "value": "var(--ds-chart-axis-font-size)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-line-chart-line-width",
+        "value": "var(--ds-chart-line-width)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-line-chart-dot-radius",
+        "value": "var(--ds-chart-dot-radius)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-line-chart-dot-radius-active",
+        "value": "var(--ds-chart-dot-radius-active)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-line-chart-hover-bg-color",
+        "value": "var(--ds-chart-hover-bg-color)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-line-chart-cursor-line-color",
+        "value": "var(--ds-chart-cursor-line-color)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-line-chart-line-width-bold",
+        "value": "var(--ds-chart-line-width-bold)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-line-chart-focus-color",
+        "value": "var(--focus-ring-color)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-line-chart-focus-width",
+        "value": "var(--focus-ring-width)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-line-chart-area-opacity",
+        "value": "0.16",
+        "notes": ""
+      },
+      {
+        "name": "--ds-line-chart-plot-height",
+        "value": "240px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-line-chart-swatch-size",
+        "value": "10px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-motion-chart-state-duration",
+        "value": "—",
+        "notes": ""
+      },
+      {
+        "name": "--ds-motion-chart-state-easing",
+        "value": "—",
+        "notes": ""
       }
     ]
   },
@@ -4244,6 +4843,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-number-stepper-step-bg-color-active",
         "value": "var(--accent-muted)",
         "notes": "Number stepper increment/decrement button fill when pressed (defaults to --accent-muted)."
+      },
+      {
+        "name": "--ds-number-stepper-field-width",
+        "value": "calc(var(--_field-box-height) * 1.25)",
+        "notes": ""
       }
     ]
   },
@@ -4964,11 +5568,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Brand mark label."
       },
       {
-        "name": "--ds-radius-control",
-        "value": "—",
-        "notes": "Radius role for controls and field frames — buttons, inputs, selects, both picker triggers, tooltips. Defaults to --radius-md."
-      },
-      {
         "name": "--ds-sidenav-brand-max-height",
         "value": "none",
         "notes": "Height cap for a logo projected into the [brand] slot; `none` by default, so an oversized logo sets the brand row's height until you set this. Height only — an image with no CSS width keeps its ratio on its own."
@@ -5284,6 +5883,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-stat-value-white-space",
         "value": "nowrap",
         "notes": "Wrapping of the value line (default `nowrap`). Set `normal` when the value is a phrase — a date range or a status — rather than the number the tile was built around. Without it the line does not wrap and, since `.stat` sets no `overflow`, the text runs OUT of the tile rather than being clipped inside it."
+      },
+      {
+        "name": "--ds-stat-value-lines",
+        "value": "none",
+        "notes": ""
+      },
+      {
+        "name": "--ds-stat-value-wrap",
+        "value": "normal",
+        "notes": ""
       },
       {
         "name": "--ds-stat-up-color",
@@ -6731,11 +7340,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "selector": ".tokens",
     "description": "",
     "tokens": [
-      {
-        "name": "--ds-elevation-overlay",
-        "value": "—",
-        "notes": "Elevation role for a panel anchored to a trigger — popovers, menus, dropdowns, tooltips. Defaults to --shadow-2."
-      },
       {
         "name": "--ds-elevation-modal",
         "value": "—",

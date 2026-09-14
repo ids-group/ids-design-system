@@ -154,6 +154,21 @@
   --ds-motion-check-exit-duration:    var(--duration-fast);
   --ds-motion-check-exit-easing:      var(--ease-accelerate);
 
+  /* `state` is a hover or focus answering a pointer, so it runs at the fast step — anything slower
+     reads as lag on a mark the cursor is already leaving. `mark` is a datum changing size, which is
+     a redraw the reader is meant to follow rather than catch up with. */
+  --ds-motion-chart-state-duration:   var(--duration-fast);
+  --ds-motion-chart-state-easing:     var(--ease-standard);
+  --ds-motion-chart-mark-duration:    var(--duration-base);
+  --ds-motion-chart-mark-easing:      var(--ease-decelerate);
+
+  /* A mark arriving and a mark leaving are separate roles because the enter waits out the exit:
+     the two durations are added, and one role could not carry both halves of that sum. */
+  --ds-motion-chart-mark-enter-duration: var(--duration-base);
+  --ds-motion-chart-mark-enter-easing:   var(--ease-decelerate);
+  --ds-motion-chart-mark-exit-duration:  var(--duration-fast);
+  --ds-motion-chart-mark-exit-easing:    var(--ease-accelerate);
+
   --opacity-disabled:        0.5;
   --opacity-text-disabled:   0.38;  /* WCAG-derived */
   --opacity-scrim:           0.55;
@@ -245,10 +260,8 @@
      the crisp ring. Components default their own --ds-*-focus-shadow to these,
      so a consumer can retune a whole family or a single component. */
 
-  /* The flat tokens, NOT the --accent-focus-* aliases — see docs/todo.md, "zone colour and
-     data-focus shape cannot both reach one role". A `var()` inside a custom property is
-     substituted where it is DECLARED, so a ds-color zone can never reach what is written here;
-     the switch wins because it is the documented one. */
+  /* The flat tokens, NOT the --accent-focus-* aliases. A `var()` inside a custom property is
+     substituted where it is DECLARED, so a ds-color zone can never reach what is written here. */
   --ds-field-focus-shadow:         var(--focus-field);
   --ds-field-focus-shadow-error:   var(--focus-field-error);
   --ds-control-focus-shadow:       var(--focus-ring);

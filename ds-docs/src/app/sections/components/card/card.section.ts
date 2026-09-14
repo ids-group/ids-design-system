@@ -1,16 +1,12 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { CardComponent } from 'ds/card';
 import type { CardElevation, CardPadding } from 'ds/core';
-import {
-  DocsTruncationComponent,
-  TruncationRule,
-} from '../../../shared/docs-truncation.component';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({
   selector: 'section-components-card',
   standalone: true,
-  imports: [CardComponent, DocsTruncationComponent, DocsSectionComponent],
+  imports: [CardComponent, DocsSectionComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './card.section.html',
   styleUrl: './card.section.scss',
@@ -22,20 +18,4 @@ export class CardSection {
     'hover',
   ];
   protected readonly paddings: readonly CardPadding[] = ['sm', 'md', 'lg'];
-  protected readonly truncationRules: TruncationRule[] = [
-    {
-      field: 'Header title',
-      behaviour:
-        'Single line, ellipsis at ~32 ch. Tooltip on hover when clipped.',
-    },
-    {
-      field: 'Body copy',
-      behaviour:
-        'Wrap freely. No line clamp by default; consumer applies clamp if needed.',
-    },
-    {
-      field: 'Footer actions',
-      behaviour: 'Stay below; collapse to icon-only on narrow widths.',
-    },
-  ];
 }

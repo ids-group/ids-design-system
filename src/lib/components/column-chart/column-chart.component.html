@@ -1,0 +1,144 @@
+<figure class="column-chart">
+  @if (caption()) {
+    <figcaption>
+      {{ caption() }}
+    </figcaption>
+  }
+
+  @if (error()) {
+    <p
+      class="empty is-error"
+      role="status">
+      {{ errorText() }}
+    </p>
+  } @else if (loading()) {
+    <div
+      class="skeleton"
+      aria-hidden="true">
+      @for (placeholder of skeletonColumns(); track $index) {
+        <ds-skeleton height="var(--_column-chart-plot-height)" />
+      }
+    </div>
+  } @else if (isEmpty()) {
+    <p class="empty">
+      {{ emptyText() }}
+    </p>
+  } @else {
+    <div
+      class="chart"
+      [attr.role]="interactive() ? 'group' : 'img'"
+      [attr.aria-label]="accessibleName()">
+      <div class="tick-labels">
+        @for (tick of ticks(); track $index) {
+          <span
+            class="tick-label"
+            [style.bottom.%]="tick.offsetPercent">
+            {{ tick.label }}
+          </span>
+        }
+      </div>
+
+      <div class="canvas">
+        <div class="grid-lines">
+          @for (tick of ticks(); track $index) {
+            <span
+              class="grid-line"
+              [style.bottom.%]="tick.offsetPercent">
+            </span>
+          }
+        </div>
+
+        <div
+          class="columns"
+          [dsChartTooltip]="tooltipContext()"
+          [dsChartTooltipOrigin]="activeMark.origin()"
+          [dsChartTooltipTemplate]="tooltipTemplate() ?? null">
+          @for (entry of columns(); track entry.key; let index = $index) {
+            <div
+              class="column"
+              animate.enter="mark-enter"
+              animate.leave="mark-leave"
+              [style.--_chart-mark-stagger]="markStagger(index)"
+              [class.interactive]="interactive()"
+              [attr.role]="interactive() ? 'button' : null"
+              [attr.tabindex]="
+                interactive() ? (index === tabStopIndex() ? 0 : -1) : null
+              "
+              [attr.data-mark-index]="index"
+              [attr.aria-label]="interactive() ? entryLabel(entry) : null"
+              (pointerenter)="activeMark.enter(index, $event)"
+              (pointerleave)="activeMark.leave()"
+              (focus)="onMarkFocus(index, $event)"
+              (blur)="activeMark.leave()"
+              (keydown)="onMarkNavigation($event, index)"
+              (click)="pointClicked.emit(entry.point)"
+              (keydown.enter)="onPointKey(entry.point, $event)"
+              (keydown.space)="onPointKey(entry.point, $event)">
+              <span class="plot-cell">
+                @if (showValues()) {
+                  <span class="value">
+                    {{ entry.formattedValue }}
+                  </span>
+                }
+
+                <span
+                  class="bar"
+                  [style.height.%]="entry.heightPercent"
+                  [style.background]="entry.color">
+                </span>
+              </span>
+
+              <span class="category-label">
+                {{ entry.point.label }}
+              </span>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    @if (dataTable() !== 'none') {
+      <details
+        class="data-table"
+        [open]="dataTable() === 'visible'">
+        <summary>
+          Data table
+        </summary>
+
+        <table>
+          <caption>
+            {{
+              caption() ?? 'Chart data'
+            }}
+          </caption>
+
+          <thead>
+            <tr>
+              <th scope="col">
+                Label
+              </th>
+
+              <th scope="col">
+                Value
+              </th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (entry of columns(); track entry.key) {
+              <tr>
+                <td>
+                  {{ entry.point.label }}
+                </td>
+
+                <td>
+                  {{ entry.formattedValue }}
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </details>
+    }
+  }
+</figure>

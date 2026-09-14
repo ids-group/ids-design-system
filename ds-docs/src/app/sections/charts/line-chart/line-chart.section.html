@@ -1,0 +1,457 @@
+<docs-section
+  anchor="line-chart"
+  eyebrow="Charts"
+  title="Line chart"
+  [chapters]="true">
+  <span lede>
+    One or more series plotted over a shared set of categories, with an optional
+    second y axis for a series in different units.
+  </span>
+
+  <h3 class="block-title t-h4">
+    Default
+  </h3>
+
+  <p class="block-desc t-s">
+    Series share one set of categories and take categorical palette colours in
+    the order you pass them.
+  </p>
+
+  <ds-line-chart
+    caption="Sessions and signups by month"
+    dataTable="none"
+    [categories]="specimenCategories()"
+    [series]="specimenSeries()" />
+
+  <docs-line-chart-data-editor
+    [(categories)]="specimenCategories"
+    [(series)]="specimenSeries" />
+
+  <h3 class="block-title t-h4">
+    Missing readings
+  </h3>
+
+  <p class="block-desc t-s">
+    A <code class="t-mono-inline">null</code> reading is a hole, not a zero, and
+    <code class="t-mono-inline">
+      gaps
+    </code> decides what it draws:
+    <code class="t-mono-inline">
+      break
+    </code>, the default, stops the line and
+    picks it up after; <code class="t-mono-inline">zero</code> draws through the
+    baseline. Any non-finite value takes the same route, so an upstream
+    <code class="t-mono-inline">
+      NaN
+    </code> lands here too.
+  </p>
+
+  <div class="states states--cols-2">
+    <div class="state-cell">
+      <ds-line-chart
+        caption="Wednesday has no reading — the line stops and picks up again"
+        dataTable="none"
+        gaps="break"
+        [categories]="gapBreakCategories()"
+        [series]="gapBreakSeries()" />
+
+      <div class="state-cell-label">
+        break (default)
+      </div>
+
+      <docs-line-chart-data-editor
+        [(categories)]="gapBreakCategories"
+        [(series)]="gapBreakSeries" />
+    </div>
+
+    <div class="state-cell">
+      <ds-line-chart
+        caption="The same missing Wednesday, read as a zero"
+        dataTable="none"
+        gaps="zero"
+        [categories]="gapZeroCategories()"
+        [series]="gapZeroSeries()" />
+
+      <div class="state-cell-label">
+        zero
+      </div>
+
+      <docs-line-chart-data-editor
+        [(categories)]="gapZeroCategories"
+        [(series)]="gapZeroSeries" />
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Second axis · rounded (default)
+  </h3>
+
+  <p class="block-desc t-s">
+    A series in other units sets
+    <code class="t-mono-inline">
+      axis: 'secondary'
+    </code> and is measured against
+    the right-hand scale;
+    <code class="t-mono-inline">
+      yAxisMode
+    </code> reconciles the two. Rounded
+    keeps one set of gridlines and rounds the secondary step up, so that line
+    stops short of the top.
+  </p>
+
+  <ds-line-chart
+    caption="Sessions against conversion rate, rounded secondary axis"
+    dataTable="none"
+    yAxisMode="rounded"
+    [categories]="roundedCategories()"
+    [series]="roundedSeries()" />
+
+  <docs-line-chart-data-editor
+    [(categories)]="roundedCategories"
+    [(series)]="roundedSeries" />
+
+  <h3 class="block-title t-h4">
+    Second axis · exact
+  </h3>
+
+  <p class="block-desc t-s">
+    The secondary step is taken straight from the peak, so that series uses the
+    full height and its labels are no longer round numbers.
+  </p>
+
+  <ds-line-chart
+    caption="Sessions against conversion rate, exact secondary axis"
+    dataTable="none"
+    yAxisMode="exact"
+    [categories]="exactCategories()"
+    [series]="exactSeries()" />
+
+  <docs-line-chart-data-editor
+    [(categories)]="exactCategories"
+    [(series)]="exactSeries" />
+
+  <h3 class="block-title t-h4">
+    Second axis · independent
+  </h3>
+
+  <p class="block-desc t-s">
+    Each axis is niced on its own and both series use the full height, at the
+    price of two sets of gridlines — the secondary's are dashed so the
+    right-hand labels can be told apart.
+  </p>
+
+  <ds-line-chart
+    caption="Each axis scaled and gridded on its own, the secondary dashed"
+    dataTable="none"
+    yAxisMode="independent"
+    [categories]="independentCategories()"
+    [series]="independentSeries()" />
+
+  <docs-line-chart-data-editor
+    [(categories)]="independentCategories"
+    [(series)]="independentSeries" />
+
+  <h3 class="block-title t-h4">
+    Second axis · stacked
+  </h3>
+
+  <p class="block-desc t-s">
+    Two plots over a shared category axis, labelled under the lower one only:
+    nothing overlaps, but the two shapes can no longer be read against each
+    other.
+  </p>
+
+  <ds-line-chart
+    caption="Two plots sharing one category axis, labelled under the lower plot only"
+    dataTable="none"
+    yAxisMode="stacked"
+    [categories]="stackedCategories()"
+    [series]="stackedSeries()" />
+
+  <docs-line-chart-data-editor
+    [(categories)]="stackedCategories"
+    [(series)]="stackedSeries" />
+
+  <h3 class="block-title t-h4">
+    Markers
+  </h3>
+
+  <p class="block-desc t-s">
+    Turn <code class="t-mono-inline">showMarkers</code> off once the readings
+    are dense enough that the markers merge into a band.
+  </p>
+
+  <ds-line-chart
+    dataTable="none"
+    [categories]="markersCategories()"
+    [series]="markersSeries()"
+    [showMarkers]="false" />
+
+  <docs-line-chart-data-editor
+    [(categories)]="markersCategories"
+    [(series)]="markersSeries" />
+
+  <h3 class="block-title t-h4">
+    Area fill
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      area: true
+    </code> fills the series down to its
+    axis baseline, which asserts that zero means something for it — wrong for a
+    rate or an index. Fill one series at most: two translucent fills overlap
+    into a third quantity that is not there.
+  </p>
+
+  <ds-line-chart
+    caption="A series with area on, filling down to its axis baseline"
+    dataTable="none"
+    [categories]="areaFillCategories()"
+    [series]="areaFillSeries()" />
+
+  <docs-line-chart-data-editor
+    [(categories)]="areaFillCategories"
+    [(series)]="areaFillSeries" />
+
+  <h3 class="block-title t-h4">
+    Long series
+  </h3>
+
+  <p class="block-desc t-s">
+    At most twelve category labels are drawn whatever the length — the chart
+    keeps every nth and drops the rest — while the line still carries every
+    reading.
+  </p>
+
+  <ds-line-chart
+    caption="Thirty-six days — every third category label is drawn"
+    dataTable="none"
+    [categories]="manyCategories()"
+    [series]="manyCategorySeries()" />
+
+  <docs-line-chart-data-editor
+    [(categories)]="manyCategories"
+    [(series)]="manyCategorySeries" />
+
+  <h3 class="block-title t-h4">
+    Data table
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      toggle
+    </code>, the default, leaves the
+    disclosure closed; <code class="t-mono-inline">visible</code> renders it
+    open; <code class="t-mono-inline">none</code> leaves it out.
+  </p>
+
+  <ds-line-chart
+    caption="The annex table, collapsed until asked for"
+    [categories]="dataTableCategories()"
+    [series]="dataTableSeries()" />
+
+  <docs-line-chart-data-editor
+    [(categories)]="dataTableCategories"
+    [(series)]="dataTableSeries" />
+
+  <h3 class="block-title t-h4">
+    Interactive
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      interactive
+    </code> makes every reading focusable
+    and clickable, and grows an invisible marker on a series drawn without one
+    so there is something to land on. The hit area is a transparent 24px stroke
+    on a fine pointer and 44px on a coarse one — a 4px dot is not a touch
+    target. Tab to a marker and the tooltip names that series alone; hover the
+    plot and it names every series at the category. A tap latches the tooltip
+    open until the next tap outside.
+    <code class="t-mono-inline">
+      pointClicked
+    </code> fires whether
+    or not the flag is set.
+  </p>
+
+  <ds-line-chart
+    caption="Sessions and signups — every reading is a control"
+    dataTable="none"
+    interactive
+    [categories]="interactiveCategories()"
+    [series]="interactiveSeries()"
+    (pointClicked)="lastPoint.set($event.series.label + ' · ' + $event.category)" />
+
+  <p class="block-desc t-s">
+    Last clicked: <code class="t-mono-inline">{{ lastPoint() || '—' }}</code>
+  </p>
+
+  <h3 class="block-title t-h4">
+    Patterns
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      patterns
+    </code> gives every series a dash of
+    its own, in palette-slot order, so the lines are told apart by shape as well
+    as by colour — WCAG technique G111. Slot 1 stays solid, so a single-series
+    chart is unchanged by turning it on. Off by default: the shipped palette
+    clears the colour-blind separation threshold on its own, and this is for
+    monochrome print, a retuned palette, or a reader who asks for it.
+  </p>
+
+  <div class="states states--cols-2">
+    <div class="state-cell">
+      <ds-line-chart
+        caption="Colour alone separates the series"
+        dataTable="none"
+        [categories]="patternCategories()"
+        [series]="patternSeries()" />
+
+      <div class="state-cell-label">
+        patterns = false (default)
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-line-chart
+        caption="Shape separates them too"
+        dataTable="none"
+        patterns
+        [categories]="patternCategories()"
+        [series]="patternSeries()" />
+
+      <div class="state-cell-label">
+        patterns
+      </div>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Filtering legend
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      legendFilters
+    </code> turns each legend entry
+    into a checkbox that switches its series off, and
+    <code class="t-mono-inline">
+      hiddenSeries
+    </code> is two-way, so a page can
+    drive it from a URL parameter. The value axis is scaled from every series,
+    hidden or not, unless
+    <code class="t-mono-inline">
+      rescaleOnHide
+    </code> says
+    otherwise — a silent rescale turns a period-over-period comparison into a
+    different claim. Hovering an entry dims the other series. Switch them all
+    off and the plot is replaced by an explanation rather than an empty grid.
+  </p>
+
+  <div class="states states--cols-2">
+    <div class="state-cell">
+      <ds-line-chart
+        caption="Hiding a series leaves the axis where it was"
+        dataTable="none"
+        legendFilters
+        [categories]="legendCategories()"
+        [series]="legendSeries()"
+        [(hiddenSeries)]="hiddenSeries" />
+
+      <div class="state-cell-label">
+        rescaleOnHide = false (default)
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-line-chart
+        caption="Hiding a series re-scales the axis to what is left"
+        dataTable="none"
+        legendFilters
+        rescaleOnHide
+        [categories]="legendCategories()"
+        [series]="legendSeries()"
+        [(hiddenSeries)]="rescaledHiddenSeries" />
+
+      <div class="state-cell-label">
+        rescaleOnHide
+      </div>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Edge cases
+  </h3>
+
+  <p class="block-desc t-s">
+    Loading holds the plot's height with a skeleton; empty has no series to
+    derive axes from, so the chart falls back to its
+    <code class="t-mono-inline">
+      emptyText
+    </code> line.
+  </p>
+
+  <div class="states states--cols-2">
+    <div class="state-cell">
+      <ds-line-chart
+        dataTable="none"
+        [categories]="emptyCategories()"
+        [series]="emptySeries()" />
+
+      <div class="state-cell-label">
+        Empty
+      </div>
+
+      <docs-line-chart-data-editor
+        [(categories)]="emptyCategories"
+        [(series)]="emptySeries" />
+    </div>
+
+    <div class="state-cell">
+      <ds-line-chart
+        dataTable="none"
+        loading
+        [categories]="loadingCategories()"
+        [series]="loadingSeries()" />
+
+      <div class="state-cell-label">
+        Loading
+      </div>
+
+      <docs-line-chart-data-editor
+        [(categories)]="loadingCategories"
+        [(series)]="loadingSeries" />
+    </div>
+
+    <div class="state-cell">
+      <ds-line-chart
+        caption="A single series carries no legend, and the axes are still drawn"
+        dataTable="none"
+        [categories]="oneSeriesCategories()"
+        [series]="oneSeries()" />
+
+      <div class="state-cell-label">
+        One series
+      </div>
+
+      <docs-line-chart-data-editor
+        [(categories)]="oneSeriesCategories"
+        [(series)]="oneSeries" />
+    </div>
+
+    <div class="state-cell">
+      <ds-line-chart
+        dataTable="none"
+        error
+        [categories]="specimenCategories()"
+        [series]="specimenSeries()" />
+
+      <div class="state-cell-label">
+        Error
+      </div>
+    </div>
+  </div>
+</docs-section>

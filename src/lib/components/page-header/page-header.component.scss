@@ -1,3 +1,14 @@
+/* Truncation contract:
+   Title — Single line, ellipsis. Tooltip on hover when clipped — the title carries identity.
+   Subtitle / lede — Single line, ellipsis. Tooltip on hover when clipped.
+   Eyebrow — Single line, no clip — keep eyebrow short by spec. Wraps if forced.
+   Breadcrumb segment — Single line, ellipsis at ~24 ch per segment. Middle segments collapse to
+     … before the leaf clips.
+   Status badge — Single line, no clip — status labels are short by spec. Max one badge per
+     header.
+   Action buttons — Single line, no clip. Beyond two ghost + one primary actions, collapse the
+     rest into an overflow menu. */
+
 // Ported from vendor/claude-design-ds components-extras.css (.page-hdr, lines 636-706).
 // patterns.css's .page-header is a dropped duplicate, not the source.
 @use '../../styles/breakpoints' as bp;

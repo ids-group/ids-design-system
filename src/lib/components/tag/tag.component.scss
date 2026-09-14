@@ -1,6 +1,9 @@
 @use '../../styles/focus' as focus;
 @use '../../styles/press' as press;
 
+/* Truncation contract:
+   Label — Single line, ellipsis at ~16 ch. Tooltip on hover when clipped. */
+
 :host {
   --_tag-pad-y:        var(--ds-tag-pad-y, var(--tag-pad-y));
   --_tag-pad-x:        var(--ds-tag-pad-x, var(--tag-pad-x));

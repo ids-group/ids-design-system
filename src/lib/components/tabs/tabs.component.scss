@@ -1,6 +1,10 @@
 @use '../../styles/focus' as focus;
 @use '../../styles/press' as press;
 
+/* Truncation contract:
+   Tab label — Single line, no clip — labels are short. Tooltip on hover if forced clip.
+   Badge count — Numeric only — no clip. */
+
 :host {
   --_tabs-divider:          var(--ds-tabs-divider,          var(--border-divider));
   --_tab-pad-x:             var(--ds-tab-pad-x,             var(--space-4));

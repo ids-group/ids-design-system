@@ -12,9 +12,22 @@ import {
 import { devWarn } from '@ids-group-ltd/ids-design-system/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import type {
+  IsActiveMatchOptions,
+  Params,
+  QueryParamsHandling,
+} from '@angular/router';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import type { IconName } from '@ids-group-ltd/ids-design-system/core';
-import { dsDestination } from '@ids-group-ltd/ids-design-system/components';
+import {
+  dsAriaCurrent,
+  dsDestination,
+} from '@ids-group-ltd/ids-design-system/components';
+import type {
+  DsAriaCurrent,
+  DsLinkModifiers,
+  DsRouterLink,
+} from '@ids-group-ltd/ids-design-system/components';
 import type { ButtonColor, ButtonVariant, ButtonType } from './button.types';
 import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
 import { inFieldGroup } from '@ids-group-ltd/ids-design-system/components/field-group';
@@ -32,6 +45,14 @@ import { nextControlId } from '@ids-group-ltd/ids-design-system/components';
 // none, so these stand in for the two sources a field feeds in from its control.
 const NO_ERRORS = signal<readonly DsFieldError[]>([]).asReadonly();
 const NEVER_INVALID = signal(false).asReadonly();
+
+// Modifiers that only reach the router branch. Read as a tuple so the warning can name the one
+// that was actually set.
+const ROUTER_ONLY = [
+  ['fragment'],
+  ['queryParams'],
+  ['queryParamsHandling'],
+] as const;
 
 // Discouraged, not blocked — two inputs cannot be narrowed against each other at compile time,
 // so the pair is warned about in dev and still renders.
@@ -102,11 +123,43 @@ export class ButtonComponent extends DsMessageBase {
   );
   /** `RouterLink` target. Set it and the button renders an `<a [routerLink]>` with
    *  `routerLinkActive`: middle-click, open-in-new-tab and the announced "link" role depend on the
-   *  element, not on the look. */
-  readonly routerLink = input<string | readonly unknown[] | null>(null);
+   *  element, not on the look.
+   *
+   *  Accepts a `UrlTree` as well as a path or a command array — `Router.createUrlTree` is the way
+   *  to reach the `UrlCreationOptions` that have no input of their own here (`relativeTo`,
+   *  `preserveFragment`). */
+  readonly routerLink = input<DsRouterLink>(null);
   /** Plain `href` target, used when `routerLink` is not set — an external address or a download.
    *  Renders an `<a href>`; same reasoning as `routerLink`. */
   readonly href = input<string>('');
+  /** Hash to append to a `routerLink` destination — the section of the page to land on.
+   *  routerLink-only: on an `href` put it in the URL, and on a plain button it is ignored with a
+   *  dev warning. */
+  readonly fragment = input<string | undefined>(undefined);
+  /** Query parameters for a `routerLink` destination. routerLink-only, same as `fragment`. */
+  readonly queryParams = input<Params | null | undefined>(undefined);
+  /** How the destination's query merges with the current one — `'merge'`, `'preserve'` or
+   *  `'replace'`. routerLink-only. */
+  readonly queryParamsHandling = input<QueryParamsHandling | null | undefined>(
+    undefined,
+  );
+  /** Browsing context for the link — `'_blank'` and the rest. Both link destinations take it; on a
+   *  plain button it is ignored with a dev warning. */
+  readonly target = input<string | undefined>(undefined);
+  /** `rel` for the link. Pair it with `target="_blank"`: without `noopener` the opened page can
+   *  reach back through `window.opener`. Both link destinations take it. */
+  readonly rel = input<string | undefined>(undefined);
+  /** How `routerLinkActive` decides the `active` CLASS — prefix by default, so a section link
+   *  stays lit inside its own pages. It also bounds the announcement, because the same directive
+   *  writes it: narrowed to `{ exact: true }`, a prefix match is no longer active and the link
+   *  announces nothing rather than `true`. Pass `ariaCurrent` alongside to keep one. */
+  readonly routerLinkActiveOptions = input<
+    { exact: boolean } | IsActiveMatchOptions
+  >({ exact: false });
+  /** Overrides what the link announces. Unset, an exact match announces `page` and a prefix match
+   *  announces `true`, which is what ARIA means by each; pass `null` to announce nothing, or one
+   *  of the other values when the link is a step or a location rather than a page. */
+  readonly ariaCurrent = input<DsAriaCurrent | null | undefined>(undefined);
   /** Native `type`, defaulting to `'button'` so it never submits an ancestor form by accident.
    *  Button-only: ignored on a link, with a dev warning. */
   readonly type = input<ButtonType>('button');
@@ -154,6 +207,16 @@ export class ButtonComponent extends DsMessageBase {
   readonly controlRef = viewChild.required<ElementRef<HTMLElement>>('btn');
 
   protected readonly destination = dsDestination(this.routerLink, this.href);
+  protected readonly linkModifiers = computed<DsLinkModifiers>(() => ({
+    fragment: this.fragment(),
+    queryParams: this.queryParams(),
+    queryParamsHandling: this.queryParamsHandling(),
+  }));
+  protected readonly ariaCurrentResolved = dsAriaCurrent(
+    this.routerLink,
+    this.linkModifiers,
+    this.ariaCurrent,
+  );
 
   protected readonly classes = computed(() => {
     const color = this.color();
@@ -209,13 +272,25 @@ export class ButtonComponent extends DsMessageBase {
         if (variant === 'text') {
           return '[ds-button] variant="text" is discouraged — prefer the global `.link` class for link-styled actions. It renders, but `.link` is the canonical link affordance.';
         }
-        if (this.destination() !== 'button') {
+        const destination = this.destination();
+        if (destination !== 'button') {
           if (this.loading()) {
             return '[ds-button] `loading` is ignored on a link-button — a navigation cannot be in flight before it starts. Remove it, or drop the destination and emit `(pressed)` instead.';
           }
           if (this.type() !== 'button') {
             return `[ds-button] type="${this.type()}" is ignored on a link-button — an anchor has no form to submit. Drop the destination to submit a form.`;
           }
+        }
+        if (destination !== 'routerLink') {
+          const routed = ROUTER_ONLY.find(
+            ([name]) => this[name]() !== undefined,
+          );
+          if (routed) {
+            return `[ds-button] \`${routed[0]}\` only applies to a \`routerLink\` destination${destination === 'href' ? ' — put it in the `href` URL instead' : ''}.`;
+          }
+        }
+        if (destination === 'button' && (this.target() || this.rel())) {
+          return '[ds-button] `target` and `rel` need a destination — set `routerLink` or `href`, or drop them.';
         }
         const reason = DISCOURAGED_COMBOS.get(`${this.color()}|${variant}`);
 
@@ -230,8 +305,7 @@ export class ButtonComponent extends DsMessageBase {
     // A soft-disabled button is only `aria-disabled`, so the browser still
     // dispatches the click — this is what stops it.
     if (this.disabled() || this.loading()) {
-      // `aria-disabled` is a label, not a behaviour, so a disabled `<a href>` would still
-      // navigate. The routerLink branch binds `null` instead.
+      // The routerLink branch binds `null`; an `<a href>` still navigates.
       if (this.destination() === 'href') {
         event.preventDefault();
       }

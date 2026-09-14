@@ -29,8 +29,10 @@ import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/s
 import { PaginationComponent } from '@ids-group-ltd/ids-design-system/components/pagination';
 import { LoadingOverlayComponent } from '@ids-group-ltd/ids-design-system/components/loading-overlay';
 import { PopoverComponent } from '@ids-group-ltd/ids-design-system/components/popover';
+import { TooltipDirective } from '@ids-group-ltd/ids-design-system/components/tooltip';
 import { MenuComponent } from '@ids-group-ltd/ids-design-system/components/menu';
 import { MenuItemComponent } from '@ids-group-ltd/ids-design-system/components/menu';
+import { MenuDividerComponent } from '@ids-group-ltd/ids-design-system/components/menu';
 import { CellTemplateDirective } from './cell-template.directive';
 import { HeaderFilterDirective } from './header-filter.directive';
 import { DsTableLayout } from './table-layout';
@@ -53,12 +55,13 @@ const NUMERIC = /^-?\d+(\.\d+)?$/;
 // row count a virtualized table is reached for.
 const VIRTUAL_FALLBACK_HEIGHT = 720;
 
-// Rows kept rendered past each edge of the viewport, so a flick does not expose
-// blank space before the next range lands.
+// Extra rows each side of the viewport, so a flick shows no blank gap.
 const VIRTUAL_OVERSCAN = 6;
 
-/** Rendered values that read as "no data", matched case-insensitively. Wider
- *  than the empty string because consumers render placeholders. */
+// Documented on `TableColumn.truncate`, which is where a consumer reads it.
+const DEFAULT_CLIP_WIDTH_PX = 240;
+
+/** Rendered values that read as "no data", matched case-insensitively. */
 const BLANK_CELL = new Set(['', '—', '-', '–', 'n/a', 'never', 'none']);
 
 /** Normalises "no data" to a single `null`, so the comparator has one blank
@@ -113,8 +116,10 @@ function compareSortValues(
     PaginationComponent,
     LoadingOverlayComponent,
     PopoverComponent,
+    TooltipDirective,
     MenuComponent,
     MenuItemComponent,
+    MenuDividerComponent,
     // Only instantiated when a column sets `link`, so a consumer app with no router
     // provided still renders the table — the directive is never constructed.
     RouterLink,
@@ -146,8 +151,6 @@ export class TableComponent<T extends object> {
   readonly selectable = input(false, { transform: booleanAttribute });
   /** Opt-in outer border + radius. Off by default so tables flush inside a
    *  `<ds-card padding="none">` don't double-border.
-   *  When `true`, the scroll-wrap gets a `var(--border-default)` outline and
-   *  `var(--radius-md)` radius — useful when the table stands alone in a padded card.
    *  Unset falls back to `DS_CONFIG.table.bordered`, then `false`. */
   readonly bordered = input<boolean | null, unknown>(null, {
     transform: (value) => (value == null ? null : booleanAttribute(value)),
@@ -245,8 +248,8 @@ export class TableComponent<T extends object> {
   /** Accessible name for the table (rendered as a visually-hidden caption).
    *  Without it, screen-reader users get an unlabelled table. */
   readonly caption = input<string>('');
-  /** When true, each row becomes a keyboard-operable control (role=button,
-   *  tabindex, Enter/Space → rowClicked) with an accessible name from the first
+  /** When true, each row becomes a keyboard-operable control (tabindex,
+   *  Enter/Space → rowClicked) with an accessible name from the first
    *  column. Off by default so non-navigating tables don't advertise a false
    *  click affordance. Also the gate for the hover/pressed row tints. */
   readonly rowInteractive = input(false, { transform: booleanAttribute });
@@ -506,7 +509,6 @@ export class TableComponent<T extends object> {
     () => this.loadingMode() === false && !this.filteredData().length,
   );
 
-  /** Loading, nothing to show yet, and not the skeleton mode which draws its own rows. */
   protected readonly showsLoadingSpace = computed(
     () =>
       this.loadingMode() !== false &&
@@ -529,8 +531,6 @@ export class TableComponent<T extends object> {
     TemplateRef<{ $implicit: TableColumn<T> }>
   >('columnWidthControls');
 
-  // Ordering and hiding are stages a feature contributes, so this is the whole chain: the
-  // declared list folded through whatever registered.
   protected readonly visibleColumns = computed<readonly TableColumn<T>[]>(() =>
     this.layout.foldColumns(this.columns()),
   );
@@ -561,7 +561,6 @@ export class TableComponent<T extends object> {
   private readonly columnFilterPopover = viewChild<PopoverComponent>(
     'columnFilterPopover',
   );
-  /** The column whose filter menu is open — drives the distinct-value list. */
   // Gates the panel's EXISTENCE on configuration, never on the clicked column: a handler that
   // raises its own `@if` reads the viewChild back in the same synchronous line, before change
   // detection has created it, and loses the click that opened it.
@@ -685,7 +684,7 @@ export class TableComponent<T extends object> {
       current.add(value);
     }
     const next = new Map(this.columnFilters());
-    // Every value checked again → drop the entry so the column reads unfiltered.
+    // No entry means unfiltered, so a full set is dropped rather than stored.
     if (current.size >= distinct.length) {
       next.delete(col.key);
     } else {
@@ -772,7 +771,7 @@ export class TableComponent<T extends object> {
       ? col.width
       : col.width === 'content'
         ? null
-        : 240;
+        : DEFAULT_CLIP_WIDTH_PX;
   }
 
   protected readonly filteredData = computed<readonly T[]>(() => {
@@ -939,13 +938,10 @@ export class TableComponent<T extends object> {
     return this.rangeAnnouncement()(first, first + rows - 1, total);
   });
 
-  /** Virtual mode needs a bounded scroller to window against. */
   protected readonly virtualizing = computed(
     () => this.virtualScroll() && !!this.maxHeight(),
   );
 
-  /** Drives the CSS row height from the same number the arithmetic uses, so the
-   *  two cannot drift — which would make every offset progressively wrong. */
   protected readonly virtualRowHeight = computed(
     () => `${this.virtualRowSize()}px`,
   );
@@ -987,8 +983,7 @@ export class TableComponent<T extends object> {
    *
    * Absolute rather than loop-relative because everything downstream needs it —
    * striping parity, the skeleton's width seed, and the range `(lazyLoad)` asks
-   * for. Outside lazy mode every slot is filled, so the extra object per visible
-   * row buys uniformity for the ~25 rows windowing keeps in the DOM.
+   * for.
    */
   protected readonly rowSlots = computed<
     readonly { row: T | null; index: number }[]
@@ -1022,10 +1017,8 @@ export class TableComponent<T extends object> {
     return data.every((row) => sel.has(this.rowKey(row)));
   });
 
-  // PART of the page selected, and deliberately false when ALL of it is: this is the header
-  // checkbox's indeterminate predicate and nothing else. Anything asking "is a selection live"
-  // wants `anySelected` — gating the bulk bar on this one hid it at full selection, which is
-  // exactly when a bulk action is most likely.
+  // The header checkbox's indeterminate predicate: false when ALL of the page is selected.
+  // Anything asking "is a selection live" wants `anySelected`.
   protected readonly someSelected = computed(() => {
     const data = this.displayData();
     const sel = this.selectedIds();
@@ -1095,47 +1088,6 @@ export class TableComponent<T extends object> {
   protected readonly hasTruncate = computed(() =>
     this.columns().some((col) => col.truncate),
   );
-  private readonly cellTextPopover =
-    viewChild<PopoverComponent>('cellTextPopover');
-  protected readonly cellPopoverText = signal('');
-
-  protected onCellClipClick(row: T, col: TableColumn<T>, event: Event): void {
-    const element = event.currentTarget as HTMLElement;
-    if (!TableComponent.isClipped(element)) {
-      return;
-    }
-    event.stopPropagation();
-    this.cellPopoverText.set(this.cellValue(row, col));
-    this.cellTextPopover()?.toggle(element);
-  }
-
-  /** Clipped horizontally — itself or anything it renders. A `dsCellTemplate`
-   *  puts the ellipsis on a descendant, so testing only the wrapper misses it. */
-  private static isClipped(element: HTMLElement): boolean {
-    if (element.scrollWidth > element.clientWidth) {
-      return true;
-    }
-
-    return [...element.querySelectorAll<HTMLElement>('*')].some(
-      (child) => child.scrollWidth > child.clientWidth,
-    );
-  }
-
-  /**
-   * A header narrowed by resizing clips its own label, and the label is the only
-   * thing naming the column — so the full text has to stay reachable. Set on
-   * enter rather than always, because a `title` on every header would fire a
-   * tooltip on hover for text that is perfectly readable.
-   */
-  protected onHeaderEnter(event: Event, col: TableColumn<T>): void {
-    const element = event.currentTarget as HTMLElement;
-    const label = element.querySelector<HTMLElement>('.th-label') ?? element;
-    if (TableComponent.isClipped(label)) {
-      element.setAttribute('title', col.label);
-    } else {
-      element.removeAttribute('title');
-    }
-  }
 
   private readonly scrollWrap =
     viewChild.required<ElementRef<HTMLElement>>('scrollWrap');
@@ -1208,7 +1160,7 @@ export class TableComponent<T extends object> {
     // blind to a taller control in the header.
     //
     // After RENDER, or the read lands before layout and publishes 0px, which insets the scrim by
-    // nothing and covers the whole header. Twice, as chip-overflow does: the observer catches a
+    // nothing and covers the whole header. Twice: the observer catches a
     // header that grows on a narrower column or a density change, and the second pass re-reads
     // whenever the scrim is about to appear, so a load never depends on an observer having fired.
     afterRenderEffect((onCleanup) => {
@@ -1249,8 +1201,6 @@ export class TableComponent<T extends object> {
       this.saveLayout(key, stored);
     });
 
-    // A table holding ALL its rows is the exception, and `total` unbound is how
-    // it says so — so that is where the reminder goes.
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
       devWarn(() =>
         this.sortMode() === null &&
@@ -1576,6 +1526,16 @@ export class TableComponent<T extends object> {
     },
   );
 
+  protected actionLabel(action: TableRowAction<T>): string {
+    const label = action.label;
+    if (typeof label !== 'function') {
+      return label;
+    }
+    const row = this.menuRow();
+
+    return row === null ? '' : label(row);
+  }
+
   /** Empty unless the item is actually disabled for this row: a reason on a live
    *  item would read as a caveat on something that works. */
   protected actionReason(action: TableRowAction<T>): string {
@@ -1764,8 +1724,8 @@ export class TableComponent<T extends object> {
       const currentIndex = order.indexOf(this.activeSortDir());
       dir = order[(currentIndex + 1) % order.length] ?? null;
     }
-    // The key survives "unsorted" — `dir === null` alone means that. Nulling it too
-    // desynced a host that maps off `sortKey` back to its own default sort.
+    // The key survives `dir === null`: nulling it too would send a host that maps off
+    // `sortKey` back to its own default sort.
     this.sortState.set({ key: col.key, dir });
     this.sortKeyChange.emit(col.key);
     this.sortDirChange.emit(dir);
@@ -1808,8 +1768,7 @@ export class TableComponent<T extends object> {
   }
 
   // localStorage, not session: a column layout the reader arranged should still
-  // be there tomorrow. Every access is guarded — Safari private mode throws on
-  // write, and a quota error must not take the table down with it.
+  // be there tomorrow.
   private layoutKey(): string | null {
     const key = this.storageKey().trim();
 
@@ -1868,8 +1827,6 @@ export class TableComponent<T extends object> {
     await running;
   }
 
-  // The one failure this shape is prone to: a call that finds no feature is a silent no-op, and
-  // the table is the only place that knows whether one registered.
   private warnNoExport(called: string): void {
     devWarn(
       () =>
