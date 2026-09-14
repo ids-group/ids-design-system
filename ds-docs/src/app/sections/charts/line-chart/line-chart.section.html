@@ -256,6 +256,38 @@
     [(series)]="dataTableSeries" />
 
   <h3 class="block-title t-h4">
+    Interactive
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      interactive
+    </code> makes every reading focusable
+    and clickable, and grows an invisible marker on a series drawn without one
+    so there is something to land on. The hit area is a transparent 24px stroke
+    on a fine pointer and 44px on a coarse one — a 4px dot is not a touch
+    target. Tab to a marker and the tooltip names that series alone; hover the
+    plot and it names every series at the category. A tap latches the tooltip
+    open until the next tap outside.
+    <code class="t-mono-inline">
+      pointClicked
+    </code> fires whether
+    or not the flag is set.
+  </p>
+
+  <ds-line-chart
+    caption="Sessions and signups — every reading is a control"
+    dataTable="none"
+    interactive
+    [categories]="interactiveCategories()"
+    [series]="interactiveSeries()"
+    (pointClicked)="lastPoint.set($event.series.label + ' · ' + $event.category)" />
+
+  <p class="block-desc t-s">
+    Last clicked: <code class="t-mono-inline">{{ lastPoint() || '—' }}</code>
+  </p>
+
+  <h3 class="block-title t-h4">
     Filtering legend
   </h3>
 

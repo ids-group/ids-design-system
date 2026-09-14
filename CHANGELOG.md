@@ -112,6 +112,18 @@
 
 ### Added
 
+- **A tap answers the way a hover does, and stays put.** Tapping a mark opens its tooltip and
+  LATCHES it: a touch fires `pointerleave` the instant the finger lifts, so without this the panel
+  would flash and vanish. The next tap outside the mark releases it. On `ds-line-chart` a tap
+  anywhere in the plot picks the category under the finger, the same as a pointer moving over it.
+
+  `ds-line-chart`'s markers carry a hit area rather than relying on the dot: a transparent
+  `non-scaling-stroke` of 24px on a fine pointer and 44px under `(pointer: coarse)`. Measured in
+  Chrome at a 390px viewport: the marker hit-tests 21px from its centre and misses at 25px, so the
+  touch target is 44px across whatever width the plot is scaled to — a stroke in viewBox units
+  would have been a different size on a narrow card than on a wide one. It is narrower on a fine
+  pointer because a 44px target on a dense chart swallows the neighbouring readings.
+
 - **A mark that arrives and a mark that leaves are now two staged phases.** Removals run first, at
   `--ds-motion-chart-mark-exit-duration`; additions wait that long and then run at
   `--ds-motion-chart-mark-enter-duration`, so a vanishing mark and an arriving one are never on

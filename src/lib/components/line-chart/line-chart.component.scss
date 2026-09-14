@@ -115,6 +115,22 @@ figcaption {
 
 .series-marker.interactive {
   cursor: pointer;
+
+  /* The hit area, not the dot. `non-scaling-stroke` is what makes it a CSS-pixel size: the plot
+     scales to its container, so a stroke width in viewBox units would be a different target on a
+     narrow card than on a wide one. A transparent stroke is still `visiblePainted`, so it
+     hit-tests. 24px is WCAG 2.5.8; the coarse-pointer rule below takes it to 44. */
+  stroke: transparent;
+  stroke-width: 24px;
+  vector-effect: non-scaling-stroke;
+}
+
+/* A fingertip, not a cursor. Wider here only, because on a dense chart a 44px target on a fine
+   pointer swallows the neighbouring readings. */
+@media (hover: none) and (pointer: coarse) {
+  .series-marker.interactive {
+    stroke-width: 44px;
+  }
 }
 
 .series-marker.ghost {

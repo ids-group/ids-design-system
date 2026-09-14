@@ -57,6 +57,7 @@
         [attr.aria-hidden]="interactive() ? null : true"
         [attr.viewBox]="viewBox"
         (pointermove)="onPlotPointer($event)"
+        (pointerdown)="onPlotPointer($event)"
         (pointerleave)="clearActiveCategory()">
         @if (activeCategory() >= 0) {
           <rect
