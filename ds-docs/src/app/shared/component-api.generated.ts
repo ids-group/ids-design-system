@@ -1067,6 +1067,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'toggle'`."
       },
       {
+        "name": "partOfWhole",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Declares that the marks are parts of one whole, which is what makes a share of their total a real quantity. Off by default: a chart of visitors per stage or revenue per month sums to a number nobody can point at, and \"18.6% of total\" against it is arithmetic dressed as a fact. On, each mark's share appears on the tooltip's second line and in the data table."
+      },
+      {
         "name": "showPercent",
         "kind": "input",
         "type": "boolean",
@@ -2080,6 +2089,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'toggle'`."
+      },
+      {
+        "name": "partOfWhole",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Declares that the marks are parts of one whole, which is what makes a share of their total a real quantity. Off by default: a chart of visitors per stage or revenue per month sums to a number nobody can point at, and \"18.6% of total\" against it is arithmetic dressed as a fact. On, each mark's share appears on the tooltip's second line and in the data table."
       },
       {
         "name": "loading",

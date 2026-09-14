@@ -72,6 +72,12 @@ export class BarChartComponent {
    *  `'none'` belongs only where the same data is already in a table on the page.
    *  Unset falls back to `DS_CONFIG.chart.dataTable`, then `'toggle'`. */
   readonly dataTable = input<ChartDataTable | null>(null);
+  /** Declares that the marks are parts of one whole, which is what makes a share of their total a
+   *  real quantity. Off by default: a chart of visitors per stage or revenue per month sums to a
+   *  number nobody can point at, and "18.6% of total" against it is arithmetic dressed as a fact.
+   *  On, each mark's share appears on the tooltip's second line and in the data table. */
+  readonly partOfWhole = input(false, { transform: booleanAttribute });
+
   /** Prints each row's share of `max` beside its value. */
   readonly showPercent = input(true, { transform: booleanAttribute });
   /** Draws skeleton marks in place of the data, at the same count, so the chart does not resize
@@ -189,10 +195,12 @@ export class BarChartComponent {
             value: entry.row.value,
             formatted: entry.formattedValue,
             color: entry.color,
-            detail: describeShare(
-              this.data().map((row) => row.value),
-              this.activeMark.index(),
-            ),
+            detail: this.partOfWhole()
+              ? describeShare(
+                  this.data().map((row) => row.value),
+                  this.activeMark.index(),
+                )
+              : undefined,
           },
         ],
       };
@@ -220,7 +228,7 @@ export class BarChartComponent {
         row.percent !== undefined
           ? formatPercent(row.percent, 100)
           : formatPercent(row.value, max),
-      share: shareOfTotal(values, index),
+      share: this.partOfWhole() ? shareOfTotal(values, index) : '',
       color: row.color ?? chartColors.seriesDefault,
     }));
   });

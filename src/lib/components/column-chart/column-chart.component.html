@@ -123,9 +123,11 @@
                 Value
               </th>
 
-              <th scope="col">
-                Share of total
-              </th>
+              @if (partOfWhole()) {
+                <th scope="col">
+                  Share of total
+                </th>
+              }
             </tr>
           </thead>
 
@@ -140,9 +142,11 @@
                   {{ entry.formattedValue }}
                 </td>
 
-                <td>
-                  {{ entry.share }}
-                </td>
+                @if (partOfWhole()) {
+                  <td>
+                    {{ entry.share }}
+                  </td>
+                }
               </tr>
             }
           </tbody>
