@@ -19,6 +19,7 @@ import {
   niceMax,
   tickStep,
   describeShare,
+  shareOfTotal,
   focusMark,
   nextRovingIndex,
   staggerDelay,
@@ -241,12 +242,14 @@ export class ColumnChartComponent {
   protected readonly columns = computed(() => {
     const axisMax = this.axisMax();
     const format = this.valueFormatResolved();
+    const values = this.data().map((point) => point.value);
 
     return this.data().map((point, index) => ({
       key: point.id ?? String(index),
       point,
       heightPercent: heightPercent(point.value, axisMax),
       formattedValue: format(point.value),
+      share: shareOfTotal(values, index),
       color:
         point.color ?? CHART_SERIES_COLORS[index % CHART_SERIES_COLORS.length],
     }));

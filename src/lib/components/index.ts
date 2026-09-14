@@ -10,6 +10,7 @@ export {
   formatValue,
   largestRemainder,
   describeShare,
+  shareOfTotal,
 } from './charts-format';
 export { elementWidth } from './charts-measure';
 export {

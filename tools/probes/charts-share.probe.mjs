@@ -5,7 +5,7 @@ import { check, finish } from './probe-check.mjs';
 // keep the import shape identical to the other chart probes.
 registerHooks({});
 
-const { describeShare } = await import(
+const { describeShare, shareOfTotal } = await import(
   new URL('../../src/lib/components/charts-format.ts', import.meta.url).href
 );
 
@@ -45,5 +45,15 @@ check(
 // A positive mark whose only sibling is negative is the whole of the total it can be a share of.
 check('the only positive is all of it', describeShare([10, -5], 0), '100.0% of total');
 check('no positive mark, no total', describeShare([-10, -5], 0), '');
+
+// The table column and the tooltip line must never disagree: one is the other without its suffix.
+check('the column cell is the bare percentage', shareOfTotal([50, 30, 20], 0), '50.0%');
+check('a lone mark has no share to print', shareOfTotal([42], 0), '');
+check('a negative mark has no share', shareOfTotal([50, -30, 20], 1), '');
+check(
+  'the tooltip line is the column cell plus its denominator',
+  describeShare([50, 30, 20], 1),
+  `${shareOfTotal([50, 30, 20], 1)} of total`,
+);
 
 finish('charts-share');

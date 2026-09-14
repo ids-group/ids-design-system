@@ -16,6 +16,7 @@ import {
   describeSeries,
   formatPercent,
   describeShare,
+  shareOfTotal,
   focusMark,
   formatValue,
   nextRovingIndex,
@@ -208,6 +209,7 @@ export class BarChartComponent {
   protected readonly rows = computed(() => {
     const max = this.resolvedMax();
     const format = this.valueFormatResolved();
+    const values = this.data().map((row) => row.value);
 
     return this.data().map((row, index) => ({
       key: row.id ?? String(index),
@@ -218,6 +220,7 @@ export class BarChartComponent {
         row.percent !== undefined
           ? formatPercent(row.percent, 100)
           : formatPercent(row.value, max),
+      share: shareOfTotal(values, index),
       color: row.color ?? chartColors.seriesDefault,
     }));
   });
