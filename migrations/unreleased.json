@@ -77,6 +77,37 @@
       ],
       "verify": "Every consumer rule on `.ds-dropdown-panel` is either intended for all six pickers, or names one pane class — `ds-select-panel`, `ds-multi-select-panel`, `ds-autocomplete-panel`, `ds-color-picker-panel`, `ds-date-picker-panel` or `ds-time-picker-panel`.",
       "note": "The date and time pickers used to pass a panel class that REPLACED the shared pair, so their panes carried `ds-overlay-pane` alone. The shared pair is now unconditional and a caller adds to it, which is what lets each pane also carry a class of its own. This is the inbound direction of a widening: an existing rule starts matching a panel it never matched."
+    },
+    {
+      "id": "overlay-role-forwarding-compares-with-the-parent",
+      "kind": "behavior",
+      "old": "SelectComponent",
+      "new": null,
+      "surface": "style",
+      "action": "If a role token set on an ANCESTOR of a picker was reaching its portaled panel, move it onto the component itself — `ds-select { --ds-radius-panel: 8px }` — or use the panel hook, e.g. `--ds-dropdown-panel-radius`.",
+      "appliesWhen": "Only a stylesheet that sets `--ds-radius-inner`, `--ds-radius-control`, `--ds-radius-panel`, `--ds-radius-pill` or one of the four `--ds-elevation-*` roles on an ancestor of a picker, popover, menu or tooltip. A role set on the component, on `:root`, or on the pane is unaffected, and no template or TypeScript changes.",
+      "pitfall": "Nothing errors and nothing logs. A panel that was inheriting a shell radius or elevation simply falls back to the root value, and only opening it shows the difference.",
+      "restore": null,
+      "searchHints": [
+        "--ds-radius-panel",
+        "--ds-radius-inner",
+        "--ds-radius-control",
+        "--ds-radius-pill",
+        "--ds-elevation-overlay"
+      ],
+      "detect": [
+        "--ds-radius-panel",
+        "--ds-radius-inner",
+        "--ds-radius-control",
+        "--ds-radius-pill",
+        "--ds-elevation-raised",
+        "--ds-elevation-overlay",
+        "--ds-elevation-floating",
+        "--ds-elevation-modal",
+        ".ds-overlay-pane"
+      ],
+      "verify": "Every panel whose corner or elevation came from a wrapper still looks right with it open, and a rule on `.ds-overlay-pane` is no longer beaten by an inline value on the pane.",
+      "note": "The component copies the roles a portaled pane needs onto it inline, because the pane sits outside the host. It chose what to copy by comparing the host with `:root`; custom properties inherit, so any ancestor value made every component under it an overrider and pinned that value inline, above the `.ds-overlay-pane` rule that is a stylesheet’s only route to a portaled panel. The comparison is against the parent now, which is what separates a role the host declares from one it inherited."
     }
   ],
   "informational": [

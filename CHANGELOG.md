@@ -203,6 +203,18 @@
   with `-right` set and `-x` unset — got a footer at the 16px default while the column sat at 0.
   The footer now walks the same per-side chain; `-x` still works as the shorthand for both.
 
+- **A role token set on an app shell no longer outranks your rule on a portaled panel.** A panel
+  sits in `document.body`, so the component copies the roles it needs onto the pane as an inline
+  style. It decided what to copy by comparing the host with `:root` — and because custom properties
+  inherit, a shell setting `--ds-radius-panel` for its own chrome made every picker under it an
+  overrider, each pinning the shell's value inline. A rule on `.ds-overlay-pane`, which is the only
+  route a stylesheet has to a portaled panel, then lost to a value nobody wrote. The comparison is
+  now against the host's PARENT, so only a role the host declares itself travels.
+
+  If you were relying on an ancestor's role reaching a panel, set it on the component instead —
+  `ds-select { --ds-radius-panel: 8px }` still forwards — or use the panel's own hook, such as
+  `--ds-dropdown-panel-radius`, which is forwarded with no such test.
+
 ### What you can now DELETE
 
 | your workaround | why it is unnecessary | replace with |
