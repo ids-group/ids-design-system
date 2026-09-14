@@ -150,8 +150,9 @@ export class ButtonComponent extends DsMessageBase {
    *  reach back through `window.opener`. Both link destinations take it. */
   readonly rel = input<string | undefined>(undefined);
   /** How `routerLinkActive` decides the `active` CLASS — prefix by default, so a section link
-   *  stays lit inside its own pages. It does NOT decide `aria-current`, which is exact by
-   *  construction; see `ariaCurrent`. */
+   *  stays lit inside its own pages. It also bounds the announcement, because the same directive
+   *  writes it: narrowed to `{ exact: true }`, a prefix match is no longer active and the link
+   *  announces nothing rather than `true`. Pass `ariaCurrent` alongside to keep one. */
   readonly routerLinkActiveOptions = input<
     { exact: boolean } | IsActiveMatchOptions
   >({ exact: false });
