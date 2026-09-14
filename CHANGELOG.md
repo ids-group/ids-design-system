@@ -2,14 +2,34 @@
 
 ### Added
 
-- **`ds-bar-chart` and `ds-column-chart` print each mark's share of the total in their data table.**
-  The tooltip carries that figure on its second line and was the only place it existed, so a reader
-  who cannot hover had no route to it at all. The column is headed `Share of total` rather than
-  `Share` because `ds-bar-chart` already prints a percentage beside each row and that one is the
-  share of the LARGEST row — two different questions, now each labelled with the one it answers.
+- **`ds-bar-chart` and `ds-column-chart` take `partOfWhole`, and it is what states each mark's share
+  of the total.** A share of a total is only a real quantity when the marks are parts of one whole.
+  Visitors per funnel stage, or response time per endpoint, sum to a number nobody can point at, and
+  a percentage of THAT is arithmetic dressed as a fact — so the charts no longer state one unless
+  you say the relationship holds:
+
+  ```html
+  <ds-bar-chart partOfWhole caption="Spend by department, share of the budget" [data]="rows" />
+  ```
+
+  With it set, the share appears in two places: the tooltip's second line, and a `Share of total`
+  column in the data table. The column is headed `Share of total` rather than `Share` because
+  `ds-bar-chart` already prints a percentage beside each row and that one is the share of the
+  LARGEST row — two different questions, each now labelled with the one it answers.
 
   The cell is empty where there is no share to state: a lone mark, or a reading that is zero,
   negative or non-finite. Negatives are left out of the total rather than subtracted from it.
+
+### Changed
+
+- **A chart tooltip's second line is opt-in.** `0.13.1` gave every `ds-bar-chart` and
+  `ds-column-chart` tooltip a `18.6% of total` line whether or not the marks were parts of a whole.
+  It appears only under `partOfWhole` now. Set it on any chart whose categories genuinely divide one
+  total to keep the line; leave it off and the tooltip carries the label and the value, as before
+  `0.13.1`.
+
+  `BarChartComponent` and `ColumnChartComponent` grow by one member, `partOfWhole`. A subclass
+  declaring that name collides and needs `override` or a rename.
 
 ## 0.13.1 — 2026-09-14
 

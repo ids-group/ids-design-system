@@ -1,0 +1,52 @@
+{
+  "version": "unreleased",
+  "items": [
+    {
+      "id": "chart-share-of-total-behind-part-of-whole",
+      "kind": "behavior",
+      "old": "ds-bar-chart",
+      "new": null,
+      "surface": "template",
+      "action": "Add `partOfWhole` to any `ds-bar-chart` or `ds-column-chart` whose categories genuinely divide one total, to keep the `18.6% of total` line `0.13.1` put in its tooltip. Leave it off everywhere else — the line disappears and the tooltip reads as it did before `0.13.1`.",
+      "appliesWhen": "Only `ds-bar-chart` and `ds-column-chart`. `ds-donut-chart` and `ds-funnel-chart` state their own percentages from their own geometry and are untouched; `ds-line-chart` never had the line.",
+      "pitfall": "Nothing errors and nothing logs — the second line simply stops appearing. The reverse is the worse failure: leaving `partOfWhole` on a chart whose marks are a funnel or a time series states a share of a total that does not exist as a quantity.",
+      "restore": "Set `partOfWhole` on the chart.",
+      "searchHints": [
+        "ds-bar-chart",
+        "ds-column-chart",
+        "of total",
+        "partOfWhole"
+      ],
+      "detect": [
+        "ds-bar-chart",
+        "ds-column-chart"
+      ],
+      "verify": "Every chart that still shows a share on its tooltip carries `partOfWhole`, and every chart carrying it has categories that add up to a total a reader can name.",
+      "note": "A share of a total is only a real quantity when the marks are parts of one whole. `0.13.1` stated one unconditionally, which made the figure meaningless on funnel-shaped and time-series data. The input also governs the new `Share of total` column in the data table."
+    },
+    {
+      "id": "chart-part-of-whole-member-added",
+      "kind": "behavior",
+      "old": "BarChartComponent",
+      "new": null,
+      "surface": "typescript",
+      "action": "Only if you SUBCLASS `BarChartComponent` or `ColumnChartComponent` and declare a member called `partOfWhole`: rename yours, or add `override` where your member genuinely means the same thing.",
+      "appliesWhen": "Only a class extending `BarChartComponent` or `ColumnChartComponent`. A template that uses the charts needs nothing.",
+      "pitfall": "The collision is a compile error, not a silent one — TS4114 for a same-named member, TS2416 where the signature differs — so a build that passes has none.",
+      "restore": null,
+      "searchHints": [
+        "partOfWhole"
+      ],
+      "detect": [
+        "extends BarChartComponent",
+        "extends ColumnChartComponent"
+      ],
+      "verify": "No subclass of either chart declares a member named `partOfWhole` of its own; the app builds with no TS4114 or TS2416 on those classes.",
+      "note": "Each chart gained one input, `partOfWhole`. Subclassing a DS component is unsupported, but a release that only adds can still fail such a build on a name collision, which is why the addition is listed here rather than in the additive notes."
+    }
+  ],
+  "informational": [
+    "`ds-bar-chart` and `ds-column-chart` gained a `Share of total` column in their data table, shown only under `partOfWhole`. It carries the same figure as the tooltip's second line, so a reader who cannot hover now has a route to it. The heading says `Share of total` rather than `Share` because `ds-bar-chart` already prints a percentage beside each row and that one is the share of the largest row, not of the sum."
+  ],
+  "deleteList": []
+}
