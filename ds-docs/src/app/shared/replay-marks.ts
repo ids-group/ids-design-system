@@ -5,7 +5,7 @@ const CHARTS =
 // bar row and a column is the fill inside it rather than the row. A class list rather than a
 // library API: this is a docs affordance, and a chart that renamed a mark leaves the button inert
 // rather than breaking anything.
-const MARKS = '.fill,.bar,.slice,.stage,.series-line,.series-area';
+const MARKS = '.fill,.bar,.ring-svg,.stage,.series-line,.series-area';
 
 const ENTER = 'mark-enter';
 

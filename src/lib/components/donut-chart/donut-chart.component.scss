@@ -3,7 +3,11 @@
 @use '../../styles/chart-frame' as chart-frame;
 @use '../../styles/chart-interactive' as chart-interactive;
 @use '../../styles/chart-motion' as chart-motion;
-@include chart-motion.fades-in('.slice');
+
+// The RING fades, not the slices. Arcs share their edges, and two semi-transparent shapes butting
+// up along one show the background through the seam — which reads as the proportions shifting
+// slightly as the fade finishes. Compositing the ring first and fading the result cannot.
+@include chart-motion.fades-in('.ring-svg');
 @include chart-frame.chart-frame;
 @include chart-data-table.chart-data-table;
 

@@ -593,6 +593,13 @@ export class LineChartComponent {
     baselineOf(this.layout().secondaryPlot),
   );
 
+  /** Where the crosshair stops. Under `'stacked'` the two plots sit one above the other over one
+   *  category axis, so a crosshair that ends at the upper plot's baseline leaves the lower plot —
+   *  the same category, the same pointer — with nothing marked at all. */
+  protected readonly cursorBottomY = computed(() =>
+    this.stacked() ? this.secondaryBaselineY() : this.primaryBaselineY(),
+  );
+
   protected readonly primaryLabelX = computed(
     () => this.layout().primaryPlot.left - LINE_CHART_AXIS_LABEL_GAP,
   );

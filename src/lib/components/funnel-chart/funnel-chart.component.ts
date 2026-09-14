@@ -202,6 +202,10 @@ export class FunnelChartComponent {
             value: entry.stage.value,
             formatted: `${entry.formattedValue} · ${entry.formattedPercent}`,
             color: entry.color,
+            detail:
+              entry.formattedDrop === '—'
+                ? ''
+                : `${entry.formattedDrop} fell away since the stage above`,
           },
         ],
       };

@@ -9,6 +9,7 @@ export {
   formatTick,
   formatValue,
   largestRemainder,
+  describeStanding,
 } from './charts-format';
 export { elementWidth } from './charts-measure';
 export {

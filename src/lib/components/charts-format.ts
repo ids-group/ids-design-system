@@ -91,3 +91,46 @@ export function formatTick(value: number, step: number): string {
     ? `${Math.round(scaled)}${unit.suffix}`
     : `${scaled.toFixed(1)}${unit.suffix}`;
 }
+
+function ordinal(rank: number): string {
+  // 11th, 12th and 13th break the last-digit rule, which is why the teens are excluded first.
+  const teens = rank % 100;
+  if (teens >= 11 && teens <= 13) {
+    return `${rank}th`;
+  }
+  const suffix = { 1: 'st', 2: 'nd', 3: 'rd' }[rank % 10] ?? 'th';
+
+  return `${rank}${suffix}`;
+}
+
+/** Where one mark stands among its siblings: its share of the total, and its rank.
+ *
+ *  A single-series category chart prints every mark's own value beside it, so a tooltip repeating
+ *  that number tells the reader nothing they are not already looking at. What is NOT on the chart
+ *  is how the mark compares — and both halves of that are arithmetic the reader should not have to
+ *  do. Empty for a single mark, which has nothing to stand among.
+ *
+ *  @internal */
+export function describeStanding(
+  values: readonly number[],
+  index: number,
+): string {
+  const value = values[index];
+  if (values.length < 2 || !Number.isFinite(value)) {
+    return '';
+  }
+  // Negatives and non-finite readings are excluded from the total rather than subtracted from it:
+  // a share of a total that some marks reduced is not a share of anything a reader can see.
+  const positives = values.filter(
+    (entry) => Number.isFinite(entry) && entry > 0,
+  );
+  const total = positives.reduce((sum, entry) => sum + entry, 0);
+  const rank =
+    1 +
+    values.filter((entry) => Number.isFinite(entry) && entry > value).length;
+  const standing = `${ordinal(rank)} of ${values.length}`;
+
+  return total > 0 && value > 0
+    ? `${formatPercent(value, total)} of total · ${standing}`
+    : standing;
+}

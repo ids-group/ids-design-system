@@ -116,6 +116,28 @@
   nothing. `ds-bar-chart`'s row gap moved from `row-gap` on the list to padding on each row, for
   the same reason: a reader aiming between two bars used to hit neither.
 
+- **A tooltip now says what the chart does not already print.** On `ds-bar-chart` and
+  `ds-column-chart` it repeated the label and the value that sit beside the mark, which told the
+  reader nothing they were not looking at. Every mark's panel carries a second line: its share of
+  the total and its rank — `18.6% of total · 3rd of 5` — arithmetic the reader should not have to
+  do. `ds-donut-chart` gets the rank beside the share its legend already prints, and
+  `ds-funnel-chart` gets the drop into the stage, which the shape cannot show. A projected
+  `#dsChartTooltip` template still replaces the lot.
+
+- **`ds-line-chart`'s crosshair stops travelling.** It was eased into place, which meant it arrived
+  after the cursor and crossed readings it had never been over — and on the first hover it flew in
+  from the plot's origin. It is where the pointer is, immediately.
+
+- **`ds-line-chart`'s crosshair covers both plots under `yAxisMode="stacked"`.** It stopped at the
+  upper plot's baseline, so the lower plot — same category, same pointer — had nothing marked at
+  all. Measured on the docs card: the band was 121 of 320 viewBox units and is now 276.
+
+- **`ds-donut-chart` fades as one ring rather than slice by slice.** Arcs share their edges, and
+  two semi-transparent shapes butting up along one let the background through the seam — which
+  reads as the slice proportions shifting slightly as the fade ends. Compositing the ring first and
+  fading the result cannot do that. Measured: mid-animation the ring is at opacity 0.66 and every
+  slice at 1.
+
 - **A chart keeps its height in every state.** An empty `data`, a failed request, or a legend that
   switched the last series off used to shrink the chart to a line of text, which drags the page up
   under the reader at exactly the moment they are being told something. The message now stands in a

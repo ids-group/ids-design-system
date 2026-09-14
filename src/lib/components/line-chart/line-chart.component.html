@@ -71,7 +71,7 @@
               x="0"
               [attr.y]="primaryTopY()"
               [attr.width]="activeBandWidth()"
-              [attr.height]="primaryBaselineY() - primaryTopY()" />
+              [attr.height]="cursorBottomY() - primaryTopY()" />
 
             <line
               class="cursor-line"
@@ -79,7 +79,7 @@
               [attr.x1]="activeBandWidth() / 2"
               [attr.x2]="activeBandWidth() / 2"
               [attr.y1]="primaryTopY()"
-              [attr.y2]="primaryBaselineY()" />
+              [attr.y2]="cursorBottomY()" />
           </g>
         }
 

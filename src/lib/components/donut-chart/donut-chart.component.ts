@@ -15,6 +15,7 @@ import {
   CHART_SERIES_COLORS,
   describeSeries,
   formatValue,
+  describeStanding,
   focusMark,
   largestRemainder,
   nextRovingIndex,
@@ -219,6 +220,10 @@ export class DonutChartComponent {
             value: entry.slice.value,
             formatted: `${entry.formattedValue} · ${entry.formattedPercent}`,
             color: entry.color,
+            detail: describeStanding(
+              this.visibleSlices().map((slice) => slice.value),
+              this.activeMark.index(),
+            ),
           },
         ],
       };

@@ -14,6 +14,10 @@ export interface ChartTooltipEntry {
   /** Already through the chart's `valueFormat`, so the panel never formats. */
   readonly formatted: string;
   readonly color: string;
+  /** A second line under the value, for what the chart does NOT already print beside the mark —
+   *  its share of the total, its rank, the drop into it. A tooltip that repeats the label a
+   *  reader is looking at has told them nothing. */
+  readonly detail?: string;
 }
 
 export interface ChartTooltipContext {
