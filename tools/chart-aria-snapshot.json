@@ -1,0 +1,41 @@
+{
+  "bar-chart": [
+    "p: role=status",
+    "div: aria-hidden=true",
+    "div: role={interactive() ? 'group' : 'img'}, aria-label={accessibleName()}",
+    "div: role={interactive() ? 'button' : null}, aria-label={interactive() ? entryLabel(entry) : null}"
+  ],
+  "column-chart": [
+    "p: role=status",
+    "div: aria-hidden=true",
+    "div: role={interactive() ? 'group' : 'img'}, aria-label={accessibleName()}",
+    "div: role={interactive() ? 'button' : null}, aria-label={interactive() ? entryLabel(entry) : null}"
+  ],
+  "donut-chart": [
+    "p: role=status",
+    "div: aria-hidden=true",
+    "div: aria-hidden=true",
+    "div: role={interactive() ? 'group' : 'img'}, aria-label={accessibleName()}",
+    "svg: aria-hidden={ringCarriesTheRoute() ? null : true}",
+    "path: role={ringCarriesTheRoute() ? 'button' : null}, aria-label={ringCarriesTheRoute() ? entryLabel(entry) : null}",
+    "li: role={interactive() ? 'button' : null}, aria-label={interactive() ? entryLabel(entry) : null}"
+  ],
+  "funnel-chart": [
+    "p: role=status",
+    "div: aria-hidden=true",
+    "div: role={interactive() ? 'group' : 'img'}, aria-label={accessibleName()}",
+    "svg: aria-hidden={interactive() ? null : true}",
+    "polygon: role={interactive() ? 'button' : null}, aria-label={interactive() ? entryLabel(entry) : null}",
+    "span: aria-hidden=true"
+  ],
+  "line-chart": [
+    "p: role=status",
+    "div: aria-hidden=true",
+    "p: role=status",
+    "div: role={interactive() ? 'group' : 'img'}, aria-label={accessibleName()}",
+    "svg: aria-hidden={interactive() ? null : true}",
+    "rect: aria-hidden=true",
+    "line: aria-hidden=true",
+    "circle: role={interactive() ? 'button' : null}, aria-label={interactive() ? markerLabel(entry, marker) : null}"
+  ]
+}

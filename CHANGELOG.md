@@ -536,6 +536,10 @@
 
 ### Changed
 
+- **`--ds-chart-line-width-bold` now reaches a rule.** Highlighting one `ds-line-chart` series —
+  from the legend, or from a mark — thickens it to that width as well as dimming the others, so the
+  highlight survives a monochrome print and a reader who cannot tell the two hues apart.
+
 - **A chart's generated description leads with what the chart says, not with how it is drawn.** The
   order is now: what it is and its scale, the trend, the extremes, then where the numbers are —
   `"Visits by month, 3 points, 1,620 to 2,410. Rising throughout. Highest in Nov at 2,410, lowest
@@ -589,6 +593,9 @@
 | `ds-stat { --ds-stat-value-white-space: normal; }` written only to stop a long value painting over the tile beside it | the value clips by default, so it no longer escapes its card | nothing — keep the hook only where you want the value wrapped and the tile taller |
 | `ds-stat .value { overflow: hidden; text-overflow: ellipsis; }` — your own clip on the value | the component clips it, and with `overflow: clip` plus a clip margin, so descenders survive where `hidden` shaved them | nothing |
 | `.cell-text-pop` — a rule sizing or colouring the table's full-value popover | the popover is gone; a clipped cell opens a tooltip instead | `--ds-tooltip-*`, if the panel needs changing at all |
+| `--ds-chart-axis-title-color` | no chart draws an axis title, so the token reached no rule and setting it changed nothing | nothing |
+| `--ds-chart-grid-line-strong-color` | no chart draws a strong gridline, so the token reached no rule | nothing |
+| `--ds-chart-tick-size` | no chart draws tick marks on its axes, so the token reached no rule | nothing |
 
 ## 0.12.3 — 2026-09-10
 

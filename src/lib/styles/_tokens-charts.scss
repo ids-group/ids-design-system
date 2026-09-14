@@ -90,10 +90,7 @@
   /* AXIS / GRID / LEGEND */
   --chart-axis-line-color:    var(--neutral-300);
   --chart-axis-label-color:   var(--text-tertiary);
-  --chart-axis-title-color:   var(--text-secondary);
   --chart-grid-line-color:    var(--neutral-150);
-  --chart-grid-line-strong-color: var(--neutral-200);
-  --chart-tick-size:    4px;
   --chart-axis-font-size:      var(--font-size-2xs);
 
   /* HIGHLIGHT / HOVER */
@@ -161,10 +158,8 @@
 
   --ds-chart-axis-line-color: var(--chart-axis-line-color);
   --ds-chart-axis-label-color: var(--chart-axis-label-color);
-  --ds-chart-axis-title-color: var(--chart-axis-title-color);
   --ds-chart-axis-font-size: var(--chart-axis-font-size);
   --ds-chart-grid-line-color: var(--chart-grid-line-color);
-  --ds-chart-grid-line-strong-color: var(--chart-grid-line-strong-color);
 
   --ds-chart-dim-opacity: var(--chart-dim-opacity);
   --ds-chart-hover-bg-color: var(--chart-hover-bg-color);
@@ -180,5 +175,4 @@
   --ds-chart-line-width-bold: var(--chart-line-width-bold);
   --ds-chart-dot-radius: var(--chart-dot-radius);
   --ds-chart-dot-radius-active: var(--chart-dot-radius-active);
-  --ds-chart-tick-size: var(--chart-tick-size);
 }

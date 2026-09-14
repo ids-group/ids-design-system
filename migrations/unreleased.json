@@ -479,6 +479,33 @@
       ],
       "why": "importing it to write `[queryParams]` or `[fragment]` on a `<ds-button>` put a second RouterLink on the host that disagreed with the anchor\\u2019s about the destination",
       "replaceWith": "the component\\u2019s own inputs; keep the import where you use `RouterLink` on your own anchors"
+    },
+    {
+      "id": "chart-axis-title-colour-hook",
+      "surface": "style",
+      "find": [
+        "--ds-chart-axis-title-color"
+      ],
+      "why": "no chart draws an axis title, so the token reached no rule and setting it changed nothing",
+      "replaceWith": "nothing"
+    },
+    {
+      "id": "chart-strong-gridline-hook",
+      "surface": "style",
+      "find": [
+        "--ds-chart-grid-line-strong-color"
+      ],
+      "why": "no chart draws a strong gridline, so the token reached no rule and setting it changed nothing",
+      "replaceWith": "nothing"
+    },
+    {
+      "id": "chart-axis-tick-size-hook",
+      "surface": "style",
+      "find": [
+        "--ds-chart-tick-size"
+      ],
+      "why": "no chart draws tick marks on its axes, so the token reached no rule and setting it changed nothing",
+      "replaceWith": "nothing"
     }
   ]
 }

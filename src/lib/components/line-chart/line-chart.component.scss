@@ -20,6 +20,10 @@
   --_line-chart-dot-radius-active: var(--ds-line-chart-dot-radius-active, var(--ds-chart-dot-radius-active));
   --_line-chart-hover-bg-color: var(--ds-line-chart-hover-bg-color, var(--ds-chart-hover-bg-color));
   --_line-chart-cursor-line-color: var(--ds-line-chart-cursor-line-color, var(--ds-chart-cursor-line-color));
+  --_line-chart-line-width-bold: var(
+    --ds-line-chart-line-width-bold,
+    var(--ds-chart-line-width-bold)
+  );
   --_line-chart-focus-color: var(--ds-line-chart-focus-color, var(--focus-ring-color));
   --_line-chart-focus-width: var(--ds-line-chart-focus-width, var(--focus-ring-width));
   --_line-chart-area-opacity: var(--ds-line-chart-area-opacity, 0.16);
@@ -84,6 +88,14 @@ figcaption {
   stroke-width: var(--_line-chart-line-width);
   stroke-linecap: round;
   stroke-linejoin: round;
+  transition: stroke-width var(--ds-motion-chart-state-duration)
+    var(--ds-motion-chart-state-easing);
+}
+
+/* The singled-out series thickens as well as keeping its colour, so the highlight survives a
+   monochrome print and a reader who cannot tell the two hues apart. */
+.plot:has(.series-line.is-dimmed) .series-line:not(.is-dimmed) {
+  stroke-width: var(--_line-chart-line-width-bold);
 }
 
 .series-marker {
