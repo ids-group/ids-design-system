@@ -371,8 +371,36 @@ export class LineChartComponent {
       screen.inverse(),
     );
     const plot = this.layout().primaryPlot;
-    this.activeCategory.set(this.categoryBands().indexAt(point.x - plot.left));
-    this.tooltipOrigin.set({ x: event.clientX, y: event.clientY });
+    const category = this.categoryBands().indexAt(point.x - plot.left);
+    this.activeCategory.set(category);
+    this.tooltipOrigin.set(
+      this.tooltipAnchor() === 'pointer'
+        ? { x: event.clientX, y: event.clientY }
+        : this.readingAnchor(screen, category),
+    );
+  }
+
+  /** The highest reading in the category, mapped back into client pixels. Anchoring there rather
+   *  than at the cursor keeps the panel still while the pointer travels within one band, and puts
+   *  it over the readings it names instead of over the finger. */
+  private readingAnchor(
+    screen: DOMMatrix,
+    category: number,
+  ): ChartTooltipOrigin {
+    const tops = this.plottedSeries().flatMap((entry) =>
+      entry.markers
+        .filter((marker) => marker.categoryIndex === category)
+        .map((marker) => marker.y),
+    );
+    const y = tops.length ? Math.min(...tops) : this.layout().primaryPlot.top;
+    const point = new DOMPoint(
+      this.plotLeft() +
+        this.categoryBands().position(category) +
+        this.categoryBands().bandWidth / 2,
+      y,
+    ).matrixTransform(screen);
+
+    return { x: point.x, y: point.y };
   }
 
   protected clearActiveCategory(): void {
@@ -389,6 +417,11 @@ export class LineChartComponent {
     contentChild<TemplateRef<{ $implicit: ChartTooltipContext }>>(
       'dsChartTooltip',
     );
+
+  /** Where the tooltip is pinned. `'point'`, the default, is the highest reading in the category,
+   *  so the panel stays put while the pointer moves within one band. `'pointer'` follows the
+   *  cursor. */
+  readonly tooltipAnchor = input<'point' | 'pointer'>('point');
 
   protected readonly tooltipOrigin = signal<ChartTooltipOrigin | null>(null);
 

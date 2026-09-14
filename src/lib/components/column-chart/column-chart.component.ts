@@ -112,7 +112,20 @@ export class ColumnChartComponent {
       'dsChartTooltip',
     );
 
+  /** Where the tooltip is pinned. `'mark'`, the default, is the column itself — a panel over the
+   *  reading it describes. `'cell'` is the full-height category cell, which puts the panel at the
+   *  top of the plot whatever the column's value. */
+  readonly tooltipAnchor = input<'mark' | 'cell'>('mark');
+
   protected readonly activeMark = chartActiveMark();
+
+  protected onMarkEnter(index: number, event: Event): void {
+    this.activeMark.enter(
+      index,
+      event,
+      this.tooltipAnchor() === 'mark' ? '.bar' : undefined,
+    );
+  }
   /** One tab stop per chart, not one per mark: WCAG 2.1.1's Understanding is explicit that not
    *  every mouse-operable control has to be separately focusable, and that is what keeps a
    *  twenty-five mark chart from being twenty-five stops in the page's tab order. */
@@ -124,7 +137,7 @@ export class ColumnChartComponent {
 
   protected onMarkFocus(index: number, event: FocusEvent): void {
     this.rovingIndex.set(index);
-    this.activeMark.enter(index, event);
+    this.onMarkEnter(index, event);
   }
 
   protected onMarkNavigation(event: KeyboardEvent, index: number): void {

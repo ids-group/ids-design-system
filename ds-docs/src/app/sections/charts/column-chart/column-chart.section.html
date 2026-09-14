@@ -118,16 +118,14 @@
     </code> spaces the arrivals out —
     <code class="t-mono-inline">
       0
-    </code>, the default, is no stagger at all, and
-    <code class="t-mono-inline">
-      40
-    </code> is the documented step. The total delay is
-    capped at 300ms, so a long series does not crawl in. Edit the data below to
-    watch it. Under
+    </code>, the default, is no stagger at all,
+    and <code class="t-mono-inline"> 40 </code> is the documented step. The
+    total delay is capped at 300ms, so a long series does not crawl in. Edit the
+    data below to watch it. Under
     <code class="t-mono-inline">
       prefers-reduced-motion
-    </code> every
-    duration is zero and each column lands straight on its final size.
+    </code> every duration
+    is zero and each column lands straight on its final size.
   </p>
 
   <div class="states states--cols-2">
@@ -159,122 +157,126 @@
     </div>
   </div>
 
-  <h3 class="block-title t-h4">
-    Edge cases
-  </h3>
+  <details class="edge-cases">
+    <summary>
+      <h3 class="block-title t-h4">
+        Edge cases
+      </h3>
+    </summary>
 
-  <p class="block-desc t-s">
-    The axis starts at zero and never goes below it, so a negative point keeps
-    its label and draws no column at all.
-  </p>
+    <p class="block-desc t-s">
+      The axis starts at zero and never goes below it, so a negative point keeps
+      its label and draws no column at all.
+    </p>
 
-  <div class="states states--cols-2">
-    <div class="state-cell">
-      <ds-column-chart
-        dataTable="none"
-        [data]="emptyPoints()" />
+    <div class="states states--cols-2">
+      <div class="state-cell">
+        <ds-column-chart
+          dataTable="none"
+          [data]="emptyPoints()" />
 
-      <div class="state-cell-label">
-        Empty
+        <div class="state-cell-label">
+          Empty
+        </div>
+
+        <docs-chart-data-editor [(rows)]="emptyPoints" />
       </div>
 
-      <docs-chart-data-editor [(rows)]="emptyPoints" />
-    </div>
+      <div class="state-cell">
+        <ds-column-chart
+          dataTable="none"
+          loading
+          [data]="loadingPoints()" />
 
-    <div class="state-cell">
-      <ds-column-chart
-        dataTable="none"
-        loading
-        [data]="loadingPoints()" />
+        <div class="state-cell-label">
+          Loading
+        </div>
 
-      <div class="state-cell-label">
-        Loading
+        <docs-chart-data-editor [(rows)]="loadingPoints" />
       </div>
 
-      <docs-chart-data-editor [(rows)]="loadingPoints" />
-    </div>
+      <div class="state-cell">
+        <ds-column-chart
+          dataTable="none"
+          [data]="onePoint()" />
 
-    <div class="state-cell">
-      <ds-column-chart
-        dataTable="none"
-        [data]="onePoint()" />
+        <div class="state-cell-label">
+          One point
+        </div>
 
-      <div class="state-cell-label">
-        One point
+        <docs-chart-data-editor [(rows)]="onePoint" />
       </div>
 
-      <docs-chart-data-editor [(rows)]="onePoint" />
-    </div>
+      <div class="state-cell">
+        <ds-column-chart
+          dataTable="none"
+          [data]="allZerosPoints()" />
 
-    <div class="state-cell">
-      <ds-column-chart
-        dataTable="none"
-        [data]="allZerosPoints()" />
+        <div class="state-cell-label">
+          All zeros
+        </div>
 
-      <div class="state-cell-label">
-        All zeros
+        <docs-chart-data-editor [(rows)]="allZerosPoints" />
       </div>
 
-      <docs-chart-data-editor [(rows)]="allZerosPoints" />
-    </div>
+      <div class="state-cell">
+        <ds-column-chart
+          dataTable="none"
+          [data]="negativePoints()" />
 
-    <div class="state-cell">
-      <ds-column-chart
-        dataTable="none"
-        [data]="negativePoints()" />
+        <div class="state-cell-label">
+          Negative value
+        </div>
 
-      <div class="state-cell-label">
-        Negative value
+        <docs-chart-data-editor [(rows)]="negativePoints" />
       </div>
 
-      <docs-chart-data-editor [(rows)]="negativePoints" />
-    </div>
+      <div class="state-cell">
+        <ds-column-chart
+          dataTable="none"
+          [data]="hugeOutlierPoints()" />
 
-    <div class="state-cell">
-      <ds-column-chart
-        dataTable="none"
-        [data]="hugeOutlierPoints()" />
+        <div class="state-cell-label">
+          Huge outlier
+        </div>
 
-      <div class="state-cell-label">
-        Huge outlier
+        <docs-chart-data-editor [(rows)]="hugeOutlierPoints" />
       </div>
 
-      <docs-chart-data-editor [(rows)]="hugeOutlierPoints" />
-    </div>
+      <div class="state-cell">
+        <ds-column-chart
+          dataTable="none"
+          [data]="longLabelPoints()" />
 
-    <div class="state-cell">
-      <ds-column-chart
-        dataTable="none"
-        [data]="longLabelPoints()" />
+        <div class="state-cell-label">
+          Long label
+        </div>
 
-      <div class="state-cell-label">
-        Long label
+        <docs-chart-data-editor [(rows)]="longLabelPoints" />
       </div>
 
-      <docs-chart-data-editor [(rows)]="longLabelPoints" />
-    </div>
+      <div class="state-cell">
+        <ds-column-chart
+          dataTable="none"
+          [data]="nineDigitValuePoints()" />
 
-    <div class="state-cell">
-      <ds-column-chart
-        dataTable="none"
-        [data]="nineDigitValuePoints()" />
+        <div class="state-cell-label">
+          Nine-digit value
+        </div>
 
-      <div class="state-cell-label">
-        Nine-digit value
+        <docs-chart-data-editor [(rows)]="nineDigitValuePoints" />
       </div>
 
-      <docs-chart-data-editor [(rows)]="nineDigitValuePoints" />
-    </div>
+      <div class="state-cell">
+        <ds-column-chart
+          dataTable="none"
+          error
+          [data]="specimenPoints()" />
 
-    <div class="state-cell">
-      <ds-column-chart
-        dataTable="none"
-        error
-        [data]="specimenPoints()" />
-
-      <div class="state-cell-label">
-        Error
+        <div class="state-cell-label">
+          Error
+        </div>
       </div>
     </div>
-  </div>
+  </details>
 </docs-section>

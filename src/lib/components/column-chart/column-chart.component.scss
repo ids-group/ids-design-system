@@ -2,7 +2,7 @@
 @use '../../styles/chart-frame' as chart-frame;
 @use '../../styles/chart-interactive' as chart-interactive;
 @use '../../styles/chart-motion' as chart-motion;
-@include chart-motion.staged('.column');
+@include chart-motion.grows-up('.column', '.bar');
 @include chart-frame.chart-frame;
 @include chart-data-table.chart-data-table;
 
@@ -11,6 +11,10 @@
   --_column-chart-plot-height: var(--ds-column-chart-plot-height, 200px);
   --_column-chart-column-gap: var(--ds-column-chart-column-gap, var(--ds-chart-bar-gap));
   --_column-chart-column-width: var(--ds-column-chart-column-width, 80%);
+  --_column-chart-cap-radius: var(
+    --ds-column-chart-cap-radius,
+    var(--ds-chart-mark-cap-radius)
+  );
   --_column-chart-column-max-width: var(--ds-column-chart-column-max-width, 48px);
   --_column-chart-grid-line-color: var(--ds-column-chart-grid-line-color, var(--ds-chart-grid-line-color));
   --_column-chart-value-space: var(--ds-column-chart-value-space, var(--space-5));
@@ -114,13 +118,13 @@ figcaption {
 .bar {
   inline-size: var(--_column-chart-column-width);
   max-inline-size: var(--_column-chart-column-max-width);
-  border-start-start-radius: var(--radius-sm);
-  border-start-end-radius: var(--radius-sm);
+  border-start-start-radius: var(--_column-chart-cap-radius);
+  border-start-end-radius: var(--_column-chart-cap-radius);
 
-  // NOTE(chart-layout-transition): `block-size`, not `transform: scaleY()`, and it is a
-  // considered trade — Stas 2026-09-14, keep the current cap for now. Under a scaled transform the
-  // rounded top squashes with the body, so the cap's radius changes shape for the length of the
-  // animation. The cost is a layout pass per frame on one property.
+  // NOTE(chart-layout-transition): a VALUE change animates `block-size`, not `transform`, and it
+  // is a considered trade — under a scaled transform the rounded top squashes with the body, so
+  // the cap changes shape for the length of the animation. The cost is a layout pass per frame on
+  // one property. The mark's ARRIVAL does scale, where the squash is worth the compositor.
   transition: block-size var(--ds-motion-chart-mark-duration)
     var(--ds-motion-chart-mark-easing);
 }

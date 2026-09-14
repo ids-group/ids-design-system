@@ -46,6 +46,11 @@
 
 /* Hiding a series is a filter, not a disabled control — the item stays operable and says so by
    losing the colour it contributed. */
+.legend-label {
+  transition: color var(--ds-motion-chart-state-duration)
+    var(--ds-motion-chart-state-easing);
+}
+
 .legend-item.is-hidden .legend-label {
   color: var(--text-disabled);
   text-decoration: line-through;

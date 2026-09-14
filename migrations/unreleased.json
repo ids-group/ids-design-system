@@ -1,0 +1,13 @@
+{
+  "version": "unreleased",
+  "items": [],
+  "informational": [
+    "Every DS surface that used to travel on its way in now fades instead. `ds-overlay-pane` — the select, autocomplete, multi-select, date-picker, time-picker, colour-picker, popover, menu-submenu and tooltip panels — plus `ds-alert`, `ds-banner` and `ds-toast` defaulted to `ds-slide-in`, which offsets the surface and slides it into place; they default to `ds-fade-in` now, at the same duration and easing. `ds-drawer` and `ds-bottom-sheet` are unchanged (`ds-slide-edge-in`), and so is `ds-modal` (`ds-scale-in`). Nothing in your code changes. If you want the travel back it is one declaration at the root — `:root { --ds-overlay-enter-keyframes: ds-slide-in; }` — or per surface, `ds-toast { --ds-toast-enter-keyframes: ds-slide-in; }`.",
+    "A chart mark now arrives by growing from its own baseline rather than by scaling about its centre: a `ds-column-chart` column grows up out of the category axis, a `ds-bar-chart` row grows out from the value axis, and `ds-donut-chart`, `ds-funnel-chart` and `ds-line-chart` marks fade because they have no baseline to grow from. Nothing in your code changes, and `staggerMs` is unaffected.",
+    "The mark cap on `ds-bar-chart` and `ds-column-chart` is 3px, through a new `--ds-chart-mark-cap-radius` with `--ds-bar-chart-cap-radius` and `--ds-column-chart-cap-radius` over it. The bar's end was a full pill (half the track height) and the column's top was `--radius-sm`, so both change shape slightly. Set the hook to your old value if the pill mattered: `ds-bar-chart { --ds-bar-chart-cap-radius: 6px; }`.",
+    "`ds-funnel-chart`'s inter-stage gaps and `ds-bar-chart`'s row gap now belong to the marks either side of them, so a pointer between two marks answers for one of them instead of for nothing. Both gaps look exactly as they did; only what the pointer hits changed. A test that asserted a pointer between two bars hits neither will now see the nearer one.",
+    "`ds-line-chart`'s crosshair moved into a group that carries a `translateX`, so it glides between categories instead of jumping. A stylesheet that reached `.category-band` or `.cursor-line` to position them by hand is now positioning them inside that group; the classes themselves are unchanged.",
+    "A chart tooltip closes when the page scrolls and reopens on the next pointer move. It used to stay pinned in space while the chart scrolled away, because CDK's reposition strategy watches `window` and registered `cdkScrollable`s only and misses an app's own `overflow: auto` container."
+  ],
+  "deleteList": []
+}

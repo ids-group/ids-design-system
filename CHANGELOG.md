@@ -1,5 +1,61 @@
 ## Unreleased
 
+### Added
+
+- **The tooltip is pinned to the mark, not to the cursor, and both charts that had a say now take
+  an option.** `ds-line-chart` gains `tooltipAnchor`: `'point'`, the default, pins the panel over
+  the highest reading in the category, so it stays still while the pointer travels within one band;
+  `'pointer'` follows the cursor. `ds-column-chart` gains the same input with `'mark'` and
+  `'cell'` — measured before this, a column tooltip opened 83px above the column it described,
+  because the box catching the pointer is the full-height category cell rather than the column.
+
+  ```html
+  <ds-line-chart tooltipAnchor="pointer" [series]="series" [categories]="months" />
+  <ds-column-chart tooltipAnchor="cell" [data]="points" />
+  ```
+
+### Changed
+
+- **A surface no longer travels on its way in.** `ds-overlay-pane` — every picker panel, the
+  popover, the menu submenu, the tooltip — plus `ds-alert`, `ds-banner` and `ds-toast` defaulted to
+  `ds-slide-in`, which offsets the panel and slides it to its place. They now default to
+  `ds-fade-in`: the same duration and easing, no travel. The travel read as the panel jumping into
+  position, and on a panel that opens UPWARD it read as jumping up from below the trigger.
+
+  `ds-drawer` and `ds-bottom-sheet` keep `ds-slide-edge-in`, because sliding in from an edge is
+  what they are, and `ds-modal` keeps `ds-scale-in`. Any surface takes its old entrance back with
+  one declaration:
+
+  ```scss
+  :root { --ds-overlay-enter-keyframes: ds-slide-in; }
+  ds-toast { --ds-toast-enter-keyframes: ds-slide-in; }
+  ```
+
+- **A chart mark arrives by GROWING from its own baseline, not by scaling about its centre.** A
+  column grows up out of the category axis and a bar row grows out from the value axis; a ring arc,
+  a funnel band and a line have no baseline to grow from and fade instead. The uniform
+  `scale(0.94)` this replaces moved every mark's baseline and read as the whole chart zooming in.
+
+- **The mark cap is 3px on `ds-bar-chart` and `ds-column-chart`,** through the new
+  `--ds-chart-mark-cap-radius`, with `--ds-bar-chart-cap-radius` and `--ds-column-chart-cap-radius`
+  over it. The bar's end was a full pill (half the track height) and the column's top was
+  `--radius-sm`; one soft value for both keeps the cap from reading as a change of shape while a
+  mark grows in.
+
+- **A gap between two marks now belongs to the marks either side of it.** `ds-funnel-chart`'s
+  inter-stage gaps are claimed half by the band above and half by the band below, through a
+  transparent stroke — the gap looks exactly as it did and stops being dead space that answers
+  nothing. `ds-bar-chart`'s row gap moved from `row-gap` on the list to padding on each row, for
+  the same reason: a reader aiming between two bars used to hit neither.
+
+- **A chart tooltip closes when the page scrolls.** CDK's reposition strategy watches `window` and
+  registered `cdkScrollable`s only, so an app's own `overflow: auto` container left the panel
+  pinned in space while the chart scrolled out from under it. It reopens on the next pointer move.
+
+- **`ds-line-chart`'s crosshair glides between categories instead of jumping,** and fades on the
+  way in and out. The band and the cursor line are one group carrying a `translateX`, so the move
+  is a transform rather than four attribute writes.
+
 ## 0.13.0 — 2026-09-14
 
 ### Breaking

@@ -1,53 +1,62 @@
-<details
-  #disclosure
-  class="editor"
-  (toggle)="open.set(disclosure.open)">
-  <summary>
-    Edit data
-  </summary>
+<div class="editor-row">
+  <details
+    #disclosure
+    class="editor"
+    (toggle)="open.set(disclosure.open)">
+    <summary>
+      Edit data
+    </summary>
 
-  @if (open()) {
-    <div class="body">
-      @if (rows().length) {
-        <div class="grid">
-          @for (row of rows(); track $index) {
-            <ds-input
-              ariaLabel="Label"
-              placeholder="Label"
-              size="sm"
-              [value]="row.label"
-              (valueChange)="setLabel($index, $event)" />
+    @if (open()) {
+      <div class="body">
+        @if (rows().length) {
+          <div class="grid">
+            @for (row of rows(); track $index) {
+              <ds-input
+                ariaLabel="Label"
+                placeholder="Label"
+                size="sm"
+                [value]="row.label"
+                (valueChange)="setLabel($index, $event)" />
 
-            <ds-number-stepper
-              ariaLabel="Value"
-              size="sm"
-              [max]="valueBound"
-              [min]="-valueBound"
-              [step]="stepFor(row.value)"
-              [value]="row.value"
-              (valueChange)="setValue($index, $event)" />
+              <ds-number-stepper
+                ariaLabel="Value"
+                size="sm"
+                [max]="valueBound"
+                [min]="-valueBound"
+                [step]="stepFor(row.value)"
+                [value]="row.value"
+                (valueChange)="setValue($index, $event)" />
 
-            <ds-icon-button
-              ariaLabel="Remove row"
-              icon="trash"
-              size="sm"
-              (pressed)="removeRow($index)" />
-          }
-        </div>
-      } @else {
-        <p class="empty">
-          No rows — the chart is showing its empty state.
-        </p>
-      }
+              <ds-icon-button
+                ariaLabel="Remove row"
+                icon="trash"
+                size="sm"
+                (pressed)="removeRow($index)" />
+            }
+          </div>
+        } @else {
+          <p class="empty">
+            No rows — the chart is showing its empty state.
+          </p>
+        }
 
-      <ds-button
-        color="secondary"
-        icon="plus"
-        size="sm"
-        variant="outline"
-        (pressed)="addRow()">
-        Add row
-      </ds-button>
-    </div>
-  }
-</details>
+        <ds-button
+          color="secondary"
+          icon="plus"
+          size="sm"
+          variant="outline"
+          (pressed)="addRow()">
+          Add row
+        </ds-button>
+      </div>
+    }
+  </details>
+
+  <button
+    class="replay"
+    type="button"
+    (click)="replay()">
+    Replay animation
+  </button>
+</div>

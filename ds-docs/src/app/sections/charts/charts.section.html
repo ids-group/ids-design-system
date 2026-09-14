@@ -60,137 +60,141 @@
 
   <docs-chart-data-editor [(rows)]="dataTableRows" />
 
-  <h3 class="block-title t-h4">
-    Edge cases
-  </h3>
+  <details class="edge-cases">
+    <summary>
+      <h3 class="block-title t-h4">
+        Edge cases
+      </h3>
+    </summary>
 
-  <p class="block-desc t-s">
-    A value at or below zero draws an empty track rather than dropping the row,
-    so its label survives; one value far above the rest flattens every other
-    track.
-  </p>
+    <p class="block-desc t-s">
+      A value at or below zero draws an empty track rather than dropping the
+      row, so its label survives; one value far above the rest flattens every
+      other track.
+    </p>
 
-  <div class="states states--cols-2">
-    <div class="state-cell">
-      <ds-bar-chart
-        dataTable="none"
-        [data]="emptyRows()" />
+    <div class="states states--cols-2">
+      <div class="state-cell">
+        <ds-bar-chart
+          dataTable="none"
+          [data]="emptyRows()" />
 
-      <div class="state-cell-label">
-        Empty
+        <div class="state-cell-label">
+          Empty
+        </div>
+
+        <docs-chart-data-editor [(rows)]="emptyRows" />
       </div>
 
-      <docs-chart-data-editor [(rows)]="emptyRows" />
-    </div>
+      <div class="state-cell">
+        <ds-bar-chart
+          dataTable="none"
+          loading
+          [data]="loadingRows()" />
 
-    <div class="state-cell">
-      <ds-bar-chart
-        dataTable="none"
-        loading
-        [data]="loadingRows()" />
+        <div class="state-cell-label">
+          Loading
+        </div>
 
-      <div class="state-cell-label">
-        Loading
+        <docs-chart-data-editor [(rows)]="loadingRows" />
       </div>
 
-      <docs-chart-data-editor [(rows)]="loadingRows" />
-    </div>
+      <div class="state-cell">
+        <ds-bar-chart
+          dataTable="none"
+          [data]="oneRow()" />
 
-    <div class="state-cell">
-      <ds-bar-chart
-        dataTable="none"
-        [data]="oneRow()" />
+        <div class="state-cell-label">
+          One row
+        </div>
 
-      <div class="state-cell-label">
-        One row
+        <docs-chart-data-editor [(rows)]="oneRow" />
       </div>
 
-      <docs-chart-data-editor [(rows)]="oneRow" />
-    </div>
+      <div class="state-cell">
+        <ds-bar-chart
+          dataTable="none"
+          [data]="allZerosRows()" />
 
-    <div class="state-cell">
-      <ds-bar-chart
-        dataTable="none"
-        [data]="allZerosRows()" />
+        <div class="state-cell-label">
+          All zeros
+        </div>
 
-      <div class="state-cell-label">
-        All zeros
+        <docs-chart-data-editor [(rows)]="allZerosRows" />
       </div>
 
-      <docs-chart-data-editor [(rows)]="allZerosRows" />
-    </div>
+      <div class="state-cell">
+        <ds-bar-chart
+          dataTable="none"
+          [data]="negativeRows()" />
 
-    <div class="state-cell">
-      <ds-bar-chart
-        dataTable="none"
-        [data]="negativeRows()" />
+        <div class="state-cell-label">
+          Negative value
+        </div>
 
-      <div class="state-cell-label">
-        Negative value
+        <docs-chart-data-editor [(rows)]="negativeRows" />
       </div>
 
-      <docs-chart-data-editor [(rows)]="negativeRows" />
-    </div>
+      <div class="state-cell">
+        <ds-bar-chart
+          dataTable="none"
+          [data]="hugeOutlierRows()" />
 
-    <div class="state-cell">
-      <ds-bar-chart
-        dataTable="none"
-        [data]="hugeOutlierRows()" />
+        <div class="state-cell-label">
+          Huge outlier
+        </div>
 
-      <div class="state-cell-label">
-        Huge outlier
+        <docs-chart-data-editor [(rows)]="hugeOutlierRows" />
       </div>
 
-      <docs-chart-data-editor [(rows)]="hugeOutlierRows" />
-    </div>
+      <div class="state-cell">
+        <ds-bar-chart
+          dataTable="none"
+          [data]="longLabelRows()" />
 
-    <div class="state-cell">
-      <ds-bar-chart
-        dataTable="none"
-        [data]="longLabelRows()" />
+        <div class="state-cell-label">
+          Long label
+        </div>
 
-      <div class="state-cell-label">
-        Long label
+        <docs-chart-data-editor [(rows)]="longLabelRows" />
       </div>
 
-      <docs-chart-data-editor [(rows)]="longLabelRows" />
-    </div>
+      <div class="state-cell">
+        <ds-bar-chart
+          dataTable="none"
+          [data]="nineDigitValueRows()" />
 
-    <div class="state-cell">
-      <ds-bar-chart
-        dataTable="none"
-        [data]="nineDigitValueRows()" />
+        <div class="state-cell-label">
+          Nine-digit value
+        </div>
 
-      <div class="state-cell-label">
-        Nine-digit value
+        <docs-chart-data-editor [(rows)]="nineDigitValueRows" />
       </div>
 
-      <docs-chart-data-editor [(rows)]="nineDigitValueRows" />
-    </div>
+      <div class="state-cell">
+        <ds-bar-chart
+          caption="Max set below the largest value — bars clip at the track edge"
+          dataTable="none"
+          [data]="maxBelowDataRows()"
+          [max]="200" />
 
-    <div class="state-cell">
-      <ds-bar-chart
-        caption="Max set below the largest value — bars clip at the track edge"
-        dataTable="none"
-        [data]="maxBelowDataRows()"
-        [max]="200" />
+        <div class="state-cell-label">
+          Max below the data
+        </div>
 
-      <div class="state-cell-label">
-        Max below the data
+        <docs-chart-data-editor [(rows)]="maxBelowDataRows" />
       </div>
 
-      <docs-chart-data-editor [(rows)]="maxBelowDataRows" />
-    </div>
+      <div class="state-cell">
+        <ds-bar-chart
+          dataTable="none"
+          error
+          [data]="specimenRows()" />
 
-    <div class="state-cell">
-      <ds-bar-chart
-        dataTable="none"
-        error
-        [data]="specimenRows()" />
-
-      <div class="state-cell-label">
-        Error
+        <div class="state-cell-label">
+          Error
+        </div>
       </div>
     </div>
-  </div>
+  </details>
 </docs-section>

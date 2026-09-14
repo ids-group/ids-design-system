@@ -114,6 +114,10 @@
   --chart-tooltip-border-color: var(--neutral-700);
 
   /* DIMENSIONS */
+
+  /* Soft, not a pill: the cap squashes with the body while a mark grows in, and 3px is small
+     enough that the squash is not readable. */
+  --chart-mark-cap-radius: 3px;
   --chart-bar-gap:      4px;
   --chart-line-width:       2px;
   --chart-line-width-bold:  3px;
@@ -170,6 +174,7 @@
   --ds-chart-tooltip-text-color: var(--chart-tooltip-text-color);
   --ds-chart-tooltip-border-color: var(--chart-tooltip-border-color);
 
+  --ds-chart-mark-cap-radius: var(--chart-mark-cap-radius);
   --ds-chart-bar-gap: var(--chart-bar-gap);
   --ds-chart-line-width: var(--chart-line-width);
   --ds-chart-line-width-bold: var(--chart-line-width-bold);

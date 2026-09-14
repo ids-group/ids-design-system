@@ -10,6 +10,7 @@ import { ButtonComponent } from 'ds/button';
 import { IconButtonComponent } from 'ds/icon-button';
 import { InputComponent } from 'ds/input';
 import { NumberStepperComponent } from 'ds/number-stepper';
+import { replayMarks } from './replay-marks';
 
 export interface ChartDataEditorRow {
   readonly label: string;
@@ -51,6 +52,10 @@ export class DocsChartDataEditorComponent<TRow extends ChartDataEditorRow> {
 
   protected readonly valueBound = VALUE_BOUND;
   protected readonly open = signal(false);
+
+  protected replay(): void {
+    replayMarks(this.rows);
+  }
 
   protected setLabel(index: number, label: string): void {
     this.patch(index, { label });

@@ -173,6 +173,13 @@ export class FunnelChartComponent {
 
   protected readonly viewBox = `0 0 ${FUNNEL_VIEW_BOX_WIDTH} ${FUNNEL_VIEW_BOX_HEIGHT}`;
 
+  /** The gap between two bands, painted as a TRANSPARENT STROKE on each. A stroke straddles the
+   *  edge it is drawn on, so each band claims half the gap above it and half below — the gap stays
+   *  exactly as wide to the eye and stops being dead space to the pointer. */
+  protected readonly hitGapUnits = computed(() =>
+    stageGapUnits(this.data().length, FUNNEL_VIEW_BOX_HEIGHT),
+  );
+
   protected readonly stages = computed(() => {
     const data = this.data();
     const values = data.map((stage) => stage.value);

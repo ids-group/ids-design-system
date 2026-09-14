@@ -43,6 +43,7 @@
             class="stage"
             animate.enter="mark-enter"
             animate.leave="mark-leave"
+            [attr.stroke-width]="hitGapUnits()"
             [style.--_chart-mark-stagger]="markStagger(index)"
             [class.interactive]="interactive()"
             [attr.points]="entry.points"

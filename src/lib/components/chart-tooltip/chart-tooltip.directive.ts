@@ -15,6 +15,7 @@ import {
   type FlexibleConnectedPositionStrategyOrigin,
 } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
+import { closeOnScroll } from '@ids-group-ltd/ids-design-system/components';
 import { ChartTooltipPanelComponent } from './chart-tooltip-panel.component';
 import type {
   ChartTooltipContext,
@@ -84,16 +85,28 @@ export class ChartTooltipDirective {
 
   private overlayRef: OverlayRef | null = null;
   private panelRef: ComponentRef<ChartTooltipPanelComponent> | null = null;
+  private detachScrollClose: (() => void) | null = null;
+
+  /** The context a scroll dismissed. A scroll moves the mark out from under the pointer, so the
+   *  panel has to go — but the chart's context signal has not changed, and without this the effect
+   *  would re-open it on the very next change detection. Cleared by the next DIFFERENT context,
+   *  which is what a pointer moving again produces. */
+  private dismissed: ChartTooltipContext | null = null;
 
   constructor() {
     effect(() => {
       const context = this.dsChartTooltip();
       const origin = this.dsChartTooltipOrigin();
       if (!context?.entries.length || !origin) {
+        this.dismissed = null;
         this.close();
 
         return;
       }
+      if (context === this.dismissed) {
+        return;
+      }
+      this.dismissed = null;
       this.open(context, origin);
     });
     inject(DestroyRef).onDestroy(() => this.close());
@@ -111,6 +124,13 @@ export class ChartTooltipDirective {
       this.panelRef = this.overlayRef.attach(
         new ComponentPortal(ChartTooltipPanelComponent, this.viewContainerRef),
       );
+      // CDK's reposition strategy watches `window` and registered `cdkScrollable`s only, so it
+      // misses an app's own `overflow: auto` container — and a panel that stays put while the
+      // chart scrolls away points at nothing.
+      this.detachScrollClose = closeOnScroll(this.overlayRef, () => {
+        this.dismissed = this.dsChartTooltip();
+        this.close();
+      });
     } else {
       this.overlayRef.updatePositionStrategy(this.strategyFor(origin));
     }
@@ -130,6 +150,8 @@ export class ChartTooltipDirective {
   }
 
   private close(): void {
+    this.detachScrollClose?.();
+    this.detachScrollClose = null;
     this.overlayRef?.dispose();
     this.overlayRef = null;
     this.panelRef = null;

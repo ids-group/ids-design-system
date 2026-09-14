@@ -951,6 +951,11 @@ export const CHARTS: readonly ColourRow[] = [
     "notes": "Chart tooltip border colour."
   },
   {
+    "name": "--chart-mark-cap-radius",
+    "value": "3px",
+    "notes": ""
+  },
+  {
     "name": "--chart-bar-gap",
     "value": "4px",
     "notes": "Chart bar-series inter-bar gap (4px)."
@@ -1149,6 +1154,11 @@ export const CHARTS: readonly ColourRow[] = [
     "name": "--ds-chart-tooltip-border-color",
     "value": "var(--chart-tooltip-border-color)",
     "notes": "Chart tooltip border colour. Set this, not --chart-tooltip-border-color."
+  },
+  {
+    "name": "--ds-chart-mark-cap-radius",
+    "value": "var(--chart-mark-cap-radius)",
+    "notes": ""
   },
   {
     "name": "--ds-chart-bar-gap",
@@ -2115,7 +2125,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-alert-enter-keyframes",
-        "value": "ds-slide-in",
+        "value": "ds-fade-in",
         "notes": "Alert entrance @keyframes (default ds-slide-in)."
       },
       {
@@ -2524,7 +2534,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-banner-enter-keyframes",
-        "value": "ds-slide-in",
+        "value": "ds-fade-in",
         "notes": "Banner entrance @keyframes (default ds-slide-in)."
       },
       {
@@ -2568,6 +2578,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-bar-chart-track-height",
         "value": "12px",
         "notes": "Thickness of a ds-bar-chart bar and its track (default 8px)."
+      },
+      {
+        "name": "--ds-bar-chart-cap-radius",
+        "value": "var(--ds-chart-mark-cap-radius)",
+        "notes": ""
       },
       {
         "name": "--ds-bar-chart-row-gap",
@@ -2972,20 +2987,27 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
+    "component": "Chart Legend",
+    "selector": ".chart-legend",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-motion-chart-state-duration",
+        "value": "—",
+        "notes": ""
+      },
+      {
+        "name": "--ds-motion-chart-state-easing",
+        "value": "—",
+        "notes": ""
+      }
+    ]
+  },
+  {
     "component": "Chart Motion",
     "selector": ".chart-motion",
     "description": "",
     "tokens": [
-      {
-        "name": "--ds-motion-chart-mark-enter-duration",
-        "value": "—",
-        "notes": ""
-      },
-      {
-        "name": "--ds-motion-chart-mark-enter-easing",
-        "value": "—",
-        "notes": ""
-      },
       {
         "name": "--ds-motion-chart-mark-exit-duration",
         "value": "—",
@@ -2993,6 +3015,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-motion-chart-mark-exit-easing",
+        "value": "—",
+        "notes": ""
+      },
+      {
+        "name": "--ds-motion-chart-mark-enter-duration",
+        "value": "—",
+        "notes": ""
+      },
+      {
+        "name": "--ds-motion-chart-mark-enter-easing",
         "value": "—",
         "notes": ""
       }
@@ -3212,6 +3244,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-column-chart-column-width",
         "value": "80%",
+        "notes": ""
+      },
+      {
+        "name": "--ds-column-chart-cap-radius",
+        "value": "var(--ds-chart-mark-cap-radius)",
         "notes": ""
       },
       {
@@ -4239,16 +4276,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-line-chart-swatch-size",
         "value": "10px",
         "notes": ""
-      },
-      {
-        "name": "--ds-motion-chart-state-duration",
-        "value": "—",
-        "notes": ""
-      },
-      {
-        "name": "--ds-motion-chart-state-easing",
-        "value": "—",
-        "notes": ""
       }
     ]
   },
@@ -4895,7 +4922,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "tokens": [
       {
         "name": "--ds-overlay-enter-keyframes",
-        "value": "ds-slide-in",
+        "value": "ds-fade-in",
         "notes": "Entrance @keyframes for every portaled panel — default ds-slide-in; also ds-scale-in / ds-fade-in, your own GLOBAL keyframes, or none."
       },
       {
@@ -7203,7 +7230,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-toast-enter-keyframes",
-        "value": "ds-slide-in",
+        "value": "ds-fade-in",
         "notes": "Toast entrance @keyframes (default ds-slide-in — rises into place from below)."
       },
       {

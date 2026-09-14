@@ -4,7 +4,7 @@
 @use '../../styles/chart-frame' as chart-frame;
 @use '../../styles/chart-interactive' as chart-interactive;
 @use '../../styles/chart-motion' as chart-motion;
-@include chart-motion.staged('.stage');
+@include chart-motion.fades-in('.stage');
 @include chart-frame.chart-frame;
 @include chart-data-table.chart-data-table;
 
@@ -57,6 +57,11 @@ svg {
    measured in Chrome 153, a funnel stage rings as a flat bar across the trapezoid. The ring is a
    stroke on the shape instead; `own-indicator` keeps the outline under forced colours, where
    `stroke` is not remapped. */
+// Transparent, so the gap reads exactly as it did while the band answers a pointer across it.
+.stage {
+  stroke: transparent;
+}
+
 .stage.interactive:focus-visible {
   @include focus.own-indicator;
   @include chart-frame.drawn-focus-ring;

@@ -16,7 +16,7 @@
 // teardown working and outranks a consumer keyframe carrying its own timing.
 
 .cdk-overlay-pane.ds-overlay-pane {
-  --_overlay-enter-keyframes: var(--ds-overlay-enter-keyframes, ds-slide-in);
+  --_overlay-enter-keyframes: var(--ds-overlay-enter-keyframes, ds-fade-in);
   --_overlay-enter-duration: var(--ds-overlay-enter-duration, var(--ds-motion-enter-panel-duration));
   --_overlay-enter-easing: var(--ds-overlay-enter-easing, var(--ds-motion-enter-panel-easing));
   --_overlay-enter-offset: var(--ds-overlay-enter-offset, 4px);

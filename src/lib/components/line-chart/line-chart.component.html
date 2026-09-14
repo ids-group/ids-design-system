@@ -60,21 +60,27 @@
         (pointerdown)="onPlotPointer($event)"
         (pointerleave)="clearActiveCategory()">
         @if (activeCategory() >= 0) {
-          <rect
-            class="category-band"
-            aria-hidden="true"
-            [attr.x]="activeBandX()"
-            [attr.y]="primaryTopY()"
-            [attr.width]="activeBandWidth()"
-            [attr.height]="primaryBaselineY() - primaryTopY()" />
+          <g
+            class="cursor"
+            animate.enter="cursor-in"
+            animate.leave="cursor-out"
+            [style.transform]="'translateX(' + activeBandX() + 'px)'">
+            <rect
+              class="category-band"
+              aria-hidden="true"
+              x="0"
+              [attr.y]="primaryTopY()"
+              [attr.width]="activeBandWidth()"
+              [attr.height]="primaryBaselineY() - primaryTopY()" />
 
-          <line
-            class="cursor-line"
-            aria-hidden="true"
-            [attr.x1]="activeCategoryX()"
-            [attr.x2]="activeCategoryX()"
-            [attr.y1]="primaryTopY()"
-            [attr.y2]="primaryBaselineY()" />
+            <line
+              class="cursor-line"
+              aria-hidden="true"
+              [attr.x1]="activeBandWidth() / 2"
+              [attr.x2]="activeBandWidth() / 2"
+              [attr.y1]="primaryTopY()"
+              [attr.y2]="primaryBaselineY()" />
+          </g>
         }
 
         @for (tick of primaryTicks(); track $index) {
@@ -154,8 +160,8 @@
             <polyline
               class="series-line"
               animate.enter="mark-enter"
-              [attr.stroke-dasharray]="entry.dash"
               animate.leave="mark-leave"
+              [attr.stroke-dasharray]="entry.dash"
               [style.--_chart-mark-stagger]="markStagger(seriesIndex)"
               [class.is-dimmed]="isDimmed(entry.series.id)"
               [attr.points]="points"

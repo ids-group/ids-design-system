@@ -3,9 +3,9 @@
 @use '../../styles/chart-frame' as chart-frame;
 @use '../../styles/chart-interactive' as chart-interactive;
 @use '../../styles/chart-motion' as chart-motion;
-@include chart-motion.staged('.series-line');
-@include chart-motion.staged('.series-area');
-@include chart-motion.staged('.series-marker');
+@include chart-motion.fades-in('.series-line');
+@include chart-motion.fades-in('.series-area');
+@include chart-motion.fades-in('.series-marker');
 @include chart-frame.chart-frame;
 @include chart-data-table.chart-data-table;
 
@@ -100,6 +100,23 @@ figcaption {
 
 .series-marker {
   r: var(--_line-chart-dot-radius);
+}
+
+// One group carries both the band and the crosshair, so moving to the next category is a
+// translate the compositor can run rather than four attribute writes that jump.
+.cursor {
+  transition: transform var(--ds-motion-chart-state-duration)
+    var(--ds-motion-chart-state-easing);
+}
+
+.cursor.cursor-in {
+  animation: ds-chart-mark-fade-in var(--ds-motion-chart-state-duration)
+    var(--ds-motion-chart-state-easing) both;
+}
+
+.cursor.cursor-out {
+  animation: ds-chart-mark-exit var(--ds-motion-chart-state-duration)
+    var(--ds-motion-chart-state-easing) both;
 }
 
 .category-band {

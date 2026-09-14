@@ -90,8 +90,8 @@
     A series in other units sets
     <code class="t-mono-inline">
       axis: 'secondary'
-    </code> and is measured against
-    the right-hand scale;
+    </code> and is measured
+    against the right-hand scale;
     <code class="t-mono-inline">
       yAxisMode
     </code> reconciles the two. Rounded
@@ -262,17 +262,17 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       interactive
-    </code> makes every reading focusable
-    and clickable, and grows an invisible marker on a series drawn without one
-    so there is something to land on. The hit area is a transparent 24px stroke
-    on a fine pointer and 44px on a coarse one — a 4px dot is not a touch
-    target. Tab to a marker and the tooltip names that series alone; hover the
-    plot and it names every series at the category. A tap latches the tooltip
-    open until the next tap outside.
+    </code> makes every reading
+    focusable and clickable, and grows an invisible marker on a series drawn
+    without one so there is something to land on. The hit area is a transparent
+    24px stroke on a fine pointer and 44px on a coarse one — a 4px dot is not a
+    touch target. Tab to a marker and the tooltip names that series alone; hover
+    the plot and it names every series at the category. A tap latches the
+    tooltip open until the next tap outside.
     <code class="t-mono-inline">
       pointClicked
-    </code> fires whether
-    or not the flag is set.
+    </code> fires whether or not the
+    flag is set.
   </p>
 
   <ds-line-chart
@@ -281,7 +281,9 @@
     interactive
     [categories]="interactiveCategories()"
     [series]="interactiveSeries()"
-    (pointClicked)="lastPoint.set($event.series.label + ' · ' + $event.category)" />
+    (pointClicked)="
+      lastPoint.set($event.series.label + ' · ' + $event.category)
+    " />
 
   <p class="block-desc t-s">
     Last clicked: <code class="t-mono-inline">{{ lastPoint() || '—' }}</code>
@@ -345,10 +347,10 @@
     hidden or not, unless
     <code class="t-mono-inline">
       rescaleOnHide
-    </code> says
-    otherwise — a silent rescale turns a period-over-period comparison into a
-    different claim. Hovering an entry dims the other series. Switch them all
-    off and the plot is replaced by an explanation rather than an empty grid.
+    </code> says otherwise — a silent
+    rescale turns a period-over-period comparison into a different claim.
+    Hovering an entry dims the other series. Switch them all off and the plot is
+    replaced by an explanation rather than an empty grid.
   </p>
 
   <div class="states states--cols-2">
@@ -382,76 +384,80 @@
     </div>
   </div>
 
-  <h3 class="block-title t-h4">
-    Edge cases
-  </h3>
+  <details class="edge-cases">
+    <summary>
+      <h3 class="block-title t-h4">
+        Edge cases
+      </h3>
+    </summary>
 
-  <p class="block-desc t-s">
-    Loading holds the plot's height with a skeleton; empty has no series to
-    derive axes from, so the chart falls back to its
-    <code class="t-mono-inline">
-      emptyText
-    </code> line.
-  </p>
+    <p class="block-desc t-s">
+      Loading holds the plot's height with a skeleton; empty has no series to
+      derive axes from, so the chart falls back to its
+      <code class="t-mono-inline">
+        emptyText
+      </code> line.
+    </p>
 
-  <div class="states states--cols-2">
-    <div class="state-cell">
-      <ds-line-chart
-        dataTable="none"
-        [categories]="emptyCategories()"
-        [series]="emptySeries()" />
+    <div class="states states--cols-2">
+      <div class="state-cell">
+        <ds-line-chart
+          dataTable="none"
+          [categories]="emptyCategories()"
+          [series]="emptySeries()" />
 
-      <div class="state-cell-label">
-        Empty
+        <div class="state-cell-label">
+          Empty
+        </div>
+
+        <docs-line-chart-data-editor
+          [(categories)]="emptyCategories"
+          [(series)]="emptySeries" />
       </div>
 
-      <docs-line-chart-data-editor
-        [(categories)]="emptyCategories"
-        [(series)]="emptySeries" />
-    </div>
+      <div class="state-cell">
+        <ds-line-chart
+          dataTable="none"
+          loading
+          [categories]="loadingCategories()"
+          [series]="loadingSeries()" />
 
-    <div class="state-cell">
-      <ds-line-chart
-        dataTable="none"
-        loading
-        [categories]="loadingCategories()"
-        [series]="loadingSeries()" />
+        <div class="state-cell-label">
+          Loading
+        </div>
 
-      <div class="state-cell-label">
-        Loading
+        <docs-line-chart-data-editor
+          [(categories)]="loadingCategories"
+          [(series)]="loadingSeries" />
       </div>
 
-      <docs-line-chart-data-editor
-        [(categories)]="loadingCategories"
-        [(series)]="loadingSeries" />
-    </div>
+      <div class="state-cell">
+        <ds-line-chart
+          caption="A single series carries no legend, and the axes are still drawn"
+          dataTable="none"
+          [categories]="oneSeriesCategories()"
+          [series]="oneSeries()" />
 
-    <div class="state-cell">
-      <ds-line-chart
-        caption="A single series carries no legend, and the axes are still drawn"
-        dataTable="none"
-        [categories]="oneSeriesCategories()"
-        [series]="oneSeries()" />
+        <div class="state-cell-label">
+          One series
+        </div>
 
-      <div class="state-cell-label">
-        One series
+        <docs-line-chart-data-editor
+          [(categories)]="oneSeriesCategories"
+          [(series)]="oneSeries" />
       </div>
 
-      <docs-line-chart-data-editor
-        [(categories)]="oneSeriesCategories"
-        [(series)]="oneSeries" />
-    </div>
+      <div class="state-cell">
+        <ds-line-chart
+          dataTable="none"
+          error
+          [categories]="specimenCategories()"
+          [series]="specimenSeries()" />
 
-    <div class="state-cell">
-      <ds-line-chart
-        dataTable="none"
-        error
-        [categories]="specimenCategories()"
-        [series]="specimenSeries()" />
-
-      <div class="state-cell-label">
-        Error
+        <div class="state-cell-label">
+          Error
+        </div>
       </div>
     </div>
-  </div>
+  </details>
 </docs-section>

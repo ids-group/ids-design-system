@@ -5,7 +5,7 @@ export interface ChartActiveMark {
   readonly index: Signal<number>;
   /** The mark's own element, which is what the tooltip anchors to. */
   readonly origin: Signal<Element | null>;
-  enter(index: number, event: Event): void;
+  enter(index: number, event: Event, anchorWithin?: string): void;
   leave(): void;
 }
 
@@ -49,9 +49,14 @@ export function chartActiveMark(): ChartActiveMark {
   return {
     index: index.asReadonly(),
     origin: origin.asReadonly(),
-    enter(at, event) {
-      if (event.currentTarget instanceof Element) {
-        origin.set(event.currentTarget);
+    enter(at, event, anchorWithin) {
+      const host = event.currentTarget;
+      if (host instanceof Element) {
+        // The tooltip anchors to the MARK, not to the box that catches the pointer: a column's
+        // cell is the full plot height, so anchoring to it opens the panel at the top of the
+        // chart rather than over the column it is about.
+        const anchor = anchorWithin ? host.querySelector(anchorWithin) : null;
+        origin.set(anchor ?? host);
       }
       index.set(at);
       if (

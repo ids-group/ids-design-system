@@ -42,3 +42,38 @@
   gap: var(--space-2);
   margin-top: var(--space-4);
 }
+
+// Edge cases open on demand. They are the longest block on every chart page and the least often
+// read — a reader comes for the default and the options, and meets six specimens of degenerate
+// data before reaching the next component. The heading stays an `h3.block-title` inside the
+// summary so the chapter rail still lists it and still scrolls to it.
+:host ::ng-deep .edge-cases {
+  > summary {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    cursor: pointer;
+    list-style: none;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    // A disclosure triangle drawn from borders: there is no token for one, and the two numbers
+    // here are the arrow's own geometry rather than spacing.
+    &::before {
+      content: "";
+      inline-size: 0;
+      block-size: 0;
+      border-block-start: 5px solid transparent;
+      border-block-end: 5px solid transparent;
+      border-inline-start: 7px solid var(--icon-muted);
+      transition: rotate var(--ds-motion-chart-state-duration)
+        var(--ds-motion-chart-state-easing);
+    }
+  }
+
+  &[open] > summary::before {
+    rotate: 90deg;
+  }
+}

@@ -143,87 +143,91 @@
 
   <docs-chart-data-editor [(rows)]="dataTableStages" />
 
-  <h3 class="block-title t-h4">
-    Edge cases
-  </h3>
+  <details class="edge-cases">
+    <summary>
+      <h3 class="block-title t-h4">
+        Edge cases
+      </h3>
+    </summary>
 
-  <p class="block-desc t-s">
-    Every share is measured against the first stage, so a first stage of zero
-    leaves the percentage column with nothing to divide by.
-  </p>
+    <p class="block-desc t-s">
+      Every share is measured against the first stage, so a first stage of zero
+      leaves the percentage column with nothing to divide by.
+    </p>
 
-  <div class="states states--cols-2">
-    <div class="state-cell">
-      <ds-funnel-chart
-        dataTable="none"
-        [data]="emptyStages()" />
+    <div class="states states--cols-2">
+      <div class="state-cell">
+        <ds-funnel-chart
+          dataTable="none"
+          [data]="emptyStages()" />
 
-      <div class="state-cell-label">
-        Empty
+        <div class="state-cell-label">
+          Empty
+        </div>
+
+        <docs-chart-data-editor [(rows)]="emptyStages" />
       </div>
 
-      <docs-chart-data-editor [(rows)]="emptyStages" />
-    </div>
+      <div class="state-cell">
+        <ds-funnel-chart
+          dataTable="none"
+          loading
+          [data]="loadingStages()" />
 
-    <div class="state-cell">
-      <ds-funnel-chart
-        dataTable="none"
-        loading
-        [data]="loadingStages()" />
+        <div class="state-cell-label">
+          Loading
+        </div>
 
-      <div class="state-cell-label">
-        Loading
+        <docs-chart-data-editor [(rows)]="loadingStages" />
       </div>
 
-      <docs-chart-data-editor [(rows)]="loadingStages" />
-    </div>
+      <div class="state-cell">
+        <ds-funnel-chart
+          dataTable="none"
+          [data]="oneStage()" />
 
-    <div class="state-cell">
-      <ds-funnel-chart
-        dataTable="none"
-        [data]="oneStage()" />
+        <div class="state-cell-label">
+          One stage
+        </div>
 
-      <div class="state-cell-label">
-        One stage
+        <docs-chart-data-editor [(rows)]="oneStage" />
       </div>
 
-      <docs-chart-data-editor [(rows)]="oneStage" />
-    </div>
+      <div class="state-cell">
+        <ds-funnel-chart
+          dataTable="none"
+          [data]="allZerosStages()" />
 
-    <div class="state-cell">
-      <ds-funnel-chart
-        dataTable="none"
-        [data]="allZerosStages()" />
+        <div class="state-cell-label">
+          All zeros
+        </div>
 
-      <div class="state-cell-label">
-        All zeros
+        <docs-chart-data-editor [(rows)]="allZerosStages" />
       </div>
 
-      <docs-chart-data-editor [(rows)]="allZerosStages" />
-    </div>
+      <div class="state-cell">
+        <ds-funnel-chart
+          caption="Nothing to be a share of — the percentage column reads an em dash"
+          dataTable="none"
+          [data]="zeroFirstStageStages()" />
 
-    <div class="state-cell">
-      <ds-funnel-chart
-        caption="Nothing to be a share of — the percentage column reads an em dash"
-        dataTable="none"
-        [data]="zeroFirstStageStages()" />
+        <div class="state-cell-label">
+          Zero first stage
+        </div>
 
-      <div class="state-cell-label">
-        Zero first stage
+        <docs-chart-data-editor [(rows)]="zeroFirstStageStages" />
       </div>
 
-      <docs-chart-data-editor [(rows)]="zeroFirstStageStages" />
-    </div>
+      <div class="state-cell">
+        <ds-funnel-chart
+          dataTable="none"
+          error
+          [data]="specimenStages()" />
 
-    <div class="state-cell">
-      <ds-funnel-chart
-        dataTable="none"
-        error
-        [data]="specimenStages()" />
-
-      <div class="state-cell-label">
-        Error
+        <div class="state-cell-label">
+          Error
+        </div>
       </div>
     </div>
-  </div>
+  </details>
 </docs-section>

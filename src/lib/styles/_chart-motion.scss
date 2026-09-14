@@ -3,43 +3,81 @@
 // The enter is DELAYED by the exit duration, and that delay is what stages the three phases:
 // removals finish before additions start, so a vanishing mark and an arriving one are never on
 // screen together. Angular's `animate.enter` / `animate.leave` own the classes; this file owns
-// what they mean.
+// what they mean. `--_chart-mark-stagger` is set per mark by the component and adds to the delay.
+//
+// A mark ARRIVES BY GROWING FROM ITS OWN BASELINE, never by scaling about its centre: a uniform
+// scale reads as the whole chart zooming, and it moves the mark's baseline, which is the one line
+// on a chart that must not move. A mark with no baseline to grow from — a ring arc, a funnel band,
+// a line — fades instead, for the same reason.
 //
 // `prefers-reduced-motion` is handled globally in `_tokens.scss` — nothing here re-handles it.
 
-@keyframes ds-chart-mark-enter {
+@keyframes ds-chart-mark-grow-y {
   from {
     opacity: 0;
-    transform: scale(0.94);
+    transform: scaleY(0);
+  }
+}
+
+@keyframes ds-chart-mark-grow-x {
+  from {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+}
+
+@keyframes ds-chart-mark-fade-in {
+  from {
+    opacity: 0;
   }
 }
 
 @keyframes ds-chart-mark-exit {
   to {
     opacity: 0;
-    transform: scale(0.94);
   }
 }
 
-@mixin staged($mark) {
-  #{$mark} {
-    // An SVG shape's transform box is the whole viewBox, so without this a mark scales about the
-    // chart's origin and flies in from the corner instead of growing in place.
-    transform-box: fill-box;
-    transform-origin: center;
-  }
-
-  // The delay is the exit duration plus this mark's own stagger step, which the component sets
-  // per mark. Unset, `0ms` leaves the staging and adds nothing.
-  #{$mark}.mark-enter {
-    animation: ds-chart-mark-enter var(--ds-motion-chart-mark-enter-duration)
-      var(--ds-motion-chart-mark-enter-easing)
-      calc(var(--ds-motion-chart-mark-exit-duration) + var(--_chart-mark-stagger, 0ms))
-      both;
-  }
-
+@mixin leaves($mark) {
   #{$mark}.mark-leave {
     animation: ds-chart-mark-exit var(--ds-motion-chart-mark-exit-duration)
       var(--ds-motion-chart-mark-exit-easing) both;
   }
+}
+
+@mixin enters($selector, $keyframes) {
+  #{$selector} {
+    animation: #{$keyframes} var(--ds-motion-chart-mark-enter-duration)
+      var(--ds-motion-chart-mark-enter-easing)
+      calc(
+        var(--ds-motion-chart-mark-exit-duration) + var(--_chart-mark-stagger, 0ms)
+      )
+      both;
+  }
+}
+
+/* A column: the fill grows up out of the category axis. */
+@mixin grows-up($mark, $fill) {
+  #{$mark} #{$fill} {
+    transform-origin: bottom;
+  }
+
+  @include enters('#{$mark}.mark-enter #{$fill}', ds-chart-mark-grow-y);
+  @include leaves($mark);
+}
+
+/* A bar row: the fill grows out of the value axis, which is the inline start. */
+@mixin grows-across($mark, $fill) {
+  #{$mark} #{$fill} {
+    transform-origin: left;
+  }
+
+  @include enters('#{$mark}.mark-enter #{$fill}', ds-chart-mark-grow-x);
+  @include leaves($mark);
+}
+
+/* A mark with no baseline of its own — a ring arc, a funnel band, a line. */
+@mixin fades-in($mark) {
+  @include enters('#{$mark}.mark-enter', ds-chart-mark-fade-in);
+  @include leaves($mark);
 }

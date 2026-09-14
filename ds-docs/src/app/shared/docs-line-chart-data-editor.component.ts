@@ -9,6 +9,7 @@ import {
 import { ButtonComponent } from 'ds/button';
 import { IconButtonComponent } from 'ds/icon-button';
 import { InputComponent } from 'ds/input';
+import { replayMarks } from './replay-marks';
 import type { LineChartSeries } from 'ds/line-chart';
 
 let nextSeriesId = 0;
@@ -26,6 +27,10 @@ let nextSeriesId = 0;
 export class DocsLineChartDataEditorComponent {
   readonly categories = model.required<readonly string[]>();
   readonly series = model.required<readonly LineChartSeries[]>();
+
+  protected replay(): void {
+    replayMarks(this.series);
+  }
 
   protected readonly open = signal(false);
 

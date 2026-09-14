@@ -1132,7 +1132,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "tooltip",
         "kind": "input",
-        "type": "Exclude<ChartTooltipTrigger, 'axis'>",
+        "type": "ChartItemTooltipTrigger",
         "union": [
           "item",
           "none"
@@ -1656,37 +1656,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       }
     ]
   },
-  "chart-tooltip": {
-    "key": "chart-tooltip",
-    "selector": "ds-chart-tooltip-panel",
-    "isElement": true,
-    "className": "ChartTooltipPanelComponent",
-    "status": "stable",
-    "importName": "ChartTooltipPanelComponent",
-    "importPath": "@ids-group-ltd/ids-design-system",
-    "summary": null,
-    "inputs": [
-      {
-        "name": "context",
-        "kind": "input-required",
-        "type": "ChartTooltipContext",
-        "union": null,
-        "default": null,
-        "required": true,
-        "description": "The category and the readings the panel prints."
-      },
-      {
-        "name": "template",
-        "kind": "input",
-        "type": "TemplateRef<{\n    $implicit: ChartTooltipContext;\n  }> | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "The chart's projected `#dsChartTooltip` template. Null renders the built-in rows."
-      }
-    ],
-    "outputs": []
-  },
   "checkbox": {
     "key": "checkbox",
     "selector": "ds-checkbox",
@@ -2151,7 +2120,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "tooltip",
         "kind": "input",
-        "type": "Exclude<ChartTooltipTrigger, 'axis'>",
+        "type": "ChartItemTooltipTrigger",
         "union": [
           "item",
           "none"
@@ -2159,6 +2128,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "'item'",
         "required": false,
         "description": "Whether a hovered or focused column opens a tooltip. `'axis'` is not offered — a column chart's marks ARE its categories, so an axis tooltip would repeat the item one."
+      },
+      {
+        "name": "tooltipAnchor",
+        "kind": "input",
+        "type": "'mark' | 'cell'",
+        "union": [
+          "mark",
+          "cell"
+        ],
+        "default": "'mark'",
+        "required": false,
+        "description": "Where the tooltip is pinned. `'mark'`, the default, is the column itself — a panel over the reading it describes. `'cell'` is the full-height category cell, which puts the panel at the top of the plot whatever the column's value."
       }
     ],
     "outputs": [
@@ -2755,7 +2736,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "tooltip",
         "kind": "input",
-        "type": "Exclude<ChartTooltipTrigger, 'axis'>",
+        "type": "ChartItemTooltipTrigger",
         "union": [
           "item",
           "none"
@@ -3303,7 +3284,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "tooltip",
         "kind": "input",
-        "type": "Exclude<ChartTooltipTrigger, 'axis'>",
+        "type": "ChartItemTooltipTrigger",
         "union": [
           "item",
           "none"
@@ -4225,6 +4206,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "'axis'",
         "required": false,
         "description": "Whether the plot opens a tooltip, and for what. `'axis'` names every series at the category under the pointer, which is the reading a multi-series line is compared on; `'item'` names only the marker itself."
+      },
+      {
+        "name": "tooltipAnchor",
+        "kind": "input",
+        "type": "'point' | 'pointer'",
+        "union": [
+          "point",
+          "pointer"
+        ],
+        "default": "'point'",
+        "required": false,
+        "description": "Where the tooltip is pinned. `'point'`, the default, is the highest reading in the category, so the panel stays put while the pointer moves within one band. `'pointer'` follows the cursor."
       }
     ],
     "outputs": [
