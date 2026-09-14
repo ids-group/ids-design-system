@@ -1,96 +1,16 @@
-<!-- @dsCard group="forms-inputs" viewport="1200x700" name="Dropzone - states showcase" subtitle="Every dropzone surface state stacked vertically — one per row." --><!doctype html>
+<!-- @dsCard group="forms-inputs" viewport="1200x700" name="Dropzone - states showcase" subtitle="Every dropzone surface state stacked vertically — one per row." --><!DOCTYPE html>
 <html data-theme="light"><head><meta charset="utf-8">
   <title>Dropzone</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>
-    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-    .ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
-    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
-  </style>
-</head><body>
-  <div class="ds-page"><ds-docs-components-dropzone></ds-docs-components-dropzone></div>
-  <script>window.__dsSectionsOnly = true</script>
-  <script src="../../../_ds_bundle.js"></script>
-  <script>
-    (function () {
-      var OWNS = "";
-      var INDEX = 0;
-      var KEY = "dropzone";
-      var TABLE = true;
-      var HEAD = null;
-      var BLOCK = "states showcase";
-      var REACT = "Dropzone";
-      var WHOLE = OWNS === null;
-      var LEDE = WHOLE || (OWNS === '' && INDEX <= 0);
-      var KEEP = LEDE ? 'h2, p.lede' : 'h2';
-      var DROP_ALWAYS = '.eyebrow' + (LEDE ? '' : ', p.lede');
-      var API = '[data-key]';
-      var host = document.querySelector("ds-docs-components-dropzone");
-      var start = Date.now();
-      (function slice() {
-        var section = host && host.querySelector('.section');
-        if (!section) {
-          if (Date.now() - start < 8000) setTimeout(slice, 50);
-          return;
-        }
-        var owner = '';
-        var doomed = [];
-        var apis = [];
-        var ordinal = -1;
-        var heading = null;
-        for (var node = section.firstElementChild; node; node = node.nextElementSibling) {
-          if (node.matches(DROP_ALWAYS)) { doomed.push(node); continue; }
-          if (WHOLE) continue;
-          if (node.matches(KEEP)) continue;
-          if (node.matches(API)) { apis.push(node); continue; }
-          var marked = node.getAttribute('data-for');
-          var starts = marked !== null || node.matches('h3.block-title');
-          if (marked !== null) owner = marked;
-          else if (node.matches('h3.block-title')) owner = '';
-          if (starts && owner === OWNS) ordinal += 1;
-          if (owner !== OWNS || ordinal !== INDEX) doomed.push(node);
-          else if (starts && node.matches('h3.block-title')) heading = node;
-        }
-        var mine = KEY === '' ? [] : apis.filter(function (n) { return n.getAttribute('data-key') === KEY; });
-        var keepApi = KEY === '' ? [] : (mine.length ? mine : apis.slice(0, 1));
-        if (!WHOLE) {
-          for (var a = 0; a < apis.length; a++) {
-            if (keepApi.indexOf(apis[a]) < 0) { doomed.push(apis[a]); continue; }
-            if (TABLE) continue;
-            if (apis[a].matches('docs-api-table')) { doomed.push(apis[a]); continue; }
-            var nested = apis[a].querySelector('docs-api-table');
-            if (nested) doomed.push(nested);
-          }
-        }
-        var title = section.querySelector('h2');
-        var label = null;
-        for (var c = 0; title && c < title.childNodes.length; c++) {
-          if (title.childNodes[c].nodeType === 3) { label = title.childNodes[c]; break; }
-        }
-        if (title && label === null) {
-          label = document.createTextNode('');
-          title.insertBefore(label, title.firstChild);
-        }
-        if (label) {
-          var head = HEAD || label.nodeValue.trim();
-          label.nodeValue = BLOCK ? head + ' - ' + BLOCK : head;
-          if (BLOCK && heading) doomed.push(heading);
-        }
-        for (var i = 0; i < doomed.length; i++) doomed[i].remove();
-        var wrapper = KEY === '' ? null : section.querySelector('.api-sub[data-key="' + KEY + '"]');
-        var chip = wrapper ? wrapper.querySelector('docs-component-meta') : null;
-        if (chip && title) title.parentNode.insertBefore(chip, title.nextSibling);
-        if (wrapper && wrapper.firstElementChild === null) wrapper.remove();
-        var named = section.querySelector('docs-component-meta .chip .tag');
-        if (REACT && named) named.textContent = '<' + REACT + ' />';
-        var kept = 0;
-        for (var k = section.firstElementChild; k; k = k.nextElementSibling) {
-          if (!k.matches(KEEP) && !k.matches(API) && !k.matches('docs-component-meta')) kept += 1;
-        }
-        document.documentElement.setAttribute('data-ds-sliced', String(doomed.length));
-        document.documentElement.setAttribute('data-ds-kept', String(kept));
-      })();
-    })();
-  </script>
+  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
+<link rel="stylesheet" href="../../../_ds_cards.css"><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}</style></head><body>
+  <div class="ds-page"><ds-docs-components-dropzone _nghost-ct=""><docs-section _ngcontent-ct="" anchor="dropzone" eyebrow="Components" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-dropzone" data-anchor="dropzone"><h2 _ngcontent-c1="" class="t-h2">Dropzone - states showcase</h2><p _ngcontent-c1="" class="lede t-m"><span _ngcontent-ct="" lede=""> Drag-and-drop file upload with progress, success / error states, and a queued file list. </span></p><p _ngcontent-ct="" class="block-desc t-s"> Every dropzone surface state stacked vertically — one per row. Static specimens, no interaction needed. </p><div _ngcontent-ct="" class="states states--cols-1"><div _ngcontent-ct="" class="state-cell"><div _ngcontent-ct="" class="state-cell-stage"><div _ngcontent-ct="" class="dz-demo"><ds-dropzone _ngcontent-ct="" _nghost-cu=""><label _ngcontent-cu="" class="dropzone"><input _ngcontent-cu="" type="file" aria-label="Upload files" class="dz-input"><ds-icon _ngcontent-cu="" name="upload"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 24px;" width="24" height="24" stroke-width="1.75" aria-hidden="true"><path d="M12 20V8M6 12l6-6 6 6"></path><path d="M4 4h16"></path></svg></ds-icon><div _ngcontent-cu="" class="title"> Drop files here </div><div _ngcontent-cu="" class="hint"> or click to browse </div></label></ds-dropzone></div></div><div _ngcontent-ct="" class="state-cell-label"> Idle </div></div><div _ngcontent-ct="" class="state-cell"><div _ngcontent-ct="" class="state-cell-stage pin-active"><div _ngcontent-ct="" class="dz-demo"><ds-dropzone _ngcontent-ct="" _nghost-cu=""><label _ngcontent-cu="" class="dropzone"><input _ngcontent-cu="" type="file" aria-label="Upload files" class="dz-input"><ds-icon _ngcontent-cu="" name="upload"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 24px;" width="24" height="24" stroke-width="1.75" aria-hidden="true"><path d="M12 20V8M6 12l6-6 6 6"></path><path d="M4 4h16"></path></svg></ds-icon><div _ngcontent-cu="" class="title"> Drop files here </div><div _ngcontent-cu="" class="hint"> or click to browse </div></label></ds-dropzone></div></div><div _ngcontent-ct="" class="state-cell-label"> Active · drag-over </div></div><div _ngcontent-ct="" class="state-cell"><div _ngcontent-ct="" class="state-cell-stage"><div _ngcontent-ct="" class="dz-demo"><ds-dropzone _ngcontent-ct="" _nghost-cu=""><label _ngcontent-cu="" class="dropzone has-files"><input _ngcontent-cu="" type="file" aria-label="Upload files" class="dz-input"><div _ngcontent-cu="" class="file-list"><div _ngcontent-cu="" class="file uploading"><ds-icon _ngcontent-cu="" class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 20px;" width="20" height="20" stroke-width="1.75" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><path d="M14 3v6h6"></path></svg></ds-icon><div _ngcontent-cu="" class="main"><div _ngcontent-cu="" class="name"> project-alpha-brief-v3.pdf </div><div _ngcontent-cu="" class="meta"> 2.4 MB · uploading 65% </div><div _ngcontent-cu="" class="progress"><div _ngcontent-cu="" class="progress-fill" style="width: 65%;"></div></div></div><button _ngcontent-cu="" type="button" class="remove" aria-label="Remove project-alpha-brief-v3.pdf"><ds-icon _ngcontent-cu="" name="x"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 14px;" width="14" height="14" stroke-width="1.75" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></ds-icon></button></div><div _ngcontent-cu="" class="file success"><ds-icon _ngcontent-cu="" class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 20px;" width="20" height="20" stroke-width="1.75" aria-hidden="true"><path d="m4 12 5 5L20 6"></path></svg></ds-icon><div _ngcontent-cu="" class="main"><div _ngcontent-cu="" class="name"> site-map.dwg </div><div _ngcontent-cu="" class="meta"> 8.1 MB · uploaded </div></div><button _ngcontent-cu="" type="button" class="remove" aria-label="Remove site-map.dwg"><ds-icon _ngcontent-cu="" name="x"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 14px;" width="14" height="14" stroke-width="1.75" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></ds-icon></button></div><div _ngcontent-cu="" class="error file"><ds-icon _ngcontent-cu="" class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 20px;" width="20" height="20" stroke-width="1.75" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v4M12 16v.01"></path></svg></ds-icon><div _ngcontent-cu="" class="main"><div _ngcontent-cu="" class="name"> vendor-list-FINAL.xlsx </div><div _ngcontent-cu="" class="meta"> 12.4 MB · exceeds 10 MB limit </div></div><button _ngcontent-cu="" type="button" class="remove" aria-label="Remove vendor-list-FINAL.xlsx"><ds-icon _ngcontent-cu="" name="x"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 14px;" width="14" height="14" stroke-width="1.75" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></ds-icon></button></div></div></label></ds-dropzone></div></div><div _ngcontent-ct="" class="state-cell-label"> With files </div></div><div _ngcontent-ct="" class="state-cell"><div _ngcontent-ct="" class="state-cell-stage"><div _ngcontent-ct="" class="dz-demo"><ds-dropzone _ngcontent-ct="" _nghost-cu=""><label _ngcontent-cu="" class="disabled dropzone" aria-disabled="true"><input _ngcontent-cu="" type="file" aria-label="Upload files" class="dz-input" disabled=""><ds-icon _ngcontent-cu="" name="upload"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 24px;" width="24" height="24" stroke-width="1.75" aria-hidden="true"><path d="M12 20V8M6 12l6-6 6 6"></path><path d="M4 4h16"></path></svg></ds-icon><div _ngcontent-cu="" class="title"> Drop files here </div><div _ngcontent-cu="" class="hint"> or click to browse </div></label></ds-dropzone></div></div><div _ngcontent-ct="" class="state-cell-label"> Disabled </div></div></div></section></docs-section></ds-docs-components-dropzone></div>
+  
+  
+  
+
+
 </body></html>

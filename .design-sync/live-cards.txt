@@ -2,12 +2,46 @@
 components/actions/SplitButton/Split Button - Outline variant.html
 components/actions/SplitButton/Split Button - Primary variant.html
 components/actions/SplitButton/Split Button - Without menu items.html
+components/data-display/Stat/Stat - A formatted number, through Angular's own pipe.html
+components/data-display/Stat/Stat - A value that is a phrase.html
+components/data-display/Stat/Stat - A value that is not a number.html
+components/data-display/Stat/Stat - Sizes.html
+components/data-display/Stat/Stat - Stat tiles.html
+components/data-display/Table/Table - A cell that IS a link.html
+components/data-display/Table/Table - Bordered.html
+components/data-display/Table/Table - CSV export.html
+components/data-display/Table/Table - Clickable rows - drawer detail.html
 components/data-display/Table/Table - Column filters.html
 components/data-display/Table/Table - Column picker - reorder.html
+components/data-display/Table/Table - Default.html
+components/data-display/Table/Table - Dense - zebra.html
+components/data-display/Table/Table - Empty states.html
+components/data-display/Table/Table - Expandable rows.html
+components/data-display/Table/Table - Header sort states.html
+components/data-display/Table/Table - Inline editing.html
+components/data-display/Table/Table - Lazy loading.html
+components/data-display/Table/Table - Loading - let the table choose.html
+components/data-display/Table/Table - Loading - overlay.html
+components/data-display/Table/Table - Loading - skeleton.html
+components/data-display/Table/Table - One row at a time.html
 components/data-display/Table/Table - Pagination - sticky column.html
 components/data-display/Table/Table - Persisted layout & export.html
+components/data-display/Table/Table - Resizable columns.html
 components/data-display/Table/Table - Row actions - kebab menu.html
+components/data-display/Table/Table - Row identity for data with no key.html
+components/data-display/Table/Table - Row interaction states.html
+components/data-display/Table/Table - Row selection - bulk-action bar.html
+components/data-display/Table/Table - Server sort - a host that answers with its own.html
+components/data-display/Table/Table - Sizing a column to its content.html
+components/data-display/Table/Table - Sortable columns.html
+components/data-display/Table/Table - Sticky header.html
+components/data-display/Table/Table - Sticky horizontal scrollbar.html
+components/data-display/Table/Table - Templates a wrapper hands over.html
+components/data-display/Table/Table - The cell that names what the row opens.html
+components/data-display/Table/Table - The same thing two-way.html
+components/data-display/Table/Table - Toolbar slot - the export button anywhere.html
 components/data-display/Table/Table - Truncation - full-text popover.html
+components/data-display/Table/Table - Virtual scroll.html
 components/data-display/Table/Table - What the pager shows.html
 components/data-display/Tree/Tree - Interactive tree.html
 components/data-display/Tree/Tree - Single node states.html
@@ -45,6 +79,7 @@ components/forms-inputs/DatePicker/Date Picker - Presets.html
 components/forms-inputs/DatePicker/Date Picker - Single date.html
 components/forms-inputs/DatePicker/Date Picker - Validation states.html
 components/forms-inputs/FieldGroup/Field Group - Every supported control.html
+components/forms-inputs/FieldGroup/Field Group - Saying what is wrong.html
 components/forms-inputs/FieldGroup/Field Group - Sizes, error and full width.html
 components/forms-inputs/FieldGroup/Field Group - Trailing action, and a unit after the value.html
 components/forms-inputs/MultiSelect/Multi Select - Basic usage.html

@@ -1,96 +1,16 @@
-<!-- @dsCard group="navigation" viewport="1200x511" name="Tabs - pills states showcase" subtitle="Same matrix on the pills variant — note the filled active chip." --><!doctype html>
+<!-- @dsCard group="navigation" viewport="1200x465" name="Tabs - pills states showcase" subtitle="Same matrix on the pills variant — note the filled active chip." --><!DOCTYPE html>
 <html data-theme="light"><head><meta charset="utf-8">
   <title>Tabs</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>
-    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-    .ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
-    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
-  </style>
-</head><body>
-  <div class="ds-page"><ds-docs-components-tabs></ds-docs-components-tabs></div>
-  <script>window.__dsSectionsOnly = true</script>
-  <script src="../../../_ds_bundle.js"></script>
-  <script>
-    (function () {
-      var OWNS = "";
-      var INDEX = 6;
-      var KEY = "tabs";
-      var TABLE = false;
-      var HEAD = null;
-      var BLOCK = "pills states showcase";
-      var REACT = "Tabs";
-      var WHOLE = OWNS === null;
-      var LEDE = WHOLE || (OWNS === '' && INDEX <= 0);
-      var KEEP = LEDE ? 'h2, p.lede' : 'h2';
-      var DROP_ALWAYS = '.eyebrow' + (LEDE ? '' : ', p.lede');
-      var API = '[data-key]';
-      var host = document.querySelector("ds-docs-components-tabs");
-      var start = Date.now();
-      (function slice() {
-        var section = host && host.querySelector('.section');
-        if (!section) {
-          if (Date.now() - start < 8000) setTimeout(slice, 50);
-          return;
-        }
-        var owner = '';
-        var doomed = [];
-        var apis = [];
-        var ordinal = -1;
-        var heading = null;
-        for (var node = section.firstElementChild; node; node = node.nextElementSibling) {
-          if (node.matches(DROP_ALWAYS)) { doomed.push(node); continue; }
-          if (WHOLE) continue;
-          if (node.matches(KEEP)) continue;
-          if (node.matches(API)) { apis.push(node); continue; }
-          var marked = node.getAttribute('data-for');
-          var starts = marked !== null || node.matches('h3.block-title');
-          if (marked !== null) owner = marked;
-          else if (node.matches('h3.block-title')) owner = '';
-          if (starts && owner === OWNS) ordinal += 1;
-          if (owner !== OWNS || ordinal !== INDEX) doomed.push(node);
-          else if (starts && node.matches('h3.block-title')) heading = node;
-        }
-        var mine = KEY === '' ? [] : apis.filter(function (n) { return n.getAttribute('data-key') === KEY; });
-        var keepApi = KEY === '' ? [] : (mine.length ? mine : apis.slice(0, 1));
-        if (!WHOLE) {
-          for (var a = 0; a < apis.length; a++) {
-            if (keepApi.indexOf(apis[a]) < 0) { doomed.push(apis[a]); continue; }
-            if (TABLE) continue;
-            if (apis[a].matches('docs-api-table')) { doomed.push(apis[a]); continue; }
-            var nested = apis[a].querySelector('docs-api-table');
-            if (nested) doomed.push(nested);
-          }
-        }
-        var title = section.querySelector('h2');
-        var label = null;
-        for (var c = 0; title && c < title.childNodes.length; c++) {
-          if (title.childNodes[c].nodeType === 3) { label = title.childNodes[c]; break; }
-        }
-        if (title && label === null) {
-          label = document.createTextNode('');
-          title.insertBefore(label, title.firstChild);
-        }
-        if (label) {
-          var head = HEAD || label.nodeValue.trim();
-          label.nodeValue = BLOCK ? head + ' - ' + BLOCK : head;
-          if (BLOCK && heading) doomed.push(heading);
-        }
-        for (var i = 0; i < doomed.length; i++) doomed[i].remove();
-        var wrapper = KEY === '' ? null : section.querySelector('.api-sub[data-key="' + KEY + '"]');
-        var chip = wrapper ? wrapper.querySelector('docs-component-meta') : null;
-        if (chip && title) title.parentNode.insertBefore(chip, title.nextSibling);
-        if (wrapper && wrapper.firstElementChild === null) wrapper.remove();
-        var named = section.querySelector('docs-component-meta .chip .tag');
-        if (REACT && named) named.textContent = '<' + REACT + ' />';
-        var kept = 0;
-        for (var k = section.firstElementChild; k; k = k.nextElementSibling) {
-          if (!k.matches(KEEP) && !k.matches(API) && !k.matches('docs-component-meta')) kept += 1;
-        }
-        document.documentElement.setAttribute('data-ds-sliced', String(doomed.length));
-        document.documentElement.setAttribute('data-ds-kept', String(kept));
-      })();
-    })();
-  </script>
+  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
+<link rel="stylesheet" href="../../../_ds_cards.css"><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}</style></head><body>
+  <div class="ds-page"><ds-docs-components-tabs _nghost-c2a=""><docs-section _ngcontent-c2a="" anchor="tabs" eyebrow="Components" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-tabs" data-anchor="tabs"><h2 _ngcontent-c1="" class="t-h2">Tabs - pills states showcase</h2><p _ngcontent-c2a="" class="block-desc t-s"> Same matrix on the pills variant — note the filled active chip. </p><div _ngcontent-c2a="" class="states states--cols-4"><div _ngcontent-c2a="" class="state-cell"><div _ngcontent-c2a="" class="state-cell-stage"><ds-tabs _ngcontent-c2a="" variant="pills" _nghost-c2b=""><div _ngcontent-c2b="" role="tablist" class="pills tabs" aria-orientation="horizontal"><button _ngcontent-c2b="" type="button" role="tab" class="tab" id="ds-tabs-14-tab-0" aria-selected="false" aria-controls="ds-tabs-14-panel-0" tabindex="-1"><span _ngcontent-c2b=""> All </span></button><button _ngcontent-c2b="" type="button" role="tab" class="active tab" id="ds-tabs-14-tab-1" aria-selected="true" aria-controls="ds-tabs-14-panel-1" tabindex="0"><span _ngcontent-c2b=""> . </span></button></div><div _ngcontent-c2b="" role="tabpanel" tabindex="0" class="panel" id="ds-tabs-14-panel-1" aria-labelledby="ds-tabs-14-tab-1"></div></ds-tabs></div><div _ngcontent-c2a="" class="state-cell-label"> Default </div></div><div _ngcontent-c2a="" class="state-cell"><div _ngcontent-c2a="" class="state-cell-stage pin-hover"><ds-tabs _ngcontent-c2a="" variant="pills" _nghost-c2b=""><div _ngcontent-c2b="" role="tablist" class="pills tabs" aria-orientation="horizontal"><button _ngcontent-c2b="" type="button" role="tab" class="tab" id="ds-tabs-15-tab-0" aria-selected="false" aria-controls="ds-tabs-15-panel-0" tabindex="-1"><span _ngcontent-c2b=""> All </span></button><button _ngcontent-c2b="" type="button" role="tab" class="active tab" id="ds-tabs-15-tab-1" aria-selected="true" aria-controls="ds-tabs-15-panel-1" tabindex="0"><span _ngcontent-c2b=""> . </span></button></div><div _ngcontent-c2b="" role="tabpanel" tabindex="0" class="panel" id="ds-tabs-15-panel-1" aria-labelledby="ds-tabs-15-tab-1"></div></ds-tabs></div><div _ngcontent-c2a="" class="state-cell-label"> Hover </div></div><div _ngcontent-c2a="" class="state-cell"><div _ngcontent-c2a="" class="state-cell-stage pin-focus"><ds-tabs _ngcontent-c2a="" variant="pills" _nghost-c2b=""><div _ngcontent-c2b="" role="tablist" class="pills tabs" aria-orientation="horizontal"><button _ngcontent-c2b="" type="button" role="tab" class="tab" id="ds-tabs-16-tab-0" aria-selected="false" aria-controls="ds-tabs-16-panel-0" tabindex="-1"><span _ngcontent-c2b=""> All </span></button><button _ngcontent-c2b="" type="button" role="tab" class="active tab" id="ds-tabs-16-tab-1" aria-selected="true" aria-controls="ds-tabs-16-panel-1" tabindex="0"><span _ngcontent-c2b=""> . </span></button></div><div _ngcontent-c2b="" role="tabpanel" tabindex="0" class="panel" id="ds-tabs-16-panel-1" aria-labelledby="ds-tabs-16-tab-1"></div></ds-tabs></div><div _ngcontent-c2a="" class="state-cell-label"> Focus-visible </div></div><div _ngcontent-c2a="" class="state-cell"><div _ngcontent-c2a="" class="state-cell-stage"><ds-tabs _ngcontent-c2a="" variant="pills" _nghost-c2b=""><div _ngcontent-c2b="" role="tablist" class="pills tabs" aria-orientation="horizontal"><button _ngcontent-c2b="" type="button" role="tab" class="active tab" id="ds-tabs-17-tab-0" aria-selected="true" aria-controls="ds-tabs-17-panel-0" tabindex="0"><span _ngcontent-c2b=""> All </span></button></div><div _ngcontent-c2b="" role="tabpanel" tabindex="0" class="panel" id="ds-tabs-17-panel-0" aria-labelledby="ds-tabs-17-tab-0"></div></ds-tabs></div><div _ngcontent-c2a="" class="state-cell-label"> Active </div></div><div _ngcontent-c2a="" class="state-cell"><div _ngcontent-c2a="" class="state-cell-stage"><ds-tabs _ngcontent-c2a="" variant="pills" _nghost-c2b=""><div _ngcontent-c2b="" role="tablist" class="pills tabs" aria-orientation="horizontal"><button _ngcontent-c2b="" type="button" role="tab" class="active disabled tab" id="ds-tabs-18-tab-0" disabled="" aria-selected="true" aria-controls="ds-tabs-18-panel-0" tabindex="0"><span _ngcontent-c2b=""> All </span></button></div><div _ngcontent-c2b="" role="tabpanel" tabindex="0" class="panel" id="ds-tabs-18-panel-0" aria-labelledby="ds-tabs-18-tab-0"></div></ds-tabs></div><div _ngcontent-c2a="" class="state-cell-label"> Disabled </div></div></div></section></docs-section></ds-docs-components-tabs></div>
+  
+  
+  
+
+
 </body></html>

@@ -1,96 +1,16 @@
-<!-- @dsCard group="foundations" viewport="1200x596" name="Radius - applied" subtitle="Each radius on the surface it actually shapes." --><!doctype html>
+<!-- @dsCard group="foundations" viewport="1200x596" name="Radius - applied" subtitle="Each radius on the surface it actually shapes." --><!DOCTYPE html>
 <html data-theme="light"><head><meta charset="utf-8">
   <title>Radius</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>
-    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-    .ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
-    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
-  </style>
-</head><body>
-  <div class="ds-page"><ds-docs-foundations-radius></ds-docs-foundations-radius></div>
-  <script>window.__dsSectionsOnly = true</script>
-  <script src="../../../_ds_bundle.js"></script>
-  <script>
-    (function () {
-      var OWNS = "";
-      var INDEX = 3;
-      var KEY = "";
-      var TABLE = false;
-      var HEAD = null;
-      var BLOCK = "applied";
-      var REACT = null;
-      var WHOLE = OWNS === null;
-      var LEDE = WHOLE || (OWNS === '' && INDEX <= 0);
-      var KEEP = LEDE ? 'h2, p.lede' : 'h2';
-      var DROP_ALWAYS = '.eyebrow' + (LEDE ? '' : ', p.lede');
-      var API = '[data-key]';
-      var host = document.querySelector("ds-docs-foundations-radius");
-      var start = Date.now();
-      (function slice() {
-        var section = host && host.querySelector('.section');
-        if (!section) {
-          if (Date.now() - start < 8000) setTimeout(slice, 50);
-          return;
-        }
-        var owner = '';
-        var doomed = [];
-        var apis = [];
-        var ordinal = -1;
-        var heading = null;
-        for (var node = section.firstElementChild; node; node = node.nextElementSibling) {
-          if (node.matches(DROP_ALWAYS)) { doomed.push(node); continue; }
-          if (WHOLE) continue;
-          if (node.matches(KEEP)) continue;
-          if (node.matches(API)) { apis.push(node); continue; }
-          var marked = node.getAttribute('data-for');
-          var starts = marked !== null || node.matches('h3.block-title');
-          if (marked !== null) owner = marked;
-          else if (node.matches('h3.block-title')) owner = '';
-          if (starts && owner === OWNS) ordinal += 1;
-          if (owner !== OWNS || ordinal !== INDEX) doomed.push(node);
-          else if (starts && node.matches('h3.block-title')) heading = node;
-        }
-        var mine = KEY === '' ? [] : apis.filter(function (n) { return n.getAttribute('data-key') === KEY; });
-        var keepApi = KEY === '' ? [] : (mine.length ? mine : apis.slice(0, 1));
-        if (!WHOLE) {
-          for (var a = 0; a < apis.length; a++) {
-            if (keepApi.indexOf(apis[a]) < 0) { doomed.push(apis[a]); continue; }
-            if (TABLE) continue;
-            if (apis[a].matches('docs-api-table')) { doomed.push(apis[a]); continue; }
-            var nested = apis[a].querySelector('docs-api-table');
-            if (nested) doomed.push(nested);
-          }
-        }
-        var title = section.querySelector('h2');
-        var label = null;
-        for (var c = 0; title && c < title.childNodes.length; c++) {
-          if (title.childNodes[c].nodeType === 3) { label = title.childNodes[c]; break; }
-        }
-        if (title && label === null) {
-          label = document.createTextNode('');
-          title.insertBefore(label, title.firstChild);
-        }
-        if (label) {
-          var head = HEAD || label.nodeValue.trim();
-          label.nodeValue = BLOCK ? head + ' - ' + BLOCK : head;
-          if (BLOCK && heading) doomed.push(heading);
-        }
-        for (var i = 0; i < doomed.length; i++) doomed[i].remove();
-        var wrapper = KEY === '' ? null : section.querySelector('.api-sub[data-key="' + KEY + '"]');
-        var chip = wrapper ? wrapper.querySelector('docs-component-meta') : null;
-        if (chip && title) title.parentNode.insertBefore(chip, title.nextSibling);
-        if (wrapper && wrapper.firstElementChild === null) wrapper.remove();
-        var named = section.querySelector('docs-component-meta .chip .tag');
-        if (REACT && named) named.textContent = '<' + REACT + ' />';
-        var kept = 0;
-        for (var k = section.firstElementChild; k; k = k.nextElementSibling) {
-          if (!k.matches(KEEP) && !k.matches(API) && !k.matches('docs-component-meta')) kept += 1;
-        }
-        document.documentElement.setAttribute('data-ds-sliced', String(doomed.length));
-        document.documentElement.setAttribute('data-ds-kept', String(kept));
-      })();
-    })();
-  </script>
+  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
+<link rel="stylesheet" href="../../../_ds_cards.css"></head><body>
+  <div class="ds-page"><ds-docs-foundations-radius _nghost-c4j=""><docs-section _ngcontent-c4j="" anchor="radius" eyebrow="Foundations" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-radius" data-anchor="radius"><h2 _ngcontent-c1="" class="t-h2">Radius - applied</h2><p _ngcontent-c4j="" class="block-desc t-s"> Each radius on the surface it actually shapes. Real components — no painted tiles. </p><div _ngcontent-c4j="" class="applied-grid"><div _ngcontent-c4j="" class="applied-cell"><div _ngcontent-c4j="" class="applied-cell-stage"><div _ngcontent-c4j="" class="demo-group"><button _ngcontent-c4j="" class="demo-group-btn demo-group-btn--start"> First </button><button _ngcontent-c4j="" class="demo-group-btn demo-group-btn--mid"> Mid </button><button _ngcontent-c4j="" class="demo-group-btn demo-group-btn--end"> Last </button></div></div><div _ngcontent-c4j="" class="applied-cell-label"> --radius-0 · group middle </div></div><div _ngcontent-c4j="" class="applied-cell"><div _ngcontent-c4j="" class="applied-cell-stage"><kbd _ngcontent-c4j="" class="demo-kbd"> ⌘ </kbd><kbd _ngcontent-c4j="" class="demo-kbd"> K </kbd></div><div _ngcontent-c4j="" class="applied-cell-label"> --radius-sm · kbd </div></div><div _ngcontent-c4j="" class="applied-cell"><div _ngcontent-c4j="" class="applied-cell-stage"><button _ngcontent-c4j="" class="demo-btn"> Save changes </button></div><div _ngcontent-c4j="" class="applied-cell-label"> --radius-md · button </div></div><div _ngcontent-c4j="" class="applied-cell"><div _ngcontent-c4j="" class="applied-cell-stage"><div _ngcontent-c4j="" class="demo-card"><div _ngcontent-c4j="" class="demo-card-head t-s-bold"> Capacity </div><div _ngcontent-c4j="" class="demo-card-value t-h3"> 84% </div></div></div><div _ngcontent-c4j="" class="applied-cell-label"> --radius-lg · card </div></div><div _ngcontent-c4j="" class="applied-cell"><div _ngcontent-c4j="" class="applied-cell-stage"><div _ngcontent-c4j="" class="demo-hero"><div _ngcontent-c4j="" class="t-overline" style="color: var(--text-on-primary); opacity: 0.7;"> Q3 summary </div><div _ngcontent-c4j="" class="t-h4" style="color: var(--text-on-primary);"> All systems green </div></div></div><div _ngcontent-c4j="" class="applied-cell-label"> --radius-2xl · hero </div></div><div _ngcontent-c4j="" class="applied-cell"><div _ngcontent-c4j="" class="applied-cell-stage"><span _ngcontent-c4j="" class="demo-pill demo-pill--active"> Active </span><span _ngcontent-c4j="" class="demo-pill demo-pill--planning"> Planning </span></div><div _ngcontent-c4j="" class="applied-cell-label"> --radius-pill · status chip </div></div></div></section></docs-section></ds-docs-foundations-radius></div>
+  
+  
+  
+
+
 </body></html>

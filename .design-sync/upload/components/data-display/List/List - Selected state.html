@@ -1,96 +1,16 @@
-<!-- @dsCard group="data-display" viewport="1200x506" name="List - selected state" subtitle="Pass [selected]='true' to highlight the active row — useful in navigation lists and option pickers." --><!doctype html>
+<!-- @dsCard group="data-display" viewport="1200x460" name="List - selected state" subtitle="Pass [selected]='true' to highlight the active row — useful in navigation lists and option pickers." --><!DOCTYPE html>
 <html data-theme="light"><head><meta charset="utf-8">
   <title>List</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>
-    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-    .ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
-    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
-  </style>
-</head><body>
-  <div class="ds-page"><ds-docs-components-list></ds-docs-components-list></div>
-  <script>window.__dsSectionsOnly = true</script>
-  <script src="../../../_ds_bundle.js"></script>
-  <script>
-    (function () {
-      var OWNS = "";
-      var INDEX = 1;
-      var KEY = "list";
-      var TABLE = false;
-      var HEAD = null;
-      var BLOCK = "selected state";
-      var REACT = "List";
-      var WHOLE = OWNS === null;
-      var LEDE = WHOLE || (OWNS === '' && INDEX <= 0);
-      var KEEP = LEDE ? 'h2, p.lede' : 'h2';
-      var DROP_ALWAYS = '.eyebrow' + (LEDE ? '' : ', p.lede');
-      var API = '[data-key]';
-      var host = document.querySelector("ds-docs-components-list");
-      var start = Date.now();
-      (function slice() {
-        var section = host && host.querySelector('.section');
-        if (!section) {
-          if (Date.now() - start < 8000) setTimeout(slice, 50);
-          return;
-        }
-        var owner = '';
-        var doomed = [];
-        var apis = [];
-        var ordinal = -1;
-        var heading = null;
-        for (var node = section.firstElementChild; node; node = node.nextElementSibling) {
-          if (node.matches(DROP_ALWAYS)) { doomed.push(node); continue; }
-          if (WHOLE) continue;
-          if (node.matches(KEEP)) continue;
-          if (node.matches(API)) { apis.push(node); continue; }
-          var marked = node.getAttribute('data-for');
-          var starts = marked !== null || node.matches('h3.block-title');
-          if (marked !== null) owner = marked;
-          else if (node.matches('h3.block-title')) owner = '';
-          if (starts && owner === OWNS) ordinal += 1;
-          if (owner !== OWNS || ordinal !== INDEX) doomed.push(node);
-          else if (starts && node.matches('h3.block-title')) heading = node;
-        }
-        var mine = KEY === '' ? [] : apis.filter(function (n) { return n.getAttribute('data-key') === KEY; });
-        var keepApi = KEY === '' ? [] : (mine.length ? mine : apis.slice(0, 1));
-        if (!WHOLE) {
-          for (var a = 0; a < apis.length; a++) {
-            if (keepApi.indexOf(apis[a]) < 0) { doomed.push(apis[a]); continue; }
-            if (TABLE) continue;
-            if (apis[a].matches('docs-api-table')) { doomed.push(apis[a]); continue; }
-            var nested = apis[a].querySelector('docs-api-table');
-            if (nested) doomed.push(nested);
-          }
-        }
-        var title = section.querySelector('h2');
-        var label = null;
-        for (var c = 0; title && c < title.childNodes.length; c++) {
-          if (title.childNodes[c].nodeType === 3) { label = title.childNodes[c]; break; }
-        }
-        if (title && label === null) {
-          label = document.createTextNode('');
-          title.insertBefore(label, title.firstChild);
-        }
-        if (label) {
-          var head = HEAD || label.nodeValue.trim();
-          label.nodeValue = BLOCK ? head + ' - ' + BLOCK : head;
-          if (BLOCK && heading) doomed.push(heading);
-        }
-        for (var i = 0; i < doomed.length; i++) doomed[i].remove();
-        var wrapper = KEY === '' ? null : section.querySelector('.api-sub[data-key="' + KEY + '"]');
-        var chip = wrapper ? wrapper.querySelector('docs-component-meta') : null;
-        if (chip && title) title.parentNode.insertBefore(chip, title.nextSibling);
-        if (wrapper && wrapper.firstElementChild === null) wrapper.remove();
-        var named = section.querySelector('docs-component-meta .chip .tag');
-        if (REACT && named) named.textContent = '<' + REACT + ' />';
-        var kept = 0;
-        for (var k = section.firstElementChild; k; k = k.nextElementSibling) {
-          if (!k.matches(KEEP) && !k.matches(API) && !k.matches('docs-component-meta')) kept += 1;
-        }
-        document.documentElement.setAttribute('data-ds-sliced', String(doomed.length));
-        document.documentElement.setAttribute('data-ds-kept', String(kept));
-      })();
-    })();
-  </script>
+  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
+<link rel="stylesheet" href="../../../_ds_cards.css"><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}</style></head><body>
+  <div class="ds-page"><ds-docs-components-list _nghost-c2o=""><docs-section _ngcontent-c2o="" anchor="list" eyebrow="Components" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-list" data-anchor="list"><h2 _ngcontent-c1="" class="t-h2">List - selected state</h2><p _ngcontent-c2o="" class="block-desc t-s"> Pass <code _ngcontent-c2o="">[selected]="true"</code> to highlight the active row — useful in navigation lists and option pickers. </p><div _ngcontent-c2o="" class="demo-panel"><ds-list _ngcontent-c2o="" role="list" _nghost-c2p="" class="dividers"><ds-list-item _ngcontent-c2o="" role="listitem" subtitle="Email and push preferences" _nghost-c2q="" aria-current="true" class="clickable selected"><span _ngcontent-c2q="" class="leading"><ds-icon _ngcontent-c2o="" leading="" name="bell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 18px;" width="18" height="18" stroke-width="1.75" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10 21a2 2 0 0 0 4 0"></path></svg></ds-icon></span><button _ngcontent-c2q="" type="button" class="activator"><span _ngcontent-c2q="" class="body"><span _ngcontent-c2q="" class="title"> Notifications </span><span _ngcontent-c2q="" class="subtitle"> Email and push preferences </span></span></button><span _ngcontent-c2q="" class="trailing"></span></ds-list-item><ds-list-item _ngcontent-c2o="" role="listitem" subtitle="Uploaded files and exports" _nghost-c2q="" class="clickable"><span _ngcontent-c2q="" class="leading"><ds-icon _ngcontent-c2o="" leading="" name="folder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 18px;" width="18" height="18" stroke-width="1.75" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg></ds-icon></span><button _ngcontent-c2q="" type="button" class="activator"><span _ngcontent-c2q="" class="body"><span _ngcontent-c2q="" class="title"> Documents </span><span _ngcontent-c2q="" class="subtitle"> Uploaded files and exports </span></span></button><span _ngcontent-c2q="" class="trailing"></span></ds-list-item><ds-list-item _ngcontent-c2o="" role="listitem" subtitle="Items you have bookmarked" _nghost-c2q="" class="clickable"><span _ngcontent-c2q="" class="leading"><ds-icon _ngcontent-c2o="" leading="" name="star"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 18px;" width="18" height="18" stroke-width="1.75" aria-hidden="true"><path d="m12 3 2.9 6 6.6.9-4.8 4.6 1.1 6.5L12 17.8 6.2 21l1.1-6.5L2.5 9.9 9.1 9z"></path></svg></ds-icon></span><button _ngcontent-c2q="" type="button" class="activator"><span _ngcontent-c2q="" class="body"><span _ngcontent-c2q="" class="title"> Starred </span><span _ngcontent-c2q="" class="subtitle"> Items you have bookmarked </span></span></button><span _ngcontent-c2q="" class="trailing"></span></ds-list-item></ds-list></div></section></docs-section></ds-docs-components-list></div>
+  
+  
+  
+
+
 </body></html>

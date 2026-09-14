@@ -1,96 +1,16 @@
-<!-- @dsCard group="feedback-status" viewport="1200x642" name="Progress - variants" --><!doctype html>
+<!-- @dsCard group="feedback-status" viewport="1200x510" name="Progress - variants" --><!DOCTYPE html>
 <html data-theme="light"><head><meta charset="utf-8">
   <title>Progress</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>
-    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-    .ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
-    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
-  </style>
-</head><body>
-  <div class="ds-page"><ds-docs-components-progress></ds-docs-components-progress></div>
-  <script>window.__dsSectionsOnly = true</script>
-  <script src="../../../_ds_bundle.js"></script>
-  <script>
-    (function () {
-      var OWNS = "";
-      var INDEX = 0;
-      var KEY = "progress";
-      var TABLE = true;
-      var HEAD = null;
-      var BLOCK = "variants";
-      var REACT = "Progress";
-      var WHOLE = OWNS === null;
-      var LEDE = WHOLE || (OWNS === '' && INDEX <= 0);
-      var KEEP = LEDE ? 'h2, p.lede' : 'h2';
-      var DROP_ALWAYS = '.eyebrow' + (LEDE ? '' : ', p.lede');
-      var API = '[data-key]';
-      var host = document.querySelector("ds-docs-components-progress");
-      var start = Date.now();
-      (function slice() {
-        var section = host && host.querySelector('.section');
-        if (!section) {
-          if (Date.now() - start < 8000) setTimeout(slice, 50);
-          return;
-        }
-        var owner = '';
-        var doomed = [];
-        var apis = [];
-        var ordinal = -1;
-        var heading = null;
-        for (var node = section.firstElementChild; node; node = node.nextElementSibling) {
-          if (node.matches(DROP_ALWAYS)) { doomed.push(node); continue; }
-          if (WHOLE) continue;
-          if (node.matches(KEEP)) continue;
-          if (node.matches(API)) { apis.push(node); continue; }
-          var marked = node.getAttribute('data-for');
-          var starts = marked !== null || node.matches('h3.block-title');
-          if (marked !== null) owner = marked;
-          else if (node.matches('h3.block-title')) owner = '';
-          if (starts && owner === OWNS) ordinal += 1;
-          if (owner !== OWNS || ordinal !== INDEX) doomed.push(node);
-          else if (starts && node.matches('h3.block-title')) heading = node;
-        }
-        var mine = KEY === '' ? [] : apis.filter(function (n) { return n.getAttribute('data-key') === KEY; });
-        var keepApi = KEY === '' ? [] : (mine.length ? mine : apis.slice(0, 1));
-        if (!WHOLE) {
-          for (var a = 0; a < apis.length; a++) {
-            if (keepApi.indexOf(apis[a]) < 0) { doomed.push(apis[a]); continue; }
-            if (TABLE) continue;
-            if (apis[a].matches('docs-api-table')) { doomed.push(apis[a]); continue; }
-            var nested = apis[a].querySelector('docs-api-table');
-            if (nested) doomed.push(nested);
-          }
-        }
-        var title = section.querySelector('h2');
-        var label = null;
-        for (var c = 0; title && c < title.childNodes.length; c++) {
-          if (title.childNodes[c].nodeType === 3) { label = title.childNodes[c]; break; }
-        }
-        if (title && label === null) {
-          label = document.createTextNode('');
-          title.insertBefore(label, title.firstChild);
-        }
-        if (label) {
-          var head = HEAD || label.nodeValue.trim();
-          label.nodeValue = BLOCK ? head + ' - ' + BLOCK : head;
-          if (BLOCK && heading) doomed.push(heading);
-        }
-        for (var i = 0; i < doomed.length; i++) doomed[i].remove();
-        var wrapper = KEY === '' ? null : section.querySelector('.api-sub[data-key="' + KEY + '"]');
-        var chip = wrapper ? wrapper.querySelector('docs-component-meta') : null;
-        if (chip && title) title.parentNode.insertBefore(chip, title.nextSibling);
-        if (wrapper && wrapper.firstElementChild === null) wrapper.remove();
-        var named = section.querySelector('docs-component-meta .chip .tag');
-        if (REACT && named) named.textContent = '<' + REACT + ' />';
-        var kept = 0;
-        for (var k = section.firstElementChild; k; k = k.nextElementSibling) {
-          if (!k.matches(KEEP) && !k.matches(API) && !k.matches('docs-component-meta')) kept += 1;
-        }
-        document.documentElement.setAttribute('data-ds-sliced', String(doomed.length));
-        document.documentElement.setAttribute('data-ds-kept', String(kept));
-      })();
-    })();
-  </script>
+  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
+<link rel="stylesheet" href="../../../_ds_cards.css"></head><body>
+  <div class="ds-page"><ds-docs-components-progress _nghost-c3c=""><docs-section _ngcontent-c3c="" anchor="progress" eyebrow="Components" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-progress" data-anchor="progress"><h2 _ngcontent-c1="" class="t-h2">Progress - variants</h2><p _ngcontent-c1="" class="lede t-m"><span _ngcontent-c3c="" lede=""> Horizontal progress bar. Value 0..100 for determinate. Four status variants match the global colour roles, plus an indeterminate sweep for unknown duration. </span></p><div _ngcontent-c3c="" class="states"><div _ngcontent-c3c="" class="state"><code _ngcontent-c3c="" class="t-mono-inline state-lbl"> default · 30% </code><ds-progress _ngcontent-c3c="" role="progressbar" aria-valuemin="0" aria-valuemax="100" _nghost-c3d="" aria-valuenow="30"><span _ngcontent-c3d="" style="width: 30%;"></span></ds-progress></div><div _ngcontent-c3c="" class="state"><code _ngcontent-c3c="" class="t-mono-inline state-lbl"> default · 70% </code><ds-progress _ngcontent-c3c="" role="progressbar" aria-valuemin="0" aria-valuemax="100" _nghost-c3d="" aria-valuenow="70"><span _ngcontent-c3d="" style="width: 70%;"></span></ds-progress></div><div _ngcontent-c3c="" class="state"><code _ngcontent-c3c="" class="t-mono-inline state-lbl"> success · 70% </code><ds-progress _ngcontent-c3c="" role="progressbar" aria-valuemin="0" aria-valuemax="100" variant="success" _nghost-c3d="" aria-valuenow="70" class="success"><span _ngcontent-c3d="" style="width: 70%;"></span></ds-progress></div><div _ngcontent-c3c="" class="state"><code _ngcontent-c3c="" class="t-mono-inline state-lbl"> warning · 92% </code><ds-progress _ngcontent-c3c="" role="progressbar" aria-valuemin="0" aria-valuemax="100" variant="warning" _nghost-c3d="" aria-valuenow="92" class="warning"><span _ngcontent-c3d="" style="width: 92%;"></span></ds-progress></div><div _ngcontent-c3c="" class="state"><code _ngcontent-c3c="" class="t-mono-inline state-lbl"> error · 100% </code><ds-progress _ngcontent-c3c="" role="progressbar" aria-valuemin="0" aria-valuemax="100" variant="error" _nghost-c3d="" aria-valuenow="100" class="error"><span _ngcontent-c3d="" style="width: 100%;"></span></ds-progress></div><div _ngcontent-c3c="" class="state"><code _ngcontent-c3c="" class="t-mono-inline state-lbl"> indeterminate </code><ds-progress _ngcontent-c3c="" role="progressbar" aria-valuemin="0" aria-valuemax="100" indeterminate="" _nghost-c3d="" class="indeterminate"><span _ngcontent-c3d=""></span></ds-progress></div></div></section></docs-section></ds-docs-components-progress></div>
+  
+  
+  
+
+
 </body></html>

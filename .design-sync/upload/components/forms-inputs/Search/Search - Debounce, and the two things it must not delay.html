@@ -1,96 +1,16 @@
-<!-- @dsCard group="forms-inputs" viewport="1200x551" name="Search - debounce, and the two things it must not delay" subtitle="[debounce]='200' holds each keystroke back before value updates, so a list screen stops firing a request per character." --><!doctype html>
+<!-- @dsCard group="forms-inputs" viewport="1200x505" name="Search - debounce, and the two things it must not delay" subtitle="[debounce]='200' holds each keystroke back before value updates, so a list screen stops firing a request per character." --><!DOCTYPE html>
 <html data-theme="light"><head><meta charset="utf-8">
   <title>Search</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>
-    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-    .ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
-    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
-  </style>
-</head><body>
-  <div class="ds-page"><ds-docs-components-search></ds-docs-components-search></div>
-  <script>window.__dsSectionsOnly = true</script>
-  <script src="../../../_ds_bundle.js"></script>
-  <script>
-    (function () {
-      var OWNS = "";
-      var INDEX = 5;
-      var KEY = "search";
-      var TABLE = false;
-      var HEAD = null;
-      var BLOCK = "debounce, and the two things it must not delay";
-      var REACT = "Search";
-      var WHOLE = OWNS === null;
-      var LEDE = WHOLE || (OWNS === '' && INDEX <= 0);
-      var KEEP = LEDE ? 'h2, p.lede' : 'h2';
-      var DROP_ALWAYS = '.eyebrow' + (LEDE ? '' : ', p.lede');
-      var API = '[data-key]';
-      var host = document.querySelector("ds-docs-components-search");
-      var start = Date.now();
-      (function slice() {
-        var section = host && host.querySelector('.section');
-        if (!section) {
-          if (Date.now() - start < 8000) setTimeout(slice, 50);
-          return;
-        }
-        var owner = '';
-        var doomed = [];
-        var apis = [];
-        var ordinal = -1;
-        var heading = null;
-        for (var node = section.firstElementChild; node; node = node.nextElementSibling) {
-          if (node.matches(DROP_ALWAYS)) { doomed.push(node); continue; }
-          if (WHOLE) continue;
-          if (node.matches(KEEP)) continue;
-          if (node.matches(API)) { apis.push(node); continue; }
-          var marked = node.getAttribute('data-for');
-          var starts = marked !== null || node.matches('h3.block-title');
-          if (marked !== null) owner = marked;
-          else if (node.matches('h3.block-title')) owner = '';
-          if (starts && owner === OWNS) ordinal += 1;
-          if (owner !== OWNS || ordinal !== INDEX) doomed.push(node);
-          else if (starts && node.matches('h3.block-title')) heading = node;
-        }
-        var mine = KEY === '' ? [] : apis.filter(function (n) { return n.getAttribute('data-key') === KEY; });
-        var keepApi = KEY === '' ? [] : (mine.length ? mine : apis.slice(0, 1));
-        if (!WHOLE) {
-          for (var a = 0; a < apis.length; a++) {
-            if (keepApi.indexOf(apis[a]) < 0) { doomed.push(apis[a]); continue; }
-            if (TABLE) continue;
-            if (apis[a].matches('docs-api-table')) { doomed.push(apis[a]); continue; }
-            var nested = apis[a].querySelector('docs-api-table');
-            if (nested) doomed.push(nested);
-          }
-        }
-        var title = section.querySelector('h2');
-        var label = null;
-        for (var c = 0; title && c < title.childNodes.length; c++) {
-          if (title.childNodes[c].nodeType === 3) { label = title.childNodes[c]; break; }
-        }
-        if (title && label === null) {
-          label = document.createTextNode('');
-          title.insertBefore(label, title.firstChild);
-        }
-        if (label) {
-          var head = HEAD || label.nodeValue.trim();
-          label.nodeValue = BLOCK ? head + ' - ' + BLOCK : head;
-          if (BLOCK && heading) doomed.push(heading);
-        }
-        for (var i = 0; i < doomed.length; i++) doomed[i].remove();
-        var wrapper = KEY === '' ? null : section.querySelector('.api-sub[data-key="' + KEY + '"]');
-        var chip = wrapper ? wrapper.querySelector('docs-component-meta') : null;
-        if (chip && title) title.parentNode.insertBefore(chip, title.nextSibling);
-        if (wrapper && wrapper.firstElementChild === null) wrapper.remove();
-        var named = section.querySelector('docs-component-meta .chip .tag');
-        if (REACT && named) named.textContent = '<' + REACT + ' />';
-        var kept = 0;
-        for (var k = section.firstElementChild; k; k = k.nextElementSibling) {
-          if (!k.matches(KEEP) && !k.matches(API) && !k.matches('docs-component-meta')) kept += 1;
-        }
-        document.documentElement.setAttribute('data-ds-sliced', String(doomed.length));
-        document.documentElement.setAttribute('data-ds-kept', String(kept));
-      })();
-    })();
-  </script>
+  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
+<link rel="stylesheet" href="../../../_ds_cards.css"><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}</style></head><body>
+  <div class="ds-page"><ds-docs-components-search _nghost-c1e=""><docs-section _ngcontent-c1e="" anchor="search" eyebrow="Components" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-search" data-anchor="search"><h2 _ngcontent-c1="" class="t-h2">Search - debounce, and the two things it must not delay</h2><p _ngcontent-c1e="" class="block-desc t-s"><code _ngcontent-c1e="" class="t-mono-inline"> [debounce]="200" </code> holds each keystroke back before <code _ngcontent-c1e="" class="t-mono-inline">value</code> updates, so a list screen stops firing a request per character. Default is <code _ngcontent-c1e="" class="t-mono-inline"> 0 </code> — every keystroke writes through, exactly as this control always has. </p><p _ngcontent-c1e="" class="block-desc t-s"> Three things deliberately skip the timer, and they are the reason a wrapped <code _ngcontent-c1e="" class="t-mono-inline"> debounceTime </code> usually feels wrong. <strong _ngcontent-c1e=""> Clearing the field </strong> — emptying a search is a deliberate act, and waiting 200ms to see the whole list back reads as a hang; <strong _ngcontent-c1e=""> Enter </strong>, which flushes whatever is still in flight so you search what you can see; and <strong _ngcontent-c1e=""> the public <code _ngcontent-c1e="" class="t-mono-inline"> clear() </code></strong>, for a Clear button that lives outside the control — it empties the field, drops an armed keystroke and publishes <code _ngcontent-c1e="" class="t-mono-inline"> '' </code> at once. Writing <code _ngcontent-c1e="" class="t-mono-inline"> '' </code> into <code _ngcontent-c1e="" class="t-mono-inline"> value </code> is NOT the same: the timer is cancelled only when the incoming text differs from what the control last pushed, so clearing an already-empty-looking field left the keystroke armed. What the input SHOWS is never delayed by any of the three. </p><div _ngcontent-c1e="" class="demo-stack"><ds-search _ngcontent-c1e="" clearable="" placeholder="Type here — value lags 600ms" _nghost-cz=""><div _ngcontent-cz="" dsfieldclickfocus="" class="search md"><ds-icon _ngcontent-cz="" name="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 16px;" width="16" height="16" stroke-width="1.75" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg></ds-icon><input _ngcontent-cz="" class="search-input ng-untouched ng-pristine ng-valid" placeholder="Type here — value lags 600ms" aria-label="Type here — value lags 600ms"></div></ds-search><p _ngcontent-c1e="" class="t-s"><code _ngcontent-c1e="" class="t-mono-inline"> value </code>: (empty) </p></div></section></docs-section></ds-docs-components-search></div>
+  
+  
+  
+
+
 </body></html>
