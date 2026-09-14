@@ -203,11 +203,20 @@ export function forwardOverlayTokens(
   // Roles resolve at :root, so every host has a value for them and copying it
   // unconditionally would PIN it inline on the pane — an open panel would then
   // ignore a theme switch until it was reopened. Forward only where the host
-  // actually overrides the root, which is the case the pane cannot see.
-  const rootStyle = getComputedStyle(host.ownerDocument.documentElement);
+  // declares the role ITSELF, which is the case the pane cannot see.
+  //
+  // Compared against the PARENT, not against :root. Custom properties inherit, so a
+  // shell that sets a role for its own chrome makes every component under it differ
+  // from the root — each would pin the shell's value inline, where it outranks the
+  // `.ds-overlay-pane` rule that is a consumer's only route to a portaled panel. An
+  // ancestor's value reaches one panel through that component's own `--ds-*` hook,
+  // which the loop above forwards with no such test.
+  const inheritedStyle = getComputedStyle(
+    host.parentElement ?? host.ownerDocument.documentElement,
+  );
   for (const token of ROLE_TOKENS) {
     const value = hostStyle.getPropertyValue(token).trim();
-    if (value && value !== rootStyle.getPropertyValue(token).trim()) {
+    if (value && value !== inheritedStyle.getPropertyValue(token).trim()) {
       paneStyle.setProperty(token, value);
     }
   }
