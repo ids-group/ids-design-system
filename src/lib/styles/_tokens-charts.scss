@@ -97,6 +97,12 @@
   --chart-axis-font-size:      var(--font-size-2xs);
 
   /* HIGHLIGHT / HOVER */
+
+  /* Every level of dimming costs the separation BETWEEN the dimmed series: measured 2026-09-13,
+     OKLab dE x100, the worst pair of three dimmed series falls from 14.8 at full opacity to 5.2 at
+     60% and 2.1 at 30%. There is no level that keeps them apart, so this number buys accent
+     loudness, not readable context. 30% is Carbon's. */
+  --chart-dim-opacity:        0.3;
   --chart-hover-bg-color:     hsl(225deg 39% 7% / 4%);
   --chart-cursor-line-color:  var(--neutral-400);
   --chart-tooltip-bg-color:   var(--neutral-900);
@@ -153,6 +159,7 @@
   --ds-chart-grid-line-color: var(--chart-grid-line-color);
   --ds-chart-grid-line-strong-color: var(--chart-grid-line-strong-color);
 
+  --ds-chart-dim-opacity: var(--chart-dim-opacity);
   --ds-chart-hover-bg-color: var(--chart-hover-bg-color);
   --ds-chart-cursor-line-color: var(--chart-cursor-line-color);
   --ds-chart-tooltip-bg-color: var(--chart-tooltip-bg-color);

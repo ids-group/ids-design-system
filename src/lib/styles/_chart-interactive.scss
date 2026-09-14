@@ -1,0 +1,42 @@
+// The ONLY place a chart derives a hover state.
+//
+// TODO(ds-interactive): when the `.ds-interactive` verdicts B1-B5 on presentations/3-interaction-formula
+// close and `_interaction.scss` exists, this file is what migrates onto it. Keeping the derivation
+// here — rather than in five component stylesheets — is what makes that one file instead of five.
+//
+// Two channels, and they are independent, matching `highlightScope: { highlight, fade }`:
+//
+//   fade      the marks that are NOT under the pointer drop to --ds-chart-dim-opacity
+//   highlight the mark that IS under the pointer takes a direct value label, which is markup
+//
+// Only the fade half is CSS. The label is a `<text>`/`<span>` the component renders, because a
+// label has to be a node a screen reader can reach — an ::after cannot be.
+
+// Applies to a container that holds marks. `$mark` is the mark's own selector inside it.
+//
+// The pointer case needs no component state: `:has()` asks the container whether anything inside it
+// is hovered, so a chart that only wants hover dimming writes nothing in TypeScript. The `.is-dimmed`
+// class is the second entry point, for a highlight driven from outside — the legend, or a
+// consumer-controlled `highlightScope`.
+//
+// Usage: `.columns { @include chart-interactive.fades('.column'); }`
+@mixin fades($mark) {
+  #{$mark} {
+    transition: opacity var(--ds-motion-chart-state-duration)
+      var(--ds-motion-chart-state-easing);
+  }
+
+  &:has(#{$mark}.interactive:hover) #{$mark}.interactive:not(:hover),
+  &:has(#{$mark}.interactive:focus-visible)
+    #{$mark}.interactive:not(:focus-visible),
+  #{$mark}.is-dimmed {
+    opacity: var(--ds-chart-dim-opacity);
+  }
+}
+
+// The pointer affordance, for a mark that reports a click.
+@mixin clickable($mark) {
+  #{$mark}.interactive {
+    cursor: pointer;
+  }
+}

@@ -1,5 +1,6 @@
 @use '../../styles/chart-data-table' as chart-data-table;
 @use '../../styles/chart-frame' as chart-frame;
+@use '../../styles/chart-interactive' as chart-interactive;
 @include chart-frame.chart-frame;
 @include chart-data-table.chart-data-table;
 
@@ -76,6 +77,9 @@ figcaption {
 // and an unpositioned sibling sits in the layer beneath it whatever the DOM order — every column
 // came out ruled with the tick lines.
 .columns {
+  @include chart-interactive.fades('.column');
+  @include chart-interactive.clickable('.column');
+
   position: relative;
   display: grid;
   grid-auto-flow: column;
@@ -88,9 +92,6 @@ figcaption {
   row-gap: var(--space-2);
 }
 
-.column.interactive {
-  cursor: pointer;
-}
 
 .plot-cell {
   display: flex;
