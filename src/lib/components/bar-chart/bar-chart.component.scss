@@ -76,7 +76,8 @@ figcaption {
   display: block;
   block-size: 100%;
   border-radius: inherit;
-  transition: inline-size var(--duration-base) var(--ease-decelerate);
+  transition: inline-size var(--ds-motion-chart-mark-duration)
+    var(--ds-motion-chart-mark-easing);
 }
 
 .empty.is-error {

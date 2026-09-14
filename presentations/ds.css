@@ -892,10 +892,13 @@
   --ds-motion-check-enter-easing: var(--ease-spring);
   --ds-motion-check-exit-duration: var(--duration-fast);
   --ds-motion-check-exit-easing: var(--ease-accelerate);
-  /* A hover or focus answering a pointer, so it runs at the fast step — anything slower reads as
-     lag on a mark the cursor is already leaving. */
+  /* `state` is a hover or focus answering a pointer, so it runs at the fast step — anything slower
+     reads as lag on a mark the cursor is already leaving. `mark` is a datum changing size, which is
+     a redraw the reader is meant to follow rather than catch up with. */
   --ds-motion-chart-state-duration: var(--duration-fast);
   --ds-motion-chart-state-easing: var(--ease-standard);
+  --ds-motion-chart-mark-duration: var(--duration-base);
+  --ds-motion-chart-mark-easing: var(--ease-decelerate);
   --opacity-disabled: 0.5;
   --opacity-text-disabled: 0.38; /* WCAG-derived */
   --opacity-scrim: 0.55;

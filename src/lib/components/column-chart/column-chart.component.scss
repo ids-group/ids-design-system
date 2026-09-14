@@ -114,7 +114,8 @@ figcaption {
   max-inline-size: var(--_column-chart-column-max-width);
   border-start-start-radius: var(--radius-sm);
   border-start-end-radius: var(--radius-sm);
-  transition: block-size var(--duration-base) var(--ease-decelerate);
+  transition: block-size var(--ds-motion-chart-mark-duration)
+    var(--ds-motion-chart-mark-easing);
 }
 
 .category-label {
