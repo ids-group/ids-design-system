@@ -20,6 +20,7 @@
   --_modal-title-text-color-info: var(--ds-modal-title-text-color-info, var(--info-text));
   --_modal-title-weight: var(--ds-modal-title-weight, var(--font-weight-bold));
   --_modal-title-font-size: var(--ds-modal-title-font-size, var(--font-size-h5));
+  --_modal-title-font-family: var(--ds-modal-title-font-family, var(--font-heading));
   --_modal-subtitle-text-color: var(--ds-modal-subtitle-text-color, var(--text-secondary));
   --_modal-subtitle-font-size: var(--ds-modal-subtitle-font-size, var(--font-size-s));
   --_modal-eyebrow-text-color: var(--ds-modal-eyebrow-text-color, var(--text-tertiary));
@@ -152,7 +153,7 @@
   }
 
   .title {
-    font: var(--_modal-title-weight) var(--_modal-title-font-size) / var(--line-height-snug) var(--font-heading);
+    font: var(--_modal-title-weight) var(--_modal-title-font-size) / var(--line-height-snug) var(--_modal-title-font-family);
     margin: 0;
     min-width: 0;
     color: var(--_modal-title-text-color);
