@@ -1,10 +1,10 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   ViewEncapsulation,
-  input,
+  inject,
 } from '@angular/core';
-import type { WritableSignal } from '@angular/core';
 import { replayMarks } from './replay-marks';
 
 @Component({
@@ -18,11 +18,9 @@ import { replayMarks } from './replay-marks';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DocsReplayButtonComponent {
-  // Emptied and restored TOGETHER, so a card showing two charts replays both at once rather than
-  // one after the other.
-  readonly data = input.required<WritableSignal<readonly unknown[]>[]>();
+  private readonly host = inject(ElementRef<HTMLElement>);
 
   protected replay(): void {
-    replayMarks(...this.data());
+    replayMarks(this.host.nativeElement);
   }
 }

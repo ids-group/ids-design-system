@@ -79,6 +79,29 @@
   nothing. `ds-bar-chart`'s row gap moved from `row-gap` on the list to padding on each row, for
   the same reason: a reader aiming between two bars used to hit neither.
 
+- **A chart tooltip no longer fights the pointer that opened it.** The panel opens under the
+  cursor, and the CDK pane it is portaled into takes pointer events by default — so the panel
+  covered the plot, the plot took a `pointerleave`, the chart cleared its hover, the panel closed,
+  the pointer landed on the plot again, and the whole thing flickered for as long as the cursor sat
+  there. The pane is `pointer-events: none` now; `pointer-events` on the panel alone never reached
+  it. Measured on `ds-line-chart`: sweeping the pointer across the panel's own area gives zero
+  open/close flips, where it used to flip continuously.
+
+  A scroll-dismissed panel also re-opens on the next hover of the SAME category. It was suppressed
+  until the pointer visited a different band, which left a dead band after every scroll.
+
+- **`ds-column-chart` answers the pointer near its column, not across the whole category slot.** A
+  column is capped at `--ds-column-chart-column-max-width` while its slot is a `1fr` share of the
+  plot, so on a wide chart the hover reached 50px of empty space either side of the mark. The
+  target is the column's own width plus one gap — half each side, the rule the funnel's bands
+  already follow — for the full height of the plot, which is what keeps a short column reachable.
+  The category label under it still counts.
+
+- **The legend's checkboxes are not permanently ringed.** `ds-chart-legend` applied the focus ring
+  unconditionally instead of under `:focus-visible`, so every legend row looked focused. The
+  library's global `:where(:focus-visible)` rule already rings them, so the component needs none of
+  its own.
+
 - **A mark's colour change eases instead of jumping,** and a dimmed line fades again. Each mark
   animated exactly one property, because a second `transition` on the same selector REPLACES the
   first rather than adding to it: `ds-line-chart`'s line kept `stroke-width` and lost the dim fade,

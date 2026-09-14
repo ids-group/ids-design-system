@@ -1,5 +1,4 @@
 @use '../../styles/check-box' as check-box;
-@use '../../styles/focus' as focus;
 
 :host {
   display: block;
@@ -34,7 +33,6 @@
      outrank the `--ds-checkbox-selected-*` pair the template sets per item, and every box would
      come out in `--accent` instead of its own series colour. */
   @include check-box.box;
-  @include focus.ring;
 }
 
 .legend-swatch {

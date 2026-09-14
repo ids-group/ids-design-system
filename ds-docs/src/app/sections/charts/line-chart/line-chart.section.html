@@ -289,7 +289,7 @@
     Last clicked: <code class="t-mono-inline">{{ lastPoint() || '—' }}</code>
   </p>
 
-  <docs-replay-button [data]="[interactiveSeries]" />
+  <docs-replay-button />
 
   <h3 class="block-title t-h4">
     Patterns
@@ -305,8 +305,6 @@
     clears the colour-blind separation threshold on its own, and this is for
     monochrome print, a retuned palette, or a reader who asks for it.
   </p>
-
-  <docs-replay-button [data]="[patternSeries]" />
 
   <div class="states states--cols-2">
     <div class="state-cell">
@@ -335,6 +333,8 @@
     </div>
   </div>
 
+  <docs-replay-button />
+
   <h3 class="block-title t-h4">
     Filtering legend
   </h3>
@@ -356,8 +356,6 @@
     Hovering an entry dims the other series. Switch them all off and the plot is
     replaced by an explanation rather than an empty grid.
   </p>
-
-  <docs-replay-button [data]="[legendSeries]" />
 
   <div class="states states--cols-2">
     <div class="state-cell">
@@ -389,6 +387,8 @@
       </div>
     </div>
   </div>
+
+  <docs-replay-button />
 
   <details class="edge-cases">
     <summary>

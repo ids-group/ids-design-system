@@ -87,26 +87,15 @@ export class ChartTooltipDirective {
   private panelRef: ComponentRef<ChartTooltipPanelComponent> | null = null;
   private detachScrollClose: (() => void) | null = null;
 
-  /** The context a scroll dismissed. A scroll moves the mark out from under the pointer, so the
-   *  panel has to go — but the chart's context signal has not changed, and without this the effect
-   *  would re-open it on the very next change detection. Cleared by the next DIFFERENT context,
-   *  which is what a pointer moving again produces. */
-  private dismissed: ChartTooltipContext | null = null;
-
   constructor() {
     effect(() => {
       const context = this.dsChartTooltip();
       const origin = this.dsChartTooltipOrigin();
       if (!context?.entries.length || !origin) {
-        this.dismissed = null;
         this.close();
 
         return;
       }
-      if (context === this.dismissed) {
-        return;
-      }
-      this.dismissed = null;
       this.open(context, origin);
     });
     inject(DestroyRef).onDestroy(() => this.close());
@@ -118,7 +107,7 @@ export class ChartTooltipDirective {
     if (!this.overlayRef) {
       this.overlayRef = this.overlay.create({
         positionStrategy: this.strategyFor(origin),
-        panelClass: 'ds-overlay-pane',
+        panelClass: ['ds-overlay-pane', 'ds-chart-tooltip-pane'],
         scrollStrategy: this.overlay.scrollStrategies.reposition(),
       });
       this.panelRef = this.overlayRef.attach(
@@ -127,10 +116,11 @@ export class ChartTooltipDirective {
       // CDK's reposition strategy watches `window` and registered `cdkScrollable`s only, so it
       // misses an app's own `overflow: auto` container — and a panel that stays put while the
       // chart scrolls away points at nothing.
-      this.detachScrollClose = closeOnScroll(this.overlayRef, () => {
-        this.dismissed = this.dsChartTooltip();
-        this.close();
-      });
+      // Nothing re-opens it: the effect re-runs on a CHANGE to the context or the origin, and a
+      // scroll changes neither. The next pointer move does both.
+      this.detachScrollClose = closeOnScroll(this.overlayRef, () =>
+        this.close(),
+      );
     } else {
       this.overlayRef.updatePositionStrategy(this.strategyFor(origin));
     }

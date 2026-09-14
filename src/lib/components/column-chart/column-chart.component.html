@@ -56,7 +56,6 @@
           @for (entry of columns(); track entry.key; let index = $index) {
             <div
               class="column"
-              animate.enter="mark-enter"
               animate.leave="mark-leave"
               [style.--_chart-mark-stagger]="markStagger(index)"
               [class.interactive]="interactive()"
@@ -83,6 +82,7 @@
 
                 <span
                   class="bar"
+                  animate.enter="mark-enter"
                   [style.height.%]="entry.heightPercent"
                   [style.background]="entry.color">
                 </span>

@@ -1,8 +1,10 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   ViewEncapsulation,
   computed,
+  inject,
   model,
   signal,
 } from '@angular/core';
@@ -28,8 +30,10 @@ export class DocsLineChartDataEditorComponent {
   readonly categories = model.required<readonly string[]>();
   readonly series = model.required<readonly LineChartSeries[]>();
 
+  private readonly host = inject(ElementRef<HTMLElement>);
+
   protected replay(): void {
-    replayMarks(this.series);
+    replayMarks(this.host.nativeElement);
   }
 
   protected readonly open = signal(false);

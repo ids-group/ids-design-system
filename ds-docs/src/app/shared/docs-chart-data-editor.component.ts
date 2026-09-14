@@ -1,8 +1,10 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   ViewEncapsulation,
   computed,
+  inject,
   model,
   signal,
 } from '@angular/core';
@@ -50,11 +52,13 @@ function magnitudeStep(magnitude: number): number {
 export class DocsChartDataEditorComponent<TRow extends ChartDataEditorRow> {
   readonly rows = model.required<readonly TRow[]>();
 
+  private readonly host = inject(ElementRef<HTMLElement>);
+
   protected readonly valueBound = VALUE_BOUND;
   protected readonly open = signal(false);
 
   protected replay(): void {
-    replayMarks(this.rows);
+    replayMarks(this.host.nativeElement);
   }
 
   protected setLabel(index: number, label: string): void {
