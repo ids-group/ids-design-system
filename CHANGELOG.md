@@ -22,6 +22,20 @@
 
 ### Changed
 
+- **A chart tooltip can be reached with the pointer and dismissed with Escape.** It could be
+  neither. The panel is portaled out of the chart, so leaving a mark closed it before the pointer
+  could arrive, and the pane was inert to keep the two from fighting — which left the panel
+  unreadable at high zoom, unselectable, and impossible to clear without moving the pointer off the
+  mark. WCAG 1.4.13 asks for all three.
+
+  Leaving a mark now clears it after a short grace period instead of at once, and arriving on the
+  panel cancels that; leaving the panel for anything that is not the mark starts it again. Escape
+  closes the panel and it stays closed until the pointer visits another mark, so a reader who clears
+  the screen keeps it cleared.
+
+  If you styled `.ds-chart-tooltip-pane` with `pointer-events`, that rule now decides whether the
+  criterion is met — the pane must stay `auto`.
+
 - **A chart tooltip's second line is opt-in.** `0.13.1` gave every `ds-bar-chart` and
   `ds-column-chart` tooltip a `18.6% of total` line whether or not the marks were parts of a whole.
   It appears only under `partOfWhole` now. Set it on any chart whose categories genuinely divide one

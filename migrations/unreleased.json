@@ -46,7 +46,8 @@
     }
   ],
   "informational": [
-    "`ds-bar-chart` and `ds-column-chart` gained a `Share of total` column in their data table, shown only under `partOfWhole`. It carries the same figure as the tooltip's second line, so a reader who cannot hover now has a route to it. The heading says `Share of total` rather than `Share` because `ds-bar-chart` already prints a percentage beside each row and that one is the share of the largest row, not of the sum."
+    "`ds-bar-chart` and `ds-column-chart` gained a `Share of total` column in their data table, shown only under `partOfWhole`. It carries the same figure as the tooltip's second line, so a reader who cannot hover now has a route to it. The heading says `Share of total` rather than `Share` because `ds-bar-chart` already prints a percentage beside each row and that one is the share of the largest row, not of the sum.",
+    "A chart tooltip is now reachable with the pointer and dismissable with Escape, which WCAG 1.4.13 requires of anything shown on hover. Leaving a mark clears it after a short grace period rather than at once, and arriving on the panel cancels that. Nothing in your code changes. Two things will notice: a test that asserts the panel is gone immediately after a `pointerleave` now needs to wait out the grace period, and a rule of yours setting `pointer-events` on `.ds-chart-tooltip-pane` decides whether the criterion is met — it must stay `auto`."
   ],
   "deleteList": []
 }
