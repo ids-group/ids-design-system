@@ -12,9 +12,11 @@ export interface SidenavItemProps {
   /** Plain `href` target, used when `routerLink` is not set. */
   href?: string;
   /** Angular `RouterLink` target — string or array form for dynamic segments. */
-  routerLink?: string | readonly unknown[] | null;
+  routerLink?: unknown;
   /** Applies the active style; also drives `aria-current` when not using `routerLink`. */
   active?: boolean;
+  /** Overrides what an active item announces. Unset, an exact match announces `page` and a prefix match announces `true` — in a sidenav the prefix case is "you are in this section", which is exactly what `true` means. */
+  ariaCurrent?: ('page' | 'step' | 'location' | 'date' | 'time' | true) | null | undefined;
   /** Numeric count shown at the end of the item. */
   badge?: number | null;
   /** Shows an alert dot alongside the badge. */

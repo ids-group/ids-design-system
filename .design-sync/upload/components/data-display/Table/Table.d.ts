@@ -13,7 +13,7 @@ export interface TableProps {
   columns?: unknown;
   /** Adds a checkbox column for row/select-all selection. */
   selectable?: boolean;
-  /** Opt-in outer border + radius. Off by default so tables flush inside a `<ds-card padding="none">` don't double-border. When `true`, the scroll-wrap gets a `var(--border-default)` outline and `var(--radius-md)` radius — useful when the table stands alone in a padded card. Unset falls back to `DS_CONFIG.table.bordered`, then `false`. */
+  /** Opt-in outer border + radius. Off by default so tables flush inside a `<ds-card padding="none">` don't double-border. Unset falls back to `DS_CONFIG.table.bordered`, then `false`. */
   bordered?: boolean | null;
   /** false — no loading state. `true` — the table picks: skeleton rows while it has nothing to show, overlay once rows are on screen. Prefer it; the right choice is a function of the row count, which only the table holds. 'skeleton' — first-load placeholder; rows are replaced with shimmer rows. 'overlay' — re-fetch indicator; existing rows stay visible behind a translucent overlay with a centred spinner. Pin either one only to override the rule deliberately. */
   loading?: boolean | 'skeleton' | 'overlay';
@@ -48,7 +48,7 @@ export interface TableProps {
   skeletonRows?: number;
   /** Accessible name for the table (rendered as a visually-hidden caption). Without it, screen-reader users get an unlabelled table. */
   caption?: string;
-  /** When true, each row becomes a keyboard-operable control (role=button, tabindex, Enter/Space → rowClicked) with an accessible name from the first column. Off by default so non-navigating tables don't advertise a false click affordance. Also the gate for the hover/pressed row tints. */
+  /** When true, each row becomes a keyboard-operable control (tabindex, Enter/Space → rowClicked) with an accessible name from the first column. Off by default so non-navigating tables don't advertise a false click affordance. Also the gate for the hover/pressed row tints. */
   rowInteractive?: boolean;
   /** Id of the row rendered as current (highlight + `aria-current`) — e.g. the row whose detail drawer or side panel is open. `null` — none. */
   activeRowId?: string | null;

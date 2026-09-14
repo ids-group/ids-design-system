@@ -1,32 +1,96 @@
-<!-- @dsCard group="data-display" viewport="1200x700" name="Avatars - seeded tint" subtitle="Pass seed (an email or name) for a deterministic hsl(H 50% 62%) colour — the same person always gets the same tint across apps — with WHITE initials on every one." --><!DOCTYPE html>
+<!-- @dsCard group="data-display" viewport="1200x700" name="Avatars - seeded tint" subtitle="Pass seed (an email or name) for a deterministic hsl(H 50% 62%) colour — the same person always gets the same tint across apps — with WHITE initials on every one." --><!doctype html>
 <html data-theme="light"><head><meta charset="utf-8">
   <title>Avatar</title>
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../../_ds_bundle.css">
-  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
-.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
-.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
-<link rel="stylesheet" href="../../../_ds_cards.css"><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}</style></head><body>
-  <div class="ds-page"><ds-docs-components-avatar _nghost-c2i=""><docs-section _ngcontent-c2i="" anchor="avatar" eyebrow="Components" title="Avatars" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-avatar" data-anchor="avatar"><h2 _ngcontent-c1="" class="t-h2">Avatars - seeded tint<docs-truncation _ngcontent-c2i="" _nghost-c2=""><button _ngcontent-c2="" type="button" aria-label="Truncation rules" class="i"><ds-icon _ngcontent-c2="" name="info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 18px;" width="18" height="18" stroke-width="1.75" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v.01M11 12h1v4h1"></path></svg></ds-icon></button><div _ngcontent-c2="" role="tooltip" class="panel"><div _ngcontent-c2="" class="panel-title"><ds-icon _ngcontent-c2="" name="filter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" style="--ds-icon-size: 13px;" width="13" height="13" stroke-width="1.75" aria-hidden="true"><path d="M3 5h18l-7 9v6l-4-2v-4z"></path></svg></ds-icon> Truncation </div><ul _ngcontent-c2="" class="list"><li _ngcontent-c2=""><span _ngcontent-c2="" class="field"> Initials fallback </span><span _ngcontent-c2="" class="behaviour"> 2 chars max — no clip. Generated from first + last name. </span></li><li _ngcontent-c2=""><span _ngcontent-c2="" class="field"> Adjacent name label </span><span _ngcontent-c2="" class="behaviour"> Single line, ellipsis. Tooltip on hover with full name. </span></li><li _ngcontent-c2=""><span _ngcontent-c2="" class="field"> +N overflow </span><span _ngcontent-c2="" class="behaviour"> Numeric only — no clip. Hidden member names are not surfaced by the component. </span></li></ul></div></docs-truncation></h2><docs-component-meta _ngcontent-c1="" _nghost-c8="" data-key="avatar"><div _ngcontent-c8="" class="meta"><div _ngcontent-c8="" class="row"><span _ngcontent-c8="" class="chip tagchip"><span _ngcontent-c8="" class="tag">&lt;Avatar /&gt;</span></span></div></div></docs-component-meta><p _ngcontent-c2i="" class="block-desc t-s"> Pass <code _ngcontent-c2i="" class="t-mono-inline">seed</code> (an email or name) for a deterministic <code _ngcontent-c2i="" class="t-mono-inline">hsl(H 50% 62%)</code> colour — the same person always gets the same tint across apps — with WHITE initials on every one. The helpers <code _ngcontent-c2i="" class="t-mono-inline">avatarTint</code> and <code _ngcontent-c2i="" class="t-mono-inline"> initialsFrom </code> (which also accepts a single full name) are exported for use outside the component. </p><p _ngcontent-c2i="" class="block-desc t-s"><strong _ngcontent-c2i=""> The trade this makes, stated plainly. </strong> HSL lightness is not perceptually even, so a yellow lands far lighter than a blue at the same 62% — and that unevenness is what makes the row read as bright rather than uniform. White initials on the lighter hues measure as little as <strong _ngcontent-c2i="">1.65:1</strong>, under the 4.5:1 WCAG AA asks of text. Use it where the avatar is decoration beside a name that is written out anyway; where the initials are the only identifier, pass your own <code _ngcontent-c2i="" class="t-mono-inline"> lightness </code> and <code _ngcontent-c2i="" class="t-mono-inline"> foreground </code>. </p><p _ngcontent-c2i="" class="block-desc t-s"><strong _ngcontent-c2i=""> Or pass the name and let the avatar do both. </strong><code _ngcontent-c2i="" class="t-mono-inline"> name </code> replaces the two bindings this demo wires by hand: it derives the initials AND seeds the tint. <strong _ngcontent-c2i=""> The tint hashes the NAME, never the initials </strong> — two letters collide wholesale, so Alice Brown and Adam Bell would otherwise share one colour. Measured: same "AB", hues 198° and 356°. </p><p _ngcontent-c2i="" class="block-desc t-s"> The built-in rule takes the first two words, and that is all it claims to be — a Latin-script guess. Reading a name is a cultural convention rather than a UI decision: a Spanish reader wants MG from "María José García López", an insurer wants BC from "Blue Cross Blue Shield". So the rule is replaceable, not configurable-by-mode — <code _ngcontent-c2i="" class="t-mono-inline"> [initialsRule] </code> for one table, <code _ngcontent-c2i="" class="t-mono-inline"> provideDsConfig({ avatar: { initials } }) </code> for the app. An explicit <code _ngcontent-c2i="" class="t-mono-inline"> initials </code> still wins over both. </p><div _ngcontent-c2i="" class="row"><ds-avatar _ngcontent-c2i="" _nghost-c1x="" role="img" aria-label="Alice Nguyen" style="--ds-avatar-bg-color: hsl(36 50% 62%); --ds-avatar-label-color: #fff;"> AN
-</ds-avatar><ds-avatar _ngcontent-c2i="" _nghost-c1x="" role="img" aria-label="Bob Martin" style="--ds-avatar-bg-color: hsl(292 50% 62%); --ds-avatar-label-color: #fff;"> BM
-</ds-avatar><ds-avatar _ngcontent-c2i="" _nghost-c1x="" role="img" aria-label="Carla Ivanova" style="--ds-avatar-bg-color: hsl(227 50% 62%); --ds-avatar-label-color: #fff;"> CI
-</ds-avatar><ds-avatar _ngcontent-c2i="" _nghost-c1x="" role="img" aria-label="Ekaterina Petrova" style="--ds-avatar-bg-color: hsl(215 50% 62%); --ds-avatar-label-color: #fff;"> EP
-</ds-avatar><ds-avatar _ngcontent-c2i="" _nghost-c1x="" role="img" aria-label="Farid Hassan" style="--ds-avatar-bg-color: hsl(146 50% 62%); --ds-avatar-label-color: #fff;"> FH
-</ds-avatar><ds-avatar _ngcontent-c2i="" _nghost-c1x="" role="img" aria-label="Grace Lee" style="--ds-avatar-bg-color: hsl(206 50% 62%); --ds-avatar-label-color: #fff;"> GL
-</ds-avatar><ds-avatar _ngcontent-c2i="" _nghost-c1x="" role="img" aria-label="Hiro Tanaka" style="--ds-avatar-bg-color: hsl(22 50% 62%); --ds-avatar-label-color: #fff;"> HT
-</ds-avatar><ds-avatar _ngcontent-c2i="" _nghost-c1x="" role="img" aria-label="Priya Sharma" style="--ds-avatar-bg-color: hsl(177 50% 62%); --ds-avatar-label-color: #fff;"> PS
-</ds-avatar></div><p _ngcontent-c2i="" class="block-desc t-s"> Same seeds with <code _ngcontent-c2i="" class="t-mono-inline"> [avoidHues]="[[310, 360], [0, 20]]" </code> — pink and red hues are skipped so seeded avatars never clash with a brand colour: </p><div _ngcontent-c2i="" class="row"><ds-avatar _ngcontent-c2i="" _nghost-c1x="" role="img" aria-label="Alice Nguyen" style="--ds-avatar-bg-color: hsl(86 50% 62%); --ds-avatar-label-color: #fff;"> AN
-</ds-avatar><ds-avatar _ngcontent-c2i="" _nghost-c1x="" role="img" aria-label="Bob Martin" style="--ds-avatar-bg-color: hsl(292 50% 62%); --ds-avatar-label-color: #fff;"> BM
-</ds-avatar><ds-avatar _ngcontent-c2i="" _nghost-c1x="" role="img" aria-label="Carla Ivanova" style="--ds-avatar-bg-color: hsl(267 50% 62%); --ds-avatar-label-color: #fff;"> CI
-</ds-avatar><ds-avatar _ngcontent-c2i="" _nghost-c1x="" role="img" aria-label="Ekaterina Petrova" style="--ds-avatar-bg-color: hsl(45 50% 62%); --ds-avatar-label-color: #fff;"> EP
-</ds-avatar><ds-avatar _ngcontent-c2i="" _nghost-c1x="" role="img" aria-label="Farid Hassan" style="--ds-avatar-bg-color: hsl(156 50% 62%); --ds-avatar-label-color: #fff;"> FH
-</ds-avatar><ds-avatar _ngcontent-c2i="" _nghost-c1x="" role="img" aria-label="Grace Lee" style="--ds-avatar-bg-color: hsl(266 50% 62%); --ds-avatar-label-color: #fff;"> GL
-</ds-avatar><ds-avatar _ngcontent-c2i="" _nghost-c1x="" role="img" aria-label="Hiro Tanaka" style="--ds-avatar-bg-color: hsl(32 50% 62%); --ds-avatar-label-color: #fff;"> HT
-</ds-avatar><ds-avatar _ngcontent-c2i="" _nghost-c1x="" role="img" aria-label="Priya Sharma" style="--ds-avatar-bg-color: hsl(187 50% 62%); --ds-avatar-label-color: #fff;"> PS
-</ds-avatar></div></section></docs-section></ds-docs-components-avatar></div>
-  
-  
-  
-
-
+  <style>
+    body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+    .ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+    .ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}
+  </style>
+</head><body>
+  <div class="ds-page"><ds-docs-components-avatar></ds-docs-components-avatar></div>
+  <script>window.__dsSectionsOnly = true</script>
+  <script src="../../../_ds_bundle.js"></script>
+  <script>
+    (function () {
+      var OWNS = "";
+      var INDEX = 3;
+      var KEY = "avatar";
+      var TABLE = false;
+      var HEAD = null;
+      var BLOCK = "seeded tint";
+      var REACT = "Avatar";
+      var WHOLE = OWNS === null;
+      var LEDE = WHOLE || (OWNS === '' && INDEX <= 0);
+      var KEEP = LEDE ? 'h2, p.lede' : 'h2';
+      var DROP_ALWAYS = '.eyebrow' + (LEDE ? '' : ', p.lede');
+      var API = '[data-key]';
+      var host = document.querySelector("ds-docs-components-avatar");
+      var start = Date.now();
+      (function slice() {
+        var section = host && host.querySelector('.section');
+        if (!section) {
+          if (Date.now() - start < 8000) setTimeout(slice, 50);
+          return;
+        }
+        var owner = '';
+        var doomed = [];
+        var apis = [];
+        var ordinal = -1;
+        var heading = null;
+        for (var node = section.firstElementChild; node; node = node.nextElementSibling) {
+          if (node.matches(DROP_ALWAYS)) { doomed.push(node); continue; }
+          if (WHOLE) continue;
+          if (node.matches(KEEP)) continue;
+          if (node.matches(API)) { apis.push(node); continue; }
+          var marked = node.getAttribute('data-for');
+          var starts = marked !== null || node.matches('h3.block-title');
+          if (marked !== null) owner = marked;
+          else if (node.matches('h3.block-title')) owner = '';
+          if (starts && owner === OWNS) ordinal += 1;
+          if (owner !== OWNS || ordinal !== INDEX) doomed.push(node);
+          else if (starts && node.matches('h3.block-title')) heading = node;
+        }
+        var mine = KEY === '' ? [] : apis.filter(function (n) { return n.getAttribute('data-key') === KEY; });
+        var keepApi = KEY === '' ? [] : (mine.length ? mine : apis.slice(0, 1));
+        if (!WHOLE) {
+          for (var a = 0; a < apis.length; a++) {
+            if (keepApi.indexOf(apis[a]) < 0) { doomed.push(apis[a]); continue; }
+            if (TABLE) continue;
+            if (apis[a].matches('docs-api-table')) { doomed.push(apis[a]); continue; }
+            var nested = apis[a].querySelector('docs-api-table');
+            if (nested) doomed.push(nested);
+          }
+        }
+        var title = section.querySelector('h2');
+        var label = null;
+        for (var c = 0; title && c < title.childNodes.length; c++) {
+          if (title.childNodes[c].nodeType === 3) { label = title.childNodes[c]; break; }
+        }
+        if (title && label === null) {
+          label = document.createTextNode('');
+          title.insertBefore(label, title.firstChild);
+        }
+        if (label) {
+          var head = HEAD || label.nodeValue.trim();
+          label.nodeValue = BLOCK ? head + ' - ' + BLOCK : head;
+          if (BLOCK && heading) doomed.push(heading);
+        }
+        for (var i = 0; i < doomed.length; i++) doomed[i].remove();
+        var wrapper = KEY === '' ? null : section.querySelector('.api-sub[data-key="' + KEY + '"]');
+        var chip = wrapper ? wrapper.querySelector('docs-component-meta') : null;
+        if (chip && title) title.parentNode.insertBefore(chip, title.nextSibling);
+        if (wrapper && wrapper.firstElementChild === null) wrapper.remove();
+        var named = section.querySelector('docs-component-meta .chip .tag');
+        if (REACT && named) named.textContent = '<' + REACT + ' />';
+        var kept = 0;
+        for (var k = section.firstElementChild; k; k = k.nextElementSibling) {
+          if (!k.matches(KEEP) && !k.matches(API) && !k.matches('docs-component-meta')) kept += 1;
+        }
+        document.documentElement.setAttribute('data-ds-sliced', String(doomed.length));
+        document.documentElement.setAttribute('data-ds-kept', String(kept));
+      })();
+    })();
+  </script>
 </body></html>

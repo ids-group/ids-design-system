@@ -1,7 +1,7 @@
 # Stats - a value that is a phrase
 
-The value line is white-space: nowrap, which is right for the number this tile was built around and wrong for a date range or a status phrase — that used to be a reason to reach for the slot above and undo it. Two hooks instead: --ds-stat-value-white-space and --ds-stat-value-font-size, the second working at every size rather than only the default.
+The value clips to one line and discloses the rest on hover and on keyboard focus, the same treatment every other text-bearing component in the library uses. Three hooks reshape that, and they compose: --ds-stat-value-white-space wraps instead of clipping, --ds-stat-value-lines then puts the ellipsis on the line you name, and --ds-stat-value-wrap breaks a word wider than the tile.
 
-Left: both hooks set. Right: the same value untouched — with nowrap and no overflow on the card, the phrase spills straight past the tile's edge. That is the behaviour every existing tile keeps, since the defaults did not move.
+The dashed outline marks where the 240px column ends. Wrapping alone does not keep a value inside it — a single word wider than the tile still paints past the edge, which is what the fourth hook is for. Note that lines only bites once the value wraps: a clamp on a nowrap box has nothing to clamp.
 
 Full API: `Stat.d.ts`. How to use the component anywhere: `Stat.prompt.md`.

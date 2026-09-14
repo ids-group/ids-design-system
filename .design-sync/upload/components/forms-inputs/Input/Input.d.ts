@@ -38,7 +38,7 @@ export interface InputProps {
   disabled?: boolean;
   /** Prevents editing while still allowing focus and selection. */
   readOnly?: boolean;
-  /** The contract spelling of `readOnly`, a second input because signal forms binds by NAME — a `readonly()` rule was reaching nothing before this existed. */
+  /** The contract spelling of `readOnly`: signal forms binds by NAME, so a `readonly()` rule reaches nothing without it. */
   readonlyBinding?: boolean;
   /** Confirmation text, shown when there is no error or warning — and it paints the field's success border. A string like `warning`: the text IS the state. */
   success?: string;
@@ -76,7 +76,7 @@ export interface InputProps {
   inputMode?: | 'none' | 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url' | null;
   /** Emits when the native input loses focus. */
   onBlurred?: (value: void) => void;
-  /** Show an inline clear (×) button when the input has a non-empty value. Mirrors the Material/PrimeNG pattern: explicit button (not native search cancel) so the affordance is consistent across browsers and styled with DS tokens. Defaults to true when type='search', false otherwise — pass an explicit boolean to override. */
+  /** Show an inline clear (×) button when the input has a non-empty value. Defaults to true when `type="search"`, false otherwise — pass an explicit boolean to override. */
   clearable?: boolean | null;
   /** Shows a show/hide button when `type="password"`. */
   passwordToggle?: boolean;
