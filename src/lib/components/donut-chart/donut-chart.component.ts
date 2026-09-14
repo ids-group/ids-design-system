@@ -75,6 +75,12 @@ export class DonutChartComponent {
   readonly dataTable = input<'toggle' | 'visible' | 'none'>('toggle');
   readonly loading = input(false, { transform: booleanAttribute });
   readonly emptyText = input<string>('No data');
+
+  /** A load that failed is not a load that returned nothing: without this the chart says
+   *  "No data" when the truth is "could not load". */
+  readonly error = input(false, { transform: booleanAttribute });
+
+  readonly errorText = input<string>('Could not load the data');
   readonly valueFormat = input<(value: number) => string>(defaultValueFormat);
 
   /** Turns on the click affordance — the pointer cursor and any hover tint.
@@ -157,6 +163,13 @@ export class DonutChartComponent {
     event.preventDefault();
     this.sliceClicked.emit(slice);
   }
+
+  /** Exactly one keyboard route to a slice, never two: the legend items already carry it, so the
+   *  arcs take it only when there is no legend. Without this the ring is unreachable at
+   *  `legend="none"`, and with both the tab order doubles. */
+  protected readonly ringCarriesTheRoute = computed(
+    () => this.interactive() && this.legend() === 'none',
+  );
 
   protected readonly isEmpty = computed(() => this.data().length === 0);
 

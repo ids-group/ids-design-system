@@ -49,10 +49,6 @@ svg {
 
 .stage {
   transition: opacity var(--duration-base) var(--ease-decelerate);
-
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-  }
 }
 
 .stage.interactive {
@@ -123,4 +119,8 @@ svg {
   block-size: var(--space-2);
   margin-inline-end: var(--space-2);
   border-radius: var(--radius-sm);
+}
+
+.empty.is-error {
+  color: var(--error);
 }

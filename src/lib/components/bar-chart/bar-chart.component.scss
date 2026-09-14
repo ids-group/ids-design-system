@@ -76,8 +76,8 @@ figcaption {
   block-size: 100%;
   border-radius: inherit;
   transition: inline-size var(--duration-base) var(--ease-decelerate);
+}
 
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-  }
+.empty.is-error {
+  color: var(--error);
 }

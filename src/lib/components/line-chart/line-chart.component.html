@@ -5,7 +5,13 @@
     </figcaption>
   }
 
-  @if (loading()) {
+  @if (error()) {
+    <p
+      class="empty is-error"
+      role="status">
+      {{ errorText() }}
+    </p>
+  } @else if (loading()) {
     <div
       class="skeleton"
       aria-hidden="true">

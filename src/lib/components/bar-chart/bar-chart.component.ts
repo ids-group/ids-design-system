@@ -47,6 +47,12 @@ export class BarChartComponent {
   readonly showPercent = input(true, { transform: booleanAttribute });
   readonly loading = input(false, { transform: booleanAttribute });
   readonly emptyText = input<string>('No data');
+
+  /** A load that failed is not a load that returned nothing: without this the chart says
+   *  "No data" when the truth is "could not load". */
+  readonly error = input(false, { transform: booleanAttribute });
+
+  readonly errorText = input<string>('Could not load the data');
   readonly valueFormat = input<(value: number) => string>(defaultValueFormat);
 
   /** Turns on the click affordance — the pointer cursor and any hover tint.
@@ -67,7 +73,8 @@ export class BarChartComponent {
     const max = this.resolvedMax();
     const format = this.valueFormat();
 
-    return this.data().map((row) => ({
+    return this.data().map((row, index) => ({
+      key: row.id ?? String(index),
       row,
       widthPercent: widthPercent(row.value, max),
       formattedValue: format(row.value),

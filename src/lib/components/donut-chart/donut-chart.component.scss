@@ -1,4 +1,5 @@
 @use '../../styles/chart-data-table' as chart-data-table;
+@use '../../styles/focus' as focus;
 @use '../../styles/chart-frame' as chart-frame;
 @include chart-frame.chart-frame;
 @include chart-data-table.chart-data-table;
@@ -10,6 +11,8 @@
   --_donut-chart-legend-row-gap: var(--ds-donut-chart-legend-row-gap, var(--space-2));
   --_donut-chart-legend-row-height: var(--ds-donut-chart-legend-row-height, 16px);
   --_donut-chart-swatch-size: var(--ds-donut-chart-swatch-size, 10px);
+  --_donut-chart-focus-color: var(--ds-donut-chart-focus-color, var(--focus-ring-color));
+  --_donut-chart-focus-width: var(--ds-donut-chart-focus-width, var(--focus-ring-width));
   --_donut-chart-outline-width: var(--ds-donut-chart-outline-width, calc(var(--border-width-strong) + var(--border-width-default)));
 
   margin: 0;
@@ -92,10 +95,6 @@ figcaption {
 
 .slice {
   transition: opacity var(--duration-base) var(--ease-decelerate);
-
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-  }
 }
 
 .slice.interactive {
@@ -104,6 +103,17 @@ figcaption {
 
 .slice.interactive:hover {
   opacity: 0.85;
+}
+
+/* focus-ring-guard: an outline on an SVG element paints its BOUNDING BOX, not its silhouette — an
+   arc would ring as the whole square the ring sits in. The ring is a stroke on the arc instead;
+   `own-indicator` keeps the outline under forced colours, where `stroke` is not remapped. */
+.slice.focusable:focus-visible {
+  @include focus.own-indicator;
+
+  stroke: var(--_donut-chart-focus-color);
+  stroke-width: var(--_donut-chart-focus-width);
+  paint-order: stroke;
 }
 
 // Held to the square that fits inside the hole (d / √2), so a long centre label wraps instead of
@@ -200,4 +210,8 @@ figcaption {
 .legend-bottom .legend-item {
   display: flex;
   column-gap: var(--space-2);
+}
+
+.empty.is-error {
+  color: var(--error);
 }

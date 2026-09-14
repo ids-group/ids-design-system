@@ -114,10 +114,6 @@ figcaption {
   border-start-start-radius: var(--radius-sm);
   border-start-end-radius: var(--radius-sm);
   transition: block-size var(--duration-base) var(--ease-decelerate);
-
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-  }
 }
 
 .category-label {
@@ -131,4 +127,8 @@ figcaption {
   grid-auto-flow: column;
   grid-auto-columns: 1fr;
   column-gap: var(--_column-chart-column-gap);
+}
+
+.empty.is-error {
+  color: var(--error);
 }

@@ -7,7 +7,13 @@
     </figcaption>
   }
 
-  @if (loading()) {
+  @if (error()) {
+    <p
+      class="empty is-error"
+      role="status">
+      {{ errorText() }}
+    </p>
+  } @else if (loading()) {
     <div
       class="skeleton"
       aria-hidden="true"
@@ -47,15 +53,23 @@
         [class.ring-outline]="total() === 0">
         <svg
           class="ring-svg"
-          aria-hidden="true"
+          [attr.aria-hidden]="ringCarriesTheRoute() ? null : true"
           [attr.viewBox]="viewBox">
           @for (entry of slices(); track entry.slice.id) {
             <path
               class="slice"
               [class.interactive]="interactive()"
+              [class.focusable]="ringCarriesTheRoute()"
               [attr.d]="entry.path"
               [style.fill]="entry.color"
-              (click)="sliceClicked.emit(entry.slice)">
+              [attr.role]="ringCarriesTheRoute() ? 'button' : null"
+              [attr.tabindex]="ringCarriesTheRoute() ? 0 : null"
+              [attr.aria-label]="
+                ringCarriesTheRoute() ? entryLabel(entry) : null
+              "
+              (click)="sliceClicked.emit(entry.slice)"
+              (keydown.enter)="onSliceKey(entry.slice, $event)"
+              (keydown.space)="onSliceKey(entry.slice, $event)">
             </path>
           }
         </svg>

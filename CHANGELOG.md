@@ -73,6 +73,22 @@
 
 ### Added
 
+- **Every chart takes `error` and `errorText`.** A failed fetch had to render as `emptyText`, which
+  says "No data" when the truth is "could not load". The branch renders ahead of `loading` and
+  carries `role="status"`, so the message is announced when it replaces a spinner.
+
+  ```html
+  <ds-bar-chart
+    [data]="rows"
+    [loading]="pending()"
+    [error]="failed()"
+    errorText="Could not reach the depot service" />
+  ```
+
+- **`BarChartRow` and `ColumnChartPoint` take an optional `id`.** Supplying it makes a reorder move
+  the DOM nodes instead of rewriting them; left out, the row keeps its position as its key, which is
+  what both charts did before. `DonutChartSlice` and `FunnelChartStage` already required one.
+
 - **`ds-line-chart` takes `interactive` and emits `pointClicked`.** Every reading becomes a focusable
   button carrying its series, its category and its value, so a click and a keyboard activation reach
   the consumer the same way they already do on `ds-bar-chart`. A series drawn with

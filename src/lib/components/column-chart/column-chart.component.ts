@@ -50,6 +50,12 @@ export class ColumnChartComponent {
   readonly dataTable = input<'toggle' | 'visible' | 'none'>('toggle');
   readonly loading = input(false, { transform: booleanAttribute });
   readonly emptyText = input<string>('No data');
+
+  /** A load that failed is not a load that returned nothing: without this the chart says
+   *  "No data" when the truth is "could not load". */
+  readonly error = input(false, { transform: booleanAttribute });
+
+  readonly errorText = input<string>('Could not load the data');
   readonly valueFormat = input<(value: number) => string>(defaultValueFormat);
 
   /** Turns on the click affordance — the pointer cursor and any hover tint.
@@ -89,6 +95,7 @@ export class ColumnChartComponent {
     const format = this.valueFormat();
 
     return this.data().map((point, index) => ({
+      key: point.id ?? String(index),
       point,
       heightPercent: heightPercent(point.value, axisMax),
       formattedValue: format(point.value),
