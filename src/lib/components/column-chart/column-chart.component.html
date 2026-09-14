@@ -50,6 +50,7 @@
 
         <div
           class="columns"
+          [class.dims-others]="dimOthers()"
           [dsChartTooltip]="tooltipContext()"
           [dsChartTooltipOrigin]="activeMark.origin()"
           [dsChartTooltipTemplate]="tooltipTemplate() ?? null">

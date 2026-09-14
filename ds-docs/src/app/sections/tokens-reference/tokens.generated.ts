@@ -3674,9 +3674,39 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Option row fill under the keyboard cursor and the pointer (default --surface-secondary)."
       },
       {
+        "name": "--ds-option-weight",
+        "value": "var(--font-weight-medium)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-option-font-size",
+        "value": "var(--font-size-s)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-option-line-height",
+        "value": "var(--line-height-flat)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-option-font-family",
+        "value": "var(--font-sans)",
+        "notes": ""
+      },
+      {
         "name": "--ds-dropdown-panel-bg-color",
         "value": "var(--surface-overlay)",
         "notes": "Connected dropdown panel fill (defaults to --surface-overlay)."
+      },
+      {
+        "name": "--ds-dropdown-panel-border-color",
+        "value": "var(--border-default)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-dropdown-panel-shadow",
+        "value": "var(--shadow-popover)",
+        "notes": ""
       },
       {
         "name": "--ds-dropdown-panel-maxh",
@@ -4596,6 +4626,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-modal-title-font-size",
         "value": "var(--font-size-h5)",
         "notes": "Modal/dialog title size (default --font-size-h5). Pairs with --ds-modal-title-weight."
+      },
+      {
+        "name": "--ds-modal-title-font-family",
+        "value": "var(--font-heading)",
+        "notes": ""
       },
       {
         "name": "--ds-modal-subtitle-text-color",

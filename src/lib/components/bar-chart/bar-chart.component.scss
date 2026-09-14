@@ -55,10 +55,9 @@ figcaption {
 }
 
 
-.empty {
-  margin: 0;
-  color: var(--text-secondary);
-}
+@include chart-frame.message-box(
+  calc(3 * (var(--_bar-chart-track-height) + var(--_bar-chart-row-gap)))
+);
 
 .label {
   color: var(--text-secondary);

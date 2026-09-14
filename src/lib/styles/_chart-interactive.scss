@@ -26,12 +26,19 @@
 // Include on the CONTAINER, never on the mark: `:has()` asks the container whether anything inside
 // it is hovered, which is what lets a pointer highlight work with no component state.
 //
+// Gated on `.dims-others`, which the chart puts on the container from its `dimOthers` input. Off by
+// default, because dimming is not free: measured 2026-09-13, OKLab dE x100, the worst pair of three
+// dimmed series falls from 14.8 at full opacity to 2.1 at 30%. It buys loudness for the mark under
+// the pointer and pays for it with the reader's ability to tell the REST of the chart apart, which
+// is a trade a consumer should make deliberately rather than inherit.
+//
 // Usage: `.columns { @include chart-interactive.fades('.column'); }`
 @mixin fades($mark, $also: '') {
   @include dims($mark, $also);
 
-  &:has(#{$mark}.interactive:hover) #{$mark}.interactive:not(:hover),
-  &:has(#{$mark}.interactive:focus-visible)
+  &.dims-others:has(#{$mark}.interactive:hover)
+    #{$mark}.interactive:not(:hover),
+  &.dims-others:has(#{$mark}.interactive:focus-visible)
     #{$mark}.interactive:not(:focus-visible) {
     opacity: var(--ds-chart-dim-opacity);
   }

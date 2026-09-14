@@ -151,6 +151,13 @@ export class DonutChartComponent {
    *  `interactive` is set. */
   readonly sliceClicked = output<DonutChartSlice>();
 
+  /** Dims every OTHER mark while one is hovered or focused, so the reader's eye is held on the
+   *  one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed
+   *  marks — measured 2026-09-13, the worst pair of three dimmed series falls from dE 14.8 at full
+   *  opacity to 2.1 at `--ds-chart-dim-opacity`'s default 0.3 — so it buys loudness for one mark
+   *  and pays for it with the rest of the chart. */
+  readonly dimOthers = input(false, { transform: booleanAttribute });
+
   /** Milliseconds between one mark's entrance and the next. `0`, the default, is no stagger at
    *  all; `40` is the documented non-zero step. The total is capped, so a long series does not
    *  crawl in. */

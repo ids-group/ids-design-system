@@ -39,10 +39,7 @@ figcaption {
   font-weight: 600;
 }
 
-.empty {
-  margin: 0;
-  color: var(--text-secondary);
-}
+@include chart-frame.message-box(var(--_line-chart-plot-height));
 
 .canvas {
   display: block;

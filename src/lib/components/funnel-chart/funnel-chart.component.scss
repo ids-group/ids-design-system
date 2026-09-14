@@ -36,10 +36,9 @@ figcaption {
   font-weight: 600;
 }
 
-.empty {
-  margin: 0;
-  color: var(--text-secondary);
-}
+@include chart-frame.message-box(
+  calc(3 * (var(--_funnel-chart-stage-height) + var(--_funnel-chart-stage-gap)))
+);
 
 .shape {
   display: block;

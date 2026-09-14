@@ -142,6 +142,13 @@ export class LineChartComponent {
    *  `interactive` is set. */
   readonly pointClicked = output<LineChartPoint>();
 
+  /** Dims every OTHER mark while one is hovered or focused, so the reader's eye is held on the
+   *  one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed
+   *  marks — measured 2026-09-13, the worst pair of three dimmed series falls from dE 14.8 at full
+   *  opacity to 2.1 at `--ds-chart-dim-opacity`'s default 0.3 — so it buys loudness for one mark
+   *  and pays for it with the rest of the chart. */
+  readonly dimOthers = input(false, { transform: booleanAttribute });
+
   /** What a `null` reading draws. The default refuses to assert that a missing
    *  reading is a zero. */
   readonly gaps = input<LineChartGaps>('break');
@@ -284,7 +291,7 @@ export class LineChartComponent {
   protected isDimmed(seriesId: string): boolean {
     const highlighted = this.highlightedSeries();
 
-    return highlighted !== null && highlighted !== seriesId;
+    return this.dimOthers() && highlighted !== null && highlighted !== seriesId;
   }
 
   protected readonly hasSecondaryAxis = computed(() =>

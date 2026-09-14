@@ -28,6 +28,7 @@
   } @else {
     <div
       class="shape"
+      [class.dims-others]="dimOthers()"
       [attr.role]="interactive() ? 'group' : 'img'"
       [attr.aria-label]="accessibleName()"
       [dsChartTooltip]="tooltipContext()"
