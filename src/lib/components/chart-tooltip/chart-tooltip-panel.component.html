@@ -24,6 +24,12 @@
         <span class="value">
           {{ entry.formatted }}
         </span>
+
+        @if (entry.detail) {
+          <span class="detail">
+            {{ entry.detail }}
+          </span>
+        }
       </li>
     }
   </ul>

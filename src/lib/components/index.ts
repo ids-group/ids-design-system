@@ -9,6 +9,7 @@ export {
   formatTick,
   formatValue,
   largestRemainder,
+  describeShare,
 } from './charts-format';
 export { elementWidth } from './charts-measure';
 export {
@@ -64,6 +65,7 @@ export {
   focusIsInside,
   forwardOverlayTokens,
   overlayPlacementOf,
+  panelClassesOf,
   prepareOverlayEnter,
 } from './overlay-motion';
 export type { DsOverlayCloseCause } from './overlay-motion';

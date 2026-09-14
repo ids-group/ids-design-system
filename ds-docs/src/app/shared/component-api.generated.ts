@@ -544,6 +544,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Native `name` attribute forwarded to the trigger."
       },
       {
+        "name": "panelClass",
+        "kind": "input",
+        "type": "string | readonly string[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Extra classes for the portaled panel, beside `ds-dropdown-panel`, `ds-overlay-pane` and this component's own `ds-autocomplete-panel`. The panel is portaled out of the host, so a class on the pane is the only way a consumer stylesheet reaches ONE instance of it."
+      },
+      {
         "name": "readOnly",
         "kind": "input",
         "type": "boolean",
@@ -1047,15 +1056,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "dataTable",
         "kind": "input",
-        "type": "'toggle' | 'visible' | 'none'",
+        "type": "ChartDataTable | null",
         "union": [
           "toggle",
           "visible",
           "none"
         ],
-        "default": "'toggle'",
+        "default": "null",
         "required": false,
-        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page."
+        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'toggle'`."
       },
       {
         "name": "showPercent",
@@ -1078,11 +1087,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "emptyText",
         "kind": "input",
-        "type": "string",
+        "type": "string | null",
         "union": null,
-        "default": "'No data'",
+        "default": "null",
         "required": false,
-        "description": "Shown in place of the plot when `data` is empty."
+        "description": "Shown in place of the plot when `data` is empty. Unset falls back to `DS_CONFIG.chart.emptyText`, then `'No data'`."
       },
       {
         "name": "error",
@@ -1096,20 +1105,20 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "errorText",
         "kind": "input",
-        "type": "string",
+        "type": "string | null",
         "union": null,
-        "default": "'Could not load the data'",
+        "default": "null",
         "required": false,
-        "description": "The message the error state prints."
+        "description": "The message the error state prints. Unset falls back to `DS_CONFIG.chart.errorText`, then `'Could not load the data'`."
       },
       {
         "name": "valueFormat",
         "kind": "input",
-        "type": "(value: number) => string",
+        "type": "ChartValueFormat | null",
         "union": null,
-        "default": "defaultValueFormat",
+        "default": "null",
         "required": false,
-        "description": "Formats every value the chart prints, the annex table and the generated description included. Defaults to the browser's locale grouping with a K/M/B suffix past four digits."
+        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then the browser's locale grouping with a K/M/B suffix past four digits."
       },
       {
         "name": "interactive",
@@ -1119,6 +1128,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
+      },
+      {
+        "name": "dimOthers",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Dims every OTHER mark while one is hovered or focused, so the reader's eye is held on the one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed marks — measured 2026-09-13, the worst pair of three dimmed series falls from dE 14.8 at full opacity to 2.1 at `--ds-chart-dim-opacity`'s default 0.3 — so it buys loudness for one mark and pays for it with the rest of the chart."
       },
       {
         "name": "staggerMs",
@@ -1132,7 +1150,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "tooltip",
         "kind": "input",
-        "type": "Exclude<ChartTooltipTrigger, 'axis'>",
+        "type": "ChartItemTooltipTrigger",
         "union": [
           "item",
           "none"
@@ -1656,37 +1674,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       }
     ]
   },
-  "chart-tooltip": {
-    "key": "chart-tooltip",
-    "selector": "ds-chart-tooltip-panel",
-    "isElement": true,
-    "className": "ChartTooltipPanelComponent",
-    "status": "stable",
-    "importName": "ChartTooltipPanelComponent",
-    "importPath": "@ids-group-ltd/ids-design-system",
-    "summary": null,
-    "inputs": [
-      {
-        "name": "context",
-        "kind": "input-required",
-        "type": "ChartTooltipContext",
-        "union": null,
-        "default": null,
-        "required": true,
-        "description": "The category and the readings the panel prints."
-      },
-      {
-        "name": "template",
-        "kind": "input",
-        "type": "TemplateRef<{\n    $implicit: ChartTooltipContext;\n  }> | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "The chart's projected `#dsChartTooltip` template. Null renders the built-in rows."
-      }
-    ],
-    "outputs": []
-  },
   "checkbox": {
     "key": "checkbox",
     "selector": "ds-checkbox",
@@ -1988,6 +1975,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Swatches shown in the panel — defaults to a built-in palette."
       },
       {
+        "name": "panelClass",
+        "kind": "input",
+        "type": "string | readonly string[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Extra classes for the portaled panel, beside `ds-dropdown-panel`, `ds-overlay-pane` and this component's own `ds-color-picker-panel`. The panel is portaled out of the host, so a class on the pane is the only way a consumer stylesheet reaches ONE instance of it."
+      },
+      {
         "name": "disabled",
         "kind": "input",
         "type": "boolean",
@@ -2075,15 +2071,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "dataTable",
         "kind": "input",
-        "type": "'toggle' | 'visible' | 'none'",
+        "type": "ChartDataTable | null",
         "union": [
           "toggle",
           "visible",
           "none"
         ],
-        "default": "'toggle'",
+        "default": "null",
         "required": false,
-        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page."
+        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'toggle'`."
       },
       {
         "name": "loading",
@@ -2097,11 +2093,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "emptyText",
         "kind": "input",
-        "type": "string",
+        "type": "string | null",
         "union": null,
-        "default": "'No data'",
+        "default": "null",
         "required": false,
-        "description": "Shown in place of the plot when `data` is empty."
+        "description": "Shown in place of the plot when `data` is empty. Unset falls back to `DS_CONFIG.chart.emptyText`, then `'No data'`."
       },
       {
         "name": "error",
@@ -2115,20 +2111,20 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "errorText",
         "kind": "input",
-        "type": "string",
+        "type": "string | null",
         "union": null,
-        "default": "'Could not load the data'",
+        "default": "null",
         "required": false,
-        "description": "The message the error state prints."
+        "description": "The message the error state prints. Unset falls back to `DS_CONFIG.chart.errorText`, then `'Could not load the data'`."
       },
       {
         "name": "valueFormat",
         "kind": "input",
-        "type": "(value: number) => string",
+        "type": "ChartValueFormat | null",
         "union": null,
-        "default": "defaultValueFormat",
+        "default": "null",
         "required": false,
-        "description": "Formats every value the chart prints, the annex table and the generated description included. Defaults to the browser's locale grouping with a K/M/B suffix past four digits."
+        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then the browser's locale grouping with a K/M/B suffix past four digits."
       },
       {
         "name": "interactive",
@@ -2138,6 +2134,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
+      },
+      {
+        "name": "dimOthers",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Dims every OTHER mark while one is hovered or focused, so the reader's eye is held on the one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed marks — measured 2026-09-13, the worst pair of three dimmed series falls from dE 14.8 at full opacity to 2.1 at `--ds-chart-dim-opacity`'s default 0.3 — so it buys loudness for one mark and pays for it with the rest of the chart."
       },
       {
         "name": "staggerMs",
@@ -2151,7 +2156,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "tooltip",
         "kind": "input",
-        "type": "Exclude<ChartTooltipTrigger, 'axis'>",
+        "type": "ChartItemTooltipTrigger",
         "union": [
           "item",
           "none"
@@ -2159,6 +2164,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "'item'",
         "required": false,
         "description": "Whether a hovered or focused column opens a tooltip. `'axis'` is not offered — a column chart's marks ARE its categories, so an axis tooltip would repeat the item one."
+      },
+      {
+        "name": "tooltipAnchor",
+        "kind": "input",
+        "type": "'mark' | 'cell'",
+        "union": [
+          "mark",
+          "cell"
+        ],
+        "default": "'mark'",
+        "required": false,
+        "description": "Where the tooltip is pinned. `'mark'`, the default, is the column itself — a panel over the reading it describes. `'cell'` is the full-height category cell, which puts the panel at the top of the plot whatever the column's value."
       }
     ],
     "outputs": [
@@ -2354,6 +2371,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Shows an \"(optional)\" marker beside the label — ignored when `required` is set."
+      },
+      {
+        "name": "panelClass",
+        "kind": "input",
+        "type": "string | readonly string[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Extra classes for the portaled panel, beside `ds-dropdown-panel`, `ds-overlay-pane` and this component's own `ds-date-picker-panel`. The panel is portaled out of the host, so a class on the pane is the only way a consumer stylesheet reaches ONE instance of it."
       },
       {
         "name": "disabled",
@@ -2679,15 +2705,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "dataTable",
         "kind": "input",
-        "type": "'toggle' | 'visible' | 'none'",
+        "type": "ChartDataTable | null",
         "union": [
           "toggle",
           "visible",
           "none"
         ],
-        "default": "'toggle'",
+        "default": "null",
         "required": false,
-        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page."
+        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'toggle'`."
       },
       {
         "name": "loading",
@@ -2701,11 +2727,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "emptyText",
         "kind": "input",
-        "type": "string",
+        "type": "string | null",
         "union": null,
-        "default": "'No data'",
+        "default": "null",
         "required": false,
-        "description": "Shown in place of the plot when `data` is empty."
+        "description": "Shown in place of the plot when `data` is empty. Unset falls back to `DS_CONFIG.chart.emptyText`, then `'No data'`."
       },
       {
         "name": "error",
@@ -2719,20 +2745,20 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "errorText",
         "kind": "input",
-        "type": "string",
+        "type": "string | null",
         "union": null,
-        "default": "'Could not load the data'",
+        "default": "null",
         "required": false,
-        "description": "The message the error state prints."
+        "description": "The message the error state prints. Unset falls back to `DS_CONFIG.chart.errorText`, then `'Could not load the data'`."
       },
       {
         "name": "valueFormat",
         "kind": "input",
-        "type": "(value: number) => string",
+        "type": "ChartValueFormat | null",
         "union": null,
-        "default": "defaultValueFormat",
+        "default": "null",
         "required": false,
-        "description": "Formats every value the chart prints, the annex table and the generated description included. Defaults to the browser's locale grouping with a K/M/B suffix past four digits."
+        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then the browser's locale grouping with a K/M/B suffix past four digits."
       },
       {
         "name": "interactive",
@@ -2744,18 +2770,27 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
       },
       {
+        "name": "dimOthers",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Dims every OTHER mark while one is hovered or focused, so the reader's eye is held on the one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed marks — measured 2026-09-13, the worst pair of three dimmed series falls from dE 14.8 at full opacity to 2.1 at `--ds-chart-dim-opacity`'s default 0.3 — so it buys loudness for one mark and pays for it with the rest of the chart."
+      },
+      {
         "name": "staggerMs",
         "kind": "input",
         "type": "number",
         "union": null,
         "default": "0",
         "required": false,
-        "description": "Milliseconds between one mark's entrance and the next. `0`, the default, is no stagger at all; `40` is the documented non-zero step. The total is capped, so a long series does not crawl in."
+        "description": "Accepted for parity with the other four charts and deliberately without effect here: a ring arrives as ONE object, because arcs share their edges and fading them one at a time lets the background through every seam. There is nothing to stagger."
       },
       {
         "name": "tooltip",
         "kind": "input",
-        "type": "Exclude<ChartTooltipTrigger, 'axis'>",
+        "type": "ChartItemTooltipTrigger",
         "union": [
           "item",
           "none"
@@ -3227,15 +3262,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "dataTable",
         "kind": "input",
-        "type": "'toggle' | 'visible' | 'none'",
+        "type": "ChartDataTable | null",
         "union": [
           "toggle",
           "visible",
           "none"
         ],
-        "default": "'toggle'",
+        "default": "null",
         "required": false,
-        "description": "The label-and-value disclosure every chart carries. Ignored while `showTable` is on, which already prints every label and value."
+        "description": "The label-and-value disclosure every chart carries. Ignored while `showTable` is on, which already prints every label and value. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'toggle'`."
       },
       {
         "name": "loading",
@@ -3249,11 +3284,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "emptyText",
         "kind": "input",
-        "type": "string",
+        "type": "string | null",
         "union": null,
-        "default": "'No data'",
+        "default": "null",
         "required": false,
-        "description": "Shown in place of the plot when `data` is empty."
+        "description": "Shown in place of the plot when `data` is empty. Unset falls back to `DS_CONFIG.chart.emptyText`, then `'No data'`."
       },
       {
         "name": "error",
@@ -3267,20 +3302,20 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "errorText",
         "kind": "input",
-        "type": "string",
+        "type": "string | null",
         "union": null,
-        "default": "'Could not load the data'",
+        "default": "null",
         "required": false,
-        "description": "The message the error state prints."
+        "description": "The message the error state prints. Unset falls back to `DS_CONFIG.chart.errorText`, then `'Could not load the data'`."
       },
       {
         "name": "valueFormat",
         "kind": "input",
-        "type": "(value: number) => string",
+        "type": "ChartValueFormat | null",
         "union": null,
-        "default": "defaultValueFormat",
+        "default": "null",
         "required": false,
-        "description": "Formats every value the chart prints, the annex table and the generated description included. Defaults to the browser's locale grouping with a K/M/B suffix past four digits."
+        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then the browser's locale grouping with a K/M/B suffix past four digits."
       },
       {
         "name": "interactive",
@@ -3290,6 +3325,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
+      },
+      {
+        "name": "dimOthers",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Dims every OTHER mark while one is hovered or focused, so the reader's eye is held on the one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed marks — measured 2026-09-13, the worst pair of three dimmed series falls from dE 14.8 at full opacity to 2.1 at `--ds-chart-dim-opacity`'s default 0.3 — so it buys loudness for one mark and pays for it with the rest of the chart."
       },
       {
         "name": "staggerMs",
@@ -3303,7 +3347,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "tooltip",
         "kind": "input",
-        "type": "Exclude<ChartTooltipTrigger, 'axis'>",
+        "type": "ChartItemTooltipTrigger",
         "union": [
           "item",
           "none"
@@ -4063,6 +4107,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Makes every reading focusable and clickable. A series drawn without markers grows invisible ones so there is something to land on; they appear on hover and on focus. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
       },
       {
+        "name": "dimOthers",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Dims every OTHER mark while one is hovered or focused, so the reader's eye is held on the one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed marks — measured 2026-09-13, the worst pair of three dimmed series falls from dE 14.8 at full opacity to 2.1 at `--ds-chart-dim-opacity`'s default 0.3 — so it buys loudness for one mark and pays for it with the rest of the chart."
+      },
+      {
         "name": "gaps",
         "kind": "input",
         "type": "LineChartGaps",
@@ -4104,15 +4157,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "dataTable",
         "kind": "input",
-        "type": "'toggle' | 'visible' | 'none'",
+        "type": "ChartDataTable | null",
         "union": [
           "toggle",
           "visible",
           "none"
         ],
-        "default": "'toggle'",
+        "default": "null",
         "required": false,
-        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page."
+        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'toggle'`."
       },
       {
         "name": "loading",
@@ -4126,11 +4179,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "emptyText",
         "kind": "input",
-        "type": "string",
+        "type": "string | null",
         "union": null,
-        "default": "'No data'",
+        "default": "null",
         "required": false,
-        "description": "Shown in place of the plot when `data` is empty."
+        "description": "Shown in place of the plot when `data` is empty. Unset falls back to `DS_CONFIG.chart.emptyText`, then `'No data'`."
       },
       {
         "name": "error",
@@ -4144,20 +4197,20 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "errorText",
         "kind": "input",
-        "type": "string",
+        "type": "string | null",
         "union": null,
-        "default": "'Could not load the data'",
+        "default": "null",
         "required": false,
-        "description": "The message the error state prints."
+        "description": "The message the error state prints. Unset falls back to `DS_CONFIG.chart.errorText`, then `'Could not load the data'`."
       },
       {
         "name": "valueFormat",
         "kind": "input",
-        "type": "(value: number) => string",
+        "type": "ChartValueFormat | null",
         "union": null,
-        "default": "defaultValueFormat",
+        "default": "null",
         "required": false,
-        "description": "Formats every value the chart prints, the annex table and the generated description included. Defaults to the browser's locale grouping with a K/M/B suffix past four digits."
+        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then the browser's locale grouping with a K/M/B suffix past four digits."
       },
       {
         "name": "hiddenSeries",
@@ -4225,6 +4278,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "'axis'",
         "required": false,
         "description": "Whether the plot opens a tooltip, and for what. `'axis'` names every series at the category under the pointer, which is the reading a multi-series line is compared on; `'item'` names only the marker itself."
+      },
+      {
+        "name": "tooltipAnchor",
+        "kind": "input",
+        "type": "'point' | 'pointer'",
+        "union": [
+          "point",
+          "pointer"
+        ],
+        "default": "'point'",
+        "required": false,
+        "description": "Where the tooltip is pinned. `'point'`, the default, is the highest reading in the category, so the panel stays put while the pointer moves within one band. `'pointer'` follows the cursor."
       }
     ],
     "outputs": [
@@ -4869,6 +4934,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Native `name` attribute forwarded to the trigger."
+      },
+      {
+        "name": "panelClass",
+        "kind": "input",
+        "type": "string | readonly string[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Extra classes for the portaled panel, beside `ds-dropdown-panel`, `ds-overlay-pane` and this component's own `ds-multi-select-panel`. The panel is portaled out of the host, so a class on the pane is the only way a consumer stylesheet reaches ONE instance of it."
       },
       {
         "name": "readOnly",
@@ -6465,6 +6539,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "true",
         "required": false,
         "description": "Scrolls the keyboard cursor's row into view. On by default: a list longer than the panel otherwise walks the cursor out of sight. Set `false` only if you are driving the scroll position yourself."
+      },
+      {
+        "name": "panelClass",
+        "kind": "input",
+        "type": "string | readonly string[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Extra classes for the portaled panel, beside `ds-dropdown-panel`, `ds-overlay-pane` and this component's own `ds-select-panel`. The panel is portaled out of the host, so a class on the pane is the only way a consumer stylesheet reaches ONE instance of it."
       },
       {
         "name": "readOnly",
@@ -9088,6 +9171,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Shows an \"(optional)\" marker beside the label — ignored when `required` is set."
+      },
+      {
+        "name": "panelClass",
+        "kind": "input",
+        "type": "string | readonly string[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Extra classes for the portaled panel, beside `ds-dropdown-panel`, `ds-overlay-pane` and this component's own `ds-time-picker-panel`. The panel is portaled out of the host, so a class on the pane is the only way a consumer stylesheet reaches ONE instance of it."
       },
       {
         "name": "disabled",

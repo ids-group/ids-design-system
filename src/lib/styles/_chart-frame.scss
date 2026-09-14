@@ -51,3 +51,18 @@
     }
   }
 }
+
+// Every state a chart can be in occupies the same box. A chart that shrinks to a line of text when
+// its data is empty, its request failed, or its legend switched the last series off drags the whole
+// page up under the reader's cursor — and the state they are being told about is exactly the moment
+// they are least able to afford the jump. `$height` is the plot the message stands in for.
+@mixin message-box($height) {
+  .empty {
+    display: grid;
+    place-items: center;
+    min-block-size: $height;
+    margin: 0;
+    color: var(--text-secondary);
+    text-align: center;
+  }
+}

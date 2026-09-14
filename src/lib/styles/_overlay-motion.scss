@@ -16,7 +16,7 @@
 // teardown working and outranks a consumer keyframe carrying its own timing.
 
 .cdk-overlay-pane.ds-overlay-pane {
-  --_overlay-enter-keyframes: var(--ds-overlay-enter-keyframes, ds-slide-in);
+  --_overlay-enter-keyframes: var(--ds-overlay-enter-keyframes, ds-fade-in);
   --_overlay-enter-duration: var(--ds-overlay-enter-duration, var(--ds-motion-enter-panel-duration));
   --_overlay-enter-easing: var(--ds-overlay-enter-easing, var(--ds-motion-enter-panel-easing));
   --_overlay-enter-offset: var(--ds-overlay-enter-offset, 4px);
@@ -83,4 +83,13 @@
   to {
     opacity: 0;
   }
+}
+
+/* A chart tooltip is read, never clicked, and it opens UNDER the pointer that summoned it. The CDK
+   pane defaults to `pointer-events: auto`, so without this the panel covers the plot, the plot
+   takes a `pointerleave`, the chart clears its hover, the panel closes, the pointer lands on the
+   plot again — and the whole thing flickers for as long as the cursor sits there. `pointer-events`
+   on the panel alone is not enough: the pane is a wrapper the panel cannot reach. */
+.cdk-overlay-pane.ds-chart-tooltip-pane {
+  pointer-events: none;
 }

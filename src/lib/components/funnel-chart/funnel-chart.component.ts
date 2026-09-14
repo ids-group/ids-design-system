@@ -22,6 +22,11 @@ import {
   staggerDelay,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
+import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
+import type {
+  ChartDataTable,
+  ChartValueFormat,
+} from '@ids-group-ltd/ids-design-system/core';
 import {
   ChartTooltipDirective,
   chartActiveMark,
@@ -78,25 +83,50 @@ export class FunnelChartComponent {
   /** Accessible name. Generated from the data when omitted. */
   readonly summary = input<string | null>(null);
 
-  /** The label-and-value disclosure every chart carries. Ignored while
-   *  `showTable` is on, which already prints every label and value. */
-  readonly dataTable = input<'toggle' | 'visible' | 'none'>('toggle');
+  /** The label-and-value disclosure every chart carries. Ignored while `showTable` is on, which
+   *  already prints every label and value. Unset falls back to `DS_CONFIG.chart.dataTable`, then
+   *  `'toggle'`. */
+  readonly dataTable = input<ChartDataTable | null>(null);
   /** Draws skeleton marks in place of the data, at the same count, so the chart does not resize
    *  when the data lands. */
   readonly loading = input(false, { transform: booleanAttribute });
-  /** Shown in place of the plot when `data` is empty. */
-  readonly emptyText = input<string>('No data');
+  /** Shown in place of the plot when `data` is empty. Unset falls back to
+   *  `DS_CONFIG.chart.emptyText`, then `'No data'`. */
+  readonly emptyText = input<string | null>(null);
 
   /** Shows `errorText` in place of the plot. Separate from `loading` and from an empty `data`,
    *  because "the request failed" and "there is nothing to show" read the same to a reader and
    *  mean opposite things. */
   readonly error = input(false, { transform: booleanAttribute });
 
-  /** The message the error state prints. */
-  readonly errorText = input<string>('Could not load the data');
+  /** The message the error state prints. Unset falls back to `DS_CONFIG.chart.errorText`, then
+   *  `'Could not load the data'`. */
+  readonly errorText = input<string | null>(null);
   /** Formats every value the chart prints, the annex table and the generated description
-   *  included. Defaults to the browser's locale grouping with a K/M/B suffix past four digits. */
-  readonly valueFormat = input<(value: number) => string>(defaultValueFormat);
+   *  included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then the browser's locale
+   *  grouping with a K/M/B suffix past four digits. */
+  readonly valueFormat = input<ChartValueFormat | null>(null);
+
+  readonly dataTableResolved = resolveWithConfig(
+    this.dataTable,
+    (config) => config.chart?.dataTable,
+    'toggle' as ChartDataTable,
+  );
+  readonly emptyTextResolved = resolveWithConfig(
+    this.emptyText,
+    (config) => config.chart?.emptyText,
+    'No data',
+  );
+  readonly errorTextResolved = resolveWithConfig(
+    this.errorText,
+    (config) => config.chart?.errorText,
+    'Could not load the data',
+  );
+  readonly valueFormatResolved = resolveWithConfig(
+    this.valueFormat,
+    (config) => config.chart?.valueFormat,
+    defaultValueFormat as ChartValueFormat,
+  );
 
   /** Turns on the click affordance — the pointer cursor and any hover tint.
    *  The click output fires whether or not this is set, so a consumer that
@@ -106,6 +136,13 @@ export class FunnelChartComponent {
   /** The stage that was clicked, or activated with Enter or Space. Fires whether or not
    *  `interactive` is set. */
   readonly stageClicked = output<FunnelChartStage>();
+
+  /** Dims every OTHER mark while one is hovered or focused, so the reader's eye is held on the
+   *  one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed
+   *  marks — measured 2026-09-13, the worst pair of three dimmed series falls from dE 14.8 at full
+   *  opacity to 2.1 at `--ds-chart-dim-opacity`'s default 0.3 — so it buys loudness for one mark
+   *  and pays for it with the rest of the chart. */
+  readonly dimOthers = input(false, { transform: booleanAttribute });
 
   /** Milliseconds between one mark's entrance and the next. `0`, the default, is no stagger at
    *  all; `40` is the documented non-zero step. The total is capped, so a long series does not
@@ -165,6 +202,10 @@ export class FunnelChartComponent {
             value: entry.stage.value,
             formatted: `${entry.formattedValue} · ${entry.formattedPercent}`,
             color: entry.color,
+            detail:
+              entry.formattedDrop === '—'
+                ? ''
+                : `${entry.formattedDrop} fell away since the stage above`,
           },
         ],
       };
@@ -173,13 +214,20 @@ export class FunnelChartComponent {
 
   protected readonly viewBox = `0 0 ${FUNNEL_VIEW_BOX_WIDTH} ${FUNNEL_VIEW_BOX_HEIGHT}`;
 
+  /** The gap between two bands, painted as a TRANSPARENT STROKE on each. A stroke straddles the
+   *  edge it is drawn on, so each band claims half the gap above it and half below — the gap stays
+   *  exactly as wide to the eye and stops being dead space to the pointer. */
+  protected readonly hitGapUnits = computed(() =>
+    stageGapUnits(this.data().length, FUNNEL_VIEW_BOX_HEIGHT),
+  );
+
   protected readonly stages = computed(() => {
     const data = this.data();
     const values = data.map((stage) => stage.value);
     const geometry = funnelGeometry(values, this.shape());
     const drops = stageDrops(values);
     const gapUnits = stageGapUnits(data.length, FUNNEL_VIEW_BOX_HEIGHT);
-    const format = this.valueFormat();
+    const format = this.valueFormatResolved();
     // Every stage is a share of the funnel's mouth, not of the column total:
     // the stages are nested subsets, so they do not add up to 100%.
     const firstValue = values.length ? values[0] : 0;
@@ -221,8 +269,8 @@ export class FunnelChartComponent {
           label: stage.label,
           value: stage.value,
         })),
-        this.valueFormat(),
-        this.showTable() || this.dataTable() !== 'none',
+        this.valueFormatResolved(),
+        this.showTable() || this.dataTableResolved() !== 'none',
       ),
   );
 
@@ -245,7 +293,7 @@ export class FunnelChartComponent {
   protected readonly isEmpty = computed(() => this.data().length === 0);
 
   protected readonly showDataTable = computed(
-    () => this.dataTable() !== 'none' && !this.showTable(),
+    () => this.dataTableResolved() !== 'none' && !this.showTable(),
   );
 
   protected readonly chartHeight = computed(

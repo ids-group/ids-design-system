@@ -25,7 +25,10 @@ let nextId = 0;
   templateUrl: './drawer.component.html',
   styleUrl: './drawer.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
+  // A static `title="…"` feeding the input below ALSO stays in the DOM as the global attribute,
+  // which makes the host a native browser tooltip over everything inside it.
   host: {
+    '[attr.title]': 'null',
     '(document:keydown.escape)': 'onEscape()',
   },
 })

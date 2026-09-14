@@ -140,9 +140,9 @@ outside any block, and it is one of the 31 that register under an alias.
 ## 2. Attribute directives — no element to register
 
 A directive has no tag, so `@angular/elements` has nothing to define and it is
-absent from the generated surface entirely. Eighteen of them:
+absent from the generated surface entirely. Nineteen of them:
 
-`[dsBrandName]` · `[dsCellTemplate]` · `[dsChipTemplate]` · `[dsCreateTemplate]` ·
+`[dsBrandName]` · `[dsCellTemplate]` · `[dsChartTooltip]` · `[dsChipTemplate]` · `[dsCreateTemplate]` ·
 `[dsEmptyTemplate]` · `[dsFieldClickFocus]` · `[dsGroupLabelTemplate]` ·
 `[dsOptionTemplate]` · `[dsPanelFooterTemplate]` · `[dsPanelHeaderTemplate]` ·
 `[dsPickerTrigger]` · `[dsProjectionDropped]` · `[dsRailTrigger]` ·
@@ -178,6 +178,18 @@ selection, pagination — are all still inputs on `ds-table` itself and reach th
 **Nothing that was visible in a card before has stopped being visible**, because the built-in
 export button was the only rendered affordance of the three and a card never pressed it.
 
+**`[dsChartTooltip]` drives the charts' own overlay** (2026-09-14), and it is applied inside our
+chart templates rather than by a consumer: a chart hands it a `ChartTooltipContext` and an origin,
+non-null opens the panel and null closes it, so pointer and keyboard share one path. The
+`components/chart-tooltip` entry point exports the class, so it is reachable, but it is inert
+without a chart's context and origin.
+
+**What the elements route loses is nothing a card can show**, by the argument already recorded above
+for `[dsTooltip]`: the panel is revealed on hover, tap or focus, and a static card has none of the
+three. `ds-chart-tooltip-panel` registers as an element in its own right, so a specimen that wants
+the surface places the panel itself — which is what `.design-sync/docs/ChartTooltipPanel.md` tells
+the design agent to do.
+
 The three panel components they create (`ds-table-columns-panel`, `ds-table-columns-trigger`,
 `ds-table-export-button`) carry `@internal` and are created imperatively through a
 `ViewContainerRef`, so they appear in no template and no consumer can write one.
@@ -194,8 +206,15 @@ need an input-based open state before a design can use them.
 
 ## Keeping this honest
 
-Run `bun run check:manual-surface` (wired into `infrastructure/scripts/ci-pr.sh`
-in `ci-pr.sh`). It fails when a new component starts projecting inside
-a control-flow block, when a new attribute directive appears, when a recorded
-entry disappears, or when a recorded component is not mentioned in this file.
-Triage first, edit this file, then `--bless`.
+Run `npm run check:cards`. It builds the elements surface first, because
+`check-manual-surface.mjs` reads the gitignored `elements/gen/sections.json` and
+cannot run without it — `bun run check:manual-surface` alone works only in a tree
+that has already built. The gate itself fails when a new component starts
+projecting inside a control-flow block, when a new attribute directive appears,
+when a recorded entry disappears, or when a recorded component is not mentioned
+in this file. Triage first, edit this file, then `--bless`.
+
+CI runs it in `build-design-sync.sh`, which is the `after-release` pipeline: a
+failure there leaves the published package and the deployed docs alone and stops
+only the upload tree from being rebuilt. So the release does not wait on it, and
+running `check:cards` before a release is what keeps a gap out of one.

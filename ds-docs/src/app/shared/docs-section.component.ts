@@ -23,6 +23,9 @@ import { DocsApiTableComponent } from './docs-api-table.component';
   selector: 'docs-section',
   standalone: true,
   imports: [DocsComponentMetaComponent, DocsApiTableComponent],
+  // A static `title="…"` feeding the input below ALSO stays in the DOM as the global attribute,
+  // which makes the host a native browser tooltip over everything inside it.
+  host: { '[attr.title]': 'null' },
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './docs-section.component.html',
   styleUrl: './docs-section.component.scss',

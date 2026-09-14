@@ -2,7 +2,7 @@
 @use '../../styles/chart-frame' as chart-frame;
 @use '../../styles/chart-interactive' as chart-interactive;
 @use '../../styles/chart-motion' as chart-motion;
-@include chart-motion.staged('.row');
+@include chart-motion.grows-across('.row', '.fill');
 @include chart-frame.chart-frame;
 @include chart-data-table.chart-data-table;
 
@@ -10,6 +10,10 @@
 .bar-chart {
   --_bar-chart-track-color: var(--ds-bar-chart-track-color, var(--ds-chart-grid-line-color));
   --_bar-chart-track-height: var(--ds-bar-chart-track-height, 12px);
+  --_bar-chart-cap-radius: var(
+    --ds-bar-chart-cap-radius,
+    var(--ds-chart-mark-cap-radius)
+  );
 
   // Two gaps, and the ratio between them is what does the work. A label belongs to the bar under
   // it, so it sits closer to that bar than the bar sits to the next row — otherwise the eye groups
@@ -27,12 +31,14 @@ figcaption {
   font-weight: 600;
 }
 
+// The gap between rows is PADDING on each row, not `row-gap` on the list: a gap is dead space to
+// the pointer, and a reader aiming between two bars then hits neither. Half above and half below
+// leaves the spacing identical and gives every pixel an owner.
 .rows {
   @include chart-interactive.fades('.row');
   @include chart-interactive.clickable('.row');
 
   display: grid;
-  row-gap: var(--_bar-chart-row-gap);
 }
 
 .skeleton {
@@ -41,6 +47,7 @@ figcaption {
 }
 
 .row {
+  padding-block: calc(var(--_bar-chart-row-gap) / 2);
   display: grid;
   grid-template-columns: 1fr auto auto;
   gap: var(--_bar-chart-label-gap) var(--space-2);
@@ -48,10 +55,9 @@ figcaption {
 }
 
 
-.empty {
-  margin: 0;
-  color: var(--text-secondary);
-}
+@include chart-frame.message-box(
+  calc(3 * (var(--_bar-chart-track-height) + var(--_bar-chart-row-gap)))
+);
 
 .label {
   color: var(--text-secondary);
@@ -69,7 +75,7 @@ figcaption {
 .track {
   grid-column: 1 / -1;
   block-size: var(--_bar-chart-track-height);
-  border-radius: calc(var(--_bar-chart-track-height) / 2);
+  border-radius: var(--_bar-chart-cap-radius);
   background: var(--_bar-chart-track-color);
   overflow: hidden;
 }
@@ -79,12 +85,15 @@ figcaption {
   block-size: 100%;
   border-radius: inherit;
 
-  // NOTE(chart-layout-transition): `inline-size`, not `transform: scaleX()`, and it is a
-  // considered trade — Stas 2026-09-14, keep the current cap for now. Under a scaled transform the
-  // rounded data-end squashes with the body, so the cap's radius changes shape for the length of
-  // the animation. The cost is a layout pass per frame on one property.
-  transition: inline-size var(--ds-motion-chart-mark-duration)
-    var(--ds-motion-chart-mark-easing);
+  // NOTE(chart-layout-transition): a VALUE change animates `inline-size`, not `transform`, and it
+  // is a considered trade — under a scaled transform the rounded data-end squashes with the body,
+  // so the cap changes shape for the length of the animation. The cost is a layout pass per frame
+  // on one property. The mark's ARRIVAL does scale, where the squash is worth the compositor.
+  transition:
+    inline-size var(--ds-motion-chart-mark-duration)
+      var(--ds-motion-chart-mark-easing),
+    background-color var(--ds-motion-chart-mark-duration)
+      var(--ds-motion-chart-mark-easing);
 }
 
 .empty.is-error {

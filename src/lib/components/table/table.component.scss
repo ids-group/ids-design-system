@@ -735,9 +735,12 @@
 }
 
 .pagination-footer {
-  /* The public hook, not `--_table-cell-pad-x`: that resolver is declared on `.table` and
-     invisible to this sibling, and one unresolvable var voids the whole shorthand. */
-  padding: var(--space-3) var(--ds-table-cell-pad-x, var(--table-cell-pad-x)) var(--space-3);
+  /* The per-side chain the cells resolve, spelled out again: `--_table-cell-pad-*` is declared
+     on `.table` and invisible to this sibling. Longhands because one unresolvable var voids a
+     whole shorthand, and the summary must stay in line with column one. */
+  padding-block: var(--space-3);
+  padding-left: var(--ds-table-cell-pad-left, var(--ds-table-cell-pad-x, var(--table-cell-pad-x)));
+  padding-right: var(--ds-table-cell-pad-right, var(--ds-table-cell-pad-x, var(--table-cell-pad-x)));
   border-top: var(--border-width-default) solid var(--ds-table-divider, var(--border-divider));
 }
 

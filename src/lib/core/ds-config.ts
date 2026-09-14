@@ -2,6 +2,7 @@ import { InjectionToken, Provider, inject } from '@angular/core';
 import type { IconName } from './icon-names';
 import type { DsSize } from './size';
 import type { CardElevation, CardPadding } from './card.types';
+import type { ChartDataTable, ChartValueFormat } from './chart.types';
 import type { DsToastPosition } from './toast-position';
 
 export interface DsConfig {
@@ -120,6 +121,22 @@ export interface DsConfig {
   badge?: {
     /** Default for `ds-badge`'s `withDot` — the leading status dot. Default `false`. */
     withDot?: boolean;
+  };
+  chart?: {
+    /** Default `dataTable` for all five charts. Default `'toggle'`. It is an accessibility policy
+     *  rather than a per-chart taste — whether the numbers behind a plot have a non-visual route is
+     *  decided once for an app, not thirty times. */
+    dataTable?: ChartDataTable;
+    /** Shown in place of the plot when a chart's data is empty. Default `'No data'`. */
+    emptyText?: string;
+    /** Shown in place of the plot when a chart has `error` set. Default
+     *  `'Could not load the data'`. */
+    errorText?: string;
+    /** How every chart formats its values, the annex table and the generated description included.
+     *  Default is the browser's locale grouping with a K/M/B suffix past four digits. The same
+     *  reason `datePicker.locale` lives here: a number reads one way in an app, and a formatter
+     *  passed per chart drifts as soon as there are two screens. */
+    valueFormat?: ChartValueFormat;
   };
   datePicker?: {
     /** BCP-47 locale for `ds-date-picker` names + value format. Default `'en-US'`. */

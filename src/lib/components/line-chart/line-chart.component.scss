@@ -3,9 +3,9 @@
 @use '../../styles/chart-frame' as chart-frame;
 @use '../../styles/chart-interactive' as chart-interactive;
 @use '../../styles/chart-motion' as chart-motion;
-@include chart-motion.staged('.series-line');
-@include chart-motion.staged('.series-area');
-@include chart-motion.staged('.series-marker');
+@include chart-motion.fades-in('.series-line');
+@include chart-motion.fades-in('.series-area');
+@include chart-motion.fades-in('.series-marker');
 @include chart-frame.chart-frame;
 @include chart-data-table.chart-data-table;
 
@@ -39,10 +39,7 @@ figcaption {
   font-weight: 600;
 }
 
-.empty {
-  margin: 0;
-  color: var(--text-secondary);
-}
+@include chart-frame.message-box(var(--_line-chart-plot-height));
 
 .canvas {
   display: block;
@@ -74,9 +71,15 @@ figcaption {
   dominant-baseline: middle;
 }
 
-@include chart-interactive.dims('.series-area');
-@include chart-interactive.dims('.series-line');
-@include chart-interactive.dims('.series-marker');
+@include chart-interactive.dims('.series-area', ', fill var(--ds-motion-chart-mark-duration) var(--ds-motion-chart-mark-easing)');
+@include chart-interactive.dims(
+  '.series-line',
+  ', stroke var(--ds-motion-chart-mark-duration) var(--ds-motion-chart-mark-easing), stroke-width var(--ds-motion-chart-state-duration) var(--ds-motion-chart-state-easing)'
+);
+@include chart-interactive.dims(
+  '.series-marker',
+  ', fill var(--ds-motion-chart-mark-duration) var(--ds-motion-chart-mark-easing), r var(--ds-motion-chart-state-duration) var(--ds-motion-chart-state-easing)'
+);
 
 .series-area {
   fill-opacity: var(--_line-chart-area-opacity);
@@ -88,8 +91,6 @@ figcaption {
   stroke-width: var(--_line-chart-line-width);
   stroke-linecap: round;
   stroke-linejoin: round;
-  transition: stroke-width var(--ds-motion-chart-state-duration)
-    var(--ds-motion-chart-state-easing);
 }
 
 /* The singled-out series thickens as well as keeping its colour, so the highlight survives a
@@ -102,6 +103,20 @@ figcaption {
   r: var(--_line-chart-dot-radius);
 }
 
+// The group carries both the band and the crosshair so one transform moves them together. It is
+// NOT transitioned: the crosshair belongs under the pointer, and easing it there means it arrives
+// after the cursor does and travels across readings it was never over — on the first hover it flew
+// in from the plot's origin. A pointer needs no help being followed.
+.cursor.cursor-in {
+  animation: ds-chart-mark-fade-in var(--ds-motion-chart-state-duration)
+    var(--ds-motion-chart-state-easing) both;
+}
+
+.cursor.cursor-out {
+  animation: ds-chart-mark-exit var(--ds-motion-chart-state-duration)
+    var(--ds-motion-chart-state-easing) both;
+}
+
 .category-band {
   fill: var(--_line-chart-hover-bg-color);
 }
@@ -109,11 +124,6 @@ figcaption {
 .cursor-line {
   stroke: var(--_line-chart-cursor-line-color);
   stroke-width: 1;
-}
-
-.series-marker {
-  transition: r var(--ds-motion-chart-state-duration)
-    var(--ds-motion-chart-state-easing);
 }
 
 // A finger covers a 1px cursor line; the grown marker is what stays readable under it.

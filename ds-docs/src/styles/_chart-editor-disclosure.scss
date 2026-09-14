@@ -62,3 +62,40 @@
     margin-block-start: var(--space-2);
   }
 }
+
+// The replay control sits beside the editor's own pill rather than under it: both are things the
+// reader clicks on the same specimen, and a second row of chrome under every chart is noise.
+@mixin replay-row {
+  :host > .replay {
+    margin-block-start: 0;
+  }
+
+  .editor-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: var(--space-2);
+    margin-block-start: var(--space-4);
+  }
+
+  .editor-row > .editor {
+    flex: 0 1 auto;
+    margin-block-start: 0;
+  }
+
+  .replay {
+    flex: none;
+    padding: var(--space-2) var(--space-4);
+    background: var(--surface-default);
+    border: var(--border-width-default) solid var(--border-default);
+    border-radius: var(--radius-pill);
+    color: var(--text-primary);
+    font: 600 var(--font-size-s) / var(--line-height-base) var(--font-sans);
+    cursor: pointer;
+
+    &:hover {
+      background: var(--surface-secondary);
+      border-color: var(--border-strong);
+    }
+  }
+}

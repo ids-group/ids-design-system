@@ -1,0 +1,236 @@
+{
+  "version": "unreleased",
+  "items": [
+    {
+      "id": "chart-defaults-resolve-through-config",
+      "kind": "behavior",
+      "old": "BarChartComponent",
+      "new": null,
+      "surface": "typescript",
+      "action": "Only if you SUBCLASS a chart or read its inputs from a template reference: read `dataTableResolved()`, `emptyTextResolved()`, `errorTextResolved()` or `valueFormatResolved()` instead of the raw input. Binding the inputs is unchanged.",
+      "appliesWhen": "Only where code reads `dataTable()`, `emptyText()`, `errorText()` or `valueFormat()` off a chart instance. Every template that BINDS them — `dataTable=\"none\"`, `[valueFormat]=\"fn\"` — needs nothing.",
+      "pitfall": "The raw input now answers `null` until something binds it, and `null` is a legitimate value rather than an error — a subclass reading it gets no exception, just a missing string where a default used to be.",
+      "restore": null,
+      "searchHints": [
+        "dataTable()",
+        "emptyText()",
+        "errorText()",
+        "valueFormat()"
+      ],
+      "detect": [
+        ".dataTable()",
+        ".emptyText()",
+        ".errorText()",
+        ".valueFormat()",
+        "BarChartComponent",
+        "ColumnChartComponent",
+        "DonutChartComponent",
+        "FunnelChartComponent",
+        "LineChartComponent"
+      ],
+      "verify": "No code reads a chart's `dataTable`, `emptyText`, `errorText` or `valueFormat` input directly; every read goes through the matching `*Resolved` signal.",
+      "note": "The four moved onto the library's internal config resolver, which requires the input to be `T | null` defaulting to `null`: a signal input cannot report whether it was bound, so `null` is what separates \"not set\" from an explicit value. Same shape as `ds-card`'s `elevation` / `padding` and `ds-button`'s `size`."
+    },
+    {
+      "id": "picker-panel-class-input-added",
+      "kind": "behavior",
+      "old": "SelectComponent",
+      "new": null,
+      "surface": "typescript",
+      "action": "Only if you SUBCLASS one of the six pickers and declare a member called `panelClass`: rename yours, or add `override` where your member genuinely means the panel class.",
+      "appliesWhen": "Only a class extending SelectComponent, MultiSelectComponent, AutocompleteComponent, ColorPickerComponent, DatePickerComponent or TimePickerComponent. A template that uses the pickers needs nothing, and neither does code that reads their other inputs.",
+      "pitfall": "The collision is a compile error, not a silent one — TS4114 for a same-named member, TS2416 where the signature differs — so a build that passes has none.",
+      "restore": null,
+      "searchHints": [
+        "panelClass"
+      ],
+      "detect": [
+        "extends SelectComponent",
+        "extends MultiSelectComponent",
+        "extends AutocompleteComponent",
+        "extends ColorPickerComponent",
+        "extends DatePickerComponent",
+        "extends TimePickerComponent",
+        "extends "
+      ],
+      "verify": "No subclass of the six pickers declares a member named `panelClass` of its own; the app builds with no TS4114 or TS2416 on those classes.",
+      "note": "Each picker gained one input, `panelClass`, so a consumer can name the portaled pane. Subclassing a DS component is unsupported, but a release that only adds can still fail such a build on a name collision, which is why the addition is listed here rather than in the additive notes."
+    },
+    {
+      "id": "chart-tooltip-directive-gains-detach-scroll-close",
+      "kind": "behavior",
+      "old": "ChartTooltipDirective",
+      "new": null,
+      "surface": "typescript",
+      "action": "Only if you SUBCLASS the internal `ChartTooltipDirective`, which the package root does not export, and declare a member called `detachScrollClose`: rename yours, or add `override` where your member genuinely means the scroll-close teardown.",
+      "appliesWhen": "Only a class extending the internal `ChartTooltipDirective`. It is not exported from the package root — `@ids-group-ltd/ids-design-system/components/chart-tooltip` is the only specifier that reaches it — and a chart that uses it through the five chart components needs nothing.",
+      "pitfall": "The collision is a compile error, not a silent one — TS4114 for a same-named member, TS2416 where the signature differs — so a build that passes has none.",
+      "restore": null,
+      "searchHints": [
+        "detachScrollClose",
+        "ChartTooltipDirective"
+      ],
+      "detect": [
+        "extends ChartTooltipDirective",
+        "ChartTooltipDirective"
+      ],
+      "verify": "No subclass of the internal `ChartTooltipDirective` declares a member named `detachScrollClose` of its own; the app builds with no TS4114 or TS2416 on that class.",
+      "note": "The directive is internal: it tears down its own scroll subscription when the panel closes, which is what the new member holds. Subclassing a DS directive is unsupported, but a release that only adds can still fail such a build on a name collision."
+    },
+    {
+      "id": "date-time-picker-panes-carry-dropdown-panel-class",
+      "kind": "behavior",
+      "old": "DatePickerComponent",
+      "new": null,
+      "surface": "style",
+      "action": "Check any rule of yours written against `.ds-dropdown-panel`: it now also matches the date picker and time picker panes. Narrow it to the picker you meant with that picker’s own pane class.",
+      "appliesWhen": "Only a stylesheet of yours that targets `.ds-dropdown-panel`. Neither panel changes appearance from the DS skin: the skin styles option rows, option groups and the list, and a calendar and a time column render none of those class names.",
+      "pitfall": "Nothing errors and nothing logs — the date or time panel simply picks up a treatment written for an option list, and only a look at the two panels shows it.",
+      "restore": null,
+      "searchHints": [
+        ".ds-dropdown-panel",
+        "ds-dropdown-panel"
+      ],
+      "detect": [
+        ".ds-dropdown-panel",
+        "ds-dropdown-panel"
+      ],
+      "verify": "Every consumer rule on `.ds-dropdown-panel` is either intended for all six pickers, or names one pane class — `ds-select-panel`, `ds-multi-select-panel`, `ds-autocomplete-panel`, `ds-color-picker-panel`, `ds-date-picker-panel` or `ds-time-picker-panel`.",
+      "note": "The date and time pickers used to pass a panel class that REPLACED the shared pair, so their panes carried `ds-overlay-pane` alone. The shared pair is now unconditional and a caller adds to it, which is what lets each pane also carry a class of its own. This is the inbound direction of a widening: an existing rule starts matching a panel it never matched."
+    },
+    {
+      "id": "overlay-role-forwarding-compares-with-the-parent",
+      "kind": "behavior",
+      "old": "SelectComponent",
+      "new": null,
+      "surface": "style",
+      "action": "If a role token set on an ANCESTOR of a picker was reaching its portaled panel, move it onto the component itself — `ds-select { --ds-radius-panel: 8px }` — or use the panel hook, e.g. `--ds-dropdown-panel-radius`.",
+      "appliesWhen": "Only a stylesheet that sets `--ds-radius-inner`, `--ds-radius-control`, `--ds-radius-panel`, `--ds-radius-pill` or one of the four `--ds-elevation-*` roles on an ancestor of a picker, popover, menu or tooltip. A role set on the component, on `:root`, or on the pane is unaffected, and no template or TypeScript changes.",
+      "pitfall": "Nothing errors and nothing logs. A panel that was inheriting a shell radius or elevation simply falls back to the root value, and only opening it shows the difference.",
+      "restore": null,
+      "searchHints": [
+        "--ds-radius-panel",
+        "--ds-radius-inner",
+        "--ds-radius-control",
+        "--ds-radius-pill",
+        "--ds-elevation-overlay"
+      ],
+      "detect": [
+        "--ds-radius-panel",
+        "--ds-radius-inner",
+        "--ds-radius-control",
+        "--ds-radius-pill",
+        "--ds-elevation-raised",
+        "--ds-elevation-overlay",
+        "--ds-elevation-floating",
+        "--ds-elevation-modal",
+        ".ds-overlay-pane"
+      ],
+      "verify": "Every panel whose corner or elevation came from a wrapper still looks right with it open, and a rule on `.ds-overlay-pane` is no longer beaten by an inline value on the pane.",
+      "note": "The component copies the roles a portaled pane needs onto it inline, because the pane sits outside the host. It chose what to copy by comparing the host with `:root`; custom properties inherit, so any ancestor value made every component under it an overrider and pinned that value inline, above the `.ds-overlay-pane` rule that is a stylesheet’s only route to a portaled panel. The comparison is against the parent now, which is what separates a role the host declares from one it inherited."
+    },
+    {
+      "id": "title-input-no-longer-leaves-a-native-attribute",
+      "kind": "behavior",
+      "old": "ds-modal",
+      "new": null,
+      "surface": "template",
+      "action": "Only if you relied on the native browser tooltip these hosts raised, or bound `[attr.title]` on one of them: move the tooltip to a wrapper element or a projected child, or use `dsTooltip`. Binding the `title` INPUT is unchanged.",
+      "appliesWhen": "Only a template that wrote `title=\"…\"` or `[attr.title]=\"…\"` on `ds-accordion-item`, `ds-alert`, `ds-banner`, `ds-bottom-sheet`, `ds-drawer`, `ds-empty-state`, `ds-list-item`, `ds-modal`, `ds-modal-card`, `ds-page-header` or `ds-toast` AND wanted the browser tooltip. Every one of these renders the title as visible text, so the visible output is unchanged.",
+      "pitfall": "Nothing errors and nothing logs — the tooltip simply stops appearing. The host binding also wins over a `[attr.title]` of your own on these hosts, so binding it explicitly does not bring the attribute back.",
+      "restore": null,
+      "searchHints": [
+        "title=",
+        "[attr.title]",
+        "ds-modal",
+        "ds-drawer",
+        "ds-toast"
+      ],
+      "detect": [
+        "ds-accordion-item",
+        "ds-alert",
+        "ds-banner",
+        "ds-bottom-sheet",
+        "ds-drawer",
+        "ds-empty-state",
+        "ds-list-item",
+        "ds-modal",
+        "ds-modal-card",
+        "ds-page-header",
+        "ds-toast"
+      ],
+      "verify": "Hovering one of these components raises no browser tooltip naming the component, and any tooltip you did want is still shown from its wrapper, its projected child or `dsTooltip`.",
+      "note": "`title` is a global HTML attribute, so a static `title=\"…\"` fed the input AND stayed in the DOM, making the whole component a native tooltip that named it rather than whatever the pointer rested on."
+    },
+    {
+      "id": "donut-error-message-class-renamed",
+      "kind": "class-rename",
+      "old": "empty is-error",
+      "new": "empty-text is-error",
+      "surface": "style",
+      "action": "Retarget any rule written against `.empty.is-error` inside `ds-donut-chart` to `.empty-text.is-error`.",
+      "appliesWhen": "Only a stylesheet of yours reaching the donut error message by class. The other four charts still use `.empty.is-error` and are unchanged.",
+      "pitfall": "Nothing errors — the rule simply stops matching, and the message falls back to the library default.",
+      "restore": null,
+      "searchHints": [
+        "empty is-error",
+        ".empty.is-error",
+        "is-error"
+      ],
+      "detect": [
+        ".empty.is-error"
+      ],
+      "verify": "No rule targets `.empty.is-error` within `ds-donut-chart`; the error message still takes your styling.",
+      "note": "The error branch moved from a bare paragraph to the same ring-sized box the no-data state uses, so `.empty` is now the wrapper and the message carries `.empty-text`."
+    }
+  ],
+  "informational": [
+    "Every DS surface that used to travel on its way in now fades instead. `ds-overlay-pane` — the select, autocomplete, multi-select, date-picker, time-picker, colour-picker, popover, menu-submenu and tooltip panels — plus `ds-alert`, `ds-banner` and `ds-toast` defaulted to `ds-slide-in`, which offsets the surface and slides it into place; they default to `ds-fade-in` now, at the same duration and easing. `ds-drawer` and `ds-bottom-sheet` are unchanged (`ds-slide-edge-in`), and so is `ds-modal` (`ds-scale-in`). Nothing in your code changes. If you want the travel back it is one declaration at the root — `:root { --ds-overlay-enter-keyframes: ds-slide-in; }` — or per surface, `ds-toast { --ds-toast-enter-keyframes: ds-slide-in; }`.",
+    "A chart mark now arrives by growing from its own baseline rather than by scaling about its centre: a `ds-column-chart` column grows up out of the category axis, a `ds-bar-chart` row grows out from the value axis, and `ds-donut-chart`, `ds-funnel-chart` and `ds-line-chart` marks fade because they have no baseline to grow from. Nothing in your code changes. `staggerMs` still spaces the arrivals on the four charts whose marks arrive one at a time.",
+    "The mark cap on `ds-bar-chart` and `ds-column-chart` is 3px, through a new `--ds-chart-mark-cap-radius` with `--ds-bar-chart-cap-radius` and `--ds-column-chart-cap-radius` over it. The bar's end was a full pill (half the track height) and the column's top was `--radius-sm`, so both change shape slightly. Set the hook to your old value if the pill mattered: `ds-bar-chart { --ds-bar-chart-cap-radius: 6px; }`.",
+    "`ds-funnel-chart`'s inter-stage gaps and `ds-bar-chart`'s row gap now belong to the marks either side of them, so a pointer between two marks answers for one of them instead of for nothing. The funnel's gaps look exactly as they did. `ds-bar-chart`'s plot is one full `--ds-bar-chart-row-gap` taller — 20px at the default — because the row gap moved from the list onto each row, giving the first row half a gap above it and the last half a gap below. A test that asserted a pointer between two bars hits neither will now see the nearer one, and a layout pinned to the old plot height needs 20px more.",
+    "`ds-line-chart`'s crosshair moved into a group that carries a `translateX`, so following the pointer is one transform rather than an attribute write per shape, and it fades in and out. It is deliberately not transitioned — the crosshair belongs under the pointer. A stylesheet that reached `.category-band` or `.cursor-line` to position them by hand is now positioning them inside that group; the classes themselves are unchanged. A rule that adds a transition to either will make the crosshair lag the pointer.",
+    "A chart tooltip closes when the page scrolls. `ds-line-chart` reopens it on the next pointer move; the other four reopen when the pointer leaves a mark and enters one again. It used to stay pinned in space while the chart scrolled away, because CDK's reposition strategy watches `window` and registered `cdkScrollable`s only and misses an app's own `overflow: auto` container.",
+    "`ds-chart-legend`'s checkboxes were painting the focus ring at all times rather than under `:focus-visible`, so every legend row looked focused. The component's own rule is gone — the library's global `:where(:focus-visible)` already rings them — and nothing in your code changes. A screenshot test of a chart legend will differ.",
+    "The dropdown panel gained `--ds-dropdown-panel-border-color` and `--ds-dropdown-panel-shadow`, and a dropdown option gained `--ds-option-weight`, `--ds-option-font-size`, `--ds-option-line-height` and `--ds-option-font-family`. Each defaults to the value that was hardcoded before, and each forwards from the host onto the portaled pane like the panel tokens already there, so one picker can be retyped without a global rule (delete list: deep-option-type-rule).",
+    "`ds-modal` gained `--ds-modal-title-font-family`, defaulting to `--font-heading`. It is the one title property that had no hook, which is why a display face needed the doubled `.title.title` selector (delete list: modal-title-doubled-class).",
+    "`ds-table`'s pagination footer insets from `--ds-table-cell-pad-left` and `--ds-table-cell-pad-right` when they are set, falling back to `--ds-table-cell-pad-x` as before. A table using only `-x` is unchanged; one with a per-side gutter gets a footer that lines up with column one instead of sitting at the default (delete list: table-pagination-footer-local-inset). One case is not closed: `density=\"compact\"` retunes the cells' padding on the table element and the footer is that element's sibling, so a compact table setting no `--ds-table-cell-pad-*` has 12px cells under a 16px footer.",
+    "Fading the marks that are not singled out is now the `dimOthers` input rather than something `interactive` brought with it, and it is OFF by default on all five charts. On `ds-bar-chart`, `ds-column-chart`, `ds-donut-chart` and `ds-funnel-chart` the pointer or focus picks the mark; `ds-line-chart` has no mark between two readings, so its fade follows the legend's highlight. The fade costs the separation between the faded marks — measured 2026-09-13, the worst pair of three dimmed series falls from dE 14.8 at full opacity to 2.1 at the default dim opacity — so it is a trade to make deliberately. A chart that had it back: `<ds-donut-chart interactive dimOthers …>`.",
+    "Every chart holds the height of its plot while it shows a message — empty data, an error, or a legend that switched the last series off. What reserves that height differs: `ds-column-chart` and `ds-line-chart` use `--ds-column-chart-plot-height` / `--ds-line-chart-plot-height`, `ds-donut-chart` uses `--ds-donut-chart-size`, and `ds-bar-chart` and `ds-funnel-chart` reserve three rows or stages — so a bar chart that normally draws ten rows still shrinks to that reserve. A layout that relied on a chart collapsing to a line of text in those states will now see a reserved box.",
+    "A chart tooltip's default content carries a second line per reading, for what the chart does not already print beside the mark: the mark's share of the total on `ds-bar-chart` and `ds-column-chart`, and the drop into the stage on `ds-funnel-chart`. A mark whose value is zero or negative gets no second line. `ds-donut-chart` carries none — its panel and its legend both already print the percentage. `ChartTooltipEntry` takes an optional `detail` for it. A projected `#dsChartTooltip` template is unaffected — it replaces the panel's contents entirely.",
+    "The dropdown panel's hooks all forward from the host onto the portaled pane per instance, the two new ones included — `--ds-dropdown-panel-border-color`, `--ds-dropdown-panel-shadow`, `--ds-option-weight`, `--ds-option-font-size`, `--ds-option-line-height` and `--ds-option-font-family` join `--ds-dropdown-panel-bg-color`, `--ds-dropdown-panel-minw`, `--ds-dropdown-panel-maxw`, `--ds-option-selected-bg-color`, `--ds-option-selected-label-color`, `--ds-option-selected-bg-color-hover` and `--ds-option-check-color`. Setting any of them on one picker reaches that picker's pane with no global rule.",
+    "`staggerMs` on `ds-donut-chart` has no effect. The ring fades as one object — arcs share their edges, and fading them one at a time shows the background through every seam — so there is nothing for a per-mark step to stagger. The input stays for parity with the other four charts.",
+    "A legend's colour chips now fade in with the marks they name, on the same curve and delay: `ds-chart-legend`'s swatch and, where the legend toggles, its checkbox; `ds-donut-chart`'s legend swatch; and `ds-funnel-chart`'s stage-table swatch. They used to be solid from the first frame. Nothing in your code changes; a screenshot test that captures a chart mid-entrance will differ.",
+    "`ds-donut-chart`'s error state holds the ring's height instead of collapsing to a line of text, matching the no-data state. The message element carries `empty-text is-error` where it carried `empty is-error`, so a rule written against `.empty.is-error` inside this chart no longer matches it.",
+    "The internal `describeStanding` is renamed: the internal `describeShare` replaces it, returning the share alone with no rank clause, and returning an empty string for a zero or negative reading. Neither name is exported from the package root — `@ids-group-ltd/ids-design-system/components` exports them — so only code reaching in through that specifier has an import to rename."
+  ],
+  "deleteList": [
+    {
+      "id": "deep-option-type-rule",
+      "surface": "style",
+      "find": [
+        ".ds-overlay-pane .dropdown-panel .option"
+      ],
+      "why": "the row's weight, size, line-height and family are public hooks that forward per instance, so no deep selector is needed",
+      "replaceWith": "`--ds-option-weight`, `--ds-option-font-size`, `--ds-option-line-height` and `--ds-option-font-family`"
+    },
+    {
+      "id": "modal-title-doubled-class",
+      "surface": "style",
+      "find": [
+        "ds-modal .title.title"
+      ],
+      "why": "the title reads a family hook, so the class no longer has to be doubled to out-specify the component's own rule",
+      "replaceWith": "`--ds-modal-title-font-family`"
+    },
+    {
+      "id": "table-pagination-footer-local-inset",
+      "surface": "style",
+      "find": [
+        ".pagination-footer"
+      ],
+      "why": "the footer resolves the same per-side chain the cells do, so it lines up with column one on its own — except under `density=\"compact\"`, where the density retunes the cells on the table element and the footer is that element's sibling",
+      "replaceWith": "nothing on a default-density table; on a compact one either set `--ds-table-cell-pad-x: var(--space-3)` on the table or keep the rule, because the footer is otherwise 4px wider than the cells"
+    }
+  ]
+}

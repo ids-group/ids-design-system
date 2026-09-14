@@ -35,6 +35,7 @@ import {
   focusIsInside,
   forwardOverlayTokens,
   dropdownOverlay,
+  panelClassesOf,
   prepareOverlayEnter,
 } from '@ids-group-ltd/ids-design-system/components';
 import { FieldMessageComponent } from '@ids-group-ltd/ids-design-system/components/field-message';
@@ -164,6 +165,11 @@ export class MultiSelectComponent
   );
   /** Native `name` attribute forwarded to the trigger. */
   readonly name = input<string | null>(null);
+  /** Extra classes for the portaled panel, beside `ds-dropdown-panel`,
+   *  `ds-overlay-pane` and this component's own `ds-multi-select-panel`. The panel
+   *  is portaled out of the host, so a class on the pane is the only way a consumer
+   *  stylesheet reaches ONE instance of it. */
+  readonly panelClass = input<string | readonly string[]>([]);
   /** Prevents opening the panel while still allowing focus. */
   readonly readOnly = input(false, { transform: booleanAttribute });
   /**
@@ -742,6 +748,7 @@ export class MultiSelectComponent
     const { positionStrategy, config } = dropdownOverlay(
       this.overlay,
       triggerElement,
+      ['ds-multi-select-panel', ...panelClassesOf(this.panelClass())],
     );
     const triggerWidth = triggerElement.getBoundingClientRect().width;
     // A compact trigger hugs its caption, so pinning the panel to it gives a panel

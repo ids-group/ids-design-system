@@ -24,6 +24,11 @@ import {
   tickStep,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
+import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
+import type {
+  ChartDataTable,
+  ChartValueFormat,
+} from '@ids-group-ltd/ids-design-system/core';
 import { ChartTooltipDirective } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import { ChartLegendComponent } from '@ids-group-ltd/ids-design-system/components/chart-legend';
 import type { ChartLegendItem } from '@ids-group-ltd/ids-design-system/components/chart-legend';
@@ -137,6 +142,13 @@ export class LineChartComponent {
    *  `interactive` is set. */
   readonly pointClicked = output<LineChartPoint>();
 
+  /** Dims every OTHER mark while one is hovered or focused, so the reader's eye is held on the
+   *  one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed
+   *  marks — measured 2026-09-13, the worst pair of three dimmed series falls from dE 14.8 at full
+   *  opacity to 2.1 at `--ds-chart-dim-opacity`'s default 0.3 — so it buys loudness for one mark
+   *  and pays for it with the rest of the chart. */
+  readonly dimOthers = input(false, { transform: booleanAttribute });
+
   /** What a `null` reading draws. The default refuses to assert that a missing
    *  reading is a zero. */
   readonly gaps = input<LineChartGaps>('break');
@@ -156,24 +168,49 @@ export class LineChartComponent {
 
   /** The label-and-value table under the plot: `'toggle'` puts it behind a disclosure,
    *  `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so
-   *  `'none'` belongs only where the same data is already in a table on the page. */
-  readonly dataTable = input<'toggle' | 'visible' | 'none'>('toggle');
+   *  `'none'` belongs only where the same data is already in a table on the page.
+   *  Unset falls back to `DS_CONFIG.chart.dataTable`, then `'toggle'`. */
+  readonly dataTable = input<ChartDataTable | null>(null);
   /** Draws skeleton marks in place of the data, at the same count, so the chart does not resize
    *  when the data lands. */
   readonly loading = input(false, { transform: booleanAttribute });
-  /** Shown in place of the plot when `data` is empty. */
-  readonly emptyText = input<string>('No data');
+  /** Shown in place of the plot when `data` is empty. Unset falls back to
+   *  `DS_CONFIG.chart.emptyText`, then `'No data'`. */
+  readonly emptyText = input<string | null>(null);
 
   /** Shows `errorText` in place of the plot. Separate from `loading` and from an empty `data`,
    *  because "the request failed" and "there is nothing to show" read the same to a reader and
    *  mean opposite things. */
   readonly error = input(false, { transform: booleanAttribute });
 
-  /** The message the error state prints. */
-  readonly errorText = input<string>('Could not load the data');
+  /** The message the error state prints. Unset falls back to `DS_CONFIG.chart.errorText`, then
+   *  `'Could not load the data'`. */
+  readonly errorText = input<string | null>(null);
   /** Formats every value the chart prints, the annex table and the generated description
-   *  included. Defaults to the browser's locale grouping with a K/M/B suffix past four digits. */
-  readonly valueFormat = input<(value: number) => string>(defaultValueFormat);
+   *  included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then the browser's locale
+   *  grouping with a K/M/B suffix past four digits. */
+  readonly valueFormat = input<ChartValueFormat | null>(null);
+
+  readonly dataTableResolved = resolveWithConfig(
+    this.dataTable,
+    (config) => config.chart?.dataTable,
+    'toggle' as ChartDataTable,
+  );
+  readonly emptyTextResolved = resolveWithConfig(
+    this.emptyText,
+    (config) => config.chart?.emptyText,
+    'No data',
+  );
+  readonly errorTextResolved = resolveWithConfig(
+    this.errorText,
+    (config) => config.chart?.errorText,
+    'Could not load the data',
+  );
+  readonly valueFormatResolved = resolveWithConfig(
+    this.valueFormat,
+    (config) => config.chart?.valueFormat,
+    defaultValueFormat as ChartValueFormat,
+  );
 
   protected readonly viewBox = `0 0 ${LINE_CHART_VIEW_WIDTH} ${LINE_CHART_VIEW_HEIGHT}`;
 
@@ -254,7 +291,7 @@ export class LineChartComponent {
   protected isDimmed(seriesId: string): boolean {
     const highlighted = this.highlightedSeries();
 
-    return highlighted !== null && highlighted !== seriesId;
+    return this.dimOthers() && highlighted !== null && highlighted !== seriesId;
   }
 
   protected readonly hasSecondaryAxis = computed(() =>
@@ -371,8 +408,36 @@ export class LineChartComponent {
       screen.inverse(),
     );
     const plot = this.layout().primaryPlot;
-    this.activeCategory.set(this.categoryBands().indexAt(point.x - plot.left));
-    this.tooltipOrigin.set({ x: event.clientX, y: event.clientY });
+    const category = this.categoryBands().indexAt(point.x - plot.left);
+    this.activeCategory.set(category);
+    this.tooltipOrigin.set(
+      this.tooltipAnchor() === 'pointer'
+        ? { x: event.clientX, y: event.clientY }
+        : this.readingAnchor(screen, category),
+    );
+  }
+
+  /** The highest reading in the category, mapped back into client pixels. Anchoring there rather
+   *  than at the cursor keeps the panel still while the pointer travels within one band, and puts
+   *  it over the readings it names instead of over the finger. */
+  private readingAnchor(
+    screen: DOMMatrix,
+    category: number,
+  ): ChartTooltipOrigin {
+    const tops = this.plottedSeries().flatMap((entry) =>
+      entry.markers
+        .filter((marker) => marker.categoryIndex === category)
+        .map((marker) => marker.y),
+    );
+    const y = tops.length ? Math.min(...tops) : this.layout().primaryPlot.top;
+    const point = new DOMPoint(
+      this.plotLeft() +
+        this.categoryBands().position(category) +
+        this.categoryBands().bandWidth / 2,
+      y,
+    ).matrixTransform(screen);
+
+    return { x: point.x, y: point.y };
   }
 
   protected clearActiveCategory(): void {
@@ -389,6 +454,11 @@ export class LineChartComponent {
     contentChild<TemplateRef<{ $implicit: ChartTooltipContext }>>(
       'dsChartTooltip',
     );
+
+  /** Where the tooltip is pinned. `'point'`, the default, is the highest reading in the category,
+   *  so the panel stays put while the pointer moves within one band. `'pointer'` follows the
+   *  cursor. */
+  readonly tooltipAnchor = input<'point' | 'pointer'>('point');
 
   protected readonly tooltipOrigin = signal<ChartTooltipOrigin | null>(null);
 
@@ -469,7 +539,7 @@ export class LineChartComponent {
       ) {
         return null;
       }
-      const format = this.valueFormat();
+      const format = this.valueFormatResolved();
       const focusedSeries = this.activeSeries();
       const perSeries =
         this.tooltip() === 'item' || focusedSeries >= 0
@@ -523,6 +593,13 @@ export class LineChartComponent {
     baselineOf(this.layout().secondaryPlot),
   );
 
+  /** Where the crosshair stops. Under `'stacked'` the two plots sit one above the other over one
+   *  category axis, so a crosshair that ends at the upper plot's baseline leaves the lower plot —
+   *  the same category, the same pointer — with nothing marked at all. */
+  protected readonly cursorBottomY = computed(() =>
+    this.stacked() ? this.secondaryBaselineY() : this.primaryBaselineY(),
+  );
+
   protected readonly primaryLabelX = computed(
     () => this.layout().primaryPlot.left - LINE_CHART_AXIS_LABEL_GAP,
   );
@@ -554,7 +631,7 @@ export class LineChartComponent {
   });
 
   protected readonly tableRows = computed(() => {
-    const format = this.valueFormat();
+    const format = this.valueFormatResolved();
 
     return this.categories().map((category, index) => ({
       category,
@@ -573,7 +650,7 @@ export class LineChartComponent {
     }
 
     const title = this.caption() ?? 'Chart';
-    const format = this.valueFormat();
+    const format = this.valueFormatResolved();
     const categories = this.categories();
     // The pointer belongs to the WHOLE chart, not to each series, or a two-series plot promises
     // the table twice.
@@ -588,10 +665,12 @@ export class LineChartComponent {
       ),
     );
     const pointer =
-      this.dataTable() === 'none' ? '' : ' Full values in the table below.';
+      this.dataTableResolved() === 'none'
+        ? ''
+        : ' Full values in the table below.';
 
     return sentences.length === 0
-      ? describeSeries(title, [], format, this.dataTable() !== 'none')
+      ? describeSeries(title, [], format, this.dataTableResolved() !== 'none')
       : `${title}. ${sentences.join(' ')}${pointer}`;
   });
 
@@ -607,7 +686,7 @@ export class LineChartComponent {
   protected markerLabel(entry: PlottedSeries, marker: LinePoint): string {
     const point = this.pointOf(entry, marker);
 
-    return `${entry.series.label}, ${point.category}, ${this.valueFormat()(marker.value)}`;
+    return `${entry.series.label}, ${point.category}, ${this.valueFormatResolved()(marker.value)}`;
   }
 
   protected onMarkerKey(
@@ -654,7 +733,7 @@ export class LineChartComponent {
   ): AxisTick[] {
     const plot = this.plotFor(onSecondaryAxis);
     const step = tickStep(ticks);
-    const format = this.valueFormat();
+    const format = this.valueFormatResolved();
 
     return ticks.map((value) => ({
       y: valueY(value, axisMax, plot),

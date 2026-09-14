@@ -14,7 +14,16 @@
 // border-radius of the box it is painted on, so a square-cornered shell rings square. A shell that
 // exists only to carry the ring takes `--focus-ring-radius`.
 //
-// Usage, inside the element's own `&:focus-visible` block: `@include focus.ring;`, or
+// INSIDE the element's own `&:focus-visible` block, never on the element: this mixin PAINTS a
+// ring, it does not decide when one is shown. Put it on the rule itself and every instance is
+// ringed at all times, which reads as a styling choice rather than a bug and is caught by
+// `tools/check-focus-rings.mjs` for exactly that reason.
+//
+// Usually the answer is to include nothing at all: `:where(:focus-visible)` below already rings
+// anything focusable that styles nothing itself, so a control needs this only where it wants a
+// different offset, or where it silences the base rule and has to put one back.
+//
+// Usage: `&:focus-visible { @include focus.ring; }`, or
 // `@include focus.ring(calc(-1 * var(--focus-ring-offset)))` where an ancestor clips.
 @mixin ring($offset: var(--focus-ring-offset)) {
   outline: var(--focus-ring-width) solid var(--focus-ring-color);

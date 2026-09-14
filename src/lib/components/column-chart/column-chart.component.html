@@ -9,7 +9,7 @@
     <p
       class="empty is-error"
       role="status">
-      {{ errorText() }}
+      {{ errorTextResolved() }}
     </p>
   } @else if (loading()) {
     <div
@@ -21,7 +21,7 @@
     </div>
   } @else if (isEmpty()) {
     <p class="empty">
-      {{ emptyText() }}
+      {{ emptyTextResolved() }}
     </p>
   } @else {
     <div
@@ -50,13 +50,13 @@
 
         <div
           class="columns"
+          [class.dims-others]="dimOthers()"
           [dsChartTooltip]="tooltipContext()"
           [dsChartTooltipOrigin]="activeMark.origin()"
           [dsChartTooltipTemplate]="tooltipTemplate() ?? null">
           @for (entry of columns(); track entry.key; let index = $index) {
             <div
               class="column"
-              animate.enter="mark-enter"
               animate.leave="mark-leave"
               [style.--_chart-mark-stagger]="markStagger(index)"
               [class.interactive]="interactive()"
@@ -66,7 +66,7 @@
               "
               [attr.data-mark-index]="index"
               [attr.aria-label]="interactive() ? entryLabel(entry) : null"
-              (pointerenter)="activeMark.enter(index, $event)"
+              (pointerenter)="onMarkEnter(index, $event)"
               (pointerleave)="activeMark.leave()"
               (focus)="onMarkFocus(index, $event)"
               (blur)="activeMark.leave()"
@@ -83,6 +83,7 @@
 
                 <span
                   class="bar"
+                  animate.enter="mark-enter"
                   [style.height.%]="entry.heightPercent"
                   [style.background]="entry.color">
                 </span>
@@ -97,10 +98,10 @@
       </div>
     </div>
 
-    @if (dataTable() !== 'none') {
+    @if (dataTableResolved() !== 'none') {
       <details
         class="data-table"
-        [open]="dataTable() === 'visible'">
+        [open]="dataTableResolved() === 'visible'">
         <summary>
           Data table
         </summary>

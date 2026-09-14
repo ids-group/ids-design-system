@@ -1,5 +1,294 @@
 ## Unreleased
 
+### Added
+
+- **A picker's panel can be styled without painting every other picker's.** Each portaled pane
+  carries its own class beside the shared `ds-dropdown-panel` and `ds-overlay-pane` —
+  `ds-select-panel`, `ds-multi-select-panel`, `ds-autocomplete-panel`, `ds-color-picker-panel`,
+  `ds-date-picker-panel`, `ds-time-picker-panel` — and every one of the six also takes a
+  `panelClass` input for a class of your own:
+
+  ```html
+  <ds-autocomplete panelClass="search-panel" [options]="options" />
+  ```
+
+  ```scss
+  .ds-autocomplete-panel .option { font-size: 15px; }
+  ```
+
+  The panel is portaled to `document.body`, outside the host, so a class on the pane is the only
+  route a consumer stylesheet has to ONE instance of it. `panelClass` takes a string or an array.
+
+  Two panes gain `ds-dropdown-panel` that did not carry it: the date picker's and the time picker's.
+  Neither changes appearance, because neither renders any of the class names the skin styles — no
+  option rows, no option groups, no list. A rule of yours written against `.ds-dropdown-panel` now
+  matches them, though, and so do the panel's custom properties.
+
+  `SelectComponent`, `MultiSelectComponent`, `AutocompleteComponent`, `ColorPickerComponent`,
+  `DatePickerComponent` and `TimePickerComponent` each grow by this one input. A subclass of any of
+  the six that declares its own `panelClass` stops building until it renames the member or marks it
+  `override`.
+
+- **The dropdown panel's border and shadow, and the option's type, read `--ds-*` hooks.**
+  `--ds-dropdown-panel-border-color` and `--ds-dropdown-panel-shadow` join the five box hooks the
+  panel already had; `--ds-option-weight`, `--ds-option-font-size`, `--ds-option-line-height` and
+  `--ds-option-font-family` fill the row's `font` shorthand, which carried four literal values. All
+  six forward per instance, like every other dropdown-panel hook: set one on a host and it reaches
+  that host's pane, with no global rule. Defaults are today's values, so an untouched theme is
+  unchanged.
+
+- **`--ds-modal-title-font-family`.** The title had weight, size and colour hooks but read
+  `--font-heading` literally, so a display face had no route in that did not involve outspecifying
+  the component's own rule from outside its encapsulation. Defaults to `--font-heading`.
+
+- **`DS_CONFIG` takes a `chart` section.** Four inputs now resolve through it, because each is one
+  decision per APP rather than per plot: `valueFormat` — a number reads one way in a product, and a
+  formatter passed per chart drifts as soon as there are two screens; `dataTable` — whether the
+  numbers behind a plot have a non-visual route is an accessibility policy, not a per-chart taste;
+  and `emptyText` / `errorText`, which is where localisation lands.
+
+  ```ts
+  providers: [
+    provideDsConfig({
+      chart: {
+        valueFormat: (value) => value.toLocaleString('de-DE'),
+        dataTable: 'visible',
+      },
+    }),
+  ];
+  ```
+
+  Precedence is the input, then the config, then the built-in default, so binding one on a single
+  chart still wins. The four inputs are typed `T | null` and default to `null` — that is what lets
+  a chart tell "not set" from an explicit value — and each chart exposes the settled value as
+  `dataTableResolved`, `emptyTextResolved`, `errorTextResolved` and `valueFormatResolved`. A
+  subclass that read the raw input now reads `null` until something binds it.
+
+  `ChartDataTable` and `ChartValueFormat` are exported from the package root.
+
+  The member surface of `BarChartComponent`, `ColumnChartComponent`, `DonutChartComponent`,
+  `FunnelChartComponent` and `LineChartComponent` grows by these four readbacks and by `dimOthers`,
+  all public. `ColumnChartComponent` also gains `tooltipAnchor` and the protected `onMarkEnter`,
+  `FunnelChartComponent` the protected `hitGapUnits`, and `LineChartComponent` `tooltipAnchor`, the
+  protected `cursorBottomY` and the private `readingAnchor`. `DonutChartComponent` LOSES the
+  protected `markStagger`.
+
+  A subclass that declares any of those names collides. For a public or protected member the fix is
+  `override` or a rename; for a PRIVATE one — `readingAnchor` — only a rename works, because TS2415
+  fires on the name itself and `override` does not clear it. A subclass that called `markStagger` no
+  longer compiles.
+
+- **The tooltip is pinned to the mark, not to the cursor, and both charts that had a say now take
+  an option.** `ds-line-chart` gains `tooltipAnchor`: `'point'`, the default, pins the panel over
+  the highest reading in the category, so it stays still while the pointer travels within one band;
+  `'pointer'` follows the cursor. `ds-column-chart` gains the same input with `'mark'` and `'cell'`:
+  the box catching the pointer is the full-height category cell, so `'cell'` opened the panel at the
+  top of the plot rather than over the column it described. `'mark'` is the default and points at
+  the column.
+
+  ```html
+  <ds-line-chart tooltipAnchor="pointer" [series]="series" [categories]="months" />
+  <ds-column-chart tooltipAnchor="cell" [data]="points" />
+  ```
+
+  The internal `ChartActiveMark`, which the package root does not export, takes an optional third
+  argument on `enter` to name the element inside the hit box that the panel points at. An
+  implementation that omits it still satisfies the interface.
+
+### Changed
+
+- **A surface no longer travels on its way in.** `ds-overlay-pane` — every picker panel, the
+  popover, the menu submenu, the tooltip, the chart tooltip — plus `ds-alert`, `ds-banner` and
+  `ds-toast` defaulted to
+  `ds-slide-in`, which offsets the panel and slides it to its place. They now default to
+  `ds-fade-in`: the same duration and easing, no travel. The travel read as the panel jumping into
+  position, and on a panel that opens UPWARD it read as jumping up from below the trigger.
+
+  `ds-drawer` and `ds-bottom-sheet` keep `ds-slide-edge-in`, because sliding in from an edge is
+  what they are, and `ds-modal` keeps `ds-scale-in`. Any surface takes its old entrance back with
+  one declaration:
+
+  ```scss
+  :root { --ds-overlay-enter-keyframes: ds-slide-in; }
+  ds-toast { --ds-toast-enter-keyframes: ds-slide-in; }
+  ```
+
+- **A chart mark arrives by GROWING from its own baseline, not by scaling about its centre.** A
+  column grows up out of the category axis and a bar row grows out from the value axis; a ring arc,
+  a funnel band and a line have no baseline to grow from and fade instead. The uniform
+  `scale(0.94)` this replaces moved every mark's baseline and read as the whole chart zooming in.
+
+- **The mark cap is 3px on `ds-bar-chart` and `ds-column-chart`,** through the new
+  `--ds-chart-mark-cap-radius`, with `--ds-bar-chart-cap-radius` and `--ds-column-chart-cap-radius`
+  over it. The bar's end was a full pill (half the track height) and the column's top was
+  `--radius-sm`; one soft value for both keeps the cap from reading as a change of shape while a
+  mark grows in.
+
+- **A gap between two marks now belongs to the marks either side of it.** `ds-funnel-chart`'s
+  inter-stage gaps are claimed half by the band above and half by the band below, through a
+  transparent stroke — the gap looks exactly as it did and stops being dead space that answers
+  nothing. `ds-bar-chart`'s row gap moved from `row-gap` on the list to padding on each row, for
+  the same reason: a reader aiming between two bars used to hit neither. That last one makes the
+  bar plot one full `--ds-bar-chart-row-gap` taller — 20px at the default — because the first row
+  now carries half a gap above it and the last half a gap below.
+
+- **A tooltip now says what the chart does not already print.** On `ds-bar-chart` and
+  `ds-column-chart` it repeated the label and the value that sit beside the mark, which told the
+  reader nothing they were not looking at. Both now carry a second line — the mark's share of the
+  total, `18.6% of total`, arithmetic the reader should not have to do — and `ds-funnel-chart`
+  carries the drop into the stage, which the shape cannot show. A mark whose value is zero or
+  negative has no share of anything visible and gets no second line at all. `ds-donut-chart` gets
+  none either: its panel and its legend both already print the percentage. A projected
+  `#dsChartTooltip` template still replaces the lot.
+
+- **`ds-line-chart`'s crosshair moves as one object and fades on the way in and out.** The band and
+  the cursor line are one group carrying a `translateX`, so following the pointer is a single
+  transform rather than an attribute write per shape. It is not transitioned: the crosshair belongs
+  under the pointer, and easing it there makes it arrive late over readings it was never on.
+
+- **`ds-line-chart`'s crosshair covers both plots under `yAxisMode="stacked"`.** It stopped at the
+  upper plot's baseline, so the lower plot — same category, same pointer — had nothing marked at
+  all.
+
+- **`ds-donut-chart` fades as one ring rather than slice by slice.** Arcs share their edges, and
+  two semi-transparent shapes butting up along one let the background through the seam — which
+  reads as the slice proportions shifting slightly as the fade ends. Compositing the ring first and
+  fading the result cannot do that. `staggerMs` therefore has no effect on this chart — one object
+  arrives, not five — and the input stays only for parity with the other four.
+
+- **A chart keeps its height in every state.** An empty `data`, a failed request, or a legend that
+  switched the last series off used to shrink the chart to a line of text, which drags the page up
+  under the reader at exactly the moment they are being told something. The message now stands in a
+  box the size of the plot it replaces, on all five. What sizes that box differs by chart:
+  `ds-column-chart` and `ds-line-chart` use their `--ds-*-plot-height`, `ds-donut-chart` its
+  `--ds-donut-chart-size`, and `ds-bar-chart` and `ds-funnel-chart` reserve three rows or stages,
+  so a chart that normally draws ten rows still shrinks to that reserve.
+
+- **Dimming the other marks is a separate opt-in, and it is off.** `dimOthers` fades the marks that
+  are not singled out: on `ds-bar-chart`, `ds-column-chart`, `ds-donut-chart` and `ds-funnel-chart`
+  that is every mark but the hovered or focused one, and on `ds-line-chart` — which has no mark
+  between two readings to hover — it follows the legend's highlight. It used to ride along with
+  `interactive`, and it is off by default because the fade costs the separation BETWEEN the faded
+  marks: in OKLab dE ×100, the worst pair of three dimmed series falls from 14.8 at full opacity to
+  2.1 at `--ds-chart-dim-opacity`'s default. It buys loudness for one mark and pays for it with the
+  rest of the chart. A chart that had the fade gets it back with one attribute.
+
+  ```html
+  <ds-donut-chart interactive dimOthers [data]="slices" />
+  ```
+
+- **A hidden legend row is no longer struck through.** The unchecked box says what happened and the
+  muted label agrees with it; a strike-through says the label itself is wrong.
+
+- **A legend's colour chips arrive with the marks they name.** They used to be solid from the first
+  frame while the plot was still fading in, which reads as two objects rather than one. The chip
+  now fades on the same curve and the same delay: `ds-chart-legend`'s swatch and, where the legend
+  toggles, its checkbox; `ds-donut-chart`'s legend swatch; and `ds-funnel-chart`'s stage-table
+  swatch. Nothing in your code changes, and a screenshot test that captures a chart mid-entrance
+  will differ.
+
+- **A `title` input no longer leaves a native browser tooltip over the component.** `title` is a
+  global HTML attribute, so `<ds-modal title="Settings">` both fed the input AND left the attribute
+  in the DOM — and the browser then raised its own tooltip over the whole component, naming it
+  rather than whatever the pointer was resting on. Eleven components drop the attribute:
+  `ds-accordion-item`, `ds-alert`, `ds-banner`, `ds-bottom-sheet`, `ds-drawer`, `ds-empty-state`,
+  `ds-list-item`, `ds-modal`, `ds-modal-card`, `ds-page-header` and `ds-toast`. Each renders the
+  title as visible text and names itself through `aria-labelledby` where it needs a name, so
+  nothing is lost to assistive technology.
+
+  This wins over a `[attr.title]` of your own on those hosts — bind it and the attribute is still
+  removed. If you want a native tooltip there, put it on a wrapper or a projected child, or use
+  `dsTooltip`.
+
+- **A chart tooltip no longer fights the pointer that opened it.** The panel opens under the
+  cursor, and the CDK pane it is portaled into takes pointer events by default — so the panel
+  covered the plot, the plot took a `pointerleave`, the chart cleared its hover, the panel closed,
+  the pointer landed on the plot again, and the whole thing flickered for as long as the cursor sat
+  there. The pane is `pointer-events: none` now; `pointer-events` on the panel alone never reached
+  it.
+
+- **`ds-column-chart` answers the pointer near its column, not across the whole category slot.** A
+  column is capped at `--ds-column-chart-column-max-width` while its slot is a `1fr` share of the
+  plot, so on a wide chart the hover reached well past the mark on either side. The target is
+  `--ds-column-chart-column-max-width` plus one `--ds-column-chart-column-gap` — half the gap each
+  side, the rule the funnel's bands already follow — and it spans the category cell's FULL height:
+  the plot, the axis gap under it, and the label. Split across the plot and the label alone, the
+  axis gap answered for neither, so a pointer travelling between them crossed a band where the
+  tooltip closed and reopened. It never exceeds the slot, and where the column is narrower than its
+  cap the target is wider than the column itself.
+
+  `.plot-cell` is no longer a positioned box and no longer carries the `::after` that catches the
+  pointer; `.column` is and does. A rule of yours that positioned something against `.plot-cell`
+  now resolves against `.column`.
+
+- **The legend's checkboxes are not permanently ringed.** `ds-chart-legend` applied the focus ring
+  unconditionally instead of under `:focus-visible`, so every legend row looked focused. The
+  library's global `:where(:focus-visible)` rule already rings them, so the component needs none of
+  its own.
+
+- **A mark's colour change eases instead of jumping,** and a dimmed line fades again. Each mark
+  animated exactly one property, because a second `transition` on the same selector REPLACES the
+  first rather than adding to it: `ds-line-chart`'s line kept `stroke-width` and lost the dim fade,
+  its marker kept `r` and lost the same, and no mark eased its paint at all. Opacity, geometry and
+  colour now travel in ONE declaration wherever they share a selector — so recolouring a row,
+  pinning a palette slot, or adding a funnel stage and re-spreading the ramp all ease. If you
+  declare your own `transition` on a chart mark, name every property it was already easing.
+
+- **A chart tooltip closes when the page scrolls.** CDK's reposition strategy watches `window` and
+  registered `cdkScrollable`s only, so an app's own `overflow: auto` container left the panel
+  pinned in space while the chart scrolled out from under it. `ds-line-chart` reopens on the next
+  pointer move; the other four reopen when the pointer leaves a mark and enters one again.
+
+  The internal `ChartTooltipDirective`, which the package root does not export, grows one PRIVATE
+  member, `detachScrollClose`. `@ids-group-ltd/ids-design-system/components/chart-tooltip` is the
+  only specifier that reaches the class; a subclass declaring that name must rename it, because
+  TS2415 fires on the collision and `override` does not clear it for a private member.
+
+- **The helper behind a chart tooltip's second line is renamed.** The internal `describeStanding`,
+  which returned the rank alongside the share, is the internal `describeShare` now. Neither is
+  exported from the package root, but `@ids-group-ltd/ids-design-system/components` exports them,
+  so an import of the old name stops resolving. Rename it; the signature is unchanged.
+
+### Fixed
+
+- **`ds-table`'s pagination footer insets per side, so the summary lines up with column one.** The
+  footer read `--ds-table-cell-pad-x` alone while the cells resolve `--ds-table-cell-pad-left` and
+  `-right` separately. A table asking for a flush first column — `--ds-table-cell-pad-left: 0`
+  with `-right` set and `-x` unset — got a footer at the 16px default while the column sat at 0.
+  The footer now walks the same per-side chain; `-x` still works as the shorthand for both.
+
+  One gap is left: `density="compact"` retunes the cells' padding on the table element itself, and
+  the footer sits outside that element rather than inside it, so a compact table with no
+  `--ds-table-cell-pad-*` of its own still has 12px cells under a 16px footer. Set
+  `--ds-table-cell-pad-x: var(--space-3)` beside `density="compact"`, or keep a local rule on the
+  footer.
+
+- **`ds-donut-chart`'s error state holds the plot's height.** It rendered the message as a bare
+  paragraph, so a failed request collapsed the ring's 180px to one line of text and dragged the
+  page up under the reader. It now stands in the same ring-sized box the no-data state already
+  used. The message carries `empty-text is-error` where it carried `empty is-error`, so a rule of
+  yours written against `.empty.is-error` inside this chart no longer matches.
+
+- **A role token set on an app shell no longer outranks your rule on a portaled panel.** A panel
+  sits in `document.body`, so the component copies the roles it needs onto the pane as an inline
+  style. It decided what to copy by comparing the host with `:root` — and because custom properties
+  inherit, a shell setting `--ds-radius-panel` for its own chrome made every picker under it an
+  overrider, each pinning the shell's value inline. A rule on `.ds-overlay-pane`, which is the only
+  route a stylesheet has to a portaled panel, then lost to a value nobody wrote. The comparison is
+  now against the host's PARENT, so only a role the host declares itself travels.
+
+  If you were relying on an ancestor's role reaching a panel, set it on the component instead —
+  `ds-select { --ds-radius-panel: 8px }` still forwards — or use the panel's own hook, such as
+  `--ds-dropdown-panel-radius`, which is forwarded with no such test.
+
+### What you can now DELETE
+
+| your workaround | why it is unnecessary | replace with |
+| --- | --- | --- |
+| `.ds-overlay-pane .dropdown-panel .option` — a deep rule retyping dropdown rows | the row's weight, size, line-height and family are hooks that forward per instance | `--ds-option-weight`, `--ds-option-font-size`, `--ds-option-line-height`, `--ds-option-font-family` |
+| `ds-modal .title.title` — a rule outspecifying the modal's own title rule only to set `font-family` | the title reads a family hook, which needs no specificity at all | `--ds-modal-title-font-family` |
+| `.pagination-footer` — a local rule re-insetting the table's footer to match a per-side gutter | the footer resolves the same left/right chain the cells do | nothing, UNLESS the table is `density="compact"` and sets no `--ds-table-cell-pad-*` — there the footer is still 4px wider than the cells and the rule is still doing work |
+
 ## 0.13.0 — 2026-09-14
 
 ### Breaking
@@ -168,9 +457,10 @@
   screen together. The update phase — a mark changing size — is unchanged and still runs on
   `--ds-motion-chart-mark-duration`.
 
-  `staggerMs` spaces the arrivals out on all five charts. `0` is the default and means no stagger;
-  `40` is the documented step, and the total delay is capped at 300ms so a hundred-mark series does
-  not take three seconds to appear. Measured on the docs card at `staggerMs="40"`: five columns
+  `staggerMs` spaces the arrivals out. `0` is the default and means no stagger; `40` is the
+  documented step, and the total delay is capped at 300ms so a hundred-mark series does not take
+  three seconds to appear. `ds-donut-chart` takes the input for parity and ignores it: a ring
+  arrives as one object, so there is nothing to stagger. Measured on the docs card at `staggerMs="40"`: five columns
   resolve to 0, 40, 80, 120 and 160ms.
 
   ```html

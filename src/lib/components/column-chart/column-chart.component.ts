@@ -18,12 +18,18 @@ import {
   formatValue,
   niceMax,
   tickStep,
+  describeShare,
   focusMark,
   nextRovingIndex,
   staggerDelay,
   tickValues,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
+import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
+import type {
+  ChartDataTable,
+  ChartValueFormat,
+} from '@ids-group-ltd/ids-design-system/core';
 import {
   ChartTooltipDirective,
   chartActiveMark,
@@ -66,24 +72,49 @@ export class ColumnChartComponent {
 
   /** The label-and-value table under the plot: `'toggle'` puts it behind a disclosure,
    *  `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so
-   *  `'none'` belongs only where the same data is already in a table on the page. */
-  readonly dataTable = input<'toggle' | 'visible' | 'none'>('toggle');
+   *  `'none'` belongs only where the same data is already in a table on the page.
+   *  Unset falls back to `DS_CONFIG.chart.dataTable`, then `'toggle'`. */
+  readonly dataTable = input<ChartDataTable | null>(null);
   /** Draws skeleton marks in place of the data, at the same count, so the chart does not resize
    *  when the data lands. */
   readonly loading = input(false, { transform: booleanAttribute });
-  /** Shown in place of the plot when `data` is empty. */
-  readonly emptyText = input<string>('No data');
+  /** Shown in place of the plot when `data` is empty. Unset falls back to
+   *  `DS_CONFIG.chart.emptyText`, then `'No data'`. */
+  readonly emptyText = input<string | null>(null);
 
   /** Shows `errorText` in place of the plot. Separate from `loading` and from an empty `data`,
    *  because "the request failed" and "there is nothing to show" read the same to a reader and
    *  mean opposite things. */
   readonly error = input(false, { transform: booleanAttribute });
 
-  /** The message the error state prints. */
-  readonly errorText = input<string>('Could not load the data');
+  /** The message the error state prints. Unset falls back to `DS_CONFIG.chart.errorText`, then
+   *  `'Could not load the data'`. */
+  readonly errorText = input<string | null>(null);
   /** Formats every value the chart prints, the annex table and the generated description
-   *  included. Defaults to the browser's locale grouping with a K/M/B suffix past four digits. */
-  readonly valueFormat = input<(value: number) => string>(defaultValueFormat);
+   *  included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then the browser's locale
+   *  grouping with a K/M/B suffix past four digits. */
+  readonly valueFormat = input<ChartValueFormat | null>(null);
+
+  readonly dataTableResolved = resolveWithConfig(
+    this.dataTable,
+    (config) => config.chart?.dataTable,
+    'toggle' as ChartDataTable,
+  );
+  readonly emptyTextResolved = resolveWithConfig(
+    this.emptyText,
+    (config) => config.chart?.emptyText,
+    'No data',
+  );
+  readonly errorTextResolved = resolveWithConfig(
+    this.errorText,
+    (config) => config.chart?.errorText,
+    'Could not load the data',
+  );
+  readonly valueFormatResolved = resolveWithConfig(
+    this.valueFormat,
+    (config) => config.chart?.valueFormat,
+    defaultValueFormat as ChartValueFormat,
+  );
 
   /** Turns on the click affordance — the pointer cursor and any hover tint.
    *  The click output fires whether or not this is set, so a consumer that
@@ -93,6 +124,13 @@ export class ColumnChartComponent {
   /** The point that was clicked, or activated with Enter or Space. Fires whether or not
    *  `interactive` is set. */
   readonly pointClicked = output<ColumnChartPoint>();
+
+  /** Dims every OTHER mark while one is hovered or focused, so the reader's eye is held on the
+   *  one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed
+   *  marks — measured 2026-09-13, the worst pair of three dimmed series falls from dE 14.8 at full
+   *  opacity to 2.1 at `--ds-chart-dim-opacity`'s default 0.3 — so it buys loudness for one mark
+   *  and pays for it with the rest of the chart. */
+  readonly dimOthers = input(false, { transform: booleanAttribute });
 
   /** Milliseconds between one mark's entrance and the next. `0`, the default, is no stagger at
    *  all; `40` is the documented non-zero step. The total is capped, so a long series does not
@@ -112,7 +150,20 @@ export class ColumnChartComponent {
       'dsChartTooltip',
     );
 
+  /** Where the tooltip is pinned. `'mark'`, the default, is the column itself — a panel over the
+   *  reading it describes. `'cell'` is the full-height category cell, which puts the panel at the
+   *  top of the plot whatever the column's value. */
+  readonly tooltipAnchor = input<'mark' | 'cell'>('mark');
+
   protected readonly activeMark = chartActiveMark();
+
+  protected onMarkEnter(index: number, event: Event): void {
+    this.activeMark.enter(
+      index,
+      event,
+      this.tooltipAnchor() === 'mark' ? '.bar' : undefined,
+    );
+  }
   /** One tab stop per chart, not one per mark: WCAG 2.1.1's Understanding is explicit that not
    *  every mouse-operable control has to be separately focusable, and that is what keeps a
    *  twenty-five mark chart from being twenty-five stops in the page's tab order. */
@@ -124,7 +175,7 @@ export class ColumnChartComponent {
 
   protected onMarkFocus(index: number, event: FocusEvent): void {
     this.rovingIndex.set(index);
-    this.activeMark.enter(index, event);
+    this.onMarkEnter(index, event);
   }
 
   protected onMarkNavigation(event: KeyboardEvent, index: number): void {
@@ -152,6 +203,10 @@ export class ColumnChartComponent {
             value: entry.point.value,
             formatted: entry.formattedValue,
             color: entry.color,
+            detail: describeShare(
+              this.data().map((point) => point.value),
+              this.activeMark.index(),
+            ),
           },
         ],
       };
@@ -174,7 +229,7 @@ export class ColumnChartComponent {
     // and the top of the axis the same number.
     const values = tickValues(this.domainMax(), this.tickCount());
     const step = tickStep(values);
-    const format = this.valueFormat();
+    const format = this.valueFormatResolved();
 
     return values.map((value) => ({
       label:
@@ -185,7 +240,7 @@ export class ColumnChartComponent {
 
   protected readonly columns = computed(() => {
     const axisMax = this.axisMax();
-    const format = this.valueFormat();
+    const format = this.valueFormatResolved();
 
     return this.data().map((point, index) => ({
       key: point.id ?? String(index),
@@ -206,8 +261,8 @@ export class ColumnChartComponent {
           label: point.label,
           value: point.value,
         })),
-        this.valueFormat(),
-        this.dataTable() !== 'none',
+        this.valueFormatResolved(),
+        this.dataTableResolved() !== 'none',
       ),
   );
 

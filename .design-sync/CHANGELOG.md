@@ -46,8 +46,28 @@ the release commit — one timeline, two audiences.
   alone, because every backticked identifier reports 46 findings on this tree and almost none are
   defects, while this reports none.
 - **`docs/BarChart.md` was added, documenting the newly-registered `ds-bar-chart`.**
+- **The five charts and the chart-tooltip panel have cards for the first time.** `sectionFor()`
+  defaults a component to `components/<kebab name>`, and the chart sections live under a `charts`
+  group, so every one of them resolved to a slug `GROUP_PAGES` does not register — `build-cards.mjs`
+  threw on the first of them and the release step it runs under never got past it. The six names are
+  in `config.json`'s `sections` map now, `BarChart` pointing at `charts` because it has no
+  sub-folder of its own. Thirteen files followed: a card and a prompt note per chart, plus the
+  foundations guide card for the app-wide chart defaults.
+
+- **`docs/ChartLegend.md` was added and `ChartLegend` points at `charts/line-chart`.** The legend is
+  `@internal` and registers as no element, but LineChart renders it, so it reaches a card the way
+  `CalendarDay` and `FieldMessage` do — which is the pair `check-manual-surface.mjs` demands: a doc
+  the design agent can read, and a section whose chapter the card is cut from.
 
 ### Build
+
+- **`npm run check:cards` runs the card gates outside CI.** `check-manual-surface.mjs` reads
+  `elements/gen/sections.json`, which is gitignored, so the check on its own works only in a tree
+  that has already built; `check:cards` bootstraps, builds the elements surface, then runs it and
+  `check-doc-api.mjs`. `ci-pr.sh` carries neither, because nothing there builds `gen/`. CI runs both
+  in `build-design-sync.sh`, beside the build that feeds them — an `after-release` step, so a gap
+  they catch holds back the upload tree and leaves the published package and the deployed docs
+  alone.
 
 - **The shared stylesheet is the union over every rendered card, not the frozen ones.** A block
   qualifies for it on carrying a scope attribute anywhere in it, and some carry document-level rules

@@ -15,6 +15,7 @@ import {
   type FlexibleConnectedPositionStrategyOrigin,
 } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
+import { closeOnScroll } from '@ids-group-ltd/ids-design-system/components';
 import { ChartTooltipPanelComponent } from './chart-tooltip-panel.component';
 import type {
   ChartTooltipContext,
@@ -84,6 +85,7 @@ export class ChartTooltipDirective {
 
   private overlayRef: OverlayRef | null = null;
   private panelRef: ComponentRef<ChartTooltipPanelComponent> | null = null;
+  private detachScrollClose: (() => void) | null = null;
 
   constructor() {
     effect(() => {
@@ -105,11 +107,19 @@ export class ChartTooltipDirective {
     if (!this.overlayRef) {
       this.overlayRef = this.overlay.create({
         positionStrategy: this.strategyFor(origin),
-        panelClass: 'ds-overlay-pane',
+        panelClass: ['ds-overlay-pane', 'ds-chart-tooltip-pane'],
         scrollStrategy: this.overlay.scrollStrategies.reposition(),
       });
       this.panelRef = this.overlayRef.attach(
         new ComponentPortal(ChartTooltipPanelComponent, this.viewContainerRef),
+      );
+      // CDK's reposition strategy watches `window` and registered `cdkScrollable`s only, so it
+      // misses an app's own `overflow: auto` container — and a panel that stays put while the
+      // chart scrolls away points at nothing.
+      // Nothing re-opens it: the effect re-runs on a CHANGE to the context or the origin, and a
+      // scroll changes neither. The next pointer move does both.
+      this.detachScrollClose = closeOnScroll(this.overlayRef, () =>
+        this.close(),
       );
     } else {
       this.overlayRef.updatePositionStrategy(this.strategyFor(origin));
@@ -130,6 +140,8 @@ export class ChartTooltipDirective {
   }
 
   private close(): void {
+    this.detachScrollClose?.();
+    this.detachScrollClose = null;
     this.overlayRef?.dispose();
     this.overlayRef = null;
     this.panelRef = null;

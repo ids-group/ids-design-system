@@ -10,6 +10,9 @@ import type { EmptyStateVariant } from './empty-state.types';
   imports: [IconComponent, LoadingOverlayComponent],
   templateUrl: './empty-state.component.html',
   styleUrl: './empty-state.component.scss',
+  // A static `title="…"` feeding the input below ALSO stays in the DOM as the global attribute,
+  // which makes the host a native browser tooltip over everything inside it.
+  host: { '[attr.title]': 'null' },
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class EmptyStateComponent {

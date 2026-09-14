@@ -9,6 +9,7 @@
 }
 
 @include chart-editor-disclosure.disclosure;
+@include chart-editor-disclosure.replay-row;
 
 .grid {
   display: grid;

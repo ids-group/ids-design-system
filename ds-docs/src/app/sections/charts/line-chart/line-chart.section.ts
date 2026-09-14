@@ -2,6 +2,7 @@ import { Component, ViewEncapsulation, signal } from '@angular/core';
 import { LineChartComponent } from 'ds/line-chart';
 import type { LineChartSeries } from 'ds/line-chart';
 import { DocsLineChartDataEditorComponent } from '../../../shared/docs-line-chart-data-editor.component';
+import { DocsReplayButtonComponent } from '../../../shared/docs-replay-button.component';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 const MANY_CATEGORY_COUNT = 36;
@@ -98,6 +99,7 @@ const MANY_CATEGORY_SERIES: readonly LineChartSeries[] = [
   selector: 'section-charts-line-chart',
   standalone: true,
   imports: [
+    DocsReplayButtonComponent,
     DocsLineChartDataEditorComponent,
     DocsSectionComponent,
     LineChartComponent,

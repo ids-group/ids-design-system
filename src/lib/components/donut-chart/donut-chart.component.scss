@@ -3,7 +3,15 @@
 @use '../../styles/chart-frame' as chart-frame;
 @use '../../styles/chart-interactive' as chart-interactive;
 @use '../../styles/chart-motion' as chart-motion;
-@include chart-motion.staged('.slice');
+
+// The RING fades, not the slices. Arcs share their edges, and two semi-transparent shapes butting
+// up along one show the background through the seam — which reads as the proportions shifting
+// slightly as the fade finishes. Compositing the ring first and fading the result cannot.
+@include chart-motion.fades-in('.ring-svg');
+
+// The legend's colour chips are part of the same arrival — they name the arcs, so a chip that is
+// already solid while its arc is still fading reads as two objects instead of one.
+@include chart-motion.fades-in('.swatch');
 @include chart-frame.chart-frame;
 @include chart-data-table.chart-data-table;
 
@@ -205,12 +213,12 @@ figcaption {
   column-gap: var(--space-2);
 }
 
-.empty.is-error {
+.empty-text.is-error {
   color: var(--error);
 }
 
 .ring-svg {
-  @include chart-interactive.fades('.slice');
+  @include chart-interactive.fades('.slice', ', fill var(--ds-motion-chart-mark-duration) var(--ds-motion-chart-mark-easing)');
   @include chart-interactive.clickable('.slice');
 }
 

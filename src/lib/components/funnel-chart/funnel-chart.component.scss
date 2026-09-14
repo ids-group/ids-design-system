@@ -4,7 +4,10 @@
 @use '../../styles/chart-frame' as chart-frame;
 @use '../../styles/chart-interactive' as chart-interactive;
 @use '../../styles/chart-motion' as chart-motion;
-@include chart-motion.staged('.stage');
+@include chart-motion.fades-in('.stage');
+
+// The stage table's colour chips name the bands, so they arrive with them.
+@include chart-motion.fades-in('.swatch');
 @include chart-frame.chart-frame;
 @include chart-data-table.chart-data-table;
 
@@ -36,10 +39,9 @@ figcaption {
   font-weight: 600;
 }
 
-.empty {
-  margin: 0;
-  color: var(--text-secondary);
-}
+@include chart-frame.message-box(
+  calc(3 * (var(--_funnel-chart-stage-height) + var(--_funnel-chart-stage-gap)))
+);
 
 .shape {
   display: block;
@@ -57,6 +59,11 @@ svg {
    measured in Chrome 153, a funnel stage rings as a flat bar across the trapezoid. The ring is a
    stroke on the shape instead; `own-indicator` keeps the outline under forced colours, where
    `stroke` is not remapped. */
+// Transparent, so the gap reads exactly as it did while the band answers a pointer across it.
+.stage {
+  stroke: transparent;
+}
+
 .stage.interactive:focus-visible {
   @include focus.own-indicator;
   @include chart-frame.drawn-focus-ring;
@@ -117,7 +124,7 @@ svg {
 }
 
 .shape {
-  @include chart-interactive.fades('.stage');
+  @include chart-interactive.fades('.stage', ', fill var(--ds-motion-chart-mark-duration) var(--ds-motion-chart-mark-easing)');
   @include chart-interactive.clickable('.stage');
 }
 

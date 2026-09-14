@@ -91,3 +91,27 @@ export function formatTick(value: number, step: number): string {
     ? `${Math.round(scaled)}${unit.suffix}`
     : `${scaled.toFixed(1)}${unit.suffix}`;
 }
+
+/** One mark's share of the total its siblings add up to.
+ *
+ *  A single-series category chart prints every mark's own value beside it, so a tooltip repeating
+ *  that number tells the reader nothing they are not already looking at. The share is arithmetic
+ *  the reader should not have to do. Empty for a lone mark, and empty for a reading that is not
+ *  part of a total anyone can see: negatives and non-finite values are excluded from the total
+ *  rather than subtracted from it.
+ *
+ *  @internal */
+export function describeShare(
+  values: readonly number[],
+  index: number,
+): string {
+  const value = values[index];
+  if (values.length < 2 || !Number.isFinite(value) || value <= 0) {
+    return '';
+  }
+  const total = values
+    .filter((entry) => Number.isFinite(entry) && entry > 0)
+    .reduce((sum, entry) => sum + entry, 0);
+
+  return total > 0 ? `${formatPercent(value, total)} of total` : '';
+}

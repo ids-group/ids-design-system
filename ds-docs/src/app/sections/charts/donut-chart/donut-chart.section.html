@@ -208,6 +208,8 @@
     </div>
   </div>
 
+  <docs-replay-button />
+
   <h3 class="block-title t-h4">
     Palette slots
   </h3>
@@ -244,99 +246,107 @@
 
   <docs-chart-data-editor [(rows)]="dataTableSlices" />
 
-  <h3 class="block-title t-h4">
-    Edge cases
-  </h3>
+  <details class="edge-cases">
+    <summary>
+      <h3 class="block-title t-h4">
+        Edge cases
+      </h3>
 
-  <p class="block-desc t-s">
-    Anything that is not a positive number counts as zero: a negative slice
-    keeps its legend row and draws no arc.
-  </p>
+      <span class="chapter-toggle">
+        Show
+      </span>
+    </summary>
 
-  <div class="states states--cols-2">
-    <div class="state-cell">
-      <ds-donut-chart
-        dataTable="none"
-        [data]="emptySlices()" />
+    <p class="block-desc t-s">
+      Anything that is not a positive number counts as zero: a negative slice
+      keeps its legend row and draws no arc.
+    </p>
 
-      <div class="state-cell-label">
-        Empty
+    <div class="states states--cols-2">
+      <div class="state-cell">
+        <ds-donut-chart
+          dataTable="none"
+          [data]="emptySlices()" />
+
+        <div class="state-cell-label">
+          Empty
+        </div>
+
+        <docs-chart-data-editor [(rows)]="emptySlices" />
       </div>
 
-      <docs-chart-data-editor [(rows)]="emptySlices" />
-    </div>
+      <div class="state-cell">
+        <ds-donut-chart
+          dataTable="none"
+          loading
+          [data]="loadingSlices()" />
 
-    <div class="state-cell">
-      <ds-donut-chart
-        dataTable="none"
-        loading
-        [data]="loadingSlices()" />
+        <div class="state-cell-label">
+          Loading
+        </div>
 
-      <div class="state-cell-label">
-        Loading
+        <docs-chart-data-editor [(rows)]="loadingSlices" />
       </div>
 
-      <docs-chart-data-editor [(rows)]="loadingSlices" />
-    </div>
+      <div class="state-cell">
+        <ds-donut-chart
+          dataTable="none"
+          [data]="oneSlice()" />
 
-    <div class="state-cell">
-      <ds-donut-chart
-        dataTable="none"
-        [data]="oneSlice()" />
+        <div class="state-cell-label">
+          One slice
+        </div>
 
-      <div class="state-cell-label">
-        One slice
+        <docs-chart-data-editor [(rows)]="oneSlice" />
       </div>
 
-      <docs-chart-data-editor [(rows)]="oneSlice" />
-    </div>
+      <div class="state-cell">
+        <ds-donut-chart
+          dataTable="none"
+          [data]="allZerosSlices()" />
 
-    <div class="state-cell">
-      <ds-donut-chart
-        dataTable="none"
-        [data]="allZerosSlices()" />
+        <div class="state-cell-label">
+          All zeros
+        </div>
 
-      <div class="state-cell-label">
-        All zeros
+        <docs-chart-data-editor [(rows)]="allZerosSlices" />
       </div>
 
-      <docs-chart-data-editor [(rows)]="allZerosSlices" />
-    </div>
+      <div class="state-cell">
+        <ds-donut-chart
+          dataTable="none"
+          [data]="negativeSlices()" />
 
-    <div class="state-cell">
-      <ds-donut-chart
-        dataTable="none"
-        [data]="negativeSlices()" />
+        <div class="state-cell-label">
+          Negative value
+        </div>
 
-      <div class="state-cell-label">
-        Negative value
+        <docs-chart-data-editor [(rows)]="negativeSlices" />
       </div>
 
-      <docs-chart-data-editor [(rows)]="negativeSlices" />
-    </div>
+      <div class="state-cell">
+        <ds-donut-chart
+          caption="More slices than the eight-colour palette holds"
+          dataTable="none"
+          [data]="nineSlices()" />
 
-    <div class="state-cell">
-      <ds-donut-chart
-        caption="More slices than the eight-colour palette holds"
-        dataTable="none"
-        [data]="nineSlices()" />
+        <div class="state-cell-label">
+          Nine slices
+        </div>
 
-      <div class="state-cell-label">
-        Nine slices
+        <docs-chart-data-editor [(rows)]="nineSlices" />
       </div>
 
-      <docs-chart-data-editor [(rows)]="nineSlices" />
-    </div>
+      <div class="state-cell">
+        <ds-donut-chart
+          dataTable="none"
+          error
+          [data]="specimenSlices()" />
 
-    <div class="state-cell">
-      <ds-donut-chart
-        dataTable="none"
-        error
-        [data]="specimenSlices()" />
-
-      <div class="state-cell-label">
-        Error
+        <div class="state-cell-label">
+          Error
+        </div>
       </div>
     </div>
-  </div>
+  </details>
 </docs-section>

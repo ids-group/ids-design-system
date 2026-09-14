@@ -1,8 +1,10 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   ViewEncapsulation,
   computed,
+  inject,
   model,
   signal,
 } from '@angular/core';
@@ -10,6 +12,7 @@ import { ButtonComponent } from 'ds/button';
 import { IconButtonComponent } from 'ds/icon-button';
 import { InputComponent } from 'ds/input';
 import { NumberStepperComponent } from 'ds/number-stepper';
+import { replayMarks } from './replay-marks';
 
 export interface ChartDataEditorRow {
   readonly label: string;
@@ -49,8 +52,14 @@ function magnitudeStep(magnitude: number): number {
 export class DocsChartDataEditorComponent<TRow extends ChartDataEditorRow> {
   readonly rows = model.required<readonly TRow[]>();
 
+  private readonly host = inject(ElementRef<HTMLElement>);
+
   protected readonly valueBound = VALUE_BOUND;
   protected readonly open = signal(false);
+
+  protected replay(): void {
+    replayMarks(this.host.nativeElement);
+  }
 
   protected setLabel(index: number, label: string): void {
     this.patch(index, { label });

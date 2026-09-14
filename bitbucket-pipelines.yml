@@ -1,8 +1,11 @@
 # CI/CD for @ids-group-ltd/ids-design-system. Build and lint logic lives in
 # infrastructure/scripts/*.sh — see its README for the branch model and the release flow.
 #
-# NPM_TOKEN must be rotated quarterly: npm caps a write-enabled granular token at 90 days, and
-# Bitbucket is not an npm trusted publisher, so there is no OIDC route that would avoid it.
+# NPM_TOKEN is a granular token that must have Bypass 2FA ON — npm defaults it off, and publish
+# then fails EOTP. It must be rotated quarterly: npm caps a write-enabled granular token at 90
+# days, and Bitbucket is not an npm trusted publisher, so there is no OIDC route that would avoid
+# it. npm removes direct publish for bypass-2FA tokens in January 2027; staged publishing, where
+# CI stages and a maintainer approves with 2FA, is the replacement.
 
 image: node:22-alpine
 

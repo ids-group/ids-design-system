@@ -8,11 +8,18 @@
   }
 
   @if (error()) {
-    <p
-      class="empty is-error"
-      role="status">
-      {{ errorText() }}
-    </p>
+    <div class="empty">
+      <div
+        class="empty-ring"
+        aria-hidden="true">
+      </div>
+
+      <p
+        class="empty-text is-error"
+        role="status">
+        {{ errorTextResolved() }}
+      </p>
+    </div>
   } @else if (loading()) {
     <div
       class="skeleton"
@@ -39,7 +46,7 @@
       </div>
 
       <p class="empty-text">
-        {{ emptyText() }}
+        {{ emptyTextResolved() }}
       </p>
     </div>
   } @else {
@@ -56,14 +63,13 @@
         [class.ring-outline]="total() === 0">
         <svg
           class="ring-svg"
+          animate.enter="mark-enter"
+          [class.dims-others]="dimOthers()"
           [attr.aria-hidden]="ringCarriesTheRoute() ? null : true"
           [attr.viewBox]="viewBox">
           @for (entry of slices(); track entry.slice.id; let index = $index) {
             <path
               class="slice"
-              animate.enter="mark-enter"
-              animate.leave="mark-leave"
-              [style.--_chart-mark-stagger]="markStagger(index)"
               [class.interactive]="interactive()"
               [class.focusable]="ringCarriesTheRoute()"
               [attr.d]="entry.path"
@@ -127,6 +133,7 @@
               (keydown.space)="onSliceKey(entry.slice, $event)">
               <span
                 class="swatch"
+                animate.enter="mark-enter"
                 [style.background]="entry.color">
               </span>
 
@@ -147,10 +154,10 @@
       }
     </div>
 
-    @if (dataTable() !== 'none') {
+    @if (dataTableResolved() !== 'none') {
       <details
         class="data-table"
-        [open]="dataTable() === 'visible'">
+        [open]="dataTableResolved() === 'visible'">
         <summary>
           Data table
         </summary>

@@ -10,6 +10,7 @@
           <input
             type="checkbox"
             class="legend-check"
+            animate.enter="mark-enter"
             [checked]="!isHidden(item.id)"
             [style.--ds-checkbox-selected-bg-color]="item.color"
             [style.--ds-checkbox-selected-border-color]="item.color"
@@ -24,6 +25,7 @@
       } @else {
         <span
           class="legend-swatch"
+          animate.enter="mark-enter"
           aria-hidden="true"
           [style.background]="item.color">
         </span>

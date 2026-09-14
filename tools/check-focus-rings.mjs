@@ -157,8 +157,42 @@ const suppressesWithoutTheMixin = (text) => {
   return found;
 };
 
+// The third failure, and the one a reader sees before anyone else does: a focus indicator painted
+// on the component's RESTING state, because the `@include` went on the element instead of inside
+// its `&:focus-visible` block. Every control then looks focused at once, which is the same as none
+// of them being focused. Only `ring` is checked: `ring-for` carries its own selector, and
+// `own-indicator` SUPPRESSES an outline rather than painting one, which is what a control whose
+// shell rings for it is supposed to do at rest.
+const ringsOutsideAFocusSelector = (text) => {
+  const lines = text.split(/\r?\n/);
+  const found = [];
+  const openSelectors = [];
+  for (let index = 0; index < lines.length; index += 1) {
+    const line = lines[index];
+    const declaration = line.trim();
+    if (
+      /@include\s+focus\.ring\b/.test(declaration) &&
+      !/ring-for/.test(declaration) &&
+      !declaration.includes(':focus') &&
+      !openSelectors.some((selector) => selector.includes(':focus'))
+    ) {
+      found.push({ line: index + 1, declaration });
+    }
+    for (const brace of line.match(/[{}]/g) ?? []) {
+      if (brace === '{') {
+        openSelectors.push(line.slice(0, line.indexOf('{')).trim());
+      } else {
+        openSelectors.pop();
+      }
+    }
+  }
+
+  return found;
+};
+
 const failures = [];
 const unindicated = [];
+const alwaysRinging = [];
 const bareSuppressions = [];
 const waived = [];
 let shells = 0;
@@ -174,6 +208,9 @@ for (const file of ROOTS.flatMap((root) => scssFilesIn(root))) {
   }
   for (const site of suppressesWithoutTheMixin(code0)) {
     bareSuppressions.push({ file: name0, ...site });
+  }
+  for (const site of ringsOutsideAFocusSelector(code0)) {
+    alwaysRinging.push({ file: name0, ...site });
   }
   const viaMixin = ringsThroughTheMixin(code0);
   const painter = viaMixin ?? paintsRingOnFocusWithin(text);
@@ -204,6 +241,15 @@ if (unindicated.length > 0) {
   }
 }
 
+for (const site of alwaysRinging) {
+  console.error(
+    `check-focus-rings: ERROR  ${site.file}:${site.line}  \`${site.declaration}\` paints the ring on ` +
+      `the RESTING state — no selector around it mentions \`:focus\`, so every one of these is ` +
+      `ringed at all times. Move it inside \`&:focus-visible { … }\`, or delete it: the library's ` +
+      `\`:where(:focus-visible)\` catch-all already rings anything focusable that styles nothing.`,
+  );
+}
+
 if (failures.length > 0) {
   for (const failure of failures) {
     console.error(
@@ -229,6 +275,7 @@ for (const site of bareSuppressions) {
 if (
   failures.length > 0 ||
   unindicated.length > 0 ||
+  alwaysRinging.length > 0 ||
   bareSuppressions.length > 0
 ) {
   if (unindicated.length > 0) {

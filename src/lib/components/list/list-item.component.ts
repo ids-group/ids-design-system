@@ -14,7 +14,10 @@ import { NgTemplateOutlet } from '@angular/common';
   templateUrl: './list-item.component.html',
   styleUrl: './list-item.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
+  // A static `title="…"` feeding the input below ALSO stays in the DOM as the global attribute,
+  // which makes the host a native browser tooltip over everything inside it.
   host: {
+    '[attr.title]': 'null',
     role: 'listitem',
     '[attr.aria-current]': "selected() ? 'true' : null",
     '[class.clickable]': 'clickable()',
