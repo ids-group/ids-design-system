@@ -28,6 +28,7 @@ import {
   dropdownOverlay,
   type DsOverlayCloseCause,
   forwardOverlayTokens,
+  panelClassesOf,
   prepareOverlayEnter,
 } from '@ids-group-ltd/ids-design-system/components';
 import { NgTemplateOutlet } from '@angular/common';
@@ -157,6 +158,11 @@ export class SelectComponent
    *  than the panel otherwise walks the cursor out of sight. Set `false` only if
    *  you are driving the scroll position yourself. */
   readonly scrollActiveIntoView = input(true, { transform: booleanAttribute });
+  /** Extra classes for the portaled panel, beside `ds-dropdown-panel`,
+   *  `ds-overlay-pane` and this component's own `ds-select-panel`. The panel is
+   *  portaled out of the host, so a class on the pane is the only way a consumer
+   *  stylesheet reaches ONE instance of it. */
+  readonly panelClass = input<string | readonly string[]>([]);
   /** Prevents opening the dropdown while still allowing focus. */
   readonly readOnly = input(false, { transform: booleanAttribute });
   /**
@@ -375,6 +381,7 @@ export class SelectComponent
     const { positionStrategy, config } = dropdownOverlay(
       this.overlay,
       triggerElement,
+      ['ds-select-panel', ...panelClassesOf(this.panelClass())],
     );
     if (this.width() === 'content') {
       config.minWidth = triggerWidth;

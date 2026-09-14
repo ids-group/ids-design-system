@@ -26,8 +26,14 @@
   --_option-radius: var(--ds-option-radius, var(--ds-radius-inner));
   --_option-row-gap: var(--ds-option-row-gap, 2px);
   --_option-bg-color-active: var(--ds-option-bg-color-active, var(--surface-secondary));
+  --_option-weight: var(--ds-option-weight, var(--font-weight-medium));
+  --_option-font-size: var(--ds-option-font-size, var(--font-size-s));
+  --_option-line-height: var(--ds-option-line-height, var(--line-height-flat));
+  --_option-font-family: var(--ds-option-font-family, var(--font-sans));
 
   --_dropdown-panel-bg-color: var(--ds-dropdown-panel-bg-color, var(--surface-overlay));
+  --_dropdown-panel-border-color: var(--ds-dropdown-panel-border-color, var(--border-default));
+  --_dropdown-panel-shadow: var(--ds-dropdown-panel-shadow, var(--shadow-popover));
   --_dropdown-panel-maxh: var(--ds-dropdown-panel-maxh, 320px);
 
   /* minw/maxw only bite in `content` width mode, where the pane is auto-sized: in
@@ -41,9 +47,9 @@
     // child of it and shrinks to its own option content width.
     width: 100%;
     background: var(--_dropdown-panel-bg-color);
-    border: var(--border-width-default) solid var(--border-default);
+    border: var(--border-width-default) solid var(--_dropdown-panel-border-color);
     border-radius: var(--_dropdown-panel-radius);
-    box-shadow: var(--shadow-popover);
+    box-shadow: var(--_dropdown-panel-shadow);
     padding: var(--space-1);
     min-width: var(--_dropdown-panel-minw);
     max-width: var(--_dropdown-panel-maxw);
@@ -118,7 +124,7 @@
     padding: var(--_option-padding);
     border: 0;
     background: transparent;
-    font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
+    font: var(--_option-weight) var(--_option-font-size) / var(--_option-line-height) var(--_option-font-family);
     color: var(--text-primary);
     cursor: pointer;
     border-radius: var(--_option-radius);

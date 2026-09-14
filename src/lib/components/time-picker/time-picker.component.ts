@@ -29,6 +29,7 @@ import {
   focusIsInside,
   forwardOverlayTokens,
   dropdownOverlay,
+  panelClassesOf,
   prepareOverlayEnter,
 } from '@ids-group-ltd/ids-design-system/components';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
@@ -133,6 +134,11 @@ export class TimePickerComponent
   readonly required = input(false, { transform: booleanAttribute });
   /** Shows an "(optional)" marker beside the label — ignored when `required` is set. */
   readonly optional = input(false, { transform: booleanAttribute });
+  /** Extra classes for the portaled panel, beside `ds-dropdown-panel`,
+   *  `ds-overlay-pane` and this component's own `ds-time-picker-panel`. The panel
+   *  is portaled out of the host, so a class on the pane is the only way a consumer
+   *  stylesheet reaches ONE instance of it. */
+  readonly panelClass = input<string | readonly string[]>([]);
   /** Disables the picker and blocks all interaction. */
   readonly disabled = input(false, { transform: booleanAttribute });
   /** Confirmation text, shown when there is no error or warning — and it paints
@@ -290,7 +296,7 @@ export class TimePickerComponent
     const { positionStrategy, config } = dropdownOverlay(
       this.overlay,
       triggerRef.nativeElement,
-      'ds-overlay-pane',
+      ['ds-time-picker-panel', ...panelClassesOf(this.panelClass())],
     );
     this.overlayRef = this.overlay.create(config);
     prepareOverlayEnter(

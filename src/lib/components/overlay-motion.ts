@@ -32,16 +32,22 @@ const OVERLAY_MOTION_TOKENS = [
   '--ds-overlay-enter-scale',
 ] as const;
 
-/** Styles `dropdownOverlay()`'s default panel class, so every connected picker
- *  gets it whether or not it names panel tokens of its own. */
+/** Styles the `ds-dropdown-panel` class every `dropdownOverlay()` pane carries, so
+ *  every connected picker gets it whether or not it names panel tokens of its own. */
 const DROPDOWN_PANEL_TOKENS = [
   '--ds-dropdown-panel-radius',
   '--ds-dropdown-panel-maxh',
+  '--ds-dropdown-panel-border-color',
+  '--ds-dropdown-panel-shadow',
   '--ds-option-padding',
   '--ds-option-gap',
   '--ds-option-radius',
   '--ds-option-row-gap',
   '--ds-option-bg-color-active',
+  '--ds-option-weight',
+  '--ds-option-font-size',
+  '--ds-option-line-height',
+  '--ds-option-font-family',
 ] as const;
 
 /**
@@ -55,6 +61,19 @@ export type DsOverlayCloseCause = 'select' | 'dismiss';
 const DROPDOWN_GAP = 4;
 
 /**
+ * One panel-class input as an array. Spreading the raw input would scatter a
+ * string into its characters, which is a silent per-letter class list.
+ * @internal
+ */
+export function panelClassesOf(
+  panelClass: string | readonly string[],
+): readonly string[] {
+  return typeof panelClass === 'string'
+    ? panelClass.split(' ').filter((className) => className.length > 0)
+    : panelClass;
+}
+
+/**
  * The geometry every DS dropdown shares. Width is deliberately NOT set here —
  * each caller has its own policy (the exact trigger width, or the trigger as a
  * floor).
@@ -63,7 +82,7 @@ const DROPDOWN_GAP = 4;
 export function dropdownOverlay(
   overlay: Overlay,
   trigger: HTMLElement,
-  panelClass: string | string[] = ['ds-dropdown-panel', 'ds-overlay-pane'],
+  extraPanelClass: string | readonly string[] = [],
 ): {
   positionStrategy: FlexibleConnectedPositionStrategy;
   config: OverlayConfig;
@@ -95,7 +114,13 @@ export function dropdownOverlay(
       hasBackdrop: false,
       // The global panel skin lives in styles/_dropdown-overlay.scss: a portaled
       // node sits outside the host's DOM tree, so `:host ::ng-deep` cannot reach it.
-      panelClass,
+      // The shared pair is never optional — a caller adds to it, so its own class
+      // and a consumer's survive together and a rule can name one picker.
+      panelClass: [
+        'ds-dropdown-panel',
+        'ds-overlay-pane',
+        ...panelClassesOf(extraPanelClass),
+      ],
       scrollStrategy: overlay.scrollStrategies.reposition(),
     },
   };

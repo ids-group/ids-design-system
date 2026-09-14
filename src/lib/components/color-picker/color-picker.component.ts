@@ -35,6 +35,7 @@ import {
   focusIsInside,
   forwardOverlayTokens,
   dropdownOverlay,
+  panelClassesOf,
   prepareOverlayEnter,
 } from '@ids-group-ltd/ids-design-system/components';
 import {
@@ -104,6 +105,11 @@ export class ColorPickerComponent
   readonly value = model<string>('#2F54FF');
   /** Swatches shown in the panel — defaults to a built-in palette. */
   readonly presets = input<readonly string[]>(DEFAULT_PRESETS);
+  /** Extra classes for the portaled panel, beside `ds-dropdown-panel`,
+   *  `ds-overlay-pane` and this component's own `ds-color-picker-panel`. The panel
+   *  is portaled out of the host, so a class on the pane is the only way a consumer
+   *  stylesheet reaches ONE instance of it. */
+  readonly panelClass = input<string | readonly string[]>([]);
   /** Disables the trigger and blocks all interaction. */
   readonly disabled = input(false, { transform: booleanAttribute });
   /** Accessible name for the trigger button and panel. */
@@ -312,6 +318,7 @@ export class ColorPickerComponent
     const { positionStrategy, config } = dropdownOverlay(
       this.overlay,
       this.host.nativeElement,
+      ['ds-color-picker-panel', ...panelClassesOf(this.panelClass())],
     );
     this.overlayRef = this.overlay.create(config);
     prepareOverlayEnter(

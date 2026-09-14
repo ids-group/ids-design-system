@@ -64,6 +64,7 @@ export {
   focusIsInside,
   forwardOverlayTokens,
   overlayPlacementOf,
+  panelClassesOf,
   prepareOverlayEnter,
 } from './overlay-motion';
 export type { DsOverlayCloseCause } from './overlay-motion';
