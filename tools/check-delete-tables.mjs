@@ -39,7 +39,7 @@ if (existsSync(join(ROOT, 'migrations', DRAFT))) {
   manifests.push({
     file: DRAFT,
     label: 'unreleased',
-    needle: '\n## Unreleased\n',
+    needle: '## Unreleased\n',
   });
 }
 
@@ -50,8 +50,15 @@ for (const { file, label, needle } of manifests) {
   const entries = manifest.deleteList ?? [];
   if (!entries.length) continue;
 
-  // The trailing space is what keeps `## 0.1.0` from matching the start of `## 0.10.0`.
-  const start = changelog.indexOf(needle ?? `\n## ${label} `);
+  // The trailing space is what keeps `## 0.1.0` from matching the start of `## 0.10.0`. The draft's
+  // heading is the FIRST line of the file, so it has to be matched at index 0 as well: a needle
+  // carrying a leading newline never found it, and the check reported a missing block for a table
+  // that was sitting right there.
+  const start = needle
+    ? changelog.startsWith(needle)
+      ? 0
+      : changelog.indexOf(`\n${needle}`) + 1 || -1
+    : changelog.indexOf(`\n## ${label} `);
   if (start < 0) {
     problems.push(
       `${label}: ${entries.length} delete entr(ies) and no CHANGELOG block`,
