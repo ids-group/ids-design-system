@@ -1,5 +1,16 @@
 ## Unreleased
 
+### Added
+
+- **`ds-bar-chart` and `ds-column-chart` print each mark's share of the total in their data table.**
+  The tooltip carries that figure on its second line and was the only place it existed, so a reader
+  who cannot hover had no route to it at all. The column is headed `Share of total` rather than
+  `Share` because `ds-bar-chart` already prints a percentage beside each row and that one is the
+  share of the LARGEST row — two different questions, now each labelled with the one it answers.
+
+  The cell is empty where there is no share to state: a lone mark, or a reading that is zero,
+  negative or non-finite. Negatives are left out of the total rather than subtracted from it.
+
 ## 0.13.1 — 2026-09-14
 
 ### Added
