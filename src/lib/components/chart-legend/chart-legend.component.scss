@@ -1,4 +1,10 @@
 @use '../../styles/check-box' as check-box;
+@use '../../styles/chart-motion' as chart-motion;
+
+// The colour chips name the series, so they arrive with the marks rather than standing solid while
+// the plot is still fading. The checkbox is the chip when the legend toggles.
+@include chart-motion.fades-in('.legend-swatch');
+@include chart-motion.fades-in('.legend-check');
 
 :host {
   display: block;

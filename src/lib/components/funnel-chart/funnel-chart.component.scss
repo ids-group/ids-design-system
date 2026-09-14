@@ -5,6 +5,9 @@
 @use '../../styles/chart-interactive' as chart-interactive;
 @use '../../styles/chart-motion' as chart-motion;
 @include chart-motion.fades-in('.stage');
+
+// The stage table's colour chips name the bands, so they arrive with them.
+@include chart-motion.fades-in('.swatch');
 @include chart-frame.chart-frame;
 @include chart-data-table.chart-data-table;
 

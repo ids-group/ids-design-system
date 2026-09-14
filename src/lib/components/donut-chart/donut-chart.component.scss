@@ -8,6 +8,10 @@
 // up along one show the background through the seam — which reads as the proportions shifting
 // slightly as the fade finishes. Compositing the ring first and fading the result cannot.
 @include chart-motion.fades-in('.ring-svg');
+
+// The legend's colour chips are part of the same arrival — they name the arcs, so a chip that is
+// already solid while its arc is still fading reads as two objects instead of one.
+@include chart-motion.fades-in('.swatch');
 @include chart-frame.chart-frame;
 @include chart-data-table.chart-data-table;
 
