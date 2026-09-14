@@ -48,12 +48,16 @@
             [attr.points]="entry.points"
             [attr.fill]="entry.color"
             [attr.role]="interactive() ? 'button' : null"
-            [attr.tabindex]="interactive() ? 0 : null"
+            [attr.tabindex]="
+              interactive() ? (index === tabStopIndex() ? 0 : -1) : null
+            "
+            [attr.data-mark-index]="index"
             [attr.aria-label]="interactive() ? entryLabel(entry) : null"
             (pointerenter)="activeMark.enter(index, $event)"
             (pointerleave)="activeMark.leave()"
-            (focus)="activeMark.enter(index, $event)"
+            (focus)="onMarkFocus(index, $event)"
             (blur)="activeMark.leave()"
+            (keydown)="onMarkNavigation($event, index)"
             (click)="stageClicked.emit(entry.stage)"
             (keydown.enter)="onStageKey(entry.stage, $event)"
             (keydown.space)="onStageKey(entry.stage, $event)">

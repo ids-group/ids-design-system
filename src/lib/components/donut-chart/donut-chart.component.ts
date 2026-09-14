@@ -9,12 +9,15 @@ import {
   input,
   numberAttribute,
   output,
+  signal,
 } from '@angular/core';
 import {
   CHART_SERIES_COLORS,
   describeSeries,
   formatValue,
+  focusMark,
   largestRemainder,
+  nextRovingIndex,
   staggerDelay,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
@@ -118,6 +121,32 @@ export class DonutChartComponent {
     );
 
   protected readonly activeMark = chartActiveMark();
+  /** One tab stop per chart, not one per slice: WCAG 2.1.1's Understanding is explicit that not
+   *  every mouse-operable control has to be separately focusable. */
+  protected readonly rovingIndex = signal(0);
+
+  protected readonly tabStopIndex = computed(() =>
+    Math.min(this.rovingIndex(), Math.max(0, this.slices().length - 1)),
+  );
+
+  protected onMarkFocus(index: number, event: FocusEvent): void {
+    this.rovingIndex.set(index);
+    this.activeMark.enter(index, event);
+  }
+
+  protected onMarkNavigation(
+    event: KeyboardEvent,
+    index: number,
+    scope: string,
+  ): void {
+    const next = nextRovingIndex(event.key, index, this.slices().length);
+    if (next === null) {
+      return;
+    }
+    event.preventDefault();
+    this.rovingIndex.set(next);
+    focusMark((event.currentTarget as Element).closest(scope), next);
+  }
 
   protected readonly tooltipContext = computed<ChartTooltipContext | null>(
     () => {

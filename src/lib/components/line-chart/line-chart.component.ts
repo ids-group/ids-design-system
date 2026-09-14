@@ -17,7 +17,9 @@ import {
   describeSeries,
   bandScale,
   formatTick,
+  focusMark,
   formatValue,
+  nextRovingIndex,
   staggerDelay,
   tickStep,
 } from '@ids-group-ltd/ids-design-system/components';
@@ -344,6 +346,18 @@ export class LineChartComponent {
    *  series at once; a focused marker answers for its own. */
   protected readonly activeSeries = signal(-1);
 
+  /** One tab stop PER SERIES, keyed by series id — each line is a strand the reader walks with
+   *  the arrows. WCAG 2.1.1's Understanding is explicit that not every mouse-operable control has
+   *  to be separately focusable, which is what keeps a 12-category, 2-series plot from being
+   *  twenty-four stops in the page's tab order. */
+  protected readonly rovingByCategory = signal<ReadonlyMap<string, number>>(
+    new Map(),
+  );
+
+  protected isTabStop(seriesId: string, categoryIndex: number): boolean {
+    return (this.rovingByCategory().get(seriesId) ?? 0) === categoryIndex;
+  }
+
   protected onMarkerFocus(
     seriesIndex: number,
     categoryIndex: number,
@@ -354,6 +368,39 @@ export class LineChartComponent {
     }
     this.activeSeries.set(seriesIndex);
     this.activeCategory.set(categoryIndex);
+    this.setRoving(seriesIndex, categoryIndex);
+  }
+
+  protected onMarkerNavigation(
+    event: KeyboardEvent,
+    seriesIndex: number,
+    categoryIndex: number,
+  ): void {
+    const markers = this.plottedSeries()[seriesIndex]?.markers ?? [];
+    const positions = markers.map((marker) => marker.categoryIndex);
+    const current = positions.indexOf(categoryIndex);
+    const next = nextRovingIndex(event.key, current, positions.length);
+    if (next === null) {
+      return;
+    }
+    event.preventDefault();
+    const nextCategory = positions[next];
+    this.setRoving(seriesIndex, nextCategory);
+    focusMark(
+      (event.currentTarget as Element).closest('svg'),
+      nextCategory,
+      `[data-series-index="${seriesIndex}"]`,
+    );
+  }
+
+  private setRoving(seriesIndex: number, categoryIndex: number): void {
+    const seriesId = this.plottedSeries()[seriesIndex]?.series.id;
+    if (seriesId === undefined) {
+      return;
+    }
+    const next = new Map(this.rovingByCategory());
+    next.set(seriesId, categoryIndex);
+    this.rovingByCategory.set(next);
   }
 
   protected onMarkerBlur(): void {

@@ -504,6 +504,19 @@
   eighth HUE that clears the floor lands within dE 4 of one of the other seven under some colour-vision
   deficiency, so the honest eighth is one that has no hue to collide with.
 
+### Changed
+
+- **An `interactive` chart is one tab stop, not one per mark.** Arrow keys walk the marks, Home and
+  End reach the extremes, and the ends wrap the way `ds-radio-group`'s do. `ds-line-chart` keeps one
+  stop PER SERIES, so a two-series plot is two stops and each line is a strand the arrows walk;
+  measured on the docs card, twelve markers now expose two tab stops instead of twelve.
+
+  WCAG 2.1.1's Understanding is explicit that not every mouse-operable control has to be separately
+  focusable, and that is the permission this rests on. Nothing in the API changed — a page that
+  bound `interactive` and an output needs no edit — but a test that counted `[tabindex="0"]` inside
+  a chart will now see one per series.
+
+
 ### Fixed
 
 - **A disabled field is no longer announced as invalid.** Every field bound `aria-invalid` from its

@@ -179,7 +179,15 @@
                 [attr.cy]="marker.y"
                 [attr.fill]="entry.color"
                 [attr.role]="interactive() ? 'button' : null"
-                [attr.tabindex]="interactive() ? 0 : null"
+                [attr.data-series-index]="seriesIndex"
+                [attr.data-mark-index]="marker.categoryIndex"
+                [attr.tabindex]="
+                  interactive()
+                    ? isTabStop(entry.series.id, marker.categoryIndex)
+                      ? 0
+                      : -1
+                    : null
+                "
                 [attr.aria-label]="
                   interactive() ? markerLabel(entry, marker) : null
                 "
@@ -187,6 +195,9 @@
                   onMarkerFocus(seriesIndex, marker.categoryIndex, $event)
                 "
                 (blur)="onMarkerBlur()"
+                (keydown)="
+                  onMarkerNavigation($event, seriesIndex, marker.categoryIndex)
+                "
                 (click)="pointClicked.emit(pointOf(entry, marker))"
                 (keydown.enter)="onMarkerKey(entry, marker, $event)"
                 (keydown.space)="onMarkerKey(entry, marker, $event)" />
