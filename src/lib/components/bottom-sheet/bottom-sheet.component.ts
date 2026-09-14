@@ -31,6 +31,10 @@ let nextId = 0;
   imports: [A11yModule],
   templateUrl: './bottom-sheet.component.html',
   styleUrl: './bottom-sheet.component.scss',
+  // `title` is a global HTML attribute, so a static  feeding the input below ALSO
+  // stays in the DOM — a native browser tooltip covering the whole component, naming it rather than
+  // whatever the pointer is resting on.
+  host: { '[attr.title]': 'null' },
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class BottomSheetComponent implements OnDestroy {

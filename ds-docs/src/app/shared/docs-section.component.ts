@@ -23,6 +23,10 @@ import { DocsApiTableComponent } from './docs-api-table.component';
   selector: 'docs-section',
   standalone: true,
   imports: [DocsComponentMetaComponent, DocsApiTableComponent],
+  // `title` is a global HTML attribute, so a static `title="…"` feeding the input below ALSO stays
+  // in the DOM — which made every section a native browser tooltip covering everything inside it,
+  // naming the section rather than whatever the pointer was resting on.
+  host: { '[attr.title]': 'null' },
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './docs-section.component.html',
   styleUrl: './docs-section.component.scss',

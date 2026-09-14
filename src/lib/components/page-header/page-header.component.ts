@@ -11,6 +11,10 @@ import {
   standalone: true,
   templateUrl: './page-header.component.html',
   styleUrl: './page-header.component.scss',
+  // `title` is a global HTML attribute, so a static `title="…"` feeding the input below ALSO
+  // stays in the DOM — a native browser tooltip covering the whole component, naming it rather than
+  // whatever the pointer is resting on.
+  host: { '[attr.title]': 'null' },
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class PageHeaderComponent {
