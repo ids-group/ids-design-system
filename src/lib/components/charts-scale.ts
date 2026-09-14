@@ -60,7 +60,14 @@ export function linearScale(
 /** @internal Reachable from the `components` entry point because the chart entry points import it across the boundary; not part of the package surface. */
 export interface BandScale {
   readonly bandWidth: number;
+  /** Centre to centre, so it exceeds `bandWidth` by the padding. */
+  readonly step: number;
+  readonly count: number;
   position(index: number): number;
+  /** The band an offset falls in, clamped at both ends so a pointer leaving the plot
+   *  keeps the band it left from. `-1` when there are no bands, which is the one case
+   *  a caller branches on rather than clamps. */
+  indexAt(offset: number): number;
 }
 
 /** @internal Reachable from the `components` entry point because the chart entry points import it across the boundary; not part of the package surface. */
@@ -70,13 +77,23 @@ export function bandScale(
   paddingRatio: number,
 ): BandScale {
   if (count <= 0) {
-    return { bandWidth: 0, position: () => 0 };
+    return {
+      bandWidth: 0,
+      step: 0,
+      count: 0,
+      position: () => 0,
+      indexAt: () => -1,
+    };
   }
   const step = rangeSize / count;
   const bandWidth = step * (1 - paddingRatio);
 
   return {
     bandWidth,
+    step,
+    count,
     position: (index) => step * index + (step - bandWidth) / 2,
+    indexAt: (offset) =>
+      Math.min(count - 1, Math.max(0, Math.floor(offset / step))),
   };
 }

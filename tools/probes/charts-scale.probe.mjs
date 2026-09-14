@@ -93,4 +93,17 @@ check(
   [0, 100],
 );
 
+check('bandScale reports its step', band.step, 100);
+check('bandScale reports its count', band.count, 4);
+check('indexAt finds the first band', band.indexAt(0), 0);
+check('indexAt stays inside a band', band.indexAt(99.9), 0);
+check('indexAt crosses to the next band', band.indexAt(100), 1);
+check('indexAt clamps past the end', band.indexAt(400), 3);
+check('indexAt clamps before the start', band.indexAt(-5), 0);
+check(
+  'indexAt of an empty scale is minus one',
+  bandScale(0, 400, 0.2).indexAt(50),
+  -1,
+);
+
 finish('charts-scale');
