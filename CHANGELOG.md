@@ -33,8 +33,8 @@
   `--ds-dropdown-panel-border-color` and `--ds-dropdown-panel-shadow` join the five box hooks the
   panel already had; `--ds-option-weight`, `--ds-option-font-size`, `--ds-option-line-height` and
   `--ds-option-font-family` fill the row's `font` shorthand, which carried four literal values. All
-  six forward per instance, so they reach one pane from one host and need no global rule. Not every panel hook does:
-  `--ds-dropdown-panel-bg-color`, `-minw`, `-maxw`, `--ds-option-selected-bg-color`,
+  six forward per instance, so they reach one pane from one host and need no global rule. Not every
+  panel hook does: `--ds-dropdown-panel-bg-color`, `-minw`, `-maxw`, `--ds-option-selected-bg-color`,
   `--ds-option-selected-label-color`, `--ds-option-selected-bg-color-hover` and
   `--ds-option-check-color` still reach a portaled pane only from a global rule. Defaults are
   today's values, so an untouched theme is unchanged.
@@ -159,8 +159,8 @@
   are not singled out: on `ds-bar-chart`, `ds-column-chart`, `ds-donut-chart` and `ds-funnel-chart`
   that is every mark but the hovered or focused one, and on `ds-line-chart` — which has no mark
   between two readings to hover — it follows the legend's highlight. It used to ride along with
-  `interactive`. It is
-  off by default because the fade costs the separation BETWEEN the faded marks — measured
+  `interactive`, and it is off by default because the fade costs the separation BETWEEN the faded
+  marks — measured
   2026-09-13, the worst pair of three dimmed series falls from dE 14.8 at full opacity to 2.1 at
   `--ds-chart-dim-opacity`'s default — so it buys loudness for one mark and pays for it with the
   rest of the chart. A chart that had the fade gets it back with one attribute.
