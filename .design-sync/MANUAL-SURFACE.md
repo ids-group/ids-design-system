@@ -140,9 +140,9 @@ outside any block, and it is one of the 31 that register under an alias.
 ## 2. Attribute directives — no element to register
 
 A directive has no tag, so `@angular/elements` has nothing to define and it is
-absent from the generated surface entirely. Eighteen of them:
+absent from the generated surface entirely. Nineteen of them:
 
-`[dsBrandName]` · `[dsCellTemplate]` · `[dsChipTemplate]` · `[dsCreateTemplate]` ·
+`[dsBrandName]` · `[dsCellTemplate]` · `[dsChartTooltip]` · `[dsChipTemplate]` · `[dsCreateTemplate]` ·
 `[dsEmptyTemplate]` · `[dsFieldClickFocus]` · `[dsGroupLabelTemplate]` ·
 `[dsOptionTemplate]` · `[dsPanelFooterTemplate]` · `[dsPanelHeaderTemplate]` ·
 `[dsPickerTrigger]` · `[dsProjectionDropped]` · `[dsRailTrigger]` ·
@@ -177,6 +177,18 @@ already recorded above for `[dsTooltip]`. The features the card CAN show — col
 selection, pagination — are all still inputs on `ds-table` itself and reach the element unchanged.
 **Nothing that was visible in a card before has stopped being visible**, because the built-in
 export button was the only rendered affordance of the three and a card never pressed it.
+
+**`[dsChartTooltip]` drives the charts' own overlay** (2026-09-14), and it is applied inside our
+chart templates rather than by a consumer: a chart hands it a `ChartTooltipContext` and an origin,
+non-null opens the panel and null closes it, so pointer and keyboard share one path. The
+`components/chart-tooltip` entry point exports the class, so it is reachable, but it is inert
+without a chart's context and origin.
+
+**What the elements route loses is nothing a card can show**, by the argument already recorded above
+for `[dsTooltip]`: the panel is revealed on hover, tap or focus, and a static card has none of the
+three. `ds-chart-tooltip-panel` registers as an element in its own right, so a specimen that wants
+the surface places the panel itself — which is what `.design-sync/docs/ChartTooltipPanel.md` tells
+the design agent to do.
 
 The three panel components they create (`ds-table-columns-panel`, `ds-table-columns-trigger`,
 `ds-table-export-button`) carry `@internal` and are created imperatively through a
