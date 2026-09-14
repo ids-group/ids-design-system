@@ -26,8 +26,7 @@
         "ColumnChartComponent",
         "DonutChartComponent",
         "FunnelChartComponent",
-        "LineChartComponent",
-        "ChartTooltipDirective"
+        "LineChartComponent"
       ],
       "verify": "No code reads a chart's `dataTable`, `emptyText`, `errorText` or `valueFormat` input directly; every read goes through the matching `*Resolved` signal.",
       "note": "The four moved onto the library's internal config resolver, which requires the input to be `T | null` defaulting to `null`: a signal input cannot report whether it was bound, so `null` is what separates \"not set\" from an explicit value. Same shape as `ds-card`'s `elevation` / `padding` and `ds-button`'s `size`."
@@ -58,13 +57,34 @@
       "note": "Each picker gained one input, `panelClass`, so a consumer can name the portaled pane. Subclassing a DS component is unsupported, but a release that only adds can still fail such a build on a name collision, which is why the addition is listed here rather than in the additive notes."
     },
     {
+      "id": "chart-tooltip-directive-gains-detach-scroll-close",
+      "kind": "behavior",
+      "old": "ChartTooltipDirective",
+      "new": null,
+      "surface": "typescript",
+      "action": "Only if you SUBCLASS the internal `ChartTooltipDirective`, which the package root does not export, and declare a member called `detachScrollClose`: rename yours, or add `override` where your member genuinely means the scroll-close teardown.",
+      "appliesWhen": "Only a class extending the internal `ChartTooltipDirective`. It is not exported from the package root — `@ids-group-ltd/ids-design-system/components/chart-tooltip` is the only specifier that reaches it — and a chart that uses it through the five chart components needs nothing.",
+      "pitfall": "The collision is a compile error, not a silent one — TS4114 for a same-named member, TS2416 where the signature differs — so a build that passes has none.",
+      "restore": null,
+      "searchHints": [
+        "detachScrollClose",
+        "ChartTooltipDirective"
+      ],
+      "detect": [
+        "extends ChartTooltipDirective",
+        "ChartTooltipDirective"
+      ],
+      "verify": "No subclass of the internal `ChartTooltipDirective` declares a member named `detachScrollClose` of its own; the app builds with no TS4114 or TS2416 on that class.",
+      "note": "The directive is internal: it tears down its own scroll subscription when the panel closes, which is what the new member holds. Subclassing a DS directive is unsupported, but a release that only adds can still fail such a build on a name collision."
+    },
+    {
       "id": "date-time-picker-panes-carry-dropdown-panel-class",
       "kind": "behavior",
       "old": "DatePickerComponent",
       "new": null,
       "surface": "style",
       "action": "Check any rule of yours written against `.ds-dropdown-panel`: it now also matches the date picker and time picker panes. Narrow it to the picker you meant with that picker’s own pane class.",
-      "appliesWhen": "Only a stylesheet naming `.ds-dropdown-panel`. The DS skin is keyed on a `.dropdown-panel` child that neither picker renders, so our own appearance is unchanged and no template or TypeScript is affected.",
+      "appliesWhen": "Only a stylesheet of yours that targets `.ds-dropdown-panel`. Neither panel changes appearance from the DS skin: the skin styles option rows, option groups and the list, and a calendar and a time column render none of those class names.",
       "pitfall": "Nothing errors and nothing logs — the date or time panel simply picks up a treatment written for an option list, and only a look at the two panels shows it.",
       "restore": null,
       "searchHints": [
@@ -112,18 +132,20 @@
   ],
   "informational": [
     "Every DS surface that used to travel on its way in now fades instead. `ds-overlay-pane` — the select, autocomplete, multi-select, date-picker, time-picker, colour-picker, popover, menu-submenu and tooltip panels — plus `ds-alert`, `ds-banner` and `ds-toast` defaulted to `ds-slide-in`, which offsets the surface and slides it into place; they default to `ds-fade-in` now, at the same duration and easing. `ds-drawer` and `ds-bottom-sheet` are unchanged (`ds-slide-edge-in`), and so is `ds-modal` (`ds-scale-in`). Nothing in your code changes. If you want the travel back it is one declaration at the root — `:root { --ds-overlay-enter-keyframes: ds-slide-in; }` — or per surface, `ds-toast { --ds-toast-enter-keyframes: ds-slide-in; }`.",
-    "A chart mark now arrives by growing from its own baseline rather than by scaling about its centre: a `ds-column-chart` column grows up out of the category axis, a `ds-bar-chart` row grows out from the value axis, and `ds-donut-chart`, `ds-funnel-chart` and `ds-line-chart` marks fade because they have no baseline to grow from. Nothing in your code changes, and `staggerMs` is unaffected.",
+    "A chart mark now arrives by growing from its own baseline rather than by scaling about its centre: a `ds-column-chart` column grows up out of the category axis, a `ds-bar-chart` row grows out from the value axis, and `ds-donut-chart`, `ds-funnel-chart` and `ds-line-chart` marks fade because they have no baseline to grow from. Nothing in your code changes. `staggerMs` still spaces the arrivals on the four charts whose marks arrive one at a time.",
     "The mark cap on `ds-bar-chart` and `ds-column-chart` is 3px, through a new `--ds-chart-mark-cap-radius` with `--ds-bar-chart-cap-radius` and `--ds-column-chart-cap-radius` over it. The bar's end was a full pill (half the track height) and the column's top was `--radius-sm`, so both change shape slightly. Set the hook to your old value if the pill mattered: `ds-bar-chart { --ds-bar-chart-cap-radius: 6px; }`.",
     "`ds-funnel-chart`'s inter-stage gaps and `ds-bar-chart`'s row gap now belong to the marks either side of them, so a pointer between two marks answers for one of them instead of for nothing. Both gaps look exactly as they did; only what the pointer hits changed. A test that asserted a pointer between two bars hits neither will now see the nearer one.",
-    "`ds-line-chart`'s crosshair moved into a group that carries a `translateX`, so it glides between categories instead of jumping. A stylesheet that reached `.category-band` or `.cursor-line` to position them by hand is now positioning them inside that group; the classes themselves are unchanged.",
-    "A chart tooltip closes when the page scrolls and reopens on the next pointer move. It used to stay pinned in space while the chart scrolled away, because CDK's reposition strategy watches `window` and registered `cdkScrollable`s only and misses an app's own `overflow: auto` container.",
+    "`ds-line-chart`'s crosshair moved into a group that carries a `translateX` and is no longer transitioned, so it sits under the pointer immediately instead of easing after it. A stylesheet that reached `.category-band` or `.cursor-line` to position them by hand is now positioning them inside that group; the classes themselves are unchanged. A rule that added its own transition to either will bring the lag back.",
+    "A chart tooltip closes when the page scrolls. `ds-line-chart` reopens it on the next pointer move; the other four reopen when the pointer leaves a mark and enters one again. It used to stay pinned in space while the chart scrolled away, because CDK's reposition strategy watches `window` and registered `cdkScrollable`s only and misses an app's own `overflow: auto` container.",
     "`ds-chart-legend`'s checkboxes were painting the focus ring at all times rather than under `:focus-visible`, so every legend row looked focused. The component's own rule is gone — the library's global `:where(:focus-visible)` already rings them — and nothing in your code changes. A screenshot test of a chart legend will differ.",
     "The dropdown panel gained `--ds-dropdown-panel-border-color` and `--ds-dropdown-panel-shadow`, and a dropdown option gained `--ds-option-weight`, `--ds-option-font-size`, `--ds-option-line-height` and `--ds-option-font-family`. Each defaults to the value that was hardcoded before, and each forwards from the host onto the portaled pane like the panel tokens already there, so one picker can be retyped without a global rule (delete list: deep-option-type-rule).",
     "`ds-modal` gained `--ds-modal-title-font-family`, defaulting to `--font-heading`. It is the one title property that had no hook, which is why a display face needed the doubled `.title.title` selector (delete list: modal-title-doubled-class).",
-    "`ds-table`'s pagination footer insets from `--ds-table-cell-pad-left` and `--ds-table-cell-pad-right` when they are set, falling back to `--ds-table-cell-pad-x` as before. A table using only `-x` is unchanged; one with a per-side gutter gets a footer that lines up with column one instead of sitting at the default (delete list: table-pagination-footer-local-inset).",
-    "Fading the other marks on hover is now the `dimOthers` input rather than something `interactive` brought with it, and it is OFF by default on all five charts. The fade costs the separation between the faded marks — measured 2026-09-13, the worst pair of three dimmed series falls from dE 14.8 at full opacity to 2.1 at the default dim opacity — so it is a trade to make deliberately. A chart that had it back: `<ds-donut-chart interactive dimOthers …>`.",
+    "`ds-table`'s pagination footer insets from `--ds-table-cell-pad-left` and `--ds-table-cell-pad-right` when they are set, falling back to `--ds-table-cell-pad-x` as before. A table using only `-x` is unchanged; one with a per-side gutter gets a footer that lines up with column one instead of sitting at the default (delete list: table-pagination-footer-local-inset). One case is not closed: `density=\"compact\"` retunes the cells' padding on the table element and the footer is that element's sibling, so a compact table setting no `--ds-table-cell-pad-*` has 12px cells under a 16px footer.",
+    "Fading the marks that are not singled out is now the `dimOthers` input rather than something `interactive` brought with it, and it is OFF by default on all five charts. On `ds-bar-chart`, `ds-column-chart`, `ds-donut-chart` and `ds-funnel-chart` the pointer or focus picks the mark; `ds-line-chart` has no mark between two readings, so its fade follows the legend's highlight. The fade costs the separation between the faded marks — measured 2026-09-13, the worst pair of three dimmed series falls from dE 14.8 at full opacity to 2.1 at the default dim opacity — so it is a trade to make deliberately. A chart that had it back: `<ds-donut-chart interactive dimOthers …>`.",
     "Every chart holds the height of its plot while it shows a message — empty data, an error, or a legend that switched the last series off. They used to shrink to a line of text. A layout that relied on a chart collapsing in those states will now see a reserved box; the height comes from the chart's own plot-height token, so `--ds-line-chart-plot-height` and its siblings size it.",
-    "A chart tooltip's default content grew a second line per reading, for what the chart does not already print beside the mark: share of the total and rank on `ds-bar-chart`, `ds-column-chart` and `ds-donut-chart`, and the drop into the stage on `ds-funnel-chart`. `ChartTooltipEntry` takes an optional `detail` for it. A projected `#dsChartTooltip` template is unaffected — it replaces the panel's contents entirely."
+    "A chart tooltip's default content grew a second line per reading, for what the chart does not already print beside the mark: share of the total and rank on `ds-bar-chart`, `ds-column-chart` and `ds-donut-chart`, and the drop into the stage on `ds-funnel-chart`. `ChartTooltipEntry` takes an optional `detail` for it. A projected `#dsChartTooltip` template is unaffected — it replaces the panel's contents entirely.",
+    "Six dropdown-panel hooks now forward from the host onto the portaled pane per instance — `--ds-dropdown-panel-border-color`, `--ds-dropdown-panel-shadow`, `--ds-option-weight`, `--ds-option-font-size`, `--ds-option-line-height` and `--ds-option-font-family`. Seven older ones still do NOT, and still need a global rule to reach a pane: `--ds-dropdown-panel-bg-color`, `--ds-dropdown-panel-minw`, `--ds-dropdown-panel-maxw`, `--ds-option-selected-bg-color`, `--ds-option-selected-label-color`, `--ds-option-selected-bg-color-hover` and `--ds-option-check-color`.",
+    "`staggerMs` on `ds-donut-chart` has no effect. The ring fades as one object — arcs share their edges, and fading them one at a time shows the background through every seam — so there is nothing for a per-mark step to stagger. The input stays for parity with the other four charts."
   ],
   "deleteList": [
     {
@@ -150,8 +172,8 @@
       "find": [
         ".pagination-footer"
       ],
-      "why": "the footer resolves the same per-side chain the cells do, so it lines up with column one on its own",
-      "replaceWith": "nothing, unless the footer is deliberately meant to disagree with the columns"
+      "why": "the footer resolves the same per-side chain the cells do, so it lines up with column one on its own — except under `density=\"compact\"`, where the density retunes the cells on the table element and the footer is that element's sibling",
+      "replaceWith": "nothing on a default-density table; on a compact one either set `--ds-table-cell-pad-x: var(--space-3)` on the table or keep the rule, because the footer is otherwise 4px wider than the cells"
     }
   ]
 }

@@ -20,8 +20,9 @@
   route a consumer stylesheet has to ONE instance of it. `panelClass` takes a string or an array.
 
   Two panes gain `ds-dropdown-panel` that did not carry it: the date picker's and the time picker's.
-  Our own skin is keyed on a `.dropdown-panel` child that neither renders, so neither changes
-  appearance — but a rule of yours written against `.ds-dropdown-panel` now matches them too.
+  Neither changes appearance, because neither renders any of the class names the skin styles — no
+  option rows, no option groups, no list. A rule of yours written against `.ds-dropdown-panel` now
+  matches them, though, and so do the panel's custom properties.
 
   `SelectComponent`, `MultiSelectComponent`, `AutocompleteComponent`, `ColorPickerComponent`,
   `DatePickerComponent` and `TimePickerComponent` each grow by this one input. A subclass of any of
@@ -31,9 +32,12 @@
 - **The dropdown panel's border and shadow, and the option's type, read `--ds-*` hooks.**
   `--ds-dropdown-panel-border-color` and `--ds-dropdown-panel-shadow` join the five box hooks the
   panel already had; `--ds-option-weight`, `--ds-option-font-size`, `--ds-option-line-height` and
-  `--ds-option-font-family` replace the literal `font` shorthand on a row. All six forward per
-  instance like the rest of the panel tokens, so they reach one pane from one host and need no
-  global rule. Defaults are today's values, so an untouched theme is unchanged.
+  `--ds-option-font-family` fill the row's `font` shorthand, which carried four literal values. All
+  six forward per instance, so they reach one pane from one host and need no global rule. Not every panel hook does:
+  `--ds-dropdown-panel-bg-color`, `-minw`, `-maxw`, `--ds-option-selected-bg-color`,
+  `--ds-option-selected-label-color`, `--ds-option-selected-bg-color-hover` and
+  `--ds-option-check-color` still reach a portaled pane only from a global rule. Defaults are
+  today's values, so an untouched theme is unchanged.
 
 - **`--ds-modal-title-font-family`.** The title had weight, size and colour hooks and read
   `--font-heading` literally, so a display face meant `ds-modal .title.title { font-family: … }` —
@@ -65,10 +69,12 @@
   `ChartDataTable` and `ChartValueFormat` are exported from the package root.
 
   The member surface of `BarChartComponent`, `ColumnChartComponent`, `DonutChartComponent`,
-  `FunnelChartComponent` and `LineChartComponent` grows by these readbacks, and so does
-  `ChartTooltipDirective`, which is internal — the charts apply it themselves and the package root
-  does not export it. A subclass of any of the five inherits the new members; a class that
-  IMPLEMENTS one by hand has four more to satisfy.
+  `FunnelChartComponent` and `LineChartComponent` grows by these four readbacks and by `dimOthers`.
+  `ColumnChartComponent` also gains `onMarkEnter` and `tooltipAnchor`, `FunnelChartComponent` gains
+  `hitGapUnits`, and `LineChartComponent` gains `cursorBottomY`, `readingAnchor` and
+  `tooltipAnchor`. `DonutChartComponent` LOSES `markStagger`. A subclass inherits the new members
+  and stops building if it declares one of those names without `override`; a subclass that called
+  `markStagger` no longer compiles.
 
 - **The tooltip is pinned to the mark, not to the cursor, and both charts that had a say now take
   an option.** `ds-line-chart` gains `tooltipAnchor`: `'point'`, the default, pins the panel over
@@ -81,6 +87,10 @@
   <ds-line-chart tooltipAnchor="pointer" [series]="series" [categories]="months" />
   <ds-column-chart tooltipAnchor="cell" [data]="points" />
   ```
+
+  The internal `ChartActiveMark`, which the package root does not export, takes an optional third
+  argument on `enter` to name the element inside the hit box that the panel points at. An
+  implementation that omits it still satisfies the interface.
 
 ### Changed
 
@@ -124,27 +134,32 @@
   `ds-funnel-chart` gets the drop into the stage, which the shape cannot show. A projected
   `#dsChartTooltip` template still replaces the lot.
 
-- **`ds-line-chart`'s crosshair stops travelling.** It was eased into place, which meant it arrived
-  after the cursor and crossed readings it had never been over — and on the first hover it flew in
-  from the plot's origin. It is where the pointer is, immediately.
+- **`ds-line-chart`'s crosshair stops travelling, and fades on the way in and out instead.** It was
+  eased into place, which meant it arrived after the cursor and crossed readings it had never been
+  over — and on the first hover it flew in from the plot's origin. It is where the pointer is,
+  immediately. The band and the cursor line are one group, so the move is a single transform rather
+  than four attribute writes.
 
 - **`ds-line-chart`'s crosshair covers both plots under `yAxisMode="stacked"`.** It stopped at the
   upper plot's baseline, so the lower plot — same category, same pointer — had nothing marked at
-  all. Measured on the docs card: the band was 121 of 320 viewBox units and is now 276.
+  all.
 
 - **`ds-donut-chart` fades as one ring rather than slice by slice.** Arcs share their edges, and
   two semi-transparent shapes butting up along one let the background through the seam — which
   reads as the slice proportions shifting slightly as the fade ends. Compositing the ring first and
-  fading the result cannot do that. Measured: mid-animation the ring is at opacity 0.66 and every
-  slice at 1.
+  fading the result cannot do that. `staggerMs` therefore has no effect on this chart — one object
+  arrives, not five — and the input stays only for parity with the other four.
 
 - **A chart keeps its height in every state.** An empty `data`, a failed request, or a legend that
   switched the last series off used to shrink the chart to a line of text, which drags the page up
   under the reader at exactly the moment they are being told something. The message now stands in a
   box the size of the plot it replaces.
 
-- **Dimming the other marks is a separate opt-in, and it is off.** `dimOthers` on all five charts
-  fades every mark but the hovered or focused one; it used to ride along with `interactive`. It is
+- **Dimming the other marks is a separate opt-in, and it is off.** `dimOthers` fades the marks that
+  are not singled out: on `ds-bar-chart`, `ds-column-chart`, `ds-donut-chart` and `ds-funnel-chart`
+  that is every mark but the hovered or focused one, and on `ds-line-chart` — which has no mark
+  between two readings to hover — it follows the legend's highlight. It used to ride along with
+  `interactive`. It is
   off by default because the fade costs the separation BETWEEN the faded marks — measured
   2026-09-13, the worst pair of three dimmed series falls from dE 14.8 at full opacity to 2.1 at
   `--ds-chart-dim-opacity`'s default — so it buys loudness for one mark and pays for it with the
@@ -162,17 +177,15 @@
   covered the plot, the plot took a `pointerleave`, the chart cleared its hover, the panel closed,
   the pointer landed on the plot again, and the whole thing flickered for as long as the cursor sat
   there. The pane is `pointer-events: none` now; `pointer-events` on the panel alone never reached
-  it. Measured on `ds-line-chart`: sweeping the pointer across the panel's own area gives zero
-  open/close flips, where it used to flip continuously.
-
-  A scroll-dismissed panel also re-opens on the next hover of the SAME category. It was suppressed
-  until the pointer visited a different band, which left a dead band after every scroll.
+  it.
 
 - **`ds-column-chart` answers the pointer near its column, not across the whole category slot.** A
   column is capped at `--ds-column-chart-column-max-width` while its slot is a `1fr` share of the
   plot, so on a wide chart the hover reached 50px of empty space either side of the mark. The
-  target is the column's own width plus one gap — half each side, the rule the funnel's bands
-  already follow — for the full height of the plot, which is what keeps a short column reachable.
+  target is `--ds-column-chart-column-max-width` plus one `--ds-column-chart-column-gap` — half the
+  gap each side, the rule the funnel's bands already follow — for the full height of the plot,
+  which is what keeps a short column reachable. It never exceeds the slot, and where the column is
+  narrower than its cap the target is wider than the column itself.
   The category label under it still counts.
 
 - **The legend's checkboxes are not permanently ringed.** `ds-chart-legend` applied the focus ring
@@ -183,17 +196,19 @@
 - **A mark's colour change eases instead of jumping,** and a dimmed line fades again. Each mark
   animated exactly one property, because a second `transition` on the same selector REPLACES the
   first rather than adding to it: `ds-line-chart`'s line kept `stroke-width` and lost the dim fade,
-  its marker kept `r` and lost the same, and no mark eased its paint at all. Every mark now carries
-  one declaration naming opacity, its geometry and its colour — so recolouring a row, pinning a
-  palette slot, or adding a funnel stage and re-spreading the ramp all ease.
+  its marker kept `r` and lost the same, and no mark eased its paint at all. Opacity, geometry and
+  colour now travel in ONE declaration wherever they share a selector — so recolouring a row,
+  pinning a palette slot, or adding a funnel stage and re-spreading the ramp all ease. If you
+  declare your own `transition` on a chart mark, name every property it was already easing.
 
 - **A chart tooltip closes when the page scrolls.** CDK's reposition strategy watches `window` and
   registered `cdkScrollable`s only, so an app's own `overflow: auto` container left the panel
-  pinned in space while the chart scrolled out from under it. It reopens on the next pointer move.
+  pinned in space while the chart scrolled out from under it. `ds-line-chart` reopens on the next
+  pointer move; the other four reopen when the pointer leaves a mark and enters one again.
 
-- **`ds-line-chart`'s crosshair glides between categories instead of jumping,** and fades on the
-  way in and out. The band and the cursor line are one group carrying a `translateX`, so the move
-  is a transform rather than four attribute writes.
+  The internal `ChartTooltipDirective`, which the package root does not export, grows by one
+  member, `detachScrollClose`. `@ids-group-ltd/ids-design-system/components/chart-tooltip` is the
+  only specifier that reaches it, so this matters to a subclass of it and to nothing else.
 
 ### Fixed
 
@@ -202,6 +217,11 @@
   `-right` separately. A table asking for a flush first column — `--ds-table-cell-pad-left: 0`
   with `-right` set and `-x` unset — got a footer at the 16px default while the column sat at 0.
   The footer now walks the same per-side chain; `-x` still works as the shorthand for both.
+
+  One gap is left: `density="compact"` retunes the cells' padding on the table element itself, and
+  the footer is that element's sibling, so a compact table with no `--ds-table-cell-pad-*` of its
+  own still has 12px cells under a 16px footer. Set `--ds-table-cell-pad-x: var(--space-3)` beside
+  `density="compact"`, or keep a local rule on the footer, until that is closed.
 
 - **A role token set on an app shell no longer outranks your rule on a portaled panel.** A panel
   sits in `document.body`, so the component copies the roles it needs onto the pane as an inline
@@ -221,7 +241,7 @@
 | --- | --- | --- |
 | `.ds-overlay-pane .dropdown-panel .option` — a deep rule retyping dropdown rows | the row's weight, size, line-height and family are hooks that forward per instance | `--ds-option-weight`, `--ds-option-font-size`, `--ds-option-line-height`, `--ds-option-font-family` |
 | `ds-modal .title.title` — the class doubled only to set `font-family` | the title reads a family hook | `--ds-modal-title-font-family` |
-| `.pagination-footer` — a local rule re-insetting the table's footer to match a per-side gutter | the footer resolves the same left/right chain the cells do | nothing — keep the rule only if the footer is meant to disagree with the columns |
+| `.pagination-footer` — a local rule re-insetting the table's footer to match a per-side gutter | the footer resolves the same left/right chain the cells do | nothing, UNLESS the table is `density="compact"` and sets no `--ds-table-cell-pad-*` — there the footer is still 4px wider than the cells and the rule is still doing work |
 
 ## 0.13.0 — 2026-09-14
 
@@ -391,9 +411,10 @@
   screen together. The update phase — a mark changing size — is unchanged and still runs on
   `--ds-motion-chart-mark-duration`.
 
-  `staggerMs` spaces the arrivals out on all five charts. `0` is the default and means no stagger;
-  `40` is the documented step, and the total delay is capped at 300ms so a hundred-mark series does
-  not take three seconds to appear. Measured on the docs card at `staggerMs="40"`: five columns
+  `staggerMs` spaces the arrivals out. `0` is the default and means no stagger; `40` is the
+  documented step, and the total delay is capped at 300ms so a hundred-mark series does not take
+  three seconds to appear. `ds-donut-chart` takes the input for parity and ignores it: a ring
+  arrives as one object, so there is nothing to stagger. Measured on the docs card at `staggerMs="40"`: five columns
   resolve to 0, 40, 80, 120 and 160ms.
 
   ```html
