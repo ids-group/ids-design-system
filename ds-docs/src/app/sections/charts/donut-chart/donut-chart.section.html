@@ -216,8 +216,8 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       interactive
-    </code> turns on the pointer cursor and
-    makes each slice a control;
+    </code> turns on the pointer cursor
+    and makes each slice a control;
     <code class="t-mono-inline">
       sliceClicked
     </code> fires whether or not it is
@@ -229,13 +229,10 @@
     <code class="t-mono-inline">
       dimOthers
     </code> fades the slices that are not
-    under the pointer, and
-    <code class="t-mono-inline">
-      staggerMs
-    </code> is accepted for parity with the
-    other four charts but has no effect here: the ring arrives as one object,
-    because arcs share their edges and fading them one at a time shows the
-    background through every seam.
+    under the pointer, and <code class="t-mono-inline"> staggerMs </code> is
+    accepted for parity with the other four charts but has no effect here: the
+    ring arrives as one object, because arcs share their edges and fading them
+    one at a time shows the background through every seam.
   </p>
 
   <div class="states states--cols-2">
@@ -268,6 +265,35 @@
   <p class="block-desc t-s">
     Last clicked: <code class="t-mono-inline">{{ lastSlice() || '—' }}</code>
   </p>
+
+  <h3 class="block-title t-h4">
+    Pinning a slice
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      pinOnClick
+    </code> holds the clicked slice and
+    its tooltip in place, so the reading stays while you look away from the
+    ring. With <code class="t-mono-inline"> dimOthers </code> beside it the rest
+    of the ring stays down too. A pushpin marks the held arc and an
+    <code class="t-mono-inline">
+      Unpin
+    </code> button appears above the plot;
+    <kbd>
+      Esc
+    </kbd>, a press outside, or clicking the slice again releases it.
+  </p>
+
+  <ds-donut-chart
+    interactive
+    pinOnClick
+    dimOthers
+    dataTable="none"
+    caption="Click a slice to hold it"
+    [data]="pinSlices()" />
+
+  <docs-chart-data-editor [(rows)]="pinSlices" />
 
   <h3 class="block-title t-h4">
     Palette slots

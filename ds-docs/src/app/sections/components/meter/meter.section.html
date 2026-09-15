@@ -6,12 +6,16 @@
     One track and one fill, for a measurement inside a table cell.
   </span>
 
-  <h3 class="block-title t-h4">In a table cell</h3>
+  <h3 class="block-title t-h4">
+    In a table cell
+  </h3>
 
   <p class="block-desc t-s">
     A chart is a block with a caption, a legend and an annex table; in a 60px
     cell that chrome is the whole cell. This is the mark on its own.
-    <code class="t-mono-inline"> max </code> is the ceiling the column is read
+    <code class="t-mono-inline">
+      max
+    </code> is the ceiling the column is read
     against — usually the column's own largest value, so the longest bar fills
     its track and the rest are its share.
   </p>
@@ -29,37 +33,59 @@
           [value]="asRow(row).rate"
           [max]="rateCeiling" />
 
-        <span class="t-mono-inline"> {{ asRow(row).rate }}% </span>
+        <span class="t-mono-inline">
+          {{ asRow(row).rate }}%
+        </span>
       </span>
     </ng-template>
   </ds-table>
 
-  <h3 class="block-title t-h4">What it is not</h3>
+  <h3 class="block-title t-h4">
+    What it is not
+  </h3>
 
   <p class="block-desc t-s">
     It is not
-    <code class="t-mono-inline"> ds-progress </code>, which reports how far a
+    <code class="t-mono-inline">
+      ds-progress
+    </code>, which reports how far a
     task has got and says so with
-    <code class="t-mono-inline"> role="progressbar" </code>. A rate, a score or
+    <code class="t-mono-inline">
+      role="progressbar"
+    </code>. A rate, a score or
     a count against a ceiling is a measurement: it has no beginning and no
     completion, and a table of two hundred of them would announce two hundred
     progress bars. So the mark is hidden from assistive technology unless
-    <code class="t-mono-inline"> ariaLabel </code> names it — set it where the
+    <code class="t-mono-inline">
+      ariaLabel
+    </code> names it — set it where the
     bar is the only place the number appears, and leave it unset where the cell
     prints the figure beside it.
   </p>
 
-  <h3 class="block-title t-h4">Colour</h3>
+  <h3 class="block-title t-h4">
+    Colour
+  </h3>
 
   <p class="block-desc t-s">
     The fill takes
-    <code class="t-mono-inline"> --ds-meter-fill-color </code>, so a column is
+    <code class="t-mono-inline">
+      --ds-meter-fill-color
+    </code>, so a column is
     coloured once in a stylesheet rather than once per row. The
-    <code class="t-mono-inline"> color </code> input overrides it where the
+    <code class="t-mono-inline">
+      color
+    </code> input overrides it where the
     colour carries meaning — a threshold, a status.
-    <code class="t-mono-inline"> --ds-meter-height </code>,
-    <code class="t-mono-inline"> --ds-meter-track-color </code> and
-    <code class="t-mono-inline"> --ds-meter-radius </code> set the rest.
+    <code class="t-mono-inline">
+      --ds-meter-height
+    </code>,
+    <code class="t-mono-inline">
+      --ds-meter-track-color
+    </code> and
+    <code class="t-mono-inline">
+      --ds-meter-radius
+    </code> set the rest.
   </p>
 
   <div class="meter-row">
@@ -74,13 +100,19 @@
       [value]="18" />
   </div>
 
-  <h3 class="block-title t-h4">Edge cases</h3>
+  <h3 class="block-title t-h4">
+    Edge cases
+  </h3>
 
   <p class="block-desc t-s">
     A value past
-    <code class="t-mono-inline"> max </code> fills the track rather than
+    <code class="t-mono-inline">
+      max
+    </code> fills the track rather than
     overflowing it, a negative one draws nothing, and a
-    <code class="t-mono-inline"> max </code> of zero or less falls back to 100 —
+    <code class="t-mono-inline">
+      max
+    </code> of zero or less falls back to 100 —
     a scale with no width has no fraction to draw.
   </p>
 
