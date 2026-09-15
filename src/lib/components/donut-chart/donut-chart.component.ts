@@ -179,10 +179,14 @@ export class DonutChartComponent {
 
   protected readonly activeMark = chartActiveMark();
 
-  protected onMarkClick(payload: DonutChartSlice): void {
+  protected onMarkClick(
+    payload: DonutChartSlice,
+    index: number,
+    event: Event,
+  ): void {
     this.sliceClicked.emit(payload);
     if (this.pinOnClick()) {
-      this.activeMark.pin();
+      this.activeMark.pin(index, event);
     }
   }
   /** One tab stop per chart, not one per slice: WCAG 2.1.1's Understanding is explicit that not

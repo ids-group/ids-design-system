@@ -170,10 +170,14 @@ export class FunnelChartComponent {
 
   protected readonly activeMark = chartActiveMark();
 
-  protected onMarkClick(payload: FunnelChartStage): void {
+  protected onMarkClick(
+    payload: FunnelChartStage,
+    index: number,
+    event: Event,
+  ): void {
     this.stageClicked.emit(payload);
     if (this.pinOnClick()) {
-      this.activeMark.pin();
+      this.activeMark.pin(index, event);
     }
   }
   /** One tab stop per chart, not one per mark: WCAG 2.1.1's Understanding is explicit that not

@@ -83,6 +83,12 @@ export class ChartTooltipDirective {
     $implicit: ChartTooltipContext;
   }> | null>(null);
 
+  /** Extra clearance between the mark and the panel, on top of the pointer default. A chart that
+   *  prints something ABOVE its mark — a column with its value on top — needs the panel to clear
+   *  that text as well as the mark, or the two overlap. Ignored for touch, where the gap is already
+   *  sized for a fingertip. */
+  readonly dsChartTooltipExtraGap = input(0);
+
   private overlayRef: OverlayRef | null = null;
   private panelRef: ComponentRef<ChartTooltipPanelComponent> | null = null;
   private detachScrollClose: (() => void) | null = null;
@@ -131,7 +137,9 @@ export class ChartTooltipDirective {
   }
 
   private strategyFor(origin: ChartTooltipOrigin) {
-    const gap = coarsePointer() ? TOUCH_GAP_PX : POINTER_GAP_PX;
+    const gap = coarsePointer()
+      ? TOUCH_GAP_PX
+      : POINTER_GAP_PX + this.dsChartTooltipExtraGap();
 
     return this.overlay
       .position()

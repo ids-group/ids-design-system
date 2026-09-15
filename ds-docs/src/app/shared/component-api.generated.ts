@@ -5813,7 +5813,16 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "0",
         "required": false,
-        "description": "Progress 0–100; clamped, and ignored while `indeterminate`."
+        "description": "Progress in units of `max`, so 0–100 by default; clamped, and ignored while `indeterminate`."
+      },
+      {
+        "name": "max",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "100",
+        "required": false,
+        "description": "The full scale `value` and `target` are read against. Left at 100 they are percentages, which is why nothing existing changes. Set it to the real total — `[value]=\"37\" [max]=\"80\"` — and the accessible name carries \"37 of 80\" rather than the 46% a caller would otherwise have to compute and a screen reader would read instead. Zero or less falls back to 100, because a scale with no width has no fraction to draw."
       },
       {
         "name": "variant",
@@ -5854,7 +5863,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "A second point on the same 0–100 scale, drawn as a hairline across the track — a goal or a baseline to read `value` against. Clamped like `value`, ignored while `indeterminate`, and unset draws nothing."
+        "description": "A second point on the same scale as `value`, drawn as a hairline across the track — a goal or a baseline to read `value` against. Clamped like `value`, ignored while `indeterminate`, and unset draws nothing."
       }
     ],
     "outputs": []

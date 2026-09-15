@@ -23,6 +23,7 @@ import {
   staggerDelay,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
+import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 import type {
   ChartDataTable,
@@ -44,7 +45,7 @@ const defaultValueFormat = (value: number) => formatValue(value);
 @Component({
   selector: 'ds-bar-chart',
   standalone: true,
-  imports: [SkeletonComponent, ChartTooltipDirective],
+  imports: [SkeletonComponent, ChartTooltipDirective, IconComponent],
   templateUrl: './bar-chart.component.html',
   styleUrl: './bar-chart.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -163,10 +164,14 @@ export class BarChartComponent {
 
   protected readonly activeMark = chartActiveMark();
 
-  protected onMarkClick(payload: BarChartRow): void {
+  protected onMarkClick(
+    payload: BarChartRow,
+    index: number,
+    event: Event,
+  ): void {
     this.rowClicked.emit(payload);
     if (this.pinOnClick()) {
-      this.activeMark.pin();
+      this.activeMark.pin(index, event);
     }
   }
   /** One tab stop per chart, not one per mark: WCAG 2.1.1's Understanding is explicit that not

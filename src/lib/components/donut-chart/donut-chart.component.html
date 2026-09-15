@@ -92,7 +92,7 @@
               (focus)="onMarkFocus(index, $event)"
               (blur)="activeMark.leave()"
               (keydown)="onMarkNavigation($event, index, '.ring-svg')"
-              (click)="onMarkClick(entry.slice)"
+              (click)="onMarkClick(entry.slice, index, $event)"
               (keydown.enter)="onSliceKey(entry.slice, $event)"
               (keydown.space)="onSliceKey(entry.slice, $event)">
             </path>
@@ -129,7 +129,7 @@
               (focus)="onMarkFocus(index, $event)"
               (blur)="activeMark.leave()"
               (keydown)="onMarkNavigation($event, index, '.legend')"
-              (click)="onMarkClick(entry.slice)"
+              (click)="onMarkClick(entry.slice, index, $event)"
               (keydown.enter)="onSliceKey(entry.slice, $event)"
               (keydown.space)="onSliceKey(entry.slice, $event)">
               <span

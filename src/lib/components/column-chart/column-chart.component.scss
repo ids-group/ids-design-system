@@ -132,6 +132,7 @@ figcaption {
 // The cap, not the percentage, is what keeps this reading as a chart: at five categories 80% of
 // the cell is a slab wider than its own label, and the eye stops seeing a series.
 .bar {
+  position: relative;
   inline-size: var(--_column-chart-column-width);
   max-inline-size: var(--_column-chart-column-max-width);
   border-start-start-radius: var(--_column-chart-cap-radius);
@@ -167,3 +168,17 @@ figcaption {
 }
 
 @include chart-frame.forced-colors;
+
+/* The pin says the mark is held, on the mark itself rather than only in the panel — the panel can
+   be anywhere on screen, and the reader needs to know WHICH mark they froze. White with a dark halo
+   so it carries on every series colour the palette holds. */
+.pin-marker {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  inline-size: 14px;
+  block-size: 14px;
+  color: var(--ds-chart-focus-halo-color);
+  filter: drop-shadow(0 0 1px var(--ds-chart-focus-ring-color));
+  pointer-events: none;
+}

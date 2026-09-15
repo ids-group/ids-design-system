@@ -26,6 +26,7 @@ import {
   tickValues,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
+import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 import type {
   ChartDataTable,
@@ -47,7 +48,7 @@ const defaultValueFormat = (value: number) => formatValue(value);
 @Component({
   selector: 'ds-column-chart',
   standalone: true,
-  imports: [SkeletonComponent, ChartTooltipDirective],
+  imports: [SkeletonComponent, ChartTooltipDirective, IconComponent],
   templateUrl: './column-chart.component.html',
   styleUrl: './column-chart.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -168,12 +169,26 @@ export class ColumnChartComponent {
    *  top of the plot whatever the column's value. */
   readonly tooltipAnchor = input<'mark' | 'cell'>('mark');
 
+  /** The value is printed ABOVE the column, so a panel anchored to the column alone opens on top
+   *  of that number. One text line of clearance puts it above both. */
+  protected readonly valueClearance = computed(() =>
+    this.showValues() ? 18 : 0,
+  );
+
   protected readonly activeMark = chartActiveMark();
 
-  protected onMarkClick(payload: ColumnChartPoint): void {
+  protected onMarkClick(
+    payload: ColumnChartPoint,
+    index: number,
+    event: Event,
+  ): void {
     this.pointClicked.emit(payload);
     if (this.pinOnClick()) {
-      this.activeMark.pin();
+      this.activeMark.pin(
+        index,
+        event,
+        this.tooltipAnchor() === 'mark' ? '.bar' : undefined,
+      );
     }
   }
 

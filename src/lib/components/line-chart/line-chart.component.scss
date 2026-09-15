@@ -7,6 +7,7 @@
 @include chart-motion.fades-in('.series-area');
 @include chart-motion.fades-in('.series-marker');
 @include chart-frame.chart-frame;
+@include chart-frame.no-bounding-box-focus('.series-marker');
 @include chart-data-table.chart-data-table;
 
 

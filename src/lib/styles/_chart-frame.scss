@@ -1,3 +1,5 @@
+@use 'focus' as focus;
+
 // The box a chart draws around itself. All five draw the same one, so the rules live here.
 //
 // On by default, which is unusual for this library: most components resist owning chrome. A chart
@@ -28,6 +30,20 @@
   paint-order: stroke;
   filter: drop-shadow(0 0 1px var(--ds-chart-focus-halo-color))
     drop-shadow(0 0 1px var(--ds-chart-focus-halo-color));
+}
+
+// A CLICK focuses an SVG shape in Chromium even with no `tabindex` on it, and `:focus-visible` is
+// false for that focus — so a rule keyed on `:focus-visible` never fires and the user-agent paints
+// its own outline around the BOUNDING BOX. On a ring or a funnel band that is a rectangle standing
+// off the shape, which reads as a selection nobody asked for.
+//
+// Keyed on `:focus` so it catches the pointer case too. The keyboard indicator is unaffected:
+// `drawn-focus-ring` under `:focus-visible` still paints, and `own-indicator` keeps the outline
+// under forced colours, where `stroke` is not remapped and the outline is all there is.
+@mixin no-bounding-box-focus($mark) {
+  #{$mark}:focus {
+    @include focus.own-indicator;
+  }
 }
 
 // `fill` and `stroke` are NOT remapped by forced colours: the chart keeps every series colour and

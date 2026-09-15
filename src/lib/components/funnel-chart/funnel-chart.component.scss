@@ -9,6 +9,7 @@
 // The stage table's colour chips name the bands, so they arrive with them.
 @include chart-motion.fades-in('.swatch');
 @include chart-frame.chart-frame;
+@include chart-frame.no-bounding-box-focus('.stage');
 @include chart-data-table.chart-data-table;
 
 

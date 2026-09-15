@@ -50,7 +50,7 @@
           (focus)="onMarkFocus(index, $event)"
           (blur)="activeMark.leave()"
           (keydown)="onMarkNavigation($event, index)"
-          (click)="onMarkClick(entry.row)"
+          (click)="onMarkClick(entry.row, index, $event)"
           (keydown.enter)="onRowKey(entry.row, $event)"
           (keydown.space)="onRowKey(entry.row, $event)">
           <span class="label">
@@ -73,6 +73,12 @@
               animate.enter="mark-enter"
               [style.width.%]="entry.widthPercent"
               [style.background]="entry.color">
+              @if (activeMark.pinned() && activeMark.index() === index) {
+                <ds-icon
+                  class="pin-marker"
+                  name="pin"
+                  [size]="14" />
+              }
             </span>
           </span>
         </div>

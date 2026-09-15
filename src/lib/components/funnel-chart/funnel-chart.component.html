@@ -61,7 +61,7 @@
             (focus)="onMarkFocus(index, $event)"
             (blur)="activeMark.leave()"
             (keydown)="onMarkNavigation($event, index)"
-            (click)="onMarkClick(entry.stage)"
+            (click)="onMarkClick(entry.stage, index, $event)"
             (keydown.enter)="onStageKey(entry.stage, $event)"
             (keydown.space)="onStageKey(entry.stage, $event)">
           </polygon>

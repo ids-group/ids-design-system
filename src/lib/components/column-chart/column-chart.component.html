@@ -52,6 +52,7 @@
           class="columns"
           [class.dims-others]="dimOthers()"
           [dsChartTooltip]="tooltipContext()"
+          [dsChartTooltipExtraGap]="valueClearance()"
           [dsChartTooltipOrigin]="activeMark.origin()"
           [dsChartTooltipTemplate]="tooltipTemplate() ?? null">
           @for (entry of columns(); track entry.key; let index = $index) {
@@ -72,7 +73,7 @@
               (focus)="onMarkFocus(index, $event)"
               (blur)="activeMark.leave()"
               (keydown)="onMarkNavigation($event, index)"
-              (click)="onMarkClick(entry.point)"
+              (click)="onMarkClick(entry.point, index, $event)"
               (keydown.enter)="onPointKey(entry.point, $event)"
               (keydown.space)="onPointKey(entry.point, $event)">
               <span class="plot-cell">
@@ -87,6 +88,12 @@
                   animate.enter="mark-enter"
                   [style.height.%]="entry.heightPercent"
                   [style.background]="entry.color">
+                  @if (activeMark.pinned() && activeMark.index() === index) {
+                    <ds-icon
+                      class="pin-marker"
+                      name="pin"
+                      [size]="14" />
+                  }
                 </span>
               </span>
 
