@@ -2,6 +2,28 @@
 
 ### Added
 
+- **`ds-line-chart` takes `annotations`, so a reading can be labelled without a pointer.** The
+  chart had tooltips and nothing else, which leaves a peak unreadable in a screenshot, a printed
+  page or a slide. An annotation names a `categoryIndex`, a `label` and optionally the `seriesId`
+  it belongs to — left out, the first plotted series.
+
+  ```html
+  <ds-line-chart
+    [categories]="months"
+    [series]="series"
+    [annotations]="[{ categoryIndex: 5, label: 'Peak' }]" />
+  ```
+
+  It sits above the reading, below it where the plot has no room — a peak is at the top, which is
+  exactly where a label clamped upward lands on its own marker — and anchors to its own edge within
+  48 view units of one rather than hanging outside the viewBox. A label whose series is hidden or
+  whose reading is `null` draws nothing, so a legend toggle takes its annotations with it.
+
+  It is drawn with a halo rather than a box (`paint-order: stroke`), so it survives crossing the
+  line and a gridline; `--ds-line-chart-annotation-color`, `-font-size`, `-weight`, `-halo-color`
+  and `-halo-width` set its look. Marked `aria-hidden`: the annex table already carries every
+  reading, and repeating one in the plot makes a screen reader say it twice.
+
 - **`ds-progress` takes a `target`, drawn as a hairline across the track.** A second point on the
   same 0–100 scale, so a bar reads actual against a goal or a baseline in one glance instead of
   standing alone. Clamped like `value`, ignored while `indeterminate`, and unset draws nothing —

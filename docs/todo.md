@@ -14,7 +14,7 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**102 open — 1 P1, 34 P2, 67 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**101 open — 1 P1, 34 P2, 66 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 1
 
@@ -42,7 +42,7 @@ item and nothing else.
   - The elements demo has not been opened in a real browser since the rebuilds
   - `ds-toast-region`'s dev-warning strip is unverified
 - **Charts and fields the ECM prototype could not use (recorded 2026-09-15, Stas: take all five)**
-  - No component draws one bar whose segments are the parts of a whole
+  - No component draws one bar whose segments are the parts of a whole — and it is a chart
   - `ds-progress` cannot show a target beside the fill
 - **Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)**
   - A1 - build the seam and ONE directive, and measure what the seam itself costs
@@ -69,7 +69,7 @@ item and nothing else.
 - **Localization — every user-visible string is a hardcoded literal (recorded 2026-08-27, from the ITB Workspace picker report)**
   - Every user-visible string in the library is a hardcoded English literal — VALIDATED 2026-08-27 against 0.11.0; Stas: defer the whole thing, no code
 
-### P3 — 67
+### P3 — 66
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - A whole-page keyboard walk is not measurable with the tools here, and the failed
@@ -95,7 +95,6 @@ item and nothing else.
   - `.thumbnail` — the project's cover image — has no source that regenerates it
 - **Charts and fields the ECM prototype could not use (recorded 2026-09-15, Stas: take all five)**
   - A bar row carries one number, and the ask wants two — but two numbers per row with a …
-  - A point on `ds-line-chart` cannot carry a fixed label
 - **Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)**
   - A2 - the remaining directives, after A1 prices the seam
   - B1 - `DS_CONFIG.prototype: true` is BEHAVIOUR only. For bytes, use a build-time flag
@@ -540,14 +539,27 @@ Each has somebody behind it. Nothing here is speculative work.
 Ten hand-rolled charts moved onto DS components at 0.13.1. These five are what stopped the
 remaining four screens; each names the screen it blocks, so a fix has somewhere to be checked.
 
-- [ ] **[P2] No component draws one bar whose segments are the parts of a whole.** `BarChartRow` is
-  `{ id?, label, value, percent?, color? }` — one value per row — and neither `ds-bar-chart` nor
-  `ds-column-chart` mentions a stack. `LineChartAxisMode`'s `'stacked'` is two plots over a shared
-  category axis, which is a different picture.
+- [ ] **[P2] No component draws one bar whose segments are the parts of a whole — and it is a chart
+  type, so it wants a design pass before code (Stas 2026-09-15: generic, take it; not started).**
+  `BarChartRow` is `{ id?, label, value, percent?, color? }` — one value per row — and neither
+  `ds-bar-chart` nor `ds-column-chart` mentions a stack. `LineChartAxisMode`'s `'stacked'` is two
+  plots over a shared category axis, a different picture entirely.
   **Blocks** the outcome distribution on `performance-overview`: one full-width bar whose segments
   are the outcome categories, with a list beneath carrying each segment's label, code, count and
-  percent. Wanted: a stacked variant summing to the row total, on the shared categorical palette,
-  with one legend.
+  percent.
+
+  **Four questions decide the shape, and answering them in code first is how this ends up wrong:**
+  - **A mode on `ds-bar-chart`, or its own component?** A stacked bar shares the axis and the
+    palette but not the row model, and `partOfWhole` already gates whether a share of the total is
+    a real quantity — a stack asserts it by construction.
+  - **What does a segment carry?** `BarChartRow.segments?: readonly BarChartSegment[]` widens a
+    PUBLISHED type, which is a `behavior` item for anyone reading a row back. A separate input
+    avoids that and splits the data model in two.
+  - **Legend and tooltip.** One legend over segment NAMES, not series — `ds-chart-legend` keys on a
+    series id today, and `isolate`/`hidden` mean something different when hiding a segment changes
+    the whole the others are parts of.
+  - **The annex table.** Every chart carries one; for a stack it has to name the segment, its value
+    and its share, which is the same table the consumer's screen draws beneath the bar anyway.
 
 - [ ] **[P2] `ds-progress` cannot show a target beside the fill.** Its inputs are `value`,
   `variant`, `indeterminate`, `ariaLabel`; there is no second mark on the track.
@@ -572,11 +584,11 @@ remaining four screens; each names the screen it blocks, so a fix has somewhere 
   `max`, which it now takes. A second component would have differed by `role="meter"` alone, and
   that is a semantics question, not a reason to ship a near-duplicate.
 
-- [ ] **[P3] A point on `ds-line-chart` cannot carry a fixed label.** The chart has `tooltip` and
-  `tooltipAnchor`, both hover-driven, and no way to pin a callout to a category.
-  **Blocks** the visits trend on `microsites`, which used to name its peak month without hovering;
-  the callout was dropped in the migration and the value is hover-only now. Wanted: an annotation
-  on `LineChartSeries` or the chart — a category index plus a label, drawn as a fixed callout.
+- [x] **[P3] A point on `ds-line-chart` cannot carry a fixed label — shipped as `annotations`
+  (2026-09-15).** `{ categoryIndex, label, seriesId? }`, drawn above the reading and below it where
+  the plot has no room, anchored to its own edge near one, and dropped with a hidden series. Haloed
+  rather than boxed so it survives crossing the line, and `aria-hidden` because the annex table
+  already carries every reading.
 
 ## Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)
 
