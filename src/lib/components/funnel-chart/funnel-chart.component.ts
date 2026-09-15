@@ -137,6 +137,12 @@ export class FunnelChartComponent {
    *  `interactive` is set. */
   readonly stageClicked = output<FunnelChartStage>();
 
+  /** Holds the hovered mark and its tooltip in place when it is clicked, until Escape or a press
+   *  outside releases it. Off by default: a click is already the drill-down hook, and a mark left
+   *  lit after the pointer has gone needs a reader who knows why it is lit. `stageClicked` fires
+   *  either way — pinning is a state, not a handler. */
+  readonly pinOnClick = input(false, { transform: booleanAttribute });
+
   /** Dims every OTHER mark while one is hovered or focused, so the reader's eye is held on the
    *  one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed
    *  marks — measured 2026-09-13, the worst pair of three dimmed series falls from dE 14.8 at full
@@ -163,6 +169,13 @@ export class FunnelChartComponent {
     );
 
   protected readonly activeMark = chartActiveMark();
+
+  protected onMarkClick(payload: FunnelChartStage): void {
+    this.stageClicked.emit(payload);
+    if (this.pinOnClick()) {
+      this.activeMark.pin();
+    }
+  }
   /** One tab stop per chart, not one per mark: WCAG 2.1.1's Understanding is explicit that not
    *  every mouse-operable control has to be separately focusable, and that is what keeps a
    *  twenty-five mark chart from being twenty-five stops in the page's tab order. */

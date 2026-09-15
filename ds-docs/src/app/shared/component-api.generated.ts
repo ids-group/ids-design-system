@@ -1139,6 +1139,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
       },
       {
+        "name": "pinOnClick",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Holds the hovered mark and its tooltip in place when it is clicked, until Escape or a press outside releases it. Off by default: a click is already the drill-down hook, and a mark left lit after the pointer has gone needs a reader who knows why it is lit. `rowClicked` fires either way — pinning is a state, not a handler."
+      },
+      {
         "name": "dimOthers",
         "kind": "input",
         "type": "boolean",
@@ -2154,6 +2163,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
       },
       {
+        "name": "pinOnClick",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Holds the hovered mark and its tooltip in place when it is clicked, until Escape or a press outside releases it. Off by default: a click is already the drill-down hook, and a mark left lit after the pointer has gone needs a reader who knows why it is lit. `pointClicked` fires either way — pinning is a state, not a handler."
+      },
+      {
         "name": "dimOthers",
         "kind": "input",
         "type": "boolean",
@@ -2788,6 +2806,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
       },
       {
+        "name": "pinOnClick",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Holds the hovered mark and its tooltip in place when it is clicked, until Escape or a press outside releases it. Off by default: a click is already the drill-down hook, and a mark left lit after the pointer has gone needs a reader who knows why it is lit. `sliceClicked` fires either way — pinning is a state, not a handler."
+      },
+      {
         "name": "dimOthers",
         "kind": "input",
         "type": "boolean",
@@ -3343,6 +3370,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
+      },
+      {
+        "name": "pinOnClick",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Holds the hovered mark and its tooltip in place when it is clicked, until Escape or a press outside releases it. Off by default: a click is already the drill-down hook, and a mark left lit after the pointer has gone needs a reader who knows why it is lit. `stageClicked` fires either way — pinning is a state, not a handler."
       },
       {
         "name": "dimOthers",
@@ -4123,6 +4159,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Makes every reading focusable and clickable. A series drawn without markers grows invisible ones so there is something to land on; they appear on hover and on focus. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
+      },
+      {
+        "name": "pinOnClick",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Holds the crosshair and its tooltip on the category that was clicked, until Escape or a press outside releases it. Off by default: a click is already the drill-down hook, and a crosshair left standing after the pointer has gone needs a reader who knows why. `pointClicked` fires either way — pinning is a state, not a handler."
       },
       {
         "name": "dimOthers",

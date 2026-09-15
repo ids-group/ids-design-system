@@ -10,8 +10,12 @@ export interface ChartActiveMark {
   readonly index: Signal<number>;
   /** The mark's own element, which is what the tooltip anchors to. */
   readonly origin: Signal<Element | null>;
+  /** Whether the active mark is held rather than followed — a tap, or a click under `pinOnClick`. */
+  readonly pinned: Signal<boolean>;
   enter(index: number, event: Event, anchorWithin?: string): void;
   leave(): void;
+  /** Holds the mark the pointer is on, for any pointer type. */
+  pin(): void;
 }
 
 /**
@@ -28,16 +32,34 @@ export interface ChartActiveMark {
 export function chartActiveMark(): ChartActiveMark {
   const index = signal(-1);
   const origin = signal<Element | null>(null);
-  let latched = false;
+  // One flag for two ways of arriving at the same state: a tap, which has no hover to hold the
+  // panel open, and a deliberate click under `pinOnClick`. Both release the same way.
+  const pinned = signal(false);
   let pendingClear: ReturnType<typeof setTimeout> | null = null;
 
   const clear = (): void => {
-    latched = false;
+    pinned.set(false);
     cancelPendingClear();
     index.set(-1);
     origin.set(null);
     document.removeEventListener('pointerdown', release, true);
+    document.removeEventListener('keydown', releaseOnEscape, true);
     document.removeEventListener('pointerover', trackPointer, true);
+  };
+
+  const hold = (): void => {
+    pinned.set(true);
+    cancelPendingClear();
+    document.addEventListener('pointerdown', release, true);
+    document.addEventListener('keydown', releaseOnEscape, true);
+  };
+
+  // Escape releases the mark as well as the panel. Without this the panel would go and the dimming
+  // it caused would stay, leaving the chart in a state with nothing on screen explaining it.
+  const releaseOnEscape = (event: KeyboardEvent): void => {
+    if (event.key === 'Escape') {
+      clear();
+    }
   };
 
   const cancelPendingClear = (): void => {
@@ -68,7 +90,7 @@ export function chartActiveMark(): ChartActiveMark {
     if (!(event.target instanceof Element)) {
       return;
     }
-    if (event.target.closest('.ds-chart-tooltip-pane')) {
+    if (pinned() || event.target.closest('.ds-chart-tooltip-pane')) {
       cancelPendingClear();
 
       return;
@@ -98,6 +120,7 @@ export function chartActiveMark(): ChartActiveMark {
   return {
     index: index.asReadonly(),
     origin: origin.asReadonly(),
+    pinned: pinned.asReadonly(),
     enter(at, event, anchorWithin) {
       const host = event.currentTarget;
       if (host instanceof Element) {
@@ -117,15 +140,19 @@ export function chartActiveMark(): ChartActiveMark {
         event instanceof PointerEvent &&
         event.pointerType === 'touch'
       ) {
-        latched = true;
-        document.addEventListener('pointerdown', release, true);
+        hold();
       }
     },
     leave() {
-      if (latched) {
+      if (pinned()) {
         return;
       }
       scheduleClear();
+    },
+    pin() {
+      if (typeof document !== 'undefined' && index() !== -1) {
+        hold();
+      }
     },
   };
 }

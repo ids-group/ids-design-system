@@ -205,7 +205,7 @@
                 (keydown)="
                   onMarkerNavigation($event, seriesIndex, marker.categoryIndex)
                 "
-                (click)="pointClicked.emit(pointOf(entry, marker))"
+                (click)="onMarkerClick(entry, marker)"
                 (keydown.enter)="onMarkerKey(entry, marker, $event)"
                 (keydown.space)="onMarkerKey(entry, marker, $event)" />
             }

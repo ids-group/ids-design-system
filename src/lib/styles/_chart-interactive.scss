@@ -39,7 +39,11 @@
   &.dims-others:has(#{$mark}.interactive:hover)
     #{$mark}.interactive:not(:hover),
   &.dims-others:has(#{$mark}.interactive:focus-visible)
-    #{$mark}.interactive:not(:focus-visible) {
+    #{$mark}.interactive:not(:focus-visible),
+  // A pinned mark keeps the others down after the pointer has gone, which is the whole point of
+  // pinning: the reader looks away from the chart and the comparison is still on screen. Listed
+  // LAST so it wins where a pin and a hover disagree — the pin is the deliberate one.
+  &.dims-others:has(#{$mark}.is-pinned) #{$mark}:not(.is-pinned) {
     opacity: var(--ds-chart-dim-opacity);
   }
 }

@@ -60,6 +60,7 @@
               animate.leave="mark-leave"
               [style.--_chart-mark-stagger]="markStagger(index)"
               [class.interactive]="interactive()"
+              [class.is-pinned]="activeMark.pinned() && activeMark.index() === index"
               [attr.role]="interactive() ? 'button' : null"
               [attr.tabindex]="
                 interactive() ? (index === tabStopIndex() ? 0 : -1) : null
@@ -71,7 +72,7 @@
               (focus)="onMarkFocus(index, $event)"
               (blur)="activeMark.leave()"
               (keydown)="onMarkNavigation($event, index)"
-              (click)="pointClicked.emit(entry.point)"
+              (click)="onMarkClick(entry.point)"
               (keydown.enter)="onPointKey(entry.point, $event)"
               (keydown.space)="onPointKey(entry.point, $event)">
               <span class="plot-cell">

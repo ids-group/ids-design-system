@@ -47,6 +47,7 @@
             [attr.stroke-width]="hitGapUnits()"
             [style.--_chart-mark-stagger]="markStagger(index)"
             [class.interactive]="interactive()"
+            [class.is-pinned]="activeMark.pinned() && activeMark.index() === index"
             [attr.points]="entry.points"
             [attr.fill]="entry.color"
             [attr.role]="interactive() ? 'button' : null"
@@ -60,7 +61,7 @@
             (focus)="onMarkFocus(index, $event)"
             (blur)="activeMark.leave()"
             (keydown)="onMarkNavigation($event, index)"
-            (click)="stageClicked.emit(entry.stage)"
+            (click)="onMarkClick(entry.stage)"
             (keydown.enter)="onStageKey(entry.stage, $event)"
             (keydown.space)="onStageKey(entry.stage, $event)">
           </polygon>

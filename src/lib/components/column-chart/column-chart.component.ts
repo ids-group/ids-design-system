@@ -132,6 +132,12 @@ export class ColumnChartComponent {
    *  `interactive` is set. */
   readonly pointClicked = output<ColumnChartPoint>();
 
+  /** Holds the hovered mark and its tooltip in place when it is clicked, until Escape or a press
+   *  outside releases it. Off by default: a click is already the drill-down hook, and a mark left
+   *  lit after the pointer has gone needs a reader who knows why it is lit. `pointClicked` fires
+   *  either way — pinning is a state, not a handler. */
+  readonly pinOnClick = input(false, { transform: booleanAttribute });
+
   /** Dims every OTHER mark while one is hovered or focused, so the reader's eye is held on the
    *  one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed
    *  marks — measured 2026-09-13, the worst pair of three dimmed series falls from dE 14.8 at full
@@ -163,6 +169,13 @@ export class ColumnChartComponent {
   readonly tooltipAnchor = input<'mark' | 'cell'>('mark');
 
   protected readonly activeMark = chartActiveMark();
+
+  protected onMarkClick(payload: ColumnChartPoint): void {
+    this.pointClicked.emit(payload);
+    if (this.pinOnClick()) {
+      this.activeMark.pin();
+    }
+  }
 
   protected onMarkEnter(index: number, event: Event): void {
     this.activeMark.enter(

@@ -114,6 +114,9 @@ function baselineOf(plot: PlotArea): number {
   imports: [SkeletonComponent, ChartTooltipDirective, ChartLegendComponent],
   templateUrl: './line-chart.component.html',
   styleUrl: './line-chart.component.scss',
+  // Escape releases a pinned category, the same key that dismisses its panel — otherwise the
+  // crosshair would stand on a chart with nothing left on screen to explain why.
+  host: { '(document:keydown.escape)': 'releaseCategoryPin()' },
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -141,6 +144,14 @@ export class LineChartComponent {
   /** The point that was clicked, or activated with Enter or Space. Fires whether or not
    *  `interactive` is set. */
   readonly pointClicked = output<LineChartPoint>();
+
+  /** Holds the crosshair and its tooltip on the category that was clicked, until Escape or a
+   *  press outside releases it. Off by default: a click is already the drill-down hook, and a
+   *  crosshair left standing after the pointer has gone needs a reader who knows why. `pointClicked`
+   *  fires either way — pinning is a state, not a handler. */
+  readonly pinOnClick = input(false, { transform: booleanAttribute });
+
+  protected readonly pinnedCategory = signal(false);
 
   /** Dims every OTHER mark while one is hovered or focused, so the reader's eye is held on the
    *  one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed
@@ -408,6 +419,9 @@ export class LineChartComponent {
       screen.inverse(),
     );
     const plot = this.layout().primaryPlot;
+    if (this.pinnedCategory()) {
+      return;
+    }
     const category = this.categoryBands().indexAt(point.x - plot.left);
     this.activeCategory.set(category);
     this.tooltipOrigin.set(
@@ -441,6 +455,15 @@ export class LineChartComponent {
   }
 
   protected clearActiveCategory(): void {
+    if (this.pinnedCategory()) {
+      return;
+    }
+    this.activeCategory.set(-1);
+    this.tooltipOrigin.set(null);
+  }
+
+  protected releaseCategoryPin(): void {
+    this.pinnedCategory.set(false);
     this.activeCategory.set(-1);
     this.tooltipOrigin.set(null);
   }
@@ -698,7 +721,17 @@ export class LineChartComponent {
       return;
     }
     event.preventDefault();
+    this.onMarkerClick(entry, marker);
+  }
+
+  /** The pin hangs off the MARKER, not off the plot: the marker is already focusable and already
+   *  answers Enter and Space, so the keyboard gets the pin for free. A click handler on the plot
+   *  would have no keyboard route at all. A second activation of the pinned category releases it. */
+  protected onMarkerClick(entry: PlottedSeries, marker: LinePoint): void {
     this.pointClicked.emit(this.pointOf(entry, marker));
+    if (this.pinOnClick()) {
+      this.pinnedCategory.set(!this.pinnedCategory());
+    }
   }
 
   protected readonly isEmpty = computed(
