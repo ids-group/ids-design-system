@@ -58,6 +58,14 @@ export function linearScale(
 }
 
 /** @internal */
+export interface PointScale {
+  readonly step: number;
+  readonly count: number;
+  position(index: number): number;
+  indexAt(offset: number): number;
+}
+
+/** @internal */
 export interface BandScale {
   readonly bandWidth: number;
   /** Centre to centre, so it exceeds `bandWidth` by the padding. */
@@ -68,6 +76,47 @@ export interface BandScale {
    *  keeps the band it left from. `-1` when there are no bands, which is the one case
    *  a caller branches on rather than clamps. */
   indexAt(offset: number): number;
+}
+
+/** Positions for marks that sit AT a category rather than inside it — the readings of a line.
+ *  The first is at the plot's start and the last at its end, so the run fills the axis rather than
+ *  floating half a slot inside it. A single reading has no run to fill and takes the middle.
+ *
+ *  `step` is the distance between neighbours, which is what a crosshair band is a slot of; at the
+ *  two ends that slot is half outside the plot and the caller clamps it.
+ *
+ *  @internal */
+export function pointScale(count: number, rangeSize: number): PointScale {
+  const total = Number.isFinite(count) && count > 0 ? Math.floor(count) : 0;
+  const size = Number.isFinite(rangeSize) && rangeSize > 0 ? rangeSize : 0;
+  if (total === 0) {
+    return { step: 0, count: 0, position: () => 0, indexAt: () => -1 };
+  }
+  if (total === 1) {
+    return {
+      step: size,
+      count: 1,
+      position: () => size / 2,
+      indexAt: () => 0,
+    };
+  }
+  const step = size / (total - 1);
+
+  return {
+    step,
+    count: total,
+    position: (index) => Math.min(Math.max(index, 0), total - 1) * step,
+    // Nearest reading, not the slot the pointer is over: with the ends on the axes the first and
+    // last slots are half-width, and rounding is what makes both of them reachable.
+    indexAt: (offset) => {
+      if (!Number.isFinite(offset) || step === 0) {
+        return -1;
+      }
+      const index = Math.round(offset / step);
+
+      return Math.min(Math.max(index, 0), total - 1);
+    },
+  };
 }
 
 /** @internal */

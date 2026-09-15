@@ -17,7 +17,7 @@ import {
 import {
   CHART_SERIES_COLORS,
   describeSeries,
-  bandScale,
+  pointScale,
   formatTick,
   focusMark,
   formatValue,
@@ -470,18 +470,29 @@ export class LineChartComponent {
   protected readonly activeCategory = signal(-1);
 
   protected readonly categoryBands = computed(() =>
-    bandScale(this.categories().length, this.layout().primaryPlot.width, 0),
+    pointScale(this.categories().length, this.layout().primaryPlot.width),
   );
 
-  protected readonly activeBandX = computed(
-    () =>
-      this.layout().primaryPlot.left +
-      this.categoryBands().position(this.activeCategory()),
-  );
+  // The band is a slot CENTRED on its reading, so it starts half a step before it. At the two ends
+  // half of that slot is outside the plot, and clamping is what keeps the band off the axis labels
+  // rather than letting it hang past them.
+  protected readonly activeBandX = computed(() => {
+    const plot = this.layout().primaryPlot;
+    const scale = this.categoryBands();
+    const center = plot.left + scale.position(this.activeCategory());
 
-  protected readonly activeBandWidth = computed(
-    () => this.categoryBands().bandWidth,
-  );
+    return Math.max(center - scale.step / 2, plot.left);
+  });
+
+  protected readonly activeBandWidth = computed(() => {
+    const plot = this.layout().primaryPlot;
+    const scale = this.categoryBands();
+    const center = plot.left + scale.position(this.activeCategory());
+    const start = Math.max(center - scale.step / 2, plot.left);
+    const end = Math.min(center + scale.step / 2, plot.left + plot.width);
+
+    return Math.max(end - start, 0);
+  });
 
   protected readonly activeCategoryX = computed(
     () => this.activeBandX() + this.activeBandWidth() / 2,
@@ -525,9 +536,7 @@ export class LineChartComponent {
     );
     const y = tops.length ? Math.min(...tops) : this.layout().primaryPlot.top;
     const point = new DOMPoint(
-      this.plotLeft() +
-        this.categoryBands().position(category) +
-        this.categoryBands().bandWidth / 2,
+      this.plotLeft() + this.categoryBands().position(category),
       y,
     ).matrixTransform(screen);
 

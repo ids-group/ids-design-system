@@ -1,5 +1,5 @@
 import {
-  bandScale,
+  pointScale,
   linearScale,
   niceMax,
   tickValues,
@@ -240,10 +240,10 @@ export function chartLayout(
 
 export function categoryCenters(count: number, plot: PlotArea): number[] {
   const total = Number.isFinite(count) && count > 0 ? Math.floor(count) : 0;
-  const band = bandScale(total, plot.width, 0);
+  const scale = pointScale(total, plot.width);
   const centers: number[] = [];
   for (let index = 0; index < total; index++) {
-    centers.push(plot.left + band.position(index) + band.bandWidth / 2);
+    centers.push(plot.left + scale.position(index));
   }
 
   return centers;
