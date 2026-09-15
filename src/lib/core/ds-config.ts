@@ -2,7 +2,11 @@ import { InjectionToken, Provider, inject } from '@angular/core';
 import type { IconName } from './icon-names';
 import type { DsSize } from './size';
 import type { CardElevation, CardPadding } from './card.types';
-import type { ChartDataTable, ChartValueFormat } from './chart.types';
+import type {
+  ChartDataTable,
+  ChartFrame,
+  ChartValueFormat,
+} from './chart.types';
 import type { DsToastPosition } from './toast-position';
 
 export interface DsConfig {
@@ -130,6 +134,11 @@ export interface DsConfig {
      *  page that already carries its numbers, and an unasked-for disclosure under every plot is
      *  chrome the page did not ask for. */
     dataTable?: ChartDataTable;
+    /** Whether every chart draws its own bordered, padded box. Default `'auto'`, which draws it.
+     *  Whether charts live inside cards is decided once for an app — a page that puts every chart
+     *  in a card sets `'none'` here rather than reaching into five components' chrome from a
+     *  global stylesheet. */
+    frame?: ChartFrame;
     /** Shown in place of the plot when a chart's data is empty. Default `'No data'`. */
     emptyText?: string;
     /** Shown in place of the plot when a chart has `error` set. Default

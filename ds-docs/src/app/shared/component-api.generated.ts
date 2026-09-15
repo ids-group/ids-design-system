@@ -1036,13 +1036,16 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Track length is relative to this. Null uses the largest value, so the longest row always fills its track."
       },
       {
-        "name": "framed",
+        "name": "frame",
         "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
+        "type": "ChartFrame | null",
+        "union": [
+          "auto",
+          "none"
+        ],
+        "default": "null",
         "required": false,
-        "description": "Draws the chart its own bordered, padded card. Off by default: a chart is nearly always placed inside a card the page has already drawn, and a second one inside it gives the reader two borders, two paddings and a caption repeating the heading above it. Turn it on where the chart stands alone on the page."
+        "description": "Whether the chart draws its own bordered, padded box. `'auto'`, the default, draws it; `'none'` leaves the chart bare, for one placed inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards is one decision per app rather than per plot."
       },
       {
         "name": "caption",
@@ -2078,13 +2081,16 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "How many value-axis ticks to aim for. A hint, not a count: ticks are snapped to a round step, so the axis may carry one more or one fewer."
       },
       {
-        "name": "framed",
+        "name": "frame",
         "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
+        "type": "ChartFrame | null",
+        "union": [
+          "auto",
+          "none"
+        ],
+        "default": "null",
         "required": false,
-        "description": "Draws the chart its own bordered, padded card. Off by default: a chart is nearly always placed inside a card the page has already drawn, and a second one inside it gives the reader two borders, two paddings and a caption repeating the heading above it. Turn it on where the chart stands alone on the page."
+        "description": "Whether the chart draws its own bordered, padded box. `'auto'`, the default, draws it; `'none'` leaves the chart bare, for one placed inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards is one decision per app rather than per plot."
       },
       {
         "name": "caption",
@@ -2739,13 +2745,16 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Ring width as a fraction of the radius."
       },
       {
-        "name": "framed",
+        "name": "frame",
         "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
+        "type": "ChartFrame | null",
+        "union": [
+          "auto",
+          "none"
+        ],
+        "default": "null",
         "required": false,
-        "description": "Draws the chart its own bordered, padded card. Off by default: a chart is nearly always placed inside a card the page has already drawn, and a second one inside it gives the reader two borders, two paddings and a caption repeating the heading above it. Turn it on where the chart stands alone on the page."
+        "description": "Whether the chart draws its own bordered, padded box. `'auto'`, the default, draws it; `'none'` leaves the chart bare, for one placed inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards is one decision per app rather than per plot."
       },
       {
         "name": "caption",
@@ -3314,13 +3323,16 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "The value, percent and drop table printed under the funnel. It supersedes `dataTable`: while this is on, the disclosure every chart carries would repeat a strict subset of these same numbers, so it is not rendered."
       },
       {
-        "name": "framed",
+        "name": "frame",
         "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
+        "type": "ChartFrame | null",
+        "union": [
+          "auto",
+          "none"
+        ],
+        "default": "null",
         "required": false,
-        "description": "Draws the chart its own bordered, padded card. Off by default: a chart is nearly always placed inside a card the page has already drawn, and a second one inside it gives the reader two borders, two paddings and a caption repeating the heading above it. Turn it on where the chart stands alone on the page."
+        "description": "Whether the chart draws its own bordered, padded box. `'auto'`, the default, draws it; `'none'` leaves the chart bare, for one placed inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards is one decision per app rather than per plot."
       },
       {
         "name": "caption",
@@ -4245,13 +4257,16 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "How many value-axis ticks to aim for. A hint, not a count: ticks snap to a round step, so the axis may carry one more or one fewer."
       },
       {
-        "name": "framed",
+        "name": "frame",
         "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
+        "type": "ChartFrame | null",
+        "union": [
+          "auto",
+          "none"
+        ],
+        "default": "null",
         "required": false,
-        "description": "Draws the chart its own bordered, padded card. Off by default: a chart is nearly always placed inside a card the page has already drawn, and a second one inside it gives the reader two borders, two paddings and a caption repeating the heading above it. Turn it on where the chart stands alone on the page."
+        "description": "Whether the chart draws its own bordered, padded box. `'auto'`, the default, draws it; `'none'` leaves the chart bare, for one placed inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards is one decision per app rather than per plot."
       },
       {
         "name": "caption",

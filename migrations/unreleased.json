@@ -115,15 +115,15 @@
       "note": "The button takes the field message line without being a field row, and it took the field-wide default with it. `reserveMessage` exists so a field does not shift its neighbours when a message appears; a button sits outside that column, so the app-wide value now reaches fields alone and a button opts in per instance."
     },
     {
-      "id": "chart-frame-off-by-default",
+      "id": "chart-frame-leaves-through-an-input",
       "kind": "behavior",
       "old": "ds-bar-chart",
       "new": null,
       "surface": "template",
-      "action": "Add `framed` to any chart that should keep its own border, padding and background — one that stands alone on the page rather than inside a card. Charts already inside a card need nothing and stop drawing the second card they were drawing.",
-      "appliesWhen": "Every `ds-bar-chart`, `ds-column-chart`, `ds-donut-chart`, `ds-funnel-chart` and `ds-line-chart`. The look changes for all of them; whether that is a fix or a regression depends on what the chart sits in.",
-      "pitfall": "Nothing errors. A chart that stood alone loses its edge and its padding, so it runs into whatever sits beside it; a chart inside a card stops drawing a second card, which is the change this is for.",
-      "restore": "Set `framed` on the chart.",
+      "action": "Replace a stylesheet rule that zeroed the frame — `--ds-chart-frame-border-width: 0` with `--ds-chart-frame-padding: 0` on the chart tags — with `provideDsConfig({ chart: { frame: 'none' } })`, or `frame=\"none\"` on the odd chart that differs. Nothing is required: the custom properties still work.",
+      "appliesWhen": "Only an app that turns the chart frame off. The frame still draws by default, so an app that never touched it sees no change.",
+      "pitfall": "Nothing breaks either way. The custom properties and the input reach the same box, so setting both is harmless but means two places to look when the frame is wrong.",
+      "restore": null,
       "searchHints": [
         "ds-bar-chart",
         "ds-column-chart",
@@ -140,8 +140,8 @@
         "ds-funnel-chart",
         "ds-line-chart"
       ],
-      "verify": "Every chart that stands alone on a page carries `framed`, and no chart inside a card draws a border of its own.",
-      "note": "A stylesheet that zeroed the frame with `--ds-chart-frame-border-width: 0` and `--ds-chart-frame-padding: 0` can drop both declarations: the tokens still size the frame, but only under `framed`."
+      "verify": "No global stylesheet reaches into a chart's frame; the app sets `DS_CONFIG.chart.frame` or a per-chart `frame` instead.",
+      "note": "Whether charts live inside cards is decided once for an app, the same as `dataTable` — so it belongs beside it in `DS_CONFIG` rather than in a deep selector."
     },
     {
       "id": "chart-data-table-off-by-default",

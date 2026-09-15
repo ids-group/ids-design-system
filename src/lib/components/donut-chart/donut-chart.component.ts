@@ -24,6 +24,7 @@ import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 import type {
   ChartDataTable,
+  ChartFrame,
   ChartValueFormat,
 } from '@ids-group-ltd/ids-design-system/core';
 import {
@@ -60,7 +61,7 @@ const RING_OUTER_RADIUS = RING_VIEW_BOX_SIZE / 2;
   imports: [SkeletonComponent, ChartTooltipDirective, IconComponent],
   templateUrl: './donut-chart.component.html',
   styleUrl: './donut-chart.component.scss',
-  host: { '[class.framed]': 'framed()' },
+  host: { '[class.framed]': "frameResolved() === 'auto'" },
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -91,11 +92,11 @@ export class DonutChartComponent {
   /** Ring width as a fraction of the radius. */
   readonly thickness = input(DEFAULT_THICKNESS, { transform: numberAttribute });
 
-  /** Draws the chart its own bordered, padded card. Off by default: a chart is nearly always
-   *  placed inside a card the page has already drawn, and a second one inside it gives the reader
-   *  two borders, two paddings and a caption repeating the heading above it. Turn it on where the
-   *  chart stands alone on the page. */
-  readonly framed = input(false, { transform: booleanAttribute });
+  /** Whether the chart draws its own bordered, padded box. `'auto'`, the default, draws it;
+   *  `'none'` leaves the chart bare, for one placed inside a card the page has already drawn.
+   *  Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards
+   *  is one decision per app rather than per plot. */
+  readonly frame = input<ChartFrame | null>(null);
   /** Printed above the plot as the chart's visible title, and reused as the annex table's
    *  caption. */
   readonly caption = input<string | null>(null);
@@ -128,6 +129,11 @@ export class DonutChartComponent {
    *  grouping with a K/M/B suffix past four digits. */
   readonly valueFormat = input<ChartValueFormat | null>(null);
 
+  readonly frameResolved = resolveWithConfig(
+    this.frame,
+    (config) => config.chart?.frame,
+    'auto' as ChartFrame,
+  );
   readonly dataTableResolved = resolveWithConfig(
     this.dataTable,
     (config) => config.chart?.dataTable,

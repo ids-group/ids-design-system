@@ -355,6 +355,7 @@ export {
 } from '@ids-group-ltd/ids-design-system/core';
 export type {
   ChartDataTable,
+  ChartFrame,
   ChartValueFormat,
   DsConfig,
   DsControlWidth,

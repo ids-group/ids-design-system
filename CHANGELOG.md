@@ -96,19 +96,25 @@
 
 ### Changed
 
-- **A chart no longer draws its own card, and takes `framed` when it should.** The border, padding
-  and background are off by default. A chart is nearly always placed inside a card the page has
-  already drawn, and a second card inside the first gives the reader two borders, two paddings and a
-  chart caption repeating the heading directly above it.
+- **Turning a chart's frame off is an input now, not a stylesheet rule.** The frame still draws by
+  default. Switching it off took `ds-bar-chart { --ds-chart-frame-border-width: 0;
+  --ds-chart-frame-padding: 0 }` in a global sheet — a deep rule into a component's own chrome,
+  which is the shape of styling the rest of the library has been turning into inputs and tokens.
 
-  ```html
-  <ds-donut-chart framed [data]="slices" />
+  `frame` takes `'auto'` (the default, draws it) or `'none'`, and falls back to
+  `DS_CONFIG.chart.frame` when unset — whether charts live inside cards is one decision per app,
+  the same as `dataTable`:
+
+  ```ts
+  provideDsConfig({ chart: { frame: 'none' } });
   ```
 
-  If your charts stand alone on the page, add `framed` to them. The `--ds-chart-frame-*` tokens are
-  unchanged and still size the frame when it is on. A stylesheet that zeroed the frame —
-  `--ds-chart-frame-border-width: 0` with `--ds-chart-frame-padding: 0` — can drop those two
-  declarations.
+  ```html
+  <ds-donut-chart frame="none" [data]="slices" />
+  ```
+
+  The two custom properties still size the frame and still work; a stylesheet zeroing them can drop
+  those declarations in favour of the config key. `ChartFrame` is exported from the package root.
 
 - **The annex data table is off by default.** `dataTable` defaults to `'none'` rather than
   `'toggle'`, on all five charts and in `DS_CONFIG.chart.dataTable`. A disclosure under every plot
@@ -160,7 +166,7 @@
   gain `pinOnClick` and the protected `onMarkClick`, which `LineChartComponent` spells
   `onMarkerClick` beside its own `pinnedCategory` and `releaseCategoryPin`; `BarChartComponent` and
   `ColumnChartComponent` also gain `partOfWhole` and the protected `valueClearance`; all five gain
-  `framed`; `LineChartComponent` gains `legendMode`; the
+  `frame` and `frameResolved`; `LineChartComponent` gains `legendMode`; the
   internal `ChartLegendComponent`, which the package root does not export, gains `mode`, `isolated`,
   `isolate` and `showAll`; and the internal `ChartTooltipDirective`, also unexported there, gains
   `dsChartTooltipExtraGap` and the private `detachEscape` and `closeOnEscape`.

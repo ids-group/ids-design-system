@@ -1,12 +1,14 @@
 @use 'focus' as focus;
 
-// The box a chart can draw around itself. All five draw the same one, so the rules live here.
+// The box a chart draws around itself. All five draw the same one, so the rules live here.
 //
-// OFF by default, and under `framed` when a chart stands alone on a page and needs an edge to keep
-// its plot, legend and annex table from running into whatever sits beside them. The default is off
-// because the common case is the opposite: the chart goes inside a card the page already drew, and
-// a second card inside the first gives the reader two borders, two paddings, and the chart caption
-// repeating the heading directly above it.
+// ON by default, which is unusual for this library: most components resist owning chrome. A chart
+// is the exception because it is read as an OBJECT — a plot with axes, a legend and an annex table
+// — and without an edge those parts run into whatever sits beside them on the page.
+//
+// A chart already inside a card turns it off through the `frame` input, or once for a whole app
+// through `DS_CONFIG.chart.frame`, which is where an app-wide layout decision belongs. The
+// `--ds-chart-frame-*` tokens still size it.
 @mixin chart-frame {
   :host {
     display: block;
@@ -19,9 +21,8 @@
     user-select: none;
   }
 
-  // The frame paints only under `framed`. A chart is nearly always dropped into a card the page has
-  // already drawn, and drawing a second one inside it is the first thing a consumer reports: two
-  // borders, two paddings, and the chart's own caption repeating the card's heading.
+  // The class is the resolved answer, not the input: the component reads `frame`, falls back to
+  // `DS_CONFIG.chart.frame`, and puts this on only when the result is `'auto'`.
   :host(.framed) {
     padding: var(--ds-chart-frame-padding);
     background: var(--ds-chart-frame-bg-color);

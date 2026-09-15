@@ -29,6 +29,7 @@ import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/s
 import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 import type {
   ChartDataTable,
+  ChartFrame,
   ChartValueFormat,
 } from '@ids-group-ltd/ids-design-system/core';
 import { ChartTooltipDirective } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
@@ -128,7 +129,7 @@ function baselineOf(plot: PlotArea): number {
   // Escape releases a pinned category, the same key that dismisses its panel — otherwise the
   // crosshair would stand on a chart with nothing left on screen to explain why.
   host: {
-    '[class.framed]': 'framed()',
+    '[class.framed]': "frameResolved() === 'auto'",
     '(document:keydown.escape)': 'releaseCategoryPin()',
     '(document:pointerover)': 'onPointerAnywhere($event)',
   },
@@ -190,11 +191,11 @@ export class LineChartComponent {
     transform: numberAttribute,
   });
 
-  /** Draws the chart its own bordered, padded card. Off by default: a chart is nearly always
-   *  placed inside a card the page has already drawn, and a second one inside it gives the reader
-   *  two borders, two paddings and a caption repeating the heading above it. Turn it on where the
-   *  chart stands alone on the page. */
-  readonly framed = input(false, { transform: booleanAttribute });
+  /** Whether the chart draws its own bordered, padded box. `'auto'`, the default, draws it;
+   *  `'none'` leaves the chart bare, for one placed inside a card the page has already drawn.
+   *  Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards
+   *  is one decision per app rather than per plot. */
+  readonly frame = input<ChartFrame | null>(null);
   /** Printed above the plot as the chart's visible title, and reused as the annex table's
    *  caption. */
   readonly caption = input<string | null>(null);
@@ -227,6 +228,11 @@ export class LineChartComponent {
    *  grouping with a K/M/B suffix past four digits. */
   readonly valueFormat = input<ChartValueFormat | null>(null);
 
+  readonly frameResolved = resolveWithConfig(
+    this.frame,
+    (config) => config.chart?.frame,
+    'auto' as ChartFrame,
+  );
   readonly dataTableResolved = resolveWithConfig(
     this.dataTable,
     (config) => config.chart?.dataTable,
