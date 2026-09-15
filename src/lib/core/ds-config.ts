@@ -123,9 +123,12 @@ export interface DsConfig {
     withDot?: boolean;
   };
   chart?: {
-    /** Default `dataTable` for all five charts. Default `'toggle'`. It is an accessibility policy
+    /** Default `dataTable` for all five charts. Default `'none'`. It is an accessibility policy
      *  rather than a per-chart taste — whether the numbers behind a plot have a non-visual route is
-     *  decided once for an app, not thirty times. */
+     *  decided once for an app, not thirty times, so an app that wants the annex everywhere sets
+     *  `'toggle'` here once rather than on every chart. Off by default: a chart usually sits in a
+     *  page that already carries its numbers, and an unasked-for disclosure under every plot is
+     *  chrome the page did not ask for. */
     dataTable?: ChartDataTable;
     /** Shown in place of the plot when a chart's data is empty. Default `'No data'`. */
     emptyText?: string;

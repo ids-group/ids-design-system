@@ -51,6 +51,7 @@ const defaultValueFormat = (value: number) => formatValue(value);
   imports: [SkeletonComponent, ChartTooltipDirective, IconComponent],
   templateUrl: './column-chart.component.html',
   styleUrl: './column-chart.component.scss',
+  host: { '[class.framed]': 'framed()' },
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -65,6 +66,11 @@ export class ColumnChartComponent {
    *  snapped to a round step, so the axis may carry one more or one fewer. */
   readonly tickCount = input(5, { transform: numberAttribute });
 
+  /** Draws the chart its own bordered, padded card. Off by default: a chart is nearly always
+   *  placed inside a card the page has already drawn, and a second one inside it gives the reader
+   *  two borders, two paddings and a caption repeating the heading above it. Turn it on where the
+   *  chart stands alone on the page. */
+  readonly framed = input(false, { transform: booleanAttribute });
   /** Printed above the plot as the chart's visible title, and reused as the annex table's
    *  caption. */
   readonly caption = input<string | null>(null);
@@ -75,7 +81,7 @@ export class ColumnChartComponent {
   /** The label-and-value table under the plot: `'toggle'` puts it behind a disclosure,
    *  `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so
    *  `'none'` belongs only where the same data is already in a table on the page.
-   *  Unset falls back to `DS_CONFIG.chart.dataTable`, then `'toggle'`. */
+   *  Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`. */
   readonly dataTable = input<ChartDataTable | null>(null);
   /** Declares that the marks are parts of one whole, which is what makes a share of their total a
    *  real quantity. Off by default: a chart of visitors per stage or revenue per month sums to a
@@ -106,7 +112,7 @@ export class ColumnChartComponent {
   readonly dataTableResolved = resolveWithConfig(
     this.dataTable,
     (config) => config.chart?.dataTable,
-    'toggle' as ChartDataTable,
+    'none' as ChartDataTable,
   );
   readonly emptyTextResolved = resolveWithConfig(
     this.emptyText,

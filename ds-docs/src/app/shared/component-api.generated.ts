@@ -1036,6 +1036,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Track length is relative to this. Null uses the largest value, so the longest row always fills its track."
       },
       {
+        "name": "framed",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Draws the chart its own bordered, padded card. Off by default: a chart is nearly always placed inside a card the page has already drawn, and a second one inside it gives the reader two borders, two paddings and a caption repeating the heading above it. Turn it on where the chart stands alone on the page."
+      },
+      {
         "name": "caption",
         "kind": "input",
         "type": "string | null",
@@ -1064,7 +1073,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'toggle'`."
+        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`."
       },
       {
         "name": "partOfWhole",
@@ -2069,6 +2078,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "How many value-axis ticks to aim for. A hint, not a count: ticks are snapped to a round step, so the axis may carry one more or one fewer."
       },
       {
+        "name": "framed",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Draws the chart its own bordered, padded card. Off by default: a chart is nearly always placed inside a card the page has already drawn, and a second one inside it gives the reader two borders, two paddings and a caption repeating the heading above it. Turn it on where the chart stands alone on the page."
+      },
+      {
         "name": "caption",
         "kind": "input",
         "type": "string | null",
@@ -2097,7 +2115,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'toggle'`."
+        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`."
       },
       {
         "name": "partOfWhole",
@@ -2721,6 +2739,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Ring width as a fraction of the radius."
       },
       {
+        "name": "framed",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Draws the chart its own bordered, padded card. Off by default: a chart is nearly always placed inside a card the page has already drawn, and a second one inside it gives the reader two borders, two paddings and a caption repeating the heading above it. Turn it on where the chart stands alone on the page."
+      },
+      {
         "name": "caption",
         "kind": "input",
         "type": "string | null",
@@ -2749,7 +2776,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'toggle'`."
+        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`."
       },
       {
         "name": "loading",
@@ -3285,6 +3312,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "true",
         "required": false,
         "description": "The value, percent and drop table printed under the funnel. It supersedes `dataTable`: while this is on, the disclosure every chart carries would repeat a strict subset of these same numbers, so it is not rendered."
+      },
+      {
+        "name": "framed",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Draws the chart its own bordered, padded card. Off by default: a chart is nearly always placed inside a card the page has already drawn, and a second one inside it gives the reader two borders, two paddings and a caption repeating the heading above it. Turn it on where the chart stands alone on the page."
       },
       {
         "name": "caption",
@@ -4209,6 +4245,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "How many value-axis ticks to aim for. A hint, not a count: ticks snap to a round step, so the axis may carry one more or one fewer."
       },
       {
+        "name": "framed",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Draws the chart its own bordered, padded card. Off by default: a chart is nearly always placed inside a card the page has already drawn, and a second one inside it gives the reader two borders, two paddings and a caption repeating the heading above it. Turn it on where the chart stands alone on the page."
+      },
+      {
         "name": "caption",
         "kind": "input",
         "type": "string | null",
@@ -4237,7 +4282,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'toggle'`."
+        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`."
       },
       {
         "name": "loading",

@@ -60,6 +60,7 @@ const RING_OUTER_RADIUS = RING_VIEW_BOX_SIZE / 2;
   imports: [SkeletonComponent, ChartTooltipDirective, IconComponent],
   templateUrl: './donut-chart.component.html',
   styleUrl: './donut-chart.component.scss',
+  host: { '[class.framed]': 'framed()' },
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -90,6 +91,11 @@ export class DonutChartComponent {
   /** Ring width as a fraction of the radius. */
   readonly thickness = input(DEFAULT_THICKNESS, { transform: numberAttribute });
 
+  /** Draws the chart its own bordered, padded card. Off by default: a chart is nearly always
+   *  placed inside a card the page has already drawn, and a second one inside it gives the reader
+   *  two borders, two paddings and a caption repeating the heading above it. Turn it on where the
+   *  chart stands alone on the page. */
+  readonly framed = input(false, { transform: booleanAttribute });
   /** Printed above the plot as the chart's visible title, and reused as the annex table's
    *  caption. */
   readonly caption = input<string | null>(null);
@@ -100,7 +106,7 @@ export class DonutChartComponent {
   /** The label-and-value table under the plot: `'toggle'` puts it behind a disclosure,
    *  `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so
    *  `'none'` belongs only where the same data is already in a table on the page.
-   *  Unset falls back to `DS_CONFIG.chart.dataTable`, then `'toggle'`. */
+   *  Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`. */
   readonly dataTable = input<ChartDataTable | null>(null);
   /** Draws skeleton marks in place of the data, at the same count, so the chart does not resize
    *  when the data lands. */
@@ -125,7 +131,7 @@ export class DonutChartComponent {
   readonly dataTableResolved = resolveWithConfig(
     this.dataTable,
     (config) => config.chart?.dataTable,
-    'toggle' as ChartDataTable,
+    'none' as ChartDataTable,
   );
   readonly emptyTextResolved = resolveWithConfig(
     this.emptyText,
