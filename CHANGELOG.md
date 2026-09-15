@@ -45,6 +45,12 @@
   The gap itself went from 12px to 6px on every chart, because a panel a finger's width off its
   mark reads as floating free of it.
 
+- **Exported class member surface moved — only matters if you SUBCLASS one of these.**
+  `ProgressComponent` and `MeterComponent` are gone; `BarComponent` carries every member both of
+  them had. `ChartTooltipDirective`, internal and not exported from the package root, gains
+  `dsChartTooltipPreferBelow`. A subclass declaring that name collides: rename yours, or add
+  `override` where it genuinely means the same thing.
+
 - **A held mark opens its panel BELOW itself.** The Unpin control sits at the plot's top edge, and
   a panel opening upward from a mark in the upper half landed on top of it. No z-index fixes that
   — the panel is portaled to the body, and an app layout that isolates its stacking context traps
