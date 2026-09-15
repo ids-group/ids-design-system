@@ -49,6 +49,15 @@ node tools/check-tools-parse.mjs
 node tools/check-delete-tables.mjs
 node tools/check-design-sync-log.mjs
 
+# A component with no .design-sync/docs/<Name>.md, or one whose ds-docs section is not registered,
+# used to surface as an ENOENT inside the release build — the first place a card is read. gen.mjs
+# is a TypeScript AST read (~2.5s), not the Angular build, so these answer on the PR that added
+# the component for the cost of seconds.
+echo "===== Claude Design doc coverage ====="
+node .design-sync/elements/tools/gen.mjs
+node .design-sync/tools/check-manual-surface.mjs
+node .design-sync/tools/check-doc-api.mjs
+
 # CHANGELOG.md and the manifests go into the tarball on a public registry, so a client's name
 # or a `tools/` path in them reaches everyone. Prose review cannot hold this line: the writing
 # agent studies the previous release for voice and inherits its leaks.
