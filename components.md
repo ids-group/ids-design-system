@@ -286,7 +286,9 @@ Content: project `<ds-avatar>` children.
 
 #### `<ds-progress>` — `ProgressComponent`
 Linear progress bar (no circular variant).
-Inputs: `value: number = 0` (0–100, clamped), `variant: 'default' | 'success' | 'warn' | 'error' | 'indeterminate' = 'default'`
+Inputs: `value: number = 0` (0–100, clamped), `variant: 'default' | 'success' | 'warning' | 'error' = 'default'`, `indeterminate: boolean = false`, `target: number | null = null`, `ariaLabel: string | null = null`.
+`target` is a second point on the same scale, drawn as a hairline across the track — a goal or baseline to read `value` against. Clamped like `value` and ignored while `indeterminate`. `role="progressbar"` announces one value, so name the comparison in `ariaLabel` ("Resolved 62% against a 75% target"); the mark alone reaches nobody using a screen reader.
+Tokens: `--ds-progress-height`, `--ds-progress-track-color`, `--ds-progress-bar-color`, `--ds-progress-bar-color-success`, `--ds-progress-bar-color-warning`, `--ds-progress-bar-color-error`, `--ds-progress-target-color`, `--ds-progress-target-width`.
 
 #### `<ds-spinner>` — `SpinnerComponent`
 Input: `size: 'sm' | 'md' | 'lg' = 'md'`. Pure-CSS spinner, `role="status"` with built-in `aria-label`.

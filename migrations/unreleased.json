@@ -25,7 +25,7 @@
       "note": "A share of a total is only a real quantity when the marks are parts of one whole. `0.13.1` stated one unconditionally, which made the figure meaningless on funnel-shaped and time-series data. The input also governs the new `Share of total` column in the data table."
     },
     {
-      "id": "chart-members-grew",
+      "id": "exported-class-members-grew",
       "kind": "behavior",
       "old": "BarChartComponent",
       "new": null,
@@ -56,10 +56,14 @@
         "FunnelChartComponent",
         "LineChartComponent",
         "ChartLegendComponent",
-        "ChartTooltipDirective"
+        "ChartTooltipDirective",
+        "extends ProgressComponent",
+        "ProgressComponent",
+        "DsMessageBase",
+        "extends DsMessageBase"
       ],
       "verify": "No subclass declares a member named `pinOnClick`, `partOfWhole`, `legendMode`, `onMarkClick`, `onMarkerClick`, `pinnedCategory`, `releaseCategoryPin`, `mode`, `isolated`, `isolate`, `showAll`, `detachEscape` or `closeOnEscape`; the app builds with no TS4114, TS2415 or TS2416 on those classes.",
-      "note": "Pinning, the share gate and the legend mode each added members to the classes that carry them. Subclassing a DS component is unsupported, but a release that only adds can still fail such a build on a name collision, which is why the additions are listed here rather than in the additive notes."
+      "note": "Pinning, the share gate and the legend mode each added members to the classes that carry them. Subclassing a DS component is unsupported, but a release that only adds can still fail such a build on a name collision, which is why the additions are listed here rather than in the additive notes. `ds-progress` gained `target` in the same release, and the shared message base behind the fields and the button — internal, and not exported from the package root — a protected flag deciding whether an unset reserve follows the app-wide field default."
     },
     {
       "id": "chart-legend-isolates-by-default",
@@ -114,7 +118,8 @@
   "informational": [
     "`ds-bar-chart` and `ds-column-chart` gained a `Share of total` column in their data table, shown only under `partOfWhole`. It carries the same figure as the tooltip's second line, so a reader who cannot hover now has a route to it. The heading says `Share of total` rather than `Share` because `ds-bar-chart` already prints a percentage beside each row and that one is the share of the largest row, not of the sum.",
     "A chart tooltip is now reachable with the pointer and dismissable with Escape, which WCAG 1.4.13 requires of anything shown on hover. Leaving a mark clears it after a short grace period rather than at once, and arriving on the panel cancels that. Nothing in your code changes. Two things will notice: a test that asserts the panel is gone immediately after a `pointerleave` now needs to wait out the grace period, and a rule of yours setting `pointer-events` on `.ds-chart-tooltip-pane` decides whether the criterion is met — it must stay `auto`.",
-    "Every chart gained `pinOnClick`, off by default. With it set, clicking a mark holds that mark, its tooltip and — where `dimOthers` is on — the dimming of the other marks, until Escape or a press outside releases it. The click output fires either way. On `ds-line-chart` the pin hangs off the data markers, so Enter and Space pin from the keyboard too."
+    "Every chart gained `pinOnClick`, off by default. With it set, clicking a mark holds that mark, its tooltip and — where `dimOthers` is on — the dimming of the other marks, until Escape or a press outside releases it. The click output fires either way. On `ds-line-chart` the pin hangs off the data markers, so Enter and Space pin from the keyboard too.",
+    "`ds-progress` takes a `target`: a second point on the same 0–100 scale, drawn as a hairline across the track so a bar reads actual against a goal or a baseline. It is clamped like `value`, ignored while `indeterminate`, and unset draws nothing, so every existing bar is unchanged. `role=\"progressbar\"` carries one value and no second, so the mark is visual only — put the comparison in `ariaLabel`. `--ds-progress-target-color` and `--ds-progress-target-width` set its look."
   ],
   "deleteList": []
 }

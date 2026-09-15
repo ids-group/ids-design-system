@@ -2,6 +2,25 @@
 
 ### Added
 
+- **`ds-progress` takes a `target`, drawn as a hairline across the track.** A second point on the
+  same 0–100 scale, so a bar reads actual against a goal or a baseline in one glance instead of
+  standing alone. Clamped like `value`, ignored while `indeterminate`, and unset draws nothing —
+  every existing bar is unchanged.
+
+  ```html
+  <ds-progress
+    [value]="62"
+    [target]="75"
+    ariaLabel="Resolved 62% against a 75% target" />
+  ```
+
+  **Name the comparison in `ariaLabel`.** `role="progressbar"` announces one value and has no second
+  to carry, so the mark is visual only — a reader on a screen reader gets the target from the label
+  or not at all. `--ds-progress-target-color` and `--ds-progress-target-width` set its look.
+
+  `ProgressComponent` grows by the `target` input; a subclass declaring its own stops building until
+  it renames the member or marks it `override`.
+
 - **`ds-bar-chart` and `ds-column-chart` take `partOfWhole`, and it is what states each mark's share
   of the total.** A share of a total is only a real quantity when the marks are parts of one whole.
   Visitors per funnel stage, or response time per endpoint, sum to a number nobody can point at, and
@@ -82,6 +101,24 @@
   A subclass declaring any of those names collides. For a public or protected member the fix is
   `override` or a rename; for a private one only a rename works, because TS2415 fires on the name
   and `override` does not clear it.
+
+### Fixed
+
+- **`ds-button` ignores the app-wide `DS_CONFIG.field.reserveMessage`.** The button takes the same
+  message line a field does, and with it took the field-wide default: an app calling
+  `provideDsConfig({ field: { reserveMessage: true } })` gave EVERY button an empty message row,
+  which turns the host from `inline-flex` into a column with a gap. One app found 125 buttons
+  across 45 files changed box that way, and nothing in the build, the types or the release notes
+  reported it. `reserveMessage` exists so a field row does not shift its neighbours as a message
+  appears, and a button is not in that column.
+
+  A button reserves only where you ask it to, with `[reserveMessage]="true"`. Fields are unchanged:
+  `DS_CONFIG.field.reserveMessage` still reaches every one of them, `ds-field-group` included.
+
+  The decision lives on the internal `DsMessageBase`, the shared message base the fields and the
+  button extend, as a protected `reserveFollowsFieldDefault`. The package root does not export it; a
+  subclass reaching it through the deep entry point and declaring that name stops building until it
+  renames the member or marks it `override`.
 
 ## 0.13.1 — 2026-09-14
 
@@ -335,17 +372,6 @@
   so an import of the old name stops resolving. Rename it; the signature is unchanged.
 
 ### Fixed
-
-- **`ds-button` ignores the app-wide `DS_CONFIG.field.reserveMessage`.** The button takes the same
-  message line a field does, and with it took the field-wide default: an app calling
-  `provideDsConfig({ field: { reserveMessage: true } })` gave EVERY button an empty message row,
-  which turns the host from `inline-flex` into a column with a gap. One app found 125 buttons
-  across 45 files changed box that way, and nothing in the build, the types or the release notes
-  reported it. `reserveMessage` exists so a field row does not shift its neighbours as a message
-  appears, and a button is not in that column.
-
-  A button reserves only where you ask it to, with `[reserveMessage]="true"`. Fields are unchanged:
-  `DS_CONFIG.field.reserveMessage` still reaches every one of them, `ds-field-group` included.
 
 - **`ds-table`'s pagination footer insets per side, so the summary lines up with column one.** The
   footer read `--ds-table-cell-pad-x` alone while the cells resolve `--ds-table-cell-pad-left` and
