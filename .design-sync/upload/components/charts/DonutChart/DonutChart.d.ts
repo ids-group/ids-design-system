@@ -19,11 +19,15 @@ export interface DonutChartProps {
   otherLabel?: string;
   /** Ring width as a fraction of the radius. */
   thickness?: number;
+  /** Whether the chart draws its own bordered, padded box. `'auto'`, the default, draws it; `'none'` leaves the chart bare, for one placed inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards is one decision per app rather than per plot. */
+  frame?: ('auto' | 'none') | null;
+  /** How long the tooltip stays after the pointer leaves the mark, in milliseconds. Zero, the default, takes it away at once: a panel that outlives the pointer sits over the plot the reader has moved on to. Raise it only for a panel a reader has to REACH — one carrying a link, a figure, or anything selectable — which is WCAG 1.4.13's hoverable clause. The panel is portaled to the body, so crossing the gap to it at an ordinary pointer speed needs about 140. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 0. */
+  tooltipLingerMs?: number | null;
   /** Printed above the plot as the chart's visible title, and reused as the annex table's caption. */
   caption?: string | null;
   /** Accessible name. Generated from the data when omitted. */
   summary?: string | null;
-  /** The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'toggle'`. */
+  /** The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`. */
   dataTable?: ('toggle' | 'visible' | 'none') | null;
   /** Draws skeleton marks in place of the data, at the same count, so the chart does not resize when the data lands. */
   loading?: boolean;
@@ -39,6 +43,8 @@ export interface DonutChartProps {
   interactive?: boolean;
   /** The slice that was clicked, or activated with Enter or Space. Fires whether or not `interactive` is set. */
   onSliceClicked?: (value: unknown) => void;
+  /** Holds the hovered mark and its tooltip in place when it is clicked, until Escape or a press outside releases it. Off by default: a click is already the drill-down hook, and a mark left lit after the pointer has gone needs a reader who knows why it is lit. `sliceClicked` fires either way — pinning is a state, not a handler. */
+  pinOnClick?: boolean;
   /** Dims every OTHER mark while one is hovered or focused, so the reader's eye is held on the one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed marks — measured 2026-09-13, the worst pair of three dimmed series falls from dE 14.8 at full opacity to 2.1 at `--ds-chart-dim-opacity`'s default 0.3 — so it buys loudness for one mark and pays for it with the rest of the chart. */
   dimOthers?: boolean;
   /** Accepted for parity with the other four charts and deliberately without effect here: a ring arrives as ONE object, because arcs share their edges and fading them one at a time lets the background through every seam. There is nothing to stagger. */

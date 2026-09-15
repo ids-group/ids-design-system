@@ -2,6 +2,7 @@
 components/actions/SplitButton/Split Button - Outline variant.html
 components/actions/SplitButton/Split Button - Primary variant.html
 components/actions/SplitButton/Split Button - Without menu items.html
+components/data-display/Meter/Meter - In a table cell.html
 components/data-display/Stat/Stat - A formatted number, through Angular's own pipe.html
 components/data-display/Stat/Stat - A value that is a phrase.html
 components/data-display/Stat/Stat - A value that is not a number.html

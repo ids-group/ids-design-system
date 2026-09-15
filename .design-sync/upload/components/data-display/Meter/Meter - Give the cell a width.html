@@ -1,0 +1,16 @@
+<!-- @dsCard group="data-display" viewport="1200x309" name="Meter - give the cell a width" subtitle="The meter fills whatever box it is in, so the column decides how wide the bar is." --><!DOCTYPE html>
+<html data-theme="light"><head><meta charset="utf-8">
+  <title>Meter</title>
+  <link rel="stylesheet" href="../../../styles.css">
+  <link rel="stylesheet" href="../../../_ds_bundle.css">
+  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
+<link rel="stylesheet" href="../../../_ds_cards.css"></head><body>
+  <div class="ds-page"><ds-docs-components-meter _nghost-c2r=""><docs-section _ngcontent-c2r="" anchor="meter" eyebrow="Components" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-meter" data-anchor="meter"><h2 _ngcontent-c1="" class="t-h2">Meter - give the cell a width</h2><p _ngcontent-c2r="" class="block-desc t-s"> The meter fills whatever box it is in, so the column decides how wide the bar is. A box sized to its content — <code _ngcontent-c2r="" class="t-mono-inline"> width: 'content' </code> on <code _ngcontent-c2r="" class="t-mono-inline"> ds-table </code>, or a shrink-to-fit flex or grid item — is sized by what its contents contribute intrinsically, and a bar that is <code _ngcontent-c2r="" class="t-mono-inline"> 100% </code> of its cell contributes nothing: a meter alone in such a cell comes out 0px wide. So the host carries a <code _ngcontent-c2r="" class="t-mono-inline"> min-inline-size </code> of <code _ngcontent-c2r="" class="t-mono-inline"> 3rem </code>, which <code _ngcontent-c2r="" class="t-mono-inline"> --ds-meter-min-width </code> overrides. Give it a width of your own where the bar should be a fixed size — the table above puts it in a 64px grid track. </p></section></docs-section></ds-docs-components-meter></div>
+  
+  
+  
+
+
+</body></html>

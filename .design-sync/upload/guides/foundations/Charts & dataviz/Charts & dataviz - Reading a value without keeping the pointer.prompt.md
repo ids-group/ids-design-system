@@ -1,0 +1,7 @@
+# Charts & dataviz - reading a value without keeping the pointer still
+
+An inert tooltip cannot be read at high zoom, cannot have its number selected, and cannot be cleared without moving the pointer somewhere else. WCAG 1.4.13 asks for all three, so every chart panel here takes the pointer and Esc closes it. Once cleared it stays cleared until you visit another mark, so pressing Esc to get the panel off the screen actually gets it off the screen.
+
+The panel goes when the pointer does — one left behind sits over the plot you have moved on to. tooltipLingerMs is how long it stays after the pointer leaves, and it is 0. Raise it only where a panel holds something to REACH — a link, a figure, a selectable string — which is what WCAG's hoverable clause is about; the built-in panel is one line of text and has nothing in it to reach. The panel is portaled out of the chart, so crossing the gap to it at an ordinary pointer speed takes about 140. Set it per chart, or on DS_CONFIG.chart.tooltipLingerMs for an app whose tooltips all carry one.
+
+pinOnClick goes further on all five charts: clicking a mark holds it, its tooltip, and — with dimOthers — the dimming of everything else, so a comparison survives the pointer leaving the chart entirely. Esc or a press outside releases it, and the click output fires either way, because pinning is a state rather than a handler. On ds-line-chart the pin hangs off the data markers, so Enter and Space pin from the keyboard too.
