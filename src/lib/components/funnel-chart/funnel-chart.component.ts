@@ -22,6 +22,7 @@ import {
   staggerDelay,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
+import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 import type {
   ChartDataTable,
@@ -41,6 +42,7 @@ import {
   funnelGeometry,
   rampPosition,
   stageDrops,
+  stageCenter,
   stageGapUnits,
   stagePolygonPoints,
 } from './funnel-chart.math';
@@ -53,7 +55,7 @@ const SKELETON_STAGE_WIDTHS = ['88%', '62%', '80%', '54%', '72%'] as const;
 @Component({
   selector: 'ds-funnel-chart',
   standalone: true,
-  imports: [SkeletonComponent, ChartTooltipDirective],
+  imports: [SkeletonComponent, ChartTooltipDirective, IconComponent],
   templateUrl: './funnel-chart.component.html',
   styleUrl: './funnel-chart.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -258,6 +260,13 @@ export class FunnelChartComponent {
 
       return {
         stage,
+        // The middle of the band, for the marker that says this one is held. A polygon has no
+        // centre of its own, and its bounding box centre drifts outside a steeply tapered band.
+        center: stageCenter(
+          geometry[index],
+          FUNNEL_VIEW_BOX_WIDTH,
+          FUNNEL_VIEW_BOX_HEIGHT,
+        ),
         points: stagePolygonPoints(
           geometry[index],
           FUNNEL_VIEW_BOX_WIDTH,

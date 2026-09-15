@@ -104,6 +104,19 @@
               (keydown.enter)="onSliceKey(entry.slice, $event)"
               (keydown.space)="onSliceKey(entry.slice, $event)">
             </path>
+
+            @if (activeMark.pinned() && activeMark.index() === index) {
+              <foreignObject
+                class="pin-marker"
+                width="14"
+                height="14"
+                [attr.x]="entry.center.x - 7"
+                [attr.y]="entry.center.y - 7">
+                <ds-icon
+                  name="pin"
+                  [size]="14" />
+              </foreignObject>
+            }
           }
         </svg>
 

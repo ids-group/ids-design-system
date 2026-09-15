@@ -20,6 +20,7 @@ import {
   nextRovingIndex,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
+import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 import type {
   ChartDataTable,
@@ -42,6 +43,7 @@ import {
   positiveValues,
   resolveInnerRadius,
   resolveTotal,
+  ringCoords,
   sliceArcs,
 } from './donut-chart.math';
 import type { DonutChartSlice } from './donut-chart.types';
@@ -55,7 +57,7 @@ const RING_OUTER_RADIUS = RING_VIEW_BOX_SIZE / 2;
 @Component({
   selector: 'ds-donut-chart',
   standalone: true,
-  imports: [SkeletonComponent, ChartTooltipDirective],
+  imports: [SkeletonComponent, ChartTooltipDirective, IconComponent],
   templateUrl: './donut-chart.component.html',
   styleUrl: './donut-chart.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -255,8 +257,18 @@ export class DonutChartComponent {
     const innerRadius = resolveInnerRadius(RING_OUTER_RADIUS, this.thickness());
     const format = this.valueFormatResolved();
 
+    const midRadius = (RING_OUTER_RADIUS + innerRadius) / 2;
+
     return data.map((slice, index) => ({
       slice,
+      // Halfway along the arc and halfway through the ring: the one point that is inside a slice
+      // whatever its sweep, which the bounding box of a curved wedge is not.
+      center: ringCoords(
+        RING_CENTER,
+        RING_CENTER,
+        midRadius,
+        (arcs[index].startAngle + arcs[index].endAngle) / 2,
+      ),
       path: arcPath(
         RING_CENTER,
         RING_CENTER,
