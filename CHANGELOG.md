@@ -55,17 +55,19 @@
 
 - **Every chart takes `pinOnClick`, which holds a reading in place.** Clicking a mark keeps it, its
   tooltip and — with `dimOthers` — the dimming of everything else, so the comparison survives the
-  pointer leaving the chart. Escape releases it, and so does a press outside the mark. Off by
-  default: a click is already the drill-down hook, and a mark left lit after the pointer has gone
-  needs a reader who knows why it is lit.
+  pointer leaving the chart entirely. Hovering another mark does not move it; clicking another one
+  does. Clicking the pinned mark again, pressing outside it, or Escape releases it. Off by default:
+  a click is already the drill-down hook, and a mark left lit after the pointer has gone needs a
+  reader who knows why it is lit.
 
   ```html
   <ds-column-chart interactive pinOnClick dimOthers [data]="points" />
   ```
 
+  A pinned `ds-bar-chart` row and `ds-column-chart` column carry a pin glyph in the middle of the
+  mark, because the panel can sit anywhere on screen and the reader needs to see WHICH mark is held.
   The click output fires either way — pinning is a state, not a handler. On `ds-line-chart` the pin
-  hangs off the data markers rather than the plot, so Enter and Space pin from the keyboard too; a
-  second activation of the pinned reading releases it.
+  hangs off the data markers rather than the plot, so Enter and Space pin from the keyboard too.
 
 ### Changed
 
@@ -117,6 +119,19 @@
   and `override` does not clear it.
 
 ### Fixed
+
+- **Clicking a slice or a band no longer draws a rectangle around it.** Chromium focuses an SVG
+  shape when it is clicked even with no `tabindex` on it, and reports that focus as NOT
+  `:focus-visible` — so a rule keyed on `:focus-visible` never fired and the browser painted its
+  own outline instead. On a ring arc or a funnel band an outline is the BOUNDING BOX, which stood
+  off the shape and read as a selection nobody asked for. `ds-donut-chart`, `ds-funnel-chart` and
+  `ds-line-chart` marks now suppress it on `:focus`. The keyboard indicator is untouched: it is a
+  stroke that follows the silhouette, and it still paints under `:focus-visible`.
+
+- **`ds-column-chart`'s tooltip clears the value printed above the column.** The panel is anchored
+  to the column and opened 12px above it, which is exactly where `showValues` prints the figure,
+  so the two overlapped. It now clears the text as well as the mark; with `showValues` off the gap
+  is unchanged.
 
 - **`ds-button` ignores the app-wide `DS_CONFIG.field.reserveMessage`.** The button takes the same
   message line a field does, and with it took the field-wide default: an app calling
