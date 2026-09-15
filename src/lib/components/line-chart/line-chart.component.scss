@@ -47,6 +47,15 @@ figcaption {
 
 @include chart-frame.message-box(var(--_line-chart-plot-height));
 
+/* The canvas is an svg sized by its viewBox ratio against the card width, not by the plot-height
+   token — so reserving that token alone leaves the message box short by however much the width
+   adds, and the card jumps when the last series is switched off. The ratio reserves what the
+   canvas would actually have taken; the token stays as the floor for a very narrow card. */
+.empty {
+  aspect-ratio: 640 / 320;
+  inline-size: 100%;
+}
+
 .canvas {
   display: block;
   inline-size: 100%;

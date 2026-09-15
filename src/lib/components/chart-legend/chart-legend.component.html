@@ -5,8 +5,8 @@
         <input
           type="radio"
           class="legend-radio"
-          name="legend-isolate"
-          [checked]="isolated() === null"
+          [attr.name]="groupName"
+          [checked]="isolated() === 'all'"
           (change)="showAll()"
           (focus)="highlighted.set(null)" />
 
@@ -28,7 +28,7 @@
           <input
             type="radio"
             class="legend-radio"
-            name="legend-isolate"
+            [attr.name]="groupName"
             animate.enter="mark-enter"
             [checked]="isolated() === item.id"
             [style.--ds-checkbox-selected-bg-color]="item.color"
@@ -70,6 +70,24 @@
           {{ item.label }}
         </span>
       }
+    </li>
+  }
+
+  @if (toggleable() && mode() === 'isolate') {
+    <li class="legend-item">
+      <label class="legend-toggle">
+        <input
+          type="radio"
+          class="legend-radio"
+          [attr.name]="groupName"
+          [checked]="isolated() === 'none'"
+          (change)="hideAll()"
+          (focus)="highlighted.set(null)" />
+
+        <span class="legend-label">
+          None
+        </span>
+      </label>
     </li>
   }
 </ul>

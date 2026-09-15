@@ -184,6 +184,21 @@ export class FunnelChartComponent {
 
   protected readonly activeMark = chartActiveMark();
 
+  /** Where the badge goes, as a percentage of the shape's box. Percentages rather than viewBox
+   *  units because this svg is `preserveAspectRatio="none"`: it stretches horizontally with the
+   *  card, and anything measured in user units stretches with it. */
+  protected readonly pinnedCenter = computed(() => {
+    const entry = this.stages()[this.activeMark.index()];
+    if (!this.activeMark.pinned() || !entry) {
+      return null;
+    }
+
+    return {
+      xPercent: (entry.center.x / FUNNEL_VIEW_BOX_WIDTH) * 100,
+      yPercent: (entry.center.y / FUNNEL_VIEW_BOX_HEIGHT) * 100,
+    };
+  });
+
   protected onMarkClick(
     payload: FunnelChartStage,
     index: number,

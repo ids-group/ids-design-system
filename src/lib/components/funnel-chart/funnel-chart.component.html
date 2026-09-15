@@ -4,7 +4,7 @@
       class="pin-reset"
       type="button"
       (click)="activeMark.release()">
-      Reset
+      Unpin
     </button>
   }
   @if (caption()) {
@@ -73,20 +73,19 @@
             (keydown.enter)="onStageKey(entry.stage, $event)"
             (keydown.space)="onStageKey(entry.stage, $event)">
           </polygon>
-          @if (activeMark.pinned() && activeMark.index() === index) {
-            <foreignObject
-              class="pin-marker"
-              width="14"
-              height="14"
-              [attr.x]="entry.center.x - 7"
-              [attr.y]="entry.center.y - 7">
-              <ds-icon
-                name="pin"
-                [size]="14" />
-            </foreignObject>
-          }
         }
       </svg>
+
+      @if (pinnedCenter(); as center) {
+        <span
+          class="pin-marker"
+          [style.left.%]="center.xPercent"
+          [style.top.%]="center.yPercent">
+          <ds-icon
+            name="pin"
+            [size]="13" />
+        </span>
+      }
     </div>
 
     @if (showTable()) {

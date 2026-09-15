@@ -2987,6 +2987,18 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
+    "component": "Chart Frame",
+    "selector": ".chart-frame",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-chart-pin-size",
+        "value": "22px",
+        "notes": ""
+      }
+    ]
+  },
+  {
     "component": "Chart Legend",
     "selector": ".chart-legend",
     "description": "",

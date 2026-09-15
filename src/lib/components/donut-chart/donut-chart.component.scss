@@ -226,10 +226,5 @@ figcaption {
 @include chart-frame.forced-colors;
 
 @include chart-frame.pin-reset;
+@include chart-frame.pin-marker;
 
-/* The marker says which mark is held; it must never be what the pointer hits. */
-.pin-marker {
-  pointer-events: none;
-  color: var(--ds-chart-focus-halo-color);
-  filter: drop-shadow(0 0 1px var(--ds-chart-focus-ring-color));
-}

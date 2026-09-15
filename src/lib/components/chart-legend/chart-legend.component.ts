@@ -7,6 +7,7 @@ import {
   input,
   model,
 } from '@angular/core';
+import { nextControlId } from '@ids-group-ltd/ids-design-system/components';
 import type { ChartLegendItem } from './chart-legend.types';
 
 /**
@@ -62,12 +63,28 @@ export class ChartLegendComponent {
     );
   }
 
-  /** The only visible id, or null when every item is visible — which is what the "All" radio
-   *  reflects. A partially hidden set left over from `'toggle'` reads as no selection. */
-  protected readonly isolated = computed(() => {
-    const visible = this.items().filter((item) => !this.isHidden(item.id));
+  /** Radio groups are scoped by NAME across the whole document, so a shared name would make every
+   *  legend on a page one group: choosing a series in one chart would clear the choice in all the
+   *  others, and only the last one rendered would show a selection at all. */
+  protected readonly groupName = nextControlId('ds-chart-legend');
 
-    return visible.length === 1 ? visible[0].id : null;
+  /** Which radio is on: an item's id, or the two ends of the range. Always one of them, so the
+   *  group is never a set of empty circles with nothing chosen — a radio group with no selection
+   *  reads as broken, and the reader cannot tell "everything" from "not decided yet".
+   *
+   *  A partial set left over from `'toggle'` — some hidden, more than one visible — is not a state
+   *  isolate can express, so it settles on `'all'` and the next choice makes it true. */
+  protected readonly isolated = computed(() => {
+    const items = this.items();
+    const visible = items.filter((item) => !this.isHidden(item.id));
+    if (visible.length === 0 && items.length > 0) {
+      return 'none';
+    }
+    if (visible.length === 1) {
+      return visible[0].id;
+    }
+
+    return 'all';
   });
 
   protected isolate(id: string): void {
@@ -80,5 +97,9 @@ export class ChartLegendComponent {
 
   protected showAll(): void {
     this.hidden.set([]);
+  }
+
+  protected hideAll(): void {
+    this.hidden.set(this.items().map((item) => item.id));
   }
 }

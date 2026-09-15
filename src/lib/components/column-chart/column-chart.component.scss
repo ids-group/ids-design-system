@@ -169,18 +169,6 @@ figcaption {
 
 @include chart-frame.forced-colors;
 
-/* The pin says the mark is held, on the mark itself rather than only in the panel — the panel can
-   be anywhere on screen, and the reader needs to know WHICH mark they froze. White with a dark halo
-   so it carries on every series colour the palette holds. */
-.pin-marker {
-  position: absolute;
-  inset: 0;
-  margin: auto;
-  inline-size: 14px;
-  block-size: 14px;
-  color: var(--ds-chart-focus-halo-color);
-  filter: drop-shadow(0 0 1px var(--ds-chart-focus-ring-color));
-  pointer-events: none;
-}
 
 @include chart-frame.pin-reset;
+@include chart-frame.pin-marker;

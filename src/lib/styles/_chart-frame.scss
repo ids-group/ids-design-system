@@ -103,33 +103,63 @@
 }
 
 /* The way out of a pin, said in a word. A held mark is a state the reader did not have before and
-   cannot obviously undo — Escape is invisible, and clicking the mark again is a guess. Small and
-   quiet in the corner: it is an exit, not an action anyone should be drawn to.
-
-   The chart owns the corner, so this sits against :host rather than the plot, which keeps it clear
-   of the marks whatever shape they are. */
+   cannot obviously undo — Escape is invisible, and clicking the mark again is a guess. It reads
+   `Unpin` rather than `Reset`, which would leave a reader wondering what else it resets. */
 @mixin pin-reset {
   :host {
     position: relative;
   }
 
+  /* Top CENTRE: the corner competes with a legend on the donut and with the value labels on a
+     column chart, and on a wide card a corner control is a long way from the mark it undoes.
+     Centred, it sits over the plot it belongs to whatever the chart's shape.
+
+     44px minimum box around a 12px label, because it is a real control and the library's own touch
+     rule applies to it. */
   .pin-reset {
     position: absolute;
-    inset-block-start: var(--ds-chart-frame-padding);
-    inset-inline-end: var(--ds-chart-frame-padding);
+    inset-block-start: var(--space-2);
+    inset-inline: 0;
     z-index: 1;
-    padding: var(--space-1) var(--space-2);
+    justify-self: center;
+    margin-inline: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    min-block-size: var(--space-12);
+    inline-size: fit-content;
+    padding: var(--space-1) var(--space-3);
     border: var(--border-width-default) solid var(--border-divider);
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-pill);
     background: var(--surface-default);
     color: var(--text-secondary);
     font-size: var(--font-size-xs);
     line-height: 1;
+    box-shadow: var(--shadow-1);
     cursor: pointer;
 
     &:hover {
       color: var(--text-primary);
       border-color: var(--border-strong);
     }
+  }
+}
+
+/* The pinned mark's badge: a pushpin on an opaque disc. The disc is what makes it legible — a bare
+   glyph with a halo has to win against whatever colour the series happens to be, and a palette of
+   eight cannot promise that. Size is the icon's touch-free minimum: it is a STATE, never a target,
+   so it carries `pointer-events: none` and no tab stop. */
+@mixin pin-marker {
+  .pin-marker {
+    display: grid;
+    place-items: center;
+    inline-size: var(--ds-chart-pin-size, 22px);
+    block-size: var(--ds-chart-pin-size, 22px);
+    border: var(--border-width-default) solid var(--border-divider);
+    border-radius: var(--radius-pill);
+    background: var(--surface-default);
+    color: var(--text-primary);
+    box-shadow: var(--shadow-1);
+    pointer-events: none;
   }
 }

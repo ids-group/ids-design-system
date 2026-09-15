@@ -132,10 +132,15 @@ svg {
 @include chart-frame.forced-colors;
 
 @include chart-frame.pin-reset;
+@include chart-frame.pin-marker;
 
-/* The marker says which mark is held; it must never be what the pointer hits. */
+
+/* Positioned against the shape rather than the svg, so the stretch never reaches it. */
+.shape {
+  position: relative;
+}
+
 .pin-marker {
-  pointer-events: none;
-  color: var(--ds-chart-focus-halo-color);
-  filter: drop-shadow(0 0 1px var(--ds-chart-focus-ring-color));
+  position: absolute;
+  transform: translate(-50%, -50%);
 }
