@@ -16,6 +16,19 @@
     border: var(--ds-chart-frame-border-width) solid
       var(--ds-chart-frame-border-color);
     border-radius: var(--ds-chart-frame-radius);
+
+    // A drag across a plot selects the chart's chrome — axis ticks, legend labels, and the
+    // caption a screen reader needs that is clipped to a thin strip for everyone else. The
+    // selection then paints as bars across the card, over content that is not visibly there.
+    // None of it is text anyone copies; the numbers live in the annex table, which stays
+    // selectable below.
+    user-select: none;
+  }
+
+  .data-table,
+  .stage-table,
+  figcaption {
+    user-select: text;
   }
 }
 
