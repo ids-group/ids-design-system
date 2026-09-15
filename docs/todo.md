@@ -14,14 +14,14 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**98 open — 1 P1, 32 P2, 65 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**103 open — 1 P1, 34 P2, 68 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 1
 
 - **Framework & forms**
   - Upgrade to Angular 22 — and re-verify the signal-forms work against it, because one of its breaking changes lands exactly there
 
-### P2 — 32
+### P2 — 34
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Nothing catches a shell that rings on `:focus-within` when it means the keyboard
@@ -41,6 +41,9 @@ item and nothing else.
   - `.design-sync/conventions.md` is a generator INPUT, and nothing stops a reflow desyncing it
   - The elements demo has not been opened in a real browser since the rebuilds
   - `ds-toast-region`'s dev-warning strip is unverified
+- **Charts and fields the ECM prototype could not use (recorded 2026-09-15, Stas: take all five)**
+  - No component draws one bar whose segments are the parts of a whole
+  - `ds-progress` cannot show a target beside the fill
 - **Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)**
   - A1 - build the seam and ONE directive, and measure what the seam itself costs
   - Build-time `define` flag: a consumer CAN strip library code from `angular.json` — measured
@@ -66,7 +69,7 @@ item and nothing else.
 - **Localization — every user-visible string is a hardcoded literal (recorded 2026-08-27, from the ITB Workspace picker report)**
   - Every user-visible string in the library is a hardcoded English literal — VALIDATED 2026-08-27 against 0.11.0; Stas: defer the whole thing, no code
 
-### P3 — 65
+### P3 — 68
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - A whole-page keyboard walk is not measurable with the tools here, and the failed
@@ -90,6 +93,10 @@ item and nothing else.
   - Which of the 8 live chapters can also be frozen
   - `templates` and `startingPoints` in `_ds_manifest.json` are in the schema and empty
   - `.thumbnail` — the project's cover image — has no source that regenerates it
+- **Charts and fields the ECM prototype could not use (recorded 2026-09-15, Stas: take all five)**
+  - A bar row carries one number, and some rows mean two
+  - There is no mark small enough for a table cell
+  - A point on `ds-line-chart` cannot carry a fixed label
 - **Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)**
   - A2 - the remaining directives, after A1 prices the seam
   - B1 - `DS_CONFIG.prototype: true` is BEHAVIOUR only. For bytes, use a build-time flag
@@ -528,6 +535,43 @@ documented thing or their chapter's demo only exists once opened. Everything bel
 # Asks — a consumer or Stas asked for it
 
 Each has somebody behind it. Nothing here is speculative work.
+
+## Charts and fields the ECM prototype could not use (recorded 2026-09-15, Stas: take all five)
+
+Ten hand-rolled charts moved onto DS components at 0.13.1. These five are what stopped the
+remaining four screens; each names the screen it blocks, so a fix has somewhere to be checked.
+
+- [ ] **[P2] No component draws one bar whose segments are the parts of a whole.** `BarChartRow` is
+  `{ id?, label, value, percent?, color? }` — one value per row — and neither `ds-bar-chart` nor
+  `ds-column-chart` mentions a stack. `LineChartAxisMode`'s `'stacked'` is two plots over a shared
+  category axis, which is a different picture.
+  **Blocks** the outcome distribution on `performance-overview`: one full-width bar whose segments
+  are the outcome categories, with a list beneath carrying each segment's label, code, count and
+  percent. Wanted: a stacked variant summing to the row total, on the shared categorical palette,
+  with one legend.
+
+- [ ] **[P2] `ds-progress` cannot show a target beside the fill.** Its inputs are `value`,
+  `variant`, `indeterminate`, `ariaLabel`; there is no second mark on the track.
+  **Blocks** the KPI cards on `performance-overview`, where the row exists to read actual against
+  target in one glance — without the mark the bar loses the comparison it is there for. Wanted: a
+  `target` input on the same scale, drawn as a hairline across the track. The smallest of the five.
+
+- [ ] **[P3] A bar row carries one number, and some rows mean two.** `caption` and `summary` are
+  per-chart, not per-row, so a row reading `12,400 → 456` has nowhere to put the second figure.
+  **Blocks** requests-by-audience-group on `microsite-detail`. Wanted: a `detail` or
+  `secondaryValue` on `BarChartRow`, rendered beside the value the way `ChartTooltipEntry.detail`
+  already does inside the tooltip — or a per-row template like the funnel's table.
+
+- [ ] **[P3] There is no mark small enough for a table cell.** Every chart is a block with its own
+  caption, legend and annex table, which is right for a card and far too much for a 60px cell.
+  **Blocks** the request-rate column on `microsites`. Wanted: a minimal `ds-meter` taking `value`
+  and `max` and nothing else — one track on the categorical palette, no legend, caption or table.
+
+- [ ] **[P3] A point on `ds-line-chart` cannot carry a fixed label.** The chart has `tooltip` and
+  `tooltipAnchor`, both hover-driven, and no way to pin a callout to a category.
+  **Blocks** the visits trend on `microsites`, which used to name its peak month without hovering;
+  the callout was dropped in the migration and the value is hover-only now. Wanted: an annotation
+  on `LineChartSeries` or the chart — a category index plus a label, drawn as a fixed callout.
 
 ## Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)
 
