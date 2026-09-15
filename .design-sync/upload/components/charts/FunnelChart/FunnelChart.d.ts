@@ -11,12 +11,18 @@ export interface FunnelChartProps {
   shape?: ('taper' | 'width' | 'area');
   /** The value, percent and drop table printed under the funnel. It supersedes `dataTable`: while this is on, the disclosure every chart carries would repeat a strict subset of these same numbers, so it is not rendered. */
   showTable?: boolean;
+  /** Whether the chart draws its own bordered, padded box. `'auto'`, the default, draws it; `'none'` leaves the chart bare, for one placed inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards is one decision per app rather than per plot. */
+  frame?: ('auto' | 'none') | null;
+  /** How long the tooltip stays after the pointer leaves the mark, in milliseconds. Zero, the default, takes it away at once: a panel that outlives the pointer sits over the plot the reader has moved on to. Raise it only for a panel a reader has to REACH — one carrying a link, a figure, or anything selectable — which is WCAG 1.4.13's hoverable clause. The panel is portaled to the body, so crossing the gap to it at an ordinary pointer speed needs about 140. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 0. */
+  tooltipLingerMs?: number | null;
   /** Printed above the plot as the chart's visible title, and reused as the annex table's caption. */
   caption?: string | null;
   /** Accessible name. Generated from the data when omitted. */
   summary?: string | null;
   /** The label-and-value disclosure every chart carries. Ignored while `showTable` is on, which already prints every label and value. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'toggle'`. */
   dataTable?: ('toggle' | 'visible' | 'none') | null;
+  /** What the Drop column reports: `'relative'` (the default) the share that leaked at this stage, `'absolute'` the count, `'none'` no column at all. */
+  drop?: ('relative' | 'absolute' | 'none');
   /** Draws skeleton marks in place of the data, at the same count, so the chart does not resize when the data lands. */
   loading?: boolean;
   /** Shown in place of the plot when `data` is empty. Unset falls back to `DS_CONFIG.chart.emptyText`, then `'No data'`. */
@@ -31,6 +37,8 @@ export interface FunnelChartProps {
   interactive?: boolean;
   /** The stage that was clicked, or activated with Enter or Space. Fires whether or not `interactive` is set. */
   onStageClicked?: (value: unknown) => void;
+  /** Holds the hovered mark and its tooltip in place when it is clicked, until Escape or a press outside releases it. Off by default: a click is already the drill-down hook, and a mark left lit after the pointer has gone needs a reader who knows why it is lit. `stageClicked` fires either way — pinning is a state, not a handler. */
+  pinOnClick?: boolean;
   /** Dims every OTHER mark while one is hovered or focused, so the reader's eye is held on the one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed marks — measured 2026-09-13, the worst pair of three dimmed series falls from dE 14.8 at full opacity to 2.1 at `--ds-chart-dim-opacity`'s default 0.3 — so it buys loudness for one mark and pays for it with the rest of the chart. */
   dimOthers?: boolean;
   /** Milliseconds between one mark's entrance and the next. `0`, the default, is no stagger at all; `40` is the documented non-zero step. The total is capped, so a long series does not crawl in. */

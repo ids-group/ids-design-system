@@ -170,6 +170,10 @@
       "sourcePath": "components/navigation/MenuItem/MenuItem.jsx"
     },
     {
+      "name": "Meter",
+      "sourcePath": "components/data-display/Meter/Meter.jsx"
+    },
+    {
       "name": "Modal",
       "sourcePath": "components/overlays/Modal/Modal.jsx"
     },
@@ -1759,6 +1763,41 @@
       "subtitle": "[leading] and [trailing] sit OUTSIDE the row's button, so a row can carry its own controls and still be the thing that selects."
     },
     {
+      "path": "components/data-display/Meter/Meter - In a table cell.html",
+      "group": "data-display",
+      "viewport": "1200x530",
+      "name": "Meter - in a table cell",
+      "subtitle": "A chart is a block with a caption, a legend and an annex table; in a 60px cell that chrome is the whole cell."
+    },
+    {
+      "path": "components/data-display/Meter/Meter - Give the cell a width.html",
+      "group": "data-display",
+      "viewport": "1200x309",
+      "name": "Meter - give the cell a width",
+      "subtitle": "The meter fills whatever box it is in, so the column decides how wide the bar is."
+    },
+    {
+      "path": "components/data-display/Meter/Meter - What it is not.html",
+      "group": "data-display",
+      "viewport": "1200x309",
+      "name": "Meter - what it is not",
+      "subtitle": "It is not ds-progress, which reports how far a task has got and says so with role='progressbar'."
+    },
+    {
+      "path": "components/data-display/Meter/Meter - Colour.html",
+      "group": "data-display",
+      "viewport": "1200x304",
+      "name": "Meter - colour",
+      "subtitle": "The fill takes -ds-meter-fill-color, so a column is coloured once in a stylesheet rather than once per row."
+    },
+    {
+      "path": "components/data-display/Meter/Meter - Edge cases.html",
+      "group": "data-display",
+      "viewport": "1200x284",
+      "name": "Meter - edge cases",
+      "subtitle": "A value past max fills the track rather than overflowing it, a negative one draws nothing, and a max of zero or less falls back to 100 — a scale with no width has no fraction to…"
+    },
+    {
       "path": "components/data-display/Stat/Stat - Stat tiles.html",
       "group": "data-display",
       "viewport": "1200x410",
@@ -2226,7 +2265,7 @@
     {
       "path": "components/feedback-status/Progress/Progress - Variants.html",
       "group": "feedback-status",
-      "viewport": "1200x510",
+      "viewport": "1200x627",
       "name": "Progress - variants"
     },
     {
@@ -2607,11 +2646,32 @@
       "name": "Charts & dataviz - empty & loading states"
     },
     {
+      "path": "guides/foundations/Charts & dataviz/Charts & dataviz - Reading a value without keeping the pointer.html",
+      "group": "foundations",
+      "viewport": "1200x561",
+      "name": "Charts & dataviz - reading a value without keeping the pointer still",
+      "subtitle": "An inert tooltip cannot be read at high zoom, cannot have its number selected, and cannot be cleared without moving the pointer somewhere else."
+    },
+    {
+      "path": "guides/foundations/Charts & dataviz/Charts & dataviz - The frame a chart draws around itself.html",
+      "group": "foundations",
+      "viewport": "1200x700",
+      "name": "Charts & dataviz - the frame a chart draws around itself",
+      "subtitle": "A chart draws its own bordered, padded box by default, because it is read as an object — a plot with axes, a legend and an annex table — and without an edge those parts run into…"
+    },
+    {
+      "path": "guides/foundations/Charts & dataviz/Charts & dataviz - What a chart says to a screen reader.html",
+      "group": "foundations",
+      "viewport": "1200x382",
+      "name": "Charts & dataviz - what a chart says to a screen reader",
+      "subtitle": "A path and a set of arcs describe nothing one mark at a time, so a chart does not expose its marks — it carries ONE generated sentence: its caption, then each series with its…"
+    },
+    {
       "path": "guides/foundations/Charts & dataviz/Charts & dataviz - App-wide chart defaults.html",
       "group": "foundations",
-      "viewport": "1200x514",
+      "viewport": "1200x572",
       "name": "Charts & dataviz - app-wide chart defaults",
-      "subtitle": "Four things are the same decision for every chart in an app rather than a choice per plot, so they resolve through DS_CONFIG: valueFormat (a number reads one way in a product, and…"
+      "subtitle": "Six things are the same decision for every chart in an app rather than a choice per plot, so they resolve through DS_CONFIG: valueFormat (a number reads one way in a product, and a…"
     },
     {
       "path": "guides/foundations/Colour/Colour - Secondary role.html",

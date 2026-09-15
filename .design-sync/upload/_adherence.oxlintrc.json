@@ -100,6 +100,7 @@
               "components/*/Menu/**",
               "components/*/MenuDivider/**",
               "components/*/MenuItem/**",
+              "components/*/Meter/**",
               "components/*/Modal/**",
               "components/*/ModalCard/**",
               "components/*/ModalConfirm/**",
@@ -207,8 +208,8 @@
         "message": "<Banner> doesn't accept that prop. Declared props: variant, title, dismissible, icon, compact, layout, accentRail, onClosed, announce, actions, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='BarChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:data|max|caption|summary|dataTable|showPercent|loading|emptyText|error|errorText|valueFormat|interactive|onRowClicked|dimOthers|staggerMs|tooltip|children|key|ref|className|style)$/]",
-        "message": "<BarChart> doesn't accept that prop. Declared props: data, max, caption, summary, dataTable, showPercent, loading, emptyText, error, errorText, valueFormat, interactive, onRowClicked, dimOthers, staggerMs, tooltip, children."
+        "selector": "JSXOpeningElement[name.name='BarChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:data|max|frame|tooltipLingerMs|caption|summary|dataTable|partOfWhole|showPercent|loading|emptyText|error|errorText|valueFormat|interactive|onRowClicked|pinOnClick|dimOthers|staggerMs|tooltip|children|key|ref|className|style)$/]",
+        "message": "<BarChart> doesn't accept that prop. Declared props: data, max, frame, tooltipLingerMs, caption, summary, dataTable, partOfWhole, showPercent, loading, emptyText, error, errorText, valueFormat, interactive, onRowClicked, pinOnClick, dimOthers, staggerMs, tooltip, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='BottomSheet'] > JSXAttribute > JSXIdentifier[name!=/^(?:open|title|onClosed|snapPoints|onOpenChange|actions|children|key|ref|className|style)$/]",
@@ -243,8 +244,8 @@
         "message": "<ColorPicker> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, touched, hidden, value, presets, panelClass, disabled, ariaLabel, success, onValueChange, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='ColumnChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:data|showValues|tickCount|caption|summary|dataTable|loading|emptyText|error|errorText|valueFormat|interactive|onPointClicked|dimOthers|staggerMs|tooltip|tooltipAnchor|children|key|ref|className|style)$/]",
-        "message": "<ColumnChart> doesn't accept that prop. Declared props: data, showValues, tickCount, caption, summary, dataTable, loading, emptyText, error, errorText, valueFormat, interactive, onPointClicked, dimOthers, staggerMs, tooltip, tooltipAnchor, children."
+        "selector": "JSXOpeningElement[name.name='ColumnChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:data|showValues|tickCount|frame|tooltipLingerMs|caption|summary|dataTable|partOfWhole|loading|emptyText|error|errorText|valueFormat|interactive|onPointClicked|pinOnClick|dimOthers|staggerMs|tooltip|tooltipAnchor|children|key|ref|className|style)$/]",
+        "message": "<ColumnChart> doesn't accept that prop. Declared props: data, showValues, tickCount, frame, tooltipLingerMs, caption, summary, dataTable, partOfWhole, loading, emptyText, error, errorText, valueFormat, interactive, onPointClicked, pinOnClick, dimOthers, staggerMs, tooltip, tooltipAnchor, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='Container'] > JSXAttribute > JSXIdentifier[name!=/^(?:size|children|key|ref|className|style)$/]",
@@ -267,8 +268,8 @@
         "message": "<Divider> doesn't accept that prop. Declared props: variant, spacing, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='DonutChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:data|centerValue|centerLabel|legend|maxSlices|otherLabel|thickness|caption|summary|dataTable|loading|emptyText|error|errorText|valueFormat|interactive|onSliceClicked|dimOthers|staggerMs|tooltip|children|key|ref|className|style)$/]",
-        "message": "<DonutChart> doesn't accept that prop. Declared props: data, centerValue, centerLabel, legend, maxSlices, otherLabel, thickness, caption, summary, dataTable, loading, emptyText, error, errorText, valueFormat, interactive, onSliceClicked, dimOthers, staggerMs, tooltip, children."
+        "selector": "JSXOpeningElement[name.name='DonutChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:data|centerValue|centerLabel|legend|maxSlices|otherLabel|thickness|frame|tooltipLingerMs|caption|summary|dataTable|loading|emptyText|error|errorText|valueFormat|interactive|onSliceClicked|pinOnClick|dimOthers|staggerMs|tooltip|children|key|ref|className|style)$/]",
+        "message": "<DonutChart> doesn't accept that prop. Declared props: data, centerValue, centerLabel, legend, maxSlices, otherLabel, thickness, frame, tooltipLingerMs, caption, summary, dataTable, loading, emptyText, error, errorText, valueFormat, interactive, onSliceClicked, pinOnClick, dimOthers, staggerMs, tooltip, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='Drawer'] > JSXAttribute > JSXIdentifier[name!=/^(?:open|size|placement|title|onClosed|onOpenChange|drawerBody|drawerFooter|children|key|ref|className|style)$/]",
@@ -291,8 +292,8 @@
         "message": "<FilterBar> doesn't accept that prop. Declared props: moreLabel, panelLabel, triggerSize, trailing, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='FunnelChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:data|shape|showTable|caption|summary|dataTable|loading|emptyText|error|errorText|valueFormat|interactive|onStageClicked|dimOthers|staggerMs|tooltip|children|key|ref|className|style)$/]",
-        "message": "<FunnelChart> doesn't accept that prop. Declared props: data, shape, showTable, caption, summary, dataTable, loading, emptyText, error, errorText, valueFormat, interactive, onStageClicked, dimOthers, staggerMs, tooltip, children."
+        "selector": "JSXOpeningElement[name.name='FunnelChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:data|shape|showTable|frame|tooltipLingerMs|caption|summary|dataTable|drop|loading|emptyText|error|errorText|valueFormat|interactive|onStageClicked|pinOnClick|dimOthers|staggerMs|tooltip|children|key|ref|className|style)$/]",
+        "message": "<FunnelChart> doesn't accept that prop. Declared props: data, shape, showTable, frame, tooltipLingerMs, caption, summary, dataTable, drop, loading, emptyText, error, errorText, valueFormat, interactive, onStageClicked, pinOnClick, dimOthers, staggerMs, tooltip, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='Icon'] > JSXAttribute > JSXIdentifier[name!=/^(?:name|size|stroke|ariaLabel|children|key|ref|className|style)$/]",
@@ -311,8 +312,8 @@
         "message": "<Input> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, touched, hidden, value, type, size, label, placeholder, disabled, readOnly, readonlyBinding, success, loading, required, optional, name, min, max, step, autocomplete, autofocus, ariaLabel, ariaDescribedBy, maxLength, minLength, pattern, enterKeyHint, inputMode, onBlurred, clearable, passwordToggle, passwordVisible, onValueChange, onPasswordVisibleChange, prefix, suffix, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='LineChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:categories|series|yAxisMode|showMarkers|interactive|onPointClicked|dimOthers|gaps|tickCount|caption|summary|dataTable|loading|emptyText|error|errorText|valueFormat|hiddenSeries|rescaleOnHide|legendFilters|noVisibleSeriesText|patterns|staggerMs|tooltip|tooltipAnchor|onHiddenSeriesChange|children|key|ref|className|style)$/]",
-        "message": "<LineChart> doesn't accept that prop. Declared props: categories, series, yAxisMode, showMarkers, interactive, onPointClicked, dimOthers, gaps, tickCount, caption, summary, dataTable, loading, emptyText, error, errorText, valueFormat, hiddenSeries, rescaleOnHide, legendFilters, noVisibleSeriesText, patterns, staggerMs, tooltip, tooltipAnchor, onHiddenSeriesChange, children."
+        "selector": "JSXOpeningElement[name.name='LineChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:categories|series|yAxisMode|showMarkers|annotations|interactive|onPointClicked|pinOnClick|dimOthers|gaps|tickCount|frame|tooltipLingerMs|caption|summary|dataTable|max|maxSecondary|loading|emptyText|error|errorText|valueFormat|hiddenSeries|rescaleOnHide|legendFilters|legendMode|noVisibleSeriesText|patterns|staggerMs|tooltip|tooltipAnchor|onHiddenSeriesChange|children|key|ref|className|style)$/]",
+        "message": "<LineChart> doesn't accept that prop. Declared props: categories, series, yAxisMode, showMarkers, annotations, interactive, onPointClicked, pinOnClick, dimOthers, gaps, tickCount, frame, tooltipLingerMs, caption, summary, dataTable, max, maxSecondary, loading, emptyText, error, errorText, valueFormat, hiddenSeries, rescaleOnHide, legendFilters, legendMode, noVisibleSeriesText, patterns, staggerMs, tooltip, tooltipAnchor, onHiddenSeriesChange, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='List'] > JSXAttribute > JSXIdentifier[name!=/^(?:dividers|children|key|ref|className|style)$/]",
@@ -337,6 +338,10 @@
       {
         "selector": "JSXOpeningElement[name.name='MenuItem'] > JSXAttribute > JSXIdentifier[name!=/^(?:icon|disabled|error|quiet|description|submenu|onPressed|iconContent|children|key|ref|className|style)$/]",
         "message": "<MenuItem> doesn't accept that prop. Declared props: icon, disabled, error, quiet, description, submenu, onPressed, iconContent, children."
+      },
+      {
+        "selector": "JSXOpeningElement[name.name='Meter'] > JSXAttribute > JSXIdentifier[name!=/^(?:value|max|color|ariaLabel|children|key|ref|className|style)$/]",
+        "message": "<Meter> doesn't accept that prop. Declared props: value, max, color, ariaLabel, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='Modal'] > JSXAttribute > JSXIdentifier[name!=/^(?:open|size|status|title|subtitle|onClosed|onConfirmed|dividers|closeOnBackdrop|persistent|staticPreview|onOpenChange|eyebrow|titleBadge|body|impact|actions|children|key|ref|className|style)$/]",
@@ -383,8 +388,8 @@
         "message": "<Popover> doesn't accept that prop. Declared props: align, placement, arrow, panelRole, panelLabel, staticPreview, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='Progress'] > JSXAttribute > JSXIdentifier[name!=/^(?:value|variant|indeterminate|ariaLabel|children|key|ref|className|style)$/]",
-        "message": "<Progress> doesn't accept that prop. Declared props: value, variant, indeterminate, ariaLabel, children."
+        "selector": "JSXOpeningElement[name.name='Progress'] > JSXAttribute > JSXIdentifier[name!=/^(?:value|max|variant|indeterminate|ariaLabel|target|children|key|ref|className|style)$/]",
+        "message": "<Progress> doesn't accept that prop. Declared props: value, max, variant, indeterminate, ariaLabel, target, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='Radio'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|touched|checked|deselectable|disabled|name|value|inputId|size|required|label|ariaLabel|onCheckedChange|children|key|ref|className|style)$/]",
@@ -671,6 +676,9 @@
         "replaces": []
       },
       "MenuItem": {
+        "replaces": []
+      },
+      "Meter": {
         "replaces": []
       },
       "Modal": {
