@@ -127,7 +127,7 @@
   total to keep the line; leave it off and the tooltip carries the label and the value, as before
   `0.13.1`.
 
-- **Exported class member surface grew — only matters if you SUBCLASS a chart.** `BarChartComponent`,
+- **Exported class member surface grew — only matters if you SUBCLASS one of these.** `BarChartComponent`,
   `ColumnChartComponent`, `DonutChartComponent`, `FunnelChartComponent` and `LineChartComponent` all
   gain `pinOnClick` and the protected `onMarkClick`, which `LineChartComponent` spells
   `onMarkerClick` beside its own `pinnedCategory` and `releaseCategoryPin`; `BarChartComponent` and
@@ -135,6 +135,10 @@
   internal `ChartLegendComponent`, which the package root does not export, gains `mode`, `isolated`,
   `isolate` and `showAll`; and the internal `ChartTooltipDirective`, also unexported there, gains
   the private `detachEscape` and `closeOnEscape`.
+
+  Outside the charts: `ProgressComponent` gains `target` and `max`, `LineChartComponent` also gains
+  `annotations`, and the internal message base the fields and the button extend — unexported from
+  the package root — gains a protected `reserveFollowsFieldDefault`.
 
   A subclass declaring any of those names collides. For a public or protected member the fix is
   `override` or a rename; for a private one only a rename works, because TS2415 fires on the name
