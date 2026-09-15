@@ -89,5 +89,17 @@
         variant="success"
         ariaLabel="Resolved 88% against a 40% target" />
     </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        [max]="80" · 37 of 80
+      </code>
+
+      <ds-progress
+        [value]="37"
+        [max]="80"
+        [target]="64"
+        ariaLabel="Requests handled" />
+    </div>
   </div>
 </docs-section>

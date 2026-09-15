@@ -1,10 +1,10 @@
 @if (isIndet()) {
   <span></span>
 } @else {
-  <span [style.width.%]="clampedValue()"></span>
-  @if (clampedTarget() !== null) {
+  <span [style.width.%]="valuePercent()"></span>
+  @if (targetPercent() !== null) {
     <div
       class="target"
-      [style.left.%]="clampedTarget()"></div>
+      [style.left.%]="targetPercent()"></div>
   }
 }
