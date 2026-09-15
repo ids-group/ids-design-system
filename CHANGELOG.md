@@ -175,6 +175,13 @@
 
 ### Fixed
 
+- **`ds-line-chart` draws from axis to axis.** Its readings sat at the centre of a slot each, which
+  left an empty strip of plot against the value axis and another against the far edge — a gap that
+  reads as data the chart is withholding. The first reading is on the value axis now and the last
+  at the far edge, with the rest dividing the run evenly. The crosshair band is centred on its
+  reading and clamped at both ends, so the first and last are half-width and neither hangs over an
+  axis label.
+
 - **A drag across a chart no longer selects its chrome.** Axis ticks, legend labels and the caption
   a screen reader needs — clipped to a thin strip for everyone else — all came out selected, and the
   selection painted as bars across the card over content that is not visibly there. The plot is
