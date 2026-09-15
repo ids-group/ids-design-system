@@ -36,7 +36,7 @@ export class MeterSection {
   protected readonly columns: TableColumn<MicrositeRow>[] = [
     { key: 'name', label: 'Microsite' },
     { key: 'requests', label: 'Requests', align: 'right', width: 'content' },
-    { key: 'rate', label: 'Request rate' },
+    { key: 'rate', label: 'Rate', width: 'content' },
   ];
 
   protected asRow(row: unknown): MicrositeRow {

@@ -4625,6 +4625,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": ""
       },
       {
+        "name": "--ds-meter-min-width",
+        "value": "3rem",
+        "notes": ""
+      },
+      {
         "name": "--ds-meter-fill-color",
         "value": "var(--ds-chart-series-1-color)",
         "notes": ""

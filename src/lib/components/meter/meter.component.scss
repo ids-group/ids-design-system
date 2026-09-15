@@ -5,6 +5,12 @@
 
   display: block;
   inline-size: 100%;
+
+  // A shrink-to-fit column — `ds-table`'s `width: 'content'`, a flex or grid item — sizes a box by
+  // what it contributes intrinsically, and `inline-size: 100%` contributes nothing. Measured
+  // 2026-09-15: a meter alone in such a cell came out 0px wide. This is the floor that keeps it on
+  // screen; it is a minimum, so a wider column still gives the bar the whole cell.
+  min-inline-size: var(--ds-meter-min-width, 3rem);
   block-size: var(--_meter-height);
   border-radius: var(--_meter-radius);
   background: var(--_meter-track-color);
