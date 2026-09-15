@@ -86,12 +86,40 @@
   <ds-column-chart interactive pinOnClick dimOthers [data]="points" />
   ```
 
-  A pinned `ds-bar-chart` row and `ds-column-chart` column carry a pin glyph in the middle of the
-  mark, because the panel can sit anywhere on screen and the reader needs to see WHICH mark is held.
+  A pinned mark carries a pin glyph in its middle — the row's fill, the column, the middle of the
+  ring's arc, the middle of the funnel band — because the panel can sit anywhere on screen and the
+  reader needs to see WHICH mark is held. A `Reset` control appears in the chart's top corner while
+  anything is pinned, so the way out is on screen rather than a key nobody was told about.
+
   The click output fires either way — pinning is a state, not a handler. On `ds-line-chart` the pin
   hangs off the data markers rather than the plot, so Enter and Space pin from the keyboard too.
 
 ### Changed
+
+- **A chart no longer draws its own card, and takes `framed` when it should.** The border, padding
+  and background are off by default. A chart is nearly always placed inside a card the page has
+  already drawn, and a second card inside the first gives the reader two borders, two paddings and a
+  chart caption repeating the heading directly above it.
+
+  ```html
+  <ds-donut-chart framed [data]="slices" />
+  ```
+
+  If your charts stand alone on the page, add `framed` to them. The `--ds-chart-frame-*` tokens are
+  unchanged and still size the frame when it is on. A stylesheet that zeroed the frame —
+  `--ds-chart-frame-border-width: 0` with `--ds-chart-frame-padding: 0` — can drop those two
+  declarations.
+
+- **The annex data table is off by default.** `dataTable` defaults to `'none'` rather than
+  `'toggle'`, on all five charts and in `DS_CONFIG.chart.dataTable`. A disclosure under every plot
+  is chrome the page did not ask for, and the page usually carries the numbers already.
+
+  It stays the non-visual route to the numbers where a page does NOT carry them, so turn it on
+  deliberately — per chart with `dataTable="toggle"`, or once for an app:
+
+  ```ts
+  provideDsConfig({ chart: { dataTable: 'toggle' } });
+  ```
 
 - **A legend control isolates a series rather than hiding one, and `ds-chart-legend` says which.**
   `mode` is `'isolate'` by default: choosing a series shows that one and hides the rest, which takes
@@ -131,10 +159,11 @@
   `ColumnChartComponent`, `DonutChartComponent`, `FunnelChartComponent` and `LineChartComponent` all
   gain `pinOnClick` and the protected `onMarkClick`, which `LineChartComponent` spells
   `onMarkerClick` beside its own `pinnedCategory` and `releaseCategoryPin`; `BarChartComponent` and
-  `ColumnChartComponent` also gain `partOfWhole`; `LineChartComponent` gains `legendMode`; the
+  `ColumnChartComponent` also gain `partOfWhole` and the protected `valueClearance`; all five gain
+  `framed`; `LineChartComponent` gains `legendMode`; the
   internal `ChartLegendComponent`, which the package root does not export, gains `mode`, `isolated`,
   `isolate` and `showAll`; and the internal `ChartTooltipDirective`, also unexported there, gains
-  the private `detachEscape` and `closeOnEscape`.
+  `dsChartTooltipExtraGap` and the private `detachEscape` and `closeOnEscape`.
 
   Outside the charts: `ProgressComponent` gains `target` and `max`, `LineChartComponent` also gains
   `annotations`, and the internal message base the fields and the button extend — unexported from
@@ -145,6 +174,12 @@
   and `override` does not clear it.
 
 ### Fixed
+
+- **A drag across a chart no longer selects its chrome.** Axis ticks, legend labels and the caption
+  a screen reader needs — clipped to a thin strip for everyone else — all came out selected, and the
+  selection painted as bars across the card over content that is not visibly there. The plot is
+  `user-select: none` now; the annex table, the funnel's stage table and the visible caption stay
+  selectable, because those carry numbers people copy.
 
 - **Clicking a slice or a band no longer draws a rectangle around it.** Chromium focuses an SVG
   shape when it is clicked even with no `tabindex` on it, and reports that focus as NOT
