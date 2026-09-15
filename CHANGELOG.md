@@ -177,6 +177,21 @@
   How long the panel stays after the pointer leaves the mark. See the tooltip entry under Changed
   for what the default does and when to raise it.
 
+- **A pinned mark offers an `Unpin` control, and says which mark it is.** `ds-bar-chart`,
+  `ds-column-chart`, `ds-donut-chart` and `ds-funnel-chart` render a pill button above the plot
+  while a mark is pinned — Escape already released one, and a control that says so is what a reader
+  finds without knowing the key. `ds-donut-chart` and `ds-funnel-chart` also draw a pin glyph at the
+  pinned slice's or band's centre, so the plot itself carries which one is held rather than leaving
+  it to the panel; the glyph takes no pointer events. `--ds-chart-pin-size` sizes it, and the button
+  is `.pin-reset`.
+
+  The internal mark-state interface behind it — not exported from the package root — gains a
+  `release()`, and its factory implements it. Only a hand-written implementation of that interface
+  has one more method to satisfy.
+
+- **A toggleable legend in `isolate` mode offers `None`.** Beside `All` and the per-series controls,
+  which left no way to clear the plot in one action.
+
 ### Changed
 
 - **Turning a chart's frame off is an input now, not a stylesheet rule.** The frame still draws by
@@ -316,6 +331,26 @@
   button extend, as a protected `reserveFollowsFieldDefault`. The package root does not export it; a
   subclass reaching it through the deep entry point and declaring that name stops building until it
   renames the member or marks it `override`.
+
+- **Two legends on one page no longer fight over the same selection.** A legend's isolate controls
+  are radios, and every legend named the same group — so a page with more than one chart formed a
+  single document-wide group: choosing a series in one legend cleared the selection in the others,
+  and only the last-rendered legend showed one at all. Each legend now names its own group.
+
+  A legend also always shows exactly one control chosen. A leftover partial state left the group
+  with nothing checked; it settles on `All`.
+
+- **`ds-line-chart` holds its height when the last series is switched off.** The empty message
+  reserved the plot-height token alone, and the plot is an SVG sized by its ratio against the card
+  width — so on any card wider than that token the message box came up short and the card jumped.
+  It reserves the canvas ratio now, with the token as the floor for a very narrow card.
+
+### What you can now DELETE
+
+| your workaround | why it is unnecessary | replace with |
+| --- | --- | --- |
+| `--ds-chart-frame-border-width: 0` with `--ds-chart-frame-padding: 0`, written to strip the frame off a chart inside a card | the frame is an input and an app-wide config key, so reaching into the component's chrome is no longer the route | `frame="none"`, or `provideDsConfig({ chart: { frame: 'none' } })` |
+| `dataTable="none"` on a chart | the annex table is off by default, so the binding restates it | nothing — keep it only where the app-wide default is `'toggle'` and this one chart differs |
 
 ## 0.13.1 — 2026-09-14
 

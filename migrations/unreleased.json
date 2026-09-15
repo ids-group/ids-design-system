@@ -199,6 +199,28 @@
       ],
       "verify": "Every chart whose tooltip template renders an anchor, a button or text a reader would select carries a non-zero `tooltipLingerMs`; every other chart carries none.",
       "note": "A panel that outlives the pointer sits over the plot the reader has moved on to, so the delay is off. WCAG 1.4.13 asks that a hover-triggered panel be hoverable, dismissible and persistent — the first clause only bites when there is something in the panel to reach, and the built-in panel is one line of text. Dismissible and persistent hold at every value, because Escape and the latch are not on this timer."
+    },
+    {
+      "id": "chart-active-mark-gains-release",
+      "kind": "behavior",
+      "old": "ChartActiveMark",
+      "new": null,
+      "surface": "typescript",
+      "action": "Only if a class of yours IMPLEMENTS the internal `ChartActiveMark` by hand — it is not exported from the package root, only from the chart-tooltip entry point: add a `release(): void` that clears the pinned mark. Code that calls the factory needs nothing.",
+      "appliesWhen": "Only a hand-written implementation of that internal interface. Every chart binding, and every caller of the factory that returns one, is unaffected — the factory implements the method already.",
+      "pitfall": "The compiler names it (TS2420 on the class, TS2739 on a literal), so a build that passes has none. What it cannot see is a `release` that does nothing: the Unpin control and Escape both route through it, so an empty one leaves a mark pinned with a button that looks live.",
+      "restore": null,
+      "searchHints": [
+        "ChartActiveMark",
+        "chartActiveMark"
+      ],
+      "detect": [
+        "implements ChartActiveMark",
+        ": ChartActiveMark",
+        "ChartActiveMark"
+      ],
+      "verify": "Every hand-written implementation of that internal interface declares `release()`, and calling it leaves no mark pinned.",
+      "note": "A pinned mark now offers a control that releases it, and the internal interface is what the charts call to do so. Unexported from the package root, so only a deep import can reach it, which is why the item is narrow."
     }
   ],
   "informational": [
@@ -217,7 +239,31 @@
     "`ds-line-chart` takes `max` and `maxSecondary`, which pin the value axis so two renders of the same panel are comparable. Null, the default, keeps the derived axis; a maximum below the data does not clip it, because the larger of the two wins.",
     "`ds-funnel-chart` takes `drop`, which says what its Drop column reports: `relative` (the default, and what it always showed) is the share that leaked at that stage, `absolute` the count, `none` removes the column. Charts that set nothing are unchanged.",
     "A `ds-chart-legend` in its isolate mode gained a `None` option and always keeps one option chosen, so the radio group can reach an empty plot and never reads as undecided. Each legend now scopes its radio group to itself, so several charts on one page no longer share a single selection.",
-    "`ds-meter` is new: one track and one fill for a measurement inside a table cell, taking `value`, `max`, `color` and `ariaLabel`. It is the in-cell alternative to a chart, and is not `ds-progress` — it carries `role=\"meter\"` only when `ariaLabel` names it, and is `aria-hidden` otherwise. Nothing existing changes."
+    "`ds-meter` is new: one track and one fill for a measurement inside a table cell, taking `value`, `max`, `color` and `ariaLabel`. It is the in-cell alternative to a chart, and is not `ds-progress` — it carries `role=\"meter\"` only when `ariaLabel` names it, and is `aria-hidden` otherwise. Nothing existing changes.",
+    "A pinned mark offers an `Unpin` control: `ds-bar-chart`, `ds-column-chart`, `ds-donut-chart` and `ds-funnel-chart` render a pill button above the plot while one is held, and `ds-donut-chart` and `ds-funnel-chart` draw a pin glyph at the pinned slice or band. The glyph takes no pointer events. `--ds-chart-pin-size` sizes it and the button carries `.pin-reset`; nothing in your code changes, and a chart with no pin shows neither.",
+    "A toggleable `ds-chart-legend` in `isolate` mode offers a `None` control beside `All`, so the plot can be cleared in one action. Additive: the existing controls and the `hidden` model are unchanged.",
+    "Two legends on one page no longer share a selection. The isolate controls are radios and every legend named the same group, so a page with several charts formed one document-wide group — choosing a series in one cleared the others, and only the last-rendered legend showed a selection. Each legend names its own group now, and a leftover partial state settles on `All` rather than leaving nothing chosen. Nothing in your code changes.",
+    "`ds-line-chart` keeps its height when the last series is switched off. The empty message reserved `--ds-line-chart-plot-height` alone while the plot is an SVG sized by its ratio against the card width, so on a wider card the box came up short and the card jumped. It reserves the canvas ratio now, with the token as the floor."
   ],
-  "deleteList": []
+  "deleteList": [
+    {
+      "id": "chart-frame-css-override",
+      "surface": "style",
+      "find": [
+        "--ds-chart-frame-border-width",
+        "--ds-chart-frame-padding: 0"
+      ],
+      "why": "the frame is an input and an app-wide config key now, so stripping it no longer means reaching into the component’s own chrome",
+      "replaceWith": "`frame=\"none\"` on the chart, or `provideDsConfig({ chart: { frame: \"none\" } })` for the app"
+    },
+    {
+      "id": "chart-data-table-none-binding",
+      "surface": "template",
+      "find": [
+        "dataTable=\"none\""
+      ],
+      "why": "the annex table is off by default, so the binding restates the default",
+      "replaceWith": "nothing — keep it only where the app-wide default is `toggle` and this one chart differs"
+    }
+  ]
 }
