@@ -18,8 +18,22 @@
   to carry, so the mark is visual only — a reader on a screen reader gets the target from the label
   or not at all. `--ds-progress-target-color` and `--ds-progress-target-width` set its look.
 
-  `ProgressComponent` grows by the `target` input; a subclass declaring its own stops building until
-  it renames the member or marks it `override`.
+- **`ds-progress` takes a `max`, so `value` can be the real count.** The bar read 0–100 only and
+  pinned `aria-valuemax="100"`, which made a caller convert their own numbers before us and put the
+  percentage into the accessible name in place of the measurement. `max` is the scale `value` and
+  `target` are read against; at its default of 100 they are percentages, so every existing bar is
+  unchanged, and `aria-valuemax` follows it.
+
+  ```html
+  <ds-progress [value]="37" [max]="80" [target]="64" ariaLabel="Requests handled" />
+  ```
+
+  That bar fills to 46.25% and reports `aria-valuenow="37"` of `aria-valuemax="80"` — "37 of 80"
+  rather than "46%". A `max` of zero or less falls back to 100, because a scale with no width has no
+  fraction to draw.
+
+  `ProgressComponent` grows by the `target` and `max` inputs; a subclass declaring either name stops
+  building until it renames the member or marks it `override`.
 
 - **`ds-bar-chart` and `ds-column-chart` take `partOfWhole`, and it is what states each mark's share
   of the total.** A share of a total is only a real quantity when the marks are parts of one whole.

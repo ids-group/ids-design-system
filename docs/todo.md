@@ -14,7 +14,7 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**103 open — 1 P1, 34 P2, 68 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**102 open — 1 P1, 34 P2, 67 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 1
 
@@ -69,7 +69,7 @@ item and nothing else.
 - **Localization — every user-visible string is a hardcoded literal (recorded 2026-08-27, from the ITB Workspace picker report)**
   - Every user-visible string in the library is a hardcoded English literal — VALIDATED 2026-08-27 against 0.11.0; Stas: defer the whole thing, no code
 
-### P3 — 68
+### P3 — 67
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - A whole-page keyboard walk is not measurable with the tools here, and the failed
@@ -94,8 +94,7 @@ item and nothing else.
   - `templates` and `startingPoints` in `_ds_manifest.json` are in the schema and empty
   - `.thumbnail` — the project's cover image — has no source that regenerates it
 - **Charts and fields the ECM prototype could not use (recorded 2026-09-15, Stas: take all five)**
-  - A bar row carries one number, and some rows mean two
-  - There is no mark small enough for a table cell
+  - A bar row carries one number, and the ask wants two — but two numbers per row with a …
   - A point on `ds-line-chart` cannot carry a fixed label
 - **Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)**
   - A2 - the remaining directives, after A1 prices the seam
@@ -556,16 +555,22 @@ remaining four screens; each names the screen it blocks, so a fix has somewhere 
   target in one glance — without the mark the bar loses the comparison it is there for. Wanted: a
   `target` input on the same scale, drawn as a hairline across the track. The smallest of the five.
 
-- [ ] **[P3] A bar row carries one number, and some rows mean two.** `caption` and `summary` are
-  per-chart, not per-row, so a row reading `12,400 → 456` has nowhere to put the second figure.
-  **Blocks** requests-by-audience-group on `microsite-detail`. Wanted: a `detail` or
-  `secondaryValue` on `BarChartRow`, rendered beside the value the way `ChartTooltipEntry.detail`
-  already does inside the tooltip — or a per-row template like the funnel's table.
+- [ ] **[P3] A bar row carries one number, and the ask wants two — but two numbers per row with a
+  bar encoding the ratio is a table, not a chart (Stas 2026-09-15: ask back before growing the API).**
+  `caption` and `summary` are per-chart, so a row reading `12,400 → 456` has nowhere for the second
+  figure. **Blocks** requests-by-audience-group on `microsite-detail`.
+  **Two routes already ship and the question is why neither was taken:** `ds-table`, which is built
+  for rows of several values, and the funnel's `showTable`, which pairs a chart with its own figures.
+  A `detail?: string` on `BarChartRow` is cheap and mirrors `ChartTooltipEntry.detail`, but it makes
+  the row a place for arbitrary text — the next ask is a third value and column alignment, and the
+  chart becomes a worse table. Settle the shape of the screen first.
 
-- [ ] **[P3] There is no mark small enough for a table cell.** Every chart is a block with its own
-  caption, legend and annex table, which is right for a card and far too much for a 60px cell.
-  **Blocks** the request-rate column on `microsites`. Wanted: a minimal `ds-meter` taking `value`
-  and `max` and nothing else — one track on the categorical palette, no legend, caption or table.
+- [x] **[P3] There is no mark small enough for a table cell — closed by `ds-progress`, not a new
+  component (2026-09-15).** The ask wanted a `ds-meter` taking `value` and `max`, because every
+  chart is a block with caption, legend and annex table, which is far too much for a 60px cell.
+  `ds-progress` was already the thing asked for — one track, one fill, no chrome — short only a
+  `max`, which it now takes. A second component would have differed by `role="meter"` alone, and
+  that is a semantics question, not a reason to ship a near-duplicate.
 
 - [ ] **[P3] A point on `ds-line-chart` cannot carry a fixed label.** The chart has `tooltip` and
   `tooltipAnchor`, both hover-driven, and no way to pin a callout to a category.
