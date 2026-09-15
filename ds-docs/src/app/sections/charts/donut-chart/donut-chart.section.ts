@@ -64,6 +64,11 @@ const SLOT_SLICES: readonly DonutChartSlice[] = [
   ],
 })
 export class DonutChartSection {
+  protected readonly interactionSlices =
+    signal<readonly DonutChartSlice[]>(SPECIMEN_SLICES);
+  protected readonly dimSlices =
+    signal<readonly DonutChartSlice[]>(SPECIMEN_SLICES);
+  protected readonly lastSlice = signal('');
   protected readonly specimenSlices =
     signal<readonly DonutChartSlice[]>(SPECIMEN_SLICES);
   protected readonly legendEndSlices =

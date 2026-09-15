@@ -95,6 +95,98 @@
   <docs-chart-data-editor [(rows)]="pinRows" />
 
   <h3 class="block-title t-h4">
+    Percent beside the value
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      showPercent
+    </code> is on by default and prints each
+    row's share of the LARGEST row beside its value — a quick read of how the
+    rows compare to the biggest one. Turn it off where the rows are too narrow to
+    hold a second figure, or where it would be confused with
+    <code class="t-mono-inline">
+      partOfWhole
+    </code>, which is a share of the
+    sum rather than of the maximum. A row can also carry its own
+    <code class="t-mono-inline">
+      percent
+    </code>, which is printed instead of
+    the computed one.
+  </p>
+
+  <div class="states states--cols-2">
+    <div class="state-cell">
+      <ds-bar-chart
+        dataTable="none"
+        [data]="percentRows()" />
+
+      <div class="state-cell-label">
+        showPercent = true (default)
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-bar-chart
+        dataTable="none"
+        [showPercent]="false"
+        [data]="percentRows()" />
+
+      <div class="state-cell-label">
+        showPercent = false
+      </div>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Interaction
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      interactive
+    </code> turns on the pointer cursor
+    and the hover tint, and makes each row a tab stop.
+    <code class="t-mono-inline">
+      rowClicked
+    </code> fires whether or not the flag
+    is set. <code class="t-mono-inline">dimOthers</code> fades the rows that are
+    not under the pointer — off by default, because the fade costs the separation
+    BETWEEN the faded rows.
+  </p>
+
+  <ds-bar-chart
+    interactive
+    dimOthers
+    dataTable="none"
+    caption="Every row is a control"
+    [data]="interactionRows()"
+    (rowClicked)="lastRow.set($event.label)" />
+
+  <p class="block-desc t-s">
+    Last clicked: <code class="t-mono-inline">{{ lastRow() || '—' }}</code>
+  </p>
+
+  <h3 class="block-title t-h4">
+    Stagger
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      staggerMs
+    </code> spaces the rows' arrivals out
+    rather than growing them all at once. <code class="t-mono-inline">0</code>,
+    the default, means no stagger.
+  </p>
+
+  <ds-bar-chart
+    dataTable="none"
+    staggerMs="40"
+    [data]="staggerRows()" />
+
+  <docs-replay-button />
+
+  <h3 class="block-title t-h4">
     Data table
   </h3>
 

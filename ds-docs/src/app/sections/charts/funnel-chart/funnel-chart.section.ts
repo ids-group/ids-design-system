@@ -2,6 +2,7 @@ import { Component, ViewEncapsulation, signal } from '@angular/core';
 import { FunnelChartComponent } from 'ds/funnel-chart';
 import type { FunnelChartStage } from 'ds/funnel-chart';
 import { DocsChartDataEditorComponent } from '../../../shared/docs-chart-data-editor.component';
+import { DocsReplayButtonComponent } from '../../../shared/docs-replay-button.component';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 const SPECIMEN_STAGES: readonly FunnelChartStage[] = [
@@ -40,6 +41,7 @@ const ZERO_FIRST_STAGE_STAGES: readonly FunnelChartStage[] = [
     DocsChartDataEditorComponent,
     DocsSectionComponent,
     FunnelChartComponent,
+    DocsReplayButtonComponent,
   ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './funnel-chart.section.html',
@@ -64,6 +66,8 @@ export class FunnelChartSection {
   protected readonly stageTableStages =
     signal<readonly FunnelChartStage[]>(SPECIMEN_STAGES);
   protected readonly dataTableStages =
+    signal<readonly FunnelChartStage[]>(SPECIMEN_STAGES);
+  protected readonly staggerStages =
     signal<readonly FunnelChartStage[]>(SPECIMEN_STAGES);
   protected readonly interactionStages =
     signal<readonly FunnelChartStage[]>(SPECIMEN_STAGES);

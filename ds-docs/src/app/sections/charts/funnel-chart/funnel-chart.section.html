@@ -228,6 +228,25 @@
     </div>
   </div>
 
+  <h3 class="block-title t-h4">
+    Stagger
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      staggerMs
+    </code> spaces the bands' arrivals out
+    rather than fading them all at once. <code class="t-mono-inline">0</code>,
+    the default, means no stagger.
+  </p>
+
+  <ds-funnel-chart
+    dataTable="none"
+    staggerMs="60"
+    [data]="staggerStages()" />
+
+  <docs-replay-button />
+
   <details class="edge-cases">
     <summary>
       <h3 class="block-title t-h4">

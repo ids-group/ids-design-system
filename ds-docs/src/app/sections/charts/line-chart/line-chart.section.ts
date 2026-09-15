@@ -111,6 +111,21 @@ const MANY_CATEGORY_SERIES: readonly LineChartSeries[] = [
 export class LineChartSection {
   protected readonly specimenCategories =
     signal<readonly string[]>(SPECIMEN_CATEGORIES);
+  protected readonly tickCategories =
+    signal<readonly string[]>(SPECIMEN_CATEGORIES);
+  protected readonly tickSeries =
+    signal<readonly LineChartSeries[]>(SPECIMEN_SERIES);
+  protected readonly staggerCategories =
+    signal<readonly string[]>(SPECIMEN_CATEGORIES);
+  protected readonly staggerSeries =
+    signal<readonly LineChartSeries[]>(SPECIMEN_SERIES);
+  protected readonly noVisibleCategories =
+    signal<readonly string[]>(SPECIMEN_CATEGORIES);
+  protected readonly noVisibleSeriesData =
+    signal<readonly LineChartSeries[]>(SPECIMEN_SERIES);
+  protected readonly allHidden = signal<readonly string[]>(
+    SPECIMEN_SERIES.map((series) => series.id),
+  );
   protected readonly specimenSeries =
     signal<readonly LineChartSeries[]>(SPECIMEN_SERIES);
 

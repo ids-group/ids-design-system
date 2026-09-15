@@ -78,6 +78,9 @@ export class ColumnChartSection {
     signal<readonly ColumnChartPoint[]>(SPECIMEN_POINTS);
   protected readonly pinPoints =
     signal<readonly ColumnChartPoint[]>(SPECIMEN_POINTS);
+  protected readonly anchorPoints =
+    signal<readonly ColumnChartPoint[]>(SPECIMEN_POINTS);
+  protected readonly lastPoint = signal('');
   protected readonly emptyPoints = signal<readonly ColumnChartPoint[]>([]);
   protected readonly loadingPoints =
     signal<readonly ColumnChartPoint[]>(SPECIMEN_POINTS);

@@ -116,6 +116,61 @@
   <docs-chart-data-editor [(rows)]="customColorPoints" />
 
   <h3 class="block-title t-h4">
+    What the tooltip points at
+  </h3>
+
+  <p class="block-desc t-s">
+    The box that catches the pointer is the full-height category cell, not the
+    column — that is what keeps a short column reachable.
+    <code class="t-mono-inline">
+      tooltipAnchor
+    </code> decides which of the two the
+    panel points at: <code class="t-mono-inline">'mark'</code>, the default, puts
+    it over the column, and <code class="t-mono-inline">'cell'</code> puts it at
+    the top of the cell, which is where it lands if you anchor to the box rather
+    than the mark.
+    <code class="t-mono-inline">
+      pointClicked
+    </code> fires on click and on
+    <kbd>
+      Enter
+    </kbd> whether or not
+    <code class="t-mono-inline">
+      interactive
+    </code> is set.
+  </p>
+
+  <div class="states states--cols-2">
+    <div class="state-cell">
+      <ds-column-chart
+        interactive
+        dataTable="none"
+        [data]="anchorPoints()"
+        (pointClicked)="lastPoint.set($event.label)" />
+
+      <div class="state-cell-label">
+        tooltipAnchor = mark (default)
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-column-chart
+        interactive
+        tooltipAnchor="cell"
+        dataTable="none"
+        [data]="anchorPoints()" />
+
+      <div class="state-cell-label">
+        tooltipAnchor = cell
+      </div>
+    </div>
+  </div>
+
+  <p class="block-desc t-s">
+    Last clicked: <code class="t-mono-inline">{{ lastPoint() || '—' }}</code>
+  </p>
+
+  <h3 class="block-title t-h4">
     Data table
   </h3>
 

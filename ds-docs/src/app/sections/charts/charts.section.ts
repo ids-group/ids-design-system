@@ -2,6 +2,7 @@ import { Component, ViewEncapsulation, signal } from '@angular/core';
 import { BarChartComponent } from 'ds/bar-chart';
 import type { BarChartRow } from 'ds/bar-chart';
 import { DocsChartDataEditorComponent } from '../../shared/docs-chart-data-editor.component';
+import { DocsReplayButtonComponent } from '../../shared/docs-replay-button.component';
 import { DocsSectionComponent } from '../../shared/docs-section.component';
 
 const SPECIMEN_ROWS: readonly BarChartRow[] = [
@@ -80,6 +81,7 @@ const MAX_BELOW_DATA_ROWS: readonly BarChartRow[] = [
     BarChartComponent,
     DocsChartDataEditorComponent,
     DocsSectionComponent,
+    DocsReplayButtonComponent,
   ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './charts.section.html',
@@ -92,6 +94,13 @@ export class BarChartSection {
     signal<readonly BarChartRow[]>(CUSTOM_COLOR_ROWS);
   protected readonly shareRows = signal<readonly BarChartRow[]>(SHARE_ROWS);
   protected readonly pinRows = signal<readonly BarChartRow[]>(SPECIMEN_ROWS);
+  protected readonly percentRows =
+    signal<readonly BarChartRow[]>(SPECIMEN_ROWS);
+  protected readonly interactionRows =
+    signal<readonly BarChartRow[]>(SPECIMEN_ROWS);
+  protected readonly staggerRows =
+    signal<readonly BarChartRow[]>(SPECIMEN_ROWS);
+  protected readonly lastRow = signal('');
   protected readonly dataTableRows =
     signal<readonly BarChartRow[]>(DATA_TABLE_ROWS);
   protected readonly emptyRows = signal<readonly BarChartRow[]>([]);

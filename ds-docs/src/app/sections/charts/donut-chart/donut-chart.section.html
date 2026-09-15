@@ -212,6 +212,66 @@
   <docs-replay-button />
 
   <h3 class="block-title t-h4">
+    Interaction
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      interactive
+    </code> turns on the pointer cursor and
+    makes each slice a control;
+    <code class="t-mono-inline">
+      sliceClicked
+    </code> fires whether or not it is
+    set. <code class="t-mono-inline">tooltip</code> chooses whether a hovered
+    slice opens a panel — <code class="t-mono-inline">'item'</code> by default,
+    <code class="t-mono-inline">
+      'none'
+    </code> to suppress it.
+    <code class="t-mono-inline">
+      dimOthers
+    </code> fades the slices that are not
+    under the pointer, and
+    <code class="t-mono-inline">
+      staggerMs
+    </code> is accepted for parity with the
+    other four charts but has no effect here: the ring arrives as one object,
+    because arcs share their edges and fading them one at a time shows the
+    background through every seam.
+  </p>
+
+  <div class="states states--cols-2">
+    <div class="state-cell">
+      <ds-donut-chart
+        interactive
+        dataTable="none"
+        [data]="interactionSlices()"
+        (sliceClicked)="lastSlice.set($event.label)" />
+
+      <div class="state-cell-label">
+        interactive
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-donut-chart
+        interactive
+        dimOthers
+        dataTable="none"
+        tooltip="none"
+        [data]="dimSlices()" />
+
+      <div class="state-cell-label">
+        dimOthers, tooltip = none
+      </div>
+    </div>
+  </div>
+
+  <p class="block-desc t-s">
+    Last clicked: <code class="t-mono-inline">{{ lastSlice() || '—' }}</code>
+  </p>
+
+  <h3 class="block-title t-h4">
     Palette slots
   </h3>
 

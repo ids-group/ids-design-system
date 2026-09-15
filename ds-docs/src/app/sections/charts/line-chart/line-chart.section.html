@@ -8,7 +8,9 @@
     second y axis for a series in different units.
   </span>
 
-  <h3 class="block-title t-h4">Default</h3>
+  <h3 class="block-title t-h4">
+    Default
+  </h3>
 
   <p class="block-desc t-s">
     Series share one set of categories and take categorical palette colours in
@@ -32,7 +34,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">annotations</code> pins a label over one
+    <code class="t-mono-inline">
+      annotations
+    </code> pins a label over one
     reading, so a peak reads in a screenshot or a printed page with no pointer.
     Each names a <code class="t-mono-inline">categoryIndex</code> and,
     optionally, the <code class="t-mono-inline">seriesId</code> it belongs to —
@@ -49,15 +53,23 @@
     [series]="specimenSeries()"
     [annotations]="specimenAnnotations" />
 
-  <h3 class="block-title t-h4">Missing readings</h3>
+  <h3 class="block-title t-h4">
+    Missing readings
+  </h3>
 
   <p class="block-desc t-s">
     A <code class="t-mono-inline">null</code> reading is a hole, not a zero, and
-    <code class="t-mono-inline"> gaps </code> decides what it draws:
-    <code class="t-mono-inline"> break </code>, the default, stops the line and
+    <code class="t-mono-inline">
+      gaps
+    </code> decides what it draws:
+    <code class="t-mono-inline">
+      break
+    </code>, the default, stops the line and
     picks it up after; <code class="t-mono-inline">zero</code> draws through the
     baseline. Any non-finite value takes the same route, so an upstream
-    <code class="t-mono-inline"> NaN </code> lands here too.
+    <code class="t-mono-inline">
+      NaN
+    </code> lands here too.
   </p>
 
   <div class="states states--cols-2">
@@ -69,7 +81,9 @@
         [categories]="gapBreakCategories()"
         [series]="gapBreakSeries()" />
 
-      <div class="state-cell-label">break (default)</div>
+      <div class="state-cell-label">
+        break (default)
+      </div>
 
       <docs-line-chart-data-editor
         [(categories)]="gapBreakCategories"
@@ -84,7 +98,9 @@
         [categories]="gapZeroCategories()"
         [series]="gapZeroSeries()" />
 
-      <div class="state-cell-label">zero</div>
+      <div class="state-cell-label">
+        zero
+      </div>
 
       <docs-line-chart-data-editor
         [(categories)]="gapZeroCategories"
@@ -92,13 +108,19 @@
     </div>
   </div>
 
-  <h3 class="block-title t-h4">Second axis · rounded (default)</h3>
+  <h3 class="block-title t-h4">
+    Second axis · rounded (default)
+  </h3>
 
   <p class="block-desc t-s">
     A series in other units sets
-    <code class="t-mono-inline"> axis: 'secondary' </code> and is measured
+    <code class="t-mono-inline">
+      axis: 'secondary'
+    </code> and is measured
     against the right-hand scale;
-    <code class="t-mono-inline"> yAxisMode </code> reconciles the two. Rounded
+    <code class="t-mono-inline">
+      yAxisMode
+    </code> reconciles the two. Rounded
     keeps one set of gridlines and rounds the secondary step up, so that line
     stops short of the top.
   </p>
@@ -114,7 +136,9 @@
     [(categories)]="roundedCategories"
     [(series)]="roundedSeries" />
 
-  <h3 class="block-title t-h4">Second axis · exact</h3>
+  <h3 class="block-title t-h4">
+    Second axis · exact
+  </h3>
 
   <p class="block-desc t-s">
     The secondary step is taken straight from the peak, so that series uses the
@@ -132,7 +156,9 @@
     [(categories)]="exactCategories"
     [(series)]="exactSeries" />
 
-  <h3 class="block-title t-h4">Second axis · independent</h3>
+  <h3 class="block-title t-h4">
+    Second axis · independent
+  </h3>
 
   <p class="block-desc t-s">
     Each axis is niced on its own and both series use the full height, at the
@@ -151,7 +177,9 @@
     [(categories)]="independentCategories"
     [(series)]="independentSeries" />
 
-  <h3 class="block-title t-h4">Second axis · stacked</h3>
+  <h3 class="block-title t-h4">
+    Second axis · stacked
+  </h3>
 
   <p class="block-desc t-s">
     Two plots over a shared category axis, labelled under the lower one only:
@@ -170,7 +198,9 @@
     [(categories)]="stackedCategories"
     [(series)]="stackedSeries" />
 
-  <h3 class="block-title t-h4">Markers</h3>
+  <h3 class="block-title t-h4">
+    Markers
+  </h3>
 
   <p class="block-desc t-s">
     Turn <code class="t-mono-inline">showMarkers</code> off once the readings
@@ -187,10 +217,14 @@
     [(categories)]="markersCategories"
     [(series)]="markersSeries" />
 
-  <h3 class="block-title t-h4">Area fill</h3>
+  <h3 class="block-title t-h4">
+    Area fill
+  </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline"> area: true </code> fills the series down to its
+    <code class="t-mono-inline">
+      area: true
+    </code> fills the series down to its
     axis baseline, which asserts that zero means something for it — wrong for a
     rate or an index. Fill one series at most: two translucent fills overlap
     into a third quantity that is not there.
@@ -206,7 +240,9 @@
     [(categories)]="areaFillCategories"
     [(series)]="areaFillSeries" />
 
-  <h3 class="block-title t-h4">Long series</h3>
+  <h3 class="block-title t-h4">
+    Long series
+  </h3>
 
   <p class="block-desc t-s">
     At most twelve category labels are drawn whatever the length — the chart
@@ -224,10 +260,93 @@
     [(categories)]="manyCategories"
     [(series)]="manyCategorySeries" />
 
-  <h3 class="block-title t-h4">Data table</h3>
+  <h3 class="block-title t-h4">
+    Tick count
+  </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline"> toggle </code>, the default, leaves the
+    <code class="t-mono-inline">
+      tickCount
+    </code> asks for roughly that many
+    gridlines on the value axis. It is a request rather than a count: the scale
+    rounds to a step a reader can do arithmetic with, so five ticks over a domain
+    of 0–2,740 become 0/1K/2K/3K rather than five evenly-spaced odd numbers.
+  </p>
+
+  <div class="states states--cols-2">
+    <div class="state-cell">
+      <ds-line-chart
+        dataTable="none"
+        [categories]="tickCategories()"
+        [series]="tickSeries()" />
+
+      <div class="state-cell-label">
+        tickCount = 5 (default)
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-line-chart
+        dataTable="none"
+        tickCount="3"
+        [categories]="tickCategories()"
+        [series]="tickSeries()" />
+
+      <div class="state-cell-label">
+        tickCount = 3
+      </div>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Stagger
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      staggerMs
+    </code> spaces the series' arrivals out,
+    so a chart with several lines draws them one after another rather than all at
+    once. <code class="t-mono-inline">0</code>, the default, means no stagger.
+  </p>
+
+  <ds-line-chart
+    dataTable="none"
+    staggerMs="80"
+    [categories]="staggerCategories()"
+    [series]="staggerSeries()" />
+
+  <docs-replay-button />
+
+  <h3 class="block-title t-h4">
+    Nothing left to draw
+  </h3>
+
+  <p class="block-desc t-s">
+    A filtering legend can switch every series off, which is a different state
+    from having no data at all — the reader did it, and can undo it.
+    <code class="t-mono-inline">
+      noVisibleSeriesText
+    </code> is what the plot says
+    then; it keeps the plot's height either way, so the page does not jump.
+  </p>
+
+  <ds-line-chart
+    legendFilters
+    dataTable="none"
+    noVisibleSeriesText="Pick a series in the legend to see it plotted"
+    [categories]="noVisibleCategories()"
+    [series]="noVisibleSeriesData()"
+    [(hiddenSeries)]="allHidden" />
+
+  <h3 class="block-title t-h4">
+    Data table
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      toggle
+    </code>, the default, leaves the
     disclosure closed; <code class="t-mono-inline">visible</code> renders it
     open; <code class="t-mono-inline">none</code> leaves it out.
   </p>
@@ -241,21 +360,39 @@
     [(categories)]="dataTableCategories"
     [(series)]="dataTableSeries" />
 
-  <h3 class="block-title t-h4">Interactive</h3>
+  <h3 class="block-title t-h4">
+    Interactive
+  </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline"> interactive </code> makes every reading
+    <code class="t-mono-inline">
+      interactive
+    </code> makes every reading
     focusable and clickable, and grows an invisible marker on a series drawn
     without one so there is something to land on. The hit area is a transparent
     24px stroke on a fine pointer and 44px on a coarse one — a 4px dot is not a
     touch target. Tab to a marker and the tooltip names that series alone; hover
     the plot and it names every series at the category. A tap latches the
     tooltip open until the next tap outside.
-    <code class="t-mono-inline"> pointClicked </code> fires whether or not the
+    <code class="t-mono-inline">
+      pointClicked
+    </code> fires whether or not the
     flag is set. <code class="t-mono-inline"> dimOthers </code> is a separate
     opt-in, off by default on all five charts: fading the rest costs the
     separation between the faded marks, so it buys loudness for one reading and
     pays for it with the others.
+  </p>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      tooltipAnchor
+    </code> decides where the panel sits:
+    <code class="t-mono-inline">
+      'point'
+    </code>, the default, pins it over the
+    highest reading in the category, so it stays still while the pointer travels
+    within one band; <code class="t-mono-inline">'pointer'</code> follows the
+    cursor instead.
   </p>
 
   <ds-line-chart
@@ -275,10 +412,14 @@
 
   <docs-replay-button />
 
-  <h3 class="block-title t-h4">Patterns</h3>
+  <h3 class="block-title t-h4">
+    Patterns
+  </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline"> patterns </code> gives every series a dash of
+    <code class="t-mono-inline">
+      patterns
+    </code> gives every series a dash of
     its own, in palette-slot order, so the lines are told apart by shape as well
     as by colour — WCAG technique G111. Slot 1 stays solid, so a single-series
     chart is unchanged by turning it on. Off by default: the shipped palette
@@ -294,7 +435,9 @@
         [categories]="patternCategories()"
         [series]="patternSeries()" />
 
-      <div class="state-cell-label">patterns = false (default)</div>
+      <div class="state-cell-label">
+        patterns = false (default)
+      </div>
     </div>
 
     <div class="state-cell">
@@ -305,20 +448,28 @@
         [categories]="patternCategories()"
         [series]="patternSeries()" />
 
-      <div class="state-cell-label">patterns</div>
+      <div class="state-cell-label">
+        patterns
+      </div>
     </div>
   </div>
 
   <docs-replay-button />
 
-  <h3 class="block-title t-h4">What a legend control does</h3>
+  <h3 class="block-title t-h4">
+    What a legend control does
+  </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline"> legendMode </code> picks the question the
+    <code class="t-mono-inline">
+      legendMode
+    </code> picks the question the
     legend answers. <code class="t-mono-inline">isolate</code>, the default,
     shows one series and hides the rest — one action instead of one per series,
     which is what a reader of a crowded chart wants.
-    <code class="t-mono-inline"> toggle </code> hides one and leaves the rest,
+    <code class="t-mono-inline">
+      toggle
+    </code> hides one and leaves the rest,
     for taking a dominant series out so the others can be read at a usable
     scale. They are different controls, not two styles of one: isolate is a
     single choice among many and renders as radios with an All option, toggle
@@ -335,7 +486,9 @@
         [series]="legendSeries()"
         [(hiddenSeries)]="isolateHidden" />
 
-      <div class="state-cell-label">legendMode = isolate (default)</div>
+      <div class="state-cell-label">
+        legendMode = isolate (default)
+      </div>
     </div>
 
     <div class="state-cell">
@@ -348,19 +501,29 @@
         [series]="legendSeries()"
         [(hiddenSeries)]="toggleHidden" />
 
-      <div class="state-cell-label">legendMode = toggle</div>
+      <div class="state-cell-label">
+        legendMode = toggle
+      </div>
     </div>
   </div>
 
-  <h3 class="block-title t-h4">Filtering legend</h3>
+  <h3 class="block-title t-h4">
+    Filtering legend
+  </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline"> legendFilters </code> turns each legend entry
+    <code class="t-mono-inline">
+      legendFilters
+    </code> turns each legend entry
     into a checkbox that switches its series off, and
-    <code class="t-mono-inline"> hiddenSeries </code> is two-way, so a page can
+    <code class="t-mono-inline">
+      hiddenSeries
+    </code> is two-way, so a page can
     drive it from a URL parameter. The value axis is scaled from every series,
     hidden or not, unless
-    <code class="t-mono-inline"> rescaleOnHide </code> says otherwise — a silent
+    <code class="t-mono-inline">
+      rescaleOnHide
+    </code> says otherwise — a silent
     rescale turns a period-over-period comparison into a different claim.
     Hovering an entry dims the other series. Switch them all off and the plot is
     replaced by an explanation rather than an empty grid.
@@ -376,7 +539,9 @@
         [series]="legendSeries()"
         [(hiddenSeries)]="hiddenSeries" />
 
-      <div class="state-cell-label">rescaleOnHide = false (default)</div>
+      <div class="state-cell-label">
+        rescaleOnHide = false (default)
+      </div>
     </div>
 
     <div class="state-cell">
@@ -389,7 +554,9 @@
         [series]="legendSeries()"
         [(hiddenSeries)]="rescaledHiddenSeries" />
 
-      <div class="state-cell-label">rescaleOnHide</div>
+      <div class="state-cell-label">
+        rescaleOnHide
+      </div>
     </div>
   </div>
 
@@ -397,15 +564,21 @@
 
   <details class="edge-cases">
     <summary>
-      <h3 class="block-title t-h4">Edge cases</h3>
+      <h3 class="block-title t-h4">
+        Edge cases
+      </h3>
 
-      <span class="chapter-toggle"> Show </span>
+      <span class="chapter-toggle">
+        Show
+      </span>
     </summary>
 
     <p class="block-desc t-s">
       Loading holds the plot's height with a skeleton; empty has no series to
       derive axes from, so the chart falls back to its
-      <code class="t-mono-inline"> emptyText </code> line.
+      <code class="t-mono-inline">
+        emptyText
+      </code> line.
     </p>
 
     <div class="states states--cols-2">
@@ -415,7 +588,9 @@
           [categories]="emptyCategories()"
           [series]="emptySeries()" />
 
-        <div class="state-cell-label">Empty</div>
+        <div class="state-cell-label">
+          Empty
+        </div>
 
         <docs-line-chart-data-editor
           [(categories)]="emptyCategories"
@@ -429,7 +604,9 @@
           [categories]="loadingCategories()"
           [series]="loadingSeries()" />
 
-        <div class="state-cell-label">Loading</div>
+        <div class="state-cell-label">
+          Loading
+        </div>
 
         <docs-line-chart-data-editor
           [(categories)]="loadingCategories"
@@ -443,7 +620,9 @@
           [categories]="oneSeriesCategories()"
           [series]="oneSeries()" />
 
-        <div class="state-cell-label">One series</div>
+        <div class="state-cell-label">
+          One series
+        </div>
 
         <docs-line-chart-data-editor
           [(categories)]="oneSeriesCategories"
@@ -457,7 +636,9 @@
           [categories]="specimenCategories()"
           [series]="specimenSeries()" />
 
-        <div class="state-cell-label">Error</div>
+        <div class="state-cell-label">
+          Error
+        </div>
       </div>
     </div>
   </details>
