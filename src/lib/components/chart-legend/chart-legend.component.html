@@ -1,11 +1,47 @@
 <ul class="legend">
+  @if (toggleable() && mode() === 'isolate') {
+    <li class="legend-item">
+      <label class="legend-toggle">
+        <input
+          type="radio"
+          class="legend-radio"
+          name="legend-isolate"
+          [checked]="isolated() === null"
+          (change)="showAll()"
+          (focus)="highlighted.set(null)" />
+
+        <span class="legend-label">
+          All
+        </span>
+      </label>
+    </li>
+  }
+
   @for (item of items(); track item.id) {
     <li
       class="legend-item"
       [class.is-hidden]="isHidden(item.id)"
       (pointerenter)="highlighted.set(item.id)"
       (pointerleave)="highlighted.set(null)">
-      @if (toggleable()) {
+      @if (toggleable() && mode() === 'isolate') {
+        <label class="legend-toggle">
+          <input
+            type="radio"
+            class="legend-radio"
+            name="legend-isolate"
+            animate.enter="mark-enter"
+            [checked]="isolated() === item.id"
+            [style.--ds-checkbox-selected-bg-color]="item.color"
+            [style.--ds-checkbox-selected-border-color]="item.color"
+            (change)="isolate(item.id)"
+            (focus)="highlighted.set(item.id)"
+            (blur)="highlighted.set(null)" />
+
+          <span class="legend-label">
+            {{ item.label }}
+          </span>
+        </label>
+      } @else if (toggleable()) {
         <label class="legend-toggle">
           <input
             type="checkbox"

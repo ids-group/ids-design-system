@@ -340,6 +340,57 @@
   <docs-replay-button />
 
   <h3 class="block-title t-h4">
+    What a legend control does
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      legendMode
+    </code> picks the question the legend
+    answers. <code class="t-mono-inline">isolate</code>, the default, shows one
+    series and hides the rest — one action instead of one per series, which is
+    what a reader of a crowded chart wants.
+    <code class="t-mono-inline">
+      toggle
+    </code> hides one and leaves the rest, for
+    taking a dominant series out so the others can be read at a usable scale.
+    They are different controls, not two styles of one: isolate is a single
+    choice among many and renders as radios with an All option, toggle renders
+    as checkboxes.
+  </p>
+
+  <div class="states states--cols-2">
+    <div class="state-cell">
+      <ds-line-chart
+        caption="One series at a time"
+        dataTable="none"
+        legendFilters
+        [categories]="legendCategories()"
+        [series]="legendSeries()"
+        [(hiddenSeries)]="isolateHidden" />
+
+      <div class="state-cell-label">
+        legendMode = isolate (default)
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-line-chart
+        caption="Any combination of series"
+        dataTable="none"
+        legendFilters
+        legendMode="toggle"
+        [categories]="legendCategories()"
+        [series]="legendSeries()"
+        [(hiddenSeries)]="toggleHidden" />
+
+      <div class="state-cell-label">
+        legendMode = toggle
+      </div>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
     Filtering legend
   </h3>
 

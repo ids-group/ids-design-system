@@ -4303,6 +4303,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Whether the legend switches series off. Off leaves it a plain key."
       },
       {
+        "name": "legendMode",
+        "kind": "input",
+        "type": "'toggle' | 'isolate'",
+        "union": [
+          "toggle",
+          "isolate"
+        ],
+        "default": "'isolate'",
+        "required": false,
+        "description": "What a legend control does. `'isolate'` shows one series and hides the rest — one action to answer \"show me only this\" rather than one per series. `'toggle'` hides one and leaves the rest, for taking a dominant series out so the others can be read at a usable scale. Forwarded to `ds-chart-legend`, which renders radios for the first and checkboxes for the second."
+      },
+      {
         "name": "noVisibleSeriesText",
         "kind": "input",
         "type": "string",

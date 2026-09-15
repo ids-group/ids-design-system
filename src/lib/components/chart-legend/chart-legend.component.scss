@@ -5,6 +5,7 @@
 // the plot is still fading. The checkbox is the chip when the legend toggles.
 @include chart-motion.fades-in('.legend-swatch');
 @include chart-motion.fades-in('.legend-check');
+@include chart-motion.fades-in('.legend-radio');
 
 :host {
   display: block;
@@ -39,6 +40,14 @@
      outrank the `--ds-checkbox-selected-*` pair the template sets per item, and every box would
      come out in `--accent` instead of its own series colour. */
   @include check-box.box;
+}
+
+/* The same box the toggle uses, rounded: a single choice among many should look like one, and
+   reusing the box keeps the series colour arriving through the same two custom properties. */
+.legend-radio {
+  @include check-box.box;
+
+  border-radius: var(--radius-pill);
 }
 
 .legend-swatch {

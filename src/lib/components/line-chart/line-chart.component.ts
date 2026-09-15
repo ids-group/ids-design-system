@@ -262,6 +262,13 @@ export class LineChartComponent {
   /** Whether the legend switches series off. Off leaves it a plain key. */
   readonly legendFilters = input(false, { transform: booleanAttribute });
 
+  /** What a legend control does. `'isolate'` shows one series and hides the rest — one action to
+   *  answer "show me only this" rather than one per series. `'toggle'` hides one and leaves the
+   *  rest, for taking a dominant series out so the others can be read at a usable scale.
+   *  Forwarded to `ds-chart-legend`, which renders radios for the first and checkboxes for the
+   *  second. */
+  readonly legendMode = input<'toggle' | 'isolate'>('isolate');
+
   /** Shown in place of the plot once the legend has switched every series off. Without it the
    *  reader is left with an empty grid and nothing saying why. */
   readonly noVisibleSeriesText = input<string>('All series are hidden');
