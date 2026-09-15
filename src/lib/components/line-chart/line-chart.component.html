@@ -1,4 +1,13 @@
 <figure class="line-chart">
+  @if (pinnedCategory()) {
+    <button
+      class="pin-reset"
+      type="button"
+      (click)="releaseCategoryPin()">
+      Unpin
+    </button>
+  }
+
   @if (caption()) {
     <figcaption>
       {{ caption() }}
@@ -269,7 +278,9 @@
       <details
         class="data-table"
         [open]="dataTableResolved() === 'visible'">
-        <summary>Data table</summary>
+        <summary>
+          Data table
+        </summary>
 
         <table>
           <caption>
@@ -280,7 +291,9 @@
 
           <thead>
             <tr>
-              <th scope="col">Category</th>
+              <th scope="col">
+                Category
+              </th>
 
               @for (entry of resolvedSeries(); track entry.series.id) {
                 <th scope="col">

@@ -1,5 +1,6 @@
 import {
   resolveMax,
+  segmentWidths,
   widthPercent,
 } from '../../src/lib/components/bar-chart/bar-chart.math.ts';
 import { check, finish } from './probe-check.mjs';
@@ -73,3 +74,25 @@ check(
 );
 
 finish('bar-chart-math');
+
+// Segments size against their own sum, so a set that does not add up to the row's value still
+// fills the track — the alternative draws the shortfall as an unlabelled category.
+check(
+  'segments fill the track',
+  segmentWidths([291000, 74000, 47000]).reduce((sum, part) => sum + part, 0),
+  100,
+);
+check('a two-part split is proportional', segmentWidths([3, 1]), [75, 25]);
+
+// No positive total: nothing to divide, and 0 / 0 would write `width: NaN%`.
+check('an all-zero set has no widths', segmentWidths([0, 0]), []);
+check('an empty set has no widths', segmentWidths([]), []);
+
+// A negative or non-finite part must not consume track or become one.
+check('a negative part takes no width', segmentWidths([-10, 10]), [0, 100]);
+check('a NaN part takes no width', segmentWidths([NaN, 10]), [0, 100]);
+check(
+  'an Infinity part takes no width',
+  segmentWidths([Infinity, 10]),
+  [0, 100],
+);

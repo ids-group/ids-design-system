@@ -28,8 +28,8 @@
           <input
             type="radio"
             class="legend-radio"
-            [attr.name]="groupName"
             animate.enter="mark-enter"
+            [attr.name]="groupName"
             [checked]="isolated() === item.id"
             [style.--ds-checkbox-selected-bg-color]="item.color"
             [style.--ds-checkbox-selected-border-color]="item.color"

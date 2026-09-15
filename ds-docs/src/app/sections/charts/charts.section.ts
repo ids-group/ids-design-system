@@ -1,5 +1,7 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
 import { BarChartComponent } from 'ds/bar-chart';
+import { ChartLegendComponent } from 'ds/chart-legend';
+import type { ChartLegendItem } from 'ds/chart-legend';
 import type { BarChartRow } from 'ds/bar-chart';
 import { DocsChartDataEditorComponent } from '../../shared/docs-chart-data-editor.component';
 import { DocsReplayButtonComponent } from '../../shared/docs-replay-button.component';
@@ -69,6 +71,42 @@ const DATA_TABLE_ROWS: readonly BarChartRow[] = [
   ...NINE_DIGIT_VALUE_ROWS,
 ];
 
+const SEGMENT_ROWS: readonly BarChartRow[] = [
+  {
+    label: 'Engineering',
+    value: 412000,
+    segments: [
+      { label: 'Salaries', value: 291000 },
+      { label: 'Tooling', value: 74000 },
+      { label: 'Travel', value: 47000 },
+    ],
+  },
+  {
+    label: 'Sales',
+    value: 268000,
+    segments: [
+      { label: 'Salaries', value: 154000 },
+      { label: 'Tooling', value: 38000 },
+      { label: 'Travel', value: 76000 },
+    ],
+  },
+  {
+    label: 'Support',
+    value: 96000,
+    segments: [
+      { label: 'Salaries', value: 71000 },
+      { label: 'Tooling', value: 19000 },
+      { label: 'Travel', value: 6000 },
+    ],
+  },
+];
+
+const DETAIL_ROWS: readonly BarChartRow[] = [
+  { label: 'Organic', value: 12400, detail: '456 requests · 3.7%' },
+  { label: 'Paid', value: 8130, detail: '402 requests · 4.9%' },
+  { label: 'Referral', value: 2740, detail: '198 requests · 7.2%' },
+];
+
 const MAX_BELOW_DATA_ROWS: readonly BarChartRow[] = [
   { label: 'This quarter', value: 350 },
   { label: 'Last quarter', value: 150 },
@@ -79,6 +117,7 @@ const MAX_BELOW_DATA_ROWS: readonly BarChartRow[] = [
   standalone: true,
   imports: [
     BarChartComponent,
+    ChartLegendComponent,
     DocsChartDataEditorComponent,
     DocsSectionComponent,
     DocsReplayButtonComponent,
@@ -118,6 +157,21 @@ export class BarChartSection {
   protected readonly nineDigitValueRows = signal<readonly BarChartRow[]>(
     NINE_DIGIT_VALUE_ROWS,
   );
+  protected readonly segmentRows = signal<readonly BarChartRow[]>(SEGMENT_ROWS);
+  protected readonly detailRows = signal<readonly BarChartRow[]>(DETAIL_ROWS);
+  protected readonly segmentLegend: readonly ChartLegendItem[] = [
+    {
+      id: 'salaries',
+      label: 'Salaries',
+      color: 'var(--ds-chart-series-1-color)',
+    },
+    {
+      id: 'tooling',
+      label: 'Tooling',
+      color: 'var(--ds-chart-series-2-color)',
+    },
+    { id: 'travel', label: 'Travel', color: 'var(--ds-chart-series-3-color)' },
+  ];
   protected readonly maxBelowDataRows =
     signal<readonly BarChartRow[]>(MAX_BELOW_DATA_ROWS);
 }

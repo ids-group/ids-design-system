@@ -7,6 +7,7 @@
       Unpin
     </button>
   }
+
   @if (caption()) {
     <figcaption>
       {{ caption() }}
@@ -82,6 +83,18 @@
           }
 
           <span class="track">
+            @if (entry.segments.length) {
+              @for (part of entry.segments; track part.key) {
+                <span
+                  class="segment"
+                  animate.enter="mark-enter"
+                  [style.width.%]="part.widthPercent"
+                  [style.background]="part.color"
+                  [attr.title]="null"
+                  [attr.aria-hidden]="true">
+                </span>
+              }
+            } @else {
             <span
               class="fill"
               animate.enter="mark-enter"
@@ -94,6 +107,7 @@
                   [size]="14" />
               }
             </span>
+            }
           </span>
         </div>
       }

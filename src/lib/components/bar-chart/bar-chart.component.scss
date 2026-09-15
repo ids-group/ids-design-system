@@ -102,8 +102,6 @@ figcaption {
 }
 
 @include chart-frame.forced-colors;
-
-
 @include chart-frame.pin-reset;
 @include chart-frame.pin-marker;
 
@@ -114,4 +112,21 @@ figcaption {
   display: block;
   color: var(--text-secondary);
   font-size: var(--font-size-xs);
+}
+
+/* A segmented row is one track of parts, so the track becomes a row rather than a box holding one
+   fill. The 2px gap is a surface-coloured seam, not a margin: two fills meeting edge to edge read as
+   one longer fill, and a gap the track's own colour would read as a missing category. */
+.track:has(.segment) {
+  display: flex;
+}
+
+.segment {
+  block-size: 100%;
+  transition: background-color var(--ds-motion-chart-mark-duration)
+    var(--ds-motion-chart-mark-easing);
+
+  & + & {
+    border-inline-start: 2px solid var(--ds-chart-frame-bg-color, var(--surface-default));
+  }
 }

@@ -12,6 +12,7 @@ import {
   signal,
 } from '@angular/core';
 import {
+  CHART_SERIES_COLORS,
   chartColors,
   describeSeries,
   formatPercent,
@@ -38,10 +39,39 @@ import type {
   ChartItemTooltipTrigger,
   ChartTooltipContext,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
-import { resolveMax, widthPercent } from './bar-chart.math';
-import type { BarChartRow } from './bar-chart.types';
+import { resolveMax, segmentWidths, widthPercent } from './bar-chart.math';
+import type { BarChartRow, BarChartSegment } from './bar-chart.types';
 
 const defaultValueFormat = (value: number) => formatValue(value);
+
+/** A row's parts, ready to draw: a width, a colour and a formatted value each. Segments are
+ *  CATEGORIES, so they take the categorical palette in order — unlike the rows, which are one
+ *  series and share one colour. */
+function segmentsOf(
+  row: BarChartRow,
+  format: (value: number) => string,
+): readonly {
+  key: string;
+  segment: BarChartSegment;
+  widthPercent: number;
+  formattedValue: string;
+  color: string;
+}[] {
+  const parts = row.segments ?? [];
+  const widths = segmentWidths(parts.map((part) => part.value));
+
+  return widths.length
+    ? parts.map((segment, index) => ({
+        key: segment.id ?? String(index),
+        segment,
+        widthPercent: widths[index],
+        formattedValue: format(segment.value),
+        color:
+          segment.color ??
+          CHART_SERIES_COLORS[index % CHART_SERIES_COLORS.length],
+      }))
+    : [];
+}
 
 @Component({
   selector: 'ds-bar-chart',
@@ -259,6 +289,7 @@ export class BarChartComponent {
           ? formatPercent(row.percent, 100)
           : formatPercent(row.value, max),
       share: this.partOfWhole() ? shareOfTotal(values, index) : '',
+      segments: segmentsOf(row, format),
       color: row.color ?? chartColors.seriesDefault,
     }));
   });
