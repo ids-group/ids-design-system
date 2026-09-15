@@ -40,7 +40,12 @@
         "legendMode",
         "onMarkClick",
         "onMarkerClick",
-        "mode"
+        "mode",
+        "tooltipLingerMs",
+        "max",
+        "maxSecondary",
+        "drop",
+        "annotations"
       ],
       "detect": [
         "extends BarChartComponent",
@@ -62,8 +67,8 @@
         "DsMessageBase",
         "extends DsMessageBase"
       ],
-      "verify": "No subclass declares a member named `pinOnClick`, `partOfWhole`, `legendMode`, `onMarkClick`, `onMarkerClick`, `pinnedCategory`, `releaseCategoryPin`, `mode`, `isolated`, `isolate`, `showAll`, `detachEscape` or `closeOnEscape`; the app builds with no TS4114, TS2415 or TS2416 on those classes.",
-      "note": "Pinning, the share gate and the legend mode each added members to the classes that carry them. Subclassing a DS component is unsupported, but a release that only adds can still fail such a build on a name collision, which is why the additions are listed here rather than in the additive notes. `ds-progress` gained `target` and `max` in the same release, and the shared message base behind the fields and the button — internal, and not exported from the package root — a protected flag deciding whether an unset reserve follows the app-wide field default. `ds-line-chart` gained `annotations` in the same release."
+      "verify": "No subclass declares a member named `pinOnClick`, `partOfWhole`, `legendMode`, `tooltipLingerMs`, `max`, `maxSecondary`, `drop`, `annotations`, `onMarkClick`, `onMarkerClick`, `pinnedCategory`, `releaseCategoryPin`, `mode`, `isolated`, `isolate`, `showAll`, `hideAll`, `groupName`, `target`, `detachEscape` or `closeOnEscape`; the app builds with no TS4114, TS2415 or TS2416 on those classes.",
+      "note": "Pinning, the share gate, the legend mode and the tooltip linger each added members to the classes that carry them. Subclassing a DS component is unsupported, but a release that only adds can still fail such a build on a name collision, which is why the additions are listed here rather than in the additive notes. `ds-funnel-chart` gained `drop`, `ds-line-chart` gained `max`, `maxSecondary` and `annotations`, `ds-progress` gained `target` and `max`, and the shared message base behind the fields and the button — internal, and not exported from the package root — a protected flag deciding whether an unset reserve follows the app-wide field default."
     },
     {
       "id": "chart-legend-isolates-by-default",
@@ -166,19 +171,52 @@
       ],
       "verify": "Every chart whose page does not otherwise carry its numbers sets `dataTable` explicitly, and no page shows an annex disclosure nobody asked for.",
       "note": "`dataTable` now defaults to `'none'` rather than `'toggle'`, on all five charts and in `DS_CONFIG.chart.dataTable`. A disclosure under every plot is chrome the page did not ask for, and the page usually carries the numbers already."
+    },
+    {
+      "id": "chart-tooltip-linger-off-by-default",
+      "kind": "behavior",
+      "old": "ds-bar-chart",
+      "new": null,
+      "surface": [
+        "template",
+        "config"
+      ],
+      "action": "Only where a chart tooltip holds something the reader has to REACH with the pointer — a link, a figure, a selectable string: set `[tooltipLingerMs]=\"140\"` on that chart, or `DS_CONFIG.chart.tooltipLingerMs = 140` where every tooltip in the app carries one. Everywhere else, nothing.",
+      "appliesWhen": "All five charts and any `tooltipTemplate` they render. A chart whose tooltip is the built-in label-and-value panel needs nothing — there is nothing in it to reach.",
+      "pitfall": "Nothing errors and nothing logs. A custom `tooltipTemplate` carrying a link keeps rendering the link, and the panel simply closes before the pointer can arrive — so the link is unreachable by pointer while still being in the DOM, which reads as a broken control rather than a missing setting.",
+      "restore": "Set `DS_CONFIG.chart.tooltipLingerMs = 140` to put the grace back on every chart at once.",
+      "searchHints": [
+        "tooltipTemplate",
+        "dsChartTooltip",
+        "ds-chart-tooltip-pane",
+        "tooltipLingerMs"
+      ],
+      "detect": [
+        "tooltipTemplate",
+        "ds-chart-tooltip-pane",
+        "DS_CONFIG",
+        "provideDsConfig"
+      ],
+      "verify": "Every chart whose tooltip template renders an anchor, a button or text a reader would select carries a non-zero `tooltipLingerMs`; every other chart carries none.",
+      "note": "A panel that outlives the pointer sits over the plot the reader has moved on to, so the delay is off. WCAG 1.4.13 asks that a hover-triggered panel be hoverable, dismissible and persistent — the first clause only bites when there is something in the panel to reach, and the built-in panel is one line of text. Dismissible and persistent hold at every value, because Escape and the latch are not on this timer."
     }
   ],
   "informational": [
     "`ds-bar-chart` and `ds-column-chart` gained a `Share of total` column in their data table, shown only under `partOfWhole`. It carries the same figure as the tooltip's second line, so a reader who cannot hover now has a route to it. The heading says `Share of total` rather than `Share` because `ds-bar-chart` already prints a percentage beside each row and that one is the share of the largest row, not of the sum.",
-    "A chart tooltip is now reachable with the pointer and dismissable with Escape, which WCAG 1.4.13 requires of anything shown on hover. Leaving a mark clears it after a short grace period rather than at once, and arriving on the panel cancels that. Nothing in your code changes. Two things will notice: a test that asserts the panel is gone immediately after a `pointerleave` now needs to wait out the grace period, and a rule of yours setting `pointer-events` on `.ds-chart-tooltip-pane` decides whether the criterion is met — it must stay `auto`.",
+    "A chart tooltip can be selected and dismissed with Escape, which WCAG 1.4.13 requires of anything shown on hover. The panel still closes the moment the pointer leaves the mark; reaching it with the pointer is `tooltipLingerMs`, which is `0` — see the actionable item of the same name. Nothing in your code changes. One thing will notice: a rule of yours setting `pointer-events` on `.ds-chart-tooltip-pane` decides whether the panel can be selected at all, and must stay `auto`.",
     "Every chart gained `pinOnClick`, off by default. With it set, clicking a mark holds that mark, its tooltip and — where `dimOthers` is on — the dimming of the other marks, until Escape or a press outside releases it. The click output fires either way. On `ds-line-chart` the pin hangs off the data markers, so Enter and Space pin from the keyboard too.",
     "`ds-progress` takes a `target`: a second point on the same 0–100 scale, drawn as a hairline across the track so a bar reads actual against a goal or a baseline. It is clamped like `value`, ignored while `indeterminate`, and unset draws nothing, so every existing bar is unchanged. `role=\"progressbar\"` carries one value and no second, so the mark is visual only — put the comparison in `ariaLabel`. `--ds-progress-target-color` and `--ds-progress-target-width` set its look. It also takes `max`, the scale `value` and `target` are read against: left at 100 they stay percentages and nothing existing changes, while setting the real total makes `aria-valuenow` and `aria-valuemax` carry the measurement rather than a percentage the caller had to compute.",
     "Clicking a mark on ds-donut-chart, ds-funnel-chart or ds-line-chart no longer leaves a rectangular outline around it. Chromium focuses an SVG shape on click even without a tabindex and reports that focus as not :focus-visible, so the browser painted its own bounding-box outline. The marks suppress it on :focus now; the keyboard indicator is a stroke that follows the shape and is unchanged. A screenshot test that captured a clicked slice or band will differ.",
     "A ds-column-chart tooltip opens far enough above the column to clear the value that showValues prints on top of it. Nothing in your code changes; a test asserting the panel position relative to the column will see it roughly one text line higher.",
     "`ds-line-chart` takes `annotations`: labels pinned over their readings, each naming a `categoryIndex`, a `label` and optionally the `seriesId` it belongs to. Nothing is drawn without them, so every existing chart is unchanged. A label sits above its reading, below it where the plot has no room, and anchors to its own edge near one; a hidden series takes its annotations with it. Marked `aria-hidden`, because the annex table already carries every reading. `--ds-line-chart-annotation-color`, `-font-size`, `-weight`, `-halo-color` and `-halo-width` set its look.",
     "A drag across a chart no longer selects its chrome: axis ticks, legend labels and the visually-hidden caption came out selected and painted as bars over the card. The plot is `user-select: none` now. The annex table, the funnel's stage table and the visible caption stay selectable — those carry numbers people copy.",
-    "A pinned mark carries a pin glyph in its middle on all five charts, and a `Reset` control appears in the chart corner while anything is pinned. Nothing in your code changes; a screenshot test of a pinned chart will differ.",
-    "`ds-line-chart` places its first reading ON the value axis and its last at the far edge, instead of centring each reading in a slot. The line now fills the plot rather than floating half a slot inside it. Nothing in your code changes. Two things will notice: a screenshot test of a line chart, and any test asserting a marker x — the spacing between readings is now the plot width divided by one less than the reading count."
+    "A pinned mark carries a pushpin on an opaque disc on all five charts, and an `Unpin` button appears centred above the plot while anything is pinned. Nothing in your code changes; a screenshot test of a pinned chart will differ.",
+    "`ds-line-chart` places its first reading ON the value axis and its last at the far edge, instead of centring each reading in a slot. The line now fills the plot rather than floating half a slot inside it. Nothing in your code changes. Two things will notice: a screenshot test of a line chart, and any test asserting a marker x — the spacing between readings is now the plot width divided by one less than the reading count.",
+    "A `ds-bar-chart` row takes `segments`: parts that divide the row’s bar without shortening it, sized against their own sum so they always fill it. The bar keeps the length its `value` earns, each part takes the categorical palette in order, and each reaches the annex table as its own row. Rows without `segments` are unchanged.",
+    "A `ds-bar-chart` row takes `detail`: a second, already-formatted reading printed under the label and carried into the annex table, for a row that encodes a ratio the bar can only draw half of. Rows without it are unchanged.",
+    "`ds-line-chart` takes `max` and `maxSecondary`, which pin the value axis so two renders of the same panel are comparable. Null, the default, keeps the derived axis; a maximum below the data does not clip it, because the larger of the two wins.",
+    "`ds-funnel-chart` takes `drop`, which says what its Drop column reports: `relative` (the default, and what it always showed) is the share that leaked at that stage, `absolute` the count, `none` removes the column. Charts that set nothing are unchanged.",
+    "A `ds-chart-legend` in its isolate mode gained a `None` option and always keeps one option chosen, so the radio group can reach an empty plot and never reads as undecided. Each legend now scopes its radio group to itself, so several charts on one page no longer share a single selection."
   ],
   "deleteList": []
 }
