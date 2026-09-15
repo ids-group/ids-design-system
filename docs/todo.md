@@ -14,14 +14,14 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**101 open — 1 P1, 34 P2, 66 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**102 open — 1 P1, 35 P2, 66 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 1
 
 - **Framework & forms**
   - Upgrade to Angular 22 — and re-verify the signal-forms work against it, because one of its breaking changes lands exactly there
 
-### P2 — 34
+### P2 — 35
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Nothing catches a shell that rings on `:focus-within` when it means the keyboard
@@ -44,6 +44,7 @@ item and nothing else.
 - **Charts and fields the ECM prototype could not use (recorded 2026-09-15, Stas: take all five)**
   - No component draws one bar whose segments are the parts of a whole — and it is a chart
   - `ds-progress` cannot show a target beside the fill
+  - `ds-line-chart` cannot be told its value-axis maximum, so two plots of the same measure
 - **Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)**
   - A1 - build the seam and ONE directive, and measure what the seam itself costs
   - Build-time `define` flag: a consumer CAN strip library code from `angular.json` — measured
@@ -94,7 +95,7 @@ item and nothing else.
   - `templates` and `startingPoints` in `_ds_manifest.json` are in the schema and empty
   - `.thumbnail` — the project's cover image — has no source that regenerates it
 - **Charts and fields the ECM prototype could not use (recorded 2026-09-15, Stas: take all five)**
-  - A bar row carries one number, and the ask wants two — but two numbers per row with a …
+  - `ds-funnel-chart` states the drop as a share and never as a count (arrived 2026-09-15)
 - **Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)**
   - A2 - the remaining directives, after A1 prices the seam
   - B1 - `DS_CONFIG.prototype: true` is BEHAVIOUR only. For bytes, use a build-time flag
@@ -540,7 +541,9 @@ Ten hand-rolled charts moved onto DS components at 0.13.1. These five are what s
 remaining four screens; each names the screen it blocks, so a fix has somewhere to be checked.
 
 - [ ] **[P2] No component draws one bar whose segments are the parts of a whole — and it is a chart
-  type, so it wants a design pass before code (Stas 2026-09-15: generic, take it; not started).**
+  type, so it wants a design pass before code (Stas 2026-09-15: generic, take it; not started).
+  CONFIRMED BLOCKING: the consumer answered that outcome distribution cannot ship without it, and
+  that nothing else on that page waits — so this item alone holds a screen.**
   `BarChartRow` is `{ id?, label, value, percent?, color? }` — one value per row — and neither
   `ds-bar-chart` nor `ds-column-chart` mentions a stack. `LineChartAxisMode`'s `'stacked'` is two
   plots over a shared category axis, a different picture entirely.
@@ -567,15 +570,15 @@ remaining four screens; each names the screen it blocks, so a fix has somewhere 
   target in one glance — without the mark the bar loses the comparison it is there for. Wanted: a
   `target` input on the same scale, drawn as a hairline across the track. The smallest of the five.
 
-- [ ] **[P3] A bar row carries one number, and the ask wants two — but two numbers per row with a
-  bar encoding the ratio is a table, not a chart (Stas 2026-09-15: ask back before growing the API).**
-  `caption` and `summary` are per-chart, so a row reading `12,400 → 456` has nowhere for the second
-  figure. **Blocks** requests-by-audience-group on `microsite-detail`.
-  **Two routes already ship and the question is why neither was taken:** `ds-table`, which is built
-  for rows of several values, and the funnel's `showTable`, which pairs a chart with its own figures.
-  A `detail?: string` on `BarChartRow` is cheap and mirrors `ChartTooltipEntry.detail`, but it makes
-  the row a place for arbitrary text — the next ask is a third value and column alignment, and the
-  chart becomes a worse table. Settle the shape of the screen first.
+- [x] **[P3] A second value per bar row — closed by asking instead of building (2026-09-15).** The
+  ask wanted `12,400 → 456` in one row; two numbers with a bar encoding the ratio is a table, so the
+  question went back rather than a `detail?: string` going onto `BarChartRow`. The consumer had
+  tried neither shipped route, and named why: `ds-table` with a bar in the cell was dropped because
+  `ds-progress` took percentages only, so the cell would have needed a share computed up front —
+  the same accessibility narrowing their own §6 describes. `max` removes the reason, and
+  `[value]="requests" [max]="visitors"` is the row they wanted.
+  **Kept because it is the argument against the next one of these:** a chart row is not a place for
+  arbitrary text, and the route out was a missing input elsewhere rather than a wider row type.
 
 - [x] **[P3] There is no mark small enough for a table cell — closed by `ds-progress`, not a new
   component (2026-09-15).** The ask wanted a `ds-meter` taking `value` and `max`, because every
@@ -589,6 +592,27 @@ remaining four screens; each names the screen it blocks, so a fix has somewhere 
   the plot has no room, anchored to its own edge near one, and dropped with a hidden series. Haloed
   rather than boxed so it survives crossing the line, and `aria-hidden` because the annex table
   already carries every reading.
+
+- [ ] **[P2] `ds-line-chart` cannot be told its value-axis maximum, so two plots of the same measure
+  are not comparable (arrived 2026-09-15, after the first answer went out).** `yAxisMode` chooses how
+  the axes RELATE — `'rounded' | 'exact' | 'independent' | 'stacked'` — and none of them pins a
+  bound; `niceMax` derives one from the data on every render.
+  **What that costs, in the consumer's words:** a response-time panel is opened one agent at a time,
+  and an agent averaging 13 hrs renders on a 0–14 axis while one averaging 26 hrs renders on a 0–30
+  axis. The two plots look identical — the same gentle wiggle filling the same box — and nothing on
+  screen says the scales differ. Their hand-rolled chart pinned `chartYMax = 30` for exactly this.
+  **Wanted:** `min`/`max` on the value axis, per axis given `axis: 'secondary'` exists. A series
+  judged against a threshold keeps one frame across renders.
+
+- [ ] **[P3] `ds-funnel-chart` states the drop as a share and never as a count (arrived 2026-09-15).**
+  `formattedDrop` is `formatPercent(drop, 1)` (`funnel-chart.component.ts:290`), so the Drop column
+  is always relative.
+  **Both readings are real and they answer different questions** — what fraction leaked here, versus
+  how many records that is. On a settlement waterfall the count is the one an operator acts on:
+  22,623 records is a re-targeting job, 41.8% is a talking point. The count is recoverable by
+  subtracting two rows, and the reader should not have to.
+  **Wanted:** a `drop` input — `'relative' | 'absolute' | 'none'` — or a second column carrying the
+  count beside the share.
 
 ## Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)
 
