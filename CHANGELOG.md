@@ -20,7 +20,35 @@
   The cell is empty where there is no share to state: a lone mark, or a reading that is zero,
   negative or non-finite. Negatives are left out of the total rather than subtracted from it.
 
+- **Every chart takes `pinOnClick`, which holds a reading in place.** Clicking a mark keeps it, its
+  tooltip and — with `dimOthers` — the dimming of everything else, so the comparison survives the
+  pointer leaving the chart. Escape releases it, and so does a press outside the mark. Off by
+  default: a click is already the drill-down hook, and a mark left lit after the pointer has gone
+  needs a reader who knows why it is lit.
+
+  ```html
+  <ds-column-chart interactive pinOnClick dimOthers [data]="points" />
+  ```
+
+  The click output fires either way — pinning is a state, not a handler. On `ds-line-chart` the pin
+  hangs off the data markers rather than the plot, so Enter and Space pin from the keyboard too; a
+  second activation of the pinned reading releases it.
+
 ### Changed
+
+- **A legend control isolates a series rather than hiding one, and `ds-chart-legend` says which.**
+  `mode` is `'isolate'` by default: choosing a series shows that one and hides the rest, which takes
+  one action instead of one per series on a crowded chart. `mode="toggle"` is the old behaviour —
+  hide one, leave the rest — for taking a dominant series out so the others can be read at a usable
+  scale. `ds-line-chart` forwards it as `legendMode`.
+
+  The two are different controls, not two looks: isolate is a single choice among many, so it
+  renders as a radio group with an `All` option, and toggle renders as the checkboxes it already
+  did. That is what gives each the keyboard and screen-reader behaviour it should have.
+
+  **If you set `legendFilters` on `ds-line-chart`, its legend changes shape.** Add
+  `legendMode="toggle"` to keep the checkboxes. `hiddenSeries` is unchanged in both modes, so a page
+  driving it from a URL parameter needs nothing.
 
 - **A chart tooltip can be reached with the pointer and dismissed with Escape.** It could be
   neither. The panel is portaled out of the chart, so leaving a mark closed it before the pointer
@@ -42,8 +70,18 @@
   total to keep the line; leave it off and the tooltip carries the label and the value, as before
   `0.13.1`.
 
-  `BarChartComponent` and `ColumnChartComponent` grow by one member, `partOfWhole`. A subclass
-  declaring that name collides and needs `override` or a rename.
+- **Exported class member surface grew — only matters if you SUBCLASS a chart.** `BarChartComponent`,
+  `ColumnChartComponent`, `DonutChartComponent`, `FunnelChartComponent` and `LineChartComponent` all
+  gain `pinOnClick` and the protected `onMarkClick`, which `LineChartComponent` spells
+  `onMarkerClick` beside its own `pinnedCategory` and `releaseCategoryPin`; `BarChartComponent` and
+  `ColumnChartComponent` also gain `partOfWhole`; `LineChartComponent` gains `legendMode`; the
+  internal `ChartLegendComponent`, which the package root does not export, gains `mode`, `isolated`,
+  `isolate` and `showAll`; and the internal `ChartTooltipDirective`, also unexported there, gains
+  the private `detachEscape` and `closeOnEscape`.
+
+  A subclass declaring any of those names collides. For a public or protected member the fix is
+  `override` or a rename; for a private one only a rename works, because TS2415 fires on the name
+  and `override` does not clear it.
 
 ## 0.13.1 — 2026-09-14
 

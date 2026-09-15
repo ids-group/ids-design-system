@@ -25,29 +25,70 @@
       "note": "A share of a total is only a real quantity when the marks are parts of one whole. `0.13.1` stated one unconditionally, which made the figure meaningless on funnel-shaped and time-series data. The input also governs the new `Share of total` column in the data table."
     },
     {
-      "id": "chart-part-of-whole-member-added",
+      "id": "chart-members-grew",
       "kind": "behavior",
       "old": "BarChartComponent",
       "new": null,
       "surface": "typescript",
-      "action": "Only if you SUBCLASS `BarChartComponent` or `ColumnChartComponent` and declare a member called `partOfWhole`: rename yours, or add `override` where your member genuinely means the same thing.",
-      "appliesWhen": "Only a class extending `BarChartComponent` or `ColumnChartComponent`. A template that uses the charts needs nothing.",
+      "action": "Only if you SUBCLASS a chart component, or the internal legend or tooltip directive that the package root does not export, and declare a member of the same name: rename yours, or add `override` where your member genuinely means the same thing. A private base member — `detachEscape` and `closeOnEscape` — can only be resolved by renaming yours.",
+      "appliesWhen": "Only a class extending one of the five chart components, or extending the internal legend or tooltip directive, neither of which the package root exports. A template that uses the charts needs nothing.",
       "pitfall": "The collision is a compile error, not a silent one — TS4114 for a same-named member, TS2416 where the signature differs — so a build that passes has none.",
       "restore": null,
       "searchHints": [
-        "partOfWhole"
+        "pinOnClick",
+        "partOfWhole",
+        "legendMode",
+        "onMarkClick",
+        "onMarkerClick",
+        "mode"
       ],
       "detect": [
         "extends BarChartComponent",
-        "extends ColumnChartComponent"
+        "extends ColumnChartComponent",
+        "extends DonutChartComponent",
+        "extends FunnelChartComponent",
+        "extends LineChartComponent",
+        "extends ChartLegendComponent",
+        "extends ChartTooltipDirective",
+        "BarChartComponent",
+        "ColumnChartComponent",
+        "DonutChartComponent",
+        "FunnelChartComponent",
+        "LineChartComponent",
+        "ChartLegendComponent",
+        "ChartTooltipDirective"
       ],
-      "verify": "No subclass of either chart declares a member named `partOfWhole` of its own; the app builds with no TS4114 or TS2416 on those classes.",
-      "note": "Each chart gained one input, `partOfWhole`. Subclassing a DS component is unsupported, but a release that only adds can still fail such a build on a name collision, which is why the addition is listed here rather than in the additive notes."
+      "verify": "No subclass declares a member named `pinOnClick`, `partOfWhole`, `legendMode`, `onMarkClick`, `onMarkerClick`, `pinnedCategory`, `releaseCategoryPin`, `mode`, `isolated`, `isolate`, `showAll`, `detachEscape` or `closeOnEscape`; the app builds with no TS4114, TS2415 or TS2416 on those classes.",
+      "note": "Pinning, the share gate and the legend mode each added members to the classes that carry them. Subclassing a DS component is unsupported, but a release that only adds can still fail such a build on a name collision, which is why the additions are listed here rather than in the additive notes."
+    },
+    {
+      "id": "chart-legend-isolates-by-default",
+      "kind": "behavior",
+      "old": "ds-line-chart",
+      "new": null,
+      "surface": "template",
+      "action": "Add `legendMode=\"toggle\"` to any `ds-line-chart` with `legendFilters` whose legend should keep hiding one series at a time. Leave it off and the legend isolates instead: choosing a series shows that one and hides the rest.",
+      "appliesWhen": "Only a `ds-line-chart` that sets `legendFilters`. A chart with a plain key legend is unchanged, and so is `hiddenSeries` — it carries the same ids in both modes, so a page driving it from a URL parameter needs nothing.",
+      "pitfall": "Nothing errors. The legend changes SHAPE as well as behaviour — checkboxes become a radio group with an `All` option — so a screenshot test of the legend and any test clicking a checkbox by role will both need updating.",
+      "restore": "Set `legendMode=\"toggle\"`.",
+      "searchHints": [
+        "legendFilters",
+        "legendMode",
+        "hiddenSeries",
+        "legend-check"
+      ],
+      "detect": [
+        "legendFilters",
+        "ds-line-chart"
+      ],
+      "verify": "Every filtering legend either isolates deliberately or carries `legendMode=\"toggle\"`, and any test that clicked a legend checkbox has been updated for the mode it now renders.",
+      "note": "Isolate answers the question a reader of a crowded chart actually asks — show me only this — in one action rather than one per series. The two are different controls, so isolate renders as radios and toggle as checkboxes, which is what gives each the keyboard and screen-reader behaviour it should have."
     }
   ],
   "informational": [
     "`ds-bar-chart` and `ds-column-chart` gained a `Share of total` column in their data table, shown only under `partOfWhole`. It carries the same figure as the tooltip's second line, so a reader who cannot hover now has a route to it. The heading says `Share of total` rather than `Share` because `ds-bar-chart` already prints a percentage beside each row and that one is the share of the largest row, not of the sum.",
-    "A chart tooltip is now reachable with the pointer and dismissable with Escape, which WCAG 1.4.13 requires of anything shown on hover. Leaving a mark clears it after a short grace period rather than at once, and arriving on the panel cancels that. Nothing in your code changes. Two things will notice: a test that asserts the panel is gone immediately after a `pointerleave` now needs to wait out the grace period, and a rule of yours setting `pointer-events` on `.ds-chart-tooltip-pane` decides whether the criterion is met — it must stay `auto`."
+    "A chart tooltip is now reachable with the pointer and dismissable with Escape, which WCAG 1.4.13 requires of anything shown on hover. Leaving a mark clears it after a short grace period rather than at once, and arriving on the panel cancels that. Nothing in your code changes. Two things will notice: a test that asserts the panel is gone immediately after a `pointerleave` now needs to wait out the grace period, and a rule of yours setting `pointer-events` on `.ds-chart-tooltip-pane` decides whether the criterion is met — it must stay `auto`.",
+    "Every chart gained `pinOnClick`, off by default. With it set, clicking a mark holds that mark, its tooltip and — where `dimOthers` is on — the dimming of the other marks, until Escape or a press outside releases it. The click output fires either way. On `ds-line-chart` the pin hangs off the data markers, so Enter and Space pin from the keyboard too."
   ],
   "deleteList": []
 }
