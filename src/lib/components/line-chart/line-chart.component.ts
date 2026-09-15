@@ -208,6 +208,20 @@ export class LineChartComponent {
    *  `'none'` belongs only where the same data is already in a table on the page.
    *  Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`. */
   readonly dataTable = input<ChartDataTable | null>(null);
+  /** Pins the value axis instead of deriving it from the data. A panel opened one subject at a
+   *  time — one agent, one microsite — derives a different axis for each of them, so two plots with
+   *  the same gentle wiggle can be four times apart in value and nothing on screen says so. A fixed
+   *  maximum is what makes two renders comparable.
+   *
+   *  Null, the default, keeps the derived axis. Applies to the primary axis; `maxSecondary` pins
+   *  the second one where a series sets `axis: 'secondary'`. A maximum below the data does not clip
+   *  it — the larger of the two wins, because silently hiding a reading is worse than a taller axis
+   *  than you asked for. */
+  readonly max = input<number | null>(null);
+
+  /** Pins the secondary value axis. See `max`. */
+  readonly maxSecondary = input<number | null>(null);
+
   /** Draws skeleton marks in place of the data, at the same count, so the chart does not resize
    *  when the data lands. */
   readonly loading = input(false, { transform: booleanAttribute });
@@ -362,9 +376,18 @@ export class LineChartComponent {
         .filter((entry) => entry.onSecondaryAxis === secondary)
         .map((entry) => entry.values);
 
+    // The pin raises the axis, never lowers it: a maximum under the data would push readings off
+    // the top of the plot, and a chart that hides a value is worse than one with headroom.
+    const pinned = (asked: number | null, derived: number) =>
+      asked !== null && Number.isFinite(asked) && asked > derived
+        ? asked
+        : derived;
+
     return axisLayout(
-      domainMaxOf(valuesOn(false)),
-      this.hasSecondaryAxis() ? domainMaxOf(valuesOn(true)) : null,
+      pinned(this.max(), domainMaxOf(valuesOn(false))),
+      this.hasSecondaryAxis()
+        ? pinned(this.maxSecondary(), domainMaxOf(valuesOn(true)))
+        : null,
       this.yAxisMode(),
       this.tickCount(),
     );

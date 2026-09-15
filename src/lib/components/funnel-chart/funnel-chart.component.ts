@@ -47,7 +47,28 @@ import {
   stageGapUnits,
   stagePolygonPoints,
 } from './funnel-chart.math';
-import type { FunnelChartShape, FunnelChartStage } from './funnel-chart.types';
+import type {
+  FunnelChartDrop,
+  FunnelChartShape,
+  FunnelChartStage,
+} from './funnel-chart.types';
+
+/** The Drop cell, in whichever unit the chart was asked for. A null fall is the first stage, which
+ *  has nothing above it to fall from. */
+function formatDrop(
+  fraction: number | null,
+  count: number | null,
+  mode: FunnelChartDrop,
+  format: (value: number) => string,
+): string {
+  if (mode === 'none' || fraction === null) {
+    return '—';
+  }
+
+  return mode === 'absolute' && count !== null
+    ? `−${format(Math.abs(count))}`
+    : formatPercent(fraction, 1);
+}
 
 const defaultValueFormat = (value: number) => formatValue(value);
 
@@ -96,6 +117,10 @@ export class FunnelChartComponent {
    *  already prints every label and value. Unset falls back to `DS_CONFIG.chart.dataTable`, then
    *  `'toggle'`. */
   readonly dataTable = input<ChartDataTable | null>(null);
+  /** What the Drop column reports: `'relative'` (the default) the share that leaked at this
+   *  stage, `'absolute'` the count, `'none'` no column at all. */
+  readonly drop = input<FunnelChartDrop>('relative');
+
   /** Draws skeleton marks in place of the data, at the same count, so the chart does not resize
    *  when the data lands. */
   readonly loading = input(false, { transform: booleanAttribute });
@@ -302,7 +327,12 @@ export class FunnelChartComponent {
         ),
         formattedValue: format(stage.value),
         formattedPercent: formatPercent(stage.value, firstValue),
-        formattedDrop: drop === null ? '—' : formatPercent(drop, 1),
+        formattedDrop: formatDrop(
+          drop,
+          index > 0 ? values[index - 1] - stage.value : null,
+          this.drop(),
+          format,
+        ),
         color:
           index === lastIndex
             ? chartColors.seriesAccent

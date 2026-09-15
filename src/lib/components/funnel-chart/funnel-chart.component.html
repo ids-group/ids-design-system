@@ -109,9 +109,11 @@
               Percent
             </th>
 
-            <th scope="col">
-              Drop
-            </th>
+            @if (drop() !== 'none') {
+              <th scope="col">
+                Drop
+              </th>
+            }
           </tr>
         </thead>
 
@@ -137,9 +139,11 @@
                 {{ entry.formattedPercent }}
               </td>
 
-              <td>
-                {{ entry.formattedDrop }}
-              </td>
+              @if (drop() !== 'none') {
+                <td>
+                  {{ entry.formattedDrop }}
+                </td>
+              }
             </tr>
           }
         </tbody>

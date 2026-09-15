@@ -63,6 +63,12 @@
           (keydown.space)="onRowKey(entry.row, $event)">
           <span class="label">
             {{ entry.row.label }}
+
+            @if (entry.row.detail) {
+              <span class="detail">
+                {{ entry.row.detail }}
+              </span>
+            }
           </span>
 
           <span class="value">
@@ -131,6 +137,12 @@
               <tr>
                 <td>
                   {{ entry.row.label }}
+
+                  @if (entry.row.detail) {
+                    <span class="detail">
+                      {{ entry.row.detail }}
+                    </span>
+                  }
                 </td>
 
                 <td>

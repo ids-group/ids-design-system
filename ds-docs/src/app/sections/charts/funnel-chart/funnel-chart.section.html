@@ -144,6 +144,47 @@
   <docs-chart-data-editor [(rows)]="dataTableStages" />
 
   <h3 class="block-title t-h4">
+    What the Drop column reports
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      drop
+    </code> chooses the unit.
+    <code class="t-mono-inline">
+      relative
+    </code>, the default, is the share that
+    leaked at this stage; <code class="t-mono-inline">absolute</code> is the
+    count that leaked; <code class="t-mono-inline">none</code> takes the column
+    out. The two units answer different questions — a share is a talking point,
+    a count is a re-targeting job — and the count is only recoverable by
+    subtracting two rows, which a reader should not have to do.
+  </p>
+
+  <div class="states states--cols-2">
+    <div class="state-cell">
+      <ds-funnel-chart
+        dataTable="none"
+        [data]="dropStages()" />
+
+      <div class="state-cell-label">
+        drop = relative (default)
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-funnel-chart
+        drop="absolute"
+        dataTable="none"
+        [data]="dropStages()" />
+
+      <div class="state-cell-label">
+        drop = absolute
+      </div>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
     Interaction
   </h3>
 

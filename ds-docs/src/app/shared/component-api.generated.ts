@@ -3366,6 +3366,19 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "The label-and-value disclosure every chart carries. Ignored while `showTable` is on, which already prints every label and value. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'toggle'`."
       },
       {
+        "name": "drop",
+        "kind": "input",
+        "type": "FunnelChartDrop",
+        "union": [
+          "relative",
+          "absolute",
+          "none"
+        ],
+        "default": "'relative'",
+        "required": false,
+        "description": "What the Drop column reports: `'relative'` (the default) the share that leaked at this stage, `'absolute'` the count, `'none'` no column at all."
+      },
+      {
         "name": "loading",
         "kind": "input",
         "type": "boolean",
@@ -4298,6 +4311,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`."
+      },
+      {
+        "name": "max",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Pins the value axis instead of deriving it from the data. A panel opened one subject at a time — one agent, one microsite — derives a different axis for each of them, so two plots with the same gentle wiggle can be four times apart in value and nothing on screen says so. A fixed maximum is what makes two renders comparable. Null, the default, keeps the derived axis. Applies to the primary axis; `maxSecondary` pins the second one where a series sets `axis: 'secondary'`. A maximum below the data does not clip it — the larger of the two wins, because silently hiding a reading is worse than a taller axis than you asked for."
+      },
+      {
+        "name": "maxSecondary",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Pins the secondary value axis. See `max`."
       },
       {
         "name": "loading",

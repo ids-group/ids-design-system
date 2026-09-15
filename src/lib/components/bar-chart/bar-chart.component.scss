@@ -106,3 +106,12 @@ figcaption {
 
 @include chart-frame.pin-reset;
 @include chart-frame.pin-marker;
+
+/* The row's second reading, under its label rather than beside it: the value column is right-aligned
+   on the bar's scale, and a number on a different scale sitting in it would read as belonging to
+   that column. */
+.label > .detail {
+  display: block;
+  color: var(--text-secondary);
+  font-size: var(--font-size-xs);
+}

@@ -69,6 +69,8 @@ export class FunnelChartSection {
     signal<readonly FunnelChartStage[]>(SPECIMEN_STAGES);
   protected readonly staggerStages =
     signal<readonly FunnelChartStage[]>(SPECIMEN_STAGES);
+  protected readonly dropStages =
+    signal<readonly FunnelChartStage[]>(SPECIMEN_STAGES);
   protected readonly interactionStages =
     signal<readonly FunnelChartStage[]>(SPECIMEN_STAGES);
   protected readonly pinStages =

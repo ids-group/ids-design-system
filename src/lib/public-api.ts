@@ -136,6 +136,7 @@ export {
 } from '@ids-group-ltd/ids-design-system/components/filter-bar';
 export { FunnelChartComponent } from '@ids-group-ltd/ids-design-system/components/funnel-chart';
 export type {
+  FunnelChartDrop,
   FunnelChartShape,
   FunnelChartStage,
 } from '@ids-group-ltd/ids-design-system/components/funnel-chart';
