@@ -47,7 +47,9 @@
           animate.leave="mark-leave"
           [style.--_chart-mark-stagger]="markStagger(index)"
           [class.interactive]="interactive()"
-          [class.is-pinned]="activeMark.pinned() && activeMark.index() === index"
+          [class.is-pinned]="
+            activeMark.pinned() && activeMark.index() === index
+          "
           [attr.role]="interactive() ? 'button' : null"
           [attr.tabindex]="
             interactive() ? (index === tabStopIndex() ? 0 : -1) : null
@@ -83,23 +85,19 @@
           }
 
           <span class="track">
-            @if (entry.segments.length) {
-              @for (part of entry.segments; track part.key) {
-                <span
-                  class="segment"
-                  animate.enter="mark-enter"
-                  [style.width.%]="part.widthPercent"
-                  [style.background]="part.color"
-                  [attr.title]="null"
-                  [attr.aria-hidden]="true">
-                </span>
-              }
-            } @else {
             <span
               class="fill"
               animate.enter="mark-enter"
               [style.width.%]="entry.widthPercent"
-              [style.background]="entry.color">
+              [style.background]="entry.segments.length ? null : entry.color">
+              @for (part of entry.segments; track part.key) {
+                <span
+                  class="segment"
+                  [style.width.%]="part.widthPercent"
+                  [style.background]="part.color">
+                </span>
+              }
+
               @if (activeMark.pinned() && activeMark.index() === index) {
                 <ds-icon
                   class="pin-marker"
@@ -107,7 +105,6 @@
                   [size]="14" />
               }
             </span>
-            }
           </span>
         </div>
       }
@@ -169,6 +166,22 @@
                   </td>
                 }
               </tr>
+
+              @for (part of entry.segments; track part.key) {
+                <tr class="segment-row">
+                  <td>
+                    {{ part.segment.label }}
+                  </td>
+
+                  <td>
+                    {{ part.formattedValue }}
+                  </td>
+
+                  @if (partOfWhole()) {
+                    <td></td>
+                  }
+                </tr>
+              }
             }
           </tbody>
         </table>

@@ -1,9 +1,5 @@
 import { DestroyRef, Signal, inject, signal } from '@angular/core';
 
-// Long enough to cross the gap between a mark and its panel at an ordinary pointer speed, short
-// enough that a panel left behind does not linger over the plot.
-const LEAVE_GRACE_MS = 140;
-
 /** @internal */
 export interface ChartActiveMark {
   /** Index of the mark under the pointer or holding focus; `-1` when none is. */
@@ -32,7 +28,9 @@ export interface ChartActiveMark {
  *
  * @internal
  */
-export function chartActiveMark(): ChartActiveMark {
+export function chartActiveMark(
+  lingerMs: () => number = () => 0,
+): ChartActiveMark {
   const index = signal(-1);
   const origin = signal<Element | null>(null);
   // One flag for two ways of arriving at the same state: a tap, which has no hover to hold the
@@ -91,17 +89,17 @@ export function chartActiveMark(): ChartActiveMark {
     }
   };
 
-  // WCAG 1.4.13 requires the pointer to be able to REACH the panel without it vanishing, and the
-  // panel is portaled to `document.body` — so leaving the mark fires `pointerleave` long before the
-  // pointer can arrive. Clearing on a short delay instead leaves a window to cross the gap.
   const scheduleClear = (): void => {
     cancelPendingClear();
-    pendingClear = setTimeout(() => {
-      pendingClear = null;
-      index.set(-1);
-      origin.set(null);
-      document.removeEventListener('pointerover', trackPointer, true);
-    }, LEAVE_GRACE_MS);
+    pendingClear = setTimeout(
+      () => {
+        pendingClear = null;
+        index.set(-1);
+        origin.set(null);
+        document.removeEventListener('pointerover', trackPointer, true);
+      },
+      Math.max(lingerMs(), 0),
+    );
   };
 
   // One listener answers both halves of "is the pointer on the panel": `pointerover` fires on every

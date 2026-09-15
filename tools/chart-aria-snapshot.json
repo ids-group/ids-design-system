@@ -12,6 +12,7 @@
     "div: role={interactive() ? 'button' : null}, aria-label={interactive() ? entryLabel(entry) : null}"
   ],
   "donut-chart": [
+    "div: aria-hidden=true",
     "p: role=status",
     "div: aria-hidden=true",
     "div: aria-hidden=true",
@@ -36,6 +37,7 @@
     "svg: aria-hidden={interactive() ? null : true}",
     "rect: aria-hidden=true",
     "line: aria-hidden=true",
-    "circle: role={interactive() ? 'button' : null}, aria-label={interactive() ? markerLabel(entry, marker) : null}"
+    "circle: role={interactive() ? 'button' : null}, aria-label={interactive() ? markerLabel(entry, marker) : null}",
+    "text: aria-hidden=true"
   ]
 }

@@ -49,14 +49,16 @@
     A row that carries
     <code class="t-mono-inline">
       segments
-    </code> splits its whole track into
-    parts, so the WHOLE is the row rather than the chart — how one department
-    spends its budget, not how the budget divides between departments. The parts
-    are sized against their own sum and always fill the track: a set that does
-    not add up to the row's <code class="t-mono-inline"> value </code> is a data
+    </code> divides its bar into parts, so
+    the bar still says how the row compares with the rest of the chart and the
+    parts say what it is made of — how one department spends its budget, on a
+    bar whose length is still that department's share of the largest. The parts
+    are sized against their own sum and always fill the bar: a set that does not
+    add up to the row's <code class="t-mono-inline"> value </code> is a data
     error, and a gap left to show it would read as one more category. Segments
     are categories, so they take the categorical palette in order; the row's own
-    colour is unused. Pair the chart with a
+    colour is unused. Each part reaches the data table as its own row under the
+    one it belongs to. Pair the chart with a
     <code class="t-mono-inline">
       ds-chart-legend
     </code> to name them.

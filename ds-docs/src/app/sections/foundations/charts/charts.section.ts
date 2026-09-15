@@ -1,9 +1,4 @@
-import {
-  Component,
-  ViewEncapsulation,
-  computed,
-  signal,
-} from '@angular/core';
+import { Component, ViewEncapsulation, computed, signal } from '@angular/core';
 import { ColumnChartComponent } from 'ds/column-chart';
 import type { ColumnChartPoint } from 'ds/column-chart';
 import { IconComponent } from 'ds/icons';
@@ -164,7 +159,12 @@ function stackBarH(value: number): number {
 @Component({
   selector: 'section-foundations-charts',
   standalone: true,
-  imports: [IconComponent, SkeletonComponent, DocsSectionComponent, ColumnChartComponent],
+  imports: [
+    IconComponent,
+    SkeletonComponent,
+    DocsSectionComponent,
+    ColumnChartComponent,
+  ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './charts.section.html',
   styleUrl: './charts.section.scss',

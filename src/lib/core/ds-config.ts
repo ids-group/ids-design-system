@@ -139,6 +139,11 @@ export interface DsConfig {
      *  in a card sets `'none'` here rather than reaching into five components' chrome from a
      *  global stylesheet. */
     frame?: ChartFrame;
+    /** How long every chart's tooltip stays after the pointer leaves the mark, in milliseconds.
+     *  Default 0. Raise it only where the panels carry something a reader has to reach — WCAG
+     *  1.4.13's hoverable clause — which is a property of what an app puts in its tooltips rather
+     *  than of one plot. About 140 is enough to cross the gap at an ordinary pointer speed. */
+    tooltipLingerMs?: number;
     /** Shown in place of the plot when a chart's data is empty. Default `'No data'`. */
     emptyText?: string;
     /** Shown in place of the plot when a chart has `error` set. Default

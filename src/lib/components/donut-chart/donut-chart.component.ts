@@ -97,6 +97,18 @@ export class DonutChartComponent {
    *  Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards
    *  is one decision per app rather than per plot. */
   readonly frame = input<ChartFrame | null>(null);
+
+  /** How long the tooltip stays after the pointer leaves the mark, in milliseconds. Zero, the
+   *  default, takes it away at once: a panel that outlives the pointer sits over the plot the
+   *  reader has moved on to.
+   *
+   *  Raise it only for a panel a reader has to REACH — one carrying a link, a figure, or anything
+   *  selectable — which is WCAG 1.4.13's hoverable clause. The panel is portaled to the body, so
+   *  crossing the gap to it at an ordinary pointer speed needs about 140. Unset falls back to
+   *  `DS_CONFIG.chart.tooltipLingerMs`, then 0. */
+  readonly tooltipLingerMs = input<number | null>(null, {
+    transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
+  });
   /** Printed above the plot as the chart's visible title, and reused as the annex table's
    *  caption. */
   readonly caption = input<string | null>(null);
@@ -191,7 +203,15 @@ export class DonutChartComponent {
       'dsChartTooltip',
     );
 
-  protected readonly activeMark = chartActiveMark();
+  private readonly tooltipLingerResolved = resolveWithConfig(
+    this.tooltipLingerMs,
+    (config) => config.chart?.tooltipLingerMs,
+    0,
+  );
+
+  protected readonly activeMark = chartActiveMark(() =>
+    this.tooltipLingerResolved(),
+  );
 
   protected onMarkClick(
     payload: DonutChartSlice,

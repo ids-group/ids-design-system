@@ -71,7 +71,6 @@ import type {
 const defaultValueFormat = (value: number) => formatValue(value);
 
 // Long enough to cross the gap between the plot and its panel at an ordinary pointer speed.
-const LEAVE_GRACE_MS = 140;
 
 // View units between a reading and the label above it, and the margin inside which a label
 // anchors to its own edge instead of centring. Both in the 640x320 viewBox.
@@ -196,6 +195,18 @@ export class LineChartComponent {
    *  Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards
    *  is one decision per app rather than per plot. */
   readonly frame = input<ChartFrame | null>(null);
+
+  /** How long the tooltip stays after the pointer leaves the mark, in milliseconds. Zero, the
+   *  default, takes it away at once: a panel that outlives the pointer sits over the plot the
+   *  reader has moved on to.
+   *
+   *  Raise it only for a panel a reader has to REACH — one carrying a link, a figure, or anything
+   *  selectable — which is WCAG 1.4.13's hoverable clause. The panel is portaled to the body, so
+   *  crossing the gap to it at an ordinary pointer speed needs about 140. Unset falls back to
+   *  `DS_CONFIG.chart.tooltipLingerMs`, then 0. */
+  readonly tooltipLingerMs = input<number | null>(null, {
+    transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
+  });
   /** Printed above the plot as the chart's visible title, and reused as the annex table's
    *  caption. */
   readonly caption = input<string | null>(null);
@@ -581,11 +592,14 @@ export class LineChartComponent {
     // the panel unreachable, and — because the pane takes pointer events now — put the plot and the
     // panel in a loop where each closed the other.
     this.cancelCategoryClear();
-    this.pendingCategoryClear = setTimeout(() => {
-      this.pendingCategoryClear = null;
-      this.activeCategory.set(-1);
-      this.tooltipOrigin.set(null);
-    }, LEAVE_GRACE_MS);
+    this.pendingCategoryClear = setTimeout(
+      () => {
+        this.pendingCategoryClear = null;
+        this.activeCategory.set(-1);
+        this.tooltipOrigin.set(null);
+      },
+      Math.max(this.tooltipLingerResolved(), 0),
+    );
   }
 
   /** The panel is portaled to the body, so the plot never sees the pointer arrive on it. This is
@@ -614,6 +628,12 @@ export class LineChartComponent {
       this.pendingCategoryClear = null;
     }
   }
+
+  private readonly tooltipLingerResolved = resolveWithConfig(
+    this.tooltipLingerMs,
+    (config) => config.chart?.tooltipLingerMs,
+    0,
+  );
 
   private pendingCategoryClear: ReturnType<typeof setTimeout> | null = null;
 
@@ -846,10 +866,14 @@ export class LineChartComponent {
       this.dataTableResolved() === 'none'
         ? ''
         : ' Full values in the table below.';
+    // The plot's own text is inside an `aria-hidden` svg, so an annotation a sighted reader takes
+    // as the point of the chart would otherwise reach nobody else.
+    const notes = this.placedAnnotations().map((note) => note.label);
+    const noted = notes.length ? ` Noted: ${notes.join('; ')}.` : '';
 
     return sentences.length === 0
       ? describeSeries(title, [], format, this.dataTableResolved() !== 'none')
-      : `${title}. ${sentences.join(' ')}${pointer}`;
+      : `${title}. ${sentences.join(' ')}${noted}${pointer}`;
   });
 
   protected pointOf(entry: PlottedSeries, marker: LinePoint): LineChartPoint {
