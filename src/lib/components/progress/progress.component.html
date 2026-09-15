@@ -2,4 +2,9 @@
   <span></span>
 } @else {
   <span [style.width.%]="clampedValue()"></span>
+  @if (clampedTarget() !== null) {
+    <div
+      class="target"
+      [style.left.%]="clampedTarget()"></div>
+  }
 }
