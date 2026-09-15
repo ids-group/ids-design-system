@@ -494,6 +494,52 @@
   </div>
 
   <h3 class="block-title t-h4">
+    Reading a value without keeping the pointer still
+  </h3>
+
+  <p class="block-desc t-s">
+    A tooltip that vanishes the moment the pointer moves off the mark cannot be
+    read at high zoom, cannot have its number selected, and cannot be cleared
+    without moving the pointer somewhere else. WCAG 1.4.13 asks for all three, so
+    every chart tooltip here is reachable, selectable and dismissable: leaving a
+    mark clears it after a short grace period rather than at once, arriving on
+    the panel cancels that, and
+    <kbd>
+      Esc
+    </kbd> closes it. Once cleared it stays cleared until you visit
+    another mark, so pressing
+    <kbd>
+      Esc
+    </kbd> to get the panel off the screen actually gets it off the
+    screen.
+  </p>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      pinOnClick
+    </code> goes further on all five
+    charts: clicking a mark holds it, its tooltip, and — with
+    <code class="t-mono-inline">
+      dimOthers
+    </code> — the dimming of everything
+    else, so a comparison survives the pointer leaving the chart entirely.
+    <kbd>
+      Esc
+    </kbd> or a press outside releases it, and the click output fires
+    either way, because pinning is a state rather than a handler. On
+    <code class="t-mono-inline">
+      ds-line-chart
+    </code> the pin hangs off the data
+    markers, so
+    <kbd>
+      Enter
+    </kbd> and
+    <kbd>
+      Space
+    </kbd> pin from the keyboard too.
+  </p>
+
+  <h3 class="block-title t-h4">
     App-wide chart defaults
   </h3>
 

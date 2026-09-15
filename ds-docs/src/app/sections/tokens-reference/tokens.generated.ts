@@ -5280,6 +5280,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Progress bar fill colour (defaults to --accent)."
       },
       {
+        "name": "--ds-progress-target-color",
+        "value": "var(--text-primary)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-progress-target-width",
+        "value": "2px",
+        "notes": ""
+      },
+      {
         "name": "--ds-progress-bar-color-success",
         "value": "var(--success)",
         "notes": "Progress bar fill — success state (defaults to --success)."

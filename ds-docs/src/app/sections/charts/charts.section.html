@@ -42,6 +42,62 @@
   <docs-chart-data-editor [(rows)]="customColorRows" />
 
   <h3 class="block-title t-h4">
+    Share of the total
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      partOfWhole
+    </code> says the rows add up to
+    something a reader can name — a budget, a headcount, a quarter's revenue.
+    Only then does the chart state each row's share of that total, on the
+    tooltip's second line and as a
+    <code class="t-mono-inline">
+      Share of total
+    </code> column in the data
+    table. It is off by default because rows that are a funnel or a time series
+    sum to a number nobody can point at, and a percentage of that is arithmetic
+    dressed as a fact. Note that the percentage printed beside each row is a
+    different figure: that one is the share of the LARGEST row.
+  </p>
+
+  <ds-bar-chart
+    partOfWhole
+    dataTable="visible"
+    caption="Spend by department, as a share of the budget"
+    [data]="shareRows()" />
+
+  <docs-chart-data-editor [(rows)]="shareRows" />
+
+  <h3 class="block-title t-h4">
+    Pinning a reading
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      pinOnClick
+    </code> holds the clicked row and
+    its tooltip in place, and with
+    <code class="t-mono-inline">
+      dimOthers
+    </code> the rest of the plot stays
+    down too — so the comparison is still on screen after the pointer has gone.
+    <kbd>
+      Esc
+    </kbd> releases it.
+  </p>
+
+  <ds-bar-chart
+    interactive
+    pinOnClick
+    dimOthers
+    dataTable="none"
+    caption="Click a row to hold it"
+    [data]="pinRows()" />
+
+  <docs-chart-data-editor [(rows)]="pinRows" />
+
+  <h3 class="block-title t-h4">
     Data table
   </h3>
 

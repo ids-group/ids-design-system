@@ -16,6 +16,16 @@ const SPECIMEN_ROWS: readonly BarChartRow[] = [
   },
 ];
 
+// Departments of one budget: the categories genuinely divide a total, which is what makes a share
+// of it a real quantity rather than arithmetic on an imaginary sum.
+const SHARE_ROWS: readonly BarChartRow[] = [
+  { label: 'Engineering', value: 412000 },
+  { label: 'Sales', value: 268000 },
+  { label: 'Marketing', value: 154000 },
+  { label: 'Support', value: 96000 },
+  { label: 'Operations', value: 70000 },
+];
+
 const ONE_ROW: readonly BarChartRow[] = [
   { label: 'Total sessions', value: 4820 },
 ];
@@ -80,6 +90,8 @@ export class BarChartSection {
     signal<readonly BarChartRow[]>(SPECIMEN_ROWS);
   protected readonly customColorRows =
     signal<readonly BarChartRow[]>(CUSTOM_COLOR_ROWS);
+  protected readonly shareRows = signal<readonly BarChartRow[]>(SHARE_ROWS);
+  protected readonly pinRows = signal<readonly BarChartRow[]>(SPECIMEN_ROWS);
   protected readonly dataTableRows =
     signal<readonly BarChartRow[]>(DATA_TABLE_ROWS);
   protected readonly emptyRows = signal<readonly BarChartRow[]>([]);
