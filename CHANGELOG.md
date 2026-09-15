@@ -1,5 +1,7 @@
 ## Unreleased
 
+## 0.13.2 — 2026-09-15
+
 ### Added
 
 - **`ds-line-chart` takes `annotations`, so a reading can be labelled without a pointer.** The
