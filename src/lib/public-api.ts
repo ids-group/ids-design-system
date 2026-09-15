@@ -64,6 +64,11 @@ export { AvatarGroupComponent } from '@ids-group-ltd/ids-design-system/component
 export { BadgeComponent } from '@ids-group-ltd/ids-design-system/components/badge';
 export { BannerComponent } from '@ids-group-ltd/ids-design-system/components/banner';
 export type { BannerVariant } from '@ids-group-ltd/ids-design-system/components/banner';
+export { BarComponent } from '@ids-group-ltd/ids-design-system/components/bar';
+export type {
+  BarSemantics,
+  BarVariant,
+} from '@ids-group-ltd/ids-design-system/components/bar';
 export { BarChartComponent } from '@ids-group-ltd/ids-design-system/components/bar-chart';
 export type {
   BarChartRow,
@@ -179,7 +184,6 @@ export {
   MenuDividerComponent,
   MenuItemComponent,
 } from '@ids-group-ltd/ids-design-system/components/menu';
-export { MeterComponent } from '@ids-group-ltd/ids-design-system/components/meter';
 export {
   ModalCardComponent,
   ModalComponent,
@@ -217,8 +221,6 @@ export type {
   PopoverAlign,
   PopoverPlacement,
 } from '@ids-group-ltd/ids-design-system/components/popover';
-export { ProgressComponent } from '@ids-group-ltd/ids-design-system/components/progress';
-export type { ProgressVariant } from '@ids-group-ltd/ids-design-system/components/progress';
 export {
   RADIO_GROUP,
   RadioComponent,

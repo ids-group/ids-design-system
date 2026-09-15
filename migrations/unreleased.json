@@ -1,0 +1,110 @@
+{
+  "version": "unreleased",
+  "items": [
+    {
+      "id": "progress-renamed-to-bar",
+      "kind": "selector-rename",
+      "old": "ds-progress",
+      "new": "ds-bar",
+      "surface": [
+        "template",
+        "typescript"
+      ],
+      "action": "Rename every `<ds-progress>` element to `<ds-bar>`, and `ProgressComponent` to `BarComponent` imported from `@ids-group-ltd/ids-design-system/components/bar`. The type `ProgressVariant` is now `BarVariant` from the same entry point. Behaviour is unchanged — every input keeps its name and its default.",
+      "appliesWhen": "Every template rendering `<ds-progress>` and every file importing `ProgressComponent` or `ProgressVariant`. `ds-bar-chart` is a different component and keeps its name.",
+      "pitfall": "The old tag is an unknown element, not an error: Angular renders nothing and logs nothing outside strict schema mode, so a missed one is a bar that silently vanished. `ds-bar` is a prefix of `ds-bar-chart`, which is a DIFFERENT component and is NOT renamed. Match on a word boundary and confirm the tag ends there; rename nothing whose name continues past `ds-bar`.",
+      "restore": null,
+      "searchHints": [
+        "ds-progress",
+        "ProgressComponent",
+        "ProgressVariant",
+        "components/progress"
+      ],
+      "detect": [
+        "ds-progress",
+        "ProgressComponent",
+        "ProgressVariant"
+      ],
+      "verify": "No `ds-progress` tag, `ProgressComponent` or `ProgressVariant` symbol, or `components/progress` import path remains, and every `ds-bar-chart` is still spelled in full.",
+      "note": "The progress bar and the measurement bar were the same drawing under two names, so they are one component under a neutral one. A rename alone is a complete and behaviour-preserving upgrade for a progress bar; see `bar-semantics-says-what-the-bar-is` for what the merged component can now additionally say."
+    },
+    {
+      "id": "meter-renamed-to-bar",
+      "kind": "selector-rename",
+      "old": "ds-meter",
+      "new": "ds-bar",
+      "surface": [
+        "template",
+        "typescript"
+      ],
+      "action": "Rename every `<ds-meter>` element to `<ds-bar>` and `MeterComponent` to `BarComponent` from `@ids-group-ltd/ids-design-system/components/bar`. Then give each one a `semantics` — `\"none\"` where it had no `ariaLabel`, `\"meter\"` where it had one. Without that the bar announces as a progress bar.",
+      "appliesWhen": "Only code written against `0.13.2`, the single release `ds-meter` existed in. `ds-bar-chart` is a different component and keeps its name.",
+      "pitfall": "The rename alone compiles, renders identically, and silently changes what assistive technology hears: `ds-meter` was `aria-hidden` unless `ariaLabel` named it, and `ds-bar` defaults to `semantics=\"progress\"`. A table of two hundred rates that announced nothing now announces two hundred progress bars. `ds-bar` is a prefix of `ds-bar-chart`, which is a DIFFERENT component and is NOT renamed. Match on a word boundary and confirm the tag ends there; rename nothing whose name continues past `ds-bar`.",
+      "restore": null,
+      "searchHints": [
+        "ds-meter",
+        "MeterComponent",
+        "components/meter"
+      ],
+      "detect": [
+        "ds-meter",
+        "MeterComponent"
+      ],
+      "verify": "No `ds-meter` tag or `MeterComponent` symbol remains, and every bar that replaced one carries `semantics=\"none\"` or `semantics=\"meter\"` — never the default.",
+      "note": "The `semantics` step is not optional bookkeeping: it is the whole reason `ds-meter` existed, carried across as an input. `0.13.2` is the only release that shipped the tag, so an app on `0.13.1` or earlier has nothing to do here."
+    },
+    {
+      "id": "bar-semantics-says-what-the-bar-is",
+      "kind": "behavior",
+      "old": "ds-bar[semantics]",
+      "new": null,
+      "surface": "template",
+      "action": "Add `semantics=\"none\"` to every `ds-bar` rendered per row of a table or list whose figure is printed beside it, and `semantics=\"meter\"` to one that is the only place a measurement appears. A bar reporting how far a task has got needs nothing — that is the default.",
+      "appliesWhen": "Only bars that are NOT reporting a task. An upload bar, a step counter or a job indicator keeps the default and is unchanged.",
+      "pitfall": "Nothing errors and nothing looks different — the drawing is identical either way. The cost lands in the accessibility tree, where a per-row bar left at the default reads out a percentage the row already states.",
+      "restore": "Leave `semantics` unset. The default is `progress`, which is what `ds-progress` always did.",
+      "searchHints": [
+        "ds-bar",
+        "semantics",
+        "dsCellTemplate"
+      ],
+      "detect": [
+        "ds-bar",
+        "dsCellTemplate",
+        "role=\"progressbar\""
+      ],
+      "verify": "Every `ds-bar` rendered once per row carries `semantics=\"none\"` or `semantics=\"meter\"`, and a screen-reader pass over a data table announces no progress bar per row.",
+      "note": "The merged component can state what it is, which neither `ds-progress` nor a bare `ds-meter` could express per instance. Defaulting to `progress` is what keeps the `ds-progress` rename silent and behaviour-preserving."
+    },
+    {
+      "id": "progress-and-meter-tokens-renamed-to-bar",
+      "kind": "token-rename",
+      "old": "--ds-progress-*",
+      "new": "--ds-bar-*",
+      "surface": "style",
+      "action": "Rename `--ds-progress-height`, `-track-color`, `-target-color` and `-target-width` to `--ds-bar-…` with the same suffix. `--ds-progress-bar-color` and its `-success` / `-warning` / `-error` siblings become `--ds-bar-fill-color`, `--ds-bar-fill-color-success`, `--ds-bar-fill-color-warning`, `--ds-bar-fill-color-error`. The `--ds-meter-*` names go the same way: `-height`, `-min-width`, `-track-color`, `-radius` keep their suffix and `--ds-meter-fill-color` becomes `--ds-bar-fill-color`. The global `--progress-h` is now `--bar-h`.",
+      "appliesWhen": "Any stylesheet setting one of those names. DS tokens only — a consumer's own `--progress-…` variable is untouched, and so are `--stepper-bar-h` and `--calendar-bar-h`, which are different tokens that merely end in `-bar-h`.",
+      "pitfall": "An override of a name nothing reads still parses and cascades, so a missed rename changes nothing and reports nothing: the bar quietly returns to its default look. `ds-bar` is a prefix of `ds-bar-chart`, which is a DIFFERENT component and is NOT renamed. Match on a word boundary and confirm the tag ends there; rename nothing whose name continues past `ds-bar`.",
+      "restore": null,
+      "searchHints": [
+        "--ds-progress-",
+        "--ds-meter-",
+        "--progress-h",
+        "bar-color"
+      ],
+      "detect": [
+        "--ds-progress-",
+        "--ds-meter-",
+        "--progress-h"
+      ],
+      "verify": "No `--ds-progress-`, `--ds-meter-` or `--progress-h` name remains in the app's stylesheets, and every bar that was restyled still looks restyled.",
+      "note": "`bar-color` became `fill-color` because the component is now the bar and `--ds-bar-bar-color` would stutter. `--progress-h` moved with it: same 6px default, under a name that no longer described the component."
+    }
+  ],
+  "informational": [
+    "`ds-bar` carries everything `ds-progress` had — `value`, `max`, `variant`, `indeterminate`, `target` and `ariaLabel` keep their names and defaults — so for a progress bar the rename alone is the whole upgrade. It adds `semantics` and `color`.",
+    "`indeterminate` is now ignored unless `semantics` is `progress`. Only a task has an unknown duration, and the input was never meaningful on a measurement. Nothing that used it on `ds-progress` is affected, because that is the default.",
+    "The bar carries `min-inline-size: 3rem` (`--ds-bar-min-width`). `ds-progress` had none, so a bar inside a content-sized column or a shrink-to-fit flex item that used to collapse to nothing is now visible. Set the property to `0` to get the old collapsing behaviour back."
+  ],
+  "deleteList": []
+}

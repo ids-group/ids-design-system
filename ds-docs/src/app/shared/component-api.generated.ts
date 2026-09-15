@@ -1007,6 +1007,100 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       }
     ]
   },
+  "bar": {
+    "key": "bar",
+    "selector": "ds-bar",
+    "isElement": true,
+    "className": "BarComponent",
+    "status": "stable",
+    "importName": "BarComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "value",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "0",
+        "required": false,
+        "description": "The reading, in units of `max`; clamped, and ignored while `indeterminate`."
+      },
+      {
+        "name": "max",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "100",
+        "required": false,
+        "description": "The full scale `value` and `target` are read against. Left at 100 they are percentages. Set it to the real total — `[value]=\"37\" [max]=\"80\"` — and the accessible name carries \"37 of 80\" rather than the 46% a caller would otherwise have to compute. For a column of measurements it is usually the column's own largest value, so the longest bar fills its track and the rest are its share. Zero or less falls back to 100, because a scale with no width has no fraction to draw."
+      },
+      {
+        "name": "semantics",
+        "kind": "input",
+        "type": "BarSemantics",
+        "union": [
+          "progress",
+          "meter",
+          "none"
+        ],
+        "default": "'progress'",
+        "required": false,
+        "description": "What the bar is, and therefore how it is announced. See `BarSemantics`. Defaults to `'progress'`."
+      },
+      {
+        "name": "variant",
+        "kind": "input",
+        "type": "BarVariant",
+        "union": [
+          "default",
+          "success",
+          "warning",
+          "error"
+        ],
+        "default": "'default'",
+        "required": false,
+        "description": "Colour role — drives the success/warning/error styling."
+      },
+      {
+        "name": "indeterminate",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Indeterminate (unknown-duration) animation instead of a fixed `value`. Only a task has an unknown duration, so it is ignored unless `semantics` is `'progress'`."
+      },
+      {
+        "name": "color",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Overrides the fill for this one bar. A whole column is coloured once through `--ds-bar-fill-color` instead; use this where the colour carries meaning on one row."
+      },
+      {
+        "name": "ariaLabel",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Accessible name (e.g. \"Upload progress\"). With a `target` set, name the comparison here — the mark is drawn and the role has no second value to announce, so \"Resolved 62% against a 75% target\" is what reaches a screen reader. Unused under `semantics=\"none\"`."
+      },
+      {
+        "name": "target",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "A second point on the same scale as `value`, drawn as a hairline across the track — a goal, a baseline or a threshold to read `value` against. Clamped like `value`, ignored while `indeterminate`, and unset draws nothing."
+      }
+    ],
+    "outputs": []
+  },
   "bar-chart": {
     "key": "bar-chart",
     "selector": "ds-bar-chart",
@@ -4786,55 +4880,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       }
     ]
   },
-  "meter": {
-    "key": "meter",
-    "selector": "ds-meter",
-    "isElement": true,
-    "className": "MeterComponent",
-    "status": "stable",
-    "importName": "MeterComponent",
-    "importPath": "@ids-group-ltd/ids-design-system",
-    "summary": null,
-    "inputs": [
-      {
-        "name": "value",
-        "kind": "input",
-        "type": "number",
-        "union": null,
-        "default": "0",
-        "required": false,
-        "description": "The measurement, in units of `max`. Clamped to the track."
-      },
-      {
-        "name": "max",
-        "kind": "input",
-        "type": "number",
-        "union": null,
-        "default": "100",
-        "required": false,
-        "description": "The ceiling `value` is read against — the column's own largest, or the scale the number means something on. Left at 100, `value` is a percentage. Zero or less falls back to 100, because a scale with no width has no fraction to draw."
-      },
-      {
-        "name": "color",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "The fill's colour. Unset takes `--ds-meter-fill-color`, so a column is coloured once in a stylesheet rather than per row; set it per row where the colour carries meaning."
-      },
-      {
-        "name": "ariaLabel",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Names the measurement, and is what decides whether it is announced at all. Unset, the mark is `aria-hidden` — right where the cell prints the figure beside it, and wrong where the bar is the only place the number appears."
-      }
-    ],
-    "outputs": []
-  },
   "modal:ModalCardComponent": {
     "key": "modal",
     "selector": "ds-modal-card",
@@ -5986,78 +6031,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Accessible name for the panel; pair with `panelRole`."
-      }
-    ],
-    "outputs": []
-  },
-  "progress": {
-    "key": "progress",
-    "selector": "ds-progress",
-    "isElement": true,
-    "className": "ProgressComponent",
-    "status": "stable",
-    "importName": "ProgressComponent",
-    "importPath": "@ids-group-ltd/ids-design-system",
-    "summary": null,
-    "inputs": [
-      {
-        "name": "value",
-        "kind": "input",
-        "type": "number",
-        "union": null,
-        "default": "0",
-        "required": false,
-        "description": "Progress in units of `max`, so 0–100 by default; clamped, and ignored while `indeterminate`."
-      },
-      {
-        "name": "max",
-        "kind": "input",
-        "type": "number",
-        "union": null,
-        "default": "100",
-        "required": false,
-        "description": "The full scale `value` and `target` are read against. Left at 100 they are percentages, which is why nothing existing changes. Set it to the real total — `[value]=\"37\" [max]=\"80\"` — and the accessible name carries \"37 of 80\" rather than the 46% a caller would otherwise have to compute and a screen reader would read instead. Zero or less falls back to 100, because a scale with no width has no fraction to draw."
-      },
-      {
-        "name": "variant",
-        "kind": "input",
-        "type": "ProgressVariant",
-        "union": [
-          "default",
-          "success",
-          "warning",
-          "error"
-        ],
-        "default": "'default'",
-        "required": false,
-        "description": "Colour variant — drives the success/warning/error styling."
-      },
-      {
-        "name": "indeterminate",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Indeterminate (unknown-duration) animation instead of a fixed `value`."
-      },
-      {
-        "name": "ariaLabel",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Accessible name for the progress bar (e.g. \"Upload progress\"). With a `target` set, name the comparison here — the mark is drawn, and `role=\"progressbar\"` has no second value to announce, so \"Resolved 62% against a 75% target\" is what reaches a screen reader."
-      },
-      {
-        "name": "target",
-        "kind": "input",
-        "type": "number | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "A second point on the same scale as `value`, drawn as a hairline across the track — a goal or a baseline to read `value` against. Clamped like `value`, ignored while `indeterminate`, and unset draws nothing."
       }
     ],
     "outputs": []

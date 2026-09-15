@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { MeterComponent } from 'ds/meter';
+import { BarComponent } from 'ds/bar';
 import { CellTemplateDirective, TableComponent } from 'ds/table';
 import type { TableColumn } from 'ds/table';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
@@ -18,19 +18,19 @@ const ROWS: readonly MicrositeRow[] = [
 ];
 
 @Component({
-  selector: 'section-components-meter',
+  selector: 'section-components-bar',
   standalone: true,
   imports: [
-    MeterComponent,
+    BarComponent,
     TableComponent,
     CellTemplateDirective,
     DocsSectionComponent,
   ],
   encapsulation: ViewEncapsulation.Emulated,
-  templateUrl: './meter.section.html',
-  styleUrl: './meter.section.scss',
+  templateUrl: './bar.section.html',
+  styleUrl: './bar.section.scss',
 })
-export class MeterSection {
+export class BarSection {
   protected readonly rows = ROWS;
   protected readonly rateCeiling = Math.max(...ROWS.map((row) => row.rate));
   protected readonly columns: TableColumn<MicrositeRow>[] = [

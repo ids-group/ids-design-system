@@ -284,20 +284,15 @@ Inputs: `size: 'xs' | 'sm' | 'md' | 'lg' = 'md'`, `initials: string = ''`, `imag
 Inputs: `max: number = 4` (visible avatars before "+N" overflow), `total: number | null = null` (used to compute the overflow count; without `total` no overflow chip renders).
 Content: project `<ds-avatar>` children.
 
-#### `<ds-progress>` — `ProgressComponent`
-Linear progress bar (no circular variant).
-Inputs: `value: number = 0` (in units of `max`, clamped), `max: number = 100`, `variant: 'default' | 'success' | 'warning' | 'error' = 'default'`, `indeterminate: boolean = false`, `target: number | null = null`, `ariaLabel: string | null = null`.
-`max` is the scale `value` and `target` are read against; left at 100 they are percentages. Set it to the real total — `[value]="37" [max]="80"` — and `aria-valuenow`/`aria-valuemax` carry "37 of 80" instead of a percentage the caller had to compute. Zero or less falls back to 100.
-`target` is a second point on the same scale, drawn as a hairline across the track — a goal or baseline to read `value` against. Clamped like `value` and ignored while `indeterminate`. `role="progressbar"` announces one value, so name the comparison in `ariaLabel` ("Resolved 62% against a 75% target"); the mark alone reaches nobody using a screen reader.
-Tokens: `--ds-progress-height`, `--ds-progress-track-color`, `--ds-progress-bar-color`, `--ds-progress-bar-color-success`, `--ds-progress-bar-color-warning`, `--ds-progress-bar-color-error`, `--ds-progress-target-color`, `--ds-progress-target-width`.
-
-#### `<ds-meter>` — `MeterComponent`
-One track and one fill, for a measurement inside a table cell — no caption, no legend, no annex table.
-Inputs: `value: number = 0` (in units of `max`, clamped), `max: number = 100` (zero or less falls back to 100), `color: string | null = null`, `ariaLabel: string | null = null`.
-Not `<ds-progress>`: that reports how far a task has got and says so with `role="progressbar"`, which a table of two hundred measurements would announce two hundred times. Here the mark is `aria-hidden` unless `ariaLabel` names it — leave it unset where the cell prints the figure beside the bar, set it where the bar is the only place the number appears.
-`max` is usually the column's own largest value, so the longest bar fills its track and the rest are its share.
-The meter fills whatever box it is in, so the column decides the bar's width. A box sized to its content — `width: 'content'` on `ds-table`, or a shrink-to-fit flex or grid item — is sized by what its contents contribute intrinsically, and a bar that is 100% of its cell contributes nothing, so the host carries a `min-inline-size` of `3rem`. Give it a width of your own where the bar should be a fixed size.
-Tokens: `--ds-meter-height`, `--ds-meter-min-width`, `--ds-meter-track-color`, `--ds-meter-radius`, `--ds-meter-fill-color`.
+#### `<ds-bar>` — `BarComponent`
+One horizontal track with one fill: a task's completion, or a measurement on a known scale. No circular variant.
+Inputs: `value: number = 0` (in units of `max`, clamped), `max: number = 100`, `semantics: 'progress' | 'meter' | 'none' = 'progress'`, `variant: 'default' | 'success' | 'warning' | 'error' = 'default'`, `indeterminate: boolean = false`, `color: string | null = null`, `target: number | null = null`, `ariaLabel: string | null = null`.
+`semantics` is the claim the bar makes, and it decides the role: `'progress'` is how far a task has got (`role="progressbar"`), `'meter'` is a measurement on a known scale with no beginning and no completion — a rate, a score, a count against a ceiling (`role="meter"`), `'none'` draws it and hides it from assistive technology. Use `'none'` for a bar in a table cell whose figure is printed beside it: left at the default, a table of two hundred rows announces two hundred progress bars.
+`max` is the scale `value` and `target` are read against; left at 100 they are percentages. Set it to the real total — `[value]="37" [max]="80"` — and `aria-valuenow`/`aria-valuemax` carry "37 of 80" instead of a percentage the caller had to compute. For a column of measurements it is usually the column's own largest value. Zero or less falls back to 100.
+`target` is a second point on the same scale, drawn as a hairline across the track — a goal, a baseline or a threshold. Clamped like `value` and ignored while `indeterminate`. The role announces one value, so name the comparison in `ariaLabel` ("Resolved 62% against a 75% target").
+`indeterminate` is ignored unless `semantics` is `'progress'`: only a task has an unknown duration.
+The bar fills its box, so the column decides its width. A box sized to its content is sized by what its contents contribute intrinsically and a `100%`-wide child contributes nothing, so the host carries a `min-inline-size` of `3rem`.
+Tokens: `--ds-bar-height`, `--ds-bar-min-width`, `--ds-bar-track-color`, `--ds-bar-fill-color`, `--ds-bar-fill-color-success`, `--ds-bar-fill-color-warning`, `--ds-bar-fill-color-error`, `--ds-bar-target-color`, `--ds-bar-target-width`.
 
 #### `<ds-spinner>` — `SpinnerComponent`
 Input: `size: 'sm' | 'md' | 'lg' = 'md'`. Pure-CSS spinner, `role="status"` with built-in `aria-label`.

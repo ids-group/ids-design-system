@@ -1,0 +1,299 @@
+<docs-section
+  anchor="bar"
+  eyebrow="Components"
+  title="Bar">
+  <span lede>
+    One horizontal track with one fill: a task's completion, or a measurement on
+    a known scale.
+  </span>
+
+  <h3 class="block-title t-h4">
+    What the bar is
+  </h3>
+
+  <p class="block-desc t-s">
+    The two readings are the same drawing and a different claim, and
+    <code class="t-mono-inline">
+      semantics
+    </code> is which one you are making.
+    <code class="t-mono-inline">
+      'progress'
+    </code>, the default, is how far a
+    task has got and carries
+    <code class="t-mono-inline">
+      role="progressbar"
+    </code>.
+    <code class="t-mono-inline">
+      'meter'
+    </code> is a measurement on a known
+    scale — a rate, a score, a count against a ceiling — which has no beginning
+    and no completion, and carries
+    <code class="t-mono-inline">
+      role="meter"
+    </code>.
+    <code class="t-mono-inline">
+      'none'
+    </code> draws the bar and hides it from
+    assistive technology, for a cell that prints its figure beside it.
+  </p>
+
+  <p class="block-desc t-s">
+    This is not cosmetic. A table of two hundred rates left at the default
+    announces two hundred progress bars, and the row already said the number.
+  </p>
+
+  <h3 class="block-title t-h4">
+    Variants
+  </h3>
+
+  <div class="states">
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        default · 30%
+      </code>
+
+      <ds-bar [value]="30" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        default · 70%
+      </code>
+
+      <ds-bar [value]="70" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        success · 70%
+      </code>
+
+      <ds-bar
+        variant="success"
+        [value]="70" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        warning · 92%
+      </code>
+
+      <ds-bar
+        variant="warning"
+        [value]="92" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        error · 100%
+      </code>
+
+      <ds-bar
+        variant="error"
+        [value]="100" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        indeterminate
+      </code>
+
+      <ds-bar indeterminate />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        semantics="meter" · 4.8 of 10
+      </code>
+
+      <ds-bar
+        semantics="meter"
+        ariaLabel="Error rate, 4.8 of 10"
+        [value]="4.8"
+        [max]="10" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        [target]="75" · 62%
+      </code>
+
+      <ds-bar
+        ariaLabel="Resolved 62% against a 75% target"
+        [value]="62"
+        [target]="75" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        [target]="40" · 88%
+      </code>
+
+      <ds-bar
+        variant="success"
+        ariaLabel="Resolved 88% against a 40% target"
+        [value]="88"
+        [target]="40" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        [max]="80" · 37 of 80
+      </code>
+
+      <ds-bar
+        ariaLabel="Requests handled"
+        [value]="37"
+        [max]="80"
+        [target]="64" />
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    In a table cell
+  </h3>
+
+  <p class="block-desc t-s">
+    A chart is a block with a caption, a legend and an annex table; in a 60px
+    cell that chrome is the whole cell. This is the mark on its own.
+    <code class="t-mono-inline">
+      max
+    </code> is the ceiling the column is read
+    against — usually the column's own largest value, so the longest bar fills
+    its track and the rest are its share. The figure is printed beside it, so
+    the bars are <code class="t-mono-inline"> semantics="none" </code>.
+  </p>
+
+  <ds-table
+    caption="Microsites"
+    [data]="rows"
+    [columns]="columns"
+    [stickyHeader]="false">
+    <ng-template
+      let-row
+      dsCellTemplate="rate">
+      <span class="meter-cell">
+        <ds-bar
+          semantics="none"
+          [value]="asRow(row).rate"
+          [max]="rateCeiling" />
+
+        <span class="t-mono-inline">
+          {{ asRow(row).rate }}%
+        </span>
+      </span>
+    </ng-template>
+  </ds-table>
+
+  <h3 class="block-title t-h4">
+    Give the cell a width
+  </h3>
+
+  <p class="block-desc t-s">
+    The bar fills whatever box it is in, so the column decides how wide it is. A
+    box sized to its content —
+    <code class="t-mono-inline">
+      width: 'content'
+    </code> on
+    <code class="t-mono-inline">
+      ds-table
+    </code>, or a shrink-to-fit flex or
+    grid item — is sized by what its contents contribute intrinsically, and a
+    bar that is <code class="t-mono-inline"> 100% </code> of its cell
+    contributes nothing: one alone in such a cell comes out 0px wide. So the
+    host carries a <code class="t-mono-inline"> min-inline-size </code> of
+    <code class="t-mono-inline">
+      3rem
+    </code>, which
+    <code class="t-mono-inline">
+      --ds-bar-min-width
+    </code> overrides. Give it a
+    width of your own where the bar should be a fixed size — the table above
+    puts it in a 64px grid track.
+  </p>
+
+  <h3 class="block-title t-h4">
+    Colour
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      variant
+    </code> is the semantic route and
+    should be the first reach. The fill otherwise takes
+    <code class="t-mono-inline">
+      --ds-bar-fill-color
+    </code>, so a whole column
+    is coloured once in a stylesheet rather than once per row; the
+    <code class="t-mono-inline">
+      color
+    </code> input overrides both where the
+    colour carries meaning on one row.
+    <code class="t-mono-inline">
+      --ds-bar-height
+    </code>,
+    <code class="t-mono-inline">
+      --ds-bar-track-color
+    </code>,
+    <code class="t-mono-inline">
+      --ds-bar-target-color
+    </code> and
+    <code class="t-mono-inline">
+      --ds-bar-target-width
+    </code> set the rest.
+  </p>
+
+  <h3 class="block-title t-h4">
+    Edge cases
+  </h3>
+
+  <p class="block-desc t-s">
+    A value past
+    <code class="t-mono-inline">
+      max
+    </code> fills the track rather than
+    overflowing it, a negative one draws nothing, and a
+    <code class="t-mono-inline">
+      max
+    </code> of zero or less falls back to 100 —
+    a scale with no width has no fraction to draw.
+    <code class="t-mono-inline">
+      indeterminate
+    </code> is ignored unless
+    <code class="t-mono-inline">
+      semantics
+    </code> is
+    <code class="t-mono-inline">
+      'progress'
+    </code>: only a task has an unknown
+    duration.
+  </p>
+
+  <div class="states">
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        [value]="140"
+      </code>
+
+      <ds-bar [value]="140" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        [value]="-20"
+      </code>
+
+      <ds-bar [value]="-20" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        [max]="0"
+      </code>
+
+      <ds-bar
+        [value]="40"
+        [max]="0" />
+    </div>
+  </div>
+</docs-section>

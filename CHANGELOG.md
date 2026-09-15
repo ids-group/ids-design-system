@@ -1,5 +1,53 @@
 ## Unreleased
 
+### Breaking
+
+- **`ds-progress` and `ds-meter` are one component, `ds-bar`.** They were the same drawing — the
+  same 6px pill track, the same fill, the same clamping — under two names, and the only thing that
+  genuinely differed between them is now an input. `ds-meter` shipped in `0.13.2` and existed for
+  that one release.
+
+  ```html
+  <ds-bar [value]="68" ariaLabel="Manifest upload progress" />
+  ```
+
+  **For a progress bar the rename is the whole upgrade.** `value`, `max`, `variant`,
+  `indeterminate`, `target` and `ariaLabel` keep their names and their defaults, and `semantics`
+  defaults to `'progress'` — so a renamed `ds-progress` behaves exactly as it did.
+  `ProgressComponent` is `BarComponent` and `ProgressVariant` is `BarVariant`, both from
+  `@ids-group-ltd/ids-design-system/components/bar`.
+
+  **A renamed `ds-meter` needs one more edit.** It was `aria-hidden` unless `ariaLabel` named it;
+  `ds-bar` announces as a progress bar by default. Add `semantics="none"` where the figure is
+  printed beside the bar, or `semantics="meter"` where the bar is the only place the measurement
+  appears. Nothing errors and nothing looks different — the change is entirely in what a screen
+  reader says, which is what the input exists to control.
+
+  **`ds-bar-chart` is a different component and is NOT renamed.** `ds-bar` is a prefix of it, so a
+  find-and-replace without a word boundary will corrupt every chart in the app.
+
+- **The `--ds-progress-*` and `--ds-meter-*` tokens are `--ds-bar-*`.** `-height`,
+  `-track-color`, `-target-color`, `-target-width` and `-min-width` keep their suffix.
+  `--ds-progress-bar-color` and its `-success` / `-warning` / `-error` siblings became
+  `--ds-bar-fill-color` and siblings, because `--ds-bar-bar-color` stutters. The global
+  `--progress-h` is `--bar-h` — same 6px, under a name that still describes the component.
+
+  An override of a name nothing reads still parses, so a missed rename reports nothing and the bar
+  simply returns to its default look.
+
+### Changed
+
+- **`ds-bar` cannot collapse to nothing in a content-sized cell.** It carries
+  `min-inline-size: 3rem`, overridable through `--ds-bar-min-width`. A box sized to its content —
+  a `width: 'content'` table column, a shrink-to-fit flex or grid item — is sized by what its
+  contents contribute intrinsically, and a bar that is 100% of its cell contributes nothing: one
+  alone in such a cell measures 0px wide. `ds-progress` had no floor, so a bar that used to
+  disappear there is now visible; set the property to `0` for the old behaviour.
+
+- **`indeterminate` is ignored unless `semantics` is `'progress'`.** Only a task has an unknown
+  duration. Nothing that set it on `ds-progress` is affected, because that is the default.
+
+
 ## 0.13.2 — 2026-09-15
 
 ### Added

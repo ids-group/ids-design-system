@@ -2565,6 +2565,63 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
+    "component": "Bar",
+    "selector": ".bar",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-bar-height",
+        "value": "var(--bar-h)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-bar-track-color",
+        "value": "var(--surface-muted)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-bar-fill-color",
+        "value": "var(--accent)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-bar-target-color",
+        "value": "var(--text-primary)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-bar-target-width",
+        "value": "2px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-bar-min-width",
+        "value": "3rem",
+        "notes": ""
+      },
+      {
+        "name": "--ds-bar-fill-color-success",
+        "value": "var(--success)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-bar-fill-color-warning",
+        "value": "var(--yellow-500)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-bar-fill-color-error",
+        "value": "var(--error)",
+        "notes": ""
+      },
+      {
+        "name": "--bar-h",
+        "value": "6px",
+        "notes": ""
+      }
+    ]
+  },
+  {
     "component": "Bar Chart",
     "selector": ".bar-chart",
     "description": "",
@@ -4605,38 +4662,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
-    "component": "Meter",
-    "selector": ".meter",
-    "description": "",
-    "tokens": [
-      {
-        "name": "--ds-meter-height",
-        "value": "6px",
-        "notes": ""
-      },
-      {
-        "name": "--ds-meter-track-color",
-        "value": "var(--surface-muted)",
-        "notes": ""
-      },
-      {
-        "name": "--ds-meter-radius",
-        "value": "var(--radius-pill)",
-        "notes": ""
-      },
-      {
-        "name": "--ds-meter-min-width",
-        "value": "3rem",
-        "notes": ""
-      },
-      {
-        "name": "--ds-meter-fill-color",
-        "value": "var(--ds-chart-series-1-color)",
-        "notes": ""
-      }
-    ]
-  },
-  {
     "component": "Modal",
     "selector": ".modal",
     "description": "",
@@ -5325,58 +5350,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-press-scale",
         "value": "0.97",
         "notes": "How far a pressed control shrinks. Defaults to 0.97."
-      }
-    ]
-  },
-  {
-    "component": "Progress",
-    "selector": ".progress",
-    "description": "",
-    "tokens": [
-      {
-        "name": "--ds-progress-height",
-        "value": "var(--progress-h)",
-        "notes": "Progress bar track height (defaults to --progress-h, 6px)."
-      },
-      {
-        "name": "--ds-progress-track-color",
-        "value": "var(--surface-muted)",
-        "notes": "Progress bar track background (defaults to --surface-muted)."
-      },
-      {
-        "name": "--ds-progress-bar-color",
-        "value": "var(--accent)",
-        "notes": "Progress bar fill colour (defaults to --accent)."
-      },
-      {
-        "name": "--ds-progress-target-color",
-        "value": "var(--text-primary)",
-        "notes": ""
-      },
-      {
-        "name": "--ds-progress-target-width",
-        "value": "2px",
-        "notes": ""
-      },
-      {
-        "name": "--ds-progress-bar-color-success",
-        "value": "var(--success)",
-        "notes": "Progress bar fill — success state (defaults to --success)."
-      },
-      {
-        "name": "--ds-progress-bar-color-warning",
-        "value": "var(--yellow-500)",
-        "notes": "Progress bar fill — warning state (defaults to --warning-hover)."
-      },
-      {
-        "name": "--ds-progress-bar-color-error",
-        "value": "var(--error)",
-        "notes": "Progress bar fill — error state (defaults to --error)."
-      },
-      {
-        "name": "--progress-h",
-        "value": "6px",
-        "notes": "Progress bar track height (6px)."
       }
     ]
   },
