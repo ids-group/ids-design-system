@@ -95,6 +95,16 @@ const MANY_CATEGORY_SERIES: readonly LineChartSeries[] = [
   },
 ];
 
+// A series that never leaves the low hundreds: on a derived axis it fills the plot and reads as a
+// dramatic climb, which is exactly the misreading a pinned maximum removes.
+const PINNED_AXIS_LOW_SERIES: readonly LineChartSeries[] = [
+  {
+    id: 'requests',
+    label: 'Requests',
+    data: [180, 210, 195, 240, 225, 260],
+  },
+];
+
 @Component({
   selector: 'section-charts-line-chart',
   standalone: true,
@@ -115,6 +125,11 @@ export class LineChartSection {
     signal<readonly string[]>(SPECIMEN_CATEGORIES);
   protected readonly tickSeries =
     signal<readonly LineChartSeries[]>(SPECIMEN_SERIES);
+  protected readonly pinnedAxisCategories =
+    signal<readonly string[]>(SPECIMEN_CATEGORIES);
+  protected readonly pinnedAxisLowSeries = signal<readonly LineChartSeries[]>(
+    PINNED_AXIS_LOW_SERIES,
+  );
   protected readonly staggerCategories =
     signal<readonly string[]>(SPECIMEN_CATEGORIES);
   protected readonly staggerSeries =

@@ -1,7 +1,5 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
 import { BarChartComponent } from 'ds/bar-chart';
-import { ChartLegendComponent } from 'ds/chart-legend';
-import type { ChartLegendItem } from 'ds/chart-legend';
 import type { BarChartRow } from 'ds/bar-chart';
 import { DocsChartDataEditorComponent } from '../../shared/docs-chart-data-editor.component';
 import { DocsReplayButtonComponent } from '../../shared/docs-replay-button.component';
@@ -117,7 +115,6 @@ const MAX_BELOW_DATA_ROWS: readonly BarChartRow[] = [
   standalone: true,
   imports: [
     BarChartComponent,
-    ChartLegendComponent,
     DocsChartDataEditorComponent,
     DocsSectionComponent,
     DocsReplayButtonComponent,
@@ -159,18 +156,10 @@ export class BarChartSection {
   );
   protected readonly segmentRows = signal<readonly BarChartRow[]>(SEGMENT_ROWS);
   protected readonly detailRows = signal<readonly BarChartRow[]>(DETAIL_ROWS);
-  protected readonly segmentLegend: readonly ChartLegendItem[] = [
-    {
-      id: 'salaries',
-      label: 'Salaries',
-      color: 'var(--ds-chart-series-1-color)',
-    },
-    {
-      id: 'tooling',
-      label: 'Tooling',
-      color: 'var(--ds-chart-series-2-color)',
-    },
-    { id: 'travel', label: 'Travel', color: 'var(--ds-chart-series-3-color)' },
+  protected readonly segmentKey = [
+    { label: 'Salaries', color: 'var(--ds-chart-series-1-color)' },
+    { label: 'Tooling', color: 'var(--ds-chart-series-2-color)' },
+    { label: 'Travel', color: 'var(--ds-chart-series-3-color)' },
   ];
   protected readonly maxBelowDataRows =
     signal<readonly BarChartRow[]>(MAX_BELOW_DATA_ROWS);

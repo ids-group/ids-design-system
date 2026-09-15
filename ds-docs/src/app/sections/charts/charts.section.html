@@ -58,10 +58,12 @@
     error, and a gap left to show it would read as one more category. Segments
     are categories, so they take the categorical palette in order; the row's own
     colour is unused. Each part reaches the data table as its own row under the
-    one it belongs to. Pair the chart with a
+    one it belongs to. The parts carry no text of their own, so draw a key
+    beside the chart from the same
     <code class="t-mono-inline">
-      ds-chart-legend
-    </code> to name them.
+      --ds-chart-series-N-color
+    </code> values, in
+    the order the segments are passed.
   </p>
 
   <div class="states states--cols-1">
@@ -71,7 +73,18 @@
         dataTable="visible"
         [data]="segmentRows()" />
 
-      <ds-chart-legend [items]="segmentLegend" />
+      <ul class="segment-key">
+        @for (part of segmentKey; track part.label) {
+          <li>
+            <span
+              class="segment-key-swatch"
+              [style.background]="part.color">
+            </span>
+
+            {{ part.label }}
+          </li>
+        }
+      </ul>
     </div>
   </div>
 

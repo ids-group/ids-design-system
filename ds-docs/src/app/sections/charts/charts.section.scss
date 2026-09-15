@@ -3,3 +3,26 @@
 // A bar row reads label, then track, then value, so it tolerates the text measure; wider than that
 // and the value drifts a column away from the label it belongs to.
 @include chart-measure.measure('ds-bar-chart', var(--col-cap-text));
+
+.segment-key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  list-style: none;
+  color: var(--text-secondary);
+  font-size: var(--font-size-xs);
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+}
+
+.segment-key-swatch {
+  inline-size: 10px;
+  block-size: 10px;
+  border-radius: var(--radius-pill);
+}

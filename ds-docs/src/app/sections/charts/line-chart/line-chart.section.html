@@ -269,8 +269,9 @@
       tickCount
     </code> asks for roughly that many
     gridlines on the value axis. It is a request rather than a count: the scale
-    rounds to a step a reader can do arithmetic with, so five ticks over a domain
-    of 0–2,740 become 0/1K/2K/3K rather than five evenly-spaced odd numbers.
+    rounds to a step a reader can do arithmetic with, so five ticks over a
+    domain of 0–2,740 become 0/1K/2K/3K rather than five evenly-spaced odd
+    numbers.
   </p>
 
   <div class="states states--cols-2">
@@ -299,15 +300,72 @@
   </div>
 
   <h3 class="block-title t-h4">
+    Pinning the value axis
+  </h3>
+
+  <p class="block-desc t-s">
+    A panel that opens one subject at a time derives a different axis for each,
+    so two plots with the same gentle wiggle can be four times apart in value
+    with nothing on screen saying so.
+    <code class="t-mono-inline">
+      max
+    </code> pins the axis instead, which is
+    what makes two renders comparable. Null, the default, keeps the derived
+    axis. <code class="t-mono-inline"> maxSecondary </code> does the same for
+    the axis a series reaches with
+    <code class="t-mono-inline">
+      axis: 'secondary'
+    </code>.
+  </p>
+
+  <div class="states states--cols-2">
+    <div class="state-cell">
+      <ds-line-chart
+        dataTable="none"
+        [categories]="pinnedAxisCategories()"
+        [series]="pinnedAxisLowSeries()" />
+
+      <div class="state-cell-label">
+        derived axis · a quiet series fills the plot
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-line-chart
+        dataTable="none"
+        [max]="5000"
+        [categories]="pinnedAxisCategories()"
+        [series]="pinnedAxisLowSeries()" />
+
+      <div class="state-cell-label">
+        max = 5000 · the same data, read against a fixed ceiling
+      </div>
+    </div>
+  </div>
+
+  <p class="block-desc t-s">
+    A maximum below the data does not clip it — the larger of the two wins,
+    because hiding a reading is worse than more headroom than you asked for.
+  </p>
+
+  <ds-line-chart
+    caption="max = 100, against data that goes past it"
+    dataTable="none"
+    [max]="100"
+    [categories]="pinnedAxisCategories()"
+    [series]="pinnedAxisLowSeries()" />
+
+  <h3 class="block-title t-h4">
     Stagger
   </h3>
 
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       staggerMs
-    </code> spaces the series' arrivals out,
-    so a chart with several lines draws them one after another rather than all at
-    once. <code class="t-mono-inline">0</code>, the default, means no stagger.
+    </code> spaces the series' arrivals
+    out, so a chart with several lines draws them one after another rather than
+    all at once. <code class="t-mono-inline">0</code>, the default, means no
+    stagger.
   </p>
 
   <ds-line-chart
@@ -327,8 +385,8 @@
     from having no data at all — the reader did it, and can undo it.
     <code class="t-mono-inline">
       noVisibleSeriesText
-    </code> is what the plot says
-    then; it keeps the plot's height either way, so the page does not jump.
+    </code> is what the plot
+    says then; it keeps the plot's height either way, so the page does not jump.
   </p>
 
   <ds-line-chart
@@ -386,13 +444,13 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       tooltipAnchor
-    </code> decides where the panel sits:
+    </code> decides where the panel
+    sits: <code class="t-mono-inline"> 'point' </code>, the default, pins it
+    over the highest reading in the category, so it stays still while the
+    pointer travels within one band;
     <code class="t-mono-inline">
-      'point'
-    </code>, the default, pins it over the
-    highest reading in the category, so it stays still while the pointer travels
-    within one band; <code class="t-mono-inline">'pointer'</code> follows the
-    cursor instead.
+      'pointer'
+    </code> follows the cursor instead.
   </p>
 
   <ds-line-chart
