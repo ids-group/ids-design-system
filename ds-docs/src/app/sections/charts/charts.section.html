@@ -77,20 +77,17 @@
     <code class="t-mono-inline">
       pinOnClick
     </code> holds the clicked row and
-    its tooltip in place, and with
-    <code class="t-mono-inline">
-      dimOthers
-    </code> the rest of the plot stays
-    down too — so the comparison is still on screen after the pointer has gone.
+    its tooltip in place, so the reading is still on screen after the pointer has
+    gone. A pin glyph marks which row is held, and a Reset appears in the corner
+    beside it.
     <kbd>
       Esc
-    </kbd> releases it.
+    </kbd> releases it too, and so does clicking the row again.
   </p>
 
   <ds-bar-chart
     interactive
     pinOnClick
-    dimOthers
     dataTable="none"
     caption="Click a row to hold it"
     [data]="pinRows()" />

@@ -4152,6 +4152,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Draws a dot at every reading. Off, the dots appear on hover and on focus only."
       },
       {
+        "name": "annotations",
+        "kind": "input",
+        "type": "readonly LineChartAnnotation[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Labels pinned over their readings, for the points that have to read without a pointer. They are drawn, not announced: the data table already carries every reading, and repeating one in the plot makes a screen reader say it twice."
+      },
+      {
         "name": "interactive",
         "kind": "input",
         "type": "boolean",
