@@ -1,4 +1,13 @@
 <figure class="line-chart">
+  @if (pinnedCategory()) {
+    <button
+      class="pin-reset"
+      type="button"
+      (click)="releaseCategoryPin()">
+      Unpin
+    </button>
+  }
+
   @if (caption()) {
     <figcaption>
       {{ caption() }}
@@ -41,6 +50,7 @@
     <ds-chart-legend
       [items]="legendItems()"
       [toggleable]="legendFilters()"
+      [mode]="legendMode()"
       [(hidden)]="hiddenSeries"
       [(highlighted)]="highlightedSeries" />
   } @else {
@@ -205,11 +215,22 @@
                 (keydown)="
                   onMarkerNavigation($event, seriesIndex, marker.categoryIndex)
                 "
-                (click)="pointClicked.emit(pointOf(entry, marker))"
+                (click)="onMarkerClick(entry, marker)"
                 (keydown.enter)="onMarkerKey(entry, marker, $event)"
                 (keydown.space)="onMarkerKey(entry, marker, $event)" />
             }
           }
+        }
+
+        @for (note of placedAnnotations(); track note.key) {
+          <text
+            class="annotation"
+            aria-hidden="true"
+            [attr.x]="note.x"
+            [attr.y]="note.y"
+            [attr.text-anchor]="note.anchor">
+            {{ note.label }}
+          </text>
         }
 
         @for (tick of primaryTicks(); track $index) {
@@ -248,6 +269,7 @@
       <ds-chart-legend
         [items]="legendItems()"
         [toggleable]="legendFilters()"
+        [mode]="legendMode()"
         [(hidden)]="hiddenSeries"
         [(highlighted)]="highlightedSeries" />
     }

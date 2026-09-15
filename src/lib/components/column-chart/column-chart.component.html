@@ -1,4 +1,13 @@
 <figure class="column-chart">
+  @if (activeMark.pinned()) {
+    <button
+      class="pin-reset"
+      type="button"
+      (click)="activeMark.release()">
+      Unpin
+    </button>
+  }
+
   @if (caption()) {
     <figcaption>
       {{ caption() }}
@@ -52,6 +61,7 @@
           class="columns"
           [class.dims-others]="dimOthers()"
           [dsChartTooltip]="tooltipContext()"
+          [dsChartTooltipExtraGap]="valueClearance()"
           [dsChartTooltipOrigin]="activeMark.origin()"
           [dsChartTooltipTemplate]="tooltipTemplate() ?? null">
           @for (entry of columns(); track entry.key; let index = $index) {
@@ -60,6 +70,7 @@
               animate.leave="mark-leave"
               [style.--_chart-mark-stagger]="markStagger(index)"
               [class.interactive]="interactive()"
+              [class.is-pinned]="activeMark.pinned() && activeMark.index() === index"
               [attr.role]="interactive() ? 'button' : null"
               [attr.tabindex]="
                 interactive() ? (index === tabStopIndex() ? 0 : -1) : null
@@ -71,7 +82,7 @@
               (focus)="onMarkFocus(index, $event)"
               (blur)="activeMark.leave()"
               (keydown)="onMarkNavigation($event, index)"
-              (click)="pointClicked.emit(entry.point)"
+              (click)="onMarkClick(entry.point, index, $event)"
               (keydown.enter)="onPointKey(entry.point, $event)"
               (keydown.space)="onPointKey(entry.point, $event)">
               <span class="plot-cell">
@@ -86,6 +97,12 @@
                   animate.enter="mark-enter"
                   [style.height.%]="entry.heightPercent"
                   [style.background]="entry.color">
+                  @if (activeMark.pinned() && activeMark.index() === index) {
+                    <ds-icon
+                      class="pin-marker"
+                      name="pin"
+                      [size]="14" />
+                  }
                 </span>
               </span>
 
@@ -122,6 +139,12 @@
               <th scope="col">
                 Value
               </th>
+
+              @if (partOfWhole()) {
+                <th scope="col">
+                  Share of total
+                </th>
+              }
             </tr>
           </thead>
 
@@ -135,6 +158,12 @@
                 <td>
                   {{ entry.formattedValue }}
                 </td>
+
+                @if (partOfWhole()) {
+                  <td>
+                    {{ entry.share }}
+                  </td>
+                }
               </tr>
             }
           </tbody>

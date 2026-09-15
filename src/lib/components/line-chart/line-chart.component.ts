@@ -1,11 +1,13 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   TemplateRef,
   ViewEncapsulation,
   booleanAttribute,
   computed,
   contentChild,
+  inject,
   input,
   model,
   numberAttribute,
@@ -15,7 +17,7 @@ import {
 import {
   CHART_SERIES_COLORS,
   describeSeries,
-  bandScale,
+  pointScale,
   formatTick,
   focusMark,
   formatValue,
@@ -27,6 +29,7 @@ import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/s
 import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 import type {
   ChartDataTable,
+  ChartFrame,
   ChartValueFormat,
 } from '@ids-group-ltd/ids-design-system/core';
 import { ChartTooltipDirective } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
@@ -58,6 +61,7 @@ import {
   valueY,
 } from './line-chart.math';
 import type {
+  LineChartAnnotation,
   LineChartAxisMode,
   LineChartGaps,
   LineChartPoint,
@@ -65,6 +69,13 @@ import type {
 } from './line-chart.types';
 
 const defaultValueFormat = (value: number) => formatValue(value);
+
+// Long enough to cross the gap between the plot and its panel at an ordinary pointer speed.
+
+// View units between a reading and the label above it, and the margin inside which a label
+// anchors to its own edge instead of centring. Both in the 640x320 viewBox.
+const ANNOTATION_GAP = 12;
+const ANNOTATION_EDGE_GUARD = 48;
 
 interface ResolvedSeries {
   readonly series: LineChartSeries;
@@ -114,6 +125,13 @@ function baselineOf(plot: PlotArea): number {
   imports: [SkeletonComponent, ChartTooltipDirective, ChartLegendComponent],
   templateUrl: './line-chart.component.html',
   styleUrl: './line-chart.component.scss',
+  // Escape releases a pinned category, the same key that dismisses its panel — otherwise the
+  // crosshair would stand on a chart with nothing left on screen to explain why.
+  host: {
+    '[class.framed]': "frameResolved() === 'auto'",
+    '(document:keydown.escape)': 'releaseCategoryPin()',
+    '(document:pointerover)': 'onPointerAnywhere($event)',
+  },
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -131,6 +149,11 @@ export class LineChartComponent {
   /** Draws a dot at every reading. Off, the dots appear on hover and on focus only. */
   readonly showMarkers = input(true, { transform: booleanAttribute });
 
+  /** Labels pinned over their readings, for the points that have to read without a pointer. They
+   *  are drawn, not announced: the data table already carries every reading, and repeating one in
+   *  the plot makes a screen reader say it twice. */
+  readonly annotations = input<readonly LineChartAnnotation[]>([]);
+
   /** Makes every reading focusable and clickable. A series drawn without markers grows invisible
    *  ones so there is something to land on; they appear on hover and on focus.
    *
@@ -141,6 +164,14 @@ export class LineChartComponent {
   /** The point that was clicked, or activated with Enter or Space. Fires whether or not
    *  `interactive` is set. */
   readonly pointClicked = output<LineChartPoint>();
+
+  /** Holds the crosshair and its tooltip on the category that was clicked, until Escape or a
+   *  press outside releases it. Off by default: a click is already the drill-down hook, and a
+   *  crosshair left standing after the pointer has gone needs a reader who knows why. `pointClicked`
+   *  fires either way — pinning is a state, not a handler. */
+  readonly pinOnClick = input(false, { transform: booleanAttribute });
+
+  protected readonly pinnedCategory = signal(false);
 
   /** Dims every OTHER mark while one is hovered or focused, so the reader's eye is held on the
    *  one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed
@@ -159,6 +190,23 @@ export class LineChartComponent {
     transform: numberAttribute,
   });
 
+  /** Whether the chart draws its own bordered, padded box. `'auto'`, the default, draws it;
+   *  `'none'` leaves the chart bare, for one placed inside a card the page has already drawn.
+   *  Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards
+   *  is one decision per app rather than per plot. */
+  readonly frame = input<ChartFrame | null>(null);
+
+  /** How long the tooltip stays after the pointer leaves the mark, in milliseconds. Zero, the
+   *  default, takes it away at once: a panel that outlives the pointer sits over the plot the
+   *  reader has moved on to.
+   *
+   *  Raise it only for a panel a reader has to REACH — one carrying a link, a figure, or anything
+   *  selectable — which is WCAG 1.4.13's hoverable clause. The panel is portaled to the body, so
+   *  crossing the gap to it at an ordinary pointer speed needs about 140. Unset falls back to
+   *  `DS_CONFIG.chart.tooltipLingerMs`, then 0. */
+  readonly tooltipLingerMs = input<number | null>(null, {
+    transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
+  });
   /** Printed above the plot as the chart's visible title, and reused as the annex table's
    *  caption. */
   readonly caption = input<string | null>(null);
@@ -169,8 +217,22 @@ export class LineChartComponent {
   /** The label-and-value table under the plot: `'toggle'` puts it behind a disclosure,
    *  `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so
    *  `'none'` belongs only where the same data is already in a table on the page.
-   *  Unset falls back to `DS_CONFIG.chart.dataTable`, then `'toggle'`. */
+   *  Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`. */
   readonly dataTable = input<ChartDataTable | null>(null);
+  /** Pins the value axis instead of deriving it from the data. A panel opened one subject at a
+   *  time — one agent, one microsite — derives a different axis for each of them, so two plots with
+   *  the same gentle wiggle can be four times apart in value and nothing on screen says so. A fixed
+   *  maximum is what makes two renders comparable.
+   *
+   *  Null, the default, keeps the derived axis. Applies to the primary axis; `maxSecondary` pins
+   *  the second one where a series sets `axis: 'secondary'`. A maximum below the data does not clip
+   *  it — the larger of the two wins, because silently hiding a reading is worse than a taller axis
+   *  than you asked for. */
+  readonly max = input<number | null>(null);
+
+  /** Pins the secondary value axis. See `max`. */
+  readonly maxSecondary = input<number | null>(null);
+
   /** Draws skeleton marks in place of the data, at the same count, so the chart does not resize
    *  when the data lands. */
   readonly loading = input(false, { transform: booleanAttribute });
@@ -191,10 +253,15 @@ export class LineChartComponent {
    *  grouping with a K/M/B suffix past four digits. */
   readonly valueFormat = input<ChartValueFormat | null>(null);
 
+  readonly frameResolved = resolveWithConfig(
+    this.frame,
+    (config) => config.chart?.frame,
+    'auto' as ChartFrame,
+  );
   readonly dataTableResolved = resolveWithConfig(
     this.dataTable,
     (config) => config.chart?.dataTable,
-    'toggle' as ChartDataTable,
+    'none' as ChartDataTable,
   );
   readonly emptyTextResolved = resolveWithConfig(
     this.emptyText,
@@ -250,6 +317,13 @@ export class LineChartComponent {
 
   /** Whether the legend switches series off. Off leaves it a plain key. */
   readonly legendFilters = input(false, { transform: booleanAttribute });
+
+  /** What a legend control does. `'isolate'` shows one series and hides the rest — one action to
+   *  answer "show me only this" rather than one per series. `'toggle'` hides one and leaves the
+   *  rest, for taking a dominant series out so the others can be read at a usable scale.
+   *  Forwarded to `ds-chart-legend`, which renders radios for the first and checkboxes for the
+   *  second. */
+  readonly legendMode = input<'toggle' | 'isolate'>('isolate');
 
   /** Shown in place of the plot once the legend has switched every series off. Without it the
    *  reader is left with an empty grid and nothing saying why. */
@@ -313,9 +387,18 @@ export class LineChartComponent {
         .filter((entry) => entry.onSecondaryAxis === secondary)
         .map((entry) => entry.values);
 
+    // The pin raises the axis, never lowers it: a maximum under the data would push readings off
+    // the top of the plot, and a chart that hides a value is worse than one with headroom.
+    const pinned = (asked: number | null, derived: number) =>
+      asked !== null && Number.isFinite(asked) && asked > derived
+        ? asked
+        : derived;
+
     return axisLayout(
-      domainMaxOf(valuesOn(false)),
-      this.hasSecondaryAxis() ? domainMaxOf(valuesOn(true)) : null,
+      pinned(this.max(), domainMaxOf(valuesOn(false))),
+      this.hasSecondaryAxis()
+        ? pinned(this.maxSecondary(), domainMaxOf(valuesOn(true)))
+        : null,
       this.yAxisMode(),
       this.tickCount(),
     );
@@ -355,6 +438,51 @@ export class LineChartComponent {
     });
   });
 
+  /** Annotations resolved onto the markers the plot already computed, so a label sits exactly on
+   *  its reading and moves with it. One whose series is hidden or whose reading is missing has no
+   *  marker and is dropped — a hidden series must not leave its label floating over the plot. */
+  protected readonly placedAnnotations = computed(() => {
+    const plotted = this.plottedSeries();
+
+    return this.annotations().flatMap((annotation) => {
+      const entry = annotation.seriesId
+        ? plotted.find(
+            (candidate) => candidate.series.id === annotation.seriesId,
+          )
+        : plotted[0];
+      const marker = entry?.markers.find(
+        (candidate) => candidate.categoryIndex === annotation.categoryIndex,
+      );
+      if (!entry || !marker) {
+        return [];
+      }
+
+      // Anchored away from the plot edges, because a centred label at the first or last category
+      // hangs half outside the viewBox and is clipped rather than merely tight.
+      const anchor =
+        marker.x < ANNOTATION_EDGE_GUARD
+          ? 'start'
+          : marker.x > LINE_CHART_VIEW_WIDTH - ANNOTATION_EDGE_GUARD
+            ? 'end'
+            : 'middle';
+
+      return [
+        {
+          key: `${entry.series.id}:${annotation.categoryIndex}`,
+          label: annotation.label,
+          x: marker.x,
+          // Above the reading, and below it where there is no room — a peak sits at the top of
+          // the plot, which is exactly where a label clamped upward lands on its own marker.
+          y:
+            marker.y - ANNOTATION_GAP >= ANNOTATION_GAP
+              ? marker.y - ANNOTATION_GAP
+              : marker.y + ANNOTATION_GAP,
+          anchor,
+        },
+      ];
+    });
+  });
+
   protected readonly primaryTicks = computed(() =>
     this.ticksFor(this.axes().primary.ticks, this.axes().primary.max, false),
   );
@@ -377,21 +505,34 @@ export class LineChartComponent {
   );
 
   /** The category under the pointer, or -1. */
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+
   protected readonly activeCategory = signal(-1);
 
   protected readonly categoryBands = computed(() =>
-    bandScale(this.categories().length, this.layout().primaryPlot.width, 0),
+    pointScale(this.categories().length, this.layout().primaryPlot.width),
   );
 
-  protected readonly activeBandX = computed(
-    () =>
-      this.layout().primaryPlot.left +
-      this.categoryBands().position(this.activeCategory()),
-  );
+  // The band is a slot CENTRED on its reading, so it starts half a step before it. At the two ends
+  // half of that slot is outside the plot, and clamping is what keeps the band off the axis labels
+  // rather than letting it hang past them.
+  protected readonly activeBandX = computed(() => {
+    const plot = this.layout().primaryPlot;
+    const scale = this.categoryBands();
+    const center = plot.left + scale.position(this.activeCategory());
 
-  protected readonly activeBandWidth = computed(
-    () => this.categoryBands().bandWidth,
-  );
+    return Math.max(center - scale.step / 2, plot.left);
+  });
+
+  protected readonly activeBandWidth = computed(() => {
+    const plot = this.layout().primaryPlot;
+    const scale = this.categoryBands();
+    const center = plot.left + scale.position(this.activeCategory());
+    const start = Math.max(center - scale.step / 2, plot.left);
+    const end = Math.min(center + scale.step / 2, plot.left + plot.width);
+
+    return Math.max(end - start, 0);
+  });
 
   protected readonly activeCategoryX = computed(
     () => this.activeBandX() + this.activeBandWidth() / 2,
@@ -408,6 +549,10 @@ export class LineChartComponent {
       screen.inverse(),
     );
     const plot = this.layout().primaryPlot;
+    if (this.pinnedCategory()) {
+      return;
+    }
+    this.cancelCategoryClear();
     const category = this.categoryBands().indexAt(point.x - plot.left);
     this.activeCategory.set(category);
     this.tooltipOrigin.set(
@@ -431,9 +576,7 @@ export class LineChartComponent {
     );
     const y = tops.length ? Math.min(...tops) : this.layout().primaryPlot.top;
     const point = new DOMPoint(
-      this.plotLeft() +
-        this.categoryBands().position(category) +
-        this.categoryBands().bandWidth / 2,
+      this.plotLeft() + this.categoryBands().position(category),
       y,
     ).matrixTransform(screen);
 
@@ -441,6 +584,61 @@ export class LineChartComponent {
   }
 
   protected clearActiveCategory(): void {
+    if (this.pinnedCategory()) {
+      return;
+    }
+    // Same grace the element-mark charts get from `chartActiveMark`: the panel is portaled out of
+    // the plot, so leaving the plot fires before the pointer can reach it. Clearing at once made
+    // the panel unreachable, and — because the pane takes pointer events now — put the plot and the
+    // panel in a loop where each closed the other.
+    this.cancelCategoryClear();
+    this.pendingCategoryClear = setTimeout(
+      () => {
+        this.pendingCategoryClear = null;
+        this.activeCategory.set(-1);
+        this.tooltipOrigin.set(null);
+      },
+      Math.max(this.tooltipLingerResolved(), 0),
+    );
+  }
+
+  /** The panel is portaled to the body, so the plot never sees the pointer arrive on it. This is
+   *  the other half of the grace period: reaching the panel keeps it open, and leaving the panel for
+   *  anything that is not the plot starts the clear the plot can no longer start itself. */
+  protected onPointerAnywhere(event: PointerEvent): void {
+    if (!(event.target instanceof Element) || this.pinnedCategory()) {
+      return;
+    }
+    if (event.target.closest('.ds-chart-tooltip-pane')) {
+      this.cancelCategoryClear();
+
+      return;
+    }
+    if (
+      this.activeCategory() !== -1 &&
+      !this.host.nativeElement.contains(event.target)
+    ) {
+      this.clearActiveCategory();
+    }
+  }
+
+  private cancelCategoryClear(): void {
+    if (this.pendingCategoryClear !== null) {
+      clearTimeout(this.pendingCategoryClear);
+      this.pendingCategoryClear = null;
+    }
+  }
+
+  private readonly tooltipLingerResolved = resolveWithConfig(
+    this.tooltipLingerMs,
+    (config) => config.chart?.tooltipLingerMs,
+    0,
+  );
+
+  private pendingCategoryClear: ReturnType<typeof setTimeout> | null = null;
+
+  protected releaseCategoryPin(): void {
+    this.pinnedCategory.set(false);
     this.activeCategory.set(-1);
     this.tooltipOrigin.set(null);
   }
@@ -668,10 +866,14 @@ export class LineChartComponent {
       this.dataTableResolved() === 'none'
         ? ''
         : ' Full values in the table below.';
+    // The plot's own text is inside an `aria-hidden` svg, so an annotation a sighted reader takes
+    // as the point of the chart would otherwise reach nobody else.
+    const notes = this.placedAnnotations().map((note) => note.label);
+    const noted = notes.length ? ` Noted: ${notes.join('; ')}.` : '';
 
     return sentences.length === 0
       ? describeSeries(title, [], format, this.dataTableResolved() !== 'none')
-      : `${title}. ${sentences.join(' ')}${pointer}`;
+      : `${title}. ${sentences.join(' ')}${noted}${pointer}`;
   });
 
   protected pointOf(entry: PlottedSeries, marker: LinePoint): LineChartPoint {
@@ -698,7 +900,17 @@ export class LineChartComponent {
       return;
     }
     event.preventDefault();
+    this.onMarkerClick(entry, marker);
+  }
+
+  /** The pin hangs off the MARKER, not off the plot: the marker is already focusable and already
+   *  answers Enter and Space, so the keyboard gets the pin for free. A click handler on the plot
+   *  would have no keyboard route at all. A second activation of the pinned category releases it. */
+  protected onMarkerClick(entry: PlottedSeries, marker: LinePoint): void {
     this.pointClicked.emit(this.pointOf(entry, marker));
+    if (this.pinOnClick()) {
+      this.pinnedCategory.set(!this.pinnedCategory());
+    }
   }
 
   protected readonly isEmpty = computed(

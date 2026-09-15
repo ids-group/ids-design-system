@@ -10,16 +10,18 @@ export {
   formatValue,
   largestRemainder,
   describeShare,
+  shareOfTotal,
 } from './charts-format';
 export { elementWidth } from './charts-measure';
 export {
   bandScale,
+  pointScale,
   linearScale,
   niceMax,
   tickStep,
   tickValues,
 } from './charts-scale';
-export type { BandScale } from './charts-scale';
+export type { BandScale, PointScale } from './charts-scale';
 export { staggerDelay } from './charts-motion';
 export { focusMark, nextRovingIndex } from './charts-roving';
 export { describeSeries } from './charts-summary';

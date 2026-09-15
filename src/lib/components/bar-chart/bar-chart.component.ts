@@ -12,19 +12,23 @@ import {
   signal,
 } from '@angular/core';
 import {
+  CHART_SERIES_COLORS,
   chartColors,
   describeSeries,
   formatPercent,
   describeShare,
+  shareOfTotal,
   focusMark,
   formatValue,
   nextRovingIndex,
   staggerDelay,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
+import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 import type {
   ChartDataTable,
+  ChartFrame,
   ChartValueFormat,
 } from '@ids-group-ltd/ids-design-system/core';
 import {
@@ -35,17 +39,47 @@ import type {
   ChartItemTooltipTrigger,
   ChartTooltipContext,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
-import { resolveMax, widthPercent } from './bar-chart.math';
-import type { BarChartRow } from './bar-chart.types';
+import { resolveMax, segmentWidths, widthPercent } from './bar-chart.math';
+import type { BarChartRow, BarChartSegment } from './bar-chart.types';
 
 const defaultValueFormat = (value: number) => formatValue(value);
+
+/** A row's parts, ready to draw: a width, a colour and a formatted value each. Segments are
+ *  CATEGORIES, so they take the categorical palette in order — unlike the rows, which are one
+ *  series and share one colour. */
+function segmentsOf(
+  row: BarChartRow,
+  format: (value: number) => string,
+): readonly {
+  key: string;
+  segment: BarChartSegment;
+  widthPercent: number;
+  formattedValue: string;
+  color: string;
+}[] {
+  const parts = row.segments ?? [];
+  const widths = segmentWidths(parts.map((part) => part.value));
+
+  return widths.length
+    ? parts.map((segment, index) => ({
+        key: segment.id ?? String(index),
+        segment,
+        widthPercent: widths[index],
+        formattedValue: format(segment.value),
+        color:
+          segment.color ??
+          CHART_SERIES_COLORS[index % CHART_SERIES_COLORS.length],
+      }))
+    : [];
+}
 
 @Component({
   selector: 'ds-bar-chart',
   standalone: true,
-  imports: [SkeletonComponent, ChartTooltipDirective],
+  imports: [SkeletonComponent, ChartTooltipDirective, IconComponent],
   templateUrl: './bar-chart.component.html',
   styleUrl: './bar-chart.component.scss',
+  host: { '[class.framed]': "frameResolved() === 'auto'" },
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -59,6 +93,23 @@ export class BarChartComponent {
     transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
   });
 
+  /** Whether the chart draws its own bordered, padded box. `'auto'`, the default, draws it;
+   *  `'none'` leaves the chart bare, for one placed inside a card the page has already drawn.
+   *  Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards
+   *  is one decision per app rather than per plot. */
+  readonly frame = input<ChartFrame | null>(null);
+
+  /** How long the tooltip stays after the pointer leaves the mark, in milliseconds. Zero, the
+   *  default, takes it away at once: a panel that outlives the pointer sits over the plot the
+   *  reader has moved on to.
+   *
+   *  Raise it only for a panel a reader has to REACH — one carrying a link, a figure, or anything
+   *  selectable — which is WCAG 1.4.13's hoverable clause. The panel is portaled to the body, so
+   *  crossing the gap to it at an ordinary pointer speed needs about 140. Unset falls back to
+   *  `DS_CONFIG.chart.tooltipLingerMs`, then 0. */
+  readonly tooltipLingerMs = input<number | null>(null, {
+    transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
+  });
   /** Printed above the plot as the chart's visible title, and reused as the annex table's
    *  caption. */
   readonly caption = input<string | null>(null);
@@ -69,8 +120,14 @@ export class BarChartComponent {
   /** The label-and-value table under the plot: `'toggle'` puts it behind a disclosure,
    *  `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so
    *  `'none'` belongs only where the same data is already in a table on the page.
-   *  Unset falls back to `DS_CONFIG.chart.dataTable`, then `'toggle'`. */
+   *  Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`. */
   readonly dataTable = input<ChartDataTable | null>(null);
+  /** Declares that the marks are parts of one whole, which is what makes a share of their total a
+   *  real quantity. Off by default: a chart of visitors per stage or revenue per month sums to a
+   *  number nobody can point at, and "18.6% of total" against it is arithmetic dressed as a fact.
+   *  On, each mark's share appears on the tooltip's second line and in the data table. */
+  readonly partOfWhole = input(false, { transform: booleanAttribute });
+
   /** Prints each row's share of `max` beside its value. */
   readonly showPercent = input(true, { transform: booleanAttribute });
   /** Draws skeleton marks in place of the data, at the same count, so the chart does not resize
@@ -93,10 +150,15 @@ export class BarChartComponent {
    *  grouping with a K/M/B suffix past four digits. */
   readonly valueFormat = input<ChartValueFormat | null>(null);
 
+  readonly frameResolved = resolveWithConfig(
+    this.frame,
+    (config) => config.chart?.frame,
+    'auto' as ChartFrame,
+  );
   readonly dataTableResolved = resolveWithConfig(
     this.dataTable,
     (config) => config.chart?.dataTable,
-    'toggle' as ChartDataTable,
+    'none' as ChartDataTable,
   );
   readonly emptyTextResolved = resolveWithConfig(
     this.emptyText,
@@ -123,6 +185,12 @@ export class BarChartComponent {
    *  `interactive` is set. */
   readonly rowClicked = output<BarChartRow>();
 
+  /** Holds the hovered mark and its tooltip in place when it is clicked, until Escape or a press
+   *  outside releases it. Off by default: a click is already the drill-down hook, and a mark left
+   *  lit after the pointer has gone needs a reader who knows why it is lit. `rowClicked` fires
+   *  either way — pinning is a state, not a handler. */
+  readonly pinOnClick = input(false, { transform: booleanAttribute });
+
   /** Dims every OTHER mark while one is hovered or focused, so the reader's eye is held on the
    *  one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed
    *  marks — measured 2026-09-13, the worst pair of three dimmed series falls from dE 14.8 at full
@@ -148,7 +216,26 @@ export class BarChartComponent {
       'dsChartTooltip',
     );
 
-  protected readonly activeMark = chartActiveMark();
+  private readonly tooltipLingerResolved = resolveWithConfig(
+    this.tooltipLingerMs,
+    (config) => config.chart?.tooltipLingerMs,
+    0,
+  );
+
+  protected readonly activeMark = chartActiveMark(() =>
+    this.tooltipLingerResolved(),
+  );
+
+  protected onMarkClick(
+    payload: BarChartRow,
+    index: number,
+    event: Event,
+  ): void {
+    this.rowClicked.emit(payload);
+    if (this.pinOnClick()) {
+      this.activeMark.pin(index, event);
+    }
+  }
   /** One tab stop per chart, not one per mark: WCAG 2.1.1's Understanding is explicit that not
    *  every mouse-operable control has to be separately focusable, and that is what keeps a
    *  twenty-five mark chart from being twenty-five stops in the page's tab order. */
@@ -188,10 +275,12 @@ export class BarChartComponent {
             value: entry.row.value,
             formatted: entry.formattedValue,
             color: entry.color,
-            detail: describeShare(
-              this.data().map((row) => row.value),
-              this.activeMark.index(),
-            ),
+            detail: this.partOfWhole()
+              ? describeShare(
+                  this.data().map((row) => row.value),
+                  this.activeMark.index(),
+                )
+              : undefined,
           },
         ],
       };
@@ -208,6 +297,7 @@ export class BarChartComponent {
   protected readonly rows = computed(() => {
     const max = this.resolvedMax();
     const format = this.valueFormatResolved();
+    const values = this.data().map((row) => row.value);
 
     return this.data().map((row, index) => ({
       key: row.id ?? String(index),
@@ -218,6 +308,8 @@ export class BarChartComponent {
         row.percent !== undefined
           ? formatPercent(row.percent, 100)
           : formatPercent(row.value, max),
+      share: this.partOfWhole() ? shareOfTotal(values, index) : '',
+      segments: segmentsOf(row, format),
       color: row.color ?? chartColors.seriesDefault,
     }));
   });

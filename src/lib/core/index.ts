@@ -1,6 +1,10 @@
 export { backdropDismiss } from './backdrop-dismiss';
 export type { CardElevation, CardPadding } from './card.types';
-export type { ChartDataTable, ChartValueFormat } from './chart.types';
+export type {
+  ChartDataTable,
+  ChartFrame,
+  ChartValueFormat,
+} from './chart.types';
 export { resolveWithConfig } from './config-defaults';
 export { devWarn } from './dev-warning';
 export { DS_CONFIG, inheritDsConfig, provideDsConfig } from './ds-config';

@@ -54,6 +54,7 @@ import { BadgeSection } from './sections/components/badge/badge.section';
 import { BannerSection } from './sections/components/banner/banner.section';
 import { EmptyStateComponentSection } from './sections/components/empty-state/empty-state.section';
 import { LoadingOverlaySection } from './sections/components/loading-overlay/loading-overlay.section';
+import { MeterSection } from './sections/components/meter/meter.section';
 import { ProgressSection } from './sections/components/progress/progress.section';
 import { SkeletonSection } from './sections/components/skeleton/skeleton.section';
 import { SpinnerSection } from './sections/components/spinner/spinner.section';
@@ -182,6 +183,7 @@ export const GROUP_PAGES: readonly GroupPageDef[] = [
       DescriptionListSection,
       IconSection,
       ListSection,
+      MeterSection,
       StatSection,
       TableSection,
       TagSection,

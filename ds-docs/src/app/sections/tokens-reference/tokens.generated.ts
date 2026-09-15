@@ -2987,6 +2987,18 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
+    "component": "Chart Frame",
+    "selector": ".chart-frame",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-chart-pin-size",
+        "value": "22px",
+        "notes": ""
+      }
+    ]
+  },
+  {
     "component": "Chart Legend",
     "selector": ".chart-legend",
     "description": "",
@@ -4253,6 +4265,31 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": ""
       },
       {
+        "name": "--ds-line-chart-annotation-color",
+        "value": "var(--text-primary)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-line-chart-annotation-font-size",
+        "value": "var(--ds-chart-axis-font-size)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-line-chart-annotation-weight",
+        "value": "var(--font-weight-bold)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-line-chart-annotation-halo-color",
+        "value": "var(--surface-default)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-line-chart-annotation-halo-width",
+        "value": "3px",
+        "notes": ""
+      },
+      {
         "name": "--ds-line-chart-line-width",
         "value": "var(--ds-chart-line-width)",
         "notes": ""
@@ -4564,6 +4601,38 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--menu-sep-h",
         "value": "var(--border-width-default)",
         "notes": "Menu separator line thickness (var(--border-width-default))."
+      }
+    ]
+  },
+  {
+    "component": "Meter",
+    "selector": ".meter",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-meter-height",
+        "value": "6px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-meter-track-color",
+        "value": "var(--surface-muted)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-meter-radius",
+        "value": "var(--radius-pill)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-meter-min-width",
+        "value": "3rem",
+        "notes": ""
+      },
+      {
+        "name": "--ds-meter-fill-color",
+        "value": "var(--ds-chart-series-1-color)",
+        "notes": ""
       }
     ]
   },
@@ -5278,6 +5347,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-progress-bar-color",
         "value": "var(--accent)",
         "notes": "Progress bar fill colour (defaults to --accent)."
+      },
+      {
+        "name": "--ds-progress-target-color",
+        "value": "var(--text-primary)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-progress-target-width",
+        "value": "2px",
+        "notes": ""
       },
       {
         "name": "--ds-progress-bar-color-success",

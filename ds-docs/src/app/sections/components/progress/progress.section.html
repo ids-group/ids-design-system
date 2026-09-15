@@ -66,5 +66,40 @@
 
       <ds-progress indeterminate />
     </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        [target]="75" · 62%
+      </code>
+
+      <ds-progress
+        [value]="62"
+        [target]="75"
+        ariaLabel="Resolved 62% against a 75% target" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        [target]="40" · 88%
+      </code>
+
+      <ds-progress
+        [value]="88"
+        [target]="40"
+        variant="success"
+        ariaLabel="Resolved 88% against a 40% target" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        [max]="80" · 37 of 80
+      </code>
+
+      <ds-progress
+        [value]="37"
+        [max]="80"
+        [target]="64"
+        ariaLabel="Requests handled" />
+    </div>
   </div>
 </docs-section>

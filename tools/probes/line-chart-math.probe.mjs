@@ -460,9 +460,16 @@ check(
 );
 
 // ------------------------------------------------------- positions and colour
-check('a category sits at the centre of its band', categoryCenters(2, plot), [
-  plot.left + plot.width / 4,
-  plot.left + (plot.width * 3) / 4,
+// A line is a run between its first and last reading, so those two sit ON the axes rather than
+// half a slot inside them: an empty strip against each axis reads as data the chart is withholding.
+check('the first and last readings sit on the axes', categoryCenters(2, plot), [
+  plot.left,
+  plot.left + plot.width,
+]);
+check('readings in between divide the run evenly', categoryCenters(3, plot), [
+  plot.left,
+  plot.left + plot.width / 2,
+  plot.left + plot.width,
 ]);
 check('a single category sits in the middle', categoryCenters(1, plot), [
   plot.left + plot.width / 2,

@@ -36,10 +36,19 @@
 @mixin fades($mark, $also: '') {
   @include dims($mark, $also);
 
-  &.dims-others:has(#{$mark}.interactive:hover)
+  // A PIN SUSPENDS THE HOVER RULE ENTIRELY, which is what `:not(:has(.is-pinned))` is for. Without
+  // it the two rules dim each other out: the hover rule takes down the pinned mark because the
+  // pointer has moved off it, the pin rule takes down the hovered mark because it is not the pinned
+  // one, and every mark on the chart ends up faded with nothing lit.
+  &.dims-others:not(:has(#{$mark}.is-pinned)):has(#{$mark}.interactive:hover)
     #{$mark}.interactive:not(:hover),
-  &.dims-others:has(#{$mark}.interactive:focus-visible)
-    #{$mark}.interactive:not(:focus-visible) {
+  &.dims-others:not(:has(#{$mark}.is-pinned)):has(
+      #{$mark}.interactive:focus-visible
+    )
+    #{$mark}.interactive:not(:focus-visible),
+  // A pinned mark keeps the others down after the pointer has gone, which is the whole point of
+  // pinning: the reader looks away from the chart and the comparison is still on screen.
+  &.dims-others:has(#{$mark}.is-pinned) #{$mark}:not(.is-pinned) {
     opacity: var(--ds-chart-dim-opacity);
   }
 }

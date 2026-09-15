@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
 import { LineChartComponent } from 'ds/line-chart';
-import type { LineChartSeries } from 'ds/line-chart';
+import type { LineChartAnnotation, LineChartSeries } from 'ds/line-chart';
 import { DocsLineChartDataEditorComponent } from '../../../shared/docs-line-chart-data-editor.component';
 import { DocsReplayButtonComponent } from '../../../shared/docs-replay-button.component';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
@@ -95,6 +95,16 @@ const MANY_CATEGORY_SERIES: readonly LineChartSeries[] = [
   },
 ];
 
+// A series that never leaves the low hundreds: on a derived axis it fills the plot and reads as a
+// dramatic climb, which is exactly the misreading a pinned maximum removes.
+const PINNED_AXIS_LOW_SERIES: readonly LineChartSeries[] = [
+  {
+    id: 'requests',
+    label: 'Requests',
+    data: [180, 210, 195, 240, 225, 260],
+  },
+];
+
 @Component({
   selector: 'section-charts-line-chart',
   standalone: true,
@@ -111,8 +121,32 @@ const MANY_CATEGORY_SERIES: readonly LineChartSeries[] = [
 export class LineChartSection {
   protected readonly specimenCategories =
     signal<readonly string[]>(SPECIMEN_CATEGORIES);
+  protected readonly tickCategories =
+    signal<readonly string[]>(SPECIMEN_CATEGORIES);
+  protected readonly tickSeries =
+    signal<readonly LineChartSeries[]>(SPECIMEN_SERIES);
+  protected readonly pinnedAxisCategories =
+    signal<readonly string[]>(SPECIMEN_CATEGORIES);
+  protected readonly pinnedAxisLowSeries = signal<readonly LineChartSeries[]>(
+    PINNED_AXIS_LOW_SERIES,
+  );
+  protected readonly staggerCategories =
+    signal<readonly string[]>(SPECIMEN_CATEGORIES);
+  protected readonly staggerSeries =
+    signal<readonly LineChartSeries[]>(SPECIMEN_SERIES);
+  protected readonly noVisibleCategories =
+    signal<readonly string[]>(SPECIMEN_CATEGORIES);
+  protected readonly noVisibleSeriesData =
+    signal<readonly LineChartSeries[]>(SPECIMEN_SERIES);
+  protected readonly allHidden = signal<readonly string[]>(
+    SPECIMEN_SERIES.map((series) => series.id),
+  );
   protected readonly specimenSeries =
     signal<readonly LineChartSeries[]>(SPECIMEN_SERIES);
+
+  protected readonly specimenAnnotations: readonly LineChartAnnotation[] = [
+    { categoryIndex: 5, label: 'Peak' },
+  ];
 
   protected readonly gapBreakCategories =
     signal<readonly string[]>(GAP_CATEGORIES);
@@ -182,6 +216,8 @@ export class LineChartSection {
   protected readonly legendSeries =
     signal<readonly LineChartSeries[]>(SPECIMEN_SERIES);
   protected readonly hiddenSeries = signal<readonly string[]>([]);
+  protected readonly isolateHidden = signal<readonly string[]>([]);
+  protected readonly toggleHidden = signal<readonly string[]>([]);
   protected readonly interactiveCategories =
     signal<readonly string[]>(SPECIMEN_CATEGORIES);
   protected readonly interactiveSeries =

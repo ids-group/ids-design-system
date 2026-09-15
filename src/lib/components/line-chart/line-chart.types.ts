@@ -25,6 +25,18 @@ export type LineChartAxisMode = 'rounded' | 'exact' | 'independent' | 'stacked';
 /** What a `null` reading draws: a hole in the line, or a point at zero. */
 export type LineChartGaps = 'break' | 'zero';
 
+/** A label pinned to one reading, so the point it names is legible with no pointer — a peak, a
+ *  launch, the month a number turned. The tooltip answers "what is this?" on hover; an annotation
+ *  answers it in a printed page or a screenshot. */
+export interface LineChartAnnotation {
+  /** 0-based position along the category axis. */
+  readonly categoryIndex: number;
+  readonly label: string;
+  /** Which series the reading belongs to. Left out, the first plotted one. An annotation whose
+   *  series is hidden, or whose reading is `null`, draws nothing. */
+  readonly seriesId?: string;
+}
+
 /** One reading, named by the series it belongs to and the category it sits under. */
 export interface LineChartPoint {
   readonly series: LineChartSeries;

@@ -103,6 +103,10 @@ const DISCOURAGED_COMBOS = new Map<string, string>([
   },
 })
 export class ButtonComponent extends DsMessageBase {
+  // A button is not a form row, so an app-wide `DS_CONFIG.field.reserveMessage` must not give it
+  // an empty message line and the column box that comes with it. `[reserveMessage]` still works.
+  protected override readonly reserveFollowsFieldDefault = false;
+
   // As a group segment the group owns the border, radius and ring, so `.in-group` strips this
   // control back to its bare contents.
   protected readonly inGroup = inFieldGroup();

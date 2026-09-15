@@ -52,14 +52,11 @@ git merge --no-edit --no-ff origin/dev || {
 setup_bun
 install_deps
 
-# The upload tree is committed, so the tag needs one. This build runs BEFORE the bump, because
-# preflight refuses to bump a dirty tree and everything build:elements writes is gitignored —
-# which means the bundle it produces is stamped with the OUTGOING version. after-release rebuilds
-# and commits the corrected tree; moving this into the version hook instead would put a full
-# Angular build inside `npm version`.
-echo "cut-release: rebuilding the Claude Design bundle for the release commit..."
-node .design-sync/tools/bootstrap.mjs
-CI=true npm run build:elements
+# No Claude Design build here. The release commit no longer carries a rebuilt upload tree, so the
+# bundle this used to produce had no consumer: it was stamped with the OUTGOING version, and
+# after-release rebuilds the bundle and the tree with a browser and commits the result to main.
+# That leaves this script on one job — merge, bump, tag, push — with nothing in it that can fail
+# on an install or a build a few lines before it pushes main.
 
 # Runs preflight, then the version hook (tools/prepare-release-commit.mjs), then commit + tag.
 if [ "$level" = "beta" ]; then

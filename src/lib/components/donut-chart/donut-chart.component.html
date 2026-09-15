@@ -1,6 +1,15 @@
 <figure
   class="donut-chart"
   [style.--_donut-chart-hole-fraction]="hole()">
+  @if (activeMark.pinned()) {
+    <button
+      class="pin-reset"
+      type="button"
+      (click)="activeMark.release()">
+      Unpin
+    </button>
+  }
+
   @if (caption()) {
     <figcaption>
       {{ caption() }}
@@ -71,6 +80,7 @@
             <path
               class="slice"
               [class.interactive]="interactive()"
+              [class.is-pinned]="activeMark.pinned() && activeMark.index() === index"
               [class.focusable]="ringCarriesTheRoute()"
               [attr.d]="entry.path"
               [style.fill]="entry.color"
@@ -91,10 +101,23 @@
               (focus)="onMarkFocus(index, $event)"
               (blur)="activeMark.leave()"
               (keydown)="onMarkNavigation($event, index, '.ring-svg')"
-              (click)="sliceClicked.emit(entry.slice)"
+              (click)="onMarkClick(entry.slice, index, $event)"
               (keydown.enter)="onSliceKey(entry.slice, $event)"
               (keydown.space)="onSliceKey(entry.slice, $event)">
             </path>
+
+            @if (activeMark.pinned() && activeMark.index() === index) {
+              <foreignObject
+                class="pin-marker"
+                width="14"
+                height="14"
+                [attr.x]="entry.center.x - 7"
+                [attr.y]="entry.center.y - 7">
+                <ds-icon
+                  name="pin"
+                  [size]="14" />
+              </foreignObject>
+            }
           }
         </svg>
 
@@ -128,7 +151,7 @@
               (focus)="onMarkFocus(index, $event)"
               (blur)="activeMark.leave()"
               (keydown)="onMarkNavigation($event, index, '.legend')"
-              (click)="sliceClicked.emit(entry.slice)"
+              (click)="onMarkClick(entry.slice, index, $event)"
               (keydown.enter)="onSliceKey(entry.slice, $event)"
               (keydown.space)="onSliceKey(entry.slice, $event)">
               <span

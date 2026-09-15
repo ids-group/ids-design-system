@@ -1,4 +1,13 @@
 <figure class="bar-chart">
+  @if (activeMark.pinned()) {
+    <button
+      class="pin-reset"
+      type="button"
+      (click)="activeMark.release()">
+      Unpin
+    </button>
+  }
+
   @if (caption()) {
     <figcaption>
       {{ caption() }}
@@ -38,6 +47,9 @@
           animate.leave="mark-leave"
           [style.--_chart-mark-stagger]="markStagger(index)"
           [class.interactive]="interactive()"
+          [class.is-pinned]="
+            activeMark.pinned() && activeMark.index() === index
+          "
           [attr.role]="interactive() ? 'button' : null"
           [attr.tabindex]="
             interactive() ? (index === tabStopIndex() ? 0 : -1) : null
@@ -49,11 +61,17 @@
           (focus)="onMarkFocus(index, $event)"
           (blur)="activeMark.leave()"
           (keydown)="onMarkNavigation($event, index)"
-          (click)="rowClicked.emit(entry.row)"
+          (click)="onMarkClick(entry.row, index, $event)"
           (keydown.enter)="onRowKey(entry.row, $event)"
           (keydown.space)="onRowKey(entry.row, $event)">
           <span class="label">
             {{ entry.row.label }}
+
+            @if (entry.row.detail) {
+              <span class="detail">
+                {{ entry.row.detail }}
+              </span>
+            }
           </span>
 
           <span class="value">
@@ -71,7 +89,21 @@
               class="fill"
               animate.enter="mark-enter"
               [style.width.%]="entry.widthPercent"
-              [style.background]="entry.color">
+              [style.background]="entry.segments.length ? null : entry.color">
+              @for (part of entry.segments; track part.key) {
+                <span
+                  class="segment"
+                  [style.width.%]="part.widthPercent"
+                  [style.background]="part.color">
+                </span>
+              }
+
+              @if (activeMark.pinned() && activeMark.index() === index) {
+                <ds-icon
+                  class="pin-marker"
+                  name="pin"
+                  [size]="14" />
+              }
             </span>
           </span>
         </div>
@@ -102,6 +134,12 @@
               <th scope="col">
                 Value
               </th>
+
+              @if (partOfWhole()) {
+                <th scope="col">
+                  Share of total
+                </th>
+              }
             </tr>
           </thead>
 
@@ -110,12 +148,40 @@
               <tr>
                 <td>
                   {{ entry.row.label }}
+
+                  @if (entry.row.detail) {
+                    <span class="detail">
+                      {{ entry.row.detail }}
+                    </span>
+                  }
                 </td>
 
                 <td>
                   {{ entry.formattedValue }}
                 </td>
+
+                @if (partOfWhole()) {
+                  <td>
+                    {{ entry.share }}
+                  </td>
+                }
               </tr>
+
+              @for (part of entry.segments; track part.key) {
+                <tr class="segment-row">
+                  <td>
+                    {{ part.segment.label }}
+                  </td>
+
+                  <td>
+                    {{ part.formattedValue }}
+                  </td>
+
+                  @if (partOfWhole()) {
+                    <td></td>
+                  }
+                </tr>
+              }
             }
           </tbody>
         </table>

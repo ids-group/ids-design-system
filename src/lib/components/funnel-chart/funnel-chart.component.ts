@@ -22,9 +22,11 @@ import {
   staggerDelay,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
+import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 import type {
   ChartDataTable,
+  ChartFrame,
   ChartValueFormat,
 } from '@ids-group-ltd/ids-design-system/core';
 import {
@@ -41,10 +43,32 @@ import {
   funnelGeometry,
   rampPosition,
   stageDrops,
+  stageCenter,
   stageGapUnits,
   stagePolygonPoints,
 } from './funnel-chart.math';
-import type { FunnelChartShape, FunnelChartStage } from './funnel-chart.types';
+import type {
+  FunnelChartDrop,
+  FunnelChartShape,
+  FunnelChartStage,
+} from './funnel-chart.types';
+
+/** The Drop cell, in whichever unit the chart was asked for. A null fall is the first stage, which
+ *  has nothing above it to fall from. */
+function formatDrop(
+  fraction: number | null,
+  count: number | null,
+  mode: FunnelChartDrop,
+  format: (value: number) => string,
+): string {
+  if (mode === 'none' || fraction === null) {
+    return '—';
+  }
+
+  return mode === 'absolute' && count !== null
+    ? `−${format(Math.abs(count))}`
+    : formatPercent(fraction, 1);
+}
 
 const defaultValueFormat = (value: number) => formatValue(value);
 
@@ -53,9 +77,10 @@ const SKELETON_STAGE_WIDTHS = ['88%', '62%', '80%', '54%', '72%'] as const;
 @Component({
   selector: 'ds-funnel-chart',
   standalone: true,
-  imports: [SkeletonComponent, ChartTooltipDirective],
+  imports: [SkeletonComponent, ChartTooltipDirective, IconComponent],
   templateUrl: './funnel-chart.component.html',
   styleUrl: './funnel-chart.component.scss',
+  host: { '[class.framed]': "frameResolved() === 'auto'" },
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -76,6 +101,23 @@ export class FunnelChartComponent {
    *  repeat a strict subset of these same numbers, so it is not rendered. */
   readonly showTable = input(true, { transform: booleanAttribute });
 
+  /** Whether the chart draws its own bordered, padded box. `'auto'`, the default, draws it;
+   *  `'none'` leaves the chart bare, for one placed inside a card the page has already drawn.
+   *  Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards
+   *  is one decision per app rather than per plot. */
+  readonly frame = input<ChartFrame | null>(null);
+
+  /** How long the tooltip stays after the pointer leaves the mark, in milliseconds. Zero, the
+   *  default, takes it away at once: a panel that outlives the pointer sits over the plot the
+   *  reader has moved on to.
+   *
+   *  Raise it only for a panel a reader has to REACH — one carrying a link, a figure, or anything
+   *  selectable — which is WCAG 1.4.13's hoverable clause. The panel is portaled to the body, so
+   *  crossing the gap to it at an ordinary pointer speed needs about 140. Unset falls back to
+   *  `DS_CONFIG.chart.tooltipLingerMs`, then 0. */
+  readonly tooltipLingerMs = input<number | null>(null, {
+    transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
+  });
   /** Printed above the plot as the chart's visible title, and reused as the annex table's
    *  caption. */
   readonly caption = input<string | null>(null);
@@ -87,6 +129,10 @@ export class FunnelChartComponent {
    *  already prints every label and value. Unset falls back to `DS_CONFIG.chart.dataTable`, then
    *  `'toggle'`. */
   readonly dataTable = input<ChartDataTable | null>(null);
+  /** What the Drop column reports: `'relative'` (the default) the share that leaked at this
+   *  stage, `'absolute'` the count, `'none'` no column at all. */
+  readonly drop = input<FunnelChartDrop>('relative');
+
   /** Draws skeleton marks in place of the data, at the same count, so the chart does not resize
    *  when the data lands. */
   readonly loading = input(false, { transform: booleanAttribute });
@@ -107,10 +153,15 @@ export class FunnelChartComponent {
    *  grouping with a K/M/B suffix past four digits. */
   readonly valueFormat = input<ChartValueFormat | null>(null);
 
+  readonly frameResolved = resolveWithConfig(
+    this.frame,
+    (config) => config.chart?.frame,
+    'auto' as ChartFrame,
+  );
   readonly dataTableResolved = resolveWithConfig(
     this.dataTable,
     (config) => config.chart?.dataTable,
-    'toggle' as ChartDataTable,
+    'none' as ChartDataTable,
   );
   readonly emptyTextResolved = resolveWithConfig(
     this.emptyText,
@@ -137,6 +188,12 @@ export class FunnelChartComponent {
    *  `interactive` is set. */
   readonly stageClicked = output<FunnelChartStage>();
 
+  /** Holds the hovered mark and its tooltip in place when it is clicked, until Escape or a press
+   *  outside releases it. Off by default: a click is already the drill-down hook, and a mark left
+   *  lit after the pointer has gone needs a reader who knows why it is lit. `stageClicked` fires
+   *  either way — pinning is a state, not a handler. */
+  readonly pinOnClick = input(false, { transform: booleanAttribute });
+
   /** Dims every OTHER mark while one is hovered or focused, so the reader's eye is held on the
    *  one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed
    *  marks — measured 2026-09-13, the worst pair of three dimmed series falls from dE 14.8 at full
@@ -162,7 +219,41 @@ export class FunnelChartComponent {
       'dsChartTooltip',
     );
 
-  protected readonly activeMark = chartActiveMark();
+  private readonly tooltipLingerResolved = resolveWithConfig(
+    this.tooltipLingerMs,
+    (config) => config.chart?.tooltipLingerMs,
+    0,
+  );
+
+  protected readonly activeMark = chartActiveMark(() =>
+    this.tooltipLingerResolved(),
+  );
+
+  /** Where the badge goes, as a percentage of the shape's box. Percentages rather than viewBox
+   *  units because this svg is `preserveAspectRatio="none"`: it stretches horizontally with the
+   *  card, and anything measured in user units stretches with it. */
+  protected readonly pinnedCenter = computed(() => {
+    const entry = this.stages()[this.activeMark.index()];
+    if (!this.activeMark.pinned() || !entry) {
+      return null;
+    }
+
+    return {
+      xPercent: (entry.center.x / FUNNEL_VIEW_BOX_WIDTH) * 100,
+      yPercent: (entry.center.y / FUNNEL_VIEW_BOX_HEIGHT) * 100,
+    };
+  });
+
+  protected onMarkClick(
+    payload: FunnelChartStage,
+    index: number,
+    event: Event,
+  ): void {
+    this.stageClicked.emit(payload);
+    if (this.pinOnClick()) {
+      this.activeMark.pin(index, event);
+    }
+  }
   /** One tab stop per chart, not one per mark: WCAG 2.1.1's Understanding is explicit that not
    *  every mouse-operable control has to be separately focusable, and that is what keeps a
    *  twenty-five mark chart from being twenty-five stops in the page's tab order. */
@@ -241,6 +332,13 @@ export class FunnelChartComponent {
 
       return {
         stage,
+        // The middle of the band, for the marker that says this one is held. A polygon has no
+        // centre of its own, and its bounding box centre drifts outside a steeply tapered band.
+        center: stageCenter(
+          geometry[index],
+          FUNNEL_VIEW_BOX_WIDTH,
+          FUNNEL_VIEW_BOX_HEIGHT,
+        ),
         points: stagePolygonPoints(
           geometry[index],
           FUNNEL_VIEW_BOX_WIDTH,
@@ -249,7 +347,12 @@ export class FunnelChartComponent {
         ),
         formattedValue: format(stage.value),
         formattedPercent: formatPercent(stage.value, firstValue),
-        formattedDrop: drop === null ? '—' : formatPercent(drop, 1),
+        formattedDrop: formatDrop(
+          drop,
+          index > 0 ? values[index - 1] - stage.value : null,
+          this.drop(),
+          format,
+        ),
         color:
           index === lastIndex
             ? chartColors.seriesAccent

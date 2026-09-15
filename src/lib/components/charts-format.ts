@@ -92,19 +92,14 @@ export function formatTick(value: number, step: number): string {
     : `${scaled.toFixed(1)}${unit.suffix}`;
 }
 
-/** One mark's share of the total its siblings add up to.
+/** One mark's share of the total its siblings add up to, as a bare percentage.
  *
- *  A single-series category chart prints every mark's own value beside it, so a tooltip repeating
- *  that number tells the reader nothing they are not already looking at. The share is arithmetic
- *  the reader should not have to do. Empty for a lone mark, and empty for a reading that is not
+ *  Empty for a lone mark, which is the whole of its own total, and empty for a reading that is not
  *  part of a total anyone can see: negatives and non-finite values are excluded from the total
- *  rather than subtracted from it.
+ *  rather than subtracted from it, so a negative mark has no share rather than a misleading one.
  *
  *  @internal */
-export function describeShare(
-  values: readonly number[],
-  index: number,
-): string {
+export function shareOfTotal(values: readonly number[], index: number): string {
   const value = values[index];
   if (values.length < 2 || !Number.isFinite(value) || value <= 0) {
     return '';
@@ -113,5 +108,18 @@ export function describeShare(
     .filter((entry) => Number.isFinite(entry) && entry > 0)
     .reduce((sum, entry) => sum + entry, 0);
 
-  return total > 0 ? `${formatPercent(value, total)} of total` : '';
+  return total > 0 ? formatPercent(value, total) : '';
+}
+
+/** The same share, phrased for a tooltip line, where no column header stands above it to say what
+ *  the percentage is OF.
+ *
+ *  @internal */
+export function describeShare(
+  values: readonly number[],
+  index: number,
+): string {
+  const share = shareOfTotal(values, index);
+
+  return share ? `${share} of total` : '';
 }

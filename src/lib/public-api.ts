@@ -65,7 +65,10 @@ export { BadgeComponent } from '@ids-group-ltd/ids-design-system/components/badg
 export { BannerComponent } from '@ids-group-ltd/ids-design-system/components/banner';
 export type { BannerVariant } from '@ids-group-ltd/ids-design-system/components/banner';
 export { BarChartComponent } from '@ids-group-ltd/ids-design-system/components/bar-chart';
-export type { BarChartRow } from '@ids-group-ltd/ids-design-system/components/bar-chart';
+export type {
+  BarChartRow,
+  BarChartSegment,
+} from '@ids-group-ltd/ids-design-system/components/bar-chart';
 export { BottomSheetComponent } from '@ids-group-ltd/ids-design-system/components/bottom-sheet';
 export {
   BreadcrumbsComponent,
@@ -136,6 +139,7 @@ export {
 } from '@ids-group-ltd/ids-design-system/components/filter-bar';
 export { FunnelChartComponent } from '@ids-group-ltd/ids-design-system/components/funnel-chart';
 export type {
+  FunnelChartDrop,
   FunnelChartShape,
   FunnelChartStage,
 } from '@ids-group-ltd/ids-design-system/components/funnel-chart';
@@ -159,6 +163,7 @@ export type {
 } from '@ids-group-ltd/ids-design-system/components/layout';
 export { LineChartComponent } from '@ids-group-ltd/ids-design-system/components/line-chart';
 export type {
+  LineChartAnnotation,
   LineChartAxisMode,
   LineChartGaps,
   LineChartPoint,
@@ -174,6 +179,7 @@ export {
   MenuDividerComponent,
   MenuItemComponent,
 } from '@ids-group-ltd/ids-design-system/components/menu';
+export { MeterComponent } from '@ids-group-ltd/ids-design-system/components/meter';
 export {
   ModalCardComponent,
   ModalComponent,
@@ -354,6 +360,7 @@ export {
 } from '@ids-group-ltd/ids-design-system/core';
 export type {
   ChartDataTable,
+  ChartFrame,
   ChartValueFormat,
   DsConfig,
   DsControlWidth,

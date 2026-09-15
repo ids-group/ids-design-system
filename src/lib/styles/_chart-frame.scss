@@ -1,19 +1,40 @@
+@use 'focus' as focus;
+
 // The box a chart draws around itself. All five draw the same one, so the rules live here.
 //
-// On by default, which is unusual for this library: most components resist owning chrome. A chart
+// ON by default, which is unusual for this library: most components resist owning chrome. A chart
 // is the exception because it is read as an OBJECT — a plot with axes, a legend and an annex table
-// — and without an edge those parts run into whatever sits beside them on the page. A chart already
-// inside a card drops the frame with two declarations rather than a mode flag:
+// — and without an edge those parts run into whatever sits beside them on the page.
 //
-//   ds-bar-chart { --ds-chart-frame-border-width: 0; --ds-chart-frame-padding: 0; }
+// A chart already inside a card turns it off through the `frame` input, or once for a whole app
+// through `DS_CONFIG.chart.frame`, which is where an app-wide layout decision belongs. The
+// `--ds-chart-frame-*` tokens still size it.
 @mixin chart-frame {
   :host {
     display: block;
+
+    // A drag across a plot selects the chart's chrome — axis ticks, legend labels, and the
+    // caption a screen reader needs that is clipped to a thin strip for everyone else. The
+    // selection then paints as bars across the card, over content that is not visibly there.
+    // None of it is text anyone copies; the numbers live in the annex table, which stays
+    // selectable below.
+    user-select: none;
+  }
+
+  // The class is the resolved answer, not the input: the component reads `frame`, falls back to
+  // `DS_CONFIG.chart.frame`, and puts this on only when the result is `'auto'`.
+  :host(.framed) {
     padding: var(--ds-chart-frame-padding);
     background: var(--ds-chart-frame-bg-color);
     border: var(--ds-chart-frame-border-width) solid
       var(--ds-chart-frame-border-color);
     border-radius: var(--ds-chart-frame-radius);
+  }
+
+  .data-table,
+  .stage-table,
+  figcaption {
+    user-select: text;
   }
 }
 
@@ -28,6 +49,20 @@
   paint-order: stroke;
   filter: drop-shadow(0 0 1px var(--ds-chart-focus-halo-color))
     drop-shadow(0 0 1px var(--ds-chart-focus-halo-color));
+}
+
+// A CLICK focuses an SVG shape in Chromium even with no `tabindex` on it, and `:focus-visible` is
+// false for that focus — so a rule keyed on `:focus-visible` never fires and the user-agent paints
+// its own outline around the BOUNDING BOX. On a ring or a funnel band that is a rectangle standing
+// off the shape, which reads as a selection nobody asked for.
+//
+// Keyed on `:focus` so it catches the pointer case too. The keyboard indicator is unaffected:
+// `drawn-focus-ring` under `:focus-visible` still paints, and `own-indicator` keeps the outline
+// under forced colours, where `stroke` is not remapped and the outline is all there is.
+@mixin no-bounding-box-focus($mark) {
+  #{$mark}:focus {
+    @include focus.own-indicator;
+  }
 }
 
 // `fill` and `stroke` are NOT remapped by forced colours: the chart keeps every series colour and
@@ -64,5 +99,67 @@
     margin: 0;
     color: var(--text-secondary);
     text-align: center;
+  }
+}
+
+/* The way out of a pin, said in a word. A held mark is a state the reader did not have before and
+   cannot obviously undo — Escape is invisible, and clicking the mark again is a guess. It reads
+   `Unpin` rather than `Reset`, which would leave a reader wondering what else it resets. */
+@mixin pin-reset {
+  :host {
+    position: relative;
+  }
+
+  /* Top CENTRE: the corner competes with a legend on the donut and with the value labels on a
+     column chart, and on a wide card a corner control is a long way from the mark it undoes.
+     Centred, it sits over the plot it belongs to whatever the chart's shape.
+
+     44px minimum box around a 12px label, because it is a real control and the library's own touch
+     rule applies to it. */
+  .pin-reset {
+    position: absolute;
+    inset-block-start: var(--space-2);
+    inset-inline: 0;
+    z-index: 1;
+    justify-self: center;
+    margin-inline: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    min-block-size: var(--space-12);
+    inline-size: fit-content;
+    padding: var(--space-1) var(--space-3);
+    border: var(--border-width-default) solid var(--border-divider);
+    border-radius: var(--radius-pill);
+    background: var(--surface-default);
+    color: var(--text-secondary);
+    font-size: var(--font-size-xs);
+    line-height: 1;
+    box-shadow: var(--shadow-1);
+    cursor: pointer;
+
+    &:hover {
+      color: var(--text-primary);
+      border-color: var(--border-strong);
+    }
+  }
+}
+
+/* The pinned mark's badge: a pushpin on an opaque disc. The disc is what makes it legible — a bare
+   glyph with a halo has to win against whatever colour the series happens to be, and a palette of
+   eight cannot promise that. Size is the icon's touch-free minimum: it is a STATE, never a target,
+   so it carries `pointer-events: none` and no tab stop. */
+@mixin pin-marker {
+  .pin-marker {
+    display: grid;
+    place-items: center;
+    inline-size: var(--ds-chart-pin-size, 22px);
+    block-size: var(--ds-chart-pin-size, 22px);
+    border: var(--border-width-default) solid var(--border-divider);
+    border-radius: var(--radius-pill);
+    background: var(--surface-default);
+    color: var(--text-primary);
+    box-shadow: var(--shadow-1);
+    pointer-events: none;
   }
 }

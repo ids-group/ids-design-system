@@ -274,3 +274,18 @@ export function stagePolygonPoints(
     `${roundCoordinate(horizontalCentre - halfBottomWidth)},${roundCoordinate(bottom)}`,
   ].join(' ');
 }
+
+/** The middle of a band, for placing a marker inside it. The x is the viewBox centre because every
+ *  funnel band is symmetrical about it, whatever its two widths.
+ *
+ *  @internal */
+export function stageCenter(
+  geometry: FunnelStageGeometry,
+  viewBoxWidth: number,
+  viewBoxHeight: number,
+): { x: number; y: number } {
+  const top = clampFraction(geometry.top) * viewBoxHeight;
+  const bottom = clampFraction(geometry.bottom) * viewBoxHeight;
+
+  return { x: viewBoxWidth / 2, y: (top + bottom) / 2 };
+}

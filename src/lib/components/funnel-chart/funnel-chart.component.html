@@ -1,4 +1,13 @@
 <figure class="funnel-chart">
+  @if (activeMark.pinned()) {
+    <button
+      class="pin-reset"
+      type="button"
+      (click)="activeMark.release()">
+      Unpin
+    </button>
+  }
+
   @if (caption()) {
     <figcaption>
       {{ caption() }}
@@ -47,6 +56,7 @@
             [attr.stroke-width]="hitGapUnits()"
             [style.--_chart-mark-stagger]="markStagger(index)"
             [class.interactive]="interactive()"
+            [class.is-pinned]="activeMark.pinned() && activeMark.index() === index"
             [attr.points]="entry.points"
             [attr.fill]="entry.color"
             [attr.role]="interactive() ? 'button' : null"
@@ -60,12 +70,23 @@
             (focus)="onMarkFocus(index, $event)"
             (blur)="activeMark.leave()"
             (keydown)="onMarkNavigation($event, index)"
-            (click)="stageClicked.emit(entry.stage)"
+            (click)="onMarkClick(entry.stage, index, $event)"
             (keydown.enter)="onStageKey(entry.stage, $event)"
             (keydown.space)="onStageKey(entry.stage, $event)">
           </polygon>
         }
       </svg>
+
+      @if (pinnedCenter(); as center) {
+        <span
+          class="pin-marker"
+          [style.left.%]="center.xPercent"
+          [style.top.%]="center.yPercent">
+          <ds-icon
+            name="pin"
+            [size]="13" />
+        </span>
+      }
     </div>
 
     @if (showTable()) {
@@ -89,9 +110,11 @@
               Percent
             </th>
 
-            <th scope="col">
-              Drop
-            </th>
+            @if (drop() !== 'none') {
+              <th scope="col">
+                Drop
+              </th>
+            }
           </tr>
         </thead>
 
@@ -117,9 +140,11 @@
                 {{ entry.formattedPercent }}
               </td>
 
-              <td>
-                {{ entry.formattedDrop }}
-              </td>
+              @if (drop() !== 'none') {
+                <td>
+                  {{ entry.formattedDrop }}
+                </td>
+              }
             </tr>
           }
         </tbody>

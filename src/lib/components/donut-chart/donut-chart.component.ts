@@ -20,9 +20,11 @@ import {
   nextRovingIndex,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
+import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 import type {
   ChartDataTable,
+  ChartFrame,
   ChartValueFormat,
 } from '@ids-group-ltd/ids-design-system/core';
 import {
@@ -42,6 +44,7 @@ import {
   positiveValues,
   resolveInnerRadius,
   resolveTotal,
+  ringCoords,
   sliceArcs,
 } from './donut-chart.math';
 import type { DonutChartSlice } from './donut-chart.types';
@@ -55,9 +58,10 @@ const RING_OUTER_RADIUS = RING_VIEW_BOX_SIZE / 2;
 @Component({
   selector: 'ds-donut-chart',
   standalone: true,
-  imports: [SkeletonComponent, ChartTooltipDirective],
+  imports: [SkeletonComponent, ChartTooltipDirective, IconComponent],
   templateUrl: './donut-chart.component.html',
   styleUrl: './donut-chart.component.scss',
+  host: { '[class.framed]': "frameResolved() === 'auto'" },
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -88,6 +92,23 @@ export class DonutChartComponent {
   /** Ring width as a fraction of the radius. */
   readonly thickness = input(DEFAULT_THICKNESS, { transform: numberAttribute });
 
+  /** Whether the chart draws its own bordered, padded box. `'auto'`, the default, draws it;
+   *  `'none'` leaves the chart bare, for one placed inside a card the page has already drawn.
+   *  Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards
+   *  is one decision per app rather than per plot. */
+  readonly frame = input<ChartFrame | null>(null);
+
+  /** How long the tooltip stays after the pointer leaves the mark, in milliseconds. Zero, the
+   *  default, takes it away at once: a panel that outlives the pointer sits over the plot the
+   *  reader has moved on to.
+   *
+   *  Raise it only for a panel a reader has to REACH — one carrying a link, a figure, or anything
+   *  selectable — which is WCAG 1.4.13's hoverable clause. The panel is portaled to the body, so
+   *  crossing the gap to it at an ordinary pointer speed needs about 140. Unset falls back to
+   *  `DS_CONFIG.chart.tooltipLingerMs`, then 0. */
+  readonly tooltipLingerMs = input<number | null>(null, {
+    transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
+  });
   /** Printed above the plot as the chart's visible title, and reused as the annex table's
    *  caption. */
   readonly caption = input<string | null>(null);
@@ -98,7 +119,7 @@ export class DonutChartComponent {
   /** The label-and-value table under the plot: `'toggle'` puts it behind a disclosure,
    *  `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so
    *  `'none'` belongs only where the same data is already in a table on the page.
-   *  Unset falls back to `DS_CONFIG.chart.dataTable`, then `'toggle'`. */
+   *  Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`. */
   readonly dataTable = input<ChartDataTable | null>(null);
   /** Draws skeleton marks in place of the data, at the same count, so the chart does not resize
    *  when the data lands. */
@@ -120,10 +141,15 @@ export class DonutChartComponent {
    *  grouping with a K/M/B suffix past four digits. */
   readonly valueFormat = input<ChartValueFormat | null>(null);
 
+  readonly frameResolved = resolveWithConfig(
+    this.frame,
+    (config) => config.chart?.frame,
+    'auto' as ChartFrame,
+  );
   readonly dataTableResolved = resolveWithConfig(
     this.dataTable,
     (config) => config.chart?.dataTable,
-    'toggle' as ChartDataTable,
+    'none' as ChartDataTable,
   );
   readonly emptyTextResolved = resolveWithConfig(
     this.emptyText,
@@ -150,6 +176,12 @@ export class DonutChartComponent {
    *  `interactive` is set. */
   readonly sliceClicked = output<DonutChartSlice>();
 
+  /** Holds the hovered mark and its tooltip in place when it is clicked, until Escape or a press
+   *  outside releases it. Off by default: a click is already the drill-down hook, and a mark left
+   *  lit after the pointer has gone needs a reader who knows why it is lit. `sliceClicked` fires
+   *  either way — pinning is a state, not a handler. */
+  readonly pinOnClick = input(false, { transform: booleanAttribute });
+
   /** Dims every OTHER mark while one is hovered or focused, so the reader's eye is held on the
    *  one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed
    *  marks — measured 2026-09-13, the worst pair of three dimmed series falls from dE 14.8 at full
@@ -171,7 +203,26 @@ export class DonutChartComponent {
       'dsChartTooltip',
     );
 
-  protected readonly activeMark = chartActiveMark();
+  private readonly tooltipLingerResolved = resolveWithConfig(
+    this.tooltipLingerMs,
+    (config) => config.chart?.tooltipLingerMs,
+    0,
+  );
+
+  protected readonly activeMark = chartActiveMark(() =>
+    this.tooltipLingerResolved(),
+  );
+
+  protected onMarkClick(
+    payload: DonutChartSlice,
+    index: number,
+    event: Event,
+  ): void {
+    this.sliceClicked.emit(payload);
+    if (this.pinOnClick()) {
+      this.activeMark.pin(index, event);
+    }
+  }
   /** One tab stop per chart, not one per slice: WCAG 2.1.1's Understanding is explicit that not
    *  every mouse-operable control has to be separately focusable. */
   protected readonly rovingIndex = signal(0);
@@ -238,8 +289,18 @@ export class DonutChartComponent {
     const innerRadius = resolveInnerRadius(RING_OUTER_RADIUS, this.thickness());
     const format = this.valueFormatResolved();
 
+    const midRadius = (RING_OUTER_RADIUS + innerRadius) / 2;
+
     return data.map((slice, index) => ({
       slice,
+      // Halfway along the arc and halfway through the ring: the one point that is inside a slice
+      // whatever its sweep, which the bounding box of a curved wedge is not.
+      center: ringCoords(
+        RING_CENTER,
+        RING_CENTER,
+        midRadius,
+        (arcs[index].startAngle + arcs[index].endAngle) / 2,
+      ),
       path: arcPath(
         RING_CENTER,
         RING_CENTER,

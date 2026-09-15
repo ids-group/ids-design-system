@@ -77,12 +77,17 @@ figcaption {
   block-size: var(--_bar-chart-track-height);
   border-radius: var(--_bar-chart-cap-radius);
   background: var(--_bar-chart-track-color);
-  overflow: hidden;
 }
 
 .fill {
-  display: block;
+  position: relative;
+  display: flex;
   block-size: 100%;
+
+  // A `max` below the data is the caller's statement and `widthPercent` honours it, so the mark
+  // has to be capped here. It replaces `overflow: hidden` on the track, which would also clip the
+  // pin badge to the 12px bar.
+  max-inline-size: 100%;
   border-radius: inherit;
 
   // NOTE(chart-layout-transition): a VALUE change animates `inline-size`, not `transform`, and it
@@ -101,3 +106,57 @@ figcaption {
 }
 
 @include chart-frame.forced-colors;
+@include chart-frame.pin-reset;
+@include chart-frame.pin-marker;
+
+/* The row's second reading, under its label rather than beside it: the value column is right-aligned
+   on the bar's scale, and a number on a different scale sitting in it would read as belonging to
+   that column. */
+.label > .detail {
+  display: block;
+  color: var(--text-secondary);
+  font-size: var(--font-size-xs);
+}
+
+/* Segments divide the mark, never replace it: the row's length still says how it compares with the
+   rest of the chart, and the parts say what it is made of. The 2px seam is surface-coloured, not a
+   margin: two parts meeting edge to edge read as one longer part, and a gap in the track's own
+   colour would read as a missing category. */
+.segment {
+  block-size: 100%;
+  transition: background-color var(--ds-motion-chart-mark-duration)
+    var(--ds-motion-chart-mark-easing);
+
+  // The end parts carry the mark's cap themselves. Clipping the fill instead would take the pin
+  // badge with it, and the badge is taller than the bar by design.
+  &:first-of-type {
+    border-start-start-radius: var(--_bar-chart-cap-radius);
+    border-end-start-radius: var(--_bar-chart-cap-radius);
+  }
+
+  &:last-of-type {
+    border-start-end-radius: var(--_bar-chart-cap-radius);
+    border-end-end-radius: var(--_bar-chart-cap-radius);
+  }
+
+  & + & {
+    border-inline-start: 2px solid var(--ds-chart-frame-bg-color, var(--surface-default));
+  }
+}
+
+/* On the mark rather than beside it, at the bar's start: a badge at the END would hang off the left
+   of the chart on a row whose value is zero, and the start is a column every row shares. The bar is
+   thinner than the badge, so the badge overflows it — which is why the clip moved onto `.fill`. */
+.fill > .pin-marker {
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-start: 50%;
+  translate: 0 -50%;
+}
+
+/* A segment's row belongs to the row above it. Indent and de-emphasis are the table's only way to
+   say so — a nested table would break the column alignment the reader is scanning down. */
+.segment-row > td:first-child {
+  padding-inline-start: var(--space-6);
+  color: var(--text-secondary);
+}

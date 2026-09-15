@@ -89,6 +89,7 @@ export const NAV: NavGroup[] = [
       { label: 'Description list', anchor: 'description-list' },
       { label: 'Icon', anchor: 'icon' },
       { label: 'List', anchor: 'list' },
+      { label: 'Meter', anchor: 'meter' },
       { label: 'Stats', anchor: 'stat' },
       { label: 'Table', anchor: 'table' },
       { label: 'Tag', anchor: 'tag' },

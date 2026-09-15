@@ -13,6 +13,7 @@
 // already solid while its arc is still fading reads as two objects instead of one.
 @include chart-motion.fades-in('.swatch');
 @include chart-frame.chart-frame;
+@include chart-frame.no-bounding-box-focus('.slice');
 @include chart-data-table.chart-data-table;
 
 
@@ -223,3 +224,6 @@ figcaption {
 }
 
 @include chart-frame.forced-colors;
+@include chart-frame.pin-reset;
+@include chart-frame.pin-marker;
+

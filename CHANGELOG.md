@@ -1,5 +1,364 @@
 ## Unreleased
 
+### Added
+
+- **`ds-line-chart` takes `annotations`, so a reading can be labelled without a pointer.** The
+  chart had tooltips and nothing else, which leaves a peak unreadable in a screenshot, a printed
+  page or a slide. An annotation names a `categoryIndex`, a `label` and optionally the `seriesId`
+  it belongs to — left out, the first plotted series.
+
+  ```html
+  <ds-line-chart
+    [categories]="months"
+    [series]="series"
+    [annotations]="[{ categoryIndex: 5, label: 'Peak' }]" />
+  ```
+
+  It sits above the reading, below it where the plot has no room — a peak is at the top, which is
+  exactly where a label clamped upward lands on its own marker — and anchors to its own edge within
+  48 view units of one rather than hanging outside the viewBox. A label whose series is hidden or
+  whose reading is `null` draws nothing, so a legend toggle takes its annotations with it.
+
+  It is drawn with a halo rather than a box (`paint-order: stroke`), so it survives crossing the
+  line and a gridline; `--ds-line-chart-annotation-color`, `-font-size`, `-weight`, `-halo-color`
+  and `-halo-width` set its look. The plot's own text is `aria-hidden`, so the labels are read out
+  of the chart's description instead — `Noted: Peak; Launch.` after the series sentences — rather
+  than twice from the plot and the annex table.
+
+- **`ds-progress` takes a `target`, drawn as a hairline across the track.** A second point on the
+  same 0–100 scale, so a bar reads actual against a goal or a baseline in one glance instead of
+  standing alone. Clamped like `value`, ignored while `indeterminate`, and unset draws nothing —
+  every existing bar is unchanged.
+
+  ```html
+  <ds-progress
+    [value]="62"
+    [target]="75"
+    ariaLabel="Resolved 62% against a 75% target" />
+  ```
+
+  **Name the comparison in `ariaLabel`.** `role="progressbar"` announces one value and has no second
+  to carry, so the mark is visual only — a reader on a screen reader gets the target from the label
+  or not at all. `--ds-progress-target-color` and `--ds-progress-target-width` set its look.
+
+- **`ds-progress` takes a `max`, so `value` can be the real count.** The bar read 0–100 only and
+  pinned `aria-valuemax="100"`, which made a caller convert their own numbers before us and put the
+  percentage into the accessible name in place of the measurement. `max` is the scale `value` and
+  `target` are read against; at its default of 100 they are percentages, so every existing bar is
+  unchanged, and `aria-valuemax` follows it.
+
+  ```html
+  <ds-progress [value]="37" [max]="80" [target]="64" ariaLabel="Requests handled" />
+  ```
+
+  That bar fills to 46.25% and reports `aria-valuenow="37"` of `aria-valuemax="80"` — "37 of 80"
+  rather than "46%". A `max` of zero or less falls back to 100, because a scale with no width has no
+  fraction to draw.
+
+  `ProgressComponent` grows by the `target` and `max` inputs; a subclass declaring either name stops
+  building until it renames the member or marks it `override`.
+
+- **`ds-bar-chart` and `ds-column-chart` take `partOfWhole`, and it is what states each mark's share
+  of the total.** A share of a total is only a real quantity when the marks are parts of one whole.
+  Visitors per funnel stage, or response time per endpoint, sum to a number nobody can point at, and
+  a percentage of THAT is arithmetic dressed as a fact — so the charts no longer state one unless
+  you say the relationship holds:
+
+  ```html
+  <ds-bar-chart partOfWhole caption="Spend by department, share of the budget" [data]="rows" />
+  ```
+
+  With it set, the share appears in two places: the tooltip's second line, and a `Share of total`
+  column in the data table. The column is headed `Share of total` rather than `Share` because
+  `ds-bar-chart` already prints a percentage beside each row and that one is the share of the
+  LARGEST row — two different questions, each now labelled with the one it answers.
+
+  The cell is empty where there is no share to state: a lone mark, or a reading that is zero,
+  negative or non-finite. Negatives are left out of the total rather than subtracted from it.
+
+- **Every chart takes `pinOnClick`, which holds a reading in place.** Clicking a mark keeps it, its
+  tooltip and — with `dimOthers` — the dimming of everything else, so the comparison survives the
+  pointer leaving the chart entirely. Hovering another mark does not move it; clicking another one
+  does. Clicking the pinned mark again, pressing outside it, or Escape releases it. Off by default:
+  a click is already the drill-down hook, and a mark left lit after the pointer has gone needs a
+  reader who knows why it is lit.
+
+  ```html
+  <ds-column-chart interactive pinOnClick dimOthers [data]="points" />
+  ```
+
+  A pinned mark carries a pushpin on an opaque disc — over the row's bar, the column, the middle of
+  the ring's arc, the middle of the funnel band — because the panel can sit anywhere on screen and
+  the reader needs to see WHICH mark is held. An `Unpin` button appears centred above the plot while
+  anything is pinned, so the way out is on screen rather than a key nobody was told about, and it is
+  centred because a corner competes with the donut's legend and the column chart's value labels.
+
+  The click output fires either way — pinning is a state, not a handler. On `ds-line-chart` the pin
+  hangs off the data markers rather than the plot, so Enter and Space pin from the keyboard too.
+
+- **`ds-meter` — one track and one fill, for a measurement inside a table cell.** Every chart is a
+  block with a caption, a legend and an annex table; in a 60px cell that chrome is the whole cell,
+  so a micro-bar in a column had nothing to be built from. This is the mark on its own — no
+  caption, no legend, no tooltip, no table.
+
+  ```html
+  <ds-meter [value]="row.rate" [max]="highestRate" />
+  ```
+
+  `max` is the ceiling the column is read against, usually the column's own largest value, so the
+  longest bar fills its track and the rest are its share; at its default of 100, `value` is a
+  percentage. A value past `max` fills the track rather than overflowing, a negative one draws
+  nothing, and a `max` of zero or less falls back to 100.
+
+  **It is not `ds-progress`.** That reports how far a task has got and says so with
+  `role="progressbar"`, which a table of two hundred measurements would announce two hundred times.
+  A rate, a score or a count against a ceiling has no beginning and no completion. So the mark is
+  `aria-hidden` unless `ariaLabel` names it — leave it unset where the cell prints the figure
+  beside the bar, and set it where the bar is the only place the number appears.
+
+  The fill takes `--ds-meter-fill-color`, so a column is coloured once in a stylesheet rather than
+  once per row; the `color` input overrides it where the colour carries meaning.
+  `--ds-meter-height`, `--ds-meter-track-color` and `--ds-meter-radius` set the rest.
+
+  The bar is as wide as the box it sits in, so the column decides. A box sized to its content —
+  `width: 'content'` on `ds-table`, or a shrink-to-fit flex or grid item — is sized by what its
+  contents contribute intrinsically, and a bar that is 100% of its cell contributes nothing: one
+  alone in such a cell comes out 0px wide. The host carries a `min-inline-size` of `3rem` so it
+  cannot vanish, overridable through `--ds-meter-min-width`; give it a width of your own where the
+  bar should be a fixed size.
+
+- **A `ds-bar-chart` row takes `segments`, which divide its bar without shortening it.** A row that
+  is a distribution had to become its own chart. The bar keeps its own length — the row's share of
+  the largest row — and the parts say what it is made of, so one plot answers both "which department
+  spends most" and "on what".
+
+  ```html
+  <ds-bar-chart [data]="[{ label: 'Engineering', value: 412000, segments: [
+    { label: 'Salaries', value: 291000 },
+    { label: 'Tooling', value: 74000 },
+  ] }]" />
+  ```
+
+  The parts are sized against their OWN sum and always fill the bar: a set that does not add up to
+  `value` is a data error, and a gap left where the difference is would read as an unlabelled
+  category. They are categories rather than one series, so they take the categorical palette in
+  order and the row's `color` goes unused; `color` on a segment overrides its slot. Each part gets
+  its own row in the annex table under the row it belongs to. Pair the chart with `ds-chart-legend`
+  to name them — the parts carry no text of their own.
+
+- **A `ds-bar-chart` row takes `detail`, a second reading printed under the label.** A row often
+  encodes a ratio — 12,400 visitors against 456 requests — and the bar can draw only one of the two
+  numbers, so the other had nowhere to go. It is passed already formatted, because the row knows
+  what its second number means and the chart does not, and it reaches the annex table too.
+
+  ```html
+  <ds-bar-chart [data]="[{ label: 'Organic', value: 12400, detail: '456 requests · 3.7%' }]" />
+  ```
+
+- **`ds-line-chart` takes `max` and `maxSecondary`, which pin the value axis.** A panel that opens
+  one subject at a time derived a different axis for each, so two plots with the same gentle wiggle
+  could be four times apart in value with nothing on screen saying so. A fixed maximum is what makes
+  two renders comparable.
+
+  ```html
+  <ds-line-chart [max]="5000" [categories]="months" [series]="series" />
+  ```
+
+  Null, the default, keeps the derived axis, so every existing chart is unchanged. A maximum below
+  the data does not clip it — the larger of the two wins, because hiding a reading is worse than
+  more headroom than you asked for. `maxSecondary` does the same for the axis a series reaches with
+  `axis: 'secondary'`.
+
+- **`ds-funnel-chart` takes `drop`, which says what its Drop column reports.** `'relative'`, the
+  default, is the share that leaked at that stage and is what the column always showed;
+  `'absolute'` is the COUNT that leaked, and `'none'` takes the column out. Both figures answer a
+  real question and they are not the same question: on a settlement funnel the share is a talking
+  point and the count is a re-targeting job. The count was recoverable by subtracting two rows, and
+  a reader should not have to.
+
+  ```html
+  <ds-funnel-chart drop="absolute" [stages]="stages" />
+  ```
+
+- **Every chart takes `tooltipLingerMs`, and `DS_CONFIG.chart.tooltipLingerMs` sets it app-wide.**
+  How long the panel stays after the pointer leaves the mark. See the tooltip entry under Changed
+  for what the default does and when to raise it.
+
+- **A pinned mark offers an `Unpin` control, and says which mark it is.** `ds-bar-chart`,
+  `ds-column-chart`, `ds-donut-chart` and `ds-funnel-chart` render a pill button above the plot
+  while a mark is pinned — Escape already released one, and a control that says so is what a reader
+  finds without knowing the key. `ds-donut-chart` and `ds-funnel-chart` also draw a pin glyph at the
+  pinned slice's or band's centre, so the plot itself carries which one is held rather than leaving
+  it to the panel; the glyph takes no pointer events. `--ds-chart-pin-size` sizes it, and the button
+  is `.pin-reset`.
+
+  The internal mark-state interface behind it — not exported from the package root — gains a
+  `release()`, and its factory implements it. Only a hand-written implementation of that interface
+  has one more method to satisfy.
+
+- **A toggleable legend in `isolate` mode offers `None`.** Beside `All` and the per-series controls,
+  which left no way to clear the plot in one action.
+
+### Changed
+
+- **Turning a chart's frame off is an input now, not a stylesheet rule.** The frame still draws by
+  default. Switching it off took `ds-bar-chart { --ds-chart-frame-border-width: 0;
+  --ds-chart-frame-padding: 0 }` in a global sheet — a deep rule into a component's own chrome,
+  which is the shape of styling the rest of the library has been turning into inputs and tokens.
+
+  `frame` takes `'auto'` (the default, draws it) or `'none'`, and falls back to
+  `DS_CONFIG.chart.frame` when unset — whether charts live inside cards is one decision per app,
+  the same as `dataTable`:
+
+  ```ts
+  provideDsConfig({ chart: { frame: 'none' } });
+  ```
+
+  ```html
+  <ds-donut-chart frame="none" [data]="slices" />
+  ```
+
+  The two custom properties still size the frame and still work; a stylesheet zeroing them can drop
+  those declarations in favour of the config key. `ChartFrame` is exported from the package root.
+
+- **The annex data table is off by default.** `dataTable` defaults to `'none'` rather than
+  `'toggle'`, on all five charts and in `DS_CONFIG.chart.dataTable`. A disclosure under every plot
+  is chrome the page did not ask for, and the page usually carries the numbers already.
+
+  It stays the non-visual route to the numbers where a page does NOT carry them, so turn it on
+  deliberately — per chart with `dataTable="toggle"`, or once for an app:
+
+  ```ts
+  provideDsConfig({ chart: { dataTable: 'toggle' } });
+  ```
+
+- **A legend control isolates a series rather than hiding one, and `ds-chart-legend` says which.**
+  `mode` is `'isolate'` by default: choosing a series shows that one and hides the rest, which takes
+  one action instead of one per series on a crowded chart. `mode="toggle"` is the old behaviour —
+  hide one, leave the rest — for taking a dominant series out so the others can be read at a usable
+  scale. `ds-line-chart` forwards it as `legendMode`.
+
+  The two are different controls, not two looks: isolate is a single choice among many, so it
+  renders as a radio group running `All`, each series, `None`, and toggle renders as the checkboxes
+  it already did. That is what gives each the keyboard and screen-reader behaviour it should have.
+  One option is always chosen — `All` where the set is neither one series nor empty — because a
+  radio group with nothing selected cannot say whether it means "everything" or "not decided".
+
+  **If you set `legendFilters` on `ds-line-chart`, its legend changes shape.** Add
+  `legendMode="toggle"` to keep the checkboxes. `hiddenSeries` is unchanged in both modes, so a page
+  driving it from a URL parameter needs nothing.
+
+- **A chart tooltip can be selected and dismissed with Escape, and reached with the pointer where
+  you ask for it.** The pane was inert and closed the instant the pointer left the mark, which left
+  it unreadable at high zoom, unselectable, and impossible to clear without moving the pointer away.
+
+  The pane takes the pointer now, and Escape closes the panel — it stays closed until the pointer
+  visits another mark, so a reader who clears the screen keeps it cleared. Reaching the panel is
+  `tooltipLingerMs`, which is `0`: the panel goes when the pointer does, because one left behind
+  sits over the plot the reader has moved on to. WCAG 1.4.13's hoverable clause only bites where the
+  panel holds something to reach — a link, a figure, a selectable string — so set
+  `[tooltipLingerMs]="140"` on those charts, or `DS_CONFIG.chart.tooltipLingerMs` for an app whose
+  tooltips all carry one. 140ms is what crossing the gap to a portaled panel takes at an ordinary
+  pointer speed.
+
+  If you styled `.ds-chart-tooltip-pane` with `pointer-events`, that rule now decides whether the
+  panel can be selected at all — the pane must stay `auto`.
+
+- **A chart tooltip's second line is opt-in.** `0.13.1` gave every `ds-bar-chart` and
+  `ds-column-chart` tooltip a `18.6% of total` line whether or not the marks were parts of a whole.
+  It appears only under `partOfWhole` now. Set it on any chart whose categories genuinely divide one
+  total to keep the line; leave it off and the tooltip carries the label and the value, as before
+  `0.13.1`.
+
+- **Exported class member surface grew — only matters if you SUBCLASS one of these.** `BarChartComponent`,
+  `ColumnChartComponent`, `DonutChartComponent`, `FunnelChartComponent` and `LineChartComponent` all
+  gain `pinOnClick` and the protected `onMarkClick`, which `LineChartComponent` spells
+  `onMarkerClick` beside its own `pinnedCategory` and `releaseCategoryPin`; `BarChartComponent` and
+  `ColumnChartComponent` also gain `partOfWhole` and the protected `valueClearance`; all five gain
+  `frame` and `frameResolved`; `LineChartComponent` gains `legendMode`; the
+  internal `ChartLegendComponent`, which the package root does not export, gains `mode`, `isolated`,
+  `isolate` and `showAll`; and the internal `ChartTooltipDirective`, also unexported there, gains
+  `dsChartTooltipExtraGap` and the private `detachEscape` and `closeOnEscape`.
+
+  All five also gain `tooltipLingerMs` and the private `tooltipLingerResolved`; `FunnelChartComponent`
+  gains `drop` and the protected `pinnedCenter`; `LineChartComponent` gains `max`, `maxSecondary`,
+  `annotations`, `placedAnnotations` and the protected `onPointerAnywhere`, `host`,
+  `cancelCategoryClear` and `pendingCategoryClear`; the internal legend also gains `groupName` and
+  `hideAll`.
+
+  Outside the charts: `ProgressComponent` gains `target`, `max` and the protected `scale`,
+  `clampedTarget`, `targetPercent` and `valuePercent`, and the internal message base the fields and
+  the button extend — unexported from the package root — gains a protected
+  `reserveFollowsFieldDefault`.
+
+  A subclass declaring any of those names collides. For a public or protected member the fix is
+  `override` or a rename; for a private one only a rename works, because TS2415 fires on the name
+  and `override` does not clear it.
+
+### Fixed
+
+- **`ds-line-chart` draws from axis to axis.** Its readings sat at the centre of a slot each, which
+  left an empty strip of plot against the value axis and another against the far edge — a gap that
+  reads as data the chart is withholding. The first reading is on the value axis now and the last
+  at the far edge, with the rest dividing the run evenly. The crosshair band is centred on its
+  reading and clamped at both ends, so the first and last are half-width and neither hangs over an
+  axis label.
+
+- **A drag across a chart no longer selects its chrome.** Axis ticks, legend labels and the caption
+  a screen reader needs — clipped to a thin strip for everyone else — all came out selected, and the
+  selection painted as bars across the card over content that is not visibly there. The plot is
+  `user-select: none` now; the annex table, the funnel's stage table and the visible caption stay
+  selectable, because those carry numbers people copy.
+
+- **Clicking a slice or a band no longer draws a rectangle around it.** Chromium focuses an SVG
+  shape when it is clicked even with no `tabindex` on it, and reports that focus as NOT
+  `:focus-visible` — so a rule keyed on `:focus-visible` never fired and the browser painted its
+  own outline instead. On a ring arc or a funnel band an outline is the BOUNDING BOX, which stood
+  off the shape and read as a selection nobody asked for. `ds-donut-chart`, `ds-funnel-chart` and
+  `ds-line-chart` marks now suppress it on `:focus`. The keyboard indicator is untouched: it is a
+  stroke that follows the silhouette, and it still paints under `:focus-visible`.
+
+- **`ds-column-chart`'s tooltip clears the value printed above the column.** The panel is anchored
+  to the column and opened 12px above it, which is exactly where `showValues` prints the figure,
+  so the two overlapped. It now clears the text as well as the mark; with `showValues` off the gap
+  is unchanged.
+
+- **`ds-button` ignores the app-wide `DS_CONFIG.field.reserveMessage`.** The button takes the same
+  message line a field does, and with it took the field-wide default: an app calling
+  `provideDsConfig({ field: { reserveMessage: true } })` gave EVERY button an empty message row,
+  which turns the host from `inline-flex` into a column with a gap. One app found 125 buttons
+  across 45 files changed box that way, and nothing in the build, the types or the release notes
+  reported it. `reserveMessage` exists so a field row does not shift its neighbours as a message
+  appears, and a button is not in that column.
+
+  A button reserves only where you ask it to, with `[reserveMessage]="true"`. Fields are unchanged:
+  `DS_CONFIG.field.reserveMessage` still reaches every one of them, `ds-field-group` included.
+
+  The decision lives on the internal `DsMessageBase`, the shared message base the fields and the
+  button extend, as a protected `reserveFollowsFieldDefault`. The package root does not export it; a
+  subclass reaching it through the deep entry point and declaring that name stops building until it
+  renames the member or marks it `override`.
+
+- **Two legends on one page no longer fight over the same selection.** A legend's isolate controls
+  are radios, and every legend named the same group — so a page with more than one chart formed a
+  single document-wide group: choosing a series in one legend cleared the selection in the others,
+  and only the last-rendered legend showed one at all. Each legend now names its own group.
+
+  A legend also always shows exactly one control chosen. A leftover partial state left the group
+  with nothing checked; it settles on `All`.
+
+- **`ds-line-chart` holds its height when the last series is switched off.** The empty message
+  reserved the plot-height token alone, and the plot is an SVG sized by its ratio against the card
+  width — so on any card wider than that token the message box came up short and the card jumped.
+  It reserves the canvas ratio now, with the token as the floor for a very narrow card.
+
+### What you can now DELETE
+
+| your workaround | why it is unnecessary | replace with |
+| --- | --- | --- |
+| `--ds-chart-frame-border-width: 0` with `--ds-chart-frame-padding: 0`, written to strip the frame off a chart inside a card | the frame is an input and an app-wide config key, so reaching into the component's chrome is no longer the route | `frame="none"`, or `provideDsConfig({ chart: { frame: 'none' } })` |
+| `dataTable="none"` on a chart | the annex table is off by default, so the binding restates it | nothing — keep it only where the app-wide default is `'toggle'` and this one chart differs |
+
 ## 0.13.1 — 2026-09-14
 
 ### Added

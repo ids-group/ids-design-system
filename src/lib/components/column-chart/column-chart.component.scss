@@ -132,6 +132,7 @@ figcaption {
 // The cap, not the percentage, is what keeps this reading as a chart: at five categories 80% of
 // the cell is a slab wider than its own label, and the eye stops seeing a series.
 .bar {
+  position: relative;
   inline-size: var(--_column-chart-column-width);
   max-inline-size: var(--_column-chart-column-max-width);
   border-start-start-radius: var(--_column-chart-cap-radius);
@@ -167,3 +168,5 @@ figcaption {
 }
 
 @include chart-frame.forced-colors;
+@include chart-frame.pin-reset;
+@include chart-frame.pin-marker;

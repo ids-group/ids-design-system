@@ -6,8 +6,11 @@
   --_progress-height:      var(--ds-progress-height,      var(--progress-h));
   --_progress-track-color: var(--ds-progress-track-color, var(--surface-muted));
   --_progress-bar-color:   var(--ds-progress-bar-color,   var(--accent));
+  --_progress-target-color: var(--ds-progress-target-color, var(--text-primary));
+  --_progress-target-width: var(--ds-progress-target-width, 2px);
 
   display: block;
+  position: relative;
   width: 100%;
   height: var(--_progress-height);
   background: var(--_progress-track-color);
@@ -20,6 +23,21 @@
     background: var(--_progress-bar-color);
     border-radius: var(--radius-pill);
     transition: width var(--duration-base) var(--ease-standard);
+  }
+
+  /* A div rather than a second span: `> span` is what a consumer's own rule targets, and a
+     marker matching it would take the fill's colour and pill radius. */
+  > .target {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: var(--_progress-target-width);
+
+    /* Centred on the value it marks, so the hairline reads as the point rather than as the
+       start of a band. */
+    transform: translateX(-50%);
+    background: var(--_progress-target-color);
+    transition: left var(--duration-base) var(--ease-standard);
   }
 }
 

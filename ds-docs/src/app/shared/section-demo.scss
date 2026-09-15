@@ -38,6 +38,26 @@
   gap: var(--space-2);
   min-width: 0;
 }
+
+/* A rule between neighbouring specimens. Two charts side by side with nothing between them read as
+   one wide picture — the eye needs a boundary to know it is comparing two things rather than
+   looking at halves of one. Only BETWEEN columns, so the first cell of each row carries none. */
+.states--cols-2 > .state-cell:nth-child(2n),
+.states--cols-3 > .state-cell:not(:nth-child(3n + 1)),
+.states--cols-4 > .state-cell:not(:nth-child(4n + 1)) {
+  padding-inline-start: var(--space-4);
+  border-inline-start: var(--border-width-default) solid var(--border-divider);
+}
+
+/* Stacked in one column there is nothing to divide sideways, and a rule down the left of every
+   specimen reads as an indent nobody asked for. */
+@include bp.down(xs) {
+  .states > .state-cell {
+    padding-inline-start: 0;
+    border-inline-start: 0;
+  }
+}
+
 .state-cell-stage {
   display: flex;
   align-items: center;

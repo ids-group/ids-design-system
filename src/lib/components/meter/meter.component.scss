@@ -1,0 +1,32 @@
+:host {
+  --_meter-height: var(--ds-meter-height, 6px);
+  --_meter-track-color: var(--ds-meter-track-color, var(--surface-muted));
+  --_meter-radius: var(--ds-meter-radius, var(--radius-pill));
+
+  display: block;
+  inline-size: 100%;
+
+  // A shrink-to-fit column — `ds-table`'s `width: 'content'`, a flex or grid item — sizes a box by
+  // what it contributes intrinsically, and `inline-size: 100%` contributes nothing. Measured
+  // 2026-09-15: a meter alone in such a cell came out 0px wide. This is the floor that keeps it on
+  // screen; it is a minimum, so a wider column still gives the bar the whole cell.
+  min-inline-size: var(--ds-meter-min-width, 3rem);
+  block-size: var(--_meter-height);
+  border-radius: var(--_meter-radius);
+  background: var(--_meter-track-color);
+  overflow: hidden;
+}
+
+.fill {
+  display: block;
+  block-size: 100%;
+  border-radius: inherit;
+  background: var(--ds-meter-fill-color, var(--ds-chart-series-1-color));
+  transition: inline-size var(--duration-base) var(--ease-standard);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fill {
+    transition: none;
+  }
+}

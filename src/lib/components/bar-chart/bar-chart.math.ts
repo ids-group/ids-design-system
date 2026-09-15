@@ -25,3 +25,21 @@ export function widthPercent(value: number, max: number): number {
 
   return Math.max((value / max) * 100, 0);
 }
+
+/** Each segment's share of the row's track, in percent. Sized against the segments' OWN sum, never
+ *  the row's `value`: when the two disagree the row is a distribution that does not add up, and a
+ *  gap left where the difference is would draw that error as an unlabelled category.
+ *
+ *  A set with no positive finite total has no shares to give, and returns none. */
+export function segmentWidths(values: readonly number[]): number[] {
+  const total = values
+    .filter((value) => Number.isFinite(value) && value > 0)
+    .reduce((sum, value) => sum + value, 0);
+  if (total <= 0) {
+    return [];
+  }
+
+  return values.map((value) =>
+    Number.isFinite(value) && value > 0 ? (value / total) * 100 : 0,
+  );
+}

@@ -122,9 +122,22 @@ export function ringPoint(
   radius: number,
   angle: number,
 ): string {
-  return `${round(centerX + radius * Math.sin(angle))} ${round(
-    centerY - radius * Math.cos(angle),
-  )}`;
+  const { x, y } = ringCoords(centerX, centerY, radius, angle);
+
+  return `${x} ${y}`;
+}
+
+/** The same point as numbers, for PLACING something rather than drawing a path. */
+export function ringCoords(
+  centerX: number,
+  centerY: number,
+  radius: number,
+  angle: number,
+): { x: number; y: number } {
+  return {
+    x: round(centerX + radius * Math.sin(angle)),
+    y: round(centerY - radius * Math.cos(angle)),
+  };
 }
 
 export function arcPath(

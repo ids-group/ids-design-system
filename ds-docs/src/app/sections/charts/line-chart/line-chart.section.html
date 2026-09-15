@@ -27,6 +27,32 @@
     [(categories)]="specimenCategories"
     [(series)]="specimenSeries" />
 
+  <h3
+    class="block-title t-h4"
+    data-for="line-chart">
+    Annotations
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      annotations
+    </code> pins a label over one
+    reading, so a peak reads in a screenshot or a printed page with no pointer.
+    Each names a <code class="t-mono-inline">categoryIndex</code> and,
+    optionally, the <code class="t-mono-inline">seriesId</code> it belongs to —
+    left out, the first plotted series. A label near an edge anchors to that
+    edge instead of centring, and one whose series is hidden draws nothing. They
+    are <code class="t-mono-inline">aria-hidden</code>: the annex table already
+    carries every reading.
+  </p>
+
+  <ds-line-chart
+    caption="Sessions and signups by month"
+    dataTable="none"
+    [categories]="specimenCategories()"
+    [series]="specimenSeries()"
+    [annotations]="specimenAnnotations" />
+
   <h3 class="block-title t-h4">
     Missing readings
   </h3>
@@ -235,6 +261,143 @@
     [(series)]="manyCategorySeries" />
 
   <h3 class="block-title t-h4">
+    Tick count
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      tickCount
+    </code> asks for roughly that many
+    gridlines on the value axis. It is a request rather than a count: the scale
+    rounds to a step a reader can do arithmetic with, so five ticks over a
+    domain of 0–2,740 become 0/1K/2K/3K rather than five evenly-spaced odd
+    numbers.
+  </p>
+
+  <div class="states states--cols-2">
+    <div class="state-cell">
+      <ds-line-chart
+        dataTable="none"
+        [categories]="tickCategories()"
+        [series]="tickSeries()" />
+
+      <div class="state-cell-label">
+        tickCount = 5 (default)
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-line-chart
+        dataTable="none"
+        tickCount="3"
+        [categories]="tickCategories()"
+        [series]="tickSeries()" />
+
+      <div class="state-cell-label">
+        tickCount = 3
+      </div>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Pinning the value axis
+  </h3>
+
+  <p class="block-desc t-s">
+    A panel that opens one subject at a time derives a different axis for each,
+    so two plots with the same gentle wiggle can be four times apart in value
+    with nothing on screen saying so.
+    <code class="t-mono-inline">
+      max
+    </code> pins the axis instead, which is
+    what makes two renders comparable. Null, the default, keeps the derived
+    axis. <code class="t-mono-inline"> maxSecondary </code> does the same for
+    the axis a series reaches with
+    <code class="t-mono-inline">
+      axis: 'secondary'
+    </code>.
+  </p>
+
+  <div class="states states--cols-2">
+    <div class="state-cell">
+      <ds-line-chart
+        dataTable="none"
+        [categories]="pinnedAxisCategories()"
+        [series]="pinnedAxisLowSeries()" />
+
+      <div class="state-cell-label">
+        derived axis · a quiet series fills the plot
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-line-chart
+        dataTable="none"
+        [max]="5000"
+        [categories]="pinnedAxisCategories()"
+        [series]="pinnedAxisLowSeries()" />
+
+      <div class="state-cell-label">
+        max = 5000 · the same data, read against a fixed ceiling
+      </div>
+    </div>
+  </div>
+
+  <p class="block-desc t-s">
+    A maximum below the data does not clip it — the larger of the two wins,
+    because hiding a reading is worse than more headroom than you asked for.
+  </p>
+
+  <ds-line-chart
+    caption="max = 100, against data that goes past it"
+    dataTable="none"
+    [max]="100"
+    [categories]="pinnedAxisCategories()"
+    [series]="pinnedAxisLowSeries()" />
+
+  <h3 class="block-title t-h4">
+    Stagger
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      staggerMs
+    </code> spaces the series' arrivals
+    out, so a chart with several lines draws them one after another rather than
+    all at once. <code class="t-mono-inline">0</code>, the default, means no
+    stagger.
+  </p>
+
+  <ds-line-chart
+    dataTable="none"
+    staggerMs="80"
+    [categories]="staggerCategories()"
+    [series]="staggerSeries()" />
+
+  <docs-replay-button />
+
+  <h3 class="block-title t-h4">
+    Nothing left to draw
+  </h3>
+
+  <p class="block-desc t-s">
+    A filtering legend can switch every series off, which is a different state
+    from having no data at all — the reader did it, and can undo it.
+    <code class="t-mono-inline">
+      noVisibleSeriesText
+    </code> is what the plot
+    says then; it keeps the plot's height either way, so the page does not jump.
+  </p>
+
+  <ds-line-chart
+    legendFilters
+    dataTable="none"
+    noVisibleSeriesText="Pick a series in the legend to see it plotted"
+    [categories]="noVisibleCategories()"
+    [series]="noVisibleSeriesData()"
+    [(hiddenSeries)]="allHidden" />
+
+  <h3 class="block-title t-h4">
     Data table
   </h3>
 
@@ -278,10 +441,23 @@
     pays for it with the others.
   </p>
 
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      tooltipAnchor
+    </code> decides where the panel
+    sits: <code class="t-mono-inline"> 'point' </code>, the default, pins it
+    over the highest reading in the category, so it stays still while the
+    pointer travels within one band;
+    <code class="t-mono-inline">
+      'pointer'
+    </code> follows the cursor instead.
+  </p>
+
   <ds-line-chart
     caption="Sessions and signups — every reading is a control"
     dataTable="none"
     interactive
+    pinOnClick
     [categories]="interactiveCategories()"
     [series]="interactiveSeries()"
     (pointClicked)="
@@ -337,6 +513,57 @@
   </div>
 
   <docs-replay-button />
+
+  <h3 class="block-title t-h4">
+    What a legend control does
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      legendMode
+    </code> picks the question the
+    legend answers. <code class="t-mono-inline">isolate</code>, the default,
+    shows one series and hides the rest — one action instead of one per series,
+    which is what a reader of a crowded chart wants.
+    <code class="t-mono-inline">
+      toggle
+    </code> hides one and leaves the rest,
+    for taking a dominant series out so the others can be read at a usable
+    scale. They are different controls, not two styles of one: isolate is a
+    single choice among many and renders as radios with an All option, toggle
+    renders as checkboxes.
+  </p>
+
+  <div class="states states--cols-2">
+    <div class="state-cell">
+      <ds-line-chart
+        caption="One series at a time"
+        dataTable="none"
+        legendFilters
+        [categories]="legendCategories()"
+        [series]="legendSeries()"
+        [(hiddenSeries)]="isolateHidden" />
+
+      <div class="state-cell-label">
+        legendMode = isolate (default)
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-line-chart
+        caption="Any combination of series"
+        dataTable="none"
+        legendFilters
+        legendMode="toggle"
+        [categories]="legendCategories()"
+        [series]="legendSeries()"
+        [(hiddenSeries)]="toggleHidden" />
+
+      <div class="state-cell-label">
+        legendMode = toggle
+      </div>
+    </div>
+  </div>
 
   <h3 class="block-title t-h4">
     Filtering legend

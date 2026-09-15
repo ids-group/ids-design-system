@@ -10,8 +10,9 @@ else in. A consumer installing the package cannot observe any of it. The publish
 is also linted against naming a path outside the published tree, so an entry about this directory
 could not live there even if it were wanted.
 
-Sections mirror the package's versions, because the upload tree is rebuilt and committed inside
-the release commit — one timeline, two audiences.
+Sections mirror the package's versions, because the upload tree is rebuilt once per release —
+by the after-release `build-design-sync.sh`, which commits it to main straight after the tag. One
+timeline, two audiences.
 
 ## Unreleased
 
@@ -23,6 +24,23 @@ the release commit — one timeline, two audiences.
   remove anything: `delete_files` is refused for a non-owner, so the **thirteen** paths the build no
   longer produces are still there and are all listed in `obsolete.txt` for the owner to clear —
   ten of them were added to that list by this run, having been left behind by earlier renames.
+
+### Build
+
+- **The upload tree is no longer rebuilt inside the release commit.** `prepare-release-commit.mjs`
+  ran `build-upload.mjs` in the `version` hook, and `cut-release.sh` ran a full
+  `build:elements` before the bump to feed it. Neither survived contact with what
+  `build-design-sync.sh` does afterwards: that step has a browser, so it measures the card
+  heights and freezes the cards, then commits the corrected tree to main. The release-commit copy
+  was live, unmeasured and stamped with the outgoing version, and the tree is not in the npm
+  tarball, so the tag never needed one. Two builds out of three are gone, and a build failure can
+  no longer land inside `npm version` — which `cut-release.sh` runs a few lines before it
+  pushes main.
+
+- **`check-manual-surface` and `check-doc-api` run on the PR.** They need `gen/sections.json`,
+  which is gitignored, so `ci-pr.sh` runs `gen.mjs` first — a TypeScript AST read of about
+  2.5 seconds, not the Angular build. An undocumented component and an unregistered section are
+  both caught where the component is added.
 
 ### Cards
 
@@ -36,6 +54,11 @@ the release commit — one timeline, two audiences.
   bottom-sheet, tree, loading-overlay, scrollbar.
 
 ### Docs
+
+- **`docs/Meter.md` was added, documenting the new `ds-meter`.** A component with no doc is an
+  `ENOENT` in `build-cards`, and `build-cards` first runs during the release — so the missing
+  file stopped a release rather than a PR. The gate that catches it is now on the PR (see Build).
+
 
 - **Seven component docs promised an `open` prop that does not exist.** Autocomplete, ColorPicker,
   DatePicker, MultiSelect, Select, SplitButton and TimePicker each documented it, so an agent

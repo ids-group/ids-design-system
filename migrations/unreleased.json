@@ -1,0 +1,269 @@
+{
+  "version": "unreleased",
+  "items": [
+    {
+      "id": "chart-share-of-total-behind-part-of-whole",
+      "kind": "behavior",
+      "old": "ds-bar-chart",
+      "new": null,
+      "surface": "template",
+      "action": "Add `partOfWhole` to any `ds-bar-chart` or `ds-column-chart` whose categories genuinely divide one total, to keep the `18.6% of total` line `0.13.1` put in its tooltip. Leave it off everywhere else — the line disappears and the tooltip reads as it did before `0.13.1`.",
+      "appliesWhen": "Only `ds-bar-chart` and `ds-column-chart`. `ds-donut-chart` and `ds-funnel-chart` state their own percentages from their own geometry and are untouched; `ds-line-chart` never had the line.",
+      "pitfall": "Nothing errors and nothing logs — the second line simply stops appearing. The reverse is the worse failure: leaving `partOfWhole` on a chart whose marks are a funnel or a time series states a share of a total that does not exist as a quantity.",
+      "restore": "Set `partOfWhole` on the chart.",
+      "searchHints": [
+        "ds-bar-chart",
+        "ds-column-chart",
+        "of total",
+        "partOfWhole"
+      ],
+      "detect": [
+        "ds-bar-chart",
+        "ds-column-chart"
+      ],
+      "verify": "Every chart that still shows a share on its tooltip carries `partOfWhole`, and every chart carrying it has categories that add up to a total a reader can name.",
+      "note": "A share of a total is only a real quantity when the marks are parts of one whole. `0.13.1` stated one unconditionally, which made the figure meaningless on funnel-shaped and time-series data. The input also governs the new `Share of total` column in the data table."
+    },
+    {
+      "id": "exported-class-members-grew",
+      "kind": "behavior",
+      "old": "BarChartComponent",
+      "new": null,
+      "surface": "typescript",
+      "action": "Only if you SUBCLASS a chart component, or the internal legend or tooltip directive that the package root does not export, and declare a member of the same name: rename yours, or add `override` where your member genuinely means the same thing. A private base member — `detachEscape` and `closeOnEscape` — can only be resolved by renaming yours.",
+      "appliesWhen": "Only a class extending one of the five chart components, or extending the internal legend or tooltip directive, neither of which the package root exports. A template that uses the charts needs nothing.",
+      "pitfall": "The collision is a compile error, not a silent one — TS4114 for a same-named member, TS2416 where the signature differs — so a build that passes has none.",
+      "restore": null,
+      "searchHints": [
+        "pinOnClick",
+        "partOfWhole",
+        "legendMode",
+        "onMarkClick",
+        "onMarkerClick",
+        "mode",
+        "tooltipLingerMs",
+        "max",
+        "maxSecondary",
+        "drop",
+        "annotations"
+      ],
+      "detect": [
+        "extends BarChartComponent",
+        "extends ColumnChartComponent",
+        "extends DonutChartComponent",
+        "extends FunnelChartComponent",
+        "extends LineChartComponent",
+        "extends ChartLegendComponent",
+        "extends ChartTooltipDirective",
+        "BarChartComponent",
+        "ColumnChartComponent",
+        "DonutChartComponent",
+        "FunnelChartComponent",
+        "LineChartComponent",
+        "ChartLegendComponent",
+        "ChartTooltipDirective",
+        "extends ProgressComponent",
+        "ProgressComponent",
+        "DsMessageBase",
+        "extends DsMessageBase"
+      ],
+      "verify": "No subclass declares a member named `pinOnClick`, `partOfWhole`, `legendMode`, `tooltipLingerMs`, `max`, `maxSecondary`, `drop`, `annotations`, `onMarkClick`, `onMarkerClick`, `pinnedCategory`, `releaseCategoryPin`, `mode`, `isolated`, `isolate`, `showAll`, `hideAll`, `groupName`, `target`, `detachEscape` or `closeOnEscape`; the app builds with no TS4114, TS2415 or TS2416 on those classes.",
+      "note": "Pinning, the share gate, the legend mode and the tooltip linger each added members to the classes that carry them. Subclassing a DS component is unsupported, but a release that only adds can still fail such a build on a name collision, which is why the additions are listed here rather than in the additive notes. `ds-funnel-chart` gained `drop`, `ds-line-chart` gained `max`, `maxSecondary` and `annotations`, `ds-progress` gained `target` and `max`, and the shared message base behind the fields and the button — internal, and not exported from the package root — a protected flag deciding whether an unset reserve follows the app-wide field default."
+    },
+    {
+      "id": "chart-legend-isolates-by-default",
+      "kind": "behavior",
+      "old": "ds-line-chart",
+      "new": null,
+      "surface": "template",
+      "action": "Add `legendMode=\"toggle\"` to any `ds-line-chart` with `legendFilters` whose legend should keep hiding one series at a time. Leave it off and the legend isolates instead: choosing a series shows that one and hides the rest.",
+      "appliesWhen": "Only a `ds-line-chart` that sets `legendFilters`. A chart with a plain key legend is unchanged, and so is `hiddenSeries` — it carries the same ids in both modes, so a page driving it from a URL parameter needs nothing.",
+      "pitfall": "Nothing errors. The legend changes SHAPE as well as behaviour — checkboxes become a radio group with an `All` option — so a screenshot test of the legend and any test clicking a checkbox by role will both need updating.",
+      "restore": "Set `legendMode=\"toggle\"`.",
+      "searchHints": [
+        "legendFilters",
+        "legendMode",
+        "hiddenSeries",
+        "legend-check"
+      ],
+      "detect": [
+        "legendFilters",
+        "ds-line-chart"
+      ],
+      "verify": "Every filtering legend either isolates deliberately or carries `legendMode=\"toggle\"`, and any test that clicked a legend checkbox has been updated for the mode it now renders.",
+      "note": "Isolate answers the question a reader of a crowded chart actually asks — show me only this — in one action rather than one per series. The two are different controls, so isolate renders as radios and toggle as checkboxes, which is what gives each the keyboard and screen-reader behaviour it should have."
+    },
+    {
+      "id": "button-drops-the-app-wide-reserve-message-default",
+      "kind": "behavior",
+      "old": "ButtonComponent",
+      "new": null,
+      "surface": [
+        "style",
+        "template"
+      ],
+      "action": "Only if your app sets `provideDsConfig({ field: { reserveMessage: true } })` AND a layout was built around the taller buttons that produced: add `[reserveMessage]=\"true\"` to the buttons that should keep the reserved row, or drop the local spacing that compensated for it.",
+      "appliesWhen": "Only an app that sets the app-wide `field.reserveMessage`. A button binding `[reserveMessage]` itself is unchanged, and so is every field — `DS_CONFIG.field.reserveMessage` still reaches them, `ds-field-group` included.",
+      "pitfall": "Nothing errors and the buttons get SHORTER, so a broken layout looks like tightened spacing rather than a regression. The tell is a button row that used to line up with a field row beside it and now sits higher.",
+      "restore": "[reserveMessage]=\"true\"",
+      "searchHints": [
+        "reserveMessage",
+        "provideDsConfig"
+      ],
+      "detect": [
+        "reserveMessage: true",
+        "field: { reserveMessage",
+        "provideDsConfig",
+        "with-message"
+      ],
+      "verify": "No `<ds-button>` renders an empty message row unless it binds `[reserveMessage]=\"true\"`, and every field still reserves under the app-wide default.",
+      "note": "The button takes the field message line without being a field row, and it took the field-wide default with it. `reserveMessage` exists so a field does not shift its neighbours when a message appears; a button sits outside that column, so the app-wide value now reaches fields alone and a button opts in per instance."
+    },
+    {
+      "id": "chart-frame-leaves-through-an-input",
+      "kind": "behavior",
+      "old": "ds-bar-chart",
+      "new": null,
+      "surface": "template",
+      "action": "Replace a stylesheet rule that zeroed the frame — `--ds-chart-frame-border-width: 0` with `--ds-chart-frame-padding: 0` on the chart tags — with `provideDsConfig({ chart: { frame: 'none' } })`, or `frame=\"none\"` on the odd chart that differs. Nothing is required: the custom properties still work.",
+      "appliesWhen": "Only an app that turns the chart frame off. The frame still draws by default, so an app that never touched it sees no change.",
+      "pitfall": "Nothing breaks either way. The custom properties and the input reach the same box, so setting both is harmless but means two places to look when the frame is wrong.",
+      "restore": null,
+      "searchHints": [
+        "ds-bar-chart",
+        "ds-column-chart",
+        "ds-donut-chart",
+        "ds-funnel-chart",
+        "ds-line-chart",
+        "--ds-chart-frame-border-width",
+        "--ds-chart-frame-padding"
+      ],
+      "detect": [
+        "ds-bar-chart",
+        "ds-column-chart",
+        "ds-donut-chart",
+        "ds-funnel-chart",
+        "ds-line-chart"
+      ],
+      "verify": "No global stylesheet reaches into a chart's frame; the app sets `DS_CONFIG.chart.frame` or a per-chart `frame` instead.",
+      "note": "Whether charts live inside cards is decided once for an app, the same as `dataTable` — so it belongs beside it in `DS_CONFIG` rather than in a deep selector."
+    },
+    {
+      "id": "chart-data-table-off-by-default",
+      "kind": "behavior",
+      "old": "ds-bar-chart",
+      "new": null,
+      "surface": "template",
+      "action": "Set `dataTable=\"toggle\"` on any chart whose numbers are NOT already on the page, or `provideDsConfig({ chart: { dataTable: 'toggle' } })` to restore the old default for a whole app.",
+      "appliesWhen": "Every chart that relied on the default. A chart already setting `dataTable` explicitly is unchanged.",
+      "pitfall": "Nothing errors, and nothing looks broken — the disclosure simply stops being rendered. Where the annex was the only non-visual route to the numbers, removing it silently takes that route away, which is why this is worth a decision rather than a default.",
+      "restore": "Set `dataTable=\"toggle\"`, or the `DS_CONFIG` default.",
+      "searchHints": [
+        "dataTable",
+        "provideDsConfig",
+        "data-table"
+      ],
+      "detect": [
+        "dataTable",
+        "ds-bar-chart",
+        "ds-column-chart",
+        "ds-donut-chart"
+      ],
+      "verify": "Every chart whose page does not otherwise carry its numbers sets `dataTable` explicitly, and no page shows an annex disclosure nobody asked for.",
+      "note": "`dataTable` now defaults to `'none'` rather than `'toggle'`, on all five charts and in `DS_CONFIG.chart.dataTable`. A disclosure under every plot is chrome the page did not ask for, and the page usually carries the numbers already."
+    },
+    {
+      "id": "chart-tooltip-linger-off-by-default",
+      "kind": "behavior",
+      "old": "ds-bar-chart",
+      "new": null,
+      "surface": [
+        "template",
+        "config"
+      ],
+      "action": "Only where a chart tooltip holds something the reader has to REACH with the pointer — a link, a figure, a selectable string: set `[tooltipLingerMs]=\"140\"` on that chart, or `DS_CONFIG.chart.tooltipLingerMs = 140` where every tooltip in the app carries one. Everywhere else, nothing.",
+      "appliesWhen": "All five charts and any `tooltipTemplate` they render. A chart whose tooltip is the built-in label-and-value panel needs nothing — there is nothing in it to reach.",
+      "pitfall": "Nothing errors and nothing logs. A custom `tooltipTemplate` carrying a link keeps rendering the link, and the panel simply closes before the pointer can arrive — so the link is unreachable by pointer while still being in the DOM, which reads as a broken control rather than a missing setting.",
+      "restore": "Set `DS_CONFIG.chart.tooltipLingerMs = 140` to put the grace back on every chart at once.",
+      "searchHints": [
+        "tooltipTemplate",
+        "dsChartTooltip",
+        "ds-chart-tooltip-pane",
+        "tooltipLingerMs"
+      ],
+      "detect": [
+        "tooltipTemplate",
+        "ds-chart-tooltip-pane",
+        "DS_CONFIG",
+        "provideDsConfig"
+      ],
+      "verify": "Every chart whose tooltip template renders an anchor, a button or text a reader would select carries a non-zero `tooltipLingerMs`; every other chart carries none.",
+      "note": "A panel that outlives the pointer sits over the plot the reader has moved on to, so the delay is off. WCAG 1.4.13 asks that a hover-triggered panel be hoverable, dismissible and persistent — the first clause only bites when there is something in the panel to reach, and the built-in panel is one line of text. Dismissible and persistent hold at every value, because Escape and the latch are not on this timer."
+    },
+    {
+      "id": "chart-active-mark-gains-release",
+      "kind": "behavior",
+      "old": "ChartActiveMark",
+      "new": null,
+      "surface": "typescript",
+      "action": "Only if a class of yours IMPLEMENTS the internal `ChartActiveMark` by hand — it is not exported from the package root, only from the chart-tooltip entry point: add a `release(): void` that clears the pinned mark. Code that calls the factory needs nothing.",
+      "appliesWhen": "Only a hand-written implementation of that internal interface. Every chart binding, and every caller of the factory that returns one, is unaffected — the factory implements the method already.",
+      "pitfall": "The compiler names it (TS2420 on the class, TS2739 on a literal), so a build that passes has none. What it cannot see is a `release` that does nothing: the Unpin control and Escape both route through it, so an empty one leaves a mark pinned with a button that looks live.",
+      "restore": null,
+      "searchHints": [
+        "ChartActiveMark",
+        "chartActiveMark"
+      ],
+      "detect": [
+        "implements ChartActiveMark",
+        ": ChartActiveMark",
+        "ChartActiveMark"
+      ],
+      "verify": "Every hand-written implementation of that internal interface declares `release()`, and calling it leaves no mark pinned.",
+      "note": "A pinned mark now offers a control that releases it, and the internal interface is what the charts call to do so. Unexported from the package root, so only a deep import can reach it, which is why the item is narrow."
+    }
+  ],
+  "informational": [
+    "`ds-bar-chart` and `ds-column-chart` gained a `Share of total` column in their data table, shown only under `partOfWhole`. It carries the same figure as the tooltip's second line, so a reader who cannot hover now has a route to it. The heading says `Share of total` rather than `Share` because `ds-bar-chart` already prints a percentage beside each row and that one is the share of the largest row, not of the sum.",
+    "A chart tooltip can be selected and dismissed with Escape, which WCAG 1.4.13 requires of anything shown on hover. The panel still closes the moment the pointer leaves the mark; reaching it with the pointer is `tooltipLingerMs`, which is `0` — see the actionable item of the same name. Nothing in your code changes. One thing will notice: a rule of yours setting `pointer-events` on `.ds-chart-tooltip-pane` decides whether the panel can be selected at all, and must stay `auto`.",
+    "Every chart gained `pinOnClick`, off by default. With it set, clicking a mark holds that mark, its tooltip and — where `dimOthers` is on — the dimming of the other marks, until Escape or a press outside releases it. The click output fires either way. On `ds-line-chart` the pin hangs off the data markers, so Enter and Space pin from the keyboard too.",
+    "`ds-progress` takes a `target`: a second point on the same 0–100 scale, drawn as a hairline across the track so a bar reads actual against a goal or a baseline. It is clamped like `value`, ignored while `indeterminate`, and unset draws nothing, so every existing bar is unchanged. `role=\"progressbar\"` carries one value and no second, so the mark is visual only — put the comparison in `ariaLabel`. `--ds-progress-target-color` and `--ds-progress-target-width` set its look. It also takes `max`, the scale `value` and `target` are read against: left at 100 they stay percentages and nothing existing changes, while setting the real total makes `aria-valuenow` and `aria-valuemax` carry the measurement rather than a percentage the caller had to compute.",
+    "Clicking a mark on ds-donut-chart, ds-funnel-chart or ds-line-chart no longer leaves a rectangular outline around it. Chromium focuses an SVG shape on click even without a tabindex and reports that focus as not :focus-visible, so the browser painted its own bounding-box outline. The marks suppress it on :focus now; the keyboard indicator is a stroke that follows the shape and is unchanged. A screenshot test that captured a clicked slice or band will differ.",
+    "A ds-column-chart tooltip opens far enough above the column to clear the value that showValues prints on top of it. Nothing in your code changes; a test asserting the panel position relative to the column will see it roughly one text line higher.",
+    "`ds-line-chart` takes `annotations`: labels pinned over their readings, each naming a `categoryIndex`, a `label` and optionally the `seriesId` it belongs to. Nothing is drawn without them, so every existing chart is unchanged. A label sits above its reading, below it where the plot has no room, and anchors to its own edge near one; a hidden series takes its annotations with it. Marked `aria-hidden`, because the annex table already carries every reading. `--ds-line-chart-annotation-color`, `-font-size`, `-weight`, `-halo-color` and `-halo-width` set its look.",
+    "A drag across a chart no longer selects its chrome: axis ticks, legend labels and the visually-hidden caption came out selected and painted as bars over the card. The plot is `user-select: none` now. The annex table, the funnel's stage table and the visible caption stay selectable — those carry numbers people copy.",
+    "A pinned mark carries a pushpin on an opaque disc on all five charts, and an `Unpin` button appears centred above the plot while anything is pinned. Nothing in your code changes; a screenshot test of a pinned chart will differ.",
+    "`ds-line-chart` places its first reading ON the value axis and its last at the far edge, instead of centring each reading in a slot. The line now fills the plot rather than floating half a slot inside it. Nothing in your code changes. Two things will notice: a screenshot test of a line chart, and any test asserting a marker x — the spacing between readings is now the plot width divided by one less than the reading count.",
+    "A `ds-bar-chart` row takes `segments`: parts that divide the row’s bar without shortening it, sized against their own sum so they always fill it. The bar keeps the length its `value` earns, each part takes the categorical palette in order, and each reaches the annex table as its own row. Rows without `segments` are unchanged.",
+    "A `ds-bar-chart` row takes `detail`: a second, already-formatted reading printed under the label and carried into the annex table, for a row that encodes a ratio the bar can only draw half of. Rows without it are unchanged.",
+    "`ds-line-chart` takes `max` and `maxSecondary`, which pin the value axis so two renders of the same panel are comparable. Null, the default, keeps the derived axis; a maximum below the data does not clip it, because the larger of the two wins.",
+    "`ds-funnel-chart` takes `drop`, which says what its Drop column reports: `relative` (the default, and what it always showed) is the share that leaked at that stage, `absolute` the count, `none` removes the column. Charts that set nothing are unchanged.",
+    "A `ds-chart-legend` in its isolate mode gained a `None` option and always keeps one option chosen, so the radio group can reach an empty plot and never reads as undecided. Each legend now scopes its radio group to itself, so several charts on one page no longer share a single selection.",
+    "`ds-meter` is new: one track and one fill for a measurement inside a table cell, taking `value`, `max`, `color` and `ariaLabel`. It is the in-cell alternative to a chart, and is not `ds-progress` — it carries `role=\"meter\"` only when `ariaLabel` names it, and is `aria-hidden` otherwise. Nothing existing changes.",
+    "A pinned mark offers an `Unpin` control: `ds-bar-chart`, `ds-column-chart`, `ds-donut-chart` and `ds-funnel-chart` render a pill button above the plot while one is held, and `ds-donut-chart` and `ds-funnel-chart` draw a pin glyph at the pinned slice or band. The glyph takes no pointer events. `--ds-chart-pin-size` sizes it and the button carries `.pin-reset`; nothing in your code changes, and a chart with no pin shows neither.",
+    "A toggleable `ds-chart-legend` in `isolate` mode offers a `None` control beside `All`, so the plot can be cleared in one action. Additive: the existing controls and the `hidden` model are unchanged.",
+    "Two legends on one page no longer share a selection. The isolate controls are radios and every legend named the same group, so a page with several charts formed one document-wide group — choosing a series in one cleared the others, and only the last-rendered legend showed a selection. Each legend names its own group now, and a leftover partial state settles on `All` rather than leaving nothing chosen. Nothing in your code changes.",
+    "`ds-line-chart` keeps its height when the last series is switched off. The empty message reserved `--ds-line-chart-plot-height` alone while the plot is an SVG sized by its ratio against the card width, so on a wider card the box came up short and the card jumped. It reserves the canvas ratio now, with the token as the floor."
+  ],
+  "deleteList": [
+    {
+      "id": "chart-frame-css-override",
+      "surface": "style",
+      "find": [
+        "--ds-chart-frame-border-width",
+        "--ds-chart-frame-padding: 0"
+      ],
+      "why": "the frame is an input and an app-wide config key now, so stripping it no longer means reaching into the component’s own chrome",
+      "replaceWith": "`frame=\"none\"` on the chart, or `provideDsConfig({ chart: { frame: \"none\" } })` for the app"
+    },
+    {
+      "id": "chart-data-table-none-binding",
+      "surface": "template",
+      "find": [
+        "dataTable=\"none\""
+      ],
+      "why": "the annex table is off by default, so the binding restates the default",
+      "replaceWith": "nothing — keep it only where the app-wide default is `toggle` and this one chart differs"
+    }
+  ]
+}

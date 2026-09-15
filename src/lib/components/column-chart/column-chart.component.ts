@@ -19,15 +19,18 @@ import {
   niceMax,
   tickStep,
   describeShare,
+  shareOfTotal,
   focusMark,
   nextRovingIndex,
   staggerDelay,
   tickValues,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
+import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 import type {
   ChartDataTable,
+  ChartFrame,
   ChartValueFormat,
 } from '@ids-group-ltd/ids-design-system/core';
 import {
@@ -46,9 +49,10 @@ const defaultValueFormat = (value: number) => formatValue(value);
 @Component({
   selector: 'ds-column-chart',
   standalone: true,
-  imports: [SkeletonComponent, ChartTooltipDirective],
+  imports: [SkeletonComponent, ChartTooltipDirective, IconComponent],
   templateUrl: './column-chart.component.html',
   styleUrl: './column-chart.component.scss',
+  host: { '[class.framed]': "frameResolved() === 'auto'" },
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -63,6 +67,23 @@ export class ColumnChartComponent {
    *  snapped to a round step, so the axis may carry one more or one fewer. */
   readonly tickCount = input(5, { transform: numberAttribute });
 
+  /** Whether the chart draws its own bordered, padded box. `'auto'`, the default, draws it;
+   *  `'none'` leaves the chart bare, for one placed inside a card the page has already drawn.
+   *  Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards
+   *  is one decision per app rather than per plot. */
+  readonly frame = input<ChartFrame | null>(null);
+
+  /** How long the tooltip stays after the pointer leaves the mark, in milliseconds. Zero, the
+   *  default, takes it away at once: a panel that outlives the pointer sits over the plot the
+   *  reader has moved on to.
+   *
+   *  Raise it only for a panel a reader has to REACH — one carrying a link, a figure, or anything
+   *  selectable — which is WCAG 1.4.13's hoverable clause. The panel is portaled to the body, so
+   *  crossing the gap to it at an ordinary pointer speed needs about 140. Unset falls back to
+   *  `DS_CONFIG.chart.tooltipLingerMs`, then 0. */
+  readonly tooltipLingerMs = input<number | null>(null, {
+    transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
+  });
   /** Printed above the plot as the chart's visible title, and reused as the annex table's
    *  caption. */
   readonly caption = input<string | null>(null);
@@ -73,8 +94,14 @@ export class ColumnChartComponent {
   /** The label-and-value table under the plot: `'toggle'` puts it behind a disclosure,
    *  `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so
    *  `'none'` belongs only where the same data is already in a table on the page.
-   *  Unset falls back to `DS_CONFIG.chart.dataTable`, then `'toggle'`. */
+   *  Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`. */
   readonly dataTable = input<ChartDataTable | null>(null);
+  /** Declares that the marks are parts of one whole, which is what makes a share of their total a
+   *  real quantity. Off by default: a chart of visitors per stage or revenue per month sums to a
+   *  number nobody can point at, and "18.6% of total" against it is arithmetic dressed as a fact.
+   *  On, each mark's share appears on the tooltip's second line and in the data table. */
+  readonly partOfWhole = input(false, { transform: booleanAttribute });
+
   /** Draws skeleton marks in place of the data, at the same count, so the chart does not resize
    *  when the data lands. */
   readonly loading = input(false, { transform: booleanAttribute });
@@ -95,10 +122,15 @@ export class ColumnChartComponent {
    *  grouping with a K/M/B suffix past four digits. */
   readonly valueFormat = input<ChartValueFormat | null>(null);
 
+  readonly frameResolved = resolveWithConfig(
+    this.frame,
+    (config) => config.chart?.frame,
+    'auto' as ChartFrame,
+  );
   readonly dataTableResolved = resolveWithConfig(
     this.dataTable,
     (config) => config.chart?.dataTable,
-    'toggle' as ChartDataTable,
+    'none' as ChartDataTable,
   );
   readonly emptyTextResolved = resolveWithConfig(
     this.emptyText,
@@ -124,6 +156,12 @@ export class ColumnChartComponent {
   /** The point that was clicked, or activated with Enter or Space. Fires whether or not
    *  `interactive` is set. */
   readonly pointClicked = output<ColumnChartPoint>();
+
+  /** Holds the hovered mark and its tooltip in place when it is clicked, until Escape or a press
+   *  outside releases it. Off by default: a click is already the drill-down hook, and a mark left
+   *  lit after the pointer has gone needs a reader who knows why it is lit. `pointClicked` fires
+   *  either way — pinning is a state, not a handler. */
+  readonly pinOnClick = input(false, { transform: booleanAttribute });
 
   /** Dims every OTHER mark while one is hovered or focused, so the reader's eye is held on the
    *  one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed
@@ -155,7 +193,36 @@ export class ColumnChartComponent {
    *  top of the plot whatever the column's value. */
   readonly tooltipAnchor = input<'mark' | 'cell'>('mark');
 
-  protected readonly activeMark = chartActiveMark();
+  /** The value is printed ABOVE the column, so a panel anchored to the column alone opens on top
+   *  of that number. One text line of clearance puts it above both. */
+  protected readonly valueClearance = computed(() =>
+    this.showValues() ? 18 : 0,
+  );
+
+  private readonly tooltipLingerResolved = resolveWithConfig(
+    this.tooltipLingerMs,
+    (config) => config.chart?.tooltipLingerMs,
+    0,
+  );
+
+  protected readonly activeMark = chartActiveMark(() =>
+    this.tooltipLingerResolved(),
+  );
+
+  protected onMarkClick(
+    payload: ColumnChartPoint,
+    index: number,
+    event: Event,
+  ): void {
+    this.pointClicked.emit(payload);
+    if (this.pinOnClick()) {
+      this.activeMark.pin(
+        index,
+        event,
+        this.tooltipAnchor() === 'mark' ? '.bar' : undefined,
+      );
+    }
+  }
 
   protected onMarkEnter(index: number, event: Event): void {
     this.activeMark.enter(
@@ -203,10 +270,12 @@ export class ColumnChartComponent {
             value: entry.point.value,
             formatted: entry.formattedValue,
             color: entry.color,
-            detail: describeShare(
-              this.data().map((point) => point.value),
-              this.activeMark.index(),
-            ),
+            detail: this.partOfWhole()
+              ? describeShare(
+                  this.data().map((point) => point.value),
+                  this.activeMark.index(),
+                )
+              : undefined,
           },
         ],
       };
@@ -241,12 +310,14 @@ export class ColumnChartComponent {
   protected readonly columns = computed(() => {
     const axisMax = this.axisMax();
     const format = this.valueFormatResolved();
+    const values = this.data().map((point) => point.value);
 
     return this.data().map((point, index) => ({
       key: point.id ?? String(index),
       point,
       heightPercent: heightPercent(point.value, axisMax),
       formattedValue: format(point.value),
+      share: this.partOfWhole() ? shareOfTotal(values, index) : '',
       color:
         point.color ?? CHART_SERIES_COLORS[index % CHART_SERIES_COLORS.length],
     }));

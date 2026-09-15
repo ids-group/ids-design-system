@@ -85,11 +85,12 @@
   }
 }
 
-/* A chart tooltip is read, never clicked, and it opens UNDER the pointer that summoned it. The CDK
-   pane defaults to `pointer-events: auto`, so without this the panel covers the plot, the plot
-   takes a `pointerleave`, the chart clears its hover, the panel closes, the pointer lands on the
-   plot again — and the whole thing flickers for as long as the cursor sits there. `pointer-events`
-   on the panel alone is not enough: the pane is a wrapper the panel cannot reach. */
+/* The pane takes the pointer, so the panel can be reached and its text selected — WCAG 1.4.13
+   requires that of anything shown on hover. What stops the flicker an interactive pane used to
+   cause (panel covers the plot, plot takes a `pointerleave`, chart clears, panel closes, pointer
+   lands on the plot again) is the grace period on the chart's own leave, in `chart-active-mark.ts`.
+   The two are one mechanism: make the pane inert again and the criterion breaks silently; drop the
+   grace and the flicker returns. */
 .cdk-overlay-pane.ds-chart-tooltip-pane {
-  pointer-events: none;
+  pointer-events: auto;
 }

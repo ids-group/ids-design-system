@@ -14,14 +14,14 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**98 open — 1 P1, 32 P2, 65 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**102 open — 1 P1, 35 P2, 66 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 1
 
 - **Framework & forms**
   - Upgrade to Angular 22 — and re-verify the signal-forms work against it, because one of its breaking changes lands exactly there
 
-### P2 — 32
+### P2 — 35
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Nothing catches a shell that rings on `:focus-within` when it means the keyboard
@@ -41,6 +41,10 @@ item and nothing else.
   - `.design-sync/conventions.md` is a generator INPUT, and nothing stops a reflow desyncing it
   - The elements demo has not been opened in a real browser since the rebuilds
   - `ds-toast-region`'s dev-warning strip is unverified
+- **Charts and fields the ECM prototype could not use (recorded 2026-09-15, Stas: take all five)**
+  - No component draws one bar whose segments are the parts of a whole — and it is a chart
+  - `ds-progress` cannot show a target beside the fill
+  - `ds-line-chart` cannot be told its value-axis maximum, so two plots of the same measure
 - **Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)**
   - A1 - build the seam and ONE directive, and measure what the seam itself costs
   - Build-time `define` flag: a consumer CAN strip library code from `angular.json` — measured
@@ -66,7 +70,7 @@ item and nothing else.
 - **Localization — every user-visible string is a hardcoded literal (recorded 2026-08-27, from the ITB Workspace picker report)**
   - Every user-visible string in the library is a hardcoded English literal — VALIDATED 2026-08-27 against 0.11.0; Stas: defer the whole thing, no code
 
-### P3 — 65
+### P3 — 66
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - A whole-page keyboard walk is not measurable with the tools here, and the failed
@@ -90,6 +94,8 @@ item and nothing else.
   - Which of the 8 live chapters can also be frozen
   - `templates` and `startingPoints` in `_ds_manifest.json` are in the schema and empty
   - `.thumbnail` — the project's cover image — has no source that regenerates it
+- **Charts and fields the ECM prototype could not use (recorded 2026-09-15, Stas: take all five)**
+  - `ds-funnel-chart` states the drop as a share and never as a count (arrived 2026-09-15)
 - **Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)**
   - A2 - the remaining directives, after A1 prices the seam
   - B1 - `DS_CONFIG.prototype: true` is BEHAVIOUR only. For bytes, use a build-time flag
@@ -528,6 +534,85 @@ documented thing or their chapter's demo only exists once opened. Everything bel
 # Asks — a consumer or Stas asked for it
 
 Each has somebody behind it. Nothing here is speculative work.
+
+## Charts and fields the ECM prototype could not use (recorded 2026-09-15, Stas: take all five)
+
+Ten hand-rolled charts moved onto DS components at 0.13.1. These five are what stopped the
+remaining four screens; each names the screen it blocks, so a fix has somewhere to be checked.
+
+- [ ] **[P2] No component draws one bar whose segments are the parts of a whole — and it is a chart
+  type, so it wants a design pass before code (Stas 2026-09-15: generic, take it; not started).
+  CONFIRMED BLOCKING: the consumer answered that outcome distribution cannot ship without it, and
+  that nothing else on that page waits — so this item alone holds a screen.**
+  `BarChartRow` is `{ id?, label, value, percent?, color? }` — one value per row — and neither
+  `ds-bar-chart` nor `ds-column-chart` mentions a stack. `LineChartAxisMode`'s `'stacked'` is two
+  plots over a shared category axis, a different picture entirely.
+  **Blocks** the outcome distribution on `performance-overview`: one full-width bar whose segments
+  are the outcome categories, with a list beneath carrying each segment's label, code, count and
+  percent.
+
+  **Four questions decide the shape, and answering them in code first is how this ends up wrong:**
+  - **A mode on `ds-bar-chart`, or its own component?** A stacked bar shares the axis and the
+    palette but not the row model, and `partOfWhole` already gates whether a share of the total is
+    a real quantity — a stack asserts it by construction.
+  - **What does a segment carry?** `BarChartRow.segments?: readonly BarChartSegment[]` widens a
+    PUBLISHED type, which is a `behavior` item for anyone reading a row back. A separate input
+    avoids that and splits the data model in two.
+  - **Legend and tooltip.** One legend over segment NAMES, not series — `ds-chart-legend` keys on a
+    series id today, and `isolate`/`hidden` mean something different when hiding a segment changes
+    the whole the others are parts of.
+  - **The annex table.** Every chart carries one; for a stack it has to name the segment, its value
+    and its share, which is the same table the consumer's screen draws beneath the bar anyway.
+
+- [ ] **[P2] `ds-progress` cannot show a target beside the fill.** Its inputs are `value`,
+  `variant`, `indeterminate`, `ariaLabel`; there is no second mark on the track.
+  **Blocks** the KPI cards on `performance-overview`, where the row exists to read actual against
+  target in one glance — without the mark the bar loses the comparison it is there for. Wanted: a
+  `target` input on the same scale, drawn as a hairline across the track. The smallest of the five.
+
+- [x] **[P3] A second value per bar row — closed by asking instead of building (2026-09-15).** The
+  ask wanted `12,400 → 456` in one row; two numbers with a bar encoding the ratio is a table, so the
+  question went back rather than a `detail?: string` going onto `BarChartRow`. The consumer had
+  tried neither shipped route, and named why: `ds-table` with a bar in the cell was dropped because
+  `ds-progress` took percentages only, so the cell would have needed a share computed up front —
+  the same accessibility narrowing their own §6 describes. `max` removes the reason, and
+  `[value]="requests" [max]="visitors"` is the row they wanted.
+  **Kept because it is the argument against the next one of these:** a chart row is not a place for
+  arbitrary text, and the route out was a missing input elsewhere rather than a wider row type.
+
+- [x] **[P3] There is no mark small enough for a table cell — closed by `ds-progress`, not a new
+  component (2026-09-15).** The ask wanted a `ds-meter` taking `value` and `max`, because every
+  chart is a block with caption, legend and annex table, which is far too much for a 60px cell.
+  `ds-progress` was already the thing asked for — one track, one fill, no chrome — short only a
+  `max`, which it now takes. A second component would have differed by `role="meter"` alone, and
+  that is a semantics question, not a reason to ship a near-duplicate.
+
+- [x] **[P3] A point on `ds-line-chart` cannot carry a fixed label — shipped as `annotations`
+  (2026-09-15).** `{ categoryIndex, label, seriesId? }`, drawn above the reading and below it where
+  the plot has no room, anchored to its own edge near one, and dropped with a hidden series. Haloed
+  rather than boxed so it survives crossing the line, and `aria-hidden` because the annex table
+  already carries every reading.
+
+- [ ] **[P2] `ds-line-chart` cannot be told its value-axis maximum, so two plots of the same measure
+  are not comparable (arrived 2026-09-15, after the first answer went out).** `yAxisMode` chooses how
+  the axes RELATE — `'rounded' | 'exact' | 'independent' | 'stacked'` — and none of them pins a
+  bound; `niceMax` derives one from the data on every render.
+  **What that costs, in the consumer's words:** a response-time panel is opened one agent at a time,
+  and an agent averaging 13 hrs renders on a 0–14 axis while one averaging 26 hrs renders on a 0–30
+  axis. The two plots look identical — the same gentle wiggle filling the same box — and nothing on
+  screen says the scales differ. Their hand-rolled chart pinned `chartYMax = 30` for exactly this.
+  **Wanted:** `min`/`max` on the value axis, per axis given `axis: 'secondary'` exists. A series
+  judged against a threshold keeps one frame across renders.
+
+- [ ] **[P3] `ds-funnel-chart` states the drop as a share and never as a count (arrived 2026-09-15).**
+  `formattedDrop` is `formatPercent(drop, 1)` (`funnel-chart.component.ts:290`), so the Drop column
+  is always relative.
+  **Both readings are real and they answer different questions** — what fraction leaked here, versus
+  how many records that is. On a settlement waterfall the count is the one an operator acts on:
+  22,623 records is a re-targeting job, 41.8% is a talking point. The count is recoverable by
+  subtracting two rows, and the reader should not have to.
+  **Wanted:** a `drop` input — `'relative' | 'absolute' | 'none'` — or a second column carrying the
+  count beside the share.
 
 ## Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)
 

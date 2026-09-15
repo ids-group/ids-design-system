@@ -494,11 +494,142 @@
   </div>
 
   <h3 class="block-title t-h4">
+    Reading a value without keeping the pointer still
+  </h3>
+
+  <p class="block-desc t-s">
+    An inert tooltip cannot be read at high zoom, cannot have its number
+    selected, and cannot be cleared without moving the pointer somewhere else.
+    WCAG 1.4.13 asks for all three, so every chart panel here takes the pointer
+    and
+    <kbd>
+      Esc
+    </kbd> closes it. Once cleared it stays cleared until you visit
+    another mark, so pressing <kbd> Esc </kbd> to get the panel off the screen
+    actually gets it off the screen.
+  </p>
+
+  <p class="block-desc t-s">
+    The panel goes when the pointer does — one left behind sits over the plot
+    you have moved on to.
+    <code class="t-mono-inline">
+      tooltipLingerMs
+    </code> is how long it stays
+    after the pointer leaves, and it is <code class="t-mono-inline"> 0 </code>.
+    Raise it only where a panel holds something to REACH — a link, a figure, a
+    selectable string — which is what WCAG's hoverable clause is about; the
+    built-in panel is one line of text and has nothing in it to reach. The panel
+    is portaled out of the chart, so crossing the gap to it at an ordinary
+    pointer speed takes about <code class="t-mono-inline"> 140 </code>. Set it
+    per chart, or on
+    <code class="t-mono-inline">
+      DS_CONFIG.chart.tooltipLingerMs
+    </code> for an
+    app whose tooltips all carry one.
+  </p>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      pinOnClick
+    </code> goes further on all five
+    charts: clicking a mark holds it, its tooltip, and — with
+    <code class="t-mono-inline">
+      dimOthers
+    </code> — the dimming of everything
+    else, so a comparison survives the pointer leaving the chart entirely.
+    <kbd>
+      Esc
+    </kbd> or a press outside releases it, and the click output fires
+    either way, because pinning is a state rather than a handler. On
+    <code class="t-mono-inline">
+      ds-line-chart
+    </code> the pin hangs off the
+    data markers, so <kbd> Enter </kbd> and <kbd> Space </kbd> pin from the
+    keyboard too.
+  </p>
+
+  <h3 class="block-title t-h4">
+    The frame a chart draws around itself
+  </h3>
+
+  <p class="block-desc t-s">
+    A chart draws its own bordered, padded box by default, because it is read as
+    an object — a plot with axes, a legend and an annex table — and without an
+    edge those parts run into whatever sits beside them. Inside a card the page
+    has already drawn, that is a second box around the first.
+    <code class="t-mono-inline">
+      frame="none"
+    </code> turns it off for one
+    chart; <code class="t-mono-inline"> DS_CONFIG.chart.frame </code> turns it
+    off for an app, which is where the decision usually belongs — whether charts
+    live in cards is settled once per product, not per plot.
+  </p>
+
+  <div class="states states--cols-2">
+    <div class="state-cell">
+      <ds-column-chart
+        dataTable="none"
+        [data]="frameDemoPoints()" />
+
+      <div class="state-cell-label">
+        frame = auto (default)
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-column-chart
+        frame="none"
+        dataTable="none"
+        [data]="frameDemoPoints()" />
+
+      <div class="state-cell-label">
+        frame = none
+      </div>
+    </div>
+  </div>
+
+  <p class="block-desc t-s">
+    The
+    <code class="t-mono-inline">
+      --ds-chart-frame-*
+    </code> tokens still size
+    the frame when it is on. Reaching for them to switch it OFF is the thing the
+    input replaces: a rule against a component's own chrome from a global sheet.
+  </p>
+
+  <h3 class="block-title t-h4">
+    What a chart says to a screen reader
+  </h3>
+
+  <p class="block-desc t-s">
+    A path and a set of arcs describe nothing one mark at a time, so a chart
+    does not expose its marks — it carries ONE generated sentence: its caption,
+    then each series with its readings, then a pointer to the annex table when
+    one is rendered. The plot wears that sentence as its accessible name and the
+    marks are closed off behind it.
+    <code class="t-mono-inline">
+      caption
+    </code> is the visible title and feeds
+    that sentence; the table beneath carries the numbers themselves.
+  </p>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      summary
+    </code> replaces the generated sentence
+    outright, on all five charts. Reach for it where the generated one is true
+    and useless — forty categories read out one by one, or a plot whose point is
+    a shape rather than its values ("Conversion falls sharply after the third
+    step"). Leave it alone otherwise: the generated sentence follows the data,
+    and a hand-written one goes stale the moment the numbers change.
+  </p>
+
+  <h3 class="block-title t-h4">
     App-wide chart defaults
   </h3>
 
   <p class="block-desc t-s">
-    Four things are the same decision for every chart in an app rather than a
+    Six things are the same decision for every chart in an app rather than a
     choice per plot, so they resolve through
     <code class="t-mono-inline">
       DS_CONFIG
@@ -507,19 +638,21 @@
       valueFormat
     </code> (a number reads one way in
     a product, and a formatter passed per chart drifts as soon as there are two
-    screens),
+    screens), <code class="t-mono-inline"> dataTable </code> (whether the
+    numbers behind a plot have a non-visual route is an accessibility policy),
     <code class="t-mono-inline">
-      dataTable
-    </code> (whether the numbers
-    behind a plot have a non-visual route is an accessibility policy), and the
+      frame
+    </code> (whether charts live inside
+    cards), <code class="t-mono-inline"> tooltipLingerMs </code> (a property of
+    what the app puts in its tooltips), and the
     <code class="t-mono-inline">
       emptyText
     </code> /
     <code class="t-mono-inline">
       errorText
-    </code> copy. Precedence is the input,
-    then the config, then the built-in default — so binding one on a single
-    chart still wins.
+    </code> copy. Precedence is the
+    input, then the config, then the built-in default — so binding one on a
+    single chart still wins.
   </p>
 
   <pre class="t-mono"><code>providers: [
@@ -527,6 +660,8 @@
     chart: &#123;
       valueFormat: (value) =&gt; value.toLocaleString('de-DE'),
       dataTable: 'visible',
+      frame: 'none',
+      tooltipLingerMs: 140,
       emptyText: 'Нет данных',
       errorText: 'Не удалось загрузить',
     &#125;,
