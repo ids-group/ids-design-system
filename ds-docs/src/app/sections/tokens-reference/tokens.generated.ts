@@ -927,12 +927,12 @@ export const CHARTS: readonly ColourRow[] = [
   },
   {
     "name": "--chart-focus-ring-color",
-    "value": "white",
+    "value": "var(--focus-ring-color)",
     "notes": ""
   },
   {
     "name": "--chart-focus-halo-color",
-    "value": "var(--static-ink)",
+    "value": "white",
     "notes": ""
   },
   {

@@ -121,8 +121,26 @@ export function chartActiveMark(
     }
   };
 
+  // The chart the aimed mark belongs to. Every chart puts its plot in one `<figure>`, so this is
+  // what tells "pressed another mark of the same chart" apart from "pressed away".
+  const chartOf = (element: Element | null): Element | null =>
+    element ? element.closest('figure') : null;
+
   const release = (event: PointerEvent): void => {
-    if (host && event.target instanceof Node && host.contains(event.target)) {
+    if (!(event.target instanceof Element)) {
+      clear();
+
+      return;
+    }
+    if (host && host.contains(event.target)) {
+      return;
+    }
+    // Hopping the pin from one mark to the next must not pass through "nothing is pinned". This
+    // handler runs on `pointerdown`, the re-aim on the `click` after it, so clearing here would
+    // unmount the Unpin control and the pinned styling for a frame and mount them again — a
+    // flicker on every hop. The press is a re-aim when it lands on another mark of the same chart.
+    const pressedMark = event.target.closest('[data-mark-index]');
+    if (pressedMark && chartOf(pressedMark) === chartOf(host)) {
       return;
     }
     clear();
@@ -183,8 +201,12 @@ export function chartActiveMark(
 
         return;
       }
+      // Re-aiming while already pinned keeps `pinned` true throughout, so nothing that renders on
+      // it — the Unpin control, the held mark's styling — unmounts between the two marks.
       aim(at, event, anchorWithin);
-      hold();
+      if (!pinned()) {
+        hold();
+      }
     },
   };
 }

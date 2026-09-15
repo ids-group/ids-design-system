@@ -65,6 +65,7 @@
       [class.legend-bottom]="legend() === 'bottom'"
       [attr.aria-label]="accessibleName()"
       [dsChartTooltip]="tooltipContext()"
+      [dsChartTooltipPreferBelow]="activeMark.pinned()"
       [dsChartTooltipOrigin]="activeMark.origin()"
       [dsChartTooltipTemplate]="tooltipTemplate() ?? null">
       <div
@@ -80,7 +81,9 @@
             <path
               class="slice"
               [class.interactive]="interactive()"
-              [class.is-pinned]="activeMark.pinned() && activeMark.index() === index"
+              [class.is-pinned]="
+                activeMark.pinned() && activeMark.index() === index
+              "
               [class.focusable]="ringCarriesTheRoute()"
               [attr.d]="entry.path"
               [style.fill]="entry.color"

@@ -14,8 +14,10 @@
   **For a progress bar the rename is the whole upgrade.** `value`, `max`, `variant`,
   `indeterminate`, `target` and `ariaLabel` keep their names and their defaults, and `semantics`
   defaults to `'progress'` — so a renamed `ds-progress` behaves exactly as it did.
-  `ProgressComponent` is `BarComponent` and `ProgressVariant` is `BarVariant`, both from
-  `@ids-group-ltd/ids-design-system/components/bar`.
+  `ProgressComponent` and `MeterComponent` are both `BarComponent`, and `ProgressVariant` is
+  `BarVariant` — all from `@ids-group-ltd/ids-design-system/components/bar`. A subclass of either
+  old class stops building; there is one class to extend now, and it carries every member both of
+  them had.
 
   **A renamed `ds-meter` needs one more edit.** It was `aria-hidden` unless `ariaLabel` named it;
   `ds-bar` announces as a progress bar by default. Add `semantics="none"` where the figure is
@@ -36,6 +38,37 @@
   simply returns to its default look.
 
 ### Changed
+
+- **A chart tooltip opens against its mark, not against the row that holds it.** `ds-bar-chart`
+  anchored the panel to the whole row — label, value and track — so it opened a row-height above
+  the bar it was about: 46.7px from the mark where the gap asks for 6. It anchors to the bar now.
+  The gap itself went from 12px to 6px on every chart, because a panel a finger's width off its
+  mark reads as floating free of it.
+
+- **A held mark opens its panel BELOW itself.** The Unpin control sits at the plot's top edge, and
+  a panel opening upward from a mark in the upper half landed on top of it. No z-index fixes that
+  — the panel is portaled to the body, and an app layout that isolates its stacking context traps
+  the chart's own chrome underneath whatever number it carries. Below-first while pinned keeps the
+  two apart; the other three fallbacks still catch a mark with no room under it.
+
+- **Moving a pin from one mark to another no longer blinks.** The press that re-aimed it cleared
+  the pin first and the click set it again, so the Unpin control and the held mark's styling
+  unmounted for a frame between the two marks. A press that lands on another mark of the same
+  chart is a re-aim now, and `pinned` never goes false across it.
+
+- **The pin glyph is a drawing pin seen from the side.** Head-on it read as a lamp or a bell at the
+  14px the charts badge it at.
+
+- **A focused mark wears the app's own focus colour.** The ring was white with a dark halo, which
+  on a coloured band read as an artefact rather than as a focus indicator. It is
+  `--focus-ring-color` with a light keyline around it now — the keyline is what separates it from
+  a mark of the same hue family, which is why the indicator is two tones either way.
+  `--ds-chart-focus-ring-color` and `--ds-chart-focus-halo-color` still set both.
+
+- **A chart with nothing to draw keeps its axes.** `ds-line-chart` and `ds-column-chart` render
+  the value axis and the category axis behind the empty, error and no-visible-series messages, so
+  the message stands in a plot rather than in a blank card. Without ticks or labels: there is no
+  data to scale them against. The charts with no axes — donut, funnel, bar — are unchanged.
 
 - **`ds-bar` cannot collapse to nothing in a content-sized cell.** It carries
   `min-inline-size: 3rem`, overridable through `--ds-bar-min-width`. A box sized to its content —

@@ -29,7 +29,7 @@ figcaption {
   font-weight: 600;
 }
 
-@include chart-frame.message-box(var(--_column-chart-plot-height));
+@include chart-frame.message-box(var(--_column-chart-plot-height), true);
 
 // The padding is headroom for the value printed above a column: a column that
 // reaches the top gridline is the full plot height, leaving its own label nowhere

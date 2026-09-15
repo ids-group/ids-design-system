@@ -542,7 +542,11 @@
     #rowMenuPopover
     align="end">
     <ds-menu>
-      @for (action of visibleRowActions(); track action.id; let first = $first) {
+      @for (
+        action of visibleRowActions();
+        track action.id;
+        let first = $first
+      ) {
         <!-- Not before the first item: a divider at the top of a menu separates the menu from its
              own edge, which is a line with nothing on one side of it. -->
         @if (action.divider && !first) {

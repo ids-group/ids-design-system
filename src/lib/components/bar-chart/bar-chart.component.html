@@ -39,6 +39,7 @@
       [attr.role]="interactive() ? 'group' : 'img'"
       [attr.aria-label]="accessibleName()"
       [dsChartTooltip]="tooltipContext()"
+      [dsChartTooltipPreferBelow]="activeMark.pinned()"
       [dsChartTooltipOrigin]="activeMark.origin()"
       [dsChartTooltipTemplate]="tooltipTemplate() ?? null">
       @for (entry of rows(); track entry.key; let index = $index) {
@@ -56,7 +57,7 @@
           "
           [attr.data-mark-index]="index"
           [attr.aria-label]="interactive() ? entryLabel(entry) : null"
-          (pointerenter)="activeMark.enter(index, $event)"
+          (pointerenter)="activeMark.enter(index, $event, '.track')"
           (pointerleave)="activeMark.leave()"
           (focus)="onMarkFocus(index, $event)"
           (blur)="activeMark.leave()"

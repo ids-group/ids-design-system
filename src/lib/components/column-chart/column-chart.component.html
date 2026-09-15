@@ -62,6 +62,7 @@
           [class.dims-others]="dimOthers()"
           [dsChartTooltip]="tooltipContext()"
           [dsChartTooltipExtraGap]="valueClearance()"
+          [dsChartTooltipPreferBelow]="activeMark.pinned()"
           [dsChartTooltipOrigin]="activeMark.origin()"
           [dsChartTooltipTemplate]="tooltipTemplate() ?? null">
           @for (entry of columns(); track entry.key; let index = $index) {
@@ -70,7 +71,9 @@
               animate.leave="mark-leave"
               [style.--_chart-mark-stagger]="markStagger(index)"
               [class.interactive]="interactive()"
-              [class.is-pinned]="activeMark.pinned() && activeMark.index() === index"
+              [class.is-pinned]="
+                activeMark.pinned() && activeMark.index() === index
+              "
               [attr.role]="interactive() ? 'button' : null"
               [attr.tabindex]="
                 interactive() ? (index === tabStopIndex() ? 0 : -1) : null

@@ -233,7 +233,7 @@ export class BarChartComponent {
   ): void {
     this.rowClicked.emit(payload);
     if (this.pinOnClick()) {
-      this.activeMark.pin(index, event);
+      this.activeMark.pin(index, event, '.track');
     }
   }
   /** One tab stop per chart, not one per mark: WCAG 2.1.1's Understanding is explicit that not
@@ -247,7 +247,7 @@ export class BarChartComponent {
 
   protected onMarkFocus(index: number, event: FocusEvent): void {
     this.rovingIndex.set(index);
-    this.activeMark.enter(index, event);
+    this.activeMark.enter(index, event, '.track');
   }
 
   protected onMarkNavigation(event: KeyboardEvent, index: number): void {
