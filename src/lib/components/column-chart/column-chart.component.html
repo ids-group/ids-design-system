@@ -1,4 +1,12 @@
 <figure class="column-chart">
+  @if (activeMark.pinned()) {
+    <button
+      class="pin-reset"
+      type="button"
+      (click)="activeMark.release()">
+      Reset
+    </button>
+  }
   @if (caption()) {
     <figcaption>
       {{ caption() }}

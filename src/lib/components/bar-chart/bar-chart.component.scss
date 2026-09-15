@@ -116,3 +116,5 @@ figcaption {
   filter: drop-shadow(0 0 1px var(--ds-chart-focus-ring-color));
   pointer-events: none;
 }
+
+@include chart-frame.pin-reset;

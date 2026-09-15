@@ -17,6 +17,8 @@ export interface ChartActiveMark {
   /** Holds the mark that was activated, for any pointer type. Activating the mark that is already
    *  pinned releases it, so one gesture both sets and clears. */
   pin(index: number, event: Event, anchorWithin?: string): void;
+  /** Lets go of a held mark, for a control that offers the way out in as many words. */
+  release(): void;
 }
 
 /**
@@ -165,6 +167,11 @@ export function chartActiveMark(): ChartActiveMark {
         return;
       }
       scheduleClear();
+    },
+    release() {
+      if (typeof document !== 'undefined') {
+        clear();
+      }
     },
     pin(at, event, anchorWithin) {
       if (typeof document === 'undefined') {

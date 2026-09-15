@@ -1,6 +1,14 @@
 <figure
   class="donut-chart"
   [style.--_donut-chart-hole-fraction]="hole()">
+  @if (activeMark.pinned()) {
+    <button
+      class="pin-reset"
+      type="button"
+      (click)="activeMark.release()">
+      Reset
+    </button>
+  }
   @if (caption()) {
     <figcaption>
       {{ caption() }}

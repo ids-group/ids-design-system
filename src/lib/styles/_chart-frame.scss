@@ -95,3 +95,35 @@
     text-align: center;
   }
 }
+
+/* The way out of a pin, said in a word. A held mark is a state the reader did not have before and
+   cannot obviously undo — Escape is invisible, and clicking the mark again is a guess. Small and
+   quiet in the corner: it is an exit, not an action anyone should be drawn to.
+
+   The chart owns the corner, so this sits against :host rather than the plot, which keeps it clear
+   of the marks whatever shape they are. */
+@mixin pin-reset {
+  :host {
+    position: relative;
+  }
+
+  .pin-reset {
+    position: absolute;
+    inset-block-start: var(--ds-chart-frame-padding);
+    inset-inline-end: var(--ds-chart-frame-padding);
+    z-index: 1;
+    padding: var(--space-1) var(--space-2);
+    border: var(--border-width-default) solid var(--border-divider);
+    border-radius: var(--radius-sm);
+    background: var(--surface-default);
+    color: var(--text-secondary);
+    font-size: var(--font-size-xs);
+    line-height: 1;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--text-primary);
+      border-color: var(--border-strong);
+    }
+  }
+}
