@@ -336,6 +336,17 @@
 
 ### Fixed
 
+- **`ds-button` ignores the app-wide `DS_CONFIG.field.reserveMessage`.** The button takes the same
+  message line a field does, and with it took the field-wide default: an app calling
+  `provideDsConfig({ field: { reserveMessage: true } })` gave EVERY button an empty message row,
+  which turns the host from `inline-flex` into a column with a gap. One app found 125 buttons
+  across 45 files changed box that way, and nothing in the build, the types or the release notes
+  reported it. `reserveMessage` exists so a field row does not shift its neighbours as a message
+  appears, and a button is not in that column.
+
+  A button reserves only where you ask it to, with `[reserveMessage]="true"`. Fields are unchanged:
+  `DS_CONFIG.field.reserveMessage` still reaches every one of them, `ds-field-group` included.
+
 - **`ds-table`'s pagination footer insets per side, so the summary lines up with column one.** The
   footer read `--ds-table-cell-pad-x` alone while the cells resolve `--ds-table-cell-pad-left` and
   `-right` separately. A table asking for a flush first column — `--ds-table-cell-pad-left: 0`

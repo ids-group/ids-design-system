@@ -83,6 +83,32 @@
       ],
       "verify": "Every filtering legend either isolates deliberately or carries `legendMode=\"toggle\"`, and any test that clicked a legend checkbox has been updated for the mode it now renders.",
       "note": "Isolate answers the question a reader of a crowded chart actually asks — show me only this — in one action rather than one per series. The two are different controls, so isolate renders as radios and toggle as checkboxes, which is what gives each the keyboard and screen-reader behaviour it should have."
+    },
+    {
+      "id": "button-drops-the-app-wide-reserve-message-default",
+      "kind": "behavior",
+      "old": "ButtonComponent",
+      "new": null,
+      "surface": [
+        "style",
+        "template"
+      ],
+      "action": "Only if your app sets `provideDsConfig({ field: { reserveMessage: true } })` AND a layout was built around the taller buttons that produced: add `[reserveMessage]=\"true\"` to the buttons that should keep the reserved row, or drop the local spacing that compensated for it.",
+      "appliesWhen": "Only an app that sets the app-wide `field.reserveMessage`. A button binding `[reserveMessage]` itself is unchanged, and so is every field — `DS_CONFIG.field.reserveMessage` still reaches them, `ds-field-group` included.",
+      "pitfall": "Nothing errors and the buttons get SHORTER, so a broken layout looks like tightened spacing rather than a regression. The tell is a button row that used to line up with a field row beside it and now sits higher.",
+      "restore": "[reserveMessage]=\"true\"",
+      "searchHints": [
+        "reserveMessage",
+        "provideDsConfig"
+      ],
+      "detect": [
+        "reserveMessage: true",
+        "field: { reserveMessage",
+        "provideDsConfig",
+        "with-message"
+      ],
+      "verify": "No `<ds-button>` renders an empty message row unless it binds `[reserveMessage]=\"true\"`, and every field still reserves under the app-wide default.",
+      "note": "The button takes the field message line without being a field row, and it took the field-wide default with it. `reserveMessage` exists so a field does not shift its neighbours when a message appears; a button sits outside that column, so the app-wide value now reaches fields alone and a button opts in per instance."
     }
   ],
   "informational": [
