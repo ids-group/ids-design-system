@@ -96,6 +96,30 @@
   The click output fires either way — pinning is a state, not a handler. On `ds-line-chart` the pin
   hangs off the data markers rather than the plot, so Enter and Space pin from the keyboard too.
 
+- **`ds-meter` — one track and one fill, for a measurement inside a table cell.** Every chart is a
+  block with a caption, a legend and an annex table; in a 60px cell that chrome is the whole cell,
+  so a micro-bar in a column had nothing to be built from. This is the mark on its own — no
+  caption, no legend, no tooltip, no table.
+
+  ```html
+  <ds-meter [value]="row.rate" [max]="highestRate" />
+  ```
+
+  `max` is the ceiling the column is read against, usually the column's own largest value, so the
+  longest bar fills its track and the rest are its share; at its default of 100, `value` is a
+  percentage. A value past `max` fills the track rather than overflowing, a negative one draws
+  nothing, and a `max` of zero or less falls back to 100.
+
+  **It is not `ds-progress`.** That reports how far a task has got and says so with
+  `role="progressbar"`, which a table of two hundred measurements would announce two hundred times.
+  A rate, a score or a count against a ceiling has no beginning and no completion. So the mark is
+  `aria-hidden` unless `ariaLabel` names it — leave it unset where the cell prints the figure
+  beside the bar, and set it where the bar is the only place the number appears.
+
+  The fill takes `--ds-meter-fill-color`, so a column is coloured once in a stylesheet rather than
+  once per row; the `color` input overrides it where the colour carries meaning.
+  `--ds-meter-height`, `--ds-meter-track-color` and `--ds-meter-radius` set the rest.
+
 - **A `ds-bar-chart` row takes `segments`, which divide its bar without shortening it.** A row that
   is a distribution had to become its own chart. The bar keeps its own length — the row's share of
   the largest row — and the parts say what it is made of, so one plot answers both "which department

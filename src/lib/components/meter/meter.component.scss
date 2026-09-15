@@ -1,0 +1,26 @@
+:host {
+  --_meter-height: var(--ds-meter-height, 6px);
+  --_meter-track-color: var(--ds-meter-track-color, var(--surface-muted));
+  --_meter-radius: var(--ds-meter-radius, var(--radius-pill));
+
+  display: block;
+  inline-size: 100%;
+  block-size: var(--_meter-height);
+  border-radius: var(--_meter-radius);
+  background: var(--_meter-track-color);
+  overflow: hidden;
+}
+
+.fill {
+  display: block;
+  block-size: 100%;
+  border-radius: inherit;
+  background: var(--ds-meter-fill-color, var(--ds-chart-series-1-color));
+  transition: inline-size var(--duration-base) var(--ease-standard);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fill {
+    transition: none;
+  }
+}

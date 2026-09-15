@@ -291,6 +291,13 @@ Inputs: `value: number = 0` (in units of `max`, clamped), `max: number = 100`, `
 `target` is a second point on the same scale, drawn as a hairline across the track — a goal or baseline to read `value` against. Clamped like `value` and ignored while `indeterminate`. `role="progressbar"` announces one value, so name the comparison in `ariaLabel` ("Resolved 62% against a 75% target"); the mark alone reaches nobody using a screen reader.
 Tokens: `--ds-progress-height`, `--ds-progress-track-color`, `--ds-progress-bar-color`, `--ds-progress-bar-color-success`, `--ds-progress-bar-color-warning`, `--ds-progress-bar-color-error`, `--ds-progress-target-color`, `--ds-progress-target-width`.
 
+#### `<ds-meter>` — `MeterComponent`
+One track and one fill, for a measurement inside a table cell — no caption, no legend, no annex table.
+Inputs: `value: number = 0` (in units of `max`, clamped), `max: number = 100` (zero or less falls back to 100), `color: string | null = null`, `ariaLabel: string | null = null`.
+Not `<ds-progress>`: that reports how far a task has got and says so with `role="progressbar"`, which a table of two hundred measurements would announce two hundred times. Here the mark is `aria-hidden` unless `ariaLabel` names it — leave it unset where the cell prints the figure beside the bar, set it where the bar is the only place the number appears.
+`max` is usually the column's own largest value, so the longest bar fills its track and the rest are its share.
+Tokens: `--ds-meter-height`, `--ds-meter-track-color`, `--ds-meter-radius`, `--ds-meter-fill-color`.
+
 #### `<ds-spinner>` — `SpinnerComponent`
 Input: `size: 'sm' | 'md' | 'lg' = 'md'`. Pure-CSS spinner, `role="status"` with built-in `aria-label`.
 

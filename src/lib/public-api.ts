@@ -179,6 +179,7 @@ export {
   MenuDividerComponent,
   MenuItemComponent,
 } from '@ids-group-ltd/ids-design-system/components/menu';
+export { MeterComponent } from '@ids-group-ltd/ids-design-system/components/meter';
 export {
   ModalCardComponent,
   ModalComponent,

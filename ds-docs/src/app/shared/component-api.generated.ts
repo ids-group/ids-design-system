@@ -4786,6 +4786,55 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       }
     ]
   },
+  "meter": {
+    "key": "meter",
+    "selector": "ds-meter",
+    "isElement": true,
+    "className": "MeterComponent",
+    "status": "stable",
+    "importName": "MeterComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "value",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "0",
+        "required": false,
+        "description": "The measurement, in units of `max`. Clamped to the track."
+      },
+      {
+        "name": "max",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "100",
+        "required": false,
+        "description": "The ceiling `value` is read against — the column's own largest, or the scale the number means something on. Left at 100, `value` is a percentage. Zero or less falls back to 100, because a scale with no width has no fraction to draw."
+      },
+      {
+        "name": "color",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "The fill's colour. Unset takes `--ds-meter-fill-color`, so a column is coloured once in a stylesheet rather than per row; set it per row where the colour carries meaning."
+      },
+      {
+        "name": "ariaLabel",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Names the measurement, and is what decides whether it is announced at all. Unset, the mark is `aria-hidden` — right where the cell prints the figure beside it, and wrong where the bar is the only place the number appears."
+      }
+    ],
+    "outputs": []
+  },
   "modal:ModalCardComponent": {
     "key": "modal",
     "selector": "ds-modal-card",

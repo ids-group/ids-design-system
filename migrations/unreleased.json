@@ -216,7 +216,8 @@
     "A `ds-bar-chart` row takes `detail`: a second, already-formatted reading printed under the label and carried into the annex table, for a row that encodes a ratio the bar can only draw half of. Rows without it are unchanged.",
     "`ds-line-chart` takes `max` and `maxSecondary`, which pin the value axis so two renders of the same panel are comparable. Null, the default, keeps the derived axis; a maximum below the data does not clip it, because the larger of the two wins.",
     "`ds-funnel-chart` takes `drop`, which says what its Drop column reports: `relative` (the default, and what it always showed) is the share that leaked at that stage, `absolute` the count, `none` removes the column. Charts that set nothing are unchanged.",
-    "A `ds-chart-legend` in its isolate mode gained a `None` option and always keeps one option chosen, so the radio group can reach an empty plot and never reads as undecided. Each legend now scopes its radio group to itself, so several charts on one page no longer share a single selection."
+    "A `ds-chart-legend` in its isolate mode gained a `None` option and always keeps one option chosen, so the radio group can reach an empty plot and never reads as undecided. Each legend now scopes its radio group to itself, so several charts on one page no longer share a single selection.",
+    "`ds-meter` is new: one track and one fill for a measurement inside a table cell, taking `value`, `max`, `color` and `ariaLabel`. It is the in-cell alternative to a chart, and is not `ds-progress` — it carries `role=\"meter\"` only when `ariaLabel` names it, and is `aria-hidden` otherwise. Nothing existing changes."
   ],
   "deleteList": []
 }

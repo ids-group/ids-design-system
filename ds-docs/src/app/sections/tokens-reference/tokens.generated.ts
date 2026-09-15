@@ -4605,6 +4605,33 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
+    "component": "Meter",
+    "selector": ".meter",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-meter-height",
+        "value": "6px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-meter-track-color",
+        "value": "var(--surface-muted)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-meter-radius",
+        "value": "var(--radius-pill)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-meter-fill-color",
+        "value": "var(--ds-chart-series-1-color)",
+        "notes": ""
+      }
+    ]
+  },
+  {
     "component": "Modal",
     "selector": ".modal",
     "description": "",
