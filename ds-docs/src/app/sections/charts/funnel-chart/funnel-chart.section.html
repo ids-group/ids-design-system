@@ -143,6 +143,91 @@
 
   <docs-chart-data-editor [(rows)]="dataTableStages" />
 
+  <h3 class="block-title t-h4">
+    Interaction
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      interactive
+    </code> turns on the pointer cursor and
+    the hover tint, and makes each band a tab stop with
+    <kbd>
+      Enter
+    </kbd> and
+    <kbd>
+      Space
+    </kbd> activating it.
+    <code class="t-mono-inline">
+      stageClicked
+    </code> fires whether or not the flag
+    is set, so a chart that only needs the output does not have to advertise the
+    affordance.
+  </p>
+
+  <ds-funnel-chart
+    interactive
+    dataTable="none"
+    caption="Every band is a control"
+    [data]="interactionStages()"
+    (stageClicked)="lastStage.set($event.label)" />
+
+  <p class="block-desc t-s">
+    Last clicked: <code class="t-mono-inline">{{ lastStage() || '—' }}</code>
+  </p>
+
+  <docs-chart-data-editor [(rows)]="interactionStages" />
+
+  <h3 class="block-title t-h4">
+    Holding a band
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      pinOnClick
+    </code> holds the clicked band and its
+    tooltip in place, so the reading stays while you look away from the chart. A
+    pin glyph marks the held band and a
+    <code class="t-mono-inline">
+      Reset
+    </code> appears in the corner;
+    <kbd>
+      Esc
+    </kbd> releases it, and so does clicking the band again. With
+    <code class="t-mono-inline">
+      dimOthers
+    </code> the rest of the funnel stays
+    down too, which is what keeps the comparison on screen after the pointer has
+    gone.
+  </p>
+
+  <div class="states states--cols-2">
+    <div class="state-cell">
+      <ds-funnel-chart
+        interactive
+        pinOnClick
+        dataTable="none"
+        [data]="pinStages()" />
+
+      <div class="state-cell-label">
+        pinOnClick
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-funnel-chart
+        interactive
+        pinOnClick
+        dimOthers
+        dataTable="none"
+        [data]="pinDimStages()" />
+
+      <div class="state-cell-label">
+        pinOnClick + dimOthers
+      </div>
+    </div>
+  </div>
+
   <details class="edge-cases">
     <summary>
       <h3 class="block-title t-h4">

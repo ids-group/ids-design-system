@@ -540,6 +540,57 @@
   </p>
 
   <h3 class="block-title t-h4">
+    The frame a chart draws around itself
+  </h3>
+
+  <p class="block-desc t-s">
+    A chart draws its own bordered, padded box by default, because it is read as
+    an object — a plot with axes, a legend and an annex table — and without an
+    edge those parts run into whatever sits beside them. Inside a card the page
+    has already drawn, that is a second box around the first.
+    <code class="t-mono-inline">
+      frame="none"
+    </code> turns it off for one chart;
+    <code class="t-mono-inline">
+      DS_CONFIG.chart.frame
+    </code> turns it off for an app,
+    which is where the decision usually belongs — whether charts live in cards is
+    settled once per product, not per plot.
+  </p>
+
+  <div class="states states--cols-2">
+    <div class="state-cell">
+      <ds-column-chart
+        dataTable="none"
+        [data]="frameDemoPoints()" />
+
+      <div class="state-cell-label">
+        frame = auto (default)
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-column-chart
+        frame="none"
+        dataTable="none"
+        [data]="frameDemoPoints()" />
+
+      <div class="state-cell-label">
+        frame = none
+      </div>
+    </div>
+  </div>
+
+  <p class="block-desc t-s">
+    The
+    <code class="t-mono-inline">
+      --ds-chart-frame-*
+    </code> tokens still size the
+    frame when it is on. Reaching for them to switch it OFF is the thing the
+    input replaces: a rule against a component's own chrome from a global sheet.
+  </p>
+
+  <h3 class="block-title t-h4">
     App-wide chart defaults
   </h3>
 

@@ -4253,6 +4253,31 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": ""
       },
       {
+        "name": "--ds-line-chart-annotation-color",
+        "value": "var(--text-primary)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-line-chart-annotation-font-size",
+        "value": "var(--ds-chart-axis-font-size)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-line-chart-annotation-weight",
+        "value": "var(--font-weight-bold)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-line-chart-annotation-halo-color",
+        "value": "var(--surface-default)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-line-chart-annotation-halo-width",
+        "value": "3px",
+        "notes": ""
+      },
+      {
         "name": "--ds-line-chart-line-width",
         "value": "var(--ds-chart-line-width)",
         "notes": ""
