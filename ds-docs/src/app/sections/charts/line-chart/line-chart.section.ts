@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
 import { LineChartComponent } from 'ds/line-chart';
-import type { LineChartSeries } from 'ds/line-chart';
+import type { LineChartAnnotation, LineChartSeries } from 'ds/line-chart';
 import { DocsLineChartDataEditorComponent } from '../../../shared/docs-line-chart-data-editor.component';
 import { DocsReplayButtonComponent } from '../../../shared/docs-replay-button.component';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
@@ -113,6 +113,10 @@ export class LineChartSection {
     signal<readonly string[]>(SPECIMEN_CATEGORIES);
   protected readonly specimenSeries =
     signal<readonly LineChartSeries[]>(SPECIMEN_SERIES);
+
+  protected readonly specimenAnnotations: readonly LineChartAnnotation[] = [
+    { categoryIndex: 5, label: 'Peak' },
+  ];
 
   protected readonly gapBreakCategories =
     signal<readonly string[]>(GAP_CATEGORIES);

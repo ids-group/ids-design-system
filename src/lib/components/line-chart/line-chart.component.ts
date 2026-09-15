@@ -1,11 +1,13 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   TemplateRef,
   ViewEncapsulation,
   booleanAttribute,
   computed,
   contentChild,
+  inject,
   input,
   model,
   numberAttribute,
@@ -58,6 +60,7 @@ import {
   valueY,
 } from './line-chart.math';
 import type {
+  LineChartAnnotation,
   LineChartAxisMode,
   LineChartGaps,
   LineChartPoint,
@@ -65,6 +68,14 @@ import type {
 } from './line-chart.types';
 
 const defaultValueFormat = (value: number) => formatValue(value);
+
+// Long enough to cross the gap between the plot and its panel at an ordinary pointer speed.
+const LEAVE_GRACE_MS = 140;
+
+// View units between a reading and the label above it, and the margin inside which a label
+// anchors to its own edge instead of centring. Both in the 640x320 viewBox.
+const ANNOTATION_GAP = 12;
+const ANNOTATION_EDGE_GUARD = 48;
 
 interface ResolvedSeries {
   readonly series: LineChartSeries;
@@ -116,7 +127,10 @@ function baselineOf(plot: PlotArea): number {
   styleUrl: './line-chart.component.scss',
   // Escape releases a pinned category, the same key that dismisses its panel — otherwise the
   // crosshair would stand on a chart with nothing left on screen to explain why.
-  host: { '(document:keydown.escape)': 'releaseCategoryPin()' },
+  host: {
+    '(document:keydown.escape)': 'releaseCategoryPin()',
+    '(document:pointerover)': 'onPointerAnywhere($event)',
+  },
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -133,6 +147,11 @@ export class LineChartComponent {
 
   /** Draws a dot at every reading. Off, the dots appear on hover and on focus only. */
   readonly showMarkers = input(true, { transform: booleanAttribute });
+
+  /** Labels pinned over their readings, for the points that have to read without a pointer. They
+   *  are drawn, not announced: the data table already carries every reading, and repeating one in
+   *  the plot makes a screen reader say it twice. */
+  readonly annotations = input<readonly LineChartAnnotation[]>([]);
 
   /** Makes every reading focusable and clickable. A series drawn without markers grows invisible
    *  ones so there is something to land on; they appear on hover and on focus.
@@ -373,6 +392,51 @@ export class LineChartComponent {
     });
   });
 
+  /** Annotations resolved onto the markers the plot already computed, so a label sits exactly on
+   *  its reading and moves with it. One whose series is hidden or whose reading is missing has no
+   *  marker and is dropped — a hidden series must not leave its label floating over the plot. */
+  protected readonly placedAnnotations = computed(() => {
+    const plotted = this.plottedSeries();
+
+    return this.annotations().flatMap((annotation) => {
+      const entry = annotation.seriesId
+        ? plotted.find(
+            (candidate) => candidate.series.id === annotation.seriesId,
+          )
+        : plotted[0];
+      const marker = entry?.markers.find(
+        (candidate) => candidate.categoryIndex === annotation.categoryIndex,
+      );
+      if (!entry || !marker) {
+        return [];
+      }
+
+      // Anchored away from the plot edges, because a centred label at the first or last category
+      // hangs half outside the viewBox and is clipped rather than merely tight.
+      const anchor =
+        marker.x < ANNOTATION_EDGE_GUARD
+          ? 'start'
+          : marker.x > LINE_CHART_VIEW_WIDTH - ANNOTATION_EDGE_GUARD
+            ? 'end'
+            : 'middle';
+
+      return [
+        {
+          key: `${entry.series.id}:${annotation.categoryIndex}`,
+          label: annotation.label,
+          x: marker.x,
+          // Above the reading, and below it where there is no room — a peak sits at the top of
+          // the plot, which is exactly where a label clamped upward lands on its own marker.
+          y:
+            marker.y - ANNOTATION_GAP >= ANNOTATION_GAP
+              ? marker.y - ANNOTATION_GAP
+              : marker.y + ANNOTATION_GAP,
+          anchor,
+        },
+      ];
+    });
+  });
+
   protected readonly primaryTicks = computed(() =>
     this.ticksFor(this.axes().primary.ticks, this.axes().primary.max, false),
   );
@@ -395,6 +459,8 @@ export class LineChartComponent {
   );
 
   /** The category under the pointer, or -1. */
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+
   protected readonly activeCategory = signal(-1);
 
   protected readonly categoryBands = computed(() =>
@@ -429,6 +495,7 @@ export class LineChartComponent {
     if (this.pinnedCategory()) {
       return;
     }
+    this.cancelCategoryClear();
     const category = this.categoryBands().indexAt(point.x - plot.left);
     this.activeCategory.set(category);
     this.tooltipOrigin.set(
@@ -465,9 +532,46 @@ export class LineChartComponent {
     if (this.pinnedCategory()) {
       return;
     }
-    this.activeCategory.set(-1);
-    this.tooltipOrigin.set(null);
+    // Same grace the element-mark charts get from `chartActiveMark`: the panel is portaled out of
+    // the plot, so leaving the plot fires before the pointer can reach it. Clearing at once made
+    // the panel unreachable, and — because the pane takes pointer events now — put the plot and the
+    // panel in a loop where each closed the other.
+    this.cancelCategoryClear();
+    this.pendingCategoryClear = setTimeout(() => {
+      this.pendingCategoryClear = null;
+      this.activeCategory.set(-1);
+      this.tooltipOrigin.set(null);
+    }, LEAVE_GRACE_MS);
   }
+
+  /** The panel is portaled to the body, so the plot never sees the pointer arrive on it. This is
+   *  the other half of the grace period: reaching the panel keeps it open, and leaving the panel for
+   *  anything that is not the plot starts the clear the plot can no longer start itself. */
+  protected onPointerAnywhere(event: PointerEvent): void {
+    if (!(event.target instanceof Element) || this.pinnedCategory()) {
+      return;
+    }
+    if (event.target.closest('.ds-chart-tooltip-pane')) {
+      this.cancelCategoryClear();
+
+      return;
+    }
+    if (
+      this.activeCategory() !== -1 &&
+      !this.host.nativeElement.contains(event.target)
+    ) {
+      this.clearActiveCategory();
+    }
+  }
+
+  private cancelCategoryClear(): void {
+    if (this.pendingCategoryClear !== null) {
+      clearTimeout(this.pendingCategoryClear);
+      this.pendingCategoryClear = null;
+    }
+  }
+
+  private pendingCategoryClear: ReturnType<typeof setTimeout> | null = null;
 
   protected releaseCategoryPin(): void {
     this.pinnedCategory.set(false);

@@ -159,6 +159,7 @@ export type {
 } from '@ids-group-ltd/ids-design-system/components/layout';
 export { LineChartComponent } from '@ids-group-ltd/ids-design-system/components/line-chart';
 export type {
+  LineChartAnnotation,
   LineChartAxisMode,
   LineChartGaps,
   LineChartPoint,

@@ -213,6 +213,17 @@
           }
         }
 
+        @for (note of placedAnnotations(); track note.key) {
+          <text
+            class="annotation"
+            aria-hidden="true"
+            [attr.x]="note.x"
+            [attr.y]="note.y"
+            [attr.text-anchor]="note.anchor">
+            {{ note.label }}
+          </text>
+        }
+
         @for (tick of primaryTicks(); track $index) {
           <text
             class="axis-label"
@@ -249,7 +260,7 @@
       <ds-chart-legend
         [items]="legendItems()"
         [toggleable]="legendFilters()"
-      [mode]="legendMode()"
+        [mode]="legendMode()"
         [(hidden)]="hiddenSeries"
         [(highlighted)]="highlightedSeries" />
     }
@@ -258,9 +269,7 @@
       <details
         class="data-table"
         [open]="dataTableResolved() === 'visible'">
-        <summary>
-          Data table
-        </summary>
+        <summary>Data table</summary>
 
         <table>
           <caption>
@@ -271,9 +280,7 @@
 
           <thead>
             <tr>
-              <th scope="col">
-                Category
-              </th>
+              <th scope="col">Category</th>
 
               @for (entry of resolvedSeries(); track entry.series.id) {
                 <th scope="col">
