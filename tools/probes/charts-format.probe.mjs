@@ -104,9 +104,9 @@ check(
   '2K',
 );
 
-// Expected values come from the same Intl call rather than a hardcoded literal — this
-// probe's own runtime resolves the default locale to ru-RU ("1,2 млн"), not the "1.2M" an
-// en-US machine would print, and `formatValue`'s own default-locale check above makes the
+// Expected values come from the same Intl call rather than a hardcoded literal, because
+// this probe's own runtime resolves the default locale to ru-RU ("1,2 млн"), not the "1.2M"
+// an en-US machine would print, and `formatValue`'s own default-locale check above makes the
 // same choice for the same reason.
 check(
   'the default formatter abbreviates on a tick',

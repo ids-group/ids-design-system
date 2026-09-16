@@ -8,8 +8,8 @@ export type ChartDataTable = 'toggle' | 'visible' | 'none';
 export type ChartFrame = 'auto' | 'none';
 
 /** Where a chart-value formatter is printing: the compact `'tick'` label on the value axis, or
- *  `'tooltip'` everywhere else a value is spelled out in full — the annex table, the generated
- *  description, and a value printed beside a mark. */
+ *  `'tooltip'` everywhere else a value is spelled out in full, meaning the annex table, the
+ *  generated description, and a value printed beside a mark. */
 export type ChartFormatLocation = 'tick' | 'tooltip';
 
 /** Formats every value a chart prints — the annex table and the generated description included.
