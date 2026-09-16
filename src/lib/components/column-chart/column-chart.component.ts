@@ -343,6 +343,9 @@ export class ColumnChartComponent {
         point,
         barBottomPercent: Math.min(valueOffset, zero),
         barHeightPercent: Math.abs(valueOffset - zero),
+        // The value's own end of the bar, not the baseline — a positive column's label sits
+        // above this, a negative one's below it.
+        barTipPercent: valueOffset,
         // Growing from the baseline, never the mark's own tip — a column below zero grows
         // downward, so its transform-origin flips to the top edge it hangs from.
         barOrigin: valueOffset < zero ? ('top' as const) : null,

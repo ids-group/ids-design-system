@@ -131,6 +131,12 @@ figcaption {
   font-weight: 700;
   text-align: center;
   white-space: nowrap;
+
+  // Anchored at the bar's own tip (see `barTipPercent`), which for a column below zero sits
+  // BELOW the label rather than above it — the label has to sit on the far side too.
+  &.below-baseline {
+    transform: translateY(calc(100% + var(--space-2)));
+  }
 }
 
 // The cap, not the percentage, is what keeps this reading as a chart: at five categories 80% of

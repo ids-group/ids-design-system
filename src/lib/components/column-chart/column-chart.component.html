@@ -92,9 +92,8 @@
                 @if (showValues()) {
                   <span
                     class="value"
-                    [style.bottom.%]="
-                      entry.barBottomPercent + entry.barHeightPercent
-                    ">
+                    [class.below-baseline]="entry.barOrigin === 'top'"
+                    [style.bottom.%]="entry.barTipPercent">
                     {{ entry.formattedValue }}
                   </span>
                 }
