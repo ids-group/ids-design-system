@@ -293,6 +293,11 @@ export class ColumnChartComponent {
     resolveDomainMax(this.data().map((point) => point.value)),
   );
 
+  /** Whether any column can hang below its own category label — reserves the row-gap a
+   *  below-baseline value label needs, the same amount `.chart`'s top padding reserves for a
+   *  label overflowing above the plot, but only where a column can reach that low. */
+  protected readonly reachesBelowZero = computed(() => this.domainMin() < 0);
+
   /** Floor and ceiling of the value axis: the domain rounded outward to a whole tick, so the
    *  tallest and (where the data reaches below zero) the lowest column each end on a gridline
    *  rather than between two. */

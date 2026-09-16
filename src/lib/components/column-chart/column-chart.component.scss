@@ -100,6 +100,12 @@ figcaption {
   row-gap: var(--space-2);
   pointer-events: none;
 
+  // A below-baseline value label hangs past the plot's own floor, into this same gap — widened
+  // to the plot's own top headroom so it cannot reach the category label under it.
+  .chart.reaches-below-zero & {
+    row-gap: var(--_column-chart-value-space);
+  }
+
   &::after {
     content: "";
     position: absolute;

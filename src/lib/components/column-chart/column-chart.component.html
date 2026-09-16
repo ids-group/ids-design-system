@@ -35,6 +35,7 @@
   } @else {
     <div
       class="chart"
+      [class.reaches-below-zero]="reachesBelowZero()"
       [attr.role]="interactive() ? 'group' : 'img'"
       [attr.aria-label]="accessibleName()">
       <div class="tick-labels">
