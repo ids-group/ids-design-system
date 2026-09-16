@@ -121,5 +121,17 @@ check(
   defaultChartFormat(1248392, 'tooltip'),
   new Intl.NumberFormat().format(1248392),
 );
+// Neither NaN nor Infinity is a value Intl should ever see, on either location, the same guard
+// formatValue makes above.
+check(
+  'the default formatter guards a NaN value on a tick',
+  defaultChartFormat(NaN, 'tick'),
+  '—',
+);
+check(
+  'the default formatter guards an infinite value in a tooltip',
+  defaultChartFormat(Infinity, 'tooltip'),
+  '—',
+);
 
 finish('charts-format');

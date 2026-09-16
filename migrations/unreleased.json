@@ -137,7 +137,7 @@
       "new": null,
       "surface": "typescript",
       "action": "Give your `valueFormat` callback a second parameter, `location: ChartFormatLocation` (`'tick' | 'tooltip'`), imported from `@ids-group-ltd/ids-design-system/core`. Return a compact string for `'tick'` and the full value for `'tooltip'`. A callback that ignores the parameter still compiles and still runs.",
-      "appliesWhen": "Any `ds-column-chart` or `ds-line-chart` with a custom `valueFormat` bound, as an input or through `DS_CONFIG.chart.valueFormat`. A chart left on the built-in default is unaffected, because that default already branches on location.",
+      "appliesWhen": "The `action` above is only for a `ds-column-chart` or `ds-line-chart` with a custom `valueFormat` bound, as an input or through `DS_CONFIG.chart.valueFormat`: that is who has code to touch. A chart left on the built-in default needs no code change, but its own rendered ticks changed too; see the informational note about the built-in default below.",
       "pitfall": "Nothing throws and the build stays green. TypeScript allows an implementation with fewer parameters than its declared type, and JavaScript ignores an argument nothing reads, so a one-argument callback keeps compiling and keeps running. It now also runs for every axis tick, and an implementation that returns the full value regardless of location prints that same full value on the axis, clipped by the fixed-width axis column, which is the defect this release fixes only for the built-in default.",
       "restore": null,
       "searchHints": [
@@ -164,7 +164,8 @@
     "While a mark is pinned its panel opens BELOW the mark, so it no longer covers the Unpin control at the plot's top edge. Moving the pin between marks no longer unmounts that control for a frame.",
     "The focus indicator on a chart mark is now the app's `--focus-ring-color` with a light keyline, instead of a white ring with a dark halo. Override `--ds-chart-focus-ring-color` and `--ds-chart-focus-halo-color` to keep the old pair.",
     "`ds-line-chart` and `ds-column-chart` draw their axes behind the empty, error and no-visible-series messages. No ticks and no labels, because there is no data to scale them against.",
-    "The `pin` icon is redrawn as a drawing pin seen from the side. Any `<ds-icon name=\"pin\">` in your app changes shape."
+    "The `pin` icon is redrawn as a drawing pin seen from the side. Any `<ds-icon name=\"pin\">` in your app changes shape.",
+    "The built-in default `valueFormat` on `ds-column-chart` and `ds-line-chart` now compacts each axis tick by that tick's own magnitude (`Intl.NumberFormat`'s `notation: 'compact'`), where the previous default picked one suffix for the whole axis from its step. An axis whose ticks cross a thousand, million or billion boundary can now print more than one suffix, `1M` beside `800K` where it used to print `1000K` beside `800K`. Nothing in your code changes; a screenshot of such an axis will differ."
   ],
   "deleteList": []
 }

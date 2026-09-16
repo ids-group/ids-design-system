@@ -31,6 +31,10 @@ export function defaultChartFormat(
   value: number,
   location: ChartFormatLocation,
 ): string {
+  if (!Number.isFinite(value)) {
+    return '—';
+  }
+
   return location === 'tick'
     ? new Intl.NumberFormat(undefined, {
         notation: 'compact',

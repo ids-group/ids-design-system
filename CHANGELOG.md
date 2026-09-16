@@ -55,6 +55,11 @@
   string for both, which is un-abbreviated on the axis wherever the built-in default used to
   abbreviate for it.
 
+  **The built-in default changed too, with no callback involved.** It used to pick one suffix for
+  the whole axis, from the axis's own step, so `800K` and `1600K` shared a unit even past a million.
+  It now compacts each tick by that tick's own magnitude, so the same axis prints `800K` beside
+  `1.6M`. An axis whose ticks cross a thousand, million or billion boundary renders differently.
+
 ### Changed
 
 - **A chart tooltip opens against its mark, not against the row that holds it.** `ds-bar-chart`
