@@ -1,0 +1,57 @@
+@use '../../styles/chart-frame' as chart-frame;
+@include chart-frame.chart-frame;
+
+.chart {
+  --_chart-grid-line-color: var(--ds-chart-grid-line-color, var(--chart-grid-line-color));
+  --_chart-axis-line-color: var(--ds-chart-axis-line-color, var(--chart-axis-line-color));
+  --_chart-axis-label-color: var(--ds-chart-axis-label-color, var(--chart-axis-label-color));
+  --_chart-axis-font-size: var(--ds-chart-axis-font-size, var(--chart-axis-font-size));
+  --_chart-plot-height: var(--ds-chart-plot-height, 240px);
+
+  margin: 0;
+}
+
+figcaption {
+  margin-block-end: var(--space-3);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+@include chart-frame.message-box(var(--_chart-plot-height), true);
+
+/* The canvas is an svg sized by its viewBox ratio against the card width, not by the plot-height
+   token - so reserving that token alone leaves the message box short by however much the width
+   adds, and the card jumps when the data lands. */
+.empty {
+  aspect-ratio: 640 / 320;
+  inline-size: 100%;
+}
+
+.canvas {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+}
+
+.grid-line {
+  stroke: var(--_chart-grid-line-color);
+  stroke-width: 1;
+}
+
+.axis-line,
+.zero-line {
+  stroke: var(--_chart-axis-line-color);
+  stroke-width: 1;
+}
+
+.axis-label,
+.category-label {
+  fill: var(--_chart-axis-label-color);
+  font-size: var(--_chart-axis-font-size);
+}
+
+.axis-label {
+  dominant-baseline: middle;
+}
+
+@include chart-frame.forced-colors;

@@ -1,0 +1,101 @@
+<figure class="chart">
+  @if (caption()) {
+    <figcaption>
+      {{ caption() }}
+    </figcaption>
+  }
+
+  @if (error()) {
+    <p
+      class="empty is-error"
+      role="status">
+      {{ errorTextResolved() }}
+    </p>
+  } @else if (loading()) {
+    <div
+      class="skeleton"
+      aria-hidden="true">
+      <ds-skeleton height="var(--_chart-plot-height)" />
+    </div>
+  } @else if (isEmpty()) {
+    <p class="empty">
+      {{ emptyTextResolved() }}
+    </p>
+  } @else {
+    <div
+      class="plot"
+      role="group"
+      [attr.aria-label]="accessibleName()">
+      <svg
+        class="canvas"
+        preserveAspectRatio="xMidYMid meet"
+        [attr.viewBox]="viewBox">
+        <!-- Hidden as a group rather than on the svg: a projected mark may be focusable, and an
+             aria-hidden ancestor would leave it reachable by Tab and invisible to a reader. -->
+        <g
+          class="axes"
+          aria-hidden="true">
+          @for (tick of ticks(); track tick.value) {
+            <line
+              class="grid-line"
+              [attr.x1]="plot().left"
+              [attr.x2]="plotRight()"
+              [attr.y1]="tick.y"
+              [attr.y2]="tick.y" />
+          }
+
+          <line
+            class="axis-line"
+            [attr.x1]="plot().left"
+            [attr.x2]="plotRight()"
+            [attr.y1]="plotBottom()"
+            [attr.y2]="plotBottom()" />
+
+          <line
+            class="axis-line"
+            [attr.x1]="plot().left"
+            [attr.x2]="plot().left"
+            [attr.y1]="plot().top"
+            [attr.y2]="plotBottom()" />
+
+          @if (reachesBelowZero()) {
+            <line
+              class="zero-line"
+              [attr.x1]="plot().left"
+              [attr.x2]="plotRight()"
+              [attr.y1]="zeroOffset()"
+              [attr.y2]="zeroOffset()" />
+          }
+        </g>
+
+        <g class="marks">
+          <ng-content />
+        </g>
+
+        <g
+          class="labels"
+          aria-hidden="true">
+          @for (tick of ticks(); track tick.value) {
+            <text
+              class="axis-label"
+              text-anchor="end"
+              [attr.x]="axisLabelX()"
+              [attr.y]="tick.y">
+              {{ tick.label }}
+            </text>
+          }
+
+          @for (label of categoryLabels(); track label.x) {
+            <text
+              class="category-label"
+              text-anchor="middle"
+              [attr.x]="label.x"
+              [attr.y]="categoryLabelY()">
+              {{ label.text }}
+            </text>
+          }
+        </g>
+      </svg>
+    </div>
+  }
+</figure>

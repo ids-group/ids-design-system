@@ -92,6 +92,14 @@ export type {
   CardElevation,
   CardPadding,
 } from '@ids-group-ltd/ids-design-system/components/card';
+export {
+  CHART_SCALES,
+  ChartComponent,
+} from '@ids-group-ltd/ids-design-system/components/chart';
+export type {
+  ChartPlot,
+  ChartScales,
+} from '@ids-group-ltd/ids-design-system/components/chart';
 export type { ChartLegendItem } from '@ids-group-ltd/ids-design-system/components/chart-legend';
 export type {
   ChartItemTooltipTrigger,
