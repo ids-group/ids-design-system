@@ -13,8 +13,8 @@ import {
 } from '@angular/core';
 import {
   CHART_SERIES_COLORS,
+  defaultChartFormat,
   describeSeries,
-  formatValue,
   focusMark,
   largestRemainder,
   nextRovingIndex,
@@ -48,8 +48,6 @@ import {
   sliceArcs,
 } from './donut-chart.math';
 import type { DonutChartSlice } from './donut-chart.types';
-
-const defaultValueFormat = (value: number) => formatValue(value);
 
 const RING_VIEW_BOX_SIZE = 100;
 const RING_CENTER = RING_VIEW_BOX_SIZE / 2;
@@ -164,7 +162,7 @@ export class DonutChartComponent {
   readonly valueFormatResolved = resolveWithConfig(
     this.valueFormat,
     (config) => config.chart?.valueFormat,
-    defaultValueFormat as ChartValueFormat,
+    defaultChartFormat,
   );
 
   /** Turns on the click affordance — the pointer cursor and any hover tint.
@@ -287,7 +285,8 @@ export class DonutChartComponent {
     const arcs = sliceArcs(values);
     const percents = largestRemainder(positiveValues(values));
     const innerRadius = resolveInnerRadius(RING_OUTER_RADIUS, this.thickness());
-    const format = this.valueFormatResolved();
+    const format = (value: number) =>
+      this.valueFormatResolved()(value, 'tooltip');
 
     const midRadius = (RING_OUTER_RADIUS + innerRadius) / 2;
 
@@ -319,7 +318,8 @@ export class DonutChartComponent {
   });
 
   protected readonly resolvedCenterValue = computed(
-    () => this.centerValue() ?? this.valueFormatResolved()(this.total()),
+    () =>
+      this.centerValue() ?? this.valueFormatResolved()(this.total(), 'tooltip'),
   );
 
   protected readonly accessibleName = computed(
@@ -331,7 +331,7 @@ export class DonutChartComponent {
           label: slice.label,
           value: slice.value,
         })),
-        this.valueFormatResolved(),
+        (value) => this.valueFormatResolved()(value, 'tooltip'),
         this.dataTableResolved() !== 'none',
       ),
   );

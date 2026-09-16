@@ -1,3 +1,5 @@
+import type { ChartFormatLocation } from '@ids-group-ltd/ids-design-system/core';
+
 const numberFormatters = new Map<string, Intl.NumberFormat>();
 
 function numberFormatter(locale: string | undefined): Intl.NumberFormat {
@@ -18,6 +20,23 @@ export function formatValue(value: number, locale?: string): string {
   }
 
   return numberFormatter(locale).format(value);
+}
+
+/** The built-in `valueFormat`: compact on a tick (`1.2M`), spelled out everywhere else
+ *  (`1 248 392`). A caller-supplied formatter receives the same `location` and decides for
+ *  itself; this is only the default.
+ *
+ *  @internal */
+export function defaultChartFormat(
+  value: number,
+  location: ChartFormatLocation,
+): string {
+  return location === 'tick'
+    ? new Intl.NumberFormat(undefined, {
+        notation: 'compact',
+        maximumFractionDigits: 1,
+      }).format(value)
+    : new Intl.NumberFormat().format(value);
 }
 
 /** @internal */

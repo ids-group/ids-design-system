@@ -37,6 +37,24 @@
   An override of a name nothing reads still parses, so a missed rename reports nothing and the bar
   simply returns to its default look.
 
+- **`valueFormat` on `ds-column-chart` and `ds-line-chart` now receives a second argument,
+  `location`.** The axis tick and the annex table used to share one call with no way to tell them
+  apart, so a custom formatter that spelled a value out in full also spelled it out on the axis,
+  where a fixed-width column has room for `1.2M` and not `1,248,392`. The callback is
+  `(value: number, location: ChartFormatLocation) => string` now, called with `'tick'` for the axis
+  label and `'tooltip'` everywhere else a value is printed in full (the annex table, the generated
+  description, the value beside a mark).
+
+  ```ts
+  valueFormat: ChartValueFormat = (value, location) =>
+    location === 'tick' ? compact(value) : spelled(value);
+  ```
+
+  An existing one-argument callback still compiles and still runs, because JavaScript ignores an
+  argument nothing reads. It cannot tell the two locations apart, though, so it prints the same
+  string for both, which is un-abbreviated on the axis wherever the built-in default used to
+  abbreviate for it.
+
 ### Changed
 
 - **A chart tooltip opens against its mark, not against the row that holds it.** `ds-bar-chart`

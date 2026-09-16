@@ -13,11 +13,9 @@ import {
 } from '@angular/core';
 import {
   CHART_SERIES_COLORS,
+  defaultChartFormat,
   describeSeries,
-  formatTick,
-  formatValue,
   niceDomain,
-  tickStep,
   describeShare,
   shareOfTotal,
   focusMark,
@@ -47,8 +45,6 @@ import {
   resolveDomainMin,
 } from './column-chart.math';
 import type { ColumnChartPoint } from './column-chart.types';
-
-const defaultValueFormat = (value: number) => formatValue(value);
 
 @Component({
   selector: 'ds-column-chart',
@@ -149,7 +145,7 @@ export class ColumnChartComponent {
   readonly valueFormatResolved = resolveWithConfig(
     this.valueFormat,
     (config) => config.chart?.valueFormat,
-    defaultValueFormat as ChartValueFormat,
+    defaultChartFormat,
   );
 
   /** Turns on the click affordance — the pointer cursor and any hover tint.
@@ -324,12 +320,10 @@ export class ColumnChartComponent {
       this.domainMax(),
       this.tickCount(),
     );
-    const step = tickStep(values);
     const format = this.valueFormatResolved();
 
     return values.map((value) => ({
-      label:
-        format === defaultValueFormat ? formatTick(value, step) : format(value),
+      label: format(value, 'tick'),
       offsetPercent: heightPercent(value, domain.min, domain.max),
     }));
   });
@@ -354,7 +348,7 @@ export class ColumnChartComponent {
         // Growing from the baseline, never the mark's own tip — a column below zero grows
         // downward, so its transform-origin flips to the top edge it hangs from.
         barOrigin: valueOffset < zero ? ('top' as const) : null,
-        formattedValue: format(point.value),
+        formattedValue: format(point.value, 'tooltip'),
         share: this.partOfWhole() ? shareOfTotal(values, index) : '',
         color:
           point.color ??
@@ -372,7 +366,7 @@ export class ColumnChartComponent {
           label: point.label,
           value: point.value,
         })),
-        this.valueFormatResolved(),
+        (value) => this.valueFormatResolved()(value, 'tooltip'),
         this.dataTableResolved() !== 'none',
       ),
   );

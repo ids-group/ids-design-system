@@ -2,6 +2,7 @@ export { backdropDismiss } from './backdrop-dismiss';
 export type { CardElevation, CardPadding } from './card.types';
 export type {
   ChartDataTable,
+  ChartFormatLocation,
   ChartFrame,
   ChartValueFormat,
 } from './chart.types';

@@ -129,6 +129,31 @@
       ],
       "verify": "No subclass declares a member named `semantics`, `color`, `role` or `dsChartTooltipPreferBelow`, and the app builds with no TS4114, TS2415 or TS2416 on those classes.",
       "note": "Merging the progress bar and the measurement bar moved every member of both onto one class, and the tooltip directive gained the input that opens a pinned panel below its mark. Subclassing a DS component is unsupported, but a release that only merges and adds can still fail such a build on a name collision, which is why the classes are listed here rather than in the additive notes."
+    },
+    {
+      "id": "chart-value-format-receives-tick-or-tooltip-location",
+      "kind": "behavior",
+      "old": "ChartValueFormat",
+      "new": null,
+      "surface": "typescript",
+      "action": "Give your `valueFormat` callback a second parameter, `location: ChartFormatLocation` (`'tick' | 'tooltip'`), imported from `@ids-group-ltd/ids-design-system/core`. Return a compact string for `'tick'` and the full value for `'tooltip'`. A callback that ignores the parameter still compiles and still runs.",
+      "appliesWhen": "Any `ds-column-chart` or `ds-line-chart` with a custom `valueFormat` bound, as an input or through `DS_CONFIG.chart.valueFormat`. A chart left on the built-in default is unaffected, because that default already branches on location.",
+      "pitfall": "Nothing throws and the build stays green. TypeScript allows an implementation with fewer parameters than its declared type, and JavaScript ignores an argument nothing reads, so a one-argument callback keeps compiling and keeps running. It now also runs for every axis tick, and an implementation that returns the full value regardless of location prints that same full value on the axis, clipped by the fixed-width axis column, which is the defect this release fixes only for the built-in default.",
+      "restore": null,
+      "searchHints": [
+        "valueFormat",
+        "ChartValueFormat",
+        "ChartFormatLocation",
+        "chart.valueFormat"
+      ],
+      "detect": [
+        "valueFormat]=\"",
+        "valueFormat:",
+        "(value: number) =>",
+        "chart: { valueFormat:"
+      ],
+      "verify": "Every custom `valueFormat` bound on a `ds-column-chart` or `ds-line-chart` reads its second argument, and the value axis on such a chart prints a compact label rather than the full number.",
+      "note": "The axis tick and the annex table used to share one formatter call with no way to tell them apart, so a formatter written to spell the table's values out in full also ran, unchanged, on the axis. `location` is what lets one callback serve both without a chart-side special case for its own default."
     }
   ],
   "informational": [

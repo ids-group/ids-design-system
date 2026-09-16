@@ -5,6 +5,7 @@ export {
   chartColors,
 } from './chart-palette.generated';
 export {
+  defaultChartFormat,
   formatPercent,
   formatTick,
   formatValue,
