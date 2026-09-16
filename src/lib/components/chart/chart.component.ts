@@ -6,6 +6,7 @@ import {
   ViewEncapsulation,
   booleanAttribute,
   computed,
+  effect,
   forwardRef,
   inject,
   input,
@@ -52,6 +53,7 @@ import {
   styleUrl: './chart.component.scss',
   host: {
     '[class.framed]': "frameResolved() === 'auto'",
+    '[class.measuring]': '!settled()',
     '[style.--_chart-view-height]': "viewHeight() + 'px'",
   },
   encapsulation: ViewEncapsulation.Emulated,
@@ -178,6 +180,34 @@ export class ChartComponent implements ChartScales {
   protected readonly viewWidth = computed(
     () => this.measuredWidth() || CHART_FALLBACK_WIDTH,
   );
+
+  /** Whether the marks may animate yet. The first frame draws at `CHART_FALLBACK_WIDTH` scaled to
+   *  fit, so the measurement that follows moves every mark - and a mark that transitions its
+   *  geometry would play that correction as an animated slide on every load, hydration included.
+   *
+   *  Two frames, not one. A transition starts when the property changes in a style that also
+   *  enables it, so the enabling must not land in the same style recalculation as the correction.
+   *  One `requestAnimationFrame` is not enough: scheduled from the change detection that writes
+   *  the corrected geometry, it runs at the START of the next frame, still before that geometry
+   *  has been through a recalculation. Measured with one frame: `transitionrun` on `x` and
+   *  `width`, both marks, on the same tick the class cleared. */
+  protected readonly settled = signal(false);
+
+  constructor() {
+    effect((onCleanup) => {
+      if (this.settled() || this.measuredWidth() === 0) {
+        return;
+      }
+      let second = 0;
+      const first = requestAnimationFrame(() => {
+        second = requestAnimationFrame(() => this.settled.set(true));
+      });
+      onCleanup(() => {
+        cancelAnimationFrame(first);
+        cancelAnimationFrame(second);
+      });
+    });
+  }
 
   protected readonly viewHeight = computed(() =>
     chartViewHeight(this.plotHeight(), this.valueSpace()),

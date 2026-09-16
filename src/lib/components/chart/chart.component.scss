@@ -29,6 +29,14 @@ figcaption {
   inline-size: 100%;
 }
 
+/* Anchored pierce, so the rule reaches a projected mark's own stylesheet without compiling to a
+   global one. It holds every mark still until `settled` - a mark inserted at the fallback width
+   and corrected by the measurement would otherwise animate that correction on every load. Zeroing
+   the duration rather than dropping `transition`, which is what the reduced-motion block does. */
+:host(.measuring) .marks ::ng-deep * {
+  transition-duration: 0ms !important;
+}
+
 .grid-line {
   stroke: var(--_chart-grid-line-color);
   stroke-width: 1;

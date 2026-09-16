@@ -41,21 +41,31 @@ for (const { name: dir, base } of charts) {
   // A container projects its marks rather than drawing them, and `interactive` reaches it only to
   // pick the plot's ARIA role. The hover state, the cursor and the tooltip belong to whatever is
   // projected in; demanding them here would make the container write rules for elements it does
-  // not own, which is how a gate teaches the wrong lesson.
+  // not own, which is how a gate teaches the wrong lesson. The focus ring below is NOT part of
+  // that exemption: it is keyed on a mark this component's own template draws, and an outline on
+  // an SVG element is wrong whoever else the component also projects.
   const projectsItsMarks = /<ng-content\b/.test(template);
 
-  if (!projectsItsMarks && /readonly interactive = input\(/.test(script)) {
-    if (!/chart-interactive\.(fades|dims)\(/.test(styles)) {
-      problems.push(
-        `${dir}: accepts \`interactive\` and derives no hover state — include ` +
-          `chart-interactive.fades() or .dims()`,
-      );
+  if (/readonly interactive = input\(/.test(script)) {
+    if (!projectsItsMarks) {
+      if (!/chart-interactive\.(fades|dims)\(/.test(styles)) {
+        problems.push(
+          `${dir}: accepts \`interactive\` and derives no hover state — include ` +
+            `chart-interactive.fades() or .dims()`,
+        );
+      }
+      if (!/cursor:\s*pointer|chart-interactive\.clickable\(/.test(styles)) {
+        problems.push(
+          `${dir}: accepts \`interactive\` and offers no pointer cursor`,
+        );
+      }
+      if (!/readonly tooltip = input</.test(script)) {
+        problems.push(
+          `${dir}: accepts \`interactive\` and declares no \`tooltip\` trigger`,
+        );
+      }
     }
-    if (!/cursor:\s*pointer|chart-interactive\.clickable\(/.test(styles)) {
-      problems.push(
-        `${dir}: accepts \`interactive\` and offers no pointer cursor`,
-      );
-    }
+
     // Only an SVG mark needs a rule of its own. `outline` on an SVG element paints its BOUNDING
     // BOX rather than its silhouette, so the library's catch-all ring is wrong there and the chart
     // has to draw one; an HTML mark takes that catch-all and needs nothing.
@@ -65,11 +75,6 @@ for (const { name: dir, base } of charts) {
       problems.push(
         `${dir}: a focusable SVG mark and no drawn focus ring — an outline there paints the ` +
           `bounding box, not the mark`,
-      );
-    }
-    if (!/readonly tooltip = input</.test(script)) {
-      problems.push(
-        `${dir}: accepts \`interactive\` and declares no \`tooltip\` trigger`,
       );
     }
   }
