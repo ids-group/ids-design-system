@@ -90,7 +90,11 @@
               (keydown.space)="onPointKey(entry.point, $event)">
               <span class="plot-cell">
                 @if (showValues()) {
-                  <span class="value">
+                  <span
+                    class="value"
+                    [style.bottom.%]="
+                      entry.barBottomPercent + entry.barHeightPercent
+                    ">
                     {{ entry.formattedValue }}
                   </span>
                 }
@@ -98,7 +102,10 @@
                 <span
                   class="bar"
                   animate.enter="mark-enter"
-                  [style.height.%]="entry.heightPercent"
+                  [class.below-baseline]="entry.barOrigin === 'top'"
+                  [style.bottom.%]="entry.barBottomPercent"
+                  [style.height.%]="entry.barHeightPercent"
+                  [style.transform-origin]="entry.barOrigin"
                   [style.background]="entry.color">
                   @if (activeMark.pinned() && activeMark.index() === index) {
                     <ds-icon

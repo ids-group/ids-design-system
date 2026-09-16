@@ -65,8 +65,8 @@
     away from the chart. With
     <code class="t-mono-inline">
       dimOthers
-    </code> beside it the rest of the plot
-    stays down too, which is what makes the comparison survive the pointer
+    </code> beside it the rest of the
+    plot stays down too, which is what makes the comparison survive the pointer
     leaving. Escape releases it, and so does a press anywhere outside the mark.
     The click output fires either way.
   </p>
@@ -124,11 +124,11 @@
     column — that is what keeps a short column reachable.
     <code class="t-mono-inline">
       tooltipAnchor
-    </code> decides which of the two the
-    panel points at: <code class="t-mono-inline">'mark'</code>, the default, puts
-    it over the column, and <code class="t-mono-inline">'cell'</code> puts it at
-    the top of the cell, which is where it lands if you anchor to the box rather
-    than the mark.
+    </code> decides which of the two
+    the panel points at: <code class="t-mono-inline">'mark'</code>, the default,
+    puts it over the column, and <code class="t-mono-inline">'cell'</code> puts
+    it at the top of the cell, which is where it lands if you anchor to the box
+    rather than the mark.
     <code class="t-mono-inline">
       pointClicked
     </code> fires on click and on
@@ -252,8 +252,9 @@
     </summary>
 
     <p class="block-desc t-s">
-      The axis starts at zero and never goes below it, so a negative point keeps
-      its label and draws no column at all.
+      The axis reaches below zero when the data does, and a negative point
+      draws a column that grows down from the zero baseline rather than from
+      the plot floor.
     </p>
 
     <div class="states states--cols-2">
@@ -316,6 +317,18 @@
         </div>
 
         <docs-chart-data-editor [(rows)]="negativePoints" />
+      </div>
+
+      <div class="state-cell">
+        <ds-column-chart
+          dataTable="none"
+          [data]="plPoints()" />
+
+        <div class="state-cell-label">
+          P&amp;L, crossing zero twice
+        </div>
+
+        <docs-chart-data-editor [(rows)]="plPoints" />
       </div>
 
       <div class="state-cell">

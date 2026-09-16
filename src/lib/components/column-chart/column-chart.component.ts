@@ -16,7 +16,7 @@ import {
   describeSeries,
   formatTick,
   formatValue,
-  niceMax,
+  niceDomain,
   tickStep,
   describeShare,
   shareOfTotal,
@@ -41,7 +41,11 @@ import type {
   ChartItemTooltipTrigger,
   ChartTooltipContext,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
-import { heightPercent, resolveDomainMax } from './column-chart.math';
+import {
+  heightPercent,
+  resolveDomainMax,
+  resolveDomainMin,
+} from './column-chart.math';
 import type { ColumnChartPoint } from './column-chart.types';
 
 const defaultValueFormat = (value: number) => formatValue(value);
@@ -282,45 +286,73 @@ export class ColumnChartComponent {
     },
   );
 
+  protected readonly domainMin = computed(() =>
+    resolveDomainMin(this.data().map((point) => point.value)),
+  );
   protected readonly domainMax = computed(() =>
     resolveDomainMax(this.data().map((point) => point.value)),
   );
 
-  /** Top of the value axis: the domain rounded up to a whole tick, so the
-   *  tallest column ends on a gridline rather than between two. */
-  protected readonly axisMax = computed(() =>
-    niceMax(this.domainMax(), this.tickCount()),
+  /** Floor and ceiling of the value axis: the domain rounded outward to a whole tick, so the
+   *  tallest and (where the data reaches below zero) the lowest column each end on a gridline
+   *  rather than between two. */
+  protected readonly axisDomain = computed(() =>
+    niceDomain(this.domainMin(), this.domainMax(), this.tickCount()),
   );
 
+  /** Where zero sits in the plot, as a percent from the floor. Zero for an all-positive
+   *  series — the plot floor, exactly as before this axis could reach below zero — and
+   *  clamped to 100 for an all-negative one, where zero sits above the ceiling and every
+   *  column is measured against the ceiling instead. */
+  protected readonly zeroOffsetPercent = computed(() => {
+    const domain = this.axisDomain();
+
+    return heightPercent(0, domain.min, domain.max);
+  });
+
   protected readonly ticks = computed(() => {
-    const axisMax = this.axisMax();
-    // Niced from the same domain as `axisMax`, which is what makes the top tick
-    // and the top of the axis the same number.
-    const values = tickValues(this.domainMax(), this.tickCount());
+    const domain = this.axisDomain();
+    // Niced from the same domain as `axisDomain`, which is what makes the top and bottom
+    // ticks the top and bottom of the axis.
+    const values = tickValues(
+      this.domainMin(),
+      this.domainMax(),
+      this.tickCount(),
+    );
     const step = tickStep(values);
     const format = this.valueFormatResolved();
 
     return values.map((value) => ({
       label:
         format === defaultValueFormat ? formatTick(value, step) : format(value),
-      offsetPercent: heightPercent(value, axisMax),
+      offsetPercent: heightPercent(value, domain.min, domain.max),
     }));
   });
 
   protected readonly columns = computed(() => {
-    const axisMax = this.axisMax();
+    const domain = this.axisDomain();
+    const zero = this.zeroOffsetPercent();
     const format = this.valueFormatResolved();
     const values = this.data().map((point) => point.value);
 
-    return this.data().map((point, index) => ({
-      key: point.id ?? String(index),
-      point,
-      heightPercent: heightPercent(point.value, axisMax),
-      formattedValue: format(point.value),
-      share: this.partOfWhole() ? shareOfTotal(values, index) : '',
-      color:
-        point.color ?? CHART_SERIES_COLORS[index % CHART_SERIES_COLORS.length],
-    }));
+    return this.data().map((point, index) => {
+      const valueOffset = heightPercent(point.value, domain.min, domain.max);
+
+      return {
+        key: point.id ?? String(index),
+        point,
+        barBottomPercent: Math.min(valueOffset, zero),
+        barHeightPercent: Math.abs(valueOffset - zero),
+        // Growing from the baseline, never the mark's own tip — a column below zero grows
+        // downward, so its transform-origin flips to the top edge it hangs from.
+        barOrigin: valueOffset < zero ? ('top' as const) : null,
+        formattedValue: format(point.value),
+        share: this.partOfWhole() ? shareOfTotal(values, index) : '',
+        color:
+          point.color ??
+          CHART_SERIES_COLORS[index % CHART_SERIES_COLORS.length],
+      };
+    });
   });
 
   protected readonly accessibleName = computed(

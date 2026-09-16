@@ -26,6 +26,13 @@ const NEGATIVE_POINTS: readonly ColumnChartPoint[] = [
   { label: 'Net change', value: 460 },
 ];
 
+const PL_POINTS: readonly ColumnChartPoint[] = [
+  { label: 'Q1', value: -120 },
+  { label: 'Q2', value: 40 },
+  { label: 'Q3', value: -30 },
+  { label: 'Q4', value: 80 },
+];
+
 const HUGE_OUTLIER_POINTS: readonly ColumnChartPoint[] = [
   { label: 'Direct', value: 62 },
   { label: 'Search', value: 58 },
@@ -89,6 +96,7 @@ export class ColumnChartSection {
     signal<readonly ColumnChartPoint[]>(ALL_ZEROS_POINTS);
   protected readonly negativePoints =
     signal<readonly ColumnChartPoint[]>(NEGATIVE_POINTS);
+  protected readonly plPoints = signal<readonly ColumnChartPoint[]>(PL_POINTS);
   protected readonly hugeOutlierPoints =
     signal<readonly ColumnChartPoint[]>(HUGE_OUTLIER_POINTS);
   protected readonly longLabelPoints =

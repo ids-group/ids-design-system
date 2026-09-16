@@ -16,12 +16,13 @@ export { elementWidth } from './charts-measure';
 export {
   bandScale,
   pointScale,
+  domainMinOf,
   linearScale,
-  niceMax,
+  niceDomain,
   tickStep,
   tickValues,
 } from './charts-scale';
-export type { BandScale, PointScale } from './charts-scale';
+export type { BandScale, NiceDomain, PointScale } from './charts-scale';
 export { staggerDelay } from './charts-motion';
 export { focusMark, nextRovingIndex } from './charts-roving';
 export { describeSeries } from './charts-summary';

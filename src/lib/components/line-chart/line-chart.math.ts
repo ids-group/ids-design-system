@@ -1,7 +1,7 @@
 import {
   pointScale,
   linearScale,
-  niceMax,
+  niceDomain,
   tickValues,
 } from '@ids-group-ltd/ids-design-system/components';
 import type { LineChartAxisMode, LineChartGaps } from './line-chart.types';
@@ -139,8 +139,8 @@ export function roundStepAtLeast(minimumStep: number): number {
 
 function nicedAxis(domainMax: number, tickCount: number): AxisScale {
   return {
-    max: niceMax(domainMax, tickCount),
-    ticks: tickValues(domainMax, tickCount),
+    max: niceDomain(0, domainMax, tickCount).max,
+    ticks: tickValues(0, domainMax, tickCount),
   };
 }
 
@@ -254,7 +254,7 @@ export function categoryCenters(count: number, plot: PlotArea): number[] {
  *  below, and the finite test is what stops an unplottable one becoming `NaN`. */
 export function valueY(value: number, axisMax: number, plot: PlotArea): number {
   const baseline = plot.top + plot.height;
-  const y = baseline - linearScale(axisMax, plot.height)(value);
+  const y = baseline - linearScale(0, axisMax, plot.height)(value);
   if (!Number.isFinite(y)) {
     return baseline;
   }

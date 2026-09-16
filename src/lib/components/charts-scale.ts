@@ -2,10 +2,10 @@ const E10 = Math.sqrt(50);
 const E5 = Math.sqrt(10);
 const E2 = Math.sqrt(2);
 
-/** d3's tick-increment rule. A naive `max / count` produces steps like 482, which
+/** d3's tick-increment rule. A naive `span / count` produces steps like 482, which
  *  no reader parses; this snaps to 1, 2, 5 or 10 times a power of ten. */
-function tickIncrement(domainMax: number, targetCount: number): number {
-  const step = domainMax / Math.max(1, targetCount);
+function tickIncrement(span: number, targetCount: number): number {
+  const step = span / Math.max(1, targetCount);
   const power = Math.floor(Math.log10(step));
   const error = step / Math.pow(10, power);
   const factor = error >= E10 ? 10 : error >= E5 ? 5 : error >= E2 ? 2 : 1;
@@ -13,14 +13,29 @@ function tickIncrement(domainMax: number, targetCount: number): number {
   return factor * Math.pow(10, power);
 }
 
+/** The floor of a domain that has to include zero: zero itself for an all-positive
+ *  series, and the most negative reading otherwise.
+ *
+ *  @internal */
+export function domainMinOf(values: readonly number[]): number {
+  return values.reduce((min, value) => Math.min(min, value), 0);
+}
+
 /** @internal */
-export function tickValues(domainMax: number, targetCount: number): number[] {
-  if (!Number.isFinite(domainMax) || domainMax <= 0) {
+export function tickValues(
+  domainMin: number,
+  domainMax: number,
+  targetCount: number,
+): number[] {
+  const span = domainMax - domainMin;
+  if (!Number.isFinite(span) || span <= 0) {
     return [0];
   }
-  const step = tickIncrement(domainMax, targetCount);
+  const step = tickIncrement(span, targetCount);
+  const first = Math.floor(domainMin / step);
+  const last = Math.ceil(domainMax / step);
   const out: number[] = [];
-  for (let i = 0; i <= Math.ceil(domainMax / step); i++) {
+  for (let i = first; i <= last; i++) {
     out.push(i * step);
   }
 
@@ -28,13 +43,27 @@ export function tickValues(domainMax: number, targetCount: number): number[] {
 }
 
 /** @internal */
-export function niceMax(domainMax: number, targetCount: number): number {
-  if (!Number.isFinite(domainMax) || domainMax <= 0) {
-    return 0;
-  }
-  const step = tickIncrement(domainMax, targetCount);
+export interface NiceDomain {
+  readonly min: number;
+  readonly max: number;
+}
 
-  return Math.ceil(domainMax / step) * step;
+/** @internal */
+export function niceDomain(
+  domainMin: number,
+  domainMax: number,
+  targetCount: number,
+): NiceDomain {
+  const span = domainMax - domainMin;
+  if (!Number.isFinite(span) || span <= 0) {
+    return { min: 0, max: 0 };
+  }
+  const step = tickIncrement(span, targetCount);
+
+  return {
+    min: Math.floor(domainMin / step) * step,
+    max: Math.ceil(domainMax / step) * step,
+  };
 }
 
 /** Distance between two ticks, which `formatTick` needs to pick a precision. A
@@ -47,14 +76,16 @@ export function tickStep(ticks: readonly number[]): number {
 
 /** @internal */
 export function linearScale(
+  domainMin: number,
   domainMax: number,
   rangeSize: number,
 ): (value: number) => number {
-  if (!Number.isFinite(domainMax) || domainMax <= 0) {
+  const span = domainMax - domainMin;
+  if (!Number.isFinite(span) || span <= 0) {
     return () => 0;
   }
 
-  return (value) => (value / domainMax) * rangeSize;
+  return (value) => ((value - domainMin) / span) * rangeSize;
 }
 
 /** @internal */

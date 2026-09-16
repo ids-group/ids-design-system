@@ -115,24 +115,30 @@ figcaption {
   }
 }
 
+// A column's bottom and height are both set from a shared zero baseline rather than always
+// from the cell's own floor, so a value below zero grows downward from that baseline instead
+// of from the bottom of the cell.
 .plot-cell {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
+  position: relative;
   block-size: var(--_column-chart-plot-height);
 }
 
 .value {
+  position: absolute;
+  inset-inline: 0;
+  transform: translateY(calc(-100% - var(--space-2)));
   font-size: var(--font-size-xs);
   font-weight: 700;
+  text-align: center;
   white-space: nowrap;
 }
 
 // The cap, not the percentage, is what keeps this reading as a chart: at five categories 80% of
 // the cell is a slab wider than its own label, and the eye stops seeing a series.
 .bar {
-  position: relative;
+  position: absolute;
+  inset-inline: 0;
+  margin-inline: auto;
   inline-size: var(--_column-chart-column-width);
   max-inline-size: var(--_column-chart-column-max-width);
   border-start-start-radius: var(--_column-chart-cap-radius);
@@ -143,10 +149,21 @@ figcaption {
   // the cap changes shape for the length of the animation. The cost is a layout pass per frame on
   // one property. The mark's ARRIVAL does scale, where the squash is worth the compositor.
   transition:
+    bottom var(--ds-motion-chart-mark-duration)
+      var(--ds-motion-chart-mark-easing),
     block-size var(--ds-motion-chart-mark-duration)
       var(--ds-motion-chart-mark-easing),
     background-color var(--ds-motion-chart-mark-duration)
       var(--ds-motion-chart-mark-easing);
+
+  // A column below the zero baseline hangs from it, so its cap — the free end, away from the
+  // baseline — is at the bottom rather than the top.
+  &.below-baseline {
+    border-start-start-radius: 0;
+    border-start-end-radius: 0;
+    border-end-start-radius: var(--_column-chart-cap-radius);
+    border-end-end-radius: var(--_column-chart-cap-radius);
+  }
 }
 
 .category-label {
