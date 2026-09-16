@@ -156,13 +156,19 @@ export class ChartComponent implements ChartScales {
     });
   }
 
-  protected readonly domain = computed(() =>
-    axisDomain(
-      this.reportedDomains().values(),
-      this.tickCount(),
-      this.min(),
-      this.max(),
-    ),
+  /** Compared by value, which is what stops a mark that reports AND reads `yPosition()` in one
+   *  effect from running forever: every report allocates a fresh `Map` and `niceDomain` a fresh
+   *  object, so identity always differs and the read would re-arm the write. Measured without it:
+   *  97507 effect runs in 45 seconds, no Angular loop error, renderer unresponsive. */
+  protected readonly domain = computed(
+    () =>
+      axisDomain(
+        this.reportedDomains().values(),
+        this.tickCount(),
+        this.min(),
+        this.max(),
+      ),
+    { equal: (a, b) => a.min === b.min && a.max === b.max },
   );
 
   private readonly bands = computed(() =>
