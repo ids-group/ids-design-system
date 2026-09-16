@@ -9,12 +9,12 @@
 //
 //   node tools/check-chart-aria.mjs            check against the baseline
 //   node tools/check-chart-aria.mjs --update   rewrite the baseline after an intended change
-import { readFileSync, writeFileSync, readdirSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { chartComponents, templateOf } from './chart-components.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const COMPONENTS = join(ROOT, 'src', 'lib', 'components');
 const BASELINE = join(ROOT, 'tools', 'chart-aria-snapshot.json');
 const update = process.argv.includes('--update');
 
@@ -43,11 +43,8 @@ function ariaOf(template) {
 }
 
 const snapshot = {};
-for (const entry of readdirSync(COMPONENTS, { withFileTypes: true })) {
-  if (!entry.isDirectory() || !entry.name.endsWith('-chart')) continue;
-  const template = join(COMPONENTS, entry.name, `${entry.name}.component.html`);
-  if (!existsSync(template)) continue;
-  snapshot[entry.name] = ariaOf(readFileSync(template, 'utf8'));
+for (const { name, base } of chartComponents()) {
+  snapshot[name] = ariaOf(templateOf(base));
 }
 
 if (update) {

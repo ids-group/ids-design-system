@@ -12,9 +12,9 @@
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { chartComponents, templateOf } from './chart-components.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const COMPONENTS = join(ROOT, 'src', 'lib', 'components');
 
 // Loops whose items have no datum identity of their own: a placeholder, a tick, an axis label, one
 // segment of a broken line, a table cell. `$index` is the only key these have.
@@ -29,15 +29,11 @@ function withoutComments(source) {
     .replace(/(^|\s)\/\/.*$/gm, '$1');
 }
 
-const chartDirs = readdirSync(COMPONENTS, { withFileTypes: true })
-  .filter((entry) => entry.isDirectory() && entry.name.endsWith('-chart'))
-  .map((entry) => entry.name);
+const charts = chartComponents();
 
-for (const dir of chartDirs) {
-  const base = join(COMPONENTS, dir, `${dir}.component`);
-  if (!existsSync(`${base}.ts`)) continue;
+for (const { name: dir, base } of charts) {
   const script = readFileSync(`${base}.ts`, 'utf8');
-  const template = readFileSync(`${base}.html`, 'utf8');
+  const template = templateOf(base);
   const styles = existsSync(`${base}.scss`)
     ? readFileSync(`${base}.scss`, 'utf8')
     : '';
@@ -135,5 +131,6 @@ if (problems.length) {
 }
 
 console.log(
-  `check-chart-interaction: ${chartDirs.length} chart(s) and ${declared.length} public token(s) OK.`,
+  `check-chart-interaction: ${charts.length} chart(s) (${charts.map((chart) => chart.name).join(', ')}) ` +
+    `and ${declared.length} public token(s) OK.`,
 );

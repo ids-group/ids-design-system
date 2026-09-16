@@ -5,6 +5,13 @@
     "div: role={interactive() ? 'group' : 'img'}, aria-label={accessibleName()}",
     "div: role={interactive() ? 'button' : null}, aria-label={interactive() ? entryLabel(entry) : null}"
   ],
+  "chart": [
+    "p: role=status",
+    "div: aria-hidden=true",
+    "div: role=group, aria-label={accessibleName()}",
+    "g: aria-hidden=true",
+    "g: aria-hidden=true"
+  ],
   "column-chart": [
     "p: role=status",
     "div: aria-hidden=true",
