@@ -13,6 +13,7 @@ export {
   describeShare,
   shareOfTotal,
 } from './charts-format';
+export { elementWidth } from './charts-measure';
 export {
   bandScale,
   pointScale,

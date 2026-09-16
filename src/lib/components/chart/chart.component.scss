@@ -6,7 +6,6 @@
   --_chart-axis-line-color: var(--ds-chart-axis-line-color, var(--chart-axis-line-color));
   --_chart-axis-label-color: var(--ds-chart-axis-label-color, var(--chart-axis-label-color));
   --_chart-axis-font-size: var(--ds-chart-axis-font-size, var(--chart-axis-font-size));
-  --_chart-plot-height: var(--ds-chart-plot-height, 240px);
 
   margin: 0;
 }
@@ -17,20 +16,17 @@ figcaption {
   font-weight: 600;
 }
 
-@include chart-frame.message-box(var(--_chart-plot-height), true);
+/* `--_chart-view-height` is set on the host in px, from the same TS geometry the canvas is drawn
+   with: the plot's height is an SVG coordinate, so CSS cannot be its source, and a message box
+   that does not match it jumps the card when the data lands. */
+@include chart-frame.message-box(var(--_chart-view-height), true);
 
-/* The canvas is an svg sized by its viewBox ratio against the card width, not by the plot-height
-   token - so reserving that token alone leaves the message box short by however much the width
-   adds, and the card jumps when the data lands. */
-.empty {
-  aspect-ratio: 640 / 320;
-  inline-size: 100%;
-}
-
+/* The canvas is measured, not ratio-sized: `inline-size` is what the ResizeObserver reads back to
+   set the viewBox width, and `block-size` is bound to the viewBox height. Giving either of them
+   to the other would be circular. */
 .canvas {
   display: block;
   inline-size: 100%;
-  block-size: auto;
 }
 
 .grid-line {

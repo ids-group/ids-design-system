@@ -38,7 +38,13 @@ for (const { name: dir, base } of charts) {
     ? readFileSync(`${base}.scss`, 'utf8')
     : '';
 
-  if (/readonly interactive = input\(/.test(script)) {
+  // A container projects its marks rather than drawing them, and `interactive` reaches it only to
+  // pick the plot's ARIA role. The hover state, the cursor and the tooltip belong to whatever is
+  // projected in; demanding them here would make the container write rules for elements it does
+  // not own, which is how a gate teaches the wrong lesson.
+  const projectsItsMarks = /<ng-content\b/.test(template);
+
+  if (!projectsItsMarks && /readonly interactive = input\(/.test(script)) {
     if (!/chart-interactive\.(fades|dims)\(/.test(styles)) {
       problems.push(
         `${dir}: accepts \`interactive\` and derives no hover state — include ` +

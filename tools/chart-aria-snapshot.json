@@ -8,7 +8,7 @@
   "chart": [
     "p: role=status",
     "div: aria-hidden=true",
-    "div: role=group, aria-label={accessibleName()}",
+    "div: role={interactive() ? 'group' : 'img'}, aria-label={accessibleName()}",
     "g: aria-hidden=true",
     "g: aria-hidden=true"
   ],

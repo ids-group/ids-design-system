@@ -15,7 +15,7 @@
     <div
       class="skeleton"
       aria-hidden="true">
-      <ds-skeleton height="var(--_chart-plot-height)" />
+      <ds-skeleton height="var(--_chart-view-height)" />
     </div>
   } @else if (isEmpty()) {
     <p class="empty">
@@ -24,12 +24,13 @@
   } @else {
     <div
       class="plot"
-      role="group"
+      [attr.role]="interactive() ? 'group' : 'img'"
       [attr.aria-label]="accessibleName()">
       <svg
         class="canvas"
         preserveAspectRatio="xMidYMid meet"
-        [attr.viewBox]="viewBox">
+        [style.block-size.px]="viewHeight()"
+        [attr.viewBox]="viewBox()">
         <!-- Hidden as a group rather than on the svg: a projected mark may be focusable, and an
              aria-hidden ancestor would leave it reachable by Tab and invisible to a reader. -->
         <g

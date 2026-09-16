@@ -1,7 +1,8 @@
 import { InjectionToken, Signal } from '@angular/core';
 
-/** The drawable rectangle inside `ds-chart`, in the coordinate space of its `viewBox` rather
- *  than in CSS pixels. The gutters outside it carry the axis labels. */
+/** The drawable rectangle inside `ds-chart`, in CSS pixels: the container measures itself and
+ *  sizes its `viewBox` so one user unit is one pixel. A length written into a mark is therefore
+ *  the length it says it is, at every card width. The gutters outside it carry the axis labels. */
 export interface ChartPlot {
   readonly width: number;
   readonly height: number;

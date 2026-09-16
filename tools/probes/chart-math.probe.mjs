@@ -7,16 +7,37 @@ const components = registerComponentsFacade(import.meta.url, [
   'charts-scale.ts',
 ]);
 
-const { CHART_PLOT, axisDomain, valueScale } = await import(
+const { axisDomain, chartPlot, chartViewHeight, valueScale } = await import(
   pathToFileURL(join(components, 'chart', 'chart.math.ts')).href
 );
 
-check('the plot leaves a gutter for each axis', CHART_PLOT, {
+check('the plot leaves a gutter for each axis', chartPlot(640, 240, 46, 20), {
   left: 46,
-  top: 14,
+  top: 20,
   width: 582,
-  height: 276,
+  height: 240,
 });
+check('the plot width follows the measured width', chartPlot(320, 240, 46, 20), {
+  left: 46,
+  top: 20,
+  width: 262,
+  height: 240,
+});
+check('the plot height does NOT follow the measured width', chartPlot(320, 240, 46, 20).height, 240);
+check('a width narrower than its gutters leaves no plot', chartPlot(40, 240, 46, 20).width, 0);
+check('an unmeasured width leaves no plot', chartPlot(0, 240, 46, 20).width, 0);
+check('a negative plot height is floored at zero', chartPlot(640, -50, 46, 20).height, 0);
+check('a wider axis gutter takes it out of the plot', chartPlot(640, 240, 80, 20), {
+  left: 80,
+  top: 20,
+  width: 548,
+  height: 240,
+});
+
+check('the view budgets value space at both ends', chartViewHeight(240, 20), 310);
+check('no value space leaves the category row alone', chartViewHeight(240, 0), 270);
+check('the view height grows with the plot one for one', chartViewHeight(340, 20) - chartViewHeight(240, 20), 100);
+check('the view height grows with value space two for one', chartViewHeight(240, 30) - chartViewHeight(240, 20), 20);
 
 check('one reported set rounds up to a tick', axisDomain([[10, 20, 30]], 5), {
   min: 0,
