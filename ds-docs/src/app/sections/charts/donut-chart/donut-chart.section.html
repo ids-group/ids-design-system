@@ -376,6 +376,17 @@
       <div class="state-cell">
         <ds-donut-chart
           dataTable="none"
+          error
+          [data]="emptySlices()" />
+
+        <div class="state-cell-label">
+          Error
+        </div>
+      </div>
+
+      <div class="state-cell">
+        <ds-donut-chart
+          dataTable="none"
           [data]="oneSlice()" />
 
         <div class="state-cell-label">

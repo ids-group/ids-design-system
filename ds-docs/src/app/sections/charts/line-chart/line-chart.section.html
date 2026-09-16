@@ -673,6 +673,18 @@
 
       <div class="state-cell">
         <ds-line-chart
+          dataTable="none"
+          error
+          [categories]="emptyCategories()"
+          [series]="emptySeries()" />
+
+        <div class="state-cell-label">
+          Error
+        </div>
+      </div>
+
+      <div class="state-cell">
+        <ds-line-chart
           caption="A single series carries no legend, and the axes are still drawn"
           dataTable="none"
           [categories]="oneSeriesCategories()"

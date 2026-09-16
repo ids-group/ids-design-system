@@ -333,6 +333,17 @@
       <div class="state-cell">
         <ds-funnel-chart
           dataTable="none"
+          error
+          [data]="emptyStages()" />
+
+        <div class="state-cell-label">
+          Error
+        </div>
+      </div>
+
+      <div class="state-cell">
+        <ds-funnel-chart
+          dataTable="none"
           [data]="oneStage()" />
 
         <div class="state-cell-label">
