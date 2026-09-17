@@ -163,27 +163,6 @@
       ],
       "verify": "Every custom `valueFormat` bound on a `ds-column-chart` or `ds-line-chart` reads its second argument, and the value axis on such a chart prints a compact label rather than the full number.",
       "note": "The axis tick and the annex table used to share one formatter call with no way to tell them apart, so a formatter written to spell the table's values out in full also ran, unchanged, on the axis. `location` is what lets one callback serve both without a chart-side special case for its own default."
-    },
-    {
-      "id": "donut-chart-states-each-share-by-default",
-      "kind": "behavior",
-      "old": "ds-donut-chart[partOfWhole]",
-      "new": null,
-      "surface": "template",
-      "action": "Nothing, unless a donut must NOT print percentages: add `[partOfWhole]=\"false\"` to it.",
-      "appliesWhen": "Only `ds-donut-chart`. The same input on `ds-bar-chart`, `ds-column-chart` and `ds-line-chart` still defaults to false, because their categories often sum to a number nobody can point at.",
-      "pitfall": "Nothing errors and no binding changes, so a build that passes proves nothing. A donut whose slices are filtered to a subset now states each one as a share of the SUBSET, which reads as a share of the whole to anyone who did not choose the filter.",
-      "restore": "[partOfWhole]=\"false\"",
-      "searchHints": [
-        "ds-donut-chart",
-        "partOfWhole"
-      ],
-      "detect": [
-        "ds-donut-chart",
-        "partOfWhole"
-      ],
-      "verify": "Every donut that shows a filtered or partial set either carries `[partOfWhole]=\"false\"` or has a caption saying what the total is.",
-      "note": "A donut is parts of one whole by construction, so the flag was asking a question its own geometry had already answered, and a reader had to be told the proportion in a caption the chart could have printed itself. The share now appears in the legend, the tooltip and the data table."
     }
   ],
   "informational": [
@@ -196,7 +175,8 @@
     "`ds-line-chart` and `ds-column-chart` draw their axes behind the empty, error and no-visible-series messages. No ticks and no labels, because there is no data to scale them against.",
     "The `pin` icon is redrawn as a drawing pin seen from the side. Any `<ds-icon name=\"pin\">` in your app changes shape.",
     "The built-in default `valueFormat` on `ds-column-chart` and `ds-line-chart` now compacts each axis tick by that tick's own magnitude (`Intl.NumberFormat`'s `notation: 'compact'`), where the previous default picked one suffix for the whole axis from its step. An axis whose ticks cross a thousand, million or billion boundary can now print more than one suffix, `1M` beside `800K` where it used to print `1000K` beside `800K`. Nothing in your code changes; a screenshot of such an axis will differ.",
-    "Hovering or focusing a legend item on `ds-donut-chart`, or a stage row on `ds-funnel-chart`, now opens the same tooltip over the MARK it names and dims the rest of the plot, exactly as pointing at the arc or the bar does. Nothing to change: it affects what a pointer does, not what a template declares."
+    "Hovering or focusing a legend item on `ds-donut-chart`, or a stage row on `ds-funnel-chart`, now opens the same tooltip over the MARK it names and dims the rest of the plot, exactly as pointing at the arc or the bar does. Nothing to change: it affects what a pointer does, not what a template declares.",
+    "`ds-donut-chart` gains `partOfWhole`, defaulting to true. A ring's legend, tooltip and data table always stated each slice's share before this input existed; `partOfWhole` only adds the opt-out that was previously impossible — `[partOfWhole]=\"false\"` drops it from all three. Nothing changes for an existing consumer."
   ],
   "deleteList": []
 }
