@@ -31,7 +31,7 @@ function withoutComments(source) {
 
 const charts = chartComponents();
 
-for (const { name: dir, base } of charts) {
+for (const { name: component, base } of charts) {
   const script = readFileSync(`${base}.ts`, 'utf8');
   const template = templateOf(base);
   const styles = existsSync(`${base}.scss`)
@@ -52,18 +52,18 @@ for (const { name: dir, base } of charts) {
     if (!projectsItsMarks && !delegatesItsMarks) {
       if (!/chart-interactive\.(fades|dims)\(/.test(styles)) {
         problems.push(
-          `${dir}: accepts \`interactive\` and derives no hover state — include ` +
+          `${component}: accepts \`interactive\` and derives no hover state — include ` +
             `chart-interactive.fades() or .dims()`,
         );
       }
       if (!/cursor:\s*pointer|chart-interactive\.clickable\(/.test(styles)) {
         problems.push(
-          `${dir}: accepts \`interactive\` and offers no pointer cursor`,
+          `${component}: accepts \`interactive\` and offers no pointer cursor`,
         );
       }
       if (!/readonly tooltip = input</.test(script)) {
         problems.push(
-          `${dir}: accepts \`interactive\` and declares no \`tooltip\` trigger`,
+          `${component}: accepts \`interactive\` and declares no \`tooltip\` trigger`,
         );
       }
     }
@@ -77,7 +77,7 @@ for (const { name: dir, base } of charts) {
       );
     if (svgMarkIsFocusable && !/drawn-focus-ring/.test(styles)) {
       problems.push(
-        `${dir}: a focusable SVG mark and no drawn focus ring — an outline there paints the ` +
+        `${component}: a focusable SVG mark and no drawn focus ring — an outline there paints the ` +
           `bounding box, not the mark`,
       );
     }
@@ -88,7 +88,7 @@ for (const { name: dir, base } of charts) {
   )) {
     if (!KEYLESS_LOOPS.test(iterable)) {
       problems.push(
-        `${dir}: \`@for (… of ${iterable}; track $index)\` — key a mark by its datum, never by ` +
+        `${component}: \`@for (… of ${iterable}; track $index)\` — key a mark by its datum, never by ` +
           `its position`,
       );
     }

@@ -62,6 +62,22 @@
 
 ### Added
 
+- **A column can be drawn as a projection rather than a reading.** A `ColumnChartPoint` that sets
+  `fill: 'hatched'` keeps its colour and takes a striped texture over it, which is what separates a
+  forecast from a settled figure without spending a second hue on it.
+
+  ```html
+  <ds-column-chart [data]="[
+    { label: 'Jun', value: 3020 },
+    { label: 'Jul', value: 3400, fill: 'hatched' },
+  ]" />
+  ```
+
+  Texture is the encoding that survives greyscale, print and colour-vision deficiency, so it carries
+  the distinction where a lighter tint of the same colour would not. The chart reads nothing into the
+  flag: which columns are projections is a fact only the caller has. `--ds-chart-hatch-color` and
+  `--ds-chart-hatch-width` tune the stripes.
+
 - **A second value axis on `ds-chart`, and a line series to draw against it.** A plot can now carry
   two quantities at two magnitudes - a figure per month on the left axis, the running total of
   those months on the right - instead of flattening one of them against the other's scale.
@@ -103,6 +119,17 @@
 
 ### Changed
 
+- **`ds-donut-chart` prints each slice's share by default.** `partOfWhole` had to be set before a
+  donut would state what proportion a slice was, which is a flag a donut never needs: its slices are
+  parts of one whole by construction, unlike a bar or column chart where the categories often sum to
+  a number nobody can point at. The share now appears in the legend, the tooltip and the data table
+  without asking. `[partOfWhole]="false"` removes it from all of them.
+
+- **Hovering a legend item behaves as hovering the mark it names.** On `ds-donut-chart` the panel
+  opened over the legend row rather than over the arc, so the reader was pointed at the label
+  instead of the slice; on `ds-funnel-chart` the stage rows did nothing at all. Both now open the
+  same panel over the MARK and dim the rest of the plot, identical to pointing at the arc or the bar
+  directly, and the keyboard route follows wherever the legend carries it.
 
 - **A chart tooltip opens against its mark, not against the row that holds it.** `ds-bar-chart`
   anchored the panel to the whole row — label, value and track — so it opened a row-height above
@@ -150,6 +177,26 @@
 
 - **`indeterminate` is ignored unless `semantics` is `'progress'`.** Only a task has an unknown
   duration. Nothing that set it on `ds-progress` is affected, because that is the default.
+
+### Fixed
+
+- **A pinned tooltip survives a scroll.** Every chart tore its panel down on any scroll of the page,
+  and because a pinned mark deliberately stops answering the pointer, nothing brought it back: the
+  pin badge and the Unpin control were left sitting over a reading that was no longer on screen.
+  The panel repositions now instead of closing. An unpinned tooltip still goes away on both a scroll
+  and the pointer leaving, as it always did.
+
+- **A column chart plots a domain that reaches below zero.** Every scale clamped its floor at zero,
+  so a negative reading drew nothing at all and a P&L series rendered as a flat baseline with no
+  warning. The axis now spans the data, the zero line is drawn where it falls inside the plot, and a
+  negative column grows downward from it with its value label at its own tip. Room for that label is
+  reserved only when the domain actually reaches below zero, so an all-positive chart keeps its
+  height.
+
+- **The value axis fits its own labels.** The gutter was a fixed width, which an SVG canvas CLIPS
+  rather than overflows, so a locale whose compact numbers are wider than an English `3.5k` lost the
+  leading digit of every tick - `3,5 тыс.` printed as `,5 тыс.`. The gutter is measured from the
+  widest label that actually rendered, and `axisGutter` is the floor it will not go below.
 
 
 ## 0.13.2 — 2026-09-15

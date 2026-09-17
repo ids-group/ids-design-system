@@ -156,6 +156,9 @@ const THRESHOLD_LABEL_INSET = 4;
 
 /** @internal */
 export interface ThresholdMark {
+  /** Position in the list, not the reading: two thresholds may legitimately name the same value -
+   *  a target and the floor of the band around it - and keying on the value would collapse them
+   *  into one drawn line. */
   readonly key: number;
   readonly label: string;
   readonly color: string | null;
@@ -181,13 +184,13 @@ export function thresholdMarks(
   plot: { left: number; top: number; width: number; height: number },
   toY: (value: number) => number,
 ): readonly ThresholdMark[] {
-  return thresholds.map((threshold) => {
+  return thresholds.map((threshold, index) => {
     const y = toY(threshold.value);
     const far = threshold.to == null ? y : toY(threshold.to);
     const top = Math.min(y, far);
 
     return {
-      key: threshold.value,
+      key: index,
       label: threshold.label ?? '',
       color: threshold.color ?? null,
       dash: threshold.dash ?? 'dashed',
