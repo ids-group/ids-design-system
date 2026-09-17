@@ -1,0 +1,93 @@
+<svg:g
+  class="columns"
+  [class.dims-others]="dimOthers()"
+  [style.--_column-chart-column-share]="markWidthPx()"
+  [style.--_column-chart-band-step]="bandStepPx()">
+  @for (mark of marks(); track mark.key; let index = $index) {
+    <svg:g
+      class="column"
+      animate.leave="mark-leave"
+      [class.interactive]="interactive()"
+      [class.below-baseline]="mark.below"
+      [class.is-pinned]="activeMark.pinned() && activeMark.index() === index"
+      [style.--_chart-mark-stagger]="markStagger(index)"
+      [style.--_column-mark-height]="mark.height + 'px'"
+      [style.--_column-baseline-y]="mark.baseline + 'px'"
+      [attr.transform]="'translate(' + mark.x + ',0)'"
+      [attr.data-mark-index]="index"
+      [attr.role]="interactive() ? 'button' : null"
+      [attr.tabindex]="
+        interactive() ? (index === tabStopIndex() ? 0 : -1) : null
+      "
+      [attr.aria-label]="interactive() ? entryLabel(mark) : null"
+      (pointerenter)="onMarkEnter(index, $event)"
+      (pointerleave)="activeMark.leave()"
+      (focus)="onMarkFocus(index, $event)"
+      (blur)="activeMark.leave()"
+      (keydown)="onMarkNavigation($event, index)"
+      (click)="onMarkClick(mark.point, index, $event)"
+      (keydown.enter)="onPointKey(mark.point, $event)"
+      (keydown.space)="onPointKey(mark.point, $event)">
+      <!-- The box that catches the pointer is the whole category slot, not the drawn column: a
+           column two pixels tall is otherwise unreachable, and a pointer that has to find the
+           mark is a pointer that misses it. -->
+      <svg:rect
+        class="hit-area"
+        y="0"
+        [attr.height]="hitHeight()" />
+
+      <svg:g
+        class="bar"
+        animate.enter="mark-enter"
+        [style.transform-origin]="mark.origin">
+        <!-- Under the capped rect, not beside it: `rx` rounds all four corners, and the cap
+             belongs on the free end alone. This one fills the two corners at the baseline back
+             in, and both keep `y` and `height` a plain interpolable length, which a `<path>`
+             would not. -->
+        <svg:rect
+          class="bar-base"
+          [attr.fill]="mark.color" />
+
+        <svg:rect
+          class="bar-cap"
+          [attr.y]="mark.top"
+          [attr.height]="mark.height"
+          [attr.fill]="mark.color" />
+      </svg:g>
+
+      @if (showValues()) {
+        <svg:text
+          class="value"
+          text-anchor="middle"
+          [attr.y]="mark.labelY">
+          {{ mark.formattedValue }}
+        </svg:text>
+      }
+
+      @if (activeMark.pinned() && activeMark.index() === index) {
+        <svg:g
+          class="pin-marker"
+          aria-hidden="true"
+          [attr.transform]="'translate(0,' + mark.pinY + ')'">
+          <svg:circle
+            class="pin-disc"
+            [attr.r]="pinDiscRadius" />
+
+          <svg:svg
+            class="pin-glyph"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            [attr.x]="pinGlyphOffset"
+            [attr.y]="pinGlyphOffset"
+            [attr.width]="pinGlyphSize"
+            [attr.height]="pinGlyphSize"
+            [innerHTML]="pinGlyph" />
+        </svg:g>
+      }
+    </svg:g>
+  }
+</svg:g>

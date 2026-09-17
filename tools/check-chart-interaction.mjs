@@ -38,16 +38,18 @@ for (const { name: dir, base } of charts) {
     ? readFileSync(`${base}.scss`, 'utf8')
     : '';
 
-  // A container projects its marks rather than drawing them, and `interactive` reaches it only to
-  // pick the plot's ARIA role. The hover state, the cursor and the tooltip belong to whatever is
-  // projected in; demanding them here would make the container write rules for elements it does
-  // not own, which is how a gate teaches the wrong lesson. The focus ring below is NOT part of
-  // that exemption: it is keyed on a mark this component's own template draws, and an outline on
-  // an SVG element is wrong whoever else the component also projects.
+  // Neither end of a composed chart draws its own marks: the container projects them, and a preset
+  // hands them to a series inside that container. `interactive` still reaches both, for the plot's
+  // ARIA role and to pass along. The hover state, the cursor and the tooltip belong to whichever
+  // component owns the marks; demanding them here would make the other two write rules for
+  // elements they do not own, which is how a gate teaches the wrong lesson. The focus ring below is
+  // NOT part of that exemption: it is keyed on a mark this component's own template draws, and an
+  // outline on an SVG element is wrong whoever else the component also composes.
   const projectsItsMarks = /<ng-content\b/.test(template);
+  const delegatesItsMarks = /<ds-chart[\s>]/.test(template);
 
   if (/readonly interactive = input\(/.test(script)) {
-    if (!projectsItsMarks) {
+    if (!projectsItsMarks && !delegatesItsMarks) {
       if (!/chart-interactive\.(fades|dims)\(/.test(styles)) {
         problems.push(
           `${dir}: accepts \`interactive\` and derives no hover state — include ` +
@@ -70,7 +72,9 @@ for (const { name: dir, base } of charts) {
     // BOX rather than its silhouette, so the library's catch-all ring is wrong there and the chart
     // has to draw one; an HTML mark takes that catch-all and needs nothing.
     const svgMarkIsFocusable =
-      /<(path|polygon|circle|rect|line)\s[^>]*\[attr\.tabindex\]/s.test(template);
+      /<(?:svg:)?(path|polygon|circle|rect|line|g)\s[^>]*\[attr\.tabindex\]/s.test(
+        template,
+      );
     if (svgMarkIsFocusable && !/drawn-focus-ring/.test(styles)) {
       problems.push(
         `${dir}: a focusable SVG mark and no drawn focus ring — an outline there paints the ` +
@@ -94,7 +98,10 @@ for (const { name: dir, base } of charts) {
 // The DECLARATION lines only. A token named inside a comment is not a declaration — scraping those
 // is what once made a count of this very set wrong by one.
 const publicLayer = withoutComments(
-  readFileSync(join(ROOT, 'src', 'lib', 'styles', '_tokens-charts.scss'), 'utf8'),
+  readFileSync(
+    join(ROOT, 'src', 'lib', 'styles', '_tokens-charts.scss'),
+    'utf8',
+  ),
 );
 const declared = [
   ...new Set(

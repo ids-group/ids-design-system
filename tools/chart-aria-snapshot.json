@@ -12,11 +12,10 @@
     "g: aria-hidden=true",
     "g: aria-hidden=true"
   ],
-  "column-chart": [
-    "p: role=status",
-    "div: aria-hidden=true",
-    "div: role={interactive() ? 'group' : 'img'}, aria-label={accessibleName()}",
-    "div: role={interactive() ? 'button' : null}, aria-label={interactive() ? entryLabel(entry) : null}"
+  "column-chart": ["p: role=status", "div: aria-hidden=true"],
+  "column-series": [
+    "svg: role={interactive() ? 'button' : null}, aria-label={interactive() ? entryLabel(mark) : null}",
+    "svg: aria-hidden=true"
   ],
   "donut-chart": [
     "div: aria-hidden=true",

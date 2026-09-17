@@ -1,24 +1,22 @@
 @use '../../styles/chart-data-table' as chart-data-table;
 @use '../../styles/chart-frame' as chart-frame;
-@use '../../styles/chart-interactive' as chart-interactive;
-@use '../../styles/chart-motion' as chart-motion;
-@include chart-motion.grows-up('.column', '.bar');
 @include chart-frame.chart-frame;
 @include chart-data-table.chart-data-table;
 
 
-.column-chart {
+// Declared on the host rather than on the figure inside it: the plot is an SVG coordinate space, so
+// these four reach it as numbers read back off this element, and a computed style can only be read
+// from the element a property is declared on or inherited by.
+:host {
   --_column-chart-plot-height: var(--ds-column-chart-plot-height, 200px);
-  --_column-chart-column-gap: var(--ds-column-chart-column-gap, var(--ds-chart-bar-gap));
-  --_column-chart-column-width: var(--ds-column-chart-column-width, 80%);
-  --_column-chart-cap-radius: var(
-    --ds-column-chart-cap-radius,
-    var(--ds-chart-mark-cap-radius)
-  );
-  --_column-chart-column-max-width: var(--ds-column-chart-column-max-width, 48px);
-  --_column-chart-grid-line-color: var(--ds-column-chart-grid-line-color, var(--ds-chart-grid-line-color));
-  --_column-chart-value-space: var(--ds-column-chart-value-space, var(--space-5));
   --_column-chart-axis-width: var(--ds-column-chart-axis-width, 40px);
+  --_column-chart-value-space: var(--ds-column-chart-value-space, var(--space-5));
+  --_column-chart-column-width: var(--ds-column-chart-column-width, 80%);
+}
+
+.column-chart {
+  --_column-chart-grid-line-color: var(--ds-column-chart-grid-line-color, var(--ds-chart-grid-line-color, var(--chart-grid-line-color)));
+  --_column-chart-column-gap: var(--ds-column-chart-column-gap, var(--ds-chart-bar-gap));
 
   margin: 0;
 }
@@ -29,161 +27,14 @@ figcaption {
   font-weight: 600;
 }
 
-@include chart-frame.message-box(var(--_column-chart-plot-height), true);
-
-// The padding is headroom for the value printed above a column: a column that
-// reaches the top gridline is the full plot height, leaving its own label nowhere
-// to go but outside the plot.
-.chart {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  column-gap: var(--space-2);
-  padding-block-start: var(--_column-chart-value-space);
+// The container draws the grid, so the column chart's own hook reaches it by re-pointing the
+// shared one on the element that owns the rule. Declared on the figure and consumed here, which is
+// what keeps the two names off the same element and out of a custom-property cycle.
+ds-chart {
+  --ds-chart-grid-line-color: var(--_column-chart-grid-line-color);
 }
 
-// Every tick label is absolutely positioned, so none of them contributes width and the `auto` grid
-// column resolves to zero — the labels then hang outside the chart's own box.
-// ponytail: a fixed width, widen the token if a custom valueFormat prints longer ticks.
-.tick-labels {
-  position: relative;
-  inline-size: var(--_column-chart-axis-width);
-  block-size: var(--_column-chart-plot-height);
-}
-
-.tick-label {
-  position: absolute;
-  inset-inline-end: 0;
-  transform: translateY(50%);
-  color: var(--ds-chart-axis-label-color);
-  font-size: var(--ds-chart-axis-font-size);
-  white-space: nowrap;
-}
-
-.canvas {
-  position: relative;
-}
-
-.grid-lines {
-  position: absolute;
-  inset-inline: 0;
-  inset-block-start: 0;
-  block-size: var(--_column-chart-plot-height);
-}
-
-.grid-line {
-  position: absolute;
-  inset-inline: 0;
-  border-block-start: 1px solid var(--_column-chart-grid-line-color);
-}
-
-// Positioned so the columns paint over the grid rather than under it. `.grid-lines` is absolute,
-// and an unpositioned sibling sits in the layer beneath it whatever the DOM order — every column
-// came out ruled with the tick lines.
-.columns {
-  @include chart-interactive.fades('.column');
-  @include chart-interactive.clickable('.column');
-
-  position: relative;
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: 1fr;
-  column-gap: var(--_column-chart-column-gap);
-}
-
-// The cell is layout, not a target: its own box is the whole category slot, and answering the
-// pointer across all of it puts the hover metres from the column it is about. The strip below takes
-// the pointer back — column-wide, and the cell's full height so the axis gap between the plot and
-// the label answers too. The label takes whatever of itself sticks out past the strip.
-.column {
-  position: relative;
-  display: grid;
-  row-gap: var(--space-2);
-  pointer-events: none;
-
-  // A below-baseline value label hangs past the plot's own floor, into this same gap — widened
-  // to the plot's own top headroom so it cannot reach the category label under it.
-  .chart.reaches-below-zero & {
-    row-gap: var(--_column-chart-value-space);
-  }
-
-  &::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    margin-inline: auto;
-    inline-size: min(
-      100%,
-      calc(
-        var(--_column-chart-column-max-width) + var(--_column-chart-column-gap)
-      )
-    );
-    pointer-events: auto;
-  }
-}
-
-// A column's bottom and height are both set from a shared zero baseline rather than always
-// from the cell's own floor, so a value below zero grows downward from that baseline instead
-// of from the bottom of the cell.
-.plot-cell {
-  position: relative;
-  block-size: var(--_column-chart-plot-height);
-}
-
-.value {
-  position: absolute;
-  inset-inline: 0;
-  transform: translateY(calc(-100% - var(--space-2)));
-  font-size: var(--font-size-xs);
-  font-weight: 700;
-  text-align: center;
-  white-space: nowrap;
-
-  // Anchored at the bar's own tip (see `barTipPercent`), which for a column below zero sits
-  // BELOW the label rather than above it — the label has to sit on the far side too.
-  &.below-baseline {
-    transform: translateY(calc(100% + var(--space-2)));
-  }
-}
-
-// The cap, not the percentage, is what keeps this reading as a chart: at five categories 80% of
-// the cell is a slab wider than its own label, and the eye stops seeing a series.
-.bar {
-  position: absolute;
-  inset-inline: 0;
-  margin-inline: auto;
-  inline-size: var(--_column-chart-column-width);
-  max-inline-size: var(--_column-chart-column-max-width);
-  border-start-start-radius: var(--_column-chart-cap-radius);
-  border-start-end-radius: var(--_column-chart-cap-radius);
-
-  // NOTE(chart-layout-transition): a VALUE change animates `block-size`, not `transform`, and it
-  // is a considered trade — under a scaled transform the rounded top squashes with the body, so
-  // the cap changes shape for the length of the animation. The cost is a layout pass per frame on
-  // one property. The mark's ARRIVAL does scale, where the squash is worth the compositor.
-  transition:
-    bottom var(--ds-motion-chart-mark-duration)
-      var(--ds-motion-chart-mark-easing),
-    block-size var(--ds-motion-chart-mark-duration)
-      var(--ds-motion-chart-mark-easing),
-    background-color var(--ds-motion-chart-mark-duration)
-      var(--ds-motion-chart-mark-easing);
-
-  // A column below the zero baseline hangs from it, so its cap — the free end, away from the
-  // baseline — is at the bottom rather than the top.
-  &.below-baseline {
-    border-start-start-radius: 0;
-    border-start-end-radius: 0;
-    border-end-start-radius: var(--_column-chart-cap-radius);
-    border-end-end-radius: var(--_column-chart-cap-radius);
-  }
-}
-
-.category-label {
-  color: var(--text-secondary);
-  font-size: var(--ds-chart-axis-font-size);
-  text-align: center;
-  pointer-events: auto;
-}
+@include chart-frame.message-box(var(--_column-chart-view-height), true);
 
 .skeleton {
   display: grid;
@@ -196,6 +47,4 @@ figcaption {
   color: var(--error);
 }
 
-@include chart-frame.forced-colors;
 @include chart-frame.pin-reset;
-@include chart-frame.pin-marker;

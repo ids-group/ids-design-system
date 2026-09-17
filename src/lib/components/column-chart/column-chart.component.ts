@@ -1,30 +1,26 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   TemplateRef,
   ViewEncapsulation,
+  afterNextRender,
   booleanAttribute,
   computed,
   contentChild,
+  inject,
   input,
   numberAttribute,
   output,
   signal,
+  viewChild,
 } from '@angular/core';
 import {
-  CHART_SERIES_COLORS,
   defaultChartFormat,
   describeSeries,
-  niceDomain,
-  describeShare,
   shareOfTotal,
-  focusMark,
-  nextRovingIndex,
-  staggerDelay,
-  tickValues,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
-import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 import type {
   ChartDataTable,
@@ -32,27 +28,81 @@ import type {
   ChartValueFormat,
 } from '@ids-group-ltd/ids-design-system/core';
 import {
-  ChartTooltipDirective,
-  chartActiveMark,
-} from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
+  ChartComponent,
+  ColumnSeriesComponent,
+  chartViewHeight,
+} from '@ids-group-ltd/ids-design-system/components/chart';
+import { ChartTooltipDirective } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import type {
   ChartItemTooltipTrigger,
   ChartTooltipContext,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
-import {
-  heightPercent,
-  resolveDomainMax,
-  resolveDomainMin,
-} from './column-chart.math';
 import type { ColumnChartPoint } from './column-chart.types';
+
+/** What the four geometry tokens resolve to when nothing has been set and while the host is not yet
+ *  in a document — under SSR, and for the frame before the first read. */
+const COLUMN_GEOMETRY = {
+  plotHeight: 200,
+  axisGutter: 40,
+  valueSpace: 20,
+  columnWidthRatio: 0.8,
+};
+
+/** The plot is an SVG coordinate space, so `--ds-column-chart-plot-height` and its three siblings
+ *  cannot reach it as CSS: a length written into a `viewBox` is a number the component computes.
+ *  They are read back once, from the private resolvers on the host, which is what keeps them real
+ *  public hooks rather than names that parse and change nothing.
+ *
+ *  Read once, on the first pass: a token re-pointed at a breakpoint is NOT picked up, because
+ *  `ds-chart`'s `ResizeObserver` answers the plot's width rather than a token's value. Set these
+ *  from a stylesheet, not from a media query. */
+function readColumnGeometry(host: HTMLElement): typeof COLUMN_GEOMETRY {
+  const style = getComputedStyle(host);
+  const length = (token: string, fallback: number): number => {
+    const parsed = Number.parseFloat(style.getPropertyValue(token));
+
+    // `>= 0`, so a token deliberately set to zero - no tick gutter, no label headroom - is kept
+    // rather than silently replaced by the default.
+    return Number.isFinite(parsed) && parsed >= 0 ? parsed : fallback;
+  };
+
+  return {
+    plotHeight: length(
+      '--_column-chart-plot-height',
+      COLUMN_GEOMETRY.plotHeight,
+    ),
+    axisGutter: length(
+      '--_column-chart-axis-width',
+      COLUMN_GEOMETRY.axisGutter,
+    ),
+    valueSpace: length(
+      '--_column-chart-value-space',
+      COLUMN_GEOMETRY.valueSpace,
+    ),
+    // A share of the category's own slot, written as a percentage and used as a ratio.
+    columnWidthRatio:
+      length(
+        '--_column-chart-column-width',
+        COLUMN_GEOMETRY.columnWidthRatio * 100,
+      ) / 100,
+  };
+}
 
 @Component({
   selector: 'ds-column-chart',
   standalone: true,
-  imports: [SkeletonComponent, ChartTooltipDirective, IconComponent],
+  imports: [
+    SkeletonComponent,
+    ChartComponent,
+    ColumnSeriesComponent,
+    ChartTooltipDirective,
+  ],
   templateUrl: './column-chart.component.html',
   styleUrl: './column-chart.component.scss',
-  host: { '[class.framed]': "frameResolved() === 'auto'" },
+  host: {
+    '[class.framed]': "frameResolved() === 'auto'",
+    '[style.--_column-chart-view-height]': 'viewHeightPx()',
+  },
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -175,10 +225,6 @@ export class ColumnChartComponent {
    *  crawl in. */
   readonly staggerMs = input(0, { transform: numberAttribute });
 
-  protected markStagger(index: number): string {
-    return `${staggerDelay(index, this.staggerMs())}ms`;
-  }
-
   /** Whether a hovered or focused column opens a tooltip. `'axis'` is not offered — a
    *  column chart's marks ARE its categories, so an axis tooltip would repeat the item one. */
   readonly tooltip = input<ChartItemTooltipTrigger>('item');
@@ -199,162 +245,41 @@ export class ColumnChartComponent {
     this.showValues() ? 18 : 0,
   );
 
-  private readonly tooltipLingerResolved = resolveWithConfig(
+  protected readonly tooltipLingerResolved = resolveWithConfig(
     this.tooltipLingerMs,
     (config) => config.chart?.tooltipLingerMs,
     0,
   );
 
-  protected readonly activeMark = chartActiveMark(() =>
-    this.tooltipLingerResolved(),
+  protected readonly geometry = signal(COLUMN_GEOMETRY);
+
+  /** Every state occupies the box the plot would have, so nothing on the page moves when the data
+   *  lands or the request fails. */
+  protected readonly viewHeightPx = computed(
+    () =>
+      `${chartViewHeight(this.geometry().plotHeight, this.geometry().valueSpace)}px`,
   );
 
-  protected onMarkClick(
-    payload: ColumnChartPoint,
-    index: number,
-    event: Event,
-  ): void {
-    this.pointClicked.emit(payload);
-    if (this.pinOnClick()) {
-      this.activeMark.pin(
-        index,
-        event,
-        this.tooltipAnchor() === 'mark' ? '.bar' : undefined,
-      );
-    }
-  }
-
-  protected onMarkEnter(index: number, event: Event): void {
-    this.activeMark.enter(
-      index,
-      event,
-      this.tooltipAnchor() === 'mark' ? '.bar' : undefined,
-    );
-  }
-  /** One tab stop per chart, not one per mark: WCAG 2.1.1's Understanding is explicit that not
-   *  every mouse-operable control has to be separately focusable, and that is what keeps a
-   *  twenty-five mark chart from being twenty-five stops in the page's tab order. */
-  protected readonly rovingIndex = signal(0);
-
-  protected readonly tabStopIndex = computed(() =>
-    Math.min(this.rovingIndex(), Math.max(0, this.columns().length - 1)),
+  protected readonly skeletonHeightPx = computed(
+    () => `${this.geometry().plotHeight}px`,
   );
 
-  protected onMarkFocus(index: number, event: FocusEvent): void {
-    this.rovingIndex.set(index);
-    this.onMarkEnter(index, event);
-  }
+  protected readonly series = viewChild(ColumnSeriesComponent);
 
-  protected onMarkNavigation(event: KeyboardEvent, index: number): void {
-    const next = nextRovingIndex(event.key, index, this.columns().length);
-    if (next === null) {
-      return;
-    }
-    event.preventDefault();
-    this.rovingIndex.set(next);
-    focusMark((event.currentTarget as Element).closest('.columns'), next);
-  }
-
-  protected readonly tooltipContext = computed<ChartTooltipContext | null>(
-    () => {
-      const entry = this.columns()[this.activeMark.index()];
-      if (this.tooltip() === 'none' || !entry) {
-        return null;
-      }
-
-      return {
-        category: '',
-        entries: [
-          {
-            label: entry.point.label,
-            value: entry.point.value,
-            formatted: entry.formattedValue,
-            color: entry.color,
-            detail: this.partOfWhole()
-              ? describeShare(
-                  this.data().map((point) => point.value),
-                  this.activeMark.index(),
-                )
-              : undefined,
-          },
-        ],
-      };
-    },
+  protected readonly categories = computed(() =>
+    this.data().map((point) => point.label),
   );
 
-  protected readonly domainMin = computed(() =>
-    resolveDomainMin(this.data().map((point) => point.value)),
-  );
-  protected readonly domainMax = computed(() =>
-    resolveDomainMax(this.data().map((point) => point.value)),
-  );
-
-  /** Whether any column can hang below its own category label — reserves the row-gap a
-   *  below-baseline value label needs, the same amount `.chart`'s top padding reserves for a
-   *  label overflowing above the plot, but only where a column can reach that low. */
-  protected readonly reachesBelowZero = computed(() => this.domainMin() < 0);
-
-  /** Floor and ceiling of the value axis: the domain rounded outward to a whole tick, so the
-   *  tallest and (where the data reaches below zero) the lowest column each end on a gridline
-   *  rather than between two. */
-  protected readonly axisDomain = computed(() =>
-    niceDomain(this.domainMin(), this.domainMax(), this.tickCount()),
-  );
-
-  /** Where zero sits in the plot, as a percent from the floor. Zero for an all-positive
-   *  series — the plot floor, exactly as before this axis could reach below zero — and
-   *  clamped to 100 for an all-negative one, where zero sits above the ceiling and every
-   *  column is measured against the ceiling instead. */
-  protected readonly zeroOffsetPercent = computed(() => {
-    const domain = this.axisDomain();
-
-    return heightPercent(0, domain.min, domain.max);
-  });
-
-  protected readonly ticks = computed(() => {
-    const domain = this.axisDomain();
-    // Niced from the same domain as `axisDomain`, which is what makes the top and bottom
-    // ticks the top and bottom of the axis.
-    const values = tickValues(
-      this.domainMin(),
-      this.domainMax(),
-      this.tickCount(),
-    );
-    const format = this.valueFormatResolved();
-
-    return values.map((value) => ({
-      label: format(value, 'tick'),
-      offsetPercent: heightPercent(value, domain.min, domain.max),
-    }));
-  });
-
-  protected readonly columns = computed(() => {
-    const domain = this.axisDomain();
-    const zero = this.zeroOffsetPercent();
+  protected readonly tableRows = computed(() => {
     const format = this.valueFormatResolved();
     const values = this.data().map((point) => point.value);
 
-    return this.data().map((point, index) => {
-      const valueOffset = heightPercent(point.value, domain.min, domain.max);
-
-      return {
-        key: point.id ?? String(index),
-        point,
-        barBottomPercent: Math.min(valueOffset, zero),
-        barHeightPercent: Math.abs(valueOffset - zero),
-        // The value's own end of the bar, not the baseline — a positive column's label sits
-        // above this, a negative one's below it.
-        barTipPercent: valueOffset,
-        // Growing from the baseline, never the mark's own tip — a column below zero grows
-        // downward, so its transform-origin flips to the top edge it hangs from.
-        barOrigin: valueOffset < zero ? ('top' as const) : null,
-        formattedValue: format(point.value, 'tooltip'),
-        share: this.partOfWhole() ? shareOfTotal(values, index) : '',
-        color:
-          point.color ??
-          CHART_SERIES_COLORS[index % CHART_SERIES_COLORS.length],
-      };
-    });
+    return this.data().map((point, index) => ({
+      key: point.id ?? String(index),
+      label: point.label,
+      formattedValue: format(point.value, 'tooltip'),
+      share: this.partOfWhole() ? shareOfTotal(values, index) : '',
+    }));
   });
 
   protected readonly accessibleName = computed(
@@ -371,23 +296,6 @@ export class ColumnChartComponent {
       ),
   );
 
-  protected entryLabel(entry: {
-    point: ColumnChartPoint;
-    formattedValue: string;
-  }) {
-    return `${entry.point.label}, ${entry.formattedValue}`;
-  }
-
-  protected onPointKey(point: ColumnChartPoint, event: Event): void {
-    // Only the column's own key opens it: a key pressed on a control inside belongs to that
-    // control.
-    if (!this.interactive() || event.target !== event.currentTarget) {
-      return;
-    }
-    event.preventDefault();
-    this.pointClicked.emit(point);
-  }
-
   protected readonly isEmpty = computed(() => this.data().length === 0);
 
   /** Placeholder columns while loading. Follows the real point count so the chart does not resize
@@ -395,4 +303,11 @@ export class ColumnChartComponent {
   protected readonly skeletonColumns = computed(() =>
     Array.from({ length: Math.max(this.data().length, 3) }),
   );
+
+  constructor() {
+    const host = inject<ElementRef<HTMLElement>>(ElementRef);
+    afterNextRender(() =>
+      this.geometry.set(readColumnGeometry(host.nativeElement)),
+    );
+  }
 }

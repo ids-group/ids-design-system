@@ -1,9 +1,9 @@
 <figure class="column-chart">
-  @if (activeMark.pinned()) {
+  @if (series()?.activeMark?.pinned()) {
     <button
       class="pin-reset"
       type="button"
-      (click)="activeMark.release()">
+      (click)="series()?.activeMark?.release()">
       Unpin
     </button>
   }
@@ -25,7 +25,7 @@
       class="skeleton"
       aria-hidden="true">
       @for (placeholder of skeletonColumns(); track $index) {
-        <ds-skeleton height="var(--_column-chart-plot-height)" />
+        <ds-skeleton [height]="skeletonHeightPx()" />
       }
     </div>
   } @else if (isEmpty()) {
@@ -33,97 +33,38 @@
       {{ emptyTextResolved() }}
     </p>
   } @else {
-    <div
-      class="chart"
-      [class.reaches-below-zero]="reachesBelowZero()"
-      [attr.role]="interactive() ? 'group' : 'img'"
-      [attr.aria-label]="accessibleName()">
-      <div class="tick-labels">
-        @for (tick of ticks(); track $index) {
-          <span
-            class="tick-label"
-            [style.bottom.%]="tick.offsetPercent">
-            {{ tick.label }}
-          </span>
-        }
-      </div>
-
-      <div class="canvas">
-        <div class="grid-lines">
-          @for (tick of ticks(); track $index) {
-            <span
-              class="grid-line"
-              [style.bottom.%]="tick.offsetPercent">
-            </span>
-          }
-        </div>
-
-        <div
-          class="columns"
-          [class.dims-others]="dimOthers()"
-          [dsChartTooltip]="tooltipContext()"
-          [dsChartTooltipExtraGap]="valueClearance()"
-          [dsChartTooltipPreferBelow]="activeMark.pinned()"
-          [dsChartTooltipOrigin]="activeMark.origin()"
-          [dsChartTooltipTemplate]="tooltipTemplate() ?? null">
-          @for (entry of columns(); track entry.key; let index = $index) {
-            <div
-              class="column"
-              animate.leave="mark-leave"
-              [style.--_chart-mark-stagger]="markStagger(index)"
-              [class.interactive]="interactive()"
-              [class.is-pinned]="
-                activeMark.pinned() && activeMark.index() === index
-              "
-              [attr.role]="interactive() ? 'button' : null"
-              [attr.tabindex]="
-                interactive() ? (index === tabStopIndex() ? 0 : -1) : null
-              "
-              [attr.data-mark-index]="index"
-              [attr.aria-label]="interactive() ? entryLabel(entry) : null"
-              (pointerenter)="onMarkEnter(index, $event)"
-              (pointerleave)="activeMark.leave()"
-              (focus)="onMarkFocus(index, $event)"
-              (blur)="activeMark.leave()"
-              (keydown)="onMarkNavigation($event, index)"
-              (click)="onMarkClick(entry.point, index, $event)"
-              (keydown.enter)="onPointKey(entry.point, $event)"
-              (keydown.space)="onPointKey(entry.point, $event)">
-              <span class="plot-cell">
-                @if (showValues()) {
-                  <span
-                    class="value"
-                    [class.below-baseline]="entry.barOrigin === 'top'"
-                    [style.bottom.%]="entry.barTipPercent">
-                    {{ entry.formattedValue }}
-                  </span>
-                }
-
-                <span
-                  class="bar"
-                  animate.enter="mark-enter"
-                  [class.below-baseline]="entry.barOrigin === 'top'"
-                  [style.bottom.%]="entry.barBottomPercent"
-                  [style.height.%]="entry.barHeightPercent"
-                  [style.transform-origin]="entry.barOrigin"
-                  [style.background]="entry.color">
-                  @if (activeMark.pinned() && activeMark.index() === index) {
-                    <ds-icon
-                      class="pin-marker"
-                      name="pin"
-                      [size]="14" />
-                  }
-                </span>
-              </span>
-
-              <span class="category-label">
-                {{ entry.point.label }}
-              </span>
-            </div>
-          }
-        </div>
-      </div>
-    </div>
+    <ds-chart
+      frame="none"
+      [categories]="categories()"
+      [tickCount]="tickCount()"
+      [valueFormat]="valueFormat()"
+      [interactive]="interactive()"
+      [summary]="accessibleName()"
+      [plotHeight]="geometry().plotHeight"
+      [axisGutter]="geometry().axisGutter"
+      [valueSpace]="geometry().valueSpace">
+      <svg:g
+        #series="dsColumnSeries"
+        dsColumnSeries
+        [data]="data()"
+        [columnWidthRatio]="geometry().columnWidthRatio"
+        [showValues]="showValues()"
+        [interactive]="interactive()"
+        [pinOnClick]="pinOnClick()"
+        [dimOthers]="dimOthers()"
+        [staggerMs]="staggerMs()"
+        [partOfWhole]="partOfWhole()"
+        [tooltip]="tooltip()"
+        [tooltipAnchor]="tooltipAnchor()"
+        [tooltipLingerMs]="tooltipLingerResolved()"
+        [valueFormat]="valueFormatResolved()"
+        [dsChartTooltip]="series.tooltipContext()"
+        [dsChartTooltipExtraGap]="valueClearance()"
+        [dsChartTooltipPreferBelow]="series.activeMark.pinned()"
+        [dsChartTooltipOrigin]="series.activeMark.origin()"
+        [dsChartTooltipTemplate]="tooltipTemplate() ?? null"
+        (pointClicked)="pointClicked.emit($event)" />
+    </ds-chart>
 
     @if (dataTableResolved() !== 'none') {
       <details
@@ -159,19 +100,19 @@
           </thead>
 
           <tbody>
-            @for (entry of columns(); track entry.key) {
+            @for (row of tableRows(); track row.key) {
               <tr>
                 <td>
-                  {{ entry.point.label }}
+                  {{ row.label }}
                 </td>
 
                 <td>
-                  {{ entry.formattedValue }}
+                  {{ row.formattedValue }}
                 </td>
 
                 @if (partOfWhole()) {
                   <td>
-                    {{ entry.share }}
+                    {{ row.share }}
                   </td>
                 }
               </tr>
