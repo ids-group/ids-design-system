@@ -8,6 +8,7 @@ import {
 import type { NiceDomain } from '@ids-group-ltd/ids-design-system/components';
 import type {
   ChartAxisMode,
+  ChartStackMode,
   ChartThreshold,
   ChartThresholdDash,
 } from '@ids-group-ltd/ids-design-system/core';
@@ -308,4 +309,63 @@ export function secondaryAxis(
  *  `149.99999999999997` is the visible form of that. */
 function roundTick(value: number): number {
   return Number(value.toFixed(6));
+}
+
+/** Where one series' segment starts and ends on the value axis, in the axis's own unit - or in
+ *  shares of the category total under `'normalized'`.
+ *
+ *  @internal */
+export interface ChartStackOffset {
+  readonly from: number;
+  readonly to: number;
+}
+
+/** Every segment's span on the value axis, series-major: `offsets[series][category]`.
+ *
+ *  `'none'` and `'grouped'` give every series the same span it would have alone - the two differ in
+ *  where the band puts them, which is geometry rather than value. The stacking modes run a
+ *  POSITIVE and a NEGATIVE pile per category, so a negative segment hangs below the baseline
+ *  instead of being subtracted from the positive pile it sits in.
+ *
+ *  `'normalized'` divides a running SUM rather than each share in turn: adding 20/60 to 40/60
+ *  lands on 0.9999999999999999, which draws a category that visibly falls short of full.
+ *
+ *  @internal */
+export function stackOffsets(
+  series: readonly (readonly number[])[],
+  mode: ChartStackMode,
+): readonly (readonly ChartStackOffset[])[] {
+  const reading = (value: number): number =>
+    Number.isFinite(value) ? value : 0;
+  if (mode === 'none' || mode === 'grouped') {
+    return series.map((values) =>
+      values.map((value) => ({ from: 0, to: reading(value) })),
+    );
+  }
+  const magnitude: number[] = [];
+  if (mode === 'normalized') {
+    for (const values of series) {
+      values.forEach((value, category) => {
+        magnitude[category] =
+          (magnitude[category] ?? 0) + Math.abs(reading(value));
+      });
+    }
+  }
+  const risen: number[] = [];
+  const fallen: number[] = [];
+
+  return series.map((values) =>
+    values.map((raw, category) => {
+      const value = reading(raw);
+      const pile = value < 0 ? fallen : risen;
+      const from = pile[category] ?? 0;
+      const to = from + value;
+      pile[category] = to;
+      const total = mode === 'normalized' ? (magnitude[category] ?? 0) : 1;
+
+      return total > 0
+        ? { from: from / total, to: to / total }
+        : { from: 0, to: 0 };
+    }),
+  );
 }

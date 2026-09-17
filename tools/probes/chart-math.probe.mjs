@@ -12,6 +12,7 @@ const {
   chartPlot,
   chartViewHeight,
   secondaryAxis,
+  stackOffsets,
   thresholdMarks,
   valueScale,
 } = await import(
@@ -250,6 +251,54 @@ check(
   'the plot gives the right-hand labels their own gutter',
   chartPlot(640, 240, 46, 20, 46).width,
   548,
+);
+
+// Stack offsets. Two series of two categories throughout: `[[10, 20], [30, 40]]` is series-major,
+// so `[0][1]` is the first series' second category.
+check(
+  'grouped puts each series in its own slot',
+  stackOffsets([[10, 20], [30, 40]], 'grouped'),
+  [[{ from: 0, to: 10 }, { from: 0, to: 20 }], [{ from: 0, to: 30 }, { from: 0, to: 40 }]],
+);
+check(
+  'stacked accumulates',
+  stackOffsets([[10, 20], [30, 40]], 'stacked'),
+  [[{ from: 0, to: 10 }, { from: 0, to: 20 }], [{ from: 10, to: 40 }, { from: 20, to: 60 }]],
+);
+check(
+  'normalized fills the axis',
+  stackOffsets([[10, 20], [30, 40]], 'normalized'),
+  [[{ from: 0, to: 0.25 }, { from: 0, to: 1 / 3 }], [{ from: 0.25, to: 1 }, { from: 1 / 3, to: 1 }]],
+);
+check('none is grouped with one slot', stackOffsets([[10, 20]], 'none'), [[{ from: 0, to: 10 }, { from: 0, to: 20 }]]);
+check('nothing to stack stacks to nothing', stackOffsets([], 'stacked'), []);
+check(
+  'a non-finite reading contributes nothing and shifts nothing',
+  stackOffsets([[Number.NaN], [30]], 'stacked'),
+  [[{ from: 0, to: 0 }], [{ from: 0, to: 30 }]],
+);
+check(
+  'a category with no readings at all normalizes to zero rather than NaN',
+  stackOffsets([[0], [0]], 'normalized'),
+  [[{ from: 0, to: 0 }], [{ from: 0, to: 0 }]],
+);
+// Signed stacking runs two piles, so a negative segment hangs below the baseline instead of
+// eating the positive pile it would otherwise be subtracted from.
+check(
+  'a negative segment stacks downward on its own pile',
+  stackOffsets([[10], [-30], [20]], 'stacked'),
+  [[{ from: 0, to: 10 }], [{ from: 0, to: -30 }], [{ from: 10, to: 30 }]],
+);
+check(
+  'normalized shares are taken against the magnitudes, so the axis still ends at one',
+  stackOffsets([[10], [-30]], 'normalized'),
+  [[{ from: 0, to: 0.25 }], [{ from: 0, to: -0.75 }]],
+);
+// A short series leaves the categories past its end untouched rather than shortening the stack.
+check(
+  'a ragged series stacks only the categories it reaches',
+  stackOffsets([[10, 20], [30]], 'stacked'),
+  [[{ from: 0, to: 10 }, { from: 0, to: 20 }], [{ from: 10, to: 40 }]],
 );
 
 finish('chart-math');

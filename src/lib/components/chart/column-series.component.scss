@@ -31,7 +31,7 @@
     var(--_column-chart-column-max-width)
   );
   --_column-hit-width: min(
-    var(--_column-chart-band-step),
+    var(--_column-chart-slot-step),
     calc(
       var(--_column-chart-column-max-width) + var(--_column-chart-column-gap)
     )
@@ -39,6 +39,17 @@
   --_column-square-height: min(
     var(--_column-chart-cap-radius),
     calc(var(--_column-mark-height) / 2)
+  );
+
+  // Grouped slots are placed here rather than in the transform the component writes, so the
+  // spacing follows the mark's CAPPED width: a band wide enough for the cap to bite would
+  // otherwise leave the pair drawn 48px wide but spread as though it were wider.
+  --_column-slot-offset: calc(
+    (2 * var(--_column-slot, 0) - var(--_column-slots, 1) + 1) * (var(--_column-mark-width) + var(--_column-chart-column-gap)) / 2
+  );
+
+  transform: translateX(
+    calc(var(--_column-x, 0px) + var(--_column-slot-offset))
   );
 }
 

@@ -7,7 +7,7 @@ import {
 import type { ColumnSeriesPoint, LineSeriesData } from 'ds/chart';
 import { ChartTooltipDirective } from 'ds/chart-tooltip';
 import { ColumnChartComponent } from 'ds/column-chart';
-import type { ColumnChartPoint } from 'ds/column-chart';
+import type { ColumnChartPoint, ColumnChartSeries } from 'ds/column-chart';
 import type { ChartThreshold, ChartValueFormat } from 'ds/core';
 import { DocsChartDataEditorComponent } from '../../../shared/docs-chart-data-editor.component';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
@@ -52,6 +52,56 @@ const PROJECTED_POINTS: readonly ColumnChartPoint[] = [
   { label: 'Aug', value: 3610, fill: 'hatched' },
   { label: 'Sep', value: 3880, fill: 'hatched' },
 ];
+
+const PAIRED_MONTHS = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+];
+
+const PAIRED_SERIES: readonly ColumnChartSeries[] = [
+  {
+    id: 'billed',
+    label: 'Billed',
+    data: [2410, 2680, 2530, 2960, 3120, 3040, 2880, 3010, 3260].map(
+      (value, index) => ({ label: PAIRED_MONTHS[index], value }),
+    ),
+  },
+  {
+    id: 'committed',
+    label: 'Committed',
+    fill: 'hatched',
+    data: [0, 0, 0, 0, 0, 0, 3940, 4210, 4480].map((value, index) => ({
+      label: PAIRED_MONTHS[index],
+      value,
+    })),
+  },
+];
+
+const PAIRED_THRESHOLDS: readonly ChartThreshold[] = [
+  { value: 3000, label: 'Run rate' },
+  { value: 4200, label: 'Stretch', dash: 'dotted' },
+];
+
+const CHANNEL_MONTHS = ['Q1', 'Q2', 'Q3', 'Q4'];
+
+const CHANNEL_SERIES: readonly ColumnChartSeries[] = [
+  { id: 'direct', label: 'Direct', data: [820, 940, 1010, 1180] },
+  { id: 'partner', label: 'Partner', data: [610, 580, 720, 690] },
+  { id: 'online', label: 'Online', data: [340, 460, 520, 780] },
+].map((series) => ({
+  ...series,
+  data: series.data.map((value, index) => ({
+    label: CHANNEL_MONTHS[index],
+    value,
+  })),
+}));
 
 const HUGE_OUTLIER_POINTS: readonly ColumnChartPoint[] = [
   { label: 'Direct', value: 62 },
@@ -201,6 +251,10 @@ export class ColumnChartSection {
   protected readonly nineDigitValuePoints = signal<readonly ColumnChartPoint[]>(
     NINE_DIGIT_VALUE_POINTS,
   );
+
+  protected readonly pairedSeries = PAIRED_SERIES;
+  protected readonly pairedThresholds = PAIRED_THRESHOLDS;
+  protected readonly channelSeries = CHANNEL_SERIES;
 
   protected readonly uptimePoints =
     signal<readonly ColumnChartPoint[]>(UPTIME_POINTS);

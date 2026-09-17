@@ -13,11 +13,13 @@ import {
   numberAttribute,
   output,
   signal,
-  viewChild,
+  viewChildren,
 } from '@angular/core';
 import {
+  CHART_SERIES_COLORS,
   defaultChartFormat,
   describeSeries,
+  formatPercent,
   shareOfTotal,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
@@ -25,6 +27,7 @@ import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 import type {
   ChartDataTable,
   ChartFrame,
+  ChartStackMode,
   ChartThreshold,
   ChartValueFormat,
 } from '@ids-group-ltd/ids-design-system/core';
@@ -34,13 +37,40 @@ import {
   ReferenceLabelComponent,
   ReferenceLineComponent,
   chartViewHeight,
+  stackOffsets,
 } from '@ids-group-ltd/ids-design-system/components/chart';
+import type { ChartStackOffset } from '@ids-group-ltd/ids-design-system/components/chart';
+import { ChartLegendComponent } from '@ids-group-ltd/ids-design-system/components/chart-legend';
+import type { ChartLegendItem } from '@ids-group-ltd/ids-design-system/components/chart-legend';
 import { ChartTooltipDirective } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import type {
   ChartItemTooltipTrigger,
   ChartTooltipContext,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
-import type { ColumnChartPoint } from './column-chart.types';
+import type {
+  ChartMarkFill,
+  ColumnChartPoint,
+  ColumnChartSeries,
+} from './column-chart.types';
+
+/** One series, ready to draw. `points` is the caller's own array, never a copy: the colour and the
+ *  fill reach the marks as series-wide defaults so a clicked point comes back as the object that
+ *  was handed in. */
+interface ResolvedColumnSeries {
+  readonly key: string;
+  readonly label: string;
+  /** Null leaves each mark on the categorical palette by its own position, which is what a chart
+   *  of one series has always drawn. */
+  readonly color: string | null;
+  readonly fill: ChartMarkFill | null;
+  readonly points: readonly ColumnChartPoint[];
+}
+
+function isSeriesList(
+  data: readonly ColumnChartPoint[] | readonly ColumnChartSeries[],
+): data is readonly ColumnChartSeries[] {
+  return data.length > 0 && 'data' in data[0];
+}
 
 /** What the four geometry tokens resolve to when nothing has been set and while the host is not yet
  *  in a document — under SSR, and for the frame before the first read. */
@@ -97,6 +127,7 @@ function readColumnGeometry(host: HTMLElement): typeof COLUMN_GEOMETRY {
   imports: [
     SkeletonComponent,
     ChartComponent,
+    ChartLegendComponent,
     ColumnSeriesComponent,
     ReferenceLabelComponent,
     ReferenceLineComponent,
@@ -112,8 +143,22 @@ function readColumnGeometry(host: HTMLElement): typeof COLUMN_GEOMETRY {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ColumnChartComponent {
-  /** One column per point, drawn in the order given. */
-  readonly data = input.required<readonly ColumnChartPoint[]>();
+  /** One column per point, drawn in the order given - or one NAMED SERIES per entry, where every
+   *  category carries a column from each. The two forms are told apart by their shape, so a chart
+   *  handed a flat list behaves exactly as it always has. */
+  readonly data = input.required<
+    readonly ColumnChartPoint[] | readonly ColumnChartSeries[]
+  >();
+
+  /** How several series share one category's band. `'none'`, the default, and `'grouped'` draw
+   *  them side by side - a chart of one series takes the whole band either way, so the two differ
+   *  only in spelling. `'stacked'` puts each series on top of the one before it, and
+   *  `'normalized'` stacks then divides by the category's total, so every band is full and the
+   *  axis reads in shares.
+   *
+   *  Unrelated to `ds-line-chart`'s `axisMode="stacked"`, which is two PLOTS one above the
+   *  other. */
+  readonly stack = input<ChartStackMode>('none');
 
   /** Reference lines and bands drawn across the plot, behind the columns: a target, a budget, an
    *  SLA. Each one opens the value axis far enough to hold it, so a target above every column is
@@ -275,45 +320,130 @@ export class ColumnChartComponent {
     () => `${this.geometry().plotHeight}px`,
   );
 
-  protected readonly series = viewChild(ColumnSeriesComponent);
+  protected readonly seriesRefs = viewChildren(ColumnSeriesComponent);
 
+  protected readonly pinnedSeries = computed(
+    () =>
+      this.seriesRefs().find((series) => series.activeMark.pinned()) ?? null,
+  );
+
+  protected readonly resolvedSeries = computed<readonly ResolvedColumnSeries[]>(
+    () => {
+      const given = this.data();
+      if (!isSeriesList(given)) {
+        return [
+          { key: 'series', label: '', color: null, fill: null, points: given },
+        ];
+      }
+
+      return given.map((series, index) => ({
+        key: series.id,
+        label: series.label,
+        color:
+          series.color ??
+          CHART_SERIES_COLORS[index % CHART_SERIES_COLORS.length],
+        fill: series.fill ?? null,
+        points: series.data,
+      }));
+    },
+  );
+
+  /** Stacking collapses every series onto ONE slot, which is also why a stacked series is drawn
+   *  at slot 0 rather than at its own index - its segments sit on top of each other, not beside
+   *  them. */
+  protected readonly slotCount = computed(() =>
+    this.stack() === 'stacked' || this.stack() === 'normalized'
+      ? 1
+      : this.resolvedSeries().length,
+  );
+
+  private readonly offsets = computed(() =>
+    stackOffsets(
+      this.resolvedSeries().map((series) =>
+        series.points.map((point) => point.value),
+      ),
+      this.stack(),
+    ),
+  );
+
+  protected offsetsFor(index: number): readonly ChartStackOffset[] {
+    return this.offsets()[index] ?? [];
+  }
+
+  /** The categories come from the LONGEST series: a series that stops early leaves the bands past
+   *  its end standing rather than taking them off the axis for every other series too. */
   protected readonly categories = computed(() =>
-    this.data().map((point) => point.label),
+    this.resolvedSeries()
+      .reduce<readonly ColumnChartPoint[]>(
+        (longest, series) =>
+          series.points.length > longest.length ? series.points : longest,
+        [],
+      )
+      .map((point) => point.label),
+  );
+
+  protected readonly multiSeries = computed(
+    () => this.resolvedSeries().length > 1,
+  );
+
+  protected readonly legendItems = computed<readonly ChartLegendItem[]>(() =>
+    this.resolvedSeries().map((series) => ({
+      id: series.key,
+      label: series.label,
+      color: series.color ?? '',
+    })),
+  );
+
+  /** A normalized stack draws shares, not readings, so the axis has to say so - the value printed
+   *  beside each mark stays the reading, which is what `valueFormat` goes on formatting. */
+  protected readonly axisFormat = computed<ChartValueFormat | null>(() =>
+    this.stack() === 'normalized'
+      ? (value: number) => formatPercent(value, 1)
+      : this.valueFormat(),
   );
 
   protected readonly tableRows = computed(() => {
     const format = this.valueFormatResolved();
-    const values = this.data().map((point) => point.value);
 
-    return this.data().map((point, index) => ({
-      key: point.id ?? String(index),
-      label: point.label,
-      formattedValue: format(point.value, 'tooltip'),
-      share: this.partOfWhole() ? shareOfTotal(values, index) : '',
-    }));
+    return this.resolvedSeries().flatMap((series) => {
+      const values = series.points.map((point) => point.value);
+
+      return series.points.map((point, index) => ({
+        key: `${series.key}:${point.id ?? index}`,
+        series: series.label,
+        label: point.label,
+        formattedValue: format(point.value, 'tooltip'),
+        share: this.partOfWhole() ? shareOfTotal(values, index) : '',
+      }));
+    });
   });
 
   protected readonly accessibleName = computed(
     () =>
       this.summary() ??
-      describeSeries(
-        this.caption() ?? 'Chart',
-        this.data().map((point) => ({
-          label: point.label,
-          value: point.value,
-        })),
-        (value) => this.valueFormatResolved()(value, 'tooltip'),
-        this.dataTableResolved() !== 'none',
-        this.thresholds(),
-      ),
+      this.resolvedSeries()
+        .map((series, index) =>
+          describeSeries(
+            series.label || this.caption() || 'Chart',
+            series.points.map((point) => ({
+              label: point.label,
+              value: point.value,
+            })),
+            (value) => this.valueFormatResolved()(value, 'tooltip'),
+            this.dataTableResolved() !== 'none',
+            // The reference lines belong to the plot, not to a series, so they are named once.
+            index === 0 ? this.thresholds() : [],
+          ),
+        )
+        .join(' '),
   );
 
-  protected readonly isEmpty = computed(() => this.data().length === 0);
+  protected readonly isEmpty = computed(() => this.categories().length === 0);
 
   /** Placeholder columns while loading. Follows the real point count so the chart does not resize
    *  when the data lands; falls back to three when `data` is still empty. */
   protected readonly skeletonColumns = computed(() =>
-    Array.from({ length: Math.max(this.data().length, 3) }),
+    Array.from({ length: Math.max(this.categories().length, 3) }),
   );
 
   constructor() {

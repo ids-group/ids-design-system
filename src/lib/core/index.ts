@@ -6,6 +6,7 @@ export type {
   ChartDataTable,
   ChartFormatLocation,
   ChartFrame,
+  ChartStackMode,
   ChartThreshold,
   ChartThresholdDash,
   ChartValueFormat,

@@ -1,9 +1,9 @@
 <figure class="column-chart">
-  @if (series()?.activeMark?.pinned()) {
+  @if (pinnedSeries()) {
     <button
       class="pin-reset"
       type="button"
-      (click)="series()?.activeMark?.release()">
+      (click)="pinnedSeries()?.activeMark?.release()">
       Unpin
     </button>
   }
@@ -37,7 +37,7 @@
       frame="none"
       [categories]="categories()"
       [tickCount]="tickCount()"
-      [valueFormat]="valueFormat()"
+      [valueFormat]="axisFormat()"
       [interactive]="interactive()"
       [summary]="accessibleName()"
       [plotHeight]="geometry().plotHeight"
@@ -47,32 +47,48 @@
         dsReferenceLine
         [thresholds]="thresholds()" />
 
-      <svg:g
-        #series="dsColumnSeries"
-        dsColumnSeries
-        [data]="data()"
-        [columnWidthRatio]="geometry().columnWidthRatio"
-        [showValues]="showValues()"
-        [interactive]="interactive()"
-        [pinOnClick]="pinOnClick()"
-        [dimOthers]="dimOthers()"
-        [staggerMs]="staggerMs()"
-        [partOfWhole]="partOfWhole()"
-        [tooltip]="tooltip()"
-        [tooltipAnchor]="tooltipAnchor()"
-        [tooltipLingerMs]="tooltipLingerResolved()"
-        [valueFormat]="valueFormatResolved()"
-        [dsChartTooltip]="series.tooltipContext()"
-        [dsChartTooltipExtraGap]="valueClearance()"
-        [dsChartTooltipPreferBelow]="series.activeMark.pinned()"
-        [dsChartTooltipOrigin]="series.activeMark.origin()"
-        [dsChartTooltipTemplate]="tooltipTemplate() ?? null"
-        (pointClicked)="pointClicked.emit($event)" />
+      @for (
+        series of resolvedSeries();
+        track series.key;
+        let seriesIndex = $index
+      ) {
+        <svg:g
+          #mark="dsColumnSeries"
+          dsColumnSeries
+          [data]="series.points"
+          [slot]="slotCount() > 1 ? seriesIndex : 0"
+          [slotCount]="slotCount()"
+          [offsets]="offsetsFor(seriesIndex)"
+          [seriesColor]="series.color"
+          [seriesFill]="series.fill"
+          [seriesLabel]="multiSeries() ? series.label : null"
+          [columnWidthRatio]="geometry().columnWidthRatio"
+          [showValues]="showValues()"
+          [interactive]="interactive()"
+          [pinOnClick]="pinOnClick()"
+          [dimOthers]="dimOthers()"
+          [staggerMs]="staggerMs()"
+          [partOfWhole]="partOfWhole()"
+          [tooltip]="tooltip()"
+          [tooltipAnchor]="tooltipAnchor()"
+          [tooltipLingerMs]="tooltipLingerResolved()"
+          [valueFormat]="valueFormatResolved()"
+          [dsChartTooltip]="mark.tooltipContext()"
+          [dsChartTooltipExtraGap]="valueClearance()"
+          [dsChartTooltipPreferBelow]="mark.activeMark.pinned()"
+          [dsChartTooltipOrigin]="mark.activeMark.origin()"
+          [dsChartTooltipTemplate]="tooltipTemplate() ?? null"
+          (pointClicked)="pointClicked.emit($event)" />
+      }
 
       <svg:g
         dsReferenceLabel
         [thresholds]="thresholds()" />
     </ds-chart>
+
+    @if (multiSeries()) {
+      <ds-chart-legend [items]="legendItems()" />
+    }
 
     @if (dataTableResolved() !== 'none') {
       <details
@@ -91,6 +107,12 @@
 
           <thead>
             <tr>
+              @if (multiSeries()) {
+                <th scope="col">
+                  Series
+                </th>
+              }
+
               <th scope="col">
                 Label
               </th>
@@ -110,6 +132,12 @@
           <tbody>
             @for (row of tableRows(); track row.key) {
               <tr>
+                @if (multiSeries()) {
+                  <td>
+                    {{ row.series }}
+                  </td>
+                }
+
                 <td>
                   {{ row.label }}
                 </td>

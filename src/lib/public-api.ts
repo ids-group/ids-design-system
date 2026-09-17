@@ -111,7 +111,10 @@ export type {
 export { CheckboxComponent } from '@ids-group-ltd/ids-design-system/components/checkbox';
 export { ColorPickerComponent } from '@ids-group-ltd/ids-design-system/components/color-picker';
 export { ColumnChartComponent } from '@ids-group-ltd/ids-design-system/components/column-chart';
-export type { ColumnChartPoint } from '@ids-group-ltd/ids-design-system/components/column-chart';
+export type {
+  ColumnChartPoint,
+  ColumnChartSeries,
+} from '@ids-group-ltd/ids-design-system/components/column-chart';
 export { DatePickerComponent } from '@ids-group-ltd/ids-design-system/components/date-picker';
 export type {
   DatePickerMode,
@@ -374,6 +377,7 @@ export type {
   ChartDataTable,
   ChartFormatLocation,
   ChartFrame,
+  ChartStackMode,
   ChartThreshold,
   ChartThresholdDash,
   ChartValueFormat,

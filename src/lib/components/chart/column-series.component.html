@@ -2,7 +2,9 @@
   class="columns"
   [class.dims-others]="dimOthers()"
   [style.--_column-chart-column-share]="markWidthPx()"
-  [style.--_column-chart-band-step]="bandStepPx()">
+  [style.--_column-chart-slot-step]="slotStepPx()"
+  [style.--_column-slot]="slot()"
+  [style.--_column-slots]="slotCount()">
   <!-- `userSpaceOnUse`, so the stripe pitch is the same on a tall column and a short one: with the
        default object bounding box it would scale with each mark and read as a different texture
        per bar. -->
@@ -38,7 +40,7 @@
       [style.--_chart-mark-stagger]="markStagger(index)"
       [style.--_column-mark-height]="mark.height + 'px'"
       [style.--_column-baseline-y]="mark.baseline + 'px'"
-      [attr.transform]="'translate(' + mark.x + ',0)'"
+      [style.--_column-x]="mark.x + 'px'"
       [attr.data-mark-index]="index"
       [attr.role]="interactive() ? 'button' : null"
       [attr.tabindex]="

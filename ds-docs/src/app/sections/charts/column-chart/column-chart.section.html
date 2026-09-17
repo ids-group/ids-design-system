@@ -140,6 +140,86 @@
   <docs-chart-data-editor [(rows)]="projectedPoints" />
 
   <h3 class="block-title t-h4">
+    More than one column per category
+  </h3>
+
+  <p class="block-desc t-s">
+    Hand
+    <code class="t-mono-inline">
+      data
+    </code> a list of NAMED SERIES instead of a
+    flat list of points and every category carries one column per series, keyed
+    by the legend under the plot.
+    <code class="t-mono-inline">
+      stack
+    </code> decides how they
+    share the band:
+    <code class="t-mono-inline">
+      grouped
+    </code> stands them side by
+    side,
+    <code class="t-mono-inline">
+      stacked
+    </code> puts each on top of the one
+    before it, and
+    <code class="t-mono-inline">
+      normalized
+    </code> stacks then divides by
+    the category's own total, so every band is full and the axis reads in
+    shares. A flat list of points is still one series and still takes the whole
+    band, so nothing about a single-series chart changes.
+  </p>
+
+  <p class="block-desc t-s">
+    A series takes one colour for all of its marks, where a flat list colours
+    each mark by its own position — the marks of a single-series chart ARE the
+    categories, and the marks of a grouped one are not. A series-wide
+    <code class="t-mono-inline">
+      fill
+    </code> paints every one of its columns, so the
+    pair below separates a settled figure from a committed one by texture as
+    well as by hue. The chart reads nothing into either: what the two columns
+    MEAN is the caller's fact.
+  </p>
+
+  <ds-column-chart
+    caption="Billed against committed"
+    stack="grouped"
+    dataTable="none"
+    [showValues]="false"
+    [data]="pairedSeries"
+    [thresholds]="pairedThresholds" />
+
+  <p class="block-desc t-s">
+    Stacked, the band's full height is the category's total; normalized, it is
+    always the whole axis and only the SHARES move. The boundary between two
+    segments is a 2px gap in the surface colour rather than a drawn rule — a gap
+    survives print and colour-vision deficiency, and it is the second encoding
+    the palette's separation band asks for. The value printed beside a segment
+    stays the reading even under
+    <code class="t-mono-inline">
+      normalized
+    </code>, where the
+    axis is the only thing that switches to shares.
+  </p>
+
+  <div class="demo-pair">
+    <ds-column-chart
+      caption="Revenue by channel"
+      stack="stacked"
+      dataTable="none"
+      [showValues]="false"
+      [data]="channelSeries" />
+
+    <ds-column-chart
+      caption="Share of revenue by channel"
+      stack="normalized"
+      dataTable="none"
+      [showValues]="false"
+      [data]="channelSeries" />
+  </div>
+
+  <h3 class="block-title t-h4">
     Columns and a line, on two scales
   </h3>
 

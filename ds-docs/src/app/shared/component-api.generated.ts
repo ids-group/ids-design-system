@@ -2351,11 +2351,25 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "data",
         "kind": "input-required",
-        "type": "readonly ColumnChartPoint[]",
+        "type": "readonly ColumnChartPoint[] | readonly ColumnChartSeries[]",
         "union": null,
         "default": null,
         "required": true,
-        "description": "One column per point, drawn in the order given."
+        "description": "One column per point, drawn in the order given - or one NAMED SERIES per entry, where every category carries a column from each. The two forms are told apart by their shape, so a chart handed a flat list behaves exactly as it always has."
+      },
+      {
+        "name": "stack",
+        "kind": "input",
+        "type": "ChartStackMode",
+        "union": [
+          "none",
+          "grouped",
+          "stacked",
+          "normalized"
+        ],
+        "default": "'none'",
+        "required": false,
+        "description": "How several series share one category's band. `'none'`, the default, and `'grouped'` draw them side by side - a chart of one series takes the whole band either way, so the two differ only in spelling. `'stacked'` puts each series on top of the one before it, and `'normalized'` stacks then divides by the category's total, so every band is full and the axis reads in shares. Unrelated to `ds-line-chart`'s `axisMode=\"stacked\"`, which is two PLOTS one above the other."
       },
       {
         "name": "thresholds",

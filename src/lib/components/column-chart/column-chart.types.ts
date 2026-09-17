@@ -17,3 +17,21 @@ export interface ColumnChartPoint {
    *  columns are projections is the caller's fact, not one a chart can derive. */
   fill?: ChartMarkFill;
 }
+
+/** One named set of columns, for a chart that compares two or more readings per category.
+ *
+ *  A chart handed a flat `ColumnChartPoint[]` stays exactly what it was - one series whose marks
+ *  ARE the categories, coloured by position. The series form is the one that needs a key, so it
+ *  carries a label and takes one colour for all of its marks. */
+export interface ColumnChartSeries {
+  /** Names the series in the legend and in the tooltip, and keys it in the DOM. */
+  id: string;
+  label: string;
+  /** One point per category, in the same order for every series. */
+  data: readonly ColumnChartPoint[];
+  /** Overrides the palette slot this series would take. A point's own `color` wins over it. */
+  color?: string;
+  /** Paints every mark of this series, so a whole projected or estimated series is written once
+   *  rather than per point. A point's own `fill` wins over it. */
+  fill?: ChartMarkFill;
+}

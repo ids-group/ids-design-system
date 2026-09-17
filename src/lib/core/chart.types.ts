@@ -56,3 +56,16 @@ export type ChartAxis = 'primary' | 'secondary';
  *  - `'independent'` - each axis is scaled and gridded on its own.
  *  - `'stacked'` - two plots one above the other, sharing the category axis. */
 export type ChartAxisMode = 'rounded' | 'exact' | 'independent' | 'stacked';
+
+/** How several series share one category's band.
+ *
+ *  - `'none'` - every series draws from the baseline at the band's centre, which is the single
+ *    series case and what a chart that was handed one list has always done.
+ *  - `'grouped'` - each series takes its own slot inside the band, side by side.
+ *  - `'stacked'` - each series starts where the one before it ended, so the band's full height is
+ *    the category's total.
+ *  - `'normalized'` - stacked, then divided by the category's own total, so every band is full and
+ *    the axis reads in shares rather than in the data's own unit.
+ *
+ *  Unrelated to `ChartAxisMode`'s `'stacked'`, which puts two PLOTS one above the other. */
+export type ChartStackMode = 'none' | 'grouped' | 'stacked' | 'normalized';
