@@ -1,5 +1,7 @@
 ## Unreleased
 
+## 0.13.3 — 2026-09-17
+
 ### Breaking
 
 - **`ds-progress` and `ds-meter` are one component, `ds-bar`.** They were the same drawing — the
