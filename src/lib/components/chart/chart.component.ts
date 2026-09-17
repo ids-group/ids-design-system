@@ -213,9 +213,10 @@ export class ChartComponent implements ChartScales {
     // interleaving them forces a synchronous layout per label.
     afterRenderEffect({
       read: () => {
-        const labels = this.host.nativeElement.querySelectorAll<SVGTextElement>(
-          '.axis-label',
-        );
+        const labels =
+          this.host.nativeElement.querySelectorAll<SVGTextElement>(
+            '.axis-label',
+          );
         let widest = 0;
         for (const label of labels) {
           widest = Math.max(widest, label.getComputedTextLength());
