@@ -6,10 +6,7 @@
       "kind": "selector-rename",
       "old": "ds-progress",
       "new": "ds-bar",
-      "surface": [
-        "template",
-        "typescript"
-      ],
+      "surface": ["template", "typescript"],
       "action": "Rename every `<ds-progress>` element to `<ds-bar>`, and `ProgressComponent` to `BarComponent` imported from `@ids-group-ltd/ids-design-system/components/bar`. The type `ProgressVariant` is now `BarVariant` from the same entry point. Behaviour is unchanged — every input keeps its name and its default.",
       "appliesWhen": "Every template rendering `<ds-progress>` and every file importing `ProgressComponent` or `ProgressVariant`. `ds-bar-chart` is a different component and keeps its name.",
       "pitfall": "The old tag is an unknown element, not an error: Angular renders nothing and logs nothing outside strict schema mode, so a missed one is a bar that silently vanished. `ds-bar` is a prefix of `ds-bar-chart`, which is a DIFFERENT component and is NOT renamed. Match on a word boundary and confirm the tag ends there; rename nothing whose name continues past `ds-bar`.",
@@ -20,11 +17,7 @@
         "ProgressVariant",
         "components/progress"
       ],
-      "detect": [
-        "ds-progress",
-        "ProgressComponent",
-        "ProgressVariant"
-      ],
+      "detect": ["ds-progress", "ProgressComponent", "ProgressVariant"],
       "verify": "No `ds-progress` tag, `ProgressComponent` or `ProgressVariant` symbol, or `components/progress` import path remains, and every `ds-bar-chart` is still spelled in full.",
       "note": "The progress bar and the measurement bar were the same drawing under two names, so they are one component under a neutral one. A rename alone is a complete and behaviour-preserving upgrade for a progress bar; see `bar-semantics-says-what-the-bar-is` for what the merged component can now additionally say."
     },
@@ -33,23 +26,13 @@
       "kind": "selector-rename",
       "old": "ds-meter",
       "new": "ds-bar",
-      "surface": [
-        "template",
-        "typescript"
-      ],
+      "surface": ["template", "typescript"],
       "action": "Rename every `<ds-meter>` element to `<ds-bar>` and `MeterComponent` to `BarComponent` from `@ids-group-ltd/ids-design-system/components/bar`. Then give each one a `semantics` — `\"none\"` where it had no `ariaLabel`, `\"meter\"` where it had one. Without that the bar announces as a progress bar.",
       "appliesWhen": "Only code written against `0.13.2`, the single release `ds-meter` existed in. `ds-bar-chart` is a different component and keeps its name.",
       "pitfall": "The rename alone compiles, renders identically, and silently changes what assistive technology hears: `ds-meter` was `aria-hidden` unless `ariaLabel` named it, and `ds-bar` defaults to `semantics=\"progress\"`. A table of two hundred rates that announced nothing now announces two hundred progress bars. `ds-bar` is a prefix of `ds-bar-chart`, which is a DIFFERENT component and is NOT renamed. Match on a word boundary and confirm the tag ends there; rename nothing whose name continues past `ds-bar`.",
       "restore": null,
-      "searchHints": [
-        "ds-meter",
-        "MeterComponent",
-        "components/meter"
-      ],
-      "detect": [
-        "ds-meter",
-        "MeterComponent"
-      ],
+      "searchHints": ["ds-meter", "MeterComponent", "components/meter"],
+      "detect": ["ds-meter", "MeterComponent"],
       "verify": "No `ds-meter` tag or `MeterComponent` symbol remains, and every bar that replaced one carries `semantics=\"none\"` or `semantics=\"meter\"` — never the default.",
       "note": "The `semantics` step is not optional bookkeeping: it is the whole reason `ds-meter` existed, carried across as an input. `0.13.2` is the only release that shipped the tag, so an app on `0.13.1` or earlier has nothing to do here."
     },
@@ -63,16 +46,8 @@
       "appliesWhen": "Only bars that are NOT reporting a task. An upload bar, a step counter or a job indicator keeps the default and is unchanged.",
       "pitfall": "Nothing errors and nothing looks different — the drawing is identical either way. The cost lands in the accessibility tree, where a per-row bar left at the default reads out a percentage the row already states.",
       "restore": "Leave `semantics` unset. The default is `progress`, which is what `ds-progress` always did.",
-      "searchHints": [
-        "ds-bar",
-        "semantics",
-        "dsCellTemplate"
-      ],
-      "detect": [
-        "ds-bar",
-        "dsCellTemplate",
-        "role=\"progressbar\""
-      ],
+      "searchHints": ["ds-bar", "semantics", "dsCellTemplate"],
+      "detect": ["ds-bar", "dsCellTemplate", "role=\"progressbar\""],
       "verify": "Every `ds-bar` rendered once per row carries `semantics=\"none\"` or `semantics=\"meter\"`, and a screen-reader pass over a data table announces no progress bar per row.",
       "note": "The merged component can state what it is, which neither `ds-progress` nor a bare `ds-meter` could express per instance. Defaulting to `progress` is what keeps the `ds-progress` rename silent and behaviour-preserving."
     },
@@ -92,11 +67,7 @@
         "--progress-h",
         "bar-color"
       ],
-      "detect": [
-        "--ds-progress-",
-        "--ds-meter-",
-        "--progress-h"
-      ],
+      "detect": ["--ds-progress-", "--ds-meter-", "--progress-h"],
       "verify": "No `--ds-progress-`, `--ds-meter-` or `--progress-h` name remains in the app's stylesheets, and every bar that was restyled still looks restyled.",
       "note": "`bar-color` became `fill-color` because the component is now the bar and `--ds-bar-bar-color` would stutter. `--progress-h` moved with it: same 6px default, under a name that no longer described the component."
     },
@@ -137,7 +108,7 @@
         "FunnelChartComponent"
       ],
       "verify": "No subclass declares a member named `semantics`, `color`, `role` or `dsChartTooltipPreferBelow`, and the app builds with no TS4114, TS2415 or TS2416 on those classes.",
-      "note": "Merging the progress bar and the measurement bar moved every member of both onto one class, and the tooltip directive gained the input that opens a pinned panel below its mark. The three chart components grew as well: the column chart moved its drawing into the shared container and gained `thresholds`, `categories`, `series`, `geometry`, `tableRows`, `viewHeightPx` and `skeletonHeightPx` while losing the members that drew its marks; the donut gained `partOfWhole`, `arcAt`, `isDimmed` and three legend handlers; the funnel gained `isDimmed` and `onRowEnter`. Subclassing a DS component is unsupported, but a release that only merges and adds can still fail such a build on a name collision, which is why the classes are listed here rather than in the additive notes."
+      "note": "Merging the progress bar and the measurement bar moved every member of both onto one class, and the tooltip directive gained the input that opens a pinned panel below its mark. The three chart components grew as well: the column chart moved its drawing into the shared container and took several series, gaining `thresholds`, `categories`, `geometry`, `tableRows`, `viewHeightPx`, `skeletonHeightPx`, `stack`, `resolvedSeries`, `seriesRefs`, `pinnedSeries`, `slotCount`, `offsets`, `offsetsFor`, `multiSeries`, `legendItems` and `axisFormat` while losing the members that drew its marks; the donut gained `partOfWhole`, `arcAt`, `isDimmed` and three legend handlers; the funnel gained `isDimmed` and `onRowEnter`. Subclassing a design-system component is unsupported, but a release that only merges and adds can still fail such a build on a name collision."
     },
     {
       "id": "chart-value-format-receives-tick-or-tooltip-location",
@@ -163,6 +134,32 @@
       ],
       "verify": "Every custom `valueFormat` bound on a `ds-column-chart` or `ds-line-chart` reads its second argument, and the value axis on such a chart prints a compact label rather than the full number.",
       "note": "The axis tick and the annex table used to share one formatter call with no way to tell them apart, so a formatter written to spell the table's values out in full also ran, unchanged, on the axis. `location` is what lets one callback serve both without a chart-side special case for its own default."
+    },
+    {
+      "id": "column-chart-data-accepts-a-series-list",
+      "kind": "behavior",
+      "old": "ds-column-chart[data]",
+      "new": null,
+      "surface": "typescript",
+      "action": "Where the `data` signal is READ BACK or the input is redeclared, narrow on the shape first: `'data' in entry` is a `ColumnChartSeries`, otherwise a `ColumnChartPoint`. Binding a flat `ColumnChartPoint[]` needs no change at all.",
+      "appliesWhen": "Only code that reads `ds-column-chart`'s own `data` signal back through a template reference or a `viewChild`, or a subclass redeclaring `data`. Every consumer that only PASSES an array is unaffected, whatever its shape.",
+      "pitfall": "A reader breaks at compile time and a writer does not, so a build that passes has no reader to fix. The silent half is a runtime narrowing written the other way round - testing for `value` rather than for `data` - which treats an empty series list as a point list and draws nothing.",
+      "restore": null,
+      "searchHints": [
+        "ds-column-chart",
+        "ColumnChartPoint",
+        "ColumnChartSeries",
+        "ColumnChartComponent"
+      ],
+      "detect": [
+        "extends ColumnChartComponent",
+        ".data()[",
+        "viewChild(ColumnChartComponent",
+        "ColumnChartComponent)",
+        "readonly data = input"
+      ],
+      "verify": "Every place that reads a `ds-column-chart`'s `data` signal back narrows on the entry's shape before touching `value` or `label`, and the app builds with no TS2339 or TS2416 on `ColumnChartComponent`.",
+      "note": "`data` was `readonly ColumnChartPoint[]` and is now `readonly ColumnChartPoint[] | readonly ColumnChartSeries[]`, so one chart can carry several named series. Widening an input is source-compatible for whoever writes the value and breaking for whoever reads it back or overrides it: an input signal's type is invariant, so a redeclaration fails even where the values are compatible."
     }
   ],
   "informational": [
