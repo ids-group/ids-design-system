@@ -140,8 +140,12 @@
 - **Exported class member surface moved — only matters if you SUBCLASS one of these.**
   `ProgressComponent` and `MeterComponent` are gone; `BarComponent` carries every member both of
   them had. `ChartTooltipDirective`, internal and not exported from the package root, gains
-  `dsChartTooltipPreferBelow`. A subclass declaring that name collides: rename yours, or add
-  `override` where it genuinely means the same thing.
+  `dsChartTooltipPreferBelow`. `ColumnChartComponent` moved its drawing into the shared container,
+  so it gained `thresholds`, `categories`, `series`, `geometry`, `tableRows`, `viewHeightPx` and
+  `skeletonHeightPx` and lost the members that used to draw its marks. `DonutChartComponent` gained
+  `partOfWhole`, `arcAt`, `isDimmed` and three legend handlers; `FunnelChartComponent` gained
+  `isDimmed` and `onRowEnter`. A subclass declaring any of those names collides: rename yours, or
+  add `override` where it genuinely means the same thing.
 
 - **A held mark opens its panel BELOW itself.** The Unpin control sits at the plot's top edge, and
   a panel opening upward from a mark in the upper half landed on top of it. No z-index fixes that
