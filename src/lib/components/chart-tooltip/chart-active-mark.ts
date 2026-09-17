@@ -8,11 +8,11 @@ export interface ChartActiveMark {
   readonly origin: Signal<Element | null>;
   /** Whether the active mark is held rather than followed — a tap, or a click under `pinOnClick`. */
   readonly pinned: Signal<boolean>;
-  enter(index: number, event: Event, anchorWithin?: string): void;
+  enter(index: number, event: Event, anchor?: string | Element | null): void;
   leave(): void;
   /** Holds the mark that was activated, for any pointer type. Activating the mark that is already
    *  pinned releases it, so one gesture both sets and clears. */
-  pin(index: number, event: Event, anchorWithin?: string): void;
+  pin(index: number, event: Event, anchor?: string | Element | null): void;
   /** Lets go of a held mark, for a control that offers the way out in as many words. */
   release(): void;
 }
@@ -56,13 +56,19 @@ export function chartActiveMark(
 
   // The tooltip anchors to the MARK, not to the box that catches the pointer: a column's cell is
   // the full plot height, so anchoring to it opens the panel at the top of the chart rather than
-  // over the column it is about.
-  const aim = (at: number, event: Event, anchorWithin?: string): void => {
+  // over the column it is about. A selector is resolved INSIDE the box; a legend item's mark is not
+  // inside it, so that caller passes the element.
+  const aim = (
+    at: number,
+    event: Event,
+    anchor?: string | Element | null,
+  ): void => {
     const target = event.currentTarget;
     if (target instanceof Element) {
       host = target;
-      const anchor = anchorWithin ? target.querySelector(anchorWithin) : null;
-      origin.set(anchor ?? target);
+      const mark =
+        typeof anchor === 'string' ? target.querySelector(anchor) : anchor;
+      origin.set(mark ?? target);
     }
     index.set(at);
   };
@@ -115,8 +121,10 @@ export function chartActiveMark(
 
       return;
     }
-    const mark = origin();
-    if (!(mark instanceof Element) || !mark.contains(event.target)) {
+    // Against the HOST, not the anchor: a legend item and the arc its panel points at are disjoint
+    // elements, so testing the anchor would clear the panel the moment the pointer moved inside the
+    // legend item that opened it.
+    if (!host || !host.contains(event.target)) {
       scheduleClear();
     }
   };
@@ -158,14 +166,14 @@ export function chartActiveMark(
     index: index.asReadonly(),
     origin: origin.asReadonly(),
     pinned: pinned.asReadonly(),
-    enter(at, event, anchorWithin) {
+    enter(at, event, anchor) {
       // A pin HOLDS. Without this the next mark the pointer crossed took the active slot straight
       // back, so pinning appeared to work and then followed the pointer anyway — the one thing a
       // pin exists not to do. It is released by Escape, or by a press outside the pinned mark.
       if (pinned()) {
         return;
       }
-      aim(at, event, anchorWithin);
+      aim(at, event, anchor);
       cancelPendingClear();
       if (typeof document !== 'undefined') {
         document.addEventListener('pointerover', trackPointer, true);
@@ -189,7 +197,7 @@ export function chartActiveMark(
         clear();
       }
     },
-    pin(at, event, anchorWithin) {
+    pin(at, event, anchor) {
       if (typeof document === 'undefined') {
         return;
       }
@@ -203,7 +211,7 @@ export function chartActiveMark(
       }
       // Re-aiming while already pinned keeps `pinned` true throughout, so nothing that renders on
       // it — the Unpin control, the held mark's styling — unmounts between the two marks.
-      aim(at, event, anchorWithin);
+      aim(at, event, anchor);
       if (!pinned()) {
         hold();
       }

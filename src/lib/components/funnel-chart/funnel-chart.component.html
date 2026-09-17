@@ -60,6 +60,7 @@
             [class.is-pinned]="
               activeMark.pinned() && activeMark.index() === index
             "
+            [class.is-dimmed]="isDimmed(index)"
             [attr.points]="entry.points"
             [attr.fill]="entry.color"
             [attr.role]="interactive() ? 'button' : null"
@@ -122,8 +123,10 @@
         </thead>
 
         <tbody>
-          @for (entry of stages(); track entry.stage.id) {
-            <tr>
+          @for (entry of stages(); track entry.stage.id; let index = $index) {
+            <tr
+              (pointerenter)="onRowEnter(index, $event)"
+              (pointerleave)="activeMark.leave()">
               <th scope="row">
                 <span
                   class="swatch"

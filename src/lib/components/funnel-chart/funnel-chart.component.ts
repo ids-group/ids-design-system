@@ -18,6 +18,7 @@ import {
   describeSeries,
   formatPercent,
   focusMark,
+  markAt,
   nextRovingIndex,
   staggerDelay,
 } from '@ids-group-ltd/ids-design-system/components';
@@ -264,6 +265,28 @@ export class FunnelChartComponent {
   protected onMarkFocus(index: number, event: FocusEvent): void {
     this.rovingIndex.set(index);
     this.activeMark.enter(index, event);
+  }
+
+  /** A table row stands for its band, so it opens the band's tooltip over the BAND and dims the
+   *  others — the same state hovering the band itself produces. */
+  protected onRowEnter(index: number, event: Event): void {
+    this.activeMark.enter(
+      index,
+      event,
+      markAt(
+        (event.currentTarget as Element).closest('figure'),
+        index,
+        '.stage',
+      ),
+    );
+  }
+
+  protected isDimmed(index: number): boolean {
+    return (
+      this.dimOthers() &&
+      this.activeMark.index() !== -1 &&
+      this.activeMark.index() !== index
+    );
   }
 
   protected onMarkNavigation(event: KeyboardEvent, index: number): void {

@@ -17,6 +17,7 @@ import {
   describeSeries,
   focusMark,
   largestRemainder,
+  markAt,
   nextRovingIndex,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
@@ -232,6 +233,44 @@ export class DonutChartComponent {
   protected onMarkFocus(index: number, event: FocusEvent): void {
     this.rovingIndex.set(index);
     this.activeMark.enter(index, event);
+  }
+
+  /** A legend item stands for its arc, so it opens the arc's tooltip over the ARC and dims the
+   *  other slices — the same state hovering the arc itself produces. */
+  protected onLegendEnter(index: number, event: Event): void {
+    this.activeMark.enter(index, event, this.arcAt(event, index));
+  }
+
+  protected onLegendFocus(index: number, event: FocusEvent): void {
+    this.rovingIndex.set(index);
+    this.onLegendEnter(index, event);
+  }
+
+  protected onLegendClick(
+    slice: DonutChartSlice,
+    index: number,
+    event: Event,
+  ): void {
+    this.sliceClicked.emit(slice);
+    if (this.pinOnClick()) {
+      this.activeMark.pin(index, event, this.arcAt(event, index));
+    }
+  }
+
+  private arcAt(event: Event, index: number): Element | null {
+    return markAt(
+      (event.currentTarget as Element).closest('.chart'),
+      index,
+      '.slice',
+    );
+  }
+
+  protected isDimmed(index: number): boolean {
+    return (
+      this.dimOthers() &&
+      this.activeMark.index() !== -1 &&
+      this.activeMark.index() !== index
+    );
   }
 
   protected onMarkNavigation(
