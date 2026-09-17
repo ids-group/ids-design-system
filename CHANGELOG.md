@@ -62,6 +62,15 @@
 
 ### Added
 
+- **`ds-donut-chart` takes `partOfWhole`, so its percentages can be turned off.** A ring always
+  printed each slice's share and there was no way to stop it. The input defaults to `true`, which is
+  what the ring already did, so nothing changes without asking; `[partOfWhole]="false"` drops the
+  percentage from the legend, the tooltip and the data table alike.
+
+  It starts `true` here and `false` on every other chart on purpose: a ring IS parts of one whole, so
+  a share of the total is a real quantity whatever the data, while a column chart's categories often
+  sum to a number nobody can point at.
+
 - **A column can be drawn as a projection rather than a reading.** A `ColumnChartPoint` that sets
   `fill: 'hatched'` keeps its colour and takes a striped texture over it, which is what separates a
   forecast from a settled figure without spending a second hue on it.
@@ -118,12 +127,6 @@
   `--ds-chart-threshold-dotted-pattern`. A threshold's own `color` overrides the first.
 
 ### Changed
-
-- **`ds-donut-chart` prints each slice's share by default.** `partOfWhole` had to be set before a
-  donut would state what proportion a slice was, which is a flag a donut never needs: its slices are
-  parts of one whole by construction, unlike a bar or column chart where the categories often sum to
-  a number nobody can point at. The share now appears in the legend, the tooltip and the data table
-  without asking. `[partOfWhole]="false"` removes it from all of them.
 
 - **Hovering a legend item behaves as hovering the mark it names.** On `ds-donut-chart` the panel
   opened over the legend row rather than over the arc, so the reader was pointed at the label
