@@ -210,7 +210,11 @@ export class ChartComponent implements ChartScales {
   }
 
   protected readonly viewHeight = computed(() =>
-    chartViewHeight(this.plotHeight(), this.valueSpace()),
+    chartViewHeight(
+      this.plotHeight(),
+      this.valueSpace(),
+      this.reachesBelowZero(),
+    ),
   );
 
   /** One viewBox unit is one CSS pixel, in both axes. That is the whole point of measuring: a
@@ -305,8 +309,13 @@ export class ChartComponent implements ChartScales {
   protected readonly axisLabelX = computed(
     () => this.plot().left - CHART_AXIS_LABEL_GAP,
   );
+  /** Clears the same reservation the view height budgets, and only when it is there: adding it
+   *  unconditionally would drop the labels past a viewBox that no longer holds the space. */
   protected readonly categoryLabelY = computed(
-    () => this.plotBottom() + this.valueSpace() + CHART_CATEGORY_LABEL_OFFSET,
+    () =>
+      this.plotBottom() +
+      (this.reachesBelowZero() ? this.valueSpace() : 0) +
+      CHART_CATEGORY_LABEL_OFFSET,
   );
 
   protected readonly ticks = computed(() => {

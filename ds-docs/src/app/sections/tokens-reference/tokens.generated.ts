@@ -3049,8 +3049,18 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "description": "",
     "tokens": [
       {
-        "name": "--ds-chart-plot-height",
-        "value": "240px",
+        "name": "--ds-column-chart-column-max-width",
+        "value": "48px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-column-chart-column-gap",
+        "value": "var(--ds-chart-bar-gap)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-column-chart-cap-radius",
+        "value": "var(--ds-chart-mark-cap-radius)",
         "notes": ""
       }
     ]
@@ -3318,28 +3328,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": ""
       },
       {
-        "name": "--ds-column-chart-column-gap",
-        "value": "var(--ds-chart-bar-gap)",
-        "notes": ""
-      },
-      {
-        "name": "--ds-column-chart-column-width",
-        "value": "80%",
-        "notes": ""
-      },
-      {
-        "name": "--ds-column-chart-cap-radius",
-        "value": "var(--ds-chart-mark-cap-radius)",
-        "notes": ""
-      },
-      {
-        "name": "--ds-column-chart-column-max-width",
-        "value": "48px",
-        "notes": ""
-      },
-      {
-        "name": "--ds-column-chart-grid-line-color",
-        "value": "var(--ds-chart-grid-line-color)",
+        "name": "--ds-column-chart-axis-width",
+        "value": "40px",
         "notes": ""
       },
       {
@@ -3348,8 +3338,13 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": ""
       },
       {
-        "name": "--ds-column-chart-axis-width",
-        "value": "40px",
+        "name": "--ds-column-chart-column-width",
+        "value": "80%",
+        "notes": ""
+      },
+      {
+        "name": "--ds-column-chart-grid-line-color",
+        "value": "var(--ds-chart-grid-line-color, var(--chart-grid-line-color))",
         "notes": ""
       }
     ]

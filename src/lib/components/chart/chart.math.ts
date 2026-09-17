@@ -55,16 +55,20 @@ export function chartPlot(
 /** The viewBox's height, and the `<svg>`'s rendered height in pixels - the two are the same
  *  number, which is what holds the 1:1 scale on the vertical axis too.
  *
- *  `valueSpace` is budgeted TWICE: once above the plot for a value label over the tallest mark,
- *  and once below the baseline for a negative mark's label, which would otherwise print into the
- *  category labels.
+ *  `valueSpace` is always budgeted above the plot, for a value label over the tallest mark. It is
+ *  budgeted a SECOND time below the baseline only when the domain reaches under zero, where a
+ *  negative mark's label would otherwise print into the category labels: reserving it for every
+ *  chart costs the all-positive ones - the common case - that much height for nothing.
  *
  *  @internal */
 export function chartViewHeight(
   plotHeight: number,
   valueSpace: number,
+  reservesBelowBaseline = false,
 ): number {
-  return valueSpace + Math.max(0, plotHeight) + valueSpace + CATEGORY_GUTTER;
+  const below = reservesBelowBaseline ? valueSpace : 0;
+
+  return valueSpace + Math.max(0, plotHeight) + below + CATEGORY_GUTTER;
 }
 
 /** The domain the value axis draws: the union of every reported set, always reaching zero,

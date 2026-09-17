@@ -136,10 +136,13 @@ export class ColumnSeriesComponent implements OnDestroy {
     () => `${this.bandStep() * this.columnWidthRatio()}px`,
   );
 
+  /** The whole canvas, reserved end included. Overshooting when the container drops that
+   *  reservation costs nothing - the outer `<svg>` clips it - while falling short would leave a
+   *  strip under the plot that answers no pointer. */
   protected readonly hitHeight = computed(() => {
     const plot = this.scales.plot();
 
-    return chartViewHeight(plot.height, plot.top);
+    return chartViewHeight(plot.height, plot.top, true);
   });
 
   protected readonly pinDiscRadius = PIN_DISC_RADIUS;

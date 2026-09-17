@@ -1854,6 +1854,33 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Pins the ceiling of the value axis. See `min`. Two charts drawn one subject at a time are only comparable when both are pinned."
       },
       {
+        "name": "plotHeight",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "CHART_DEFAULT_PLOT_HEIGHT",
+        "required": false,
+        "description": "Height of the plot itself, in CSS pixels, axis labels and value headroom excluded. Real pixels rather than a share of the width: one viewBox unit is one pixel, so a card that widens spreads the categories further apart and leaves the plot exactly this tall."
+      },
+      {
+        "name": "axisGutter",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "CHART_DEFAULT_AXIS_GUTTER",
+        "required": false,
+        "description": "Width in CSS pixels of the gutter down the left that carries the value-axis labels. Widen it for long tick labels; the plot takes whatever is left."
+      },
+      {
+        "name": "valueSpace",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "CHART_DEFAULT_VALUE_SPACE",
+        "required": false,
+        "description": "Pixels reserved for a value label at each end of the plot: above the top tick for a mark at the ceiling, and below the baseline for a negative mark, whose label would otherwise print over the category labels. Reserved whether or not a mark draws one, because a chart that gains a label on one value must not change height."
+      },
+      {
         "name": "caption",
         "kind": "input",
         "type": "string | null",
@@ -1863,13 +1890,22 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Printed above the plot as the chart's visible title."
       },
       {
+        "name": "interactive",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the projected marks answer to the pointer and the keyboard. The container draws no marks of its own and only reads this for the plot's role: a group of controls to step through, against a single image to be described."
+      },
+      {
         "name": "summary",
         "kind": "input",
         "type": "string | null",
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Accessible name for the plot. The container holds no readings of its own, so a chart that needs its numbers described supplies the sentence here."
+        "description": "Accessible name for the plot. The container holds no readings of its own, so a chart that needs its numbers described supplies the sentence here - `describeSeries` is what the five presets build it with. It is the whole label in the static case, where nothing else is reachable."
       },
       {
         "name": "frame",

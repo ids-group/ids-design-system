@@ -34,10 +34,13 @@ check('a wider axis gutter takes it out of the plot', chartPlot(640, 240, 80, 20
   height: 240,
 });
 
-check('the view budgets value space at both ends', chartViewHeight(240, 20), 310);
-check('no value space leaves the category row alone', chartViewHeight(240, 0), 270);
+check('an all-positive view budgets value space above only', chartViewHeight(240, 20), 290);
+check('a domain reaching below zero budgets it at both ends', chartViewHeight(240, 20, true), 310);
+check('the reservation is exactly one value space', chartViewHeight(240, 20, true) - chartViewHeight(240, 20, false), 20);
+check('no value space leaves the category row alone', chartViewHeight(240, 0, true), 270);
 check('the view height grows with the plot one for one', chartViewHeight(340, 20) - chartViewHeight(240, 20), 100);
-check('the view height grows with value space two for one', chartViewHeight(240, 30) - chartViewHeight(240, 20), 20);
+check('the view height grows with value space one for one while positive', chartViewHeight(240, 30) - chartViewHeight(240, 20), 10);
+check('the view height grows with value space two for one below zero', chartViewHeight(240, 30, true) - chartViewHeight(240, 20, true), 20);
 
 check('one reported set rounds up to a tick', axisDomain([[10, 20, 30]], 5), {
   min: 0,
