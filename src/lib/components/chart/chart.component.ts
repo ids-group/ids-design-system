@@ -4,6 +4,7 @@ import {
   ElementRef,
   Signal,
   ViewEncapsulation,
+  afterRenderEffect,
   booleanAttribute,
   computed,
   effect,
@@ -170,12 +171,12 @@ export class ChartComponent implements ChartScales {
     defaultChartFormat,
   );
 
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+
   /** The `<svg>`'s own rendered width: `:host(.framed)` carries the frame padding, so the host's
    *  CONTENT box - which is what a `ResizeObserver` reports - is the box the canvas fills at
    *  `inline-size: 100%`. Measuring the host is therefore measuring the canvas. */
-  private readonly measuredWidth = elementWidth(
-    inject<ElementRef<HTMLElement>>(ElementRef),
-  );
+  private readonly measuredWidth = elementWidth(this.host);
 
   protected readonly viewWidth = computed(
     () => this.measuredWidth() || CHART_FALLBACK_WIDTH,
@@ -207,6 +208,21 @@ export class ChartComponent implements ChartScales {
         cancelAnimationFrame(second);
       });
     });
+
+    // The read phase, so every `getComputedTextLength` lands in one batch before any write:
+    // interleaving them forces a synchronous layout per label.
+    afterRenderEffect({
+      read: () => {
+        const labels = this.host.nativeElement.querySelectorAll<SVGTextElement>(
+          '.axis-label',
+        );
+        let widest = 0;
+        for (const label of labels) {
+          widest = Math.max(widest, label.getComputedTextLength());
+        }
+        this.measuredLabelWidth.set(Math.ceil(widest));
+      },
+    });
   }
 
   protected readonly viewHeight = computed(() =>
@@ -224,11 +240,30 @@ export class ChartComponent implements ChartScales {
     () => `0 0 ${this.viewWidth()} ${this.viewHeight()}`,
   );
 
+  /** Widest tick label actually rendered, in the CSS pixels the canvas is drawn in. Zero until the
+   *  first read, and zero under SSR, where `axisGutter` alone decides. */
+  private readonly measuredLabelWidth = signal(0);
+
+  /** `axisGutter` is the FLOOR, not the answer: a compact number is far wider in some locales than
+   *  in others - `3,5 тыс.` against `3.5k` - and an SVG canvas CLIPS what a DOM column merely
+   *  overflowed, so a fixed gutter silently eats the leading digit. The gutter takes whichever is
+   *  larger, so setting the token still guarantees at least that much room.
+   *
+   *  This converges rather than oscillating: a tick's TEXT is decided by the domain and the tick
+   *  count, neither of which the gutter feeds, so widening it moves the labels without rewriting
+   *  them and the second measurement equals the first. */
+  protected readonly effectiveAxisGutter = computed(() =>
+    Math.max(
+      this.axisGutter(),
+      this.measuredLabelWidth() + CHART_AXIS_LABEL_GAP,
+    ),
+  );
+
   readonly plot: Signal<ChartPlot> = computed(() =>
     chartPlot(
       this.viewWidth(),
       this.plotHeight(),
-      this.axisGutter(),
+      this.effectiveAxisGutter(),
       this.valueSpace(),
     ),
   );
