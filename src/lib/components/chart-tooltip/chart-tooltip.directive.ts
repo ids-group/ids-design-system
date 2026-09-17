@@ -100,7 +100,7 @@ export class ChartTooltipDirective {
 
   private overlayRef: OverlayRef | null = null;
   private panelRef: ComponentRef<ChartTooltipPanelComponent> | null = null;
-  private detachScrollClose: (() => void) | null = null;
+  private detachScrollReposition: (() => void) | null = null;
   private detachEscape: (() => void) | null = null;
 
   constructor() {
@@ -130,12 +130,11 @@ export class ChartTooltipDirective {
         new ComponentPortal(ChartTooltipPanelComponent, this.viewContainerRef),
       );
       // CDK's reposition strategy watches `window` and registered `cdkScrollable`s only, so it
-      // misses an app's own `overflow: auto` container — and a panel that stays put while the
-      // chart scrolls away points at nothing.
-      // Nothing re-opens it: the effect re-runs on a CHANGE to the context or the origin, and a
-      // scroll changes neither. The next pointer move does both.
-      this.detachScrollClose = closeOnScroll(this.overlayRef, () =>
-        this.close(),
+      // misses an app's own `overflow: auto` container. Moved rather than closed: a PINNED mark
+      // stops answering pointer moves, so a close here would be permanent, leaving the pin glyph
+      // and the Unpin control standing over a reading that is gone.
+      this.detachScrollReposition = closeOnScroll(this.overlayRef, () =>
+        this.overlayRef?.updatePosition(),
       );
       this.detachEscape = this.closeOnEscape();
     } else {
@@ -179,8 +178,8 @@ export class ChartTooltipDirective {
   private close(): void {
     this.detachEscape?.();
     this.detachEscape = null;
-    this.detachScrollClose?.();
-    this.detachScrollClose = null;
+    this.detachScrollReposition?.();
+    this.detachScrollReposition = null;
     this.overlayRef?.dispose();
     this.overlayRef = null;
     this.panelRef = null;
