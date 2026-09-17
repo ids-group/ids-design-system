@@ -6,6 +6,7 @@ import { check, finish } from './probe-check.mjs';
 const components = registerComponentsFacade(import.meta.url, [
   'charts-scale.ts',
   'charts-format.ts',
+  'charts-path.ts',
 ]);
 
 const {

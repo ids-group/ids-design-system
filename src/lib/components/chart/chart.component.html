@@ -59,6 +59,33 @@
             [attr.y1]="plot().top"
             [attr.y2]="plotBottom()" />
 
+          @if (showSecondaryGridlines()) {
+            @for (tick of secondaryTicks(); track tick.value) {
+              <line
+                class="grid-line is-secondary"
+                [attr.x1]="plot().left"
+                [attr.x2]="plotRight()"
+                [attr.y1]="tick.y"
+                [attr.y2]="tick.y" />
+            }
+          }
+
+          @if (stacked()) {
+            <line
+              class="axis-line"
+              [attr.x1]="plot().left"
+              [attr.x2]="plotRight()"
+              [attr.y1]="secondaryPlotBottom()"
+              [attr.y2]="secondaryPlotBottom()" />
+
+            <line
+              class="axis-line"
+              [attr.x1]="plot().left"
+              [attr.x2]="plot().left"
+              [attr.y1]="secondaryPlot().top"
+              [attr.y2]="secondaryPlotBottom()" />
+          }
+
           @if (reachesBelowZero()) {
             <line
               class="zero-line"
@@ -83,9 +110,21 @@
           aria-hidden="true">
           @for (tick of ticks(); track tick.value) {
             <text
-              class="axis-label"
+              class="axis-label is-primary"
               text-anchor="end"
+              [style.fill]="axisLabelFill()"
               [attr.x]="axisLabelX()"
+              [attr.y]="tick.y">
+              {{ tick.label }}
+            </text>
+          }
+
+          @for (tick of secondaryTicks(); track tick.value) {
+            <text
+              class="axis-label is-secondary"
+              [style.fill]="secondaryAxisLabelFill()"
+              [attr.text-anchor]="secondaryLabelAnchor()"
+              [attr.x]="secondaryLabelX()"
               [attr.y]="tick.y">
               {{ tick.label }}
             </text>

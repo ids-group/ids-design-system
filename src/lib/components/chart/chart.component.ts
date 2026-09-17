@@ -23,6 +23,8 @@ import {
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 import type {
+  ChartAxis,
+  ChartAxisMode,
   ChartFrame,
   ChartValueFormat,
 } from '@ids-group-ltd/ids-design-system/core';
@@ -34,10 +36,13 @@ import {
   CHART_DEFAULT_PLOT_HEIGHT,
   CHART_DEFAULT_TICK_COUNT,
   CHART_DEFAULT_VALUE_SPACE,
+  CHART_EDGE_GUTTER,
   CHART_FALLBACK_WIDTH,
+  CHART_STACKED_PLOT_GAP,
   axisDomain,
   chartPlot,
   chartViewHeight,
+  secondaryAxis,
   valueScale,
 } from './chart.math';
 import {
@@ -150,6 +155,19 @@ export class ChartComponent implements ChartScales {
    *  browser's locale grouping with a K/M/B suffix past four digits. */
   readonly valueFormat = input<ChartValueFormat | null>(null);
 
+  /** How the second value axis relates to the first, once a mark has reported against it. The
+   *  same four words `ds-line-chart` takes. */
+  readonly secondaryAxisMode = input<ChartAxisMode>('rounded');
+
+  /** Paints the first axis's tick labels in the colour of the marks measured against it. A
+   *  two-scale plot is ambiguous without it - nothing on the canvas says which of two lines is
+   *  read against which set of numbers - and it is the author, not the container, who knows which
+   *  colour an axis belongs to, because several marks can share one. */
+  readonly axisColor = input<string | null>(null);
+
+  /** `axisColor` for the second axis. */
+  readonly secondaryAxisColor = input<string | null>(null);
+
   readonly frameResolved = resolveWithConfig(
     this.frame,
     (config) => config.chart?.frame,
@@ -213,25 +231,38 @@ export class ChartComponent implements ChartScales {
     // interleaving them forces a synchronous layout per label.
     afterRenderEffect({
       read: () => {
-        const labels =
-          this.host.nativeElement.querySelectorAll<SVGTextElement>(
-            '.axis-label',
-          );
-        let widest = 0;
-        for (const label of labels) {
-          widest = Math.max(widest, label.getComputedTextLength());
-        }
-        this.measuredLabelWidth.set(Math.ceil(widest));
+        this.measuredLabelWidth.set(this.widestLabel('.axis-label.is-primary'));
+        this.measuredSecondaryLabelWidth.set(
+          this.widestLabel('.axis-label.is-secondary'),
+        );
       },
     });
   }
 
-  protected readonly viewHeight = computed(() =>
-    chartViewHeight(
-      this.plotHeight(),
-      this.valueSpace(),
-      this.reachesBelowZero(),
-    ),
+  private widestLabel(selector: string): number {
+    const labels =
+      this.host.nativeElement.querySelectorAll<SVGTextElement>(selector);
+    let widest = 0;
+    for (const label of labels) {
+      widest = Math.max(widest, label.getComputedTextLength());
+    }
+
+    return Math.ceil(widest);
+  }
+
+  /** Two plots, one above the other, sharing the category axis: the only mode whose second axis
+   *  is a second PLOT rather than a second scale over the first. */
+  protected readonly stacked = computed(
+    () => this.secondaryAxisMode() === 'stacked' && this.hasSecondaryAxis(),
+  );
+
+  protected readonly viewHeight = computed(
+    () =>
+      chartViewHeight(
+        this.plotHeight(),
+        this.valueSpace(),
+        this.reachesBelowZero(),
+      ) + (this.stacked() ? this.plotHeight() + CHART_STACKED_PLOT_GAP : 0),
   );
 
   /** One viewBox unit is one CSS pixel, in both axes. That is the whole point of measuring: a
@@ -260,23 +291,66 @@ export class ChartComponent implements ChartScales {
     ),
   );
 
+  /** Widest secondary tick label, measured the same way and for the same reason as the primary
+   *  one: those labels sit OUTSIDE the plot's right edge and an SVG canvas clips what a DOM
+   *  column merely overflowed. */
+  private readonly measuredSecondaryLabelWidth = signal(0);
+
+  /** The plot gives the right-hand labels room only when they are drawn there - a stacked second
+   *  axis puts both label columns down the left, so the plot keeps the full width. */
+  protected readonly rightGutter = computed(() =>
+    this.hasSecondaryAxis() && !this.stacked()
+      ? Math.max(
+          this.axisGutter(),
+          this.measuredSecondaryLabelWidth() + CHART_AXIS_LABEL_GAP,
+        )
+      : CHART_EDGE_GUTTER,
+  );
+
   readonly plot: Signal<ChartPlot> = computed(() =>
     chartPlot(
       this.viewWidth(),
       this.plotHeight(),
       this.effectiveAxisGutter(),
       this.valueSpace(),
+      this.rightGutter(),
     ),
   );
 
+  readonly secondaryPlot: Signal<ChartPlot> = computed(() => {
+    const plot = this.plot();
+
+    return this.stacked()
+      ? { ...plot, top: plot.top + plot.height + CHART_STACKED_PLOT_GAP }
+      : plot;
+  });
+
   private readonly reportedDomains = signal<
-    ReadonlyMap<string, readonly number[]>
+    ReadonlyMap<
+      string,
+      { readonly axis: ChartAxis; readonly values: readonly number[] }
+    >
   >(new Map());
 
-  reportDomain(id: string, values: readonly number[]): void {
+  reportDomain(
+    id: string,
+    values: readonly number[],
+    axis: ChartAxis = 'primary',
+  ): void {
     this.reportedDomains.update((reported) =>
-      new Map(reported).set(id, values),
+      new Map(reported).set(id, { axis, values }),
     );
+  }
+
+  private valuesOn(axis: ChartAxis): readonly (readonly number[])[] {
+    const found: (readonly number[])[] = [];
+    for (const report of this.reportedDomains().values()) {
+      if (report.axis === axis) {
+        found.push(report.values);
+      }
+    }
+
+    return found;
   }
 
   releaseDomain(id: string): void {
@@ -295,12 +369,90 @@ export class ChartComponent implements ChartScales {
   protected readonly domain = computed(
     () =>
       axisDomain(
-        this.reportedDomains().values(),
+        this.valuesOn('primary'),
         this.tickCount(),
         this.min(),
         this.max(),
       ),
     { equal: (a, b) => a.min === b.min && a.max === b.max },
+  );
+
+  readonly hasSecondaryAxis = computed(
+    () => this.valuesOn('secondary').length > 0,
+  );
+
+  protected readonly secondary = computed(
+    () =>
+      secondaryAxis(
+        this.ticks().map((tick) => tick.value),
+        this.valuesOn('secondary'),
+        this.tickCount(),
+        this.secondaryAxisMode(),
+      ),
+    {
+      equal: (a, b) =>
+        a.aligned === b.aligned &&
+        a.domain.min === b.domain.min &&
+        a.domain.max === b.domain.max &&
+        a.ticks.length === b.ticks.length &&
+        a.ticks.every((tick, index) => tick === b.ticks[index]),
+    },
+  );
+
+  readonly secondaryYPosition = computed(() => {
+    if (!this.hasSecondaryAxis()) {
+      return this.yPosition();
+    }
+    const plot = this.secondaryPlot();
+
+    return valueScale(this.secondary().domain, plot.top, plot.height);
+  });
+
+  protected readonly secondaryTicks = computed(() => {
+    if (!this.hasSecondaryAxis()) {
+      return [];
+    }
+    const toY = this.secondaryYPosition();
+    const format = this.valueFormatResolved();
+
+    return this.secondary().ticks.map((value) => ({
+      value,
+      y: toY(value),
+      label: format(value, 'tick'),
+    }));
+  });
+
+  /** A second set of gridlines only where the two scales do NOT share rows: drawn against an
+   *  aligned axis they would land on the primary's own lines and double every stroke. */
+  protected readonly showSecondaryGridlines = computed(
+    () =>
+      this.hasSecondaryAxis() &&
+      (this.stacked() || !this.secondary().aligned) &&
+      this.secondaryTicks().length > 1,
+  );
+
+  protected readonly secondaryLabelX = computed(() =>
+    this.stacked()
+      ? this.plot().left - CHART_AXIS_LABEL_GAP
+      : this.plot().left + this.plot().width + CHART_AXIS_LABEL_GAP,
+  );
+
+  protected readonly secondaryLabelAnchor = computed(() =>
+    this.stacked() ? 'end' : 'start',
+  );
+
+  protected readonly secondaryPlotBottom = computed(
+    () => this.secondaryPlot().top + this.secondaryPlot().height,
+  );
+
+  /** No tint on a single-scale plot: one axis needs no telling apart, and colouring it would only
+   *  restate the marks' own colour in the furniture. */
+  protected readonly axisLabelFill = computed(() =>
+    this.hasSecondaryAxis() ? this.axisColor() : null,
+  );
+
+  protected readonly secondaryAxisLabelFill = computed(() =>
+    this.secondaryAxisColor(),
   );
 
   private readonly bands = computed(() =>
@@ -349,7 +501,7 @@ export class ChartComponent implements ChartScales {
    *  unconditionally would drop the labels past a viewBox that no longer holds the space. */
   protected readonly categoryLabelY = computed(
     () =>
-      this.plotBottom() +
+      this.secondaryPlotBottom() +
       (this.reachesBelowZero() ? this.valueSpace() : 0) +
       CHART_CATEGORY_LABEL_OFFSET,
   );

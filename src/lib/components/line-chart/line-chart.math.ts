@@ -2,9 +2,19 @@ import {
   pointScale,
   linearScale,
   niceDomain,
+  roundStepAtLeast,
   tickValues,
 } from '@ids-group-ltd/ids-design-system/components';
+import type { LinePoint } from '@ids-group-ltd/ids-design-system/components';
 import type { LineChartAxisMode, LineChartGaps } from './line-chart.types';
+
+export {
+  areaPath,
+  lineSegments,
+  polylinePoints,
+  roundStepAtLeast,
+} from '@ids-group-ltd/ids-design-system/components';
+export type { LinePoint } from '@ids-group-ltd/ids-design-system/components';
 
 export const LINE_CHART_VIEW_WIDTH = 640;
 export const LINE_CHART_VIEW_HEIGHT = 320;
@@ -18,13 +28,7 @@ const CATEGORY_GUTTER = 30;
 const CATEGORY_LABEL_OFFSET = 18;
 const STACKED_PLOT_GAP = 34;
 const MAX_CATEGORY_LABELS = 12;
-const COORDINATE_DECIMALS = 2;
 const TICK_DECIMALS = 6;
-const ROUND_STEP_FACTORS = [1, 2, 5, 10];
-// A step divided out of a domain and multiplied back rarely lands on itself, so a
-// candidate equal to the minimum can compare as smaller by one bit and push the
-// whole axis up a rung.
-const ROUND_STEP_TOLERANCE = 1 - 1e-12;
 
 export interface PlotArea {
   readonly left: number;
@@ -52,13 +56,6 @@ export interface ChartLayout {
   readonly secondaryPlot: PlotArea;
   readonly categoryLabelY: number;
   readonly stacked: boolean;
-}
-
-export interface LinePoint {
-  readonly categoryIndex: number;
-  readonly x: number;
-  readonly y: number;
-  readonly value: number;
 }
 
 function roundTo(value: number, decimals: number): number {
@@ -116,25 +113,6 @@ export function domainMaxOf(
   }
 
   return max;
-}
-
-/** The smallest 1/2/5/10 × power-of-ten step that is not below `minimumStep`.
- *  `niceMax` picks its own number of intervals, so it cannot answer this: an aligned
- *  secondary axis has to reach its data within the intervals the primary already
- *  drew. */
-export function roundStepAtLeast(minimumStep: number): number {
-  if (!Number.isFinite(minimumStep) || minimumStep <= 0) {
-    return 0;
-  }
-  const base = Math.pow(10, Math.floor(Math.log10(minimumStep)));
-  for (const factor of ROUND_STEP_FACTORS) {
-    const candidate = factor * base;
-    if (candidate >= minimumStep * ROUND_STEP_TOLERANCE) {
-      return candidate;
-    }
-  }
-
-  return 10 * base;
 }
 
 function nicedAxis(domainMax: number, tickCount: number): AxisScale {
@@ -276,66 +254,6 @@ export function seriesPoints(
 
     return { categoryIndex: index, x, y: valueY(value, axisMax, plot), value };
   });
-}
-
-export function lineSegments(
-  points: readonly (LinePoint | null)[],
-): LinePoint[][] {
-  const segments: LinePoint[][] = [];
-  let current: LinePoint[] = [];
-  for (const point of points) {
-    if (point === null) {
-      if (current.length > 0) {
-        segments.push(current);
-      }
-      current = [];
-    } else {
-      current.push(point);
-    }
-  }
-  if (current.length > 0) {
-    segments.push(current);
-  }
-
-  return segments;
-}
-
-/** `''` rather than a partial list when a coordinate is unplottable: one `NaN` in a
- *  `points` list or a path `d` voids the whole attribute, and the line then vanishes
- *  with nothing logged. */
-export function polylinePoints(segment: readonly LinePoint[]): string {
-  if (segment.length === 0 || !segment.every(isPlottable)) {
-    return '';
-  }
-
-  return segment.map((point) => coordinatePair(point)).join(' ');
-}
-
-export function areaPath(
-  segment: readonly LinePoint[],
-  baselineY: number,
-): string {
-  if (
-    segment.length < 2 ||
-    !Number.isFinite(baselineY) ||
-    !segment.every(isPlottable)
-  ) {
-    return '';
-  }
-  const first = segment[0];
-  const last = segment[segment.length - 1];
-  const along = segment.map((point) => coordinatePair(point)).join(' L ');
-  const baseline = roundTo(baselineY, COORDINATE_DECIMALS);
-
-  return `M ${along} L ${roundTo(last.x, COORDINATE_DECIMALS)},${baseline} L ${roundTo(first.x, COORDINATE_DECIMALS)},${baseline} Z`;
-}
-
-function isPlottable(point: LinePoint): boolean {
-  return Number.isFinite(point.x) && Number.isFinite(point.y);
-}
-
-function coordinatePair(point: LinePoint): string {
-  return `${roundTo(point.x, COORDINATE_DECIMALS)},${roundTo(point.y, COORDINATE_DECIMALS)}`;
 }
 
 /** Show every nth category label. Every label at 60 categories is a grey smear, and

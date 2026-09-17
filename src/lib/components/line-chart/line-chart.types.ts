@@ -1,3 +1,5 @@
+import type { ChartAxisMode } from '@ids-group-ltd/ids-design-system/core';
+
 export interface LineChartSeries {
   id: string;
   label: string;
@@ -12,15 +14,9 @@ export interface LineChartSeries {
   slot?: number;
 }
 
-/** How the secondary axis relates to the primary one.
- *
- *  - `'rounded'` — one set of gridlines, and the secondary axis rounds its step up
- *    to a round number, so its series stops short of the top.
- *  - `'exact'` — one set of gridlines, and the secondary axis ends exactly at its
- *    largest reading, so its series uses the full height and the labels are not round.
- *  - `'independent'` — each axis is scaled and gridded on its own.
- *  - `'stacked'` — two plots one above the other, sharing the category axis. */
-export type LineChartAxisMode = 'rounded' | 'exact' | 'independent' | 'stacked';
+/** How the secondary axis relates to the primary one. The same four words `ds-chart` takes for a
+ *  composed two-scale plot, so a combo and a line chart are read the same way. */
+export type LineChartAxisMode = ChartAxisMode;
 
 /** What a `null` reading draws: a hole in the line, or a point at zero. */
 export type LineChartGaps = 'break' | 'zero';

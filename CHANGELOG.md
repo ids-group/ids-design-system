@@ -62,6 +62,23 @@
 
 ### Added
 
+- **A second value axis on `ds-chart`, and a line series to draw against it.** A plot can now carry
+  two quantities at two magnitudes - a figure per month on the left axis, the running total of
+  those months on the right - instead of flattening one of them against the other's scale.
+
+  `secondaryAxisMode` takes the same four words `ds-line-chart`'s `yAxisMode` does:
+  `'rounded'` (the default) hangs the second scale on the first's own gridlines at a round step,
+  `'exact'` ends it on its largest reading, `'independent'` scales and grids it on its own, and
+  `'stacked'` draws two plots one above the other over a shared category axis. `ChartAxisMode` and
+  `ChartAxis` are exported from the core entry point, and `LineChartAxisMode` is now an alias of
+  the first.
+
+  `axisColor` and `secondaryAxisColor` paint each axis's tick labels in the colour of the marks
+  measured against it, which on a two-scale plot is the only thing that says which numbers a mark
+  is read against. They are inert while the plot has one axis.
+
+  `--ds-chart-area-opacity` sets how solid the band a line series fills down to its baseline is.
+
 - **Reference lines and bands on `ds-column-chart`.** `thresholds` draws a target, a budget or an
   SLA across the plot, behind the columns.
 

@@ -133,6 +133,7 @@
   --chart-line-width-bold:  3px;
   --chart-dot-radius:        4px;
   --chart-dot-radius-active: 6px;
+  --chart-area-opacity:      0.16;
 
   /* Stripes wide enough to survive a 24px-wide mark at a glance, and drawn in the surface colour
      so they read as gaps cut out of the mark rather than a second hue competing with it. */
@@ -200,6 +201,7 @@
   --ds-chart-line-width-bold: var(--chart-line-width-bold);
   --ds-chart-dot-radius: var(--chart-dot-radius);
   --ds-chart-dot-radius-active: var(--chart-dot-radius-active);
+  --ds-chart-area-opacity: var(--chart-area-opacity);
   --ds-chart-hatch-color: var(--chart-hatch-color);
   --ds-chart-hatch-width: var(--chart-hatch-width);
 }

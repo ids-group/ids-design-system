@@ -11,6 +11,7 @@ const {
   axisDomain,
   chartPlot,
   chartViewHeight,
+  secondaryAxis,
   thresholdMarks,
   valueScale,
 } = await import(
@@ -156,6 +157,99 @@ check(
   'every threshold is laid out, in the order given',
   marksOf([{ value: 85 }, { value: 73 }]).map((mark) => mark.y),
   [50, 74],
+);
+
+// THE SECOND VALUE AXIS.
+//
+// Misha's combo: nine months on a 0-40K primary (5 rows, 4 intervals) against a running total
+// reaching 189900. 189900 / 4 = 47475 a row, which rounds up to the 50000 step that puts the last
+// label on 200K.
+const PRIMARY_TICKS = [0, 10000, 20000, 30000, 40000];
+
+const rounded = secondaryAxis(PRIMARY_TICKS, [[189900]], 5, 'rounded');
+check('a rounded second axis hangs on the first axis rows', rounded.aligned, true);
+check('a rounded second axis snaps its step up', rounded.ticks, [
+  0, 50000, 100000, 150000, 200000,
+]);
+check('a rounded second axis ends on its own last row', rounded.domain, {
+  min: 0,
+  max: 200000,
+});
+
+const exact = secondaryAxis(PRIMARY_TICKS, [[189900]], 5, 'exact');
+check('an exact second axis ends on the data', exact.domain, {
+  min: 0,
+  max: 189900,
+});
+check('an exact second axis divides the same rows', exact.ticks, [
+  0, 47475, 94950, 142425, 189900,
+]);
+
+const independent = secondaryAxis(PRIMARY_TICKS, [[189900]], 5, 'independent');
+check('an independent second axis shares no rows', independent.aligned, false);
+check('an independent second axis nices its own domain', independent.domain, {
+  min: 0,
+  max: 200000,
+});
+
+check(
+  'a stacked second axis is niced on its own too',
+  secondaryAxis(PRIMARY_TICKS, [[189900]], 5, 'stacked').aligned,
+  false,
+);
+
+// A step multiplied back out lands off by a bit, and an axis label reading
+// 149.99999999999997 is the visible form of that.
+check(
+  'an aligned tick is rounded back to a printable number',
+  secondaryAxis([0, 1, 2, 3], [[0.3]], 4, 'exact').ticks,
+  [0, 0.1, 0.2, 0.3],
+);
+
+// Alignment needs a SHARED ZERO ROW: a second scale hung on rows whose zero sits elsewhere would
+// put a reading above the line on one axis and below it on the other.
+const signedRows = [-20, 0, 20, 40, 60];
+const signedSecond = secondaryAxis(signedRows, [[-150, 450]], 5, 'exact');
+check(
+  'a signed primary puts the second axis zero on the same row',
+  signedSecond.ticks,
+  [-150, 0, 150, 300, 450],
+);
+check('a signed second axis reaches both of its own ends', signedSecond.domain, {
+  min: -150,
+  max: 450,
+});
+
+check(
+  'rows with no zero of their own cannot be shared',
+  secondaryAxis([10, 20, 30], [[500]], 3, 'rounded').aligned,
+  false,
+);
+check(
+  'a single row cannot be shared',
+  secondaryAxis([0], [[500]], 3, 'rounded').aligned,
+  false,
+);
+check(
+  'a positive reading with no rows above zero falls back',
+  secondaryAxis([-30, -20, -10, 0], [[500]], 4, 'rounded').aligned,
+  false,
+);
+check('nothing reported leaves a degenerate second axis', secondaryAxis(PRIMARY_TICKS, [], 5, 'rounded').domain, {
+  min: 0,
+  max: 0,
+});
+check(
+  'a non-finite reading never reaches the second axis domain',
+  secondaryAxis(PRIMARY_TICKS, [[Number.NaN, 120]], 5, 'exact').domain.max,
+  120,
+);
+
+// The plot's right gutter, which only a drawn-on-the-right second axis asks for.
+check(
+  'the plot gives the right-hand labels their own gutter',
+  chartPlot(640, 240, 46, 20, 46).width,
+  548,
 );
 
 finish('chart-math');

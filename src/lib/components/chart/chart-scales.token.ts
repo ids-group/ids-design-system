@@ -1,4 +1,5 @@
 import { InjectionToken, Signal } from '@angular/core';
+import type { ChartAxis } from '@ids-group-ltd/ids-design-system/core';
 
 /** The drawable rectangle inside `ds-chart`, in CSS pixels: the container measures itself and
  *  sizes its `viewBox` so one user unit is one pixel. A length written into a mark is therefore
@@ -27,6 +28,13 @@ export interface ChartScales {
    *  over the axis labels. */
   readonly yPosition: Signal<(value: number) => number>;
   readonly bandWidth: Signal<number>;
+  /** The rectangle a secondary-axis mark draws in. The same one as `plot` unless the two axes are
+   *  stacked, where it is the lower of the two plots. */
+  readonly secondaryPlot: Signal<ChartPlot>;
+  /** `yPosition` for the second value axis. Identical to it while no mark has reported against
+   *  that axis, so a mark may read it without first asking whether one exists. */
+  readonly secondaryYPosition: Signal<(value: number) => number>;
+  readonly hasSecondaryAxis: Signal<boolean>;
   /** The y of value zero, which is the baseline a bar grows from and the line a signed domain
    *  is read against. */
   readonly zeroOffset: Signal<number>;
@@ -38,7 +46,7 @@ export interface ChartScales {
    *
    *  Call it from an `effect`: a mark whose values come from a required `input` cannot read them
    *  in its constructor, and the effect is also what re-reports when they change. */
-  reportDomain(id: string, values: readonly number[]): void;
+  reportDomain(id: string, values: readonly number[], axis?: ChartAxis): void;
   /** Withdraws a contribution, which a mark does in `ngOnDestroy`. */
   releaseDomain(id: string): void;
 }

@@ -1,0 +1,86 @@
+@use '../../styles/focus' as focus;
+@use '../../styles/chart-frame' as chart-frame;
+@use '../../styles/chart-interactive' as chart-interactive;
+@use '../../styles/chart-motion' as chart-motion;
+@include chart-motion.fades-in('.series-line');
+@include chart-motion.fades-in('.series-area');
+@include chart-motion.fades-in('.series-marker');
+@include chart-frame.no-bounding-box-focus('.series-marker');
+
+
+.lines {
+  --_line-series-line-width: var(--ds-chart-line-width);
+  --_line-series-dot-radius: var(--ds-chart-dot-radius);
+  --_line-series-dot-radius-active: var(--ds-chart-dot-radius-active);
+  --_line-series-area-opacity: var(--ds-chart-area-opacity);
+}
+
+@include chart-interactive.dims('.series-line', ', stroke var(--ds-motion-chart-mark-duration) var(--ds-motion-chart-mark-easing)');
+@include chart-interactive.dims('.series-marker', ', fill var(--ds-motion-chart-mark-duration) var(--ds-motion-chart-mark-easing), r var(--ds-motion-chart-state-duration) var(--ds-motion-chart-state-easing)');
+@include chart-interactive.clickable('.series-marker');
+
+.series-area {
+  fill-opacity: var(--_line-series-area-opacity);
+  stroke: none;
+}
+
+.series-line {
+  fill: none;
+  stroke-width: var(--_line-series-line-width);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+
+.series-marker {
+  r: var(--_line-series-dot-radius);
+}
+
+.series-marker.ghost {
+  fill-opacity: 0;
+}
+
+.series-marker.ghost:hover,
+.series-marker.ghost:focus-visible,
+.series-marker.ghost.is-active {
+  fill-opacity: 1;
+}
+
+.series-marker.is-active {
+  r: var(--_line-series-dot-radius-active);
+}
+
+/* The hit area, not the dot. `non-scaling-stroke` is what makes it a CSS-pixel size independent of
+   any transform on the canvas, and a transparent stroke is still `visiblePainted`, so it
+   hit-tests. 24px is WCAG 2.5.8; the coarse-pointer rule below takes it to 44. */
+.series-marker.interactive {
+  stroke: transparent;
+  stroke-width: 24px;
+  vector-effect: non-scaling-stroke;
+}
+
+@media (pointer: coarse) {
+  .series-marker.interactive {
+    stroke-width: 44px;
+  }
+}
+
+/* focus-ring-guard: an outline on an SVG element paints its BOUNDING BOX, not its silhouette, so a
+   marker would ring as a square. The ring is a stroke on the circle instead; `own-indicator` keeps
+   the outline under forced colours, where `stroke` is not remapped. */
+.series-marker.interactive:focus-visible {
+  @include focus.own-indicator;
+  @include chart-frame.drawn-focus-ring;
+
+  r: var(--_line-series-dot-radius-active);
+}
+
+@media (forced-colors: active) {
+  .series-line {
+    stroke: CanvasText;
+  }
+
+  .series-marker {
+    fill: CanvasText;
+  }
+}

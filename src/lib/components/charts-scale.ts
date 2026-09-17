@@ -177,3 +177,30 @@ export function bandScale(
       Math.min(count - 1, Math.max(0, Math.floor(offset / step))),
   };
 }
+
+const ROUND_STEP_FACTORS = [1, 2, 5, 10];
+// A step divided out of a domain and multiplied back rarely lands on itself, so a
+// candidate equal to the minimum can compare as smaller by one bit and push the
+// whole axis up a rung.
+const ROUND_STEP_TOLERANCE = 1 - 1e-12;
+
+/** The smallest 1/2/5/10 x power-of-ten step that is not below `minimumStep`.
+ *  `niceDomain` picks its own number of intervals, so it cannot answer this: a second
+ *  axis drawn against the first's gridlines has to reach its data within the intervals
+ *  the first already drew.
+ *
+ *  @internal */
+export function roundStepAtLeast(minimumStep: number): number {
+  if (!Number.isFinite(minimumStep) || minimumStep <= 0) {
+    return 0;
+  }
+  const base = Math.pow(10, Math.floor(Math.log10(minimumStep)));
+  for (const factor of ROUND_STEP_FACTORS) {
+    const candidate = factor * base;
+    if (candidate >= minimumStep * ROUND_STEP_TOLERANCE) {
+      return candidate;
+    }
+  }
+
+  return 10 * base;
+}

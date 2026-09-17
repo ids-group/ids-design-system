@@ -14,12 +14,15 @@ export {
   shareOfTotal,
 } from './charts-format';
 export { elementWidth } from './charts-measure';
+export { areaPath, lineSegments, polylinePoints } from './charts-path';
+export type { LinePoint } from './charts-path';
 export {
   bandScale,
   pointScale,
   domainMinOf,
   linearScale,
   niceDomain,
+  roundStepAtLeast,
   tickStep,
   tickValues,
 } from './charts-scale';

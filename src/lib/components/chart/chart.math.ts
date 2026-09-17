@@ -2,9 +2,12 @@ import {
   domainMinOf,
   linearScale,
   niceDomain,
+  roundStepAtLeast,
+  tickValues,
 } from '@ids-group-ltd/ids-design-system/components';
 import type { NiceDomain } from '@ids-group-ltd/ids-design-system/components';
 import type {
+  ChartAxisMode,
   ChartThreshold,
   ChartThresholdDash,
 } from '@ids-group-ltd/ids-design-system/core';
@@ -30,7 +33,11 @@ export const CHART_DEFAULT_AXIS_GUTTER = 46;
 export const CHART_DEFAULT_VALUE_SPACE = 20;
 
 /** Room past the last band, so a mark centred on it is not cut by the viewBox edge. */
-const EDGE_GUTTER = 12;
+export const CHART_EDGE_GUTTER = 12;
+
+/** Blank between two stacked plots: enough for the lower plot's top tick label to clear the upper
+ *  plot's category-free bottom edge. */
+export const CHART_STACKED_PLOT_GAP = 34;
 
 /** Height of the category-label row under the plot: one line plus its descenders. */
 const CATEGORY_GUTTER = 30;
@@ -47,11 +54,12 @@ export function chartPlot(
   plotHeight: number,
   axisGutter: number,
   valueSpace: number,
+  rightGutter: number = CHART_EDGE_GUTTER,
 ): { left: number; top: number; width: number; height: number } {
   return {
     left: axisGutter,
     top: valueSpace,
-    width: Math.max(0, measuredWidth - axisGutter - EDGE_GUTTER),
+    width: Math.max(0, measuredWidth - axisGutter - rightGutter),
     height: Math.max(0, plotHeight),
   };
 }
@@ -194,4 +202,107 @@ export function thresholdMarks(
       labelY: top - THRESHOLD_LABEL_GAP,
     };
   });
+}
+
+/** A tick row's index for the value zero, or `null` when the rows do not carry one.
+ *
+ *  Two axes share gridlines only if they also share a zero: a second scale hung on the first's
+ *  rows has to put its own zero on the same row, or a reading above the line on one axis sits
+ *  below it on the other. */
+function zeroRow(ticks: readonly number[]): number | null {
+  if (ticks.length < 2) {
+    return null;
+  }
+  const step = ticks[1] - ticks[0];
+  if (!Number.isFinite(step) || step === 0) {
+    return null;
+  }
+  const row = (0 - ticks[0]) / step;
+  const rounded = Math.round(row);
+
+  return Math.abs(row - rounded) < 1e-9 &&
+    rounded >= 0 &&
+    rounded < ticks.length
+    ? rounded
+    : null;
+}
+
+/** @internal */
+export interface SecondaryAxis {
+  readonly domain: NiceDomain;
+  readonly ticks: readonly number[];
+  /** True when the labels below belong on the PRIMARY axis's own tick rows, so the plot carries
+   *  one set of gridlines rather than two crossing each other. */
+  readonly aligned: boolean;
+}
+
+/** The second value axis, as the four modes define it.
+ *
+ *  `'rounded'` and `'exact'` hang the second scale on the first's tick rows and differ only in the
+ *  step: `'rounded'` snaps it up to a round number and overshoots the data, `'exact'` takes the
+ *  step the data needs and lands on it. `'independent'` and `'stacked'` nice the second domain on
+ *  its own - stacked plots sit one above the other, so there is nothing to align.
+ *
+ *  Falls back to an independent scale wherever alignment is not available: fewer than two rows, no
+ *  shared zero row, or a domain whose sign has no rows on its side of that zero.
+ *
+ *  @internal */
+export function secondaryAxis(
+  primaryTicks: readonly number[],
+  reported: Iterable<readonly number[]>,
+  tickCount: number,
+  mode: ChartAxisMode,
+): SecondaryAxis {
+  let minimum = 0;
+  let maximum = 0;
+  for (const values of reported) {
+    const finite = values.filter((value) => Number.isFinite(value));
+    minimum = Math.min(minimum, domainMinOf(finite));
+    maximum = finite.reduce(
+      (highest, value) => Math.max(highest, value),
+      maximum,
+    );
+  }
+  const independent = (): SecondaryAxis => ({
+    domain: niceDomain(minimum, maximum, tickCount),
+    ticks: tickValues(minimum, maximum, tickCount),
+    aligned: false,
+  });
+
+  if (mode !== 'rounded' && mode !== 'exact') {
+    return independent();
+  }
+  const zero = zeroRow(primaryTicks);
+  if (zero === null) {
+    return independent();
+  }
+  const rowsAbove = primaryTicks.length - 1 - zero;
+  const rowsBelow = zero;
+  if ((maximum > 0 && rowsAbove === 0) || (minimum < 0 && rowsBelow === 0)) {
+    return independent();
+  }
+  const needed = Math.max(
+    rowsAbove > 0 ? maximum / rowsAbove : 0,
+    rowsBelow > 0 ? -minimum / rowsBelow : 0,
+  );
+  const step = mode === 'rounded' ? roundStepAtLeast(needed) : needed;
+  if (!Number.isFinite(step) || step <= 0) {
+    return {
+      domain: { min: 0, max: 0 },
+      ticks: primaryTicks.map(() => 0),
+      aligned: true,
+    };
+  }
+
+  return {
+    domain: { min: -rowsBelow * step, max: rowsAbove * step },
+    ticks: primaryTicks.map((_, row) => roundTick((row - zero) * step)),
+    aligned: true,
+  };
+}
+
+/** A step multiplied back out rarely lands on itself, and an axis label that prints
+ *  `149.99999999999997` is the visible form of that. */
+function roundTick(value: number): number {
+  return Number(value.toFixed(6));
 }
