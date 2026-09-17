@@ -1,0 +1,10 @@
+@use '../../../../styles/chart-measure' as chart-measure;
+
+// The column chart's 620px plus room for the 46px gutter a second value axis takes down the right.
+@include chart-measure.measure('ds-chart', 680px);
+
+// A stacked second axis is twice the height of a shared one, and a stretched grid row would leave
+// the shorter chart's own frame drawn around half a card of nothing.
+.demo-pair {
+  align-items: start;
+}

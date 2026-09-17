@@ -141,6 +141,7 @@ export const NAV: NavGroup[] = [
     kind: 'component',
     items: [
       { label: 'Bar chart', anchor: 'bar-chart' },
+      { label: 'Chart', anchor: 'chart' },
       { label: 'Column chart', anchor: 'column-chart' },
       { label: 'Donut chart', anchor: 'donut-chart' },
       { label: 'Funnel chart', anchor: 'funnel-chart' },
