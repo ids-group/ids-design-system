@@ -372,6 +372,8 @@ export type {
   ChartDataTable,
   ChartFormatLocation,
   ChartFrame,
+  ChartThreshold,
+  ChartThresholdDash,
   ChartValueFormat,
   DsConfig,
   DsControlWidth,

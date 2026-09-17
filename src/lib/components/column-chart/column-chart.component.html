@@ -44,6 +44,10 @@
       [axisGutter]="geometry().axisGutter"
       [valueSpace]="geometry().valueSpace">
       <svg:g
+        dsReferenceLine
+        [thresholds]="thresholds()" />
+
+      <svg:g
         #series="dsColumnSeries"
         dsColumnSeries
         [data]="data()"
@@ -64,6 +68,10 @@
         [dsChartTooltipOrigin]="series.activeMark.origin()"
         [dsChartTooltipTemplate]="tooltipTemplate() ?? null"
         (pointClicked)="pointClicked.emit($event)" />
+
+      <svg:g
+        dsReferenceLabel
+        [thresholds]="thresholds()" />
     </ds-chart>
 
     @if (dataTableResolved() !== 'none') {

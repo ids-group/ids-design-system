@@ -7,7 +7,13 @@ const components = registerComponentsFacade(import.meta.url, [
   'charts-scale.ts',
 ]);
 
-const { axisDomain, chartPlot, chartViewHeight, valueScale } = await import(
+const {
+  axisDomain,
+  chartPlot,
+  chartViewHeight,
+  thresholdMarks,
+  valueScale,
+} = await import(
   pathToFileURL(join(components, 'chart', 'chart.math.ts')).href
 );
 
@@ -102,5 +108,54 @@ check('the signed floor sits on the baseline', signed(-50), 100);
 
 const degenerate = valueScale({ min: 0, max: 0 }, 10, 200);
 check('a degenerate domain puts everything on the baseline', degenerate(7), 210);
+
+// --- Reference lines and bands ----------------------------------------------
+// One plot, one scale: 0-100 over 200px from y=20, so a value's y is 220 - 2v and every number
+// below is hand-computed from that rather than read back off the function.
+const thresholdPlot = { left: 40, top: 20, width: 500, height: 200 };
+const thresholdScale = valueScale({ min: 0, max: 100 }, 20, 200);
+const marksOf = (thresholds) =>
+  thresholdMarks(thresholds, thresholdPlot, thresholdScale);
+
+const targetLine = marksOf([{ value: 85, label: 'Target' }])[0];
+check('a reference line starts at the plot edge', targetLine.left, 40);
+check('a reference line ends at the far plot edge', targetLine.right, 540);
+check('a reference line sits at its own value', targetLine.y, 50);
+check('a line is not a band', targetLine.band, false);
+check('a line has no height to fill', targetLine.height, 0);
+check('an unset dash reads as dashed', targetLine.dash, 'dashed');
+check('an unset colour leaves the token in charge', targetLine.color, null);
+check("the label anchors inside the plot's left edge", targetLine.labelX, 44);
+check('the label clears the line it names', targetLine.labelY, 45);
+
+check(
+  'a dotted line keeps its own dash',
+  marksOf([{ value: 85, dash: 'dotted' }])[0].dash,
+  'dotted',
+);
+check(
+  'an unlabelled threshold carries no label',
+  marksOf([{ value: 85 }])[0].label,
+  '',
+);
+
+const band = marksOf([{ value: 78, to: 88, label: 'Agreed range' }])[0];
+check('a band is a band', band.band, true);
+check('a band starts at its upper reading', band.top, 44);
+check('a band spans both readings', band.height, 20);
+check('a band fills the plot width', band.width, 500);
+check('a band label clears its upper edge', band.labelY, 39);
+
+// A ceiling-and-floor pair is naturally written high end first, and must read the same.
+const reversed = marksOf([{ value: 88, to: 78, label: 'Agreed range' }])[0];
+check('a band written high-end first starts at the same edge', reversed.top, 44);
+check('a band written high-end first spans the same height', reversed.height, 20);
+
+check('no thresholds draw nothing', marksOf([]).length, 0);
+check(
+  'every threshold is laid out, in the order given',
+  marksOf([{ value: 85 }, { value: 73 }]).map((mark) => mark.y),
+  [50, 74],
+);
 
 finish('chart-math');

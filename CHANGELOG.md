@@ -60,7 +60,32 @@
   It now compacts each tick by that tick's own magnitude, so the same axis prints `800K` beside
   `1.6M`. An axis whose ticks cross a thousand, million or billion boundary renders differently.
 
+### Added
+
+- **Reference lines and bands on `ds-column-chart`.** `thresholds` draws a target, a budget or an
+  SLA across the plot, behind the columns.
+
+  ```ts
+  thresholds: ChartThreshold[] = [
+    { value: 85, label: 'Target' },
+    { value: 73, label: 'Escalation', dash: 'dotted' },
+  ];
+  ```
+
+  Each entry is ONE number, not a coordinate pair: `value`, plus an optional `label`, `color` and
+  `dash` (`'solid' | 'dashed' | 'dotted'`, default `'dashed'`). `to` turns the same object into a
+  band filled between two readings instead of a line, written in either order.
+
+  A threshold widens the value axis to hold it, so a target above every column still lands on the
+  plot rather than off it. It is also named in the generated description - "Target at 85, 2 of 5
+  points above" - so the line reaches a reader who cannot see it.
+
+  Four tokens set the default look: `--ds-chart-threshold-color`,
+  `--ds-chart-threshold-band-opacity`, `--ds-chart-threshold-dashed-pattern` and
+  `--ds-chart-threshold-dotted-pattern`. A threshold's own `color` overrides the first.
+
 ### Changed
+
 
 - **A chart tooltip opens against its mark, not against the row that holds it.** `ds-bar-chart`
   anchored the panel to the whole row — label, value and track — so it opened a row-height above

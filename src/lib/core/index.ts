@@ -4,6 +4,8 @@ export type {
   ChartDataTable,
   ChartFormatLocation,
   ChartFrame,
+  ChartThreshold,
+  ChartThresholdDash,
   ChartValueFormat,
 } from './chart.types';
 export { resolveWithConfig } from './config-defaults';

@@ -69,7 +69,12 @@
           }
         </g>
 
+        <!-- Two slots, one group: a reference line has to paint UNDER the marks whatever order the
+             consumer wrote it in, and a selected slot is what decides that instead of the author.
+             Both stay inside `.marks`, which is what the boot transition guard is keyed on. -->
         <g class="marks">
+          <ng-content select="[dsReferenceLine]" />
+
           <ng-content />
         </g>
 
@@ -95,6 +100,10 @@
               {{ label.text }}
             </text>
           }
+
+          <!-- Over the marks, where `.marks` is under them: an annotation's LINE is furniture and
+               belongs below the readings, its NAME has to survive a column drawn through it. -->
+          <ng-content select="[dsReferenceLabel]" />
         </g>
       </svg>
     </div>

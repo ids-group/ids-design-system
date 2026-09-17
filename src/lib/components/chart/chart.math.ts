@@ -4,6 +4,10 @@ import {
   niceDomain,
 } from '@ids-group-ltd/ids-design-system/components';
 import type { NiceDomain } from '@ids-group-ltd/ids-design-system/components';
+import type {
+  ChartThreshold,
+  ChartThresholdDash,
+} from '@ids-group-ltd/ids-design-system/core';
 
 export const CHART_DEFAULT_TICK_COUNT = 5;
 export const CHART_AXIS_LABEL_GAP = 8;
@@ -131,4 +135,63 @@ export function valueScale(
 
     return Number.isFinite(y) ? Math.min(Math.max(y, top), baseline) : baseline;
   };
+}
+
+/** Distance from a reference line, or a band's upper edge, to its label's baseline. */
+const THRESHOLD_LABEL_GAP = 5;
+
+/** Inset from the plot's LEFT edge. The label sits at the start of the line rather than its end
+ *  because a value label is centred on its column, and the last column's is the one nearest the
+ *  edge the line stops at - measured on the docs demo, a right-anchored "Escalation" printed over
+ *  the last column's own value. */
+const THRESHOLD_LABEL_INSET = 4;
+
+/** @internal */
+export interface ThresholdMark {
+  readonly key: number;
+  readonly label: string;
+  readonly color: string | null;
+  readonly dash: ChartThresholdDash;
+  readonly band: boolean;
+  readonly left: number;
+  readonly right: number;
+  readonly width: number;
+  readonly y: number;
+  readonly top: number;
+  readonly height: number;
+  readonly labelX: number;
+  readonly labelY: number;
+}
+
+/** Every drawable coordinate of a chart's reference lines and bands, so the strokes and the labels
+ *  - which paint in different layers, under the marks and over them - are laid out by one
+ *  calculation rather than by two that can disagree.
+ *
+ *  @internal */
+export function thresholdMarks(
+  thresholds: readonly ChartThreshold[],
+  plot: { left: number; top: number; width: number; height: number },
+  toY: (value: number) => number,
+): readonly ThresholdMark[] {
+  return thresholds.map((threshold) => {
+    const y = toY(threshold.value);
+    const far = threshold.to == null ? y : toY(threshold.to);
+    const top = Math.min(y, far);
+
+    return {
+      key: threshold.value,
+      label: threshold.label ?? '',
+      color: threshold.color ?? null,
+      dash: threshold.dash ?? 'dashed',
+      band: threshold.to != null,
+      left: plot.left,
+      right: plot.left + plot.width,
+      width: plot.width,
+      y,
+      top,
+      height: Math.abs(y - far),
+      labelX: plot.left + THRESHOLD_LABEL_INSET,
+      labelY: top - THRESHOLD_LABEL_GAP,
+    };
+  });
 }

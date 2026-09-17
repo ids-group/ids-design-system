@@ -25,11 +25,14 @@ import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 import type {
   ChartDataTable,
   ChartFrame,
+  ChartThreshold,
   ChartValueFormat,
 } from '@ids-group-ltd/ids-design-system/core';
 import {
   ChartComponent,
   ColumnSeriesComponent,
+  ReferenceLabelComponent,
+  ReferenceLineComponent,
   chartViewHeight,
 } from '@ids-group-ltd/ids-design-system/components/chart';
 import { ChartTooltipDirective } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
@@ -95,6 +98,8 @@ function readColumnGeometry(host: HTMLElement): typeof COLUMN_GEOMETRY {
     SkeletonComponent,
     ChartComponent,
     ColumnSeriesComponent,
+    ReferenceLabelComponent,
+    ReferenceLineComponent,
     ChartTooltipDirective,
   ],
   templateUrl: './column-chart.component.html',
@@ -109,6 +114,12 @@ function readColumnGeometry(host: HTMLElement): typeof COLUMN_GEOMETRY {
 export class ColumnChartComponent {
   /** One column per point, drawn in the order given. */
   readonly data = input.required<readonly ColumnChartPoint[]>();
+
+  /** Reference lines and bands drawn across the plot, behind the columns: a target, a budget, an
+   *  SLA. Each one opens the value axis far enough to hold it, so a target above every column is
+   *  still on the plot, and each is named in the generated description - a line only the sighted
+   *  reader gets is an annotation half the audience never receives. */
+  readonly thresholds = input<readonly ChartThreshold[]>([]);
 
   /** Prints each column's value above the column. */
   readonly showValues = input(true, { transform: booleanAttribute });
@@ -293,6 +304,7 @@ export class ColumnChartComponent {
         })),
         (value) => this.valueFormatResolved()(value, 'tooltip'),
         this.dataTableResolved() !== 'none',
+        this.thresholds(),
       ),
   );
 

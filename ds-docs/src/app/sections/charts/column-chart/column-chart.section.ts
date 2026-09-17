@@ -1,6 +1,7 @@
 import { Component, ViewEncapsulation, signal } from '@angular/core';
 import { ColumnChartComponent } from 'ds/column-chart';
 import type { ColumnChartPoint } from 'ds/column-chart';
+import type { ChartThreshold } from 'ds/core';
 import { DocsChartDataEditorComponent } from '../../../shared/docs-chart-data-editor.component';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
@@ -63,6 +64,28 @@ const NINE_DIGIT_VALUE_POINTS: readonly ColumnChartPoint[] = [
   { label: 'Sessions', value: 412870655 },
 ];
 
+const UPTIME_POINTS: readonly ColumnChartPoint[] = [
+  { label: 'Jan', value: 81 },
+  { label: 'Feb', value: 88 },
+  { label: 'Mar', value: 74 },
+  { label: 'Apr', value: 91 },
+  { label: 'May', value: 69 },
+];
+
+const UPTIME_THRESHOLDS: readonly ChartThreshold[] = [
+  { value: 85, label: 'Target', color: 'var(--ds-chart-series-6-color)' },
+  {
+    value: 73,
+    label: 'Escalation',
+    color: 'var(--ds-chart-series-1-color)',
+    dash: 'dotted',
+  },
+];
+
+const UPTIME_BAND: readonly ChartThreshold[] = [
+  { value: 78, to: 88, label: 'Agreed range' },
+];
+
 const CUSTOM_COLOR_POINTS: readonly ColumnChartPoint[] = [
   { label: 'Organic', value: 620 },
   { label: 'Paid', value: 410 },
@@ -118,6 +141,11 @@ export class ColumnChartSection {
   protected readonly nineDigitValuePoints = signal<readonly ColumnChartPoint[]>(
     NINE_DIGIT_VALUE_POINTS,
   );
+
+  protected readonly uptimePoints =
+    signal<readonly ColumnChartPoint[]>(UPTIME_POINTS);
+  protected readonly uptimeThresholds = UPTIME_THRESHOLDS;
+  protected readonly uptimeBand = UPTIME_BAND;
 
   protected readonly staggerOffPoints =
     signal<readonly ColumnChartPoint[]>(SPECIMEN_POINTS);

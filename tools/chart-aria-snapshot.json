@@ -45,5 +45,7 @@
     "line: aria-hidden=true",
     "circle: role={interactive() ? 'button' : null}, aria-label={interactive() ? markerLabel(entry, marker) : null}",
     "text: aria-hidden=true"
-  ]
+  ],
+  "reference-label": [],
+  "reference-line": ["svg: aria-hidden=true"]
 }

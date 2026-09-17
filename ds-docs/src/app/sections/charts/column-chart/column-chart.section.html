@@ -140,6 +140,42 @@
   <docs-chart-data-editor [(rows)]="projectedPoints" />
 
   <h3 class="block-title t-h4">
+    Reference lines and bands
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      thresholds
+    </code> draws a target, a budget or an
+    SLA across the plot, behind the columns. Each entry is ONE number, so the
+    two ends of a horizontal line cannot drift apart;
+    <code class="t-mono-inline">
+      dash
+    </code> picks how it is stroked, and
+    <code class="t-mono-inline">
+      to
+    </code> turns the same object into a band
+    between two readings. A threshold also opens the value axis far enough to
+    hold it, so a target above every column still lands on the plot, and it is
+    named in the chart's generated description rather than being drawn and left
+    unsaid.
+  </p>
+
+  <ds-column-chart
+    caption="Uptime against target"
+    dataTable="none"
+    [data]="uptimePoints()"
+    [thresholds]="uptimeThresholds" />
+
+  <ds-column-chart
+    caption="Uptime against the agreed range"
+    dataTable="none"
+    [data]="uptimePoints()"
+    [thresholds]="uptimeBand" />
+
+  <docs-chart-data-editor [(rows)]="uptimePoints" />
+
+  <h3 class="block-title t-h4">
     What the tooltip points at
   </h3>
 

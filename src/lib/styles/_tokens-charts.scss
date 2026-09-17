@@ -93,6 +93,14 @@
   --chart-grid-line-color:    var(--neutral-150);
   --chart-axis-font-size:      var(--font-size-2xs);
 
+  /* REFERENCE LINES - an annotation, not a series. A neutral stroke and a dash are what keep a
+     target from reading as one more category, and the band's opacity is low enough that a mark
+     drawn over it stays its own colour. */
+  --chart-threshold-color: var(--neutral-500);
+  --chart-threshold-band-opacity: 0.12;
+  --chart-threshold-dashed-pattern: 6 4;
+  --chart-threshold-dotted-pattern: 1 5;
+
   /* HIGHLIGHT / HOVER */
 
   /* Every level of dimming costs the separation BETWEEN the dimmed series: measured 2026-09-13,
@@ -171,6 +179,11 @@
   --ds-chart-axis-label-color: var(--chart-axis-label-color);
   --ds-chart-axis-font-size: var(--chart-axis-font-size);
   --ds-chart-grid-line-color: var(--chart-grid-line-color);
+
+  --ds-chart-threshold-color: var(--chart-threshold-color);
+  --ds-chart-threshold-band-opacity: var(--chart-threshold-band-opacity);
+  --ds-chart-threshold-dashed-pattern: var(--chart-threshold-dashed-pattern);
+  --ds-chart-threshold-dotted-pattern: var(--chart-threshold-dotted-pattern);
 
   --ds-chart-dim-opacity: var(--chart-dim-opacity);
   --ds-chart-hover-bg-color: var(--chart-hover-bg-color);
