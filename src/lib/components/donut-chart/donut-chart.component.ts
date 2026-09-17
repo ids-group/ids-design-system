@@ -120,6 +120,13 @@ export class DonutChartComponent {
    *  `'none'` belongs only where the same data is already in a table on the page.
    *  Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`. */
   readonly dataTable = input<ChartDataTable | null>(null);
+
+  /** Prints each slice's share of the ring — in the legend, on the tooltip and in the data table.
+   *  On by default, unlike every other chart, because a ring IS parts of one whole: the share is a
+   *  real quantity here whatever the data, not a claim the consumer has to make. Off drops all
+   *  three, for a ring whose slices are already labelled in percent. */
+  readonly partOfWhole = input(true, { transform: booleanAttribute });
+
   /** Draws skeleton marks in place of the data, at the same count, so the chart does not resize
    *  when the data lands. */
   readonly loading = input(false, { transform: booleanAttribute });
@@ -300,7 +307,9 @@ export class DonutChartComponent {
           {
             label: entry.slice.label,
             value: entry.slice.value,
-            formatted: `${entry.formattedValue} · ${entry.formattedPercent}`,
+            formatted: this.partOfWhole()
+              ? `${entry.formattedValue} · ${entry.formattedPercent}`
+              : entry.formattedValue,
             color: entry.color,
           },
         ],
@@ -382,7 +391,9 @@ export class DonutChartComponent {
     formattedValue: string;
     formattedPercent: string;
   }) {
-    return `${entry.slice.label}, ${entry.formattedValue}, ${entry.formattedPercent}`;
+    return this.partOfWhole()
+      ? `${entry.slice.label}, ${entry.formattedValue}, ${entry.formattedPercent}`
+      : `${entry.slice.label}, ${entry.formattedValue}`;
   }
 
   protected onSliceKey(slice: DonutChartSlice, event: Event): void {

@@ -172,9 +172,11 @@
                 {{ entry.formattedValue }}
               </span>
 
-              <span class="legend-percent">
-                {{ entry.formattedPercent }}
-              </span>
+              @if (partOfWhole()) {
+                <span class="legend-percent">
+                  {{ entry.formattedPercent }}
+                </span>
+              }
             </li>
           }
         </ul>
@@ -206,9 +208,11 @@
                 Value
               </th>
 
-              <th scope="col">
-                Share
-              </th>
+              @if (partOfWhole()) {
+                <th scope="col">
+                  Share of total
+                </th>
+              }
             </tr>
           </thead>
 
@@ -223,9 +227,11 @@
                   {{ entry.formattedValue }}
                 </td>
 
-                <td>
-                  {{ entry.formattedPercent }}
-                </td>
+                @if (partOfWhole()) {
+                  <td>
+                    {{ entry.formattedPercent }}
+                  </td>
+                }
               </tr>
             }
           </tbody>

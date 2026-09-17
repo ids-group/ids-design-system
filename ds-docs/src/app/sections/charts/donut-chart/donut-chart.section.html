@@ -324,10 +324,17 @@
       toggle
     </code>, the default, leaves the
     disclosure closed; <code class="t-mono-inline">visible</code> renders it
-    open; <code class="t-mono-inline">none</code> leaves it out.
+    open; <code class="t-mono-inline">none</code> leaves it out. Every share
+    column here is on by default, unlike the other charts:
+    <code class="t-mono-inline">
+      partOfWhole
+    </code> starts true on a ring, because
+    a ring IS parts of one whole. Set it false to drop the percentage from the
+    legend, the tooltip and the table alike.
   </p>
 
   <ds-donut-chart
+    dataTable="toggle"
     caption="The annex table, collapsed until asked for"
     [data]="dataTableSlices()" />
 
