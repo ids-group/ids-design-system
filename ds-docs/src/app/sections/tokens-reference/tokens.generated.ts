@@ -1001,6 +1001,11 @@ export const CHARTS: readonly ColourRow[] = [
     "notes": "Chart line/scatter series dot radius, active/hover state (6px)."
   },
   {
+    "name": "--chart-area-opacity",
+    "value": "0.16",
+    "notes": "Opacity of a line series' area fill (0.16)."
+  },
+  {
     "name": "--chart-hatch-color",
     "value": "var(--surface-default)",
     "notes": ""
@@ -1234,6 +1239,11 @@ export const CHARTS: readonly ColourRow[] = [
     "name": "--ds-chart-dot-radius-active",
     "value": "var(--chart-dot-radius-active)",
     "notes": "Chart data-point dot radius while active. Set this, not --chart-dot-radius-active."
+  },
+  {
+    "name": "--ds-chart-area-opacity",
+    "value": "var(--chart-area-opacity)",
+    "notes": "Opacity of the band a line series fills down to its axis baseline. Set this, not --chart-area-opacity."
   },
   {
     "name": "--ds-chart-hatch-color",
@@ -3122,6 +3132,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-column-chart-cap-radius",
         "value": "var(--ds-chart-mark-cap-radius)",
         "notes": ""
+      },
+      {
+        "name": "--ds-motion-chart-state-duration",
+        "value": "—",
+        "notes": ""
+      },
+      {
+        "name": "--ds-motion-chart-state-easing",
+        "value": "—",
+        "notes": ""
       }
     ]
   },
@@ -3133,23 +3153,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-chart-pin-size",
         "value": "22px",
-        "notes": ""
-      }
-    ]
-  },
-  {
-    "component": "Chart Legend",
-    "selector": ".chart-legend",
-    "description": "",
-    "tokens": [
-      {
-        "name": "--ds-motion-chart-state-duration",
-        "value": "—",
-        "notes": ""
-      },
-      {
-        "name": "--ds-motion-chart-state-easing",
-        "value": "—",
         "notes": ""
       }
     ]

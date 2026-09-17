@@ -1963,6 +1963,38 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Formats the value-axis ticks. Unset falls back to `DS_CONFIG.chart.valueFormat`, then the browser's locale grouping with a K/M/B suffix past four digits."
+      },
+      {
+        "name": "secondaryAxisMode",
+        "kind": "input",
+        "type": "ChartAxisMode",
+        "union": [
+          "rounded",
+          "exact",
+          "independent",
+          "stacked"
+        ],
+        "default": "'rounded'",
+        "required": false,
+        "description": "How the second value axis relates to the first, once a mark has reported against it. The same four words `ds-line-chart` takes."
+      },
+      {
+        "name": "axisColor",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Paints the first axis's tick labels in the colour of the marks measured against it. A two-scale plot is ambiguous without it - nothing on the canvas says which of two lines is read against which set of numbers - and it is the author, not the container, who knows which colour an axis belongs to, because several marks can share one."
+      },
+      {
+        "name": "secondaryAxisColor",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "`axisColor` for the second axis."
       }
     ],
     "outputs": []
@@ -3076,6 +3108,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`."
+      },
+      {
+        "name": "partOfWhole",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Prints each slice's share of the ring — in the legend, on the tooltip and in the data table. On by default, unlike every other chart, because a ring IS parts of one whole: the share is a real quantity here whatever the data, not a claim the consumer has to make. Off drops all three, for a ring whose slices are already labelled in percent."
       },
       {
         "name": "loading",
