@@ -3044,6 +3044,18 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
+    "component": "Chart",
+    "selector": ".chart",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-chart-plot-height",
+        "value": "240px",
+        "notes": ""
+      }
+    ]
+  },
+  {
     "component": "Chart Frame",
     "selector": ".chart-frame",
     "description": "",

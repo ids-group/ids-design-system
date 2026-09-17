@@ -1807,6 +1807,130 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       }
     ]
   },
+  "chart": {
+    "key": "chart",
+    "selector": "ds-chart",
+    "isElement": true,
+    "className": "ChartComponent",
+    "status": "stable",
+    "importName": "ChartComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "categories",
+        "kind": "input",
+        "type": "readonly string[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "The category axis. Every projected mark is positioned against this list, so its length is what decides how many bands the plot has."
+      },
+      {
+        "name": "tickCount",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "CHART_DEFAULT_TICK_COUNT",
+        "required": false,
+        "description": "How many value-axis ticks to aim for. A hint, not a count: ticks snap to a round step, so the axis may carry one more or one fewer."
+      },
+      {
+        "name": "min",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Pins the floor of the value axis instead of deriving it from the marks. It only ever opens the axis further: a floor above the data would push readings off the plot."
+      },
+      {
+        "name": "max",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Pins the ceiling of the value axis. See `min`. Two charts drawn one subject at a time are only comparable when both are pinned."
+      },
+      {
+        "name": "caption",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Printed above the plot as the chart's visible title."
+      },
+      {
+        "name": "summary",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Accessible name for the plot. The container holds no readings of its own, so a chart that needs its numbers described supplies the sentence here."
+      },
+      {
+        "name": "frame",
+        "kind": "input",
+        "type": "ChartFrame | null",
+        "union": [
+          "auto",
+          "none"
+        ],
+        "default": "null",
+        "required": false,
+        "description": "Whether the chart draws its own bordered, padded box. `'auto'`, the default, draws it; `'none'` leaves it bare, for one placed inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'`."
+      },
+      {
+        "name": "loading",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Draws a placeholder in place of the plot, at the plot's own height, so the page does not resize when the data lands."
+      },
+      {
+        "name": "emptyText",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Shown in place of the plot when `categories` is empty. Unset falls back to `DS_CONFIG.chart.emptyText`, then `'No data'`."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from an empty `categories`, because \"the request failed\" and \"there is nothing to show\" read the same to a reader and mean opposite things."
+      },
+      {
+        "name": "errorText",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "The message the error state prints. Unset falls back to `DS_CONFIG.chart.errorText`, then `'Could not load the data'`."
+      },
+      {
+        "name": "valueFormat",
+        "kind": "input",
+        "type": "ChartValueFormat | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Formats the value-axis ticks. Unset falls back to `DS_CONFIG.chart.valueFormat`, then the browser's locale grouping with a K/M/B suffix past four digits."
+      }
+    ],
+    "outputs": []
+  },
   "checkbox": {
     "key": "checkbox",
     "selector": "ds-checkbox",
