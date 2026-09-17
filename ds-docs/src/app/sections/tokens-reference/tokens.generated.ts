@@ -911,6 +911,26 @@ export const CHARTS: readonly ColourRow[] = [
     "notes": "Chart axis label font size (var(--font-size-2xs))."
   },
   {
+    "name": "--chart-threshold-color",
+    "value": "var(--neutral-500)",
+    "notes": "Reference line and band colour."
+  },
+  {
+    "name": "--chart-threshold-band-opacity",
+    "value": "0.12",
+    "notes": "Fill opacity of a reference band."
+  },
+  {
+    "name": "--chart-threshold-dashed-pattern",
+    "value": "6 4",
+    "notes": "stroke-dasharray of a `dash: 'dashed'` reference line."
+  },
+  {
+    "name": "--chart-threshold-dotted-pattern",
+    "value": "1 5",
+    "notes": "stroke-dasharray of a `dash: 'dotted'` reference line."
+  },
+  {
     "name": "--chart-dim-opacity",
     "value": "0.3",
     "notes": ""
@@ -979,6 +999,16 @@ export const CHARTS: readonly ColourRow[] = [
     "name": "--chart-dot-radius-active",
     "value": "6px",
     "notes": "Chart line/scatter series dot radius, active/hover state (6px)."
+  },
+  {
+    "name": "--chart-hatch-color",
+    "value": "var(--surface-default)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-hatch-width",
+    "value": "3px",
+    "notes": ""
   },
   {
     "name": "--ds-chart-series-1-color",
@@ -1116,6 +1146,26 @@ export const CHARTS: readonly ColourRow[] = [
     "notes": "Chart gridline colour. Set this, not --chart-grid-line-color."
   },
   {
+    "name": "--ds-chart-threshold-color",
+    "value": "var(--chart-threshold-color)",
+    "notes": "Reference line and band colour, where a threshold sets none of its own. Set this, not --chart-threshold-color."
+  },
+  {
+    "name": "--ds-chart-threshold-band-opacity",
+    "value": "var(--chart-threshold-band-opacity)",
+    "notes": "Fill opacity of a reference band. Set this, not --chart-threshold-band-opacity."
+  },
+  {
+    "name": "--ds-chart-threshold-dashed-pattern",
+    "value": "var(--chart-threshold-dashed-pattern)",
+    "notes": "stroke-dasharray of a `dash: 'dashed'` reference line. Set this, not --chart-threshold-dashed-pattern."
+  },
+  {
+    "name": "--ds-chart-threshold-dotted-pattern",
+    "value": "var(--chart-threshold-dotted-pattern)",
+    "notes": "stroke-dasharray of a `dash: 'dotted'` reference line. Set this, not --chart-threshold-dotted-pattern."
+  },
+  {
     "name": "--ds-chart-dim-opacity",
     "value": "var(--chart-dim-opacity)",
     "notes": ""
@@ -1184,6 +1234,16 @@ export const CHARTS: readonly ColourRow[] = [
     "name": "--ds-chart-dot-radius-active",
     "value": "var(--chart-dot-radius-active)",
     "notes": "Chart data-point dot radius while active. Set this, not --chart-dot-radius-active."
+  },
+  {
+    "name": "--ds-chart-hatch-color",
+    "value": "var(--chart-hatch-color)",
+    "notes": ""
+  },
+  {
+    "name": "--ds-chart-hatch-width",
+    "value": "var(--chart-hatch-width)",
+    "notes": ""
   }
 ];
 

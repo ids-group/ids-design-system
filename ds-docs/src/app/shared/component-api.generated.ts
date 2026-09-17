@@ -2326,6 +2326,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "One column per point, drawn in the order given."
       },
       {
+        "name": "thresholds",
+        "kind": "input",
+        "type": "readonly ChartThreshold[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Reference lines and bands drawn across the plot, behind the columns: a target, a budget, an SLA. Each one opens the value axis far enough to hold it, so a target above every column is still on the plot, and each is named in the generated description - a line only the sighted reader gets is an annotation half the audience never receives."
+      },
+      {
         "name": "showValues",
         "kind": "input",
         "type": "boolean",
