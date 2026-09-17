@@ -62,6 +62,31 @@
 
 ### Added
 
+- **`ds-chart` is importable, with the marks that draw inside it.** The container the column and
+  line charts are built inside now ships as its own entry point,
+  `@ids-group-ltd/ids-design-system/components/chart`, for a plot the five presets do not cover - a
+  combo of columns and a cumulative line being the case that asked for it. It owns the frame, the
+  axes, the gridlines, the caption, the legend slot, the annex table and the generated description;
+  what is drawn against its scales is projected in.
+
+  ```html
+  <ds-chart [categories]="months" secondaryAxisMode="rounded">
+    <svg:g dsColumnSeries [data]="billed" />
+    <svg:g dsLineSeries [data]="cumulative" axis="secondary" />
+  </ds-chart>
+  ```
+
+  The entry point carries the container, the two series marks, the reference line and label marks,
+  their data types, the scales token and the two geometry helpers. A mark is an ATTRIBUTE selector
+  on a real `<svg:g>`, never an element of its own: an element the SVG specification does not know
+  renders nothing, its children included. Write `<svg:g dsColumnSeries>`, not `<ds-column-series>`.
+
+  **Reach for a preset first.** `ds-bar-chart`, `ds-column-chart`, `ds-donut-chart`,
+  `ds-funnel-chart` and `ds-line-chart` carry the accessible defaults, and the container is the
+  escape hatch for the plot none of them draws. It is not re-exported from the package facade, so it
+  is imported by its own path. The marks are Angular components, so nothing projected from React or
+  from `@angular/elements` can draw inside the canvas.
+
 - **A column chart can carry several named series per category.** Hand `data` a list of
   `ColumnChartSeries` instead of a flat list of points and every category carries one column per
   series, keyed by a `ds-chart-legend` under the plot. `stack` decides how they share the band:
