@@ -55,7 +55,8 @@
 }
 
 .bar-base,
-.bar-cap {
+.bar-cap,
+.bar-hatch {
   width: var(--_column-mark-width);
   x: calc(var(--_column-mark-width) / -2);
 
