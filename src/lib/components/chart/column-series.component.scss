@@ -16,6 +16,11 @@
     --ds-column-chart-cap-radius,
     var(--ds-chart-mark-cap-radius)
   );
+  --_column-chart-hatch-color: var(
+    --ds-chart-hatch-color,
+    var(--surface-default)
+  );
+  --_column-chart-hatch-width: var(--ds-chart-hatch-width, 3px);
 }
 
 // One user unit is one CSS pixel inside `ds-chart`, which is what lets a cap in pixels stay a
@@ -67,6 +72,22 @@
 
 .bar-cap {
   rx: var(--_column-chart-cap-radius);
+}
+
+// The ground carries no paint of its own: the mark under it supplies the hue, and only the stripes
+// are drawn in the surface colour, which is what keeps one shared pattern correct for every mark.
+.hatch-ground {
+  fill: none;
+}
+
+.hatch-stripe {
+  stroke: var(--_column-chart-hatch-color);
+  stroke-width: var(--_column-chart-hatch-width);
+}
+
+.bar-hatch {
+  rx: var(--_column-chart-cap-radius);
+  pointer-events: none;
 }
 
 // Half the mark's height is the ceiling because SVG clamps `ry` to that as well: past it the cap

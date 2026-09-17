@@ -37,6 +37,7 @@ export interface ColumnSeriesPoint {
   label: string;
   value: number;
   color?: string;
+  fill?: 'solid' | 'hatched';
 }
 
 /** The disc's radius, and half the glyph's box, in the same CSS pixels the plot is drawn in. */
@@ -105,7 +106,13 @@ export class ColumnSeriesComponent implements OnDestroy {
 
   readonly pointClicked = output<ColumnSeriesPoint>();
 
-  private readonly domainId = `column-series-${nextSeriesId++}`;
+  private readonly seriesId = nextSeriesId++;
+
+  private readonly domainId = `column-series-${this.seriesId}`;
+
+  /** Per instance: two charts on one page would otherwise share the first `<pattern>` to reach the
+   *  document, and every hatched mark would take that chart's colour. */
+  protected readonly hatchId = `ds-column-hatch-${this.seriesId}`;
 
   constructor() {
     effect(() =>
@@ -161,6 +168,8 @@ export class ColumnSeriesComponent implements OnDestroy {
     return this.data().map((point, index) => {
       const tip = toY(point.value);
       const below = tip > baseline;
+      const color =
+        point.color ?? CHART_SERIES_COLORS[index % CHART_SERIES_COLORS.length];
 
       return {
         key: point.id ?? String(index),
@@ -177,9 +186,8 @@ export class ColumnSeriesComponent implements OnDestroy {
         // downward, so its transform-origin flips to the top edge it hangs from.
         origin: below ? 'top' : 'bottom',
         formattedValue: format(point.value, 'tooltip'),
-        color:
-          point.color ??
-          CHART_SERIES_COLORS[index % CHART_SERIES_COLORS.length],
+        color,
+        hatched: point.fill === 'hatched',
       };
     });
   });

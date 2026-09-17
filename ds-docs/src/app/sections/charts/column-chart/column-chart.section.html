@@ -116,6 +116,30 @@
   <docs-chart-data-editor [(rows)]="customColorPoints" />
 
   <h3 class="block-title t-h4">
+    Readings of a different standing
+  </h3>
+
+  <p class="block-desc t-s">
+    A point that sets
+    <code class="t-mono-inline">
+      fill="hatched"
+    </code> keeps its colour and takes
+    a striped texture over it, which separates a projection from a settled
+    figure without spending a second hue on it. Texture is the encoding that
+    survives greyscale, print and colour-vision deficiency, so it carries the
+    distinction where a lighter tint of the same colour would not. The chart
+    reads nothing into the flag: which columns are projections is a fact only
+    the caller has.
+  </p>
+
+  <ds-column-chart
+    caption="Applications a month, last three projected"
+    dataTable="none"
+    [data]="projectedPoints()" />
+
+  <docs-chart-data-editor [(rows)]="projectedPoints" />
+
+  <h3 class="block-title t-h4">
     What the tooltip points at
   </h3>
 

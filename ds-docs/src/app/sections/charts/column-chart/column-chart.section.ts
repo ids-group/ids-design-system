@@ -33,6 +33,18 @@ const PL_POINTS: readonly ColumnChartPoint[] = [
   { label: 'Q4', value: 80 },
 ];
 
+const PROJECTED_POINTS: readonly ColumnChartPoint[] = [
+  { label: 'Jan', value: 1840 },
+  { label: 'Feb', value: 2260 },
+  { label: 'Mar', value: 2105 },
+  { label: 'Apr', value: 2740 },
+  { label: 'May', value: 3180 },
+  { label: 'Jun', value: 3020 },
+  { label: 'Jul', value: 3400, fill: 'hatched' },
+  { label: 'Aug', value: 3610, fill: 'hatched' },
+  { label: 'Sep', value: 3880, fill: 'hatched' },
+];
+
 const HUGE_OUTLIER_POINTS: readonly ColumnChartPoint[] = [
   { label: 'Direct', value: 62 },
   { label: 'Search', value: 58 },
@@ -97,6 +109,8 @@ export class ColumnChartSection {
   protected readonly negativePoints =
     signal<readonly ColumnChartPoint[]>(NEGATIVE_POINTS);
   protected readonly plPoints = signal<readonly ColumnChartPoint[]>(PL_POINTS);
+  protected readonly projectedPoints =
+    signal<readonly ColumnChartPoint[]>(PROJECTED_POINTS);
   protected readonly hugeOutlierPoints =
     signal<readonly ColumnChartPoint[]>(HUGE_OUTLIER_POINTS);
   protected readonly longLabelPoints =
