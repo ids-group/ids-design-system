@@ -4,6 +4,30 @@
    Mirrors the per-section .states grid used elsewhere, factored out so the new
    sections don't each duplicate it. Compiled per component (emulated). */
 
+/* Two demos of the same option, one under the other. Spacing between blocks otherwise comes from
+   the heading and the paragraph above them, so a second component with neither in between meets
+   the first edge to edge - two framed charts read as one box split by a line. No stage tint:
+   these are the components themselves, not specimens arranged on a surface. */
+.demo-stack {
+  display: grid;
+  gap: var(--space-5);
+  margin-top: var(--space-3);
+}
+
+/* Two demos that are read AGAINST each other rather than one after the other, so they sit side by
+   side where the column is wide enough and fall back to the stack where it is not. */
+.demo-pair {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-5);
+  margin-top: var(--space-3);
+  inline-size: 100%;
+
+  @include bp.up(md) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
 .states {
   display: grid;
   gap: var(--space-3);

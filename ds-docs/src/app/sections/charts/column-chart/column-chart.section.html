@@ -37,7 +37,7 @@
     ten stops at eight.
   </p>
 
-  <div class="tick-count-pair">
+  <div class="demo-pair">
     <ds-column-chart
       caption="tickCount 3"
       dataTable="none"
@@ -161,17 +161,19 @@
     unsaid.
   </p>
 
-  <ds-column-chart
-    caption="Uptime against target"
-    dataTable="none"
-    [data]="uptimePoints()"
-    [thresholds]="uptimeThresholds" />
+  <div class="demo-stack">
+    <ds-column-chart
+      caption="Uptime against target"
+      dataTable="none"
+      [data]="uptimePoints()"
+      [thresholds]="uptimeThresholds" />
 
-  <ds-column-chart
-    caption="Uptime against the agreed range"
-    dataTable="none"
-    [data]="uptimePoints()"
-    [thresholds]="uptimeBand" />
+    <ds-column-chart
+      caption="Uptime against the agreed range"
+      dataTable="none"
+      [data]="uptimePoints()"
+      [thresholds]="uptimeBand" />
+  </div>
 
   <docs-chart-data-editor [(rows)]="uptimePoints" />
 
