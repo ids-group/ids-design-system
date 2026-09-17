@@ -13,10 +13,11 @@ import {
 } from '@angular/core';
 import {
   CHART_SERIES_COLORS,
+  defaultChartFormat,
   describeSeries,
-  formatValue,
   focusMark,
   largestRemainder,
+  markAt,
   nextRovingIndex,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
@@ -48,8 +49,6 @@ import {
   sliceArcs,
 } from './donut-chart.math';
 import type { DonutChartSlice } from './donut-chart.types';
-
-const defaultValueFormat = (value: number) => formatValue(value);
 
 const RING_VIEW_BOX_SIZE = 100;
 const RING_CENTER = RING_VIEW_BOX_SIZE / 2;
@@ -121,6 +120,13 @@ export class DonutChartComponent {
    *  `'none'` belongs only where the same data is already in a table on the page.
    *  Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`. */
   readonly dataTable = input<ChartDataTable | null>(null);
+
+  /** Prints each slice's share of the ring — in the legend, on the tooltip and in the data table.
+   *  On by default, unlike every other chart, because a ring IS parts of one whole: the share is a
+   *  real quantity here whatever the data, not a claim the consumer has to make. Off drops all
+   *  three, for a ring whose slices are already labelled in percent. */
+  readonly partOfWhole = input(true, { transform: booleanAttribute });
+
   /** Draws skeleton marks in place of the data, at the same count, so the chart does not resize
    *  when the data lands. */
   readonly loading = input(false, { transform: booleanAttribute });
@@ -164,7 +170,7 @@ export class DonutChartComponent {
   readonly valueFormatResolved = resolveWithConfig(
     this.valueFormat,
     (config) => config.chart?.valueFormat,
-    defaultValueFormat as ChartValueFormat,
+    defaultChartFormat,
   );
 
   /** Turns on the click affordance — the pointer cursor and any hover tint.
@@ -236,6 +242,44 @@ export class DonutChartComponent {
     this.activeMark.enter(index, event);
   }
 
+  /** A legend item stands for its arc, so it opens the arc's tooltip over the ARC and dims the
+   *  other slices — the same state hovering the arc itself produces. */
+  protected onLegendEnter(index: number, event: Event): void {
+    this.activeMark.enter(index, event, this.arcAt(event, index));
+  }
+
+  protected onLegendFocus(index: number, event: FocusEvent): void {
+    this.rovingIndex.set(index);
+    this.onLegendEnter(index, event);
+  }
+
+  protected onLegendClick(
+    slice: DonutChartSlice,
+    index: number,
+    event: Event,
+  ): void {
+    this.sliceClicked.emit(slice);
+    if (this.pinOnClick()) {
+      this.activeMark.pin(index, event, this.arcAt(event, index));
+    }
+  }
+
+  private arcAt(event: Event, index: number): Element | null {
+    return markAt(
+      (event.currentTarget as Element).closest('.chart'),
+      index,
+      '.slice',
+    );
+  }
+
+  protected isDimmed(index: number): boolean {
+    return (
+      this.dimOthers() &&
+      this.activeMark.index() !== -1 &&
+      this.activeMark.index() !== index
+    );
+  }
+
   protected onMarkNavigation(
     event: KeyboardEvent,
     index: number,
@@ -263,7 +307,9 @@ export class DonutChartComponent {
           {
             label: entry.slice.label,
             value: entry.slice.value,
-            formatted: `${entry.formattedValue} · ${entry.formattedPercent}`,
+            formatted: this.partOfWhole()
+              ? `${entry.formattedValue} · ${entry.formattedPercent}`
+              : entry.formattedValue,
             color: entry.color,
           },
         ],
@@ -287,7 +333,8 @@ export class DonutChartComponent {
     const arcs = sliceArcs(values);
     const percents = largestRemainder(positiveValues(values));
     const innerRadius = resolveInnerRadius(RING_OUTER_RADIUS, this.thickness());
-    const format = this.valueFormatResolved();
+    const format = (value: number) =>
+      this.valueFormatResolved()(value, 'tooltip');
 
     const midRadius = (RING_OUTER_RADIUS + innerRadius) / 2;
 
@@ -319,7 +366,8 @@ export class DonutChartComponent {
   });
 
   protected readonly resolvedCenterValue = computed(
-    () => this.centerValue() ?? this.valueFormatResolved()(this.total()),
+    () =>
+      this.centerValue() ?? this.valueFormatResolved()(this.total(), 'tooltip'),
   );
 
   protected readonly accessibleName = computed(
@@ -331,7 +379,7 @@ export class DonutChartComponent {
           label: slice.label,
           value: slice.value,
         })),
-        this.valueFormatResolved(),
+        (value) => this.valueFormatResolved()(value, 'tooltip'),
         this.dataTableResolved() !== 'none',
       ),
   );
@@ -343,7 +391,9 @@ export class DonutChartComponent {
     formattedValue: string;
     formattedPercent: string;
   }) {
-    return `${entry.slice.label}, ${entry.formattedValue}, ${entry.formattedPercent}`;
+    return this.partOfWhole()
+      ? `${entry.slice.label}, ${entry.formattedValue}, ${entry.formattedPercent}`
+      : `${entry.slice.label}, ${entry.formattedValue}`;
   }
 
   protected onSliceKey(slice: DonutChartSlice, event: Event): void {

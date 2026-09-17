@@ -911,6 +911,26 @@ export const CHARTS: readonly ColourRow[] = [
     "notes": "Chart axis label font size (var(--font-size-2xs))."
   },
   {
+    "name": "--chart-threshold-color",
+    "value": "var(--neutral-500)",
+    "notes": "Reference line and band colour."
+  },
+  {
+    "name": "--chart-threshold-band-opacity",
+    "value": "0.12",
+    "notes": "Fill opacity of a reference band."
+  },
+  {
+    "name": "--chart-threshold-dashed-pattern",
+    "value": "6 4",
+    "notes": "stroke-dasharray of a `dash: 'dashed'` reference line."
+  },
+  {
+    "name": "--chart-threshold-dotted-pattern",
+    "value": "1 5",
+    "notes": "stroke-dasharray of a `dash: 'dotted'` reference line."
+  },
+  {
     "name": "--chart-dim-opacity",
     "value": "0.3",
     "notes": ""
@@ -927,12 +947,12 @@ export const CHARTS: readonly ColourRow[] = [
   },
   {
     "name": "--chart-focus-ring-color",
-    "value": "white",
+    "value": "var(--focus-ring-color)",
     "notes": ""
   },
   {
     "name": "--chart-focus-halo-color",
-    "value": "var(--static-ink)",
+    "value": "white",
     "notes": ""
   },
   {
@@ -979,6 +999,21 @@ export const CHARTS: readonly ColourRow[] = [
     "name": "--chart-dot-radius-active",
     "value": "6px",
     "notes": "Chart line/scatter series dot radius, active/hover state (6px)."
+  },
+  {
+    "name": "--chart-area-opacity",
+    "value": "0.16",
+    "notes": "Opacity of a line series' area fill (0.16)."
+  },
+  {
+    "name": "--chart-hatch-color",
+    "value": "var(--surface-default)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-hatch-width",
+    "value": "3px",
+    "notes": ""
   },
   {
     "name": "--ds-chart-series-1-color",
@@ -1116,6 +1151,26 @@ export const CHARTS: readonly ColourRow[] = [
     "notes": "Chart gridline colour. Set this, not --chart-grid-line-color."
   },
   {
+    "name": "--ds-chart-threshold-color",
+    "value": "var(--chart-threshold-color)",
+    "notes": "Reference line and band colour, where a threshold sets none of its own. Set this, not --chart-threshold-color."
+  },
+  {
+    "name": "--ds-chart-threshold-band-opacity",
+    "value": "var(--chart-threshold-band-opacity)",
+    "notes": "Fill opacity of a reference band. Set this, not --chart-threshold-band-opacity."
+  },
+  {
+    "name": "--ds-chart-threshold-dashed-pattern",
+    "value": "var(--chart-threshold-dashed-pattern)",
+    "notes": "stroke-dasharray of a `dash: 'dashed'` reference line. Set this, not --chart-threshold-dashed-pattern."
+  },
+  {
+    "name": "--ds-chart-threshold-dotted-pattern",
+    "value": "var(--chart-threshold-dotted-pattern)",
+    "notes": "stroke-dasharray of a `dash: 'dotted'` reference line. Set this, not --chart-threshold-dotted-pattern."
+  },
+  {
     "name": "--ds-chart-dim-opacity",
     "value": "var(--chart-dim-opacity)",
     "notes": ""
@@ -1184,6 +1239,21 @@ export const CHARTS: readonly ColourRow[] = [
     "name": "--ds-chart-dot-radius-active",
     "value": "var(--chart-dot-radius-active)",
     "notes": "Chart data-point dot radius while active. Set this, not --chart-dot-radius-active."
+  },
+  {
+    "name": "--ds-chart-area-opacity",
+    "value": "var(--chart-area-opacity)",
+    "notes": "Opacity of the band a line series fills down to its axis baseline. Set this, not --chart-area-opacity."
+  },
+  {
+    "name": "--ds-chart-hatch-color",
+    "value": "var(--chart-hatch-color)",
+    "notes": ""
+  },
+  {
+    "name": "--ds-chart-hatch-width",
+    "value": "var(--chart-hatch-width)",
+    "notes": ""
   }
 ];
 
@@ -2565,6 +2635,63 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
+    "component": "Bar",
+    "selector": ".bar",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-bar-height",
+        "value": "var(--bar-h)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-bar-track-color",
+        "value": "var(--surface-muted)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-bar-fill-color",
+        "value": "var(--accent)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-bar-target-color",
+        "value": "var(--text-primary)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-bar-target-width",
+        "value": "2px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-bar-min-width",
+        "value": "3rem",
+        "notes": ""
+      },
+      {
+        "name": "--ds-bar-fill-color-success",
+        "value": "var(--success)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-bar-fill-color-warning",
+        "value": "var(--yellow-500)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-bar-fill-color-error",
+        "value": "var(--error)",
+        "notes": ""
+      },
+      {
+        "name": "--bar-h",
+        "value": "6px",
+        "notes": ""
+      }
+    ]
+  },
+  {
     "component": "Bar Chart",
     "selector": ".bar-chart",
     "description": "",
@@ -2987,22 +3114,25 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
-    "component": "Chart Frame",
-    "selector": ".chart-frame",
+    "component": "Chart",
+    "selector": ".chart",
     "description": "",
     "tokens": [
       {
-        "name": "--ds-chart-pin-size",
-        "value": "22px",
+        "name": "--ds-column-chart-column-max-width",
+        "value": "48px",
         "notes": ""
-      }
-    ]
-  },
-  {
-    "component": "Chart Legend",
-    "selector": ".chart-legend",
-    "description": "",
-    "tokens": [
+      },
+      {
+        "name": "--ds-column-chart-column-gap",
+        "value": "var(--ds-chart-bar-gap)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-column-chart-cap-radius",
+        "value": "var(--ds-chart-mark-cap-radius)",
+        "notes": ""
+      },
       {
         "name": "--ds-motion-chart-state-duration",
         "value": "—",
@@ -3011,6 +3141,18 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-motion-chart-state-easing",
         "value": "—",
+        "notes": ""
+      }
+    ]
+  },
+  {
+    "component": "Chart Frame",
+    "selector": ".chart-frame",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-chart-pin-size",
+        "value": "22px",
         "notes": ""
       }
     ]
@@ -3249,28 +3391,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": ""
       },
       {
-        "name": "--ds-column-chart-column-gap",
-        "value": "var(--ds-chart-bar-gap)",
-        "notes": ""
-      },
-      {
-        "name": "--ds-column-chart-column-width",
-        "value": "80%",
-        "notes": ""
-      },
-      {
-        "name": "--ds-column-chart-cap-radius",
-        "value": "var(--ds-chart-mark-cap-radius)",
-        "notes": ""
-      },
-      {
-        "name": "--ds-column-chart-column-max-width",
-        "value": "48px",
-        "notes": ""
-      },
-      {
-        "name": "--ds-column-chart-grid-line-color",
-        "value": "var(--ds-chart-grid-line-color)",
+        "name": "--ds-column-chart-axis-width",
+        "value": "40px",
         "notes": ""
       },
       {
@@ -3279,8 +3401,13 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": ""
       },
       {
-        "name": "--ds-column-chart-axis-width",
-        "value": "40px",
+        "name": "--ds-column-chart-column-width",
+        "value": "80%",
+        "notes": ""
+      },
+      {
+        "name": "--ds-column-chart-grid-line-color",
+        "value": "var(--ds-chart-grid-line-color, var(--chart-grid-line-color))",
         "notes": ""
       }
     ]
@@ -4605,38 +4732,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
-    "component": "Meter",
-    "selector": ".meter",
-    "description": "",
-    "tokens": [
-      {
-        "name": "--ds-meter-height",
-        "value": "6px",
-        "notes": ""
-      },
-      {
-        "name": "--ds-meter-track-color",
-        "value": "var(--surface-muted)",
-        "notes": ""
-      },
-      {
-        "name": "--ds-meter-radius",
-        "value": "var(--radius-pill)",
-        "notes": ""
-      },
-      {
-        "name": "--ds-meter-min-width",
-        "value": "3rem",
-        "notes": ""
-      },
-      {
-        "name": "--ds-meter-fill-color",
-        "value": "var(--ds-chart-series-1-color)",
-        "notes": ""
-      }
-    ]
-  },
-  {
     "component": "Modal",
     "selector": ".modal",
     "description": "",
@@ -5325,58 +5420,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-press-scale",
         "value": "0.97",
         "notes": "How far a pressed control shrinks. Defaults to 0.97."
-      }
-    ]
-  },
-  {
-    "component": "Progress",
-    "selector": ".progress",
-    "description": "",
-    "tokens": [
-      {
-        "name": "--ds-progress-height",
-        "value": "var(--progress-h)",
-        "notes": "Progress bar track height (defaults to --progress-h, 6px)."
-      },
-      {
-        "name": "--ds-progress-track-color",
-        "value": "var(--surface-muted)",
-        "notes": "Progress bar track background (defaults to --surface-muted)."
-      },
-      {
-        "name": "--ds-progress-bar-color",
-        "value": "var(--accent)",
-        "notes": "Progress bar fill colour (defaults to --accent)."
-      },
-      {
-        "name": "--ds-progress-target-color",
-        "value": "var(--text-primary)",
-        "notes": ""
-      },
-      {
-        "name": "--ds-progress-target-width",
-        "value": "2px",
-        "notes": ""
-      },
-      {
-        "name": "--ds-progress-bar-color-success",
-        "value": "var(--success)",
-        "notes": "Progress bar fill — success state (defaults to --success)."
-      },
-      {
-        "name": "--ds-progress-bar-color-warning",
-        "value": "var(--yellow-500)",
-        "notes": "Progress bar fill — warning state (defaults to --warning-hover)."
-      },
-      {
-        "name": "--ds-progress-bar-color-error",
-        "value": "var(--error)",
-        "notes": "Progress bar fill — error state (defaults to --error)."
-      },
-      {
-        "name": "--progress-h",
-        "value": "6px",
-        "notes": "Progress bar track height (6px)."
       }
     ]
   },

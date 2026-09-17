@@ -5,6 +5,7 @@ export {
   chartColors,
 } from './chart-palette.generated';
 export {
+  defaultChartFormat,
   formatPercent,
   formatTick,
   formatValue,
@@ -13,17 +14,21 @@ export {
   shareOfTotal,
 } from './charts-format';
 export { elementWidth } from './charts-measure';
+export { areaPath, lineSegments, polylinePoints } from './charts-path';
+export type { LinePoint } from './charts-path';
 export {
   bandScale,
   pointScale,
+  domainMinOf,
   linearScale,
-  niceMax,
+  niceDomain,
+  roundStepAtLeast,
   tickStep,
   tickValues,
 } from './charts-scale';
-export type { BandScale, PointScale } from './charts-scale';
+export type { BandScale, NiceDomain, PointScale } from './charts-scale';
 export { staggerDelay } from './charts-motion';
-export { focusMark, nextRovingIndex } from './charts-roving';
+export { focusMark, markAt, nextRovingIndex } from './charts-roving';
 export { describeSeries } from './charts-summary';
 export type { SummaryPoint } from './charts-summary';
 export { chipFit } from './chip-overflow';

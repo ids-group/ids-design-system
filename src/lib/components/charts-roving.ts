@@ -28,9 +28,20 @@ export function nextRovingIndex(
   }
 }
 
+/** The mark `index` within `scope`. `within` narrows the search for a chart whose marks repeat the
+ *  same index once per series.
+ *
+ *  @internal */
+export function markAt(
+  scope: Element | null,
+  index: number,
+  within = '',
+): Element | null {
+  return scope?.querySelector(`${within}[data-mark-index="${index}"]`) ?? null;
+}
+
 /** Moves DOM focus to the mark `index` within `scope`, which is what makes the roving tabindex a
- *  traversal rather than a state change nobody can see. `within` narrows the search for a chart
- *  whose marks repeat the same index once per series.
+ *  traversal rather than a state change nobody can see.
  *
  *  @internal */
 export function focusMark(
@@ -38,7 +49,7 @@ export function focusMark(
   index: number,
   within = '',
 ): void {
-  const target = scope?.querySelector(`${within}[data-mark-index="${index}"]`);
+  const target = markAt(scope, index, within);
   if (target instanceof HTMLElement || target instanceof SVGElement) {
     target.focus();
   }

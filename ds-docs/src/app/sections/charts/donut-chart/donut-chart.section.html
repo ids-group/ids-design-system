@@ -232,7 +232,9 @@
     under the pointer, and <code class="t-mono-inline"> staggerMs </code> is
     accepted for parity with the other four charts but has no effect here: the
     ring arrives as one object, because arcs share their edges and fading them
-    one at a time shows the background through every seam.
+    one at a time shows the background through every seam. Hovering or focusing
+    a legend item reads as hovering the arc it names: the same tooltip opens
+    over the ARC, and the rest of the ring dims with it.
   </p>
 
   <div class="states states--cols-2">
@@ -319,13 +321,25 @@
 
   <p class="block-desc t-s">
     <code class="t-mono-inline">
-      toggle
-    </code>, the default, leaves the
-    disclosure closed; <code class="t-mono-inline">visible</code> renders it
-    open; <code class="t-mono-inline">none</code> leaves it out.
+      none
+    </code>, the default, renders no table at
+    all; <code class="t-mono-inline">toggle</code> puts one behind a closed
+    disclosure; <code class="t-mono-inline">visible</code> renders it open. The
+    table is the non-visual route to the numbers, so
+    <code class="t-mono-inline">
+      none
+    </code> belongs only where the same
+    figures are already in a table on the page. Every share
+    column here is on by default, unlike the other charts:
+    <code class="t-mono-inline">
+      partOfWhole
+    </code> starts true on a ring, because
+    a ring IS parts of one whole. Set it false to drop the percentage from the
+    legend, the tooltip and the table alike.
   </p>
 
   <ds-donut-chart
+    dataTable="toggle"
     caption="The annex table, collapsed until asked for"
     [data]="dataTableSlices()" />
 
@@ -371,6 +385,17 @@
         </div>
 
         <docs-chart-data-editor [(rows)]="loadingSlices" />
+      </div>
+
+      <div class="state-cell">
+        <ds-donut-chart
+          dataTable="none"
+          error
+          [data]="emptySlices()" />
+
+        <div class="state-cell-label">
+          Error
+        </div>
       </div>
 
       <div class="state-cell">

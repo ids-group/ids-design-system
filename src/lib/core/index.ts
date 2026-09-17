@@ -1,8 +1,14 @@
 export { backdropDismiss } from './backdrop-dismiss';
 export type { CardElevation, CardPadding } from './card.types';
 export type {
+  ChartAxis,
+  ChartAxisMode,
   ChartDataTable,
+  ChartFormatLocation,
   ChartFrame,
+  ChartStackMode,
+  ChartThreshold,
+  ChartThresholdDash,
   ChartValueFormat,
 } from './chart.types';
 export { resolveWithConfig } from './config-defaults';

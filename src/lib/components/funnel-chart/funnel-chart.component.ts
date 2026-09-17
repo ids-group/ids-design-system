@@ -14,10 +14,11 @@ import {
 import {
   CHART_RAMP_COLORS,
   chartColors,
+  defaultChartFormat,
   describeSeries,
   formatPercent,
   focusMark,
-  formatValue,
+  markAt,
   nextRovingIndex,
   staggerDelay,
 } from '@ids-group-ltd/ids-design-system/components';
@@ -69,8 +70,6 @@ function formatDrop(
     ? `−${format(Math.abs(count))}`
     : formatPercent(fraction, 1);
 }
-
-const defaultValueFormat = (value: number) => formatValue(value);
 
 const SKELETON_STAGE_WIDTHS = ['88%', '62%', '80%', '54%', '72%'] as const;
 
@@ -176,7 +175,7 @@ export class FunnelChartComponent {
   readonly valueFormatResolved = resolveWithConfig(
     this.valueFormat,
     (config) => config.chart?.valueFormat,
-    defaultValueFormat as ChartValueFormat,
+    defaultChartFormat,
   );
 
   /** Turns on the click affordance — the pointer cursor and any hover tint.
@@ -268,6 +267,28 @@ export class FunnelChartComponent {
     this.activeMark.enter(index, event);
   }
 
+  /** A table row stands for its band, so it opens the band's tooltip over the BAND and dims the
+   *  others — the same state hovering the band itself produces. */
+  protected onRowEnter(index: number, event: Event): void {
+    this.activeMark.enter(
+      index,
+      event,
+      markAt(
+        (event.currentTarget as Element).closest('figure'),
+        index,
+        '.stage',
+      ),
+    );
+  }
+
+  protected isDimmed(index: number): boolean {
+    return (
+      this.dimOthers() &&
+      this.activeMark.index() !== -1 &&
+      this.activeMark.index() !== index
+    );
+  }
+
   protected onMarkNavigation(event: KeyboardEvent, index: number): void {
     const next = nextRovingIndex(event.key, index, this.stages().length);
     if (next === null) {
@@ -318,7 +339,8 @@ export class FunnelChartComponent {
     const geometry = funnelGeometry(values, this.shape());
     const drops = stageDrops(values);
     const gapUnits = stageGapUnits(data.length, FUNNEL_VIEW_BOX_HEIGHT);
-    const format = this.valueFormatResolved();
+    const format = (value: number) =>
+      this.valueFormatResolved()(value, 'tooltip');
     // Every stage is a share of the funnel's mouth, not of the column total:
     // the stages are nested subsets, so they do not add up to 100%.
     const firstValue = values.length ? values[0] : 0;
@@ -372,7 +394,7 @@ export class FunnelChartComponent {
           label: stage.label,
           value: stage.value,
         })),
-        this.valueFormatResolved(),
+        (value) => this.valueFormatResolved()(value, 'tooltip'),
         this.showTable() || this.dataTableResolved() !== 'none',
       ),
   );

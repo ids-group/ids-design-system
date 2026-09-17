@@ -1,5 +1,268 @@
 ## Unreleased
 
+### Breaking
+
+- **`ds-progress` and `ds-meter` are one component, `ds-bar`.** They were the same drawing — the
+  same 6px pill track, the same fill, the same clamping — under two names, and the only thing that
+  genuinely differed between them is now an input. `ds-meter` shipped in `0.13.2` and existed for
+  that one release.
+
+  ```html
+  <ds-bar [value]="68" ariaLabel="Manifest upload progress" />
+  ```
+
+  **For a progress bar the rename is the whole upgrade.** `value`, `max`, `variant`,
+  `indeterminate`, `target` and `ariaLabel` keep their names and their defaults, and `semantics`
+  defaults to `'progress'` — so a renamed `ds-progress` behaves exactly as it did.
+  `ProgressComponent` and `MeterComponent` are both `BarComponent`, and `ProgressVariant` is
+  `BarVariant` — all from `@ids-group-ltd/ids-design-system/components/bar`. A subclass of either
+  old class stops building; there is one class to extend now, and it carries every member both of
+  them had.
+
+  **A renamed `ds-meter` needs one more edit.** It was `aria-hidden` unless `ariaLabel` named it;
+  `ds-bar` announces as a progress bar by default. Add `semantics="none"` where the figure is
+  printed beside the bar, or `semantics="meter"` where the bar is the only place the measurement
+  appears. Nothing errors and nothing looks different — the change is entirely in what a screen
+  reader says, which is what the input exists to control.
+
+  **`ds-bar-chart` is a different component and is NOT renamed.** `ds-bar` is a prefix of it, so a
+  find-and-replace without a word boundary will corrupt every chart in the app.
+
+- **The `--ds-progress-*` and `--ds-meter-*` tokens are `--ds-bar-*`.** `-height`,
+  `-track-color`, `-target-color`, `-target-width` and `-min-width` keep their suffix.
+  `--ds-progress-bar-color` and its `-success` / `-warning` / `-error` siblings became
+  `--ds-bar-fill-color` and siblings, because `--ds-bar-bar-color` stutters. The global
+  `--progress-h` is `--bar-h` — same 6px, under a name that still describes the component.
+
+  An override of a name nothing reads still parses, so a missed rename reports nothing and the bar
+  simply returns to its default look.
+
+- **`valueFormat` on `ds-column-chart` and `ds-line-chart` now receives a second argument,
+  `location`.** The axis tick and the annex table used to share one call with no way to tell them
+  apart, so a custom formatter that spelled a value out in full also spelled it out on the axis,
+  where a fixed-width column has room for `1.2M` and not `1,248,392`. The callback is
+  `(value: number, location: ChartFormatLocation) => string` now, called with `'tick'` for the axis
+  label and `'tooltip'` everywhere else a value is printed in full (the annex table, the generated
+  description, the value beside a mark).
+
+  ```ts
+  valueFormat: ChartValueFormat = (value, location) =>
+    location === 'tick' ? compact(value) : spelled(value);
+  ```
+
+  An existing one-argument callback still compiles and still runs, because JavaScript ignores an
+  argument nothing reads. It cannot tell the two locations apart, though, so it prints the same
+  string for both, which is un-abbreviated on the axis wherever the built-in default used to
+  abbreviate for it.
+
+  **The built-in default changed too, with no callback involved.** It used to pick one suffix for
+  the whole axis, from the axis's own step, so `800K` and `1600K` shared a unit even past a million.
+  It now compacts each tick by that tick's own magnitude, so the same axis prints `800K` beside
+  `1.6M`. An axis whose ticks cross a thousand, million or billion boundary renders differently.
+
+### Added
+
+- **`ds-chart` is importable, with the marks that draw inside it.** The container the column and
+  line charts are built inside now ships as its own entry point,
+  `@ids-group-ltd/ids-design-system/components/chart`, for a plot the five presets do not cover - a
+  combo of columns and a cumulative line being the case that asked for it. It owns the frame, the
+  axes, the gridlines, the caption, the legend slot, the annex table and the generated description;
+  what is drawn against its scales is projected in.
+
+  ```html
+  <ds-chart [categories]="months" secondaryAxisMode="rounded">
+    <svg:g dsColumnSeries [data]="billed" />
+    <svg:g dsLineSeries [data]="cumulative" axis="secondary" />
+  </ds-chart>
+  ```
+
+  The entry point carries the container, the two series marks, the reference line and label marks,
+  their data types, the scales token and the two geometry helpers. A mark is an ATTRIBUTE selector
+  on a real `<svg:g>`, never an element of its own: an element the SVG specification does not know
+  renders nothing, its children included. Write `<svg:g dsColumnSeries>`, not `<ds-column-series>`.
+
+  **Reach for a preset first.** `ds-bar-chart`, `ds-column-chart`, `ds-donut-chart`,
+  `ds-funnel-chart` and `ds-line-chart` carry the accessible defaults, and the container is the
+  escape hatch for the plot none of them draws. It is not re-exported from the package facade, so it
+  is imported by its own path. The marks are Angular components, so nothing projected from React or
+  from `@angular/elements` can draw inside the canvas.
+
+- **A column chart can carry several named series per category.** Hand `data` a list of
+  `ColumnChartSeries` instead of a flat list of points and every category carries one column per
+  series, keyed by a `ds-chart-legend` under the plot. `stack` decides how they share the band:
+  `'none'` (the default) and `'grouped'` stand them side by side, `'stacked'` puts each on top of
+  the one before it, and `'normalized'` stacks then divides by the category's own total, so every
+  band is full and the axis reads in shares.
+
+  ```html
+  <ds-column-chart stack="grouped" [data]="[
+    { id: 'billed', label: 'Billed', data: months },
+    { id: 'committed', label: 'Committed', fill: 'hatched', data: forecast },
+  ]" />
+  ```
+
+  A series takes one colour for all of its marks and a series-wide `fill` paints every one of its
+  columns, where a flat list of points still colours each mark by its own position — the marks of a
+  single-series chart ARE the categories and the marks of a grouped one are not. A flat list still
+  takes the whole band, so a chart that was passing one stays exactly as it was. Stacked segments
+  are separated by a 2px gap in the surface colour rather than a drawn rule, which survives print
+  and colour-vision deficiency. `stack="stacked"` and `ds-line-chart`'s `axisMode="stacked"` are
+  different things: series on top of each other, against two plots one above the other.
+
+- **`ds-donut-chart` takes `partOfWhole`, so its percentages can be turned off.** A ring always
+  printed each slice's share and there was no way to stop it. The input defaults to `true`, which is
+  what the ring already did, so nothing changes without asking; `[partOfWhole]="false"` drops the
+  percentage from the legend, the tooltip and the data table alike.
+
+  It starts `true` here and `false` on every other chart on purpose: a ring IS parts of one whole, so
+  a share of the total is a real quantity whatever the data, while a column chart's categories often
+  sum to a number nobody can point at.
+
+- **A column can be drawn as a projection rather than a reading.** A `ColumnChartPoint` that sets
+  `fill: 'hatched'` keeps its colour and takes a striped texture over it, which is what separates a
+  forecast from a settled figure without spending a second hue on it.
+
+  ```html
+  <ds-column-chart [data]="[
+    { label: 'Jun', value: 3020 },
+    { label: 'Jul', value: 3400, fill: 'hatched' },
+  ]" />
+  ```
+
+  Texture is the encoding that survives greyscale, print and colour-vision deficiency, so it carries
+  the distinction where a lighter tint of the same colour would not. The chart reads nothing into the
+  flag: which columns are projections is a fact only the caller has. `--ds-chart-hatch-color` and
+  `--ds-chart-hatch-width` tune the stripes.
+
+- **A second value axis on `ds-chart`, and a line series to draw against it.** A plot can now carry
+  two quantities at two magnitudes - a figure per month on the left axis, the running total of
+  those months on the right - instead of flattening one of them against the other's scale.
+
+  `secondaryAxisMode` takes the same four words `ds-line-chart`'s `yAxisMode` does:
+  `'rounded'` (the default) hangs the second scale on the first's own gridlines at a round step,
+  `'exact'` ends it on its largest reading, `'independent'` scales and grids it on its own, and
+  `'stacked'` draws two plots one above the other over a shared category axis. `ChartAxisMode` and
+  `ChartAxis` are exported from the core entry point, and `LineChartAxisMode` is now an alias of
+  the first.
+
+  `axisColor` and `secondaryAxisColor` paint each axis's tick labels in the colour of the marks
+  measured against it, which on a two-scale plot is the only thing that says which numbers a mark
+  is read against. They are inert while the plot has one axis.
+
+  `--ds-chart-area-opacity` sets how solid the band a line series fills down to its baseline is.
+
+- **Reference lines and bands on `ds-column-chart`.** `thresholds` draws a target, a budget or an
+  SLA across the plot, behind the columns.
+
+  ```ts
+  thresholds: ChartThreshold[] = [
+    { value: 85, label: 'Target' },
+    { value: 73, label: 'Escalation', dash: 'dotted' },
+  ];
+  ```
+
+  Each entry is ONE number, not a coordinate pair: `value`, plus an optional `label`, `color` and
+  `dash` (`'solid' | 'dashed' | 'dotted'`, default `'dashed'`). `to` turns the same object into a
+  band filled between two readings instead of a line, written in either order.
+
+  A threshold widens the value axis to hold it, so a target above every column still lands on the
+  plot rather than off it. It is also named in the generated description - "Target at 85, 2 of 5
+  points above" - so the line reaches a reader who cannot see it.
+
+  Four tokens set the default look: `--ds-chart-threshold-color`,
+  `--ds-chart-threshold-band-opacity`, `--ds-chart-threshold-dashed-pattern` and
+  `--ds-chart-threshold-dotted-pattern`. A threshold's own `color` overrides the first.
+
+### Changed
+
+- **Hovering a legend item behaves as hovering the mark it names.** On `ds-donut-chart` the panel
+  opened over the legend row rather than over the arc, so the reader was pointed at the label
+  instead of the slice; on `ds-funnel-chart` the stage rows did nothing at all. Both now open the
+  same panel over the MARK and dim the rest of the plot, identical to pointing at the arc or the bar
+  directly, and the keyboard route follows wherever the legend carries it.
+
+- **A chart tooltip opens against its mark, not against the row that holds it.** `ds-bar-chart`
+  anchored the panel to the whole row — label, value and track — so it opened a row-height above
+  the bar it was about: 46.7px from the mark where the gap asks for 6. It anchors to the bar now.
+  The gap itself went from 12px to 6px on every chart, because a panel a finger's width off its
+  mark reads as floating free of it.
+
+- **`ds-column-chart`'s `data` input accepts a second shape.** It was
+  `readonly ColumnChartPoint[]` and is now
+  `readonly ColumnChartPoint[] | readonly ColumnChartSeries[]`. Passing one is unaffected; reading
+  the signal back or overriding it is not. `chart.data()[0].value` stops type-checking without a
+  narrowing test, because a `ColumnChartSeries` has no `value`, and a subclass redeclaring `data`
+  fails on TS2416 since an input signal's type is invariant. Narrow on the shape —
+  `'data' in entry` — wherever the values are read back.
+
+- **Exported class member surface moved — only matters if you SUBCLASS one of these.**
+  `ProgressComponent` and `MeterComponent` are gone; `BarComponent` carries every member both of
+  them had. `ChartTooltipDirective`, internal and not exported from the package root, gains
+  `dsChartTooltipPreferBelow`. `ColumnChartComponent` moved its drawing into the shared container
+  and took several series, so it gained `thresholds`, `categories`, `geometry`, `tableRows`,
+  `viewHeightPx`, `skeletonHeightPx`, `stack`, `resolvedSeries`, `seriesRefs`, `pinnedSeries`,
+  `slotCount`, `offsets`, `offsetsFor`, `multiSeries`, `legendItems` and `axisFormat`, and lost the
+  members that used to draw its marks. `DonutChartComponent` gained
+  `partOfWhole`, `arcAt`, `isDimmed` and three legend handlers; `FunnelChartComponent` gained
+  `isDimmed` and `onRowEnter`. A subclass declaring any of those names collides: rename yours, or
+  add `override` where it genuinely means the same thing.
+
+- **A held mark opens its panel BELOW itself.** The Unpin control sits at the plot's top edge, and
+  a panel opening upward from a mark in the upper half landed on top of it. No z-index fixes that
+  — the panel is portaled to the body, and an app layout that isolates its stacking context traps
+  the chart's own chrome underneath whatever number it carries. Below-first while pinned keeps the
+  two apart; the other three fallbacks still catch a mark with no room under it.
+
+- **Moving a pin from one mark to another no longer blinks.** The press that re-aimed it cleared
+  the pin first and the click set it again, so the Unpin control and the held mark's styling
+  unmounted for a frame between the two marks. A press that lands on another mark of the same
+  chart is a re-aim now, and `pinned` never goes false across it.
+
+- **The pin glyph is a drawing pin seen from the side.** Head-on it read as a lamp or a bell at the
+  14px the charts badge it at.
+
+- **A focused mark wears the app's own focus colour.** The ring was white with a dark halo, which
+  on a coloured band read as an artefact rather than as a focus indicator. It is
+  `--focus-ring-color` with a light keyline around it now — the keyline is what separates it from
+  a mark of the same hue family, which is why the indicator is two tones either way.
+  `--ds-chart-focus-ring-color` and `--ds-chart-focus-halo-color` still set both.
+
+- **A chart with nothing to draw keeps its axes.** `ds-line-chart` and `ds-column-chart` render
+  the value axis and the category axis behind the empty, error and no-visible-series messages, so
+  the message stands in a plot rather than in a blank card. Without ticks or labels: there is no
+  data to scale them against. The charts with no axes — donut, funnel, bar — are unchanged.
+
+- **`ds-bar` cannot collapse to nothing in a content-sized cell.** It carries
+  `min-inline-size: 3rem`, overridable through `--ds-bar-min-width`. A box sized to its content —
+  a `width: 'content'` table column, a shrink-to-fit flex or grid item — is sized by what its
+  contents contribute intrinsically, and a bar that is 100% of its cell contributes nothing: one
+  alone in such a cell measures 0px wide. `ds-progress` had no floor, so a bar that used to
+  disappear there is now visible; set the property to `0` for the old behaviour.
+
+- **`indeterminate` is ignored unless `semantics` is `'progress'`.** Only a task has an unknown
+  duration. Nothing that set it on `ds-progress` is affected, because that is the default.
+
+### Fixed
+
+- **A pinned tooltip survives a scroll.** Every chart tore its panel down on any scroll of the page,
+  and because a pinned mark deliberately stops answering the pointer, nothing brought it back: the
+  pin badge and the Unpin control were left sitting over a reading that was no longer on screen.
+  The panel repositions now instead of closing. An unpinned tooltip still goes away on both a scroll
+  and the pointer leaving, as it always did.
+
+- **A column chart plots a domain that reaches below zero.** Every scale clamped its floor at zero,
+  so a negative reading drew nothing at all and a P&L series rendered as a flat baseline with no
+  warning. The axis now spans the data, the zero line is drawn where it falls inside the plot, and a
+  negative column grows downward from it with its value label at its own tip. Room for that label is
+  reserved only when the domain actually reaches below zero, so an all-positive chart keeps its
+  height.
+
+- **The value axis fits its own labels.** The gutter was a fixed width, which an SVG canvas CLIPS
+  rather than overflows, so a locale whose compact numbers are wider than an English `3.5k` lost the
+  leading digit of every tick - `3,5 тыс.` printed as `,5 тыс.`. The gutter is measured from the
+  widest label that actually rendered, and `axisGutter` is the floor it will not go below.
+
+
 ## 0.13.2 — 2026-09-15
 
 ### Added

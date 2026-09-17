@@ -1,0 +1,61 @@
+@use '../../styles/chart-frame' as chart-frame;
+@include chart-frame.chart-frame;
+
+.chart {
+  --_chart-grid-line-color: var(--ds-chart-grid-line-color, var(--chart-grid-line-color));
+  --_chart-axis-line-color: var(--ds-chart-axis-line-color, var(--chart-axis-line-color));
+  --_chart-axis-label-color: var(--ds-chart-axis-label-color, var(--chart-axis-label-color));
+  --_chart-axis-font-size: var(--ds-chart-axis-font-size, var(--chart-axis-font-size));
+
+  margin: 0;
+}
+
+figcaption {
+  margin-block-end: var(--space-3);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* `--_chart-view-height` is set on the host in px, from the same TS geometry the canvas is drawn
+   with: the plot's height is an SVG coordinate, so CSS cannot be its source, and a message box
+   that does not match it jumps the card when the data lands. */
+@include chart-frame.message-box(var(--_chart-view-height), true);
+
+/* The canvas is measured, not ratio-sized: `inline-size` is what the ResizeObserver reads back to
+   set the viewBox width, and `block-size` is bound to the viewBox height. Giving either of them
+   to the other would be circular. */
+.canvas {
+  display: block;
+  inline-size: 100%;
+}
+
+/* Anchored pierce, so the rule reaches a projected mark's own stylesheet without compiling to a
+   global one. It holds every mark still until `settled` - a mark inserted at the fallback width
+   and corrected by the measurement would otherwise animate that correction on every load. Zeroing
+   the duration rather than dropping `transition`, which is what the reduced-motion block does. */
+:host(.measuring) .marks ::ng-deep * {
+  transition-duration: 0ms !important;
+}
+
+.grid-line {
+  stroke: var(--_chart-grid-line-color);
+  stroke-width: 1;
+}
+
+.axis-line,
+.zero-line {
+  stroke: var(--_chart-axis-line-color);
+  stroke-width: 1;
+}
+
+.axis-label,
+.category-label {
+  fill: var(--_chart-axis-label-color);
+  font-size: var(--_chart-axis-font-size);
+}
+
+.axis-label {
+  dominant-baseline: middle;
+}
+
+@include chart-frame.forced-colors;

@@ -1,0 +1,101 @@
+/* Truncation contract:
+   Value — Clamped to 0..max in the wrapper.
+   Indeterminate — Width input is ignored. Animation runs at --duration-loop-slow. */
+
+:host {
+  --_bar-height: var(--ds-bar-height, var(--bar-h));
+  --_bar-track-color: var(--ds-bar-track-color, var(--surface-muted));
+  --_bar-fill-color: var(--ds-bar-fill-color, var(--accent));
+  --_bar-target-color: var(--ds-bar-target-color, var(--text-primary));
+  --_bar-target-width: var(--ds-bar-target-width, 2px);
+
+  display: block;
+  position: relative;
+  inline-size: 100%;
+
+  /* A box sized to its content — a `width: 'content'` table column, a shrink-to-fit flex or grid
+     item — is sized by what its contents contribute intrinsically, and a `100%`-wide child
+     contributes nothing. Measured 2026-09-15: a bar alone in such a cell came out 0px. */
+  min-inline-size: var(--ds-bar-min-width, 3rem);
+  block-size: var(--_bar-height);
+  background: var(--_bar-track-color);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+
+  > span {
+    display: block;
+    block-size: 100%;
+    background: var(--_bar-fill-color);
+    border-radius: var(--radius-pill);
+    transition: inline-size var(--duration-base) var(--ease-standard);
+  }
+
+  /* A div rather than a second span: `> span` is what a consumer's own rule targets, and a
+     marker matching it would take the fill's colour and pill radius. */
+  > .target {
+    position: absolute;
+    inset-block-start: 0;
+    block-size: 100%;
+    inline-size: var(--_bar-target-width);
+
+    /* Centred on the value it marks, so the hairline reads as the point rather than as the
+       start of a band. */
+    transform: translateX(-50%);
+    background: var(--_bar-target-color);
+    transition: left var(--duration-base) var(--ease-standard);
+  }
+}
+
+:host(.success) {
+  --_bar-fill-color-success: var(--ds-bar-fill-color-success, var(--success));
+}
+
+/* `--warning-hover` is a HOVER derivation — the warning yellow mixed 88% with black — and mixing a
+   yellow toward black desaturates it into olive, which is why this one bar read as dirty rather
+   than as bright. `--yellow-500` is the ramp's own deeper yellow and stays a yellow. */
+:host(.warning) {
+  --_bar-fill-color-warning: var(--ds-bar-fill-color-warning, var(--yellow-500));
+}
+
+:host(.error) {
+  --_bar-fill-color-error: var(--ds-bar-fill-color-error, var(--error));
+}
+
+:host(.success) > span {
+  background: var(--_bar-fill-color-success);
+}
+
+:host(.warning) > span {
+  background: var(--_bar-fill-color-warning);
+}
+
+:host(.error) > span {
+  background: var(--_bar-fill-color-error);
+}
+
+:host(.indeterminate) > span {
+  inline-size: 30%;
+  animation: bar-indet var(--duration-loop-slow) var(--ease-standard) infinite;
+}
+
+@keyframes bar-indet {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(400%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host > span,
+  :host > .target {
+    transition: none;
+  }
+
+  :host(.indeterminate) > span {
+    animation: none;
+    inline-size: 100%;
+  }
+}

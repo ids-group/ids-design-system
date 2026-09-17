@@ -14,12 +14,12 @@ import {
 import {
   CHART_SERIES_COLORS,
   chartColors,
+  defaultChartFormat,
   describeSeries,
   formatPercent,
   describeShare,
   shareOfTotal,
   focusMark,
-  formatValue,
   nextRovingIndex,
   staggerDelay,
 } from '@ids-group-ltd/ids-design-system/components';
@@ -41,8 +41,6 @@ import type {
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import { resolveMax, segmentWidths, widthPercent } from './bar-chart.math';
 import type { BarChartRow, BarChartSegment } from './bar-chart.types';
-
-const defaultValueFormat = (value: number) => formatValue(value);
 
 /** A row's parts, ready to draw: a width, a colour and a formatted value each. Segments are
  *  CATEGORIES, so they take the categorical palette in order — unlike the rows, which are one
@@ -173,7 +171,7 @@ export class BarChartComponent {
   readonly valueFormatResolved = resolveWithConfig(
     this.valueFormat,
     (config) => config.chart?.valueFormat,
-    defaultValueFormat as ChartValueFormat,
+    defaultChartFormat,
   );
 
   /** Turns on the click affordance — the pointer cursor and any hover tint.
@@ -233,7 +231,7 @@ export class BarChartComponent {
   ): void {
     this.rowClicked.emit(payload);
     if (this.pinOnClick()) {
-      this.activeMark.pin(index, event);
+      this.activeMark.pin(index, event, '.track');
     }
   }
   /** One tab stop per chart, not one per mark: WCAG 2.1.1's Understanding is explicit that not
@@ -247,7 +245,7 @@ export class BarChartComponent {
 
   protected onMarkFocus(index: number, event: FocusEvent): void {
     this.rovingIndex.set(index);
-    this.activeMark.enter(index, event);
+    this.activeMark.enter(index, event, '.track');
   }
 
   protected onMarkNavigation(event: KeyboardEvent, index: number): void {
@@ -303,13 +301,13 @@ export class BarChartComponent {
       key: row.id ?? String(index),
       row,
       widthPercent: widthPercent(row.value, max),
-      formattedValue: format(row.value),
+      formattedValue: format(row.value, 'tooltip'),
       formattedPercent:
         row.percent !== undefined
           ? formatPercent(row.percent, 100)
           : formatPercent(row.value, max),
       share: this.partOfWhole() ? shareOfTotal(values, index) : '',
-      segments: segmentsOf(row, format),
+      segments: segmentsOf(row, (value) => format(value, 'tooltip')),
       color: row.color ?? chartColors.seriesDefault,
     }));
   });
@@ -320,7 +318,7 @@ export class BarChartComponent {
       describeSeries(
         this.caption() ?? 'Chart',
         this.data().map((row) => ({ label: row.label, value: row.value })),
-        this.valueFormatResolved(),
+        (value) => this.valueFormatResolved()(value, 'tooltip'),
         this.dataTableResolved() !== 'none',
       ),
   );

@@ -203,7 +203,9 @@
       stageClicked
     </code> fires whether or not the flag
     is set, so a chart that only needs the output does not have to advertise the
-    affordance.
+    affordance. Hovering a row of the stage table reads as hovering the band it
+    names: the same tooltip opens over the BAND, and the rest of the funnel dims
+    with it.
   </p>
 
   <ds-funnel-chart
@@ -328,6 +330,17 @@
         </div>
 
         <docs-chart-data-editor [(rows)]="loadingStages" />
+      </div>
+
+      <div class="state-cell">
+        <ds-funnel-chart
+          dataTable="none"
+          error
+          [data]="emptyStages()" />
+
+        <div class="state-cell-label">
+          Error
+        </div>
       </div>
 
       <div class="state-cell">

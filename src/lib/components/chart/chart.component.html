@@ -1,0 +1,150 @@
+<figure class="chart">
+  @if (caption()) {
+    <figcaption>
+      {{ caption() }}
+    </figcaption>
+  }
+
+  @if (error()) {
+    <p
+      class="empty is-error"
+      role="status">
+      {{ errorTextResolved() }}
+    </p>
+  } @else if (loading()) {
+    <div
+      class="skeleton"
+      aria-hidden="true">
+      <ds-skeleton height="var(--_chart-view-height)" />
+    </div>
+  } @else if (isEmpty()) {
+    <p class="empty">
+      {{ emptyTextResolved() }}
+    </p>
+  } @else {
+    <div
+      class="plot"
+      [attr.role]="interactive() ? 'group' : 'img'"
+      [attr.aria-label]="accessibleName()">
+      <svg
+        class="canvas"
+        preserveAspectRatio="xMidYMid meet"
+        [style.block-size.px]="viewHeight()"
+        [attr.viewBox]="viewBox()">
+        <!-- Hidden as a group rather than on the svg: a projected mark may be focusable, and an
+             aria-hidden ancestor would leave it reachable by Tab and invisible to a reader. -->
+        <g
+          class="axes"
+          aria-hidden="true">
+          @for (tick of ticks(); track tick.value) {
+            <line
+              class="grid-line"
+              [attr.x1]="plot().left"
+              [attr.x2]="plotRight()"
+              [attr.y1]="tick.y"
+              [attr.y2]="tick.y" />
+          }
+
+          <line
+            class="axis-line"
+            [attr.x1]="plot().left"
+            [attr.x2]="plotRight()"
+            [attr.y1]="plotBottom()"
+            [attr.y2]="plotBottom()" />
+
+          <line
+            class="axis-line"
+            [attr.x1]="plot().left"
+            [attr.x2]="plot().left"
+            [attr.y1]="plot().top"
+            [attr.y2]="plotBottom()" />
+
+          @if (showSecondaryGridlines()) {
+            @for (tick of secondaryTicks(); track tick.value) {
+              <line
+                class="grid-line is-secondary"
+                [attr.x1]="plot().left"
+                [attr.x2]="plotRight()"
+                [attr.y1]="tick.y"
+                [attr.y2]="tick.y" />
+            }
+          }
+
+          @if (stacked()) {
+            <line
+              class="axis-line"
+              [attr.x1]="plot().left"
+              [attr.x2]="plotRight()"
+              [attr.y1]="secondaryPlotBottom()"
+              [attr.y2]="secondaryPlotBottom()" />
+
+            <line
+              class="axis-line"
+              [attr.x1]="plot().left"
+              [attr.x2]="plot().left"
+              [attr.y1]="secondaryPlot().top"
+              [attr.y2]="secondaryPlotBottom()" />
+          }
+
+          @if (reachesBelowZero()) {
+            <line
+              class="zero-line"
+              [attr.x1]="plot().left"
+              [attr.x2]="plotRight()"
+              [attr.y1]="zeroOffset()"
+              [attr.y2]="zeroOffset()" />
+          }
+        </g>
+
+        <!-- Two slots, one group: a reference line has to paint UNDER the marks whatever order the
+             consumer wrote it in, and a selected slot is what decides that instead of the author.
+             Both stay inside `.marks`, which is what the boot transition guard is keyed on. -->
+        <g class="marks">
+          <ng-content select="[dsReferenceLine]" />
+
+          <ng-content />
+        </g>
+
+        <g
+          class="labels"
+          aria-hidden="true">
+          @for (tick of ticks(); track tick.value) {
+            <text
+              class="axis-label is-primary"
+              text-anchor="end"
+              [style.fill]="axisLabelFill()"
+              [attr.x]="axisLabelX()"
+              [attr.y]="tick.y">
+              {{ tick.label }}
+            </text>
+          }
+
+          @for (tick of secondaryTicks(); track tick.value) {
+            <text
+              class="axis-label is-secondary"
+              [style.fill]="secondaryAxisLabelFill()"
+              [attr.text-anchor]="secondaryLabelAnchor()"
+              [attr.x]="secondaryLabelX()"
+              [attr.y]="tick.y">
+              {{ tick.label }}
+            </text>
+          }
+
+          @for (label of categoryLabels(); track $index) {
+            <text
+              class="category-label"
+              text-anchor="middle"
+              [attr.x]="label.x"
+              [attr.y]="categoryLabelY()">
+              {{ label.text }}
+            </text>
+          }
+
+          <!-- Over the marks, where `.marks` is under them: an annotation's LINE is furniture and
+               belongs below the readings, its NAME has to survive a column drawn through it. -->
+          <ng-content select="[dsReferenceLabel]" />
+        </g>
+      </svg>
+    </div>
+  }
+</figure>

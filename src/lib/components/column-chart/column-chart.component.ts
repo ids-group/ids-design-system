@@ -1,64 +1,170 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   TemplateRef,
   ViewEncapsulation,
+  afterNextRender,
   booleanAttribute,
   computed,
   contentChild,
+  inject,
   input,
   numberAttribute,
   output,
   signal,
+  viewChildren,
 } from '@angular/core';
 import {
   CHART_SERIES_COLORS,
+  defaultChartFormat,
   describeSeries,
-  formatTick,
-  formatValue,
-  niceMax,
-  tickStep,
-  describeShare,
+  formatPercent,
   shareOfTotal,
-  focusMark,
-  nextRovingIndex,
-  staggerDelay,
-  tickValues,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
-import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 import type {
   ChartDataTable,
   ChartFrame,
+  ChartStackMode,
+  ChartThreshold,
   ChartValueFormat,
 } from '@ids-group-ltd/ids-design-system/core';
 import {
-  ChartTooltipDirective,
-  chartActiveMark,
-} from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
+  ChartComponent,
+  ColumnSeriesComponent,
+  ReferenceLabelComponent,
+  ReferenceLineComponent,
+  chartViewHeight,
+  stackOffsets,
+} from '@ids-group-ltd/ids-design-system/components/chart';
+import type { ChartStackOffset } from '@ids-group-ltd/ids-design-system/components/chart';
+import { ChartLegendComponent } from '@ids-group-ltd/ids-design-system/components/chart-legend';
+import type { ChartLegendItem } from '@ids-group-ltd/ids-design-system/components/chart-legend';
+import { ChartTooltipDirective } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import type {
   ChartItemTooltipTrigger,
   ChartTooltipContext,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
-import { heightPercent, resolveDomainMax } from './column-chart.math';
-import type { ColumnChartPoint } from './column-chart.types';
+import type {
+  ChartMarkFill,
+  ColumnChartPoint,
+  ColumnChartSeries,
+} from './column-chart.types';
 
-const defaultValueFormat = (value: number) => formatValue(value);
+/** One series, ready to draw. `points` is the caller's own array, never a copy: the colour and the
+ *  fill reach the marks as series-wide defaults so a clicked point comes back as the object that
+ *  was handed in. */
+interface ResolvedColumnSeries {
+  readonly key: string;
+  readonly label: string;
+  /** Null leaves each mark on the categorical palette by its own position, which is what a chart
+   *  of one series has always drawn. */
+  readonly color: string | null;
+  readonly fill: ChartMarkFill | null;
+  readonly points: readonly ColumnChartPoint[];
+}
+
+function isSeriesList(
+  data: readonly ColumnChartPoint[] | readonly ColumnChartSeries[],
+): data is readonly ColumnChartSeries[] {
+  return data.length > 0 && 'data' in data[0];
+}
+
+/** What the four geometry tokens resolve to when nothing has been set and while the host is not yet
+ *  in a document — under SSR, and for the frame before the first read. */
+const COLUMN_GEOMETRY = {
+  plotHeight: 200,
+  axisGutter: 40,
+  valueSpace: 20,
+  columnWidthRatio: 0.8,
+};
+
+/** The plot is an SVG coordinate space, so `--ds-column-chart-plot-height` and its three siblings
+ *  cannot reach it as CSS: a length written into a `viewBox` is a number the component computes.
+ *  They are read back once, from the private resolvers on the host, which is what keeps them real
+ *  public hooks rather than names that parse and change nothing.
+ *
+ *  Read once, on the first pass: a token re-pointed at a breakpoint is NOT picked up, because
+ *  `ds-chart`'s `ResizeObserver` answers the plot's width rather than a token's value. Set these
+ *  from a stylesheet, not from a media query. */
+function readColumnGeometry(host: HTMLElement): typeof COLUMN_GEOMETRY {
+  const style = getComputedStyle(host);
+  const length = (token: string, fallback: number): number => {
+    const parsed = Number.parseFloat(style.getPropertyValue(token));
+
+    // `>= 0`, so a token deliberately set to zero - no tick gutter, no label headroom - is kept
+    // rather than silently replaced by the default.
+    return Number.isFinite(parsed) && parsed >= 0 ? parsed : fallback;
+  };
+
+  return {
+    plotHeight: length(
+      '--_column-chart-plot-height',
+      COLUMN_GEOMETRY.plotHeight,
+    ),
+    axisGutter: length(
+      '--_column-chart-axis-width',
+      COLUMN_GEOMETRY.axisGutter,
+    ),
+    valueSpace: length(
+      '--_column-chart-value-space',
+      COLUMN_GEOMETRY.valueSpace,
+    ),
+    // A share of the category's own slot, written as a percentage and used as a ratio.
+    columnWidthRatio:
+      length(
+        '--_column-chart-column-width',
+        COLUMN_GEOMETRY.columnWidthRatio * 100,
+      ) / 100,
+  };
+}
 
 @Component({
   selector: 'ds-column-chart',
   standalone: true,
-  imports: [SkeletonComponent, ChartTooltipDirective, IconComponent],
+  imports: [
+    SkeletonComponent,
+    ChartComponent,
+    ChartLegendComponent,
+    ColumnSeriesComponent,
+    ReferenceLabelComponent,
+    ReferenceLineComponent,
+    ChartTooltipDirective,
+  ],
   templateUrl: './column-chart.component.html',
   styleUrl: './column-chart.component.scss',
-  host: { '[class.framed]': "frameResolved() === 'auto'" },
+  host: {
+    '[class.framed]': "frameResolved() === 'auto'",
+    '[style.--_column-chart-view-height]': 'viewHeightPx()',
+  },
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ColumnChartComponent {
-  /** One column per point, drawn in the order given. */
-  readonly data = input.required<readonly ColumnChartPoint[]>();
+  /** One column per point, drawn in the order given - or one NAMED SERIES per entry, where every
+   *  category carries a column from each. The two forms are told apart by their shape, so a chart
+   *  handed a flat list behaves exactly as it always has. */
+  readonly data = input.required<
+    readonly ColumnChartPoint[] | readonly ColumnChartSeries[]
+  >();
+
+  /** How several series share one category's band. `'none'`, the default, and `'grouped'` draw
+   *  them side by side - a chart of one series takes the whole band either way, so the two differ
+   *  only in spelling. `'stacked'` puts each series on top of the one before it, and
+   *  `'normalized'` stacks then divides by the category's total, so every band is full and the
+   *  axis reads in shares.
+   *
+   *  Unrelated to `ds-line-chart`'s `axisMode="stacked"`, which is two PLOTS one above the
+   *  other. */
+  readonly stack = input<ChartStackMode>('none');
+
+  /** Reference lines and bands drawn across the plot, behind the columns: a target, a budget, an
+   *  SLA. Each one opens the value axis far enough to hold it, so a target above every column is
+   *  still on the plot, and each is named in the generated description - a line only the sighted
+   *  reader gets is an annotation half the audience never receives. */
+  readonly thresholds = input<readonly ChartThreshold[]>([]);
 
   /** Prints each column's value above the column. */
   readonly showValues = input(true, { transform: booleanAttribute });
@@ -145,7 +251,7 @@ export class ColumnChartComponent {
   readonly valueFormatResolved = resolveWithConfig(
     this.valueFormat,
     (config) => config.chart?.valueFormat,
-    defaultValueFormat as ChartValueFormat,
+    defaultChartFormat,
   );
 
   /** Turns on the click affordance — the pointer cursor and any hover tint.
@@ -175,10 +281,6 @@ export class ColumnChartComponent {
    *  crawl in. */
   readonly staggerMs = input(0, { transform: numberAttribute });
 
-  protected markStagger(index: number): string {
-    return `${staggerDelay(index, this.staggerMs())}ms`;
-  }
-
   /** Whether a hovered or focused column opens a tooltip. `'axis'` is not offered — a
    *  column chart's marks ARE its categories, so an axis tooltip would repeat the item one. */
   readonly tooltip = input<ChartItemTooltipTrigger>('item');
@@ -199,166 +301,155 @@ export class ColumnChartComponent {
     this.showValues() ? 18 : 0,
   );
 
-  private readonly tooltipLingerResolved = resolveWithConfig(
+  protected readonly tooltipLingerResolved = resolveWithConfig(
     this.tooltipLingerMs,
     (config) => config.chart?.tooltipLingerMs,
     0,
   );
 
-  protected readonly activeMark = chartActiveMark(() =>
-    this.tooltipLingerResolved(),
+  protected readonly geometry = signal(COLUMN_GEOMETRY);
+
+  /** Every state occupies the box the plot would have, so nothing on the page moves when the data
+   *  lands or the request fails. */
+  protected readonly viewHeightPx = computed(
+    () =>
+      `${chartViewHeight(this.geometry().plotHeight, this.geometry().valueSpace)}px`,
   );
 
-  protected onMarkClick(
-    payload: ColumnChartPoint,
-    index: number,
-    event: Event,
-  ): void {
-    this.pointClicked.emit(payload);
-    if (this.pinOnClick()) {
-      this.activeMark.pin(
-        index,
-        event,
-        this.tooltipAnchor() === 'mark' ? '.bar' : undefined,
-      );
-    }
-  }
-
-  protected onMarkEnter(index: number, event: Event): void {
-    this.activeMark.enter(
-      index,
-      event,
-      this.tooltipAnchor() === 'mark' ? '.bar' : undefined,
-    );
-  }
-  /** One tab stop per chart, not one per mark: WCAG 2.1.1's Understanding is explicit that not
-   *  every mouse-operable control has to be separately focusable, and that is what keeps a
-   *  twenty-five mark chart from being twenty-five stops in the page's tab order. */
-  protected readonly rovingIndex = signal(0);
-
-  protected readonly tabStopIndex = computed(() =>
-    Math.min(this.rovingIndex(), Math.max(0, this.columns().length - 1)),
+  protected readonly skeletonHeightPx = computed(
+    () => `${this.geometry().plotHeight}px`,
   );
 
-  protected onMarkFocus(index: number, event: FocusEvent): void {
-    this.rovingIndex.set(index);
-    this.onMarkEnter(index, event);
-  }
+  protected readonly seriesRefs = viewChildren(ColumnSeriesComponent);
 
-  protected onMarkNavigation(event: KeyboardEvent, index: number): void {
-    const next = nextRovingIndex(event.key, index, this.columns().length);
-    if (next === null) {
-      return;
-    }
-    event.preventDefault();
-    this.rovingIndex.set(next);
-    focusMark((event.currentTarget as Element).closest('.columns'), next);
-  }
+  protected readonly pinnedSeries = computed(
+    () =>
+      this.seriesRefs().find((series) => series.activeMark.pinned()) ?? null,
+  );
 
-  protected readonly tooltipContext = computed<ChartTooltipContext | null>(
+  protected readonly resolvedSeries = computed<readonly ResolvedColumnSeries[]>(
     () => {
-      const entry = this.columns()[this.activeMark.index()];
-      if (this.tooltip() === 'none' || !entry) {
-        return null;
+      const given = this.data();
+      if (!isSeriesList(given)) {
+        return [
+          { key: 'series', label: '', color: null, fill: null, points: given },
+        ];
       }
 
-      return {
-        category: '',
-        entries: [
-          {
-            label: entry.point.label,
-            value: entry.point.value,
-            formatted: entry.formattedValue,
-            color: entry.color,
-            detail: this.partOfWhole()
-              ? describeShare(
-                  this.data().map((point) => point.value),
-                  this.activeMark.index(),
-                )
-              : undefined,
-          },
-        ],
-      };
+      return given.map((series, index) => ({
+        key: series.id,
+        label: series.label,
+        color:
+          series.color ??
+          CHART_SERIES_COLORS[index % CHART_SERIES_COLORS.length],
+        fill: series.fill ?? null,
+        points: series.data,
+      }));
     },
   );
 
-  protected readonly domainMax = computed(() =>
-    resolveDomainMax(this.data().map((point) => point.value)),
+  /** Stacking collapses every series onto ONE slot, which is also why a stacked series is drawn
+   *  at slot 0 rather than at its own index - its segments sit on top of each other, not beside
+   *  them. */
+  protected readonly slotCount = computed(() =>
+    this.stack() === 'stacked' || this.stack() === 'normalized'
+      ? 1
+      : this.resolvedSeries().length,
   );
 
-  /** Top of the value axis: the domain rounded up to a whole tick, so the
-   *  tallest column ends on a gridline rather than between two. */
-  protected readonly axisMax = computed(() =>
-    niceMax(this.domainMax(), this.tickCount()),
+  private readonly offsets = computed(() =>
+    stackOffsets(
+      this.resolvedSeries().map((series) =>
+        series.points.map((point) => point.value),
+      ),
+      this.stack(),
+    ),
   );
 
-  protected readonly ticks = computed(() => {
-    const axisMax = this.axisMax();
-    // Niced from the same domain as `axisMax`, which is what makes the top tick
-    // and the top of the axis the same number.
-    const values = tickValues(this.domainMax(), this.tickCount());
-    const step = tickStep(values);
+  protected offsetsFor(index: number): readonly ChartStackOffset[] {
+    return this.offsets()[index] ?? [];
+  }
+
+  /** The categories come from the LONGEST series: a series that stops early leaves the bands past
+   *  its end standing rather than taking them off the axis for every other series too. */
+  protected readonly categories = computed(() =>
+    this.resolvedSeries()
+      .reduce<readonly ColumnChartPoint[]>(
+        (longest, series) =>
+          series.points.length > longest.length ? series.points : longest,
+        [],
+      )
+      .map((point) => point.label),
+  );
+
+  protected readonly multiSeries = computed(
+    () => this.resolvedSeries().length > 1,
+  );
+
+  protected readonly legendItems = computed<readonly ChartLegendItem[]>(() =>
+    this.resolvedSeries().map((series) => ({
+      id: series.key,
+      label: series.label,
+      color: series.color ?? '',
+    })),
+  );
+
+  /** A normalized stack draws shares, not readings, so the axis has to say so - the value printed
+   *  beside each mark stays the reading, which is what `valueFormat` goes on formatting. */
+  protected readonly axisFormat = computed<ChartValueFormat | null>(() =>
+    this.stack() === 'normalized'
+      ? (value: number) => formatPercent(value, 1)
+      : this.valueFormat(),
+  );
+
+  protected readonly tableRows = computed(() => {
     const format = this.valueFormatResolved();
 
-    return values.map((value) => ({
-      label:
-        format === defaultValueFormat ? formatTick(value, step) : format(value),
-      offsetPercent: heightPercent(value, axisMax),
-    }));
-  });
+    return this.resolvedSeries().flatMap((series) => {
+      const values = series.points.map((point) => point.value);
 
-  protected readonly columns = computed(() => {
-    const axisMax = this.axisMax();
-    const format = this.valueFormatResolved();
-    const values = this.data().map((point) => point.value);
-
-    return this.data().map((point, index) => ({
-      key: point.id ?? String(index),
-      point,
-      heightPercent: heightPercent(point.value, axisMax),
-      formattedValue: format(point.value),
-      share: this.partOfWhole() ? shareOfTotal(values, index) : '',
-      color:
-        point.color ?? CHART_SERIES_COLORS[index % CHART_SERIES_COLORS.length],
-    }));
+      return series.points.map((point, index) => ({
+        key: `${series.key}:${point.id ?? index}`,
+        series: series.label,
+        label: point.label,
+        formattedValue: format(point.value, 'tooltip'),
+        share: this.partOfWhole() ? shareOfTotal(values, index) : '',
+      }));
+    });
   });
 
   protected readonly accessibleName = computed(
     () =>
       this.summary() ??
-      describeSeries(
-        this.caption() ?? 'Chart',
-        this.data().map((point) => ({
-          label: point.label,
-          value: point.value,
-        })),
-        this.valueFormatResolved(),
-        this.dataTableResolved() !== 'none',
-      ),
+      this.resolvedSeries()
+        .map((series, index) =>
+          describeSeries(
+            series.label || this.caption() || 'Chart',
+            series.points.map((point) => ({
+              label: point.label,
+              value: point.value,
+            })),
+            (value) => this.valueFormatResolved()(value, 'tooltip'),
+            this.dataTableResolved() !== 'none',
+            // The reference lines belong to the plot, not to a series, so they are named once.
+            index === 0 ? this.thresholds() : [],
+          ),
+        )
+        .join(' '),
   );
 
-  protected entryLabel(entry: {
-    point: ColumnChartPoint;
-    formattedValue: string;
-  }) {
-    return `${entry.point.label}, ${entry.formattedValue}`;
-  }
-
-  protected onPointKey(point: ColumnChartPoint, event: Event): void {
-    // Only the column's own key opens it: a key pressed on a control inside belongs to that
-    // control.
-    if (!this.interactive() || event.target !== event.currentTarget) {
-      return;
-    }
-    event.preventDefault();
-    this.pointClicked.emit(point);
-  }
-
-  protected readonly isEmpty = computed(() => this.data().length === 0);
+  protected readonly isEmpty = computed(() => this.categories().length === 0);
 
   /** Placeholder columns while loading. Follows the real point count so the chart does not resize
    *  when the data lands; falls back to three when `data` is still empty. */
   protected readonly skeletonColumns = computed(() =>
-    Array.from({ length: Math.max(this.data().length, 3) }),
+    Array.from({ length: Math.max(this.categories().length, 3) }),
   );
+
+  constructor() {
+    const host = inject<ElementRef<HTMLElement>>(ElementRef);
+    afterNextRender(() =>
+      this.geometry.set(readColumnGeometry(host.nativeElement)),
+    );
+  }
 }

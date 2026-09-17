@@ -1,0 +1,27 @@
+<svg:g
+  class="references"
+  aria-hidden="true">
+  @for (line of lines(); track line.key) {
+    <svg:g
+      class="reference"
+      [style.--_chart-threshold-color]="line.color">
+      @if (line.band) {
+        <svg:rect
+          class="threshold-band"
+          [attr.x]="line.left"
+          [attr.y]="line.top"
+          [attr.width]="line.width"
+          [attr.height]="line.height" />
+      } @else {
+        <svg:line
+          class="threshold-line"
+          [class.is-dashed]="line.dash === 'dashed'"
+          [class.is-dotted]="line.dash === 'dotted'"
+          [attr.x1]="line.left"
+          [attr.x2]="line.right"
+          [attr.y1]="line.y"
+          [attr.y2]="line.y" />
+      }
+    </svg:g>
+  }
+</svg:g>

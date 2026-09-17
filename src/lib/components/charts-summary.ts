@@ -1,3 +1,4 @@
+import type { ChartThreshold } from '@ids-group-ltd/ids-design-system/core';
 import { formatValue } from './charts-format';
 
 /** @internal */
@@ -31,6 +32,38 @@ function trendOf(values: readonly number[]): string {
   return 'Ending where it started';
 }
 
+/** Where the readings sit against each reference line, appended to the description. A line the
+ *  reader cannot see is a line that does not exist for them, and its whole point is the
+ *  comparison, not its position. */
+function describeThresholds(
+  thresholds: readonly ChartThreshold[],
+  points: readonly SummaryPoint[],
+  format: (value: number) => string,
+): string {
+  const total = points.length;
+  const noun = total === 1 ? 'point' : 'points';
+
+  return thresholds
+    .map((threshold) => {
+      const name = threshold.label ?? 'Threshold';
+      if (threshold.to == null) {
+        const above = points.filter(
+          (point) => point.value > threshold.value,
+        ).length;
+
+        return ` ${name} at ${format(threshold.value)}, ${above} of ${total} ${noun} above.`;
+      }
+      const low = Math.min(threshold.value, threshold.to);
+      const high = Math.max(threshold.value, threshold.to);
+      const inside = points.filter(
+        (point) => point.value >= low && point.value <= high,
+      ).length;
+
+      return ` ${name} from ${format(low)} to ${format(high)}, ${inside} of ${total} ${noun} inside.`;
+    })
+    .join('');
+}
+
 /** The sentence a screen reader gets as the chart's accessible name. Generated rather than
  *  required, because a required one is a field that gets left at the component's default and then
  *  lies.
@@ -45,11 +78,14 @@ export function describeSeries(
   points: readonly SummaryPoint[],
   format: (value: number) => string = formatValue,
   tableFollows = true,
+  thresholds: readonly ChartThreshold[] = [],
 ): string {
-  const pointer = tableFollows ? ' Full values in the table below.' : '';
   if (points.length === 0) {
     return `${label}. No data.`;
   }
+  const pointer =
+    describeThresholds(thresholds, points, format) +
+    (tableFollows ? ' Full values in the table below.' : '');
   if (points.length === 1) {
     return `${label}, one point: ${format(points[0].value)} at ${points[0].label}.${pointer}`;
   }

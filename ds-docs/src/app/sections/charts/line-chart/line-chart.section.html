@@ -403,10 +403,15 @@
 
   <p class="block-desc t-s">
     <code class="t-mono-inline">
-      toggle
-    </code>, the default, leaves the
-    disclosure closed; <code class="t-mono-inline">visible</code> renders it
-    open; <code class="t-mono-inline">none</code> leaves it out.
+      none
+    </code>, the default, renders no table at
+    all; <code class="t-mono-inline">toggle</code> puts one behind a closed
+    disclosure; <code class="t-mono-inline">visible</code> renders it open. The
+    table is the non-visual route to the numbers, so
+    <code class="t-mono-inline">
+      none
+    </code> belongs only where the same
+    figures are already in a table on the page.
   </p>
 
   <ds-line-chart
@@ -669,6 +674,18 @@
         <docs-line-chart-data-editor
           [(categories)]="loadingCategories"
           [(series)]="loadingSeries" />
+      </div>
+
+      <div class="state-cell">
+        <ds-line-chart
+          dataTable="none"
+          error
+          [categories]="emptyCategories()"
+          [series]="emptySeries()" />
+
+        <div class="state-cell-label">
+          Error
+        </div>
       </div>
 
       <div class="state-cell">

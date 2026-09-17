@@ -40,15 +40,14 @@
 
 // The focus indicator, drawn rather than outlined: `outline` on an SVG element paints its BOUNDING
 // BOX, not its silhouette, so a slice would ring as a rectangle. Two tones, because one is not
-// enough — a light stroke carries against a dark mark, the dark halo around it carries against a
-// light one and against the surface, and between them the ring clears 3:1 on every series colour
-// the palette holds. `drop-shadow` rather than a second stroke: an SVG shape has one stroke.
+// enough: the ring is the app's own focus colour, so a focused mark reads as the same indicator as
+// every other control, and the light keyline around it is what separates that colour from a mark
+// of the same hue family. `drop-shadow` rather than a second stroke: an SVG shape has one stroke.
 @mixin drawn-focus-ring {
   stroke: var(--ds-chart-focus-ring-color);
   stroke-width: var(--focus-ring-width);
   paint-order: stroke;
-  filter: drop-shadow(0 0 1px var(--ds-chart-focus-halo-color))
-    drop-shadow(0 0 1px var(--ds-chart-focus-halo-color));
+  filter: drop-shadow(0 0 var(--focus-ring-width) var(--ds-chart-focus-halo-color));
 }
 
 // A CLICK focuses an SVG shape in Chromium even with no `tabindex` on it, and `:focus-visible` is
@@ -91,7 +90,13 @@
 // its data is empty, its request failed, or its legend switched the last series off drags the whole
 // page up under the reader's cursor — and the state they are being told about is exactly the moment
 // they are least able to afford the jump. `$height` is the plot the message stands in for.
-@mixin message-box($height) {
+// `$axes` keeps the L of a plot that HAS axes — the value axis down the left, the category axis
+// along the bottom. A chart whose data went away still has the frame its readings were measured
+// against, and drawing it keeps the message inside a plot rather than floating in a blank card.
+// Borders rather than an SVG: with no data there is nothing to scale against, and an axis without
+// ticks or labels is exactly two lines. Off for the donut and the funnel, which have no axes to
+// keep.
+@mixin message-box($height, $axes: false) {
   .empty {
     display: grid;
     place-items: center;
@@ -99,6 +104,11 @@
     margin: 0;
     color: var(--text-secondary);
     text-align: center;
+
+    @if $axes {
+      border-inline-start: 1px solid var(--ds-chart-axis-line-color);
+      border-block-end: 1px solid var(--ds-chart-axis-line-color);
+    }
   }
 }
 

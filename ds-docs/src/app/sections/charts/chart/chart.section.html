@@ -1,0 +1,149 @@
+<docs-section
+  anchor="chart"
+  eyebrow="Charts"
+  title="Chart">
+  <span lede>
+    The container the column chart is built inside. It owns the plot, the axes,
+    the grid, the value domain and the loading, empty and error states, and
+    draws no marks of its own - reach for it directly when no preset offers the
+    combination you need.
+  </span>
+
+  <h3 class="block-title t-h4">
+    Composing a chart
+  </h3>
+
+  <p class="block-desc t-s">
+    A mark is an ATTRIBUTE on a real
+    <code class="t-mono-inline">
+      &lt;svg:g&gt;
+    </code> -
+    <code class="t-mono-inline">
+      dsColumnSeries
+    </code>,
+    <code class="t-mono-inline">
+      dsLineSeries
+    </code>,
+    <code class="t-mono-inline">
+      dsReferenceLine
+    </code>,
+    <code class="t-mono-inline">
+      dsReferenceLabel
+    </code> - because an element the SVG
+    specification does not know renders nothing and neither do its children. The
+    <code class="t-mono-inline">
+      svg:
+    </code> prefix is Angular's, and a projected SVG
+    element without it is rejected at compile time.
+  </p>
+
+  <p class="block-desc t-s">
+    The container has three slots and they are layers rather than an ordering
+    preference: a reference line paints UNDER the marks whatever order you wrote
+    it in, the default slot takes the marks, and a reference label paints OVER
+    them, so an annotation's stroke stays furniture and its name survives a
+    column drawn through it. Inside the default slot the marks paint in the
+    order they are written.
+  </p>
+
+  <p class="block-desc t-s">
+    This one is a column series with a target band behind it and the band's
+    names over it.
+    <code class="t-mono-inline">
+      ds-column-chart
+    </code> wraps exactly this
+    arrangement behind its own
+    <code class="t-mono-inline">thresholds</code> input; written out, that input
+    is what it builds.
+  </p>
+
+  <ds-chart
+    caption="Response time against the agreed range"
+    [categories]="latencyWeeks"
+    [summary]="latencySummary">
+    <svg:g
+      dsReferenceLine
+      [thresholds]="latencyThresholds" />
+
+    <svg:g
+      dsColumnSeries
+      [data]="latencyColumns" />
+
+    <svg:g
+      dsReferenceLabel
+      [thresholds]="latencyThresholds" />
+  </ds-chart>
+
+  <h3 class="block-title t-h4">
+    Two value axes
+  </h3>
+
+  <p class="block-desc t-s">
+    A mark declares which axis it is measured against -
+    <code class="t-mono-inline">axis: 'secondary'</code> on a line series'
+    data - and
+    <code class="t-mono-inline">
+      secondaryAxisMode
+    </code> decides how that axis
+    relates to the first.
+    <code class="t-mono-inline">
+      'rounded'
+    </code>, the default, hangs it on the
+    first axis's own gridlines at a round step, so both marks share one plot;
+    <code class="t-mono-inline">
+      'stacked'
+    </code> gives up on sharing and draws two
+    plots over the same category axis.
+    <code class="t-mono-inline">
+      axisColor
+    </code> and
+    <code class="t-mono-inline">
+      secondaryAxisColor
+    </code> paint each axis's
+    labels in the colour of the marks read against it, which is the only thing
+    on the canvas that says which numbers a mark answers to.
+  </p>
+
+  <div class="demo-pair">
+    <ds-chart
+      caption="rounded - one plot"
+      [categories]="orderMonths"
+      [axisColor]="columnAxisColor"
+      [secondaryAxisColor]="lineAxisColor"
+      [summary]="ordersSummary">
+      <svg:g
+        dsColumnSeries
+        [data]="orderColumns"
+        [showValues]="false" />
+
+      <svg:g
+        dsLineSeries
+        [data]="basketSeries" />
+    </ds-chart>
+
+    <ds-chart
+      caption="stacked - two plots"
+      secondaryAxisMode="stacked"
+      [categories]="orderMonths"
+      [axisColor]="columnAxisColor"
+      [secondaryAxisColor]="lineAxisColor"
+      [summary]="ordersSummary">
+      <svg:g
+        dsColumnSeries
+        [data]="orderColumns"
+        [showValues]="false" />
+
+      <svg:g
+        dsLineSeries
+        [data]="basketSeries" />
+    </ds-chart>
+  </div>
+
+  <p class="block-desc t-s">
+    The dressed version of the single-plot case - both marks answering the
+    pointer, a cumulative line over the columns it sums - is on the column chart
+    page under "Columns and a line, on two scales". It is kept there rather than
+    moved here because a reader arrives at it while reading about columns, which
+    is where the question is asked.
+  </p>
+</docs-section>

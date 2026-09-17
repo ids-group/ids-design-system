@@ -162,4 +162,82 @@ check(
   'Weekly, 6 points, 100 to 900. Falling overall. Highest in Thu at 900, lowest in Tue at 100. Full values in the table below.',
 );
 
+// --- Thresholds -------------------------------------------------------------
+// A target line is a fact about the chart, not decoration: a reader who cannot see the drawn line
+// gets nothing unless the sentence carries it.
+const thresholdPoints = [
+  { label: 'Jan', value: 30 },
+  { label: 'Feb', value: 55 },
+  { label: 'Mar', value: 40 },
+];
+
+check(
+  'names a threshold and where the data sits against it',
+  describeSeries('Uptime', thresholdPoints, englishFormat, false, [
+    { value: 50, label: 'Target' },
+  ]),
+  'Uptime, 3 points, 30 to 55. Rising overall. Highest in Feb at 55, lowest in Jan at 30. Target at 50, 1 of 3 points above.',
+);
+
+// The clause sits BEFORE the table pointer: the pointer is the last thing said, because it is an
+// instruction rather than a reading.
+check(
+  'puts the threshold clause before the table pointer',
+  describeSeries('Uptime', thresholdPoints, englishFormat, true, [
+    { value: 50, label: 'Target' },
+  ]),
+  'Uptime, 3 points, 30 to 55. Rising overall. Highest in Feb at 55, lowest in Jan at 30. Target at 50, 1 of 3 points above. Full values in the table below.',
+);
+
+check(
+  'falls back to a generic name for an unlabelled threshold',
+  describeSeries('Uptime', thresholdPoints, englishFormat, false, [
+    { value: 20 },
+  ]),
+  'Uptime, 3 points, 30 to 55. Rising overall. Highest in Feb at 55, lowest in Jan at 30. Threshold at 20, 3 of 3 points above.',
+);
+
+check(
+  'names every threshold, in the order given',
+  describeSeries('Uptime', thresholdPoints, englishFormat, false, [
+    { value: 50, label: 'Target' },
+    { value: 20, label: 'Floor' },
+  ]),
+  'Uptime, 3 points, 30 to 55. Rising overall. Highest in Feb at 55, lowest in Jan at 30. Target at 50, 1 of 3 points above. Floor at 20, 3 of 3 points above.',
+);
+
+// A band is the same object with `to`, so it is counted by containment rather than by which side
+// the reading falls on.
+check(
+  'counts a band by what falls inside it',
+  describeSeries('Uptime', thresholdPoints, englishFormat, false, [
+    { value: 50, to: 70, label: 'Target band' },
+  ]),
+  'Uptime, 3 points, 30 to 55. Rising overall. Highest in Feb at 55, lowest in Jan at 30. Target band from 50 to 70, 1 of 3 points inside.',
+);
+
+// Written high-end-first, which is the natural way to write a ceiling-and-floor pair.
+check(
+  'reads a band written in either direction',
+  describeSeries('Uptime', thresholdPoints, englishFormat, false, [
+    { value: 70, to: 50, label: 'Target band' },
+  ]),
+  'Uptime, 3 points, 30 to 55. Rising overall. Highest in Feb at 55, lowest in Jan at 30. Target band from 50 to 70, 1 of 3 points inside.',
+);
+
+// A chart with no thresholds must read exactly as it did before they existed.
+check(
+  'leaves a chart without thresholds untouched',
+  describeSeries('Uptime', thresholdPoints, englishFormat, false, []),
+  describeSeries('Uptime', thresholdPoints, englishFormat, false),
+);
+
+check(
+  'names a threshold on a single-point series',
+  describeSeries('Uptime', [{ label: 'Jan', value: 30 }], englishFormat, false, [
+    { value: 50, label: 'Target' },
+  ]),
+  'Uptime, one point: 30 at Jan. Target at 50, 0 of 1 point above.',
+);
+
 finish('charts-summary');

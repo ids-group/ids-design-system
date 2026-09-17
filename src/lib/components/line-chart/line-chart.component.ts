@@ -16,14 +16,12 @@ import {
 } from '@angular/core';
 import {
   CHART_SERIES_COLORS,
+  defaultChartFormat,
   describeSeries,
   pointScale,
-  formatTick,
   focusMark,
-  formatValue,
   nextRovingIndex,
   staggerDelay,
-  tickStep,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
@@ -67,8 +65,6 @@ import type {
   LineChartPoint,
   LineChartSeries,
 } from './line-chart.types';
-
-const defaultValueFormat = (value: number) => formatValue(value);
 
 // Long enough to cross the gap between the plot and its panel at an ordinary pointer speed.
 
@@ -276,7 +272,7 @@ export class LineChartComponent {
   readonly valueFormatResolved = resolveWithConfig(
     this.valueFormat,
     (config) => config.chart?.valueFormat,
-    defaultValueFormat as ChartValueFormat,
+    defaultChartFormat,
   );
 
   protected readonly viewBox = `0 0 ${LINE_CHART_VIEW_WIDTH} ${LINE_CHART_VIEW_HEIGHT}`;
@@ -764,7 +760,7 @@ export class LineChartComponent {
           .map(({ entry, value }) => ({
             label: entry.series.label,
             value,
-            formatted: format(value),
+            formatted: format(value, 'tooltip'),
             color: entry.color,
           })),
       };
@@ -836,7 +832,9 @@ export class LineChartComponent {
       cells: this.resolvedSeries().map((entry) => {
         const value = entry.values[index];
 
-        return value === null || value === undefined ? '—' : format(value);
+        return value === null || value === undefined
+          ? '—'
+          : format(value, 'tooltip');
       }),
     }));
   });
@@ -848,7 +846,8 @@ export class LineChartComponent {
     }
 
     const title = this.caption() ?? 'Chart';
-    const format = this.valueFormatResolved();
+    const format = (value: number) =>
+      this.valueFormatResolved()(value, 'tooltip');
     const categories = this.categories();
     // The pointer belongs to the WHOLE chart, not to each series, or a two-series plot promises
     // the table twice.
@@ -888,7 +887,7 @@ export class LineChartComponent {
   protected markerLabel(entry: PlottedSeries, marker: LinePoint): string {
     const point = this.pointOf(entry, marker);
 
-    return `${entry.series.label}, ${point.category}, ${this.valueFormatResolved()(marker.value)}`;
+    return `${entry.series.label}, ${point.category}, ${this.valueFormatResolved()(marker.value, 'tooltip')}`;
   }
 
   protected onMarkerKey(
@@ -944,13 +943,11 @@ export class LineChartComponent {
     onSecondaryAxis: boolean,
   ): AxisTick[] {
     const plot = this.plotFor(onSecondaryAxis);
-    const step = tickStep(ticks);
     const format = this.valueFormatResolved();
 
     return ticks.map((value) => ({
       y: valueY(value, axisMax, plot),
-      label:
-        format === defaultValueFormat ? formatTick(value, step) : format(value),
+      label: format(value, 'tick'),
     }));
   }
 }

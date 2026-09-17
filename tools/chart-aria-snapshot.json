@@ -5,11 +5,17 @@
     "div: role={interactive() ? 'group' : 'img'}, aria-label={accessibleName()}",
     "div: role={interactive() ? 'button' : null}, aria-label={interactive() ? entryLabel(entry) : null}"
   ],
-  "column-chart": [
+  "chart": [
     "p: role=status",
     "div: aria-hidden=true",
     "div: role={interactive() ? 'group' : 'img'}, aria-label={accessibleName()}",
-    "div: role={interactive() ? 'button' : null}, aria-label={interactive() ? entryLabel(entry) : null}"
+    "g: aria-hidden=true",
+    "g: aria-hidden=true"
+  ],
+  "column-chart": ["p: role=status", "div: aria-hidden=true"],
+  "column-series": [
+    "svg: role={interactive() ? 'button' : null}, aria-label={interactive() ? entryLabel(mark) : null}",
+    "svg: aria-hidden=true"
   ],
   "donut-chart": [
     "div: aria-hidden=true",
@@ -39,5 +45,10 @@
     "line: aria-hidden=true",
     "circle: role={interactive() ? 'button' : null}, aria-label={interactive() ? markerLabel(entry, marker) : null}",
     "text: aria-hidden=true"
-  ]
+  ],
+  "line-series": [
+    "svg: role={interactive() ? 'button' : null}, aria-label={interactive() ? markerLabel(marker) : null}"
+  ],
+  "reference-label": [],
+  "reference-line": ["svg: aria-hidden=true"]
 }

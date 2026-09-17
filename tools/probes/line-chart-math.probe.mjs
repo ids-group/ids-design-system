@@ -1,37 +1,13 @@
-// The line-chart maths reach the foundation's scale helpers by package specifier,
-// which is the only spelling ng-packagr accepts across an entry-point boundary and
-// the one thing node cannot resolve here. So the specifier is mapped onto the
-// foundation's own sources for the length of this run.
-import { register } from 'node:module';
-import { dirname, join } from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { pathToFileURL } from 'node:url';
+import { join } from 'node:path';
+import { registerComponentsFacade } from './register-components-facade.mjs';
 import { check, finish } from './probe-check.mjs';
 
-const components = join(
-  dirname(fileURLToPath(import.meta.url)),
-  '..',
-  '..',
-  'src',
-  'lib',
-  'components',
-);
-const entryPointFacade =
-  'data:text/javascript,' +
-  ['charts-scale.ts', 'charts-format.ts']
-    .map(
-      (file) =>
-        `export * from ${JSON.stringify(pathToFileURL(join(components, file)).href)};`,
-    )
-    .join('');
-
-register(
-  `data:text/javascript,export async function resolve(specifier, context, next) {
-     if (specifier === '@ids-group-ltd/ids-design-system/components') {
-       return { url: ${JSON.stringify(entryPointFacade)}, shortCircuit: true };
-     }
-     return next(specifier, context);
-   }`,
-);
+const components = registerComponentsFacade(import.meta.url, [
+  'charts-scale.ts',
+  'charts-format.ts',
+  'charts-path.ts',
+]);
 
 const {
   alignSeriesValues,

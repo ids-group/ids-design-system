@@ -93,6 +93,14 @@
   --chart-grid-line-color:    var(--neutral-150);
   --chart-axis-font-size:      var(--font-size-2xs);
 
+  /* REFERENCE LINES - an annotation, not a series. A neutral stroke and a dash are what keep a
+     target from reading as one more category, and the band's opacity is low enough that a mark
+     drawn over it stays its own colour. */
+  --chart-threshold-color: var(--neutral-500);
+  --chart-threshold-band-opacity: 0.12;
+  --chart-threshold-dashed-pattern: 6 4;
+  --chart-threshold-dotted-pattern: 1 5;
+
   /* HIGHLIGHT / HOVER */
 
   /* Every level of dimming costs the separation BETWEEN the dimmed series: measured 2026-09-13,
@@ -103,11 +111,13 @@
   --chart-hover-bg-color:     hsl(225deg 39% 7% / 4%);
   --chart-cursor-line-color:  var(--neutral-400);
 
-  /* The focus indicator is TWO tones, not one: a light stroke with a dark halo around it. A
-     single accent ring disappears on a mark of the same hue family, and a chart's marks are
-     exactly the surfaces a ring has to survive. */
-  --chart-focus-ring-color:  white;
-  --chart-focus-halo-color:  var(--static-ink);
+  /* The focus indicator is TWO tones, not one: a single accent ring disappears on a mark of the
+     same hue family, and a chart's marks are exactly the surfaces a ring has to survive. The ring
+     itself is the app's, so a focused mark reads as the same indicator as every other control;
+     the white keyline is what separates it from the mark underneath, and it is the keyline rather
+     than the ring that does the surviving. */
+  --chart-focus-ring-color:  var(--focus-ring-color);
+  --chart-focus-halo-color:  white;
 
   --chart-tooltip-bg-color:   var(--neutral-900);
   --chart-tooltip-text-color:   var(--neutral-0);
@@ -123,6 +133,12 @@
   --chart-line-width-bold:  3px;
   --chart-dot-radius:        4px;
   --chart-dot-radius-active: 6px;
+  --chart-area-opacity:      0.16;
+
+  /* Stripes wide enough to survive a 24px-wide mark at a glance, and drawn in the surface colour
+     so they read as gaps cut out of the mark rather than a second hue competing with it. */
+  --chart-hatch-color: var(--surface-default);
+  --chart-hatch-width: 3px;
 }
 
 /* Public override layer.
@@ -165,6 +181,11 @@
   --ds-chart-axis-font-size: var(--chart-axis-font-size);
   --ds-chart-grid-line-color: var(--chart-grid-line-color);
 
+  --ds-chart-threshold-color: var(--chart-threshold-color);
+  --ds-chart-threshold-band-opacity: var(--chart-threshold-band-opacity);
+  --ds-chart-threshold-dashed-pattern: var(--chart-threshold-dashed-pattern);
+  --ds-chart-threshold-dotted-pattern: var(--chart-threshold-dotted-pattern);
+
   --ds-chart-dim-opacity: var(--chart-dim-opacity);
   --ds-chart-hover-bg-color: var(--chart-hover-bg-color);
   --ds-chart-cursor-line-color: var(--chart-cursor-line-color);
@@ -180,4 +201,7 @@
   --ds-chart-line-width-bold: var(--chart-line-width-bold);
   --ds-chart-dot-radius: var(--chart-dot-radius);
   --ds-chart-dot-radius-active: var(--chart-dot-radius-active);
+  --ds-chart-area-opacity: var(--chart-area-opacity);
+  --ds-chart-hatch-color: var(--chart-hatch-color);
+  --ds-chart-hatch-width: var(--chart-hatch-width);
 }

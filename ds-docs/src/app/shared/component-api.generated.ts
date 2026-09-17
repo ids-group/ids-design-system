@@ -1007,6 +1007,100 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       }
     ]
   },
+  "bar": {
+    "key": "bar",
+    "selector": "ds-bar",
+    "isElement": true,
+    "className": "BarComponent",
+    "status": "stable",
+    "importName": "BarComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "value",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "0",
+        "required": false,
+        "description": "The reading, in units of `max`; clamped, and ignored while `indeterminate`."
+      },
+      {
+        "name": "max",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "100",
+        "required": false,
+        "description": "The full scale `value` and `target` are read against. Left at 100 they are percentages. Set it to the real total — `[value]=\"37\" [max]=\"80\"` — and the accessible name carries \"37 of 80\" rather than the 46% a caller would otherwise have to compute. For a column of measurements it is usually the column's own largest value, so the longest bar fills its track and the rest are its share. Zero or less falls back to 100, because a scale with no width has no fraction to draw."
+      },
+      {
+        "name": "semantics",
+        "kind": "input",
+        "type": "BarSemantics",
+        "union": [
+          "progress",
+          "meter",
+          "none"
+        ],
+        "default": "'progress'",
+        "required": false,
+        "description": "What the bar is, and therefore how it is announced. See `BarSemantics`. Defaults to `'progress'`."
+      },
+      {
+        "name": "variant",
+        "kind": "input",
+        "type": "BarVariant",
+        "union": [
+          "default",
+          "success",
+          "warning",
+          "error"
+        ],
+        "default": "'default'",
+        "required": false,
+        "description": "Colour role — drives the success/warning/error styling."
+      },
+      {
+        "name": "indeterminate",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Indeterminate (unknown-duration) animation instead of a fixed `value`. Only a task has an unknown duration, so it is ignored unless `semantics` is `'progress'`."
+      },
+      {
+        "name": "color",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Overrides the fill for this one bar. A whole column is coloured once through `--ds-bar-fill-color` instead; use this where the colour carries meaning on one row."
+      },
+      {
+        "name": "ariaLabel",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Accessible name (e.g. \"Upload progress\"). With a `target` set, name the comparison here — the mark is drawn and the role has no second value to announce, so \"Resolved 62% against a 75% target\" is what reaches a screen reader. Unused under `semantics=\"none\"`."
+      },
+      {
+        "name": "target",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "A second point on the same scale as `value`, drawn as a hairline across the track — a goal, a baseline or a threshold to read `value` against. Clamped like `value`, ignored while `indeterminate`, and unset draws nothing."
+      }
+    ],
+    "outputs": []
+  },
   "bar-chart": {
     "key": "bar-chart",
     "selector": "ds-bar-chart",
@@ -1713,6 +1807,198 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       }
     ]
   },
+  "chart": {
+    "key": "chart",
+    "selector": "ds-chart",
+    "isElement": true,
+    "className": "ChartComponent",
+    "status": "stable",
+    "importName": "ChartComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "categories",
+        "kind": "input",
+        "type": "readonly string[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "The category axis. Every projected mark is positioned against this list, so its length is what decides how many bands the plot has."
+      },
+      {
+        "name": "tickCount",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "CHART_DEFAULT_TICK_COUNT",
+        "required": false,
+        "description": "How many value-axis ticks to aim for. A hint, not a count: ticks snap to a round step, so the axis may carry one more or one fewer."
+      },
+      {
+        "name": "min",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Pins the floor of the value axis instead of deriving it from the marks. It only ever opens the axis further: a floor above the data would push readings off the plot."
+      },
+      {
+        "name": "max",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Pins the ceiling of the value axis. See `min`. Two charts drawn one subject at a time are only comparable when both are pinned."
+      },
+      {
+        "name": "plotHeight",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "CHART_DEFAULT_PLOT_HEIGHT",
+        "required": false,
+        "description": "Height of the plot itself, in CSS pixels, axis labels and value headroom excluded. Real pixels rather than a share of the width: one viewBox unit is one pixel, so a card that widens spreads the categories further apart and leaves the plot exactly this tall."
+      },
+      {
+        "name": "axisGutter",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "CHART_DEFAULT_AXIS_GUTTER",
+        "required": false,
+        "description": "Width in CSS pixels of the gutter down the left that carries the value-axis labels. Widen it for long tick labels; the plot takes whatever is left."
+      },
+      {
+        "name": "valueSpace",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "CHART_DEFAULT_VALUE_SPACE",
+        "required": false,
+        "description": "Pixels reserved for a value label at each end of the plot: above the top tick for a mark at the ceiling, and below the baseline for a negative mark, whose label would otherwise print over the category labels. Reserved whether or not a mark draws one, because a chart that gains a label on one value must not change height."
+      },
+      {
+        "name": "caption",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Printed above the plot as the chart's visible title."
+      },
+      {
+        "name": "interactive",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether the projected marks answer to the pointer and the keyboard. The container draws no marks of its own and only reads this for the plot's role: a group of controls to step through, against a single image to be described."
+      },
+      {
+        "name": "summary",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Accessible name for the plot. The container holds no readings of its own, so a chart that needs its numbers described supplies the sentence here - `describeSeries` is what the five presets build it with. It is the whole label in the static case, where nothing else is reachable."
+      },
+      {
+        "name": "frame",
+        "kind": "input",
+        "type": "ChartFrame | null",
+        "union": [
+          "auto",
+          "none"
+        ],
+        "default": "null",
+        "required": false,
+        "description": "Whether the chart draws its own bordered, padded box. `'auto'`, the default, draws it; `'none'` leaves it bare, for one placed inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'`."
+      },
+      {
+        "name": "loading",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Draws a placeholder in place of the plot, at the plot's own height, so the page does not resize when the data lands."
+      },
+      {
+        "name": "emptyText",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Shown in place of the plot when `categories` is empty. Unset falls back to `DS_CONFIG.chart.emptyText`, then `'No data'`."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from an empty `categories`, because \"the request failed\" and \"there is nothing to show\" read the same to a reader and mean opposite things."
+      },
+      {
+        "name": "errorText",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "The message the error state prints. Unset falls back to `DS_CONFIG.chart.errorText`, then `'Could not load the data'`."
+      },
+      {
+        "name": "valueFormat",
+        "kind": "input",
+        "type": "ChartValueFormat | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Formats the value-axis ticks. Unset falls back to `DS_CONFIG.chart.valueFormat`, then the browser's locale grouping with a K/M/B suffix past four digits."
+      },
+      {
+        "name": "secondaryAxisMode",
+        "kind": "input",
+        "type": "ChartAxisMode",
+        "union": [
+          "rounded",
+          "exact",
+          "independent",
+          "stacked"
+        ],
+        "default": "'rounded'",
+        "required": false,
+        "description": "How the second value axis relates to the first, once a mark has reported against it. The same four words `ds-line-chart` takes."
+      },
+      {
+        "name": "axisColor",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Paints the first axis's tick labels in the colour of the marks measured against it. A two-scale plot is ambiguous without it - nothing on the canvas says which of two lines is read against which set of numbers - and it is the author, not the container, who knows which colour an axis belongs to, because several marks can share one."
+      },
+      {
+        "name": "secondaryAxisColor",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "`axisColor` for the second axis."
+      }
+    ],
+    "outputs": []
+  },
   "checkbox": {
     "key": "checkbox",
     "selector": "ds-checkbox",
@@ -2065,11 +2351,34 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "data",
         "kind": "input-required",
-        "type": "readonly ColumnChartPoint[]",
+        "type": "readonly ColumnChartPoint[] | readonly ColumnChartSeries[]",
         "union": null,
         "default": null,
         "required": true,
-        "description": "One column per point, drawn in the order given."
+        "description": "One column per point, drawn in the order given - or one NAMED SERIES per entry, where every category carries a column from each. The two forms are told apart by their shape, so a chart handed a flat list behaves exactly as it always has."
+      },
+      {
+        "name": "stack",
+        "kind": "input",
+        "type": "ChartStackMode",
+        "union": [
+          "none",
+          "grouped",
+          "stacked",
+          "normalized"
+        ],
+        "default": "'none'",
+        "required": false,
+        "description": "How several series share one category's band. `'none'`, the default, and `'grouped'` draw them side by side - a chart of one series takes the whole band either way, so the two differ only in spelling. `'stacked'` puts each series on top of the one before it, and `'normalized'` stacks then divides by the category's total, so every band is full and the axis reads in shares. Unrelated to `ds-line-chart`'s `axisMode=\"stacked\"`, which is two PLOTS one above the other."
+      },
+      {
+        "name": "thresholds",
+        "kind": "input",
+        "type": "readonly ChartThreshold[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Reference lines and bands drawn across the plot, behind the columns: a target, a budget, an SLA. Each one opens the value axis far enough to hold it, so a target above every column is still on the plot, and each is named in the generated description - a line only the sighted reader gets is an annotation half the audience never receives."
       },
       {
         "name": "showValues",
@@ -2813,6 +3122,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`."
+      },
+      {
+        "name": "partOfWhole",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Prints each slice's share of the ring — in the legend, on the tooltip and in the data table. On by default, unlike every other chart, because a ring IS parts of one whole: the share is a real quantity here whatever the data, not a claim the consumer has to make. Off drops all three, for a ring whose slices are already labelled in percent."
       },
       {
         "name": "loading",
@@ -4786,55 +5104,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       }
     ]
   },
-  "meter": {
-    "key": "meter",
-    "selector": "ds-meter",
-    "isElement": true,
-    "className": "MeterComponent",
-    "status": "stable",
-    "importName": "MeterComponent",
-    "importPath": "@ids-group-ltd/ids-design-system",
-    "summary": null,
-    "inputs": [
-      {
-        "name": "value",
-        "kind": "input",
-        "type": "number",
-        "union": null,
-        "default": "0",
-        "required": false,
-        "description": "The measurement, in units of `max`. Clamped to the track."
-      },
-      {
-        "name": "max",
-        "kind": "input",
-        "type": "number",
-        "union": null,
-        "default": "100",
-        "required": false,
-        "description": "The ceiling `value` is read against — the column's own largest, or the scale the number means something on. Left at 100, `value` is a percentage. Zero or less falls back to 100, because a scale with no width has no fraction to draw."
-      },
-      {
-        "name": "color",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "The fill's colour. Unset takes `--ds-meter-fill-color`, so a column is coloured once in a stylesheet rather than per row; set it per row where the colour carries meaning."
-      },
-      {
-        "name": "ariaLabel",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Names the measurement, and is what decides whether it is announced at all. Unset, the mark is `aria-hidden` — right where the cell prints the figure beside it, and wrong where the bar is the only place the number appears."
-      }
-    ],
-    "outputs": []
-  },
   "modal:ModalCardComponent": {
     "key": "modal",
     "selector": "ds-modal-card",
@@ -5986,78 +6255,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Accessible name for the panel; pair with `panelRole`."
-      }
-    ],
-    "outputs": []
-  },
-  "progress": {
-    "key": "progress",
-    "selector": "ds-progress",
-    "isElement": true,
-    "className": "ProgressComponent",
-    "status": "stable",
-    "importName": "ProgressComponent",
-    "importPath": "@ids-group-ltd/ids-design-system",
-    "summary": null,
-    "inputs": [
-      {
-        "name": "value",
-        "kind": "input",
-        "type": "number",
-        "union": null,
-        "default": "0",
-        "required": false,
-        "description": "Progress in units of `max`, so 0–100 by default; clamped, and ignored while `indeterminate`."
-      },
-      {
-        "name": "max",
-        "kind": "input",
-        "type": "number",
-        "union": null,
-        "default": "100",
-        "required": false,
-        "description": "The full scale `value` and `target` are read against. Left at 100 they are percentages, which is why nothing existing changes. Set it to the real total — `[value]=\"37\" [max]=\"80\"` — and the accessible name carries \"37 of 80\" rather than the 46% a caller would otherwise have to compute and a screen reader would read instead. Zero or less falls back to 100, because a scale with no width has no fraction to draw."
-      },
-      {
-        "name": "variant",
-        "kind": "input",
-        "type": "ProgressVariant",
-        "union": [
-          "default",
-          "success",
-          "warning",
-          "error"
-        ],
-        "default": "'default'",
-        "required": false,
-        "description": "Colour variant — drives the success/warning/error styling."
-      },
-      {
-        "name": "indeterminate",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Indeterminate (unknown-duration) animation instead of a fixed `value`."
-      },
-      {
-        "name": "ariaLabel",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Accessible name for the progress bar (e.g. \"Upload progress\"). With a `target` set, name the comparison here — the mark is drawn, and `role=\"progressbar\"` has no second value to announce, so \"Resolved 62% against a 75% target\" is what reaches a screen reader."
-      },
-      {
-        "name": "target",
-        "kind": "input",
-        "type": "number | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "A second point on the same scale as `value`, drawn as a hairline across the track — a goal or a baseline to read `value` against. Clamped like `value`, ignored while `indeterminate`, and unset draws nothing."
       }
     ],
     "outputs": []

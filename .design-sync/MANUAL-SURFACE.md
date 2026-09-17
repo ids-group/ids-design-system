@@ -107,13 +107,14 @@ through the UI afterwards renders the bar and its plain content, and drops the n
 
 ### What the manifest list means now
 
-`manual-surface.json` records the 16 templates whose `<ng-content>` sits inside a control-flow
-block. **That is a watch-list, not a defect list** — all 16 are green today. It exists because
-the two defects above were invisible until someone looked, and a new component that gates its
-projection deserves the same look. `check-manual-surface.mjs` fails when the list changes so
-the look actually happens.
+`manual-surface.json` records the 17 templates whose `<ng-content>` sits inside a control-flow
+block. **That is a watch-list, not a defect list** - 16 are green today and the seventeenth,
+`chart`, is unreachable through the boundary for a reason that has nothing to do with its gate
+(below). It exists because the two defects above were invisible until someone looked, and a new
+component that gates its projection deserves the same look. `check-manual-surface.mjs` fails when
+the list changes so the look actually happens.
 
-The sixteen, each with the gate its `<ng-content>` sits behind:
+The seventeen, each with the gate its `<ng-content>` sits behind:
 
 | component       | gate              | status                                                                                                 |
 | --------------- | ----------------- | ------------------------------------------------------------------------------------------------------ |
@@ -122,6 +123,7 @@ The sixteen, each with the gate its `<ng-content>` sits behind:
 | `bottom-sheet`  | `rendered()`      | overlay; ✅                                                                                            |
 | `auth-layout`   | `letterGlyph()`   | ✅                                                                                                     |
 | `badge`         | `count()`         | projection in the live @else; ✅                                                                       |
+| `chart`         | the state chain   | gate is live at connect; the marks themselves cannot cross the boundary - see below                    |
 | `checkbox`      | `label()`         | projection in the live @else; ✅                                                                       |
 | `radio`         | `label()`         | projection in the live @else; ✅ — moved under `radio-group/` by the entry-point split, same component |
 | `switch`        | `label()`         | projection in the live @else; ✅                                                                       |
@@ -136,6 +138,47 @@ The sixteen, each with the gate its `<ng-content>` sits behind:
 
 `ds-modal-card` also has projection but does not appear here: its slots are at root level,
 outside any block, and it is one of the 31 that register under an alias.
+
+### `chart` - the gate is live, the marks are what cannot cross (2026-09-17)
+
+`ds-chart` is the container `ds-column-chart` is built inside; the other four charts each still
+draw their own canvas. Its three
+`<ng-content>` slots sit in the last arm of a four-way state chain - `@if (error()) … @else if
+(loading()) … @else if (isEmpty()) … @else { the canvas }` - and by the rule above that arm is live
+at connect: `error`, `loading` and `categories` are all initial props, so an element created with
+`categories` set has the marks' branch stamped out in the same microtask it upgrades. Nothing is
+toggled after mount.
+
+`isEmpty()` is read off `categories` alone and never off the domains the marks report, which is what
+keeps it that way. The marks are projected INTO the branch this gate decides, so a container that
+waited for a domain report before rendering them would never receive one.
+
+**What cannot cross the boundary is the marks themselves.** Each is an Angular component with an
+ATTRIBUTE selector on a real `<svg:g>` - `g[dsColumnSeries]`, `g[dsLineSeries]`,
+`g[dsReferenceLine]`, `g[dsReferenceLabel]` - because an element the SVG specification does not know
+is not rendered and neither are its children. An attribute selector has no tag, so
+`createCustomElement` has nothing to define; they are absent from §2's list as well, because that
+list matches a bare `[dsFoo]` selector and these carry an element in front of it. The generated
+`referenceLine` / `referenceLabel` slot props are inert for a second reason: `runtime.tsx` claims a
+named slot by wrapping the prop in a `<span style="display: contents">`, and an HTML `<span>` inside
+an `<svg>` renders nothing - the very fact that put the marks on `<svg:g>` in the first place. So a
+`Chart` rendered from React draws its frame, caption, axes, gridlines, ticks and states, and no
+marks at all.
+
+**Acceptable, and nothing a card can show is lost.** Every chart a design places reaches it through
+`ColumnChart`, `BarChart`, `LineChart`, `DonutChart` or `FunnelChart`, each of which carries its own
+marks internally and takes its data as an ordinary prop - the container is an Angular composition
+seam, not a thing a design writes by hand. `ds-chart` registers under the alias `ds-x-chart` anyway,
+because `ds-column-chart` renders it inside its own template (§1, defect A).
+`.design-sync/docs/Chart.md` says all of this to the design agent and sends it to a preset, so the
+route is documented rather than discovered as an empty plot.
+
+**Not built:** a registered component per mark, which is the only shape that would make the
+container composable from React. It would add four public components to the library for a
+design-tool-only need, and each would still have to be written inside a `Chart`'s canvas in the
+right order to mean anything - the same trade already recorded for `[dsTooltip]` and the
+`[dsTable*]` family. Revisit if a design host ever needs a combination the five presets cannot
+express.
 
 ## 2. Attribute directives — no element to register
 

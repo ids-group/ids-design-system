@@ -12,9 +12,9 @@
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { chartComponents, templateOf } from './chart-components.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const COMPONENTS = join(ROOT, 'src', 'lib', 'components');
 
 // Loops whose items have no datum identity of their own: a placeholder, a tick, an axis label, one
 // segment of a broken line, a table cell. `$index` is the only key these have.
@@ -29,45 +29,56 @@ function withoutComments(source) {
     .replace(/(^|\s)\/\/.*$/gm, '$1');
 }
 
-const chartDirs = readdirSync(COMPONENTS, { withFileTypes: true })
-  .filter((entry) => entry.isDirectory() && entry.name.endsWith('-chart'))
-  .map((entry) => entry.name);
+const charts = chartComponents();
 
-for (const dir of chartDirs) {
-  const base = join(COMPONENTS, dir, `${dir}.component`);
-  if (!existsSync(`${base}.ts`)) continue;
+for (const { name: component, base } of charts) {
   const script = readFileSync(`${base}.ts`, 'utf8');
-  const template = readFileSync(`${base}.html`, 'utf8');
+  const template = templateOf(base);
   const styles = existsSync(`${base}.scss`)
     ? readFileSync(`${base}.scss`, 'utf8')
     : '';
 
+  // Neither end of a composed chart draws its own marks: the container projects them, and a preset
+  // hands them to a series inside that container. `interactive` still reaches both, for the plot's
+  // ARIA role and to pass along. The hover state, the cursor and the tooltip belong to whichever
+  // component owns the marks; demanding them here would make the other two write rules for
+  // elements they do not own, which is how a gate teaches the wrong lesson. The focus ring below is
+  // NOT part of that exemption: it is keyed on a mark this component's own template draws, and an
+  // outline on an SVG element is wrong whoever else the component also composes.
+  const projectsItsMarks = /<ng-content\b/.test(template);
+  const delegatesItsMarks = /<ds-chart[\s>]/.test(template);
+
   if (/readonly interactive = input\(/.test(script)) {
-    if (!/chart-interactive\.(fades|dims)\(/.test(styles)) {
-      problems.push(
-        `${dir}: accepts \`interactive\` and derives no hover state — include ` +
-          `chart-interactive.fades() or .dims()`,
-      );
+    if (!projectsItsMarks && !delegatesItsMarks) {
+      if (!/chart-interactive\.(fades|dims)\(/.test(styles)) {
+        problems.push(
+          `${component}: accepts \`interactive\` and derives no hover state — include ` +
+            `chart-interactive.fades() or .dims()`,
+        );
+      }
+      if (!/cursor:\s*pointer|chart-interactive\.clickable\(/.test(styles)) {
+        problems.push(
+          `${component}: accepts \`interactive\` and offers no pointer cursor`,
+        );
+      }
+      if (!/readonly tooltip = input</.test(script)) {
+        problems.push(
+          `${component}: accepts \`interactive\` and declares no \`tooltip\` trigger`,
+        );
+      }
     }
-    if (!/cursor:\s*pointer|chart-interactive\.clickable\(/.test(styles)) {
-      problems.push(
-        `${dir}: accepts \`interactive\` and offers no pointer cursor`,
-      );
-    }
+
     // Only an SVG mark needs a rule of its own. `outline` on an SVG element paints its BOUNDING
     // BOX rather than its silhouette, so the library's catch-all ring is wrong there and the chart
     // has to draw one; an HTML mark takes that catch-all and needs nothing.
     const svgMarkIsFocusable =
-      /<(path|polygon|circle|rect|line)\s[^>]*\[attr\.tabindex\]/s.test(template);
+      /<(?:svg:)?(path|polygon|circle|rect|line|g)\s[^>]*\[attr\.tabindex\]/s.test(
+        template,
+      );
     if (svgMarkIsFocusable && !/drawn-focus-ring/.test(styles)) {
       problems.push(
-        `${dir}: a focusable SVG mark and no drawn focus ring — an outline there paints the ` +
+        `${component}: a focusable SVG mark and no drawn focus ring — an outline there paints the ` +
           `bounding box, not the mark`,
-      );
-    }
-    if (!/readonly tooltip = input</.test(script)) {
-      problems.push(
-        `${dir}: accepts \`interactive\` and declares no \`tooltip\` trigger`,
       );
     }
   }
@@ -77,7 +88,7 @@ for (const dir of chartDirs) {
   )) {
     if (!KEYLESS_LOOPS.test(iterable)) {
       problems.push(
-        `${dir}: \`@for (… of ${iterable}; track $index)\` — key a mark by its datum, never by ` +
+        `${component}: \`@for (… of ${iterable}; track $index)\` — key a mark by its datum, never by ` +
           `its position`,
       );
     }
@@ -87,7 +98,10 @@ for (const dir of chartDirs) {
 // The DECLARATION lines only. A token named inside a comment is not a declaration — scraping those
 // is what once made a count of this very set wrong by one.
 const publicLayer = withoutComments(
-  readFileSync(join(ROOT, 'src', 'lib', 'styles', '_tokens-charts.scss'), 'utf8'),
+  readFileSync(
+    join(ROOT, 'src', 'lib', 'styles', '_tokens-charts.scss'),
+    'utf8',
+  ),
 );
 const declared = [
   ...new Set(
@@ -135,5 +149,6 @@ if (problems.length) {
 }
 
 console.log(
-  `check-chart-interaction: ${chartDirs.length} chart(s) and ${declared.length} public token(s) OK.`,
+  `check-chart-interaction: ${charts.length} chart(s) (${charts.map((chart) => chart.name).join(', ')}) ` +
+    `and ${declared.length} public token(s) OK.`,
 );

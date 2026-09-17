@@ -1,0 +1,15 @@
+@if (isIndet()) {
+  <span></span>
+} @else {
+  <span
+    [style.width.%]="valuePercent()"
+    [style.background]="color()">
+  </span>
+
+  @if (targetPercent() !== null) {
+    <div
+      class="target"
+      [style.left.%]="targetPercent()">
+    </div>
+  }
+}

@@ -52,10 +52,9 @@ import { TreeSection } from './sections/components/tree/tree.section';
 import { AlertSection } from './sections/components/alert/alert.section';
 import { BadgeSection } from './sections/components/badge/badge.section';
 import { BannerSection } from './sections/components/banner/banner.section';
+import { BarSection } from './sections/components/bar/bar.section';
 import { EmptyStateComponentSection } from './sections/components/empty-state/empty-state.section';
 import { LoadingOverlaySection } from './sections/components/loading-overlay/loading-overlay.section';
-import { MeterSection } from './sections/components/meter/meter.section';
-import { ProgressSection } from './sections/components/progress/progress.section';
 import { SkeletonSection } from './sections/components/skeleton/skeleton.section';
 import { SpinnerSection } from './sections/components/spinner/spinner.section';
 import { StatusDotSection } from './sections/components/status-dot/status-dot.section';
@@ -73,6 +72,7 @@ import { PageFooterSection } from './sections/components/page-footer/page-footer
 import { PageHeaderSection as ComponentsPageHeaderSection } from './sections/components/page-header/page-header.section';
 
 import { BarChartSection } from './sections/charts/charts.section';
+import { ChartSection } from './sections/charts/chart/chart.section';
 import { ColumnChartSection } from './sections/charts/column-chart/column-chart.section';
 import { DonutChartSection } from './sections/charts/donut-chart/donut-chart.section';
 import { FunnelChartSection } from './sections/charts/funnel-chart/funnel-chart.section';
@@ -183,7 +183,6 @@ export const GROUP_PAGES: readonly GroupPageDef[] = [
       DescriptionListSection,
       IconSection,
       ListSection,
-      MeterSection,
       StatSection,
       TableSection,
       TagSection,
@@ -198,9 +197,9 @@ export const GROUP_PAGES: readonly GroupPageDef[] = [
       AlertSection,
       BadgeSection,
       BannerSection,
+      BarSection,
       EmptyStateComponentSection,
       LoadingOverlaySection,
-      ProgressSection,
       SkeletonSection,
       SpinnerSection,
       StatusDotSection,
@@ -232,6 +231,7 @@ export const GROUP_PAGES: readonly GroupPageDef[] = [
     title: 'Charts',
     sections: [
       BarChartSection,
+      ChartSection,
       ColumnChartSection,
       DonutChartSection,
       FunnelChartSection,

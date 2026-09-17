@@ -1,0 +1,21 @@
+
+    .states {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+      margin-top: var(--space-3);
+      padding: var(--space-4);
+      background: var(--surface-default);
+      border: var(--border-width-default) solid var(--border-divider);
+      border-radius: var(--radius-lg);
+    }
+    .state { display: flex; flex-direction: column; gap: var(--space-1); }
+    .state-lbl { font-size: 11px; color: var(--text-secondary); }
+
+
+.meter-cell {
+  display: grid;
+  grid-template-columns: 4rem auto;
+  align-items: center;
+  gap: var(--space-2);
+}

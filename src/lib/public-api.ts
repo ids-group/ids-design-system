@@ -64,6 +64,11 @@ export { AvatarGroupComponent } from '@ids-group-ltd/ids-design-system/component
 export { BadgeComponent } from '@ids-group-ltd/ids-design-system/components/badge';
 export { BannerComponent } from '@ids-group-ltd/ids-design-system/components/banner';
 export type { BannerVariant } from '@ids-group-ltd/ids-design-system/components/banner';
+export { BarComponent } from '@ids-group-ltd/ids-design-system/components/bar';
+export type {
+  BarSemantics,
+  BarVariant,
+} from '@ids-group-ltd/ids-design-system/components/bar';
 export { BarChartComponent } from '@ids-group-ltd/ids-design-system/components/bar-chart';
 export type {
   BarChartRow,
@@ -87,6 +92,14 @@ export type {
   CardElevation,
   CardPadding,
 } from '@ids-group-ltd/ids-design-system/components/card';
+export {
+  CHART_SCALES,
+  ChartComponent,
+} from '@ids-group-ltd/ids-design-system/components/chart';
+export type {
+  ChartPlot,
+  ChartScales,
+} from '@ids-group-ltd/ids-design-system/components/chart';
 export type { ChartLegendItem } from '@ids-group-ltd/ids-design-system/components/chart-legend';
 export type {
   ChartItemTooltipTrigger,
@@ -98,7 +111,10 @@ export type {
 export { CheckboxComponent } from '@ids-group-ltd/ids-design-system/components/checkbox';
 export { ColorPickerComponent } from '@ids-group-ltd/ids-design-system/components/color-picker';
 export { ColumnChartComponent } from '@ids-group-ltd/ids-design-system/components/column-chart';
-export type { ColumnChartPoint } from '@ids-group-ltd/ids-design-system/components/column-chart';
+export type {
+  ColumnChartPoint,
+  ColumnChartSeries,
+} from '@ids-group-ltd/ids-design-system/components/column-chart';
 export { DatePickerComponent } from '@ids-group-ltd/ids-design-system/components/date-picker';
 export type {
   DatePickerMode,
@@ -179,7 +195,6 @@ export {
   MenuDividerComponent,
   MenuItemComponent,
 } from '@ids-group-ltd/ids-design-system/components/menu';
-export { MeterComponent } from '@ids-group-ltd/ids-design-system/components/meter';
 export {
   ModalCardComponent,
   ModalComponent,
@@ -217,8 +232,6 @@ export type {
   PopoverAlign,
   PopoverPlacement,
 } from '@ids-group-ltd/ids-design-system/components/popover';
-export { ProgressComponent } from '@ids-group-ltd/ids-design-system/components/progress';
-export type { ProgressVariant } from '@ids-group-ltd/ids-design-system/components/progress';
 export {
   RADIO_GROUP,
   RadioComponent,
@@ -359,8 +372,14 @@ export {
   provideDsConfig,
 } from '@ids-group-ltd/ids-design-system/core';
 export type {
+  ChartAxis,
+  ChartAxisMode,
   ChartDataTable,
+  ChartFormatLocation,
   ChartFrame,
+  ChartStackMode,
+  ChartThreshold,
+  ChartThresholdDash,
   ChartValueFormat,
   DsConfig,
   DsControlWidth,

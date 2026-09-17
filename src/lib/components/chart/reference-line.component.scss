@@ -1,0 +1,40 @@
+.references {
+  --_chart-threshold-color: var(--ds-chart-threshold-color, var(--chart-threshold-color));
+  --_chart-threshold-band-opacity: var(--ds-chart-threshold-band-opacity, var(--chart-threshold-band-opacity));
+  --_chart-threshold-dashed-pattern: var(--ds-chart-threshold-dashed-pattern, var(--chart-threshold-dashed-pattern));
+  --_chart-threshold-dotted-pattern: var(--ds-chart-threshold-dotted-pattern, var(--chart-threshold-dotted-pattern));
+
+  // An annotation answers no pointer: the marks underneath are what the reader is aiming at, and a
+  // line across the whole plot would otherwise swallow every hover along its own row.
+  pointer-events: none;
+}
+
+.threshold-line {
+  stroke: var(--_chart-threshold-color);
+  stroke-width: var(--ds-chart-line-width);
+}
+
+.threshold-line.is-dashed {
+  stroke-dasharray: var(--_chart-threshold-dashed-pattern);
+}
+
+// Round caps are what make a one-unit dash read as a dot rather than as a short dash.
+.threshold-line.is-dotted {
+  stroke-dasharray: var(--_chart-threshold-dotted-pattern);
+  stroke-linecap: round;
+}
+
+.threshold-band {
+  fill: var(--_chart-threshold-color);
+  fill-opacity: var(--_chart-threshold-band-opacity);
+}
+
+@media (forced-colors: active) {
+  .threshold-line {
+    stroke: CanvasText;
+  }
+
+  .threshold-band {
+    fill: CanvasText;
+  }
+}

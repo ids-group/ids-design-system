@@ -22,29 +22,35 @@ import type {
   ChartTooltipOrigin,
 } from './chart-tooltip.types';
 
-const POINTER_GAP_PX = 12;
+const POINTER_GAP_PX = 6;
 // A fingertip covers roughly 40 CSS px, so a touch-opened panel has to clear the tap
 // point by more than a pointer-opened one does.
 const TOUCH_GAP_PX = 48;
 
-// Above first, then below, then either side: four fallbacks are what make the panel flip
-// out of a small dashboard card rather than be clipped by it.
-function positionsFor(gap: number): ConnectedPosition[] {
+// Four fallbacks are what make the panel flip out of a small dashboard card rather than be
+// clipped by it. Above first, except while a mark is HELD: the Unpin control sits at the plot's
+// top edge, and a panel that opens upward from a mark in the upper half lands on top of it. The
+// panel is portaled to the body, so no z-index can lift the control over it — an app layout that
+// isolates its own stacking context traps the chart's chrome below the overlay whatever number it
+// carries.
+function positionsFor(gap: number, preferBelow: boolean): ConnectedPosition[] {
+  const above: ConnectedPosition = {
+    originX: 'center',
+    originY: 'top',
+    overlayX: 'center',
+    overlayY: 'bottom',
+    offsetY: -gap,
+  };
+  const below: ConnectedPosition = {
+    originX: 'center',
+    originY: 'bottom',
+    overlayX: 'center',
+    overlayY: 'top',
+    offsetY: gap,
+  };
+
   return [
-    {
-      originX: 'center',
-      originY: 'top',
-      overlayX: 'center',
-      overlayY: 'bottom',
-      offsetY: -gap,
-    },
-    {
-      originX: 'center',
-      originY: 'bottom',
-      overlayX: 'center',
-      overlayY: 'top',
-      offsetY: gap,
-    },
+    ...(preferBelow ? [below, above] : [above, below]),
     {
       originX: 'end',
       originY: 'center',
@@ -88,10 +94,13 @@ export class ChartTooltipDirective {
    *  that text as well as the mark, or the two overlap. Ignored for touch, where the gap is already
    *  sized for a fingertip. */
   readonly dsChartTooltipExtraGap = input(0);
+  /** Opens the panel BELOW the mark first. A chart sets it while a mark is held, so the panel
+   *  leaves the plot's top edge — and the Unpin control that lives there — alone. */
+  readonly dsChartTooltipPreferBelow = input(false);
 
   private overlayRef: OverlayRef | null = null;
   private panelRef: ComponentRef<ChartTooltipPanelComponent> | null = null;
-  private detachScrollClose: (() => void) | null = null;
+  private detachScrollReposition: (() => void) | null = null;
   private detachEscape: (() => void) | null = null;
 
   constructor() {
@@ -121,12 +130,11 @@ export class ChartTooltipDirective {
         new ComponentPortal(ChartTooltipPanelComponent, this.viewContainerRef),
       );
       // CDK's reposition strategy watches `window` and registered `cdkScrollable`s only, so it
-      // misses an app's own `overflow: auto` container — and a panel that stays put while the
-      // chart scrolls away points at nothing.
-      // Nothing re-opens it: the effect re-runs on a CHANGE to the context or the origin, and a
-      // scroll changes neither. The next pointer move does both.
-      this.detachScrollClose = closeOnScroll(this.overlayRef, () =>
-        this.close(),
+      // misses an app's own `overflow: auto` container. Moved rather than closed: a PINNED mark
+      // stops answering pointer moves, so a close here would be permanent, leaving the pin glyph
+      // and the Unpin control standing over a reading that is gone.
+      this.detachScrollReposition = closeOnScroll(this.overlayRef, () =>
+        this.overlayRef?.updatePosition(),
       );
       this.detachEscape = this.closeOnEscape();
     } else {
@@ -146,7 +154,7 @@ export class ChartTooltipDirective {
       .flexibleConnectedTo(origin as FlexibleConnectedPositionStrategyOrigin)
       .withFlexibleDimensions(false)
       .withPush(true)
-      .withPositions(positionsFor(gap));
+      .withPositions(positionsFor(gap, this.dsChartTooltipPreferBelow()));
   }
 
   // WCAG 1.4.13 wants the panel dismissable WITHOUT moving the pointer or the focus, which rules
@@ -170,8 +178,8 @@ export class ChartTooltipDirective {
   private close(): void {
     this.detachEscape?.();
     this.detachEscape = null;
-    this.detachScrollClose?.();
-    this.detachScrollClose = null;
+    this.detachScrollReposition?.();
+    this.detachScrollReposition = null;
     this.overlayRef?.dispose();
     this.overlayRef = null;
     this.panelRef = null;

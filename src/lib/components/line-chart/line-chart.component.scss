@@ -45,7 +45,7 @@ figcaption {
   font-weight: 600;
 }
 
-@include chart-frame.message-box(var(--_line-chart-plot-height));
+@include chart-frame.message-box(var(--_line-chart-plot-height), true);
 
 /* The canvas is an svg sized by its viewBox ratio against the card width, not by the plot-height
    token — so reserving that token alone leaves the message box short by however much the width

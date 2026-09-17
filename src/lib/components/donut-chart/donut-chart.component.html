@@ -65,6 +65,7 @@
       [class.legend-bottom]="legend() === 'bottom'"
       [attr.aria-label]="accessibleName()"
       [dsChartTooltip]="tooltipContext()"
+      [dsChartTooltipPreferBelow]="activeMark.pinned()"
       [dsChartTooltipOrigin]="activeMark.origin()"
       [dsChartTooltipTemplate]="tooltipTemplate() ?? null">
       <div
@@ -80,7 +81,10 @@
             <path
               class="slice"
               [class.interactive]="interactive()"
-              [class.is-pinned]="activeMark.pinned() && activeMark.index() === index"
+              [class.is-pinned]="
+                activeMark.pinned() && activeMark.index() === index
+              "
+              [class.is-dimmed]="isDimmed(index)"
               [class.focusable]="ringCarriesTheRoute()"
               [attr.d]="entry.path"
               [style.fill]="entry.color"
@@ -146,12 +150,12 @@
               "
               [attr.data-mark-index]="index"
               [attr.aria-label]="interactive() ? entryLabel(entry) : null"
-              (pointerenter)="activeMark.enter(index, $event)"
+              (pointerenter)="onLegendEnter(index, $event)"
               (pointerleave)="activeMark.leave()"
-              (focus)="onMarkFocus(index, $event)"
+              (focus)="onLegendFocus(index, $event)"
               (blur)="activeMark.leave()"
               (keydown)="onMarkNavigation($event, index, '.legend')"
-              (click)="onMarkClick(entry.slice, index, $event)"
+              (click)="onLegendClick(entry.slice, index, $event)"
               (keydown.enter)="onSliceKey(entry.slice, $event)"
               (keydown.space)="onSliceKey(entry.slice, $event)">
               <span
@@ -168,9 +172,11 @@
                 {{ entry.formattedValue }}
               </span>
 
-              <span class="legend-percent">
-                {{ entry.formattedPercent }}
-              </span>
+              @if (partOfWhole()) {
+                <span class="legend-percent">
+                  {{ entry.formattedPercent }}
+                </span>
+              }
             </li>
           }
         </ul>
@@ -202,9 +208,11 @@
                 Value
               </th>
 
-              <th scope="col">
-                Share
-              </th>
+              @if (partOfWhole()) {
+                <th scope="col">
+                  Share of total
+                </th>
+              }
             </tr>
           </thead>
 
@@ -219,9 +227,11 @@
                   {{ entry.formattedValue }}
                 </td>
 
-                <td>
-                  {{ entry.formattedPercent }}
-                </td>
+                @if (partOfWhole()) {
+                  <td>
+                    {{ entry.formattedPercent }}
+                  </td>
+                }
               </tr>
             }
           </tbody>

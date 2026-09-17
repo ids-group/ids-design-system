@@ -3,6 +3,7 @@ import {
   formatPercent,
   largestRemainder,
   formatTick,
+  defaultChartFormat,
 } from '../../src/lib/components/charts-format.ts';
 import { check, finish } from './probe-check.mjs';
 
@@ -101,6 +102,36 @@ check(
   'formatTick treats a step dividing 1000 evenly as whole thousands',
   formatTick(2000, 1000),
   '2K',
+);
+
+// Expected values come from the same Intl call rather than a hardcoded literal, because
+// this probe's own runtime resolves the default locale to ru-RU ("1,2 млн"), not the "1.2M"
+// an en-US machine would print, and `formatValue`'s own default-locale check above makes the
+// same choice for the same reason.
+check(
+  'the default formatter abbreviates on a tick',
+  defaultChartFormat(1248392, 'tick'),
+  new Intl.NumberFormat(undefined, {
+    notation: 'compact',
+    maximumFractionDigits: 1,
+  }).format(1248392),
+);
+check(
+  'the default formatter spells the value out in a tooltip',
+  defaultChartFormat(1248392, 'tooltip'),
+  new Intl.NumberFormat().format(1248392),
+);
+// Neither NaN nor Infinity is a value Intl should ever see, on either location, the same guard
+// formatValue makes above.
+check(
+  'the default formatter guards a NaN value on a tick',
+  defaultChartFormat(NaN, 'tick'),
+  '—',
+);
+check(
+  'the default formatter guards an infinite value in a tooltip',
+  defaultChartFormat(Infinity, 'tooltip'),
+  '—',
 );
 
 finish('charts-format');

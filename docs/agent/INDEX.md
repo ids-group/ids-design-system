@@ -39,8 +39,7 @@ and token names.** These leaves are for orientation and usage.
 - [<ds-tag> — TagComponent](feedback/ds-tag.md) — Content: label.
 - [<ds-avatar> — AvatarComponent](feedback/ds-avatar.md) — Inputs: size: 'xs' | 'sm' | 'md' | 'lg' = 'md', initials: string = '', imageUrl: string | null = null, tint: {
 - [<ds-avatar-group> — AvatarGroupComponent](feedback/ds-avatar-group.md) — Content: project <ds-avatar> children.
-- [<ds-progress> — ProgressComponent](feedback/ds-progress.md) — Linear progress bar (no circular variant).
-- [<ds-meter> — MeterComponent](feedback/ds-meter.md) — One track and one fill, for a measurement inside a table cell — no caption, no legend, no annex table.
+- [<ds-bar> — BarComponent](feedback/ds-bar.md) — One horizontal track with one fill: a task's completion, or a measurement on a known scale. No circular varian
 - [<ds-spinner> — SpinnerComponent](feedback/ds-spinner.md) — Input: size: 'sm' | 'md' | 'lg' = 'md'. Pure-CSS spinner, role="status" with built-in aria-label.
 - [<ds-skeleton> — SkeletonComponent](feedback/ds-skeleton.md) — Inputs: width?: string, height?: string, circle: boolean = false, inline: boolean = false. Shimmer animation r
 - [<ds-stat> — StatComponent](feedback/ds-stat.md) — Delta direction is derived from the sign of delta: positive → up (arrow + green), negative → down (arrow + red

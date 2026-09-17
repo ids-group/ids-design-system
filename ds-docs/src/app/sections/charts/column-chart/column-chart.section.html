@@ -37,7 +37,7 @@
     ten stops at eight.
   </p>
 
-  <div class="tick-count-pair">
+  <div class="demo-pair">
     <ds-column-chart
       caption="tickCount 3"
       dataTable="none"
@@ -65,8 +65,8 @@
     away from the chart. With
     <code class="t-mono-inline">
       dimOthers
-    </code> beside it the rest of the plot
-    stays down too, which is what makes the comparison survive the pointer
+    </code> beside it the rest of the
+    plot stays down too, which is what makes the comparison survive the pointer
     leaving. Escape releases it, and so does a press anywhere outside the mark.
     The click output fires either way.
   </p>
@@ -116,6 +116,217 @@
   <docs-chart-data-editor [(rows)]="customColorPoints" />
 
   <h3 class="block-title t-h4">
+    Readings of a different standing
+  </h3>
+
+  <p class="block-desc t-s">
+    A point that sets
+    <code class="t-mono-inline">
+      fill="hatched"
+    </code> keeps its colour and takes
+    a striped texture over it, which separates a projection from a settled
+    figure without spending a second hue on it. Texture is the encoding that
+    survives greyscale, print and colour-vision deficiency, so it carries the
+    distinction where a lighter tint of the same colour would not. The chart
+    reads nothing into the flag: which columns are projections is a fact only
+    the caller has.
+  </p>
+
+  <ds-column-chart
+    caption="Applications a month, last three projected"
+    dataTable="none"
+    [data]="projectedPoints()" />
+
+  <docs-chart-data-editor [(rows)]="projectedPoints" />
+
+  <h3 class="block-title t-h4">
+    More than one column per category
+  </h3>
+
+  <p class="block-desc t-s">
+    Hand
+    <code class="t-mono-inline">
+      data
+    </code> a list of NAMED SERIES instead of a
+    flat list of points and every category carries one column per series, keyed
+    by the legend under the plot.
+    <code class="t-mono-inline">
+      stack
+    </code> decides how they
+    share the band:
+    <code class="t-mono-inline">
+      grouped
+    </code> stands them side by
+    side,
+    <code class="t-mono-inline">
+      stacked
+    </code> puts each on top of the one
+    before it, and
+    <code class="t-mono-inline">
+      normalized
+    </code> stacks then divides by
+    the category's own total, so every band is full and the axis reads in
+    shares. A flat list of points is still one series and still takes the whole
+    band, so nothing about a single-series chart changes.
+  </p>
+
+  <p class="block-desc t-s">
+    A series takes one colour for all of its marks, where a flat list colours
+    each mark by its own position — the marks of a single-series chart ARE the
+    categories, and the marks of a grouped one are not. A series-wide
+    <code class="t-mono-inline">
+      fill
+    </code> paints every one of its columns, so the
+    pair below separates a settled figure from a committed one by texture as
+    well as by hue. The chart reads nothing into either: what the two columns
+    MEAN is the caller's fact.
+  </p>
+
+  <ds-column-chart
+    caption="Billed against committed"
+    stack="grouped"
+    dataTable="none"
+    [showValues]="false"
+    [data]="pairedSeries"
+    [thresholds]="pairedThresholds" />
+
+  <p class="block-desc t-s">
+    Stacked, the band's full height is the category's total; normalized, it is
+    always the whole axis and only the SHARES move. The boundary between two
+    segments is a 2px gap in the surface colour rather than a drawn rule — a gap
+    survives print and colour-vision deficiency, and it is the second encoding
+    the palette's separation band asks for. The value printed beside a segment
+    stays the reading even under
+    <code class="t-mono-inline">
+      normalized
+    </code>, where the
+    axis is the only thing that switches to shares.
+  </p>
+
+  <div class="demo-pair">
+    <ds-column-chart
+      caption="Revenue by channel"
+      stack="stacked"
+      dataTable="none"
+      [showValues]="false"
+      [data]="channelSeries" />
+
+    <ds-column-chart
+      caption="Share of revenue by channel"
+      stack="normalized"
+      dataTable="none"
+      [showValues]="false"
+      [data]="channelSeries" />
+  </div>
+
+  <h3 class="block-title t-h4">
+    Columns and a line, on two scales
+  </h3>
+
+  <p class="block-desc t-s">
+    Two charts in one plot: a figure per month on the left axis, and the running
+    total of those months on the right. They are different quantities at
+    different magnitudes, so one axis cannot carry both - the total dwarfs every
+    month it is made of, and on a shared scale the columns flatten to nothing.
+    Each axis therefore takes the colour of the series measured against it, which
+    is the only thing on the canvas that says which numbers a mark is read
+    against.
+  </p>
+
+  <p class="block-desc t-s">
+    There is no combo component. This is
+    <code class="t-mono-inline">
+      ds-chart
+    </code> - the container the column
+    and line charts are built inside - with a
+    <code class="t-mono-inline">
+      dsColumnSeries
+    </code> and a
+    <code class="t-mono-inline">
+      dsLineSeries
+    </code> projected into it. A series
+    that sets <code class="t-mono-inline">axis: 'secondary'</code> is measured
+    against the second axis;
+    <code class="t-mono-inline">
+      secondaryAxisMode
+    </code> decides how that axis
+    relates to the first, and
+    <code class="t-mono-inline">
+      'rounded'
+    </code>, the default, hangs it on the
+    first axis's own gridlines at a round step. The line is written after the
+    columns because a projected mark paints in the order it is written, and a
+    cumulative line belongs over the readings it sums.
+  </p>
+
+  <ds-chart
+    interactive
+    tickCount="5"
+    caption="Revenue a month against the running total"
+    [categories]="comboMonths"
+    [valueFormat]="dollars"
+    [axisColor]="columnColor"
+    [secondaryAxisColor]="lineColor"
+    [summary]="comboSummary">
+    <svg:g
+      #comboColumnSeries="dsColumnSeries"
+      dsColumnSeries
+      interactive
+      [data]="comboColumns"
+      [showValues]="false"
+      [valueFormat]="dollars"
+      [dsChartTooltip]="comboColumnSeries.tooltipContext()"
+      [dsChartTooltipOrigin]="comboColumnSeries.activeMark.origin()" />
+
+    <svg:g
+      #comboLineSeries="dsLineSeries"
+      dsLineSeries
+      interactive
+      [data]="comboCumulative"
+      [valueFormat]="dollars"
+      [dsChartTooltip]="comboLineSeries.tooltipContext()"
+      [dsChartTooltipOrigin]="comboLineSeries.activeMark.origin()" />
+  </ds-chart>
+
+  <h3 class="block-title t-h4">
+    Reference lines and bands
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      thresholds
+    </code> draws a target, a budget or an
+    SLA across the plot, behind the columns. Each entry is ONE number, so the
+    two ends of a horizontal line cannot drift apart;
+    <code class="t-mono-inline">
+      dash
+    </code> picks how it is stroked, and
+    <code class="t-mono-inline">
+      to
+    </code> turns the same object into a band
+    between two readings. A threshold also opens the value axis far enough to
+    hold it, so a target above every column still lands on the plot, and it is
+    named in the chart's generated description rather than being drawn and left
+    unsaid.
+  </p>
+
+  <div class="demo-stack">
+    <ds-column-chart
+      caption="Uptime against target"
+      dataTable="none"
+      [data]="uptimePoints()"
+      [thresholds]="uptimeThresholds" />
+
+    <ds-column-chart
+      caption="Uptime against the agreed range"
+      dataTable="none"
+      [data]="uptimePoints()"
+      [thresholds]="uptimeBand" />
+  </div>
+
+  <docs-chart-data-editor [(rows)]="uptimePoints" />
+
+  <h3 class="block-title t-h4">
     What the tooltip points at
   </h3>
 
@@ -124,11 +335,11 @@
     column — that is what keeps a short column reachable.
     <code class="t-mono-inline">
       tooltipAnchor
-    </code> decides which of the two the
-    panel points at: <code class="t-mono-inline">'mark'</code>, the default, puts
-    it over the column, and <code class="t-mono-inline">'cell'</code> puts it at
-    the top of the cell, which is where it lands if you anchor to the box rather
-    than the mark.
+    </code> decides which of the two
+    the panel points at: <code class="t-mono-inline">'mark'</code>, the default,
+    puts it over the column, and <code class="t-mono-inline">'cell'</code> puts
+    it at the top of the cell, which is where it lands if you anchor to the box
+    rather than the mark.
     <code class="t-mono-inline">
       pointClicked
     </code> fires on click and on
@@ -176,10 +387,15 @@
 
   <p class="block-desc t-s">
     <code class="t-mono-inline">
-      toggle
-    </code>, the default, leaves the
-    disclosure closed; <code class="t-mono-inline">visible</code> renders it
-    open; <code class="t-mono-inline">none</code> leaves it out.
+      none
+    </code>, the default, renders no table at
+    all; <code class="t-mono-inline">toggle</code> puts one behind a closed
+    disclosure; <code class="t-mono-inline">visible</code> renders it open. The
+    table is the non-visual route to the numbers, so
+    <code class="t-mono-inline">
+      none
+    </code> belongs only where the same
+    figures are already in a table on the page.
   </p>
 
   <ds-column-chart
@@ -252,8 +468,9 @@
     </summary>
 
     <p class="block-desc t-s">
-      The axis starts at zero and never goes below it, so a negative point keeps
-      its label and draws no column at all.
+      The axis reaches below zero when the data does, and a negative point
+      draws a column that grows down from the zero baseline rather than from
+      the plot floor.
     </p>
 
     <div class="states states--cols-2">
@@ -316,6 +533,18 @@
         </div>
 
         <docs-chart-data-editor [(rows)]="negativePoints" />
+      </div>
+
+      <div class="state-cell">
+        <ds-column-chart
+          dataTable="none"
+          [data]="plPoints()" />
+
+        <div class="state-cell-label">
+          P&amp;L, crossing zero twice
+        </div>
+
+        <docs-chart-data-editor [(rows)]="plPoints" />
       </div>
 
       <div class="state-cell">

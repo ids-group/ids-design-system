@@ -12,7 +12,7 @@ One or more series plotted over a shared set of categories. A series can be meas
 - `caption`: shown above the plot and reused as the data table's caption.
 - `summary`: the accessible name; generated from the series when omitted.
 - `valueFormat`: `(value: number) => string`, defaults to `Intl.NumberFormat`.
-- `dataTable`: `'toggle'` (default, closed disclosure) | `'visible'` (open) | `'none'`.
+- `dataTable`: `'none'` (the default) | `'toggle'` (closed disclosure) | `'visible'` (open). Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`.
 - `loading` (default `false`): shows a skeleton plot.
 - `emptyText` (default `"No data"`): shown in place of the plot when there is nothing to draw.
 
