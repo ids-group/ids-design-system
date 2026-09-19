@@ -72,6 +72,12 @@ node tools/changelog-lint-selftest.mjs
 echo "===== docblock drift ====="
 node tools/check-docblock-drift.mjs
 
+# The chart geometry has no test runner behind it, so these assertions are the only thing standing
+# between a scale or stacking change and a plot that draws wrong numbers. Each probe is its own
+# process, so one failure does not hide the rest.
+echo "===== probes ====="
+node tools/run-probes.mjs
+
 log_dir="$(mktemp -d)"
 
 echo "Building (lib -> docs) and linting in parallel..."
