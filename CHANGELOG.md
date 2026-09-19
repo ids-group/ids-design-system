@@ -22,6 +22,34 @@
 
 ### Added
 
+- **`ds-waterfall-chart`: a running total, bar by bar.** What a figure started at, what moved it,
+  and what it ended at - the one variant in the family that genuinely cannot be a mode on another,
+  because it needs an accumulating level, bars pinned to zero for the totals and its own
+  three-colour semantic all at once.
+
+  ```html
+  <ds-waterfall-chart caption="Settlement" [data]="[
+    { label: 'Billed', value: 1200, kind: 'total' },
+    { label: 'Commission', value: -320 },
+    { label: 'Net', value: 0, kind: 'total' },
+  ]" />
+  ```
+
+  Every row adds its `value` to the running sum wherever it sits. A `'delta'`, the default, hangs
+  from the level the bar before it left off at; a `'total'` or `'subtotal'` stands on zero at the
+  sum reached. A closing total carries `value: 0` and prints the sum, not a change of its own; a
+  subtotal differs from a total only in that the chain carries on past it. The order is never
+  sorted, because the sequence is the meaning.
+
+  **Colour never carries the meaning alone.** Each bar prints its own sign above it and each bar's
+  accessible name says "increase", "decrease" or "total" in words. The new
+  `--ds-chart-positive-color` and `--ds-chart-negative-color` point at the palette's two lead hues
+  rather than at `--success` and `--error`: a waterfall's up and down are not success and failure,
+  and a cost rising is a rise and a bad one. A total takes `--ds-chart-series-default-color`.
+
+  `showConnectors` draws the dashed rule chaining one bar to the next at the level they share.
+
+
 - **`ds-heatmap-chart`: a matrix of readings coloured by magnitude.** Depot by weekday, hour by
   date, queue by region - the case where the interesting thing is the shape of a whole grid rather
   than any one reading in it.

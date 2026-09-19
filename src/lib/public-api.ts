@@ -372,6 +372,12 @@ export { TopBarComponent } from '@ids-group-ltd/ids-design-system/components/top
 export { TreeComponent } from '@ids-group-ltd/ids-design-system/components/tree';
 export type { TreeNode } from '@ids-group-ltd/ids-design-system/components/tree';
 export { W3wComponent } from '@ids-group-ltd/ids-design-system/components/w3w';
+export { WaterfallChartComponent } from '@ids-group-ltd/ids-design-system/components/waterfall-chart';
+export type {
+  WaterfallChartDatum,
+  WaterfallChartKind,
+  WaterfallChartStep,
+} from '@ids-group-ltd/ids-design-system/components/waterfall-chart';
 
 // Core
 export {

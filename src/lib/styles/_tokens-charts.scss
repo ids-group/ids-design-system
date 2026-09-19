@@ -40,6 +40,13 @@
   --chart-series-default: hsl(222deg 16% 42%);
   --chart-series-accent:  var(--chart-categorical-2);
 
+  /* A waterfall's up and down are NOT success and failure - a cost rising is a rise and a bad
+     one - so the pair points at the palette's own two lead hues rather than at --success and
+     --error. The sign is carried by the label and the accessible name as well, because a hue
+     cannot say which direction is the welcome one. */
+  --chart-positive: var(--chart-categorical-2);
+  --chart-negative: var(--chart-categorical-1);
+
   /* RAMP — one hue, light → deep, for the ordered stages of a single
      quantity. Shares the lead hue so a funnel reads as one object rather
      than as eight unrelated categories. It spans the full lightness range,
@@ -159,6 +166,8 @@
   --ds-chart-series-6-color: var(--chart-categorical-6);
   --ds-chart-series-7-color: var(--chart-categorical-7);
   --ds-chart-series-8-color: var(--chart-categorical-8);
+  --ds-chart-positive-color: var(--chart-positive);
+  --ds-chart-negative-color: var(--chart-negative);
   --ds-chart-series-default-color: var(--chart-series-default);
   --ds-chart-series-accent-color: var(--chart-series-accent);
 

@@ -78,6 +78,7 @@ import { DonutChartSection } from './sections/charts/donut-chart/donut-chart.sec
 import { FunnelChartSection } from './sections/charts/funnel-chart/funnel-chart.section';
 import { HeatmapChartSection } from './sections/charts/heatmap-chart/heatmap-chart.section';
 import { LineChartSection } from './sections/charts/line-chart/line-chart.section';
+import { WaterfallChartSection } from './sections/charts/waterfall-chart/waterfall-chart.section';
 
 import { BordersSection } from './sections/foundations/borders/borders.section';
 import { BrowserTabSection } from './sections/foundations/browser-tab/browser-tab.section';
@@ -238,6 +239,7 @@ export const GROUP_PAGES: readonly GroupPageDef[] = [
       FunnelChartSection,
       HeatmapChartSection,
       LineChartSection,
+      WaterfallChartSection,
     ],
   },
   {

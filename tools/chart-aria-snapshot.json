@@ -58,5 +58,7 @@
     "svg: role={interactive() ? 'button' : null}, aria-label={interactive() ? markerLabel(marker) : null}"
   ],
   "reference-label": [],
-  "reference-line": ["svg: aria-hidden=true"]
+  "reference-line": ["svg: aria-hidden=true"],
+  "waterfall-chart": ["p: role=status", "div: aria-hidden=true"],
+  "waterfall-marks": ["svg: aria-hidden=true"]
 }

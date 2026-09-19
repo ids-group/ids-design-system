@@ -1,0 +1,26 @@
+<svg:g
+  class="waterfall-marks"
+  aria-hidden="true">
+  @if (showConnectors()) {
+    @for (connector of connectors(); track connector.key) {
+      <svg:line
+        class="connector"
+        [attr.x1]="connector.x1"
+        [attr.x2]="connector.x2"
+        [attr.y1]="connector.y"
+        [attr.y2]="connector.y" />
+    }
+  }
+
+  @if (showValues()) {
+    @for (label of labels(); track label.key) {
+      <svg:text
+        class="value"
+        text-anchor="middle"
+        [attr.x]="label.x"
+        [attr.y]="label.y">
+        {{ label.text }}
+      </svg:text>
+    }
+  }
+</svg:g>

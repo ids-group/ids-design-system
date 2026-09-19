@@ -1,0 +1,114 @@
+<figure
+  class="waterfall-chart"
+  [class.is-framed]="frameResolved() === 'auto'">
+  @if (caption()) {
+    <figcaption>
+      {{ caption() }}
+    </figcaption>
+  }
+
+  @if (error()) {
+    <p
+      class="empty is-error"
+      role="status">
+      {{ errorTextResolved() }}
+    </p>
+  } @else if (loading()) {
+    <div
+      class="skeleton"
+      aria-hidden="true">
+      @for (placeholder of skeletonBars(); track $index) {
+        <ds-skeleton height="var(--_waterfall-chart-skeleton-height)" />
+      }
+    </div>
+  } @else if (isEmpty()) {
+    <p class="empty">
+      {{ emptyTextResolved() }}
+    </p>
+  } @else {
+    <ds-chart
+      frame="none"
+      [categories]="categories()"
+      [tickCount]="tickCount()"
+      [valueFormat]="valueFormatResolved()"
+      [interactive]="interactive()"
+      [summary]="accessibleName()">
+      <svg:g
+        dsWaterfallMarks
+        [steps]="steps()"
+        [labelValues]="labelValues()"
+        [showValues]="showValues()"
+        [showConnectors]="showConnectors()"
+        [valueFormat]="valueFormatResolved()" />
+
+      <svg:g
+        dsColumnSeries
+        showValues="false"
+        [data]="points()"
+        [offsets]="offsets()"
+        [interactive]="interactive()"
+        [valueFormat]="valueFormatResolved()"
+        (pointClicked)="onPointClicked($event)" />
+    </ds-chart>
+
+    @if (dataTableResolved() !== 'none') {
+      <details
+        class="data-table"
+        [open]="dataTableResolved() === 'visible'">
+        <summary>
+          Data table
+        </summary>
+
+        <table>
+          <caption>
+            {{
+              caption() ?? 'Chart data'
+            }}
+          </caption>
+
+          <thead>
+            <tr>
+              <th scope="col">
+                Step
+              </th>
+
+              <th scope="col">
+                Direction
+              </th>
+
+              <th scope="col">
+                Value
+              </th>
+
+              <th scope="col">
+                Running total
+              </th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (row of tableRows(); track row.key) {
+              <tr>
+                <td>
+                  {{ row.label }}
+                </td>
+
+                <td>
+                  {{ row.direction }}
+                </td>
+
+                <td>
+                  {{ row.formattedValue }}
+                </td>
+
+                <td>
+                  {{ row.formattedRunningTotal }}
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </details>
+    }
+  }
+</figure>

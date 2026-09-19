@@ -10690,6 +10690,162 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Fires with `address` after a successful copy."
       }
     ]
+  },
+  "waterfall-chart": {
+    "key": "waterfall-chart",
+    "selector": "ds-waterfall-chart",
+    "isElement": true,
+    "className": "WaterfallChartComponent",
+    "status": "stable",
+    "importName": "WaterfallChartComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "data",
+        "kind": "input",
+        "type": "readonly WaterfallChartDatum[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "The bars in the order they are read, which is the order they happened in - a waterfall is never sorted, because the sequence is the meaning."
+      },
+      {
+        "name": "showValues",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Prints each bar's own reading above it, with its sign."
+      },
+      {
+        "name": "showConnectors",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "The dashed rule chaining one bar to the next at the level they share. Without it the bars read as separate columns rather than as one running total."
+      },
+      {
+        "name": "caption",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Printed above the plot as the visible title, and reused as the annex table's caption."
+      },
+      {
+        "name": "summary",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "The accessible name. Generated from the steps when omitted, naming each one's direction in words and the figure the chain ends at."
+      },
+      {
+        "name": "tickCount",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "5",
+        "required": false,
+        "description": "A hint, not a count. Ticks snap to a round step."
+      },
+      {
+        "name": "interactive",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Turns on the click affordance and the keyboard route. `barClicked` fires whether or not this is set."
+      },
+      {
+        "name": "frame",
+        "kind": "input",
+        "type": "ChartFrame | null",
+        "union": [
+          "auto",
+          "none"
+        ],
+        "default": "null",
+        "required": false,
+        "description": "`'auto'` draws the bordered, padded box; `'none'` leaves it bare for a chart inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`."
+      },
+      {
+        "name": "dataTable",
+        "kind": "input",
+        "type": "ChartDataTable | null",
+        "union": [
+          "toggle",
+          "visible",
+          "none"
+        ],
+        "default": "null",
+        "required": false,
+        "description": "The annex table under the plot. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`. It prints each step's direction, its own reading and the running total."
+      },
+      {
+        "name": "loading",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Skeleton bars at the real count, so the page does not resize when the data lands."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Separate from an empty `data`: \"the request failed\" and \"there is nothing to show\" read the same and mean opposite things."
+      },
+      {
+        "name": "emptyText",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Shown in place of the plot when `data` is empty. Unset falls back to `DS_CONFIG.chart.emptyText`."
+      },
+      {
+        "name": "errorText",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Shown in place of the plot while `error` is set. Unset falls back to `DS_CONFIG.chart.errorText`."
+      },
+      {
+        "name": "valueFormat",
+        "kind": "input",
+        "type": "ChartValueFormat | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Formats every value the chart prints - the axis ticks, the bar labels and the annex table. The sign a delta carries is added around it, so a formatter never has to know about one."
+      }
+    ],
+    "outputs": [
+      {
+        "name": "barClicked",
+        "kind": "output",
+        "type": "WaterfallChartDatum",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The clicked datum, as it was given. Fires on click and on Enter or Space."
+      }
+    ]
   }
 };
 

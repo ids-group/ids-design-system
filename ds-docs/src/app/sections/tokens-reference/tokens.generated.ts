@@ -761,6 +761,16 @@ export const CHARTS: readonly ColourRow[] = [
     "notes": ""
   },
   {
+    "name": "--chart-positive",
+    "value": "var(--chart-categorical-2)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-negative",
+    "value": "var(--chart-categorical-1)",
+    "notes": ""
+  },
+  {
     "name": "--chart-ramp-1",
     "value": "hsl(  8deg 60% 95%)",
     "notes": ""
@@ -1054,6 +1064,16 @@ export const CHARTS: readonly ColourRow[] = [
     "name": "--ds-chart-series-8-color",
     "value": "var(--chart-categorical-8)",
     "notes": "Colour of the eighth chart series. Set this, not --chart-categorical-8."
+  },
+  {
+    "name": "--ds-chart-positive-color",
+    "value": "var(--chart-positive)",
+    "notes": ""
+  },
+  {
+    "name": "--ds-chart-negative-color",
+    "value": "var(--chart-negative)",
+    "notes": ""
   },
   {
     "name": "--ds-chart-series-default-color",
@@ -7778,6 +7798,23 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-w3w-mark-color",
         "value": "var(--error)",
         "notes": "what3words leading slash marks colour (defaults to --error)."
+      }
+    ]
+  },
+  {
+    "component": "Waterfall Chart",
+    "selector": ".waterfall-chart",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-waterfall-chart-connector-color",
+        "value": "var(--ds-chart-axis-line-color)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-waterfall-chart-skeleton-height",
+        "value": "40px",
+        "notes": ""
       }
     ]
   }
