@@ -54,6 +54,70 @@
     [annotations]="specimenAnnotations" />
 
   <h3 class="block-title t-h4">
+    Composition over time
+  </h3>
+
+  <p class="block-desc t-s">
+    Separate lines answer "how is each one doing"; a stack answers "what is the
+    total made of", which is a different question and the one a mix of tiers
+    usually asks.
+    <code class="t-mono-inline">
+      stack
+    </code> decides which:
+    <code class="t-mono-inline">
+      stacked
+    </code> starts each series where the one
+    below it ended, and
+    <code class="t-mono-inline">
+      normalized
+    </code> divides by the
+    category's own total, so every month is full and the axis reads in shares.
+    Only a series with
+    <code class="t-mono-inline">
+      area
+    </code> fills; the lines
+    themselves still sit on the running total either way. Stacking runs per AXIS,
+    so a series on the secondary axis never piles onto one measured against the
+    primary.
+  </p>
+
+  <div class="states states--cols-2">
+    <div class="state-cell">
+      <ds-line-chart
+        caption="Deliveries a month, by tier"
+        dataTable="none"
+        stack="stacked"
+        [categories]="stackedCategoriesDemo()"
+        [series]="stackedSeriesDemo()" />
+
+      <div class="state-cell-label">
+        stacked
+      </div>
+
+      <docs-line-chart-data-editor
+        [(categories)]="stackedCategoriesDemo"
+        [(series)]="stackedSeriesDemo" />
+    </div>
+
+    <div class="state-cell">
+      <ds-line-chart
+        caption="The same tiers as a share of each month"
+        dataTable="none"
+        stack="normalized"
+        [categories]="normalizedCategories()"
+        [series]="normalizedSeries()" />
+
+      <div class="state-cell-label">
+        normalized
+      </div>
+
+      <docs-line-chart-data-editor
+        [(categories)]="normalizedCategories"
+        [(series)]="normalizedSeries" />
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
     Between the readings
   </h3>
 

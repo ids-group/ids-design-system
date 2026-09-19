@@ -155,6 +155,7 @@
               class="series-area"
               animate.enter="mark-enter"
               animate.leave="mark-leave"
+              [class.is-stacked]="stacksSeries()"
               [style.--_chart-mark-stagger]="markStagger(seriesIndex)"
               [class.is-dimmed]="isDimmed(entry.series.id)"
               [attr.d]="path"

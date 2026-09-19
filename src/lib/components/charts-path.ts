@@ -164,6 +164,30 @@ export function linePath(
   return smoothPath(segment);
 }
 
+/** The filled band between two edges - a stacked area sitting on the series below it, or a
+ *  confidence band around a line. The lower edge is walked BACKWARDS, so its curve is rebuilt from
+ *  the reversed points rather than reused: a monotone cubic is not symmetric, and closing the shape
+ *  along the forward path would bend the bottom of the band the wrong way.
+ *
+ *  @internal */
+export function bandPath(
+  upper: readonly LinePoint[],
+  lower: readonly LinePoint[],
+  curve: LineCurve = 'linear',
+): string {
+  if (
+    upper.length < 2 ||
+    upper.length !== lower.length ||
+    !upper.every(isPlottable) ||
+    !lower.every(isPlottable)
+  ) {
+    return '';
+  }
+  const back = linePath([...lower].reverse(), curve);
+
+  return `${linePath(upper, curve)} L ${back.slice('M '.length)} Z`;
+}
+
 /** The same run as `linePath`, closed down to the baseline. It takes the curve so a filled series
  *  and its own line share one edge - drawn apart, a smooth line floats off a straight-edged fill.
  *

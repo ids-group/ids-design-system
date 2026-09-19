@@ -72,6 +72,38 @@ const GAP_CATEGORIES: readonly string[] = [
 
 // A rate that holds between readings and a peak with a plateau either side: the first is what
 // `step` is for, the second is where a Catmull-Rom would invent a dip and a monotone cubic does not.
+// Deck 10's composition-over-time case: three delivery tiers whose sum is the quantity that
+// matters, which is what a stack says and a set of separate lines does not.
+const STACK_CATEGORIES: readonly string[] = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+];
+
+const STACK_SERIES: readonly LineChartSeries[] = [
+  {
+    id: 'economy',
+    label: 'Economy',
+    data: [1200, 1320, 1280, 1450, 1520, 1480],
+    area: true,
+  },
+  {
+    id: 'standard',
+    label: 'Standard',
+    data: [860, 980, 1010, 1120, 1290, 1340],
+    area: true,
+  },
+  {
+    id: 'express',
+    label: 'Express',
+    data: [420, 510, 590, 640, 710, 820],
+    area: true,
+  },
+];
+
 const CURVE_CATEGORIES: readonly string[] = [
   'Jan',
   'Feb',
@@ -171,6 +203,16 @@ export class LineChartSection {
     signal<readonly string[]>(GAP_CATEGORIES);
   protected readonly gapBreakSeries =
     signal<readonly LineChartSeries[]>(GAP_SERIES);
+
+  protected readonly stackedCategoriesDemo =
+    signal<readonly string[]>(STACK_CATEGORIES);
+  protected readonly stackedSeriesDemo =
+    signal<readonly LineChartSeries[]>(STACK_SERIES);
+
+  protected readonly normalizedCategories =
+    signal<readonly string[]>(STACK_CATEGORIES);
+  protected readonly normalizedSeries =
+    signal<readonly LineChartSeries[]>(STACK_SERIES);
 
   protected readonly curveLinearCategories =
     signal<readonly string[]>(CURVE_CATEGORIES);

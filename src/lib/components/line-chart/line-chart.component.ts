@@ -24,7 +24,9 @@ import {
   staggerDelay,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
+import { formatPercent } from '@ids-group-ltd/ids-design-system/components';
 import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
+import { stackOffsets } from '@ids-group-ltd/ids-design-system/components/chart';
 import type {
   ChartDataTable,
   ChartFrame,
@@ -47,14 +49,15 @@ import {
   type PlotArea,
   alignSeriesValues,
   areaPath,
+  bandPath,
   axisLayout,
   categoryCenters,
   categoryLabelStride,
   chartLayout,
   domainMaxOf,
+  linePath,
   lineSegments,
   paletteIndexFor,
-  linePath,
   seriesPoints,
   valueY,
 } from './line-chart.math';
@@ -63,6 +66,7 @@ import type {
   LineChartAxisMode,
   LineChartCurve,
   LineChartGaps,
+  LineChartStack,
   LineChartPoint,
   LineChartSeries,
 } from './line-chart.types';
@@ -77,6 +81,9 @@ const ANNOTATION_EDGE_GUARD = 48;
 interface ResolvedSeries {
   readonly series: LineChartSeries;
   readonly values: readonly (number | null)[];
+  /** Where this series' band starts on the value axis, one entry per category. `null` while the
+   *  chart is unstacked, where every band starts at the baseline. */
+  readonly lowerValues: readonly (number | null)[] | null;
   readonly onSecondaryAxis: boolean;
   readonly color: string;
   /** `null` while `patterns` is off, which is what keeps a solid line solid. */
@@ -184,6 +191,10 @@ export class LineChartComponent {
   /** How the line joins its readings. `'linear'` by default, which asserts nothing the data does
    *  not say; a curve is a claim about what happened BETWEEN two readings. */
   readonly curve = input<LineChartCurve>('linear');
+
+  /** How several series share the value axis. Stacking runs per AXIS, so a series on the secondary
+   *  axis never piles onto one measured against the primary. */
+  readonly stack = input<LineChartStack>('none');
 
   /** How many value-axis ticks to aim for. A hint, not a count: ticks snap to a round step, so
    *  the axis may carry one more or one fewer. */
@@ -299,6 +310,7 @@ export class LineChartComponent {
         return {
           series,
           values: alignSeriesValues(series.data, categoryCount, gaps),
+          lowerValues: null,
           onSecondaryAxis: series.axis === 'secondary',
           color: CHART_SERIES_COLORS[slot],
           dash: patterns ? SERIES_DASH_ARRAYS[slot] : null,
@@ -347,10 +359,52 @@ export class LineChartComponent {
 
   protected readonly highlightedSeries = signal<string | null>(null);
 
+  /** Every series with its band's own span, stacked per axis. Hiding a series does NOT re-pile the
+   *  rest, for the same reason `rescaleOnHide` defaults off: switching one off must not move the
+   *  ones still drawn. A `null` stays a hole in the line and contributes nothing to the pile. */
+  protected readonly stackedSeries = computed<readonly ResolvedSeries[]>(() => {
+    const mode = this.stack();
+    const entries = this.resolvedSeries();
+    if (mode === 'none') {
+      return entries;
+    }
+
+    const spans = new Map<ResolvedSeries, { from: number; to: number }[]>();
+    for (const secondary of [false, true]) {
+      const onThisAxis = entries.filter(
+        (entry) => entry.onSecondaryAxis === secondary,
+      );
+      const offsets = stackOffsets(
+        onThisAxis.map((entry) => entry.values.map((value) => value ?? 0)),
+        mode,
+      );
+      onThisAxis.forEach((entry, index) =>
+        spans.set(entry, [...offsets[index]]),
+      );
+    }
+
+    return entries.map((entry) => {
+      const span = spans.get(entry);
+      if (!span) {
+        return entry;
+      }
+
+      return {
+        ...entry,
+        values: entry.values.map((value, category) =>
+          value === null ? null : span[category].to,
+        ),
+        lowerValues: entry.values.map((value, category) =>
+          value === null ? null : span[category].from,
+        ),
+      };
+    });
+  });
+
   protected readonly visibleSeries = computed<readonly ResolvedSeries[]>(() => {
     const hidden = this.hiddenSeries();
 
-    return this.resolvedSeries().filter(
+    return this.stackedSeries().filter(
       (entry) => !hidden.includes(entry.series.id),
     );
   });
@@ -382,7 +436,7 @@ export class LineChartComponent {
     // off does not move the gridlines under the ones still drawn.
     const entries = this.rescaleOnHide()
       ? this.visibleSeries()
-      : this.resolvedSeries();
+      : this.stackedSeries();
     const valuesOn = (secondary: boolean) =>
       entries
         .filter((entry) => entry.onSecondaryAxis === secondary)
@@ -431,14 +485,54 @@ export class LineChartComponent {
           .map((segment) => linePath(segment, curve))
           .filter((path) => path.length > 0),
         areaPaths: entry.series.area
-          ? segments
-              .map((segment) => areaPath(segment, baselineY, curve))
-              .filter((path) => path.length > 0)
+          ? this.areaPathsFor(
+              entry,
+              segments,
+              axisMax,
+              plot,
+              centers,
+              baselineY,
+              curve,
+            )
           : [],
         markers: segments.flat(),
       };
     });
   });
+
+  /** A stacked series fills DOWN to the series below it, not to the baseline: the areas are drawn
+   *  at `--ds-chart-area-opacity`, so painting one over another would show both through each other
+   *  rather than hiding what is underneath. */
+  private areaPathsFor(
+    entry: ResolvedSeries,
+    segments: readonly LinePoint[][],
+    axisMax: number,
+    plot: PlotArea,
+    centers: readonly number[],
+    baselineY: number,
+    curve: LineChartCurve,
+  ): readonly string[] {
+    const lower = entry.lowerValues;
+    if (lower === null) {
+      return segments
+        .map((segment) => areaPath(segment, baselineY, curve))
+        .filter((path) => path.length > 0);
+    }
+
+    // `lowerValues` is null in exactly the categories `values` is, so both sides break in the same
+    // places and the two segment lists line up index for index.
+    const lowerSegments = lineSegments(
+      seriesPoints(lower, axisMax, plot, centers),
+    );
+
+    return segments
+      .map((segment, index) =>
+        lowerSegments[index]
+          ? bandPath(segment, lowerSegments[index], curve)
+          : areaPath(segment, baselineY, curve),
+      )
+      .filter((path) => path.length > 0);
+  }
 
   /** Annotations resolved onto the markers the plot already computed, so a label sits exactly on
    *  its reading and moves with it. One whose series is hidden or whose reading is missing has no
@@ -484,6 +578,16 @@ export class LineChartComponent {
       ];
     });
   });
+
+  /** A normalized stack draws shares, not readings, so the axis has to say so - the value a tooltip
+   *  or the annex table prints stays the reading, which is what `valueFormat` goes on formatting. */
+  private readonly axisFormat = computed<ChartValueFormat>(() =>
+    this.stack() === 'normalized'
+      ? (value: number) => formatPercent(value, 1)
+      : this.valueFormatResolved(),
+  );
+
+  protected readonly stacksSeries = computed(() => this.stack() !== 'none');
 
   protected readonly primaryTicks = computed(() =>
     this.ticksFor(this.axes().primary.ticks, this.axes().primary.max, false),
@@ -949,7 +1053,7 @@ export class LineChartComponent {
     onSecondaryAxis: boolean,
   ): AxisTick[] {
     const plot = this.plotFor(onSecondaryAxis);
-    const format = this.valueFormatResolved();
+    const format = this.axisFormat();
 
     return ticks.map((value) => ({
       y: valueY(value, axisMax, plot),

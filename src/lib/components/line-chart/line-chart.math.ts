@@ -10,6 +10,7 @@ import type { LineChartAxisMode, LineChartGaps } from './line-chart.types';
 
 export {
   areaPath,
+  bandPath,
   linePath,
   lineSegments,
   polylinePoints,

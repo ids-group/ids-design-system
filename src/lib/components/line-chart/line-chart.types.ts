@@ -25,6 +25,15 @@ export type LineChartAxisMode = ChartAxisMode;
  *  Catmull-Rom does. */
 export type LineChartCurve = 'linear' | 'step' | 'smooth';
 
+/** How several series share the value axis. `'none'` draws each from the baseline, which is what a
+ *  line chart has always done. `'stacked'` starts each series where the one before it ended, so a
+ *  filled series reads as a share of a total rather than a quantity of its own. `'normalized'`
+ *  stacks then divides by the category's own total, so every category is full and the axis reads in
+ *  shares.
+ *
+ *  Unrelated to `yAxisMode`'s `'split'`, which puts two PLOTS one above the other. */
+export type LineChartStack = 'none' | 'stacked' | 'normalized';
+
 /** What a `null` reading draws: a hole in the line, or a point at zero. */
 export type LineChartGaps = 'break' | 'zero';
 

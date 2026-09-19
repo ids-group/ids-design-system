@@ -4980,6 +4980,19 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "How the line joins its readings. `'linear'` by default, which asserts nothing the data does not say; a curve is a claim about what happened BETWEEN two readings."
       },
       {
+        "name": "stack",
+        "kind": "input",
+        "type": "LineChartStack",
+        "union": [
+          "none",
+          "stacked",
+          "normalized"
+        ],
+        "default": "'none'",
+        "required": false,
+        "description": "How several series share the value axis. Stacking runs per AXIS, so a series on the secondary axis never piles onto one measured against the primary."
+      },
+      {
         "name": "tickCount",
         "kind": "input",
         "type": "number",

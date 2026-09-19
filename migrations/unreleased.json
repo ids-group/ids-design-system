@@ -107,7 +107,7 @@
         "LineSeriesComponent"
       ],
       "verify": "Every subclass of the listed components builds, and any member it declares that the base now also declares carries `override`.",
-      "note": "`LineChartComponent` and `LineSeriesComponent` both gained `curve`. Subclassing a DS component is unsupported, but a release that only adds can still fail such a build on a name collision, which is why the classes are listed here rather than in the additive notes."
+      "note": "`LineChartComponent` gained `curve`, `stack`, `stackedSeries`, `stacksSeries` and `lowerValues` on its resolved series; `LineSeriesComponent` gained `curve`. Subclassing a DS component is unsupported, but a release that only adds can still fail such a build on a name collision, which is why the classes are listed here rather than in the additive notes."
     }
   ],
   "informational": [
@@ -115,7 +115,8 @@
     "A filled series now follows its own curve, so the fill and the line share one edge. With the default `'linear'` the drawing is byte-identical to before.",
     "The chart container's marks are published API: `ColumnSeriesComponent`, `LineSeriesComponent`, `ReferenceLineComponent` and `ReferenceLabelComponent`, with `ColumnSeriesPoint`, `LineSeriesData` and `LineSeriesGaps`, now come from the package root as well as from `@ids-group-ltd/ids-design-system/components/chart`. Purely additive.",
     "A chart tooltip no longer runs off the screen: the panel stops at the viewport height less the overlay's 12px margin and scrolls past that. A panel that already fitted is drawn exactly as before.",
-    "A line series measured only against the first axis no longer raises an empty second axis labelled `0`. Affected any plot whose series all read against the left axis; a plot that genuinely carries two scales is unchanged."
+    "A line series measured only against the first axis no longer raises an empty second axis labelled `0`. Affected any plot whose series all read against the left axis; a plot that genuinely carries two scales is unchanged.",
+    "`ds-line-chart` takes `stack`: `'none'` (the default, and what every chart already drew), `'stacked'` or `'normalized'`. Nothing to change - a chart that sets nothing is unchanged. Only a series with `area: true` fills, stacking runs per axis, and `stack=\"stacked\"` is not `yAxisMode=\"split\"`: series on top of each other, against two plots one above the other."
   ],
   "deleteList": []
 }

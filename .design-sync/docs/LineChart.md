@@ -9,6 +9,7 @@ One or more series plotted over a shared set of categories. A series can be meas
 - `showMarkers` (default `true`): the dot at each reading.
 - `gaps`: `'break'` (default) leaves a hole in the line at a `null`; `'zero'` plants a point on the baseline. Pick `'break'` unless a missing reading genuinely means none.
 - `curve`: `'linear'` (default) joins the readings with straight segments and asserts nothing the data does not say. `'step'` holds each reading until the next, which is right for a quantity that CHANGES at a moment rather than drifting between two - a price, a headcount, a rate. `'smooth'` is a monotone cubic, so it never draws a peak or a trough the readings do not contain; a Catmull-Rom would. A filled series follows the same curve, so the fill and its line share one edge.
+- `stack`: `'none'` (default) | `'stacked'` | `'normalized'`. `'stacked'` starts each series where the one below it ended, so a filled series reads as a share of a total; `'normalized'` divides by the category's own total, so every category is full and the axis reads in shares. Only a series with `area: true` fills; the lines sit on the running total either way. Stacking runs per AXIS, so a secondary-axis series never piles onto a primary one. Unrelated to `yAxisMode: 'split'`, which puts two PLOTS one above the other.
 - `tickCount`: a hint — ticks snap to a round step.
 - `caption`: shown above the plot and reused as the data table's caption.
 - `summary`: the accessible name; generated from the series when omitted.

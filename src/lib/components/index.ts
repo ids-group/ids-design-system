@@ -16,6 +16,7 @@ export {
 export { elementWidth } from './charts-measure';
 export {
   areaPath,
+  bandPath,
   linePath,
   lineSegments,
   polylinePoints,

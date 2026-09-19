@@ -22,6 +22,26 @@
 
 ### Added
 
+- **`stack` on the line: several series as a composition rather than as separate readings.** A set
+  of lines answers "how is each one doing"; a stack answers "what is the total made of", which is a
+  different question and the one a mix of tiers usually asks.
+
+  ```html
+  <ds-line-chart stack="stacked" [categories]="months" [series]="tiers" />
+  ```
+
+  `'stacked'` starts each series where the one below it ended; `'normalized'` divides by the
+  category's own total, so every category is full and the axis reads in shares. `'none'` stays the
+  default and nothing changes without asking. Only a series with `area: true` fills - the lines sit
+  on the running total either way.
+
+  A stacked band fills down to the series below it rather than to the baseline, and the boundary is
+  a 2px stroke in the surface colour rather than a drawn rule, which survives print and
+  colour-vision deficiency. Stacking runs per AXIS, so a secondary-axis series never piles onto one
+  measured against the primary. `stack="stacked"` and `yAxisMode="split"` are different things:
+  series on top of each other, against two plots one above the other.
+
+
 - **`curve` on the line: `'linear'`, `'step'` or `'smooth'`.** A line drawn between two readings is
   a claim about what happened in between, and this is where the claim is made. `'linear'` stays the
   default and asserts nothing the data does not say.

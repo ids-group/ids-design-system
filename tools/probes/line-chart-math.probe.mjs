@@ -18,6 +18,7 @@ const {
   chartLayout,
   domainMaxOf,
   lineSegments,
+  bandPath,
   linePath,
   normalizeTickCount,
   paletteIndexFor,
@@ -381,6 +382,33 @@ check(
   'an area follows its own line, so the fill and the stroke share an edge',
   areaPath([point(0, 10), point(10, 20)], 100, 'smooth'),
   'M 0,10 C 3.33,13.33 6.67,16.67 10,20 L 10,100 L 0,100 Z',
+);
+check(
+  'a band closes along its lower edge, not along the baseline',
+  bandPath([point(0, 10), point(10, 20)], [point(0, 40), point(10, 50)], 'linear'),
+  'M 0,10 L 10,20 L 10,50 L 0,40 Z',
+);
+// The lower edge is walked backwards, so a curved band's two edges have to be curved in opposite
+// directions: reusing the forward path would close the shape along a curve bending the wrong way.
+check(
+  'a curved band curves both of its edges',
+  bandPath([point(0, 10), point(10, 20)], [point(0, 40), point(10, 50)], 'smooth'),
+  'M 0,10 C 3.33,13.33 6.67,16.67 10,20 L 10,50 C 6.67,46.67 3.33,43.33 0,40 Z',
+);
+check(
+  'a band of one reading encloses nothing',
+  bandPath([point(0, 10)], [point(0, 40)], 'linear'),
+  '',
+);
+check(
+  'a band refuses a poisoned edge',
+  bandPath([point(0, 10), point(10, 20)], [point(0, 40), point(NaN, 50)], 'linear'),
+  '',
+);
+check(
+  'a band refuses edges of different lengths',
+  bandPath([point(0, 10), point(10, 20)], [point(0, 40)], 'linear'),
+  '',
 );
 check(
   'areaPath refuses a poisoned baseline',

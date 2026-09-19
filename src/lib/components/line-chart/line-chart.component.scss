@@ -114,6 +114,16 @@ figcaption {
   stroke: none;
 }
 
+// A stacked band is separated from the one below it by a stroke in the SURFACE colour, never a
+// darker rule: a rule is a third ink the palette has to stay legible against and it vanishes in
+// print, while a gap survives both. Only stacked bands take it - an unstacked area sits on the
+// baseline and has nothing to be separated from.
+.series-area.is-stacked {
+  stroke: var(--surface-default);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
 .series-line {
   fill: none;
   stroke-width: var(--_line-chart-line-width);
