@@ -19,8 +19,7 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 | 6 | `6-warning-text-colour` | one colour on one tint, each candidate rendered in itself. It ends "name a number: 1, 2, 3 or 4", and `docs/todo.md` still carries the measured 4.42:1 failure |
 | 7 | `7-chart-palette-v2` | whether the eight categorical hues are re-derived against the validator, which costs a slot |
 | 8 | `8-chart-sparkline-preset` | `variant="spark"` or a separate `ds-sparkline` — parked on 2026-09-19, so it is decided-not-built rather than unasked |
-| 9 | `9-chart-scatter-phase` | scatter in phase 2 or phase 3, and the decimation it drags in |
-| 10 | `10-waterfall-mode-or-component` | the waterfall's own tag against a `stack="waterfall"` mode on the column chart |
+| 9 | `9-waterfall-mode-or-component` | the waterfall's own tag against a `stack="waterfall"` mode on the column chart |
 
 **Ranks 1-3 are the two biggest lanes** — the colour engine, then the interaction formula that reads
 its ramp. Ranks 1-4 are written in Russian and share `deck.css`, which sits beside `ds.css` and
@@ -30,9 +29,9 @@ carries the shell; the chart decks share it too.
 of the argument — the next person to ask the same question reads it to find out what was already
 weighed — but it stops LOOKING like a question: the verdict sits in a `.decided` banner at the top
 with its evidence line, and the argument folds into a `<details class="folded">` accordion under it.
-Seven closed on 2026-09-19 with the charts phase-2 work: the composition model, the area mode, the
-four axis modes and their names, the rescale-on-hide default, the phase-2 marks and the docs chapter
-nav.
+Eight closed on 2026-09-19 with the charts phase-2 work: the composition model, the area mode, the
+four axis modes and their names, the rescale-on-hide default, the phase-2 marks, the docs chapter
+nav, and the scatter's phase — which went to phase 2 with its decimation layer rather than to 3.
 
 **A `tool` here takes no number.** `backlog-board.html` and `rejected-with-numbers.html` — both are
 read whenever rather than at a moment, so they stay unnumbered and sort below the queue.

@@ -3,10 +3,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Точечная диаграмма — фаза 2 или фаза 3</title>
-<meta name="ds-deck-status" content="open">
+<meta name="ds-deck-status" content="implemented">
+<meta name="ds-deck-decided" content="2026-09-19">
+<meta name="ds-deck-evidence" content="src/lib/components/scatter-chart/scatter-chart.component.ts - src/lib/components/charts-decimate.ts - tools/check-chart-mark-budget.mjs">
 <meta name="ds-deck-evidence" content="src/lib/components/charts-measure.ts">
-<link rel="stylesheet" href="ds.css">
-<link rel="stylesheet" href="deck.css">
+<link rel="stylesheet" href="../ds.css">
+<link rel="stylesheet" href="../deck.css">
 
 <style>
   .art {
@@ -76,16 +78,35 @@
   <div class="masthead">
     <h1>Точечная диаграмма: фаза 2 или фаза 3</h1>
     <p class="lede">
-      Самая дешёвая геометрия из оставшихся — круг на двух шкалах — и единственная, у которой число
-      марок не ограничено сверху. Взять её в фазу 2 значит взять вместе с ней прореживание.
-      Ниже — измерение, сделанное в этом браузере сегодня.
+      Самая дешёвая геометрия из оставшихся - круг на двух шкалах - и единственная,
+      у которой число марок не ограничено сверху. Измерение сделано в браузере.
     </p>
     <div class="chips">
-      <span class="chip is-open">Нужно решение</span>
+      <span class="chip is-done">Решено</span>
       <span class="chip">§6 спеки, вопрос 6</span>
       <span class="chip">измерено 2026-09-13</span>
     </div>
   </div>
+
+  <div class="decided">
+    <h2>Решено: фаза 2, вместе со слоем прореживания</h2>
+    <p>
+      <code class="tok">ds-scatter-chart</code> построен, и прореживание пришло с ним целиком:
+      MinMax по умолчанию, <code class="tok">lttb</code> как альтернатива,
+      <code class="tok">none</code> для вызывающего, который берёт бюджет узлов на себя. Порог -
+      четырёхкратное превышение ширины плота в марках. Чарт говорит о прореживании на своём лице,
+      а приложенная таблица по-прежнему держит каждое чтение.
+    </p>
+    <p>
+      Бюджет стал проверкой, а не абзацем: гейт кормит прореживатель 100 000 чтениями, проверяет,
+      что вывод влезает в плот, и отдельно - что те же данные без прореживания НЕ влезают. Замер в
+      браузере: 12 000 чтений дают 576 марок.
+    </p>
+    <p class="evidence">2026-09-19 · src/lib/components/scatter-chart/scatter-chart.component.ts - src/lib/components/charts-decimate.ts - tools/check-chart-mark-budget.mjs</p>
+  </div>
+
+  <details class="folded">
+    <summary>Разбор, который к этому привёл</summary>
 
   <section class="panel">
     <h2>Что это за марка</h2>
@@ -350,4 +371,5 @@
       размен, и тогда прореживание входит в фазу 2 целиком, вместе с пробами и гейтом.
     </p>
   </section>
+  </details>
 </main>
