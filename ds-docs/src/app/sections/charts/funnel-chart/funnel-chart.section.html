@@ -153,11 +153,11 @@
     </code> chooses the unit.
     <code class="t-mono-inline">
       relative
-    </code>, the default, is the share that
-    leaked at this stage; <code class="t-mono-inline">absolute</code> is the
-    count that leaked; <code class="t-mono-inline">none</code> takes the column
-    out. The two units answer different questions — a share is a talking point,
-    a count is a re-targeting job — and the count is only recoverable by
+    </code>, the default, is the share
+    that leaked at this stage; <code class="t-mono-inline">absolute</code> is
+    the count that leaked; <code class="t-mono-inline">none</code> takes the
+    column out. The two units answer different questions — a share is a talking
+    point, a count is a re-targeting job — and the count is only recoverable by
     subtracting two rows, which a reader should not have to do.
   </p>
 
@@ -191,21 +191,18 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       interactive
-    </code> turns on the pointer cursor and
-    the hover tint, and makes each band a tab stop with
+    </code> turns on the pointer cursor
+    and the hover tint, and makes each band a tab stop with
     <kbd>
       Enter
-    </kbd> and
-    <kbd>
-      Space
-    </kbd> activating it.
+    </kbd> and <kbd> Space </kbd> activating it.
     <code class="t-mono-inline">
       stageClicked
-    </code> fires whether or not the flag
-    is set, so a chart that only needs the output does not have to advertise the
-    affordance. Hovering a row of the stage table reads as hovering the band it
-    names: the same tooltip opens over the BAND, and the rest of the funnel dims
-    with it.
+    </code> fires whether or not the
+    flag is set, so a chart that only needs the output does not have to
+    advertise the affordance. Hovering a row of the stage table reads as
+    hovering the band it names: the same tooltip opens over the BAND, and the
+    rest of the funnel dims with it.
   </p>
 
   <ds-funnel-chart
@@ -228,9 +225,9 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       pinOnClick
-    </code> holds the clicked band and its
-    tooltip in place, so the reading stays while you look away from the chart. A
-    pin glyph marks the held band and a
+    </code> holds the clicked band and
+    its tooltip in place, so the reading stays while you look away from the
+    chart. A pin glyph marks the held band and a
     <code class="t-mono-inline">
       Reset
     </code> appears in the corner;
@@ -278,9 +275,11 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       staggerMs
-    </code> spaces the bands' arrivals out
-    rather than fading them all at once. <code class="t-mono-inline">0</code>,
-    the default, means no stagger.
+    </code> spaces the bands' arrivals
+    out rather than fading them all at once.
+    <code class="t-mono-inline">
+      0
+    </code>, the default, means no stagger.
   </p>
 
   <ds-funnel-chart

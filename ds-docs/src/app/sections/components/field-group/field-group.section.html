@@ -178,15 +178,10 @@
     The group takes the same pair every field takes.
     <code class="t-mono-inline">
       error
-    </code> is a string: it turns the state on
-    <em>
-      and
-    </em> carries the text, in one message under the whole row rather
-    than one per segment.
-    <code class="t-mono-inline">
-      invalid
-    </code> is the flag for when the text
-    lives elsewhere — a form-level summary — and
+    </code> is a string: it turns the state
+    on <em> and </em> carries the text, in one message under the whole row
+    rather than one per segment. <code class="t-mono-inline"> invalid </code> is
+    the flag for when the text lives elsewhere — a form-level summary — and
     <code class="t-mono-inline">
       hint
     </code>
@@ -221,13 +216,13 @@
     Every segment carries
     <code class="t-mono-inline">
       aria-invalid
-    </code> while the group is in error, and every
-    segment points at the one message through
+    </code> while the group is in
+    error, and every segment points at the one message through
     <code class="t-mono-inline">
       aria-describedby
-    </code> — a reader who tabs straight to the
-    second segment hears the error there too, which is the whole reason the state
-    is not announced on the group element itself.
+    </code> — a reader who tabs
+    straight to the second segment hears the error there too, which is the whole
+    reason the state is not announced on the group element itself.
   </p>
 
   <p class="block-desc t-s">

@@ -14,19 +14,19 @@ const WEEKDAYS: readonly string[] = [
 ];
 
 const DEPOT_ROWS: readonly HeatmapChartRow[] = [
-  { id: 'a', label: 'Depot A', data: [180, 240, 275, 310, 420, 480, 250] },
-  { id: 'b', label: 'Depot B', data: [160, 195, 240, 275, 310, 360, 200] },
-  { id: 'c', label: 'Depot C', data: [210, 290, 320, 370, 470, 470, 280] },
-  { id: 'd', label: 'Depot D', data: [150, 190, 235, 235, 300, 350, 185] },
-  { id: 'e', label: 'Depot E', data: [195, 250, 290, 355, 430, 490, 265] },
+  { id: 'a', label: 'Depot A', data: [180, 460, 95, 310, 420, 140, 250] },
+  { id: 'b', label: 'Depot B', data: [490, 120, 240, 75, 380, 205, 160] },
+  { id: 'c', label: 'Depot C', data: [110, 290, 500, 195, 60, 470, 330] },
+  { id: 'd', label: 'Depot D', data: [355, 85, 165, 440, 300, 50, 225] },
+  { id: 'e', label: 'Depot E', data: [70, 400, 270, 130, 510, 345, 185] },
 ];
 
 // A depot that opened mid-week and one that reports nothing on Sundays: both are holes, and the
 // point of the specimen is that neither reads as a quiet day.
 const PARTIAL_ROWS: readonly HeatmapChartRow[] = [
-  { id: 'a', label: 'Depot A', data: [180, 240, 275, 310, 420, 480, null] },
-  { id: 'f', label: 'Depot F', data: [null, null, null, 290, 380, 410, null] },
-  { id: 'c', label: 'Depot C', data: [210, 290, 320, 370, 470, 470, null] },
+  { id: 'a', label: 'Depot A', data: [180, 460, 95, 310, 420, 140, null] },
+  { id: 'f', label: 'Depot F', data: [null, null, null, 290, 60, 410, null] },
+  { id: 'c', label: 'Depot C', data: [110, 290, 500, 195, 60, 470, null] },
 ];
 
 const SMALL_ROWS: readonly HeatmapChartRow[] = [

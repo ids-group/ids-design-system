@@ -587,12 +587,10 @@
     </code> and
     <code class="t-mono-inline">
       rel
-    </code> go with either link. Each is a pass-through to the element the
-    component already renders, and each warns in dev on a destination that
-    cannot carry it. For the options with no input of their own —
-    <code class="t-mono-inline">
-      relativeTo
-    </code>,
+    </code> go with either link. Each is a
+    pass-through to the element the component already renders, and each warns in
+    dev on a destination that cannot carry it. For the options with no input of
+    their own — <code class="t-mono-inline"> relativeTo </code>,
     <code class="t-mono-inline">
       preserveFragment
     </code> — build a
@@ -601,13 +599,12 @@
     </code> with
     <code class="t-mono-inline">
       Router.createUrlTree
-    </code> and pass that as the
-    <code class="t-mono-inline">
-      routerLink
-    </code>.
+    </code> and pass that as
+    the <code class="t-mono-inline"> routerLink </code>.
   </p>
 
-  <pre class="t-mono-block"><code>&lt;ds-button [routerLink]="['/ai-solutions', slug]" fragment="enquiry"&gt;
+  <pre
+    class="t-mono-block"><code>&lt;ds-button [routerLink]="['/ai-solutions', slug]" fragment="enquiry"&gt;
   Talk to us
 &lt;/ds-button&gt;
 
@@ -618,8 +615,9 @@
     No live demo for
     <code class="t-mono-inline">
       fragment
-    </code> on this site: a docs URL already names its section in the path, so a
-    fragment here would be a no-op — which its own link check enforces.
+    </code> on this site: a docs URL
+    already names its section in the path, so a fragment here would be a no-op —
+    which its own link check enforces.
   </p>
 
   <div class="row">
@@ -650,18 +648,19 @@
     A link that IS the current page announces
     <code class="t-mono-inline">
       aria-current="page"
-    </code>; a link to a section the reader is INSIDE announces
+    </code>; a link to a
+    section the reader is INSIDE announces
     <code class="t-mono-inline">
       aria-current="true"
-    </code>, which is what ARIA means by each. The
-    <code class="t-mono-inline">
-      active
-    </code> class stays prefix-matched so a section link keeps looking lit —
-    they are separate questions, and
+    </code>, which is what ARIA
+    means by each. The <code class="t-mono-inline"> active </code> class stays
+    prefix-matched so a section link keeps looking lit — they are separate
+    questions, and
     <code class="t-mono-inline">
       routerLinkActiveOptions
-    </code> moves the class without touching the announcement. Both buttons below are
-    active on this page; only the first one IS this page.
+    </code> moves the class
+    without touching the announcement. Both buttons below are active on this
+    page; only the first one IS this page.
   </p>
 
   <div class="row">

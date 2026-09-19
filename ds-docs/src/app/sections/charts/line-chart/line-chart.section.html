@@ -66,19 +66,16 @@
     </code> decides which:
     <code class="t-mono-inline">
       stacked
-    </code> starts each series where the one
-    below it ended, and
+    </code> starts each series where the
+    one below it ended, and
     <code class="t-mono-inline">
       normalized
-    </code> divides by the
-    category's own total, so every month is full and the axis reads in shares.
-    Only a series with
-    <code class="t-mono-inline">
-      area
-    </code> fills; the lines
-    themselves still sit on the running total either way. Stacking runs per AXIS,
-    so a series on the secondary axis never piles onto one measured against the
-    primary.
+    </code> divides by the category's
+    own total, so every month is full and the axis reads in shares. Only a
+    series with <code class="t-mono-inline"> area </code> fills; the lines
+    themselves still sit on the running total either way. Stacking runs per
+    AXIS, so a series on the secondary axis never piles onto one measured
+    against the primary.
   </p>
 
   <div class="states states--cols-2">
@@ -129,19 +126,17 @@
     </code> is where that claim is made.
     <code class="t-mono-inline">
       linear
-    </code>, the default, asserts nothing the
-    data does not say.
-    <code class="t-mono-inline">
-      step
-    </code> holds each reading
-    until the next, which is what a quantity that CHANGES at a moment actually
-    did - a price, a headcount, a rate.
+    </code>, the default, asserts nothing
+    the data does not say. <code class="t-mono-inline"> step </code> holds each
+    reading until the next, which is what a quantity that CHANGES at a moment
+    actually did - a price, a headcount, a rate.
     <code class="t-mono-inline">
       smooth
     </code>
-    is a monotone cubic, so it never draws a peak or a trough the readings do not
-    contain; a Catmull-Rom would invent one on either side of the plateau below. A
-    filled series follows the same curve, so the fill and its line share one edge.
+    is a monotone cubic, so it never draws a peak or a trough the readings do
+    not contain; a Catmull-Rom would invent one on either side of the plateau
+    below. A filled series follows the same curve, so the fill and its line
+    share one edge.
   </p>
 
   <div class="states states--cols-3">

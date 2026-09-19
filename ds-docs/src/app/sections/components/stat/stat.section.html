@@ -115,13 +115,16 @@
     uses. Three hooks reshape that, and they compose:
     <code class="t-mono-inline">
       --ds-stat-value-white-space
-    </code> wraps instead of clipping,
+    </code> wraps
+    instead of clipping,
     <code class="t-mono-inline">
       --ds-stat-value-lines
-    </code> then puts the ellipsis on the line you name, and
+    </code> then puts the
+    ellipsis on the line you name, and
     <code class="t-mono-inline">
       --ds-stat-value-wrap
-    </code> breaks a word wider than the tile.
+    </code> breaks a word
+    wider than the tile.
   </p>
 
   <div class="phrase-row">
@@ -170,15 +173,14 @@
   </div>
 
   <p class="block-desc t-s">
-    The dashed outline marks where the 240px column ends. Wrapping alone does not
-    keep a value inside it — a single word wider than the tile still paints past
-    the edge, which is what the fourth hook is for. Note that
+    The dashed outline marks where the 240px column ends. Wrapping alone does
+    not keep a value inside it — a single word wider than the tile still paints
+    past the edge, which is what the fourth hook is for. Note that
     <code class="t-mono-inline">
       lines
-    </code> only bites once the value wraps: a clamp on a
-    <code class="t-mono-inline">
-      nowrap
-    </code> box has nothing to clamp.
+    </code> only bites once the value wraps:
+    a clamp on a <code class="t-mono-inline"> nowrap </code> box has nothing to
+    clamp.
   </p>
 
   <h3 class="block-title t-h4">
