@@ -4202,6 +4202,170 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "inputs": [],
     "outputs": []
   },
+  "heatmap-chart": {
+    "key": "heatmap-chart",
+    "selector": "ds-heatmap-chart",
+    "isElement": true,
+    "className": "HeatmapChartComponent",
+    "status": "stable",
+    "importName": "HeatmapChartComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "columns",
+        "kind": "input",
+        "type": "readonly string[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "The column headings, left to right. Their count decides how many readings of a row are drawn: a row longer than this loses its tail, a shorter one ends early."
+      },
+      {
+        "name": "data",
+        "kind": "input",
+        "type": "readonly HeatmapChartRow[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "One entry per row, each carrying one reading per column. A `null` reading is a cell that was never measured and is drawn as the surface rather than as the ramp's coldest step."
+      },
+      {
+        "name": "caption",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Printed above the grid as the visible title."
+      },
+      {
+        "name": "min",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Pins the floor of the colour scale. It only ever OPENS the scale further, so a floor above the data cannot push a reading off the ramp. Unset, the scale starts at the lowest reading."
+      },
+      {
+        "name": "max",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Pins the ceiling of the colour scale, the same way `min` pins its floor. Set both to compare two heat maps by colour: unset, each one spans its own readings and the same hue means a different quantity on each."
+      },
+      {
+        "name": "showValues",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Prints each cell's reading inside it. Off by default: a grid dense enough to be worth a heat map has no room for the numbers, which is why the annex table is always there."
+      },
+      {
+        "name": "interactive",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Makes every measured cell a button. An unmeasured cell stays inert - a grid of buttons with nothing behind them is a tab trap."
+      },
+      {
+        "name": "dimOthers",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Fades every cell but the one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed cells, which on a ramp is the only thing carrying magnitude."
+      },
+      {
+        "name": "frame",
+        "kind": "input",
+        "type": "ChartFrame | null",
+        "union": [
+          "auto",
+          "none"
+        ],
+        "default": "null",
+        "required": false,
+        "description": "`'auto'` draws the bordered, padded box; `'none'` leaves it bare for a chart inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`."
+      },
+      {
+        "name": "loading",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "A skeleton at the grid's own height, so the page does not resize when the data lands."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Separate from an empty matrix: \"the request failed\" and \"there is nothing to show\" read the same and mean opposite things."
+      },
+      {
+        "name": "emptyText",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Shown when there are no rows or no columns. Unset falls back to `DS_CONFIG.chart.emptyText`."
+      },
+      {
+        "name": "errorText",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Shown in place of the grid while `error` is set. Unset falls back to `DS_CONFIG.chart.errorText`."
+      },
+      {
+        "name": "valueFormat",
+        "kind": "input",
+        "type": "ChartValueFormat | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Formats every reading the chart prints - the scale's two ends, each cell's accessible name and the annex table. Unset falls back to `DS_CONFIG.chart.valueFormat`."
+      },
+      {
+        "name": "tooltip",
+        "kind": "input",
+        "type": "ChartItemTooltipTrigger",
+        "union": [
+          "item",
+          "none"
+        ],
+        "default": "'item'",
+        "required": false,
+        "description": "Whether a hovered or focused cell opens a tooltip. A heat map's cells carry no printed value by default, so this is where a reading is read without reaching for the annex table."
+      }
+    ],
+    "outputs": [
+      {
+        "name": "cellClicked",
+        "kind": "output",
+        "type": "HeatmapChartCell",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The clicked cell, with the row and the column it sits at. Never fires for an unmeasured cell, which has no reading to drill into."
+      }
+    ]
+  },
   "icon-button": {
     "key": "icon-button",
     "selector": "ds-icon-button",

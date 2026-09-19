@@ -91,6 +91,7 @@
     "probes": "node tools/run-probes.mjs",
     "probe:donut-chart-math": "node --experimental-strip-types tools/probes/donut-chart-math.probe.mjs",
     "probe:funnel-chart-math": "node --experimental-strip-types tools/probes/funnel-chart-math.probe.mjs",
+    "probe:heatmap-chart-math": "node --experimental-strip-types tools/probes/heatmap-chart-math.probe.mjs",
     "probe:line-chart-math": "node --experimental-strip-types tools/probes/line-chart-math.probe.mjs",
     "probe:bar-chart-math": "node --experimental-strip-types tools/probes/bar-chart-math.probe.mjs",
     "probe:chart-math": "node --experimental-strip-types tools/probes/chart-math.probe.mjs",

@@ -24,6 +24,7 @@
     "DonutChart": "charts/donut-chart",
     "FieldMessage": "components/input",
     "FunnelChart": "charts/funnel-chart",
+    "HeatmapChart": "charts/heatmap-chart",
     "Inline": "components/layout-primitives",
     "LineChart": "charts/line-chart",
     "ListItem": "components/list",

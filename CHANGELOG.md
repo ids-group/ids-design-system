@@ -22,6 +22,34 @@
 
 ### Added
 
+- **`ds-heatmap-chart`: a matrix of readings coloured by magnitude.** Depot by weekday, hour by
+  date, queue by region - the case where the interesting thing is the shape of a whole grid rather
+  than any one reading in it.
+
+  ```html
+  <ds-heatmap-chart
+    caption="Collections a day, by depot"
+    [columns]="weekdays"
+    [data]="depots" />
+  ```
+
+  `data` is one `HeatmapChartRow` per row, each carrying one reading per column.
+
+  **Two things are not optional here.** Colour is the only channel carrying the quantity on the
+  grid, so the scale under it and the annex table below it are always drawn - there is no
+  `dataTable` input to turn the table off, because WCAG 1.4.1 is not satisfied by a grid of coloured
+  squares. Every cell also names its own reading to assistive tech as `row, column: value`.
+
+  **A `null` reading is a hole, not a low value.** It draws as the surface, stays out of the colour
+  scale, is inert under `interactive` and never fires `cellClicked`. The ramp's coldest step is a
+  real measurement, and painting "we never measured this" with it states a figure nobody recorded.
+
+  `min` and `max` pin the scale and only ever open it further; set both to compare two heat maps by
+  colour, because unset each one spans its own readings and the same hue means a different quantity
+  on each. `showValues` prints the readings in the cells, drawing each glyph in its own cell's
+  colour inverted so it stays legible at both ends of a ramp running 1.14:1 to 9.07:1 against white.
+
+
 - **`stack` on the line: several series as a composition rather than as separate readings.** A set
   of lines answers "how is each one doing"; a stack answers "what is the total made of", which is a
   different question and the one a mix of tiers usually asks.

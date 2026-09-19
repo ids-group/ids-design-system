@@ -166,6 +166,11 @@ export type {
   FunnelChartShape,
   FunnelChartStage,
 } from '@ids-group-ltd/ids-design-system/components/funnel-chart';
+export { HeatmapChartComponent } from '@ids-group-ltd/ids-design-system/components/heatmap-chart';
+export type {
+  HeatmapChartCell,
+  HeatmapChartRow,
+} from '@ids-group-ltd/ids-design-system/components/heatmap-chart';
 export { IconButtonComponent } from '@ids-group-ltd/ids-design-system/components/icon-button';
 export type {
   IconButtonType,

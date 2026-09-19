@@ -23,6 +23,7 @@ and token names.** These leaves are for orientation and usage.
 - [<ds-column-chart> — ColumnChartComponent](charts/ds-column-chart.md) — Vertical columns for a short series read left to right — months, stages, teams — measured against one value ax
 - [<ds-donut-chart> — DonutChartComponent](charts/ds-donut-chart.md) — A ring that splits one total into its parts, with the middle free for the total or a headline figure of your o
 - [<ds-funnel-chart> — FunnelChartComponent](charts/ds-funnel-chart.md) — Stages of a journey, drawn top to bottom in the order you give them — they are never sorted, because the order
+- [<ds-heatmap-chart> — HeatmapChartComponent](charts/ds-heatmap-chart.md) — A matrix of readings coloured by magnitude — depot by weekday, hour by date, queue by region.
 - [<ds-line-chart> — LineChartComponent](charts/ds-line-chart.md) — One or more series plotted over a shared set of categories.
 - [Chart defaults — what DS_CONFIG decides once](charts/ds-config.md) — Four chart inputs resolve through DS_CONFIG.chart because they are one decision per APP, not per plot: valueFo
 - [Chart frame — the box a chart draws around itself](charts/chart-frame-the-box-a-chart-draws-around-itself.md) — Every chart paints its own border, radius, padding and --surface-default background, on by default. That is un

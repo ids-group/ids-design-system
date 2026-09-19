@@ -4154,6 +4154,53 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
+    "component": "Heatmap Chart",
+    "selector": ".heatmap-chart",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-heatmap-chart-cell-size",
+        "value": "34px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-heatmap-chart-cell-gap",
+        "value": "2px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-heatmap-chart-cell-radius",
+        "value": "var(--ds-radius-control)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-heatmap-chart-label-color",
+        "value": "var(--ds-chart-axis-label-color)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-heatmap-chart-label-font-size",
+        "value": "var(--ds-chart-axis-font-size)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-heatmap-chart-missing-color",
+        "value": "var(--surface-secondary)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-heatmap-chart-focus-color",
+        "value": "var(--focus-ring-color)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-heatmap-chart-focus-width",
+        "value": "var(--focus-ring-width)",
+        "notes": ""
+      }
+    ]
+  },
+  {
     "component": "Icon Base",
     "selector": ".icon-base",
     "description": "",

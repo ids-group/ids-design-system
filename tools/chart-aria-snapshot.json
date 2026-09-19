@@ -35,6 +35,14 @@
     "polygon: role={interactive() ? 'button' : null}, aria-label={interactive() ? entryLabel(entry) : null}",
     "span: aria-hidden=true"
   ],
+  "heatmap-chart": [
+    "p: role=status",
+    "div: aria-hidden=true",
+    "div: role={interactive() ? 'group' : 'img'}, aria-label={accessibleName()}",
+    "button: aria-label={cell.accessibleName}",
+    "span: role=img, aria-label={cell.accessibleName}",
+    "span: aria-hidden=true"
+  ],
   "line-chart": [
     "p: role=status",
     "div: aria-hidden=true",
