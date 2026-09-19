@@ -110,30 +110,6 @@
       "note": "`LineChartComponent` gained `curve`, `stack`, `stackedSeries`, `stacksSeries` and `lowerValues` on its resolved series; `LineSeriesComponent` gained `curve`. Subclassing a DS component is unsupported, but a release that only adds can still fail such a build on a name collision, which is why the classes are listed here rather than in the additive notes."
     },
     {
-      "id": "chart-ramp-spans-the-full-lightness-range",
-      "kind": "behavior",
-      "old": "--ds-chart-ramp-1-color",
-      "new": null,
-      "surface": "style",
-      "action": "Nothing, unless the old funnel colours must be kept: set the eight `--ds-chart-ramp-N-color` tokens back to their previous values. Re-check any text or icon drawn over a ramp colour, because the two ends of the scale are much further apart than they were.",
-      "appliesWhen": "Any app rendering `ds-funnel-chart` without overriding the ramp, and any stylesheet that paints with `--ds-chart-ramp-*` or places a label over something painted with it. An app that already overrides all eight is unaffected.",
-      "pitfall": "Nothing errors and no binding changes, so a build that passes proves nothing. Contrast on white across the scale now runs 1.14:1 to 9.07:1 rather than 2.07:1 to 4.37:1, so a label colour chosen once for the whole ramp is now unreadable at one end or the other.",
-      "restore": "--ds-chart-ramp-1-color: hsl(8deg 78% 76%); --ds-chart-ramp-2-color: hsl(8deg 78% 72%); --ds-chart-ramp-3-color: hsl(8deg 78% 69%); --ds-chart-ramp-4-color: hsl(8deg 78% 65%); --ds-chart-ramp-5-color: hsl(8deg 78% 62%); --ds-chart-ramp-6-color: hsl(8deg 77% 58%); --ds-chart-ramp-7-color: hsl(8deg 75% 55%); --ds-chart-ramp-8-color: hsl(8deg 72% 51%);",
-      "searchHints": [
-        "--ds-chart-ramp",
-        "chart-ramp",
-        "ds-funnel-chart"
-      ],
-      "detect": [
-        "--ds-chart-ramp-1-color",
-        "--ds-chart-ramp",
-        "ds-funnel-chart",
-        "chart-ramp"
-      ],
-      "verify": "Every label, icon or border drawn over a ramp colour is chosen against that cell's own end of the scale, and a funnel that must keep its old palette carries all eight overrides rather than some of them.",
-      "note": "Magnitude on an ordered scale is read from the step between two colours and nothing else. The old ramp gave adjacent steps 2.1-3.9 dE apart and 20.7 end to end, so eight stages showed about three the eye could separate; it is 6.9-10.6 and 55.0 now, measured in OKLab. The dark theme's ramp is widened to the same span."
-    },
-    {
       "id": "bar-chart-value-accepts-a-range",
       "kind": "behavior",
       "old": "BarChartRow",
@@ -166,7 +142,8 @@
     "A line series measured only against the first axis no longer raises an empty second axis labelled `0`. Affected any plot whose series all read against the left axis; a plot that genuinely carries two scales is unchanged.",
     "`ds-line-chart` takes `stack`: `'none'` (the default, and what every chart already drew), `'stacked'` or `'normalized'`. Nothing to change - a chart that sets nothing is unchanged. Only a series with `area: true` fills, stacking runs per axis, and `stack=\"stacked\"` is not `yAxisMode=\"split\"`: series on top of each other, against two plots one above the other.",
     "`ds-heatmap-chart` is new, from `@ids-group-ltd/ids-design-system/components/heatmap-chart` and from the package root, with `HeatmapChartRow` and `HeatmapChartCell`. Purely additive - nothing to change. It has no `dataTable` input on purpose: colour is the only channel carrying the quantity on the grid, so the annex table and the colour scale are always drawn.",
-    "`ds-waterfall-chart` is new, from `@ids-group-ltd/ids-design-system/components/waterfall-chart` and from the package root, with `WaterfallChartDatum`, `WaterfallChartKind` and `WaterfallChartStep`. Two tokens come with it, `--ds-chart-positive-color` and `--ds-chart-negative-color`, pointing at the palette's two lead hues rather than at `--success` and `--error`. Purely additive - nothing to change."
+    "`ds-waterfall-chart` is new, from `@ids-group-ltd/ids-design-system/components/waterfall-chart` and from the package root, with `WaterfallChartDatum`, `WaterfallChartKind` and `WaterfallChartStep`. Two tokens come with it, `--ds-chart-positive-color` and `--ds-chart-negative-color`, pointing at the palette's two lead hues rather than at `--success` and `--error`. Purely additive - nothing to change.",
+    "A heat scale is new: `--ds-chart-heat-1-color` through `--ds-chart-heat-8-color`, the same hue across the full lightness range for a grid where magnitude is read from the step between two colours. `--ds-chart-ramp-*` is unchanged and `ds-funnel-chart` looks exactly as it did. Purely additive - nothing to change."
   ],
   "deleteList": []
 }

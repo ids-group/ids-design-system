@@ -1,5 +1,6 @@
 export { resolveBrandValue } from './brand-defaults';
 export {
+  CHART_HEAT_COLORS,
   CHART_RAMP_COLORS,
   CHART_SERIES_COLORS,
   chartColors,

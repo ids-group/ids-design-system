@@ -14,10 +14,10 @@ A matrix of readings coloured by magnitude — depot by weekday, hour by date, q
 - `valueFormat`: `(value: number, location) => string`. Formats the scale's two ends, every cell's accessible name and the annex table. Unset falls back to `DS_CONFIG.chart.valueFormat`.
 - `cellClicked`: `{ row, rowIndex, column, columnIndex, value }`.
 
-**A `null` reading is a hole, not a low value.** It draws as the surface rather than as the ramp's coldest step, and it is excluded from the scale — the coldest step is a real measurement, and painting "we never measured this" with it states a figure nobody recorded.
+**A `null` reading is a hole, not a low value.** It draws as the surface rather than as the heat scale's coldest step, and it is excluded from the scale — the coldest step is a real measurement, and painting "we never measured this" with it states a figure nobody recorded.
 
-**The scale under the grid is what says what a colour is worth.** It prints the ramp's steps between the lowest and the highest reading; a heat map without it is a picture of relative warmth with no quantity attached.
+**The scale under the grid is what says what a colour is worth.** It prints the heat scale's steps between the lowest and the highest reading; a heat map without it is a picture of relative warmth with no quantity attached.
 
-**The ramp spans 1.14:1 to 9.07:1 against white**, so a label placed over a cell cannot take one colour for the whole scale. `showValues` handles this by drawing the glyph in the cell's own colour inverted, which stays legible at either end.
+**The heat scale spans 1.14:1 to 9.07:1 against white**, so a label placed over a cell cannot take one colour for the whole scale. `showValues` handles this by drawing the glyph in the cell's own colour inverted, which stays legible at either end.
 
 The grid scrolls sideways below its natural width rather than crushing the cells, the same answer `Table` gives.

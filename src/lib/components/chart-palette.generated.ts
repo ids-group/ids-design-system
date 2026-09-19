@@ -23,6 +23,14 @@ export const chartColors = {
   ramp6: 'var(--ds-chart-ramp-6-color)',
   ramp7: 'var(--ds-chart-ramp-7-color)',
   ramp8: 'var(--ds-chart-ramp-8-color)',
+  heat1: 'var(--ds-chart-heat-1-color)',
+  heat2: 'var(--ds-chart-heat-2-color)',
+  heat3: 'var(--ds-chart-heat-3-color)',
+  heat4: 'var(--ds-chart-heat-4-color)',
+  heat5: 'var(--ds-chart-heat-5-color)',
+  heat6: 'var(--ds-chart-heat-6-color)',
+  heat7: 'var(--ds-chart-heat-7-color)',
+  heat8: 'var(--ds-chart-heat-8-color)',
 } as const;
 
 /** @internal See chartColors. */
@@ -47,4 +55,16 @@ export const CHART_RAMP_COLORS: readonly string[] = [
   chartColors.ramp6,
   chartColors.ramp7,
   chartColors.ramp8,
+];
+
+/** @internal See chartColors. */
+export const CHART_HEAT_COLORS: readonly string[] = [
+  chartColors.heat1,
+  chartColors.heat2,
+  chartColors.heat3,
+  chartColors.heat4,
+  chartColors.heat5,
+  chartColors.heat6,
+  chartColors.heat7,
+  chartColors.heat8,
 ];

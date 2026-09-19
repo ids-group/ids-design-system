@@ -15,8 +15,10 @@
 
   <p class="block-desc t-s">
     Rows down the side, columns across the top, one reading per cell. Magnitude
-    is read from the STEP between two colours, which is why the ramp spans the
-    full lightness range rather than a band of near-neighbours.
+    is read from the STEP between two colours, which is why the heat scale spans
+    the full lightness range rather than a band of near-neighbours. It is a
+    separate scale from the funnel's ramp, which stays in the middle of the
+    range for the opposite reason.
   </p>
 
   <ds-heatmap-chart
@@ -49,10 +51,10 @@
 
   <p class="block-desc t-s">
     A <code class="t-mono-inline">null</code> draws as the surface, not as the
-    ramp's coldest step, and it is left out of the scale entirely. The coldest
-    step is a real measurement; painting "we never measured this" with it states
-    a figure nobody recorded. Depot F below opened on Thursday and nobody
-    reports on Sunday - neither reads as a quiet day.
+    heat scale's coldest step, and it is left out of the scale entirely. The
+    coldest step is a real measurement; painting "we never measured this" with
+    it states a figure nobody recorded. Depot F below opened on Thursday and
+    nobody reports on Sunday - neither reads as a quiet day.
   </p>
 
   <ds-heatmap-chart
@@ -70,7 +72,7 @@
     </code> puts each reading inside its
     own cell. Off by default because a grid dense enough to be worth a heat map
     has no room for the numbers. The glyph takes the cell's own colour inverted,
-    which is what keeps it legible at both ends of a ramp running 1.14:1 to
+    which is what keeps it legible at both ends of a scale running 1.14:1 to
     9.07:1 against white.
   </p>
 

@@ -8,7 +8,7 @@ import {
   output,
 } from '@angular/core';
 import {
-  CHART_RAMP_COLORS,
+  CHART_HEAT_COLORS,
   defaultChartFormat,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
@@ -188,7 +188,7 @@ export class HeatmapChartComponent {
         const step =
           value === null
             ? null
-            : rampIndexOf(value, min, max, CHART_RAMP_COLORS.length);
+            : rampIndexOf(value, min, max, CHART_HEAT_COLORS.length);
         const formattedValue =
           value === null ? 'No reading' : format(value, 'tooltip');
 
@@ -197,7 +197,7 @@ export class HeatmapChartComponent {
           columnIndex,
           column,
           value,
-          color: step === null ? null : CHART_RAMP_COLORS[step],
+          color: step === null ? null : CHART_HEAT_COLORS[step],
           formattedValue,
           accessibleName: `${row.label}, ${column}: ${formattedValue}`,
         };
@@ -207,7 +207,7 @@ export class HeatmapChartComponent {
 
   /** The legend under the grid: the ramp's own steps with the readings at either end, which is the
    *  only thing that says what a colour is worth. */
-  protected readonly scaleSteps = computed(() => CHART_RAMP_COLORS);
+  protected readonly scaleSteps = computed(() => CHART_HEAT_COLORS);
 
   protected readonly scaleMinLabel = computed(() =>
     this.valueFormatResolved()(this.domain().min, 'tick'),

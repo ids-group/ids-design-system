@@ -772,41 +772,81 @@ export const CHARTS: readonly ColourRow[] = [
   },
   {
     "name": "--chart-ramp-1",
-    "value": "hsl(  8deg 60% 95%)",
+    "value": "hsl(  8deg 78% 76%)",
     "notes": ""
   },
   {
     "name": "--chart-ramp-2",
-    "value": "hsl(  8deg 67% 88%)",
+    "value": "hsl(  8deg 78% 72%)",
     "notes": ""
   },
   {
     "name": "--chart-ramp-3",
-    "value": "hsl(  8deg 73% 80%)",
+    "value": "hsl(  8deg 78% 69%)",
     "notes": ""
   },
   {
     "name": "--chart-ramp-4",
-    "value": "hsl(  8deg 76% 71%)",
+    "value": "hsl(  8deg 78% 65%)",
     "notes": ""
   },
   {
     "name": "--chart-ramp-5",
-    "value": "hsl(  8deg 78% 61%)",
+    "value": "hsl(  8deg 78% 62%)",
     "notes": ""
   },
   {
     "name": "--chart-ramp-6",
-    "value": "hsl(  8deg 78% 51%)",
+    "value": "hsl(  8deg 77% 58%)",
     "notes": ""
   },
   {
     "name": "--chart-ramp-7",
-    "value": "hsl(  8deg 74% 41%)",
+    "value": "hsl(  8deg 75% 55%)",
     "notes": ""
   },
   {
     "name": "--chart-ramp-8",
+    "value": "hsl(  8deg 72% 51%)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-heat-1",
+    "value": "hsl(  8deg 60% 95%)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-heat-2",
+    "value": "hsl(  8deg 67% 88%)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-heat-3",
+    "value": "hsl(  8deg 73% 80%)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-heat-4",
+    "value": "hsl(  8deg 76% 71%)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-heat-5",
+    "value": "hsl(  8deg 78% 61%)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-heat-6",
+    "value": "hsl(  8deg 78% 51%)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-heat-7",
+    "value": "hsl(  8deg 74% 41%)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-heat-8",
     "value": "hsl(  8deg 68% 31%)",
     "notes": ""
   },
@@ -1123,6 +1163,46 @@ export const CHARTS: readonly ColourRow[] = [
   {
     "name": "--ds-chart-ramp-8-color",
     "value": "var(--chart-ramp-8)",
+    "notes": ""
+  },
+  {
+    "name": "--ds-chart-heat-1-color",
+    "value": "var(--chart-heat-1)",
+    "notes": ""
+  },
+  {
+    "name": "--ds-chart-heat-2-color",
+    "value": "var(--chart-heat-2)",
+    "notes": ""
+  },
+  {
+    "name": "--ds-chart-heat-3-color",
+    "value": "var(--chart-heat-3)",
+    "notes": ""
+  },
+  {
+    "name": "--ds-chart-heat-4-color",
+    "value": "var(--chart-heat-4)",
+    "notes": ""
+  },
+  {
+    "name": "--ds-chart-heat-5-color",
+    "value": "var(--chart-heat-5)",
+    "notes": ""
+  },
+  {
+    "name": "--ds-chart-heat-6-color",
+    "value": "var(--chart-heat-6)",
+    "notes": ""
+  },
+  {
+    "name": "--ds-chart-heat-7-color",
+    "value": "var(--chart-heat-7)",
+    "notes": ""
+  },
+  {
+    "name": "--ds-chart-heat-8-color",
+    "value": "var(--chart-heat-8)",
     "notes": ""
   },
   {
