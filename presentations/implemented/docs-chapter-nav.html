@@ -3,10 +3,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Главы в навигации доков — 38 пунктов, семь способов их подать</title>
-<meta name="ds-deck-status" content="open">
+<meta name="ds-deck-status" content="implemented">
+<meta name="ds-deck-decided" content="2026-09-19">
+<meta name="ds-deck-evidence" content="ds-docs/src/app/shared/docs-section.component.ts - docs/todo.md">
 <meta name="ds-deck-evidence" content="ds-docs/src/app/layout/sidebar.component.scss - ds-docs/src/app/core/section-chapters.service.ts - ds-docs/src/app/sections/components/table/table.section.html">
-<link rel="stylesheet" href="ds.css">
-<link rel="stylesheet" href="deck.css">
+<link rel="stylesheet" href="../ds.css">
+<link rel="stylesheet" href="../deck.css">
 
 <style>
   /* Every rail is a 1:1 copy of the real sidebar: the numbers are read off
@@ -473,7 +475,7 @@
 <main>
   <header class="masthead">
     <div class="chips">
-      <span class="chip is-open">нужен вердикт</span>
+      <span class="chip is-done">Решено</span>
       <span class="chip is-accent">рейка нарисована 1:1 с кодом</span>
       <span class="chip">38 глав · 4 уровня</span>
       <span class="chip is-dead">1, 4, 5 — отвергнуты</span>
@@ -482,14 +484,18 @@
     <h1>Главы в навигации доков — 38 пунктов, семь способов их подать</h1>
 
     <p class="lede">
-      Главы секции выводятся автоматически и попадают в рейку. У <code>ds-table</code> их <b>38</b>
-      — против 14 у следующей по размеру секции. Ниже: сначала <b>почему это выглядело
-      нечитаемо</b> (причина оказалась не в количестве), потом четыре уровня иерархии нарисованные
-      правильно, потом семь вариантов четвёртого уровня. Каждая рейка здесь — <b>копия настоящей</b>
-      по значениям из <code>sidebar.component.scss</code>, сверенная с computed styles в живом
-      приложении на 280px.
+      Как список глав выводится из самой секции, и какие два предела у этого вывода. 38 глав у <code class="tok">ds-table</code> против 14 у следующей по размеру секции - предельный случай, на котором это разбиралось.
     </p>
   </header>
+
+  <div class="decided">
+    <h2>Решено: Главы выводятся из <code class="tok">h3.block-title</code> секции</h2>
+    <p>Список глав строится из заголовков самой секции, а не ведётся отдельно. Два предела записаны как осознанные: до секции без <code class="tok">h3.block-title</code> список не дотягивается, и активная глава не подкручивается во вьюпорт рельсы.</p>
+    <p class="evidence">2026-09-19 · ds-docs/src/app/shared/docs-section.component.ts - docs/todo.md</p>
+  </div>
+
+  <details class="folded">
+    <summary>Разбор, который к этому привёл</summary>
 
   <h2>Сначала — настоящая причина <span class="chip is-accent">исправлено</span></h2>
 
@@ -1364,4 +1370,5 @@
     уход на середине прокрутки выше на 39%. Заливка активного пункта из блока выше — Material,
     <code>itemShapeInsetStart: 12dp</code>.
   </div>
+  </details>
 </main>

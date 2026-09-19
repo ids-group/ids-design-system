@@ -3,10 +3,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Новые марки фазы 2 — три компонента, семь режимов, одна отложенная</title>
-<meta name="ds-deck-status" content="open">
+<meta name="ds-deck-status" content="implemented">
+<meta name="ds-deck-decided" content="2026-09-19">
+<meta name="ds-deck-evidence" content="src/lib/components/waterfall-chart/waterfall-chart.component.ts - src/lib/components/heatmap-chart/heatmap-chart.component.ts - CHANGELOG.md">
 <meta name="ds-deck-evidence" content="src/lib/components/line-chart/line-chart.types.ts:9 - src/lib/styles/_tokens-charts.scss:50-57">
-<link rel="stylesheet" href="ds.css">
-<link rel="stylesheet" href="deck.css">
+<link rel="stylesheet" href="../ds.css">
+<link rel="stylesheet" href="../deck.css">
 
 <style>
   .art {
@@ -74,16 +76,22 @@
   <div class="masthead">
     <h1>Марки фазы 2</h1>
     <p class="lede">
-      Три новых компонента, семь вариантов, которые компонентами быть не должны, и одна геометрия,
-      отложенная на фазу 3 по измеренной причине. Всё нарисовано на этой странице — выбирать по
-      картинке, а не по названию.
+      Какие марки добавляет фаза 2, и семь вариантов, которые компонентами быть не должны. Всё нарисовано на этой странице.
     </p>
     <div class="chips">
-      <span class="chip is-open">Нужно решение</span>
+      <span class="chip is-done">Решено</span>
       <span class="chip">§4 спеки фазы 2</span>
-      <span class="chip">вопросы 4, 6, 7</span>
     </div>
   </div>
+
+  <div class="decided">
+    <h2>Решено: Область - режим линии, водопад и тепловая карта - свои компоненты</h2>
+    <p>Область стала режимом (<code class="tok">area</code> плюс <code class="tok">stack</code>), водопад и тепловая карта получили свои теги. Рампу решено НЕ расширять: вместо этого заведена отдельная шкала <code class="tok">--ds-chart-heat-*</code> на полный размах светлоты, а рампа воронки осталась прежней. Спарклайн запаркован, точечная диаграмма ушла в фазу 3.</p>
+    <p class="evidence">2026-09-19 · src/lib/components/waterfall-chart/waterfall-chart.component.ts - src/lib/components/heatmap-chart/heatmap-chart.component.ts - CHANGELOG.md</p>
+  </div>
+
+  <details class="folded">
+    <summary>Разбор, который к этому привёл</summary>
 
   <section class="panel">
     <h2>1 · Область (area)</h2>
@@ -408,4 +416,5 @@
       переиспользует линию целиком, вторая — столбцы, третья не зависит ни от чего, кроме рампы.
     </p>
   </section>
+  </details>
 </main>

@@ -3,10 +3,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Скрыли серию — пересчитывать ось?</title>
-<meta name="ds-deck-status" content="open">
+<meta name="ds-deck-status" content="implemented">
+<meta name="ds-deck-decided" content="2026-09-19">
+<meta name="ds-deck-evidence" content="src/lib/components/line-chart/line-chart.component.ts">
 <meta name="ds-deck-evidence" content="src/lib/components/charts-scale.ts">
-<link rel="stylesheet" href="ds.css">
-<link rel="stylesheet" href="deck.css">
+<link rel="stylesheet" href="../ds.css">
+<link rel="stylesheet" href="../deck.css">
 
 <style>
   .art {
@@ -62,17 +64,21 @@
   <div class="masthead">
     <h1>Скрыли серию — ось пересчитывается?</h1>
     <p class="lede">
-      Легенда фазы 2 умеет выключать серию. Дальше начинается вопрос, который из десяти
-      обследованных библиотек называет вслух только одна: остаётся ли ось прежней. Вход будет в
-      любом случае — решается значение по умолчанию, то есть то, что увидит человек, ничего не
-      настраивавший.
+      Что происходит с осью, когда серию выключают - вопрос, который из десяти обследованных библиотек называет вслух только одна.
     </p>
     <div class="chips">
-      <span class="chip is-open">Нужно решение</span>
-      <span class="chip">§3.2 спеки, вопрос 8</span>
-      <span class="chip">решается дефолт, не наличие входа</span>
+      <span class="chip is-done">Решено</span>
     </div>
   </div>
+
+  <div class="decided">
+    <h2>Решено: Ось стоит на месте, пересчёт - по запросу</h2>
+    <p>Скрытие серии НЕ двигает сетку: иначе оставшиеся марки меняют высоту, хотя их числа не менялись. <code class="tok">rescaleOnHide</code> включает другое прочтение там, где читателю нужен масштаб оставшегося.</p>
+    <p class="evidence">2026-09-19 · src/lib/components/line-chart/line-chart.component.ts</p>
+  </div>
+
+  <details class="folded">
+    <summary>Разбор, который к этому привёл</summary>
 
   <section class="panel">
     <h2>Исходный чарт</h2>
@@ -225,4 +231,5 @@
       нужен второй режим, тот его включает осознанно и знает, что смотрит.
     </p>
   </section>
+  </details>
 </main>

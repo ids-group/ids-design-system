@@ -3,10 +3,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Как второй серии попасть в чарт</title>
-<meta name="ds-deck-status" content="open">
+<meta name="ds-deck-status" content="implemented">
+<meta name="ds-deck-decided" content="2026-09-19">
+<meta name="ds-deck-evidence" content="src/lib/components/chart/chart.component.ts - src/lib/components/column-chart/column-chart.component.html">
 <meta name="ds-deck-evidence" content="src/lib/components/radio-group/radio-group.token.ts">
-<link rel="stylesheet" href="ds.css">
-<link rel="stylesheet" href="deck.css">
+<link rel="stylesheet" href="../ds.css">
+<link rel="stylesheet" href="../deck.css">
 
 <style>
   .art {
@@ -66,16 +68,22 @@
   <div class="masthead">
     <h1>Как второй серии попасть в чарт</h1>
     <p class="lede">
-      Архитектурное решение фазы 2 и предпосылка сразу для трёх вещей: референсных линий,
-      комбинированных марок и аннотаций. Две модели стоят в поле, и разница между ними видна не в
-      обычном случае, а в том, что происходит при добавлении четвёртого элемента.
+      Две модели композиции, и место, где между ними видна разница: не в обычном случае, а во втором марке на том же плоте.
     </p>
     <div class="chips">
-      <span class="chip is-open">Нужно решение</span>
-      <span class="chip">гейтит всю стадию B плана</span>
+      <span class="chip is-done">Решено</span>
       <span class="chip">публичный API пяти чартов не меняется</span>
     </div>
   </div>
+
+  <div class="decided">
+    <h2>Решено: Проецируемые дети, а не массив серий</h2>
+    <p>Марк - это атрибут на настоящем <code class="tok">&lt;svg:g&gt;</code>, который инжектит контейнерные шкалы и сам сообщает свой домен. Контейнер не знает, какой марк он держит, - поэтому опорная линия, колоночная серия и линия делят одну ось, ничего друг о друге не зная.</p>
+    <p class="evidence">2026-09-19 · src/lib/components/chart/chart.component.ts - src/lib/components/column-chart/column-chart.component.html</p>
+  </div>
+
+  <details class="folded">
+    <summary>Разбор, который к этому привёл</summary>
 
   <section class="panel">
     <h2>Вот что надо уметь нарисовать</h2>
@@ -257,4 +265,5 @@ export const CHART_SCALES = new InjectionToken&lt;ChartScales&gt;('CHART_SCALES'
       а комбинированный чарт и аннотации перестают быть отдельными задачами.
     </p>
   </section>
+  </details>
 </main>

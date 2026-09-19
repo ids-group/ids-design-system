@@ -3,10 +3,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Область — режим линии или свой компонент</title>
-<meta name="ds-deck-status" content="open">
+<meta name="ds-deck-status" content="implemented">
+<meta name="ds-deck-decided" content="2026-09-19">
+<meta name="ds-deck-evidence" content="src/lib/components/line-chart/line-chart.types.ts - CHANGELOG.md">
 <meta name="ds-deck-evidence" content="src/lib/components/line-chart/line-chart.types.ts:9">
-<link rel="stylesheet" href="ds.css">
-<link rel="stylesheet" href="deck.css">
+<link rel="stylesheet" href="../ds.css">
+<link rel="stylesheet" href="../deck.css">
 
 <style>
   .art {
@@ -67,17 +69,22 @@
   <div class="masthead">
     <h1>Область: режим линии или свой компонент</h1>
     <p class="lede">
-      Картинка одна и та же при любом ответе — вопрос только в том, как её попросить. Обе формы
-      ходят в поле, и цена у них измеримая: <code class="tok">ds-line-chart</code> сегодня несёт
-      <strong>12 входов и 9 публичных токенов</strong>, и отдельному
-      <code class="tok">ds-area-chart</code> нужны все двенадцать.
+      Режим линии или свой компонент, с измеренной ценой каждой формы: 12 входов и 9 публичных токенов, которые пришлось бы заводить заново.
     </p>
     <div class="chips">
-      <span class="chip is-open">Нужно решение</span>
-      <span class="chip">§4.2 спеки, вопрос 4</span>
+      <span class="chip is-done">Решено</span>
       <span class="chip"><code>area?: boolean</code> уже объявлен и ничего не делает</span>
     </div>
   </div>
+
+  <div class="decided">
+    <h2>Решено: Режим линии, а не свой компонент</h2>
+    <p><code class="tok">area: true</code> на серии заливает полосу под ней, <code class="tok">stack</code> складывает несколько таких в композицию. Геометрия у области и у линии одна и та же, и все двенадцать входов линии остаются доступными.</p>
+    <p class="evidence">2026-09-19 · src/lib/components/line-chart/line-chart.types.ts - CHANGELOG.md</p>
+  </div>
+
+  <details class="folded">
+    <summary>Разбор, который к этому привёл</summary>
 
   <section class="panel">
     <h2>Что рисуем</h2>
@@ -205,4 +212,5 @@
       <code class="tok">ds-area-series</code> внутри. Тогда имя есть, а дублирования нет.
     </p>
   </section>
+  </details>
 </main>

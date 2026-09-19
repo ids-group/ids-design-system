@@ -16,31 +16,23 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 | 3 | `3-interaction-formula` | `.ds-interactive`, five verdicts B1-B5; agreed in principle, and `_interaction.scss` still does not exist |
 | 4 | `4-migration-manifest-audit` | eight format practices to ratify — tooling, no consumer pulling on it |
 | 5 | `5-select-native-multi` | the cheapest to close: "keep parked" is a complete answer, and it is the answer already given — it stays only because closing it was declined |
-| 6 | `6-warning-text-colour` | one colour on one tint, each candidate rendered in itself. It ends "name a number: 1, 2, 3 or 4" |
-| 7 | `7-docs-chapter-nav` | where the chapter list lives and what makes a sub-item a sub-item. Seven variants rejected, four left, and they are mutually exclusive: 11, 12, 13 and 14 each answer "where do 38 rows live" differently |
-| 8 | `8-chart-dual-axis` | ANSWERED — all four `yAxisMode` values stay, documented; the deck is the artefact the docs card carries |
-| 9 | `9-chart-palette-v2` | whether the eight categorical hues are re-derived against the validator, which costs a slot |
-| 10 | `10-chart-phase-2-marks` | which marks phase 2 adds — area, waterfall, heatmap — and the ramp measurement behind them |
-| 11 | `11-chart-composition-model` | projected children versus a series array; everything downstream of phase 2 reads this |
-| 12 | `12-chart-axis-mode-names` | three candidate name sets for `yAxisMode`, which is already public API |
-| 13 | `13-chart-area-mode-or-component` | area as a mode of the line or a component of its own, with the input count measured |
-| 14 | `14-chart-rescale-on-hide` | ANSWERED — the axis holds still; `rescaleOnHide` opts into the other reading |
-| 15 | `15-chart-sparkline-preset` | `variant="spark"` or a separate `ds-sparkline` |
-| 16 | `16-chart-scatter-phase` | scatter in phase 2 or phase 3, and the decimation it drags in |
+| 6 | `6-warning-text-colour` | one colour on one tint, each candidate rendered in itself. It ends "name a number: 1, 2, 3 or 4", and `docs/todo.md` still carries the measured 4.42:1 failure |
+| 7 | `7-chart-palette-v2` | whether the eight categorical hues are re-derived against the validator, which costs a slot |
+| 8 | `8-chart-sparkline-preset` | `variant="spark"` or a separate `ds-sparkline` — parked on 2026-09-19, so it is decided-not-built rather than unasked |
+| 9 | `9-chart-scatter-phase` | scatter in phase 2 or phase 3, and the decimation it drags in |
+| 10 | `10-waterfall-mode-or-component` | the waterfall's own tag against a `stack="waterfall"` mode on the column chart |
 
 **Ranks 1-3 are the two biggest lanes** — the colour engine, then the interaction formula that reads
-its ramp. Five closed on 2026-09-12: `field-group-invalid-voice` (the group takes `error` and a message row, and every segment announces it), `button-destination-api` (the modifiers ship as flat inputs, `routerLink` takes a `UrlTree`, and an exact match announces `page` where a prefix announces `true`), `opt-in-seam` (the table's features became directives and the
-other two questions were answered with a measurement — the button's message row was built and
-reverted, the portaled CSS rejected at 1 kB), `sidebar-states` (variant E, in the code as the item's
-`--accent-subtitle` fill with no fill on the group) and `stat-value-overflow` (one line and a tip on
-hover, with three hooks over it). `focus-ring-radius` closed on 2026-09-10: 4px everywhere, and the
-measuring found four of its seven hosts already had a shape their ring follows, so only three needed
-the token. `selection-focus-ring` closed on 2026-09-04 and moved on 2026-09-10 — the ring is on the
-row in `_control-line.scss`, which is what the deck asked for. The three that closed on 2026-09-04
-are in `implemented/` (`packaging-entry-points`, `basic-advanced-split`, `entry-point-shape`); read
-them in that order for the mechanism, the split question and the layout. Ranks 1-4 are written in
-Russian and share `deck.css`, which sits beside `ds.css` and carries the shell they use; the rest
-keep their own inline styles.
+its ramp. Ranks 1-4 are written in Russian and share `deck.css`, which sits beside `ds.css` and
+carries the shell; the chart decks share it too.
+
+**`implemented/` is where the answers live, and it is worth reading.** A closed deck keeps every word
+of the argument — the next person to ask the same question reads it to find out what was already
+weighed — but it stops LOOKING like a question: the verdict sits in a `.decided` banner at the top
+with its evidence line, and the argument folds into a `<details class="folded">` accordion under it.
+Seven closed on 2026-09-19 with the charts phase-2 work: the composition model, the area mode, the
+four axis modes and their names, the rescale-on-hide default, the phase-2 marks and the docs chapter
+nav.
 
 **A `tool` here takes no number.** `backlog-board.html` and `rejected-with-numbers.html` — both are
 read whenever rather than at a moment, so they stay unnumbered and sort below the queue.

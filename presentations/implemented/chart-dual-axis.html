@@ -3,10 +3,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Две оси на одном плоте — что именно в них ломается</title>
-<meta name="ds-deck-status" content="open">
+<meta name="ds-deck-status" content="implemented">
+<meta name="ds-deck-decided" content="2026-09-19">
+<meta name="ds-deck-evidence" content="src/lib/core/chart.types.ts - .design-sync/docs/LineChart.md">
 <meta name="ds-deck-evidence" content="src/lib/components/line-chart/line-chart.types.ts:23 - src/lib/components/line-chart/line-chart.math.ts:153-239">
-<link rel="stylesheet" href="ds.css">
-<link rel="stylesheet" href="deck.css">
+<link rel="stylesheet" href="../ds.css">
+<link rel="stylesheet" href="../deck.css">
 
 <style>
   .plots {
@@ -55,16 +57,22 @@
   <div class="masthead">
     <h1>Две оси: одни и те же данные, два вывода</h1>
     <p class="lede">
-      <code class="tok">ds-line-chart</code> возит четыре режима второй оси, три из них кладут две
-      шкалы на один плот. Точка пересечения линий при этом — артефакт выбора шкалы, а не факт из
-      данных. Ниже это показано на наших же числах.
+      Что именно ломается, когда две шкалы делят один плот, на наших же числах: точка пересечения линий - артефакт выбора шкалы, а не факт из данных.
     </p>
     <div class="chips">
       <span class="chip is-done">Решено 2026-09-13 — все четыре остаются</span>
-      <span class="chip">задокументировать, не построено</span>
       <span class="chip">имена режимов — дека 12</span>
     </div>
   </div>
+
+  <div class="decided">
+    <h2>Решено: Все четыре режима второй оси остаются</h2>
+    <p>Ни один не удалён. Артефакт двух шкал закрывается документацией, а не сокращением набора: каждый режим честно описан тем, что он делает с сетками. Имена разбирались отдельно и тоже приняты.</p>
+    <p class="evidence">2026-09-19 · src/lib/core/chart.types.ts - .design-sync/docs/LineChart.md</p>
+  </div>
+
+  <details class="folded">
+    <summary>Разбор, который к этому привёл</summary>
 
   <section class="panel">
     <h2>Артефакт</h2>
@@ -200,4 +208,5 @@
       <code class="tok">12-chart-axis-mode-names</code>.
     </p>
   </section>
+  </details>
 </main>
