@@ -1,0 +1,121 @@
+{
+  "version": "unreleased",
+  "items": [
+    {
+      "id": "line-chart-axis-mode-values-renamed",
+      "kind": "value-remap",
+      "old": "ds-line-chart[yAxisMode]",
+      "new": null,
+      "surface": [
+        "template",
+        "typescript"
+      ],
+      "map": {
+        "rounded": "yAxisMode=\"aligned\"",
+        "independent": "yAxisMode=\"dual-grid\"",
+        "stacked": "yAxisMode=\"split\"",
+        "exact": "yAxisMode=\"exact\""
+      },
+      "action": "On every `ds-line-chart`, rewrite `yAxisMode=\"rounded\"` to `yAxisMode=\"aligned\"`, `yAxisMode=\"independent\"` to `yAxisMode=\"dual-grid\"` and `yAxisMode=\"stacked\"` to `yAxisMode=\"split\"`. `yAxisMode=\"exact\"` is unchanged. Retype any field, constant or return value that supplies one of those strings.",
+      "appliesWhen": "Only `yAxisMode` on `ds-line-chart`, and any TypeScript typed as `ChartAxisMode` or `LineChartAxisMode` that feeds it. `stack` on `ds-column-chart` keeps its own `\"stacked\"`, which is a different input with a different meaning and is NOT renamed.",
+      "pitfall": "An unknown string does not error. Angular assigns it, no mode matches, and the plot silently falls back to one shared grid - a chart that still renders and is measured against the wrong axis. A build that passes proves nothing here; only the three old strings being gone does.",
+      "restore": null,
+      "searchHints": [
+        "yAxisMode=",
+        "ChartAxisMode",
+        "LineChartAxisMode",
+        "'rounded'",
+        "'independent'",
+        "'stacked'"
+      ],
+      "detect": [
+        "yAxisMode=\"rounded\"",
+        "yAxisMode=\"independent\"",
+        "yAxisMode=\"stacked\"",
+        "[yAxisMode]=",
+        "ChartAxisMode",
+        "LineChartAxisMode",
+        ": 'rounded'",
+        "= 'rounded'",
+        "'independent'",
+        "'stacked'"
+      ],
+      "verify": "No `yAxisMode` on a `ds-line-chart` carries `rounded`, `independent` or `stacked`, and every expression bound to `[yAxisMode]` can only produce `aligned`, `exact`, `dual-grid` or `split`.",
+      "note": "The names now say what is done to the gridlines, which is the only thing the four modes differ in. `'stacked'` had to go whatever else happened: `ds-column-chart` ships `stack=\"stacked\"` for SERIES on top of each other, while this mode puts two PLOTS one above the other, and the two charts are read side by side. `'exact'` was the one name that already described itself, so it stays."
+    },
+    {
+      "id": "chart-secondary-axis-mode-values-renamed",
+      "kind": "value-remap",
+      "old": "ds-chart[secondaryAxisMode]",
+      "new": null,
+      "surface": [
+        "template",
+        "typescript"
+      ],
+      "map": {
+        "rounded": "secondaryAxisMode=\"aligned\"",
+        "independent": "secondaryAxisMode=\"dual-grid\"",
+        "stacked": "secondaryAxisMode=\"split\"",
+        "exact": "secondaryAxisMode=\"exact\""
+      },
+      "action": "On every `ds-chart`, rewrite `secondaryAxisMode=\"rounded\"` to `secondaryAxisMode=\"aligned\"`, `secondaryAxisMode=\"independent\"` to `secondaryAxisMode=\"dual-grid\"` and `secondaryAxisMode=\"stacked\"` to `secondaryAxisMode=\"split\"`. `secondaryAxisMode=\"exact\"` is unchanged. Retype any field, constant or return value that supplies one of those strings.",
+      "appliesWhen": "Only `secondaryAxisMode` on `ds-chart`, and any TypeScript typed as `ChartAxisMode` or `LineChartAxisMode` that feeds it. `stack` on `ds-column-chart` keeps its own `\"stacked\"`, which is a different input with a different meaning and is NOT renamed.",
+      "pitfall": "An unknown string does not error. Angular assigns it, no mode matches, and the plot silently falls back to one shared grid - a chart that still renders and is measured against the wrong axis. A build that passes proves nothing here; only the three old strings being gone does.",
+      "restore": null,
+      "searchHints": [
+        "secondaryAxisMode=",
+        "ChartAxisMode",
+        "LineChartAxisMode",
+        "'rounded'",
+        "'independent'",
+        "'stacked'"
+      ],
+      "detect": [
+        "secondaryAxisMode=\"rounded\"",
+        "secondaryAxisMode=\"independent\"",
+        "secondaryAxisMode=\"stacked\"",
+        "[secondaryAxisMode]=",
+        "ChartAxisMode",
+        "LineChartAxisMode",
+        ": 'rounded'",
+        "= 'rounded'",
+        "'independent'",
+        "'stacked'"
+      ],
+      "verify": "No `secondaryAxisMode` on a `ds-chart` carries `rounded`, `independent` or `stacked`, and every expression bound to `[secondaryAxisMode]` can only produce `aligned`, `exact`, `dual-grid` or `split`.",
+      "note": "The names now say what is done to the gridlines, which is the only thing the four modes differ in. `'stacked'` had to go whatever else happened: `ds-column-chart` ships `stack=\"stacked\"` for SERIES on top of each other, while this mode puts two PLOTS one above the other, and the two charts are read side by side. The container takes the same four words as the preset, so a combo plot and a line chart are read the same way."
+    },
+    {
+      "id": "exported-class-members-grew",
+      "kind": "behavior",
+      "old": "extends LineChartComponent",
+      "new": null,
+      "surface": "typescript",
+      "action": "Only if you SUBCLASS one of these and declare a member of the same name: rename yours, or add `override` where your member genuinely means the same thing.",
+      "appliesWhen": "Only a class extending one of the listed components. Using them in a template is unaffected.",
+      "pitfall": "The collision is a compile error, not a silent one - TS4114 for a same-named member, TS2416 where the signature differs - so a build that passes has none.",
+      "restore": null,
+      "searchHints": [
+        "extends LineChartComponent",
+        "extends LineSeriesComponent",
+        "extends "
+      ],
+      "detect": [
+        "extends LineChartComponent",
+        "extends LineSeriesComponent",
+        "LineChartComponent",
+        "LineSeriesComponent"
+      ],
+      "verify": "Every subclass of the listed components builds, and any member it declares that the base now also declares carries `override`.",
+      "note": "`LineChartComponent` and `LineSeriesComponent` both gained `curve`. Subclassing a DS component is unsupported, but a release that only adds can still fail such a build on a name collision, which is why the classes are listed here rather than in the additive notes."
+    }
+  ],
+  "informational": [
+    "`ds-line-chart` and `dsLineSeries` take `curve`: `'linear'` (the default, and what every chart already drew), `'step'` or `'smooth'`. Nothing to change - a chart that sets nothing is unchanged. `'smooth'` is a monotone cubic, so it never draws a peak or a trough the readings do not contain.",
+    "A filled series now follows its own curve, so the fill and the line share one edge. With the default `'linear'` the drawing is byte-identical to before.",
+    "The chart container's marks are published API: `ColumnSeriesComponent`, `LineSeriesComponent`, `ReferenceLineComponent` and `ReferenceLabelComponent`, with `ColumnSeriesPoint`, `LineSeriesData` and `LineSeriesGaps`, now come from the package root as well as from `@ids-group-ltd/ids-design-system/components/chart`. Purely additive.",
+    "A chart tooltip no longer runs off the screen: the panel stops at the viewport height less the overlay's 12px margin and scrolls past that. A panel that already fitted is drawn exactly as before.",
+    "A line series measured only against the first axis no longer raises an empty second axis labelled `0`. Affected any plot whose series all read against the left axis; a plot that genuinely carries two scales is unchanged."
+  ],
+  "deleteList": []
+}

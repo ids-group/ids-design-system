@@ -242,9 +242,9 @@ export interface SecondaryAxis {
 
 /** The second value axis, as the four modes define it.
  *
- *  `'rounded'` and `'exact'` hang the second scale on the first's tick rows and differ only in the
- *  step: `'rounded'` snaps it up to a round number and overshoots the data, `'exact'` takes the
- *  step the data needs and lands on it. `'independent'` and `'stacked'` nice the second domain on
+ *  `'aligned'` and `'exact'` hang the second scale on the first's tick rows and differ only in the
+ *  step: `'aligned'` snaps it up to a round number and overshoots the data, `'exact'` takes the
+ *  step the data needs and lands on it. `'dual-grid'` and `'split'` nice the second domain on
  *  its own - stacked plots sit one above the other, so there is nothing to align.
  *
  *  Falls back to an independent scale wherever alignment is not available: fewer than two rows, no
@@ -273,7 +273,7 @@ export function secondaryAxis(
     aligned: false,
   });
 
-  if (mode !== 'rounded' && mode !== 'exact') {
+  if (mode !== 'aligned' && mode !== 'exact') {
     return independent();
   }
   const zero = zeroRow(primaryTicks);
@@ -289,7 +289,7 @@ export function secondaryAxis(
     rowsAbove > 0 ? maximum / rowsAbove : 0,
     rowsBelow > 0 ? -minimum / rowsBelow : 0,
   );
-  const step = mode === 'rounded' ? roundStepAtLeast(needed) : needed;
+  const step = mode === 'aligned' ? roundStepAtLeast(needed) : needed;
   if (!Number.isFinite(step) || step <= 0) {
     return {
       domain: { min: 0, max: 0 },

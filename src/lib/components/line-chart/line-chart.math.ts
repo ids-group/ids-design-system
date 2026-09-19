@@ -126,11 +126,11 @@ function nicedAxis(domainMax: number, tickCount: number): AxisScale {
   };
 }
 
-/** Both y axes, as the four modes define them. `'rounded'` and `'exact'` share the
+/** Both y axes, as the four modes define them. `'aligned'` and `'exact'` share the
  *  primary's gridlines and differ only in the step they divide the secondary domain
- *  by: `'rounded'` snaps the step up to a round number and overshoots the data,
- *  `'exact'` takes the domain itself and lands on it. `'independent'` and
- *  `'stacked'` nice each axis on its own — stacked plots sit one above the other,
+ *  by: `'aligned'` snaps the step up to a round number and overshoots the data,
+ *  `'exact'` takes the domain itself and lands on it. `'dual-grid'` and
+ *  `'split'` nice each axis on its own — stacked plots sit one above the other,
  *  so there is nothing to align. */
 export function axisLayout(
   primaryDomainMax: number,
@@ -146,7 +146,7 @@ export function axisLayout(
 
   const intervals = primary.ticks.length - 1;
   const canAlign =
-    (mode === 'rounded' || mode === 'exact') &&
+    (mode === 'aligned' || mode === 'exact') &&
     intervals >= 1 &&
     Number.isFinite(secondaryDomainMax) &&
     secondaryDomainMax > 0;
@@ -159,7 +159,7 @@ export function axisLayout(
   }
 
   const step =
-    mode === 'rounded'
+    mode === 'aligned'
       ? roundStepAtLeast(secondaryDomainMax / intervals)
       : secondaryDomainMax / intervals;
   if (step <= 0) {
@@ -182,7 +182,7 @@ export function chartLayout(
   mode: LineChartAxisMode,
   hasSecondaryAxis: boolean,
 ): ChartLayout {
-  const stacked = mode === 'stacked' && hasSecondaryAxis;
+  const stacked = mode === 'split' && hasSecondaryAxis;
   const left = AXIS_GUTTER;
   const right = hasSecondaryAxis && !stacked ? AXIS_GUTTER : BARE_EDGE_GUTTER;
   const width = LINE_CHART_VIEW_WIDTH - left - right;

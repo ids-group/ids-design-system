@@ -157,7 +157,7 @@ export class ChartComponent implements ChartScales {
 
   /** How the second value axis relates to the first, once a mark has reported against it. The
    *  same four words `ds-line-chart` takes. */
-  readonly secondaryAxisMode = input<ChartAxisMode>('rounded');
+  readonly secondaryAxisMode = input<ChartAxisMode>('aligned');
 
   /** Paints the first axis's tick labels in the colour of the marks measured against it. A
    *  two-scale plot is ambiguous without it - nothing on the canvas says which of two lines is
@@ -253,7 +253,7 @@ export class ChartComponent implements ChartScales {
   /** Two plots, one above the other, sharing the category axis: the only mode whose second axis
    *  is a second PLOT rather than a second scale over the first. */
   protected readonly stacked = computed(
-    () => this.secondaryAxisMode() === 'stacked' && this.hasSecondaryAxis(),
+    () => this.secondaryAxisMode() === 'split' && this.hasSecondaryAxis(),
   );
 
   protected readonly viewHeight = computed(

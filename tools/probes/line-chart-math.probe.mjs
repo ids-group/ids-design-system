@@ -29,8 +29,8 @@ const {
   pathToFileURL(join(components, 'line-chart', 'line-chart.math.ts')).href
 );
 
-const plot = chartLayout('rounded', false).primaryPlot;
-const stackedLayout = chartLayout('stacked', true);
+const plot = chartLayout('aligned', false).primaryPlot;
+const stackedLayout = chartLayout('split', true);
 const categories = ['Jan', 'Feb', 'Mar'];
 const centers = categoryCenters(categories.length, plot);
 const point = (x, y) => ({ categoryIndex: 0, x, y, value: 1 });
@@ -43,10 +43,10 @@ const PRIMARY_PEAK = 2410;
 const SECONDARY_PEAK = 75;
 const PRIMARY_TICKS = [0, 500, 1000, 1500, 2000, 2500];
 
-const rounded = axisLayout(PRIMARY_PEAK, SECONDARY_PEAK, 'rounded', 5);
+const rounded = axisLayout(PRIMARY_PEAK, SECONDARY_PEAK, 'aligned', 5);
 const exact = axisLayout(PRIMARY_PEAK, SECONDARY_PEAK, 'exact', 5);
-const independent = axisLayout(PRIMARY_PEAK, SECONDARY_PEAK, 'independent', 5);
-const stacked = axisLayout(PRIMARY_PEAK, SECONDARY_PEAK, 'stacked', 5);
+const independent = axisLayout(PRIMARY_PEAK, SECONDARY_PEAK, 'dual-grid', 5);
+const stacked = axisLayout(PRIMARY_PEAK, SECONDARY_PEAK, 'split', 5);
 
 check(
   'the primary axis is niced the same way in every mode',
@@ -60,7 +60,7 @@ check(
 );
 check('the primary max is the last primary tick', rounded.primary.max, 2500);
 
-// 'rounded' — the spec's own worked numbers: a secondary peak of 75 labels
+// 'aligned' — the spec's own worked numbers: a secondary peak of 75 labels
 // 0 · 20 · 40 · 60 · 80 · 100, so the series stops short of the top.
 check(
   'rounded labels the secondary axis in round steps',
@@ -90,7 +90,7 @@ check(
 );
 check('exact shares the primary gridlines', exact.alignedTicks, true);
 
-// 'independent' — niced on its own, so its gridlines fall somewhere else entirely.
+// 'dual-grid' — niced on its own, so its gridlines fall somewhere else entirely.
 check(
   'independent nices the secondary axis on its own',
   independent.secondary.ticks,
@@ -103,7 +103,7 @@ check(
   false,
 );
 
-// 'stacked' — two plots, so there is no alignment question to answer: the scales
+// 'split' — two plots, so there is no alignment question to answer: the scales
 // are the independent ones and the difference is the layout below.
 check('stacked scales the secondary axis independently', stacked.secondary, {
   max: 80,
@@ -128,20 +128,20 @@ check(
 );
 check(
   'an unstacked chart draws both axes against one plot',
-  chartLayout('rounded', true).stacked,
+  chartLayout('aligned', true).stacked,
   false,
 );
 check(
   'a right-hand axis gets a gutter for its labels',
-  chartLayout('rounded', true).primaryPlot.width <
-    chartLayout('rounded', false).primaryPlot.width,
+  chartLayout('aligned', true).primaryPlot.width <
+    chartLayout('aligned', false).primaryPlot.width,
   true,
 );
 
 // A domain whose own nice step would round DOWN: 650 / 5 is 130, and the d3 rule
 // snaps that to 100 — five intervals of which reach 500, short of the data. The
 // aligned axis must grow the step instead, not the interval count.
-const short = axisLayout(PRIMARY_PEAK, 650, 'rounded', 5);
+const short = axisLayout(PRIMARY_PEAK, 650, 'aligned', 5);
 check(
   'rounded never stops below its own data',
   short.secondary.max >= 650,
@@ -165,7 +165,7 @@ check('roundStepAtLeast on a NaN step is zero', roundStepAtLeast(NaN), 0);
 
 check(
   'no secondary series means no secondary axis',
-  axisLayout(PRIMARY_PEAK, null, 'rounded', 5).secondary,
+  axisLayout(PRIMARY_PEAK, null, 'aligned', 5).secondary,
   null,
 );
 
@@ -417,22 +417,22 @@ check(
 check('a NaN tick count falls back to the default', normalizeTickCount(NaN), 5);
 check(
   'a NaN tick count still produces an axis',
-  axisLayout(PRIMARY_PEAK, null, 'rounded', NaN).primary.ticks,
+  axisLayout(PRIMARY_PEAK, null, 'aligned', NaN).primary.ticks,
   PRIMARY_TICKS,
 );
 check(
   'an Infinity tick count still produces an axis',
-  axisLayout(PRIMARY_PEAK, null, 'rounded', Infinity).primary.ticks,
+  axisLayout(PRIMARY_PEAK, null, 'aligned', Infinity).primary.ticks,
   PRIMARY_TICKS,
 );
 check(
   'an Infinity domain produces a single tick',
-  axisLayout(Infinity, null, 'rounded', 5).primary.ticks,
+  axisLayout(Infinity, null, 'aligned', 5).primary.ticks,
   [0],
 );
 check(
   'a NaN domain produces a single tick',
-  axisLayout(NaN, null, 'rounded', 5).primary.ticks,
+  axisLayout(NaN, null, 'aligned', 5).primary.ticks,
   [0],
 );
 
@@ -440,12 +440,12 @@ check(
 check('no series means no domain', domainMaxOf([]), 0);
 check(
   'no series still produces an axis',
-  axisLayout(domainMaxOf([]), null, 'rounded', 5).primary,
+  axisLayout(domainMaxOf([]), null, 'aligned', 5).primary,
   { max: 0, ticks: [0] },
 );
 check(
   'no series leaves the secondary axis alone',
-  axisLayout(domainMaxOf([]), null, 'rounded', 5).secondary,
+  axisLayout(domainMaxOf([]), null, 'aligned', 5).secondary,
   null,
 );
 check('no categories means no positions', categoryCenters(0, plot), []);
@@ -459,7 +459,7 @@ check(
 // them "0" — six identical labels stacked up the plot say nothing at all.
 check(
   'a zero secondary domain collapses to one tick',
-  axisLayout(PRIMARY_PEAK, 0, 'rounded', 5).secondary.ticks,
+  axisLayout(PRIMARY_PEAK, 0, 'aligned', 5).secondary.ticks,
   [0],
 );
 check(
@@ -479,7 +479,7 @@ check(
 // unguarded tick would print that as an axis label.
 check(
   'a secondary domain at the top of the number range still ticks finitely',
-  axisLayout(PRIMARY_PEAK, 1.7e308, 'rounded', 5).secondary.ticks.every(
+  axisLayout(PRIMARY_PEAK, 1.7e308, 'aligned', 5).secondary.ticks.every(
     (tick) => Number.isFinite(tick),
   ),
   true,

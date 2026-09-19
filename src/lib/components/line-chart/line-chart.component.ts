@@ -141,7 +141,7 @@ export class LineChartComponent {
   readonly series = input.required<readonly LineChartSeries[]>();
 
   /** How a secondary axis relates to the primary one. */
-  readonly yAxisMode = input<LineChartAxisMode>('rounded');
+  readonly yAxisMode = input<LineChartAxisMode>('aligned');
 
   /** Draws a dot at every reading. Off, the dots appear on hover and on focus only. */
   readonly showMarkers = input(true, { transform: booleanAttribute });
@@ -793,7 +793,7 @@ export class LineChartComponent {
     baselineOf(this.layout().secondaryPlot),
   );
 
-  /** Where the crosshair stops. Under `'stacked'` the two plots sit one above the other over one
+  /** Where the crosshair stops. Under `'split'` the two plots sit one above the other over one
    *  category axis, so a crosshair that ends at the upper plot's baseline leaves the lower plot —
    *  the same category, the same pointer — with nothing marked at all. */
   protected readonly cursorBottomY = computed(() =>

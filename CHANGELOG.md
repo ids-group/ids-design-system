@@ -1,5 +1,25 @@
 ## Unreleased
 
+### Breaking
+
+- **The second-axis modes are renamed: `'rounded'` is `'aligned'`, `'independent'` is `'dual-grid'`,
+  `'stacked'` is `'split'`.** `'exact'` is unchanged. The four words name what is done to the
+  GRIDLINES, which is the only thing the modes differ in; the old three named something else or
+  nothing at all.
+
+  ```html
+  <ds-line-chart yAxisMode="dual-grid" [categories]="months" [series]="series" />
+  ```
+
+  It applies to `yAxisMode` on `ds-line-chart`, `secondaryAxisMode` on `ds-chart`, and the
+  `ChartAxisMode` union both take. `'stacked'` had to go whatever else happened: `ds-column-chart`
+  ships `stack="stacked"`, which puts SERIES on top of each other, while the axis mode puts two
+  PLOTS one above the other - one word, two meanings, on charts read side by side.
+
+  An unknown string does not error. Angular assigns it, no mode matches it, and the plot falls back
+  to one shared grid - a chart that looks plausible and is measured against the wrong axis. Grep for
+  the three old values on those two inputs; there is nothing to see at runtime.
+
 ### Added
 
 - **`curve` on the line: `'linear'`, `'step'` or `'smooth'`.** A line drawn between two readings is
@@ -31,6 +51,14 @@
   plot, the case the container exists for, can now be assembled by a consumer: no preset draws
   columns and a cumulative line on two axes, so the marks were the only route to it and were not
   reachable as one.
+
+### Changed
+
+- **Exported class member surface grew — only matters if you SUBCLASS one of these.**
+  `LineChartComponent` and `LineSeriesComponent` both gained `curve`. Subclassing a DS component is
+  unsupported, but a release that only adds can still fail such a build on a name collision: TS4114
+  demands `override` for a same-named member, TS2416 fires where the signature differs. Rename your
+  own member, or add `override` where it genuinely means the same thing.
 
 ### Fixed
 

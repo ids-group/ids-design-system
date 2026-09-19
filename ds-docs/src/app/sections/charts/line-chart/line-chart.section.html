@@ -189,7 +189,7 @@
   </div>
 
   <h3 class="block-title t-h4">
-    Second axis · rounded (default)
+    Second axis · aligned (default)
   </h3>
 
   <p class="block-desc t-s">
@@ -206,9 +206,9 @@
   </p>
 
   <ds-line-chart
-    caption="Sessions against conversion rate, rounded secondary axis"
+    caption="Sessions against conversion rate, aligned secondary axis"
     dataTable="none"
-    yAxisMode="rounded"
+    yAxisMode="aligned"
     [categories]="roundedCategories()"
     [series]="roundedSeries()" />
 
@@ -237,7 +237,7 @@
     [(series)]="exactSeries" />
 
   <h3 class="block-title t-h4">
-    Second axis · independent
+    Second axis · dual-grid
   </h3>
 
   <p class="block-desc t-s">
@@ -249,7 +249,7 @@
   <ds-line-chart
     caption="Each axis scaled and gridded on its own, the secondary dashed"
     dataTable="none"
-    yAxisMode="independent"
+    yAxisMode="dual-grid"
     [categories]="independentCategories()"
     [series]="independentSeries()" />
 
@@ -258,7 +258,7 @@
     [(series)]="independentSeries" />
 
   <h3 class="block-title t-h4">
-    Second axis · stacked
+    Second axis · split
   </h3>
 
   <p class="block-desc t-s">
@@ -270,7 +270,7 @@
   <ds-line-chart
     caption="Two plots sharing one category axis, labelled under the lower plot only"
     dataTable="none"
-    yAxisMode="stacked"
+    yAxisMode="split"
     [categories]="stackedCategories()"
     [series]="stackedSeries()" />
 

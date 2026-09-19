@@ -47,15 +47,16 @@ export interface ChartThreshold {
 /** Which of a chart's two value axes a mark is measured against. */
 export type ChartAxis = 'primary' | 'secondary';
 
-/** How a chart's second value axis relates to its first.
+/** How a chart's second value axis relates to its first. Every name says what is done to the
+ *  GRIDLINES, which is the only thing the four modes actually differ in.
  *
- *  - `'rounded'` - one set of gridlines, and the secondary axis rounds its step up to a round
+ *  - `'aligned'` - one set of gridlines, and the secondary axis rounds its step up to a round
  *    number, so its series stops short of the top.
  *  - `'exact'` - one set of gridlines, and the secondary axis ends exactly at its largest
  *    reading, so its series uses the full height and the labels are not round.
- *  - `'independent'` - each axis is scaled and gridded on its own.
- *  - `'stacked'` - two plots one above the other, sharing the category axis. */
-export type ChartAxisMode = 'rounded' | 'exact' | 'independent' | 'stacked';
+ *  - `'dual-grid'` - each axis is scaled and gridded on its own.
+ *  - `'split'` - two plots one above the other, sharing the category axis. */
+export type ChartAxisMode = 'aligned' | 'exact' | 'dual-grid' | 'split';
 
 /** How several series share one category's band.
  *
@@ -67,5 +68,5 @@ export type ChartAxisMode = 'rounded' | 'exact' | 'independent' | 'stacked';
  *  - `'normalized'` - stacked, then divided by the category's own total, so every band is full and
  *    the axis reads in shares rather than in the data's own unit.
  *
- *  Unrelated to `ChartAxisMode`'s `'stacked'`, which puts two PLOTS one above the other. */
+ *  Unrelated to `ChartAxisMode`'s `'split'`, which puts two PLOTS one above the other. */
 export type ChartStackMode = 'none' | 'grouped' | 'stacked' | 'normalized';

@@ -1969,12 +1969,12 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "kind": "input",
         "type": "ChartAxisMode",
         "union": [
-          "rounded",
+          "aligned",
           "exact",
-          "independent",
-          "stacked"
+          "dual-grid",
+          "split"
         ],
-        "default": "'rounded'",
+        "default": "'aligned'",
         "required": false,
         "description": "How the second value axis relates to the first, once a mark has reported against it. The same four words `ds-line-chart` takes."
       },
@@ -4900,12 +4900,12 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "kind": "input",
         "type": "LineChartAxisMode",
         "union": [
-          "rounded",
+          "aligned",
           "exact",
-          "independent",
-          "stacked"
+          "dual-grid",
+          "split"
         ],
-        "default": "'rounded'",
+        "default": "'aligned'",
         "required": false,
         "description": "How a secondary axis relates to the primary one."
       },

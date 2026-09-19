@@ -167,12 +167,12 @@ check(
 // label on 200K.
 const PRIMARY_TICKS = [0, 10000, 20000, 30000, 40000];
 
-const rounded = secondaryAxis(PRIMARY_TICKS, [[189900]], 5, 'rounded');
-check('a rounded second axis hangs on the first axis rows', rounded.aligned, true);
-check('a rounded second axis snaps its step up', rounded.ticks, [
+const aligned = secondaryAxis(PRIMARY_TICKS, [[189900]], 5, 'aligned');
+check('an aligned second axis hangs on the first axis rows', aligned.aligned, true);
+check('an aligned second axis snaps its step up', aligned.ticks, [
   0, 50000, 100000, 150000, 200000,
 ]);
-check('a rounded second axis ends on its own last row', rounded.domain, {
+check('an aligned second axis ends on its own last row', aligned.domain, {
   min: 0,
   max: 200000,
 });
@@ -186,16 +186,16 @@ check('an exact second axis divides the same rows', exact.ticks, [
   0, 47475, 94950, 142425, 189900,
 ]);
 
-const independent = secondaryAxis(PRIMARY_TICKS, [[189900]], 5, 'independent');
-check('an independent second axis shares no rows', independent.aligned, false);
-check('an independent second axis nices its own domain', independent.domain, {
+const dualGrid = secondaryAxis(PRIMARY_TICKS, [[189900]], 5, 'dual-grid');
+check('a dual-grid second axis shares no rows', dualGrid.aligned, false);
+check('a dual-grid second axis nices its own domain', dualGrid.domain, {
   min: 0,
   max: 200000,
 });
 
 check(
   'a stacked second axis is niced on its own too',
-  secondaryAxis(PRIMARY_TICKS, [[189900]], 5, 'stacked').aligned,
+  secondaryAxis(PRIMARY_TICKS, [[189900]], 5, 'split').aligned,
   false,
 );
 
@@ -223,20 +223,20 @@ check('a signed second axis reaches both of its own ends', signedSecond.domain, 
 
 check(
   'rows with no zero of their own cannot be shared',
-  secondaryAxis([10, 20, 30], [[500]], 3, 'rounded').aligned,
+  secondaryAxis([10, 20, 30], [[500]], 3, 'aligned').aligned,
   false,
 );
 check(
   'a single row cannot be shared',
-  secondaryAxis([0], [[500]], 3, 'rounded').aligned,
+  secondaryAxis([0], [[500]], 3, 'aligned').aligned,
   false,
 );
 check(
   'a positive reading with no rows above zero falls back',
-  secondaryAxis([-30, -20, -10, 0], [[500]], 4, 'rounded').aligned,
+  secondaryAxis([-30, -20, -10, 0], [[500]], 4, 'aligned').aligned,
   false,
 );
-check('nothing reported leaves a degenerate second axis', secondaryAxis(PRIMARY_TICKS, [], 5, 'rounded').domain, {
+check('nothing reported leaves a degenerate second axis', secondaryAxis(PRIMARY_TICKS, [], 5, 'aligned').domain, {
   min: 0,
   max: 0,
 });
