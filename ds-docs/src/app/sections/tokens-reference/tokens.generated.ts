@@ -2717,6 +2717,26 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "description": "",
     "tokens": [
       {
+        "name": "--ds-bar-chart-band-color",
+        "value": "var(--ds-chart-grid-line-color)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-bar-chart-target-color",
+        "value": "var(--text-primary)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-bar-chart-target-width",
+        "value": "2px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-bar-chart-target-overhang",
+        "value": "3px",
+        "notes": ""
+      },
+      {
         "name": "--ds-bar-chart-track-color",
         "value": "var(--ds-chart-grid-line-color)",
         "notes": "Unfilled part of a ds-bar-chart bar (default --chart-grid-line-color)."

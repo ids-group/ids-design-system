@@ -22,6 +22,31 @@
 
 ### Added
 
+- **`ds-bar-chart` takes a value range, a target and qualitative bands.** Three small additions that
+  turn the same bar into a floating bar and into a bullet chart, neither of which needed a component
+  of its own.
+
+  ```html
+  <ds-bar-chart [data]="[
+    { label: 'Build', value: [2, 9] },
+    { label: 'Revenue', value: 268, target: 250, ranges: [150, 220, 300] },
+  ]" />
+  ```
+
+  A row's `value` may be a `[low, high]` pair, and the bar then spans between its own ends rather
+  than from zero - what compares a duration and its PLACEMENT at once, which a bar from zero cannot
+  do. The ends may be written either way round, because a reader who reverses them means the same
+  band. `target` draws a tick at one reading; `ranges` paints bands behind the bar, given as their
+  upper bounds in ascending order.
+
+  The bands take one neutral hue at rising opacity rather than the series palette: a band is a
+  backdrop and the bar is the reading, so a second palette behind them would compete with the bars.
+  The track's scale holds the target and the outermost band as well as the bars, so a goal above
+  every reading still lands on the plot. `--ds-bar-chart-band-color`,
+  `--ds-bar-chart-target-color`, `--ds-bar-chart-target-width` and `--ds-bar-chart-target-overhang`
+  tune them.
+
+
 - **`ds-waterfall-chart`: a running total, bar by bar.** What a figure started at, what moved it,
   and what it ended at - the one variant in the family that genuinely cannot be a mode on another,
   because it needs an accumulating level, bars pinned to zero for the totals and its own

@@ -24,9 +24,9 @@
                 size="sm"
                 [max]="valueBound"
                 [min]="-valueBound"
-                [step]="stepFor(row.value)"
-                [value]="row.value"
-                (valueChange)="setValue($index, $event)" />
+                [step]="stepFor(readingOf(row.value))"
+                [value]="readingOf(row.value)"
+                (valueChange)="setValue($index, $event, row.value)" />
 
               <ds-icon-button
                 ariaLabel="Remove row"

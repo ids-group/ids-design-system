@@ -1,3 +1,27 @@
+import type { BarChartValue } from './bar-chart.types';
+
+/** Where a row's bar starts and ends on the value axis.
+ *
+ *  A plain number spans from zero, negative included - a reading below zero hangs from the
+ *  baseline rather than reaching up to it. A pair is normalised, because a bar of negative width
+ *  draws nothing at all and a reader who wrote the ends backwards meant the same band. A
+ *  non-finite end collapses the whole extent, so one bad reading draws no bar rather than a bar of
+ *  unknown length.
+ *
+ *  @internal */
+export function barExtent(value: BarChartValue): { low: number; high: number } {
+  if (typeof value === 'number') {
+    return Number.isFinite(value)
+      ? { low: Math.min(0, value), high: Math.max(0, value) }
+      : { low: 0, high: 0 };
+  }
+  const [first, second] = value;
+
+  return Number.isFinite(first) && Number.isFinite(second)
+    ? { low: Math.min(first, second), high: Math.max(first, second) }
+    : { low: 0, high: 0 };
+}
+
 /** Largest finite value, or `explicitMax` when it is a usable track length. A
  *  non-finite datum is skipped rather than compared: one `Infinity` row would
  *  otherwise become the track length and flatten every other row to nothing. */

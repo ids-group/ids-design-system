@@ -39,7 +39,12 @@ import type {
   ChartItemTooltipTrigger,
   ChartTooltipContext,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
-import { resolveMax, segmentWidths, widthPercent } from './bar-chart.math';
+import {
+  barExtent,
+  resolveMax,
+  segmentWidths,
+  widthPercent,
+} from './bar-chart.math';
 import type { BarChartRow, BarChartSegment } from './bar-chart.types';
 
 /** A row's parts, ready to draw: a width, a colour and a formatted value each. Segments are
@@ -270,12 +275,16 @@ export class BarChartComponent {
         entries: [
           {
             label: entry.row.label,
-            value: entry.row.value,
+            value: barExtent(entry.row.value).high,
             formatted: entry.formattedValue,
             color: entry.color,
             detail: this.partOfWhole()
               ? describeShare(
-                  this.data().map((row) => row.value),
+                  this.data().map((row) => {
+                    const extent = barExtent(row.value);
+
+                    return extent.high - extent.low;
+                  }),
                   this.activeMark.index(),
                 )
               : undefined,
@@ -285,31 +294,64 @@ export class BarChartComponent {
     },
   );
 
+  /** The track has to hold the far end of every bar, the target tick and the outermost band -
+   *  a goal above every reading is the one the chart is read for, and an axis derived from the
+   *  bars alone would draw it off the end. */
   protected readonly resolvedMax = computed(() =>
     resolveMax(
       this.max(),
-      this.data().map((row) => row.value),
+      this.data().flatMap((row) => [
+        barExtent(row.value).high,
+        row.target ?? 0,
+        ...(row.ranges ?? []),
+      ]),
     ),
   );
 
   protected readonly rows = computed(() => {
     const max = this.resolvedMax();
     const format = this.valueFormatResolved();
-    const values = this.data().map((row) => row.value);
+    // The bar's LENGTH is what a share is a share of, and on a floating bar that is the span
+    // between its ends rather than either end on its own.
+    const values = this.data().map((row) => {
+      const extent = barExtent(row.value);
 
-    return this.data().map((row, index) => ({
-      key: row.id ?? String(index),
-      row,
-      widthPercent: widthPercent(row.value, max),
-      formattedValue: format(row.value, 'tooltip'),
-      formattedPercent:
-        row.percent !== undefined
-          ? formatPercent(row.percent, 100)
-          : formatPercent(row.value, max),
-      share: this.partOfWhole() ? shareOfTotal(values, index) : '',
-      segments: segmentsOf(row, (value) => format(value, 'tooltip')),
-      color: row.color ?? chartColors.seriesDefault,
-    }));
+      return extent.high - extent.low;
+    });
+
+    return this.data().map((row, index) => {
+      const extent = barExtent(row.value);
+      const span = extent.high - extent.low;
+      const isRange = typeof row.value !== 'number';
+
+      return {
+        key: row.id ?? String(index),
+        row,
+        offsetPercent: widthPercent(extent.low, max),
+        widthPercent: widthPercent(span, max),
+        formattedValue: isRange
+          ? `${format(extent.low, 'tooltip')} - ${format(extent.high, 'tooltip')}`
+          : format(extent.high, 'tooltip'),
+        targetPercent:
+          row.target === undefined ? null : widthPercent(row.target, max),
+        formattedTarget:
+          row.target === undefined ? '' : format(row.target, 'tooltip'),
+        bands: (row.ranges ?? []).map((bound, bandIndex, all) => ({
+          key: `${row.id ?? index}-band-${bandIndex}`,
+          widthPercent: widthPercent(bound, max),
+          // Rising opacity rather than rising hue: the bands are one backdrop read as an order,
+          // and a second palette behind the bars would compete with the bars themselves.
+          opacity: (bandIndex + 1) / (all.length + 1),
+        })),
+        formattedPercent:
+          row.percent !== undefined
+            ? formatPercent(row.percent, 100)
+            : formatPercent(span, max),
+        share: this.partOfWhole() ? shareOfTotal(values, index) : '',
+        segments: segmentsOf(row, (value) => format(value, 'tooltip')),
+        color: row.color ?? chartColors.seriesDefault,
+      };
+    });
   });
 
   protected readonly accessibleName = computed(
@@ -317,7 +359,10 @@ export class BarChartComponent {
       this.summary() ??
       describeSeries(
         this.caption() ?? 'Chart',
-        this.data().map((row) => ({ label: row.label, value: row.value })),
+        this.data().map((row) => ({
+          label: row.label,
+          value: barExtent(row.value).high - barExtent(row.value).low,
+        })),
         (value) => this.valueFormatResolved()(value, 'tooltip'),
         this.dataTableResolved() !== 'none',
       ),

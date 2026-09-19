@@ -16,7 +16,9 @@ import { replayMarks } from './replay-marks';
 
 export interface ChartDataEditorRow {
   readonly label: string;
-  readonly value: number;
+  /** A pair is a floating bar. The stepper edits its FAR end and leaves the near one where it is,
+   *  because moving both at once is a drag and this is a one-number control. */
+  readonly value: number | readonly [number, number];
 }
 
 // Chart figures run from nine digits down through negatives, so the stepper is bounded
@@ -65,8 +67,19 @@ export class DocsChartDataEditorComponent<TRow extends ChartDataEditorRow> {
     this.patch(index, { label });
   }
 
-  protected setValue(index: number, value: number): void {
-    this.patch(index, { value });
+  /** The number the stepper shows: a pair's far end, a plain reading as it is. */
+  protected readingOf(value: number | readonly [number, number]): number {
+    return typeof value === 'number' ? value : value[1];
+  }
+
+  protected setValue(
+    index: number,
+    value: number,
+    previous: number | readonly [number, number],
+  ): void {
+    this.patch(index, {
+      value: typeof previous === 'number' ? value : [previous[0], value],
+    } as Partial<TRow>);
   }
 
   // Zero carries no magnitude of its own, so it borrows the series' — otherwise a fresh row in a
@@ -98,7 +111,7 @@ export class DocsChartDataEditorComponent<TRow extends ChartDataEditorRow> {
 
   private readonly typicalMagnitude = computed(() => {
     const magnitudes = this.rows()
-      .map((row) => Math.abs(row.value))
+      .map((row) => Math.abs(this.readingOf(row.value)))
       .filter((magnitude) => Number.isFinite(magnitude) && magnitude > 0)
       .sort((left, right) => left - right);
 

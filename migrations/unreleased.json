@@ -132,6 +132,30 @@
       ],
       "verify": "Every label, icon or border drawn over a ramp colour is chosen against that cell's own end of the scale, and a funnel that must keep its old palette carries all eight overrides rather than some of them.",
       "note": "Magnitude on an ordered scale is read from the step between two colours and nothing else. The old ramp gave adjacent steps 2.1-3.9 dE apart and 20.7 end to end, so eight stages showed about three the eye could separate; it is 6.9-10.6 and 55.0 now, measured in OKLab. The dark theme's ramp is widened to the same span."
+    },
+    {
+      "id": "bar-chart-value-accepts-a-range",
+      "kind": "behavior",
+      "old": "BarChartRow",
+      "new": null,
+      "surface": "typescript",
+      "action": "Nothing to write. Where you READ a row's `value` back as a number - summing it, comparing it, passing it on - handle the `[low, high]` pair the type now also allows.",
+      "appliesWhen": "Only code that reads `BarChartRow['value']` back, or declares its own value of that type. Passing a plain number into `data` is unchanged and draws exactly what it did.",
+      "pitfall": "The widening is source-compatible for whoever WRITES the value and breaking for whoever reads it: `total += row.value` is TS2365 now, and a subclass or a mapped type over `BarChartRow` can fail on the invariant position. A chart that only receives data sees nothing at all.",
+      "restore": null,
+      "searchHints": [
+        "BarChartRow",
+        "row.value",
+        "bar-chart"
+      ],
+      "detect": [
+        "BarChartRow",
+        ".value",
+        "readonly BarChartRow[]",
+        "BarChartRow["
+      ],
+      "verify": "Every place that reads a `BarChartRow`'s `value` back narrows it before using it as a number, and the build is clean.",
+      "note": "`value` was `number` and is `number | readonly [low, high]`, so a bar can span between its own ends rather than from zero. The pair is normalised, so either order means the same band."
     }
   ],
   "informational": [
