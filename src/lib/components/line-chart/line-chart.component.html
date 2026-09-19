@@ -167,15 +167,15 @@
           track entry.series.id;
           let seriesIndex = $index
         ) {
-          @for (points of entry.polylines; track $index) {
-            <polyline
+          @for (path of entry.linePaths; track $index) {
+            <path
               class="series-line"
               animate.enter="mark-enter"
               animate.leave="mark-leave"
               [attr.stroke-dasharray]="entry.dash"
               [style.--_chart-mark-stagger]="markStagger(seriesIndex)"
               [class.is-dimmed]="isDimmed(entry.series.id)"
-              [attr.points]="points"
+              [attr.d]="path"
               [attr.stroke]="entry.color" />
           }
         }

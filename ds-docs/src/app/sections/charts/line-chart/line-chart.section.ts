@@ -70,6 +70,25 @@ const GAP_CATEGORIES: readonly string[] = [
   'Sun',
 ];
 
+// A rate that holds between readings and a peak with a plateau either side: the first is what
+// `step` is for, the second is where a Catmull-Rom would invent a dip and a monotone cubic does not.
+const CURVE_CATEGORIES: readonly string[] = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+];
+
+const CURVE_SERIES: readonly LineChartSeries[] = [
+  {
+    id: 'rate',
+    label: 'Base rate',
+    data: [4.5, 4.5, 5.25, 5.25, 5.25, 4.75],
+  },
+];
+
 const GAP_SERIES: readonly LineChartSeries[] = [
   {
     id: 'visits',
@@ -152,6 +171,21 @@ export class LineChartSection {
     signal<readonly string[]>(GAP_CATEGORIES);
   protected readonly gapBreakSeries =
     signal<readonly LineChartSeries[]>(GAP_SERIES);
+
+  protected readonly curveLinearCategories =
+    signal<readonly string[]>(CURVE_CATEGORIES);
+  protected readonly curveLinearSeries =
+    signal<readonly LineChartSeries[]>(CURVE_SERIES);
+
+  protected readonly curveStepCategories =
+    signal<readonly string[]>(CURVE_CATEGORIES);
+  protected readonly curveStepSeries =
+    signal<readonly LineChartSeries[]>(CURVE_SERIES);
+
+  protected readonly curveSmoothCategories =
+    signal<readonly string[]>(CURVE_CATEGORIES);
+  protected readonly curveSmoothSeries =
+    signal<readonly LineChartSeries[]>(CURVE_SERIES);
 
   protected readonly gapZeroCategories =
     signal<readonly string[]>(GAP_CATEGORIES);

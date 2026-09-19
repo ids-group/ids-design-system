@@ -14,8 +14,13 @@ export {
   shareOfTotal,
 } from './charts-format';
 export { elementWidth } from './charts-measure';
-export { areaPath, lineSegments, polylinePoints } from './charts-path';
-export type { LinePoint } from './charts-path';
+export {
+  areaPath,
+  linePath,
+  lineSegments,
+  polylinePoints,
+} from './charts-path';
+export type { LineCurve, LinePoint } from './charts-path';
 export {
   bandScale,
   pointScale,

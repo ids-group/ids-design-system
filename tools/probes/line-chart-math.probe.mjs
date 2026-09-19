@@ -18,6 +18,7 @@ const {
   chartLayout,
   domainMaxOf,
   lineSegments,
+  linePath,
   normalizeTickCount,
   paletteIndexFor,
   polylinePoints,
@@ -331,6 +332,55 @@ check(
   'polylinePoints of a clean segment is a points list',
   polylinePoints([point(10, 20), point(30, 40.125)]),
   '10,20 30,40.13',
+);
+check('linePath of nothing is an empty path', linePath([], 'linear'), '');
+check(
+  'linePath of one point is a move alone',
+  linePath([point(0, 10)], 'linear'),
+  'M 0,10',
+);
+check(
+  'linear joins the points',
+  linePath([point(0, 10), point(10, 20)], 'linear'),
+  'M 0,10 L 10,20',
+);
+check(
+  'step holds the value to the next x',
+  linePath([point(0, 10), point(10, 20)], 'step'),
+  'M 0,10 H 10 V 20',
+);
+// Two points have one secant, so the monotone tangents are that slope at both ends and the cubic
+// IS the straight line. A curve mode that bends a two-point series is reading a shape out of a
+// single reading pair.
+check(
+  'smooth of two points is the straight line written as a cubic',
+  linePath([point(0, 10), point(10, 20)], 'smooth'),
+  'M 0,10 C 3.33,13.33 6.67,16.67 10,20',
+);
+// The property the mode exists for: a Catmull-Rom through these three dips below 10, drawing a
+// trough the data never reaches. Every control point stays inside the readings.
+check(
+  'smooth never steers below a local minimum',
+  linePath([point(0, 20), point(10, 10), point(20, 20)], 'smooth')
+    .match(/-?\d+(?:\.\d+)?,(-?\d+(?:\.\d+)?)/g)
+    .map((pair) => Number(pair.split(',')[1]))
+    .every((y) => y <= 20 && y >= 10),
+  true,
+);
+check(
+  'linePath refuses a poisoned coordinate',
+  linePath([point(10, 20), point(NaN, 40)], 'linear'),
+  '',
+);
+check(
+  'linePath refuses an infinite coordinate',
+  linePath([point(10, 20), point(30, Infinity)], 'smooth'),
+  '',
+);
+check(
+  'an area follows its own line, so the fill and the stroke share an edge',
+  areaPath([point(0, 10), point(10, 20)], 100, 'smooth'),
+  'M 0,10 C 3.33,13.33 6.67,16.67 10,20 L 10,100 L 0,100 Z',
 );
 check(
   'areaPath refuses a poisoned baseline',

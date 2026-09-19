@@ -2,6 +2,24 @@
 
 ### Added
 
+- **`curve` on the line: `'linear'`, `'step'` or `'smooth'`.** A line drawn between two readings is
+  a claim about what happened in between, and this is where the claim is made. `'linear'` stays the
+  default and asserts nothing the data does not say.
+
+  ```html
+  <ds-line-chart curve="step" [categories]="months" [series]="baseRate" />
+  ```
+
+  `'step'` holds each reading until the next, which is what a quantity that CHANGES at a moment
+  actually did - a price, a headcount, a rate - rather than drifting between two. `'smooth'` is a
+  monotone cubic, NOT a Catmull-Rom: a Catmull-Rom overshoots, drawing a trough below a minimum the
+  data never reaches, which on a chart is a reading that does not exist.
+
+  A filled series follows the same curve, so the fill and its own line share one edge instead of the
+  line floating off a straight-edged fill. `dsLineSeries` takes the same input with the same three
+  words, so a composed plot and a preset draw one series the same way.
+
+
 - **The chart container's marks are published API.** `ColumnSeriesComponent`,
   `LineSeriesComponent`, `ReferenceLineComponent` and `ReferenceLabelComponent`, with
   `ColumnSeriesPoint`, `LineSeriesData` and `LineSeriesGaps`, come from the package root as well as

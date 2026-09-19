@@ -19,10 +19,13 @@ import {
   focusMark,
   lineSegments,
   nextRovingIndex,
-  polylinePoints,
+  linePath,
   staggerDelay,
 } from '@ids-group-ltd/ids-design-system/components';
-import type { LinePoint } from '@ids-group-ltd/ids-design-system/components';
+import type {
+  LineCurve,
+  LinePoint,
+} from '@ids-group-ltd/ids-design-system/components';
 import type {
   ChartAxis,
   ChartValueFormat,
@@ -92,6 +95,11 @@ export class LineSeriesComponent implements OnDestroy {
   /** What a `null` reading draws: `'break'` leaves a hole in the line, `'zero'` plots a point
    *  at zero. A missing measurement and a measured zero are different facts. */
   readonly gaps = input<LineSeriesGaps>('break');
+
+  /** How the line joins its readings. `'linear'` by default, which asserts nothing the data does
+   *  not say; a curve is a claim about what happened BETWEEN two readings. `'step'` holds each
+   *  reading to the next, `'smooth'` is a monotone cubic that draws no peak the data lacks. */
+  readonly curve = input<LineCurve>('linear');
 
   /** Whether a hovered or focused reading opens a tooltip. */
   readonly tooltip = input<ChartItemTooltipTrigger>('item');
@@ -186,14 +194,15 @@ export class LineSeriesComponent implements OnDestroy {
       );
       const segments = lineSegments(points);
       const format = this.valueFormat();
+      const curve = this.curve();
 
       return {
         series,
         color,
         seriesIndex: index,
-        polylines: segments.map((segment) => polylinePoints(segment)),
+        linePaths: segments.map((segment) => linePath(segment, curve)),
         areaPaths: series.area
-          ? segments.map((segment) => areaPath(segment, toY(0)))
+          ? segments.map((segment) => areaPath(segment, toY(0), curve))
           : [],
         markers: points
           .filter((point): point is LinePoint => point !== null)

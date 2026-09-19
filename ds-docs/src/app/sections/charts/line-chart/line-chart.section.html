@@ -54,6 +54,86 @@
     [annotations]="specimenAnnotations" />
 
   <h3 class="block-title t-h4">
+    Between the readings
+  </h3>
+
+  <p class="block-desc t-s">
+    A line drawn between two readings is a claim about what happened in between,
+    and
+    <code class="t-mono-inline">
+      curve
+    </code> is where that claim is made.
+    <code class="t-mono-inline">
+      linear
+    </code>, the default, asserts nothing the
+    data does not say.
+    <code class="t-mono-inline">
+      step
+    </code> holds each reading
+    until the next, which is what a quantity that CHANGES at a moment actually
+    did - a price, a headcount, a rate.
+    <code class="t-mono-inline">
+      smooth
+    </code>
+    is a monotone cubic, so it never draws a peak or a trough the readings do not
+    contain; a Catmull-Rom would invent one on either side of the plateau below. A
+    filled series follows the same curve, so the fill and its line share one edge.
+  </p>
+
+  <div class="states states--cols-3">
+    <div class="state-cell">
+      <ds-line-chart
+        caption="Straight between the readings"
+        dataTable="none"
+        curve="linear"
+        [categories]="curveLinearCategories()"
+        [series]="curveLinearSeries()" />
+
+      <div class="state-cell-label">
+        linear (default)
+      </div>
+
+      <docs-line-chart-data-editor
+        [(categories)]="curveLinearCategories"
+        [(series)]="curveLinearSeries" />
+    </div>
+
+    <div class="state-cell">
+      <ds-line-chart
+        caption="The rate holds until the day it moves"
+        dataTable="none"
+        curve="step"
+        [categories]="curveStepCategories()"
+        [series]="curveStepSeries()" />
+
+      <div class="state-cell-label">
+        step
+      </div>
+
+      <docs-line-chart-data-editor
+        [(categories)]="curveStepCategories"
+        [(series)]="curveStepSeries" />
+    </div>
+
+    <div class="state-cell">
+      <ds-line-chart
+        caption="Eased through the readings, with no invented trough"
+        dataTable="none"
+        curve="smooth"
+        [categories]="curveSmoothCategories()"
+        [series]="curveSmoothSeries()" />
+
+      <div class="state-cell-label">
+        smooth
+      </div>
+
+      <docs-line-chart-data-editor
+        [(categories)]="curveSmoothCategories"
+        [(series)]="curveSmoothSeries" />
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
     Missing readings
   </h3>
 

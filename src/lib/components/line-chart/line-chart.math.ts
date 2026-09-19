@@ -10,11 +10,15 @@ import type { LineChartAxisMode, LineChartGaps } from './line-chart.types';
 
 export {
   areaPath,
+  linePath,
   lineSegments,
   polylinePoints,
   roundStepAtLeast,
 } from '@ids-group-ltd/ids-design-system/components';
-export type { LinePoint } from '@ids-group-ltd/ids-design-system/components';
+export type {
+  LineCurve,
+  LinePoint,
+} from '@ids-group-ltd/ids-design-system/components';
 
 export const LINE_CHART_VIEW_WIDTH = 640;
 export const LINE_CHART_VIEW_HEIGHT = 320;

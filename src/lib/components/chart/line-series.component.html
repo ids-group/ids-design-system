@@ -12,13 +12,13 @@
   }
 
   @for (entry of plotted(); track entry.series.id) {
-    @for (points of entry.polylines; track $index) {
-      <svg:polyline
+    @for (path of entry.linePaths; track $index) {
+      <svg:path
         class="series-line"
         animate.enter="mark-enter"
         animate.leave="mark-leave"
         [style.--_chart-mark-stagger]="seriesStagger(entry.seriesIndex)"
-        [attr.points]="points"
+        [attr.d]="path"
         [attr.stroke]="entry.color" />
     }
   }

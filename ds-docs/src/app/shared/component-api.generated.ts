@@ -2252,6 +2252,19 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "What a `null` reading draws: `'break'` leaves a hole in the line, `'zero'` plots a point at zero. A missing measurement and a measured zero are different facts."
       },
       {
+        "name": "curve",
+        "kind": "input",
+        "type": "LineCurve",
+        "union": [
+          "linear",
+          "step",
+          "smooth"
+        ],
+        "default": "'linear'",
+        "required": false,
+        "description": "How the line joins its readings. `'linear'` by default, which asserts nothing the data does not say; a curve is a claim about what happened BETWEEN two readings. `'step'` holds each reading to the next, `'smooth'` is a monotone cubic that draws no peak the data lacks."
+      },
+      {
         "name": "tooltip",
         "kind": "input",
         "type": "ChartItemTooltipTrigger",
@@ -4952,6 +4965,19 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "'break'",
         "required": false,
         "description": "What a `null` reading draws. The default refuses to assert that a missing reading is a zero."
+      },
+      {
+        "name": "curve",
+        "kind": "input",
+        "type": "LineChartCurve",
+        "union": [
+          "linear",
+          "step",
+          "smooth"
+        ],
+        "default": "'linear'",
+        "required": false,
+        "description": "How the line joins its readings. `'linear'` by default, which asserts nothing the data does not say; a curve is a claim about what happened BETWEEN two readings."
       },
       {
         "name": "tickCount",

@@ -18,6 +18,13 @@ export interface LineChartSeries {
  *  composed two-scale plot, so a combo and a line chart are read the same way. */
 export type LineChartAxisMode = ChartAxisMode;
 
+/** How a line joins its readings. `'linear'` is the default and asserts nothing the data does not
+ *  say. `'step'` holds each reading until the next one, which is right for a quantity that CHANGES
+ *  at a moment rather than drifting between two - a price, a headcount, a rate. `'smooth'` is a
+ *  monotone cubic: it never draws a peak or a trough the readings do not contain, which a
+ *  Catmull-Rom does. */
+export type LineChartCurve = 'linear' | 'step' | 'smooth';
+
 /** What a `null` reading draws: a hole in the line, or a point at zero. */
 export type LineChartGaps = 'break' | 'zero';
 

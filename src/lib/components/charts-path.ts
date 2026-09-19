@@ -64,10 +64,114 @@ export function polylinePoints(segment: readonly LinePoint[]): string {
   return segment.map((point) => coordinatePair(point)).join(' ');
 }
 
-/** @internal */
+/** How a line joins its readings.
+ *
+ *  `'smooth'` is a monotone cubic, never a Catmull-Rom: a Catmull-Rom overshoots, drawing a trough
+ *  below a minimum the data never reaches, which on a chart is a reading that does not exist.
+ *
+ *  @internal */
+export type LineCurve = 'linear' | 'step' | 'smooth';
+
+/** Fritsch-Carlson tangents: the slope at each reading, clamped so no segment can turn back on
+ *  itself. A zero slope on either side of a reading pins the tangent flat, which is what keeps a
+ *  plateau flat instead of bulging through it. */
+function monotoneTangents(segment: readonly LinePoint[]): number[] {
+  const count = segment.length;
+  const secants: number[] = [];
+  for (let index = 0; index < count - 1; index++) {
+    const run = segment[index + 1].x - segment[index].x;
+    secants.push(
+      run === 0 ? 0 : (segment[index + 1].y - segment[index].y) / run,
+    );
+  }
+
+  const tangents = [secants[0]];
+  for (let index = 1; index < count - 1; index++) {
+    const before = secants[index - 1];
+    const after = secants[index];
+    tangents.push(before * after <= 0 ? 0 : (before + after) / 2);
+  }
+  tangents.push(secants[count - 2]);
+
+  for (let index = 0; index < count - 1; index++) {
+    const secant = secants[index];
+    if (secant === 0) {
+      tangents[index] = 0;
+      tangents[index + 1] = 0;
+      continue;
+    }
+    // Fritsch-Carlson's circle condition: keeping each tangent within three times the secant it
+    // sits on is what makes the cubic monotone on that span.
+    const alpha = tangents[index] / secant;
+    const beta = tangents[index + 1] / secant;
+    const magnitude = Math.hypot(alpha, beta);
+    if (magnitude > 3) {
+      tangents[index] = (3 / magnitude) * alpha * secant;
+      tangents[index + 1] = (3 / magnitude) * beta * secant;
+    }
+  }
+
+  return tangents;
+}
+
+function smoothPath(segment: readonly LinePoint[]): string {
+  const tangents = monotoneTangents(segment);
+  let path = `M ${coordinatePair(segment[0])}`;
+  for (let index = 0; index < segment.length - 1; index++) {
+    const from = segment[index];
+    const to = segment[index + 1];
+    const third = (to.x - from.x) / 3;
+    const firstControl = {
+      x: from.x + third,
+      y: from.y + tangents[index] * third,
+    };
+    const secondControl = {
+      x: to.x - third,
+      y: to.y - tangents[index + 1] * third,
+    };
+    path +=
+      ` C ${roundTo(firstControl.x, COORDINATE_DECIMALS)},${roundTo(firstControl.y, COORDINATE_DECIMALS)}` +
+      ` ${roundTo(secondControl.x, COORDINATE_DECIMALS)},${roundTo(secondControl.y, COORDINATE_DECIMALS)}` +
+      ` ${coordinatePair(to)}`;
+  }
+
+  return path;
+}
+
+/** One unbroken run as a path `d`. `''` rather than a partial path when a coordinate is
+ *  unplottable: one `NaN` voids the whole attribute and the line vanishes with nothing logged.
+ *
+ *  @internal */
+export function linePath(
+  segment: readonly LinePoint[],
+  curve: LineCurve = 'linear',
+): string {
+  if (segment.length === 0 || !segment.every(isPlottable)) {
+    return '';
+  }
+  if (segment.length === 1 || curve === 'linear') {
+    return `M ${segment.map((point) => coordinatePair(point)).join(' L ')}`;
+  }
+  if (curve === 'step') {
+    let path = `M ${coordinatePair(segment[0])}`;
+    for (const point of segment.slice(1)) {
+      path += ` H ${roundTo(point.x, COORDINATE_DECIMALS)} V ${roundTo(point.y, COORDINATE_DECIMALS)}`;
+    }
+
+    return path;
+  }
+
+  return smoothPath(segment);
+}
+
+/** The same run as `linePath`, closed down to the baseline. It takes the curve so a filled series
+ *  and its own line share one edge - drawn apart, a smooth line floats off a straight-edged fill.
+ *
+ *  @internal */
 export function areaPath(
   segment: readonly LinePoint[],
   baselineY: number,
+  curve: LineCurve = 'linear',
 ): string {
   if (
     segment.length < 2 ||
@@ -78,8 +182,7 @@ export function areaPath(
   }
   const first = segment[0];
   const last = segment[segment.length - 1];
-  const along = segment.map((point) => coordinatePair(point)).join(' L ');
   const baseline = roundTo(baselineY, COORDINATE_DECIMALS);
 
-  return `M ${along} L ${roundTo(last.x, COORDINATE_DECIMALS)},${baseline} L ${roundTo(first.x, COORDINATE_DECIMALS)},${baseline} Z`;
+  return `${linePath(segment, curve)} L ${roundTo(last.x, COORDINATE_DECIMALS)},${baseline} L ${roundTo(first.x, COORDINATE_DECIMALS)},${baseline} Z`;
 }

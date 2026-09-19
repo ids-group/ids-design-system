@@ -54,13 +54,14 @@ import {
   domainMaxOf,
   lineSegments,
   paletteIndexFor,
-  polylinePoints,
+  linePath,
   seriesPoints,
   valueY,
 } from './line-chart.math';
 import type {
   LineChartAnnotation,
   LineChartAxisMode,
+  LineChartCurve,
   LineChartGaps,
   LineChartPoint,
   LineChartSeries,
@@ -96,7 +97,7 @@ const SERIES_DASH_ARRAYS = [
 ];
 
 interface PlottedSeries extends ResolvedSeries {
-  readonly polylines: readonly string[];
+  readonly linePaths: readonly string[];
   readonly areaPaths: readonly string[];
   readonly markers: readonly LinePoint[];
 }
@@ -179,6 +180,10 @@ export class LineChartComponent {
   /** What a `null` reading draws. The default refuses to assert that a missing
    *  reading is a zero. */
   readonly gaps = input<LineChartGaps>('break');
+
+  /** How the line joins its readings. `'linear'` by default, which asserts nothing the data does
+   *  not say; a curve is a claim about what happened BETWEEN two readings. */
+  readonly curve = input<LineChartCurve>('linear');
 
   /** How many value-axis ticks to aim for. A hint, not a count: ticks snap to a round step, so
    *  the axis may carry one more or one fewer. */
@@ -407,6 +412,7 @@ export class LineChartComponent {
   protected readonly plottedSeries = computed<readonly PlottedSeries[]>(() => {
     const axes = this.axes();
     const centers = this.categoryPositions();
+    const curve = this.curve();
 
     return this.visibleSeries().map((entry) => {
       const plot = this.plotFor(entry.onSecondaryAxis);
@@ -421,12 +427,12 @@ export class LineChartComponent {
 
       return {
         ...entry,
-        polylines: segments
-          .map((segment) => polylinePoints(segment))
-          .filter((points) => points.length > 0),
+        linePaths: segments
+          .map((segment) => linePath(segment, curve))
+          .filter((path) => path.length > 0),
         areaPaths: entry.series.area
           ? segments
-              .map((segment) => areaPath(segment, baselineY))
+              .map((segment) => areaPath(segment, baselineY, curve))
               .filter((path) => path.length > 0)
           : [],
         markers: segments.flat(),
