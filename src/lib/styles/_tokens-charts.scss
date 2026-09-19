@@ -42,19 +42,20 @@
 
   /* RAMP — one hue, light → deep, for the ordered stages of a single
      quantity. Shares the lead hue so a funnel reads as one object rather
-     than as eight unrelated categories. Contrast on white is NOT held at
-     3:1 across the ramp: a sequential scale that clears the floor at every
-     step has to compress into its dark half, and then consecutive stages
-     stop being separable from each other, which is the distinction the
-     ramp exists to carry. */
-  --chart-ramp-1: hsl(  8deg 78% 76%);
-  --chart-ramp-2: hsl(  8deg 78% 72%);
-  --chart-ramp-3: hsl(  8deg 78% 69%);
-  --chart-ramp-4: hsl(  8deg 78% 65%);
-  --chart-ramp-5: hsl(  8deg 78% 62%);
-  --chart-ramp-6: hsl(  8deg 77% 58%);
-  --chart-ramp-7: hsl(  8deg 75% 55%);
-  --chart-ramp-8: hsl(  8deg 72% 51%);
+     than as eight unrelated categories. It spans the full lightness range,
+     95% to 31%, because magnitude on a heat map is read from the step
+     between two cells and nothing else: adjacent dE 6.9–10.6, first to
+     last 55.0, measured 2026-09-19 in OKLab. Contrast on white therefore
+     runs 1.14:1 to 9.07:1 — a cell needs a label placed against its own
+     end of the ramp, not one colour for the whole scale. */
+  --chart-ramp-1: hsl(  8deg 60% 95%);
+  --chart-ramp-2: hsl(  8deg 67% 88%);
+  --chart-ramp-3: hsl(  8deg 73% 80%);
+  --chart-ramp-4: hsl(  8deg 76% 71%);
+  --chart-ramp-5: hsl(  8deg 78% 61%);
+  --chart-ramp-6: hsl(  8deg 78% 51%);
+  --chart-ramp-7: hsl(  8deg 74% 41%);
+  --chart-ramp-8: hsl(  8deg 68% 31%);
 
   /* SEQUENTIAL — single-hue, light → dark */
   --chart-sequential-1: var(--blue-100);

@@ -762,42 +762,42 @@ export const CHARTS: readonly ColourRow[] = [
   },
   {
     "name": "--chart-ramp-1",
-    "value": "hsl(  8deg 78% 76%)",
+    "value": "hsl(  8deg 60% 95%)",
     "notes": ""
   },
   {
     "name": "--chart-ramp-2",
-    "value": "hsl(  8deg 78% 72%)",
+    "value": "hsl(  8deg 67% 88%)",
     "notes": ""
   },
   {
     "name": "--chart-ramp-3",
-    "value": "hsl(  8deg 78% 69%)",
+    "value": "hsl(  8deg 73% 80%)",
     "notes": ""
   },
   {
     "name": "--chart-ramp-4",
-    "value": "hsl(  8deg 78% 65%)",
+    "value": "hsl(  8deg 76% 71%)",
     "notes": ""
   },
   {
     "name": "--chart-ramp-5",
-    "value": "hsl(  8deg 78% 62%)",
+    "value": "hsl(  8deg 78% 61%)",
     "notes": ""
   },
   {
     "name": "--chart-ramp-6",
-    "value": "hsl(  8deg 77% 58%)",
+    "value": "hsl(  8deg 78% 51%)",
     "notes": ""
   },
   {
     "name": "--chart-ramp-7",
-    "value": "hsl(  8deg 75% 55%)",
+    "value": "hsl(  8deg 74% 41%)",
     "notes": ""
   },
   {
     "name": "--chart-ramp-8",
-    "value": "hsl(  8deg 72% 51%)",
+    "value": "hsl(  8deg 68% 31%)",
     "notes": ""
   },
   {

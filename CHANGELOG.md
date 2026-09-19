@@ -74,6 +74,21 @@
 
 ### Changed
 
+- **`--ds-chart-ramp-1..8` spans the full lightness range.** It ran 76% to 51% and now runs 95% to
+  31%, on the same hue. Magnitude on an ordered scale is read from the step between two colours and
+  nothing else, and the old ramp did not give one: adjacent steps were 2.1-3.9 dE apart with 20.7
+  end to end, so eight stages showed about three the eye could separate. It is 6.9-10.6 with 55.0
+  end to end now (OKLab, measured 2026-09-19).
+
+  **`ds-funnel-chart` therefore looks different** - its stages are the only thing painting with the
+  ramp today. The first stage is much paler and the last much deeper. Nothing to change; set the
+  eight `--ds-chart-ramp-N-color` tokens to their old values to keep the previous look.
+
+  Contrast on white now runs 1.14:1 to 9.07:1 across the scale, so a label placed over a ramp colour
+  has to be chosen against that cell's own end of it rather than once for the whole scale. The dark
+  theme's ramp is widened to the same span.
+
+
 - **Exported class member surface grew — only matters if you SUBCLASS one of these.**
   `LineChartComponent` and `LineSeriesComponent` both gained `curve`. Subclassing a DS component is
   unsupported, but a release that only adds can still fail such a build on a name collision: TS4114
