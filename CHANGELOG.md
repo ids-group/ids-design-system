@@ -22,6 +22,40 @@
 
 ### Added
 
+- **`ds-scatter-chart`, with a decimation layer behind it.** Two continuous quantities against each
+  other - weight against carriage cost, distance against time. The other charts all put categories
+  on one axis; this one does not.
+
+  ```html
+  <ds-scatter-chart
+    xLabel="Weight, kg"
+    yLabel="Cost"
+    [data]="[{ id: 'road', label: 'Road', data: readings }]" />
+  ```
+
+  **It is the only chart whose mark count the caller decides**, so it is the only one that thins its
+  own data. SVG degrades by the number of NODES, not readings: the same data as a line is one
+  `<path>` and as a scatter it is one node per point, while Lighthouse warns at about 800 nodes and
+  errors at about 1400 on a page that may hold four more charts. Past FOUR times the plot's width in
+  marks - not two, where the saving is invisible and the loss of detail is not - the series is
+  decimated, a line under the plot says how many readings were thinned, and the annex table still
+  lists every one.
+
+  `decimator` picks how. `'minMax'`, the default, keeps each bucket's highest and lowest reading by
+  construction, so the spike a reader is looking for cannot be the point that was dropped; it also
+  stays stable while the reader pans, because a bucket's answer does not depend on its neighbours.
+  `'lttb'` draws a truer silhouette at the same budget and makes no such promise. `'none'` is the
+  caller taking the node budget on themselves.
+
+  The annex table is built when it is OPENED rather than sitting in the DOM shut: 12 000 readings
+  parked 48 000 nodes there, three times what decimating the plot had just saved. Closed the
+  chart is 615 nodes; opened, every reading is one click away.
+
+  Marks are semi-transparent by default, because the interesting thing is where they pile up: at
+  full opacity a cluster of forty and a cluster of four are the same solid disc. `xLabel` and
+  `yLabel` are not decoration - without them the reader has two numbers and no idea which is which.
+
+
 - **`ds-bar-chart` takes a value range, a target and qualitative bands.** Three small additions that
   turn the same bar into a floating bar and into a bullet chart, neither of which needed a component
   of its own.
@@ -171,7 +205,8 @@
   carries the same span, flipped.
 
 - **Exported class member surface grew — only matters if you SUBCLASS one of these.**
-  `LineChartComponent` and `LineSeriesComponent` both gained `curve`. Subclassing a DS component is
+  `LineChartComponent` gained `curve`, `stack`, `stackedSeries`, `stacksSeries`, `areaPathsFor` and
+  `axisFormat`; `LineSeriesComponent` gained `curve`. Subclassing a DS component is
   unsupported, but a release that only adds can still fail such a build on a name collision: TS4114
   demands `override` for a same-named member, TS2416 fires where the signature differs. Rename your
   own member, or add `override` where it genuinely means the same thing.

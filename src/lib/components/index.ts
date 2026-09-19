@@ -16,6 +16,13 @@ export {
 } from './charts-format';
 export { elementWidth } from './charts-measure';
 export {
+  decimationTarget,
+  lttbDecimate,
+  minMaxDecimate,
+  needsDecimating,
+} from './charts-decimate';
+export type { ScatterPoint } from './charts-decimate';
+export {
   areaPath,
   bandPath,
   linePath,

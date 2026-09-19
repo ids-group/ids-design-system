@@ -147,6 +147,7 @@ export const NAV: NavGroup[] = [
       { label: 'Funnel chart', anchor: 'funnel-chart' },
       { label: 'Heat map', anchor: 'heatmap-chart' },
       { label: 'Line chart', anchor: 'line-chart' },
+      { label: 'Scatter chart', anchor: 'scatter-chart' },
       { label: 'Waterfall chart', anchor: 'waterfall-chart' },
     ],
   },

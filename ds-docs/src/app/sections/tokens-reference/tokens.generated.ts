@@ -5623,6 +5623,53 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
+    "component": "Scatter Chart",
+    "selector": ".scatter-chart",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-scatter-chart-grid-line-color",
+        "value": "var(--ds-chart-grid-line-color)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-scatter-chart-axis-line-color",
+        "value": "var(--ds-chart-axis-line-color)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-scatter-chart-axis-label-color",
+        "value": "var(--ds-chart-axis-label-color)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-scatter-chart-axis-font-size",
+        "value": "var(--ds-chart-axis-font-size)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-scatter-chart-dot-radius",
+        "value": "var(--ds-chart-dot-radius)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-scatter-chart-dot-opacity",
+        "value": "0.72",
+        "notes": ""
+      },
+      {
+        "name": "--ds-scatter-chart-focus-color",
+        "value": "var(--focus-ring-color)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-scatter-chart-focus-width",
+        "value": "var(--focus-ring-width)",
+        "notes": ""
+      }
+    ]
+  },
+  {
     "component": "Search",
     "selector": ".search",
     "description": "",

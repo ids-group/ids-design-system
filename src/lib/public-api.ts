@@ -20,6 +20,7 @@ export type {
   DsFieldError,
   DsFieldErrorsInput,
   DsRouterLink,
+  ScatterPoint,
 } from '@ids-group-ltd/ids-design-system/components';
 
 // Components
@@ -254,6 +255,12 @@ export type {
   RadioGroupContract,
 } from '@ids-group-ltd/ids-design-system/components/radio-group';
 export { ReserveMessagesDirective } from '@ids-group-ltd/ids-design-system/components/reserve-messages';
+export { ScatterChartComponent } from '@ids-group-ltd/ids-design-system/components/scatter-chart';
+export type {
+  ScatterChartDecimator,
+  ScatterChartReading,
+  ScatterChartSeries,
+} from '@ids-group-ltd/ids-design-system/components/scatter-chart';
 export { SearchComponent } from '@ids-group-ltd/ids-design-system/components/search';
 export { SegmentedComponent } from '@ids-group-ltd/ids-design-system/components/segmented';
 export type { SegmentedOption } from '@ids-group-ltd/ids-design-system/components/segmented';

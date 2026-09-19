@@ -1,0 +1,95 @@
+@use '../../styles/focus' as focus;
+@use '../../styles/chart-data-table' as chart-data-table;
+@use '../../styles/chart-frame' as chart-frame;
+@use '../../styles/chart-interactive' as chart-interactive;
+@use '../../styles/chart-motion' as chart-motion;
+@include chart-motion.fades-in('.point');
+@include chart-frame.chart-frame;
+@include chart-frame.no-bounding-box-focus('.point');
+@include chart-data-table.chart-data-table;
+
+
+.scatter-chart {
+  --_scatter-chart-grid-line-color: var(--ds-scatter-chart-grid-line-color, var(--ds-chart-grid-line-color));
+  --_scatter-chart-axis-line-color: var(--ds-scatter-chart-axis-line-color, var(--ds-chart-axis-line-color));
+  --_scatter-chart-axis-label-color: var(--ds-scatter-chart-axis-label-color, var(--ds-chart-axis-label-color));
+  --_scatter-chart-axis-font-size: var(--ds-scatter-chart-axis-font-size, var(--ds-chart-axis-font-size));
+  --_scatter-chart-dot-radius: var(--ds-scatter-chart-dot-radius, var(--ds-chart-dot-radius));
+  --_scatter-chart-dot-opacity: var(--ds-scatter-chart-dot-opacity, 0.72);
+  --_scatter-chart-focus-color: var(--ds-scatter-chart-focus-color, var(--focus-ring-color));
+  --_scatter-chart-focus-width: var(--ds-scatter-chart-focus-width, var(--focus-ring-width));
+
+  margin: 0;
+}
+
+figcaption {
+  margin-block-end: var(--space-3);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+@include chart-frame.message-box(240px, true);
+
+.canvas {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+}
+
+.grid-line {
+  stroke: var(--_scatter-chart-grid-line-color);
+  stroke-width: 1;
+}
+
+.axis-line {
+  stroke: var(--_scatter-chart-axis-line-color);
+  stroke-width: 1;
+}
+
+.axis-label,
+.axis-title {
+  fill: var(--_scatter-chart-axis-label-color);
+  font-size: var(--_scatter-chart-axis-font-size);
+}
+
+.axis-label {
+  dominant-baseline: middle;
+}
+
+.axis-label.is-horizontal {
+  dominant-baseline: auto;
+}
+
+.axis-title {
+  font-weight: var(--font-weight-bold);
+}
+
+// Semi-transparent by default: on a scatter the INTERESTING thing is where marks pile up, and at
+// full opacity a cluster of forty and a cluster of four are the same solid disc.
+.point {
+  r: var(--_scatter-chart-dot-radius);
+  fill: var(--_scatter-series-color);
+  fill-opacity: var(--_scatter-chart-dot-opacity);
+}
+
+@include chart-interactive.clickable('.point');
+
+.canvas {
+  @include chart-interactive.fades('.point', ', fill-opacity var(--ds-motion-chart-mark-duration) var(--ds-motion-chart-mark-easing)');
+}
+
+/* focus-ring-guard: an outline on an SVG element paints its BOUNDING BOX, not its silhouette, so a
+   circle would ring as a square. The ring is a stroke on the circle itself; `own-indicator` keeps
+   the outline under forced colours, where `stroke` is not remapped. */
+.point.interactive:focus-visible {
+  @include focus.own-indicator;
+  @include chart-frame.drawn-focus-ring;
+}
+
+// Said on the chart's face, not only in its accessible name - a reader who cannot see the notice
+// counts points that were never drawn.
+.thinned {
+  margin-block: var(--space-2) 0;
+  color: var(--text-secondary);
+  font-size: var(--font-size-xs);
+}

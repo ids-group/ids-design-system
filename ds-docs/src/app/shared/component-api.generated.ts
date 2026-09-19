@@ -7131,6 +7131,196 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "inputs": [],
     "outputs": []
   },
+  "scatter-chart": {
+    "key": "scatter-chart",
+    "selector": "ds-scatter-chart",
+    "isElement": true,
+    "className": "ScatterChartComponent",
+    "status": "stable",
+    "importName": "ScatterChartComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "data",
+        "kind": "input",
+        "type": "readonly ScatterChartSeries[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "One entry per series, each carrying its own readings. Both scales are continuous, so a point holds its position on each rather than an index into a list of categories."
+      },
+      {
+        "name": "xLabel",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Names the horizontal quantity under the plot. Without it the reader has two numbers and no idea which is which - on a scatter that is the whole reading."
+      },
+      {
+        "name": "yLabel",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Names the vertical quantity beside the plot."
+      },
+      {
+        "name": "decimator",
+        "kind": "input",
+        "type": "ScatterChartDecimator",
+        "union": [
+          "minMax",
+          "lttb",
+          "none"
+        ],
+        "default": "'minMax'",
+        "required": false,
+        "description": "Which decimator thins a series past the budget. `'minMax'` by default, because it is the only one that promises each bucket's extremum survives."
+      },
+      {
+        "name": "tickCount",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "SCATTER_DEFAULT_TICK_COUNT",
+        "required": false,
+        "description": "A hint, not a count, and it applies to BOTH axes. Ticks snap to a round step."
+      },
+      {
+        "name": "caption",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Printed above the plot as the visible title, and reused as the annex table's caption."
+      },
+      {
+        "name": "summary",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "The accessible name. Generated when omitted, naming both axes' spans, how many readings were drawn and how many were thinned out."
+      },
+      {
+        "name": "interactive",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Makes every mark a button and gives it a keyboard route. `pointClicked` fires whether or not this is set."
+      },
+      {
+        "name": "frame",
+        "kind": "input",
+        "type": "ChartFrame | null",
+        "union": [
+          "auto",
+          "none"
+        ],
+        "default": "null",
+        "required": false,
+        "description": "`'auto'` draws the bordered, padded box; `'none'` leaves it bare for a chart inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`."
+      },
+      {
+        "name": "dataTable",
+        "kind": "input",
+        "type": "ChartDataTable | null",
+        "union": [
+          "toggle",
+          "visible",
+          "none"
+        ],
+        "default": "null",
+        "required": false,
+        "description": "The annex table under the plot. It lists EVERY reading, including the ones decimation left out of the drawing, which is what keeps a thinned chart honest."
+      },
+      {
+        "name": "loading",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "A skeleton at the plot's own height, so the page does not resize when the data lands."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Separate from empty data: \"the request failed\" and \"there is nothing to show\" read the same and mean opposite things."
+      },
+      {
+        "name": "emptyText",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Shown when no series carries a reading. Unset falls back to `DS_CONFIG.chart.emptyText`."
+      },
+      {
+        "name": "errorText",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Shown in place of the plot while `error` is set. Unset falls back to `DS_CONFIG.chart.errorText`."
+      },
+      {
+        "name": "valueFormat",
+        "kind": "input",
+        "type": "ChartValueFormat | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Formats every number the chart prints - both axes' ticks, the accessible name and the annex table. Unset falls back to `DS_CONFIG.chart.valueFormat`."
+      },
+      {
+        "name": "tooltip",
+        "kind": "input",
+        "type": "ChartItemTooltipTrigger",
+        "union": [
+          "item",
+          "none"
+        ],
+        "default": "'item'",
+        "required": false,
+        "description": "Whether a hovered or focused mark opens a tooltip. A scatter prints no value beside its marks - there is no room - so this is where a reading is read without the annex table."
+      },
+      {
+        "name": "dimOthers",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Fades every mark but the one under the pointer. Off by default: on a scatter the pile-up IS the reading, and dimming the neighbours takes exactly that away."
+      }
+    ],
+    "outputs": [
+      {
+        "name": "pointClicked",
+        "kind": "output",
+        "type": "ScatterChartReading",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The clicked reading, with the series it belongs to. Fires on click and on Enter or Space."
+      }
+    ]
+  },
   "search": {
     "key": "search",
     "selector": "ds-search",

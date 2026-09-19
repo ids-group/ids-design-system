@@ -33,6 +33,7 @@
     "ModalCard": "components/modal",
     "ModalConfirm": "components/modal",
     "RadioGroup": "components/radio",
+    "ScatterChart": "charts/scatter-chart",
     "SidenavFooter": "components/app-layout",
     "SidenavGroup": "components/sidenav",
     "SidenavItem": "components/sidenav",

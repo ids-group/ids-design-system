@@ -24,6 +24,7 @@ and token names.** These leaves are for orientation and usage.
 - [<ds-donut-chart> — DonutChartComponent](charts/ds-donut-chart.md) — A ring that splits one total into its parts, with the middle free for the total or a headline figure of your o
 - [<ds-funnel-chart> — FunnelChartComponent](charts/ds-funnel-chart.md) — Stages of a journey, drawn top to bottom in the order you give them — they are never sorted, because the order
 - [<ds-heatmap-chart> — HeatmapChartComponent](charts/ds-heatmap-chart.md) — A matrix of readings coloured by magnitude — depot by weekday, hour by date, queue by region.
+- [<ds-scatter-chart> — ScatterChartComponent](charts/ds-scatter-chart.md) — Two continuous quantities against each other — weight against carriage cost, distance against time, volume aga
 - [<ds-waterfall-chart> — WaterfallChartComponent](charts/ds-waterfall-chart.md) — A running total, bar by bar: what a figure started at, what moved it, and what it ended at.
 - [<ds-line-chart> — LineChartComponent](charts/ds-line-chart.md) — One or more series plotted over a shared set of categories.
 - [Chart defaults — what DS_CONFIG decides once](charts/ds-config.md) — Four chart inputs resolve through DS_CONFIG.chart because they are one decision per APP, not per plot: valueFo

@@ -60,6 +60,12 @@
   ],
   "reference-label": [],
   "reference-line": ["svg: aria-hidden=true"],
+  "scatter-chart": [
+    "p: role=status",
+    "svg: role={interactive() ? 'group' : 'img'}, aria-label={accessibleName()}",
+    "circle: role={interactive() ? 'button' : null}, aria-label={interactive() ? pointLabel(entry.series, mark.point) : null}",
+    "p: role=status"
+  ],
   "waterfall-chart": ["p: role=status", "div: aria-hidden=true"],
   "waterfall-marks": ["svg: aria-hidden=true"]
 }
