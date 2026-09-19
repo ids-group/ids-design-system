@@ -34,7 +34,6 @@ import type {
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import { CHART_SCALES } from './chart-scales.token';
 
-/** @internal */
 export interface LineSeriesData {
   id: string;
   label: string;
@@ -48,9 +47,7 @@ export interface LineSeriesData {
   color?: string;
 }
 
-/** What a `null` reading draws: a hole in the line, or a point at zero.
- *
- *  @internal */
+/** What a `null` reading draws: a hole in the line, or a point at zero. */
 export type LineSeriesGaps = 'break' | 'zero';
 
 let nextSeriesId = 0;
@@ -61,8 +58,6 @@ let nextSeriesId = 0;
  *
  * Hosted on a `<g>` rather than an element of its own: an element the SVG specification does not
  * know is not rendered, and neither are its descendants. Written as `<svg:g dsLineSeries>`.
- *
- * @internal
  */
 @Component({
   // The repository's `component-selector` rule asks for an element selector, and one cannot work
@@ -83,20 +78,34 @@ export class LineSeriesComponent implements OnDestroy {
    *  element, and a required input throws NG0950 for the pass before its own value is written. */
   readonly data = input<readonly LineSeriesData[]>([]);
 
+  /** Draws a round marker at every reading. Off leaves the line alone, which reads better past
+   *  roughly twenty points. */
   readonly showMarkers = input(true, { transform: booleanAttribute });
 
+  /** Turns on the click affordance - the pointer cursor and the hover tint. `pointClicked`
+   *  fires whether or not this is set. */
   readonly interactive = input(false, { transform: booleanAttribute });
 
+  /** Milliseconds between one marker's entrance and the next. The total is capped. */
   readonly staggerMs = input(0, { transform: numberAttribute });
 
+  /** What a `null` reading draws: `'break'` leaves a hole in the line, `'zero'` plots a point
+   *  at zero. A missing measurement and a measured zero are different facts. */
   readonly gaps = input<LineSeriesGaps>('break');
 
+  /** Whether a hovered or focused reading opens a tooltip. */
   readonly tooltip = input<ChartItemTooltipTrigger>('item');
 
+  /** How long the panel survives the pointer leaving the marker. Raise it only for a panel a
+   *  reader has to REACH, which is WCAG 1.4.13's hoverable clause; about 140 crosses the gap. */
   readonly tooltipLingerMs = input(0, { transform: numberAttribute });
 
+  /** Formats every value this series prints. Called with `'tick'` for an axis label and
+   *  `'tooltip'` everywhere a value is printed in full. */
   readonly valueFormat = input<ChartValueFormat>(defaultChartFormat);
 
+  /** The clicked reading, with the series it belongs to and its position in `categories`.
+   *  Fires on click and on Enter or Space, whatever `interactive` says. */
   readonly pointClicked = output<{
     series: LineSeriesData;
     categoryIndex: number;

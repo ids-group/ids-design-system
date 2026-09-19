@@ -95,10 +95,17 @@ export type {
 export {
   CHART_SCALES,
   ChartComponent,
+  ColumnSeriesComponent,
+  LineSeriesComponent,
+  ReferenceLabelComponent,
+  ReferenceLineComponent,
 } from '@ids-group-ltd/ids-design-system/components/chart';
 export type {
   ChartPlot,
   ChartScales,
+  ColumnSeriesPoint,
+  LineSeriesData,
+  LineSeriesGaps,
 } from '@ids-group-ltd/ids-design-system/components/chart';
 export type { ChartLegendItem } from '@ids-group-ltd/ids-design-system/components/chart-legend';
 export type {

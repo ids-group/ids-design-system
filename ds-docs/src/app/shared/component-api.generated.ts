@@ -1999,6 +1999,345 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     ],
     "outputs": []
   },
+  "chart:ColumnSeriesComponent": {
+    "key": "chart",
+    "selector": "g[dsColumnSeries]",
+    "isElement": true,
+    "className": "ColumnSeriesComponent",
+    "status": "stable",
+    "importName": "ColumnSeriesComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "data",
+        "kind": "input",
+        "type": "readonly ColumnSeriesPoint[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Not `input.required`: the preset reads `tooltipContext()` from a binding on this same element, and a required input throws NG0950 for the pass before its own value is written."
+      },
+      {
+        "name": "showValues",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Prints each column's value above the column."
+      },
+      {
+        "name": "interactive",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Turns on the click affordance - the pointer cursor and the hover tint. `pointClicked` fires whether or not this is set."
+      },
+      {
+        "name": "pinOnClick",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Holds the hovered mark and its tooltip in place when it is clicked, until Escape or a press outside releases it. Pinning is a state, not a handler."
+      },
+      {
+        "name": "dimOthers",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Fades every mark but the one under the pointer. Off by default: the dimming buys loudness for one mark and pays for it with the separation between the rest."
+      },
+      {
+        "name": "staggerMs",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "0",
+        "required": false,
+        "description": "Milliseconds between one mark's entrance and the next. The total is capped, so a long series does not crawl in."
+      },
+      {
+        "name": "partOfWhole",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Declares that the marks are parts of one whole, which is what makes a share of their total a real quantity. On, each mark's share appears on the tooltip's second line."
+      },
+      {
+        "name": "tooltip",
+        "kind": "input",
+        "type": "ChartItemTooltipTrigger",
+        "union": [
+          "item",
+          "none"
+        ],
+        "default": "'item'",
+        "required": false,
+        "description": "Whether a hovered or focused column opens a tooltip."
+      },
+      {
+        "name": "tooltipAnchor",
+        "kind": "input",
+        "type": "'mark' | 'cell'",
+        "union": [
+          "mark",
+          "cell"
+        ],
+        "default": "'mark'",
+        "required": false,
+        "description": "Where the tooltip is pinned. `'mark'` is the column itself; `'cell'` is the full-height category cell, which puts the panel at the top of the plot whatever the column's value."
+      },
+      {
+        "name": "tooltipLingerMs",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "0",
+        "required": false,
+        "description": "How long the panel survives the pointer leaving the mark. Raise it only for a panel a reader has to REACH, which is WCAG 1.4.13's hoverable clause; about 140 crosses the gap."
+      },
+      {
+        "name": "valueFormat",
+        "kind": "input",
+        "type": "ChartValueFormat",
+        "union": null,
+        "default": "defaultChartFormat",
+        "required": false,
+        "description": "Formats every value this series prints. Called with `'tick'` for an axis label and `'tooltip'` everywhere a value is printed in full."
+      },
+      {
+        "name": "columnWidthRatio",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "0.8",
+        "required": false,
+        "description": "The mark's share of its category's own slot, before the maximum width caps it. Measured off the slot rather than off `bandWidth()`, which has the container's own padding already taken out of it - applying both would narrow every uncapped column twice."
+      },
+      {
+        "name": "slot",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "0",
+        "required": false,
+        "description": "This series' position among the slots a category's band is divided into."
+      },
+      {
+        "name": "slotCount",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "1",
+        "required": false,
+        "description": "How many slots the band is divided into - the number of series drawn side by side. One, the default, is the whole band, which is what a single series has always taken."
+      },
+      {
+        "name": "offsets",
+        "kind": "input",
+        "type": "readonly ChartStackOffset[] | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Where each mark starts and ends on the value axis, one entry per point. Unset, every mark runs from zero to its own value, which is the unstacked case."
+      },
+      {
+        "name": "seriesColor",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "One colour for the whole series, which is what several series drawn together need. Unset, each mark takes the categorical palette by its own position - the right reading when the marks ARE the categories, which is the single-series case. A point's own colour wins over both."
+      },
+      {
+        "name": "seriesFill",
+        "kind": "input",
+        "type": "'solid' | 'hatched' | null",
+        "union": [
+          "solid",
+          "hatched"
+        ],
+        "default": "null",
+        "required": false,
+        "description": "`seriesColor` for the fill pattern. A point's own `fill` wins."
+      },
+      {
+        "name": "seriesLabel",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Names the series in the tooltip, where the category then becomes the panel's heading. Unset, the panel names the category instead, which is what a chart of one series has to say."
+      }
+    ],
+    "outputs": [
+      {
+        "name": "pointClicked",
+        "kind": "output",
+        "type": "ColumnSeriesPoint",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The clicked datum. Fires on click and on Enter or Space, whatever `interactive` says."
+      }
+    ]
+  },
+  "chart:LineSeriesComponent": {
+    "key": "chart",
+    "selector": "g[dsLineSeries]",
+    "isElement": true,
+    "className": "LineSeriesComponent",
+    "status": "stable",
+    "importName": "LineSeriesComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "data",
+        "kind": "input",
+        "type": "readonly LineSeriesData[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Not `input.required`: the preset reads `tooltipContext()` from a binding on this same element, and a required input throws NG0950 for the pass before its own value is written."
+      },
+      {
+        "name": "showMarkers",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Draws a round marker at every reading. Off leaves the line alone, which reads better past roughly twenty points."
+      },
+      {
+        "name": "interactive",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Turns on the click affordance - the pointer cursor and the hover tint. `pointClicked` fires whether or not this is set."
+      },
+      {
+        "name": "staggerMs",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "0",
+        "required": false,
+        "description": "Milliseconds between one marker's entrance and the next. The total is capped."
+      },
+      {
+        "name": "gaps",
+        "kind": "input",
+        "type": "LineSeriesGaps",
+        "union": [
+          "break",
+          "zero"
+        ],
+        "default": "'break'",
+        "required": false,
+        "description": "What a `null` reading draws: `'break'` leaves a hole in the line, `'zero'` plots a point at zero. A missing measurement and a measured zero are different facts."
+      },
+      {
+        "name": "tooltip",
+        "kind": "input",
+        "type": "ChartItemTooltipTrigger",
+        "union": [
+          "item",
+          "none"
+        ],
+        "default": "'item'",
+        "required": false,
+        "description": "Whether a hovered or focused reading opens a tooltip."
+      },
+      {
+        "name": "tooltipLingerMs",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "0",
+        "required": false,
+        "description": "How long the panel survives the pointer leaving the marker. Raise it only for a panel a reader has to REACH, which is WCAG 1.4.13's hoverable clause; about 140 crosses the gap."
+      },
+      {
+        "name": "valueFormat",
+        "kind": "input",
+        "type": "ChartValueFormat",
+        "union": null,
+        "default": "defaultChartFormat",
+        "required": false,
+        "description": "Formats every value this series prints. Called with `'tick'` for an axis label and `'tooltip'` everywhere a value is printed in full."
+      }
+    ],
+    "outputs": [
+      {
+        "name": "pointClicked",
+        "kind": "output",
+        "type": "{\n    series: LineSeriesData;\n    categoryIndex: number;\n    value: number;\n  }",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The clicked reading, with the series it belongs to and its position in `categories`. Fires on click and on Enter or Space, whatever `interactive` says."
+      }
+    ]
+  },
+  "chart:ReferenceLabelComponent": {
+    "key": "chart",
+    "selector": "g[dsReferenceLabel]",
+    "isElement": true,
+    "className": "ReferenceLabelComponent",
+    "status": "stable",
+    "importName": "ReferenceLabelComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "thresholds",
+        "kind": "input",
+        "type": "readonly ChartThreshold[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "The same list `dsReferenceLine` is given. This mark draws only the labels, so it is placed AFTER the series and the line mark before it, which is what keeps a label legible over a mark that would otherwise cover it."
+      }
+    ],
+    "outputs": []
+  },
+  "chart:ReferenceLineComponent": {
+    "key": "chart",
+    "selector": "g[dsReferenceLine]",
+    "isElement": true,
+    "className": "ReferenceLineComponent",
+    "status": "stable",
+    "importName": "ReferenceLineComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "thresholds",
+        "kind": "input",
+        "type": "readonly ChartThreshold[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "The lines and bands to draw across the plot. Each entry is ONE reading, `value`, plus an optional `label`, `color` and `dash`; a `to` makes it a band between two readings. Each one widens the value axis to hold it, so a target above every mark still lands on the plot."
+      }
+    ],
+    "outputs": []
+  },
   "checkbox": {
     "key": "checkbox",
     "selector": "ds-checkbox",
