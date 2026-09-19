@@ -1,5 +1,16 @@
 ## Unreleased
 
+### Fixed
+
+- **A line series measured against the first axis no longer raises an empty second one.** A mark
+  registers a contribution per axis, and a line series registers both whether or not it uses them,
+  so a plot whose series all read against the left axis grew a right-hand axis labelled `0` the
+  whole way down, and lost the plot width its labels reserved.
+
+  The predicate now counts reported VALUES rather than reporters, which fixes it for any mark that
+  registers an axis it does not use, not only the line series. A plot that genuinely carries two
+  scales is untouched.
+
 ## 0.13.3 — 2026-09-17
 
 ### Breaking
@@ -64,8 +75,8 @@
 
 ### Added
 
-- **`ds-chart` is importable, with the marks that draw inside it.** The container the column and
-  line charts are built inside now ships as its own entry point,
+- **`ds-chart` is importable, with the marks that draw inside it.** The container the column chart is
+  built inside now ships as its own entry point,
   `@ids-group-ltd/ids-design-system/components/chart`, for a plot the five presets do not cover - a
   combo of columns and a cumulative line being the case that asked for it. It owns the frame, the
   axes, the gridlines, the caption, the legend slot, the annex table and the generated description;

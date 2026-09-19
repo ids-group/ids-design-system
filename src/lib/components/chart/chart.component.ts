@@ -377,8 +377,11 @@ export class ChartComponent implements ChartScales {
     { equal: (a, b) => a.min === b.min && a.max === b.max },
   );
 
-  readonly hasSecondaryAxis = computed(
-    () => this.valuesOn('secondary').length > 0,
+  // Counts VALUES, not reporters: `valuesOn` returns one entry per mark that registered, and a
+  // line series registers both axes unconditionally, so an empty contribution would otherwise
+  // raise a whole second axis on a plot that has one.
+  readonly hasSecondaryAxis = computed(() =>
+    this.valuesOn('secondary').some((values) => values.length > 0),
   );
 
   protected readonly secondary = computed(
