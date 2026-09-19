@@ -9240,7 +9240,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "'table.csv'",
         "required": false,
-        "description": ""
+        "description": "The download's name, extension included - it is passed through, never derived. A custom `exportFetcher` returning a Blob is saved under this same name, so an export that is not CSV has to say so here."
       },
       {
         "name": "exportFetcher",
