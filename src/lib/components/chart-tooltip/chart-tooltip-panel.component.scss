@@ -13,6 +13,12 @@
   box-shadow: var(--ds-elevation-overlay);
   padding: var(--space-2) var(--space-2-5);
   max-width: var(--tooltip-maxw);
+
+  /* Without a ceiling a tall panel is pushed until its top meets the viewport and the rest runs off
+     the bottom, where nothing can reach it - `withFlexibleDimensions(false)` means CDK never shrinks
+     it. The 12px each side is the overlay's own viewport margin; the two have to stay equal. */
+  max-height: calc(100dvh - 2 * var(--space-3));
+  overflow-y: auto;
   z-index: var(--layer-tooltip);
   font: var(--font-weight-regular) var(--font-size-xs) / var(--line-height-base)
     var(--font-sans);

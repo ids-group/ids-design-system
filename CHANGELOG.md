@@ -16,6 +16,15 @@
 
 ### Fixed
 
+- **A chart tooltip no longer runs off the screen.** The panel is never shrunk by the overlay, so a
+  tall one - a grouped chart's every series, or a long custom template - was pushed until its top
+  met the viewport and the rest ran off the bottom, where nothing could reach it.
+
+  It now stops at the viewport height less the 12px margin the overlay pushes against, and scrolls
+  past that. Measured in a 300px viewport: a panel whose content wants about 1400px is held at
+  276px, top 12, bottom 288. A panel that already fits is untouched.
+
+
 - **A line series measured against the first axis no longer raises an empty second one.** A mark
   registers a contribution per axis, and a line series registers both whether or not it uses them,
   so a plot whose series all read against the left axis grew a right-hand axis labelled `0` the
