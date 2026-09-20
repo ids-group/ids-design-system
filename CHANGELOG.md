@@ -250,6 +250,19 @@
 
 ### Fixed
 
+- **The two greens in the chart palette are no longer the same colour.**
+  `--chart-categorical-6` moves from `hsl(152deg 58% 41%)` to `hsl(148deg 58% 41%)`, which takes it
+  from 5.2 to 6.3 away from `--chart-categorical-2` in OKLab. The palette holds itself to 6, below
+  which two slots read as one to somebody glancing between a line and its legend swatch - and these
+  two sit three positions apart, so a chart with six or more series handed out both.
+
+  `tools/check-chart-palette-separation.mjs` now runs in `lint:all` and fails a palette where any of
+  the 28 pairs closes to under 6. It also prints, without failing, how each pair fares under
+  simulated protanopia, deuteranopia and tritanopia: this system does not carry a colour-vision
+  commitment, and the numbers are there for whoever decides to take one on.
+
+  Nothing to change in a consumer - the token name is the same and the new hue arrives with it.
+
 - **A chart tooltip no longer runs off the screen.** The panel is never shrunk by the overlay, so a
   tall one - a grouped chart's every series, or a long custom template - was pushed until its top
   met the viewport and the rest ran off the bottom, where nothing could reach it.

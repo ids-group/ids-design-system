@@ -253,6 +253,26 @@ th.num {
   background: var(--accent-surface-tint);
 }
 
+/* ---- measurement ------------------------------------------------------
+   A figure with its own box, so a number that decides something is not read
+   as one more sentence. Red is a failing measurement, green a passing one. */
+
+.measure {
+  margin-top: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-sm);
+  border-left: 4px solid var(--error);
+  background: var(--error-subtitle);
+  color: var(--error-text);
+  font: var(--font-weight-semibold) var(--font-size-s) / 1.5 var(--font-sans);
+}
+
+.measure.is-fine {
+  border-left-color: var(--success);
+  background: var(--success-subtitle);
+  color: var(--success-text);
+}
+
 /* ---- decided -----------------------------------------------------------
    A deck that has been answered keeps every word of the argument, because the
    next person to ask the same question reads it to find out what was already

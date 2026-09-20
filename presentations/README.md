@@ -17,9 +17,8 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 | 4 | `4-migration-manifest-audit` | eight format practices to ratify — tooling, no consumer pulling on it |
 | 5 | `5-select-native-multi` | the cheapest to close: "keep parked" is a complete answer, and it is the answer already given — it stays only because closing it was declined |
 | 6 | `6-warning-text-colour` | one colour on one tint, each candidate rendered in itself. It ends "name a number: 1, 2, 3 or 4", and `docs/todo.md` still carries the measured 4.42:1 failure |
-| 7 | `7-chart-palette-v2` | whether the eight categorical hues are re-derived against the validator, which costs a slot |
-| 8 | `8-chart-sparkline-preset` | `variant="spark"` or a separate `ds-sparkline` — parked on 2026-09-19, so it is decided-not-built rather than unasked |
-| 9 | `9-waterfall-mode-or-component` | the waterfall's own tag against a `stack="waterfall"` mode on the column chart |
+| 7 | `7-chart-sparkline-preset` | `variant="spark"` or a separate `ds-sparkline` — parked on 2026-09-19, so it is decided-not-built rather than unasked |
+| 8 | `8-waterfall-mode-or-component` | the waterfall's own tag against a `stack="waterfall"` mode on the column chart |
 
 **Ranks 1-3 are the two biggest lanes** — the colour engine, then the interaction formula that reads
 its ramp. Ranks 1-4 are written in Russian and share `deck.css`, which sits beside `ds.css` and

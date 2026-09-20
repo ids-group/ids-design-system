@@ -1,13 +1,12 @@
-// Does the categorical palette stay separable for a reader with colour-vision deficiency?
+// Every PAIR of slots, not only the adjacent ones: a categorical palette is handed an arbitrary
+// subset of its slots, so any two can end up side by side.
 //
-// Six checks over every PAIR of slots, not only adjacent ones: a categorical palette is handed an
-// arbitrary subset of its slots, so any two can end up side by side. Vendored rather than shelled
-// out to, because the validator it came from lives in a bundled skill directory whose path carries
-// a version, and a gate that breaks on somebody else's upgrade is not a gate.
+// Vendored rather than shelled out to, because the validator it came from lives in a bundled skill
+// directory whose path carries a version, and a gate that breaks on somebody else's upgrade is not
+// a gate.
 //
-// NOT in `lint:all` yet, deliberately: it reports real failures against the palette as it stands
-// today, and the repaint that answers them is an open decision. Wiring it in before that decision
-// would leave the chain red for everyone.
+// Colour-vision deficiency is REPORTED, never enforced - it is not a requirement of this system
+// (Stas, 2026-09-21). The numbers still print so a future repaint can be judged against them.
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -42,10 +41,10 @@ const CVD_FLOOR = 4;
 const LIGHTNESS_BAND = [0.3, 0.85];
 /** A slot with no chroma is a neutral, and one neutral in a categorical set is a role, not a hue. */
 const CHROMA_FLOOR = 0.02;
-/** A mark has to be visible against the card it sits on. */
 const SURFACE_CONTRAST_FLOOR = 1.4;
 
-const toLinear = (c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
+const toLinear = (c) =>
+  c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
 const toSrgb = (c) =>
   c <= 0.0031308 ? 12.92 * c : 1.055 * c ** (1 / 2.4) - 0.055;
 
@@ -98,38 +97,66 @@ const deltaE = (a, b) =>
   Math.hypot(...oklab(a).map((value, index) => value - oklab(b)[index])) * 100;
 
 const simulate = (linear, matrix) =>
-  matrix.map((row) => row.reduce((sum, weight, i) => sum + weight * linear[i], 0));
+  matrix.map((row) =>
+    row.reduce((sum, weight, i) => sum + weight * linear[i], 0),
+  );
 
 const relLuminance = ([r, g, b]) => 0.2126 * r + 0.7152 * g + 0.0722 * b;
 const contrast = (a, b) => {
-  const [light, dark] = [relLuminance(a), relLuminance(b)].sort((x, y) => y - x);
+  const [light, dark] = [relLuminance(a), relLuminance(b)].sort(
+    (x, y) => y - x,
+  );
 
   return (light + 0.05) / (dark + 0.05);
 };
 
 // --------------------------------------------------------------- the palette
-const scss = readFileSync(
-  join(repo, 'src/lib/styles/_tokens-charts.scss'),
-  'utf8',
-);
-const slots = [...scss.matchAll(/--chart-categorical-(\d+):\s*hsl\(\s*([\d.]+)deg\s+([\d.]+)%\s+([\d.]+)%\s*\)/g)]
-  .map((match) => ({
-    name: `--chart-categorical-${match[1]}`,
-    linear: hslToLinear(Number(match[2]), Number(match[3]), Number(match[4])),
-  }));
+// `--hexes '#aabbcc,#ddeeff'` checks a CANDIDATE instead of the shipped palette, so a repaint can
+// be measured before it is written into the tokens.
+const asked = process.argv.indexOf('--hexes');
+const hexToLinear = (value) =>
+  [1, 3, 5].map((at) => toLinear(parseInt(value.slice(at, at + 2), 16) / 255));
+
+const slots =
+  asked === -1
+    ? [
+        ...readFileSync(
+          join(repo, 'src/lib/styles/_tokens-charts.scss'),
+          'utf8',
+        ).matchAll(
+          /--chart-categorical-(\d+):\s*hsl\(\s*([\d.]+)deg\s+([\d.]+)%\s+([\d.]+)%\s*\)/g,
+        ),
+      ].map((match) => ({
+        name: `--chart-categorical-${match[1]}`,
+        linear: hslToLinear(
+          Number(match[2]),
+          Number(match[3]),
+          Number(match[4]),
+        ),
+      }))
+    : (process.argv[asked + 1] ?? '')
+        .split(',')
+        .map((value) => value.trim())
+        .filter(Boolean)
+        .map((value, index) => ({
+          name: `candidate-${index + 1}`,
+          linear: hexToLinear(value),
+        }));
 
 if (slots.length === 0) {
-  console.error('check-chart-palette-cvd: found no categorical slots to check.');
+  console.error(
+    'check-chart-palette-separation: found no categorical slots to check.',
+  );
   process.exit(1);
 }
 
-// Both surfaces a mark is drawn on.
 const surfaces = {
   '--surface-default': hslToLinear(0, 0, 100),
   '--surface-canvas': hslToLinear(220, 20, 97),
 };
 
 const problems = [];
+const advisories = [];
 
 for (const slot of slots) {
   const [lightness, a, b] = oklab(slot.linear);
@@ -154,7 +181,6 @@ for (const slot of slots) {
   }
 }
 
-// Every pair, not only the adjacent ones.
 for (let i = 0; i < slots.length; i++) {
   for (let j = i + 1; j < slots.length; j++) {
     const [left, right] = [slots[i], slots[j]];
@@ -170,24 +196,33 @@ for (let i = 0; i < slots.length; i++) {
         simulate(right.linear, matrix),
       );
       if (seen < CVD_FLOOR) {
-        problems.push(
-          `${hex(left.linear)}↔${hex(right.linear)} ΔE ${seen.toFixed(1)} (${kind}), under the ${CVD_FLOOR} floor — ${left.name} and ${right.name}`,
+        advisories.push(
+          `${hex(left.linear)}↔${hex(right.linear)} ΔE ${seen.toFixed(1)} (${kind}), under the ${CVD_FLOOR} advisory floor — ${left.name} and ${right.name}`,
         );
       }
     }
   }
 }
 
+const pairs = (slots.length * (slots.length - 1)) / 2;
+
+for (const advisory of advisories) {
+  console.log(`check-chart-palette-separation: note   ${advisory}`);
+}
+
 if (problems.length > 0) {
   for (const problem of problems) {
-    console.error(`check-chart-palette-cvd: ERROR  ${problem}`);
+    console.error(`check-chart-palette-separation: ERROR  ${problem}`);
   }
   console.error(
-    `check-chart-palette-cvd: FAILED — ${problems.length} problem(s) over ${slots.length} slots and ${(slots.length * (slots.length - 1)) / 2} pairs`,
+    `check-chart-palette-separation: FAILED — ${problems.length} problem(s) over ${slots.length} slots and ${pairs} pairs`,
   );
   process.exit(1);
 }
 
 console.log(
-  `check-chart-palette-cvd: OK — ${slots.length} slots, ${(slots.length * (slots.length - 1)) / 2} pairs, separable under protan, deutan and tritan.`,
+  `check-chart-palette-separation: OK — ${slots.length} slots, ${pairs} pairs separable to ${SEPARATION_FLOOR}` +
+    (advisories.length > 0
+      ? `; ${advisories.length} pair(s) noted under simulated colour blindness, which this gate does not enforce.`
+      : '.'),
 );
