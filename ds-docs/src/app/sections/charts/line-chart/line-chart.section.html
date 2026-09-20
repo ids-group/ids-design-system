@@ -248,6 +248,65 @@
   </div>
 
   <h3 class="block-title t-h4">
+    Where two lines cross is an artefact
+  </h3>
+
+  <p class="block-desc t-s">
+    Two scales on one plot buy comparability and charge for it. Below are the
+    SAME six months twice, with only the right axis's ceiling moved: the lines
+    cross between February and March on the left and never meet on the right. It
+    is a property of the scale that was chosen, not a fact in the data: no
+    reading changed between the two pictures.
+  </p>
+
+  <p class="block-desc t-s">
+    All four modes stay for that reason - none of them removes the artefact, so
+    removing a mode would only hide the choice. What the chart does instead is
+    say which numbers a line is read against: each axis takes the colour of the
+    series measured against it, and
+    <code class="t-mono-inline">
+      yAxisLabel
+    </code> and
+    <code class="t-mono-inline">
+      secondaryAxisLabel
+    </code> name the units.
+    Without both a reader is comparing two quantities that may not be comparable
+    at all.
+  </p>
+
+  <div class="states states--cols-2">
+    <div class="state-cell">
+      <ds-line-chart
+        caption="Right axis to 5%"
+        dataTable="none"
+        yAxisLabel="Sessions"
+        secondaryAxisLabel="Rate, %"
+        [maxSecondary]="5"
+        [categories]="artefactCategories"
+        [series]="artefactSeries" />
+
+      <div class="state-cell-label">
+        they cross between Feb and Mar
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-line-chart
+        caption="The same readings, right axis to 12%"
+        dataTable="none"
+        yAxisLabel="Sessions"
+        secondaryAxisLabel="Rate, %"
+        [maxSecondary]="12"
+        [categories]="artefactCategories"
+        [series]="artefactSeries" />
+
+      <div class="state-cell-label">
+        they never cross
+      </div>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
     Second axis · aligned (default)
   </h3>
 

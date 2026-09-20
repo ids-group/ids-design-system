@@ -22,6 +22,28 @@
 
 ### Added
 
+- **Each axis says which numbers it is counting, and in whose colour.** A plot carrying two scales
+  is ambiguous without both: nothing on the canvas says which line is read against which set of
+  numbers, and nothing says what those numbers ARE.
+
+  ```html
+  <ds-line-chart yAxisLabel="Sessions" secondaryAxisLabel="Rate, %" [series]="series" />
+  ```
+
+  `ds-line-chart` takes `yAxisLabel` and `secondaryAxisLabel`, and tints each axis with the colour
+  of the series measured against it - derived, not asked for, since the chart already knows its own
+  series colours. The tint appears only where two scales share one plot: on a single-scale chart it
+  would restate the marks' own colour in the furniture, and under `'split'` the two plots are
+  already apart. `ds-chart` takes the same pair as `axisLabel` and `secondaryAxisLabel`.
+
+  **This is the condition the four axis modes were kept on.** Two scales on one plot buy
+  comparability and charge for it: where the lines cross is a property of the scale that was
+  chosen, not a fact in the data. Measured on one dataset drawn twice - the lines cross between
+  February and March with the right axis at 5%, and never meet with it at 12%, without a single
+  reading changing. Removing a mode would have hidden the choice rather than the artefact, so the
+  chart names the axes instead. The docs card draws both plots side by side.
+
+
 - **Category labels turn before they thin.** A chart narrow enough for its labels to collide used to
   print them over each other. It now measures the widest one as it actually rendered and spends the
   cheaper remedy first: a 45-degree tilt, which takes about 71% of the label's width across the
@@ -219,8 +241,9 @@
   carries the same span, flipped.
 
 - **Exported class member surface grew — only matters if you SUBCLASS one of these.**
-  `LineChartComponent` gained `curve`, `stack`, `stackedSeries`, `stacksSeries`, `areaPathsFor` and
-  `axisFormat`; `LineSeriesComponent` gained `curve`. Subclassing a DS component is
+  `LineChartComponent` gained `curve`, `stack`, `yAxisLabel`, `secondaryAxisLabel` and five members
+  behind them; `ChartComponent` gained `axisLabel`, `secondaryAxisLabel` and the three that thin and
+  turn its category labels; `LineSeriesComponent` gained `curve`. Subclassing a DS component is
   unsupported, but a release that only adds can still fail such a build on a name collision: TS4114
   demands `override` for a same-named member, TS2416 fires where the signature differs. Rename your
   own member, or add `override` where it genuinely means the same thing.

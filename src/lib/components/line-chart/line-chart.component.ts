@@ -196,6 +196,14 @@ export class LineChartComponent {
    *  axis never piles onto one measured against the primary. */
   readonly stack = input<LineChartStack>('none');
 
+  /** Names the first axis's unit beside it. On a plot carrying two scales the colour says which
+   *  line reads which axis and this says what the numbers ARE - and a reader who has neither is
+   *  left comparing two quantities that may not be comparable at all. */
+  readonly yAxisLabel = input<string | null>(null);
+
+  /** `yAxisLabel` for the second axis. */
+  readonly secondaryAxisLabel = input<string | null>(null);
+
   /** How many value-axis ticks to aim for. A hint, not a count: ticks snap to a round step, so
    *  the axis may carry one more or one fewer. */
   readonly tickCount = input(LINE_CHART_DEFAULT_TICK_COUNT, {
@@ -586,6 +594,36 @@ export class LineChartComponent {
       ? (value: number) => formatPercent(value, 1)
       : this.valueFormatResolved(),
   );
+
+  /** Each axis takes the colour of the series measured against it, but only where two scales share
+   *  one plot: on a single-scale chart it would restate the marks' own colour in the furniture,
+   *  and under `'split'` the two plots are already apart. The chart knows its own series colours,
+   *  so this is derived rather than asked for. */
+  private readonly axisTint = computed(() => {
+    if (!this.hasSecondaryAxis() || this.stacked()) {
+      return { primary: null, secondary: null };
+    }
+    const find = (onSecondaryAxis: boolean) =>
+      this.visibleSeries().find(
+        (entry) => entry.onSecondaryAxis === onSecondaryAxis,
+      )?.color ?? null;
+
+    return { primary: find(false), secondary: find(true) };
+  });
+
+  protected readonly primaryAxisFill = computed(() => this.axisTint().primary);
+
+  protected readonly secondaryAxisFill = computed(
+    () => this.axisTint().secondary,
+  );
+
+  protected readonly axisTitleY = computed(() => {
+    const plot = this.layout().primaryPlot;
+
+    return plot.top + plot.height / 2;
+  });
+
+  protected readonly viewWidth = LINE_CHART_VIEW_WIDTH;
 
   protected readonly stacksSeries = computed(() => this.stack() !== 'none');
 

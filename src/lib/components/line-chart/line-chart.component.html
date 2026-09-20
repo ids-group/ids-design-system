@@ -235,10 +235,37 @@
           </text>
         }
 
+        @if (yAxisLabel()) {
+          <text
+            class="axis-title"
+            text-anchor="middle"
+            [style.fill]="primaryAxisFill()"
+            [attr.transform]="'rotate(-90 12 ' + axisTitleY() + ')'"
+            [attr.x]="12"
+            [attr.y]="axisTitleY()">
+            {{ yAxisLabel() }}
+          </text>
+        }
+
+        @if (secondaryAxisLabel() && hasSecondaryAxis()) {
+          <text
+            class="axis-title"
+            text-anchor="middle"
+            [style.fill]="secondaryAxisFill()"
+            [attr.transform]="
+              'rotate(90 ' + (viewWidth - 12) + ' ' + axisTitleY() + ')'
+            "
+            [attr.x]="viewWidth - 12"
+            [attr.y]="axisTitleY()">
+            {{ secondaryAxisLabel() }}
+          </text>
+        }
+
         @for (tick of primaryTicks(); track $index) {
           <text
             class="axis-label"
             text-anchor="end"
+            [style.fill]="primaryAxisFill()"
             [attr.x]="primaryLabelX()"
             [attr.y]="tick.y">
             {{ tick.label }}
@@ -248,6 +275,7 @@
         @for (tick of secondaryTicks(); track $index) {
           <text
             class="axis-label"
+            [style.fill]="secondaryAxisFill()"
             [attr.text-anchor]="secondaryLabelAnchor()"
             [attr.x]="secondaryLabelX()"
             [attr.y]="tick.y">

@@ -74,6 +74,32 @@ const GAP_CATEGORIES: readonly string[] = [
 // `step` is for, the second is where a Catmull-Rom would invent a dip and a monotone cubic does not.
 // Deck 10's composition-over-time case: three delivery tiers whose sum is the quantity that
 // matters, which is what a stack says and a set of separate lines does not.
+// Deck 8's own demonstration: the SAME six months, drawn twice, with only the right axis's ceiling
+// moved. The crossing point walks from April to January - so it is a property of the scale that was
+// chosen, not a fact in the data.
+const ARTEFACT_CATEGORIES: readonly string[] = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+];
+
+const ARTEFACT_SERIES: readonly LineChartSeries[] = [
+  {
+    id: 'sessions',
+    label: 'Sessions',
+    data: [3200, 3850, 4400, 4120, 4760, 5000],
+  },
+  {
+    id: 'rate',
+    label: 'Conversion rate',
+    data: [4.6, 4.1, 3.8, 3.3, 3.0, 2.6],
+    axis: 'secondary',
+  },
+];
+
 const STACK_CATEGORIES: readonly string[] = [
   'Jan',
   'Feb',
@@ -203,6 +229,9 @@ export class LineChartSection {
     signal<readonly string[]>(GAP_CATEGORIES);
   protected readonly gapBreakSeries =
     signal<readonly LineChartSeries[]>(GAP_SERIES);
+
+  protected readonly artefactCategories = ARTEFACT_CATEGORIES;
+  protected readonly artefactSeries = ARTEFACT_SERIES;
 
   protected readonly stackedCategoriesDemo =
     signal<readonly string[]>(STACK_CATEGORIES);

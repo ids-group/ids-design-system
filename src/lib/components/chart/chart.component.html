@@ -108,6 +108,40 @@
         <g
           class="labels"
           aria-hidden="true">
+          @if (axisLabel()) {
+            <text
+              class="axis-title"
+              text-anchor="middle"
+              [style.fill]="axisLabelFill()"
+              [attr.transform]="
+                'rotate(-90 12 ' +
+                (plot().top + plot().height / 2) +
+                ') translate(0 0)'
+              "
+              [attr.x]="12"
+              [attr.y]="plot().top + plot().height / 2">
+              {{ axisLabel() }}
+            </text>
+          }
+
+          @if (secondaryAxisLabel() && hasSecondaryAxis()) {
+            <text
+              class="axis-title"
+              text-anchor="middle"
+              [style.fill]="secondaryAxisLabelFill()"
+              [attr.transform]="
+                'rotate(90 ' +
+                (viewWidth() - 12) +
+                ' ' +
+                (plot().top + plot().height / 2) +
+                ')'
+              "
+              [attr.x]="viewWidth() - 12"
+              [attr.y]="plot().top + plot().height / 2">
+              {{ secondaryAxisLabel() }}
+            </text>
+          }
+
           @for (tick of ticks(); track tick.value) {
             <text
               class="axis-label is-primary"

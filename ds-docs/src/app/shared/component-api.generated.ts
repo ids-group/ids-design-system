@@ -1995,6 +1995,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "`axisColor` for the second axis."
+      },
+      {
+        "name": "axisLabel",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Names the first axis's unit beside it. On a two-scale plot the colour says which line reads which axis and this says what the numbers ARE - a reader who has neither is left comparing two quantities that may not be comparable at all."
+      },
+      {
+        "name": "secondaryAxisLabel",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "`axisLabel` for the second axis."
       }
     ],
     "outputs": []
@@ -5155,6 +5173,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "'none'",
         "required": false,
         "description": "How several series share the value axis. Stacking runs per AXIS, so a series on the secondary axis never piles onto one measured against the primary."
+      },
+      {
+        "name": "yAxisLabel",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Names the first axis's unit beside it. On a plot carrying two scales the colour says which line reads which axis and this says what the numbers ARE - and a reader who has neither is left comparing two quantities that may not be comparable at all."
+      },
+      {
+        "name": "secondaryAxisLabel",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "`yAxisLabel` for the second axis."
       },
       {
         "name": "tickCount",

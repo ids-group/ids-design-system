@@ -47,6 +47,7 @@
     "check-chart-interaction": "node tools/check-chart-interaction.mjs",
     "check-chart-aria": "node tools/check-chart-aria.mjs",
     "check-chart-mark-budget": "node tools/check-chart-mark-budget.mjs",
+    "check-chart-palette-cvd": "node tools/check-chart-palette-cvd.mjs",
     "check-focus-rings": "node tools/check-focus-rings.mjs",
     "check-manifest-coverage": "node tools/check-manifest-coverage.mjs",
     "check-manifest-truth": "node tools/check-manifest-truth.mjs",

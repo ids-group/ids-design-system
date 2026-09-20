@@ -170,6 +170,14 @@ export class ChartComponent implements ChartScales {
   /** `axisColor` for the second axis. */
   readonly secondaryAxisColor = input<string | null>(null);
 
+  /** Names the first axis's unit beside it. On a two-scale plot the colour says which line reads
+   *  which axis and this says what the numbers ARE - a reader who has neither is left comparing
+   *  two quantities that may not be comparable at all. */
+  readonly axisLabel = input<string | null>(null);
+
+  /** `axisLabel` for the second axis. */
+  readonly secondaryAxisLabel = input<string | null>(null);
+
   readonly frameResolved = resolveWithConfig(
     this.frame,
     (config) => config.chart?.frame,

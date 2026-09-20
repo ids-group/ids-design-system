@@ -60,6 +60,14 @@ figcaption {
   dominant-baseline: middle;
 }
 
+/* Names the unit a set of ticks is counting. Bolder than the ticks so it reads as a heading for
+   them rather than as one more reading, and it takes the axis's own colour where there are two. */
+.axis-title {
+  fill: var(--_chart-axis-label-color);
+  font-size: var(--_chart-axis-font-size);
+  font-weight: var(--font-weight-bold);
+}
+
 .axis-label {
   dominant-baseline: middle;
 }
