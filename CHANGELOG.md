@@ -22,6 +22,20 @@
 
 ### Added
 
+- **Category labels turn before they thin.** A chart narrow enough for its labels to collide used to
+  print them over each other. It now measures the widest one as it actually rendered and spends the
+  cheaper remedy first: a 45-degree tilt, which takes about 71% of the label's width across the
+  axis, and only past that does it draw every second or every third.
+
+  Measured live on a six-category plot: all six upright at 1400px and at 700px, all six tilted at
+  420px, and every third at 300px, with no `ResizeObserver` loop warning at any width - the
+  measurement batches in one read phase before any write, which is what that warning is caused by.
+
+  Rotation is spent before thinning because a tilt costs the reader a glance and a dropped label
+  costs them a reading. The widest label decides for all of them: an axis that thinned on the
+  average would still collide on the one long name.
+
+
 - **`ds-scatter-chart`, with a decimation layer behind it.** Two continuous quantities against each
   other - weight against carriage cost, distance against time. The other charts all put categories
   on one axis; this one does not.

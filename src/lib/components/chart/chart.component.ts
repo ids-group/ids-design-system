@@ -18,6 +18,8 @@ import {
   bandScale,
   defaultChartFormat,
   elementWidth,
+  labelInterval,
+  rotationWouldFit,
   tickValues,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
@@ -235,6 +237,9 @@ export class ChartComponent implements ChartScales {
         this.measuredSecondaryLabelWidth.set(
           this.widestLabel('.axis-label.is-secondary'),
         );
+        this.measuredCategoryLabelWidth.set(
+          this.widestLabel('.category-label'),
+        );
       },
     });
   }
@@ -275,6 +280,9 @@ export class ChartComponent implements ChartScales {
   /** Widest tick label actually rendered, in the CSS pixels the canvas is drawn in. Zero until the
    *  first read, and zero under SSR, where `axisGutter` alone decides. */
   private readonly measuredLabelWidth = signal(0);
+
+  /** The widest category label as drawn, which is what decides whether they all fit. */
+  private readonly measuredCategoryLabelWidth = signal(0);
 
   /** `axisGutter` is the FLOOR, not the answer: a compact number is far wider in some locales than
    *  in others - `3,5 тыс.` against `3.5k` - and an SVG canvas CLIPS what a DOM column merely
@@ -523,10 +531,34 @@ export class ChartComponent implements ChartScales {
     );
   });
 
+  /** Rotation is spent before thinning: a tilt costs the reader a glance, dropping a label costs
+   *  them a reading. Both are decided from the widest label as it actually rendered. */
+  protected readonly categoryLabelsRotated = computed(() =>
+    rotationWouldFit(
+      [this.measuredCategoryLabelWidth()],
+      this.plot().width / Math.max(1, this.categories().length),
+    ),
+  );
+
+  private readonly categoryLabelInterval = computed(() =>
+    labelInterval(
+      [this.measuredCategoryLabelWidth()],
+      this.plot().width / Math.max(1, this.categories().length),
+      this.categoryLabelsRotated(),
+    ),
+  );
+
   protected readonly categoryLabels = computed(() => {
     const toX = this.xPosition();
+    const interval = this.categoryLabelInterval();
 
-    return this.categories().map((text, index) => ({ x: toX(index), text }));
+    return (
+      this.categories()
+        .map((text, index) => ({ x: toX(index), text, index }))
+        // The first is always drawn and the rest follow the interval, so the axis keeps an anchor
+        // the reader can count from rather than an arbitrary offset into the categories.
+        .filter((label) => label.index % interval === 0)
+    );
   });
 
   protected readonly reachesBelowZero = computed(() => this.domain().min < 0);

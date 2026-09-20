@@ -95,6 +95,7 @@
     "probe:heatmap-chart-math": "node --experimental-strip-types tools/probes/heatmap-chart-math.probe.mjs",
     "probe:scatter-chart-math": "node --experimental-strip-types tools/probes/scatter-chart-math.probe.mjs",
     "probe:charts-decimate": "node --experimental-strip-types tools/probes/charts-decimate.probe.mjs",
+    "probe:charts-label-fit": "node --experimental-strip-types tools/probes/charts-label-fit.probe.mjs",
     "probe:waterfall-chart-math": "node --experimental-strip-types tools/probes/waterfall-chart-math.probe.mjs",
     "probe:line-chart-math": "node --experimental-strip-types tools/probes/line-chart-math.probe.mjs",
     "probe:bar-chart-math": "node --experimental-strip-types tools/probes/bar-chart-math.probe.mjs",

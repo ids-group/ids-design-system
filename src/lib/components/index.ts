@@ -15,6 +15,7 @@ export {
   shareOfTotal,
 } from './charts-format';
 export { elementWidth } from './charts-measure';
+export { labelInterval, rotationWouldFit } from './charts-label-fit';
 export {
   decimationTarget,
   lttbDecimate,

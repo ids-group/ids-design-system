@@ -54,6 +54,12 @@ figcaption {
   font-size: var(--_chart-axis-font-size);
 }
 
+// A rotated label hangs from the axis by its END, so `dominant-baseline` has to stop centring it
+// on a line it no longer sits on.
+.category-label.is-rotated {
+  dominant-baseline: middle;
+}
+
 .axis-label {
   dominant-baseline: middle;
 }

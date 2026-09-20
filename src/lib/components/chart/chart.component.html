@@ -130,12 +130,18 @@
             </text>
           }
 
-          @for (label of categoryLabels(); track $index) {
+          @for (label of categoryLabels(); track label.index) {
             <text
               class="category-label"
-              text-anchor="middle"
+              [class.is-rotated]="categoryLabelsRotated()"
+              [attr.text-anchor]="categoryLabelsRotated() ? 'end' : 'middle'"
               [attr.x]="label.x"
-              [attr.y]="categoryLabelY()">
+              [attr.y]="categoryLabelY()"
+              [attr.transform]="
+                categoryLabelsRotated()
+                  ? 'rotate(-45 ' + label.x + ' ' + categoryLabelY() + ')'
+                  : null
+              ">
               {{ label.text }}
             </text>
           }
