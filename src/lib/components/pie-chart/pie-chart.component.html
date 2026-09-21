@@ -125,17 +125,19 @@
           }
         </svg>
 
-        <div class="center">
-          <span class="center-value">
-            {{ resolvedCenterValue() }}
-          </span>
-
-          @if (centerLabel()) {
-            <span class="center-label">
-              {{ centerLabel() }}
+        @if (hole() > 0) {
+          <div class="center">
+            <span class="center-value">
+              {{ resolvedCenterValue() }}
             </span>
-          }
-        </div>
+
+            @if (centerLabel()) {
+              <span class="center-label">
+                {{ centerLabel() }}
+              </span>
+            }
+          </div>
+        }
       </div>
 
       @if (legend() !== 'none') {
