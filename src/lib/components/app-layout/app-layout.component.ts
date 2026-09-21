@@ -17,10 +17,10 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ScrollbarWidthService } from './scrollbar-width.service';
-import { LayoutNavigationService } from './layout-navigation.service';
+import { AppLayoutNavigationService } from './layout-navigation.service';
 import {
-  LayoutScrollService,
-  type DsScrollReset,
+  AppLayoutScrollService,
+  type DsAppLayoutScrollReset,
 } from './layout-scroll.service';
 import { nextControlId } from '@ids-group-ltd/ids-design-system/components';
 
@@ -39,7 +39,7 @@ import { nextControlId } from '@ids-group-ltd/ids-design-system/components';
  * ```
  *
  * The layout renders the `<main>` landmark itself — do not nest another
- * `<main>` in the content. Scroll-to-top is built in (`LayoutScrollService`)
+ * `<main>` in the content. Scroll-to-top is built in (`AppLayoutScrollService`)
  * and fires when navigation changes the PATH, so a URL-driven list can page
  * and filter without losing the reader's place; inject the service and call
  * `scrollToTop()` for the changes that do want the top. The content padding
@@ -66,7 +66,7 @@ import { nextControlId } from '@ids-group-ltd/ids-design-system/components';
     '[class.rail-open]': 'railOpen()',
     '(document:keydown.escape)': 'closeRail()',
   },
-  providers: [LayoutScrollService],
+  providers: [AppLayoutScrollService],
 })
 export class AppLayoutComponent {
   /**
@@ -106,12 +106,12 @@ export class AppLayoutComponent {
    * When the content scroll resets to the top. `'path'` (default) is what the
    * layout has always done; `'always'` also resets on a query- or fragment-only
    * navigation, which is what a server-paged list wants; `'never'` hands the
-   * decision to the screen, which can still call `LayoutScrollService.scrollToTop()`.
+   * decision to the screen, which can still call `AppLayoutScrollService.scrollToTop()`.
    *
    * It exists because the layout owning the scroll CONTAINER also meant it owned
    * the POLICY: a screen could add a reset but had no way to suppress one.
    */
-  readonly scrollReset = input<DsScrollReset>('path');
+  readonly scrollReset = input<DsAppLayoutScrollReset>('path');
 
   /**
    * True only while the rail is an overlay. Gates the dialog semantics: above
@@ -126,8 +126,8 @@ export class AppLayoutComponent {
   /** Id of the rail panel, for a trigger's `aria-controls`. */
   readonly railId = nextControlId('ds-rail');
 
-  private readonly layoutScroll = inject(LayoutScrollService);
-  private readonly navigation = inject(LayoutNavigationService);
+  private readonly layoutScroll = inject(AppLayoutScrollService);
+  private readonly navigation = inject(AppLayoutNavigationService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly content =
     viewChild.required<ElementRef<HTMLElement>>('content');

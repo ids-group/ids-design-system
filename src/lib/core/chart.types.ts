@@ -58,6 +58,9 @@ export type ChartAxis = 'primary' | 'secondary';
  *  - `'split'` - two plots one above the other, sharing the category axis. */
 export type ChartAxisMode = 'aligned' | 'exact' | 'dual-grid' | 'split';
 
+/** What a `null` reading draws: a hole in the line, or a point at zero. */
+export type ChartGaps = 'break' | 'zero';
+
 /** How several series share one category's band.
  *
  *  - `'none'` - every series draws from the baseline at the band's centre, which is the single

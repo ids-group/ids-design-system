@@ -38,7 +38,7 @@ import { HeaderFilterDirective } from './header-filter.directive';
 import { DsTableLayout } from './table-layout';
 import type {
   SortChangeEvent,
-  SortDir,
+  SortDirection,
   TableCellEditEvent,
   TableColumn,
   TableRowAction,
@@ -202,9 +202,9 @@ export class TableComponent<T extends object> {
    *  halves at once, which is usually the one to listen to. */
   readonly sortKeyChange = output<string | null>();
   /** Sort direction for `sortKey`. */
-  readonly sortDir = input<SortDir>(null);
-  /** Emitted for `[(sortDir)]`. */
-  readonly sortDirChange = output<SortDir>();
+  readonly sortDirection = input<SortDirection>(null);
+  /** Emitted for `[(sortDirection)]`. */
+  readonly sortDirectionChange = output<SortDirection>();
   /**
    * What the header marks, and what a client sort reads.
    *
@@ -217,23 +217,24 @@ export class TableComponent<T extends object> {
    */
   private readonly sortState = linkedSignal<{
     readonly key: string | null;
-    readonly dir: SortDir;
-  }>(() => ({ key: this.sortKey(), dir: this.sortDir() }));
+    readonly dir: SortDirection;
+  }>(() => ({ key: this.sortKey(), dir: this.sortDirection() }));
   protected readonly activeSortKey = computed(() => this.sortState().key);
   protected readonly activeSortDir = computed(() => this.sortState().dir);
   /** Sort states a column cycles through on click. Default includes null
    *  (unsorted); pass ['asc','desc'] to forbid the unsorted state (e.g.
    *  server-paged lists). */
-  readonly sortingOrder = input<SortDir[]>(['asc', 'desc', null]);
+  readonly sortingOrder = input<SortDirection[]>(['asc', 'desc', null]);
   /**
    * Wording for the sort announcement, so it can be translated. Receives the
    * column's label and the new direction; return an empty string to say nothing.
    */
-  readonly sortAnnouncement = input<(label: string, dir: SortDir) => string>(
-    (label, dir) =>
-      dir
-        ? `Sorted by ${label}, ${dir === 'asc' ? 'ascending' : 'descending'}`
-        : `Sorting cleared`,
+  readonly sortAnnouncement = input<
+    (label: string, dir: SortDirection) => string
+  >((label, dir) =>
+    dir
+      ? `Sorted by ${label}, ${dir === 'asc' ? 'ascending' : 'descending'}`
+      : `Sorting cleared`,
   );
   /**
    * Wording for the row-range announcement, so it can be translated. Receives
@@ -1717,7 +1718,7 @@ export class TableComponent<T extends object> {
     }
     const order = this.sortingOrder();
     const currentKey = this.activeSortKey();
-    let dir: SortDir;
+    let dir: SortDirection;
     if (currentKey !== col.key) {
       dir = order[0] ?? null;
     } else {
@@ -1728,7 +1729,7 @@ export class TableComponent<T extends object> {
     // `sortKey` back to its own default sort.
     this.sortState.set({ key: col.key, dir });
     this.sortKeyChange.emit(col.key);
-    this.sortDirChange.emit(dir);
+    this.sortDirectionChange.emit(dir);
     this.sortChange.emit({ key: col.key, dir });
   }
 

@@ -110,7 +110,7 @@
         <ds-table
           caption="Sorted ascending"
           sortKey="project"
-          sortDir="asc"
+          sortDirection="asc"
           [data]="stateRow"
           [columns]="sortStateColumns"
           [stickyHeader]="false" />
@@ -126,7 +126,7 @@
         <ds-table
           caption="Sorted descending"
           sortKey="project"
-          sortDir="desc"
+          sortDirection="desc"
           [data]="stateRow"
           [columns]="sortStateColumns"
           [stickyHeader]="false" />
@@ -1221,7 +1221,7 @@
       TableColumn
     </code> an
     <code class="t-mono-inline">
-      srLabel
+      screenReaderLabel
     </code> so screen-reader users still
     hear a column name.
   </p>
@@ -1586,7 +1586,7 @@
       [sortKey]
     </code> and
     <code class="t-mono-inline">
-      [sortDir]
+      [sortDirection]
     </code> are bound ONE-WAY from the
     host's own state (usually a computed over the URL), and
     <code class="t-mono-inline">
@@ -1614,7 +1614,7 @@
     [data]="serverSortedRows()"
     [columns]="serverSortColumns"
     [sortKey]="serverSortKey()"
-    [sortDir]="serverSortDir()"
+    [sortDirection]="serverSortDir()"
     (sortChange)="onServerSort($event)" />
 
   <h3
@@ -1628,7 +1628,7 @@
       sortKey
     </code> and
     <code class="t-mono-inline">
-      sortDir
+      sortDirection
     </code> each have a matching
     <code class="t-mono-inline">
       Change
@@ -1637,7 +1637,7 @@
       [(sortKey)]
     </code> and
     <code class="t-mono-inline">
-      [(sortDir)]
+      [(sortDirection)]
     </code> work: the table writes the
     host's state and the host reads it back, with no handler to write. Below is
     the demo above with the handler deleted and nothing else changed.
@@ -1649,7 +1649,7 @@
     </strong>
     Clearing a sort sets
     <code class="t-mono-inline">
-      sortDir
+      sortDirection
     </code> to
     <code class="t-mono-inline">
       null
@@ -1672,7 +1672,7 @@
     [data]="twoWaySortedRows()"
     [columns]="serverSortColumns"
     [(sortKey)]="twoWaySortKey"
-    [(sortDir)]="twoWaySortDir" />
+    [(sortDirection)]="twoWaySortDir" />
 
   <h3 class="block-title t-h4">
     Column filters

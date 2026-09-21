@@ -16,7 +16,7 @@ import { distinctUntilChanged, filter, map, type Observable } from 'rxjs';
  * `pathChanged` rather than writing a fourth:
  *
  * ```ts
- * private readonly navigation = inject(LayoutNavigationService);
+ * private readonly navigation = inject(AppLayoutNavigationService);
  * constructor() {
  *   this.navigation.pathChanged
  *     .pipe(takeUntilDestroyed())
@@ -33,11 +33,11 @@ import { distinctUntilChanged, filter, map, type Observable } from 'rxjs';
  *
  * Root-provided, which is also what makes it safe to expose: the stream is
  * derived from the router and holds no state, so one instance serves every
- * reader. `LayoutScrollService` depends on it, so a consumer providing THAT
+ * reader. `AppLayoutScrollService` depends on it, so a consumer providing THAT
  * outside `ds-app-layout` needs this one resolvable too.
  */
 @Injectable({ providedIn: 'root' })
-export class LayoutNavigationService {
+export class AppLayoutNavigationService {
   private readonly router = inject(Router);
 
   readonly pathChanged: Observable<string> = this.router.events.pipe(

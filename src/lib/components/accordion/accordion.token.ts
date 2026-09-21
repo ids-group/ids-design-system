@@ -2,7 +2,7 @@ import { InjectionToken } from '@angular/core';
 
 /** Contract that ds-accordion-item reads from its parent ds-accordion. */
 export interface AccordionContract {
-  readonly multi: () => boolean;
+  readonly multiple: () => boolean;
   /** Called when an item opens; coordinator may close other items. */
   notifyOpen(item: AccordionItemRef): void;
 }

@@ -17,7 +17,9 @@ export interface WaterfallChartBar {
   readonly kind?: WaterfallChartKind;
 }
 
-/** Where one bar spans on the value axis, and which of the three meanings it carries. */
+/** Where one bar spans on the value axis, and which of the three meanings it carries.
+ *
+ *  @internal */
 export interface WaterfallChartStep {
   readonly label: string;
   readonly from: number;

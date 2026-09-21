@@ -105,7 +105,7 @@ The wish list, item by item:
 | column order      | `reorderableColumns` `:288`, `columnOrder` `:292`                                                                                            |
 | exports           | `exportButton` `:306`, `exportFilename` `:308`, `exportFetcher` `:318`, `exportFailed` `:323`                                                |
 | inline editing    | `TableColumn.editable` (`table.types.ts:72`), `cellEdited` output `:442`                                                                     |
-| — plus            | `persistLayout` `:298` + `storageKey` `:301`, sorting (`sortKey`/`sortDir`/`sortingOrder`), pagination (`page`/`pageSize`/`pageSizeOptions`) |
+| — plus            | `persistLayout` `:298` + `storageKey` `:301`, sorting (`sortKey`/`sortDirection`/`sortingOrder`), pagination (`page`/`pageSize`/`pageSizeOptions`) |
 
 And the three features requested as new:
 

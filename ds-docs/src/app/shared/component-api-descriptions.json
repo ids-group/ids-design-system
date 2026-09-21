@@ -26,12 +26,12 @@
         "unlock": "Release a lock. Only the last one restores the saved overflow, so closing one overlay cannot re-enable page scroll under another still open above it."
       }
     },
-    "LayoutNavigationService": {
+    "AppLayoutNavigationService": {
       "members": {
         "pathChanged": "Emits the new path on every navigation that lands on a DIFFERENT path — query and hash are stripped, repeats are dropped, and a navigation the app marked `dsSamePage` is skipped entirely."
       }
     },
-    "LayoutScrollService": {
+    "AppLayoutScrollService": {
       "members": {
         "scrollToTop": "Send the layout's content region back to the top. For a screen that wants the top after its own filter or sort change, which `resetScroll=\"path\"` deliberately does not do."
       }

@@ -36,11 +36,11 @@ export { AlertComponent } from '@ids-group-ltd/ids-design-system/components/aler
 export type { AlertVariant } from '@ids-group-ltd/ids-design-system/components/alert';
 export {
   AppLayoutComponent,
-  LayoutNavigationService,
-  LayoutScrollService,
+  AppLayoutNavigationService,
+  AppLayoutScrollService,
   RailTriggerDirective,
 } from '@ids-group-ltd/ids-design-system/components/app-layout';
-export type { DsScrollReset } from '@ids-group-ltd/ids-design-system/components/app-layout';
+export type { DsAppLayoutScrollReset } from '@ids-group-ltd/ids-design-system/components/app-layout';
 export { AuthLayoutComponent } from '@ids-group-ltd/ids-design-system/components/auth-layout';
 export { AutocompleteComponent } from '@ids-group-ltd/ids-design-system/components/autocomplete';
 export type {
@@ -106,7 +106,6 @@ export type {
   ChartScales,
   ColumnSeriesPoint,
   LineSeriesData,
-  LineSeriesGaps,
 } from '@ids-group-ltd/ids-design-system/components/chart';
 export type { ChartLegendItem } from '@ids-group-ltd/ids-design-system/components/chart-legend';
 export type {
@@ -128,8 +127,8 @@ export type {
   DatePickerMode,
   DatePickerPreset,
   DatePickerValue,
+  DateRangeValue,
   DateValue,
-  RangeValue,
 } from '@ids-group-ltd/ids-design-system/components/date-picker';
 export {
   DescriptionItemComponent,
@@ -191,9 +190,7 @@ export type {
 export { LineChartComponent } from '@ids-group-ltd/ids-design-system/components/line-chart';
 export type {
   LineChartAnnotation,
-  LineChartAxisMode,
-  LineChartGaps,
-  LineChartPoint,
+  LineChartReading,
   LineChartSeries,
 } from '@ids-group-ltd/ids-design-system/components/line-chart';
 export {
@@ -317,7 +314,7 @@ export {
 export type {
   HeaderFilterContext,
   SortChangeEvent,
-  SortDir,
+  SortDirection,
   TableCellEditEvent,
   TableColumn,
   TableExpandMode,
@@ -385,7 +382,6 @@ export { WaterfallChartComponent } from '@ids-group-ltd/ids-design-system/compon
 export type {
   WaterfallChartBar,
   WaterfallChartKind,
-  WaterfallChartStep,
 } from '@ids-group-ltd/ids-design-system/components/waterfall-chart';
 
 // Core
@@ -404,6 +400,7 @@ export type {
   ChartDataTable,
   ChartFormatLocation,
   ChartFrame,
+  ChartGaps,
   ChartStackMode,
   ChartThreshold,
   ChartThresholdDash,

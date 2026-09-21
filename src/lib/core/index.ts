@@ -4,6 +4,7 @@ export type {
   ChartAxis,
   ChartAxisMode,
   ChartDataTable,
+  ChartGaps,
   ChartFormatLocation,
   ChartFrame,
   ChartStackMode,

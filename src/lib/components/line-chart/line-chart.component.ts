@@ -31,6 +31,8 @@ import type {
   ChartDataTable,
   ChartFrame,
   ChartValueFormat,
+  ChartAxisMode,
+  ChartGaps,
 } from '@ids-group-ltd/ids-design-system/core';
 import { ChartTooltipDirective } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import { ChartLegendComponent } from '@ids-group-ltd/ids-design-system/components/chart-legend';
@@ -63,11 +65,9 @@ import {
 } from './line-chart.math';
 import type {
   LineChartAnnotation,
-  LineChartAxisMode,
   LineChartCurve,
-  LineChartGaps,
   LineChartStack,
-  LineChartPoint,
+  LineChartReading,
   LineChartSeries,
 } from './line-chart.types';
 
@@ -148,7 +148,7 @@ export class LineChartComponent {
   readonly series = input.required<readonly LineChartSeries[]>();
 
   /** How a secondary axis relates to the primary one. */
-  readonly yAxisMode = input<LineChartAxisMode>('aligned');
+  readonly yAxisMode = input<ChartAxisMode>('aligned');
 
   /** Draws a dot at every reading. Off, the dots appear on hover and on focus only. */
   readonly showMarkers = input(true, { transform: booleanAttribute });
@@ -167,7 +167,7 @@ export class LineChartComponent {
 
   /** The point that was clicked, or activated with Enter or Space. Fires whether or not
    *  `interactive` is set. */
-  readonly pointClicked = output<LineChartPoint>();
+  readonly pointClicked = output<LineChartReading>();
 
   /** Holds the crosshair and its tooltip on the category that was clicked, until Escape or a
    *  press outside releases it. Off by default: a click is already the drill-down hook, and a
@@ -186,7 +186,7 @@ export class LineChartComponent {
 
   /** What a `null` reading draws. The default refuses to assert that a missing
    *  reading is a zero. */
-  readonly gaps = input<LineChartGaps>('break');
+  readonly gaps = input<ChartGaps>('break');
 
   /** How the line joins its readings. `'linear'` by default, which asserts nothing the data does
    *  not say; a curve is a claim about what happened BETWEEN two readings. */
@@ -1023,7 +1023,7 @@ export class LineChartComponent {
       : `${title}. ${sentences.join(' ')}${noted}${pointer}`;
   });
 
-  protected pointOf(entry: PlottedSeries, marker: LinePoint): LineChartPoint {
+  protected pointOf(entry: PlottedSeries, marker: LinePoint): LineChartReading {
     return {
       series: entry.series,
       categoryIndex: marker.categoryIndex,

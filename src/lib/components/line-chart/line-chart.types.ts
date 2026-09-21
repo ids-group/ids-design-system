@@ -14,10 +14,6 @@ export interface LineChartSeries {
   slot?: number;
 }
 
-/** How the secondary axis relates to the primary one. The same four words `ds-chart` takes for a
- *  composed two-scale plot, so a combo and a line chart are read the same way. */
-export type LineChartAxisMode = ChartAxisMode;
-
 /** How a line joins its readings. `'linear'` is the default and asserts nothing the data does not
  *  say. `'step'` holds each reading until the next one, which is right for a quantity that CHANGES
  *  at a moment rather than drifting between two - a price, a headcount, a rate. `'smooth'` is a
@@ -34,9 +30,6 @@ export type LineChartCurve = 'linear' | 'step' | 'smooth';
  *  Unrelated to `yAxisMode`'s `'split'`, which puts two PLOTS one above the other. */
 export type LineChartStack = 'none' | 'stacked' | 'normalized';
 
-/** What a `null` reading draws: a hole in the line, or a point at zero. */
-export type LineChartGaps = 'break' | 'zero';
-
 /** A label pinned to one reading, so the point it names is legible with no pointer — a peak, a
  *  launch, the month a number turned. The tooltip answers "what is this?" on hover; an annotation
  *  answers it in a printed page or a screenshot. */
@@ -50,7 +43,7 @@ export interface LineChartAnnotation {
 }
 
 /** One reading, named by the series it belongs to and the category it sits under. */
-export interface LineChartPoint {
+export interface LineChartReading {
   readonly series: LineChartSeries;
   readonly categoryIndex: number;
   readonly category: string;

@@ -17,13 +17,12 @@
         "exact": "yAxisMode=\"exact\""
       },
       "action": "On every `ds-line-chart`, rewrite `yAxisMode=\"rounded\"` to `yAxisMode=\"aligned\"`, `yAxisMode=\"independent\"` to `yAxisMode=\"dual-grid\"` and `yAxisMode=\"stacked\"` to `yAxisMode=\"split\"`. `yAxisMode=\"exact\"` is unchanged. Retype any field, constant or return value that supplies one of those strings.",
-      "appliesWhen": "Only `yAxisMode` on `ds-line-chart`, and any TypeScript typed as `ChartAxisMode` or `LineChartAxisMode` that feeds it. `stack` on `ds-column-chart` keeps its own `\"stacked\"`, which is a different input with a different meaning and is NOT renamed.",
+      "appliesWhen": "Only `yAxisMode` on `ds-line-chart`, and any TypeScript typed as `ChartAxisMode` or `ChartAxisMode` that feeds it. `stack` on `ds-column-chart` keeps its own `\"stacked\"`, which is a different input with a different meaning and is NOT renamed.",
       "pitfall": "An unknown string does not error. Angular assigns it, no mode matches, and the plot silently falls back to one shared grid - a chart that still renders and is measured against the wrong axis. A build that passes proves nothing here; only the three old strings being gone does.",
       "restore": null,
       "searchHints": [
         "yAxisMode=",
         "ChartAxisMode",
-        "LineChartAxisMode",
         "'rounded'",
         "'independent'",
         "'stacked'"
@@ -34,7 +33,6 @@
         "yAxisMode=\"stacked\"",
         "[yAxisMode]=",
         "ChartAxisMode",
-        "LineChartAxisMode",
         ": 'rounded'",
         "= 'rounded'",
         "'independent'",
@@ -109,10 +107,14 @@
         "extends ChartComponent",
         "ChartComponent",
         "extends PieChartComponent",
-        "PieChartComponent"
+        "PieChartComponent",
+        "extends ButtonComponent",
+        "ButtonComponent",
+        "extends PaginationComponent",
+        "PaginationComponent"
       ],
       "verify": "Every subclass of the listed components builds, and any member it declares that the base now also declares carries `override`.",
-      "note": "`LineChartComponent` gained `curve`, `stack`, `yAxisLabel`, `secondaryAxisLabel` and the members behind them; `ChartComponent` gained `axisLabel`, `secondaryAxisLabel` and the three that thin and turn its category labels; `LineSeriesComponent` gained `curve`; `PieChartComponent` traded `thickness` for `innerRadius`, so a subclass overriding the old name overrides nothing. Subclassing a DS component is unsupported, but a release that only adds can still fail such a build on a name collision, which is why the classes are listed here rather than in the additive notes."
+      "note": "`LineChartComponent` gained `curve`, `stack`, `yAxisLabel`, `secondaryAxisLabel` and the members behind them; `ChartComponent` gained `axisLabel`, `secondaryAxisLabel` and the three that thin and turn its category labels; `LineSeriesComponent` gained `curve`; `PieChartComponent` traded `thickness` for `innerRadius`, so a subclass overriding the old name overrides nothing; `ButtonComponent` gained `align` and `PaginationComponent` gained `size` and `layout`. Subclassing a DS component is unsupported, but a release that only adds can still fail such a build on a name collision, which is why the classes are listed here rather than in the additive notes."
     },
     {
       "id": "bar-chart-value-accepts-a-range",
@@ -467,6 +469,197 @@
       ],
       "verify": "Neither `--ds-description-list-col-gap` nor `--ds-split-button-bg-hover-color` remains.",
       "note": "`col` is the last abbreviation left after the spelling pass, and the split button was the one hover colour in the library spelled `-bg-hover-color` rather than `-bg-color-hover`."
+    },
+    {
+      "id": "table-column-sr-label-spelled-out",
+      "kind": "type-rename",
+      "old": "srLabel",
+      "new": "screenReaderLabel",
+      "surface": "typescript",
+      "action": "Rename the `srLabel` field on every `TableColumn` to `screenReaderLabel`.",
+      "appliesWhen": "Only the `TableColumn` field. Nothing else in the library carried an `sr` prefix.",
+      "restore": null,
+      "searchHints": [
+        "srLabel",
+        "TableColumn"
+      ],
+      "detect": [
+        "srLabel"
+      ],
+      "verify": "No `srLabel` remains.",
+      "note": "It renders visually-hidden text rather than setting an `aria-label` attribute, so `ariaLabel` would have swapped one wrong name for another."
+    },
+    {
+      "id": "table-sort-dir-change-spelled-out",
+      "kind": "output-rename",
+      "old": "ds-table[sortDirChange]",
+      "new": "sortDirectionChange",
+      "surface": "template",
+      "action": "Rename the `(sortDirChange)` binding on every `ds-table` to `(sortDirectionChange)`.",
+      "appliesWhen": "Only the output. The input and the type move with `table-sort-dir-spelled-out`.",
+      "restore": null,
+      "searchHints": [
+        "sortDirChange",
+        "sortDir"
+      ],
+      "detect": [
+        "sortDirChange",
+        "(sortDirChange)"
+      ],
+      "verify": "No `sortDirChange` remains.",
+      "note": "Renamed before the shorter `sortDir`, which its own name contains."
+    },
+    {
+      "id": "table-sort-dir-spelled-out",
+      "kind": "input-rename",
+      "old": "ds-table[sortDir]",
+      "new": "sortDirection",
+      "surface": [
+        "template",
+        "typescript"
+      ],
+      "action": "Rename the `sortDir` binding on every `ds-table` to `sortDirection`, the exported type `SortDir` to `SortDirection`, and the `dir` field of `SortChangeEvent` to `direction`.",
+      "appliesWhen": "The table's sort family only. `sortKey`, `sortMode` and `sortingOrder` keep their names.",
+      "pitfall": "An unknown static attribute is not an error: Angular leaves `sortDir=\"asc\"` on the DOM, the input keeps its default, and the table renders sorted by nothing with no warning. A `[sortDir]` property binding does fail the build; a plain attribute does not.",
+      "restore": null,
+      "searchHints": [
+        "sortDir",
+        "SortDir",
+        "sortChange",
+        ".dir"
+      ],
+      "detect": [
+        "sortDir",
+        "SortDir",
+        "order: ",
+        "dir:"
+      ],
+      "verify": "No `sortDir`, `SortDir` or `SortChangeEvent.dir` remains.",
+      "note": "`Dir` reads as a directory. Rename `sortDirChange` first - `sortDir` is a substring of it, and a plain replace would corrupt the longer name."
+    },
+    {
+      "id": "date-range-value-is-qualified",
+      "kind": "type-rename",
+      "old": "RangeValue",
+      "new": "DateRangeValue",
+      "surface": "typescript",
+      "action": "Rename the exported type `RangeValue` to `DateRangeValue`.",
+      "appliesWhen": "Only that type. `TimeRangeValue` was already qualified and is unchanged, and a consumer's own `RangeValue` is not ours - match on a whole word and confirm the import.",
+      "restore": null,
+      "searchHints": [
+        "RangeValue",
+        "DatePickerValue"
+      ],
+      "detect": [
+        "RangeValue"
+      ],
+      "verify": "No bare `RangeValue` is imported from the package.",
+      "note": "It is a date range on an unqualified name, in a root API that also publishes a slider and a time picker. Its counterpart `TimeRangeValue` says which range it is."
+    },
+    {
+      "id": "app-layout-services-carry-their-component",
+      "kind": "type-rename",
+      "old": "LayoutScrollService | LayoutNavigationService | DsScrollReset",
+      "new": "AppLayoutScrollService | AppLayoutNavigationService | DsAppLayoutScrollReset",
+      "surface": "typescript",
+      "action": "Rename `LayoutScrollService` to `AppLayoutScrollService` and `LayoutNavigationService` to `AppLayoutNavigationService`. `DsScrollReset` is no longer exported: the type is now `DsAppLayoutScrollReset`. Change every place they are injected, imported or annotated.",
+      "appliesWhen": "The three `ds-app-layout` symbols only. `LayoutAlign`, `LayoutGap` and `LayoutJustify` belong to the `components/layout` entry point and keep their names.",
+      "restore": null,
+      "searchHints": [
+        "LayoutScrollService",
+        "LayoutNavigationService",
+        "DsScrollReset",
+        "inject("
+      ],
+      "detect": [
+        "LayoutScrollService",
+        "LayoutNavigationService",
+        "DsScrollReset"
+      ],
+      "verify": "None of the three old names remains.",
+      "note": "The `Layout` prefix already names a different feature on this surface, so one prefix stood for two unrelated things: a flex container's vocabulary and the app shell's machinery."
+    },
+    {
+      "id": "line-chart-point-is-a-reading",
+      "kind": "type-rename",
+      "old": "LineChartPoint",
+      "new": "LineChartReading",
+      "surface": "typescript",
+      "action": "Rename the exported type `LineChartPoint` to `LineChartReading`.",
+      "appliesWhen": "Only the `pointClicked` payload on `ds-line-chart`. The output keeps its name, and `ColumnChartPoint` and `ScatterPoint` are input data and are unchanged.",
+      "restore": null,
+      "searchHints": [
+        "LineChartPoint",
+        "pointClicked"
+      ],
+      "detect": [
+        "LineChartPoint"
+      ],
+      "verify": "No `LineChartPoint` remains.",
+      "note": "`...ChartPoint` is an input datum everywhere else on this surface. This one is an emit payload, and its twin on the scatter chart is already `ScatterChartReading`."
+    },
+    {
+      "id": "chart-gaps-is-one-type",
+      "kind": "type-rename",
+      "old": "LineChartGaps | LineSeriesGaps",
+      "new": "ChartGaps",
+      "surface": "typescript",
+      "action": "Rename both `LineChartGaps` and `LineSeriesGaps` to `ChartGaps`, imported from the package root or from `@ids-group-ltd/ids-design-system/core`.",
+      "appliesWhen": "Both old names, wherever they annotate a `gaps` binding. The `'break'` and `'zero'` values are unchanged.",
+      "restore": null,
+      "searchHints": [
+        "LineChartGaps",
+        "LineSeriesGaps",
+        "gaps"
+      ],
+      "detect": [
+        "LineChartGaps",
+        "LineSeriesGaps"
+      ],
+      "verify": "Neither old name remains, and `ChartGaps` is imported from the root or from `core`.",
+      "note": "The two were declared character-identical and both published, so a consumer had to pick between two names for one thing. They are now one type in `core`, beside `ChartAxisMode`."
+    },
+    {
+      "id": "line-chart-axis-mode-is-chart-axis-mode",
+      "kind": "type-rename",
+      "old": "LineChartAxisMode",
+      "new": "ChartAxisMode",
+      "surface": "typescript",
+      "action": "Rename `LineChartAxisMode` to `ChartAxisMode`, imported from the package root or from `@ids-group-ltd/ids-design-system/core`.",
+      "appliesWhen": "Only the type. `yAxisMode` keeps its name, and its four values are covered by `line-chart-axis-mode-values-renamed`.",
+      "restore": null,
+      "searchHints": [
+        "LineChartAxisMode",
+        "yAxisMode"
+      ],
+      "detect": [
+        "LineChartAxisMode"
+      ],
+      "verify": "No `LineChartAxisMode` remains.",
+      "note": "It was declared as a bare alias of `ChartAxisMode` and published beside it, so the two names said the same thing while looking like a per-component variant."
+    },
+    {
+      "id": "accordion-multi-is-multiple",
+      "kind": "input-rename",
+      "old": "ds-accordion[multi]",
+      "new": "multiple",
+      "surface": "template",
+      "action": "Rename the `multi` binding on every `ds-accordion` to `multiple`.",
+      "appliesWhen": "Only `ds-accordion`. `ds-multi-select` is a component name and is unchanged, and `ds-autocomplete[multiple]` already spelled it out.",
+      "pitfall": "The default is `true`, so a `multi` attribute left behind reads as unset and the accordion keeps opening several panels - which is what most callers wanted anyway. A consumer who wrote `[multi]=\"false\"` to get a single-open accordion silently gets the opposite, with no error.",
+      "restore": null,
+      "searchHints": [
+        "multi",
+        "[multi]",
+        "ds-accordion"
+      ],
+      "detect": [
+        "[multi]",
+        "multi=",
+        "AccordionContract"
+      ],
+      "verify": "No `multi` binding remains on any `ds-accordion`.",
+      "note": "Every other place on this surface spells the same idea `multiple` - `ds-autocomplete`, `ds-dropzone`, and the table's own `TableExpandMode`."
     }
   ],
   "informational": [
@@ -477,7 +670,7 @@
     "A line series measured only against the first axis no longer raises an empty second axis labelled `0`. Affected any plot whose series all read against the left axis; a plot that genuinely carries two scales is unchanged.",
     "`ds-line-chart` takes `stack`: `'none'` (the default, and what every chart already drew), `'stacked'` or `'normalized'`. Nothing to change - a chart that sets nothing is unchanged. Only a series with `area: true` fills, stacking runs per axis, and `stack=\"stacked\"` is not `yAxisMode=\"split\"`: series on top of each other, against two plots one above the other.",
     "`ds-heatmap-chart` is new, from `@ids-group-ltd/ids-design-system/components/heatmap-chart` and from the package root, with `HeatmapChartRow` and `HeatmapChartCell`. Purely additive - nothing to change. It has no `dataTable` input on purpose: colour is the only channel carrying the quantity on the grid, so the annex table and the colour scale are always drawn.",
-    "`ds-waterfall-chart` is new, from `@ids-group-ltd/ids-design-system/components/waterfall-chart` and from the package root, with `WaterfallChartBar`, `WaterfallChartKind` and `WaterfallChartStep`. Two tokens come with it, `--ds-chart-positive-color` and `--ds-chart-negative-color`, pointing at the palette's two lead hues rather than at `--success` and `--error`. Purely additive - nothing to change.",
+    "`ds-waterfall-chart` is new, from `@ids-group-ltd/ids-design-system/components/waterfall-chart` and from the package root, with `WaterfallChartBar` and `WaterfallChartKind`. Two tokens come with it, `--ds-chart-positive-color` and `--ds-chart-negative-color`, pointing at the palette's two lead hues rather than at `--success` and `--error`. Purely additive - nothing to change.",
     "A heat scale is new: `--ds-chart-heat-1-color` through `--ds-chart-heat-8-color`, the same hue across the full lightness range for a grid where magnitude is read from the step between two colours. `--ds-chart-ramp-*` is unchanged and `ds-funnel-chart` looks exactly as it did. Purely additive - nothing to change.",
     "`ds-scatter-chart` is new, from `@ids-group-ltd/ids-design-system/components/scatter-chart` and from the package root, with `ScatterChartSeries`, `ScatterChartDecimator`, `ScatterChartReading` and `ScatterPoint`. Purely additive - nothing to change. It thins its own data past four times the plot's width in marks and says so under the plot; the annex table still lists every reading. `decimator` chooses between the two decimators or turns it off.",
     "A chart's category labels now turn 45 degrees when that lets all of them be drawn, and thin to every second or third only when a tilt is not enough. Nothing to change: it affects what a narrow chart draws, not what a template declares. A chart wide enough for its labels is unchanged.",

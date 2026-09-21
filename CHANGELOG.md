@@ -128,6 +128,39 @@
   An unknown custom property is not an error, so a missed rename is silent - the component reads
   its own fallback and draws at the default.
 
+- **Nine exported names now say what they are.** Each was found by reading the surface against
+  itself: a name is a defect when it misleads, when it stands for two things, or when two names
+  stand for one.
+
+  ```ts
+  import type { ChartGaps, DateRangeValue, SortDirection } from '@ids-group-ltd/ids-design-system';
+  ```
+
+  `LineChartGaps` and `LineSeriesGaps` were declared character-identical and both published, so a
+  consumer had to choose between two names for one type: both are `ChartGaps`, in `core` beside
+  `ChartAxisMode`. `LineChartAxisMode` was a bare alias of `ChartAxisMode` published next to it,
+  and is now that type. `RangeValue` is `DateRangeValue`, which is what its already-qualified
+  neighbour `TimeRangeValue` made clear it should have been. `LineChartPoint` is
+  `LineChartReading`: `...ChartPoint` is an input datum everywhere else, this one is the
+  `pointClicked` payload, and its twin on the scatter chart was already `ScatterChartReading`.
+
+  `SortDir`, `sortDir` and `sortDirChange` are `SortDirection`, `sortDirection` and
+  `sortDirectionChange`, and `SortChangeEvent.dir` is `direction`. `TableColumn.srLabel` is
+  `screenReaderLabel` - it renders visually-hidden text, so `ariaLabel` would have been a second
+  wrong name. `ds-accordion[multi]` is `multiple`, which is how `ds-autocomplete`, `ds-dropzone`
+  and `TableExpandMode` all spell it.
+
+  `LayoutScrollService` and `LayoutNavigationService` take their component's name -
+  `AppLayoutScrollService` and `AppLayoutNavigationService` - and `DsScrollReset` is no longer
+  exported, having become `DsAppLayoutScrollReset`. All three move because `LayoutAlign`, `LayoutGap` and `LayoutJustify` already make `Layout` mean the flex
+  container entry point on this same surface.
+
+  **Two of these fail quietly.** A static `sortDir="asc"` left behind is an unknown attribute:
+  Angular leaves it on the DOM, the input keeps its default, and the table sorts by nothing with
+  no warning. And `[multi]="false"`, written to get a single-open accordion, becomes an unknown
+  attribute against a default of `true` - the accordion opens several panels instead, silently.
+  A property binding fails the build; a plain attribute does not.
+
 ### Added
 
 - **`ds-button` takes `align`.** `'center'` is the default and what every button already drew;
@@ -398,7 +431,7 @@
 - **Exported class member surface grew — only matters if you SUBCLASS one of these.**
   `LineChartComponent` gained `curve`, `stack`, `yAxisLabel`, `secondaryAxisLabel` and five members
   behind them; `ChartComponent` gained `axisLabel`, `secondaryAxisLabel` and the three that thin and
-  turn its category labels; `LineSeriesComponent` gained `curve`. Subclassing a DS component is
+  turn its category labels; `LineSeriesComponent` gained `curve`; `ButtonComponent` gained `align`; `PaginationComponent` gained `size` and `layout`; `PieChartComponent` traded `thickness` for `innerRadius`, so a subclass overriding the old name now overrides nothing. Subclassing a DS component is
   unsupported, but a release that only adds can still fail such a build on a name collision: TS4114
   demands `override` for a same-named member, TS2416 fires where the signature differs. Rename your
   own member, or add `override` where it genuinely means the same thing.

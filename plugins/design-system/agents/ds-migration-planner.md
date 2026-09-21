@@ -33,7 +33,7 @@ every item that lacks a REQUIRED field, ADD that field from what the item's own 
 rewrite: you are not changing the migration, you are stating where to look for it (and, for
 `action`, lifting the imperative out of the note so the applier executes a field, not a paragraph). Read the note for
 the artifact it describes (a store, a query, a stylesheet, a template) and for the shapes it quotes;
-a note that says "a server query built as `orderBy: sortKey()` must skip the clause when `sortDir()`
+a note that says "a server query built as `orderBy: sortKey()` must skip the clause when `sortDirection()`
 is null" is handing you both `surface: "typescript"` and two `detect` strings.
 A top-level `deleteList` is DATA, not something to reconstruct: every published manifest carries
 it as `{ id, surface, find, why, replaceWith }` rows — pass them through verbatim (the

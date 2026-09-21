@@ -19,7 +19,7 @@ import {
   RouterLinkActive,
 } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { AppLayoutComponent, LayoutScrollService } from 'ds/app-layout';
+import { AppLayoutComponent, AppLayoutScrollService } from 'ds/app-layout';
 import { IconButtonComponent } from 'ds/icon-button';
 import { IconComponent } from 'ds/icons';
 import { SearchComponent } from 'ds/search';
@@ -62,7 +62,7 @@ export class SidebarComponent {
   private readonly destroyRef = inject(DestroyRef);
   private readonly router = inject(Router);
   private readonly injector = inject(Injector);
-  private readonly layoutScroll = inject(LayoutScrollService);
+  private readonly layoutScroll = inject(AppLayoutScrollService);
   protected readonly layout = inject(AppLayoutComponent);
 
   readonly navigated = output<void>();
@@ -442,7 +442,7 @@ export class SidebarComponent {
    * item again then worked, because the second navigation was to an unchanged
    * URL and triggered no reset. That is the "only opens on the second click".
    *
-   * `dsSamePage` is the contract `LayoutNavigationService` documents for exactly
+   * `dsSamePage` is the contract `AppLayoutNavigationService` documents for exactly
    * this: a docs URL that names the reader's position changes the path without
    * changing the page. The scroll-spy rewrite already used it; the click that
    * causes the rewrite did not.

@@ -248,7 +248,7 @@
 
   <p class="block-desc t-s">
     <code class="t-mono-inline">
-      LayoutNavigationService
+      AppLayoutNavigationService
     </code> is public for
     the same reason. Its <code class="t-mono-inline">pathChanged</code> stream
     is the layout's own answer to "did we go somewhere else?" — `NavigationEnd`,
@@ -276,7 +276,7 @@
     to build BEFORE it can be scrolled — should take the offset instead of
     letting the service assign it:
     <code class="t-mono-inline">
-      inject(LayoutScrollService).consumePendingOffset()
+      inject(AppLayoutScrollService).consumePendingOffset()
     </code
     >.
   </p>

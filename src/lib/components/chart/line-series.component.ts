@@ -28,6 +28,7 @@ import type {
 } from '@ids-group-ltd/ids-design-system/components';
 import type {
   ChartAxis,
+  ChartGaps,
   ChartValueFormat,
 } from '@ids-group-ltd/ids-design-system/core';
 import { chartActiveMark } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
@@ -49,9 +50,6 @@ export interface LineSeriesData {
   /** Any CSS colour. Unset takes the categorical palette slot for the series' position. */
   color?: string;
 }
-
-/** What a `null` reading draws: a hole in the line, or a point at zero. */
-export type LineSeriesGaps = 'break' | 'zero';
 
 let nextSeriesId = 0;
 
@@ -94,7 +92,7 @@ export class LineSeriesComponent implements OnDestroy {
 
   /** What a `null` reading draws: `'break'` leaves a hole in the line, `'zero'` plots a point
    *  at zero. A missing measurement and a measured zero are different facts. */
-  readonly gaps = input<LineSeriesGaps>('break');
+  readonly gaps = input<ChartGaps>('break');
 
   /** How the line joins its readings. `'linear'` by default, which asserts nothing the data does
    *  not say; a curve is a claim about what happened BETWEEN two readings. `'step'` holds each

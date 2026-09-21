@@ -16,7 +16,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
-        "name": "multi",
+        "name": "multiple",
         "kind": "input",
         "type": "boolean",
         "union": null,
@@ -202,7 +202,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "scrollReset",
         "kind": "input",
-        "type": "DsScrollReset",
+        "type": "DsAppLayoutScrollReset",
         "union": [
           "path",
           "never",
@@ -210,7 +210,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'path'",
         "required": false,
-        "description": "When the content scroll resets to the top. `'path'` (default) is what the layout has always done; `'always'` also resets on a query- or fragment-only navigation, which is what a server-paged list wants; `'never'` hands the decision to the screen, which can still call `LayoutScrollService.scrollToTop()`. It exists because the layout owning the scroll CONTAINER also meant it owned the POLICY: a screen could add a reset but had no way to suppress one."
+        "description": "When the content scroll resets to the top. `'path'` (default) is what the layout has always done; `'always'` also resets on a query- or fragment-only navigation, which is what a server-paged list wants; `'never'` hands the decision to the screen, which can still call `AppLayoutScrollService.scrollToTop()`. It exists because the layout owning the scroll CONTAINER also meant it owned the POLICY: a screen could add a reset but had no way to suppress one."
       }
     ],
     "outputs": []
@@ -2272,7 +2272,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "gaps",
         "kind": "input",
-        "type": "LineSeriesGaps",
+        "type": "ChartGaps",
         "union": [
           "break",
           "zero"
@@ -3099,7 +3099,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "value",
         "kind": "model",
-        "type": "Date | RangeValue | null",
+        "type": "Date | DateRangeValue | null",
         "union": null,
         "default": "null",
         "required": false,
@@ -4848,7 +4848,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "yAxisMode",
         "kind": "input",
-        "type": "LineChartAxisMode",
+        "type": "ChartAxisMode",
         "union": [
           "aligned",
           "exact",
@@ -4907,7 +4907,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "gaps",
         "kind": "input",
-        "type": "LineChartGaps",
+        "type": "ChartGaps",
         "union": [
           "break",
           "zero"
@@ -5180,7 +5180,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "pointClicked",
         "kind": "output",
-        "type": "LineChartPoint",
+        "type": "LineChartReading",
         "union": null,
         "default": null,
         "required": false,
@@ -9215,9 +9215,9 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Column key currently sorted by; `null` when unsorted. Two-way bindable (`[(sortKey)]`) or one-way from your own state with `(sortChange)`."
       },
       {
-        "name": "sortDir",
+        "name": "sortDirection",
         "kind": "input",
-        "type": "SortDir",
+        "type": "SortDirection",
         "union": [
           "asc",
           "desc"
@@ -9229,7 +9229,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "sortingOrder",
         "kind": "input",
-        "type": "SortDir[]",
+        "type": "SortDirection[]",
         "union": null,
         "default": "['asc', 'desc', null]",
         "required": false,
@@ -9238,7 +9238,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "sortAnnouncement",
         "kind": "input",
-        "type": "(label: string, dir: SortDir) => string",
+        "type": "(label: string, dir: SortDirection) => string",
         "union": null,
         "default": "(label, dir) =>\n      dir\n        ? `Sorted by ${label}, ${dir === 'asc' ? 'ascending' : 'descending'}`\n        : `Sorting cleared`",
         "required": false,
@@ -9564,16 +9564,16 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Emitted for `[(sortKey)]`. `sortChange` carries the same click with both halves at once, which is usually the one to listen to."
       },
       {
-        "name": "sortDirChange",
+        "name": "sortDirectionChange",
         "kind": "output",
-        "type": "SortDir",
+        "type": "SortDirection",
         "union": [
           "asc",
           "desc"
         ],
         "default": null,
         "required": false,
-        "description": "Emitted for `[(sortDir)]`."
+        "description": "Emitted for `[(sortDirection)]`."
       },
       {
         "name": "lazyLoad",
@@ -11113,6 +11113,87 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
 };
 
 export const SERVICE_API: Record<string, ServiceApi> = {
+  "AppLayoutNavigationService": {
+    "key": "app-layout",
+    "className": "AppLayoutNavigationService",
+    "importName": "AppLayoutNavigationService",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": "Emits the new path whenever navigation lands on a DIFFERENT one. A query- or fragment-only navigation is a search, sort or page step on the same screen, and everything that reacts to \"went somewhere else\" must agree on that — the scroll reset, the responsive rail, and now your own code — so they read one source instead of each deciding for itself. PUBLIC since 0.8.x, because consumers were re-deriving it and disagreeing: one consumer had three separate answers to \"did the path change?\" — route snapshots in a view-transition skip, this stream inside the layout, and a `split('?')` in a tab helper that ignored the fragment this one strips. Inject it and read `pathChanged` rather than writing a fourth: ```ts private readonly navigation = inject(AppLayoutNavigationService); constructor() { this.navigation.pathChanged .pipe(takeUntilDestroyed()) .subscribe((path) => …); } ``` A PATH change is not always a page change. An app whose URL mirrors the reader's position — a docs layout rewriting `/area/section` from a scroll spy, a wizard that names its step — changes the path while staying on the screen, and resetting the scroll there fights the user: the reset moves the scroll, the spy rewrites the path again, and the page ping-pongs. Such a navigation must carry `state: { dsSamePage: true }`, which is skipped here. Root-provided, which is also what makes it safe to expose: the stream is derived from the router and holds no state, so one instance serves every reader. `AppLayoutScrollService` depends on it, so a consumer providing THAT outside `ds-app-layout` needs this one resolvable too.",
+    "members": [
+      {
+        "name": "pathChanged",
+        "kind": "property",
+        "signature": "pathChanged",
+        "type": "Observable<string>",
+        "description": "Emits the new path on every navigation that lands on a DIFFERENT path — query and hash are stripped, repeats are dropped, and a navigation the app marked `dsSamePage` is skipped entirely."
+      }
+    ]
+  },
+  "AppLayoutScrollService": {
+    "key": "app-layout",
+    "className": "AppLayoutScrollService",
+    "importName": "AppLayoutScrollService",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": "Owns the layout's content scroller. In the fixed-frame layout the window never scrolls, so the router's built-in window-based scrolling no-ops — this service resets the registered container to the top when navigation lands on a different PATH instead. Provided by `ds-app-layout`, so routed pages can `inject(AppLayoutScrollService)` and call `scrollToTop()` manually (e.g. list pages that DO want the top after a filter change). With `restoreScroll` on the layout it also restores the reader's place. Only when ARMED, which is the whole design: going BACK to a list should return to where the reader was, while following a link into a new screen should not.",
+    "members": [
+      {
+        "name": "scroller",
+        "kind": "property",
+        "signature": "scroller",
+        "type": "Signal<Element | null>",
+        "description": "The content scroller, once the layout has rendered it. Exposed so a host that must measure or drive the scroll itself — a scroll-spy, a virtualizer — can ask the layout for it instead of guessing the layout's internal markup with `document.querySelector`."
+      },
+      {
+        "name": "setScrollContainer",
+        "kind": "method",
+        "signature": "setScrollContainer(element: Element)",
+        "type": "void",
+        "description": "Wiring, called by `ds-app-layout` once its content region exists. Public only because the component and the service sit in different files - a consumer has no reason to call it, and calling it points the service at the wrong element."
+      },
+      {
+        "name": "configureRestore",
+        "kind": "method",
+        "signature": "configureRestore(timeoutMs: number | null)",
+        "type": "void",
+        "description": "Wiring: `ds-app-layout` mirrors its `restoreScroll` inputs through here."
+      },
+      {
+        "name": "configureReset",
+        "kind": "method",
+        "signature": "configureReset(strategy: DsAppLayoutScrollReset)",
+        "type": "void",
+        "description": "Wiring: `ds-app-layout` mirrors its `scrollReset` input through here."
+      },
+      {
+        "name": "scrollToTop",
+        "kind": "method",
+        "signature": "scrollToTop()",
+        "type": "void",
+        "description": "Send the layout's content region back to the top. For a screen that wants the top after its own filter or sort change, which `resetScroll=\"path\"` deliberately does not do."
+      },
+      {
+        "name": "scrollTo",
+        "kind": "method",
+        "signature": "scrollTo(top: number)",
+        "type": "void",
+        "description": "Scroll the content region to an absolute offset. Assigns `scrollTop` rather than calling `scrollTo`, so a themed `scroll-behavior: smooth` cannot turn a positioning jump into an animation."
+      },
+      {
+        "name": "consumePendingOffset",
+        "kind": "method",
+        "signature": "consumePendingOffset()",
+        "type": "number | null",
+        "description": "Take the offset this navigation is going to restore, and cancel the restore. For a host that renders its own scroll position — a virtualizer needs the offset BEFORE it decides which rows to build, so letting the service assign `scrollTop` afterwards would scroll a list that has not been built yet. Returns null when nothing is pending, which is every navigation that is not a back."
+      },
+      {
+        "name": "contentReady",
+        "kind": "method",
+        "signature": "contentReady()",
+        "type": "void",
+        "description": "Optional accelerator: tell the layout the content for this route is in the DOM. Without it the restore still lands — it waits for the container to grow and clamps at the deadline — but a host that knows when its data arrived can end the wait early instead of paying the growth watch."
+      }
+    ]
+  },
   "BodyScrollLockService": {
     "key": "overlay",
     "className": "BodyScrollLockService",
@@ -11184,87 +11265,6 @@ export const SERVICE_API: Record<string, ServiceApi> = {
         "signature": "clear()",
         "type": "void",
         "description": "Empty the trail."
-      }
-    ]
-  },
-  "LayoutNavigationService": {
-    "key": "app-layout",
-    "className": "LayoutNavigationService",
-    "importName": "LayoutNavigationService",
-    "importPath": "@ids-group-ltd/ids-design-system",
-    "summary": "Emits the new path whenever navigation lands on a DIFFERENT one. A query- or fragment-only navigation is a search, sort or page step on the same screen, and everything that reacts to \"went somewhere else\" must agree on that — the scroll reset, the responsive rail, and now your own code — so they read one source instead of each deciding for itself. PUBLIC since 0.8.x, because consumers were re-deriving it and disagreeing: one consumer had three separate answers to \"did the path change?\" — route snapshots in a view-transition skip, this stream inside the layout, and a `split('?')` in a tab helper that ignored the fragment this one strips. Inject it and read `pathChanged` rather than writing a fourth: ```ts private readonly navigation = inject(LayoutNavigationService); constructor() { this.navigation.pathChanged .pipe(takeUntilDestroyed()) .subscribe((path) => …); } ``` A PATH change is not always a page change. An app whose URL mirrors the reader's position — a docs layout rewriting `/area/section` from a scroll spy, a wizard that names its step — changes the path while staying on the screen, and resetting the scroll there fights the user: the reset moves the scroll, the spy rewrites the path again, and the page ping-pongs. Such a navigation must carry `state: { dsSamePage: true }`, which is skipped here. Root-provided, which is also what makes it safe to expose: the stream is derived from the router and holds no state, so one instance serves every reader. `LayoutScrollService` depends on it, so a consumer providing THAT outside `ds-app-layout` needs this one resolvable too.",
-    "members": [
-      {
-        "name": "pathChanged",
-        "kind": "property",
-        "signature": "pathChanged",
-        "type": "Observable<string>",
-        "description": "Emits the new path on every navigation that lands on a DIFFERENT path — query and hash are stripped, repeats are dropped, and a navigation the app marked `dsSamePage` is skipped entirely."
-      }
-    ]
-  },
-  "LayoutScrollService": {
-    "key": "app-layout",
-    "className": "LayoutScrollService",
-    "importName": "LayoutScrollService",
-    "importPath": "@ids-group-ltd/ids-design-system",
-    "summary": "Owns the layout's content scroller. In the fixed-frame layout the window never scrolls, so the router's built-in window-based scrolling no-ops — this service resets the registered container to the top when navigation lands on a different PATH instead. Provided by `ds-app-layout`, so routed pages can `inject(LayoutScrollService)` and call `scrollToTop()` manually (e.g. list pages that DO want the top after a filter change). With `restoreScroll` on the layout it also restores the reader's place. Only when ARMED, which is the whole design: going BACK to a list should return to where the reader was, while following a link into a new screen should not.",
-    "members": [
-      {
-        "name": "scroller",
-        "kind": "property",
-        "signature": "scroller",
-        "type": "Signal<Element | null>",
-        "description": "The content scroller, once the layout has rendered it. Exposed so a host that must measure or drive the scroll itself — a scroll-spy, a virtualizer — can ask the layout for it instead of guessing the layout's internal markup with `document.querySelector`."
-      },
-      {
-        "name": "setScrollContainer",
-        "kind": "method",
-        "signature": "setScrollContainer(element: Element)",
-        "type": "void",
-        "description": "Wiring, called by `ds-app-layout` once its content region exists. Public only because the component and the service sit in different files - a consumer has no reason to call it, and calling it points the service at the wrong element."
-      },
-      {
-        "name": "configureRestore",
-        "kind": "method",
-        "signature": "configureRestore(timeoutMs: number | null)",
-        "type": "void",
-        "description": "Wiring: `ds-app-layout` mirrors its `restoreScroll` inputs through here."
-      },
-      {
-        "name": "configureReset",
-        "kind": "method",
-        "signature": "configureReset(strategy: DsScrollReset)",
-        "type": "void",
-        "description": "Wiring: `ds-app-layout` mirrors its `scrollReset` input through here."
-      },
-      {
-        "name": "scrollToTop",
-        "kind": "method",
-        "signature": "scrollToTop()",
-        "type": "void",
-        "description": "Send the layout's content region back to the top. For a screen that wants the top after its own filter or sort change, which `resetScroll=\"path\"` deliberately does not do."
-      },
-      {
-        "name": "scrollTo",
-        "kind": "method",
-        "signature": "scrollTo(top: number)",
-        "type": "void",
-        "description": "Scroll the content region to an absolute offset. Assigns `scrollTop` rather than calling `scrollTo`, so a themed `scroll-behavior: smooth` cannot turn a positioning jump into an animation."
-      },
-      {
-        "name": "consumePendingOffset",
-        "kind": "method",
-        "signature": "consumePendingOffset()",
-        "type": "number | null",
-        "description": "Take the offset this navigation is going to restore, and cancel the restore. For a host that renders its own scroll position — a virtualizer needs the offset BEFORE it decides which rows to build, so letting the service assign `scrollTop` afterwards would scroll a list that has not been built yet. Returns null when nothing is pending, which is every navigation that is not a back."
-      },
-      {
-        "name": "contentReady",
-        "kind": "method",
-        "signature": "contentReady()",
-        "type": "void",
-        "description": "Optional accelerator: tell the layout the content for this route is in the DOM. Without it the restore still lands — it waits for the container to grow and clamps at the deadline — but a host that knows when its data arrived can end the wait early instead of paying the growth watch."
       }
     ]
   },

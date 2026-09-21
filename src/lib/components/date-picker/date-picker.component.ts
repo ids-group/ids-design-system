@@ -69,7 +69,7 @@ import {
 import type {
   DatePickerMode,
   DatePickerPreset,
-  RangeValue,
+  DateRangeValue,
 } from './date-picker.types';
 import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
 import {
@@ -121,7 +121,7 @@ interface DayCell {
   },
 })
 export class DatePickerComponent
-  extends DsControlValueAccessor<Date | RangeValue | null>
+  extends DsControlValueAccessor<Date | DateRangeValue | null>
   implements OnDestroy
 {
   /** Segment of a ds-field-group: the group owns the border, radius and focus
@@ -149,7 +149,7 @@ export class DatePickerComponent
         return;
       }
       const single = singleFieldLayout(spec);
-      const [start, end] = (value as RangeValue | null) ?? [null, null];
+      const [start, end] = (value as DateRangeValue | null) ?? [null, null];
       const startSegments = start
         ? parseFieldText(formatDate(start, spec), single)
         : single.slots.map(() => '');
@@ -214,7 +214,7 @@ export class DatePickerComponent
    *  width — opt in when the field shares a grid/flex track with inputs. */
   readonly fullWidth = input(false, { transform: booleanAttribute });
   /** Selected date (single) or `[start, end]` (range), two-way bound. */
-  readonly value = model<Date | RangeValue | null>(null);
+  readonly value = model<Date | DateRangeValue | null>(null);
   /** Accessible-name fallback only — the mask fills the visible placeholder, not this. */
   readonly placeholder = input<string>('Select date');
   /** Field label shown above the trigger. */
@@ -706,7 +706,7 @@ export class DatePickerComponent
         isSelected: !!sel && sel.toDateString() === d.toDateString(),
       };
     }
-    const r = (value as RangeValue | null) ?? [null, null];
+    const r = (value as DateRangeValue | null) ?? [null, null];
     const a = r[0];
     const b = r[1];
     if (!a) {
@@ -790,7 +790,7 @@ export class DatePickerComponent
     const selected =
       this.mode() === 'single'
         ? (this.value() as Date | null)
-        : ((this.value() as RangeValue | null)?.[0] ?? null);
+        : ((this.value() as DateRangeValue | null)?.[0] ?? null);
     const focus = this.clampToBounds(
       selected ?? this.defaultDate() ?? new Date(),
     );
@@ -1150,7 +1150,7 @@ export class DatePickerComponent
     const endBad = endFilled && (!end || this.isDayDisabled(end));
     this.rangeInvalid.set(startBad || endBad);
     if (start && end && !startBad && !endBad) {
-      const ordered: RangeValue =
+      const ordered: DateRangeValue =
         start.getTime() <= end.getTime() ? [start, end] : [end, start];
       this.value.set(ordered);
       if (commit) {
@@ -1185,7 +1185,7 @@ export class DatePickerComponent
 
       return;
     }
-    const r = (this.value() as RangeValue | null) ?? [null, null];
+    const r = (this.value() as DateRangeValue | null) ?? [null, null];
     const a = r[0];
     const b = r[1];
     if (!a || (a && b)) {
@@ -1193,7 +1193,7 @@ export class DatePickerComponent
       this.gridFocus.set(new Date(cell.date));
     } else {
       const picked = new Date(cell.date);
-      const range: RangeValue =
+      const range: DateRangeValue =
         a.getTime() <= picked.getTime() ? [a, picked] : [picked, a];
       this.value.set(range);
       this.close();
@@ -1206,7 +1206,7 @@ export class DatePickerComponent
     if (presetValue instanceof Date) {
       return this.isDayDisabled(presetValue);
     }
-    const rangeValue = presetValue as RangeValue;
+    const rangeValue = presetValue as DateRangeValue;
     const start = rangeValue[0];
     const end = rangeValue[1];
     if (start && this.isDayDisabled(start)) {
@@ -1230,7 +1230,7 @@ export class DatePickerComponent
     if (presetValue instanceof Date) {
       this.value.set(new Date(presetValue));
     } else {
-      const rangeValue = presetValue as RangeValue;
+      const rangeValue = presetValue as DateRangeValue;
       this.value.set([
         rangeValue[0] ? new Date(rangeValue[0]) : null,
         rangeValue[1] ? new Date(rangeValue[1]) : null,

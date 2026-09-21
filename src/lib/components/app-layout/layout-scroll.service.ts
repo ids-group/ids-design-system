@@ -8,7 +8,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { LayoutNavigationService } from './layout-navigation.service';
+import { AppLayoutNavigationService } from './layout-navigation.service';
 
 const STORAGE_KEY = 'ds-app-layout:scroll';
 
@@ -29,16 +29,16 @@ const pathOf = (url: string): string => url.split(/[?#]/)[0];
  * the reader's place. `'always'` resets on every navigation, which is what a
  * server-paged list usually wants — a new page should start at the top.
  * `'never'` hands the decision back to the screen, which can still call
- * `LayoutScrollService.scrollToTop()` itself.
+ * `AppLayoutScrollService.scrollToTop()` itself.
  */
-export type DsScrollReset = 'path' | 'never' | 'always';
+export type DsAppLayoutScrollReset = 'path' | 'never' | 'always';
 
 /**
  * Owns the layout's content scroller. In the fixed-frame layout the window never
  * scrolls, so the router's built-in window-based scrolling no-ops — this service
  * resets the registered container to the top when navigation lands on a different
  * PATH instead. Provided by `ds-app-layout`, so routed pages can
- * `inject(LayoutScrollService)` and call `scrollToTop()` manually (e.g. list pages
+ * `inject(AppLayoutScrollService)` and call `scrollToTop()` manually (e.g. list pages
  * that DO want the top after a filter change).
  *
  * With `restoreScroll` on the layout it also restores the reader's place. Only
@@ -46,8 +46,8 @@ export type DsScrollReset = 'path' | 'never' | 'always';
  * where the reader was, while following a link into a new screen should not.
  */
 @Injectable()
-export class LayoutScrollService {
-  private readonly navigation = inject(LayoutNavigationService);
+export class AppLayoutScrollService {
+  private readonly navigation = inject(AppLayoutNavigationService);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
   private readonly container = signal<Element | null>(null);
@@ -62,7 +62,7 @@ export class LayoutScrollService {
 
   // null = restoration off, which is the default.
   private restoreTimeoutMs: number | null = null;
-  private resetStrategy: DsScrollReset = 'path';
+  private resetStrategy: DsAppLayoutScrollReset = 'path';
   private armed = false;
   private pendingOffset: number | null = null;
   private endRestore: (() => void) | null = null;
@@ -115,7 +115,7 @@ export class LayoutScrollService {
   }
 
   /** Wiring: `ds-app-layout` mirrors its `scrollReset` input through here. */
-  configureReset(strategy: DsScrollReset): void {
+  configureReset(strategy: DsAppLayoutScrollReset): void {
     this.resetStrategy = strategy;
   }
 

@@ -14,7 +14,7 @@ export type {
   TableExpandMode,
   TableFilterMode,
   TableSortMode,
-  SortDir,
+  SortDirection,
   SortChangeEvent,
   TableRowAction,
   TableRowActionEvent,

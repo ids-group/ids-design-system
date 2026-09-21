@@ -6,7 +6,10 @@ import {
   tickValues,
 } from '@ids-group-ltd/ids-design-system/components';
 import type { LinePoint } from '@ids-group-ltd/ids-design-system/components';
-import type { LineChartAxisMode, LineChartGaps } from './line-chart.types';
+import type {
+  ChartAxisMode,
+  ChartGaps,
+} from '@ids-group-ltd/ids-design-system/core';
 
 export {
   areaPath,
@@ -85,7 +88,7 @@ export function normalizeTickCount(tickCount: number): number {
 export function alignSeriesValues(
   data: readonly (number | null)[],
   categoryCount: number,
-  gaps: LineChartGaps,
+  gaps: ChartGaps,
 ): (number | null)[] {
   const length =
     Number.isFinite(categoryCount) && categoryCount > 0
@@ -136,7 +139,7 @@ function nicedAxis(domainMax: number, tickCount: number): AxisScale {
 export function axisLayout(
   primaryDomainMax: number,
   secondaryDomainMax: number | null,
-  mode: LineChartAxisMode,
+  mode: ChartAxisMode,
   tickCount: number,
 ): AxisLayout {
   const count = normalizeTickCount(tickCount);
@@ -180,7 +183,7 @@ export function axisLayout(
 }
 
 export function chartLayout(
-  mode: LineChartAxisMode,
+  mode: ChartAxisMode,
   hasSecondaryAxis: boolean,
 ): ChartLayout {
   const stacked = mode === 'split' && hasSecondaryAxis;
