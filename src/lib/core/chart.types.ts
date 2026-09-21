@@ -58,6 +58,12 @@ export type ChartAxis = 'primary' | 'secondary';
  *  - `'split'` - two plots one above the other, sharing the category axis. */
 export type ChartAxisMode = 'aligned' | 'exact' | 'dual-grid' | 'split';
 
+/** How a line joins its readings. `'linear'` asserts nothing the data does not say. `'step'`
+ *  holds each reading until the next, which is right for a quantity that CHANGES at a moment
+ *  rather than drifting between two. `'smooth'` is a monotone cubic: it never draws a peak or a
+ *  trough the readings do not contain, which a Catmull-Rom does. */
+export type ChartCurve = 'linear' | 'step' | 'smooth';
+
 /** What a `null` reading draws: a hole in the line, or a point at zero. */
 export type ChartGaps = 'break' | 'zero';
 

@@ -19,10 +19,8 @@ export {
   polylinePoints,
   roundStepAtLeast,
 } from '@ids-group-ltd/ids-design-system/components';
-export type {
-  LineCurve,
-  LinePoint,
-} from '@ids-group-ltd/ids-design-system/components';
+export type { LinePoint } from '@ids-group-ltd/ids-design-system/components';
+export type { ChartCurve } from '@ids-group-ltd/ids-design-system/core';
 
 export const LINE_CHART_VIEW_WIDTH = 640;
 export const LINE_CHART_VIEW_HEIGHT = 320;

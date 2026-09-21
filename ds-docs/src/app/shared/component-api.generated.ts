@@ -2284,7 +2284,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "curve",
         "kind": "input",
-        "type": "LineCurve",
+        "type": "ChartCurve",
         "union": [
           "linear",
           "step",
@@ -4919,7 +4919,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "curve",
         "kind": "input",
-        "type": "LineChartCurve",
+        "type": "ChartCurve",
         "union": [
           "linear",
           "step",

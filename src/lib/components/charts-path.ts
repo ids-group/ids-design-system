@@ -1,3 +1,5 @@
+import type { ChartCurve } from '@ids-group-ltd/ids-design-system/core';
+
 /** One plotted reading, in the canvas's own coordinates.
  *
  *  @internal */
@@ -63,14 +65,6 @@ export function polylinePoints(segment: readonly LinePoint[]): string {
 
   return segment.map((point) => coordinatePair(point)).join(' ');
 }
-
-/** How a line joins its readings.
- *
- *  `'smooth'` is a monotone cubic, never a Catmull-Rom: a Catmull-Rom overshoots, drawing a trough
- *  below a minimum the data never reaches, which on a chart is a reading that does not exist.
- *
- *  @internal */
-export type LineCurve = 'linear' | 'step' | 'smooth';
 
 /** Fritsch-Carlson tangents: the slope at each reading, clamped so no segment can turn back on
  *  itself. A zero slope on either side of a reading pins the tangent flat, which is what keeps a
@@ -144,7 +138,7 @@ function smoothPath(segment: readonly LinePoint[]): string {
  *  @internal */
 export function linePath(
   segment: readonly LinePoint[],
-  curve: LineCurve = 'linear',
+  curve: ChartCurve = 'linear',
 ): string {
   if (segment.length === 0 || !segment.every(isPlottable)) {
     return '';
@@ -173,7 +167,7 @@ export function linePath(
 export function bandPath(
   upper: readonly LinePoint[],
   lower: readonly LinePoint[],
-  curve: LineCurve = 'linear',
+  curve: ChartCurve = 'linear',
 ): string {
   if (
     upper.length < 2 ||
@@ -195,7 +189,7 @@ export function bandPath(
 export function areaPath(
   segment: readonly LinePoint[],
   baselineY: number,
-  curve: LineCurve = 'linear',
+  curve: ChartCurve = 'linear',
 ): string {
   if (
     segment.length < 2 ||

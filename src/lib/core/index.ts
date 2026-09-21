@@ -3,6 +3,7 @@ export type { CardElevation, CardPadding } from './card.types';
 export type {
   ChartAxis,
   ChartAxisMode,
+  ChartCurve,
   ChartDataTable,
   ChartGaps,
   ChartFormatLocation,

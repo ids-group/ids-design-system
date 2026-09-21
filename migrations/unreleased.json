@@ -677,7 +677,7 @@
     }
   ],
   "informational": [
-    "`ds-line-chart` and `dsLineSeries` take `curve`: `'linear'` (the default, and what every chart already drew), `'step'` or `'smooth'`. Nothing to change - a chart that sets nothing is unchanged. `'smooth'` is a monotone cubic, so it never draws a peak or a trough the readings do not contain.",
+    "`ds-line-chart` and `dsLineSeries` take `curve`: `'linear'` (the default, and what every chart already drew), `'step'` or `'smooth'`, typed `ChartCurve`. Nothing to change - a chart that sets nothing is unchanged. `'smooth'` is a monotone cubic, so it never draws a peak or a trough the readings do not contain.",
     "A filled series now follows its own curve, so the fill and the line share one edge. With the default `'linear'` the drawing is byte-identical to before.",
     "The chart container's marks are published API: `ColumnSeriesComponent`, `LineSeriesComponent`, `ReferenceLineComponent` and `ReferenceLabelComponent`, with `ColumnSeriesPoint`, `LineSeriesData` and `LineSeriesGaps`, now come from the package root as well as from `@ids-group-ltd/ids-design-system/components/chart`. Purely additive.",
     "A chart tooltip no longer runs off the screen: the panel stops at the viewport height less the overlay's 12px margin and scrolls past that. A panel that already fitted is drawn exactly as before.",
@@ -695,7 +695,8 @@
     "`ds-pagination` takes `size` (sm/md/lg, unset resolving `DS_CONFIG.control.size` then `sm`) and `layout: 'grouped' | 'spread'`. `'spread'` gives the nav full width and pushes the label and the controls apart. Both defaults draw what the component already drew. Purely additive - nothing to change.",
     "The internal `--_*` custom properties now mirror the public token they read: `--_alert-padding-y` resolves `--ds-alert-padding-y`, so an inspector showing the internal name gives the settable one by dropping `--_` for `--ds-`. 171 were brought into line; 25 keep a different name because they carry a distinction the public token does not, such as the drawer's three widths behind one `--ds-drawer-width`. Internal names are not API and nothing supported reads them - nothing to change.",
     "`ds-checkbox` takes three styling hooks its label already half had: `--ds-checkbox-row-align` for the box-and-label cross-alignment, `--ds-checkbox-gap` for the space between them, and `--ds-checkbox-message-indent` for the hint, which sits under the box by default and lines up with the label when set to the box plus the gap. Every default draws what the component drew before. Purely additive - nothing to change.",
-    "`ds-segmented` takes `joined`. Off by default, which is the padded track every consumer draws today. On, the segments share their edges, adjacent borders collapse into one hairline and only the two ends carry the group radius - the shape a row of bordered chips wants. It needs `--ds-segmented-segment-border` set, because the shared edge IS the border. Purely additive."
+    "`ds-segmented` takes `joined`. Off by default, which is the padded track every consumer draws today. On, the segments share their edges, adjacent borders collapse into one hairline and only the two ends carry the group radius - the shape a row of bordered chips wants. It needs `--ds-segmented-segment-border` set, because the shared edge IS the border. Purely additive.",
+    "`ChartStackOffset` and `stackOffsets` are published from the package root. The mark that takes them, `g[dsColumnSeries]`, was already published there, so its `offsets` input could be bound and not typed. Purely additive - nothing to change."
   ],
   "deleteList": []
 }

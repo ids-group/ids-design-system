@@ -29,7 +29,7 @@ export {
   lineSegments,
   polylinePoints,
 } from './charts-path';
-export type { LineCurve, LinePoint } from './charts-path';
+export type { LinePoint } from './charts-path';
 export {
   bandScale,
   pointScale,

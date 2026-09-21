@@ -14,13 +14,6 @@ export interface LineChartSeries {
   slot?: number;
 }
 
-/** How a line joins its readings. `'linear'` is the default and asserts nothing the data does not
- *  say. `'step'` holds each reading until the next one, which is right for a quantity that CHANGES
- *  at a moment rather than drifting between two - a price, a headcount, a rate. `'smooth'` is a
- *  monotone cubic: it never draws a peak or a trough the readings do not contain, which a
- *  Catmull-Rom does. */
-export type LineChartCurve = 'linear' | 'step' | 'smooth';
-
 /** How several series share the value axis. `'none'` draws each from the baseline, which is what a
  *  line chart has always done. `'stacked'` starts each series where the one before it ended, so a
  *  filled series reads as a share of a total rather than a quantity of its own. `'normalized'`

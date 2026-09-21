@@ -313,8 +313,7 @@ function roundTick(value: number): number {
 
 /** Where one series' segment starts and ends on the value axis, in the axis's own unit - or in
  *  shares of the category total under `'normalized'`.
- *
- *  @internal */
+ */
 export interface ChartStackOffset {
   readonly from: number;
   readonly to: number;
@@ -329,8 +328,7 @@ export interface ChartStackOffset {
  *
  *  `'normalized'` divides a running SUM rather than each share in turn: adding 20/60 to 40/60
  *  lands on 0.9999999999999999, which draws a category that visibly falls short of full.
- *
- *  @internal */
+ */
 export function stackOffsets(
   series: readonly (readonly number[])[],
   mode: ChartStackMode,

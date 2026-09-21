@@ -163,6 +163,21 @@
 
 ### Added
 
+- **A published input can now name its own type.** `g[dsColumnSeries]` and `g[dsLineSeries]` ship
+  from the package root, and two of their inputs were typed by symbols the root did not export:
+  `offsets` by `ChartStackOffset`, and `curve` by a type that existed twice.
+
+  ```ts
+  import type { ChartCurve, ChartStackOffset } from '@ids-group-ltd/ids-design-system';
+  import { stackOffsets } from '@ids-group-ltd/ids-design-system';
+  ```
+
+  `ChartStackOffset` and `stackOffsets` are published, so a consumer composing a stacked plot out
+  of the marks can both compute the offsets and annotate them. `LineCurve` and `LineChartCurve`
+  were declared character-identical in two files - one internal, one published - and are one
+  `ChartCurve` in `core`, beside `ChartAxisMode` and `ChartGaps`. Both curve names were new in
+  this release, so nothing shipped under them.
+
 - **`ds-checkbox` gets the three hooks its label already half had.** `--ds-checkbox-row-align`
   for how the box and its label line up, `--ds-checkbox-gap` for the space between them, and
   `--ds-checkbox-message-indent` for the hint.

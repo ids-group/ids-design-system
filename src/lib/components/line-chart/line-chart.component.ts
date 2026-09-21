@@ -33,6 +33,7 @@ import type {
   ChartValueFormat,
   ChartAxisMode,
   ChartGaps,
+  ChartCurve,
 } from '@ids-group-ltd/ids-design-system/core';
 import { ChartTooltipDirective } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import { ChartLegendComponent } from '@ids-group-ltd/ids-design-system/components/chart-legend';
@@ -65,7 +66,6 @@ import {
 } from './line-chart.math';
 import type {
   LineChartAnnotation,
-  LineChartCurve,
   LineChartStack,
   LineChartReading,
   LineChartSeries,
@@ -190,7 +190,7 @@ export class LineChartComponent {
 
   /** How the line joins its readings. `'linear'` by default, which asserts nothing the data does
    *  not say; a curve is a claim about what happened BETWEEN two readings. */
-  readonly curve = input<LineChartCurve>('linear');
+  readonly curve = input<ChartCurve>('linear');
 
   /** How several series share the value axis. Stacking runs per AXIS, so a series on the secondary
    *  axis never piles onto one measured against the primary. */
@@ -518,7 +518,7 @@ export class LineChartComponent {
     plot: PlotArea,
     centers: readonly number[],
     baselineY: number,
-    curve: LineChartCurve,
+    curve: ChartCurve,
   ): readonly string[] {
     const lower = entry.lowerValues;
     if (lower === null) {

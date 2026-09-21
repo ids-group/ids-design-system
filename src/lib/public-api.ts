@@ -100,10 +100,12 @@ export {
   LineSeriesComponent,
   ReferenceLabelComponent,
   ReferenceLineComponent,
+  stackOffsets,
 } from '@ids-group-ltd/ids-design-system/components/chart';
 export type {
   ChartPlot,
   ChartScales,
+  ChartStackOffset,
   ColumnSeriesPoint,
   LineSeriesData,
 } from '@ids-group-ltd/ids-design-system/components/chart';
@@ -397,6 +399,7 @@ export {
 export type {
   ChartAxis,
   ChartAxisMode,
+  ChartCurve,
   ChartDataTable,
   ChartFormatLocation,
   ChartFrame,

@@ -1037,7 +1037,7 @@ All inputs: `categories: readonly string[] = []`, `tickCount: number = 5`, `min:
 #### `<g[dsColumnSeries]>` — `ColumnSeriesComponent`
 
 <!-- inputs:g[dsColumnSeries] -->
-All inputs: `data: readonly ColumnSeriesPoint[] = []`, `showValues: boolean = true`, `interactive: boolean = false`, `pinOnClick: boolean = false`, `dimOthers: boolean = false`, `staggerMs: number = 0`, `partOfWhole: boolean = false`, `tooltip: 'item' | 'none' = 'item'`, `tooltipAnchor: 'mark' | 'cell' = 'mark'`, `tooltipLingerMs: number = 0`, `valueFormat: ChartValueFormat`, `columnWidthRatio: number = 0.8`, `slot: number = 0`, `slotCount: number = 1`, `offsets`, `seriesColor: string | null = null`, `seriesFill: 'solid' | 'hatched' = null`, `seriesLabel: string | null = null`
+All inputs: `data: readonly ColumnSeriesPoint[] = []`, `showValues: boolean = true`, `interactive: boolean = false`, `pinOnClick: boolean = false`, `dimOthers: boolean = false`, `staggerMs: number = 0`, `partOfWhole: boolean = false`, `tooltip: 'item' | 'none' = 'item'`, `tooltipAnchor: 'mark' | 'cell' = 'mark'`, `tooltipLingerMs: number = 0`, `valueFormat: ChartValueFormat`, `columnWidthRatio: number = 0.8`, `slot: number = 0`, `slotCount: number = 1`, `offsets: readonly ChartStackOffset[] | null = null`, `seriesColor: string | null = null`, `seriesFill: 'solid' | 'hatched' = null`, `seriesLabel: string | null = null`
 <!-- /inputs -->
 
 #### `<g[dsLineSeries]>` — `LineSeriesComponent`

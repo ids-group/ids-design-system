@@ -22,12 +22,10 @@ import {
   linePath,
   staggerDelay,
 } from '@ids-group-ltd/ids-design-system/components';
-import type {
-  LineCurve,
-  LinePoint,
-} from '@ids-group-ltd/ids-design-system/components';
+import type { LinePoint } from '@ids-group-ltd/ids-design-system/components';
 import type {
   ChartAxis,
+  ChartCurve,
   ChartGaps,
   ChartValueFormat,
 } from '@ids-group-ltd/ids-design-system/core';
@@ -97,7 +95,7 @@ export class LineSeriesComponent implements OnDestroy {
   /** How the line joins its readings. `'linear'` by default, which asserts nothing the data does
    *  not say; a curve is a claim about what happened BETWEEN two readings. `'step'` holds each
    *  reading to the next, `'smooth'` is a monotone cubic that draws no peak the data lacks. */
-  readonly curve = input<LineCurve>('linear');
+  readonly curve = input<ChartCurve>('linear');
 
   /** Whether a hovered or focused reading opens a tooltip. */
   readonly tooltip = input<ChartItemTooltipTrigger>('item');
