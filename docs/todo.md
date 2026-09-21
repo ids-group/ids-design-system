@@ -14,7 +14,7 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**117 open — 1 P1, 35 P2, 81 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**115 open — 1 P1, 35 P2, 79 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 1
 
@@ -70,7 +70,7 @@ item and nothing else.
 - **Localization — every user-visible string is a hardcoded literal (recorded 2026-08-27, from the ITB Workspace picker report)**
   - Every user-visible string in the library is a hardcoded English literal — VALIDATED 2026-08-27 against 0.11.0; Stas: defer the whole thing, no code
 
-### P3 — 81
+### P3 — 79
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - A whole-page keyboard walk is not measurable with the tools here, and the failed
@@ -96,9 +96,7 @@ item and nothing else.
   - `.thumbnail` — the project's cover image — has no source that regenerates it
 - **Charts and fields the ECM prototype could not use (recorded 2026-09-15, Stas: take all five)**
   - `ds-funnel-chart` states the drop as a share and never as a count (arrived 2026-09-15)
-- **Two column-chart gaps and a journey canvas the mm-ecm prototype could not use (recorded 2026-09-16)**
-  - `ds-column-chart` cannot say "these columns are one series", so a time series renders
-  - `ds-column-chart` has no `segments`, so a stacked column is not expressible
+- **A journey canvas the mm-ecm prototype could not use (recorded 2026-09-16)**
   - Journey / flow diagram - no component draws a branching node-and-edge canvas
 - **The twenty-eight rules one consumer still needs to reach into our internals (recorded 2026-09-21)**
   - `ds-checkbox` tokenises the label's size and colour but not its weight, and the row has no hooks at all
@@ -631,49 +629,11 @@ remaining four screens; each names the screen it blocks, so a fix has somewhere 
   **Wanted:** a `drop` input — `'relative' | 'absolute' | 'none'` — or a second column carrying the
   count beside the share.
 
-## Two column-chart gaps and a journey canvas the mm-ecm prototype could not use (recorded 2026-09-16)
+## A journey canvas the mm-ecm prototype could not use (recorded 2026-09-16)
 
-Three more asks from the same consumer as the 2026-09-15 batch above, arrived the next day.
-
-- [ ] **[P3] `ds-column-chart` cannot say "these columns are one series", so a time series renders
-  as N unrelated categories.** The rule is documented rather than accidental -
-  `ColumnChartPoint.color`: "Columns take the categorical palette by position"
-  (`src/lib/components/column-chart/column-chart.types.ts`) - and `data` is a flat
-  `ColumnChartPoint[]`, so there is exactly one series and no way to declare what it MEANS. Plot
-  twelve months of one count and the chart paints twelve saturated hues; the accent a consumer sets
-  on the current period then reads as a thirteenth colour rather than as emphasis, because it has
-  ten equally loud neighbours.
-  **The asymmetry is the tell, and it is in the two doc-strings:** a `BarChartRow` left without a
-  colour shares the series colour - "The rows are one series, so they share one colour by default" -
-  so the SAME unset field means opposite things on the two charts, and a consumer who migrates a bar
-  and a column the same way gets one right and one wrong. It cost this consumer exactly that: the
-  column migration shipped and the mistake was caught later, from a screenshot, not from the build
-  or a grep.
-  **Workaround in place today:** every point takes `color: 'var(--ds-chart-series-default-color)'`
-  except the accented one (mm-ecm-platform-kb:
-  `prototype/projects/ecm-portal/src/app/features/analyse/pages/microsite-detail/microsite-detail.page.ts`).
-  Three lines, and it works - but it means a time series cannot be plotted without hand-colouring
-  every point.
-  **Ask:** a declared mode on the chart saying the columns are one quantity through a period rather
-  than N categories. `partOfWhole` is the precedent for the shape - a property OF the data, stated
-  once, that changes how the chart reads it. Screenshots, same chart:
-  `presentations/column-chart-single-series.png` (after the workaround) beside
-  `presentations/bar-chart-one-series.png` (a bar chart getting it right from the same unset field).
-
-- [ ] **[P3] `ds-column-chart` has no `segments`, so a stacked column is not expressible.** 0.13.2
-  gave `BarChartRow` a `segments` array and gave `ColumnChartPoint` none, so parts-of-a-whole works
-  horizontally and not vertically. The case that leaves out is the common one: a stack over TIME -
-  monthly sends split by channel, monthly outcomes split by offer - which is a column chart by
-  nature, since the category axis is a period.
-  This consumer used the new bar segments the day they shipped, for a single 100% distribution
-  (`presentations/bar-chart-segments.png`, source mm-ecm-platform-kb:
-  `prototype/projects/ecm-portal/src/app/features/analyse/pages/performance-overview/performance-overview.page.ts`,
-  `outcomeRow`), and the next thing the same screen wants is that distribution PER MONTH. There is
-  no route to it today: `ColumnChartPoint` holds one `value`, and `data` holds one series.
-  **Ask:** `segments` on `ColumnChartPoint` with the same contract the bar row already has - parts
-  sized against their own sum, the categorical palette in order, each part its own annex-table row.
-  Same shape, same legend question, and the bar's implementation is the template to follow rather
-  than a second design.
+One ask left from that batch. The two column-chart gaps beside it shipped in v0.13.3:
+`data` takes a `ColumnChartSeries[]` whose series carries one colour for all its marks, and
+`stack` covers grouped, stacked and normalized.
 
 - [ ] **[P3] Journey / flow diagram - no component draws a branching node-and-edge canvas.** Nodes
   carrying a kind, branching edges carrying a label and a count, and a per-node run state. Nothing
