@@ -24,7 +24,7 @@ import type {
 import { waterfallSteps } from './waterfall-chart.math';
 import { WaterfallMarksComponent } from './waterfall-marks.component';
 import type {
-  WaterfallChartDatum,
+  WaterfallChartBar,
   WaterfallChartStep,
 } from './waterfall-chart.types';
 
@@ -68,7 +68,7 @@ const DIRECTION_WORDS: Record<WaterfallChartStep['direction'], string> = {
 export class WaterfallChartComponent {
   /** The bars in the order they are read, which is the order they happened in - a waterfall is
    *  never sorted, because the sequence is the meaning. */
-  readonly data = input<readonly WaterfallChartDatum[]>([]);
+  readonly data = input<readonly WaterfallChartBar[]>([]);
 
   /** Prints each bar's own reading above it, with its sign. */
   readonly showValues = input(true, { transform: booleanAttribute });
@@ -119,7 +119,7 @@ export class WaterfallChartComponent {
   readonly valueFormat = input<ChartValueFormat | null>(null);
 
   /** The clicked datum, as it was given. Fires on click and on Enter or Space. */
-  readonly barClicked = output<WaterfallChartDatum>();
+  readonly barClicked = output<WaterfallChartBar>();
 
   readonly frameResolved = resolveWithConfig(
     this.frame,

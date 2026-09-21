@@ -4,9 +4,9 @@
 Group: Charts
 
 A running total, bar by bar: what a figure started at, what moved it, and what it ended at.
-Inputs: `data: readonly WaterfallChartDatum[]` (required), `showValues: boolean = true`, `showConnectors: boolean = true`, `caption: string | null = null`, `summary: string | null = null`, `tickCount: number = 5`, `interactive: boolean = false`, `frame: 'auto' | 'none' = 'auto'`, `dataTable: 'none' | 'toggle' | 'visible' = 'none'`, `loading: boolean = false`, `error: boolean = false`, `emptyText: string = 'No data'`, `errorText: string = 'Could not load the data'`, `valueFormat: (value: number, location) => string`
-Output: `(barClicked): WaterfallChartDatum`
-Datum: `WaterfallChartDatum = { id?: string; label: string; value: number; kind?: 'delta' | 'total' | 'subtotal' }`
+Inputs: `data: readonly WaterfallChartBar[]` (required), `showValues: boolean = true`, `showConnectors: boolean = true`, `caption: string | null = null`, `summary: string | null = null`, `tickCount: number = 5`, `interactive: boolean = false`, `frame: 'auto' | 'none' = 'auto'`, `dataTable: 'none' | 'toggle' | 'visible' = 'none'`, `loading: boolean = false`, `error: boolean = false`, `emptyText: string = 'No data'`, `errorText: string = 'Could not load the data'`, `valueFormat: (value: number, location) => string`
+Output: `(barClicked): WaterfallChartBar`
+Bar: `WaterfallChartBar = { id?: string; label: string; value: number; kind?: 'delta' | 'total' | 'subtotal' }`
 Every row adds its `value` to the running sum wherever it sits. A `'delta'` (the default) hangs from the level the bar before it left off at; a `'total'` or `'subtotal'` stands on zero at the sum reached, which makes it a figure in its own right rather than a change. A closing total usually carries `value: 0` — it prints the sum, not a change. A subtotal differs from a total only in that the chain carries on past it.
 Order is never sorted: the sequence is the meaning.
 Colour never carries the meaning alone. Each bar prints its own sign above it (`+130`, `-320`, and a total's plain sum), and each bar's accessible name says "increase", "decrease" or "total" in words, so the chart survives forced colours, a monochrome print and a reader who cannot tell the two hues apart.

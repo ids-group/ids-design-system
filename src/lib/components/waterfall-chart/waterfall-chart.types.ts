@@ -6,7 +6,7 @@
  *  subtotal and a closing total is the end of it. */
 export type WaterfallChartKind = 'delta' | 'total' | 'subtotal';
 
-export interface WaterfallChartDatum {
+export interface WaterfallChartBar {
   /** Falls back to the bar's position when left out, so a reorder rewrites the DOM. */
   readonly id?: string;
   readonly label: string;

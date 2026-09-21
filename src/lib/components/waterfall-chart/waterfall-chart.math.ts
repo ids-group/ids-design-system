@@ -1,5 +1,5 @@
 import type {
-  WaterfallChartDatum,
+  WaterfallChartBar,
   WaterfallChartStep,
 } from './waterfall-chart.types';
 
@@ -12,7 +12,7 @@ import type {
  *
  *  @internal */
 export function waterfallSteps(
-  data: readonly WaterfallChartDatum[],
+  data: readonly WaterfallChartBar[],
 ): readonly WaterfallChartStep[] {
   let running = 0;
 

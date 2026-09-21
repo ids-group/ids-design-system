@@ -1,6 +1,6 @@
 export { WaterfallChartComponent } from './waterfall-chart.component';
 export type {
-  WaterfallChartDatum,
+  WaterfallChartBar,
   WaterfallChartKind,
   WaterfallChartStep,
 } from './waterfall-chart.types';
