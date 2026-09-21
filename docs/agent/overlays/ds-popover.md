@@ -4,3 +4,7 @@
 Group: Overlay
 
 Floating panel anchored to a trigger via CDK overlay. Input: `align: 'start' | 'end' = 'start'` — controls overlay alignment relative to the trigger (`start` = left-edge anchored, `end` = right-edge anchored). Open via the component method `toggle(triggerElement)` (or `close()`), and project the panel body inside a `<ng-template #panel>` (read internally via `viewChild`).
+
+<!-- inputs:ds-popover -->
+All inputs: `align: 'start' | 'end' = 'start'`, `placement: 'top' | 'bottom' | 'left' | 'right' = 'bottom'`, `arrow: boolean = false`, `panelRole: string | null = null`, `panelLabel: string | null = null`
+<!-- /inputs -->

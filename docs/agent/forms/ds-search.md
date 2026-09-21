@@ -8,3 +8,7 @@ Inputs: `value: model<string>`, `placeholder: string = 'Search'`, `shortcut: str
 Output: `(submitted): string` — emits the current value on Enter / form submit
 Methods: `clear()` — empties the field, drops an armed keystroke and publishes `''` at once, which writing `''` into `value` does not; `focus()`.
 Binds through `NG_VALUE_ACCESSOR`, taking the value plumbing without the field-message layer — so `hint` / `error` / `warning` / `errors` / `invalid` / `touched` / `reserveMessage` / `messageIcon` are NOT inputs here.
+
+<!-- inputs:ds-search -->
+All inputs: `hidden: boolean = false`, `value: string = ''`, `placeholder: string = 'Search'`, `shortcut: string = ''`, `showIcon: boolean = true`, `clearable: boolean = false`, `ariaLabel: string = ''`, `disabled: boolean = false`, `size: 'sm' | 'md' | 'lg' = null`, `debounce: number = 0`
+<!-- /inputs -->

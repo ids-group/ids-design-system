@@ -14,3 +14,7 @@ Colour: `--ds-chart-positive-color` and `--ds-chart-negative-color`, NOT `--succ
 `showConnectors` draws the dashed rule chaining one bar to the next at the level they share; without it the bars read as separate columns rather than as one running total.
 Built on `<ds-chart>` with a column series and a waterfall-specific mark projected into it, so the axis, the gridlines, the frame and the annex table are the family's own. A chain that falls past zero opens the axis downwards rather than clipping.
 Tokens: `--ds-waterfall-chart-connector-color`, `--ds-waterfall-chart-skeleton-height`.
+
+<!-- inputs:ds-waterfall-chart -->
+All inputs: `data: readonly WaterfallChartBar[] = []`, `showValues: boolean = true`, `showConnectors: boolean = true`, `caption: string | null = null`, `summary: string | null = null`, `tickCount: number = 5`, `interactive: boolean = false`, `frame: 'auto' | 'none' = null`, `dataTable: 'toggle' | 'visible' | 'none' = null`, `loading: boolean = false`, `error: boolean = false`, `emptyText: string | null = null`, `errorText: string | null = null`, `valueFormat: ChartValueFormat | null = null`
+<!-- /inputs -->

@@ -8,3 +8,7 @@ Inputs: `icon: required IconName`, `ariaLabel: required string`, `ariaDescribedB
 Output: `(pressed): MouseEvent` — fires when not disabled
 Variant emphasis: `standard` chromeless (hover-reveal) · `filled` `--primary` · `tonal` `--primary-muted` · `outlined` bordered. `selected` renders the pressed/active fill.
 Tokens: `--ds-icon-button-bg-color`, `--ds-icon-button-icon-color`, `--ds-icon-button-border`, `--ds-icon-button-bg-color-hover`, `--ds-icon-button-bg-color-active`, `--ds-icon-button-icon-color-hover`, `--ds-icon-button-radius`. The focus ring is not an icon-button token — set `--focus-ring-color`, `--focus-ring-width` or `--focus-ring-offset` on its own scope. `filled`/`selected` derive hover/active from the resolved bg, `standard`/`tonal`/`outlined` keep explicit ramp defaults.
+
+<!-- inputs:ds-icon-button -->
+All inputs: `icon: required IconName`, `ariaLabel: required string`, `ariaDescribedBy: string | null = null`, `variant: 'standard' | 'filled' | 'tonal' | 'outlined' = 'standard'`, `color: ButtonColor = 'primary'`, `size: 'sm' | 'md' | 'lg' = null`, `type: 'button' | 'submit' | 'reset' = 'button'`, `disabled: boolean = false`, `selected: boolean = false`, `ariaExpanded: boolean | null = null`, `ariaControls: string | null = null`
+<!-- /inputs -->

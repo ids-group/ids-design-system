@@ -6,3 +6,7 @@ Group: Layout & navigation
 Inputs: `eyebrow: string = ''`, `title: required string`, `subtitle: string = ''`, `compact: boolean = false`, `divider: boolean = false`, `metaDivider: boolean = false`
 Content slots: `[breadcrumbs]`, `[title-badge]` (sits next to the title text), `[actions]` (right edge of title row), `[meta]` (under the title row), `[tabs]` (under the meta row)
 Tokens: `--ds-page-header-eyebrow-text-color`, `--ds-page-header-title-text-color`, `--ds-page-header-subtitle-text-color`, `--ds-page-header-meta-text-color`, `--ds-page-header-meta-icon-color`, `--ds-page-header-divider`, `--ds-page-header-title-font-size` (default `--font-size-h3`; `compact` flips to `--font-size-h4`). The page-header does NOT own its bottom gap — the parent page `:host` owns spacing via `display: flex; flex-direction: column; gap: var(--space-4)`.
+
+<!-- inputs:ds-page-header -->
+All inputs: `eyebrow: string = ''`, `title: string = ''`, `subtitle: string = ''`, `compact: boolean = false`, `divider: boolean = false`, `metaDivider: boolean = false`
+<!-- /inputs -->

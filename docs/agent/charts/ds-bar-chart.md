@@ -14,3 +14,7 @@ Colour: the rows are ONE series, so they all take `--ds-chart-series-default-col
 Behaviour: a non-finite value draws no bar and prints `—`; a negative value clamps to an empty bar; a share too small for one decimal prints `<0.1%` rather than `0.0%`.
 Rhythm: a label belongs to the bar under it, so `--ds-bar-chart-label-gap` is deliberately much smaller than `--ds-bar-chart-row-gap`. Level the two and the eye starts grouping a bar with the label BELOW it, which reads every row off by one.
 Tokens: `--ds-bar-chart-track-color`, `--ds-bar-chart-track-height`, `--ds-bar-chart-row-gap`, `--ds-bar-chart-label-gap`.
+
+<!-- inputs:ds-bar-chart -->
+All inputs: `data: required readonly BarChartRow[]`, `max: number | null = null`, `frame: 'auto' | 'none' = null`, `tooltipLingerMs: number | null = null`, `caption: string | null = null`, `summary: string | null = null`, `dataTable: 'toggle' | 'visible' | 'none' = null`, `partOfWhole: boolean = false`, `showPercent: boolean = true`, `loading: boolean = false`, `emptyText: string | null = null`, `error: boolean = false`, `errorText: string | null = null`, `valueFormat: ChartValueFormat | null = null`, `interactive: boolean = false`, `pinOnClick: boolean = false`, `dimOthers: boolean = false`, `staggerMs: number = 0`, `tooltip: 'item' | 'none' = 'item'`
+<!-- /inputs -->

@@ -5,3 +5,7 @@ Group: Display & feedback
 
 Inputs: `variant: 'none' | 'loading' | 'error' | 'locked' = 'none'`, `icon: IconName | null = null` (defaults derive from variant — `warn` for error, `lock` for locked, `package` otherwise), `title: string = ''`, `body: string = ''`
 Content slot: `[actions]` — CTA buttons / links.
+
+<!-- inputs:ds-empty-state -->
+All inputs: `variant: 'none' | 'loading' | 'error' | 'locked' | 'success' = 'none'`, `icon: IconName | null = null`, `title: string = ''`, `body: string = ''`
+<!-- /inputs -->

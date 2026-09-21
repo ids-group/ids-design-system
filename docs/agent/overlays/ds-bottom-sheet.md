@@ -7,3 +7,7 @@ Mobile-first panel anchored to the bottom edge (touch equivalent of drawer/modal
 Inputs: `open: model<boolean> = false`, `title: string = ''`
 Output: `(closed): void`
 Content slots: default (body), `[actions]` (footer).
+
+<!-- inputs:ds-bottom-sheet -->
+All inputs: `open: boolean = false`, `title: required string`, `snapPoints: readonly number[] = []`
+<!-- /inputs -->

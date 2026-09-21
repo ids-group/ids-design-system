@@ -14,3 +14,7 @@ Shape: `'area'` is the default — the fixed silhouette with the stage boundarie
 `dataTable` is suppressed while `showTable` is on: with both, the same numbers print twice.
 Colour: the stages are one quantity draining, not N categories, so they take the single-hue ramp `--ds-chart-ramp-1-color` … `--ds-chart-ramp-8-color`, spread across however many stages there are. The LAST stage leaves the ramp for `--ds-chart-series-accent-color` — it is the outcome the funnel is read for.
 Tokens: `--ds-funnel-chart-stage-height`, `--ds-funnel-chart-stage-gap`, `--ds-funnel-chart-row-gap`.
+
+<!-- inputs:ds-funnel-chart -->
+All inputs: `data: required readonly FunnelChartStage[]`, `shape: 'taper' | 'width' | 'area' = 'area'`, `showTable: boolean = true`, `frame: 'auto' | 'none' = null`, `tooltipLingerMs: number | null = null`, `caption: string | null = null`, `summary: string | null = null`, `dataTable: 'toggle' | 'visible' | 'none' = null`, `drop: 'relative' | 'absolute' | 'none' = 'relative'`, `loading: boolean = false`, `emptyText: string | null = null`, `error: boolean = false`, `errorText: string | null = null`, `valueFormat: ChartValueFormat | null = null`, `interactive: boolean = false`, `pinOnClick: boolean = false`, `dimOthers: boolean = false`, `staggerMs: number = 0`, `tooltip: 'item' | 'none' = 'item'`
+<!-- /inputs -->

@@ -4,3 +4,7 @@
 Group: Display & feedback
 
 Inputs: `size: 'xs' | 'sm' | 'md' | 'lg' = 'md'`, `initials: string = ''`, `imageUrl: string | null = null`, `tint: { bg, fg } | 'neutral' | null = null` (off-token override; `'neutral'` swaps to the overflow-chip palette)
+
+<!-- inputs:ds-avatar -->
+All inputs: `size: 'xs' | 'sm' | 'md' | 'lg' = 'md'`, `initials: string = ''`, `name: string = ''`, `initialsRule: ((name: string) => string) | null = null`, `imageUrl: string | null = null`, `ariaLabel: string | null = null`, `tint: { bg: string; fg: string } | 'neutral' | null = null`, `status: 'online' | 'offline' | 'away' | 'busy' = null`, `fallbackIcon: IconName | null = null`, `seed: string | null = null`, `avoidHues: readonly (readonly [number, number])[] = []`
+<!-- /inputs -->

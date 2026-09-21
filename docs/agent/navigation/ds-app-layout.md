@@ -8,3 +8,7 @@ Content slots: `[sidenav]`, `[topbar]`, default (the page)
 Reads: `railId` and the read-only `railOverlay` signal, for a consumer-built burger; `dsRailTrigger` wires one for you.
 Tokens: `--ds-app-layout-padding-x`, `--ds-app-layout-padding-y`, `--ds-app-layout-content-max-width`, `--ds-app-layout-height`, `--ds-app-layout-rail-bg-color`, `--ds-app-layout-rail-shadow`, `--ds-app-layout-scrim-color`
 It owns the app's scroll CONTAINER, so a screen that needs to move the scroll calls `LayoutScrollService` rather than touching `window`.
+
+<!-- inputs:ds-app-layout -->
+All inputs: `topbarSpan: 'content' | 'full' = 'content'`, `railOpen: boolean = false`, `railLabel: string = 'Navigation'`, `restoreScroll: boolean = false`, `restoreScrollTimeout: number = 2000`, `scrollReset: 'path' | 'never' | 'always' = 'path'`
+<!-- /inputs -->

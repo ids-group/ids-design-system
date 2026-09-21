@@ -4,3 +4,7 @@
 Group: Display & feedback
 
 Inputs: `width?: string`, `height?: string`, `circle: boolean = false`, `inline: boolean = false`. Shimmer animation requires the global `_skeleton-shimmer.scss` (already pulled in by `ds.scss`).
+
+<!-- inputs:ds-skeleton -->
+All inputs: `width: string | undefined`, `height: string | undefined`, `circle: boolean = false`, `inline: boolean = false`
+<!-- /inputs -->

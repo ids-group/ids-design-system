@@ -7,3 +7,7 @@ Side panel (no `side` input — always anchored right).
 Inputs: `open: model<boolean> = false`, `size: 'md' | 'lg' = 'md'`, `title: string = ''`
 Output: `(closed): void`
 Content slots: `[drawer-body]`, `[drawer-footer]`.
+
+<!-- inputs:ds-drawer -->
+All inputs: `open: boolean = false`, `size: 'sm' | 'md' | 'lg' = 'md'`, `placement: 'right' | 'left' | 'top' | 'bottom' = 'right'`, `title: required string`
+<!-- /inputs -->

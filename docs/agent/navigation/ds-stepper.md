@@ -4,3 +4,7 @@
 Group: Layout & navigation
 
 Inputs: `steps: readonly string[] = []`, `current: number = 0`. Horizontal step indicator with done/active/upcoming nodes.
+
+<!-- inputs:ds-stepper -->
+All inputs: `steps: readonly string[] = []`, `current: number = 0`, `labelPosition: 'bottom' | 'inline' = 'bottom'`, `orientation: 'horizontal' | 'vertical' = 'horizontal'`, `clickable: boolean = false`, `errorSteps: readonly number[] = []`
+<!-- /inputs -->

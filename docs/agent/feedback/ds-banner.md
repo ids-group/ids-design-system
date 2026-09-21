@@ -8,3 +8,7 @@ Output: `(closed): void`
 Content slots: default (body text), `[actions]` (trailing CTAs)
 - `layout="stacked"` (default): actions wrap onto a new line, indented under the body. Use for multi-line messages or multiple CTAs.
 - `layout="row"`: actions sit at the right edge, vertically centred with the body. Use for one-line messages with a single trailing CTA.
+
+<!-- inputs:ds-banner -->
+All inputs: `variant: BannerVariant = 'info'`, `title: string = ''`, `dismissible: boolean = false`, `icon: IconName | null = null`, `compact: boolean = false`, `layout: 'stacked' | 'row' = 'stacked'`, `accentRail: boolean = true`, `announce: boolean = false`
+<!-- /inputs -->

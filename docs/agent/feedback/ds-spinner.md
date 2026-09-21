@@ -4,3 +4,7 @@
 Group: Display & feedback
 
 Input: `size: 'sm' | 'md' | 'lg' = 'md'`. Pure-CSS spinner, `role="status"` with built-in `aria-label`.
+
+<!-- inputs:ds-spinner -->
+All inputs: `size: 'sm' | 'md' | 'lg' = 'md'`
+<!-- /inputs -->
