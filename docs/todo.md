@@ -659,8 +659,9 @@ One ask left from that batch. The two column-chart gaps beside it shipped in v0.
 
 ## The twenty-eight rules one consumer still needs to reach into our internals (recorded 2026-09-21)
 
-Measured in mm-ecm-platform-kb, which has no chart left that is not a DS component and no inert
-token pin: **156 `--ds-*` referenced, 0 that resolve to nothing.** What it cannot express through
+Measured in mm-ecm-platform-kb, which has no inert token pin: **156 `--ds-*` referenced, 0 that
+resolve to nothing.** (One chart there is still hand-rolled, a stacked share bar predating
+`segments`, but it reaches into nothing of ours and does not change this count.) What it cannot express through
 the public surface is styling, and it is all in one shape - a rule that doubles a class
 (`.segment.segment`) purely to out-specify our compiled `.segment[_ngcontent-*]`. **25 such rules
 across 2 files**, plus one `!important` and two plain reaches, and every one names a property the
