@@ -5,4 +5,8 @@ Group: Surfaces
 
 Accordion is a thin wrapper that rounds + borders its children. Item inputs: `title: string = ''`, `expanded: model<boolean> = false`. Content slots on item: default (body), `[badge]` (rendered next to the title in the header).
 
+<!-- inputs:ds-accordion -->
+All inputs: `multi: boolean = true`
+<!-- /inputs -->
+
 ---

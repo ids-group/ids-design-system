@@ -30,6 +30,11 @@ and token names.** These leaves are for orientation and usage.
 - [Chart defaults — what DS_CONFIG decides once](charts/ds-config.md) — Four chart inputs resolve through DS_CONFIG.chart because they are one decision per APP, not per plot: valueFo
 - [Chart frame — the box a chart draws around itself](charts/chart-frame-the-box-a-chart-draws-around-itself.md) — Every chart paints its own border, radius, padding and --surface-default background, on by default. That is un
 - [Chart colour — which palette a chart takes](charts/chart-colour-which-palette-a-chart-takes.md) — Three families, and reaching for the wrong one is the usual chart bug. Set the --ds-chart-* contract tokens, n
+- [<ds-chart> — ChartComponent](charts/ds-chart.md) — <!-- inputs:ds-chart -->
+- [<g[dsColumnSeries]> — ColumnSeriesComponent](charts/column-series-component.md) — <!-- inputs:g[dsColumnSeries] -->
+- [<g[dsLineSeries]> — LineSeriesComponent](charts/line-series-component.md) — <!-- inputs:g[dsLineSeries] -->
+- [<g[dsReferenceLabel]> — ReferenceLabelComponent](charts/reference-label-component.md) — <!-- inputs:g[dsReferenceLabel] -->
+- [<g[dsReferenceLine]> — ReferenceLineComponent](charts/reference-line-component.md) — <!-- inputs:g[dsReferenceLine] -->
 
 ## domain
 
@@ -50,6 +55,14 @@ and token names.** These leaves are for orientation and usage.
 - [<ds-banner> — BannerComponent](feedback/ds-banner.md) — - layout="stacked" (default): actions wrap onto a new line, indented under the body. Use for multi-line messag
 - [<ds-alert> — AlertComponent](feedback/ds-alert.md) — Inline message, ds-banner's smaller twin — same anatomy, sized for placement inside a form or a card rather th
 - [<ds-toast> — ToastComponent](feedback/ds-toast.md) — The companion <ds-toast-region> lives inside the ToastService (see Services) — it is auto-mounted via a CDK ov
+- [<ds-list> — ListComponent](feedback/ds-list.md) — <!-- inputs:ds-list -->
+- [<ds-list-item> — ListItemComponent](feedback/ds-list-item.md) — <!-- inputs:ds-list-item -->
+- [<ds-loading-overlay> — LoadingOverlayComponent](feedback/ds-loading-overlay.md) — <!-- inputs:ds-loading-overlay -->
+- [<ds-timeline-item> — TimelineItemComponent](feedback/ds-timeline-item.md) — <!-- inputs:ds-timeline-item -->
+- [<ds-toast-region> — ToastRegionComponent](feedback/ds-toast-region.md) — <!-- inputs:ds-toast-region -->
+- [<ds-tree> — TreeComponent](feedback/ds-tree.md) — <!-- inputs:ds-tree -->
+- [<ds-description-list> — DescriptionListComponent](feedback/ds-description-list.md) — <!-- inputs:ds-description-list -->
+- [<ds-description-item> — DescriptionItemComponent](feedback/ds-description-item.md) — <!-- inputs:ds-description-item -->
 
 ## forms
 
@@ -68,6 +81,19 @@ and token names.** These leaves are for orientation and usage.
 - [<ds-search> — SearchComponent](forms/ds-search.md) — Pre-styled search input with built-in icon. A form control, but not a field: no label, no message row.
 - [<ds-date-picker> — DatePickerComponent](forms/ds-date-picker.md) — Trigger button opens a CDK overlay calendar; selecting a day in 'single' closes the panel, in 'range' it close
 - [<ds-dropzone> — DropzoneComponent](forms/ds-dropzone.md) — File upload area.
+- [<ds-button-group> — ButtonGroupComponent](forms/ds-button-group.md) — <!-- inputs:ds-button-group -->
+- [<ds-split-button> — SplitButtonComponent](forms/ds-split-button.md) — <!-- inputs:ds-split-button -->
+- [<ds-toggle-button> — ToggleButtonComponent](forms/ds-toggle-button.md) — <!-- inputs:ds-toggle-button -->
+- [<ds-color-picker> — ColorPickerComponent](forms/ds-color-picker.md) — <!-- inputs:ds-color-picker -->
+- [<ds-field-group> — FieldGroupComponent](forms/ds-field-group.md) — <!-- inputs:ds-field-group -->
+- [<ds-otp-input> — OtpInputComponent](forms/ds-otp-input.md) — <!-- inputs:ds-otp-input -->
+- [<ds-password-rules> — PasswordRulesComponent](forms/ds-password-rules.md) — <!-- inputs:ds-password-rules -->
+- [<ds-radio-group> — RadioGroupComponent](forms/ds-radio-group.md) — <!-- inputs:ds-radio-group -->
+- [<ds-segmented> — SegmentedComponent](forms/ds-segmented.md) — <!-- inputs:ds-segmented -->
+- [<ds-slider> — SliderComponent](forms/ds-slider.md) — <!-- inputs:ds-slider -->
+- [<ds-time-picker> — TimePickerComponent](forms/ds-time-picker.md) — <!-- inputs:ds-time-picker -->
+- [<ds-filter-bar> — FilterBarComponent](forms/ds-filter-bar.md) — <!-- inputs:ds-filter-bar -->
+- [<ng-template[dsFilterItem]> — FilterItemDirective](forms/filter-item-directive.md) — <!-- inputs:ng-template[dsFilterItem] -->
 
 ## navigation
 
@@ -84,6 +110,11 @@ and token names.** These leaves are for orientation and usage.
 - [<ds-stepper> — StepperComponent](navigation/ds-stepper.md) — <!-- inputs:ds-stepper -->
 - [<ds-pagination> — PaginationComponent](navigation/ds-pagination.md) — <!-- inputs:ds-pagination -->
 - [<ds-divider> — DividerComponent](navigation/ds-divider.md) — Content: label text (when variant="label").
+- [<ds-container> — ContainerComponent](navigation/ds-container.md) — <!-- inputs:ds-container -->
+- [<ds-inline> — InlineComponent](navigation/ds-inline.md) — <!-- inputs:ds-inline -->
+- [<ds-stack> — StackComponent](navigation/ds-stack.md) — <!-- inputs:ds-stack -->
+- [<ds-sidenav-footer> — SidenavFooterComponent](navigation/ds-sidenav-footer.md) — <!-- inputs:ds-sidenav-footer -->
+- [<ds-tab> — TabComponent](navigation/ds-tab.md) — <!-- inputs:ds-tab -->
 
 ## overlays
 
@@ -94,6 +125,7 @@ and token names.** These leaves are for orientation and usage.
 - [<ds-popover> — PopoverComponent](overlays/ds-popover.md) — Floating panel anchored to a trigger via CDK overlay. Input: align: 'start' | 'end' = 'start' — controls overl
 - [[dsTooltip] — TooltipDirective](overlays/ds-tooltip.md) — Attribute directive. Apply to any focusable element.
 - [<ds-menu> + <ds-menu-item> — MenuComponent, MenuItemComponent](overlays/ds-menu.md) — Menu is a container. Item inputs: icon: IconName | null = null, disabled: boolean = false, danger: boolean = f
+- [<ds-tooltip-panel> — TooltipPanelComponent](overlays/ds-tooltip-panel.md) — <!-- inputs:ds-tooltip-panel -->
 
 ## platform
 
@@ -107,7 +139,12 @@ and token names.** These leaves are for orientation and usage.
 
 - [<ds-card> — CardComponent](surfaces/ds-card.md) — Full-bleed child: a child whose background reaches the card edge paints square corners over the radius, and th
 - [<ds-accordion> + <ds-accordion-item> — AccordionComponent, AccordionItemComponent](surfaces/ds-accordion.md) — Accordion is a thin wrapper that rounds + borders its children. Item inputs: title: string = '', expanded: mod
+- [<ds-accordion-item> — AccordionItemComponent](surfaces/ds-accordion-item.md) — <!-- inputs:ds-accordion-item -->
 
 ## tables
 
 - [<ds-table> — TableComponent<T extends { id: string }>](tables/ds-table.md) — Column shape: { key: string, label: string, sortable?: boolean, align?: 'left' | 'right' | 'center', cell?: (r
+- [[dsCellTemplate] — CellTemplateDirective](tables/ds-cell-template.md) — <!-- inputs:[dsCellTemplate] -->
+- [<ng-template[dsHeaderFilter]> — HeaderFilterDirective](tables/header-filter-directive.md) — <!-- inputs:ng-template[dsHeaderFilter] -->
+- [[dsTableColumns] — DsTableColumns](tables/ds-table-columns.md) — <!-- inputs:[dsTableColumns] -->
+- [[dsTableExport] — DsTableExport](tables/ds-table-export.md) — <!-- inputs:[dsTableExport] -->
