@@ -1,5 +1,7 @@
-/** One reading on two continuous scales. */
-export interface ScatterPoint {
+/** One reading on two continuous scales. Structural and local: the decimators work on any pair
+ *  of continuous coordinates, and naming the published type here would put a chart's own type in
+ *  the shared entry point. */
+interface Reading {
   readonly x: number;
   readonly y: number;
 }
@@ -32,16 +34,16 @@ export function needsDecimating(count: number, target: number): boolean {
  *
  *  @internal */
 export function minMaxDecimate(
-  points: readonly ScatterPoint[],
+  points: readonly Reading[],
   target: number,
-): readonly ScatterPoint[] {
+): readonly Reading[] {
   if (target <= 0 || points.length <= target) {
     return points;
   }
   // Two points leave each bucket, so the bucket count is half the budget.
   const buckets = Math.max(1, Math.floor(target / 2));
   const size = points.length / buckets;
-  const kept: ScatterPoint[] = [];
+  const kept: Reading[] = [];
 
   for (let bucket = 0; bucket < buckets; bucket++) {
     const from = Math.floor(bucket * size);
@@ -80,13 +82,13 @@ export function minMaxDecimate(
  *
  *  @internal */
 export function lttbDecimate(
-  points: readonly ScatterPoint[],
+  points: readonly Reading[],
   target: number,
-): readonly ScatterPoint[] {
+): readonly Reading[] {
   if (target <= 2 || points.length <= target) {
     return points;
   }
-  const kept: ScatterPoint[] = [points[0]];
+  const kept: Reading[] = [points[0]];
   // The first and the last are fixed, so the buckets divide what is between them.
   const size = (points.length - 2) / (target - 2);
   let previous = points[0];

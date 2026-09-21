@@ -22,7 +22,6 @@ export {
   minMaxDecimate,
   needsDecimating,
 } from './charts-decimate';
-export type { ScatterPoint } from './charts-decimate';
 export {
   areaPath,
   bandPath,

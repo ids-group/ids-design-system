@@ -1,6 +1,8 @@
-import type { ScatterPoint } from '@ids-group-ltd/ids-design-system/components';
-
-export type { ScatterPoint };
+/** One reading on two continuous scales. */
+export interface ScatterPoint {
+  readonly x: number;
+  readonly y: number;
+}
 
 /** One named set of readings. Both scales are continuous, so a point carries its own position on
  *  each rather than an index into a list of categories. */

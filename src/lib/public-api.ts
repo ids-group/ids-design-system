@@ -20,7 +20,6 @@ export type {
   DsFieldError,
   DsFieldErrorsInput,
   DsRouterLink,
-  ScatterPoint,
 } from '@ids-group-ltd/ids-design-system/components';
 
 // Components
@@ -260,6 +259,7 @@ export type {
   ScatterChartDecimator,
   ScatterChartReading,
   ScatterChartSeries,
+  ScatterPoint,
 } from '@ids-group-ltd/ids-design-system/components/scatter-chart';
 export { SearchComponent } from '@ids-group-ltd/ids-design-system/components/search';
 export { SegmentedComponent } from '@ids-group-ltd/ids-design-system/components/segmented';
