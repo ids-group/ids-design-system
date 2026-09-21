@@ -107,10 +107,12 @@
         "LineChartComponent",
         "LineSeriesComponent",
         "extends ChartComponent",
-        "ChartComponent"
+        "ChartComponent",
+        "extends PieChartComponent",
+        "PieChartComponent"
       ],
       "verify": "Every subclass of the listed components builds, and any member it declares that the base now also declares carries `override`.",
-      "note": "`LineChartComponent` gained `curve`, `stack`, `yAxisLabel`, `secondaryAxisLabel` and the members behind them; `ChartComponent` gained `axisLabel`, `secondaryAxisLabel` and the three that thin and turn its category labels; `LineSeriesComponent` gained `curve`. Subclassing a DS component is unsupported, but a release that only adds can still fail such a build on a name collision, which is why the classes are listed here rather than in the additive notes."
+      "note": "`LineChartComponent` gained `curve`, `stack`, `yAxisLabel`, `secondaryAxisLabel` and the members behind them; `ChartComponent` gained `axisLabel`, `secondaryAxisLabel` and the three that thin and turn its category labels; `LineSeriesComponent` gained `curve`; `PieChartComponent` traded `thickness` for `innerRadius`, so a subclass overriding the old name overrides nothing. Subclassing a DS component is unsupported, but a release that only adds can still fail such a build on a name collision, which is why the classes are listed here rather than in the additive notes."
     },
     {
       "id": "bar-chart-value-accepts-a-range",
