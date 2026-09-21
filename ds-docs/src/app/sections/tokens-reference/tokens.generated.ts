@@ -2460,6 +2460,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Autocomplete input minimum width (40px)."
       },
       {
+        "name": "--ds-autocomplete-input-font-size",
+        "value": "var(--font-size-s)",
+        "notes": "Text input size."
+      },
+      {
         "name": "--ds-autocomplete-bg-color",
         "value": "var(--surface-default)",
         "notes": "Autocomplete field surface fill."
@@ -2614,6 +2619,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-badge-white-space",
         "value": "nowrap",
         "notes": "Label wrapping (default nowrap). Set to normal for a badge in a narrow, fixed-layout table column, where nowrap clips the label."
+      },
+      {
+        "name": "--ds-badge-letter-spacing",
+        "value": "var(--letter-spacing-wide)",
+        "notes": "Label tracking."
       },
       {
         "name": "--badge-dot-size",
@@ -3904,6 +3914,21 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-option-font-family",
         "value": "var(--font-sans)",
         "notes": ""
+      },
+      {
+        "name": "--ds-option-color",
+        "value": "var(--text-primary)",
+        "notes": "Label colour of an unselected option."
+      },
+      {
+        "name": "--ds-dropdown-empty-color",
+        "value": "var(--text-tertiary)",
+        "notes": "Colour of the no-results line."
+      },
+      {
+        "name": "--ds-dropdown-empty-font-size",
+        "value": "inherit",
+        "notes": "Size of the no-results line."
       },
       {
         "name": "--ds-dropdown-panel-bg-color",
@@ -5434,6 +5459,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-pagination-label-color",
         "value": "var(--text-secondary)",
         "notes": "Colour of the range label (default --text-secondary)."
+      },
+      {
+        "name": "--ds-pagination-label-letter-spacing",
+        "value": "normal",
+        "notes": "Tracking of the count label."
+      },
+      {
+        "name": "--ds-pagination-label-text-transform",
+        "value": "none",
+        "notes": "Casing of the count label."
       }
     ]
   },

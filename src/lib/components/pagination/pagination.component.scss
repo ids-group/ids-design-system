@@ -19,6 +19,8 @@
   --_pagination-label-font-size: var(--ds-pagination-label-font-size, var(--font-size-s));
   --_pagination-label-weight: var(--ds-pagination-label-font-weight, var(--font-weight-regular));
   --_pagination-label-color: var(--ds-pagination-label-color, var(--text-secondary));
+  --_pagination-label-letter-spacing: var(--ds-pagination-label-letter-spacing, normal);
+  --_pagination-label-text-transform: var(--ds-pagination-label-text-transform, none);
 
   display: inline-flex;
 }
@@ -32,6 +34,8 @@
   .label {
     font: var(--_pagination-label-weight) var(--_pagination-label-font-size) / var(--line-height-flat) var(--font-sans);
     color: var(--_pagination-label-color);
+    letter-spacing: var(--_pagination-label-letter-spacing);
+    text-transform: var(--_pagination-label-text-transform);
     margin-right: var(--space-2);
   }
 

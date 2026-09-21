@@ -99,6 +99,29 @@
 
 ### Added
 
+- **Seven styling hooks where a consumer was reaching past the surface.** Each one is a property
+  the component tokenised everything around and not itself, so the only way to set it was a rule
+  that doubles a class to out-specify our compiled selector.
+
+  ```scss
+  ds-badge { --ds-badge-letter-spacing: 0.01em; }
+  ds-pagination { --ds-pagination-label-text-transform: uppercase; }
+  ```
+
+  `--ds-badge-letter-spacing`; `--ds-pagination-label-letter-spacing` and
+  `--ds-pagination-label-text-transform`; `--ds-option-color` for an unselected picker row, whose
+  selected sibling had a colour token all along; `--ds-dropdown-empty-color` and
+  `--ds-dropdown-empty-font-size` for the panel's no-results line; and
+  `--ds-autocomplete-input-font-size`.
+
+  Every default is the value the component already drew, so a chart of the surface before and
+  after is identical. The no-results line takes `inherit` as its size default, which is what it
+  resolved to when it declared none.
+
+  The empty line's tokens are named for the dropdown panel rather than spelled `--ds-empty-*`,
+  because `--ds-empty-state-*` is a different component and the two would have sat one hyphen
+  apart meaning unrelated things.
+
 - **Each axis says which numbers it is counting, and in whose colour.** A plot carrying two scales
   is ambiguous without both: nothing on the canvas says which line is read against which set of
   numbers, and nothing says what those numbers ARE.

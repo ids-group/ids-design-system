@@ -30,6 +30,9 @@
   --_option-font-size: var(--ds-option-font-size, var(--font-size-s));
   --_option-line-height: var(--ds-option-line-height, var(--line-height-flat));
   --_option-font-family: var(--ds-option-font-family, var(--font-sans));
+  --_option-color: var(--ds-option-color, var(--text-primary));
+  --_dropdown-empty-color: var(--ds-dropdown-empty-color, var(--text-tertiary));
+  --_dropdown-empty-font-size: var(--ds-dropdown-empty-font-size, inherit);
 
   --_dropdown-panel-bg-color: var(--ds-dropdown-panel-bg-color, var(--surface-overlay));
   --_dropdown-panel-border-color: var(--ds-dropdown-panel-border-color, var(--border-default));
@@ -112,7 +115,8 @@
 
   .empty {
     padding: var(--space-3) var(--space-4);
-    color: var(--text-tertiary);
+    color: var(--_dropdown-empty-color);
+    font-size: var(--_dropdown-empty-font-size);
     text-align: center;
   }
 
@@ -125,7 +129,7 @@
     border: 0;
     background: transparent;
     font: var(--_option-weight) var(--_option-font-size) / var(--_option-line-height) var(--_option-font-family);
-    color: var(--text-primary);
+    color: var(--_option-color);
     cursor: pointer;
     border-radius: var(--_option-radius);
     text-align: left;
