@@ -4,9 +4,9 @@
   --_menu-item-hover-bg-color: var(--ds-menu-item-hover-bg-color, var(--surface-secondary));
   --_menu-item-error-label-color: var(--ds-menu-item-error-label-color, var(--error-text));
   --_menu-item-quiet-label-color: var(--ds-menu-item-quiet-label-color, var(--text-secondary));
-  --_menu-item-pad-x: var(--ds-menu-item-pad-x, var(--space-3));
-  --_menu-item-pad-y: var(--ds-menu-item-pad-y, var(--space-2));
-  --_menu-item-label-weight: var(--ds-menu-item-label-weight, var(--font-weight-medium));
+  --_menu-item-pad-x: var(--ds-menu-item-padding-x, var(--space-3));
+  --_menu-item-pad-y: var(--ds-menu-item-padding-y, var(--space-2));
+  --_menu-item-label-weight: var(--ds-menu-item-label-font-weight, var(--font-weight-medium));
   --_menu-item-label-font-size: var(--ds-menu-item-label-font-size, var(--font-size-s));
   --_menu-item-description-color: var(--ds-menu-item-description-color, var(--text-tertiary));
   --_menu-item-description-font-size: var(--ds-menu-item-description-font-size, var(--font-size-2xs));

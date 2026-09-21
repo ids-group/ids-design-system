@@ -19,4 +19,4 @@ Example:
 </ds-input>
 ```
 
-Tokens: `--ds-input-bg-color`, `--ds-input-border`, `--ds-input-border-hover`, `--ds-input-border-focus`, `--ds-input-text-color`, `--ds-input-placeholder`, `--ds-input-radius`, `--ds-input-pad-x`, `--ds-input-pad-y`, `--ds-input-focus-shadow`, `--ds-input-border-error`, `--ds-input-bg-color-error`, `--ds-input-border-success`, `--ds-input-bg-color-disabled`
+Tokens: `--ds-input-bg-color`, `--ds-input-border`, `--ds-input-border-hover`, `--ds-input-border-focus`, `--ds-input-text-color`, `--ds-input-placeholder`, `--ds-input-radius`, `--ds-input-padding-x`, `--ds-input-padding-y`, `--ds-input-focus-shadow`, `--ds-input-border-error`, `--ds-input-bg-color-error`, `--ds-input-border-success`, `--ds-input-bg-color-disabled`

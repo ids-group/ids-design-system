@@ -3,8 +3,8 @@
 
 
 :host {
-  --_otp-cell-w: var(--ds-otp-cell-w, var(--otp-cell-w));
-  --_otp-cell-h: var(--ds-otp-cell-h, var(--otp-cell-h));
+  --_otp-cell-w: var(--ds-otp-cell-width, var(--otp-cell-w));
+  --_otp-cell-h: var(--ds-otp-cell-height, var(--otp-cell-h));
   --_otp-gap: var(--ds-otp-gap, var(--otp-gap));
   --_otp-cell-bg-color: var(--ds-otp-cell-bg-color, var(--surface-default));
   --_otp-cell-border-color: var(--ds-otp-cell-border-color, var(--border-default));

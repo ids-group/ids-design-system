@@ -11,8 +11,8 @@
   --_alert-title-text-color:   var(--ds-alert-title-text-color,   var(--text-primary));
   --_alert-close-icon-color:   var(--ds-alert-close-icon-color,   var(--icon-default));
   --_alert-close-icon-color-hover: var(--ds-alert-close-icon-color-hover, var(--icon-strong));
-  --_alert-pad-y:              var(--ds-alert-pad-y,              var(--space-2));
-  --_alert-pad-x:              var(--ds-alert-pad-x,              var(--space-3));
+  --_alert-pad-y:              var(--ds-alert-padding-y,              var(--space-2));
+  --_alert-pad-x:              var(--ds-alert-padding-x,              var(--space-3));
   --_alert-radius:             var(--ds-alert-radius,             var(--ds-radius-control));
   --_alert-enter-keyframes: var(--ds-alert-enter-keyframes, ds-fade-in);
   --_alert-enter-duration: var(--ds-alert-enter-duration, var(--ds-motion-enter-surface-duration));

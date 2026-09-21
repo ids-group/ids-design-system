@@ -76,11 +76,11 @@
   --_button-font-family: var(--ds-button-font-family, var(--font-sans));
   --_button-line-height: var(--ds-button-line-height, var(--line-height-flat));
   --_button-font-size: var(--ds-button-font-size, var(--font-size-m));
-  --_button-weight:    var(--ds-button-weight,    var(--font-weight-extrabold));
-  --_button-tracking:  var(--ds-button-tracking,  var(--letter-spacing-wide));
+  --_button-weight:    var(--ds-button-font-weight,    var(--font-weight-extrabold));
+  --_button-tracking:  var(--ds-button-letter-spacing,  var(--letter-spacing-wide));
   --_button-height:    var(--ds-button-height,    var(--field-h-md));
-  --_button-pad-x:     var(--ds-button-pad-x,     var(--space-5));
-  --_button-pad-y:     var(--ds-button-pad-y,     0);
+  --_button-pad-x:     var(--ds-button-padding-x,     var(--space-5));
+  --_button-pad-y:     var(--ds-button-padding-y,     0);
 
   /* Two fill recipes — a flat pale tint here for solid, a mix toward --surface-disabled on
      tonal/ghost/outline — and ONE label lightness for every variant. 70% costs label contrast
@@ -168,7 +168,7 @@
     gap: var(--space-1);
     height: auto;
     min-height: var(--field-h-md);
-    padding-block: var(--ds-button-pad-y, var(--space-2));
+    padding-block: var(--ds-button-padding-y, var(--space-2));
     white-space: normal;
 
     .button-main { display: inline-flex; align-items: center; gap: var(--space-2); }
@@ -181,19 +181,19 @@
   &.lg {
     --_button-font-size: var(--ds-button-font-size, var(--font-size-m));
     --_button-height:    var(--ds-button-height,    var(--field-h-lg));
-    --_button-pad-x:     var(--ds-button-pad-x,     var(--space-5));
+    --_button-pad-x:     var(--ds-button-padding-x,     var(--space-5));
   }
 
   &.md {
     --_button-font-size: var(--ds-button-font-size, var(--font-size-m));
     --_button-height:    var(--ds-button-height,    var(--field-h-md));
-    --_button-pad-x:     var(--ds-button-pad-x,     var(--space-5));
+    --_button-pad-x:     var(--ds-button-padding-x,     var(--space-5));
   }
 
   &.sm {
     --_button-font-size: var(--ds-button-font-size, var(--font-size-s));
     --_button-height:    var(--ds-button-height,    var(--field-h-sm));
-    --_button-pad-x:     var(--ds-button-pad-x,     var(--space-4));
+    --_button-pad-x:     var(--ds-button-padding-x,     var(--space-4));
 
     .icon { width: var(--icon-sm); height: var(--icon-sm); }
   }

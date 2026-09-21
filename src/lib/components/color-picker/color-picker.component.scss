@@ -10,9 +10,9 @@
 .panel {
   --_cp-swatch: var(--ds-color-picker-swatch, var(--color-picker-swatch));
   --_cp-preview: var(--ds-color-picker-preview, var(--color-picker-preview));
-  --_cp-panel-w: var(--ds-color-picker-panel-w, var(--color-picker-panel-w));
-  --_cp-sv-h: var(--ds-color-picker-sv-h, var(--color-picker-sv-h));
-  --_cp-hue-h: var(--ds-color-picker-hue-h, var(--color-picker-hue-h));
+  --_cp-panel-w: var(--ds-color-picker-panel-width, var(--color-picker-panel-w));
+  --_cp-sv-h: var(--ds-color-picker-saturation-value-height, var(--color-picker-sv-h));
+  --_cp-hue-h: var(--ds-color-picker-hue-height, var(--color-picker-hue-h));
   --_cp-thumb: var(--ds-color-picker-thumb, var(--color-picker-thumb));
   --_cp-trigger-border-color: var(--ds-color-picker-trigger-border-color, var(--border-default));
 }

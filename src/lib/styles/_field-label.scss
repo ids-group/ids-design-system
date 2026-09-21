@@ -9,15 +9,15 @@
 // happens to use the same class name. Each field pays ~6 declarations of its own CSS.
 //
 // Per-instance retune is CSS-variable scoping, so no per-component token set is
-// needed: `ds-select { --ds-field-label-transform: uppercase; }` reaches exactly
+// needed: `ds-select { --ds-field-label-text-transform: uppercase; }` reaches exactly
 // one component. ds-input keeps its older `--ds-input-label-*` trio winning above
 // this, since those shipped in 0.7.x.
 @mixin field-label {
   --_field-label-font-size: var(--ds-field-label-font-size, var(--font-size-xs));
-  --_field-label-weight: var(--ds-field-label-weight, var(--font-weight-bold));
+  --_field-label-weight: var(--ds-field-label-font-weight, var(--font-weight-bold));
   --_field-label-color: var(--ds-field-label-color, var(--text-secondary));
-  --_field-label-transform: var(--ds-field-label-transform, none);
-  --_field-label-tracking: var(--ds-field-label-tracking, normal);
+  --_field-label-transform: var(--ds-field-label-text-transform, none);
+  --_field-label-tracking: var(--ds-field-label-letter-spacing, normal);
 
   display: flex;
   align-items: center;

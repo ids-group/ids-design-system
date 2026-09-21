@@ -49,7 +49,7 @@
   --_auth-min-height: var(--ds-auth-layout-min-height, 100dvh);
   --_auth-bg-color: var(--ds-auth-layout-bg-color, var(--surface-canvas));
   --_auth-gap: var(--ds-auth-layout-gap, clamp(var(--space-4), 4svh, var(--space-8)));
-  --_auth-pad-block: var(--ds-auth-layout-pad-block, clamp(var(--space-4), 5svh, var(--space-10)));
+  --_auth-pad-block: var(--ds-auth-layout-padding-block, clamp(var(--space-4), 5svh, var(--space-10)));
   --_auth-mark-size: var(--ds-auth-layout-mark-size, clamp(var(--space-6), 4svh, var(--space-8)));
   --_auth-mark-radius: var(--ds-auth-layout-mark-radius, var(--ds-radius-control));
   --_auth-card-max-width: var(--ds-auth-layout-card-max-width, var(--auth-card-w));

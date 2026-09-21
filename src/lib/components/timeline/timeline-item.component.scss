@@ -1,6 +1,6 @@
 :host {
   --_timeline-node-size: var(--ds-timeline-node-size, var(--timeline-node-size));
-  --_timeline-spine-w: var(--ds-timeline-spine-w, var(--timeline-spine-w));
+  --_timeline-spine-w: var(--ds-timeline-spine-width, var(--timeline-spine-w));
   --_timeline-gap: var(--ds-timeline-gap, var(--timeline-gap));
 
   /* Default (pending) node — bordered neutral surface. Tones override below. */

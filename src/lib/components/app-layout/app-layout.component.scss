@@ -1,8 +1,8 @@
 @use '../../styles/breakpoints' as bp;
 
 :host {
-  --_layout-pad-x: var(--ds-app-layout-pad-x, var(--space-6));
-  --_layout-pad-y: var(--ds-app-layout-pad-y, var(--space-6));
+  --_layout-pad-x: var(--ds-app-layout-padding-x, var(--space-6));
+  --_layout-pad-y: var(--ds-app-layout-padding-y, var(--space-6));
   --_layout-content-max-width: var(--ds-app-layout-content-max-width, none);
   --_layout-rail-bg-color: var(--ds-app-layout-rail-bg-color, var(--surface-overlay));
   --_layout-rail-shadow: var(--ds-app-layout-rail-shadow, var(--ds-elevation-modal));

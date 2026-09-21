@@ -5,13 +5,13 @@
    Label — Single line, ellipsis at ~16 ch. Tooltip on hover when clipped. */
 
 :host {
-  --_tag-pad-y:        var(--ds-tag-pad-y, var(--tag-pad-y));
-  --_tag-pad-x:        var(--ds-tag-pad-x, var(--tag-pad-x));
+  --_tag-pad-y:        var(--ds-tag-padding-y, var(--tag-pad-y));
+  --_tag-pad-x:        var(--ds-tag-padding-x, var(--tag-pad-x));
   --_tag-radius:       var(--ds-tag-radius, var(--ds-radius-control));
   --_tag-bg-color:           var(--ds-tag-bg-color, var(--accent));
   --_tag-label-color: var(--ds-tag-label-color, var(--accent-on));
   --_tag-fw:            var(--ds-tag-fw, var(--font-weight-bold));
-  --_tag-fs:            var(--ds-tag-fs, var(--font-size-xs));
+  --_tag-fs:            var(--ds-tag-font-size, var(--font-size-xs));
   --_tag-lh:            var(--ds-tag-lh, var(--line-height-base));
   --_tag-hover-bg-color:      var(--ds-tag-hover-bg-color,      var(--surface-muted));
   --_tag-hover-label-color:      var(--ds-tag-hover-label-color,      var(--text-primary));

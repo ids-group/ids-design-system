@@ -1,7 +1,7 @@
 :host {
-  --_container-max: var(--ds-container-max, var(--col-cap-content));
+  --_container-max: var(--ds-container-max-width, var(--col-cap-content));
   --_container-pad-x: var(
-    --ds-container-pad-x,
+    --ds-container-padding-x,
     clamp(var(--space-4), 4vw, var(--space-6))
   );
 

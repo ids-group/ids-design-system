@@ -1,6 +1,6 @@
 :host {
-  --_bottom-sheet-maxw: var(--ds-bottom-sheet-maxw, 480px);
-  --_bottom-sheet-maxh: var(--ds-bottom-sheet-maxh, 80%);
+  --_bottom-sheet-maxw: var(--ds-bottom-sheet-max-width, 480px);
+  --_bottom-sheet-maxh: var(--ds-bottom-sheet-max-height, 80%);
   --_bottom-sheet-radius: var(--ds-bottom-sheet-radius, var(--ds-radius-panel));
   --_bottom-sheet-bg-color: var(--ds-bottom-sheet-bg-color, var(--surface-default));
   --_bottom-sheet-scrim-color: var(--ds-bottom-sheet-scrim-color, var(--surface-scrim));

@@ -119,8 +119,8 @@ export class SelectComponent
    *  consumer's `ds-select { --ds-dropdown-panel-*: … }` reaches it. */
   private readonly panelTokens = [
     '--ds-dropdown-panel-bg-color',
-    '--ds-dropdown-panel-minw',
-    '--ds-dropdown-panel-maxw',
+    '--ds-dropdown-panel-min-width',
+    '--ds-dropdown-panel-max-width',
     '--ds-option-selected-bg-color',
     '--ds-option-selected-label-color',
     '--ds-option-selected-bg-color-hover',

@@ -21,8 +21,8 @@
   --_banner-bg-color:        var(--ds-banner-bg-color,        var(--info-subtitle));
   --_banner-text-color:        var(--ds-banner-text-color,        var(--info-text));
   --_banner-bar:       var(--ds-banner-bar,       var(--info));
-  --_banner-pad-y:     var(--ds-banner-pad-y,     var(--space-3));
-  --_banner-pad-x:     var(--ds-banner-pad-x,     var(--space-4));
+  --_banner-pad-y:     var(--ds-banner-padding-y,     var(--space-3));
+  --_banner-pad-x:     var(--ds-banner-padding-x,     var(--space-4));
   --_banner-radius:    var(--ds-banner-radius,    var(--ds-radius-control));
   --_banner-bar-width: var(--ds-banner-bar-width, var(--banner-bar-w));
   --_banner-title-text-color:  var(--ds-banner-title-text-color,  var(--text-primary));
@@ -147,8 +147,8 @@
 
   &.compact {
     align-items: center;
-    --_banner-pad-y: var(--ds-banner-pad-y, var(--space-2));
-    --_banner-pad-x: var(--ds-banner-pad-x, var(--space-3));
+    --_banner-pad-y: var(--ds-banner-padding-y, var(--space-2));
+    --_banner-pad-x: var(--ds-banner-padding-x, var(--space-3));
 
     /* A one-line strip, so the title cannot wrap — hence the ellipsis: without it a
        title longer than its container cuts off with nothing to show it was cut, and

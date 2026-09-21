@@ -254,7 +254,7 @@
 
   /* Components default their own --ds-*-pad to this, so a consumer retunes every
      surface container (card, stat, …) at once. */
-  --ds-container-pad:  var(--space-6);
+  --ds-surface-padding:  var(--space-6);
 
   /* Two focus families: fields get the soft halo, interactive controls and nav
      the crisp ring. Components default their own --ds-*-focus-shadow to these,
@@ -549,7 +549,7 @@
 
   /* One rung only — a card's frame reads as padding lost long before its cells
      do, so 24 → 16 while the cells inside it go 16 → 8. */
-  --ds-container-pad:  var(--space-4);
+  --ds-surface-padding:  var(--space-4);
 }
 [data-density="compact"] {
   --hit-cozy:  32px;

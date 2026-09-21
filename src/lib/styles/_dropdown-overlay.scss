@@ -26,7 +26,7 @@
   --_option-radius: var(--ds-option-radius, var(--ds-radius-inner));
   --_option-row-gap: var(--ds-option-row-gap, 2px);
   --_option-bg-color-active: var(--ds-option-bg-color-active, var(--surface-secondary));
-  --_option-weight: var(--ds-option-weight, var(--font-weight-medium));
+  --_option-weight: var(--ds-option-font-weight, var(--font-weight-medium));
   --_option-font-size: var(--ds-option-font-size, var(--font-size-s));
   --_option-line-height: var(--ds-option-line-height, var(--line-height-flat));
   --_option-font-family: var(--ds-option-font-family, var(--font-sans));
@@ -34,13 +34,13 @@
   --_dropdown-panel-bg-color: var(--ds-dropdown-panel-bg-color, var(--surface-overlay));
   --_dropdown-panel-border-color: var(--ds-dropdown-panel-border-color, var(--border-default));
   --_dropdown-panel-shadow: var(--ds-dropdown-panel-shadow, var(--shadow-popover));
-  --_dropdown-panel-maxh: var(--ds-dropdown-panel-maxh, 320px);
+  --_dropdown-panel-maxh: var(--ds-dropdown-panel-max-height, 320px);
 
   /* minw/maxw only bite in `content` width mode, where the pane is auto-sized: in
      `fill` the component pins the pane to the trigger width and there is nothing
      left to bound. */
-  --_dropdown-panel-minw: var(--ds-dropdown-panel-minw, 0);
-  --_dropdown-panel-maxw: var(--ds-dropdown-panel-maxw, none);
+  --_dropdown-panel-minw: var(--ds-dropdown-panel-min-width, 0);
+  --_dropdown-panel-maxw: var(--ds-dropdown-panel-max-width, none);
 
   .dropdown-panel {
     // The pane is sized from the trigger, so without `width: 100%` the panel is a flex

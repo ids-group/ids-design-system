@@ -8,10 +8,10 @@
   --_es-tile-bg-color:   var(--ds-empty-state-tile-bg-color,  var(--accent-surface-tint));
   --_es-tile-icon-color:   var(--ds-empty-state-tile-icon-color,  var(--text-secondary));
   --_es-title-text-color:  var(--ds-empty-state-title-text-color, var(--text-primary));
-  --_es-title-fs: var(--ds-empty-state-title-fs, var(--font-size-h5));
+  --_es-title-fs: var(--ds-empty-state-title-font-size, var(--font-size-h5));
   --_es-body-text-color:   var(--ds-empty-state-body-text-color,  var(--text-secondary));
-  --_es-body-maxw: var(--ds-empty-state-body-maxw, var(--empty-body-maxw));
-  --_es-pad:       var(--ds-empty-state-pad,       var(--space-12) var(--space-6));
+  --_es-body-maxw: var(--ds-empty-state-body-max-width, var(--empty-body-maxw));
+  --_es-pad:       var(--ds-empty-state-padding,       var(--space-12) var(--space-6));
 
   display: block;
 }

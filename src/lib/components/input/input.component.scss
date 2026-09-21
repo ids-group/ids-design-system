@@ -20,8 +20,8 @@
   --_input-text-color:             var(--ds-input-text-color,             var(--text-primary));
   --_input-placeholder:    var(--ds-input-placeholder,    var(--text-tertiary));
   --_input-radius:         var(--ds-input-radius,         var(--ds-radius-control));
-  --_input-pad-x:          var(--ds-input-pad-x,          var(--field-pad-x));
-  --_input-pad-y:          var(--ds-input-pad-y,          var(--field-pad-y));
+  --_input-pad-x:          var(--ds-input-padding-x,          var(--field-pad-x));
+  --_input-pad-y:          var(--ds-input-padding-y,          var(--field-pad-y));
   --_input-focus-shadow:       var(--ds-input-focus-shadow,       var(--ds-field-focus-shadow));
   --_input-focus-shadow-error: var(--ds-input-focus-shadow-error, var(--ds-field-focus-shadow-error));
   --_input-border-error:   var(--ds-input-border-error,   var(--error));
@@ -32,9 +32,9 @@
   // These predate the --ds-field-label-* family and still win, but they chain into
   // it — so one family-level retune reaches ds-input as well.
   --_input-label-color:    var(--ds-input-label-color,    var(--ds-field-label-color,       var(--text-secondary)));
-  --_input-label-fs:       var(--ds-input-label-fs,       var(--ds-field-label-font-size,   var(--font-size-xs)));
-  --_input-label-fw:       var(--ds-input-label-fw,       var(--ds-field-label-weight,      var(--font-weight-bold)));
-  --_input-fs:             var(--ds-input-fs,             var(--font-size-s));
+  --_input-label-fs:       var(--ds-input-label-font-size,       var(--ds-field-label-font-size,   var(--font-size-xs)));
+  --_input-label-fw:       var(--ds-input-label-fw,       var(--ds-field-label-font-weight,      var(--font-weight-bold)));
+  --_input-fs:             var(--ds-input-font-size,             var(--font-size-s));
   --_input-clear-color: var(--ds-input-clear-color, var(--text-secondary));
 
   display: block;

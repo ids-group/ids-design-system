@@ -191,12 +191,12 @@ Example:
 </ds-input>
 ```
 
-Tokens: `--ds-input-bg-color`, `--ds-input-border`, `--ds-input-border-hover`, `--ds-input-border-focus`, `--ds-input-text-color`, `--ds-input-placeholder`, `--ds-input-radius`, `--ds-input-pad-x`, `--ds-input-pad-y`, `--ds-input-focus-shadow`, `--ds-input-border-error`, `--ds-input-bg-color-error`, `--ds-input-border-success`, `--ds-input-bg-color-disabled`
+Tokens: `--ds-input-bg-color`, `--ds-input-border`, `--ds-input-border-hover`, `--ds-input-border-focus`, `--ds-input-text-color`, `--ds-input-placeholder`, `--ds-input-radius`, `--ds-input-padding-x`, `--ds-input-padding-y`, `--ds-input-focus-shadow`, `--ds-input-border-error`, `--ds-input-bg-color-error`, `--ds-input-border-success`, `--ds-input-bg-color-disabled`
 
 #### `<ds-textarea>` — `TextareaComponent`
 Multi-line counterpart to `<ds-input>` — same wrapper/states, reuses the `--ds-input-*` token family. No prefix/suffix slots.
 Inputs: `value: model<string>`, `size: 'sm' | 'md' | 'lg' = 'md'`, `label`, `hint`, `placeholder`, `disabled`, `invalid`, `required`, `optional: boolean = false`, `name`, `rows: number = 3`
-Tokens: same `--ds-input-*` family as `<ds-input>` (textarea overrides `--ds-input-pad-y` to `--space-3` for vertical breathing room).
+Tokens: same `--ds-input-*` family as `<ds-input>` (textarea overrides `--ds-input-padding-y` to `--space-3` for vertical breathing room).
 New: `autosize: boolean = false` (grows with content; forces `resize='none'`), `minRows`/`maxRows: number | null = null`, `resize: 'none' | 'vertical' | 'horizontal' | 'both' = 'vertical'`.
 
 #### `<ds-number-stepper>` — `NumberStepperComponent`
@@ -359,19 +359,19 @@ Tokens (on `:host`): `--ds-topbar-height`, `--ds-topbar-bg-color`, `--ds-topbar-
 Inputs: `topbarSpan: 'content' | 'full' = 'content'`, `railOpen: model<boolean> = false` (the overlay rail below `--bp-lg`), `railLabel: string = 'Navigation'`, `restoreScroll: boolean = false`, `restoreScrollTimeout: number = 2000` (ms), `scrollReset: 'path' | 'always' | 'never' = 'path'`
 Content slots: `[sidenav]`, `[topbar]`, default (the page)
 Reads: `railId` and the read-only `railOverlay` signal, for a consumer-built burger; `dsRailTrigger` wires one for you.
-Tokens: `--ds-app-layout-pad-x`, `--ds-app-layout-pad-y`, `--ds-app-layout-content-max-width`, `--ds-app-layout-height`, `--ds-app-layout-rail-bg-color`, `--ds-app-layout-rail-shadow`, `--ds-app-layout-scrim-color`
+Tokens: `--ds-app-layout-padding-x`, `--ds-app-layout-padding-y`, `--ds-app-layout-content-max-width`, `--ds-app-layout-height`, `--ds-app-layout-rail-bg-color`, `--ds-app-layout-rail-shadow`, `--ds-app-layout-scrim-color`
 It owns the app's scroll CONTAINER, so a screen that needs to move the scroll calls `LayoutScrollService` rather than touching `window`.
 
 #### `<ds-auth-layout>` — `AuthLayoutComponent`
 Inputs: `brand: string | null = null`, `logoLetter: string | null = null`, `tagline: string | null = null` (all three fall back to `DS_CONFIG.brand`), `cardElevation: CardElevation = 'raised'`, `cardPadding: CardPadding = 'lg'`, `landmark: 'main' | 'none' = 'none'`
 Content slots: `[brand]` (replaces the whole mark row), `[dsBrandName]` (the name beside the generated mark), default (the card body), `[dsAuthSupport]` (the line under the card)
-Tokens: `--ds-auth-layout-min-height`, `--ds-auth-layout-bg-color`, `--ds-auth-layout-gap`, `--ds-auth-layout-pad-block`, `--ds-auth-layout-card-max-width`, `--ds-auth-layout-mark-size`, `--ds-auth-layout-mark-radius`, `--ds-auth-layout-mark-bg-color`, `--ds-auth-layout-mark-label-color`
+Tokens: `--ds-auth-layout-min-height`, `--ds-auth-layout-bg-color`, `--ds-auth-layout-gap`, `--ds-auth-layout-padding-block`, `--ds-auth-layout-card-max-width`, `--ds-auth-layout-mark-size`, `--ds-auth-layout-mark-radius`, `--ds-auth-layout-mark-bg-color`, `--ds-auth-layout-mark-label-color`
 `landmark="main"` only when the page has no other `<main>`; the sign-in card is not automatically the document's main landmark.
 
 #### `<ds-page-header>` — `PageHeaderComponent`
 Inputs: `eyebrow: string = ''`, `title: required string`, `subtitle: string = ''`, `compact: boolean = false`, `divider: boolean = false`, `metaDivider: boolean = false`
 Content slots: `[breadcrumbs]`, `[title-badge]` (sits next to the title text), `[actions]` (right edge of title row), `[meta]` (under the title row), `[tabs]` (under the meta row)
-Tokens: `--ds-page-header-eyebrow-text-color`, `--ds-page-header-title-text-color`, `--ds-page-header-subtitle-text-color`, `--ds-page-header-meta-text-color`, `--ds-page-header-meta-icon-color`, `--ds-page-header-divider`, `--ds-page-header-title-fs` (default `--font-size-h3`; `compact` flips to `--font-size-h4`). The page-header does NOT own its bottom gap — the parent page `:host` owns spacing via `display: flex; flex-direction: column; gap: var(--space-4)`.
+Tokens: `--ds-page-header-eyebrow-text-color`, `--ds-page-header-title-text-color`, `--ds-page-header-subtitle-text-color`, `--ds-page-header-meta-text-color`, `--ds-page-header-meta-icon-color`, `--ds-page-header-divider`, `--ds-page-header-title-font-size` (default `--font-size-h3`; `compact` flips to `--font-size-h4`). The page-header does NOT own its bottom gap — the parent page `:host` owns spacing via `display: flex; flex-direction: column; gap: var(--space-4)`.
 
 #### `<ds-page-footer>` — `PageFooterComponent`
 Input: `variant: 'default' | 'compact' | 'save' = 'default'`
@@ -385,7 +385,7 @@ Output: `(navigate): BreadcrumbItem` — emits when an item with `href` is click
 Container holds `<ds-tab label="…">` children.
 Tabs inputs: `selectedIndex: model<number> = 0`, `variant: 'line' | 'pills' = 'line'`
 Tab inputs: `label: required string`, `icon: IconName | null = null`, `count: number | null = null`, `disabled: boolean = false`. The tab's projected content renders in the active panel.
-Tokens: `--ds-tab-label-color`, `--ds-tab-label-color-hover`, `--ds-tab-label-color-active`, `--ds-tab-indicator-color`, `--ds-tab-indicator-width`, `--ds-tab-pad-x`, `--ds-tab-pad-y`, `--ds-tabs-divider`, `--ds-tabs-pills-bg-color`, `--ds-tab-pill-bg-color-hover` (inactive hover, defaults to `var(--primary-subtle)`), `--ds-tab-pill-bg-color-active` (defaults to `var(--surface-default)` — elevated card), `--ds-tab-pill-bg-color-active-hover` (defaults to `var(--primary-subtle)`), `--ds-tab-pill-label-color-active` (defaults to `var(--primary-strong)`), `--ds-tab-pill-radius` (defaults to `var(--radius-md)` — same as buttons/inputs; override per-instance to `var(--radius-pill)` for fully round pills).
+Tokens: `--ds-tab-label-color`, `--ds-tab-label-color-hover`, `--ds-tab-label-color-active`, `--ds-tab-indicator-color`, `--ds-tab-indicator-width`, `--ds-tab-padding-x`, `--ds-tab-padding-y`, `--ds-tabs-divider`, `--ds-tabs-pills-bg-color`, `--ds-tab-pill-bg-color-hover` (inactive hover, defaults to `var(--primary-subtle)`), `--ds-tab-pill-bg-color-active` (defaults to `var(--surface-default)` — elevated card), `--ds-tab-pill-bg-color-active-hover` (defaults to `var(--primary-subtle)`), `--ds-tab-pill-label-color-active` (defaults to `var(--primary-strong)`), `--ds-tab-pill-radius` (defaults to `var(--radius-md)` — same as buttons/inputs; override per-instance to `var(--radius-pill)` for fully round pills).
 
 #### `<ds-stepper>` — `StepperComponent`
 Inputs: `steps: readonly string[] = []`, `current: number = 0`. Horizontal step indicator with done/active/upcoming nodes.
@@ -403,9 +403,9 @@ Content: label text (when `variant="label"`).
 ### Surfaces
 
 #### `<ds-card>` — `CardComponent`
-Inputs: `elevation: 'flat' | 'raised' | 'hover' | 'interactive' = 'flat'`, `padding: 'none' | 'sm' | 'md' | 'lg' | null = null` (when `null`, no `padding-*` class is applied and the consumer controls padding via own CSS or `--ds-card-pad`)
+Inputs: `elevation: 'flat' | 'raised' | 'hover' | 'interactive' = 'flat'`, `padding: 'none' | 'sm' | 'md' | 'lg' | null = null` (when `null`, no `padding-*` class is applied and the consumer controls padding via own CSS or `--ds-card-padding`)
 Output: `(pressed): MouseEvent` — fires only when `elevation="interactive"`
-Tokens: `--ds-card-bg-color`, `--ds-card-border`, `--ds-card-radius`, `--ds-card-pad`, `--ds-card-shadow`, `--ds-card-shadow-hover`, `--ds-card-hover-lift`, `--ds-card-overflow`. The focus ring is not a card token — set `--focus-ring-color`, `--focus-ring-width` or `--focus-ring-offset` on the card's own scope
+Tokens: `--ds-card-bg-color`, `--ds-card-border`, `--ds-card-radius`, `--ds-card-padding`, `--ds-card-shadow`, `--ds-card-shadow-hover`, `--ds-card-hover-lift`, `--ds-card-overflow`. The focus ring is not a card token — set `--focus-ring-color`, `--focus-ring-width` or `--focus-ring-offset` on the card's own scope
 Full-bleed child: a child whose background reaches the card edge paints square corners over the radius, and the host cannot fix it — the rounded box is the card's inner element. Set `--ds-card-overflow: clip` (`clip`, not `hidden`, so the card stays out of the scroll-container business). It is opt-in because a clipped card also cuts the focus ring off a child at its edge; where the clipped card holds focusable content, pair it with `data-focus="inset"`.
 Convention tokens (consumer-side `.title` projected into the card slot — declared at `:root`, not on the host): `--card-title-fs` (default `var(--font-size-h4)` = 22px; a brand can step it down to `var(--font-size-h5)`). Consumer markup: `<h3 class="title">…</h3>`; local `.title` class reads the token via `font:` shorthand together with `--font-weight-bold` / `--line-height-snug` / `--font-heading`.
 
@@ -459,7 +459,7 @@ Opening a row: give one column `link: (row) => <route target> | null` and its va
 Cell templates: `<ng-template dsCellTemplate="<colKey>" let-row>…</ng-template>` — `row` is typed `unknown`, narrow via a helper method on the host.
 Content slots: `[empty]` (rendered when `data.length === 0`), `[bulk-actions]` (rendered in the bulk action bar when `selectable && some selected`)
 Loading modes: `'skeleton'` replaces rows with shimmer placeholders driven by the global `--skeleton-shimmer-x` keyframe; `'overlay'` keeps existing rows visible behind a translucent layer with a centred spinner.
-Tokens: `--ds-table-border: var(--border-default)`, `--ds-table-radius: var(--radius-md)`, `--ds-table-bg-color`, `--ds-table-head-text-color: var(--text-secondary)`, `--ds-table-head-bg-color: var(--surface-secondary)`, `--ds-table-head-fs: var(--font-size-xs)`, `--ds-table-row-hover-bg-color`, `--ds-table-row-selected-bg-color`, `--ds-table-divider`, `--ds-table-sort-active-icon-color`, `--ds-table-cell-pad-x/y`. (Renamed 2026-06: `--ds-table-header-*` → `--ds-table-head-*`, matching the tokens reference.)
+Tokens: `--ds-table-border: var(--border-default)`, `--ds-table-radius: var(--radius-md)`, `--ds-table-bg-color`, `--ds-table-head-text-color: var(--text-secondary)`, `--ds-table-head-bg-color: var(--surface-secondary)`, `--ds-table-head-font-size: var(--font-size-xs)`, `--ds-table-row-hover-bg-color`, `--ds-table-row-selected-bg-color`, `--ds-table-divider`, `--ds-table-sort-active-icon-color`, `--ds-table-cell-padding-x/y`. (Renamed 2026-06: `--ds-table-header-*` → `--ds-table-head-*`, matching the tokens reference.)
 
 ---
 
@@ -567,7 +567,7 @@ Series: `LineChartSeries = { id: string; label: string; data: readonly (number |
 `yAxisMode` only matters once a series sets `axis: 'secondary'`, and every name says what is done to the GRIDLINES: `'aligned'` shares one set and rounds the secondary step up, so that series stops short of the top; `'exact'` shares the gridlines but ends the secondary axis on its largest reading, so it uses the full height and its labels are not round; `'dual-grid'` scales and grids each axis on its own; `'split'` draws two plots one above the other, sharing the category axis. `curve` decides what is drawn BETWEEN two readings: `'linear'` asserts nothing, `'step'` holds each reading to the next, `'smooth'` is a monotone cubic that draws no peak the data lacks. `stack` decides how several series share the axis: `'stacked'` starts each where the one below it ended, `'normalized'` divides by the category's own total so the axis reads in shares. Only a series with `area: true` fills, and stacking runs per axis.
 Colour: series ARE different things, so the categorical palette applies — `--ds-chart-series-1-color` onward, by position or by `slot`.
 `annotations: LineChartAnnotation[]` pins a label over one reading — `{ categoryIndex, label, seriesId? }`, the series defaulting to the first plotted one — so a peak reads in a screenshot with no pointer. Placed above the reading, below it where the plot has no room, and anchored to its own edge within 48 view units of one. An annotation whose series is hidden or whose reading is `null` draws nothing. Marked `aria-hidden`: the annex table already carries every reading, so announcing it again reads the number twice.
-Tokens: `--ds-line-chart-plot-height`, `--ds-line-chart-line-width`, `--ds-line-chart-dot-radius`, `--ds-line-chart-area-opacity`, `--ds-line-chart-swatch-size`, `--ds-line-chart-grid-line-color`, `--ds-line-chart-axis-line-color`, `--ds-line-chart-axis-label-color`, `--ds-line-chart-axis-font-size`, `--ds-line-chart-annotation-color`, `--ds-line-chart-annotation-font-size`, `--ds-line-chart-annotation-weight`, `--ds-line-chart-annotation-halo-color`, `--ds-line-chart-annotation-halo-width`.
+Tokens: `--ds-line-chart-plot-height`, `--ds-line-chart-line-width`, `--ds-line-chart-dot-radius`, `--ds-line-chart-area-opacity`, `--ds-line-chart-swatch-size`, `--ds-line-chart-grid-line-color`, `--ds-line-chart-axis-line-color`, `--ds-line-chart-axis-label-color`, `--ds-line-chart-axis-font-size`, `--ds-line-chart-annotation-color`, `--ds-line-chart-annotation-font-size`, `--ds-line-chart-annotation-font-weight`, `--ds-line-chart-annotation-halo-color`, `--ds-line-chart-annotation-halo-width`.
 
 #### Chart defaults — what `DS_CONFIG` decides once
 Four chart inputs resolve through `DS_CONFIG.chart` because they are one decision per APP, not per plot: `valueFormat` (a number reads one way in a product; a formatter passed per chart drifts as soon as there are two screens), `dataTable` (whether the numbers behind a plot have a non-visual route is an accessibility policy), `emptyText` and `errorText` (copy, and the place localisation lands). Precedence is the input, then the config, then the built-in — so binding one on a single chart still wins.

@@ -95,9 +95,9 @@ export class ColorPickerComponent
   private readonly panelTokens = [
     '--ds-color-picker-swatch',
     '--ds-color-picker-preview',
-    '--ds-color-picker-panel-w',
-    '--ds-color-picker-sv-h',
-    '--ds-color-picker-hue-h',
+    '--ds-color-picker-panel-width',
+    '--ds-color-picker-saturation-value-height',
+    '--ds-color-picker-hue-height',
     '--ds-color-picker-thumb',
   ];
 

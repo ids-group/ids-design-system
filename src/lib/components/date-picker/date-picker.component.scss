@@ -19,13 +19,13 @@
   --_date-picker-required-color: var(--ds-date-picker-required-color, var(--error));
   --_date-picker-placeholder-color: var(--ds-date-picker-placeholder-color, var(--text-tertiary));
   --_date-picker-trigger-radius: var(--ds-date-picker-trigger-radius, var(--ds-radius-control));
-  --_date-picker-trigger-pad-x: var(--ds-date-picker-trigger-pad-x, var(--field-pad-x));
+  --_date-picker-trigger-pad-x: var(--ds-date-picker-trigger-padding-x, var(--field-pad-x));
 
   /* Mono by default: the ghost mask paints the placeholders and the real value sits
      behind it, so only fixed-width digits keep the two in step. */
   --_date-picker-value-font-family: var(--ds-date-picker-value-font-family, var(--font-mono));
   --_date-picker-value-font-size: var(--ds-date-picker-value-font-size, var(--font-size-s));
-  --_date-picker-value-weight: var(--ds-date-picker-value-weight, var(--font-weight-regular));
+  --_date-picker-value-weight: var(--ds-date-picker-value-font-weight, var(--font-weight-regular));
 
   /* Hugs its content so an outer grid or flex track cannot stretch the field; a
      consumer opts into wider by setting a width on the host. */

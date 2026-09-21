@@ -1,6 +1,6 @@
 @use '../../styles/focus' as focus;
 :host {
-  --_slider-track-h: var(--ds-slider-track-h, var(--slider-track-h));
+  --_slider-track-h: var(--ds-slider-track-height, var(--slider-track-h));
   --_slider-thumb-size: var(--ds-slider-thumb-size, var(--slider-thumb-size));
   --_slider-thumb-bw: var(--ds-slider-thumb-bw, var(--slider-thumb-bw));
   --_slider-fill-color: var(--ds-slider-fill-color, var(--accent));

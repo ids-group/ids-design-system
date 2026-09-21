@@ -1,8 +1,8 @@
 @use '../../styles/focus' as focus;
 
 :host {
-  --_list-item-pad-y: var(--ds-list-item-pad-y, var(--list-item-pad-y));
-  --_list-item-pad-x: var(--ds-list-item-pad-x, var(--list-item-pad-x));
+  --_list-item-pad-y: var(--ds-list-item-padding-y, var(--list-item-pad-y));
+  --_list-item-pad-x: var(--ds-list-item-padding-x, var(--list-item-pad-x));
   --_list-item-gap: var(--ds-list-item-gap, var(--list-item-gap));
   --_list-item-hover-bg-color: var(--ds-list-item-hover-bg-color, var(--surface-secondary));
   --_list-item-selected-bg-color: var(--ds-list-item-selected-bg-color, var(--accent-surface-tint));
