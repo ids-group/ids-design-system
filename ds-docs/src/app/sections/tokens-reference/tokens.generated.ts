@@ -3337,6 +3337,21 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "description": "",
     "tokens": [
       {
+        "name": "--ds-checkbox-row-align",
+        "value": "center",
+        "notes": "Cross-alignment of the box and its label."
+      },
+      {
+        "name": "--ds-checkbox-gap",
+        "value": "var(--space-2)",
+        "notes": "Space between the box and its label."
+      },
+      {
+        "name": "--ds-checkbox-message-indent",
+        "value": "0px",
+        "notes": "Indent of the hint under a checkbox; set it to the box plus the gap to align with the label."
+      },
+      {
         "name": "--ds-checkbox-label-font-weight",
         "value": "var(--font-weight-regular)",
         "notes": "Checkbox label weight — the third label property; size and colour were already hookable."

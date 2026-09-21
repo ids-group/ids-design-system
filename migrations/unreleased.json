@@ -111,10 +111,24 @@
         "extends ButtonComponent",
         "ButtonComponent",
         "extends PaginationComponent",
-        "PaginationComponent"
+        "PaginationComponent",
+        "extends AccordionComponent",
+        "AccordionComponent",
+        "extends TableComponent",
+        "TableComponent",
+        "extends AppLayoutComponent",
+        "AppLayoutComponent",
+        "extends DatePickerComponent",
+        "DatePickerComponent",
+        "extends SegmentedComponent",
+        "SegmentedComponent",
+        "extends CheckboxComponent",
+        "CheckboxComponent",
+        "extends AppLayoutScrollService",
+        "AppLayoutScrollService"
       ],
       "verify": "Every subclass of the listed components builds, and any member it declares that the base now also declares carries `override`.",
-      "note": "`LineChartComponent` gained `curve`, `stack`, `yAxisLabel`, `secondaryAxisLabel` and the members behind them; `ChartComponent` gained `axisLabel`, `secondaryAxisLabel` and the three that thin and turn its category labels; `LineSeriesComponent` gained `curve`; `PieChartComponent` traded `thickness` for `innerRadius`, so a subclass overriding the old name overrides nothing; `ButtonComponent` gained `align` and `PaginationComponent` gained `size` and `layout`. Subclassing a DS component is unsupported, but a release that only adds can still fail such a build on a name collision, which is why the classes are listed here rather than in the additive notes."
+      "note": "`LineChartComponent`, `ChartComponent` and `LineSeriesComponent` gained members behind the new axis and curve inputs; `ButtonComponent` gained `align`, `PaginationComponent` `size` and `layout`, `SegmentedComponent` `joined`. `PieChartComponent` traded `thickness` for `innerRadius`, `AccordionComponent` `multi` for `multiple`, `TableComponent` `sortDir` for `sortDirection`, and `AppLayoutComponent` and `DatePickerComponent` changed a member's type with the symbol renames - a subclass overriding an old name now overrides nothing."
     },
     {
       "id": "bar-chart-value-accepts-a-range",
@@ -679,7 +693,9 @@
     "Seven styling hooks close gaps a consumer was reaching past: `--ds-badge-letter-spacing`, `--ds-pagination-label-letter-spacing` and `-label-text-transform`, `--ds-option-color` for an unselected picker row, `--ds-dropdown-empty-color` and `-font-size` for the no-results line, and `--ds-autocomplete-input-font-size`. Every default is the value the component already drew, so nothing moves. Purely additive - nothing to change.",
     "`ds-button` takes `align: 'center' | 'between'`. `'between'` pushes the label and a trailing icon to opposite edges, which only shows once `fullWidth` or a stretching cell widens the button past its contents. Default is unchanged. Purely additive - nothing to change.",
     "`ds-pagination` takes `size` (sm/md/lg, unset resolving `DS_CONFIG.control.size` then `sm`) and `layout: 'grouped' | 'spread'`. `'spread'` gives the nav full width and pushes the label and the controls apart. Both defaults draw what the component already drew. Purely additive - nothing to change.",
-    "The internal `--_*` custom properties now mirror the public token they read: `--_alert-padding-y` resolves `--ds-alert-padding-y`, so an inspector showing the internal name gives the settable one by dropping `--_` for `--ds-`. 171 were brought into line; 25 keep a different name because they carry a distinction the public token does not, such as the drawer's three widths behind one `--ds-drawer-width`. Internal names are not API and nothing supported reads them - nothing to change."
+    "The internal `--_*` custom properties now mirror the public token they read: `--_alert-padding-y` resolves `--ds-alert-padding-y`, so an inspector showing the internal name gives the settable one by dropping `--_` for `--ds-`. 171 were brought into line; 25 keep a different name because they carry a distinction the public token does not, such as the drawer's three widths behind one `--ds-drawer-width`. Internal names are not API and nothing supported reads them - nothing to change.",
+    "`ds-checkbox` takes three styling hooks its label already half had: `--ds-checkbox-row-align` for the box-and-label cross-alignment, `--ds-checkbox-gap` for the space between them, and `--ds-checkbox-message-indent` for the hint, which sits under the box by default and lines up with the label when set to the box plus the gap. Every default draws what the component drew before. Purely additive - nothing to change.",
+    "`ds-segmented` takes `joined`. Off by default, which is the padded track every consumer draws today. On, the segments share their edges, adjacent borders collapse into one hairline and only the two ends carry the group radius - the shape a row of bordered chips wants. It needs `--ds-segmented-segment-border` set, because the shared edge IS the border. Purely additive."
   ],
   "deleteList": []
 }

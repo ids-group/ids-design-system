@@ -49,6 +49,31 @@
   border-radius: var(--_segmented-radius);
 }
 
+/* The ends carry the group's radius and the seams between segments are square, so a row of
+   bordered chips reads as one control rather than as several. The negative margin is what
+   collapses two adjacent 1px borders into one. */
+:host(.joined) .track {
+  gap: 0;
+  padding: 0;
+  background: transparent;
+
+  .segment {
+    border-radius: 0;
+    margin-inline-start: calc(-1 * var(--border-width-default));
+
+    &:first-child {
+      border-start-start-radius: var(--_segmented-radius);
+      border-end-start-radius: var(--_segmented-radius);
+      margin-inline-start: 0;
+    }
+
+    &:last-child {
+      border-start-end-radius: var(--_segmented-radius);
+      border-end-end-radius: var(--_segmented-radius);
+    }
+  }
+}
+
 .segment {
   display: inline-flex;
   align-items: center;

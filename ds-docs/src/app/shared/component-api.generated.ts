@@ -7646,6 +7646,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Disables every segment."
+      },
+      {
+        "name": "joined",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Segments share their edges instead of floating in a padded track: borders collapse into one hairline and only the outer ends round. Needs `--ds-segmented-segment-border` to be set, since the shared edge IS the border."
       }
     ],
     "outputs": []
@@ -9240,7 +9249,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "kind": "input",
         "type": "(label: string, dir: SortDirection) => string",
         "union": null,
-        "default": "(label, dir) =>\n      dir\n        ? `Sorted by ${label}, ${dir === 'asc' ? 'ascending' : 'descending'}`\n        : `Sorting cleared`",
+        "default": "(label, dir) =>\n    dir\n      ? `Sorted by ${label}, ${dir === 'asc' ? 'ascending' : 'descending'}`\n      : `Sorting cleared`",
         "required": false,
         "description": "Wording for the sort announcement, so it can be translated. Receives the column's label and the new direction; return an empty string to say nothing."
       },

@@ -6,6 +6,12 @@
 
   // sm/lg are explicit overrides of the glyph size the mixin defaults.
   --_checkbox-label-fs: var(--font-size-s);
+  --_checkbox-row-align: var(--ds-checkbox-row-align, center);
+  --_checkbox-gap: var(--ds-checkbox-gap, var(--space-2));
+
+  /* The message sits under the box, not under the label. Zero keeps that; set it to the box plus
+     the gap to line the hint up with the text column. */
+  --_checkbox-message-indent: var(--ds-checkbox-message-indent, 0px);
 
   display: inline-flex;
 }
@@ -33,6 +39,12 @@
 }
 
 .control-line {
+  align-items: var(--_checkbox-row-align);
+
+  .control-text {
+    padding-inline-start: var(--_checkbox-gap);
+  }
+
   @include control-line.line(
     '.check',
     var(--ds-checkbox-label-font-weight, var(--font-weight-regular)) var(--ds-checkbox-label-font-size, var(--_checkbox-label-fs)) / var(--line-height-base) var(--font-sans),
@@ -42,5 +54,9 @@
 
 .check {
   @include check-box.box;
+}
+
+ds-field-message {
+  padding-inline-start: var(--_checkbox-message-indent);
 }
 

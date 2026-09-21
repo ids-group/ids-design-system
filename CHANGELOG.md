@@ -163,6 +163,29 @@
 
 ### Added
 
+- **`ds-checkbox` gets the three hooks its label already half had.** `--ds-checkbox-row-align`
+  for how the box and its label line up, `--ds-checkbox-gap` for the space between them, and
+  `--ds-checkbox-message-indent` for the hint.
+
+  ```scss
+  ds-checkbox { --ds-checkbox-message-indent: calc(var(--check-glyph-md) + var(--space-2)); }
+  ```
+
+  The hint sits under the box, which is where it has always been; set the indent to the box plus
+  the gap and it lines up with the label instead. The other two defaults draw what the component
+  drew before, so nothing moves on its own.
+
+- **`ds-segmented` takes `joined`.** The segments share their edges instead of floating in a
+  padded track: adjacent borders collapse into one hairline and only the two ends carry the group
+  radius.
+
+  ```html
+  <ds-segmented joined [options]="ranges" [(value)]="range" />
+  ```
+
+  It needs `--ds-segmented-segment-border` set, because the shared edge IS the border. Off by
+  default, which is the padded track every consumer draws today.
+
 - **`ds-button` takes `align`.** `'center'` is the default and what every button already drew;
   `'between'` pushes the label and a trailing icon to opposite edges.
 
@@ -431,7 +454,7 @@
 - **Exported class member surface grew — only matters if you SUBCLASS one of these.**
   `LineChartComponent` gained `curve`, `stack`, `yAxisLabel`, `secondaryAxisLabel` and five members
   behind them; `ChartComponent` gained `axisLabel`, `secondaryAxisLabel` and the three that thin and
-  turn its category labels; `LineSeriesComponent` gained `curve`; `ButtonComponent` gained `align`; `PaginationComponent` gained `size` and `layout`; `PieChartComponent` traded `thickness` for `innerRadius`, so a subclass overriding the old name now overrides nothing. Subclassing a DS component is
+  turn its category labels; `LineSeriesComponent` gained `curve`; `ButtonComponent` gained `align`; `PaginationComponent` gained `size` and `layout`; `SegmentedComponent` gained `joined`. `PieChartComponent` traded `thickness` for `innerRadius`, `AccordionComponent` `multi` for `multiple`, `TableComponent` `sortDir` for `sortDirection`, and `AppLayoutComponent` and `DatePickerComponent` changed a member's type with the symbol renames - a subclass overriding an old name now overrides nothing. Subclassing a DS component is
   unsupported, but a release that only adds can still fail such a build on a name collision: TS4114
   demands `override` for a same-named member, TS2416 fires where the signature differs. Rename your
   own member, or add `override` where it genuinely means the same thing.
