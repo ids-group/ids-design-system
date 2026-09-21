@@ -639,12 +639,18 @@ One ask left from that batch. The two column-chart gaps beside it shipped in v0.
   carrying a kind, branching edges carrying a label and a count, and a per-node run state. Nothing
   in the library draws one: bar, column, donut, funnel, line, meter, progress all plot QUANTITIES,
   and `ds-tree` is a hierarchy view rather than a canvas. The consumer built its own and renders it
-  on FOUR screens - `execute/active-journeys`, `execute/dashboard`, the campaign `journey` tab and
-  `prepare/offer-journey/builder` - which is not decoration: the campaign journey is what that
-  product is FOR.
+  on NINE screens - `execute/active-journeys`, `execute/dashboard`,
+  `prepare/offer-journey/builder` and the `journey` tab of all six campaigns - which is not
+  decoration: the campaign journey is what that product is FOR. Counted 2026-09-21 by loading all
+  71 ecm-portal screens plus all 5 agent-portal screens and reading the rendered DOM.
+  **It collides with a written non-goal, and that is the thing to settle.** The phase-2 chart spec
+  rules the family out by name - "no map, network, 3D, radar, rose, word cloud, candlestick. Wrong
+  audience, wrong renderer, or a known bad read." A branching journey is the one shape in that list
+  a consumer here actually ships, so either that line takes an exception or the answer is an
+  explicit no.
   **What it has to hold, read off the working implementation** (mm-ecm-platform-kb:
-  `prototype/projects/ecm-portal/src/app/features/programs/components/journey-canvas/`, 8
-  components across 19 files): a node kind that colours and labels its card (start, email, letter,
+  `prototype/projects/ecm-portal/src/app/features/programs/components/journey-canvas/`, 6
+  components across 20 files, 2 353 lines): a node kind that colours and labels its card (start, email, letter,
   wait, condition, end), an edge that carries a label and a count (`Yes · 0` / `No · 0`), a
   condition that fans to two columns and rejoins, an insert affordance sitting ON an edge, and a
   progress row per node while a run is live. Screenshot of a real one:
