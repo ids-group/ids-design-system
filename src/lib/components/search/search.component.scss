@@ -21,7 +21,7 @@
   --_search-focus-shadow: var(--ds-search-focus-shadow, var(--ds-field-focus-shadow));
   --_search-text-color:           var(--ds-search-text-color,           var(--text-primary));
   --_search-placeholder:  var(--ds-search-placeholder,  var(--text-tertiary));
-  --_search-maxw:         var(--ds-search-max-width,         none);
+  --_search-max-width:         var(--ds-search-max-width,         none);
 
   display: block;
 }
@@ -36,7 +36,7 @@
   padding: 0 var(--space-3);
   height: var(--_search-height);
   width: 100%;
-  max-width: var(--_search-maxw);
+  max-width: var(--_search-max-width);
   transition:
     border-color var(--duration-fast) var(--ease-standard),
     background var(--duration-fast) var(--ease-standard);

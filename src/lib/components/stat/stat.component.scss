@@ -12,7 +12,7 @@
   --_stat-bg-color:          var(--ds-stat-bg-color,          var(--surface-default));
   --_stat-border:      var(--ds-stat-border,      var(--border-divider));
   --_stat-radius:      var(--ds-stat-radius,      var(--ds-radius-panel));
-  --_stat-pad:         var(--ds-stat-padding,         var(--ds-surface-padding));
+  --_stat-padding:         var(--ds-stat-padding,         var(--ds-surface-padding));
   --_stat-label-color: var(--ds-stat-label-color, var(--text-tertiary));
   --_stat-value-color: var(--ds-stat-value-color, var(--text-primary));
   --_stat-value-font-size: var(--ds-stat-value-font-size, var(--font-size-h2));
@@ -52,7 +52,7 @@
   background-color: var(--_stat-bg-color);
   border: var(--border-width-default) solid var(--_stat-border);
   border-radius: var(--_stat-radius);
-  padding: var(--_stat-pad);
+  padding: var(--_stat-padding);
 
   // Fills a stretched host, so a KPI row of tiles with different content paints equal-height
   // cards. Content-sized when the host is not stretched.

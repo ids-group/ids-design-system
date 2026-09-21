@@ -1,6 +1,6 @@
 @use '../../styles/focus' as focus;
 :host {
-  --_slider-track-h: var(--ds-slider-track-height, var(--slider-track-h));
+  --_slider-track-height: var(--ds-slider-track-height, var(--slider-track-h));
   --_slider-thumb-size: var(--ds-slider-thumb-size, var(--slider-thumb-size));
   --_slider-thumb-bw: var(--ds-slider-thumb-bw, var(--slider-thumb-bw));
   --_slider-fill-color: var(--ds-slider-fill-color, var(--accent));
@@ -12,17 +12,17 @@
   flex-direction: column;
 
   /* Vertical room so the thumb (taller than the track) is not clipped. */
-  padding-block: calc((var(--_slider-thumb-size) - var(--_slider-track-h)) / 2);
+  padding-block: calc((var(--_slider-thumb-size) - var(--_slider-track-height)) / 2);
 
   /* Clear the thumb's overhang below the track before the hint line. */
   gap: calc(
-    (var(--_slider-thumb-size) - var(--_slider-track-h)) / 2 + var(--space-1-5)
+    (var(--_slider-thumb-size) - var(--_slider-track-height)) / 2 + var(--space-1-5)
   );
 }
 
 .track {
   position: relative;
-  height: var(--_slider-track-h);
+  height: var(--_slider-track-height);
   background-color: var(--_slider-track-color);
   border-radius: var(--radius-pill);
   cursor: pointer;

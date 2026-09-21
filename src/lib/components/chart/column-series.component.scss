@@ -16,11 +16,11 @@
     --ds-column-chart-cap-radius,
     var(--ds-chart-mark-cap-radius)
   );
-  --_column-chart-hatch-color: var(
+  --_chart-hatch-color: var(
     --ds-chart-hatch-color,
     var(--surface-default)
   );
-  --_column-chart-hatch-width: var(--ds-chart-hatch-width, 3px);
+  --_chart-hatch-width: var(--ds-chart-hatch-width, 3px);
 }
 
 // One user unit is one CSS pixel inside `ds-chart`, which is what lets a cap in pixels stay a
@@ -93,8 +93,8 @@
 }
 
 .hatch-stripe {
-  stroke: var(--_column-chart-hatch-color);
-  stroke-width: var(--_column-chart-hatch-width);
+  stroke: var(--_chart-hatch-color);
+  stroke-width: var(--_chart-hatch-width);
 }
 
 .bar-hatch {

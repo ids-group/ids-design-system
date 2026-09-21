@@ -1,30 +1,30 @@
 @use '../../styles/focus' as focus;
 
 /* The item host is one row. In horizontal mode it is a two-column grid whose
-   label column width inherits --_dl-label-w from the parent ds-description-list
+   label column width inherits --_description-list-label-width from the parent ds-description-list
    (falls back to the global token when used standalone). */
 
 :host {
   /* The term is the same eyebrow role ds-field-label and the modal eyebrow
      expose in full, so it takes the same five properties. Defaults reproduce
      what the shorthand pinned, so nothing moves until one is set. */
-  --_term-color: var(--ds-description-item-term-color, var(--text-tertiary));
-  --_term-font-size: var(--ds-description-item-term-font-size, var(--font-size-s));
-  --_term-weight: var(--ds-description-item-term-font-weight, var(--font-weight-regular));
-  --_term-tracking: var(--ds-description-item-term-letter-spacing, normal);
-  --_term-transform: var(--ds-description-item-term-text-transform, none);
+  --_description-item-term-color: var(--ds-description-item-term-color, var(--text-tertiary));
+  --_description-item-term-font-size: var(--ds-description-item-term-font-size, var(--font-size-s));
+  --_description-item-term-font-weight: var(--ds-description-item-term-font-weight, var(--font-weight-regular));
+  --_description-item-term-letter-spacing: var(--ds-description-item-term-letter-spacing, normal);
+  --_description-item-term-text-transform: var(--ds-description-item-term-text-transform, none);
 
   /* The details side is the VALUE, not a label: it gets the three properties it
      actually sets. Transform and tracking would be API with no case behind it. */
-  --_details-color: var(--ds-description-item-details-color, var(--text-primary));
-  --_details-font-size: var(--ds-description-item-details-font-size, var(--font-size-s));
-  --_details-weight: var(--ds-description-item-details-font-weight, var(--font-weight-regular));
+  --_description-item-details-color: var(--ds-description-item-details-color, var(--text-primary));
+  --_description-item-details-font-size: var(--ds-description-item-details-font-size, var(--font-size-s));
+  --_description-item-details-font-weight: var(--ds-description-item-details-font-weight, var(--font-weight-regular));
 
   display: grid;
 
   /* minmax(0, …) stops both tracks from expanding to their min-content width */
-  grid-template-columns: minmax(0, var(--_dl-label-w, var(--dl-spec-label-w))) minmax(0, 1fr);
-  column-gap: var(--_dl-col-gap, var(--space-5));
+  grid-template-columns: minmax(0, var(--_description-list-label-width, var(--dl-spec-label-w))) minmax(0, 1fr);
+  column-gap: var(--_description-list-column-gap, var(--space-5));
   align-items: baseline;
 }
 
@@ -35,12 +35,12 @@
 }
 
 .term {
-  color: var(--_term-color);
+  color: var(--_description-item-term-color);
   font:
-    var(--_term-weight) var(--_term-font-size) / var(--line-height-base)
+    var(--_description-item-term-font-weight) var(--_description-item-term-font-size) / var(--line-height-base)
     var(--font-sans);
-  letter-spacing: var(--_term-tracking);
-  text-transform: var(--_term-transform);
+  letter-spacing: var(--_description-item-term-letter-spacing);
+  text-transform: var(--_description-item-term-text-transform);
 }
 
 .details {
@@ -48,9 +48,9 @@
   align-items: center;
   gap: var(--space-2);
   min-width: 0;
-  color: var(--_details-color);
+  color: var(--_description-item-details-color);
   font:
-    var(--_details-weight) var(--_details-font-size) / var(--line-height-base)
+    var(--_description-item-details-font-weight) var(--_description-item-details-font-size) / var(--line-height-base)
     var(--font-sans);
 }
 

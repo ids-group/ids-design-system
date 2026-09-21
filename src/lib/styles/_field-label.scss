@@ -14,16 +14,16 @@
 // this, since those shipped in 0.7.x.
 @mixin field-label {
   --_field-label-font-size: var(--ds-field-label-font-size, var(--font-size-xs));
-  --_field-label-weight: var(--ds-field-label-font-weight, var(--font-weight-bold));
+  --_field-label-font-weight: var(--ds-field-label-font-weight, var(--font-weight-bold));
   --_field-label-color: var(--ds-field-label-color, var(--text-secondary));
-  --_field-label-transform: var(--ds-field-label-text-transform, none);
-  --_field-label-tracking: var(--ds-field-label-letter-spacing, normal);
+  --_field-label-text-transform: var(--ds-field-label-text-transform, none);
+  --_field-label-letter-spacing: var(--ds-field-label-letter-spacing, normal);
 
   display: flex;
   align-items: center;
   gap: var(--field-gap-req);
-  font: var(--_field-label-weight) var(--_field-label-font-size) / var(--line-height-base) var(--font-sans);
+  font: var(--_field-label-font-weight) var(--_field-label-font-size) / var(--line-height-base) var(--font-sans);
   color: var(--_field-label-color);
-  text-transform: var(--_field-label-transform);
-  letter-spacing: var(--_field-label-tracking);
+  text-transform: var(--_field-label-text-transform);
+  letter-spacing: var(--_field-label-letter-spacing);
 }

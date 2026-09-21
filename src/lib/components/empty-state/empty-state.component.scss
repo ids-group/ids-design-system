@@ -5,13 +5,13 @@
      sentence, the empty state copy is wrong. */
 
 :host {
-  --_es-tile-bg-color:   var(--ds-empty-state-tile-bg-color,  var(--accent-surface-tint));
-  --_es-tile-icon-color:   var(--ds-empty-state-tile-icon-color,  var(--text-secondary));
-  --_es-title-text-color:  var(--ds-empty-state-title-text-color, var(--text-primary));
-  --_es-title-fs: var(--ds-empty-state-title-font-size, var(--font-size-h5));
-  --_es-body-text-color:   var(--ds-empty-state-body-text-color,  var(--text-secondary));
-  --_es-body-maxw: var(--ds-empty-state-body-max-width, var(--empty-body-maxw));
-  --_es-pad:       var(--ds-empty-state-padding,       var(--space-12) var(--space-6));
+  --_empty-state-tile-bg-color:   var(--ds-empty-state-tile-bg-color,  var(--accent-surface-tint));
+  --_empty-state-tile-icon-color:   var(--ds-empty-state-tile-icon-color,  var(--text-secondary));
+  --_empty-state-title-text-color:  var(--ds-empty-state-title-text-color, var(--text-primary));
+  --_empty-state-title-font-size: var(--ds-empty-state-title-font-size, var(--font-size-h5));
+  --_empty-state-body-text-color:   var(--ds-empty-state-body-text-color,  var(--text-secondary));
+  --_empty-state-body-max-width: var(--ds-empty-state-body-max-width, var(--empty-body-maxw));
+  --_empty-state-padding:       var(--ds-empty-state-padding,       var(--space-12) var(--space-6));
 
   display: block;
 }
@@ -21,7 +21,7 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: var(--_es-pad);
+  padding: var(--_empty-state-padding);
   gap: var(--space-3);
   position: relative;
 
@@ -29,21 +29,21 @@
     width: var(--empty-icon-size);
     height: var(--empty-icon-size);
     border-radius: var(--radius-lg);
-    background-color: var(--_es-tile-bg-color);
-    color: var(--_es-tile-icon-color);
+    background-color: var(--_empty-state-tile-bg-color);
+    color: var(--_empty-state-tile-icon-color);
     display: grid;
     place-items: center;
     margin-bottom: var(--space-2);
   }
   .title {
-    font: var(--font-weight-bold) var(--_es-title-fs) / var(--line-height-snug) var(--font-sans);
-    color: var(--_es-title-text-color);
+    font: var(--font-weight-bold) var(--_empty-state-title-font-size) / var(--line-height-snug) var(--font-sans);
+    color: var(--_empty-state-title-text-color);
     margin: 0;
   }
   .body {
     font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
-    color: var(--_es-body-text-color);
-    max-width: var(--_es-body-maxw);
+    color: var(--_empty-state-body-text-color);
+    max-width: var(--_empty-state-body-max-width);
     margin: 0;
   }
   .cta {
@@ -58,17 +58,17 @@
   }
 
   &.error {
-    --_es-tile-bg-color: var(--ds-empty-state-tile-bg-color, var(--error-subtitle));
-    --_es-tile-icon-color: var(--ds-empty-state-tile-icon-color, var(--error-text));
+    --_empty-state-tile-bg-color: var(--ds-empty-state-tile-bg-color, var(--error-subtitle));
+    --_empty-state-tile-icon-color: var(--ds-empty-state-tile-icon-color, var(--error-text));
   }
 
   &.locked {
-    --_es-tile-bg-color: var(--ds-empty-state-tile-bg-color, var(--surface-muted));
-    --_es-tile-icon-color: var(--ds-empty-state-tile-icon-color, var(--text-tertiary));
+    --_empty-state-tile-bg-color: var(--ds-empty-state-tile-bg-color, var(--surface-muted));
+    --_empty-state-tile-icon-color: var(--ds-empty-state-tile-icon-color, var(--text-tertiary));
   }
 
   &.success {
-    --_es-tile-bg-color: var(--ds-empty-state-tile-bg-color, var(--success-subtitle));
-    --_es-tile-icon-color: var(--ds-empty-state-tile-icon-color, var(--success-text));
+    --_empty-state-tile-bg-color: var(--ds-empty-state-tile-bg-color, var(--success-subtitle));
+    --_empty-state-tile-icon-color: var(--ds-empty-state-tile-icon-color, var(--success-text));
   }
 }

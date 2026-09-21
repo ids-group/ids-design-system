@@ -1,12 +1,12 @@
 :host {
   --_timeline-node-size: var(--ds-timeline-node-size, var(--timeline-node-size));
-  --_timeline-spine-w: var(--ds-timeline-spine-width, var(--timeline-spine-w));
+  --_timeline-spine-width: var(--ds-timeline-spine-width, var(--timeline-spine-w));
   --_timeline-gap: var(--ds-timeline-gap, var(--timeline-gap));
 
   /* Default (pending) node — bordered neutral surface. Tones override below. */
   --_timeline-node-bg-color: var(--ds-timeline-node-bg-color, var(--surface-secondary));
   --_timeline-node-color: var(--ds-timeline-node-color, var(--text-tertiary));
-  --_timeline-node-border: var(--ds-timeline-node-border-color, var(--border-strong));
+  --_timeline-node-border-color: var(--ds-timeline-node-border-color, var(--border-strong));
   --_timeline-spine-color: var(--ds-timeline-spine-color, var(--border-divider));
 
   display: grid;
@@ -36,12 +36,12 @@
   border-radius: var(--radius-pill);
   background-color: var(--_timeline-node-bg-color);
   color: var(--_timeline-node-color);
-  border: var(--border-width-strong) solid var(--_timeline-node-border);
+  border: var(--border-width-strong) solid var(--_timeline-node-border-color);
 }
 
 .spine {
   flex: 1;
-  width: var(--_timeline-spine-w);
+  width: var(--_timeline-spine-width);
   margin-top: var(--space-1);
   background-color: var(--_timeline-spine-color);
 }
@@ -79,25 +79,25 @@
 :host([data-tone='primary']) {
   --_timeline-node-bg-color: var(--accent);
   --_timeline-node-color: var(--text-on-primary);
-  --_timeline-node-border: var(--accent);
+  --_timeline-node-border-color: var(--accent);
 }
 :host([data-tone='success']) {
   --_timeline-node-bg-color: var(--success);
   --_timeline-node-color: var(--text-on-success);
-  --_timeline-node-border: var(--success);
+  --_timeline-node-border-color: var(--success);
 }
 :host([data-tone='warning']) {
   --_timeline-node-bg-color: var(--warning);
   --_timeline-node-color: var(--text-on-warning);
-  --_timeline-node-border: var(--warning);
+  --_timeline-node-border-color: var(--warning);
 }
 :host([data-tone='error']) {
   --_timeline-node-bg-color: var(--error);
   --_timeline-node-color: var(--text-on-error);
-  --_timeline-node-border: var(--error);
+  --_timeline-node-border-color: var(--error);
 }
 :host([data-tone='muted']) {
   --_timeline-node-bg-color: var(--surface-secondary);
   --_timeline-node-color: var(--text-tertiary);
-  --_timeline-node-border: var(--border-strong);
+  --_timeline-node-border-color: var(--border-strong);
 }

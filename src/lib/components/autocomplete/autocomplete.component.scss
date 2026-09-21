@@ -29,8 +29,8 @@
   --ds-dropdown-panel-max-height: var(--ds-autocomplete-panel-max-height, var(--picker-maxh));
 
   --_autocomplete-focus-shadow: var(--ds-autocomplete-focus-shadow, var(--ds-field-focus-shadow));
-  --_autocomplete-maxw: var(--ds-autocomplete-max-width, none);
-  --_autocomplete-input-minw: var(--ds-autocomplete-input-min-width, 40px);
+  --_autocomplete-max-width: var(--ds-autocomplete-max-width, none);
+  --_autocomplete-input-min-width: var(--ds-autocomplete-input-min-width, 40px);
   --_autocomplete-input-font-size: var(--ds-autocomplete-input-font-size, var(--font-size-s));
   --_autocomplete-bg-color: var(--ds-autocomplete-bg-color, var(--surface-default));
   --_autocomplete-border-color: var(--ds-autocomplete-border-color, var(--border-default));
@@ -43,7 +43,7 @@
   flex-direction: column;
   gap: var(--field-label-gap);
   width: 100%;
-  max-width: var(--_autocomplete-maxw);
+  max-width: var(--_autocomplete-max-width);
   position: relative;
 }
 
@@ -51,7 +51,7 @@
    re-defaults to 100% so chips still wrap at the parent edge, and an explicit
    --ds-autocomplete-max-width wins in both modes. */
 :host(.content-width) {
-  --_autocomplete-maxw: var(--ds-autocomplete-max-width, 100%);
+  --_autocomplete-max-width: var(--ds-autocomplete-max-width, 100%);
 
   width: fit-content;
 }
@@ -170,7 +170,7 @@
 
 .autocomplete-input {
   flex: 1;
-  min-width: var(--_autocomplete-input-minw);
+  min-width: var(--_autocomplete-input-min-width);
 
   /* Collapsed, not removed: the input keeps focus, so clicking the field opens the
      panel and expands it again, and typing still filters. Removing it would drop

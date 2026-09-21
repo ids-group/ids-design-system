@@ -1,6 +1,6 @@
 :host {
-  --_bottom-sheet-maxw: var(--ds-bottom-sheet-max-width, 480px);
-  --_bottom-sheet-maxh: var(--ds-bottom-sheet-max-height, 80%);
+  --_bottom-sheet-max-width: var(--ds-bottom-sheet-max-width, 480px);
+  --_bottom-sheet-max-height: var(--ds-bottom-sheet-max-height, 80%);
   --_bottom-sheet-radius: var(--ds-bottom-sheet-radius, var(--ds-radius-panel));
   --_bottom-sheet-bg-color: var(--ds-bottom-sheet-bg-color, var(--surface-default));
   --_bottom-sheet-scrim-color: var(--ds-bottom-sheet-scrim-color, var(--surface-scrim));
@@ -58,7 +58,7 @@
   --_ds-enter-y: 100%;
 
   position: relative;
-  width: min(100%, var(--_bottom-sheet-maxw));
+  width: min(100%, var(--_bottom-sheet-max-width));
   margin-inline: auto;
   background: var(--_bottom-sheet-bg-color);
   border-radius: var(--_bottom-sheet-radius) var(--_bottom-sheet-radius) 0 0;
@@ -69,7 +69,7 @@
   animation-name: var(--_bottom-sheet-enter-keyframes);
   animation-duration: var(--_bottom-sheet-enter-duration);
   animation-timing-function: var(--_bottom-sheet-enter-easing);
-  max-height: var(--_bottom-sheet-maxh);
+  max-height: var(--_bottom-sheet-max-height);
   display: flex;
   flex-direction: column;
   transition: transform var(--duration-base) var(--ease-decelerate);

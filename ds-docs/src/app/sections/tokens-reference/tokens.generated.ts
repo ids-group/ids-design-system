@@ -5053,32 +5053,32 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-modal-header-padding-top",
-        "value": "var(--_modal-header-pad-y)",
+        "value": "var(--_modal-header-padding-y)",
         "notes": "Padding on the modal's header, top edge only. Falls back to --ds-modal-header-padding-y, which sets both."
       },
       {
         "name": "--ds-modal-header-padding-bottom",
-        "value": "var(--_modal-header-pad-y)",
+        "value": "var(--_modal-header-padding-y)",
         "notes": "Padding on the modal's header, bottom edge only. Falls back to --ds-modal-header-padding-y, which sets both."
       },
       {
         "name": "--ds-modal-body-padding-top",
-        "value": "var(--_modal-body-pad-y)",
+        "value": "var(--_modal-body-padding-y)",
         "notes": "Padding on the modal's body, top edge only. Falls back to --ds-modal-body-padding-y, which sets both."
       },
       {
         "name": "--ds-modal-body-padding-bottom",
-        "value": "var(--_modal-body-pad-y)",
+        "value": "var(--_modal-body-padding-y)",
         "notes": "Padding on the modal's body, bottom edge only. Falls back to --ds-modal-body-padding-y, which sets both."
       },
       {
         "name": "--ds-modal-actions-padding-top",
-        "value": "var(--_modal-actions-pad-y)",
+        "value": "var(--_modal-actions-padding-y)",
         "notes": "Padding on the modal's actions, top edge only. Falls back to --ds-modal-actions-padding-y, which sets both."
       },
       {
         "name": "--ds-modal-actions-padding-bottom",
-        "value": "var(--_modal-actions-pad-y)",
+        "value": "var(--_modal-actions-padding-y)",
         "notes": "Padding on the modal's actions, bottom edge only. Falls back to --ds-modal-actions-padding-y, which sets both."
       },
       {
@@ -5217,7 +5217,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-number-stepper-field-width",
-        "value": "calc(var(--_field-box-height) * 1.25)",
+        "value": "calc(var(--_field-height) * 1.25)",
         "notes": ""
       }
     ]
@@ -5808,7 +5808,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-segmented-radius",
-        "value": "calc(var(--_segmented-r-inner) + var(--_segmented-pad))",
+        "value": "calc(var(--_segmented-radius-inner) + var(--_segmented-padding))",
         "notes": "Outer radius of the segmented track. Defaults to the inner radius plus the track padding, so the selected chip and the track stay concentric — set both if you override this."
       },
       {
@@ -7084,22 +7084,22 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-table-cell-padding-top",
-        "value": "var(--_table-cell-pad-y)",
+        "value": "var(--_table-cell-padding-y)",
         "notes": "Per-side cell padding override; falls back to --ds-table-cell-padding-y."
       },
       {
         "name": "--ds-table-cell-padding-right",
-        "value": "var(--_table-cell-pad-x)",
+        "value": "var(--_table-cell-padding-x)",
         "notes": "Per-side cell padding override (also the header gutter); falls back to --ds-table-cell-padding-x."
       },
       {
         "name": "--ds-table-cell-padding-bottom",
-        "value": "var(--_table-cell-pad-y)",
+        "value": "var(--_table-cell-padding-y)",
         "notes": "Per-side cell padding override; falls back to --ds-table-cell-padding-y."
       },
       {
         "name": "--ds-table-cell-padding-left",
-        "value": "var(--_table-cell-pad-x)",
+        "value": "var(--_table-cell-padding-x)",
         "notes": "Per-side cell padding override (also the header gutter) — set 0 for a flush first column; falls back to --ds-table-cell-padding-x."
       },
       {
@@ -7206,12 +7206,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-tab-padding-top",
-        "value": "var(--_tab-pad-y)",
+        "value": "var(--_tab-padding-y)",
         "notes": "Per-side tab padding override; falls back to --ds-tab-padding-y."
       },
       {
         "name": "--ds-tab-padding-bottom",
-        "value": "var(--_tab-pad-y)",
+        "value": "var(--_tab-padding-y)",
         "notes": "Per-side tab padding override; falls back to --ds-tab-padding-y. An underline tab usually wants its padding here only."
       },
       {

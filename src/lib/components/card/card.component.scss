@@ -13,7 +13,7 @@
   --_card-bg-color:           var(--ds-card-bg-color,           var(--surface-default));
   --_card-border:       var(--ds-card-border,       var(--border-divider));
   --_card-radius:       var(--ds-card-radius,       var(--ds-radius-panel));
-  --_card-pad:          var(--ds-card-padding,          var(--ds-surface-padding));
+  --_card-padding:          var(--ds-card-padding,          var(--ds-surface-padding));
   --_card-shadow:       var(--ds-card-shadow,       none);
   --_card-shadow-hover: var(--ds-card-shadow-hover, var(--shadow-1));
   --_card-hover-lift:   var(--ds-card-hover-lift,   var(--card-hover-lift));
@@ -24,7 +24,7 @@
   background-color: var(--_card-bg-color);
   border: var(--border-width-default) solid var(--_card-border);
   border-radius: var(--_card-radius);
-  padding: var(--_card-pad);
+  padding: var(--_card-padding);
   box-shadow: var(--_card-shadow);
 
   /* `visible` by default and NOT clipped: the rounded box here is the card, so a
@@ -50,8 +50,8 @@
   &.interactive:focus-visible { @include focus.ring; }
 
   // Padding presets re-bind the resolver; a consumer --ds-card-padding still wins.
-  &.padding-none { --_card-pad: var(--ds-card-padding, 0); }
-  &.padding-sm   { --_card-pad: var(--ds-card-padding, var(--space-4)); }
-  &.padding-md   { --_card-pad: var(--ds-card-padding, var(--space-6)); }
-  &.padding-lg   { --_card-pad: var(--ds-card-padding, var(--space-8)); }
+  &.padding-none { --_card-padding: var(--ds-card-padding, 0); }
+  &.padding-sm   { --_card-padding: var(--ds-card-padding, var(--space-4)); }
+  &.padding-md   { --_card-padding: var(--ds-card-padding, var(--space-6)); }
+  &.padding-lg   { --_card-padding: var(--ds-card-padding, var(--space-8)); }
 }

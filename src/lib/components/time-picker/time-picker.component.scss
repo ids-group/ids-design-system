@@ -22,11 +22,11 @@
     var(--text-primary)
   );
   --_time-picker-trigger-radius: var(--ds-time-picker-trigger-radius, var(--ds-radius-control));
-  --_time-picker-trigger-pad-x: var(--ds-time-picker-trigger-padding-x, var(--field-pad-x));
+  --_time-picker-trigger-padding-x: var(--ds-time-picker-trigger-padding-x, var(--field-pad-x));
   --_time-picker-required-color: var(--ds-time-picker-required-color, var(--error));
   --_time-picker-value-font-family: var(--ds-time-picker-value-font-family, var(--font-sans));
   --_time-picker-value-font-size: var(--ds-time-picker-value-font-size, var(--font-size-s));
-  --_time-picker-value-weight: var(--ds-time-picker-value-font-weight, var(--font-weight-regular));
+  --_time-picker-value-font-weight: var(--ds-time-picker-value-font-weight, var(--font-weight-regular));
 
   display: block;
 }
@@ -87,7 +87,7 @@
   background: var(--_time-picker-trigger-bg-color);
   border: var(--border-width-default) solid var(--_time-picker-trigger-border);
   border-radius: var(--_time-picker-trigger-radius);
-  padding: 0 var(--_time-picker-trigger-pad-x);
+  padding: 0 var(--_time-picker-trigger-padding-x);
 
   @include field-box.field-box-height(md);
 
@@ -146,7 +146,7 @@
   text-align: left;
   font-family: var(--_time-picker-value-font-family);
   font-size: var(--_time-picker-value-font-size);
-  font-weight: var(--_time-picker-value-weight);
+  font-weight: var(--_time-picker-value-font-weight);
   font-variant-numeric: tabular-nums;
 }
 

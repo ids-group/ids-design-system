@@ -33,7 +33,7 @@
    not jump when the first page arrives. */
 .loading-space {
   height: calc(
-    (var(--_table-cell-pad-y) * 2 + var(--line-height-base) * var(--font-size-s)) * 3
+    (var(--_table-cell-padding-y) * 2 + var(--line-height-base) * var(--font-size-s)) * 3
   );
 }
 
@@ -164,26 +164,26 @@
   --_table-cell-link-decoration: var(--ds-table-cell-link-decoration, underline);
   --_table-head-text-color:         var(--ds-table-head-text-color,         var(--text-secondary));
   --_table-head-bg-color:         var(--ds-table-head-bg-color,         var(--surface-secondary));
-  --_table-head-fs:         var(--ds-table-head-font-size,         var(--font-size-xs));
+  --_table-head-font-size:         var(--ds-table-head-font-size,         var(--font-size-xs));
   --_table-divider:         var(--ds-table-divider,         var(--border-divider));
   --_table-sort-active-icon-color:  var(--ds-table-sort-active-icon-color,  var(--accent));
-  --_table-icon-btn-color: var(--ds-table-icon-button-color, var(--icon-default));
-  --_table-icon-btn-color-hover: var(--ds-table-icon-button-color-hover, var(--icon-strong));
-  --_table-icon-btn-focus-color: var(--ds-table-icon-button-focus-color, var(--accent));
-  --_table-cell-pad-x:      var(--ds-table-cell-padding-x,      var(--table-cell-pad-x));
-  --_table-cell-pad-y:      var(--ds-table-cell-padding-y,      var(--table-cell-pad-y));
+  --_table-icon-button-color: var(--ds-table-icon-button-color, var(--icon-default));
+  --_table-icon-button-color-hover: var(--ds-table-icon-button-color-hover, var(--icon-strong));
+  --_table-icon-button-focus-color: var(--ds-table-icon-button-focus-color, var(--accent));
+  --_table-cell-padding-x:      var(--ds-table-cell-padding-x,      var(--table-cell-pad-x));
+  --_table-cell-padding-y:      var(--ds-table-cell-padding-y,      var(--table-cell-pad-y));
 
   /* Per-side overrides fall back to the x/y pair, so an editorial table can ask
      for a right-only gutter (first column flush) without redefining both axes. */
-  --_table-cell-pad-top: var(--ds-table-cell-padding-top, var(--_table-cell-pad-y));
-  --_table-cell-pad-right: var(--ds-table-cell-padding-right, var(--_table-cell-pad-x));
-  --_table-cell-pad-bottom: var(--ds-table-cell-padding-bottom, var(--_table-cell-pad-y));
-  --_table-cell-pad-left: var(--ds-table-cell-padding-left, var(--_table-cell-pad-x));
-  --_table-head-pad-top: var(--ds-table-head-padding-top, var(--table-head-pad-y));
-  --_table-head-pad-bottom: var(--ds-table-head-padding-bottom, var(--table-head-pad-y));
+  --_table-cell-padding-top: var(--ds-table-cell-padding-top, var(--_table-cell-padding-y));
+  --_table-cell-padding-right: var(--ds-table-cell-padding-right, var(--_table-cell-padding-x));
+  --_table-cell-padding-bottom: var(--ds-table-cell-padding-bottom, var(--_table-cell-padding-y));
+  --_table-cell-padding-left: var(--ds-table-cell-padding-left, var(--_table-cell-padding-x));
+  --_table-head-padding-top: var(--ds-table-head-padding-top, var(--table-head-pad-y));
+  --_table-head-padding-bottom: var(--ds-table-head-padding-bottom, var(--table-head-pad-y));
   --_table-head-border-color: var(--ds-table-head-border-color, var(--_table-divider));
-  --_table-head-weight: var(--ds-table-head-font-weight, var(--font-weight-bold));
-  --_table-head-tracking: var(--ds-table-head-letter-spacing, var(--letter-spacing-wider));
+  --_table-head-font-weight: var(--ds-table-head-font-weight, var(--font-weight-bold));
+  --_table-head-letter-spacing: var(--ds-table-head-letter-spacing, var(--letter-spacing-wider));
 
   width: 100%;
   border-collapse: collapse;
@@ -202,9 +202,9 @@
 
   thead th {
     text-align: left;
-    padding: var(--_table-head-pad-top) var(--_table-cell-pad-right) var(--_table-head-pad-bottom) var(--_table-cell-pad-left);
-    font: var(--_table-head-weight) var(--_table-head-fs) / var(--line-height-base) var(--font-sans);
-    letter-spacing: var(--_table-head-tracking);
+    padding: var(--_table-head-padding-top) var(--_table-cell-padding-right) var(--_table-head-padding-bottom) var(--_table-cell-padding-left);
+    font: var(--_table-head-font-weight) var(--_table-head-font-size) / var(--line-height-base) var(--font-sans);
+    letter-spacing: var(--_table-head-letter-spacing);
     text-transform: uppercase;
     color: var(--_table-head-text-color);
     background-color: var(--_table-head-bg-color);
@@ -304,7 +304,7 @@
 
   tbody {
     td {
-      padding: var(--_table-cell-pad-top) var(--_table-cell-pad-right) var(--_table-cell-pad-bottom) var(--_table-cell-pad-left);
+      padding: var(--_table-cell-padding-top) var(--_table-cell-padding-right) var(--_table-cell-padding-bottom) var(--_table-cell-padding-left);
       line-height: var(--line-height-flat);
       transition: background-color var(--duration-fast) var(--ease-standard);
 
@@ -388,7 +388,7 @@
        interpolate, and this can. A keyframe rather than a transition because the row is inserted
        when it opens, and there is no previous state for a transition to run from. */
     .expand-panel-cell {
-      padding: var(--_table-cell-pad-top) var(--_table-cell-pad-right) var(--_table-cell-pad-bottom) var(--_table-cell-pad-left);
+      padding: var(--_table-cell-padding-top) var(--_table-cell-padding-right) var(--_table-cell-padding-bottom) var(--_table-cell-padding-left);
       display: grid;
       grid-template-rows: 1fr;
       animation: ds-table-expand var(--duration-base) var(--ease-standard);
@@ -633,7 +633,7 @@
    positioning is unreliable with `border-collapse: collapse`, so under this flag ONLY the table
    switches to separated borders with explicit per-cell `border-bottom`. */
 :host(.pinned) {
-  --_table-select-w: var(--ds-table-select-column-width, var(--space-10));
+  --_table-select-column-width: var(--ds-table-select-column-width, var(--space-10));
 
   .table {
     border-collapse: separate;
@@ -685,11 +685,11 @@
 }
 
 :host(.pinned.selectable) .pin-first {
-  left: var(--_table-select-w);
+  left: var(--_table-select-column-width);
 }
 
 :host(.pinned.expandable) {
-  --_table-expand-w: var(--ds-table-expand-column-width, var(--space-10));
+  --_table-expand-column-width: var(--ds-table-expand-column-width, var(--space-10));
 
   .pin-expand {
     position: sticky;
@@ -720,17 +720,17 @@
   }
 
   .pin-first {
-    left: var(--_table-expand-w);
+    left: var(--_table-expand-column-width);
   }
 }
 
 :host(.pinned.selectable.expandable) {
   .pin-expand {
-    left: var(--_table-select-w);
+    left: var(--_table-select-column-width);
   }
 
   .pin-first {
-    left: calc(var(--_table-select-w) + var(--_table-expand-w));
+    left: calc(var(--_table-select-column-width) + var(--_table-expand-column-width));
   }
 }
 

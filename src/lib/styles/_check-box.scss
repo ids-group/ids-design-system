@@ -12,11 +12,11 @@
 // still reaches the box through the cascade: a declaration on the element itself would outrank the
 // inherited one and pin the resting colour.
 @mixin resolvers {
-  --_checkbox-bg: var(--ds-checkbox-bg-color, var(--surface-default));
-  --_checkbox-border: var(--ds-checkbox-border-color, var(--border-strong));
-  --_checkbox-hover-border: var(--ds-checkbox-hover-border-color, var(--accent));
-  --_checkbox-selected-bg: var(--ds-checkbox-selected-bg-color, var(--accent));
-  --_checkbox-selected-border: var(--ds-checkbox-selected-border-color, var(--accent));
+  --_checkbox-bg-color: var(--ds-checkbox-bg-color, var(--surface-default));
+  --_checkbox-border-color: var(--ds-checkbox-border-color, var(--border-strong));
+  --_checkbox-hover-border-color: var(--ds-checkbox-hover-border-color, var(--accent));
+  --_checkbox-selected-bg-color: var(--ds-checkbox-selected-bg-color, var(--accent));
+  --_checkbox-selected-border-color: var(--ds-checkbox-selected-border-color, var(--accent));
   --_checkbox-radius: var(--ds-checkbox-radius, var(--ds-radius-inner));
   --_checkbox-glyph: var(--check-size);
 }
@@ -33,8 +33,8 @@
   width: var(--_checkbox-glyph, var(--check-size));
   height: var(--_checkbox-glyph, var(--check-size));
   border: var(--check-bw) solid
-    var(--_checkbox-border, var(--ds-checkbox-border-color, var(--border-strong)));
-  background: var(--_checkbox-bg, var(--ds-checkbox-bg-color, var(--surface-default)));
+    var(--_checkbox-border-color, var(--ds-checkbox-border-color, var(--border-strong)));
+  background: var(--_checkbox-bg-color, var(--ds-checkbox-bg-color, var(--surface-default)));
   cursor: pointer;
   display: inline-grid;
   place-items: center;
@@ -52,7 +52,7 @@
               border-color var(--duration-fast) var(--ease-standard);
 
   &:hover:not(:disabled) {
-    border-color: var(--_checkbox-hover-border, var(--ds-checkbox-hover-border-color, var(--accent)));
+    border-color: var(--_checkbox-hover-border-color, var(--ds-checkbox-hover-border-color, var(--accent)));
   }
 
   @include press.feedback;
@@ -75,14 +75,14 @@
   }
 
   &:checked {
-    background: var(--_checkbox-selected-bg, var(--ds-checkbox-selected-bg-color, var(--accent)));
-    border-color: var(--_checkbox-selected-border, var(--ds-checkbox-selected-border-color, var(--accent)));
+    background: var(--_checkbox-selected-bg-color, var(--ds-checkbox-selected-bg-color, var(--accent)));
+    border-color: var(--_checkbox-selected-border-color, var(--ds-checkbox-selected-border-color, var(--accent)));
     &::after { @include check-mark.shown; }
   }
 
   &:indeterminate {
-    background: var(--_checkbox-selected-bg, var(--ds-checkbox-selected-bg-color, var(--accent)));
-    border-color: var(--_checkbox-selected-border, var(--ds-checkbox-selected-border-color, var(--accent)));
+    background: var(--_checkbox-selected-bg-color, var(--ds-checkbox-selected-bg-color, var(--accent)));
+    border-color: var(--_checkbox-selected-border-color, var(--ds-checkbox-selected-border-color, var(--accent)));
     &::after {
       @include check-mark.shown;
       @include check-mark.dash;

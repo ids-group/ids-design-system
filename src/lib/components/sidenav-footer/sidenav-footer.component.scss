@@ -2,11 +2,11 @@
 @use '../../styles/text-clip' as text-clip;
 
 :host {
-  --_footer-popover-width: var(--ds-sidenav-footer-popover-width, 300px);
-  --_footer-popover-max-width: var(--ds-sidenav-footer-popover-max-width, 82vw);
-  --_footer-popover-max-height: var(--ds-sidenav-footer-popover-max-height, 56vh);
-  --_footer-head-tracking: var(--ds-sidenav-footer-head-letter-spacing, 0.04em);
-  --_footer-dot-size: var(--ds-sidenav-footer-dot-size, 6px);
+  --_sidenav-footer-popover-width: var(--ds-sidenav-footer-popover-width, 300px);
+  --_sidenav-footer-popover-max-width: var(--ds-sidenav-footer-popover-max-width, 82vw);
+  --_sidenav-footer-popover-max-height: var(--ds-sidenav-footer-popover-max-height, 56vh);
+  --_sidenav-footer-head-letter-spacing: var(--ds-sidenav-footer-head-letter-spacing, 0.04em);
+  --_sidenav-footer-dot-size: var(--ds-sidenav-footer-dot-size, 6px);
 
   display: flex;
   flex-direction: column;
@@ -36,8 +36,8 @@
 }
 
 .dot {
-  width: var(--_footer-dot-size);
-  height: var(--_footer-dot-size);
+  width: var(--_sidenav-footer-dot-size);
+  height: var(--_sidenav-footer-dot-size);
   margin-left: auto;
   border-radius: var(--radius-pill);
   background: var(--error);
@@ -99,7 +99,7 @@
   color: var(--text-tertiary);
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-semibold);
-  letter-spacing: var(--_footer-head-tracking);
+  letter-spacing: var(--_sidenav-footer-head-letter-spacing);
   text-transform: uppercase;
 }
 
@@ -107,9 +107,9 @@
 .alerts-panel {
   display: flex;
   flex-direction: column;
-  width: var(--_footer-popover-width);
-  max-width: var(--_footer-popover-max-width);
-  max-height: var(--_footer-popover-max-height);
+  width: var(--_sidenav-footer-popover-width);
+  max-width: var(--_sidenav-footer-popover-max-width);
+  max-height: var(--_sidenav-footer-popover-max-height);
   padding-bottom: var(--space-1);
   overflow-y: auto;
 
