@@ -65,6 +65,38 @@
   whenever `maxSlices` groups a tail, so code comparing `slice.id` to `'ds-donut-other'` stops
   matching - without erroring, and with the grouped `Other` then handled as a real category.
 
+- **118 `--ds-*` tokens take their CSS property's name.** `-pad` is `-padding`, `-btn` is
+  `-button`, `-fs` is `-font-size`, `-tracking` is `-letter-spacing`, `-transform` is
+  `-text-transform`, a bare `-weight` is `-font-weight`, and the truncated dimensions
+  (`-w`, `-h`, `-maxw`, `-maxh`, `-minw`, `-col-w`) are spelled in full.
+
+  ```scss
+  ds-button { --ds-button-padding-x: var(--space-6); --ds-button-letter-spacing: 0; }
+  ```
+
+  A consumer measured against this surface on 2026-09-21 referenced 156 of our tokens with none
+  resolving to nothing, and still wrote 25 rules that double a class to out-specify our compiled
+  selector. Several of the properties those rules set were tokenised all along, under a name the
+  consumer did not guess: they looked for `--ds-tab-padding`, `--ds-menu-item-padding` and
+  `--ds-checkbox-label-font-weight` while the surface published `-tab-pad-*`, `-menu-item-pad-*`
+  and `-label-weight`. A hook nobody can find is not a hook.
+
+  The whole surface is now guessable from the property being set. What was already spelled out
+  (`--ds-button-height`, `--ds-chart-frame-padding`, `--ds-checkbox-label-font-size`) is
+  unchanged, and the token count is the same 1019 it was - nothing was added or removed.
+
+  An unknown custom property is not an error. The declaration stays in the stylesheet, the
+  component reads its own fallback, and the element draws at its default with no build error and
+  no console warning, so a missed rename is silent. Grep for the six spellings above.
+
+- **`--ds-container-pad` is `--ds-surface-padding`.** It is the padding every surface component
+  falls back to - `card` and `stat` read it, `<ds-container>` never did - so it sat in the
+  namespace of a component it had nothing to do with, beside `--ds-container-pad-x`, which is
+  that component's own padding and is now `--ds-container-padding-x`.
+
+  The two old names read as a pair and controlled unrelated things: a value moved to the wrong one
+  re-pads every card in the app and leaves the container alone, or the reverse.
+
 ### Added
 
 - **Each axis says which numbers it is counting, and in whose colour.** A plot carrying two scales

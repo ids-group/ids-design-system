@@ -256,6 +256,150 @@
       ],
       "verify": "No `.donut-chart` selector remains.",
       "note": "The wrapper class carries the component's name, so it moves with it."
+    },
+    {
+      "id": "token-pad-spelled-out-as-padding",
+      "kind": "token-rename",
+      "old": "--ds-*-pad*",
+      "new": "--ds-*-padding*",
+      "surface": "style",
+      "action": "In every stylesheet, rewrite the `-pad` segment of a `--ds-*` custom property to `-padding`: `--ds-button-pad-x` becomes `--ds-button-padding-x`, `--ds-card-pad` becomes `--ds-card-padding`, `--ds-table-head-pad-top` becomes `--ds-table-head-padding-top`.",
+      "appliesWhen": "52 tokens, every `--ds-*` whose name contains a `-pad` segment. `--ds-container-pad` is NOT one of them - it is renamed by `container-pad-is-the-surface-default` instead. A consumer's own `--pad-*` variable and any `-padding` token that was already spelled out are untouched.",
+      "pitfall": "An unknown custom property is not an error. The declaration stays in the stylesheet, the component reads its own fallback, and the element draws at the default with nothing reported - no build error, no console warning.",
+      "restore": null,
+      "searchHints": [
+        "-pad-",
+        "-pad:",
+        "--ds-"
+      ],
+      "verify": "No `--ds-` custom property with a `-pad` segment remains in any stylesheet.",
+      "note": "A consumer measured against this surface wrote 25 rules doubling a class to out-specify our compiled selector, and several of those properties were tokenised all along under a name they did not guess. The whole abbreviated set now carries its CSS property's name."
+    },
+    {
+      "id": "token-weight-spelled-out-as-font-weight",
+      "kind": "token-rename",
+      "old": "--ds-*-weight",
+      "new": "--ds-*-font-weight",
+      "surface": "style",
+      "action": "Rewrite a `--ds-*` custom property ending in `-weight` to end in `-font-weight`: `--ds-menu-item-label-weight` becomes `--ds-menu-item-label-font-weight`.",
+      "appliesWhen": "17 tokens. One already spelled `-font-weight` is unchanged, and so is `--ds-button-border-width` and every other `-width`.",
+      "pitfall": "An unknown custom property is not an error. The declaration stays in the stylesheet, the component reads its own fallback, and the element draws at the default with nothing reported - no build error, no console warning.",
+      "restore": null,
+      "searchHints": [
+        "-weight",
+        "--ds-"
+      ],
+      "verify": "No `--ds-` custom property ends in `-weight` without `font-` before it.",
+      "note": "`-font-size` was already spelled out beside it on the same components, so one typographic property was guessable and its neighbour was not."
+    },
+    {
+      "id": "token-btn-spelled-out-as-button",
+      "kind": "token-rename",
+      "old": "--ds-*-btn*",
+      "new": "--ds-*-button*",
+      "surface": "style",
+      "action": "Rewrite the `-btn` segment to `-button`: `--ds-pagination-btn-bg-color` becomes `--ds-pagination-button-bg-color`, `--ds-segmented-btn-h` becomes `--ds-segmented-button-height`.",
+      "appliesWhen": "11 tokens across pagination, segmented and the table's icon button. The `--ds-button-*` family was always spelled out and is unchanged.",
+      "pitfall": "An unknown custom property is not an error. The declaration stays in the stylesheet, the component reads its own fallback, and the element draws at the default with nothing reported - no build error, no console warning.",
+      "restore": null,
+      "searchHints": [
+        "-btn-",
+        "-btn:",
+        "--ds-"
+      ],
+      "verify": "No `--ds-` custom property contains a `-btn` segment.",
+      "note": "The same published surface carried both spellings of one word: `--ds-button-bg-color` beside `--ds-pagination-btn-bg-color`."
+    },
+    {
+      "id": "token-fs-spelled-out-as-font-size",
+      "kind": "token-rename",
+      "old": "--ds-*-fs",
+      "new": "--ds-*-font-size",
+      "surface": "style",
+      "action": "Rewrite a `--ds-*` custom property ending in `-fs` to end in `-font-size`: `--ds-table-head-fs` becomes `--ds-table-head-font-size`.",
+      "appliesWhen": "6 tokens: the input's own and its label's, the tag's, the table head's, the empty state's title and the page header's title.",
+      "pitfall": "An unknown custom property is not an error. The declaration stays in the stylesheet, the component reads its own fallback, and the element draws at the default with nothing reported - no build error, no console warning.",
+      "restore": null,
+      "searchHints": [
+        "-fs",
+        "--ds-"
+      ],
+      "verify": "No `--ds-` custom property ends in `-fs`.",
+      "note": "`--ds-input-label-fs` read `--ds-field-label-font-size` as its own fallback, so the abbreviation and the spelled-out form sat on one line."
+    },
+    {
+      "id": "token-tracking-spelled-out-as-letter-spacing",
+      "kind": "token-rename",
+      "old": "--ds-*-tracking",
+      "new": "--ds-*-letter-spacing",
+      "surface": "style",
+      "action": "Rewrite a `--ds-*` custom property ending in `-tracking` to end in `-letter-spacing`: `--ds-button-tracking` becomes `--ds-button-letter-spacing`.",
+      "appliesWhen": "6 tokens. `tracking` is typographic jargon, not a CSS property, so nothing else is affected.",
+      "pitfall": "An unknown custom property is not an error. The declaration stays in the stylesheet, the component reads its own fallback, and the element draws at the default with nothing reported - no build error, no console warning.",
+      "restore": null,
+      "searchHints": [
+        "-tracking",
+        "--ds-"
+      ],
+      "verify": "No `--ds-` custom property ends in `-tracking`.",
+      "note": "A consumer looks for the property they are trying to set, and the property is called `letter-spacing`."
+    },
+    {
+      "id": "token-transform-spelled-out-as-text-transform",
+      "kind": "token-rename",
+      "old": "--ds-*-transform",
+      "new": "--ds-*-text-transform",
+      "surface": "style",
+      "action": "Rewrite a `--ds-*` custom property ending in `-transform` to end in `-text-transform`: `--ds-field-label-transform` becomes `--ds-field-label-text-transform`.",
+      "appliesWhen": "3 tokens, all of them casing hooks. None of them ever carried the CSS `transform` property, which is what the old name read as.",
+      "pitfall": "An unknown custom property is not an error. The declaration stays in the stylesheet, the component reads its own fallback, and the element draws at the default with nothing reported - no build error, no console warning.",
+      "restore": null,
+      "searchHints": [
+        "-transform",
+        "--ds-"
+      ],
+      "verify": "No `--ds-` custom property ends in `-transform` without `text-` before it.",
+      "note": "The old name named a different CSS property from the one it set."
+    },
+    {
+      "id": "token-dimensions-spelled-out",
+      "kind": "token-rename",
+      "old": "--ds-*-w | -h | -maxw | -maxh | -minw | -col-w",
+      "new": "--ds-*-width | -height | -max-width | -max-height | -min-width | -column-width",
+      "surface": "style",
+      "action": "Rewrite every truncated dimension suffix on a `--ds-*` custom property: `-w` to `-width`, `-h` to `-height`, `-maxw` to `-max-width`, `-maxh` to `-max-height`, `-minw` to `-min-width`, `-col-w` to `-column-width`. Three carry their own spelling: `--ds-container-max` becomes `--ds-container-max-width`, `--ds-segmented-r-inner` becomes `--ds-segmented-radius-inner`, and `--ds-color-picker-sv-h` becomes `--ds-color-picker-saturation-value-height`.",
+      "appliesWhen": "23 tokens. Every dimension token already spelled out - `--ds-button-height`, `--ds-app-layout-content-max-width`, `--ds-avatar-ring-width` - is unchanged, and `-w`/`-h` inside a longer word is not a suffix.",
+      "pitfall": "An unknown custom property is not an error. The declaration stays in the stylesheet, the component reads its own fallback, and the element draws at the default with nothing reported - no build error, no console warning.",
+      "restore": null,
+      "searchHints": [
+        "-maxw",
+        "-maxh",
+        "-minw",
+        "-col-w",
+        "-sv-h",
+        "-r-inner",
+        "--ds-"
+      ],
+      "verify": "No `--ds-` custom property ends in `-w`, `-h`, `-maxw`, `-maxh`, `-minw` or `-col-w`.",
+      "note": "`--ds-color-picker-sv-h` was abbreviated twice over, and `-col-` read as the column chart's family rather than as a table column."
+    },
+    {
+      "id": "container-pad-is-the-surface-default",
+      "kind": "token-rename",
+      "old": "--ds-container-pad",
+      "new": "--ds-surface-padding",
+      "surface": "style",
+      "action": "Rewrite `--ds-container-pad` to `--ds-surface-padding`. It is the default every surface component falls back to, not a `ds-container` hook. `ds-container`'s own padding is `--ds-container-padding-x`, renamed by `token-pad-spelled-out-as-padding`.",
+      "appliesWhen": "Only `--ds-container-pad`, set to retune card and stat padding at once. A consumer setting `--ds-container-pad-x` was styling `ds-container` and wants the other item.",
+      "pitfall": "The two old names read as a pair and controlled unrelated things: `--ds-container-pad` never reached `<ds-container>`, and `--ds-container-pad-x` never reached a card. A value moved to the wrong one of the two changes a surface nobody was looking at, and leaves the one they were looking at alone.",
+      "restore": null,
+      "searchHints": [
+        "--ds-container-pad",
+        "--ds-card-pad",
+        "--ds-stat-pad"
+      ],
+      "verify": "No `--ds-container-pad` remains, and every card or stat padding that was set through it now reads `--ds-surface-padding`.",
+      "note": "It is declared in the global token sheet and read by `card` and `stat`; `ds-container` reads `--ds-container-padding-x` and `--ds-container-max-width`. One prefix carried two owners."
     }
   ],
   "informational": [
