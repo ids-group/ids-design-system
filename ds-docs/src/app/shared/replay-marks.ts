@@ -1,5 +1,5 @@
 const CHARTS =
-  'ds-bar-chart,ds-column-chart,ds-donut-chart,ds-funnel-chart,ds-line-chart';
+  'ds-bar-chart,ds-column-chart,ds-pie-chart,ds-funnel-chart,ds-line-chart';
 
 // What `animate.enter` puts the class on, chart by chart — the element that ANIMATES, which for a
 // bar row and a column is the fill inside it rather than the row. A class list rather than a

@@ -1,6 +1,6 @@
 <figure
-  class="donut-chart"
-  [style.--_donut-chart-hole-fraction]="hole()">
+  class="pie-chart"
+  [style.--_pie-chart-hole-fraction]="hole()">
   @if (activeMark.pinned()) {
     <button
       class="pin-reset"
@@ -36,13 +36,13 @@
       [class.legend-bottom]="legend() === 'bottom'">
       <ds-skeleton
         circle
-        width="var(--_donut-chart-size)"
-        height="var(--_donut-chart-size)" />
+        width="var(--_pie-chart-size)"
+        height="var(--_pie-chart-size)" />
 
       @if (legend() !== 'none') {
         <div class="skeleton-legend">
           @for (placeholder of skeletonRows(); track $index) {
-            <ds-skeleton height="var(--_donut-chart-legend-row-height)" />
+            <ds-skeleton height="var(--_pie-chart-legend-row-height)" />
           }
         </div>
       }

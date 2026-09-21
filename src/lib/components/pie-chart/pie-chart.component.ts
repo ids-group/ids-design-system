@@ -37,7 +37,7 @@ import type {
   ChartTooltipContext,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import {
-  DEFAULT_THICKNESS,
+  DEFAULT_INNER_RADIUS,
   arcPath,
   groupSmallest,
   holeFraction,
@@ -47,27 +47,27 @@ import {
   resolveTotal,
   ringCoords,
   sliceArcs,
-} from './donut-chart.math';
-import type { DonutChartSlice } from './donut-chart.types';
+} from './pie-chart.math';
+import type { PieChartSlice } from './pie-chart.types';
 
 const RING_VIEW_BOX_SIZE = 100;
 const RING_CENTER = RING_VIEW_BOX_SIZE / 2;
 const RING_OUTER_RADIUS = RING_VIEW_BOX_SIZE / 2;
 
 @Component({
-  selector: 'ds-donut-chart',
+  selector: 'ds-pie-chart',
   standalone: true,
   imports: [SkeletonComponent, ChartTooltipDirective, IconComponent],
-  templateUrl: './donut-chart.component.html',
-  styleUrl: './donut-chart.component.scss',
+  templateUrl: './pie-chart.component.html',
+  styleUrl: './pie-chart.component.scss',
   host: { '[class.framed]': "frameResolved() === 'auto'" },
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DonutChartComponent {
+export class PieChartComponent {
   /** One slice per entry. A non-positive or non-finite value counts as zero — a ring is a
    *  part-to-whole picture and has no way to draw a negative share. */
-  readonly data = input.required<readonly DonutChartSlice[]>();
+  readonly data = input.required<readonly PieChartSlice[]>();
 
   /** Printed inside the ring. Null prints the sum through `valueFormat`. */
   readonly centerValue = input<string | null>(null);
@@ -80,7 +80,7 @@ export class DonutChartComponent {
 
   /** Longest legend to draw. Past it the smallest slices are summed into one, so a long tail does
    *  not become a legend nobody reads. Off by default: grouping changes what the chart says, and
-   *  that is the consumer's call. Values below 2 are ignored — one slice is not a donut. */
+   *  that is the consumer's call. Values below 2 are ignored — one slice is not a pie. */
   readonly maxSlices = input<number | null>(null, {
     transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
   });
@@ -88,8 +88,11 @@ export class DonutChartComponent {
   /** Names the grouped slice. */
   readonly otherLabel = input<string>('Other');
 
-  /** Ring width as a fraction of the radius. */
-  readonly thickness = input(DEFAULT_THICKNESS, { transform: numberAttribute });
+  /** The hole, as a fraction of the outer radius. Zero draws a solid pie and takes the centre
+   *  content away with the hole that held it. */
+  readonly innerRadius = input(DEFAULT_INNER_RADIUS, {
+    transform: numberAttribute,
+  });
 
   /** Whether the chart draws its own bordered, padded box. `'auto'`, the default, draws it;
    *  `'none'` leaves the chart bare, for one placed inside a card the page has already drawn.
@@ -180,7 +183,7 @@ export class DonutChartComponent {
 
   /** The slice that was clicked, or activated with Enter or Space. Fires whether or not
    *  `interactive` is set. */
-  readonly sliceClicked = output<DonutChartSlice>();
+  readonly sliceClicked = output<PieChartSlice>();
 
   /** Holds the hovered mark and its tooltip in place when it is clicked, until Escape or a press
    *  outside releases it. Off by default: a click is already the drill-down hook, and a mark left
@@ -220,7 +223,7 @@ export class DonutChartComponent {
   );
 
   protected onMarkClick(
-    payload: DonutChartSlice,
+    payload: PieChartSlice,
     index: number,
     event: Event,
   ): void {
@@ -254,7 +257,7 @@ export class DonutChartComponent {
   }
 
   protected onLegendClick(
-    slice: DonutChartSlice,
+    slice: PieChartSlice,
     index: number,
     event: Event,
   ): void {
@@ -332,7 +335,10 @@ export class DonutChartComponent {
     const values = data.map((slice) => slice.value);
     const arcs = sliceArcs(values);
     const percents = largestRemainder(positiveValues(values));
-    const innerRadius = resolveInnerRadius(RING_OUTER_RADIUS, this.thickness());
+    const innerRadius = resolveInnerRadius(
+      RING_OUTER_RADIUS,
+      this.innerRadius(),
+    );
     const format = (value: number) =>
       this.valueFormatResolved()(value, 'tooltip');
 
@@ -384,10 +390,10 @@ export class DonutChartComponent {
       ),
   );
 
-  protected readonly hole = computed(() => holeFraction(this.thickness()));
+  protected readonly hole = computed(() => holeFraction(this.innerRadius()));
 
   protected entryLabel(entry: {
-    slice: DonutChartSlice;
+    slice: PieChartSlice;
     formattedValue: string;
     formattedPercent: string;
   }) {
@@ -396,7 +402,7 @@ export class DonutChartComponent {
       : `${entry.slice.label}, ${entry.formattedValue}`;
   }
 
-  protected onSliceKey(slice: DonutChartSlice, event: Event): void {
+  protected onSliceKey(slice: PieChartSlice, event: Event): void {
     // Only the legend item's own key opens it: a key pressed on a control inside belongs to that
     // control.
     if (!this.interactive() || event.target !== event.currentTarget) {

@@ -140,8 +140,6 @@ export type {
   DividerSpacing,
   DividerVariant,
 } from '@ids-group-ltd/ids-design-system/components/divider';
-export { DonutChartComponent } from '@ids-group-ltd/ids-design-system/components/donut-chart';
-export type { DonutChartSlice } from '@ids-group-ltd/ids-design-system/components/donut-chart';
 export { DrawerComponent } from '@ids-group-ltd/ids-design-system/components/drawer';
 export type { DrawerPlacement } from '@ids-group-ltd/ids-design-system/components/drawer';
 export { DropzoneComponent } from '@ids-group-ltd/ids-design-system/components/dropzone';
@@ -239,6 +237,8 @@ export type {
   DsPasswordRule,
   DsPasswordRuleState,
 } from '@ids-group-ltd/ids-design-system/components/password-rules';
+export { PieChartComponent } from '@ids-group-ltd/ids-design-system/components/pie-chart';
+export type { PieChartSlice } from '@ids-group-ltd/ids-design-system/components/pie-chart';
 export { PopoverComponent } from '@ids-group-ltd/ids-design-system/components/popover';
 export type {
   PopoverAlign,

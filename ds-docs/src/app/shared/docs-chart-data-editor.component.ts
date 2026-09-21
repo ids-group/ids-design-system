@@ -98,7 +98,7 @@ export class DocsChartDataEditorComponent<TRow extends ChartDataEditorRow> {
     nextRowId += 1;
     const magnitude = this.typicalMagnitude();
     const step = magnitudeStep(magnitude);
-    // Donut and funnel track by `id`; bar and column ignore the key entirely, so one
+    // Pie and funnel track by `id`; bar and column ignore the key entirely, so one
     // shape of added row serves all four.
     const added = {
       id: `docs-editor-row-${nextRowId}`,

@@ -1,19 +1,16 @@
-import type { DonutChartSlice } from './donut-chart.types';
+import type { PieChartSlice } from './pie-chart.types';
 
 const FULL_TURN = Math.PI * 2;
 const FULL_TURN_EPSILON = 1e-9;
 
-export const DEFAULT_THICKNESS = 0.32;
+export const DEFAULT_INNER_RADIUS = 0.68;
 
-/** Diameter of the hole, as a fraction of the ring's own diameter. The centre content is held to
- *  the square that fits inside it. */
-export function holeFraction(thickness: number): number {
-  const ratio =
-    Number.isFinite(thickness) && thickness > 0 && thickness <= 1
-      ? thickness
-      : DEFAULT_THICKNESS;
-
-  return round(1 - ratio);
+/** Valid over [0, 1): zero is a solid pie, and one would leave no ring to draw, so it falls back
+ *  along with every other unusable value. */
+export function holeFraction(innerRadius: number): number {
+  return Number.isFinite(innerRadius) && innerRadius >= 0 && innerRadius < 1
+    ? round(innerRadius)
+    : DEFAULT_INNER_RADIUS;
 }
 
 /** The slices a legend can carry, with everything past `limit` summed into one. The kept slices stay
@@ -21,10 +18,10 @@ export function holeFraction(thickness: number): number {
  *  would move every other slice to make room for the grouping. The remainder takes the neutral
  *  eighth palette slot, which is what that slot is for. */
 export function groupSmallest(
-  slices: readonly DonutChartSlice[],
+  slices: readonly PieChartSlice[],
   limit: number | null,
   otherLabel: string,
-): DonutChartSlice[] {
+): PieChartSlice[] {
   if (limit === null || !Number.isInteger(limit) || limit < 2) {
     return [...slices];
   }
@@ -41,11 +38,11 @@ export function groupSmallest(
 
   return [
     ...slices.filter((unusedSlice, index) => kept.has(index)),
-    { id: 'ds-donut-other', label: otherLabel, value: remainder, slot: 8 },
+    { id: 'ds-pie-other', label: otherLabel, value: remainder, slot: 8 },
   ];
 }
 
-export interface DonutArc {
+export interface PieArc {
   readonly startAngle: number;
   readonly endAngle: number;
 }
@@ -64,7 +61,7 @@ export function resolveTotal(values: readonly number[]): number {
   return positiveValues(values).reduce((sum, value) => sum + value, 0);
 }
 
-export function sliceArcs(values: readonly number[]): DonutArc[] {
+export function sliceArcs(values: readonly number[]): PieArc[] {
   const positive = positiveValues(values);
   const total = resolveTotal(positive);
   if (total <= 0) {
@@ -82,20 +79,13 @@ export function sliceArcs(values: readonly number[]): DonutArc[] {
 
 export function resolveInnerRadius(
   outerRadius: number,
-  thickness: number,
+  innerRadius: number,
 ): number {
   if (!Number.isFinite(outerRadius) || outerRadius <= 0) {
     return 0;
   }
-  // A thickness outside (0, 1] draws no ring: at 0 the band has no width, above
-  // 1 the inner radius goes negative. An unusable one falls back to the default
-  // instead of rendering an empty chart.
-  const ratio =
-    Number.isFinite(thickness) && thickness > 0 && thickness <= 1
-      ? thickness
-      : DEFAULT_THICKNESS;
 
-  return outerRadius * (1 - ratio);
+  return outerRadius * holeFraction(innerRadius);
 }
 
 export function paletteIndex(

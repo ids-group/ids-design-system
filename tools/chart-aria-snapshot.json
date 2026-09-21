@@ -18,7 +18,7 @@
     "svg: role={interactive() ? 'button' : null}, aria-label={interactive() ? entryLabel(mark) : null}",
     "svg: aria-hidden=true"
   ],
-  "donut-chart": [
+  "pie-chart": [
     "div: aria-hidden=true",
     "p: role=status",
     "div: aria-hidden=true",

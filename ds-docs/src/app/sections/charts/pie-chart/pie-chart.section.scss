@@ -2,4 +2,4 @@
 
 // The tightest of the five: a 180px ring beside its legend is about 400px of content, and
 // everything past that is dead space to the right of the legend.
-@include chart-measure.measure('ds-donut-chart', 460px);
+@include chart-measure.measure('ds-pie-chart', 460px);

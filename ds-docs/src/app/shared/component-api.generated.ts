@@ -3364,250 +3364,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     ],
     "outputs": []
   },
-  "donut-chart": {
-    "key": "donut-chart",
-    "selector": "ds-donut-chart",
-    "isElement": true,
-    "className": "DonutChartComponent",
-    "status": "stable",
-    "importName": "DonutChartComponent",
-    "importPath": "@ids-group-ltd/ids-design-system",
-    "summary": null,
-    "inputs": [
-      {
-        "name": "data",
-        "kind": "input-required",
-        "type": "readonly DonutChartSlice[]",
-        "union": null,
-        "default": null,
-        "required": true,
-        "description": "One slice per entry. A non-positive or non-finite value counts as zero — a ring is a part-to-whole picture and has no way to draw a negative share."
-      },
-      {
-        "name": "centerValue",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Printed inside the ring. Null prints the sum through `valueFormat`."
-      },
-      {
-        "name": "centerLabel",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Caption under the centre value."
-      },
-      {
-        "name": "legend",
-        "kind": "input",
-        "type": "'end' | 'bottom' | 'none'",
-        "union": [
-          "end",
-          "bottom",
-          "none"
-        ],
-        "default": "'end'",
-        "required": false,
-        "description": "Logical placement, so a right-to-left page needs no second value."
-      },
-      {
-        "name": "maxSlices",
-        "kind": "input",
-        "type": "number | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Longest legend to draw. Past it the smallest slices are summed into one, so a long tail does not become a legend nobody reads. Off by default: grouping changes what the chart says, and that is the consumer's call. Values below 2 are ignored — one slice is not a donut."
-      },
-      {
-        "name": "otherLabel",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "'Other'",
-        "required": false,
-        "description": "Names the grouped slice."
-      },
-      {
-        "name": "thickness",
-        "kind": "input",
-        "type": "number",
-        "union": null,
-        "default": "DEFAULT_THICKNESS",
-        "required": false,
-        "description": "Ring width as a fraction of the radius."
-      },
-      {
-        "name": "frame",
-        "kind": "input",
-        "type": "ChartFrame | null",
-        "union": [
-          "auto",
-          "none"
-        ],
-        "default": "null",
-        "required": false,
-        "description": "Whether the chart draws its own bordered, padded box. `'auto'`, the default, draws it; `'none'` leaves the chart bare, for one placed inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards is one decision per app rather than per plot."
-      },
-      {
-        "name": "tooltipLingerMs",
-        "kind": "input",
-        "type": "number | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds. Zero, the default, takes it away at once: a panel that outlives the pointer sits over the plot the reader has moved on to. Raise it only for a panel a reader has to REACH — one carrying a link, a figure, or anything selectable — which is WCAG 1.4.13's hoverable clause. The panel is portaled to the body, so crossing the gap to it at an ordinary pointer speed needs about 140. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 0."
-      },
-      {
-        "name": "caption",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Printed above the plot as the chart's visible title, and reused as the annex table's caption."
-      },
-      {
-        "name": "summary",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Accessible name. Generated from the data when omitted."
-      },
-      {
-        "name": "dataTable",
-        "kind": "input",
-        "type": "ChartDataTable | null",
-        "union": [
-          "toggle",
-          "visible",
-          "none"
-        ],
-        "default": "null",
-        "required": false,
-        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`."
-      },
-      {
-        "name": "partOfWhole",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "true",
-        "required": false,
-        "description": "Prints each slice's share of the ring — in the legend, on the tooltip and in the data table. On by default, unlike every other chart, because a ring IS parts of one whole: the share is a real quantity here whatever the data, not a claim the consumer has to make. Off drops all three, for a ring whose slices are already labelled in percent."
-      },
-      {
-        "name": "loading",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize when the data lands."
-      },
-      {
-        "name": "emptyText",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Shown in place of the plot when `data` is empty. Unset falls back to `DS_CONFIG.chart.emptyText`, then `'No data'`."
-      },
-      {
-        "name": "error",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from an empty `data`, because \"the request failed\" and \"there is nothing to show\" read the same to a reader and mean opposite things."
-      },
-      {
-        "name": "errorText",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "The message the error state prints. Unset falls back to `DS_CONFIG.chart.errorText`, then `'Could not load the data'`."
-      },
-      {
-        "name": "valueFormat",
-        "kind": "input",
-        "type": "ChartValueFormat | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then the browser's locale grouping with a K/M/B suffix past four digits."
-      },
-      {
-        "name": "interactive",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
-      },
-      {
-        "name": "pinOnClick",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Holds the hovered mark and its tooltip in place when it is clicked, until Escape or a press outside releases it. Off by default: a click is already the drill-down hook, and a mark left lit after the pointer has gone needs a reader who knows why it is lit. `sliceClicked` fires either way — pinning is a state, not a handler."
-      },
-      {
-        "name": "dimOthers",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Dims every OTHER mark while one is hovered or focused, so the reader's eye is held on the one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed marks — measured 2026-09-13, the worst pair of three dimmed series falls from dE 14.8 at full opacity to 2.1 at `--ds-chart-dim-opacity`'s default 0.3 — so it buys loudness for one mark and pays for it with the rest of the chart."
-      },
-      {
-        "name": "staggerMs",
-        "kind": "input",
-        "type": "number",
-        "union": null,
-        "default": "0",
-        "required": false,
-        "description": "Accepted for parity with the other four charts and deliberately without effect here: a ring arrives as ONE object, because arcs share their edges and fading them one at a time lets the background through every seam. There is nothing to stagger."
-      },
-      {
-        "name": "tooltip",
-        "kind": "input",
-        "type": "ChartItemTooltipTrigger",
-        "union": [
-          "item",
-          "none"
-        ],
-        "default": "'item'",
-        "required": false,
-        "description": "Whether a hovered or focused slice opens a tooltip. `'axis'` is not offered — a ring has no axis to group readings under."
-      }
-    ],
-    "outputs": [
-      {
-        "name": "sliceClicked",
-        "kind": "output",
-        "type": "DonutChartSlice",
-        "union": null,
-        "default": null,
-        "required": false,
-        "description": "The slice that was clicked, or activated with Enter or Space. Fires whether or not `interactive` is set."
-      }
-    ]
-  },
   "drawer": {
     "key": "drawer",
     "selector": "ds-drawer",
@@ -6770,6 +6526,250 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [],
     "outputs": []
+  },
+  "pie-chart": {
+    "key": "pie-chart",
+    "selector": "ds-pie-chart",
+    "isElement": true,
+    "className": "PieChartComponent",
+    "status": "stable",
+    "importName": "PieChartComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "data",
+        "kind": "input-required",
+        "type": "readonly PieChartSlice[]",
+        "union": null,
+        "default": null,
+        "required": true,
+        "description": "One slice per entry. A non-positive or non-finite value counts as zero — a ring is a part-to-whole picture and has no way to draw a negative share."
+      },
+      {
+        "name": "centerValue",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Printed inside the ring. Null prints the sum through `valueFormat`."
+      },
+      {
+        "name": "centerLabel",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Caption under the centre value."
+      },
+      {
+        "name": "legend",
+        "kind": "input",
+        "type": "'end' | 'bottom' | 'none'",
+        "union": [
+          "end",
+          "bottom",
+          "none"
+        ],
+        "default": "'end'",
+        "required": false,
+        "description": "Logical placement, so a right-to-left page needs no second value."
+      },
+      {
+        "name": "maxSlices",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Longest legend to draw. Past it the smallest slices are summed into one, so a long tail does not become a legend nobody reads. Off by default: grouping changes what the chart says, and that is the consumer's call. Values below 2 are ignored — one slice is not a pie."
+      },
+      {
+        "name": "otherLabel",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "'Other'",
+        "required": false,
+        "description": "Names the grouped slice."
+      },
+      {
+        "name": "innerRadius",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "DEFAULT_INNER_RADIUS",
+        "required": false,
+        "description": "The hole, as a fraction of the outer radius. Zero draws a solid pie and takes the centre content away with the hole that held it."
+      },
+      {
+        "name": "frame",
+        "kind": "input",
+        "type": "ChartFrame | null",
+        "union": [
+          "auto",
+          "none"
+        ],
+        "default": "null",
+        "required": false,
+        "description": "Whether the chart draws its own bordered, padded box. `'auto'`, the default, draws it; `'none'` leaves the chart bare, for one placed inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards is one decision per app rather than per plot."
+      },
+      {
+        "name": "tooltipLingerMs",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds. Zero, the default, takes it away at once: a panel that outlives the pointer sits over the plot the reader has moved on to. Raise it only for a panel a reader has to REACH — one carrying a link, a figure, or anything selectable — which is WCAG 1.4.13's hoverable clause. The panel is portaled to the body, so crossing the gap to it at an ordinary pointer speed needs about 140. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 0."
+      },
+      {
+        "name": "caption",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Printed above the plot as the chart's visible title, and reused as the annex table's caption."
+      },
+      {
+        "name": "summary",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Accessible name. Generated from the data when omitted."
+      },
+      {
+        "name": "dataTable",
+        "kind": "input",
+        "type": "ChartDataTable | null",
+        "union": [
+          "toggle",
+          "visible",
+          "none"
+        ],
+        "default": "null",
+        "required": false,
+        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`."
+      },
+      {
+        "name": "partOfWhole",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Prints each slice's share of the ring — in the legend, on the tooltip and in the data table. On by default, unlike every other chart, because a ring IS parts of one whole: the share is a real quantity here whatever the data, not a claim the consumer has to make. Off drops all three, for a ring whose slices are already labelled in percent."
+      },
+      {
+        "name": "loading",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize when the data lands."
+      },
+      {
+        "name": "emptyText",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Shown in place of the plot when `data` is empty. Unset falls back to `DS_CONFIG.chart.emptyText`, then `'No data'`."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from an empty `data`, because \"the request failed\" and \"there is nothing to show\" read the same to a reader and mean opposite things."
+      },
+      {
+        "name": "errorText",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "The message the error state prints. Unset falls back to `DS_CONFIG.chart.errorText`, then `'Could not load the data'`."
+      },
+      {
+        "name": "valueFormat",
+        "kind": "input",
+        "type": "ChartValueFormat | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then the browser's locale grouping with a K/M/B suffix past four digits."
+      },
+      {
+        "name": "interactive",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
+      },
+      {
+        "name": "pinOnClick",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Holds the hovered mark and its tooltip in place when it is clicked, until Escape or a press outside releases it. Off by default: a click is already the drill-down hook, and a mark left lit after the pointer has gone needs a reader who knows why it is lit. `sliceClicked` fires either way — pinning is a state, not a handler."
+      },
+      {
+        "name": "dimOthers",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Dims every OTHER mark while one is hovered or focused, so the reader's eye is held on the one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed marks — measured 2026-09-13, the worst pair of three dimmed series falls from dE 14.8 at full opacity to 2.1 at `--ds-chart-dim-opacity`'s default 0.3 — so it buys loudness for one mark and pays for it with the rest of the chart."
+      },
+      {
+        "name": "staggerMs",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "0",
+        "required": false,
+        "description": "Accepted for parity with the other four charts and deliberately without effect here: a ring arrives as ONE object, because arcs share their edges and fading them one at a time lets the background through every seam. There is nothing to stagger."
+      },
+      {
+        "name": "tooltip",
+        "kind": "input",
+        "type": "ChartItemTooltipTrigger",
+        "union": [
+          "item",
+          "none"
+        ],
+        "default": "'item'",
+        "required": false,
+        "description": "Whether a hovered or focused slice opens a tooltip. `'axis'` is not offered — a ring has no axis to group readings under."
+      }
+    ],
+    "outputs": [
+      {
+        "name": "sliceClicked",
+        "kind": "output",
+        "type": "PieChartSlice",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The slice that was clicked, or activated with Enter or Space. Fires whether or not `interactive` is set."
+      }
+    ]
   },
   "popover": {
     "key": "popover",
@@ -10930,7 +10930,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "data",
         "kind": "input",
-        "type": "readonly WaterfallChartDatum[]",
+        "type": "readonly WaterfallChartBar[]",
         "union": null,
         "default": "[]",
         "required": false,
@@ -11065,7 +11065,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "barClicked",
         "kind": "output",
-        "type": "WaterfallChartDatum",
+        "type": "WaterfallChartBar",
         "union": null,
         "default": null,
         "required": false,

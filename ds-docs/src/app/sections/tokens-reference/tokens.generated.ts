@@ -737,7 +737,7 @@ export const CHARTS: readonly ColourRow[] = [
   },
   {
     "name": "--chart-categorical-6",
-    "value": "hsl(152deg 58% 41%)",
+    "value": "hsl(148deg 58% 41%)",
     "notes": "Categorical chart series colour 6."
   },
   {
@@ -3739,53 +3739,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
-    "component": "Donut Chart",
-    "selector": ".donut-chart",
-    "description": "",
-    "tokens": [
-      {
-        "name": "--ds-donut-chart-size",
-        "value": "180px",
-        "notes": ""
-      },
-      {
-        "name": "--ds-donut-chart-gap",
-        "value": "var(--space-5)",
-        "notes": ""
-      },
-      {
-        "name": "--ds-donut-chart-legend-row-gap",
-        "value": "var(--space-2)",
-        "notes": ""
-      },
-      {
-        "name": "--ds-donut-chart-legend-row-height",
-        "value": "16px",
-        "notes": ""
-      },
-      {
-        "name": "--ds-donut-chart-swatch-size",
-        "value": "10px",
-        "notes": ""
-      },
-      {
-        "name": "--ds-donut-chart-focus-color",
-        "value": "var(--focus-ring-color)",
-        "notes": ""
-      },
-      {
-        "name": "--ds-donut-chart-focus-width",
-        "value": "var(--focus-ring-width)",
-        "notes": ""
-      },
-      {
-        "name": "--ds-donut-chart-outline-width",
-        "value": "calc(var(--border-width-strong) + var(--border-width-default))",
-        "notes": ""
-      }
-    ]
-  },
-  {
     "component": "Drawer",
     "selector": ".drawer",
     "description": "",
@@ -5513,6 +5466,53 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-password-rules-failed-color",
         "value": "var(--error-text)",
         "notes": "Colour of a rule the current value breaks (default --error-text). Only after the user has typed — see the pending colour."
+      }
+    ]
+  },
+  {
+    "component": "Pie Chart",
+    "selector": ".pie-chart",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-pie-chart-size",
+        "value": "180px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-pie-chart-gap",
+        "value": "var(--space-5)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-pie-chart-legend-row-gap",
+        "value": "var(--space-2)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-pie-chart-legend-row-height",
+        "value": "16px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-pie-chart-swatch-size",
+        "value": "10px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-pie-chart-focus-color",
+        "value": "var(--focus-ring-color)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-pie-chart-focus-width",
+        "value": "var(--focus-ring-width)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-pie-chart-outline-width",
+        "value": "calc(var(--border-width-strong) + var(--border-width-default))",
+        "notes": ""
       }
     ]
   },

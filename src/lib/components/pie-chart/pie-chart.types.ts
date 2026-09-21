@@ -1,4 +1,4 @@
-export interface DonutChartSlice {
+export interface PieChartSlice {
   id: string;
   label: string;
   value: number;

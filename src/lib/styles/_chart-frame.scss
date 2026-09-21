@@ -94,7 +94,7 @@
 // along the bottom. A chart whose data went away still has the frame its readings were measured
 // against, and drawing it keeps the message inside a plot rather than floating in a blank card.
 // Borders rather than an SVG: with no data there is nothing to scale against, and an axis without
-// ticks or labels is exactly two lines. Off for the donut and the funnel, which have no axes to
+// ticks or labels is exactly two lines. Off for the pie and the funnel, which have no axes to
 // keep.
 @mixin message-box($height, $axes: false) {
   .empty {
@@ -120,7 +120,7 @@
     position: relative;
   }
 
-  /* Top CENTRE: the corner competes with a legend on the donut and with the value labels on a
+  /* Top CENTRE: the corner competes with a legend on the pie and with the value labels on a
      column chart, and on a wide card a corner control is a long way from the mark it undoes.
      Centred, it sits over the plot it belongs to whatever the chart's shape.
 

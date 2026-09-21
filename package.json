@@ -91,7 +91,7 @@
     "prepublishOnly": "node -e \"console.error('Publish from dist/ds (npm publish ./dist/ds), not the repo root.'); process.exit(1)\"",
     "preversion": "node tools/preflight.mjs",
     "probes": "node tools/run-probes.mjs",
-    "probe:donut-chart-math": "node --experimental-strip-types tools/probes/donut-chart-math.probe.mjs",
+    "probe:pie-chart-math": "node --experimental-strip-types tools/probes/pie-chart-math.probe.mjs",
     "probe:funnel-chart-math": "node --experimental-strip-types tools/probes/funnel-chart-math.probe.mjs",
     "probe:heatmap-chart-math": "node --experimental-strip-types tools/probes/heatmap-chart-math.probe.mjs",
     "probe:scatter-chart-math": "node --experimental-strip-types tools/probes/scatter-chart-math.probe.mjs",

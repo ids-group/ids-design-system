@@ -8,7 +8,7 @@ import {
   resolveTotal,
   ringPoint,
   sliceArcs,
-} from '../../src/lib/components/donut-chart/donut-chart.math.ts';
+} from '../../src/lib/components/pie-chart/pie-chart.math.ts';
 import { largestRemainder } from '../../src/lib/components/charts-format.ts';
 import { check, finish } from './probe-check.mjs';
 
@@ -74,7 +74,7 @@ check(
 );
 
 // One slice: an arc of a full turn ends where it starts, and SVG draws NOTHING
-// for it — the single-slice donut is the case that renders blank.
+// for it — the single-slice pie is the case that renders blank.
 check('a single slice takes the whole ring', sliceArcs([5]), [
   { startAngle: 0, endAngle: FULL_TURN },
 ]);
@@ -204,56 +204,58 @@ check(
   [50, 0, 50],
 );
 
-// Thickness. Outside (0, 1] there is no ring to draw, and a chart that silently
-// renders nothing is the failure this file exists to prevent.
+// Zero must be honoured rather than read as unset, or `innerRadius="0"` silently draws a ring.
+// At 1 and above there is no ring left, and a chart that silently renders nothing is the failure
+// this file exists to prevent.
 check(
-  'the default thickness leaves a 34 unit hole',
-  resolveInnerRadius(50, 0.32),
+  'the default innerRadius leaves a 34 unit hole',
+  resolveInnerRadius(50, 0.68),
   34,
 );
+check('a zero innerRadius draws a solid pie', resolveInnerRadius(50, 0), 0);
 check(
-  'a NaN thickness falls back to the default',
+  'a NaN innerRadius falls back to the default',
   resolveInnerRadius(50, NaN),
   34,
 );
 check(
-  'a zero thickness falls back to the default',
-  resolveInnerRadius(50, 0),
+  'a negative innerRadius falls back to the default',
+  resolveInnerRadius(50, -1),
   34,
 );
 check(
-  'a thickness above 1 falls back to the default',
+  'an innerRadius of 1 leaves no ring, so it falls back',
+  resolveInnerRadius(50, 1),
+  34,
+);
+check(
+  'an innerRadius above 1 falls back to the default',
   resolveInnerRadius(50, 2),
   34,
 );
-check(
-  'a thickness of 1 closes the hole into a pie',
-  resolveInnerRadius(50, 1),
-  0,
-);
 
 // The hole fraction drives how wide the centre content may be, so a wrong one either overlaps the
-// slices or wraps text that had room.
+// slices or wraps text that had room. At zero the component renders no centre content at all.
 check(
-  'the default thickness leaves 68% of the diameter',
-  holeFraction(0.32),
+  'the default innerRadius leaves 68% of the diameter',
+  holeFraction(0.68),
   0.68,
 );
-check('a pie leaves no hole to hold the centre text', holeFraction(1), 0);
+check('a pie leaves no hole to hold the centre text', holeFraction(0), 0);
 check(
-  'an out-of-range thickness falls back with the radius',
+  'an out-of-range innerRadius falls back with the radius',
   holeFraction(2),
   0.68,
 );
-check('a NaN thickness falls back with the radius', holeFraction(NaN), 0.68);
+check('a NaN innerRadius falls back with the radius', holeFraction(NaN), 0.68);
 check(
   'a non-positive outer radius has no hole',
-  resolveInnerRadius(-10, 0.32),
+  resolveInnerRadius(-10, 0.68),
   0,
 );
 check(
   'an Infinity outer radius has no hole',
-  resolveInnerRadius(Infinity, 0.32),
+  resolveInnerRadius(Infinity, 0.68),
   0,
 );
 
@@ -283,7 +285,7 @@ check(
   'M 50 0 A 50 50 0 0 1 100 50 L 50 50 Z',
 );
 
-// Legend grouping. The tail is summed, never dropped: a donut that quietly loses slices is a chart
+// Legend grouping. The tail is summed, never dropped: a pie that quietly loses slices is a chart
 // that lies about its own total.
 const TAIL = [
   { id: 'a', label: 'A', value: 50 },
@@ -313,4 +315,4 @@ check(
   15,
 );
 
-finish('donut-chart-math');
+finish('pie-chart-math');
