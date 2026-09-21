@@ -135,6 +135,125 @@
       ],
       "verify": "Every place that reads a `BarChartRow`'s `value` back narrows it before using it as a number, and the build is clean.",
       "note": "`value` was `number` and is `number | readonly [low, high]`, so a bar can span between its own ends rather than from zero. The pair is normalised, so either order means the same band."
+    },
+    {
+      "id": "donut-chart-renamed-to-pie-chart",
+      "kind": "selector-rename",
+      "old": "ds-donut-chart",
+      "new": "ds-pie-chart",
+      "surface": [
+        "template",
+        "typescript"
+      ],
+      "action": "Rename every `<ds-donut-chart>` element to `<ds-pie-chart>`, `DonutChartComponent` to `PieChartComponent` and `DonutChartSlice` to `PieChartSlice`, imported from `@ids-group-ltd/ids-design-system/components/pie-chart` or from the package root. Rewrite any comparison against the grouped slice's id: `'ds-donut-other'` is now `'ds-pie-other'`. Then apply `pie-chart-thickness-is-now-inner-radius`, which is where the ring width moves.",
+      "appliesWhen": "Every template rendering `<ds-donut-chart>`, every file importing `DonutChartComponent` or `DonutChartSlice`, and any code comparing `slice.id` off `sliceClicked` to `'ds-donut-other'` - which only a consumer setting `maxSlices` ever sees. No other chart is renamed, and no input, output or default changes with the tag.",
+      "pitfall": "The old tag is an unknown element, not an error: Angular renders nothing and logs nothing outside strict schema mode, so a missed one is a chart that silently vanished. The id is the same shape of failure in TypeScript: a comparison that stops matching does not error, and the grouped `Other` slice starts being handled as a real category.",
+      "restore": null,
+      "searchHints": [
+        "ds-donut-chart",
+        "DonutChartComponent",
+        "DonutChartSlice",
+        "components/donut-chart",
+        "ds-donut-other",
+        "maxSlices"
+      ],
+      "detect": [
+        "ds-donut-chart",
+        "DonutChartComponent",
+        "DonutChartSlice",
+        "ds-donut-other",
+        "slice.id ==="
+      ],
+      "verify": "No `ds-donut-chart` tag, `DonutChartComponent` or `DonutChartSlice` symbol, `components/donut-chart` import path or `ds-donut-other` literal remains.",
+      "note": "The component has always drawn a solid pie once the hole was closed, so `Donut` named one value of one input rather than the component. Under `Pie` the ring is the default and the disc is the zero case."
+    },
+    {
+      "id": "pie-chart-tokens-renamed",
+      "kind": "token-rename",
+      "old": "--ds-donut-chart-*",
+      "new": "--ds-pie-chart-*",
+      "surface": "style",
+      "action": "Rename all eight tokens to the `--ds-pie-chart-` prefix: `--ds-donut-chart-size`, `-gap`, `-legend-row-gap`, `-legend-row-height`, `-swatch-size`, `-focus-color`, `-focus-width`, `-outline-width`.",
+      "appliesWhen": "Only those eight. The family is closed and every member moves together; no other `--ds-*-chart-*` family is renamed.",
+      "pitfall": "An unknown custom property is not an error. The declaration stays in the stylesheet, the component reads its own fallback, and the chart draws at the default with nothing reported.",
+      "restore": null,
+      "searchHints": [
+        "--ds-donut-chart-",
+        "donut-chart"
+      ],
+      "verify": "No `--ds-donut-chart-` string remains in any stylesheet.",
+      "note": "The tokens carry the component's name, so they move with it."
+    },
+    {
+      "id": "pie-chart-thickness-is-now-inner-radius",
+      "kind": "input-rename",
+      "old": "ds-pie-chart[thickness]",
+      "new": "innerRadius",
+      "surface": [
+        "template",
+        "typescript"
+      ],
+      "action": "Rename `thickness` to `innerRadius` on every pie chart AND replace the value with `1` minus it: `0.32` becomes `0.68`, `0.1` becomes `0.9`, `1` becomes `0`. Retype any field, constant or return value that supplies one.",
+      "appliesWhen": "Only `thickness` on the pie chart, under either tag spelling. `--ds-divider-thickness`, `text-decoration-thickness` and any consumer property of that name are unrelated.",
+      "pitfall": "The rename alone compiles and draws. A value carried across untouched is still in range and still valid, so a ring set to `0.32` becomes a nearly solid disc and a pie set to `1` becomes a ring. Nothing errors; only the picture changes.",
+      "restore": null,
+      "searchHints": [
+        "thickness",
+        "[thickness]",
+        "ds-donut-chart",
+        "ds-pie-chart"
+      ],
+      "detect": [
+        "[thickness]=",
+        "thickness=\"",
+        "thickness:",
+        "thickness ="
+      ],
+      "verify": "No `thickness` binding remains on any pie chart, and every `innerRadius` equals `1` minus the `thickness` it replaced.",
+      "note": "The knob names the hole now rather than the band, because the component's base case is a solid pie and the ring is the hole opened in it. The default is unchanged as a drawing: `0.68` inner radius is the `0.32` thickness it replaced. A value outside `[0, 1)` falls back to the default, so `1` is no longer the pie - `0` is."
+    },
+    {
+      "id": "pie-chart-centre-content-needs-a-hole",
+      "kind": "behavior",
+      "old": "ds-pie-chart[centerValue]",
+      "new": null,
+      "surface": "template",
+      "action": "On every pie chart set to `innerRadius=\"0\"`, move what `centerValue` or `centerLabel` carried into the caption, the legend or the page around the chart.",
+      "appliesWhen": "Only a pie with no hole. At the default, or at any `innerRadius` above zero, the centre content renders exactly as before.",
+      "pitfall": "Nothing errors and the chart still draws. A headline figure that was the only place a total appeared simply stops being on the screen.",
+      "restore": null,
+      "searchHints": [
+        "centerValue",
+        "centerLabel",
+        "innerRadius",
+        "thickness"
+      ],
+      "detect": [
+        "centerValue",
+        "centerLabel",
+        "innerRadius=\"0\"",
+        "[innerRadius]=\"0\""
+      ],
+      "verify": "No pie chart at `innerRadius=\"0\"` depends on `centerValue` or `centerLabel` to state a figure.",
+      "note": "The centre content used to render over the solid disc, where the halo behind it had nothing to separate it from and no single text colour is readable against three hues. It now renders only where there is a hole to hold it."
+    },
+    {
+      "id": "pie-chart-internal-class-renamed",
+      "kind": "class-rename",
+      "old": "ds-pie-chart .donut-chart",
+      "new": "pie-chart",
+      "surface": "style",
+      "action": "Rename `.donut-chart` to `.pie-chart` in any consumer stylesheet that reaches into the component.",
+      "appliesWhen": "Only a consumer STYLING the internal wrapper, usually through `::ng-deep`. Setting `--ds-pie-chart-*` tokens instead is covered by `pie-chart-tokens-renamed`.",
+      "pitfall": "A selector matching nothing is valid CSS. The rule stays in the bundle and the override quietly stops applying.",
+      "restore": null,
+      "searchHints": [
+        ".donut-chart",
+        "donut-chart",
+        "ng-deep"
+      ],
+      "verify": "No `.donut-chart` selector remains.",
+      "note": "The wrapper class carries the component's name, so it moves with it."
     }
   ],
   "informational": [
@@ -145,7 +264,7 @@
     "A line series measured only against the first axis no longer raises an empty second axis labelled `0`. Affected any plot whose series all read against the left axis; a plot that genuinely carries two scales is unchanged.",
     "`ds-line-chart` takes `stack`: `'none'` (the default, and what every chart already drew), `'stacked'` or `'normalized'`. Nothing to change - a chart that sets nothing is unchanged. Only a series with `area: true` fills, stacking runs per axis, and `stack=\"stacked\"` is not `yAxisMode=\"split\"`: series on top of each other, against two plots one above the other.",
     "`ds-heatmap-chart` is new, from `@ids-group-ltd/ids-design-system/components/heatmap-chart` and from the package root, with `HeatmapChartRow` and `HeatmapChartCell`. Purely additive - nothing to change. It has no `dataTable` input on purpose: colour is the only channel carrying the quantity on the grid, so the annex table and the colour scale are always drawn.",
-    "`ds-waterfall-chart` is new, from `@ids-group-ltd/ids-design-system/components/waterfall-chart` and from the package root, with `WaterfallChartDatum`, `WaterfallChartKind` and `WaterfallChartStep`. Two tokens come with it, `--ds-chart-positive-color` and `--ds-chart-negative-color`, pointing at the palette's two lead hues rather than at `--success` and `--error`. Purely additive - nothing to change.",
+    "`ds-waterfall-chart` is new, from `@ids-group-ltd/ids-design-system/components/waterfall-chart` and from the package root, with `WaterfallChartBar`, `WaterfallChartKind` and `WaterfallChartStep`. Two tokens come with it, `--ds-chart-positive-color` and `--ds-chart-negative-color`, pointing at the palette's two lead hues rather than at `--success` and `--error`. Purely additive - nothing to change.",
     "A heat scale is new: `--ds-chart-heat-1-color` through `--ds-chart-heat-8-color`, the same hue across the full lightness range for a grid where magnitude is read from the step between two colours. `--ds-chart-ramp-*` is unchanged and `ds-funnel-chart` looks exactly as it did. Purely additive - nothing to change.",
     "`ds-scatter-chart` is new, from `@ids-group-ltd/ids-design-system/components/scatter-chart` and from the package root, with `ScatterChartSeries`, `ScatterChartDecimator`, `ScatterChartReading` and `ScatterPoint`. Purely additive - nothing to change. It thins its own data past four times the plot's width in marks and says so under the plot; the annex table still lists every reading. `decimator` chooses between the two decimators or turns it off.",
     "A chart's category labels now turn 45 degrees when that lets all of them be drawn, and thin to every second or third only when a tilt is not enough. Nothing to change: it affects what a narrow chart draws, not what a template declares. A chart wide enough for its labels is unchanged.",

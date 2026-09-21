@@ -637,7 +637,7 @@ One ask left from that batch. The two column-chart gaps beside it shipped in v0.
 
 - [ ] **[P3] Journey / flow diagram - no component draws a branching node-and-edge canvas.** Nodes
   carrying a kind, branching edges carrying a label and a count, and a per-node run state. Nothing
-  in the library draws one: bar, column, donut, funnel, line, meter, progress all plot QUANTITIES,
+  in the library draws one: bar, column, pie, funnel, line, meter, progress all plot QUANTITIES,
   and `ds-tree` is a hierarchy view rather than a canvas. The consumer built its own and renders it
   on NINE screens - `execute/active-journeys`, `execute/dashboard`,
   `prepare/offer-journey/builder` and the `journey` tab of all six campaigns - which is not

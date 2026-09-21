@@ -20,6 +20,51 @@
   to one shared grid - a chart that looks plausible and is measured against the wrong axis. Grep for
   the three old values on those two inputs; there is nothing to see at runtime.
 
+- **`ds-donut-chart` is `ds-pie-chart`.** `DonutChartComponent` is `PieChartComponent`,
+  `DonutChartSlice` is `PieChartSlice`, and the entry point is
+  `@ids-group-ltd/ids-design-system/components/pie-chart`. The eight `--ds-donut-chart-*` tokens
+  take the `--ds-pie-chart-` prefix, and the internal wrapper class `.donut-chart` is `.pie-chart`.
+
+  ```html
+  <ds-pie-chart [data]="slices" centerValue="4,208" centerLabel="Total" />
+  ```
+
+  The component has drawn a solid pie since it shipped - closing the hole was one value of one
+  input - so `Donut` named a default rather than the component. Under `Pie` the ring is the
+  default and the disc is the zero case, which is how every other library in the field spells it.
+
+  The old tag is an unknown element, not an error: Angular renders nothing and logs nothing outside
+  strict schema mode, so a missed one is a chart that silently vanished. A `--ds-donut-chart-*`
+  declaration left behind is valid CSS the component no longer reads, and the chart draws at its
+  default size with nothing reported.
+
+- **`thickness` is `innerRadius`, and the value is `1` minus what it was.** `0.32` becomes `0.68`,
+  `0.1` becomes `0.9`, `1` becomes `0`. The default draws the identical ring.
+
+  ```html
+  <ds-pie-chart [data]="slices" [innerRadius]="0" />
+  ```
+
+  The knob names the hole now rather than the band, because the base case is a solid pie and the
+  ring is the hole opened in it. `innerRadius="0"` is the pie; `1` no longer is. A value outside
+  `[0, 1)` falls back to the default rather than drawing nothing.
+
+  **Renaming without inverting is the hazard here, and nothing catches it.** A value carried across
+  untouched is still in range and still valid, so a ring set to `0.32` becomes a nearly solid disc
+  and a pie set to `1` becomes a ring. There is no error, no warning, and no type change - only a
+  different picture.
+
+- **Centre content renders only where there is a hole to hold it.** At `innerRadius="0"`,
+  `centerValue` and `centerLabel` draw nothing.
+
+  They used to render over the solid disc, where the halo behind them had nothing to separate them
+  from and no single text colour is readable against three hues. Where a pie's centre figure was
+  the only place a total appeared, move it to the caption, the legend or the page around the chart.
+
+- **The grouped slice's id is `ds-pie-other`.** It reaches a consumer through `sliceClicked`
+  whenever `maxSlices` groups a tail, so code comparing `slice.id` to `'ds-donut-other'` stops
+  matching - without erroring, and with the grouped `Other` then handled as a real category.
+
 ### Added
 
 - **Each axis says which numbers it is counting, and in whose colour.** A plot carrying two scales
