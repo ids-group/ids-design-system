@@ -14,7 +14,7 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**105 open — 1 P1, 35 P2, 69 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**117 open — 1 P1, 35 P2, 81 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 1
 
@@ -70,7 +70,7 @@ item and nothing else.
 - **Localization — every user-visible string is a hardcoded literal (recorded 2026-08-27, from the ITB Workspace picker report)**
   - Every user-visible string in the library is a hardcoded English literal — VALIDATED 2026-08-27 against 0.11.0; Stas: defer the whole thing, no code
 
-### P3 — 69
+### P3 — 81
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - A whole-page keyboard walk is not measurable with the tools here, and the failed
@@ -100,6 +100,18 @@ item and nothing else.
   - `ds-column-chart` cannot say "these columns are one series", so a time series renders
   - `ds-column-chart` has no `segments`, so a stacked column is not expressible
   - Journey / flow diagram - no component draws a branching node-and-edge canvas
+- **The twenty-eight rules one consumer still needs to reach into our internals (recorded 2026-09-21)**
+  - `ds-checkbox` tokenises the label's size and colour but not its weight, and the row has no hooks at all
+  - `ds-menu-item` has no padding or weight hook, and `--ds-menu-item-label-color` cannot be set per item
+  - `ds-autocomplete` cannot drop its chevron, and its input's type scale has no hook
+  - An option row's colour and the empty-state line have no hooks, while everything around them does
+  - `ds-tabs` tokenises the colours and the indicator, and none of the geometry
+  - `ds-description-item` tokenises the term's colour and size, and the term reads as an eyebrow only with three more properties
+  - `ds-segmented`'s radius hooks are per-segment, so a group that rounds only at its outer ends cannot be expressed
+  - `ds-pagination` tokenises the label's size, weight and colour, and not its tracking, its case, its position or the control size
+  - `ds-table`'s head padding is symmetric, and asymmetric is the only thing in this consumer that needs `!important`
+  - `ds-badge` tokenises its weight and sets `letter-spacing` directly
+  - `ds-button` has no `justify-content` hook, so a full-width action cannot put its arrow hard right
 - **Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)**
   - A2 - the remaining directives, after A1 prices the seam
   - B1 - `DS_CONFIG.prototype: true` is BEHAVIOUR only. For bytes, use a build-time flag
@@ -128,6 +140,7 @@ item and nothing else.
 - **The field system — the two controls outside it, and the five with no box to paint**
   - CDK Menu adoption (option B) — parked
 - **Tooling**
+  - The chart palette separates by hue and barely at all by lightness, and nothing measures the dark theme (recorded 2026-09-21, Stas: record only)
   - Three `ds-table` paths have never been driven by automation, and five component groups have never been clicked through
   - `tools/todo-index.mjs --check` is not in `lint:all`, so the index can still go stale between runs
   - `templates` and `startingPoints` in the Claude Design manifest are unexplored, and so is what feeds the pane's "Usage notes for Claude" (recorded 2026-09-03)
@@ -683,6 +696,48 @@ Three more asks from the same consumer as the 2026-09-15 batch above, arrived th
   `layout.ts` - so the question to settle first is whether this belongs in a component library at
   all, or whether the honest answer is "bring your own canvas, here are the tokens". Either verdict
   is useful; silence is not.
+
+## The twenty-eight rules one consumer still needs to reach into our internals (recorded 2026-09-21)
+
+Measured in mm-ecm-platform-kb, which has no chart left that is not a DS component and no inert
+token pin: **156 `--ds-*` referenced, 0 that resolve to nothing.** What it cannot express through
+the public surface is styling, and it is all in one shape - a rule that doubles a class
+(`.segment.segment`) purely to out-specify our compiled `.segment[_ngcontent-*]`. **25 such rules
+across 2 files**, plus one `!important` and two plain reaches, and every one names a property the
+component tokenises everything around but not itself.
+
+Counted with a script over every `.scss` under `projects/`, matching `/\.([a-z][a-z0-9-]*)\.\1/` in a
+selector. A first count of 72 was wrong and is not the figure: it matched the app's own `.panel`,
+`.table` and `.label` too. The doubled class is the reliable marker because nobody writes one for
+their own stylesheet.
+
+The consumer is not asking to be allowed in. Each item below is the one hook that would delete its
+rule, and the reason the rule exists is the same every time: a `font:` shorthand or a layout
+property sits next to tokens that cover its neighbours.
+
+- [ ] **[P3] `ds-checkbox` tokenises the label's size and colour but not its weight, and the row has no hooks at all.** `--ds-checkbox-label-font-size` and `--ds-checkbox-label-color` both land, and the weight beside them cannot: it is pinned `regular` inside the `font:` shorthand that reads those two. The row's `align-items` and `gap` have nothing either, and the hint under a checkbox indents by hand to clear the box. Four rules in the consumer, one component. **Ask:** `--ds-checkbox-label-font-weight`, `--ds-checkbox-row-align`, `--ds-checkbox-gap`, and a hint that already clears the box.
+
+- [ ] **[P3] `ds-menu-item` has no padding or weight hook, and `--ds-menu-item-label-color` cannot be set per item.** The colour token resolves on the `ds-menu-item` host against the value inherited from the `ds-menu` above it, so a single quiet row - a destructive Sign Out beside four ordinary rows - cannot take its own colour through the token and goes on the inner element instead. Padding and weight are not tokenised at all. **Ask:** `--ds-menu-item-padding` and `--ds-menu-item-font-weight`, and let the label colour resolve on the item rather than the menu.
+
+- [ ] **[P3] `ds-autocomplete` cannot drop its chevron, and its input's type scale has no hook.** A chevron on a search field invites a click that would list the whole book, so the consumer hides it by selector. The input's size is a `font:` shorthand on `--font-size-s`, and the left padding has to clear a search glyph the consumer lays over the field. **Ask:** a `chevron` input (or a `search` appearance that implies it), `--ds-autocomplete-input-font-size` and `--ds-autocomplete-input-padding-inline-start`.
+
+- [ ] **[P3] An option row's colour and the empty-state line have no hooks, while everything around them does.** `--ds-option-padding`, `--ds-option-font-size` and `--ds-option-weight` all forward onto the portaled pane per instance, which is what makes the two that are missing conspicuous: the row's own colour, and the "no results" line's size and colour. **Ask:** `--ds-option-color` and `--ds-empty-font-size` / `--ds-empty-color`.
+
+- [ ] **[P3] `ds-tabs` tokenises the colours and the indicator, and none of the geometry.** The strip's gap, the tab label's type scale, the tab's bottom-only padding and the panel's top padding each need a rule. The panel one is not taste: the component ships a top padding an editorial layout does not want, because each panel block owns its own margin. **Ask:** `--ds-tabs-gap`, `--ds-tab-font-size`, `--ds-tab-padding`, `--ds-tab-panel-padding`.
+
+- [ ] **[P3] `ds-description-item` tokenises the term's colour and size, and the term reads as an eyebrow only with three more properties.** Uppercase, tracking and weight have no hooks, and the value's type scale is hard-coded `regular var(--font-size-s)`. A description list whose terms are page eyebrows is not an unusual want - it is what a detail hero looks like. **Ask:** `--ds-description-term-weight`, `-letter-spacing`, `-text-transform`, and `--ds-description-details-font-size` / `-weight`.
+
+- [ ] **[P3] `ds-segmented`'s radius hooks are per-segment, so a group that rounds only at its outer ends cannot be expressed.** The consumer's design is a row of hairline chips sharing their edges: each segment takes a border and a negative margin, and only the first and last round. Our radius token applies to every segment, which would undo the shared edge. The border and the type scale have no hooks either. **Ask:** `--ds-segmented-segment-border` and `--ds-segmented-font-size`, plus a group radius that rounds the ends rather than each segment.
+
+- [ ] **[P3] `ds-pagination` tokenises the label's size, weight and colour, and not its tracking, its case, its position or the control size.** Four rules: the label as an eyebrow needs `letter-spacing` and `text-transform`; "Showing X-Y of Z" hugging the left while the controls sit right needs the row to be a flex with the label taking `margin-right: auto`; and a pager under a full-width table needs bigger hit targets than the default. **Ask:** `--ds-pagination-label-letter-spacing` / `-text-transform`, a `layout` input (`'grouped' | 'spread'`), and `--ds-pagination-button-size` / `-font-size`.
+
+- [ ] **[P3] `ds-table`'s head padding is symmetric, and asymmetric is the only thing in this consumer that needs `!important`.** The density primitive is `--table-head-pad-y`, one value for both sides. The design wants the label tight to the top with air under it before the rule. `.table thead th` compiles to (0,4,2), which no global selector beats without stacking classes for the sole purpose of winning, so the rule carries `!important` - the only one this app aims at us. **Ask:** `--ds-table-head-pad-top` and `--ds-table-head-pad-bottom`, or let the existing hook take a two-value `padding-block`.
+
+- [ ] **[P3] `ds-badge` tokenises its weight and sets `letter-spacing` directly.** A quieter status pill needs semibold and near-normal tracking. The weight has a token; the tracking is written into `.badge`, so it can only be won on specificity. One rule, one property. **Ask:** `--ds-badge-letter-spacing`.
+
+- [ ] **[P3] `ds-button` has no `justify-content` hook, so a full-width action cannot put its arrow hard right.** A stacked full-width button whose label sits left and whose icon sits at the far edge is a common editorial shape, and `fullWidth` alone centres the pair. **Ask:** `--ds-button-justify`, or an `align` input on the button.
+
+All eleven are in mm-ecm-platform-kb: `prototype/projects/agent-portal/src/styles.scss` and `prototype/projects/ecm-portal/src/styles.scss`; every rule there carries a comment naming the hook it is standing in for, so the consumer's file doubles as the spec.
 
 ## Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)
 
