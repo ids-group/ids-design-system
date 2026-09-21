@@ -28,7 +28,12 @@ import type {
   DsLinkModifiers,
   DsRouterLink,
 } from '@ids-group-ltd/ids-design-system/components';
-import type { ButtonColor, ButtonVariant, ButtonType } from './button.types';
+import type {
+  ButtonAlign,
+  ButtonColor,
+  ButtonVariant,
+  ButtonType,
+} from './button.types';
 import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
 import { inFieldGroup } from '@ids-group-ltd/ids-design-system/components/field-group';
 import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
@@ -100,6 +105,7 @@ const DISCOURAGED_COMBOS = new Map<string, string>([
     '[attr.data-variant]': 'variant()',
     '[attr.data-color]': 'color()',
     '[class.with-message]': 'hasMessageRow()',
+    '[class.align-between]': "align() === 'between'",
   },
 })
 export class ButtonComponent extends DsMessageBase {
@@ -117,6 +123,9 @@ export class ButtonComponent extends DsMessageBase {
    *  reason. `text` is discouraged for every colour — prefer the global `.link` class, and keep
    *  this one only where the ds-button API is needed. */
   readonly variant = input<ButtonVariant>('solid');
+  /** Where the contents sit once the button is wider than them, which in practice means
+   *  `fullWidth`. `'between'` pushes the label and a trailing icon to opposite edges. */
+  readonly align = input<ButtonAlign>('center');
   /** Button height — sm/md/lg.
    *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
   readonly size = input<DsSize | null>(null);

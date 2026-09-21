@@ -21,6 +21,8 @@
   --_pagination-label-color: var(--ds-pagination-label-color, var(--text-secondary));
   --_pagination-label-letter-spacing: var(--ds-pagination-label-letter-spacing, normal);
   --_pagination-label-text-transform: var(--ds-pagination-label-text-transform, none);
+  --_pagination-button-size: var(--field-h-sm);
+  --_pagination-button-font-size: var(--font-size-s);
 
   display: inline-flex;
 }
@@ -31,6 +33,18 @@
   align-items: center;
   flex-wrap: wrap;
 
+  &.md { --_pagination-button-size: var(--field-h-md); }
+  &.lg { --_pagination-button-size: var(--field-h-lg); --_pagination-button-font-size: var(--font-size-m); }
+
+  /* The label takes the slack, so the controls land on the far edge. Only visible once
+     something stretches the nav past its contents, which is the caller's job. */
+  &.spread {
+    display: flex;
+    width: 100%;
+
+    .label { margin-right: auto; }
+  }
+
   .label {
     font: var(--_pagination-label-weight) var(--_pagination-label-font-size) / var(--line-height-flat) var(--font-sans);
     color: var(--_pagination-label-color);
@@ -40,12 +54,12 @@
   }
 
   .pagination-button {
-    min-width: var(--hit-min);
-    height: var(--hit-min);
+    min-width: var(--_pagination-button-size);
+    height: var(--_pagination-button-size);
     padding: 0 var(--space-2);
     border: var(--border-width-default) solid var(--_pagination-btn-border);
     background-color: var(--_pagination-btn-bg-color);
-    font: var(--font-weight-semibold) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
+    font: var(--font-weight-semibold) var(--_pagination-button-font-size) / var(--line-height-flat) var(--font-sans);
     color: var(--_pagination-btn-label-color);
     border-radius: var(--_pagination-radius);
     cursor: pointer;

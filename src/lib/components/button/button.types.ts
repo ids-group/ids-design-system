@@ -12,3 +12,7 @@ export type ButtonColor =
   | 'warning';
 export type ButtonVariant = 'solid' | 'tonal' | 'ghost' | 'outline' | 'text';
 export type ButtonType = 'button' | 'submit' | 'reset';
+
+// Only meaningful once the button is wider than its contents, which in practice means
+// `fullWidth` or a grid cell that stretches it.
+export type ButtonAlign = 'center' | 'between';

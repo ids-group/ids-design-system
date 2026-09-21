@@ -99,6 +99,30 @@
 
 ### Added
 
+- **`ds-button` takes `align`.** `'center'` is the default and what every button already drew;
+  `'between'` pushes the label and a trailing icon to opposite edges.
+
+  ```html
+  <ds-button fullWidth align="between" icon="arrowRight">Continue</ds-button>
+  ```
+
+  It only shows once something widens the button past its contents, so on an inline button the two
+  values are identical. Named values rather than a `justify-content` token: the shape a full-width
+  action wants is the label at one edge and the arrow at the other, and publishing the CSS property
+  would publish every other flex arrangement with it.
+
+- **`ds-pagination` takes `size` and `layout`.** `size` is the sm/md/lg control scale the rest of
+  the library uses, unset resolving `DS_CONFIG.control.size` and then `sm`, which is the height the
+  pager already had. `layout="spread"` gives the nav full width and pushes the count label and the
+  controls to opposite edges; `'grouped'`, the default, keeps them together.
+
+  ```html
+  <ds-pagination size="md" layout="spread" [total]="rows.length" [(currentPage)]="page" />
+  ```
+
+  A pager under a full-width table needs bigger targets than the dense default, and that is a
+  density question the scale already answers everywhere else.
+
 - **Seven styling hooks where a consumer was reaching past the surface.** Each one is a property
   the component tokenised everything around and not itself, so the only way to set it was a rule
   that doubles a class to out-specify our compiled selector.

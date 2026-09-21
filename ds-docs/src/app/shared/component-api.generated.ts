@@ -1502,6 +1502,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Fill pattern. Every color×variant pair renders; the discouraged ones dev-warn with the reason. `text` is discouraged for every colour — prefer the global `.link` class, and keep this one only where the ds-button API is needed."
       },
       {
+        "name": "align",
+        "kind": "input",
+        "type": "ButtonAlign",
+        "union": [
+          "center",
+          "between"
+        ],
+        "default": "'center'",
+        "required": false,
+        "description": "Where the contents sit once the button is wider than them, which in practice means `fullWidth`. `'between'` pushes the label and a trailing icon to opposite edges."
+      },
+      {
         "name": "size",
         "kind": "input",
         "type": "DsSize | null",
@@ -6429,6 +6441,31 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "true",
         "required": false,
         "description": "Shows the rows-per-page dropdown. Turn it off for a screen with a fixed page size — otherwise the control offers a choice the host won't honour."
+      },
+      {
+        "name": "size",
+        "kind": "input",
+        "type": "DsSize | null",
+        "union": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "null",
+        "required": false,
+        "description": "Control height - sm/md/lg. A pager under a full-width table wants targets bigger than the dense default. Unset falls back to `DS_CONFIG.control.size`, then `'sm'`."
+      },
+      {
+        "name": "layout",
+        "kind": "input",
+        "type": "PaginationLayout",
+        "union": [
+          "grouped",
+          "spread"
+        ],
+        "default": "'grouped'",
+        "required": false,
+        "description": "`'grouped'`, the default, keeps the label beside the controls. `'spread'` pushes them to opposite edges of whatever width the nav is given."
       }
     ],
     "outputs": []

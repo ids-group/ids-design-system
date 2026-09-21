@@ -3,5 +3,5 @@
 
 Group: Layout & navigation
 
-Inputs: `total: required number`, `pageSize: model<number> = 10`, `currentPage: model<number> = 1`, `pageSizeOptions: number[] = [10, 25, 50, 100]`, `showLabel: boolean = true`
+Inputs: `total: required number`, `pageSize: model<number> = 10`, `currentPage: model<number> = 1`, `pageSizeOptions: number[] = [10, 25, 50, 100]`, `showLabel: boolean = true`, `size: DsSize | null = null` (unset resolves `DS_CONFIG.control.size`, then `sm`), `layout: PaginationLayout = 'grouped'` (`'grouped' | 'spread'`; `'spread'` gives the nav full width and pushes the label and the controls to opposite edges)
 Outputs: `(currentPageChange): number`, `(pageSizeChange): number`

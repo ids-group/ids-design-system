@@ -82,6 +82,7 @@ export {
 export type { BreadcrumbItem } from '@ids-group-ltd/ids-design-system/components/breadcrumbs';
 export { ButtonComponent } from '@ids-group-ltd/ids-design-system/components/button';
 export type {
+  ButtonAlign,
   ButtonColor,
   ButtonType,
   ButtonVariant,
@@ -229,6 +230,7 @@ export { PageFooterComponent } from '@ids-group-ltd/ids-design-system/components
 export type { PageFooterVariant } from '@ids-group-ltd/ids-design-system/components/page-footer';
 export { PageHeaderComponent } from '@ids-group-ltd/ids-design-system/components/page-header';
 export { PaginationComponent } from '@ids-group-ltd/ids-design-system/components/pagination';
+export type { PaginationLayout } from '@ids-group-ltd/ids-design-system/components/pagination';
 export {
   PasswordRulesComponent,
   passwordRulesMet,

@@ -30,6 +30,10 @@
   gap: var(--field-label-gap);
 }
 
+:host(.align-between) .button {
+  --_button-justify: space-between;
+}
+
 :host(.with-message.full-width) {
   display: flex;
 }
@@ -45,6 +49,8 @@
   --c-muted:          var(--accent-muted);
   --c-muted-strong:   var(--accent-muted-strong);
   --c-outline-border: var(--c-muted-strong);
+
+  --_button-justify: center;
 
   --_button-bg-color:        var(--ds-button-bg-color,        var(--c-base));
   --_button-label-color:     var(--ds-button-label-color,     var(--c-on));
@@ -91,7 +97,7 @@
 
   display: inline-flex;
   align-items: center;
-  justify-content: center;
+  justify-content: var(--_button-justify);
   gap: var(--space-2);
   font: var(--_button-weight) var(--_button-font-size) / var(--_button-line-height) var(--_button-font-family);
   letter-spacing: var(--_button-tracking);

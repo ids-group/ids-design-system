@@ -9,6 +9,9 @@ import {
 import { FormsModule } from '@angular/forms';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { SelectComponent } from '@ids-group-ltd/ids-design-system/components/select';
+import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
+import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
+import type { PaginationLayout } from './pagination.types';
 
 @Component({
   selector: 'ds-pagination',
@@ -33,6 +36,23 @@ export class PaginationComponent {
   /** Shows the rows-per-page dropdown. Turn it off for a screen with a fixed
    *  page size — otherwise the control offers a choice the host won't honour. */
   readonly showPageSize = input(true, { transform: booleanAttribute });
+  /** Control height - sm/md/lg. A pager under a full-width table wants targets bigger than the
+   *  dense default. Unset falls back to `DS_CONFIG.control.size`, then `'sm'`. */
+  readonly size = input<DsSize | null>(null);
+  protected readonly sizeResolved = resolveWithConfig(
+    this.size,
+    (config) => config.control?.size,
+    'sm' as DsSize,
+  );
+  /** `'grouped'`, the default, keeps the label beside the controls. `'spread'` pushes them to
+   *  opposite edges of whatever width the nav is given. */
+  readonly layout = input<PaginationLayout>('grouped');
+
+  protected readonly navClass = computed(() =>
+    ['pagination', this.sizeResolved(), this.layout()]
+      .filter((part) => part !== 'grouped')
+      .join(' '),
+  );
 
   protected readonly totalPages = computed(() =>
     Math.max(1, Math.ceil(this.total() / this.pageSize())),
