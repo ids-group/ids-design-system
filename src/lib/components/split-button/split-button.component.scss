@@ -8,7 +8,7 @@
 
   /* Not --accent-strong: that is the family's ON-TINT colour, meant for text on a light
      surface, and as a background it leaves the label unreadable. */
-  --_split-button-bg-hover-color: var(--ds-split-button-bg-hover-color, var(--accent-hover));
+  --_split-button-bg-hover-color: var(--ds-split-button-bg-color-hover, var(--accent-hover));
   --_split-button-divider-color: var(--ds-split-button-divider-color, var(--btn-split-divider));
 
   /* Transparent, matching ds-button's outline variant — the split button's outlined

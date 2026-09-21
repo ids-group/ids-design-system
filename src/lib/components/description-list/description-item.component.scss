@@ -8,17 +8,17 @@
   /* The term is the same eyebrow role ds-field-label and the modal eyebrow
      expose in full, so it takes the same five properties. Defaults reproduce
      what the shorthand pinned, so nothing moves until one is set. */
-  --_term-color: var(--ds-description-list-term-color, var(--text-tertiary));
-  --_term-font-size: var(--ds-description-list-term-font-size, var(--font-size-s));
-  --_term-weight: var(--ds-description-list-term-font-weight, var(--font-weight-regular));
-  --_term-tracking: var(--ds-description-list-term-letter-spacing, normal);
-  --_term-transform: var(--ds-description-list-term-text-transform, none);
+  --_term-color: var(--ds-description-item-term-color, var(--text-tertiary));
+  --_term-font-size: var(--ds-description-item-term-font-size, var(--font-size-s));
+  --_term-weight: var(--ds-description-item-term-font-weight, var(--font-weight-regular));
+  --_term-tracking: var(--ds-description-item-term-letter-spacing, normal);
+  --_term-transform: var(--ds-description-item-term-text-transform, none);
 
   /* The details side is the VALUE, not a label: it gets the three properties it
      actually sets. Transform and tracking would be API with no case behind it. */
-  --_details-color: var(--ds-description-list-details-color, var(--text-primary));
-  --_details-font-size: var(--ds-description-list-details-font-size, var(--font-size-s));
-  --_details-weight: var(--ds-description-list-details-font-weight, var(--font-weight-regular));
+  --_details-color: var(--ds-description-item-details-color, var(--text-primary));
+  --_details-font-size: var(--ds-description-item-details-font-size, var(--font-size-s));
+  --_details-weight: var(--ds-description-item-details-font-weight, var(--font-weight-regular));
 
   display: grid;
 

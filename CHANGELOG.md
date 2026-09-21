@@ -97,6 +97,37 @@
   The two old names read as a pair and controlled unrelated things: a value moved to the wrong one
   re-pads every card in the app and leaves the container alone, or the reverse.
 
+- **Fourteen more tokens take the name of what they configure.** The spelling pass fixed
+  abbreviations; this one fixes tokens whose name points at the wrong component or uses a word
+  only we say.
+
+  ```scss
+  ds-description-item { --ds-description-item-term-text-transform: uppercase; }
+  ds-segmented { --ds-segmented-segment-border: 1px solid var(--border-default); }
+  ds-tabs { --ds-tabs-gap: var(--space-4); }
+  ```
+
+  The eight `--ds-description-list-term-*` and `-details-*` tokens are declared in
+  `description-item.component.scss` and style one item, so they are `--ds-description-item-*`.
+  The three `--ds-segmented-button-*` are `--ds-segmented-segment-*`, because the component calls
+  its parts segments everywhere else it speaks - `class="segment"` in the template,
+  `SegmentedOption` as the published type. `--ds-tabs-strip-gap` is `--ds-tabs-gap`: `strip` is
+  our internal word for the tab list and appears nowhere a consumer reads.
+  `--ds-description-list-col-gap` is `-column-gap`, and
+  `--ds-split-button-bg-hover-color` is `-bg-color-hover`, which is how every other hover colour
+  in the library is spelled.
+
+  `--ds-description-list-label-width`, `-row-gap` and `-column-gap` stay on the list, which is
+  what they size. `--ds-button-*`, `--ds-split-button-*`, `--ds-icon-button-*` and
+  `--ds-pagination-button-*` all style real buttons and are unchanged.
+
+  A word that disambiguates a real part is not an abbreviation and was kept:
+  `--ds-tab-label-font-size` stays, because a tab has a label and a badge, and
+  `--ds-tab-color` would not say which it meant.
+
+  An unknown custom property is not an error, so a missed rename is silent - the component reads
+  its own fallback and draws at the default.
+
 ### Added
 
 - **`ds-button` takes `align`.** `'center'` is the default and what every button already drew;

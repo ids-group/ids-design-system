@@ -1,7 +1,7 @@
 :host {
   --_dl-label-w: var(--ds-description-list-label-width, var(--dl-spec-label-w));
   --_dl-row-gap: var(--ds-description-list-row-gap, var(--space-3));
-  --_dl-col-gap: var(--ds-description-list-col-gap, var(--space-5));
+  --_dl-col-gap: var(--ds-description-list-column-gap, var(--space-5));
 
   display: flex;
   flex-direction: column;

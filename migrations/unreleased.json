@@ -400,6 +400,73 @@
       ],
       "verify": "No `--ds-container-pad` remains, and every card or stat padding that was set through it now reads `--ds-surface-padding`.",
       "note": "It is declared in the global token sheet and read by `card` and `stat`; `ds-container` reads `--ds-container-padding-x` and `--ds-container-max-width`. One prefix carried two owners."
+    },
+    {
+      "id": "description-item-tokens-leave-the-list-namespace",
+      "kind": "token-rename",
+      "old": "--ds-description-list-term-* | --ds-description-list-details-*",
+      "new": "--ds-description-item-term-* | --ds-description-item-details-*",
+      "surface": "style",
+      "action": "Rewrite the eight term and details tokens from `--ds-description-list-` to `--ds-description-item-`: `-term-color`, `-term-font-size`, `-term-font-weight`, `-term-letter-spacing`, `-term-text-transform`, `-details-color`, `-details-font-size`, `-details-font-weight`.",
+      "appliesWhen": "Only those eight. `--ds-description-list-label-width`, `-row-gap` and `-column-gap` stay on the list, because the list is what they size.",
+      "pitfall": "An unknown custom property is not an error. The declaration stays in the stylesheet, the component reads its own fallback, and the element draws at the default with nothing reported.",
+      "restore": null,
+      "searchHints": [
+        "--ds-description-list-",
+        "--ds-description-"
+      ],
+      "verify": "No `--ds-description-list-term-` or `--ds-description-list-details-` remains.",
+      "note": "All eight are declared in `description-item.component.scss` and style one item's term and details, so the prefix named a component they do not configure. A consumer reaching for `ds-description-item` looked for the item's name and found nothing."
+    },
+    {
+      "id": "segmented-parts-are-segments",
+      "kind": "token-rename",
+      "old": "--ds-segmented-button-*",
+      "new": "--ds-segmented-segment-*",
+      "surface": "style",
+      "action": "Rewrite `--ds-segmented-button-border`, `-button-height` and `-button-padding-x` to `--ds-segmented-segment-border`, `-segment-height` and `-segment-padding-x`.",
+      "appliesWhen": "Only the segmented control. `--ds-button-*`, `--ds-split-button-*`, `--ds-icon-button-*` and `--ds-pagination-button-*` all style real buttons and keep their names.",
+      "pitfall": "An unknown custom property is not an error. The declaration stays in the stylesheet, the component reads its own fallback, and the element draws at the default with nothing reported.",
+      "restore": null,
+      "searchHints": [
+        "--ds-segmented-"
+      ],
+      "verify": "No `--ds-segmented-button-` remains.",
+      "note": "The component calls its parts segments everywhere else it speaks: the template renders `class=\"segment\"` and the published type is `SegmentedOption`. Only the tokens said button."
+    },
+    {
+      "id": "tabs-strip-gap-is-tabs-gap",
+      "kind": "token-rename",
+      "old": "--ds-tabs-strip-gap",
+      "new": "--ds-tabs-gap",
+      "surface": "style",
+      "action": "Rewrite `--ds-tabs-strip-gap` to `--ds-tabs-gap`.",
+      "appliesWhen": "The gap between tabs in the strip. The panel's own spacing is `--ds-tabs-panel-padding-top` and is unchanged.",
+      "pitfall": "An unknown custom property is not an error. The declaration stays in the stylesheet, the component reads its own fallback, and the element draws at the default with nothing reported.",
+      "restore": null,
+      "searchHints": [
+        "--ds-tabs-strip-gap",
+        "--ds-tabs-"
+      ],
+      "verify": "No `--ds-tabs-strip-gap` remains.",
+      "note": "`strip` is the component's internal word for the tab list and appears nowhere a consumer reads, so the token carried a noun only we use."
+    },
+    {
+      "id": "two-tokens-brought-back-into-their-family",
+      "kind": "token-rename",
+      "old": "--ds-description-list-col-gap | --ds-split-button-bg-hover-color",
+      "new": "--ds-description-list-column-gap | --ds-split-button-bg-color-hover",
+      "surface": "style",
+      "action": "Rewrite `--ds-description-list-col-gap` to `--ds-description-list-column-gap`, and `--ds-split-button-bg-hover-color` to `--ds-split-button-bg-color-hover`.",
+      "appliesWhen": "Those two names only.",
+      "pitfall": "An unknown custom property is not an error. The declaration stays in the stylesheet, the component reads its own fallback, and the element draws at the default with nothing reported.",
+      "restore": null,
+      "searchHints": [
+        "-col-gap",
+        "-bg-hover-color"
+      ],
+      "verify": "Neither `--ds-description-list-col-gap` nor `--ds-split-button-bg-hover-color` remains.",
+      "note": "`col` is the last abbreviation left after the spelling pass, and the split button was the one hover colour in the library spelled `-bg-hover-color` rather than `-bg-color-hover`."
     }
   ],
   "informational": [

@@ -3665,42 +3665,42 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "description": "",
     "tokens": [
       {
-        "name": "--ds-description-list-term-color",
+        "name": "--ds-description-item-term-color",
         "value": "var(--text-tertiary)",
         "notes": "Description list term (label) text colour."
       },
       {
-        "name": "--ds-description-list-term-font-size",
+        "name": "--ds-description-item-term-font-size",
         "value": "var(--font-size-s)",
         "notes": "Description list term font size (defaults to --font-size-s)."
       },
       {
-        "name": "--ds-description-list-term-font-weight",
+        "name": "--ds-description-item-term-font-weight",
         "value": "var(--font-weight-regular)",
         "notes": "Term (label) weight. Completes the eyebrow set the modal eyebrow and ds-field-label already expose."
       },
       {
-        "name": "--ds-description-list-term-letter-spacing",
+        "name": "--ds-description-item-term-letter-spacing",
         "value": "normal",
         "notes": "Term letter-spacing (default normal)."
       },
       {
-        "name": "--ds-description-list-term-text-transform",
+        "name": "--ds-description-item-term-text-transform",
         "value": "none",
         "notes": "Term text-transform (default none) — set uppercase for an eyebrow-style label column."
       },
       {
-        "name": "--ds-description-list-details-color",
+        "name": "--ds-description-item-details-color",
         "value": "var(--text-primary)",
         "notes": "Description list details (value) text colour."
       },
       {
-        "name": "--ds-description-list-details-font-size",
+        "name": "--ds-description-item-details-font-size",
         "value": "var(--font-size-s)",
         "notes": "Value size."
       },
       {
-        "name": "--ds-description-list-details-font-weight",
+        "name": "--ds-description-item-details-font-weight",
         "value": "var(--font-weight-regular)",
         "notes": "Value weight."
       },
@@ -3715,7 +3715,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Description list row gap (defaults to --space-3)."
       },
       {
-        "name": "--ds-description-list-col-gap",
+        "name": "--ds-description-list-column-gap",
         "value": "var(--space-5)",
         "notes": "Description list term/details column gap (defaults to --space-5)."
       }
@@ -5797,7 +5797,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Segmented control track inner padding (defaults to --segmented-pad)."
       },
       {
-        "name": "--ds-segmented-button-height",
+        "name": "--ds-segmented-segment-height",
         "value": "var(--segmented-btn-h)",
         "notes": "Segmented control button height (defaults to --segmented-btn-h)."
       },
@@ -5817,12 +5817,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Selected segment shadow (defaults to --ds-elevation-raised)."
       },
       {
-        "name": "--ds-segmented-button-border",
+        "name": "--ds-segmented-segment-border",
         "value": "0",
         "notes": "Segment border (default 0) — set a hairline for a bordered chip row."
       },
       {
-        "name": "--ds-segmented-button-padding-x",
+        "name": "--ds-segmented-segment-padding-x",
         "value": "var(--space-4)",
         "notes": "Segment horizontal padding."
       },
@@ -6231,7 +6231,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Split button label/icon colour (defaults to --accent-on)."
       },
       {
-        "name": "--ds-split-button-bg-hover-color",
+        "name": "--ds-split-button-bg-color-hover",
         "value": "var(--accent-hover)",
         "notes": "Split button hover fill (defaults to --accent-hover). Not --accent-strong: that is the on-tint colour for text on a light surface, and as a fill it leaves the label unreadable."
       },
@@ -7225,7 +7225,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Tab label size."
       },
       {
-        "name": "--ds-tabs-strip-gap",
+        "name": "--ds-tabs-gap",
         "value": "var(--space-2)",
         "notes": "Gap between tabs in the strip."
       },

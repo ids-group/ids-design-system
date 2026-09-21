@@ -15,15 +15,15 @@
   );
   --_segmented-label-color: var(--ds-segmented-label-color, var(--text-secondary));
   --_segmented-pad: var(--ds-segmented-padding, var(--segmented-pad));
-  --_segmented-btn-h: var(--ds-segmented-button-height, var(--segmented-btn-h));
+  --_segmented-btn-h: var(--ds-segmented-segment-height, var(--segmented-btn-h));
   --_segmented-r-inner: var(--ds-segmented-radius-inner, var(--segmented-r-inner));
   --_segmented-radius: var(
     --ds-segmented-radius,
     calc(var(--_segmented-r-inner) + var(--_segmented-pad))
   );
   --_segmented-selected-shadow: var(--ds-segmented-selected-shadow, var(--ds-elevation-raised));
-  --_segmented-btn-border: var(--ds-segmented-button-border, 0);
-  --_segmented-btn-pad-x: var(--ds-segmented-button-padding-x, var(--space-4));
+  --_segmented-btn-border: var(--ds-segmented-segment-border, 0);
+  --_segmented-btn-pad-x: var(--ds-segmented-segment-padding-x, var(--space-4));
   --_segmented-label-weight: var(--ds-segmented-label-font-weight, var(--font-weight-semibold));
   --_segmented-label-font-size: var(--ds-segmented-label-font-size, var(--font-size-s));
 
