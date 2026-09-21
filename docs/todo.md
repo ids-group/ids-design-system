@@ -14,14 +14,14 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**115 open — 1 P1, 35 P2, 79 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**113 open — 1 P1, 33 P2, 79 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 1
 
 - **Framework & forms**
   - Upgrade to Angular 22 — and re-verify the signal-forms work against it, because one of its breaking changes lands exactly there
 
-### P2 — 35
+### P2 — 33
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Nothing catches a shell that rings on `:focus-within` when it means the keyboard
@@ -41,10 +41,8 @@ item and nothing else.
   - `.design-sync/conventions.md` is a generator INPUT, and nothing stops a reflow desyncing it
   - The elements demo has not been opened in a real browser since the rebuilds
   - `ds-toast-region`'s dev-warning strip is unverified
-- **Charts and fields the ECM prototype could not use (recorded 2026-09-15, Stas: take all five)**
-  - No component draws one bar whose segments are the parts of a whole — and it is a chart
-  - `ds-progress` cannot show a target beside the fill
-  - `ds-line-chart` cannot be told its value-axis maximum, so two plots of the same measure
+- **Two chart names that collide (recorded 2026-09-21, from the mm-ecm consumer)**
+  - `ds-bar` is a prefix of `ds-bar-chart`, and the token surfaces overlap the same way
 - **Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)**
   - A1 - build the seam and ONE directive, and measure what the seam itself costs
   - Build-time `define` flag: a consumer CAN strip library code from `angular.json` — measured
@@ -94,8 +92,8 @@ item and nothing else.
   - Which of the 8 live chapters can also be frozen
   - `templates` and `startingPoints` in `_ds_manifest.json` are in the schema and empty
   - `.thumbnail` — the project's cover image — has no source that regenerates it
-- **Charts and fields the ECM prototype could not use (recorded 2026-09-15, Stas: take all five)**
-  - `ds-funnel-chart` states the drop as a share and never as a count (arrived 2026-09-15)
+- **Two chart names that collide (recorded 2026-09-21, from the mm-ecm consumer)**
+  - One idea, two contracts: a bar stacks through `segments`, a column through `stack`
 - **A journey canvas the mm-ecm prototype could not use (recorded 2026-09-16)**
   - Journey / flow diagram - no component draws a branching node-and-edge canvas
 - **The twenty-eight rules one consumer still needs to reach into our internals (recorded 2026-09-21)**
@@ -552,38 +550,18 @@ Each has somebody behind it. Nothing here is speculative work.
 
 ## Charts and fields the ECM prototype could not use (recorded 2026-09-15, Stas: take all five)
 
-Ten hand-rolled charts moved onto DS components at 0.13.1. These five are what stopped the
-remaining four screens; each names the screen it blocks, so a fix has somewhere to be checked.
+All closed. Seven items, every one answered by v0.13.2 or by sending the question back; the section
+stays because each records what the shape was argued down to. Verified against the tag on
+2026-09-21: `segments`, `target`, `max`, `maxSecondary` and `drop` all resolve at `v0.13.2`.
 
-- [ ] **[P2] No component draws one bar whose segments are the parts of a whole — and it is a chart
-  type, so it wants a design pass before code (Stas 2026-09-15: generic, take it; not started).
-  CONFIRMED BLOCKING: the consumer answered that outcome distribution cannot ship without it, and
-  that nothing else on that page waits — so this item alone holds a screen.**
-  `BarChartRow` is `{ id?, label, value, percent?, color? }` — one value per row — and neither
-  `ds-bar-chart` nor `ds-column-chart` mentions a stack. `LineChartAxisMode`'s `'stacked'` is two
-  plots over a shared category axis, a different picture entirely.
-  **Blocks** the outcome distribution on `performance-overview`: one full-width bar whose segments
-  are the outcome categories, with a list beneath carrying each segment's label, code, count and
-  percent.
+- [x] **[P2] One bar whose segments are the parts of a whole — shipped as `BarChartRow.segments`
+  in v0.13.2.** `segments?: readonly BarChartSegment[]` widened the published row rather than
+  splitting the data model, and `partOfWhole` still gates whether a share of the total is a real
+  quantity. It carries the outcome distribution on the consumer's `performance-overview`.
 
-  **Four questions decide the shape, and answering them in code first is how this ends up wrong:**
-  - **A mode on `ds-bar-chart`, or its own component?** A stacked bar shares the axis and the
-    palette but not the row model, and `partOfWhole` already gates whether a share of the total is
-    a real quantity — a stack asserts it by construction.
-  - **What does a segment carry?** `BarChartRow.segments?: readonly BarChartSegment[]` widens a
-    PUBLISHED type, which is a `behavior` item for anyone reading a row back. A separate input
-    avoids that and splits the data model in two.
-  - **Legend and tooltip.** One legend over segment NAMES, not series — `ds-chart-legend` keys on a
-    series id today, and `isolate`/`hidden` mean something different when hiding a segment changes
-    the whole the others are parts of.
-  - **The annex table.** Every chart carries one; for a stack it has to name the segment, its value
-    and its share, which is the same table the consumer's screen draws beneath the bar anyway.
-
-- [ ] **[P2] `ds-progress` cannot show a target beside the fill.** Its inputs are `value`,
-  `variant`, `indeterminate`, `ariaLabel`; there is no second mark on the track.
-  **Blocks** the KPI cards on `performance-overview`, where the row exists to read actual against
-  target in one glance — without the mark the bar loses the comparison it is there for. Wanted: a
-  `target` input on the same scale, drawn as a hairline across the track. The smallest of the five.
+- [x] **[P2] `ds-progress` cannot show a target beside the fill — shipped as `target` in v0.13.2.**
+  `readonly target = input<number | null>(null)`, on the same scale as `value`, drawn as a hairline
+  across the track. It carries the KPI cards on `performance-overview`.
 
 - [x] **[P3] A second value per bar row — closed by asking instead of building (2026-09-15).** The
   ask wanted `12,400 → 456` in one row; two numbers with a bar encoding the ratio is a table, so the
@@ -608,26 +586,42 @@ remaining four screens; each names the screen it blocks, so a fix has somewhere 
   rather than boxed so it survives crossing the line, and `aria-hidden` because the annex table
   already carries every reading.
 
-- [ ] **[P2] `ds-line-chart` cannot be told its value-axis maximum, so two plots of the same measure
-  are not comparable (arrived 2026-09-15, after the first answer went out).** `yAxisMode` chooses how
-  the axes RELATE — `'rounded' | 'exact' | 'independent' | 'stacked'` — and none of them pins a
-  bound; `niceMax` derives one from the data on every render.
-  **What that costs, in the consumer's words:** a response-time panel is opened one agent at a time,
-  and an agent averaging 13 hrs renders on a 0–14 axis while one averaging 26 hrs renders on a 0–30
-  axis. The two plots look identical — the same gentle wiggle filling the same box — and nothing on
-  screen says the scales differ. Their hand-rolled chart pinned `chartYMax = 30` for exactly this.
-  **Wanted:** `min`/`max` on the value axis, per axis given `axis: 'secondary'` exists. A series
-  judged against a threshold keeps one frame across renders.
+- [x] **[P2] `ds-line-chart` cannot be told its value-axis maximum — shipped as `max` in v0.13.2,
+  with `maxSecondary` beside it.** `niceMax` derived a bound from the data on every render, so a
+  panel opened one agent at a time drew 13 hrs on a 0–14 axis and 26 hrs on a 0–30 axis with
+  nothing on screen saying the scales differed. A pinned `max` keeps one frame across renders.
 
-- [ ] **[P3] `ds-funnel-chart` states the drop as a share and never as a count (arrived 2026-09-15).**
-  `formattedDrop` is `formatPercent(drop, 1)` (`funnel-chart.component.ts:290`), so the Drop column
-  is always relative.
-  **Both readings are real and they answer different questions** — what fraction leaked here, versus
-  how many records that is. On a settlement waterfall the count is the one an operator acts on:
-  22,623 records is a re-targeting job, 41.8% is a talking point. The count is recoverable by
-  subtracting two rows, and the reader should not have to.
-  **Wanted:** a `drop` input — `'relative' | 'absolute' | 'none'` — or a second column carrying the
-  count beside the share.
+- [x] **[P3] `ds-funnel-chart` states the drop as a share and never as a count — shipped as the
+  `drop` input in v0.13.2.** `FunnelChartDrop` is `'relative' | 'absolute' | 'none'`. Both readings
+  answer different questions: what fraction leaked here, versus how many records that is. On a
+  settlement waterfall the count is the one an operator acts on.
+
+## Two chart names that collide (recorded 2026-09-21, from the mm-ecm consumer)
+
+Both found while planning that consumer's move to 0.13.3. Neither blocks it; both cost a reader.
+
+- [ ] **[P2] `ds-bar` is a prefix of `ds-bar-chart`, and the token surfaces overlap the same way.**
+  0.13.3 merged `ds-progress` and `ds-meter` into `ds-bar`, and the CHANGELOG entry announcing it
+  has to carry its own warning: "`ds-bar-chart` is a different component and is NOT renamed. `ds-bar`
+  is a prefix of it, so a find-and-replace without a word boundary will corrupt every chart in the
+  app." The tokens repeat the trap — three pairs differ only by the word `chart`:
+  `--ds-bar-track-color` against `--ds-bar-chart-track-color`, `--ds-bar-target-color` against
+  `--ds-bar-chart-target-color`, `--ds-bar-target-width` against `--ds-bar-chart-target-width`.
+  A missed token rename reports nothing and the bar simply returns to its default look, which is the
+  failure this collision makes likely rather than merely possible.
+  **Wanted:** a name that cannot prefix a chart's. `ds-progress-bar` keeps the merge and loses the
+  collision; it also costs one more rename in a release that is already renaming this component, so
+  it is cheapest now and not later.
+
+- [ ] **[P3] One idea, two contracts: a bar stacks through `segments`, a column through `stack`.**
+  `column-chart.component.ts:161` is `readonly stack = input<ChartStackMode>('none')` with
+  `'none' | 'grouped' | 'stacked' | 'normalized'`. `ds-bar-chart` has 19 inputs and no `stack` at
+  all; its stacking lives on the datum, as `BarChartRow.segments`.
+  The phase-1 spec calls the two components twins — "bar is horizontal, column is vertical", sharing
+  the scale and format modules — so a consumer who has stacked one arrives at the other expecting
+  the same input and finds a different model.
+  **Wanted:** either `stack` on `ds-bar-chart` as well, or one line in both docs pages saying which
+  contract belongs to which orientation and why they differ.
 
 ## A journey canvas the mm-ecm prototype could not use (recorded 2026-09-16)
 
