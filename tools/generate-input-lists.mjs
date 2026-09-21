@@ -2,10 +2,8 @@
 // Every component's full input list, written into components.md between markers, and a stub
 // block for a component the file does not mention at all.
 //
-// The prose above each marker is authored: it groups the inputs that need explaining and says
-// why. It is not a catalogue, and it drifted into one being 525 of 944 inputs short, with 37
-// components missing outright - which is how a consumer came to file eleven asks for API that
-// already existed. The generated line is the catalogue, so the prose does not have to be one.
+// The prose above each marker is authored and explains why an input exists. The generated line
+// is the catalogue, so the prose does not have to be one and does not go short as inputs land.
 //
 // Sibling of extract-tokens.mjs and extract-component-api.mjs: source -> generated -> docs.
 import { readFileSync, writeFileSync, readdirSync, existsSync } from 'node:fs';
@@ -91,8 +89,7 @@ function readApi() {
   throw new Error('COMPONENT_API object not found');
 }
 
-/** The component's own directory, where a constant it defaults to is declared. */
-function sourcesNear(entry) {
+function componentSourceFiles(entry) {
   const directory = join(COMPONENTS, String(entry.key ?? ''));
   if (!existsSync(directory)) return [];
 
@@ -103,14 +100,16 @@ function sourcesNear(entry) {
 
 /** A default naming an unexported constant tells a consumer a symbol they cannot import, so it
  *  is resolved to the literal it holds and dropped when it cannot be. `changelog-lint` C010
- *  fails the build on the unresolved form, which is how this was found. */
+ *  fails the build on the unresolved form. */
 function readableDefault(value, entry) {
   if (value === null || value === undefined) return null;
   const text = String(value).trim();
   if (LITERAL.test(text)) return text;
   if (!CONSTANT.test(text)) return null;
-  const declaration = new RegExp(`export const ${text}\\s*(?::[^=]+)?=\\s*([^;\\n]+)`);
-  for (const file of sourcesNear(entry)) {
+  const declaration = new RegExp(
+    `export const ${text}\\s*(?::[^=]+)?=\\s*([^;\\n]+)`,
+  );
+  for (const file of componentSourceFiles(entry)) {
     const match = readFileSync(file, 'utf8').match(declaration);
     if (match && LITERAL.test(match[1].trim())) return match[1].trim();
   }
@@ -119,8 +118,7 @@ function readableDefault(value, entry) {
 }
 
 /** A type the package root does not publish cannot be named in a published document: it sends a
- *  reader after a symbol they cannot import. `changelog-lint` C010 fails the build on one, which
- *  is how `ChartStackOffset` - `@internal`, yet the type of a published input - was found. */
+ *  reader after a symbol they cannot import, and `changelog-lint` C010 fails the build on one. */
 function publishableType(type) {
   if (!type) return null;
   const named = type.match(/[A-Z][A-Za-z0-9]*/g) ?? [];
@@ -133,9 +131,11 @@ function signature(input, entry) {
   const union = input.union?.length
     ? input.union.map((value) => `'${value}'`).join(' | ')
     : null;
-  const spelled = union && union.length <= 60 ? union : (input.type ?? 'unknown');
+  const spelled =
+    union && union.length <= 60 ? union : (input.type ?? 'unknown');
   const type = publishableType(spelled);
-  if (input.required) return type ? `${input.name}: required ${type}` : `${input.name}: required`;
+  if (input.required)
+    return type ? `${input.name}: required ${type}` : `${input.name}: required`;
   if (!type) return input.name;
   const value = readableDefault(input.default, entry);
 
@@ -152,7 +152,6 @@ function inputLine(entry) {
   );
 }
 
-/** A component absent from the file gets a heading, its own summary and the generated list. */
 function stubFor(entry) {
   const heading = entry.isElement ? `<${entry.selector}>` : entry.selector;
   const summary = entry.summary ? `${entry.summary}\n\n` : '';
@@ -163,7 +162,8 @@ function stubFor(entry) {
 const api = readApi();
 const bySelector = new Map();
 for (const entry of Object.values(api)) {
-  if (entry.selector && entry.inputs?.length) bySelector.set(entry.selector, entry);
+  if (entry.selector && entry.inputs?.length)
+    bySelector.set(entry.selector, entry);
 }
 
 const current = readFileSync(DOCS, 'utf8');
@@ -171,8 +171,8 @@ const written = [];
 
 /** One part per `###` or `####` heading. Split rather than matched, on BOTH levels: JS has no
  *  `\Z`, so a lookahead for "the next heading or the end" silently means "or a literal Z"; and a
- *  block that ran to the next `####` swallowed the `###` section heading between them, so the
- *  appended line landed under the wrong section. */
+ *  block split on `####` alone swallows the `###` section heading after it, which puts an
+ *  appended line under the wrong section. */
 function blocksOf(text) {
   const starts = [];
   const heading = /^#{3,4} /gm;
@@ -195,7 +195,9 @@ let updated = blocksOf(current)
     const selectors = [...heading.matchAll(/`([^`]+)`/g)].map((match) =>
       match[1].replace(/^</, '').replace(/>$/, ''),
     );
-    const entry = selectors.map((selector) => bySelector.get(selector)).find(Boolean);
+    const entry = selectors
+      .map((selector) => bySelector.get(selector))
+      .find(Boolean);
     if (!entry) return block;
     written.push(entry.selector);
     const marked = new RegExp(
@@ -207,25 +209,34 @@ let updated = blocksOf(current)
     const body = rule ? block.slice(0, block.length - rule[0].length) : block;
 
     return (
-      body.replace(/\n*$/, '\n\n') + inputLine(entry) + (rule ? '\n---\n\n' : '\n')
+      body.replace(/\n*$/, '\n\n') +
+      inputLine(entry) +
+      (rule ? '\n---\n\n' : '\n')
     );
   })
   .join('');
 
-const absent = [...bySelector.keys()].filter((selector) => !written.includes(selector));
+const absent = [...bySelector.keys()].filter(
+  (selector) => !written.includes(selector),
+);
 for (const [section, selectors] of Object.entries(SECTION)) {
   const due = selectors.filter((selector) => absent.includes(selector));
   if (!due.length) continue;
-  const stubs = due.map((selector) => stubFor(bySelector.get(selector))).join('');
+  const stubs = due
+    .map((selector) => stubFor(bySelector.get(selector)))
+    .join('');
   const start = updated.indexOf(`### ${section}\n`);
-  if (start === -1) throw new Error(`no '### ${section}' section in components.md`);
+  if (start === -1)
+    throw new Error(`no '### ${section}' section in components.md`);
   const next = updated.indexOf('\n### ', start + 1);
   const end = next === -1 ? updated.length : next + 1;
   updated = updated.slice(0, end) + stubs + updated.slice(end);
   written.push(...due);
 }
 
-const missing = [...bySelector.keys()].filter((selector) => !written.includes(selector));
+const missing = [...bySelector.keys()].filter(
+  (selector) => !written.includes(selector),
+);
 
 if (process.argv.includes('--check')) {
   if (current !== updated) {
@@ -234,7 +245,9 @@ if (process.argv.includes('--check')) {
     );
     process.exit(1);
   }
-  console.log(`generate-input-lists: OK - ${written.length} component(s) up to date.`);
+  console.log(
+    `generate-input-lists: OK - ${written.length} component(s) up to date.`,
+  );
 } else {
   writeFileSync(DOCS, updated);
   console.log(
