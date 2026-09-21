@@ -674,6 +674,32 @@
       ],
       "verify": "No `multi` binding remains on any `ds-accordion`.",
       "note": "Every other place on this surface spells the same idea `multiple` - `ds-autocomplete`, `ds-dropzone`, and the table's own `TableExpandMode`."
+    },
+    {
+      "id": "dropzone-single-removed",
+      "kind": "removed-api",
+      "old": "ds-dropzone[single]",
+      "new": null,
+      "surface": [
+        "template",
+        "style"
+      ],
+      "action": "Delete every `single` binding from `ds-dropzone`. The file count is `multiple`, whose unset default already takes one file. Where `single` was also narrowing the panel, set `--ds-dropzone-max-width` instead.",
+      "appliesWhen": "Only `ds-dropzone`. `mode=\"single\"` on `ds-date-picker` is a different input with a different meaning and is unchanged.",
+      "pitfall": "`single` did two things and only one of them was its name. Dropping it without setting `--ds-dropzone-max-width` leaves the panel full width, which is a layout change no error reports. The count needs nothing: `single` and the default `multiple` unset were already the same file count.",
+      "restore": null,
+      "searchHints": [
+        "single",
+        "ds-dropzone",
+        "[multiple]"
+      ],
+      "detect": [
+        "single",
+        "<ds-dropzone",
+        "ds-dropzone"
+      ],
+      "verify": "No `single` binding remains on any `ds-dropzone`, and every panel that was narrow still is - through `--ds-dropzone-max-width`.",
+      "note": "Two booleans encoded one three-state fact: `single` set the count, which `multiple` already carried, and separately capped the width, which nothing said. A narrow multi-file dropzone could not be expressed at all."
     }
   ],
   "informational": [

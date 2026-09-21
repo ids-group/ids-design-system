@@ -161,6 +161,29 @@
   attribute against a default of `true` - the accordion opens several panels instead, silently.
   A property binding fails the build; a plain attribute does not.
 
+- **`ds-dropzone` loses `single`; the file count is `multiple` and the width is a token.**
+
+  ```html
+  <ds-dropzone [multiple]="true" />
+  ```
+  ```scss
+  ds-dropzone { --ds-dropzone-max-width: var(--col-cap-text); }
+  ```
+
+  Two booleans encoded one three-state fact. `single` set the file count, which `multiple` already
+  carried - its unset default takes one file, which is exactly what `single` did - and the
+  component resolved the overlap by making one silently win: `[multiple]="single() ? false :
+  multiple()"`. Setting both to `true` gave a single-file dropzone, with no error and no warning.
+
+  Separately, and with nothing in its name to say so, `single` capped the panel at
+  `--col-cap-text`. A narrow dropzone that takes several files could not be expressed at all. That
+  width is now `--ds-dropzone-max-width`, unset by default, which is how every other component
+  sizes itself.
+
+  Dropping the binding needs no thought about the count - `single` and an unset `multiple` were
+  the same file count. It does need a thought about the width: without the token the panel fills
+  its column, and nothing reports that.
+
 ### Added
 
 - **A published input can now name its own type.** `g[dsColumnSeries]` and `g[dsLineSeries]` ship

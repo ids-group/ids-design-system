@@ -4028,6 +4028,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Corner radius."
       },
       {
+        "name": "--ds-dropzone-max-width",
+        "value": "none",
+        "notes": "Panel width cap; unset lets it fill its column."
+      },
+      {
         "name": "--ds-dropzone-file-progress",
         "value": "var(--accent)",
         "notes": "Upload progress."

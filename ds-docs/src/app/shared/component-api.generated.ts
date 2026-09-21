@@ -3470,7 +3470,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Allows picking more than one file at once (ignored when `single`)."
+        "description": "Allows picking more than one file at once. Unset takes one, which is what the native input does with no `multiple`."
       },
       {
         "name": "files",
@@ -3489,15 +3489,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Disables the dropzone: blocks all file-picking interactions and signals unavailability."
-      },
-      {
-        "name": "single",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Restricts the dropzone to a single file; narrows the panel to `--col-cap-text`."
       }
     ],
     "outputs": [

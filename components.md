@@ -326,7 +326,7 @@ Inputs: `accept: string = ''`, `multiple: boolean = false`, `files: model<Dropzo
 Outputs: `(filesAdded): File[]` (raw browser File list from drop or picker), `(fileRemoved): DropzoneFile` (a chip's remove button)
 
 <!-- inputs:ds-dropzone -->
-All inputs: `accept: string = ''`, `multiple: boolean = false`, `files: DropzoneFile[] = []`, `disabled: boolean = false`, `single: boolean = false`
+All inputs: `accept: string = ''`, `multiple: boolean = false`, `files: DropzoneFile[] = []`, `disabled: boolean = false`
 <!-- /inputs -->
 
 ---

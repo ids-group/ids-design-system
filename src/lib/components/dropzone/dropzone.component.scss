@@ -16,6 +16,7 @@
   --_dropzone-text-color:               var(--ds-dropzone-text-color,               var(--text-secondary));
   --_dropzone-text-color-active:        var(--ds-dropzone-text-color-active,        var(--accent-strong));
   --_dropzone-radius:           var(--ds-dropzone-radius,           var(--ds-radius-panel));
+  --_dropzone-max-width: var(--ds-dropzone-max-width, none);
   --_dropzone-file-progress:    var(--ds-dropzone-file-progress,    var(--accent));
   --_dropzone-file-success:     var(--ds-dropzone-file-success,     var(--success));
   --_dropzone-file-error:       var(--ds-dropzone-file-error,       var(--error));
@@ -93,7 +94,7 @@
     pointer-events: none;
   }
 
-  &.single { max-width: var(--col-cap-text); }
+  max-width: var(--_dropzone-max-width);
 
   .title {
     font: var(--font-weight-bold) var(--font-size-m) / var(--line-height-snug) var(--font-heading);

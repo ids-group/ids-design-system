@@ -433,6 +433,7 @@
   "--ds-dropzone-file-progress": "Upload progress.",
   "--ds-dropzone-file-success": "Per-file success.",
   "--ds-dropzone-icon-color": "Dropzone upload icon colour (defaults to --icon-default).",
+  "--ds-dropzone-max-width": "Panel width cap; unset lets it fill its column.",
   "--ds-dropzone-radius": "Corner radius.",
   "--ds-dropzone-text-color": "Body text.",
   "--ds-dropzone-text-color-active": "Drag-active text.",
