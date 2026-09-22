@@ -14,10 +14,9 @@
 :host {
   @include check-box.resolvers;
 
-  /* On the host, not on `.table`: the loading scrim that offsets by it sits OUTSIDE the table
-     element, and a custom property only reaches descendants. The measured row height sits between
-     the hook and the floor, so a consumer pin wins over the measurement and the measurement wins
-     over the fallback; `publishHeadHeight` writes the measured one. */
+  /* On the host, not in the `.table` resolver block with its siblings: the loading scrim that
+     offsets by it sits OUTSIDE the table element, and a custom property only reaches descendants.
+     `publishHeadHeight` writes `--_table-head-measured`. */
   --_table-head-height: var(--ds-table-head-height, var(--_table-head-measured, 40px));
 
   display: block;

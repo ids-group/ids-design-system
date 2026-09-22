@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 // `presentations/backlog-board.html` embeds `docs/todo.md` and `docs/done.md` verbatim so its
-// popover works over `file://`, and a copy nobody diffs rots: it carried a three-week-old backlog
-// with three deck filenames that no longer existed.
+// popover works over `file://`. The embed is a copy, so it needs diffing against its source.
 //
 // Deliberately NOT in `lint:all`, for the reason `todo-index:check` is not either: `docs/todo.md`
 // is edited by parallel sessions in a shared checkout, so a byte-equality check against it fails a
