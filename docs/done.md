@@ -21,7 +21,9 @@ Fourteen subclass items carry the DS classes in `old` instead of `class MyTable 
 placeholders. `time-columns-onkey-signature` is an informational line: the class is not exported.
 `field-state-icon-hand-rolled` finds `name="error"`, `name="warn"` and `.field-message` rather than
 every `ds-icon`, and the table footer rows say a local rule replaces the inset per side instead of
-doubling it. Every picker's `panelTokens` comment names the shared `DROPDOWN_PANEL_TOKENS`.
+doubling it. Every picker's `panelTokens` comment names the shared `DROPDOWN_PANEL_TOKENS`, and
+the five manifest entries that send a consumer to one of its hooks (0.10.0, 0.10.2, 0.11.4, two in
+0.13.1) say that the shared pane setup forwards it and no picker's own list names it.
 
 The plugin (1.8.1) reads each tag from its own `git archive` tree and never checks the clone out,
 and every dispatch carries the trees of `v<V>` and the tag before it, so `ds-recheck` proves a
