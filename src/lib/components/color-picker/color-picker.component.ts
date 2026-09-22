@@ -91,7 +91,9 @@ export class ColorPickerComponent
   private readonly vcr = inject(ViewContainerRef);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   /** Public panel tokens forwarded onto the portaled overlay pane on open so
-   *  a consumer's `ds-color-picker { --ds-color-picker-panel-*: … }` reaches it. */
+   *  a consumer's `ds-color-picker { --ds-color-picker-panel-*: … }` reaches it.
+   *  Not the whole set: `prepareOverlayEnter` also forwards `DROPDOWN_PANEL_TOKENS`
+   *  (overlay-motion.ts) onto every pane, the `--ds-option-*` family among them. */
   private readonly panelTokens = [
     '--ds-color-picker-swatch',
     '--ds-color-picker-preview',

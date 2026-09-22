@@ -67,7 +67,9 @@ export class PopoverComponent implements OnDestroy, DsOverlayCloseRef {
   private triggerElement: HTMLElement | null = null;
   private focusTimer: ReturnType<typeof setTimeout> | null = null;
   /** Public panel tokens forwarded onto the portaled overlay pane on open so
-   *  a consumer's `ds-popover { --ds-popover-panel-*: … }` reaches it. */
+   *  a consumer's `ds-popover { --ds-popover-panel-*: … }` reaches it.
+   *  Not the whole set: `prepareOverlayEnter` also forwards `DROPDOWN_PANEL_TOKENS`
+   *  (overlay-motion.ts) onto every pane, the `--ds-option-*` family among them. */
   private readonly panelTokens = [
     '--ds-popover-bg-color',
     '--ds-popover-border-color',

@@ -118,7 +118,9 @@ export class AutocompleteComponent<T = unknown>
   private readonly vcr = inject(ViewContainerRef);
   private readonly host = inject(ElementRef<HTMLElement>);
   /** Public panel tokens forwarded onto the portaled overlay pane on open, so a consumer's
-   *  `ds-autocomplete { --ds-autocomplete-panel-bg-color | -radius | -maxh: … }` reaches it. */
+   *  `ds-autocomplete { --ds-autocomplete-panel-bg-color | -radius | -maxh: … }` reaches it.
+   *  Not the whole set: `prepareOverlayEnter` also forwards `DROPDOWN_PANEL_TOKENS`
+   *  (overlay-motion.ts) onto every pane, the `--ds-option-*` family among them. */
   private readonly panelTokens = [
     '--ds-dropdown-panel-bg-color',
     '--ds-dropdown-panel-min-width',
