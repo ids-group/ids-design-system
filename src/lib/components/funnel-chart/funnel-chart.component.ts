@@ -14,7 +14,6 @@ import {
 import {
   CHART_RAMP_COLORS,
   chartColors,
-  defaultChartFormat,
   describeSeries,
   formatPercent,
   focusMark,
@@ -26,7 +25,6 @@ import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/s
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { ChartDataTableComponent } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
 import type { ChartDataRow } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
-import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 import { resolveChartDefaults } from '@ids-group-ltd/ids-design-system/components';
 import type {
   ChartDataTable,

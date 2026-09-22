@@ -13,7 +13,6 @@ import {
 } from '@angular/core';
 import {
   CHART_SERIES_COLORS,
-  defaultChartFormat,
   describeSeries,
   focusMark,
   largestRemainder,
@@ -22,7 +21,6 @@ import {
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
-import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 import type {
   ChartDataTable,
   ChartFrame,

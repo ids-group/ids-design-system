@@ -14,7 +14,6 @@ import {
 import {
   CHART_SERIES_COLORS,
   chartColors,
-  defaultChartFormat,
   describeSeries,
   formatPercent,
   describeShare,
@@ -25,7 +24,6 @@ import {
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
-import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 import type {
   ChartDataTable,
   ChartFrame,

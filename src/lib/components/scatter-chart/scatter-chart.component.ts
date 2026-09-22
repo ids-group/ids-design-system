@@ -12,7 +12,6 @@ import {
 import {
   CHART_SERIES_COLORS,
   decimationTarget,
-  defaultChartFormat,
   linearScale,
   lttbDecimate,
   minMaxDecimate,
@@ -31,7 +30,6 @@ import type {
   ChartItemTooltipTrigger,
   ChartTooltipContext,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
-import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 import type {
   ChartDataTable,
   ChartFrame,

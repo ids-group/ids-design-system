@@ -8,14 +8,12 @@ import {
   numberAttribute,
   output,
 } from '@angular/core';
-import { defaultChartFormat } from '@ids-group-ltd/ids-design-system/components';
 import {
   ChartComponent,
   ColumnSeriesComponent,
 } from '@ids-group-ltd/ids-design-system/components/chart';
 import type { ColumnSeriesPoint } from '@ids-group-ltd/ids-design-system/components/chart';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
-import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 import type {
   ChartDataTable,
   ChartFrame,

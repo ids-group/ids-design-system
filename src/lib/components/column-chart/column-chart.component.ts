@@ -17,13 +17,11 @@ import {
 } from '@angular/core';
 import {
   CHART_SERIES_COLORS,
-  defaultChartFormat,
   describeSeries,
   formatPercent,
   shareOfTotal,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
-import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 import type {
   ChartDataTable,
   ChartFrame,

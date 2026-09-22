@@ -7,10 +7,7 @@ import {
   input,
   output,
 } from '@angular/core';
-import {
-  CHART_HEAT_COLORS,
-  defaultChartFormat,
-} from '@ids-group-ltd/ids-design-system/components';
+import { CHART_HEAT_COLORS } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import { ChartDataTableComponent } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
 import type { ChartDataRow } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
@@ -22,7 +19,6 @@ import type {
   ChartItemTooltipTrigger,
   ChartTooltipContext,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
-import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 import type {
   ChartFrame,
   ChartValueFormat,
