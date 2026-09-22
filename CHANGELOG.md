@@ -716,7 +716,8 @@
 - **Exported class member surface grew, and some members were renamed or retyped - this matters
   only if you SUBCLASS one of these.** `ButtonComponent` gained `align`; `SegmentedComponent` gained
   `joined`; `PaginationComponent` gained `layout`, `size`, `sizeResolved` and `navClass`;
-  `DropzoneComponent` gained `emitPicked`; `AlertComponent` and `BannerComponent` each gained
+  `DropzoneComponent` gained `emitPicked`; `ToastRegionComponent` gained `showQueueCount` and
+  `queuedLabel`; `AlertComponent` and `BannerComponent` each gained
   `announceResolved` and widened `announce` to `boolean | null`. `ChartComponent` gained 21 members -
   the cursor, second-axis and category-label machinery, `cursor`, `cursorPin`, `cursorPinned`,
   `cursorPointer`, `releaseCursor`, `maxSecondary`, `axisLabel`, `secondaryAxisLabel`,
