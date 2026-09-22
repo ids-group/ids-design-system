@@ -14,18 +14,17 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**117 open — 1 P1, 34 P2, 82 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**116 open — 1 P1, 33 P2, 82 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 1
 
 - **Framework & forms**
   - Upgrade to Angular 22 — and re-verify the signal-forms work against it, because one of its breaking changes lands exactly there
 
-### P2 — 34
+### P2 — 33
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Nothing catches a shell that rings on `:focus-within` when it means the keyboard
-  - The overlay entrance no longer drops, and it does not grow either (Stas asked for scale plus opacity, 2026-09-04)
   - Transitions are missing or wrong in places, and nothing says where (Stas, 2026-09-04)
   - `_focus.scss`'s top-level CSS is copied into 33 component style strings
   - Warning and success fields show a mismatched halo
@@ -272,15 +271,6 @@ Constraints and decisions that read as removable and are not.
   is about the element type, not the selector. Candidate: flag `:focus-within` in a component whose
   template has `type="checkbox"`, `type="radio"`, or a `button`, and leave text fields alone.
 
-
-- [ ] **[P2] The overlay entrance no longer drops, and it does not grow either (Stas asked for scale plus opacity, 2026-09-04).** `_overlay-motion.scss:19` reads `--_overlay-enter-keyframes: var(--ds-overlay-enter-keyframes, ds-fade-in)`, so the 4px drop the ask named is gone. What was asked for was `ds-scale-in` - opacity AND growth out of the trigger edge; what shipped is opacity alone.
-  `--_ds-enter-y` survives at `:29`, computed per placement and read by nobody for a panel.
-  `ds-scale-in` is in `_surface-motion.scss` and `--_overlay-enter-origin` is already resolved per
-  placement, so the remaining change is still one keyframe name.
-  Check before switching it: drawer, bottom-sheet, alert and banner set their own `--_ds-enter-y`
-  and must keep travelling, and `prepareOverlayEnter()` stamps `data-ds-placement` before attach so
-  a mid-scroll CDK flip redirects rather than restarts - a scale entrance has to survive that flip.
-  **Stas: is fade alone the answer, or does the scale still owe you?**
 
 - [ ] **[P2] Transitions are missing or wrong in places, and nothing says where (Stas, 2026-09-04).**
   Asked for as a sweep: add the ones that are absent, correct the ones that are wrong. Two mechanical
