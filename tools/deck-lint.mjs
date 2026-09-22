@@ -200,16 +200,24 @@ for (const dir of [DECKS, ARCHIVE]) {
 }
 
 // A rank is a queue position and moves whenever the queue does, so a deck cited by PATH rots the
-// moment anything is renumbered. The board cites by path because its cards are clickable, so the
-// paths it holds are checked here rather than trusted.
+// moment anything is renumbered. The board cites by path because its cards are clickable.
+//
+// The two `text/plain` blobs are CUT OUT rather than scanned up to: they carry docs/todo.md and
+// docs/done.md verbatim, whose prose names `index.html` and the like, and the `MAP` array that
+// actually drives the card links sits AFTER both of them.
 const board = join(DECKS, 'backlog-board.html');
 if (existsSync(board)) {
   const html = readFileSync(board, 'utf8');
-  const visible = html.slice(0, html.indexOf('<script type="text/plain"'));
+  const code = html
+    .split(/<script type="text\/plain"[^>]*>/)
+    .map((part, index) =>
+      index === 0 ? part : part.slice(part.indexOf('</script>') + 1),
+    )
+    .join('\n');
   for (const cited of new Set(
-    visible.match(/(?:implemented\/)?\d*-?[a-z0-9-]+\.html/g) ?? [],
+    code.match(/(?:implemented\/)?\d*-?[a-z0-9-]+\.html/g) ?? [],
   )) {
-    if (!cited.endsWith('.html') || cited === 'backlog-board.html') continue;
+    if (cited === 'backlog-board.html') continue;
     if (existsSync(join(DECKS, cited))) continue;
     fail(
       'D016',
