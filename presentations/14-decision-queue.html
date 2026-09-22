@@ -77,6 +77,13 @@
   .bn.q2 { border-inline-start-color: var(--border-strong); background: var(--surface-secondary); }
   .bn i { inline-size: 0.9rem; block-size: 0.9rem; border-radius: 50%; background: var(--error); flex: none; margin-block-start: 2px; }
   .bn.q2 i { background: var(--text-tertiary); }
+  .tint {
+    margin: 0;
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-sm);
+    font: var(--font-weight-medium) var(--font-size-2xs) / 1.4 var(--font-sans);
+  }
+
   .bn span { font: var(--font-size-2xs) / 1.45 var(--font-sans); }
 
   .bar-fixed {
@@ -93,17 +100,19 @@
 
 <main>
   <div class="masthead">
-    <h1>Четыре аска ждут тебя, пятый уже решён</h1>
+    <h1>Тридцать семь решений, каждое с нарисованными вариантами</h1>
     <p class="lede">
-      Только то, что пришло от консьюмеров на 0.13.2-0.13.3 и ещё не закрыто. Вариант выбирается
-      кликом по карточке, звёздочка - рекомендация, внизу собирается одна строка. Спор и замеры
-      лежат в своей деке, ссылка справа от вопроса.
+      Всё, на что ты ещё не ответил: открытые деки и бакет <code>Decisions</code> из бэклога, в одном
+      месте и по группам. Вариант выбирается кликом, звёздочка - рекомендация, внизу собирается одна
+      строка со всеми ответами. Где спор длинный - ссылка на деку справа от вопроса.
     </p>
     <div class="chips">
       <span class="chip is-open">Нужно решение</span>
-      <span class="chip">аски 2026-09-21 и 09-22</span>
+      <span class="chip">деки + бакет Decisions</span>
     </div>
   </div>
+
+  <p class="group">Чарты</p>
 
   <section class="q" data-q="bar-name">
     <div class="q-head">
@@ -162,9 +171,39 @@
     </div>
   </section>
 
-  <section class="q" data-q="indeterminate">
+  <section class="q" data-q="sparkline">
     <div class="q-head">
       <span class="q-num">02</span>
+      <h2 class="q-title">Спарклайн - пресет линии или свой компонент</h2>
+      <a class="q-src" href="7-chart-sparkline-preset.html">дека 7</a>
+    </div>
+    <p class="q-sub">Проверка: что вариант ДОБАВЛЯЕТ к API родителя. Спарклайн не добавляет ничего - только выключает оси, сетку, легенду, рамку и подсказку.</p>
+    <div class="opts">
+      <div class="opt"><h3>Пресет variant="spark" <span class="star">★</span></h3>
+        <p>Ноль новых понятий, другой набор значений по умолчанию.</p></div>
+      <div class="opt"><h3>Свой ds-sparkline</h3>
+        <p>Ещё один тег в каталоге и ещё одна страница доков.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="waterfall">
+    <div class="q-head">
+      <span class="q-num">03</span>
+      <h2 class="q-title">Водопад - свой тег или режим колоночного чарта</h2>
+      <a class="q-src" href="8-waterfall-mode-or-component.html">дека 8</a>
+    </div>
+    <p class="q-sub">Та же проверка даёт обратный ответ: водопад добавляет <code>kind</code> на точке, связки, подписи со знаком и три цветовые роли - и все четыре бессмысленны в остальных четырёх режимах <code>stack</code>. Аудит 2026-09-22: это самый тонкий случай из восьми чартов.</p>
+    <div class="opts">
+      <div class="opt"><h3>Свой тег <span class="star">★</span></h3>
+        <p>Вход, бессмысленный в 4 случаях из 5, читается как ловушка.</p></div>
+      <div class="opt"><h3>Режим stack="waterfall"</h3>
+        <p>Минус тег в каталоге; API колонки растёт на то, что ей не нужно.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="indeterminate">
+    <div class="q-head">
+      <span class="q-num">04</span>
       <h2 class="q-title">Форма неопределённого прогресса на узком треке</h2>
       <a class="q-src" href="../docs/todo.md">бэклог, без деки</a>
     </div>
@@ -207,9 +246,184 @@
     </div>
   </section>
 
+  <section class="q" data-q="chart-palette-lightness">
+    <div class="q-head">
+      <span class="q-num">05</span>
+      <h2 class="q-title">Палитра чартов разделяет по тону и почти не по светлоте</h2>
+      <a class="q-src" href="../docs/todo.md">бэклог 1363</a>
+    </div>
+    <p class="q-sub">Гейт держит разделение по 6 в OKLab, но светлота в него почти не входит, и тёмная тема не измерялась ни разу. Ты пометил «record only» - вопрос в том, снимать ли эту пометку.</p>
+    <div class="opts">
+      <div class="opt"><h3>Оставить record only</h3>
+        <p>Измерение есть, обязательства нет.</p></div>
+      <div class="opt"><h3>Мерить и в тёмной теме</h3>
+        <p>Гейт получает вторую тему и, возможно, перекраску.</p></div>
+    </div>
+  </section>
+
+  <p class="group">Цвет и состояния</p>
+
+  <section class="q" data-q="colour-engine">
+    <div class="q-head">
+      <span class="q-num">06</span>
+      <h2 class="q-title">Каким методом выводить цвет из одного токена на роль</h2>
+      <a class="q-src" href="1-color-engine-derivation.html">дека 1</a>
+    </div>
+    <p class="q-sub">Ниже по течению три P2 и одна измеренная провальная проверка контраста. Дека 2 - прототипная половина того же вопроса, отдельного ответа не требует.</p>
+    <div class="opts">
+      <div class="opt"><h3>Сегодня, ручные пики</h3>
+        <p>Ничего не меняется, источник остаётся раздвоенным.</p></div>
+      <div class="opt"><h3>HSL hue-only + ручные S/L <span class="star">★</span></h3>
+        <p>Δ0, байт-в-байт как сейчас, и всё из одного токена.</p></div>
+      <div class="opt"><h3>OKLCH hue-only</h3>
+        <p>Ровнее шаги, чище тинты; расхождение с сегодняшним.</p></div>
+      <div class="opt"><h3>OKLCH чистая формула</h3>
+        <p>Всё из calc от base; сплющивает рампу.</p></div>
+      <div class="opt"><h3>color-mix white/black</h3>
+        <p>Мутит на насыщенных.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="interaction-b1">
+    <div class="q-head">
+      <span class="q-num">07</span>
+      <h2 class="q-title">Шаг pressed для тинтов</h2>
+      <a class="q-src" href="3-interaction-formula.html">дека 3, В1</a>
+    </div>
+    <p class="q-sub">28% - правило «2x hover». 34% - точное попадание в нарисованный blue-300.</p>
+    <div class="opts">
+      <div class="opt"><h3>28%, правило</h3></div>
+      <div class="opt"><h3>34%, попадание в рампу</h3></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="interaction-b2">
+    <div class="q-head">
+      <span class="q-num">08</span>
+      <h2 class="q-title">Нужен ли pressed нейтральным поверхностям</h2>
+      <a class="q-src" href="3-interaction-formula.html">дека 3, В2</a>
+    </div>
+    <p class="q-sub">Сейчас у меню и строк его нет; формула даёт бесплатно.</p>
+    <div class="opts">
+      <div class="opt"><h3>Как сейчас, без pressed</h3></div>
+      <div class="opt"><h3>По формуле</h3></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="interaction-b4">
+    <div class="q-head">
+      <span class="q-num">09</span>
+      <h2 class="q-title">Нужен ли override-слот поверх формулы</h2>
+      <a class="q-src" href="3-interaction-formula.html">дека 3, В4</a>
+    </div>
+    <p class="q-sub">Любой токен состояния задаётся руками, формула остаётся fallback.</p>
+    <div class="opts">
+      <div class="opt"><h3>Только формула</h3></div>
+      <div class="opt"><h3>Формула + override</h3></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="interaction-b5">
+    <div class="q-head">
+      <span class="q-num">10</span>
+      <h2 class="q-title">Вводим ли pressed для success и warning кнопок</h2>
+      <a class="q-src" href="3-interaction-formula.html">дека 3, В5</a>
+    </div>
+    <p class="q-sub">Сейчас его нет. Это новое видимое состояние, не подгонка существующего.</p>
+    <div class="opts">
+      <div class="opt"><h3>Вводим</h3></div>
+      <div class="opt"><h3>Глушим шаг до hover</h3></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="theme-recipe">
+    <div class="q-head">
+      <span class="q-num">11</span>
+      <h2 class="q-title">Рецепт темы против ручных пиков</h2>
+      <a class="q-src" href="../docs/todo.md">бэклог 1331</a>
+    </div>
+    <p class="q-sub">Кнопка выводит состояния из рецепта темы 88%/76% mix-to-black. Если калибровка цвет-движка заменит <code>--primary-hover/-pressed</code> ручными значениями, дефолты кнопки разойдутся с ролями темы.</p>
+    <div class="opts">
+      <div class="opt"><h3>Компоненты снова читают роли</h3>
+        <p>Один источник, кнопка теряет свой расчёт.</p></div>
+      <div class="opt"><h3>Тема оставляет формулу</h3>
+        <p>Кнопка считает сама, роли и кнопка расходятся.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="warning-text">
+    <div class="q-head">
+      <span class="q-num">12</span>
+      <h2 class="q-title">Какой цвет текста ставить на жёлтый тинт</h2>
+      <a class="q-src" href="6-warning-text-colour.html">дека 6</a>
+    </div>
+    <p class="q-sub">Пара под Bugs меряется 4.42:1 против порога 4.5:1. Вариант 4 трогает не текст, а тинт, и оставляет ноль запаса.</p>
+    <div class="opts">
+      <div class="opt"><h3>1 · основной текст</h3>
+        <p class="tint" style="background:#FFF9E6;color:#1F2933">Проверьте подключение</p>
+        <dl class="layer"><dt>Контраст</dt><dd>14.22:1</dd></dl></div>
+      <div class="opt"><h3>2 · серый</h3>
+        <p class="tint" style="background:#FFF9E6;color:#323F4B">Проверьте подключение</p>
+        <dl class="layer"><dt>Контраст</dt><dd>10.39:1</dd></dl></div>
+      <div class="opt"><h3>3 · тёмно-жёлтый</h3>
+        <p class="tint" style="background:#FFF9E6;color:#5C4A00">Проверьте подключение</p>
+        <dl class="layer"><dt>Контраст</dt><dd>8.31:1</dd></dl></div>
+      <div class="opt"><h3>4 · осветлить тинт</h3>
+        <p class="tint" style="background:#FFFDF5;color:#8A6D00">Проверьте подключение</p>
+        <dl class="layer"><dt>Контраст</dt><dd>4.50:1</dd></dl></div>
+    </div>
+  </section>
+
+  <p class="group">Компоненты</p>
+
+  <section class="q" data-q="stepper-dropzone-fields">
+    <div class="q-head">
+      <span class="q-num">13</span>
+      <h2 class="q-title">ds-number-stepper и ds-dropzone - поля или нет</h2>
+      <a class="q-src" href="../docs/todo.md">бэклог 1320</a>
+    </div>
+    <p class="q-sub">Ни у одного нет <code>label</code>, <code>hint</code>, <code>error</code>, <code>ds-field-message</code> и миксина <code>field-label</code> - они никогда не были в системе полей, а не потеряли её. У остальных четырнадцати полей есть всё.</p>
+    <div class="opts">
+      <div class="opt"><h3>Внести в систему полей</h3>
+        <p>Пять входов и обёртка на каждый.</p></div>
+      <div class="opt"><h3>Объявить, что это не поля</h3>
+        <p>Строка в доках; консьюмер перестаёт их искать.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="select-multi">
+    <div class="q-head">
+      <span class="q-num">14</span>
+      <h2 class="q-title">ds-select с multi - строить ли</h2>
+      <a class="q-src" href="5-select-native-multi.html">дека 5</a>
+    </div>
+    <p class="q-sub">Ответ уже дан 2026-08-06: не строить, дека приложена. Пункт держится открытым, потому что закрыть его отказались.</p>
+    <div class="opts">
+      <div class="opt"><h3>Закрыть пункт <span class="star">★</span></h3>
+        <p>Ответ дан, дека остаётся как запись.</p></div>
+      <div class="opt"><h3>Оставить открытым</h3>
+        <p>Как сейчас.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="surface-entrance">
+    <div class="q-head">
+      <span class="q-num">15</span>
+      <h2 class="q-title">С чем появляются тост, баннер и алерт</h2>
+      <a class="q-src" href="13-surface-entrance-motion.html">дека 13</a>
+    </div>
+    <p class="q-sub">Все три объявляют <code>--ds-*-enter-scale</code> и <code>-enter-offset</code>, а <code>ds-fade-in</code> не читает ни того, ни другого. Выезд убран по твоим словам.</p>
+    <div class="opts">
+      <div class="opt"><h3>Только проявление</h3>
+        <p>Как сейчас; оба хука удаляются.</p></div>
+      <div class="opt"><h3>Рост</h3>
+        <p>Scale идёт в дело, offset удаляется.</p></div>
+    </div>
+  </section>
+
   <section class="q" data-q="banner-warning">
     <div class="q-head">
-      <span class="q-num">03</span>
+      <span class="q-num">16</span>
       <h2 class="q-title">Предупреждать ли в dev о неозвученном error-баннере</h2>
       <a class="q-src" href="11-banner-announce-warning.html">дека 11</a>
     </div>
@@ -244,7 +458,7 @@
 
   <section class="q" data-q="picker-height">
     <div class="q-head">
-      <span class="q-num">04</span>
+      <span class="q-num">17</span>
       <h2 class="q-title">Высота списка пикера - публичный токен или panelClass</h2>
       <a class="q-src" href="12-picker-list-height.html">дека 12</a>
     </div>
@@ -293,7 +507,336 @@
     </div>
   </section>
 
-  <p class="group" style="margin-top:var(--space-8);font:var(--font-weight-bold) var(--font-size-2xs)/1.4 var(--font-sans);letter-spacing:var(--letter-spacing-wider);text-transform:uppercase;color:var(--text-tertiary)">Уже решено</p>
+  <section class="q" data-q="cdk-menu">
+    <div class="q-head">
+      <span class="q-num">18</span>
+      <h2 class="q-title">Переходить ли на CDK Menu</h2>
+      <a class="q-src" href="../docs/todo.md">бэклог 1359</a>
+    </div>
+    <p class="q-sub">Припарковано: только если появятся вложенные подменю, menubar или контекстное меню.</p>
+    <div class="opts">
+      <div class="opt"><h3>Оставить парковку <span class="star">★</span></h3>
+        <p>Как сейчас.</p></div>
+      <div class="opt"><h3>Брать сейчас</h3>
+        <p>Замена своей клавиатуры и фокуса на чужие.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="signal-forms">
+    <div class="q-head">
+      <span class="q-num">19</span>
+      <h2 class="q-title">Как выглядят pending и dirty</h2>
+      <a class="q-src" href="../docs/todo.md">бэклог 1488</a>
+    </div>
+    <p class="q-sub">Два из трёх членов контракта signal-forms ждут не проводки, а вида. <code>pending</code>: у <code>ds-input</code> есть спиннер, у остальных нет. <code>dirty</code>: библиотека нигде не рисует «изменено».</p>
+    <div class="opts">
+      <div class="opt"><h3>Нарисовать оба</h3>
+        <p>Спиннер во все поля, треугольник или точка для dirty.</p></div>
+      <div class="opt"><h3>Только pending</h3>
+        <p>Dirty остаётся без визуального представления.</p></div>
+      <div class="opt"><h3>Ни одного</h3>
+        <p>Члены контракта остаются необъявленными.</p></div>
+    </div>
+  </section>
+
+  <p class="group">Имена и типографика</p>
+
+  <section class="q" data-q="typography-classes">
+    <div class="q-head">
+      <span class="q-num">20</span>
+      <h2 class="q-title">20 классов типографики всё ещё .t-*</h2>
+      <a class="q-src" href="../docs/todo.md">бэклог 1340</a>
+    </div>
+    <p class="q-sub">96 токенов под ними стали <code>--ds-typography-*</code>, классы придержали. Измерено 2026-09-22: минимум 3121 использование в одном этом репозитории.</p>
+    <p class="css">.t-h1  .t-display  .t-card-title  .t-caption
+.t-l  .t-m  .t-s  .t-xs  .t-mono
+
+.ds-typography-h1  .ds-typography-display  …</p>
+    <div class="opts">
+      <div class="opt"><h3>Переименовать классы</h3>
+        <p>3121 использование здесь плюс все консьюмеры.</p></div>
+      <div class="opt"><h3>Оставить .t-*</h3>
+        <p>Токены и классы пишут одно слово по-разному навсегда.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="button-c-slots">
+    <div class="q-head">
+      <span class="q-num">21</span>
+      <h2 class="q-title">Слоты кнопки называются --c-*</h2>
+      <a class="q-src" href="../docs/todo.md">бэклог 1346</a>
+    </div>
+    <p class="q-sub">Семь слотов на <code>.button</code>, читаются кнопкой и icon-button. Однобуквенное сокращение там, где правило дома - слово целиком; и они внутренние, но без маркера <code>--_</code>, поэтому читаются как публичные.</p>
+    <p class="css">--c-base  --c-on  --c-strong  --c-subtitle
+--c-muted  --c-muted-strong  --c-outline-border
+
+--_button-colour-base  …</p>
+    <div class="opts">
+      <div class="opt"><h3>Спеллить и пометить --_ <span class="star">★</span></h3>
+        <p>Внутренние слоты честно называются внутренними.</p></div>
+      <div class="opt"><h3>Оставить --c-*</h3>
+        <p>Ноль работы; имя продолжает врать про публичность.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="bem-modifiers">
+    <div class="q-head">
+      <span class="q-num">22</span>
+      <h2 class="q-title">ds-docs пишет модификаторы как --suffix</h2>
+      <a class="q-src" href="../docs/todo.md">бэклог 1421</a>
+    </div>
+    <p class="q-sub">Состояние должно быть своим классом, а не модификатором в имени.</p>
+    <div class="opts">
+      <div class="opt"><h3>Состояние своим классом</h3>
+        <p>Переписать модификаторы в ds-docs.</p></div>
+      <div class="opt"><h3>Оставить как есть</h3>
+        <p>Только сайт доков, в пакет не уезжает.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="docs-brand-examples">
+    <div class="q-head">
+      <span class="q-num">23</span>
+      <h2 class="q-title">Убрать ли примеры бренда и домена из публичных доков</h2>
+      <a class="q-src" href="../docs/todo.md">бэклог 1403</a>
+    </div>
+    <p class="q-sub">Имена уже убраны; речь про сами ПРИМЕРЫ.</p>
+    <div class="opts">
+      <div class="opt"><h3>Убрать примеры</h3>
+        <p>Доки становятся абстрактнее.</p></div>
+      <div class="opt"><h3>Оставить</h3>
+        <p>Примеры конкретнее, но узнаваемы.</p></div>
+    </div>
+  </section>
+
+  <p class="group">Релиз и публикация</p>
+
+  <section class="q" data-q="angular-22">
+    <div class="q-head">
+      <span class="q-num">24</span>
+      <h2 class="q-title">Когда переходим на Angular 22</h2>
+      <a class="q-src" href="../docs/todo.md">бэклог 1439, P1</a>
+    </div>
+    <p class="q-sub">Библиотека объявляет <code>^21.2.0</code> во всех шести peer-зависимостях, поэтому приложение на 22 не ставится без <code>--legacy-peer-deps</code>. Angular 22 вышел 2026-06-03. Вопрос - когда, а не нужно ли.</p>
+    <div class="opts">
+      <div class="opt"><h3>В ближайший мажор</h3>
+        <p>Новый мажор Angular = новый мажор пакета.</p></div>
+      <div class="opt"><h3>После текущего релиза</h3>
+        <p>Сначала выпустить накопленное, потом апгрейд.</p></div>
+      <div class="opt"><h3>Ждать 22.1</h3>
+        <p>Дать экосистеме догнать.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="npm-2027">
+    <div class="q-head">
+      <span class="q-num">25</span>
+      <h2 class="q-title">Чем заменить публикацию в npm с января 2027</h2>
+      <a class="q-src" href="../docs/todo.md">бэклог 1369</a>
+    </div>
+    <p class="q-sub"><code>publish.sh</code> ходит с гранулярным токеном и Bypass 2FA. npm убирает прямую публикацию такими токенами в январе 2027 - останется чтение и подготовка публикации, которую мейнтейнер подтверждает 2FA.</p>
+    <div class="opts">
+      <div class="opt"><h3>Trusted publishing (OIDC)</h3>
+        <p>CI публикует без долгоживущего токена.</p></div>
+      <div class="opt"><h3>Ручное подтверждение 2FA</h3>
+        <p>Пайплайн готовит, человек подтверждает.</p></div>
+      <div class="opt"><h3>Свой реестр</h3>
+        <p>Уход с публичного npm.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="claude-design-ci">
+    <div class="q-head">
+      <span class="q-num">26</span>
+      <h2 class="q-title">Публикация в Claude Design из Bitbucket</h2>
+      <a class="q-src" href="../docs/todo.md">бэклог 1391</a>
+    </div>
+    <p class="q-sub">Всё до публикации уже автоматизировано и гейтится. Не хватает последнего шага - самой загрузки, которая требует Chrome.</p>
+    <div class="opts">
+      <div class="opt"><h3>Искать CI-маршрут</h3>
+        <p>Headless Chrome в пайплайне.</p></div>
+      <div class="opt"><h3>Оставить локальным</h3>
+        <p>Загрузка с машины, остальное в CI.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="release-note-why">
+    <div class="q-head">
+      <span class="q-num">27</span>
+      <h2 class="q-title">Должна ли запись релиза объяснять ПОЧЕМУ</h2>
+      <a class="q-src" href="../docs/todo.md">бэклог 1414</a>
+    </div>
+    <p class="q-sub">Или только что изменилось и что делать читателю.</p>
+    <div class="opts">
+      <div class="opt"><h3>Только что и что делать</h3>
+        <p>Короче, читается быстрее.</p></div>
+      <div class="opt"><h3>И почему тоже</h3>
+        <p>Длиннее; читатель понимает решение.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="deferred-defaults">
+    <div class="q-head">
+      <span class="q-num">28</span>
+      <h2 class="q-title">Три отложенных смены значений по умолчанию</h2>
+      <a class="q-src" href="../docs/todo.md">бэклог 1498</a>
+    </div>
+    <p class="q-sub">Придержаны под партию после 0.9.0. Партия так и не собралась.</p>
+    <div class="opts">
+      <div class="opt"><h3>Выпустить в ближайший мажор</h3>
+        <p>Одна миграция на три смены.</p></div>
+      <div class="opt"><h3>Разнести по релизам</h3>
+        <p>Три миграции, каждая мельче.</p></div>
+      <div class="opt"><h3>Отказаться</h3>
+        <p>Дефолты остаются как есть.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="changelog-wrap">
+    <div class="q-head">
+      <span class="q-num">29</span>
+      <h2 class="q-title">Перевёрстывать ли CHANGELOG в 100 колонок</h2>
+      <a class="q-src" href="../docs/todo.md">бэклог 1408</a>
+    </div>
+    <p class="q-sub">Твои слова 2026-08-31: «запиши пока в туду, щас не будем».</p>
+    <div class="opts">
+      <div class="opt"><h3>Перевёрстывать</h3>
+        <p>Один большой диффа, дальше единый вид.</p></div>
+      <div class="opt"><h3>Не трогать</h3>
+        <p>Как сейчас.</p></div>
+    </div>
+  </section>
+
+  <p class="group">Тулинг и гейты</p>
+
+  <section class="q" data-q="fix-all-html">
+    <div class="q-head">
+      <span class="q-num">30</span>
+      <h2 class="q-title">fix:all переформатирует HTML, с которым потом спорит eslint</h2>
+      <a class="q-src" href="../docs/todo.md">бэклог 1425</a>
+    </div>
+    <p class="q-sub">Разница в двух глобах: <code>format</code> не смотрит шаблоны и гейт зелёный, а <code>format:fix</code> добавляет <code>html</code> и переписывает ~112 шаблонов, которые два правила eslint немедленно хотят обратно.</p>
+    <div class="opts">
+      <div class="opt"><h3>*.html в .prettierignore <span class="star">★</span></h3>
+        <p>Самый дешёвый пункт на доске.</p></div>
+      <div class="opt"><h3>Подружить правила</h3>
+        <p>Настройка prettier и двух правил eslint.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="stale-ds-css">
+    <div class="q-head">
+      <span class="q-num">31</span>
+      <h2 class="q-title">Ничто не ловит устаревший presentations/ds.css</h2>
+      <a class="q-src" href="../docs/todo.md">бэклог 1378</a>
+    </div>
+    <p class="q-sub">Регенерация 2026-09-10 сдвинула 47 объявлений, не имевших отношения к правке. Два гейта читают этот файл как истину, то есть деки рендерились со старым фокус-кольцом столько, сколько изменения лежали в <code>src/lib</code>.</p>
+    <div class="opts">
+      <div class="opt"><h3>Гейт на свежесть <span class="star">★</span></h3>
+        <p>Сравнивать с пересборкой, падать на расхождении.</p></div>
+      <div class="opt"><h3>Регенерировать в prebuild</h3>
+        <p>Всегда свежий, дольше сборка.</p></div>
+      <div class="opt"><h3>Оставить</h3>
+        <p>Расхождение остаётся невидимым.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="todo-index-gate">
+    <div class="q-head">
+      <span class="q-num">32</span>
+      <h2 class="q-title">todo-index --check вне lint:all</h2>
+      <a class="q-src" href="../docs/todo.md">бэклог 1376</a>
+    </div>
+    <p class="q-sub">Намеренно: в общем чекауте побайтовая сверка валит прогоны, не связанные с текущей веткой. Цена - индекс может устареть между коммитами.</p>
+    <div class="opts">
+      <div class="opt"><h3>Оставить вне <span class="star">★</span></h3>
+        <p>Как сейчас.</p></div>
+      <div class="opt"><h3>Внести в lint:all</h3>
+        <p>Индекс всегда свеж, чужие прогоны падают.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="manifest-practices">
+    <div class="q-head">
+      <span class="q-num">33</span>
+      <h2 class="q-title">Какие из восьми практик формата манифестов берём</h2>
+      <a class="q-src" href="4-migration-manifest-audit.html">дека 4</a>
+    </div>
+    <p class="q-sub">Все 23 находки аудита закрыты, осталась ратификация. Контракт держится на 306 строках регэкспов - первые две практики лечат именно это. Можно отметить несколько.</p>
+    <div class="opts" data-multi>
+      <div class="opt"><h3>Исполняемая проверка <span class="star">★</span></h3></div>
+      <div class="opt"><h3>schemaVersion <span class="star">★</span></h3></div>
+      <div class="opt"><h3>Явное «замены нет»</h3></div>
+      <div class="opt"><h3>Рантайм-идентификаторы</h3></div>
+      <div class="opt"><h3>Маркер эскалации</h3></div>
+      <div class="opt"><h3>deprecatedIn</h3></div>
+      <div class="opt"><h3>Ссылка на PR</h3></div>
+      <div class="opt"><h3>Ключ requirements</h3></div>
+      <div class="opt"><h3>Ни одну</h3></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="automation-coverage">
+    <div class="q-head">
+      <span class="q-num">34</span>
+      <h2 class="q-title">Три пути ds-table и пять групп компонентов ни разу не прокликаны</h2>
+      <a class="q-src" href="../docs/todo.md">бэклог 1374</a>
+    </div>
+    <p class="q-sub">Автоматизация их не трогала.</p>
+    <div class="opts">
+      <div class="opt"><h3>Прокликать</h3>
+        <p>Разовый проход и запись результата.</p></div>
+      <div class="opt"><h3>Оставить</h3>
+        <p>Пробел остаётся известным.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="schematics-tsconfig">
+    <div class="q-head">
+      <span class="q-num">35</span>
+      <h2 class="q-title">schematics/tsconfig просит moduleResolution: node</h2>
+      <a class="q-src" href="../docs/todo.md">бэклог 1399</a>
+    </div>
+    <p class="q-sub">TypeScript 6 его удаляет.</p>
+    <div class="opts">
+      <div class="opt"><h3>Перевести сейчас</h3>
+        <p>До того, как оно сломается.</p></div>
+      <div class="opt"><h3>Ждать TS 6</h3>
+        <p>Чинить по факту.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="design-manifest-templates">
+    <div class="q-head">
+      <span class="q-num">36</span>
+      <h2 class="q-title">templates и startingPoints в манифесте Claude Design</h2>
+      <a class="q-src" href="../docs/todo.md">бэклог 1382</a>
+    </div>
+    <p class="q-sub">Оба в схеме и оба пустые; что они дают - не исследовано.</p>
+    <div class="opts">
+      <div class="opt"><h3>Исследовать</h3>
+        <p>Понять, что они меняют для читателя.</p></div>
+      <div class="opt"><h3>Оставить пустыми</h3>
+        <p>Как сейчас.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="docs-blocks">
+    <div class="q-head">
+      <span class="q-num">37</span>
+      <h2 class="q-title">Четыре компонента без собственного блока в ds-docs</h2>
+      <a class="q-src" href="../docs/todo.md">бэклог 1385</a>
+    </div>
+    <p class="q-sub">Два из четырёх уже исправлены.</p>
+    <div class="opts">
+      <div class="opt"><h3>Доделать оставшиеся два</h3>
+        <p>Каждый компонент со своим блоком.</p></div>
+      <div class="opt"><h3>Оставить</h3>
+        <p>Два компонента живут внутри чужих блоков.</p></div>
+    </div>
+  </section>
+
+  <p class="group">Уже решено</p>
 
   <section class="q is-settled">
     <div class="q-head">
@@ -332,7 +875,6 @@
     записана в бэклоге - это уже руки, а не вопрос.</p>
   </section>
 
-
   <div class="bar-fixed">
     <span class="count" id="count">0 из 5</span>
     <output id="line">пока ничего не выбрано</output>
@@ -343,8 +885,9 @@
 
 <script>
   const KEY = 'ds-decision-queue-v2';
-  const load = () => { try { return JSON.parse(localStorage.getItem(KEY)) ?? {}; } catch { return {}; } };
-  const save = (v) => { try { localStorage.setItem(KEY, JSON.stringify(v)); } catch { /* private window */ } };
+  const KEY_SHAPE = 'ds-decision-queue-v3';
+  const load = () => { try { return JSON.parse(localStorage.getItem(KEY_SHAPE)) ?? {}; } catch { return {}; } };
+  const save = (v) => { try { localStorage.setItem(KEY_SHAPE, JSON.stringify(v)); } catch { /* private window */ } };
 
   const state = load();
   const sections = [...document.querySelectorAll('.q[data-q]')];
@@ -352,15 +895,15 @@
 
   function render() {
     for (const section of sections) {
-      const chosen = state[section.dataset.q];
+      const chosen = state[section.dataset.q] ?? [];
       for (const card of section.querySelectorAll('.opt')) {
-        card.classList.toggle('is-chosen', name(card) === chosen);
+        card.classList.toggle('is-chosen', chosen.includes(name(card)));
       }
     }
-    const done = sections.filter((s) => state[s.dataset.q]);
+    const done = sections.filter((s) => (state[s.dataset.q] ?? []).length > 0);
     document.getElementById('count').textContent = `${done.length} из ${sections.length}`;
     document.getElementById('line').textContent = done.length
-      ? done.map((s) => `${s.querySelector('.q-num').textContent}: ${state[s.dataset.q]}`).join('  ·  ')
+      ? done.map((s) => `${s.querySelector('.q-num').textContent}: ${state[s.dataset.q].join(' + ')}`).join('  ·  ')
       : 'пока ничего не выбрано';
   }
 
@@ -369,8 +912,13 @@
       const card = event.target.closest('.opt');
       if (!card) return;
       const key = section.dataset.q;
-      state[key] = state[key] === name(card) ? undefined : name(card);
-      if (!state[key]) delete state[key];
+      const picked = name(card);
+      const chosen = state[key] ?? [];
+      // one question may take several answers - the manifest practices are marked `data-multi`
+      state[key] = card.closest('[data-multi]')
+        ? (chosen.includes(picked) ? chosen.filter((v) => v !== picked) : [...chosen, picked])
+        : (chosen.includes(picked) ? [] : [picked]);
+      if (!state[key].length) delete state[key];
       save(state);
       render();
     });
