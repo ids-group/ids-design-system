@@ -20,9 +20,8 @@
   --_funnel-chart-focus-color: var(--ds-funnel-chart-focus-color, var(--focus-ring-color));
   --_funnel-chart-focus-width: var(--ds-funnel-chart-focus-width, var(--focus-ring-width));
 
-  /* The rings are drawn by the shared mixins, which read `--focus-ring-*` and
-     `--ds-chart-focus-ring-color`. Re-pointed here, or this chart's own two hooks would parse and
-     change nothing. */
+  /* The shared mixins draw the ring from `--focus-ring-*` and `--ds-chart-focus-ring-color`, so
+     the two hooks above reach nothing without this. */
   --ds-chart-focus-ring-color: var(--_funnel-chart-focus-color);
   --focus-ring-color: var(--_funnel-chart-focus-color);
   --focus-ring-width: var(--_funnel-chart-focus-width);
@@ -39,12 +38,6 @@
 
 .visually-hidden {
   @include visually-hidden.visually-hidden;
-}
-
-figcaption {
-  margin-block-end: var(--space-3);
-  color: var(--text-primary);
-  font-weight: 600;
 }
 
 @include chart-frame.message-box(

@@ -37,9 +37,14 @@
     user-select: text;
   }
 
+  figcaption {
+    margin-block-end: var(--space-3);
+    color: var(--text-primary);
+    font-weight: var(--font-weight-semibold);
+  }
+
   /* "The request failed" and "there is nothing to show" read the same in grey and mean opposite
-     things. Stated here rather than per chart because every chart's template sets this class:
-     four of the nine had no rule for it, and the pie names its element `.empty-text`. */
+     things. Two selectors because the pie names its element `.empty-text`. */
   .empty.is-error,
   .empty-text.is-error {
     color: var(--error);

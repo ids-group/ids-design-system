@@ -199,12 +199,9 @@ for (const dir of [DECKS, ARCHIVE]) {
   }
 }
 
-// A rank is a queue position and moves whenever the queue does, so a deck cited by PATH rots the
-// moment anything is renumbered. The board cites by path because its cards are clickable.
-//
 // The two `text/plain` blobs are CUT OUT rather than scanned up to: they carry docs/todo.md and
 // docs/done.md verbatim, whose prose names `index.html` and the like, and the `MAP` array that
-// actually drives the card links sits AFTER both of them.
+// drives the card links sits AFTER both of them.
 const board = join(DECKS, 'backlog-board.html');
 if (existsSync(board)) {
   const html = readFileSync(board, 'utf8');
