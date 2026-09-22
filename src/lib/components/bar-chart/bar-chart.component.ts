@@ -46,6 +46,8 @@ import {
   widthPercent,
 } from './bar-chart.math';
 import type { BarChartRow, BarChartSegment } from './bar-chart.types';
+import { ChartDataTableComponent } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
+import type { ChartDataRow } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
 
 /** A row's parts, ready to draw: a width, a colour and a formatted value each. Segments are
  *  CATEGORIES, so they take the categorical palette in order — unlike the rows, which are one
@@ -79,7 +81,12 @@ function segmentsOf(
 @Component({
   selector: 'ds-bar-chart',
   standalone: true,
-  imports: [SkeletonComponent, ChartTooltipDirective, IconComponent],
+  imports: [
+    SkeletonComponent,
+    ChartTooltipDirective,
+    IconComponent,
+    ChartDataTableComponent,
+  ],
   templateUrl: './bar-chart.component.html',
   styleUrl: './bar-chart.component.scss',
   host: { '[class.framed]': "frameResolved() === 'auto'" },
@@ -306,6 +313,39 @@ export class BarChartComponent {
         ...(row.ranges ?? []),
       ]),
     ),
+  );
+
+  protected readonly dataTableColumns = computed<readonly string[]>(() =>
+    this.partOfWhole()
+      ? ['Label', 'Value', 'Share of total']
+      : ['Label', 'Value'],
+  );
+
+  /** A row's segments follow it as nested rows: one table reads in one pass, and a segment is
+   *  read against the bar it belongs to rather than against the other bars. */
+  protected readonly dataTableRows = computed<readonly ChartDataRow[]>(() =>
+    this.rows().flatMap((entry) => [
+      {
+        key: entry.key,
+        cells: this.partOfWhole()
+          ? [
+              [entry.row.label, entry.row.detail].filter(Boolean).join(' - '),
+              entry.formattedValue,
+              entry.share,
+            ]
+          : [
+              [entry.row.label, entry.row.detail].filter(Boolean).join(' - '),
+              entry.formattedValue,
+            ],
+      },
+      ...entry.segments.map((part) => ({
+        key: part.key,
+        nested: true,
+        cells: this.partOfWhole()
+          ? [part.segment.label, part.formattedValue, '']
+          : [part.segment.label, part.formattedValue],
+      })),
+    ]),
   );
 
   protected readonly rows = computed(() => {

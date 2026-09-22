@@ -45,6 +45,8 @@ import {
   scatterPlacement,
 } from './scatter-chart.math';
 import type { ScatterPlot } from './scatter-chart.math';
+import { ChartDataTableComponent } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
+import type { ChartDataRow } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
 import type {
   ScatterChartDecimator,
   ScatterChartReading,
@@ -85,7 +87,12 @@ interface PlacedSeries {
   selector: 'ds-scatter-chart',
   standalone: true,
   exportAs: 'dsScatterChart',
-  imports: [ChartLegendComponent, ChartTooltipDirective, SkeletonComponent],
+  imports: [
+    ChartLegendComponent,
+    ChartTooltipDirective,
+    SkeletonComponent,
+    ChartDataTableComponent,
+  ],
   templateUrl: './scatter-chart.component.html',
   styleUrl: './scatter-chart.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -336,6 +343,23 @@ export class ScatterChartComponent {
 
     return `${this.caption() ?? 'Scatter chart'}: ${counted} readings drawn, ${axes}.${dropped > 0 ? ` ${dropped} further readings were thinned out to keep the plot drawable; the data table lists every one.` : ''}`;
   });
+
+  protected readonly dataTableColumns = computed<readonly string[]>(() => [
+    'Series',
+    this.xLabel() ?? 'x',
+    this.yLabel() ?? 'y',
+  ]);
+
+  /** Built only while the disclosure is open: a scatter carries thousands of readings, and every
+   *  one of them as a table row is a cost nobody pays until they ask. */
+  protected readonly dataTableRows = computed<readonly ChartDataRow[]>(() =>
+    this.tableIsOpen()
+      ? this.tableRows().map((row) => ({
+          key: row.key,
+          cells: [row.series, row.x, row.y],
+        }))
+      : [],
+  );
 
   protected readonly tableRows = computed(() => {
     const format = this.valueFormatResolved();

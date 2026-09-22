@@ -23,6 +23,8 @@ import type {
 } from '@ids-group-ltd/ids-design-system/core';
 import { waterfallSteps } from './waterfall-chart.math';
 import { WaterfallMarksComponent } from './waterfall-marks.component';
+import { ChartDataTableComponent } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
+import type { ChartDataRow } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
 import type {
   WaterfallChartBar,
   WaterfallChartStep,
@@ -59,6 +61,7 @@ const DIRECTION_WORDS: Record<WaterfallChartStep['direction'], string> = {
     ColumnSeriesComponent,
     SkeletonComponent,
     WaterfallMarksComponent,
+    ChartDataTableComponent,
   ],
   templateUrl: './waterfall-chart.component.html',
   styleUrl: './waterfall-chart.component.scss',
@@ -211,6 +214,18 @@ export class WaterfallChartComponent {
 
     return `${this.caption() ?? 'Waterfall'}: ${spoken}. Ends at ${format(last.to, 'tooltip')}.`;
   });
+
+  protected readonly dataTableRows = computed<readonly ChartDataRow[]>(() =>
+    this.tableRows().map((row) => ({
+      key: row.key,
+      cells: [
+        row.label,
+        row.direction,
+        row.formattedValue,
+        row.formattedRunningTotal,
+      ],
+    })),
+  );
 
   protected readonly tableRows = computed(() => {
     const format = this.valueFormatResolved();

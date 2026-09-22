@@ -305,51 +305,11 @@
     }
 
     @if (dataTableResolved() !== 'none') {
-      <details
-        class="data-table"
-        [open]="dataTableResolved() === 'visible'">
-        <summary>
-          Data table
-        </summary>
-
-        <table>
-          <caption>
-            {{
-              caption() ?? 'Chart data'
-            }}
-          </caption>
-
-          <thead>
-            <tr>
-              <th scope="col">
-                Category
-              </th>
-
-              @for (entry of resolvedSeries(); track entry.series.id) {
-                <th scope="col">
-                  {{ entry.series.label }}
-                </th>
-              }
-            </tr>
-          </thead>
-
-          <tbody>
-            @for (row of tableRows(); track $index) {
-              <tr>
-                <th scope="row">
-                  {{ row.category }}
-                </th>
-
-                @for (cell of row.cells; track $index) {
-                  <td>
-                    {{ cell }}
-                  </td>
-                }
-              </tr>
-            }
-          </tbody>
-        </table>
-      </details>
+      <ds-chart-data-table
+        [columns]="dataTableColumns()"
+        [rows]="dataTableRows()"
+        [caption]="caption()"
+        [open]="dataTableResolved() === 'visible'" />
     }
   }
 </figure>

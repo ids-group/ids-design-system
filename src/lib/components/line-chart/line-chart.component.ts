@@ -39,6 +39,8 @@ import { annotationMarks } from '@ids-group-ltd/ids-design-system/components/cha
 import { ChartTooltipDirective } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import { ChartLegendComponent } from '@ids-group-ltd/ids-design-system/components/chart-legend';
 import type { ChartLegendItem } from '@ids-group-ltd/ids-design-system/components/chart-legend';
+import { ChartDataTableComponent } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
+import type { ChartDataRow } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
 import type {
   ChartTooltipContext,
   ChartTooltipOrigin,
@@ -122,7 +124,12 @@ function baselineOf(plot: PlotArea): number {
 @Component({
   selector: 'ds-line-chart',
   standalone: true,
-  imports: [SkeletonComponent, ChartTooltipDirective, ChartLegendComponent],
+  imports: [
+    SkeletonComponent,
+    ChartTooltipDirective,
+    ChartLegendComponent,
+    ChartDataTableComponent,
+  ],
   templateUrl: './line-chart.component.html',
   styleUrl: './line-chart.component.scss',
   // Escape releases a pinned category, the same key that dismisses its panel — otherwise the
@@ -954,6 +961,18 @@ export class LineChartComponent {
 
     return labels;
   });
+
+  protected readonly dataTableColumns = computed<readonly string[]>(() => [
+    'Category',
+    ...this.resolvedSeries().map((entry) => entry.series.label),
+  ]);
+
+  protected readonly dataTableRows = computed<readonly ChartDataRow[]>(() =>
+    this.tableRows().map((row) => ({
+      key: row.category,
+      cells: [row.category, ...row.cells],
+    })),
+  );
 
   protected readonly tableRows = computed(() => {
     const format = this.valueFormatResolved();

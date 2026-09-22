@@ -49,6 +49,8 @@ import {
   sliceArcs,
 } from './pie-chart.math';
 import type { PieChartSlice } from './pie-chart.types';
+import { ChartDataTableComponent } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
+import type { ChartDataRow } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
 
 const RING_VIEW_BOX_SIZE = 100;
 const RING_CENTER = RING_VIEW_BOX_SIZE / 2;
@@ -57,7 +59,12 @@ const RING_OUTER_RADIUS = RING_VIEW_BOX_SIZE / 2;
 @Component({
   selector: 'ds-pie-chart',
   standalone: true,
-  imports: [SkeletonComponent, ChartTooltipDirective, IconComponent],
+  imports: [
+    SkeletonComponent,
+    ChartTooltipDirective,
+    IconComponent,
+    ChartDataTableComponent,
+  ],
   templateUrl: './pie-chart.component.html',
   styleUrl: './pie-chart.component.scss',
   host: { '[class.framed]': "frameResolved() === 'auto'" },
@@ -328,6 +335,21 @@ export class PieChartComponent {
 
   protected readonly visibleSlices = computed(() =>
     groupSmallest(this.data(), this.maxSlices(), this.otherLabel()),
+  );
+
+  protected readonly dataTableColumns = computed<readonly string[]>(() =>
+    this.partOfWhole()
+      ? ['Label', 'Value', 'Share of total']
+      : ['Label', 'Value'],
+  );
+
+  protected readonly dataTableRows = computed<readonly ChartDataRow[]>(() =>
+    this.slices().map((entry) => ({
+      key: entry.slice.id,
+      cells: this.partOfWhole()
+        ? [entry.slice.label, entry.formattedValue, entry.formattedPercent]
+        : [entry.slice.label, entry.formattedValue],
+    })),
   );
 
   protected readonly slices = computed(() => {

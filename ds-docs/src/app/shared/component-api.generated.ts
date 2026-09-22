@@ -2496,7 +2496,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "The chart's own caption, reused so the table says what it is a table OF."
+        "description": ""
       },
       {
         "name": "open",
@@ -2517,7 +2517,17 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Renders each row's first cell as a `<th scope=\"row\">`, for a matrix whose rows are named rather than numbered."
       }
     ],
-    "outputs": []
+    "outputs": [
+      {
+        "name": "toggled",
+        "kind": "output",
+        "type": "boolean",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "Fires with the disclosure's state, so a chart with thousands of readings can build its rows only while they are on screen."
+      }
+    ]
   },
   "checkbox": {
     "key": "checkbox",

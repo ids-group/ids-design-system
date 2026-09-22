@@ -4,12 +4,16 @@ import {
   ViewEncapsulation,
   booleanAttribute,
   input,
+  output,
 } from '@angular/core';
 
 /** Cells arrive formatted: how a value reads is the chart's decision, not the table's. */
 export interface ChartDataRow {
   readonly key: string;
   readonly cells: readonly string[];
+  /** A part of the row above rather than a row of its own - one bar's segment, one stage's drop.
+   *  Drawn indented and quieter, so the nesting survives without a second table. */
+  readonly nested?: boolean;
 }
 
 /**
@@ -35,4 +39,8 @@ export class ChartDataTableComponent {
   /** Renders each row's first cell as a `<th scope="row">`, for a matrix whose rows are named
    *  rather than numbered. */
   readonly rowHeader = input(false, { transform: booleanAttribute });
+
+  /** Fires with the disclosure's state, so a chart with thousands of readings can build its rows
+   *  only while they are on screen. */
+  readonly toggled = output<boolean>();
 }

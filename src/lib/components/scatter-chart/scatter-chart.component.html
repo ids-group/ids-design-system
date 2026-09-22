@@ -128,56 +128,12 @@
     }
 
     @if (dataTableResolved() !== 'none') {
-      <details
-        class="data-table"
+      <ds-chart-data-table
+        [columns]="dataTableColumns()"
+        [rows]="dataTableRows()"
+        [caption]="caption()"
         [open]="dataTableResolved() === 'visible'"
-        (toggle)="tableOpen.set($any($event.target).open)">
-        <summary>
-          Data table
-        </summary>
-
-        <table>
-          <caption>
-            {{
-              caption() ?? 'Chart data'
-            }}
-          </caption>
-
-          <thead>
-            <tr>
-              <th scope="col">
-                Series
-              </th>
-
-              <th scope="col">
-                {{ xLabel() ?? 'x' }}
-              </th>
-
-              <th scope="col">
-                {{ yLabel() ?? 'y' }}
-              </th>
-            </tr>
-          </thead>
-
-          <tbody>
-            @for (row of tableIsOpen() ? tableRows() : []; track row.key) {
-              <tr>
-                <td>
-                  {{ row.series }}
-                </td>
-
-                <td>
-                  {{ row.x }}
-                </td>
-
-                <td>
-                  {{ row.y }}
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </details>
+        (toggled)="tableOpen.set($event)" />
     }
   }
 </figure>

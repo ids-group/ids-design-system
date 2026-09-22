@@ -130,81 +130,11 @@
     </div>
 
     @if (dataTableResolved() !== 'none') {
-      <details
-        class="data-table"
-        [open]="dataTableResolved() === 'visible'">
-        <summary>
-          Data table
-        </summary>
-
-        <table>
-          <caption>
-            {{
-              caption() ?? 'Chart data'
-            }}
-          </caption>
-
-          <thead>
-            <tr>
-              <th scope="col">
-                Label
-              </th>
-
-              <th scope="col">
-                Value
-              </th>
-
-              @if (partOfWhole()) {
-                <th scope="col">
-                  Share of total
-                </th>
-              }
-            </tr>
-          </thead>
-
-          <tbody>
-            @for (entry of rows(); track entry.key) {
-              <tr>
-                <td>
-                  {{ entry.row.label }}
-
-                  @if (entry.row.detail) {
-                    <span class="detail">
-                      {{ entry.row.detail }}
-                    </span>
-                  }
-                </td>
-
-                <td>
-                  {{ entry.formattedValue }}
-                </td>
-
-                @if (partOfWhole()) {
-                  <td>
-                    {{ entry.share }}
-                  </td>
-                }
-              </tr>
-
-              @for (part of entry.segments; track part.key) {
-                <tr class="segment-row">
-                  <td>
-                    {{ part.segment.label }}
-                  </td>
-
-                  <td>
-                    {{ part.formattedValue }}
-                  </td>
-
-                  @if (partOfWhole()) {
-                    <td></td>
-                  }
-                </tr>
-              }
-            }
-          </tbody>
-        </table>
-      </details>
+      <ds-chart-data-table
+        [columns]="dataTableColumns()"
+        [rows]="dataTableRows()"
+        [caption]="caption()"
+        [open]="dataTableResolved() === 'visible'" />
     }
   }
 </figure>
