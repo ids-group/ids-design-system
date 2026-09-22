@@ -23,8 +23,7 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 | 10 | `10-ds-bar-name-collision` | the name of the merged progress+meter: `--ds-bar-` is a prefix of `--ds-bar-chart-`, and a namespace replace kills the chart's overrides silently |
 | 11 | `11-banner-announce-warning` | whether a dev warning names an error banner no screen reader will read, now that the input's three states tell an opt-out from an oversight |
 | 12 | `12-picker-list-height` | whether the picker list's height stays an internal token: the cap that governs the visible rows is not the one that looks settable |
-| 13 | `13-surface-entrance-motion` | whether toast, banner and alert keep fading in or grow like the overlay panels - all three declare an offset AND a scale that `ds-fade-in` reads neither of; the toast is drawn in its own corner at its real 320px |
-| 14 | `14-decision-queue` | every open question in one page - 37 across six groups, each with its options drawn rather than named; the live indeterminate tracks are the case a text list could not put |
+| 13 | `13-decision-queue` | every open question in one page - 37 across six groups, each with its options drawn rather than named; the live indeterminate tracks are the case a text list could not put |
 
 **Rank 1 is the way in, and ranks 2-4 are the two biggest lanes** — the colour engine, then the interaction formula that reads
 its ramp. Ranks 1-5 are written in Russian and share `deck.css`, which sits beside `ds.css` and

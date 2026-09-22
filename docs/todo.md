@@ -1274,7 +1274,7 @@ None of these is blocked on effort. Each is a verdict, and most carry a deck tha
 short before. **The rank is the filename**: an open deck is `<rank>-<slug>.html`, ranked by what
 answering it unblocks, so the folder listing IS the queue. Ranks are renumbered when the queue
 changes and a stale one is never kept to preserve a link; `deck-lint` fails a duplicate rank, a gap
-in 1..N, and an `implemented` deck still carrying one. **`presentations/14-decision-queue.html` carries every open question** — every open
+in 1..N, and an `implemented` deck still carrying one. **`presentations/13-decision-queue.html` carries every open question** — every open
 deck's question with its options in that deck's own words, the recommendation starred, a link back
 for the argument, and the two questions that have no deck. It duplicates no argument, so it cannot
 contradict a deck; re-check it when a deck's OPTIONS change. **Never cite a deck by number from this
@@ -1294,8 +1294,7 @@ file** — the number moves; cite the filename.
 | 10 | `10-ds-bar-name-collision` | What the merged progress+meter is called, given `ds-bar` is a prefix of `ds-bar-chart`. | the `ds-bar` rename ask on the same board |
 | 11 | `11-banner-announce-warning` | Whether a dev warning names an error banner no screen reader will read. | the closed `banner.announce` ask, which left this open |
 | 12 | `12-picker-list-height` | Whether the picker list height becomes a public token or stays behind `panelClass`. | the closed `--picker-maxh` ask, same shape |
-| 13 | `13-surface-entrance-motion` | Whether toast, banner and alert keep fading in or grow like the overlay panels. | `--ds-*-enter-offset` and `--ds-*-enter-scale` on all three, which `ds-fade-in` reads neither of |
-| 14 | `14-decision-queue` | Every open question in one page - 37 across six groups, options drawn rather than named. | every open deck plus the whole `Decisions` bucket |
+| 13 | `13-decision-queue` | Every open question in one page - 37 across six groups, options drawn rather than named. | every open deck plus the whole `Decisions` bucket |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled

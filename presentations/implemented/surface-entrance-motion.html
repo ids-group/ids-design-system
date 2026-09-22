@@ -3,8 +3,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Тост, баннер и алерт появляются на месте</title>
-<meta name="ds-deck-status" content="open">
-<link rel="stylesheet" href="ds.css">
+<meta name="ds-deck-status" content="implemented">
+<meta name="ds-deck-decided" content="2026-09-23">
+<meta name="ds-deck-evidence" content="src/lib/components/toast/toast.component.scss:43 - src/lib/components/banner/banner.component.scss:32 - src/lib/components/alert/alert.component.scss:17 - CHANGELOG.md">
+<link rel="stylesheet" href="../ds.css">
 <link rel="stylesheet" href="deck.css">
 
 <style>
@@ -199,6 +201,29 @@
   </div>
 </div>
 
+<div class="decided">
+  <h2>Решено: рост из центра</h2>
+  <p>
+    Тост, баннер и алерт входят через <code>ds-scale-in</code> — тем же движением, что
+    <code>ds-modal</code> и оверлейные панели. Точка роста — центр:
+    <code>transform-origin</code> не задан, как у модалки.
+  </p>
+  <p>
+    Выезд отклонён. <code>--ds-*-enter-offset</code> у всех трёх остаются со своими значениями:
+    форму задаёт поверхность, а не кейфрейм, поэтому потребитель, переключивший поверхность на
+    <code>ds-slide-in</code>, получит её собственное расстояние и направление.
+  </p>
+  <p class="evidence">
+    <code>toast.component.scss:43</code>, <code>banner.component.scss:32</code>,
+    <code>alert.component.scss:17</code>. Проверено в браузере на dev-сервере ds-docs:
+    у всех трёх <code>animation-name: ds-scale-in</code>, <code>transform-origin</code> в центре
+    элемента, а выстреленный тост ловится в полёте на <code>scale(0.98)</code> в своём углу.
+  </p>
+</div>
+
+<details class="folded">
+<summary>Как выбирали</summary>
+
 <h2>Что происходит сейчас</h2>
 
 <p>
@@ -256,7 +281,7 @@
       <dt>читает</dt>
       <dd class="gain"><code>opacity</code> + <code>--_ds-enter-scale</code></dd>
       <dt>смещение и масштаб</dt>
-      <dd class="gain"><code>--ds-*-enter-scale</code> оживает, <code>--ds-*-enter-offset</code> уходит</dd>
+      <dd class="gain"><code>--ds-*-enter-scale</code> оживает, <code>--ds-*-enter-offset</code> остаётся геометрией поверхности</dd>
       <dt>согласие с оверлеями</dt>
       <dd class="gain">то же движение, что у панелей</dd>
     </dl>
@@ -390,7 +415,7 @@
     <tr class="row-pick">
       <td>Рост</td>
       <td>Плашка вырастает; тост — из своего угла</td>
-      <td><code>enter-scale</code> оживает, <code>enter-offset</code> удаляется</td>
+      <td><code>enter-scale</code> оживает, <code>enter-offset</code> ждёт пресета, который ездит</td>
       <td>Одно имя кейфрейма в трёх файлах плюс <code>transform-origin</code> для тоста</td>
     </tr>
   </tbody>
@@ -435,6 +460,8 @@
     </tr>
   </tbody>
 </table>
+
+</details>
 
 <h2>Источники</h2>
 
