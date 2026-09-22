@@ -11,20 +11,20 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 
 | # | Deck | Answering it unblocks |
 | --- | --- | --- |
-| 1 | `1-decision-queue` | the five consumer asks still open from 0.13.2-0.13.3, each with its options DRAWN - the live indeterminate tracks are the case a text list could not put |
-| 2 | `2-color-engine-derivation` | the head of the biggest lane: three P2 decisions and one measured WCAG AA failure sit downstream of the colour-space choice |
-| 3 | `3-color-engine-relative` | the same decision, prototype half — ranked next so the pair is read together |
-| 4 | `4-interaction-formula` | `.ds-interactive`, five verdicts B1-B5; agreed in principle, and `_interaction.scss` still does not exist |
-| 5 | `5-migration-manifest-audit` | eight format practices to ratify — tooling, no consumer pulling on it |
-| 6 | `6-select-native-multi` | the cheapest to close: "keep parked" is a complete answer, and it is the answer already given — it stays only because closing it was declined |
-| 7 | `7-warning-text-colour` | one colour on one tint, each candidate rendered in itself. It ends "name a number: 1, 2, 3 or 4", and `docs/todo.md` still carries the measured 4.42:1 failure |
-| 8 | `8-chart-sparkline-preset` | `variant="spark"` or a separate `ds-sparkline` — parked on 2026-09-19, so it is decided-not-built rather than unasked |
-| 9 | `9-waterfall-mode-or-component` | the waterfall's own tag against a `stack="waterfall"` mode on the column chart |
-| 10 | `10-bar-column-contracts` | how far the bar and the column converge - the consumer ask that found them diverging in palette and in where composition is declared |
-| 11 | `11-ds-bar-name-collision` | the name of the merged progress+meter: `--ds-bar-` is a prefix of `--ds-bar-chart-`, and a namespace replace kills the chart's overrides silently |
-| 12 | `12-banner-announce-warning` | whether a dev warning names an error banner no screen reader will read, now that the input's three states tell an opt-out from an oversight |
-| 13 | `13-picker-list-height` | whether the picker list's height stays an internal token: the cap that governs the visible rows is not the one that looks settable |
-| 14 | `14-surface-entrance-motion` | what toast, banner and alert enter with, now that the overlay panels grow: all three declare an offset that `ds-fade-in` never reads |
+| 1 | `1-color-engine-derivation` | the head of the biggest lane: three P2 decisions and one measured WCAG AA failure sit downstream of the colour-space choice |
+| 2 | `2-color-engine-relative` | the same decision, prototype half — ranked next so the pair is read together |
+| 3 | `3-interaction-formula` | `.ds-interactive`, five verdicts B1-B5; agreed in principle, and `_interaction.scss` still does not exist |
+| 4 | `4-migration-manifest-audit` | eight format practices to ratify — tooling, no consumer pulling on it |
+| 5 | `5-select-native-multi` | the cheapest to close: "keep parked" is a complete answer, and it is the answer already given — it stays only because closing it was declined |
+| 6 | `6-warning-text-colour` | one colour on one tint, each candidate rendered in itself. It ends "name a number: 1, 2, 3 or 4", and `docs/todo.md` still carries the measured 4.42:1 failure |
+| 7 | `7-chart-sparkline-preset` | `variant="spark"` or a separate `ds-sparkline` — parked on 2026-09-19, so it is decided-not-built rather than unasked |
+| 8 | `8-waterfall-mode-or-component` | the waterfall's own tag against a `stack="waterfall"` mode on the column chart |
+| 9 | `9-bar-column-contracts` | how far the bar and the column converge - the consumer ask that found them diverging in palette and in where composition is declared |
+| 10 | `10-ds-bar-name-collision` | the name of the merged progress+meter: `--ds-bar-` is a prefix of `--ds-bar-chart-`, and a namespace replace kills the chart's overrides silently |
+| 11 | `11-banner-announce-warning` | whether a dev warning names an error banner no screen reader will read, now that the input's three states tell an opt-out from an oversight |
+| 12 | `12-picker-list-height` | whether the picker list's height stays an internal token: the cap that governs the visible rows is not the one that looks settable |
+| 13 | `13-surface-entrance-motion` | what toast, banner and alert enter with, now that the overlay panels grow: all three declare an offset that `ds-fade-in` never reads |
+| 14 | `14-decision-queue` | the five consumer asks still open from 0.13.2-0.13.3, each with its options DRAWN - the live indeterminate tracks are the case a text list could not put |
 
 **Rank 1 is the way in, and ranks 2-4 are the two biggest lanes** — the colour engine, then the interaction formula that reads
 its ramp. Ranks 1-5 are written in Russian and share `deck.css`, which sits beside `ds.css` and

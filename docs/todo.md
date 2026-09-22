@@ -1270,11 +1270,11 @@ None of these is blocked on effort. Each is a verdict, and most carry a deck tha
 
 ## Decks awaiting a verdict (re-audited 2026-09-20)
 
-**Thirteen** decks carry `ds-deck-status: open` — counted on disk, not from this list, which has been
+**Fourteen** decks carry `ds-deck-status: open` — counted on disk, not from this list, which has been
 short before. **The rank is the filename**: an open deck is `<rank>-<slug>.html`, ranked by what
 answering it unblocks, so the folder listing IS the queue. Ranks are renumbered when the queue
 changes and a stale one is never kept to preserve a link; `deck-lint` fails a duplicate rank, a gap
-in 1..N, and an `implemented` deck still carrying one. **`presentations/1-decision-queue.html` is rank 1 and covers the RECENT asks** — every open
+in 1..N, and an `implemented` deck still carrying one. **`presentations/14-decision-queue.html` covers the RECENT asks** — every open
 deck's question with its options in that deck's own words, the recommendation starred, a link back
 for the argument, and the two questions that have no deck. It duplicates no argument, so it cannot
 contradict a deck; re-check it when a deck's OPTIONS change. **Never cite a deck by number from this
@@ -1282,20 +1282,20 @@ file** — the number moves; cite the filename.
 
 | # | Deck | Asks | Twin on this board |
 | --- | --- | --- | --- |
-| 1 | `1-decision-queue` | The five consumer asks still open from 0.13.2-0.13.3, options drawn rather than named. | the 09-21 and 09-22 ask sections |
-| 2 | `2-color-engine-derivation` | One source token per role, derived. | the colour-engine P2 |
-| 3 | `3-color-engine-relative` | The prototype half of the same question. | as above |
-| 4 | `4-interaction-formula` | State interactions by formula, calibrated against the drawn ramp. | the `.ds-interactive` P2 |
-| 5 | `5-migration-manifest-audit` | Which of eight format practices marked *Adopt* are worth the tooling. | the manifest-practices P3 |
-| 6 | `6-select-native-multi` | Whether `ds-select` native `multi` is worth building. | already *Parked* — "keep parked" closes both |
-| 7 | `7-warning-text-colour` | Which colour goes on the warning tint. Four candidates, each rendered in itself. | the warning pair under *Bugs* |
-| 8 | `8-chart-sparkline-preset` | A `variant="spark"` on the line chart against a separate `ds-sparkline`. | parked 2026-09-19, so it is decided-not-built |
-| 9 | `9-waterfall-mode-or-component` | The waterfall's own tag against a `stack="waterfall"` mode on the column chart. | the waterfall entry point, already shipped standalone |
-| 10 | `10-bar-column-contracts` | How far to converge the bar and the column: name the difference, converge the palette, or give the bar a series model. | the stacking-contract ask under *Two chart names that collide* |
-| 11 | `11-ds-bar-name-collision` | What the merged progress+meter is called, given `ds-bar` is a prefix of `ds-bar-chart`. | the `ds-bar` rename ask on the same board |
-| 12 | `12-banner-announce-warning` | Whether a dev warning names an error banner no screen reader will read. | the closed `banner.announce` ask, which left this open |
-| 13 | `13-picker-list-height` | Whether the picker list height becomes a public token or stays behind `panelClass`. | the closed `--picker-maxh` ask, same shape |
-| 14 | `14-surface-entrance-motion` | What toast, banner and alert enter with: fade only, slide, or the scale the overlay panels now use. | `--ds-*-enter-offset` on all three, which `ds-fade-in` does not read |
+| 1 | `1-color-engine-derivation` | One source token per role, derived. | the colour-engine P2 |
+| 2 | `2-color-engine-relative` | The prototype half of the same question. | as above |
+| 3 | `3-interaction-formula` | State interactions by formula, calibrated against the drawn ramp. | the `.ds-interactive` P2 |
+| 4 | `4-migration-manifest-audit` | Which of eight format practices marked *Adopt* are worth the tooling. | the manifest-practices P3 |
+| 5 | `5-select-native-multi` | Whether `ds-select` native `multi` is worth building. | already *Parked* — "keep parked" closes both |
+| 6 | `6-warning-text-colour` | Which colour goes on the warning tint. Four candidates, each rendered in itself. | the warning pair under *Bugs* |
+| 7 | `7-chart-sparkline-preset` | A `variant="spark"` on the line chart against a separate `ds-sparkline`. | parked 2026-09-19, so it is decided-not-built |
+| 8 | `8-waterfall-mode-or-component` | The waterfall's own tag against a `stack="waterfall"` mode on the column chart. | the waterfall entry point, already shipped standalone |
+| 9 | `9-bar-column-contracts` | How far to converge the bar and the column: name the difference, converge the palette, or give the bar a series model. | the stacking-contract ask under *Two chart names that collide* |
+| 10 | `10-ds-bar-name-collision` | What the merged progress+meter is called, given `ds-bar` is a prefix of `ds-bar-chart`. | the `ds-bar` rename ask on the same board |
+| 11 | `11-banner-announce-warning` | Whether a dev warning names an error banner no screen reader will read. | the closed `banner.announce` ask, which left this open |
+| 12 | `12-picker-list-height` | Whether the picker list height becomes a public token or stays behind `panelClass`. | the closed `--picker-maxh` ask, same shape |
+| 13 | `13-surface-entrance-motion` | What toast, banner and alert enter with: fade only, slide, or the scale the overlay panels now use. | `--ds-*-enter-offset` on all three, which `ds-fade-in` does not read |
+| 14 | `14-decision-queue` | The five consumer asks still open from 0.13.2-0.13.3, options drawn rather than named. | the 09-21 and 09-22 ask sections |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
@@ -1308,7 +1308,7 @@ same day as a `tool` — it asks nothing, so a rank on it claimed a verdict was 
 
 **Closed on 2026-09-21 and moved to `implemented/`:** `chart-palette-v2` - the two greens moved apart by one token (`--chart-categorical-6`, 152deg to 148deg), and `tools/check-chart-palette-separation.mjs` went into `lint:all` holding the 6 floor under normal vision. Colour-vision deficiency is reported by that gate and not enforced: Stas confirmed the system never took that commitment on, which is why the full repaint was declined.
 
-**Nine of the thirteen have a twin on this board, so one answer closes two lines** — which is what
+**Nine of the fourteen have a twin on this board, so one answer closes two lines** — which is what
 makes them the cheapest thing here. Rank 5 is the cheapest of all: "keep parked" is a complete
 answer, and it has already been given — the deck stays only because closing it was declined.
 
