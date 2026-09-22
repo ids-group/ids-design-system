@@ -379,9 +379,9 @@ export interface ChartAnnotationMark {
  *  anchors to its own edge instead of centring.
  *
  *  @internal */
-export const ANNOTATION_GAP = 12;
+const ANNOTATION_GAP = 12;
 /** @internal */
-export const ANNOTATION_EDGE_GUARD = 48;
+const ANNOTATION_EDGE_GUARD = 48;
 
 /** Places a label against each reading it names.
  *

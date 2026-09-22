@@ -30,18 +30,3 @@ export function waterfallSteps(
     };
   });
 }
-
-/** The span the value axis has to hold: every level a bar touches, plus zero, because a chain that
- *  never crosses the baseline still has to show where the baseline is.
- *
- *  @internal */
-export function waterfallDomain(steps: readonly WaterfallChartStep[]): {
-  min: number;
-  max: number;
-} {
-  const levels = [0, ...steps.flatMap((step) => [step.from, step.to])].filter(
-    (level) => Number.isFinite(level),
-  );
-
-  return { min: Math.min(...levels), max: Math.max(...levels) };
-}
