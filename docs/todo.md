@@ -14,7 +14,7 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**116 open — 1 P1, 33 P2, 82 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**118 open — 1 P1, 33 P2, 84 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 1
 
@@ -69,7 +69,7 @@ item and nothing else.
   - The chassis is declared nine times and shared once - about 450 lines of it
   - The template state head and the figcaption rule are copied verbatim, nine times each
 
-### P3 — 82
+### P3 — 84
 
 - **What v0.13.3 added and the docs site never shows (measured 2026-09-22)**
   - Fifteen new inputs have no demo and no prose on the docs site
@@ -130,6 +130,8 @@ item and nothing else.
   - Inspect mode — ASKED 2026-08-05, Stas: NOT NOW (stays open with the pilot scope below)
 - **The hex readout rolls its glyphs like a mechanical board (recorded 2026-09-02, Stas)**
   - Dragging the picker retypes the hex value instantly; each glyph should ROLL to its new
+  - Does a dev warning name an error banner no screen reader will read?
+  - Does the picker list height become a public token, or stay behind `panelClass`?
 - **The field system — the two controls outside it, and the five with no box to paint**
   - CDK Menu adoption (option B) — parked
 - **Tooling**
@@ -1249,6 +1251,20 @@ Three defects the port surfaced by reading every component's template + SCSS aga
   one accessible text source.
 
 # Decisions — waiting on Stas, not on work
+
+- [ ] **[P3] Does a dev warning name an error banner no screen reader will read?** Drawn in deck
+  `banner-announce-warning`, three options: stay silent, warn on every unannounced `error` or
+  `warning` banner, or warn only while `DS_CONFIG.banner.announce` is unset so the noise ends the
+  moment an app decides. It became answerable only when `announce` gained a third state: `null` is
+  untouched, `false` is a deliberate opt-out, and before that the two were indistinguishable. One
+  consumer's first pass over 43 banners missed ten.
+
+- [ ] **[P3] Does the picker list height become a public token, or stay behind `panelClass`?** Drawn
+  in deck `picker-list-height`. Two caps sit on one panel and the settable-looking one is not the
+  one that governs the visible rows: `--ds-dropdown-panel-max-height` caps the box and is forwarded,
+  `--picker-maxh` caps the list and is not. `panelClass` has expressed a per-picker list height
+  since 0.13.1; a public token would add a second way to say it, and `--picker-maxh` resolves at
+  `:root`, so forwarding it without the role guard would pin it inline on every open panel.
 
 None of these is blocked on effort. Each is a verdict, and most carry a deck that renders the options.
 
