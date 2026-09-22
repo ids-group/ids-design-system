@@ -294,7 +294,7 @@
       "new": "--ds-*-padding*",
       "surface": "style",
       "action": "In every stylesheet, rewrite the `-pad` segment of a `--ds-*` custom property to `-padding`: `--ds-button-pad-x` becomes `--ds-button-padding-x`, `--ds-card-pad` becomes `--ds-card-padding`, `--ds-table-head-pad-top` becomes `--ds-table-head-padding-top`.",
-      "appliesWhen": "52 tokens, every `--ds-*` whose name contains a `-pad` segment. `--ds-container-pad` is NOT one of them - it is renamed by `container-pad-is-the-surface-default` instead. A consumer's own `--pad-*` variable and any `-padding` token that was already spelled out are untouched.",
+      "appliesWhen": "52 tokens, every `--ds-*` whose name contains a `-pad` segment. `--ds-container-pad` is NOT one of them - it is renamed by `container-pad-is-the-surface-default` instead. A consumer's own `--pad-*` variable and any `-padding` token that was already spelled out are untouched. The segmented control's three part tokens change prefix as well as suffix and are covered end to end by `segmented-parts-are-segments`, so do not apply this rule to them.",
       "pitfall": "An unknown custom property is not an error. The declaration stays in the stylesheet, the component reads its own fallback, and the element draws at the default with nothing reported - no build error, no console warning.",
       "restore": null,
       "searchHints": [
@@ -312,7 +312,7 @@
       "new": "--ds-*-font-weight",
       "surface": "style",
       "action": "Rewrite a `--ds-*` custom property ending in `-weight` to end in `-font-weight`: `--ds-menu-item-label-weight` becomes `--ds-menu-item-label-font-weight`.",
-      "appliesWhen": "17 tokens. One already spelled `-font-weight` is unchanged, and so is `--ds-button-border-width` and every other `-width`.",
+      "appliesWhen": "17 tokens. One already spelled `-font-weight` is unchanged, and so is `--ds-button-border-width` and every other `-width`. The description list's term and details tokens change prefix as well as suffix and are covered end to end by `description-item-tokens-leave-the-list-namespace`, so do not apply this rule to them.",
       "pitfall": "An unknown custom property is not an error. The declaration stays in the stylesheet, the component reads its own fallback, and the element draws at the default with nothing reported - no build error, no console warning.",
       "restore": null,
       "searchHints": [
@@ -328,8 +328,8 @@
       "old": "--ds-*-btn*",
       "new": "--ds-*-button*",
       "surface": "style",
-      "action": "Rewrite the `-btn` segment to `-button`: `--ds-pagination-btn-bg-color` becomes `--ds-pagination-button-bg-color`, `--ds-segmented-btn-h` becomes `--ds-segmented-button-height`.",
-      "appliesWhen": "11 tokens across pagination, segmented and the table's icon button. The `--ds-button-*` family was always spelled out and is unchanged.",
+      "action": "Rewrite the `-btn` segment to `-button`: `--ds-pagination-btn-bg-color` becomes `--ds-pagination-button-bg-color`, `--ds-table-icon-btn-color` becomes `--ds-table-icon-button-color`.",
+      "appliesWhen": "8 tokens: five on pagination and three on the table's icon button. The three segmented ones move namespace as well as spelling and are covered end to end by `segmented-parts-are-segments` instead, so do not apply this rule to them. The `--ds-button-*` family was always spelled out and is unchanged.",
       "pitfall": "An unknown custom property is not an error. The declaration stays in the stylesheet, the component reads its own fallback, and the element draws at the default with nothing reported - no build error, no console warning.",
       "restore": null,
       "searchHints": [
@@ -337,7 +337,7 @@
         "-btn:",
         "--ds-"
       ],
-      "verify": "No `--ds-` custom property contains a `-btn` segment.",
+      "verify": "No `--ds-` custom property contains a `-btn` segment, on pagination or on the table's icon button.",
       "note": "The same published surface carried both spellings of one word: `--ds-button-bg-color` beside `--ds-pagination-btn-bg-color`."
     },
     {
@@ -364,7 +364,7 @@
       "new": "--ds-*-letter-spacing",
       "surface": "style",
       "action": "Rewrite a `--ds-*` custom property ending in `-tracking` to end in `-letter-spacing`: `--ds-button-tracking` becomes `--ds-button-letter-spacing`.",
-      "appliesWhen": "6 tokens. `tracking` is typographic jargon, not a CSS property, so nothing else is affected.",
+      "appliesWhen": "6 tokens. `tracking` is typographic jargon, not a CSS property, so nothing else is affected. The description list's term and details tokens change prefix as well as suffix and are covered end to end by `description-item-tokens-leave-the-list-namespace`, so do not apply this rule to them.",
       "pitfall": "An unknown custom property is not an error. The declaration stays in the stylesheet, the component reads its own fallback, and the element draws at the default with nothing reported - no build error, no console warning.",
       "restore": null,
       "searchHints": [
@@ -381,7 +381,7 @@
       "new": "--ds-*-text-transform",
       "surface": "style",
       "action": "Rewrite a `--ds-*` custom property ending in `-transform` to end in `-text-transform`: `--ds-field-label-transform` becomes `--ds-field-label-text-transform`.",
-      "appliesWhen": "3 tokens, all of them casing hooks. None of them ever carried the CSS `transform` property, which is what the old name read as.",
+      "appliesWhen": "3 tokens, all of them casing hooks. None of them ever carried the CSS `transform` property, which is what the old name read as. The description list's term and details tokens change prefix as well as suffix and are covered end to end by `description-item-tokens-leave-the-list-namespace`, so do not apply this rule to them.",
       "pitfall": "An unknown custom property is not an error. The declaration stays in the stylesheet, the component reads its own fallback, and the element draws at the default with nothing reported - no build error, no console warning.",
       "restore": null,
       "searchHints": [
@@ -398,7 +398,7 @@
       "new": "--ds-*-width | -height | -max-width | -max-height | -min-width | -column-width",
       "surface": "style",
       "action": "Rewrite every truncated dimension suffix on a `--ds-*` custom property: `-w` to `-width`, `-h` to `-height`, `-maxw` to `-max-width`, `-maxh` to `-max-height`, `-minw` to `-min-width`, `-col-w` to `-column-width`. Three carry their own spelling: `--ds-container-max` becomes `--ds-container-max-width`, `--ds-segmented-r-inner` becomes `--ds-segmented-radius-inner`, and `--ds-color-picker-sv-h` becomes `--ds-color-picker-saturation-value-height`.",
-      "appliesWhen": "23 tokens. Every dimension token already spelled out - `--ds-button-height`, `--ds-app-layout-content-max-width`, `--ds-avatar-ring-width` - is unchanged, and `-w`/`-h` inside a longer word is not a suffix.",
+      "appliesWhen": "23 tokens. Every dimension token already spelled out - `--ds-button-height`, `--ds-app-layout-content-max-width`, `--ds-avatar-ring-width` - is unchanged, and `-w`/`-h` inside a longer word is not a suffix. The segmented control's three part tokens change prefix as well as suffix and are covered end to end by `segmented-parts-are-segments`, so do not apply this rule to them.",
       "pitfall": "An unknown custom property is not an error. The declaration stays in the stylesheet, the component reads its own fallback, and the element draws at the default with nothing reported - no build error, no console warning.",
       "restore": null,
       "searchHints": [
@@ -437,32 +437,47 @@
       "old": "--ds-description-list-term-* | --ds-description-list-details-*",
       "new": "--ds-description-item-term-* | --ds-description-item-details-*",
       "surface": "style",
-      "action": "Rewrite the eight term and details tokens from `--ds-description-list-` to `--ds-description-item-`: `-term-color`, `-term-font-size`, `-term-font-weight`, `-term-letter-spacing`, `-term-text-transform`, `-details-color`, `-details-font-size`, `-details-font-weight`.",
-      "appliesWhen": "Only those eight. `--ds-description-list-label-width`, `-row-gap` and `-column-gap` stay on the list, because the list is what they size.",
+      "action": "Rewrite the eight term and details tokens onto the item, spelling out the three abbreviated suffixes as you go: `--ds-description-list-term-color` becomes `--ds-description-item-term-color`, `-term-font-size` keeps its name under the new prefix, and `-term-weight`, `-term-tracking`, `-term-transform`, `-details-weight` become `--ds-description-item-term-font-weight`, `-term-letter-spacing`, `-term-text-transform` and `-details-font-weight`. `-details-color` and `-details-font-size` change prefix only.",
+      "appliesWhen": "Only those eight, and this item replaces the weight, tracking and transform spell-out rules for them: they change prefix as well as suffix, so applying both would leave a name that has never existed. `--ds-description-list-label-w`, `-row-gap` and `-col-gap` stay on the list, because the list is what they size.",
       "pitfall": "An unknown custom property is not an error. The declaration stays in the stylesheet, the component reads its own fallback, and the element draws at the default with nothing reported.",
       "restore": null,
       "searchHints": [
-        "--ds-description-list-",
-        "--ds-description-"
+        "--ds-description-list-term",
+        "--ds-description-list-details",
+        "--ds-description-list-"
       ],
       "verify": "No `--ds-description-list-term-` or `--ds-description-list-details-` remains.",
-      "note": "All eight are declared in `description-item.component.scss` and style one item's term and details, so the prefix named a component they do not configure. A consumer reaching for `ds-description-item` looked for the item's name and found nothing."
+      "note": "All eight are declared in `description-item.component.scss` and style one item's term and details, so the prefix named a component they do not configure. A consumer reaching for `ds-description-item` looked for the item's name and found nothing.",
+      "detect": [
+        "--ds-description-list-term-color",
+        "--ds-description-list-term-weight",
+        "--ds-description-list-term-tracking",
+        "--ds-description-list-term-transform",
+        "--ds-description-list-details-weight"
+      ]
     },
     {
       "id": "segmented-parts-are-segments",
       "kind": "token-rename",
-      "old": "--ds-segmented-button-*",
+      "old": "--ds-segmented-btn-*",
       "new": "--ds-segmented-segment-*",
       "surface": "style",
-      "action": "Rewrite `--ds-segmented-button-border`, `-button-height` and `-button-padding-x` to `--ds-segmented-segment-border`, `-segment-height` and `-segment-padding-x`.",
-      "appliesWhen": "Only the segmented control. `--ds-button-*`, `--ds-split-button-*`, `--ds-icon-button-*` and `--ds-pagination-button-*` all style real buttons and keep their names.",
+      "action": "Rewrite `--ds-segmented-btn-border`, `--ds-segmented-btn-h` and `--ds-segmented-btn-pad-x` to `--ds-segmented-segment-border`, `--ds-segmented-segment-height` and `--ds-segmented-segment-padding-x`.",
+      "appliesWhen": "Only the segmented control's three part tokens, and it replaces the `-btn`, dimension and padding renames for them: those three carry a namespace change as well as a spelling one, so this item is the whole instruction and the others do not apply. `--ds-button-*`, `--ds-split-button-*`, `--ds-icon-button-*` and the pagination buttons all style real buttons and keep their names.",
       "pitfall": "An unknown custom property is not an error. The declaration stays in the stylesheet, the component reads its own fallback, and the element draws at the default with nothing reported.",
       "restore": null,
       "searchHints": [
+        "--ds-segmented-btn",
+        "-btn-",
         "--ds-segmented-"
       ],
-      "verify": "No `--ds-segmented-button-` remains.",
-      "note": "The component calls its parts segments everywhere else it speaks: the template renders `class=\"segment\"` and the published type is `SegmentedOption`. Only the tokens said button."
+      "verify": "No `--ds-segmented-btn-` remains.",
+      "note": "The component calls its parts segments everywhere else it speaks: the template renders `class=\"segment\"` and the published type is `SegmentedOption`. Only the tokens said button.",
+      "detect": [
+        "--ds-segmented-btn-border",
+        "--ds-segmented-btn-h",
+        "--ds-segmented-btn-pad-x"
+      ]
     },
     {
       "id": "tabs-strip-gap-is-tabs-gap",
