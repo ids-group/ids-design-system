@@ -113,7 +113,7 @@
     {
       "id": "autocomplete-option-groups-input-removed",
       "kind": "input-rename",
-      "old": "optionGroups",
+      "old": "ds-autocomplete[optionGroups]",
       "new": "options",
       "action": "Move the array you passed to `optionGroups` into `options`.",
       "note": "The autocomplete took groups in a second input and documented `options` as ignored whenever it was set, so two inputs existed and one silently won. `options` now accepts flat options, groups, or both mixed, in the order given, which is the shape ds-select already used and ds-multi-select has gained.",

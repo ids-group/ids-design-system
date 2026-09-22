@@ -350,6 +350,9 @@ Run `npm run migration-lint` before you call the manifest done — it mechanises
 
 - [ ] `id` is a stable, unique kebab slug. (lint)
 - [ ] `old`/`new`/`searchHints` are exact code strings; element-scoped as `element[attr]` where shared.
+- [ ] `old` names OUR identifiers - the class, element, input or token that changed - never a
+      consumer placeholder like `class MyTable extends TableComponent`. The consumer's shape goes in
+      `detect` / `searchHints`, where `extends TableComponent` already locates it.
 - [ ] `kind` correct; `map` present iff `value-remap`; `new: null` for `behavior`. (lint)
 - [ ] `surface` says which of the consumer's artifacts changes — `none` where nothing does. (lint)
 - [ ] A `style` item whose change ships in one of our partials names that partial in `appliesWhen`,
@@ -393,7 +396,11 @@ Run `npm run migration-lint` before you call the manifest done — it mechanises
 - [ ] No key outside the allowlist. (lint, M042)
 - [ ] `old` resolves at the PREVIOUS tag, is gone at this one for a rename or a removal, and `new`
       resolves at this one. Checked against the trees, not against HEAD — `0.2.0` named a ninth
-      `-subtle` token that never existed and every other check passed it.
+      `-subtle` token that never existed and every other check passed it. The same check reads
+      every `--ds-*` name in `action`, `appliesWhen`, `note`, `pitfall`, `informational` and each
+      `deleteList` field, and fails one that exists at neither tag; prose that names a token to say
+      it does not exist is listed in its `DELIBERATE_PHANTOMS`. Its closing line says how many
+      values it read - a clean run vouches for those only.
       (`tools/check-manifest-truth.mjs`, in the PR gate and the preflight)
 - [ ] A published record that described something which never worked is resolved by one question —
       does anything the consumer DOES change? Yes → an item with an `action` here, in the library's
