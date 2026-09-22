@@ -226,6 +226,16 @@
 
 ### Added
 
+- **`ds-chart-legend` sizes its colour chip from `--ds-chart-legend-swatch-size`.** Every chart's
+  legend takes it, and a preset with a swatch token of its own points that at it.
+
+  ```css
+  ds-chart-legend { --ds-chart-legend-swatch-size: 14px; }
+  ```
+
+  Defaults to `--space-2-5`, which is what the chip measured before.
+
+
 - **`DS_CONFIG` takes `banner.announce` and `alert.announce`, the app-wide default for whether a
   banner or an alert is spoken when it appears.**
 
@@ -685,6 +695,19 @@
   own member, or add `override` where it genuinely means the same thing.
 
 ### Fixed
+
+- **`--ds-line-chart-swatch-size` reaches the swatch again.** The token has been declared and
+  documented since the chart shipped and reached nothing since the legend became its own component:
+  the line chart kept the `.legend-swatch` rule that read it and stopped rendering the element.
+
+  ```css
+  ds-line-chart { --ds-line-chart-swatch-size: 14px; }
+  ```
+
+  The chart forwards it to `--ds-chart-legend-swatch-size` now, and the three dead legend rules are
+  gone. The default is unchanged: the legend's own `--space-2-5` is the 10px the token always
+  claimed, so no chart moves.
+
 
 - **A rule on `.ds-overlay-pane` now decides an autocomplete's or a multi-select's panel radius and
   background.** Both pickers declared the panel tokens with a fallback, so they always computed to

@@ -8,6 +8,8 @@
 @include chart-motion.fades-in('.legend-radio');
 
 :host {
+  --_chart-legend-swatch-size: var(--ds-chart-legend-swatch-size, var(--space-2-5));
+
   display: block;
 }
 
@@ -52,8 +54,8 @@
 
 .legend-swatch {
   flex: none;
-  inline-size: var(--space-2-5);
-  block-size: var(--space-2-5);
+  inline-size: var(--_chart-legend-swatch-size);
+  block-size: var(--_chart-legend-swatch-size);
   border-radius: var(--radius-pill);
 }
 

@@ -71,28 +71,8 @@ ds-chart {
   --focus-ring-width: var(--_line-chart-focus-width);
 }
 
-.legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2) var(--space-4);
-  margin: var(--space-3) 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.legend-item {
-  display: inline-flex;
-  gap: var(--space-2);
-  align-items: center;
-  color: var(--text-secondary);
-  font-size: var(--font-size-xs);
-}
-
-.legend-swatch {
-  flex: none;
-  inline-size: var(--_line-chart-swatch-size);
-  block-size: var(--_line-chart-swatch-size);
-  border-radius: var(--radius-pill);
+ds-chart-legend {
+  --ds-chart-legend-swatch-size: var(--_line-chart-swatch-size);
 }
 
 .skeleton {
