@@ -1,8 +1,5 @@
-/** What a drop or a pick contributes, given the dropzone's file count.
- *
- *  The native `multiple` attribute constrains the PICKER and nothing else: a drag of several
- *  files reaches the element whatever it is set to. Both ways in run through here so the count
- *  means the same thing for each.
+/** The native `multiple` attribute constrains the PICKER and nothing else: a drag of several
+ *  files reaches the element whatever it is set to, so the count is enforced here instead.
  *
  *  @internal */
 export function filesToAdd(

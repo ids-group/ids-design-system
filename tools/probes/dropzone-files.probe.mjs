@@ -6,9 +6,6 @@ const named = (count) =>
     name: `f${index}.png`,
   }));
 
-// The count is the whole reason this function exists. A dropzone that takes one file was taking
-// three from a DRAG for as long as it has shipped: the native `multiple` attribute constrains the
-// picker dialog and has no say over a drop, and nothing else checked.
 check('one file in, one file out', filesToAdd(named(1), false).length, 1);
 check(
   'three dropped on a single-file zone yield one',
@@ -39,7 +36,6 @@ check(
   0,
 );
 
-// The input is the caller's array and the DOM's FileList; neither may come back aliased.
 const source = named(2);
 check(
   'the result is a copy, not the input',
