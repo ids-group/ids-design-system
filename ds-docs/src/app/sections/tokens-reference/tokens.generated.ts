@@ -7657,6 +7657,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "description": "",
     "tokens": [
       {
+        "name": "--ds-toast-queue-bg-color",
+        "value": "var(--surface-overlay)",
+        "notes": "Background of the `+N` strip shown while toasts wait behind maxVisible (default --surface-overlay)."
+      },
+      {
+        "name": "--ds-toast-queue-text-color",
+        "value": "var(--text-secondary)",
+        "notes": "Text colour of the `+N` strip shown while toasts wait behind maxVisible (default --text-secondary)."
+      },
+      {
         "name": "--ds-toast-leave-duration",
         "value": "var(--duration-base)",
         "notes": "Toast dismiss duration — a transition, not an animation (default --duration-base)."

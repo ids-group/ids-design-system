@@ -1517,5 +1517,7 @@
   "--yellow-50": "Yellow ramp — stop 50.",
   "--yellow-500": "Yellow ramp — stop 500.",
   "--yellow-600": "Yellow ramp — stop 600.",
-  "--yellow-700": "Yellow ramp — stop 700."
+  "--yellow-700": "Yellow ramp — stop 700.",
+  "--ds-toast-queue-bg-color": "Background of the `+N` strip shown while toasts wait behind maxVisible (default --surface-overlay).",
+  "--ds-toast-queue-text-color": "Text colour of the `+N` strip shown while toasts wait behind maxVisible (default --text-secondary)."
 }

@@ -658,6 +658,17 @@
 
 ### Changed
 
+- **A `+N` strip says how many toasts are waiting.** `maxVisible` has always queued the extras, and
+  nothing on screen said so: past the cap a toast simply did not appear. The region now renders a
+  small counter at the end the next toast will come from - above a top-anchored stack, below a
+  bottom-anchored one - and it disappears the moment the queue empties. It is `aria-hidden`, because
+  `ToastService` announces every toast through the LiveAnnouncer, queued ones included, so a reader
+  has already heard everything it counts.
+
+  On by default. Turn it off with `DS_CONFIG.toast.showQueueCount: false` or
+  `[showQueueCount]="false"` on `ds-toast-region`. Colours come from
+  `--ds-toast-queue-bg-color` and `--ds-toast-queue-text-color`.
+
 - **`ds-toast`, `ds-banner` and `ds-alert` grow into place instead of fading in.** Their default
   `--ds-<surface>-enter-keyframes` moves from `ds-fade-in` to `ds-scale-in`, so all three now enter
   the way `ds-modal` and the overlay panels already do: opacity plus a growth from `--ds-*-enter-scale`,

@@ -923,6 +923,31 @@
       ],
       "verify": "With no enter-keyframes token set, an appearing toast, banner and alert each animate ds-scale-in, and a consumer value on --ds-<surface>-enter-scale changes how far they grow.",
       "note": "The default enter keyframe of all three was ds-fade-in and is now ds-scale-in. They declared both --ds-<surface>-enter-offset and --ds-<surface>-enter-scale while defaulting to a keyframe that reads neither, so both hooks were inert. The offsets keep their values and meaning - a preset that travels still reads them, so pointing a surface at ds-slide-in gets that surface's own distance and direction. Growth is from the centre: transform-origin stays unset, matching ds-modal."
+    },
+    {
+      "id": "toast-region-shows-queued-count",
+      "kind": "behavior",
+      "old": "ds-toast-region",
+      "new": null,
+      "surface": "style",
+      "action": "Fire more concurrent toasts than maxVisible and look at the stack. A +N strip now appears at the end the next toast comes from; set showQueueCount to false to keep the old silent queue.",
+      "appliesWhen": "Only ds-toast-region, and only while more toasts are live than maxVisible allows (default 5). An app that never queues never sees it. ds-banner, ds-alert and the overlay panels are untouched.",
+      "pitfall": "The strip is a child of ds-toast-region, so an app that styles that region by child position - first-child, nth-child, > * - now hits the counter instead of the first toast. Scope those rules to ds-toast.",
+      "restore": "DS_CONFIG.toast.showQueueCount: false, or [showQueueCount]=\"false\" on ds-toast-region.",
+      "searchHints": [
+        "ds-toast-region",
+        "maxVisible",
+        "--ds-toast-queue-bg-color",
+        "--ds-toast-queue-text-color"
+      ],
+      "detect": [
+        "ds-toast-region >",
+        "ds-toast-region :first-child",
+        "ds-toast-region :nth-child",
+        "maxVisible"
+      ],
+      "verify": "With more live toasts than maxVisible, the region renders exactly one .queue-count element reading the number still waiting, and it is gone once the queue empties.",
+      "note": "The queue itself is not new - maxVisible has always held toasts back - but nothing said so, and a toast past the cap read as one that never fired. The counter is aria-hidden: ToastService announces every toast through the LiveAnnouncer whether it is visible or queued, so the count is redundant for a reader. Its place follows the anchor, because that is where the next toast will arrive."
     }
   ],
   "informational": [
@@ -959,8 +984,8 @@
     "`CHART_DEFAULT_VALUE_SPACE` is exported from `@ids-group-ltd/ids-design-system/components/chart`, so a preset reserving the box `ds-chart` will take can read the same number the container defaults to.",
     "`--ds-chart-legend-swatch-size` sizes the colour chip in `ds-chart-legend`, defaulting to `--space-2-5`. `--ds-line-chart-swatch-size` points at it, so that token reaches the swatch again after reaching nothing since the legend became its own component; nothing to change, and the default size is the same.",
     "An indeterminate ds-bar keeps its sliding chunk on the track for most of the cycle: the loop runs at a constant speed instead of on an ease curve that parked it at the extremes. Visual only, no code change.",
-        "The table's loading scrim now starts below a head pinned with `--ds-table-head-height` (spelled `--ds-table-head-h` before this release, renamed by `token-dimensions-spelled-out`); the order is your value, then the measured head row, then 40px. Nothing to change beyond that rename.",
-        "`ds-chart` prints its error message in `--error` red rather than in the grey of its empty message, like the presets always did. The rule ships in `styles/chart-frame`. Nothing to change.",
+    "The table's loading scrim now starts below a head pinned with `--ds-table-head-height` (spelled `--ds-table-head-h` before this release, renamed by `token-dimensions-spelled-out`); the order is your value, then the measured head row, then 40px. Nothing to change beyond that rename.",
+    "`ds-chart` prints its error message in `--error` red rather than in the grey of its empty message, like the presets always did. The rule ships in `styles/chart-frame`. Nothing to change.",
     "`--ds-funnel-chart-focus-color` / `-width` and `--ds-pie-chart-focus-color` / `-width` (spelled `--ds-donut-chart-` before this release) now reach the focus ring. They parsed and did nothing before, so a value already set for them starts taking effect."
   ],
   "deleteList": []

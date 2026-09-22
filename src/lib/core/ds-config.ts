@@ -92,6 +92,8 @@ export interface DsConfig {
     /** Maximum number of toasts visible at once. Extras are queued and shown as
      *  earlier ones dismiss. Default `5`; `0` means unlimited. */
     maxVisible?: number;
+    /** Show a `+N` strip while toasts wait behind `maxVisible`. Default `true`. */
+    showQueueCount?: boolean;
   };
   picker?: {
     /** Default for `ds-multi-select``s `searchable`. `true` always shows the panel's

@@ -177,6 +177,10 @@ export class ToastService {
     if (typeof maxVisible === 'number' && maxVisible >= 0) {
       this.regionRef.setInput('maxVisible', maxVisible);
     }
+    const showQueueCount = this.toastConfig?.showQueueCount;
+    if (typeof showQueueCount === 'boolean') {
+      this.regionRef.setInput('showQueueCount', showQueueCount);
+    }
     this.keepAboveScrims();
   }
 

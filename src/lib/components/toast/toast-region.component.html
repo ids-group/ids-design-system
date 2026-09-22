@@ -1,3 +1,12 @@
+@if (queuedLabel(); as label) {
+  <!-- aria-hidden: ToastService announces every toast through the LiveAnnouncer, queued ones
+       included, so a reader has already heard everything this counts. -->
+  <div
+    class="queue-count"
+    aria-hidden="true">
+    {{ label }}
+  </div>
+}
 @for (entry of visibleEntries(); track entry.id) {
   <ds-toast
     [variant]="entry.variant"
