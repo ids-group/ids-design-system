@@ -109,6 +109,10 @@ timeline, two audiences.
   is `PieChart` pointing at `charts/pie-chart`, the chapter the docs site now serves.
   `ChartTooltipPanel.md` and `MANUAL-SURFACE.md` name the pie as well.
 
+- **`docs/ChartDataTable.md` was added and `ChartDataTable` points at `charts/chart`.** Every chart
+  renders `ds-chart-data-table` under its plot, and the `charts/chart` chapter is where it is shown,
+  so the card is cut from there.
+
 ## 0.12.0 — 2026-09-04
 
 ### Cards
