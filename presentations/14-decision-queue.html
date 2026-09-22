@@ -96,6 +96,79 @@
   .bar-fixed output { flex: 1 1 auto; color: var(--text-secondary); font-family: var(--font-mono); overflow-x: auto; white-space: nowrap; }
   .bar-fixed button { flex: none; padding: var(--space-1-5) var(--space-3); border: var(--border-width-default) solid var(--border-default); border-radius: var(--ds-radius-control); background: var(--surface-default); font: var(--font-weight-bold) var(--font-size-2xs) var(--font-sans); cursor: pointer; }
   .bar-fixed button:hover { background: var(--surface-secondary); }
+
+  /* specimens added so every question is answerable by looking */
+  .mini-chart { min-inline-size: 210px; }
+  .mini-chart svg { inline-size: 100%; block-size: auto; display: block; }
+  .mini-chart .tick { font: 8px var(--font-sans); fill: var(--text-tertiary); }
+  .legend-row { margin: var(--space-1) 0 0; font: var(--font-size-2xs) var(--font-sans); color: var(--text-secondary); display: flex; align-items: center; gap: var(--space-1); }
+  .legend-row i { inline-size: .7rem; block-size: .7rem; border-radius: 2px; }
+
+  .swatch-row { display: flex; gap: 3px; }
+  .swatch-row i { inline-size: 30px; block-size: 30px; border-radius: 3px; }
+  .swatch-row.lbl { flex-wrap: wrap; gap: var(--space-1); }
+  .swatch-row.lbl i { inline-size: auto; block-size: auto; padding: var(--space-1) var(--space-2); }
+  .swatch-row.lbl b { font: var(--font-weight-bold) 9px var(--font-mono); color: #fff; mix-blend-mode: difference; }
+
+  .tint-steps, .btn-row { display: flex; gap: var(--space-1); }
+  .tint-steps span, .btn-row b { padding: var(--space-2) var(--space-3); border-radius: var(--ds-radius-control); font: var(--font-weight-medium) var(--font-size-2xs) var(--font-sans); }
+  .btn-row b { color: #fff; }
+
+  .menu-mock { border: var(--border-width-default) solid var(--border-divider); border-radius: var(--ds-radius-panel); padding: var(--space-1); min-inline-size: 150px; }
+  .menu-mock span { display: block; padding: 5px var(--space-2); border-radius: var(--ds-radius-inner); font: var(--font-size-2xs) var(--font-sans); }
+  .menu-mock .hov { background: var(--surface-secondary); }
+  .menu-mock .prs { background: var(--surface-muted); }
+  .menu-mock .danger { color: var(--error-text); }
+
+  .field-mock { min-inline-size: 170px; font: var(--font-size-2xs) var(--font-sans); }
+  .field-mock label { display: block; color: var(--text-secondary); margin-block-end: 3px; }
+  .field-mock .box { display: flex; align-items: center; gap: var(--space-1); padding: var(--space-2); border: var(--border-width-default) solid var(--border-default); border-radius: var(--ds-radius-control); background: var(--surface-default); }
+  .field-mock .box.stepper { justify-content: space-between; }
+  .field-mock .msg { margin: 3px 0 0; color: var(--text-tertiary); }
+  .field-mock .chipx { padding: 1px var(--space-1); border-radius: 3px; background: var(--primary-subtitle); color: var(--primary-strong); }
+  .field-mock .spin { inline-size: .7rem; block-size: .7rem; border-radius: 50%; border: 2px solid var(--border-default); border-top-color: var(--primary); margin-inline-start: auto; animation: spinq .8s linear infinite; }
+  @keyframes spinq { to { transform: rotate(360deg); } }
+  .field-mock .dot-dirty { inline-size: 6px; block-size: 6px; border-radius: 50%; background: var(--warning); margin-inline-start: auto; }
+  .panel-mock { margin-block-start: 3px; border: var(--border-width-default) solid var(--border-divider); border-radius: var(--ds-radius-panel); padding: var(--space-1); }
+  .panel-mock span { display: block; padding: 3px var(--space-2); font: var(--font-size-2xs) var(--font-mono); }
+
+  .enter-mock { display: flex; align-items: center; gap: var(--space-2); padding: var(--space-2) var(--space-3); border-radius: var(--radius-md); background: var(--surface-default); box-shadow: var(--shadow-popover); font: var(--font-size-2xs) var(--font-sans); min-inline-size: 170px; }
+  .enter-mock .bar3 { inline-size: 3px; align-self: stretch; border-radius: 2px; background: var(--success); }
+  .enter-mock.fade { animation: qfade 2.2s ease-in-out infinite; }
+  .enter-mock.scale { animation: qscale 2.2s ease-in-out infinite; transform-origin: top right; }
+  @keyframes qfade { 0%, 60%, 100% { opacity: 1; } 70% { opacity: 0; } 85% { opacity: 1; } }
+  @keyframes qscale { 0%, 60%, 100% { opacity: 1; transform: scale(1); } 70% { opacity: 0; transform: scale(.96); } 85% { opacity: 1; transform: scale(1); } }
+
+  .timeline, .pipe { display: flex; flex-wrap: wrap; gap: var(--space-1); }
+  .timeline span, .pipe span { padding: var(--space-1) var(--space-2); border-radius: var(--radius-sm); background: var(--surface-secondary); font: var(--font-size-2xs) var(--font-sans); color: var(--text-secondary); }
+  .t-done, .p-ok { background: var(--success-subtitle) !important; color: var(--success-text) !important; }
+  .t-now { background: var(--primary-subtitle) !important; color: var(--primary-strong) !important; }
+  .t-gap, .p-wait { background: var(--error-subtitle) !important; color: var(--error-text) !important; }
+  .t-ok { background: var(--success) !important; color: var(--surface-default) !important; }
+
+  .doc-mock { padding: var(--space-2) var(--space-3); border: var(--border-width-default) solid var(--border-divider); border-radius: var(--radius-sm); font: var(--font-size-2xs) / 1.5 var(--font-sans); min-inline-size: 190px; }
+  .doc-mock p { margin: var(--space-1) 0 0; }
+
+  .wrap-mock { font: var(--font-size-2xs) / 1.6 var(--font-mono); color: var(--text-secondary); }
+  .wrap-mock.long { max-inline-size: 420px; }
+  .wrap-mock.short { max-inline-size: 260px; }
+
+  .ring-mock { display: inline-block; padding: var(--space-2) var(--space-3); border-radius: var(--ds-radius-control); background: var(--surface-default); border: var(--border-width-default) solid var(--border-default); font: var(--font-size-2xs) var(--font-sans); }
+  .ring-mock.old { box-shadow: 0 0 0 3px var(--primary-muted); }
+  .ring-mock.new { animation: qring 1.8s var(--ease-standard) infinite; }
+  @keyframes qring { 0%, 70%, 100% { box-shadow: 0 0 0 3px var(--primary-muted); } 80% { box-shadow: 0 0 0 6px var(--primary-subtitle); } }
+
+  .grid-mock { display: grid; grid-template-columns: repeat(8, 14px); gap: 3px; }
+  .grid-mock i { block-size: 14px; border-radius: 2px; }
+  .g-ok { background: var(--success); }
+  .g-no { background: var(--neutral-200); }
+
+  .nav-mock span { display: block; padding: 3px var(--space-2); font: var(--font-size-2xs) var(--font-sans); }
+  .nav-mock .n-in { color: var(--text-tertiary); padding-inline-start: var(--space-5); }
+  .nav-mock .n-own { background: var(--success-subtitle); color: var(--success-text); border-radius: 3px; }
+
+  .type-mock { display: grid; gap: var(--space-1); }
+  .type-mock span { font-family: var(--font-mono); color: var(--text-primary); }
 </style>
 
 <main>
@@ -178,6 +251,8 @@
       <a class="q-src" href="7-chart-sparkline-preset.html">дека 7</a>
     </div>
     <p class="q-sub">Проверка: что вариант ДОБАВЛЯЕТ к API родителя. Спарклайн не добавляет ничего - только выключает оси, сетку, легенду, рамку и подсказку.</p>
+    <div class="stage"><div class="spec"><p class="cap">ds-line-chart как есть</p><div class="mini-chart"><svg viewBox="0 0 200 90"><line x1="26" y1="6" x2="26" y2="70" stroke="var(--border-default)"/><line x1="26" y1="70" x2="196" y2="70" stroke="var(--border-default)"/><g stroke="var(--border-divider)" stroke-dasharray="2 3"><line x1="26" y1="22" x2="196" y2="22"/><line x1="26" y1="46" x2="196" y2="46"/></g><polyline fill="none" stroke="var(--ds-chart-series-1-color)" stroke-width="2" points="30,56 60,38 90,44 120,20 150,30 190,12"/><text x="2" y="25" class="tick">80</text><text x="2" y="49" class="tick">40</text><text x="30" y="84" class="tick">Янв</text><text x="160" y="84" class="tick">Июн</text></svg><p class="legend-row"><i style="background:var(--ds-chart-series-1-color)"></i>Запросы</p></div></div><div class="spec"><p class="cap">тот же ряд как спарклайн</p><div class="mini-chart"><svg viewBox="0 0 200 90"><polyline fill="none" stroke="var(--ds-chart-series-1-color)" stroke-width="2" points="6,56 42,38 78,44 114,20 150,30 194,12"/></svg><p class="says">ничего не добавлено - выключены оси, сетка, легенда, рамка и подсказка</p></div></div></div>
+
     <div class="opts">
       <div class="opt"><h3>Пресет variant="spark" <span class="star">★</span></h3>
         <p>Ноль новых понятий, другой набор значений по умолчанию.</p></div>
@@ -193,6 +268,8 @@
       <a class="q-src" href="8-waterfall-mode-or-component.html">дека 8</a>
     </div>
     <p class="q-sub">Та же проверка даёт обратный ответ: водопад добавляет <code>kind</code> на точке, связки, подписи со знаком и три цветовые роли - и все четыре бессмысленны в остальных четырёх режимах <code>stack</code>. Аудит 2026-09-22: это самый тонкий случай из восьми чартов.</p>
+    <div class="stage"><div class="spec"><p class="cap">водопад: что добавляется к колонке</p><div class="mini-chart"><svg viewBox="0 0 240 96"><line x1="6" y1="78" x2="236" y2="78" stroke="var(--border-default)"/><rect x="12" y="20" width="32" height="58" rx="2" fill="var(--ds-chart-series-default-color)"/><rect x="60" y="20" width="32" height="16" rx="2" fill="var(--error)"/><rect x="108" y="36" width="32" height="11" rx="2" fill="var(--error)"/><rect x="156" y="40" width="32" height="7" rx="2" fill="var(--success)"/><rect x="204" y="40" width="32" height="38" rx="2" fill="var(--ds-chart-series-default-color)"/><g stroke="var(--text-tertiary)" stroke-dasharray="3 3"><line x1="44" y1="20" x2="60" y2="20"/><line x1="92" y1="36" x2="108" y2="36"/><line x1="140" y1="47" x2="156" y2="47"/><line x1="188" y1="40" x2="204" y2="40"/></g><text x="62" y="14" class="tick">-320</text><text x="158" y="34" class="tick">+130</text></svg></div><dl class="layer"><dt>Добавляет к API колонки</dt><dd>kind на точке, связки, подписи со знаком, 3 цветовые роли</dd><dt>Бессмысленно в режимах</dt><dd>none, grouped, stacked, normalized</dd></dl></div><div class="spec"><p class="cap">обычная колонка</p><div class="mini-chart"><svg viewBox="0 0 240 96"><line x1="6" y1="78" x2="236" y2="78" stroke="var(--border-default)"/><rect x="12" y="20" width="32" height="58" rx="2" fill="var(--ds-chart-series-1-color)"/><rect x="60" y="40" width="32" height="38" rx="2" fill="var(--ds-chart-series-2-color)"/><rect x="108" y="52" width="32" height="26" rx="2" fill="var(--ds-chart-series-3-color)"/><rect x="156" y="46" width="32" height="32" rx="2" fill="var(--ds-chart-series-4-color)"/><rect x="204" y="58" width="32" height="20" rx="2" fill="var(--ds-chart-series-5-color)"/></svg></div><p class="says">ни одна из четырёх добавок ей не нужна</p></div></div>
+
     <div class="opts">
       <div class="opt"><h3>Свой тег <span class="star">★</span></h3>
         <p>Вход, бессмысленный в 4 случаях из 5, читается как ловушка.</p></div>
@@ -253,6 +330,8 @@
       <a class="q-src" href="../docs/todo.md">бэклог 1363</a>
     </div>
     <p class="q-sub">Гейт держит разделение по 6 в OKLab, но светлота в него почти не входит, и тёмная тема не измерялась ни разу. Ты пометил «record only» - вопрос в том, снимать ли эту пометку.</p>
+    <div class="stage"><div class="spec"><p class="cap">палитра по позиции</p><div class="swatch-row"><i style="background:hsl(8deg 78% 58%)"></i><i style="background:hsl(172deg 82% 36%)"></i><i style="background:hsl(222deg 70% 62%)"></i><i style="background:hsl(266deg 62% 66%)"></i><i style="background:hsl(330deg 70% 62%)"></i><i style="background:hsl(148deg 58% 41%)"></i><i style="background:hsl(300deg 62% 60%)"></i><i style="background:hsl(222deg 14% 60%)"></i></div></div><div class="spec"><p class="cap">та же палитра в оттенках серого</p><div class="swatch-row"><i style="background:hsl(8deg 78% 58%);filter:grayscale(1)"></i><i style="background:hsl(172deg 82% 36%);filter:grayscale(1)"></i><i style="background:hsl(222deg 70% 62%);filter:grayscale(1)"></i><i style="background:hsl(266deg 62% 66%);filter:grayscale(1)"></i><i style="background:hsl(330deg 70% 62%);filter:grayscale(1)"></i><i style="background:hsl(148deg 58% 41%);filter:grayscale(1)"></i><i style="background:hsl(300deg 62% 60%);filter:grayscale(1)"></i><i style="background:hsl(222deg 14% 60%);filter:grayscale(1)"></i></div><p class="says">светлота почти не разводит их - это и есть вопрос</p></div></div>
+
     <div class="opts">
       <div class="opt"><h3>Оставить record only</h3>
         <p>Измерение есть, обязательства нет.</p></div>
@@ -270,6 +349,8 @@
       <a class="q-src" href="1-color-engine-derivation.html">дека 1</a>
     </div>
     <p class="q-sub">Ниже по течению три P2 и одна измеренная провальная проверка контраста. Дека 2 - прототипная половина того же вопроса, отдельного ответа не требует.</p>
+    <div class="stage"><div class="spec"><p class="cap">сегодня: ручные пики</p><div class="swatch-row"><i style="background:#EFF6FF"></i><i style="background:#DBEAFE"></i><i style="background:#93C5FD"></i><i style="background:#3B82F6"></i><i style="background:#1D4ED8"></i><i style="background:#1E3A8A"></i></div><p class="says">шесть значений записаны руками</p></div><div class="spec"><p class="cap">HSL hue-only из одного токена</p><div class="swatch-row"><i style="background:hsl(217 91% 95%)"></i><i style="background:hsl(217 91% 87%)"></i><i style="background:hsl(217 91% 72%)"></i><i style="background:hsl(217 91% 60%)"></i><i style="background:hsl(217 91% 45%)"></i><i style="background:hsl(217 91% 33%)"></i></div><p class="says">тон из --primary, S и L остаются ручными</p></div><div class="spec"><p class="cap">чистая формула</p><div class="swatch-row"><i style="background:color-mix(in srgb, #3B82F6 12%, white)"></i><i style="background:color-mix(in srgb, #3B82F6 28%, white)"></i><i style="background:color-mix(in srgb, #3B82F6 60%, white)"></i><i style="background:#3B82F6"></i><i style="background:color-mix(in srgb, #3B82F6 76%, black)"></i><i style="background:color-mix(in srgb, #3B82F6 55%, black)"></i></div><p class="says">всё выводится, рампа сплющивается</p></div></div>
+
     <div class="opts">
       <div class="opt"><h3>Сегодня, ручные пики</h3>
         <p>Ничего не меняется, источник остаётся раздвоенным.</p></div>
@@ -291,6 +372,8 @@
       <a class="q-src" href="3-interaction-formula.html">дека 3, В1</a>
     </div>
     <p class="q-sub">28% - правило «2x hover». 34% - точное попадание в нарисованный blue-300.</p>
+    <div class="stage"><div class="spec"><p class="cap">28% - правило 2x hover</p><div class="tint-steps"><span style="background:var(--primary-subtitle)">покой</span><span style="background:color-mix(in srgb, var(--primary) 14%, white)">hover</span><span style="background:color-mix(in srgb, var(--primary) 28%, white)">pressed</span></div></div><div class="spec"><p class="cap">34% - попадание в blue-300</p><div class="tint-steps"><span style="background:var(--primary-subtitle)">покой</span><span style="background:color-mix(in srgb, var(--primary) 14%, white)">hover</span><span style="background:color-mix(in srgb, var(--primary) 34%, white)">pressed</span></div></div></div>
+
     <div class="opts">
       <div class="opt"><h3>28%, правило</h3></div>
       <div class="opt"><h3>34%, попадание в рампу</h3></div>
@@ -304,6 +387,8 @@
       <a class="q-src" href="3-interaction-formula.html">дека 3, В2</a>
     </div>
     <p class="q-sub">Сейчас у меню и строк его нет; формула даёт бесплатно.</p>
+    <div class="stage"><div class="spec"><p class="cap">меню сейчас: hover есть, pressed нет</p><div class="menu-mock"><span>Профиль</span><span class="hov">Настройки</span><span>Выйти</span></div></div><div class="spec"><p class="cap">по формуле: появляется pressed</p><div class="menu-mock"><span>Профиль</span><span class="hov">Настройки</span><span class="prs">Выйти</span></div></div></div>
+
     <div class="opts">
       <div class="opt"><h3>Как сейчас, без pressed</h3></div>
       <div class="opt"><h3>По формуле</h3></div>
@@ -317,6 +402,13 @@
       <a class="q-src" href="3-interaction-formula.html">дека 3, В4</a>
     </div>
     <p class="q-sub">Любой токен состояния задаётся руками, формула остаётся fallback.</p>
+    <div class="stage"><div class="spec"><p class="cap">только формула</p><p class="css">.ds-interactive {
+  --state-step-hover: 14%;
+  --state-step-pressed: 28%;
+}</p><p class="says">одно правило на всю библиотеку</p></div><div class="spec"><p class="cap">формула + слот</p><p class="css">ds-button[color="error"] {
+  --interactive-pressed-set: #7f1d1d;
+}</p><p class="says">формула остаётся fallback, частный случай задаётся руками</p></div></div>
+
     <div class="opts">
       <div class="opt"><h3>Только формула</h3></div>
       <div class="opt"><h3>Формула + override</h3></div>
@@ -330,6 +422,8 @@
       <a class="q-src" href="3-interaction-formula.html">дека 3, В5</a>
     </div>
     <p class="q-sub">Сейчас его нет. Это новое видимое состояние, не подгонка существующего.</p>
+    <div class="stage"><div class="spec"><p class="cap">сейчас: у success шага нет</p><div class="btn-row"><b style="background:var(--success)">Покой</b><b style="background:var(--success)">Hover</b><b style="background:var(--success)">Pressed</b></div></div><div class="spec"><p class="cap">вводим pressed</p><div class="btn-row"><b style="background:var(--success)">Покой</b><b style="background:color-mix(in srgb, var(--success) 88%, black)">Hover</b><b style="background:color-mix(in srgb, var(--success) 76%, black)">Pressed</b></div></div></div>
+
     <div class="opts">
       <div class="opt"><h3>Вводим</h3></div>
       <div class="opt"><h3>Глушим шаг до hover</h3></div>
@@ -343,6 +437,8 @@
       <a class="q-src" href="../docs/todo.md">бэклог 1331</a>
     </div>
     <p class="q-sub">Кнопка выводит состояния из рецепта темы 88%/76% mix-to-black. Если калибровка цвет-движка заменит <code>--primary-hover/-pressed</code> ручными значениями, дефолты кнопки разойдутся с ролями темы.</p>
+    <div class="stage"><div class="spec"><p class="cap">рецепт темы 88% / 76%</p><div class="btn-row"><b style="background:var(--primary)">Покой</b><b style="background:color-mix(in srgb, var(--primary) 88%, black)">Hover</b><b style="background:color-mix(in srgb, var(--primary) 76%, black)">Pressed</b></div></div><div class="spec"><p class="cap">ручные пики калибровки</p><div class="btn-row"><b style="background:var(--primary)">Покой</b><b style="background:#1D4ED8">Hover</b><b style="background:#1E3A8A">Pressed</b></div><p class="says">если калибровка заменит роли, кнопка разойдётся с темой</p></div></div>
+
     <div class="opts">
       <div class="opt"><h3>Компоненты снова читают роли</h3>
         <p>Один источник, кнопка теряет свой расчёт.</p></div>
@@ -383,6 +479,8 @@
       <a class="q-src" href="../docs/todo.md">бэклог 1320</a>
     </div>
     <p class="q-sub">Ни у одного нет <code>label</code>, <code>hint</code>, <code>error</code>, <code>ds-field-message</code> и миксина <code>field-label</code> - они никогда не были в системе полей, а не потеряли её. У остальных четырнадцати полей есть всё.</p>
+    <div class="stage"><div class="spec"><p class="cap">поле сегодня</p><div class="field-mock"><label>Количество мест</label><div class="box">12</div><p class="msg">Не больше 40</p></div></div><div class="spec"><p class="cap">ds-number-stepper сегодня</p><div class="field-mock"><div class="box stepper"><span>&minus;</span>12<span>+</span></div></div><p class="says">ни label, ни hint, ни строки сообщения</p></div></div>
+
     <div class="opts">
       <div class="opt"><h3>Внести в систему полей</h3>
         <p>Пять входов и обёртка на каждый.</p></div>
@@ -398,6 +496,8 @@
       <a class="q-src" href="5-select-native-multi.html">дека 5</a>
     </div>
     <p class="q-sub">Ответ уже дан 2026-08-06: не строить, дека приложена. Пункт держится открытым, потому что закрыть его отказались.</p>
+    <div class="stage"><div class="spec"><p class="cap">ds-multi-select - есть сейчас</p><div class="field-mock"><div class="box"><span class="chipx">Лондон</span><span class="chipx">Дувр</span></div><div class="panel-mock"><span>&#10003; Лондон</span><span>&#10003; Дувр</span><span>&nbsp;&nbsp; Бристоль</span></div></div></div><div class="spec"><p class="cap">гипотетический ds-select multi</p><div class="field-mock"><div class="box">Лондон, Дувр</div><div class="panel-mock"><span>&#10003; Лондон</span><span>&#10003; Дувр</span><span>&nbsp;&nbsp; Бристоль</span></div></div><p class="says">чтобы стать юзабельным, ему нужны те же чекбоксы - и он становится первым</p></div></div>
+
     <div class="opts">
       <div class="opt"><h3>Закрыть пункт <span class="star">★</span></h3>
         <p>Ответ дан, дека остаётся как запись.</p></div>
@@ -413,6 +513,8 @@
       <a class="q-src" href="13-surface-entrance-motion.html">дека 13</a>
     </div>
     <p class="q-sub">Все три объявляют <code>--ds-*-enter-scale</code> и <code>-enter-offset</code>, а <code>ds-fade-in</code> не читает ни того, ни другого. Выезд убран по твоим словам.</p>
+    <div class="stage"><div class="spec"><p class="cap">только проявление</p><div class="enter-mock fade"><span class="bar3"></span>Манифест загружен</div></div><div class="spec"><p class="cap">рост</p><div class="enter-mock scale"><span class="bar3"></span>Манифест загружен</div></div></div>
+
     <div class="opts">
       <div class="opt"><h3>Только проявление</h3>
         <p>Как сейчас; оба хука удаляются.</p></div>
@@ -514,6 +616,8 @@
       <a class="q-src" href="../docs/todo.md">бэклог 1359</a>
     </div>
     <p class="q-sub">Припарковано: только если появятся вложенные подменю, menubar или контекстное меню.</p>
+    <div class="stage"><div class="spec"><p class="cap">наше меню сейчас</p><div class="menu-mock"><span>Открыть</span><span>Дублировать</span><span class="danger">Удалить</span></div><p class="says">своя клавиатура и свой фокус</p></div><div class="spec"><p class="cap">что откроет CDK Menu</p><div class="menu-mock"><span>Открыть</span><span>Экспорт &nbsp;&rsaquo;</span><span class="danger">Удалить</span></div><p class="says">вложенные подменю, menubar, контекстное меню</p></div></div>
+
     <div class="opts">
       <div class="opt"><h3>Оставить парковку <span class="star">★</span></h3>
         <p>Как сейчас.</p></div>
@@ -529,6 +633,8 @@
       <a class="q-src" href="../docs/todo.md">бэклог 1488</a>
     </div>
     <p class="q-sub">Два из трёх членов контракта signal-forms ждут не проводки, а вида. <code>pending</code>: у <code>ds-input</code> есть спиннер, у остальных нет. <code>dirty</code>: библиотека нигде не рисует «изменено».</p>
+    <div class="stage"><div class="spec"><p class="cap">pending: есть у ds-input</p><div class="field-mock"><div class="box">acme-holdings<span class="spin"></span></div></div></div><div class="spec"><p class="cap">pending: у остальных нечем</p><div class="field-mock"><div class="box">12</div></div></div><div class="spec"><p class="cap">dirty: рисовать нечем нигде</p><div class="field-mock"><div class="box">ACME<span class="dot-dirty"></span></div><p class="msg">изменено</p></div><p class="says">такого вида в библиотеке нет</p></div></div>
+
     <div class="opts">
       <div class="opt"><h3>Нарисовать оба</h3>
         <p>Спиннер во все поля, треугольник или точка для dirty.</p></div>
@@ -548,10 +654,9 @@
       <a class="q-src" href="../docs/todo.md">бэклог 1340</a>
     </div>
     <p class="q-sub">96 токенов под ними стали <code>--ds-typography-*</code>, классы придержали. Измерено 2026-09-22: минимум 3121 использование в одном этом репозитории.</p>
-    <p class="css">.t-h1  .t-display  .t-card-title  .t-caption
-.t-l  .t-m  .t-s  .t-xs  .t-mono
+    <div class="stage"><div class="spec"><p class="cap">20 классов, 3121 использование</p><div class="type-mock"><span style="font-size:30px;font-weight:700">.t-h1</span><span style="font-size:22px;font-weight:700">.t-h3</span><span style="font-size:16px">.t-m</span><span style="font-size:14px">.t-s</span><span style="font-size:11px;letter-spacing:.08em;text-transform:uppercase">.t-overline</span></div></div><div class="spec"><p class="cap">токены под ними уже спеллятся</p><p class="css">--ds-typography-h1-font-size
+--ds-typography-overline-letter-spacing</p><p class="says">две половины пишут одно слово по-разному</p></div></div>
 
-.ds-typography-h1  .ds-typography-display  …</p>
     <div class="opts">
       <div class="opt"><h3>Переименовать классы</h3>
         <p>3121 использование здесь плюс все консьюмеры.</p></div>
@@ -567,10 +672,8 @@
       <a class="q-src" href="../docs/todo.md">бэклог 1346</a>
     </div>
     <p class="q-sub">Семь слотов на <code>.button</code>, читаются кнопкой и icon-button. Однобуквенное сокращение там, где правило дома - слово целиком; и они внутренние, но без маркера <code>--_</code>, поэтому читаются как публичные.</p>
-    <p class="css">--c-base  --c-on  --c-strong  --c-subtitle
---c-muted  --c-muted-strong  --c-outline-border
+    <div class="stage"><div class="spec"><p class="cap">семь слотов на .button</p><div class="swatch-row lbl"><i style="background:var(--primary)"><b>--c-base</b></i><i style="background:var(--primary-on, #fff)"><b>--c-on</b></i><i style="background:var(--primary-strong, #1E3A8A)"><b>--c-strong</b></i><i style="background:var(--primary-subtitle)"><b>--c-subtitle</b></i><i style="background:var(--primary-muted)"><b>--c-muted</b></i></div><p class="says">однобуквенное сокращение, и без маркера --_ читается как публичный</p></div></div>
 
---_button-colour-base  …</p>
     <div class="opts">
       <div class="opt"><h3>Спеллить и пометить --_ <span class="star">★</span></h3>
         <p>Внутренние слоты честно называются внутренними.</p></div>
@@ -586,6 +689,8 @@
       <a class="q-src" href="../docs/todo.md">бэклог 1421</a>
     </div>
     <p class="q-sub">Состояние должно быть своим классом, а не модификатором в имени.</p>
+    <div class="stage"><div class="spec"><p class="cap">сейчас</p><p class="css">&lt;li class="nav-item nav-item--active"&gt;</p></div><div class="spec"><p class="cap">состояние своим классом</p><p class="css">&lt;li class="nav-item is-active"&gt;</p></div></div>
+
     <div class="opts">
       <div class="opt"><h3>Состояние своим классом</h3>
         <p>Переписать модификаторы в ds-docs.</p></div>
@@ -601,6 +706,8 @@
       <a class="q-src" href="../docs/todo.md">бэклог 1403</a>
     </div>
     <p class="q-sub">Имена уже убраны; речь про сами ПРИМЕРЫ.</p>
+    <div class="stage"><div class="spec"><p class="cap">сейчас</p><div class="doc-mock"><b>brand</b> &mdash; wordmark для sidenav<p class="css">provideDsConfig({ brand: { name: 'ACME Logistics' } })</p></div></div><div class="spec"><p class="cap">без примера</p><div class="doc-mock"><b>brand</b> &mdash; wordmark для sidenav<p class="css">provideDsConfig({ brand: { name: '…' } })</p></div></div></div>
+
     <div class="opts">
       <div class="opt"><h3>Убрать примеры</h3>
         <p>Доки становятся абстрактнее.</p></div>
@@ -618,6 +725,8 @@
       <a class="q-src" href="../docs/todo.md">бэклог 1439, P1</a>
     </div>
     <p class="q-sub">Библиотека объявляет <code>^21.2.0</code> во всех шести peer-зависимостях, поэтому приложение на 22 не ставится без <code>--legacy-peer-deps</code>. Angular 22 вышел 2026-06-03. Вопрос - когда, а не нужно ли.</p>
+    <div class="stage"><div class="spec"><p class="cap">сейчас</p><div class="timeline"><span class="t-done">21.2 — peer-диапазон</span><span class="t-now">22.0 вышел 2026-06-03</span><span class="t-gap">приложение на 22 ставится только с --legacy-peer-deps</span></div></div><div class="spec"><p class="cap">после апгрейда</p><div class="timeline"><span class="t-done">22.x — peer-диапазон</span><span class="t-now">новый мажор пакета</span><span class="t-ok">ставится штатно</span></div></div></div>
+
     <div class="opts">
       <div class="opt"><h3>В ближайший мажор</h3>
         <p>Новый мажор Angular = новый мажор пакета.</p></div>
@@ -635,6 +744,8 @@
       <a class="q-src" href="../docs/todo.md">бэклог 1369</a>
     </div>
     <p class="q-sub"><code>publish.sh</code> ходит с гранулярным токеном и Bypass 2FA. npm убирает прямую публикацию такими токенами в январе 2027 - останется чтение и подготовка публикации, которую мейнтейнер подтверждает 2FA.</p>
+    <div class="stage"><div class="spec"><p class="cap">сейчас</p><div class="pipe"><span>тег</span><span>сборка</span><span class="p-ok">publish по токену</span></div><p class="says">январь 2027: последний шаг перестаёт работать</p></div><div class="spec"><p class="cap">OIDC</p><div class="pipe"><span>тег</span><span>сборка</span><span class="p-ok">publish без токена</span></div></div><div class="spec"><p class="cap">подтверждение 2FA</p><div class="pipe"><span>тег</span><span>сборка</span><span class="p-wait">ждёт человека</span></div></div></div>
+
     <div class="opts">
       <div class="opt"><h3>Trusted publishing (OIDC)</h3>
         <p>CI публикует без долгоживущего токена.</p></div>
@@ -652,6 +763,8 @@
       <a class="q-src" href="../docs/todo.md">бэклог 1391</a>
     </div>
     <p class="q-sub">Всё до публикации уже автоматизировано и гейтится. Не хватает последнего шага - самой загрузки, которая требует Chrome.</p>
+    <div class="stage"><div class="spec"><p class="cap">что уже в CI</p><div class="pipe"><span class="p-ok">генератор</span><span class="p-ok">сборка</span><span class="p-ok">бандл</span><span class="p-ok">3 гейта</span><span class="p-wait">загрузка</span></div><p class="says">последний шаг требует Chrome и идёт с машины</p></div></div>
+
     <div class="opts">
       <div class="opt"><h3>Искать CI-маршрут</h3>
         <p>Headless Chrome в пайплайне.</p></div>
@@ -667,6 +780,8 @@
       <a class="q-src" href="../docs/todo.md">бэклог 1414</a>
     </div>
     <p class="q-sub">Или только что изменилось и что делать читателю.</p>
+    <div class="stage"><div class="spec"><p class="cap">только что и что делать</p><div class="doc-mock"><b>ds-bar заменяет ds-progress и ds-meter.</b><p>Переименуйте тег; входы сохранили имена.</p></div></div><div class="spec"><p class="cap">и почему тоже</p><div class="doc-mock"><b>ds-bar заменяет ds-progress и ds-meter.</b><p>Это был один рисунок под двумя именами, и единственное отличие стало входом. Переименуйте тег; входы сохранили имена.</p></div></div></div>
+
     <div class="opts">
       <div class="opt"><h3>Только что и что делать</h3>
         <p>Короче, читается быстрее.</p></div>
@@ -682,6 +797,8 @@
       <a class="q-src" href="../docs/todo.md">бэклог 1498</a>
     </div>
     <p class="q-sub">Придержаны под партию после 0.9.0. Партия так и не собралась.</p>
+    <div class="stage"><div class="spec"><p class="cap">один мажор</p><div class="pipe"><span class="p-ok">3 смены дефолтов</span><span>1 миграция</span></div></div><div class="spec"><p class="cap">по релизам</p><div class="pipe"><span>1 смена</span><span>1 смена</span><span>1 смена</span></div><p class="says">три миграции, каждая мельче</p></div></div>
+
     <div class="opts">
       <div class="opt"><h3>Выпустить в ближайший мажор</h3>
         <p>Одна миграция на три смены.</p></div>
@@ -699,6 +816,8 @@
       <a class="q-src" href="../docs/todo.md">бэклог 1408</a>
     </div>
     <p class="q-sub">Твои слова 2026-08-31: «запиши пока в туду, щас не будем».</p>
+    <div class="stage"><div class="spec"><p class="cap">сейчас</p><p class="wrap-mock long">Второй режим оси переименован: rounded стал aligned, independent стал dual-grid, stacked стал split. Четыре слова называют то, что делается с линиями сетки.</p></div><div class="spec"><p class="cap">~100 колонок</p><p class="wrap-mock short">Второй режим оси переименован: rounded стал aligned,<br>independent стал dual-grid, stacked стал split. Четыре<br>слова называют то, что делается с линиями сетки.</p></div></div>
+
     <div class="opts">
       <div class="opt"><h3>Перевёрстывать</h3>
         <p>Один большой диффа, дальше единый вид.</p></div>
@@ -716,6 +835,13 @@
       <a class="q-src" href="../docs/todo.md">бэклог 1425</a>
     </div>
     <p class="q-sub">Разница в двух глобах: <code>format</code> не смотрит шаблоны и гейт зелёный, а <code>format:fix</code> добавляет <code>html</code> и переписывает ~112 шаблонов, которые два правила eslint немедленно хотят обратно.</p>
+    <div class="stage"><div class="spec"><p class="cap">после format:fix</p><p class="css">&lt;ds-button variant="solid" color="primary" size="md"&gt;Экспорт&lt;/ds-button&gt;</p></div><div class="spec"><p class="cap">чего немедленно хочет eslint</p><p class="css">&lt;ds-button
+  color="primary"
+  variant="solid"
+  size="md"&gt;
+  Экспорт
+&lt;/ds-button&gt;</p><p class="says">~112 шаблонов ходят между двумя формами</p></div></div>
+
     <div class="opts">
       <div class="opt"><h3>*.html в .prettierignore <span class="star">★</span></h3>
         <p>Самый дешёвый пункт на доске.</p></div>
@@ -731,6 +857,8 @@
       <a class="q-src" href="../docs/todo.md">бэклог 1378</a>
     </div>
     <p class="q-sub">Регенерация 2026-09-10 сдвинула 47 объявлений, не имевших отношения к правке. Два гейта читают этот файл как истину, то есть деки рендерились со старым фокус-кольцом столько, сколько изменения лежали в <code>src/lib</code>.</p>
+    <div class="stage"><div class="spec"><p class="cap">деки рендерили это</p><div class="ring-mock old">Кнопка</div><p class="says">кольцо через transition</p></div><div class="spec"><p class="cap">библиотека рисует это</p><div class="ring-mock new">Кнопка</div><p class="says">кольцо через animation, 47 объявлений разошлись</p></div></div>
+
     <div class="opts">
       <div class="opt"><h3>Гейт на свежесть <span class="star">★</span></h3>
         <p>Сравнивать с пересборкой, падать на расхождении.</p></div>
@@ -748,6 +876,8 @@
       <a class="q-src" href="../docs/todo.md">бэклог 1376</a>
     </div>
     <p class="q-sub">Намеренно: в общем чекауте побайтовая сверка валит прогоны, не связанные с текущей веткой. Цена - индекс может устареть между коммитами.</p>
+    <div class="stage"><div class="spec"><p class="cap">вне lint:all - сейчас</p><div class="pipe"><span class="p-ok">lint</span><span class="p-ok">format</span><span class="p-ok">гейты</span></div><p class="says">чужой прогон зелёный, индекс может устареть</p></div><div class="spec"><p class="cap">в lint:all</p><div class="pipe"><span class="p-ok">lint</span><span class="p-ok">format</span><span class="p-wait">todo-index</span></div><p class="says">индекс свеж, чужой прогон падает на твоём коммите</p></div></div>
+
     <div class="opts">
       <div class="opt"><h3>Оставить вне <span class="star">★</span></h3>
         <p>Как сейчас.</p></div>
@@ -763,6 +893,17 @@
       <a class="q-src" href="4-migration-manifest-audit.html">дека 4</a>
     </div>
     <p class="q-sub">Все 23 находки аудита закрыты, осталась ратификация. Контракт держится на 306 строках регэкспов - первые две практики лечат именно это. Можно отметить несколько.</p>
+    <div class="stage"><div class="spec"><p class="cap">пункт манифеста сейчас</p><p class="css">{
+  "id": "donut-chart-renamed",
+  "kind": "selector-rename",
+  "old": "ds-donut-chart",
+  "new": "ds-pie-chart"
+}</p></div><div class="spec"><p class="cap">первые две практики</p><p class="css">{
+  "schemaVersion": 2,
+  "id": "donut-chart-renamed",
+  "verifyCommand": "grep -r ds-donut-chart src"
+}</p><p class="says">контракт держится на 306 строках регэкспов - это их и лечит</p></div></div>
+
     <div class="opts" data-multi>
       <div class="opt"><h3>Исполняемая проверка <span class="star">★</span></h3></div>
       <div class="opt"><h3>schemaVersion <span class="star">★</span></h3></div>
@@ -783,6 +924,8 @@
       <a class="q-src" href="../docs/todo.md">бэклог 1374</a>
     </div>
     <p class="q-sub">Автоматизация их не трогала.</p>
+    <div class="stage"><div class="spec"><p class="cap">что прокликано</p><div class="grid-mock"><i class="g-ok"></i><i class="g-ok"></i><i class="g-ok"></i><i class="g-ok"></i><i class="g-ok"></i><i class="g-no"></i><i class="g-no"></i><i class="g-no"></i><i class="g-ok"></i><i class="g-ok"></i><i class="g-no"></i><i class="g-no"></i><i class="g-ok"></i><i class="g-no"></i><i class="g-ok"></i><i class="g-ok"></i></div><p class="says">три пути ds-table и пять групп компонентов - серые</p></div></div>
+
     <div class="opts">
       <div class="opt"><h3>Прокликать</h3>
         <p>Разовый проход и запись результата.</p></div>
@@ -798,6 +941,12 @@
       <a class="q-src" href="../docs/todo.md">бэклог 1399</a>
     </div>
     <p class="q-sub">TypeScript 6 его удаляет.</p>
+    <div class="stage"><div class="spec"><p class="cap">сейчас</p><p class="css">{
+  "moduleResolution": "node"
+}</p><p class="says">TypeScript 6 его удаляет</p></div><div class="spec"><p class="cap">после</p><p class="css">{
+  "moduleResolution": "bundler"
+}</p></div></div>
+
     <div class="opts">
       <div class="opt"><h3>Перевести сейчас</h3>
         <p>До того, как оно сломается.</p></div>
@@ -813,6 +962,12 @@
       <a class="q-src" href="../docs/todo.md">бэклог 1382</a>
     </div>
     <p class="q-sub">Оба в схеме и оба пустые; что они дают - не исследовано.</p>
+    <div class="stage"><div class="spec"><p class="cap">манифест сейчас</p><p class="css">{
+  "cards": [ … 96 … ],
+  "templates": [],
+  "startingPoints": []
+}</p><p class="says">оба в схеме и оба пустые</p></div></div>
+
     <div class="opts">
       <div class="opt"><h3>Исследовать</h3>
         <p>Понять, что они меняют для читателя.</p></div>
@@ -828,6 +983,8 @@
       <a class="q-src" href="../docs/todo.md">бэклог 1385</a>
     </div>
     <p class="q-sub">Два из четырёх уже исправлены.</p>
+    <div class="stage"><div class="spec"><p class="cap">сейчас</p><div class="nav-mock"><span>ds-alert</span><span>ds-badge</span><span class="n-in">ds-status-dot внутри ds-badge</span><span>ds-banner</span></div></div><div class="spec"><p class="cap">со своим блоком</p><div class="nav-mock"><span>ds-alert</span><span>ds-badge</span><span class="n-own">ds-status-dot</span><span>ds-banner</span></div></div></div>
+
     <div class="opts">
       <div class="opt"><h3>Доделать оставшиеся два</h3>
         <p>Каждый компонент со своим блоком.</p></div>
