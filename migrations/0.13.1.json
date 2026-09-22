@@ -211,8 +211,8 @@
       "find": [
         ".ds-overlay-pane .dropdown-panel .option"
       ],
-      "why": "the row's weight, size, line-height and family are public hooks that forward per instance, so no deep selector is needed",
-      "replaceWith": "`--ds-option-weight`, `--ds-option-font-size`, `--ds-option-line-height` and `--ds-option-font-family`"
+      "why": "the row's weight, size, line-height and family are public hooks that forward per instance, so no deep selector is needed. Where they are SET decides whether they work: the picker copies its host's computed value onto the portaled pane as an inline style, and a value inherited into the host from any ancestor counts, so the copy outranks a rule written on the pane class this version adds.",
+      "replaceWith": "`--ds-option-weight`, `--ds-option-font-size`, `--ds-option-line-height` and `--ds-option-font-family`, set on the picker element - `ds-select`, `ds-autocomplete` or `ds-multi-select` - and not on the `panelClass`. A rule on the panel class owns the properties these four do not cover; for these four it loses to the copy."
     },
     {
       "id": "modal-title-doubled-class",
