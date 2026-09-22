@@ -1294,7 +1294,7 @@ file** — the number moves; cite the filename.
 | 10 | `10-ds-bar-name-collision` | What the merged progress+meter is called, given `ds-bar` is a prefix of `ds-bar-chart`. | the `ds-bar` rename ask on the same board |
 | 11 | `11-banner-announce-warning` | Whether a dev warning names an error banner no screen reader will read. | the closed `banner.announce` ask, which left this open |
 | 12 | `12-picker-list-height` | Whether the picker list height becomes a public token or stays behind `panelClass`. | the closed `--picker-maxh` ask, same shape |
-| 13 | `13-surface-entrance-motion` | What toast, banner and alert enter with: fade only, slide, or the scale the overlay panels now use. | `--ds-*-enter-offset` on all three, which `ds-fade-in` does not read |
+| 13 | `13-surface-entrance-motion` | Whether toast, banner and alert keep fading in or grow like the overlay panels. | `--ds-*-enter-offset` and `--ds-*-enter-scale` on all three, which `ds-fade-in` reads neither of |
 | 14 | `14-decision-queue` | The five consumer asks still open from 0.13.2-0.13.3, options drawn rather than named. | the 09-21 and 09-22 ask sections |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —

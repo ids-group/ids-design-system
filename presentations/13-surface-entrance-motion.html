@@ -15,7 +15,6 @@
     gap: var(--space-3);
     align-items: flex-start;
     box-sizing: border-box;
-    min-width: min(320px, 100%);
     max-width: 480px;
     padding: var(--space-3) var(--space-4);
     border: var(--border-width-default) solid var(--border-default);
@@ -91,6 +90,10 @@
 
   .opt.is-today .well { background: var(--surface-default); }
 
+  /* --toast-minw is 320px, so the specimen has to be 320px: a shrink-to-fit wrapper would
+     draw it at its text width and the section's own prose would be wrong about it. */
+  .well > div { inline-size: min(320px, 100%); }
+
   /* The toast's real home: top right, --space-6 in from both edges (DS_TOAST_POSITION_DEFAULT),
      stacked downwards with --space-2 between pills (toast-region.component.scss). */
   .viewport {
@@ -126,7 +129,7 @@
     inset-inline-end: var(--space-6);
     display: grid;
     gap: var(--space-2);
-    justify-items: end;
+    inline-size: min(320px, calc(100% - var(--space-6) * 2));
   }
 
   /* The three candidates, verbatim from _surface-motion.scss:26-47. */
