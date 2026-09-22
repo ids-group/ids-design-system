@@ -104,6 +104,11 @@ timeline, two audiences.
   `dsLineSeries`; and both `LineChart.md` and `Chart.md` spell the axis modes `'aligned'`,
   `'exact'`, `'dual-grid'` and `'split'`.
 
+- **`DonutChart` is `PieChart`.** `docs/DonutChart.md` is `docs/PieChart.md`, documenting
+  `<PieChart>` and `innerRadius` in place of `thickness`, and the `sections` entry in `config.json`
+  is `PieChart` pointing at `charts/pie-chart`, the chapter the docs site now serves.
+  `ChartTooltipPanel.md` and `MANUAL-SURFACE.md` name the pie as well.
+
 ## 0.12.0 — 2026-09-04
 
 ### Cards

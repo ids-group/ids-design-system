@@ -4,10 +4,10 @@ category: Data display
 A ring that splits one total into its parts. Each slice carries its share as a whole percentage, and the percentages always add up to exactly 100, so a legend never visibly loses a point. The middle of the ring is free for the total or for a headline figure of your own.
 
 - `data` (required): `{ id, label, value, slot? }[]`. `slot` is a 1-based palette slot — pinning a slice keeps every other slice's colour where it is when one is filtered out of `data`; left off, the colour follows the index and the whole ring repaints.
-- `centerValue` / `centerLabel`: the headline figure in the middle of the ring, and the word under it.
+- `centerValue` / `centerLabel`: the headline figure in the middle of the ring, and the word under it. Drawn only while there is a hole.
 - `legend`: `'end'` (default, beside the ring) | `'bottom'` | `'none'`.
 - `maxSlices` / `otherLabel`: cap the legend's length. Past the cap the smallest slices are summed into one slice named by `otherLabel` (default `"Other"`) taking the neutral eighth palette colour. Off by default; the kept slices keep the order you gave them and the total does not change.
-- `thickness`: the ring's stroke as a share of its radius. `thickness={1}` closes the hole into a pie; the centre value still prints, over the slices, carrying a halo of the chart's own background because no single text colour is readable against three different hues.
+- `innerRadius` (default `0.68`): the hole as a share of the radius, from `0` up to but not including `1`. `innerRadius={0}` closes the hole into a solid pie, and `centerValue` / `centerLabel` then draw nothing, because no single text colour is readable against three different hues. A value outside that range falls back to the default.
 - `caption`: shown above the ring and reused as the data table's caption.
 - `summary`: the accessible name; generated from `data` when omitted.
 - `valueFormat`: `(value: number) => string`, defaults to `Intl.NumberFormat`.
@@ -22,7 +22,7 @@ A ring that splits one total into its parts. Each slice carries its share as a w
 Percentages use largest-remainder rounding rather than rounding each slice on its own, so the legend adds up and a real non-zero slice never prints `0%`.
 
 ```tsx
-<DonutChart
+<PieChart
   caption="Accounts by plan"
   centerValue="11,860"
   centerLabel="accounts"
