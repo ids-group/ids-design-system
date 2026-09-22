@@ -701,7 +701,7 @@
         "ds-dropzone"
       ],
       "verify": "No `single` binding remains on any `ds-dropzone`, and every panel that was narrow still is - through `--ds-dropzone-max-width`.",
-      "note": "Two booleans encoded one three-state fact: `single` set the count, which `multiple` already carried, and separately capped the width, which nothing said. A narrow multi-file dropzone could not be expressed at all."
+      "note": "Two booleans encoded one three-state fact: `single` set the count, which `multiple` already carried, and separately capped the width, which nothing said. A narrow multi-file dropzone could not be expressed at all. The count is also enforced on a DROP now: the native `multiple` attribute constrains the picker dialog only, so a drag of several files reached a single-file dropzone whatever it was set to."
     }
   ],
   "informational": [

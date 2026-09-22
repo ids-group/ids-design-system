@@ -12,6 +12,10 @@
     }
 
     /* ---------- Single-file wrap ---------- */
+    .single-wrap ds-dropzone.narrow {
+      --ds-dropzone-max-width: var(--col-cap-text);
+    }
+
     .single-wrap {
       margin-top: var(--space-3);
       padding: var(--space-4);

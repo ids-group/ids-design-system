@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import type { DropzoneFile } from './dropzone.types';
+import { filesToAdd } from './dropzone.files';
 
 @Component({
   selector: 'ds-dropzone',
@@ -68,19 +69,20 @@ export class DropzoneComponent {
     if (this.disabled()) {
       return;
     }
-    const list = event.dataTransfer?.files;
-    if (list) {
-      this.filesAdded.emit(Array.from(list));
-    }
+    this.emitPicked(event.dataTransfer?.files);
   }
 
   protected onPickerChange(event: Event): void {
     if (this.disabled()) {
       return;
     }
-    const list = (event.target as HTMLInputElement).files;
-    if (list) {
-      this.filesAdded.emit(Array.from(list));
+    this.emitPicked((event.target as HTMLInputElement).files);
+  }
+
+  private emitPicked(list: FileList | null | undefined): void {
+    const picked = filesToAdd(list ? Array.from(list) : [], this.multiple());
+    if (picked.length) {
+      this.filesAdded.emit([...picked]);
     }
   }
 

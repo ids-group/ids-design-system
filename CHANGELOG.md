@@ -184,6 +184,11 @@
   the same file count. It does need a thought about the width: without the token the panel fills
   its column, and nothing reports that.
 
+  **A drop now honours the count too.** The native `multiple` attribute constrains the file
+  PICKER and has no say over a drag, so dropping three files on a dropzone that takes one emitted
+  three - under `single` as much as without it, for as long as the component has shipped. Both
+  ways in run through one place now, and a probe pins it.
+
 ### Added
 
 - **A published input can now name its own type.** `g[dsColumnSeries]` and `g[dsLineSeries]` ship
