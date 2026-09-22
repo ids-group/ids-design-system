@@ -122,7 +122,7 @@
     {
       "id": "max-visible-chips-type-widened",
       "kind": "behavior",
-      "old": "maxVisibleChips: number | 'fit' | null",
+      "old": "ds-multi-select[maxVisibleChips], ds-autocomplete[maxVisibleChips]",
       "new": null,
       "action": "Retype to `number | 'fit' | 'all' | null`, or drop the annotation and let inference carry it.",
       "appliesWhen": "A binding compiles as before. The VALUE change is the separate `max-visible-chips-null-is-unset-*` pair; this entry is only the declaration.",

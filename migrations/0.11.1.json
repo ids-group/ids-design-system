@@ -4,9 +4,9 @@
     {
       "id": "autocomplete-panel-classes-renamed",
       "kind": "class-rename",
-      "old": ".autocomplete-list, .autocomplete-optgroup, .autocomplete-optgroup-label, and the check icon's .icon inside an option",
-      "new": ".dropdown-list, .optgroup, .optgroup-label, .option-check — all inside a new .dropdown-panel wrapper",
-      "appliesWhen": "You wrote a global rule against `.ds-overlay-pane .autocomplete-list` or a sibling. Nothing to do if you only use the `<ds-autocomplete>` element and its inputs.",
+      "old": ".autocomplete-list, .autocomplete-optgroup, .autocomplete-optgroup-label",
+      "new": ".dropdown-list, .optgroup, .optgroup-label",
+      "appliesWhen": "You wrote a global rule against `.ds-overlay-pane .autocomplete-list` or a sibling. The check icon's `.icon` inside an option is `.option-check` too, and all of them sit inside a new `.dropdown-panel` wrapper. Nothing to do if you only use the `<ds-autocomplete>` element and its inputs.",
       "pitfall": "The panel is portaled to document.body, so these rules are almost always global rather than component-scoped - grep your global stylesheets, not just the component next to the picker. Retargeting one is also a WIDENING: the three pickers share this panel and it carries no per-picker class, attribute or token, so a rule that used to reach the autocomplete alone now reaches ds-select and ds-multi-select too. There is a second trap under it - a rule of yours on `.ds-overlay-pane` loses to the panel radius and background, which the picker copies off its own host as an inline style.",
       "searchHints": [
         "autocomplete-list",
@@ -45,7 +45,7 @@
     {
       "id": "autocomplete-single-value-ellipsizes",
       "kind": "behavior",
-      "old": "A settled single value wider than the trigger wrapped onto a second line and pushed the chevron onto a third — measured 40px to 63px at a 144px trigger.",
+      "old": "ds-autocomplete",
       "new": null,
       "appliesWhen": "You use `<ds-autocomplete>` in single mode in a narrow column.",
       "pitfall": "Multi mode is unchanged — its chips already had a measured cap. This only affects the settled single value.",
@@ -133,11 +133,11 @@
     {
       "id": "multi-select-panel-classes-renamed",
       "kind": "class-rename",
-      "old": ".panel, .options (inside ds-multi-select’s portaled panel)",
+      "old": ".panel, .options",
       "new": ".dropdown-panel, .dropdown-list",
       "action": "Retarget any rule naming the old classes, then delete the ones that only restored what the shared panel already gives.",
       "note": "The multi-select carried its own copy of the panel and the option row while its pane also carried ds-dropdown-panel, so both rule sets applied at once and the component’s won. It renders through the shared partial now, like the other two pickers.",
-      "appliesWhen": "You wrote a global rule against `.ds-overlay-pane .panel` or `.options` for the multi-select.",
+      "appliesWhen": "You wrote a global rule against `.ds-overlay-pane .panel` or `.options` for the multi-select - both classes live inside its portaled panel.",
       "pitfall": "The panel is portaled to document.body, so such a rule is almost always global rather than beside the component.",
       "searchHints": [
         "ds-overlay-pane .panel",
@@ -154,7 +154,7 @@
     {
       "id": "autocomplete-options-element-type-widened",
       "kind": "behavior",
-      "old": "ds-autocomplete [options] typed readonly AutocompleteOption<T>[]",
+      "old": "ds-autocomplete[options]",
       "new": null,
       "surface": "typescript",
       "action": "Only where you READ the array back or type a variable against its element: change `AutocompleteOption<T>` to `AutocompleteItem<T>` and narrow each element with `isDsOptionGroup` before touching `.value`. Narrow before reading: `for (const item of picker.options()) { if (isDsOptionGroup(item)) continue; /* item.value is safe here */ }`. `isDsOptionGroup` and `flattenDsOptions` are exported from the package root.",
@@ -206,7 +206,7 @@
     {
       "id": "multi-select-select-all-type-widened",
       "kind": "behavior",
-      "old": "ds-multi-select selectAll typed boolean",
+      "old": "ds-multi-select[selectAll]",
       "new": null,
       "surface": "typescript",
       "action": "Only where you READ `selectAll` back into a `boolean`: widen the receiving type to `boolean | 'group' | 'both'`, or compare against the value you meant (`selectAll() === true`).",

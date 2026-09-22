@@ -96,7 +96,7 @@
       "id": "dropdown-error-input-rename",
       "kind": "input-rename",
       "old": "ds-dropdown[error]",
-      "new": "invalid",
+      "new": "ds-select[invalid]",
       "action": "On elements you moved from `ds-dropdown` to `ds-select`, rename `[error]` to `[invalid]` and `error=\"…\"` to `invalid=\"…\"`.",
       "searchHints": [
         "[error]=",

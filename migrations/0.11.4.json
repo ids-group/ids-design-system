@@ -63,7 +63,7 @@
     {
       "id": "banner-alert-announce-opt-in",
       "kind": "behavior",
-      "old": "role and aria-live always present",
+      "old": "ds-banner, ds-alert",
       "new": null,
       "appliesWhen": "You rely on a ds-banner or ds-alert being announced by a screen reader when it appears. A banner that is page furniture needs no change - silence is now the correct behaviour for it.",
       "pitfall": "Nothing breaks visibly and no build fails, so a regression here is invisible without a screen reader. Grepping for a severity misses two shapes that are common and easy to walk past: a banner in a non-first branch of an @if / @else if / @switch chain, and one whose variant is a computed expression rather than a literal. Both render as the severity you were looking for and neither matches the search for it.",
@@ -126,7 +126,7 @@
     {
       "id": "toast-max-visible-default-5",
       "kind": "behavior",
-      "old": "provideDsConfig without a toast.maxVisible",
+      "old": "provideDsConfig",
       "new": null,
       "appliesWhen": "You raise more than five toasts at once and expect every one to be on screen together. An app that shows one or two at a time needs nothing.",
       "pitfall": "Nothing is dropped and nothing errors, so this reads as toasts \"not appearing\": the sixth is queued and shows as an earlier one dismisses. A cap of 0 is the only way left to ask for an uncapped stack, and 0 no longer means \"unset\" - it is forwarded.",
@@ -205,7 +205,7 @@
     {
       "id": "banner-alert-aria-getters-nullable",
       "kind": "behavior",
-      "old": "protected get ariaRole(): 'alert' | 'status'",
+      "old": "BannerComponent.ariaRole, AlertComponent.ariaRole",
       "new": null,
       "appliesWhen": "Only a class extending BannerComponent or AlertComponent that reads or overrides ariaRole or ariaLive. Nothing in a template sees these.",
       "pitfall": "A widening breaks the READER, not the writer: an override that still declares the narrow return type fails, and code that fed the value somewhere non-nullable fails too, both at a site that did not change.",

@@ -351,8 +351,10 @@ Run `npm run migration-lint` before you call the manifest done — it mechanises
 - [ ] `id` is a stable, unique kebab slug. (lint)
 - [ ] `old`/`new`/`searchHints` are exact code strings; element-scoped as `element[attr]` where shared.
 - [ ] `old` names OUR identifiers - the class, element, input or token that changed - never a
-      consumer placeholder like `class MyTable extends TableComponent`. The consumer's shape goes in
-      `detect` / `searchHints`, where `extends TableComponent` already locates it.
+      consumer placeholder like `class MyTable extends TableComponent`, and never a sentence. The
+      consumer's shape goes in `detect` / `searchHints`, where `extends TableComponent` already
+      locates it; the symptom goes in `appliesWhen` or `note`. Families (`--ds-*-bg`), prefixes
+      (`--ds-combobox-`), `element .class` selectors, keyframe lists and `@use` paths are read.
 - [ ] `kind` correct; `map` present iff `value-remap`; `new: null` for `behavior`. (lint)
 - [ ] `surface` says which of the consumer's artifacts changes — `none` where nothing does. (lint)
 - [ ] A `style` item whose change ships in one of our partials names that partial in `appliesWhen`,
