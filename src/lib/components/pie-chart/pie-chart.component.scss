@@ -25,6 +25,13 @@
   --_pie-chart-swatch-size: var(--ds-pie-chart-swatch-size, 10px);
   --_pie-chart-focus-color: var(--ds-pie-chart-focus-color, var(--focus-ring-color));
   --_pie-chart-focus-width: var(--ds-pie-chart-focus-width, var(--focus-ring-width));
+
+  /* The rings are drawn by the shared mixins, which read `--focus-ring-*` and
+     `--ds-chart-focus-ring-color`. Re-pointed here, or this chart's own two hooks would parse and
+     change nothing. */
+  --ds-chart-focus-ring-color: var(--_pie-chart-focus-color);
+  --focus-ring-color: var(--_pie-chart-focus-color);
+  --focus-ring-width: var(--_pie-chart-focus-width);
   --_pie-chart-outline-width: var(--ds-pie-chart-outline-width, calc(var(--border-width-strong) + var(--border-width-default)));
 
   margin: 0;
@@ -214,9 +221,6 @@ figcaption {
   column-gap: var(--space-2);
 }
 
-.empty-text.is-error {
-  color: var(--error);
-}
 
 .ring-svg {
   @include chart-interactive.fades('.slice', ', fill var(--ds-motion-chart-mark-duration) var(--ds-motion-chart-mark-easing)');

@@ -16,6 +16,13 @@
   --_heatmap-chart-focus-color: var(--ds-heatmap-chart-focus-color, var(--focus-ring-color));
   --_heatmap-chart-focus-width: var(--ds-heatmap-chart-focus-width, var(--focus-ring-width));
 
+  /* The rings are drawn by the shared mixins, which read `--focus-ring-*` and
+     `--ds-chart-focus-ring-color`. Re-pointed here, or this chart's own two hooks would parse and
+     change nothing. */
+  --ds-chart-focus-ring-color: var(--_heatmap-chart-focus-color);
+  --focus-ring-color: var(--_heatmap-chart-focus-color);
+  --focus-ring-width: var(--_heatmap-chart-focus-width);
+
   margin: 0;
 }
 
