@@ -48,6 +48,7 @@ export class DropzoneComponent {
     if (this.disabled()) {
       parts.push('disabled');
     }
+
     return parts.join(' ');
   });
 

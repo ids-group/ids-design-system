@@ -64,15 +64,15 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       cursor="category"
-    </code> draws a band and a crosshair
-    down the category under the pointer, and reports that category to every mark
-    through the shared scales. Off by default: a plot whose marks are themselves
-    the hover targets already answers per mark, and two affordances on one plot
-    read as two different questions. A mark set to
+    </code> draws a band and a
+    crosshair down the category under the pointer, and reports that category to
+    every mark through the shared scales. Off by default: a plot whose marks are
+    themselves the hover targets already answers per mark, and two affordances
+    on one plot read as two different questions. A mark set to
     <code class="t-mono-inline">
       tooltip="axis"
-    </code> reads that same category and
-    names every series at it.
+    </code> reads that same category
+    and names every series at it.
   </p>
 
   <ds-chart
@@ -82,9 +82,9 @@
     [summary]="ordersSummary">
     <svg:g
       dsColumnSeries
+      tooltip="none"
       [data]="orderColumns"
-      [showValues]="false"
-      tooltip="none" />
+      [showValues]="false" />
 
     <svg:g
       #axisLine="dsLineSeries"
@@ -217,14 +217,13 @@
       ds-chart-data-table
     </code> is the annex every
     chart puts under its plot: each reading in a
-    <code class="t-mono-inline"> details </code> a reader can open. Cells arrive
-    already formatted, because how a value reads is the chart's decision and not
-    the table's.
     <code class="t-mono-inline">
-      rowHeader
-    </code> renders each row's first
-    cell as a <code class="t-mono-inline"> th scope="row" </code>, for a matrix
-    whose rows are named rather than numbered, and
+      details
+    </code> a reader can open. Cells arrive
+    already formatted, because how a value reads is the chart's decision and not
+    the table's. <code class="t-mono-inline"> rowHeader </code> renders each
+    row's first cell as a <code class="t-mono-inline"> th scope="row" </code>,
+    for a matrix whose rows are named rather than numbered, and
     <code class="t-mono-inline">
       toggled
     </code> fires when the disclosure
@@ -287,16 +286,15 @@
 
   <p class="block-desc t-s">
     These are the mark's inputs, not the preset's - reach for them once
-    <code class="t-mono-inline"> ds-line-chart </code> stops fitting.
+    <code class="t-mono-inline">
+      ds-line-chart
+    </code> stops fitting.
     <code class="t-mono-inline">
       highlighted
     </code> names the one series to
-    single out and
-    <code class="t-mono-inline">
-      dimOthers
-    </code> is what says fading is
-    wanted at all; the singled-out line thickens as well as keeping its colour,
-    so the comparison survives a monochrome print.
+    single out and <code class="t-mono-inline"> dimOthers </code> is what says
+    fading is wanted at all; the singled-out line thickens as well as keeping
+    its colour, so the comparison survives a monochrome print.
     <code class="t-mono-inline">
       patterns
     </code> gives each series a dash of
@@ -312,16 +310,11 @@
     </code>,
     <code class="t-mono-inline">
       stacked
-    </code> separates a piled band from
-    the one under it, <code class="t-mono-inline"> pinOnClick </code> holds a
-    reading, and
-    <code class="t-mono-inline">
-      tooltipAnchor
-    </code> decides whether an
-    <code class="t-mono-inline">
-      'axis'
-    </code> panel hangs over the highest
-    reading or follows the pointer.
+    </code> separates a piled band from the
+    one under it, <code class="t-mono-inline"> pinOnClick </code> holds a
+    reading, and <code class="t-mono-inline"> tooltipAnchor </code> decides
+    whether an <code class="t-mono-inline"> 'axis' </code> panel hangs over the
+    highest reading or follows the pointer.
   </p>
 
   <div class="demo-row">
@@ -333,7 +326,11 @@
         (pressed)="
           singledOut.set(singledOut() === series.id ? null : series.id)
         ">
-        {{ singledOut() === series.id ? 'Show both' : 'Single out ' + series.label }}
+        {{
+          singledOut() === series.id
+            ? 'Show both'
+            : 'Single out ' + series.label
+        }}
       </ds-button>
     }
   </div>
@@ -341,9 +338,9 @@
   <ds-chart
     cursor="category"
     axisLabel="Sessions"
+    summary="Organic and paid sessions a month, six months."
     [categories]="orderMonths"
-    [interactive]="true"
-    summary="Organic and paid sessions a month, six months.">
+    [interactive]="true">
     <svg:g
       #traffic="dsLineSeries"
       dsLineSeries

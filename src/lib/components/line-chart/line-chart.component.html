@@ -91,7 +91,9 @@
         [tooltipLingerMs]="tooltipLingerResolved()"
         [valueFormat]="valueFormatResolved()"
         [dsChartTooltip]="mark.tooltipContext()"
-        [dsChartTooltipPreferBelow]="pinnedCategory() || mark.activeMark.pinned()"
+        [dsChartTooltipPreferBelow]="
+          pinnedCategory() || mark.activeMark.pinned()
+        "
         [dsChartTooltipOrigin]="mark.tooltipOrigin()"
         [dsChartTooltipTemplate]="tooltipTemplate() ?? null"
         (pointClicked)="onPointClicked($event)" />

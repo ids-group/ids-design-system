@@ -7,6 +7,7 @@
     {{ label }}
   </div>
 }
+
 @for (entry of visibleEntries(); track entry.id) {
   <ds-toast
     [variant]="entry.variant"

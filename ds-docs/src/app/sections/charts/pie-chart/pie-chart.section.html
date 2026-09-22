@@ -8,7 +8,9 @@
     as a whole percentage.
   </span>
 
-  <h3 class="block-title t-h4">Default</h3>
+  <h3 class="block-title t-h4">
+    Default
+  </h3>
 
   <p class="block-desc t-s">
     Slices run clockwise from twelve o'clock in the order you pass them. Shares
@@ -24,13 +26,21 @@
 
   <docs-chart-data-editor [(rows)]="specimenSlices" />
 
-  <h3 class="block-title t-h4">Legend placement</h3>
+  <h3 class="block-title t-h4">
+    Legend placement
+  </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline"> end </code> is the default;
-    <code class="t-mono-inline"> bottom </code> is for a narrow column, where
+    <code class="t-mono-inline">
+      end
+    </code> is the default;
+    <code class="t-mono-inline">
+      bottom
+    </code> is for a narrow column, where
     the ring would otherwise shrink to make room beside it;
-    <code class="t-mono-inline"> none </code> is only safe where the parts are
+    <code class="t-mono-inline">
+      none
+    </code> is only safe where the parts are
     named elsewhere.
   </p>
 
@@ -41,7 +51,9 @@
         legend="end"
         [data]="legendEndSlices()" />
 
-      <div class="state-cell-label">end (default)</div>
+      <div class="state-cell-label">
+        end (default)
+      </div>
 
       <docs-chart-data-editor [(rows)]="legendEndSlices" />
     </div>
@@ -52,7 +64,9 @@
         legend="bottom"
         [data]="legendBottomSlices()" />
 
-      <div class="state-cell-label">bottom</div>
+      <div class="state-cell-label">
+        bottom
+      </div>
 
       <docs-chart-data-editor [(rows)]="legendBottomSlices" />
     </div>
@@ -63,17 +77,23 @@
         legend="none"
         [data]="legendNoneSlices()" />
 
-      <div class="state-cell-label">none</div>
+      <div class="state-cell-label">
+        none
+      </div>
 
       <docs-chart-data-editor [(rows)]="legendNoneSlices" />
     </div>
   </div>
 
-  <h3 class="block-title t-h4">Inner radius</h3>
+  <h3 class="block-title t-h4">
+    Inner radius
+  </h3>
 
   <p class="block-desc t-s">
     The hole as a fraction of the outer radius, 0.68 by default;
-    <code class="t-mono-inline"> 0 </code> closes it and gives you a pie, centre
+    <code class="t-mono-inline">
+      0
+    </code> closes it and gives you a pie, centre
     content included.
   </p>
 
@@ -84,7 +104,9 @@
         [data]="thinRingSlices()"
         [innerRadius]="0.9" />
 
-      <div class="state-cell-label">innerRadius 0.9</div>
+      <div class="state-cell-label">
+        innerRadius 0.9
+      </div>
 
       <docs-chart-data-editor [(rows)]="thinRingSlices" />
     </div>
@@ -95,20 +117,30 @@
         [data]="pieSlices()"
         [innerRadius]="0" />
 
-      <div class="state-cell-label">innerRadius 0 · a pie</div>
+      <div class="state-cell-label">
+        innerRadius 0 · a pie
+      </div>
 
       <docs-chart-data-editor [(rows)]="pieSlices" />
     </div>
   </div>
 
-  <h3 class="block-title t-h4">Centre content</h3>
+  <h3 class="block-title t-h4">
+    Centre content
+  </h3>
 
   <p class="block-desc t-s">
     Wherever there is a hole, the middle prints something: your
-    <code class="t-mono-inline"> centerValue </code> when you give one, the
+    <code class="t-mono-inline">
+      centerValue
+    </code> when you give one, the
     formatted total when you do not, with
-    <code class="t-mono-inline"> centerLabel </code> captioning it. At
-    <code class="t-mono-inline"> innerRadius="0" </code> there is no hole to
+    <code class="t-mono-inline">
+      centerLabel
+    </code> captioning it. At
+    <code class="t-mono-inline">
+      innerRadius="0"
+    </code> there is no hole to
     hold it, so neither renders.
   </p>
 
@@ -119,7 +151,9 @@
         dataTable="none"
         [data]="centerLabelSlices()" />
 
-      <div class="state-cell-label">Label only — the total fills in</div>
+      <div class="state-cell-label">
+        Label only — the total fills in
+      </div>
 
       <docs-chart-data-editor [(rows)]="centerLabelSlices" />
     </div>
@@ -131,18 +165,26 @@
         dataTable="none"
         [data]="centerValueSlices()" />
 
-      <div class="state-cell-label">Value and label</div>
+      <div class="state-cell-label">
+        Value and label
+      </div>
 
       <docs-chart-data-editor [(rows)]="centerValueSlices" />
     </div>
   </div>
 
-  <h3 class="block-title t-h4">Legend length</h3>
+  <h3 class="block-title t-h4">
+    Legend length
+  </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline"> maxSlices </code> caps the legend and sums the
+    <code class="t-mono-inline">
+      maxSlices
+    </code> caps the legend and sums the
     smallest slices into one, named by
-    <code class="t-mono-inline"> otherLabel </code>. Off by default, the tail is
+    <code class="t-mono-inline">
+      otherLabel
+    </code>. Off by default, the tail is
     summed rather than dropped, and the slices you keep stay in the order you
     gave them.
   </p>
@@ -153,7 +195,9 @@
         dataTable="none"
         [data]="nineSlices()" />
 
-      <div class="state-cell-label">nine slices, uncapped</div>
+      <div class="state-cell-label">
+        nine slices, uncapped
+      </div>
     </div>
 
     <div class="state-cell">
@@ -162,22 +206,34 @@
         [data]="nineSlices()"
         [maxSlices]="5" />
 
-      <div class="state-cell-label">maxSlices 5</div>
+      <div class="state-cell-label">
+        maxSlices 5
+      </div>
     </div>
   </div>
 
   <docs-replay-button />
 
-  <h3 class="block-title t-h4">Interaction</h3>
+  <h3 class="block-title t-h4">
+    Interaction
+  </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline"> interactive </code> turns on the pointer cursor
+    <code class="t-mono-inline">
+      interactive
+    </code> turns on the pointer cursor
     and makes each slice a control;
-    <code class="t-mono-inline"> sliceClicked </code> fires whether or not it is
+    <code class="t-mono-inline">
+      sliceClicked
+    </code> fires whether or not it is
     set. <code class="t-mono-inline">tooltip</code> chooses whether a hovered
     slice opens a panel — <code class="t-mono-inline">'item'</code> by default,
-    <code class="t-mono-inline"> 'none' </code> to suppress it.
-    <code class="t-mono-inline"> dimOthers </code> fades the slices that are not
+    <code class="t-mono-inline">
+      'none'
+    </code> to suppress it.
+    <code class="t-mono-inline">
+      dimOthers
+    </code> fades the slices that are not
     under the pointer, and <code class="t-mono-inline"> staggerMs </code> is
     accepted for parity with the other four charts but has no effect here: the
     ring arrives as one object, because arcs share their edges and fading them
@@ -194,7 +250,9 @@
         [data]="interactionSlices()"
         (sliceClicked)="lastSlice.set($event.label)" />
 
-      <div class="state-cell-label">interactive</div>
+      <div class="state-cell-label">
+        interactive
+      </div>
     </div>
 
     <div class="state-cell">
@@ -205,7 +263,9 @@
         tooltip="none"
         [data]="dimSlices()" />
 
-      <div class="state-cell-label">dimOthers, tooltip = none</div>
+      <div class="state-cell-label">
+        dimOthers, tooltip = none
+      </div>
     </div>
   </div>
 
@@ -213,15 +273,23 @@
     Last clicked: <code class="t-mono-inline">{{ lastSlice() || '—' }}</code>
   </p>
 
-  <h3 class="block-title t-h4">Pinning a slice</h3>
+  <h3 class="block-title t-h4">
+    Pinning a slice
+  </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline"> pinOnClick </code> holds the clicked slice and
+    <code class="t-mono-inline">
+      pinOnClick
+    </code> holds the clicked slice and
     its tooltip in place, so the reading stays while you look away from the
     ring. With <code class="t-mono-inline"> dimOthers </code> beside it the rest
     of the ring stays down too. A pushpin marks the held arc and an
-    <code class="t-mono-inline"> Unpin </code> button appears above the plot;
-    <kbd> Esc </kbd>, a press outside, or clicking the slice again releases it.
+    <code class="t-mono-inline">
+      Unpin
+    </code> button appears above the plot;
+    <kbd>
+      Esc
+    </kbd>, a press outside, or clicking the slice again releases it.
   </p>
 
   <ds-pie-chart
@@ -234,7 +302,9 @@
 
   <docs-chart-data-editor [(rows)]="pinSlices" />
 
-  <h3 class="block-title t-h4">Palette slots</h3>
+  <h3 class="block-title t-h4">
+    Palette slots
+  </h3>
 
   <p class="block-desc t-s">
     Slices take the categorical palette by position, so dropping one recolours
@@ -250,17 +320,25 @@
 
   <docs-chart-data-editor [(rows)]="slotSlices" />
 
-  <h3 class="block-title t-h4">Data table</h3>
+  <h3 class="block-title t-h4">
+    Data table
+  </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline"> none </code>, the default, renders no table at
+    <code class="t-mono-inline">
+      none
+    </code>, the default, renders no table at
     all; <code class="t-mono-inline">toggle</code> puts one behind a closed
     disclosure; <code class="t-mono-inline">visible</code> renders it open. The
     table is the non-visual route to the numbers, so
-    <code class="t-mono-inline"> none </code> belongs only where the same
+    <code class="t-mono-inline">
+      none
+    </code> belongs only where the same
     figures are already in a table on the page. Every share column here is on by
     default, unlike the other charts:
-    <code class="t-mono-inline"> partOfWhole </code> starts true on a ring,
+    <code class="t-mono-inline">
+      partOfWhole
+    </code> starts true on a ring,
     because a ring IS parts of one whole. Set it false to drop the percentage
     from the legend, the tooltip and the table alike.
   </p>
@@ -274,9 +352,13 @@
 
   <details class="edge-cases">
     <summary>
-      <h3 class="block-title t-h4">Edge cases</h3>
+      <h3 class="block-title t-h4">
+        Edge cases
+      </h3>
 
-      <span class="chapter-toggle"> Show </span>
+      <span class="chapter-toggle">
+        Show
+      </span>
     </summary>
 
     <p class="block-desc t-s">
@@ -290,7 +372,9 @@
           dataTable="none"
           [data]="emptySlices()" />
 
-        <div class="state-cell-label">Empty</div>
+        <div class="state-cell-label">
+          Empty
+        </div>
 
         <docs-chart-data-editor [(rows)]="emptySlices" />
       </div>
@@ -301,7 +385,9 @@
           loading
           [data]="loadingSlices()" />
 
-        <div class="state-cell-label">Loading</div>
+        <div class="state-cell-label">
+          Loading
+        </div>
 
         <docs-chart-data-editor [(rows)]="loadingSlices" />
       </div>
@@ -312,7 +398,9 @@
           error
           [data]="emptySlices()" />
 
-        <div class="state-cell-label">Error</div>
+        <div class="state-cell-label">
+          Error
+        </div>
       </div>
 
       <div class="state-cell">
@@ -320,7 +408,9 @@
           dataTable="none"
           [data]="oneSlice()" />
 
-        <div class="state-cell-label">One slice</div>
+        <div class="state-cell-label">
+          One slice
+        </div>
 
         <docs-chart-data-editor [(rows)]="oneSlice" />
       </div>
@@ -330,7 +420,9 @@
           dataTable="none"
           [data]="allZerosSlices()" />
 
-        <div class="state-cell-label">All zeros</div>
+        <div class="state-cell-label">
+          All zeros
+        </div>
 
         <docs-chart-data-editor [(rows)]="allZerosSlices" />
       </div>
@@ -340,7 +432,9 @@
           dataTable="none"
           [data]="negativeSlices()" />
 
-        <div class="state-cell-label">Negative value</div>
+        <div class="state-cell-label">
+          Negative value
+        </div>
 
         <docs-chart-data-editor [(rows)]="negativeSlices" />
       </div>
@@ -351,7 +445,9 @@
           dataTable="none"
           [data]="nineSlices()" />
 
-        <div class="state-cell-label">Nine slices</div>
+        <div class="state-cell-label">
+          Nine slices
+        </div>
 
         <docs-chart-data-editor [(rows)]="nineSlices" />
       </div>
@@ -362,7 +458,9 @@
           error
           [data]="specimenSlices()" />
 
-        <div class="state-cell-label">Error</div>
+        <div class="state-cell-label">
+          Error
+        </div>
       </div>
     </div>
   </details>

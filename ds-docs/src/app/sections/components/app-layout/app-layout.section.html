@@ -249,10 +249,13 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       AppLayoutNavigationService
-    </code> is public for
-    the same reason. Its <code class="t-mono-inline">pathChanged</code> stream
-    is the layout's own answer to "did we go somewhere else?" — `NavigationEnd`,
-    path only, de-duplicated, and skipping any navigation that carries
+    </code> is public
+    for the same reason. Its
+    <code class="t-mono-inline">
+      pathChanged
+    </code> stream is the layout's own
+    answer to "did we go somewhere else?" — `NavigationEnd`, path only,
+    de-duplicated, and skipping any navigation that carries
     <code class="t-mono-inline">
       state: {{ '{' }} dsSamePage: true {{ '}' }}
     </code
