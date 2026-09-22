@@ -2431,12 +2431,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "tokens": [
       {
         "name": "--ds-autocomplete-panel-bg-color",
-        "value": "var(--surface-overlay)",
+        "value": "initial",
         "notes": "Autocomplete dropdown panel fill."
       },
       {
         "name": "--ds-autocomplete-panel-radius",
-        "value": "var(--ds-radius-panel)",
+        "value": "initial",
         "notes": "Autocomplete dropdown panel corner radius (default --ds-radius-panel). Forwarded onto the portaled pane on open."
       },
       {
@@ -5185,7 +5185,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "tokens": [
       {
         "name": "--ds-multi-select-panel-bg-color",
-        "value": "var(--surface-overlay)",
+        "value": "initial",
         "notes": "Dropdown panel surface (default --surface-overlay). The panel is portaled, so set it on the host — a global rule against the pane cannot see the host override."
       },
       {

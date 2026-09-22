@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-// Does check-void-tokens still FIRE, and does it still stay QUIET on the four shapes that are
-// sound? Both halves matter equally here: the gate's whole value is that it reports the one real
+// Does check-void-tokens still FIRE, and does it still stay QUIET on the shapes that are sound?
+// Both halves matter equally here: the gate's whole value is that it reports the one real
 // void among 26 look-alikes, so a version that flagged everything would be as useless as one that
 // flagged nothing — and the first version of this gate did exactly that, reporting
 // `var(--warning-subtitle, var(--surface-subtitle))` because it walked into a nested fallback whose
@@ -32,7 +32,10 @@ const run = () => {
     });
     return { failed: false, output: '' };
   } catch (error) {
-    return { failed: true, output: (error.stdout ?? '') + (error.stderr ?? '') };
+    return {
+      failed: true,
+      output: (error.stdout ?? '') + (error.stderr ?? ''),
+    };
   }
 };
 
@@ -65,15 +68,16 @@ const cases = [
   [
     'a void nested two fallbacks deep',
     {
-      'd.scss':
-        '.x { color: var(--void-1, var(--void-2, var(--void-3))); }',
+      'd.scss': '.x { color: var(--void-1, var(--void-2, var(--void-3))); }',
     },
     true,
     '--void-3',
   ],
   [
     'rule 1 — a name inside a // comment is documentation',
-    { 'e.scss': '// var(--only-in-a-comment) is the idiom\n.x { color: red; }' },
+    {
+      'e.scss': '// var(--only-in-a-comment) is the idiom\n.x { color: red; }',
+    },
     false,
   ],
   [
@@ -85,7 +89,8 @@ const cases = [
     'rule 2 — written from a template binding',
     {
       'g.scss': '.row { height: var(--_from-the-template); }',
-      'g.component.html': '<div [style.--_from-the-template]="rowHeight()"></div>',
+      'g.component.html':
+        '<div [style.--_from-the-template]="rowHeight()"></div>',
     },
     false,
   ],
@@ -114,6 +119,38 @@ const cases = [
     'a token declared in the same file',
     { 'k.scss': ':host { --_local: 4px; }\n.x { padding: var(--_local); }' },
     false,
+  ],
+  [
+    'an `initial` fallback, which drops the declaration just as a bare var() does',
+    { 'reset.scss': '.x { --y: var(--never-declared-reset, initial); }' },
+    true,
+    '--never-declared-reset',
+  ],
+  [
+    'the same line carrying the void-ok marker',
+    {
+      'reset-ok.scss':
+        '.x { --y: var(--never-declared-marked, initial); /* void-ok */ }',
+    },
+    false,
+  ],
+  [
+    'a marker on one line does not clear a void on the next',
+    {
+      'reset-scope.scss':
+        '.x {\n  --a: var(--never-declared-marked-a, initial); /* void-ok */\n  --b: var(--never-declared-bare-b);\n}',
+    },
+    true,
+    '--never-declared-bare-b',
+  ],
+  [
+    'a block comment does not shift the reported line number',
+    {
+      'lines.scss':
+        '.x {\n  /* one\n     two\n     three */\n  color: var(--never-declared-line-six);\n}',
+    },
+    true,
+    'lines.scss:5',
   ],
   [
     'NEGATIVE CONTROL — only real tokens, must stay green',
@@ -157,6 +194,7 @@ if (failures > 0) {
   console.error(`\ncheck-void-tokens-selftest: ${failures} case(s) failed.`);
   process.exit(1);
 }
+const firing = cases.filter(([, , mustFire]) => mustFire).length;
 console.log(
-  `\ncheck-void-tokens-selftest: OK — ${cases.length} cases, 4 firing shapes and 7 sound ones, and a valid stylesheet stayed green.`,
+  `\ncheck-void-tokens-selftest: OK — ${cases.length} cases, ${firing} firing shapes and ${cases.length - firing} sound ones, and a valid stylesheet stayed green.`,
 );

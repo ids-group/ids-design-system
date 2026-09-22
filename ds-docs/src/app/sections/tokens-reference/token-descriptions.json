@@ -207,7 +207,7 @@
   "--ds-autocomplete-input-font-size": "Text input size.",
   "--ds-autocomplete-input-min-width": "Autocomplete input minimum width (40px).",
   "--ds-autocomplete-max-width": "Autocomplete max width (none by default).",
-  "--ds-autocomplete-panel-bg-color": "Autocomplete dropdown panel fill.",
+  "--ds-autocomplete-panel-bg-color": "Autocomplete dropdown panel fill (default --surface-overlay). The panel is portaled, so set it on the host - a global rule against the pane cannot see the host override.",
   "--ds-autocomplete-panel-max-height": "Autocomplete dropdown panel max height before it scrolls (default --picker-maxh, shared with ds-multi-select). Forwarded onto the portaled pane on open.",
   "--ds-autocomplete-panel-radius": "Autocomplete dropdown panel corner radius (default --ds-radius-panel). Forwarded onto the portaled pane on open.",
   "--ds-autocomplete-radius": "Autocomplete field corner radius (8px).",

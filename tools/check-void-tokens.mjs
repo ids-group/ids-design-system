@@ -7,8 +7,8 @@
 // 26.8px, text flush against its thread. `deck-lint`'s D012 had caught exactly this class of bug
 // in `presentations/`, but the rule stopped at that folder.
 //
-// Four rules earn their keep, measured on this repo's own history: without them the sweep reports
-// 26 non-defects.
+// Five rules earn their keep, measured on this repo's own history: without the first four the sweep
+// reports 26 non-defects.
 //   1. Comments are documentation, not references — three hits were inside `//` or `/* */`.
 //   2. A custom property may be written from the template (`[style.--x]`) or from script
 //      (`setProperty('--x')`) — that is how --_table-virtual-row-h and --demo-dur arrive.
@@ -17,6 +17,16 @@
 //   4. A fallback is only consulted when the primary is undeclared, so
 //      `var(--warning-subtitle, var(--surface-subtitle))` is sound while --warning-subtitle
 //      resolves — the void fallback is dead code, not a defect.
+//   5. An `initial` / `unset` fallback is NOT an escape from rule 4: on a custom property either
+//      keyword IS the guaranteed-invalid value, so the declaration drops exactly as a bare var()
+//      would. It is reported the same way, and cleared the same way.
+//
+// The only deliberate case is a component aliasing a hook a consumer may set — `--ds-dropdown-
+// panel-radius: var(--ds-autocomplete-panel-radius, initial)` must stay unset until they set it,
+// because a value here is copied onto the portaled pane as an inline style and would outrank the
+// pane-class rule that is their only route to it. Nothing distinguishes that from a mistyped token,
+// since both name something the library never declares — so the author says so with a `void-ok`
+// comment on the same line, and the gate stays strict everywhere else.
 //
 // Known limit: only `.scss`/`.css` files are scanned. A component with inline `styles:` in its
 // TypeScript is not read, so a void token there is invisible to this gate.
@@ -47,8 +57,27 @@ const filesUnder = (dir) => {
   return found;
 };
 
+// Keeps the line count, so a reported line number and the `void-ok` lookup both land on the line the
+// author is looking at. A block comment used to collapse to one space and shift everything under it
+// up by however many lines it spanned.
 const stripComments = (css) =>
-  css.replace(/\/\*[\s\S]*?\*\//g, ' ').replace(/(^|\s)\/\/[^\n]*/g, '$1');
+  css
+    .replace(
+      /\/\*[\s\S]*?\*\//g,
+      (block) => ' '.repeat(1) + '\n'.repeat((block.match(/\n/g) ?? []).length),
+    )
+    .replace(/(^|\s)\/\/[^\n]*/g, '$1');
+
+// `--x: var(--y, initial)` drops the declaration exactly as `var(--y)` does — `initial` on a custom
+// property IS the guaranteed-invalid value. Written on purpose it is the only way to say "unset
+// unless the consumer sets the hook"; written by accident it is the same defect wearing a fallback,
+// and rule 4 would wave it through. So it is reported like a bare void and cleared by the marker.
+const RESET_FALLBACK = /^(initial|unset)$/;
+
+// The author's statement that the drop is intended, on the same line as the declaration. Same shape
+// as `eslint-disable-line`: nothing else can tell a deliberate reset from a mistyped token, because
+// both name something the library never declares.
+const DELIBERATE = /void-ok/;
 
 /**
  * The arguments of one `var(` at `openParen`, split on the first top-level comma:
@@ -90,7 +119,7 @@ function consultedTokens(css, declared) {
         continue;
       }
       if (!declared.has(token)) {
-        if (fallback === null) {
+        if (fallback === null || RESET_FALLBACK.test(fallback)) {
           names.push(token);
         } else {
           // The primary is undeclared, so the fallback IS consulted — its own voids count.
@@ -140,11 +169,13 @@ for (const file of sources.filter((f) => /\.(scss|css|html|ts)$/.test(f))) {
 
 const problems = [];
 for (const file of styleFiles) {
+  const raw = readFileSync(file, 'utf8').split('\n');
   const lines = stripComments(readFileSync(file, 'utf8')).split('\n');
   lines.forEach((line, index) => {
+    if (DELIBERATE.test(raw[index] ?? '')) return;
     for (const token of consultedTokens(line, declared)) {
       problems.push(
-        `${relative(ROOT, file)}:${index + 1}  var(${token}) resolves to nothing — no fallback, declared nowhere. The whole declaration is dropped.`,
+        `${relative(ROOT, file)}:${index + 1}  var(${token}) resolves to nothing — declared nowhere, and no fallback survives it. The whole declaration is dropped. Deliberate? Add a \`void-ok\` comment on this line saying why.`,
       );
     }
   });
