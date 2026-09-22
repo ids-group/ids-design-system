@@ -206,6 +206,24 @@
   A selector that stops matching is valid CSS. The rule goes dead, the plot draws at its default,
   and nothing reports either - which is also true of a test locator built on `data-series-index`.
 
+- **The 96 typography hooks spell out their prefix: `--ds-t-*` is `--ds-typography-*`.** Every
+  name is otherwise unchanged - `--ds-t-h4-font-size` is `--ds-typography-h4-font-size`.
+
+  ```css
+  :root { --ds-typography-h4-font-size: 1.375rem; }
+  ```
+
+  `t` was the last abbreviation in the token surface and the one hardest to guess from the property
+  it sets: a reader looking for the h4 size in devtools sees `font-size` and has no route from
+  there to a single letter.
+
+  **The `.t-h4` / `.t-s` / `.t-mono-inline` classes keep their names.** They are the markup
+  vocabulary rather than tokens, and renaming them would rewrite every template that carries one.
+
+  A declaration left on an old name is valid CSS nobody reads. The type falls back to the global
+  `--font-size-*` behind each hook, which is near enough the overridden value that a page reads as
+  slightly off rather than broken.
+
 ### Added
 
 - **`ds-chart` holds the category cursor: `cursorPin` and `tooltipLingerMs`.** A press holds the

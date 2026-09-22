@@ -6531,482 +6531,482 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "description": "Per-axis --ds-t-* override hooks on the .t-* type utilities.",
     "tokens": [
       {
-        "name": "--ds-t-display-font-weight",
+        "name": "--ds-typography-display-font-weight",
         "value": "var(--font-weight-extrabold)",
         "notes": "`.t-display` font weight."
       },
       {
-        "name": "--ds-t-display-font-size",
+        "name": "--ds-typography-display-font-size",
         "value": "var(--font-size-display)",
         "notes": "`.t-display` font size — the largest heading, above h1."
       },
       {
-        "name": "--ds-t-display-line-height",
+        "name": "--ds-typography-display-line-height",
         "value": "var(--line-height-tight)",
         "notes": "`.t-display` line height."
       },
       {
-        "name": "--ds-t-display-font-family",
+        "name": "--ds-typography-display-font-family",
         "value": "var(--font-display)",
         "notes": "`.t-display` font family."
       },
       {
-        "name": "--ds-t-display-letter-spacing",
+        "name": "--ds-typography-display-letter-spacing",
         "value": "var(--letter-spacing-tight)",
         "notes": "`.t-display` letter spacing."
       },
       {
-        "name": "--ds-t-h1-font-weight",
+        "name": "--ds-typography-h1-font-weight",
         "value": "var(--font-weight-extrabold)",
         "notes": "`.t-h1` font weight."
       },
       {
-        "name": "--ds-t-h1-font-size",
+        "name": "--ds-typography-h1-font-size",
         "value": "var(--font-size-h1)",
         "notes": "`.t-h1` font size."
       },
       {
-        "name": "--ds-t-h1-line-height",
+        "name": "--ds-typography-h1-line-height",
         "value": "var(--line-height-tight)",
         "notes": "`.t-h1` line height."
       },
       {
-        "name": "--ds-t-h1-font-family",
+        "name": "--ds-typography-h1-font-family",
         "value": "var(--font-heading)",
         "notes": "`.t-h1` font family."
       },
       {
-        "name": "--ds-t-h1-letter-spacing",
+        "name": "--ds-typography-h1-letter-spacing",
         "value": "var(--letter-spacing-tight)",
         "notes": "`.t-h1` letter spacing."
       },
       {
-        "name": "--ds-t-h2-font-weight",
+        "name": "--ds-typography-h2-font-weight",
         "value": "var(--font-weight-extrabold)",
         "notes": "`.t-h2` font weight."
       },
       {
-        "name": "--ds-t-h2-font-size",
+        "name": "--ds-typography-h2-font-size",
         "value": "var(--font-size-h2)",
         "notes": "`.t-h2` font size."
       },
       {
-        "name": "--ds-t-h2-line-height",
+        "name": "--ds-typography-h2-line-height",
         "value": "var(--line-height-snug)",
         "notes": "`.t-h2` line height."
       },
       {
-        "name": "--ds-t-h2-font-family",
+        "name": "--ds-typography-h2-font-family",
         "value": "var(--font-heading)",
         "notes": "`.t-h2` font family."
       },
       {
-        "name": "--ds-t-h2-letter-spacing",
+        "name": "--ds-typography-h2-letter-spacing",
         "value": "var(--letter-spacing-snug)",
         "notes": "`.t-h2` letter spacing."
       },
       {
-        "name": "--ds-t-h3-font-weight",
+        "name": "--ds-typography-h3-font-weight",
         "value": "var(--font-weight-extrabold)",
         "notes": "`.t-h3` font weight."
       },
       {
-        "name": "--ds-t-h3-font-size",
+        "name": "--ds-typography-h3-font-size",
         "value": "var(--font-size-h3)",
         "notes": "`.t-h3` font size."
       },
       {
-        "name": "--ds-t-h3-line-height",
+        "name": "--ds-typography-h3-line-height",
         "value": "var(--line-height-snug)",
         "notes": "`.t-h3` line height."
       },
       {
-        "name": "--ds-t-h3-font-family",
+        "name": "--ds-typography-h3-font-family",
         "value": "var(--font-heading)",
         "notes": "`.t-h3` font family."
       },
       {
-        "name": "--ds-t-h3-letter-spacing",
+        "name": "--ds-typography-h3-letter-spacing",
         "value": "var(--letter-spacing-snug)",
         "notes": "`.t-h3` letter spacing."
       },
       {
-        "name": "--ds-t-h4-font-weight",
+        "name": "--ds-typography-h4-font-weight",
         "value": "var(--font-weight-bold)",
         "notes": "`.t-h4` font weight."
       },
       {
-        "name": "--ds-t-h4-font-size",
+        "name": "--ds-typography-h4-font-size",
         "value": "var(--font-size-h4)",
         "notes": "`.t-h4` font size."
       },
       {
-        "name": "--ds-t-h4-line-height",
+        "name": "--ds-typography-h4-line-height",
         "value": "var(--line-height-snug)",
         "notes": "`.t-h4` line height."
       },
       {
-        "name": "--ds-t-h4-font-family",
+        "name": "--ds-typography-h4-font-family",
         "value": "var(--font-heading)",
         "notes": "`.t-h4` font family."
       },
       {
-        "name": "--ds-t-h5-font-weight",
+        "name": "--ds-typography-h5-font-weight",
         "value": "var(--font-weight-bold)",
         "notes": "`.t-h5` font weight."
       },
       {
-        "name": "--ds-t-h5-font-size",
+        "name": "--ds-typography-h5-font-size",
         "value": "var(--font-size-h5)",
         "notes": "`.t-h5` font size."
       },
       {
-        "name": "--ds-t-h5-line-height",
+        "name": "--ds-typography-h5-line-height",
         "value": "var(--line-height-snug)",
         "notes": "`.t-h5` line height."
       },
       {
-        "name": "--ds-t-h5-font-family",
+        "name": "--ds-typography-h5-font-family",
         "value": "var(--font-heading)",
         "notes": "`.t-h5` font family."
       },
       {
-        "name": "--ds-t-card-title-font-weight",
+        "name": "--ds-typography-card-title-font-weight",
         "value": "var(--font-weight-bold)",
         "notes": "`.t-card-title` font weight."
       },
       {
-        "name": "--ds-t-card-title-font-size",
+        "name": "--ds-typography-card-title-font-size",
         "value": "var(--card-title-fs)",
         "notes": "`.t-card-title` font size — the heading inside a card."
       },
       {
-        "name": "--ds-t-card-title-line-height",
+        "name": "--ds-typography-card-title-line-height",
         "value": "var(--line-height-snug)",
         "notes": "`.t-card-title` line height."
       },
       {
-        "name": "--ds-t-card-title-font-family",
+        "name": "--ds-typography-card-title-font-family",
         "value": "var(--font-heading)",
         "notes": "`.t-card-title` font family."
       },
       {
-        "name": "--ds-t-card-title-color",
+        "name": "--ds-typography-card-title-color",
         "value": "var(--text-primary)",
         "notes": "`.t-card-title` text colour."
       },
       {
-        "name": "--ds-t-l-font-weight",
+        "name": "--ds-typography-l-font-weight",
         "value": "var(--font-weight-regular)",
         "notes": "`.t-l` font weight."
       },
       {
-        "name": "--ds-t-l-font-size",
+        "name": "--ds-typography-l-font-size",
         "value": "var(--font-size-l)",
         "notes": "`.t-l` font size — body text, large."
       },
       {
-        "name": "--ds-t-l-line-height",
+        "name": "--ds-typography-l-line-height",
         "value": "var(--line-height-base)",
         "notes": "`.t-l` line height."
       },
       {
-        "name": "--ds-t-l-font-family",
+        "name": "--ds-typography-l-font-family",
         "value": "var(--font-sans)",
         "notes": "`.t-l` font family."
       },
       {
-        "name": "--ds-t-l-bold-font-weight",
+        "name": "--ds-typography-l-bold-font-weight",
         "value": "var(--font-weight-bold)",
         "notes": "`.t-l-bold` font weight."
       },
       {
-        "name": "--ds-t-l-bold-font-size",
+        "name": "--ds-typography-l-bold-font-size",
         "value": "var(--font-size-l)",
         "notes": "`.t-l-bold` font size — body text, large and bold."
       },
       {
-        "name": "--ds-t-l-bold-line-height",
+        "name": "--ds-typography-l-bold-line-height",
         "value": "var(--line-height-base)",
         "notes": "`.t-l-bold` line height."
       },
       {
-        "name": "--ds-t-l-bold-font-family",
+        "name": "--ds-typography-l-bold-font-family",
         "value": "var(--font-sans)",
         "notes": "`.t-l-bold` font family."
       },
       {
-        "name": "--ds-t-m-font-weight",
+        "name": "--ds-typography-m-font-weight",
         "value": "var(--font-weight-regular)",
         "notes": "`.t-m` font weight."
       },
       {
-        "name": "--ds-t-m-font-size",
+        "name": "--ds-typography-m-font-size",
         "value": "var(--font-size-m)",
         "notes": "`.t-m` font size — body text, the default size."
       },
       {
-        "name": "--ds-t-m-line-height",
+        "name": "--ds-typography-m-line-height",
         "value": "var(--line-height-base)",
         "notes": "`.t-m` line height."
       },
       {
-        "name": "--ds-t-m-font-family",
+        "name": "--ds-typography-m-font-family",
         "value": "var(--font-sans)",
         "notes": "`.t-m` font family."
       },
       {
-        "name": "--ds-t-m-bold-font-weight",
+        "name": "--ds-typography-m-bold-font-weight",
         "value": "var(--font-weight-bold)",
         "notes": "`.t-m-bold` font weight."
       },
       {
-        "name": "--ds-t-m-bold-font-size",
+        "name": "--ds-typography-m-bold-font-size",
         "value": "var(--font-size-m)",
         "notes": "`.t-m-bold` font size — body text, bold."
       },
       {
-        "name": "--ds-t-m-bold-line-height",
+        "name": "--ds-typography-m-bold-line-height",
         "value": "var(--line-height-base)",
         "notes": "`.t-m-bold` line height."
       },
       {
-        "name": "--ds-t-m-bold-font-family",
+        "name": "--ds-typography-m-bold-font-family",
         "value": "var(--font-sans)",
         "notes": "`.t-m-bold` font family."
       },
       {
-        "name": "--ds-t-s-font-weight",
+        "name": "--ds-typography-s-font-weight",
         "value": "var(--font-weight-regular)",
         "notes": "`.t-s` font weight."
       },
       {
-        "name": "--ds-t-s-font-size",
+        "name": "--ds-typography-s-font-size",
         "value": "var(--font-size-s)",
         "notes": "`.t-s` font size — body text, small."
       },
       {
-        "name": "--ds-t-s-line-height",
+        "name": "--ds-typography-s-line-height",
         "value": "var(--line-height-base)",
         "notes": "`.t-s` line height."
       },
       {
-        "name": "--ds-t-s-font-family",
+        "name": "--ds-typography-s-font-family",
         "value": "var(--font-sans)",
         "notes": "`.t-s` font family."
       },
       {
-        "name": "--ds-t-s-bold-font-weight",
+        "name": "--ds-typography-s-bold-font-weight",
         "value": "var(--font-weight-bold)",
         "notes": "`.t-s-bold` font weight."
       },
       {
-        "name": "--ds-t-s-bold-font-size",
+        "name": "--ds-typography-s-bold-font-size",
         "value": "var(--font-size-s)",
         "notes": "`.t-s-bold` font size — body text, small and bold."
       },
       {
-        "name": "--ds-t-s-bold-line-height",
+        "name": "--ds-typography-s-bold-line-height",
         "value": "var(--line-height-base)",
         "notes": "`.t-s-bold` line height."
       },
       {
-        "name": "--ds-t-s-bold-font-family",
+        "name": "--ds-typography-s-bold-font-family",
         "value": "var(--font-sans)",
         "notes": "`.t-s-bold` font family."
       },
       {
-        "name": "--ds-t-xs-font-weight",
+        "name": "--ds-typography-xs-font-weight",
         "value": "var(--font-weight-regular)",
         "notes": "`.t-xs` font weight."
       },
       {
-        "name": "--ds-t-xs-font-size",
+        "name": "--ds-typography-xs-font-size",
         "value": "var(--font-size-xs)",
         "notes": "`.t-xs` font size — body text, extra small."
       },
       {
-        "name": "--ds-t-xs-line-height",
+        "name": "--ds-typography-xs-line-height",
         "value": "var(--line-height-base)",
         "notes": "`.t-xs` line height."
       },
       {
-        "name": "--ds-t-xs-font-family",
+        "name": "--ds-typography-xs-font-family",
         "value": "var(--font-sans)",
         "notes": "`.t-xs` font family."
       },
       {
-        "name": "--ds-t-xs-bold-font-weight",
+        "name": "--ds-typography-xs-bold-font-weight",
         "value": "var(--font-weight-bold)",
         "notes": "`.t-xs-bold` font weight."
       },
       {
-        "name": "--ds-t-xs-bold-font-size",
+        "name": "--ds-typography-xs-bold-font-size",
         "value": "var(--font-size-xs)",
         "notes": "`.t-xs-bold` font size — body text, extra small and bold."
       },
       {
-        "name": "--ds-t-xs-bold-line-height",
+        "name": "--ds-typography-xs-bold-line-height",
         "value": "var(--line-height-base)",
         "notes": "`.t-xs-bold` line height."
       },
       {
-        "name": "--ds-t-xs-bold-font-family",
+        "name": "--ds-typography-xs-bold-font-family",
         "value": "var(--font-sans)",
         "notes": "`.t-xs-bold` font family."
       },
       {
-        "name": "--ds-t-overline-font-weight",
+        "name": "--ds-typography-overline-font-weight",
         "value": "var(--font-weight-bold)",
         "notes": "`.t-overline` font weight."
       },
       {
-        "name": "--ds-t-overline-font-size",
+        "name": "--ds-typography-overline-font-size",
         "value": "var(--font-size-2xs)",
         "notes": "`.t-overline` font size — the small uppercase label above a heading."
       },
       {
-        "name": "--ds-t-overline-line-height",
+        "name": "--ds-typography-overline-line-height",
         "value": "var(--line-height-base)",
         "notes": "`.t-overline` line height."
       },
       {
-        "name": "--ds-t-overline-font-family",
+        "name": "--ds-typography-overline-font-family",
         "value": "var(--font-sans)",
         "notes": "`.t-overline` font family."
       },
       {
-        "name": "--ds-t-overline-letter-spacing",
+        "name": "--ds-typography-overline-letter-spacing",
         "value": "var(--letter-spacing-wider)",
         "notes": "`.t-overline` letter spacing."
       },
       {
-        "name": "--ds-t-overline-text-transform",
+        "name": "--ds-typography-overline-text-transform",
         "value": "uppercase",
         "notes": "`.t-overline` text transform."
       },
       {
-        "name": "--ds-t-overline-color",
+        "name": "--ds-typography-overline-color",
         "value": "var(--text-tertiary)",
         "notes": "`.t-overline` text colour."
       },
       {
-        "name": "--ds-t-caption-font-weight",
+        "name": "--ds-typography-caption-font-weight",
         "value": "var(--font-weight-regular)",
         "notes": "`.t-caption` font weight."
       },
       {
-        "name": "--ds-t-caption-font-size",
+        "name": "--ds-typography-caption-font-size",
         "value": "var(--font-size-xs)",
         "notes": "`.t-caption` font size — small print under a field or a figure."
       },
       {
-        "name": "--ds-t-caption-line-height",
+        "name": "--ds-typography-caption-line-height",
         "value": "var(--line-height-base)",
         "notes": "`.t-caption` line height."
       },
       {
-        "name": "--ds-t-caption-font-family",
+        "name": "--ds-typography-caption-font-family",
         "value": "var(--font-sans)",
         "notes": "`.t-caption` font family."
       },
       {
-        "name": "--ds-t-caption-color",
+        "name": "--ds-typography-caption-color",
         "value": "var(--text-tertiary)",
         "notes": "`.t-caption` text colour."
       },
       {
-        "name": "--ds-t-mono-ligatures",
+        "name": "--ds-typography-mono-ligatures",
         "value": "none",
         "notes": "Ligatures in mono type. Defaults to `none`, so `===` and `!=` show their characters rather than JetBrains Mono's combined glyph; set `normal` to get them back."
       },
       {
-        "name": "--ds-t-mono-font-weight",
+        "name": "--ds-typography-mono-font-weight",
         "value": "var(--font-weight-medium)",
         "notes": "`.t-mono` font weight."
       },
       {
-        "name": "--ds-t-mono-font-size",
+        "name": "--ds-typography-mono-font-size",
         "value": "var(--font-size-mono)",
         "notes": "`.t-mono` font size — monospaced text."
       },
       {
-        "name": "--ds-t-mono-line-height",
+        "name": "--ds-typography-mono-line-height",
         "value": "var(--line-height-base)",
         "notes": "`.t-mono` line height."
       },
       {
-        "name": "--ds-t-mono-font-family",
+        "name": "--ds-typography-mono-font-family",
         "value": "var(--font-mono)",
         "notes": "`.t-mono` font family."
       },
       {
-        "name": "--ds-t-mono-inline-font-weight",
+        "name": "--ds-typography-mono-inline-font-weight",
         "value": "var(--font-weight-regular)",
         "notes": "`.t-mono-inline` font weight."
       },
       {
-        "name": "--ds-t-mono-inline-font-size",
+        "name": "--ds-typography-mono-inline-font-size",
         "value": "var(--font-size-mono)",
         "notes": "`.t-mono-inline` font size — a monospaced run inside a sentence."
       },
       {
-        "name": "--ds-t-mono-inline-line-height",
+        "name": "--ds-typography-mono-inline-line-height",
         "value": "1",
         "notes": "`.t-mono-inline` line height."
       },
       {
-        "name": "--ds-t-mono-inline-font-family",
+        "name": "--ds-typography-mono-inline-font-family",
         "value": "var(--font-mono)",
         "notes": "`.t-mono-inline` font family."
       },
       {
-        "name": "--ds-t-mono-inline-color",
+        "name": "--ds-typography-mono-inline-color",
         "value": "var(--text-primary)",
         "notes": "`.t-mono-inline` text colour."
       },
       {
-        "name": "--ds-t-mono-inline-bg-color",
+        "name": "--ds-typography-mono-inline-bg-color",
         "value": "var(--surface-secondary)",
         "notes": "`.t-mono-inline` background."
       },
       {
-        "name": "--ds-t-mono-inline-radius",
+        "name": "--ds-typography-mono-inline-radius",
         "value": "var(--ds-radius-inner)",
         "notes": "`.t-mono-inline` corner radius."
       },
       {
-        "name": "--ds-t-mono-block-font-weight",
+        "name": "--ds-typography-mono-block-font-weight",
         "value": "var(--font-weight-regular)",
         "notes": "`.t-mono-block` font weight."
       },
       {
-        "name": "--ds-t-mono-block-font-size",
+        "name": "--ds-typography-mono-block-font-size",
         "value": "var(--font-size-mono)",
         "notes": "`.t-mono-block` font size — a monospaced block, its own box."
       },
       {
-        "name": "--ds-t-mono-block-line-height",
+        "name": "--ds-typography-mono-block-line-height",
         "value": "var(--line-height-loose)",
         "notes": "`.t-mono-block` line height."
       },
       {
-        "name": "--ds-t-mono-block-font-family",
+        "name": "--ds-typography-mono-block-font-family",
         "value": "var(--font-mono)",
         "notes": "`.t-mono-block` font family."
       },
       {
-        "name": "--ds-t-mono-block-bg-color",
+        "name": "--ds-typography-mono-block-bg-color",
         "value": "var(--surface-secondary)",
         "notes": "`.t-mono-block` background."
       },
       {
-        "name": "--ds-t-mono-block-border-color",
+        "name": "--ds-typography-mono-block-border-color",
         "value": "var(--border-divider)",
         "notes": "`.t-mono-block` border colour."
       },
       {
-        "name": "--ds-t-mono-block-radius",
+        "name": "--ds-typography-mono-block-radius",
         "value": "var(--ds-radius-control)",
         "notes": "`.t-mono-block` corner radius."
       }

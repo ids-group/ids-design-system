@@ -782,6 +782,31 @@
       ],
       "verify": "Every `ChartScales` implementation declares `cursorPointer`.",
       "note": "A mark that anchors its panel to the cursor rather than to a reading needs the pointer position, and only the container that caught the event has it."
+    },
+    {
+      "id": "typography-tokens-spelled-out",
+      "kind": "token-rename",
+      "old": "--ds-t-",
+      "new": "--ds-typography-",
+      "surface": "style",
+      "action": "In every stylesheet, rewrite the `--ds-t-` prefix to `--ds-typography-`: `--ds-t-h4-font-size` becomes `--ds-typography-h4-font-size`, and so on for all 96.",
+      "appliesWhen": "Only the 96 `--ds-t-*` typography hooks. The `.t-h4` / `.t-s` / `.t-mono-inline` CLASSES keep their names - they are the markup vocabulary, not tokens, and no template changes. A consumer variable of their own that happens to start `--t-` is not ours and is not affected.",
+      "pitfall": "A declaration left on the old name is valid CSS nobody reads. The type falls back to the global `--font-size-*` / `--font-weight-*` behind each hook, which is close enough to the overridden value that a page can look merely slightly off rather than broken.",
+      "restore": null,
+      "searchHints": [
+        "--ds-t-",
+        "ds-t-h",
+        "ds-t-mono",
+        "ds-t-caption",
+        "ds-t-display"
+      ],
+      "detect": [
+        "--ds-t-",
+        "--ds-t-h4",
+        "--ds-t-s-",
+        "--ds-t-mono"
+      ],
+      "note": "The last abbreviation left in the token surface, and the one hardest to guess from the CSS property it sets. `t` expands the way `pad`, `fs`, `btn` and the rest already did."
     }
   ],
   "informational": [
