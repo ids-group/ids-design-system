@@ -199,6 +199,26 @@ for (const dir of [DECKS, ARCHIVE]) {
   }
 }
 
+// A rank is a queue position and moves whenever the queue does, so a deck cited by PATH rots the
+// moment anything is renumbered. The board cites by path because its cards are clickable, so the
+// paths it holds are checked here rather than trusted.
+const board = join(DECKS, 'backlog-board.html');
+if (existsSync(board)) {
+  const html = readFileSync(board, 'utf8');
+  const visible = html.slice(0, html.indexOf('<script type="text/plain"'));
+  for (const cited of new Set(
+    visible.match(/(?:implemented\/)?\d*-?[a-z0-9-]+\.html/g) ?? [],
+  )) {
+    if (!cited.endsWith('.html') || cited === 'backlog-board.html') continue;
+    if (existsSync(join(DECKS, cited))) continue;
+    fail(
+      'D016',
+      'presentations/backlog-board.html',
+      `links ${cited}, which does not exist — a rank moved and the card now opens nothing.`,
+    );
+  }
+}
+
 const sorted = [...ranks.keys()].map(Number).sort((a, b) => a - b);
 sorted.forEach((rank, index) => {
   if (rank !== index + 1) {
