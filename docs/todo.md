@@ -102,7 +102,7 @@ item and nothing else.
 - **An indeterminate bar that survives a short track (recorded 2026-09-22, from the mm-ecm consumer)**
   - An indeterminate `ds-bar` is never empty, or 86.7% is enough - one verdict left
 - **Two chart names that collide (recorded 2026-09-21, from the mm-ecm consumer)**
-  - One idea, two contracts: a bar stacks through `segments`, a column through `stack`
+  - Extract what bar and column SHARE; their contracts stay different (Stas, 2026-09-22)
 - **A journey canvas the mm-ecm prototype could not use (recorded 2026-09-16)**
   - Journey / flow diagram - no component draws a branching node-and-edge canvas
 - **Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)**
@@ -801,20 +801,20 @@ Both found while planning that consumer's move to 0.13.3. Neither blocks it; bot
   where the two components are unrelated; the other 20 are parent and child of one family.
   Candidates drawn in deck `11-ds-bar-name-collision`, which recommends `ds-gauge`.
 
-- [ ] **[P3] One idea, two contracts: a bar stacks through `segments`, a column through `stack`.**
-  `column-chart.component.ts:161` is `readonly stack = input<ChartStackMode>('none')` with
-  `'none' | 'grouped' | 'stacked' | 'normalized'`. `ds-bar-chart` has 19 inputs and no `stack` at
-  all; its stacking lives on the datum, as `BarChartRow.segments`.
-  The phase-1 spec calls the two components twins — "bar is horizontal, column is vertical", sharing
-  the scale and format modules — so a consumer who has stacked one arrives at the other expecting
-  the same input and finds a different model.
-  A second divergence sits under it and nobody named it: the same flat array is one series in the
-  bar, so every row takes `--ds-chart-series-default-color`, and N categories in the column, so each
-  mark takes its own palette slot (`bar-chart.component.ts:368` against
-  `column-chart.component.ts:314`).
-  **Wanted:** either `stack` on `ds-bar-chart` as well, or one line in both docs pages saying which
-  contract belongs to which orientation and why they differ. Three levels of convergence drawn in
-  deck `10-bar-column-contracts`, which recommends naming the difference.
+- [ ] **[P3] Extract what bar and column SHARE; their contracts stay different (Stas, 2026-09-22).**
+  **The two are different charts and are not merged.** Neither grows the other's data model: a bar
+  row is one label and one value with an optional `segments` breakdown, a column series is N marks
+  across categories with `stack` deciding how they share a band
+  (`column-chart.component.ts:161`, `'none' | 'grouped' | 'stacked' | 'normalized'`). The phase-1
+  spec calling them twins is what made the divergence read as an accident; it is not one.
+  **What the verdict asks for is the layer underneath.** Whatever both implement is extracted into a
+  shared module, reused by both, and given a way to be EXTENDED where one of them needs to differ -
+  so a chart adapts rather than forks. Whatever is unique to one stays unique to that one.
+  **Two divergences are visible to a consumer and are documented rather than removed:** stacking
+  arrives in the datum on one side and in an input on the other, and the same flat array is one
+  series in the bar, where every row takes `--ds-chart-series-default-color`, against N categories
+  in the column, where each mark takes its own palette slot (`bar-chart.component.ts:368` against
+  `column-chart.component.ts:314`). Both drawn in deck `bar-column-contracts`.
 
 ## A journey canvas the mm-ecm prototype could not use (recorded 2026-09-16)
 
