@@ -170,7 +170,7 @@
         "BarChartRow["
       ],
       "verify": "Every place that reads a `BarChartRow`'s `value` back narrows it before using it as a number, and the build is clean.",
-      "note": "`value` was `number` and is `number | readonly [low, high]`, so a bar can span between its own ends rather than from zero. The pair is normalised, so either order means the same band."
+      "note": "`value` was `number` and is `BarChartValue`, `number | readonly [low, high]`, so a bar can span between its own ends rather than from zero. The pair is normalised, so either order means the same band."
     },
     {
       "id": "donut-chart-renamed-to-pie-chart",

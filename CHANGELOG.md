@@ -526,7 +526,7 @@
   A row's `value` may be a `[low, high]` pair, and the bar then spans between its own ends rather
   than from zero - what compares a duration and its PLACEMENT at once, which a bar from zero cannot
   do. The ends may be written either way round, because a reader who reverses them means the same
-  band. `BarChartRow.value` is now typed `number | readonly [low: number, high: number]`,
+  band. `BarChartRow.value` is now `BarChartValue`, `number | readonly [low: number, high: number]`,
   so code that READS `row.value` as a number stops compiling; code that only writes it is
   unaffected. `target` draws a tick at one reading; `ranges` paints bands behind the bar, given as their
   upper bounds in ascending order.
