@@ -731,6 +731,22 @@ stays because each records what the shape was argued down to. Verified against t
   answer different questions: what fraction leaked here, versus how many records that is. On a
   settlement waterfall the count is the one an operator acts on.
 
+## Thirteen inputs the chart family declares component by component (measured 2026-09-22)
+
+- [ ] **[P3] Only the RESOLUTION of the shared chart inputs is shared, not their declaration.**
+  `resolveChartDefaults` unified what the values mean; the `input()` lines above it did not move.
+  Counting `readonly <name> = input(…)` and `= model(…)` at class level across the nine chart
+  components: `caption`, `valueFormat`, `errorText`, `emptyText`, `error`, `interactive`, `frame`
+  and `loading` are declared in all nine, `summary` in eight, and `tooltip`, `dimOthers`,
+  `dataTable` and `data` in seven - 108 declarations for 13 names.
+
+  Each carries its own docblock, and `extract-docs` turns those into the per-component input
+  tables in `components.md` and `docs/agent/`. A base class or a `hostDirective` would buy roughly
+  a hundred lines and cost the documentation pipeline the per-component wording, which is what
+  makes a chart's API page read as that chart's rather than as a shared preamble.
+  **Not obviously worth doing.** Recorded so the next reader does not re-derive the measurement,
+  and so the decision is made once rather than half-made.
+
 ## Two chart names that collide (recorded 2026-09-21, from the mm-ecm consumer)
 
 Both found while planning that consumer's move to 0.13.3. Neither blocks it; both cost a reader.
