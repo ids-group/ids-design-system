@@ -10,12 +10,6 @@
   margin: 0;
 }
 
-figcaption {
-  margin-block-end: var(--space-3);
-  color: var(--text-primary);
-  font-weight: 600;
-}
-
 /* `--_chart-view-height` is set on the host in px, from the same TS geometry the canvas is drawn
    with: the plot's height is an SVG coordinate, so CSS cannot be its source, and a message box
    that does not match it jumps the card when the data lands. */

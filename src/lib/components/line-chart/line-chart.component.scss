@@ -38,12 +38,6 @@
   margin: 0;
 }
 
-figcaption {
-  margin-block-end: var(--space-3);
-  color: var(--text-primary);
-  font-weight: 600;
-}
-
 @include chart-frame.message-box(var(--_line-chart-view-height), true);
 
 // The container and the series mark draw the plot, so every hook of this chart's own reaches them

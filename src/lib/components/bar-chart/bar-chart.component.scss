@@ -29,12 +29,6 @@
   margin: 0;
 }
 
-figcaption {
-  margin-block-end: var(--space-3);
-  color: var(--text-primary);
-  font-weight: 600;
-}
-
 // The gap between rows is PADDING on each row, not `row-gap` on the list: a gap is dead space to
 // the pointer, and a reader aiming between two bars then hits neither. Half above and half below
 // leaves the spacing identical and gives every pixel an owner.
