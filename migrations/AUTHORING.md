@@ -138,6 +138,22 @@ looks defective:
   discard work; these trade a false negative for the same. When in doubt, name the surface widely and
   let the semantic pass narrow it.
 
+## A `style` item whose change ships in one of OUR partials names the partial
+
+A token rename lands in a stylesheet the consumer wrote, so they can always find it. A RULE we ship
+lands in `styles/<partial>`, and whether it reaches them at all depends on their build — so an item
+that does not name the partial cannot be answered. "We do not have this problem" and "this rule
+never reaches us" read identically, and the second one stays true for every future release.
+
+Two sentences close it. In `appliesWhen`: *"ships in `styles/focus`, which `styles/ds` forwards"*.
+In `verify`: a grep of the BUILT CSS for a shape only our partial emits, never a grep of their
+source — `@use 'styles/ds'` resolves against every Sass include path in order, so a consumer file of
+the same name earlier on the path wins and reads identically at the import site.
+
+The same asymmetry decides `detect`: for a token rename their stylesheet carries our name verbatim
+and is the locator, and for a shipped rule it carries nothing of ours, so the locator is the shape
+of their own rule that now competes with it.
+
 ## Correcting a PUBLISHED manifest: read the tag, not HEAD
 
 A released `<version>.json` is a claim about one boundary — what existed at the tag before it, and
@@ -336,6 +352,8 @@ Run `npm run migration-lint` before you call the manifest done — it mechanises
 - [ ] `old`/`new`/`searchHints` are exact code strings; element-scoped as `element[attr]` where shared.
 - [ ] `kind` correct; `map` present iff `value-remap`; `new: null` for `behavior`. (lint)
 - [ ] `surface` says which of the consumer's artifacts changes — `none` where nothing does. (lint)
+- [ ] A `style` item whose change ships in one of our partials names that partial in `appliesWhen`,
+      and its `verify` greps the BUILT CSS rather than their source.
 - [ ] `detect` carries the consumer's own shapes wherever the affected code names no DS symbol; an
       item whose every locator is a DS name while its surface is not the template fails the lint.
 - [ ] `verify` states the positive assertion for every `behavior` / `removed-api` entry — what a

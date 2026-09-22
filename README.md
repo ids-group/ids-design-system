@@ -43,6 +43,17 @@ Then import the design system once at the top of your root `styles.scss`:
 
 This brings in the default palette, semantic theme, design tokens, fonts, reset and base typography.
 
+**`'styles/ds'` resolves against every include path in order, so a file of your own at
+`<an-earlier-path>/styles/ds.scss` wins and the package's never loads.** Nothing reports it: the
+build succeeds, your own file's partials arrive, and whatever the package adds to its `ds.scss` in
+any later version silently never reaches you. If you keep an aggregator of your own, name it
+something else, or list the package partials by hand and revisit that list on every upgrade. To
+check which one you got, grep the built CSS for a rule only ours ships:
+
+```bash
+grep -c ':where(:focus-visible)' dist/<app>/browser/styles-*.css   # 0 means ours never loaded
+```
+
 Advanced consumers can swap the palette/theme and keep the token layer — global side-effects (fonts, link styles, etc.) become opt-in:
 
 ```scss

@@ -179,8 +179,8 @@
       "old": "@use '@ids-group-ltd/ids-design-system/styles",
       "new": "@use '@ids-group-ltd/ids-design-system/styles/focus';",
       "action": "Add `@use '@ids-group-ltd/ids-design-system/styles/focus';` to the same global stylesheet that already `@use`s the other DS partials.",
-      "appliesWhen": "ONLY a consumer who cherry-picks partials. Do NOT add it beside a `styles/ds` import — that entry forwards it already, and its users must do nothing.",
-      "pitfall": "Missing it costs accessibility, silently. The `data-focus` switch simply does nothing, and — the part that matters — focused elements have NO visible indicator at all in Windows High Contrast and other forced-colors modes, because forced-colors drops box-shadow and the shadow-only indicator was all they had.",
+      "appliesWhen": "Any consumer whose built CSS does not already carry the partial. A `@use 'styles/ds'` that resolved to the PACKAGE's file forwards it and needs nothing; one that resolved to a file of your own with the same name does not, and reads identically in the source.",
+      "pitfall": "Missing it costs accessibility, silently. The `data-focus` switch does nothing, and focused elements have NO visible indicator at all in Windows High Contrast and other forced-colors modes, because forced-colors drops box-shadow and the shadow-only indicator was all they had. The reason to miss it is the import you already have: `styles/ds` resolves against every Sass include path in order, so your own `styles/ds.scss` earlier on the path wins and the package's never loads. Check the built CSS, not the source - `grep -c ':where(:focus-visible)' dist/<app>/browser/styles-*.css` returns 0 when ours never arrived.",
       "note": "The `data-focus` switch and the `@media (forced-colors: active)` fallback both live in the new `styles/_focus.scss`.",
       "searchHints": [
         "@use '@ids-group-ltd/ids-design-system/styles",
@@ -190,7 +190,8 @@
         "data-focus",
         "forced-colors"
       ],
-      "surface": "style"
+      "surface": "style",
+      "verify": "The built CSS carries `:where(:focus-visible)`, and a focused control keeps a visible indicator with forced-colors active."
     },
     {
       "id": "combobox-tokens-renamed-to-picker",
