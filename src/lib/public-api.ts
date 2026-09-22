@@ -14,6 +14,7 @@ export {
   DsPickerTriggerDirective,
   DsStaticPreview,
   FieldClickFocusDirective,
+  resolveChartDefaults,
 } from '@ids-group-ltd/ids-design-system/components';
 export type {
   DsAriaCurrent,

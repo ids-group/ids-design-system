@@ -48,6 +48,7 @@ import {
 import type { BarChartRow, BarChartSegment } from './bar-chart.types';
 import { ChartDataTableComponent } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
 import type { ChartDataRow } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
+import { resolveChartDefaults } from '@ids-group-ltd/ids-design-system/components';
 
 /** A row's parts, ready to draw: a width, a colour and a formatted value each. Segments are
  *  CATEGORIES, so they take the categorical palette in order — unlike the rows, which are one
@@ -160,31 +161,12 @@ export class BarChartComponent {
    *  grouping with a K/M/B suffix past four digits. */
   readonly valueFormat = input<ChartValueFormat | null>(null);
 
-  readonly frameResolved = resolveWithConfig(
-    this.frame,
-    (config) => config.chart?.frame,
-    'auto' as ChartFrame,
-  );
-  readonly dataTableResolved = resolveWithConfig(
-    this.dataTable,
-    (config) => config.chart?.dataTable,
-    'none' as ChartDataTable,
-  );
-  readonly emptyTextResolved = resolveWithConfig(
-    this.emptyText,
-    (config) => config.chart?.emptyText,
-    'No data',
-  );
-  readonly errorTextResolved = resolveWithConfig(
-    this.errorText,
-    (config) => config.chart?.errorText,
-    'Could not load the data',
-  );
-  readonly valueFormatResolved = resolveWithConfig(
-    this.valueFormat,
-    (config) => config.chart?.valueFormat,
-    defaultChartFormat,
-  );
+  private readonly defaults = resolveChartDefaults(this);
+  readonly frameResolved = this.defaults.frame;
+  readonly dataTableResolved = this.defaults.dataTable;
+  readonly emptyTextResolved = this.defaults.emptyText;
+  readonly errorTextResolved = this.defaults.errorText;
+  readonly valueFormatResolved = this.defaults.valueFormat;
 
   /** Turns on the click affordance — the pointer cursor and any hover tint.
    *  The click output fires whether or not this is set, so a consumer that
@@ -226,11 +208,7 @@ export class BarChartComponent {
       'dsChartTooltip',
     );
 
-  private readonly tooltipLingerResolved = resolveWithConfig(
-    this.tooltipLingerMs,
-    (config) => config.chart?.tooltipLingerMs,
-    0,
-  );
+  private readonly tooltipLingerResolved = this.defaults.tooltipLingerMs;
 
   protected readonly activeMark = chartActiveMark(() =>
     this.tooltipLingerResolved(),

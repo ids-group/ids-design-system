@@ -47,6 +47,7 @@ import {
 import type { ScatterPlot } from './scatter-chart.math';
 import { ChartDataTableComponent } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
 import type { ChartDataRow } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
+import { resolveChartDefaults } from '@ids-group-ltd/ids-design-system/components';
 import type {
   ScatterChartDecimator,
   ScatterChartReading,
@@ -167,35 +168,12 @@ export class ScatterChartComponent {
   /** The clicked reading, with the series it belongs to. Fires on click and on Enter or Space. */
   readonly pointClicked = output<ScatterChartReading>();
 
-  readonly frameResolved = resolveWithConfig(
-    this.frame,
-    (config) => config.chart?.frame,
-    'auto' as ChartFrame,
-  );
-
-  readonly dataTableResolved = resolveWithConfig(
-    this.dataTable,
-    (config) => config.chart?.dataTable,
-    'none' as ChartDataTable,
-  );
-
-  readonly emptyTextResolved = resolveWithConfig(
-    this.emptyText,
-    (config) => config.chart?.emptyText,
-    'No data',
-  );
-
-  readonly errorTextResolved = resolveWithConfig(
-    this.errorText,
-    (config) => config.chart?.errorText,
-    'Could not load the data',
-  );
-
-  readonly valueFormatResolved = resolveWithConfig(
-    this.valueFormat,
-    (config) => config.chart?.valueFormat,
-    defaultChartFormat,
-  );
+  private readonly defaults = resolveChartDefaults(this);
+  readonly frameResolved = this.defaults.frame;
+  readonly dataTableResolved = this.defaults.dataTable;
+  readonly emptyTextResolved = this.defaults.emptyText;
+  readonly errorTextResolved = this.defaults.errorText;
+  readonly valueFormatResolved = this.defaults.valueFormat;
 
   protected readonly activeMark = chartActiveMark(() => 0);
 

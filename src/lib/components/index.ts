@@ -98,3 +98,4 @@ export { ProjectionDroppedDirective } from './projection-dropped.directive';
 export { scrollActiveOptionIntoView } from './scroll-active-option';
 export { DsStaticPreview } from './static-preview.directive';
 export { createTypeAhead } from './type-ahead';
+export { resolveChartDefaults } from './charts-defaults';

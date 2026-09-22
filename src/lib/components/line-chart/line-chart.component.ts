@@ -41,6 +41,7 @@ import { ChartLegendComponent } from '@ids-group-ltd/ids-design-system/component
 import type { ChartLegendItem } from '@ids-group-ltd/ids-design-system/components/chart-legend';
 import { ChartDataTableComponent } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
 import type { ChartDataRow } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
+import { resolveChartDefaults } from '@ids-group-ltd/ids-design-system/components';
 import type {
   ChartTooltipContext,
   ChartTooltipOrigin,
@@ -276,31 +277,12 @@ export class LineChartComponent {
    *  grouping with a K/M/B suffix past four digits. */
   readonly valueFormat = input<ChartValueFormat | null>(null);
 
-  readonly frameResolved = resolveWithConfig(
-    this.frame,
-    (config) => config.chart?.frame,
-    'auto' as ChartFrame,
-  );
-  readonly dataTableResolved = resolveWithConfig(
-    this.dataTable,
-    (config) => config.chart?.dataTable,
-    'none' as ChartDataTable,
-  );
-  readonly emptyTextResolved = resolveWithConfig(
-    this.emptyText,
-    (config) => config.chart?.emptyText,
-    'No data',
-  );
-  readonly errorTextResolved = resolveWithConfig(
-    this.errorText,
-    (config) => config.chart?.errorText,
-    'Could not load the data',
-  );
-  readonly valueFormatResolved = resolveWithConfig(
-    this.valueFormat,
-    (config) => config.chart?.valueFormat,
-    defaultChartFormat,
-  );
+  private readonly defaults = resolveChartDefaults(this);
+  readonly frameResolved = this.defaults.frame;
+  readonly dataTableResolved = this.defaults.dataTable;
+  readonly emptyTextResolved = this.defaults.emptyText;
+  readonly errorTextResolved = this.defaults.errorText;
+  readonly valueFormatResolved = this.defaults.valueFormat;
 
   protected readonly viewBox = `0 0 ${LINE_CHART_VIEW_WIDTH} ${LINE_CHART_VIEW_HEIGHT}`;
 
@@ -763,11 +745,7 @@ export class LineChartComponent {
     }
   }
 
-  private readonly tooltipLingerResolved = resolveWithConfig(
-    this.tooltipLingerMs,
-    (config) => config.chart?.tooltipLingerMs,
-    0,
-  );
+  private readonly tooltipLingerResolved = this.defaults.tooltipLingerMs;
 
   private pendingCategoryClear: ReturnType<typeof setTimeout> | null = null;
 

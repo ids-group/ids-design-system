@@ -25,6 +25,7 @@ import {
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
+import { resolveChartDefaults } from '@ids-group-ltd/ids-design-system/components';
 import type {
   ChartAxis,
   ChartAxisMode,
@@ -192,26 +193,11 @@ export class ChartComponent implements ChartScales {
   /** `axisLabel` for the second axis. */
   readonly secondaryAxisLabel = input<string | null>(null);
 
-  readonly frameResolved = resolveWithConfig(
-    this.frame,
-    (config) => config.chart?.frame,
-    'auto' as ChartFrame,
-  );
-  protected readonly emptyTextResolved = resolveWithConfig(
-    this.emptyText,
-    (config) => config.chart?.emptyText,
-    'No data',
-  );
-  protected readonly errorTextResolved = resolveWithConfig(
-    this.errorText,
-    (config) => config.chart?.errorText,
-    'Could not load the data',
-  );
-  protected readonly valueFormatResolved = resolveWithConfig(
-    this.valueFormat,
-    (config) => config.chart?.valueFormat,
-    defaultChartFormat,
-  );
+  private readonly defaults = resolveChartDefaults(this);
+  readonly frameResolved = this.defaults.frame;
+  readonly emptyTextResolved = this.defaults.emptyText;
+  readonly errorTextResolved = this.defaults.errorText;
+  readonly valueFormatResolved = this.defaults.valueFormat;
 
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
 

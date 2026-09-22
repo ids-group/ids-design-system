@@ -29,6 +29,7 @@ import type {
 } from '@ids-group-ltd/ids-design-system/core';
 import { heatmapDomain, rampIndexOf } from './heatmap-chart.math';
 import type { HeatmapChartCell, HeatmapChartRow } from './heatmap-chart.types';
+import { resolveChartDefaults } from '@ids-group-ltd/ids-design-system/components';
 
 interface PlacedCell {
   readonly key: string;
@@ -126,29 +127,11 @@ export class HeatmapChartComponent {
    *  cell, which has no reading to drill into. */
   readonly cellClicked = output<HeatmapChartCell>();
 
-  readonly frameResolved = resolveWithConfig(
-    this.frame,
-    (config) => config.chart?.frame,
-    'auto' as ChartFrame,
-  );
-
-  readonly emptyTextResolved = resolveWithConfig(
-    this.emptyText,
-    (config) => config.chart?.emptyText,
-    'No data',
-  );
-
-  readonly errorTextResolved = resolveWithConfig(
-    this.errorText,
-    (config) => config.chart?.errorText,
-    'Could not load the data',
-  );
-
-  readonly valueFormatResolved = resolveWithConfig(
-    this.valueFormat,
-    (config) => config.chart?.valueFormat,
-    defaultChartFormat,
-  );
+  private readonly defaults = resolveChartDefaults(this);
+  readonly frameResolved = this.defaults.frame;
+  readonly emptyTextResolved = this.defaults.emptyText;
+  readonly errorTextResolved = this.defaults.errorText;
+  readonly valueFormatResolved = this.defaults.valueFormat;
 
   protected readonly activeMark = chartActiveMark(() => 0);
 
