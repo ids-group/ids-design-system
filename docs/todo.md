@@ -809,7 +809,7 @@ because both are the kind of ask that comes back.
 
   **The per-item override works, measured 2026-09-22.** A page reproducing the resolver shape - `ds-menu-item { --_label: var(--ds-menu-item-label-color, …) }`, the token set on an ancestor `ds-menu` and again on `ds-menu-item.is-quiet` - resolves `navy` on an ordinary item and `darkorange` on the quiet one. A declaration on the element beats one inherited into it, so the premise that the token "cannot be set per item" does not hold.
 
-  **Open:** nothing to build here that has been shown to be missing. Decide whether to tell them, and confirm against their own build before closing.
+  **Answered 2026-09-22.** The consumer was told which names carry padding, weight and colour at v0.13.3, that `quiet` and `error` are inputs with their own colour tokens, and that the label colour resolves on the ITEM host, so a declaration on one item beats the menu's. Also that `-pad-x` / `-pad-y` and `-label-weight` are spelled out in the next release. Open only until they confirm against their own build.
 
 - [x] **[P3] `ds-autocomplete` cannot pad its input past an overlaid search glyph - answered by the
   prefix slot, not a padding token.** `[dsAutocompletePrefix]` projects into an in-flow
