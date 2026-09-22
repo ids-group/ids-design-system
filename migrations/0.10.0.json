@@ -706,7 +706,7 @@
         ".cdk-overlay-pane"
       ],
       "why": "A global rule against `.ds-dropdown-panel` or `.cdk-overlay-pane` to change a dropdown corner.",
-      "replaceWith": "`--ds-dropdown-panel-radius`, which scopes to one picker when written under a component selector"
+      "replaceWith": "`--ds-dropdown-panel-radius`, which scopes to one picker when written under a component selector. The pane setup the dropdown pickers share forwards it, so no picker's own list of forwarded tokens names it"
     },
     {
       "id": "autocomplete-synthetic-input-clear",

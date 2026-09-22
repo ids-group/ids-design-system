@@ -104,7 +104,7 @@
       "old": "SelectComponent",
       "new": null,
       "surface": "style",
-      "action": "If a role token set on an ANCESTOR of a picker was reaching its portaled panel, move it onto the component itself — `ds-select { --ds-radius-panel: 8px }` — or use the panel hook, e.g. `--ds-dropdown-panel-radius`.",
+      "action": "If a role token set on an ANCESTOR of a picker was reaching its portaled panel, move it onto the component itself — `ds-select { --ds-radius-panel: 8px }` — or use the panel hook, e.g. `--ds-dropdown-panel-radius`, which every dropdown picker forwards onto its pane.",
       "appliesWhen": "Only a stylesheet that sets `--ds-radius-inner`, `--ds-radius-control`, `--ds-radius-panel`, `--ds-radius-pill` or one of the four `--ds-elevation-*` roles on an ancestor of a picker, popover, menu or tooltip. A role set on the component, on `:root`, or on the pane is unaffected, and no template or TypeScript changes.",
       "pitfall": "Nothing errors and nothing logs. A panel that was inheriting a shell radius or elevation simply falls back to the root value, and only opening it shows the difference.",
       "restore": null,
@@ -212,7 +212,7 @@
         ".ds-overlay-pane .dropdown-panel .option"
       ],
       "why": "the row's weight, size, line-height and family are public hooks that forward per instance, so no deep selector is needed. Where they are SET decides whether they work: the picker copies its host's computed value onto the portaled pane as an inline style, and a value inherited into the host from any ancestor counts, so the copy outranks a rule written on the pane class this version adds.",
-      "replaceWith": "`--ds-option-weight`, `--ds-option-font-size`, `--ds-option-line-height` and `--ds-option-font-family`, set on the picker element - `ds-select`, `ds-autocomplete` or `ds-multi-select` - and not on the `panelClass`. A rule on the panel class owns the properties these four do not cover; for these four it loses to the copy."
+      "replaceWith": "`--ds-option-weight`, `--ds-option-font-size`, `--ds-option-line-height` and `--ds-option-font-family`, set on the picker element - `ds-select`, `ds-autocomplete` or `ds-multi-select` - and not on the `panelClass`. A rule on the panel class owns the properties these four do not cover; for these four it loses to the copy. The pane setup every dropdown picker shares forwards all four, so none appears in a picker's own list of forwarded tokens."
     },
     {
       "id": "modal-title-doubled-class",

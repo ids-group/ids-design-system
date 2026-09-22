@@ -380,7 +380,7 @@
         "--ds-multi-select-panel"
       ],
       "why": "The panel radius reached two of the three dropdowns, so the third was retuned by hand.",
-      "replaceWith": "--ds-dropdown-panel-radius, which now reaches all three"
+      "replaceWith": "--ds-dropdown-panel-radius, which now reaches all three. The pane setup they share forwards it, so no picker's own list of forwarded tokens names it"
     },
     {
       "id": "search-clear-timer",
