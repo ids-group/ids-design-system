@@ -675,6 +675,27 @@ stays because each records what the shape was argued down to. Verified against t
   **Not obviously worth doing.** Recorded so the next reader does not re-derive the measurement,
   and so the decision is made once rather than half-made.
 
+## A documented line-chart hook that reaches nothing (measured 2026-09-22)
+
+- [ ] **[P3] `--ds-line-chart-swatch-size` has been dead since `4e5a0c25` (2026-09-14, inside
+  v0.13.3), and `components.md` still lists it.** The line chart stopped rendering its own
+  `.legend-swatch` when it moved to `ds-chart-legend`; the token, its `--_line-chart-swatch-size`
+  resolver and the three `.legend` / `.legend-item` / `.legend-swatch` rules that read it stayed
+  behind. A consumer setting it gets silence.
+
+  `ds-chart-legend` draws the real swatch and hard-codes `--space-2-5`, so there is nothing to
+  forward to yet. Two ways out, and they differ in what consumers get:
+
+  - **Remove it** - delete the rules, the resolver and the `components.md` line, with a
+    `token-rename`-style removal entry saying the legend sizes its own swatch. Smallest, and
+    truthful.
+  - **Make it work** - give `ds-chart-legend` a `--ds-chart-legend-swatch-size`, point the line
+    chart's token at it, and every chart's legend gains the same hook. Larger, and it adds public
+    surface to the whole chart family.
+
+  `--ds-pie-chart-swatch-size` is NOT affected: the pie chart renders its own `.swatch` and reads
+  the token, so the donut-to-pie rename of it is correct.
+
 ## Two chart names that collide (recorded 2026-09-21, from the mm-ecm consumer)
 
 Both found while planning that consumer's move to 0.13.3. Neither blocks it; both cost a reader.
