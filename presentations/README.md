@@ -19,6 +19,8 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 | 6 | `6-warning-text-colour` | one colour on one tint, each candidate rendered in itself. It ends "name a number: 1, 2, 3 or 4", and `docs/todo.md` still carries the measured 4.42:1 failure |
 | 7 | `7-chart-sparkline-preset` | `variant="spark"` or a separate `ds-sparkline` — parked on 2026-09-19, so it is decided-not-built rather than unasked |
 | 8 | `8-waterfall-mode-or-component` | the waterfall's own tag against a `stack="waterfall"` mode on the column chart |
+| 9 | `9-bar-column-contracts` | how far the bar and the column converge - the consumer ask that found them diverging in palette and in where composition is declared |
+| 10 | `10-ds-bar-name-collision` | the name of the merged progress+meter: `--ds-bar-` is a prefix of `--ds-bar-chart-`, and a namespace replace kills the chart's overrides silently |
 
 **Ranks 1-3 are the two biggest lanes** — the colour engine, then the interaction formula that reads
 its ramp. Ranks 1-4 are written in Russian and share `deck.css`, which sits beside `ds.css` and
