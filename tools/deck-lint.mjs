@@ -199,35 +199,6 @@ for (const dir of [DECKS, ARCHIVE]) {
   }
 }
 
-// The board embeds `docs/todo.md` and `docs/done.md` verbatim so its popover works over
-// `file://`, and a copy nobody diffs rots: it carried a three-week-old backlog with three deck
-// filenames that no longer existed. Compared whole, because a stale line is the whole defect.
-const board = join(DECKS, 'backlog-board.html');
-if (existsSync(board)) {
-  const html = readFileSync(board, 'utf8');
-  for (const [id, file] of [
-    ['todo-md', 'docs/todo.md'],
-    ['done-md', 'docs/done.md'],
-  ]) {
-    const opening = `<script type="text/plain" id="${id}">`;
-    const from = html.indexOf(opening);
-    const to = from < 0 ? -1 : html.indexOf('</script>', from);
-    if (to < 0) {
-      fail('D014', 'backlog-board.html', `has no \`#${id}\` block to compare.`);
-      continue;
-    }
-    const embedded = html.slice(from + opening.length, to);
-    const live = readFileSync(join(ROOT, file), 'utf8').replace(/\r\n/g, '\n');
-    if (embedded.trim() !== live.trim()) {
-      fail(
-        'D014',
-        'backlog-board.html',
-        `the embedded \`#${id}\` no longer matches ${file} — re-embed it, then rebuild the cards and MAP.`,
-      );
-    }
-  }
-}
-
 const sorted = [...ranks.keys()].map(Number).sort((a, b) => a - b);
 sorted.forEach((rank, index) => {
   if (rank !== index + 1) {

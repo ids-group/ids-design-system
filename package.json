@@ -66,6 +66,7 @@
     "todo-index:check": "node tools/todo-index.mjs --check",
     "class-surface": "node tools/class-surface-diff.mjs",
     "deck-lint": "node tools/deck-lint.mjs",
+    "check-board-embed": "node tools/check-board-embed.mjs",
     "deck-lint:selftest": "node tools/deck-lint-selftest.mjs",
     "dev": "npm run start",
     "dev:docs": "npm run extract-docs && ng serve ds-docs --port 4300",
