@@ -302,7 +302,7 @@ export class BarChartComponent {
   protected readonly dataTableRows = computed<readonly ChartDataRow[]>(() =>
     this.rows().flatMap((entry) => [
       {
-        key: entry.key,
+        key: `bar:${entry.key}`,
         cells: this.partOfWhole()
           ? [
               [entry.row.label, entry.row.detail].filter(Boolean).join(' - '),
@@ -315,7 +315,9 @@ export class BarChartComponent {
             ],
       },
       ...entry.segments.map((part) => ({
-        key: part.key,
+        // Both keys fall back to a positional index in their OWN scope, and flattening puts
+        // them in one list - a bar and its first segment would otherwise both be "0".
+        key: `bar:${entry.key}/${part.key}`,
         nested: true,
         cells: this.partOfWhole()
           ? [part.segment.label, part.formattedValue, '']
