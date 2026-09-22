@@ -2311,7 +2311,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-alert-enter-offset",
         "value": "2px",
-        "notes": "How far the alert drops in — read by ds-slide-in (default 2px)."
+        "notes": "How far the alert travels in. The default entrance is ds-fade-in, which does not travel, so this applies once --ds-alert-enter-keyframes names ds-slide-in (default 2px)."
       },
       {
         "name": "--ds-alert-enter-scale",
@@ -2730,7 +2730,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-banner-enter-offset",
         "value": "4px",
-        "notes": "How far the banner drops in — read by ds-slide-in (default 4px)."
+        "notes": "How far the banner travels in. The default entrance is ds-fade-in, which does not travel, so this applies once --ds-banner-enter-keyframes names ds-slide-in (default 4px)."
       },
       {
         "name": "--ds-banner-enter-scale",
@@ -7714,7 +7714,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-toast-enter-offset",
         "value": "var(--space-2)",
-        "notes": "How far the toast rises into place — read by ds-slide-in (default --space-2)."
+        "notes": "How far the toast travels in. The default entrance is ds-fade-in, which does not travel, so this applies once --ds-toast-enter-keyframes names ds-slide-in (default --space-2)."
       },
       {
         "name": "--ds-toast-min-width",
