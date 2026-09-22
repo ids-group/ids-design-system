@@ -384,6 +384,16 @@ const GONE_AFTER = new Set([
   'selector-rename',
 ]);
 
+// Prose that names a token in order to say it does not exist: the spelling a blind replace
+// produces, a name the text explains away. Keyed `<tag> <item or row id | informational> <token>`.
+const DELIBERATE_PHANTOMS = new Set([
+  'v0.9.0 dropdown-panel-radius --ds-select-panel-radius',
+  'v0.10.0 informational --ds-pagehdr',
+  'v0.10.0 informational --ds-topbar-margin-b',
+  'v0.13.0 button-border-token-names-the-colour --ds-button-border-color-width',
+  'v0.13.3 progress-and-meter-tokens-renamed-to-bar --ds-bar-bar-color',
+]);
+
 const label = (claim) =>
   claim.kind === 'member' ? `${claim.element}[${claim.name}]` : claim.name;
 
@@ -405,6 +415,7 @@ function sweep() {
   // missing, and one readable manifest was enough to green a run where the other 26 were not.
   const unreadable = [];
   const unchecked = [];
+  const coverage = { values: 0, read: 0 };
   let checked = 0;
 
   for (const file of manifests) {
@@ -454,7 +465,18 @@ function sweep() {
         ...verdict.unresolved.map((line) => `${file} ${item.id}: ${line}`),
       );
       unchecked.push(...verdict.unchecked.map((line) => `${file} ${line}`));
+      coverage.values += verdict.values;
+      coverage.read += verdict.readValues;
     }
+    defects.push(
+      ...checkFileProse(
+        doc,
+        before,
+        after,
+        prev,
+        draft ? 'the working tree' : `v${version}`,
+      ).map((line) => `${file}\n      ${line}`),
+    );
   }
   if (ONLY && !manifests.length) {
     console.error(
@@ -471,7 +493,7 @@ function sweep() {
         `boundary, so nothing is known about them:\n  ${unreadable.join('\n  ')}`,
     );
     if (defects.length)
-      report(defects, unresolved, checked, skipped, unchecked);
+      report(defects, unresolved, checked, skipped, unchecked, coverage);
     process.exit(1);
   }
   if (!checked) {
@@ -481,7 +503,7 @@ function sweep() {
     );
     process.exit(1);
   }
-  report(defects, unresolved, checked, skipped, unchecked);
+  report(defects, unresolved, checked, skipped, unchecked, coverage);
 }
 
 // Exported so the selftest can exercise the rules against synthetic surfaces: the checkout is
@@ -529,22 +551,24 @@ export function checkItem(item, before, after, prevTag, tag) {
     (claim) => resolves(after, claim) === true,
   );
 
+  // A name neither tag declares is usually a consumer's own example (`class MyTable extends …`)
+  // or a framework type (`InputSignal`). But when the item is a TYPE or CLASS rename, `old` is
+  // a name the consumer had to IMPORT — and an import of something that never existed does not
+  // compile, so nobody ever wrote it and the rename is fiction. That is not true of a template
+  // binding: `ds-banner[dismissed]` against a phantom output compiles and silently does
+  // nothing, which is why the catalogue could promise it and consumers could write it.
+  const isImportedName =
+    item.kind === 'type-rename' || item.kind === 'class-rename';
+  const declaredAtNeither = (claim) =>
+    claim.kind === 'symbol' &&
+    resolves(before, claim) === false &&
+    resolves(after, claim) === false &&
+    !(isImportedName && claim.bare);
+
+  const unresolvedBeforeOld = unresolved.length;
   for (const claim of claims(item.old)) {
     const wasThere = resolves(before, claim);
-    // A name neither tag declares is usually a consumer's own example (`class MyTable extends …`)
-    // or a framework type (`InputSignal`). But when the item is a TYPE or CLASS rename, `old` is
-    // a name the consumer had to IMPORT — and an import of something that never existed does not
-    // compile, so nobody ever wrote it and the rename is fiction. That is not true of a template
-    // binding: `ds-banner[dismissed]` against a phantom output compiles and silently does
-    // nothing, which is why the catalogue could promise it and consumers could write it.
-    const isImportedName =
-      item.kind === 'type-rename' || item.kind === 'class-rename';
-    if (
-      claim.kind === 'symbol' &&
-      wasThere === false &&
-      resolves(after, claim) === false &&
-      !(isImportedName && claim.bare)
-    ) {
+    if (declaredAtNeither(claim)) {
       unresolved.push(`\`${claim.name}\` is declared at neither tag`);
       continue;
     }
@@ -600,24 +624,99 @@ export function checkItem(item, before, after, prevTag, tag) {
   // override. `searchHints` and `detect` are recall seeds and legitimately carry bare prefixes,
   // so they are not read here; a prose name that is a PREFIX of a real token is a family, not a
   // claim.
-  const knownTokens = [...before.tokens, ...after.tokens];
-  for (const field of ['action', 'appliesWhen']) {
-    const text = item[field];
-    if (typeof text !== 'string') continue;
-    for (const match of text.matchAll(/--ds-[a-z0-9-]*[a-z0-9]/g)) {
-      const name = match[0];
-      if (resolves(before, { kind: 'token', name }) !== false) continue;
-      if (resolves(after, { kind: 'token', name }) !== false) continue;
-      if (knownTokens.some((known) => known.startsWith(`${name}-`))) continue;
+  for (const field of ['action', 'appliesWhen', 'note', 'pitfall'])
+    for (const name of phantomTokens(
+      item[field],
+      before,
+      after,
+      `${tag} ${item.id}`,
+    ))
       defects.push(
         `${field} names \`${name}\`, which exists at neither ${prevTag} nor ${tag}`,
       );
-    }
-  }
-  return { defects, unresolved, unchecked };
+  // A value counts as read when at least one name in it resolved at its tag, true or false.
+  const oldRead = claims(item.old).some(
+    (claim) => resolves(before, claim) !== null && !declaredAtNeither(claim),
+  );
+  const newRead = newClaims.some((claim) => resolves(after, claim) !== null);
+  if (
+    claims(item.old).length &&
+    !oldRead &&
+    unresolved.length === unresolvedBeforeOld
+  )
+    unresolved.push(
+      `old \`${item.old.trim()}\` — nothing in it resolves at ${prevTag}`,
+    );
+  if (newClaims.length && !newRead)
+    unresolved.push(
+      `new \`${item.new.trim()}\` — nothing in it resolves at ${tag}`,
+    );
+  const values = ['old', 'new'].filter(
+    (field) => typeof item[field] === 'string' && item[field].trim(),
+  ).length;
+  return {
+    defects,
+    unresolved,
+    unchecked,
+    values,
+    readValues: Number(oldRead) + Number(newRead),
+  };
 }
 
-function report(defects, unresolved, count, skipped = [], unchecked = []) {
+function phantomTokens(text, before, after, location) {
+  if (typeof text !== 'string') return [];
+  const knownTokens = [...before.tokens, ...after.tokens];
+  const phantoms = [];
+  for (const match of text.matchAll(/--ds-[a-z0-9-]*[a-z0-9]/g)) {
+    const name = match[0];
+    if (DELIBERATE_PHANTOMS.has(`${location} ${name}`)) continue;
+    if (resolves(before, { kind: 'token', name }) !== false) continue;
+    if (resolves(after, { kind: 'token', name }) !== false) continue;
+    if (knownTokens.some((known) => known.startsWith(`${name}-`))) continue;
+    phantoms.push(name);
+  }
+  return phantoms;
+}
+
+// A deleteList row or an informational line naming a hook that existed at neither tag tells the
+// consumer to delete, or to set, something no release ever shipped.
+export function checkFileProse(doc, before, after, prevTag, tag) {
+  const defects = [];
+  for (const [index, line] of (doc.informational ?? []).entries())
+    for (const name of phantomTokens(
+      line,
+      before,
+      after,
+      `${tag} informational`,
+    ))
+      defects.push(
+        `informational[${index}] names \`${name}\`, which exists at neither ${prevTag} nor ${tag}`,
+      );
+  for (const row of doc.deleteList ?? [])
+    for (const field of ['find', 'why', 'replaceWith']) {
+      const values = Array.isArray(row[field]) ? row[field] : [row[field]];
+      for (const value of values)
+        for (const name of phantomTokens(
+          value,
+          before,
+          after,
+          `${tag} ${row.id}`,
+        ))
+          defects.push(
+            `deleteList ${row.id} ${field} names \`${name}\`, which exists at neither ${prevTag} nor ${tag}`,
+          );
+    }
+  return defects;
+}
+
+function report(
+  defects,
+  unresolved,
+  count,
+  skipped = [],
+  unchecked = [],
+  coverage = null,
+) {
   console.log(
     `check-manifest-truth: ${count} manifest(s) against ${surfaceCache.size} tree(s).`,
   );
@@ -634,7 +733,7 @@ function report(defects, unresolved, count, skipped = [], unchecked = []) {
   }
   if (unresolved.length) {
     console.log(
-      `\n${unresolved.length} name(s) neither tag declares — consumer examples, not checked:`,
+      `\n${unresolved.length} name(s) no tag could resolve — framework types and elements a tag does not know, not checked:`,
     );
     for (const line of unresolved) console.log(`  ${line}`);
   }
@@ -647,11 +746,14 @@ function report(defects, unresolved, count, skipped = [], unchecked = []) {
     );
     process.exit(1);
   }
+  // "Clean" must not read as "complete": the fraction says how much of the surface was read at all.
+  const read = coverage
+    ? `${coverage.read} of ${coverage.values} old/new value(s) were read against their boundary`
+    : 'every old/new was read against its boundary';
   console.log(
-    unchecked.length
-      ? `every old/new that holds a name resolves against its own boundary; ${unchecked.length} ` +
-          'listed above hold none.'
-      : 'every old/new resolves against its own boundary.',
+    coverage && coverage.read < coverage.values
+      ? `${read} and hold; the other ${coverage.values - coverage.read} are listed above and nothing is known about them.`
+      : `${read} and hold.`,
   );
 }
 
