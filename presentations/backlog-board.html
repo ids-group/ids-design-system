@@ -1198,7 +1198,7 @@ A0 first, which touches none of it, or wait for that lane to land.
 
 
 
-- [ ] **[P3] A token named in prose is not checked against the tokens that exist, and the same fact lives in two copies.** `--static-white` was removed at 0.5.1 and was still advertised in `src/lib/themes/README.md` AND in `ds-docs`' theming page months later; both are fixed, but nothing stops the next one. Two mechanisms would: (a) a gate that extracts every `--token` mentioned in prose (`*.md`, the ds-docs section templates) and fails on any that no longer resolves in `_base-palette.scss` / `_semantic.scss` / `_tokens.scss`, with an allowlist for text that is deliberately historical — `docs/done.md` and the migration manifests must keep naming what they removed; (b) pairing the two copies, since a repo doc and its ds-docs page carry the same facts and drifted independently twice in one day. Sequence (a) first: it is mechanical and catches the class, while (b) is a restructure.
+- [ ] **[P3] A token named in prose is not checked against the tokens that exist, and the same fact lives in two copies.** `--static-white` was removed at 0.5.1 and was still advertised in `src/lib/themes/README.md` AND in `ds-docs`' theming page months later; both are fixed, but nothing stops the next one. Two mechanisms would: (a) a gate that extracts every `--token` mentioned in prose (`*.md`, the ds-docs section templates) and fails on any that no longer resolves in `_base-palette.scss` / `_semantic.scss` / `_tokens.scss`, with an allowlist for text that is deliberately historical — `docs/done.md` and the migration manifests must keep naming what they removed; (b) pairing the two copies, since a repo doc and its ds-docs page carry the same facts and drifted independently twice in one day. Sequence (a) first: it is mechanical and catches the class, while (b) is a restructure. The manifests are already covered and are not part of (a): `check-manifest-truth` fails a `--ds-*` name in manifest prose that exists at neither boundary tag, and its `phantomTokens` plus `DELIBERATE_PHANTOMS` allowlist is the shape to copy for the `*.md` half.
 
 - [ ] **[P3] Three edges left open on `ds-table` row expansion and the resize handle, each a judgement call rather than a defect.** (a) On a page with no rows the expand-all chevron still renders and its label reads "Expand all rows", while clicking it does nothing — the handler early-returns. This is an exact clone of what the select-all checkbox next to it does on an empty page, so it was left for symmetry; breaking the symmetry needs a disabled state on `.expand-btn`, which the shared icon-button chrome has no styling for. (b) Under `lazy` (no `pageSize`, `total` set) `expandAllLabel` omits " on this page" because it keys on `pageSize()`, while expand-all only reaches the rows that have arrived. Inside the already-declared-unsupported `virtualScroll` + `expandableRows` combination. (c) The expander column's `<th>` had no accessible name and now takes one from the expand-all button — which FLIPS between "Expand all rows" and "Collapse all rows", so in table-navigation mode every body cell in that column inherits a changing column name. The `select-col` `<th>` sets the precedent of naming itself from its control, but with a STABLE name. Fixing it means an `aria-label` on the `<th>` naming the column, which is a pattern the component does not use anywhere else.
 
@@ -1878,11 +1878,15 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ## Nine manifest and plugin asks from one consumer's re-audit (2026-09-23)
 
-`check-manifest-truth` closes on the fraction it read - `330 of 457 old/new value(s) were read
-against their boundary and hold` (measured 2026-09-23) - and lists every one of the other 127, so a
-green run cannot be read as complete. It also scans `note`, `pitfall`, `informational` and every
-`deleteList` field for a `--ds-*` name neither tag declares; prose that names a token to say it
-does not exist goes in `DELIBERATE_PHANTOMS`, keyed by tag, id and token.
+`check-manifest-truth` closes on the fraction it read - `359 of 458 old/new value(s) were read
+against their boundary and hold` (measured 2026-09-23) - and lists every one of the other 99, so a
+green run cannot be read as complete. It reads the element-scoped class shape AUTHORING prescribes
+(`ds-modal .danger`) as an element and a class, `<ds-toast>` as an element and `DS_TOAST_CONFIG` as
+a symbol; a scope element renamed in the same release is accused only if neither tag has it. It
+also scans `note`, `pitfall`, `informational` and every `deleteList` field for a `--ds-*` name
+neither tag declares; prose that names a token to say it does not exist goes in
+`DELIBERATE_PHANTOMS`, keyed by tag, id and token. Five selftest cases drive the new readings.
+`migrations/AUTHORING.md` carries both rules.
 
 That scan found three `--ds-chart-*` hooks the 0.13.0 manifest and CHANGELOG described as existing
 or deletable, none of which any tag ever shipped; they are gone from the informational line, the
@@ -1890,7 +1894,8 @@ delete list, two notes and the DELETE table. 0.13.0 gained the missing `--chart-
 and its categorical rename sends anyone recolouring a series to `--ds-chart-series-N-color`.
 
 Fourteen subclass items carry the DS classes in `old` instead of `class MyTable extends …`
-placeholders. `time-columns-onkey-signature` is an informational line: the class is not exported.
+placeholders, and two bare member names are scoped: `ds-autocomplete[optionGroups]` and
+`ButtonComponent.buttonRef`. `time-columns-onkey-signature` is an informational line: the class is not exported.
 `field-state-icon-hand-rolled` finds `name="error"`, `name="warn"` and `.field-message` rather than
 every `ds-icon`, and the table footer rows say a local rule replaces the inset per side instead of
 doubling it. Every picker's `panelTokens` comment names the shared `DROPDOWN_PANEL_TOKENS`, and

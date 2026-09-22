@@ -6,11 +6,15 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ## Nine manifest and plugin asks from one consumer's re-audit (2026-09-23)
 
-`check-manifest-truth` closes on the fraction it read - `330 of 457 old/new value(s) were read
-against their boundary and hold` (measured 2026-09-23) - and lists every one of the other 127, so a
-green run cannot be read as complete. It also scans `note`, `pitfall`, `informational` and every
-`deleteList` field for a `--ds-*` name neither tag declares; prose that names a token to say it
-does not exist goes in `DELIBERATE_PHANTOMS`, keyed by tag, id and token.
+`check-manifest-truth` closes on the fraction it read - `359 of 458 old/new value(s) were read
+against their boundary and hold` (measured 2026-09-23) - and lists every one of the other 99, so a
+green run cannot be read as complete. It reads the element-scoped class shape AUTHORING prescribes
+(`ds-modal .danger`) as an element and a class, `<ds-toast>` as an element and `DS_TOAST_CONFIG` as
+a symbol; a scope element renamed in the same release is accused only if neither tag has it. It
+also scans `note`, `pitfall`, `informational` and every `deleteList` field for a `--ds-*` name
+neither tag declares; prose that names a token to say it does not exist goes in
+`DELIBERATE_PHANTOMS`, keyed by tag, id and token. Five selftest cases drive the new readings.
+`migrations/AUTHORING.md` carries both rules.
 
 That scan found three `--ds-chart-*` hooks the 0.13.0 manifest and CHANGELOG described as existing
 or deletable, none of which any tag ever shipped; they are gone from the informational line, the
@@ -18,7 +22,8 @@ delete list, two notes and the DELETE table. 0.13.0 gained the missing `--chart-
 and its categorical rename sends anyone recolouring a series to `--ds-chart-series-N-color`.
 
 Fourteen subclass items carry the DS classes in `old` instead of `class MyTable extends …`
-placeholders. `time-columns-onkey-signature` is an informational line: the class is not exported.
+placeholders, and two bare member names are scoped: `ds-autocomplete[optionGroups]` and
+`ButtonComponent.buttonRef`. `time-columns-onkey-signature` is an informational line: the class is not exported.
 `field-state-icon-hand-rolled` finds `name="error"`, `name="warn"` and `.field-message` rather than
 every `ds-icon`, and the table footer rows say a local rule replaces the inset per side instead of
 doubling it. Every picker's `panelTokens` comment names the shared `DROPDOWN_PANEL_TOKENS`, and
