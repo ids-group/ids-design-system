@@ -57,7 +57,6 @@ export class BannerComponent {
     transform: (value) => (value == null ? null : booleanAttribute(value)),
   });
 
-  /** `announce`, then `DS_CONFIG.banner.announce`, then `false`. */
   readonly announceResolved = resolveWithConfig(
     this.announce,
     (config) => config.banner?.announce,

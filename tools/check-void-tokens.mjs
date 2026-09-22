@@ -68,10 +68,6 @@ const stripComments = (css) =>
     )
     .replace(/(^|\s)\/\/[^\n]*/g, '$1');
 
-// `--x: var(--y, initial)` drops the declaration exactly as `var(--y)` does — `initial` on a custom
-// property IS the guaranteed-invalid value. Written on purpose it is the only way to say "unset
-// unless the consumer sets the hook"; written by accident it is the same defect wearing a fallback,
-// and rule 4 would wave it through. So it is reported like a bare void and cleared by the marker.
 const RESET_FALLBACK = /^(initial|unset)$/;
 
 // The author's statement that the drop is intended, on the same line as the declaration. Same shape
