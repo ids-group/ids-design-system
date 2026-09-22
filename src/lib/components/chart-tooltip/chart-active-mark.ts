@@ -9,6 +9,10 @@ export interface ChartActiveMark {
   /** Whether the active mark is held rather than followed — a tap, or a click under `pinOnClick`. */
   readonly pinned: Signal<boolean>;
   enter(index: number, event: Event, anchor?: string | Element | null): void;
+  /** Moves the active index with no pointer behind it - a keyboard, or a mark handing over which
+   *  category it took focus on. Leaves the anchor alone: the caller that has no event has no
+   *  element to aim at either. A pin holds against this too. */
+  setIndex(index: number): void;
   leave(): void;
   /** Holds the mark that was activated, for any pointer type. Activating the mark that is already
    *  pinned releases it, so one gesture both sets and clears. */
@@ -185,6 +189,13 @@ export function chartActiveMark(
       ) {
         hold();
       }
+    },
+    setIndex(at) {
+      if (pinned()) {
+        return;
+      }
+      cancelPendingClear();
+      index.set(at);
     },
     leave() {
       if (pinned()) {

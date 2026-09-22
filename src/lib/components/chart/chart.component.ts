@@ -17,14 +17,13 @@ import {
 } from '@angular/core';
 import {
   bandScale,
-  defaultChartFormat,
   elementWidth,
   labelInterval,
   rotationWouldFit,
   tickValues,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
-import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
+import { chartActiveMark } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import { resolveChartDefaults } from '@ids-group-ltd/ids-design-system/components';
 import type {
   ChartAxis,
@@ -59,6 +58,7 @@ import {
 @Component({
   selector: 'ds-chart',
   standalone: true,
+  exportAs: 'dsChart',
   imports: [SkeletonComponent],
   templateUrl: './chart.component.html',
   styleUrl: './chart.component.scss',
@@ -104,6 +104,17 @@ export class ChartComponent implements ChartScales {
    *  whose marks are the hover targets already answers per mark, and two affordances on one plot
    *  read as two different questions. */
   readonly cursor = input<'none' | 'category'>('none');
+
+  /** Whether a press holds the category cursor where it is, so the reader can look away from the
+   *  plot with the comparison still on screen. Released by pressing it again, by Escape, or by a
+   *  press outside the plot. */
+  readonly cursorPin = input(false, { transform: booleanAttribute });
+
+  /** Milliseconds the cursor survives the pointer leaving the plot. The tooltip panel is portaled
+   *  out of the plot, so without a grace period it closes before the pointer can reach it. */
+  readonly tooltipLingerMs = input<number | null>(null, {
+    transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
+  });
 
   /** Pins the ceiling of the SECOND value axis, the way `max` pins the first. Two plots read
    *  against each other need both pinned, or the second rescales under them. */
@@ -513,6 +524,28 @@ export class ChartComponent implements ChartScales {
     };
   });
 
+  /** The same state machine the element marks run on: pin, linger, the grace period that lets the
+   *  pointer reach a portaled panel, Escape and press-outside. A category cursor differs from a
+   *  mark only in what the index counts, so it takes the behaviour rather than restating it. */
+  private readonly cursorState = chartActiveMark(() =>
+    this.defaults.tooltipLingerMs(),
+  );
+
+  readonly activeIndex = this.cursorState.index;
+
+  private readonly pointerAt = signal<{ x: number; y: number } | null>(null);
+
+  readonly cursorPointer = computed(() =>
+    this.activeIndex() < 0 ? null : this.pointerAt(),
+  );
+
+  /** Whether the cursor is held. A preset renders its own way out of the pin from this. */
+  readonly cursorPinned = this.cursorState.pinned;
+
+  releaseCursor(): void {
+    this.cursorState.release();
+  }
+
   protected onPlotPointer(event: PointerEvent): void {
     if (this.cursor() !== 'category') {
       return;
@@ -523,18 +556,23 @@ export class ChartComponent implements ChartScales {
     // it means anything to a plot measured in view units.
     const viewX =
       ((event.clientX - canvas.left) / canvas.width) * this.viewWidth();
-    this.setActiveIndex(
+    const index = this.clampIndex(
       categoryAt(viewX, plot.left, plot.width, this.categories().length),
     );
+    this.pointerAt.set({ x: event.clientX, y: event.clientY });
+    if (event.type === 'pointerdown' && this.cursorPin()) {
+      this.cursorState.pin(index, event);
+
+      return;
+    }
+    this.cursorState.enter(index, event);
   }
 
   protected clearCursor(): void {
     if (this.cursor() === 'category') {
-      this.setActiveIndex(-1);
+      this.cursorState.leave();
     }
   }
-
-  readonly activeIndex = signal(-1);
 
   private readonly bandElement = viewChild<ElementRef<Element>>('cursorBandEl');
 
@@ -543,12 +581,15 @@ export class ChartComponent implements ChartScales {
   );
 
   setActiveIndex(index: number): void {
+    this.cursorState.setIndex(this.clampIndex(index));
+  }
+
+  private clampIndex(index: number): number {
     const last = this.categories().length - 1;
-    this.activeIndex.set(
-      Number.isFinite(index)
-        ? Math.min(Math.max(Math.trunc(index), -1), last)
-        : -1,
-    );
+
+    return Number.isFinite(index)
+      ? Math.min(Math.max(Math.trunc(index), -1), last)
+      : -1;
   }
 
   protected readonly plotRight = computed(
