@@ -182,7 +182,3 @@ figcaption {
 
 /* A segment's row belongs to the row above it. Indent and de-emphasis are the table's only way to
    say so — a nested table would break the column alignment the reader is scanning down. */
-.segment-row > td:first-child {
-  padding-inline-start: var(--space-6);
-  color: var(--text-secondary);
-}
