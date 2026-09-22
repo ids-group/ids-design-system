@@ -14,7 +14,7 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**106 open — 1 P1, 34 P2, 71 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**107 open — 1 P1, 34 P2, 72 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 1
 
@@ -69,7 +69,7 @@ item and nothing else.
 - **Localization — every user-visible string is a hardcoded literal (recorded 2026-08-27, from the ITB Workspace picker report)**
   - Every user-visible string in the library is a hardcoded English literal — VALIDATED 2026-08-27 against 0.11.0; Stas: defer the whole thing, no code
 
-### P3 — 71
+### P3 — 72
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - A whole-page keyboard walk is not measurable with the tools here, and the failed
@@ -97,6 +97,8 @@ item and nothing else.
   - Only the RESOLUTION of the shared chart inputs is shared, not their declaration
 - **A documented line-chart hook that reaches nothing (measured 2026-09-22)**
   - `--ds-line-chart-swatch-size` has been dead since `4e5a0c25` (2026-09-14, inside
+- **An indeterminate bar that survives a short track (recorded 2026-09-22, from the mm-ecm consumer)**
+  - `ds-progress`'s indeterminate is a 30% chunk, and on a short track it reads as empty
 - **Two chart names that collide (recorded 2026-09-21, from the mm-ecm consumer)**
   - One idea, two contracts: a bar stacks through `segments`, a column through `stack`
 - **A journey canvas the mm-ecm prototype could not use (recorded 2026-09-16)**
@@ -697,6 +699,27 @@ stays because each records what the shape was argued down to. Verified against t
 
   `--ds-pie-chart-swatch-size` is NOT affected: the pie chart renders its own `.swatch` and reads
   the token, so the donut-to-pie rename of it is correct.
+
+## An indeterminate bar that survives a short track (recorded 2026-09-22, from the mm-ecm consumer)
+
+- [ ] **[P3] `ds-progress`'s indeterminate is a 30% chunk, and on a short track it reads as empty.**
+  `:host(.indeterminate) > span { width: 30%; animation: progress-indet var(--duration-loop-slow) }`.
+  For most of each cycle that chunk is outside a narrow track, so a bar the width of a card's
+  content column spends more time blank than filled, and a viewer reads "nothing is happening" on a
+  step that IS running.
+  **The consumer hit this and fixed it before we shipped anything**, which is why their bar is the
+  one place they did not adopt `ds-progress`: `node-card.component.scss` in mm-ecm draws a
+  full-width fill whose `repeating-linear-gradient` scrolls exactly one tile per cycle, and its
+  comment records the reason - "the track is 100% covered every frame and the loop is seamless, so
+  it can NEVER empty or slide off-screen (the root-cause fix for the original invisible bar). No
+  transform, no narrow translated chunk."
+  **What that costs us:** adopting `ds-progress` there would reinstate the defect, and the only way
+  to keep their behaviour is a rule on our `> span`, so the swap would trade a hand-rolled bar for a
+  hand-rolled bar PLUS a reach into the component. Every other track they had is now `ds-progress`;
+  this is the single hold-out.
+  **Wanted:** either the stripe as the indeterminate default, or a second style behind an input, so
+  a short track has a form that cannot read as empty. The prior art is small and is in their
+  `node-card.component.scss` under `.card__track.is-indeterminate .card__bar`.
 
 ## Two chart names that collide (recorded 2026-09-21, from the mm-ecm consumer)
 
