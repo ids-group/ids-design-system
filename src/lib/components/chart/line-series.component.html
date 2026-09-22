@@ -8,6 +8,7 @@
         animate.enter="mark-enter"
         animate.leave="mark-leave"
         [class.is-stacked]="stacked()"
+        [class.is-dimmed]="isDimmed(entry.series.id)"
         [style.--_chart-mark-stagger]="seriesStagger(entry.seriesIndex)"
         [attr.d]="path"
         [attr.fill]="entry.color" />
@@ -20,6 +21,7 @@
         class="series-line"
         animate.enter="mark-enter"
         animate.leave="mark-leave"
+        [class.is-dimmed]="isDimmed(entry.series.id)"
         [attr.stroke-dasharray]="dashFor(entry.seriesIndex)"
         [style.--_chart-mark-stagger]="seriesStagger(entry.seriesIndex)"
         [attr.d]="path"
@@ -31,7 +33,9 @@
     @for (entry of plotted(); track entry.series.id) {
       @for (marker of entry.markers; track marker.key) {
         <svg:circle
+          #markerEl
           class="series-marker"
+          [class.is-dimmed]="isDimmed(entry.series.id)"
           [class.ghost]="!showMarkers()"
           [class.interactive]="interactive()"
           [class.is-active]="marker.markIndex === activeMark.index()"
@@ -42,7 +46,7 @@
           [attr.role]="interactive() ? 'button' : null"
           [attr.tabindex]="
             interactive()
-              ? marker.markIndex === tabStopIndex()
+              ? isTabStop(entry.series.id, marker.markIndex)
                 ? 0
                 : -1
               : null
@@ -51,7 +55,7 @@
           (pointerenter)="onMarkerEnter(marker.markIndex, $event)"
           (pointerleave)="activeMark.leave()"
           (focus)="onMarkerFocus(marker.markIndex, $event)"
-          (blur)="activeMark.leave()"
+          (blur)="onMarkerBlur()"
           (keydown)="onMarkerNavigation($event, marker.markIndex)"
           (click)="onMarkerClick(marker.markIndex, $event)"
           (keydown.enter)="onMarkerClick(marker.markIndex)"

@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   OnDestroy,
   ViewEncapsulation,
   booleanAttribute,
@@ -11,6 +12,7 @@ import {
   numberAttribute,
   output,
   signal,
+  viewChildren,
 } from '@angular/core';
 import {
   CHART_SERIES_COLORS,
@@ -34,6 +36,7 @@ import { chartActiveMark } from '@ids-group-ltd/ids-design-system/components/cha
 import type {
   ChartTooltipTrigger,
   ChartTooltipContext,
+  ChartTooltipOrigin,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import { CHART_SCALES } from './chart-scales.token';
 
@@ -100,6 +103,12 @@ export class LineSeriesComponent implements OnDestroy {
    *  for one line and pays for it with the separation between the rest. */
   readonly dimOthers = input(false, { transform: booleanAttribute });
 
+  /** The one series to single out: every other one draws faded and this one draws bold, so the
+   *  comparison survives a monochrome print. Driven from a legend, or from whatever else the app
+   *  uses to mean "show me this one". Needs `dimOthers`, which is what says fading is wanted at
+   *  all. */
+  readonly highlighted = input<string | null>(null);
+
   /** A dash pattern per series, in the order the series are given. A series past the end of the
    *  list, or given an empty string, draws solid. */
   readonly patterns = input<readonly string[]>([]);
@@ -130,6 +139,11 @@ export class LineSeriesComponent implements OnDestroy {
    *  reading a multi-series line is compared on - it follows the container's `cursor`, so set
    *  `cursor="category"` on `ds-chart` with it or nothing marks the category being read. */
   readonly tooltip = input<ChartTooltipTrigger>('item');
+
+  /** Where an `'axis'` panel hangs: `'reading'` puts it over the highest reading in the category,
+   *  so it names what it points at and stays put while the pointer travels within one band;
+   *  `'pointer'` follows the cursor. */
+  readonly tooltipAnchor = input<'reading' | 'pointer'>('reading');
 
   /** How long the panel survives the pointer leaving the marker. Raise it only for a panel a
    *  reader has to REACH, which is WCAG 1.4.13's hoverable clause; about 140 crosses the gap. */
@@ -293,35 +307,73 @@ export class LineSeriesComponent implements OnDestroy {
     return `${staggerDelay(index, this.staggerMs())}ms`;
   }
 
-  /** One tab stop per chart, not one per mark: WCAG 2.1.1's Understanding is explicit that not
-   *  every mouse-operable control has to be separately focusable. */
-  protected readonly rovingIndex = signal(0);
-
-  protected readonly tabStopIndex = computed(() =>
-    Math.min(this.rovingIndex(), Math.max(0, this.allMarkers().length - 1)),
+  /** One tab stop PER SERIES: each line is a strand the reader walks with the arrows, and the
+   *  strands are what the chart is comparing. WCAG 2.1.1's Understanding is explicit that not
+   *  every mouse-operable control has to be separately focusable, which is what keeps a
+   *  12-category, 2-series plot from being twenty-four stops in the page's tab order. */
+  private readonly rovingBySeries = signal<ReadonlyMap<string, number>>(
+    new Map(),
   );
+
+  protected isTabStop(seriesId: string, markIndex: number): boolean {
+    const chosen = this.rovingBySeries().get(seriesId);
+    if (chosen !== undefined) {
+      return chosen === markIndex;
+    }
+    const first = this.plotted().find((entry) => entry.series.id === seriesId)
+      ?.markers[0];
+
+    return first?.markIndex === markIndex;
+  }
+
+  /** The series a marker holds focus on, which narrows an `'axis'` panel to that one reading: a
+   *  pointer answers for every series at once, a focused marker answers for its own. */
+  private readonly focusedSeries = signal<string | null>(null);
 
   protected onMarkerEnter(markIndex: number, event: Event): void {
     this.activeMark.enter(markIndex, event);
   }
 
   protected onMarkerFocus(markIndex: number, event: FocusEvent): void {
-    this.rovingIndex.set(markIndex);
+    const marker = this.allMarkers()[markIndex];
+    if (marker) {
+      this.rovingBySeries.update((roving) =>
+        new Map(roving).set(marker.seriesId, markIndex),
+      );
+      this.focusedSeries.set(marker.seriesId);
+      this.scales.setActiveIndex(marker.categoryIndex);
+    }
     this.onMarkerEnter(markIndex, event);
   }
 
+  protected onMarkerBlur(): void {
+    this.focusedSeries.set(null);
+    this.activeMark.leave();
+  }
+
   protected onMarkerNavigation(event: KeyboardEvent, markIndex: number): void {
-    const next = nextRovingIndex(
-      event.key,
-      markIndex,
-      this.allMarkers().length,
+    const marker = this.allMarkers()[markIndex];
+    const strand = this.allMarkers().filter(
+      (candidate) => candidate.seriesId === marker?.seriesId,
     );
+    const current = strand.findIndex(
+      (candidate) => candidate.markIndex === markIndex,
+    );
+    const next = nextRovingIndex(event.key, current, strand.length);
     if (next === null) {
       return;
     }
     event.preventDefault();
-    this.rovingIndex.set(next);
-    focusMark((event.currentTarget as Element).closest('.lines'), next);
+    focusMark(
+      (event.currentTarget as Element).closest('.lines'),
+      strand[next].markIndex,
+    );
+  }
+
+  protected isDimmed(seriesId: string): boolean {
+    const highlighted = this.highlighted();
+
+    return this.dimOthers() && highlighted !== null && highlighted !== seriesId;
   }
 
   protected onMarkerClick(markIndex: number, event?: Event): void {
@@ -372,12 +424,41 @@ export class LineSeriesComponent implements OnDestroy {
     };
   });
 
-  /** Where the panel hangs: the category band in `'axis'` mode, the hovered mark otherwise. */
-  readonly tooltipOrigin = computed(() =>
-    this.tooltip() === 'axis'
-      ? this.scales.cursorOrigin()
-      : this.activeMark.origin(),
-  );
+  private readonly markerElements =
+    viewChildren<ElementRef<Element>>('markerEl');
+
+  /** The topmost reading at the active category, as its own element. The cursor band spans the
+   *  whole plot, so anchoring an `'axis'` panel to it opens the panel at the top of the chart
+   *  rather than over the readings it is about. */
+  private readonly topReadingElement = computed<Element | null>(() => {
+    const categoryIndex = this.scales.activeIndex();
+    if (categoryIndex < 0) {
+      return null;
+    }
+    const highest = this.allMarkers()
+      .filter((marker) => marker.categoryIndex === categoryIndex)
+      .reduce<{ markIndex: number; y: number } | null>(
+        (top, marker) => (top === null || marker.y < top.y ? marker : top),
+        null,
+      );
+
+    return highest
+      ? (this.markerElements()[highest.markIndex]?.nativeElement ?? null)
+      : null;
+  });
+
+  /** Where the panel hangs: the reading or the pointer in `'axis'` mode, the hovered mark
+   *  otherwise. */
+  readonly tooltipOrigin = computed<ChartTooltipOrigin | null>(() => {
+    if (this.tooltip() !== 'axis') {
+      return this.activeMark.origin();
+    }
+    if (this.tooltipAnchor() === 'pointer') {
+      return this.scales.cursorPointer() ?? this.scales.cursorOrigin();
+    }
+
+    return this.topReadingElement() ?? this.scales.cursorOrigin();
+  });
 
   /** Every series' reading at the category the CONTAINER says is active, which is what the
    *  category cursor sets. A series with no reading there contributes no row rather than a
@@ -388,7 +469,11 @@ export class LineSeriesComponent implements OnDestroy {
       if (categoryIndex < 0) {
         return null;
       }
-      const entries = this.plotted().flatMap((entry) => {
+      const focused = this.focusedSeries();
+      const reporting = focused
+        ? this.plotted().filter((entry) => entry.series.id === focused)
+        : this.plotted();
+      const entries = reporting.flatMap((entry) => {
         const marker = entry.markers.find(
           (candidate) => candidate.categoryIndex === categoryIndex,
         );
