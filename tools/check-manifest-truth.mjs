@@ -678,8 +678,6 @@ function phantomTokens(text, before, after, location) {
   return phantoms;
 }
 
-// A deleteList row or an informational line naming a hook that existed at neither tag tells the
-// consumer to delete, or to set, something no release ever shipped.
 export function checkFileProse(doc, before, after, prevTag, tag) {
   const defects = [];
   for (const [index, line] of (doc.informational ?? []).entries())
@@ -746,7 +744,6 @@ function report(
     );
     process.exit(1);
   }
-  // "Clean" must not read as "complete": the fraction says how much of the surface was read at all.
   const read = coverage
     ? `${coverage.read} of ${coverage.values} old/new value(s) were read against their boundary`
     : 'every old/new was read against its boundary';
