@@ -14,7 +14,7 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**113 open — 1 P1, 37 P2, 75 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**112 open — 1 P1, 37 P2, 74 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 1
 
@@ -73,7 +73,7 @@ item and nothing else.
 - **Localization — every user-visible string is a hardcoded literal (recorded 2026-08-27, from the ITB Workspace picker report)**
   - Every user-visible string in the library is a hardcoded English literal — VALIDATED 2026-08-27 against 0.11.0; Stas: defer the whole thing, no code
 
-### P3 — 75
+### P3 — 74
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - A whole-page keyboard walk is not measurable with the tools here, and the failed
@@ -110,8 +110,6 @@ item and nothing else.
   - One idea, two contracts: a bar stacks through `segments`, a column through `stack`
 - **A journey canvas the mm-ecm prototype could not use (recorded 2026-09-16)**
   - Journey / flow diagram - no component draws a branching node-and-edge canvas
-- **The eleven styling hooks one consumer reached past the surface for (recorded 2026-09-21)**
-  - `ds-menu-item` - every hook the ask wanted already shipped; close it or answer the consumer
 - **Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)**
   - A2 - the remaining directives, after A1 prices the seam
   - B1 - `DS_CONFIG.prototype: true` is BEHAVIOUR only. For bytes, use a build-time flag
@@ -894,7 +892,7 @@ the ends only), table (`--ds-table-head-padding-top` / `-bottom`), badge
 Three stay written down: one with an open action, and two answered by API that already existed,
 because both are the kind of ask that comes back.
 
-- [ ] **[P3] `ds-menu-item` - every hook the ask wanted already shipped; close it or answer the consumer.** Verified against `a1ff1f49`, the commit that recorded the ask: `--ds-menu-item-pad-x` / `-pad-y` carried the padding, `--ds-menu-item-label-weight` the weight, and a quiet row had both an input and a hook of its own - `quiet` renders `.quiet`, coloured by `--ds-menu-item-quiet-label-color`; `error` does the same for a destructive row. The two token names were the abbreviations `b3e0cace` spelled out, which is the cause the other asks had too: unguessable from the CSS property.
+- [x] **[P3] `ds-menu-item` - every hook the ask wanted already shipped, and the consumer confirmed it.** Verified against `a1ff1f49`, the commit that recorded the ask: `--ds-menu-item-pad-x` / `-pad-y` carried the padding, `--ds-menu-item-label-weight` the weight, and a quiet row had both an input and a hook of its own - `quiet` renders `.quiet`, coloured by `--ds-menu-item-quiet-label-color`; `error` does the same for a destructive row. The two token names were the abbreviations `b3e0cace` spelled out, which is the cause the other asks had too: unguessable from the CSS property.
 
   The consumer's rule, `mm-ecm-platform-kb` `prototype/projects/agent-portal/src/styles.scss`, written by Mikhail Shyshla on 2026-07-31 in `35ed3969`:
 
@@ -909,7 +907,7 @@ because both are the kind of ask that comes back.
 
   **The per-item override works, measured 2026-09-22.** A page reproducing the resolver shape - `ds-menu-item { --_label: var(--ds-menu-item-label-color, …) }`, the token set on an ancestor `ds-menu` and again on `ds-menu-item.is-quiet` - resolves `navy` on an ordinary item and `darkorange` on the quiet one. A declaration on the element beats one inherited into it, so the premise that the token "cannot be set per item" does not hold.
 
-  **Answered 2026-09-22.** The consumer was told which names carry padding, weight and colour at v0.13.3, that `quiet` and `error` are inputs with their own colour tokens, and that the label colour resolves on the ITEM host, so a declaration on one item beats the menu's. Also that `-pad-x` / `-pad-y` and `-label-weight` are spelled out in the next release. Open only until they confirm against their own build.
+  **Closed 2026-09-22, confirmed on their build.** They applied `--ds-menu-item-pad-x` / `-pad-y`, `--ds-menu-item-label-weight` and a per-item `--ds-menu-item-label-color`, and both doubled-class rules are gone. The label colour resolves on the ITEM host, so a declaration on one item beats the menu's. They keep their own `is-quiet` class rather than the `quiet` input, which the token route serves either way.
 
 - [x] **[P3] `ds-autocomplete` cannot pad its input past an overlaid search glyph - answered by the
   prefix slot, not a padding token.** `[dsAutocompletePrefix]` projects into an in-flow
