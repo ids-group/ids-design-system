@@ -170,7 +170,7 @@
     {
       "id": "toast-table-subclass-members-moved",
       "kind": "behavior",
-      "old": "class MyThing extends ToastComponent | ToastRegionComponent | ToastService | TableComponent | BannerComponent | AlertComponent",
+      "old": "ToastComponent, ToastRegionComponent, ToastService, TableComponent, BannerComponent, AlertComponent",
       "new": null,
       "appliesWhen": "Only a class that extends one of those six. Template users and service callers need nothing.",
       "pitfall": "Every new name is private or protected, which is no protection - a redeclared private fails with TS2415 exactly as a public collision does. And an `override promoteFromQueue` or `override role` now overrides nothing: it compiles clean and silently never runs.",

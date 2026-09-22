@@ -4,7 +4,7 @@
     {
       "id": "picker-subclass-members-grew",
       "kind": "behavior",
-      "old": "class MySelect extends SelectComponent, class MyMultiSelect extends MultiSelectComponent, class MyAutocomplete extends AutocompleteComponent",
+      "old": "SelectComponent, MultiSelectComponent, AutocompleteComponent",
       "new": null,
       "action": "Build after upgrading, and rename or mark `override` every member of yours the compiler reports as colliding.",
       "note": "All three pickers gained members for the new inputs and outputs. Subclassing a DS component is unsupported but consumers do it, and a redeclared member collides whether it is public or protected. The compiler enumerates every collision, so a build is the whole check and no list here could stay current.",
@@ -27,7 +27,7 @@
     {
       "id": "table-subclass-members-grew",
       "kind": "behavior",
-      "old": "class MyTable extends TableComponent",
+      "old": "TableComponent",
       "new": null,
       "action": "Build after upgrading, and rename or mark `override` every member of yours the compiler reports as colliding.",
       "note": "TableComponent gained members for row expansion: expandMode, expandAllToggle, rowExpanded, rowCollapsed and the protected helpers behind the header toggle. A redeclared member collides whether it is public or protected, and the compiler enumerates every one, so a build is the whole check.",
@@ -46,7 +46,7 @@
     {
       "id": "loading-overlay-subclass-members-grew",
       "kind": "behavior",
-      "old": "class MyOverlay extends LoadingOverlayComponent",
+      "old": "LoadingOverlayComponent",
       "new": null,
       "action": "Build after upgrading, and rename or mark `override` every member of yours the compiler reports as colliding.",
       "note": "LoadingOverlayComponent gained `inertContent`. A redeclared member collides whether it is public or protected, and the compiler enumerates every one, so a build is the whole check.",
@@ -65,7 +65,7 @@
     {
       "id": "toast-region-subclass-members-grew",
       "kind": "behavior",
-      "old": "class MyToastRegion extends ToastRegionComponent",
+      "old": "ToastRegionComponent",
       "new": null,
       "action": "Nothing unless you subclass ToastRegionComponent and declare a member of those names: rename yours, or add `override` if you meant to replace ours.",
       "note": "ToastRegionComponent gained six members: the fields `timers`, `position` and `newestFirst`, and the methods `show`, `startCountdown` and `clearCountdown`. The auto-dismiss countdown moved into the region, because only it knows when a toast became visible — started in the service, a toast queued behind `maxVisible` expired without ever being shown. `newestFirst` puts the newest toast nearest the anchor.",

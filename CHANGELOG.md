@@ -1802,11 +1802,10 @@
     `--chart-line-width-bold`, `--chart-dot-r` becomes `--chart-dot-radius`, and
     `--chart-dot-r-active` becomes `--chart-dot-radius-active`.
 
-  Three more are REMOVED rather than renamed, because no chart draws what they named and the
-  `--ds-chart-*` token each fed reached no rule: `--chart-axis-title`, `--chart-grid-line-strong`
-  and `--chart-tick-size`. Handle `--chart-grid-line-strong` before `--chart-grid-line`: the short
-  name is a prefix of the long one, and a prefix-blind sweep renames this one instead of deleting
-  it.
+  Three more are REMOVED rather than renamed, because no chart draws what they named and no rule
+  read them: `--chart-axis-title`, `--chart-grid-line-strong` and `--chart-tick-size`. Handle
+  `--chart-grid-line-strong` before `--chart-grid-line`: the short name is a prefix of the long
+  one, and a prefix-blind sweep renames this one instead of deleting it.
 
   The sequential and divergent VALUES are unchanged in both themes; the eight categorical values are
   not — they are retuned in this same release, so a rename there lands a different colour rather than
@@ -2341,9 +2340,6 @@
 | `ds-stat { --ds-stat-value-white-space: normal; }` written only to stop a long value painting over the tile beside it | the value clips by default, so it no longer escapes its card | nothing — keep the hook only where you want the value wrapped and the tile taller |
 | `ds-stat .value { overflow: hidden; text-overflow: ellipsis; }` — your own clip on the value | the component clips it, and with `overflow: clip` plus a clip margin, so descenders survive where `hidden` shaved them | nothing |
 | `.cell-text-pop` — a rule sizing or colouring the table's full-value popover | the popover is gone; a clipped cell opens a tooltip instead | `--ds-tooltip-*`, if the panel needs changing at all |
-| `--ds-chart-axis-title-color` | no chart draws an axis title, so the token reached no rule and setting it changed nothing | nothing |
-| `--ds-chart-grid-line-strong-color` | no chart draws a strong gridline, so the token reached no rule | nothing |
-| `--ds-chart-tick-size` | no chart draws tick marks on its axes, so the token reached no rule | nothing |
 
 ## 0.12.3 — 2026-09-10
 
@@ -4438,7 +4434,7 @@ workaround written against a hook that only landed in this release.
 | `--ds-button-label-color-disabled` pinned on a tonal button to make its disabled state visible, most likely only in the dark theme | The default disabled-label recipe carries it |
 | `count.toLocaleString('en-US')` (or any hand-rolled formatting) inside a `ds-stat` binding, because `[value]="count \| number"` would not typecheck | The pipe binds now, and it reads `LOCALE_ID` instead of a pinned locale |
 | A `::ng-deep ds-table tr:hover .some-cell { color; text-decoration }` rule to make one cell read as the row's link target | `interactive: true` on that column, retuned with `--ds-table-cell-link-color` / `--ds-table-cell-link-decoration` |
-| `ds-icon`, `field-message`, `align-items: center` | A glyph rendered by hand beside a field's error or warning text, or a margin nudge added to line one up against the old centred message row. Replace with: the built-in state glyph (error / warning / success carry one now), retuned through DS_CONFIG.field.stateIcons or messageIcon, with --ds-field-message-icon-gap / -offset for the spacing. |
+| `name="error"`, `name="warn"`, `.field-message` | A `ds-icon` rendered by hand beside a field's error or warning text, or a rule on the message row nudging it into line against the old centred layout. Replace with: the built-in state glyph (error / warning / success carry one now), retuned through DS_CONFIG.field.stateIcons or messageIcon, with --ds-field-message-icon-gap / -offset for the spacing. |
 | `box-shadow: none`, `--ds-field-focus-shadow` | A rule that killed one of the two focus rings a field used to paint - on an inner input, or by re-declaring the field focus shadow. SCOPE, and it matters: this release suppresses the inner ring on ds-search, ds-autocomplete, ds-date-picker, ds-number-stepper and ds-field-group ONLY. A workaround on ds-input or ds-textarea is still load-bearing here - deleting it brings the double ring back. Leave those two until you are on the release that names them. Also leave any rule you wrote against the universal :where(:focus-visible) base indicator itself: that rule is still the one this library ships. Replace with: nothing: the field paints one ring now. |
 | `padding-block`, `line-height`, `option-label` | A padding or line-height override added to an option label, a clipped table cell or a breadcrumb to stop the descenders being shaved. Replace with: nothing: the clip carries a --space-1 margin now, at the same row height. |
 

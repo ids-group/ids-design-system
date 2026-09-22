@@ -123,7 +123,7 @@
     {
       "id": "fields-shared-base-class-members",
       "kind": "behavior",
-      "old": "class MyField extends TextareaComponent (or any DS field)",
+      "old": "TextareaComponent, InputComponent",
       "new": null,
       "action": "Only if you SUBCLASS a DS field and declare a member named `hint`, `error`, `warning`, `errors`, `invalid`, `touched` or `reserveMessage`: it is an inherited member now rather than an own member, so an incompatible re-declaration fails where it may previously have shadowed. Redeclaring with the same shape still works.",
       "appliesWhen": "No public API changed — every input keeps its name, type, default and documentation, and the generated docs reference lost nothing. `success`, `label`, `required` and `optional` were deliberately NOT lifted and remain per-component.",

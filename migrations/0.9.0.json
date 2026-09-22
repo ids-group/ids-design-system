@@ -226,7 +226,7 @@
     {
       "id": "input-signal-types-widened-by-transforms",
       "kind": "behavior",
-      "old": "class MyInput extends InputComponent (or NumberStepperComponent / TextareaComponent)",
+      "old": "InputComponent, NumberStepperComponent, TextareaComponent",
       "new": null,
       "action": "Drop the annotation, or widen it to `InputSignalWithTransform`. `ds-input.focus()` and `ds-textarea.focus()` also gained `override`, for the same subclass-only reason.",
       "appliesWhen": "NO ACTION for a caller: the WRITE type widened, so every binding that compiled still compiles, and the READ type is unchanged. Two shapes only are affected — an explicit annotation naming the old type, and a subclass that re-declares one of these.",

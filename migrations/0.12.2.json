@@ -5,7 +5,7 @@
       "id": "subclass-members-grew",
       "kind": "behavior",
       "surface": "typescript",
-      "old": "class MyThing extends TableComponent | SidenavGroupComponent",
+      "old": "TableComponent, SidenavGroupComponent",
       "new": null,
       "action": "Build after upgrading, then rename or mark `override` any member the compiler reports as colliding.",
       "appliesWhen": "Only a class that extends TableComponent or SidenavGroupComponent. A consumer who uses the elements in a template needs nothing — no existing input, output, token or class changed name or type in this release.",

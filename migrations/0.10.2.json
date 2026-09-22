@@ -4,7 +4,7 @@
     {
       "id": "resolved-readbacks-are-public",
       "kind": "behavior",
-      "old": "class MyThing extends ButtonComponent (or any DS component)",
+      "old": "ButtonComponent",
       "new": null,
       "action": "Only if you SUBCLASS a DS component and declare a member with one of those names: it is a public member of the base now, so an incompatible re-declaration needs `override` or a rename.",
       "appliesWhen": "No action for a consumer that composes. Members a host can derive from its own bindings stay protected on purpose: `invalidResolved`, `railResolved`, `sortModeResolved`, `filterModeResolved`.",
@@ -222,27 +222,6 @@
       "verify": "No SearchComponent subclass declares `protected clear()`."
     },
     {
-      "id": "time-columns-onkey-signature",
-      "kind": "behavior",
-      "old": "TimeColumnsComponent.onKey",
-      "new": null,
-      "action": "Read the current signature of the internal `TimeColumnsComponent.onKey` from the package's type declarations and match it, or drop the override.",
-      "appliesWhen": "It is `protected`, so no consumer calls it and templates are unaffected. The component is internal to ds-time-picker and subclassing it was never supported.",
-      "note": "The parameter list changed, so an overriding subclass has a signature that no longer matches the base (TS2416).",
-      "searchHints": [
-        "extends TimeColumnsComponent",
-        "onKey",
-        "ds-time-columns",
-        "ds-time-picker"
-      ],
-      "surface": "typescript",
-      "detect": [
-        "onKey(",
-        "extends TimeColumnsComponent"
-      ],
-      "verify": "No subclass of the internal TimeColumnsComponent overrides `onKey` with the old parameter list."
-    },
-    {
       "id": "overlay-outside-guard-tests-the-trigger",
       "kind": "behavior",
       "old": "ds-select",
@@ -353,6 +332,7 @@
     }
   ],
   "informational": [
+    "ds-time-picker: the protected `TimeColumnsComponent.onKey` changed its parameter list. The class is internal to the time picker and not exported, so no consumer can subclass it and there is nothing to migrate.",
     "ds-table: `TableRowAction` gained `hidden?: (row) => boolean` and `disabledReason?: string | ((row) => string)`. Purely additive -- an existing config behaves exactly as before. Reach for `hidden` where an action does not APPLY to a row rather than `disabled`, which greys an item that is always present; a row with every item hidden now renders no kebab instead of an empty menu.",
     "ds-menu-item: new `description` input renders a standing second line and wires `aria-describedby`. If you hand-rolled that line by projecting your own span into the item, move it to the input -- yours lands INSIDE the accessible name, the input's does not.",
     "ds-search: `clear()` is now public. A host-owned Clear button should call it rather than writing '' into `value`, which does not cancel an armed debounce when the text already matches what the control last pushed.",
@@ -487,11 +467,11 @@
         "style"
       ],
       "find": [
-        "ds-icon",
-        "field-message",
-        "align-items: center"
+        "name=\"error\"",
+        "name=\"warn\"",
+        ".field-message"
       ],
-      "why": "A glyph rendered by hand beside a field's error or warning text, or a margin nudge added to line one up against the old centred message row.",
+      "why": "A `ds-icon` rendered by hand beside a field's error or warning text, or a rule on the message row nudging it into line against the old centred layout.",
       "replaceWith": "the built-in state glyph (error / warning / success carry one now), retuned through DS_CONFIG.field.stateIcons or messageIcon, with --ds-field-message-icon-gap / -offset for the spacing"
     },
     {

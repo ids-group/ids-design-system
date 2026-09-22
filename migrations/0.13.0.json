@@ -204,10 +204,10 @@
       "surface": "style",
       "old": "--chart-cat-1, --chart-cat-2, --chart-cat-3, --chart-cat-4, --chart-cat-5, --chart-cat-6, --chart-cat-7, --chart-cat-8",
       "new": "--chart-categorical-1, --chart-categorical-2, --chart-categorical-3, --chart-categorical-4, --chart-categorical-5, --chart-categorical-6, --chart-categorical-7, --chart-categorical-8",
-      "action": "Replace the prefix `--chart-cat-` with `--chart-categorical-` on all eight series tokens, keeping the number.",
+      "action": "Where you re-declare one to recolour a series, declare the public hook instead: `--chart-cat-N` becomes `--ds-chart-series-N-color`, keeping the number. Everywhere else, replace the prefix `--chart-cat-` with `--chart-categorical-`, keeping the number.",
       "appliesWhen": "Any stylesheet of yours that reads or re-declares one of the eight, including a theme block. A `--chart-cat-` variable of your own is out of scope, and the eight `--ds-chart-series-1-color` … `--ds-chart-series-8-color` hooks are new rather than renamed.",
       "pitfall": "The old name is inert, not invalid. A `var()` on it resolves to nothing, which makes the declaration holding it invalid at computed-value time and drops it whole — a series loses its fill rather than falling back to a default, and nothing is reported.",
-      "note": "The palette is spelled out end to end now, so a name can be searched for without being decoded first. The eight VALUES are retuned in the same release, so the rename lands a different colour rather than the same one under a new name: the set is rebuilt around coral and teal, every hue clears 3:1 on white, and no hue falls between 35 and 130, where a colour cannot be both rich and legible. Slot 8 is a neutral now. Read each value back from the installed package rather than assuming the one you saw before.",
+      "note": "The palette is spelled out end to end now, so a name can be searched for without being decoded first. The eight VALUES are retuned in the same release, so the rename lands a different colour rather than the same one under a new name: the set is rebuilt around coral and teal, every hue clears 3:1 on white, and no hue falls between 35 and 130, where a colour cannot be both rich and legible. Slot 8 is a neutral now. Read each value back from the installed package rather than assuming the one you saw before. `--ds-chart-series-N-color` is the documented override; the `--chart-categorical-` family is the palette it reads.",
       "searchHints": [
         "--chart-cat-",
         "chart-cat"
@@ -265,7 +265,7 @@
       "appliesWhen": "Any stylesheet of yours that declares `--chart-grid-line-strong`. The plain `--chart-grid-line` is a separate token, is renamed rather than removed, and has its own entry.",
       "pitfall": "`--chart-grid-line` is a prefix of this name, so a sweep that renames the shorter one first rewrites this one into `--chart-grid-line-color-strong` instead of deleting it, and leaves a declaration nothing reads.",
       "restore": null,
-      "note": "The token fed `--ds-chart-grid-line-strong-color`, which reached no rule, so setting either already painted nothing.",
+      "note": "No rule read the token, so setting it already painted nothing.",
       "searchHints": [
         "--chart-grid-line-strong",
         "grid-line-strong"
@@ -310,7 +310,7 @@
       "appliesWhen": "Any stylesheet of yours that declares `--chart-axis-title`.",
       "pitfall": "It is a prefix of nothing and nothing is a prefix of it, so a sweep is safe — but the neighbouring `--chart-axis-line` and `--chart-axis-label` are RENAMED rather than removed, and deleting those loses the axis.",
       "restore": null,
-      "note": "The token fed `--ds-chart-axis-title-color`, which reached no rule, so setting either already painted nothing.",
+      "note": "No rule read the token, so setting it already painted nothing.",
       "searchHints": [
         "--chart-axis-title"
       ],
@@ -318,6 +318,25 @@
         "--chart-axis-title"
       ],
       "verify": "No stylesheet names `--chart-axis-title`."
+    },
+    {
+      "id": "chart-tick-size-token-removed",
+      "kind": "removed-api",
+      "surface": "style",
+      "old": "--chart-tick-size",
+      "new": null,
+      "action": "Delete the declaration. No chart draws tick marks on its axes, so the token fed nothing.",
+      "appliesWhen": "Any stylesheet of yours that declares `--chart-tick-size`. The checkbox's `--check-tick-size` is unrelated and stays.",
+      "restore": null,
+      "note": "No rule read the token, so setting it already sized nothing.",
+      "searchHints": [
+        "--chart-tick-size",
+        "tick-size"
+      ],
+      "detect": [
+        "--chart-tick-size"
+      ],
+      "verify": "No stylesheet names `--chart-tick-size`."
     },
     {
       "id": "chart-line-width-bold-token-renamed",
@@ -436,7 +455,7 @@
     "`routerLinkActiveOptions` and `ariaCurrent` are public on the same three components — the first moves what the `active` class matches, the second overrides what the link announces. Neither is needed for the corrected default.",
     "`ds-field-group` takes `error`, `hint` and `warning` — the same message inputs every field takes, resolved by the same code. `error` turns the state on and carries the text; `invalid` stays the flag for when the text lives in a form-level summary. Every segment gains `aria-invalid` while the group is in error and points at the one message through `aria-describedby`. Additive: a group binding neither renders exactly as before.",
     "`ds-bar-chart` is new — horizontal bars with a label, a value and a percentage per row, an optional data table, and a `color` override per row.",
-    "A public override layer sits over the chart palette: `--ds-chart-series-1-color` through `--ds-chart-series-8-color`, plus `--ds-chart-axis-line-color`, `--ds-chart-axis-label-color`, `--ds-chart-axis-title-color`, `--ds-chart-axis-font-size`, `--ds-chart-grid-line-color`, `--ds-chart-grid-line-strong-color`, `--ds-chart-hover-bg-color`, `--ds-chart-cursor-line-color`, `--ds-chart-tooltip-bg-color`, `--ds-chart-tooltip-text-color`, `--ds-chart-tooltip-border-color`, `--ds-chart-bar-gap`, `--ds-chart-line-width`, `--ds-chart-line-width-bold`, `--ds-chart-dot-radius`, `--ds-chart-dot-radius-active` and `--ds-chart-tick-size`. Each defaults to the palette token behind it, so nothing moves until you set one; set these rather than the palette, and recolouring one series costs one declaration instead of the whole ramp.",
+    "A public override layer sits over the chart palette: `--ds-chart-series-1-color` through `--ds-chart-series-8-color`, plus `--ds-chart-axis-line-color`, `--ds-chart-axis-label-color`, `--ds-chart-axis-font-size`, `--ds-chart-grid-line-color`, `--ds-chart-hover-bg-color`, `--ds-chart-cursor-line-color`, `--ds-chart-tooltip-bg-color`, `--ds-chart-tooltip-text-color`, `--ds-chart-tooltip-border-color`, `--ds-chart-bar-gap`, `--ds-chart-line-width`, `--ds-chart-line-width-bold`, `--ds-chart-dot-radius` and `--ds-chart-dot-radius-active`. Each defaults to the palette token behind it, so nothing moves until you set one; set these rather than the palette, and recolouring one series costs one declaration instead of the whole ramp.",
     "`TableRowAction` gains `divider?: boolean`, which draws a line above the item — for the destructive tail that colour alone was separating. Additive, and ignored on the first item because a line at the top of a menu has nothing on one side of it.",
     "A field that is disabled no longer sets `aria-invalid`, on all fifteen. Nothing renders differently — the error paint already excluded disabled — and the message text still shows. Only a test asserting `aria-invalid` on a disabled control is affected.",
     "Five chart components ship: `ds-bar-chart`, `ds-column-chart`, `ds-donut-chart`, `ds-funnel-chart` and `ds-line-chart`. Each takes a `caption`, a `summary` for the accessible name, a `loading` skeleton, an `emptyText` and a `valueFormat`, and each offers its numbers again as a table under a `dataTable: 'toggle' | 'visible' | 'none'` disclosure. All new; nothing existing changes.",
@@ -498,33 +517,6 @@
       ],
       "why": "importing it to write `[queryParams]` or `[fragment]` on a `<ds-button>` put a second RouterLink on the host that disagreed with the anchor\\u2019s about the destination",
       "replaceWith": "the component\\u2019s own inputs; keep the import where you use `RouterLink` on your own anchors"
-    },
-    {
-      "id": "chart-axis-title-colour-hook",
-      "surface": "style",
-      "find": [
-        "--ds-chart-axis-title-color"
-      ],
-      "why": "no chart draws an axis title, so the token reached no rule and setting it changed nothing",
-      "replaceWith": "nothing"
-    },
-    {
-      "id": "chart-strong-gridline-hook",
-      "surface": "style",
-      "find": [
-        "--ds-chart-grid-line-strong-color"
-      ],
-      "why": "no chart draws a strong gridline, so the token reached no rule and setting it changed nothing",
-      "replaceWith": "nothing"
-    },
-    {
-      "id": "chart-axis-tick-size-hook",
-      "surface": "style",
-      "find": [
-        "--ds-chart-tick-size"
-      ],
-      "why": "no chart draws tick marks on its axes, so the token reached no rule and setting it changed nothing",
-      "replaceWith": "nothing"
     }
   ]
 }

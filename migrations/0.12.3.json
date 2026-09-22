@@ -30,7 +30,7 @@
       "id": "exported-class-members-grew",
       "kind": "behavior",
       "surface": "typescript",
-      "old": "class MyControl extends CheckboxComponent",
+      "old": "ButtonComponent, CheckboxComponent, RadioComponent, SwitchComponent",
       "new": null,
       "action": "Build after upgrading, then rename or mark `override` any member the compiler reports as colliding.",
       "appliesWhen": "Only a class that extends ButtonComponent, CheckboxComponent, RadioComponent or SwitchComponent. A consumer who uses the elements in a template needs nothing from this item.",
