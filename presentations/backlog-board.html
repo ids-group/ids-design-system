@@ -180,7 +180,8 @@
 
   <!-- raw docs/todo.md and docs/done.md embedded verbatim (as of 2026-09-22) so the popover works offline over file://
        Regenerating: swap both blocks for the current files, then rebuild the cards and MAP from the todo.md index. -->
-  <script type="text/plain" id="todo-md"># DS — improvements backlog
+  <script type="text/plain" id="todo-md">
+# DS — improvements backlog
 
 Five buckets, and the bucket is the first sort key: **Bugs** is something already wrong in a
 surface a consumer reads, **Asks** has a person behind it, **Decisions** is waiting on a verdict
@@ -196,18 +197,17 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**117 open — 1 P1, 34 P2, 82 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**118 open — 1 P1, 33 P2, 84 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 1
 
 - **Framework & forms**
   - Upgrade to Angular 22 — and re-verify the signal-forms work against it, because one of its breaking changes lands exactly there
 
-### P2 — 34
+### P2 — 33
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Nothing catches a shell that rings on `:focus-within` when it means the keyboard
-  - The overlay entrance no longer drops, and it does not grow either (Stas asked for scale plus opacity, 2026-09-04)
   - Transitions are missing or wrong in places, and nothing says where (Stas, 2026-09-04)
   - `_focus.scss`'s top-level CSS is copied into 33 component style strings
   - Warning and success fields show a mismatched halo
@@ -252,7 +252,7 @@ item and nothing else.
   - The chassis is declared nine times and shared once - about 450 lines of it
   - The template state head and the figcaption rule are copied verbatim, nine times each
 
-### P3 — 82
+### P3 — 84
 
 - **What v0.13.3 added and the docs site never shows (measured 2026-09-22)**
   - Fifteen new inputs have no demo and no prose on the docs site
@@ -313,6 +313,8 @@ item and nothing else.
   - Inspect mode — ASKED 2026-08-05, Stas: NOT NOW (stays open with the pilot scope below)
 - **The hex readout rolls its glyphs like a mechanical board (recorded 2026-09-02, Stas)**
   - Dragging the picker retypes the hex value instantly; each glyph should ROLL to its new
+  - Does a dev warning name an error banner no screen reader will read?
+  - Does the picker list height become a public token, or stay behind `panelClass`?
 - **The field system — the two controls outside it, and the five with no box to paint**
   - CDK Menu adoption (option B) — parked
 - **Tooling**
@@ -454,15 +456,6 @@ Constraints and decisions that read as removable and are not.
   is about the element type, not the selector. Candidate: flag `:focus-within` in a component whose
   template has `type="checkbox"`, `type="radio"`, or a `button`, and leave text fields alone.
 
-
-- [ ] **[P2] The overlay entrance no longer drops, and it does not grow either (Stas asked for scale plus opacity, 2026-09-04).** `_overlay-motion.scss:19` reads `--_overlay-enter-keyframes: var(--ds-overlay-enter-keyframes, ds-fade-in)`, so the 4px drop the ask named is gone. What was asked for was `ds-scale-in` - opacity AND growth out of the trigger edge; what shipped is opacity alone.
-  `--_ds-enter-y` survives at `:29`, computed per placement and read by nobody for a panel.
-  `ds-scale-in` is in `_surface-motion.scss` and `--_overlay-enter-origin` is already resolved per
-  placement, so the remaining change is still one keyframe name.
-  Check before switching it: drawer, bottom-sheet, alert and banner set their own `--_ds-enter-y`
-  and must keep travelling, and `prepareOverlayEnter()` stamps `data-ds-placement` before attach so
-  a mid-scroll CDK flip redirects rather than restarts - a scale entrance has to survive that flip.
-  **Stas: is fade alone the answer, or does the scale still owe you?**
 
 - [ ] **[P2] Transitions are missing or wrong in places, and nothing says where (Stas, 2026-09-04).**
   Asked for as a sweep: add the ones that are absent, correct the ones that are wrong. Two mechanical
@@ -1442,6 +1435,20 @@ Three defects the port surfaced by reading every component's template + SCSS aga
 
 # Decisions — waiting on Stas, not on work
 
+- [ ] **[P3] Does a dev warning name an error banner no screen reader will read?** Drawn in deck
+  `banner-announce-warning`, three options: stay silent, warn on every unannounced `error` or
+  `warning` banner, or warn only while `DS_CONFIG.banner.announce` is unset so the noise ends the
+  moment an app decides. It became answerable only when `announce` gained a third state: `null` is
+  untouched, `false` is a deliberate opt-out, and before that the two were indistinguishable. One
+  consumer's first pass over 43 banners missed ten.
+
+- [ ] **[P3] Does the picker list height become a public token, or stay behind `panelClass`?** Drawn
+  in deck `picker-list-height`. Two caps sit on one panel and the settable-looking one is not the
+  one that governs the visible rows: `--ds-dropdown-panel-max-height` caps the box and is forwarded,
+  `--picker-maxh` caps the list and is not. `panelClass` has expressed a per-picker list height
+  since 0.13.1; a public token would add a second way to say it, and `--picker-maxh` resolves at
+  `:root`, so forwarding it without the role guard would pin it inline on every open panel.
+
 None of these is blocked on effort. Each is a verdict, and most carry a deck that renders the options.
 
 ## Decks awaiting a verdict (re-audited 2026-09-20)
@@ -1471,6 +1478,7 @@ file** — the number moves; cite the filename.
 | 11 | `11-ds-bar-name-collision` | What the merged progress+meter is called, given `ds-bar` is a prefix of `ds-bar-chart`. | the `ds-bar` rename ask on the same board |
 | 12 | `12-banner-announce-warning` | Whether a dev warning names an error banner no screen reader will read. | the closed `banner.announce` ask, which left this open |
 | 13 | `13-picker-list-height` | Whether the picker list height becomes a public token or stays behind `panelClass`. | the closed `--picker-maxh` ask, same shape |
+| 14 | `14-surface-entrance-motion` | What toast, banner and alert enter with: fade only, slide, or the scale the overlay panels now use. | `--ds-*-enter-offset` on all three, which `ds-fade-in` does not read |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
@@ -1986,8 +1994,9 @@ _Closed 2026-08-07 from a consumer report: `ds-autocomplete` had no chip cap, so
 - [ ] **[P3] A chapter list reaches only sections whose headings are `h3.block-title`.** `docs-section` derives its chapters by walking that one selector, so a section that titles its blocks any other way contributes nothing and its nav item shows no caret — silently, because there is no error to raise for markup that simply does not match. Eleven sections on the Data display page do match; nothing audits the rest. **Fix by** either normalising the remaining sections onto `h3.block-title` or widening the walk to every `h3` inside the section and letting the heading opt out with an attribute. **A check would say which**: count sections whose `h3` elements carry the class against those that have `h3` at all, and fail when the two disagree — the same shape as `check-docs-attrs`. Worth doing before anyone concludes a section "has no chapters" when it has 20.
 
 - [ ] **[P3] The active chapter is not scrolled into the rail's own viewport.** With 35 chapters under `ds-table`, the highlighted one can sit outside the sidebar's scroll — the reader watches the URL fragment change while the list shows no movement, which is the same "where am I" problem the chapter list was added to solve. Section items never had this: there are at most ~20 per group and the group collapses. **Fix by** scrolling the active chapter link into view within the nav's scroller when `activeChapter` changes — `scrollIntoView({ block: 'nearest' })` on the element, guarded so a click the reader just made does not fight their own scroll. **The trap:** the nav is itself inside the layout's rail, so a naive `scrollIntoView` scrolls the PAGE as well; it has to be constrained to the nav container the way `onItem` constrains its scroll to the layout's scroller.
-  </script>
-  <script type="text/plain" id="done-md"># DS — completed work (archive)
+</script>
+  <script type="text/plain" id="done-md">
+# DS — completed work (archive)
 
 Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirrors the live backlog (`todo.md`); deep gap analysis stays in `docs/superpowers/ds-gap-analysis.md`.
 
@@ -5468,7 +5477,7 @@ mark, because each is waiting on a deck verdict rather than on work.
 - [x] **[P2] `ds-checkbox`, `ds-radio` and `ds-switch` cannot be named without a visible label — FIXED 2026-09-10.** All three take an `ariaLabel` input now, resolved the way `ds-select` already resolved its own: it applies only when `label` is empty, because setting it beside a visible label overrides what that label says. Not put on a shared base class — twenty-one components declare `readonly ariaLabel = input(...)` individually, so a base-class member would collide with every one of them; that unification is a repo-wide refactor, not part of this.
   **Verified in a browser, not by reading the templates:** the forms group page went from 31 focusable elements with no accessible name to 14, and every checkbox, radio and switch instance is named. The 23 label-less state demos in ds-docs took the name of the caption printed under each cell.
   **The 14 that remain are ds-docs authoring on two components that already had the input:** nine `ds-select` instances (the ones with a `value` and no `placeholder` — `placeholder` is a name source there, `value` is not) and five `ds-number-stepper` instances in size and behaviour demos. Both need a hand-written name rather than a caption, which is why they were left rather than auto-filled.
-  </script>
+</script>
 
   <script>
   (function () {
