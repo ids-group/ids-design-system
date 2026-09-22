@@ -47,9 +47,6 @@ export function domainMaxOf(
   return max;
 }
 
-/** Which palette slot a series draws from. Pinning `slot` keeps every other series
- *  on its own colour when one is hidden; left out, a series takes the colour of its
- *  position. */
 export function paletteIndexFor(
   slot: number | undefined,
   index: number,

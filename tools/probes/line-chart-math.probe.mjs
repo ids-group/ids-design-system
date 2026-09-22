@@ -19,9 +19,8 @@ const { areaPath, bandPath, lineSegments, linePath, polylinePoints } =
 const point = (x, y) => ({ categoryIndex: 0, x, y, value: 1 });
 const noDigitsLost = (text) => !/NaN|Infinity|undefined/.test(text);
 
-// The projection `g[dsLineSeries]` performs, written out: a reading becomes a point, a hole stays
-// a hole. The mark is an Angular component and cannot be imported here, so the segment assertions
-// below feed `lineSegments` the shape it produces rather than the shape's producer.
+// The mark is an Angular component and cannot be imported here, so the segment assertions feed
+// `lineSegments` the shape `g[dsLineSeries]` produces rather than the producer.
 const pointsFrom = (values) =>
   values.map((value, categoryIndex) =>
     value === null
@@ -157,7 +156,6 @@ check(
   '10,20 30,40.13',
 );
 
-// -------------------------------------------------------------------- curves
 check('linePath of nothing is an empty path', linePath([], 'linear'), '');
 check(
   'linePath of one point is a move alone',
@@ -203,7 +201,6 @@ check(
   '',
 );
 
-// ----------------------------------------------------------- areas and bands
 check(
   'an area follows its own line, so the fill and the stroke share an edge',
   areaPath([point(0, 10), point(10, 20)], 100, 'smooth'),
@@ -272,7 +269,6 @@ check(
 // ------------------------------------------------------- an empty series list
 check('no series means no domain', domainMaxOf([]), 0);
 
-// -------------------------------------------------------------------- colour
 check('a slot picks its own palette colour', paletteIndexFor(3, 0, 8), 2);
 check(
   'no slot falls back to the position',
