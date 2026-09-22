@@ -73,3 +73,22 @@ figcaption {
 }
 
 @include chart-frame.forced-colors;
+
+.cursor.cursor-in {
+  animation: ds-chart-mark-fade-in var(--ds-motion-chart-state-duration)
+    var(--ds-motion-chart-state-easing) both;
+}
+
+.cursor.cursor-out {
+  animation: ds-chart-mark-exit var(--ds-motion-chart-state-duration)
+    var(--ds-motion-chart-state-easing) both;
+}
+
+.category-band {
+  fill: var(--ds-chart-hover-bg-color);
+}
+
+.cursor-line {
+  stroke: var(--ds-chart-cursor-line-color);
+  stroke-width: 1;
+}

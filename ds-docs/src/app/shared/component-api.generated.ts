@@ -1866,6 +1866,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Pins the ceiling of the value axis. See `min`. Two charts drawn one subject at a time are only comparable when both are pinned."
       },
       {
+        "name": "cursor",
+        "kind": "input",
+        "type": "'none' | 'category'",
+        "union": [
+          "none",
+          "category"
+        ],
+        "default": "'none'",
+        "required": false,
+        "description": "Draws a band and a crosshair down the category under the pointer, and reports that category to every mark through `activeIndex`. `'none'`, the default, leaves the plot alone: a chart whose marks are the hover targets already answers per mark, and two affordances on one plot read as two different questions."
+      },
+      {
         "name": "maxSecondary",
         "kind": "input",
         "type": "number | null",

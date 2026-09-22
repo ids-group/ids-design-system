@@ -3249,6 +3249,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "description": "",
     "tokens": [
       {
+        "name": "--ds-motion-chart-state-duration",
+        "value": "—",
+        "notes": ""
+      },
+      {
+        "name": "--ds-motion-chart-state-easing",
+        "value": "—",
+        "notes": ""
+      },
+      {
         "name": "--ds-column-chart-column-max-width",
         "value": "48px",
         "notes": ""
@@ -3261,16 +3271,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-column-chart-cap-radius",
         "value": "var(--ds-chart-mark-cap-radius)",
-        "notes": ""
-      },
-      {
-        "name": "--ds-motion-chart-state-duration",
-        "value": "—",
-        "notes": ""
-      },
-      {
-        "name": "--ds-motion-chart-state-easing",
-        "value": "—",
         "notes": ""
       }
     ]

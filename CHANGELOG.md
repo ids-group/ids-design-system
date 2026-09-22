@@ -191,6 +191,17 @@
 
 ### Added
 
+- **`ds-chart` takes `cursor`.** `'category'` draws a band and a crosshair down the category
+  under the pointer, and reports that category to every mark through the shared scales.
+
+  ```html
+  <ds-chart cursor="category" [categories]="weeks">…</ds-chart>
+  ```
+
+  `'none'` is the default and what every chart drew before. A plot whose marks are themselves the
+  hover targets already answers per mark, and two affordances on one plot read as two different
+  questions - so the whole-column cursor is the opt-in, not the baseline.
+
 - **`ds-chart` takes `maxSecondary`.** It pins the ceiling of the second value axis the way
   `max` pins the first.
 

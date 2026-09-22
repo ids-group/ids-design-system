@@ -31,6 +31,7 @@ import type {
   ChartValueFormat,
 } from '@ids-group-ltd/ids-design-system/core';
 import {
+  categoryAt,
   CHART_AXIS_LABEL_GAP,
   CHART_BAND_PADDING,
   CHART_CATEGORY_LABEL_OFFSET,
@@ -95,6 +96,12 @@ export class ChartComponent implements ChartScales {
   readonly max = input<number | null>(null, {
     transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
   });
+
+  /** Draws a band and a crosshair down the category under the pointer, and reports that category
+   *  to every mark through `activeIndex`. `'none'`, the default, leaves the plot alone: a chart
+   *  whose marks are the hover targets already answers per mark, and two affordances on one plot
+   *  read as two different questions. */
+  readonly cursor = input<'none' | 'category'>('none');
 
   /** Pins the ceiling of the SECOND value axis, the way `max` pins the first. Two plots read
    *  against each other need both pinned, or the second rescales under them. */
@@ -502,6 +509,43 @@ export class ChartComponent implements ChartScales {
   });
 
   readonly zeroOffset = computed(() => this.yPosition()(0));
+
+  protected readonly cursorBand = computed(() => {
+    const index = this.activeIndex();
+    if (this.cursor() !== 'category' || index < 0) {
+      return null;
+    }
+    const width = this.bandWidth();
+    const plot = this.plot();
+
+    return {
+      x: this.xPosition()(index) - width / 2,
+      width,
+      top: plot.top,
+      bottom: plot.top + plot.height,
+    };
+  });
+
+  protected onPlotPointer(event: PointerEvent): void {
+    if (this.cursor() !== 'category') {
+      return;
+    }
+    const canvas = (event.currentTarget as Element).getBoundingClientRect();
+    const plot = this.plot();
+    // The canvas is scaled to its box, so a client x has to come back through the viewBox before
+    // it means anything to a plot measured in view units.
+    const viewX =
+      ((event.clientX - canvas.left) / canvas.width) * this.viewWidth();
+    this.setActiveIndex(
+      categoryAt(viewX, plot.left, plot.width, this.categories().length),
+    );
+  }
+
+  protected clearCursor(): void {
+    if (this.cursor() === 'category') {
+      this.setActiveIndex(-1);
+    }
+  }
 
   readonly activeIndex = signal(-1);
 

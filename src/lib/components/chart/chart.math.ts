@@ -418,3 +418,26 @@ export interface ChartStackOffset {
   readonly from: number;
   readonly to: number;
 }
+
+/** Which category a pointer at `x` is over, or `-1` outside the plot. Bands are equal and abut,
+ *  so the reading is a division rather than a search - and the half band at each end belongs to
+ *  the first and last category, which is where a reader aiming at the edge means to be.
+ *
+ *  @internal */
+export function categoryAt(
+  x: number,
+  plotLeft: number,
+  plotWidth: number,
+  categoryCount: number,
+): number {
+  if (categoryCount <= 0 || plotWidth <= 0 || !Number.isFinite(x)) {
+    return -1;
+  }
+  const offset = x - plotLeft;
+  if (offset < 0 || offset > plotWidth) {
+    return -1;
+  }
+  const band = plotWidth / categoryCount;
+
+  return Math.min(categoryCount - 1, Math.floor(offset / band));
+}

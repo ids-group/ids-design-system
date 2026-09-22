@@ -57,6 +57,30 @@
     input is what it builds.
   </p>
 
+  <h3 class="block-title t-h4">
+    Category cursor
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      cursor="category"
+    </code> draws a band and a crosshair
+    down the category under the pointer, and reports that category to every mark
+    through the shared scales. Off by default: a plot whose marks are themselves
+    the hover targets already answers per mark, and two affordances on one plot
+    read as two different questions.
+  </p>
+
+  <ds-chart
+    cursor="category"
+    caption="Hover the plot, not a mark"
+    [categories]="latencyWeeks"
+    [summary]="latencySummary">
+    <svg:g
+      dsColumnSeries
+      [data]="latencyColumns" />
+  </ds-chart>
+
   <ds-chart
     caption="Response time against the agreed range"
     [categories]="latencyWeeks"

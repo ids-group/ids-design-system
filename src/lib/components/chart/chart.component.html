@@ -30,7 +30,31 @@
         class="canvas"
         preserveAspectRatio="xMidYMid meet"
         [style.block-size.px]="viewHeight()"
-        [attr.viewBox]="viewBox()">
+        [attr.viewBox]="viewBox()"
+        (pointermove)="onPlotPointer($event)"
+        (pointerdown)="onPlotPointer($event)"
+        (pointerleave)="clearCursor()">
+        @if (cursorBand(); as band) {
+          <g
+            class="cursor"
+            aria-hidden="true"
+            animate.enter="cursor-in"
+            animate.leave="cursor-out">
+            <rect
+              class="category-band"
+              [attr.x]="band.x"
+              [attr.y]="band.top"
+              [attr.width]="band.width"
+              [attr.height]="band.bottom - band.top" />
+
+            <line
+              class="cursor-line"
+              [attr.x1]="band.x + band.width / 2"
+              [attr.x2]="band.x + band.width / 2"
+              [attr.y1]="band.top"
+              [attr.y2]="band.bottom" />
+          </g>
+        }
         <!-- Hidden as a group rather than on the svg: a projected mark may be focusable, and an
              aria-hidden ancestor would leave it reachable by Tab and invisible to a reader. -->
         <g
