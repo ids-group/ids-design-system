@@ -10,7 +10,6 @@ import type { ChartAxis } from '@ids-group-ltd/ids-design-system/core';
 import { CHART_SCALES } from './chart-scales.token';
 import { annotationMarks } from './chart.math';
 
-/** A label the caller pins to one reading, named by the category it sits under. */
 export interface ChartAnnotation {
   /** 0-based position along the category axis. */
   readonly categoryIndex: number;
@@ -22,9 +21,8 @@ export interface ChartAnnotation {
 }
 
 /**
- * Labels pinned to readings, so the point one names is legible with no pointer - a peak, a
- * launch, the month a number turned. The tooltip answers "what is this?" on hover; an annotation
- * answers it in a printed page or a screenshot.
+ * A tooltip answers "what is this?" on hover; an annotation answers it in a printed page or a
+ * screenshot.
  *
  * Takes the readings rather than finding them: a mark never sees the other marks, so the caller
  * that owns the series is the one that knows which value a label belongs to. Reports no domain -
