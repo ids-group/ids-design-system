@@ -298,7 +298,7 @@
       "new": "--ds-*-padding*",
       "surface": "style",
       "action": "In every stylesheet, rewrite the `-pad` segment of a `--ds-*` custom property to `-padding`: `--ds-button-pad-x` becomes `--ds-button-padding-x`, `--ds-card-pad` becomes `--ds-card-padding`, `--ds-table-head-pad-top` becomes `--ds-table-head-padding-top`.",
-      "appliesWhen": "52 tokens, every `--ds-*` whose name contains a `-pad` segment. `--ds-container-pad` is NOT one of them - it is renamed by `container-pad-is-the-surface-default` instead. A consumer's own `--pad-*` variable and any `-padding` token that was already spelled out are untouched. The segmented control's three part tokens change prefix as well as suffix and are covered end to end by `segmented-parts-are-segments`, so do not apply this rule to them.",
+      "appliesWhen": "51 tokens, every `--ds-*` whose name contains a `-pad` segment. `--ds-container-pad` is NOT one of them - it is renamed by `container-pad-is-the-surface-default` instead. A consumer's own `--pad-*` variable and any `-padding` token that was already spelled out are untouched. The segmented control's three part tokens change prefix as well as suffix and are covered end to end by `segmented-parts-are-segments`, so do not apply this rule to them.",
       "pitfall": "An unknown custom property is not an error. The declaration stays in the stylesheet, the component reads its own fallback, and the element draws at the default with nothing reported - no build error, no console warning.",
       "restore": null,
       "searchHints": [
@@ -307,7 +307,7 @@
         "--ds-"
       ],
       "verify": "No `--ds-` custom property with a `-pad` segment remains in any stylesheet.",
-      "note": "A consumer measured against this surface wrote 25 rules doubling a class to out-specify our compiled selector, and several of those properties were tokenised all along under a name they did not guess. The whole abbreviated set now carries its CSS property's name."
+      "note": "A hook is only usable if it can be found from the property being set: `--ds-tab-pad-x` and `--ds-menu-item-pad-y` were tokenised all along and read as missing to anyone searching for `padding`. The whole abbreviated set now carries its CSS property's name."
     },
     {
       "id": "token-weight-spelled-out-as-font-weight",
@@ -316,7 +316,7 @@
       "new": "--ds-*-font-weight",
       "surface": "style",
       "action": "Rewrite a `--ds-*` custom property ending in `-weight` to end in `-font-weight`: `--ds-menu-item-label-weight` becomes `--ds-menu-item-label-font-weight`.",
-      "appliesWhen": "17 tokens. One already spelled `-font-weight` is unchanged, and so is `--ds-button-border-width` and every other `-width`. The description list's term and details tokens change prefix as well as suffix and are covered end to end by `description-item-tokens-leave-the-list-namespace`, so do not apply this rule to them.",
+      "appliesWhen": "15 tokens. One already spelled `-font-weight` is unchanged, and so is `--ds-button-border-width` and every other `-width`. The description list's term and details tokens change prefix as well as suffix and are covered end to end by `description-item-tokens-leave-the-list-namespace`, so do not apply this rule to them.",
       "pitfall": "An unknown custom property is not an error. The declaration stays in the stylesheet, the component reads its own fallback, and the element draws at the default with nothing reported - no build error, no console warning.",
       "restore": null,
       "searchHints": [
@@ -368,7 +368,7 @@
       "new": "--ds-*-letter-spacing",
       "surface": "style",
       "action": "Rewrite a `--ds-*` custom property ending in `-tracking` to end in `-letter-spacing`: `--ds-button-tracking` becomes `--ds-button-letter-spacing`.",
-      "appliesWhen": "6 tokens. `tracking` is typographic jargon, not a CSS property, so nothing else is affected. The description list's term and details tokens change prefix as well as suffix and are covered end to end by `description-item-tokens-leave-the-list-namespace`, so do not apply this rule to them.",
+      "appliesWhen": "5 tokens. `tracking` is typographic jargon, not a CSS property, so nothing else is affected. The description list's term and details tokens change prefix as well as suffix and are covered end to end by `description-item-tokens-leave-the-list-namespace`, so do not apply this rule to them.",
       "pitfall": "An unknown custom property is not an error. The declaration stays in the stylesheet, the component reads its own fallback, and the element draws at the default with nothing reported - no build error, no console warning.",
       "restore": null,
       "searchHints": [
@@ -385,7 +385,7 @@
       "new": "--ds-*-text-transform",
       "surface": "style",
       "action": "Rewrite a `--ds-*` custom property ending in `-transform` to end in `-text-transform`: `--ds-field-label-transform` becomes `--ds-field-label-text-transform`.",
-      "appliesWhen": "3 tokens, all of them casing hooks. None of them ever carried the CSS `transform` property, which is what the old name read as. The description list's term and details tokens change prefix as well as suffix and are covered end to end by `description-item-tokens-leave-the-list-namespace`, so do not apply this rule to them.",
+      "appliesWhen": "2 tokens, both of them casing hooks. Neither ever carried the CSS `transform` property, which is what the old name read as. The description list's term and details tokens change prefix as well as suffix and are covered end to end by `description-item-tokens-leave-the-list-namespace`, so do not apply this rule to them.",
       "pitfall": "An unknown custom property is not an error. The declaration stays in the stylesheet, the component reads its own fallback, and the element draws at the default with nothing reported - no build error, no console warning.",
       "restore": null,
       "searchHints": [
@@ -565,23 +565,21 @@
         "template",
         "typescript"
       ],
-      "action": "Rename the `sortDir` binding on every `ds-table` to `sortDirection`, the exported type `SortDir` to `SortDirection`, and the `dir` field of `SortChangeEvent` to `direction`.",
+      "action": "Rename the `sortDir` binding on every `ds-table` to `sortDirection` and the exported type `SortDir` to `SortDirection`. `SortChangeEvent` keeps its `dir` field, now typed `SortDirection`.",
       "appliesWhen": "The table's sort family only. `sortKey`, `sortMode` and `sortingOrder` keep their names.",
       "pitfall": "An unknown static attribute is not an error: Angular leaves `sortDir=\"asc\"` on the DOM, the input keeps its default, and the table renders sorted by nothing with no warning. A `[sortDir]` property binding does fail the build; a plain attribute does not.",
       "restore": null,
       "searchHints": [
         "sortDir",
         "SortDir",
-        "sortChange",
-        ".dir"
+        "sortChange"
       ],
       "detect": [
         "sortDir",
         "SortDir",
-        "order: ",
-        "dir:"
+        "order: "
       ],
-      "verify": "No `sortDir`, `SortDir` or `SortChangeEvent.dir` remains.",
+      "verify": "No `sortDir` binding and no `SortDir` type remains; `SortChangeEvent.dir` is still read as `dir`.",
       "note": "`Dir` reads as a directory. Rename `sortDirChange` first - `sortDir` is a substring of it, and a plain replace would corrupt the longer name."
     },
     {
@@ -651,7 +649,7 @@
       "old": "LineChartGaps | LineSeriesGaps",
       "new": "ChartGaps",
       "surface": "typescript",
-      "action": "Rename both `LineChartGaps` and `LineSeriesGaps` to `ChartGaps`, imported from the package root or from `@ids-group-ltd/ids-design-system/core`.",
+      "action": "Rename `LineChartGaps`, and `LineSeriesGaps` where it was imported from the chart entry point, to `ChartGaps`, imported from the package root or from `@ids-group-ltd/ids-design-system/core`.",
       "appliesWhen": "Both old names, wherever they annotate a `gaps` binding. The `'break'` and `'zero'` values are unchanged.",
       "restore": null,
       "searchHints": [
@@ -664,7 +662,7 @@
         "LineSeriesGaps"
       ],
       "verify": "Neither old name remains, and `ChartGaps` is imported from the root or from `core`.",
-      "note": "The two were declared character-identical and both published, so a consumer had to pick between two names for one thing. They are now one type in `core`, beside `ChartAxisMode`."
+      "note": "The two were declared character-identical: `LineChartGaps` was public and `LineSeriesGaps` was internal but reachable through `@ids-group-ltd/ids-design-system/components/chart`. They are now one type in `core`, beside `ChartAxisMode`."
     },
     {
       "id": "line-chart-axis-mode-is-chart-axis-mode",
@@ -785,7 +783,7 @@
       "old": "ChartScales",
       "new": null,
       "surface": "typescript",
-      "action": "If you implement `ChartScales` yourself, add a `cursorPointer` signal returning the pointer position in client pixels, or `null`.",
+      "action": "If you implement `ChartScales` yourself, add a `cursorPointer` signal returning the pointer position in client pixels or `null`, and a `cursorOrigin` signal returning the cursor's band element or `null`.",
       "appliesWhen": "Only a class or object declared as implementing `ChartScales`. Injecting the token to READ the scales is unaffected - the interface only grew.",
       "pitfall": "None: a missing member is a compile error at the declaration.",
       "restore": null,
@@ -799,8 +797,8 @@
         ": ChartScales",
         "CHART_SCALES"
       ],
-      "verify": "Every `ChartScales` implementation declares `cursorPointer`.",
-      "note": "A mark that anchors its panel to the cursor rather than to a reading needs the pointer position, and only the container that caught the event has it."
+      "verify": "Every `ChartScales` implementation declares `cursorPointer` and `cursorOrigin`.",
+      "note": "A mark that anchors its panel to the cursor rather than to a reading needs the pointer position and the band the cursor draws, and only the container that caught the event has either."
     },
     {
       "id": "typography-tokens-spelled-out",
@@ -861,6 +859,27 @@
       ]
     },
     {
+      "id": "overlay-pane-enters-with-scale-in",
+      "kind": "behavior",
+      "old": "--ds-overlay-enter-keyframes",
+      "new": null,
+      "surface": "none",
+      "action": "None, unless the panels should keep fading in place: then set `--ds-overlay-enter-keyframes: ds-fade-in` on `:root`.",
+      "appliesWhen": "Every portaled panel carrying `ds-overlay-pane`: select, autocomplete, multi-select, the date, time and colour pickers, popover, tooltip, the menu submenu and the chart tooltip. Drawer, bottom-sheet, alert, banner and toast name their own `--ds-*-enter-keyframes` and are unchanged. The default ships in `styles/overlay-motion`, which `styles/ds` forwards.",
+      "restore": ":root { --ds-overlay-enter-keyframes: ds-fade-in; }",
+      "searchHints": [
+        "--ds-overlay-enter-keyframes",
+        "ds-overlay-pane",
+        "ds-fade-in"
+      ],
+      "detect": [
+        "--ds-overlay-enter-keyframes",
+        ".ds-overlay-pane"
+      ],
+      "verify": "The built CSS resolves the overlay enter keyframes to `ds-scale-in` unless the app sets `--ds-overlay-enter-keyframes`, and an opened select panel grows from the edge nearest its trigger.",
+      "note": "The default of `--ds-overlay-enter-keyframes` was `ds-fade-in` and is now `ds-scale-in`, so a panel grows out of its trigger edge instead of appearing in place. The origin follows the placement: a panel below its trigger grows from its top edge, one above from its bottom."
+    },
+    {
       "id": "picker-panel-aliases-stop-pinning-a-default",
       "kind": "behavior",
       "old": ".ds-overlay-pane",
@@ -883,12 +902,33 @@
       ],
       "verify": "With no picker hook set, the open panel carries no inline `--ds-dropdown-panel-radius` or `--ds-dropdown-panel-bg-color`, and your `.ds-overlay-pane` rule decides its radius and background.",
       "note": "A portaled pane is not a descendant of its picker, so these tokens reach it by being copied off the host as an inline style. Written with a real fallback they always computed to something, so the copy always happened and a pane-class rule - the only route a consumer has to a portaled panel - could never win. They are unset now until the picker's own hook is set."
+    },
+    {
+      "id": "toast-banner-alert-grow-instead-of-fading",
+      "kind": "behavior",
+      "old": "--ds-toast-enter-keyframes",
+      "new": null,
+      "surface": "style",
+      "action": "Look at a toast, a banner and an inline alert as they appear. Was ds-fade-in, now ds-scale-in; restore with --ds-<surface>-enter-keyframes: ds-fade-in.",
+      "appliesWhen": "Only the entrance of ds-toast, ds-banner and ds-alert. ds-modal and the overlay panels already grew and are unchanged; ds-drawer and ds-bottom-sheet keep ds-slide-edge-in, and the loading overlay keeps ds-fade-in. An app that already set --ds-toast-enter-keyframes, --ds-banner-enter-keyframes or --ds-alert-enter-keyframes sees no change.",
+      "pitfall": "The growth reads --ds-<surface>-enter-scale, which these three have declared all along while ds-fade-in ignored it. An app that set that token expecting it to do nothing now gets the scale it asked for - a value like 0.5 was inert before and is a visible lurch now.",
+      "restore": "ds-toast { --ds-toast-enter-keyframes: ds-fade-in; } and the same for --ds-banner-enter-keyframes and --ds-alert-enter-keyframes.",
+      "searchHints": [
+        "--ds-toast-enter-keyframes",
+        "--ds-banner-enter-keyframes",
+        "--ds-alert-enter-keyframes",
+        "--ds-toast-enter-scale",
+        "--ds-banner-enter-scale",
+        "--ds-alert-enter-scale"
+      ],
+      "verify": "With no enter-keyframes token set, an appearing toast, banner and alert each animate ds-scale-in, and a consumer value on --ds-<surface>-enter-scale changes how far they grow.",
+      "note": "These three declared both --ds-<surface>-enter-offset and --ds-<surface>-enter-scale while defaulting to a keyframe that reads neither, so both hooks were inert. The offsets keep their values and meaning - a preset that travels still reads them, so pointing a surface at ds-slide-in gets that surface's own distance and direction. Growth is from the centre: transform-origin stays unset, matching ds-modal."
     }
   ],
   "informational": [
     "`ds-line-chart` and `dsLineSeries` take `curve`: `'linear'` (the default, and what every chart already drew), `'step'` or `'smooth'`, typed `ChartCurve`. Nothing to change - a chart that sets nothing is unchanged. `'smooth'` is a monotone cubic, so it never draws a peak or a trough the readings do not contain.",
     "A filled series now follows its own curve, so the fill and the line share one edge. With the default `'linear'` the drawing is byte-identical to before.",
-    "The chart container's marks are published API: `ColumnSeriesComponent`, `LineSeriesComponent`, `ReferenceLineComponent` and `ReferenceLabelComponent`, with `ColumnSeriesPoint`, `LineSeriesData` and `LineSeriesGaps`, now come from the package root as well as from `@ids-group-ltd/ids-design-system/components/chart`. Purely additive.",
+    "The chart container's marks are published API: `ColumnSeriesComponent`, `LineSeriesComponent`, `ReferenceLineComponent` and `ReferenceLabelComponent`, with `ColumnSeriesPoint` and `LineSeriesData`, now come from the package root as well as from `@ids-group-ltd/ids-design-system/components/chart`. Purely additive.",
     "A chart tooltip no longer runs off the screen: the panel stops at the viewport height less the overlay's 12px margin and scrolls past that. A panel that already fitted is drawn exactly as before.",
     "A line series measured only against the first axis no longer raises an empty second axis labelled `0`. Affected any plot whose series all read against the left axis; a plot that genuinely carries two scales is unchanged.",
     "`ds-line-chart` takes `stack`: `'none'` (the default, and what every chart already drew), `'stacked'` or `'normalized'`. Nothing to change - a chart that sets nothing is unchanged. Only a series with `area: true` fills, stacking runs per axis, and `stack=\"stacked\"` is not `yAxisMode=\"split\"`: series on top of each other, against two plots one above the other.",
@@ -898,7 +938,7 @@
     "`ds-scatter-chart` is new, from `@ids-group-ltd/ids-design-system/components/scatter-chart` and from the package root, with `ScatterChartSeries`, `ScatterChartDecimator`, `ScatterChartReading` and `ScatterPoint`. Purely additive - nothing to change. It thins its own data past four times the plot's width in marks and says so under the plot; the annex table still lists every reading. `decimator` chooses between the two decimators or turns it off.",
     "A chart's category labels now turn 45 degrees when that lets all of them be drawn, and thin to every second or third only when a tilt is not enough. Nothing to change: it affects what a narrow chart draws, not what a template declares. A chart wide enough for its labels is unchanged.",
     "`ds-line-chart` takes `yAxisLabel` and `secondaryAxisLabel`, and `ds-chart` takes `axisLabel` and `secondaryAxisLabel`, naming what each axis counts. A line chart carrying two scales on one plot also tints each axis with the colour of the series measured against it, derived from the series rather than asked for. Purely additive - a chart with one scale is drawn exactly as before.",
-    "The sixth categorical chart colour moves from `hsl(152deg 58% 41%)` to `hsl(148deg 58% 41%)`. It sat 5.2 from the second slot in OKLab, under the 6 the palette holds itself to, so a chart drawing both series handed the reader two greens to tell apart by eye. Nothing to change: a consumer reading `--chart-categorical-6` or `--ds-chart-series-6-color` keeps the same token and gets the new hue.",
+    "The sixth categorical chart colour moves from `hsl(152deg 58% 41%)` to `hsl(148deg 58% 41%)`. It sat 5.3 from the second slot in OKLab, under the 6 the palette holds itself to, so a chart drawing both series handed the reader two greens to tell apart by eye. Nothing to change: a consumer reading `--chart-categorical-6` or `--ds-chart-series-6-color` keeps the same token and gets the new hue.",
     "Seven styling hooks close gaps a consumer was reaching past: `--ds-badge-letter-spacing`, `--ds-pagination-label-letter-spacing` and `-label-text-transform`, `--ds-option-color` for an unselected picker row, `--ds-dropdown-empty-color` and `-font-size` for the no-results line, and `--ds-autocomplete-input-font-size`. Every default is the value the component already drew, so nothing moves. Purely additive - nothing to change.",
     "`ds-button` takes `align: 'center' | 'between'`. `'between'` pushes the label and a trailing icon to opposite edges, which only shows once `fullWidth` or a stretching cell widens the button past its contents. Default is unchanged. Purely additive - nothing to change.",
     "`ds-pagination` takes `size` (sm/md/lg, unset resolving `DS_CONFIG.control.size` then `sm`) and `layout: 'grouped' | 'spread'`. `'spread'` gives the nav full width and pushes the label and the controls apart. Both defaults draw what the component already drew. Purely additive - nothing to change.",
@@ -919,11 +959,9 @@
     "`CHART_DEFAULT_VALUE_SPACE` is exported from `@ids-group-ltd/ids-design-system/components/chart`, so a preset reserving the box `ds-chart` will take can read the same number the container defaults to.",
     "`--ds-chart-legend-swatch-size` sizes the colour chip in `ds-chart-legend`, defaulting to `--space-2-5`. `--ds-line-chart-swatch-size` points at it, so that token reaches the swatch again after reaching nothing since the legend became its own component; nothing to change, and the default size is the same.",
     "An indeterminate ds-bar keeps its sliding chunk on the track for most of the cycle: the loop runs at a constant speed instead of on an ease curve that parked it at the extremes. Visual only, no code change.",
-    "Portaled panels carrying `ds-overlay-pane` now enter with `ds-scale-in` rather than `ds-fade-in`: a panel grows out of its trigger edge instead of appearing in place. Nothing to change. `--ds-overlay-enter-keyframes` still takes `ds-fade-in`, `ds-slide-in` or your own global keyframes, and drawer, bottom-sheet, alert, banner and toast each name their own and are untouched.",
-    "`--ds-table-head-height` now appears in the token reference and resolves through a declared resolver rather than a string inside a template. Nothing to change - a consumer already setting it kept working throughout; what changed is that the docs list it.",
-    "`ds-heatmap-chart`, `ds-scatter-chart` and `ds-waterfall-chart` now draw the frame their `frame` input asks for: the resolved class sat on an inner element and the only rule for it is `:host(.framed)`. A consumer who set `frame=\"none\"` to hide a frame that was never drawn can drop that binding, and one who left it at the default gains the box.",
-    "The error message in `ds-heatmap-chart`, `ds-scatter-chart`, `ds-waterfall-chart` and `ds-chart` is red rather than grey. Nothing to change.",
-    "`--ds-funnel-chart-focus-color` / `-width`, and the same pair on `--ds-heatmap-chart-`, `--ds-pie-chart-` and `--ds-scatter-chart-`, now reach the focus ring. They parsed and did nothing before, so a value already set for them starts taking effect."
+        "The table's loading scrim now starts below a head pinned with `--ds-table-head-height` (spelled `--ds-table-head-h` before this release, renamed by `token-dimensions-spelled-out`); the order is your value, then the measured head row, then 40px. Nothing to change beyond that rename.",
+        "`ds-chart` prints its error message in `--error` red rather than in the grey of its empty message, like the presets always did. The rule ships in `styles/chart-frame`. Nothing to change.",
+    "`--ds-funnel-chart-focus-color` / `-width` and `--ds-pie-chart-focus-color` / `-width` (spelled `--ds-donut-chart-` before this release) now reach the focus ring. They parsed and did nothing before, so a value already set for them starts taking effect."
   ],
   "deleteList": []
 }

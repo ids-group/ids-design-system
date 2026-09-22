@@ -2295,8 +2295,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-alert-enter-keyframes",
-        "value": "ds-fade-in",
-        "notes": "Alert entrance @keyframes (default ds-slide-in)."
+        "value": "ds-scale-in",
+        "notes": "Alert entrance @keyframes (default ds-scale-in, growing from the alert's centre)."
       },
       {
         "name": "--ds-alert-enter-duration",
@@ -2311,12 +2311,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-alert-enter-offset",
         "value": "2px",
-        "notes": "How far the alert travels in. The default entrance is ds-fade-in, which does not travel, so this applies once --ds-alert-enter-keyframes names ds-slide-in (default 2px)."
+        "notes": "How far the alert travels in, and from where: negative means it settles down from above. The default ds-scale-in does not travel, so this applies once --ds-alert-enter-keyframes names a preset that does, such as ds-slide-in (default 2px)."
       },
       {
         "name": "--ds-alert-enter-scale",
         "value": "0.96",
-        "notes": "Start scale if the alert enters with ds-scale-in (default 0.96)."
+        "notes": "Start scale of the default ds-scale-in entrance (default 0.96)."
       }
     ]
   },
@@ -2714,8 +2714,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-banner-enter-keyframes",
-        "value": "ds-fade-in",
-        "notes": "Banner entrance @keyframes (default ds-slide-in)."
+        "value": "ds-scale-in",
+        "notes": "Banner entrance @keyframes (default ds-scale-in, growing from the banner's centre)."
       },
       {
         "name": "--ds-banner-enter-duration",
@@ -2730,12 +2730,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-banner-enter-offset",
         "value": "4px",
-        "notes": "How far the banner travels in. The default entrance is ds-fade-in, which does not travel, so this applies once --ds-banner-enter-keyframes names ds-slide-in (default 4px)."
+        "notes": "How far the banner travels in, and from where: negative means it settles down from above. The default ds-scale-in does not travel, so this applies once --ds-banner-enter-keyframes names a preset that does, such as ds-slide-in (default 4px)."
       },
       {
         "name": "--ds-banner-enter-scale",
         "value": "0.96",
-        "notes": "Start scale if the banner enters with ds-scale-in (default 0.96)."
+        "notes": "Start scale of the default ds-scale-in entrance (default 0.96)."
       },
       {
         "name": "--banner-bar-w",
@@ -7698,8 +7698,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-toast-enter-keyframes",
-        "value": "ds-fade-in",
-        "notes": "Toast entrance @keyframes (default ds-slide-in — rises into place from below)."
+        "value": "ds-scale-in",
+        "notes": "Toast entrance @keyframes (default ds-scale-in, growing from the toast's centre)."
       },
       {
         "name": "--ds-toast-enter-duration",
@@ -7714,7 +7714,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-toast-enter-offset",
         "value": "var(--space-2)",
-        "notes": "How far the toast travels in. The default entrance is ds-fade-in, which does not travel, so this applies once --ds-toast-enter-keyframes names ds-slide-in (default --space-2)."
+        "notes": "How far the toast travels in, and from where: positive means it rises from below its resting spot. The default ds-scale-in does not travel, so this applies once --ds-toast-enter-keyframes names a preset that does, such as ds-slide-in (default --space-2)."
       },
       {
         "name": "--ds-toast-min-width",
@@ -7729,7 +7729,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-toast-enter-scale",
         "value": "0.96",
-        "notes": "Start scale if the toast enters with ds-scale-in (default 0.96)."
+        "notes": "Start scale of the default ds-scale-in entrance (default 0.96)."
       },
       {
         "name": "--ds-toast-bg-color-info",

@@ -655,6 +655,17 @@
 
 ### Changed
 
+- **`ds-toast`, `ds-banner` and `ds-alert` grow into place instead of fading in.** Their default
+  `--ds-<surface>-enter-keyframes` moves from `ds-fade-in` to `ds-scale-in`, so all three now enter
+  the way `ds-modal` and the overlay panels already do: opacity plus a growth from `--ds-*-enter-scale`,
+  which each of them has declared since motion shipped and which `ds-fade-in` never read. They grow
+  from their own centre - `transform-origin` stays unset, as on `ds-modal`.
+
+  `--ds-toast-enter-offset`, `--ds-banner-enter-offset` and `--ds-alert-enter-offset` keep their
+  values and their meaning: a preset that travels reads them, so pointing a surface at `ds-slide-in`
+  still gets that surface's own distance and direction. Set
+  `--ds-toast-enter-keyframes: ds-fade-in` to keep the old entrance.
+
 - **`ds-line-chart` measures its plot instead of scaling a fixed viewBox.** One unit is one CSS
   pixel, the axis gutter widens to the widest tick label as it actually rendered, and the category
   labels tilt then thin when they stop fitting - the same treatment `ds-column-chart` and
