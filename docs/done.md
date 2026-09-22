@@ -4,6 +4,48 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## The chart family stopped repeating itself, and one preset stopped drawing its own plot (2026-09-22)
+
+`ds-line-chart` renders `<ds-chart>` with `g[dsLineSeries]` and `g[dsSeriesAnnotation]` inside it.
+Its own 640x320 viewBox is gone, so the plot is measured in CSS pixels like every other chart and
+`--ds-line-chart-plot-height` drives it for the first time - the token had reached only the loading
+skeleton since the chart shipped.
+
+**The switch needed six behaviours the container did not have**, found by diffing the preset's
+BEHAVIOUR rather than the mark's input list: cursor pinning, the linger grace that lets a pointer
+reach a portaled panel, `tooltipAnchor`, legend-driven dimming, per-series roving tab stops, and a
+focused marker narrowing an axis tooltip to its own series. The first three belong to the
+container, and `chartActiveMark` already held that whole state machine for the element marks - so
+the category cursor took it instead of restating it, and gained Escape and the tap latch for free.
+The last three are the mark's, as inputs.
+
+**Two extractions came out of the same pass.** `ds-chart-data-table` is the annex table eight
+charts were each drawing (between 43 and 77 lines of template apiece, differing only in the body),
+and `resolveChartDefaults` is the five-to-six `resolveWithConfig` calls nine charts repeated. The
+formatting stays with the chart: two charts reading the same number differently is a chart
+decision, not a table one.
+
+**What the switch left behind was deleted rather than kept.** Fourteen of eighteen exports in
+`line-chart.math.ts` had no caller but their own probe; the axis-mode assertions were already
+covered by `chart-math.probe.mjs` and the rest exercised geometry the mark now owns.
+
+## A rename wave, and the three causes behind eight consumer asks (2026-09-22)
+
+Eight of eleven styling hooks a consumer reached past the surface for already existed. Measured
+causes, not guesses: the name was unguessable from the CSS property it sets (`-pad-x` for
+`padding`, `-label-weight` for `font-weight`), the API was absent from `components.md`, and
+devtools showed only the private resolver name.
+
+All three were closed. 132 tokens spell their names out, `tools/generate-input-lists.mjs` writes an
+"All inputs" line per component into `components.md` from the source, and 171 private names are
+mirrored onto their public token so devtools shows the one a consumer can set.
+
+**The manifest had to be corrected twice over.** Two items named old tokens that never shipped -
+`--ds-segmented-button-*` where the release carried `--ds-segmented-btn-*` - because they were
+written against the already-renamed tree. `check-manifest-truth` could not see it: `claims()`
+returns nothing for a value holding `*`, so every globbed item went unchecked. It now reads `--ds-`
+names out of `action` and `appliesWhen` too and fails on one that exists at neither boundary.
+
 ## A void `var(--token)` is now a gate, not a surprise (2026-09-09)
 
 `check-void-tokens` reads every `.scss`/`.css` under `src` and `ds-docs/src` and fails on a
