@@ -289,6 +289,20 @@ function buildSurface(files) {
     elements.set(tag_, members);
   }
 
+  const partials = new Set();
+  const keyframes = new Set();
+  for (const { path: file, text } of files) {
+    for (const match of text.matchAll(/@keyframes\s+([a-z][a-z0-9-]*)/g))
+      keyframes.add(match[1]);
+    const partial =
+      /src\/lib\/((?:styles|themes)\/(?:[\w-]+\/)*)_?([\w-]+)\.scss$/.exec(
+        file.replace(/\\/g, '/'),
+      );
+    if (!partial) continue;
+    partials.add(`${partial[1]}${partial[2]}`);
+    if (partial[2] === 'index') partials.add(partial[1].replace(/\/$/, ''));
+  }
+
   return {
     tokens,
     symbols,
@@ -296,6 +310,8 @@ function buildSurface(files) {
     elements,
     tokenPrefixes,
     directives,
+    partials,
+    keyframes,
   };
 }
 
@@ -304,7 +320,24 @@ function claims(value) {
   const text = value.trim();
   const openingTag = /^<(ds-[a-z0-9]+(?:-[a-z0-9]+)*)\s*\/?>$/.exec(text);
   if (openingTag) return [{ kind: 'element', name: openingTag[1], bare: true }];
-  if (/[*<>]|\.\.\./.test(text)) return []; // a family placeholder is not one name
+  const family = familyClaims(text);
+  if (family) return family;
+  const lines = text.split('\n').map((line) => line.trim());
+  const partials = lines.map(
+    (line) =>
+      /^@use\s+'@ids-group-ltd\/ids-design-system\/((?:styles|themes)\/[a-z0-9/-]+)'(?:\s+as\s+[\w-]+)?;?$/.exec(
+        line,
+      )?.[1],
+  );
+  if (
+    partials[0] &&
+    lines.every((line, index) => partials[index] || /^@include\s/.test(line))
+  )
+    return partials
+      .filter(Boolean)
+      .map((name) => ({ kind: 'partial', name, bare: false }));
+  // A family placeholder is not one name; a spaced `>` is a child combinator, not a placeholder.
+  if (/[*<]|\.\.\.|\S>|>\S/.test(text)) return [];
 
   // `bare` marks a value that IS the identifier, as opposed to one lifted out of a sentence.
   // Only a bare claim can be asked to have disappeared: `class MyTable extends TableComponent`
@@ -350,25 +383,78 @@ function claims(value) {
   // `ds-modal .danger` is the element-scoped shape AUTHORING prescribes for a class rename, so
   // the parts are read one by one. None is bare: the scope element survives its class's rename.
   const ELEMENT = /(?<![\w-])(ds-[a-z0-9]+(?:-[a-z0-9]+)*)/g;
-  const CLASS = /(?<![\w-])\.([a-z][a-z0-9-]*)/g;
+  const CLASS =
+    /(?<![\w-])\.([a-z][a-z0-9-]*)|(?<=[a-z0-9])\.([a-z][a-z0-9-]*)/g;
+  const selector = text.replace(/\s*\{[^}]*\}\s*$/, '');
   const selectorOnly =
-    text
+    selector
       .replace(/\[[^\]]*\]/g, '')
       .replace(/::ng-deep|::?[a-z-]+(?:\([^)]*\))?/g, '')
       .replace(ELEMENT, '')
       .replace(CLASS, '')
       .replace(/[\s,>+~]/g, '').length === 0;
   if (selectorOnly) {
-    for (const match of text.matchAll(ELEMENT))
+    for (const match of selector.matchAll(ELEMENT))
       found.push({ kind: 'element', name: match[1], bare: false, scope: true });
-    for (const match of text.matchAll(CLASS))
-      found.push({ kind: 'class', name: match[1], bare: false, scope: true });
+    for (const match of selector.matchAll(CLASS))
+      found.push({
+        kind: 'class',
+        name: match[1] ?? match[2],
+        bare: false,
+        scope: true,
+      });
     if (found.length) return found;
   }
 
+  // `modal-out / drawer-panel-close-right|left|top|bottom`: keyframe names, a `|` swapping the last
+  // word of the one before it.
+  if (/^[a-z][a-z0-9|-]*(\s+\/\s+[a-z][a-z0-9|-]*)+$/.test(text))
+    return text.split(/\s+\/\s+/).flatMap((part) => {
+      const [first, ...alternatives] = part.split('|');
+      const stem = first.slice(0, first.lastIndexOf('-') + 1);
+      return [first, ...alternatives.map((word) => `${stem}${word}`)].map(
+        (name) => ({ kind: 'keyframes', name, bare: false }),
+      );
+    });
+
+  if (/^[a-z][a-z0-9]*[A-Z][A-Za-z0-9]*$/.test(text))
+    return [{ kind: 'symbol', name: text, bare: false }];
+
   for (const match of text.matchAll(/\b[A-Z][A-Za-z0-9_]{3,}\b/g))
     found.push({ kind: 'symbol', name: match[0], bare: text === match[0] });
+  // An exported function is called, not imported by type: `avatarTint(seed, { chroma })`.
+  for (const match of text.matchAll(/(?<![.\w])([a-z][A-Za-z0-9]{3,})\(/g))
+    found.push({ kind: 'symbol', name: match[1], bare: false });
   return found;
+}
+
+// `--ds-*-bg`, `--<role>-subtle`, `--ds-combobox-` and `--ds-*-w | -h | -maxw`: each part is a
+// pattern over the token set, answered by whether any token matches. A part that starts with a
+// bare `-` completes the first part's stem.
+function familyClaims(text) {
+  const parts = text.split(/\s*\|\s*/);
+  const stem = /^(--[^|]*\*)/.exec(parts[0])?.[1];
+  const patterns = [];
+  for (const raw of parts) {
+    const part = raw.startsWith('--') ? raw : stem ? `${stem}${raw}` : null;
+    if (!part || !/^--[a-z0-9<>*-]+$/.test(part)) return null;
+    if (!/[*<]|-$/.test(part)) return null;
+    const source = part
+      .replace(/<[a-z-]+>/g, '\u0000')
+      .replace(/\*/g, '\u0001')
+      .replace(/-$/, '-\u0002')
+      .replace(/[-]/g, '\\-')
+      .replace(/\u0000/g, '[a-z0-9-]+')
+      .replace(/\u0001/g, '[a-z0-9-]*')
+      .replace(/\u0002/g, '[a-z0-9-]+');
+    patterns.push({
+      kind: 'family',
+      name: part,
+      pattern: new RegExp(`^${source}$`),
+      bare: false,
+    });
+  }
+  return patterns.length ? patterns : null;
 }
 
 function resolves(surface, claim) {
@@ -380,6 +466,18 @@ function resolves(surface, claim) {
       if (claim.name.startsWith(prefix)) return null;
     return false;
   }
+  if (claim.kind === 'family') {
+    for (const token of surface.tokens)
+      if (claim.pattern.test(token)) return true;
+    const stem = claim.name.split(/[*<]/)[0];
+    for (const prefix of surface.tokenPrefixes ?? [])
+      if (prefix.startsWith(stem) || stem.startsWith(prefix)) return null;
+    return false;
+  }
+  if (claim.kind === 'partial')
+    return surface.partials ? surface.partials.has(claim.name) : null;
+  if (claim.kind === 'keyframes')
+    return surface.keyframes ? surface.keyframes.has(claim.name) : null;
   if (claim.kind === 'symbol') return surface.symbols.has(claim.name);
   if (claim.kind === 'class') return surface.classes.has(claim.name);
   if (claim.kind === 'element') return surface.elements.has(claim.name);
