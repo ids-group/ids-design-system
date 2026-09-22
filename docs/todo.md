@@ -576,9 +576,10 @@ cost a wrong edit that the version's own `migrations/<V>.json` could have preven
   writes. They read `var(--ds-<picker>-panel-*, initial)` now - unset until the picker's own hook is
   set. Measured in a browser: with no hook the pane carries no inline radius or background and a
   pane-class rule decides both; with the hook set it is pinned and wins.
-  **`initial` is load-bearing and `check-void-tokens` would block the bare form.** A `var()` with no
-  fallback that resolves to nothing is the defect that gate exists for; `initial` says the drop is
-  deliberate. Worth deciding whether the gate should learn the idiom.
+  **The gate learned the idiom (Stas, 2026-09-22).** `check-void-tokens` treats an `initial` or
+  `unset` fallback as the void it is - the declaration drops either way - and clears it only where a
+  `void-ok` comment on the same line says the drop is intended. Stripping a block comment keeps the
+  line count now, so the reported line and the marker lookup land on the author's line.
 
 - [x] **[P3] The picker panels unify at 0.11.1 and `panelClass` only arrives at 0.13.1.** 0.11.1's
   `pitfall` says a retargeted rule widens to all three pickers, its `restore` gives the only
