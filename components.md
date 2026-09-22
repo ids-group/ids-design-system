@@ -502,7 +502,7 @@ Content slots: default (body text), `[actions]` (trailing CTAs)
 - `layout="row"`: actions sit at the right edge, vertically centred with the body. Use for one-line messages with a single trailing CTA.
 
 <!-- inputs:ds-banner -->
-All inputs: `variant: BannerVariant = 'info'`, `title: string = ''`, `dismissible: boolean = false`, `icon: IconName | null = null`, `compact: boolean = false`, `layout: 'stacked' | 'row' = 'stacked'`, `accentRail: boolean = true`, `announce: boolean = false`
+All inputs: `variant: BannerVariant = 'info'`, `title: string = ''`, `dismissible: boolean = false`, `icon: IconName | null = null`, `compact: boolean = false`, `layout: 'stacked' | 'row' = 'stacked'`, `accentRail: boolean = true`, `announce: boolean | null = null`
 <!-- /inputs -->
 
 #### `<ds-alert>` — `AlertComponent`
@@ -512,7 +512,7 @@ Output: `(closed): void`
 Content slots: default (body text), `[actions]` (trailing CTAs)
 
 <!-- inputs:ds-alert -->
-All inputs: `variant: 'info' | 'success' | 'warning' | 'error' | 'neutral' = 'info'`, `title: string = ''`, `dismissible: boolean = false`, `icon: IconName | null = null`, `announce: boolean = false`
+All inputs: `variant: 'info' | 'success' | 'warning' | 'error' | 'neutral' = 'info'`, `title: string = ''`, `dismissible: boolean = false`, `icon: IconName | null = null`, `announce: boolean | null = null`
 <!-- /inputs -->
 
 #### `<ds-toast>` — `ToastComponent`

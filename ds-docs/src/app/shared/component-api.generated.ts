@@ -122,11 +122,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "announce",
         "kind": "input",
-        "type": "boolean",
+        "type": "boolean | null",
         "union": null,
-        "default": "false",
+        "default": "null",
         "required": false,
-        "description": "Announce this alert to a screen reader when it appears. Off by default — see `ds-banner`'s `announce` for why, and prefer `ToastService` for anything transient."
+        "description": "Announce this alert to a screen reader when it appears. Unset follows `DS_CONFIG.alert.announce`, then `false` — see `ds-banner`'s `announce` for why, and prefer `ToastService` for anything transient."
       }
     ],
     "outputs": [
@@ -988,11 +988,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "announce",
         "kind": "input",
-        "type": "boolean",
+        "type": "boolean | null",
         "union": null,
-        "default": "false",
+        "default": "null",
         "required": false,
-        "description": "Announce this banner to a screen reader when it appears. Off by default: an `alert` region fires on INSERTION, so a banner that is page furniture would interrupt the reader on every route into the page. Turn it on for one the app raises in response to an event; for anything transient prefer `ToastService`, which owns a live region built for the purpose."
+        "description": "Announce this banner to a screen reader when it appears. Unset follows `DS_CONFIG.banner.announce`, then `false`. Off by default: an `alert` region fires on INSERTION, so a banner that is page furniture would interrupt the reader on every route into the page. Turn it on for one the app raises in response to an event; for anything transient prefer `ToastService`, which owns a live region built for the purpose."
       }
     ],
     "outputs": [
