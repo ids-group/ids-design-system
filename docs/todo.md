@@ -14,14 +14,14 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**119 open — 1 P1, 34 P2, 84 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**110 open — 1 P1, 30 P2, 79 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 1
 
 - **Framework & forms**
   - Upgrade to Angular 22 — and re-verify the signal-forms work against it, because one of its breaking changes lands exactly there
 
-### P2 — 34
+### P2 — 30
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Nothing catches a shell that rings on `:focus-within` when it means the keyboard
@@ -36,12 +36,6 @@ item and nothing else.
   - The elements demo has not been opened in a real browser since the rebuilds
   - `ds-toast-region`'s dev-warning strip is unverified
   - `ds-waterfall-chart` is `ds-cascade-chart` (Stas, 2026-09-23)
-- **Two more from the same audit, both about our tooling (recorded 2026-09-22, from the mm-ecm consumer)**
-  - `check-manifest-truth` verifies a minority of the locator surface, and its clean line does not say so
-- **What a full re-audit of that same upgrade turned up (recorded 2026-09-22, from the mm-ecm consumer)**
-  - `chart-categorical-tokens-renamed` sends a consumer to a token our own docs say not to set
-  - Two token-forwarding lists, one of them invisible from the component - and it has now misled two separate readers
-  - The plugin's `ds-recheck` agent has no shell, so it cannot do what the workflow tells it to do
 - **Two chart names that collide (recorded 2026-09-21, from the mm-ecm consumer)**
   - `ds-bar` is a prefix of `ds-bar-chart`, and the token surfaces overlap the same way
 - **Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)**
@@ -70,7 +64,7 @@ item and nothing else.
   - The chassis is declared nine times and shared once - about 450 lines of it
   - The template state head and the figcaption rule are copied verbatim, nine times each
 
-### P3 — 84
+### P3 — 79
 
 - **What v0.13.3 added and the docs site never shows (measured 2026-09-22)**
   - Fifteen new inputs have no demo and no prose on the docs site
@@ -95,13 +89,6 @@ item and nothing else.
   - Which of the 8 live chapters can also be frozen
   - `templates` and `startingPoints` in `_ds_manifest.json` are in the schema and empty
   - `.thumbnail` — the project's cover image — has no source that regenerates it
-- **Two more from the same audit, both about our tooling (recorded 2026-09-22, from the mm-ecm consumer)**
-  - `auto-update-package` tells parallel subagents to check out a tag in one shared clone
-- **What a full re-audit of that same upgrade turned up (recorded 2026-09-22, from the mm-ecm consumer)**
-  - `--chart-tick-size`: the 0.13.0 CHANGELOG and manifest disagree, and the manifest's informational text is wrong
-  - `time-columns-onkey-signature` (0.10.2) is a migration item for a class no consumer can extend
-  - `field-state-icon-hand-rolled` (0.10.2) has a locator that matches half the app
-  - `table-footer-padding-workaround` (0.11.0) says a local rule "DOUBLES" the inset. In CSS it replaces it
 - **An indeterminate bar that survives a short track (recorded 2026-09-22, from the mm-ecm consumer)**
   - An indeterminate `ds-bar` is never empty, or 86.7% is enough - one verdict left
 - **Two chart names that collide (recorded 2026-09-21, from the mm-ecm consumer)**
@@ -528,133 +515,6 @@ documented thing or their chapter's demo only exists once opened. Everything bel
   chart that silently vanished.
 
 Each has somebody behind it. Nothing here is speculative work.
-
-## Two more from the same audit, both about our tooling (recorded 2026-09-22, from the mm-ecm consumer)
-
-Neither cost the consumer anything. Both mean a check we run reports more confidence than it earned.
-
-- [ ] **[P2] `check-manifest-truth` verifies a minority of the locator surface, and its clean line does not say so.**
-  Run across the whole `migrations/` directory it reported: *33 manifest(s) against 34 tree(s)*,
-  `1 manifest(s) not checked` (0.1.0, no earlier boundary), `94 value(s) hold no single name to
-  look up - composite selectors and call signatures. Nothing was verified about these`, and
-  `20 name(s) neither tag declares - consumer examples`. That is **114 values about which the tool
-  asserts nothing**. For scale, the same manifests carry **447 `old`/`new` values across 35 files**
-  (306 `old`, 141 `new`, counted over the saved copy, so a near-identical rather than identical
-  population). The closing line reads *"every old/new that holds a name resolves against its own
-  boundary"* - true, and easy to read as "every claim checked out" when roughly a quarter of them
-  were never testable.
-  The 20 documentation examples are the sharper half: values like `MyTable`, `MySelect`,
-  `MyToastRegion` sit in `old` on the subclass-collision items, where `old` is supposed to be a
-  locator. They are placeholders in a field a tool treats as a symbol.
-  **Wanted:** (1) print the covered fraction on the clean line, so "clean" cannot be mistaken for
-  "complete"; (2) keep documentation placeholders out of `old` - they belong in `note` or
-  `searchHints`, and a locator field that holds `MyTable` is unusable by any consumer tooling too;
-  (3) where a real symbol exists beside the composite selector, put the symbol in `old` and the
-  selector in `searchHints`, which is what the field is for.
-
-- [ ] **[P3] `auto-update-package` tells parallel subagents to check out a tag in one shared clone.**
-  Phase B step 1 says *"Check out tag `v<V>` in the DS sources clone … so agents can consult V's
-  real sources"* and *"Pass the checkout path to subagents in their prompts"*. There is exactly one
-  clone. That holds while a wave is all one version, which is the documented shape - but any use
-  that fans out across versions (a re-audit of a whole chain, which is a natural thing to want)
-  has agents racing `git checkout` on a shared working tree. Worse, combined with `ds-recheck`
-  having no shell at all, the instruction cannot be followed today in either shape.
-  **Wanted:** document `git show v<V>:<path>` and `git ls-tree -r --name-only v<V> <dir>` as the
-  access form - read-only, no working-tree change, safe for any number of concurrent readers - or
-  have the orchestrator extract each version's files to its own directory and pass that. The tag
-  checkout should stay only where it is genuinely single-tenant.
-
-
-## What a full re-audit of that same upgrade turned up (recorded 2026-09-22, from the mm-ecm consumer)
-
-Seven parallel agents re-audited all nineteen versions adversarially, plus two deterministic
-before/after comparisons against a clean 0.8.0 build. The consumer came out clean - no dead token
-override was introduced, every deleted rule has a working replacement. What follows is what the
-audit found on OUR side: two manifest defects, three locator/wording defects, and two problems with
-the plugin's own tooling that cost real time.
-
-- [ ] **[P2] `chart-categorical-tokens-renamed` sends a consumer to a token our own docs say not to set.**
-  `tokens.generated.ts:1021` and `token-descriptions.json:270-271` both say, of
-  `--ds-chart-series-1-color`: *"Colour of the first chart series. Set this, not
-  `--chart-categorical-1`."* The 0.13.0 item's `action` renames `--chart-cat-N` to
-  `--chart-categorical-N` and its `note` says to read the value back from the installed package -
-  neither mentions that `--chart-categorical-*` is the internal, unprefixed family and that
-  `--ds-chart-series-N-color` is the public surface. The manifest's own `informational` block
-  describes the public hook two paragraphs later, so the information is in the file; the item a
-  consumer actually executes does not carry it. A consumer following the item lands mechanically
-  correct and architecturally coupled to a token we tell people not to set.
-  **Wanted:** a `note` on the item naming `--ds-chart-series-N-color` as the destination for anyone
-  who is setting these deliberately, and keeping the bare rename only for someone who was already
-  reaching into the internal family.
-
-- [ ] **[P3] `--chart-tick-size`: the 0.13.0 CHANGELOG and manifest disagree, and the manifest's informational text is wrong.**
-  `CHANGELOG.md:983-987` lists THREE removed chart tokens - `--chart-axis-title`,
-  `--chart-grid-line-strong` and `--chart-tick-size`. The manifest carries `removed-api` items for
-  the first two only; `--chart-tick-size` gets a deleteList row for the dead public hook
-  (`chart-axis-tick-size-hook`) and no item of its own. Worse, the same manifest's `informational`
-  block lists `--ds-chart-tick-size` among the hooks that currently exist. It does not:
-  `src/lib/styles/_tokens-charts.scss` declares no `--chart-tick-size` and no `--ds-chart-tick-size`,
-  and the only `tick-size` token in the package is the unrelated checkbox `--check-tick-size`
-  (`_tokens.scss:275`). Harmless to the consumer that found it (zero usage either way), but the
-  informational text is a factual error and the items list has a gap against its own changelog.
-  **Wanted:** an item for the third token, and the informational line corrected or dropped.
-
-- [ ] **[P3] `time-columns-onkey-signature` (0.10.2) is a migration item for a class no consumer can extend.**
-  The item carries `detect` shapes like `extends TimeColumnsComponent`, but
-  `types/…-components-time-picker.d.ts` declares `TimeColumnsComponent` without exporting it - only
-  `TimePickerComponent` and the value types are exported. The item's own `appliesWhen` admits
-  subclassing it "was never supported". A locator that cannot match in any real consumer still
-  costs every re-checker a pass.
-  **Wanted:** either drop it to `informational`, or mark it structurally unreachable so tooling can
-  skip it.
-
-- [ ] **[P3] `field-state-icon-hand-rolled` (0.10.2) has a locator that matches half the app.**
-  `find: ["ds-icon", "field-message", "align-items: center"]`. `ds-icon` alone is the generic icon
-  element - dozens of unrelated hits in any real consumer. Nothing in the row states that the three
-  shapes are AND-context rather than alternatives, so a grep-driven re-checker either floods or has
-  to guess the semantics.
-  **Wanted:** state the AND semantics on rows whose `find` is a context triple, or make the first
-  shape specific enough to stand alone.
-
-- [ ] **[P3] `table-footer-padding-workaround` (0.11.0) says a local rule "DOUBLES" the inset. In CSS it replaces it.**
-  The row and its informational note both warn that a consumer's local footer padding now doubles
-  the DS's own. For the horizontal inset that reads fine, but the consumer we audited carries
-  `.pagination-footer.pagination-footer { padding-top: … }`, which at (0,2,0) simply OVERRIDES our
-  (0,1,0) `padding-block` on the top side - nothing is added. The wording sent an auditor looking
-  for a doubled top inset that cannot exist, and it would send a consumer deleting a rule that is
-  still load-bearing.
-  **Wanted:** say which side the doubling applies to, and that an equal-or-higher-specificity
-  single-side override replaces rather than adds.
-
-- [ ] **[P2] Two token-forwarding lists, one of them invisible from the component - and it has now misled two separate readers.**
-  A picker declares its own `panelTokens` array, which reads as the complete set of what reaches
-  the portaled pane. It is not: `DROPDOWN_PANEL_TOKENS` in `src/lib/components/overlay-motion.ts`
-  is forwarded onto every `dropdownOverlay()` pane regardless, and it carries the panel radius and
-  max-height plus the whole `--ds-option-*` typography family. During this audit two independent
-  readers checked a component's `panelTokens`, found a token missing, and concluded "not forwarded"
-  - once about `--ds-option-*`, once about `--ds-dropdown-panel-maxh`, and the second produced a
-  confident bug report about a search panel being clipped to 320px that is simply not true. Both
-  were caught only by reading `overlay-motion.ts` on a hunch.
-  **Wanted:** name the shared list in each component's `panelTokens` doc comment ("plus
-  `DROPDOWN_PANEL_TOKENS`, forwarded for every dropdown pane"), and say it in any migration item
-  that tells a consumer to move styling onto these hooks. One line each; it is the difference
-  between a correct migration and a plausible wrong one.
-
-- [ ] **[P2] The plugin's `ds-recheck` agent has no shell, so it cannot do what the workflow tells it to do.**
-  `auto-update-package`'s own instructions have the orchestrator point re-checkers at a local DS
-  clone checked out at the release tag, and its "Reading the DS sources" section makes
-  version-exactness the whole point. But the `ds-recheck` agent type ships with Grep, Glob and Read
-  only - no Bash. All seven auditors in this run opened their report by saying they could not run
-  `git show v<version>:<path>` or `git show <consumer-sha>`, and fell back to the current worktree
-  plus the installed package. That is a sound proxy for renames and additions and NOT sound for any
-  claim of the shape "X was removed at version N" - which is exactly what the `removed-api` kind
-  asserts. It also means a re-checker can never verify that a given COMMIT was right, only that the
-  end state is.
-  **Wanted:** either give `ds-recheck` a read-only shell (`git show`, `git ls-tree`, `grep`), or
-  change the workflow so the orchestrator extracts the tag-pinned files to a plain directory first
-  and passes paths. Today the instruction and the tool do not match, and every re-check silently
-  degrades to a weaker check than the workflow believes it is getting.
-
 
 ## What the 0.9.0 - 0.13.3 manifests did not tell a consumer (recorded 2026-09-22, from the mm-ecm consumer)
 

@@ -4,6 +4,30 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## Nine manifest and plugin asks from one consumer's re-audit (2026-09-23)
+
+`check-manifest-truth` closes on the fraction it read - `330 of 457 old/new value(s) were read
+against their boundary and hold` (measured 2026-09-23) - and lists every one of the other 127, so a
+green run cannot be read as complete. It also scans `note`, `pitfall`, `informational` and every
+`deleteList` field for a `--ds-*` name neither tag declares; prose that names a token to say it
+does not exist goes in `DELIBERATE_PHANTOMS`, keyed by tag, id and token.
+
+That scan found three `--ds-chart-*` hooks the 0.13.0 manifest and CHANGELOG described as existing
+or deletable, none of which any tag ever shipped; they are gone from the informational line, the
+delete list, two notes and the DELETE table. 0.13.0 gained the missing `--chart-tick-size` item,
+and its categorical rename sends anyone recolouring a series to `--ds-chart-series-N-color`.
+
+Fourteen subclass items carry the DS classes in `old` instead of `class MyTable extends …`
+placeholders. `time-columns-onkey-signature` is an informational line: the class is not exported.
+`field-state-icon-hand-rolled` finds `name="error"`, `name="warn"` and `.field-message` rather than
+every `ds-icon`, and the table footer rows say a local rule replaces the inset per side instead of
+doubling it. Every picker's `panelTokens` comment names the shared `DROPDOWN_PANEL_TOKENS`.
+
+The plugin (1.8.1) reads each tag from its own `git archive` tree and never checks the clone out,
+and every dispatch carries the trees of `v<V>` and the tag before it, so `ds-recheck` proves a
+removal with Read/Grep and no shell. **Not changed: the 0.11.1 option-hover item** - at `v0.11.1`
+the shared list held only the panel radius, so the forwarding fact did not hold there.
+
 ## The chart family stopped repeating itself, and one preset stopped drawing its own plot (2026-09-22)
 
 `ds-line-chart` renders `<ds-chart>` with `g[dsLineSeries]` and `g[dsSeriesAnnotation]` inside it.
