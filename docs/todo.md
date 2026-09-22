@@ -98,7 +98,7 @@ item and nothing else.
   - Journey / flow diagram - no component draws a branching node-and-edge canvas
 - **The twenty-eight rules one consumer still needs to reach into our internals (recorded 2026-09-21)**
   - `ds-checkbox` tokenises the label's size and colour but not its weight, and the row has no hooks at all
-  - `ds-menu-item` has no padding or weight hook, and `--ds-menu-item-label-color` cannot be set per item
+  - `ds-menu-item` - every hook the ask wanted already shipped under an abbreviated name
   - `ds-autocomplete` cannot drop its chevron, and its input's type scale has no hook
   - An option row's colour and the empty-state line have no hooks, while everything around them does
   - `ds-tabs` tokenises the colours and the indicator, and none of the geometry
@@ -678,7 +678,22 @@ property sits next to tokens that cover its neighbours.
 
 - [ ] **[P3] `ds-checkbox` tokenises the label's size and colour but not its weight, and the row has no hooks at all.** `--ds-checkbox-label-font-size` and `--ds-checkbox-label-color` both land, and the weight beside them cannot: it is pinned `regular` inside the `font:` shorthand that reads those two. The row's `align-items` and `gap` have nothing either, and the hint under a checkbox indents by hand to clear the box. Four rules in the consumer, one component. **Ask:** `--ds-checkbox-label-font-weight`, `--ds-checkbox-row-align`, `--ds-checkbox-gap`, and a hint that already clears the box.
 
-- [ ] **[P3] `ds-menu-item` has no padding or weight hook, and `--ds-menu-item-label-color` cannot be set per item.** The colour token resolves on the `ds-menu-item` host against the value inherited from the `ds-menu` above it, so a single quiet row - a destructive Sign Out beside four ordinary rows - cannot take its own colour through the token and goes on the inner element instead. Padding and weight are not tokenised at all. **Ask:** `--ds-menu-item-padding` and `--ds-menu-item-font-weight`, and let the label colour resolve on the item rather than the menu.
+- [ ] **[P3] `ds-menu-item` - every hook the ask wanted already shipped; close it or answer the consumer.** Verified against `a1ff1f49`, the commit that recorded the ask: `--ds-menu-item-pad-x` / `-pad-y` carried the padding, `--ds-menu-item-label-weight` the weight, and a quiet row had both an input and a hook of its own - `quiet` renders `.quiet`, coloured by `--ds-menu-item-quiet-label-color`; `error` does the same for a destructive row. The two token names were the abbreviations `b3e0cace` spelled out, which is the cause the other asks had too: unguessable from the CSS property.
+
+  The consumer's rule, `mm-ecm-platform-kb` `prototype/projects/agent-portal/src/styles.scss`, written by Mikhail Shyshla on 2026-07-31 in `35ed3969`:
+
+  ```scss
+  .ds-overlay-pane ds-menu {
+    .menu-item.menu-item { padding: var(--rp-sp-11) var(--rp-sp-18); font-weight: var(--rp-fw-400); }
+    ds-menu-item.is-quiet .menu-item.menu-item { color: var(--rp-mute); }
+  }
+  ```
+
+  `is-quiet` is their own class, not our `quiet` input, and the colour goes on the inner element rather than through the token that exists for that row.
+
+  **The per-item override works, measured 2026-09-22.** A page reproducing the resolver shape - `ds-menu-item { --_label: var(--ds-menu-item-label-color, …) }`, the token set on an ancestor `ds-menu` and again on `ds-menu-item.is-quiet` - resolves `navy` on an ordinary item and `darkorange` on the quiet one. A declaration on the element beats one inherited into it, so the premise that the token "cannot be set per item" does not hold.
+
+  **Open:** nothing to build here that has been shown to be missing. Decide whether to tell them, and confirm against their own build before closing.
 
 - [ ] **[P3] `ds-autocomplete` cannot drop its chevron, and its input's type scale has no hook.** A chevron on a search field invites a click that would list the whole book, so the consumer hides it by selector. The input's size is a `font:` shorthand on `--font-size-s`, and the left padding has to clear a search glyph the consumer lays over the field. **Ask:** a `chevron` input (or a `search` appearance that implies it), `--ds-autocomplete-input-font-size` and `--ds-autocomplete-input-padding-inline-start`.
 
@@ -1214,6 +1229,12 @@ its own inline styles. `presentations/README.md` holds the authoring contract an
   **P3 → P2, 2026-09-02:** promoted by the decision above; the demotion below is kept so the reasoning that was overruled is still readable, not deleted.
 
   **P2 → P3, 2026-08-21 (SUPERSEDED):** demoted, and it should have been on the day it was surveyed: **the item's own conclusion is not to build it** — three components share ~25 lines each, against a ~30-line helper, so extracting now is a wash and the wrong shared abstraction costs more than the duplication. It is kept open only so the survey is not repeated, which makes it a parked record, not a P2. Revisit when a FOURTH list picker appears.
+
+- [ ] **[P2] The 20 typography CLASSES still read `.t-*`, where the tokens behind them now spell it out.** `.t-h1` through `.t-h5`, `.t-display`, `.t-card-title`, `.t-caption`, `.t-overline`, `.t-l` / `-l-bold`, `.t-m` / `-m-bold`, `.t-s` / `-s-bold`, `.t-xs` / `-xs-bold`, `.t-mono` / `-mono-block` / `-mono-inline`. The 96 tokens they read became `--ds-typography-*` in `4d2ddd7d`; the classes were held back deliberately, so the two halves now disagree on how the word is spelled.
+
+  Measured 2026-09-22: at least 3121 uses in this repo alone, counted as exact class names with a quote or a space on each side (`grep -rhoE "(^|[\"' ])(t-h1|t-h2|…)([\"' ]|$)" src ds-docs`), which undercounts two adjacent classes in one attribute. Consumer markup carries more, and unlike a token a class cannot fall back - a template left on `.t-h4` loses its type entirely rather than reading a default.
+
+  **Stas: tokens first, classes recorded here (2026-09-22).** The question when it comes up is whether a markup vocabulary wants the same spelling rule as a token surface at all - Tailwind and every utility set in the field argue brevity IS the feature there.
 
 - [ ] **[P2] The button's colour-family slots are named `--c-*`, which is not an acceptable name.**
   Seven of them — `--c-base`, `--c-on`, `--c-strong`, `--c-subtitle`, `--c-muted`, `--c-muted-strong`,
