@@ -14,7 +14,6 @@ export {
   DsPickerTriggerDirective,
   DsStaticPreview,
   FieldClickFocusDirective,
-  resolveChartDefaults,
 } from '@ids-group-ltd/ids-design-system/components';
 export type {
   DsAriaCurrent,
@@ -74,6 +73,7 @@ export { BarChartComponent } from '@ids-group-ltd/ids-design-system/components/b
 export type {
   BarChartRow,
   BarChartSegment,
+  BarChartValue,
 } from '@ids-group-ltd/ids-design-system/components/bar-chart';
 export { BottomSheetComponent } from '@ids-group-ltd/ids-design-system/components/bottom-sheet';
 export {

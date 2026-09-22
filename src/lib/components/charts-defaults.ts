@@ -21,12 +21,12 @@ export interface ChartDefaultInputs {
   readonly tooltipLingerMs?: Signal<number | null>;
 }
 
-/** Each resolved input → `DS_CONFIG.chart` → the built-in. Call from an injection context.
- *
- *  @internal */
 const NO_DATA_TABLE = signal<ChartDataTable | null>(null);
 const NO_LINGER = signal<number | null>(null);
 
+/** Each resolved input → `DS_CONFIG.chart` → the built-in. Call from an injection context.
+ *
+ *  @internal */
 export function resolveChartDefaults(inputs: ChartDefaultInputs) {
   return {
     frame: resolveWithConfig(
