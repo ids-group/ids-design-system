@@ -14,14 +14,14 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**113 open — 1 P1, 33 P2, 79 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**120 open — 1 P1, 37 P2, 82 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 1
 
 - **Framework & forms**
   - Upgrade to Angular 22 — and re-verify the signal-forms work against it, because one of its breaking changes lands exactly there
 
-### P2 — 33
+### P2 — 37
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Nothing catches a shell that rings on `:focus-within` when it means the keyboard
@@ -41,6 +41,10 @@ item and nothing else.
   - `.design-sync/conventions.md` is a generator INPUT, and nothing stops a reflow desyncing it
   - The elements demo has not been opened in a real browser since the rebuilds
   - `ds-toast-region`'s dev-warning strip is unverified
+- **What the 0.9.0 - 0.13.3 manifests did not tell a consumer (recorded 2026-09-22, from the mm-ecm consumer)**
+  - `banner.announce` flips an accessibility default and no config key can restore it
+  - A `surface: "style"` item never names the partial that carries it, so a consumer cannot tell "we do not have this problem" from "this rule never reaches us"
+  - Only `ds-autocomplete` forwards `--ds-dropdown-panel-radius`, the forward is inline, and nothing says so
 - **Two chart names that collide (recorded 2026-09-21, from the mm-ecm consumer)**
   - `ds-bar` is a prefix of `ds-bar-chart`, and the token surfaces overlap the same way
 - **Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)**
@@ -59,6 +63,7 @@ item and nothing else.
   - `.ds-interactive` — global state-interaction contract (agreed; prototype before spec — [[project-interaction-contract-design]])
   - Theme recipe vs hand-tuned picks — alignment decision
   - Shared picker internals — DECIDED 2026-09-02 (Stas): BUILD IT
+  - The 20 typography CLASSES still read `.t-*`, where the tokens behind them now spell it out
   - The button's colour-family slots are named `--c-*`, which is not an acceptable name
 - **Tooling**
   - Publishing to npm stops working in January 2027 and the replacement is not chosen
@@ -68,7 +73,7 @@ item and nothing else.
 - **Localization — every user-visible string is a hardcoded literal (recorded 2026-08-27, from the ITB Workspace picker report)**
   - Every user-visible string in the library is a hardcoded English literal — VALIDATED 2026-08-27 against 0.11.0; Stas: defer the whole thing, no code
 
-### P3 — 79
+### P3 — 82
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - A whole-page keyboard walk is not measurable with the tools here, and the failed
@@ -92,13 +97,17 @@ item and nothing else.
   - Which of the 8 live chapters can also be frozen
   - `templates` and `startingPoints` in `_ds_manifest.json` are in the schema and empty
   - `.thumbnail` — the project's cover image — has no source that regenerates it
+- **What the 0.9.0 - 0.13.3 manifests did not tell a consumer (recorded 2026-09-22, from the mm-ecm consumer)**
+  - The picker panels unify at 0.11.1 and `panelClass` only arrives at 0.13.1, so for two versions a per-picker panel rule is not expressible - and the manifest does not say it
+  - `select-option-list-caps-at-picker-maxh` prescribes something that cannot be done at the version that ships it, and hides a second cap behind the first
+  - `deep-option-type-rule` sends a consumer to hooks that an inline forward outranks, in the same version that gives them a pane class to write rules on …
 - **Two chart names that collide (recorded 2026-09-21, from the mm-ecm consumer)**
   - One idea, two contracts: a bar stacks through `segments`, a column through `stack`
 - **A journey canvas the mm-ecm prototype could not use (recorded 2026-09-16)**
   - Journey / flow diagram - no component draws a branching node-and-edge canvas
 - **The twenty-eight rules one consumer still needs to reach into our internals (recorded 2026-09-21)**
   - `ds-checkbox` tokenises the label's size and colour but not its weight, and the row has no hooks at all
-  - `ds-menu-item` - every hook the ask wanted already shipped under an abbreviated name
+  - `ds-menu-item` - every hook the ask wanted already shipped; close it or answer the consumer
   - `ds-autocomplete` cannot drop its chevron, and its input's type scale has no hook
   - An option row's colour and the empty-state line have no hooks, while everything around them does
   - `ds-tabs` tokenises the colours and the indicator, and none of the geometry
@@ -547,6 +556,142 @@ documented thing or their chapter's demo only exists once opened. Everything bel
 # Asks — a consumer or Stas asked for it
 
 Each has somebody behind it. Nothing here is speculative work.
+
+## What the 0.9.0 - 0.13.3 manifests did not tell a consumer (recorded 2026-09-22, from the mm-ecm consumer)
+
+Found while walking `mm-ecm-platform` from 0.8.0 to 0.13.3, nineteen versions, one commit each.
+Every item below cost a wrong edit that the version's own `migrations/<V>.json` could have
+prevented. None asks for a behaviour change: the ask each time is that the manifest says what a
+consumer has to PRESERVE, what the interim workaround is, and what to redo once the proper API
+lands. The `MigrationItem` schema already has the fields - `pitfall`, `restore`, `note`,
+`appliesWhen` - and on the items named below they are empty.
+
+- [ ] **[P2] `banner.announce` flips an accessibility default and no config key can restore it.**
+  Before 0.11.4 every `ds-banner` and `ds-alert` carried `role` and `aria-live` unconditionally;
+  from 0.11.4 both getters return `null` unless the element sets `announce`
+  (`banner.component.ts:51-72`). On upgrade every banner in every existing consumer goes silent to
+  assistive technology at once, with no build error, no visual change and no console warning - the
+  only signal is a screen reader. The destination is right and the component's own doc comment
+  gives the reason (an `alert` region fires on INSERTION, so page furniture would interrupt the
+  reader on every route in); the route is the problem. This consumer has 43 banners: deciding per
+  banner took a pass over all of them, and the first pass missed ten - every banner in a non-first
+  branch of an `@if`/`@else if`/`@switch` chain, and every banner whose `variant` is a computed
+  ternary rather than a literal. Those are exactly the shapes a consumer grepping for
+  `variant="error"` misses too. `DsConfig` carries fourteen keys - `field`, `breadcrumbs`,
+  `timePicker`, `avatar`, `brand`, `modal`, `toast`, `picker`, `control`, `card`, `table`, `icon`,
+  `badge`, `datePicker` - and no `banner` or `alert` key at all, so `toast` gets a config block and
+  the banner's announcement, a larger accessibility surface, gets nothing.
+  **Wanted:** `banner?: { announce?: boolean }` on `DsConfig`, read as the element input's default,
+  so a consumer restores prior behaviour in one line and opts individual banners out;
+  `field.reserveMessage` is the precedent. Until it exists, say in the item that the only lever is
+  per element, that the audit has to ENUMERATE every `ds-banner` rather than grep for a variant,
+  and name the two shapes a grep misses. A dev-mode warning on first render of an
+  `error`/`warning` banner without `announce` would catch the one case where old and new differ in
+  a way the developer almost certainly did not intend.
+
+- [ ] **[P2] A `surface: "style"` item never names the partial that carries it, so a consumer cannot tell "we do not have this problem" from "this rule never reaches us".**
+  0.10.0's `universal-focus-ring-base-rule` ships
+  `:where(:focus-visible) { outline: none; box-shadow: var(--ds-control-focus-shadow) }` in
+  `styles/_focus.scss`, which the package's own `styles/ds.scss` forwards. This consumer's SCSS
+  include path is `["projects/shared-styles", "node_modules/@ids-group-ltd/ids-design-system"]` and
+  it has its own `projects/shared-styles/ds.scss` - same filename, earlier on the path - so
+  `@use 'ds'` resolved to the CONSUMER's file, which lists the package partials by hand and never
+  named `focus`. **Measured: `grep -c ':where(:focus-visible)' dist/*/browser/styles-*.css`
+  returned 0 for both portals before we added the `@use`, and matched after.** The base rule had
+  never reached either app, through five versions. Worse, a tool reading only the package sources
+  reports the OPPOSITE - that nine consumer elements now render two focus rings - which is what we
+  first concluded and reported, wrongly. The hazard is silent and permanent: every partial the
+  package adds to its own `ds.scss` in any future version will not arrive here, and nothing
+  anywhere says so.
+  **Wanted:** on every item whose `surface` includes `style`, one clause naming the partial -
+  "ships in `styles/focus`; if your app does not `@use` it, this item does not apply". Plus either
+  a package aggregator name a consumer is unlikely to shadow (`styles/_ds-index.scss`), or a line
+  in the setup docs saying a consumer file called `ds.scss` earlier on the include path silently
+  replaces ours and the partial list then has to be maintained by hand. A `--check` script
+  comparing a consumer's aggregator against what ours forwards would close it outright; that is the
+  check we ended up doing by hand, per version, against the built CSS.
+
+- [ ] **[P2] Only `ds-autocomplete` forwards `--ds-dropdown-panel-radius`, the forward is inline, and nothing says so.**
+  `AutocompleteComponent.panelTokens` includes it (`autocomplete.component.ts:99` at v0.11.1);
+  `SelectComponent.panelTokens` carries only `-bg-color`, `-minw`, `-maxw`
+  (`select.component.ts:94-96`), and `MultiSelectComponent` likewise. `forwardOverlayTokens()`
+  copies the host's COMPUTED value onto the pane with `paneStyle.setProperty()` - an inline style
+  with no `!important` - and the autocomplete's `:host` declares
+  `--ds-dropdown-panel-radius: var(--ds-autocomplete-panel-radius, var(--ds-radius-panel))`
+  (`autocomplete.component.scss:17`). So a consumer that squares `--ds-radius-panel` on an app
+  shell and re-rounds it on `.ds-overlay-pane` - the recipe 0.9.0's own
+  `overlay-pane-squared-globally` delete-list row describes - gets the right result for every panel
+  EXCEPT the autocomplete's, where the shell's square value is pinned inline and the partial's
+  `var(..., var(--ds-radius-panel))` never reaches its fallback. It is invisible until someone
+  removes the literal `border-radius` the consumer had on the old `.autocomplete-list`, which is
+  exactly what 0.11.1 invites. **It made our search panel square, and only a re-check caught it.**
+  **Wanted:** either the three pickers forward the same set, or, if the asymmetry is deliberate, a
+  `pitfall` on `autocomplete-panel-classes-renamed` naming it and a `restore` carrying the one-line
+  fix - `ds-autocomplete { --ds-autocomplete-panel-radius: <your panel radius>; }` on the host,
+  which wins the alias chain before the role is read.
+
+- [ ] **[P3] The picker panels unify at 0.11.1 and `panelClass` only arrives at 0.13.1, so for two versions a per-picker panel rule is not expressible - and the manifest does not say it.**
+  0.11.1 puts `ds-select`, `ds-autocomplete` and `ds-multi-select` on one portaled panel and drops
+  `.autocomplete-list`. A consumer that styled ONE picker's panel - necessarily a global rule,
+  since the panel is portaled - has no way to keep it scoped: no picker-distinguishing class,
+  attribute or token on the pane, and no `panelClass` input until 0.13.1. The 0.11.1 material does
+  not mention this. `autocomplete-panel-classes-renamed` says "Retarget every rule that names an
+  old class", which silently BROADENS the rule to all three pickers; the deleteList row
+  `autocomplete-listbox-padding-override` says `replaceWith: Nothing - delete the rule`, which is
+  right for a rule that only patched the panel-vs-select difference but wrong for the usual case,
+  where the same rule also carries brand chrome with no DS equivalent (border colour, shadow, row
+  padding and type, in ours). We carried a broadened rule under a `TODO(ds-panel-scope)` marker for
+  two versions and narrowed it at 0.13.1.
+  **Wanted:** a `pitfall` saying the three pickers now share one panel with no per-picker hook, so
+  a retargeted rule reaches all of them; a `note` pointing at 0.13.1's `panelClass` and telling the
+  consumer to carry the broadened rule under a marker until then; and a narrowed `why`/`replaceWith`
+  on the deleteList row saying only the padding-and-row-radius compensation is dead.
+
+- [ ] **[P3] `select-option-list-caps-at-picker-maxh` prescribes something that cannot be done at the version that ships it, and hides a second cap behind the first.**
+  The 0.11.2 item's `action` reads "set `--picker-maxh` to the height you want - on the panel where
+  only that select should change, or globally where the other two pickers should follow". The first
+  half is not expressible at 0.11.2: `--picker-maxh` is read on `.dropdown-list`
+  (`styles/_dropdown-overlay.scss`) inside the portaled pane, it is in no picker's `panelTokens`,
+  and the pane carries no per-picker class until 0.13.1 - so "on the panel where only that select
+  should change" has no selector. The second trap sits beside it: the panel and the list cap
+  INDEPENDENTLY - `.dropdown-panel { max-height: var(--_dropdown-panel-maxh) }` fed by the
+  forwarded `--ds-dropdown-panel-maxh`, and `.dropdown-list { max-height: var(--picker-maxh) }`,
+  not forwarded - and the inner one decides how many rows are visible. A consumer reading the
+  0.11.1 material naturally moves a per-picker height onto `--ds-autocomplete-panel-maxh`, which
+  sizes the box and changes nothing about the row count. **We did exactly that and it was silently
+  ineffective.**
+  **Wanted:** correct the `action` to say the only lever at 0.11.2 is global and point at 0.13.1
+  for the scoped form; add a `pitfall` naming the two independent caps and which one governs the
+  visible rows; and consider forwarding `--picker-maxh` alongside `--ds-dropdown-panel-maxh`, so
+  one token answers the question a consumer is actually asking.
+
+- [ ] **[P3] `deep-option-type-rule` sends a consumer to hooks that an inline forward outranks, in the same version that gives them a pane class to write rules on.**
+  The 0.13.1 deleteList row says a deep `.ds-overlay-pane .dropdown-panel .option` rule is no
+  longer needed because the row's weight, size, line-height and family "forward per instance". Both
+  halves are true - `DROPDOWN_PANEL_TOKENS` in `src/lib/components/overlay-motion.ts` forwards them
+  onto every `dropdownOverlay()` pane regardless of a component's own `panelTokens`. What the row
+  does not say is WHERE they must be set. 0.13.1 also adds `panelClass`, which makes a rule on
+  `.ds-autocomplete-panel` the obvious new home for panel styling, and that is exactly where these
+  hooks must NOT go: `forwardOverlayTokens` pins the host's computed value on the pane as an inline
+  style, which beats the pane-class rule. The hooks have to be set on the picker HOST. The two
+  pieces of 0.13.1 guidance point in opposite directions, and this is the same inline-forward trap
+  as the autocomplete radius above, reached from the other side - there it silently squared a
+  panel, here it would silently ignore a consumer's typography.
+  (The row's other gap - the resting option label had no colour hook at 0.13.3, so the deep
+  selector survived anything setting `color` - is already recorded above and `--ds-option-color`
+  has since landed on `dev`.)
+  **Wanted:** a `pitfall` on the row saying these hooks are forwarded from the host as inline
+  styles, so set them on `ds-select` / `ds-autocomplete` / `ds-multi-select`, never on the pane
+  class. More generally: where a version ships both a new scoping mechanism and a new token route,
+  say which one owns which properties, because a consumer reading that version straight through has
+  no way to know the two do not compose.
+
+**The shape all six share.** The release notes describe what changed IN THE PACKAGE; a consumer
+needs to know what that means for code it already has - what still works, what silently stops
+working, what it must preserve by hand, and what to redo when the proper API lands one or two
+versions later. A migration that spans versions (a capability removed at N, restored properly at
+N+2) is worth saying out loud in BOTH manifests: at N "this is temporary, mark it", at N+2 "here is
+the thing you marked".
 
 ## Charts and fields the ECM prototype could not use (recorded 2026-09-15, Stas: take all five)
 
