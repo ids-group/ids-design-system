@@ -93,7 +93,7 @@
 
 <main>
   <div class="masthead">
-    <h1>Пять асков за два релиза, каждый нарисован</h1>
+    <h1>Четыре аска ждут тебя, пятый уже решён</h1>
     <p class="lede">
       Только то, что пришло от консьюмеров на 0.13.2-0.13.3 и ещё не закрыто. Вариант выбирается
       кликом по карточке, звёздочка - рекомендация, внизу собирается одна строка. Спор и замеры
@@ -162,58 +162,9 @@
     </div>
   </section>
 
-  <section class="q" data-q="bar-column">
-    <div class="q-head">
-      <span class="q-num">02</span>
-      <h2 class="q-title">Насколько сводить контракты бара и колонки</h2>
-      <a class="q-src" href="9-bar-column-contracts.html">дека 9</a>
-    </div>
-    <p class="q-sub">
-      Один и тот же плоский массив, ни одна запись не несёт <code>color</code>. Бар считает строки
-      ОДНОЙ серией, колонка - КАТЕГОРИЯМИ.
-    </p>
-
-    <div class="stage">
-      <div class="spec">
-        <p class="cap">ds-bar-chart</p>
-        <div class="rows" style="min-inline-size:200px">
-          <div class="row"><span>Eng</span><span class="bar"><i style="inline-size:100%;background:var(--ds-chart-series-default-color)"></i></span></div>
-          <div class="row"><span>Sales</span><span class="bar"><i style="inline-size:63%;background:var(--ds-chart-series-default-color)"></i></span></div>
-          <div class="row"><span>Support</span><span class="bar"><i style="inline-size:32%;background:var(--ds-chart-series-default-color)"></i></span></div>
-          <div class="row"><span>Ops</span><span class="bar"><i style="inline-size:24%;background:var(--ds-chart-series-default-color)"></i></span></div>
-        </div>
-      </div>
-      <div class="spec">
-        <p class="cap">ds-column-chart</p>
-        <div class="cols">
-          <span class="col" style="block-size:100%;background:var(--ds-chart-series-1-color)"></span>
-          <span class="col" style="block-size:63%;background:var(--ds-chart-series-2-color)"></span>
-          <span class="col" style="block-size:32%;background:var(--ds-chart-series-3-color)"></span>
-          <span class="col" style="block-size:24%;background:var(--ds-chart-series-4-color)"></span>
-        </div>
-      </div>
-    </div>
-
-    <div class="opts">
-      <div class="opt is-chosen"><h3>Назвать разницу <span class="star">★</span></h3>
-        <p><strong>Решено 2026-09-22.</strong> Не сводить: два разных чарта. Общий слой под ними
-        выносится и переиспользуется, уникальное остаётся уникальным.</p>
-        <dl class="layer"><dt>Кода</dt><dd class="none">в контрактах нет</dd><dt>Что делается</dt><dd class="gain">извлечение общего</dd></dl>
-      </div>
-      <div class="opt"><h3>Свести палитру</h3>
-        <p>Плоская форма красится одинаково у обоих. Один вход решает, что значит цвет.</p>
-        <dl class="layer"><dt>Кода</dt><dd>вход и две ветки покраски</dd><dt>Ломает</dt><dd>картинку у всех, кто рисует плоский массив</dd></dl>
-      </div>
-      <div class="opt"><h3>Свести всё</h3>
-        <p>Бар принимает серии и получает <code>stack</code> - multi-series горизонтальный чарт.</p>
-        <dl class="layer"><dt>Кода</dt><dd>серийная модель, раскладка, легенда</dd><dt>Ломает</dt><dd>тип <code>data</code></dd></dl>
-      </div>
-    </div>
-  </section>
-
   <section class="q" data-q="indeterminate">
     <div class="q-head">
-      <span class="q-num">03</span>
+      <span class="q-num">02</span>
       <h2 class="q-title">Форма неопределённого прогресса на узком треке</h2>
       <a class="q-src" href="../docs/todo.md">бэклог, без деки</a>
     </div>
@@ -258,7 +209,7 @@
 
   <section class="q" data-q="banner-warning">
     <div class="q-head">
-      <span class="q-num">04</span>
+      <span class="q-num">03</span>
       <h2 class="q-title">Предупреждать ли в dev о неозвученном error-баннере</h2>
       <a class="q-src" href="11-banner-announce-warning.html">дека 11</a>
     </div>
@@ -293,7 +244,7 @@
 
   <section class="q" data-q="picker-height">
     <div class="q-head">
-      <span class="q-num">05</span>
+      <span class="q-num">04</span>
       <h2 class="q-title">Высота списка пикера - публичный токен или panelClass</h2>
       <a class="q-src" href="12-picker-list-height.html">дека 12</a>
     </div>
@@ -341,6 +292,46 @@
       </div>
     </div>
   </section>
+
+  <p class="group" style="margin-top:var(--space-8);font:var(--font-weight-bold) var(--font-size-2xs)/1.4 var(--font-sans);letter-spacing:var(--letter-spacing-wider);text-transform:uppercase;color:var(--text-tertiary)">Уже решено</p>
+
+  <section class="q is-settled">
+    <div class="q-head">
+      <span class="q-num">--</span>
+      <h2 class="q-title">Насколько сводить контракты бара и колонки</h2>
+      <a class="q-src" href="9-bar-column-contracts.html">дека 9</a>
+    </div>
+    <p class="q-sub">
+      Один и тот же плоский массив, ни одна запись не несёт <code>color</code>. Бар считает строки
+      ОДНОЙ серией, колонка - КАТЕГОРИЯМИ.
+    </p>
+
+    <div class="stage">
+      <div class="spec">
+        <p class="cap">ds-bar-chart</p>
+        <div class="rows" style="min-inline-size:200px">
+          <div class="row"><span>Eng</span><span class="bar"><i style="inline-size:100%;background:var(--ds-chart-series-default-color)"></i></span></div>
+          <div class="row"><span>Sales</span><span class="bar"><i style="inline-size:63%;background:var(--ds-chart-series-default-color)"></i></span></div>
+          <div class="row"><span>Support</span><span class="bar"><i style="inline-size:32%;background:var(--ds-chart-series-default-color)"></i></span></div>
+          <div class="row"><span>Ops</span><span class="bar"><i style="inline-size:24%;background:var(--ds-chart-series-default-color)"></i></span></div>
+        </div>
+      </div>
+      <div class="spec">
+        <p class="cap">ds-column-chart</p>
+        <div class="cols">
+          <span class="col" style="block-size:100%;background:var(--ds-chart-series-1-color)"></span>
+          <span class="col" style="block-size:63%;background:var(--ds-chart-series-2-color)"></span>
+          <span class="col" style="block-size:32%;background:var(--ds-chart-series-3-color)"></span>
+          <span class="col" style="block-size:24%;background:var(--ds-chart-series-4-color)"></span>
+        </div>
+      </div>
+    </div>
+    <p class="q-sub"><strong>Решено 2026-09-22.</strong> Не сводить: два разных чарта, ни один не
+    растит модель данных другого. Общий слой под ними выносится, переиспользуется и получает
+    способ расширяться там, где одному нужно иначе; уникальное остаётся уникальным. Работа
+    записана в бэклоге - это уже руки, а не вопрос.</p>
+  </section>
+
 
   <div class="bar-fixed">
     <span class="count" id="count">0 из 5</span>

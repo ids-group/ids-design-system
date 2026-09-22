@@ -8,35 +8,74 @@
 <link rel="stylesheet" href="deck.css">
 
 <style>
-  /* Rebuilt from toast.component.scss:57-62 and banner/alert, so the specimen is the real surface:
-     the same radius, padding, shadow and motion tokens the components read. */
-  .surface {
+  /* Rebuilt from toast.component.{html,scss}: the 3px accent bar, the 16px icon, the bold title
+     over the body, the close, and min-width 320px / max-width 480px from --toast-minw/maxw. */
+  .toast {
+    display: flex;
+    gap: var(--space-3);
+    align-items: flex-start;
+    box-sizing: border-box;
+    min-width: min(320px, 100%);
+    max-width: 480px;
+    padding: var(--space-3) var(--space-4);
+    border: var(--border-width-default) solid var(--border-default);
+    border-left: var(--toast-bar-w) solid var(--accent);
+    border-radius: var(--radius-lg);
+    background: var(--surface-overlay);
+    box-shadow: var(--ds-elevation-floating);
+    text-align: left;
+  }
+
+  .toast .icon {
+    flex: none;
+    align-self: center;
+    inline-size: 16px;
+    block-size: 16px;
+    border-radius: var(--radius-pill);
+    background: var(--accent);
+  }
+
+  .toast .body {
+    flex: 1;
+    min-width: 0;
+    color: var(--text-secondary);
+    font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
+  }
+
+  .toast .title {
+    margin-bottom: var(--space-0-5);
+    color: var(--text-primary);
+    font-weight: var(--font-weight-bold);
+  }
+
+  .toast .close {
+    flex: none;
+    inline-size: 14px;
+    block-size: 14px;
+    border-radius: var(--radius-sm);
+    background: var(--neutral-200);
+  }
+
+  /* Banner and alert are in-flow strips, not floating pills. */
+  .strip {
     display: flex;
     gap: var(--space-3);
     align-items: center;
     box-sizing: border-box;
-    min-width: min(240px, 100%);
+    width: 100%;
     padding: var(--space-3) var(--space-4);
-    border-radius: var(--radius-lg);
-    background: var(--surface-overlay);
-    box-shadow: var(--ds-elevation-floating);
+    border-radius: var(--radius-md);
+    background: var(--surface-secondary);
     color: var(--text-primary);
     font: var(--font-size-s) / var(--line-height-base) var(--font-sans);
   }
 
-  .surface .dot {
+  .strip .icon {
     flex: none;
     inline-size: 10px;
     block-size: 10px;
     border-radius: var(--radius-pill);
     background: var(--accent);
-  }
-
-  .surface.is-banner {
-    width: 100%;
-    border-radius: var(--radius-md);
-    background: var(--surface-secondary);
-    box-shadow: none;
   }
 
   .well {
@@ -50,31 +89,75 @@
     overflow: hidden;
   }
 
+  .opt.is-today .well { background: var(--surface-default); }
+
+  /* The toast's real home: top right, --space-6 in from both edges (DS_TOAST_POSITION_DEFAULT),
+     stacked downwards with --space-2 between pills (toast-region.component.scss). */
+  .viewport {
+    position: relative;
+    box-sizing: border-box;
+    min-block-size: 260px;
+    padding: var(--space-6);
+    border: 1px dashed var(--border-default);
+    border-radius: var(--radius-md);
+    background: var(--surface-muted);
+    overflow: hidden;
+  }
+
+  .viewport .page {
+    display: grid;
+    gap: var(--space-3);
+    max-width: 320px;
+  }
+
+  .viewport .page span {
+    block-size: 10px;
+    border-radius: var(--radius-pill);
+    background: var(--neutral-200);
+  }
+
+  .viewport .page span:nth-child(1) { inline-size: 55%; }
+  .viewport .page span:nth-child(2) { inline-size: 85%; }
+  .viewport .page span:nth-child(3) { inline-size: 70%; }
+
+  .stack {
+    position: absolute;
+    inset-block-start: var(--space-6);
+    inset-inline-end: var(--space-6);
+    display: grid;
+    gap: var(--space-2);
+    justify-items: end;
+  }
+
   /* The three candidates, verbatim from _surface-motion.scss:26-47. */
   @keyframes deck-fade-in {
     from { opacity: 0; }
-  }
-
-  @keyframes deck-slide-in {
-    from { opacity: 0; transform: translateY(var(--deck-enter-y)); }
   }
 
   @keyframes deck-scale-in {
     from { opacity: 0; transform: scale(0.96); }
   }
 
-  .playing .surface {
-    animation-duration: var(--deck-enter-duration);
+  .playing .toast,
+  .playing .strip {
+    animation-duration: var(--deck-enter-duration, 260ms);
     animation-timing-function: cubic-bezier(0, 0, 0, 1);
     animation-fill-mode: both;
   }
 
-  .playing .fade .surface { animation-name: deck-fade-in; }
-  .playing .slide .surface { animation-name: deck-slide-in; }
-  .playing .scale .surface { animation-name: deck-scale-in; }
+  .playing.fade .toast,
+  .playing.fade .strip { animation-name: deck-fade-in; }
 
-  /* `.opt.is-today` is already muted, so the well would vanish into it. */
-  .opt.is-today .well { background: var(--surface-default); }
+  .playing.scale .toast,
+  .playing.scale .strip { animation-name: deck-scale-in; }
+
+  /* A pill pinned to the top-right corner has to grow out of that corner; growing out of its
+     own centre reads as the corner pushing it away. */
+  .grow-corner .toast { transform-origin: top right; }
+
+  /* The second pill in a stack enters after the first has settled, which is how the region
+     actually fills. */
+  .stack > :nth-child(2) .toast { animation-delay: 420ms; }
 
   .replay {
     margin-block: var(--space-4) var(--space-2);
@@ -89,145 +172,193 @@
 
   .replay:hover { background: var(--surface-secondary); }
 
-  .triple {
+  .pair {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--space-3);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-4);
     margin-block-start: var(--space-3);
   }
 
-  .triple .cap { margin-block-start: var(--space-2); }
+  .pair .cap { margin-block-start: var(--space-2); }
 
   @media (width < 900px) {
-    .triple { grid-template-columns: 1fr; }
+    .pair { grid-template-columns: 1fr; }
   }
 </style>
 
 <div class="masthead">
-  <h1>Тост, баннер и алерт появляются на месте, а смещение для них задано и мертво</h1>
-  <p class="lede">Одно решение: каким движением эти три поверхности входят.</p>
+  <h1>Тост, баннер и алерт появляются на месте, пока оверлейные панели вырастают</h1>
+  <p class="lede">Одно решение: оставить проявление или довести эти три до роста.</p>
   <div class="chips">
     <span class="chip is-open">открыто</span>
     <span class="chip is-accent">3 компонента</span>
-    <span class="chip">3 токена вхолостую</span>
+    <span class="chip">тост отрисован отдельно</span>
   </div>
 </div>
 
 <h2>Что происходит сейчас</h2>
 
 <p>
-  Все три объявляют <code>--ds-&lt;компонент&gt;-enter-offset</code> и кладут его в
-  <code>--_ds-enter-y</code>. Их дефолтный кейфрейм <code>ds-fade-in</code> меняет только
-  <code>opacity</code> и <code>--_ds-enter-y</code> не читает. Значит смещение задано, наследуется и
-  ни на что не влияет: потребитель ставит своё значение, и не меняется ничего.
+  Дефолтный кейфрейм у всех трёх — <code>ds-fade-in</code>, и он меняет только
+  <code>opacity</code>. Ни <code>--_ds-enter-y</code>, который они заполняют из публичного
+  <code>--ds-&lt;компонент&gt;-enter-offset</code>, ни <code>--_ds-enter-scale</code> из
+  <code>--ds-&lt;компонент&gt;-enter-scale</code> он не читает. Обе ручки объявлены и не работают.
 </p>
 
-<div class="well playing" id="today">
-  <div class="fade" style="--deck-enter-duration: 260ms">
-    <div class="surface"><span class="dot"></span>Файл загружен</div>
+<div class="well" id="today" data-play="fade">
+  <div>
+    <div class="toast">
+      <span class="icon"></span>
+      <div class="body"><div class="title">Файл загружен</div>report-2026-09.csv, 2.4 МБ</div>
+      <span class="close"></span>
+    </div>
   </div>
 </div>
 
 <button class="replay" type="button" data-replay="#today">Проиграть заново</button>
 
 <p class="says">
-  Оверлейные панели — селект, автокомплит, пикеры, поповер, тултип — с сегодняшнего дня входят через
+  Оверлейные панели — селект, автокомплит, пикеры, поповер, тултип — входят через
   <code>ds-scale-in</code> и вырастают из края триггера. Эти три остались на месте.
 </p>
 
-<h2>Три варианта, отрисованы</h2>
+<h2>Два варианта, отрисованы</h2>
 
 <div class="opts">
   <div class="opt is-today">
     <h3>Только проявление <span class="badge is-same">сегодня</span></h3>
-    <div class="well playing">
-      <div class="fade" style="--deck-enter-duration: 260ms">
-        <div class="surface"><span class="dot"></span>Файл загружен</div>
+    <div class="well" data-play="fade">
+      <div>
+        <div class="strip"><span class="icon"></span>Черновик сохранён</div>
       </div>
     </div>
     <dl class="layer">
       <dt>читает</dt>
       <dd><code>opacity</code></dd>
-      <dt>смещение</dt>
-      <dd class="none">не читается</dd>
-      <dt>три токена</dt>
-      <dd class="none">удалить или оставить как контракт для переключения кейфрейма</dd>
-    </dl>
-  </div>
-
-  <div class="opt">
-    <h3>Выезд <span class="badge is-no">по вкусу</span></h3>
-    <div class="well playing">
-      <div class="slide" style="--deck-enter-duration: 260ms; --deck-enter-y: 8px">
-        <div class="surface"><span class="dot"></span>Файл загружен</div>
-      </div>
-    </div>
-    <dl class="layer">
-      <dt>читает</dt>
-      <dd class="gain"><code>opacity</code> + <code>--_ds-enter-y</code></dd>
-      <dt>смещение</dt>
-      <dd class="gain">оживает: тост 8px снизу, баннер 4px сверху, алерт 2px сверху</dd>
-      <dt>три токена</dt>
-      <dd class="gain">начинают работать без единой правки у потребителя</dd>
+      <dt>смещение и масштаб</dt>
+      <dd class="none">обе ручки остаются мёртвыми</dd>
+      <dt>согласие с оверлеями</dt>
+      <dd class="none">две разных манеры входа в одной библиотеке</dd>
     </dl>
   </div>
 
   <div class="opt is-pick">
     <h3>Рост <span class="badge is-pick">рекомендую</span></h3>
-    <div class="well playing">
-      <div class="scale" style="--deck-enter-duration: 260ms">
-        <div class="surface"><span class="dot"></span>Файл загружен</div>
+    <div class="well" data-play="scale">
+      <div>
+        <div class="strip"><span class="icon"></span>Черновик сохранён</div>
       </div>
     </div>
     <dl class="layer">
       <dt>читает</dt>
-      <dd class="gain"><code>opacity</code> + <code>scale(0.96)</code></dd>
-      <dt>смещение</dt>
-      <dd class="none">по-прежнему не читается — три токена удаляются</dd>
-      <dt>согласие</dt>
-      <dd class="gain">то же движение, что у оверлейных панелей с сегодняшнего дня</dd>
+      <dd class="gain"><code>opacity</code> + <code>--_ds-enter-scale</code></dd>
+      <dt>смещение и масштаб</dt>
+      <dd class="gain"><code>--ds-*-enter-scale</code> оживает, <code>--ds-*-enter-offset</code> уходит</dd>
+      <dt>согласие с оверлеями</dt>
+      <dd class="gain">то же движение, что у панелей</dd>
     </dl>
   </div>
 </div>
 
-<button class="replay" type="button" data-replay=".opts">Проиграть все три заново</button>
+<button class="replay" type="button" data-replay=".opts">Проиграть оба заново</button>
 
-<h2>Три поверхности различаются, и это часть выбора</h2>
+<h2>Тост, в своём углу и в своём размере</h2>
 
 <p>
-  Смещение и длительность у них не одинаковы — значения из
-  <code>toast.component.scss:43-46</code>, <code>banner:32-35</code>, <code>alert:17-20</code>.
-  Тост приходит снизу и длиннее, баннер и алерт садятся сверху и быстрее.
+  Тост — единственный из трёх, который прилетает поверх страницы: по умолчанию сверху справа,
+  в <code>24px</code> от обоих краёв, шириной от <code>320px</code>. Поэтому он единственный,
+  у кого рост заметен как рост, а не как мигание. Ниже он собран из своего шаблона: полоска
+  акцента <code>3px</code> слева, иконка, жирный заголовок над текстом, крестик.
 </p>
 
-<div class="triple playing">
+<div class="pair">
   <div>
-    <div class="well">
-      <div class="slide" style="--deck-enter-duration: 260ms; --deck-enter-y: 8px">
-        <div class="surface"><span class="dot"></span>Тост</div>
+    <div class="viewport grow-corner" data-play="fade">
+      <div class="page"><span></span><span></span><span></span></div>
+      <div class="stack">
+        <div>
+          <div class="toast">
+            <span class="icon"></span>
+            <div class="body"><div class="title">Файл загружен</div>report-2026-09.csv</div>
+            <span class="close"></span>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="cap">тост · 260ms · 8px снизу</div>
+    <div class="cap">сегодня · только проявление</div>
   </div>
   <div>
-    <div class="well">
-      <div class="slide" style="--deck-enter-duration: 180ms; --deck-enter-y: -4px">
-        <div class="surface is-banner"><span class="dot"></span>Баннер</div>
+    <div class="viewport grow-corner" data-play="scale">
+      <div class="page"><span></span><span></span><span></span></div>
+      <div class="stack">
+        <div>
+          <div class="toast">
+            <span class="icon"></span>
+            <div class="body"><div class="title">Файл загружен</div>report-2026-09.csv</div>
+            <span class="close"></span>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="cap">баннер · 180ms · 4px сверху</div>
-  </div>
-  <div>
-    <div class="well">
-      <div class="slide" style="--deck-enter-duration: 180ms; --deck-enter-y: -2px">
-        <div class="surface is-banner"><span class="dot"></span>Алерт</div>
-      </div>
-    </div>
-    <div class="cap">алерт · 180ms · 2px сверху</div>
+    <div class="cap">рост · из верхнего правого угла</div>
   </div>
 </div>
 
-<button class="replay" type="button" data-replay=".triple">Проиграть заново</button>
+<button class="replay" type="button" data-replay=".pair">Проиграть заново</button>
+
+<p>
+  Второй тост приходит в стопку, пока первый ещё висит. Рост отделяет новую плашку от той,
+  что уже стоит, — проявление в этот момент читается как подмена.
+</p>
+
+<div class="pair">
+  <div>
+    <div class="viewport grow-corner" data-play="fade">
+      <div class="page"><span></span><span></span><span></span></div>
+      <div class="stack">
+        <div>
+          <div class="toast">
+            <span class="icon"></span>
+            <div class="body"><div class="title">Файл загружен</div>report-2026-09.csv</div>
+            <span class="close"></span>
+          </div>
+        </div>
+        <div>
+          <div class="toast">
+            <span class="icon"></span>
+            <div class="body"><div class="title">Отчёт готов</div>Можно выгрузить</div>
+            <span class="close"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="cap">стопка · только проявление</div>
+  </div>
+  <div>
+    <div class="viewport grow-corner" data-play="scale">
+      <div class="page"><span></span><span></span><span></span></div>
+      <div class="stack">
+        <div>
+          <div class="toast">
+            <span class="icon"></span>
+            <div class="body"><div class="title">Файл загружен</div>report-2026-09.csv</div>
+            <span class="close"></span>
+          </div>
+        </div>
+        <div>
+          <div class="toast">
+            <span class="icon"></span>
+            <div class="body"><div class="title">Отчёт готов</div>Можно выгрузить</div>
+            <span class="close"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="cap">стопка · рост</div>
+  </div>
+</div>
+
+<button class="replay" type="button" data-replay-all>Проиграть всю деку заново</button>
 
 <h2>Что каждый даёт и чего стоит</h2>
 
@@ -236,43 +367,37 @@
     <tr>
       <th>Вариант</th>
       <th>Что видит читатель</th>
-      <th>Что с тремя токенами</th>
+      <th>Что с ручками</th>
       <th>Цена</th>
     </tr>
   </thead>
   <tbody>
     <tr class="row-today">
       <td>Только проявление</td>
-      <td>Поверхность возникает на месте</td>
-      <td>Остаются мёртвыми, либо удаляются как публичная поверхность</td>
-      <td>Ноль работы. Оверлеи растут, эти три — нет</td>
-    </tr>
-    <tr>
-      <td>Выезд</td>
-      <td>Тост поднимается, баннер и алерт садятся сверху</td>
-      <td>Оживают в заданных сегодня значениях</td>
-      <td>Одно имя кейфрейма в трёх файлах</td>
+      <td>Плашка возникает на месте</td>
+      <td><code>enter-offset</code> и <code>enter-scale</code> объявлены и мертвы</td>
+      <td>Ноль работы. Панели растут, эти три — нет</td>
     </tr>
     <tr class="row-pick">
       <td>Рост</td>
-      <td>Поверхность вырастает из своего места</td>
-      <td>Удаляются: <code>ds-scale-in</code> их не читает</td>
-      <td>Одно имя в трёх файлах плюс удаление трёх токенов</td>
+      <td>Плашка вырастает; тост — из своего угла</td>
+      <td><code>enter-scale</code> оживает, <code>enter-offset</code> удаляется</td>
+      <td>Одно имя кейфрейма в трёх файлах плюс <code>transform-origin</code> для тоста</td>
     </tr>
   </tbody>
 </table>
 
 <div class="panel good">
   <p>
-    <strong>Рекомендую «Рост».</strong> Сегодня в библиотеке два разных ответа на один вопрос: панель
-    вырастает из края триггера, а тост возникает из ничего. Одно движение на все всплывающие
-    поверхности читается как одна система, и три мёртвых токена уходят вместе с выбором, а не
-    остаются висеть контрактом, который надо объяснять.
+    <strong>Рекомендую «Рост».</strong> Сегодня в библиотеке два разных ответа на один вопрос:
+    панель вырастает из края триггера, а тост возникает из ничего. Одно движение на все
+    всплывающие поверхности читается как одна система, и три публичные ручки
+    <code>--ds-*-enter-scale</code> начинают работать вместо того, чтобы стоять рядом с мёртвыми
+    <code>--ds-*-enter-offset</code>.
   </p>
   <p>
-    «Выезд» — честный второй вариант, если тост должен приходить именно снизу: он единственный
-    оживляет уже заданные значения. «Только проявление» оставляет расхождение с оверлеями и требует
-    отдельного решения, что делать с тремя токенами.
+    Тосту при этом нужен <code>transform-origin: top right</code> — он прилеплен к углу, и рост
+    из собственного центра читается как отталкивание от края, а не как появление в нём.
   </p>
 </div>
 
@@ -288,7 +413,7 @@
   <tbody>
     <tr>
       <td>Каким движением входят тост, баннер и алерт</td>
-      <td>Только проявление · Выезд · <strong>Рост</strong></td>
+      <td>Только проявление · <strong>Рост</strong></td>
     </tr>
   </tbody>
 </table>
@@ -296,39 +421,42 @@
 <h2>Источники</h2>
 
 <p>
-  Кейфреймы дословно из <code>src/lib/styles/_surface-motion.scss:26-47</code>. Дефолты и смещения —
-  <code>toast.component.scss:43-46</code>, <code>banner.component.scss:32-35</code>,
-  <code>alert.component.scss:17-20</code>; длительности разворачиваются через
+  Кейфреймы дословно из <code>src/lib/styles/_surface-motion.scss:26-47</code>. Дефолты, смещения и
+  масштабы — <code>toast.component.scss:43-52</code>, <code>banner.component.scss:32-37</code>,
+  <code>alert.component.scss:17-22</code>: все три уже объявляют и
+  <code>--ds-*-enter-offset</code>, и <code>--ds-*-enter-scale</code>, а
+  <code>ds-fade-in</code> не читает ни одну. Длительности разворачиваются через
   <code>_tokens.scss:141-144</code> в <code>--duration-slow</code> 260ms для тоста и
   <code>--duration-base</code> 180ms для двух других, смягчение — <code>--ease-decelerate</code>.
-  Проверено 2026-09-22, что <code>ds-fade-in</code> не содержит <code>transform</code>, поэтому
-  <code>--_ds-enter-y</code> у всех трёх не читается никем. Оверлейные панели переведены на
-  <code>ds-scale-in</code> в <code>f1a1ace5</code> и проверены в браузере.
+  Угол, отступ и ширина тоста — <code>toast.config.ts</code>
+  (<code>right</code>/<code>top</code>, <code>--space-6</code>) и <code>_tokens.scss:417-419</code>
+  (<code>--toast-minw</code> 320px, <code>--toast-bar-w</code> 3px); шаг стопки
+  <code>--space-2</code> из <code>toast-region.component.scss</code>. Проверено 2026-09-22.
+  Оверлейные панели переведены на <code>ds-scale-in</code> в <code>f1a1ace5</code>.
 </p>
 
 <script>
-  (() => {
-    const replay = (scope) => {
-      for (const well of scope.querySelectorAll('.well, .triple')) {
-        well.classList.remove('playing');
-      }
-      scope.offsetWidth;
-      for (const well of scope.querySelectorAll('.well, .triple')) {
-        well.classList.add('playing');
-      }
-      if (scope.classList.contains('well') || scope.classList.contains('triple')) {
-        scope.classList.remove('playing');
-        scope.offsetWidth;
-        scope.classList.add('playing');
-      }
-    };
+  // Restart by removing `playing` from the elements that carry it, forcing one layout read,
+  // then putting it back. `playing` lives ONLY on a [data-play] element, so nothing else can
+  // hold a stale copy of it and keep the animation applied.
+  const stages = [...document.querySelectorAll('[data-play]')];
+  for (const stage of stages) stage.classList.add(stage.dataset.play, 'playing');
 
-    for (const button of document.querySelectorAll('[data-replay]')) {
-      button.addEventListener('click', () => {
-        const target = document.querySelector(button.dataset.replay);
-        if (target) replay(target);
-      });
-    }
-  })();
+  const play = (targets) => {
+    for (const stage of targets) stage.classList.remove('playing');
+    void document.documentElement.offsetWidth;
+    for (const stage of targets) stage.classList.add('playing');
+  };
+
+  for (const button of document.querySelectorAll('.replay')) {
+    button.addEventListener('click', () => {
+      const selector = button.dataset.replay;
+      const targets =
+        selector === undefined || selector === ''
+          ? stages
+          : stages.filter((stage) => stage.matches(selector) || stage.closest(selector));
+      play(targets);
+    });
+  }
 </script>
 </html>
