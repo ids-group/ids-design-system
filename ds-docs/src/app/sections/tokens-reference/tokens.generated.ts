@@ -4562,6 +4562,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "description": "",
     "tokens": [
       {
+        "name": "--ds-line-chart-plot-height",
+        "value": "240px",
+        "notes": ""
+      },
+      {
         "name": "--ds-line-chart-grid-line-color",
         "value": "var(--ds-chart-grid-line-color)",
         "notes": ""
@@ -4649,11 +4654,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-line-chart-area-opacity",
         "value": "0.16",
-        "notes": ""
-      },
-      {
-        "name": "--ds-line-chart-plot-height",
-        "value": "240px",
         "notes": ""
       },
       {

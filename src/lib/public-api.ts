@@ -95,6 +95,7 @@ export type {
   CardPadding,
 } from '@ids-group-ltd/ids-design-system/components/card';
 export {
+  CHART_DEFAULT_VALUE_SPACE,
   CHART_SCALES,
   ChartComponent,
   ColumnSeriesComponent,

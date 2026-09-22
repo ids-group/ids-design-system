@@ -1031,7 +1031,7 @@ Three families, and reaching for the wrong one is the usual chart bug. Set the `
 #### `<ds-chart>` — `ChartComponent`
 
 <!-- inputs:ds-chart -->
-All inputs: `categories: readonly string[] = []`, `tickCount: number = 5`, `min: number | null = null`, `max: number | null = null`, `cursor: 'none' | 'category' = 'none'`, `maxSecondary: number | null = null`, `plotHeight: number = 240`, `axisGutter: number = 46`, `valueSpace: number = 20`, `caption: string | null = null`, `interactive: boolean = false`, `summary: string | null = null`, `frame: 'auto' | 'none' = null`, `loading: boolean = false`, `emptyText: string | null = null`, `error: boolean = false`, `errorText: string | null = null`, `valueFormat: ChartValueFormat | null = null`, `secondaryAxisMode: 'aligned' | 'exact' | 'dual-grid' | 'split' = 'aligned'`, `axisColor: string | null = null`, `secondaryAxisColor: string | null = null`, `axisLabel: string | null = null`, `secondaryAxisLabel: string | null = null`
+All inputs: `categories: readonly string[] = []`, `tickCount: number = 5`, `min: number | null = null`, `max: number | null = null`, `cursor: 'none' | 'category' = 'none'`, `cursorPin: boolean = false`, `tooltipLingerMs: number | null = null`, `maxSecondary: number | null = null`, `plotHeight: number = 240`, `axisGutter: number = 46`, `valueSpace: number = 20`, `caption: string | null = null`, `interactive: boolean = false`, `summary: string | null = null`, `frame: 'auto' | 'none' = null`, `loading: boolean = false`, `emptyText: string | null = null`, `error: boolean = false`, `errorText: string | null = null`, `valueFormat: ChartValueFormat | null = null`, `secondaryAxisMode: 'aligned' | 'exact' | 'dual-grid' | 'split' = 'aligned'`, `axisColor: string | null = null`, `secondaryAxisColor: string | null = null`, `axisLabel: string | null = null`, `secondaryAxisLabel: string | null = null`
 <!-- /inputs -->
 
 #### `<g[dsColumnSeries]>` — `ColumnSeriesComponent`
@@ -1043,7 +1043,7 @@ All inputs: `data: readonly ColumnSeriesPoint[] = []`, `showValues: boolean = tr
 #### `<g[dsLineSeries]>` — `LineSeriesComponent`
 
 <!-- inputs:g[dsLineSeries] -->
-All inputs: `data: readonly LineSeriesData[] = []`, `showMarkers: boolean = true`, `interactive: boolean = false`, `pinOnClick: boolean = false`, `dimOthers: boolean = false`, `patterns: readonly string[] = []`, `stacked: boolean = false`, `staggerMs: number = 0`, `gaps: 'break' | 'zero' = 'break'`, `curve: 'linear' | 'step' | 'smooth' = 'linear'`, `tooltip: 'item' | 'axis' | 'none' = 'item'`, `tooltipLingerMs: number = 0`, `valueFormat: ChartValueFormat`
+All inputs: `data: readonly LineSeriesData[] = []`, `showMarkers: boolean = true`, `interactive: boolean = false`, `pinOnClick: boolean = false`, `dimOthers: boolean = false`, `highlighted: string | null = null`, `patterns: readonly string[] = []`, `stacked: boolean = false`, `staggerMs: number = 0`, `gaps: 'break' | 'zero' = 'break'`, `curve: 'linear' | 'step' | 'smooth' = 'linear'`, `tooltip: 'item' | 'axis' | 'none' = 'item'`, `tooltipAnchor: 'reading' | 'pointer' = 'reading'`, `tooltipLingerMs: number = 0`, `valueFormat: ChartValueFormat`
 <!-- /inputs -->
 
 #### `<g[dsReferenceLabel]>` — `ReferenceLabelComponent`

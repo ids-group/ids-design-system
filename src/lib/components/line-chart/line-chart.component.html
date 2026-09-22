@@ -54,246 +54,52 @@
       [(hidden)]="hiddenSeries"
       [(highlighted)]="highlightedSeries" />
   } @else {
-    <div
-      class="plot"
-      [attr.role]="interactive() ? 'group' : 'img'"
-      [attr.aria-label]="accessibleName()"
-      [dsChartTooltip]="tooltipContext()"
-      [dsChartTooltipPreferBelow]="pinnedCategory()"
-      [dsChartTooltipOrigin]="tooltipOrigin()"
-      [dsChartTooltipTemplate]="tooltipTemplate() ?? null">
-      <svg
-        class="canvas"
-        preserveAspectRatio="xMidYMid meet"
-        [attr.aria-hidden]="interactive() ? null : true"
-        [attr.viewBox]="viewBox"
-        (pointermove)="onPlotPointer($event)"
-        (pointerdown)="onPlotPointer($event)"
-        (pointerleave)="clearActiveCategory()">
-        @if (activeCategory() >= 0) {
-          <g
-            class="cursor"
-            animate.enter="cursor-in"
-            animate.leave="cursor-out"
-            [style.transform]="'translateX(' + activeBandX() + 'px)'">
-            <rect
-              class="category-band"
-              aria-hidden="true"
-              x="0"
-              [attr.y]="primaryTopY()"
-              [attr.width]="activeBandWidth()"
-              [attr.height]="cursorBottomY() - primaryTopY()" />
+    <ds-chart
+      frame="none"
+      cursor="category"
+      [categories]="categories()"
+      [tickCount]="tickCount()"
+      [valueFormat]="axisFormat()"
+      [interactive]="interactive()"
+      [summary]="accessibleName()"
+      [max]="axisMax()"
+      [maxSecondary]="axisMaxSecondary()"
+      [secondaryAxisMode]="yAxisMode()"
+      [axisLabel]="yAxisLabel()"
+      [secondaryAxisLabel]="secondaryAxisLabel()"
+      [axisColor]="primaryAxisFill()"
+      [secondaryAxisColor]="secondaryAxisFill()"
+      [cursorPin]="pinOnClick()"
+      [tooltipLingerMs]="tooltipLingerMs()"
+      [plotHeight]="plotHeight()">
+      <svg:g
+        #mark="dsLineSeries"
+        dsLineSeries
+        [data]="markSeries()"
+        [showMarkers]="showMarkers()"
+        [interactive]="interactive()"
+        [pinOnClick]="pinOnClick()"
+        [dimOthers]="dimOthers()"
+        [highlighted]="highlightedSeries()"
+        [patterns]="dashPatterns()"
+        [stacked]="stacksSeries()"
+        [staggerMs]="staggerMs()"
+        [gaps]="gaps()"
+        [curve]="curve()"
+        [tooltip]="tooltip()"
+        [tooltipAnchor]="markAnchor()"
+        [tooltipLingerMs]="tooltipLingerResolved()"
+        [valueFormat]="valueFormatResolved()"
+        [dsChartTooltip]="mark.tooltipContext()"
+        [dsChartTooltipPreferBelow]="pinnedCategory() || mark.activeMark.pinned()"
+        [dsChartTooltipOrigin]="mark.tooltipOrigin()"
+        [dsChartTooltipTemplate]="tooltipTemplate() ?? null"
+        (pointClicked)="onPointClicked($event)" />
 
-            <line
-              class="cursor-line"
-              aria-hidden="true"
-              [attr.x1]="activeBandWidth() / 2"
-              [attr.x2]="activeBandWidth() / 2"
-              [attr.y1]="primaryTopY()"
-              [attr.y2]="cursorBottomY()" />
-          </g>
-        }
-
-        @for (tick of primaryTicks(); track $index) {
-          <line
-            class="grid-line"
-            [attr.x1]="plotLeft()"
-            [attr.x2]="plotRight()"
-            [attr.y1]="tick.y"
-            [attr.y2]="tick.y" />
-        }
-
-        @if (showSecondaryGridlines()) {
-          @for (tick of secondaryTicks(); track $index) {
-            <line
-              class="grid-line"
-              [attr.x1]="plotLeft()"
-              [attr.x2]="plotRight()"
-              [attr.y1]="tick.y"
-              [attr.y2]="tick.y"
-              [class.secondary]="!stacked()" />
-          }
-        }
-
-        <line
-          class="axis-line"
-          [attr.x1]="plotLeft()"
-          [attr.x2]="plotRight()"
-          [attr.y1]="primaryBaselineY()"
-          [attr.y2]="primaryBaselineY()" />
-
-        <line
-          class="axis-line"
-          [attr.x1]="plotLeft()"
-          [attr.x2]="plotLeft()"
-          [attr.y1]="primaryTopY()"
-          [attr.y2]="primaryBaselineY()" />
-
-        @if (stacked()) {
-          <line
-            class="axis-line"
-            [attr.x1]="plotLeft()"
-            [attr.x2]="plotRight()"
-            [attr.y1]="secondaryBaselineY()"
-            [attr.y2]="secondaryBaselineY()" />
-
-          <line
-            class="axis-line"
-            [attr.x1]="plotLeft()"
-            [attr.x2]="plotLeft()"
-            [attr.y1]="secondaryTopY()"
-            [attr.y2]="secondaryBaselineY()" />
-        }
-
-        @for (
-          entry of plottedSeries();
-          track entry.series.id;
-          let seriesIndex = $index
-        ) {
-          @for (path of entry.areaPaths; track $index) {
-            <path
-              class="series-area"
-              animate.enter="mark-enter"
-              animate.leave="mark-leave"
-              [class.is-stacked]="stacksSeries()"
-              [style.--_chart-mark-stagger]="markStagger(seriesIndex)"
-              [class.is-dimmed]="isDimmed(entry.series.id)"
-              [attr.d]="path"
-              [attr.fill]="entry.color" />
-          }
-        }
-
-        @for (
-          entry of plottedSeries();
-          track entry.series.id;
-          let seriesIndex = $index
-        ) {
-          @for (path of entry.linePaths; track $index) {
-            <path
-              class="series-line"
-              animate.enter="mark-enter"
-              animate.leave="mark-leave"
-              [attr.stroke-dasharray]="entry.dash"
-              [style.--_chart-mark-stagger]="markStagger(seriesIndex)"
-              [class.is-dimmed]="isDimmed(entry.series.id)"
-              [attr.d]="path"
-              [attr.stroke]="entry.color" />
-          }
-        }
-
-        @if (showMarkers() || interactive()) {
-          @for (
-            entry of plottedSeries();
-            track entry.series.id;
-            let seriesIndex = $index
-          ) {
-            @for (marker of entry.markers; track marker.categoryIndex) {
-              <circle
-                class="series-marker"
-                [class.is-dimmed]="isDimmed(entry.series.id)"
-                [class.ghost]="!showMarkers()"
-                [class.interactive]="interactive()"
-                [class.is-active]="marker.categoryIndex === activeCategory()"
-                [attr.cx]="marker.x"
-                [attr.cy]="marker.y"
-                [attr.fill]="entry.color"
-                [attr.role]="interactive() ? 'button' : null"
-                [attr.data-series-index]="seriesIndex"
-                [attr.data-mark-index]="marker.categoryIndex"
-                [attr.tabindex]="
-                  interactive()
-                    ? isTabStop(entry.series.id, marker.categoryIndex)
-                      ? 0
-                      : -1
-                    : null
-                "
-                [attr.aria-label]="
-                  interactive() ? markerLabel(entry, marker) : null
-                "
-                (focus)="
-                  onMarkerFocus(seriesIndex, marker.categoryIndex, $event)
-                "
-                (blur)="onMarkerBlur()"
-                (keydown)="
-                  onMarkerNavigation($event, seriesIndex, marker.categoryIndex)
-                "
-                (click)="onMarkerClick(entry, marker)"
-                (keydown.enter)="onMarkerKey(entry, marker, $event)"
-                (keydown.space)="onMarkerKey(entry, marker, $event)" />
-            }
-          }
-        }
-
-        @for (note of placedAnnotations(); track note.key) {
-          <text
-            class="annotation"
-            aria-hidden="true"
-            [attr.x]="note.x"
-            [attr.y]="note.y"
-            [attr.text-anchor]="note.anchor">
-            {{ note.label }}
-          </text>
-        }
-
-        @if (yAxisLabel()) {
-          <text
-            class="axis-title"
-            text-anchor="middle"
-            [style.fill]="primaryAxisFill()"
-            [attr.transform]="'rotate(-90 12 ' + axisTitleY() + ')'"
-            [attr.x]="12"
-            [attr.y]="axisTitleY()">
-            {{ yAxisLabel() }}
-          </text>
-        }
-
-        @if (secondaryAxisLabel() && hasSecondaryAxis()) {
-          <text
-            class="axis-title"
-            text-anchor="middle"
-            [style.fill]="secondaryAxisFill()"
-            [attr.transform]="
-              'rotate(90 ' + (viewWidth - 12) + ' ' + axisTitleY() + ')'
-            "
-            [attr.x]="viewWidth - 12"
-            [attr.y]="axisTitleY()">
-            {{ secondaryAxisLabel() }}
-          </text>
-        }
-
-        @for (tick of primaryTicks(); track $index) {
-          <text
-            class="axis-label"
-            text-anchor="end"
-            [style.fill]="primaryAxisFill()"
-            [attr.x]="primaryLabelX()"
-            [attr.y]="tick.y">
-            {{ tick.label }}
-          </text>
-        }
-
-        @for (tick of secondaryTicks(); track $index) {
-          <text
-            class="axis-label"
-            [style.fill]="secondaryAxisFill()"
-            [attr.text-anchor]="secondaryLabelAnchor()"
-            [attr.x]="secondaryLabelX()"
-            [attr.y]="tick.y">
-            {{ tick.label }}
-          </text>
-        }
-
-        @for (label of categoryLabels(); track $index) {
-          <text
-            class="category-label"
-            text-anchor="middle"
-            [attr.x]="label.x"
-            [attr.y]="categoryLabelY()">
-            {{ label.text }}
-          </text>
-        }
-      </svg>
-    </div>
+      <svg:g
+        dsSeriesAnnotation
+        [annotations]="markAnnotations()" />
+    </ds-chart>
 
     @if (showLegend()) {
       <ds-chart-legend

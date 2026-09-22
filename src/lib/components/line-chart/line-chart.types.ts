@@ -1,5 +1,3 @@
-import type { ChartAxisMode } from '@ids-group-ltd/ids-design-system/core';
-
 export interface LineChartSeries {
   id: string;
   label: string;

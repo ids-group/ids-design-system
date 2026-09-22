@@ -1878,6 +1878,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Draws a band and a crosshair down the category under the pointer, and reports that category to every mark through `activeIndex`. `'none'`, the default, leaves the plot alone: a chart whose marks are the hover targets already answers per mark, and two affordances on one plot read as two different questions."
       },
       {
+        "name": "cursorPin",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether a press holds the category cursor where it is, so the reader can look away from the plot with the comparison still on screen. Released by pressing it again, by Escape, or by a press outside the plot."
+      },
+      {
+        "name": "tooltipLingerMs",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Milliseconds the cursor survives the pointer leaving the plot. The tooltip panel is portaled out of the plot, so without a grace period it closes before the pointer can reach it."
+      },
+      {
         "name": "maxSecondary",
         "kind": "input",
         "type": "number | null",
@@ -2300,6 +2318,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Fades every series but the one under the pointer. Off by default: the dimming buys loudness for one line and pays for it with the separation between the rest."
       },
       {
+        "name": "highlighted",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "The one series to single out: every other one draws faded and this one draws bold, so the comparison survives a monochrome print. Driven from a legend, or from whatever else the app uses to mean \"show me this one\". Needs `dimOthers`, which is what says fading is wanted at all."
+      },
+      {
         "name": "patterns",
         "kind": "input",
         "type": "readonly string[]",
@@ -2363,6 +2390,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "'item'",
         "required": false,
         "description": "Whether a hovered or focused reading opens a tooltip, and for what. `'item'` names the marker itself. `'axis'` names every series at the category under the pointer, which is the reading a multi-series line is compared on - it follows the container's `cursor`, so set `cursor=\"category\"` on `ds-chart` with it or nothing marks the category being read."
+      },
+      {
+        "name": "tooltipAnchor",
+        "kind": "input",
+        "type": "'reading' | 'pointer'",
+        "union": [
+          "reading",
+          "pointer"
+        ],
+        "default": "'reading'",
+        "required": false,
+        "description": "Where an `'axis'` panel hangs: `'reading'` puts it over the highest reading in the category, so it names what it points at and stays put while the pointer travels within one band; `'pointer'` follows the cursor."
       },
       {
         "name": "tooltipLingerMs",
