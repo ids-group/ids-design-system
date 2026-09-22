@@ -696,6 +696,19 @@
 
 ### Fixed
 
+- **Portaled panels grow out of their trigger instead of fading in place.** Every panel carrying
+  `ds-overlay-pane` - select, autocomplete, multi-select, the three pickers, popover, tooltip, the
+  menu submenu - enters with `ds-scale-in` rather than `ds-fade-in`.
+
+  ```css
+  :root { --ds-overlay-enter-keyframes: ds-fade-in; }
+  ```
+
+  `--_overlay-enter-origin` is already resolved per placement, so a panel below its trigger grows
+  from its top edge and one above it from its bottom. The four edge panels are untouched: drawer,
+  bottom-sheet, alert, banner and toast each name their own keyframe and never read this one.
+
+
 - **An indeterminate `ds-bar` is on the track for most of its cycle instead of under half of it.**
   The sliding chunk ran on the standard ease curve, which decelerates into the end of a transition -
   on a loop there is no end, so it crawled at both extremes, where the chunk sits outside the track.
