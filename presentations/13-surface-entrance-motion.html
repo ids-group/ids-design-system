@@ -132,7 +132,7 @@
     inline-size: min(320px, calc(100% - var(--space-6) * 2));
   }
 
-  /* The three candidates, verbatim from _surface-motion.scss:26-47. */
+  /* The two candidates, verbatim from _surface-motion.scss:26-38. */
   @keyframes deck-fade-in {
     from { opacity: 0; }
   }
@@ -154,9 +154,9 @@
   .playing.scale .toast,
   .playing.scale .strip { animation-name: deck-scale-in; }
 
-  /* A pill pinned to the top-right corner has to grow out of that corner; growing out of its
-     own centre reads as the corner pushing it away. */
-  .grow-corner .toast { transform-origin: top right; }
+  /* transform-origin defaults to 50% 50%, so a surface grows from its own centre unless the
+     library names a point. `_overlay-motion.scss:30-46` names one per placement. */
+  .from-corner .toast { transform-origin: top right; }
 
   /* The second pill in a stack enters after the first has settled, which is how the region
      actually fills. */
@@ -265,18 +265,24 @@
 
 <button class="replay" type="button" data-replay=".opts">Проиграть оба заново</button>
 
-<h2>Тост, в своём углу и в своём размере</h2>
+<h2>Откуда тост вырастает</h2>
 
 <p>
-  Тост — единственный из трёх, который прилетает поверх страницы: по умолчанию сверху справа,
-  в <code>24px</code> от обоих краёв, шириной от <code>320px</code>. Поэтому он единственный,
-  у кого рост заметен как рост, а не как мигание. Ниже он собран из своего шаблона: полоска
-  акцента <code>3px</code> слева, иконка, жирный заголовок над текстом, крестик.
+  Точка роста — это <code>transform-origin</code>, и по умолчанию она в центре:
+  <code>50% 50%</code>. Значит без отдельной строки плашка раздувается из собственной середины
+  во все стороны сразу. Оверлейные панели эту точку уже выбирают: в
+  <code>_overlay-motion.scss:30-46</code> она своя на каждое положение относительно триггера.
+</p>
+
+<p>
+  Тост по умолчанию прилеплен к правому верхнему углу, в <code>24px</code> от обоих краёв,
+  шириной от <code>320px</code>. Слева он растёт из центра, справа — из того угла, к которому
+  прилеплен. Обе анимации одинаковые, отличается одна строка.
 </p>
 
 <div class="pair">
   <div>
-    <div class="viewport grow-corner" data-play="fade">
+    <div class="viewport" data-play="scale">
       <div class="page"><span></span><span></span><span></span></div>
       <div class="stack">
         <div>
@@ -288,10 +294,10 @@
         </div>
       </div>
     </div>
-    <div class="cap">сегодня · только проявление</div>
+    <div class="cap">из центра · по умолчанию</div>
   </div>
   <div>
-    <div class="viewport grow-corner" data-play="scale">
+    <div class="viewport from-corner" data-play="scale">
       <div class="page"><span></span><span></span><span></span></div>
       <div class="stack">
         <div>
@@ -303,20 +309,20 @@
         </div>
       </div>
     </div>
-    <div class="cap">рост · из верхнего правого угла</div>
+    <div class="cap">из верхнего правого угла</div>
   </div>
 </div>
 
 <button class="replay" type="button" data-replay=".pair">Проиграть заново</button>
 
 <p>
-  Второй тост приходит в стопку, пока первый ещё висит. Рост отделяет новую плашку от той,
-  что уже стоит, — проявление в этот момент читается как подмена.
+  В стопке разница видна лучше: рост из центра толкает вторую плашку в обе стороны от её
+  середины, рост из угла держит её правый край на месте.
 </p>
 
 <div class="pair">
   <div>
-    <div class="viewport grow-corner" data-play="fade">
+    <div class="viewport" data-play="scale">
       <div class="page"><span></span><span></span><span></span></div>
       <div class="stack">
         <div>
@@ -335,10 +341,10 @@
         </div>
       </div>
     </div>
-    <div class="cap">стопка · только проявление</div>
+    <div class="cap">стопка · из центра</div>
   </div>
   <div>
-    <div class="viewport grow-corner" data-play="scale">
+    <div class="viewport from-corner" data-play="scale">
       <div class="page"><span></span><span></span><span></span></div>
       <div class="stack">
         <div>
@@ -357,7 +363,7 @@
         </div>
       </div>
     </div>
-    <div class="cap">стопка · рост</div>
+    <div class="cap">стопка · из угла</div>
   </div>
 </div>
 
@@ -399,8 +405,13 @@
     <code>--ds-*-enter-offset</code>.
   </p>
   <p>
-    Тосту при этом нужен <code>transform-origin: top right</code> — он прилеплен к углу, и рост
-    из собственного центра читается как отталкивание от края, а не как появление в нём.
+    <strong>Точку роста рекомендую брать из угла, а не из центра</strong> — и не константой.
+    Положение тоста настраивается (<code>verticalPosition: 'top' | 'bottom'</code>,
+    <code>horizontalPosition</code>), так что при <code>top right</code> правильная точка —
+    <code>top right</code>, при <code>bottom left</code> — <code>bottom left</code>. Точка должна
+    следовать за конфигом, ровно как <code>--_overlay-enter-origin</code> следует за
+    <code>data-ds-placement</code> у панелей. Баннер и алерт стоят в потоке во всю ширину, у них
+    рост по горизонтали почти не читается, и <code>top center</code> им достаточно.
   </p>
 </div>
 
@@ -415,8 +426,12 @@
   </thead>
   <tbody>
     <tr>
-      <td>Каким движением входят тост, баннер и алерт</td>
+      <td>Каким движением входят баннер и алерт</td>
       <td>Только проявление · <strong>Рост</strong></td>
+    </tr>
+    <tr>
+      <td>Откуда растёт тост</td>
+      <td>Из центра · <strong>Из своего угла</strong></td>
     </tr>
   </tbody>
 </table>
@@ -434,7 +449,10 @@
   Угол, отступ и ширина тоста — <code>toast.config.ts</code>
   (<code>right</code>/<code>top</code>, <code>--space-6</code>) и <code>_tokens.scss:417-419</code>
   (<code>--toast-minw</code> 320px, <code>--toast-bar-w</code> 3px); шаг стопки
-  <code>--space-2</code> из <code>toast-region.component.scss</code>. Проверено 2026-09-22.
+  <code>--space-2</code> из <code>toast-region.component.scss</code>. Точка роста — <code>transform-origin</code>,
+  по умолчанию <code>50% 50%</code>; у панелей её выбирает
+  <code>--_overlay-enter-origin</code> в <code>_overlay-motion.scss:30-46</code>, у тоста сегодня
+  не выбрана. Проверено 2026-09-22.
   Оверлейные панели переведены на <code>ds-scale-in</code> в <code>f1a1ace5</code>.
 </p>
 
