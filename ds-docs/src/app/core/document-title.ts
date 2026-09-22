@@ -6,11 +6,8 @@ import { NAV, areaOfPath, groupForAnchor } from './nav.config';
 
 const BRAND = 'IDS Design System';
 
-/**
- * `{Record} · {Section} · Brand`, the format `foundations/browser-tab` prescribes: leaf first
- * and brand last, so a row of tabs can be triaged by its left edge. The docs site is the
- * first thing a consumer sees the rule applied to, so it follows its own rule.
- */
+// The format is governed by the `foundations/browser-tab` section: `{Record} · {Section} · Brand`,
+// leaf first so a row of tabs is triaged by its left edge.
 @Injectable({ providedIn: 'root' })
 export class DocumentTitleService {
   private readonly router = inject(Router);
