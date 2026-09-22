@@ -792,8 +792,7 @@ One ask left from that batch. The two column-chart gaps beside it shipped in v0.
   components across 20 files, 2 353 lines): a node kind that colours and labels its card (start, email, letter,
   wait, condition, end), an edge that carries a label and a count (`Yes · 0` / `No · 0`), a
   condition that fans to two columns and rejoins, an insert affordance sitting ON an edge, and a
-  progress row per node while a run is live. Screenshot of a real one:
-  `presentations/journey-canvas-running.png`.
+  progress row per node while a run is live.
   **NOT asking for a builder.** Drag-and-drop, the node editor and the add menu are consumer
   concerns and should stay there. The ask is the CANVAS: take a node list and an edge list, lay them
   out, draw the edges with their markers and labels, and emit a click. The prior art is small and
