@@ -68,17 +68,31 @@
     down the category under the pointer, and reports that category to every mark
     through the shared scales. Off by default: a plot whose marks are themselves
     the hover targets already answers per mark, and two affordances on one plot
-    read as two different questions.
+    read as two different questions. A mark set to
+    <code class="t-mono-inline">
+      tooltip="axis"
+    </code> reads that same category and
+    names every series at it.
   </p>
 
   <ds-chart
     cursor="category"
     caption="Hover the plot, not a mark"
-    [categories]="latencyWeeks"
-    [summary]="latencySummary">
+    [categories]="orderMonths"
+    [summary]="ordersSummary">
     <svg:g
       dsColumnSeries
-      [data]="latencyColumns" />
+      [data]="orderColumns"
+      [showValues]="false"
+      tooltip="none" />
+
+    <svg:g
+      #axisLine="dsLineSeries"
+      dsLineSeries
+      tooltip="axis"
+      [data]="basketSeries"
+      [dsChartTooltip]="axisLine.tooltipContext()"
+      [dsChartTooltipOrigin]="axisLine.tooltipOrigin()" />
   </ds-chart>
 
   <ds-chart

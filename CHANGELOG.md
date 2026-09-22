@@ -191,6 +191,23 @@
 
 ### Added
 
+- **`g[dsLineSeries]` takes `tooltip="axis"`.** It names every series of that mark at the
+  category under the pointer, rather than the one marker hovered.
+
+  ```html
+  <ds-chart cursor="category" [categories]="months">
+    <svg:g #line="dsLineSeries" dsLineSeries tooltip="axis" [data]="series"
+      [dsChartTooltip]="line.tooltipContext()"
+      [dsChartTooltipOrigin]="line.tooltipOrigin()" />
+  </ds-chart>
+  ```
+
+  It follows the container rather than its own hover: set `cursor="category"` on `ds-chart`
+  beside it and the panel anchors to the band the cursor draws, which is also what tells the
+  reader which category is being named. `'item'` stays the default, so no chart changes on its
+  own. `ChartScales` gains `cursorOrigin` for it - the band element, or `null` while the cursor
+  is off.
+
 - **`g[dsSeriesAnnotation]` pins labels to readings.** A peak, a launch, the month a number
   turned - legible in a printed page or a screenshot, where a tooltip is not.
 

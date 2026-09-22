@@ -31,7 +31,7 @@ import type {
 } from '@ids-group-ltd/ids-design-system/core';
 import { chartActiveMark } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import type {
-  ChartItemTooltipTrigger,
+  ChartTooltipTrigger,
   ChartTooltipContext,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import { CHART_SCALES } from './chart-scales.token';
@@ -118,8 +118,11 @@ export class LineSeriesComponent implements OnDestroy {
    *  reading to the next, `'smooth'` is a monotone cubic that draws no peak the data lacks. */
   readonly curve = input<ChartCurve>('linear');
 
-  /** Whether a hovered or focused reading opens a tooltip. */
-  readonly tooltip = input<ChartItemTooltipTrigger>('item');
+  /** Whether a hovered or focused reading opens a tooltip, and for what. `'item'` names the
+   *  marker itself. `'axis'` names every series at the category under the pointer, which is the
+   *  reading a multi-series line is compared on - it follows the container's `cursor`, so set
+   *  `cursor="category"` on `ds-chart` with it or nothing marks the category being read. */
+  readonly tooltip = input<ChartTooltipTrigger>('item');
 
   /** How long the panel survives the pointer leaving the marker. Raise it only for a panel a
    *  reader has to REACH, which is WCAG 1.4.13's hoverable clause; about 140 crosses the gap. */
@@ -303,8 +306,14 @@ export class LineSeriesComponent implements OnDestroy {
   }
 
   readonly tooltipContext = computed<ChartTooltipContext | null>(() => {
+    if (this.tooltip() === 'none') {
+      return null;
+    }
+    if (this.tooltip() === 'axis') {
+      return this.axisTooltipContext();
+    }
     const marker = this.allMarkers()[this.activeMark.index()];
-    if (this.tooltip() === 'none' || !marker) {
+    if (!marker) {
       return null;
     }
 
@@ -320,4 +329,47 @@ export class LineSeriesComponent implements OnDestroy {
       ],
     };
   });
+
+  /** Where the panel hangs: the category band in `'axis'` mode, the hovered mark otherwise. */
+  readonly tooltipOrigin = computed(() =>
+    this.tooltip() === 'axis'
+      ? this.scales.cursorOrigin()
+      : this.activeMark.origin(),
+  );
+
+  /** Every series' reading at the category the CONTAINER says is active, which is what the
+   *  category cursor sets. A series with no reading there contributes no row rather than a
+   *  blank one. */
+  private readonly axisTooltipContext = computed<ChartTooltipContext | null>(
+    () => {
+      const categoryIndex = this.scales.activeIndex();
+      if (categoryIndex < 0) {
+        return null;
+      }
+      const entries = this.plotted().flatMap((entry) => {
+        const marker = entry.markers.find(
+          (candidate) => candidate.categoryIndex === categoryIndex,
+        );
+
+        return marker
+          ? [
+              {
+                label: marker.seriesLabel,
+                value: marker.value,
+                formatted: marker.formattedValue,
+                color: marker.color,
+              },
+            ]
+          : [];
+      });
+      if (!entries.length) {
+        return null;
+      }
+
+      return {
+        category: this.scales.categories()[categoryIndex] ?? '',
+        entries,
+      };
+    },
+  );
 }

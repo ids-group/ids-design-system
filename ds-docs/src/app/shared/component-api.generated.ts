@@ -2354,14 +2354,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "tooltip",
         "kind": "input",
-        "type": "ChartItemTooltipTrigger",
+        "type": "ChartTooltipTrigger",
         "union": [
           "item",
+          "axis",
           "none"
         ],
         "default": "'item'",
         "required": false,
-        "description": "Whether a hovered or focused reading opens a tooltip."
+        "description": "Whether a hovered or focused reading opens a tooltip, and for what. `'item'` names the marker itself. `'axis'` names every series at the category under the pointer, which is the reading a multi-series line is compared on - it follows the container's `cursor`, so set `cursor=\"category\"` on `ds-chart` with it or nothing marks the category being read."
       },
       {
         "name": "tooltipLingerMs",

@@ -13,6 +13,7 @@ import {
   input,
   numberAttribute,
   signal,
+  viewChild,
 } from '@angular/core';
 import {
   bandScale,
@@ -548,6 +549,12 @@ export class ChartComponent implements ChartScales {
   }
 
   readonly activeIndex = signal(-1);
+
+  private readonly bandElement = viewChild<ElementRef<Element>>('cursorBandEl');
+
+  readonly cursorOrigin = computed<Element | null>(() =>
+    this.cursorBand() ? (this.bandElement()?.nativeElement ?? null) : null,
+  );
 
   setActiveIndex(index: number): void {
     const last = this.categories().length - 1;

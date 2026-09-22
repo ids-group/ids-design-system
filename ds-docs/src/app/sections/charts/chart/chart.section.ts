@@ -7,6 +7,7 @@ import {
   ReferenceLineComponent,
 } from 'ds/chart';
 import type { ColumnSeriesPoint, LineSeriesData } from 'ds/chart';
+import { ChartTooltipDirective } from 'ds/chart-tooltip';
 import type { ChartThreshold } from 'ds/core';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
@@ -66,6 +67,7 @@ const BASKET_SERIES: readonly LineSeriesData[] = [
   standalone: true,
   imports: [
     ChartComponent,
+    ChartTooltipDirective,
     ColumnSeriesComponent,
     DocsSectionComponent,
     LineSeriesComponent,

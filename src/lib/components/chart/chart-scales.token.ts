@@ -40,6 +40,9 @@ export interface ChartScales {
   readonly zeroOffset: Signal<number>;
   /** The category under the pointer or the keyboard, or `-1` for none. */
   readonly activeIndex: Signal<number>;
+  /** The band drawn over the active category, for a mark that anchors a panel to the CATEGORY
+   *  rather than to one of its own marks. `null` while `cursor` is off or nothing is active. */
+  readonly cursorOrigin: Signal<Element | null>;
   setActiveIndex(index: number): void;
   /** Contributes values to the shared domain under an id the caller owns. Reporting again with
    *  the same id replaces that contribution.
