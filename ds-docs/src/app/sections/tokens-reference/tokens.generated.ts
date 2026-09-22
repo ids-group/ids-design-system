@@ -7030,6 +7030,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "description": "",
     "tokens": [
       {
+        "name": "--ds-table-head-height",
+        "value": "var(--_table-head-measured, 40px)",
+        "notes": ""
+      },
+      {
         "name": "--ds-table-border",
         "value": "var(--border-default)",
         "notes": "Outer border."

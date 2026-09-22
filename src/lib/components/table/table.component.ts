@@ -1098,7 +1098,7 @@ export class TableComponent<T extends object> {
 
   private publishHeadHeight(head: HTMLElement): void {
     this.hostElement.nativeElement.style.setProperty(
-      '--_table-head-h',
+      '--_table-head-measured',
       `${head.getBoundingClientRect().height}px`,
     );
   }
