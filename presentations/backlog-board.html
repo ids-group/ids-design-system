@@ -196,14 +196,14 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**104 open — 1 P1, 31 P2, 72 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**117 open — 1 P1, 34 P2, 82 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 1
 
 - **Framework & forms**
   - Upgrade to Angular 22 — and re-verify the signal-forms work against it, because one of its breaking changes lands exactly there
 
-### P2 — 31
+### P2 — 34
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Nothing catches a shell that rings on `:focus-within` when it means the keyboard
@@ -218,6 +218,8 @@ item and nothing else.
   - `.design-sync/conventions.md` is a generator INPUT, and nothing stops a reflow desyncing it
   - The elements demo has not been opened in a real browser since the rebuilds
   - `ds-toast-region`'s dev-warning strip is unverified
+- **Two more from the same audit, both about our tooling (recorded 2026-09-22, from the mm-ecm consumer)**
+  - `check-manifest-truth` verifies a minority of the locator surface, and its clean line does not say so
 - **What a full re-audit of that same upgrade turned up (recorded 2026-09-22, from the mm-ecm consumer)**
   - `chart-categorical-tokens-renamed` sends a consumer to a token our own docs say not to set
   - Two token-forwarding lists, one of them invisible from the component - and it has now misled two separate readers
@@ -246,8 +248,11 @@ item and nothing else.
   - `fix:all` reformats HTML that eslint then fights, and it is `fix:all` alone — `lint:all` is green
 - **Localization — every user-visible string is a hardcoded literal (recorded 2026-08-27, from the ITB Workspace picker report)**
   - Every user-visible string in the library is a hardcoded English literal — VALIDATED 2026-08-27 against 0.11.0; Stas: defer the whole thing, no code
+- **The chart family read as an architecture (audited 2026-09-22)**
+  - The chassis is declared nine times and shared once - about 450 lines of it
+  - The template state head and the figcaption rule are copied verbatim, nine times each
 
-### P3 — 72
+### P3 — 82
 
 - **What v0.13.3 added and the docs site never shows (measured 2026-09-22)**
   - Fifteen new inputs have no demo and no prose on the docs site
@@ -272,6 +277,8 @@ item and nothing else.
   - Which of the 8 live chapters can also be frozen
   - `templates` and `startingPoints` in `_ds_manifest.json` are in the schema and empty
   - `.thumbnail` — the project's cover image — has no source that regenerates it
+- **Two more from the same audit, both about our tooling (recorded 2026-09-22, from the mm-ecm consumer)**
+  - `auto-update-package` tells parallel subagents to check out a tag in one shared clone
 - **What a full re-audit of that same upgrade turned up (recorded 2026-09-22, from the mm-ecm consumer)**
   - `--chart-tick-size`: the 0.13.0 CHANGELOG and manifest disagree, and the manifest's informational text is wrong
   - `time-columns-onkey-signature` (0.10.2) is a migration item for a class no consumer can extend
@@ -280,7 +287,7 @@ item and nothing else.
 - **An indeterminate bar that survives a short track (recorded 2026-09-22, from the mm-ecm consumer)**
   - An indeterminate `ds-bar` is never empty, or 86.7% is enough - one verdict left
 - **Two chart names that collide (recorded 2026-09-21, from the mm-ecm consumer)**
-  - One idea, two contracts: a bar stacks through `segments`, a column through `stack`
+  - Extract what bar and column SHARE; their contracts stay different (Stas, 2026-09-22)
 - **A journey canvas the mm-ecm prototype could not use (recorded 2026-09-16)**
   - Journey / flow diagram - no component draws a branching node-and-edge canvas
 - **Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)**
@@ -335,6 +342,16 @@ item and nothing else.
   - MED cluster — ASKED 2026-08-05, Stas: keep in the backlog
 - **Virtualising a long picker list (recorded 2026-08-31, §9 P5, Stas: record only)**
   - Five thousand options render five thousand rows
+- **The chart family read as an architecture (audited 2026-09-22)**
+  - Four charts keep their own roving-tabindex state block, and the shared module owns only
+  - Three charts hand-roll a legend and three compose their own accessible sentence
+  - Six places reimplement something a shared module already does
+  - Five constants carry two or three spellings each
+  - Four exports on the package surface have no consumer in `src/`
+  - `'none'` and `'grouped'` are the same value on `ds-column-chart`
+  - Two inputs decide one thing on `ds-funnel-chart`, and two vocabularies name one idea
+  - `tooltipAnchor="pointer"` is inert unless `tooltip="axis"`, and nothing says so
+  - `ds-pie-chart` declares `staggerMs` and documents that it does nothing
 - **Thirteen inputs the chart family declares component by component (measured 2026-09-22)**
   - Only the RESOLUTION of the shared chart inputs is shared, not their declaration
 - **`changelog-lint` cannot tell "checked and clean" from "did not check" (recorded 2026-09-01, §9 G6, Stas: park)**
@@ -687,6 +704,42 @@ documented thing or their chapter's demo only exists once opened. Everything bel
 
 Each has somebody behind it. Nothing here is speculative work.
 
+## Two more from the same audit, both about our tooling (recorded 2026-09-22, from the mm-ecm consumer)
+
+Neither cost the consumer anything. Both mean a check we run reports more confidence than it earned.
+
+- [ ] **[P2] `check-manifest-truth` verifies a minority of the locator surface, and its clean line does not say so.**
+  Run across the whole `migrations/` directory it reported: *33 manifest(s) against 34 tree(s)*,
+  `1 manifest(s) not checked` (0.1.0, no earlier boundary), `94 value(s) hold no single name to
+  look up - composite selectors and call signatures. Nothing was verified about these`, and
+  `20 name(s) neither tag declares - consumer examples`. That is **114 values about which the tool
+  asserts nothing**. For scale, the same manifests carry **447 `old`/`new` values across 35 files**
+  (306 `old`, 141 `new`, counted over the saved copy, so a near-identical rather than identical
+  population). The closing line reads *"every old/new that holds a name resolves against its own
+  boundary"* - true, and easy to read as "every claim checked out" when roughly a quarter of them
+  were never testable.
+  The 20 documentation examples are the sharper half: values like `MyTable`, `MySelect`,
+  `MyToastRegion` sit in `old` on the subclass-collision items, where `old` is supposed to be a
+  locator. They are placeholders in a field a tool treats as a symbol.
+  **Wanted:** (1) print the covered fraction on the clean line, so "clean" cannot be mistaken for
+  "complete"; (2) keep documentation placeholders out of `old` - they belong in `note` or
+  `searchHints`, and a locator field that holds `MyTable` is unusable by any consumer tooling too;
+  (3) where a real symbol exists beside the composite selector, put the symbol in `old` and the
+  selector in `searchHints`, which is what the field is for.
+
+- [ ] **[P3] `auto-update-package` tells parallel subagents to check out a tag in one shared clone.**
+  Phase B step 1 says *"Check out tag `v<V>` in the DS sources clone … so agents can consult V's
+  real sources"* and *"Pass the checkout path to subagents in their prompts"*. There is exactly one
+  clone. That holds while a wave is all one version, which is the documented shape - but any use
+  that fans out across versions (a re-audit of a whole chain, which is a natural thing to want)
+  has agents racing `git checkout` on a shared working tree. Worse, combined with `ds-recheck`
+  having no shell at all, the instruction cannot be followed today in either shape.
+  **Wanted:** document `git show v<V>:<path>` and `git ls-tree -r --name-only v<V> <dir>` as the
+  access form - read-only, no working-tree change, safe for any number of concurrent readers - or
+  have the orchestrator extract each version's files to its own directory and pass that. The tag
+  checkout should stay only where it is genuinely single-tenant.
+
+
 ## What a full re-audit of that same upgrade turned up (recorded 2026-09-22, from the mm-ecm consumer)
 
 Seven parallel agents re-audited all nineteen versions adversarially, plus two deterministic
@@ -943,20 +996,20 @@ Both found while planning that consumer's move to 0.13.3. Neither blocks it; bot
   where the two components are unrelated; the other 20 are parent and child of one family.
   Candidates drawn in deck `11-ds-bar-name-collision`, which recommends `ds-gauge`.
 
-- [ ] **[P3] One idea, two contracts: a bar stacks through `segments`, a column through `stack`.**
-  `column-chart.component.ts:161` is `readonly stack = input<ChartStackMode>('none')` with
-  `'none' | 'grouped' | 'stacked' | 'normalized'`. `ds-bar-chart` has 19 inputs and no `stack` at
-  all; its stacking lives on the datum, as `BarChartRow.segments`.
-  The phase-1 spec calls the two components twins — "bar is horizontal, column is vertical", sharing
-  the scale and format modules — so a consumer who has stacked one arrives at the other expecting
-  the same input and finds a different model.
-  A second divergence sits under it and nobody named it: the same flat array is one series in the
-  bar, so every row takes `--ds-chart-series-default-color`, and N categories in the column, so each
-  mark takes its own palette slot (`bar-chart.component.ts:368` against
-  `column-chart.component.ts:314`).
-  **Wanted:** either `stack` on `ds-bar-chart` as well, or one line in both docs pages saying which
-  contract belongs to which orientation and why they differ. Three levels of convergence drawn in
-  deck `10-bar-column-contracts`, which recommends naming the difference.
+- [ ] **[P3] Extract what bar and column SHARE; their contracts stay different (Stas, 2026-09-22).**
+  **The two are different charts and are not merged.** Neither grows the other's data model: a bar
+  row is one label and one value with an optional `segments` breakdown, a column series is N marks
+  across categories with `stack` deciding how they share a band
+  (`column-chart.component.ts:161`, `'none' | 'grouped' | 'stacked' | 'normalized'`). The phase-1
+  spec calling them twins is what made the divergence read as an accident; it is not one.
+  **What the verdict asks for is the layer underneath.** Whatever both implement is extracted into a
+  shared module, reused by both, and given a way to be EXTENDED where one of them needs to differ -
+  so a chart adapts rather than forks. Whatever is unique to one stays unique to that one.
+  **Two divergences are visible to a consumer and are documented rather than removed:** stacking
+  arrives in the datum on one side and in an input on the other, and the same flat array is one
+  series in the bar, where every row takes `--ds-chart-series-default-color`, against N categories
+  in the column, where each mark takes its own palette slot (`bar-chart.component.ts:368` against
+  `column-chart.component.ts:314`). Both drawn in deck `bar-column-contracts`.
 
 ## A journey canvas the mm-ecm prototype could not use (recorded 2026-09-16)
 
@@ -1397,7 +1450,7 @@ None of these is blocked on effort. Each is a verdict, and most carry a deck tha
 short before. **The rank is the filename**: an open deck is `<rank>-<slug>.html`, ranked by what
 answering it unblocks, so the folder listing IS the queue. Ranks are renumbered when the queue
 changes and a stale one is never kept to preserve a link; `deck-lint` fails a duplicate rank, a gap
-in 1..N, and an `implemented` deck still carrying one. **`presentations/1-decision-queue.html` is rank 1 and answers all of them** — every open
+in 1..N, and an `implemented` deck still carrying one. **`presentations/1-decision-queue.html` is rank 1 and covers the RECENT asks** — every open
 deck's question with its options in that deck's own words, the recommendation starred, a link back
 for the argument, and the two questions that have no deck. It duplicates no argument, so it cannot
 contradict a deck; re-check it when a deck's OPTIONS change. **Never cite a deck by number from this
@@ -1405,7 +1458,7 @@ file** — the number moves; cite the filename.
 
 | # | Deck | Asks | Twin on this board |
 | --- | --- | --- | --- |
-| 1 | `1-decision-queue` | Every open question on one page, each with its options and a link back to the deck that argues it. | all of them |
+| 1 | `1-decision-queue` | The five consumer asks still open from 0.13.2-0.13.3, options drawn rather than named. | the 09-21 and 09-22 ask sections |
 | 2 | `2-color-engine-derivation` | One source token per role, derived. | the colour-engine P2 |
 | 3 | `3-color-engine-relative` | The prototype half of the same question. | as above |
 | 4 | `4-interaction-formula` | State interactions by formula, calibrated against the drawn ramp. | the `.ds-interactive` P2 |
@@ -1701,6 +1754,105 @@ Most of the original gap list has SHIPPED (verified 2026-07-24: multi-select · 
   unfiltered.
 
 # Records — kept so they are not "simplified" away
+
+## The chart family read as an architecture (audited 2026-09-22)
+
+Four questions, asked of all eight charts plus the `ds-chart` container: does each earn its own tag,
+is each existing variant warranted, what repeats that is not shared yet, and where does a component
+reach around a module that already does the job. Every figure below is a file:line count, not an
+impression.
+
+**Seven of the eight earn their tag and are not in question.** The test is what a chart ADDS to the
+one it most resembles: line adds 18 inputs, 3 datum fields and 2 marks over column; scatter adds a
+continuous x that `ChartScales.xPosition` cannot express at all, since it takes a category index
+(`chart-scales.token.ts:26`); heatmap adds a second axis of readings and its own ramp; pie adds six
+inputs and inverts `partOfWhole` to true; funnel adds a stage-to-stage drop no bar chart derives.
+Bar and column are settled separately and stay apart.
+
+- [ ] **[P2] The chassis is declared nine times and shared once - about 450 lines of it.**
+  `resolveChartDefaults` (`charts-defaults.ts:30-63`) unifies what the ten common inputs MEAN, and
+  the `input()` lines above it never moved. Ten inputs plus their doc paragraphs repeat across
+  `bar-chart.component.ts:105-167`, `column-chart.component.ts:178-238`,
+  `line-chart.component.ts:186-254`, `pie-chart.component.ts:103-164`,
+  `funnel-chart.component.ts:109-166`, `heatmap-chart.component.ts:99-133`,
+  `scatter-chart.component.ts:135-177`, `waterfall-chart.component.ts:99-134` and
+  `chart/chart.component.ts:160-211`. The `tooltipLingerMs` and `dimOthers` paragraphs are
+  byte-identical in five files each.
+  **The cost of moving them is the documentation, not the code.** `extract-docs` turns each
+  docblock into that chart's own input table, so a base class buys ~450 lines and makes every
+  chart's API page open with a shared preamble. The extraction that does NOT cost that is the
+  template and style duplication below, which no generator reads.
+
+- [ ] **[P2] The template state head and the figcaption rule are copied verbatim, nine times each.**
+  The error and empty `<p>` blocks are byte-identical in all nine chart templates, and the pin-reset
+  `<button>` in five, differing only in the release expression. The `figcaption` rule - three
+  declarations - is byte-identical in nine stylesheets (`bar-chart.component.scss:32-36` and its
+  eight siblings), and `styles/_chart-frame.scss:34-38` already reaches `figcaption` for
+  `user-select`, so the mixin is the obvious home. Neither is read by a doc generator, so both move
+  without losing anything.
+
+- [ ] **[P3] Four charts keep their own roving-tabindex state block, and the shared module owns only
+  the helpers.** `charts-roving.ts` exports `nextRovingIndex` and `focusMark`; the four-member state
+  around them repeats at `bar-chart.component.ts:228-247`, `pie-chart.component.ts:220-281`,
+  `funnel-chart.component.ts:242-283` and `column-series.component.ts:297-316`, differing only in the
+  count source and the `.closest()` selector. `ds-scatter-chart` opts out entirely -
+  `scatter-chart.component.html:76` puts `tabindex="0"` on every mark, against the one-tab-stop
+  policy the other four follow.
+
+- [ ] **[P3] Three charts hand-roll a legend and three compose their own accessible sentence.**
+  `ds-chart-legend` exists and has three users (column, line, scatter); `pie-chart.component.html:143-183`
+  builds a 41-line legend, `funnel-chart.component.html:96-158` a swatch table and
+  `heatmap-chart.component.ts:211-219` a ramp key. `describeSeries` (`charts-summary.ts:76`)
+  documents "the ORDER is the contract" and has five users; heatmap, scatter and waterfall each
+  phrase their own instead (`heatmap-chart.component.ts:221-228`,
+  `scatter-chart.component.ts:309-324`, `waterfall-chart.component.ts:176-195`).
+
+- [ ] **[P3] Six places reimplement something a shared module already does.**
+  `line-series.component.ts:198-209` repeats `alignSeriesValues` (`line-chart.math.ts:12-30`) on data
+  the chart already aligned at `:272`. `scatter-chart.component.ts:57-59,183-188` declares its own
+  gutters and plot rectangle beside `chartPlot` (`chart.math.ts:53`), and
+  `scatter-chart.math.ts:50-71` its own clamped scale beside `valueScale` (`chart.math.ts:134`) -
+  while using `linearScale` for the tick labels, so one component runs two scales.
+  `heatmap-chart.math.ts:9-25` recomputes a clamped share `linearScale` covers.
+  `bar-chart.math.ts:28-38` and `line-chart.math.ts:35-48` each reimplement the max reduction inside
+  `axisDomain`, which itself carries the same loop twice (`chart.math.ts:103-110` and `:263-270`,
+  byte-identical, same file). `waterfall-chart.component.ts:37` writes the literal
+  `'var(--ds-chart-series-default-color)'` where `chart-palette.generated.ts:16` exports it.
+
+- [ ] **[P3] Five constants carry two or three spellings each.** Tick count `5` at
+  `chart.math.ts:16`, `line-chart.math.ts:5`, `scatter-chart.math.ts:5` plus bare literals at
+  `column-chart.component.ts:176` and `waterfall-chart.component.ts:93`; plot height `240` at
+  `chart.math.ts:32` and `line-chart.component.ts:63`; edge gutter `12` at `chart.math.ts:37` and
+  `scatter-chart.component.ts:59`; value-label gap `8` at `column-series.component.ts:50` and
+  `waterfall-marks.component.ts:15`; column width ratio `0.8` in three places.
+
+- [ ] **[P3] Four exports on the package surface have no consumer in `src/`.** `pointScale`
+  (`charts-scale.ts:120`, 32 lines), `tickStep` (`:73`), `formatTick` (`charts-format.ts:90`, 27
+  lines) and `polylinePoints` (`charts-path.ts:61`) are re-exported by `components/index.ts` and
+  referenced only from `tools/probes/`. `ChartScales.zeroOffset` (`chart-scales.token.ts:40`) is
+  declared on the mark contract and read by no mark.
+
+- [ ] **[P3] `'none'` and `'grouped'` are the same value on `ds-column-chart`.**
+  `column-chart.component.ts:333-337` branches them together for `slotCount` and
+  `chart.math.ts:334-338` branches them together in `stackOffsets`; the component's own doc says
+  "the two differ only in spelling" (`:158-159`). Either one goes, or the doc says which is
+  canonical.
+
+- [ ] **[P3] Two inputs decide one thing on `ds-funnel-chart`, and two vocabularies name one idea.**
+  `showTable` (`funnel-chart.component.ts:107`) is resolved against the family-wide `dataTable` by
+  mutual exclusion at `:410-412` - the only chart-local switch that supersedes a `DS_CONFIG`-backed
+  one. Separately, `column-series` spells its tooltip anchor `'mark' | 'cell'` (`:114`) and
+  `line-series` spells the same idea `'reading' | 'pointer'` (`:146`), in one folder. And
+  `line-chart.types.ts:22` declares `LineChartStack` rather than narrowing `ChartStackMode`, then
+  feeds it to `stackOffsets`, which is typed on the full union (`chart.math.ts:329-331`).
+
+- [ ] **[P3] `tooltipAnchor="pointer"` is inert unless `tooltip="axis"`, and nothing says so.**
+  `line-series.component.ts:452-461`. A value on one input that does nothing depending on the value
+  of a sibling is the shape a consumer reports as a bug.
+
+- [ ] **[P3] `ds-pie-chart` declares `staggerMs` and documents that it does nothing.**
+  `pie-chart.component.ts:188-191`. It exists for parity with the other charts. Either it works or
+  it goes.
 
 ## Thirteen inputs the chart family declares component by component (measured 2026-09-22)
 
