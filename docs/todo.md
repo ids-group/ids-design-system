@@ -14,7 +14,7 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**120 open — 1 P1, 37 P2, 82 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**110 open — 1 P1, 37 P2, 72 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 1
 
@@ -73,7 +73,7 @@ item and nothing else.
 - **Localization — every user-visible string is a hardcoded literal (recorded 2026-08-27, from the ITB Workspace picker report)**
   - Every user-visible string in the library is a hardcoded English literal — VALIDATED 2026-08-27 against 0.11.0; Stas: defer the whole thing, no code
 
-### P3 — 82
+### P3 — 72
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - A whole-page keyboard walk is not measurable with the tools here, and the failed
@@ -105,18 +105,8 @@ item and nothing else.
   - One idea, two contracts: a bar stacks through `segments`, a column through `stack`
 - **A journey canvas the mm-ecm prototype could not use (recorded 2026-09-16)**
   - Journey / flow diagram - no component draws a branching node-and-edge canvas
-- **The twenty-eight rules one consumer still needs to reach into our internals (recorded 2026-09-21)**
-  - `ds-checkbox` tokenises the label's size and colour but not its weight, and the row has no hooks at all
+- **The eleven styling hooks one consumer reached past the surface for (recorded 2026-09-21)**
   - `ds-menu-item` - every hook the ask wanted already shipped; close it or answer the consumer
-  - `ds-autocomplete` cannot drop its chevron, and its input's type scale has no hook
-  - An option row's colour and the empty-state line have no hooks, while everything around them does
-  - `ds-tabs` tokenises the colours and the indicator, and none of the geometry
-  - `ds-description-item` tokenises the term's colour and size, and the term reads as an eyebrow only with three more properties
-  - `ds-segmented`'s radius hooks are per-segment, so a group that rounds only at its outer ends cannot be expressed
-  - `ds-pagination` tokenises the label's size, weight and colour, and not its tracking, its case, its position or the control size
-  - `ds-table`'s head padding is symmetric, and asymmetric is the only thing in this consumer that needs `!important`
-  - `ds-badge` tokenises its weight and sets `letter-spacing` directly
-  - `ds-button` has no `justify-content` hook, so a full-width action cannot put its arrow hard right
 - **Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)**
   - A2 - the remaining directives, after A1 prices the seam
   - B1 - `DS_CONFIG.prototype: true` is BEHAVIOUR only. For bytes, use a build-time flag
@@ -754,9 +744,11 @@ Both found while planning that consumer's move to 0.13.3. Neither blocks it; bot
   `--ds-bar-chart-target-color`, `--ds-bar-target-width` against `--ds-bar-chart-target-width`.
   A missed token rename reports nothing and the bar simply returns to its default look, which is the
   failure this collision makes likely rather than merely possible.
-  **Wanted:** a name that cannot prefix a chart's. `ds-progress-bar` keeps the merge and loses the
-  collision; it also costs one more rename in a release that is already renaming this component, so
-  it is cheapest now and not later.
+  **Wanted:** a name that cannot prefix a chart's, and that does not re-pin the component to
+  progress or to meter - the merge dropped both words deliberately, and `semantics` is what carries
+  that meaning now. Measured 2026-09-22: of 21 prefix pairs among 99 selectors this is the only one
+  where the two components are unrelated; the other 20 are parent and child of one family.
+  Candidates drawn in deck `10-ds-bar-name-collision`, which recommends `ds-gauge`.
 
 - [ ] **[P3] One idea, two contracts: a bar stacks through `segments`, a column through `stack`.**
   `column-chart.component.ts:161` is `readonly stack = input<ChartStackMode>('none')` with
@@ -765,8 +757,13 @@ Both found while planning that consumer's move to 0.13.3. Neither blocks it; bot
   The phase-1 spec calls the two components twins — "bar is horizontal, column is vertical", sharing
   the scale and format modules — so a consumer who has stacked one arrives at the other expecting
   the same input and finds a different model.
+  A second divergence sits under it and nobody named it: the same flat array is one series in the
+  bar, so every row takes `--ds-chart-series-default-color`, and N categories in the column, so each
+  mark takes its own palette slot (`bar-chart.component.ts:368` against
+  `column-chart.component.ts:314`).
   **Wanted:** either `stack` on `ds-bar-chart` as well, or one line in both docs pages saying which
-  contract belongs to which orientation and why they differ.
+  contract belongs to which orientation and why they differ. Three levels of convergence drawn in
+  deck `9-bar-column-contracts`, which recommends naming the difference.
 
 ## A journey canvas the mm-ecm prototype could not use (recorded 2026-09-16)
 
@@ -797,30 +794,38 @@ One ask left from that batch. The two column-chart gaps beside it shipped in v0.
   concerns and should stay there. The ask is the CANVAS: take a node list and an edge list, lay them
   out, draw the edges with their markers and labels, and emit a click. The prior art is small and
   readable - `edge-overlay.component.ts` (`pathFor`, one `<marker>`, three edge classes) and
-  `layout.ts` - so the question to settle first is whether this belongs in a component library at
-  all, or whether the honest answer is "bring your own canvas, here are the tokens". Either verdict
-  is useful; silence is not.
+  `layout.ts`.
+  **PARKED 2026-09-22 by Stas: wait for a second consumer.** One product shipping a shape is not
+  demand for it, and the node kinds, the edge count and the per-node run state are campaign
+  semantics rather than a rendering primitive. The phase-2 non-goal stands until someone else asks.
 
-## The twenty-eight rules one consumer still needs to reach into our internals (recorded 2026-09-21)
+## The eleven styling hooks one consumer reached past the surface for (recorded 2026-09-21)
 
 Measured in mm-ecm-platform-kb, which has no inert token pin: **156 `--ds-*` referenced, 0 that
 resolve to nothing.** (One chart there is still hand-rolled, a stacked share bar predating
-`segments`, but it reaches into nothing of ours and does not change this count.) What it cannot express through
-the public surface is styling, and it is all in one shape - a rule that doubles a class
-(`.segment.segment`) purely to out-specify our compiled `.segment[_ngcontent-*]`. **25 such rules
-across 2 files**, plus one `!important` and two plain reaches, and every one names a property the
-component tokenises everything around but not itself.
+`segments`, but it reaches into nothing of ours and does not change this count.) What it cannot
+express through the public surface is styling, and it is all in one shape - a rule that doubles a
+class (`.segment.segment`) purely to out-specify our compiled `.segment[_ngcontent-*]`. **25 such
+rules across 2 files**, plus one `!important` and two plain reaches, and every one names a property
+the component tokenises everything around but not itself.
 
 Counted with a script over every `.scss` under `projects/`, matching `/\.([a-z][a-z0-9-]*)\.\1/` in a
 selector. A first count of 72 was wrong and is not the figure: it matched the app's own `.panel`,
 `.table` and `.label` too. The doubled class is the reliable marker because nobody writes one for
 their own stylesheet.
 
-The consumer is not asking to be allowed in. Each item below is the one hook that would delete its
-rule, and the reason the rule exists is the same every time: a `font:` shorthand or a layout
-property sits next to tokens that cover its neighbours.
+**Eight shipped as hooks between 2026-09-21 and 2026-09-22**, verified against the resolver blocks
+on 2026-09-22: checkbox (`--ds-checkbox-label-font-weight`, `-row-align`, `-gap`,
+`-message-indent`), the option row and the empty line (`--ds-option-color`,
+`--ds-dropdown-empty-color`, `-font-size`), tabs (`--ds-tabs-gap`, `--ds-tab-label-font-size`,
+`--ds-tab-padding-top` / `-bottom`, `--ds-tabs-panel-padding-top`), description-item (five term
+properties plus `--ds-description-item-details-font-size` / `-font-weight`), segmented
+(`--ds-segmented-segment-border`, `--ds-segmented-label-font-size`, and a group radius that rounds
+the ends only), table (`--ds-table-head-padding-top` / `-bottom`), badge
+(`--ds-badge-letter-spacing`) and button (`align="between"`).
 
-- [ ] **[P3] `ds-checkbox` tokenises the label's size and colour but not its weight, and the row has no hooks at all.** `--ds-checkbox-label-font-size` and `--ds-checkbox-label-color` both land, and the weight beside them cannot: it is pinned `regular` inside the `font:` shorthand that reads those two. The row's `align-items` and `gap` have nothing either, and the hint under a checkbox indents by hand to clear the box. Four rules in the consumer, one component. **Ask:** `--ds-checkbox-label-font-weight`, `--ds-checkbox-row-align`, `--ds-checkbox-gap`, and a hint that already clears the box.
+Three stay written down: one with an open action, and two answered by API that already existed,
+because both are the kind of ask that comes back.
 
 - [ ] **[P3] `ds-menu-item` - every hook the ask wanted already shipped; close it or answer the consumer.** Verified against `a1ff1f49`, the commit that recorded the ask: `--ds-menu-item-pad-x` / `-pad-y` carried the padding, `--ds-menu-item-label-weight` the weight, and a quiet row had both an input and a hook of its own - `quiet` renders `.quiet`, coloured by `--ds-menu-item-quiet-label-color`; `error` does the same for a destructive row. The two token names were the abbreviations `b3e0cace` spelled out, which is the cause the other asks had too: unguessable from the CSS property.
 
@@ -839,25 +844,18 @@ property sits next to tokens that cover its neighbours.
 
   **Open:** nothing to build here that has been shown to be missing. Decide whether to tell them, and confirm against their own build before closing.
 
-- [ ] **[P3] `ds-autocomplete` cannot drop its chevron, and its input's type scale has no hook.** A chevron on a search field invites a click that would list the whole book, so the consumer hides it by selector. The input's size is a `font:` shorthand on `--font-size-s`, and the left padding has to clear a search glyph the consumer lays over the field. **Ask:** a `chevron` input (or a `search` appearance that implies it), `--ds-autocomplete-input-font-size` and `--ds-autocomplete-input-padding-inline-start`.
+- [x] **[P3] `ds-autocomplete` cannot pad its input past an overlaid search glyph - answered by the
+  prefix slot, not a padding token.** `[dsAutocompletePrefix]` projects into an in-flow
+  `.addon-slot` that pushes the input itself, so the glyph never needs to be laid over the field
+  and the padding never needs to be guessed. A `--ds-autocomplete-input-padding-inline-start`
+  would bless the overlay and then have to track its width forever. `showChevron` and
+  `--ds-autocomplete-input-font-size` shipped.
 
-- [ ] **[P3] An option row's colour and the empty-state line have no hooks, while everything around them does.** `--ds-option-padding`, `--ds-option-font-size` and `--ds-option-font-weight` all forward onto the portaled pane per instance, which is what makes the two that are missing conspicuous: the row's own colour, and the "no results" line's size and colour. **Ask:** `--ds-option-color` and `--ds-empty-font-size` / `--ds-empty-color`.
-
-- [ ] **[P3] `ds-tabs` tokenises the colours and the indicator, and none of the geometry.** The strip's gap, the tab label's type scale, the tab's bottom-only padding and the panel's top padding each need a rule. The panel one is not taste: the component ships a top padding an editorial layout does not want, because each panel block owns its own margin. **Ask:** `--ds-tabs-gap`, `--ds-tab-font-size`, `--ds-tab-padding`, `--ds-tab-panel-padding`.
-
-- [ ] **[P3] `ds-description-item` tokenises the term's colour and size, and the term reads as an eyebrow only with three more properties.** Uppercase, tracking and weight have no hooks, and the value's type scale is hard-coded `regular var(--font-size-s)`. A description list whose terms are page eyebrows is not an unusual want - it is what a detail hero looks like. **Ask:** `--ds-description-term-weight`, `-letter-spacing`, `-text-transform`, and `--ds-description-details-font-size` / `-weight`.
-
-- [ ] **[P3] `ds-segmented`'s radius hooks are per-segment, so a group that rounds only at its outer ends cannot be expressed.** The consumer's design is a row of hairline chips sharing their edges: each segment takes a border and a negative margin, and only the first and last round. Our radius token applies to every segment, which would undo the shared edge. The border and the type scale have no hooks either. **Ask:** `--ds-segmented-segment-border` and `--ds-segmented-font-size`, plus a group radius that rounds the ends rather than each segment.
-
-- [ ] **[P3] `ds-pagination` tokenises the label's size, weight and colour, and not its tracking, its case, its position or the control size.** Four rules: the label as an eyebrow needs `letter-spacing` and `text-transform`; "Showing X-Y of Z" hugging the left while the controls sit right needs the row to be a flex with the label taking `margin-right: auto`; and a pager under a full-width table needs bigger hit targets than the default. **Ask:** `--ds-pagination-label-letter-spacing` / `-text-transform`, a `layout` input (`'grouped' | 'spread'`), and `--ds-pagination-button-size` / `-font-size`.
-
-- [ ] **[P3] `ds-table`'s head padding is symmetric, and asymmetric is the only thing in this consumer that needs `!important`.** The density primitive is `--table-head-pad-y`, one value for both sides. The design wants the label tight to the top with air under it before the rule. `.table thead th` compiles to (0,4,2), which no global selector beats without stacking classes for the sole purpose of winning, so the rule carries `!important` - the only one this app aims at us. **Ask:** `--ds-table-head-padding-top` and `--ds-table-head-padding-bottom`, or let the existing hook take a two-value `padding-block`.
-
-- [ ] **[P3] `ds-badge` tokenises its weight and sets `letter-spacing` directly.** A quieter status pill needs semibold and near-normal tracking. The weight has a token; the tracking is written into `.badge`, so it can only be won on specificity. One rule, one property. **Ask:** `--ds-badge-letter-spacing`.
-
-- [ ] **[P3] `ds-button` has no `justify-content` hook, so a full-width action cannot put its arrow hard right.** A stacked full-width button whose label sits left and whose icon sits at the far edge is a common editorial shape, and `fullWidth` alone centres the pair. **Ask:** `--ds-button-justify`, or an `align` input on the button.
-
-All eleven are in mm-ecm-platform-kb: `prototype/projects/agent-portal/src/styles.scss` and `prototype/projects/ecm-portal/src/styles.scss`; every rule there carries a comment naming the hook it is standing in for, so the consumer's file doubles as the spec.
+- [x] **[P3] `ds-pagination` controls with bigger hit targets - answered by `size`, not a token.**
+  `size` takes `'sm' | 'md' | 'lg'` and drives the control height and the label's type scale
+  together. A `--ds-pagination-button-size` beside it would be a second way to say one thing, and
+  the two would drift the first time one is set without the other. The label's `letter-spacing`,
+  `text-transform` and the `layout` input all shipped.
 
 ## Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)
 
@@ -1316,7 +1314,7 @@ None of these is blocked on effort. Each is a verdict, and most carry a deck tha
 
 ## Decks awaiting a verdict (re-audited 2026-09-20)
 
-**Eight** decks carry `ds-deck-status: open` — counted on disk, not from this list, which has been
+**Ten** decks carry `ds-deck-status: open` — counted on disk, not from this list, which has been
 short before. **The rank is the filename**: an open deck is `<rank>-<slug>.html`, ranked by what
 answering it unblocks, so the folder listing IS the queue. Ranks are renumbered when the queue
 changes and a stale one is never kept to preserve a link; `deck-lint` fails a duplicate rank, a gap
@@ -1333,6 +1331,8 @@ file** — the number moves; cite the filename.
 | 6 | `6-warning-text-colour` | Which colour goes on the warning tint. Four candidates, each rendered in itself. | the warning pair under *Bugs* |
 | 7 | `7-chart-sparkline-preset` | A `variant="spark"` on the line chart against a separate `ds-sparkline`. | parked 2026-09-19, so it is decided-not-built |
 | 8 | `8-waterfall-mode-or-component` | The waterfall's own tag against a `stack="waterfall"` mode on the column chart. | the waterfall entry point, already shipped standalone |
+| 9 | `9-bar-column-contracts` | How far to converge the bar and the column: name the difference, converge the palette, or give the bar a series model. | the stacking-contract ask under *Two chart names that collide* |
+| 10 | `10-ds-bar-name-collision` | What the merged progress+meter is called, given `ds-bar` is a prefix of `ds-bar-chart`. | the `ds-bar` rename ask on the same board |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
@@ -1345,11 +1345,11 @@ same day as a `tool` — it asks nothing, so a rank on it claimed a verdict was 
 
 **Closed on 2026-09-21 and moved to `implemented/`:** `chart-palette-v2` - the two greens moved apart by one token (`--chart-categorical-6`, 152deg to 148deg), and `tools/check-chart-palette-separation.mjs` went into `lint:all` holding the 6 floor under normal vision. Colour-vision deficiency is reported by that gate and not enforced: Stas confirmed the system never took that commitment on, which is why the full repaint was declined.
 
-**Five of the eight have a twin on this board, so one answer closes two lines** — which is what
+**Seven of the ten have a twin on this board, so one answer closes two lines** — which is what
 makes them the cheapest thing here. Rank 5 is the cheapest of all: "keep parked" is a complete
 answer, and it has already been given — the deck stays only because closing it was declined.
 
-**Ranks 1-4 and 7-8 are written in Russian and share `presentations/deck.css`**; only rank 6 carries
+**Every rank but 6 is written in Russian and shares `presentations/deck.css`**; only rank 6 carries
 its own inline styles. `presentations/README.md` holds the authoring contract and the fifteen lint rules.
 
 ## The field system — the two controls outside it, and the five with no box to paint
