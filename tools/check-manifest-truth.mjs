@@ -302,6 +302,8 @@ function buildSurface(files) {
 function claims(value) {
   if (typeof value !== 'string' || !value.trim()) return [];
   const text = value.trim();
+  const openingTag = /^<(ds-[a-z0-9]+(?:-[a-z0-9]+)*)\s*\/?>$/.exec(text);
+  if (openingTag) return [{ kind: 'element', name: openingTag[1], bare: true }];
   if (/[*<>]|\.\.\./.test(text)) return []; // a family placeholder is not one name
 
   // `bare` marks a value that IS the identifier, as opposed to one lifted out of a sentence.
@@ -345,7 +347,26 @@ function claims(value) {
   const bareClass = /^\.([a-z][a-z0-9-]*)$/.exec(text);
   if (bareClass) return [{ kind: 'class', name: bareClass[1], bare: true }];
 
-  for (const match of text.matchAll(/\b[A-Z][A-Za-z0-9]{3,}\b/g))
+  // `ds-modal .danger` is the element-scoped shape AUTHORING prescribes for a class rename, so
+  // the parts are read one by one. None is bare: the scope element survives its class's rename.
+  const ELEMENT = /(?<![\w-])(ds-[a-z0-9]+(?:-[a-z0-9]+)*)/g;
+  const CLASS = /(?<![\w-])\.([a-z][a-z0-9-]*)/g;
+  const selectorOnly =
+    text
+      .replace(/\[[^\]]*\]/g, '')
+      .replace(/::ng-deep|::?[a-z-]+(?:\([^)]*\))?/g, '')
+      .replace(ELEMENT, '')
+      .replace(CLASS, '')
+      .replace(/[\s,>+~]/g, '').length === 0;
+  if (selectorOnly) {
+    for (const match of text.matchAll(ELEMENT))
+      found.push({ kind: 'element', name: match[1], bare: false, scope: true });
+    for (const match of text.matchAll(CLASS))
+      found.push({ kind: 'class', name: match[1], bare: false, scope: true });
+    if (found.length) return found;
+  }
+
+  for (const match of text.matchAll(/\b[A-Z][A-Za-z0-9_]{3,}\b/g))
     found.push({ kind: 'symbol', name: match[0], bare: text === match[0] });
   return found;
 }
@@ -593,6 +614,8 @@ export function checkItem(item, before, after, prevTag, tag) {
         !(isImportedName && claim.bare)
       )
         continue;
+      // A scope element renamed in the same release carries its new name in both halves.
+      if (claim.scope && resolves(after, claim) === true) continue;
       defects.push(
         targetExists
           ? `old \`${label(claim)}\` does not exist at ${prevTag} — \`new\` is real, so the item renames something that was never there`

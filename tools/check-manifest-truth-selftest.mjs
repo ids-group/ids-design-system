@@ -32,6 +32,57 @@ const surface = ({
 
 const rules = [
   {
+    name: 'FIRES when a note names a --ds-* token neither tag declares',
+    item: {
+      id: 'x',
+      kind: 'removed-api',
+      old: '--chart-tick',
+      new: null,
+      note: 'It fed `--ds-chart-never-shipped`, which reached no rule.',
+    },
+    before: surface({ tokens: ['--chart-tick'] }),
+    after: surface({ tokens: [] }),
+    expect: 'fire',
+  },
+  {
+    name: 'FIRES when an element-scoped class never existed',
+    item: {
+      id: 'x',
+      kind: 'class-rename',
+      old: 'ds-modal .no-such',
+      new: null,
+    },
+    before: surface({ classes: ['danger'], elements: { 'ds-modal': [] } }),
+    after: surface({ classes: ['error'], elements: { 'ds-modal': [] } }),
+    expect: 'fire',
+  },
+  {
+    name: 'HOLDS: an element-scoped class that existed, under a scope renamed in the same release',
+    item: { id: 'x', kind: 'class-rename', old: 'ds-pie .donut', new: null },
+    before: surface({ classes: ['donut'], elements: { 'ds-donut': [] } }),
+    after: surface({ classes: ['pie'], elements: { 'ds-pie': [] } }),
+    expect: 'hold',
+  },
+  {
+    name: 'FIRES when a renamed injection token never existed',
+    item: {
+      id: 'x',
+      kind: 'type-rename',
+      old: 'DS_NEVER_WAS',
+      new: 'DS_TOAST_CONFIG',
+    },
+    before: surface({ symbols: ['DS_TOAST_CONFIG'] }),
+    after: surface({ symbols: ['DS_TOAST_CONFIG'] }),
+    expect: 'fire',
+  },
+  {
+    name: 'FIRES when an opening tag names an element that never existed',
+    item: { id: 'x', kind: 'behavior', old: '<ds-never>', new: null },
+    before: surface({ elements: { 'ds-toast': [] } }),
+    after: surface({ elements: { 'ds-toast': [] } }),
+    expect: 'fire',
+  },
+  {
     name: 'FIRES when old never existed and new names nothing either',
     item: {
       id: 'x',
