@@ -8,372 +8,341 @@
 <link rel="stylesheet" href="deck.css">
 
 <style>
-  main { padding-bottom: 6rem; }
+  main { padding-bottom: 6.5rem; }
 
-  .q {
-    padding: var(--space-4) var(--space-5);
-    border: var(--border-width-default) solid var(--border-divider);
-    border-radius: var(--ds-radius-panel);
-    background: var(--surface-default);
-    margin-bottom: var(--space-4);
-  }
-  .q.is-done { border-color: var(--success); background: var(--success-subtitle); }
-  .q.is-parked { background: var(--surface-muted); }
-
+  .q { margin-bottom: var(--space-8); }
   .q-head { display: flex; align-items: baseline; gap: var(--space-3); flex-wrap: wrap; }
-  .q-num {
-    font: var(--font-weight-bold) var(--font-size-2xs) / 1 var(--font-mono);
-    color: var(--text-tertiary);
-    flex: none;
-  }
-  .q-title {
-    margin: 0;
-    font: var(--font-weight-bold) var(--font-size-m) / var(--line-height-tight) var(--font-sans);
-    flex: 1 1 18rem;
-  }
-  .q-src {
-    font: var(--font-size-2xs) var(--font-mono);
-    color: var(--text-tertiary);
-    text-decoration: none;
-    border-bottom: 1px dotted var(--border-strong);
-  }
+  .q-num { font: var(--font-weight-bold) var(--font-size-2xs) / 1 var(--font-mono); color: var(--text-tertiary); }
+  .q-title { margin: 0; font: var(--font-weight-bold) var(--font-size-l) / var(--line-height-tight) var(--font-sans); flex: 1 1 18rem; }
+  .q-src { font: var(--font-size-2xs) var(--font-mono); color: var(--text-tertiary); text-decoration: none; border-bottom: 1px dotted var(--border-strong); }
   .q-src:hover { color: var(--accent-strong); }
+  .q-sub { margin: var(--space-2) 0 0; font: var(--font-size-2xs) / 1.55 var(--font-sans); color: var(--text-secondary); }
 
-  .q-sub {
-    margin: var(--space-2) 0 0;
-    font: var(--font-size-2xs) / 1.55 var(--font-sans);
-    color: var(--text-secondary);
-  }
+  .opt { cursor: pointer; }
+  .opt.is-chosen { border-color: var(--success); box-shadow: inset 0 0 0 1px var(--success); }
+  .opt > h3 { display: flex; align-items: baseline; gap: var(--space-2); }
+  .opt .star { color: var(--success-text); }
 
-  .picks { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-3); }
-  .pickbtn {
-    padding: var(--space-1-5) var(--space-3);
-    border: var(--border-width-default) solid var(--border-default);
-    border-radius: var(--ds-radius-control);
-    background: var(--surface-default);
-    font: var(--font-weight-medium) var(--font-size-2xs) / 1.4 var(--font-sans);
-    color: var(--text-primary);
-    cursor: pointer;
-    text-align: start;
+  /* one horizontal track with one fill, rebuilt from bar.component.scss */
+  .track { block-size: 6px; border-radius: 999px; background: var(--surface-muted); overflow: hidden; position: relative; }
+  .track.narrow { inline-size: 92px; }
+  .track i { display: block; block-size: 100%; background: var(--primary); }
+  .chunk { inline-size: 30%; animation: indet var(--duration-loop-slow) linear infinite; }
+  .chunk.eased { animation-timing-function: cubic-bezier(0.2, 0, 0, 1); }
+  @keyframes indet { from { transform: translateX(-100%); } to { transform: translateX(400%); } }
+  /* `.track i` sets a flat fill and out-ranks a single class, so the gradient has to name both. */
+  .track i.stripe {
+    inline-size: 100%;
+    background: repeating-linear-gradient(115deg, var(--primary) 0 8px, var(--primary-hover) 8px 16px);
+    background-size: 22.6px 100%;
+    animation: slide 1.4s linear infinite;
   }
-  .pickbtn:hover { border-color: var(--border-strong); background: var(--surface-secondary); }
-  .pickbtn[aria-pressed='true'] {
-    border-color: var(--success);
-    background: var(--success);
-    color: var(--surface-default);
-  }
-  .pickbtn .rec {
-    display: inline-block;
-    margin-inline-start: var(--space-1);
-    font-size: 0.85em;
-    opacity: 0.75;
+  @keyframes slide { to { background-position: 22.6px 0; } }
+  @media (prefers-reduced-motion: reduce) {
+    .chunk, .stripe { animation: none; inline-size: 100%; }
   }
 
-  .bar {
-    position: fixed;
-    inset-inline: 0;
-    inset-block-end: 0;
-    display: flex;
-    align-items: center;
-    gap: var(--space-4);
-    padding: var(--space-3) var(--space-5);
-    background: var(--surface-default);
-    border-top: var(--border-width-default) solid var(--border-divider);
-    box-shadow: var(--shadow-popover);
-    font: var(--font-size-2xs) / 1.4 var(--font-sans);
-    z-index: 10;
-  }
-  .bar .count { font-weight: var(--font-weight-bold); flex: none; }
-  .bar output { flex: 1 1 auto; color: var(--text-secondary); font-family: var(--font-mono); overflow-x: auto; white-space: nowrap; }
-  .bar button {
-    flex: none;
-    padding: var(--space-1-5) var(--space-3);
-    border: var(--border-width-default) solid var(--border-default);
-    border-radius: var(--ds-radius-control);
-    background: var(--surface-default);
-    font: var(--font-weight-bold) var(--font-size-2xs) var(--font-sans);
-    color: var(--text-primary);
-    cursor: pointer;
-  }
-  .bar button:hover { background: var(--surface-secondary); }
+  /* the chart rows and columns, same proportions as the real data */
+  .rows { display: grid; gap: 5px; }
+  .row { display: grid; grid-template-columns: 4.2rem 1fr; align-items: center; gap: var(--space-2); }
+  .row span { font: var(--font-size-2xs) var(--font-sans); color: var(--text-secondary); text-align: end; }
+  .row .bar { block-size: 13px; border-radius: 2px; display: flex; overflow: hidden; }
+  .cols { display: flex; align-items: flex-end; gap: var(--space-2); block-size: 78px; }
+  .cols .col { inline-size: 26px; border-radius: 2px 2px 0 0; }
 
-  .group {
-    margin: var(--space-6) 0 var(--space-3);
-    font: var(--font-weight-bold) var(--font-size-2xs) / 1.4 var(--font-sans);
-    letter-spacing: var(--letter-spacing-wider);
-    text-transform: uppercase;
-    color: var(--text-tertiary);
+  .css {
+    margin: var(--space-2) 0 0; padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-sm); background: var(--surface-muted);
+    font: var(--font-size-2xs) / 1.6 var(--font-mono); white-space: pre; overflow-x: auto;
   }
+  .css .hit { color: var(--error-text); font-weight: var(--font-weight-bold); }
+  .css .dead { color: var(--text-tertiary); text-decoration: line-through; }
+  .console {
+    margin: var(--space-2) 0 0; padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm);
+    background: #1f2430; color: #e7c66b; font: var(--font-size-2xs) / 1.5 var(--font-mono); overflow-x: auto;
+  }
+  .console.quiet { background: var(--surface-muted); color: var(--text-tertiary); font-style: italic; }
+
+  .ns { display: grid; gap: 2px; }
+  .ns code { font: var(--font-size-2xs) / 1.5 var(--font-mono); padding: 1px var(--space-1); border-radius: 2px; background: var(--surface-muted); }
+  .ns code.clash { background: var(--error-subtitle); color: var(--error-text); }
+  .ns code.clear { background: var(--success-subtitle); color: var(--success-text); }
+
+  .panelbox { position: relative; border: var(--border-width-default) solid var(--border-default); border-radius: var(--ds-radius-panel); padding: var(--space-1); overflow: hidden; }
+  .panelbox .orow { padding: 4px var(--space-2); border-radius: var(--ds-radius-inner); font: var(--font-size-2xs) var(--font-sans); }
+  .panelbox .orow:nth-child(odd) { background: var(--surface-secondary); }
+  .rule { position: absolute; inset-inline: 0; border-top: 2px dashed; font: var(--font-weight-bold) 9px / 1 var(--font-mono); padding-inline-start: 3px; }
+
+  .bn { display: flex; gap: var(--space-2); padding: var(--space-2) var(--space-3); border-radius: var(--radius-md); border-inline-start: 3px solid var(--error); background: var(--error-subtitle); }
+  .bn.q2 { border-inline-start-color: var(--border-strong); background: var(--surface-secondary); }
+  .bn i { inline-size: 0.9rem; block-size: 0.9rem; border-radius: 50%; background: var(--error); flex: none; margin-block-start: 2px; }
+  .bn.q2 i { background: var(--text-tertiary); }
+  .bn span { font: var(--font-size-2xs) / 1.45 var(--font-sans); }
+
+  .bar-fixed {
+    position: fixed; inset-inline: 0; inset-block-end: 0; display: flex; align-items: center;
+    gap: var(--space-4); padding: var(--space-3) var(--space-5); background: var(--surface-default);
+    border-top: var(--border-width-default) solid var(--border-divider); box-shadow: var(--shadow-popover);
+    font: var(--font-size-2xs) / 1.4 var(--font-sans); z-index: 10;
+  }
+  .bar-fixed .count { font-weight: var(--font-weight-bold); flex: none; }
+  .bar-fixed output { flex: 1 1 auto; color: var(--text-secondary); font-family: var(--font-mono); overflow-x: auto; white-space: nowrap; }
+  .bar-fixed button { flex: none; padding: var(--space-1-5) var(--space-3); border: var(--border-width-default) solid var(--border-default); border-radius: var(--ds-radius-control); background: var(--surface-default); font: var(--font-weight-bold) var(--font-size-2xs) var(--font-sans); cursor: pointer; }
+  .bar-fixed button:hover { background: var(--surface-secondary); }
 </style>
 
 <main>
   <div class="masthead">
-    <h1>Тринадцать решений лежали в тринадцати местах</h1>
+    <h1>Пять асков за два релиза, каждый нарисован</h1>
     <p class="lede">
-      Здесь они по очереди, каждое одной строкой и списком вариантов. Рекомендация помечена
-      звёздочкой. Нажатие запоминается, внизу собирается одна строка со всеми ответами. Спор и
-      картинки остались в своей деке - ссылка справа от вопроса.
+      Только то, что пришло от консьюмеров на 0.13.2-0.13.3 и ещё не закрыто. Вариант выбирается
+      кликом по карточке, звёздочка - рекомендация, внизу собирается одна строка. Спор и замеры
+      лежат в своей деке, ссылка справа от вопроса.
     </p>
     <div class="chips">
       <span class="chip is-open">Нужно решение</span>
-      <span class="chip">ранг 1 — отсюда открываются остальные</span>
+      <span class="chip">аски 2026-09-21 и 09-22</span>
     </div>
   </div>
 
-  <p class="group">Сначала то, что разблокирует остальное</p>
-
-  <section class="q" data-q="colour-engine">
+  <section class="q" data-q="bar-name">
     <div class="q-head">
       <span class="q-num">01</span>
-      <h2 class="q-title">Каким методом выводить цвет из одного токена на роль</h2>
-      <a class="q-src" href="2-color-engine-derivation.html">дека 2</a>
+      <h2 class="q-title">Как зовётся объединённый progress+meter</h2>
+      <a class="q-src" href="11-ds-bar-name-collision.html">дека 11</a>
     </div>
     <p class="q-sub">
-      Ниже по течению: три P2 и одна измеренная провальная проверка контраста WCAG AA. Дека 2 -
-      прототипная половина того же вопроса, отдельного ответа не требует.
+      Единственная пара из 99 селекторов, где имя - префикс ЧУЖОГО компонента. Замена по
+      <code>--ds-bar-</code> ловит и чарт: промах молчит, чарт просто возвращается к дефолту.
     </p>
-    <div class="picks">
-      <button class="pickbtn" type="button">Сегодня (ручные пики)</button>
-      <button class="pickbtn" type="button" data-rec>HSL hue-only + ручные S/L<span class="rec">★</span></button>
-      <button class="pickbtn" type="button">OKLCH hue-only + ручные L/C</button>
-      <button class="pickbtn" type="button">OKLCH чистая формула</button>
-      <button class="pickbtn" type="button">color-mix white/black</button>
-      <button class="pickbtn" type="button">OKLCH tonal ladder</button>
-    </div>
-  </section>
 
-  <section class="q" data-q="interaction-b1">
-    <div class="q-head">
-      <span class="q-num">02</span>
-      <h2 class="q-title">Шаг pressed для тинтов</h2>
-      <a class="q-src" href="4-interaction-formula.html">дека 4, В1</a>
+    <div class="stage">
+      <div class="spec">
+        <p class="cap">до замены</p>
+        <div class="rows" style="min-inline-size:190px">
+          <div class="row"><span>Eng</span><span class="bar" style="background:#eef0f4"><i style="inline-size:82%;background:#1c3558"></i></span></div>
+          <div class="row"><span>Sales</span><span class="bar" style="background:#eef0f4"><i style="inline-size:54%;background:#1c3558"></i></span></div>
+        </div>
+        <p class="css">:root {
+  <span class="hit">--ds-bar-</span>track-color:       #eef0f4;
+  <span class="hit">--ds-bar-</span>chart-track-color: #eef0f4;
+}</p>
+      </div>
+      <div class="spec">
+        <p class="cap">после замены префикса</p>
+        <div class="rows" style="min-inline-size:190px">
+          <div class="row"><span>Eng</span><span class="bar" style="background:var(--ds-chart-grid-line-color)"><i style="inline-size:82%;background:var(--ds-chart-series-default-color)"></i></span></div>
+          <div class="row"><span>Sales</span><span class="bar" style="background:var(--ds-chart-grid-line-color)"><i style="inline-size:54%;background:var(--ds-chart-series-default-color)"></i></span></div>
+        </div>
+        <p class="css">:root {
+  --ds-gauge-track-color:       #eef0f4;
+  <span class="dead">--ds-gauge-chart-track-color: #eef0f4;</span>
+}</p>
+      </div>
     </div>
-    <p class="q-sub">28% - правило «2x hover». 34% - точное попадание в нарисованный blue-300.</p>
-    <div class="picks">
-      <button class="pickbtn" type="button">28%, правило</button>
-      <button class="pickbtn" type="button">34%, попадание в рампу</button>
-    </div>
-  </section>
+    <p class="says">Консоль пуста, сборка зелёная. Мёртвый custom property - валидный CSS.</p>
 
-  <section class="q" data-q="interaction-b2">
-    <div class="q-head">
-      <span class="q-num">03</span>
-      <h2 class="q-title">Нужен ли pressed нейтральным поверхностям</h2>
-      <a class="q-src" href="4-interaction-formula.html">дека 4, В2</a>
-    </div>
-    <p class="q-sub">Сейчас у меню и строк его нет; формула даёт бесплатно.</p>
-    <div class="picks">
-      <button class="pickbtn" type="button">Как сейчас, без pressed</button>
-      <button class="pickbtn" type="button">По формуле</button>
-    </div>
-  </section>
-
-  <section class="q" data-q="interaction-b4">
-    <div class="q-head">
-      <span class="q-num">04</span>
-      <h2 class="q-title">Нужен ли override-слот поверх формулы</h2>
-      <a class="q-src" href="4-interaction-formula.html">дека 4, В4</a>
-    </div>
-    <p class="q-sub">Любой токен состояния задаётся руками, формула остаётся fallback.</p>
-    <div class="picks">
-      <button class="pickbtn" type="button">Только формула</button>
-      <button class="pickbtn" type="button">Формула + override</button>
-    </div>
-  </section>
-
-  <section class="q" data-q="interaction-b5">
-    <div class="q-head">
-      <span class="q-num">05</span>
-      <h2 class="q-title">Вводим ли pressed для success и warning кнопок</h2>
-      <a class="q-src" href="4-interaction-formula.html">дека 4, В5</a>
-    </div>
-    <p class="q-sub">Сейчас его нет. Это новое видимое состояние, не подгонка существующего.</p>
-    <div class="picks">
-      <button class="pickbtn" type="button">Вводим</button>
-      <button class="pickbtn" type="button">Глушим шаг до hover</button>
-    </div>
-  </section>
-
-  <p class="group">Цвет и контраст</p>
-
-  <section class="q" data-q="warning-text">
-    <div class="q-head">
-      <span class="q-num">06</span>
-      <h2 class="q-title">Какой цвет текста ставить на жёлтый тинт</h2>
-      <a class="q-src" href="7-warning-text-colour.html">дека 7</a>
-    </div>
-    <p class="q-sub">
-      Пара под «Bugs» меряется 4.42:1 против порога 4.5:1. Вариант 4 трогает не текст, а тинт, и
-      оставляет ноль запаса.
-    </p>
-    <div class="picks">
-      <button class="pickbtn" type="button">1 · основной текст, 14.22:1</button>
-      <button class="pickbtn" type="button">2 · серый, 10.39:1</button>
-      <button class="pickbtn" type="button">3 · тёмно-жёлтый, 8.31:1</button>
-      <button class="pickbtn" type="button">4 · осветлить тинт, 4.50:1</button>
-    </div>
-  </section>
-
-  <p class="group">Чарты и компоненты</p>
-
-  <section class="q" data-q="sparkline">
-    <div class="q-head">
-      <span class="q-num">07</span>
-      <h2 class="q-title">Спарклайн - пресет линии или свой компонент</h2>
-      <a class="q-src" href="8-chart-sparkline-preset.html">дека 8</a>
-    </div>
-    <p class="q-sub">«Всё выключено» - это набор значений по умолчанию или новая марка.</p>
-    <div class="picks">
-      <button class="pickbtn" type="button" data-rec>Пресет, variant="spark"<span class="rec">★</span></button>
-      <button class="pickbtn" type="button">Свой ds-sparkline</button>
-    </div>
-  </section>
-
-  <section class="q" data-q="waterfall">
-    <div class="q-head">
-      <span class="q-num">08</span>
-      <h2 class="q-title">Водопад - свой тег или режим колоночного чарта</h2>
-      <a class="q-src" href="9-waterfall-mode-or-component.html">дека 9</a>
-    </div>
-    <p class="q-sub">Рисунок один и тот же и уже реализован; спор про тег и про то, чей API растёт.</p>
-    <div class="picks">
-      <button class="pickbtn" type="button" data-rec>Свой тег<span class="rec">★</span></button>
-      <button class="pickbtn" type="button">Режим stack="waterfall"</button>
+    <div class="opts">
+      <div class="opt is-today"><h3>Оставить ds-bar</h3>
+        <div class="ns"><code class="clash">--ds-bar-track-color</code><code class="clash">--ds-bar-chart-track-color</code></div>
+        <dl class="layer"><dt>Работа</dt><dd class="none">нет</dd><dt>Коллизия</dt><dd>остаётся</dd></dl>
+      </div>
+      <div class="opt"><h3>ds-gauge <span class="star">★</span></h3>
+        <div class="ns"><code class="clear">--ds-gauge-track-color</code><code class="clear">--ds-bar-chart-track-color</code></div>
+        <dl class="layer"><dt>Работа</dt><dd>9 токенов, 36 файлов</dd><dt>Ищется как</dt><dd>gauge, не bar</dd></dl>
+      </div>
+      <div class="opt"><h3>ds-value-bar</h3>
+        <div class="ns"><code class="clear">--ds-value-bar-track-color</code><code class="clear">--ds-bar-chart-track-color</code></div>
+        <dl class="layer"><dt>Работа</dt><dd>9 токенов, 36 файлов</dd><dt>Ищется как</dt><dd class="gain">bar, но длиннее</dd></dl>
+      </div>
+      <div class="opt"><h3>Переименовать чарт</h3>
+        <div class="ns"><code class="clear">--ds-bar-track-color</code><code class="clear">--ds-row-chart-track-color</code></div>
+        <dl class="layer"><dt>Работа</dt><dd>9 токенов, 22 файла, 19 входов</dd><dt>Цена</dt><dd>«bar chart» перестаёт находиться</dd></dl>
+      </div>
     </div>
   </section>
 
   <section class="q" data-q="bar-column">
     <div class="q-head">
-      <span class="q-num">09</span>
+      <span class="q-num">02</span>
       <h2 class="q-title">Насколько сводить контракты бара и колонки</h2>
       <a class="q-src" href="10-bar-column-contracts.html">дека 10</a>
     </div>
-    <p class="q-sub">Один плоский массив бар красит одним цветом, колонка - палитрой по позиции.</p>
-    <div class="picks">
-      <button class="pickbtn" type="button" data-rec>Назвать разницу в доках<span class="rec">★</span></button>
-      <button class="pickbtn" type="button">Свести палитру</button>
-      <button class="pickbtn" type="button">Свести всё, серии бару</button>
-    </div>
-  </section>
-
-  <section class="q" data-q="bar-name">
-    <div class="q-head">
-      <span class="q-num">10</span>
-      <h2 class="q-title">Как зовётся объединённый progress+meter</h2>
-      <a class="q-src" href="11-ds-bar-name-collision.html">дека 11</a>
-    </div>
     <p class="q-sub">
-      Единственная пара из 99 селекторов, где имя - префикс ЧУЖОГО компонента. Промах по
-      <code>--ds-bar-</code> молча возвращает чарт к дефолту.
+      Один и тот же плоский массив, ни одна запись не несёт <code>color</code>. Бар считает строки
+      ОДНОЙ серией, колонка - КАТЕГОРИЯМИ.
     </p>
-    <div class="picks">
-      <button class="pickbtn" type="button">Оставить ds-bar</button>
-      <button class="pickbtn" type="button" data-rec>ds-gauge<span class="rec">★</span></button>
-      <button class="pickbtn" type="button">ds-level</button>
-      <button class="pickbtn" type="button">ds-value-bar</button>
-      <button class="pickbtn" type="button">Переименовать чарт</button>
+
+    <div class="stage">
+      <div class="spec">
+        <p class="cap">ds-bar-chart</p>
+        <div class="rows" style="min-inline-size:200px">
+          <div class="row"><span>Eng</span><span class="bar"><i style="inline-size:100%;background:var(--ds-chart-series-default-color)"></i></span></div>
+          <div class="row"><span>Sales</span><span class="bar"><i style="inline-size:63%;background:var(--ds-chart-series-default-color)"></i></span></div>
+          <div class="row"><span>Support</span><span class="bar"><i style="inline-size:32%;background:var(--ds-chart-series-default-color)"></i></span></div>
+          <div class="row"><span>Ops</span><span class="bar"><i style="inline-size:24%;background:var(--ds-chart-series-default-color)"></i></span></div>
+        </div>
+      </div>
+      <div class="spec">
+        <p class="cap">ds-column-chart</p>
+        <div class="cols">
+          <span class="col" style="block-size:100%;background:var(--ds-chart-series-1-color)"></span>
+          <span class="col" style="block-size:63%;background:var(--ds-chart-series-2-color)"></span>
+          <span class="col" style="block-size:32%;background:var(--ds-chart-series-3-color)"></span>
+          <span class="col" style="block-size:24%;background:var(--ds-chart-series-4-color)"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="opts">
+      <div class="opt"><h3>Назвать разницу <span class="star">★</span></h3>
+        <p>Строка в обеих доках: у бара строки и есть сравнение, у колонки сравниваются серии.</p>
+        <dl class="layer"><dt>Кода</dt><dd class="none">нет</dd><dt>Цвет плоского массива</dt><dd>остаётся разным</dd></dl>
+      </div>
+      <div class="opt"><h3>Свести палитру</h3>
+        <p>Плоская форма красится одинаково у обоих. Один вход решает, что значит цвет.</p>
+        <dl class="layer"><dt>Кода</dt><dd>вход и две ветки покраски</dd><dt>Ломает</dt><dd>картинку у всех, кто рисует плоский массив</dd></dl>
+      </div>
+      <div class="opt"><h3>Свести всё</h3>
+        <p>Бар принимает серии и получает <code>stack</code> - multi-series горизонтальный чарт.</p>
+        <dl class="layer"><dt>Кода</dt><dd>серийная модель, раскладка, легенда</dd><dt>Ломает</dt><dd>тип <code>data</code></dd></dl>
+      </div>
     </div>
   </section>
 
   <section class="q" data-q="indeterminate">
     <div class="q-head">
-      <span class="q-num">11</span>
+      <span class="q-num">03</span>
       <h2 class="q-title">Форма неопределённого прогресса на узком треке</h2>
       <a class="q-src" href="../docs/todo.md">бэклог, без деки</a>
     </div>
     <p class="q-sub">
-      Причина уже исправлена: цикл был на кривой, стал linear, и кусок теперь на треке 86.7%
-      цикла против 48.3%. Осталось, устраивает ли, что 13.3% его нет совсем.
+      Причина уже исправлена: цикл шёл на кривой, стал <code>linear</code>, и кусок теперь на треке
+      86.7% цикла против 48.3%. Треки ниже живые и узкие - как в карточке узла у консьюмера.
     </p>
-    <div class="picks">
-      <button class="pickbtn" type="button" data-rec>Оставить бегущий кусок<span class="rec">★</span></button>
-      <button class="pickbtn" type="button">Полоса по умолчанию</button>
-      <button class="pickbtn" type="button">Полоса за входом</button>
+
+    <div class="stage">
+      <div class="spec">
+        <p class="cap">было, кривая</p>
+        <div class="track narrow"><i class="chunk eased"></i></div>
+        <p class="says">на треке 48.3% цикла</p>
+      </div>
+      <div class="spec">
+        <p class="cap">сейчас, linear</p>
+        <div class="track narrow"><i class="chunk"></i></div>
+        <p class="says">86.7%, целиком 46.8%</p>
+      </div>
+      <div class="spec">
+        <p class="cap">полоса консьюмера</p>
+        <div class="track narrow"><i class="stripe"></i></div>
+        <p class="says">100% трека каждый кадр</p>
+      </div>
+    </div>
+
+    <div class="opts">
+      <div class="opt"><h3>Оставить бегущий кусок <span class="star">★</span></h3>
+        <p>Дефект вылечен. 13.3% цикла куска нет совсем - это бегущий кусок, который так и работает.</p>
+        <dl class="layer"><dt>Кода</dt><dd class="none">нет, уже сделано</dd></dl>
+      </div>
+      <div class="opt"><h3>Полоса по умолчанию</h3>
+        <p>Неопределённый прогресс больше никогда не пуст, на любой ширине.</p>
+        <dl class="layer"><dt>Кода</dt><dd>новый keyframe, градиент</dd><dt>Ломает</dt><dd>вид у всех, кто уже привык к куску</dd></dl>
+      </div>
+      <div class="opt"><h3>Полоса за входом</h3>
+        <p>Узкий трек выбирает форму сам, широкий остаётся как есть.</p>
+        <dl class="layer"><dt>Кода</dt><dd>вход + вторая форма</dd><dt>Цена</dt><dd>две формы одного состояния в API</dd></dl>
+      </div>
     </div>
   </section>
 
-  <p class="group">Инструменты и формат</p>
-
   <section class="q" data-q="banner-warning">
     <div class="q-head">
-      <span class="q-num">12</span>
+      <span class="q-num">04</span>
       <h2 class="q-title">Предупреждать ли в dev о неозвученном error-баннере</h2>
       <a class="q-src" href="12-banner-announce-warning.html">дека 12</a>
     </div>
-    <p class="q-sub">У входа теперь три состояния, поэтому осознанный opt-out отличим от забывчивости.</p>
-    <div class="picks">
-      <button class="pickbtn" type="button">Молчать</button>
-      <button class="pickbtn" type="button">Предупреждать всегда</button>
-      <button class="pickbtn" type="button" data-rec>Пока ключ не выставлен<span class="rec">★</span></button>
+    <p class="q-sub">
+      У консьюмера 43 баннера, первый проход пропустил десять. Экран один и тот же, отличается
+      только то, что печатает консоль.
+    </p>
+
+    <div class="stage">
+      <div class="spec" style="min-inline-size:250px">
+        <p class="cap">экран во всех трёх вариантах</p>
+        <div class="bn"><i></i><span><strong>Загрузка манифеста не прошла</strong><br>Файл отклонён на строке 12.</span></div>
+        <div class="bn q2" style="margin-top:var(--space-2)"><i></i><span><strong>Плановые работы в воскресенье</strong><br>С 02:00 до 04:00.</span></div>
+      </div>
+    </div>
+
+    <div class="opts">
+      <div class="opt is-today"><h3>Молчать</h3>
+        <p class="console quiet">консоль пуста</p>
+        <dl class="layer"><dt>Как находят пропуск</dt><dd>ручной обход всех баннеров</dd></dl>
+      </div>
+      <div class="opt"><h3>Предупреждать всегда</h3>
+        <p class="console">[ds-banner] variant="error" without announce - a screen reader will not hear it.</p>
+        <dl class="layer"><dt>Шум</dt><dd>у каждого при апгрейде</dd><dt>Как гасится</dt><dd>правкой каждого элемента</dd></dl>
+      </div>
+      <div class="opt"><h3>Пока ключ не выставлен <span class="star">★</span></h3>
+        <p class="console">[ds-banner] variant="error" without announce. Decide app-wide with provideDsConfig.</p>
+        <dl class="layer"><dt>Шум</dt><dd class="gain">кончается с ключом</dd><dt>Как гасится</dt><dd class="gain">одной строкой</dd></dl>
+      </div>
     </div>
   </section>
 
   <section class="q" data-q="picker-height">
     <div class="q-head">
-      <span class="q-num">13</span>
+      <span class="q-num">05</span>
       <h2 class="q-title">Высота списка пикера - публичный токен или panelClass</h2>
       <a class="q-src" href="13-picker-list-height.html">дека 13</a>
     </div>
-    <p class="q-sub">Кэпов два, и настраиваемым выглядит не тот, что решает видимые строки.</p>
-    <div class="picks">
-      <button class="pickbtn" type="button" data-rec>Через panelClass<span class="rec">★</span></button>
-      <button class="pickbtn" type="button">Оставить --picker-maxh глобальным</button>
-      <button class="pickbtn" type="button">Публичный токен на хосте</button>
-    </div>
-  </section>
-
-  <section class="q" data-q="manifest-practices">
-    <div class="q-head">
-      <span class="q-num">14</span>
-      <h2 class="q-title">Какие из восьми практик формата манифестов берём</h2>
-      <a class="q-src" href="5-migration-manifest-audit.html">дека 5</a>
-    </div>
     <p class="q-sub">
-      Все 23 находки аудита закрыты, осталась ратификация. Контракт держится на 306 строках
-      регэкспов - первые две практики лечат именно это. Можно отметить несколько.
+      Кэпов два. Синий режет список и решает видимые строки, красный режет коробку и форвардится -
+      настраиваемым выглядит именно он.
     </p>
-    <div class="picks" data-multi>
-      <button class="pickbtn" type="button" data-rec>Исполняемая проверка<span class="rec">★</span></button>
-      <button class="pickbtn" type="button" data-rec>schemaVersion<span class="rec">★</span></button>
-      <button class="pickbtn" type="button">Явное «замены нет»</button>
-      <button class="pickbtn" type="button">Рантайм-идентификаторы</button>
-      <button class="pickbtn" type="button">Маркер эскалации</button>
-      <button class="pickbtn" type="button">deprecatedIn</button>
-      <button class="pickbtn" type="button">Ссылка на PR</button>
-      <button class="pickbtn" type="button">Ключ requirements</button>
-      <button class="pickbtn" type="button">Ни одну</button>
+
+    <div class="stage">
+      <div class="spec" style="min-inline-size:210px">
+        <p class="cap">как есть</p>
+        <div class="panelbox" style="block-size:128px">
+          <div class="orow">Aberdeen</div><div class="orow">Belfast</div>
+          <div class="orow">Cardiff</div><div class="orow">Dover</div>
+          <span class="rule" style="inset-block-start:100px;border-color:var(--accent);color:var(--accent-strong)">--picker-maxh 280</span>
+          <span class="rule" style="inset-block-start:126px;border-color:var(--error);color:var(--error-text)">--ds-dropdown-panel-max-height 320</span>
+        </div>
+      </div>
+      <div class="spec" style="min-inline-size:210px">
+        <p class="cap">поднять знакомую ручку до 480</p>
+        <div class="panelbox" style="block-size:128px">
+          <div class="orow">Aberdeen</div><div class="orow">Belfast</div>
+          <div class="orow">Cardiff</div><div class="orow">Dover</div>
+          <span class="rule" style="inset-block-start:100px;border-color:var(--accent);color:var(--accent-strong)">--picker-maxh 280</span>
+        </div>
+        <p class="says">картинка не изменилась</p>
+      </div>
+    </div>
+
+    <div class="opts">
+      <div class="opt"><h3>Через panelClass <span class="star">★</span></h3>
+        <p class="css">&lt;ds-select panelClass="depot" /&gt;
+.depot .dropdown-list { max-height: 480px }</p>
+        <dl class="layer"><dt>Есть с</dt><dd class="gain">0.13.1, работает</dd><dt>Новый API</dt><dd class="none">нет</dd></dl>
+      </div>
+      <div class="opt is-today"><h3>Оставить глобальным</h3>
+        <p class="css">:root { --picker-maxh: 480px }</p>
+        <dl class="layer"><dt>Область</dt><dd>все три пикера</dd><dt>Новый API</dt><dd class="none">нет</dd></dl>
+      </div>
+      <div class="opt"><h3>Публичный токен</h3>
+        <p class="css">ds-select {
+  --ds-picker-list-max-height: 480px
+}</p>
+        <dl class="layer"><dt>Есть с</dt><dd>надо строить</dd><dt>Цена</dt><dd>переименование + гард + миграция</dd></dl>
+      </div>
     </div>
   </section>
 
-  <p class="group">Уже отвечено - здесь, чтобы не искать</p>
-
-  <section class="q is-parked">
-    <div class="q-head">
-      <span class="q-num">--</span>
-      <h2 class="q-title">ds-select с multi - не строим</h2>
-      <a class="q-src" href="6-select-native-multi.html">дека 6</a>
-    </div>
-    <p class="q-sub">
-      Решение 2026-08-06: пункт остаётся в бэклоге P3, дека приложена как ответ. Как только
-      гипотетический <code>ds-select multi</code> делают юзабельным, он превращается в
-      <code>ds-multi-select</code>. Закрыть можно в любой момент - ответ уже дан.
-    </p>
-  </section>
-
-  <section class="q is-parked">
-    <div class="q-head">
-      <span class="q-num">--</span>
-      <h2 class="q-title">Journey canvas - припаркован до второго консьюмера</h2>
-      <a class="q-src" href="../docs/todo.md">бэклог, без деки</a>
-    </div>
-    <p class="q-sub">
-      Твой вердикт 2026-09-22. Один продукт, отрисовывающий форму, - это не спрос, а виды узлов и
-      прогресс запуска - семантика campaign automation, а не примитив отрисовки.
-    </p>
-  </section>
-
-  <div class="bar">
-    <span class="count" id="count">0 из 14</span>
+  <div class="bar-fixed">
+    <span class="count" id="count">0 из 5</span>
     <output id="line">пока ничего не выбрано</output>
     <button type="button" id="copy">Скопировать</button>
     <button type="button" id="reset">Сбросить</button>
@@ -381,44 +350,35 @@
 </main>
 
 <script>
-  const KEY = 'ds-decision-queue';
+  const KEY = 'ds-decision-queue-v2';
   const load = () => { try { return JSON.parse(localStorage.getItem(KEY)) ?? {}; } catch { return {}; } };
   const save = (v) => { try { localStorage.setItem(KEY, JSON.stringify(v)); } catch { /* private window */ } };
 
   const state = load();
   const sections = [...document.querySelectorAll('.q[data-q]')];
-
-  const label = (btn) => btn.textContent.replace('★', '').trim();
+  const name = (card) => card.querySelector('h3').textContent.replace('★', '').trim();
 
   function render() {
     for (const section of sections) {
-      const key = section.dataset.q;
-      const chosen = state[key] ?? [];
-      for (const btn of section.querySelectorAll('.pickbtn')) {
-        btn.setAttribute('aria-pressed', String(chosen.includes(label(btn))));
+      const chosen = state[section.dataset.q];
+      for (const card of section.querySelectorAll('.opt')) {
+        card.classList.toggle('is-chosen', name(card) === chosen);
       }
-      section.classList.toggle('is-done', chosen.length > 0);
     }
-    const done = sections.filter((s) => (state[s.dataset.q] ?? []).length > 0);
+    const done = sections.filter((s) => state[s.dataset.q]);
     document.getElementById('count').textContent = `${done.length} из ${sections.length}`;
     document.getElementById('line').textContent = done.length
-      ? done.map((s) => `${s.querySelector('.q-num').textContent}: ${(state[s.dataset.q] ?? []).join(' + ')}`).join('  ·  ')
+      ? done.map((s) => `${s.querySelector('.q-num').textContent}: ${state[s.dataset.q]}`).join('  ·  ')
       : 'пока ничего не выбрано';
   }
 
   for (const section of sections) {
     section.addEventListener('click', (event) => {
-      const btn = event.target.closest('.pickbtn');
-      if (!btn) return;
+      const card = event.target.closest('.opt');
+      if (!card) return;
       const key = section.dataset.q;
-      const multi = btn.closest('[data-multi]');
-      const name = label(btn);
-      const chosen = state[key] ?? [];
-      if (multi) {
-        state[key] = chosen.includes(name) ? chosen.filter((v) => v !== name) : [...chosen, name];
-      } else {
-        state[key] = chosen.includes(name) ? [] : [name];
-      }
+      state[key] = state[key] === name(card) ? undefined : name(card);
+      if (!state[key]) delete state[key];
       save(state);
       render();
     });

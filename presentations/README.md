@@ -11,7 +11,7 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 
 | # | Deck | Answering it unblocks |
 | --- | --- | --- |
-| 1 | `1-decision-queue` | every open question in one place: the options in each deck's own words, the recommendation starred, a link back for the argument |
+| 1 | `1-decision-queue` | the five consumer asks still open from 0.13.2-0.13.3, each with its options DRAWN - the live indeterminate tracks are the case a text list could not put |
 | 2 | `2-color-engine-derivation` | the head of the biggest lane: three P2 decisions and one measured WCAG AA failure sit downstream of the colour-space choice |
 | 3 | `3-color-engine-relative` | the same decision, prototype half — ranked next so the pair is read together |
 | 4 | `4-interaction-formula` | `.ds-interactive`, five verdicts B1-B5; agreed in principle, and `_interaction.scss` still does not exist |
@@ -40,9 +40,10 @@ nav, and the scatter's phase — which went to phase 2 with its decimation layer
 **A `tool` here takes no number.** `backlog-board.html` and `rejected-with-numbers.html` — both are
 read whenever rather than at a moment, so they stay unnumbered and sort below the queue.
 
-**`1-decision-queue` holds rank 1 because answering it is what unblocks every other deck.** Every open deck's question,
-its options in that deck's own words, the recommendation starred, and a link back to the deck for
-the argument — plus the two questions that have no deck of their own. Picks persist per browser
+**`1-decision-queue` holds rank 1 and is scoped to the RECENT asks, not to the whole queue.** The
+five a consumer raised on 0.13.2-0.13.3 that are still open, each with its options rendered rather
+than named — three live tracks for the indeterminate one, the two palettes side by side for the
+bar-and-column one. A deck link sits beside each question for the argument and the measurements. Picks persist per browser
 and the bar at the foot hands them back as one line. It duplicates no argument, so it cannot
 contradict a deck; it goes stale only when a deck's OPTIONS change, which is what to re-check
 when one does.

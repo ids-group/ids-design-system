@@ -1255,7 +1255,7 @@ None of these is blocked on effort. Each is a verdict, and most carry a deck tha
 short before. **The rank is the filename**: an open deck is `<rank>-<slug>.html`, ranked by what
 answering it unblocks, so the folder listing IS the queue. Ranks are renumbered when the queue
 changes and a stale one is never kept to preserve a link; `deck-lint` fails a duplicate rank, a gap
-in 1..N, and an `implemented` deck still carrying one. **`presentations/1-decision-queue.html` is rank 1 and answers all of them** — every open
+in 1..N, and an `implemented` deck still carrying one. **`presentations/1-decision-queue.html` is rank 1 and covers the RECENT asks** — every open
 deck's question with its options in that deck's own words, the recommendation starred, a link back
 for the argument, and the two questions that have no deck. It duplicates no argument, so it cannot
 contradict a deck; re-check it when a deck's OPTIONS change. **Never cite a deck by number from this
@@ -1263,7 +1263,7 @@ file** — the number moves; cite the filename.
 
 | # | Deck | Asks | Twin on this board |
 | --- | --- | --- | --- |
-| 1 | `1-decision-queue` | Every open question on one page, each with its options and a link back to the deck that argues it. | all of them |
+| 1 | `1-decision-queue` | The five consumer asks still open from 0.13.2-0.13.3, options drawn rather than named. | the 09-21 and 09-22 ask sections |
 | 2 | `2-color-engine-derivation` | One source token per role, derived. | the colour-engine P2 |
 | 3 | `3-color-engine-relative` | The prototype half of the same question. | as above |
 | 4 | `4-interaction-formula` | State interactions by formula, calibrated against the drawn ramp. | the `.ds-interactive` P2 |
