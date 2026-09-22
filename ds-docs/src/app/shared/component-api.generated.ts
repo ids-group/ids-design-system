@@ -1866,6 +1866,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Pins the ceiling of the value axis. See `min`. Two charts drawn one subject at a time are only comparable when both are pinned."
       },
       {
+        "name": "maxSecondary",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Pins the ceiling of the SECOND value axis, the way `max` pins the first. Two plots read against each other need both pinned, or the second rescales under them."
+      },
+      {
         "name": "plotHeight",
         "kind": "input",
         "type": "number",

@@ -256,6 +256,7 @@ export function secondaryAxis(
   reported: Iterable<readonly number[]>,
   tickCount: number,
   mode: ChartAxisMode,
+  pinnedMax: number | null = null,
 ): SecondaryAxis {
   let minimum = 0;
   let maximum = 0;
@@ -266,6 +267,9 @@ export function secondaryAxis(
       (highest, value) => Math.max(highest, value),
       maximum,
     );
+  }
+  if (pinnedMax !== null && Number.isFinite(pinnedMax)) {
+    maximum = pinnedMax;
   }
   const independent = (): SecondaryAxis => ({
     domain: niceDomain(minimum, maximum, tickCount),

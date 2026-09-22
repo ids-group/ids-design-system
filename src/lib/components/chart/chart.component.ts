@@ -96,6 +96,12 @@ export class ChartComponent implements ChartScales {
     transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
   });
 
+  /** Pins the ceiling of the SECOND value axis, the way `max` pins the first. Two plots read
+   *  against each other need both pinned, or the second rescales under them. */
+  readonly maxSecondary = input<number | null>(null, {
+    transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
+  });
+
   /** Height of the plot itself, in CSS pixels, axis labels and value headroom excluded. Real
    *  pixels rather than a share of the width: one viewBox unit is one pixel, so a card that
    *  widens spreads the categories further apart and leaves the plot exactly this tall. */
@@ -407,6 +413,7 @@ export class ChartComponent implements ChartScales {
         this.valuesOn('secondary'),
         this.tickCount(),
         this.secondaryAxisMode(),
+        this.maxSecondary(),
       ),
     {
       equal: (a, b) =>

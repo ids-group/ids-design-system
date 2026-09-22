@@ -186,6 +186,19 @@ check('an exact second axis divides the same rows', exact.ticks, [
   0, 47475, 94950, 142425, 189900,
 ]);
 
+// A pinned ceiling replaces what the data reported, so two plots read against each other keep the
+// same second axis when one of them loses its tallest reading.
+const pinned = secondaryAxis(PRIMARY_TICKS, [[189900]], 5, 'dual-grid', 250000);
+check('a pinned second ceiling wins over the data', pinned.domain.max, 250000);
+const pinnedBelow = secondaryAxis(PRIMARY_TICKS, [[189900]], 5, 'dual-grid', 100000);
+check('a pinned ceiling under the data still wins', pinnedBelow.domain.max, 100000);
+const unpinned = secondaryAxis(PRIMARY_TICKS, [[189900]], 5, 'dual-grid', null);
+check(
+  'no pin leaves the domain where the data put it',
+  unpinned.domain.max,
+  secondaryAxis(PRIMARY_TICKS, [[189900]], 5, 'dual-grid').domain.max,
+);
+
 const dualGrid = secondaryAxis(PRIMARY_TICKS, [[189900]], 5, 'dual-grid');
 check('a dual-grid second axis shares no rows', dualGrid.aligned, false);
 check('a dual-grid second axis nices its own domain', dualGrid.domain, {

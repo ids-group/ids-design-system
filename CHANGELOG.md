@@ -191,6 +191,17 @@
 
 ### Added
 
+- **`ds-chart` takes `maxSecondary`.** It pins the ceiling of the second value axis the way
+  `max` pins the first.
+
+  ```html
+  <ds-chart [max]="40000" [maxSecondary]="250000" [categories]="months">…</ds-chart>
+  ```
+
+  Two plots read against each other need both axes pinned, or the second one rescales under the
+  reader when a series loses its tallest value. Unset, the axis is derived from what the marks
+  report, which is what it did before.
+
 - **A published input can now name its own type.** `g[dsColumnSeries]` and `g[dsLineSeries]` ship
   from the package root, and two of their inputs were typed by symbols the root did not export:
   `offsets` by `ChartStackOffset`, and `curve` by a type that existed twice.
