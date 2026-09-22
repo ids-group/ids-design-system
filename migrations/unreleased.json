@@ -146,7 +146,7 @@
         "BannerComponent"
       ],
       "verify": "Every subclass of the listed components builds, and any member it declares that the base now also declares carries `override`.",
-      "note": "`LineChartComponent`, `ChartComponent` and `LineSeriesComponent` gained members behind the new axis and curve inputs; `ButtonComponent` gained `align`, `PaginationComponent` `size` and `layout`, `SegmentedComponent` `joined`, `LineSeriesComponent` four more; `DropzoneComponent` lost `single`; and every chart gained the rows and columns it now hands `ds-chart-data-table`. `PieChartComponent` traded `thickness` for `innerRadius`, `AccordionComponent` `multi` for `multiple`, `TableComponent` `sortDir` for `sortDirection`, and `AppLayoutComponent` and `DatePickerComponent` changed a member's type with the symbol renames - a subclass overriding an old name now overrides nothing."
+      "note": "`ChartComponent` gained 21 members and `LineChartComponent` 24 behind the new axis, cursor, curve and stack inputs, while `LineChartComponent` lost 51 geometry members now drawn by `ds-chart`; `LineSeriesComponent` gained 17. `ButtonComponent` gained `align`, `PaginationComponent` `size`, `layout`, `sizeResolved` and `navClass`, `SegmentedComponent` `joined`, `DropzoneComponent` `emitPicked`, `AlertComponent` and `BannerComponent` `announceResolved`, and every chart the defaults and table rows it hands `ds-chart-data-table`. `DropzoneComponent` lost `single`; `PieChartComponent` traded `thickness` for `innerRadius`, `AccordionComponent` `multi` for `multiple`, `TableComponent` `sortDir` for `sortDirection`; `AppLayoutComponent` and `DatePickerComponent` changed a member's type with the symbol renames. A subclass overriding an old name now overrides nothing."
     },
     {
       "id": "bar-chart-value-accepts-a-range",
@@ -865,7 +865,7 @@
       "new": null,
       "surface": "none",
       "action": "None, unless the panels should keep fading in place: then set `--ds-overlay-enter-keyframes: ds-fade-in` on `:root`.",
-      "appliesWhen": "Every portaled panel carrying `ds-overlay-pane`: select, autocomplete, multi-select, the date, time and colour pickers, popover, tooltip, the menu submenu and the chart tooltip. Drawer, bottom-sheet, alert, banner and toast name their own `--ds-*-enter-keyframes` and are unchanged. The default ships in `styles/overlay-motion`, which `styles/ds` forwards.",
+      "appliesWhen": "Every portaled panel carrying `ds-overlay-pane`: select, autocomplete, multi-select, the date, time and colour pickers, popover, tooltip, the menu submenu and the chart tooltip. Drawer, bottom-sheet, alert, banner and toast name their own `--ds-*-enter-keyframes` and never read this one; the last three change default too, under `toast-banner-alert-grow-instead-of-fading`. The default ships in `styles/overlay-motion`, which `styles/ds` forwards.",
       "restore": ":root { --ds-overlay-enter-keyframes: ds-fade-in; }",
       "searchHints": [
         "--ds-overlay-enter-keyframes",
@@ -909,10 +909,10 @@
       "old": "--ds-toast-enter-keyframes",
       "new": null,
       "surface": "style",
-      "action": "Look at a toast, a banner and an inline alert as they appear. Was ds-fade-in, now ds-scale-in; restore with --ds-<surface>-enter-keyframes: ds-fade-in.",
+      "action": "None, unless a toast, a banner or an inline alert should keep fading in: then set its `--ds-<surface>-enter-keyframes` to `ds-fade-in`. Separately, remove any `--ds-toast-enter-scale`, `--ds-banner-enter-scale` or `--ds-alert-enter-scale` value that was not meant to take effect.",
       "appliesWhen": "Only the entrance of ds-toast, ds-banner and ds-alert. ds-modal and the overlay panels already grew and are unchanged; ds-drawer and ds-bottom-sheet keep ds-slide-edge-in, and the loading overlay keeps ds-fade-in. An app that already set --ds-toast-enter-keyframes, --ds-banner-enter-keyframes or --ds-alert-enter-keyframes sees no change.",
       "pitfall": "The growth reads --ds-<surface>-enter-scale, which these three have declared all along while ds-fade-in ignored it. An app that set that token expecting it to do nothing now gets the scale it asked for - a value like 0.5 was inert before and is a visible lurch now.",
-      "restore": "ds-toast { --ds-toast-enter-keyframes: ds-fade-in; } and the same for --ds-banner-enter-keyframes and --ds-alert-enter-keyframes.",
+      "restore": ":root { --ds-toast-enter-keyframes: ds-fade-in; --ds-banner-enter-keyframes: ds-fade-in; --ds-alert-enter-keyframes: ds-fade-in; }",
       "searchHints": [
         "--ds-toast-enter-keyframes",
         "--ds-banner-enter-keyframes",
@@ -922,7 +922,7 @@
         "--ds-alert-enter-scale"
       ],
       "verify": "With no enter-keyframes token set, an appearing toast, banner and alert each animate ds-scale-in, and a consumer value on --ds-<surface>-enter-scale changes how far they grow.",
-      "note": "These three declared both --ds-<surface>-enter-offset and --ds-<surface>-enter-scale while defaulting to a keyframe that reads neither, so both hooks were inert. The offsets keep their values and meaning - a preset that travels still reads them, so pointing a surface at ds-slide-in gets that surface's own distance and direction. Growth is from the centre: transform-origin stays unset, matching ds-modal."
+      "note": "The default enter keyframe of all three was ds-fade-in and is now ds-scale-in. They declared both --ds-<surface>-enter-offset and --ds-<surface>-enter-scale while defaulting to a keyframe that reads neither, so both hooks were inert. The offsets keep their values and meaning - a preset that travels still reads them, so pointing a surface at ds-slide-in gets that surface's own distance and direction. Growth is from the centre: transform-origin stays unset, matching ds-modal."
     }
   ],
   "informational": [
