@@ -17,6 +17,7 @@ import {
   areaPath,
   defaultChartFormat,
   focusMark,
+  bandPath,
   lineSegments,
   nextRovingIndex,
   linePath,
@@ -45,6 +46,12 @@ export interface LineSeriesData {
   axis?: ChartAxis;
   /** Fills the band between the line and its axis baseline. */
   area?: boolean;
+  /** The band's floor, one entry per category, in the axis's own unit. Unset fills to the
+   *  baseline. Given, the fill is the band between the two curves - which is what a stacked plot
+   *  needs, and the caller that owns the pile is the one that knows where each band starts. A
+   *  `null` must sit in exactly the categories `data` has one, or the two sides break in
+   *  different places. */
+  lower?: readonly (number | null)[];
   /** Any CSS colour. Unset takes the categorical palette slot for the series' position. */
   color?: string;
 }
@@ -222,7 +229,7 @@ export class LineSeriesComponent implements OnDestroy {
         seriesIndex: index,
         linePaths: segments.map((segment) => linePath(segment, curve)),
         areaPaths: series.area
-          ? segments.map((segment) => areaPath(segment, toY(0), curve))
+          ? this.areaPathsFor(series, segments, toX, toY, curve)
           : [],
         markers: points
           .filter((point): point is LinePoint => point !== null)
@@ -242,6 +249,41 @@ export class LineSeriesComponent implements OnDestroy {
       };
     });
   });
+
+  private areaPathsFor(
+    series: LineSeriesData,
+    segments: readonly (readonly LinePoint[])[],
+    toX: (categoryIndex: number) => number,
+    toY: (value: number) => number,
+    curve: ChartCurve,
+  ): readonly string[] {
+    const lower = series.lower;
+    if (!lower) {
+      return segments
+        .map((segment) => areaPath(segment, toY(0), curve))
+        .filter((path) => path.length > 0);
+    }
+    const lowerSegments = lineSegments(
+      lower.map((value, categoryIndex) =>
+        value === null
+          ? null
+          : {
+              categoryIndex,
+              x: toX(categoryIndex),
+              y: toY(value),
+              value,
+            },
+      ),
+    );
+
+    return segments
+      .map((segment, index) =>
+        lowerSegments[index]
+          ? bandPath(segment, lowerSegments[index], curve)
+          : areaPath(segment, toY(0), curve),
+      )
+      .filter((path) => path.length > 0);
+  }
 
   private readonly allMarkers = computed(() =>
     this.plotted().flatMap((entry) => entry.markers),

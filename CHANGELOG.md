@@ -191,6 +191,18 @@
 
 ### Added
 
+- **`LineSeriesData` takes `lower`.** The band's floor, one entry per category: an `area` series
+  given one fills the band between the two curves rather than down to the baseline, which is what
+  a stacked plot draws.
+
+  ```ts
+  { id: 'pro', label: 'Pro', data: tops, lower: floors, area: true }
+  ```
+
+  Unset, the fill reaches the baseline exactly as before. The caller that owns the pile is the one
+  that knows where each band starts - a mark never sees the other marks. A `null` must sit in the
+  same categories `data` has one, or the two sides break in different places.
+
 - **`g[dsLineSeries]` takes `tooltip="axis"`.** It names every series of that mark at the
   category under the pointer, rather than the one marker hovered.
 
