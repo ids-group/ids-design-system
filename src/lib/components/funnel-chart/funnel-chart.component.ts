@@ -24,6 +24,8 @@ import {
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
+import { ChartDataTableComponent } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
+import type { ChartDataRow } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
 import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 import type {
   ChartDataTable,
@@ -76,7 +78,12 @@ const SKELETON_STAGE_WIDTHS = ['88%', '62%', '80%', '54%', '72%'] as const;
 @Component({
   selector: 'ds-funnel-chart',
   standalone: true,
-  imports: [SkeletonComponent, ChartTooltipDirective, IconComponent],
+  imports: [
+    SkeletonComponent,
+    ChartTooltipDirective,
+    IconComponent,
+    ChartDataTableComponent,
+  ],
   templateUrl: './funnel-chart.component.html',
   styleUrl: './funnel-chart.component.scss',
   host: { '[class.framed]': "frameResolved() === 'auto'" },
@@ -331,6 +338,13 @@ export class FunnelChartComponent {
    *  exactly as wide to the eye and stops being dead space to the pointer. */
   protected readonly hitGapUnits = computed(() =>
     stageGapUnits(this.data().length, FUNNEL_VIEW_BOX_HEIGHT),
+  );
+
+  protected readonly tableRows = computed<readonly ChartDataRow[]>(() =>
+    this.stages().map((entry) => ({
+      key: entry.stage.id,
+      cells: [entry.stage.label, entry.formattedValue],
+    })),
   );
 
   protected readonly stages = computed(() => {

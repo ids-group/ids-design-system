@@ -139,46 +139,10 @@
 
     <!-- Always present, never a `dataTable` choice: colour is the only channel carrying magnitude
          on the grid, so the numbers have to be reachable somewhere that is not a colour. -->
-    <details class="data-table">
-      <summary>
-        Data table
-      </summary>
-
-      <table>
-        <caption>
-          {{
-            caption() ?? 'Chart data'
-          }}
-        </caption>
-
-        <thead>
-          <tr>
-            <td></td>
-
-            @for (column of columns(); track column) {
-              <th scope="col">
-                {{ column }}
-              </th>
-            }
-          </tr>
-        </thead>
-
-        <tbody>
-          @for (entry of rows(); track entry.key) {
-            <tr>
-              <th scope="row">
-                {{ entry.row.label }}
-              </th>
-
-              @for (cell of entry.cells; track cell.key) {
-                <td>
-                  {{ cell.formattedValue }}
-                </td>
-              }
-            </tr>
-          }
-        </tbody>
-      </table>
-    </details>
+    <ds-chart-data-table
+      rowHeader
+      [columns]="tableColumns()"
+      [rows]="tableRows()"
+      [caption]="caption()" />
   }
 </figure>

@@ -12,6 +12,8 @@ import {
   defaultChartFormat,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
+import { ChartDataTableComponent } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
+import type { ChartDataRow } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
 import {
   ChartTooltipDirective,
   chartActiveMark,
@@ -55,7 +57,7 @@ interface PlacedRow {
   selector: 'ds-heatmap-chart',
   standalone: true,
   exportAs: 'dsHeatmapChart',
-  imports: [ChartTooltipDirective, SkeletonComponent],
+  imports: [ChartTooltipDirective, SkeletonComponent, ChartDataTableComponent],
   templateUrl: './heatmap-chart.component.html',
   styleUrl: './heatmap-chart.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -174,6 +176,23 @@ export class HeatmapChartComponent {
           : measured.max,
     };
   });
+
+  /** The row header column has no name of its own: the corner cell above it is blank, which is
+   *  what a matrix's top-left is. */
+  protected readonly tableColumns = computed<readonly string[]>(() => [
+    '',
+    ...this.columns(),
+  ]);
+
+  protected readonly tableRows = computed<readonly ChartDataRow[]>(() =>
+    this.rows().map((entry) => ({
+      key: entry.key,
+      cells: [
+        entry.row.label,
+        ...entry.cells.map((cell) => cell.formattedValue),
+      ],
+    })),
+  );
 
   protected readonly rows = computed<readonly PlacedRow[]>(() => {
     const columns = this.columns();

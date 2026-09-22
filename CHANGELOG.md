@@ -191,6 +191,19 @@
 
 ### Added
 
+- **`ds-chart-data-table` holds the annex table every chart was drawing itself.** The
+  `details`, the summary, the caption and the table; the chart supplies `columns` and `rows` of
+  already-formatted cells.
+
+  ```html
+  <ds-chart-data-table [columns]="['Label', 'Value']" [rows]="tableRows()" [caption]="caption()" />
+  ```
+
+  Eight charts carried their own copy of that chrome, between 43 and 77 lines of template each,
+  differing only in the body. `rowHeader` renders each row's first cell as a `<th scope="row">`,
+  for a matrix whose rows are named rather than numbered. The formatting stays with the chart:
+  two charts reading the same number differently is a chart decision, not a table one.
+
 - **`LineSeriesData` takes `lower`.** The band's floor, one entry per category: an `area` series
   given one fills the band between the two curves rather than down to the baseline, which is what
   a stacked plot draws.

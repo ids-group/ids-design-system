@@ -111,6 +111,8 @@ export type {
   ColumnSeriesPoint,
   LineSeriesData,
 } from '@ids-group-ltd/ids-design-system/components/chart';
+export { ChartDataTableComponent } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
+export type { ChartDataRow } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
 export type { ChartLegendItem } from '@ids-group-ltd/ids-design-system/components/chart-legend';
 export type {
   ChartItemTooltipTrigger,

@@ -2461,6 +2461,64 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     ],
     "outputs": []
   },
+  "chart-data-table": {
+    "key": "chart-data-table",
+    "selector": "ds-chart-data-table",
+    "isElement": true,
+    "className": "ChartDataTableComponent",
+    "status": "stable",
+    "importName": "ChartDataTableComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "columns",
+        "kind": "input",
+        "type": "readonly string[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "rows",
+        "kind": "input",
+        "type": "readonly ChartDataRow[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "caption",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "The chart's own caption, reused so the table says what it is a table OF."
+      },
+      {
+        "name": "open",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "rowHeader",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Renders each row's first cell as a `<th scope=\"row\">`, for a matrix whose rows are named rather than numbered."
+      }
+    ],
+    "outputs": []
+  },
   "checkbox": {
     "key": "checkbox",
     "selector": "ds-checkbox",

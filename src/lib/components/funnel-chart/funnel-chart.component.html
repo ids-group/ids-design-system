@@ -158,47 +158,11 @@
     }
 
     @if (showDataTable()) {
-      <details
-        class="data-table"
-        [open]="dataTableResolved() === 'visible'">
-        <summary>
-          Data table
-        </summary>
-
-        <table>
-          <caption>
-            {{
-              caption() ?? 'Chart data'
-            }}
-          </caption>
-
-          <thead>
-            <tr>
-              <th scope="col">
-                Label
-              </th>
-
-              <th scope="col">
-                Value
-              </th>
-            </tr>
-          </thead>
-
-          <tbody>
-            @for (entry of stages(); track entry.stage.id) {
-              <tr>
-                <td>
-                  {{ entry.stage.label }}
-                </td>
-
-                <td>
-                  {{ entry.formattedValue }}
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </details>
+      <ds-chart-data-table
+        [columns]="['Label', 'Value']"
+        [rows]="tableRows()"
+        [caption]="caption()"
+        [open]="dataTableResolved() === 'visible'" />
     }
   }
 </figure>
