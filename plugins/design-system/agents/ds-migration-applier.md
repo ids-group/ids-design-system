@@ -85,7 +85,7 @@ reporting applied; `note` is the why, not an instruction.** An old manifest item
   `needsReview` rather than guessing.
 - After editing, re-read the file to confirm the old usages are gone (except intentional `needsReview`).
 - **Resolving API questions from sources — read, don't guess.** The NEW version's truth is the DS
-  sources checkout at the release tag (path provided in your prompt) — real component
+  sources tree extracted at the release tag (path provided in your prompt) — real component
   `.ts`/`.scss`/templates; Read/Grep it directly for the exact union a new input accepts or the
   shape of a replacement API. The OLD version's truth is the installed package at
   `node_modules/@ids-group-ltd/ids-design-system/` (`types/*.d.ts`, `fesm2022/`, `themes/` +

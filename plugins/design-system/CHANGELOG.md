@@ -4,6 +4,21 @@ Versioning: **patch** = instruction/prompt fixes; **minor** = new capability (pi
 source, agent); **major** = a change to the workflow's behavior contract. Bump `plugin.json` +
 `marketplace.json` together on every published change.
 
+## 1.8.1 - 2026-09-23
+
+### Changed
+
+- **Each release tag is read from its own extracted tree; the clone is never checked out.**
+  `git archive v<V> src/lib` lands in `<scratch>/ds-src/v<V>`, once per version, and every
+  dispatch carries the tree of `v<V>` and of the tag before it. Subagents read any version with
+  Read/Grep and no shell, and none of them shares a working tree that another version moves. A
+  claim that something was removed at V cites both trees.
+- **Re-checking a committed change takes a saved diff.** The orchestrator writes
+  `git show <sha>` to a file and passes its path; without one `ds-recheck` says it verified the
+  end state only.
+- **The manifest-truth check's "M of N values were read" line bounds a clean result** - the
+  unread values are recorded as unverified per item.
+
 ## 1.8.0 — 2026-09-06
 
 Grounded in the first 0.11.4 → 0.12.1 field run (ai-sdlc-prototype): the run's one real find was a
