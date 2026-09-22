@@ -5,11 +5,31 @@ import {
   LineSeriesComponent,
   ReferenceLabelComponent,
   ReferenceLineComponent,
+  SeriesAnnotationComponent,
 } from 'ds/chart';
-import type { ColumnSeriesPoint, LineSeriesData } from 'ds/chart';
+import type {
+  ChartAnnotation,
+  ColumnSeriesPoint,
+  LineSeriesData,
+} from 'ds/chart';
+import { ChartDataTableComponent } from 'ds/chart-data-table';
+import type { ChartDataRow } from 'ds/chart-data-table';
 import { ChartTooltipDirective } from 'ds/chart-tooltip';
 import type { ChartThreshold } from 'ds/core';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
+
+const LATENCY_NOTES: readonly ChartAnnotation[] = [
+  { categoryIndex: 4, value: 480, label: 'Cache eviction' },
+];
+
+const LATENCY_TABLE_ROWS: readonly ChartDataRow[] = [
+  { key: 'wk1', cells: ['Wk 1', '210 ms'] },
+  { key: 'wk2', cells: ['Wk 2', '260 ms'] },
+  { key: 'wk3', cells: ['Wk 3', '240 ms'] },
+  { key: 'wk4', cells: ['Wk 4', '330 ms'] },
+  { key: 'wk5', cells: ['Wk 5', '480 ms'] },
+  { key: 'wk6', cells: ['Wk 6', '290 ms'] },
+];
 
 const LATENCY_WEEKS: readonly string[] = [
   'Wk 1',
@@ -67,12 +87,14 @@ const BASKET_SERIES: readonly LineSeriesData[] = [
   standalone: true,
   imports: [
     ChartComponent,
+    ChartDataTableComponent,
     ChartTooltipDirective,
     ColumnSeriesComponent,
     DocsSectionComponent,
     LineSeriesComponent,
     ReferenceLabelComponent,
     ReferenceLineComponent,
+    SeriesAnnotationComponent,
   ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './chart.section.html',
@@ -82,6 +104,9 @@ export class ChartSection {
   protected readonly latencyWeeks = LATENCY_WEEKS;
   protected readonly latencyColumns = LATENCY_COLUMNS;
   protected readonly latencyThresholds = LATENCY_THRESHOLDS;
+  protected readonly latencyNotes = LATENCY_NOTES;
+  protected readonly latencyTableRows = LATENCY_TABLE_ROWS;
+  protected readonly latencyTableColumns = ['Week', 'p95'];
   protected readonly latencySummary =
     'p95 response time over six weeks, against a target band of 0 to 300 milliseconds and a breach line at 500. Readings: 210, 260, 240, 330, 480, 290 milliseconds.';
 

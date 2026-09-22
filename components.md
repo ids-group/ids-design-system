@@ -1028,6 +1028,13 @@ Three families, and reaching for the wrong one is the usual chart bug. Set the `
 - **Single series** — `--ds-chart-series-default-color` plus `--ds-chart-series-accent-color`, for marks that are ONE thing measured repeatedly: bar rows, columns. One colour for all of them, and the accent on the one the reader should land on.
 - **Ramp** — `--ds-chart-ramp-1-color` … `--ds-chart-ramp-8-color`, one hue light to deep, for the ORDERED stages of a single quantity: the funnel.
 
+#### `<ds-chart-data-table>` — `ChartDataTableComponent`
+The annex table under a chart: every reading in a `<details>` a reader can open. Cells arrive already formatted, because how a value reads is the chart's decision, not the table's. `rowHeader` renders each row's first cell as a `<th scope="row">`, for a matrix whose rows are named rather than numbered; `toggled` fires when the disclosure changes, for a chart that builds its rows only when they are asked for.
+
+<!-- inputs:ds-chart-data-table -->
+All inputs: `columns: readonly string[] = []`, `rows: readonly ChartDataRow[] = []`, `caption: string | null = null`, `open: boolean = false`, `rowHeader: boolean = false`
+<!-- /inputs -->
+
 #### `<ds-chart>` — `ChartComponent`
 
 <!-- inputs:ds-chart -->
@@ -1044,6 +1051,13 @@ All inputs: `data: readonly ColumnSeriesPoint[] = []`, `showValues: boolean = tr
 
 <!-- inputs:g[dsLineSeries] -->
 All inputs: `data: readonly LineSeriesData[] = []`, `showMarkers: boolean = true`, `interactive: boolean = false`, `pinOnClick: boolean = false`, `dimOthers: boolean = false`, `highlighted: string | null = null`, `patterns: readonly string[] = []`, `stacked: boolean = false`, `staggerMs: number = 0`, `gaps: 'break' | 'zero' = 'break'`, `curve: 'linear' | 'step' | 'smooth' = 'linear'`, `tooltip: 'item' | 'axis' | 'none' = 'item'`, `tooltipAnchor: 'reading' | 'pointer' = 'reading'`, `tooltipLingerMs: number = 0`, `valueFormat: ChartValueFormat`
+<!-- /inputs -->
+
+#### `<g[dsSeriesAnnotation]>` — `SeriesAnnotationComponent`
+A label pinned to one reading, legible with no pointer. Takes the readings rather than finding them: a mark never sees the other marks, so the caller that owns the series is the one that knows which value a label belongs to. Reports no domain.
+
+<!-- inputs:g[dsSeriesAnnotation] -->
+All inputs: `annotations: readonly ChartAnnotation[] = []`
 <!-- /inputs -->
 
 #### `<g[dsReferenceLabel]>` — `ReferenceLabelComponent`

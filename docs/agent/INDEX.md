@@ -30,9 +30,11 @@ and token names.** These leaves are for orientation and usage.
 - [Chart defaults — what DS_CONFIG decides once](charts/ds-config.md) — Four chart inputs resolve through DS_CONFIG.chart because they are one decision per APP, not per plot: valueFo
 - [Chart frame — the box a chart draws around itself](charts/chart-frame-the-box-a-chart-draws-around-itself.md) — Every chart paints its own border, radius, padding and --surface-default background, on by default. That is un
 - [Chart colour — which palette a chart takes](charts/chart-colour-which-palette-a-chart-takes.md) — Three families, and reaching for the wrong one is the usual chart bug. Set the --ds-chart-* contract tokens, n
+- [<ds-chart-data-table> — ChartDataTableComponent](charts/ds-chart-data-table.md) — The annex table under a chart: every reading in a <details> a reader can open. Cells arrive already formatted,
 - [<ds-chart> — ChartComponent](charts/ds-chart.md) — <!-- inputs:ds-chart -->
 - [<g[dsColumnSeries]> — ColumnSeriesComponent](charts/column-series-component.md) — <!-- inputs:g[dsColumnSeries] -->
 - [<g[dsLineSeries]> — LineSeriesComponent](charts/line-series-component.md) — <!-- inputs:g[dsLineSeries] -->
+- [<g[dsSeriesAnnotation]> — SeriesAnnotationComponent](charts/series-annotation-component.md) — A label pinned to one reading, legible with no pointer. Takes the readings rather than finding them: a mark ne
 - [<g[dsReferenceLabel]> — ReferenceLabelComponent](charts/reference-label-component.md) — <!-- inputs:g[dsReferenceLabel] -->
 - [<g[dsReferenceLine]> — ReferenceLineComponent](charts/reference-line-component.md) — <!-- inputs:g[dsReferenceLine] -->
 
