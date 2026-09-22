@@ -278,7 +278,7 @@ item and nothing else.
   - `field-state-icon-hand-rolled` (0.10.2) has a locator that matches half the app
   - `table-footer-padding-workaround` (0.11.0) says a local rule "DOUBLES" the inset. In CSS it replaces it
 - **An indeterminate bar that survives a short track (recorded 2026-09-22, from the mm-ecm consumer)**
-  - `ds-progress`'s indeterminate is a 30% chunk, and on a short track it reads as empty
+  - An indeterminate `ds-bar` is never empty, or 86.7% is enough - one verdict left
 - **Two chart names that collide (recorded 2026-09-21, from the mm-ecm consumer)**
   - One idea, two contracts: a bar stacks through `segments`, a column through `stack`
 - **A journey canvas the mm-ecm prototype could not use (recorded 2026-09-16)**
@@ -898,11 +898,17 @@ stays because each records what the shape was argued down to. Verified against t
 
 ## An indeterminate bar that survives a short track (recorded 2026-09-22, from the mm-ecm consumer)
 
-- [ ] **[P3] `ds-progress`'s indeterminate is a 30% chunk, and on a short track it reads as empty.**
-  `:host(.indeterminate) > span { width: 30%; animation: progress-indet var(--duration-loop-slow) }`.
-  For most of each cycle that chunk is outside a narrow track, so a bar the width of a card's
-  content column spends more time blank than filled, and a viewer reads "nothing is happening" on a
-  step that IS running.
+- [ ] **[P3] An indeterminate `ds-bar` is never empty, or 86.7% is enough - one verdict left.**
+  **The cause shipped fixed.** It was the easing, not the geometry: the loop ran on
+  `--ease-standard`, a curve that decelerates into the end of a transition, and a repeat has no end,
+  so the chunk crawled at both extremes - which is exactly where it sits outside the track. Measured
+  in a browser by stepping the animation through one 1400ms cycle, 2000 samples: at least partly on
+  the track 48.3% of the cycle before, 86.7% after; fully on it 17.4% before, 46.8% after. The loop
+  is `linear` now, like the other three in the library, and `design-system.md` 5 carries the rule so
+  it cannot come back.
+  **What is left is a taste call, not a defect.** The chunk still leaves the track entirely for
+  13.3% of the cycle. That is a travelling chunk behaving as designed; it is not the consumer's bar,
+  which covers 100% of the track every frame and therefore cannot read as empty at any width.
   **The consumer hit this and fixed it before we shipped anything**, which is why their bar is the
   one place they did not adopt `ds-progress`: `node-card.component.scss` in mm-ecm draws a
   full-width fill whose `repeating-linear-gradient` scrolls exactly one tile per cycle, and its
@@ -913,9 +919,10 @@ stays because each records what the shape was argued down to. Verified against t
   to keep their behaviour is a rule on our `> span`, so the swap would trade a hand-rolled bar for a
   hand-rolled bar PLUS a reach into the component. Every other track they had is now `ds-progress`;
   this is the single hold-out.
-  **Wanted:** either the stripe as the indeterminate default, or a second style behind an input, so
-  a short track has a form that cannot read as empty. The prior art is small and is in their
-  `node-card.component.scss` under `.card__track.is-indeterminate .card__bar`.
+  **Wanted:** a verdict between three - leave it at the travelling chunk, make the scrolling stripe
+  the indeterminate default, or put the stripe behind an input so a narrow track can pick it. The
+  prior art is small and is in their `node-card.component.scss` under
+  `.card__track.is-indeterminate .card__bar`.
 
 ## Two chart names that collide (recorded 2026-09-21, from the mm-ecm consumer)
 
@@ -1390,7 +1397,10 @@ None of these is blocked on effort. Each is a verdict, and most carry a deck tha
 short before. **The rank is the filename**: an open deck is `<rank>-<slug>.html`, ranked by what
 answering it unblocks, so the folder listing IS the queue. Ranks are renumbered when the queue
 changes and a stale one is never kept to preserve a link; `deck-lint` fails a duplicate rank, a gap
-in 1..N, and an `implemented` deck still carrying one. **Never cite a deck by number from this
+in 1..N, and an `implemented` deck still carrying one. **`presentations/decision-queue.html` is the one page that answers all of them** — every open
+deck's question with its options in that deck's own words, the recommendation starred, a link back
+for the argument, and the two questions that have no deck. It duplicates no argument, so it cannot
+contradict a deck; re-check it when a deck's OPTIONS change. **Never cite a deck by number from this
 file** — the number moves; cite the filename.
 
 | # | Deck | Asks | Twin on this board |
