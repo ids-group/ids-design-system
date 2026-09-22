@@ -36,8 +36,16 @@ Eight closed on 2026-09-19 with the charts phase-2 work: the composition model, 
 four axis modes and their names, the rescale-on-hide default, the phase-2 marks, the docs chapter
 nav, and the scatter's phase — which went to phase 2 with its decimation layer rather than to 3.
 
-**A `tool` here takes no number.** `backlog-board.html` and `rejected-with-numbers.html` — both are
-read whenever rather than at a moment, so they stay unnumbered and sort below the queue.
+**A `tool` here takes no number.** `decision-queue.html`, `backlog-board.html` and
+`rejected-with-numbers.html` — all three are read whenever rather than at a moment, so they stay
+unnumbered and sort below the queue.
+
+**`decision-queue.html` is the one page that answers all of them.** Every open deck's question,
+its options in that deck's own words, the recommendation starred, and a link back to the deck for
+the argument — plus the two questions that have no deck of their own. Picks persist per browser
+and the bar at the foot hands them back as one line. It duplicates no argument, so it cannot
+contradict a deck; it goes stale only when a deck's OPTIONS change, which is what to re-check
+when one does.
 `rejected-with-numbers` held rank 5 until 2026-09-12 while asking nothing: it is the register of what
 this backlog has turned down and the measurement that turned it down, so a rank on it made the queue
 claim a verdict was owed where none was. A tool that is RUN rather than read does not belong in this
