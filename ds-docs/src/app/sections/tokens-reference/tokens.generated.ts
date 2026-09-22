@@ -2432,7 +2432,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-autocomplete-panel-bg-color",
         "value": "initial",
-        "notes": "Autocomplete dropdown panel fill."
+        "notes": "Autocomplete dropdown panel fill (default --surface-overlay). The panel is portaled, so set it on the host - a global rule against the pane cannot see the host override."
       },
       {
         "name": "--ds-autocomplete-panel-radius",
@@ -3308,6 +3308,18 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-chart-pin-size",
         "value": "22px",
+        "notes": ""
+      }
+    ]
+  },
+  {
+    "component": "Chart Legend",
+    "selector": ".chart-legend",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-chart-legend-swatch-size",
+        "value": "var(--space-2-5)",
         "notes": ""
       }
     ]
