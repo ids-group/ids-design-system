@@ -12,6 +12,7 @@ const {
   chartPlot,
   chartViewHeight,
   secondaryAxis,
+  annotationMarks,
   stackOffsets,
   thresholdMarks,
   valueScale,
@@ -313,5 +314,21 @@ check(
   stackOffsets([[10, 20], [30]], 'stacked'),
   [[{ from: 0, to: 10 }, { from: 0, to: 20 }], [{ from: 10, to: 40 }]],
 );
+
+
+// An annotation sits above its reading, and below it only where there is no room: a peak lands at
+// the top of the plot, which is exactly where a label clamped upward covers its own marker.
+const high = annotationMarks([{ key: 'a', label: 'Peak', x: 320, y: 4 }], 640);
+check('a label with no room above drops below the reading', high[0].y, 16);
+const room = annotationMarks([{ key: 'b', label: 'Launch', x: 320, y: 200 }], 640);
+check('a label with room sits above the reading', room[0].y, 188);
+
+// A centred label at the first or last category hangs half outside the viewBox and is clipped.
+const left = annotationMarks([{ key: 'c', label: 'First', x: 10, y: 100 }], 640);
+check('a label near the left edge anchors to its start', left[0].anchor, 'start');
+const right = annotationMarks([{ key: 'd', label: 'Last', x: 630, y: 100 }], 640);
+check('a label near the right edge anchors to its end', right[0].anchor, 'end');
+const middle = annotationMarks([{ key: 'e', label: 'Mid', x: 320, y: 100 }], 640);
+check('a label away from both edges centres', middle[0].anchor, 'middle');
 
 finish('chart-math');

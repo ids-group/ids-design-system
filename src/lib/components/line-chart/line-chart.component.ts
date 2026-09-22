@@ -35,6 +35,7 @@ import type {
   ChartGaps,
   ChartCurve,
 } from '@ids-group-ltd/ids-design-system/core';
+import { annotationMarks } from '@ids-group-ltd/ids-design-system/components/chart';
 import { ChartTooltipDirective } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import { ChartLegendComponent } from '@ids-group-ltd/ids-design-system/components/chart-legend';
 import type { ChartLegendItem } from '@ids-group-ltd/ids-design-system/components/chart-legend';
@@ -72,11 +73,6 @@ import type {
 } from './line-chart.types';
 
 // Long enough to cross the gap between the plot and its panel at an ordinary pointer speed.
-
-// View units between a reading and the label above it, and the margin inside which a label
-// anchors to its own edge instead of centring. Both in the 640x320 viewBox.
-const ANNOTATION_GAP = 12;
-const ANNOTATION_EDGE_GUARD = 48;
 
 interface ResolvedSeries {
   readonly series: LineChartSeries;
@@ -545,47 +541,34 @@ export class LineChartComponent {
   /** Annotations resolved onto the markers the plot already computed, so a label sits exactly on
    *  its reading and moves with it. One whose series is hidden or whose reading is missing has no
    *  marker and is dropped — a hidden series must not leave its label floating over the plot. */
-  protected readonly placedAnnotations = computed(() => {
-    const plotted = this.plottedSeries();
+  protected readonly placedAnnotations = computed(() =>
+    annotationMarks(
+      this.annotations().flatMap((annotation) => {
+        const plotted = this.plottedSeries();
+        const entry = annotation.seriesId
+          ? plotted.find(
+              (candidate) => candidate.series.id === annotation.seriesId,
+            )
+          : plotted[0];
+        const marker = entry?.markers.find(
+          (candidate) => candidate.categoryIndex === annotation.categoryIndex,
+        );
+        if (!entry || !marker) {
+          return [];
+        }
 
-    return this.annotations().flatMap((annotation) => {
-      const entry = annotation.seriesId
-        ? plotted.find(
-            (candidate) => candidate.series.id === annotation.seriesId,
-          )
-        : plotted[0];
-      const marker = entry?.markers.find(
-        (candidate) => candidate.categoryIndex === annotation.categoryIndex,
-      );
-      if (!entry || !marker) {
-        return [];
-      }
-
-      // Anchored away from the plot edges, because a centred label at the first or last category
-      // hangs half outside the viewBox and is clipped rather than merely tight.
-      const anchor =
-        marker.x < ANNOTATION_EDGE_GUARD
-          ? 'start'
-          : marker.x > LINE_CHART_VIEW_WIDTH - ANNOTATION_EDGE_GUARD
-            ? 'end'
-            : 'middle';
-
-      return [
-        {
-          key: `${entry.series.id}:${annotation.categoryIndex}`,
-          label: annotation.label,
-          x: marker.x,
-          // Above the reading, and below it where there is no room — a peak sits at the top of
-          // the plot, which is exactly where a label clamped upward lands on its own marker.
-          y:
-            marker.y - ANNOTATION_GAP >= ANNOTATION_GAP
-              ? marker.y - ANNOTATION_GAP
-              : marker.y + ANNOTATION_GAP,
-          anchor,
-        },
-      ];
-    });
-  });
+        return [
+          {
+            key: `${entry.series.id}:${annotation.categoryIndex}`,
+            label: annotation.label,
+            x: marker.x,
+            y: marker.y,
+          },
+        ];
+      }),
+      LINE_CHART_VIEW_WIDTH,
+    ),
+  );
 
   /** A normalized stack draws shares, not readings, so the axis has to say so - the value a tooltip
    *  or the annex table prints stays the reading, which is what `valueFormat` goes on formatting. */

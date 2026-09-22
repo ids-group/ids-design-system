@@ -315,14 +315,6 @@ function roundTick(value: number): number {
   return Number(value.toFixed(6));
 }
 
-/** Where one series' segment starts and ends on the value axis, in the axis's own unit - or in
- *  shares of the category total under `'normalized'`.
- */
-export interface ChartStackOffset {
-  readonly from: number;
-  readonly to: number;
-}
-
 /** Every segment's span on the value axis, series-major: `offsets[series][category]`.
  *
  *  `'none'` and `'grouped'` give every series the same span it would have alone - the two differ in
@@ -370,4 +362,59 @@ export function stackOffsets(
         : { from: 0, to: 0 };
     }),
   );
+}
+
+/** A label pinned to one reading, so the point it names is legible with no pointer.
+ *
+ *  @internal */
+export interface ChartAnnotationMark {
+  readonly key: string;
+  readonly label: string;
+  readonly x: number;
+  readonly y: number;
+  readonly anchor: 'start' | 'middle' | 'end';
+}
+
+/** View units between a reading and the label above it, and the margin inside which a label
+ *  anchors to its own edge instead of centring.
+ *
+ *  @internal */
+export const ANNOTATION_GAP = 12;
+/** @internal */
+export const ANNOTATION_EDGE_GUARD = 48;
+
+/** Places a label against each reading it names.
+ *
+ *  @internal */
+export function annotationMarks(
+  readings: readonly { key: string; label: string; x: number; y: number }[],
+  plotWidth: number,
+): readonly ChartAnnotationMark[] {
+  return readings.map((reading) => ({
+    key: reading.key,
+    label: reading.label,
+    x: reading.x,
+    // Above the reading, and below it where there is no room - a peak sits at the top of the
+    // plot, which is exactly where a label clamped upward lands on its own marker.
+    y:
+      reading.y - ANNOTATION_GAP >= ANNOTATION_GAP
+        ? reading.y - ANNOTATION_GAP
+        : reading.y + ANNOTATION_GAP,
+    // Anchored away from the plot edges: a centred label at the first or last category hangs
+    // half outside the viewBox and is clipped rather than merely tight.
+    anchor:
+      reading.x < ANNOTATION_EDGE_GUARD
+        ? 'start'
+        : reading.x > plotWidth - ANNOTATION_EDGE_GUARD
+          ? 'end'
+          : 'middle',
+  }));
+}
+
+/** Where one series' segment starts and ends on the value axis, in the axis's own unit - or in
+ *  shares of the category total under `'normalized'`.
+ */
+export interface ChartStackOffset {
+  readonly from: number;
+  readonly to: number;
 }
