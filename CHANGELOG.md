@@ -492,7 +492,7 @@
 - **Exported class member surface grew — only matters if you SUBCLASS one of these.**
   `LineChartComponent` gained `curve`, `stack`, `yAxisLabel`, `secondaryAxisLabel` and five members
   behind them; `ChartComponent` gained `axisLabel`, `secondaryAxisLabel` and the three that thin and
-  turn its category labels; `LineSeriesComponent` gained `curve`; `ButtonComponent` gained `align`; `PaginationComponent` gained `size` and `layout`; `SegmentedComponent` gained `joined`. `PieChartComponent` traded `thickness` for `innerRadius`, `AccordionComponent` `multi` for `multiple`, `TableComponent` `sortDir` for `sortDirection`, and `AppLayoutComponent` and `DatePickerComponent` changed a member's type with the symbol renames - a subclass overriding an old name now overrides nothing. Subclassing a DS component is
+  turn its category labels; `LineSeriesComponent` gained `curve`; `ButtonComponent` gained `align`; `PaginationComponent` gained `size` and `layout`; `SegmentedComponent` gained `joined`; `LineSeriesComponent` gained `pinOnClick`, `dimOthers`, `patterns` and `stacked`; `DropzoneComponent` lost `single`. `PieChartComponent` traded `thickness` for `innerRadius`, `AccordionComponent` `multi` for `multiple`, `TableComponent` `sortDir` for `sortDirection`, and `AppLayoutComponent` and `DatePickerComponent` changed a member's type with the symbol renames - a subclass overriding an old name now overrides nothing. Subclassing a DS component is
   unsupported, but a release that only adds can still fail such a build on a name collision: TS4114
   demands `override` for a same-named member, TS2416 fires where the signature differs. Rename your
   own member, or add `override` where it genuinely means the same thing.

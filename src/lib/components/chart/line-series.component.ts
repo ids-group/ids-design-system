@@ -85,6 +85,27 @@ export class LineSeriesComponent implements OnDestroy {
    *  fires whether or not this is set. */
   readonly interactive = input(false, { transform: booleanAttribute });
 
+  /** Holds the hovered mark and its tooltip in place when it is clicked, until Escape or a
+   *  press outside releases it. Pinning is a state, not a handler. */
+  readonly pinOnClick = input(false, { transform: booleanAttribute });
+
+  /** Fades every series but the one under the pointer. Off by default: the dimming buys loudness
+   *  for one line and pays for it with the separation between the rest. */
+  readonly dimOthers = input(false, { transform: booleanAttribute });
+
+  /** A dash pattern per series, in the order the series are given. A series past the end of the
+   *  list, or given an empty string, draws solid. */
+  readonly patterns = input<readonly string[]>([]);
+
+  /** Fills each area from the series below it rather than from the baseline, which is what a
+   *  stacked plot needs and what the fill reads as. */
+  readonly stacked = input(false, { transform: booleanAttribute });
+
+  /** The dash for a series' position, or null where it draws solid. */
+  protected dashFor(seriesIndex: number): string | null {
+    return this.patterns()[seriesIndex] || null;
+  }
+
   /** Milliseconds between one marker's entrance and the next. The total is capped. */
   readonly staggerMs = input(0, { transform: numberAttribute });
 
@@ -258,7 +279,10 @@ export class LineSeriesComponent implements OnDestroy {
     focusMark((event.currentTarget as Element).closest('.lines'), next);
   }
 
-  protected onMarkerClick(markIndex: number): void {
+  protected onMarkerClick(markIndex: number, event?: Event): void {
+    if (this.pinOnClick() && event) {
+      this.activeMark.pin(markIndex, event, '.series-marker');
+    }
     const marker = this.allMarkers()[markIndex];
     const series = this.data().find((entry) => entry.id === marker?.seriesId);
     if (marker && series) {

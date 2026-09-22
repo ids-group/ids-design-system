@@ -2261,6 +2261,42 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Turns on the click affordance - the pointer cursor and the hover tint. `pointClicked` fires whether or not this is set."
       },
       {
+        "name": "pinOnClick",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Holds the hovered mark and its tooltip in place when it is clicked, until Escape or a press outside releases it. Pinning is a state, not a handler."
+      },
+      {
+        "name": "dimOthers",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Fades every series but the one under the pointer. Off by default: the dimming buys loudness for one line and pays for it with the separation between the rest."
+      },
+      {
+        "name": "patterns",
+        "kind": "input",
+        "type": "readonly string[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "A dash pattern per series, in the order the series are given. A series past the end of the list, or given an empty string, draws solid."
+      },
+      {
+        "name": "stacked",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Fills each area from the series below it rather than from the baseline, which is what a stacked plot needs and what the fill reads as."
+      },
+      {
         "name": "staggerMs",
         "kind": "input",
         "type": "number",

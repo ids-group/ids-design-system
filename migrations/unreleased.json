@@ -125,10 +125,12 @@
         "extends CheckboxComponent",
         "CheckboxComponent",
         "extends AppLayoutScrollService",
-        "AppLayoutScrollService"
+        "AppLayoutScrollService",
+        "extends DropzoneComponent",
+        "DropzoneComponent"
       ],
       "verify": "Every subclass of the listed components builds, and any member it declares that the base now also declares carries `override`.",
-      "note": "`LineChartComponent`, `ChartComponent` and `LineSeriesComponent` gained members behind the new axis and curve inputs; `ButtonComponent` gained `align`, `PaginationComponent` `size` and `layout`, `SegmentedComponent` `joined`. `PieChartComponent` traded `thickness` for `innerRadius`, `AccordionComponent` `multi` for `multiple`, `TableComponent` `sortDir` for `sortDirection`, and `AppLayoutComponent` and `DatePickerComponent` changed a member's type with the symbol renames - a subclass overriding an old name now overrides nothing."
+      "note": "`LineChartComponent`, `ChartComponent` and `LineSeriesComponent` gained members behind the new axis and curve inputs; `ButtonComponent` gained `align`, `PaginationComponent` `size` and `layout`, `SegmentedComponent` `joined`, `LineSeriesComponent` four more; `DropzoneComponent` lost `single`. `PieChartComponent` traded `thickness` for `innerRadius`, `AccordionComponent` `multi` for `multiple`, `TableComponent` `sortDir` for `sortDirection`, and `AppLayoutComponent` and `DatePickerComponent` changed a member's type with the symbol renames - a subclass overriding an old name now overrides nothing."
     },
     {
       "id": "bar-chart-value-accepts-a-range",
@@ -722,7 +724,8 @@
     "The internal `--_*` custom properties now mirror the public token they read: `--_alert-padding-y` resolves `--ds-alert-padding-y`, so an inspector showing the internal name gives the settable one by dropping `--_` for `--ds-`. 171 were brought into line; 25 keep a different name because they carry a distinction the public token does not, such as the drawer's three widths behind one `--ds-drawer-width`. Internal names are not API and nothing supported reads them - nothing to change.",
     "`ds-checkbox` takes three styling hooks its label already half had: `--ds-checkbox-row-align` for the box-and-label cross-alignment, `--ds-checkbox-gap` for the space between them, and `--ds-checkbox-message-indent` for the hint, which sits under the box by default and lines up with the label when set to the box plus the gap. Every default draws what the component drew before. Purely additive - nothing to change.",
     "`ds-segmented` takes `joined`. Off by default, which is the padded track every consumer draws today. On, the segments share their edges, adjacent borders collapse into one hairline and only the two ends carry the group radius - the shape a row of bordered chips wants. It needs `--ds-segmented-segment-border` set, because the shared edge IS the border. Purely additive.",
-    "`ChartStackOffset` and `stackOffsets` are published from the package root. The mark that takes them, `g[dsColumnSeries]`, was already published there, so its `offsets` input could be bound and not typed. Purely additive - nothing to change."
+    "`ChartStackOffset` and `stackOffsets` are published from the package root. The mark that takes them, `g[dsColumnSeries]`, was already published there, so its `offsets` input could be bound and not typed. Purely additive - nothing to change.",
+    "`g[dsLineSeries]` takes `pinOnClick`, `dimOthers`, `patterns` and `stacked`, which brings it level with `g[dsColumnSeries]` and with what `ds-line-chart` draws. A consumer composing a plot out of the marks can now pin a reading, fade the other series, dash a line and stack the areas. Every default is off. Purely additive - nothing to change."
   ],
   "deleteList": []
 }

@@ -1,10 +1,13 @@
-<svg:g class="lines">
+<svg:g
+  class="lines"
+  [class.dims-others]="dimOthers()">
   @for (entry of plotted(); track entry.series.id) {
     @for (path of entry.areaPaths; track $index) {
       <svg:path
         class="series-area"
         animate.enter="mark-enter"
         animate.leave="mark-leave"
+        [class.is-stacked]="stacked()"
         [style.--_chart-mark-stagger]="seriesStagger(entry.seriesIndex)"
         [attr.d]="path"
         [attr.fill]="entry.color" />
@@ -17,6 +20,7 @@
         class="series-line"
         animate.enter="mark-enter"
         animate.leave="mark-leave"
+        [attr.stroke-dasharray]="dashFor(entry.seriesIndex)"
         [style.--_chart-mark-stagger]="seriesStagger(entry.seriesIndex)"
         [attr.d]="path"
         [attr.stroke]="entry.color" />
@@ -49,7 +53,7 @@
           (focus)="onMarkerFocus(marker.markIndex, $event)"
           (blur)="activeMark.leave()"
           (keydown)="onMarkerNavigation($event, marker.markIndex)"
-          (click)="onMarkerClick(marker.markIndex)"
+          (click)="onMarkerClick(marker.markIndex, $event)"
           (keydown.enter)="onMarkerClick(marker.markIndex)"
           (keydown.space)="onMarkerClick(marker.markIndex)" />
       }

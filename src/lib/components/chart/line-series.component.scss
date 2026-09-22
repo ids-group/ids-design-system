@@ -10,6 +10,7 @@
 
 .lines {
   --_chart-line-width: var(--ds-chart-line-width);
+  --_chart-line-width-bold: var(--ds-chart-line-width-bold);
   --_chart-dot-radius: var(--ds-chart-dot-radius);
   --_chart-dot-radius-active: var(--ds-chart-dot-radius-active);
   --_chart-area-opacity: var(--ds-chart-area-opacity);
@@ -22,6 +23,22 @@
 .series-area {
   fill-opacity: var(--_chart-area-opacity);
   stroke: none;
+}
+
+// A stacked band is separated from the one below it by a stroke in the SURFACE colour, never a
+// darker rule: a rule is a third ink the palette has to stay legible against and it vanishes in
+// print, while a gap survives both. Only stacked bands take it - an unstacked area sits on the
+// baseline and has nothing to be separated from.
+.series-area.is-stacked {
+  stroke: var(--surface-default);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+/* The singled-out series thickens as well as keeping its colour, so the highlight survives a
+   monochrome print and a reader who cannot tell the two hues apart. */
+.lines:has(.series-line.is-dimmed) .series-line:not(.is-dimmed) {
+  stroke-width: var(--_chart-line-width-bold);
 }
 
 .series-line {
