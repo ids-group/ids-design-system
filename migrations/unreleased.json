@@ -920,7 +920,10 @@
     "`--ds-chart-legend-swatch-size` sizes the colour chip in `ds-chart-legend`, defaulting to `--space-2-5`. `--ds-line-chart-swatch-size` points at it, so that token reaches the swatch again after reaching nothing since the legend became its own component; nothing to change, and the default size is the same.",
     "An indeterminate ds-bar keeps its sliding chunk on the track for most of the cycle: the loop runs at a constant speed instead of on an ease curve that parked it at the extremes. Visual only, no code change.",
     "Portaled panels carrying `ds-overlay-pane` now enter with `ds-scale-in` rather than `ds-fade-in`: a panel grows out of its trigger edge instead of appearing in place. Nothing to change. `--ds-overlay-enter-keyframes` still takes `ds-fade-in`, `ds-slide-in` or your own global keyframes, and drawer, bottom-sheet, alert, banner and toast each name their own and are untouched.",
-    "`--ds-table-head-height` now appears in the token reference and resolves through a declared resolver rather than a string inside a template. Nothing to change - a consumer already setting it kept working throughout; what changed is that the docs list it."
+    "`--ds-table-head-height` now appears in the token reference and resolves through a declared resolver rather than a string inside a template. Nothing to change - a consumer already setting it kept working throughout; what changed is that the docs list it.",
+    "`ds-heatmap-chart`, `ds-scatter-chart` and `ds-waterfall-chart` now draw the frame their `frame` input asks for: the resolved class sat on an inner element and the only rule for it is `:host(.framed)`. A consumer who set `frame=\"none\"` to hide a frame that was never drawn can drop that binding, and one who left it at the default gains the box.",
+    "The error message in `ds-heatmap-chart`, `ds-scatter-chart`, `ds-waterfall-chart` and `ds-chart` is red rather than grey. Nothing to change.",
+    "`--ds-funnel-chart-focus-color` / `-width`, and the same pair on `--ds-heatmap-chart-`, `--ds-pie-chart-` and `--ds-scatter-chart-`, now reach the focus ring. They parsed and did nothing before, so a value already set for them starts taking effect."
   ],
   "deleteList": []
 }

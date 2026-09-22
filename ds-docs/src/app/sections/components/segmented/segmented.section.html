@@ -29,6 +29,27 @@
     </div>
   </div>
 
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      joined
+    </code> drops the padded track and lets
+    the segments share their edges: the borders collapse into one hairline and
+    only the outer ends round, which is the shape a row of filter chips wants.
+    It needs <code class="t-mono-inline"> --ds-segmented-segment-border </code>
+    set, because the shared edge IS that border - without one there is nothing
+    to collapse.
+  </p>
+
+  <div
+    class="demo-panel"
+    style="--ds-segmented-segment-border: 1px solid var(--border-default)">
+    <ds-segmented
+      ariaLabel="View mode, joined"
+      joined
+      [options]="viewOptions"
+      [value]="view()" />
+  </div>
+
   <h3
     class="block-title t-h4"
     data-for="button-group">

@@ -696,6 +696,22 @@
 
 ### Fixed
 
+- **Three charts drew no frame, and four showed their error message in grey.** `ds-heatmap-chart`,
+  `ds-scatter-chart` and `ds-waterfall-chart` put the resolved `framed` class on an inner
+  `<figure>`, while the only rule for it is `:host(.framed)` - so `frame="auto"` drew nothing on
+  the three charts this release added. The class is on the host now, like the other six.
+
+  Separately, every chart's template marks its error message `is-error` and only five stylesheets
+  coloured it: `ds-heatmap-chart`, `ds-scatter-chart`, `ds-waterfall-chart` and `ds-chart` printed
+  "Could not load the data" in the same grey as "No data". The rule moved into the shared frame
+  mixin every chart includes, which also catches the pie's `.empty-text` spelling.
+
+- **Eight chart focus hooks did nothing.** `--ds-funnel-chart-focus-color` / `-width` and the same
+  pair on the heatmap, the pie and the scatter resolved into a private name no mixin reads: an
+  override parsed, cascaded and changed no pixel. Each chart now points its pair at
+  `--ds-chart-focus-ring-color` and `--focus-ring-*`, which is what draws the ring.
+
+
 - **`--ds-table-head-height` is in the token reference, and the loading scrim honours it.** The
   hook only ever existed as a string inside a template attribute, so `extract-tokens.mjs` - which
   reads `.scss` - never saw it and the reference never listed it.

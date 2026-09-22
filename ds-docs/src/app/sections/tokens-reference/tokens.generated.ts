@@ -1108,12 +1108,12 @@ export const CHARTS: readonly ColourRow[] = [
   {
     "name": "--ds-chart-positive-color",
     "value": "var(--chart-positive)",
-    "notes": ""
+    "notes": "Colour of a rising bar in ds-waterfall-chart. A rise is a direction and not a success, so it defaults to the palette's teal --chart-positive rather than to --success. Set this, not --chart-positive."
   },
   {
     "name": "--ds-chart-negative-color",
     "value": "var(--chart-negative)",
-    "notes": ""
+    "notes": "Colour of a falling bar in ds-waterfall-chart, defaulting to the palette's coral --chart-negative rather than to --error for the same reason. Set this, not --chart-negative."
   },
   {
     "name": "--ds-chart-series-default-color",
@@ -1168,42 +1168,42 @@ export const CHARTS: readonly ColourRow[] = [
   {
     "name": "--ds-chart-heat-1-color",
     "value": "var(--chart-heat-1)",
-    "notes": ""
+    "notes": "Lightest of the eight heat-scale steps a ds-heatmap-chart buckets its cells into, the low end of the range. Set this, not --chart-heat-1."
   },
   {
     "name": "--ds-chart-heat-2-color",
     "value": "var(--chart-heat-2)",
-    "notes": ""
+    "notes": "Heat-scale step 2 of 8, running low to high. Set this, not --chart-heat-2."
   },
   {
     "name": "--ds-chart-heat-3-color",
     "value": "var(--chart-heat-3)",
-    "notes": ""
+    "notes": "Heat-scale step 3 of 8, running low to high. Set this, not --chart-heat-3."
   },
   {
     "name": "--ds-chart-heat-4-color",
     "value": "var(--chart-heat-4)",
-    "notes": ""
+    "notes": "Heat-scale step 4 of 8, running low to high. Set this, not --chart-heat-4."
   },
   {
     "name": "--ds-chart-heat-5-color",
     "value": "var(--chart-heat-5)",
-    "notes": ""
+    "notes": "Heat-scale step 5 of 8, running low to high. Set this, not --chart-heat-5."
   },
   {
     "name": "--ds-chart-heat-6-color",
     "value": "var(--chart-heat-6)",
-    "notes": ""
+    "notes": "Heat-scale step 6 of 8, running low to high. Set this, not --chart-heat-6."
   },
   {
     "name": "--ds-chart-heat-7-color",
     "value": "var(--chart-heat-7)",
-    "notes": ""
+    "notes": "Heat-scale step 7 of 8, running low to high. Set this, not --chart-heat-7."
   },
   {
     "name": "--ds-chart-heat-8-color",
     "value": "var(--chart-heat-8)",
-    "notes": ""
+    "notes": "Darkest of the eight heat-scale steps, the high end of the range. Set this, not --chart-heat-8."
   },
   {
     "name": "--ds-chart-frame-border-color",
@@ -2814,17 +2814,17 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-bar-chart-target-color",
         "value": "var(--text-primary)",
-        "notes": ""
+        "notes": "Fill of the target tick a ds-bar-chart row draws across its bar (default --text-primary)."
       },
       {
         "name": "--ds-bar-chart-target-width",
         "value": "2px",
-        "notes": ""
+        "notes": "Thickness of that target tick; it also sets the tick's corner radius and the half-width shift that centres it on the target value (default 2px)."
       },
       {
         "name": "--ds-bar-chart-target-overhang",
         "value": "3px",
-        "notes": ""
+        "notes": "How far the target tick runs past the bar at each end (default 3px)."
       },
       {
         "name": "--ds-bar-chart-track-color",
@@ -3276,27 +3276,27 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-chart-annotation-color",
         "value": "var(--text-primary)",
-        "notes": ""
+        "notes": "Fill of a dsSeriesAnnotation label, the reading a chart prints next to a mark so a screenshot carries what a tooltip would (default --text-primary)."
       },
       {
         "name": "--ds-chart-annotation-font-size",
         "value": "var(--ds-chart-axis-font-size)",
-        "notes": ""
+        "notes": "Type size of those annotation labels (defaults to --ds-chart-axis-font-size, so a label sits with the chart's furniture rather than shouting over the marks)."
       },
       {
         "name": "--ds-chart-annotation-font-weight",
         "value": "var(--font-weight-bold)",
-        "notes": ""
+        "notes": "Weight of those annotation labels (default --font-weight-bold)."
       },
       {
         "name": "--ds-chart-annotation-halo-color",
         "value": "var(--surface-default)",
-        "notes": ""
+        "notes": "Colour of the halo painted under an annotation label so it survives over a line or a mark (default --surface-default)."
       },
       {
         "name": "--ds-chart-annotation-halo-width",
         "value": "3px",
-        "notes": ""
+        "notes": "Thickness of that halo, as the SVG stroke-width drawn under the glyphs rather than over them (default 3px)."
       }
     ]
   },
@@ -3320,7 +3320,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-chart-legend-swatch-size",
         "value": "var(--space-2-5)",
-        "notes": ""
+        "notes": "Diameter of the round colour chip in ds-chart-legend, on both axes (default --space-2-5). ds-line-chart feeds it from --ds-line-chart-swatch-size."
       }
     ]
   },
@@ -3950,7 +3950,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-option-font-weight",
         "value": "var(--font-weight-medium)",
-        "notes": ""
+        "notes": "Weight of an option row's label in a dropdown panel (default --font-weight-medium)."
       },
       {
         "name": "--ds-option-font-size",
@@ -4316,42 +4316,42 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-heatmap-chart-cell-size",
         "value": "34px",
-        "notes": ""
+        "notes": "Side of one grid cell, on both axes, and the height of a row in the loading skeleton (default 34px)."
       },
       {
         "name": "--ds-heatmap-chart-cell-gap",
         "value": "2px",
-        "notes": ""
+        "notes": "Space between neighbouring cells, applied as the grid table's border-spacing (default 2px)."
       },
       {
         "name": "--ds-heatmap-chart-cell-radius",
         "value": "var(--ds-radius-control)",
-        "notes": ""
+        "notes": "Corner radius of a cell (defaults to the --ds-radius-control role)."
       },
       {
         "name": "--ds-heatmap-chart-label-color",
         "value": "var(--ds-chart-axis-label-color)",
-        "notes": ""
+        "notes": "Colour of the row and column labels around the grid (defaults to --ds-chart-axis-label-color)."
       },
       {
         "name": "--ds-heatmap-chart-label-font-size",
         "value": "var(--ds-chart-axis-font-size)",
-        "notes": ""
+        "notes": "Type size of those row and column labels (defaults to --ds-chart-axis-font-size)."
       },
       {
         "name": "--ds-heatmap-chart-missing-color",
         "value": "var(--surface-secondary)",
-        "notes": ""
+        "notes": "Fill of a cell whose value is null, which no step of the heat scale stands for (default --surface-secondary)."
       },
       {
         "name": "--ds-heatmap-chart-focus-color",
         "value": "var(--focus-ring-color)",
-        "notes": ""
+        "notes": "Focus-ring colour for a cell (default --focus-ring-color). The cell rings through the shared focus mixin, which reads --focus-ring-color itself, so nothing resolves this one."
       },
       {
         "name": "--ds-heatmap-chart-focus-width",
         "value": "var(--focus-ring-width)",
-        "notes": ""
+        "notes": "Focus-ring thickness for a cell (default --focus-ring-width), with the same caveat: the shared mixin reads --focus-ring-width itself, so nothing resolves this one."
       }
     ]
   },
@@ -4611,7 +4611,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-line-chart-annotation-font-weight",
         "value": "var(--font-weight-bold)",
-        "notes": ""
+        "notes": "Weight of a ds-line-chart annotation label (default --font-weight-bold). The chart republishes it as --ds-chart-annotation-font-weight, so this is the per-chart lever over the shared one."
       },
       {
         "name": "--ds-line-chart-annotation-halo-color",
@@ -5569,42 +5569,42 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-pie-chart-size",
         "value": "180px",
-        "notes": ""
+        "notes": "Outer diameter of the ring, on both axes (default 180px). The hole is a fraction of it, set by [hole] on the component rather than by a token."
       },
       {
         "name": "--ds-pie-chart-gap",
         "value": "var(--space-5)",
-        "notes": ""
+        "notes": "Space between the ring and its legend, whichever side the legend sits on (default --space-5)."
       },
       {
         "name": "--ds-pie-chart-legend-row-gap",
         "value": "var(--space-2)",
-        "notes": ""
+        "notes": "Vertical gap between legend rows, and the wrap gap when the legend sits below the ring (default --space-2)."
       },
       {
         "name": "--ds-pie-chart-legend-row-height",
         "value": "16px",
-        "notes": ""
+        "notes": "Height of one legend row in the loading skeleton only (default 16px); a real row is sized by its own text."
       },
       {
         "name": "--ds-pie-chart-swatch-size",
         "value": "10px",
-        "notes": ""
+        "notes": "Side of the round colour chip in a legend row, on both axes (default 10px)."
       },
       {
         "name": "--ds-pie-chart-focus-color",
         "value": "var(--focus-ring-color)",
-        "notes": ""
+        "notes": "Focus-ring colour for a slice (default --focus-ring-color). The ring is stroked onto the arc by the shared chart mixin, which reads --ds-chart-focus-ring-color, so nothing resolves this one."
       },
       {
         "name": "--ds-pie-chart-focus-width",
         "value": "var(--focus-ring-width)",
-        "notes": ""
+        "notes": "Focus-ring thickness for a slice (default --focus-ring-width), with the same caveat: the stroked ring reads --focus-ring-width itself, so nothing resolves this one."
       },
       {
         "name": "--ds-pie-chart-outline-width",
         "value": "calc(var(--border-width-strong) + var(--border-width-default))",
-        "notes": ""
+        "notes": "Border thickness of the placeholder ring drawn while the chart is empty or errored, and over the real ring when every slice is zero (defaults to --border-width-strong plus --border-width-default); the hole's inner border scales from it by the hole fraction."
       }
     ]
   },
@@ -5722,42 +5722,42 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-scatter-chart-grid-line-color",
         "value": "var(--ds-chart-grid-line-color)",
-        "notes": ""
+        "notes": "Stroke of the plot's gridlines (defaults to --ds-chart-grid-line-color)."
       },
       {
         "name": "--ds-scatter-chart-axis-line-color",
         "value": "var(--ds-chart-axis-line-color)",
-        "notes": ""
+        "notes": "Stroke of the two axis lines (defaults to --ds-chart-axis-line-color)."
       },
       {
         "name": "--ds-scatter-chart-axis-label-color",
         "value": "var(--ds-chart-axis-label-color)",
-        "notes": ""
+        "notes": "Fill of the axis tick labels (defaults to --ds-chart-axis-label-color)."
       },
       {
         "name": "--ds-scatter-chart-axis-font-size",
         "value": "var(--ds-chart-axis-font-size)",
-        "notes": ""
+        "notes": "Type size of those tick labels (defaults to --ds-chart-axis-font-size)."
       },
       {
         "name": "--ds-scatter-chart-dot-radius",
         "value": "var(--ds-chart-dot-radius)",
-        "notes": ""
+        "notes": "Radius of a plotted point, as the SVG r attribute (defaults to --ds-chart-dot-radius)."
       },
       {
         "name": "--ds-scatter-chart-dot-opacity",
         "value": "0.72",
-        "notes": ""
+        "notes": "fill-opacity of a plotted point, held under 1 so overlapping points read as a denser cluster (default 0.72)."
       },
       {
         "name": "--ds-scatter-chart-focus-color",
         "value": "var(--focus-ring-color)",
-        "notes": ""
+        "notes": "Focus-ring colour for a point (default --focus-ring-color). The ring is stroked onto the dot by the shared chart mixin, which reads --ds-chart-focus-ring-color, so nothing resolves this one."
       },
       {
         "name": "--ds-scatter-chart-focus-width",
         "value": "var(--focus-ring-width)",
-        "notes": ""
+        "notes": "Focus-ring thickness for a point (default --focus-ring-width), with the same caveat: the stroked ring reads --focus-ring-width itself, so nothing resolves this one."
       }
     ]
   },
@@ -7032,7 +7032,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-table-head-height",
         "value": "var(--_table-head-measured, 40px)",
-        "notes": ""
+        "notes": "Overrides the header-row height the table measures for itself; the loading scrim insets its top by it, so the spinner sits below the header rather than behind it (falls back to the measured height, then 40px)."
       },
       {
         "name": "--ds-table-border",
@@ -8053,12 +8053,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-waterfall-chart-connector-color",
         "value": "var(--ds-chart-axis-line-color)",
-        "notes": ""
+        "notes": "Stroke of the dashed chain that carries each bar's end across to where the next one starts (defaults to --ds-chart-axis-line-color)."
       },
       {
         "name": "--ds-waterfall-chart-skeleton-height",
         "value": "40px",
-        "notes": ""
+        "notes": "Height of a placeholder bar in the loading skeleton (default 40px)."
       }
     ]
   }

@@ -172,4 +172,63 @@
       [(pageSize)]="pageSizeWith"
       [(currentPage)]="pageWith" />
   </div>
+
+  <h3 class="block-title t-h4">
+    Layout and size
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      layout
+    </code> decides how the pager fills its
+    row. <code class="t-mono-inline"> 'grouped' </code>, the default, keeps the
+    label and the buttons together at their natural width;
+    <code class="t-mono-inline">
+      'spread'
+    </code> goes full width and pushes
+    the label to one end, which is what a pager under a table wants so the
+    controls land under the same edge as the table's own.
+    <code class="t-mono-inline">
+      size
+    </code> takes the control scale -
+    unset it falls back to <code class="t-mono-inline"> DS_CONFIG.control.size
+    </code>, then <code class="t-mono-inline"> 'sm' </code>.
+  </p>
+
+  <div class="ranges">
+    <div class="ranges-row">
+      <div class="ranges-label t-overline">
+        grouped (default)
+      </div>
+
+      <ds-pagination
+        [total]="240"
+        [pageSize]="10"
+        [currentPage]="4" />
+    </div>
+
+    <div class="ranges-row">
+      <div class="ranges-label t-overline">
+        spread
+      </div>
+
+      <ds-pagination
+        layout="spread"
+        [total]="240"
+        [pageSize]="10"
+        [currentPage]="4" />
+    </div>
+
+    <div class="ranges-row">
+      <div class="ranges-label t-overline">
+        size = md
+      </div>
+
+      <ds-pagination
+        size="md"
+        [total]="240"
+        [pageSize]="10"
+        [currentPage]="4" />
+    </div>
+  </div>
 </docs-section>
