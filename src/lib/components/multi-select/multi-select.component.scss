@@ -14,10 +14,11 @@
   flex-direction: column;
   gap: var(--field-label-gap);
 
-  --ds-dropdown-panel-bg-color: var(
-    --ds-multi-select-panel-bg-color,
-    var(--surface-overlay)
-  );
+  /* `initial` means UNSET - see the same pair on `ds-autocomplete`. A value here is
+     copied onto the portaled pane as an inline style, which outranks the
+     `.ds-overlay-pane` rule a consumer writes; unset while the picker's own hook is
+     unset, nothing is copied and the shared partial supplies the default. */
+  --ds-dropdown-panel-bg-color: var(--ds-multi-select-panel-bg-color, initial);
 
   --_multi-select-bg-color: var(--ds-multi-select-bg-color, var(--surface-default));
   --_multi-select-border-color: var(

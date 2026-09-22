@@ -686,6 +686,22 @@
 
 ### Fixed
 
+- **A rule on `.ds-overlay-pane` now decides an autocomplete's or a multi-select's panel radius and
+  background.** Both pickers declared the panel tokens with a fallback, so they always computed to
+  something and were always copied onto the portaled pane as an inline style - which outranks a
+  pane-class rule, the only route a consumer has to a panel that is not a descendant of its trigger.
+  A shell that squared `--ds-radius-panel` and re-rounded `.ds-overlay-pane` got the rounded panel
+  everywhere except these two.
+
+  ```scss
+  .ds-overlay-pane .dropdown-panel { border-radius: var(--ds-radius-panel); } // now applies
+  ```
+
+  Nothing moves at the defaults: unset, the tokens fall to the same values the shared panel
+  stylesheet has always supplied. `--ds-autocomplete-panel-radius`,
+  `--ds-autocomplete-panel-bg-color` and `--ds-multi-select-panel-bg-color` still reach the pane and
+  still outrank a pane-class rule, which is what they are for.
+
 - **The two greens in the chart palette are no longer the same colour.**
   `--chart-categorical-6` moves from `hsl(152deg 58% 41%)` to `hsl(148deg 58% 41%)`, which takes it
   from 5.2 to 6.3 away from `--chart-categorical-2` in OKLab. The palette holds itself to 6, below

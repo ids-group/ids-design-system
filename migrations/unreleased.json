@@ -859,6 +859,30 @@
       "supersedes": [
         "0.11.4#banner-alert-announce-opt-in"
       ]
+    },
+    {
+      "id": "picker-panel-aliases-stop-pinning-a-default",
+      "kind": "behavior",
+      "old": ".ds-overlay-pane",
+      "new": null,
+      "surface": "style",
+      "action": "Open an autocomplete or multi-select panel and check it still looks right. A rule of yours on `.ds-overlay-pane` that had no effect before now applies.",
+      "appliesWhen": "Only an app with its own rule on the portaled pane, or one setting `--ds-radius-panel` / `--surface-overlay` to different values in different places. An app that styles these panels through `--ds-autocomplete-panel-radius`, `--ds-autocomplete-panel-bg-color` or `--ds-multi-select-panel-bg-color` sees no change - those still reach the pane.",
+      "pitfall": "The change is a rule of YOURS starting to win, so nothing of ours appears in the diff and no search finds it. Where the pane rule and the picker hook disagreed, the hook used to win silently and the pane rule now does.",
+      "restore": "Set the picker's own hook on the host - `ds-autocomplete { --ds-autocomplete-panel-radius: <value>; }` - which is copied onto the pane and outranks a pane-class rule.",
+      "searchHints": [
+        ".ds-overlay-pane",
+        "dropdown-panel",
+        "--ds-dropdown-panel-radius",
+        "--ds-dropdown-panel-bg-color"
+      ],
+      "detect": [
+        ".ds-overlay-pane",
+        ".dropdown-panel",
+        "--ds-overlay-pane"
+      ],
+      "verify": "With no picker hook set, the open panel carries no inline `--ds-dropdown-panel-radius` or `--ds-dropdown-panel-bg-color`, and your `.ds-overlay-pane` rule decides its radius and background.",
+      "note": "A portaled pane is not a descendant of its picker, so these tokens reach it by being copied off the host as an inline style. Written with a real fallback they always computed to something, so the copy always happened and a pane-class rule - the only route a consumer has to a portaled panel - could never win. They are unset now until the picker's own hook is set."
     }
   ],
   "informational": [

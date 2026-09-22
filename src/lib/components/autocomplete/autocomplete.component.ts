@@ -121,7 +121,6 @@ export class AutocompleteComponent<T = unknown>
    *  `ds-autocomplete { --ds-autocomplete-panel-bg-color | -radius | -maxh: … }` reaches it. */
   private readonly panelTokens = [
     '--ds-dropdown-panel-bg-color',
-    '--ds-dropdown-panel-radius',
     '--ds-dropdown-panel-min-width',
     '--ds-dropdown-panel-max-width',
     '--ds-option-selected-bg-color',

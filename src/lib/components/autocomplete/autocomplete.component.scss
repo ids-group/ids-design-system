@@ -18,14 +18,15 @@
 @use '../../styles/text-clip' as text-clip;
 
 :host {
-  --ds-dropdown-panel-bg-color: var(
-    --ds-autocomplete-panel-bg-color,
-    var(--surface-overlay)
-  );
-  --ds-dropdown-panel-radius: var(
-    --ds-autocomplete-panel-radius,
-    var(--ds-radius-panel)
-  );
+  /* `initial` on a custom property means UNSET, and that is the point. The pane is
+     portaled, so these reach it by being COPIED off this host as an inline style,
+     which outranks the `.ds-overlay-pane` rule that is a consumer's only route to a
+     portaled panel. Given a real fallback they always compute to something, so the
+     copy always happened and the consumer's rule never won. Unset while the picker's
+     own hook is unset, nothing is copied, and `styles/_dropdown-overlay.scss`
+     supplies the same default it always did. */
+  --ds-dropdown-panel-bg-color: var(--ds-autocomplete-panel-bg-color, initial);
+  --ds-dropdown-panel-radius: var(--ds-autocomplete-panel-radius, initial);
   --ds-dropdown-panel-max-height: var(--ds-autocomplete-panel-max-height, var(--picker-maxh));
 
   --_autocomplete-focus-shadow: var(--ds-autocomplete-focus-shadow, var(--ds-field-focus-shadow));
