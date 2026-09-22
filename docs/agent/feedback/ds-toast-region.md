@@ -4,5 +4,5 @@
 Group: Display & feedback
 
 <!-- inputs:ds-toast-region -->
-All inputs: `maxVisible: number`
+All inputs: `maxVisible: number`, `showQueueCount: boolean = true`
 <!-- /inputs -->

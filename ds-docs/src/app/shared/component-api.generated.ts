@@ -10886,6 +10886,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "DEFAULT_MAX_VISIBLE",
         "required": false,
         "description": "Cap on concurrently visible toasts. Extras are queued and shown as earlier ones dismiss. `0` = unlimited."
+      },
+      {
+        "name": "showQueueCount",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Show a `+N` strip while toasts wait behind `maxVisible`."
       }
     ],
     "outputs": []

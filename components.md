@@ -555,7 +555,7 @@ All inputs: `heading: string = ''`, `time: string = ''`, `icon: IconName | null 
 #### `<ds-toast-region>` — `ToastRegionComponent`
 
 <!-- inputs:ds-toast-region -->
-All inputs: `maxVisible: number`
+All inputs: `maxVisible: number`, `showQueueCount: boolean = true`
 <!-- /inputs -->
 
 #### `<ds-tree>` — `TreeComponent`
