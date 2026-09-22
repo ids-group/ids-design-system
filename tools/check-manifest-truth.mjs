@@ -594,6 +594,26 @@ export function checkItem(item, before, after, prevTag, tag) {
         `new \`${label(claim)}\` does not exist at ${tag} — the target is not there`,
       );
   }
+  // A token named in the PROSE, where `old`/`new` are a family placeholder that `claims` cannot
+  // read. Two items shipped a spelling produced by chaining two of our own rules — a name that
+  // existed at neither tag — so a consumer grepping for it found nothing and kept a dead
+  // override. `searchHints` and `detect` are recall seeds and legitimately carry bare prefixes,
+  // so they are not read here; a prose name that is a PREFIX of a real token is a family, not a
+  // claim.
+  const knownTokens = [...before.tokens, ...after.tokens];
+  for (const field of ['action', 'appliesWhen']) {
+    const text = item[field];
+    if (typeof text !== 'string') continue;
+    for (const match of text.matchAll(/--ds-[a-z0-9-]*[a-z0-9]/g)) {
+      const name = match[0];
+      if (resolves(before, { kind: 'token', name }) !== false) continue;
+      if (resolves(after, { kind: 'token', name }) !== false) continue;
+      if (knownTokens.some((known) => known.startsWith(`${name}-`))) continue;
+      defects.push(
+        `${field} names \`${name}\`, which exists at neither ${prevTag} nor ${tag}`,
+      );
+    }
+  }
   return { defects, unresolved, unchecked };
 }
 
