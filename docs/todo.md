@@ -14,14 +14,14 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**104 open — 1 P1, 31 P2, 72 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**106 open — 1 P1, 32 P2, 73 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 1
 
 - **Framework & forms**
   - Upgrade to Angular 22 — and re-verify the signal-forms work against it, because one of its breaking changes lands exactly there
 
-### P2 — 31
+### P2 — 32
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Nothing catches a shell that rings on `:focus-within` when it means the keyboard
@@ -36,6 +36,8 @@ item and nothing else.
   - `.design-sync/conventions.md` is a generator INPUT, and nothing stops a reflow desyncing it
   - The elements demo has not been opened in a real browser since the rebuilds
   - `ds-toast-region`'s dev-warning strip is unverified
+- **Two more from the same audit, both about our tooling (recorded 2026-09-22, from the mm-ecm consumer)**
+  - `check-manifest-truth` verifies a minority of the locator surface, and its clean line does not say so
 - **What a full re-audit of that same upgrade turned up (recorded 2026-09-22, from the mm-ecm consumer)**
   - `chart-categorical-tokens-renamed` sends a consumer to a token our own docs say not to set
   - Two token-forwarding lists, one of them invisible from the component - and it has now misled two separate readers
@@ -65,7 +67,7 @@ item and nothing else.
 - **Localization — every user-visible string is a hardcoded literal (recorded 2026-08-27, from the ITB Workspace picker report)**
   - Every user-visible string in the library is a hardcoded English literal — VALIDATED 2026-08-27 against 0.11.0; Stas: defer the whole thing, no code
 
-### P3 — 72
+### P3 — 73
 
 - **What v0.13.3 added and the docs site never shows (measured 2026-09-22)**
   - Fifteen new inputs have no demo and no prose on the docs site
@@ -90,6 +92,8 @@ item and nothing else.
   - Which of the 8 live chapters can also be frozen
   - `templates` and `startingPoints` in `_ds_manifest.json` are in the schema and empty
   - `.thumbnail` — the project's cover image — has no source that regenerates it
+- **Two more from the same audit, both about our tooling (recorded 2026-09-22, from the mm-ecm consumer)**
+  - `auto-update-package` tells parallel subagents to check out a tag in one shared clone
 - **What a full re-audit of that same upgrade turned up (recorded 2026-09-22, from the mm-ecm consumer)**
   - `--chart-tick-size`: the 0.13.0 CHANGELOG and manifest disagree, and the manifest's informational text is wrong
   - `time-columns-onkey-signature` (0.10.2) is a migration item for a class no consumer can extend
@@ -504,6 +508,42 @@ documented thing or their chapter's demo only exists once opened. Everything bel
 # Asks — a consumer or Stas asked for it
 
 Each has somebody behind it. Nothing here is speculative work.
+
+## Two more from the same audit, both about our tooling (recorded 2026-09-22, from the mm-ecm consumer)
+
+Neither cost the consumer anything. Both mean a check we run reports more confidence than it earned.
+
+- [ ] **[P2] `check-manifest-truth` verifies a minority of the locator surface, and its clean line does not say so.**
+  Run across the whole `migrations/` directory it reported: *33 manifest(s) against 34 tree(s)*,
+  `1 manifest(s) not checked` (0.1.0, no earlier boundary), `94 value(s) hold no single name to
+  look up - composite selectors and call signatures. Nothing was verified about these`, and
+  `20 name(s) neither tag declares - consumer examples`. That is **114 values about which the tool
+  asserts nothing**. For scale, the same manifests carry **447 `old`/`new` values across 35 files**
+  (306 `old`, 141 `new`, counted over the saved copy, so a near-identical rather than identical
+  population). The closing line reads *"every old/new that holds a name resolves against its own
+  boundary"* - true, and easy to read as "every claim checked out" when roughly a quarter of them
+  were never testable.
+  The 20 documentation examples are the sharper half: values like `MyTable`, `MySelect`,
+  `MyToastRegion` sit in `old` on the subclass-collision items, where `old` is supposed to be a
+  locator. They are placeholders in a field a tool treats as a symbol.
+  **Wanted:** (1) print the covered fraction on the clean line, so "clean" cannot be mistaken for
+  "complete"; (2) keep documentation placeholders out of `old` - they belong in `note` or
+  `searchHints`, and a locator field that holds `MyTable` is unusable by any consumer tooling too;
+  (3) where a real symbol exists beside the composite selector, put the symbol in `old` and the
+  selector in `searchHints`, which is what the field is for.
+
+- [ ] **[P3] `auto-update-package` tells parallel subagents to check out a tag in one shared clone.**
+  Phase B step 1 says *"Check out tag `v<V>` in the DS sources clone … so agents can consult V's
+  real sources"* and *"Pass the checkout path to subagents in their prompts"*. There is exactly one
+  clone. That holds while a wave is all one version, which is the documented shape - but any use
+  that fans out across versions (a re-audit of a whole chain, which is a natural thing to want)
+  has agents racing `git checkout` on a shared working tree. Worse, combined with `ds-recheck`
+  having no shell at all, the instruction cannot be followed today in either shape.
+  **Wanted:** document `git show v<V>:<path>` and `git ls-tree -r --name-only v<V> <dir>` as the
+  access form - read-only, no working-tree change, safe for any number of concurrent readers - or
+  have the orchestrator extract each version's files to its own directory and pass that. The tag
+  checkout should stay only where it is genuinely single-tenant.
+
 
 ## What a full re-audit of that same upgrade turned up (recorded 2026-09-22, from the mm-ecm consumer)
 
