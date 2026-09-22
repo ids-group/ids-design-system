@@ -696,6 +696,20 @@
 
 ### Fixed
 
+- **An indeterminate `ds-bar` is on the track for most of its cycle instead of under half of it.**
+  The sliding chunk ran on the standard ease curve, which decelerates into the end of a transition -
+  on a loop there is no end, so it crawled at both extremes, where the chunk sits outside the track.
+  Measured in a browser over one 1400ms cycle: the chunk was at least partly on the track 48.3% of
+  the time and fully on it 17.4%; it is now 86.7% and 46.8%. On a short track that reads as an empty
+  bar rather than a busy one.
+
+  ```html
+  <ds-bar indeterminate ariaLabel="Importing" />
+  ```
+
+  Nothing to change - the geometry, the duration and the 30% chunk are the same, and the reduced-motion
+  branch still replaces the animation with a full track.
+
 - **`--ds-line-chart-swatch-size` reaches the swatch again.** The token has been declared and
   documented since the chart shipped and reached nothing since the legend became its own component:
   the line chart kept the `.legend-swatch` rule that read it and stopped rendering the element.

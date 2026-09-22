@@ -917,7 +917,8 @@
     "`ds-chart` is exported as `dsChart`, and a template reference reads `cursorPinned()` and calls `releaseCursor()` - which is how a preset renders its own way out of a held cursor.",
     "`g[dsLineSeries]` takes `highlighted`, the id of the one series to single out, and `tooltipAnchor`, which decides whether an `axis` panel hangs over the highest reading or follows the pointer. Both need `dimOthers` and `tooltip=\"axis\"` respectively; neither changes a chart that sets nothing.",
     "`CHART_DEFAULT_VALUE_SPACE` is exported from `@ids-group-ltd/ids-design-system/components/chart`, so a preset reserving the box `ds-chart` will take can read the same number the container defaults to.",
-    "`--ds-chart-legend-swatch-size` sizes the colour chip in `ds-chart-legend`, defaulting to `--space-2-5`. `--ds-line-chart-swatch-size` points at it, so that token reaches the swatch again after reaching nothing since the legend became its own component; nothing to change, and the default size is the same."
+    "`--ds-chart-legend-swatch-size` sizes the colour chip in `ds-chart-legend`, defaulting to `--space-2-5`. `--ds-line-chart-swatch-size` points at it, so that token reaches the swatch again after reaching nothing since the legend became its own component; nothing to change, and the default size is the same.",
+    "An indeterminate ds-bar keeps its sliding chunk on the track for most of the cycle: the loop runs at a constant speed instead of on an ease curve that parked it at the extremes. Visual only, no code change."
   ],
   "deleteList": []
 }

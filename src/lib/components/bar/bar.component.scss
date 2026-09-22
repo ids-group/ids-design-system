@@ -75,7 +75,10 @@
 
 :host(.indeterminate) > span {
   inline-size: 30%;
-  animation: bar-indet var(--duration-loop-slow) var(--ease-standard) infinite;
+
+  /* linear, like every other loop here: an ease curve has no start and end state to shape, so on a
+     repeat it just parks the chunk at the extremes, where it is off the track. */
+  animation: bar-indet var(--duration-loop-slow) linear infinite;
 }
 
 @keyframes bar-indet {
