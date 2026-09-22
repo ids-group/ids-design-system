@@ -14,14 +14,14 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**118 open — 1 P1, 33 P2, 84 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**119 open — 1 P1, 34 P2, 84 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 1
 
 - **Framework & forms**
   - Upgrade to Angular 22 — and re-verify the signal-forms work against it, because one of its breaking changes lands exactly there
 
-### P2 — 33
+### P2 — 34
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Nothing catches a shell that rings on `:focus-within` when it means the keyboard
@@ -35,6 +35,7 @@ item and nothing else.
   - `.design-sync/conventions.md` is a generator INPUT, and nothing stops a reflow desyncing it
   - The elements demo has not been opened in a real browser since the rebuilds
   - `ds-toast-region`'s dev-warning strip is unverified
+  - `ds-waterfall-chart` is `ds-cascade-chart` (Stas, 2026-09-23)
 - **Two more from the same audit, both about our tooling (recorded 2026-09-22, from the mm-ecm consumer)**
   - `check-manifest-truth` verifies a minority of the locator surface, and its clean line does not say so
 - **What a full re-audit of that same upgrade turned up (recorded 2026-09-22, from the mm-ecm consumer)**
@@ -511,6 +512,20 @@ documented thing or their chapter's demo only exists once opened. Everything bel
   no overlay either. What freezing took away was the click, which is why the panel owners are live.
 
 # Asks — a consumer or Stas asked for it
+
+- [ ] **[P2] `ds-waterfall-chart` is `ds-cascade-chart` (Stas, 2026-09-23).** The English `waterfall`
+  is the field's standard word - Excel, Power BI, Tableau, Highcharts and ECharts all use it, with
+  `bridge` as the finance synonym - so this is a preference, not a correction, and it is his to make.
+  **What moves:** the selector, `WaterfallChartComponent`, `WaterfallChartBar`, `WaterfallChartDrop`
+  and the rest of the exported types, the entry point
+  `@ids-group-ltd/ids-design-system/components/waterfall-chart`, the `g[dsWaterfallMarks]` mark, the
+  `--ds-waterfall-chart-*` tokens, the internal `.waterfall-chart` class, the docs page and the
+  catalogue leaf.
+  **Migration:** a `selector-rename`, one `type-rename` per exported symbol, a `token-rename` for the
+  prefix and a `class-rename` for the internal class - the shape `donut-chart` to `pie-chart` used in
+  0.13.3, which is the worked example to copy. The old tag is an unknown element rather than an
+  error: Angular renders nothing and logs nothing outside strict schema mode, so a missed one is a
+  chart that silently vanished.
 
 Each has somebody behind it. Nothing here is speculative work.
 
@@ -1294,7 +1309,7 @@ file** — the number moves; cite the filename.
 | 10 | `10-ds-bar-name-collision` | What the merged progress+meter is called, given `ds-bar` is a prefix of `ds-bar-chart`. | the `ds-bar` rename ask on the same board |
 | 11 | `11-banner-announce-warning` | Whether a dev warning names an error banner no screen reader will read. | the closed `banner.announce` ask, which left this open |
 | 12 | `12-picker-list-height` | Whether the picker list height becomes a public token or stays behind `panelClass`. | the closed `--picker-maxh` ask, same shape |
-| 13 | `13-decision-queue` | Every open question in one page - 37 across six groups, options drawn rather than named. | every open deck plus the whole `Decisions` bucket |
+| 13 | `13-decision-queue` | Every open question in one page - 36 across six groups, options drawn rather than named. | every open deck plus the whole `Decisions` bucket |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled

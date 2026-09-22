@@ -23,7 +23,7 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 | 10 | `10-ds-bar-name-collision` | the name of the merged progress+meter: `--ds-bar-` is a prefix of `--ds-bar-chart-`, and a namespace replace kills the chart's overrides silently |
 | 11 | `11-banner-announce-warning` | whether a dev warning names an error banner no screen reader will read, now that the input's three states tell an opt-out from an oversight |
 | 12 | `12-picker-list-height` | whether the picker list's height stays an internal token: the cap that governs the visible rows is not the one that looks settable |
-| 13 | `13-decision-queue` | every open question in one page - 37 across six groups, each with its options drawn rather than named; the live indeterminate tracks are the case a text list could not put |
+| 13 | `13-decision-queue` | every open question in one page - 36 across six groups, each with its options drawn rather than named; the live indeterminate tracks are the case a text list could not put |
 
 **Rank 1 is the way in, and ranks 2-4 are the two biggest lanes** — the colour engine, then the interaction formula that reads
 its ramp. Ranks 1-5 are written in Russian and share `deck.css`, which sits beside `ds.css` and
@@ -40,13 +40,14 @@ nav, and the scatter's phase — which went to phase 2 with its decimation layer
 **A `tool` here takes no number.** `backlog-board.html` and `rejected-with-numbers.html` — both are
 read whenever rather than at a moment, so they stay unnumbered and sort below the queue.
 
-**`1-decision-queue` holds rank 1 and is scoped to the RECENT asks, not to the whole queue.** The
-five a consumer raised on 0.13.2-0.13.3 that are still open, each with its options rendered rather
-than named — three live tracks for the indeterminate one, the two palettes side by side for the
-bar-and-column one. A deck link sits beside each question for the argument and the measurements. Picks persist per browser
-and the bar at the foot hands them back as one line. It duplicates no argument, so it cannot
-contradict a deck; it goes stale only when a deck's OPTIONS change, which is what to re-check
-when one does.
+**`13-decision-queue` sorts last and carries EVERY open question** — each open deck plus the whole
+`Decisions` bucket of `docs/todo.md`, grouped by area. Every one has its options rendered rather
+than named: live tracks for the indeterminate bar, two palettes side by side for bar-and-column,
+sparklines in a card and a table cell, rendered ramps for the colour questions, pipelines for the
+release ones, and before-and-after code where the decision is a name. A deck link sits beside each
+question for the argument and the measurements. Picks persist per browser and the bar at the foot
+hands them back as one line. It duplicates no argument, so it cannot contradict a deck; it goes
+stale when a deck's OPTIONS change or when a question is answered, which is what to re-check then.
 `rejected-with-numbers` held rank 5 until 2026-09-12 while asking nothing: it is the register of what
 this backlog has turned down and the measurement that turned it down, so a rank on it made the queue
 claim a verdict was owed where none was. A tool that is RUN rather than read does not belong in this
