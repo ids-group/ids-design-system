@@ -36,6 +36,14 @@
   figcaption {
     user-select: text;
   }
+
+  /* "The request failed" and "there is nothing to show" read the same in grey and mean opposite
+     things. Stated here rather than per chart because every chart's template sets this class:
+     four of the nine had no rule for it, and the pie names its element `.empty-text`. */
+  .empty.is-error,
+  .empty-text.is-error {
+    color: var(--error);
+  }
 }
 
 // The focus indicator, drawn rather than outlined: `outline` on an SVG element paints its BOUNDING

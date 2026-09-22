@@ -20,6 +20,13 @@
   --_funnel-chart-focus-color: var(--ds-funnel-chart-focus-color, var(--focus-ring-color));
   --_funnel-chart-focus-width: var(--ds-funnel-chart-focus-width, var(--focus-ring-width));
 
+  /* The rings are drawn by the shared mixins, which read `--focus-ring-*` and
+     `--ds-chart-focus-ring-color`. Re-pointed here, or this chart's own two hooks would parse and
+     change nothing. */
+  --ds-chart-focus-ring-color: var(--_funnel-chart-focus-color);
+  --focus-ring-color: var(--_funnel-chart-focus-color);
+  --focus-ring-width: var(--_funnel-chart-focus-width);
+
   // Contains the absolutely-positioned caption below; without it the caption resolves against the
   // initial containing block and can grow the consuming page's root scroller.
   position: relative;
@@ -120,9 +127,6 @@ svg {
   border-radius: var(--radius-sm);
 }
 
-.empty.is-error {
-  color: var(--error);
-}
 
 .shape {
   @include chart-interactive.fades('.stage', ', fill var(--ds-motion-chart-mark-duration) var(--ds-motion-chart-mark-easing)');

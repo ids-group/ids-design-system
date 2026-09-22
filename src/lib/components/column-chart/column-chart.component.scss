@@ -43,8 +43,5 @@ ds-chart {
   column-gap: var(--_column-chart-column-gap);
 }
 
-.empty.is-error {
-  color: var(--error);
-}
 
 @include chart-frame.pin-reset;

@@ -86,9 +86,6 @@ ds-chart-legend {
   margin-block-start: var(--space-3);
 }
 
-.empty.is-error {
-  color: var(--error);
-}
 
 @include chart-frame.forced-colors;
 @include chart-frame.pin-reset;
