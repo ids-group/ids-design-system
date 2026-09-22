@@ -226,6 +226,24 @@
 
 ### Added
 
+- **`DS_CONFIG` takes `banner.announce` and `alert.announce`, the app-wide default for whether a
+  banner or an alert is spoken when it appears.**
+
+  ```ts
+  provideDsConfig({ banner: { announce: true }, alert: { announce: true } });
+  ```
+
+  Both default to `false`, which is what the element already did. An app whose banners are raised in
+  response to events sets the key once and binds `[announce]="false"` on the strips that are page
+  furniture, instead of deciding at every element - a pass over 43 banners is the shape this is for,
+  and a search for a severity walks past a banner in a non-first `@else if` branch and one whose
+  `variant` is a computed expression.
+
+  **The input reads `boolean | null` now**, with `null` meaning unset, because a signal input cannot
+  otherwise report whether it was bound. Writing the attribute is unchanged. A subclass that reads
+  `announce()` back gets the three-state value and wants `announceResolved()`, which is the one the
+  component's own ARIA reads.
+
 - **`ds-chart` holds the category cursor: `cursorPin` and `tooltipLingerMs`.** A press holds the
   cursor where it is until it is pressed again, Escape, or a press outside the plot; the linger is
   the grace period that lets the pointer cross from the plot to a portaled tooltip panel.

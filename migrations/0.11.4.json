@@ -66,7 +66,7 @@
       "old": "role and aria-live always present",
       "new": null,
       "appliesWhen": "You rely on a ds-banner or ds-alert being announced by a screen reader when it appears. A banner that is page furniture needs no change - silence is now the correct behaviour for it.",
-      "pitfall": "Nothing breaks visibly and no build fails, so a regression here is invisible without a screen reader: an app that raised an error banner in response to a request and relied on the alert firing now shows it silently.",
+      "pitfall": "Nothing breaks visibly and no build fails, so a regression here is invisible without a screen reader. Grepping for a severity misses two shapes that are common and easy to walk past: a banner in a non-first branch of an @if / @else if / @switch chain, and one whose variant is a computed expression rather than a literal. Both render as the severity you were looking for and neither matches the search for it.",
       "searchHints": [
         "ds-banner",
         "ds-alert"
@@ -77,9 +77,9 @@
         "ds-alert"
       ],
       "verify": "A banner your app raises in response to an event carries announce and is spoken; a static strip carries none and is silent on route change.",
-      "restore": "Pass [announce]=\"true\" to get the previous behaviour on a given instance.",
+      "restore": "Pass [announce]=\"true\" per instance. There is no app-wide lever at this version, so an app that announced everywhere restores it one element at a time.",
       "note": "An alert region fires on insertion, so a statically-placed strip interrupted the reader on every client-side route into its page - 12 such regions on this library's own docs. MDN advises against alert on content the user has not interacted with, and the DS convention is that a new capability is off by default.",
-      "action": "Add [announce]=\"true\" to any ds-banner or ds-alert that should be announced when it appears."
+      "action": "Enumerate every ds-banner and ds-alert in the app and decide each one, then add [announce]=\"true\" to the ones that should be spoken when they appear."
     },
     {
       "id": "toast-config-token-removed",

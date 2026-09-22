@@ -807,6 +807,39 @@
         "--ds-t-mono"
       ],
       "note": "The last abbreviation left in the token surface, and the one hardest to guess from the CSS property it sets. `t` expands the way `pad`, `fs`, `btn` and the rest already did."
+    },
+    {
+      "id": "banner-alert-announce-takes-a-config-default",
+      "kind": "behavior",
+      "old": "ds-banner[announce]",
+      "new": null,
+      "surface": [
+        "config",
+        "typescript"
+      ],
+      "action": "Set `banner: { announce: true }` and `alert: { announce: true }` in DS_CONFIG to announce every banner and alert, then bind [announce]=\"false\" on the ones that are page furniture.",
+      "appliesWhen": "An app that wants its banners announced by default. A template that already binds [announce] on every instance needs nothing - the binding still wins over the config.",
+      "pitfall": "The config default reaches a banner only where the element leaves `announce` unbound. `[announce]=\"false\"` written to silence one instance keeps silencing it, which is the point, but `[announce]=\"isError\"` binds on every render and never falls through to the config at all.",
+      "restore": null,
+      "searchHints": [
+        "announce",
+        "ds-banner",
+        "ds-alert",
+        "provideDsConfig",
+        "DS_CONFIG"
+      ],
+      "detect": [
+        "announce",
+        "provideDsConfig",
+        "DS_CONFIG",
+        "extends BannerComponent",
+        "extends AlertComponent"
+      ],
+      "verify": "With `banner.announce` true and no binding on the element, a ds-banner carries role and aria-live; the same banner with [announce]=\"false\" carries neither.",
+      "note": "The input reads `boolean | null` now, with null meaning unset, which is what lets the config answer for it. Writing the attribute is unchanged; a subclass that reads `announce()` back gets the three-state value and should read `announceResolved()` instead.",
+      "supersedes": [
+        "0.11.4#banner-alert-announce-opt-in"
+      ]
     }
   ],
   "informational": [
