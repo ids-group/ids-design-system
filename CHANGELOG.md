@@ -189,7 +189,59 @@
   three - under `single` as much as without it, for as long as the component has shipped. Both
   ways in run through one place now, and a probe pins it.
 
+- **`ds-line-chart` draws its plot through `ds-chart`, and two DOM hooks change with it.** The
+  second-axis gridline class is `.grid-line.is-secondary`, not `.grid-line.secondary`, and the
+  markers no longer carry `data-series-index` - they are numbered across the whole chart, so
+  `data-mark-index` alone names one reading.
+
+  ```css
+  ::ng-deep ds-line-chart .grid-line.is-secondary { stroke-dasharray: 2 6; }
+  ```
+
+  Every `--ds-line-chart-*` hook still reaches the plot; the preset re-points each one at the
+  container's own name. `.plot`, `.canvas`, `.axis-label`, `.series-line`, `.series-marker`,
+  `.cursor-line` and `.category-band` are all still there, and `.axis-label` gained
+  `.is-primary` / `.is-secondary`.
+
+  A selector that stops matching is valid CSS. The rule goes dead, the plot draws at its default,
+  and nothing reports either - which is also true of a test locator built on `data-series-index`.
+
 ### Added
+
+- **`ds-chart` holds the category cursor: `cursorPin` and `tooltipLingerMs`.** A press holds the
+  cursor where it is until it is pressed again, Escape, or a press outside the plot; the linger is
+  the grace period that lets the pointer cross from the plot to a portaled tooltip panel.
+
+  ```html
+  <ds-chart cursor="category" cursorPin [tooltipLingerMs]="180" [categories]="months">
+  ```
+
+  Both are off by default. The cursor runs on the same state machine the element marks already
+  use, so a pin behaves identically whether it is held on a column or on a category.
+
+- **`ds-chart` is exported as `dsChart`.** A template reference reads `cursorPinned()` and calls
+  `releaseCursor()`, which is what a preset needs to render its own way out of a held cursor.
+
+  ```html
+  <ds-chart #plot="dsChart" cursor="category" cursorPin [categories]="months">
+  ```
+
+- **`g[dsLineSeries]` takes `highlighted` and `tooltipAnchor`.** `highlighted` is the id of the one
+  series to single out: with `dimOthers` beside it, that series keeps its colour and thickens while
+  the rest fade. `tooltipAnchor` decides where an `axis` panel hangs - `'reading'`, the default,
+  over the highest reading in the category, `'pointer'` following the cursor.
+
+  ```html
+  <svg:g dsLineSeries dimOthers [highlighted]="hovered()" [data]="series()" />
+  ```
+
+  Its markers also rove per series now: one tab stop per line, and the arrows walk that line rather
+  than every reading on the plot. A focused marker narrows an `axis` panel to its own series.
+
+- **`ChartScales` carries `cursorPointer`**, the pointer position in client pixels, for a mark that
+  anchors a panel to the cursor rather than to a reading. `CHART_DEFAULT_VALUE_SPACE` is exported
+  alongside it, so a preset can reserve the same box the container will take.
+
 
 - **`ds-chart-data-table` holds the annex table every chart was drawing itself.** The
   `details`, the summary, the caption and the table; the chart supplies `columns` and `rows` of
@@ -557,6 +609,22 @@
 
 ### Changed
 
+- **`ds-line-chart` measures its plot instead of scaling a fixed viewBox.** One unit is one CSS
+  pixel, the axis gutter widens to the widest tick label as it actually rendered, and the category
+  labels tilt then thin when they stop fitting - the same treatment `ds-column-chart` and
+  `ds-chart` already got.
+
+  **`--ds-line-chart-plot-height` now drives the plot.** It has been declared since the chart
+  shipped and reached only the loading skeleton: the plot was a 640x320 viewBox scaled to the
+  card's width, so the token parsed and changed nothing. The empty and error boxes reserve the
+  height the plot will take rather than a width-derived ratio, so the card no longer moves when the
+  last series is switched off.
+
+  Escape now releases the category cursor and its panel together, a tap latches the cursor the way
+  a tap on a column latches that column, and a pointer that leaves the plot for the tooltip panel
+  keeps it open. None of that was reachable before without a pin.
+
+
 - **A heat scale, `--ds-chart-heat-1..8`, separate from the ramp.** Magnitude on a grid is read
   from the step between two colours and nothing else, and the ramp does not give one: its adjacent
   steps are 2.1-3.9 dE apart with 20.7 end to end, so eight cells show about three the eye can
@@ -575,7 +643,7 @@
 - **Exported class member surface grew — only matters if you SUBCLASS one of these.**
   `LineChartComponent` gained `curve`, `stack`, `yAxisLabel`, `secondaryAxisLabel` and five members
   behind them; `ChartComponent` gained `axisLabel`, `secondaryAxisLabel` and the three that thin and
-  turn its category labels; `LineSeriesComponent` gained `curve`; `ButtonComponent` gained `align`; `PaginationComponent` gained `size` and `layout`; `SegmentedComponent` gained `joined`; `LineSeriesComponent` gained `pinOnClick`, `dimOthers`, `patterns` and `stacked`; `DropzoneComponent` lost `single`. `PieChartComponent` traded `thickness` for `innerRadius`, `AccordionComponent` `multi` for `multiple`, `TableComponent` `sortDir` for `sortDirection`, and `AppLayoutComponent` and `DatePickerComponent` changed a member's type with the symbol renames; every chart gained the rows and columns it hands `ds-chart-data-table` - `BarChartComponent`, `ColumnChartComponent`, `LineChartComponent`, `PieChartComponent`, `FunnelChartComponent`, `HeatmapChartComponent`, `ScatterChartComponent` and `WaterfallChartComponent`. A subclass overriding an old name now overrides nothing. Subclassing a DS component is
+  turn its category labels; `LineSeriesComponent` gained `curve`; `ButtonComponent` gained `align`; `PaginationComponent` gained `size` and `layout`; `SegmentedComponent` gained `joined`; `LineSeriesComponent` gained `pinOnClick`, `dimOthers`, `patterns`, `stacked`, `highlighted` and `tooltipAnchor`; `ChartComponent` gained `cursorPin`, `tooltipLingerMs`, `cursorPinned`, `cursorPointer` and `releaseCursor`; `DropzoneComponent` lost `single`. `PieChartComponent` traded `thickness` for `innerRadius`, `AccordionComponent` `multi` for `multiple`, `TableComponent` `sortDir` for `sortDirection`, and `AppLayoutComponent` and `DatePickerComponent` changed a member's type with the symbol renames; every chart gained the rows and columns it hands `ds-chart-data-table` - `BarChartComponent`, `ColumnChartComponent`, `LineChartComponent`, `PieChartComponent`, `FunnelChartComponent`, `HeatmapChartComponent`, `ScatterChartComponent` and `WaterfallChartComponent`. A subclass overriding an old name now overrides nothing. Subclassing a DS component is
   unsupported, but a release that only adds can still fail such a build on a name collision: TS4114
   demands `override` for a same-named member, TS2416 fires where the signature differs. Rename your
   own member, or add `override` where it genuinely means the same thing.

@@ -714,6 +714,74 @@
       ],
       "verify": "No `single` binding remains on any `ds-dropzone`, and every panel that was narrow still is - through `--ds-dropzone-max-width`.",
       "note": "Two booleans encoded one three-state fact: `single` set the count, which `multiple` already carried, and separately capped the width, which nothing said. A narrow multi-file dropzone could not be expressed at all. The count is also enforced on a DROP now: the native `multiple` attribute constrains the picker dialog only, so a drag of several files reached a single-file dropzone whatever it was set to."
+    },
+    {
+      "id": "line-chart-secondary-gridline-class",
+      "kind": "class-rename",
+      "old": "ds-line-chart .grid-line.secondary",
+      "new": "ds-line-chart .grid-line.is-secondary",
+      "surface": "style",
+      "action": "In any stylesheet reaching into `ds-line-chart`, rewrite `.grid-line.secondary` to `.grid-line.is-secondary`.",
+      "appliesWhen": "Only consumer STYLING of the second axis gridlines inside `ds-line-chart`. No binding, input or type changes, and `ds-chart` already spelt the class `is-secondary`.",
+      "pitfall": "A selector that no longer matches is valid CSS. The second-axis gridlines simply draw at the shared default and nothing reports the rule went dead.",
+      "restore": null,
+      "searchHints": [
+        ".grid-line",
+        "grid-line.secondary",
+        "ds-line-chart"
+      ],
+      "detect": [
+        ".grid-line.secondary",
+        "grid-line",
+        "::ng-deep ds-line-chart"
+      ],
+      "note": "The preset draws its plot through `ds-chart` now, and the container names that class `is-secondary` the way every other state class in the library is named. One vocabulary across the two, rather than one per chart."
+    },
+    {
+      "id": "line-chart-marker-index-is-chart-wide",
+      "kind": "behavior",
+      "old": "ds-line-chart [data-series-index]",
+      "new": null,
+      "surface": "style",
+      "action": "Drop `[data-series-index]` from any selector or test locator aimed at a `ds-line-chart` marker, and match on the marker itself. Where a selector combined the two, `[data-mark-index]` alone now identifies one reading.",
+      "appliesWhen": "Only `ds-line-chart`. `ds-column-chart` and `ds-funnel-chart` never carried `data-series-index`, and `data-mark-index` is unchanged on them.",
+      "pitfall": "A locator on the removed attribute finds nothing rather than failing: a screenshot test keeps passing over a marker it stopped hovering, and a style rule leaves the reading it was pinning at its default.",
+      "restore": null,
+      "searchHints": [
+        "data-series-index",
+        "data-mark-index",
+        "series-marker"
+      ],
+      "detect": [
+        "data-series-index",
+        "[data-mark-index=",
+        ".series-marker"
+      ],
+      "verify": "No selector or locator aimed at a line-chart marker names `data-series-index`, and every one that identified a reading does so by `data-mark-index` alone.",
+      "note": "The markers are numbered across the whole chart now rather than restarting per series, so one number names one reading and the second attribute had nothing left to disambiguate."
+    },
+    {
+      "id": "chart-scales-gained-cursor-pointer",
+      "kind": "behavior",
+      "old": "ChartScales",
+      "new": null,
+      "surface": "typescript",
+      "action": "If you implement `ChartScales` yourself, add a `cursorPointer` signal returning the pointer position in client pixels, or `null`.",
+      "appliesWhen": "Only a class or object declared as implementing `ChartScales`. Injecting the token to READ the scales is unaffected - the interface only grew.",
+      "pitfall": "None: a missing member is a compile error at the declaration.",
+      "restore": null,
+      "searchHints": [
+        "ChartScales",
+        "CHART_SCALES",
+        "implements ChartScales"
+      ],
+      "detect": [
+        "implements ChartScales",
+        ": ChartScales",
+        "CHART_SCALES"
+      ],
+      "verify": "Every `ChartScales` implementation declares `cursorPointer`.",
+      "note": "A mark that anchors its panel to the cursor rather than to a reading needs the pointer position, and only the container that caught the event has it."
     }
   ],
   "informational": [
@@ -743,7 +811,11 @@
     "`g[dsSeriesAnnotation]` is a new mark for the chart container: it pins labels to readings the caller names, so a peak or a launch is legible with no pointer. It takes the readings rather than finding them - a mark never sees the other marks, and the caller that owns the series is the one that knows which value a label belongs to. Purely additive.",
     "`g[dsLineSeries]` takes `tooltip=\"axis\"`, which names every series of that mark at the category under the pointer rather than the one marker hovered. It follows the container: set `cursor=\"category\"` on `ds-chart` beside it, and the panel anchors to the band the cursor draws. `'item'` stays the default. Purely additive - nothing to change.",
     "`LineSeriesData` takes `lower`: the band's floor, one entry per category. Unset, an `area` series fills to the baseline as before; given, the fill is the band between the two curves, which is what a stacked plot needs. The caller that owns the pile is the one that knows where each band starts - a mark never sees the other marks. Purely additive.",
-    "`ds-chart-data-table` is a new component for the annex table under a chart: the `details`, the summary, the caption and the table, taking `columns` and `rows` of formatted cells. Every chart drew its own copy of that chrome. Purely additive - the charts that use it render the same markup they did."
+    "`ds-chart-data-table` is a new component for the annex table under a chart: the `details`, the summary, the caption and the table, taking `columns` and `rows` of formatted cells. Every chart drew its own copy of that chrome. Purely additive - the charts that use it render the same markup they did.",
+    "`ds-chart` takes `cursorPin` and `tooltipLingerMs`: a press holds the category cursor where it is, and the cursor survives the pointer leaving the plot for long enough to reach a tooltip panel. Both off by default, so a chart that set neither behaves as before.",
+    "`ds-chart` is exported as `dsChart`, and a template reference reads `cursorPinned()` and calls `releaseCursor()` - which is how a preset renders its own way out of a held cursor.",
+    "`g[dsLineSeries]` takes `highlighted`, the id of the one series to single out, and `tooltipAnchor`, which decides whether an `axis` panel hangs over the highest reading or follows the pointer. Both need `dimOthers` and `tooltip=\"axis\"` respectively; neither changes a chart that sets nothing.",
+    "`CHART_DEFAULT_VALUE_SPACE` is exported from `@ids-group-ltd/ids-design-system/components/chart`, so a preset reserving the box `ds-chart` will take can read the same number the container defaults to."
   ],
   "deleteList": []
 }

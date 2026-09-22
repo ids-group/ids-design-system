@@ -65,13 +65,18 @@ if (flood.length <= budget) {
   );
 }
 
-// The four bounded charts: assert the bound is still structural, by reading the source rather than
-// rendering. A mark drawn per datum is fine; a mark drawn per datum PER PIXEL is not.
+// The bounded charts: assert the bound is still structural, by reading the source rather than
+// rendering. A mark drawn per datum is fine; a mark drawn per datum PER PIXEL is not. A preset that
+// projects its marks takes two rows - the tag it writes, and the mark that draws the node.
 const bounded = {
-  'src/lib/components/heatmap-chart/heatmap-chart.component.html': 'class="cell"',
-  'src/lib/components/waterfall-chart/waterfall-chart.component.html': 'dsColumnSeries',
+  'src/lib/components/heatmap-chart/heatmap-chart.component.html':
+    'class="cell"',
+  'src/lib/components/waterfall-chart/waterfall-chart.component.html':
+    'dsColumnSeries',
   'src/lib/components/chart/column-series.component.html': 'class="column"',
-  'src/lib/components/line-chart/line-chart.component.html': 'class="series-marker"',
+  'src/lib/components/chart/line-series.component.html':
+    'class="series-marker"',
+  'src/lib/components/line-chart/line-chart.component.html': 'dsLineSeries',
 };
 
 for (const [file, mark] of Object.entries(bounded)) {
@@ -97,5 +102,5 @@ if (problems.length > 0) {
 }
 
 console.log(
-  `check-chart-mark-budget: OK — scatter holds ${flood.length} readings to ${minMaxDecimate(flood, budget).length} marks against a ${budget} budget, and the four bounded charts still draw one mark per datum.`,
+  `check-chart-mark-budget: OK — scatter holds ${flood.length} readings to ${minMaxDecimate(flood, budget).length} marks against a ${budget} budget, and the bounded charts still draw one mark per datum.`,
 );
