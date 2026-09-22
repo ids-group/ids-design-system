@@ -3272,6 +3272,31 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-column-chart-cap-radius",
         "value": "var(--ds-chart-mark-cap-radius)",
         "notes": ""
+      },
+      {
+        "name": "--ds-chart-annotation-color",
+        "value": "var(--text-primary)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-chart-annotation-font-size",
+        "value": "var(--ds-chart-axis-font-size)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-chart-annotation-font-weight",
+        "value": "var(--font-weight-bold)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-chart-annotation-halo-color",
+        "value": "var(--surface-default)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-chart-annotation-halo-width",
+        "value": "3px",
+        "notes": ""
       }
     ]
   },

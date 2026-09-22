@@ -3,6 +3,8 @@ export { ColumnSeriesComponent } from './column-series.component';
 export { LineSeriesComponent } from './line-series.component';
 export { ReferenceLabelComponent } from './reference-label.component';
 export { ReferenceLineComponent } from './reference-line.component';
+export { SeriesAnnotationComponent } from './series-annotation.component';
+export type { ChartAnnotation } from './series-annotation.component';
 export type { ColumnSeriesPoint } from './column-series.component';
 export type { LineSeriesData } from './line-series.component';
 export { annotationMarks, chartViewHeight, stackOffsets } from './chart.math';

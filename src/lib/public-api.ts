@@ -100,9 +100,11 @@ export {
   LineSeriesComponent,
   ReferenceLabelComponent,
   ReferenceLineComponent,
+  SeriesAnnotationComponent,
   stackOffsets,
 } from '@ids-group-ltd/ids-design-system/components/chart';
 export type {
+  ChartAnnotation,
   ChartPlot,
   ChartScales,
   ChartStackOffset,

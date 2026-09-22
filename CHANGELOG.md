@@ -191,6 +191,20 @@
 
 ### Added
 
+- **`g[dsSeriesAnnotation]` pins labels to readings.** A peak, a launch, the month a number
+  turned - legible in a printed page or a screenshot, where a tooltip is not.
+
+  ```html
+  <ds-chart [categories]="months">
+    <svg:g dsLineSeries [data]="series" />
+    <svg:g dsSeriesAnnotation [annotations]="notes" />
+  </ds-chart>
+  ```
+
+  It takes the readings rather than finding them: a mark never sees the other marks, so the caller
+  that owns the series is the one that knows which value a label belongs to. It reports no domain,
+  because the series it annotates already did.
+
 - **`ds-chart` takes `cursor`.** `'category'` draws a band and a crosshair down the category
   under the pointer, and reports that category to every mark through the shared scales.
 

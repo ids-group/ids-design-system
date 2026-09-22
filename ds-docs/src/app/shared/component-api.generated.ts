@@ -2438,6 +2438,28 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     ],
     "outputs": []
   },
+  "chart:SeriesAnnotationComponent": {
+    "key": "chart",
+    "selector": "g[dsSeriesAnnotation]",
+    "isElement": true,
+    "className": "SeriesAnnotationComponent",
+    "status": "stable",
+    "importName": "SeriesAnnotationComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "annotations",
+        "kind": "input",
+        "type": "readonly ChartAnnotation[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": ""
+      }
+    ],
+    "outputs": []
+  },
   "checkbox": {
     "key": "checkbox",
     "selector": "ds-checkbox",

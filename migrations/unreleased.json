@@ -727,7 +727,8 @@
     "`ChartStackOffset` and `stackOffsets` are published from the package root. The mark that takes them, `g[dsColumnSeries]`, was already published there, so its `offsets` input could be bound and not typed. Purely additive - nothing to change.",
     "`g[dsLineSeries]` takes `pinOnClick`, `dimOthers`, `patterns` and `stacked`, which brings it level with `g[dsColumnSeries]` and with what `ds-line-chart` draws. A consumer composing a plot out of the marks can now pin a reading, fade the other series, dash a line and stack the areas. Every default is off. Purely additive - nothing to change.",
     "`ds-chart` takes `maxSecondary`, which pins the ceiling of the second value axis the way `max` pins the first. Two plots read against each other need both pinned, or the second rescales under them when one loses its tallest reading. Purely additive - nothing to change.",
-    "`ds-chart` takes `cursor`. `'category'` draws a band and a crosshair down the category under the pointer and reports it to every mark through the shared scales; `'none'`, the default, leaves the plot alone, which is what every chart drew before. Purely additive - nothing to change."
+    "`ds-chart` takes `cursor`. `'category'` draws a band and a crosshair down the category under the pointer and reports it to every mark through the shared scales; `'none'`, the default, leaves the plot alone, which is what every chart drew before. Purely additive - nothing to change.",
+    "`g[dsSeriesAnnotation]` is a new mark for the chart container: it pins labels to readings the caller names, so a peak or a launch is legible with no pointer. It takes the readings rather than finding them - a mark never sees the other marks, and the caller that owns the series is the one that knows which value a label belongs to. Purely additive."
   ],
   "deleteList": []
 }
