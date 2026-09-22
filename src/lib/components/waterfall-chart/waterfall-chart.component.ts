@@ -64,6 +64,9 @@ const DIRECTION_WORDS: Record<WaterfallChartStep['direction'], string> = {
   ],
   templateUrl: './waterfall-chart.component.html',
   styleUrl: './waterfall-chart.component.scss',
+  host: {
+    '[class.framed]': "frameResolved() === 'auto'",
+  },
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

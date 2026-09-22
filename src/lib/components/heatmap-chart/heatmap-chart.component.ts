@@ -57,6 +57,9 @@ interface PlacedRow {
   imports: [ChartTooltipDirective, SkeletonComponent, ChartDataTableComponent],
   templateUrl: './heatmap-chart.component.html',
   styleUrl: './heatmap-chart.component.scss',
+  host: {
+    '[class.framed]': "frameResolved() === 'auto'",
+  },
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

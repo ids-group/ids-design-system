@@ -94,6 +94,9 @@ interface PlacedSeries {
   ],
   templateUrl: './scatter-chart.component.html',
   styleUrl: './scatter-chart.component.scss',
+  host: {
+    '[class.framed]': "frameResolved() === 'auto'",
+  },
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
