@@ -696,6 +696,19 @@
 
 ### Fixed
 
+- **`--ds-table-head-height` is in the token reference, and the loading scrim honours it.** The
+  hook only ever existed as a string inside a template attribute, so `extract-tokens.mjs` - which
+  reads `.scss` - never saw it and the reference never listed it.
+
+  ```css
+  ds-table { --ds-table-head-height: 56px; }
+  ```
+
+  It resolves through `--_table-head-height` on the host now, between the pin and the measured row
+  height the component publishes: a consumer value wins over the measurement, the measurement wins
+  over the 40px floor.
+
+
 - **Portaled panels grow out of their trigger instead of fading in place.** Every panel carrying
   `ds-overlay-pane` - select, autocomplete, multi-select, the three pickers, popover, tooltip, the
   menu submenu - enters with `ds-scale-in` rather than `ds-fade-in`.

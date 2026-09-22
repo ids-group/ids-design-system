@@ -919,7 +919,8 @@
     "`CHART_DEFAULT_VALUE_SPACE` is exported from `@ids-group-ltd/ids-design-system/components/chart`, so a preset reserving the box `ds-chart` will take can read the same number the container defaults to.",
     "`--ds-chart-legend-swatch-size` sizes the colour chip in `ds-chart-legend`, defaulting to `--space-2-5`. `--ds-line-chart-swatch-size` points at it, so that token reaches the swatch again after reaching nothing since the legend became its own component; nothing to change, and the default size is the same.",
     "An indeterminate ds-bar keeps its sliding chunk on the track for most of the cycle: the loop runs at a constant speed instead of on an ease curve that parked it at the extremes. Visual only, no code change.",
-    "Portaled panels carrying `ds-overlay-pane` now enter with `ds-scale-in` rather than `ds-fade-in`: a panel grows out of its trigger edge instead of appearing in place. Nothing to change. `--ds-overlay-enter-keyframes` still takes `ds-fade-in`, `ds-slide-in` or your own global keyframes, and drawer, bottom-sheet, alert, banner and toast each name their own and are untouched."
+    "Portaled panels carrying `ds-overlay-pane` now enter with `ds-scale-in` rather than `ds-fade-in`: a panel grows out of its trigger edge instead of appearing in place. Nothing to change. `--ds-overlay-enter-keyframes` still takes `ds-fade-in`, `ds-slide-in` or your own global keyframes, and drawer, bottom-sheet, alert, banner and toast each name their own and are untouched.",
+    "`--ds-table-head-height` now appears in the token reference and resolves through a declared resolver rather than a string inside a template. Nothing to change - a consumer already setting it kept working throughout; what changed is that the docs list it."
   ],
   "deleteList": []
 }
