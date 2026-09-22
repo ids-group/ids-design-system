@@ -139,7 +139,11 @@
         "extends HeatmapChartComponent",
         "HeatmapChartComponent",
         "extends ColumnChartComponent",
-        "ColumnChartComponent"
+        "ColumnChartComponent",
+        "extends AlertComponent",
+        "AlertComponent",
+        "extends BannerComponent",
+        "BannerComponent"
       ],
       "verify": "Every subclass of the listed components builds, and any member it declares that the base now also declares carries `override`.",
       "note": "`LineChartComponent`, `ChartComponent` and `LineSeriesComponent` gained members behind the new axis and curve inputs; `ButtonComponent` gained `align`, `PaginationComponent` `size` and `layout`, `SegmentedComponent` `joined`, `LineSeriesComponent` four more; `DropzoneComponent` lost `single`; and every chart gained the rows and columns it now hands `ds-chart-data-table`. `PieChartComponent` traded `thickness` for `innerRadius`, `AccordionComponent` `multi` for `multiple`, `TableComponent` `sortDir` for `sortDirection`, and `AppLayoutComponent` and `DatePickerComponent` changed a member's type with the symbol renames - a subclass overriding an old name now overrides nothing."
