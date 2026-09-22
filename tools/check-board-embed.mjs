@@ -65,7 +65,6 @@ if (problems.length > 0) {
   process.exit(1);
 }
 
-// A doc whose ITEMS changed also changes what the board should show, and that part is hand-curated.
 if (fixed.length > 0) {
   console.log(
     `check-board-embed: re-embedded ${fixed.join(' and ')} — check the cards and MAP against the new items.`,
