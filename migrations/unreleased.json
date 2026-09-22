@@ -726,8 +726,7 @@
     "`ds-segmented` takes `joined`. Off by default, which is the padded track every consumer draws today. On, the segments share their edges, adjacent borders collapse into one hairline and only the two ends carry the group radius - the shape a row of bordered chips wants. It needs `--ds-segmented-segment-border` set, because the shared edge IS the border. Purely additive.",
     "`ChartStackOffset` and `stackOffsets` are published from the package root. The mark that takes them, `g[dsColumnSeries]`, was already published there, so its `offsets` input could be bound and not typed. Purely additive - nothing to change.",
     "`g[dsLineSeries]` takes `pinOnClick`, `dimOthers`, `patterns` and `stacked`, which brings it level with `g[dsColumnSeries]` and with what `ds-line-chart` draws. A consumer composing a plot out of the marks can now pin a reading, fade the other series, dash a line and stack the areas. Every default is off. Purely additive - nothing to change.",
-    "`ds-chart` takes `maxSecondary`, which pins the ceiling of the second value axis the way `max` pins the first. Two plots read against each other need both pinned, or the second rescales under them when one loses its tallest reading. Purely additive - nothing to change.",
-    "`annotationMarks` and `ChartAnnotationMark` are published from `@ids-group-ltd/ids-design-system/components/chart`. They place a label against a reading - above it, below it where there is no room, anchored inward near the plot edges - which is what `ds-line-chart` did inline. Purely additive; the line chart now calls it rather than keeping its own copy."
+    "`ds-chart` takes `maxSecondary`, which pins the ceiling of the second value axis the way `max` pins the first. Two plots read against each other need both pinned, or the second rescales under them when one loses its tallest reading. Purely additive - nothing to change."
   ],
   "deleteList": []
 }
