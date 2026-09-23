@@ -13,10 +13,6 @@ import { AppLayoutScrollService } from 'ds/app-layout';
 // in the next task.
 const MOUNT_BUDGET_MS = 8;
 
-// A little ahead of the fold, so the chart is built by the time it shows and its entrance still
-// plays on screen rather than a viewport earlier where nobody sees it.
-const ROOT_MARGIN = '10% 0px';
-
 type Mount = () => void;
 
 const pending = new Map<Element, Mount>();
@@ -60,7 +56,7 @@ function observerFor(root: Element | null): IntersectionObserver {
           setTimeout(drain);
         }
       },
-      { root, rootMargin: ROOT_MARGIN },
+      { root },
     );
     observers.set(root, observer);
   }
@@ -71,14 +67,14 @@ function observerFor(root: Element | null): IntersectionObserver {
 const mounts = new WeakMap<Element, Mount>();
 
 /**
- * Builds its element only once it scrolls near the viewport, a few at a time, and keeps it after
+ * Builds its element the first time any of it is on screen, a few at a time, and keeps it after
  * that. Until then a fixed-height placeholder holds its place.
  *
- * The chart page carries over two hundred charts. Built together they are a multi-second stall on
- * opening the page and another every time a section scrolls in; built one by one as they arrive,
- * no task runs long enough to drop a frame. A built chart that scrolls off again stays built -
- * rebuilding it on the way back would replay its entrance and cost the mount again - and
- * `content-visibility` on it skips its style, layout and paint while it is off screen.
+ * Two states, then. The first time a chart scrolls into view it is built and plays its entrance
+ * where the reader sees it. After that it is never rebuilt: scrolled off, it stays in the DOM and
+ * `content-visibility` skips its style, layout and paint, so it costs nothing while hidden and
+ * shows again as it was, without replaying anything. Charts the reader scrolls straight past are
+ * never built at all.
  *
  * A design-sync card renders its whole chapter at once: it is a snapshot, and a headless page
  * reports nothing as intersecting.
