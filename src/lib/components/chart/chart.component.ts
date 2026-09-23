@@ -2,6 +2,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  NgZone,
+  PLATFORM_ID,
   Signal,
   ViewEncapsulation,
   afterRenderEffect,
@@ -23,6 +25,7 @@ import {
   rotationWouldFit,
   tickValues,
 } from '@ids-group-ltd/ids-design-system/components';
+import { isPlatformBrowser } from '@angular/common';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import {
   ChartTooltipDirective,
@@ -218,11 +221,18 @@ export class ChartComponent implements ChartScales {
   readonly valueFormatResolved = this.defaults.valueFormat;
 
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly zone = inject(NgZone);
+  private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
   /** The `<svg>`'s own rendered width: `:host(.framed)` carries the frame padding, so the host's
    *  CONTENT box - which is what a `ResizeObserver` reports - is the box the canvas fills at
    *  `inline-size: 100%`. Measuring the host is therefore measuring the canvas. */
   private readonly measuredWidth = elementWidth(this.host);
+
+  /** Server-rendered output has no width to wait for, so it draws at the stand-in. */
+  readonly measured = computed(
+    () => !this.isBrowser || this.measuredWidth() > 0,
+  );
 
   protected readonly viewWidth = computed(
     () => this.measuredWidth() || CHART_FALLBACK_WIDTH,
@@ -245,9 +255,14 @@ export class ChartComponent implements ChartScales {
       if (this.settled() || this.measuredWidth() === 0) {
         return;
       }
+      let first = 0;
       let second = 0;
-      const first = requestAnimationFrame(() => {
-        second = requestAnimationFrame(() => this.settled.set(true));
+      // Outside the zone: under zone.js each frame callback is a full application tick, two per
+      // chart, and the signal write schedules the one render this needs by itself.
+      this.zone.runOutsideAngular(() => {
+        first = requestAnimationFrame(() => {
+          second = requestAnimationFrame(() => this.settled.set(true));
+        });
       });
       onCleanup(() => {
         cancelAnimationFrame(first);
@@ -256,9 +271,11 @@ export class ChartComponent implements ChartScales {
     });
 
     // The read phase, so every `getComputedTextLength` lands in one batch before any write:
-    // interleaving them forces a synchronous layout per label.
+    // interleaving them forces a synchronous layout per label. It re-measures when a label's text
+    // changes, and only then - not when a resize merely moves the labels.
     afterRenderEffect({
       read: () => {
+        this.labelTexts();
         this.measuredLabelWidth.set(this.widestLabel('.axis-label.is-primary'));
         this.measuredSecondaryLabelWidth.set(
           this.widestLabel('.axis-label.is-secondary'),
@@ -741,6 +758,14 @@ export class ChartComponent implements ChartScales {
       }),
     );
   });
+
+  private readonly labelTexts = computed(() =>
+    [
+      ...this.ticks().map((tick) => tick.label),
+      ...this.secondaryTicks().map((tick) => tick.label),
+      ...this.categories(),
+    ].join('\n'),
+  );
 
   /** Rotation is spent before thinning: a tilt costs the reader a glance, dropping a label costs
    *  them a reading. Both are decided from the widest label as it actually rendered. */

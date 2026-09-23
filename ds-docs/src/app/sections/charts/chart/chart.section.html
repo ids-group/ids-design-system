@@ -10,225 +10,145 @@
     combination you need.
   </span>
 
-  <!-- Nothing here is built until it is scrolled to: nine chart sections at once is a page
-       that stalls on open. The anchor lives on <docs-section>, so the sidebar's scroll still
-       finds this section while its body is a placeholder, and the design-sync card pass
-       resolves the viewport trigger itself. -->
-  @defer (on viewport) {
-    <h3 class="block-title t-h4">Composing a chart</h3>
+  <h3 class="block-title t-h4">
+    Composing a chart
+  </h3>
 
-    <p class="block-desc t-s">
-      A mark is an ATTRIBUTE on a real
-      <code class="t-mono-inline"> &lt;svg:g&gt; </code> -
-      <code class="t-mono-inline"> dsColumnSeries </code>,
-      <code class="t-mono-inline"> dsLineSeries </code>,
-      <code class="t-mono-inline"> dsReferenceLine </code>,
-      <code class="t-mono-inline"> dsReferenceLabel </code> - because an element
-      the SVG specification does not know renders nothing and neither do its
-      children. The <code class="t-mono-inline"> svg: </code> prefix is
-      Angular's, and a projected SVG element without it is rejected at compile
-      time.
-    </p>
+  <p class="block-desc t-s">
+    A mark is an ATTRIBUTE on a real
+    <code class="t-mono-inline">
+      &lt;svg:g&gt;
+    </code> -
+    <code class="t-mono-inline">
+      dsColumnSeries
+    </code>,
+    <code class="t-mono-inline">
+      dsLineSeries
+    </code>,
+    <code class="t-mono-inline">
+      dsReferenceLine
+    </code>,
+    <code class="t-mono-inline">
+      dsReferenceLabel
+    </code> - because an element
+    the SVG specification does not know renders nothing and neither do its
+    children. The <code class="t-mono-inline"> svg: </code> prefix is Angular's,
+    and a projected SVG element without it is rejected at compile time.
+  </p>
 
-    <p class="block-desc t-s">
-      The container has three slots and they are layers rather than an ordering
-      preference: a reference line paints UNDER the marks whatever order you
-      wrote it in, the default slot takes the marks, and a reference label
-      paints OVER them, so an annotation's stroke stays furniture and its name
-      survives a column drawn through it. Inside the default slot the marks
-      paint in the order they are written.
-    </p>
+  <p class="block-desc t-s">
+    The container has three slots and they are layers rather than an ordering
+    preference: a reference line paints UNDER the marks whatever order you wrote
+    it in, the default slot takes the marks, and a reference label paints OVER
+    them, so an annotation's stroke stays furniture and its name survives a
+    column drawn through it. Inside the default slot the marks paint in the
+    order they are written.
+  </p>
 
-    <p class="block-desc t-s">
-      This one is a column series with a target band behind it and the band's
-      names over it.
-      <code class="t-mono-inline"> ds-column-chart </code> wraps exactly this
-      arrangement behind its own
-      <code class="t-mono-inline"> thresholds </code> input; written out, that
-      input is what it builds.
-    </p>
+  <p class="block-desc t-s">
+    This one is a column series with a target band behind it and the band's
+    names over it.
+    <code class="t-mono-inline">
+      ds-column-chart
+    </code> wraps exactly this
+    arrangement behind its own
+    <code class="t-mono-inline">
+      thresholds
+    </code> input; written out, that
+    input is what it builds.
+  </p>
 
-    <h3 class="block-title t-h4">Category cursor</h3>
+  <h3 class="block-title t-h4">
+    Category cursor
+  </h3>
 
-    <p class="block-desc t-s">
-      <code class="t-mono-inline"> cursor="category" </code> draws a band and a
-      crosshair down the category under the pointer, and reports that category
-      to every mark through the shared scales. Off by default: a plot whose
-      marks are themselves the hover targets already answers per mark, and two
-      affordances on one plot read as two different questions. A mark set to
-      <code class="t-mono-inline"> tooltip="axis" </code> reads that same
-      category and names every series at it.
-    </p>
-
-    <ds-chart
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
       cursor="category"
-      caption="Hover the plot, not a mark"
+    </code> draws a band and a
+    crosshair down the category under the pointer, and reports that category to
+    every mark through the shared scales. Off by default: a plot whose marks are
+    themselves the hover targets already answers per mark, and two affordances
+    on one plot read as two different questions. A mark set to
+    <code class="t-mono-inline">
+      tooltip="axis"
+    </code> reads that same category
+    and names every series at it.
+  </p>
+
+  <ds-chart
+    *docsLazy
+    cursor="category"
+    caption="Hover the plot, not a mark"
+    [categories]="orderMonths"
+    [summary]="ordersSummary">
+    <svg:g
+      dsColumnSeries
+      tooltip="none"
+      seriesLabel="Sessions"
+      [data]="orderColumns"
+      [showValues]="false" />
+
+    <svg:g
+      dsLineSeries
+      tooltip="axis"
+      [data]="basketSeries" />
+  </ds-chart>
+
+  <ds-chart
+    *docsLazy
+    cursor="category"
+    caption="Response time against the agreed range"
+    [categories]="latencyWeeks"
+    [summary]="latencySummary">
+    <svg:g
+      dsReferenceLine
+      [thresholds]="latencyThresholds" />
+
+    <svg:g
+      dsColumnSeries
+      [data]="latencyColumns" />
+
+    <svg:g
+      dsReferenceLabel
+      [thresholds]="latencyThresholds" />
+  </ds-chart>
+
+  <h3 class="block-title t-h4">
+    Two value axes
+  </h3>
+
+  <p class="block-desc t-s">
+    A mark declares which axis it is measured against -
+    <code class="t-mono-inline">
+      axis: 'secondary'
+    </code> on a line series'
+    data - and <code class="t-mono-inline"> secondaryAxisMode </code> decides
+    how that axis relates to the first.
+    <code class="t-mono-inline">
+      'aligned'
+    </code>, the default, hangs it on the
+    first axis's own gridlines at a round step, so both marks share one plot;
+    <code class="t-mono-inline">
+      'split'
+    </code> gives up on sharing and draws
+    two plots over the same category axis.
+    <code class="t-mono-inline">
+      axisColor
+    </code> and
+    <code class="t-mono-inline">
+      secondaryAxisColor
+    </code> paint each axis's
+    labels in the colour of the marks read against it, which is the only thing
+    on the canvas that says which numbers a mark answers to.
+  </p>
+
+  <div class="demo-pair">
+    <ds-chart
+      *docsLazy
+      cursor="category"
+      caption="aligned - one plot"
       [categories]="orderMonths"
-      [summary]="ordersSummary">
-      <svg:g
-        dsColumnSeries
-        tooltip="none"
-        seriesLabel="Sessions"
-        [data]="orderColumns"
-        [showValues]="false" />
-
-      <svg:g
-        dsLineSeries
-        tooltip="axis"
-        [data]="basketSeries" />
-    </ds-chart>
-
-    <ds-chart
-      cursor="category"
-      caption="Response time against the agreed range"
-      [categories]="latencyWeeks"
-      [summary]="latencySummary">
-      <svg:g
-        dsReferenceLine
-        [thresholds]="latencyThresholds" />
-
-      <svg:g
-        dsColumnSeries
-        [data]="latencyColumns" />
-
-      <svg:g
-        dsReferenceLabel
-        [thresholds]="latencyThresholds" />
-    </ds-chart>
-
-    <h3 class="block-title t-h4">Two value axes</h3>
-
-    <p class="block-desc t-s">
-      A mark declares which axis it is measured against -
-      <code class="t-mono-inline"> axis: 'secondary' </code> on a line series'
-      data - and <code class="t-mono-inline"> secondaryAxisMode </code> decides
-      how that axis relates to the first.
-      <code class="t-mono-inline"> 'aligned' </code>, the default, hangs it on
-      the first axis's own gridlines at a round step, so both marks share one
-      plot; <code class="t-mono-inline"> 'split' </code> gives up on sharing and
-      draws two plots over the same category axis.
-      <code class="t-mono-inline"> axisColor </code> and
-      <code class="t-mono-inline"> secondaryAxisColor </code> paint each axis's
-      labels in the colour of the marks read against it, which is the only thing
-      on the canvas that says which numbers a mark answers to.
-    </p>
-
-    <div class="demo-pair">
-      <ds-chart
-        cursor="category"
-        caption="aligned - one plot"
-        [categories]="orderMonths"
-        [axisColor]="columnAxisColor"
-        [secondaryAxisColor]="lineAxisColor"
-        [summary]="ordersSummary">
-        <svg:g
-          dsColumnSeries
-          [data]="orderColumns"
-          [showValues]="false" />
-
-        <svg:g
-          dsLineSeries
-          [data]="basketSeries" />
-      </ds-chart>
-
-      <ds-chart
-        cursor="category"
-        caption="split - two plots"
-        secondaryAxisMode="split"
-        [categories]="orderMonths"
-        [axisColor]="columnAxisColor"
-        [secondaryAxisColor]="lineAxisColor"
-        [summary]="ordersSummary">
-        <svg:g
-          dsColumnSeries
-          [data]="orderColumns"
-          [showValues]="false" />
-
-        <svg:g
-          dsLineSeries
-          [data]="basketSeries" />
-      </ds-chart>
-    </div>
-
-    <p class="block-desc t-s">
-      The dressed version of the single-plot case - both marks answering the
-      pointer, a cumulative line over the columns it sums - is on the column
-      chart page under "Columns and a line, on two scales". It is kept there
-      rather than moved here because a reader arrives at it while reading about
-      columns, which is where the question is asked.
-    </p>
-
-    <h3 class="block-title t-h4">Annotations</h3>
-
-    <p class="block-desc t-s">
-      <code class="t-mono-inline"> dsSeriesAnnotation </code> pins a label to
-      one reading, so the point it names is legible with no pointer - in a
-      printed page, or a screenshot. It takes the readings rather than finding
-      them: a mark never sees the other marks, so the caller that owns the
-      series is the one that knows which value a label belongs to. It reports no
-      domain, because the series it annotates already did.
-    </p>
-
-    <ds-chart
-      cursor="category"
-      caption="p95 response time, with the week that moved it named"
-      [categories]="latencyWeeks"
-      [summary]="latencySummary">
-      <svg:g
-        dsLineSeries
-        [data]="basketSeries" />
-
-      <svg:g
-        dsSeriesAnnotation
-        [annotations]="latencyNotes" />
-    </ds-chart>
-
-    <h3
-      class="block-title t-h4"
-      data-for="chart-data-table">
-      The annex table
-    </h3>
-
-    <p class="block-desc t-s">
-      <code class="t-mono-inline"> ds-chart-data-table </code> is the annex
-      every chart puts under its plot: each reading in a
-      <code class="t-mono-inline"> details </code> a reader can open. Cells
-      arrive already formatted, because how a value reads is the chart's
-      decision and not the table's.
-      <code class="t-mono-inline"> rowHeader </code> renders each row's first
-      cell as a <code class="t-mono-inline"> th scope="row" </code>, for a
-      matrix whose rows are named rather than numbered, and
-      <code class="t-mono-inline"> toggled </code> fires when the disclosure
-      changes - which is how the scatter chart builds twelve thousand rows only
-      once they are asked for.
-    </p>
-
-    <ds-chart-data-table
-      caption="p95 response time"
-      [columns]="latencyTableColumns"
-      [rows]="latencyTableRows" />
-
-    <h3 class="block-title t-h4">Naming the axes, and holding the cursor</h3>
-
-    <p class="block-desc t-s">
-      <code class="t-mono-inline"> axisLabel </code> and
-      <code class="t-mono-inline"> secondaryAxisLabel </code> name the unit each
-      set of ticks counts, rotated down its own gutter.
-      <code class="t-mono-inline"> maxSecondary </code> pins the second axis's
-      ceiling the way <code class="t-mono-inline"> max </code> pins the first,
-      so two plots read against each other do not rescale under one another.
-      <code class="t-mono-inline"> cursorPin </code> holds the category cursor
-      where it is: press once to hold, press again, Escape, or a press outside
-      to let go.
-    </p>
-
-    <ds-chart
-      cursor="category"
-      cursorPin
-      axisLabel="Sessions"
-      secondaryAxisLabel="Average order value, GBP"
-      [categories]="orderMonths"
-      [maxSecondary]="150"
       [axisColor]="columnAxisColor"
       [secondaryAxisColor]="lineAxisColor"
       [summary]="ordersSummary">
@@ -242,64 +162,209 @@
         [data]="basketSeries" />
     </ds-chart>
 
-    <h3 class="block-title t-h4">What a line series does on its own</h3>
-
-    <p class="block-desc t-s">
-      These are the mark's inputs, not the preset's - reach for them once
-      <code class="t-mono-inline"> ds-line-chart </code> stops fitting.
-      <code class="t-mono-inline"> highlighted </code> names the one series to
-      single out and <code class="t-mono-inline"> dimOthers </code> is what says
-      fading is wanted at all; the singled-out line thickens as well as keeping
-      its colour, so the comparison survives a monochrome print.
-      <code class="t-mono-inline"> patterns </code> gives each series a dash of
-      its own, <code class="t-mono-inline"> curve </code> takes
-      <code class="t-mono-inline"> 'linear' </code> /
-      <code class="t-mono-inline"> 'step' </code> /
-      <code class="t-mono-inline"> 'smooth' </code>,
-      <code class="t-mono-inline"> stacked </code> separates a piled band from
-      the one under it, <code class="t-mono-inline"> pinOnClick </code> holds a
-      reading, and <code class="t-mono-inline"> tooltipAnchor </code> decides
-      whether an <code class="t-mono-inline"> 'axis' </code> panel hangs over
-      the highest reading or follows the pointer.
-    </p>
-
-    <div class="demo-row">
-      <ds-radio-group
-        name="singled-out"
-        label="Single out"
-        [(value)]="singledOutChoice">
-        <ds-radio
-          value="all"
-          label="Both" />
-
-        @for (series of trafficSeries; track series.id) {
-          <ds-radio
-            [value]="series.id"
-            [label]="series.label" />
-        }
-      </ds-radio-group>
-    </div>
-
     <ds-chart
+      *docsLazy
       cursor="category"
-      axisLabel="Sessions"
-      summary="Organic and paid sessions a month, six months."
+      caption="split - two plots"
+      secondaryAxisMode="split"
       [categories]="orderMonths"
-      [interactive]="true">
+      [axisColor]="columnAxisColor"
+      [secondaryAxisColor]="lineAxisColor"
+      [summary]="ordersSummary">
+      <svg:g
+        dsColumnSeries
+        [data]="orderColumns"
+        [showValues]="false" />
+
       <svg:g
         dsLineSeries
-        curve="smooth"
-        tooltip="axis"
-        dimOthers
-        pinOnClick
-        [data]="trafficSeries"
-        [highlighted]="singledOut()"
-        [patterns]="seriesDashes"
-        [interactive]="true" />
+        [data]="basketSeries" />
     </ds-chart>
-  } @placeholder (minimum 100ms) {
-    <div
-      class="section-deferred"
-      aria-hidden="true"></div>
-  }
+  </div>
+
+  <p class="block-desc t-s">
+    The dressed version of the single-plot case - both marks answering the
+    pointer, a cumulative line over the columns it sums - is on the column chart
+    page under "Columns and a line, on two scales". It is kept there rather than
+    moved here because a reader arrives at it while reading about columns, which
+    is where the question is asked.
+  </p>
+
+  <h3 class="block-title t-h4">
+    Annotations
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      dsSeriesAnnotation
+    </code> pins a label to one
+    reading, so the point it names is legible with no pointer - in a printed
+    page, or a screenshot. It takes the readings rather than finding them: a
+    mark never sees the other marks, so the caller that owns the series is the
+    one that knows which value a label belongs to. It reports no domain, because
+    the series it annotates already did.
+  </p>
+
+  <ds-chart
+    *docsLazy
+    cursor="category"
+    caption="p95 response time, with the week that moved it named"
+    [categories]="latencyWeeks"
+    [summary]="latencySummary">
+    <svg:g
+      dsLineSeries
+      [data]="basketSeries" />
+
+    <svg:g
+      dsSeriesAnnotation
+      [annotations]="latencyNotes" />
+  </ds-chart>
+
+  <h3
+    class="block-title t-h4"
+    data-for="chart-data-table">
+    The annex table
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      ds-chart-data-table
+    </code> is the annex every
+    chart puts under its plot: each reading in a
+    <code class="t-mono-inline">
+      details
+    </code> a reader can open. Cells arrive
+    already formatted, because how a value reads is the chart's decision and not
+    the table's. <code class="t-mono-inline"> rowHeader </code> renders each
+    row's first cell as a <code class="t-mono-inline"> th scope="row" </code>,
+    for a matrix whose rows are named rather than numbered, and
+    <code class="t-mono-inline">
+      toggled
+    </code> fires when the disclosure
+    changes - which is how the scatter chart builds twelve thousand rows only
+    once they are asked for.
+  </p>
+
+  <ds-chart-data-table
+    caption="p95 response time"
+    [columns]="latencyTableColumns"
+    [rows]="latencyTableRows" />
+
+  <h3 class="block-title t-h4">
+    Naming the axes, and holding the cursor
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      axisLabel
+    </code> and
+    <code class="t-mono-inline">
+      secondaryAxisLabel
+    </code> name the unit each
+    set of ticks counts, rotated down its own gutter.
+    <code class="t-mono-inline">
+      maxSecondary
+    </code> pins the second axis's
+    ceiling the way <code class="t-mono-inline"> max </code> pins the first, so
+    two plots read against each other do not rescale under one another.
+    <code class="t-mono-inline">
+      cursorPin
+    </code> holds the category cursor
+    where it is: press once to hold, press again, Escape, or a press outside to
+    let go.
+  </p>
+
+  <ds-chart
+    *docsLazy
+    cursor="category"
+    cursorPin
+    axisLabel="Sessions"
+    secondaryAxisLabel="Average order value, GBP"
+    [categories]="orderMonths"
+    [maxSecondary]="150"
+    [axisColor]="columnAxisColor"
+    [secondaryAxisColor]="lineAxisColor"
+    [summary]="ordersSummary">
+    <svg:g
+      dsColumnSeries
+      [data]="orderColumns"
+      [showValues]="false" />
+
+    <svg:g
+      dsLineSeries
+      [data]="basketSeries" />
+  </ds-chart>
+
+  <h3 class="block-title t-h4">
+    What a line series does on its own
+  </h3>
+
+  <p class="block-desc t-s">
+    These are the mark's inputs, not the preset's - reach for them once
+    <code class="t-mono-inline">
+      ds-line-chart
+    </code> stops fitting.
+    <code class="t-mono-inline">
+      highlighted
+    </code> names the one series to
+    single out and <code class="t-mono-inline"> dimOthers </code> is what says
+    fading is wanted at all; the singled-out line thickens as well as keeping
+    its colour, so the comparison survives a monochrome print.
+    <code class="t-mono-inline">
+      patterns
+    </code> gives each series a dash of
+    its own, <code class="t-mono-inline"> curve </code> takes
+    <code class="t-mono-inline">
+      'linear'
+    </code> /
+    <code class="t-mono-inline">
+      'step'
+    </code> /
+    <code class="t-mono-inline">
+      'smooth'
+    </code>,
+    <code class="t-mono-inline">
+      stacked
+    </code> separates a piled band from the
+    one under it, <code class="t-mono-inline"> pinOnClick </code> holds a
+    reading, and <code class="t-mono-inline"> tooltipAnchor </code> decides
+    whether an <code class="t-mono-inline"> 'axis' </code> panel hangs over the
+    highest reading or follows the pointer.
+  </p>
+
+  <div class="demo-row">
+    <ds-radio-group
+      name="singled-out"
+      label="Single out"
+      [(value)]="singledOutChoice">
+      <ds-radio
+        value="all"
+        label="Both" />
+
+      @for (series of trafficSeries; track series.id) {
+        <ds-radio
+          [value]="series.id"
+          [label]="series.label" />
+      }
+    </ds-radio-group>
+  </div>
+
+  <ds-chart
+    *docsLazy
+    cursor="category"
+    axisLabel="Sessions"
+    summary="Organic and paid sessions a month, six months."
+    [categories]="orderMonths"
+    [interactive]="true">
+    <svg:g
+      dsLineSeries
+      curve="smooth"
+      tooltip="axis"
+      dimOthers
+      pinOnClick
+      [data]="trafficSeries"
+      [highlighted]="singledOut()"
+      [patterns]="seriesDashes"
+      [interactive]="true" />
+  </ds-chart>
 </docs-section>

@@ -9,12 +9,6 @@
     another.
   </span>
 
-  <!-- Nothing here is built until it is scrolled to: nine chart sections at once is a page
-       that stalls on open. The anchor lives on <docs-section>, so the sidebar's scroll still
-       finds this section while its body is a placeholder, and the design-sync card pass
-       resolves the viewport trigger itself. -->
-  @defer (on viewport) {
-
   <h3 class="block-title t-h4">
     Default
   </h3>
@@ -38,6 +32,7 @@
   </p>
 
   <ds-waterfall-chart
+    *docsLazy
     caption="Settlement, this month"
     [data]="settlement" />
 
@@ -71,6 +66,7 @@
   </p>
 
   <ds-waterfall-chart
+    *docsLazy
     caption="Headcount over a year, with a half-year subtotal"
     [data]="withSubtotal" />
 
@@ -85,6 +81,7 @@
   </p>
 
   <ds-waterfall-chart
+    *docsLazy
     caption="A balance that goes negative and comes back"
     [data]="belowZero" />
 
@@ -104,6 +101,7 @@
   </p>
 
   <ds-waterfall-chart
+    *docsLazy
     caption="Click a bar"
     interactive
     dataTable="toggle"
@@ -113,7 +111,4 @@
   <p class="block-desc t-s">
     Last clicked: {{ lastClicked() }}
   </p>
-  } @placeholder (minimum 100ms) {
-    <div class="section-deferred" aria-hidden="true"></div>
-  }
 </docs-section>

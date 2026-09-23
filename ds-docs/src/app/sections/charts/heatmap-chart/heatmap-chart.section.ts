@@ -1,7 +1,13 @@
-import { Component, ViewEncapsulation, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ViewEncapsulation,
+  signal,
+} from '@angular/core';
 import { HeatmapChartComponent } from 'ds/heatmap-chart';
 import type { HeatmapChartRow } from 'ds/heatmap-chart';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
+import { DocsLazyDirective } from '../../../shared/docs-lazy.directive';
 
 const WEEKDAYS: readonly string[] = [
   'Mon',
@@ -37,8 +43,9 @@ const SMALL_ROWS: readonly HeatmapChartRow[] = [
 @Component({
   selector: 'section-charts-heatmap-chart',
   standalone: true,
-  imports: [DocsSectionComponent, HeatmapChartComponent],
+  imports: [DocsLazyDirective, DocsSectionComponent, HeatmapChartComponent],
   encapsulation: ViewEncapsulation.Emulated,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './heatmap-chart.section.html',
   styleUrls: ['../../../shared/section-demo.scss'],
 })

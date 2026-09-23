@@ -7,12 +7,6 @@
     Horizontal bars: each row draws its value as a share of the longest row.
   </span>
 
-  <!-- Nothing here is built until it is scrolled to: nine chart sections at once is a page
-       that stalls on open. The anchor lives on <docs-section>, so the sidebar's scroll still
-       finds this section while its body is a placeholder, and the design-sync card pass
-       resolves the viewport trigger itself. -->
-  @defer (on viewport) {
-
   <h3 class="block-title t-h4">
     Default
   </h3>
@@ -24,6 +18,7 @@
   </p>
 
   <ds-bar-chart
+    *docsLazy
     caption="Visitor funnel"
     dataTable="none"
     [data]="specimenRows()" />
@@ -49,6 +44,7 @@
   </p>
 
   <ds-bar-chart
+    *docsLazy
     caption="Phases, by week"
     dataTable="none"
     [data]="rangeRows()" />
@@ -72,6 +68,7 @@
   </p>
 
   <ds-bar-chart
+    *docsLazy
     caption="Against target, this quarter"
     dataTable="none"
     [data]="bulletRows()" />
@@ -88,6 +85,7 @@
   </p>
 
   <ds-bar-chart
+    *docsLazy
     dataTable="none"
     [data]="customColorRows()" />
 
@@ -121,6 +119,7 @@
   <div class="states states--cols-1">
     <div class="state-cell">
       <ds-bar-chart
+        *docsLazy
         caption="Spend inside each department"
         dataTable="visible"
         [data]="segmentRows()" />
@@ -156,6 +155,7 @@
   </p>
 
   <ds-bar-chart
+    *docsLazy
     caption="Requests per source"
     dataTable="visible"
     [data]="detailRows()" />
@@ -181,6 +181,7 @@
   </p>
 
   <ds-bar-chart
+    *docsLazy
     partOfWhole
     dataTable="visible"
     caption="Spend by department, as a share of the budget"
@@ -203,6 +204,7 @@
   </p>
 
   <ds-bar-chart
+    *docsLazy
     interactive
     pinOnClick
     dataTable="none"
@@ -235,6 +237,7 @@
   <div class="states states--cols-2">
     <div class="state-cell">
       <ds-bar-chart
+        *docsLazy
         dataTable="none"
         [data]="percentRows()" />
 
@@ -245,6 +248,7 @@
 
     <div class="state-cell">
       <ds-bar-chart
+        *docsLazy
         dataTable="none"
         [showPercent]="false"
         [data]="percentRows()" />
@@ -273,6 +277,7 @@
   </p>
 
   <ds-bar-chart
+    *docsLazy
     interactive
     dimOthers
     dataTable="none"
@@ -297,6 +302,7 @@
   </p>
 
   <ds-bar-chart
+    *docsLazy
     dataTable="none"
     staggerMs="40"
     [data]="staggerRows()" />
@@ -316,6 +322,7 @@
   </p>
 
   <ds-bar-chart
+    *docsLazy
     caption="Long label and nine-digit value together, table forced open"
     dataTable="visible"
     [data]="dataTableRows()" />
@@ -342,6 +349,7 @@
     <div class="states states--cols-2">
       <div class="state-cell">
         <ds-bar-chart
+          *docsLazy
           dataTable="none"
           [data]="emptyRows()" />
 
@@ -354,6 +362,7 @@
 
       <div class="state-cell">
         <ds-bar-chart
+          *docsLazy
           dataTable="none"
           loading
           [data]="loadingRows()" />
@@ -367,6 +376,7 @@
 
       <div class="state-cell">
         <ds-bar-chart
+          *docsLazy
           dataTable="none"
           [data]="oneRow()" />
 
@@ -379,6 +389,7 @@
 
       <div class="state-cell">
         <ds-bar-chart
+          *docsLazy
           dataTable="none"
           [data]="allZerosRows()" />
 
@@ -391,6 +402,7 @@
 
       <div class="state-cell">
         <ds-bar-chart
+          *docsLazy
           dataTable="none"
           [data]="negativeRows()" />
 
@@ -403,6 +415,7 @@
 
       <div class="state-cell">
         <ds-bar-chart
+          *docsLazy
           dataTable="none"
           [data]="hugeOutlierRows()" />
 
@@ -415,6 +428,7 @@
 
       <div class="state-cell">
         <ds-bar-chart
+          *docsLazy
           dataTable="none"
           [data]="longLabelRows()" />
 
@@ -427,6 +441,7 @@
 
       <div class="state-cell">
         <ds-bar-chart
+          *docsLazy
           dataTable="none"
           [data]="nineDigitValueRows()" />
 
@@ -439,6 +454,7 @@
 
       <div class="state-cell">
         <ds-bar-chart
+          *docsLazy
           caption="Max set below the largest value — bars clip at the track edge"
           dataTable="none"
           [data]="maxBelowDataRows()"
@@ -453,6 +469,7 @@
 
       <div class="state-cell">
         <ds-bar-chart
+          *docsLazy
           dataTable="none"
           error
           [data]="specimenRows()" />
@@ -463,7 +480,4 @@
       </div>
     </div>
   </details>
-  } @placeholder (minimum 100ms) {
-    <div class="section-deferred" aria-hidden="true"></div>
-  }
 </docs-section>

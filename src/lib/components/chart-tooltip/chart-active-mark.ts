@@ -167,6 +167,7 @@ export function chartActiveMark(
     inject(DestroyRef).onDestroy(() => {
       cancelPendingClear();
       document.removeEventListener('pointerdown', release, true);
+      document.removeEventListener('keydown', releaseOnEscape, true);
       document.removeEventListener('pointerover', trackPointer, true);
     });
   }

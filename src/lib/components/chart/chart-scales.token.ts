@@ -40,6 +40,10 @@ export interface ChartPlot {
 export interface ChartScales {
   readonly categories: Signal<readonly string[]>;
   readonly plot: Signal<ChartPlot>;
+  /** Whether the plot has its real width yet. Until it does, the scales describe a stand-in width
+   *  that the first measurement replaces, so a mark that waits for this builds its geometry once
+   *  instead of twice. Absent means always measured. */
+  readonly measured?: Signal<boolean>;
   /** The CENTRE of a category's band. A mark with a width of its own subtracts half of
    *  `bandWidth` to reach its leading edge. */
   readonly xPosition: Signal<(index: number) => number>;

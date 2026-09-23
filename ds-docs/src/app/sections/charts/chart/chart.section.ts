@@ -1,4 +1,10 @@
-import { Component, ViewEncapsulation, computed, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ViewEncapsulation,
+  computed,
+  signal,
+} from '@angular/core';
 import {
   ChartComponent,
   ColumnSeriesComponent,
@@ -18,6 +24,7 @@ import { ButtonComponent } from 'ds/button';
 import type { ChartThreshold } from 'ds/core';
 import { RadioComponent, RadioGroupComponent } from 'ds/radio-group';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
+import { DocsLazyDirective } from '../../../shared/docs-lazy.directive';
 
 const LATENCY_NOTES: readonly ChartAnnotation[] = [
   { categoryIndex: 4, value: 480, label: 'Cache eviction' },
@@ -102,6 +109,7 @@ const TRAFFIC_SERIES: readonly LineSeriesData[] = [
   selector: 'section-charts-chart',
   standalone: true,
   imports: [
+    DocsLazyDirective,
     ButtonComponent,
     RadioComponent,
     RadioGroupComponent,
@@ -115,6 +123,7 @@ const TRAFFIC_SERIES: readonly LineSeriesData[] = [
     SeriesAnnotationComponent,
   ],
   encapsulation: ViewEncapsulation.Emulated,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './chart.section.html',
   styleUrls: ['../../../shared/section-demo.scss', './chart.section.scss'],
 })

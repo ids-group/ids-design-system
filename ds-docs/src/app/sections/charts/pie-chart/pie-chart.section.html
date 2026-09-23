@@ -8,12 +8,6 @@
     as a whole percentage.
   </span>
 
-  <!-- Nothing here is built until it is scrolled to: nine chart sections at once is a page
-       that stalls on open. The anchor lives on <docs-section>, so the sidebar's scroll still
-       finds this section while its body is a placeholder, and the design-sync card pass
-       resolves the viewport trigger itself. -->
-  @defer (on viewport) {
-
   <h3 class="block-title t-h4">
     Default
   </h3>
@@ -26,6 +20,7 @@
   </p>
 
   <ds-pie-chart
+    *docsLazy
     caption="Accounts by plan"
     dataTable="none"
     [data]="specimenSlices()" />
@@ -53,6 +48,7 @@
   <div class="states states--cols-2">
     <div class="state-cell">
       <ds-pie-chart
+        *docsLazy
         dataTable="none"
         legend="end"
         [data]="legendEndSlices()" />
@@ -66,6 +62,7 @@
 
     <div class="state-cell">
       <ds-pie-chart
+        *docsLazy
         dataTable="none"
         legend="bottom"
         [data]="legendBottomSlices()" />
@@ -79,6 +76,7 @@
 
     <div class="state-cell">
       <ds-pie-chart
+        *docsLazy
         dataTable="none"
         legend="none"
         [data]="legendNoneSlices()" />
@@ -106,6 +104,7 @@
   <div class="states states--cols-2">
     <div class="state-cell">
       <ds-pie-chart
+        *docsLazy
         dataTable="none"
         [data]="thinRingSlices()"
         [innerRadius]="0.9" />
@@ -119,6 +118,7 @@
 
     <div class="state-cell">
       <ds-pie-chart
+        *docsLazy
         dataTable="none"
         [data]="pieSlices()"
         [innerRadius]="0" />
@@ -153,6 +153,7 @@
   <div class="states states--cols-2">
     <div class="state-cell">
       <ds-pie-chart
+        *docsLazy
         centerLabel="Accounts"
         dataTable="none"
         [data]="centerLabelSlices()" />
@@ -166,6 +167,7 @@
 
     <div class="state-cell">
       <ds-pie-chart
+        *docsLazy
         centerLabel="Annual recurring revenue"
         centerValue="£1.2M"
         dataTable="none"
@@ -198,6 +200,7 @@
   <div class="states states--cols-2">
     <div class="state-cell">
       <ds-pie-chart
+        *docsLazy
         dataTable="none"
         [data]="nineSlices()" />
 
@@ -208,6 +211,7 @@
 
     <div class="state-cell">
       <ds-pie-chart
+        *docsLazy
         dataTable="none"
         [data]="nineSlices()"
         [maxSlices]="5" />
@@ -251,6 +255,7 @@
   <div class="states states--cols-2">
     <div class="state-cell">
       <ds-pie-chart
+        *docsLazy
         interactive
         dataTable="none"
         [data]="interactionSlices()"
@@ -263,6 +268,7 @@
 
     <div class="state-cell">
       <ds-pie-chart
+        *docsLazy
         interactive
         dimOthers
         dataTable="none"
@@ -299,6 +305,7 @@
   </p>
 
   <ds-pie-chart
+    *docsLazy
     interactive
     pinOnClick
     dimOthers
@@ -320,6 +327,7 @@
   </p>
 
   <ds-pie-chart
+    *docsLazy
     caption="Two slices pinned to palette slots 6 and 8"
     dataTable="none"
     [data]="slotSlices()" />
@@ -350,6 +358,7 @@
   </p>
 
   <ds-pie-chart
+    *docsLazy
     dataTable="toggle"
     caption="The annex table, collapsed until asked for"
     [data]="dataTableSlices()" />
@@ -375,6 +384,7 @@
     <div class="states states--cols-2">
       <div class="state-cell">
         <ds-pie-chart
+          *docsLazy
           dataTable="none"
           [data]="emptySlices()" />
 
@@ -387,6 +397,7 @@
 
       <div class="state-cell">
         <ds-pie-chart
+          *docsLazy
           dataTable="none"
           loading
           [data]="loadingSlices()" />
@@ -400,6 +411,7 @@
 
       <div class="state-cell">
         <ds-pie-chart
+          *docsLazy
           dataTable="none"
           error
           [data]="emptySlices()" />
@@ -411,6 +423,7 @@
 
       <div class="state-cell">
         <ds-pie-chart
+          *docsLazy
           dataTable="none"
           [data]="oneSlice()" />
 
@@ -423,6 +436,7 @@
 
       <div class="state-cell">
         <ds-pie-chart
+          *docsLazy
           dataTable="none"
           [data]="allZerosSlices()" />
 
@@ -435,6 +449,7 @@
 
       <div class="state-cell">
         <ds-pie-chart
+          *docsLazy
           dataTable="none"
           [data]="negativeSlices()" />
 
@@ -447,6 +462,7 @@
 
       <div class="state-cell">
         <ds-pie-chart
+          *docsLazy
           caption="More slices than the eight-colour palette holds"
           dataTable="none"
           [data]="nineSlices()" />
@@ -460,6 +476,7 @@
 
       <div class="state-cell">
         <ds-pie-chart
+          *docsLazy
           dataTable="none"
           error
           [data]="specimenSlices()" />
@@ -470,7 +487,4 @@
       </div>
     </div>
   </details>
-  } @placeholder (minimum 100ms) {
-    <div class="section-deferred" aria-hidden="true"></div>
-  }
 </docs-section>

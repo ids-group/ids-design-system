@@ -97,6 +97,8 @@
         "extends LineSeriesComponent",
         "extends ColumnChartComponent",
         "extends ChartTooltipDirective",
+        "extends ScatterChartComponent",
+        "extends ChartDataTableComponent",
         "extends "
       ],
       "detect": [
@@ -109,10 +111,14 @@
         "extends ColumnChartComponent",
         "ColumnChartComponent",
         "extends ChartTooltipDirective",
-        "ChartTooltipDirective"
+        "ChartTooltipDirective",
+        "extends ScatterChartComponent",
+        "ScatterChartComponent",
+        "extends ChartDataTableComponent",
+        "ChartDataTableComponent"
       ],
       "verify": "Your build has no TS4114 or TS2416 against any of the listed classes.",
-      "note": "ChartComponent gained activeTooltip, releaseTooltip, reportTooltip, tooltipContext, tooltipExtraGap, tooltipOrigin, tooltipPreferBelow, tooltipSources and tooltipTemplate; ColumnSeriesComponent gained MIN_STACK_HIT, axisEntries, dimmedBySeries, highlighted, hitBox, seriesKey and stacked; LineSeriesComponent gained outline; ColumnChartComponent gained highlightedSeries. ChartTooltipDirective gained dsChartTooltipPinned - internal, but reachable through the components/chart-tooltip entry point. Most of these carry the tooltip the container now owns."
+      "note": "ChartComponent gained 15 members, most of them the tooltip the container now owns (activeTooltip, reportTooltip, tooltipTemplate and the rest) plus measured; ColumnSeriesComponent gained MIN_STACK_HIT, axisEntries, dimmedBySeries, highlighted, hitBox, seriesKey and stacked; LineSeriesComponent gained axisEntries, isActiveMarker and outline; ColumnChartComponent and ScatterChartComponent gained highlightedSeries; ChartDataTableComponent gained built, onToggle and openedOnce. ChartTooltipDirective gained dsChartTooltipPinned - internal, but reachable through the components/chart-tooltip entry point."
     },
     {
       "id": "table-expand-panel-content-wrapper",

@@ -21,8 +21,9 @@
   `.is-pinned` added to it.
 
 - **Subclassing one of these breaks on a name collision.** `ChartComponent`,
-  `ColumnSeriesComponent`, `LineSeriesComponent` and `ColumnChartComponent` each gained members
-  while the container took over the tooltip, and so did `ChartTooltipDirective`, which is internal
+  `ColumnSeriesComponent`, `LineSeriesComponent`, `ColumnChartComponent`, `ScatterChartComponent`
+  and `ChartDataTableComponent` each gained members, most of them while the container took over the
+  tooltip, and so did `ChartTooltipDirective`, which is internal
   but reachable through `@ids-group-ltd/ids-design-system/components/chart-tooltip`. Declaring a
   member of the same name in a subclass is a compile error - TS4114, or TS2416 where the signature
   differs - so rename yours or add `override`. Subclassing a DS component is unsupported either
@@ -39,6 +40,11 @@
 
 - **`--ds-toast-queue-bg-color` and `--ds-toast-queue-text-color`** paint the `+N` strip.
 
+- **`ChartScales` carries an optional `measured` signal**, true once the plot has its real width.
+  A mark of your own can wait for it before building geometry the first measurement would replace.
+  A container of your own that implements `ChartScales` may leave it out, and a mark reads it as
+  always measured then.
+
 ### Changed
 
 - **A category panel names every series at the category.** `tooltip="axis"` was documented to do
@@ -52,6 +58,16 @@
 
 - **The unpin control sits below the plot.** The panel it undoes opens above the held mark, so a
   control at the top was the one thing that panel covered.
+
+- **A chart's data table is built the first time it is opened.** A closed disclosure carried the
+  whole table in the DOM; it now holds only its summary until the reader opens it, and keeps the
+  table from then on. `dataTable="visible"` is unaffected. The browser's find-in-page no longer
+  reaches the numbers of a table nobody has opened.
+
+- **A mark's entrance is a CSS animation declared on the mark, and the `mark-enter` class is
+  gone.** The entrance plays when the mark is inserted - on first render and for a mark a data
+  change adds - exactly as before. A rule of yours that restyled the entrance through
+  `.mark-enter` targets the mark itself instead.
 
 ### Fixed
 
@@ -85,6 +101,23 @@
   `dsTableColumns` panel as a bare checkbox with no text, so nothing said which column it stood
   for. The row now reads the `screenReaderLabel`, which also gives the checkbox its accessible
   name.
+
+- **A chart that enters hundreds of marks at once no longer freezes the page.** Every entering mark
+  asked the browser for its running animations, and in Chrome that call slows down with each
+  animation already running, so a scatter of a thousand points held the main thread for seconds -
+  longer still on a page with other charts entering. Under zone.js a `ds-chart` also ran two extra
+  change-detection passes of the whole application after its first render, a column or line series
+  built its geometry at a stand-in width before the real one arrived, and the default number format
+  built a new formatter for every label.
+
+- **Axis labels are measured again when their text changes.** The value gutter and the rotation and
+  thinning of category labels were decided on the first render alone, so a chart that started out
+  loading or empty, or whose categories or ticks changed later, kept overlapping labels.
+
+- **Reduced motion stops the skeleton shimmer.** The opt-out rule lost to the component's own
+  animation, and the wave kept running for readers who asked for less motion.
+
+- **A chart destroyed while a reading was pinned no longer leaves a key listener on the document.**
 
 - **An expanded `ds-table` row's panel spans every column.** The panel's `<td>` carried
   `display: grid` for its reveal, and a cell whose display is not `table-cell` leaves the table
