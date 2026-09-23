@@ -1,10 +1,13 @@
 import {
   Component,
+  ElementRef,
   ViewEncapsulation,
+  afterRenderEffect,
   booleanAttribute,
   computed,
   input,
   output,
+  viewChild,
 } from '@angular/core';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import type { IconName } from '@ids-group-ltd/ids-design-system/core';
@@ -62,6 +65,48 @@ export class ModalCardComponent {
   readonly closed = output<void>();
 
   protected readonly titleId = `ds-modal-title-${++nextId}`;
+
+  private readonly header =
+    viewChild.required<ElementRef<HTMLElement>>('header');
+  private readonly actionsRow =
+    viewChild.required<ElementRef<HTMLElement>>('actions');
+
+  constructor() {
+    afterRenderEffect((onCleanup) => {
+      this.stackOverflowingActions();
+      let frame = 0;
+      // Deferred a frame: a layout change made inside a ResizeObserver callback is reported as an
+      // observer loop by whatever else observes an ancestor.
+      const observer = new ResizeObserver(() => {
+        cancelAnimationFrame(frame);
+        frame = requestAnimationFrame(() => this.stackOverflowingActions());
+      });
+      // The header, not the actions row: the header's box does not move when the row stacks, so
+      // the observer never reports this function's own output back to it.
+      observer.observe(this.header().nativeElement);
+      onCleanup(() => {
+        cancelAnimationFrame(frame);
+        observer.disconnect();
+      });
+    });
+  }
+
+  // Measured unstacked: stacked, every child is full-width and its natural width is gone.
+  private stackOverflowingActions(): void {
+    const row = this.actionsRow().nativeElement;
+    row.classList.remove('stacked');
+    const styles = getComputedStyle(row);
+    const available =
+      row.clientWidth -
+      parseFloat(styles.paddingLeft) -
+      parseFloat(styles.paddingRight);
+    const gap = parseFloat(styles.columnGap) || 0;
+    let needed = -gap;
+    for (const child of row.children) {
+      needed += child.getBoundingClientRect().width + gap;
+    }
+    row.classList.toggle('stacked', needed > available);
+  }
 
   /** Status picks the glyph so a severity is never carried by colour alone. */
   protected readonly resolvedIcon = computed<IconName | null>(() => {

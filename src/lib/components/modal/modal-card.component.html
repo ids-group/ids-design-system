@@ -3,7 +3,9 @@
   [attr.role]="resolvedRole()"
   [class]="classes()"
   [attr.aria-labelledby]="titleId">
-  <div class="header">
+  <div
+    #header
+    class="header">
     @if (resolvedIcon(); as iconName) {
       <span [class]="status() ? 'icon-badge ' + status() : 'icon-badge'">
         <ds-icon
@@ -56,7 +58,9 @@
     </div>
   </div>
 
-  <div class="actions">
+  <div
+    #actions
+    class="actions">
     <ng-content select="[actions]"></ng-content>
   </div>
 </div>
