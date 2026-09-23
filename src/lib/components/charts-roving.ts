@@ -54,3 +54,24 @@ export function focusMark(
     target.focus();
   }
 }
+
+/** The mark an event on the marks' parent came from - the nearest `[data-mark-index]` inside that
+ *  parent - for a chart that listens once per series rather than once per mark. `null` when the
+ *  event did not start on a mark.
+ *
+ *  @internal */
+export function markOf(
+  event: Event,
+): { readonly element: Element; readonly index: number } | null {
+  const scope = event.currentTarget;
+  const target = event.target;
+  if (!(scope instanceof Element) || !(target instanceof Element)) {
+    return null;
+  }
+  const element = target.closest('[data-mark-index]');
+  if (!element || !scope.contains(element)) {
+    return null;
+  }
+
+  return { element, index: Number(element.getAttribute('data-mark-index')) };
+}

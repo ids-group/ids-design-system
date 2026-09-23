@@ -1,7 +1,13 @@
 <svg:g
   class="lines"
   [class.dims-others]="dimOthers()"
-  [class.is-outlined]="outline()">
+  [class.is-outlined]="outline()"
+  (pointerover)="onMarkerOver($event)"
+  (pointerout)="onMarkerOut($event)"
+  (focusin)="onMarkerFocus($event)"
+  (focusout)="onMarkerBlur($event)"
+  (keydown)="onMarkerKey($event)"
+  (click)="onMarkerClick($event)">
   @for (entry of plotted(); track entry.series.id) {
     @for (path of entry.areaPaths; track $index) {
       <svg:path
@@ -62,15 +68,7 @@
                 : -1
               : null
           "
-          [attr.aria-label]="interactive() ? markerLabel(marker) : null"
-          (pointerenter)="onMarkerEnter(marker.markIndex, $event)"
-          (pointerleave)="activeMark.leave()"
-          (focus)="onMarkerFocus(marker.markIndex, $event)"
-          (blur)="onMarkerBlur()"
-          (keydown)="onMarkerNavigation($event, marker.markIndex)"
-          (click)="onMarkerClick(marker.markIndex, $event)"
-          (keydown.enter)="onMarkerClick(marker.markIndex)"
-          (keydown.space)="onMarkerClick(marker.markIndex)" />
+          [attr.aria-label]="interactive() ? markerLabel(marker) : null" />
       }
     }
   }

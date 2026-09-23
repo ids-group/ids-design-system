@@ -18,6 +18,7 @@ import {
   defaultChartFormat,
   describeShare,
   focusMark,
+  markOf,
   nextRovingIndex,
   leaveMark,
   staggerDelay,
@@ -320,27 +321,38 @@ export class ColumnSeriesComponent implements OnDestroy {
     return `${staggerDelay(index, this.staggerMs())}ms`;
   }
 
-  protected onMarkClick(
-    payload: ColumnSeriesPoint,
-    index: number,
-    event: Event,
-  ): void {
-    this.pointClicked.emit(payload);
+  private readonly tooltipMark = computed(() =>
+    this.tooltipAnchor() === 'mark' ? '.bar' : undefined,
+  );
+
+  protected onMarkClick(event: MouseEvent): void {
+    const hit = markOf(event);
+    const mark = hit && this.marks()[hit.index];
+    if (!hit || !mark) {
+      return;
+    }
+    this.pointClicked.emit(mark.point);
     if (this.pinOnClick()) {
-      this.activeMark.pin(
-        index,
-        event,
-        this.tooltipAnchor() === 'mark' ? '.bar' : undefined,
-      );
+      this.activeMark.pin(hit.index, event, this.tooltipMark(), hit.element);
     }
   }
 
-  protected onMarkEnter(index: number, event: Event): void {
-    this.activeMark.enter(
-      index,
-      event,
-      this.tooltipAnchor() === 'mark' ? '.bar' : undefined,
-    );
+  protected onMarkOver(event: PointerEvent): void {
+    const hit = markOf(event);
+    if (hit) {
+      this.activeMark.enter(hit.index, event, this.tooltipMark(), hit.element);
+    }
+  }
+
+  protected onMarkOut(event: PointerEvent): void {
+    const hit = markOf(event);
+    const next =
+      event.relatedTarget instanceof Element
+        ? event.relatedTarget.closest('[data-mark-index]')
+        : null;
+    if (hit && next !== hit.element) {
+      this.activeMark.leave();
+    }
   }
 
   /** One tab stop per chart, not one per mark: WCAG 2.1.1's Understanding is explicit that not
@@ -352,29 +364,43 @@ export class ColumnSeriesComponent implements OnDestroy {
     Math.min(this.rovingIndex(), Math.max(0, this.marks().length - 1)),
   );
 
-  protected onMarkFocus(index: number, event: FocusEvent): void {
-    this.rovingIndex.set(index);
-    this.onMarkEnter(index, event);
+  protected onMarkFocus(event: FocusEvent): void {
+    const hit = markOf(event);
+    if (hit) {
+      this.rovingIndex.set(hit.index);
+      this.activeMark.enter(hit.index, event, this.tooltipMark(), hit.element);
+    }
   }
 
-  protected onMarkNavigation(event: KeyboardEvent, index: number): void {
-    const next = nextRovingIndex(event.key, index, this.marks().length);
+  protected onMarkBlur(event: FocusEvent): void {
+    if (markOf(event)) {
+      this.activeMark.leave();
+    }
+  }
+
+  protected onMarkKey(event: KeyboardEvent): void {
+    const hit = markOf(event);
+    if (!hit) {
+      return;
+    }
+    if (event.key === 'Enter' || event.key === ' ') {
+      // Only the column's own key opens it: a key pressed on a control inside belongs to that
+      // control.
+      const mark = this.marks()[hit.index];
+      if (this.interactive() && event.target === hit.element && mark) {
+        event.preventDefault();
+        this.pointClicked.emit(mark.point);
+      }
+
+      return;
+    }
+    const next = nextRovingIndex(event.key, hit.index, this.marks().length);
     if (next === null) {
       return;
     }
     event.preventDefault();
     this.rovingIndex.set(next);
-    focusMark((event.currentTarget as Element).closest('.columns'), next);
-  }
-
-  protected onPointKey(point: ColumnSeriesPoint, event: Event): void {
-    // Only the column's own key opens it: a key pressed on a control inside belongs to that
-    // control.
-    if (!this.interactive() || event.target !== event.currentTarget) {
-      return;
-    }
-    event.preventDefault();
-    this.pointClicked.emit(point);
+    focusMark(hit.element.closest('.columns'), next);
   }
 
   protected entryLabel(mark: {

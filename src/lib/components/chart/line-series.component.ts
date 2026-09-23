@@ -19,6 +19,7 @@ import {
   areaPath,
   defaultChartFormat,
   focusMark,
+  markOf,
   bandPath,
   lineSegments,
   nextRovingIndex,
@@ -362,44 +363,73 @@ export class LineSeriesComponent implements OnDestroy {
     );
   }
 
-  protected onMarkerEnter(markIndex: number, event: Event): void {
-    this.activeMark.enter(markIndex, event);
+  protected onMarkerOver(event: PointerEvent): void {
+    const hit = markOf(event);
+    if (hit) {
+      this.activeMark.enter(hit.index, event, undefined, hit.element);
+    }
   }
 
-  protected onMarkerFocus(markIndex: number, event: FocusEvent): void {
-    const marker = this.allMarkers()[markIndex];
+  protected onMarkerOut(event: PointerEvent): void {
+    const hit = markOf(event);
+    if (!hit) {
+      return;
+    }
+    const next =
+      event.relatedTarget instanceof Element
+        ? event.relatedTarget.closest('[data-mark-index]')
+        : null;
+    if (next !== hit.element) {
+      this.activeMark.leave();
+    }
+  }
+
+  protected onMarkerFocus(event: FocusEvent): void {
+    const hit = markOf(event);
+    if (!hit) {
+      return;
+    }
+    const marker = this.allMarkers()[hit.index];
     if (marker) {
       this.rovingBySeries.update((roving) =>
-        new Map(roving).set(marker.seriesId, markIndex),
+        new Map(roving).set(marker.seriesId, hit.index),
       );
       this.focusedSeries.set(marker.seriesId);
       this.scales.setActiveIndex(marker.categoryIndex);
     }
-    this.onMarkerEnter(markIndex, event);
+    this.activeMark.enter(hit.index, event, undefined, hit.element);
   }
 
-  protected onMarkerBlur(): void {
-    this.focusedSeries.set(null);
-    this.activeMark.leave();
+  protected onMarkerBlur(event: FocusEvent): void {
+    if (markOf(event)) {
+      this.focusedSeries.set(null);
+      this.activeMark.leave();
+    }
   }
 
-  protected onMarkerNavigation(event: KeyboardEvent, markIndex: number): void {
-    const marker = this.allMarkers()[markIndex];
+  protected onMarkerKey(event: KeyboardEvent): void {
+    const hit = markOf(event);
+    if (!hit) {
+      return;
+    }
+    if (event.key === 'Enter' || event.key === ' ') {
+      this.selectMarker(hit.index);
+
+      return;
+    }
+    const marker = this.allMarkers()[hit.index];
     const strand = this.allMarkers().filter(
       (candidate) => candidate.seriesId === marker?.seriesId,
     );
     const current = strand.findIndex(
-      (candidate) => candidate.markIndex === markIndex,
+      (candidate) => candidate.markIndex === hit.index,
     );
     const next = nextRovingIndex(event.key, current, strand.length);
     if (next === null) {
       return;
     }
     event.preventDefault();
-    focusMark(
-      (event.currentTarget as Element).closest('.lines'),
-      strand[next].markIndex,
-    );
+    focusMark(hit.element.closest('.lines'), strand[next].markIndex);
   }
 
   protected isDimmed(seriesId: string): boolean {
@@ -410,10 +440,18 @@ export class LineSeriesComponent implements OnDestroy {
     return highlighted !== null && highlighted !== seriesId;
   }
 
-  protected onMarkerClick(markIndex: number, event?: Event): void {
-    if (this.pinOnClick() && event) {
-      this.activeMark.pin(markIndex, event, '.series-marker');
+  protected onMarkerClick(event: MouseEvent): void {
+    const hit = markOf(event);
+    if (!hit) {
+      return;
     }
+    if (this.pinOnClick()) {
+      this.activeMark.pin(hit.index, event, '.series-marker', hit.element);
+    }
+    this.selectMarker(hit.index);
+  }
+
+  private selectMarker(markIndex: number): void {
     const marker = this.allMarkers()[markIndex];
     const series = this.data().find((entry) => entry.id === marker?.seriesId);
     if (marker && series) {

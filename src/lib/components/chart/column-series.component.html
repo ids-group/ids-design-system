@@ -5,7 +5,13 @@
   [style.--_column-chart-column-share]="markWidthPx()"
   [style.--_column-chart-slot-step]="slotStepPx()"
   [style.--_column-slot]="slot()"
-  [style.--_column-slots]="slotCount()">
+  [style.--_column-slots]="slotCount()"
+  (pointerover)="onMarkOver($event)"
+  (pointerout)="onMarkOut($event)"
+  (focusin)="onMarkFocus($event)"
+  (focusout)="onMarkBlur($event)"
+  (keydown)="onMarkKey($event)"
+  (click)="onMarkClick($event)">
   <!-- `userSpaceOnUse`, so the stripe pitch is the same on a tall column and a short one: with the
        default object bounding box it would scale with each mark and read as a different texture
        per bar. -->
@@ -47,15 +53,7 @@
         interactive() ? (index === tabStopIndex() ? 0 : -1) : null
       "
       [attr.aria-label]="interactive() ? entryLabel(mark) : null"
-      (animate.leave)="leaveMark($event)"
-      (pointerenter)="onMarkEnter(index, $event)"
-      (pointerleave)="activeMark.leave()"
-      (focus)="onMarkFocus(index, $event)"
-      (blur)="activeMark.leave()"
-      (keydown)="onMarkNavigation($event, index)"
-      (click)="onMarkClick(mark.point, index, $event)"
-      (keydown.enter)="onPointKey(mark.point, $event)"
-      (keydown.space)="onPointKey(mark.point, $event)">
+      (animate.leave)="leaveMark($event)">
       <!-- The box that catches the pointer is the whole category slot, not the drawn column: a
            column two pixels tall is otherwise unreachable, and a pointer that has to find the
            mark is a pointer that misses it. -->
