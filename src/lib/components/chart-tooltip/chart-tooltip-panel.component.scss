@@ -61,6 +61,18 @@
   border-radius: var(--radius-pill);
 }
 
+/* One white rule across the dot, matching the hatch on the mark it stands for: at 8px a stripe
+   pattern reads as noise, a single break reads as the same distinction the column makes. */
+.swatch.hatched {
+  background-image: linear-gradient(
+    to bottom,
+    transparent 40%,
+    var(--surface-default) 40%,
+    var(--surface-default) 60%,
+    transparent 60%
+  );
+}
+
 .value {
   font-variant-numeric: tabular-nums;
   font-weight: var(--font-weight-medium);

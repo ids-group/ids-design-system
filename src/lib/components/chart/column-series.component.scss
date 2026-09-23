@@ -164,3 +164,11 @@
 .pin-glyph {
   color: var(--text-primary);
 }
+
+/* The whole series steps back while another one is named in the legend. On the group, not each
+   column: a stacked segment and its neighbours fade together or the stack stops reading as one. */
+.columns.is-dimmed {
+  opacity: var(--ds-chart-dimmed-opacity, 0.25);
+  transition: opacity var(--ds-motion-chart-mark-duration)
+    var(--ds-motion-chart-mark-easing);
+}

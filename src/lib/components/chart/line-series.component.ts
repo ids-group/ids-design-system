@@ -91,6 +91,10 @@ export class LineSeriesComponent implements OnDestroy {
    *  roughly twenty points. */
   readonly showMarkers = input(true, { transform: booleanAttribute });
 
+  /** Lays the line on a band of the surface colour, so it stays legible where it crosses other
+   *  marks. For a line over columns; on an empty plot the band only thickens it. */
+  readonly outline = input(false, { transform: booleanAttribute });
+
   /** Turns on the click affordance - the pointer cursor and the hover tint. `pointClicked`
    *  fires whether or not this is set. */
   readonly interactive = input(false, { transform: booleanAttribute });
@@ -379,7 +383,9 @@ export class LineSeriesComponent implements OnDestroy {
   protected isDimmed(seriesId: string): boolean {
     const highlighted = this.highlighted();
 
-    return this.dimOthers() && highlighted !== null && highlighted !== seriesId;
+    // Not gated on `dimOthers`: that input governs what a POINTER over a mark does, and naming a
+    // series in the legend is the reader asking for this one directly.
+    return highlighted !== null && highlighted !== seriesId;
   }
 
   protected onMarkerClick(markIndex: number, event?: Event): void {

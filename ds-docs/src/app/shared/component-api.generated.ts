@@ -2266,6 +2266,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Names the series in the tooltip, where the category then becomes the panel's heading. Unset, the panel names the category instead, which is what a chart of one series has to say."
+      },
+      {
+        "name": "seriesKey",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Identifies this series to the legend, so hovering a legend item can single it out."
+      },
+      {
+        "name": "highlighted",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "The series the reader is pointing at in the legend. Every other series fades."
       }
     ],
     "outputs": [
@@ -2307,6 +2325,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "true",
         "required": false,
         "description": "Draws a round marker at every reading. Off leaves the line alone, which reads better past roughly twenty points."
+      },
+      {
+        "name": "outline",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Lays the line on a band of the surface colour, so it stays legible where it crosses other marks. For a line over columns; on an empty plot the band only thickens it."
       },
       {
         "name": "interactive",

@@ -363,6 +363,9 @@ export class ColumnChartComponent {
     () => this.resolvedSeries().length > 1,
   );
 
+  /** The series named in the legend under the pointer, which fades the rest. */
+  protected readonly highlightedSeries = signal<string | null>(null);
+
   protected readonly legendItems = computed<readonly ChartLegendItem[]>(() =>
     this.resolvedSeries().map((series) => ({
       id: series.key,

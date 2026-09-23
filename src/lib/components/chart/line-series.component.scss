@@ -41,6 +41,21 @@
   stroke-width: var(--_chart-line-width-bold);
 }
 
+/* Under the line, never around it: a stroke on the line itself would be clipped by its own dash
+   pattern, and a dashed line would lose the band exactly where it crosses a column. */
+.series-halo {
+  fill: none;
+  stroke: var(--surface-default);
+  stroke-width: calc(var(--_chart-line-width) + 4px);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+
+.series-halo.is-dimmed {
+  opacity: 0;
+}
+
 .series-line {
   fill: none;
   stroke-width: var(--_chart-line-width);

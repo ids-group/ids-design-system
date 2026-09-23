@@ -133,15 +133,15 @@
     position: relative;
   }
 
-  /* Top CENTRE: the corner competes with a legend on the pie and with the value labels on a
-     column chart, and on a wide card a corner control is a long way from the mark it undoes.
-     Centred, it sits over the plot it belongs to whatever the chart's shape.
+  /* Bottom CENTRE: the panel it undoes opens above the held mark, so a control at the top is the
+     one thing the panel covers. A corner competes with a legend on the pie and with the value
+     labels on a column chart, and on a wide card it is a long way from the mark it undoes.
 
      44px minimum box around a 12px label, because it is a real control and the library's own touch
      rule applies to it. */
   .pin-reset {
     position: absolute;
-    inset-block-start: var(--space-2);
+    inset-block-end: var(--space-2);
     inset-inline: 0;
     z-index: 1;
     justify-self: center;

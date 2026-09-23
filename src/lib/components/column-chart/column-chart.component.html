@@ -57,6 +57,8 @@
         <svg:g
           dsColumnSeries
           [data]="series.points"
+          [seriesKey]="series.key"
+          [highlighted]="highlightedSeries()"
           [slot]="slotCount() > 1 ? seriesIndex : 0"
           [slotCount]="slotCount()"
           [offsets]="offsetsFor(seriesIndex)"
@@ -83,7 +85,9 @@
     </ds-chart>
 
     @if (multiSeries()) {
-      <ds-chart-legend [items]="legendItems()" />
+      <ds-chart-legend
+        [items]="legendItems()"
+        [(highlighted)]="highlightedSeries" />
     }
 
     @if (dataTableResolved() !== 'none') {

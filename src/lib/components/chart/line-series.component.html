@@ -15,6 +15,18 @@
     }
   }
 
+  @if (outline()) {
+    @for (entry of plotted(); track entry.series.id) {
+      @for (path of entry.linePaths; track $index) {
+        <svg:path
+          class="series-halo"
+          [class.is-dimmed]="isDimmed(entry.series.id)"
+          [attr.stroke-dasharray]="dashFor(entry.seriesIndex)"
+          [attr.d]="path" />
+      }
+    }
+  }
+
   @for (entry of plotted(); track entry.series.id) {
     @for (path of entry.linePaths; track $index) {
       <svg:path

@@ -154,6 +154,18 @@ export class ColumnSeriesComponent implements OnDestroy {
    *  the panel names the category instead, which is what a chart of one series has to say. */
   readonly seriesLabel = input<string | null>(null);
 
+  /** Identifies this series to the legend, so hovering a legend item can single it out. */
+  readonly seriesKey = input<string | null>(null);
+
+  /** The series the reader is pointing at in the legend. Every other series fades. */
+  readonly highlighted = input<string | null>(null);
+
+  protected readonly dimmedBySeries = computed(() => {
+    const highlighted = this.highlighted();
+
+    return highlighted !== null && highlighted !== this.seriesKey();
+  });
+
   /** The clicked datum. Fires on click and on Enter or Space, whatever `interactive` says. */
   readonly pointClicked = output<ColumnSeriesPoint>();
 
@@ -225,6 +237,27 @@ export class ColumnSeriesComponent implements OnDestroy {
 
     return chartViewHeight(plot.height, plot.top, true);
   });
+
+  /** Stacked series sit on top of one another, so a full-slot hit box on each one means only the
+   *  series drawn last is ever reachable. Stacked, a mark catches the pointer over its own segment
+   *  and nothing else. */
+  protected readonly stacked = computed(() => this.offsets() !== null);
+
+  /** Keeps a thin segment reachable without letting it reach into its neighbours. */
+  private static readonly MIN_STACK_HIT = 6;
+
+  protected hitBox(mark: { top: number; height: number }): {
+    y: number;
+    height: number;
+  } {
+    if (!this.stacked()) {
+      return { y: 0, height: this.hitHeight() };
+    }
+    const height = Math.max(mark.height, ColumnSeriesComponent.MIN_STACK_HIT);
+    const overflow = height - mark.height;
+
+    return { y: mark.top - overflow / 2, height };
+  }
 
   protected readonly pinDiscRadius = PIN_DISC_RADIUS;
   protected readonly pinGlyphSize = PIN_GLYPH_SIZE;
@@ -359,6 +392,7 @@ export class ColumnSeriesComponent implements OnDestroy {
           value: mark.point.value,
           formatted: mark.formattedValue,
           color: mark.color,
+          hatched: mark.hatched,
           detail: this.partOfWhole()
             ? describeShare(
                 this.data().map((point) => point.value),

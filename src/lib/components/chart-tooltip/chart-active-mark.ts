@@ -72,7 +72,11 @@ export function chartActiveMark(
       host = target;
       const mark =
         typeof anchor === 'string' ? target.querySelector(anchor) : anchor;
-      origin.set(mark ?? target);
+      // A mark drawn from a zero value has no box, and an overlay anchored to one lands at the
+      // viewport corner rather than near the reading. The hover target always has a box.
+      const box = mark?.getBoundingClientRect();
+      const aimable = box && (box.width > 0 || box.height > 0);
+      origin.set(aimable ? (mark ?? target) : target);
     }
     index.set(at);
   };

@@ -1,6 +1,7 @@
 <svg:g
   class="columns"
   [class.dims-others]="dimOthers()"
+  [class.is-dimmed]="dimmedBySeries()"
   [style.--_column-chart-column-share]="markWidthPx()"
   [style.--_column-chart-slot-step]="slotStepPx()"
   [style.--_column-slot]="slot()"
@@ -58,10 +59,11 @@
       <!-- The box that catches the pointer is the whole category slot, not the drawn column: a
            column two pixels tall is otherwise unreachable, and a pointer that has to find the
            mark is a pointer that misses it. -->
+      @let hit = hitBox(mark);
       <svg:rect
         class="hit-area"
-        y="0"
-        [attr.height]="hitHeight()" />
+        [attr.y]="hit.y"
+        [attr.height]="hit.height" />
 
       <svg:g
         class="bar"

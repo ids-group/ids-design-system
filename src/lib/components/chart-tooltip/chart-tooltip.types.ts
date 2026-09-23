@@ -14,6 +14,9 @@ export interface ChartTooltipEntry {
   /** Already through the chart's `valueFormat`, so the panel never formats. */
   readonly formatted: string;
   readonly color: string;
+  /** Marks whose fill is hatched rather than solid. The swatch takes the same treatment, so the
+   *  panel and the plot encode the distinction the same way and neither relies on hue alone. */
+  readonly hatched?: boolean;
   /** A second line under the value, for what the chart does NOT already print beside the mark —
    *  its share of the total, its rank, the drop into it. A tooltip that repeats the label a
    *  reader is looking at has told them nothing. */
