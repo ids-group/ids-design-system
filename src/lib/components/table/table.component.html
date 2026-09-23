@@ -440,6 +440,7 @@
       [showLabel]="showLabel()"
       [size]="paginationSize()"
       [layout]="paginationLayout()"
+      [disabled]="isSkeletonLoading()"
       [(currentPage)]="page"
       (pageSizeChange)="pageSize.set($event)" />
   </div>

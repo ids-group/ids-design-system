@@ -9,6 +9,7 @@ import {
 import { FormsModule } from '@angular/forms';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { SelectComponent } from '@ids-group-ltd/ids-design-system/components/select';
+import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 import type {
   DsSize,
@@ -18,7 +19,7 @@ import type {
 @Component({
   selector: 'ds-pagination',
   standalone: true,
-  imports: [FormsModule, IconComponent, SelectComponent],
+  imports: [FormsModule, IconComponent, SelectComponent, SkeletonComponent],
   templateUrl: './pagination.component.html',
   styleUrl: './pagination.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -56,6 +57,10 @@ export class PaginationComponent {
     (config) => config.pagination?.layout,
     'grouped' as PaginationLayout,
   );
+  /** The `total` behind it may no longer describe what is on screen (e.g. a host still
+   *  fetching), so this also masks the range label with a shimmer placeholder instead of
+   *  rendering it. */
+  readonly disabled = input(false, { transform: booleanAttribute });
 
   protected readonly navClass = computed(() =>
     ['pagination', this.sizeResolved(), this.layoutResolved()]
