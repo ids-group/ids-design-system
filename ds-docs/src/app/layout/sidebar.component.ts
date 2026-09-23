@@ -355,10 +355,10 @@ export class SidebarComponent {
     );
   }
 
-  /** A deferred section builds only once it reaches the viewport, and until it does it stands at
-   *  its placeholder height - so a deep link scrolls to where the target WILL NOT be, and the
-   *  sections above it push it further down as they build. Re-aims until the target has a body and
-   *  is sitting under the topbar, and lets a real gesture take over at any point. */
+  /** A chart builds only once it is on screen, and until then it stands at its placeholder
+   *  height - so the charts that build around a deep link's target can move it after the first
+   *  scroll. Re-aims until the target is sitting under the topbar, and lets a real gesture take
+   *  over at any point. */
   private holdAnchorWhileContentGrows(anchor: string): void {
     const main = this.layoutScroll.scroller() as HTMLElement | null;
     if (!anchor || !main) {
@@ -375,7 +375,7 @@ export class SidebarComponent {
       const section = this.document.querySelector(
         `[data-anchor="${anchor}"]`,
       ) as HTMLElement | null;
-      if (!section || section.querySelector('.section-deferred')) {
+      if (!section) {
         return false;
       }
       const offset =
