@@ -52,3 +52,9 @@ html, body { height: 100%; margin: 0; }
     transition-duration: var(--duration-fast);
   }
 }
+
+/* Holds the scroll height while a deferred section body is still a placeholder, so the page does
+   not collapse under the reader scrolling past the chart group's nine sections. */
+.section-deferred {
+  min-block-size: 60vh;
+}

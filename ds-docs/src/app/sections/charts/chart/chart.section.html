@@ -10,6 +10,12 @@
     combination you need.
   </span>
 
+  <!-- The anchor lives on <docs-section>, so it stays in the DOM and the sidebar's scroll
+       still finds this section while its body is a placeholder. `on idle` carries the OR:
+       a viewport trigger alone never fires where nothing is painted, which is every
+       headless render - the design-sync card pass snapshotted 21 empty placeholders. -->
+  @defer (on idle; on viewport) {
+
   <h3 class="block-title t-h4">
     Composing a chart
   </h3>
@@ -362,4 +368,7 @@
       [dsChartTooltip]="traffic.tooltipContext()"
       [dsChartTooltipOrigin]="traffic.tooltipOrigin()" />
   </ds-chart>
+  } @placeholder (minimum 100ms) {
+    <div class="section-deferred" aria-hidden="true"></div>
+  }
 </docs-section>
