@@ -22,7 +22,7 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 | 9 | `9-bar-column-contracts` | how far the bar and the column converge - the consumer ask that found them diverging in palette and in where composition is declared |
 | 10 | `10-banner-announce-warning` | whether a dev warning names an error banner no screen reader will read, now that the input's three states tell an opt-out from an oversight |
 | 11 | `11-picker-list-height` | whether the picker list's height stays an internal token: the cap that governs the visible rows is not the one that looks settable |
-| 12 | `12-decision-queue` | every consumer ask and every open question in one page - 28 asks a consumer waits on, each drawn as today against after, then 35 decisions across six groups; the live indeterminate tracks are the case a text list could not put |
+| 12 | `12-decision-queue` | every consumer ask and every open question in one page - 27 asks a consumer waits on, each drawn as today against after, then 35 decisions across six groups; the live indeterminate tracks are the case a text list could not put |
 
 **Rank 1 is the way in, and ranks 2-4 are the two biggest lanes** — the colour engine, then the interaction formula that reads
 its ramp. Ranks 1-5 are written in Russian and share `deck.css`, which sits beside `ds.css` and
