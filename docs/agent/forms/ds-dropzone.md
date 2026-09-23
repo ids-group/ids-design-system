@@ -7,4 +7,8 @@ File upload area.
 Inputs: `accept: string = ''`, `multiple: boolean = false`, `files: model<DropzoneFile[]>` (`{ id, name, size, state: 'uploading' | 'success' | 'error', progress }`)
 Outputs: `(filesAdded): File[]` (raw browser File list from drop or picker), `(fileRemoved): DropzoneFile` (a chip's remove button)
 
+<!-- inputs:ds-dropzone -->
+All inputs: `accept: string = ''`, `multiple: boolean = false`, `files: DropzoneFile[] = []`, `disabled: boolean = false`
+<!-- /inputs -->
+
 ---

@@ -26,21 +26,24 @@
   --_option-radius: var(--ds-option-radius, var(--ds-radius-inner));
   --_option-row-gap: var(--ds-option-row-gap, 2px);
   --_option-bg-color-active: var(--ds-option-bg-color-active, var(--surface-secondary));
-  --_option-weight: var(--ds-option-weight, var(--font-weight-medium));
+  --_option-font-weight: var(--ds-option-font-weight, var(--font-weight-medium));
   --_option-font-size: var(--ds-option-font-size, var(--font-size-s));
   --_option-line-height: var(--ds-option-line-height, var(--line-height-flat));
   --_option-font-family: var(--ds-option-font-family, var(--font-sans));
+  --_option-color: var(--ds-option-color, var(--text-primary));
+  --_dropdown-empty-color: var(--ds-dropdown-empty-color, var(--text-tertiary));
+  --_dropdown-empty-font-size: var(--ds-dropdown-empty-font-size, inherit);
 
   --_dropdown-panel-bg-color: var(--ds-dropdown-panel-bg-color, var(--surface-overlay));
   --_dropdown-panel-border-color: var(--ds-dropdown-panel-border-color, var(--border-default));
   --_dropdown-panel-shadow: var(--ds-dropdown-panel-shadow, var(--shadow-popover));
-  --_dropdown-panel-maxh: var(--ds-dropdown-panel-maxh, 320px);
+  --_dropdown-panel-max-height: var(--ds-dropdown-panel-max-height, 320px);
 
   /* minw/maxw only bite in `content` width mode, where the pane is auto-sized: in
      `fill` the component pins the pane to the trigger width and there is nothing
      left to bound. */
-  --_dropdown-panel-minw: var(--ds-dropdown-panel-minw, 0);
-  --_dropdown-panel-maxw: var(--ds-dropdown-panel-maxw, none);
+  --_dropdown-panel-min-width: var(--ds-dropdown-panel-min-width, 0);
+  --_dropdown-panel-max-width: var(--ds-dropdown-panel-max-width, none);
 
   .dropdown-panel {
     // The pane is sized from the trigger, so without `width: 100%` the panel is a flex
@@ -51,9 +54,9 @@
     border-radius: var(--_dropdown-panel-radius);
     box-shadow: var(--_dropdown-panel-shadow);
     padding: var(--space-1);
-    min-width: var(--_dropdown-panel-minw);
-    max-width: var(--_dropdown-panel-maxw);
-    max-height: var(--_dropdown-panel-maxh);
+    min-width: var(--_dropdown-panel-min-width);
+    max-width: var(--_dropdown-panel-max-width);
+    max-height: var(--_dropdown-panel-max-height);
 
     // The panel clips and the LIST scrolls, so a filter or select-all row stays
     // put while the options move under it — a panel that scrolled itself would
@@ -112,7 +115,8 @@
 
   .empty {
     padding: var(--space-3) var(--space-4);
-    color: var(--text-tertiary);
+    color: var(--_dropdown-empty-color);
+    font-size: var(--_dropdown-empty-font-size);
     text-align: center;
   }
 
@@ -124,8 +128,8 @@
     padding: var(--_option-padding);
     border: 0;
     background: transparent;
-    font: var(--_option-weight) var(--_option-font-size) / var(--_option-line-height) var(--_option-font-family);
-    color: var(--text-primary);
+    font: var(--_option-font-weight) var(--_option-font-size) / var(--_option-line-height) var(--_option-font-family);
+    color: var(--_option-color);
     cursor: pointer;
     border-radius: var(--_option-radius);
     text-align: left;

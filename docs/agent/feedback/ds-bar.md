@@ -11,3 +11,7 @@ Inputs: `value: number = 0` (in units of `max`, clamped), `max: number = 100`, `
 `indeterminate` is ignored unless `semantics` is `'progress'`: only a task has an unknown duration.
 The bar fills its box, so the column decides its width. A box sized to its content is sized by what its contents contribute intrinsically and a `100%`-wide child contributes nothing, so the host carries a `min-inline-size` of `3rem`.
 Tokens: `--ds-bar-height`, `--ds-bar-min-width`, `--ds-bar-track-color`, `--ds-bar-fill-color`, `--ds-bar-fill-color-success`, `--ds-bar-fill-color-warning`, `--ds-bar-fill-color-error`, `--ds-bar-target-color`, `--ds-bar-target-width`.
+
+<!-- inputs:ds-bar -->
+All inputs: `value: number = 0`, `max: number = 100`, `semantics: 'progress' | 'meter' | 'none' = 'progress'`, `variant: 'default' | 'success' | 'warning' | 'error' = 'default'`, `indeterminate: boolean = false`, `color: string | null = null`, `ariaLabel: string | null = null`, `target: number | null = null`
+<!-- /inputs -->

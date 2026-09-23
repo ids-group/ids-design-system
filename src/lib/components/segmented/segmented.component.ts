@@ -29,6 +29,7 @@ import type { SegmentedOption } from './segmented.types';
     '[attr.aria-label]': 'ariaLabel() || label() || null',
     '[attr.aria-describedby]': 'hintId()',
     '[attr.aria-invalid]': "invalidResolved() ? 'true' : null",
+    '[class.joined]': 'joined()',
   },
   providers: [
     {
@@ -49,6 +50,10 @@ export class SegmentedComponent extends DsControlValueAccessor<string> {
   readonly label = input<string>('');
   /** Disables every segment. */
   readonly disabled = input(false, { transform: booleanAttribute });
+  /** Segments share their edges instead of floating in a padded track: borders collapse into one
+   *  hairline and only the outer ends round. Needs `--ds-segmented-segment-border` to be set,
+   *  since the shared edge IS the border. */
+  readonly joined = input(false, { transform: booleanAttribute });
 
   readonly isDisabled = computed(() => this.disabled() || this.formDisabled());
 

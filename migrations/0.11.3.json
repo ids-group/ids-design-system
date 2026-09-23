@@ -23,7 +23,7 @@
     {
       "id": "toast-region-subclass-members-moved",
       "kind": "behavior",
-      "old": "class MyToastRegion extends ToastRegionComponent",
+      "old": "ToastRegionComponent",
       "new": null,
       "action": "Build after upgrading. Rename or mark `override` every member the compiler reports as colliding, and DELETE any `override startCountdown` - that member no longer exists, so the override is dead code the compiler will not complain about.",
       "appliesWhen": "Only a class that extends ToastRegionComponent. Template users of `<ds-toast-region>` and callers of ToastService need nothing.",

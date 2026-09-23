@@ -1,19 +1,19 @@
 :host {
   display: block;
   position: relative;
-  --_scrim-color: var(--ds-loading-overlay-scrim-color, color-mix(
+  --_loading-overlay-scrim-color: var(--ds-loading-overlay-scrim-color, color-mix(
     in srgb,
     var(--surface-canvas) calc(var(--opacity-scrim) * 100%),
     transparent
   ));
-  --_label-color: var(--ds-loading-overlay-label-color, var(--text-secondary));
-  --_enter-keyframes: var(--ds-loading-overlay-enter-keyframes, ds-fade-in);
-  --_enter-duration: var(--ds-loading-overlay-enter-duration, var(--duration-fast));
-  --_enter-easing: var(--ds-loading-overlay-enter-easing, var(--ease-standard));
+  --_loading-overlay-label-color: var(--ds-loading-overlay-label-color, var(--text-secondary));
+  --_loading-overlay-enter-keyframes: var(--ds-loading-overlay-enter-keyframes, ds-fade-in);
+  --_loading-overlay-enter-duration: var(--ds-loading-overlay-enter-duration, var(--duration-fast));
+  --_loading-overlay-enter-easing: var(--ds-loading-overlay-enter-easing, var(--ease-standard));
   --_ds-enter-scale: var(--ds-loading-overlay-enter-scale, 0.96);
 
   @media (prefers-reduced-motion: reduce) {
-    --_enter-duration: 0ms;
+    --_loading-overlay-enter-duration: 0ms;
   }
 }
 
@@ -34,10 +34,10 @@
   align-items: center;
   justify-content: center;
   gap: var(--space-3);
-  background-color: var(--_scrim-color);
-  animation-name: var(--_enter-keyframes);
-  animation-duration: var(--_enter-duration);
-  animation-timing-function: var(--_enter-easing);
+  background-color: var(--_loading-overlay-scrim-color);
+  animation-name: var(--_loading-overlay-enter-keyframes);
+  animation-duration: var(--_loading-overlay-enter-duration);
+  animation-timing-function: var(--_loading-overlay-enter-easing);
 }
 
 .scrim.blur {
@@ -45,7 +45,7 @@
 }
 
 .label {
-  color: var(--_label-color);
+  color: var(--_loading-overlay-label-color);
   font:
     var(--font-weight-medium) var(--font-size-s) / var(--line-height-base)
     var(--font-sans);

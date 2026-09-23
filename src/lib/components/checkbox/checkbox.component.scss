@@ -6,6 +6,12 @@
 
   // sm/lg are explicit overrides of the glyph size the mixin defaults.
   --_checkbox-label-fs: var(--font-size-s);
+  --_checkbox-row-align: var(--ds-checkbox-row-align, center);
+  --_checkbox-gap: var(--ds-checkbox-gap, var(--space-2));
+
+  /* The message sits under the box, not under the label. Zero keeps that; set it to the box plus
+     the gap to line the hint up with the text column. */
+  --_checkbox-message-indent: var(--ds-checkbox-message-indent, 0px);
 
   display: inline-flex;
 }
@@ -13,13 +19,13 @@
 /* A 16px square cannot take the field mixin's border+fill treatment — at that size
    a tinted fill reads as "checked". Only the border moves. */
 :host([data-field-state='error']) {
-  --_checkbox-border: var(--error);
-  --_checkbox-hover-border: var(--error);
+  --_checkbox-border-color: var(--error);
+  --_checkbox-hover-border-color: var(--error);
 }
 
 :host([data-field-state='warning']) {
-  --_checkbox-border: var(--warning-text);
-  --_checkbox-hover-border: var(--warning-text);
+  --_checkbox-border-color: var(--warning-text);
+  --_checkbox-hover-border-color: var(--warning-text);
 }
 
 .checkbox-field {
@@ -33,14 +39,24 @@
 }
 
 .control-line {
+  align-items: var(--_checkbox-row-align);
+
+  .control-text {
+    padding-inline-start: var(--_checkbox-gap);
+  }
+
   @include control-line.line(
     '.check',
-    var(--ds-checkbox-label-weight, var(--font-weight-regular)) var(--ds-checkbox-label-font-size, var(--_checkbox-label-fs)) / var(--line-height-base) var(--font-sans),
+    var(--ds-checkbox-label-font-weight, var(--font-weight-regular)) var(--ds-checkbox-label-font-size, var(--_checkbox-label-fs)) / var(--line-height-base) var(--font-sans),
     var(--ds-checkbox-label-color, var(--text-primary))
   );
 }
 
 .check {
   @include check-box.box;
+}
+
+ds-field-message {
+  padding-inline-start: var(--_checkbox-message-indent);
 }
 

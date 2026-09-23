@@ -110,7 +110,7 @@
         <ds-table
           caption="Sorted ascending"
           sortKey="project"
-          sortDir="asc"
+          sortDirection="asc"
           [data]="stateRow"
           [columns]="sortStateColumns"
           [stickyHeader]="false" />
@@ -126,7 +126,7 @@
         <ds-table
           caption="Sorted descending"
           sortKey="project"
-          sortDir="desc"
+          sortDirection="desc"
           [data]="stateRow"
           [columns]="sortStateColumns"
           [stickyHeader]="false" />
@@ -474,12 +474,9 @@
     <code class="t-mono-inline">
       [loading]="'skeleton'"
     </code> when you have no
-    rows to show yet.
-    <code class="t-mono-inline">
-      [skeletonRows]
-    </code> sets how many shimmer rows
-    stand in — five by default. Match it to the page size you are about to show,
-    so the body does not resize the moment the rows land.
+    rows to show yet. <code class="t-mono-inline"> [skeletonRows] </code> sets
+    how many shimmer rows stand in — five by default. Match it to the page size
+    you are about to show, so the body does not resize the moment the rows land.
   </p>
 
   <ds-table
@@ -853,8 +850,8 @@
     <code class="t-mono-inline">
       [cellTemplateMap]
     </code>
-    takes a column key to template map and overrides a projected template of
-    the same key, and
+    takes a column key to template map and overrides a projected template of the
+    same key, and
     <code class="t-mono-inline">
       [emptyTemplate]
     </code>
@@ -866,7 +863,9 @@
     handed-over cell template.
   </p>
 
-  <ng-template #outcomeCell let-row>
+  <ng-template
+    #outcomeCell
+    let-row>
     <ds-badge [status]="row.outcome === 'Failed' ? 'error' : 'success'">
       {{ row.outcome }}
     </ds-badge>
@@ -906,8 +905,8 @@
     and by default the table reads
     <code class="t-mono-inline">
       row.id
-    </code>. Display-only data often has none —
-    an audit line, a log row, a joined projection. Pass
+    </code>. Display-only data often has
+    none — an audit line, a log row, a joined projection. Pass
     <code class="t-mono-inline">
       [rowId]
     </code> an accessor instead of minting
@@ -942,18 +941,18 @@
     Three switches, all on by default.
     <code class="t-mono-inline">
       [pageSizeOptions]
-    </code> is the list the picker
-    offers — <code class="t-mono-inline">[10, 25, 50, 100]</code> unless you say
-    otherwise, and worth narrowing when the data has a natural page.
+    </code> is the list the
+    picker offers — <code class="t-mono-inline">[10, 25, 50, 100]</code> unless
+    you say otherwise, and worth narrowing when the data has a natural page.
     <code class="t-mono-inline">
       [showPageSize]="false"
-    </code> drops the picker for a
-    table whose page size is fixed, and
+    </code> drops the picker
+    for a table whose page size is fixed, and
     <code class="t-mono-inline">
       [showLabel]="false"
-    </code> drops the "N of M" range
-    line. Turn both off and the footer is arrows and a page number, which is all
-    a short list needs.
+    </code> drops the "N of M"
+    range line. Turn both off and the footer is arrows and a page number, which
+    is all a short list needs.
   </p>
 
   <ds-table
@@ -1222,9 +1221,9 @@
       TableColumn
     </code> an
     <code class="t-mono-inline">
-      srLabel
-    </code> so screen-reader users still
-    hear a column name.
+      screenReaderLabel
+    </code> so screen-reader
+    users still hear a column name.
   </p>
 
   <ds-table
@@ -1587,9 +1586,9 @@
       [sortKey]
     </code> and
     <code class="t-mono-inline">
-      [sortDir]
-    </code> are bound ONE-WAY from the
-    host's own state (usually a computed over the URL), and
+      [sortDirection]
+    </code> are bound ONE-WAY from
+    the host's own state (usually a computed over the URL), and
     <code class="t-mono-inline">
       (sortChange)
     </code> is where it hears about a
@@ -1615,7 +1614,7 @@
     [data]="serverSortedRows()"
     [columns]="serverSortColumns"
     [sortKey]="serverSortKey()"
-    [sortDir]="serverSortDir()"
+    [sortDirection]="serverSortDir()"
     (sortChange)="onServerSort($event)" />
 
   <h3
@@ -1629,7 +1628,7 @@
       sortKey
     </code> and
     <code class="t-mono-inline">
-      sortDir
+      sortDirection
     </code> each have a matching
     <code class="t-mono-inline">
       Change
@@ -1638,10 +1637,11 @@
       [(sortKey)]
     </code> and
     <code class="t-mono-inline">
-      [(sortDir)]
-    </code> work: the table writes the
-    host's state and the host reads it back, with no handler to write. Below is
-    the demo above with the handler deleted and nothing else changed.
+      [(sortDirection)]
+    </code> work: the table
+    writes the host's state and the host reads it back, with no handler to
+    write. Below is the demo above with the handler deleted and nothing else
+    changed.
   </p>
 
   <p class="block-desc t-s">
@@ -1650,7 +1650,7 @@
     </strong>
     Clearing a sort sets
     <code class="t-mono-inline">
-      sortDir
+      sortDirection
     </code> to
     <code class="t-mono-inline">
       null
@@ -1673,7 +1673,7 @@
     [data]="twoWaySortedRows()"
     [columns]="serverSortColumns"
     [(sortKey)]="twoWaySortKey"
-    [(sortDir)]="twoWaySortDir" />
+    [(sortDirection)]="twoWaySortDir" />
 
   <h3 class="block-title t-h4">
     Column filters
@@ -1766,12 +1766,12 @@
     </code> on the table or
     <code class="t-mono-inline">
       DS_CONFIG.table.stickyScrollbarOffset
-    </code> for every table
-    at once; the
+    </code>
+    for every table at once; the
     <code class="t-mono-inline">
       --ds-table-sticky-scrollbar-offset
-    </code> hook still
-    out-ranks both.
+    </code> hook
+    still out-ranks both.
   </p>
 
   <ds-table

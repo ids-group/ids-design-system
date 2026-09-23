@@ -27,6 +27,11 @@ const POINTER_GAP_PX = 6;
 // point by more than a pointer-opened one does.
 const TOUCH_GAP_PX = 48;
 
+// Keeps the panel off the screen edge, and matches the `--space-3` the panel reserves in its own
+// `max-height`. The two have to agree: CDK pushes against this margin, and a panel allowed to grow
+// past what the margin leaves is one push cannot fit.
+const VIEWPORT_MARGIN_PX = 12;
+
 // Four fallbacks are what make the panel flip out of a small dashboard card rather than be
 // clipped by it. Above first, except while a mark is HELD: the Unpin control sits at the plot's
 // top edge, and a panel that opens upward from a mark in the upper half lands on top of it. The
@@ -154,6 +159,7 @@ export class ChartTooltipDirective {
       .flexibleConnectedTo(origin as FlexibleConnectedPositionStrategyOrigin)
       .withFlexibleDimensions(false)
       .withPush(true)
+      .withViewportMargin(VIEWPORT_MARGIN_PX)
       .withPositions(positionsFor(gap, this.dsChartTooltipPreferBelow()));
   }
 

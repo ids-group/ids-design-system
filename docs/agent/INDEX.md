@@ -21,12 +21,22 @@ and token names.** These leaves are for orientation and usage.
 
 - [<ds-bar-chart> — BarChartComponent](charts/ds-bar-chart.md) — Interaction: interactive: boolean = false turns on the affordance — pointer cursor, hover tint and the keyboar
 - [<ds-column-chart> — ColumnChartComponent](charts/ds-column-chart.md) — Vertical columns for a short series read left to right — months, stages, teams — measured against one value ax
-- [<ds-donut-chart> — DonutChartComponent](charts/ds-donut-chart.md) — A ring that splits one total into its parts, with the middle free for the total or a headline figure of your o
+- [<ds-pie-chart> — PieChartComponent](charts/ds-pie-chart.md) — A ring that splits one total into its parts, with the middle free for the total or a headline figure of your o
 - [<ds-funnel-chart> — FunnelChartComponent](charts/ds-funnel-chart.md) — Stages of a journey, drawn top to bottom in the order you give them — they are never sorted, because the order
+- [<ds-heatmap-chart> — HeatmapChartComponent](charts/ds-heatmap-chart.md) — A matrix of readings coloured by magnitude — depot by weekday, hour by date, queue by region.
+- [<ds-scatter-chart> — ScatterChartComponent](charts/ds-scatter-chart.md) — Two continuous quantities against each other — weight against carriage cost, distance against time, volume aga
+- [<ds-waterfall-chart> — WaterfallChartComponent](charts/ds-waterfall-chart.md) — A running total, bar by bar: what a figure started at, what moved it, and what it ended at.
 - [<ds-line-chart> — LineChartComponent](charts/ds-line-chart.md) — One or more series plotted over a shared set of categories.
 - [Chart defaults — what DS_CONFIG decides once](charts/ds-config.md) — Four chart inputs resolve through DS_CONFIG.chart because they are one decision per APP, not per plot: valueFo
 - [Chart frame — the box a chart draws around itself](charts/chart-frame-the-box-a-chart-draws-around-itself.md) — Every chart paints its own border, radius, padding and --surface-default background, on by default. That is un
 - [Chart colour — which palette a chart takes](charts/chart-colour-which-palette-a-chart-takes.md) — Three families, and reaching for the wrong one is the usual chart bug. Set the --ds-chart-* contract tokens, n
+- [<ds-chart-data-table> — ChartDataTableComponent](charts/ds-chart-data-table.md) — The annex table under a chart: every reading in a <details> a reader can open. Cells arrive already formatted,
+- [<ds-chart> — ChartComponent](charts/ds-chart.md) — <!-- inputs:ds-chart -->
+- [<g[dsColumnSeries]> — ColumnSeriesComponent](charts/column-series-component.md) — <!-- inputs:g[dsColumnSeries] -->
+- [<g[dsLineSeries]> — LineSeriesComponent](charts/line-series-component.md) — <!-- inputs:g[dsLineSeries] -->
+- [<g[dsSeriesAnnotation]> — SeriesAnnotationComponent](charts/series-annotation-component.md) — A label pinned to one reading, legible with no pointer. Takes the readings rather than finding them: a mark ne
+- [<g[dsReferenceLabel]> — ReferenceLabelComponent](charts/reference-label-component.md) — <!-- inputs:g[dsReferenceLabel] -->
+- [<g[dsReferenceLine]> — ReferenceLineComponent](charts/reference-line-component.md) — <!-- inputs:g[dsReferenceLine] -->
 
 ## domain
 
@@ -35,18 +45,26 @@ and token names.** These leaves are for orientation and usage.
 ## feedback
 
 - [<ds-badge> — BadgeComponent](feedback/ds-badge.md) — Content: label text. Use for status pills, counts, lifecycle markers.
-- [<ds-status-dot> — StatusDotComponent](feedback/ds-status-dot.md) — Input: status: DsStatusKey (same consumer-registered vocabulary as ds-badge; colours wired via styles/status, 
+- [<ds-status-dot> — StatusDotComponent](feedback/ds-status-dot.md) — <!-- inputs:ds-status-dot -->
 - [<ds-tag> — TagComponent](feedback/ds-tag.md) — Content: label.
-- [<ds-avatar> — AvatarComponent](feedback/ds-avatar.md) — Inputs: size: 'xs' | 'sm' | 'md' | 'lg' = 'md', initials: string = '', imageUrl: string | null = null, tint: {
+- [<ds-avatar> — AvatarComponent](feedback/ds-avatar.md) — <!-- inputs:ds-avatar -->
 - [<ds-avatar-group> — AvatarGroupComponent](feedback/ds-avatar-group.md) — Content: project <ds-avatar> children.
 - [<ds-bar> — BarComponent](feedback/ds-bar.md) — One horizontal track with one fill: a task's completion, or a measurement on a known scale. No circular varian
-- [<ds-spinner> — SpinnerComponent](feedback/ds-spinner.md) — Input: size: 'sm' | 'md' | 'lg' = 'md'. Pure-CSS spinner, role="status" with built-in aria-label.
-- [<ds-skeleton> — SkeletonComponent](feedback/ds-skeleton.md) — Inputs: width?: string, height?: string, circle: boolean = false, inline: boolean = false. Shimmer animation r
+- [<ds-spinner> — SpinnerComponent](feedback/ds-spinner.md) — <!-- inputs:ds-spinner -->
+- [<ds-skeleton> — SkeletonComponent](feedback/ds-skeleton.md) — <!-- inputs:ds-skeleton -->
 - [<ds-stat> — StatComponent](feedback/ds-stat.md) — Delta direction is derived from the sign of delta: positive → up (arrow + green), negative → down (arrow + red
 - [<ds-empty-state> — EmptyStateComponent](feedback/ds-empty-state.md) — Content slot: [actions] — CTA buttons / links.
-- [<ds-banner> — BannerComponent](feedback/ds-banner.md) — - layout="stacked" (default): actions wrap onto a new line, indented under the body. Use for multi-line messag
+- [<ds-banner> — BannerComponent](feedback/ds-banner.md) — - layout="stacked" (default): actions wrap onto a new line, indented under the body. Use for multiple-line mes
 - [<ds-alert> — AlertComponent](feedback/ds-alert.md) — Inline message, ds-banner's smaller twin — same anatomy, sized for placement inside a form or a card rather th
 - [<ds-toast> — ToastComponent](feedback/ds-toast.md) — The companion <ds-toast-region> lives inside the ToastService (see Services) — it is auto-mounted via a CDK ov
+- [<ds-list> — ListComponent](feedback/ds-list.md) — <!-- inputs:ds-list -->
+- [<ds-list-item> — ListItemComponent](feedback/ds-list-item.md) — <!-- inputs:ds-list-item -->
+- [<ds-loading-overlay> — LoadingOverlayComponent](feedback/ds-loading-overlay.md) — <!-- inputs:ds-loading-overlay -->
+- [<ds-timeline-item> — TimelineItemComponent](feedback/ds-timeline-item.md) — <!-- inputs:ds-timeline-item -->
+- [<ds-toast-region> — ToastRegionComponent](feedback/ds-toast-region.md) — <!-- inputs:ds-toast-region -->
+- [<ds-tree> — TreeComponent](feedback/ds-tree.md) — <!-- inputs:ds-tree -->
+- [<ds-description-list> — DescriptionListComponent](feedback/ds-description-list.md) — <!-- inputs:ds-description-list -->
+- [<ds-description-item> — DescriptionItemComponent](feedback/ds-description-item.md) — <!-- inputs:ds-description-item -->
 
 ## forms
 
@@ -55,16 +73,29 @@ and token names.** These leaves are for orientation and usage.
 - [<ds-input> — InputComponent](forms/ds-input.md) — Content slots — addon attributes apply to any child element:
 - [<ds-textarea> — TextareaComponent](forms/ds-textarea.md) — Multi-line counterpart to <ds-input> — same wrapper/states, reuses the --ds-input-* token family. No prefix/su
 - [<ds-number-stepper> — NumberStepperComponent](forms/ds-number-stepper.md) — Spinbox for bounded quantities — −/+ buttons around a numeric value.
-- [<ds-checkbox> — CheckboxComponent](forms/ds-checkbox.md) — Inputs: checked: model<boolean>, indeterminate: boolean = false, disabled: boolean = false, name: string | nul
-- [<ds-radio> — RadioComponent](forms/ds-radio.md) — Inputs: checked: model<boolean>, disabled: boolean = false, name: string = '', value: string = '', inputId: st
-- [<ds-switch> — SwitchComponent](forms/ds-switch.md) — Inputs: checked: model<boolean>, disabled: boolean = false, name: string | null = null, variant: 'default' | '
+- [<ds-checkbox> — CheckboxComponent](forms/ds-checkbox.md) — <!-- inputs:ds-checkbox -->
+- [<ds-radio> — RadioComponent](forms/ds-radio.md) — <!-- inputs:ds-radio -->
+- [<ds-switch> — SwitchComponent](forms/ds-switch.md) — <!-- inputs:ds-switch -->
 - [The picker family — <ds-select>, <ds-multi-select>, <ds-autocomplete>](forms/the-picker-family-ds-select-ds-multi-select-ds-autocomplete.md) — Five rules hold across all three: one meaning per member name, difference only where a reason is stated, one p
 - [<ds-select> — SelectComponent](forms/ds-select.md) — Trigger plus a CDK overlay panel. Keyboard: ArrowUp/Down, Enter/Space, Home/End, Escape, skipping group header
-- [<ds-multi-select> — MultiSelectComponent](forms/ds-multi-select.md) — Inputs: value: model<string[]>, options: readonly MultiSelectItem[], placeholder: string = 'Select…', searchPl
+- [<ds-multi-select> — MultiSelectComponent](forms/ds-multi-select.md) — <!-- inputs:ds-multi-select -->
 - [<ds-autocomplete> — AutocompleteComponent<T>](forms/ds-autocomplete.md) — Type-ahead picker, generic on the option value.
 - [<ds-search> — SearchComponent](forms/ds-search.md) — Pre-styled search input with built-in icon. A form control, but not a field: no label, no message row.
 - [<ds-date-picker> — DatePickerComponent](forms/ds-date-picker.md) — Trigger button opens a CDK overlay calendar; selecting a day in 'single' closes the panel, in 'range' it close
 - [<ds-dropzone> — DropzoneComponent](forms/ds-dropzone.md) — File upload area.
+- [<ds-button-group> — ButtonGroupComponent](forms/ds-button-group.md) — <!-- inputs:ds-button-group -->
+- [<ds-split-button> — SplitButtonComponent](forms/ds-split-button.md) — <!-- inputs:ds-split-button -->
+- [<ds-toggle-button> — ToggleButtonComponent](forms/ds-toggle-button.md) — <!-- inputs:ds-toggle-button -->
+- [<ds-color-picker> — ColorPickerComponent](forms/ds-color-picker.md) — <!-- inputs:ds-color-picker -->
+- [<ds-field-group> — FieldGroupComponent](forms/ds-field-group.md) — <!-- inputs:ds-field-group -->
+- [<ds-otp-input> — OtpInputComponent](forms/ds-otp-input.md) — <!-- inputs:ds-otp-input -->
+- [<ds-password-rules> — PasswordRulesComponent](forms/ds-password-rules.md) — <!-- inputs:ds-password-rules -->
+- [<ds-radio-group> — RadioGroupComponent](forms/ds-radio-group.md) — <!-- inputs:ds-radio-group -->
+- [<ds-segmented> — SegmentedComponent](forms/ds-segmented.md) — <!-- inputs:ds-segmented -->
+- [<ds-slider> — SliderComponent](forms/ds-slider.md) — <!-- inputs:ds-slider -->
+- [<ds-time-picker> — TimePickerComponent](forms/ds-time-picker.md) — <!-- inputs:ds-time-picker -->
+- [<ds-filter-bar> — FilterBarComponent](forms/ds-filter-bar.md) — <!-- inputs:ds-filter-bar -->
+- [<ng-template[dsFilterItem]> — FilterItemDirective](forms/filter-item-directive.md) — <!-- inputs:ng-template[dsFilterItem] -->
 
 ## navigation
 
@@ -74,23 +105,29 @@ and token names.** These leaves are for orientation and usage.
 - [<ds-topbar> — TopBarComponent](navigation/ds-topbar.md) — No inputs.
 - [<ds-app-layout> — AppLayoutComponent](navigation/ds-app-layout.md) — Reads: railId and the read-only railOverlay signal, for a consumer-built burger; dsRailTrigger wires one for y
 - [<ds-auth-layout> — AuthLayoutComponent](navigation/ds-auth-layout.md) — landmark="main" only when the page has no other <main>; the sign-in card is not automatically the document's m
-- [<ds-page-header> — PageHeaderComponent](navigation/ds-page-header.md) — Inputs: eyebrow: string = '', title: required string, subtitle: string = '', compact: boolean = false, divider
+- [<ds-page-header> — PageHeaderComponent](navigation/ds-page-header.md) — <!-- inputs:ds-page-header -->
 - [<ds-page-footer> — PageFooterComponent](navigation/ds-page-footer.md) — Content: default <ng-content>. Sticky footer bar pattern.
-- [<ds-breadcrumbs> — BreadcrumbsComponent](navigation/ds-breadcrumbs.md) — Inputs: items: BreadcrumbItem[] | null = null ({ label?, href?, icon? } — when null/omitted, the component rea
+- [<ds-breadcrumbs> — BreadcrumbsComponent](navigation/ds-breadcrumbs.md) — <!-- inputs:ds-breadcrumbs -->
 - [<ds-tabs> + <ds-tab> — TabsComponent, TabComponent](navigation/ds-tabs.md) — Container holds <ds-tab label="…"> children.
-- [<ds-stepper> — StepperComponent](navigation/ds-stepper.md) — Inputs: steps: readonly string[] = [], current: number = 0. Horizontal step indicator with done/active/upcomin
-- [<ds-pagination> — PaginationComponent](navigation/ds-pagination.md) — Inputs: total: required number, pageSize: model<number> = 10, currentPage: model<number> = 1, pageSizeOptions:
+- [<ds-stepper> — StepperComponent](navigation/ds-stepper.md) — <!-- inputs:ds-stepper -->
+- [<ds-pagination> — PaginationComponent](navigation/ds-pagination.md) — <!-- inputs:ds-pagination -->
 - [<ds-divider> — DividerComponent](navigation/ds-divider.md) — Content: label text (when variant="label").
+- [<ds-container> — ContainerComponent](navigation/ds-container.md) — <!-- inputs:ds-container -->
+- [<ds-inline> — InlineComponent](navigation/ds-inline.md) — <!-- inputs:ds-inline -->
+- [<ds-stack> — StackComponent](navigation/ds-stack.md) — <!-- inputs:ds-stack -->
+- [<ds-sidenav-footer> — SidenavFooterComponent](navigation/ds-sidenav-footer.md) — <!-- inputs:ds-sidenav-footer -->
+- [<ds-tab> — TabComponent](navigation/ds-tab.md) — <!-- inputs:ds-tab -->
 
 ## overlays
 
-- [<ds-modal> — ModalComponent](overlays/ds-modal.md) — Inputs: open: model<boolean> = false, size: 'sm' | 'md' | 'lg' = 'md', danger: boolean = false, title: require
+- [<ds-modal> — ModalComponent](overlays/ds-modal.md) — <!-- inputs:ds-modal -->
 - [<ds-modal-card> — ModalCardComponent](overlays/ds-modal-card.md) — The visual card the <ds-modal> host renders inside its backdrop. Exposed as a separate selector for cases wher
 - [<ds-drawer> — DrawerComponent](overlays/ds-drawer.md) — Side panel (no side input — always anchored right).
 - [<ds-bottom-sheet> — BottomSheetComponent](overlays/ds-bottom-sheet.md) — Mobile-first panel anchored to the bottom edge (touch equivalent of drawer/modal). Drag-down on the grab strip
 - [<ds-popover> — PopoverComponent](overlays/ds-popover.md) — Floating panel anchored to a trigger via CDK overlay. Input: align: 'start' | 'end' = 'start' — controls overl
 - [[dsTooltip] — TooltipDirective](overlays/ds-tooltip.md) — Attribute directive. Apply to any focusable element.
 - [<ds-menu> + <ds-menu-item> — MenuComponent, MenuItemComponent](overlays/ds-menu.md) — Menu is a container. Item inputs: icon: IconName | null = null, disabled: boolean = false, danger: boolean = f
+- [<ds-tooltip-panel> — TooltipPanelComponent](overlays/ds-tooltip-panel.md) — <!-- inputs:ds-tooltip-panel -->
 
 ## platform
 
@@ -104,7 +141,12 @@ and token names.** These leaves are for orientation and usage.
 
 - [<ds-card> — CardComponent](surfaces/ds-card.md) — Full-bleed child: a child whose background reaches the card edge paints square corners over the radius, and th
 - [<ds-accordion> + <ds-accordion-item> — AccordionComponent, AccordionItemComponent](surfaces/ds-accordion.md) — Accordion is a thin wrapper that rounds + borders its children. Item inputs: title: string = '', expanded: mod
+- [<ds-accordion-item> — AccordionItemComponent](surfaces/ds-accordion-item.md) — <!-- inputs:ds-accordion-item -->
 
 ## tables
 
 - [<ds-table> — TableComponent<T extends { id: string }>](tables/ds-table.md) — Column shape: { key: string, label: string, sortable?: boolean, align?: 'left' | 'right' | 'center', cell?: (r
+- [[dsCellTemplate] — CellTemplateDirective](tables/ds-cell-template.md) — <!-- inputs:[dsCellTemplate] -->
+- [<ng-template[dsHeaderFilter]> — HeaderFilterDirective](tables/header-filter-directive.md) — <!-- inputs:ng-template[dsHeaderFilter] -->
+- [[dsTableColumns] — DsTableColumns](tables/ds-table-columns.md) — <!-- inputs:[dsTableColumns] -->
+- [[dsTableExport] — DsTableExport](tables/ds-table-export.md) — <!-- inputs:[dsTableExport] -->

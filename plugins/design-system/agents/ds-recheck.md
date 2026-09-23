@@ -101,15 +101,20 @@ locator matches this repo"`, so the report carries it as manifest evidence rathe
   the `verify` assertion over that surface yourself before agreeing it does not apply, and search the
   consumer's own vocabulary (their store, their query builder, their theme) rather than our API name.
 - **Verifying against the real API:** don't rely on the `note` alone — verify the edit against V's
-  actual surface: the DS sources checkout at the release tag (path provided in your prompt; real
+  actual surface: the DS source tree extracted at `v<V>` (path provided in your prompt; real
   component sources) and/or the installed package (`node_modules/@ids-group-ltd/ids-design-system/`:
   `types/*.d.ts` = public API, `fesm2022/` = internals, `themes/` + `styles/` = SCSS tokens — at
-  re-check time it holds V). Both read-only.
+  re-check time it holds V). Both read-only. **A claim that something was REMOVED at V needs both
+  trees:** present in the previous tag's tree, absent in V's — absence from the current worktree
+  or the installed package alone is no proof, since either can be a later version. Without the
+  previous tree in your prompt, say so and set `confidence: "low"` rather than inferring it.
+- **A committed change** is judged from the diff file the orchestrator passes (a saved
+  `git show <sha>`); without one you can verify the end state only, and say that in `note`.
 - **Customization-drift fixes** (the orchestrator retargeted consumer deep-selectors/tokens onto the
   new version's internals): the orchestrator sends each fix as a synthetic item — `old` = the dead
   selector/class/token, `new` = the retargeted one, `surface: "style"`, `verify` = the existence
   assertion. Mechanical existence check over exactly those: confirm `new` exists on V's real surface
-  (grep the sources checkout / installed bundle for the class or token name) and no dead `old`
+  (grep the extracted `v<V>` tree / installed bundle for the class or token name) and no dead `old`
   remains in the consumer. A typo in a retargeted selector
   compiles clean — your grep is the only thing that catches it.
 - Do NOT edit anything.

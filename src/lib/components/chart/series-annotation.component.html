@@ -1,0 +1,11 @@
+<svg:g class="annotations">
+  @for (note of placed(); track note.key) {
+    <svg:text
+      class="annotation"
+      [attr.x]="note.x"
+      [attr.y]="note.y"
+      [attr.text-anchor]="note.anchor">
+      {{ note.label }}
+    </svg:text>
+  }
+</svg:g>

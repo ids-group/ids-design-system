@@ -12,7 +12,7 @@
 <ds-loading-overlay
   [loading]="isOverlayLoading()"
   [blur]="true"
-  [insetTop]="'var(--ds-table-head-h, var(--_table-head-h, 40px))'"
+  [insetTop]="'var(--_table-head-height)'"
   [inertContent]="false">
   <div
     #scrollWrap
@@ -97,9 +97,9 @@
                   (click)="onSort(col)">
                   @if (col.label) {
                     {{ col.label }}
-                  } @else if (col.srLabel) {
+                  } @else if (col.screenReaderLabel) {
                     <span class="visually-hidden">
-                      {{ col.srLabel }}
+                      {{ col.screenReaderLabel }}
                     </span>
                   }
 
@@ -113,9 +113,9 @@
                 <span class="th-label">
                   @if (col.label) {
                     {{ col.label }}
-                  } @else if (col.srLabel) {
+                  } @else if (col.screenReaderLabel) {
                     <span class="visually-hidden">
-                      {{ col.srLabel }}
+                      {{ col.screenReaderLabel }}
                     </span>
                   }
                 </span>

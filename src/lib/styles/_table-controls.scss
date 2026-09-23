@@ -17,16 +17,16 @@
   border: 0;
   background: none;
   cursor: pointer;
-  color: var(--_table-icon-btn-color);
+  color: var(--_table-icon-button-color);
   border-radius: var(--ds-radius-inner);
   transition: color var(--duration-fast) var(--ease-standard);
 
   &:hover {
-    color: var(--_table-icon-btn-color-hover);
+    color: var(--_table-icon-button-color-hover);
   }
 
   &:focus-visible {
-    --focus-ring-color: var(--_table-icon-btn-focus-color);
+    --focus-ring-color: var(--_table-icon-button-focus-color);
 
     @include focus.ring;
   }

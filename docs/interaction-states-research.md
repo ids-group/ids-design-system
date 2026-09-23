@@ -1,7 +1,7 @@
 # How leading design systems derive interaction-state colors
 
 > Research base for the interaction-formula work (see `interaction-color-audit.md`
-> and `presentations/3-interaction-formula.html`).
+> and deck `interaction-formula`).
 > Method: deep-research workflow, 2026-06-10 — 5 search angles, 24 sources fetched,
 > 115 claims extracted, top 25 adversarially verified (3 votes each, 2/3 refutes
 > kill), 18 confirmed → 11 synthesized findings. Confidence reflects vote splits:

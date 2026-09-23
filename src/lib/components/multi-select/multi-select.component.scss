@@ -14,19 +14,20 @@
   flex-direction: column;
   gap: var(--field-label-gap);
 
-  --ds-dropdown-panel-bg-color: var(
-    --ds-multi-select-panel-bg-color,
-    var(--surface-overlay)
-  );
+  /* `initial` means UNSET - see the same pair on `ds-autocomplete`. A value here is
+     copied onto the portaled pane as an inline style, which outranks the
+     `.ds-overlay-pane` rule a consumer writes; unset while the picker's own hook is
+     unset, nothing is copied and the shared partial supplies the default. */
+  --ds-dropdown-panel-bg-color: var(--ds-multi-select-panel-bg-color, initial); /* void-ok */
 
-  --_trigger-bg-color: var(--ds-multi-select-bg-color, var(--surface-default));
-  --_trigger-border-color: var(
+  --_multi-select-bg-color: var(--ds-multi-select-bg-color, var(--surface-default));
+  --_multi-select-border-color: var(
     --ds-multi-select-border-color,
     var(--border-default)
   );
-  --_trigger-radius: var(--ds-multi-select-radius, var(--ds-radius-control));
-  --_trigger-text-color: var(--ds-multi-select-text-color, var(--text-primary));
-  --_trigger-border-color-focus: var(
+  --_multi-select-radius: var(--ds-multi-select-radius, var(--ds-radius-control));
+  --_multi-select-text-color: var(--ds-multi-select-text-color, var(--text-primary));
+  --_multi-select-border-color-focus: var(
     --ds-multi-select-border-color-focus,
     var(--accent)
   );
@@ -97,10 +98,10 @@
   &.lg { @include field-box.field-box-height(lg, min-height); }
 
   padding: var(--space-1-5) var(--field-pad-x);
-  background-color: var(--_trigger-bg-color);
-  border: var(--border-width-default) solid var(--_trigger-border-color);
-  border-radius: var(--_trigger-radius);
-  color: var(--_trigger-text-color);
+  background-color: var(--_multi-select-bg-color);
+  border: var(--border-width-default) solid var(--_multi-select-border-color);
+  border-radius: var(--_multi-select-radius);
+  color: var(--_multi-select-text-color);
   font:
     var(--font-weight-regular) var(--font-size-s) / var(--line-height-base)
     var(--font-sans);
@@ -117,7 +118,7 @@
   &:focus-visible {
     @include focus.own-indicator;
 
-    border-color: var(--_trigger-border-color-focus);
+    border-color: var(--_multi-select-border-color-focus);
     box-shadow: var(--accent-focus-field);
   }
 
@@ -174,7 +175,7 @@
     var(--surface-secondary)
   );
 
-  --_check-bg-color: var(--ds-multi-select-check-bg-color, var(--accent));
+  --_multi-select-check-bg-color: var(--ds-multi-select-check-bg-color, var(--accent));
 }
 
 .search-row {
@@ -266,8 +267,8 @@
 
   &.checked,
   &.indeterminate {
-    background-color: var(--_check-bg-color);
-    border-color: var(--_check-bg-color);
+    background-color: var(--_multi-select-check-bg-color);
+    border-color: var(--_multi-select-check-bg-color);
   }
 }
 

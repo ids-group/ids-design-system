@@ -5,3 +5,7 @@ Group: Display & feedback
 
 Inputs: `label: required string`, `value: required string | number`, `delta: number | null = null`, `deltaLabel: string = ''`, `caption: string = ''`, `unit: string = ''`, `variant: 'default' | 'danger' = 'default'`
 Delta direction is derived from the sign of `delta`: positive → up (arrow + green), negative → down (arrow + red), zero/null → neutral.
+
+<!-- inputs:ds-stat -->
+All inputs: `label: required string`, `value: string | number | null = ''`, `delta: number | null = null`, `deltaLabel: string = ''`, `deltaTone: 'neutral' | 'secondary' = null`, `caption: string = ''`, `unit: string = ''`, `variant: 'default' | 'error' = 'default'`, `size: 'sm' | 'md' | 'lg' = 'md'`
+<!-- /inputs -->

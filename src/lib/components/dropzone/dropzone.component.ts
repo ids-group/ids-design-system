@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import type { DropzoneFile } from './dropzone.types';
+import { filesToAdd } from './dropzone.files';
 
 @Component({
   selector: 'ds-dropzone',
@@ -22,15 +23,13 @@ import type { DropzoneFile } from './dropzone.types';
 export class DropzoneComponent {
   /** Native `accept` attribute — comma-separated MIME types or extensions. */
   readonly accept = input<string>('');
-  /** Allows picking more than one file at once (ignored when `single`). */
+  /** Allows picking more than one file at once. Unset takes one, which is what the native input
+   *  does with no `multiple`. */
   readonly multiple = input(false, { transform: booleanAttribute });
   /** Files shown in the list — the consumer owns upload state and progress. */
   readonly files = model<DropzoneFile[]>([]);
   /** Disables the dropzone: blocks all file-picking interactions and signals unavailability. */
   readonly disabled = input(false, { transform: booleanAttribute });
-  /** Restricts the dropzone to a single file; narrows the panel to `--col-cap-text`. */
-  readonly single = input(false, { transform: booleanAttribute });
-
   protected readonly dragOver = signal<boolean>(false);
 
   /** Fires with the raw files picked or dropped; the consumer adds them to `files`. */
@@ -48,9 +47,6 @@ export class DropzoneComponent {
     }
     if (this.disabled()) {
       parts.push('disabled');
-    }
-    if (this.single()) {
-      parts.push('single');
     }
 
     return parts.join(' ');
@@ -74,19 +70,20 @@ export class DropzoneComponent {
     if (this.disabled()) {
       return;
     }
-    const list = event.dataTransfer?.files;
-    if (list) {
-      this.filesAdded.emit(Array.from(list));
-    }
+    this.emitPicked(event.dataTransfer?.files);
   }
 
   protected onPickerChange(event: Event): void {
     if (this.disabled()) {
       return;
     }
-    const list = (event.target as HTMLInputElement).files;
-    if (list) {
-      this.filesAdded.emit(Array.from(list));
+    this.emitPicked((event.target as HTMLInputElement).files);
+  }
+
+  private emitPicked(list: FileList | null | undefined): void {
+    const picked = filesToAdd(list ? Array.from(list) : [], this.multiple());
+    if (picked.length) {
+      this.filesAdded.emit([...picked]);
     }
   }
 

@@ -4,3 +4,7 @@
 Group: Display & feedback
 
 Input: `status: DsStatusKey` (same consumer-registered vocabulary as `ds-badge`; colours wired via `styles/status`, unset → neutral). Tiny coloured dot.
+
+<!-- inputs:ds-status-dot -->
+All inputs: `status: DsStatusKey`, `ariaLabel: string | null = null`
+<!-- /inputs -->

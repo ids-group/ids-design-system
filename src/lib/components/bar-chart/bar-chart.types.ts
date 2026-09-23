@@ -1,3 +1,10 @@
+/** A row's reading: one number, or the two ends of a band.
+ *
+ *  A plain number spans from zero, which is what a bar has always drawn. A pair spans between its
+ *  own two ends - a floating bar, a range, a min-to-max - and the ends may be written either way
+ *  round, because a reader who reverses them means the same band. */
+export type BarChartValue = number | readonly [low: number, high: number];
+
 /** One part of a row that is a distribution rather than a single quantity. */
 export interface BarChartSegment {
   /** Falls back to the segment's position when left out. */
@@ -13,7 +20,17 @@ export interface BarChartRow {
   /** Falls back to the row's position when left out, so a reorder rewrites the DOM. */
   id?: string;
   label: string;
-  value: number;
+  /** One number spans from zero. A `[low, high]` pair spans between its own ends, which is what
+   *  draws a floating bar - a range, a min to max, a period that starts partway along. */
+  value: BarChartValue;
+  /** A tick across the bar at one reading: a goal, a budget, a last-period figure. With `ranges`
+   *  behind it this is the bullet chart, which is a bar with two extras rather than a chart type. */
+  target?: number;
+  /** Qualitative bands drawn behind the bar, given as their upper bounds in ascending order -
+   *  `[60, 80, 100]` is three bands. They say what the reading MEANS where the number alone does
+   *  not: poor, fair, good. They are painted in one neutral hue at rising opacity, never in the
+   *  series palette, because a band is a backdrop and a bar is the reading. */
+  ranges?: readonly number[];
   /** A percentage already out of 100, not a fraction: `42`, never `0.42`. Printed at
    *  the row's end while `showPercent` is on; derived from `value / max` when omitted. */
   percent?: number;

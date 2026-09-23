@@ -282,12 +282,12 @@
         </span>
       </div>
 
-      <div class="donut-row">
+      <div class="pie-row">
         <svg
           width="200"
           height="200"
           viewBox="0 0 200 200">
-          @for (a of donutArcs(); track a.label) {
+          @for (a of pieArcs(); track a.label) {
             <path
               stroke-width="22"
               fill="none"
@@ -317,14 +317,14 @@
           </text>
         </svg>
 
-        <div class="legend donut-legend">
-          @for (s of donut; track s.label) {
+        <div class="legend pie-legend">
+          @for (s of pie; track s.label) {
             <span class="item">
               <span
                 class="dot"
                 [style.background]="s.c">
               </span>
-              {{ s.label }} <span class="donut-pct">{{ s.v }}%</span>
+              {{ s.label }} <span class="pie-pct">{{ s.v }}%</span>
             </span>
           }
         </div>

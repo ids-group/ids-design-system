@@ -4,6 +4,85 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## Nine manifest and plugin asks from one consumer's re-audit (2026-09-23)
+
+`check-manifest-truth` closes on the fraction it read - `438 of 458 old/new value(s) were read
+against their boundary and hold` (measured 2026-09-23) - and lists every one of the other 20, so a
+green run cannot be read as complete. Those 20 name nothing the package declares: `data-*`
+attributes the components write, `:focus-visible`, Angular types, a CLI command, CSS keywords,
+snippet fields and a Sass namespace call. Beyond single names it reads `element .class` and
+compound-class selectors, `<ds-toast>`, `DS_TOAST_CONFIG`, token families (`--ds-*-bg`,
+`--<role>-subtle`, `--ds-*-w | -h`), prefixes (`--ds-combobox-`), called and camelCase functions,
+keyframe lists and `@use` partial paths; a scope element renamed in the same release is accused only
+if neither tag has it. It also scans `note`, `pitfall`, `informational` and every `deleteList`
+field for a `--ds-*` name neither tag declares; prose that names a token to say it does not exist
+goes in `DELIBERATE_PHANTOMS`, keyed by tag, id and token. The selftest drives each reading red and
+green. `migrations/AUTHORING.md` carries the rules: `old` holds our identifiers, never a
+placeholder or a sentence.
+
+That scan found three `--ds-chart-*` hooks the 0.13.0 manifest and CHANGELOG described as existing
+or deletable, none of which any tag ever shipped; they are gone from the informational line, the
+delete list, two notes and the DELETE table. 0.13.0 gained the missing `--chart-tick-size` item,
+and its categorical rename sends anyone recolouring a series to `--ds-chart-series-N-color`.
+
+Fourteen subclass items carry the DS classes in `old` instead of `class MyTable extends …`
+placeholders, and eighteen more `old`/`new` values that held a sentence, a type annotation or a
+bare member name now hold the identifier - `ds-autocomplete[optionGroups]`,
+`ButtonComponent.buttonRef`, `ds-multi-select[selectAll]`, `ds-banner, ds-alert` and the rest - with
+the sentence moved to `appliesWhen`. `time-columns-onkey-signature` is an informational line: the class is not exported.
+`field-state-icon-hand-rolled` finds `name="error"`, `name="warn"` and `.field-message` rather than
+every `ds-icon`, and the table footer rows say a local rule replaces the inset per side instead of
+doubling it. Every picker's `panelTokens` comment names the shared `DROPDOWN_PANEL_TOKENS`, and
+the five manifest entries that send a consumer to one of its hooks (0.10.0, 0.10.2, 0.11.4, two in
+0.13.1) say that the shared pane setup forwards it and no picker's own list names it.
+
+The plugin (1.8.1) reads each tag from its own `git archive` tree and never checks the clone out,
+and every dispatch carries the trees of `v<V>` and the tag before it, so `ds-recheck` proves a
+removal with Read/Grep and no shell. **Not changed: the 0.11.1 option-hover item** - at `v0.11.1`
+the shared list held only the panel radius, so the forwarding fact did not hold there.
+
+## The chart family stopped repeating itself, and one preset stopped drawing its own plot (2026-09-22)
+
+`ds-line-chart` renders `<ds-chart>` with `g[dsLineSeries]` and `g[dsSeriesAnnotation]` inside it.
+Its own 640x320 viewBox is gone, so the plot is measured in CSS pixels like every other chart and
+`--ds-line-chart-plot-height` drives it for the first time - the token had reached only the loading
+skeleton since the chart shipped.
+
+**The switch needed six behaviours the container did not have**, found by diffing the preset's
+BEHAVIOUR rather than the mark's input list: cursor pinning, the linger grace that lets a pointer
+reach a portaled panel, `tooltipAnchor`, legend-driven dimming, per-series roving tab stops, and a
+focused marker narrowing an axis tooltip to its own series. The first three belong to the
+container, and `chartActiveMark` already held that whole state machine for the element marks - so
+the category cursor took it instead of restating it, and gained Escape and the tap latch for free.
+The last three are the mark's, as inputs.
+
+**Two extractions came out of the same pass.** `ds-chart-data-table` is the annex table eight
+charts were each drawing (between 43 and 77 lines of template apiece, differing only in the body),
+and `resolveChartDefaults` is the five-to-six `resolveWithConfig` calls nine charts repeated. The
+formatting stays with the chart: two charts reading the same number differently is a chart
+decision, not a table one.
+
+**What the switch left behind was deleted rather than kept.** Fourteen of eighteen exports in
+`line-chart.math.ts` had no caller but their own probe; the axis-mode assertions were already
+covered by `chart-math.probe.mjs` and the rest exercised geometry the mark now owns.
+
+## A rename wave, and the three causes behind eight consumer asks (2026-09-22)
+
+Eight of eleven styling hooks a consumer reached past the surface for already existed. Measured
+causes, not guesses: the name was unguessable from the CSS property it sets (`-pad-x` for
+`padding`, `-label-weight` for `font-weight`), the API was absent from `components.md`, and
+devtools showed only the private resolver name.
+
+All three were closed. 132 tokens spell their names out, `tools/generate-input-lists.mjs` writes an
+"All inputs" line per component into `components.md` from the source, and 171 private names are
+mirrored onto their public token so devtools shows the one a consumer can set.
+
+**The manifest had to be corrected twice over.** Two items named old tokens that never shipped -
+`--ds-segmented-button-*` where the release carried `--ds-segmented-btn-*` - because they were
+written against the already-renamed tree. `check-manifest-truth` could not see it: `claims()`
+returns nothing for a value holding `*`, so every globbed item went unchecked. It now reads `--ds-`
+names out of `action` and `appliesWhen` too and fails on one that exists at neither boundary.
+
 ## A void `var(--token)` is now a gate, not a surprise (2026-09-09)
 
 `check-void-tokens` reads every `.scss`/`.css` under `src` and `ds-docs/src` and fails on a

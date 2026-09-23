@@ -14,53 +14,44 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**105 open — 1 P1, 35 P2, 69 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**110 open — 1 P1, 30 P2, 79 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 1
 
 - **Framework & forms**
   - Upgrade to Angular 22 — and re-verify the signal-forms work against it, because one of its breaking changes lands exactly there
 
-### P2 — 35
+### P2 — 30
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Nothing catches a shell that rings on `:focus-within` when it means the keyboard
-  - Overlays should grow, not drop in from above (Stas, 2026-09-04)
   - Transitions are missing or wrong in places, and nothing says where (Stas, 2026-09-04)
-  - `.design-sync/upload/_ds_bundle.css` is frozen against a rule the library no longer …
   - `_focus.scss`'s top-level CSS is copied into 33 component style strings
   - Warning and success fields show a mismatched halo
   - Zone COLOUR and `data-focus` SHAPE cannot both reach one role, and the reason is a …
 - **Manifest-shape defects the two-wave plugin review surfaced (2026-09-04)**
   - The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27 in a real browser, 4.42:1 against the 4.5:1 threshold
-- **Reported by Stas from the docs site, 2026-09-05**
-  - The `labels` trigger collapses to one label regardless of free space, because the measurement reads a `fit-content` box that the cut itself narrows
-- **Four files style one portaled panel at equal specificity (recorded 2026-08-31, from the branch review)**
-  - The dropdown panel is styled by `styles/_dropdown-overlay.scss` AND by three component stylesheets, and nothing decides which wins except the order the stylesheets happen to load
 - **Claude Design upload — what the freeze left open (recorded 2026-09-04)**
   - `.design-sync/conventions.md` is a generator INPUT, and nothing stops a reflow desyncing it
   - The elements demo has not been opened in a real browser since the rebuilds
   - `ds-toast-region`'s dev-warning strip is unverified
-- **Charts and fields the ECM prototype could not use (recorded 2026-09-15, Stas: take all five)**
-  - No component draws one bar whose segments are the parts of a whole — and it is a chart
-  - `ds-progress` cannot show a target beside the fill
-  - `ds-line-chart` cannot be told its value-axis maximum, so two plots of the same measure
+  - `ds-waterfall-chart` is `ds-cascade-chart` (Stas, 2026-09-23)
+- **Two chart names that collide (recorded 2026-09-21, from the mm-ecm consumer)**
+  - `ds-bar` is a prefix of `ds-bar-chart`, and the token surfaces overlap the same way
 - **Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)**
-  - A1 - build the seam and ONE directive, and measure what the seam itself costs
   - Build-time `define` flag: a consumer CAN strip library code from `angular.json` — measured
-  - A3+ — the top layer MUST be per-component, measured 2026-09-01, not a preference
   - The boundary guard cannot be flipped to `'error'` as it shipped — five defects found by …
   - DOCS for A3: `@defer` needs the deep specifier — the one exception to «no consumer
   - `ds-button`'s field-message line costs 11.0 KB gzip — 35% of the button, ABLATION DONE
 - **Agent-facing docs — the rules an agent needs to prototype a page, and an md layout it can navigate**
   - An md ARCHITECTURE for the whole design system — cross-linked like a graph, not a pile of files (Stas, 2026-09-01, re-scoped 2026-09-02). NEXT UP, and the first step is RESEARCH, not code
-  - There is no page-level design approach an agent can follow — only per-token and per-component rules (Stas, 2026-09-01)
 - **The field system — the two controls outside it, and the five with no box to paint**
   - `ds-number-stepper` and `ds-dropzone` are outside the field-message system entirely — bring them in, or say they are not fields (Stas asked 2026-08-20)
   - Single-source colour engine — collapse `--primary` + `--primary-h/s/l` into ONE token, derive the rest with `color-mix()` + relative-colour (idea 2026-06-24)
   - `.ds-interactive` — global state-interaction contract (agreed; prototype before spec — [[project-interaction-contract-design]])
   - Theme recipe vs hand-tuned picks — alignment decision
   - Shared picker internals — DECIDED 2026-09-02 (Stas): BUILD IT
+  - The 20 typography CLASSES still read `.t-*`, where the tokens behind them now spell it out
   - The button's colour-family slots are named `--c-*`, which is not an acceptable name
 - **Tooling**
   - Publishing to npm stops working in January 2027 and the replacement is not chosen
@@ -69,16 +60,20 @@ item and nothing else.
   - `fix:all` reformats HTML that eslint then fights, and it is `fix:all` alone — `lint:all` is green
 - **Localization — every user-visible string is a hardcoded literal (recorded 2026-08-27, from the ITB Workspace picker report)**
   - Every user-visible string in the library is a hardcoded English literal — VALIDATED 2026-08-27 against 0.11.0; Stas: defer the whole thing, no code
+- **The chart family read as an architecture (audited 2026-09-22)**
+  - The chassis is declared nine times and shared once - about 450 lines of it
+  - The template state head and the figcaption rule are copied verbatim, nine times each
 
-### P3 — 69
+### P3 — 79
 
+- **What v0.13.3 added and the docs site never shows (measured 2026-09-22)**
+  - Fifteen new inputs have no demo and no prose on the docs site
+  - Forty-nine new tokens have a row in the reference and an empty `notes`
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - A whole-page keyboard walk is not measurable with the tools here, and the failed
   - No indicator has been measured for SIZE or contrast — the 2026-09-10 sweep answered 2.4.7 only
-  - `ds-date-picker` takes the CONTROL focus role while being a text field
   - `--ds-multi-select-option-bg-color-active` is documented and dead
   - `--ds-time-picker-focus-shadow` is read by the portaled panel and forwarded by nobody
-  - color-picker's selected swatch stops reading as selected while focused
   - Thirteen ds-docs forced-state pins misrepresent their component
   - `ds-tag` marked `interactive` is mouse-only
 - **Manifest-shape defects the two-wave plugin review surfaced (2026-09-04)**
@@ -94,11 +89,11 @@ item and nothing else.
   - Which of the 8 live chapters can also be frozen
   - `templates` and `startingPoints` in `_ds_manifest.json` are in the schema and empty
   - `.thumbnail` — the project's cover image — has no source that regenerates it
-- **Charts and fields the ECM prototype could not use (recorded 2026-09-15, Stas: take all five)**
-  - `ds-funnel-chart` states the drop as a share and never as a count (arrived 2026-09-15)
-- **Two column-chart gaps and a journey canvas the mm-ecm prototype could not use (recorded 2026-09-16)**
-  - `ds-column-chart` cannot say "these columns are one series", so a time series renders
-  - `ds-column-chart` has no `segments`, so a stacked column is not expressible
+- **An indeterminate bar that survives a short track (recorded 2026-09-22, from the mm-ecm consumer)**
+  - An indeterminate `ds-bar` is never empty, or 86.7% is enough - one verdict left
+- **Two chart names that collide (recorded 2026-09-21, from the mm-ecm consumer)**
+  - Extract what bar and column SHARE; their contracts stay different (Stas, 2026-09-22)
+- **A journey canvas the mm-ecm prototype could not use (recorded 2026-09-16)**
   - Journey / flow diagram - no component draws a branching node-and-edge canvas
 - **Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)**
   - A2 - the remaining directives, after A1 prices the seam
@@ -113,7 +108,6 @@ item and nothing else.
   - Portaled CSS as opt-in — PARKED 2026-09-04 by Stas
   - Split «design system» from «UI kit» as two packages (Mikhail, 2026-08-30)
   - `DS_CONFIG` prototype mode — `prototype: true` (Mikhail's original framing, endorsed by Stas 2026-09-01: «ds config тоже можно. как я и говорю prototype: true»)
-  - `todo.md`'s one-line index no longer accounts for its body, and the gap cannot be attributed by eye
   - A token named in prose is not checked against the tokens that exist, and the same fact lives in two copies
   - Three edges left open on `ds-table` row expansion and the resize handle, each a judgement call rather than a defect
   - `ds-number-stepper` — optional numeric formatting (locale / currency / decimals / grouping), ref https://primeng.dev/inputnumber
@@ -121,13 +115,15 @@ item and nothing else.
 - **DS-docs**
   - Fourteen focusable elements in ds-docs still have no accessible name, on two components that always could
   - ds-docs renders a space before punctuation after any inline `<code>` (found 2026-09-01)
-  - Sidebar nav labels reflow while the rail animates, the way the brand text used to (recorded 2026-08-12, from the collapse-animation work)
   - Inspect mode — ASKED 2026-08-05, Stas: NOT NOW (stays open with the pilot scope below)
 - **The hex readout rolls its glyphs like a mechanical board (recorded 2026-09-02, Stas)**
   - Dragging the picker retypes the hex value instantly; each glyph should ROLL to its new
+  - Does a dev warning name an error banner no screen reader will read?
+  - Does the picker list height become a public token, or stay behind `panelClass`?
 - **The field system — the two controls outside it, and the five with no box to paint**
   - CDK Menu adoption (option B) — parked
 - **Tooling**
+  - The chart palette separates by hue and barely at all by lightness, and nothing measures the dark theme (recorded 2026-09-21, Stas: record only)
   - Three `ds-table` paths have never been driven by automation, and five component groups have never been clicked through
   - `tools/todo-index.mjs --check` is not in `lint:all`, so the index can still go stale between runs
   - `templates` and `startingPoints` in the Claude Design manifest are unexplored, and so is what feeds the pane's "Usage notes for Claude" (recorded 2026-09-03)
@@ -137,7 +133,7 @@ item and nothing else.
   - Re-wrap `CHANGELOG.md` to ~100 columns (Stas, 2026-08-31: "запиши пока в туду … щас не будем")
   - Does a release note owe the reader a WHY, or only a what-and-what-to-do? (Stas, 2026-08-28, left open on purpose during the public-surface sweep.)
   - ds-docs still writes BEM MODIFIERS as `--suffix`, and a state should be its own class (Stas, 2026-08-26 — the `__` half is done and archived)
-  - Eight manifest-format practices the audit marked *Adopt*, and nobody has ratified any of them (filed 2026-08-27 out of `presentations/4-migration-manifest-audit.html`)
+  - Eight manifest-format practices the audit marked *Adopt*, and nobody has ratified any of them (filed 2026-08-27 out of deck `migration-manifest-audit`)
 - **Framework & forms**
   - Three signal-forms contract members are unimplemented, and all three are blocked on a LOOK, not on wiring
 - **ds-auth-layout — residue from the 0.8.0/0.9.0 audit (recorded 2026-08-11, from the ai-sdlc-prototype side)**
@@ -153,6 +149,18 @@ item and nothing else.
   - MED cluster — ASKED 2026-08-05, Stas: keep in the backlog
 - **Virtualising a long picker list (recorded 2026-08-31, §9 P5, Stas: record only)**
   - Five thousand options render five thousand rows
+- **The chart family read as an architecture (audited 2026-09-22)**
+  - Four charts keep their own roving-tabindex state block, and the shared module owns only
+  - Three charts hand-roll a legend and three compose their own accessible sentence
+  - Six places reimplement something a shared module already does
+  - Five constants carry two or three spellings each
+  - Four exports on the package surface have no consumer in `src/`
+  - `'none'` and `'grouped'` are the same value on `ds-column-chart`
+  - Two inputs decide one thing on `ds-funnel-chart`, and two vocabularies name one idea
+  - `tooltipAnchor="pointer"` is inert unless `tooltip="axis"`, and nothing says so
+  - `ds-pie-chart` declares `staggerMs` and documents that it does nothing
+- **Thirteen inputs the chart family declares component by component (measured 2026-09-22)**
+  - Only the RESOLUTION of the shared chart inputs is shared, not their declaration
 - **`changelog-lint` cannot tell "checked and clean" from "did not check" (recorded 2026-09-01, §9 G6, Stas: park)**
   - The gate's own floor does not catch the failure it was written for …
 - **ds-app-layout — the one knowingly duplicated decision**
@@ -199,6 +207,32 @@ zero, read the consumer's hand-rolled version rather than re-reading our own API
 
 Highest: each one is wrong in code — or in a surface — a consumer already reads.
 
+## What v0.13.3 added and the docs site never shows (measured 2026-09-22)
+
+Every new component landed everywhere - five charts plus `g[dsSeriesAnnotation]` have a section, a
+`components.md` entry and a `docs/agent` file. The gap is below the component line, and the site's
+generated API table carries the NAMES, so this is about a reader meeting an input with no example
+rather than never meeting it at all.
+
+- [ ] **[P3] Fifteen new inputs have no demo and no prose on the docs site.** Seven are not
+  mentioned anywhere outside the generated table: `ds-button[align]`, `ds-chart[axisLabel]`,
+  `ds-chart[cursorPin]`, `g[dsLineSeries][highlighted]`, `ds-pagination[size]`,
+  `ds-pagination[layout]`, `ds-segmented[joined]`. Eight more are demonstrated on a PRESET but not
+  on the mark or container that also takes them: `ds-chart[secondaryAxisLabel]`, `[maxSecondary]`,
+  and `g[dsLineSeries]`'s `pinOnClick`, `dimOthers`, `patterns`, `stacked`, `curve`, `tooltipAnchor`.
+  The composable path is the one a consumer reaches for after the preset stops fitting, so its
+  inputs are exactly the ones that need an example.
+
+- [ ] **[P3] Forty-nine new tokens have a row in the reference and an empty `notes`.** The whole
+  `--ds-chart-heat-1..8-color` family, `--ds-chart-annotation-*` (5), `--ds-chart-positive-color` /
+  `-negative-color`, `--ds-chart-legend-swatch-size`, `--ds-bar-chart-target-*` (4),
+  `--ds-heatmap-chart-*` (8), `--ds-pie-chart-*` (8), `--ds-scatter-chart-*` (8),
+  `--ds-waterfall-chart-*` (2), `--ds-line-chart-annotation-font-weight`,
+  `--ds-option-font-weight`, `--ds-table-head-height`. `token-descriptions.json` is hand-written,
+  so a name and a value reach the table and the sentence saying what to set it FOR does not.
+
+Constraints and decisions that read as removable and are not.
+
 ## Focus indicators — what the two-wave review left open (recorded 2026-09-04)
 
 - [ ] **[P3] A whole-page keyboard walk is not measurable with the tools here, and the failed
@@ -228,21 +262,6 @@ Highest: each one is wrong in code — or in a surface — a consumer already re
   template has `type="checkbox"`, `type="radio"`, or a `button`, and leave text fields alone.
 
 
-- [ ] **[P2] Overlays should grow, not drop in from above (Stas, 2026-09-04).** Every CDK panel
-  carrying `ds-overlay-pane` enters with `ds-slide-in`: `_overlay-motion.scss` sets
-  `--_ds-enter-y: calc(-1 * var(--_overlay-enter-offset))`, so a panel below its trigger starts 4px
-  high and drops into place. Across selects, menus, popovers, tooltips and the pickers that reads as
-  a small jump from the top on everything at once. Wanted instead: scale plus opacity, no travel.
-  Most of the parts are already there — `ds-scale-in` exists in `_surface-motion.scss`, reads
-  `--_ds-enter-scale` (0.96), and `--_overlay-enter-origin` is ALREADY computed per placement
-  (`top center` / `bottom center` / `center left` / `center right`), so a scaled panel would still
-  grow out of its trigger edge. The change is the default keyframe name, one line.
-  Check before shipping it: the four panels that opt out of the shared enter (drawer, bottom-sheet,
-  alert, banner set their own `--_ds-enter-y`) must keep travelling — an edge panel that scales
-  instead of sliding reads as a glitch. And `prepareOverlayEnter()` stamps `data-ds-placement`
-  BEFORE attach specifically so a mid-scroll CDK flip redirects rather than restarts; a scale
-  entrance has to survive the same flip.
-
 - [ ] **[P2] Transitions are missing or wrong in places, and nothing says where (Stas, 2026-09-04).**
   Asked for as a sweep: add the ones that are absent, correct the ones that are wrong. Two mechanical
   traps are already known and should shape the sweep rather than be rediscovered. First, `transition`
@@ -254,13 +273,6 @@ Highest: each one is wrong in code — or in a surface — a consumer already re
   ON — see the reduced-motion item below for how a void run reads exactly like a working one.
 
 
-- [ ] **[P2] `.design-sync/upload/_ds_bundle.css` is frozen against a rule the library no longer
-  has.** `ddae60e0` regenerated it while `_focus.scss` still carried the resting transparent-outline
-  rule; `5be96212` replaced that whole mechanism with `animation: ds-focus-ring-in`. The frozen
-  bundle now contains one `solid transparent` outline rule and zero mentions of the keyframe, so the
-  cards render a focus mechanism that no longer exists. Owned by the design-sync pipeline, which
-  regenerates and freezes in CI (`bf949c62`) — do NOT regenerate the 410 files by hand in the shared
-  checkout, since committing them unfrozen has already been a real bug once.
 
 
 - [ ] **[P2] `_focus.scss`'s top-level CSS is copied into 33 component style strings.** Measured
@@ -329,10 +341,6 @@ and says nothing about the old one. Measured on three grounds: `presentations/fo
   read, which IS substituted per element. Both are real work, not a token edit.
 
 
-- [ ] **[P3] `ds-date-picker` takes the CONTROL focus role while being a text field.** Its `.trigger`
-  wraps a real masked `<input>`, and every other text field takes `--ds-field-focus-shadow`, so a date
-  beside an input in one row shows a crisp 4px ring next to a soft 3px halo. One resolver serves both
-  the trigger and the panel's buttons, so splitting them needs a second token.
 
 - [ ] **[P3] `--ds-multi-select-option-bg-color-active` is documented and dead.** The alias is
   re-declared on `.dropdown-panel`, a DESCENDANT of the pane where `_dropdown-overlay.scss` has
@@ -347,11 +355,6 @@ and says nothing about the old one. Measured on three grounds: `presentations/fo
   opposite in writing. Same class as the six tokens fixed in `c013e08c`.
 
 
-- [ ] **[P3] color-picker's selected swatch stops reading as selected while focused** — a regression
-  from `e9b0ef16` (2026-09-02), which adopted `outline-indicator` and with it `box-shadow: none`. The
-  preset button is empty, so selection is carried by the shadow ALONE in the visual channel:
-  `focus.state-shadow` must NOT be used here. Selection needs another channel — a check glyph, a
-  border — before the ring can take the shadow.
 
 - [ ] **[P3] Thirteen ds-docs forced-state pins misrepresent their component.** Three change pixels
   today: the dropzone pin invents a text colour from a token nothing else reads (itself a published
@@ -397,49 +400,9 @@ and says nothing about the old one. Measured on three grounds: `presentations/fo
   whole document every frame. Worth a note in the skeleton's docs page before it is worth code.
 
 
-- [ ] **[P2] The `labels` trigger collapses to one label regardless of free space, because the measurement reads a `fit-content` box that the cut itself narrows.** `:host(.compact-trigger)` sets `width: fit-content` (`multi-select.component.scss:36`), and `labels` renders a `#chipRow` of `data-chip` spans (`multi-select.component.html:61-83`), so `chipFit` measures `trigger.clientWidth` of a box whose width is decided by the chips it is about to cut. **This is the exact case `chip-overflow.ts:13` names as its INVARIANT** — "nothing here may measure something the cut itself changes". The `lastWidth`/`lastCount` guard stops it hanging, so the symptom is a wrong converged value rather than a frozen page: pass 1 measures the full width, cuts to N, the trigger shrinks, pass 2 cuts again, and it settles at one label plus "+N".
-
-  `width="fill"` does not avoid it: `:host(.content-width)` (`:29`) and `:host(.compact-trigger)` (`:36`) are an exact specificity tie and the compact rule is declared later, so the host is `fit-content` in every `labels` and `count` configuration.
-
-  **Three ways out, and the choice is a design call, not a cleanup:** (a) `labels` stops taking `compact-trigger`, which fixes the measurement and gives up the fixed footprint that is the mode's whole point; (b) `chipFit` measures the trigger's PARENT instead, which keeps the footprint but changes a primitive two components share; (c) `labels` is not a compact mode at all and gets its own host class. Shipped as-is in 0.11.1 with the defect: it under-shows labels, it does not misbehave otherwise.
-
-  Same class as the two self-referential loops recorded in `done.md` from the original chip work — the rule that came out of that one is the rule this broke.
-
-  **FIXED 2026-08-31, and by none of the three options above.** The measurement now reads the width
-  available — the trigger's PARENT content box — instead of the width occupied. The parent does not
-  move when chips do, so the feedback is gone by construction rather than worked around, the compact
-  footprint is kept, and `ds-autocomplete` gets the same correction for free since both go through
-  `chipFit`. For a `width="fill"` trigger the two numbers are identical, so nothing moves there.
-
-  **Measured rather than reasoned**, in a controlled repro of the geometry: dropping one chip at a
-  time, the old budget read 272 → 200 → 137 → 87 px — each cut shrinking its own input, which is what
-  settled the split at one label. The new budget read 700 px at every step.
 
 ## Four files style one portaled panel at equal specificity (recorded 2026-08-31, from the branch review)
 
-- [ ] **[P2] The dropdown panel is styled by `styles/_dropdown-overlay.scss` AND by three component stylesheets, and nothing decides which wins except the order the stylesheets happen to load.** The panel is portaled to `document.body`, so Angular's emulated encapsulation does not apply to it: all four rule sets land in one global cascade. `.ds-dropdown-panel .dropdown-panel` (0,2,0) from the partial and `.dropdown-panel[_ngcontent-…]` (0,2,0) from a component are an exact tie. Today the component wins because Angular appends component `<style>` after the global `<link>`; SSR critical-CSS inlining, or a consumer that `@use`s the partial from a stylesheet loaded later, flips it — and that same tie is the only thing keeping `--ds-autocomplete-panel-bg-color`, `-radius` and `-maxh` alive, which the release notes promise still work.
-
-  **The cause is duplication, not specificity.** `ds-select` declares nothing for the panel and is already correct. `ds-multi-select` and `ds-autocomplete` re-declare geometry the partial already sets — `background`, `border-radius`, `max-height`, `overflow`, `display: flex` — which is exactly what §3 of `docs/picker-contract.md` forbids, in the same release that wrote §3.
-
-  **The three ways out, in the order they were considered:**
-
-  1. **Qualify the component selectors** so they outrank the partial by specificity rather than by order — `.ds-dropdown-panel .dropdown-panel, .dropdown-panel { … }`. Shipped in 0.11.1 as the stop-gap. It is deterministic, and it is a patch: it makes the tie moot per selector instead of removing it, and the next panel rule someone writes will not have it.
-  2. **Geometry lives only in the partial; components forward alias tokens.** Each component declares `--ds-dropdown-panel-bg-color: var(--ds-multi-select-panel-bg-color, …)` on its host and forwards the SHARED token through `forwardOverlayTokens`, which already exists for this. The component stylesheet then keeps only what is genuinely its own markup — the filter row, the select-all rows, `.check-box`, `.option.multi` — and the tie disappears rather than being out-ranked. This is the shape `ds-select` is already in.
-  3. **`@layer` — MEASURED 2026-08-31, and it does NOT hold the way the idea assumes.** The two mechanical halves work: Angular lists `@layer` in `scopedAtRuleIdentifiers` (`@angular/compiler/fesm2022/compiler.mjs:6881`) so it descends into a layer block and scopes the selectors inside exactly as it does for `@media`, and esbuild's CSS minifier — the one this build uses, 0.27.3 — emits `@layer` unchanged.
-
-     **The failure is the order statement, and it is a real one.** Layer order is fixed by FIRST APPEARANCE, so a statement that arrives after a layer already exists cannot reorder it — it appends the names it does not yet know. Measured in Chrome with three sheets:
-
-     | Case | Setup | Result |
-     | --- | --- | --- |
-     | A | component sheet creates `ds.component`, order statement arrives later | **the partial wins** — `ds.panel` is appended AFTER `ds.component`, the opposite of what the statement reads |
-     | B | order statement first, then both sheets | the component wins — the intended, deterministic result |
-     | C | no layers (today) | whichever sheet loads later wins |
-
-     So `@layer` only buys determinism if `@layer ds.panel, ds.component;` is parsed before ANY component style. **This repo's own docs build breaks that:** `dist/ds-docs/browser/index.html` carries `data-beasties-container` and defers the real stylesheet with `media="print" onload="this.media='all'"`, so the global sheet — where such a statement would live — arrives after the inlined critical block. A library cannot guarantee the ordering from inside its own stylesheet; it would have to ask every consumer to put an inline `<style>@layer …;</style>` in `index.html` before anything else, which is an integration step, not a fix.
-
-     **Verdict: not worth it for the panel problem, which option 2 already solved by deleting the duplication.** Worth revisiting only if the library ever needs a stated precedence across MANY portaled nodes at once (`ds-modal`, `ds-drawer`, `ds-toast`, the date/time/colour pickers) — and then the consumer-side ordering requirement has to be part of the proposal, not a footnote.
-
-  **Where it landed:** 2 was done — the partial owns the geometry, the components only alias its tokens, and the qualifier from 1 was removed because there is no competing rule left to out-rank. 3 was measured and rejected for this problem, for the reason above. Nothing here is outstanding; the entry stays as the record of why the panel is shaped the way it is.
 
 ## Claude Design upload — what the freeze left open (recorded 2026-09-04)
 
@@ -537,42 +500,106 @@ documented thing or their chapter's demo only exists once opened. Everything bel
 
 # Asks — a consumer or Stas asked for it
 
+- [ ] **[P2] `ds-waterfall-chart` is `ds-cascade-chart` (Stas, 2026-09-23).** The English `waterfall`
+  is the field's standard word - Excel, Power BI, Tableau, Highcharts and ECharts all use it, with
+  `bridge` as the finance synonym - so this is a preference, not a correction, and it is his to make.
+  **What moves:** the selector, `WaterfallChartComponent`, `WaterfallChartBar`, `WaterfallChartDrop`
+  and the rest of the exported types, the entry point
+  `@ids-group-ltd/ids-design-system/components/waterfall-chart`, the `g[dsWaterfallMarks]` mark, the
+  `--ds-waterfall-chart-*` tokens, the internal `.waterfall-chart` class, the docs page and the
+  catalogue leaf.
+  **Migration:** a `selector-rename`, one `type-rename` per exported symbol, a `token-rename` for the
+  prefix and a `class-rename` for the internal class - the shape `donut-chart` to `pie-chart` used in
+  0.13.3, which is the worked example to copy. The old tag is an unknown element rather than an
+  error: Angular renders nothing and logs nothing outside strict schema mode, so a missed one is a
+  chart that silently vanished.
+
 Each has somebody behind it. Nothing here is speculative work.
+
+## What the 0.9.0 - 0.13.3 manifests did not tell a consumer (recorded 2026-09-22, from the mm-ecm consumer)
+
+Found while walking a consumer from 0.8.0 to 0.13.3, nineteen versions, one commit each. Every item
+cost a wrong edit that the version's own `migrations/<V>.json` could have prevented. All six closed
+2026-09-22; the section stays because two of them record a decision that will be asked about again.
+
+- [x] **[P2] `banner.announce` flips an accessibility default and no config key can restore it -
+  `DS_CONFIG.banner.announce` and `alert.announce` shipped.** The input reads `boolean | null` so
+  unset stays distinguishable, and `announceResolved()` is what the component's ARIA reads. The
+  0.11.4 item now says the audit has to enumerate rather than grep, and names the two shapes a
+  severity grep walks past: a banner in a non-first `@else if` branch, and one whose `variant` is a
+  computed expression. The new item carries `supersedes`, so a consumer walking the chain is not
+  told to do 43 per-element edits first.
+  **Not built: a dev-mode warning on an unannounced error banner.** It cannot tell a deliberate
+  opt-out from an oversight, and the config key removes the reason for the sweep that would have
+  wanted it.
+
+- [x] **[P2] A `surface: "style"` item never names the partial that carries it.** The rule is in
+  `migrations/AUTHORING.md` with its own checklist line: an item whose change ships in one of our
+  partials names that partial in `appliesWhen`, and its `verify` greps the BUILT CSS rather than
+  the consumer's source. 0.8.0's `focus-partial-needs-use-line` and 0.10.0's
+  `universal-focus-ring-base-rule` carry it now, and `README.md` says that `@use 'styles/ds'`
+  resolves against every include path in order, so a consumer file of the same name earlier on the
+  path wins and reads identically at the import site.
+  **Not done: retrofitting the other 127 style items.** A token rename lands in a stylesheet the
+  consumer wrote, so the partial question does not arise there; only a rule WE ship can fail to
+  arrive.
+
+- [x] **[P3] Only `ds-autocomplete` forwards `--ds-dropdown-panel-radius` - fixed at the cause.**
+  Neither picker needed a wider forward: `ds-autocomplete` and `ds-multi-select` declared the panel
+  radius and background WITH a fallback, so they always computed to a value and were always copied
+  onto the pane as an inline style, where they outranked the `.ds-overlay-pane` rule a consumer
+  writes. They read `var(--ds-<picker>-panel-*, initial)` now - unset until the picker's own hook is
+  set. Measured in a browser: with no hook the pane carries no inline radius or background and a
+  pane-class rule decides both; with the hook set it is pinned and wins.
+  **The gate learned the idiom (Stas, 2026-09-22).** `check-void-tokens` treats an `initial` or
+  `unset` fallback as the void it is - the declaration drops either way - and clears it only where a
+  `void-ok` comment on the same line says the drop is intended. Stripping a block comment keeps the
+  line count now, so the reported line and the marker lookup land on the author's line.
+
+- [x] **[P3] The picker panels unify at 0.11.1 and `panelClass` only arrives at 0.13.1.** 0.11.1's
+  `pitfall` says a retargeted rule widens to all three pickers, its `restore` gives the only
+  scoping available at that version, and its `note` points at 0.13.1 and says to mark the widened
+  rule until then. The deleteList row is narrowed: only the padding and row-radius compensation is
+  dead, and any brand chrome in the same rule is still load-bearing.
+
+- [x] **[P3] `select-option-list-caps-at-picker-maxh` prescribes something that cannot be done.**
+  The `action` is global-only now, `appliesWhen` says why no per-picker form exists at 0.11.2, and
+  the `pitfall` names both caps and which one governs the visible rows.
+  **Not built: forwarding `--picker-maxh` onto the pane.** `panelClass` already expresses a
+  per-picker list height, and `--picker-maxh` resolves at `:root`, so forwarding it unconditionally
+  would pin it inline on every open panel - the failure `ROLE_TOKENS` in
+  `src/lib/components/overlay-motion.ts` exists to avoid.
+
+- [x] **[P3] `deep-option-type-rule` sends a consumer to hooks that an inline forward outranks.**
+  The row now says where the four hooks must be set - on the picker element, never on the
+  `panelClass` - and that a value inherited into the host counts as the host's.
+  **Deliberately not fixed in code.** Measured 2026-09-22: `:root { --ds-option-font-size: 11px }`
+  beats `.ds-overlay-pane { --ds-option-font-size: 22px }`, because the host's computed value is
+  copied onto the pane. Guarding those thirteen tokens the way `ROLE_TOKENS` is guarded would
+  reverse a recorded decision - the comment above that loop says an ancestor's value is MEANT to
+  reach the panel through the component's own hook - and would break a consumer who themes a
+  subtree rather than the root.
+
+**The shape all six shared.** The release notes describe what changed in the package; a consumer
+needs to know what that means for code it already has - what still works, what silently stops
+working, what it must preserve by hand, and what to redo when the proper API lands one or two
+versions later. A migration that spans versions is worth saying out loud in BOTH manifests: at the
+first "this is temporary, mark it", at the later "here is the thing you marked".
 
 ## Charts and fields the ECM prototype could not use (recorded 2026-09-15, Stas: take all five)
 
-Ten hand-rolled charts moved onto DS components at 0.13.1. These five are what stopped the
-remaining four screens; each names the screen it blocks, so a fix has somewhere to be checked.
+All closed. Seven items, every one answered by v0.13.2 or by sending the question back; the section
+stays because each records what the shape was argued down to. Verified against the tag on
+2026-09-21: `segments`, `target`, `max`, `maxSecondary` and `drop` all resolve at `v0.13.2`.
 
-- [ ] **[P2] No component draws one bar whose segments are the parts of a whole — and it is a chart
-  type, so it wants a design pass before code (Stas 2026-09-15: generic, take it; not started).
-  CONFIRMED BLOCKING: the consumer answered that outcome distribution cannot ship without it, and
-  that nothing else on that page waits — so this item alone holds a screen.**
-  `BarChartRow` is `{ id?, label, value, percent?, color? }` — one value per row — and neither
-  `ds-bar-chart` nor `ds-column-chart` mentions a stack. `LineChartAxisMode`'s `'stacked'` is two
-  plots over a shared category axis, a different picture entirely.
-  **Blocks** the outcome distribution on `performance-overview`: one full-width bar whose segments
-  are the outcome categories, with a list beneath carrying each segment's label, code, count and
-  percent.
+- [x] **[P2] One bar whose segments are the parts of a whole — shipped as `BarChartRow.segments`
+  in v0.13.2.** `segments?: readonly BarChartSegment[]` widened the published row rather than
+  splitting the data model, and `partOfWhole` still gates whether a share of the total is a real
+  quantity. It carries the outcome distribution on the consumer's `performance-overview`.
 
-  **Four questions decide the shape, and answering them in code first is how this ends up wrong:**
-  - **A mode on `ds-bar-chart`, or its own component?** A stacked bar shares the axis and the
-    palette but not the row model, and `partOfWhole` already gates whether a share of the total is
-    a real quantity — a stack asserts it by construction.
-  - **What does a segment carry?** `BarChartRow.segments?: readonly BarChartSegment[]` widens a
-    PUBLISHED type, which is a `behavior` item for anyone reading a row back. A separate input
-    avoids that and splits the data model in two.
-  - **Legend and tooltip.** One legend over segment NAMES, not series — `ds-chart-legend` keys on a
-    series id today, and `isolate`/`hidden` mean something different when hiding a segment changes
-    the whole the others are parts of.
-  - **The annex table.** Every chart carries one; for a stack it has to name the segment, its value
-    and its share, which is the same table the consumer's screen draws beneath the bar anyway.
-
-- [ ] **[P2] `ds-progress` cannot show a target beside the fill.** Its inputs are `value`,
-  `variant`, `indeterminate`, `ariaLabel`; there is no second mark on the track.
-  **Blocks** the KPI cards on `performance-overview`, where the row exists to read actual against
-  target in one glance — without the mark the bar loses the comparison it is there for. Wanted: a
-  `target` input on the same scale, drawn as a hairline across the track. The smallest of the five.
+- [x] **[P2] `ds-progress` cannot show a target beside the fill — shipped as `target` in v0.13.2.**
+  `readonly target = input<number | null>(null)`, on the same scale as `value`, drawn as a hairline
+  across the track. It carries the KPI cards on `performance-overview`.
 
 - [x] **[P3] A second value per bar row — closed by asking instead of building (2026-09-15).** The
   ask wanted `12,400 → 456` in one row; two numbers with a bar encoding the ratio is a table, so the
@@ -597,92 +624,169 @@ remaining four screens; each names the screen it blocks, so a fix has somewhere 
   rather than boxed so it survives crossing the line, and `aria-hidden` because the annex table
   already carries every reading.
 
-- [ ] **[P2] `ds-line-chart` cannot be told its value-axis maximum, so two plots of the same measure
-  are not comparable (arrived 2026-09-15, after the first answer went out).** `yAxisMode` chooses how
-  the axes RELATE — `'rounded' | 'exact' | 'independent' | 'stacked'` — and none of them pins a
-  bound; `niceMax` derives one from the data on every render.
-  **What that costs, in the consumer's words:** a response-time panel is opened one agent at a time,
-  and an agent averaging 13 hrs renders on a 0–14 axis while one averaging 26 hrs renders on a 0–30
-  axis. The two plots look identical — the same gentle wiggle filling the same box — and nothing on
-  screen says the scales differ. Their hand-rolled chart pinned `chartYMax = 30` for exactly this.
-  **Wanted:** `min`/`max` on the value axis, per axis given `axis: 'secondary'` exists. A series
-  judged against a threshold keeps one frame across renders.
+- [x] **[P2] `ds-line-chart` cannot be told its value-axis maximum — shipped as `max` in v0.13.2,
+  with `maxSecondary` beside it.** `niceMax` derived a bound from the data on every render, so a
+  panel opened one agent at a time drew 13 hrs on a 0–14 axis and 26 hrs on a 0–30 axis with
+  nothing on screen saying the scales differed. A pinned `max` keeps one frame across renders.
 
-- [ ] **[P3] `ds-funnel-chart` states the drop as a share and never as a count (arrived 2026-09-15).**
-  `formattedDrop` is `formatPercent(drop, 1)` (`funnel-chart.component.ts:290`), so the Drop column
-  is always relative.
-  **Both readings are real and they answer different questions** — what fraction leaked here, versus
-  how many records that is. On a settlement waterfall the count is the one an operator acts on:
-  22,623 records is a re-targeting job, 41.8% is a talking point. The count is recoverable by
-  subtracting two rows, and the reader should not have to.
-  **Wanted:** a `drop` input — `'relative' | 'absolute' | 'none'` — or a second column carrying the
-  count beside the share.
+- [x] **[P3] `ds-funnel-chart` states the drop as a share and never as a count — shipped as the
+  `drop` input in v0.13.2.** `FunnelChartDrop` is `'relative' | 'absolute' | 'none'`. Both readings
+  answer different questions: what fraction leaked here, versus how many records that is. On a
+  settlement waterfall the count is the one an operator acts on.
 
-## Two column-chart gaps and a journey canvas the mm-ecm prototype could not use (recorded 2026-09-16)
+## An indeterminate bar that survives a short track (recorded 2026-09-22, from the mm-ecm consumer)
 
-Three more asks from the same consumer as the 2026-09-15 batch above, arrived the next day.
+- [ ] **[P3] An indeterminate `ds-bar` is never empty, or 86.7% is enough - one verdict left.**
+  **The cause shipped fixed.** It was the easing, not the geometry: the loop ran on
+  `--ease-standard`, a curve that decelerates into the end of a transition, and a repeat has no end,
+  so the chunk crawled at both extremes - which is exactly where it sits outside the track. Measured
+  in a browser by stepping the animation through one 1400ms cycle, 2000 samples: at least partly on
+  the track 48.3% of the cycle before, 86.7% after; fully on it 17.4% before, 46.8% after. The loop
+  is `linear` now, like the other three in the library, and `design-system.md` 5 carries the rule so
+  it cannot come back.
+  **What is left is a taste call, not a defect.** The chunk still leaves the track entirely for
+  13.3% of the cycle. That is a travelling chunk behaving as designed; it is not the consumer's bar,
+  which covers 100% of the track every frame and therefore cannot read as empty at any width.
+  **The consumer hit this and fixed it before we shipped anything**, which is why their bar is the
+  one place they did not adopt `ds-progress`: `node-card.component.scss` in mm-ecm draws a
+  full-width fill whose `repeating-linear-gradient` scrolls exactly one tile per cycle, and its
+  comment records the reason - "the track is 100% covered every frame and the loop is seamless, so
+  it can NEVER empty or slide off-screen (the root-cause fix for the original invisible bar). No
+  transform, no narrow translated chunk."
+  **What that costs us:** adopting `ds-progress` there would reinstate the defect, and the only way
+  to keep their behaviour is a rule on our `> span`, so the swap would trade a hand-rolled bar for a
+  hand-rolled bar PLUS a reach into the component. Every other track they had is now `ds-progress`;
+  this is the single hold-out.
+  **Wanted:** a verdict between three - leave it at the travelling chunk, make the scrolling stripe
+  the indeterminate default, or put the stripe behind an input so a narrow track can pick it. The
+  prior art is small and is in their `node-card.component.scss` under
+  `.card__track.is-indeterminate .card__bar`.
 
-- [ ] **[P3] `ds-column-chart` cannot say "these columns are one series", so a time series renders
-  as N unrelated categories.** The rule is documented rather than accidental -
-  `ColumnChartPoint.color`: "Columns take the categorical palette by position"
-  (`src/lib/components/column-chart/column-chart.types.ts`) - and `data` is a flat
-  `ColumnChartPoint[]`, so there is exactly one series and no way to declare what it MEANS. Plot
-  twelve months of one count and the chart paints twelve saturated hues; the accent a consumer sets
-  on the current period then reads as a thirteenth colour rather than as emphasis, because it has
-  ten equally loud neighbours.
-  **The asymmetry is the tell, and it is in the two doc-strings:** a `BarChartRow` left without a
-  colour shares the series colour - "The rows are one series, so they share one colour by default" -
-  so the SAME unset field means opposite things on the two charts, and a consumer who migrates a bar
-  and a column the same way gets one right and one wrong. It cost this consumer exactly that: the
-  column migration shipped and the mistake was caught later, from a screenshot, not from the build
-  or a grep.
-  **Workaround in place today:** every point takes `color: 'var(--ds-chart-series-default-color)'`
-  except the accented one (mm-ecm-platform-kb:
-  `prototype/projects/ecm-portal/src/app/features/analyse/pages/microsite-detail/microsite-detail.page.ts`).
-  Three lines, and it works - but it means a time series cannot be plotted without hand-colouring
-  every point.
-  **Ask:** a declared mode on the chart saying the columns are one quantity through a period rather
-  than N categories. `partOfWhole` is the precedent for the shape - a property OF the data, stated
-  once, that changes how the chart reads it. Screenshots, same chart:
-  `presentations/column-chart-single-series.png` (after the workaround) beside
-  `presentations/bar-chart-one-series.png` (a bar chart getting it right from the same unset field).
+## Two chart names that collide (recorded 2026-09-21, from the mm-ecm consumer)
 
-- [ ] **[P3] `ds-column-chart` has no `segments`, so a stacked column is not expressible.** 0.13.2
-  gave `BarChartRow` a `segments` array and gave `ColumnChartPoint` none, so parts-of-a-whole works
-  horizontally and not vertically. The case that leaves out is the common one: a stack over TIME -
-  monthly sends split by channel, monthly outcomes split by offer - which is a column chart by
-  nature, since the category axis is a period.
-  This consumer used the new bar segments the day they shipped, for a single 100% distribution
-  (`presentations/bar-chart-segments.png`, source mm-ecm-platform-kb:
-  `prototype/projects/ecm-portal/src/app/features/analyse/pages/performance-overview/performance-overview.page.ts`,
-  `outcomeRow`), and the next thing the same screen wants is that distribution PER MONTH. There is
-  no route to it today: `ColumnChartPoint` holds one `value`, and `data` holds one series.
-  **Ask:** `segments` on `ColumnChartPoint` with the same contract the bar row already has - parts
-  sized against their own sum, the categorical palette in order, each part its own annex-table row.
-  Same shape, same legend question, and the bar's implementation is the template to follow rather
-  than a second design.
+Both found while planning that consumer's move to 0.13.3. Neither blocks it; both cost a reader.
+
+- [ ] **[P2] `ds-bar` is a prefix of `ds-bar-chart`, and the token surfaces overlap the same way.**
+  0.13.3 merged `ds-progress` and `ds-meter` into `ds-bar`, and the CHANGELOG entry announcing it
+  has to carry its own warning: "`ds-bar-chart` is a different component and is NOT renamed. `ds-bar`
+  is a prefix of it, so a find-and-replace without a word boundary will corrupt every chart in the
+  app." The tokens repeat the trap — three pairs differ only by the word `chart`:
+  `--ds-bar-track-color` against `--ds-bar-chart-track-color`, `--ds-bar-target-color` against
+  `--ds-bar-chart-target-color`, `--ds-bar-target-width` against `--ds-bar-chart-target-width`.
+  A missed token rename reports nothing and the bar simply returns to its default look, which is the
+  failure this collision makes likely rather than merely possible.
+  **Wanted:** a name that cannot prefix a chart's, and that does not re-pin the component to
+  progress or to meter - the merge dropped both words deliberately, and `semantics` is what carries
+  that meaning now. Measured 2026-09-22: of 21 prefix pairs among 99 selectors this is the only one
+  where the two components are unrelated; the other 20 are parent and child of one family.
+  Candidates drawn in deck `11-ds-bar-name-collision`, which recommends `ds-gauge`.
+
+- [ ] **[P3] Extract what bar and column SHARE; their contracts stay different (Stas, 2026-09-22).**
+  **The two are different charts and are not merged.** Neither grows the other's data model: a bar
+  row is one label and one value with an optional `segments` breakdown, a column series is N marks
+  across categories with `stack` deciding how they share a band
+  (`column-chart.component.ts:161`, `'none' | 'grouped' | 'stacked' | 'normalized'`). The phase-1
+  spec calling them twins is what made the divergence read as an accident; it is not one.
+  **What the verdict asks for is the layer underneath.** Whatever both implement is extracted into a
+  shared module, reused by both, and given a way to be EXTENDED where one of them needs to differ -
+  so a chart adapts rather than forks. Whatever is unique to one stays unique to that one.
+  **Two divergences are visible to a consumer and are documented rather than removed:** stacking
+  arrives in the datum on one side and in an input on the other, and the same flat array is one
+  series in the bar, where every row takes `--ds-chart-series-default-color`, against N categories
+  in the column, where each mark takes its own palette slot (`bar-chart.component.ts:368` against
+  `column-chart.component.ts:314`). Both drawn in deck `bar-column-contracts`.
+
+## A journey canvas the mm-ecm prototype could not use (recorded 2026-09-16)
+
+One ask left from that batch. The two column-chart gaps beside it shipped in v0.13.3:
+`data` takes a `ColumnChartSeries[]` whose series carries one colour for all its marks, and
+`stack` covers grouped, stacked and normalized.
 
 - [ ] **[P3] Journey / flow diagram - no component draws a branching node-and-edge canvas.** Nodes
   carrying a kind, branching edges carrying a label and a count, and a per-node run state. Nothing
-  in the library draws one: bar, column, donut, funnel, line, meter, progress all plot QUANTITIES,
+  in the library draws one: bar, column, pie, funnel, line, meter, progress all plot QUANTITIES,
   and `ds-tree` is a hierarchy view rather than a canvas. The consumer built its own and renders it
-  on FOUR screens - `execute/active-journeys`, `execute/dashboard`, the campaign `journey` tab and
-  `prepare/offer-journey/builder` - which is not decoration: the campaign journey is what that
-  product is FOR.
+  on NINE screens - `execute/active-journeys`, `execute/dashboard`,
+  `prepare/offer-journey/builder` and the `journey` tab of all six campaigns - which is not
+  decoration: the campaign journey is what that product is FOR. Counted 2026-09-21 by loading all
+  71 ecm-portal screens plus all 5 agent-portal screens and reading the rendered DOM.
+  **It collides with a written non-goal, and that is the thing to settle.** The phase-2 chart spec
+  rules the family out by name - "no map, network, 3D, radar, rose, word cloud, candlestick. Wrong
+  audience, wrong renderer, or a known bad read." A branching journey is the one shape in that list
+  a consumer here actually ships, so either that line takes an exception or the answer is an
+  explicit no.
   **What it has to hold, read off the working implementation** (mm-ecm-platform-kb:
-  `prototype/projects/ecm-portal/src/app/features/programs/components/journey-canvas/`, 8
-  components across 19 files): a node kind that colours and labels its card (start, email, letter,
+  `prototype/projects/ecm-portal/src/app/features/programs/components/journey-canvas/`, 6
+  components across 20 files, 2 353 lines): a node kind that colours and labels its card (start, email, letter,
   wait, condition, end), an edge that carries a label and a count (`Yes · 0` / `No · 0`), a
   condition that fans to two columns and rejoins, an insert affordance sitting ON an edge, and a
-  progress row per node while a run is live. Screenshot of a real one:
-  `presentations/journey-canvas-running.png`.
+  progress row per node while a run is live.
   **NOT asking for a builder.** Drag-and-drop, the node editor and the add menu are consumer
   concerns and should stay there. The ask is the CANVAS: take a node list and an edge list, lay them
   out, draw the edges with their markers and labels, and emit a click. The prior art is small and
   readable - `edge-overlay.component.ts` (`pathFor`, one `<marker>`, three edge classes) and
-  `layout.ts` - so the question to settle first is whether this belongs in a component library at
-  all, or whether the honest answer is "bring your own canvas, here are the tokens". Either verdict
-  is useful; silence is not.
+  `layout.ts`.
+  **PARKED 2026-09-22 by Stas: wait for a second consumer.** One product shipping a shape is not
+  demand for it, and the node kinds, the edge count and the per-node run state are campaign
+  semantics rather than a rendering primitive. The phase-2 non-goal stands until someone else asks.
+
+## The eleven styling hooks one consumer reached past the surface for (recorded 2026-09-21)
+
+Measured in mm-ecm-platform-kb, which has no inert token pin: **156 `--ds-*` referenced, 0 that
+resolve to nothing.** (One chart there is still hand-rolled, a stacked share bar predating
+`segments`, but it reaches into nothing of ours and does not change this count.) What it cannot
+express through the public surface is styling, and it is all in one shape - a rule that doubles a
+class (`.segment.segment`) purely to out-specify our compiled `.segment[_ngcontent-*]`. **25 such
+rules across 2 files**, plus one `!important` and two plain reaches, and every one names a property
+the component tokenises everything around but not itself.
+
+Counted with a script over every `.scss` under `projects/`, matching `/\.([a-z][a-z0-9-]*)\.\1/` in a
+selector. A first count of 72 was wrong and is not the figure: it matched the app's own `.panel`,
+`.table` and `.label` too. The doubled class is the reliable marker because nobody writes one for
+their own stylesheet.
+
+**Eight shipped as hooks between 2026-09-21 and 2026-09-22**, verified against the resolver blocks
+on 2026-09-22: checkbox (`--ds-checkbox-label-font-weight`, `-row-align`, `-gap`,
+`-message-indent`), the option row and the empty line (`--ds-option-color`,
+`--ds-dropdown-empty-color`, `-font-size`), tabs (`--ds-tabs-gap`, `--ds-tab-label-font-size`,
+`--ds-tab-padding-top` / `-bottom`, `--ds-tabs-panel-padding-top`), description-item (five term
+properties plus `--ds-description-item-details-font-size` / `-font-weight`), segmented
+(`--ds-segmented-segment-border`, `--ds-segmented-label-font-size`, and a group radius that rounds
+the ends only), table (`--ds-table-head-padding-top` / `-bottom`), badge
+(`--ds-badge-letter-spacing`) and button (`align="between"`).
+
+Three stay written down: one with an open action, and two answered by API that already existed,
+because both are the kind of ask that comes back.
+
+- [x] **[P3] `ds-menu-item` - every hook the ask wanted already shipped, and the consumer confirmed it.** Verified against `a1ff1f49`, the commit that recorded the ask: `--ds-menu-item-pad-x` / `-pad-y` carried the padding, `--ds-menu-item-label-weight` the weight, and a quiet row had both an input and a hook of its own - `quiet` renders `.quiet`, coloured by `--ds-menu-item-quiet-label-color`; `error` does the same for a destructive row. The two token names were the abbreviations `b3e0cace` spelled out, which is the cause the other asks had too: unguessable from the CSS property.
+
+  The consumer's rule, `mm-ecm-platform-kb` `prototype/projects/agent-portal/src/styles.scss`, written by Mikhail Shyshla on 2026-07-31 in `35ed3969`:
+
+  ```scss
+  .ds-overlay-pane ds-menu {
+    .menu-item.menu-item { padding: var(--rp-sp-11) var(--rp-sp-18); font-weight: var(--rp-fw-400); }
+    ds-menu-item.is-quiet .menu-item.menu-item { color: var(--rp-mute); }
+  }
+  ```
+
+  `is-quiet` is their own class, not our `quiet` input, and the colour goes on the inner element rather than through the token that exists for that row.
+
+  **The per-item override works, measured 2026-09-22.** A page reproducing the resolver shape - `ds-menu-item { --_label: var(--ds-menu-item-label-color, …) }`, the token set on an ancestor `ds-menu` and again on `ds-menu-item.is-quiet` - resolves `navy` on an ordinary item and `darkorange` on the quiet one. A declaration on the element beats one inherited into it, so the premise that the token "cannot be set per item" does not hold.
+
+  **Closed 2026-09-22, confirmed on their build.** They applied `--ds-menu-item-pad-x` / `-pad-y`, `--ds-menu-item-label-weight` and a per-item `--ds-menu-item-label-color`, and both doubled-class rules are gone. The label colour resolves on the ITEM host, so a declaration on one item beats the menu's. They keep their own `is-quiet` class rather than the `quiet` input, which the token route serves either way.
+
+- [x] **[P3] `ds-autocomplete` cannot pad its input past an overlaid search glyph - answered by the
+  prefix slot, not a padding token.** `[dsAutocompletePrefix]` projects into an in-flow
+  `.addon-slot` that pushes the input itself, so the glyph never needs to be laid over the field
+  and the padding never needs to be guessed. A `--ds-autocomplete-input-padding-inline-start`
+  would bless the overlay and then have to track its width forever. `showChevron` and
+  `--ds-autocomplete-input-font-size` shipped.
+
+- [x] **[P3] `ds-pagination` controls with bigger hit targets - answered by `size`, not a token.**
+  `size` takes `'sm' | 'md' | 'lg'` and drives the control height and the label's type scale
+  together. A `--ds-pagination-button-size` beside it would be a second way to say one thing, and
+  the two would drift the first time one is set without the other. The label's `letter-spacing`,
+  `text-transform` and the `layout` input all shipped.
 
 ## Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)
 
@@ -725,41 +829,6 @@ the service was just the one somebody noticed. Full table and every tested hypot
 `packaging-diagnosis.md`.
 
 
-- [ ] **[P2] A1 - build the seam and ONE directive, and measure what the seam itself costs.** The
-  ablation gives a **floor of 12.1 KB**, but the seam is not free: template slots, the empty
-  composition, the service. Real landing is somewhere between 12.1 and 31.4 KB, and A1 says where -
-  before we commit to five directives. Start with `DsTableExport`: no markup in the header, no shared
-  width logic, just a status contribution and a public method. **Fresh branch from `dev`**, not a
-  continuation of `probe/table-feature-directives`: that ablation was deliberately crude (it simplified
-  `filteredData`, deleted shared helpers) and those simplifications must not be inherited. Keep it as
-  the reference for what has to move, and as the size target.
-
-  **The seam, designed 2026-09-01.** All four collisions the ablation hit are one pattern: *the table
-  owns a derived value and an optional feature wants to contribute an input to that derivation.*
-  `clipWidth`/`fitsContent` serve truncate AND resize; `orderedColumns`/`visibleColumns` are the
-  computed chain the picker writes to; `filteredData` folds set filters into the substring search;
-  `statusMessage` folds export state into the live region. So the seam is a **contribution registry**,
-  not a method move - a per-instance internal service the table provides and the directives inject:
-
-  ```ts
-  @Injectable() // providers: [DsTableLayout] on the table itself
-  export class DsTableLayout<T> {
-    readonly columnTransforms = signal<readonly ColumnTransform<T>[]>([]); // order, visibility, width
-    readonly rowFilters = signal<readonly RowFilter<T>[]>([]);
-    readonly statusParts = signal<readonly Signal<string | null>[]>([]);
-    readonly headerAdornments = signal<readonly HeaderAdornment[]>([]);
-  }
-  ```
-
-  `visibleColumns` becomes `columns()` piped through `columnTransforms()` - empty means identity, which
-  is exactly the ablated behaviour that already compiles and measures at 12.1 KB. `filteredData`
-  composes `rowFilters()`; `statusMessage` joins `statusParts()`. Width resolution moves into the seam
-  as one `resolvedWidth(col)` the table always calls, so neither resize nor truncate owns it. **The
-  table never names a feature** - no `if (resizable)` anywhere. **Two genuinely hard bits:** (1) a
-  directive cannot inject markup, and the filter button, resize handle and picker popover ARE markup -
-  the table keeps tiny `@if (headerAdornments().length)` slots rendering an `ng-template` the directive
-  supplies, and the residual slot cost has to be MEASURED, not assumed; (2) `clipWidth`/`fitsContent`
-  are only untangled by the width move above.
 
 - [ ] **[P3] A2 - the remaining directives, after A1 prices the seam.** `DsTableResizable`,
   `DsTableReorderable` (with the picker and the `@angular/cdk/drag-drop` import),
@@ -801,76 +870,6 @@ the service was just the one somebody noticed. Full table and every tested hypot
   the same feature.
 
 
-- [ ] **[P2] A3+ — the top layer MUST be per-component, measured 2026-09-01, not a preference.**
-  A single `components` entry helps only a consumer whose eager root touches nothing outside `core` and
-  `services`. An eager **app shell** does touch the component layer — that is what `ds-app-layout`,
-  `ds-sidenav` and `ds-topbar` are FOR — and one `components` entry then pulls the whole retained
-  component layer back into the initial bundle. Fixture at `.claude/local/granularity-probe/`, same
-  payload both shapes, consumed through the root facade, eager `alpha` + lazy routes using `beta` and
-  `gamma`:
-
-  | Library shape | Initial | beta (lazy) | gamma (lazy) | Lazy chunks |
-  | --- | --- | --- | --- | --- |
-  | one `components` entry | 178 538 B | **500 markers** | **500** | 101 B, 101 B — stubs |
-  | one entry per component | **125 651 B** | **0** | **0** | 26 819 B, 26 318 B — real |
-
-  **-52 887 B, -30%** on a fixture where the eager component is a third of the payload; a real shell is
-  a handful of components out of 55, so the ratio is far more lopsided. Angular Material publishes one
-  entry point per component for exactly this reason, and the APF rule is «entrypoints for the smallest
-  sets of logically connected code possible»; `@angular/cdk` does the same and we already consume it
-  that way (`overlay`, `portal`, `drag-drop` are three specifiers).
-
-  **SIZED 2026-09-01, and per-component is NOT the expensive option.** ng-packagr requires a
-  cross-entry import to go through the public specifier, and `src/lib` holds **318 cross-group import
-  statements** today (250 runtime + 70 type-only; `node tools/entry-point-graph.mjs` reports 320
-  counting the two `export … from` crossings, and 319/76 groups after A3-pre). Rewrites needed: **per-component 318, six semantic
-  clusters 265, three layers 257** — only **19%** apart, because most cross-group imports point at
-  core-ish modules (`icons`, `core`, `field-message`) that cross a boundary under any partition. Coarse
-  clustering therefore saves almost nothing on the refactor and gives up the whole eager/lazy win.
-
-  **And semantic clustering is structurally worse.** A six-cluster attempt has a real cycle
-  `data -> fields -> display -> data`: `pagination -> select`, `autocomplete -> tag`,
-  `multi-select -> tag`/`badge`, `empty-state -> loading-overlay`. Every edge is a legitimate
-  composition — components do not respect semantic categories — and ng-packagr forbids cycles
-  between entry points, so any clustering must be de-cycled first. Per-component has only the two
-  trivial sibling cycles. **Verdict: go per-component.**
-
-  **Re-validated 2026-09-02 after a challenge, and the rejection got stronger.** The first argument was
-  weak — it rested on ONE attempted clustering having a cycle, which proves nothing about clustering in
-  general. So the question was asked properly: make that clustering acyclic and see what it becomes. A
-  cluster graph is made acyclic by merging its strongly-connected components, and `data`, `fields`,
-  `display` and `shell` all merge:
-
-  | cluster after merging | groups |
-  | --- | --- |
-  | `data+display+fields+shell` | **60** |
-  | `core` | 15 |
-  | `services` | 2 |
-
-  **Six semantic clusters collapse to three, and one of them holds 60 of the 77 groups.** That is the
-  three-layer partition again, which is already measured as delivering roughly nothing for an
-  eager-shell consumer. A lazy route using `ds-table` would drag **59 sibling groups** with it.
-
-  The cause is that the cycle is made of real edges — `pagination -> select`, `autocomplete -> tag`,
-  `multi-select -> badge`, `empty-state -> loading-overlay`. Components compose across semantic
-  categories, so the categories do not match the dependency structure. It is not that this particular
-  clustering was badly chosen; it is that clustering by meaning does not survive contact with the graph.
-
-  **A missed rewrite fails the build with a useless message, tested:** swapping one public specifier for
-  a relative path across a boundary gives `Cannot destructure property 'pos' of
-  'file.referencedFiles[index]' as it is undefined`, with nothing naming the cause. The good news is it
-  FAILS rather than silently bundling the same source into two FESMs, which would give two class
-  identities and DI resolving two different services. Restoring the specifier builds again — causal
-  link confirmed by control.
-
-  **Cost checklist:** ~75 nested `ng-package.json` (2 lines each) + a `public-api.ts` per folder; 318
-  import rewrites; root `public-api.ts` becomes a pure facade (measured twice as costing consumers
-  nothing); `ds-docs` needs a tsconfig path mapping per entry point since it compiles from source; check
-  `extract-component-api.mjs`, `extract-tokens.mjs`, `class-surface-diff.mjs` and `changelog-lint.mjs`
-  against the new layout; co-locate the two sibling cycles. Secondary entry points are NOT deprecated
-  (ng-packagr `docs/secondary-entrypoints.md` on `main`; the "Feb 2026 guide" once cited alongside it
-  is withdrawn — never named, never linked). Full analysis:
-  `packaging-diagnosis.md` « Do we have to split? ».
 
 
 - [ ] **[P3] Make the PORTALED overlay stylesheets opt-in — ~1.6 KB gzip, and that is the whole prize.**
@@ -1000,13 +999,6 @@ A0 first, which touches none of it, or wait for that lane to land.
   **Points to settle when it is designed:** how the split is addressed (per component, per area, or per question); what stays in the root files as the always-loaded core; how a link is expressed so it survives both a generator and a human reader; how the index and the edges stay correct as components are added; and what the package ships versus what stays in-repo.
   **Precedent already in the repo:** `tools/extract-tokens.mjs`, `tools/extract-component-api.mjs` and `tools/split-agent-catalogue.mjs` all generate documentation from source at prebuild, each with a `--check` gate. Whatever architecture is chosen should be generated the same way wherever it can be, so it cannot drift.
 
-- [ ] **[P2] There is no page-level design approach an agent can follow — only per-token and per-component rules (Stas, 2026-09-01).** `design-system.md` covers spacing, type, size, colour, motion, content and overrides, and it answers "what value do I use" well. It does not answer **"where does this go on the page"**, which is the whole question when an agent is prototyping a screen rather than styling one control. Concretely missing:
-  - **Corner radii have no rule at all.** The only mention in `design-system.md` is line 304, in passing, about radius travelling as a ROLE when a host overrides it. Nothing says which radius belongs to which surface class, or how radii nest (an inner element inside a rounded container).
-  - **No composition guidance.** Where the page heading sits, where primary vs secondary actions go, when content belongs in a card and when it does not, where filters live relative to the data they filter, where supporting information goes.
-  - **No pattern catalogue.** Which page patterns the DS actually supports (list + filters, detail, form, dashboard, empty/error), what each is made of, and how to tell which one a given screen is.
-  - **No method for measuring a pattern** — how to check a composition against the grid and the spacing scale instead of eyeballing it.
-  The deliverable is a file an agent reads before it lays out a screen, in the same voice as `design-system.md`: rules with reasons, not a style tour. It ships in the package (`tools/build-schematics.mjs` copies the root `.md` files into `dist/ds`), so it reaches consumers' agents too.
-  **One item in the dictated list needs confirming before it is written up:** "где должен быть фильм" is almost certainly a speech-to-text slip for **фильтр** (filter) — that reading fits the surrounding list of buttons/cards/information/heading. Confirm before treating it as a real requirement.
 
 ## Component feature gaps
 
@@ -1022,15 +1014,14 @@ A0 first, which touches none of it, or wait for that lane to land.
 - [ ] **[P3] `DS_CONFIG` prototype mode — `prototype: true` (Mikhail's original framing, endorsed by Stas 2026-09-01: «ds config тоже можно. как я и говорю prototype: true»).** One flag in the existing `DS_CONFIG` that puts the whole library in prototype mode instead of asking a consumer to pick a package. **The honest caveat, and it must be settled before this is built:** a runtime config flag CANNOT reduce the bundle — the code for the features it disables is still imported and still ships, so `prototype: true` buys behaviour, not bytes. Only the directive split above removes bytes. So decide what the flag is actually FOR: (a) turning off advanced affordances so a prototype's UI stays simple and demo-able — a real and useful thing, unrelated to size; (b) build-time dead-code elimination, which would need it to be a compile-time constant a bundler can fold, not a DI value. Do not ship (a) while implying it does (b). `DS_CONFIG` already resolves per-component defaults via `resolveWithConfig`, so (a) is a small build.
 
 
-- [ ] **[P3] `todo.md`'s one-line index no longer accounts for its body, and the gap cannot be attributed by eye.** Measured 2026-09-02: 44 index lines against 66 open body items. Some of that is legitimate — the Decisions, Parked and Records blocks summarise rather than mirror — so the raw difference is NOT the orphan count, and a quick substring matcher written to find them flagged all 55, which is proof the naive approach does not work rather than a finding. What is needed is a per-section reconciliation: decide which sections mirror 1:1 and which summarise, then check only the mirroring ones, and ideally leave behind a script so the next drift is mechanical to spot. Two sessions were editing this file within the same hour when the gap was measured, so do it when the file is quiet.
 
-- [ ] **[P3] A token named in prose is not checked against the tokens that exist, and the same fact lives in two copies.** `--static-white` was removed at 0.5.1 and was still advertised in `src/lib/themes/README.md` AND in `ds-docs`' theming page months later; both are fixed, but nothing stops the next one. Two mechanisms would: (a) a gate that extracts every `--token` mentioned in prose (`*.md`, the ds-docs section templates) and fails on any that no longer resolves in `_base-palette.scss` / `_semantic.scss` / `_tokens.scss`, with an allowlist for text that is deliberately historical — `docs/done.md` and the migration manifests must keep naming what they removed; (b) pairing the two copies, since a repo doc and its ds-docs page carry the same facts and drifted independently twice in one day. Sequence (a) first: it is mechanical and catches the class, while (b) is a restructure.
+- [ ] **[P3] A token named in prose is not checked against the tokens that exist, and the same fact lives in two copies.** `--static-white` was removed at 0.5.1 and was still advertised in `src/lib/themes/README.md` AND in `ds-docs`' theming page months later; both are fixed, but nothing stops the next one. Two mechanisms would: (a) a gate that extracts every `--token` mentioned in prose (`*.md`, the ds-docs section templates) and fails on any that no longer resolves in `_base-palette.scss` / `_semantic.scss` / `_tokens.scss`, with an allowlist for text that is deliberately historical — `docs/done.md` and the migration manifests must keep naming what they removed; (b) pairing the two copies, since a repo doc and its ds-docs page carry the same facts and drifted independently twice in one day. Sequence (a) first: it is mechanical and catches the class, while (b) is a restructure. The manifests are already covered and are not part of (a): `check-manifest-truth` fails a `--ds-*` name in manifest prose that exists at neither boundary tag, and its `phantomTokens` plus `DELIBERATE_PHANTOMS` allowlist is the shape to copy for the `*.md` half.
 
 - [ ] **[P3] Three edges left open on `ds-table` row expansion and the resize handle, each a judgement call rather than a defect.** (a) On a page with no rows the expand-all chevron still renders and its label reads "Expand all rows", while clicking it does nothing — the handler early-returns. This is an exact clone of what the select-all checkbox next to it does on an empty page, so it was left for symmetry; breaking the symmetry needs a disabled state on `.expand-btn`, which the shared icon-button chrome has no styling for. (b) Under `lazy` (no `pageSize`, `total` set) `expandAllLabel` omits " on this page" because it keys on `pageSize()`, while expand-all only reaches the rows that have arrived. Inside the already-declared-unsupported `virtualScroll` + `expandableRows` combination. (c) The expander column's `<th>` had no accessible name and now takes one from the expand-all button — which FLIPS between "Expand all rows" and "Collapse all rows", so in table-navigation mode every body cell in that column inherits a changing column name. The `select-col` `<th>` sets the precedent of naming itself from its control, but with a STABLE name. Fixing it means an `aria-label` on the `<th>` naming the column, which is a pattern the component does not use anywhere else.
 
 - [ ] **[P3] `ds-number-stepper` — optional numeric formatting (locale / currency / decimals / grouping), ref https://primeng.dev/inputnumber.** Today it's a raw `value: number` + `min`/`max`/`step` + spinner, no display formatting. PrimeNG InputNumber's value-add is a formatted numeric field: thousands grouping, fixed decimals, currency/percent, locale-aware, parsed back to a number on edit. Add opt-in `mode` (decimal/currency/percent) + `locale`/`currency`/`minFractionDigits`/`maxFractionDigits`/`useGrouping`; format on display/blur, parse on focus/input. Masking prior art in-house: [[reference-masked-input-dom-writeback]] (pinkmoon phone/w3w imperative `element.value` write-back). No active request — likely pulled by the financial-admin consumers (mm-broker admin, pinkmoon amounts/rates/%); gate on the first such form. **GATE HELD 2026-08-25 (Stas), asked explicitly.**
 
-- [ ] **[P3] Forms — `ds-select` native `multi` — RESEARCHED 2026-08-06; Stas: keep it in the backlog with the deck attached (not built, not closed).** Deck: `presentations/5-select-native-multi.html` — three variants live, comparison matrix and sources; it is the prepared answer if a consumer ever pulls on this. Native `<select multiple>` is not a cheaper spelling of the same control, it is a documented antipattern: multi-selection is reachable only through Ctrl/Cmd- or Shift-click with nothing in the control announcing it, an unmodified click **discards the entire prior selection**, non-adjacent options cannot be selected from the keyboard at all, and screen readers handle it worse than a single `<select>`. The consensus alternative is a checkbox list — which is exactly what `ds-multi-select` already is.
+- [ ] **[P3] Forms — `ds-select` native `multi` — RESEARCHED 2026-08-06; Stas: keep it in the backlog with the deck attached (not built, not closed).** Deck `select-native-multi` — three variants live, comparison matrix and sources; it is the prepared answer if a consumer ever pulls on this. Native `<select multiple>` is not a cheaper spelling of the same control, it is a documented antipattern: multi-selection is reachable only through Ctrl/Cmd- or Shift-click with nothing in the control announcing it, an unmodified click **discards the entire prior selection**, non-adjacent options cannot be selected from the keyboard at all, and screen readers handle it worse than a single `<select>`. The consensus alternative is a checkbox list — which is exactly what `ds-multi-select` already is.
   **The soft version of the ask does not survive either:** the moment a hypothetical `ds-select multi` is made usable it has to open a checkbox list, i.e. it becomes `ds-multi-select`, and the only genuine difference left is chips-in-trigger vs an "N selected" summary. If a consumer ever wants the compact trigger, the honest answer is an input (`[triggerDisplay]="'summary'"`) on the existing component, not a second component and a fork in the docs. The one case where nativeness would really matter — a plain HTTP form POST with no JS — is solved by a hidden `<select multiple>` inside `ds-multi-select`, not by changing the UI.
 
 ### Found while porting the design-sync React bindings (2026-07-28, re-verified 2026-09-01)
@@ -1050,7 +1041,6 @@ Three defects the port surfaced by reading every component's template + SCSS aga
   either a rule exemption for inline `<code>` or a CSS-level one; either way it is a single change for the
   whole site. Low priority — it is one space — but it is in every paragraph that names a token.
 
-- [ ] **[P3] Sidebar nav labels reflow while the rail animates, the way the brand text used to (recorded 2026-08-12, from the collapse-animation work).** The brand block was fixed by pinning its layout — `white-space: nowrap` plus `overflow: clip` on `.brand` — so it is clipped rather than re-wrapped on every frame of the width transition; measured 31px tall at every width afterwards, against 31px at 280 and 60px at anything under 240 before. The nav links were left alone and still wrap: at a mid-transition width of 150px, `Buttons · group & segmented` breaks onto three lines and unwraps again when the rail settles. Same defect class, same one-line fix — `nowrap` on `.link` and a clip on the scrolling container. **ANSWERED 2026-09-01 (Stas): clipped, not wrapped.** Applied — the row, its label span and the group headers all pin, so the caption is cut with an ellipsis instead of re-wrapping. The original note read: the collapsed rail shows icons only, so nothing is lost.
 
 - [ ] **[P3] Inspect mode — ASKED 2026-08-05, Stas: NOT NOW (stays open with the pilot scope below).** A section-heading toggle that draws a visual "inspect" overlay on the live demos: colour-coded lines/boxes for paddings, gaps, sizes with values+units, plus WHICH token/class drives each value. Read computed styles + `getBoundingClientRect`; map values back to the `--space-*`/`--radius-*`/`--font-size-*` scales. **Rewritten 2026-07-24 → start as a scoped pilot:** spacing-only on ONE section (e.g. button), then generalize. Greenfield, docs-only, no product impact. _(Verified: nothing exists today.)_
 
@@ -1121,7 +1111,7 @@ Three defects the port surfaced by reading every component's template + SCSS aga
     slack, and the field reports `scrollWidth === clientWidth` (152/152), i.e. it is never scrolled,
     which is what makes the no-scroll-sync claim hold rather than merely look likely. The panel is a
     fixed 240px (`--color-picker-panel-w`), and **160.80px** is the width at which seven glyphs would
-    start to overflow — so only a consumer who shrinks `--ds-color-picker-panel-w` below ~161px can
+    start to overflow — so only a consumer who shrinks `--ds-color-picker-panel-width` below ~161px can
     break this. Keep `overflow: hidden` on the layer so that case degrades to a clip rather than a
     spill.
   - **A drag emits values faster than any animation finishes.** Every `pointermove` produces a new
@@ -1137,15 +1127,32 @@ Three defects the port surfaced by reading every component's template + SCSS aga
 
 # Decisions — waiting on Stas, not on work
 
+- [ ] **[P3] Does a dev warning name an error banner no screen reader will read?** Drawn in deck
+  `banner-announce-warning`, three options: stay silent, warn on every unannounced `error` or
+  `warning` banner, or warn only while `DS_CONFIG.banner.announce` is unset so the noise ends the
+  moment an app decides. It became answerable only when `announce` gained a third state: `null` is
+  untouched, `false` is a deliberate opt-out, and before that the two were indistinguishable. One
+  consumer's first pass over 43 banners missed ten.
+
+- [ ] **[P3] Does the picker list height become a public token, or stay behind `panelClass`?** Drawn
+  in deck `picker-list-height`. Two caps sit on one panel and the settable-looking one is not the
+  one that governs the visible rows: `--ds-dropdown-panel-max-height` caps the box and is forwarded,
+  `--picker-maxh` caps the list and is not. `panelClass` has expressed a per-picker list height
+  since 0.13.1; a public token would add a second way to say it, and `--picker-maxh` resolves at
+  `:root`, so forwarding it without the role guard would pin it inline on every open panel.
+
 None of these is blocked on effort. Each is a verdict, and most carry a deck that renders the options.
 
-## Decks awaiting a verdict (re-audited 2026-09-12)
+## Decks awaiting a verdict (re-audited 2026-09-20)
 
-**Seven** decks carry `ds-deck-status: open` — counted on disk, not from this list, which has been
+**Fourteen** decks carry `ds-deck-status: open` — counted on disk, not from this list, which has been
 short before. **The rank is the filename**: an open deck is `<rank>-<slug>.html`, ranked by what
 answering it unblocks, so the folder listing IS the queue. Ranks are renumbered when the queue
 changes and a stale one is never kept to preserve a link; `deck-lint` fails a duplicate rank, a gap
-in 1..N, and an `implemented` deck still carrying one. **Never cite a deck by number from this
+in 1..N, and an `implemented` deck still carrying one. **`presentations/13-decision-queue.html` carries every open question** — every open
+deck's question with its options in that deck's own words, the recommendation starred, a link back
+for the argument, and the two questions that have no deck. It duplicates no argument, so it cannot
+contradict a deck; re-check it when a deck's OPTIONS change. **Never cite a deck by number from this
 file** — the number moves; cite the filename.
 
 | # | Deck | Asks | Twin on this board |
@@ -1156,21 +1163,31 @@ file** — the number moves; cite the filename.
 | 4 | `4-migration-manifest-audit` | Which of eight format practices marked *Adopt* are worth the tooling. | the manifest-practices P3 |
 | 5 | `5-select-native-multi` | Whether `ds-select` native `multi` is worth building. | already *Parked* — "keep parked" closes both |
 | 6 | `6-warning-text-colour` | Which colour goes on the warning tint. Four candidates, each rendered in itself. | the warning pair under *Bugs* |
-| 7 | `7-docs-chapter-nav` | Where the chapter list lives. Four mutually-exclusive variants left after seven were rejected. | the docs-nav P3s under *Records* |
+| 7 | `7-chart-sparkline-preset` | A `variant="spark"` on the line chart against a separate `ds-sparkline`. | parked 2026-09-19, so it is decided-not-built |
+| 8 | `8-waterfall-mode-or-component` | The waterfall's own tag against a `stack="waterfall"` mode on the column chart. | the waterfall entry point, already shipped standalone |
+| 9 | `9-bar-column-contracts` | How far to converge the bar and the column: name the difference, converge the palette, or give the bar a series model. | the stacking-contract ask under *Two chart names that collide* |
+| 10 | `10-ds-bar-name-collision` | What the merged progress+meter is called, given `ds-bar` is a prefix of `ds-bar-chart`. | the `ds-bar` rename ask on the same board |
+| 11 | `11-banner-announce-warning` | Whether a dev warning names an error banner no screen reader will read. | the closed `banner.announce` ask, which left this open |
+| 12 | `12-picker-list-height` | Whether the picker list height becomes a public token or stays behind `panelClass`. | the closed `--picker-maxh` ask, same shape |
+| 13 | `13-decision-queue` | Every open question in one page - 36 across six groups, options drawn rather than named. | every open deck plus the whole `Decisions` bucket |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
 CSS rejected at 1 kB for a consumer who does not exist), `sidebar-states` (variant E, and the code
 carries it: the item fills with `--accent-subtitle`, the group never fills) and `stat-value-overflow`
-(one line plus a tip on hover, three hooks over it). `5-rejected-with-numbers` left the queue the
+(one line plus a tip on hover, three hooks over it). `6-rejected-with-numbers` left the queue the
 same day as a `tool` — it asks nothing, so a rank on it claimed a verdict was owed.
 
-**Five of the seven have a twin on this board, so one answer closes two lines** — which is what
+**Closed on 2026-09-19 and moved to `implemented/`:** the chart lane in one pass - `chart-composition-model` (marks project into the container, one `<svg>` per chart), `chart-phase-2-marks` (the whole Phase 2 layer built), `chart-dual-axis` (a second axis rises only when a mark contributes values to it), `chart-axis-mode-names` (`yAxisMode` renamed), `chart-area-mode-or-component` (a mode on the line chart, not its own tag), `chart-rescale-on-hide` (the domain drops a hidden series) - plus `docs-chapter-nav`.
+
+**Closed on 2026-09-21 and moved to `implemented/`:** `chart-palette-v2` - the two greens moved apart by one token (`--chart-categorical-6`, 152deg to 148deg), and `tools/check-chart-palette-separation.mjs` went into `lint:all` holding the 6 floor under normal vision. Colour-vision deficiency is reported by that gate and not enforced: Stas confirmed the system never took that commitment on, which is why the full repaint was declined.
+
+**Nine of the fourteen have a twin on this board, so one answer closes two lines** — which is what
 makes them the cheapest thing here. Rank 5 is the cheapest of all: "keep parked" is a complete
 answer, and it has already been given — the deck stays only because closing it was declined.
 
-**Ranks 1–4 are written in Russian and share `presentations/deck.css`**; 6–7 carry their own inline
-styles. `presentations/README.md` holds the authoring contract and the fifteen lint rules.
+**Every rank but 6 is written in Russian and shares `presentations/deck.css`**; only rank 6 carries
+its own inline styles. `presentations/README.md` holds the authoring contract and the fifteen lint rules.
 
 ## The field system — the two controls outside it, and the five with no box to paint
 
@@ -1181,9 +1198,9 @@ styles. `presentations/README.md` holds the authoring contract and the fifteen l
   **Cheap now that the base exists:** `extends DsFieldBase` plus a `resolveFieldMessage` call, a `ds-field-message` in the template, and the label block — the same shape all fourteen already share.
   **Cheaper again since 2026-08-25:** the base was split into `DsMessageBase` (the message half) and `DsFieldBase` (that plus `errors`/`invalid`/`touched`) so `ds-button` could take the message line, and `ds-button` is now the worked example of wiring the message half into a component that was never a field. Both of these hold a value, so both want the full `DsFieldBase` — but the pattern, the resolver call and the template shape are all demonstrated now rather than described.
 
-- [ ] **[P2] Single-source colour engine — collapse `--primary` + `--primary-h/s/l` into ONE token, derive the rest with `color-mix()` + relative-colour (idea 2026-06-24).** ROOT CAUSE (surfaced when a consumer scoped `--primary-h/s/l` on a checkbox and ONLY the focus halo moved): "primary" has TWO decoupled reps — (a) `--primary` + hand-picked ramp shades read by component FILLS; (b) `--primary-h/s/l` HSL channels feeding ONLY math-derived halos/ramp/gray-tint — with **no live link**, so a coherent scoped recolour needs BOTH the channels AND a `--primary` re-composition (the 3-/4-token footgun). **Re-verified true 2026-07-24** (`_semantic.scss:91-93` channels; `:111-112` hover/pressed already `color-mix`; halos `:209-229`; gray tint `_base-palette.scss:41`). **IDEA:** one colour token per role as the only source; shades via `color-mix()`, hue via `hsl(from var(--primary) h <S> <L>)` keeping each step's hand-tuned S/L (see [[feedback-handtuned-colors-beat-formulas]] — only the HUE is single-sourced); drop `--primary-h/s/l` as PUBLIC API. Scoped recolour becomes ONE declaration; **UNBLOCKS the `ds-color`/`--accent-*` indirection**. **OPEN for the spec:** (a) colour space (`oklch`/`oklab` perceptual vs `srgb`/`hsl` matches today) — verify each derived role visually; (b) pure-derived vs hand-pick per role; (c) relative-colour + `var()` edge cases in the 3 target engines; (d) dark-theme interplay. Prototype: `presentations/2-color-engine-relative.html`.
+- [ ] **[P2] Single-source colour engine — collapse `--primary` + `--primary-h/s/l` into ONE token, derive the rest with `color-mix()` + relative-colour (idea 2026-06-24).** ROOT CAUSE (surfaced when a consumer scoped `--primary-h/s/l` on a checkbox and ONLY the focus halo moved): "primary" has TWO decoupled reps — (a) `--primary` + hand-picked ramp shades read by component FILLS; (b) `--primary-h/s/l` HSL channels feeding ONLY math-derived halos/ramp/gray-tint — with **no live link**, so a coherent scoped recolour needs BOTH the channels AND a `--primary` re-composition (the 3-/4-token footgun). **Re-verified true 2026-07-24** (`_semantic.scss:91-93` channels; `:111-112` hover/pressed already `color-mix`; halos `:209-229`; gray tint `_base-palette.scss:41`). **IDEA:** one colour token per role as the only source; shades via `color-mix()`, hue via `hsl(from var(--primary) h <S> <L>)` keeping each step's hand-tuned S/L (see [[feedback-handtuned-colors-beat-formulas]] — only the HUE is single-sourced); drop `--primary-h/s/l` as PUBLIC API. Scoped recolour becomes ONE declaration; **UNBLOCKS the `ds-color`/`--accent-*` indirection**. **OPEN for the spec:** (a) colour space (`oklch`/`oklab` perceptual vs `srgb`/`hsl` matches today) — verify each derived role visually; (b) pure-derived vs hand-pick per role; (c) relative-colour + `var()` edge cases in the 3 target engines; (d) dark-theme interplay. Prototype: deck `color-engine-relative`.
 
-- [ ] **[P2] `.ds-interactive` — global state-interaction contract (agreed; prototype before spec — [[project-interaction-contract-design]]).** Replace per-component `--ds-*-bg-hover/-active` + scattered `color-mix()` with ONE contract: a `.ds-interactive` class + presets driven by `--state-step-*` tokens in a NEW `src/lib/styles/_interaction.scss` (**still absent — verified 2026-07-24**), with an override slot (`--interactive-*-set`). Then migrate interactive components off their local recipes. **NEXT — blocking user verdicts B1–B5** (live demo `presentations/3-interaction-formula.html`): (B1) tint-pressed 28% vs 34%; (B2) pressed step for neutral surfaces (menu-item/table rows); (B3) danger menu-item hover — formula vs `--error-subtitle`; (B4) shape of the `--interactive-*-set` slot; (B5) pressed step for success/warning buttons. **Rewritten 2026-07-24:** the old "retire `_forced-states` duplication" clause is now MOOT — `_forced-states.scss` no longer exists (docs state-forcing is per-section `:host ::ng-deep .pin-*` reading each component's `--_*` resolvers). What survives is the broader "should presentational/state styling live in global partials (like `_link.scss`) with components as thin sugar" question. (Housekeeping DONE — re-grepped 2026-08-10, the stale `_forced-states` refs are gone from `README.md` and `table.component.scss`; nothing outside `.claude/` mentions it.)
+- [ ] **[P2] `.ds-interactive` — global state-interaction contract (agreed; prototype before spec — [[project-interaction-contract-design]]).** Replace per-component `--ds-*-bg-hover/-active` + scattered `color-mix()` with ONE contract: a `.ds-interactive` class + presets driven by `--state-step-*` tokens in a NEW `src/lib/styles/_interaction.scss` (**still absent — verified 2026-07-24**), with an override slot (`--interactive-*-set`). Then migrate interactive components off their local recipes. **NEXT — blocking user verdicts B1–B5** (live demo in deck `interaction-formula`): (B1) tint-pressed 28% vs 34%; (B2) pressed step for neutral surfaces (menu-item/table rows); (B3) danger menu-item hover — formula vs `--error-subtitle`; (B4) shape of the `--interactive-*-set` slot; (B5) pressed step for success/warning buttons. **Rewritten 2026-07-24:** the old "retire `_forced-states` duplication" clause is now MOOT — `_forced-states.scss` no longer exists (docs state-forcing is per-section `:host ::ng-deep .pin-*` reading each component's `--_*` resolvers). What survives is the broader "should presentational/state styling live in global partials (like `_link.scss`) with components as thin sugar" question. (Housekeeping DONE — re-grepped 2026-08-10, the stale `_forced-states` refs are gone from `README.md` and `table.component.scss`; nothing outside `.claude/` mentions it.)
 
 - [ ] **[P2] Theme recipe vs hand-tuned picks — alignment decision.** Button/icon-button state derivation uses the theme's 88%/76% mix-to-black recipe (**verified `button.component.scss:34-38`, `_semantic.scss:111-112`, 2026-07-24**). If the single-source-colour calibration replaces `--primary-hover/-pressed` with hand-tuned values, the button defaults (color-mix off the resolved bg) diverge from the theme roles — decide then: components read role tokens again, or theme keeps the formula. **This is a concrete instance of the single-source item's open question (b); resolve it inside that spec, not separately.**
 
@@ -1193,6 +1210,12 @@ styles. `presentations/README.md` holds the authoring contract and the fifteen l
   **P3 → P2, 2026-09-02:** promoted by the decision above; the demotion below is kept so the reasoning that was overruled is still readable, not deleted.
 
   **P2 → P3, 2026-08-21 (SUPERSEDED):** demoted, and it should have been on the day it was surveyed: **the item's own conclusion is not to build it** — three components share ~25 lines each, against a ~30-line helper, so extracting now is a wash and the wrong shared abstraction costs more than the duplication. It is kept open only so the survey is not repeated, which makes it a parked record, not a P2. Revisit when a FOURTH list picker appears.
+
+- [ ] **[P2] The 20 typography CLASSES still read `.t-*`, where the tokens behind them now spell it out.** `.t-h1` through `.t-h5`, `.t-display`, `.t-card-title`, `.t-caption`, `.t-overline`, `.t-l` / `-l-bold`, `.t-m` / `-m-bold`, `.t-s` / `-s-bold`, `.t-xs` / `-xs-bold`, `.t-mono` / `-mono-block` / `-mono-inline`. The 96 tokens they read became `--ds-typography-*` in `4d2ddd7d`; the classes were held back deliberately, so the two halves now disagree on how the word is spelled.
+
+  Measured 2026-09-22: at least 3121 uses in this repo alone, counted as exact class names with a quote or a space on each side (`grep -rhoE "(^|[\"' ])(t-h1|t-h2|…)([\"' ]|$)" src ds-docs`), which undercounts two adjacent classes in one attribute. Consumer markup carries more, and unlike a token a class cannot fall back - a template left on `.t-h4` loses its type entirely rather than reading a default.
+
+  **Stas: tokens first, classes recorded here (2026-09-22).** The question when it comes up is whether a markup vocabulary wants the same spelling rule as a token surface at all - Tailwind and every utility set in the field argue brevity IS the feature there.
 
 - [ ] **[P2] The button's colour-family slots are named `--c-*`, which is not an acceptable name.**
   Seven of them — `--c-base`, `--c-on`, `--c-strong`, `--c-subtitle`, `--c-muted`, `--c-muted-strong`,
@@ -1210,6 +1233,12 @@ styles. `presentations/README.md` holds the authoring contract and the fifteen l
 - [ ] **[P3] CDK Menu adoption (option B) — parked.** ONLY if/when nested submenus, a menubar, or context menus are needed. `ds-menu` = native roving + `DsOverlayCloseRef` (verified still native, 2026-07-24 — correct for flat menus). Plan: `docs/superpowers/cdk-menu-adoption.md`. When we move, prefer `@angular/aria` `ngMenu` over CDK Menu; gated on a real need or `@angular/aria` going stable.
 
 ## Tooling
+
+- [ ] **[P3] The chart palette separates by hue and barely at all by lightness, and nothing measures the dark theme (recorded 2026-09-21, Stas: record only).** Three findings, each with the command that produced it.
+  **1. Lightness is flat.** Seven of the eight categorical slots sit between OKLab L 0.625 and 0.673 - a spread of 0.048 - and the closest two are 0.002 apart. Only slot 8 breaks the band at 0.394. A chart screenshotted into a black-and-white document loses every series distinction, and the same flatness is why simulated colour blindness collapses six pairs: it removes hue, and there is no lightness left underneath. Fixing it means moving colours, so it is a repaint and needs its own deck.
+  **2. The gate only ever sees the light palette.** `tools/check-chart-palette-separation.mjs` reads `_tokens-charts.scss`; `src/lib/themes/dark/_theme.scss` overrides `--chart-categorical-8` alone, so the dark theme's effective palette is seven inherited slots plus one. Checked by hand on 2026-09-21 and it passes (`node tools/check-chart-palette-separation.mjs --hexes '#e75740,#11a793,#5a83e2,#a173de,#e25a9e,#2ca565,#d85ad8,#8b93a7'`), but nothing holds it there - and in the dark theme all eight slots land in L 0.625-0.673, because slot 8 flips to 0.663.
+  **3. Slot order is right and unguarded.** The worst pair among the first 2 slots is 29.0, the first 3 is 18.4, the first 4 is 10.2 - so the charts that use two to four series get the widest gaps, which is the correct arrangement. No gate enforces it, so a future reorder can quietly hand the common case the narrow pairs.
+  A fourth thing, not a defect: the dark theme's own comment reasons in protanopia deltas ("dE 12 from the orchid"), although colour-vision support is not a requirement of this system - see `presentations/implemented/chart-palette-v2.html`.
 
 - [ ] **[P2] Publishing to npm stops working in January 2027 and the replacement is not chosen.** `publish.sh` authenticates with `NPM_TOKEN`, a granular token with **Bypass 2FA** on. npm removes direct publish for such a token in January 2027, leaving it able to read private packages and to stage a publish that a maintainer then approves with 2FA. Two failure shapes mark the token itself, and both fail the tag pipeline at `npm publish` with a tarball already built: `E404` on the `PUT` is an expired or revoked token, `EOTP` is a token whose Bypass 2FA is off — npm's default for a newly generated one.
   **The fork:** staged publishing, where the tag pipeline stages and a maintainer approves each release by hand, against trusted publishing over OIDC, which needs no token at all. `bitbucket-pipelines.yml` records that Bitbucket is not an npm trusted publisher, so the OIDC route has to be re-checked before it is ruled out rather than assumed gone.
@@ -1254,7 +1283,7 @@ styles. `presentations/README.md` holds the authoring contract and the fifteen l
   - 0.8.0 is the bad one — 13 lines, the longest 1039 characters: 2022, 2023, 2024, 2213, 2278, 2289, 2307, 2308, 2309, 2310, 2327, 2328, 2340. Several entries there are a single unwrapped line each.
   - 0.10.0 — 6 lines, longest 199: 911, 1066, 1080, 1201, 1448, 1527.
   - 0.11.0 — 3 lines, longest 221: 118, 121, 124. 0.10.2 — 374, 500. 0.10.1 — 744, 836. 0.9.0 — 1747, 1849. 0.10.3 — 259. 0.6.2 — 2991. 0.4.0 — 3543.
-  Two constraints for whoever does it: table rows (`| … |`) must NOT be re-wrapped, because `check-delete-tables` matches a manifest's `find` shapes verbatim against them; and several inline code spans are currently split across a break (`` `<button\n  class="link">` ``, `` `flex: 1;\n  height: auto` ``, `` `<ng-template\n  [dsFilterItem]="180">` ``), which a re-wrap should join rather than preserve. Three more came out of the same reflow and must join too: `` `ds-select { --ds-field-label-transform: uppercase; }` ``, the `::ng-deep ds-table tr:hover .cell-name { … }` workaround shape, and `` `color="neutral" variant="outline"` `` — that last one is a rename map, so a line-oriented grep for it currently misses the CHANGELOG, which is the exact hazard this gate was written for. Six shipped comments are ragged too and are NOT in this item: `_ds-color.scss:4`, `auth-layout.component.ts:20`, `_tokens-charts.scss:36`, `themes/light/_palette.scss:15`, `auth-layout.component.scss:29`, and `_status.scss:10-11`. Verify by comparing the whitespace-normalised word stream before and after.
+  Two constraints for whoever does it: table rows (`| … |`) must NOT be re-wrapped, because `check-delete-tables` matches a manifest's `find` shapes verbatim against them; and several inline code spans are currently split across a break (`` `<button\n  class="link">` ``, `` `flex: 1;\n  height: auto` ``, `` `<ng-template\n  [dsFilterItem]="180">` ``), which a re-wrap should join rather than preserve. Three more came out of the same reflow and must join too: `` `ds-select { --ds-field-label-text-transform: uppercase; }` ``, the `::ng-deep ds-table tr:hover .cell-name { … }` workaround shape, and `` `color="neutral" variant="outline"` `` — that last one is a rename map, so a line-oriented grep for it currently misses the CHANGELOG, which is the exact hazard this gate was written for. Six shipped comments are ragged too and are NOT in this item: `_ds-color.scss:4`, `auth-layout.component.ts:20`, `_tokens-charts.scss:36`, `themes/light/_palette.scss:15`, `auth-layout.component.scss:29`, and `_status.scss:10-11`. Verify by comparing the whitespace-normalised word stream before and after.
 
 - [ ] **[P3] Does a release note owe the reader a WHY, or only a what-and-what-to-do? (Stas, 2026-08-28, left open on purpose during the public-surface sweep.)** The case that raised it: `ds-search` lost `hint` / `error` / `warning` / `errors` / `invalid` / `touched` / `reserveMessage` / `messageIcon`. Two shapes are available and the release currently ships BOTH — the entry states the removal, and a following paragraph explains the CVA split that caused it.
   **The narrow shape** is what the manifest already does: `old`/`new`, an `action`, and the locators to find it. A consumer's agent needs nothing else to migrate — it does not care why the inputs left.
@@ -1272,7 +1301,7 @@ styles. `presentations/README.md` holds the authoring contract and the fifteen l
   **The fix is one glob, and it needs a decision because it is a policy file.** Drop `html` from `format:fix` so prettier owns ts/json/md and the two `ds/template/*` rules own templates, which is the shape `lint:all` already assumes. The alternatives are to drop the two ds rules and let prettier own html (bigger diff, loses the attribute-order convention the repo chose), or to leave it and say so in the script so nobody expects `fix:all` to converge.
   **Earlier measurements, still valid as evidence:** prettier reformatted 140 files (115 html + 25 ts) and eslint pulled 77 back (2026-08-25); in the order prettier → stylelint → eslint, `eslint --fix` reverted 111 of prettier's 112, leaving 8 files of whitespace inside inline elements that Angular discards. The tree has been in eslint's shape all along.
 
-- [ ] **[P3] Eight manifest-format practices the audit marked *Adopt*, and nobody has ratified any of them (filed 2026-08-27 out of `presentations/4-migration-manifest-audit.html`).** The audit's own header says it: "the verdict column is a judgement about this repo, not about the practice." So *Adopt* there is a recommendation, not a decision — and the recommendations have sat only inside a deck since 2026-08-25, which is the shape of a verdict nobody executes. **The decision is which of the ten, if any**, not whether each is defensible; every one was sourced from a primary doc, so they are all defensible and adopting all ten is a tooling project no consumer is pulling on.
+- [ ] **[P3] Eight manifest-format practices the audit marked *Adopt*, and nobody has ratified any of them (filed 2026-08-27 out of deck `migration-manifest-audit`).** The audit's own header says it: "the verdict column is a judgement about this repo, not about the practice." So *Adopt* there is a recommendation, not a decision — and the recommendations have sat only inside a deck since 2026-08-25, which is the shape of a verdict nobody executes. **The decision is which of the ten, if any**, not whether each is defensible; every one was sourced from a primary doc, so they are all defensible and adopting all ten is a tooling project no consumer is pulling on.
   **Three of the thirteen are already settled and are NOT part of this item:** the instruction/rationale split shipped as `action` (the prose-split pass, 2026-08-25); package reachability shipped — `package.json` already exports `"./migrations/*"`; and `schemaVersion` was **rejected** in the prose-split session along with `author`, `place`, `outcome`, `unchanged` and `source`.
   **The ten, with what each would cost, verified as absent today** (grep: none of these keys or checks exists in `tools/migration-lint.mjs` or `migrations/AUTHORING.md`):
   (1) **precondition guard** — a no-op check each runbook opens with, so an item cannot half-apply (OpenRewrite `Preconditions.check`, Nx agentic runbooks); (2) **`replaceIn` polarity** — CDK's `CssTokenUpgradeData` defaults to ALL files and narrows, ours is a whitelist that silently excludes, which is a wrong-by-default surface; (3) **executable verification** — Polaris ships a literal alternation `RegExp` per token group, where our `verify` is prose; (4) **runtime signal ids** — Vue/Ember collect what actually fired per app, and `devWarn` already exists here, so this is wiring rather than a mechanism; (5) **escalation marker** — Next.js codemods write a comment that breaks the build until removed (adopt the comment half only); (6) **explicit "no replacement"** — ESLint's `replacedBy` may be an empty array to SAY there is none, and 0 of 22 manifests would fail the check; (7) **`deprecatedIn`** — one half of ESLint `deprecatedSince` / Ember RFC 0649 `since`; the `availableUntil` half was rejected; (8) **provenance link** — CDK makes the PR link a required member; adopt it optional and lint it only on `unreleased`; (9) **`ng-update` requirements key** — the hard pre-flight the Angular CLI enforces (adopt the key, NOT a port to real schematics); (10) **dry-run hit counts** — jscodeshift prints per-file outcomes and Next.js warns that a wrong path reports 0 rather than failing; this one lands in the plugin, not the lint.
@@ -1425,7 +1454,120 @@ Most of the original gap list has SHIPPED (verified 2026-07-24: multi-select · 
 
 # Records — kept so they are not "simplified" away
 
-Constraints and decisions that read as removable and are not.
+## The chart family read as an architecture (audited 2026-09-22)
+
+Four questions, asked of all eight charts plus the `ds-chart` container: does each earn its own tag,
+is each existing variant warranted, what repeats that is not shared yet, and where does a component
+reach around a module that already does the job. Every figure below is a file:line count, not an
+impression.
+
+**Seven of the eight earn their tag and are not in question.** The test is what a chart ADDS to the
+one it most resembles: line adds 18 inputs, 3 datum fields and 2 marks over column; scatter adds a
+continuous x that `ChartScales.xPosition` cannot express at all, since it takes a category index
+(`chart-scales.token.ts:26`); heatmap adds a second axis of readings and its own ramp; pie adds six
+inputs and inverts `partOfWhole` to true; funnel adds a stage-to-stage drop no bar chart derives.
+Bar and column are settled separately and stay apart.
+
+- [ ] **[P2] The chassis is declared nine times and shared once - about 450 lines of it.**
+  `resolveChartDefaults` (`charts-defaults.ts:30-63`) unifies what the ten common inputs MEAN, and
+  the `input()` lines above it never moved. Ten inputs plus their doc paragraphs repeat across
+  `bar-chart.component.ts:105-167`, `column-chart.component.ts:178-238`,
+  `line-chart.component.ts:186-254`, `pie-chart.component.ts:103-164`,
+  `funnel-chart.component.ts:109-166`, `heatmap-chart.component.ts:99-133`,
+  `scatter-chart.component.ts:135-177`, `waterfall-chart.component.ts:99-134` and
+  `chart/chart.component.ts:160-211`. The `tooltipLingerMs` and `dimOthers` paragraphs are
+  byte-identical in five files each.
+  **The cost of moving them is the documentation, not the code.** `extract-docs` turns each
+  docblock into that chart's own input table, so a base class buys ~450 lines and makes every
+  chart's API page open with a shared preamble. The extraction that does NOT cost that is the
+  template and style duplication below, which no generator reads.
+
+- [ ] **[P2] The template state head and the figcaption rule are copied verbatim, nine times each.**
+  The error and empty `<p>` blocks are byte-identical in all nine chart templates, and the pin-reset
+  `<button>` in five, differing only in the release expression. The `figcaption` rule - three
+  declarations - is byte-identical in nine stylesheets (`bar-chart.component.scss:32-36` and its
+  eight siblings), and `styles/_chart-frame.scss:34-38` already reaches `figcaption` for
+  `user-select`, so the mixin is the obvious home. Neither is read by a doc generator, so both move
+  without losing anything.
+
+- [ ] **[P3] Four charts keep their own roving-tabindex state block, and the shared module owns only
+  the helpers.** `charts-roving.ts` exports `nextRovingIndex` and `focusMark`; the four-member state
+  around them repeats at `bar-chart.component.ts:228-247`, `pie-chart.component.ts:220-281`,
+  `funnel-chart.component.ts:242-283` and `column-series.component.ts:297-316`, differing only in the
+  count source and the `.closest()` selector. `ds-scatter-chart` opts out entirely -
+  `scatter-chart.component.html:76` puts `tabindex="0"` on every mark, against the one-tab-stop
+  policy the other four follow.
+
+- [ ] **[P3] Three charts hand-roll a legend and three compose their own accessible sentence.**
+  `ds-chart-legend` exists and has three users (column, line, scatter); `pie-chart.component.html:143-183`
+  builds a 41-line legend, `funnel-chart.component.html:96-158` a swatch table and
+  `heatmap-chart.component.ts:211-219` a ramp key. `describeSeries` (`charts-summary.ts:76`)
+  documents "the ORDER is the contract" and has five users; heatmap, scatter and waterfall each
+  phrase their own instead (`heatmap-chart.component.ts:221-228`,
+  `scatter-chart.component.ts:309-324`, `waterfall-chart.component.ts:176-195`).
+
+- [ ] **[P3] Six places reimplement something a shared module already does.**
+  `line-series.component.ts:198-209` repeats `alignSeriesValues` (`line-chart.math.ts:12-30`) on data
+  the chart already aligned at `:272`. `scatter-chart.component.ts:57-59,183-188` declares its own
+  gutters and plot rectangle beside `chartPlot` (`chart.math.ts:53`), and
+  `scatter-chart.math.ts:50-71` its own clamped scale beside `valueScale` (`chart.math.ts:134`) -
+  while using `linearScale` for the tick labels, so one component runs two scales.
+  `heatmap-chart.math.ts:9-25` recomputes a clamped share `linearScale` covers.
+  `bar-chart.math.ts:28-38` and `line-chart.math.ts:35-48` each reimplement the max reduction inside
+  `axisDomain`, which itself carries the same loop twice (`chart.math.ts:103-110` and `:263-270`,
+  byte-identical, same file). `waterfall-chart.component.ts:37` writes the literal
+  `'var(--ds-chart-series-default-color)'` where `chart-palette.generated.ts:16` exports it.
+
+- [ ] **[P3] Five constants carry two or three spellings each.** Tick count `5` at
+  `chart.math.ts:16`, `line-chart.math.ts:5`, `scatter-chart.math.ts:5` plus bare literals at
+  `column-chart.component.ts:176` and `waterfall-chart.component.ts:93`; plot height `240` at
+  `chart.math.ts:32` and `line-chart.component.ts:63`; edge gutter `12` at `chart.math.ts:37` and
+  `scatter-chart.component.ts:59`; value-label gap `8` at `column-series.component.ts:50` and
+  `waterfall-marks.component.ts:15`; column width ratio `0.8` in three places.
+
+- [ ] **[P3] Four exports on the package surface have no consumer in `src/`.** `pointScale`
+  (`charts-scale.ts:120`, 32 lines), `tickStep` (`:73`), `formatTick` (`charts-format.ts:90`, 27
+  lines) and `polylinePoints` (`charts-path.ts:61`) are re-exported by `components/index.ts` and
+  referenced only from `tools/probes/`. `ChartScales.zeroOffset` (`chart-scales.token.ts:40`) is
+  declared on the mark contract and read by no mark.
+
+- [ ] **[P3] `'none'` and `'grouped'` are the same value on `ds-column-chart`.**
+  `column-chart.component.ts:333-337` branches them together for `slotCount` and
+  `chart.math.ts:334-338` branches them together in `stackOffsets`; the component's own doc says
+  "the two differ only in spelling" (`:158-159`). Either one goes, or the doc says which is
+  canonical.
+
+- [ ] **[P3] Two inputs decide one thing on `ds-funnel-chart`, and two vocabularies name one idea.**
+  `showTable` (`funnel-chart.component.ts:107`) is resolved against the family-wide `dataTable` by
+  mutual exclusion at `:410-412` - the only chart-local switch that supersedes a `DS_CONFIG`-backed
+  one. Separately, `column-series` spells its tooltip anchor `'mark' | 'cell'` (`:114`) and
+  `line-series` spells the same idea `'reading' | 'pointer'` (`:146`), in one folder. And
+  `line-chart.types.ts:22` declares `LineChartStack` rather than narrowing `ChartStackMode`, then
+  feeds it to `stackOffsets`, which is typed on the full union (`chart.math.ts:329-331`).
+
+- [ ] **[P3] `tooltipAnchor="pointer"` is inert unless `tooltip="axis"`, and nothing says so.**
+  `line-series.component.ts:452-461`. A value on one input that does nothing depending on the value
+  of a sibling is the shape a consumer reports as a bug.
+
+- [ ] **[P3] `ds-pie-chart` declares `staggerMs` and documents that it does nothing.**
+  `pie-chart.component.ts:188-191`. It exists for parity with the other charts. Either it works or
+  it goes.
+
+## Thirteen inputs the chart family declares component by component (measured 2026-09-22)
+
+- [ ] **[P3] Only the RESOLUTION of the shared chart inputs is shared, not their declaration.**
+  `resolveChartDefaults` unified what the values mean; the `input()` lines above it did not move.
+  Counting `readonly <name> = input(…)` and `= model(…)` at class level across the nine chart
+  components: `caption`, `valueFormat`, `errorText`, `emptyText`, `error`, `interactive`, `frame`
+  and `loading` are declared in all nine, `summary` in eight, and `tooltip`, `dimOthers`,
+  `dataTable` and `data` in seven - 108 declarations for 13 names.
+
+  Each carries its own docblock, and `extract-docs` turns those into the per-component input
+  tables in `components.md` and `docs/agent/`. A base class or a `hostDirective` would buy roughly
+  a hundred lines and cost the documentation pipeline the per-component wording, which is what
+  makes a chart's API page read as that chart's rather than as a shared preamble.
+  **Not obviously worth doing.** Recorded so the next reader does not re-derive the measurement,
+  and so the decision is made once rather than half-made.
 
 ## mm-broker read as a record — what our releases did to one consumer (2026-08-07, updated 08-11)
 

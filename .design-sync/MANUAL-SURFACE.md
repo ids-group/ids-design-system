@@ -166,7 +166,7 @@ an `<svg>` renders nothing - the very fact that put the marks on `<svg:g>` in th
 marks at all.
 
 **Acceptable, and nothing a card can show is lost.** Every chart a design places reaches it through
-`ColumnChart`, `BarChart`, `LineChart`, `DonutChart` or `FunnelChart`, each of which carries its own
+`ColumnChart`, `BarChart`, `LineChart`, `PieChart` or `FunnelChart`, each of which carries its own
 marks internally and takes its data as an ordinary prop - the container is an Angular composition
 seam, not a thing a design writes by hand. `ds-chart` registers under the alias `ds-x-chart` anyway,
 because `ds-column-chart` renders it inside its own template (§1, defect A).

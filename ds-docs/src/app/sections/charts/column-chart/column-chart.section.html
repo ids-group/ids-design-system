@@ -123,8 +123,8 @@
     A point that sets
     <code class="t-mono-inline">
       fill="hatched"
-    </code> keeps its colour and takes
-    a striped texture over it, which separates a projection from a settled
+    </code> keeps its colour and
+    takes a striped texture over it, which separates a projection from a settled
     figure without spending a second hue on it. Texture is the encoding that
     survives greyscale, print and colour-vision deficiency, so it carries the
     distinction where a lighter tint of the same colour would not. The chart
@@ -147,27 +147,22 @@
     Hand
     <code class="t-mono-inline">
       data
-    </code> a list of NAMED SERIES instead of a
-    flat list of points and every category carries one column per series, keyed
-    by the legend under the plot.
+    </code> a list of NAMED SERIES instead of
+    a flat list of points and every category carries one column per series,
+    keyed by the legend under the plot.
     <code class="t-mono-inline">
       stack
-    </code> decides how they
-    share the band:
+    </code> decides how they share the band:
     <code class="t-mono-inline">
       grouped
-    </code> stands them side by
-    side,
+    </code> stands them side by side,
     <code class="t-mono-inline">
       stacked
     </code> puts each on top of the one
-    before it, and
-    <code class="t-mono-inline">
-      normalized
-    </code> stacks then divides by
-    the category's own total, so every band is full and the axis reads in
-    shares. A flat list of points is still one series and still takes the whole
-    band, so nothing about a single-series chart changes.
+    before it, and <code class="t-mono-inline"> normalized </code> stacks then
+    divides by the category's own total, so every band is full and the axis
+    reads in shares. A flat list of points is still one series and still takes
+    the whole band, so nothing about a single-series chart changes.
   </p>
 
   <p class="block-desc t-s">
@@ -176,9 +171,9 @@
     categories, and the marks of a grouped one are not. A series-wide
     <code class="t-mono-inline">
       fill
-    </code> paints every one of its columns, so the
-    pair below separates a settled figure from a committed one by texture as
-    well as by hue. The chart reads nothing into either: what the two columns
+    </code> paints every one of its columns,
+    so the pair below separates a settled figure from a committed one by texture
+    as well as by hue. The chart reads nothing into either: what the two columns
     MEAN is the caller's fact.
   </p>
 
@@ -199,8 +194,8 @@
     stays the reading even under
     <code class="t-mono-inline">
       normalized
-    </code>, where the
-    axis is the only thing that switches to shares.
+    </code>, where the axis is the only
+    thing that switches to shares.
   </p>
 
   <div class="demo-pair">
@@ -228,8 +223,8 @@
     total of those months on the right. They are different quantities at
     different magnitudes, so one axis cannot carry both - the total dwarfs every
     month it is made of, and on a shared scale the columns flatten to nothing.
-    Each axis therefore takes the colour of the series measured against it, which
-    is the only thing on the canvas that says which numbers a mark is read
+    Each axis therefore takes the colour of the series measured against it,
+    which is the only thing on the canvas that says which numbers a mark is read
     against.
   </p>
 
@@ -237,26 +232,24 @@
     There is no combo component. This is
     <code class="t-mono-inline">
       ds-chart
-    </code> - the container the column
-    and line charts are built inside - with a
+    </code> - the container this chart is
+    built inside - with a
     <code class="t-mono-inline">
       dsColumnSeries
     </code> and a
     <code class="t-mono-inline">
       dsLineSeries
-    </code> projected into it. A series
-    that sets <code class="t-mono-inline">axis: 'secondary'</code> is measured
-    against the second axis;
+    </code> projected into it. A
+    series that sets <code class="t-mono-inline">axis: 'secondary'</code> is
+    measured against the second axis;
     <code class="t-mono-inline">
       secondaryAxisMode
     </code> decides how that axis
-    relates to the first, and
-    <code class="t-mono-inline">
-      'rounded'
-    </code>, the default, hangs it on the
-    first axis's own gridlines at a round step. The line is written after the
-    columns because a projected mark paints in the order it is written, and a
-    cumulative line belongs over the readings it sums.
+    relates to the first, and <code class="t-mono-inline"> 'aligned' </code>,
+    the default, hangs it on the first axis's own gridlines at a round step. The
+    line is written after the columns because a projected mark paints in the
+    order it is written, and a cumulative line belongs over the readings it
+    sums.
   </p>
 
   <ds-chart
@@ -295,8 +288,8 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       thresholds
-    </code> draws a target, a budget or an
-    SLA across the plot, behind the columns. Each entry is ONE number, so the
+    </code> draws a target, a budget or
+    an SLA across the plot, behind the columns. Each entry is ONE number, so the
     two ends of a horizontal line cannot drift apart;
     <code class="t-mono-inline">
       dash
@@ -468,9 +461,9 @@
     </summary>
 
     <p class="block-desc t-s">
-      The axis reaches below zero when the data does, and a negative point
-      draws a column that grows down from the zero baseline rather than from
-      the plot floor.
+      The axis reaches below zero when the data does, and a negative point draws
+      a column that grows down from the zero baseline rather than from the plot
+      floor.
     </p>
 
     <div class="states states--cols-2">

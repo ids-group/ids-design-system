@@ -100,7 +100,7 @@
       "id": "subclass-members-grew",
       "kind": "behavior",
       "surface": "typescript",
-      "old": "class MyThing extends MenuComponent | RadioComponent | TableComponent",
+      "old": "MenuComponent, RadioComponent, TableComponent",
       "new": null,
       "action": "Build after upgrading, then rename or mark `override` any member the compiler reports as colliding.",
       "appliesWhen": "Only a class that extends MenuComponent, RadioComponent or TableComponent. Template users need nothing; `deselectable` is a new input and nothing existing changed name or type.",

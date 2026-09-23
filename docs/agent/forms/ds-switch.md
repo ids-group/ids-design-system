@@ -4,3 +4,7 @@
 Group: Form & input
 
 Inputs: `checked: model<boolean>`, `disabled: boolean = false`, `name: string | null = null`, `variant: 'default' | 'success' | 'error' = 'default'`, `inputId: string | null = null`
+
+<!-- inputs:ds-switch -->
+All inputs: `hint: string = ''`, `error: string = ''`, `warning: string = ''`, `reserveMessage: boolean | null = null`, `messageIcon: IconName | false | null = null`, `errors: readonly DsFieldError[] = []`, `invalid: boolean = false`, `touched: boolean = false`, `hidden: boolean = false`, `checked: boolean = false`, `disabled: boolean = false`, `name: string | null = null`, `variant: 'default' | 'success' | 'error' = 'default'`, `inputId: string | null = null`, `size: 'sm' | 'md' | 'lg' = null`, `required: boolean = false`, `label: string = ''`, `ariaLabel: string | null = null`
+<!-- /inputs -->

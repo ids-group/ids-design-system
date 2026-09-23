@@ -16,7 +16,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
-        "name": "multi",
+        "name": "multiple",
         "kind": "input",
         "type": "boolean",
         "union": null,
@@ -122,11 +122,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "announce",
         "kind": "input",
-        "type": "boolean",
+        "type": "boolean | null",
         "union": null,
-        "default": "false",
+        "default": "null",
         "required": false,
-        "description": "Announce this alert to a screen reader when it appears. Off by default — see `ds-banner`'s `announce` for why, and prefer `ToastService` for anything transient."
+        "description": "Announce this alert to a screen reader when it appears. Unset follows `DS_CONFIG.alert.announce`, then `false` — see `ds-banner`'s `announce` for why, and prefer `ToastService` for anything transient."
       }
     ],
     "outputs": [
@@ -202,7 +202,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "scrollReset",
         "kind": "input",
-        "type": "DsScrollReset",
+        "type": "DsAppLayoutScrollReset",
         "union": [
           "path",
           "never",
@@ -210,7 +210,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'path'",
         "required": false,
-        "description": "When the content scroll resets to the top. `'path'` (default) is what the layout has always done; `'always'` also resets on a query- or fragment-only navigation, which is what a server-paged list wants; `'never'` hands the decision to the screen, which can still call `LayoutScrollService.scrollToTop()`. It exists because the layout owning the scroll CONTAINER also meant it owned the POLICY: a screen could add a reset but had no way to suppress one."
+        "description": "When the content scroll resets to the top. `'path'` (default) is what the layout has always done; `'always'` also resets on a query- or fragment-only navigation, which is what a server-paged list wants; `'never'` hands the decision to the screen, which can still call `AppLayoutScrollService.scrollToTop()`. It exists because the layout owning the scroll CONTAINER also meant it owned the POLICY: a screen could add a reset but had no way to suppress one."
       }
     ],
     "outputs": []
@@ -988,11 +988,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "announce",
         "kind": "input",
-        "type": "boolean",
+        "type": "boolean | null",
         "union": null,
-        "default": "false",
+        "default": "null",
         "required": false,
-        "description": "Announce this banner to a screen reader when it appears. Off by default: an `alert` region fires on INSERTION, so a banner that is page furniture would interrupt the reader on every route into the page. Turn it on for one the app raises in response to an event; for anything transient prefer `ToastService`, which owns a live region built for the purpose."
+        "description": "Announce this banner to a screen reader when it appears. Unset follows `DS_CONFIG.banner.announce`, then `false`. Off by default: an `alert` region fires on INSERTION, so a banner that is page furniture would interrupt the reader on every route into the page. Turn it on for one the app raises in response to an event; for anything transient prefer `ToastService`, which owns a live region built for the purpose."
       }
     ],
     "outputs": [
@@ -1502,6 +1502,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Fill pattern. Every color×variant pair renders; the discouraged ones dev-warn with the reason. `text` is discouraged for every colour — prefer the global `.link` class, and keep this one only where the ds-button API is needed."
       },
       {
+        "name": "align",
+        "kind": "input",
+        "type": "ButtonAlign",
+        "union": [
+          "center",
+          "between"
+        ],
+        "default": "'center'",
+        "required": false,
+        "description": "Where the contents sit once the button is wider than them, which in practice means `fullWidth`. `'between'` pushes the label and a trailing icon to opposite edges."
+      },
+      {
         "name": "size",
         "kind": "input",
         "type": "DsSize | null",
@@ -1854,6 +1866,45 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Pins the ceiling of the value axis. See `min`. Two charts drawn one subject at a time are only comparable when both are pinned."
       },
       {
+        "name": "cursor",
+        "kind": "input",
+        "type": "'none' | 'category'",
+        "union": [
+          "none",
+          "category"
+        ],
+        "default": "'none'",
+        "required": false,
+        "description": "Draws a band and a crosshair down the category under the pointer, and reports that category to every mark through `activeIndex`. `'none'`, the default, leaves the plot alone: a chart whose marks are the hover targets already answers per mark, and two affordances on one plot read as two different questions."
+      },
+      {
+        "name": "cursorPin",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Whether a press holds the category cursor where it is, so the reader can look away from the plot with the comparison still on screen. Released by pressing it again, by Escape, or by a press outside the plot."
+      },
+      {
+        "name": "tooltipLingerMs",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Milliseconds the cursor survives the pointer leaving the plot. The tooltip panel is portaled out of the plot, so without a grace period it closes before the pointer can reach it."
+      },
+      {
+        "name": "maxSecondary",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Pins the ceiling of the SECOND value axis, the way `max` pins the first. Two plots read against each other need both pinned, or the second rescales under them."
+      },
+      {
         "name": "plotHeight",
         "kind": "input",
         "type": "number",
@@ -1969,12 +2020,12 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "kind": "input",
         "type": "ChartAxisMode",
         "union": [
-          "rounded",
+          "aligned",
           "exact",
-          "independent",
-          "stacked"
+          "dual-grid",
+          "split"
         ],
-        "default": "'rounded'",
+        "default": "'aligned'",
         "required": false,
         "description": "How the second value axis relates to the first, once a mark has reported against it. The same four words `ds-line-chart` takes."
       },
@@ -1995,9 +2046,527 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "`axisColor` for the second axis."
+      },
+      {
+        "name": "axisLabel",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Names the first axis's unit beside it. On a two-scale plot the colour says which line reads which axis and this says what the numbers ARE - a reader who has neither is left comparing two quantities that may not be comparable at all."
+      },
+      {
+        "name": "secondaryAxisLabel",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "`axisLabel` for the second axis."
       }
     ],
     "outputs": []
+  },
+  "chart:ColumnSeriesComponent": {
+    "key": "chart",
+    "selector": "g[dsColumnSeries]",
+    "isElement": true,
+    "className": "ColumnSeriesComponent",
+    "status": "stable",
+    "importName": "ColumnSeriesComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "data",
+        "kind": "input",
+        "type": "readonly ColumnSeriesPoint[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Not `input.required`: the preset reads `tooltipContext()` from a binding on this same element, and a required input throws NG0950 for the pass before its own value is written."
+      },
+      {
+        "name": "showValues",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Prints each column's value above the column."
+      },
+      {
+        "name": "interactive",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Turns on the click affordance - the pointer cursor and the hover tint. `pointClicked` fires whether or not this is set."
+      },
+      {
+        "name": "pinOnClick",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Holds the hovered mark and its tooltip in place when it is clicked, until Escape or a press outside releases it. Pinning is a state, not a handler."
+      },
+      {
+        "name": "dimOthers",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Fades every mark but the one under the pointer. Off by default: the dimming buys loudness for one mark and pays for it with the separation between the rest."
+      },
+      {
+        "name": "staggerMs",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "0",
+        "required": false,
+        "description": "Milliseconds between one mark's entrance and the next. The total is capped, so a long series does not crawl in."
+      },
+      {
+        "name": "partOfWhole",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Declares that the marks are parts of one whole, which is what makes a share of their total a real quantity. On, each mark's share appears on the tooltip's second line."
+      },
+      {
+        "name": "tooltip",
+        "kind": "input",
+        "type": "ChartItemTooltipTrigger",
+        "union": [
+          "item",
+          "none"
+        ],
+        "default": "'item'",
+        "required": false,
+        "description": "Whether a hovered or focused column opens a tooltip."
+      },
+      {
+        "name": "tooltipAnchor",
+        "kind": "input",
+        "type": "'mark' | 'cell'",
+        "union": [
+          "mark",
+          "cell"
+        ],
+        "default": "'mark'",
+        "required": false,
+        "description": "Where the tooltip is pinned. `'mark'` is the column itself; `'cell'` is the full-height category cell, which puts the panel at the top of the plot whatever the column's value."
+      },
+      {
+        "name": "tooltipLingerMs",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "0",
+        "required": false,
+        "description": "How long the panel survives the pointer leaving the mark. Raise it only for a panel a reader has to REACH, which is WCAG 1.4.13's hoverable clause; about 140 crosses the gap."
+      },
+      {
+        "name": "valueFormat",
+        "kind": "input",
+        "type": "ChartValueFormat",
+        "union": null,
+        "default": "defaultChartFormat",
+        "required": false,
+        "description": "Formats every value this series prints. Called with `'tick'` for an axis label and `'tooltip'` everywhere a value is printed in full."
+      },
+      {
+        "name": "columnWidthRatio",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "0.8",
+        "required": false,
+        "description": "The mark's share of its category's own slot, before the maximum width caps it. Measured off the slot rather than off `bandWidth()`, which has the container's own padding already taken out of it - applying both would narrow every uncapped column twice."
+      },
+      {
+        "name": "slot",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "0",
+        "required": false,
+        "description": "This series' position among the slots a category's band is divided into."
+      },
+      {
+        "name": "slotCount",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "1",
+        "required": false,
+        "description": "How many slots the band is divided into - the number of series drawn side by side. One, the default, is the whole band, which is what a single series has always taken."
+      },
+      {
+        "name": "offsets",
+        "kind": "input",
+        "type": "readonly ChartStackOffset[] | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Where each mark starts and ends on the value axis, one entry per point. Unset, every mark runs from zero to its own value, which is the unstacked case."
+      },
+      {
+        "name": "seriesColor",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "One colour for the whole series, which is what several series drawn together need. Unset, each mark takes the categorical palette by its own position - the right reading when the marks ARE the categories, which is the single-series case. A point's own colour wins over both."
+      },
+      {
+        "name": "seriesFill",
+        "kind": "input",
+        "type": "'solid' | 'hatched' | null",
+        "union": [
+          "solid",
+          "hatched"
+        ],
+        "default": "null",
+        "required": false,
+        "description": "`seriesColor` for the fill pattern. A point's own `fill` wins."
+      },
+      {
+        "name": "seriesLabel",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Names the series in the tooltip, where the category then becomes the panel's heading. Unset, the panel names the category instead, which is what a chart of one series has to say."
+      }
+    ],
+    "outputs": [
+      {
+        "name": "pointClicked",
+        "kind": "output",
+        "type": "ColumnSeriesPoint",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The clicked datum. Fires on click and on Enter or Space, whatever `interactive` says."
+      }
+    ]
+  },
+  "chart:LineSeriesComponent": {
+    "key": "chart",
+    "selector": "g[dsLineSeries]",
+    "isElement": true,
+    "className": "LineSeriesComponent",
+    "status": "stable",
+    "importName": "LineSeriesComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "data",
+        "kind": "input",
+        "type": "readonly LineSeriesData[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "Not `input.required`: the preset reads `tooltipContext()` from a binding on this same element, and a required input throws NG0950 for the pass before its own value is written."
+      },
+      {
+        "name": "showMarkers",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Draws a round marker at every reading. Off leaves the line alone, which reads better past roughly twenty points."
+      },
+      {
+        "name": "interactive",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Turns on the click affordance - the pointer cursor and the hover tint. `pointClicked` fires whether or not this is set."
+      },
+      {
+        "name": "pinOnClick",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Holds the hovered mark and its tooltip in place when it is clicked, until Escape or a press outside releases it. Pinning is a state, not a handler."
+      },
+      {
+        "name": "dimOthers",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Fades every series but the one under the pointer. Off by default: the dimming buys loudness for one line and pays for it with the separation between the rest."
+      },
+      {
+        "name": "highlighted",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "The one series to single out: every other one draws faded and this one draws bold, so the comparison survives a monochrome print. Driven from a legend, or from whatever else the app uses to mean \"show me this one\". Needs `dimOthers`, which is what says fading is wanted at all."
+      },
+      {
+        "name": "patterns",
+        "kind": "input",
+        "type": "readonly string[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "A dash pattern per series, in the order the series are given. A series past the end of the list, or given an empty string, draws solid."
+      },
+      {
+        "name": "stacked",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Fills each area from the series below it rather than from the baseline, which is what a stacked plot needs and what the fill reads as."
+      },
+      {
+        "name": "staggerMs",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "0",
+        "required": false,
+        "description": "Milliseconds between one marker's entrance and the next. The total is capped."
+      },
+      {
+        "name": "gaps",
+        "kind": "input",
+        "type": "ChartGaps",
+        "union": [
+          "break",
+          "zero"
+        ],
+        "default": "'break'",
+        "required": false,
+        "description": "What a `null` reading draws: `'break'` leaves a hole in the line, `'zero'` plots a point at zero. A missing measurement and a measured zero are different facts."
+      },
+      {
+        "name": "curve",
+        "kind": "input",
+        "type": "ChartCurve",
+        "union": [
+          "linear",
+          "step",
+          "smooth"
+        ],
+        "default": "'linear'",
+        "required": false,
+        "description": "How the line joins its readings. `'linear'` by default, which asserts nothing the data does not say; a curve is a claim about what happened BETWEEN two readings. `'step'` holds each reading to the next, `'smooth'` is a monotone cubic that draws no peak the data lacks."
+      },
+      {
+        "name": "tooltip",
+        "kind": "input",
+        "type": "ChartTooltipTrigger",
+        "union": [
+          "item",
+          "axis",
+          "none"
+        ],
+        "default": "'item'",
+        "required": false,
+        "description": "Whether a hovered or focused reading opens a tooltip, and for what. `'item'` names the marker itself. `'axis'` names every series at the category under the pointer, which is the reading a multi-series line is compared on - it follows the container's `cursor`, so set `cursor=\"category\"` on `ds-chart` with it or nothing marks the category being read."
+      },
+      {
+        "name": "tooltipAnchor",
+        "kind": "input",
+        "type": "'reading' | 'pointer'",
+        "union": [
+          "reading",
+          "pointer"
+        ],
+        "default": "'reading'",
+        "required": false,
+        "description": "Where an `'axis'` panel hangs: `'reading'` puts it over the highest reading in the category, so it names what it points at and stays put while the pointer travels within one band; `'pointer'` follows the cursor."
+      },
+      {
+        "name": "tooltipLingerMs",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "0",
+        "required": false,
+        "description": "How long the panel survives the pointer leaving the marker. Raise it only for a panel a reader has to REACH, which is WCAG 1.4.13's hoverable clause; about 140 crosses the gap."
+      },
+      {
+        "name": "valueFormat",
+        "kind": "input",
+        "type": "ChartValueFormat",
+        "union": null,
+        "default": "defaultChartFormat",
+        "required": false,
+        "description": "Formats every value this series prints. Called with `'tick'` for an axis label and `'tooltip'` everywhere a value is printed in full."
+      }
+    ],
+    "outputs": [
+      {
+        "name": "pointClicked",
+        "kind": "output",
+        "type": "{\n    series: LineSeriesData;\n    categoryIndex: number;\n    value: number;\n  }",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The clicked reading, with the series it belongs to and its position in `categories`. Fires on click and on Enter or Space, whatever `interactive` says."
+      }
+    ]
+  },
+  "chart:ReferenceLabelComponent": {
+    "key": "chart",
+    "selector": "g[dsReferenceLabel]",
+    "isElement": true,
+    "className": "ReferenceLabelComponent",
+    "status": "stable",
+    "importName": "ReferenceLabelComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "thresholds",
+        "kind": "input",
+        "type": "readonly ChartThreshold[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "The same list `dsReferenceLine` is given. This mark draws only the labels, so it is placed AFTER the series and the line mark before it, which is what keeps a label legible over a mark that would otherwise cover it."
+      }
+    ],
+    "outputs": []
+  },
+  "chart:ReferenceLineComponent": {
+    "key": "chart",
+    "selector": "g[dsReferenceLine]",
+    "isElement": true,
+    "className": "ReferenceLineComponent",
+    "status": "stable",
+    "importName": "ReferenceLineComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "thresholds",
+        "kind": "input",
+        "type": "readonly ChartThreshold[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "The lines and bands to draw across the plot. Each entry is ONE reading, `value`, plus an optional `label`, `color` and `dash`; a `to` makes it a band between two readings. Each one widens the value axis to hold it, so a target above every mark still lands on the plot."
+      }
+    ],
+    "outputs": []
+  },
+  "chart:SeriesAnnotationComponent": {
+    "key": "chart",
+    "selector": "g[dsSeriesAnnotation]",
+    "isElement": true,
+    "className": "SeriesAnnotationComponent",
+    "status": "stable",
+    "importName": "SeriesAnnotationComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "annotations",
+        "kind": "input",
+        "type": "readonly ChartAnnotation[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": ""
+      }
+    ],
+    "outputs": []
+  },
+  "chart-data-table": {
+    "key": "chart-data-table",
+    "selector": "ds-chart-data-table",
+    "isElement": true,
+    "className": "ChartDataTableComponent",
+    "status": "stable",
+    "importName": "ChartDataTableComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "columns",
+        "kind": "input",
+        "type": "readonly string[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "rows",
+        "kind": "input",
+        "type": "readonly ChartDataRow[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "caption",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "open",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "rowHeader",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Renders each row's first cell as a `<th scope=\"row\">`, for a matrix whose rows are named rather than numbered."
+      }
+    ],
+    "outputs": [
+      {
+        "name": "toggled",
+        "kind": "output",
+        "type": "boolean",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "Fires with the disclosure's state, so a chart with thousands of readings can build its rows only while they are on screen."
+      }
+    ]
   },
   "checkbox": {
     "key": "checkbox",
@@ -2717,7 +3286,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "value",
         "kind": "model",
-        "type": "Date | RangeValue | null",
+        "type": "Date | DateRangeValue | null",
         "union": null,
         "default": "null",
         "required": false,
@@ -2994,250 +3563,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     ],
     "outputs": []
   },
-  "donut-chart": {
-    "key": "donut-chart",
-    "selector": "ds-donut-chart",
-    "isElement": true,
-    "className": "DonutChartComponent",
-    "status": "stable",
-    "importName": "DonutChartComponent",
-    "importPath": "@ids-group-ltd/ids-design-system",
-    "summary": null,
-    "inputs": [
-      {
-        "name": "data",
-        "kind": "input-required",
-        "type": "readonly DonutChartSlice[]",
-        "union": null,
-        "default": null,
-        "required": true,
-        "description": "One slice per entry. A non-positive or non-finite value counts as zero — a ring is a part-to-whole picture and has no way to draw a negative share."
-      },
-      {
-        "name": "centerValue",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Printed inside the ring. Null prints the sum through `valueFormat`."
-      },
-      {
-        "name": "centerLabel",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Caption under the centre value."
-      },
-      {
-        "name": "legend",
-        "kind": "input",
-        "type": "'end' | 'bottom' | 'none'",
-        "union": [
-          "end",
-          "bottom",
-          "none"
-        ],
-        "default": "'end'",
-        "required": false,
-        "description": "Logical placement, so a right-to-left page needs no second value."
-      },
-      {
-        "name": "maxSlices",
-        "kind": "input",
-        "type": "number | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Longest legend to draw. Past it the smallest slices are summed into one, so a long tail does not become a legend nobody reads. Off by default: grouping changes what the chart says, and that is the consumer's call. Values below 2 are ignored — one slice is not a donut."
-      },
-      {
-        "name": "otherLabel",
-        "kind": "input",
-        "type": "string",
-        "union": null,
-        "default": "'Other'",
-        "required": false,
-        "description": "Names the grouped slice."
-      },
-      {
-        "name": "thickness",
-        "kind": "input",
-        "type": "number",
-        "union": null,
-        "default": "DEFAULT_THICKNESS",
-        "required": false,
-        "description": "Ring width as a fraction of the radius."
-      },
-      {
-        "name": "frame",
-        "kind": "input",
-        "type": "ChartFrame | null",
-        "union": [
-          "auto",
-          "none"
-        ],
-        "default": "null",
-        "required": false,
-        "description": "Whether the chart draws its own bordered, padded box. `'auto'`, the default, draws it; `'none'` leaves the chart bare, for one placed inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards is one decision per app rather than per plot."
-      },
-      {
-        "name": "tooltipLingerMs",
-        "kind": "input",
-        "type": "number | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds. Zero, the default, takes it away at once: a panel that outlives the pointer sits over the plot the reader has moved on to. Raise it only for a panel a reader has to REACH — one carrying a link, a figure, or anything selectable — which is WCAG 1.4.13's hoverable clause. The panel is portaled to the body, so crossing the gap to it at an ordinary pointer speed needs about 140. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 0."
-      },
-      {
-        "name": "caption",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Printed above the plot as the chart's visible title, and reused as the annex table's caption."
-      },
-      {
-        "name": "summary",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Accessible name. Generated from the data when omitted."
-      },
-      {
-        "name": "dataTable",
-        "kind": "input",
-        "type": "ChartDataTable | null",
-        "union": [
-          "toggle",
-          "visible",
-          "none"
-        ],
-        "default": "null",
-        "required": false,
-        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`."
-      },
-      {
-        "name": "partOfWhole",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "true",
-        "required": false,
-        "description": "Prints each slice's share of the ring — in the legend, on the tooltip and in the data table. On by default, unlike every other chart, because a ring IS parts of one whole: the share is a real quantity here whatever the data, not a claim the consumer has to make. Off drops all three, for a ring whose slices are already labelled in percent."
-      },
-      {
-        "name": "loading",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize when the data lands."
-      },
-      {
-        "name": "emptyText",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Shown in place of the plot when `data` is empty. Unset falls back to `DS_CONFIG.chart.emptyText`, then `'No data'`."
-      },
-      {
-        "name": "error",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from an empty `data`, because \"the request failed\" and \"there is nothing to show\" read the same to a reader and mean opposite things."
-      },
-      {
-        "name": "errorText",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "The message the error state prints. Unset falls back to `DS_CONFIG.chart.errorText`, then `'Could not load the data'`."
-      },
-      {
-        "name": "valueFormat",
-        "kind": "input",
-        "type": "ChartValueFormat | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then the browser's locale grouping with a K/M/B suffix past four digits."
-      },
-      {
-        "name": "interactive",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
-      },
-      {
-        "name": "pinOnClick",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Holds the hovered mark and its tooltip in place when it is clicked, until Escape or a press outside releases it. Off by default: a click is already the drill-down hook, and a mark left lit after the pointer has gone needs a reader who knows why it is lit. `sliceClicked` fires either way — pinning is a state, not a handler."
-      },
-      {
-        "name": "dimOthers",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Dims every OTHER mark while one is hovered or focused, so the reader's eye is held on the one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed marks — measured 2026-09-13, the worst pair of three dimmed series falls from dE 14.8 at full opacity to 2.1 at `--ds-chart-dim-opacity`'s default 0.3 — so it buys loudness for one mark and pays for it with the rest of the chart."
-      },
-      {
-        "name": "staggerMs",
-        "kind": "input",
-        "type": "number",
-        "union": null,
-        "default": "0",
-        "required": false,
-        "description": "Accepted for parity with the other four charts and deliberately without effect here: a ring arrives as ONE object, because arcs share their edges and fading them one at a time lets the background through every seam. There is nothing to stagger."
-      },
-      {
-        "name": "tooltip",
-        "kind": "input",
-        "type": "ChartItemTooltipTrigger",
-        "union": [
-          "item",
-          "none"
-        ],
-        "default": "'item'",
-        "required": false,
-        "description": "Whether a hovered or focused slice opens a tooltip. `'axis'` is not offered — a ring has no axis to group readings under."
-      }
-    ],
-    "outputs": [
-      {
-        "name": "sliceClicked",
-        "kind": "output",
-        "type": "DonutChartSlice",
-        "union": null,
-        "default": null,
-        "required": false,
-        "description": "The slice that was clicked, or activated with Enter or Space. Fires whether or not `interactive` is set."
-      }
-    ]
-  },
   "drawer": {
     "key": "drawer",
     "selector": "ds-drawer",
@@ -3332,7 +3657,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Allows picking more than one file at once (ignored when `single`)."
+        "description": "Allows picking more than one file at once. Unset takes one, which is what the native input does with no `multiple`."
       },
       {
         "name": "files",
@@ -3351,15 +3676,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Disables the dropzone: blocks all file-picking interactions and signals unavailability."
-      },
-      {
-        "name": "single",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Restricts the dropzone to a single file; narrows the panel to `--col-cap-text`."
       }
     ],
     "outputs": [
@@ -3849,6 +4165,170 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [],
     "outputs": []
+  },
+  "heatmap-chart": {
+    "key": "heatmap-chart",
+    "selector": "ds-heatmap-chart",
+    "isElement": true,
+    "className": "HeatmapChartComponent",
+    "status": "stable",
+    "importName": "HeatmapChartComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "columns",
+        "kind": "input",
+        "type": "readonly string[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "The column headings, left to right. Their count decides how many readings of a row are drawn: a row longer than this loses its tail, a shorter one ends early."
+      },
+      {
+        "name": "data",
+        "kind": "input",
+        "type": "readonly HeatmapChartRow[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "One entry per row, each carrying one reading per column. A `null` reading is a cell that was never measured and is drawn as the surface rather than as the ramp's coldest step."
+      },
+      {
+        "name": "caption",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Printed above the grid as the visible title."
+      },
+      {
+        "name": "min",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Pins the floor of the colour scale. It only ever OPENS the scale further, so a floor above the data cannot push a reading off the ramp. Unset, the scale starts at the lowest reading."
+      },
+      {
+        "name": "max",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Pins the ceiling of the colour scale, the same way `min` pins its floor. Set both to compare two heat maps by colour: unset, each one spans its own readings and the same hue means a different quantity on each."
+      },
+      {
+        "name": "showValues",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Prints each cell's reading inside it. Off by default: a grid dense enough to be worth a heat map has no room for the numbers, which is why the annex table is always there."
+      },
+      {
+        "name": "interactive",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Makes every measured cell a button. An unmeasured cell stays inert - a grid of buttons with nothing behind them is a tab trap."
+      },
+      {
+        "name": "dimOthers",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Fades every cell but the one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed cells, which on a ramp is the only thing carrying magnitude."
+      },
+      {
+        "name": "frame",
+        "kind": "input",
+        "type": "ChartFrame | null",
+        "union": [
+          "auto",
+          "none"
+        ],
+        "default": "null",
+        "required": false,
+        "description": "`'auto'` draws the bordered, padded box; `'none'` leaves it bare for a chart inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`."
+      },
+      {
+        "name": "loading",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "A skeleton at the grid's own height, so the page does not resize when the data lands."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Separate from an empty matrix: \"the request failed\" and \"there is nothing to show\" read the same and mean opposite things."
+      },
+      {
+        "name": "emptyText",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Shown when there are no rows or no columns. Unset falls back to `DS_CONFIG.chart.emptyText`."
+      },
+      {
+        "name": "errorText",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Shown in place of the grid while `error` is set. Unset falls back to `DS_CONFIG.chart.errorText`."
+      },
+      {
+        "name": "valueFormat",
+        "kind": "input",
+        "type": "ChartValueFormat | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Formats every reading the chart prints - the scale's two ends, each cell's accessible name and the annex table. Unset falls back to `DS_CONFIG.chart.valueFormat`."
+      },
+      {
+        "name": "tooltip",
+        "kind": "input",
+        "type": "ChartItemTooltipTrigger",
+        "union": [
+          "item",
+          "none"
+        ],
+        "default": "'item'",
+        "required": false,
+        "description": "Whether a hovered or focused cell opens a tooltip. A heat map's cells carry no printed value by default, so this is where a reading is read without reaching for the annex table."
+      }
+    ],
+    "outputs": [
+      {
+        "name": "cellClicked",
+        "kind": "output",
+        "type": "HeatmapChartCell",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The clicked cell, with the row and the column it sits at. Never fires for an unmeasured cell, which has no reading to drill into."
+      }
+    ]
   },
   "icon-button": {
     "key": "icon-button",
@@ -4546,14 +5026,14 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "yAxisMode",
         "kind": "input",
-        "type": "LineChartAxisMode",
+        "type": "ChartAxisMode",
         "union": [
-          "rounded",
+          "aligned",
           "exact",
-          "independent",
-          "stacked"
+          "dual-grid",
+          "split"
         ],
-        "default": "'rounded'",
+        "default": "'aligned'",
         "required": false,
         "description": "How a secondary axis relates to the primary one."
       },
@@ -4605,7 +5085,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "gaps",
         "kind": "input",
-        "type": "LineChartGaps",
+        "type": "ChartGaps",
         "union": [
           "break",
           "zero"
@@ -4613,6 +5093,50 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "'break'",
         "required": false,
         "description": "What a `null` reading draws. The default refuses to assert that a missing reading is a zero."
+      },
+      {
+        "name": "curve",
+        "kind": "input",
+        "type": "ChartCurve",
+        "union": [
+          "linear",
+          "step",
+          "smooth"
+        ],
+        "default": "'linear'",
+        "required": false,
+        "description": "How the line joins its readings. `'linear'` by default, which asserts nothing the data does not say; a curve is a claim about what happened BETWEEN two readings."
+      },
+      {
+        "name": "stack",
+        "kind": "input",
+        "type": "LineChartStack",
+        "union": [
+          "none",
+          "stacked",
+          "normalized"
+        ],
+        "default": "'none'",
+        "required": false,
+        "description": "How several series share the value axis. Stacking runs per AXIS, so a series on the secondary axis never piles onto one measured against the primary."
+      },
+      {
+        "name": "yAxisLabel",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Names the first axis's unit beside it. On a plot carrying two scales the colour says which line reads which axis and this says what the numbers ARE - and a reader who has neither is left comparing two quantities that may not be comparable at all."
+      },
+      {
+        "name": "secondaryAxisLabel",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "`yAxisLabel` for the second axis."
       },
       {
         "name": "tickCount",
@@ -4834,7 +5358,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "pointClicked",
         "kind": "output",
-        "type": "LineChartPoint",
+        "type": "LineChartReading",
         "union": null,
         "default": null,
         "required": false,
@@ -6095,6 +6619,31 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "true",
         "required": false,
         "description": "Shows the rows-per-page dropdown. Turn it off for a screen with a fixed page size — otherwise the control offers a choice the host won't honour."
+      },
+      {
+        "name": "size",
+        "kind": "input",
+        "type": "DsSize | null",
+        "union": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "null",
+        "required": false,
+        "description": "Control height - sm/md/lg. A pager under a full-width table wants targets bigger than the dense default. Unset falls back to `DS_CONFIG.control.size`, then `'sm'`."
+      },
+      {
+        "name": "layout",
+        "kind": "input",
+        "type": "PaginationLayout",
+        "union": [
+          "grouped",
+          "spread"
+        ],
+        "default": "'grouped'",
+        "required": false,
+        "description": "`'grouped'`, the default, keeps the label beside the controls. `'spread'` pushes them to opposite edges of whatever width the nav is given."
       }
     ],
     "outputs": []
@@ -6192,6 +6741,250 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [],
     "outputs": []
+  },
+  "pie-chart": {
+    "key": "pie-chart",
+    "selector": "ds-pie-chart",
+    "isElement": true,
+    "className": "PieChartComponent",
+    "status": "stable",
+    "importName": "PieChartComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "data",
+        "kind": "input-required",
+        "type": "readonly PieChartSlice[]",
+        "union": null,
+        "default": null,
+        "required": true,
+        "description": "One slice per entry. A non-positive or non-finite value counts as zero — a ring is a part-to-whole picture and has no way to draw a negative share."
+      },
+      {
+        "name": "centerValue",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Printed inside the ring. Null prints the sum through `valueFormat`."
+      },
+      {
+        "name": "centerLabel",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Caption under the centre value."
+      },
+      {
+        "name": "legend",
+        "kind": "input",
+        "type": "'end' | 'bottom' | 'none'",
+        "union": [
+          "end",
+          "bottom",
+          "none"
+        ],
+        "default": "'end'",
+        "required": false,
+        "description": "Logical placement, so a right-to-left page needs no second value."
+      },
+      {
+        "name": "maxSlices",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Longest legend to draw. Past it the smallest slices are summed into one, so a long tail does not become a legend nobody reads. Off by default: grouping changes what the chart says, and that is the consumer's call. Values below 2 are ignored — one slice is not a pie."
+      },
+      {
+        "name": "otherLabel",
+        "kind": "input",
+        "type": "string",
+        "union": null,
+        "default": "'Other'",
+        "required": false,
+        "description": "Names the grouped slice."
+      },
+      {
+        "name": "innerRadius",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "DEFAULT_INNER_RADIUS",
+        "required": false,
+        "description": "The hole, as a fraction of the outer radius. Zero draws a solid pie and takes the centre content away with the hole that held it."
+      },
+      {
+        "name": "frame",
+        "kind": "input",
+        "type": "ChartFrame | null",
+        "union": [
+          "auto",
+          "none"
+        ],
+        "default": "null",
+        "required": false,
+        "description": "Whether the chart draws its own bordered, padded box. `'auto'`, the default, draws it; `'none'` leaves the chart bare, for one placed inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards is one decision per app rather than per plot."
+      },
+      {
+        "name": "tooltipLingerMs",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds. Zero, the default, takes it away at once: a panel that outlives the pointer sits over the plot the reader has moved on to. Raise it only for a panel a reader has to REACH — one carrying a link, a figure, or anything selectable — which is WCAG 1.4.13's hoverable clause. The panel is portaled to the body, so crossing the gap to it at an ordinary pointer speed needs about 140. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 0."
+      },
+      {
+        "name": "caption",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Printed above the plot as the chart's visible title, and reused as the annex table's caption."
+      },
+      {
+        "name": "summary",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Accessible name. Generated from the data when omitted."
+      },
+      {
+        "name": "dataTable",
+        "kind": "input",
+        "type": "ChartDataTable | null",
+        "union": [
+          "toggle",
+          "visible",
+          "none"
+        ],
+        "default": "null",
+        "required": false,
+        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`."
+      },
+      {
+        "name": "partOfWhole",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Prints each slice's share of the ring — in the legend, on the tooltip and in the data table. On by default, unlike every other chart, because a ring IS parts of one whole: the share is a real quantity here whatever the data, not a claim the consumer has to make. Off drops all three, for a ring whose slices are already labelled in percent."
+      },
+      {
+        "name": "loading",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize when the data lands."
+      },
+      {
+        "name": "emptyText",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Shown in place of the plot when `data` is empty. Unset falls back to `DS_CONFIG.chart.emptyText`, then `'No data'`."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from an empty `data`, because \"the request failed\" and \"there is nothing to show\" read the same to a reader and mean opposite things."
+      },
+      {
+        "name": "errorText",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "The message the error state prints. Unset falls back to `DS_CONFIG.chart.errorText`, then `'Could not load the data'`."
+      },
+      {
+        "name": "valueFormat",
+        "kind": "input",
+        "type": "ChartValueFormat | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then the browser's locale grouping with a K/M/B suffix past four digits."
+      },
+      {
+        "name": "interactive",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
+      },
+      {
+        "name": "pinOnClick",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Holds the hovered mark and its tooltip in place when it is clicked, until Escape or a press outside releases it. Off by default: a click is already the drill-down hook, and a mark left lit after the pointer has gone needs a reader who knows why it is lit. `sliceClicked` fires either way — pinning is a state, not a handler."
+      },
+      {
+        "name": "dimOthers",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Dims every OTHER mark while one is hovered or focused, so the reader's eye is held on the one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed marks — measured 2026-09-13, the worst pair of three dimmed series falls from dE 14.8 at full opacity to 2.1 at `--ds-chart-dim-opacity`'s default 0.3 — so it buys loudness for one mark and pays for it with the rest of the chart."
+      },
+      {
+        "name": "staggerMs",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "0",
+        "required": false,
+        "description": "Accepted for parity with the other four charts and deliberately without effect here: a ring arrives as ONE object, because arcs share their edges and fading them one at a time lets the background through every seam. There is nothing to stagger."
+      },
+      {
+        "name": "tooltip",
+        "kind": "input",
+        "type": "ChartItemTooltipTrigger",
+        "union": [
+          "item",
+          "none"
+        ],
+        "default": "'item'",
+        "required": false,
+        "description": "Whether a hovered or focused slice opens a tooltip. `'axis'` is not offered — a ring has no axis to group readings under."
+      }
+    ],
+    "outputs": [
+      {
+        "name": "sliceClicked",
+        "kind": "output",
+        "type": "PieChartSlice",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The slice that was clicked, or activated with Enter or Space. Fires whether or not `interactive` is set."
+      }
+    ]
   },
   "popover": {
     "key": "popover",
@@ -6589,6 +7382,196 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "inputs": [],
     "outputs": []
   },
+  "scatter-chart": {
+    "key": "scatter-chart",
+    "selector": "ds-scatter-chart",
+    "isElement": true,
+    "className": "ScatterChartComponent",
+    "status": "stable",
+    "importName": "ScatterChartComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "data",
+        "kind": "input",
+        "type": "readonly ScatterChartSeries[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "One entry per series, each carrying its own readings. Both scales are continuous, so a point holds its position on each rather than an index into a list of categories."
+      },
+      {
+        "name": "xLabel",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Names the horizontal quantity under the plot. Without it the reader has two numbers and no idea which is which - on a scatter that is the whole reading."
+      },
+      {
+        "name": "yLabel",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Names the vertical quantity beside the plot."
+      },
+      {
+        "name": "decimator",
+        "kind": "input",
+        "type": "ScatterChartDecimator",
+        "union": [
+          "minMax",
+          "lttb",
+          "none"
+        ],
+        "default": "'minMax'",
+        "required": false,
+        "description": "Which decimator thins a series past the budget. `'minMax'` by default, because it is the only one that promises each bucket's extremum survives."
+      },
+      {
+        "name": "tickCount",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "SCATTER_DEFAULT_TICK_COUNT",
+        "required": false,
+        "description": "A hint, not a count, and it applies to BOTH axes. Ticks snap to a round step."
+      },
+      {
+        "name": "caption",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Printed above the plot as the visible title, and reused as the annex table's caption."
+      },
+      {
+        "name": "summary",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "The accessible name. Generated when omitted, naming both axes' spans, how many readings were drawn and how many were thinned out."
+      },
+      {
+        "name": "interactive",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Makes every mark a button and gives it a keyboard route. `pointClicked` fires whether or not this is set."
+      },
+      {
+        "name": "frame",
+        "kind": "input",
+        "type": "ChartFrame | null",
+        "union": [
+          "auto",
+          "none"
+        ],
+        "default": "null",
+        "required": false,
+        "description": "`'auto'` draws the bordered, padded box; `'none'` leaves it bare for a chart inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`."
+      },
+      {
+        "name": "dataTable",
+        "kind": "input",
+        "type": "ChartDataTable | null",
+        "union": [
+          "toggle",
+          "visible",
+          "none"
+        ],
+        "default": "null",
+        "required": false,
+        "description": "The annex table under the plot. It lists EVERY reading, including the ones decimation left out of the drawing, which is what keeps a thinned chart honest."
+      },
+      {
+        "name": "loading",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "A skeleton at the plot's own height, so the page does not resize when the data lands."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Separate from empty data: \"the request failed\" and \"there is nothing to show\" read the same and mean opposite things."
+      },
+      {
+        "name": "emptyText",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Shown when no series carries a reading. Unset falls back to `DS_CONFIG.chart.emptyText`."
+      },
+      {
+        "name": "errorText",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Shown in place of the plot while `error` is set. Unset falls back to `DS_CONFIG.chart.errorText`."
+      },
+      {
+        "name": "valueFormat",
+        "kind": "input",
+        "type": "ChartValueFormat | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Formats every number the chart prints - both axes' ticks, the accessible name and the annex table. Unset falls back to `DS_CONFIG.chart.valueFormat`."
+      },
+      {
+        "name": "tooltip",
+        "kind": "input",
+        "type": "ChartItemTooltipTrigger",
+        "union": [
+          "item",
+          "none"
+        ],
+        "default": "'item'",
+        "required": false,
+        "description": "Whether a hovered or focused mark opens a tooltip. A scatter prints no value beside its marks - there is no room - so this is where a reading is read without the annex table."
+      },
+      {
+        "name": "dimOthers",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Fades every mark but the one under the pointer. Off by default: on a scatter the pile-up IS the reading, and dimming the neighbours takes exactly that away."
+      }
+    ],
+    "outputs": [
+      {
+        "name": "pointClicked",
+        "kind": "output",
+        "type": "ScatterChartReading",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The clicked reading, with the series it belongs to. Fires on click and on Enter or Space."
+      }
+    ]
+  },
   "search": {
     "key": "search",
     "selector": "ds-search",
@@ -6841,6 +7824,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Disables every segment."
+      },
+      {
+        "name": "joined",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Segments share their edges instead of floating in a padded track: borders collapse into one hairline and only the outer ends round. Needs `--ds-segmented-segment-border` to be set, since the shared edge IS the border."
       }
     ],
     "outputs": []
@@ -8410,9 +9402,9 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Column key currently sorted by; `null` when unsorted. Two-way bindable (`[(sortKey)]`) or one-way from your own state with `(sortChange)`."
       },
       {
-        "name": "sortDir",
+        "name": "sortDirection",
         "kind": "input",
-        "type": "SortDir",
+        "type": "SortDirection",
         "union": [
           "asc",
           "desc"
@@ -8424,7 +9416,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "sortingOrder",
         "kind": "input",
-        "type": "SortDir[]",
+        "type": "SortDirection[]",
         "union": null,
         "default": "['asc', 'desc', null]",
         "required": false,
@@ -8433,9 +9425,9 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "sortAnnouncement",
         "kind": "input",
-        "type": "(label: string, dir: SortDir) => string",
+        "type": "(label: string, dir: SortDirection) => string",
         "union": null,
-        "default": "(label, dir) =>\n      dir\n        ? `Sorted by ${label}, ${dir === 'asc' ? 'ascending' : 'descending'}`\n        : `Sorting cleared`",
+        "default": "(label, dir) =>\n    dir\n      ? `Sorted by ${label}, ${dir === 'asc' ? 'ascending' : 'descending'}`\n      : `Sorting cleared`",
         "required": false,
         "description": "Wording for the sort announcement, so it can be translated. Receives the column's label and the new direction; return an empty string to say nothing."
       },
@@ -8759,16 +9751,16 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Emitted for `[(sortKey)]`. `sortChange` carries the same click with both halves at once, which is usually the one to listen to."
       },
       {
-        "name": "sortDirChange",
+        "name": "sortDirectionChange",
         "kind": "output",
-        "type": "SortDir",
+        "type": "SortDirection",
         "union": [
           "asc",
           "desc"
         ],
         "default": null,
         "required": false,
-        "description": "Emitted for `[(sortDir)]`."
+        "description": "Emitted for `[(sortDirection)]`."
       },
       {
         "name": "lazyLoad",
@@ -8901,7 +9893,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "'table.csv'",
         "required": false,
-        "description": ""
+        "description": "The download's name, extension included - it is passed through, never derived. A custom `exportFetcher` returning a Blob is saved under this same name, so an export that is not CSV has to say so here."
       },
       {
         "name": "exportFetcher",
@@ -9894,6 +10886,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "DEFAULT_MAX_VISIBLE",
         "required": false,
         "description": "Cap on concurrently visible toasts. Extras are queued and shown as earlier ones dismiss. `0` = unlimited."
+      },
+      {
+        "name": "showQueueCount",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Show a `+N` strip while toasts wait behind `maxVisible`."
       }
     ],
     "outputs": []
@@ -10148,10 +11149,247 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Fires with `address` after a successful copy."
       }
     ]
+  },
+  "waterfall-chart": {
+    "key": "waterfall-chart",
+    "selector": "ds-waterfall-chart",
+    "isElement": true,
+    "className": "WaterfallChartComponent",
+    "status": "stable",
+    "importName": "WaterfallChartComponent",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": null,
+    "inputs": [
+      {
+        "name": "data",
+        "kind": "input",
+        "type": "readonly WaterfallChartBar[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "The bars in the order they are read, which is the order they happened in - a waterfall is never sorted, because the sequence is the meaning."
+      },
+      {
+        "name": "showValues",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Prints each bar's own reading above it, with its sign."
+      },
+      {
+        "name": "showConnectors",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "The dashed rule chaining one bar to the next at the level they share. Without it the bars read as separate columns rather than as one running total."
+      },
+      {
+        "name": "caption",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Printed above the plot as the visible title, and reused as the annex table's caption."
+      },
+      {
+        "name": "summary",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "The accessible name. Generated from the steps when omitted, naming each one's direction in words and the figure the chain ends at."
+      },
+      {
+        "name": "tickCount",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "5",
+        "required": false,
+        "description": "A hint, not a count. Ticks snap to a round step."
+      },
+      {
+        "name": "interactive",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Turns on the click affordance and the keyboard route. `barClicked` fires whether or not this is set."
+      },
+      {
+        "name": "frame",
+        "kind": "input",
+        "type": "ChartFrame | null",
+        "union": [
+          "auto",
+          "none"
+        ],
+        "default": "null",
+        "required": false,
+        "description": "`'auto'` draws the bordered, padded box; `'none'` leaves it bare for a chart inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`."
+      },
+      {
+        "name": "dataTable",
+        "kind": "input",
+        "type": "ChartDataTable | null",
+        "union": [
+          "toggle",
+          "visible",
+          "none"
+        ],
+        "default": "null",
+        "required": false,
+        "description": "The annex table under the plot. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`. It prints each step's direction, its own reading and the running total."
+      },
+      {
+        "name": "loading",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Skeleton bars at the real count, so the page does not resize when the data lands."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Separate from an empty `data`: \"the request failed\" and \"there is nothing to show\" read the same and mean opposite things."
+      },
+      {
+        "name": "emptyText",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Shown in place of the plot when `data` is empty. Unset falls back to `DS_CONFIG.chart.emptyText`."
+      },
+      {
+        "name": "errorText",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Shown in place of the plot while `error` is set. Unset falls back to `DS_CONFIG.chart.errorText`."
+      },
+      {
+        "name": "valueFormat",
+        "kind": "input",
+        "type": "ChartValueFormat | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Formats every value the chart prints - the axis ticks, the bar labels and the annex table. The sign a delta carries is added around it, so a formatter never has to know about one."
+      }
+    ],
+    "outputs": [
+      {
+        "name": "barClicked",
+        "kind": "output",
+        "type": "WaterfallChartBar",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The clicked datum, as it was given. Fires on click and on Enter or Space."
+      }
+    ]
   }
 };
 
 export const SERVICE_API: Record<string, ServiceApi> = {
+  "AppLayoutNavigationService": {
+    "key": "app-layout",
+    "className": "AppLayoutNavigationService",
+    "importName": "AppLayoutNavigationService",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": "Emits the new path whenever navigation lands on a DIFFERENT one. A query- or fragment-only navigation is a search, sort or page step on the same screen, and everything that reacts to \"went somewhere else\" must agree on that — the scroll reset, the responsive rail, and now your own code — so they read one source instead of each deciding for itself. PUBLIC since 0.8.x, because consumers were re-deriving it and disagreeing: one consumer had three separate answers to \"did the path change?\" — route snapshots in a view-transition skip, this stream inside the layout, and a `split('?')` in a tab helper that ignored the fragment this one strips. Inject it and read `pathChanged` rather than writing a fourth: ```ts private readonly navigation = inject(AppLayoutNavigationService); constructor() { this.navigation.pathChanged .pipe(takeUntilDestroyed()) .subscribe((path) => …); } ``` A PATH change is not always a page change. An app whose URL mirrors the reader's position — a docs layout rewriting `/area/section` from a scroll spy, a wizard that names its step — changes the path while staying on the screen, and resetting the scroll there fights the user: the reset moves the scroll, the spy rewrites the path again, and the page ping-pongs. Such a navigation must carry `state: { dsSamePage: true }`, which is skipped here. Root-provided, which is also what makes it safe to expose: the stream is derived from the router and holds no state, so one instance serves every reader. `AppLayoutScrollService` depends on it, so a consumer providing THAT outside `ds-app-layout` needs this one resolvable too.",
+    "members": [
+      {
+        "name": "pathChanged",
+        "kind": "property",
+        "signature": "pathChanged",
+        "type": "Observable<string>",
+        "description": "Emits the new path on every navigation that lands on a DIFFERENT path — query and hash are stripped, repeats are dropped, and a navigation the app marked `dsSamePage` is skipped entirely."
+      }
+    ]
+  },
+  "AppLayoutScrollService": {
+    "key": "app-layout",
+    "className": "AppLayoutScrollService",
+    "importName": "AppLayoutScrollService",
+    "importPath": "@ids-group-ltd/ids-design-system",
+    "summary": "Owns the layout's content scroller. In the fixed-frame layout the window never scrolls, so the router's built-in window-based scrolling no-ops — this service resets the registered container to the top when navigation lands on a different PATH instead. Provided by `ds-app-layout`, so routed pages can `inject(AppLayoutScrollService)` and call `scrollToTop()` manually (e.g. list pages that DO want the top after a filter change). With `restoreScroll` on the layout it also restores the reader's place. Only when ARMED, which is the whole design: going BACK to a list should return to where the reader was, while following a link into a new screen should not.",
+    "members": [
+      {
+        "name": "scroller",
+        "kind": "property",
+        "signature": "scroller",
+        "type": "Signal<Element | null>",
+        "description": "The content scroller, once the layout has rendered it. Exposed so a host that must measure or drive the scroll itself — a scroll-spy, a virtualizer — can ask the layout for it instead of guessing the layout's internal markup with `document.querySelector`."
+      },
+      {
+        "name": "setScrollContainer",
+        "kind": "method",
+        "signature": "setScrollContainer(element: Element)",
+        "type": "void",
+        "description": "Wiring, called by `ds-app-layout` once its content region exists. Public only because the component and the service sit in different files - a consumer has no reason to call it, and calling it points the service at the wrong element."
+      },
+      {
+        "name": "configureRestore",
+        "kind": "method",
+        "signature": "configureRestore(timeoutMs: number | null)",
+        "type": "void",
+        "description": "Wiring: `ds-app-layout` mirrors its `restoreScroll` inputs through here."
+      },
+      {
+        "name": "configureReset",
+        "kind": "method",
+        "signature": "configureReset(strategy: DsAppLayoutScrollReset)",
+        "type": "void",
+        "description": "Wiring: `ds-app-layout` mirrors its `scrollReset` input through here."
+      },
+      {
+        "name": "scrollToTop",
+        "kind": "method",
+        "signature": "scrollToTop()",
+        "type": "void",
+        "description": "Send the layout's content region back to the top. For a screen that wants the top after its own filter or sort change, which `resetScroll=\"path\"` deliberately does not do."
+      },
+      {
+        "name": "scrollTo",
+        "kind": "method",
+        "signature": "scrollTo(top: number)",
+        "type": "void",
+        "description": "Scroll the content region to an absolute offset. Assigns `scrollTop` rather than calling `scrollTo`, so a themed `scroll-behavior: smooth` cannot turn a positioning jump into an animation."
+      },
+      {
+        "name": "consumePendingOffset",
+        "kind": "method",
+        "signature": "consumePendingOffset()",
+        "type": "number | null",
+        "description": "Take the offset this navigation is going to restore, and cancel the restore. For a host that renders its own scroll position — a virtualizer needs the offset BEFORE it decides which rows to build, so letting the service assign `scrollTop` afterwards would scroll a list that has not been built yet. Returns null when nothing is pending, which is every navigation that is not a back."
+      },
+      {
+        "name": "contentReady",
+        "kind": "method",
+        "signature": "contentReady()",
+        "type": "void",
+        "description": "Optional accelerator: tell the layout the content for this route is in the DOM. Without it the restore still lands — it waits for the container to grow and clamps at the deadline — but a host that knows when its data arrived can end the wait early instead of paying the growth watch."
+      }
+    ]
+  },
   "BodyScrollLockService": {
     "key": "overlay",
     "className": "BodyScrollLockService",
@@ -10223,87 +11461,6 @@ export const SERVICE_API: Record<string, ServiceApi> = {
         "signature": "clear()",
         "type": "void",
         "description": "Empty the trail."
-      }
-    ]
-  },
-  "LayoutNavigationService": {
-    "key": "app-layout",
-    "className": "LayoutNavigationService",
-    "importName": "LayoutNavigationService",
-    "importPath": "@ids-group-ltd/ids-design-system",
-    "summary": "Emits the new path whenever navigation lands on a DIFFERENT one. A query- or fragment-only navigation is a search, sort or page step on the same screen, and everything that reacts to \"went somewhere else\" must agree on that — the scroll reset, the responsive rail, and now your own code — so they read one source instead of each deciding for itself. PUBLIC since 0.8.x, because consumers were re-deriving it and disagreeing: one consumer had three separate answers to \"did the path change?\" — route snapshots in a view-transition skip, this stream inside the layout, and a `split('?')` in a tab helper that ignored the fragment this one strips. Inject it and read `pathChanged` rather than writing a fourth: ```ts private readonly navigation = inject(LayoutNavigationService); constructor() { this.navigation.pathChanged .pipe(takeUntilDestroyed()) .subscribe((path) => …); } ``` A PATH change is not always a page change. An app whose URL mirrors the reader's position — a docs layout rewriting `/area/section` from a scroll spy, a wizard that names its step — changes the path while staying on the screen, and resetting the scroll there fights the user: the reset moves the scroll, the spy rewrites the path again, and the page ping-pongs. Such a navigation must carry `state: { dsSamePage: true }`, which is skipped here. Root-provided, which is also what makes it safe to expose: the stream is derived from the router and holds no state, so one instance serves every reader. `LayoutScrollService` depends on it, so a consumer providing THAT outside `ds-app-layout` needs this one resolvable too.",
-    "members": [
-      {
-        "name": "pathChanged",
-        "kind": "property",
-        "signature": "pathChanged",
-        "type": "Observable<string>",
-        "description": "Emits the new path on every navigation that lands on a DIFFERENT path — query and hash are stripped, repeats are dropped, and a navigation the app marked `dsSamePage` is skipped entirely."
-      }
-    ]
-  },
-  "LayoutScrollService": {
-    "key": "app-layout",
-    "className": "LayoutScrollService",
-    "importName": "LayoutScrollService",
-    "importPath": "@ids-group-ltd/ids-design-system",
-    "summary": "Owns the layout's content scroller. In the fixed-frame layout the window never scrolls, so the router's built-in window-based scrolling no-ops — this service resets the registered container to the top when navigation lands on a different PATH instead. Provided by `ds-app-layout`, so routed pages can `inject(LayoutScrollService)` and call `scrollToTop()` manually (e.g. list pages that DO want the top after a filter change). With `restoreScroll` on the layout it also restores the reader's place. Only when ARMED, which is the whole design: going BACK to a list should return to where the reader was, while following a link into a new screen should not.",
-    "members": [
-      {
-        "name": "scroller",
-        "kind": "property",
-        "signature": "scroller",
-        "type": "Signal<Element | null>",
-        "description": "The content scroller, once the layout has rendered it. Exposed so a host that must measure or drive the scroll itself — a scroll-spy, a virtualizer — can ask the layout for it instead of guessing the layout's internal markup with `document.querySelector`."
-      },
-      {
-        "name": "setScrollContainer",
-        "kind": "method",
-        "signature": "setScrollContainer(element: Element)",
-        "type": "void",
-        "description": "Wiring, called by `ds-app-layout` once its content region exists. Public only because the component and the service sit in different files - a consumer has no reason to call it, and calling it points the service at the wrong element."
-      },
-      {
-        "name": "configureRestore",
-        "kind": "method",
-        "signature": "configureRestore(timeoutMs: number | null)",
-        "type": "void",
-        "description": "Wiring: `ds-app-layout` mirrors its `restoreScroll` inputs through here."
-      },
-      {
-        "name": "configureReset",
-        "kind": "method",
-        "signature": "configureReset(strategy: DsScrollReset)",
-        "type": "void",
-        "description": "Wiring: `ds-app-layout` mirrors its `scrollReset` input through here."
-      },
-      {
-        "name": "scrollToTop",
-        "kind": "method",
-        "signature": "scrollToTop()",
-        "type": "void",
-        "description": "Send the layout's content region back to the top. For a screen that wants the top after its own filter or sort change, which `resetScroll=\"path\"` deliberately does not do."
-      },
-      {
-        "name": "scrollTo",
-        "kind": "method",
-        "signature": "scrollTo(top: number)",
-        "type": "void",
-        "description": "Scroll the content region to an absolute offset. Assigns `scrollTop` rather than calling `scrollTo`, so a themed `scroll-behavior: smooth` cannot turn a positioning jump into an animation."
-      },
-      {
-        "name": "consumePendingOffset",
-        "kind": "method",
-        "signature": "consumePendingOffset()",
-        "type": "number | null",
-        "description": "Take the offset this navigation is going to restore, and cancel the restore. For a host that renders its own scroll position — a virtualizer needs the offset BEFORE it decides which rows to build, so letting the service assign `scrollTop` afterwards would scroll a list that has not been built yet. Returns null when nothing is pending, which is every navigation that is not a back."
-      },
-      {
-        "name": "contentReady",
-        "kind": "method",
-        "signature": "contentReady()",
-        "type": "void",
-        "description": "Optional accelerator: tell the layout the content for this route is in the DOM. Without it the restore still lands — it waits for the container to grow and clamps at the deadline — but a host that knows when its data arrived can end the wait early instead of paying the growth watch."
       }
     ]
   },

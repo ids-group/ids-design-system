@@ -14,7 +14,6 @@ import {
 import {
   CHART_SERIES_COLORS,
   chartColors,
-  defaultChartFormat,
   describeSeries,
   formatPercent,
   describeShare,
@@ -25,7 +24,6 @@ import {
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
-import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 import type {
   ChartDataTable,
   ChartFrame,
@@ -39,8 +37,16 @@ import type {
   ChartItemTooltipTrigger,
   ChartTooltipContext,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
-import { resolveMax, segmentWidths, widthPercent } from './bar-chart.math';
+import {
+  barExtent,
+  resolveMax,
+  segmentWidths,
+  widthPercent,
+} from './bar-chart.math';
 import type { BarChartRow, BarChartSegment } from './bar-chart.types';
+import { ChartDataTableComponent } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
+import type { ChartDataRow } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
+import { resolveChartDefaults } from '@ids-group-ltd/ids-design-system/components';
 
 /** A row's parts, ready to draw: a width, a colour and a formatted value each. Segments are
  *  CATEGORIES, so they take the categorical palette in order — unlike the rows, which are one
@@ -74,7 +80,12 @@ function segmentsOf(
 @Component({
   selector: 'ds-bar-chart',
   standalone: true,
-  imports: [SkeletonComponent, ChartTooltipDirective, IconComponent],
+  imports: [
+    SkeletonComponent,
+    ChartTooltipDirective,
+    IconComponent,
+    ChartDataTableComponent,
+  ],
   templateUrl: './bar-chart.component.html',
   styleUrl: './bar-chart.component.scss',
   host: { '[class.framed]': "frameResolved() === 'auto'" },
@@ -148,31 +159,12 @@ export class BarChartComponent {
    *  grouping with a K/M/B suffix past four digits. */
   readonly valueFormat = input<ChartValueFormat | null>(null);
 
-  readonly frameResolved = resolveWithConfig(
-    this.frame,
-    (config) => config.chart?.frame,
-    'auto' as ChartFrame,
-  );
-  readonly dataTableResolved = resolveWithConfig(
-    this.dataTable,
-    (config) => config.chart?.dataTable,
-    'none' as ChartDataTable,
-  );
-  readonly emptyTextResolved = resolveWithConfig(
-    this.emptyText,
-    (config) => config.chart?.emptyText,
-    'No data',
-  );
-  readonly errorTextResolved = resolveWithConfig(
-    this.errorText,
-    (config) => config.chart?.errorText,
-    'Could not load the data',
-  );
-  readonly valueFormatResolved = resolveWithConfig(
-    this.valueFormat,
-    (config) => config.chart?.valueFormat,
-    defaultChartFormat,
-  );
+  private readonly defaults = resolveChartDefaults(this);
+  readonly frameResolved = this.defaults.frame;
+  readonly dataTableResolved = this.defaults.dataTable;
+  readonly emptyTextResolved = this.defaults.emptyText;
+  readonly errorTextResolved = this.defaults.errorText;
+  readonly valueFormatResolved = this.defaults.valueFormat;
 
   /** Turns on the click affordance — the pointer cursor and any hover tint.
    *  The click output fires whether or not this is set, so a consumer that
@@ -214,11 +206,7 @@ export class BarChartComponent {
       'dsChartTooltip',
     );
 
-  private readonly tooltipLingerResolved = resolveWithConfig(
-    this.tooltipLingerMs,
-    (config) => config.chart?.tooltipLingerMs,
-    0,
-  );
+  private readonly tooltipLingerResolved = this.defaults.tooltipLingerMs;
 
   protected readonly activeMark = chartActiveMark(() =>
     this.tooltipLingerResolved(),
@@ -270,12 +258,16 @@ export class BarChartComponent {
         entries: [
           {
             label: entry.row.label,
-            value: entry.row.value,
+            value: barExtent(entry.row.value).high,
             formatted: entry.formattedValue,
             color: entry.color,
             detail: this.partOfWhole()
               ? describeShare(
-                  this.data().map((row) => row.value),
+                  this.data().map((row) => {
+                    const extent = barExtent(row.value);
+
+                    return extent.high - extent.low;
+                  }),
                   this.activeMark.index(),
                 )
               : undefined,
@@ -285,31 +277,99 @@ export class BarChartComponent {
     },
   );
 
+  /** The track has to hold the far end of every bar, the target tick and the outermost band -
+   *  a goal above every reading is the one the chart is read for, and an axis derived from the
+   *  bars alone would draw it off the end. */
   protected readonly resolvedMax = computed(() =>
     resolveMax(
       this.max(),
-      this.data().map((row) => row.value),
+      this.data().flatMap((row) => [
+        barExtent(row.value).high,
+        row.target ?? 0,
+        ...(row.ranges ?? []),
+      ]),
     ),
+  );
+
+  protected readonly dataTableColumns = computed<readonly string[]>(() =>
+    this.partOfWhole()
+      ? ['Label', 'Value', 'Share of total']
+      : ['Label', 'Value'],
+  );
+
+  /** A row's segments follow it as nested rows: one table reads in one pass, and a segment is
+   *  read against the bar it belongs to rather than against the other bars. */
+  protected readonly dataTableRows = computed<readonly ChartDataRow[]>(() =>
+    this.rows().flatMap((entry) => [
+      {
+        key: `bar:${entry.key}`,
+        cells: this.partOfWhole()
+          ? [
+              [entry.row.label, entry.row.detail].filter(Boolean).join(' - '),
+              entry.formattedValue,
+              entry.share,
+            ]
+          : [
+              [entry.row.label, entry.row.detail].filter(Boolean).join(' - '),
+              entry.formattedValue,
+            ],
+      },
+      ...entry.segments.map((part) => ({
+        // Both keys fall back to a positional index in their OWN scope, and flattening puts
+        // them in one list - a bar and its first segment would otherwise both be "0".
+        key: `bar:${entry.key}/${part.key}`,
+        nested: true,
+        cells: this.partOfWhole()
+          ? [part.segment.label, part.formattedValue, '']
+          : [part.segment.label, part.formattedValue],
+      })),
+    ]),
   );
 
   protected readonly rows = computed(() => {
     const max = this.resolvedMax();
     const format = this.valueFormatResolved();
-    const values = this.data().map((row) => row.value);
+    // The bar's LENGTH is what a share is a share of, and on a floating bar that is the span
+    // between its ends rather than either end on its own.
+    const values = this.data().map((row) => {
+      const extent = barExtent(row.value);
 
-    return this.data().map((row, index) => ({
-      key: row.id ?? String(index),
-      row,
-      widthPercent: widthPercent(row.value, max),
-      formattedValue: format(row.value, 'tooltip'),
-      formattedPercent:
-        row.percent !== undefined
-          ? formatPercent(row.percent, 100)
-          : formatPercent(row.value, max),
-      share: this.partOfWhole() ? shareOfTotal(values, index) : '',
-      segments: segmentsOf(row, (value) => format(value, 'tooltip')),
-      color: row.color ?? chartColors.seriesDefault,
-    }));
+      return extent.high - extent.low;
+    });
+
+    return this.data().map((row, index) => {
+      const extent = barExtent(row.value);
+      const span = extent.high - extent.low;
+      const isRange = typeof row.value !== 'number';
+
+      return {
+        key: row.id ?? String(index),
+        row,
+        offsetPercent: widthPercent(extent.low, max),
+        widthPercent: widthPercent(span, max),
+        formattedValue: isRange
+          ? `${format(extent.low, 'tooltip')} - ${format(extent.high, 'tooltip')}`
+          : format(extent.high, 'tooltip'),
+        targetPercent:
+          row.target === undefined ? null : widthPercent(row.target, max),
+        formattedTarget:
+          row.target === undefined ? '' : format(row.target, 'tooltip'),
+        bands: (row.ranges ?? []).map((bound, bandIndex, all) => ({
+          key: `${row.id ?? index}-band-${bandIndex}`,
+          widthPercent: widthPercent(bound, max),
+          // Rising opacity rather than rising hue: the bands are one backdrop read as an order,
+          // and a second palette behind the bars would compete with the bars themselves.
+          opacity: (bandIndex + 1) / (all.length + 1),
+        })),
+        formattedPercent:
+          row.percent !== undefined
+            ? formatPercent(row.percent, 100)
+            : formatPercent(span, max),
+        share: this.partOfWhole() ? shareOfTotal(values, index) : '',
+        segments: segmentsOf(row, (value) => format(value, 'tooltip')),
+        color: row.color ?? chartColors.seriesDefault,
+      };
+    });
   });
 
   protected readonly accessibleName = computed(
@@ -317,7 +377,10 @@ export class BarChartComponent {
       this.summary() ??
       describeSeries(
         this.caption() ?? 'Chart',
-        this.data().map((row) => ({ label: row.label, value: row.value })),
+        this.data().map((row) => ({
+          label: row.label,
+          value: barExtent(row.value).high - barExtent(row.value).low,
+        })),
         (value) => this.valueFormatResolved()(value, 'tooltip'),
         this.dataTableResolved() !== 'none',
       ),

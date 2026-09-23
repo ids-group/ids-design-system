@@ -72,6 +72,19 @@ export interface DsConfig {
      *  `ds-modal` ancestor to bind — an attribute cannot reach it. */
     dividers?: boolean;
   };
+  banner?: {
+    /** Default for every `ds-banner`'s `announce`. Default `false`, because an
+     *  `alert` region fires on INSERTION: a banner that is page furniture would
+     *  interrupt the reader on every route into the page. Set `true` where the app
+     *  raises banners in response to events, and bind `[announce]="false"` on the
+     *  furniture. `ds-alert` has its own key, so the two can differ. */
+    announce?: boolean;
+  };
+  alert?: {
+    /** Default for every `ds-alert`'s `announce`. Default `false`, for the reason
+     *  under `banner.announce`. */
+    announce?: boolean;
+  };
   toast?: {
     /** Where the stack sits. Merged field by field over the built-in
      *  `right` / `top` / `var(--space-6)`, so naming one key keeps the other two. */
@@ -79,6 +92,8 @@ export interface DsConfig {
     /** Maximum number of toasts visible at once. Extras are queued and shown as
      *  earlier ones dismiss. Default `5`; `0` means unlimited. */
     maxVisible?: number;
+    /** Show a `+N` strip while toasts wait behind `maxVisible`. Default `true`. */
+    showQueueCount?: boolean;
   };
   picker?: {
     /** Default for `ds-multi-select``s `searchable`. `true` always shows the panel's

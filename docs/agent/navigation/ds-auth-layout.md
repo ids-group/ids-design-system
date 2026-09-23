@@ -5,5 +5,9 @@ Group: Layout & navigation
 
 Inputs: `brand: string | null = null`, `logoLetter: string | null = null`, `tagline: string | null = null` (all three fall back to `DS_CONFIG.brand`), `cardElevation: CardElevation = 'raised'`, `cardPadding: CardPadding = 'lg'`, `landmark: 'main' | 'none' = 'none'`
 Content slots: `[brand]` (replaces the whole mark row), `[dsBrandName]` (the name beside the generated mark), default (the card body), `[dsAuthSupport]` (the line under the card)
-Tokens: `--ds-auth-layout-min-height`, `--ds-auth-layout-bg-color`, `--ds-auth-layout-gap`, `--ds-auth-layout-pad-block`, `--ds-auth-layout-card-max-width`, `--ds-auth-layout-mark-size`, `--ds-auth-layout-mark-radius`, `--ds-auth-layout-mark-bg-color`, `--ds-auth-layout-mark-label-color`
+Tokens: `--ds-auth-layout-min-height`, `--ds-auth-layout-bg-color`, `--ds-auth-layout-gap`, `--ds-auth-layout-padding-block`, `--ds-auth-layout-card-max-width`, `--ds-auth-layout-mark-size`, `--ds-auth-layout-mark-radius`, `--ds-auth-layout-mark-bg-color`, `--ds-auth-layout-mark-label-color`
 `landmark="main"` only when the page has no other `<main>`; the sign-in card is not automatically the document's main landmark.
+
+<!-- inputs:ds-auth-layout -->
+All inputs: `brand: string | null = null`, `logoLetter: string | null = null`, `tagline: string | null = null`, `cardElevation: 'flat' | 'raised' | 'hover' | 'interactive' = 'raised'`, `cardPadding: 'none' | 'sm' | 'md' | 'lg' = 'lg'`, `landmark: 'main' | 'none' = 'none'`
+<!-- /inputs -->

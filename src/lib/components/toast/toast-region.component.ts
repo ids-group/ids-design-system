@@ -3,6 +3,8 @@ import {
   ElementRef,
   Component,
   ViewEncapsulation,
+  booleanAttribute,
+  computed,
   effect,
   inject,
   input,
@@ -23,6 +25,9 @@ const MIN_RESUME_MS = 600;
 
 const DEFAULT_MAX_VISIBLE = 5;
 
+// Past this the exact figure stops being information, so the counter says "99+".
+const QUEUE_COUNT_CAP = 99;
+
 @Component({
   selector: 'ds-toast-region',
   standalone: true,
@@ -37,17 +42,30 @@ const DEFAULT_MAX_VISIBLE = 5;
     '(mouseleave)': 'onHover(false)',
     '(focusin)': 'onFocusWithin(true)',
     '(focusout)': 'onFocusWithin($event)',
+    '[class.stack-newest-last]': '!newestFirst',
   },
 })
 export class ToastRegionComponent {
   /** Cap on concurrently visible toasts. Extras are queued and shown as
    *  earlier ones dismiss. `0` = unlimited. */
   readonly maxVisible = input<number>(DEFAULT_MAX_VISIBLE);
+  /** Show a `+N` strip while toasts wait behind `maxVisible`. */
+  readonly showQueueCount = input(true, { transform: booleanAttribute });
 
   protected readonly visibleEntries = signal<readonly ToastEntry[]>([]);
   protected readonly leaving = signal<ReadonlySet<number>>(new Set());
 
-  private readonly pendingQueue: ToastEntry[] = [];
+  // A signal, not a plain array: the `+N` strip renders from its length.
+  private readonly pendingQueue = signal<readonly ToastEntry[]>([]);
+
+  protected readonly queuedLabel = computed(() => {
+    const waiting = this.pendingQueue().length;
+    if (waiting === 0 || !this.showQueueCount()) {
+      return null;
+    }
+
+    return waiting > QUEUE_COUNT_CAP ? `+${QUEUE_COUNT_CAP}+` : `+${waiting}`;
+  });
   private readonly timers = new Map<number, number>();
   private readonly leaveTimers = new Map<number, number>();
   private readonly remaining = new Map<number, number>();
@@ -83,14 +101,14 @@ export class ToastRegionComponent {
   /** Newest goes NEAREST the anchor, so the toast that just fired appears where the
    *  stack is pinned rather than at the far end of a list the reader has to hunt
    *  down. DOM order is the visual order, so this also keeps the reading order. */
-  private readonly newestFirst =
+  protected readonly newestFirst =
     (this.position?.verticalPosition ??
       DS_TOAST_POSITION_DEFAULT.verticalPosition) === 'top';
 
   add(entry: ToastEntry): void {
     const limit = this.maxVisible();
     if (limit > 0 && this.visibleEntries().length >= limit) {
-      this.pendingQueue.push(entry);
+      this.pendingQueue.update((queue) => [...queue, entry]);
 
       return;
     }
@@ -271,26 +289,24 @@ export class ToastRegionComponent {
 
       return;
     }
-    const queueIndex = this.pendingQueue.findIndex((entry) => entry.id === id);
-    if (queueIndex !== -1) {
-      this.pendingQueue[queueIndex] = {
-        ...this.pendingQueue[queueIndex],
-        ...patch,
-      };
-    }
+    this.pendingQueue.update((queue) =>
+      queue.map((entry) => (entry.id === id ? { ...entry, ...patch } : entry)),
+    );
   }
 
   remove(id: number): void {
     // A `ToastRef` outlives its toast, so dismiss() can arrive for an id nothing holds.
     const isVisible = this.visibleEntries().some((entry) => entry.id === id);
-    const queueIndex = this.pendingQueue.findIndex((entry) => entry.id === id);
-    if (!isVisible && queueIndex === -1) {
+    const queued = this.pendingQueue().some((entry) => entry.id === id);
+    if (!isVisible && !queued) {
       return;
     }
 
     this.clearCountdown(id);
-    if (queueIndex !== -1) {
-      this.pendingQueue.splice(queueIndex, 1);
+    if (queued) {
+      this.pendingQueue.update((queue) =>
+        queue.filter((entry) => entry.id !== id),
+      );
 
       return;
     }
@@ -345,16 +361,18 @@ export class ToastRegionComponent {
     this.startedAt.clear();
     this.visibleEntries.set([]);
     this.leaving.set(new Set());
-    this.pendingQueue.length = 0;
+    this.pendingQueue.set([]);
   }
 
   private drainQueue(): void {
-    while (this.pendingQueue.length) {
+    while (this.pendingQueue().length) {
       const limit = this.maxVisible();
       if (limit > 0 && this.visibleEntries().length >= limit) {
         return;
       }
-      this.show(this.pendingQueue.shift()!);
+      const [next, ...rest] = this.pendingQueue();
+      this.pendingQueue.set(rest);
+      this.show(next);
     }
   }
 }

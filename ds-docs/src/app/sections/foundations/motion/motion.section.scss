@@ -179,6 +179,10 @@
 
     /* ---------- Entrance presets ---------- */
     .motion-preset-stage {
+      /* The alert ships a 2px entrance offset, which is right on a real screen and
+         invisible in a demo whose whole job is telling Slide from Fade. */
+      --ds-alert-enter-offset: var(--space-3);
+
       display: flex;
       flex-wrap: wrap;
       align-items: flex-start;

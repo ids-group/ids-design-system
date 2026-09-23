@@ -1,0 +1,226 @@
+@use '../../styles/chart-data-table' as chart-data-table;
+@use '../../styles/focus' as focus;
+@use '../../styles/chart-frame' as chart-frame;
+@use '../../styles/chart-interactive' as chart-interactive;
+@use '../../styles/chart-motion' as chart-motion;
+
+// The RING fades, not the slices. Arcs share their edges, and two semi-transparent shapes butting
+// up along one show the background through the seam — which reads as the proportions shifting
+// slightly as the fade finishes. Compositing the ring first and fading the result cannot.
+@include chart-motion.fades-in('.ring-svg');
+
+// The legend's colour chips are part of the same arrival — they name the arcs, so a chip that is
+// already solid while its arc is still fading reads as two objects instead of one.
+@include chart-motion.fades-in('.swatch');
+@include chart-frame.chart-frame;
+@include chart-frame.no-bounding-box-focus('.slice');
+@include chart-data-table.chart-data-table;
+
+
+.pie-chart {
+  --_pie-chart-size: var(--ds-pie-chart-size, 180px);
+  --_pie-chart-gap: var(--ds-pie-chart-gap, var(--space-5));
+  --_pie-chart-legend-row-gap: var(--ds-pie-chart-legend-row-gap, var(--space-2));
+  --_pie-chart-legend-row-height: var(--ds-pie-chart-legend-row-height, 16px);
+  --_pie-chart-swatch-size: var(--ds-pie-chart-swatch-size, 10px);
+  --_pie-chart-focus-color: var(--ds-pie-chart-focus-color, var(--focus-ring-color));
+  --_pie-chart-focus-width: var(--ds-pie-chart-focus-width, var(--focus-ring-width));
+
+  /* The shared mixins draw the ring from `--focus-ring-*` and `--ds-chart-focus-ring-color`, so
+     the two hooks above reach nothing without this. */
+  --ds-chart-focus-ring-color: var(--_pie-chart-focus-color);
+  --focus-ring-color: var(--_pie-chart-focus-color);
+  --focus-ring-width: var(--_pie-chart-focus-width);
+  --_pie-chart-outline-width: var(--ds-pie-chart-outline-width, calc(var(--border-width-strong) + var(--border-width-default)));
+
+  margin: 0;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+// Also when every slice is zero: there is data, so this is not the empty state, but no arc has any
+// sweep and the ring's box would otherwise be blank.
+.empty-ring,
+.ring-outline {
+  position: relative;
+  inline-size: var(--_pie-chart-size);
+  block-size: var(--_pie-chart-size);
+  border: var(--_pie-chart-outline-width) solid var(--border-divider);
+  border-radius: var(--radius-pill);
+}
+
+// The hole, so the placeholder reads as this chart rather than as any round thing. Drawn at the
+// real hole fraction, so a chart set to a pie shows no hole to promise one.
+.empty-ring::before,
+.ring-outline::before {
+  content: '';
+  position: absolute;
+  inset: calc((100% - var(--_pie-chart-hole-fraction) * 100%) / 2);
+  border: calc(
+      var(--_pie-chart-hole-fraction) * var(--_pie-chart-outline-width)
+    )
+    solid var(--border-divider);
+  border-radius: var(--radius-pill);
+}
+
+.empty-text {
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+// Centred whatever `legend` is — the ring alone, the ring beside its legend, or the ring above it.
+// The pair is one object and sits in the middle of whatever width it gets, rather than pinned to
+// the start with a dead strip beside it.
+.chart,
+.skeleton {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--_pie-chart-gap);
+  align-items: center;
+  justify-content: center;
+}
+
+.chart.legend-bottom,
+.skeleton.legend-bottom {
+  flex-direction: column;
+}
+
+.ring {
+  position: relative;
+  flex: none;
+  inline-size: var(--_pie-chart-size);
+  block-size: var(--_pie-chart-size);
+}
+
+.ring-svg {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+
+
+
+/* focus-ring-guard: an outline on an SVG element paints its BOUNDING BOX, not its silhouette — an
+   arc would ring as the whole square the ring sits in. The ring is a stroke on the arc instead;
+   `own-indicator` keeps the outline under forced colours, where `stroke` is not remapped. */
+
+/* focus-ring-guard: an outline on an SVG element paints its BOUNDING BOX, not its silhouette, so
+   a slice would ring as a rectangle. `own-indicator` keeps the outline under forced colours, where
+   `stroke` is not remapped. */
+.slice.focusable:focus-visible {
+  @include focus.own-indicator;
+  @include chart-frame.drawn-focus-ring;
+}
+
+// `70%` is the square that fits inside the hole (1/√2), and the hole fraction comes from the
+// component, the only place that knows it. The 56% floor overrides it at the default hole, so a
+// long label does overhang the slices — the halo below is what carries it there.
+.center {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  inline-size: max(56%, calc(var(--_pie-chart-hole-fraction) * 70%));
+  margin-inline: auto;
+  overflow-wrap: anywhere;
+  text-align: center;
+  pointer-events: none;
+}
+
+// The 56% floor lets a long value overhang the ring, where no single colour is readable against
+// three different hues. A halo of the frame's own background carries it there, and is invisible
+// over the hole where there is nothing to separate it from.
+.center-value,
+.center-label {
+  text-shadow:
+    0 0 var(--space-1) var(--ds-chart-frame-bg-color),
+    0 0 var(--space-0-5) var(--ds-chart-frame-bg-color);
+}
+
+.center-value {
+  color: var(--text-primary);
+  font-size: var(--font-size-h4);
+  font-weight: 700;
+}
+
+.center-label {
+  color: var(--text-tertiary);
+  font-size: var(--font-size-xs);
+}
+
+.legend,
+.skeleton-legend {
+  display: grid;
+  row-gap: var(--_pie-chart-legend-row-gap);
+  min-inline-size: 0;
+}
+
+.legend {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.skeleton-legend {
+  flex: 1 1 auto;
+}
+
+.legend-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  column-gap: var(--space-2);
+  align-items: baseline;
+}
+
+.legend-item.interactive {
+  cursor: pointer;
+}
+
+.swatch {
+  align-self: center;
+  inline-size: var(--_pie-chart-swatch-size);
+  block-size: var(--_pie-chart-swatch-size);
+  border-radius: var(--radius-pill);
+}
+
+.legend-label {
+  color: var(--text-secondary);
+}
+
+.legend-value {
+  font-weight: 700;
+}
+
+.legend-percent {
+  color: var(--text-tertiary);
+  font-size: var(--font-size-xs);
+}
+
+.legend-bottom .legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--_pie-chart-legend-row-gap) var(--space-4);
+}
+
+.legend-bottom .legend-item {
+  display: flex;
+  column-gap: var(--space-2);
+}
+
+
+.ring-svg {
+  @include chart-interactive.fades('.slice', ', fill var(--ds-motion-chart-mark-duration) var(--ds-motion-chart-mark-easing)');
+  @include chart-interactive.clickable('.slice');
+}
+
+@include chart-frame.forced-colors;
+@include chart-frame.pin-reset;
+@include chart-frame.pin-marker;
+

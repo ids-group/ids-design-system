@@ -32,7 +32,6 @@ import { CHART_SCALES } from './chart-scales.token';
 import { chartViewHeight } from './chart.math';
 import type { ChartStackOffset } from './chart.math';
 
-/** @internal */
 export interface ColumnSeriesPoint {
   id?: string;
   label: string;
@@ -62,8 +61,6 @@ let nextSeriesId = 0;
  * Hosted on a `<g>` rather than an element of its own: an element the SVG specification does not
  * know is not rendered, and neither are its descendants, so `<ds-column-series>` inside the
  * container's canvas would draw nothing. Written as `<svg:g dsColumnSeries>`.
- *
- * @internal
  */
 @Component({
   // The repository's `component-selector` rule asks for an element selector, and one cannot work
@@ -86,24 +83,42 @@ export class ColumnSeriesComponent implements OnDestroy {
    *  element, and a required input throws NG0950 for the pass before its own value is written. */
   readonly data = input<readonly ColumnSeriesPoint[]>([]);
 
+  /** Prints each column's value above the column. */
   readonly showValues = input(true, { transform: booleanAttribute });
 
+  /** Turns on the click affordance - the pointer cursor and the hover tint. `pointClicked`
+   *  fires whether or not this is set. */
   readonly interactive = input(false, { transform: booleanAttribute });
 
+  /** Holds the hovered mark and its tooltip in place when it is clicked, until Escape or a
+   *  press outside releases it. Pinning is a state, not a handler. */
   readonly pinOnClick = input(false, { transform: booleanAttribute });
 
+  /** Fades every mark but the one under the pointer. Off by default: the dimming buys loudness
+   *  for one mark and pays for it with the separation between the rest. */
   readonly dimOthers = input(false, { transform: booleanAttribute });
 
+  /** Milliseconds between one mark's entrance and the next. The total is capped, so a long
+   *  series does not crawl in. */
   readonly staggerMs = input(0, { transform: numberAttribute });
 
+  /** Declares that the marks are parts of one whole, which is what makes a share of their total
+   *  a real quantity. On, each mark's share appears on the tooltip's second line. */
   readonly partOfWhole = input(false, { transform: booleanAttribute });
 
+  /** Whether a hovered or focused column opens a tooltip. */
   readonly tooltip = input<ChartItemTooltipTrigger>('item');
 
+  /** Where the tooltip is pinned. `'mark'` is the column itself; `'cell'` is the full-height
+   *  category cell, which puts the panel at the top of the plot whatever the column's value. */
   readonly tooltipAnchor = input<'mark' | 'cell'>('mark');
 
+  /** How long the panel survives the pointer leaving the mark. Raise it only for a panel a
+   *  reader has to REACH, which is WCAG 1.4.13's hoverable clause; about 140 crosses the gap. */
   readonly tooltipLingerMs = input(0, { transform: numberAttribute });
 
+  /** Formats every value this series prints. Called with `'tick'` for an axis label and
+   *  `'tooltip'` everywhere a value is printed in full. */
   readonly valueFormat = input<ChartValueFormat>(defaultChartFormat);
 
   /** The mark's share of its category's own slot, before the maximum width caps it. Measured off
@@ -135,6 +150,7 @@ export class ColumnSeriesComponent implements OnDestroy {
    *  the panel names the category instead, which is what a chart of one series has to say. */
   readonly seriesLabel = input<string | null>(null);
 
+  /** The clicked datum. Fires on click and on Enter or Space, whatever `interactive` says. */
   readonly pointClicked = output<ColumnSeriesPoint>();
 
   private readonly seriesId = nextSeriesId++;

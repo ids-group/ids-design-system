@@ -8,6 +8,7 @@ import {
   output,
 } from '@angular/core';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
+import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 import type { IconName } from '@ids-group-ltd/ids-design-system/core';
 import type { BannerVariant } from './banner.types';
 
@@ -45,17 +46,26 @@ export class BannerComponent {
     return !this.accentRail();
   }
 
-  /** Announce this banner to a screen reader when it appears.
+  /** Announce this banner to a screen reader when it appears. Unset follows
+   *  `DS_CONFIG.banner.announce`, then `false`.
    *
    *  Off by default: an `alert` region fires on INSERTION, so a banner that is page
    *  furniture would interrupt the reader on every route into the page. Turn it on for
    *  one the app raises in response to an event; for anything transient prefer
    *  `ToastService`, which owns a live region built for the purpose. */
-  readonly announce = input(false, { transform: booleanAttribute });
+  readonly announce = input<boolean | null, unknown>(null, {
+    transform: (value) => (value == null ? null : booleanAttribute(value)),
+  });
+
+  readonly announceResolved = resolveWithConfig(
+    this.announce,
+    (config) => config.banner?.announce,
+    false,
+  );
 
   @HostBinding('attr.role')
   protected get ariaRole(): 'alert' | 'status' | null {
-    if (!this.announce()) {
+    if (!this.announceResolved()) {
       return null;
     }
     const value = this.variant();
@@ -67,7 +77,7 @@ export class BannerComponent {
 
   @HostBinding('attr.aria-live')
   protected get ariaLive(): 'assertive' | 'polite' | null {
-    if (!this.announce()) {
+    if (!this.announceResolved()) {
       return null;
     }
 

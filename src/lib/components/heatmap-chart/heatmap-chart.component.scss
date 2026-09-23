@@ -1,0 +1,136 @@
+@use '../../styles/focus' as focus;
+@use '../../styles/chart-data-table' as chart-data-table;
+@use '../../styles/chart-frame' as chart-frame;
+@use '../../styles/chart-interactive' as chart-interactive;
+@include chart-frame.chart-frame;
+@include chart-data-table.chart-data-table;
+
+
+.heatmap-chart {
+  --_heatmap-chart-cell-size: var(--ds-heatmap-chart-cell-size, 34px);
+  --_heatmap-chart-cell-gap: var(--ds-heatmap-chart-cell-gap, 2px);
+  --_heatmap-chart-cell-radius: var(--ds-heatmap-chart-cell-radius, var(--ds-radius-control));
+  --_heatmap-chart-label-color: var(--ds-heatmap-chart-label-color, var(--ds-chart-axis-label-color));
+  --_heatmap-chart-label-font-size: var(--ds-heatmap-chart-label-font-size, var(--ds-chart-axis-font-size));
+  --_heatmap-chart-missing-color: var(--ds-heatmap-chart-missing-color, var(--surface-secondary));
+  --_heatmap-chart-focus-color: var(--ds-heatmap-chart-focus-color, var(--focus-ring-color));
+  --_heatmap-chart-focus-width: var(--ds-heatmap-chart-focus-width, var(--focus-ring-width));
+
+  /* The shared mixins draw the ring from `--focus-ring-*` and `--ds-chart-focus-ring-color`, so
+     the two hooks above reach nothing without this. */
+  --ds-chart-focus-ring-color: var(--_heatmap-chart-focus-color);
+  --focus-ring-color: var(--_heatmap-chart-focus-color);
+  --focus-ring-width: var(--_heatmap-chart-focus-width);
+
+  margin: 0;
+}
+
+@include chart-frame.message-box(
+  calc(4 * var(--_heatmap-chart-cell-size)),
+  false
+);
+
+.skeleton {
+  display: grid;
+  gap: var(--_heatmap-chart-cell-gap);
+}
+
+// A matrix has a hard minimum width - one cell per column - so below it the grid scrolls rather
+// than crushing the cells into unreadable slivers. The same answer ds-table gives.
+.grid-scroll {
+  overflow-x: auto;
+}
+
+.grid {
+  @include chart-interactive.fades('.cell', ', background var(--ds-motion-chart-mark-duration) var(--ds-motion-chart-mark-easing)');
+
+  border-collapse: separate;
+  border-spacing: var(--_heatmap-chart-cell-gap);
+}
+
+.column-label,
+.row-label {
+  color: var(--_heatmap-chart-label-color);
+  font-size: var(--_heatmap-chart-label-font-size);
+  font-weight: var(--font-weight-regular);
+  white-space: nowrap;
+}
+
+.column-label {
+  text-align: center;
+}
+
+.row-label {
+  text-align: end;
+  padding-inline-end: var(--space-2);
+}
+
+.cell-slot {
+  padding: 0;
+}
+
+.cell {
+  display: grid;
+  place-items: center;
+  inline-size: var(--_heatmap-chart-cell-size);
+  block-size: var(--_heatmap-chart-cell-size);
+  border: 0;
+  border-radius: var(--_heatmap-chart-cell-radius);
+  padding: 0;
+}
+
+// An unmeasured cell is the surface, not the coldest colour: the ramp's own first step is a real
+// reading, and painting "we never measured this" with it states a figure nobody recorded.
+.cell.is-missing {
+  background: var(--_heatmap-chart-missing-color);
+}
+
+.cell-value {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+
+  // The ramp spans 1.14:1 to 9.07:1 against white, so one ink cannot serve both ends. The glyph
+  // takes the cell's own colour inverted by `difference`, which stays legible at either end
+  // without the component having to know which half of the scale it landed on.
+  color: white;
+  mix-blend-mode: difference;
+}
+
+.cell.interactive {
+  cursor: pointer;
+}
+
+.cell.interactive:focus-visible {
+  @include focus.ring;
+}
+
+.scale {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-block-start: var(--space-3);
+}
+
+.scale-ramp {
+  display: flex;
+}
+
+.scale-step {
+  inline-size: var(--space-4);
+  block-size: var(--space-2);
+}
+
+.scale-step:first-child {
+  border-start-start-radius: var(--ds-radius-control);
+  border-end-start-radius: var(--ds-radius-control);
+}
+
+.scale-step:last-child {
+  border-start-end-radius: var(--ds-radius-control);
+  border-end-end-radius: var(--ds-radius-control);
+}
+
+.scale-label {
+  color: var(--_heatmap-chart-label-color);
+  font-size: var(--_heatmap-chart-label-font-size);
+}

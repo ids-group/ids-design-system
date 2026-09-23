@@ -116,11 +116,13 @@ export class SelectComponent
   /** Flat options or option groups rendered in the dropdown panel. */
   readonly options = input<readonly SelectItem[]>([]);
   /** Public panel tokens forwarded onto the portaled overlay pane on open, so a
-   *  consumer's `ds-select { --ds-dropdown-panel-*: … }` reaches it. */
+   *  consumer's `ds-select { --ds-dropdown-panel-*: … }` reaches it.
+   *  Not the whole set: `prepareOverlayEnter` also forwards `DROPDOWN_PANEL_TOKENS`
+   *  (overlay-motion.ts) onto every pane, the `--ds-option-*` family among them. */
   private readonly panelTokens = [
     '--ds-dropdown-panel-bg-color',
-    '--ds-dropdown-panel-minw',
-    '--ds-dropdown-panel-maxw',
+    '--ds-dropdown-panel-min-width',
+    '--ds-dropdown-panel-max-width',
     '--ds-option-selected-bg-color',
     '--ds-option-selected-label-color',
     '--ds-option-selected-bg-color-hover',

@@ -30,6 +30,10 @@
   gap: var(--field-label-gap);
 }
 
+:host(.align-between) .button {
+  --_button-justify: space-between;
+}
+
 :host(.with-message.full-width) {
   display: flex;
 }
@@ -45,6 +49,8 @@
   --c-muted:          var(--accent-muted);
   --c-muted-strong:   var(--accent-muted-strong);
   --c-outline-border: var(--c-muted-strong);
+
+  --_button-justify: center;
 
   --_button-bg-color:        var(--ds-button-bg-color,        var(--c-base));
   --_button-label-color:     var(--ds-button-label-color,     var(--c-on));
@@ -76,11 +82,11 @@
   --_button-font-family: var(--ds-button-font-family, var(--font-sans));
   --_button-line-height: var(--ds-button-line-height, var(--line-height-flat));
   --_button-font-size: var(--ds-button-font-size, var(--font-size-m));
-  --_button-weight:    var(--ds-button-weight,    var(--font-weight-extrabold));
-  --_button-tracking:  var(--ds-button-tracking,  var(--letter-spacing-wide));
+  --_button-font-weight:    var(--ds-button-font-weight,    var(--font-weight-extrabold));
+  --_button-letter-spacing:  var(--ds-button-letter-spacing,  var(--letter-spacing-wide));
   --_button-height:    var(--ds-button-height,    var(--field-h-md));
-  --_button-pad-x:     var(--ds-button-pad-x,     var(--space-5));
-  --_button-pad-y:     var(--ds-button-pad-y,     0);
+  --_button-padding-x:     var(--ds-button-padding-x,     var(--space-5));
+  --_button-padding-y:     var(--ds-button-padding-y,     0);
 
   /* Two fill recipes — a flat pale tint here for solid, a mix toward --surface-disabled on
      tonal/ghost/outline — and ONE label lightness for every variant. 70% costs label contrast
@@ -91,15 +97,15 @@
 
   display: inline-flex;
   align-items: center;
-  justify-content: center;
+  justify-content: var(--_button-justify);
   gap: var(--space-2);
-  font: var(--_button-weight) var(--_button-font-size) / var(--_button-line-height) var(--_button-font-family);
-  letter-spacing: var(--_button-tracking);
+  font: var(--_button-font-weight) var(--_button-font-size) / var(--_button-line-height) var(--_button-font-family);
+  letter-spacing: var(--_button-letter-spacing);
   color: var(--_button-label-color);
   background-color: var(--_button-bg-color);
   border: var(--_button-border-width) solid var(--_button-border-color);
   border-radius: var(--_button-radius);
-  padding: var(--_button-pad-y) var(--_button-pad-x);
+  padding: var(--_button-padding-y) var(--_button-padding-x);
   height: var(--_button-height);
   width: 100%;
   cursor: pointer;
@@ -168,7 +174,7 @@
     gap: var(--space-1);
     height: auto;
     min-height: var(--field-h-md);
-    padding-block: var(--ds-button-pad-y, var(--space-2));
+    padding-block: var(--ds-button-padding-y, var(--space-2));
     white-space: normal;
 
     .button-main { display: inline-flex; align-items: center; gap: var(--space-2); }
@@ -181,19 +187,19 @@
   &.lg {
     --_button-font-size: var(--ds-button-font-size, var(--font-size-m));
     --_button-height:    var(--ds-button-height,    var(--field-h-lg));
-    --_button-pad-x:     var(--ds-button-pad-x,     var(--space-5));
+    --_button-padding-x:     var(--ds-button-padding-x,     var(--space-5));
   }
 
   &.md {
     --_button-font-size: var(--ds-button-font-size, var(--font-size-m));
     --_button-height:    var(--ds-button-height,    var(--field-h-md));
-    --_button-pad-x:     var(--ds-button-pad-x,     var(--space-5));
+    --_button-padding-x:     var(--ds-button-padding-x,     var(--space-5));
   }
 
   &.sm {
     --_button-font-size: var(--ds-button-font-size, var(--font-size-s));
     --_button-height:    var(--ds-button-height,    var(--field-h-sm));
-    --_button-pad-x:     var(--ds-button-pad-x,     var(--space-4));
+    --_button-padding-x:     var(--ds-button-padding-x,     var(--space-4));
 
     .icon { width: var(--icon-sm); height: var(--icon-sm); }
   }

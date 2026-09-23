@@ -1,0 +1,467 @@
+<docs-section
+  anchor="pie-chart"
+  eyebrow="Charts"
+  title="Pie chart"
+  [chapters]="true">
+  <span lede>
+    A ring that splits one total into its parts, each slice carrying its share
+    as a whole percentage.
+  </span>
+
+  <h3 class="block-title t-h4">
+    Default
+  </h3>
+
+  <p class="block-desc t-s">
+    Slices run clockwise from twelve o'clock in the order you pass them. Shares
+    are settled by largest remainder so they total exactly 100, which is why a
+    slice can print a percentage one off the value you would get by rounding it
+    yourself.
+  </p>
+
+  <ds-pie-chart
+    caption="Accounts by plan"
+    dataTable="none"
+    [data]="specimenSlices()" />
+
+  <docs-chart-data-editor [(rows)]="specimenSlices" />
+
+  <h3 class="block-title t-h4">
+    Legend placement
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      end
+    </code> is the default;
+    <code class="t-mono-inline">
+      bottom
+    </code> is for a narrow column, where
+    the ring would otherwise shrink to make room beside it;
+    <code class="t-mono-inline">
+      none
+    </code> is only safe where the parts are
+    named elsewhere.
+  </p>
+
+  <div class="states states--cols-2">
+    <div class="state-cell">
+      <ds-pie-chart
+        dataTable="none"
+        legend="end"
+        [data]="legendEndSlices()" />
+
+      <div class="state-cell-label">
+        end (default)
+      </div>
+
+      <docs-chart-data-editor [(rows)]="legendEndSlices" />
+    </div>
+
+    <div class="state-cell">
+      <ds-pie-chart
+        dataTable="none"
+        legend="bottom"
+        [data]="legendBottomSlices()" />
+
+      <div class="state-cell-label">
+        bottom
+      </div>
+
+      <docs-chart-data-editor [(rows)]="legendBottomSlices" />
+    </div>
+
+    <div class="state-cell">
+      <ds-pie-chart
+        dataTable="none"
+        legend="none"
+        [data]="legendNoneSlices()" />
+
+      <div class="state-cell-label">
+        none
+      </div>
+
+      <docs-chart-data-editor [(rows)]="legendNoneSlices" />
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Inner radius
+  </h3>
+
+  <p class="block-desc t-s">
+    The hole as a fraction of the outer radius, 0.68 by default;
+    <code class="t-mono-inline">
+      0
+    </code> closes it and gives you a pie, centre
+    content included.
+  </p>
+
+  <div class="states states--cols-2">
+    <div class="state-cell">
+      <ds-pie-chart
+        dataTable="none"
+        [data]="thinRingSlices()"
+        [innerRadius]="0.9" />
+
+      <div class="state-cell-label">
+        innerRadius 0.9
+      </div>
+
+      <docs-chart-data-editor [(rows)]="thinRingSlices" />
+    </div>
+
+    <div class="state-cell">
+      <ds-pie-chart
+        dataTable="none"
+        [data]="pieSlices()"
+        [innerRadius]="0" />
+
+      <div class="state-cell-label">
+        innerRadius 0 · a pie
+      </div>
+
+      <docs-chart-data-editor [(rows)]="pieSlices" />
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Centre content
+  </h3>
+
+  <p class="block-desc t-s">
+    Wherever there is a hole, the middle prints something: your
+    <code class="t-mono-inline">
+      centerValue
+    </code> when you give one, the
+    formatted total when you do not, with
+    <code class="t-mono-inline">
+      centerLabel
+    </code> captioning it. At
+    <code class="t-mono-inline">
+      innerRadius="0"
+    </code> there is no hole to
+    hold it, so neither renders.
+  </p>
+
+  <div class="states states--cols-2">
+    <div class="state-cell">
+      <ds-pie-chart
+        centerLabel="Accounts"
+        dataTable="none"
+        [data]="centerLabelSlices()" />
+
+      <div class="state-cell-label">
+        Label only — the total fills in
+      </div>
+
+      <docs-chart-data-editor [(rows)]="centerLabelSlices" />
+    </div>
+
+    <div class="state-cell">
+      <ds-pie-chart
+        centerLabel="Annual recurring revenue"
+        centerValue="£1.2M"
+        dataTable="none"
+        [data]="centerValueSlices()" />
+
+      <div class="state-cell-label">
+        Value and label
+      </div>
+
+      <docs-chart-data-editor [(rows)]="centerValueSlices" />
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Legend length
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      maxSlices
+    </code> caps the legend and sums the
+    smallest slices into one, named by
+    <code class="t-mono-inline">
+      otherLabel
+    </code>. Off by default, the tail is
+    summed rather than dropped, and the slices you keep stay in the order you
+    gave them.
+  </p>
+
+  <div class="states states--cols-2">
+    <div class="state-cell">
+      <ds-pie-chart
+        dataTable="none"
+        [data]="nineSlices()" />
+
+      <div class="state-cell-label">
+        nine slices, uncapped
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-pie-chart
+        dataTable="none"
+        [data]="nineSlices()"
+        [maxSlices]="5" />
+
+      <div class="state-cell-label">
+        maxSlices 5
+      </div>
+    </div>
+  </div>
+
+  <docs-replay-button />
+
+  <h3 class="block-title t-h4">
+    Interaction
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      interactive
+    </code> turns on the pointer cursor
+    and makes each slice a control;
+    <code class="t-mono-inline">
+      sliceClicked
+    </code> fires whether or not it is
+    set. <code class="t-mono-inline">tooltip</code> chooses whether a hovered
+    slice opens a panel — <code class="t-mono-inline">'item'</code> by default,
+    <code class="t-mono-inline">
+      'none'
+    </code> to suppress it.
+    <code class="t-mono-inline">
+      dimOthers
+    </code> fades the slices that are not
+    under the pointer, and <code class="t-mono-inline"> staggerMs </code> is
+    accepted for parity with the other four charts but has no effect here: the
+    ring arrives as one object, because arcs share their edges and fading them
+    one at a time shows the background through every seam. Hovering or focusing
+    a legend item reads as hovering the arc it names: the same tooltip opens
+    over the ARC, and the rest of the ring dims with it.
+  </p>
+
+  <div class="states states--cols-2">
+    <div class="state-cell">
+      <ds-pie-chart
+        interactive
+        dataTable="none"
+        [data]="interactionSlices()"
+        (sliceClicked)="lastSlice.set($event.label)" />
+
+      <div class="state-cell-label">
+        interactive
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-pie-chart
+        interactive
+        dimOthers
+        dataTable="none"
+        tooltip="none"
+        [data]="dimSlices()" />
+
+      <div class="state-cell-label">
+        dimOthers, tooltip = none
+      </div>
+    </div>
+  </div>
+
+  <p class="block-desc t-s">
+    Last clicked: <code class="t-mono-inline">{{ lastSlice() || '—' }}</code>
+  </p>
+
+  <h3 class="block-title t-h4">
+    Pinning a slice
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      pinOnClick
+    </code> holds the clicked slice and
+    its tooltip in place, so the reading stays while you look away from the
+    ring. With <code class="t-mono-inline"> dimOthers </code> beside it the rest
+    of the ring stays down too. A pushpin marks the held arc and an
+    <code class="t-mono-inline">
+      Unpin
+    </code> button appears above the plot;
+    <kbd>
+      Esc
+    </kbd>, a press outside, or clicking the slice again releases it.
+  </p>
+
+  <ds-pie-chart
+    interactive
+    pinOnClick
+    dimOthers
+    dataTable="none"
+    caption="Click a slice to hold it"
+    [data]="pinSlices()" />
+
+  <docs-chart-data-editor [(rows)]="pinSlices" />
+
+  <h3 class="block-title t-h4">
+    Palette slots
+  </h3>
+
+  <p class="block-desc t-s">
+    Slices take the categorical palette by position, so dropping one recolours
+    everything after it; <code class="t-mono-inline">slot</code> pins a slice to
+    a fixed palette position instead. Slots count from one and wrap past the
+    eighth.
+  </p>
+
+  <ds-pie-chart
+    caption="Two slices pinned to palette slots 6 and 8"
+    dataTable="none"
+    [data]="slotSlices()" />
+
+  <docs-chart-data-editor [(rows)]="slotSlices" />
+
+  <h3 class="block-title t-h4">
+    Data table
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      none
+    </code>, the default, renders no table at
+    all; <code class="t-mono-inline">toggle</code> puts one behind a closed
+    disclosure; <code class="t-mono-inline">visible</code> renders it open. The
+    table is the non-visual route to the numbers, so
+    <code class="t-mono-inline">
+      none
+    </code> belongs only where the same
+    figures are already in a table on the page. Every share column here is on by
+    default, unlike the other charts:
+    <code class="t-mono-inline">
+      partOfWhole
+    </code> starts true on a ring,
+    because a ring IS parts of one whole. Set it false to drop the percentage
+    from the legend, the tooltip and the table alike.
+  </p>
+
+  <ds-pie-chart
+    dataTable="toggle"
+    caption="The annex table, collapsed until asked for"
+    [data]="dataTableSlices()" />
+
+  <docs-chart-data-editor [(rows)]="dataTableSlices" />
+
+  <details class="edge-cases">
+    <summary>
+      <h3 class="block-title t-h4">
+        Edge cases
+      </h3>
+
+      <span class="chapter-toggle">
+        Show
+      </span>
+    </summary>
+
+    <p class="block-desc t-s">
+      Anything that is not a positive number counts as zero: a negative slice
+      keeps its legend row and draws no arc.
+    </p>
+
+    <div class="states states--cols-2">
+      <div class="state-cell">
+        <ds-pie-chart
+          dataTable="none"
+          [data]="emptySlices()" />
+
+        <div class="state-cell-label">
+          Empty
+        </div>
+
+        <docs-chart-data-editor [(rows)]="emptySlices" />
+      </div>
+
+      <div class="state-cell">
+        <ds-pie-chart
+          dataTable="none"
+          loading
+          [data]="loadingSlices()" />
+
+        <div class="state-cell-label">
+          Loading
+        </div>
+
+        <docs-chart-data-editor [(rows)]="loadingSlices" />
+      </div>
+
+      <div class="state-cell">
+        <ds-pie-chart
+          dataTable="none"
+          error
+          [data]="emptySlices()" />
+
+        <div class="state-cell-label">
+          Error
+        </div>
+      </div>
+
+      <div class="state-cell">
+        <ds-pie-chart
+          dataTable="none"
+          [data]="oneSlice()" />
+
+        <div class="state-cell-label">
+          One slice
+        </div>
+
+        <docs-chart-data-editor [(rows)]="oneSlice" />
+      </div>
+
+      <div class="state-cell">
+        <ds-pie-chart
+          dataTable="none"
+          [data]="allZerosSlices()" />
+
+        <div class="state-cell-label">
+          All zeros
+        </div>
+
+        <docs-chart-data-editor [(rows)]="allZerosSlices" />
+      </div>
+
+      <div class="state-cell">
+        <ds-pie-chart
+          dataTable="none"
+          [data]="negativeSlices()" />
+
+        <div class="state-cell-label">
+          Negative value
+        </div>
+
+        <docs-chart-data-editor [(rows)]="negativeSlices" />
+      </div>
+
+      <div class="state-cell">
+        <ds-pie-chart
+          caption="More slices than the eight-colour palette holds"
+          dataTable="none"
+          [data]="nineSlices()" />
+
+        <div class="state-cell-label">
+          Nine slices
+        </div>
+
+        <docs-chart-data-editor [(rows)]="nineSlices" />
+      </div>
+
+      <div class="state-cell">
+        <ds-pie-chart
+          dataTable="none"
+          error
+          [data]="specimenSlices()" />
+
+        <div class="state-cell-label">
+          Error
+        </div>
+      </div>
+    </div>
+  </details>
+</docs-section>

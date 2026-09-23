@@ -4,7 +4,7 @@
 // background is what makes a framed chart read as a specimen rather than as page content.
 //
 // `$chart-measure` is per page on purpose: a chart is not body text, and left to fill the content
-// column a funnel comes out a letterbox while a donut floats in dead space. Each page picks the
+// column a funnel comes out a letterbox while a pie floats in dead space. Each page picks the
 // measure its own geometry wants. Inside a multi-column tray the cell is already narrower, so the
 // measure caps the width rather than setting it.
 // The cell takes the cap as well as the chart: `.state-cell-label` centres itself in the cell, so a

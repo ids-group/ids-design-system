@@ -70,6 +70,83 @@ const GAP_CATEGORIES: readonly string[] = [
   'Sun',
 ];
 
+// A rate that holds between readings and a peak with a plateau either side: the first is what
+// `step` is for, the second is where a Catmull-Rom would invent a dip and a monotone cubic does not.
+// Deck 10's composition-over-time case: three delivery tiers whose sum is the quantity that
+// matters, which is what a stack says and a set of separate lines does not.
+// Deck 8's own demonstration: the SAME six months, drawn twice, with only the right axis's ceiling
+// moved. The crossing point walks from April to January - so it is a property of the scale that was
+// chosen, not a fact in the data.
+const ARTEFACT_CATEGORIES: readonly string[] = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+];
+
+const ARTEFACT_SERIES: readonly LineChartSeries[] = [
+  {
+    id: 'sessions',
+    label: 'Sessions',
+    data: [3200, 3850, 4400, 4120, 4760, 5000],
+  },
+  {
+    id: 'rate',
+    label: 'Conversion rate',
+    data: [4.6, 4.1, 3.8, 3.3, 3.0, 2.6],
+    axis: 'secondary',
+  },
+];
+
+const STACK_CATEGORIES: readonly string[] = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+];
+
+const STACK_SERIES: readonly LineChartSeries[] = [
+  {
+    id: 'economy',
+    label: 'Economy',
+    data: [1200, 1320, 1280, 1450, 1520, 1480],
+    area: true,
+  },
+  {
+    id: 'standard',
+    label: 'Standard',
+    data: [860, 980, 1010, 1120, 1290, 1340],
+    area: true,
+  },
+  {
+    id: 'express',
+    label: 'Express',
+    data: [420, 510, 590, 640, 710, 820],
+    area: true,
+  },
+];
+
+const CURVE_CATEGORIES: readonly string[] = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+];
+
+const CURVE_SERIES: readonly LineChartSeries[] = [
+  {
+    id: 'rate',
+    label: 'Base rate',
+    data: [4.5, 4.5, 5.25, 5.25, 5.25, 4.75],
+  },
+];
+
 const GAP_SERIES: readonly LineChartSeries[] = [
   {
     id: 'visits',
@@ -152,6 +229,34 @@ export class LineChartSection {
     signal<readonly string[]>(GAP_CATEGORIES);
   protected readonly gapBreakSeries =
     signal<readonly LineChartSeries[]>(GAP_SERIES);
+
+  protected readonly artefactCategories = ARTEFACT_CATEGORIES;
+  protected readonly artefactSeries = ARTEFACT_SERIES;
+
+  protected readonly stackedCategoriesDemo =
+    signal<readonly string[]>(STACK_CATEGORIES);
+  protected readonly stackedSeriesDemo =
+    signal<readonly LineChartSeries[]>(STACK_SERIES);
+
+  protected readonly normalizedCategories =
+    signal<readonly string[]>(STACK_CATEGORIES);
+  protected readonly normalizedSeries =
+    signal<readonly LineChartSeries[]>(STACK_SERIES);
+
+  protected readonly curveLinearCategories =
+    signal<readonly string[]>(CURVE_CATEGORIES);
+  protected readonly curveLinearSeries =
+    signal<readonly LineChartSeries[]>(CURVE_SERIES);
+
+  protected readonly curveStepCategories =
+    signal<readonly string[]>(CURVE_CATEGORIES);
+  protected readonly curveStepSeries =
+    signal<readonly LineChartSeries[]>(CURVE_SERIES);
+
+  protected readonly curveSmoothCategories =
+    signal<readonly string[]>(CURVE_CATEGORIES);
+  protected readonly curveSmoothSeries =
+    signal<readonly LineChartSeries[]>(CURVE_SERIES);
 
   protected readonly gapZeroCategories =
     signal<readonly string[]>(GAP_CATEGORIES);

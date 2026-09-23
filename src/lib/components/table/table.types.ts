@@ -32,7 +32,7 @@ export interface TableColumn<T = unknown> {
   label: string;
   /** Visually-hidden accessible header name — use when `label` is
    *  intentionally empty (e.g. an actions column). */
-  srLabel?: string;
+  screenReaderLabel?: string;
   sortable?: boolean;
   /** Include the column in `filterQuery` matching. When no column is marked,
    *  every column matches. Works on `hidden` columns too. */
@@ -100,11 +100,11 @@ export interface TableColumn<T = unknown> {
   hidden?: boolean;
 }
 
-export type SortDir = 'asc' | 'desc' | null;
+export type SortDirection = 'asc' | 'desc' | null;
 
 export interface SortChangeEvent {
   key: string;
-  dir: SortDir;
+  dir: SortDirection;
 }
 
 export interface TableRowAction<T = unknown> {

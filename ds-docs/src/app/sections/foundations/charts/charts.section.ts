@@ -77,12 +77,12 @@ const BAR_DATA: readonly BarRow[] = [
   { label: 'Sigma', v: 165 },
 ];
 
-interface DonutSeg {
+interface PieSeg {
   readonly label: string;
   readonly v: number;
   readonly c: string;
 }
-const DONUT: readonly DonutSeg[] = [
+const PIE: readonly PieSeg[] = [
   { label: 'Ready', v: 64, c: 'var(--chart-categorical-1)' },
   { label: 'Pre-build', v: 22, c: 'var(--chart-categorical-2)' },
   { label: 'Out', v: 14, c: 'var(--chart-categorical-3)' },
@@ -180,7 +180,7 @@ export class ChartsSection {
   protected readonly seqs = SEQUENTIAL;
   protected readonly divs = DIVERGENT;
   protected readonly axisTokens = AXIS_TOKENS;
-  protected readonly donut = DONUT;
+  protected readonly pie = PIE;
   protected readonly heatWeeks = HEAT_WEEKS;
   protected readonly heatRows = HEAT_ROWS;
   protected readonly heat = HEAT;
@@ -259,13 +259,13 @@ export class ChartsSection {
     }),
   );
 
-  protected readonly donutArcs = computed(() => {
+  protected readonly pieArcs = computed(() => {
     const cx = 100,
       cy = 100,
       r = 80;
     let acc = -Math.PI / 2;
 
-    return DONUT.map((segment) => {
+    return PIE.map((segment) => {
       const start = acc;
       const end = acc + (segment.v / 100) * 2 * Math.PI;
       acc = end;

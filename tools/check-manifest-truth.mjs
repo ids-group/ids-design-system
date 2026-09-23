@@ -289,6 +289,20 @@ function buildSurface(files) {
     elements.set(tag_, members);
   }
 
+  const partials = new Set();
+  const keyframes = new Set();
+  for (const { path: file, text } of files) {
+    for (const match of text.matchAll(/@keyframes\s+([a-z][a-z0-9-]*)/g))
+      keyframes.add(match[1]);
+    const partial =
+      /src\/lib\/((?:styles|themes)\/(?:[\w-]+\/)*)_?([\w-]+)\.scss$/.exec(
+        file.replace(/\\/g, '/'),
+      );
+    if (!partial) continue;
+    partials.add(`${partial[1]}${partial[2]}`);
+    if (partial[2] === 'index') partials.add(partial[1].replace(/\/$/, ''));
+  }
+
   return {
     tokens,
     symbols,
@@ -296,13 +310,34 @@ function buildSurface(files) {
     elements,
     tokenPrefixes,
     directives,
+    partials,
+    keyframes,
   };
 }
 
 function claims(value) {
   if (typeof value !== 'string' || !value.trim()) return [];
   const text = value.trim();
-  if (/[*<>]|\.\.\./.test(text)) return []; // a family placeholder is not one name
+  const openingTag = /^<(ds-[a-z0-9]+(?:-[a-z0-9]+)*)\s*\/?>$/.exec(text);
+  if (openingTag) return [{ kind: 'element', name: openingTag[1], bare: true }];
+  const family = familyClaims(text);
+  if (family) return family;
+  const lines = text.split('\n').map((line) => line.trim());
+  const partials = lines.map(
+    (line) =>
+      /^@use\s+'@ids-group-ltd\/ids-design-system\/((?:styles|themes)\/[a-z0-9/-]+)'(?:\s+as\s+[\w-]+)?;?$/.exec(
+        line,
+      )?.[1],
+  );
+  if (
+    partials[0] &&
+    lines.every((line, index) => partials[index] || /^@include\s/.test(line))
+  )
+    return partials
+      .filter(Boolean)
+      .map((name) => ({ kind: 'partial', name, bare: false }));
+  // A family placeholder is not one name; a spaced `>` is a child combinator, not a placeholder.
+  if (/[*<]|\.\.\.|\S>|>\S/.test(text)) return [];
 
   // `bare` marks a value that IS the identifier, as opposed to one lifted out of a sentence.
   // Only a bare claim can be asked to have disappeared: `class MyTable extends TableComponent`
@@ -345,9 +380,81 @@ function claims(value) {
   const bareClass = /^\.([a-z][a-z0-9-]*)$/.exec(text);
   if (bareClass) return [{ kind: 'class', name: bareClass[1], bare: true }];
 
-  for (const match of text.matchAll(/\b[A-Z][A-Za-z0-9]{3,}\b/g))
+  // `ds-modal .danger` is the element-scoped shape AUTHORING prescribes for a class rename, so
+  // the parts are read one by one. None is bare: the scope element survives its class's rename.
+  const ELEMENT = /(?<![\w-])(ds-[a-z0-9]+(?:-[a-z0-9]+)*)/g;
+  const CLASS =
+    /(?<![\w-])\.([a-z][a-z0-9-]*)|(?<=[a-z0-9])\.([a-z][a-z0-9-]*)/g;
+  const selector = text.replace(/\s*\{[^}]*\}\s*$/, '');
+  const selectorOnly =
+    selector
+      .replace(/\[[^\]]*\]/g, '')
+      .replace(/::ng-deep|::?[a-z-]+(?:\([^)]*\))?/g, '')
+      .replace(ELEMENT, '')
+      .replace(CLASS, '')
+      .replace(/[\s,>+~]/g, '').length === 0;
+  if (selectorOnly) {
+    for (const match of selector.matchAll(ELEMENT))
+      found.push({ kind: 'element', name: match[1], bare: false, scope: true });
+    for (const match of selector.matchAll(CLASS))
+      found.push({
+        kind: 'class',
+        name: match[1] ?? match[2],
+        bare: false,
+        scope: true,
+      });
+    if (found.length) return found;
+  }
+
+  // `modal-out / drawer-panel-close-right|left|top|bottom`: keyframe names, a `|` swapping the last
+  // word of the one before it.
+  if (/^[a-z][a-z0-9|-]*(\s+\/\s+[a-z][a-z0-9|-]*)+$/.test(text))
+    return text.split(/\s+\/\s+/).flatMap((part) => {
+      const [first, ...alternatives] = part.split('|');
+      const stem = first.slice(0, first.lastIndexOf('-') + 1);
+      return [first, ...alternatives.map((word) => `${stem}${word}`)].map(
+        (name) => ({ kind: 'keyframes', name, bare: false }),
+      );
+    });
+
+  if (/^[a-z][a-z0-9]*[A-Z][A-Za-z0-9]*$/.test(text))
+    return [{ kind: 'symbol', name: text, bare: false }];
+
+  for (const match of text.matchAll(/\b[A-Z][A-Za-z0-9_]{3,}\b/g))
     found.push({ kind: 'symbol', name: match[0], bare: text === match[0] });
+  // An exported function is called, not imported by type: `avatarTint(seed, { chroma })`.
+  for (const match of text.matchAll(/(?<![.\w])([a-z][A-Za-z0-9]{3,})\(/g))
+    found.push({ kind: 'symbol', name: match[1], bare: false });
   return found;
+}
+
+// `--ds-*-bg`, `--<role>-subtle`, `--ds-combobox-` and `--ds-*-w | -h | -maxw`: each part is a
+// pattern over the token set, answered by whether any token matches. A part that starts with a
+// bare `-` completes the first part's stem.
+function familyClaims(text) {
+  const parts = text.split(/\s*\|\s*/);
+  const stem = /^(--[^|]*\*)/.exec(parts[0])?.[1];
+  const patterns = [];
+  for (const raw of parts) {
+    const part = raw.startsWith('--') ? raw : stem ? `${stem}${raw}` : null;
+    if (!part || !/^--[a-z0-9<>*-]+$/.test(part)) return null;
+    if (!/[*<]|-$/.test(part)) return null;
+    const source = part
+      .replace(/<[a-z-]+>/g, '\u0000')
+      .replace(/\*/g, '\u0001')
+      .replace(/-$/, '-\u0002')
+      .replace(/[-]/g, '\\-')
+      .replace(/\u0000/g, '[a-z0-9-]+')
+      .replace(/\u0001/g, '[a-z0-9-]*')
+      .replace(/\u0002/g, '[a-z0-9-]+');
+    patterns.push({
+      kind: 'family',
+      name: part,
+      pattern: new RegExp(`^${source}$`),
+      bare: false,
+    });
+  }
+  return patterns.length ? patterns : null;
 }
 
 function resolves(surface, claim) {
@@ -359,6 +466,18 @@ function resolves(surface, claim) {
       if (claim.name.startsWith(prefix)) return null;
     return false;
   }
+  if (claim.kind === 'family') {
+    for (const token of surface.tokens)
+      if (claim.pattern.test(token)) return true;
+    const stem = claim.name.split(/[*<]/)[0];
+    for (const prefix of surface.tokenPrefixes ?? [])
+      if (prefix.startsWith(stem) || stem.startsWith(prefix)) return null;
+    return false;
+  }
+  if (claim.kind === 'partial')
+    return surface.partials ? surface.partials.has(claim.name) : null;
+  if (claim.kind === 'keyframes')
+    return surface.keyframes ? surface.keyframes.has(claim.name) : null;
   if (claim.kind === 'symbol') return surface.symbols.has(claim.name);
   if (claim.kind === 'class') return surface.classes.has(claim.name);
   if (claim.kind === 'element') return surface.elements.has(claim.name);
@@ -384,6 +503,16 @@ const GONE_AFTER = new Set([
   'selector-rename',
 ]);
 
+// Prose that names a token in order to say it does not exist: the spelling a blind replace
+// produces, a name the text explains away. Keyed `<tag> <item or row id | informational> <token>`.
+const DELIBERATE_PHANTOMS = new Set([
+  'v0.9.0 dropdown-panel-radius --ds-select-panel-radius',
+  'v0.10.0 informational --ds-pagehdr',
+  'v0.10.0 informational --ds-topbar-margin-b',
+  'v0.13.0 button-border-token-names-the-colour --ds-button-border-color-width',
+  'v0.13.3 progress-and-meter-tokens-renamed-to-bar --ds-bar-bar-color',
+]);
+
 const label = (claim) =>
   claim.kind === 'member' ? `${claim.element}[${claim.name}]` : claim.name;
 
@@ -405,6 +534,7 @@ function sweep() {
   // missing, and one readable manifest was enough to green a run where the other 26 were not.
   const unreadable = [];
   const unchecked = [];
+  const coverage = { values: 0, read: 0 };
   let checked = 0;
 
   for (const file of manifests) {
@@ -454,7 +584,18 @@ function sweep() {
         ...verdict.unresolved.map((line) => `${file} ${item.id}: ${line}`),
       );
       unchecked.push(...verdict.unchecked.map((line) => `${file} ${line}`));
+      coverage.values += verdict.values;
+      coverage.read += verdict.readValues;
     }
+    defects.push(
+      ...checkFileProse(
+        doc,
+        before,
+        after,
+        prev,
+        draft ? 'the working tree' : `v${version}`,
+      ).map((line) => `${file}\n      ${line}`),
+    );
   }
   if (ONLY && !manifests.length) {
     console.error(
@@ -471,7 +612,7 @@ function sweep() {
         `boundary, so nothing is known about them:\n  ${unreadable.join('\n  ')}`,
     );
     if (defects.length)
-      report(defects, unresolved, checked, skipped, unchecked);
+      report(defects, unresolved, checked, skipped, unchecked, coverage);
     process.exit(1);
   }
   if (!checked) {
@@ -481,7 +622,7 @@ function sweep() {
     );
     process.exit(1);
   }
-  report(defects, unresolved, checked, skipped, unchecked);
+  report(defects, unresolved, checked, skipped, unchecked, coverage);
 }
 
 // Exported so the selftest can exercise the rules against synthetic surfaces: the checkout is
@@ -529,22 +670,24 @@ export function checkItem(item, before, after, prevTag, tag) {
     (claim) => resolves(after, claim) === true,
   );
 
+  // A name neither tag declares is usually a consumer's own example (`class MyTable extends …`)
+  // or a framework type (`InputSignal`). But when the item is a TYPE or CLASS rename, `old` is
+  // a name the consumer had to IMPORT — and an import of something that never existed does not
+  // compile, so nobody ever wrote it and the rename is fiction. That is not true of a template
+  // binding: `ds-banner[dismissed]` against a phantom output compiles and silently does
+  // nothing, which is why the catalogue could promise it and consumers could write it.
+  const isImportedName =
+    item.kind === 'type-rename' || item.kind === 'class-rename';
+  const declaredAtNeither = (claim) =>
+    claim.kind === 'symbol' &&
+    resolves(before, claim) === false &&
+    resolves(after, claim) === false &&
+    !(isImportedName && claim.bare);
+
+  const unresolvedBeforeOld = unresolved.length;
   for (const claim of claims(item.old)) {
     const wasThere = resolves(before, claim);
-    // A name neither tag declares is usually a consumer's own example (`class MyTable extends …`)
-    // or a framework type (`InputSignal`). But when the item is a TYPE or CLASS rename, `old` is
-    // a name the consumer had to IMPORT — and an import of something that never existed does not
-    // compile, so nobody ever wrote it and the rename is fiction. That is not true of a template
-    // binding: `ds-banner[dismissed]` against a phantom output compiles and silently does
-    // nothing, which is why the catalogue could promise it and consumers could write it.
-    const isImportedName =
-      item.kind === 'type-rename' || item.kind === 'class-rename';
-    if (
-      claim.kind === 'symbol' &&
-      wasThere === false &&
-      resolves(after, claim) === false &&
-      !(isImportedName && claim.bare)
-    ) {
+    if (declaredAtNeither(claim)) {
       unresolved.push(`\`${claim.name}\` is declared at neither tag`);
       continue;
     }
@@ -569,6 +712,8 @@ export function checkItem(item, before, after, prevTag, tag) {
         !(isImportedName && claim.bare)
       )
         continue;
+      // A scope element renamed in the same release carries its new name in both halves.
+      if (claim.scope && resolves(after, claim) === true) continue;
       defects.push(
         targetExists
           ? `old \`${label(claim)}\` does not exist at ${prevTag} — \`new\` is real, so the item renames something that was never there`
@@ -594,10 +739,103 @@ export function checkItem(item, before, after, prevTag, tag) {
         `new \`${label(claim)}\` does not exist at ${tag} — the target is not there`,
       );
   }
-  return { defects, unresolved, unchecked };
+  // A token named in the PROSE, where `old`/`new` are a family placeholder that `claims` cannot
+  // read. Two items shipped a spelling produced by chaining two of our own rules — a name that
+  // existed at neither tag — so a consumer grepping for it found nothing and kept a dead
+  // override. `searchHints` and `detect` are recall seeds and legitimately carry bare prefixes,
+  // so they are not read here; a prose name that is a PREFIX of a real token is a family, not a
+  // claim.
+  for (const field of ['action', 'appliesWhen', 'note', 'pitfall'])
+    for (const name of phantomTokens(
+      item[field],
+      before,
+      after,
+      `${tag} ${item.id}`,
+    ))
+      defects.push(
+        `${field} names \`${name}\`, which exists at neither ${prevTag} nor ${tag}`,
+      );
+  // A value counts as read when at least one name in it resolved at its tag, true or false.
+  const oldRead = claims(item.old).some(
+    (claim) => resolves(before, claim) !== null && !declaredAtNeither(claim),
+  );
+  const newRead = newClaims.some((claim) => resolves(after, claim) !== null);
+  if (
+    claims(item.old).length &&
+    !oldRead &&
+    unresolved.length === unresolvedBeforeOld
+  )
+    unresolved.push(
+      `old \`${item.old.trim()}\` — nothing in it resolves at ${prevTag}`,
+    );
+  if (newClaims.length && !newRead)
+    unresolved.push(
+      `new \`${item.new.trim()}\` — nothing in it resolves at ${tag}`,
+    );
+  const values = ['old', 'new'].filter(
+    (field) => typeof item[field] === 'string' && item[field].trim(),
+  ).length;
+  return {
+    defects,
+    unresolved,
+    unchecked,
+    values,
+    readValues: Number(oldRead) + Number(newRead),
+  };
 }
 
-function report(defects, unresolved, count, skipped = [], unchecked = []) {
+function phantomTokens(text, before, after, location) {
+  if (typeof text !== 'string') return [];
+  const knownTokens = [...before.tokens, ...after.tokens];
+  const phantoms = [];
+  for (const match of text.matchAll(/--ds-[a-z0-9-]*[a-z0-9]/g)) {
+    const name = match[0];
+    if (DELIBERATE_PHANTOMS.has(`${location} ${name}`)) continue;
+    if (resolves(before, { kind: 'token', name }) !== false) continue;
+    if (resolves(after, { kind: 'token', name }) !== false) continue;
+    if (knownTokens.some((known) => known.startsWith(`${name}-`))) continue;
+    phantoms.push(name);
+  }
+  return phantoms;
+}
+
+export function checkFileProse(doc, before, after, prevTag, tag) {
+  const defects = [];
+  for (const [index, line] of (doc.informational ?? []).entries())
+    for (const name of phantomTokens(
+      line,
+      before,
+      after,
+      `${tag} informational`,
+    ))
+      defects.push(
+        `informational[${index}] names \`${name}\`, which exists at neither ${prevTag} nor ${tag}`,
+      );
+  for (const row of doc.deleteList ?? [])
+    for (const field of ['find', 'why', 'replaceWith']) {
+      const values = Array.isArray(row[field]) ? row[field] : [row[field]];
+      for (const value of values)
+        for (const name of phantomTokens(
+          value,
+          before,
+          after,
+          `${tag} ${row.id}`,
+        ))
+          defects.push(
+            `deleteList ${row.id} ${field} names \`${name}\`, which exists at neither ${prevTag} nor ${tag}`,
+          );
+    }
+  return defects;
+}
+
+function report(
+  defects,
+  unresolved,
+  count,
+  skipped = [],
+  unchecked = [],
+  coverage = null,
+) {
   console.log(
     `check-manifest-truth: ${count} manifest(s) against ${surfaceCache.size} tree(s).`,
   );
@@ -614,7 +852,7 @@ function report(defects, unresolved, count, skipped = [], unchecked = []) {
   }
   if (unresolved.length) {
     console.log(
-      `\n${unresolved.length} name(s) neither tag declares — consumer examples, not checked:`,
+      `\n${unresolved.length} name(s) no tag could resolve — framework types and elements a tag does not know, not checked:`,
     );
     for (const line of unresolved) console.log(`  ${line}`);
   }
@@ -627,11 +865,13 @@ function report(defects, unresolved, count, skipped = [], unchecked = []) {
     );
     process.exit(1);
   }
+  const read = coverage
+    ? `${coverage.read} of ${coverage.values} old/new value(s) were read against their boundary`
+    : 'every old/new was read against its boundary';
   console.log(
-    unchecked.length
-      ? `every old/new that holds a name resolves against its own boundary; ${unchecked.length} ` +
-          'listed above hold none.'
-      : 'every old/new resolves against its own boundary.',
+    coverage && coverage.read < coverage.values
+      ? `${read} and hold; the other ${coverage.values - coverage.read} are listed above and nothing is known about them.`
+      : `${read} and hold.`,
   );
 }
 

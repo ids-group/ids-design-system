@@ -54,6 +54,145 @@
     [annotations]="specimenAnnotations" />
 
   <h3 class="block-title t-h4">
+    Composition over time
+  </h3>
+
+  <p class="block-desc t-s">
+    Separate lines answer "how is each one doing"; a stack answers "what is the
+    total made of", which is a different question and the one a mix of tiers
+    usually asks.
+    <code class="t-mono-inline">
+      stack
+    </code> decides which:
+    <code class="t-mono-inline">
+      stacked
+    </code> starts each series where the
+    one below it ended, and
+    <code class="t-mono-inline">
+      normalized
+    </code> divides by the category's
+    own total, so every month is full and the axis reads in shares. Only a
+    series with <code class="t-mono-inline"> area </code> fills; the lines
+    themselves still sit on the running total either way. Stacking runs per
+    AXIS, so a series on the secondary axis never piles onto one measured
+    against the primary.
+  </p>
+
+  <div class="states states--cols-2">
+    <div class="state-cell">
+      <ds-line-chart
+        caption="Deliveries a month, by tier"
+        dataTable="none"
+        stack="stacked"
+        [categories]="stackedCategoriesDemo()"
+        [series]="stackedSeriesDemo()" />
+
+      <div class="state-cell-label">
+        stacked
+      </div>
+
+      <docs-line-chart-data-editor
+        [(categories)]="stackedCategoriesDemo"
+        [(series)]="stackedSeriesDemo" />
+    </div>
+
+    <div class="state-cell">
+      <ds-line-chart
+        caption="The same tiers as a share of each month"
+        dataTable="none"
+        stack="normalized"
+        [categories]="normalizedCategories()"
+        [series]="normalizedSeries()" />
+
+      <div class="state-cell-label">
+        normalized
+      </div>
+
+      <docs-line-chart-data-editor
+        [(categories)]="normalizedCategories"
+        [(series)]="normalizedSeries" />
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Between the readings
+  </h3>
+
+  <p class="block-desc t-s">
+    A line drawn between two readings is a claim about what happened in between,
+    and
+    <code class="t-mono-inline">
+      curve
+    </code> is where that claim is made.
+    <code class="t-mono-inline">
+      linear
+    </code>, the default, asserts nothing
+    the data does not say. <code class="t-mono-inline"> step </code> holds each
+    reading until the next, which is what a quantity that CHANGES at a moment
+    actually did - a price, a headcount, a rate.
+    <code class="t-mono-inline">
+      smooth
+    </code>
+    is a monotone cubic, so it never draws a peak or a trough the readings do
+    not contain; a Catmull-Rom would invent one on either side of the plateau
+    below. A filled series follows the same curve, so the fill and its line
+    share one edge.
+  </p>
+
+  <div class="states states--cols-3">
+    <div class="state-cell">
+      <ds-line-chart
+        caption="Straight between the readings"
+        dataTable="none"
+        curve="linear"
+        [categories]="curveLinearCategories()"
+        [series]="curveLinearSeries()" />
+
+      <div class="state-cell-label">
+        linear (default)
+      </div>
+
+      <docs-line-chart-data-editor
+        [(categories)]="curveLinearCategories"
+        [(series)]="curveLinearSeries" />
+    </div>
+
+    <div class="state-cell">
+      <ds-line-chart
+        caption="The rate holds until the day it moves"
+        dataTable="none"
+        curve="step"
+        [categories]="curveStepCategories()"
+        [series]="curveStepSeries()" />
+
+      <div class="state-cell-label">
+        step
+      </div>
+
+      <docs-line-chart-data-editor
+        [(categories)]="curveStepCategories"
+        [(series)]="curveStepSeries" />
+    </div>
+
+    <div class="state-cell">
+      <ds-line-chart
+        caption="Eased through the readings, with no invented trough"
+        dataTable="none"
+        curve="smooth"
+        [categories]="curveSmoothCategories()"
+        [series]="curveSmoothSeries()" />
+
+      <div class="state-cell-label">
+        smooth
+      </div>
+
+      <docs-line-chart-data-editor
+        [(categories)]="curveSmoothCategories"
+        [(series)]="curveSmoothSeries" />
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
     Missing readings
   </h3>
 
@@ -109,7 +248,66 @@
   </div>
 
   <h3 class="block-title t-h4">
-    Second axis · rounded (default)
+    Where two lines cross is an artefact
+  </h3>
+
+  <p class="block-desc t-s">
+    Two scales on one plot buy comparability and charge for it. Below are the
+    SAME six months twice, with only the right axis's ceiling moved: the lines
+    cross between February and March on the left and never meet on the right. It
+    is a property of the scale that was chosen, not a fact in the data: no
+    reading changed between the two pictures.
+  </p>
+
+  <p class="block-desc t-s">
+    All four modes stay for that reason - none of them removes the artefact, so
+    removing a mode would only hide the choice. What the chart does instead is
+    say which numbers a line is read against: each axis takes the colour of the
+    series measured against it, and
+    <code class="t-mono-inline">
+      yAxisLabel
+    </code> and
+    <code class="t-mono-inline">
+      secondaryAxisLabel
+    </code> name the units.
+    Without both a reader is comparing two quantities that may not be comparable
+    at all.
+  </p>
+
+  <div class="states states--cols-2">
+    <div class="state-cell">
+      <ds-line-chart
+        caption="Right axis to 5%"
+        dataTable="none"
+        yAxisLabel="Sessions"
+        secondaryAxisLabel="Rate, %"
+        [maxSecondary]="5"
+        [categories]="artefactCategories"
+        [series]="artefactSeries" />
+
+      <div class="state-cell-label">
+        they cross between Feb and Mar
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-line-chart
+        caption="The same readings, right axis to 12%"
+        dataTable="none"
+        yAxisLabel="Sessions"
+        secondaryAxisLabel="Rate, %"
+        [maxSecondary]="12"
+        [categories]="artefactCategories"
+        [series]="artefactSeries" />
+
+      <div class="state-cell-label">
+        they never cross
+      </div>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Second axis · aligned (default)
   </h3>
 
   <p class="block-desc t-s">
@@ -126,9 +324,9 @@
   </p>
 
   <ds-line-chart
-    caption="Sessions against conversion rate, rounded secondary axis"
+    caption="Sessions against conversion rate, aligned secondary axis"
     dataTable="none"
-    yAxisMode="rounded"
+    yAxisMode="aligned"
     [categories]="roundedCategories()"
     [series]="roundedSeries()" />
 
@@ -157,7 +355,7 @@
     [(series)]="exactSeries" />
 
   <h3 class="block-title t-h4">
-    Second axis · independent
+    Second axis · dual-grid
   </h3>
 
   <p class="block-desc t-s">
@@ -169,7 +367,7 @@
   <ds-line-chart
     caption="Each axis scaled and gridded on its own, the secondary dashed"
     dataTable="none"
-    yAxisMode="independent"
+    yAxisMode="dual-grid"
     [categories]="independentCategories()"
     [series]="independentSeries()" />
 
@@ -178,7 +376,7 @@
     [(series)]="independentSeries" />
 
   <h3 class="block-title t-h4">
-    Second axis · stacked
+    Second axis · split
   </h3>
 
   <p class="block-desc t-s">
@@ -190,7 +388,7 @@
   <ds-line-chart
     caption="Two plots sharing one category axis, labelled under the lower plot only"
     dataTable="none"
-    yAxisMode="stacked"
+    yAxisMode="split"
     [categories]="stackedCategories()"
     [series]="stackedSeries()" />
 
@@ -416,6 +614,7 @@
 
   <ds-line-chart
     caption="The annex table, collapsed until asked for"
+    dataTable="toggle"
     [categories]="dataTableCategories()"
     [series]="dataTableSeries()" />
 
@@ -544,13 +743,14 @@
       <ds-line-chart
         caption="One series at a time"
         dataTable="none"
+        dimOthers
         legendFilters
         [categories]="legendCategories()"
         [series]="legendSeries()"
         [(hiddenSeries)]="isolateHidden" />
 
       <div class="state-cell-label">
-        legendMode = isolate (default)
+        legendMode = isolate (default), dimOthers
       </div>
     </div>
 
@@ -587,9 +787,12 @@
     <code class="t-mono-inline">
       rescaleOnHide
     </code> says otherwise — a silent
-    rescale turns a period-over-period comparison into a different claim.
-    Hovering an entry dims the other series. Switch them all off and the plot is
-    replaced by an explanation rather than an empty grid.
+    rescale turns a period-over-period comparison into a different claim. With
+    <code class="t-mono-inline">
+      dimOthers
+    </code> beside it, hovering an entry
+    fades the other series. Switch them all off and the plot is replaced by an
+    explanation rather than an empty grid.
   </p>
 
   <div class="states states--cols-2">

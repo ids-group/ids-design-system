@@ -18,16 +18,16 @@
   --_modal-title-text-color-warning: var(--ds-modal-title-text-color-warning, var(--warning-text));
   --_modal-title-text-color-success: var(--ds-modal-title-text-color-success, var(--success-text));
   --_modal-title-text-color-info: var(--ds-modal-title-text-color-info, var(--info-text));
-  --_modal-title-weight: var(--ds-modal-title-weight, var(--font-weight-bold));
+  --_modal-title-font-weight: var(--ds-modal-title-font-weight, var(--font-weight-bold));
   --_modal-title-font-size: var(--ds-modal-title-font-size, var(--font-size-h5));
   --_modal-title-font-family: var(--ds-modal-title-font-family, var(--font-heading));
   --_modal-subtitle-text-color: var(--ds-modal-subtitle-text-color, var(--text-secondary));
   --_modal-subtitle-font-size: var(--ds-modal-subtitle-font-size, var(--font-size-s));
   --_modal-eyebrow-text-color: var(--ds-modal-eyebrow-text-color, var(--text-tertiary));
   --_modal-eyebrow-font-size: var(--ds-modal-eyebrow-font-size, var(--font-size-xs));
-  --_modal-eyebrow-weight: var(--ds-modal-eyebrow-weight, var(--font-weight-bold));
-  --_modal-eyebrow-tracking: var(--ds-modal-eyebrow-tracking, var(--letter-spacing-wide));
-  --_modal-eyebrow-transform: var(--ds-modal-eyebrow-transform, uppercase);
+  --_modal-eyebrow-font-weight: var(--ds-modal-eyebrow-font-weight, var(--font-weight-bold));
+  --_modal-eyebrow-letter-spacing: var(--ds-modal-eyebrow-letter-spacing, var(--letter-spacing-wide));
+  --_modal-eyebrow-text-transform: var(--ds-modal-eyebrow-text-transform, uppercase);
   --_modal-close-icon-color:        var(--ds-modal-close-icon-color,        var(--icon-default));
   --_modal-close-icon-color-hover:  var(--ds-modal-close-icon-color-hover,  var(--icon-strong));
   --_modal-icon-badge-bg-color: var(--ds-modal-icon-badge-bg-color, var(--accent-subtitle));
@@ -44,20 +44,20 @@
      uniform before it was tokenised — so it is one knob, not three. Only the
      vertical differs, because the header and the actions sit against a divider
      and the body does not. */
-  --_modal-pad-x: var(--ds-modal-pad-x, var(--space-5));
-  --_modal-header-pad-y: var(--ds-modal-header-pad-y, var(--space-4));
-  --_modal-body-pad-y: var(--ds-modal-body-pad-y, var(--space-5));
-  --_modal-actions-pad-y: var(--ds-modal-actions-pad-y, var(--space-4));
+  --_modal-padding-x: var(--ds-modal-padding-x, var(--space-5));
+  --_modal-header-padding-y: var(--ds-modal-header-padding-y, var(--space-4));
+  --_modal-body-padding-y: var(--ds-modal-body-padding-y, var(--space-5));
+  --_modal-actions-padding-y: var(--ds-modal-actions-padding-y, var(--space-4));
 
   /* Per-side, each falling back to its region's pad-y. One pad-y is applied to both
      edges, so a header that pads only at the top could not be said without reaching
      past the API into .header / .actions. */
-  --_modal-header-pad-top: var(--ds-modal-header-pad-top, var(--_modal-header-pad-y));
-  --_modal-header-pad-bottom: var(--ds-modal-header-pad-bottom, var(--_modal-header-pad-y));
-  --_modal-body-pad-top: var(--ds-modal-body-pad-top, var(--_modal-body-pad-y));
-  --_modal-body-pad-bottom: var(--ds-modal-body-pad-bottom, var(--_modal-body-pad-y));
-  --_modal-actions-pad-top: var(--ds-modal-actions-pad-top, var(--_modal-actions-pad-y));
-  --_modal-actions-pad-bottom: var(--ds-modal-actions-pad-bottom, var(--_modal-actions-pad-y));
+  --_modal-header-padding-top: var(--ds-modal-header-padding-top, var(--_modal-header-padding-y));
+  --_modal-header-padding-bottom: var(--ds-modal-header-padding-bottom, var(--_modal-header-padding-y));
+  --_modal-body-padding-top: var(--ds-modal-body-padding-top, var(--_modal-body-padding-y));
+  --_modal-body-padding-bottom: var(--ds-modal-body-padding-bottom, var(--_modal-body-padding-y));
+  --_modal-actions-padding-top: var(--ds-modal-actions-padding-top, var(--_modal-actions-padding-y));
+  --_modal-actions-padding-bottom: var(--ds-modal-actions-padding-bottom, var(--_modal-actions-padding-y));
   --_ds-enter-scale: var(--ds-modal-enter-scale, 0.97);
 
   display: contents;
@@ -103,8 +103,8 @@
     align-items: center;
     gap: var(--space-3);
     justify-content: space-between;
-    padding: var(--_modal-header-pad-top) var(--_modal-pad-x)
-      var(--_modal-header-pad-bottom);
+    padding: var(--_modal-header-padding-top) var(--_modal-padding-x)
+      var(--_modal-header-padding-bottom);
     border-bottom: var(--border-width-default) solid var(--_modal-divider);
   }
 
@@ -135,9 +135,9 @@
   }
 
   .eyebrow {
-    font: var(--_modal-eyebrow-weight) var(--_modal-eyebrow-font-size) / var(--line-height-flat) var(--font-sans);
-    letter-spacing: var(--_modal-eyebrow-tracking);
-    text-transform: var(--_modal-eyebrow-transform);
+    font: var(--_modal-eyebrow-font-weight) var(--_modal-eyebrow-font-size) / var(--line-height-flat) var(--font-sans);
+    letter-spacing: var(--_modal-eyebrow-letter-spacing);
+    text-transform: var(--_modal-eyebrow-text-transform);
     color: var(--_modal-eyebrow-text-color);
     margin-bottom: var(--space-0-5);
 
@@ -153,7 +153,7 @@
   }
 
   .title {
-    font: var(--_modal-title-weight) var(--_modal-title-font-size) / var(--line-height-snug) var(--_modal-title-font-family);
+    font: var(--_modal-title-font-weight) var(--_modal-title-font-size) / var(--line-height-snug) var(--_modal-title-font-family);
     margin: 0;
     min-width: 0;
     color: var(--_modal-title-text-color);
@@ -181,8 +181,8 @@
   }
 
   .body {
-    padding: var(--_modal-body-pad-top) var(--_modal-pad-x)
-      var(--_modal-body-pad-bottom);
+    padding: var(--_modal-body-padding-top) var(--_modal-padding-x)
+      var(--_modal-body-padding-bottom);
     overflow-y: auto;
   }
 
@@ -190,8 +190,8 @@
     display: flex;
     gap: var(--space-3);
     justify-content: flex-end;
-    padding: var(--_modal-actions-pad-top) var(--_modal-pad-x)
-      var(--_modal-actions-pad-bottom);
+    padding: var(--_modal-actions-padding-top) var(--_modal-padding-x)
+      var(--_modal-actions-padding-bottom);
     border-top: var(--border-width-default) solid var(--_modal-divider);
 
     // A read-only dialog projects nothing here — without this it still draws a
@@ -203,7 +203,7 @@
   // body-top stack into one oversized gap. Zero the FALLBACK, not the resolver —
   // collapsing this to `0` would silently drop a consumer's override.
   &.no-dividers {
-    --_modal-body-pad-y: var(--ds-modal-body-pad-y, 0);
+    --_modal-body-padding-y: var(--ds-modal-body-padding-y, 0);
 
     .header { border-bottom-width: 0; }
     .actions { border-top-width: 0; }

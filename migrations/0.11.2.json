@@ -4,7 +4,7 @@
     {
       "id": "picker-subclass-members-grew",
       "kind": "behavior",
-      "old": "class MySelect extends SelectComponent, class MyMultiSelect extends MultiSelectComponent, class MyAutocomplete extends AutocompleteComponent",
+      "old": "SelectComponent, MultiSelectComponent, AutocompleteComponent",
       "new": null,
       "action": "Build after upgrading, and rename or mark `override` every member of yours the compiler reports as colliding.",
       "note": "All three pickers gained members for the new inputs and outputs. Subclassing a DS component is unsupported but consumers do it, and a redeclared member collides whether it is public or protected. The compiler enumerates every collision, so a build is the whole check and no list here could stay current.",
@@ -27,7 +27,7 @@
     {
       "id": "table-subclass-members-grew",
       "kind": "behavior",
-      "old": "class MyTable extends TableComponent",
+      "old": "TableComponent",
       "new": null,
       "action": "Build after upgrading, and rename or mark `override` every member of yours the compiler reports as colliding.",
       "note": "TableComponent gained members for row expansion: expandMode, expandAllToggle, rowExpanded, rowCollapsed and the protected helpers behind the header toggle. A redeclared member collides whether it is public or protected, and the compiler enumerates every one, so a build is the whole check.",
@@ -46,7 +46,7 @@
     {
       "id": "loading-overlay-subclass-members-grew",
       "kind": "behavior",
-      "old": "class MyOverlay extends LoadingOverlayComponent",
+      "old": "LoadingOverlayComponent",
       "new": null,
       "action": "Build after upgrading, and rename or mark `override` every member of yours the compiler reports as colliding.",
       "note": "LoadingOverlayComponent gained `inertContent`. A redeclared member collides whether it is public or protected, and the compiler enumerates every one, so a build is the whole check.",
@@ -65,7 +65,7 @@
     {
       "id": "toast-region-subclass-members-grew",
       "kind": "behavior",
-      "old": "class MyToastRegion extends ToastRegionComponent",
+      "old": "ToastRegionComponent",
       "new": null,
       "action": "Nothing unless you subclass ToastRegionComponent and declare a member of those names: rename yours, or add `override` if you meant to replace ours.",
       "note": "ToastRegionComponent gained six members: the fields `timers`, `position` and `newestFirst`, and the methods `show`, `startCountdown` and `clearCountdown`. The auto-dismiss countdown moved into the region, because only it knows when a toast became visible — started in the service, a toast queued behind `maxVisible` expired without ever being shown. `newestFirst` puts the newest toast nearest the anchor.",
@@ -110,10 +110,10 @@
       "kind": "behavior",
       "old": "--ds-dropdown-panel-maxh",
       "new": null,
-      "action": "If a ds-select has to show more than 280px of options, set `--picker-maxh` to the height you want — on the panel where only that select should change, or globally where the other two pickers should follow it.",
-      "appliesWhen": "Only ds-select, and only where the list was long enough to reach the old 320px. ds-autocomplete and ds-multi-select already capped at this value and do not move.",
-      "pitfall": "`--ds-dropdown-panel-maxh` still reads 320px and still caps the PANEL. It is the list INSIDE that stops 40px sooner now, so raising the panel knob on its own changes nothing you can see.",
-      "note": "The option list's own max-height moved into the shared panel partial, so ds-select caps its list at `--picker-maxh` (280px) where it previously ran to the panel's `--ds-dropdown-panel-maxh` (320px).",
+      "action": "If a ds-select has to show more than 280px of options, set `--picker-maxh` globally, in your own `:root` or on a shell element the pickers sit under. All three pickers follow it.",
+      "appliesWhen": "Only ds-select, and only where the list was long enough to reach the old 320px. ds-autocomplete and ds-multi-select already capped at this value and do not move. There is no per-picker form of this at this version: the panel is portaled and carries no class of its own, and `--picker-maxh` is read inside the pane rather than copied onto it from the host, so a value set on one picker does not reach its panel.",
+      "pitfall": "Two independent caps, and the one a consumer reaches for is the wrong one. `--ds-dropdown-panel-maxh` caps the PANEL box and is forwarded from the host, so it is the one that looks settable per picker - and raising it alone changes nothing you can see. The list INSIDE caps separately at `--picker-maxh`, and that is what decides how many rows are visible.",
+      "note": "The option list's own max-height moved into the shared panel partial, so ds-select caps its list at `--picker-maxh` (280px) where it previously ran to the panel's `--ds-dropdown-panel-maxh` (320px). A `panelClass` input on each picker arrives in 0.13.1; a rule on that class is the scoped route to one picker's list height, and until then the token is global or nothing.",
       "searchHints": [
         "ds-dropdown-panel-maxh",
         "picker-maxh",
@@ -121,7 +121,7 @@
         "max-height"
       ],
       "surface": "style",
-      "verify": "Open a ds-select with more options than fit: the list scrolls at the height you set, and one left alone shows 280px of rows.",
+      "verify": "Open a ds-select with more options than fit: the list scrolls at the height `--picker-maxh` sets, and one left alone shows 280px of rows. A change to `--ds-dropdown-panel-maxh` alone moves nothing visible.",
       "restore": "--picker-maxh: 320px"
     }
   ],

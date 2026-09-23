@@ -6,8 +6,8 @@
   <span lede>
     Collapsible disclosure panel. Each item exposes a head trigger and a body
     that shows when expanded. Multiple items can be open simultaneously by
-    default — set <code class="t-mono-inline">[multi]="false"</code> to enforce
-    single-open semantics. Items can also be individually disabled.
+    default — set <code class="t-mono-inline">[multiple]="false"</code> to
+    enforce single-open semantics. Items can also be individually disabled.
   </span>
 
   <h3 class="block-title t-h4">
@@ -90,10 +90,10 @@
   </ds-accordion>
 
   <h3 class="block-title t-h4">
-    Single-open (<code class="t-mono-inline">[multi]="false"</code>)
+    Single-open (<code class="t-mono-inline">[multiple]="false"</code>)
   </h3>
 
-  <ds-accordion [multi]="false">
+  <ds-accordion [multiple]="false">
     <ds-accordion-item
       title="Build dates"
       [expanded]="true">

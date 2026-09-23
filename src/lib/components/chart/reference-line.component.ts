@@ -23,8 +23,6 @@ let nextReferenceId = 0;
  *
  * Hosted on a `<g>` rather than an element of its own: an element the SVG specification does not
  * know is not rendered, and neither are its descendants. Written as `<svg:g dsReferenceLine>`.
- *
- * @internal
  */
 @Component({
   // The repository's `component-selector` rule asks for an element selector, and one cannot work
@@ -40,6 +38,9 @@ let nextReferenceId = 0;
 export class ReferenceLineComponent implements OnDestroy {
   private readonly scales = inject(CHART_SCALES);
 
+  /** The lines and bands to draw across the plot. Each entry is ONE reading, `value`, plus an
+   *  optional `label`, `color` and `dash`; a `to` makes it a band between two readings. Each one
+   *  widens the value axis to hold it, so a target above every mark still lands on the plot. */
   readonly thresholds = input<readonly ChartThreshold[]>([]);
 
   private readonly domainId = `reference-line-${nextReferenceId++}`;

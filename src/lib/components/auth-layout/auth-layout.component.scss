@@ -46,15 +46,15 @@
    the padding edge and scrolls normally. */
 
 :host {
-  --_auth-min-height: var(--ds-auth-layout-min-height, 100dvh);
-  --_auth-bg-color: var(--ds-auth-layout-bg-color, var(--surface-canvas));
-  --_auth-gap: var(--ds-auth-layout-gap, clamp(var(--space-4), 4svh, var(--space-8)));
-  --_auth-pad-block: var(--ds-auth-layout-pad-block, clamp(var(--space-4), 5svh, var(--space-10)));
-  --_auth-mark-size: var(--ds-auth-layout-mark-size, clamp(var(--space-6), 4svh, var(--space-8)));
-  --_auth-mark-radius: var(--ds-auth-layout-mark-radius, var(--ds-radius-control));
-  --_auth-card-max-width: var(--ds-auth-layout-card-max-width, var(--auth-card-w));
-  --_auth-mark-bg-color: var(--ds-auth-layout-mark-bg-color, var(--accent));
-  --_auth-mark-label-color: var(--ds-auth-layout-mark-label-color, var(--accent-on));
+  --_auth-layout-min-height: var(--ds-auth-layout-min-height, 100dvh);
+  --_auth-layout-bg-color: var(--ds-auth-layout-bg-color, var(--surface-canvas));
+  --_auth-layout-gap: var(--ds-auth-layout-gap, clamp(var(--space-4), 4svh, var(--space-8)));
+  --_auth-layout-padding-block: var(--ds-auth-layout-padding-block, clamp(var(--space-4), 5svh, var(--space-10)));
+  --_auth-layout-mark-size: var(--ds-auth-layout-mark-size, clamp(var(--space-6), 4svh, var(--space-8)));
+  --_auth-layout-mark-radius: var(--ds-auth-layout-mark-radius, var(--ds-radius-control));
+  --_auth-layout-card-max-width: var(--ds-auth-layout-card-max-width, var(--auth-card-w));
+  --_auth-layout-mark-bg-color: var(--ds-auth-layout-mark-bg-color, var(--accent));
+  --_auth-layout-mark-label-color: var(--ds-auth-layout-mark-label-color, var(--accent-on));
 
   /* Not inherited from the global reset on purpose: `min-height: 100dvh` plus up
      to 80px of padding overflows by exactly that padding under `content-box`,
@@ -62,16 +62,16 @@
      survives a consumer composing the style partials without `styles/reset`. */
   box-sizing: border-box;
   display: flex;
-  min-height: var(--_auth-min-height);
-  background-color: var(--_auth-bg-color);
+  min-height: var(--_auth-layout-min-height);
+  background-color: var(--_auth-layout-bg-color);
 
   /* Physical left/right, not logical: the safe area is a property of the device,
      so in RTL the insets must NOT swap sides with the text direction.
      These are 0 unless the HOST APP sets `viewport-fit=cover` in its viewport
      meta — a cutout alone is not enough, and the library cannot set it. */
   padding-block:
-    calc(var(--_auth-pad-block) + env(safe-area-inset-top, 0px))
-    calc(var(--_auth-pad-block) + env(safe-area-inset-bottom, 0px));
+    calc(var(--_auth-layout-padding-block) + env(safe-area-inset-top, 0px))
+    calc(var(--_auth-layout-padding-block) + env(safe-area-inset-bottom, 0px));
   padding-left: calc(var(--space-4) + env(safe-area-inset-left, 0px));
   padding-right: calc(var(--space-4) + env(safe-area-inset-right, 0px));
 }
@@ -80,10 +80,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--_auth-gap);
+  gap: var(--_auth-layout-gap);
   margin: auto;
   width: 100%;
-  max-width: var(--_auth-card-max-width);
+  max-width: var(--_auth-layout-card-max-width);
 }
 
 /* Brand lockup and tagline read as one block, set apart from the card by the
@@ -138,16 +138,16 @@
 .mark {
   display: grid;
   place-items: center;
-  width: var(--_auth-mark-size);
-  height: var(--_auth-mark-size);
+  width: var(--_auth-layout-mark-size);
+  height: var(--_auth-layout-mark-size);
 
   /* The row is a flex line capped at --auth-card-w; without this a long wordmark
      shrinks the tile horizontally while its height stays fixed, i.e. the square
      accent tile becomes a rectangle. */
   flex-shrink: 0;
-  border-radius: var(--_auth-mark-radius);
-  background-color: var(--_auth-mark-bg-color);
-  color: var(--_auth-mark-label-color);
+  border-radius: var(--_auth-layout-mark-radius);
+  background-color: var(--_auth-layout-mark-bg-color);
+  color: var(--_auth-layout-mark-label-color);
   font: var(--font-weight-bold) var(--font-size-m) / 1 var(--font-sans);
 }
 

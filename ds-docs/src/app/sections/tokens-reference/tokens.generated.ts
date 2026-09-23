@@ -737,7 +737,7 @@ export const CHARTS: readonly ColourRow[] = [
   },
   {
     "name": "--chart-categorical-6",
-    "value": "hsl(152deg 58% 41%)",
+    "value": "hsl(148deg 58% 41%)",
     "notes": "Categorical chart series colour 6."
   },
   {
@@ -758,6 +758,16 @@ export const CHARTS: readonly ColourRow[] = [
   {
     "name": "--chart-series-accent",
     "value": "var(--chart-categorical-2)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-positive",
+    "value": "var(--chart-categorical-2)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-negative",
+    "value": "var(--chart-categorical-1)",
     "notes": ""
   },
   {
@@ -798,6 +808,46 @@ export const CHARTS: readonly ColourRow[] = [
   {
     "name": "--chart-ramp-8",
     "value": "hsl(  8deg 72% 51%)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-heat-1",
+    "value": "hsl(  8deg 60% 95%)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-heat-2",
+    "value": "hsl(  8deg 67% 88%)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-heat-3",
+    "value": "hsl(  8deg 73% 80%)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-heat-4",
+    "value": "hsl(  8deg 76% 71%)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-heat-5",
+    "value": "hsl(  8deg 78% 61%)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-heat-6",
+    "value": "hsl(  8deg 78% 51%)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-heat-7",
+    "value": "hsl(  8deg 74% 41%)",
+    "notes": ""
+  },
+  {
+    "name": "--chart-heat-8",
+    "value": "hsl(  8deg 68% 31%)",
     "notes": ""
   },
   {
@@ -1056,6 +1106,16 @@ export const CHARTS: readonly ColourRow[] = [
     "notes": "Colour of the eighth chart series. Set this, not --chart-categorical-8."
   },
   {
+    "name": "--ds-chart-positive-color",
+    "value": "var(--chart-positive)",
+    "notes": "Colour of a rising bar in ds-waterfall-chart. A rise is a direction and not a success, so it defaults to the palette's teal --chart-positive rather than to --success. Set this, not --chart-positive."
+  },
+  {
+    "name": "--ds-chart-negative-color",
+    "value": "var(--chart-negative)",
+    "notes": "Colour of a falling bar in ds-waterfall-chart, defaulting to the palette's coral --chart-negative rather than to --error for the same reason. Set this, not --chart-negative."
+  },
+  {
     "name": "--ds-chart-series-default-color",
     "value": "var(--chart-series-default)",
     "notes": ""
@@ -1104,6 +1164,46 @@ export const CHARTS: readonly ColourRow[] = [
     "name": "--ds-chart-ramp-8-color",
     "value": "var(--chart-ramp-8)",
     "notes": ""
+  },
+  {
+    "name": "--ds-chart-heat-1-color",
+    "value": "var(--chart-heat-1)",
+    "notes": "Lightest of the eight heat-scale steps a ds-heatmap-chart buckets its cells into, the low end of the range. Set this, not --chart-heat-1."
+  },
+  {
+    "name": "--ds-chart-heat-2-color",
+    "value": "var(--chart-heat-2)",
+    "notes": "Heat-scale step 2 of 8, running low to high. Set this, not --chart-heat-2."
+  },
+  {
+    "name": "--ds-chart-heat-3-color",
+    "value": "var(--chart-heat-3)",
+    "notes": "Heat-scale step 3 of 8, running low to high. Set this, not --chart-heat-3."
+  },
+  {
+    "name": "--ds-chart-heat-4-color",
+    "value": "var(--chart-heat-4)",
+    "notes": "Heat-scale step 4 of 8, running low to high. Set this, not --chart-heat-4."
+  },
+  {
+    "name": "--ds-chart-heat-5-color",
+    "value": "var(--chart-heat-5)",
+    "notes": "Heat-scale step 5 of 8, running low to high. Set this, not --chart-heat-5."
+  },
+  {
+    "name": "--ds-chart-heat-6-color",
+    "value": "var(--chart-heat-6)",
+    "notes": "Heat-scale step 6 of 8, running low to high. Set this, not --chart-heat-6."
+  },
+  {
+    "name": "--ds-chart-heat-7-color",
+    "value": "var(--chart-heat-7)",
+    "notes": "Heat-scale step 7 of 8, running low to high. Set this, not --chart-heat-7."
+  },
+  {
+    "name": "--ds-chart-heat-8-color",
+    "value": "var(--chart-heat-8)",
+    "notes": "Darkest of the eight heat-scale steps, the high end of the range. Set this, not --chart-heat-8."
   },
   {
     "name": "--ds-chart-frame-border-color",
@@ -1733,7 +1833,7 @@ export const SPACING: readonly SpacingRow[] = [
     "notes": "Default horizontal gap between inline elements (8px)."
   },
   {
-    "name": "--ds-container-pad",
+    "name": "--ds-surface-padding",
     "value": "var(--space-6)",
     "notes": "Default inner padding for card / stat, 24px. Retune it once here instead of per component; ultra-compact density drops it to 16px."
   }
@@ -2179,12 +2279,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Alert dismiss icon colour on hover."
       },
       {
-        "name": "--ds-alert-pad-y",
+        "name": "--ds-alert-padding-y",
         "value": "var(--space-2)",
         "notes": "Alert vertical padding (8px)."
       },
       {
-        "name": "--ds-alert-pad-x",
+        "name": "--ds-alert-padding-x",
         "value": "var(--space-3)",
         "notes": "Alert horizontal padding (12px)."
       },
@@ -2195,8 +2295,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-alert-enter-keyframes",
-        "value": "ds-fade-in",
-        "notes": "Alert entrance @keyframes (default ds-slide-in)."
+        "value": "ds-scale-in",
+        "notes": "Alert entrance @keyframes (default ds-scale-in, growing from the alert's centre)."
       },
       {
         "name": "--ds-alert-enter-duration",
@@ -2211,12 +2311,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-alert-enter-offset",
         "value": "2px",
-        "notes": "How far the alert drops in — read by ds-slide-in (default 2px)."
+        "notes": "How far the alert travels in, and from where: negative means it settles down from above. The default ds-scale-in does not travel, so this applies once --ds-alert-enter-keyframes names a preset that does, such as ds-slide-in (default 2px)."
       },
       {
         "name": "--ds-alert-enter-scale",
         "value": "0.96",
-        "notes": "Start scale if the alert enters with ds-scale-in (default 0.96)."
+        "notes": "Start scale of the default ds-scale-in entrance (default 0.96)."
       }
     ]
   },
@@ -2226,12 +2326,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "description": "",
     "tokens": [
       {
-        "name": "--ds-app-layout-pad-x",
+        "name": "--ds-app-layout-padding-x",
         "value": "var(--space-6)",
         "notes": "Content region horizontal padding (defaults to --space-6); right side nets out --ds-scrollbar-width."
       },
       {
-        "name": "--ds-app-layout-pad-y",
+        "name": "--ds-app-layout-padding-y",
         "value": "var(--space-6)",
         "notes": "Content region vertical padding (defaults to --space-6)."
       },
@@ -2288,7 +2388,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Space between masthead, card and support footer. Defaults to a clamp that compresses on a short viewport (16px…32px, 32px at an 800px-tall viewport); a fixed value opts out."
       },
       {
-        "name": "--ds-auth-layout-pad-block",
+        "name": "--ds-auth-layout-padding-block",
         "value": "clamp(var(--space-4), 5svh, var(--space-10))",
         "notes": "Block padding around the auth column. Defaults to a clamp that COMPRESSES on a short viewport (16px…40px, reaching 40px at an 800px-tall viewport) so the layout's own furniture is never what pushes a card into scrolling; set a fixed value to opt out of the compression."
       },
@@ -2331,16 +2431,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "tokens": [
       {
         "name": "--ds-autocomplete-panel-bg-color",
-        "value": "var(--surface-overlay)",
-        "notes": "Autocomplete dropdown panel fill."
+        "value": "initial",
+        "notes": "Autocomplete dropdown panel fill (default --surface-overlay). The panel is portaled, so set it on the host - a global rule against the pane cannot see the host override."
       },
       {
         "name": "--ds-autocomplete-panel-radius",
-        "value": "var(--ds-radius-panel)",
+        "value": "initial",
         "notes": "Autocomplete dropdown panel corner radius (default --ds-radius-panel). Forwarded onto the portaled pane on open."
       },
       {
-        "name": "--ds-autocomplete-panel-maxh",
+        "name": "--ds-autocomplete-panel-max-height",
         "value": "var(--picker-maxh)",
         "notes": "Autocomplete dropdown panel max height before it scrolls (default --picker-maxh, shared with ds-multi-select). Forwarded onto the portaled pane on open."
       },
@@ -2350,14 +2450,19 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Autocomplete focus ring (inherits shared field focus shadow)."
       },
       {
-        "name": "--ds-autocomplete-maxw",
+        "name": "--ds-autocomplete-max-width",
         "value": "none",
         "notes": "Autocomplete max width (none by default)."
       },
       {
-        "name": "--ds-autocomplete-input-minw",
+        "name": "--ds-autocomplete-input-min-width",
         "value": "40px",
         "notes": "Autocomplete input minimum width (40px)."
+      },
+      {
+        "name": "--ds-autocomplete-input-font-size",
+        "value": "var(--font-size-s)",
+        "notes": "Text input size."
       },
       {
         "name": "--ds-autocomplete-bg-color",
@@ -2496,12 +2601,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Pill radius."
       },
       {
-        "name": "--ds-badge-pad-x",
+        "name": "--ds-badge-padding-x",
         "value": "var(--badge-pad-x)",
         "notes": "Horizontal padding."
       },
       {
-        "name": "--ds-badge-pad-y",
+        "name": "--ds-badge-padding-y",
         "value": "var(--badge-pad-y)",
         "notes": "Vertical padding."
       },
@@ -2514,6 +2619,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-badge-white-space",
         "value": "nowrap",
         "notes": "Label wrapping (default nowrap). Set to normal for a badge in a narrow, fixed-layout table column, where nowrap clips the label."
+      },
+      {
+        "name": "--ds-badge-letter-spacing",
+        "value": "var(--letter-spacing-wide)",
+        "notes": "Label tracking."
       },
       {
         "name": "--badge-dot-size",
@@ -2563,12 +2673,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Left bar colour."
       },
       {
-        "name": "--ds-banner-pad-y",
+        "name": "--ds-banner-padding-y",
         "value": "var(--space-3)",
         "notes": "Vertical padding."
       },
       {
-        "name": "--ds-banner-pad-x",
+        "name": "--ds-banner-padding-x",
         "value": "var(--space-4)",
         "notes": "Horizontal padding."
       },
@@ -2604,8 +2714,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-banner-enter-keyframes",
-        "value": "ds-fade-in",
-        "notes": "Banner entrance @keyframes (default ds-slide-in)."
+        "value": "ds-scale-in",
+        "notes": "Banner entrance @keyframes (default ds-scale-in, growing from the banner's centre)."
       },
       {
         "name": "--ds-banner-enter-duration",
@@ -2620,12 +2730,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-banner-enter-offset",
         "value": "4px",
-        "notes": "How far the banner drops in — read by ds-slide-in (default 4px)."
+        "notes": "How far the banner travels in, and from where: negative means it settles down from above. The default ds-scale-in does not travel, so this applies once --ds-banner-enter-keyframes names a preset that does, such as ds-slide-in (default 4px)."
       },
       {
         "name": "--ds-banner-enter-scale",
         "value": "0.96",
-        "notes": "Start scale if the banner enters with ds-scale-in (default 0.96)."
+        "notes": "Start scale of the default ds-scale-in entrance (default 0.96)."
       },
       {
         "name": "--banner-bar-w",
@@ -2697,6 +2807,26 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "description": "",
     "tokens": [
       {
+        "name": "--ds-bar-chart-band-color",
+        "value": "var(--ds-chart-grid-line-color)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-bar-chart-target-color",
+        "value": "var(--text-primary)",
+        "notes": "Fill of the target tick a ds-bar-chart row draws across its bar (default --text-primary)."
+      },
+      {
+        "name": "--ds-bar-chart-target-width",
+        "value": "2px",
+        "notes": "Thickness of that target tick; it also sets the tick's corner radius and the half-width shift that centres it on the target value (default 2px)."
+      },
+      {
+        "name": "--ds-bar-chart-target-overhang",
+        "value": "3px",
+        "notes": "How far the target tick runs past the bar at each end (default 3px)."
+      },
+      {
         "name": "--ds-bar-chart-track-color",
         "value": "var(--ds-chart-grid-line-color)",
         "notes": "Unfilled part of a ds-bar-chart bar (default --chart-grid-line-color)."
@@ -2739,12 +2869,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "description": "",
     "tokens": [
       {
-        "name": "--ds-bottom-sheet-maxw",
+        "name": "--ds-bottom-sheet-max-width",
         "value": "480px",
         "notes": "Max width — centred above this."
       },
       {
-        "name": "--ds-bottom-sheet-maxh",
+        "name": "--ds-bottom-sheet-max-height",
         "value": "80%",
         "notes": "Max height of the sheet."
       },
@@ -2933,27 +3063,27 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Label size. Overrides the size class, so one value holds across sm/md/lg."
       },
       {
-        "name": "--ds-button-weight",
+        "name": "--ds-button-font-weight",
         "value": "var(--font-weight-extrabold)",
         "notes": "Label weight (default extrabold)."
       },
       {
-        "name": "--ds-button-tracking",
+        "name": "--ds-button-letter-spacing",
         "value": "var(--letter-spacing-wide)",
         "notes": "Label letter-spacing (default --letter-spacing-wide)."
       },
       {
         "name": "--ds-button-height",
         "value": "var(--field-h-md)",
-        "notes": "Button height, overriding the size class. Set with --ds-button-pad-y for a box sized by its padding instead."
+        "notes": "Button height, overriding the size class. Set with --ds-button-padding-y for a box sized by its padding instead."
       },
       {
-        "name": "--ds-button-pad-x",
+        "name": "--ds-button-padding-x",
         "value": "var(--space-5)",
         "notes": "Horizontal padding."
       },
       {
-        "name": "--ds-button-pad-y",
+        "name": "--ds-button-padding-y",
         "value": "0",
         "notes": "Vertical padding — 0 by default, since height is fixed; pair with height:auto styling for a padding-sized button."
       },
@@ -3077,8 +3207,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Corner radius."
       },
       {
-        "name": "--ds-card-pad",
-        "value": "var(--ds-container-pad)",
+        "name": "--ds-card-padding",
+        "value": "var(--ds-surface-padding)",
         "notes": "Inner padding."
       },
       {
@@ -3119,6 +3249,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "description": "",
     "tokens": [
       {
+        "name": "--ds-motion-chart-state-duration",
+        "value": "—",
+        "notes": ""
+      },
+      {
+        "name": "--ds-motion-chart-state-easing",
+        "value": "—",
+        "notes": ""
+      },
+      {
         "name": "--ds-column-chart-column-max-width",
         "value": "48px",
         "notes": ""
@@ -3134,14 +3274,29 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": ""
       },
       {
-        "name": "--ds-motion-chart-state-duration",
-        "value": "—",
-        "notes": ""
+        "name": "--ds-chart-annotation-color",
+        "value": "var(--text-primary)",
+        "notes": "Fill of a dsSeriesAnnotation label, the reading a chart prints next to a mark so a screenshot carries what a tooltip would (default --text-primary)."
       },
       {
-        "name": "--ds-motion-chart-state-easing",
-        "value": "—",
-        "notes": ""
+        "name": "--ds-chart-annotation-font-size",
+        "value": "var(--ds-chart-axis-font-size)",
+        "notes": "Type size of those annotation labels (defaults to --ds-chart-axis-font-size, so a label sits with the chart's furniture rather than shouting over the marks)."
+      },
+      {
+        "name": "--ds-chart-annotation-font-weight",
+        "value": "var(--font-weight-bold)",
+        "notes": "Weight of those annotation labels (default --font-weight-bold)."
+      },
+      {
+        "name": "--ds-chart-annotation-halo-color",
+        "value": "var(--surface-default)",
+        "notes": "Colour of the halo painted under an annotation label so it survives over a line or a mark (default --surface-default)."
+      },
+      {
+        "name": "--ds-chart-annotation-halo-width",
+        "value": "3px",
+        "notes": "Thickness of that halo, as the SVG stroke-width drawn under the glyphs rather than over them (default 3px)."
       }
     ]
   },
@@ -3154,6 +3309,18 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-chart-pin-size",
         "value": "22px",
         "notes": ""
+      }
+    ]
+  },
+  {
+    "component": "Chart Legend",
+    "selector": ".chart-legend",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-chart-legend-swatch-size",
+        "value": "var(--space-2-5)",
+        "notes": "Diameter of the round colour chip in ds-chart-legend, on both axes (default --space-2-5). ds-line-chart feeds it from --ds-line-chart-swatch-size."
       }
     ]
   },
@@ -3207,7 +3374,22 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "description": "",
     "tokens": [
       {
-        "name": "--ds-checkbox-label-weight",
+        "name": "--ds-checkbox-row-align",
+        "value": "center",
+        "notes": "Cross-alignment of the box and its label."
+      },
+      {
+        "name": "--ds-checkbox-gap",
+        "value": "var(--space-2)",
+        "notes": "Space between the box and its label."
+      },
+      {
+        "name": "--ds-checkbox-message-indent",
+        "value": "0px",
+        "notes": "Indent of the hint under a checkbox; set it to the box plus the gap to align with the label."
+      },
+      {
+        "name": "--ds-checkbox-label-font-weight",
         "value": "var(--font-weight-regular)",
         "notes": "Checkbox label weight — the third label property; size and colour were already hookable."
       },
@@ -3219,7 +3401,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-checkbox-label-color",
         "value": "var(--text-primary)",
-        "notes": "Checkbox caption text colour (defaults to --text-primary). A control caption is deliberately NOT part of the --ds-field-label-* contract: a label above an input is a heading for the field and reads secondary, while a caption beside a checkbox is the content you are agreeing to and reads primary. Routing them together would put \"Remember me\" in uppercase in any brand that sets --ds-field-label-transform."
+        "notes": "Checkbox caption text colour (defaults to --text-primary). A control caption is deliberately NOT part of the --ds-field-label-* contract: a label above an input is a heading for the field and reads secondary, while a caption beside a checkbox is the content you are agreeing to and reads primary. Routing them together would put \"Remember me\" in uppercase in any brand that sets --ds-field-label-text-transform."
       },
       {
         "name": "--ds-checkbox-bg-color",
@@ -3324,17 +3506,17 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Colour picker preview size (defaults to --color-picker-preview)."
       },
       {
-        "name": "--ds-color-picker-panel-w",
+        "name": "--ds-color-picker-panel-width",
         "value": "var(--color-picker-panel-w)",
         "notes": "Colour picker panel width (defaults to --color-picker-panel-w)."
       },
       {
-        "name": "--ds-color-picker-sv-h",
+        "name": "--ds-color-picker-saturation-value-height",
         "value": "var(--color-picker-sv-h)",
         "notes": "Colour picker saturation/value area height (defaults to --color-picker-sv-h)."
       },
       {
-        "name": "--ds-color-picker-hue-h",
+        "name": "--ds-color-picker-hue-height",
         "value": "var(--color-picker-hue-h)",
         "notes": "Colour picker hue slider height (defaults to --color-picker-hue-h)."
       },
@@ -3453,7 +3635,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Date-picker trigger corner radius (default --radius-md) — the counterpart of --ds-time-picker-trigger-radius."
       },
       {
-        "name": "--ds-date-picker-trigger-pad-x",
+        "name": "--ds-date-picker-trigger-padding-x",
         "value": "var(--field-pad-x)",
         "notes": "Trigger horizontal padding; follows the field family via --field-pad-x, so it tracks density like ds-input."
       },
@@ -3468,7 +3650,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Size of the date value and its ghost mask (default --font-size-s)."
       },
       {
-        "name": "--ds-date-picker-value-weight",
+        "name": "--ds-date-picker-value-font-weight",
         "value": "var(--font-weight-regular)",
         "notes": "Weight of the date value and its ghost mask (default --font-weight-regular)."
       },
@@ -3535,47 +3717,47 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "description": "",
     "tokens": [
       {
-        "name": "--ds-description-list-term-color",
+        "name": "--ds-description-item-term-color",
         "value": "var(--text-tertiary)",
         "notes": "Description list term (label) text colour."
       },
       {
-        "name": "--ds-description-list-term-font-size",
+        "name": "--ds-description-item-term-font-size",
         "value": "var(--font-size-s)",
         "notes": "Description list term font size (defaults to --font-size-s)."
       },
       {
-        "name": "--ds-description-list-term-weight",
+        "name": "--ds-description-item-term-font-weight",
         "value": "var(--font-weight-regular)",
         "notes": "Term (label) weight. Completes the eyebrow set the modal eyebrow and ds-field-label already expose."
       },
       {
-        "name": "--ds-description-list-term-tracking",
+        "name": "--ds-description-item-term-letter-spacing",
         "value": "normal",
         "notes": "Term letter-spacing (default normal)."
       },
       {
-        "name": "--ds-description-list-term-transform",
+        "name": "--ds-description-item-term-text-transform",
         "value": "none",
         "notes": "Term text-transform (default none) — set uppercase for an eyebrow-style label column."
       },
       {
-        "name": "--ds-description-list-details-color",
+        "name": "--ds-description-item-details-color",
         "value": "var(--text-primary)",
         "notes": "Description list details (value) text colour."
       },
       {
-        "name": "--ds-description-list-details-font-size",
+        "name": "--ds-description-item-details-font-size",
         "value": "var(--font-size-s)",
         "notes": "Value size."
       },
       {
-        "name": "--ds-description-list-details-weight",
+        "name": "--ds-description-item-details-font-weight",
         "value": "var(--font-weight-regular)",
         "notes": "Value weight."
       },
       {
-        "name": "--ds-description-list-label-w",
+        "name": "--ds-description-list-label-width",
         "value": "var(--dl-spec-label-w)",
         "notes": "Description list term column width (defaults to --dl-spec-label-w)."
       },
@@ -3585,7 +3767,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Description list row gap (defaults to --space-3)."
       },
       {
-        "name": "--ds-description-list-col-gap",
+        "name": "--ds-description-list-column-gap",
         "value": "var(--space-5)",
         "notes": "Description list term/details column gap (defaults to --space-5)."
       }
@@ -3615,53 +3797,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-divider-strong-color",
         "value": "var(--border-default)",
         "notes": "Divider line colour (defaults to --border-default)."
-      }
-    ]
-  },
-  {
-    "component": "Donut Chart",
-    "selector": ".donut-chart",
-    "description": "",
-    "tokens": [
-      {
-        "name": "--ds-donut-chart-size",
-        "value": "180px",
-        "notes": ""
-      },
-      {
-        "name": "--ds-donut-chart-gap",
-        "value": "var(--space-5)",
-        "notes": ""
-      },
-      {
-        "name": "--ds-donut-chart-legend-row-gap",
-        "value": "var(--space-2)",
-        "notes": ""
-      },
-      {
-        "name": "--ds-donut-chart-legend-row-height",
-        "value": "16px",
-        "notes": ""
-      },
-      {
-        "name": "--ds-donut-chart-swatch-size",
-        "value": "10px",
-        "notes": ""
-      },
-      {
-        "name": "--ds-donut-chart-focus-color",
-        "value": "var(--focus-ring-color)",
-        "notes": ""
-      },
-      {
-        "name": "--ds-donut-chart-focus-width",
-        "value": "var(--focus-ring-width)",
-        "notes": ""
-      },
-      {
-        "name": "--ds-donut-chart-outline-width",
-        "value": "calc(var(--border-width-strong) + var(--border-width-default))",
-        "notes": ""
       }
     ]
   },
@@ -3813,9 +3948,9 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Option row fill under the keyboard cursor and the pointer (default --surface-secondary)."
       },
       {
-        "name": "--ds-option-weight",
+        "name": "--ds-option-font-weight",
         "value": "var(--font-weight-medium)",
-        "notes": ""
+        "notes": "Weight of an option row's label in a dropdown panel (default --font-weight-medium)."
       },
       {
         "name": "--ds-option-font-size",
@@ -3833,6 +3968,21 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": ""
       },
       {
+        "name": "--ds-option-color",
+        "value": "var(--text-primary)",
+        "notes": "Label colour of an unselected option."
+      },
+      {
+        "name": "--ds-dropdown-empty-color",
+        "value": "var(--text-tertiary)",
+        "notes": "Colour of the no-results line."
+      },
+      {
+        "name": "--ds-dropdown-empty-font-size",
+        "value": "inherit",
+        "notes": "Size of the no-results line."
+      },
+      {
         "name": "--ds-dropdown-panel-bg-color",
         "value": "var(--surface-overlay)",
         "notes": "Connected dropdown panel fill (defaults to --surface-overlay)."
@@ -3848,19 +3998,19 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": ""
       },
       {
-        "name": "--ds-dropdown-panel-maxh",
+        "name": "--ds-dropdown-panel-max-height",
         "value": "320px",
         "notes": "Connected dropdown panel height before it scrolls (default 320px). The option list inside stops sooner, at --picker-maxh."
       },
       {
-        "name": "--ds-dropdown-panel-minw",
+        "name": "--ds-dropdown-panel-min-width",
         "value": "0",
         "notes": "Lower bound for the connected dropdown panel behind ds-select and ds-multi-select. Only bites in `width=\"content\"`, where the pane is auto-sized and the trigger is merely its floor; in `fill` the component pins the pane to the trigger and there is nothing left to bound. Forwarded onto the portaled pane, so a host-scoped value reaches it."
       },
       {
-        "name": "--ds-dropdown-panel-maxw",
+        "name": "--ds-dropdown-panel-max-width",
         "value": "none",
-        "notes": "Upper bound for the same panel, and the reason `width=\"content\"` is safe over a trigger whose options are long: without it the panel grows to its widest option. Same `content`-only caveat as --ds-dropdown-panel-minw."
+        "notes": "Upper bound for the same panel, and the reason `width=\"content\"` is safe over a trigger whose options are long: without it the panel grows to its widest option. Same `content`-only caveat as --ds-dropdown-panel-min-width."
       }
     ]
   },
@@ -3915,6 +4065,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Corner radius."
       },
       {
+        "name": "--ds-dropzone-max-width",
+        "value": "none",
+        "notes": "Panel width cap; unset lets it fill its column."
+      },
+      {
         "name": "--ds-dropzone-file-progress",
         "value": "var(--accent)",
         "notes": "Upload progress."
@@ -3967,7 +4122,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Title colour."
       },
       {
-        "name": "--ds-empty-state-title-fs",
+        "name": "--ds-empty-state-title-font-size",
         "value": "var(--font-size-h5)",
         "notes": "Empty state title font size (defaults to --font-size-h5)."
       },
@@ -3977,12 +4132,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Body colour."
       },
       {
-        "name": "--ds-empty-state-body-maxw",
+        "name": "--ds-empty-state-body-max-width",
         "value": "var(--empty-body-maxw)",
         "notes": "Body max width."
       },
       {
-        "name": "--ds-empty-state-pad",
+        "name": "--ds-empty-state-padding",
         "value": "var(--space-12) var(--space-6)",
         "notes": "Inner padding."
       }
@@ -4004,7 +4159,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Label size for the whole field family — input, textarea, select, both pickers and radio-group resolve through it."
       },
       {
-        "name": "--ds-field-label-weight",
+        "name": "--ds-field-label-font-weight",
         "value": "var(--font-weight-bold)",
         "notes": "Label weight for the whole field family."
       },
@@ -4014,12 +4169,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Label colour for the field family — input, textarea, select, both pickers and radio-group. Does NOT reach the checkbox / switch / radio CAPTIONS, which have their own --ds-<control>-label-color: see those for why."
       },
       {
-        "name": "--ds-field-label-transform",
+        "name": "--ds-field-label-text-transform",
         "value": "none",
         "notes": "Label text-transform — set `uppercase` for the tracked editorial label pattern. Default `none`."
       },
       {
-        "name": "--ds-field-label-tracking",
+        "name": "--ds-field-label-letter-spacing",
         "value": "normal",
         "notes": "Label letter-spacing, for uppercase labels that need opening up. Default `normal`."
       },
@@ -4154,6 +4309,53 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     ]
   },
   {
+    "component": "Heatmap Chart",
+    "selector": ".heatmap-chart",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-heatmap-chart-cell-size",
+        "value": "34px",
+        "notes": "Side of one grid cell, on both axes, and the height of a row in the loading skeleton (default 34px)."
+      },
+      {
+        "name": "--ds-heatmap-chart-cell-gap",
+        "value": "2px",
+        "notes": "Space between neighbouring cells, applied as the grid table's border-spacing (default 2px)."
+      },
+      {
+        "name": "--ds-heatmap-chart-cell-radius",
+        "value": "var(--ds-radius-control)",
+        "notes": "Corner radius of a cell (defaults to the --ds-radius-control role)."
+      },
+      {
+        "name": "--ds-heatmap-chart-label-color",
+        "value": "var(--ds-chart-axis-label-color)",
+        "notes": "Colour of the row and column labels around the grid (defaults to --ds-chart-axis-label-color)."
+      },
+      {
+        "name": "--ds-heatmap-chart-label-font-size",
+        "value": "var(--ds-chart-axis-font-size)",
+        "notes": "Type size of those row and column labels (defaults to --ds-chart-axis-font-size)."
+      },
+      {
+        "name": "--ds-heatmap-chart-missing-color",
+        "value": "var(--surface-secondary)",
+        "notes": "Fill of a cell whose value is null, which no step of the heat scale stands for (default --surface-secondary)."
+      },
+      {
+        "name": "--ds-heatmap-chart-focus-color",
+        "value": "var(--focus-ring-color)",
+        "notes": "Focus-ring colour for a cell (default --focus-ring-color). The cell rings through the shared focus mixin, which reads --focus-ring-color itself, so nothing resolves this one."
+      },
+      {
+        "name": "--ds-heatmap-chart-focus-width",
+        "value": "var(--focus-ring-width)",
+        "notes": "Focus-ring thickness for a cell (default --focus-ring-width), with the same caveat: the shared mixin reads --focus-ring-width itself, so nothing resolves this one."
+      }
+    ]
+  },
+  {
     "component": "Icon Base",
     "selector": ".icon-base",
     "description": "",
@@ -4273,12 +4475,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Corner radius."
       },
       {
-        "name": "--ds-input-pad-x",
+        "name": "--ds-input-padding-x",
         "value": "var(--field-pad-x)",
         "notes": "Horizontal padding."
       },
       {
-        "name": "--ds-input-pad-y",
+        "name": "--ds-input-padding-y",
         "value": "var(--field-pad-y)",
         "notes": "Vertical padding."
       },
@@ -4318,17 +4520,17 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Label colour."
       },
       {
-        "name": "--ds-input-label-fs",
+        "name": "--ds-input-label-font-size",
         "value": "var(--ds-field-label-font-size,   var(--font-size-xs))",
         "notes": "Label size."
       },
       {
         "name": "--ds-input-label-fw",
-        "value": "var(--ds-field-label-weight,      var(--font-weight-bold))",
+        "value": "var(--ds-field-label-font-weight,      var(--font-weight-bold))",
         "notes": "Label weight."
       },
       {
-        "name": "--ds-input-fs",
+        "name": "--ds-input-font-size",
         "value": "var(--font-size-s)",
         "notes": "Value text size."
       },
@@ -4345,14 +4547,14 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "description": "",
     "tokens": [
       {
-        "name": "--ds-container-max",
+        "name": "--ds-container-max-width",
         "value": "var(--col-cap-content)",
         "notes": "Page container max width (defaults to --col-cap-content)."
       },
       {
-        "name": "--ds-container-pad-x",
+        "name": "--ds-container-padding-x",
         "value": "clamp(var(--space-4), 4vw, var(--space-6))",
-        "notes": "Horizontal page padding, fluid: clamp(--space-4, 4vw, --space-6). The vertical counterpart is --ds-container-pad."
+        "notes": "Horizontal page padding, fluid: clamp(--space-4, 4vw, --space-6). The vertical counterpart is --ds-surface-padding."
       },
       {
         "name": "--ds-inline-gap",
@@ -4371,6 +4573,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "selector": ".line-chart",
     "description": "",
     "tokens": [
+      {
+        "name": "--ds-line-chart-plot-height",
+        "value": "240px",
+        "notes": ""
+      },
       {
         "name": "--ds-line-chart-grid-line-color",
         "value": "var(--ds-chart-grid-line-color)",
@@ -4402,9 +4609,9 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": ""
       },
       {
-        "name": "--ds-line-chart-annotation-weight",
+        "name": "--ds-line-chart-annotation-font-weight",
         "value": "var(--font-weight-bold)",
-        "notes": ""
+        "notes": "Weight of a ds-line-chart annotation label (default --font-weight-bold). The chart republishes it as --ds-chart-annotation-font-weight, so this is the per-chart lever over the shared one."
       },
       {
         "name": "--ds-line-chart-annotation-halo-color",
@@ -4462,11 +4669,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": ""
       },
       {
-        "name": "--ds-line-chart-plot-height",
-        "value": "240px",
-        "notes": ""
-      },
-      {
         "name": "--ds-line-chart-swatch-size",
         "value": "10px",
         "notes": ""
@@ -4501,12 +4703,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "description": "",
     "tokens": [
       {
-        "name": "--ds-list-item-pad-y",
+        "name": "--ds-list-item-padding-y",
         "value": "var(--list-item-pad-y)",
         "notes": "List item vertical padding (defaults to --list-item-pad-y)."
       },
       {
-        "name": "--ds-list-item-pad-x",
+        "name": "--ds-list-item-padding-x",
         "value": "var(--list-item-pad-x)",
         "notes": "List item horizontal padding (defaults to --list-item-pad-x)."
       },
@@ -4640,17 +4842,17 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Label colour for a [quiet] item (default --text-secondary) — a secondary row like \"Sign out\" under a divider."
       },
       {
-        "name": "--ds-menu-item-pad-x",
+        "name": "--ds-menu-item-padding-x",
         "value": "var(--space-3)",
         "notes": "Menu item horizontal padding."
       },
       {
-        "name": "--ds-menu-item-pad-y",
+        "name": "--ds-menu-item-padding-y",
         "value": "var(--space-2)",
         "notes": "Menu item vertical padding."
       },
       {
-        "name": "--ds-menu-item-label-weight",
+        "name": "--ds-menu-item-label-font-weight",
         "value": "var(--font-weight-medium)",
         "notes": "Menu item label weight."
       },
@@ -4782,14 +4984,14 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Title colour when status=\"info\"."
       },
       {
-        "name": "--ds-modal-title-weight",
+        "name": "--ds-modal-title-font-weight",
         "value": "var(--font-weight-bold)",
         "notes": "Title font-weight (defaults to --font-weight-bold)."
       },
       {
         "name": "--ds-modal-title-font-size",
         "value": "var(--font-size-h5)",
-        "notes": "Modal/dialog title size (default --font-size-h5). Pairs with --ds-modal-title-weight."
+        "notes": "Modal/dialog title size (default --font-size-h5). Pairs with --ds-modal-title-font-weight."
       },
       {
         "name": "--ds-modal-title-font-family",
@@ -4817,17 +5019,17 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Size of the [eyebrow] line above the dialog title (default --font-size-xs)."
       },
       {
-        "name": "--ds-modal-eyebrow-weight",
+        "name": "--ds-modal-eyebrow-font-weight",
         "value": "var(--font-weight-bold)",
         "notes": "Weight of the [eyebrow] line above the dialog title (default --font-weight-bold)."
       },
       {
-        "name": "--ds-modal-eyebrow-tracking",
+        "name": "--ds-modal-eyebrow-letter-spacing",
         "value": "var(--letter-spacing-wide)",
         "notes": "Letter-spacing of the [eyebrow] line (default --letter-spacing-wide) — it renders uppercase by default."
       },
       {
-        "name": "--ds-modal-eyebrow-transform",
+        "name": "--ds-modal-eyebrow-text-transform",
         "value": "uppercase",
         "notes": "text-transform for the [eyebrow] line (default uppercase; set none for sentence case)."
       },
@@ -4887,54 +5089,54 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Modal close easing (default --ease-accelerate)."
       },
       {
-        "name": "--ds-modal-pad-x",
+        "name": "--ds-modal-padding-x",
         "value": "var(--space-5)",
         "notes": "Horizontal gutter shared by the header, body and actions. Set it on ds-modal AND ds-modal-card — a dialog opened through ModalService has no ds-modal ancestor."
       },
       {
-        "name": "--ds-modal-header-pad-y",
+        "name": "--ds-modal-header-padding-y",
         "value": "var(--space-4)",
         "notes": "Vertical padding of the header row."
       },
       {
-        "name": "--ds-modal-body-pad-y",
+        "name": "--ds-modal-body-padding-y",
         "value": "var(--space-5)",
         "notes": "Vertical padding of the body. Falls to 0 under [dividers]=\"false\", since it exists to clear a rule; set this token to keep a value in both modes."
       },
       {
-        "name": "--ds-modal-actions-pad-y",
+        "name": "--ds-modal-actions-padding-y",
         "value": "var(--space-4)",
         "notes": "Vertical padding of the footer actions row. Worth tightening alongside --ds-modal-divider: transparent, which leaves spacing sized for dividers that are gone."
       },
       {
-        "name": "--ds-modal-header-pad-top",
-        "value": "var(--_modal-header-pad-y)",
-        "notes": "Padding on the modal's header, top edge only. Falls back to --ds-modal-header-pad-y, which sets both."
+        "name": "--ds-modal-header-padding-top",
+        "value": "var(--_modal-header-padding-y)",
+        "notes": "Padding on the modal's header, top edge only. Falls back to --ds-modal-header-padding-y, which sets both."
       },
       {
-        "name": "--ds-modal-header-pad-bottom",
-        "value": "var(--_modal-header-pad-y)",
-        "notes": "Padding on the modal's header, bottom edge only. Falls back to --ds-modal-header-pad-y, which sets both."
+        "name": "--ds-modal-header-padding-bottom",
+        "value": "var(--_modal-header-padding-y)",
+        "notes": "Padding on the modal's header, bottom edge only. Falls back to --ds-modal-header-padding-y, which sets both."
       },
       {
-        "name": "--ds-modal-body-pad-top",
-        "value": "var(--_modal-body-pad-y)",
-        "notes": "Padding on the modal's body, top edge only. Falls back to --ds-modal-body-pad-y, which sets both."
+        "name": "--ds-modal-body-padding-top",
+        "value": "var(--_modal-body-padding-y)",
+        "notes": "Padding on the modal's body, top edge only. Falls back to --ds-modal-body-padding-y, which sets both."
       },
       {
-        "name": "--ds-modal-body-pad-bottom",
-        "value": "var(--_modal-body-pad-y)",
-        "notes": "Padding on the modal's body, bottom edge only. Falls back to --ds-modal-body-pad-y, which sets both."
+        "name": "--ds-modal-body-padding-bottom",
+        "value": "var(--_modal-body-padding-y)",
+        "notes": "Padding on the modal's body, bottom edge only. Falls back to --ds-modal-body-padding-y, which sets both."
       },
       {
-        "name": "--ds-modal-actions-pad-top",
-        "value": "var(--_modal-actions-pad-y)",
-        "notes": "Padding on the modal's actions, top edge only. Falls back to --ds-modal-actions-pad-y, which sets both."
+        "name": "--ds-modal-actions-padding-top",
+        "value": "var(--_modal-actions-padding-y)",
+        "notes": "Padding on the modal's actions, top edge only. Falls back to --ds-modal-actions-padding-y, which sets both."
       },
       {
-        "name": "--ds-modal-actions-pad-bottom",
-        "value": "var(--_modal-actions-pad-y)",
-        "notes": "Padding on the modal's actions, bottom edge only. Falls back to --ds-modal-actions-pad-y, which sets both."
+        "name": "--ds-modal-actions-padding-bottom",
+        "value": "var(--_modal-actions-padding-y)",
+        "notes": "Padding on the modal's actions, bottom edge only. Falls back to --ds-modal-actions-padding-y, which sets both."
       },
       {
         "name": "--ds-modal-enter-scale",
@@ -4995,7 +5197,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "tokens": [
       {
         "name": "--ds-multi-select-panel-bg-color",
-        "value": "var(--surface-overlay)",
+        "value": "initial",
         "notes": "Dropdown panel surface (default --surface-overlay). The panel is portaled, so set it on the host — a global rule against the pane cannot see the host override."
       },
       {
@@ -5072,7 +5274,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-number-stepper-field-width",
-        "value": "calc(var(--_field-box-height) * 1.25)",
+        "value": "calc(var(--_field-height) * 1.25)",
         "notes": ""
       }
     ]
@@ -5083,12 +5285,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "description": "",
     "tokens": [
       {
-        "name": "--ds-otp-cell-w",
+        "name": "--ds-otp-cell-width",
         "value": "var(--otp-cell-w)",
         "notes": "OTP input cell width (48px)."
       },
       {
-        "name": "--ds-otp-cell-h",
+        "name": "--ds-otp-cell-height",
         "value": "var(--otp-cell-h)",
         "notes": "OTP input cell height (56px)."
       },
@@ -5121,8 +5323,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "tokens": [
       {
         "name": "--ds-overlay-enter-keyframes",
-        "value": "ds-fade-in",
-        "notes": "Entrance @keyframes for every portaled panel — default ds-slide-in; also ds-scale-in / ds-fade-in, your own GLOBAL keyframes, or none."
+        "value": "ds-scale-in",
+        "notes": "Entrance @keyframes for every portaled panel — default ds-scale-in, which grows the panel out of its trigger edge; also ds-slide-in / ds-fade-in, your own GLOBAL keyframes, or none."
       },
       {
         "name": "--ds-overlay-enter-duration",
@@ -5234,7 +5436,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Divider below header."
       },
       {
-        "name": "--ds-page-header-title-fs",
+        "name": "--ds-page-header-title-font-size",
         "value": "var(--font-size-h3)",
         "notes": "Title size — 28px, dropping to 22px below the mobile breakpoint. Raise it for a brand-scale header; 28px is the productive-UI rung."
       },
@@ -5256,27 +5458,27 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "description": "",
     "tokens": [
       {
-        "name": "--ds-pagination-btn-bg-color",
+        "name": "--ds-pagination-button-bg-color",
         "value": "var(--surface-default)",
         "notes": "Button fill."
       },
       {
-        "name": "--ds-pagination-btn-bg-color-hover",
+        "name": "--ds-pagination-button-bg-color-hover",
         "value": "var(--surface-secondary)",
         "notes": "Hover fill."
       },
       {
-        "name": "--ds-pagination-btn-label-color",
+        "name": "--ds-pagination-button-label-color",
         "value": "var(--text-secondary)",
         "notes": "Button label."
       },
       {
-        "name": "--ds-pagination-btn-label-color-hover",
+        "name": "--ds-pagination-button-label-color-hover",
         "value": "var(--text-primary)",
         "notes": "Hover label."
       },
       {
-        "name": "--ds-pagination-btn-border",
+        "name": "--ds-pagination-button-border",
         "value": "var(--border-default)",
         "notes": "Button border."
       },
@@ -5306,7 +5508,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Size of the \"Showing X–Y of Z\" range label (default --font-size-s)."
       },
       {
-        "name": "--ds-pagination-label-weight",
+        "name": "--ds-pagination-label-font-weight",
         "value": "var(--font-weight-regular)",
         "notes": "Weight of the range label (default --font-weight-regular)."
       },
@@ -5314,6 +5516,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-pagination-label-color",
         "value": "var(--text-secondary)",
         "notes": "Colour of the range label (default --text-secondary)."
+      },
+      {
+        "name": "--ds-pagination-label-letter-spacing",
+        "value": "normal",
+        "notes": "Tracking of the count label."
+      },
+      {
+        "name": "--ds-pagination-label-text-transform",
+        "value": "none",
+        "notes": "Casing of the count label."
       }
     ]
   },
@@ -5346,6 +5558,53 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-password-rules-failed-color",
         "value": "var(--error-text)",
         "notes": "Colour of a rule the current value breaks (default --error-text). Only after the user has typed — see the pending colour."
+      }
+    ]
+  },
+  {
+    "component": "Pie Chart",
+    "selector": ".pie-chart",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-pie-chart-size",
+        "value": "180px",
+        "notes": "Outer diameter of the ring, on both axes (default 180px). The hole is a fraction of it, set by [hole] on the component rather than by a token."
+      },
+      {
+        "name": "--ds-pie-chart-gap",
+        "value": "var(--space-5)",
+        "notes": "Space between the ring and its legend, whichever side the legend sits on (default --space-5)."
+      },
+      {
+        "name": "--ds-pie-chart-legend-row-gap",
+        "value": "var(--space-2)",
+        "notes": "Vertical gap between legend rows, and the wrap gap when the legend sits below the ring (default --space-2)."
+      },
+      {
+        "name": "--ds-pie-chart-legend-row-height",
+        "value": "16px",
+        "notes": "Height of one legend row in the loading skeleton only (default 16px); a real row is sized by its own text."
+      },
+      {
+        "name": "--ds-pie-chart-swatch-size",
+        "value": "10px",
+        "notes": "Side of the round colour chip in a legend row, on both axes (default 10px)."
+      },
+      {
+        "name": "--ds-pie-chart-focus-color",
+        "value": "var(--focus-ring-color)",
+        "notes": "Focus-ring colour for a slice (default --focus-ring-color). The ring is stroked onto the arc by the shared chart mixin, which reads --ds-chart-focus-ring-color, so nothing resolves this one."
+      },
+      {
+        "name": "--ds-pie-chart-focus-width",
+        "value": "var(--focus-ring-width)",
+        "notes": "Focus-ring thickness for a slice (default --focus-ring-width), with the same caveat: the stroked ring reads --focus-ring-width itself, so nothing resolves this one."
+      },
+      {
+        "name": "--ds-pie-chart-outline-width",
+        "value": "calc(var(--border-width-strong) + var(--border-width-default))",
+        "notes": "Border thickness of the placeholder ring drawn while the chart is empty or errored, and over the real ring when every slice is zero (defaults to --border-width-strong plus --border-width-default); the hole's inner border scales from it by the hole fraction."
       }
     ]
   },
@@ -5446,12 +5705,59 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-radio-label-color",
         "value": "var(--text-primary)",
-        "notes": "Radio caption text colour (defaults to --text-primary). A control caption is deliberately NOT part of the --ds-field-label-* contract: a label above an input is a heading for the field and reads secondary, while a caption beside a checkbox is the content you are agreeing to and reads primary. Routing them together would put \"Remember me\" in uppercase in any brand that sets --ds-field-label-transform."
+        "notes": "Radio caption text colour (defaults to --text-primary). A control caption is deliberately NOT part of the --ds-field-label-* contract: a label above an input is a heading for the field and reads secondary, while a caption beside a checkbox is the content you are agreeing to and reads primary. Routing them together would put \"Remember me\" in uppercase in any brand that sets --ds-field-label-text-transform."
       },
       {
         "name": "--ds-radio-label-font-size",
         "value": "var(--_radio-label-fs)",
         "notes": "Radio caption size. Overrides the size class, so setting it pins the caption regardless of `size`."
+      }
+    ]
+  },
+  {
+    "component": "Scatter Chart",
+    "selector": ".scatter-chart",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-scatter-chart-grid-line-color",
+        "value": "var(--ds-chart-grid-line-color)",
+        "notes": "Stroke of the plot's gridlines (defaults to --ds-chart-grid-line-color)."
+      },
+      {
+        "name": "--ds-scatter-chart-axis-line-color",
+        "value": "var(--ds-chart-axis-line-color)",
+        "notes": "Stroke of the two axis lines (defaults to --ds-chart-axis-line-color)."
+      },
+      {
+        "name": "--ds-scatter-chart-axis-label-color",
+        "value": "var(--ds-chart-axis-label-color)",
+        "notes": "Fill of the axis tick labels (defaults to --ds-chart-axis-label-color)."
+      },
+      {
+        "name": "--ds-scatter-chart-axis-font-size",
+        "value": "var(--ds-chart-axis-font-size)",
+        "notes": "Type size of those tick labels (defaults to --ds-chart-axis-font-size)."
+      },
+      {
+        "name": "--ds-scatter-chart-dot-radius",
+        "value": "var(--ds-chart-dot-radius)",
+        "notes": "Radius of a plotted point, as the SVG r attribute (defaults to --ds-chart-dot-radius)."
+      },
+      {
+        "name": "--ds-scatter-chart-dot-opacity",
+        "value": "0.72",
+        "notes": "fill-opacity of a plotted point, held under 1 so overlapping points read as a denser cluster (default 0.72)."
+      },
+      {
+        "name": "--ds-scatter-chart-focus-color",
+        "value": "var(--focus-ring-color)",
+        "notes": "Focus-ring colour for a point (default --focus-ring-color). The ring is stroked onto the dot by the shared chart mixin, which reads --ds-chart-focus-ring-color, so nothing resolves this one."
+      },
+      {
+        "name": "--ds-scatter-chart-focus-width",
+        "value": "var(--focus-ring-width)",
+        "notes": "Focus-ring thickness for a point (default --focus-ring-width), with the same caveat: the stroked ring reads --focus-ring-width itself, so nothing resolves this one."
       }
     ]
   },
@@ -5511,7 +5817,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Placeholder."
       },
       {
-        "name": "--ds-search-maxw",
+        "name": "--ds-search-max-width",
         "value": "none",
         "notes": "Search field max-width cap (none by default)."
       }
@@ -5543,23 +5849,23 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Segmented control label colour (defaults to --text-secondary)."
       },
       {
-        "name": "--ds-segmented-pad",
+        "name": "--ds-segmented-padding",
         "value": "var(--segmented-pad)",
         "notes": "Segmented control track inner padding (defaults to --segmented-pad)."
       },
       {
-        "name": "--ds-segmented-btn-h",
+        "name": "--ds-segmented-segment-height",
         "value": "var(--segmented-btn-h)",
         "notes": "Segmented control button height (defaults to --segmented-btn-h)."
       },
       {
-        "name": "--ds-segmented-r-inner",
+        "name": "--ds-segmented-radius-inner",
         "value": "var(--segmented-r-inner)",
         "notes": "Segmented control button corner radius (defaults to --segmented-r-inner)."
       },
       {
         "name": "--ds-segmented-radius",
-        "value": "calc(var(--_segmented-r-inner) + var(--_segmented-pad))",
+        "value": "calc(var(--_segmented-radius-inner) + var(--_segmented-padding))",
         "notes": "Outer radius of the segmented track. Defaults to the inner radius plus the track padding, so the selected chip and the track stay concentric — set both if you override this."
       },
       {
@@ -5568,17 +5874,17 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Selected segment shadow (defaults to --ds-elevation-raised)."
       },
       {
-        "name": "--ds-segmented-btn-border",
+        "name": "--ds-segmented-segment-border",
         "value": "0",
         "notes": "Segment border (default 0) — set a hairline for a bordered chip row."
       },
       {
-        "name": "--ds-segmented-btn-pad-x",
+        "name": "--ds-segmented-segment-padding-x",
         "value": "var(--space-4)",
         "notes": "Segment horizontal padding."
       },
       {
-        "name": "--ds-segmented-label-weight",
+        "name": "--ds-segmented-label-font-weight",
         "value": "var(--font-weight-semibold)",
         "notes": "Segment label weight."
       },
@@ -5682,7 +5988,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Item hover label."
       },
       {
-        "name": "--ds-sidenav-item-label-weight",
+        "name": "--ds-sidenav-item-label-font-weight",
         "value": "var(--font-weight-semibold)",
         "notes": "Item label font-weight (defaults to --font-weight-semibold)."
       },
@@ -5824,7 +6130,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Search/alerts popover max height before the panel scrolls (56vh)."
       },
       {
-        "name": "--ds-sidenav-footer-head-tracking",
+        "name": "--ds-sidenav-footer-head-letter-spacing",
         "value": "0.04em",
         "notes": "Letter-spacing on the uppercase group heading in the search/alerts popovers (0.04em)."
       },
@@ -5878,7 +6184,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "description": "",
     "tokens": [
       {
-        "name": "--ds-slider-track-h",
+        "name": "--ds-slider-track-height",
         "value": "var(--slider-track-h)",
         "notes": "Slider track thickness (defaults to --slider-track-h)."
       },
@@ -5982,7 +6288,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Split button label/icon colour (defaults to --accent-on)."
       },
       {
-        "name": "--ds-split-button-bg-hover-color",
+        "name": "--ds-split-button-bg-color-hover",
         "value": "var(--accent-hover)",
         "notes": "Split button hover fill (defaults to --accent-hover). Not --accent-strong: that is the on-tint colour for text on a light surface, and as a fill it leaves the label unreadable."
       },
@@ -6044,8 +6350,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Corner radius."
       },
       {
-        "name": "--ds-stat-pad",
-        "value": "var(--ds-container-pad)",
+        "name": "--ds-stat-padding",
+        "value": "var(--ds-surface-padding)",
         "notes": "Inner padding."
       },
       {
@@ -6202,7 +6508,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-switch-label-color",
         "value": "var(--text-primary)",
-        "notes": "Switch caption text colour (defaults to --text-primary). A control caption is deliberately NOT part of the --ds-field-label-* contract: a label above an input is a heading for the field and reads secondary, while a caption beside a checkbox is the content you are agreeing to and reads primary. Routing them together would put \"Remember me\" in uppercase in any brand that sets --ds-field-label-transform."
+        "notes": "Switch caption text colour (defaults to --text-primary). A control caption is deliberately NOT part of the --ds-field-label-* contract: a label above an input is a heading for the field and reads secondary, while a caption beside a checkbox is the content you are agreeing to and reads primary. Routing them together would put \"Remember me\" in uppercase in any brand that sets --ds-field-label-text-transform."
       },
       {
         "name": "--switch-track-w",
@@ -6237,482 +6543,482 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "description": "Per-axis --ds-t-* override hooks on the .t-* type utilities.",
     "tokens": [
       {
-        "name": "--ds-t-display-font-weight",
+        "name": "--ds-typography-display-font-weight",
         "value": "var(--font-weight-extrabold)",
         "notes": "`.t-display` font weight."
       },
       {
-        "name": "--ds-t-display-font-size",
+        "name": "--ds-typography-display-font-size",
         "value": "var(--font-size-display)",
         "notes": "`.t-display` font size — the largest heading, above h1."
       },
       {
-        "name": "--ds-t-display-line-height",
+        "name": "--ds-typography-display-line-height",
         "value": "var(--line-height-tight)",
         "notes": "`.t-display` line height."
       },
       {
-        "name": "--ds-t-display-font-family",
+        "name": "--ds-typography-display-font-family",
         "value": "var(--font-display)",
         "notes": "`.t-display` font family."
       },
       {
-        "name": "--ds-t-display-letter-spacing",
+        "name": "--ds-typography-display-letter-spacing",
         "value": "var(--letter-spacing-tight)",
         "notes": "`.t-display` letter spacing."
       },
       {
-        "name": "--ds-t-h1-font-weight",
+        "name": "--ds-typography-h1-font-weight",
         "value": "var(--font-weight-extrabold)",
         "notes": "`.t-h1` font weight."
       },
       {
-        "name": "--ds-t-h1-font-size",
+        "name": "--ds-typography-h1-font-size",
         "value": "var(--font-size-h1)",
         "notes": "`.t-h1` font size."
       },
       {
-        "name": "--ds-t-h1-line-height",
+        "name": "--ds-typography-h1-line-height",
         "value": "var(--line-height-tight)",
         "notes": "`.t-h1` line height."
       },
       {
-        "name": "--ds-t-h1-font-family",
+        "name": "--ds-typography-h1-font-family",
         "value": "var(--font-heading)",
         "notes": "`.t-h1` font family."
       },
       {
-        "name": "--ds-t-h1-letter-spacing",
+        "name": "--ds-typography-h1-letter-spacing",
         "value": "var(--letter-spacing-tight)",
         "notes": "`.t-h1` letter spacing."
       },
       {
-        "name": "--ds-t-h2-font-weight",
+        "name": "--ds-typography-h2-font-weight",
         "value": "var(--font-weight-extrabold)",
         "notes": "`.t-h2` font weight."
       },
       {
-        "name": "--ds-t-h2-font-size",
+        "name": "--ds-typography-h2-font-size",
         "value": "var(--font-size-h2)",
         "notes": "`.t-h2` font size."
       },
       {
-        "name": "--ds-t-h2-line-height",
+        "name": "--ds-typography-h2-line-height",
         "value": "var(--line-height-snug)",
         "notes": "`.t-h2` line height."
       },
       {
-        "name": "--ds-t-h2-font-family",
+        "name": "--ds-typography-h2-font-family",
         "value": "var(--font-heading)",
         "notes": "`.t-h2` font family."
       },
       {
-        "name": "--ds-t-h2-letter-spacing",
+        "name": "--ds-typography-h2-letter-spacing",
         "value": "var(--letter-spacing-snug)",
         "notes": "`.t-h2` letter spacing."
       },
       {
-        "name": "--ds-t-h3-font-weight",
+        "name": "--ds-typography-h3-font-weight",
         "value": "var(--font-weight-extrabold)",
         "notes": "`.t-h3` font weight."
       },
       {
-        "name": "--ds-t-h3-font-size",
+        "name": "--ds-typography-h3-font-size",
         "value": "var(--font-size-h3)",
         "notes": "`.t-h3` font size."
       },
       {
-        "name": "--ds-t-h3-line-height",
+        "name": "--ds-typography-h3-line-height",
         "value": "var(--line-height-snug)",
         "notes": "`.t-h3` line height."
       },
       {
-        "name": "--ds-t-h3-font-family",
+        "name": "--ds-typography-h3-font-family",
         "value": "var(--font-heading)",
         "notes": "`.t-h3` font family."
       },
       {
-        "name": "--ds-t-h3-letter-spacing",
+        "name": "--ds-typography-h3-letter-spacing",
         "value": "var(--letter-spacing-snug)",
         "notes": "`.t-h3` letter spacing."
       },
       {
-        "name": "--ds-t-h4-font-weight",
+        "name": "--ds-typography-h4-font-weight",
         "value": "var(--font-weight-bold)",
         "notes": "`.t-h4` font weight."
       },
       {
-        "name": "--ds-t-h4-font-size",
+        "name": "--ds-typography-h4-font-size",
         "value": "var(--font-size-h4)",
         "notes": "`.t-h4` font size."
       },
       {
-        "name": "--ds-t-h4-line-height",
+        "name": "--ds-typography-h4-line-height",
         "value": "var(--line-height-snug)",
         "notes": "`.t-h4` line height."
       },
       {
-        "name": "--ds-t-h4-font-family",
+        "name": "--ds-typography-h4-font-family",
         "value": "var(--font-heading)",
         "notes": "`.t-h4` font family."
       },
       {
-        "name": "--ds-t-h5-font-weight",
+        "name": "--ds-typography-h5-font-weight",
         "value": "var(--font-weight-bold)",
         "notes": "`.t-h5` font weight."
       },
       {
-        "name": "--ds-t-h5-font-size",
+        "name": "--ds-typography-h5-font-size",
         "value": "var(--font-size-h5)",
         "notes": "`.t-h5` font size."
       },
       {
-        "name": "--ds-t-h5-line-height",
+        "name": "--ds-typography-h5-line-height",
         "value": "var(--line-height-snug)",
         "notes": "`.t-h5` line height."
       },
       {
-        "name": "--ds-t-h5-font-family",
+        "name": "--ds-typography-h5-font-family",
         "value": "var(--font-heading)",
         "notes": "`.t-h5` font family."
       },
       {
-        "name": "--ds-t-card-title-font-weight",
+        "name": "--ds-typography-card-title-font-weight",
         "value": "var(--font-weight-bold)",
         "notes": "`.t-card-title` font weight."
       },
       {
-        "name": "--ds-t-card-title-font-size",
+        "name": "--ds-typography-card-title-font-size",
         "value": "var(--card-title-fs)",
         "notes": "`.t-card-title` font size — the heading inside a card."
       },
       {
-        "name": "--ds-t-card-title-line-height",
+        "name": "--ds-typography-card-title-line-height",
         "value": "var(--line-height-snug)",
         "notes": "`.t-card-title` line height."
       },
       {
-        "name": "--ds-t-card-title-font-family",
+        "name": "--ds-typography-card-title-font-family",
         "value": "var(--font-heading)",
         "notes": "`.t-card-title` font family."
       },
       {
-        "name": "--ds-t-card-title-color",
+        "name": "--ds-typography-card-title-color",
         "value": "var(--text-primary)",
         "notes": "`.t-card-title` text colour."
       },
       {
-        "name": "--ds-t-l-font-weight",
+        "name": "--ds-typography-l-font-weight",
         "value": "var(--font-weight-regular)",
         "notes": "`.t-l` font weight."
       },
       {
-        "name": "--ds-t-l-font-size",
+        "name": "--ds-typography-l-font-size",
         "value": "var(--font-size-l)",
         "notes": "`.t-l` font size — body text, large."
       },
       {
-        "name": "--ds-t-l-line-height",
+        "name": "--ds-typography-l-line-height",
         "value": "var(--line-height-base)",
         "notes": "`.t-l` line height."
       },
       {
-        "name": "--ds-t-l-font-family",
+        "name": "--ds-typography-l-font-family",
         "value": "var(--font-sans)",
         "notes": "`.t-l` font family."
       },
       {
-        "name": "--ds-t-l-bold-font-weight",
+        "name": "--ds-typography-l-bold-font-weight",
         "value": "var(--font-weight-bold)",
         "notes": "`.t-l-bold` font weight."
       },
       {
-        "name": "--ds-t-l-bold-font-size",
+        "name": "--ds-typography-l-bold-font-size",
         "value": "var(--font-size-l)",
         "notes": "`.t-l-bold` font size — body text, large and bold."
       },
       {
-        "name": "--ds-t-l-bold-line-height",
+        "name": "--ds-typography-l-bold-line-height",
         "value": "var(--line-height-base)",
         "notes": "`.t-l-bold` line height."
       },
       {
-        "name": "--ds-t-l-bold-font-family",
+        "name": "--ds-typography-l-bold-font-family",
         "value": "var(--font-sans)",
         "notes": "`.t-l-bold` font family."
       },
       {
-        "name": "--ds-t-m-font-weight",
+        "name": "--ds-typography-m-font-weight",
         "value": "var(--font-weight-regular)",
         "notes": "`.t-m` font weight."
       },
       {
-        "name": "--ds-t-m-font-size",
+        "name": "--ds-typography-m-font-size",
         "value": "var(--font-size-m)",
         "notes": "`.t-m` font size — body text, the default size."
       },
       {
-        "name": "--ds-t-m-line-height",
+        "name": "--ds-typography-m-line-height",
         "value": "var(--line-height-base)",
         "notes": "`.t-m` line height."
       },
       {
-        "name": "--ds-t-m-font-family",
+        "name": "--ds-typography-m-font-family",
         "value": "var(--font-sans)",
         "notes": "`.t-m` font family."
       },
       {
-        "name": "--ds-t-m-bold-font-weight",
+        "name": "--ds-typography-m-bold-font-weight",
         "value": "var(--font-weight-bold)",
         "notes": "`.t-m-bold` font weight."
       },
       {
-        "name": "--ds-t-m-bold-font-size",
+        "name": "--ds-typography-m-bold-font-size",
         "value": "var(--font-size-m)",
         "notes": "`.t-m-bold` font size — body text, bold."
       },
       {
-        "name": "--ds-t-m-bold-line-height",
+        "name": "--ds-typography-m-bold-line-height",
         "value": "var(--line-height-base)",
         "notes": "`.t-m-bold` line height."
       },
       {
-        "name": "--ds-t-m-bold-font-family",
+        "name": "--ds-typography-m-bold-font-family",
         "value": "var(--font-sans)",
         "notes": "`.t-m-bold` font family."
       },
       {
-        "name": "--ds-t-s-font-weight",
+        "name": "--ds-typography-s-font-weight",
         "value": "var(--font-weight-regular)",
         "notes": "`.t-s` font weight."
       },
       {
-        "name": "--ds-t-s-font-size",
+        "name": "--ds-typography-s-font-size",
         "value": "var(--font-size-s)",
         "notes": "`.t-s` font size — body text, small."
       },
       {
-        "name": "--ds-t-s-line-height",
+        "name": "--ds-typography-s-line-height",
         "value": "var(--line-height-base)",
         "notes": "`.t-s` line height."
       },
       {
-        "name": "--ds-t-s-font-family",
+        "name": "--ds-typography-s-font-family",
         "value": "var(--font-sans)",
         "notes": "`.t-s` font family."
       },
       {
-        "name": "--ds-t-s-bold-font-weight",
+        "name": "--ds-typography-s-bold-font-weight",
         "value": "var(--font-weight-bold)",
         "notes": "`.t-s-bold` font weight."
       },
       {
-        "name": "--ds-t-s-bold-font-size",
+        "name": "--ds-typography-s-bold-font-size",
         "value": "var(--font-size-s)",
         "notes": "`.t-s-bold` font size — body text, small and bold."
       },
       {
-        "name": "--ds-t-s-bold-line-height",
+        "name": "--ds-typography-s-bold-line-height",
         "value": "var(--line-height-base)",
         "notes": "`.t-s-bold` line height."
       },
       {
-        "name": "--ds-t-s-bold-font-family",
+        "name": "--ds-typography-s-bold-font-family",
         "value": "var(--font-sans)",
         "notes": "`.t-s-bold` font family."
       },
       {
-        "name": "--ds-t-xs-font-weight",
+        "name": "--ds-typography-xs-font-weight",
         "value": "var(--font-weight-regular)",
         "notes": "`.t-xs` font weight."
       },
       {
-        "name": "--ds-t-xs-font-size",
+        "name": "--ds-typography-xs-font-size",
         "value": "var(--font-size-xs)",
         "notes": "`.t-xs` font size — body text, extra small."
       },
       {
-        "name": "--ds-t-xs-line-height",
+        "name": "--ds-typography-xs-line-height",
         "value": "var(--line-height-base)",
         "notes": "`.t-xs` line height."
       },
       {
-        "name": "--ds-t-xs-font-family",
+        "name": "--ds-typography-xs-font-family",
         "value": "var(--font-sans)",
         "notes": "`.t-xs` font family."
       },
       {
-        "name": "--ds-t-xs-bold-font-weight",
+        "name": "--ds-typography-xs-bold-font-weight",
         "value": "var(--font-weight-bold)",
         "notes": "`.t-xs-bold` font weight."
       },
       {
-        "name": "--ds-t-xs-bold-font-size",
+        "name": "--ds-typography-xs-bold-font-size",
         "value": "var(--font-size-xs)",
         "notes": "`.t-xs-bold` font size — body text, extra small and bold."
       },
       {
-        "name": "--ds-t-xs-bold-line-height",
+        "name": "--ds-typography-xs-bold-line-height",
         "value": "var(--line-height-base)",
         "notes": "`.t-xs-bold` line height."
       },
       {
-        "name": "--ds-t-xs-bold-font-family",
+        "name": "--ds-typography-xs-bold-font-family",
         "value": "var(--font-sans)",
         "notes": "`.t-xs-bold` font family."
       },
       {
-        "name": "--ds-t-overline-font-weight",
+        "name": "--ds-typography-overline-font-weight",
         "value": "var(--font-weight-bold)",
         "notes": "`.t-overline` font weight."
       },
       {
-        "name": "--ds-t-overline-font-size",
+        "name": "--ds-typography-overline-font-size",
         "value": "var(--font-size-2xs)",
         "notes": "`.t-overline` font size — the small uppercase label above a heading."
       },
       {
-        "name": "--ds-t-overline-line-height",
+        "name": "--ds-typography-overline-line-height",
         "value": "var(--line-height-base)",
         "notes": "`.t-overline` line height."
       },
       {
-        "name": "--ds-t-overline-font-family",
+        "name": "--ds-typography-overline-font-family",
         "value": "var(--font-sans)",
         "notes": "`.t-overline` font family."
       },
       {
-        "name": "--ds-t-overline-letter-spacing",
+        "name": "--ds-typography-overline-letter-spacing",
         "value": "var(--letter-spacing-wider)",
         "notes": "`.t-overline` letter spacing."
       },
       {
-        "name": "--ds-t-overline-text-transform",
+        "name": "--ds-typography-overline-text-transform",
         "value": "uppercase",
         "notes": "`.t-overline` text transform."
       },
       {
-        "name": "--ds-t-overline-color",
+        "name": "--ds-typography-overline-color",
         "value": "var(--text-tertiary)",
         "notes": "`.t-overline` text colour."
       },
       {
-        "name": "--ds-t-caption-font-weight",
+        "name": "--ds-typography-caption-font-weight",
         "value": "var(--font-weight-regular)",
         "notes": "`.t-caption` font weight."
       },
       {
-        "name": "--ds-t-caption-font-size",
+        "name": "--ds-typography-caption-font-size",
         "value": "var(--font-size-xs)",
         "notes": "`.t-caption` font size — small print under a field or a figure."
       },
       {
-        "name": "--ds-t-caption-line-height",
+        "name": "--ds-typography-caption-line-height",
         "value": "var(--line-height-base)",
         "notes": "`.t-caption` line height."
       },
       {
-        "name": "--ds-t-caption-font-family",
+        "name": "--ds-typography-caption-font-family",
         "value": "var(--font-sans)",
         "notes": "`.t-caption` font family."
       },
       {
-        "name": "--ds-t-caption-color",
+        "name": "--ds-typography-caption-color",
         "value": "var(--text-tertiary)",
         "notes": "`.t-caption` text colour."
       },
       {
-        "name": "--ds-t-mono-ligatures",
+        "name": "--ds-typography-mono-ligatures",
         "value": "none",
         "notes": "Ligatures in mono type. Defaults to `none`, so `===` and `!=` show their characters rather than JetBrains Mono's combined glyph; set `normal` to get them back."
       },
       {
-        "name": "--ds-t-mono-font-weight",
+        "name": "--ds-typography-mono-font-weight",
         "value": "var(--font-weight-medium)",
         "notes": "`.t-mono` font weight."
       },
       {
-        "name": "--ds-t-mono-font-size",
+        "name": "--ds-typography-mono-font-size",
         "value": "var(--font-size-mono)",
         "notes": "`.t-mono` font size — monospaced text."
       },
       {
-        "name": "--ds-t-mono-line-height",
+        "name": "--ds-typography-mono-line-height",
         "value": "var(--line-height-base)",
         "notes": "`.t-mono` line height."
       },
       {
-        "name": "--ds-t-mono-font-family",
+        "name": "--ds-typography-mono-font-family",
         "value": "var(--font-mono)",
         "notes": "`.t-mono` font family."
       },
       {
-        "name": "--ds-t-mono-inline-font-weight",
+        "name": "--ds-typography-mono-inline-font-weight",
         "value": "var(--font-weight-regular)",
         "notes": "`.t-mono-inline` font weight."
       },
       {
-        "name": "--ds-t-mono-inline-font-size",
+        "name": "--ds-typography-mono-inline-font-size",
         "value": "var(--font-size-mono)",
         "notes": "`.t-mono-inline` font size — a monospaced run inside a sentence."
       },
       {
-        "name": "--ds-t-mono-inline-line-height",
+        "name": "--ds-typography-mono-inline-line-height",
         "value": "1",
         "notes": "`.t-mono-inline` line height."
       },
       {
-        "name": "--ds-t-mono-inline-font-family",
+        "name": "--ds-typography-mono-inline-font-family",
         "value": "var(--font-mono)",
         "notes": "`.t-mono-inline` font family."
       },
       {
-        "name": "--ds-t-mono-inline-color",
+        "name": "--ds-typography-mono-inline-color",
         "value": "var(--text-primary)",
         "notes": "`.t-mono-inline` text colour."
       },
       {
-        "name": "--ds-t-mono-inline-bg-color",
+        "name": "--ds-typography-mono-inline-bg-color",
         "value": "var(--surface-secondary)",
         "notes": "`.t-mono-inline` background."
       },
       {
-        "name": "--ds-t-mono-inline-radius",
+        "name": "--ds-typography-mono-inline-radius",
         "value": "var(--ds-radius-inner)",
         "notes": "`.t-mono-inline` corner radius."
       },
       {
-        "name": "--ds-t-mono-block-font-weight",
+        "name": "--ds-typography-mono-block-font-weight",
         "value": "var(--font-weight-regular)",
         "notes": "`.t-mono-block` font weight."
       },
       {
-        "name": "--ds-t-mono-block-font-size",
+        "name": "--ds-typography-mono-block-font-size",
         "value": "var(--font-size-mono)",
         "notes": "`.t-mono-block` font size — a monospaced block, its own box."
       },
       {
-        "name": "--ds-t-mono-block-line-height",
+        "name": "--ds-typography-mono-block-line-height",
         "value": "var(--line-height-loose)",
         "notes": "`.t-mono-block` line height."
       },
       {
-        "name": "--ds-t-mono-block-font-family",
+        "name": "--ds-typography-mono-block-font-family",
         "value": "var(--font-mono)",
         "notes": "`.t-mono-block` font family."
       },
       {
-        "name": "--ds-t-mono-block-bg-color",
+        "name": "--ds-typography-mono-block-bg-color",
         "value": "var(--surface-secondary)",
         "notes": "`.t-mono-block` background."
       },
       {
-        "name": "--ds-t-mono-block-border-color",
+        "name": "--ds-typography-mono-block-border-color",
         "value": "var(--border-divider)",
         "notes": "`.t-mono-block` border colour."
       },
       {
-        "name": "--ds-t-mono-block-radius",
+        "name": "--ds-typography-mono-block-radius",
         "value": "var(--ds-radius-control)",
         "notes": "`.t-mono-block` corner radius."
       }
@@ -6723,6 +7029,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "selector": ".table",
     "description": "",
     "tokens": [
+      {
+        "name": "--ds-table-head-height",
+        "value": "var(--_table-head-measured, 40px)",
+        "notes": "Overrides the header-row height the table measures for itself; the loading scrim insets its top by it, so the spinner sits below the header rather than behind it (falls back to the measured height, then 40px)."
+      },
       {
         "name": "--ds-table-border",
         "value": "var(--border-default)",
@@ -6794,7 +7105,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Head fill."
       },
       {
-        "name": "--ds-table-head-fs",
+        "name": "--ds-table-head-font-size",
         "value": "var(--font-size-xs)",
         "notes": "Head label size."
       },
@@ -6809,57 +7120,57 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Active sort caret."
       },
       {
-        "name": "--ds-table-icon-btn-color",
+        "name": "--ds-table-icon-button-color",
         "value": "var(--icon-default)",
         "notes": "Icon colour of ds-table's own icon buttons — the row-action kebab and the column picker. Defaults to --icon-default. Neither is a ds-icon-button, so the icon-button tokens do not reach them."
       },
       {
-        "name": "--ds-table-icon-btn-color-hover",
+        "name": "--ds-table-icon-button-color-hover",
         "value": "var(--icon-strong)",
         "notes": "Hover icon colour for ds-table's row-action kebab and column picker. Defaults to --icon-strong."
       },
       {
-        "name": "--ds-table-icon-btn-focus-color",
+        "name": "--ds-table-icon-button-focus-color",
         "value": "var(--accent)",
         "notes": "Focus-outline colour for ds-table's row-action kebab and column picker. Defaults to --accent."
       },
       {
-        "name": "--ds-table-cell-pad-x",
+        "name": "--ds-table-cell-padding-x",
         "value": "var(--table-cell-pad-x)",
         "notes": "Cell horizontal padding."
       },
       {
-        "name": "--ds-table-cell-pad-y",
+        "name": "--ds-table-cell-padding-y",
         "value": "var(--table-cell-pad-y)",
         "notes": "Cell vertical padding."
       },
       {
-        "name": "--ds-table-cell-pad-top",
-        "value": "var(--_table-cell-pad-y)",
-        "notes": "Per-side cell padding override; falls back to --ds-table-cell-pad-y."
+        "name": "--ds-table-cell-padding-top",
+        "value": "var(--_table-cell-padding-y)",
+        "notes": "Per-side cell padding override; falls back to --ds-table-cell-padding-y."
       },
       {
-        "name": "--ds-table-cell-pad-right",
-        "value": "var(--_table-cell-pad-x)",
-        "notes": "Per-side cell padding override (also the header gutter); falls back to --ds-table-cell-pad-x."
+        "name": "--ds-table-cell-padding-right",
+        "value": "var(--_table-cell-padding-x)",
+        "notes": "Per-side cell padding override (also the header gutter); falls back to --ds-table-cell-padding-x."
       },
       {
-        "name": "--ds-table-cell-pad-bottom",
-        "value": "var(--_table-cell-pad-y)",
-        "notes": "Per-side cell padding override; falls back to --ds-table-cell-pad-y."
+        "name": "--ds-table-cell-padding-bottom",
+        "value": "var(--_table-cell-padding-y)",
+        "notes": "Per-side cell padding override; falls back to --ds-table-cell-padding-y."
       },
       {
-        "name": "--ds-table-cell-pad-left",
-        "value": "var(--_table-cell-pad-x)",
-        "notes": "Per-side cell padding override (also the header gutter) — set 0 for a flush first column; falls back to --ds-table-cell-pad-x."
+        "name": "--ds-table-cell-padding-left",
+        "value": "var(--_table-cell-padding-x)",
+        "notes": "Per-side cell padding override (also the header gutter) — set 0 for a flush first column; falls back to --ds-table-cell-padding-x."
       },
       {
-        "name": "--ds-table-head-pad-top",
+        "name": "--ds-table-head-padding-top",
         "value": "var(--table-head-pad-y)",
         "notes": "Per-side header padding override; falls back to the density value --table-head-pad-y."
       },
       {
-        "name": "--ds-table-head-pad-bottom",
+        "name": "--ds-table-head-padding-bottom",
         "value": "var(--table-head-pad-y)",
         "notes": "Per-side header padding override; falls back to the density value --table-head-pad-y."
       },
@@ -6869,22 +7180,22 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Colour of the rule under the header row (default --ds-table-divider)."
       },
       {
-        "name": "--ds-table-head-weight",
+        "name": "--ds-table-head-font-weight",
         "value": "var(--font-weight-bold)",
         "notes": "Header label weight (default --font-weight-bold)."
       },
       {
-        "name": "--ds-table-head-tracking",
+        "name": "--ds-table-head-letter-spacing",
         "value": "var(--letter-spacing-wider)",
         "notes": "Header label letter-spacing (default --letter-spacing-wider)."
       },
       {
-        "name": "--ds-table-select-col-w",
+        "name": "--ds-table-select-column-width",
         "value": "var(--space-10)",
         "notes": "Table row-selection checkbox column width (--space-10)."
       },
       {
-        "name": "--ds-table-expand-col-w",
+        "name": "--ds-table-expand-column-width",
         "value": "var(--space-10)",
         "notes": "Table row-expand toggle column width (--space-10)."
       },
@@ -6946,27 +7257,27 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Bottom divider."
       },
       {
-        "name": "--ds-tab-pad-x",
+        "name": "--ds-tab-padding-x",
         "value": "var(--space-4)",
         "notes": "Horizontal padding."
       },
       {
-        "name": "--ds-tab-pad-y",
+        "name": "--ds-tab-padding-y",
         "value": "var(--space-3)",
         "notes": "Vertical padding."
       },
       {
-        "name": "--ds-tab-pad-top",
-        "value": "var(--_tab-pad-y)",
-        "notes": "Per-side tab padding override; falls back to --ds-tab-pad-y."
+        "name": "--ds-tab-padding-top",
+        "value": "var(--_tab-padding-y)",
+        "notes": "Per-side tab padding override; falls back to --ds-tab-padding-y."
       },
       {
-        "name": "--ds-tab-pad-bottom",
-        "value": "var(--_tab-pad-y)",
-        "notes": "Per-side tab padding override; falls back to --ds-tab-pad-y. An underline tab usually wants its padding here only."
+        "name": "--ds-tab-padding-bottom",
+        "value": "var(--_tab-padding-y)",
+        "notes": "Per-side tab padding override; falls back to --ds-tab-padding-y. An underline tab usually wants its padding here only."
       },
       {
-        "name": "--ds-tab-label-weight",
+        "name": "--ds-tab-label-font-weight",
         "value": "var(--font-weight-semibold)",
         "notes": "Tab label weight."
       },
@@ -6976,12 +7287,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Tab label size."
       },
       {
-        "name": "--ds-tabs-strip-gap",
+        "name": "--ds-tabs-gap",
         "value": "var(--space-2)",
         "notes": "Gap between tabs in the strip."
       },
       {
-        "name": "--ds-tabs-panel-pad-top",
+        "name": "--ds-tabs-panel-padding-top",
         "value": "var(--space-3)",
         "notes": "Space between the tab strip and its panel."
       },
@@ -7068,12 +7379,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "description": "",
     "tokens": [
       {
-        "name": "--ds-tag-pad-y",
+        "name": "--ds-tag-padding-y",
         "value": "var(--tag-pad-y)",
         "notes": "Vertical padding."
       },
       {
-        "name": "--ds-tag-pad-x",
+        "name": "--ds-tag-padding-x",
         "value": "var(--tag-pad-x)",
         "notes": "Horizontal padding."
       },
@@ -7098,7 +7409,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Label weight."
       },
       {
-        "name": "--ds-tag-fs",
+        "name": "--ds-tag-font-size",
         "value": "var(--font-size-xs)",
         "notes": "Label size."
       },
@@ -7237,7 +7548,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Time picker trigger corner radius (defaults to --radius-md)."
       },
       {
-        "name": "--ds-time-picker-trigger-pad-x",
+        "name": "--ds-time-picker-trigger-padding-x",
         "value": "var(--field-pad-x)",
         "notes": "Trigger horizontal padding; follows the field family via --field-pad-x, so it tracks density like ds-input."
       },
@@ -7257,7 +7568,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Size of the time value (default --font-size-s)."
       },
       {
-        "name": "--ds-time-picker-value-weight",
+        "name": "--ds-time-picker-value-font-weight",
         "value": "var(--font-weight-regular)",
         "notes": "Weight of the time value (default --font-weight-regular — matches ds-input / ds-select / ds-date-picker)."
       },
@@ -7294,7 +7605,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Timeline event node diameter (defaults to --timeline-node-size)."
       },
       {
-        "name": "--ds-timeline-spine-w",
+        "name": "--ds-timeline-spine-width",
         "value": "var(--timeline-spine-w)",
         "notes": "Timeline connector spine thickness (defaults to --timeline-spine-w)."
       },
@@ -7346,6 +7657,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "description": "",
     "tokens": [
       {
+        "name": "--ds-toast-queue-bg-color",
+        "value": "var(--surface-overlay)",
+        "notes": "Background of the `+N` strip shown while toasts wait behind maxVisible (default --surface-overlay)."
+      },
+      {
+        "name": "--ds-toast-queue-text-color",
+        "value": "var(--text-secondary)",
+        "notes": "Text colour of the `+N` strip shown while toasts wait behind maxVisible (default --text-secondary)."
+      },
+      {
         "name": "--ds-toast-leave-duration",
         "value": "var(--duration-base)",
         "notes": "Toast dismiss duration — a transition, not an animation (default --duration-base)."
@@ -7387,8 +7708,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-toast-enter-keyframes",
-        "value": "ds-fade-in",
-        "notes": "Toast entrance @keyframes (default ds-slide-in — rises into place from below)."
+        "value": "ds-scale-in",
+        "notes": "Toast entrance @keyframes (default ds-scale-in, growing from the toast's centre)."
       },
       {
         "name": "--ds-toast-enter-duration",
@@ -7403,7 +7724,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-toast-enter-offset",
         "value": "var(--space-2)",
-        "notes": "How far the toast rises into place — read by ds-slide-in (default --space-2)."
+        "notes": "How far the toast travels in, and from where: positive means it rises from below its resting spot. The default ds-scale-in does not travel, so this applies once --ds-toast-enter-keyframes names a preset that does, such as ds-slide-in (default --space-2)."
       },
       {
         "name": "--ds-toast-min-width",
@@ -7418,7 +7739,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-toast-enter-scale",
         "value": "0.96",
-        "notes": "Start scale if the toast enters with ds-scale-in (default 0.96)."
+        "notes": "Start scale of the default ds-scale-in entrance (default 0.96)."
       },
       {
         "name": "--ds-toast-bg-color-info",
@@ -7651,12 +7972,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Per-level indent for nested tree rows (defaults to --tree-indent)."
       },
       {
-        "name": "--ds-tree-row-pad-y",
+        "name": "--ds-tree-row-padding-y",
         "value": "var(--tree-row-pad-y)",
         "notes": "Tree row vertical padding (defaults to --tree-row-pad-y)."
       },
       {
-        "name": "--ds-tree-row-pad-x",
+        "name": "--ds-tree-row-padding-x",
         "value": "var(--tree-row-pad-x)",
         "notes": "Tree row horizontal padding (defaults to --tree-row-pad-x)."
       },
@@ -7731,6 +8052,23 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-w3w-mark-color",
         "value": "var(--error)",
         "notes": "what3words leading slash marks colour (defaults to --error)."
+      }
+    ]
+  },
+  {
+    "component": "Waterfall Chart",
+    "selector": ".waterfall-chart",
+    "description": "",
+    "tokens": [
+      {
+        "name": "--ds-waterfall-chart-connector-color",
+        "value": "var(--ds-chart-axis-line-color)",
+        "notes": "Stroke of the dashed chain that carries each bar's end across to where the next one starts (defaults to --ds-chart-axis-line-color)."
+      },
+      {
+        "name": "--ds-waterfall-chart-skeleton-height",
+        "value": "40px",
+        "notes": "Height of a placeholder bar in the loading skeleton (default 40px)."
       }
     ]
   }

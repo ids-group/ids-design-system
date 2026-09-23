@@ -14,7 +14,7 @@ import {
   RouterLink,
 } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { LayoutScrollService } from 'ds/app-layout';
+import { AppLayoutScrollService } from 'ds/app-layout';
 import { GROUP_PAGES } from '../group-pages';
 import { groupForAnchor, urlForGroupPath } from '../core/nav.config';
 
@@ -50,7 +50,7 @@ export class SectionGroupPage {
     return GROUP_PAGES.find((group) => group.path === path) ?? null;
   });
 
-  private readonly layoutScroll = inject(LayoutScrollService);
+  private readonly layoutScroll = inject(AppLayoutScrollService);
   // Whether the app had already navigated when this instance was built. On the
   // very first navigation focus is already where the reader expects it, and
   // moving it there would be startling; on a later one that rebuilt this

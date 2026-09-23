@@ -1,0 +1,108 @@
+<docs-section
+  anchor="heatmap-chart"
+  eyebrow="Charts"
+  title="Heat map"
+  [chapters]="true">
+  <span lede>
+    A matrix of readings coloured by magnitude - depot by weekday, hour by date,
+    queue by region. The least code per unit of insight of anything in the
+    family, and the strictest about what has to sit beside it.
+  </span>
+
+  <h3 class="block-title t-h4">
+    Default
+  </h3>
+
+  <p class="block-desc t-s">
+    Rows down the side, columns across the top, one reading per cell. Magnitude
+    is read from the STEP between two colours, which is why the heat scale spans
+    the full lightness range rather than a band of near-neighbours. It is a
+    separate scale from the funnel's ramp, which stays in the middle of the
+    range for the opposite reason.
+  </p>
+
+  <ds-heatmap-chart
+    caption="Collections a day, by depot"
+    [columns]="weekdays"
+    [data]="depotRows" />
+
+  <h3 class="block-title t-h4">
+    What has to be there
+  </h3>
+
+  <p class="block-desc t-s">
+    Colour is the only channel carrying the quantity on the grid, so two things
+    are not optional here the way they are on the other charts. The scale under
+    the grid says what a colour is worth - without it the picture is relative
+    warmth with no quantity attached. The annex table is always drawn, never a
+    <code class="t-mono-inline">
+      dataTable
+    </code> choice, because WCAG 1.4.1 is
+    not satisfied by a grid of coloured squares. Every cell also names its own
+    reading to assistive tech as
+    <code class="t-mono-inline">
+      row, column: value
+    </code>.
+  </p>
+
+  <h3 class="block-title t-h4">
+    A hole is not a low reading
+  </h3>
+
+  <p class="block-desc t-s">
+    A <code class="t-mono-inline">null</code> draws as the surface, not as the
+    heat scale's coldest step, and it is left out of the scale entirely. The
+    coldest step is a real measurement; painting "we never measured this" with
+    it states a figure nobody recorded. Depot F below opened on Thursday and
+    nobody reports on Sunday - neither reads as a quiet day.
+  </p>
+
+  <ds-heatmap-chart
+    caption="The same week with gaps in the record"
+    [columns]="weekdays"
+    [data]="partialRows" />
+
+  <h3 class="block-title t-h4">
+    Printing the readings
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      showValues
+    </code> puts each reading inside its
+    own cell. Off by default because a grid dense enough to be worth a heat map
+    has no room for the numbers. The glyph takes the cell's own colour inverted,
+    which is what keeps it legible at both ends of a scale running 1.14:1 to
+    9.07:1 against white.
+  </p>
+
+  <ds-heatmap-chart
+    caption="Escalations by quarter and region"
+    showValues
+    [columns]="smallColumns"
+    [data]="smallRows" />
+
+  <h3 class="block-title t-h4">
+    Drilling in
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      interactive
+    </code> makes every MEASURED cell a
+    button and fires <code class="t-mono-inline">cellClicked</code> with the
+    row, the column and the reading. An unmeasured cell stays inert: a grid of
+    buttons with nothing behind them is a tab trap.
+  </p>
+
+  <ds-heatmap-chart
+    caption="Click a cell"
+    interactive
+    [columns]="smallColumns"
+    [data]="smallRows"
+    (cellClicked)="onCellClicked($event)" />
+
+  <p class="block-desc t-s">
+    Last clicked: {{ lastClicked() }}
+  </p>
+</docs-section>

@@ -63,10 +63,10 @@
     {
       "id": "banner-alert-announce-opt-in",
       "kind": "behavior",
-      "old": "role and aria-live always present",
+      "old": "ds-banner, ds-alert",
       "new": null,
       "appliesWhen": "You rely on a ds-banner or ds-alert being announced by a screen reader when it appears. A banner that is page furniture needs no change - silence is now the correct behaviour for it.",
-      "pitfall": "Nothing breaks visibly and no build fails, so a regression here is invisible without a screen reader: an app that raised an error banner in response to a request and relied on the alert firing now shows it silently.",
+      "pitfall": "Nothing breaks visibly and no build fails, so a regression here is invisible without a screen reader. Grepping for a severity misses two shapes that are common and easy to walk past: a banner in a non-first branch of an @if / @else if / @switch chain, and one whose variant is a computed expression rather than a literal. Both render as the severity you were looking for and neither matches the search for it.",
       "searchHints": [
         "ds-banner",
         "ds-alert"
@@ -77,9 +77,9 @@
         "ds-alert"
       ],
       "verify": "A banner your app raises in response to an event carries announce and is spoken; a static strip carries none and is silent on route change.",
-      "restore": "Pass [announce]=\"true\" to get the previous behaviour on a given instance.",
+      "restore": "Pass [announce]=\"true\" per instance. There is no app-wide lever at this version, so an app that announced everywhere restores it one element at a time.",
       "note": "An alert region fires on insertion, so a statically-placed strip interrupted the reader on every client-side route into its page - 12 such regions on this library's own docs. MDN advises against alert on content the user has not interacted with, and the DS convention is that a new capability is off by default.",
-      "action": "Add [announce]=\"true\" to any ds-banner or ds-alert that should be announced when it appears."
+      "action": "Enumerate every ds-banner and ds-alert in the app and decide each one, then add [announce]=\"true\" to the ones that should be spoken when they appear."
     },
     {
       "id": "toast-config-token-removed",
@@ -126,7 +126,7 @@
     {
       "id": "toast-max-visible-default-5",
       "kind": "behavior",
-      "old": "provideDsConfig without a toast.maxVisible",
+      "old": "provideDsConfig",
       "new": null,
       "appliesWhen": "You raise more than five toasts at once and expect every one to be on screen together. An app that shows one or two at a time needs nothing.",
       "pitfall": "Nothing is dropped and nothing errors, so this reads as toasts \"not appearing\": the sixth is queued and shows as an earlier one dismisses. A cap of 0 is the only way left to ask for an uncapped stack, and 0 no longer means \"unset\" - it is forwarded.",
@@ -170,7 +170,7 @@
     {
       "id": "toast-table-subclass-members-moved",
       "kind": "behavior",
-      "old": "class MyThing extends ToastComponent | ToastRegionComponent | ToastService | TableComponent | BannerComponent | AlertComponent",
+      "old": "ToastComponent, ToastRegionComponent, ToastService, TableComponent, BannerComponent, AlertComponent",
       "new": null,
       "appliesWhen": "Only a class that extends one of those six. Template users and service callers need nothing.",
       "pitfall": "Every new name is private or protected, which is no protection - a redeclared private fails with TS2415 exactly as a public collision does. And an `override promoteFromQueue` or `override role` now overrides nothing: it compiles clean and silently never runs.",
@@ -205,7 +205,7 @@
     {
       "id": "banner-alert-aria-getters-nullable",
       "kind": "behavior",
-      "old": "protected get ariaRole(): 'alert' | 'status'",
+      "old": "BannerComponent.ariaRole, AlertComponent.ariaRole",
       "new": null,
       "appliesWhen": "Only a class extending BannerComponent or AlertComponent that reads or overrides ariaRole or ariaLive. Nothing in a template sees these.",
       "pitfall": "A widening breaks the READER, not the writer: an override that still declares the narrow return type fails, and code that fed the value somewhere non-nullable fails too, both at a site that did not change.",
@@ -232,7 +232,7 @@
     "A chip row's guard against a parent that hugs its content was unreachable and is removed; the measurement is unchanged. NO ACTION.",
     "A queued toast is not lost: it appears as an earlier one dismisses. The stack also animates when a toast is added rather than jumping, and --ds-toast-shift-duration and --ds-toast-shift-easing tune that. NO ACTION.",
     "Info, success and loading toasts raised through ToastService are now announced at all, where before only error and warning were. NO ACTION.",
-    "Six tokens the connected panel reads - --ds-option-padding, -gap, -radius, -row-gap, --ds-option-bg-color-active and --ds-dropdown-panel-maxh - now take effect when scoped to one picker (ds-select { ... }), where before only a global declaration reached them. The panel is portaled outside the component, so a host-scoped value arrives only if the token is on the forwarded list, and these six were not; --ds-dropdown-panel-maxh reached ds-autocomplete and neither of its siblings. NO ACTION, and nothing moves on its own: it changes only where such a declaration is already written on an element and was being ignored. If you widened one to a global rule because the scoped form did nothing, the scoped form is now the narrower way to say it.",
+    "Six tokens the connected panel reads - --ds-option-padding, -gap, -radius, -row-gap, --ds-option-bg-color-active and --ds-dropdown-panel-maxh - now take effect when scoped to one picker (ds-select { ... }), where before only a global declaration reached them. The panel is portaled outside the component, so a host-scoped value arrives only if the token is on the forwarded list, and these six were not. They join the list every dropdown picker shares, so none of them appears in a picker's own list of forwarded tokens; --ds-dropdown-panel-maxh reached ds-autocomplete and neither of its siblings. NO ACTION, and nothing moves on its own: it changes only where such a declaration is already written on an element and was being ignored. If you widened one to a global rule because the scoped form did nothing, the scoped form is now the narrower way to say it.",
     "A click in the strip between a boolean control and its label now toggles the control, where it previously hit nothing. Affects ds-radio, ds-checkbox and ds-switch. The label’s clickable box grew 8px taller; its laid-out size, the text position and the row height are unchanged, so nothing in your layout moves. NO ACTION.",
     "The buttons inside ds-table’s bulk-actions bar are visible again — their label was the same colour as the inverted bar behind it. A pressed state now has a fill where it had none. NO ACTION.",
     "The skeleton shimmer is driven per element instead of by one registered custom property on :root, so skeletons no longer travel in lock-step with one another. The property that drove it, --skeleton-shimmer-x, no longer exists: it was never a --ds-* hook, but if you referenced it, it now resolves to nothing. NO ACTION otherwise.",

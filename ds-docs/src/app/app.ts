@@ -1,9 +1,10 @@
-import { Component, ViewEncapsulation, signal } from '@angular/core';
+import { Component, ViewEncapsulation, inject, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { AppLayoutComponent } from 'ds/app-layout';
 import { ButtonComponent } from 'ds/button';
 import { IconButtonComponent } from 'ds/icon-button';
 import { TopBarComponent } from 'ds/topbar';
+import { DocumentTitleService } from './core/document-title';
 import { SidebarComponent } from './layout/sidebar.component';
 import { TweaksPanelComponent } from './tweaks-panel/tweaks-panel.component';
 
@@ -25,4 +26,8 @@ import { TweaksPanelComponent } from './tweaks-panel/tweaks-panel.component';
 })
 export class App {
   protected readonly navOpen = signal(false);
+
+  constructor() {
+    inject(DocumentTitleService).start();
+  }
 }

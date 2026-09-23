@@ -3,8 +3,8 @@
 
 :host {
   --_tree-indent: var(--ds-tree-indent, var(--tree-indent));
-  --_tree-row-pad-y: var(--ds-tree-row-pad-y, var(--tree-row-pad-y));
-  --_tree-row-pad-x: var(--ds-tree-row-pad-x, var(--tree-row-pad-x));
+  --_tree-row-padding-y: var(--ds-tree-row-padding-y, var(--tree-row-pad-y));
+  --_tree-row-padding-x: var(--ds-tree-row-padding-x, var(--tree-row-pad-x));
   --_tree-row-hover-bg-color: var(--ds-tree-row-hover-bg-color, var(--surface-secondary));
   --_tree-row-selected-bg-color: var(--ds-tree-row-selected-bg-color, var(--accent-surface-tint));
   --_tree-row-selected-text-color: var(--ds-tree-row-selected-text-color, var(--accent-strong));
@@ -21,8 +21,8 @@
   align-items: center;
   gap: var(--space-2);
   width: 100%;
-  padding: var(--_tree-row-pad-y) var(--_tree-row-pad-x) var(--_tree-row-pad-y)
-    calc(var(--_tree-row-pad-x) + var(--_level, 0) * var(--_tree-indent));
+  padding: var(--_tree-row-padding-y) var(--_tree-row-padding-x) var(--_tree-row-padding-y)
+    calc(var(--_tree-row-padding-x) + var(--_level, 0) * var(--_tree-indent));
   border: 0;
   background: transparent;
   border-radius: var(--focus-ring-radius);

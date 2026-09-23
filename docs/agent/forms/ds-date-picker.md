@@ -3,5 +3,9 @@
 
 Group: Form & input
 
-Inputs: `mode: 'single' | 'range' = 'single'`, `size: 'sm' | 'md' | 'lg' = 'md'`, `value: model<Date | RangeValue | null>` (`RangeValue = [Date | null, Date | null]`), `placeholder: string = 'Select date'`, `label: string = ''`, `hint: string = ''`, `required: boolean = false`, `optional: boolean = false`
+Inputs: `mode: 'single' | 'range' = 'single'`, `size: 'sm' | 'md' | 'lg' = 'md'`, `value: model<Date | DateRangeValue | null>` (`DateRangeValue = [Date | null, Date | null]`), `placeholder: string = 'Select date'`, `label: string = ''`, `hint: string = ''`, `required: boolean = false`, `optional: boolean = false`
 Trigger button opens a CDK overlay calendar; selecting a day in `'single'` closes the panel, in `'range'` it closes after the second pick.
+
+<!-- inputs:ds-date-picker -->
+All inputs: `hint: string = ''`, `error: string = ''`, `warning: string = ''`, `reserveMessage: boolean | null = null`, `messageIcon: IconName | false | null = null`, `errors: readonly DsFieldError[] = []`, `invalid: boolean = false`, `touched: boolean = false`, `hidden: boolean = false`, `mode: 'single' | 'range' = 'single'`, `size: 'sm' | 'md' | 'lg' = null`, `fullWidth: boolean = false`, `value: Date | DateRangeValue | null = null`, `placeholder: string = 'Select date'`, `label: string = ''`, `required: boolean = false`, `optional: boolean = false`, `panelClass: string | readonly string[] = []`, `disabled: boolean = false`, `success: string = ''`, `ariaLabel: string | null = null`, `minYear: number`, `maxYear: number`, `minDate: Date | null = null`, `maxDate: Date | null = null`, `disabledDate: ((date: Date) => boolean) | null = null`, `presets: readonly DatePickerPreset[] = []`, `locale: string | null = null`, `dateFormat: string | null = null`, `firstDayOfWeek: number | null = null`, `defaultDate: Date | null = null`, `allowInput: boolean = true`
+<!-- /inputs -->

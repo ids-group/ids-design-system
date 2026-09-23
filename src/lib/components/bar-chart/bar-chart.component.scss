@@ -8,6 +8,10 @@
 
 
 .bar-chart {
+  --_bar-chart-band-color: var(--ds-bar-chart-band-color, var(--ds-chart-grid-line-color));
+  --_bar-chart-target-color: var(--ds-bar-chart-target-color, var(--text-primary));
+  --_bar-chart-target-width: var(--ds-bar-chart-target-width, 2px);
+  --_bar-chart-target-overhang: var(--ds-bar-chart-target-overhang, 3px);
   --_bar-chart-track-color: var(--ds-bar-chart-track-color, var(--ds-chart-grid-line-color));
   --_bar-chart-track-height: var(--ds-bar-chart-track-height, 12px);
   --_bar-chart-cap-radius: var(
@@ -23,12 +27,6 @@
   --_bar-chart-label-gap: var(--ds-bar-chart-label-gap, var(--space-1));
 
   margin: 0;
-}
-
-figcaption {
-  margin-block-end: var(--space-3);
-  color: var(--text-primary);
-  font-weight: 600;
 }
 
 // The gap between rows is PADDING on each row, not `row-gap` on the list: a gap is dead space to
@@ -73,10 +71,32 @@ figcaption {
 }
 
 .track {
+  position: relative;
   grid-column: 1 / -1;
   block-size: var(--_bar-chart-track-height);
   border-radius: var(--_bar-chart-cap-radius);
   background: var(--_bar-chart-track-color);
+}
+
+// Qualitative bands sit under the bar and stack from the track's start, each one wider than the
+// last, so the visible step between two of them is the boundary between the two meanings.
+.band {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  border-radius: var(--_bar-chart-cap-radius);
+  background: var(--_bar-chart-band-color);
+}
+
+// A tick, not a bar: the target is a level to compare against, and drawing it with any width at
+// all would read as a second quantity.
+.target {
+  position: absolute;
+  inset-block: calc(-1 * var(--_bar-chart-target-overhang));
+  inline-size: var(--_bar-chart-target-width);
+  margin-inline-start: calc(-1 * var(--_bar-chart-target-width) / 2);
+  border-radius: var(--_bar-chart-target-width);
+  background: var(--_bar-chart-target-color);
 }
 
 .fill {
@@ -101,9 +121,6 @@ figcaption {
       var(--ds-motion-chart-mark-easing);
 }
 
-.empty.is-error {
-  color: var(--error);
-}
 
 @include chart-frame.forced-colors;
 @include chart-frame.pin-reset;
@@ -156,7 +173,3 @@ figcaption {
 
 /* A segment's row belongs to the row above it. Indent and de-emphasis are the table's only way to
    say so — a nested table would break the column alignment the reader is scanning down. */
-.segment-row > td:first-child {
-  padding-inline-start: var(--space-6);
-  color: var(--text-secondary);
-}

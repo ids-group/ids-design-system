@@ -395,7 +395,7 @@ const RAMPS = RAMP_SPEC.map(({ label, prefix, notes }) => {
 
 // ---- Scales ---------------------------------------------------------------
 const scaleRow = (t) => ({ name: t.name, value: t.value, notes: t.notes });
-const SPACING = pick(/^--space-/, ['--ds-container-pad']).map(scaleRow);
+const SPACING = pick(/^--space-/, ['--ds-surface-padding']).map(scaleRow);
 const RADIUS = pick(/^--radius-/).map(scaleRow);
 
 // Shadows: alias = the value when it is a single var(--shadow-N) alias or a

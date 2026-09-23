@@ -5,6 +5,41 @@ import { DocsChartDataEditorComponent } from '../../shared/docs-chart-data-edito
 import { DocsReplayButtonComponent } from '../../shared/docs-replay-button.component';
 import { DocsSectionComponent } from '../../shared/docs-section.component';
 
+// A floating bar: each row starts where its own period does, so the bars compare DURATION and
+// PLACEMENT at once, which a bar from zero cannot do.
+const RANGE_ROWS: readonly BarChartRow[] = [
+  { id: 'discovery', label: 'Discovery', value: [0, 3] },
+  { id: 'build', label: 'Build', value: [2, 9] },
+  { id: 'pilot', label: 'Pilot', value: [8, 12] },
+  { id: 'rollout', label: 'Rollout', value: [11, 16] },
+];
+
+// A bullet: the bar is the reading, the tick is the goal, and the bands say what the reading
+// MEANS where the number alone does not.
+const BULLET_ROWS: readonly BarChartRow[] = [
+  {
+    id: 'revenue',
+    label: 'Revenue',
+    value: 268,
+    target: 250,
+    ranges: [150, 220, 300],
+  },
+  {
+    id: 'margin',
+    label: 'Margin',
+    value: 172,
+    target: 210,
+    ranges: [150, 220, 300],
+  },
+  {
+    id: 'orders',
+    label: 'Orders',
+    value: 224,
+    target: 210,
+    ranges: [150, 220, 300],
+  },
+];
+
 const SPECIMEN_ROWS: readonly BarChartRow[] = [
   { label: 'Unique visitors', value: 3204 },
   { label: 'Scrolled ≥ 50% of the page', value: 1961 },
@@ -124,6 +159,9 @@ const MAX_BELOW_DATA_ROWS: readonly BarChartRow[] = [
   styleUrls: ['../../shared/section-demo.scss', './charts.section.scss'],
 })
 export class BarChartSection {
+  protected readonly rangeRows = signal<readonly BarChartRow[]>(RANGE_ROWS);
+  protected readonly bulletRows = signal<readonly BarChartRow[]>(BULLET_ROWS);
+
   protected readonly specimenRows =
     signal<readonly BarChartRow[]>(SPECIMEN_ROWS);
   protected readonly customColorRows =

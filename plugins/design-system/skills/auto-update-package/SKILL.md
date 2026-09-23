@@ -25,7 +25,7 @@ only when a version cannot be made green.
 - **A semver** (e.g. `0.4.0`) → target version: end the chain there instead of the latest.
 - **`dry-run`** (or `plan`) → **plan-only mode**: run Phase A read-only (no branch, no
   AskUserQuestion about git strategy), then for each chain version run plan + find + a read-only
-  customization-drift scan (the sources checkout at tag `v<V>` lets you check consumer deep
+  customization-drift scan (the extracted `v<V>` tree lets you check consumer deep
   selectors/tokens against V's internals WITHOUT installing anything). Report per version: the
   MigrationItems, which are applicable (with file/hit counts), which are not, expected drift, and
   any command-type items (the real run will pause for approval on those) — and
@@ -113,16 +113,21 @@ When a question the changelog can't answer blocks an item — the exact union a 
 whether an internal class/token still exists, the shape of a replacement API — read the sources
 instead of guessing. Version-exactness decides WHERE:
 
-- **Primary: a local checkout of the DS sources at the release tag.** The clone is made once in
-  Phase A step 7 (one clone = changelog + sources reference; the same git credentials that installed
-  this plugin can clone it). At the start of
-  each version V, check out tag `v<X.Y.Z>` (releases are tagged): the checkout then holds the TRUE
-  readable sources of exactly the version being migrated TO — component `.ts`/`.scss`/templates —
-  available to every agent at every pipeline stage, independent of npm install timing. Pass the
-  checkout path to subagents in their prompts; they Read/Grep it directly. Read-only reference
-  material. If the clone fails (no git access), fall back to fetching individual files at the tag
-  over the network and passing excerpts verbatim. **Never read `main` for this** — it is ahead of V
-  and answers questions about a version you are not migrating to.
+- **Primary: one extracted tree per release tag.** The clone is made once in Phase A step 7 (one
+  clone = changelog + sources reference; the same git credentials that installed this plugin can
+  clone it) and is NEVER checked out afterwards — it stays on its default branch for the whole run.
+  For each version V the loop needs, extract that tag into its own directory beside the clone:
+  `mkdir -p <scratch>/ds-src/v<X.Y.Z> && (cd <scratch>/ds-src/v<X.Y.Z> && git -C <clone> archive v<X.Y.Z> src/lib | tar -x)`
+  (releases are tagged). Unpack into the current directory rather than passing `tar -C`: GNU tar
+  on Windows reads the drive colon in `C:\…` as a remote host and fails. Each directory holds the TRUE readable sources of exactly one version —
+  component `.ts`/`.scss`/templates — and nothing ever changes it, so any number of agents, across
+  any number of versions, read it at once with Read/Grep and no shell. Extract V AND the tag before
+  it, and pass BOTH paths to every subagent: a claim that something was removed at V is proved only
+  by reading it present in the earlier tree and absent in V's, and the subagents cannot run git.
+  Extract once per version and reuse it across targets. If the clone fails (no git access), fall
+  back to fetching individual files at the tag over the network and passing excerpts verbatim.
+  **Never read `main` for this** — it is ahead of V and answers questions about a version you are
+  not migrating to.
 - **The installed package** `<target>/node_modules/@ids-group-ltd/ids-design-system/` — what is
   ACTUALLY installed right now: `types/*.d.ts` (the whole public API surface, incl. input value
   unions), `fesm2022/*.mjs` (compiled internals — class names, DOM structure), `themes/` +
@@ -150,7 +155,7 @@ delete pass / committed); DELETE it when the run completes. **On skill start (no
 a ledger for this repo shows an unfinished version, summarize it, warn when `git rev-parse HEAD`
 no longer matches `headAtStart` (the tree moved since), and ask the user (AskUserQuestion): resume
 from the recorded step, or start fresh — where fresh means re-running the UNFINISHED version from
-step 1, never skipping past it. Either way, Phase A setup (the clone, the save-asides, the truth
+step 1, never skipping past it. Either way, Phase A setup (the clone, the extracted trees, the truth
 check) is re-run first — those artifacts lived in the dead session's scratchpad; only the ledger
 survives.
 
@@ -196,12 +201,12 @@ survives.
    exists among the published stables and end the chain there instead of the latest.
 7. **Clone the DS sources + load the changelog.** Clone
    `https://bitbucket.org/itband/ids-design-system.git` into your scratchpad (NEVER inside the
-   consumer repo) — a FULL clone with tags (no `--depth`, no `--no-tags`): the per-version tag
-   checkouts and the manifest-truth check both die without them, the latter loudly per version. One clone serves as BOTH the changelog source and the per-version sources
-   reference (see "Reading the DS sources"). On the clone's default branch read `CHANGELOG.md` —
-   the complete newest changelog, covering every chain version — and save ASIDE (scratchpad,
-   outside the clone) what you need across tag checkouts: the changelog text and the `migrations/`
-   manifests if present (per-version tag checkouts change the clone's tree).
+   consumer repo) — a FULL clone with tags (no `--depth`, no `--no-tags`): the per-version tree
+   extracts and the manifest-truth check both die without them, the latter loudly per version. One
+   clone serves as BOTH the changelog source and the per-version sources reference (see "Reading
+   the DS sources"). Its working tree stays on the default branch for the whole run, so read
+   `CHANGELOG.md` there — the complete newest changelog, covering every chain version — and the
+   `migrations/` manifests in place.
    Fallbacks if the clone fails (no git access):
    (a) `<target>/node_modules/@ids-group-ltd/ids-design-system/CHANGELOG.md` — OR the **workspace-root**
    `node_modules/...` (hoisted monorepos install the dependency at the root, not under the
@@ -216,20 +221,21 @@ survives.
    merely has _some_ headings, or a mid-chain version silently becomes a no-migration step). If no
    source covers the whole chain → report and stop. Parse each version's block (its heading to the
    next `## ` or EOF).
-   **Manifest-truth check (run HERE, before any tag checkout).** When the clone's DEFAULT branch
-   carries `tools/check-manifest-truth.mjs`, run `node <clone>/tools/check-manifest-truth.mjs` once
-   (no argument = every manifest) NOW — the tool resolves tags itself but the per-version checkouts
-   below replace the tree that holds it, and no published tag carries the tool. It validates
+   **Manifest-truth check (run HERE, once).** When the clone's DEFAULT branch carries
+   `tools/check-manifest-truth.mjs`, run `node <clone>/tools/check-manifest-truth.mjs` once (no
+   argument = every manifest) — the tool reads the tags itself, and no published tag carries it. It validates
    against the tag trees the same three assumptions this workflow executes (`old` resolves at the
    previous tag; a rename/removal's `old` is gone at `v<V>`; `new` resolves at `v<V>`). Read its
    OUTPUT, not just the exit code, and record per chain version: "N claim(s) the tree does not
    support" = a manifest DEFECT; "nothing could be checked" (or a skipped-versions list) =
-   UNVERIFIED, not clean. The two are different evidence, never merged; step 1 of the loop consumes
+   UNVERIFIED, not clean; and its closing "M of N old/new value(s) were read" line bounds even a
+   clean result — the values it lists as holding no name, or none it could resolve, are UNVERIFIED
+   too, per item. The two are different evidence, never merged; step 1 of the loop consumes
    the record, and the final report carries both lists. A clone without the tool = every version
    UNVERIFIED, said so once.
    **Migration manifests (deterministic bonus, same source priority).** The DS ships a structured
    `migrations/<V>.json` per version (a MigrationPlan mirror of each changelog block). Prefer the
-   clone's `migrations/` (default branch has ALL versions — save the whole dir aside). If the clone
+   clone's `migrations/` (the default branch has ALL versions). If the clone
    failed, try fetching each chain version's `migrations/<V>.json` via Bitbucket raw
    (`…/raw/main/migrations/<V>.json`); the fallback `node_modules/.../migrations/` only holds
    versions ≤ installed, so it rarely covers a forward chain. A version whose manifest you couldn't
@@ -256,10 +262,10 @@ For a monorepo, invert the loop: for each version V, apply across ALL selected t
 target's `package.json` to V, run ONE install, build each target, and make ONE commit per version
 spanning all targets. (Single-target repos: the plain per-target loop below is fine.)
 
-1. **Plan.** Check out tag `v<V>` in the DS sources clone (see "Reading the DS sources") so agents
-   can consult V's real sources throughout this version. Dispatch `ds-migration-planner` with V's
-   changelog block — **and, if a shipped manifest `migrations/<V>.json` was saved aside in Phase A
-   step 7, pass it VERBATIM too**: the planner validates and prefers the manifest (deterministic
+1. **Plan.** Extract the `v<V>` tree and the tree of the tag before it (see "Reading the DS
+   sources"), unless an earlier version already did; every dispatch in this version carries both
+   paths. Dispatch `ds-migration-planner` with V's changelog block — **and, if the clone carries a
+   manifest `migrations/<V>.json`, pass it VERBATIM too**: the planner validates and prefers the manifest (deterministic
    plan), deriving from prose only when it's absent or malformed. Consult the manifest-truth result
    recorded for V in Phase A step 7: a flagged item's plan entry is derived from prose instead of
    trusted (a fallback, not verified ground: the prose can carry the same phantom, so the item
@@ -301,7 +307,7 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    An item that a LATER manifest **inside this chain** names in its `supersedes` is skipped here —
    for EVERY item kind, not only zeros — with that reason recorded: the later item is the one to
    act on, and doing both means doing work the next version undoes. The link only points back, so
-   build the skip set by reading every `supersedes` in the manifests saved aside in Phase A;
+   build the skip set by reading every `supersedes` in the clone's manifests;
    nothing marks an item from its own file, and a chain version with no manifest contributes
    nothing — note in the report that supersession coverage is partial past it.
 3. **Apply (parallel, sonnet).** Group the finder's hits by file; dispatch one
@@ -388,7 +394,7 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    **Drift fixes get a re-check too** (they are born AFTER the main item cycle and would otherwise
    escape the net): dispatch `ds-recheck` with each fix as a synthetic item — `old` = the dead
    selector/class/token, `new` = the retargeted one, `surface: "style"`, `verify` = the existence
-   assertion — to confirm `new` exists on the new version's real surface (the sources checkout /
+   assertion — to confirm `new` exists on the new version's real surface (the extracted `v<V>` tree /
    installed bundle) and no dead `old` remains. A silent typo in a retargeted selector compiles
    clean and is invisible otherwise.
    **Generated-from-package artifacts (the second silent-drift class):** consumer tooling that
@@ -419,7 +425,9 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    only) — plus the applier's reported mode (`replaced | inserted | no-op` — it decides what the
    re-check greps for, and a `no-op` is confirmed by checking the condition, not the edit), and the
    applier's `needsReview` entries with their `locs` (the only occurrences the re-check may
-   excuse):
+   excuse), and the two extracted tree paths. To re-check a change that is already COMMITTED, save
+   `git -C <target> show <sha>` to a file in the scratchpad and pass that path too; the re-checker
+   reads the diff, it cannot produce one:
    grep for mechanical, semantic for behavioral (returns `migrated` + `confidence` + reasoned
    `remaining`). **An INDEPENDENT second pass — run it even when step 5 was green and every fix was
    your own inline edit.** Each

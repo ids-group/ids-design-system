@@ -195,6 +195,15 @@ encodes this, so prefer it to picking an easing yourself: `--ds-motion-enter-pan
 dropdown), `--ds-motion-enter-surface-*` (a dialog), `--ds-motion-enter-large-*` (a drawer),
 and `--ds-motion-exit-*`, which is deliberately FASTER than its entrance.
 
+**A loop is `linear`, and it is the one place no easing token belongs.** All four `infinite`
+animations here — the spinner, the button's spinner, the skeleton shimmer and the indeterminate
+bar — run at a constant speed. An easing curve shapes the approach to a RESTING state, and a
+repeat has none, so the curve spends the cycle slowing down into a boundary the viewer cannot
+see: whatever is moving crawls at both ends of its travel and crosses the middle too fast. Where
+the ends sit outside the visible box, as they do for a chunk that slides across a track, that is
+time the element is simply absent. `--ease-standard` is the tempting wrong answer, because a loop
+does read as "changes in place".
+
 ### Transition properties, not `all`
 
 In this library: `background-color` (20), `transform` (12), `color` (10), `border-color` (5),

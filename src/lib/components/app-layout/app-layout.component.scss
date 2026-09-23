@@ -1,12 +1,12 @@
 @use '../../styles/breakpoints' as bp;
 
 :host {
-  --_layout-pad-x: var(--ds-app-layout-pad-x, var(--space-6));
-  --_layout-pad-y: var(--ds-app-layout-pad-y, var(--space-6));
-  --_layout-content-max-width: var(--ds-app-layout-content-max-width, none);
-  --_layout-rail-bg-color: var(--ds-app-layout-rail-bg-color, var(--surface-overlay));
-  --_layout-rail-shadow: var(--ds-app-layout-rail-shadow, var(--ds-elevation-modal));
-  --_layout-scrim-color: var(--ds-app-layout-scrim-color, var(--scrim, hsl(220deg 20% 12% / 45%)));
+  --_app-layout-padding-x: var(--ds-app-layout-padding-x, var(--space-6));
+  --_app-layout-padding-y: var(--ds-app-layout-padding-y, var(--space-6));
+  --_app-layout-content-max-width: var(--ds-app-layout-content-max-width, none);
+  --_app-layout-rail-bg-color: var(--ds-app-layout-rail-bg-color, var(--surface-overlay));
+  --_app-layout-rail-shadow: var(--ds-app-layout-rail-shadow, var(--ds-elevation-modal));
+  --_app-layout-scrim-color: var(--ds-app-layout-scrim-color, var(--scrim, hsl(220deg 20% 12% / 45%)));
 
   display: grid;
   grid-template-areas:
@@ -53,8 +53,8 @@
     top: 0;
     bottom: 0;
     left: 0;
-    background: var(--_layout-rail-bg-color);
-    box-shadow: var(--_layout-rail-shadow);
+    background: var(--_app-layout-rail-bg-color);
+    box-shadow: var(--_app-layout-rail-shadow);
     transform: translateX(-100%);
     transition: transform var(--duration-base) var(--ease-standard);
 
@@ -77,7 +77,7 @@
     position: absolute;
     z-index: calc(var(--layer-drawer) - 1);
     inset: 0;
-    background: var(--_layout-scrim-color);
+    background: var(--_app-layout-scrim-color);
     opacity: 0;
     transition:
       opacity var(--duration-base) var(--ease-standard),
@@ -98,18 +98,18 @@
 
 .content {
   grid-area: content;
-  padding: var(--_layout-pad-y) var(--_layout-pad-x);
+  padding: var(--_app-layout-padding-y) var(--_app-layout-padding-x);
 
   // The reserved gutter + scrollbar count towards the right inset: subtract
-  // the measured width so gutter + padding always equals --_layout-pad-x and
+  // the measured width so gutter + padding always equals --_app-layout-padding-x and
   // the inset matches the left edge on every device (0 with overlay
   // scrollbars).
-  padding-right: calc(var(--_layout-pad-x) - var(--ds-scrollbar-width, 0px));
+  padding-right: calc(var(--_app-layout-padding-x) - var(--ds-scrollbar-width, 0px));
   overflow: auto;
   scrollbar-gutter: stable;
 }
 
 .inner {
-  max-width: var(--_layout-content-max-width);
+  max-width: var(--_app-layout-content-max-width);
   margin-inline: auto;
 }

@@ -41,19 +41,19 @@
 }
 
 .arrow {
-  --_arrow-size: var(--ds-popover-arrow-size, 7px);
+  --_popover-arrow-size: var(--ds-popover-arrow-size, 7px);
 
   position: absolute;
-  width: calc(var(--_arrow-size) * 2);
-  height: calc(var(--_arrow-size) * 2);
+  width: calc(var(--_popover-arrow-size) * 2);
+  height: calc(var(--_popover-arrow-size) * 2);
   overflow: hidden;
   pointer-events: none;
 
   &::before {
     content: '';
     position: absolute;
-    width: var(--_arrow-size);
-    height: var(--_arrow-size);
+    width: var(--_popover-arrow-size);
+    height: var(--_popover-arrow-size);
     background: var(--_popover-bg-color);
     border: var(--border-width-default) solid var(--_popover-border-color);
     transform: rotate(45deg);
@@ -63,7 +63,7 @@
 
 [data-placement='bottom'] .arrow,
 [data-placement='bottom'] > .arrow {
-  top: calc(var(--_arrow-size) * -1);
+  top: calc(var(--_popover-arrow-size) * -1);
   left: var(--space-4);
 
   &::before {
@@ -77,7 +77,7 @@
 
 [data-placement='top'] .arrow,
 [data-placement='top'] > .arrow {
-  bottom: calc(var(--_arrow-size) * -1);
+  bottom: calc(var(--_popover-arrow-size) * -1);
   left: var(--space-4);
 
   &::before {
@@ -91,7 +91,7 @@
 
 [data-placement='right'] .arrow,
 [data-placement='right'] > .arrow {
-  left: calc(var(--_arrow-size) * -1);
+  left: calc(var(--_popover-arrow-size) * -1);
   top: var(--space-4);
 
   &::before {
@@ -105,7 +105,7 @@
 
 [data-placement='left'] .arrow,
 [data-placement='left'] > .arrow {
-  right: calc(var(--_arrow-size) * -1);
+  right: calc(var(--_popover-arrow-size) * -1);
   top: var(--space-4);
 
   &::before {

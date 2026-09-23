@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   OnDestroy,
   ViewEncapsulation,
   booleanAttribute,
@@ -11,30 +12,34 @@ import {
   numberAttribute,
   output,
   signal,
+  viewChildren,
 } from '@angular/core';
 import {
   CHART_SERIES_COLORS,
   areaPath,
   defaultChartFormat,
   focusMark,
+  bandPath,
   lineSegments,
   nextRovingIndex,
-  polylinePoints,
+  linePath,
   staggerDelay,
 } from '@ids-group-ltd/ids-design-system/components';
 import type { LinePoint } from '@ids-group-ltd/ids-design-system/components';
 import type {
   ChartAxis,
+  ChartCurve,
+  ChartGaps,
   ChartValueFormat,
 } from '@ids-group-ltd/ids-design-system/core';
 import { chartActiveMark } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import type {
-  ChartItemTooltipTrigger,
+  ChartTooltipTrigger,
   ChartTooltipContext,
+  ChartTooltipOrigin,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import { CHART_SCALES } from './chart-scales.token';
 
-/** @internal */
 export interface LineSeriesData {
   id: string;
   label: string;
@@ -44,14 +49,15 @@ export interface LineSeriesData {
   axis?: ChartAxis;
   /** Fills the band between the line and its axis baseline. */
   area?: boolean;
+  /** The band's floor, one entry per category, in the axis's own unit. Unset fills to the
+   *  baseline. Given, the fill is the band between the two curves - which is what a stacked plot
+   *  needs, and the caller that owns the pile is the one that knows where each band starts. A
+   *  `null` must sit in exactly the categories `data` has one, or the two sides break in
+   *  different places. */
+  lower?: readonly (number | null)[];
   /** Any CSS colour. Unset takes the categorical palette slot for the series' position. */
   color?: string;
 }
-
-/** What a `null` reading draws: a hole in the line, or a point at zero.
- *
- *  @internal */
-export type LineSeriesGaps = 'break' | 'zero';
 
 let nextSeriesId = 0;
 
@@ -61,8 +67,6 @@ let nextSeriesId = 0;
  *
  * Hosted on a `<g>` rather than an element of its own: an element the SVG specification does not
  * know is not rendered, and neither are its descendants. Written as `<svg:g dsLineSeries>`.
- *
- * @internal
  */
 @Component({
   // The repository's `component-selector` rule asks for an element selector, and one cannot work
@@ -83,20 +87,74 @@ export class LineSeriesComponent implements OnDestroy {
    *  element, and a required input throws NG0950 for the pass before its own value is written. */
   readonly data = input<readonly LineSeriesData[]>([]);
 
+  /** Draws a round marker at every reading. Off leaves the line alone, which reads better past
+   *  roughly twenty points. */
   readonly showMarkers = input(true, { transform: booleanAttribute });
 
+  /** Turns on the click affordance - the pointer cursor and the hover tint. `pointClicked`
+   *  fires whether or not this is set. */
   readonly interactive = input(false, { transform: booleanAttribute });
 
+  /** Holds the hovered mark and its tooltip in place when it is clicked, until Escape or a
+   *  press outside releases it. Pinning is a state, not a handler. */
+  readonly pinOnClick = input(false, { transform: booleanAttribute });
+
+  /** Fades every series but the one under the pointer. Off by default: the dimming buys loudness
+   *  for one line and pays for it with the separation between the rest. */
+  readonly dimOthers = input(false, { transform: booleanAttribute });
+
+  /** The one series to single out: every other one draws faded and this one draws bold, so the
+   *  comparison survives a monochrome print. Driven from a legend, or from whatever else the app
+   *  uses to mean "show me this one". Needs `dimOthers`, which is what says fading is wanted at
+   *  all. */
+  readonly highlighted = input<string | null>(null);
+
+  /** A dash pattern per series, in the order the series are given. A series past the end of the
+   *  list, or given an empty string, draws solid. */
+  readonly patterns = input<readonly string[]>([]);
+
+  /** Fills each area from the series below it rather than from the baseline, which is what a
+   *  stacked plot needs and what the fill reads as. */
+  readonly stacked = input(false, { transform: booleanAttribute });
+
+  /** The dash for a series' position, or null where it draws solid. */
+  protected dashFor(seriesIndex: number): string | null {
+    return this.patterns()[seriesIndex] || null;
+  }
+
+  /** Milliseconds between one marker's entrance and the next. The total is capped. */
   readonly staggerMs = input(0, { transform: numberAttribute });
 
-  readonly gaps = input<LineSeriesGaps>('break');
+  /** What a `null` reading draws: `'break'` leaves a hole in the line, `'zero'` plots a point
+   *  at zero. A missing measurement and a measured zero are different facts. */
+  readonly gaps = input<ChartGaps>('break');
 
-  readonly tooltip = input<ChartItemTooltipTrigger>('item');
+  /** How the line joins its readings. `'linear'` by default, which asserts nothing the data does
+   *  not say; a curve is a claim about what happened BETWEEN two readings. `'step'` holds each
+   *  reading to the next, `'smooth'` is a monotone cubic that draws no peak the data lacks. */
+  readonly curve = input<ChartCurve>('linear');
 
+  /** Whether a hovered or focused reading opens a tooltip, and for what. `'item'` names the
+   *  marker itself. `'axis'` names every series at the category under the pointer, which is the
+   *  reading a multi-series line is compared on - it follows the container's `cursor`, so set
+   *  `cursor="category"` on `ds-chart` with it or nothing marks the category being read. */
+  readonly tooltip = input<ChartTooltipTrigger>('item');
+
+  /** Where an `'axis'` panel hangs: `'reading'` puts it over the highest reading in the category,
+   *  so it names what it points at and stays put while the pointer travels within one band;
+   *  `'pointer'` follows the cursor. */
+  readonly tooltipAnchor = input<'reading' | 'pointer'>('reading');
+
+  /** How long the panel survives the pointer leaving the marker. Raise it only for a panel a
+   *  reader has to REACH, which is WCAG 1.4.13's hoverable clause; about 140 crosses the gap. */
   readonly tooltipLingerMs = input(0, { transform: numberAttribute });
 
+  /** Formats every value this series prints. Called with `'tick'` for an axis label and
+   *  `'tooltip'` everywhere a value is printed in full. */
   readonly valueFormat = input<ChartValueFormat>(defaultChartFormat);
 
+  /** The clicked reading, with the series it belongs to and its position in `categories`.
+   *  Fires on click and on Enter or Space, whatever `interactive` says. */
   readonly pointClicked = output<{
     series: LineSeriesData;
     categoryIndex: number;
@@ -177,14 +235,15 @@ export class LineSeriesComponent implements OnDestroy {
       );
       const segments = lineSegments(points);
       const format = this.valueFormat();
+      const curve = this.curve();
 
       return {
         series,
         color,
         seriesIndex: index,
-        polylines: segments.map((segment) => polylinePoints(segment)),
+        linePaths: segments.map((segment) => linePath(segment, curve)),
         areaPaths: series.area
-          ? segments.map((segment) => areaPath(segment, toY(0)))
+          ? this.areaPathsFor(series, segments, toX, toY, curve)
           : [],
         markers: points
           .filter((point): point is LinePoint => point !== null)
@@ -205,6 +264,41 @@ export class LineSeriesComponent implements OnDestroy {
     });
   });
 
+  private areaPathsFor(
+    series: LineSeriesData,
+    segments: readonly (readonly LinePoint[])[],
+    toX: (categoryIndex: number) => number,
+    toY: (value: number) => number,
+    curve: ChartCurve,
+  ): readonly string[] {
+    const lower = series.lower;
+    if (!lower) {
+      return segments
+        .map((segment) => areaPath(segment, toY(0), curve))
+        .filter((path) => path.length > 0);
+    }
+    const lowerSegments = lineSegments(
+      lower.map((value, categoryIndex) =>
+        value === null
+          ? null
+          : {
+              categoryIndex,
+              x: toX(categoryIndex),
+              y: toY(value),
+              value,
+            },
+      ),
+    );
+
+    return segments
+      .map((segment, index) =>
+        lowerSegments[index]
+          ? bandPath(segment, lowerSegments[index], curve)
+          : areaPath(segment, toY(0), curve),
+      )
+      .filter((path) => path.length > 0);
+  }
+
   private readonly allMarkers = computed(() =>
     this.plotted().flatMap((entry) => entry.markers),
   );
@@ -213,38 +307,79 @@ export class LineSeriesComponent implements OnDestroy {
     return `${staggerDelay(index, this.staggerMs())}ms`;
   }
 
-  /** One tab stop per chart, not one per mark: WCAG 2.1.1's Understanding is explicit that not
-   *  every mouse-operable control has to be separately focusable. */
-  protected readonly rovingIndex = signal(0);
-
-  protected readonly tabStopIndex = computed(() =>
-    Math.min(this.rovingIndex(), Math.max(0, this.allMarkers().length - 1)),
+  /** One tab stop PER SERIES: each line is a strand the reader walks with the arrows, and the
+   *  strands are what the chart is comparing. WCAG 2.1.1's Understanding is explicit that not
+   *  every mouse-operable control has to be separately focusable, which is what keeps a
+   *  12-category, 2-series plot from being twenty-four stops in the page's tab order. */
+  private readonly rovingBySeries = signal<ReadonlyMap<string, number>>(
+    new Map(),
   );
+
+  protected isTabStop(seriesId: string, markIndex: number): boolean {
+    const chosen = this.rovingBySeries().get(seriesId);
+    if (chosen !== undefined) {
+      return chosen === markIndex;
+    }
+    const first = this.plotted().find((entry) => entry.series.id === seriesId)
+      ?.markers[0];
+
+    return first?.markIndex === markIndex;
+  }
+
+  /** The series a marker holds focus on, which narrows an `'axis'` panel to that one reading: a
+   *  pointer answers for every series at once, a focused marker answers for its own. */
+  private readonly focusedSeries = signal<string | null>(null);
 
   protected onMarkerEnter(markIndex: number, event: Event): void {
     this.activeMark.enter(markIndex, event);
   }
 
   protected onMarkerFocus(markIndex: number, event: FocusEvent): void {
-    this.rovingIndex.set(markIndex);
+    const marker = this.allMarkers()[markIndex];
+    if (marker) {
+      this.rovingBySeries.update((roving) =>
+        new Map(roving).set(marker.seriesId, markIndex),
+      );
+      this.focusedSeries.set(marker.seriesId);
+      this.scales.setActiveIndex(marker.categoryIndex);
+    }
     this.onMarkerEnter(markIndex, event);
   }
 
+  protected onMarkerBlur(): void {
+    this.focusedSeries.set(null);
+    this.activeMark.leave();
+  }
+
   protected onMarkerNavigation(event: KeyboardEvent, markIndex: number): void {
-    const next = nextRovingIndex(
-      event.key,
-      markIndex,
-      this.allMarkers().length,
+    const marker = this.allMarkers()[markIndex];
+    const strand = this.allMarkers().filter(
+      (candidate) => candidate.seriesId === marker?.seriesId,
     );
+    const current = strand.findIndex(
+      (candidate) => candidate.markIndex === markIndex,
+    );
+    const next = nextRovingIndex(event.key, current, strand.length);
     if (next === null) {
       return;
     }
     event.preventDefault();
-    this.rovingIndex.set(next);
-    focusMark((event.currentTarget as Element).closest('.lines'), next);
+    focusMark(
+      (event.currentTarget as Element).closest('.lines'),
+      strand[next].markIndex,
+    );
   }
 
-  protected onMarkerClick(markIndex: number): void {
+  protected isDimmed(seriesId: string): boolean {
+    const highlighted = this.highlighted();
+
+    return this.dimOthers() && highlighted !== null && highlighted !== seriesId;
+  }
+
+  protected onMarkerClick(markIndex: number, event?: Event): void {
+    if (this.pinOnClick() && event) {
+      this.activeMark.pin(markIndex, event, '.series-marker');
+    }
     const marker = this.allMarkers()[markIndex];
     const series = this.data().find((entry) => entry.id === marker?.seriesId);
     if (marker && series) {
@@ -265,8 +400,14 @@ export class LineSeriesComponent implements OnDestroy {
   }
 
   readonly tooltipContext = computed<ChartTooltipContext | null>(() => {
+    if (this.tooltip() === 'none') {
+      return null;
+    }
+    if (this.tooltip() === 'axis') {
+      return this.axisTooltipContext();
+    }
     const marker = this.allMarkers()[this.activeMark.index()];
-    if (this.tooltip() === 'none' || !marker) {
+    if (!marker) {
       return null;
     }
 
@@ -282,4 +423,80 @@ export class LineSeriesComponent implements OnDestroy {
       ],
     };
   });
+
+  private readonly markerElements =
+    viewChildren<ElementRef<Element>>('markerEl');
+
+  /** The topmost reading at the active category, as its own element. The cursor band spans the
+   *  whole plot, so anchoring an `'axis'` panel to it opens the panel at the top of the chart
+   *  rather than over the readings it is about. */
+  private readonly topReadingElement = computed<Element | null>(() => {
+    const categoryIndex = this.scales.activeIndex();
+    if (categoryIndex < 0) {
+      return null;
+    }
+    const highest = this.allMarkers()
+      .filter((marker) => marker.categoryIndex === categoryIndex)
+      .reduce<{ markIndex: number; y: number } | null>(
+        (top, marker) => (top === null || marker.y < top.y ? marker : top),
+        null,
+      );
+
+    return highest
+      ? (this.markerElements()[highest.markIndex]?.nativeElement ?? null)
+      : null;
+  });
+
+  /** Where the panel hangs: the reading or the pointer in `'axis'` mode, the hovered mark
+   *  otherwise. */
+  readonly tooltipOrigin = computed<ChartTooltipOrigin | null>(() => {
+    if (this.tooltip() !== 'axis') {
+      return this.activeMark.origin();
+    }
+    if (this.tooltipAnchor() === 'pointer') {
+      return this.scales.cursorPointer() ?? this.scales.cursorOrigin();
+    }
+
+    return this.topReadingElement() ?? this.scales.cursorOrigin();
+  });
+
+  /** Every series' reading at the category the CONTAINER says is active, which is what the
+   *  category cursor sets. A series with no reading there contributes no row rather than a
+   *  blank one. */
+  private readonly axisTooltipContext = computed<ChartTooltipContext | null>(
+    () => {
+      const categoryIndex = this.scales.activeIndex();
+      if (categoryIndex < 0) {
+        return null;
+      }
+      const focused = this.focusedSeries();
+      const reporting = focused
+        ? this.plotted().filter((entry) => entry.series.id === focused)
+        : this.plotted();
+      const entries = reporting.flatMap((entry) => {
+        const marker = entry.markers.find(
+          (candidate) => candidate.categoryIndex === categoryIndex,
+        );
+
+        return marker
+          ? [
+              {
+                label: marker.seriesLabel,
+                value: marker.value,
+                formatted: marker.formattedValue,
+                color: marker.color,
+              },
+            ]
+          : [];
+      });
+      if (!entries.length) {
+        return null;
+      }
+
+      return {
+        category: this.scales.categories()[categoryIndex] ?? '',
+        entries,
+      };
+    },
+  );
 }

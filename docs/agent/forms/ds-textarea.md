@@ -5,5 +5,9 @@ Group: Form & input
 
 Multi-line counterpart to `<ds-input>` — same wrapper/states, reuses the `--ds-input-*` token family. No prefix/suffix slots.
 Inputs: `value: model<string>`, `size: 'sm' | 'md' | 'lg' = 'md'`, `label`, `hint`, `placeholder`, `disabled`, `invalid`, `required`, `optional: boolean = false`, `name`, `rows: number = 3`
-Tokens: same `--ds-input-*` family as `<ds-input>` (textarea overrides `--ds-input-pad-y` to `--space-3` for vertical breathing room).
+Tokens: same `--ds-input-*` family as `<ds-input>` (textarea overrides `--ds-input-padding-y` to `--space-3` for vertical breathing room).
 New: `autosize: boolean = false` (grows with content; forces `resize='none'`), `minRows`/`maxRows: number | null = null`, `resize: 'none' | 'vertical' | 'horizontal' | 'both' = 'vertical'`.
+
+<!-- inputs:ds-textarea -->
+All inputs: `hint: string = ''`, `error: string = ''`, `warning: string = ''`, `reserveMessage: boolean | null = null`, `messageIcon: IconName | false | null = null`, `errors: readonly DsFieldError[] = []`, `invalid: boolean = false`, `touched: boolean = false`, `hidden: boolean = false`, `value: string = ''`, `size: 'sm' | 'md' | 'lg' = null`, `label: string = ''`, `placeholder: string = ''`, `disabled: boolean = false`, `readOnly: boolean = false`, `readonlyBinding: boolean = false`, `success: string = ''`, `required: boolean = false`, `optional: boolean = false`, `rows: number = 3`, `name: string | null = null`, `autosize: boolean = false`, `minRows: number | null = null`, `maxRows: number | null = null`, `resize: 'none' | 'vertical' | 'horizontal' | 'both' = 'vertical'`, `ariaLabel: string | null = null`, `maxLength: number | null = null`, `minLength: number | null = null`, `pattern: readonly RegExp[] = []`
+<!-- /inputs -->

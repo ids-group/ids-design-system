@@ -7,18 +7,22 @@
    Total count — Plain text — wraps in narrow viewports. */
 
 :host {
-  --_pagination-btn-bg-color:       var(--ds-pagination-btn-bg-color,       var(--surface-default));
-  --_pagination-btn-bg-color-hover: var(--ds-pagination-btn-bg-color-hover, var(--surface-secondary));
-  --_pagination-btn-label-color:       var(--ds-pagination-btn-label-color,       var(--text-secondary));
-  --_pagination-btn-label-color-hover: var(--ds-pagination-btn-label-color-hover, var(--text-primary));
-  --_pagination-btn-border:   var(--ds-pagination-btn-border,   var(--border-default));
+  --_pagination-button-bg-color:       var(--ds-pagination-button-bg-color,       var(--surface-default));
+  --_pagination-button-bg-color-hover: var(--ds-pagination-button-bg-color-hover, var(--surface-secondary));
+  --_pagination-button-label-color:       var(--ds-pagination-button-label-color,       var(--text-secondary));
+  --_pagination-button-label-color-hover: var(--ds-pagination-button-label-color-hover, var(--text-primary));
+  --_pagination-button-border:   var(--ds-pagination-button-border,   var(--border-default));
   --_pagination-active-bg-color:    var(--ds-pagination-active-bg-color,    var(--accent));
   --_pagination-active-bg-color-hover: var(--ds-pagination-active-bg-color-hover, var(--accent-hover));
   --_pagination-active-label-color:    var(--ds-pagination-active-label-color,    var(--accent-on));
   --_pagination-radius:        var(--ds-pagination-radius,        var(--ds-radius-control));
   --_pagination-label-font-size: var(--ds-pagination-label-font-size, var(--font-size-s));
-  --_pagination-label-weight: var(--ds-pagination-label-weight, var(--font-weight-regular));
+  --_pagination-label-font-weight: var(--ds-pagination-label-font-weight, var(--font-weight-regular));
   --_pagination-label-color: var(--ds-pagination-label-color, var(--text-secondary));
+  --_pagination-label-letter-spacing: var(--ds-pagination-label-letter-spacing, normal);
+  --_pagination-label-text-transform: var(--ds-pagination-label-text-transform, none);
+  --_pagination-button-size: var(--field-h-sm);
+  --_pagination-button-font-size: var(--font-size-s);
 
   display: inline-flex;
 }
@@ -29,20 +33,34 @@
   align-items: center;
   flex-wrap: wrap;
 
+  &.md { --_pagination-button-size: var(--field-h-md); }
+  &.lg { --_pagination-button-size: var(--field-h-lg); --_pagination-button-font-size: var(--font-size-m); }
+
+  /* The label takes the slack, so the controls land on the far edge. Only visible once
+     something stretches the nav past its contents, which is the caller's job. */
+  &.spread {
+    display: flex;
+    width: 100%;
+
+    .label { margin-right: auto; }
+  }
+
   .label {
-    font: var(--_pagination-label-weight) var(--_pagination-label-font-size) / var(--line-height-flat) var(--font-sans);
+    font: var(--_pagination-label-font-weight) var(--_pagination-label-font-size) / var(--line-height-flat) var(--font-sans);
     color: var(--_pagination-label-color);
+    letter-spacing: var(--_pagination-label-letter-spacing);
+    text-transform: var(--_pagination-label-text-transform);
     margin-right: var(--space-2);
   }
 
   .pagination-button {
-    min-width: var(--hit-min);
-    height: var(--hit-min);
+    min-width: var(--_pagination-button-size);
+    height: var(--_pagination-button-size);
     padding: 0 var(--space-2);
-    border: var(--border-width-default) solid var(--_pagination-btn-border);
-    background-color: var(--_pagination-btn-bg-color);
-    font: var(--font-weight-semibold) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
-    color: var(--_pagination-btn-label-color);
+    border: var(--border-width-default) solid var(--_pagination-button-border);
+    background-color: var(--_pagination-button-bg-color);
+    font: var(--font-weight-semibold) var(--_pagination-button-font-size) / var(--line-height-flat) var(--font-sans);
+    color: var(--_pagination-button-label-color);
     border-radius: var(--_pagination-radius);
     cursor: pointer;
     display: inline-grid;
@@ -53,8 +71,8 @@
       color var(--duration-fast) var(--ease-standard);
 
     &:hover:not([disabled], .active) {
-      background-color: var(--_pagination-btn-bg-color-hover);
-      color: var(--_pagination-btn-label-color-hover);
+      background-color: var(--_pagination-button-bg-color-hover);
+      color: var(--_pagination-button-label-color-hover);
     }
 
     &.active {

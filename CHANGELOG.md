@@ -1,5 +1,840 @@
 ## Unreleased
 
+### Breaking
+
+- **The second-axis modes are renamed: `'rounded'` is `'aligned'`, `'independent'` is `'dual-grid'`,
+  `'stacked'` is `'split'`.** `'exact'` is unchanged. The four words name what is done to the
+  GRIDLINES, which is the only thing the modes differ in; the old three named something else or
+  nothing at all.
+
+  ```html
+  <ds-line-chart yAxisMode="dual-grid" [categories]="months" [series]="series" />
+  ```
+
+  It applies to `yAxisMode` on `ds-line-chart`, `secondaryAxisMode` on `ds-chart`, and the
+  `ChartAxisMode` union both take. `'stacked'` had to go whatever else happened: `ds-column-chart`
+  ships `stack="stacked"`, which puts SERIES on top of each other, while the axis mode puts two
+  PLOTS one above the other - one word, two meanings, on charts read side by side.
+
+  An unknown string does not error. Angular assigns it, no mode matches it, and the plot falls back
+  to one shared grid - a chart that looks plausible and is measured against the wrong axis. Grep for
+  the three old values on those two inputs; there is nothing to see at runtime.
+
+- **`ds-donut-chart` is `ds-pie-chart`.** `DonutChartComponent` is `PieChartComponent`,
+  `DonutChartSlice` is `PieChartSlice`, and the entry point is
+  `@ids-group-ltd/ids-design-system/components/pie-chart`. The eight `--ds-donut-chart-*` tokens
+  take the `--ds-pie-chart-` prefix, and the internal wrapper class `.donut-chart` is `.pie-chart`.
+
+  ```html
+  <ds-pie-chart [data]="slices" centerValue="4,208" centerLabel="Total" />
+  ```
+
+  The component has drawn a solid pie since it shipped - closing the hole was one value of one
+  input - so `Donut` named a default rather than the component. Under `Pie` the ring is the
+  default and the disc is the zero case, which is how every other library in the field spells it.
+
+  The old tag is an unknown element, not an error: Angular renders nothing and logs nothing outside
+  strict schema mode, so a missed one is a chart that silently vanished. A `--ds-donut-chart-*`
+  declaration left behind is valid CSS the component no longer reads, and the chart draws at its
+  default size with nothing reported.
+
+- **`thickness` is `innerRadius`, and the value is `1` minus what it was.** `0.32` becomes `0.68`,
+  `0.1` becomes `0.9`, `1` becomes `0`. The default draws the identical ring.
+
+  ```html
+  <ds-pie-chart [data]="slices" [innerRadius]="0" />
+  ```
+
+  The knob names the hole now rather than the band, because the base case is a solid pie and the
+  ring is the hole opened in it. `innerRadius="0"` is the pie; `1` no longer is. A value outside
+  `[0, 1)` falls back to the default rather than drawing nothing.
+
+  **Renaming without inverting is the hazard here, and nothing catches it.** A value carried across
+  untouched is still in range and still valid, so a ring set to `0.32` becomes a nearly solid disc
+  and a pie set to `1` becomes a ring. There is no error, no warning, and no type change - only a
+  different picture.
+
+- **Centre content renders only where there is a hole to hold it.** At `innerRadius="0"`,
+  `centerValue` and `centerLabel` draw nothing.
+
+  They used to render over the solid disc, where the halo behind them had nothing to separate them
+  from and no single text colour is readable against three hues. Where a pie's centre figure was
+  the only place a total appeared, move it to the caption, the legend or the page around the chart.
+
+- **The grouped slice's id is `ds-pie-other`.** It reaches a consumer through `sliceClicked`
+  whenever `maxSlices` groups a tail, so code comparing `slice.id` to `'ds-donut-other'` stops
+  matching - without erroring, and with the grouped `Other` then handled as a real category.
+
+- **118 `--ds-*` tokens take their CSS property's name.** `-pad` is `-padding`, `-btn` is
+  `-button`, `-fs` is `-font-size`, `-tracking` is `-letter-spacing`, `-transform` is
+  `-text-transform`, a bare `-weight` is `-font-weight`, and the truncated dimensions
+  (`-w`, `-h`, `-maxw`, `-maxh`, `-minw`, `-col-w`) are spelled in full. Three fall outside those
+  rules: `--ds-container-max` is `--ds-container-max-width`, `--ds-segmented-r-inner` is
+  `--ds-segmented-radius-inner`, and `--ds-color-picker-sv-h` is
+  `--ds-color-picker-saturation-value-height`.
+
+  ```scss
+  ds-button { --ds-button-padding-x: var(--space-6); --ds-button-letter-spacing: 0; }
+  ```
+
+  Several properties were tokenised all along under names nobody would guess from the property
+  being set: tab padding lived under `-tab-pad-*`, menu-item padding under `-menu-item-pad-*`, and
+  the checkbox label weight under `--ds-checkbox-label-weight` rather than
+  `--ds-checkbox-label-font-weight`. A hook nobody can find is not a hook.
+
+  The whole surface is now guessable from the property being set. What was already spelled out
+  (`--ds-button-height`, `--ds-chart-frame-padding`, `--ds-checkbox-label-font-size`) is
+  unchanged, and nothing was added or removed.
+
+  An unknown custom property is not an error. The declaration stays in the stylesheet, the
+  component reads its own fallback, and the element draws at its default with no build error and
+  no console warning, so a missed rename is silent. Grep for the six spellings and the three
+  named tokens above.
+
+- **`--ds-container-pad` is `--ds-surface-padding`.** It is the padding every surface component
+  falls back to - `card` and `stat` read it, `<ds-container>` never did - so it sat in the
+  namespace of a component it had nothing to do with, beside `--ds-container-pad-x`, which is
+  that component's own padding and is now `--ds-container-padding-x`.
+
+  The two old names read as a pair and controlled unrelated things: a value moved to the wrong one
+  re-pads every card in the app and leaves the container alone, or the reverse.
+
+- **Fourteen more tokens take the name of what they configure.** The spelling pass fixed
+  abbreviations; this one fixes tokens whose name points at the wrong component or uses a word
+  only we say.
+
+  ```scss
+  ds-description-item { --ds-description-item-term-text-transform: uppercase; }
+  ds-segmented { --ds-segmented-segment-border: 1px solid var(--border-default); }
+  ds-tabs { --ds-tabs-gap: var(--space-4); }
+  ```
+
+  The eight `--ds-description-list-term-*` and `-details-*` tokens are declared in
+  `description-item.component.scss` and style one item, so they are `--ds-description-item-*`.
+  The three `--ds-segmented-button-*` are `--ds-segmented-segment-*`, because the component calls
+  its parts segments everywhere else it speaks - `class="segment"` in the template,
+  `SegmentedOption` as the published type. `--ds-tabs-strip-gap` is `--ds-tabs-gap`: `strip` is
+  our internal word for the tab list and appears nowhere a consumer reads.
+  `--ds-description-list-col-gap` is `-column-gap`, and
+  `--ds-split-button-bg-hover-color` is `-bg-color-hover`, which is how every other hover colour
+  in the library is spelled.
+
+  `--ds-description-list-label-width`, `-row-gap` and `-column-gap` stay on the list, which is
+  what they size. `--ds-button-*`, `--ds-split-button-*`, `--ds-icon-button-*` and
+  `--ds-pagination-button-*` all style real buttons, so this pass leaves them in their own
+  namespace.
+
+  A word that disambiguates a real part is not an abbreviation and was kept:
+  `--ds-tab-label-font-size` stays, because a tab has a label and a badge, and
+  `--ds-tab-color` would not say which it meant.
+
+  An unknown custom property is not an error, so a missed rename is silent - the component reads
+  its own fallback and draws at the default.
+
+- **Nine exported names now say what they are.** A name is a defect when it misleads, when it
+  stands for two things, or when two names stand for one.
+
+  ```ts
+  import type { ChartGaps, DateRangeValue, SortDirection } from '@ids-group-ltd/ids-design-system';
+  ```
+
+  `LineChartGaps` is `ChartGaps`, in `core` beside `ChartAxisMode`, and so is its
+  character-identical `@internal` twin `LineSeriesGaps`, which was reachable through the
+  `components/chart` entry point. `LineChartAxisMode` was a bare alias of `ChartAxisMode` published next to it,
+  and is now that type. `RangeValue` is `DateRangeValue`, which is what its already-qualified
+  neighbour `TimeRangeValue` made clear it should have been. `LineChartPoint` is
+  `LineChartReading`: `...ChartPoint` is an input datum everywhere else, this one is the
+  `pointClicked` payload, matching the new scatter chart's `ScatterChartReading`.
+
+  `SortDir`, `sortDir` and `sortDirChange` are `SortDirection`, `sortDirection` and
+  `sortDirectionChange`, and `SortChangeEvent.dir` keeps its name with the type `SortDirection`.
+  `TableColumn.srLabel` is
+  `screenReaderLabel` - it renders visually-hidden text, so `ariaLabel` would have been a second
+  wrong name. `ds-accordion[multi]` is `multiple`, which is how `ds-autocomplete`, `ds-dropzone`
+  and `TableExpandMode` all spell it.
+
+  `LayoutScrollService` and `LayoutNavigationService` take their component's name -
+  `AppLayoutScrollService` and `AppLayoutNavigationService` - and `DsScrollReset` is no longer
+  exported, having become `DsAppLayoutScrollReset`. All three move because `LayoutAlign`, `LayoutGap` and `LayoutJustify` already make `Layout` mean the flex
+  container entry point on this same surface.
+
+  **Two of these fail quietly.** A static `sortDir="asc"` left behind is an unknown attribute:
+  Angular leaves it on the DOM, the input keeps its default, and the table sorts by nothing with
+  no warning. And `[multi]="false"`, written to get a single-open accordion, becomes an unknown
+  attribute against a default of `true` - the accordion opens several panels instead, silently.
+  A property binding fails the build; a plain attribute does not.
+
+- **`ds-dropzone` loses `single`; the file count is `multiple` and the width is a token.**
+
+  ```html
+  <ds-dropzone [multiple]="true" />
+  ```
+  ```scss
+  ds-dropzone { --ds-dropzone-max-width: var(--col-cap-text); }
+  ```
+
+  Two booleans encoded one three-state fact. `single` set the file count, which `multiple` already
+  carried - its unset default takes one file, which is exactly what `single` did - and the
+  component resolved the overlap by making one silently win: `[multiple]="single() ? false :
+  multiple()"`. Setting both to `true` gave a single-file dropzone, with no error and no warning.
+
+  Separately, and with nothing in its name to say so, `single` capped the panel at
+  `--col-cap-text`. A narrow dropzone that takes several files could not be expressed at all. That
+  width is now `--ds-dropzone-max-width`, unset by default, which is how every other component
+  sizes itself.
+
+  Dropping the binding needs no thought about the count - `single` and an unset `multiple` were
+  the same file count. It does need a thought about the width: without the token the panel fills
+  its column, and nothing reports that.
+
+  **A drop now honours the count too.** The native `multiple` attribute constrains the file
+  PICKER and has no say over a drag, so dropping three files on a dropzone that takes one emitted
+  three - under `single` as much as without it, for as long as the component has shipped. Both
+  ways in run through one place now, and a drop of several files on a one-file dropzone keeps the
+  first.
+
+- **`ds-line-chart` draws its plot through `ds-chart`, and two DOM hooks change with it.** The
+  second-axis gridline class is `.grid-line.is-secondary`, not `.grid-line.secondary`, and the
+  markers no longer carry `data-series-index` - they are numbered across the whole chart, so
+  `data-mark-index` alone names one reading.
+
+  ```css
+  ::ng-deep ds-line-chart .grid-line.is-secondary { stroke-dasharray: 2 6; }
+  ```
+
+  Every `--ds-line-chart-*` hook still reaches the plot; the preset re-points each one at the
+  container's own name. `.plot`, `.canvas`, `.axis-label`, `.series-line`, `.series-marker`,
+  `.cursor-line` and `.category-band` are all still there, and `.axis-label` gained
+  `.is-primary` / `.is-secondary`.
+
+  A selector that stops matching is valid CSS. The rule goes dead, the plot draws at its default,
+  and nothing reports either - which is also true of a test locator built on `data-series-index`.
+
+- **The 96 typography hooks spell out their prefix: `--ds-t-*` is `--ds-typography-*`.** Every
+  name is otherwise unchanged - `--ds-t-h4-font-size` is `--ds-typography-h4-font-size`.
+
+  ```css
+  :root { --ds-typography-h4-font-size: 1.375rem; }
+  ```
+
+  `t` was the last abbreviation in the token surface and the one hardest to guess from the property
+  it sets: a reader looking for the h4 size in devtools sees `font-size` and has no route from
+  there to a single letter.
+
+  **The `.t-h4` / `.t-s` / `.t-mono-inline` classes keep their names.** They are the markup
+  vocabulary rather than tokens, and renaming them would rewrite every template that carries one.
+
+  A declaration left on an old name is valid CSS nobody reads. The type falls back to the global
+  `--font-size-*` behind each hook, which is near enough the overridden value that a page reads as
+  slightly off rather than broken.
+
+### Added
+
+- **`ds-chart-legend` sizes its colour chip from `--ds-chart-legend-swatch-size`.** The column, line
+  and scatter charts render the legend and take it, and a preset with a swatch token of its own
+  points that at it.
+
+  ```css
+  ds-chart-legend { --ds-chart-legend-swatch-size: 14px; }
+  ```
+
+  Defaults to `--space-2-5`, which is what the chip measured before.
+
+- **`DS_CONFIG` takes `banner.announce` and `alert.announce`, the app-wide default for whether a
+  banner or an alert is spoken when it appears.**
+
+  ```ts
+  provideDsConfig({ banner: { announce: true }, alert: { announce: true } });
+  ```
+
+  Both default to `false`, which is what the element already did. An app whose banners are raised in
+  response to events sets the key once and binds `[announce]="false"` on the strips that are page
+  furniture, instead of deciding at every element.
+
+  **The input reads `boolean | null` now**, with `null` meaning unset, because a signal input cannot
+  otherwise report whether it was bound. Writing the attribute is unchanged. A subclass that reads
+  `announce()` back gets the three-state value and wants `announceResolved()`, which is the one the
+  component's own ARIA reads.
+
+- **`ds-chart` holds the category cursor: `cursorPin` and `tooltipLingerMs`.** A press holds the
+  cursor where it is until it is pressed again, Escape, or a press outside the plot; the linger is
+  the grace period that lets the pointer cross from the plot to a portaled tooltip panel.
+
+  ```html
+  <ds-chart cursor="category" cursorPin [tooltipLingerMs]="180" [categories]="months">
+  ```
+
+  Both are off by default. The cursor runs on the same state machine the element marks already
+  use, so a pin behaves identically whether it is held on a column or on a category.
+
+- **`ds-chart` is exported as `dsChart`.** A template reference reads `cursorPinned()` and calls
+  `releaseCursor()`, which is what a preset needs to render its own way out of a held cursor.
+
+  ```html
+  <ds-chart #plot="dsChart" cursor="category" cursorPin [categories]="months">
+  ```
+
+- **`g[dsLineSeries]` takes `highlighted` and `tooltipAnchor`.** `highlighted` is the id of the one
+  series to single out: with `dimOthers` beside it, that series keeps its colour and thickens while
+  the rest fade. `tooltipAnchor` decides where an `axis` panel hangs - `'reading'`, the default,
+  over the highest reading in the category, `'pointer'` following the cursor.
+
+  ```html
+  <svg:g dsLineSeries dimOthers [highlighted]="hovered()" [data]="series()" />
+  ```
+
+  Its markers also rove per series now: one tab stop per line, and the arrows walk that line rather
+  than every reading on the plot. A focused marker narrows an `axis` panel to its own series.
+
+- **`ChartScales` carries `cursorPointer`**, the pointer position in client pixels, for a mark that
+  anchors a panel to the cursor rather than to a reading. `CHART_DEFAULT_VALUE_SPACE` is exported
+  alongside it, so a preset can reserve the same box the container will take.
+
+- **`ds-chart-data-table` holds the annex table every chart was drawing itself.** The
+  `details`, the summary, the caption and the table; the chart supplies `columns` and `rows` of
+  already-formatted cells.
+
+  ```html
+  <ds-chart-data-table [columns]="['Label', 'Value']" [rows]="tableRows()" [caption]="caption()" />
+  ```
+
+  `rowHeader` renders each row's first cell as a `<th scope="row">`,
+  for a matrix whose rows are named rather than numbered. The formatting stays with the chart:
+  two charts reading the same number differently is a chart decision, not a table one.
+
+- **`LineSeriesData` takes `lower`.** The band's floor, one entry per category: an `area` series
+  given one fills the band between the two curves rather than down to the baseline, which is what
+  a stacked plot draws.
+
+  ```ts
+  { id: 'pro', label: 'Pro', data: tops, lower: floors, area: true }
+  ```
+
+  Unset, the fill reaches the baseline exactly as before. The caller that owns the pile is the one
+  that knows where each band starts - a mark never sees the other marks. A `null` must sit in the
+  same categories `data` has one, or the two sides break in different places.
+
+- **`g[dsLineSeries]` takes `tooltip="axis"`.** It names every series of that mark at the
+  category under the pointer, rather than the one marker hovered.
+
+  ```html
+  <ds-chart cursor="category" [categories]="months">
+    <svg:g #line="dsLineSeries" dsLineSeries tooltip="axis" [data]="series"
+      [dsChartTooltip]="line.tooltipContext()"
+      [dsChartTooltipOrigin]="line.tooltipOrigin()" />
+  </ds-chart>
+  ```
+
+  It follows the container rather than its own hover: set `cursor="category"` on `ds-chart`
+  beside it and the panel anchors to the band the cursor draws, which is also what tells the
+  reader which category is being named. `'item'` stays the default, so no chart changes on its
+  own. `ChartScales` gains `cursorOrigin` for it - the band element, or `null` while the cursor
+  is off.
+
+- **`g[dsSeriesAnnotation]` pins labels to readings.** A peak, a launch, the month a number
+  turned - legible in a printed page or a screenshot, where a tooltip is not.
+
+  ```html
+  <ds-chart [categories]="months">
+    <svg:g dsLineSeries [data]="series" />
+    <svg:g dsSeriesAnnotation [annotations]="notes" />
+  </ds-chart>
+  ```
+
+  It takes the readings rather than finding them: a mark never sees the other marks, so the caller
+  that owns the series is the one that knows which value a label belongs to. It reports no domain,
+  because the series it annotates already did.
+
+- **`ds-chart` takes `cursor`.** `'category'` draws a band and a crosshair down the category
+  under the pointer, and reports that category to every mark through the shared scales.
+
+  ```html
+  <ds-chart cursor="category" [categories]="weeks">…</ds-chart>
+  ```
+
+  `'none'` is the default and what every chart drew before. A plot whose marks are themselves the
+  hover targets already answers per mark, and two affordances on one plot read as two different
+  questions - so the whole-column cursor is the opt-in, not the baseline.
+
+- **`ds-chart` takes `maxSecondary`.** It pins the ceiling of the second value axis the way
+  `max` pins the first.
+
+  ```html
+  <ds-chart [max]="40000" [maxSecondary]="250000" [categories]="months">…</ds-chart>
+  ```
+
+  Two plots read against each other need both axes pinned, or the second one rescales under the
+  reader when a series loses its tallest value. Unset, the axis is derived from what the marks
+  report, which is what it did before.
+
+- **A published input can now name its own type.** `g[dsColumnSeries]` and `g[dsLineSeries]` ship
+  from the package root, and two of their inputs were typed by symbols the root did not export:
+  `offsets` by `ChartStackOffset`, and `curve` by a type that existed twice.
+
+  ```ts
+  import type { ChartCurve, ChartStackOffset } from '@ids-group-ltd/ids-design-system';
+  import { stackOffsets } from '@ids-group-ltd/ids-design-system';
+  ```
+
+  `ChartStackOffset` and `stackOffsets` are published, so a consumer composing a stacked plot out
+  of the marks can both compute the offsets and annotate them. `LineCurve` and `LineChartCurve`
+  were declared character-identical in two files - one internal, one published - and are one
+  `ChartCurve` in `core`, beside `ChartAxisMode` and `ChartGaps`. Both curve names were new in
+  this release, so nothing shipped under them.
+
+- **`ds-checkbox` gets the three hooks its label already half had.** `--ds-checkbox-row-align`
+  for how the box and its label line up, `--ds-checkbox-gap` for the space between them, and
+  `--ds-checkbox-message-indent` for the hint.
+
+  ```scss
+  ds-checkbox { --ds-checkbox-message-indent: calc(var(--check-glyph-md) + var(--space-2)); }
+  ```
+
+  The hint sits under the box, which is where it has always been; set the indent to the box plus
+  the gap and it lines up with the label instead. The other two defaults draw what the component
+  drew before, so nothing moves on its own.
+
+- **`ds-segmented` takes `joined`.** The segments share their edges instead of floating in a
+  padded track: adjacent borders collapse into one hairline and only the two ends carry the group
+  radius.
+
+  ```html
+  <ds-segmented joined [options]="ranges" [(value)]="range" />
+  ```
+
+  It needs `--ds-segmented-segment-border` set, because the shared edge IS the border. Off by
+  default, which is the padded track every consumer draws today.
+
+- **`ds-button` takes `align`.** `'center'` is the default and what every button already drew;
+  `'between'` pushes the label and a trailing icon to opposite edges.
+
+  ```html
+  <ds-button fullWidth align="between" icon="arrowRight">Continue</ds-button>
+  ```
+
+  It only shows once something widens the button past its contents, so on an inline button the two
+  values are identical. Named values rather than a `justify-content` token: the shape a full-width
+  action wants is the label at one edge and the arrow at the other, and publishing the CSS property
+  would publish every other flex arrangement with it.
+
+- **`ds-pagination` takes `size` and `layout`.** `size` is the sm/md/lg control scale the rest of
+  the library uses, unset resolving `DS_CONFIG.control.size` and then `sm`, which is the height the
+  pager already had. `layout="spread"` gives the nav full width and pushes the count label and the
+  controls to opposite edges; `'grouped'`, the default, keeps them together.
+
+  ```html
+  <ds-pagination size="md" layout="spread" [total]="rows.length" [(currentPage)]="page" />
+  ```
+
+  A pager under a full-width table needs bigger targets than the dense default, and that is a
+  density question the scale already answers everywhere else.
+
+- **Seven styling hooks where a consumer was reaching past the surface.** Each one is a property
+  the component tokenised everything around and not itself, so the only way to set it was a rule
+  that doubles a class to out-specify our compiled selector.
+
+  ```scss
+  ds-badge { --ds-badge-letter-spacing: 0.01em; }
+  ds-pagination { --ds-pagination-label-text-transform: uppercase; }
+  ```
+
+  `--ds-badge-letter-spacing`; `--ds-pagination-label-letter-spacing` and
+  `--ds-pagination-label-text-transform`; `--ds-option-color` for an unselected picker row, whose
+  selected sibling had a colour token all along; `--ds-dropdown-empty-color` and
+  `--ds-dropdown-empty-font-size` for the panel's no-results line; and
+  `--ds-autocomplete-input-font-size`.
+
+  Every default is the value the component already drew, so a chart of the surface before and
+  after is identical. The no-results line takes `inherit` as its size default, which is what it
+  resolved to when it declared none.
+
+  The empty line's tokens are named for the dropdown panel rather than spelled `--ds-empty-*`,
+  because `--ds-empty-state-*` is a different component and the two would have sat one hyphen
+  apart meaning unrelated things.
+
+- **Each axis says which numbers it is counting, and in whose colour.** A plot carrying two scales
+  is ambiguous without both: nothing on the canvas says which line is read against which set of
+  numbers, and nothing says what those numbers ARE.
+
+  ```html
+  <ds-line-chart yAxisLabel="Sessions" secondaryAxisLabel="Rate, %" [series]="series" />
+  ```
+
+  `ds-line-chart` takes `yAxisLabel` and `secondaryAxisLabel`, and tints each axis with the colour
+  of the series measured against it - derived, not asked for, since the chart already knows its own
+  series colours. The tint appears only where two scales share one plot: on a single-scale chart it
+  would restate the marks' own colour in the furniture, and under `'split'` the two plots are
+  already apart. `ds-chart` takes the same pair as `axisLabel` and `secondaryAxisLabel`.
+
+  **On a two-scale plot, where the lines cross depends on the scale chosen, not on the data.** One
+  dataset drawn twice crosses between February and March with the right axis at 5% and never meets
+  with it at 12%, without a single reading changing. Naming and tinting each axis is what tells the
+  reader which scale a line is read against.
+
+- **Category labels turn before they thin.** A chart narrow enough for its labels to collide used to
+  print them over each other. It now measures the widest one as it actually rendered and spends the
+  cheaper remedy first: a 45-degree tilt, which takes about 71% of the label's width across the
+  axis, and only past that does it draw every second or every third.
+
+  Rotation is spent before thinning because a tilt costs the reader a glance and a dropped label
+  costs them a reading. The widest label decides for all of them: an axis that thinned on the
+  average would still collide on the one long name.
+
+- **`ds-scatter-chart`, with a decimation layer behind it.** Two continuous quantities against each
+  other - weight against carriage cost, distance against time. The other charts all put categories
+  on one axis; this one does not.
+
+  ```html
+  <ds-scatter-chart
+    xLabel="Weight, kg"
+    yLabel="Cost"
+    [data]="[{ id: 'road', label: 'Road', data: readings }]" />
+  ```
+
+  **It is the only chart whose mark count the caller decides**, so it is the only one that thins its
+  own data. SVG degrades by the number of NODES, not readings: the same data as a line is one
+  `<path>` and as a scatter it is one node per point, while Lighthouse warns at about 800 nodes and
+  errors at about 1400 on a page that may hold four more charts. Past FOUR times the plot's width in
+  marks - not two, where the saving is invisible and the loss of detail is not - the series is
+  decimated, a line under the plot says how many readings were thinned, and the annex table still
+  lists every one.
+
+  `decimator` picks how. `'minMax'`, the default, keeps each bucket's highest and lowest reading by
+  construction, so the spike a reader is looking for cannot be the point that was dropped; it also
+  stays stable while the reader pans, because a bucket's answer does not depend on its neighbours.
+  `'lttb'` draws a truer silhouette at the same budget and makes no such promise. `'none'` is the
+  caller taking the node budget on themselves.
+
+  The annex table is built when it is OPENED rather than sitting in the DOM shut, where one node per
+  reading would undo what decimating the plot saved; opened, every reading is one click away.
+
+  Marks are semi-transparent by default, because the interesting thing is where they pile up: at
+  full opacity a cluster of forty and a cluster of four are the same solid disc. `xLabel` and
+  `yLabel` are not decoration - without them the reader has two numbers and no idea which is which.
+
+- **`ds-bar-chart` takes a value range, a target and qualitative bands.** Three small additions that
+  turn the same bar into a floating bar and into a bullet chart, neither of which needed a component
+  of its own.
+
+  ```html
+  <ds-bar-chart [data]="[
+    { label: 'Build', value: [2, 9] },
+    { label: 'Revenue', value: 268, target: 250, ranges: [150, 220, 300] },
+  ]" />
+  ```
+
+  A row's `value` may be a `[low, high]` pair, and the bar then spans between its own ends rather
+  than from zero - what compares a duration and its PLACEMENT at once, which a bar from zero cannot
+  do. The ends may be written either way round, because a reader who reverses them means the same
+  band. `BarChartRow.value` is now `BarChartValue`, `number | readonly [low: number, high: number]`,
+  so code that READS `row.value` as a number stops compiling; code that only writes it is
+  unaffected. `target` draws a tick at one reading; `ranges` paints bands behind the bar, given as their
+  upper bounds in ascending order.
+
+  The bands take one neutral hue at rising opacity rather than the series palette: a band is a
+  backdrop and the bar is the reading, so a second palette behind them would compete with the bars.
+  The track's scale holds the target and the outermost band as well as the bars, so a goal above
+  every reading still lands on the plot. `--ds-bar-chart-band-color`,
+  `--ds-bar-chart-target-color`, `--ds-bar-chart-target-width` and `--ds-bar-chart-target-overhang`
+  tune them.
+
+- **`ds-waterfall-chart`: a running total, bar by bar.** What a figure started at, what moved it,
+  and what it ended at - the one variant in the family that genuinely cannot be a mode on another,
+  because it needs an accumulating level, bars pinned to zero for the totals and its own
+  three-colour semantic all at once.
+
+  ```html
+  <ds-waterfall-chart caption="Settlement" [data]="[
+    { label: 'Billed', value: 1200, kind: 'total' },
+    { label: 'Commission', value: -320 },
+    { label: 'Net', value: 0, kind: 'total' },
+  ]" />
+  ```
+
+  Every row adds its `value` to the running sum wherever it sits. A `'delta'`, the default, hangs
+  from the level the bar before it left off at; a `'total'` or `'subtotal'` stands on zero at the
+  sum reached. A closing total carries `value: 0` and prints the sum, not a change of its own; a
+  subtotal differs from a total only in that the chain carries on past it. The order is never
+  sorted, because the sequence is the meaning.
+
+  **Colour never carries the meaning alone.** Each bar prints its own sign above it and each bar's
+  accessible name says "increase", "decrease" or "total" in words. The new
+  `--ds-chart-positive-color` and `--ds-chart-negative-color` point at the palette's two lead hues
+  rather than at `--success` and `--error`: a waterfall's up and down are not success and failure,
+  and a cost rising is a rise and a bad one. A total takes `--ds-chart-series-default-color`.
+
+  `showConnectors` draws the dashed rule chaining one bar to the next at the level they share.
+
+- **`ds-heatmap-chart`: a matrix of readings coloured by magnitude.** Depot by weekday, hour by
+  date, queue by region - the case where the interesting thing is the shape of a whole grid rather
+  than any one reading in it.
+
+  ```html
+  <ds-heatmap-chart
+    caption="Collections a day, by depot"
+    [columns]="weekdays"
+    [data]="depots" />
+  ```
+
+  `data` is one `HeatmapChartRow` per row, each carrying one reading per column.
+
+  **Two things are not optional here.** Colour is the only channel carrying the quantity on the
+  grid, so the scale under it and the annex table below it are always drawn - there is no
+  `dataTable` input to turn the table off, because WCAG 1.4.1 is not satisfied by a grid of coloured
+  squares. Every cell also names its own reading to assistive tech as `row, column: value`.
+
+  **A `null` reading is a hole, not a low value.** It draws as the surface, stays out of the colour
+  scale, is inert under `interactive` and never fires `cellClicked`. The ramp's coldest step is a
+  real measurement, and painting "we never measured this" with it states a figure nobody recorded.
+
+  `min` and `max` pin the scale and only ever open it further; set both to compare two heat maps by
+  colour, because unset each one spans its own readings and the same hue means a different quantity
+  on each. `showValues` prints the readings in the cells, drawing each glyph in its own cell's
+  colour inverted so it stays legible at both ends of the heat scale, which runs 1.14:1 to 9.07:1
+  against white.
+
+- **A heat scale, `--ds-chart-heat-1..8`, separate from the ramp.** Magnitude on a grid is read
+  from the step between two colours and nothing else, and the ramp does not give one: its adjacent
+  steps are 2.1-3.9 dE apart with 20.7 end to end, so eight cells show about three the eye can
+  separate. The heat scale runs the same hue across the full lightness range, 95% to 31%, which is
+  6.9-10.6 with 55.0 end to end (OKLab).
+
+  **`--ds-chart-ramp-*` is unchanged and `ds-funnel-chart` looks exactly as it did.** The two scales
+  want opposite things: a funnel's stages are a shape read at a glance, where a stage at either
+  extreme reads as a different object rather than as the next step, and a heat map needs every step
+  the eye can hold. `ds-heatmap-chart` is the only thing painting with the heat scale.
+
+  Contrast on white runs 1.14:1 to 9.07:1 across it, so a label placed over a heat colour is chosen
+  against that cell's own end of the scale rather than once for the whole of it. The dark theme
+  carries the same span, flipped.
+
+- **`stack` on the line: several series as a composition rather than as separate readings.** A set
+  of lines answers "how is each one doing"; a stack answers "what is the total made of", which is a
+  different question and the one a mix of tiers usually asks.
+
+  ```html
+  <ds-line-chart stack="stacked" [categories]="months" [series]="tiers" />
+  ```
+
+  `'stacked'` starts each series where the one below it ended; `'normalized'` divides by the
+  category's own total, so every category is full and the axis reads in shares. `'none'` stays the
+  default and nothing changes without asking. Only a series with `area: true` fills - the lines sit
+  on the running total either way.
+
+  A stacked band fills down to the series below it rather than to the baseline, and the boundary is
+  a 2px stroke in the surface colour rather than a drawn rule, which survives print and
+  colour-vision deficiency. Stacking runs per AXIS, so a secondary-axis series never piles onto one
+  measured against the primary. `stack="stacked"` and `yAxisMode="split"` are different things:
+  series on top of each other, against two plots one above the other.
+
+- **`curve` on the line: `'linear'`, `'step'` or `'smooth'`.** A line drawn between two readings is
+  a claim about what happened in between, and this is where the claim is made. `'linear'` stays the
+  default and asserts nothing the data does not say.
+
+  ```html
+  <ds-line-chart curve="step" [categories]="months" [series]="baseRate" />
+  ```
+
+  `'step'` holds each reading until the next, which is what a quantity that CHANGES at a moment
+  actually did - a price, a headcount, a rate - rather than drifting between two. `'smooth'` is a
+  monotone cubic, NOT a Catmull-Rom: a Catmull-Rom overshoots, drawing a trough below a minimum the
+  data never reaches, which on a chart is a reading that does not exist.
+
+  A filled series follows the same curve, so the fill and its own line share one edge instead of the
+  line floating off a straight-edged fill. `dsLineSeries` takes the same input with the same three
+  words, so a composed plot and a preset draw one series the same way.
+
+- **The chart container's marks are published API.** `ColumnSeriesComponent`,
+  `LineSeriesComponent`, `ReferenceLineComponent` and `ReferenceLabelComponent`, with
+  `ColumnSeriesPoint` and `LineSeriesData`, come from the package root as well as
+  from `@ids-group-ltd/ids-design-system/components/chart`, and every input on them is documented.
+
+  In `0.13.3` they sat in the `components/chart` entry point still marked `@internal`: reachable
+  there, but not public API. Nothing about how they are written
+  changes - a mark is still an ATTRIBUTE selector on a real `<svg:g>`. What changes is that a combo
+  plot, the case the container exists for, can now be assembled by a consumer: no preset draws
+  columns and a cumulative line on two axes, so the marks were the only route to it and were not
+  reachable as one.
+
+### Changed
+
+- **A `+N` strip says how many toasts are waiting.** `maxVisible` has always queued the extras, and
+  nothing on screen said so: past the cap a toast simply did not appear. The region now renders a
+  small counter at the end the next toast will come from - above a top-anchored stack, below a
+  bottom-anchored one - and it disappears the moment the queue empties. It is `aria-hidden`, because
+  `ToastService` announces every toast through the LiveAnnouncer, queued ones included, so a reader
+  has already heard everything it counts.
+
+  On by default. Turn it off with `DS_CONFIG.toast.showQueueCount: false` or
+  `[showQueueCount]="false"` on `ds-toast-region`. Colours come from
+  `--ds-toast-queue-bg-color` and `--ds-toast-queue-text-color`.
+
+- **`ds-toast`, `ds-banner` and `ds-alert` grow into place instead of fading in.** Their default
+  `--ds-<surface>-enter-keyframes` moves from `ds-fade-in` to `ds-scale-in`, so all three now enter
+  the way `ds-modal` and the overlay panels already do: opacity plus a growth from `--ds-*-enter-scale`,
+  which each of them has declared since motion shipped and which `ds-fade-in` never read. They grow
+  from their own centre - `transform-origin` stays unset, as on `ds-modal`.
+
+  `--ds-toast-enter-offset`, `--ds-banner-enter-offset` and `--ds-alert-enter-offset` keep their
+  values and their meaning: a preset that travels reads them, so pointing a surface at `ds-slide-in`
+  still gets that surface's own distance and direction. Set
+  `--ds-toast-enter-keyframes: ds-fade-in` to keep the old entrance.
+
+  A value already set on `--ds-toast-enter-scale`, `--ds-banner-enter-scale` or
+  `--ds-alert-enter-scale` did nothing under `ds-fade-in` and takes effect now - a `0.5` left behind
+  becomes a visible lurch rather than a no-op.
+
+- **Portaled panels grow out of their trigger instead of fading in place.** The default of
+  `--ds-overlay-enter-keyframes` moves from `ds-fade-in` to `ds-scale-in`, so every panel carrying
+  `ds-overlay-pane` - select, autocomplete, multi-select, the three pickers, popover, tooltip, the
+  chart tooltip and the menu submenu - grows out of its trigger.
+
+  ```css
+  :root { --ds-overlay-enter-keyframes: ds-fade-in; }
+  ```
+
+  `--_overlay-enter-origin` is already resolved per placement, so a panel below its trigger grows
+  from its top edge and one above it from its bottom. Drawer, bottom-sheet, toast, banner and alert
+  each name their own keyframe and never read this one; drawer and bottom-sheet keep their edge
+  slide, and the other three change under their own entry.
+
+- **`ds-line-chart` measures its plot instead of scaling a fixed viewBox.** One unit is one CSS
+  pixel, the axis gutter widens to the widest tick label as it actually rendered, and the category
+  labels tilt then thin when they stop fitting - the same treatment `ds-column-chart` and
+  `ds-chart` already got.
+
+  **`--ds-line-chart-plot-height` now drives the plot.** It has been declared since the chart
+  shipped and reached only the loading skeleton: the plot was a 640x320 viewBox scaled to the
+  card's width, so the token parsed and changed nothing. The empty and error boxes reserve the
+  height the plot will take rather than a width-derived ratio, so the card no longer moves when the
+  last series is switched off.
+
+  Escape now releases the category cursor and its panel together, a tap latches the cursor the way
+  a tap on a column latches that column, and a pointer that leaves the plot for the tooltip panel
+  keeps it open. None of that was reachable before without a pin.
+
+- **Exported class member surface grew, and some members were renamed or retyped - this matters
+  only if you SUBCLASS one of these.** `ButtonComponent` gained `align`; `SegmentedComponent` gained
+  `joined`; `PaginationComponent` gained `layout`, `size`, `sizeResolved` and `navClass`;
+  `DropzoneComponent` gained `emitPicked`; `ToastRegionComponent` gained `showQueueCount` and
+  `queuedLabel`; `AlertComponent` and `BannerComponent` each gained
+  `announceResolved` and widened `announce` to `boolean | null`. `ChartComponent` gained 21 members -
+  the cursor, second-axis and category-label machinery, `cursor`, `cursorPin`, `cursorPinned`,
+  `cursorPointer`, `releaseCursor`, `maxSecondary`, `axisLabel`, `secondaryAxisLabel`,
+  `tooltipLingerMs` and `defaults` among them. `LineChartComponent` gained 24 (`curve`, `stack`,
+  `yAxisLabel`, `secondaryAxisLabel`, `plot`, `plotHeight` and the rest) and lost 51 protected and
+  private geometry members now that its plot is drawn by `ds-chart`, so a subclass that overrode one
+  of those overrides nothing. `LineSeriesComponent`, public now, gained 17 (`curve`, `dimOthers`,
+  `highlighted`, `patterns`, `pinOnClick`, `stacked`, `tooltipAnchor` and their helpers). Every
+  chart gained the `defaults` and the table rows it hands `ds-chart-data-table`:
+  `BarChartComponent`, `ColumnChartComponent`, `FunnelChartComponent`, `PieChartComponent` and
+  `LineChartComponent`, and the three new ones, `HeatmapChartComponent`, `ScatterChartComponent` and
+  `WaterfallChartComponent`, carry the same members.
+
+  Some members changed name or type rather than only being added. `AccordionComponent` traded
+  `multi` for `multiple`, `TableComponent` `sortDir` / `sortDirChange` for `sortDirection` /
+  `sortDirectionChange`, and `PieChartComponent` `thickness` for `innerRadius`.
+  `AppLayoutComponent.scrollReset`, `DatePickerComponent.value` and several chart members
+  (`ChartComponent.secondaryAxisMode`, `LineChartComponent.gaps` / `pointClicked` / `yAxisMode`,
+  `PieChartComponent.data`) changed type with the symbol renames, so an override typed against the
+  old symbol stops compiling.
+
+  Subclassing a DS component is unsupported, but a release that only adds can still fail such a build
+  on a name collision: TS4114 demands `override` for a same-named member, TS2416 fires where the
+  signature differs. Rename your own member, or add `override` where it genuinely means the same
+  thing.
+
+### Fixed
+
+- **`ds-chart`'s error message was grey.** Its template marks the message `is-error`, but `ds-chart`
+  carried no colour rule for that state, so "Could not load the data" printed in the same grey as
+  "No data". It is `--error` red now, matching what the other charts already showed.
+
+- **The funnel and pie focus hooks did nothing.** `--ds-funnel-chart-focus-color` / `-width`, and
+  the pie's pair (`--ds-donut-chart-focus-color` / `-width` before the rename, now
+  `--ds-pie-chart-focus-color` / `-width`), resolved into a private name no rule read: an override
+  parsed, cascaded and changed no pixel. Each now points its pair at `--ds-chart-focus-ring-color`
+  and `--focus-ring-*`, which draws the ring.
+
+- **`--ds-table-head-height` is in the token reference, and the loading scrim honours it.** The
+  hook, spelled `--ds-table-head-h` before this release, only ever existed as a string inside a
+  template attribute rather than in a stylesheet, so the token reference never listed it.
+
+  ```css
+  ds-table { --ds-table-head-height: 56px; }
+  ```
+
+  It resolves through `--_table-head-height` on the host now, between the pin and the measured row
+  height the component publishes: a consumer value wins over the measurement, the measurement wins
+  over the 40px floor.
+
+- **An indeterminate `ds-bar` is on the track for most of its cycle instead of under half of it.**
+  The sliding chunk ran on the standard ease curve, which decelerates into the end of a transition -
+  on a loop there is no end, so it crawled at both extremes, where the chunk sits outside the track.
+  Over one 1400ms cycle the chunk was at least partly on the track 48.3% of the time; it is now
+  86.7%. On a short track that reads as an empty bar rather than a busy one.
+
+  ```html
+  <ds-bar indeterminate ariaLabel="Importing" />
+  ```
+
+  Nothing to change - the geometry, the duration and the 30% chunk are the same, and the reduced-motion
+  branch still replaces the animation with a full track.
+
+- **`--ds-line-chart-swatch-size` reaches the swatch again.** The token has been declared and
+  documented since the chart shipped and reached nothing since the legend became its own component:
+  the line chart kept the `.legend-swatch` rule that read it and stopped rendering the element.
+
+  ```css
+  ds-line-chart { --ds-line-chart-swatch-size: 14px; }
+  ```
+
+  The chart forwards it to `--ds-chart-legend-swatch-size` now, and the three dead legend rules are
+  gone. The default is unchanged: the legend's own `--space-2-5` is the 10px the token always
+  claimed, so no chart moves.
+
+- **A rule on `.ds-overlay-pane` now decides an autocomplete's panel radius, and either picker's
+  panel background.** Each picker declared its panel tokens with a fallback, so they always computed
+  to something and were always copied onto the portaled pane as an inline style - which outranks a
+  pane-class rule, the only route a consumer has to a panel that is not a descendant of its trigger.
+  A shell that squared `--ds-radius-panel` and re-rounded `.ds-overlay-pane` got the rounded panel
+  everywhere except autocomplete; multi-select never pinned a radius, only its background.
+
+  ```scss
+  .ds-overlay-pane .dropdown-panel { border-radius: var(--ds-radius-panel); } // now applies
+  ```
+
+  Nothing moves at the defaults: unset, the tokens fall to the same values the shared panel
+  stylesheet has always supplied. `--ds-autocomplete-panel-radius`,
+  `--ds-autocomplete-panel-bg-color` and `--ds-multi-select-panel-bg-color` still reach the pane and
+  still outrank a pane-class rule, which is what they are for.
+
+- **The two greens in the chart palette are no longer the same colour.**
+  `--chart-categorical-6` moves from `hsl(152deg 58% 41%)` to `hsl(148deg 58% 41%)`, which takes it
+  from 5.3 to 6.3 away from `--chart-categorical-2` in OKLab. The palette holds itself to 6, below
+  which two slots read as one to somebody glancing between a line and its legend swatch - and these
+  two sit four positions apart, so a chart with six or more series handed out both.
+
+  All 28 pairs in the palette now sit at least 6 apart.
+
+  Nothing to change in a consumer - the token name is the same and the new hue arrives with it.
+
+- **A chart tooltip no longer runs off the screen.** The panel is never shrunk by the overlay, so a
+  tall one - a grouped chart's every series, or a long custom template - was pushed until its top
+  met the viewport and the rest ran off the bottom, where nothing could reach it.
+
+  It now stops at the viewport height less the 12px margin the overlay pushes against, and scrolls
+  past that. A panel that already fits is untouched.
+
+- **A line series measured against the first axis no longer raises an empty second one.** A mark
+  registers a contribution per axis, and a line series registers both whether or not it uses them,
+  so a plot whose series all read against the left axis grew a right-hand axis labelled `0` the
+  whole way down, and lost the plot width its labels reserved.
+
+  The predicate now counts reported VALUES rather than reporters, which fixes it for any mark that
+  registers an axis it does not use, not only the line series. A plot that genuinely carries two
+  scales is untouched.
+
 ## 0.13.3 — 2026-09-17
 
 ### Breaking
@@ -64,8 +899,8 @@
 
 ### Added
 
-- **`ds-chart` is importable, with the marks that draw inside it.** The container the column and
-  line charts are built inside now ships as its own entry point,
+- **`ds-chart` is importable, with the marks that draw inside it.** The container the column chart is
+  built inside now ships as its own entry point,
   `@ids-group-ltd/ids-design-system/components/chart`, for a plot the five presets do not cover - a
   combo of columns and a cumulative line being the case that asked for it. It owns the frame, the
   axes, the gridlines, the caption, the legend slot, the annex table and the generated description;
@@ -85,9 +920,8 @@
 
   **Reach for a preset first.** `ds-bar-chart`, `ds-column-chart`, `ds-donut-chart`,
   `ds-funnel-chart` and `ds-line-chart` carry the accessible defaults, and the container is the
-  escape hatch for the plot none of them draws. It is not re-exported from the package facade, so it
-  is imported by its own path. The marks are Angular components, so nothing projected from React or
-  from `@angular/elements` can draw inside the canvas.
+  escape hatch for the plot none of them draws. The marks are Angular components, so nothing
+  projected from React or from `@angular/elements` can draw inside the canvas.
 
 - **A column chart can carry several named series per category.** Hand `data` a list of
   `ColumnChartSeries` instead of a flat list of points and every category carries one column per
@@ -980,11 +1814,10 @@
     `--chart-line-width-bold`, `--chart-dot-r` becomes `--chart-dot-radius`, and
     `--chart-dot-r-active` becomes `--chart-dot-radius-active`.
 
-  Three more are REMOVED rather than renamed, because no chart draws what they named and the
-  `--ds-chart-*` token each fed reached no rule: `--chart-axis-title`, `--chart-grid-line-strong`
-  and `--chart-tick-size`. Handle `--chart-grid-line-strong` before `--chart-grid-line`: the short
-  name is a prefix of the long one, and a prefix-blind sweep renames this one instead of deleting
-  it.
+  Three more are REMOVED rather than renamed, because no chart draws what they named and no rule
+  read them: `--chart-axis-title`, `--chart-grid-line-strong` and `--chart-tick-size`. Handle
+  `--chart-grid-line-strong` before `--chart-grid-line`: the short name is a prefix of the long
+  one, and a prefix-blind sweep renames this one instead of deleting it.
 
   The sequential and divergent VALUES are unchanged in both themes; the eight categorical values are
   not — they are retuned in this same release, so a rename there lands a different colour rather than
@@ -1519,9 +2352,6 @@
 | `ds-stat { --ds-stat-value-white-space: normal; }` written only to stop a long value painting over the tile beside it | the value clips by default, so it no longer escapes its card | nothing — keep the hook only where you want the value wrapped and the tile taller |
 | `ds-stat .value { overflow: hidden; text-overflow: ellipsis; }` — your own clip on the value | the component clips it, and with `overflow: clip` plus a clip margin, so descenders survive where `hidden` shaved them | nothing |
 | `.cell-text-pop` — a rule sizing or colouring the table's full-value popover | the popover is gone; a clipped cell opens a tooltip instead | `--ds-tooltip-*`, if the panel needs changing at all |
-| `--ds-chart-axis-title-color` | no chart draws an axis title, so the token reached no rule and setting it changed nothing | nothing |
-| `--ds-chart-grid-line-strong-color` | no chart draws a strong gridline, so the token reached no rule | nothing |
-| `--ds-chart-tick-size` | no chart draws tick marks on its axes, so the token reached no rule | nothing |
 
 ## 0.12.3 — 2026-09-10
 
@@ -3616,7 +4446,7 @@ workaround written against a hook that only landed in this release.
 | `--ds-button-label-color-disabled` pinned on a tonal button to make its disabled state visible, most likely only in the dark theme | The default disabled-label recipe carries it |
 | `count.toLocaleString('en-US')` (or any hand-rolled formatting) inside a `ds-stat` binding, because `[value]="count \| number"` would not typecheck | The pipe binds now, and it reads `LOCALE_ID` instead of a pinned locale |
 | A `::ng-deep ds-table tr:hover .some-cell { color; text-decoration }` rule to make one cell read as the row's link target | `interactive: true` on that column, retuned with `--ds-table-cell-link-color` / `--ds-table-cell-link-decoration` |
-| `ds-icon`, `field-message`, `align-items: center` | A glyph rendered by hand beside a field's error or warning text, or a margin nudge added to line one up against the old centred message row. Replace with: the built-in state glyph (error / warning / success carry one now), retuned through DS_CONFIG.field.stateIcons or messageIcon, with --ds-field-message-icon-gap / -offset for the spacing. |
+| `name="error"`, `name="warn"`, `.field-message` | A `ds-icon` rendered by hand beside a field's error or warning text, or a rule on the message row nudging it into line against the old centred layout. Replace with: the built-in state glyph (error / warning / success carry one now), retuned through DS_CONFIG.field.stateIcons or messageIcon, with --ds-field-message-icon-gap / -offset for the spacing. |
 | `box-shadow: none`, `--ds-field-focus-shadow` | A rule that killed one of the two focus rings a field used to paint - on an inner input, or by re-declaring the field focus shadow. SCOPE, and it matters: this release suppresses the inner ring on ds-search, ds-autocomplete, ds-date-picker, ds-number-stepper and ds-field-group ONLY. A workaround on ds-input or ds-textarea is still load-bearing here - deleting it brings the double ring back. Leave those two until you are on the release that names them. Also leave any rule you wrote against the universal :where(:focus-visible) base indicator itself: that rule is still the one this library ships. Replace with: nothing: the field paints one ring now. |
 | `padding-block`, `line-height`, `option-label` | A padding or line-height override added to an option label, a clipped table cell or a breadcrumb to stop the descenders being shaved. Replace with: nothing: the clip carries a --space-1 margin now, at the same row height. |
 

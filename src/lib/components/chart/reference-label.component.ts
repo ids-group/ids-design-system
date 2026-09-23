@@ -16,8 +16,6 @@ import { thresholdMarks } from './chart.math';
  * A second element rather than part of `g[dsReferenceLine]`: the strokes belong under the marks
  * and the names over them, and a projected element lands in exactly one of the container's slots.
  * Reports no domain - the line it names already did.
- *
- * @internal
  */
 @Component({
   // The repository's `component-selector` rule asks for an element selector, and one cannot work
@@ -33,6 +31,9 @@ import { thresholdMarks } from './chart.math';
 export class ReferenceLabelComponent {
   private readonly scales = inject(CHART_SCALES);
 
+  /** The same list `dsReferenceLine` is given. This mark draws only the labels, so it is placed
+   *  AFTER the series and the line mark before it, which is what keeps a label legible over a mark
+   *  that would otherwise cover it. */
   readonly thresholds = input<readonly ChartThreshold[]>([]);
 
   protected readonly lines = computed(() =>

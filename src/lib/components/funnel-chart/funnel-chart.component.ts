@@ -14,7 +14,6 @@ import {
 import {
   CHART_RAMP_COLORS,
   chartColors,
-  defaultChartFormat,
   describeSeries,
   formatPercent,
   focusMark,
@@ -24,7 +23,9 @@ import {
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
-import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
+import { ChartDataTableComponent } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
+import type { ChartDataRow } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
+import { resolveChartDefaults } from '@ids-group-ltd/ids-design-system/components';
 import type {
   ChartDataTable,
   ChartFrame,
@@ -76,7 +77,12 @@ const SKELETON_STAGE_WIDTHS = ['88%', '62%', '80%', '54%', '72%'] as const;
 @Component({
   selector: 'ds-funnel-chart',
   standalone: true,
-  imports: [SkeletonComponent, ChartTooltipDirective, IconComponent],
+  imports: [
+    SkeletonComponent,
+    ChartTooltipDirective,
+    IconComponent,
+    ChartDataTableComponent,
+  ],
   templateUrl: './funnel-chart.component.html',
   styleUrl: './funnel-chart.component.scss',
   host: { '[class.framed]': "frameResolved() === 'auto'" },
@@ -152,31 +158,12 @@ export class FunnelChartComponent {
    *  grouping with a K/M/B suffix past four digits. */
   readonly valueFormat = input<ChartValueFormat | null>(null);
 
-  readonly frameResolved = resolveWithConfig(
-    this.frame,
-    (config) => config.chart?.frame,
-    'auto' as ChartFrame,
-  );
-  readonly dataTableResolved = resolveWithConfig(
-    this.dataTable,
-    (config) => config.chart?.dataTable,
-    'none' as ChartDataTable,
-  );
-  readonly emptyTextResolved = resolveWithConfig(
-    this.emptyText,
-    (config) => config.chart?.emptyText,
-    'No data',
-  );
-  readonly errorTextResolved = resolveWithConfig(
-    this.errorText,
-    (config) => config.chart?.errorText,
-    'Could not load the data',
-  );
-  readonly valueFormatResolved = resolveWithConfig(
-    this.valueFormat,
-    (config) => config.chart?.valueFormat,
-    defaultChartFormat,
-  );
+  private readonly defaults = resolveChartDefaults(this);
+  readonly frameResolved = this.defaults.frame;
+  readonly dataTableResolved = this.defaults.dataTable;
+  readonly emptyTextResolved = this.defaults.emptyText;
+  readonly errorTextResolved = this.defaults.errorText;
+  readonly valueFormatResolved = this.defaults.valueFormat;
 
   /** Turns on the click affordance — the pointer cursor and any hover tint.
    *  The click output fires whether or not this is set, so a consumer that
@@ -218,11 +205,7 @@ export class FunnelChartComponent {
       'dsChartTooltip',
     );
 
-  private readonly tooltipLingerResolved = resolveWithConfig(
-    this.tooltipLingerMs,
-    (config) => config.chart?.tooltipLingerMs,
-    0,
-  );
+  private readonly tooltipLingerResolved = this.defaults.tooltipLingerMs;
 
   protected readonly activeMark = chartActiveMark(() =>
     this.tooltipLingerResolved(),
@@ -331,6 +314,13 @@ export class FunnelChartComponent {
    *  exactly as wide to the eye and stops being dead space to the pointer. */
   protected readonly hitGapUnits = computed(() =>
     stageGapUnits(this.data().length, FUNNEL_VIEW_BOX_HEIGHT),
+  );
+
+  protected readonly tableRows = computed<readonly ChartDataRow[]>(() =>
+    this.stages().map((entry) => ({
+      key: entry.stage.id,
+      cells: [entry.stage.label, entry.formattedValue],
+    })),
   );
 
   protected readonly stages = computed(() => {

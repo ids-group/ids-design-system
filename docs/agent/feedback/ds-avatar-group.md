@@ -5,3 +5,7 @@ Group: Display & feedback
 
 Inputs: `max: number = 4` (visible avatars before "+N" overflow), `total: number | null = null` (used to compute the overflow count; without `total` no overflow chip renders).
 Content: project `<ds-avatar>` children.
+
+<!-- inputs:ds-avatar-group -->
+All inputs: `max: number = 4`, `total: number | null = null`
+<!-- /inputs -->

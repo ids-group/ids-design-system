@@ -5,8 +5,8 @@
    component's own public tokens so cells stay legible instead of wrapping. */
 ds-otp-input {
   @include bp.down(xs) {
-    --ds-otp-cell-w: var(--space-10);
-    --ds-otp-cell-h: var(--space-12);
+    --ds-otp-cell-width: var(--space-10);
+    --ds-otp-cell-height: var(--space-12);
     --ds-otp-gap: var(--space-1);
   }
 }

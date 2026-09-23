@@ -1,4 +1,11 @@
-import { Component, ViewEncapsulation, signal } from '@angular/core';
+import {
+  Component,
+  Injector,
+  ViewEncapsulation,
+  afterNextRender,
+  inject,
+  signal,
+} from '@angular/core';
 import { AlertComponent } from 'ds/alert';
 import { ButtonComponent } from 'ds/button';
 import { SegmentedComponent } from 'ds/segmented';
@@ -106,13 +113,13 @@ const ENTER_PRESETS: readonly EnterPreset[] = [
     keyframes: 'ds-slide-in',
     label: 'Slide',
     feel: 'Fades while travelling a short distance — for a panel, in from the trigger edge.',
-    defaultFor: 'Overlay panels, toast, banner, alert',
+    defaultFor: 'Nothing — opt in with --ds-<surface>-enter-keyframes',
   },
   {
     keyframes: 'ds-scale-in',
     label: 'Scale',
     feel: 'Grows into place from a micro-scale, out of the trigger edge — no travel.',
-    defaultFor: 'Modal',
+    defaultFor: 'Overlay panels, modal, toast, banner, alert',
   },
   {
     keyframes: 'ds-fade-in',
@@ -160,11 +167,16 @@ export class MotionSection {
   );
   protected readonly preset = signal('ds-slide-in');
   protected readonly alertShown = signal(true);
+  private readonly injector = inject(Injector);
 
-  /** An entrance plays on insert, so the only honest way to replay it is to
-   *  re-mount the surface — a timeout, because the removal needs to render. */
+  /** An entrance plays on insert, so the only honest way to replay it is to re-mount the
+   *  surface. `afterNextRender` rather than a timeout: a `setTimeout(0)` can run before
+   *  change detection has torn the alert down, and then the signal is back to `true`
+   *  before `@if` ever removed anything - no re-insert, no entrance. */
   protected replayAlert(): void {
     this.alertShown.set(false);
-    setTimeout(() => this.alertShown.set(true));
+    afterNextRender(() => this.alertShown.set(true), {
+      injector: this.injector,
+    });
   }
 }

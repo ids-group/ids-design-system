@@ -3,12 +3,14 @@
     "p: role=status",
     "div: aria-hidden=true",
     "div: role={interactive() ? 'group' : 'img'}, aria-label={accessibleName()}",
-    "div: role={interactive() ? 'button' : null}, aria-label={interactive() ? entryLabel(entry) : null}"
+    "div: role={interactive() ? 'button' : null}, aria-label={interactive() ? entryLabel(entry) : null}",
+    "span: role=img, aria-label={'Target ' + entry.formattedTarget}"
   ],
   "chart": [
     "p: role=status",
     "div: aria-hidden=true",
     "div: role={interactive() ? 'group' : 'img'}, aria-label={accessibleName()}",
+    "g: aria-hidden=true",
     "g: aria-hidden=true",
     "g: aria-hidden=true"
   ],
@@ -16,16 +18,6 @@
   "column-series": [
     "svg: role={interactive() ? 'button' : null}, aria-label={interactive() ? entryLabel(mark) : null}",
     "svg: aria-hidden=true"
-  ],
-  "donut-chart": [
-    "div: aria-hidden=true",
-    "p: role=status",
-    "div: aria-hidden=true",
-    "div: aria-hidden=true",
-    "div: role={interactive() ? 'group' : 'img'}, aria-label={accessibleName()}",
-    "svg: aria-hidden={ringCarriesTheRoute() ? null : true}",
-    "path: role={ringCarriesTheRoute() ? 'button' : null}, aria-label={ringCarriesTheRoute() ? entryLabel(entry) : null}",
-    "li: role={interactive() ? 'button' : null}, aria-label={interactive() ? entryLabel(entry) : null}"
   ],
   "funnel-chart": [
     "p: role=status",
@@ -35,20 +27,37 @@
     "polygon: role={interactive() ? 'button' : null}, aria-label={interactive() ? entryLabel(entry) : null}",
     "span: aria-hidden=true"
   ],
-  "line-chart": [
+  "heatmap-chart": [
     "p: role=status",
     "div: aria-hidden=true",
-    "p: role=status",
     "div: role={interactive() ? 'group' : 'img'}, aria-label={accessibleName()}",
-    "svg: aria-hidden={interactive() ? null : true}",
-    "rect: aria-hidden=true",
-    "line: aria-hidden=true",
-    "circle: role={interactive() ? 'button' : null}, aria-label={interactive() ? markerLabel(entry, marker) : null}",
-    "text: aria-hidden=true"
+    "button: aria-label={cell.accessibleName}",
+    "span: role=img, aria-label={cell.accessibleName}",
+    "span: aria-hidden=true"
   ],
+  "line-chart": ["p: role=status", "div: aria-hidden=true", "p: role=status"],
   "line-series": [
     "svg: role={interactive() ? 'button' : null}, aria-label={interactive() ? markerLabel(marker) : null}"
   ],
+  "pie-chart": [
+    "div: aria-hidden=true",
+    "p: role=status",
+    "div: aria-hidden=true",
+    "div: aria-hidden=true",
+    "div: role={interactive() ? 'group' : 'img'}, aria-label={accessibleName()}",
+    "svg: aria-hidden={ringCarriesTheRoute() ? null : true}",
+    "path: role={ringCarriesTheRoute() ? 'button' : null}, aria-label={ringCarriesTheRoute() ? entryLabel(entry) : null}",
+    "li: role={interactive() ? 'button' : null}, aria-label={interactive() ? entryLabel(entry) : null}"
+  ],
   "reference-label": [],
-  "reference-line": ["svg: aria-hidden=true"]
+  "reference-line": ["svg: aria-hidden=true"],
+  "scatter-chart": [
+    "p: role=status",
+    "svg: role={interactive() ? 'group' : 'img'}, aria-label={accessibleName()}",
+    "circle: role={interactive() ? 'button' : null}, aria-label={interactive() ? pointLabel(entry.series, mark.point) : null}",
+    "p: role=status"
+  ],
+  "series-annotation": [],
+  "waterfall-chart": ["p: role=status", "div: aria-hidden=true"],
+  "waterfall-marks": ["svg: aria-hidden=true"]
 }

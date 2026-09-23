@@ -1,0 +1,120 @@
+<docs-section
+  anchor="scatter-chart"
+  eyebrow="Charts"
+  title="Scatter chart"
+  [chapters]="true">
+  <span lede>
+    Two continuous quantities against each other - weight against carriage cost,
+    distance against time, volume against conversion. The only chart in the
+    family whose mark count the caller decides, and the only one that thins its
+    own data before drawing.
+  </span>
+
+  <h3 class="block-title t-h4">
+    Default
+  </h3>
+
+  <p class="block-desc t-s">
+    Both scales are continuous, so a point carries its own position on each
+    rather than an index into a list of categories.
+    <code class="t-mono-inline">
+      xLabel
+    </code> and
+    <code class="t-mono-inline">
+      yLabel
+    </code> are not decoration: without them
+    the reader has two numbers and no idea which is which, and on a scatter that
+    is the whole reading. Marks are drawn semi-transparent, because the
+    interesting thing is where they pile up and at full opacity a cluster of
+    forty and a cluster of four are the same solid disc.
+  </p>
+
+  <ds-scatter-chart
+    caption="Carriage cost against parcel weight"
+    xLabel="Weight, kg"
+    yLabel="Cost"
+    [data]="oneSeries" />
+
+  <h3 class="block-title t-h4">
+    Several series
+  </h3>
+
+  <p class="block-desc t-s">
+    Each series takes its own palette slot and the legend keys them. Two clouds
+    that overlap are the reading, not a defect - it is the case the transparency
+    exists for.
+  </p>
+
+  <ds-scatter-chart
+    caption="Road against air, same weights"
+    xLabel="Weight, kg"
+    yLabel="Cost"
+    [data]="parcels" />
+
+  <h3 class="block-title t-h4">
+    Thinning, and saying so
+  </h3>
+
+  <p class="block-desc t-s">
+    SVG degrades by the number of NODES, not by the number of readings: the same
+    data as a line is one
+    <code class="t-mono-inline">
+      &lt;path&gt;
+    </code>, and as a scatter it is
+    one node per point. Lighthouse warns at about 800 nodes and errors at about
+    1400, on a page that may hold four more charts. So past four times the
+    plot's width in marks the series is decimated - and the chart says so on its
+    face, because a quiet decimation leaves the reader counting points that were
+    never drawn. Every reading is still in the data table.
+  </p>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      decimator
+    </code> picks how.
+    <code class="t-mono-inline">
+      minMax
+    </code>, the default, keeps each
+    bucket's highest and lowest reading by construction, so the spike a reader
+    is looking for cannot be the point that was dropped.
+    <code class="t-mono-inline">
+      lttb
+    </code> draws a truer silhouette at the
+    same budget and makes no such promise.
+    <code class="t-mono-inline">
+      none
+    </code>
+    is the caller taking the node budget on themselves.
+  </p>
+
+  <ds-scatter-chart
+    caption="12 000 readings, thinned to what the plot can hold"
+    xLabel="Weight, kg"
+    yLabel="Reading"
+    dataTable="toggle"
+    [data]="flood" />
+
+  <h3 class="block-title t-h4">
+    Drilling in
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      interactive
+    </code> makes every mark a button
+    and fires <code class="t-mono-inline">pointClicked</code> with the series
+    and the reading.
+  </p>
+
+  <ds-scatter-chart
+    caption="Click a point"
+    xLabel="Weight, kg"
+    yLabel="Cost"
+    interactive
+    [data]="oneSeries"
+    (pointClicked)="onPointClicked($event)" />
+
+  <p class="block-desc t-s">
+    Last clicked: {{ lastClicked() }}
+  </p>
+</docs-section>

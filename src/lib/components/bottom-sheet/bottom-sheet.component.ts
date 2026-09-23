@@ -22,7 +22,7 @@ let nextId = 0;
 /** Bottom-anchored sheet — the mobile sibling of ds-drawer. Closes on scrim
  * tap, Escape, or a downward drag on the grab strip. While open it locks
  * body scroll. On wide viewports the panel is capped by
- * --ds-bottom-sheet-maxw and centred; prefer ds-modal / ds-drawer for
+ * --ds-bottom-sheet-max-width and centred; prefer ds-modal / ds-drawer for
  * desktop-first layouts. position: fixed resolves against the nearest
  * ancestor containing block, so framed hosts contain the sheet. */
 @Component({

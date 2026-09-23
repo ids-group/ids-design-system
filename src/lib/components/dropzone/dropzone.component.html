@@ -9,7 +9,7 @@
     class="dz-input"
     aria-label="Upload files"
     [attr.accept]="accept() || null"
-    [multiple]="single() ? false : multiple()"
+    [multiple]="multiple()"
     [disabled]="disabled()"
     (change)="onPickerChange($event)" />
 

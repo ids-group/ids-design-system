@@ -1,0 +1,19 @@
+.annotations {
+  --_chart-annotation-color: var(--ds-chart-annotation-color, var(--text-primary));
+  --_chart-annotation-font-size: var(--ds-chart-annotation-font-size, var(--ds-chart-axis-font-size));
+  --_chart-annotation-font-weight: var(--ds-chart-annotation-font-weight, var(--font-weight-bold));
+  --_chart-annotation-halo-color: var(--ds-chart-annotation-halo-color, var(--surface-default));
+  --_chart-annotation-halo-width: var(--ds-chart-annotation-halo-width, 3px);
+}
+
+/* The halo is painted UNDER the glyphs, which is what `paint-order` buys: a stroke over them
+   would thicken the letters instead of separating them from the line they sit on. */
+.annotation {
+  fill: var(--_chart-annotation-color);
+  font-size: var(--_chart-annotation-font-size);
+  font-weight: var(--_chart-annotation-font-weight);
+  paint-order: stroke;
+  stroke: var(--_chart-annotation-halo-color);
+  stroke-width: var(--_chart-annotation-halo-width);
+  stroke-linejoin: round;
+}

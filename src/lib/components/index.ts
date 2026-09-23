@@ -1,5 +1,6 @@
 export { resolveBrandValue } from './brand-defaults';
 export {
+  CHART_HEAT_COLORS,
   CHART_RAMP_COLORS,
   CHART_SERIES_COLORS,
   chartColors,
@@ -14,7 +15,20 @@ export {
   shareOfTotal,
 } from './charts-format';
 export { elementWidth } from './charts-measure';
-export { areaPath, lineSegments, polylinePoints } from './charts-path';
+export { labelInterval, rotationWouldFit } from './charts-label-fit';
+export {
+  decimationTarget,
+  lttbDecimate,
+  minMaxDecimate,
+  needsDecimating,
+} from './charts-decimate';
+export {
+  areaPath,
+  bandPath,
+  linePath,
+  lineSegments,
+  polylinePoints,
+} from './charts-path';
 export type { LinePoint } from './charts-path';
 export {
   bandScale,
@@ -84,3 +98,4 @@ export { ProjectionDroppedDirective } from './projection-dropped.directive';
 export { scrollActiveOptionIntoView } from './scroll-active-option';
 export { DsStaticPreview } from './static-preview.directive';
 export { createTypeAhead } from './type-ahead';
+export { resolveChartDefaults } from './charts-defaults';

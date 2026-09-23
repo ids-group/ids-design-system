@@ -6,3 +6,7 @@ Group: Layout & navigation
 Inputs: `label: string = ''`, `icon: IconName | null = null`, `expandable: boolean = false`, `expanded: model<boolean> = true`
 Content slots: default (items); `[ds-group-icon]` (custom group icon when not using a DS IconName)
 When `expandable=true` renders header button with toggle + caret; collapses body when not expanded.
+
+<!-- inputs:ds-sidenav-group -->
+All inputs: `label: string = ''`, `icon: IconName | null = null`, `expandable: boolean = false`, `routerLink: DsRouterLink = null`, `ariaCurrent: 'page' | 'step' | 'location' | 'date' | 'time' | 'true'`, `expanded: boolean = true`
+<!-- /inputs -->

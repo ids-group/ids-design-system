@@ -4,6 +4,7 @@ import {
   ElementRef,
   TemplateRef,
   ViewEncapsulation,
+  afterNextRender,
   booleanAttribute,
   computed,
   contentChild,
@@ -13,69 +14,66 @@ import {
   numberAttribute,
   output,
   signal,
+  viewChild,
 } from '@angular/core';
 import {
   CHART_SERIES_COLORS,
-  defaultChartFormat,
   describeSeries,
-  pointScale,
-  focusMark,
-  nextRovingIndex,
-  staggerDelay,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
-import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
+import {
+  CHART_DEFAULT_VALUE_SPACE,
+  ChartComponent,
+  LineSeriesComponent,
+  SeriesAnnotationComponent,
+  chartViewHeight,
+} from '@ids-group-ltd/ids-design-system/components/chart';
+import type {
+  ChartAnnotation,
+  LineSeriesData,
+} from '@ids-group-ltd/ids-design-system/components/chart';
+import { formatPercent } from '@ids-group-ltd/ids-design-system/components';
+import { stackOffsets } from '@ids-group-ltd/ids-design-system/components/chart';
 import type {
   ChartDataTable,
   ChartFrame,
   ChartValueFormat,
+  ChartAxisMode,
+  ChartGaps,
+  ChartCurve,
 } from '@ids-group-ltd/ids-design-system/core';
 import { ChartTooltipDirective } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import { ChartLegendComponent } from '@ids-group-ltd/ids-design-system/components/chart-legend';
 import type { ChartLegendItem } from '@ids-group-ltd/ids-design-system/components/chart-legend';
+import { ChartDataTableComponent } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
+import type { ChartDataRow } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
+import { resolveChartDefaults } from '@ids-group-ltd/ids-design-system/components';
 import type {
   ChartTooltipContext,
-  ChartTooltipOrigin,
   ChartTooltipTrigger,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import {
-  LINE_CHART_AXIS_LABEL_GAP,
   LINE_CHART_DEFAULT_TICK_COUNT,
-  LINE_CHART_VIEW_HEIGHT,
-  LINE_CHART_VIEW_WIDTH,
-  type LinePoint,
-  type PlotArea,
   alignSeriesValues,
-  areaPath,
-  axisLayout,
-  categoryCenters,
-  categoryLabelStride,
-  chartLayout,
   domainMaxOf,
-  lineSegments,
   paletteIndexFor,
-  polylinePoints,
-  seriesPoints,
-  valueY,
 } from './line-chart.math';
+
+/** Matches `--ds-line-chart-plot-height`, for the frame before the first style read and for SSR. */
+const DEFAULT_PLOT_HEIGHT = 240;
 import type {
   LineChartAnnotation,
-  LineChartAxisMode,
-  LineChartGaps,
-  LineChartPoint,
+  LineChartStack,
+  LineChartReading,
   LineChartSeries,
 } from './line-chart.types';
-
-// Long enough to cross the gap between the plot and its panel at an ordinary pointer speed.
-
-// View units between a reading and the label above it, and the margin inside which a label
-// anchors to its own edge instead of centring. Both in the 640x320 viewBox.
-const ANNOTATION_GAP = 12;
-const ANNOTATION_EDGE_GUARD = 48;
 
 interface ResolvedSeries {
   readonly series: LineChartSeries;
   readonly values: readonly (number | null)[];
+  /** Where this series' band starts on the value axis, one entry per category. `null` while the
+   *  chart is unstacked, where every band starts at the baseline. */
+  readonly lowerValues: readonly (number | null)[] | null;
   readonly onSecondaryAxis: boolean;
   readonly color: string;
   /** `null` while `patterns` is off, which is what keeps a solid line solid. */
@@ -95,38 +93,23 @@ const SERIES_DASH_ARRAYS = [
   '14 5',
 ];
 
-interface PlottedSeries extends ResolvedSeries {
-  readonly polylines: readonly string[];
-  readonly areaPaths: readonly string[];
-  readonly markers: readonly LinePoint[];
-}
-
-interface AxisTick {
-  readonly y: number;
-  readonly label: string;
-}
-
-interface CategoryLabel {
-  readonly x: number;
-  readonly text: string;
-}
-
-function baselineOf(plot: PlotArea): number {
-  return plot.top + plot.height;
-}
-
 @Component({
   selector: 'ds-line-chart',
   standalone: true,
-  imports: [SkeletonComponent, ChartTooltipDirective, ChartLegendComponent],
+  imports: [
+    SkeletonComponent,
+    ChartComponent,
+    LineSeriesComponent,
+    SeriesAnnotationComponent,
+    ChartTooltipDirective,
+    ChartLegendComponent,
+    ChartDataTableComponent,
+  ],
   templateUrl: './line-chart.component.html',
   styleUrl: './line-chart.component.scss',
-  // Escape releases a pinned category, the same key that dismisses its panel — otherwise the
-  // crosshair would stand on a chart with nothing left on screen to explain why.
   host: {
     '[class.framed]': "frameResolved() === 'auto'",
-    '(document:keydown.escape)': 'releaseCategoryPin()',
-    '(document:pointerover)': 'onPointerAnywhere($event)',
+    '[style.--_line-chart-view-height]': 'viewHeightPx()',
   },
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -140,7 +123,7 @@ export class LineChartComponent {
   readonly series = input.required<readonly LineChartSeries[]>();
 
   /** How a secondary axis relates to the primary one. */
-  readonly yAxisMode = input<LineChartAxisMode>('rounded');
+  readonly yAxisMode = input<ChartAxisMode>('aligned');
 
   /** Draws a dot at every reading. Off, the dots appear on hover and on focus only. */
   readonly showMarkers = input(true, { transform: booleanAttribute });
@@ -159,15 +142,13 @@ export class LineChartComponent {
 
   /** The point that was clicked, or activated with Enter or Space. Fires whether or not
    *  `interactive` is set. */
-  readonly pointClicked = output<LineChartPoint>();
+  readonly pointClicked = output<LineChartReading>();
 
   /** Holds the crosshair and its tooltip on the category that was clicked, until Escape or a
    *  press outside releases it. Off by default: a click is already the drill-down hook, and a
    *  crosshair left standing after the pointer has gone needs a reader who knows why. `pointClicked`
    *  fires either way — pinning is a state, not a handler. */
   readonly pinOnClick = input(false, { transform: booleanAttribute });
-
-  protected readonly pinnedCategory = signal(false);
 
   /** Dims every OTHER mark while one is hovered or focused, so the reader's eye is held on the
    *  one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed
@@ -178,7 +159,23 @@ export class LineChartComponent {
 
   /** What a `null` reading draws. The default refuses to assert that a missing
    *  reading is a zero. */
-  readonly gaps = input<LineChartGaps>('break');
+  readonly gaps = input<ChartGaps>('break');
+
+  /** How the line joins its readings. `'linear'` by default, which asserts nothing the data does
+   *  not say; a curve is a claim about what happened BETWEEN two readings. */
+  readonly curve = input<ChartCurve>('linear');
+
+  /** How several series share the value axis. Stacking runs per AXIS, so a series on the secondary
+   *  axis never piles onto one measured against the primary. */
+  readonly stack = input<LineChartStack>('none');
+
+  /** Names the first axis's unit beside it. On a plot carrying two scales the colour says which
+   *  line reads which axis and this says what the numbers ARE - and a reader who has neither is
+   *  left comparing two quantities that may not be comparable at all. */
+  readonly yAxisLabel = input<string | null>(null);
+
+  /** `yAxisLabel` for the second axis. */
+  readonly secondaryAxisLabel = input<string | null>(null);
 
   /** How many value-axis ticks to aim for. A hint, not a count: ticks snap to a round step, so
    *  the axis may carry one more or one fewer. */
@@ -249,33 +246,12 @@ export class LineChartComponent {
    *  grouping with a K/M/B suffix past four digits. */
   readonly valueFormat = input<ChartValueFormat | null>(null);
 
-  readonly frameResolved = resolveWithConfig(
-    this.frame,
-    (config) => config.chart?.frame,
-    'auto' as ChartFrame,
-  );
-  readonly dataTableResolved = resolveWithConfig(
-    this.dataTable,
-    (config) => config.chart?.dataTable,
-    'none' as ChartDataTable,
-  );
-  readonly emptyTextResolved = resolveWithConfig(
-    this.emptyText,
-    (config) => config.chart?.emptyText,
-    'No data',
-  );
-  readonly errorTextResolved = resolveWithConfig(
-    this.errorText,
-    (config) => config.chart?.errorText,
-    'Could not load the data',
-  );
-  readonly valueFormatResolved = resolveWithConfig(
-    this.valueFormat,
-    (config) => config.chart?.valueFormat,
-    defaultChartFormat,
-  );
-
-  protected readonly viewBox = `0 0 ${LINE_CHART_VIEW_WIDTH} ${LINE_CHART_VIEW_HEIGHT}`;
+  private readonly defaults = resolveChartDefaults(this);
+  readonly frameResolved = this.defaults.frame;
+  readonly dataTableResolved = this.defaults.dataTable;
+  readonly emptyTextResolved = this.defaults.emptyText;
+  readonly errorTextResolved = this.defaults.errorText;
+  readonly valueFormatResolved = this.defaults.valueFormat;
 
   protected readonly resolvedSeries = computed<readonly ResolvedSeries[]>(
     () => {
@@ -294,6 +270,7 @@ export class LineChartComponent {
         return {
           series,
           values: alignSeriesValues(series.data, categoryCount, gaps),
+          lowerValues: null,
           onSecondaryAxis: series.axis === 'secondary',
           color: CHART_SERIES_COLORS[slot],
           dash: patterns ? SERIES_DASH_ARRAYS[slot] : null,
@@ -336,16 +313,54 @@ export class LineChartComponent {
    *  not crawl in. */
   readonly staggerMs = input(0, { transform: numberAttribute });
 
-  protected markStagger(index: number): string {
-    return `${staggerDelay(index, this.staggerMs())}ms`;
-  }
-
   protected readonly highlightedSeries = signal<string | null>(null);
+
+  /** Every series with its band's own span, stacked per axis. Hiding a series does NOT re-pile the
+   *  rest, for the same reason `rescaleOnHide` defaults off: switching one off must not move the
+   *  ones still drawn. A `null` stays a hole in the line and contributes nothing to the pile. */
+  protected readonly stackedSeries = computed<readonly ResolvedSeries[]>(() => {
+    const mode = this.stack();
+    const entries = this.resolvedSeries();
+    if (mode === 'none') {
+      return entries;
+    }
+
+    const spans = new Map<ResolvedSeries, { from: number; to: number }[]>();
+    for (const secondary of [false, true]) {
+      const onThisAxis = entries.filter(
+        (entry) => entry.onSecondaryAxis === secondary,
+      );
+      const offsets = stackOffsets(
+        onThisAxis.map((entry) => entry.values.map((value) => value ?? 0)),
+        mode,
+      );
+      onThisAxis.forEach((entry, index) =>
+        spans.set(entry, [...offsets[index]]),
+      );
+    }
+
+    return entries.map((entry) => {
+      const span = spans.get(entry);
+      if (!span) {
+        return entry;
+      }
+
+      return {
+        ...entry,
+        values: entry.values.map((value, category) =>
+          value === null ? null : span[category].to,
+        ),
+        lowerValues: entry.values.map((value, category) =>
+          value === null ? null : span[category].from,
+        ),
+      };
+    });
+  });
 
   protected readonly visibleSeries = computed<readonly ResolvedSeries[]>(() => {
     const hidden = this.hiddenSeries();
 
-    return this.resolvedSeries().filter(
+    return this.stackedSeries().filter(
       (entry) => !hidden.includes(entry.series.id),
     );
   });
@@ -358,286 +373,39 @@ export class LineChartComponent {
     })),
   );
 
-  protected isDimmed(seriesId: string): boolean {
-    const highlighted = this.highlightedSeries();
-
-    return this.dimOthers() && highlighted !== null && highlighted !== seriesId;
-  }
-
-  protected readonly hasSecondaryAxis = computed(() =>
-    this.visibleSeries().some((entry) => entry.onSecondaryAxis),
+  /** A normalized stack draws shares, not readings, so the axis has to say so - the value a tooltip
+   *  or the annex table prints stays the reading, which is what `valueFormat` goes on formatting. */
+  protected readonly axisFormat = computed<ChartValueFormat>(() =>
+    this.stack() === 'normalized'
+      ? (value: number) => formatPercent(value, 1)
+      : this.valueFormatResolved(),
   );
 
-  protected readonly layout = computed(() =>
-    chartLayout(this.yAxisMode(), this.hasSecondaryAxis()),
-  );
+  /** Each axis takes the colour of the series measured against it, but only where two scales share
+   *  one plot: on a single-scale chart it would restate the marks' own colour in the furniture,
+   *  and under `'split'` the two plots are already apart. The chart knows its own series colours,
+   *  so this is derived rather than asked for. */
+  private readonly axisTint = computed(() => {
+    if (!this.hasSecondaryAxis() || this.yAxisMode() === 'split') {
+      return { primary: null, secondary: null };
+    }
+    const find = (onSecondaryAxis: boolean) =>
+      this.visibleSeries().find(
+        (entry) => entry.onSecondaryAxis === onSecondaryAxis,
+      )?.color ?? null;
 
-  protected readonly axes = computed(() => {
-    // The axis is scaled from every series unless `rescaleOnHide` says otherwise, so switching one
-    // off does not move the gridlines under the ones still drawn.
-    const entries = this.rescaleOnHide()
-      ? this.visibleSeries()
-      : this.resolvedSeries();
-    const valuesOn = (secondary: boolean) =>
-      entries
-        .filter((entry) => entry.onSecondaryAxis === secondary)
-        .map((entry) => entry.values);
-
-    // The pin raises the axis, never lowers it: a maximum under the data would push readings off
-    // the top of the plot, and a chart that hides a value is worse than one with headroom.
-    const pinned = (asked: number | null, derived: number) =>
-      asked !== null && Number.isFinite(asked) && asked > derived
-        ? asked
-        : derived;
-
-    return axisLayout(
-      pinned(this.max(), domainMaxOf(valuesOn(false))),
-      this.hasSecondaryAxis()
-        ? pinned(this.maxSecondary(), domainMaxOf(valuesOn(true)))
-        : null,
-      this.yAxisMode(),
-      this.tickCount(),
-    );
+    return { primary: find(false), secondary: find(true) };
   });
 
-  protected readonly categoryPositions = computed(() =>
-    categoryCenters(this.categories().length, this.layout().primaryPlot),
+  protected readonly primaryAxisFill = computed(() => this.axisTint().primary);
+
+  protected readonly secondaryAxisFill = computed(
+    () => this.axisTint().secondary,
   );
 
-  protected readonly plottedSeries = computed<readonly PlottedSeries[]>(() => {
-    const axes = this.axes();
-    const centers = this.categoryPositions();
+  protected readonly stacksSeries = computed(() => this.stack() !== 'none');
 
-    return this.visibleSeries().map((entry) => {
-      const plot = this.plotFor(entry.onSecondaryAxis);
-      const axisMax =
-        entry.onSecondaryAxis && axes.secondary
-          ? axes.secondary.max
-          : axes.primary.max;
-      const segments = lineSegments(
-        seriesPoints(entry.values, axisMax, plot, centers),
-      );
-      const baselineY = plot.top + plot.height;
-
-      return {
-        ...entry,
-        polylines: segments
-          .map((segment) => polylinePoints(segment))
-          .filter((points) => points.length > 0),
-        areaPaths: entry.series.area
-          ? segments
-              .map((segment) => areaPath(segment, baselineY))
-              .filter((path) => path.length > 0)
-          : [],
-        markers: segments.flat(),
-      };
-    });
-  });
-
-  /** Annotations resolved onto the markers the plot already computed, so a label sits exactly on
-   *  its reading and moves with it. One whose series is hidden or whose reading is missing has no
-   *  marker and is dropped — a hidden series must not leave its label floating over the plot. */
-  protected readonly placedAnnotations = computed(() => {
-    const plotted = this.plottedSeries();
-
-    return this.annotations().flatMap((annotation) => {
-      const entry = annotation.seriesId
-        ? plotted.find(
-            (candidate) => candidate.series.id === annotation.seriesId,
-          )
-        : plotted[0];
-      const marker = entry?.markers.find(
-        (candidate) => candidate.categoryIndex === annotation.categoryIndex,
-      );
-      if (!entry || !marker) {
-        return [];
-      }
-
-      // Anchored away from the plot edges, because a centred label at the first or last category
-      // hangs half outside the viewBox and is clipped rather than merely tight.
-      const anchor =
-        marker.x < ANNOTATION_EDGE_GUARD
-          ? 'start'
-          : marker.x > LINE_CHART_VIEW_WIDTH - ANNOTATION_EDGE_GUARD
-            ? 'end'
-            : 'middle';
-
-      return [
-        {
-          key: `${entry.series.id}:${annotation.categoryIndex}`,
-          label: annotation.label,
-          x: marker.x,
-          // Above the reading, and below it where there is no room — a peak sits at the top of
-          // the plot, which is exactly where a label clamped upward lands on its own marker.
-          y:
-            marker.y - ANNOTATION_GAP >= ANNOTATION_GAP
-              ? marker.y - ANNOTATION_GAP
-              : marker.y + ANNOTATION_GAP,
-          anchor,
-        },
-      ];
-    });
-  });
-
-  protected readonly primaryTicks = computed(() =>
-    this.ticksFor(this.axes().primary.ticks, this.axes().primary.max, false),
-  );
-
-  protected readonly secondaryTicks = computed<readonly AxisTick[]>(() => {
-    const secondary = this.axes().secondary;
-
-    return secondary ? this.ticksFor(secondary.ticks, secondary.max, true) : [];
-  });
-
-  /** Drawn only when the two axes do not share the primary's gridlines, and only
-   *  when the axis has more than the single tick a degenerate domain leaves. */
-  protected readonly showSecondaryGridlines = computed(
-    () => !this.axes().alignedTicks && this.secondaryTicks().length > 1,
-  );
-
-  protected readonly stacked = computed(() => this.layout().stacked);
-  protected readonly categoryLabelY = computed(
-    () => this.layout().categoryLabelY,
-  );
-
-  /** The category under the pointer, or -1. */
-  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
-
-  protected readonly activeCategory = signal(-1);
-
-  protected readonly categoryBands = computed(() =>
-    pointScale(this.categories().length, this.layout().primaryPlot.width),
-  );
-
-  // The band is a slot CENTRED on its reading, so it starts half a step before it. At the two ends
-  // half of that slot is outside the plot, and clamping is what keeps the band off the axis labels
-  // rather than letting it hang past them.
-  protected readonly activeBandX = computed(() => {
-    const plot = this.layout().primaryPlot;
-    const scale = this.categoryBands();
-    const center = plot.left + scale.position(this.activeCategory());
-
-    return Math.max(center - scale.step / 2, plot.left);
-  });
-
-  protected readonly activeBandWidth = computed(() => {
-    const plot = this.layout().primaryPlot;
-    const scale = this.categoryBands();
-    const center = plot.left + scale.position(this.activeCategory());
-    const start = Math.max(center - scale.step / 2, plot.left);
-    const end = Math.min(center + scale.step / 2, plot.left + plot.width);
-
-    return Math.max(end - start, 0);
-  });
-
-  protected readonly activeCategoryX = computed(
-    () => this.activeBandX() + this.activeBandWidth() / 2,
-  );
-
-  protected onPlotPointer(event: PointerEvent): void {
-    const canvas = event.currentTarget as SVGSVGElement;
-    const screen = canvas.getScreenCTM();
-    if (!screen) {
-      return;
-    }
-    // Client pixels are not viewBox units — the plot scales to the card's width.
-    const point = new DOMPoint(event.clientX, event.clientY).matrixTransform(
-      screen.inverse(),
-    );
-    const plot = this.layout().primaryPlot;
-    if (this.pinnedCategory()) {
-      return;
-    }
-    this.cancelCategoryClear();
-    const category = this.categoryBands().indexAt(point.x - plot.left);
-    this.activeCategory.set(category);
-    this.tooltipOrigin.set(
-      this.tooltipAnchor() === 'pointer'
-        ? { x: event.clientX, y: event.clientY }
-        : this.readingAnchor(screen, category),
-    );
-  }
-
-  /** The highest reading in the category, mapped back into client pixels. Anchoring there rather
-   *  than at the cursor keeps the panel still while the pointer travels within one band, and puts
-   *  it over the readings it names instead of over the finger. */
-  private readingAnchor(
-    screen: DOMMatrix,
-    category: number,
-  ): ChartTooltipOrigin {
-    const tops = this.plottedSeries().flatMap((entry) =>
-      entry.markers
-        .filter((marker) => marker.categoryIndex === category)
-        .map((marker) => marker.y),
-    );
-    const y = tops.length ? Math.min(...tops) : this.layout().primaryPlot.top;
-    const point = new DOMPoint(
-      this.plotLeft() + this.categoryBands().position(category),
-      y,
-    ).matrixTransform(screen);
-
-    return { x: point.x, y: point.y };
-  }
-
-  protected clearActiveCategory(): void {
-    if (this.pinnedCategory()) {
-      return;
-    }
-    // Same grace the element-mark charts get from `chartActiveMark`: the panel is portaled out of
-    // the plot, so leaving the plot fires before the pointer can reach it. Clearing at once made
-    // the panel unreachable, and — because the pane takes pointer events now — put the plot and the
-    // panel in a loop where each closed the other.
-    this.cancelCategoryClear();
-    this.pendingCategoryClear = setTimeout(
-      () => {
-        this.pendingCategoryClear = null;
-        this.activeCategory.set(-1);
-        this.tooltipOrigin.set(null);
-      },
-      Math.max(this.tooltipLingerResolved(), 0),
-    );
-  }
-
-  /** The panel is portaled to the body, so the plot never sees the pointer arrive on it. This is
-   *  the other half of the grace period: reaching the panel keeps it open, and leaving the panel for
-   *  anything that is not the plot starts the clear the plot can no longer start itself. */
-  protected onPointerAnywhere(event: PointerEvent): void {
-    if (!(event.target instanceof Element) || this.pinnedCategory()) {
-      return;
-    }
-    if (event.target.closest('.ds-chart-tooltip-pane')) {
-      this.cancelCategoryClear();
-
-      return;
-    }
-    if (
-      this.activeCategory() !== -1 &&
-      !this.host.nativeElement.contains(event.target)
-    ) {
-      this.clearActiveCategory();
-    }
-  }
-
-  private cancelCategoryClear(): void {
-    if (this.pendingCategoryClear !== null) {
-      clearTimeout(this.pendingCategoryClear);
-      this.pendingCategoryClear = null;
-    }
-  }
-
-  private readonly tooltipLingerResolved = resolveWithConfig(
-    this.tooltipLingerMs,
-    (config) => config.chart?.tooltipLingerMs,
-    0,
-  );
-
-  private pendingCategoryClear: ReturnType<typeof setTimeout> | null = null;
-
-  protected releaseCategoryPin(): void {
-    this.pinnedCategory.set(false);
-    this.activeCategory.set(-1);
-    this.tooltipOrigin.set(null);
-  }
+  protected readonly tooltipLingerResolved = this.defaults.tooltipLingerMs;
 
   /** Whether the plot opens a tooltip, and for what. `'axis'` names every series at the
    *  category under the pointer, which is the reading a multi-series line is compared on;
@@ -654,175 +422,17 @@ export class LineChartComponent {
    *  cursor. */
   readonly tooltipAnchor = input<'point' | 'pointer'>('point');
 
-  protected readonly tooltipOrigin = signal<ChartTooltipOrigin | null>(null);
+  protected readonly dataTableColumns = computed<readonly string[]>(() => [
+    'Category',
+    ...this.resolvedSeries().map((entry) => entry.series.label),
+  ]);
 
-  /** The series focus is on, or -1 for the whole category. A pointer answers for every
-   *  series at once; a focused marker answers for its own. */
-  protected readonly activeSeries = signal(-1);
-
-  /** One tab stop PER SERIES, keyed by series id — each line is a strand the reader walks with
-   *  the arrows. WCAG 2.1.1's Understanding is explicit that not every mouse-operable control has
-   *  to be separately focusable, which is what keeps a 12-category, 2-series plot from being
-   *  twenty-four stops in the page's tab order. */
-  protected readonly rovingByCategory = signal<ReadonlyMap<string, number>>(
-    new Map(),
+  protected readonly dataTableRows = computed<readonly ChartDataRow[]>(() =>
+    this.tableRows().map((row) => ({
+      key: row.category,
+      cells: [row.category, ...row.cells],
+    })),
   );
-
-  protected isTabStop(seriesId: string, categoryIndex: number): boolean {
-    return (this.rovingByCategory().get(seriesId) ?? 0) === categoryIndex;
-  }
-
-  protected onMarkerFocus(
-    seriesIndex: number,
-    categoryIndex: number,
-    event: FocusEvent,
-  ): void {
-    if (event.currentTarget instanceof Element) {
-      this.tooltipOrigin.set(event.currentTarget);
-    }
-    this.activeSeries.set(seriesIndex);
-    this.activeCategory.set(categoryIndex);
-    this.setRoving(seriesIndex, categoryIndex);
-  }
-
-  protected onMarkerNavigation(
-    event: KeyboardEvent,
-    seriesIndex: number,
-    categoryIndex: number,
-  ): void {
-    const markers = this.plottedSeries()[seriesIndex]?.markers ?? [];
-    const positions = markers.map((marker) => marker.categoryIndex);
-    const current = positions.indexOf(categoryIndex);
-    const next = nextRovingIndex(event.key, current, positions.length);
-    if (next === null) {
-      return;
-    }
-    event.preventDefault();
-    const nextCategory = positions[next];
-    this.setRoving(seriesIndex, nextCategory);
-    focusMark(
-      (event.currentTarget as Element).closest('svg'),
-      nextCategory,
-      `[data-series-index="${seriesIndex}"]`,
-    );
-  }
-
-  private setRoving(seriesIndex: number, categoryIndex: number): void {
-    const seriesId = this.plottedSeries()[seriesIndex]?.series.id;
-    if (seriesId === undefined) {
-      return;
-    }
-    const next = new Map(this.rovingByCategory());
-    next.set(seriesId, categoryIndex);
-    this.rovingByCategory.set(next);
-  }
-
-  protected onMarkerBlur(): void {
-    this.activeSeries.set(-1);
-    this.clearActiveCategory();
-  }
-
-  protected readonly tooltipContext = computed<ChartTooltipContext | null>(
-    () => {
-      const categoryIndex = this.activeCategory();
-      const categories = this.categories();
-      if (
-        this.tooltip() === 'none' ||
-        categoryIndex < 0 ||
-        categoryIndex >= categories.length
-      ) {
-        return null;
-      }
-      const format = this.valueFormatResolved();
-      const focusedSeries = this.activeSeries();
-      const perSeries =
-        this.tooltip() === 'item' || focusedSeries >= 0
-          ? this.visibleSeries().slice(
-              Math.max(focusedSeries, 0),
-              Math.max(focusedSeries, 0) + 1,
-            )
-          : this.visibleSeries();
-
-      return {
-        category: categories[categoryIndex],
-        entries: perSeries
-          .map((entry) => ({ entry, value: entry.values[categoryIndex] }))
-          .filter(
-            (
-              reading,
-            ): reading is {
-              entry: (typeof perSeries)[number];
-              value: number;
-            } =>
-              typeof reading.value === 'number' &&
-              Number.isFinite(reading.value),
-          )
-          .map(({ entry, value }) => ({
-            label: entry.series.label,
-            value,
-            formatted: format(value, 'tooltip'),
-            color: entry.color,
-          })),
-      };
-    },
-  );
-
-  protected readonly plotLeft = computed(() => this.layout().primaryPlot.left);
-  protected readonly plotRight = computed(
-    () => this.layout().primaryPlot.left + this.layout().primaryPlot.width,
-  );
-
-  protected readonly primaryTopY = computed(
-    () => this.layout().primaryPlot.top,
-  );
-  protected readonly secondaryTopY = computed(
-    () => this.layout().secondaryPlot.top,
-  );
-
-  protected readonly primaryBaselineY = computed(() =>
-    baselineOf(this.layout().primaryPlot),
-  );
-
-  protected readonly secondaryBaselineY = computed(() =>
-    baselineOf(this.layout().secondaryPlot),
-  );
-
-  /** Where the crosshair stops. Under `'stacked'` the two plots sit one above the other over one
-   *  category axis, so a crosshair that ends at the upper plot's baseline leaves the lower plot —
-   *  the same category, the same pointer — with nothing marked at all. */
-  protected readonly cursorBottomY = computed(() =>
-    this.stacked() ? this.secondaryBaselineY() : this.primaryBaselineY(),
-  );
-
-  protected readonly primaryLabelX = computed(
-    () => this.layout().primaryPlot.left - LINE_CHART_AXIS_LABEL_GAP,
-  );
-
-  protected readonly secondaryLabelX = computed(() => {
-    const layout = this.layout();
-
-    return layout.stacked
-      ? layout.secondaryPlot.left - LINE_CHART_AXIS_LABEL_GAP
-      : layout.primaryPlot.left +
-          layout.primaryPlot.width +
-          LINE_CHART_AXIS_LABEL_GAP;
-  });
-
-  protected readonly secondaryLabelAnchor = computed(() =>
-    this.layout().stacked ? 'end' : 'start',
-  );
-
-  protected readonly categoryLabels = computed<readonly CategoryLabel[]>(() => {
-    const categories = this.categories();
-    const centers = this.categoryPositions();
-    const stride = categoryLabelStride(categories.length);
-    const labels: CategoryLabel[] = [];
-    for (let index = 0; index < categories.length; index += stride) {
-      labels.push({ x: centers[index], text: categories[index] });
-    }
-
-    return labels;
-  });
 
   protected readonly tableRows = computed(() => {
     const format = this.valueFormatResolved();
@@ -867,7 +477,7 @@ export class LineChartComponent {
         : ' Full values in the table below.';
     // The plot's own text is inside an `aria-hidden` svg, so an annotation a sighted reader takes
     // as the point of the chart would otherwise reach nobody else.
-    const notes = this.placedAnnotations().map((note) => note.label);
+    const notes = this.markAnnotations().map((note) => note.label);
     const noted = notes.length ? ` Noted: ${notes.join('; ')}.` : '';
 
     return sentences.length === 0
@@ -875,41 +485,143 @@ export class LineChartComponent {
       : `${title}. ${sentences.join(' ')}${noted}${pointer}`;
   });
 
-  protected pointOf(entry: PlottedSeries, marker: LinePoint): LineChartPoint {
-    return {
-      series: entry.series,
-      categoryIndex: marker.categoryIndex,
-      category: this.categories()[marker.categoryIndex] ?? '',
-      value: marker.value,
-    };
+  private readonly plot = viewChild(ChartComponent);
+
+  /** Whether the category cursor is held. Read off the container, which owns the pin now that it
+   *  owns the cursor. */
+  protected readonly pinnedCategory = computed(
+    () => this.plot()?.cursorPinned() ?? false,
+  );
+
+  protected releaseCategoryPin(): void {
+    this.plot()?.releaseCursor();
   }
 
-  protected markerLabel(entry: PlottedSeries, marker: LinePoint): string {
-    const point = this.pointOf(entry, marker);
+  /** What the series mark draws: the stacked values, the hidden series already filtered out. */
+  protected readonly markSeries = computed<readonly LineSeriesData[]>(() =>
+    this.visibleSeries().map((entry) => ({
+      id: entry.series.id,
+      label: entry.series.label,
+      data: entry.values,
+      axis: entry.onSecondaryAxis
+        ? ('secondary' as const)
+        : ('primary' as const),
+      area: entry.series.area,
+      lower: entry.lowerValues ?? undefined,
+      color: entry.color,
+    })),
+  );
 
-    return `${entry.series.label}, ${point.category}, ${this.valueFormatResolved()(marker.value, 'tooltip')}`;
+  protected readonly dashPatterns = computed<readonly string[]>(() =>
+    this.visibleSeries().map((entry) => entry.dash ?? ''),
+  );
+
+  /** The reading each label names, which is what the mark needs: it draws against the scales and
+   *  never sees the series list. One whose series is hidden or whose reading is missing is
+   *  dropped rather than left floating over the plot. */
+  protected readonly markAnnotations = computed<readonly ChartAnnotation[]>(
+    () =>
+      this.annotations().flatMap((annotation) => {
+        const visible = this.visibleSeries();
+        const entry = annotation.seriesId
+          ? visible.find(
+              (candidate) => candidate.series.id === annotation.seriesId,
+            )
+          : visible[0];
+        const value = entry?.values[annotation.categoryIndex];
+        if (!entry || typeof value !== 'number') {
+          return [];
+        }
+
+        return [
+          {
+            categoryIndex: annotation.categoryIndex,
+            value,
+            label: annotation.label,
+            axis: entry.onSecondaryAxis
+              ? ('secondary' as const)
+              : ('primary' as const),
+          },
+        ];
+      }),
+  );
+
+  protected readonly markAnchor = computed(() =>
+    this.tooltipAnchor() === 'pointer'
+      ? ('pointer' as const)
+      : ('reading' as const),
+  );
+
+  protected readonly hasSecondaryAxis = computed(() =>
+    this.visibleSeries().some((entry) => entry.onSecondaryAxis),
+  );
+
+  /** The ceiling handed to the container, which raises its own domain to it and never lowers.
+   *  Unless `rescaleOnHide` says otherwise it is the maximum across EVERY series, so switching
+   *  one off does not move the gridlines under the ones still drawn. */
+  protected readonly axisMax = computed(() =>
+    this.rescaleOnHide() ? this.max() : this.ceilingOf(false, this.max()),
+  );
+
+  protected readonly axisMaxSecondary = computed(() =>
+    this.rescaleOnHide()
+      ? this.maxSecondary()
+      : this.ceilingOf(true, this.maxSecondary()),
+  );
+
+  private ceilingOf(onSecondaryAxis: boolean, asked: number | null): number {
+    const derived = domainMaxOf(
+      this.stackedSeries()
+        .filter((entry) => entry.onSecondaryAxis === onSecondaryAxis)
+        .map((entry) => entry.values),
+    );
+
+    return asked !== null && Number.isFinite(asked) && asked > derived
+      ? asked
+      : derived;
   }
 
-  protected onMarkerKey(
-    entry: PlottedSeries,
-    marker: LinePoint,
-    event: Event,
-  ): void {
-    if (!this.interactive() || event.target !== event.currentTarget) {
+  /** `--ds-line-chart-plot-height` reaches an SVG coordinate space only as a number, so it is read
+   *  back off the host rather than applied as CSS. */
+  protected readonly plotHeight = signal(DEFAULT_PLOT_HEIGHT);
+
+  /** Every state occupies the box the plot would have, so nothing on the page moves when the data
+   *  lands, the request fails or the last series is switched off. */
+  protected readonly viewHeightPx = computed(
+    () => `${chartViewHeight(this.plotHeight(), CHART_DEFAULT_VALUE_SPACE)}px`,
+  );
+
+  protected onPointClicked(reading: {
+    series: LineSeriesData;
+    categoryIndex: number;
+    value: number;
+  }): void {
+    const series = this.series().find(
+      (candidate) => candidate.id === reading.series.id,
+    );
+    if (!series) {
       return;
     }
-    event.preventDefault();
-    this.onMarkerClick(entry, marker);
+    this.pointClicked.emit({
+      series,
+      categoryIndex: reading.categoryIndex,
+      category: this.categories()[reading.categoryIndex] ?? '',
+      value: reading.value,
+    });
   }
 
-  /** The pin hangs off the MARKER, not off the plot: the marker is already focusable and already
-   *  answers Enter and Space, so the keyboard gets the pin for free. A click handler on the plot
-   *  would have no keyboard route at all. A second activation of the pinned category releases it. */
-  protected onMarkerClick(entry: PlottedSeries, marker: LinePoint): void {
-    this.pointClicked.emit(this.pointOf(entry, marker));
-    if (this.pinOnClick()) {
-      this.pinnedCategory.set(!this.pinnedCategory());
-    }
+  constructor() {
+    const host = inject<ElementRef<HTMLElement>>(ElementRef);
+    afterNextRender(() => {
+      const parsed = Number.parseFloat(
+        getComputedStyle(host.nativeElement).getPropertyValue(
+          '--_line-chart-plot-height',
+        ),
+      );
+      if (Number.isFinite(parsed) && parsed > 0) {
+        this.plotHeight.set(parsed);
+      }
+    });
   }
 
   protected readonly isEmpty = computed(
@@ -928,26 +640,4 @@ export class LineChartComponent {
   protected readonly skeletonSeries = computed(() =>
     Array.from({ length: Math.max(this.series().length, 3) }),
   );
-
-  private plotFor(onSecondaryAxis: boolean): PlotArea {
-    const layout = this.layout();
-
-    return onSecondaryAxis && layout.stacked
-      ? layout.secondaryPlot
-      : layout.primaryPlot;
-  }
-
-  private ticksFor(
-    ticks: readonly number[],
-    axisMax: number,
-    onSecondaryAxis: boolean,
-  ): AxisTick[] {
-    const plot = this.plotFor(onSecondaryAxis);
-    const format = this.valueFormatResolved();
-
-    return ticks.map((value) => ({
-      y: valueY(value, axisMax, plot),
-      label: format(value, 'tick'),
-    }));
-  }
 }

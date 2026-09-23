@@ -421,7 +421,7 @@
       "old": ":focus-visible",
       "new": null,
       "action": "Only if you deliberately relied on an element having NO focus indicator: give it `box-shadow: none` explicitly. The rule also sets `outline: none`, so an element relying on the BROWSER outline loses it — declare your own if that is what you wanted.",
-      "appliesWhen": "Written with `:where()`, so every component rule and every app rule still out-ranks it, and the `data-focus` switch is unaffected.",
+      "appliesWhen": "Written with `:where()`, so every component rule and every app rule still out-ranks it, and the `data-focus` switch is unaffected. The rule ships in `styles/focus`, which `styles/ds` forwards: an app whose built CSS does not carry it has nothing to do here, and an app that expected to have it should find out why before reading the pitfall as a false alarm.",
       "pitfall": "The case that actually bites: an app rule that styles `:focus-visible` with an OUTLINE ONLY. It keeps winning on outline, but it says nothing about box-shadow, so the base rule still supplies one and the element renders BOTH — a second ring in your colour around the DS ring. The app rule looks untouched because it is, so neither the build nor a grep for the change finds it. FIND IT by grepping your styles for `:focus-visible` and reading each rule: one that sets outline (or outline-color / outline-offset) and no box-shadow is a hit. Add `box-shadow: none`, or better, delete the rule and retint the DS ring through `--ds-control-focus-shadow`.",
       "note": "One zero-specificity base rule — `:where(:focus-visible) { outline: none; box-shadow: var(--ds-control-focus-shadow) }` — gives the DS ring to any focusable element that does not style focus itself, including your own bare `<button>`, a link in projected content, and the close buttons inside ds-alert, ds-banner and ds-drawer. They fell through to the browser default before.",
       "searchHints": [
@@ -706,7 +706,7 @@
         ".cdk-overlay-pane"
       ],
       "why": "A global rule against `.ds-dropdown-panel` or `.cdk-overlay-pane` to change a dropdown corner.",
-      "replaceWith": "`--ds-dropdown-panel-radius`, which scopes to one picker when written under a component selector"
+      "replaceWith": "`--ds-dropdown-panel-radius`, which scopes to one picker when written under a component selector. The pane setup the dropdown pickers share forwards it, so no picker's own list of forwarded tokens names it"
     },
     {
       "id": "autocomplete-synthetic-input-clear",

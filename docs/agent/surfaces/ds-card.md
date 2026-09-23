@@ -3,8 +3,12 @@
 
 Group: Surfaces
 
-Inputs: `elevation: 'flat' | 'raised' | 'hover' | 'interactive' = 'flat'`, `padding: 'none' | 'sm' | 'md' | 'lg' | null = null` (when `null`, no `padding-*` class is applied and the consumer controls padding via own CSS or `--ds-card-pad`)
+Inputs: `elevation: 'flat' | 'raised' | 'hover' | 'interactive' = 'flat'`, `padding: 'none' | 'sm' | 'md' | 'lg' | null = null` (when `null`, no `padding-*` class is applied and the consumer controls padding via own CSS or `--ds-card-padding`)
 Output: `(pressed): MouseEvent` — fires only when `elevation="interactive"`
-Tokens: `--ds-card-bg-color`, `--ds-card-border`, `--ds-card-radius`, `--ds-card-pad`, `--ds-card-shadow`, `--ds-card-shadow-hover`, `--ds-card-hover-lift`, `--ds-card-overflow`. The focus ring is not a card token — set `--focus-ring-color`, `--focus-ring-width` or `--focus-ring-offset` on the card's own scope
+Tokens: `--ds-card-bg-color`, `--ds-card-border`, `--ds-card-radius`, `--ds-card-padding`, `--ds-card-shadow`, `--ds-card-shadow-hover`, `--ds-card-hover-lift`, `--ds-card-overflow`. The focus ring is not a card token — set `--focus-ring-color`, `--focus-ring-width` or `--focus-ring-offset` on the card's own scope
 Full-bleed child: a child whose background reaches the card edge paints square corners over the radius, and the host cannot fix it — the rounded box is the card's inner element. Set `--ds-card-overflow: clip` (`clip`, not `hidden`, so the card stays out of the scroll-container business). It is opt-in because a clipped card also cuts the focus ring off a child at its edge; where the clipped card holds focusable content, pair it with `data-focus="inset"`.
 Convention tokens (consumer-side `.title` projected into the card slot — declared at `:root`, not on the host): `--card-title-fs` (default `var(--font-size-h4)` = 22px; a brand can step it down to `var(--font-size-h5)`). Consumer markup: `<h3 class="title">…</h3>`; local `.title` class reads the token via `font:` shorthand together with `--font-weight-bold` / `--line-height-snug` / `--font-heading`.
+
+<!-- inputs:ds-card -->
+All inputs: `elevation: 'flat' | 'raised' | 'hover' | 'interactive' = null`, `padding: 'none' | 'sm' | 'md' | 'lg' = null`
+<!-- /inputs -->

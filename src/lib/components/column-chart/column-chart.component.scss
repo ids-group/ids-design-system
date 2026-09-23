@@ -21,12 +21,6 @@
   margin: 0;
 }
 
-figcaption {
-  margin-block-end: var(--space-3);
-  color: var(--text-primary);
-  font-weight: 600;
-}
-
 // The container draws the grid, so the column chart's own hook reaches it by re-pointing the
 // shared one on the element that owns the rule. Declared on the figure and consumed here, which is
 // what keeps the two names off the same element and out of a custom-property cycle.
@@ -43,8 +37,5 @@ ds-chart {
   column-gap: var(--_column-chart-column-gap);
 }
 
-.empty.is-error {
-  color: var(--error);
-}
 
 @include chart-frame.pin-reset;

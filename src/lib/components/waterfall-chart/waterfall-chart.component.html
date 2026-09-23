@@ -1,0 +1,60 @@
+<figure class="waterfall-chart">
+  @if (caption()) {
+    <figcaption>
+      {{ caption() }}
+    </figcaption>
+  }
+
+  @if (error()) {
+    <p
+      class="empty is-error"
+      role="status">
+      {{ errorTextResolved() }}
+    </p>
+  } @else if (loading()) {
+    <div
+      class="skeleton"
+      aria-hidden="true">
+      @for (placeholder of skeletonBars(); track $index) {
+        <ds-skeleton height="var(--_waterfall-chart-skeleton-height)" />
+      }
+    </div>
+  } @else if (isEmpty()) {
+    <p class="empty">
+      {{ emptyTextResolved() }}
+    </p>
+  } @else {
+    <ds-chart
+      frame="none"
+      [categories]="categories()"
+      [tickCount]="tickCount()"
+      [valueFormat]="valueFormatResolved()"
+      [interactive]="interactive()"
+      [summary]="accessibleName()">
+      <svg:g
+        dsWaterfallMarks
+        [steps]="steps()"
+        [labelValues]="labelValues()"
+        [showValues]="showValues()"
+        [showConnectors]="showConnectors()"
+        [valueFormat]="valueFormatResolved()" />
+
+      <svg:g
+        dsColumnSeries
+        showValues="false"
+        [data]="points()"
+        [offsets]="offsets()"
+        [interactive]="interactive()"
+        [valueFormat]="valueFormatResolved()"
+        (pointClicked)="onPointClicked($event)" />
+    </ds-chart>
+
+    @if (dataTableResolved() !== 'none') {
+      <ds-chart-data-table
+        [columns]="['Step', 'Direction', 'Value', 'Running total']"
+        [rows]="dataTableRows()"
+        [caption]="caption()"
+        [open]="dataTableResolved() === 'visible'" />
+    }
+  }
+</figure>

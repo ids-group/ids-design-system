@@ -1,5 +1,3 @@
-import type { ChartAxisMode } from '@ids-group-ltd/ids-design-system/core';
-
 export interface LineChartSeries {
   id: string;
   label: string;
@@ -14,12 +12,14 @@ export interface LineChartSeries {
   slot?: number;
 }
 
-/** How the secondary axis relates to the primary one. The same four words `ds-chart` takes for a
- *  composed two-scale plot, so a combo and a line chart are read the same way. */
-export type LineChartAxisMode = ChartAxisMode;
-
-/** What a `null` reading draws: a hole in the line, or a point at zero. */
-export type LineChartGaps = 'break' | 'zero';
+/** How several series share the value axis. `'none'` draws each from the baseline, which is what a
+ *  line chart has always done. `'stacked'` starts each series where the one before it ended, so a
+ *  filled series reads as a share of a total rather than a quantity of its own. `'normalized'`
+ *  stacks then divides by the category's own total, so every category is full and the axis reads in
+ *  shares.
+ *
+ *  Unrelated to `yAxisMode`'s `'split'`, which puts two PLOTS one above the other. */
+export type LineChartStack = 'none' | 'stacked' | 'normalized';
 
 /** A label pinned to one reading, so the point it names is legible with no pointer — a peak, a
  *  launch, the month a number turned. The tooltip answers "what is this?" on hover; an annotation
@@ -34,7 +34,7 @@ export interface LineChartAnnotation {
 }
 
 /** One reading, named by the series it belongs to and the category it sits under. */
-export interface LineChartPoint {
+export interface LineChartReading {
   readonly series: LineChartSeries;
   readonly categoryIndex: number;
   readonly category: string;

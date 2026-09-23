@@ -5,3 +5,7 @@ Group: Layout & navigation
 
 Input: `variant: 'default' | 'compact' | 'save' = 'default'`
 Content: default `<ng-content>`. Sticky footer bar pattern.
+
+<!-- inputs:ds-page-footer -->
+All inputs: `variant: 'default' | 'compact' | 'save' = 'default'`
+<!-- /inputs -->

@@ -4,7 +4,7 @@
    screens are built on. NO HUE BETWEEN 35 and 130: yellow and
    lime sit at high luminance by nature, so dragging one down
    to clear 3:1 on white turns it to mustard — an earlier set
-   tried, and the donut read as mud. Every hue clears 3:1 for
+   tried, and the pie read as mud. Every hue clears 3:1 for
    WCAG 1.4.11 and sits in a narrow perceptual band (L* 56-62)
    so no series shouts over another; an older set ran 45% to
    100% saturation and the first bar drowned the last.
@@ -30,7 +30,7 @@
   --chart-categorical-3: hsl(222deg 70% 62%);   /* blue */
   --chart-categorical-4: hsl(266deg 62% 66%);   /* violet */
   --chart-categorical-5: hsl(330deg 70% 62%);   /* pink */
-  --chart-categorical-6: hsl(152deg 58% 41%);   /* emerald */
+  --chart-categorical-6: hsl(148deg 58% 41%);   /* emerald */
   --chart-categorical-7: hsl(300deg 62% 60%);   /* orchid */
   --chart-categorical-8: hsl(222deg 14% 29%);   /* slate */
 
@@ -40,13 +40,20 @@
   --chart-series-default: hsl(222deg 16% 42%);
   --chart-series-accent:  var(--chart-categorical-2);
 
+  /* A waterfall's up and down are NOT success and failure - a cost rising is a rise and a bad
+     one - so the pair points at the palette's own two lead hues rather than at --success and
+     --error. The sign is carried by the label and the accessible name as well, because a hue
+     cannot say which direction is the welcome one. */
+  --chart-positive: var(--chart-categorical-2);
+  --chart-negative: var(--chart-categorical-1);
+
   /* RAMP — one hue, light → deep, for the ordered stages of a single
      quantity. Shares the lead hue so a funnel reads as one object rather
-     than as eight unrelated categories. Contrast on white is NOT held at
-     3:1 across the ramp: a sequential scale that clears the floor at every
-     step has to compress into its dark half, and then consecutive stages
-     stop being separable from each other, which is the distinction the
-     ramp exists to carry. */
+     than as eight unrelated categories. It stays in the middle of the
+     lightness range, 76% to 51%: a funnel's stages are a shape to read at
+     a glance, and a stage at either extreme reads as a different object
+     rather than as the next step. A scale that needs magnitude read from
+     the step between two colours takes --chart-heat-* instead. */
   --chart-ramp-1: hsl(  8deg 78% 76%);
   --chart-ramp-2: hsl(  8deg 78% 72%);
   --chart-ramp-3: hsl(  8deg 78% 69%);
@@ -55,6 +62,21 @@
   --chart-ramp-6: hsl(  8deg 77% 58%);
   --chart-ramp-7: hsl(  8deg 75% 55%);
   --chart-ramp-8: hsl(  8deg 72% 51%);
+
+  /* HEAT — the same hue across the FULL lightness range, 95% to 31%, for a
+     grid where magnitude is read from the step between two cells and
+     nothing else: adjacent dE 6.9–10.6, first to last 55.0, measured
+     2026-09-19 in OKLab against the ramp's 2.1–3.9 and 20.7. Contrast on
+     white runs 1.14:1 to 9.07:1, so a label over a cell is chosen against
+     that cell's own end of the scale, never once for the whole of it. */
+  --chart-heat-1: hsl(  8deg 60% 95%);
+  --chart-heat-2: hsl(  8deg 67% 88%);
+  --chart-heat-3: hsl(  8deg 73% 80%);
+  --chart-heat-4: hsl(  8deg 76% 71%);
+  --chart-heat-5: hsl(  8deg 78% 61%);
+  --chart-heat-6: hsl(  8deg 78% 51%);
+  --chart-heat-7: hsl(  8deg 74% 41%);
+  --chart-heat-8: hsl(  8deg 68% 31%);
 
   /* SEQUENTIAL — single-hue, light → dark */
   --chart-sequential-1: var(--blue-100);
@@ -158,6 +180,8 @@
   --ds-chart-series-6-color: var(--chart-categorical-6);
   --ds-chart-series-7-color: var(--chart-categorical-7);
   --ds-chart-series-8-color: var(--chart-categorical-8);
+  --ds-chart-positive-color: var(--chart-positive);
+  --ds-chart-negative-color: var(--chart-negative);
   --ds-chart-series-default-color: var(--chart-series-default);
   --ds-chart-series-accent-color: var(--chart-series-accent);
 
@@ -169,6 +193,15 @@
   --ds-chart-ramp-6-color: var(--chart-ramp-6);
   --ds-chart-ramp-7-color: var(--chart-ramp-7);
   --ds-chart-ramp-8-color: var(--chart-ramp-8);
+
+  --ds-chart-heat-1-color: var(--chart-heat-1);
+  --ds-chart-heat-2-color: var(--chart-heat-2);
+  --ds-chart-heat-3-color: var(--chart-heat-3);
+  --ds-chart-heat-4-color: var(--chart-heat-4);
+  --ds-chart-heat-5-color: var(--chart-heat-5);
+  --ds-chart-heat-6-color: var(--chart-heat-6);
+  --ds-chart-heat-7-color: var(--chart-heat-7);
+  --ds-chart-heat-8-color: var(--chart-heat-8);
 
   --ds-chart-frame-border-color: var(--chart-frame-border-color);
   --ds-chart-frame-border-width: var(--chart-frame-border-width);

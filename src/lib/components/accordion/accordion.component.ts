@@ -38,12 +38,12 @@ import { AccordionItemComponent } from './accordion-item.component';
 })
 export class AccordionComponent implements AccordionContract {
   /** When false, opening one item automatically closes all others. */
-  readonly multi = input(true, { transform: booleanAttribute });
+  readonly multiple = input(true, { transform: booleanAttribute });
 
   private readonly items = contentChildren(AccordionItemComponent);
 
   notifyOpen(opened: AccordionItemRef): void {
-    if (this.multi()) {
+    if (this.multiple()) {
       return;
     }
     for (const item of this.items() as unknown as AccordionItemRef[]) {

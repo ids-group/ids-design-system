@@ -14,17 +14,17 @@
     var(--text-primary)
   );
   --_segmented-label-color: var(--ds-segmented-label-color, var(--text-secondary));
-  --_segmented-pad: var(--ds-segmented-pad, var(--segmented-pad));
-  --_segmented-btn-h: var(--ds-segmented-btn-h, var(--segmented-btn-h));
-  --_segmented-r-inner: var(--ds-segmented-r-inner, var(--segmented-r-inner));
+  --_segmented-padding: var(--ds-segmented-padding, var(--segmented-pad));
+  --_segmented-segment-height: var(--ds-segmented-segment-height, var(--segmented-btn-h));
+  --_segmented-radius-inner: var(--ds-segmented-radius-inner, var(--segmented-r-inner));
   --_segmented-radius: var(
     --ds-segmented-radius,
-    calc(var(--_segmented-r-inner) + var(--_segmented-pad))
+    calc(var(--_segmented-radius-inner) + var(--_segmented-padding))
   );
   --_segmented-selected-shadow: var(--ds-segmented-selected-shadow, var(--ds-elevation-raised));
-  --_segmented-btn-border: var(--ds-segmented-btn-border, 0);
-  --_segmented-btn-pad-x: var(--ds-segmented-btn-pad-x, var(--space-4));
-  --_segmented-label-weight: var(--ds-segmented-label-weight, var(--font-weight-semibold));
+  --_segmented-segment-border: var(--ds-segmented-segment-border, 0);
+  --_segmented-segment-padding-x: var(--ds-segmented-segment-padding-x, var(--space-4));
+  --_segmented-label-font-weight: var(--ds-segmented-label-font-weight, var(--font-weight-semibold));
   --_segmented-label-font-size: var(--ds-segmented-label-font-size, var(--font-size-s));
 
   /* Own our width — an outer flex/grid (e.g. a stretch column) must not be able
@@ -43,10 +43,35 @@
 .track {
   display: inline-flex;
   width: fit-content;
-  gap: var(--_segmented-pad);
-  padding: var(--_segmented-pad);
+  gap: var(--_segmented-padding);
+  padding: var(--_segmented-padding);
   background-color: var(--_segmented-bg-color);
   border-radius: var(--_segmented-radius);
+}
+
+/* The ends carry the group's radius and the seams between segments are square, so a row of
+   bordered chips reads as one control rather than as several. The negative margin is what
+   collapses two adjacent 1px borders into one. */
+:host(.joined) .track {
+  gap: 0;
+  padding: 0;
+  background: transparent;
+
+  .segment {
+    border-radius: 0;
+    margin-inline-start: calc(-1 * var(--border-width-default));
+
+    &:first-child {
+      border-start-start-radius: var(--_segmented-radius);
+      border-end-start-radius: var(--_segmented-radius);
+      margin-inline-start: 0;
+    }
+
+    &:last-child {
+      border-start-end-radius: var(--_segmented-radius);
+      border-end-end-radius: var(--_segmented-radius);
+    }
+  }
 }
 
 .segment {
@@ -54,13 +79,13 @@
   align-items: center;
   justify-content: center;
   gap: var(--space-1-5);
-  height: var(--_segmented-btn-h);
-  padding: 0 var(--_segmented-btn-pad-x);
-  border: var(--_segmented-btn-border);
-  border-radius: var(--_segmented-r-inner);
+  height: var(--_segmented-segment-height);
+  padding: 0 var(--_segmented-segment-padding-x);
+  border: var(--_segmented-segment-border);
+  border-radius: var(--_segmented-radius-inner);
   background: transparent;
   color: var(--_segmented-label-color);
-  font: var(--_segmented-label-weight) var(--_segmented-label-font-size) / var(--line-height-flat) var(--font-sans);
+  font: var(--_segmented-label-font-weight) var(--_segmented-label-font-size) / var(--line-height-flat) var(--font-sans);
   white-space: nowrap;
   cursor: pointer;
   transition:

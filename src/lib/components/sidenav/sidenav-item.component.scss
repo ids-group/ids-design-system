@@ -7,7 +7,7 @@
 :host {
   --_sidenav-item-label-color:              var(--ds-sidenav-item-label-color,              var(--text-secondary));
   --_sidenav-item-label-color-hover:        var(--ds-sidenav-item-label-color-hover,        var(--text-primary));
-  --_sidenav-item-label-weight: var(--ds-sidenav-item-label-weight, var(--font-weight-semibold));
+  --_sidenav-item-label-font-weight: var(--ds-sidenav-item-label-font-weight, var(--font-weight-semibold));
   --_sidenav-item-bg-color-hover:        var(--ds-sidenav-item-bg-color-hover,        var(--surface-secondary));
 
   /* A tinted wash with a coloured label, not a solid brand pill: Material's
@@ -41,7 +41,7 @@
   border-radius: var(--_sidenav-item-radius);
   color: var(--_sidenav-item-label-color);
   text-decoration: none;
-  font: var(--_sidenav-item-label-weight) var(--font-size-s) / var(--line-height-base) var(--font-sans);
+  font: var(--_sidenav-item-label-font-weight) var(--font-size-s) / var(--line-height-base) var(--font-sans);
   cursor: pointer;
   transition:
     background var(--duration-fast) var(--ease-standard),

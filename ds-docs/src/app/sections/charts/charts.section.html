@@ -25,6 +25,52 @@
   <docs-chart-data-editor [(rows)]="specimenRows" />
 
   <h3 class="block-title t-h4">
+    Floating bars
+  </h3>
+
+  <p class="block-desc t-s">
+    A row's
+    <code class="t-mono-inline">
+      value
+    </code> can be a
+    <code class="t-mono-inline">
+      [low, high]
+    </code> pair instead of one number,
+    and the bar then spans between its own two ends rather than from zero. It is
+    what compares a duration and its PLACEMENT at once - a phase, a shift, a
+    min-to-max - which a bar from zero cannot do. The ends may be written either
+    way round.
+  </p>
+
+  <ds-bar-chart
+    caption="Phases, by week"
+    dataTable="none"
+    [data]="rangeRows()" />
+
+  <h3 class="block-title t-h4">
+    Target and bands
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      target
+    </code> draws a tick across the bar at
+    one reading - a goal, a budget, last period - and
+    <code class="t-mono-inline">
+      ranges
+    </code> paints qualitative bands behind
+    it, given as their upper bounds. Together they are the bullet chart, which
+    is a bar with two extras rather than a chart type of its own. The bands take
+    one neutral hue at rising opacity: a band is a backdrop and the bar is the
+    reading, so a second palette behind them would compete with the bars.
+  </p>
+
+  <ds-bar-chart
+    caption="Against target, this quarter"
+    dataTable="none"
+    [data]="bulletRows()" />
+
+  <h3 class="block-title t-h4">
     Row colour
   </h3>
 

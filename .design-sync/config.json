@@ -15,15 +15,16 @@
     "ButtonGroup": "components/segmented",
     "CalendarDay": "components/date-picker",
     "Chart": "charts/chart",
+    "ChartDataTable": "charts/chart",
     "ChartLegend": "charts/line-chart",
     "ChartTooltipPanel": "charts/line-chart",
     "ColumnChart": "charts/column-chart",
     "Container": "components/layout-primitives",
     "DescriptionItem": "components/description-list",
     "Divider": "foundations/borders",
-    "DonutChart": "charts/donut-chart",
     "FieldMessage": "components/input",
     "FunnelChart": "charts/funnel-chart",
+    "HeatmapChart": "charts/heatmap-chart",
     "Inline": "components/layout-primitives",
     "LineChart": "charts/line-chart",
     "ListItem": "components/list",
@@ -31,7 +32,9 @@
     "MenuItem": "components/menu",
     "ModalCard": "components/modal",
     "ModalConfirm": "components/modal",
+    "PieChart": "charts/pie-chart",
     "RadioGroup": "components/radio",
+    "ScatterChart": "charts/scatter-chart",
     "SidenavFooter": "components/app-layout",
     "SidenavGroup": "components/sidenav",
     "SidenavItem": "components/sidenav",
@@ -41,7 +44,8 @@
     "TimelineItem": "components/timeline",
     "ToastRegion": "components/toast",
     "ToggleButton": "components/button",
-    "TooltipPanel": "components/tooltip"
+    "TooltipPanel": "components/tooltip",
+    "WaterfallChart": "charts/waterfall-chart"
   },
   "overrides": {
     "Button": {

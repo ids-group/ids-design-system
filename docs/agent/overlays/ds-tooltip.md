@@ -6,3 +6,7 @@ Group: Overlay
 Attribute directive. Apply to any focusable element.
 Inputs: `dsTooltip: string = ''` (the text; empty disables), `dsTooltipPlacement: 'top' | 'bottom' | 'left' | 'right' = 'top'`, `dsTooltipDelay: number = 120` (ms)
 Renders `<ds-tooltip-panel>` via CDK overlay on hover / focus; hides on leave / blur.
+
+<!-- inputs:[dsTooltip] -->
+All inputs: `dsTooltip: string = ''`, `dsTooltipPlacement: 'top' | 'bottom' | 'left' | 'right' = 'top'`, `dsTooltipDelay: number = 120`, `dsTooltipWhenClipped: boolean = false`
+<!-- /inputs -->

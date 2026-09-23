@@ -44,6 +44,9 @@ export class DsTableExport<T extends object> {
    *  table whose export is driven from somewhere else on the page. */
   readonly dsTableExport = input(true, { transform: booleanAttribute });
 
+  /** The download's name, extension included - it is passed through, never derived. A custom
+   *  `exportFetcher` returning a Blob is saved under this same name, so an export that is not CSV
+   *  has to say so here. */
   readonly exportFilename = input<string>('table.csv');
 
   /** Fetches the rows to export. Without it the export serialises what the table holds, which on

@@ -1,0 +1,110 @@
+<docs-section
+  anchor="waterfall-chart"
+  eyebrow="Charts"
+  title="Waterfall chart"
+  [chapters]="true">
+  <span lede>
+    A running total, bar by bar: what a figure started at, what moved it, and
+    what it ended at. The one chart in the family that cannot be a mode on
+    another.
+  </span>
+
+  <h3 class="block-title t-h4">
+    Default
+  </h3>
+
+  <p class="block-desc t-s">
+    Each bar carries a
+    <code class="t-mono-inline">
+      value
+    </code> that is added to the running
+    total wherever it sits. A <code class="t-mono-inline"> delta </code>, the
+    default, hangs from the level the bar before it left off at; a
+    <code class="t-mono-inline">
+      total
+    </code> stands on zero at the sum
+    reached, which is what makes it a figure in its own right rather than a
+    change. A closing total usually carries
+    <code class="t-mono-inline">
+      value: 0
+    </code>: it prints the sum, not a
+    change of its own.
+  </p>
+
+  <ds-waterfall-chart
+    caption="Settlement, this month"
+    [data]="settlement" />
+
+  <h3 class="block-title t-h4">
+    Colour never carries it alone
+  </h3>
+
+  <p class="block-desc t-s">
+    Three meanings, three colours - and none of them is load-bearing on its own.
+    Every bar prints its own sign above it, and every bar's accessible name says
+    "increase", "decrease" or "total" in words, so the chart survives forced
+    colours, a monochrome print and a reader who cannot tell the two hues apart.
+    The pair points at the palette's own lead hues rather than at
+    <code class="t-mono-inline">
+      --success
+    </code> and
+    <code class="t-mono-inline">
+      --error
+    </code>: a cost rising is a rise and a
+    bad one, and a hue cannot say which direction is the welcome one.
+  </p>
+
+  <h3 class="block-title t-h4">
+    Subtotals
+  </h3>
+
+  <p class="block-desc t-s">
+    A <code class="t-mono-inline"> subtotal </code> stands on zero like a total,
+    but the chain carries on past it. That is the whole difference between the
+    two.
+  </p>
+
+  <ds-waterfall-chart
+    caption="Headcount over a year, with a half-year subtotal"
+    [data]="withSubtotal" />
+
+  <h3 class="block-title t-h4">
+    Crossing the baseline
+  </h3>
+
+  <p class="block-desc t-s">
+    A chain that falls past zero opens the axis downwards rather than clipping,
+    and the dashed connector stays at the level the two bars share whichever
+    side of the baseline that is.
+  </p>
+
+  <ds-waterfall-chart
+    caption="A balance that goes negative and comes back"
+    [data]="belowZero" />
+
+  <h3 class="block-title t-h4">
+    Drilling in
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      interactive
+    </code> turns on the affordance and
+    the keyboard route, and
+    <code class="t-mono-inline">
+      barClicked
+    </code> hands back the datum that
+    was clicked.
+  </p>
+
+  <ds-waterfall-chart
+    caption="Click a bar"
+    interactive
+    dataTable="toggle"
+    [data]="settlement"
+    (barClicked)="onBarClicked($event)" />
+
+  <p class="block-desc t-s">
+    Last clicked: {{ lastClicked() }}
+  </p>
+</docs-section>

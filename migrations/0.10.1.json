@@ -92,7 +92,7 @@
     {
       "id": "fields-success-is-a-string",
       "kind": "behavior",
-      "old": "ds-input [success]=\"true\"",
+      "old": "ds-input[success]",
       "new": null,
       "action": "Replace `[success]=\"true\" hint=\"Available\"` with `success=\"Available\"` — the text moves out of `hint`. A `[success]=\"someBoolean\"` becomes `[success]=\"someBoolean ? 'Looks good' : ''\"`, since an empty string is what means \"no success state\" now.",
       "appliesWhen": "Breaking on ds-input only; the same input is ADDITIVE on ds-textarea, ds-select, ds-multi-select, ds-autocomplete, ds-date-picker, ds-time-picker, ds-otp-input and ds-color-picker, which had no success state at all. Not added to ds-checkbox, ds-radio-group, ds-switch or ds-slider — no bordered box to paint. `invalid` is unchanged and remains the flag partner of `error`.",
@@ -123,7 +123,7 @@
     {
       "id": "fields-shared-base-class-members",
       "kind": "behavior",
-      "old": "class MyField extends TextareaComponent (or any DS field)",
+      "old": "TextareaComponent, InputComponent",
       "new": null,
       "action": "Only if you SUBCLASS a DS field and declare a member named `hint`, `error`, `warning`, `errors`, `invalid`, `touched` or `reserveMessage`: it is an inherited member now rather than an own member, so an incompatible re-declaration fails where it may previously have shadowed. Redeclaring with the same shape still works.",
       "appliesWhen": "No public API changed — every input keeps its name, type, default and documentation, and the generated docs reference lost nothing. `success`, `label`, `required` and `optional` were deliberately NOT lifted and remain per-component.",
@@ -177,7 +177,7 @@
     {
       "id": "fields-warning-kind-is-reserved",
       "kind": "behavior",
-      "old": "a validator returning { warning: ... }",
+      "old": "ValidationErrors",
       "new": null,
       "action": "Only if you already have a validator using the key `warning` — reactive, template-driven, or a signal-forms ValidationError with kind `warning` — for a BLOCKING error. Rename that key to anything else, such as `warningLimit` or `softLimit`, and the old behaviour returns.",
       "appliesWhen": "Otherwise additive: it gives a form model a way to raise a non-blocking remark, which Angular's AbstractControl has no channel for. Ranked below the explicit `warning` input, and shown only after interaction.",

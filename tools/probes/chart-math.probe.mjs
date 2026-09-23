@@ -12,6 +12,8 @@ const {
   chartPlot,
   chartViewHeight,
   secondaryAxis,
+  annotationMarks,
+  categoryAt,
   stackOffsets,
   thresholdMarks,
   valueScale,
@@ -25,30 +27,78 @@ check('the plot leaves a gutter for each axis', chartPlot(640, 240, 46, 20), {
   width: 582,
   height: 240,
 });
-check('the plot width follows the measured width', chartPlot(320, 240, 46, 20), {
-  left: 46,
-  top: 20,
-  width: 262,
-  height: 240,
-});
-check('the plot height does NOT follow the measured width', chartPlot(320, 240, 46, 20).height, 240);
-check('a width narrower than its gutters leaves no plot', chartPlot(40, 240, 46, 20).width, 0);
+check(
+  'the plot width follows the measured width',
+  chartPlot(320, 240, 46, 20),
+  {
+    left: 46,
+    top: 20,
+    width: 262,
+    height: 240,
+  },
+);
+check(
+  'the plot height does NOT follow the measured width',
+  chartPlot(320, 240, 46, 20).height,
+  240,
+);
+check(
+  'a width narrower than its gutters leaves no plot',
+  chartPlot(40, 240, 46, 20).width,
+  0,
+);
 check('an unmeasured width leaves no plot', chartPlot(0, 240, 46, 20).width, 0);
-check('a negative plot height is floored at zero', chartPlot(640, -50, 46, 20).height, 0);
-check('a wider axis gutter takes it out of the plot', chartPlot(640, 240, 80, 20), {
-  left: 80,
-  top: 20,
-  width: 548,
-  height: 240,
-});
+check(
+  'a negative plot height is floored at zero',
+  chartPlot(640, -50, 46, 20).height,
+  0,
+);
+check(
+  'a wider axis gutter takes it out of the plot',
+  chartPlot(640, 240, 80, 20),
+  {
+    left: 80,
+    top: 20,
+    width: 548,
+    height: 240,
+  },
+);
 
-check('an all-positive view budgets value space above only', chartViewHeight(240, 20), 290);
-check('a domain reaching below zero budgets it at both ends', chartViewHeight(240, 20, true), 310);
-check('the reservation is exactly one value space', chartViewHeight(240, 20, true) - chartViewHeight(240, 20, false), 20);
-check('no value space leaves the category row alone', chartViewHeight(240, 0, true), 270);
-check('the view height grows with the plot one for one', chartViewHeight(340, 20) - chartViewHeight(240, 20), 100);
-check('the view height grows with value space one for one while positive', chartViewHeight(240, 30) - chartViewHeight(240, 20), 10);
-check('the view height grows with value space two for one below zero', chartViewHeight(240, 30, true) - chartViewHeight(240, 20, true), 20);
+check(
+  'an all-positive view budgets value space above only',
+  chartViewHeight(240, 20),
+  290,
+);
+check(
+  'a domain reaching below zero budgets it at both ends',
+  chartViewHeight(240, 20, true),
+  310,
+);
+check(
+  'the reservation is exactly one value space',
+  chartViewHeight(240, 20, true) - chartViewHeight(240, 20, false),
+  20,
+);
+check(
+  'no value space leaves the category row alone',
+  chartViewHeight(240, 0, true),
+  270,
+);
+check(
+  'the view height grows with the plot one for one',
+  chartViewHeight(340, 20) - chartViewHeight(240, 20),
+  100,
+);
+check(
+  'the view height grows with value space one for one while positive',
+  chartViewHeight(240, 30) - chartViewHeight(240, 20),
+  10,
+);
+check(
+  'the view height grows with value space two for one below zero',
+  chartViewHeight(240, 30, true) - chartViewHeight(240, 20, true),
+  20,
+);
 
 check('one reported set rounds up to a tick', axisDomain([[10, 20, 30]], 5), {
   min: 0,
@@ -58,18 +108,26 @@ check('two reported sets take the union', axisDomain([[10], [45]], 5), {
   min: 0,
   max: 50,
 });
-check('a reported negative opens the domain below zero', axisDomain([[-20, 40]], 5), {
-  min: -20,
-  max: 40,
-});
+check(
+  'a reported negative opens the domain below zero',
+  axisDomain([[-20, 40]], 5),
+  {
+    min: -20,
+    max: 40,
+  },
+);
 check('zero is always in the domain', axisDomain([[8, 12]], 5), {
   min: 0,
   max: 12,
 });
-check('a non-finite reading is not a bound', axisDomain([[NaN, Infinity, 5]], 5), {
-  min: 0,
-  max: 5,
-});
+check(
+  'a non-finite reading is not a bound',
+  axisDomain([[NaN, Infinity, 5]], 5),
+  {
+    min: 0,
+    max: 5,
+  },
+);
 check('nothing reported is a degenerate domain', axisDomain([], 5), {
   min: 0,
   max: 0,
@@ -78,18 +136,30 @@ check('a pin widens the domain', axisDomain([[10]], 5, null, 100), {
   min: 0,
   max: 100,
 });
-check('a pin under the data does not clip it', axisDomain([[80]], 5, null, 10), {
-  min: 0,
-  max: 80,
-});
-check('a minimum pin opens the domain below zero', axisDomain([[10]], 5, -50, null), {
-  min: -50,
-  max: 10,
-});
-check('a minimum pin above zero does not raise the floor', axisDomain([[10]], 5, 5, null), {
-  min: 0,
-  max: 10,
-});
+check(
+  'a pin under the data does not clip it',
+  axisDomain([[80]], 5, null, 10),
+  {
+    min: 0,
+    max: 80,
+  },
+);
+check(
+  'a minimum pin opens the domain below zero',
+  axisDomain([[10]], 5, -50, null),
+  {
+    min: -50,
+    max: 10,
+  },
+);
+check(
+  'a minimum pin above zero does not raise the floor',
+  axisDomain([[10]], 5, 5, null),
+  {
+    min: 0,
+    max: 10,
+  },
+);
 check('a non-finite pin is ignored', axisDomain([[10]], 5, NaN, Infinity), {
   min: 0,
   max: 10,
@@ -109,7 +179,11 @@ check('the signed ceiling sits at the plot top', signed(50), 0);
 check('the signed floor sits on the baseline', signed(-50), 100);
 
 const degenerate = valueScale({ min: 0, max: 0 }, 10, 200);
-check('a degenerate domain puts everything on the baseline', degenerate(7), 210);
+check(
+  'a degenerate domain puts everything on the baseline',
+  degenerate(7),
+  210,
+);
 
 // --- Reference lines and bands ----------------------------------------------
 // One plot, one scale: 0-100 over 200px from y=20, so a value's y is 220 - 2v and every number
@@ -150,8 +224,16 @@ check('a band label clears its upper edge', band.labelY, 39);
 
 // A ceiling-and-floor pair is naturally written high end first, and must read the same.
 const reversed = marksOf([{ value: 88, to: 78, label: 'Agreed range' }])[0];
-check('a band written high-end first starts at the same edge', reversed.top, 44);
-check('a band written high-end first spans the same height', reversed.height, 20);
+check(
+  'a band written high-end first starts at the same edge',
+  reversed.top,
+  44,
+);
+check(
+  'a band written high-end first spans the same height',
+  reversed.height,
+  20,
+);
 
 check('no thresholds draw nothing', marksOf([]).length, 0);
 check(
@@ -167,12 +249,18 @@ check(
 // label on 200K.
 const PRIMARY_TICKS = [0, 10000, 20000, 30000, 40000];
 
-const rounded = secondaryAxis(PRIMARY_TICKS, [[189900]], 5, 'rounded');
-check('a rounded second axis hangs on the first axis rows', rounded.aligned, true);
-check('a rounded second axis snaps its step up', rounded.ticks, [
-  0, 50000, 100000, 150000, 200000,
-]);
-check('a rounded second axis ends on its own last row', rounded.domain, {
+const aligned = secondaryAxis(PRIMARY_TICKS, [[189900]], 5, 'aligned');
+check(
+  'an aligned second axis hangs on the first axis rows',
+  aligned.aligned,
+  true,
+);
+check(
+  'an aligned second axis snaps its step up',
+  aligned.ticks,
+  [0, 50000, 100000, 150000, 200000],
+);
+check('an aligned second axis ends on its own last row', aligned.domain, {
   min: 0,
   max: 200000,
 });
@@ -182,20 +270,45 @@ check('an exact second axis ends on the data', exact.domain, {
   min: 0,
   max: 189900,
 });
-check('an exact second axis divides the same rows', exact.ticks, [
-  0, 47475, 94950, 142425, 189900,
-]);
+check(
+  'an exact second axis divides the same rows',
+  exact.ticks,
+  [0, 47475, 94950, 142425, 189900],
+);
 
-const independent = secondaryAxis(PRIMARY_TICKS, [[189900]], 5, 'independent');
-check('an independent second axis shares no rows', independent.aligned, false);
-check('an independent second axis nices its own domain', independent.domain, {
+// A pinned ceiling replaces what the data reported, so two plots read against each other keep the
+// same second axis when one of them loses its tallest reading.
+const pinned = secondaryAxis(PRIMARY_TICKS, [[189900]], 5, 'dual-grid', 250000);
+check('a pinned second ceiling wins over the data', pinned.domain.max, 250000);
+const pinnedBelow = secondaryAxis(
+  PRIMARY_TICKS,
+  [[189900]],
+  5,
+  'dual-grid',
+  100000,
+);
+check(
+  'a pinned ceiling under the data still wins',
+  pinnedBelow.domain.max,
+  100000,
+);
+const unpinned = secondaryAxis(PRIMARY_TICKS, [[189900]], 5, 'dual-grid', null);
+check(
+  'no pin leaves the domain where the data put it',
+  unpinned.domain.max,
+  secondaryAxis(PRIMARY_TICKS, [[189900]], 5, 'dual-grid').domain.max,
+);
+
+const dualGrid = secondaryAxis(PRIMARY_TICKS, [[189900]], 5, 'dual-grid');
+check('a dual-grid second axis shares no rows', dualGrid.aligned, false);
+check('a dual-grid second axis nices its own domain', dualGrid.domain, {
   min: 0,
   max: 200000,
 });
 
 check(
   'a stacked second axis is niced on its own too',
-  secondaryAxis(PRIMARY_TICKS, [[189900]], 5, 'stacked').aligned,
+  secondaryAxis(PRIMARY_TICKS, [[189900]], 5, 'split').aligned,
   false,
 );
 
@@ -216,30 +329,38 @@ check(
   signedSecond.ticks,
   [-150, 0, 150, 300, 450],
 );
-check('a signed second axis reaches both of its own ends', signedSecond.domain, {
-  min: -150,
-  max: 450,
-});
+check(
+  'a signed second axis reaches both of its own ends',
+  signedSecond.domain,
+  {
+    min: -150,
+    max: 450,
+  },
+);
 
 check(
   'rows with no zero of their own cannot be shared',
-  secondaryAxis([10, 20, 30], [[500]], 3, 'rounded').aligned,
+  secondaryAxis([10, 20, 30], [[500]], 3, 'aligned').aligned,
   false,
 );
 check(
   'a single row cannot be shared',
-  secondaryAxis([0], [[500]], 3, 'rounded').aligned,
+  secondaryAxis([0], [[500]], 3, 'aligned').aligned,
   false,
 );
 check(
   'a positive reading with no rows above zero falls back',
-  secondaryAxis([-30, -20, -10, 0], [[500]], 4, 'rounded').aligned,
+  secondaryAxis([-30, -20, -10, 0], [[500]], 4, 'aligned').aligned,
   false,
 );
-check('nothing reported leaves a degenerate second axis', secondaryAxis(PRIMARY_TICKS, [], 5, 'rounded').domain, {
-  min: 0,
-  max: 0,
-});
+check(
+  'nothing reported leaves a degenerate second axis',
+  secondaryAxis(PRIMARY_TICKS, [], 5, 'aligned').domain,
+  {
+    min: 0,
+    max: 0,
+  },
+);
 check(
   'a non-finite reading never reaches the second axis domain',
   secondaryAxis(PRIMARY_TICKS, [[Number.NaN, 120]], 5, 'exact').domain.max,
@@ -257,20 +378,70 @@ check(
 // so `[0][1]` is the first series' second category.
 check(
   'grouped puts each series in its own slot',
-  stackOffsets([[10, 20], [30, 40]], 'grouped'),
-  [[{ from: 0, to: 10 }, { from: 0, to: 20 }], [{ from: 0, to: 30 }, { from: 0, to: 40 }]],
+  stackOffsets(
+    [
+      [10, 20],
+      [30, 40],
+    ],
+    'grouped',
+  ),
+  [
+    [
+      { from: 0, to: 10 },
+      { from: 0, to: 20 },
+    ],
+    [
+      { from: 0, to: 30 },
+      { from: 0, to: 40 },
+    ],
+  ],
 );
 check(
   'stacked accumulates',
-  stackOffsets([[10, 20], [30, 40]], 'stacked'),
-  [[{ from: 0, to: 10 }, { from: 0, to: 20 }], [{ from: 10, to: 40 }, { from: 20, to: 60 }]],
+  stackOffsets(
+    [
+      [10, 20],
+      [30, 40],
+    ],
+    'stacked',
+  ),
+  [
+    [
+      { from: 0, to: 10 },
+      { from: 0, to: 20 },
+    ],
+    [
+      { from: 10, to: 40 },
+      { from: 20, to: 60 },
+    ],
+  ],
 );
 check(
   'normalized fills the axis',
-  stackOffsets([[10, 20], [30, 40]], 'normalized'),
-  [[{ from: 0, to: 0.25 }, { from: 0, to: 1 / 3 }], [{ from: 0.25, to: 1 }, { from: 1 / 3, to: 1 }]],
+  stackOffsets(
+    [
+      [10, 20],
+      [30, 40],
+    ],
+    'normalized',
+  ),
+  [
+    [
+      { from: 0, to: 0.25 },
+      { from: 0, to: 1 / 3 },
+    ],
+    [
+      { from: 0.25, to: 1 },
+      { from: 1 / 3, to: 1 },
+    ],
+  ],
 );
-check('none is grouped with one slot', stackOffsets([[10, 20]], 'none'), [[{ from: 0, to: 10 }, { from: 0, to: 20 }]]);
+check('none is grouped with one slot', stackOffsets([[10, 20]], 'none'), [
+  [
+    { from: 0, to: 10 },
+    { from: 0, to: 20 },
+  ],
+]);
 check('nothing to stack stacks to nothing', stackOffsets([], 'stacked'), []);
 check(
   'a non-finite reading contributes nothing and shifts nothing',
@@ -298,7 +469,71 @@ check(
 check(
   'a ragged series stacks only the categories it reaches',
   stackOffsets([[10, 20], [30]], 'stacked'),
-  [[{ from: 0, to: 10 }, { from: 0, to: 20 }], [{ from: 10, to: 40 }]],
+  [
+    [
+      { from: 0, to: 10 },
+      { from: 0, to: 20 },
+    ],
+    [{ from: 10, to: 40 }],
+  ],
 );
+
+// An annotation sits above its reading, and below it only where there is no room: a peak lands at
+// the top of the plot, which is exactly where a label clamped upward covers its own marker.
+const high = annotationMarks([{ key: 'a', label: 'Peak', x: 320, y: 4 }], 640);
+check('a label with no room above drops below the reading', high[0].y, 16);
+const room = annotationMarks(
+  [{ key: 'b', label: 'Launch', x: 320, y: 200 }],
+  640,
+);
+check('a label with room sits above the reading', room[0].y, 188);
+
+// A centred label at the first or last category hangs half outside the viewBox and is clipped.
+const left = annotationMarks(
+  [{ key: 'c', label: 'First', x: 10, y: 100 }],
+  640,
+);
+check(
+  'a label near the left edge anchors to its start',
+  left[0].anchor,
+  'start',
+);
+const right = annotationMarks(
+  [{ key: 'd', label: 'Last', x: 630, y: 100 }],
+  640,
+);
+check('a label near the right edge anchors to its end', right[0].anchor, 'end');
+const middle = annotationMarks(
+  [{ key: 'e', label: 'Mid', x: 320, y: 100 }],
+  640,
+);
+check('a label away from both edges centres', middle[0].anchor, 'middle');
+
+// The half band at each end belongs to the first and last category: a reader aiming at the edge
+// means the edge category, not nothing.
+check(
+  'a pointer at the left edge is the first category',
+  categoryAt(40, 40, 600, 6),
+  0,
+);
+check(
+  'a pointer at the right edge is the last category',
+  categoryAt(640, 40, 600, 6),
+  5,
+);
+check(
+  'a pointer mid-plot is the middle category',
+  categoryAt(340, 40, 600, 6),
+  3,
+);
+check('a pointer left of the plot is nowhere', categoryAt(10, 40, 600, 6), -1);
+check(
+  'a pointer right of the plot is nowhere',
+  categoryAt(700, 40, 600, 6),
+  -1,
+);
+check('no categories means nowhere', categoryAt(340, 40, 600, 0), -1);
+check('a zero-width plot means nowhere', categoryAt(340, 40, 0, 6), -1);
+check('a NaN pointer means nowhere', categoryAt(NaN, 40, 600, 6), -1);
 
 finish('chart-math');

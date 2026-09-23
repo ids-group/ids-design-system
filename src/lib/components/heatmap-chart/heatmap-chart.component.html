@@ -1,0 +1,146 @@
+<figure class="heatmap-chart">
+  @if (caption()) {
+    <figcaption>
+      {{ caption() }}
+    </figcaption>
+  }
+
+  @if (error()) {
+    <p
+      class="empty is-error"
+      role="status">
+      {{ errorTextResolved() }}
+    </p>
+  } @else if (loading()) {
+    <div
+      class="skeleton"
+      aria-hidden="true">
+      @for (placeholder of skeletonRows(); track $index) {
+        <ds-skeleton height="var(--_heatmap-chart-cell-size)" />
+      }
+    </div>
+  } @else if (isEmpty()) {
+    <p class="empty">
+      {{ emptyTextResolved() }}
+    </p>
+  } @else {
+    <div
+      class="grid-scroll"
+      [attr.role]="interactive() ? 'group' : 'img'"
+      [attr.aria-label]="accessibleName()"
+      [dsChartTooltip]="tooltipContext()"
+      [dsChartTooltipOrigin]="activeMark.origin()">
+      <table
+        class="grid"
+        [class.dims-others]="dimOthers()">
+        <thead>
+          <tr>
+            <td class="corner"></td>
+
+            @for (column of columns(); track column) {
+              <th
+                class="column-label"
+                scope="col">
+                {{ column }}
+              </th>
+            }
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (entry of rows(); track entry.key; let rowIndex = $index) {
+            <tr>
+              <th
+                class="row-label"
+                scope="row">
+                {{ entry.row.label }}
+              </th>
+
+              @for (cell of entry.cells; track cell.key) {
+                <td
+                  class="cell-slot"
+                  (pointerenter)="
+                    activeMark.enter(
+                      cellIndex(rowIndex, cell.columnIndex),
+                      $event
+                    )
+                  ">
+                  <!-- A button only where a click means something: an unmeasured cell has no
+                       reading to drill into, and a grid of dead buttons is a tab trap. -->
+                  @if (interactive() && cell.value !== null) {
+                    <button
+                      class="cell interactive"
+                      type="button"
+                      [style.background]="cell.color"
+                      [attr.aria-label]="cell.accessibleName"
+                      (click)="onCellClick(entry, cell, rowIndex)"
+                      (pointerenter)="
+                        activeMark.enter(
+                          cellIndex(rowIndex, cell.columnIndex),
+                          $event
+                        )
+                      "
+                      (focus)="
+                        activeMark.enter(
+                          cellIndex(rowIndex, cell.columnIndex),
+                          $event
+                        )
+                      ">
+                      @if (showValues()) {
+                        <span class="cell-value">
+                          {{ cell.formattedValue }}
+                        </span>
+                      }
+                    </button>
+                  } @else {
+                    <span
+                      class="cell"
+                      role="img"
+                      [class.is-missing]="cell.value === null"
+                      [style.background]="cell.color"
+                      [attr.aria-label]="cell.accessibleName">
+                      @if (showValues() && cell.value !== null) {
+                        <span class="cell-value">
+                          {{ cell.formattedValue }}
+                        </span>
+                      }
+                    </span>
+                  }
+                </td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="scale">
+      <span class="scale-label">
+        {{ scaleMinLabel() }}
+      </span>
+
+      <span
+        class="scale-ramp"
+        aria-hidden="true">
+        @for (step of scaleSteps(); track step) {
+          <span
+            class="scale-step"
+            [style.background]="step">
+          </span>
+        }
+      </span>
+
+      <span class="scale-label">
+        {{ scaleMaxLabel() }}
+      </span>
+    </div>
+
+    <!-- Always present, never a `dataTable` choice: colour is the only channel carrying magnitude
+         on the grid, so the numbers have to be reachable somewhere that is not a colour. -->
+    <ds-chart-data-table
+      rowHeader
+      [columns]="tableColumns()"
+      [rows]="tableRows()"
+      [caption]="caption()" />
+  }
+</figure>

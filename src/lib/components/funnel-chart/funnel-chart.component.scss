@@ -20,6 +20,12 @@
   --_funnel-chart-focus-color: var(--ds-funnel-chart-focus-color, var(--focus-ring-color));
   --_funnel-chart-focus-width: var(--ds-funnel-chart-focus-width, var(--focus-ring-width));
 
+  /* The shared mixins draw the ring from `--focus-ring-*` and `--ds-chart-focus-ring-color`, so
+     the two hooks above reach nothing without this. */
+  --ds-chart-focus-ring-color: var(--_funnel-chart-focus-color);
+  --focus-ring-color: var(--_funnel-chart-focus-color);
+  --focus-ring-width: var(--_funnel-chart-focus-width);
+
   // Contains the absolutely-positioned caption below; without it the caption resolves against the
   // initial containing block and can grow the consuming page's root scroller.
   position: relative;
@@ -32,12 +38,6 @@
 
 .visually-hidden {
   @include visually-hidden.visually-hidden;
-}
-
-figcaption {
-  margin-block-end: var(--space-3);
-  color: var(--text-primary);
-  font-weight: 600;
 }
 
 @include chart-frame.message-box(
@@ -120,9 +120,6 @@ svg {
   border-radius: var(--radius-sm);
 }
 
-.empty.is-error {
-  color: var(--error);
-}
 
 .shape {
   @include chart-interactive.fades('.stage', ', fill var(--ds-motion-chart-mark-duration) var(--ds-motion-chart-mark-easing)');

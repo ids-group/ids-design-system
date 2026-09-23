@@ -10,8 +10,8 @@
   --_input-bg-color:             var(--ds-input-bg-color,             var(--surface-default));
   --_input-border:         var(--ds-input-border,         var(--border-default));
   --_input-radius:         var(--ds-input-radius,         var(--ds-radius-control));
-  --_input-pad-y:          var(--ds-input-pad-y,          var(--space-3));
-  --_input-pad-x:          var(--ds-input-pad-x,          var(--field-pad-x));
+  --_input-padding-y:          var(--ds-input-padding-y,          var(--space-3));
+  --_input-padding-x:          var(--ds-input-padding-x,          var(--field-pad-x));
   --_input-text-color:             var(--ds-input-text-color,             var(--text-primary));
   --_input-placeholder:    var(--ds-input-placeholder,    var(--text-tertiary));
   --_input-border-hover:   var(--ds-input-border-hover,   var(--border-strong));
@@ -53,7 +53,7 @@
     background-color: var(--_input-bg-color);
     border: var(--border-width-default) solid var(--_input-border);
     border-radius: var(--_input-radius);
-    padding: 0 var(--_input-pad-x);
+    padding: 0 var(--_input-padding-x);
     height: auto;
     transition:
       border-color var(--duration-fast) var(--ease-standard),
@@ -72,7 +72,7 @@
       font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
       color: var(--_input-text-color);
       min-height: var(--field-textarea-rows-min, 60px);
-      padding: var(--_input-pad-y) 0;
+      padding: var(--_input-padding-y) 0;
 
       &::placeholder {
         color: var(--_input-placeholder);
@@ -143,7 +143,7 @@
    control's own padding-block through the shorthand. One rule per size, because a
    single pin out-ranks the size variants and flattens all three to md. */
 .field .control textarea {
-  padding-block: var(--_input-pad-y);
+  padding-block: var(--_input-padding-y);
 }
 
 .field.sm .control textarea {

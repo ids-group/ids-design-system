@@ -7,3 +7,7 @@ Inputs: `collapsed: boolean = false`, `brand: string | null = null` (renders a l
 Content: default slot for groups/items + custom brand/footer rows
 **The brand row leads home only if you say so.** `brandRoute` turns the mark + wordmark into one link; unset, the row stays a plain block. A logo that goes nowhere should not be a link, and whether a mark is a way home is an app's decision, not the DS's — so this is opt-in, like every other new capability here. The link announces itself as `"<brand>, home"` because a wordmark alone does not say where it goes; `brandLinkLabel` overrides that. Router targets only, and `RouterLink` is instantiated only inside the `@if`, so an app with no router provided still renders the sidenav. A collapse toggle projected into the row stays OUTSIDE the link — one control never nests inside another.
 Tokens: `--ds-sidenav-bg-color`, `--ds-sidenav-border`, `--ds-sidenav-width`, `--ds-sidenav-width-collapsed`, `--ds-sidenav-mark-bg-color`, `--ds-sidenav-mark-label-color`
+
+<!-- inputs:ds-sidenav -->
+All inputs: `collapsed: boolean = false`, `rail: boolean = true`, `brand: string | null = null`, `logoLetter: string | null = null`, `brandRoute: string | readonly unknown[] | null = null`, `brandLinkLabel: string | null = null`
+<!-- /inputs -->

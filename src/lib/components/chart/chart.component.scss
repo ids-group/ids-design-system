@@ -10,12 +10,6 @@
   margin: 0;
 }
 
-figcaption {
-  margin-block-end: var(--space-3);
-  color: var(--text-primary);
-  font-weight: 600;
-}
-
 /* `--_chart-view-height` is set on the host in px, from the same TS geometry the canvas is drawn
    with: the plot's height is an SVG coordinate, so CSS cannot be its source, and a message box
    that does not match it jumps the card when the data lands. */
@@ -54,8 +48,41 @@ figcaption {
   font-size: var(--_chart-axis-font-size);
 }
 
+// A rotated label hangs from the axis by its END, so `dominant-baseline` has to stop centring it
+// on a line it no longer sits on.
+.category-label.is-rotated {
+  dominant-baseline: middle;
+}
+
+/* Names the unit a set of ticks is counting. Bolder than the ticks so it reads as a heading for
+   them rather than as one more reading, and it takes the axis's own colour where there are two. */
+.axis-title {
+  fill: var(--_chart-axis-label-color);
+  font-size: var(--_chart-axis-font-size);
+  font-weight: var(--font-weight-bold);
+}
+
 .axis-label {
   dominant-baseline: middle;
 }
 
 @include chart-frame.forced-colors;
+
+.cursor.cursor-in {
+  animation: ds-chart-mark-fade-in var(--ds-motion-chart-state-duration)
+    var(--ds-motion-chart-state-easing) both;
+}
+
+.cursor.cursor-out {
+  animation: ds-chart-mark-exit var(--ds-motion-chart-state-duration)
+    var(--ds-motion-chart-state-easing) both;
+}
+
+.category-band {
+  fill: var(--ds-chart-hover-bg-color);
+}
+
+.cursor-line {
+  stroke: var(--ds-chart-cursor-line-color);
+  stroke-width: 1;
+}

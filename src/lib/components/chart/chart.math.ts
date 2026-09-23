@@ -242,9 +242,9 @@ export interface SecondaryAxis {
 
 /** The second value axis, as the four modes define it.
  *
- *  `'rounded'` and `'exact'` hang the second scale on the first's tick rows and differ only in the
- *  step: `'rounded'` snaps it up to a round number and overshoots the data, `'exact'` takes the
- *  step the data needs and lands on it. `'independent'` and `'stacked'` nice the second domain on
+ *  `'aligned'` and `'exact'` hang the second scale on the first's tick rows and differ only in the
+ *  step: `'aligned'` snaps it up to a round number and overshoots the data, `'exact'` takes the
+ *  step the data needs and lands on it. `'dual-grid'` and `'split'` nice the second domain on
  *  its own - stacked plots sit one above the other, so there is nothing to align.
  *
  *  Falls back to an independent scale wherever alignment is not available: fewer than two rows, no
@@ -256,6 +256,7 @@ export function secondaryAxis(
   reported: Iterable<readonly number[]>,
   tickCount: number,
   mode: ChartAxisMode,
+  pinnedMax: number | null = null,
 ): SecondaryAxis {
   let minimum = 0;
   let maximum = 0;
@@ -267,13 +268,16 @@ export function secondaryAxis(
       maximum,
     );
   }
+  if (pinnedMax !== null && Number.isFinite(pinnedMax)) {
+    maximum = pinnedMax;
+  }
   const independent = (): SecondaryAxis => ({
     domain: niceDomain(minimum, maximum, tickCount),
     ticks: tickValues(minimum, maximum, tickCount),
     aligned: false,
   });
 
-  if (mode !== 'rounded' && mode !== 'exact') {
+  if (mode !== 'aligned' && mode !== 'exact') {
     return independent();
   }
   const zero = zeroRow(primaryTicks);
@@ -289,7 +293,7 @@ export function secondaryAxis(
     rowsAbove > 0 ? maximum / rowsAbove : 0,
     rowsBelow > 0 ? -minimum / rowsBelow : 0,
   );
-  const step = mode === 'rounded' ? roundStepAtLeast(needed) : needed;
+  const step = mode === 'aligned' ? roundStepAtLeast(needed) : needed;
   if (!Number.isFinite(step) || step <= 0) {
     return {
       domain: { min: 0, max: 0 },
@@ -311,15 +315,6 @@ function roundTick(value: number): number {
   return Number(value.toFixed(6));
 }
 
-/** Where one series' segment starts and ends on the value axis, in the axis's own unit - or in
- *  shares of the category total under `'normalized'`.
- *
- *  @internal */
-export interface ChartStackOffset {
-  readonly from: number;
-  readonly to: number;
-}
-
 /** Every segment's span on the value axis, series-major: `offsets[series][category]`.
  *
  *  `'none'` and `'grouped'` give every series the same span it would have alone - the two differ in
@@ -329,8 +324,7 @@ export interface ChartStackOffset {
  *
  *  `'normalized'` divides a running SUM rather than each share in turn: adding 20/60 to 40/60
  *  lands on 0.9999999999999999, which draws a category that visibly falls short of full.
- *
- *  @internal */
+ */
 export function stackOffsets(
   series: readonly (readonly number[])[],
   mode: ChartStackMode,
@@ -368,4 +362,82 @@ export function stackOffsets(
         : { from: 0, to: 0 };
     }),
   );
+}
+
+/** A label pinned to one reading, so the point it names is legible with no pointer.
+ *
+ *  @internal */
+export interface ChartAnnotationMark {
+  readonly key: string;
+  readonly label: string;
+  readonly x: number;
+  readonly y: number;
+  readonly anchor: 'start' | 'middle' | 'end';
+}
+
+/** View units between a reading and the label above it, and the margin inside which a label
+ *  anchors to its own edge instead of centring.
+ *
+ *  @internal */
+const ANNOTATION_GAP = 12;
+/** @internal */
+const ANNOTATION_EDGE_GUARD = 48;
+
+/** Places a label against each reading it names.
+ *
+ *  @internal */
+export function annotationMarks(
+  readings: readonly { key: string; label: string; x: number; y: number }[],
+  plotWidth: number,
+): readonly ChartAnnotationMark[] {
+  return readings.map((reading) => ({
+    key: reading.key,
+    label: reading.label,
+    x: reading.x,
+    // Above the reading, and below it where there is no room - a peak sits at the top of the
+    // plot, which is exactly where a label clamped upward lands on its own marker.
+    y:
+      reading.y - ANNOTATION_GAP >= ANNOTATION_GAP
+        ? reading.y - ANNOTATION_GAP
+        : reading.y + ANNOTATION_GAP,
+    // Anchored away from the plot edges: a centred label at the first or last category hangs
+    // half outside the viewBox and is clipped rather than merely tight.
+    anchor:
+      reading.x < ANNOTATION_EDGE_GUARD
+        ? 'start'
+        : reading.x > plotWidth - ANNOTATION_EDGE_GUARD
+          ? 'end'
+          : 'middle',
+  }));
+}
+
+/** Where one series' segment starts and ends on the value axis, in the axis's own unit - or in
+ *  shares of the category total under `'normalized'`.
+ */
+export interface ChartStackOffset {
+  readonly from: number;
+  readonly to: number;
+}
+
+/** Which category a pointer at `x` is over, or `-1` outside the plot. Bands are equal and abut,
+ *  so the reading is a division rather than a search - and the half band at each end belongs to
+ *  the first and last category, which is where a reader aiming at the edge means to be.
+ *
+ *  @internal */
+export function categoryAt(
+  x: number,
+  plotLeft: number,
+  plotWidth: number,
+  categoryCount: number,
+): number {
+  if (categoryCount <= 0 || plotWidth <= 0 || !Number.isFinite(x)) {
+    return -1;
+  }
+  const offset = x - plotLeft;
+  if (offset < 0 || offset > plotWidth) {
+    return -1;
+  }
+  const band = plotWidth / categoryCount;
+
+  return Math.min(categoryCount - 1, Math.floor(offset / band));
 }

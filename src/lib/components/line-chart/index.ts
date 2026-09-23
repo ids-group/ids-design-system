@@ -1,8 +1,6 @@
 export { LineChartComponent } from './line-chart.component';
 export type {
   LineChartAnnotation,
-  LineChartAxisMode,
-  LineChartGaps,
-  LineChartPoint,
+  LineChartReading,
   LineChartSeries,
 } from './line-chart.types';

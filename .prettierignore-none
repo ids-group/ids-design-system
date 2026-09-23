@@ -1,2 +1,0 @@
-# Deliberately empty. `format:records` points prettier here so the two record trees, which
-# .prettierignore keeps out of `fix:all`, can still be formatted when someone asks for it.

@@ -30,7 +30,33 @@
         class="canvas"
         preserveAspectRatio="xMidYMid meet"
         [style.block-size.px]="viewHeight()"
-        [attr.viewBox]="viewBox()">
+        [attr.viewBox]="viewBox()"
+        (pointermove)="onPlotPointer($event)"
+        (pointerdown)="onPlotPointer($event)"
+        (pointerleave)="clearCursor()">
+        @if (cursorBand(); as band) {
+          <g
+            class="cursor"
+            aria-hidden="true"
+            animate.enter="cursor-in"
+            animate.leave="cursor-out">
+            <rect
+              #cursorBandEl
+              class="category-band"
+              [attr.x]="band.x"
+              [attr.y]="band.top"
+              [attr.width]="band.width"
+              [attr.height]="band.bottom - band.top" />
+
+            <line
+              class="cursor-line"
+              [attr.x1]="band.x + band.width / 2"
+              [attr.x2]="band.x + band.width / 2"
+              [attr.y1]="band.top"
+              [attr.y2]="band.bottom" />
+          </g>
+        }
+
         <!-- Hidden as a group rather than on the svg: a projected mark may be focusable, and an
              aria-hidden ancestor would leave it reachable by Tab and invisible to a reader. -->
         <g
@@ -108,6 +134,40 @@
         <g
           class="labels"
           aria-hidden="true">
+          @if (axisLabel()) {
+            <text
+              class="axis-title"
+              text-anchor="middle"
+              [style.fill]="axisLabelFill()"
+              [attr.transform]="
+                'rotate(-90 12 ' +
+                (plot().top + plot().height / 2) +
+                ') translate(0 0)'
+              "
+              [attr.x]="12"
+              [attr.y]="plot().top + plot().height / 2">
+              {{ axisLabel() }}
+            </text>
+          }
+
+          @if (secondaryAxisLabel() && hasSecondaryAxis()) {
+            <text
+              class="axis-title"
+              text-anchor="middle"
+              [style.fill]="secondaryAxisLabelFill()"
+              [attr.transform]="
+                'rotate(90 ' +
+                (viewWidth() - 12) +
+                ' ' +
+                (plot().top + plot().height / 2) +
+                ')'
+              "
+              [attr.x]="viewWidth() - 12"
+              [attr.y]="plot().top + plot().height / 2">
+              {{ secondaryAxisLabel() }}
+            </text>
+          }
+
           @for (tick of ticks(); track tick.value) {
             <text
               class="axis-label is-primary"
@@ -130,19 +190,25 @@
             </text>
           }
 
-          @for (label of categoryLabels(); track $index) {
+          @for (label of categoryLabels(); track label.index) {
             <text
               class="category-label"
-              text-anchor="middle"
+              [class.is-rotated]="categoryLabelsRotated()"
+              [attr.text-anchor]="categoryLabelsRotated() ? 'end' : 'middle'"
               [attr.x]="label.x"
-              [attr.y]="categoryLabelY()">
+              [attr.y]="categoryLabelY()"
+              [attr.transform]="
+                categoryLabelsRotated()
+                  ? 'rotate(-45 ' + label.x + ' ' + categoryLabelY() + ')'
+                  : null
+              ">
               {{ label.text }}
             </text>
           }
 
           <!-- Over the marks, where `.marks` is under them: an annotation's LINE is furniture and
                belongs below the readings, its NAME has to survive a column drawn through it. -->
-          <ng-content select="[dsReferenceLabel]" />
+          <ng-content select="[dsReferenceLabel], [dsSeriesAnnotation]" />
         </g>
       </svg>
     </div>

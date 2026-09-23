@@ -23,7 +23,7 @@
   --_page-header-crumb-text-color: var(--ds-page-header-crumb-text-color, var(--text-tertiary));
   --_page-header-crumb-text-color-hover: var(--ds-page-header-crumb-text-color-hover, var(--accent));
   --_page-header-divider:      var(--ds-page-header-divider,      var(--border-divider));
-  --_page-header-title-fs:     var(--ds-page-header-title-fs,     var(--font-size-h3));
+  --_page-header-title-font-size:     var(--ds-page-header-title-font-size,     var(--font-size-h3));
   --_page-header-title-gap:    var(--ds-page-header-title-gap,    var(--space-1-5));
 
   display: block;
@@ -81,7 +81,7 @@
   }
 
   .title {
-    font: var(--font-weight-extrabold) var(--_page-header-title-fs) / var(--line-height-tight) var(--font-display);
+    font: var(--font-weight-extrabold) var(--_page-header-title-font-size) / var(--line-height-tight) var(--font-display);
     color: var(--_page-header-title-text-color);
     margin: 0;
     letter-spacing: var(--letter-spacing-tight);
@@ -176,7 +176,7 @@
   }
 
   &.compact {
-    --_page-header-title-fs: var(--ds-page-header-title-fs, var(--font-size-h4));
+    --_page-header-title-font-size: var(--ds-page-header-title-font-size, var(--font-size-h4));
 
     gap: var(--space-2);
     padding-bottom: var(--space-3);

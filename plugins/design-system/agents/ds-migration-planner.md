@@ -33,7 +33,7 @@ every item that lacks a REQUIRED field, ADD that field from what the item's own 
 rewrite: you are not changing the migration, you are stating where to look for it (and, for
 `action`, lifting the imperative out of the note so the applier executes a field, not a paragraph). Read the note for
 the artifact it describes (a store, a query, a stylesheet, a template) and for the shapes it quotes;
-a note that says "a server query built as `orderBy: sortKey()` must skip the clause when `sortDir()`
+a note that says "a server query built as `orderBy: sortKey()` must skip the clause when `sortDirection()`
 is null" is handing you both `surface: "typescript"` and two `detect` strings.
 A top-level `deleteList` is DATA, not something to reconstruct: every published manifest carries
 it as `{ id, surface, find, why, replaceWith }` rows — pass them through verbatim (the
@@ -45,7 +45,7 @@ shape the sentence names, and marking each derived row's `why` as planner-derive
 **A defect claim about the DS side needs evidence at BOTH tag boundaries.** Whenever you assert —
 in an appended item's `note`, a validation verdict, or a proposed `supersedes` — that a symbol,
 token or mixin was REMOVED, voided or reversed, check it at the previous tag AND at `v<V>` in the
-DS sources (the orchestrator's checkout, or `git show <tag>:<file>`) and cite file:line at each
+two DS source trees the orchestrator extracted and passed you (one per tag) and cite file:line at each
 boundary. Absence in ONE file is not removal: a token can leave the file that painted with it and
 stay declared in the token sheet with other components still reading it — the correct claim there
 is "silent no-op for X, still load-bearing for Y", and telling a consumer to delete the override
@@ -178,7 +178,7 @@ List every alias worth searching. If the block's wording leaves an exact identif
 ambiguous, read the real sources instead of inventing from memory: OLD identifiers → the consumer's
 installed package (`node_modules/@ids-group-ltd/ids-design-system/` — `types/*.d.ts`, `themes/`,
 `styles/`; at plan time it holds the version being migrated FROM); NEW identifiers → the DS sources
-checkout at the release tag, when the orchestrator provided its path. `id` = a stable, unique kebab slug (the join key the finder,
+tree extracted at the release tag, when the orchestrator provided its path. `id` = a stable, unique kebab slug (the join key the finder,
 applier and re-checker match on).
 
 ## Output

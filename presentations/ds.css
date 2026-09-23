@@ -742,6 +742,14 @@
   --chart-ramp-6: hsl( 8deg 75% 58%);
   --chart-ramp-7: hsl( 8deg 79% 64%);
   --chart-ramp-8: hsl( 8deg 84% 70%);
+  --chart-heat-1: hsl( 8deg 68% 20%);
+  --chart-heat-2: hsl( 8deg 74% 29%);
+  --chart-heat-3: hsl( 8deg 78% 38%);
+  --chart-heat-4: hsl( 8deg 78% 47%);
+  --chart-heat-5: hsl( 8deg 76% 56%);
+  --chart-heat-6: hsl( 8deg 73% 65%);
+  --chart-heat-7: hsl( 8deg 67% 74%);
+  --chart-heat-8: hsl( 8deg 60% 84%);
   --chart-sequential-1: var(--blue-800);
   --chart-sequential-2: var(--blue-700);
   --chart-sequential-3: var(--blue-600);
@@ -899,6 +907,12 @@
   --ds-motion-chart-state-easing: var(--ease-standard);
   --ds-motion-chart-mark-duration: var(--duration-base);
   --ds-motion-chart-mark-easing: var(--ease-decelerate);
+  /* A mark arriving and a mark leaving are separate roles because the enter waits out the exit:
+     the two durations are added, and one role could not carry both halves of that sum. */
+  --ds-motion-chart-mark-enter-duration: var(--duration-base);
+  --ds-motion-chart-mark-enter-easing: var(--ease-decelerate);
+  --ds-motion-chart-mark-exit-duration: var(--duration-fast);
+  --ds-motion-chart-mark-exit-easing: var(--ease-accelerate);
   --opacity-disabled: 0.5;
   --opacity-text-disabled: 0.38; /* WCAG-derived */
   --opacity-scrim: 0.55;
@@ -977,10 +991,8 @@
   /* Two focus families: fields get the soft halo, interactive controls and nav
      the crisp ring. Components default their own --ds-*-focus-shadow to these,
      so a consumer can retune a whole family or a single component. */
-  /* The flat tokens, NOT the --accent-focus-* aliases — see docs/todo.md, "zone colour and
-     data-focus shape cannot both reach one role". A `var()` inside a custom property is
-     substituted where it is DECLARED, so a ds-color zone can never reach what is written here;
-     the switch wins because it is the documented one. */
+  /* The flat tokens, NOT the --accent-focus-* aliases. A `var()` inside a custom property is
+     substituted where it is DECLARED, so a ds-color zone can never reach what is written here. */
   --ds-field-focus-shadow: var(--focus-field);
   --ds-field-focus-shadow-error: var(--focus-field-error);
   --ds-control-focus-shadow: var(--focus-ring);
@@ -1028,7 +1040,7 @@
   --spinner-md: 16px;
   --spinner-lg: 24px;
   --spinner-bw: var(--border-width-strong);
-  --progress-h: 6px;
+  --bar-h: 6px;
   --stepper-node-size: 28px; /* === --hit-sm */
   --stepper-bar-w: 56px;
   --stepper-bar-h: 2px;
@@ -1272,7 +1284,7 @@
   --chart-categorical-3: hsl(222deg 70% 62%); /* blue */
   --chart-categorical-4: hsl(266deg 62% 66%); /* violet */
   --chart-categorical-5: hsl(330deg 70% 62%); /* pink */
-  --chart-categorical-6: hsl(152deg 58% 41%); /* emerald */
+  --chart-categorical-6: hsl(148deg 58% 41%); /* emerald */
   --chart-categorical-7: hsl(300deg 62% 60%); /* orchid */
   --chart-categorical-8: hsl(222deg 14% 29%); /* slate */
   /* SINGLE SERIES — every row of ONE series, plus the accent that marks the
@@ -1280,13 +1292,19 @@
      here: those separate series from each other, not rows within one. */
   --chart-series-default: hsl(222deg 16% 42%);
   --chart-series-accent: var(--chart-categorical-2);
+  /* A waterfall's up and down are NOT success and failure - a cost rising is a rise and a bad
+     one - so the pair points at the palette's own two lead hues rather than at --success and
+     --error. The sign is carried by the label and the accessible name as well, because a hue
+     cannot say which direction is the welcome one. */
+  --chart-positive: var(--chart-categorical-2);
+  --chart-negative: var(--chart-categorical-1);
   /* RAMP — one hue, light → deep, for the ordered stages of a single
      quantity. Shares the lead hue so a funnel reads as one object rather
-     than as eight unrelated categories. Contrast on white is NOT held at
-     3:1 across the ramp: a sequential scale that clears the floor at every
-     step has to compress into its dark half, and then consecutive stages
-     stop being separable from each other, which is the distinction the
-     ramp exists to carry. */
+     than as eight unrelated categories. It stays in the middle of the
+     lightness range, 76% to 51%: a funnel's stages are a shape to read at
+     a glance, and a stage at either extreme reads as a different object
+     rather than as the next step. A scale that needs magnitude read from
+     the step between two colours takes --chart-heat-* instead. */
   --chart-ramp-1: hsl( 8deg 78% 76%);
   --chart-ramp-2: hsl( 8deg 78% 72%);
   --chart-ramp-3: hsl( 8deg 78% 69%);
@@ -1295,6 +1313,20 @@
   --chart-ramp-6: hsl( 8deg 77% 58%);
   --chart-ramp-7: hsl( 8deg 75% 55%);
   --chart-ramp-8: hsl( 8deg 72% 51%);
+  /* HEAT — the same hue across the FULL lightness range, 95% to 31%, for a
+     grid where magnitude is read from the step between two cells and
+     nothing else: adjacent dE 6.9–10.6, first to last 55.0, measured
+     2026-09-19 in OKLab against the ramp's 2.1–3.9 and 20.7. Contrast on
+     white runs 1.14:1 to 9.07:1, so a label over a cell is chosen against
+     that cell's own end of the scale, never once for the whole of it. */
+  --chart-heat-1: hsl( 8deg 60% 95%);
+  --chart-heat-2: hsl( 8deg 67% 88%);
+  --chart-heat-3: hsl( 8deg 73% 80%);
+  --chart-heat-4: hsl( 8deg 76% 71%);
+  --chart-heat-5: hsl( 8deg 78% 61%);
+  --chart-heat-6: hsl( 8deg 78% 51%);
+  --chart-heat-7: hsl( 8deg 74% 41%);
+  --chart-heat-8: hsl( 8deg 68% 31%);
   /* SEQUENTIAL — single-hue, light → dark */
   --chart-sequential-1: var(--blue-100);
   --chart-sequential-2: var(--blue-200);
@@ -1326,11 +1358,15 @@
   /* AXIS / GRID / LEGEND */
   --chart-axis-line-color: var(--neutral-300);
   --chart-axis-label-color: var(--text-tertiary);
-  --chart-axis-title-color: var(--text-secondary);
   --chart-grid-line-color: var(--neutral-150);
-  --chart-grid-line-strong-color: var(--neutral-200);
-  --chart-tick-size: 4px;
   --chart-axis-font-size: var(--font-size-2xs);
+  /* REFERENCE LINES - an annotation, not a series. A neutral stroke and a dash are what keep a
+     target from reading as one more category, and the band's opacity is low enough that a mark
+     drawn over it stays its own colour. */
+  --chart-threshold-color: var(--neutral-500);
+  --chart-threshold-band-opacity: 0.12;
+  --chart-threshold-dashed-pattern: 6 4;
+  --chart-threshold-dotted-pattern: 1 5;
   /* HIGHLIGHT / HOVER */
   /* Every level of dimming costs the separation BETWEEN the dimmed series: measured 2026-09-13,
      OKLab dE x100, the worst pair of three dimmed series falls from 14.8 at full opacity to 5.2 at
@@ -1339,15 +1375,30 @@
   --chart-dim-opacity: 0.3;
   --chart-hover-bg-color: hsl(225deg 39% 7% / 4%);
   --chart-cursor-line-color: var(--neutral-400);
+  /* The focus indicator is TWO tones, not one: a single accent ring disappears on a mark of the
+     same hue family, and a chart's marks are exactly the surfaces a ring has to survive. The ring
+     itself is the app's, so a focused mark reads as the same indicator as every other control;
+     the white keyline is what separates it from the mark underneath, and it is the keyline rather
+     than the ring that does the surviving. */
+  --chart-focus-ring-color: var(--focus-ring-color);
+  --chart-focus-halo-color: white;
   --chart-tooltip-bg-color: var(--neutral-900);
   --chart-tooltip-text-color: var(--neutral-0);
   --chart-tooltip-border-color: var(--neutral-700);
   /* DIMENSIONS */
+  /* Soft, not a pill: the cap squashes with the body while a mark grows in, and 3px is small
+     enough that the squash is not readable. */
+  --chart-mark-cap-radius: 3px;
   --chart-bar-gap: 4px;
   --chart-line-width: 2px;
   --chart-line-width-bold: 3px;
   --chart-dot-radius: 4px;
   --chart-dot-radius-active: 6px;
+  --chart-area-opacity: 0.16;
+  /* Stripes wide enough to survive a 24px-wide mark at a glance, and drawn in the surface colour
+     so they read as gaps cut out of the mark rather than a second hue competing with it. */
+  --chart-hatch-color: var(--surface-default);
+  --chart-hatch-width: 3px;
 }
 
 /* Public override layer.
@@ -1366,6 +1417,8 @@
   --ds-chart-series-6-color: var(--chart-categorical-6);
   --ds-chart-series-7-color: var(--chart-categorical-7);
   --ds-chart-series-8-color: var(--chart-categorical-8);
+  --ds-chart-positive-color: var(--chart-positive);
+  --ds-chart-negative-color: var(--chart-negative);
   --ds-chart-series-default-color: var(--chart-series-default);
   --ds-chart-series-accent-color: var(--chart-series-accent);
   --ds-chart-ramp-1-color: var(--chart-ramp-1);
@@ -1376,6 +1429,14 @@
   --ds-chart-ramp-6-color: var(--chart-ramp-6);
   --ds-chart-ramp-7-color: var(--chart-ramp-7);
   --ds-chart-ramp-8-color: var(--chart-ramp-8);
+  --ds-chart-heat-1-color: var(--chart-heat-1);
+  --ds-chart-heat-2-color: var(--chart-heat-2);
+  --ds-chart-heat-3-color: var(--chart-heat-3);
+  --ds-chart-heat-4-color: var(--chart-heat-4);
+  --ds-chart-heat-5-color: var(--chart-heat-5);
+  --ds-chart-heat-6-color: var(--chart-heat-6);
+  --ds-chart-heat-7-color: var(--chart-heat-7);
+  --ds-chart-heat-8-color: var(--chart-heat-8);
   --ds-chart-frame-border-color: var(--chart-frame-border-color);
   --ds-chart-frame-border-width: var(--chart-frame-border-width);
   --ds-chart-frame-radius: var(--chart-frame-radius);
@@ -1383,22 +1444,29 @@
   --ds-chart-frame-bg-color: var(--chart-frame-bg-color);
   --ds-chart-axis-line-color: var(--chart-axis-line-color);
   --ds-chart-axis-label-color: var(--chart-axis-label-color);
-  --ds-chart-axis-title-color: var(--chart-axis-title-color);
   --ds-chart-axis-font-size: var(--chart-axis-font-size);
   --ds-chart-grid-line-color: var(--chart-grid-line-color);
-  --ds-chart-grid-line-strong-color: var(--chart-grid-line-strong-color);
+  --ds-chart-threshold-color: var(--chart-threshold-color);
+  --ds-chart-threshold-band-opacity: var(--chart-threshold-band-opacity);
+  --ds-chart-threshold-dashed-pattern: var(--chart-threshold-dashed-pattern);
+  --ds-chart-threshold-dotted-pattern: var(--chart-threshold-dotted-pattern);
   --ds-chart-dim-opacity: var(--chart-dim-opacity);
   --ds-chart-hover-bg-color: var(--chart-hover-bg-color);
   --ds-chart-cursor-line-color: var(--chart-cursor-line-color);
+  --ds-chart-focus-ring-color: var(--chart-focus-ring-color);
+  --ds-chart-focus-halo-color: var(--chart-focus-halo-color);
   --ds-chart-tooltip-bg-color: var(--chart-tooltip-bg-color);
   --ds-chart-tooltip-text-color: var(--chart-tooltip-text-color);
   --ds-chart-tooltip-border-color: var(--chart-tooltip-border-color);
+  --ds-chart-mark-cap-radius: var(--chart-mark-cap-radius);
   --ds-chart-bar-gap: var(--chart-bar-gap);
   --ds-chart-line-width: var(--chart-line-width);
   --ds-chart-line-width-bold: var(--chart-line-width-bold);
   --ds-chart-dot-radius: var(--chart-dot-radius);
   --ds-chart-dot-radius-active: var(--chart-dot-radius-active);
-  --ds-chart-tick-size: var(--chart-tick-size);
+  --ds-chart-area-opacity: var(--chart-area-opacity);
+  --ds-chart-hatch-color: var(--chart-hatch-color);
+  --ds-chart-hatch-width: var(--chart-hatch-width);
 }
 
 @font-face {
@@ -2062,7 +2130,13 @@ html {
   --_option-radius: var(--ds-option-radius, var(--ds-radius-inner));
   --_option-row-gap: var(--ds-option-row-gap, 2px);
   --_option-bg-color-active: var(--ds-option-bg-color-active, var(--surface-secondary));
+  --_option-weight: var(--ds-option-weight, var(--font-weight-medium));
+  --_option-font-size: var(--ds-option-font-size, var(--font-size-s));
+  --_option-line-height: var(--ds-option-line-height, var(--line-height-flat));
+  --_option-font-family: var(--ds-option-font-family, var(--font-sans));
   --_dropdown-panel-bg-color: var(--ds-dropdown-panel-bg-color, var(--surface-overlay));
+  --_dropdown-panel-border-color: var(--ds-dropdown-panel-border-color, var(--border-default));
+  --_dropdown-panel-shadow: var(--ds-dropdown-panel-shadow, var(--shadow-popover));
   --_dropdown-panel-maxh: var(--ds-dropdown-panel-maxh, 320px);
   /* minw/maxw only bite in `content` width mode, where the pane is auto-sized: in
      `fill` the component pins the pane to the trigger width and there is nothing
@@ -2073,9 +2147,9 @@ html {
 .ds-dropdown-panel .dropdown-panel {
   width: 100%;
   background: var(--_dropdown-panel-bg-color);
-  border: var(--border-width-default) solid var(--border-default);
+  border: var(--border-width-default) solid var(--_dropdown-panel-border-color);
   border-radius: var(--_dropdown-panel-radius);
-  box-shadow: var(--shadow-popover);
+  box-shadow: var(--_dropdown-panel-shadow);
   padding: var(--space-1);
   min-width: var(--_dropdown-panel-minw);
   max-width: var(--_dropdown-panel-maxw);
@@ -2134,7 +2208,7 @@ html {
   padding: var(--_option-padding);
   border: 0;
   background: transparent;
-  font: var(--font-weight-medium) var(--font-size-s)/var(--line-height-flat) var(--font-sans);
+  font: var(--_option-weight) var(--_option-font-size)/var(--_option-line-height) var(--_option-font-family);
   color: var(--text-primary);
   cursor: pointer;
   border-radius: var(--_option-radius);
@@ -2292,7 +2366,7 @@ html {
   }
 }
 .cdk-overlay-pane.ds-overlay-pane {
-  --_overlay-enter-keyframes: var(--ds-overlay-enter-keyframes, ds-slide-in);
+  --_overlay-enter-keyframes: var(--ds-overlay-enter-keyframes, ds-fade-in);
   --_overlay-enter-duration: var(--ds-overlay-enter-duration, var(--ds-motion-enter-panel-duration));
   --_overlay-enter-easing: var(--ds-overlay-enter-easing, var(--ds-motion-enter-panel-easing));
   --_overlay-enter-offset: var(--ds-overlay-enter-offset, 4px);
@@ -2355,6 +2429,16 @@ html {
     opacity: 0;
   }
 }
+/* The pane takes the pointer, so the panel can be reached and its text selected — WCAG 1.4.13
+   requires that of anything shown on hover. What stops the flicker an interactive pane used to
+   cause (panel covers the plot, plot takes a `pointerleave`, chart clears, panel closes, pointer
+   lands on the plot again) is the grace period on the chart's own leave, in `chart-active-mark.ts`.
+   The two are one mechanism: make the pane inert again and the criterion breaks silently; drop the
+   grace and the flicker returns. */
+.cdk-overlay-pane.ds-chart-tooltip-pane {
+  pointer-events: auto;
+}
+
 @media (prefers-reduced-motion: reduce) {
   ds-skeleton::after {
     animation: none;

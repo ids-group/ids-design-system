@@ -36,11 +36,11 @@ export { AlertComponent } from '@ids-group-ltd/ids-design-system/components/aler
 export type { AlertVariant } from '@ids-group-ltd/ids-design-system/components/alert';
 export {
   AppLayoutComponent,
-  LayoutNavigationService,
-  LayoutScrollService,
+  AppLayoutNavigationService,
+  AppLayoutScrollService,
   RailTriggerDirective,
 } from '@ids-group-ltd/ids-design-system/components/app-layout';
-export type { DsScrollReset } from '@ids-group-ltd/ids-design-system/components/app-layout';
+export type { DsAppLayoutScrollReset } from '@ids-group-ltd/ids-design-system/components/app-layout';
 export { AuthLayoutComponent } from '@ids-group-ltd/ids-design-system/components/auth-layout';
 export { AutocompleteComponent } from '@ids-group-ltd/ids-design-system/components/autocomplete';
 export type {
@@ -73,6 +73,7 @@ export { BarChartComponent } from '@ids-group-ltd/ids-design-system/components/b
 export type {
   BarChartRow,
   BarChartSegment,
+  BarChartValue,
 } from '@ids-group-ltd/ids-design-system/components/bar-chart';
 export { BottomSheetComponent } from '@ids-group-ltd/ids-design-system/components/bottom-sheet';
 export {
@@ -82,6 +83,7 @@ export {
 export type { BreadcrumbItem } from '@ids-group-ltd/ids-design-system/components/breadcrumbs';
 export { ButtonComponent } from '@ids-group-ltd/ids-design-system/components/button';
 export type {
+  ButtonAlign,
   ButtonColor,
   ButtonType,
   ButtonVariant,
@@ -93,13 +95,26 @@ export type {
   CardPadding,
 } from '@ids-group-ltd/ids-design-system/components/card';
 export {
+  CHART_DEFAULT_VALUE_SPACE,
   CHART_SCALES,
   ChartComponent,
+  ColumnSeriesComponent,
+  LineSeriesComponent,
+  ReferenceLabelComponent,
+  ReferenceLineComponent,
+  SeriesAnnotationComponent,
+  stackOffsets,
 } from '@ids-group-ltd/ids-design-system/components/chart';
 export type {
+  ChartAnnotation,
   ChartPlot,
   ChartScales,
+  ChartStackOffset,
+  ColumnSeriesPoint,
+  LineSeriesData,
 } from '@ids-group-ltd/ids-design-system/components/chart';
+export { ChartDataTableComponent } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
+export type { ChartDataRow } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
 export type { ChartLegendItem } from '@ids-group-ltd/ids-design-system/components/chart-legend';
 export type {
   ChartItemTooltipTrigger,
@@ -120,8 +135,8 @@ export type {
   DatePickerMode,
   DatePickerPreset,
   DatePickerValue,
+  DateRangeValue,
   DateValue,
-  RangeValue,
 } from '@ids-group-ltd/ids-design-system/components/date-picker';
 export {
   DescriptionItemComponent,
@@ -133,8 +148,6 @@ export type {
   DividerSpacing,
   DividerVariant,
 } from '@ids-group-ltd/ids-design-system/components/divider';
-export { DonutChartComponent } from '@ids-group-ltd/ids-design-system/components/donut-chart';
-export type { DonutChartSlice } from '@ids-group-ltd/ids-design-system/components/donut-chart';
 export { DrawerComponent } from '@ids-group-ltd/ids-design-system/components/drawer';
 export type { DrawerPlacement } from '@ids-group-ltd/ids-design-system/components/drawer';
 export { DropzoneComponent } from '@ids-group-ltd/ids-design-system/components/dropzone';
@@ -159,6 +172,11 @@ export type {
   FunnelChartShape,
   FunnelChartStage,
 } from '@ids-group-ltd/ids-design-system/components/funnel-chart';
+export { HeatmapChartComponent } from '@ids-group-ltd/ids-design-system/components/heatmap-chart';
+export type {
+  HeatmapChartCell,
+  HeatmapChartRow,
+} from '@ids-group-ltd/ids-design-system/components/heatmap-chart';
 export { IconButtonComponent } from '@ids-group-ltd/ids-design-system/components/icon-button';
 export type {
   IconButtonType,
@@ -180,9 +198,7 @@ export type {
 export { LineChartComponent } from '@ids-group-ltd/ids-design-system/components/line-chart';
 export type {
   LineChartAnnotation,
-  LineChartAxisMode,
-  LineChartGaps,
-  LineChartPoint,
+  LineChartReading,
   LineChartSeries,
 } from '@ids-group-ltd/ids-design-system/components/line-chart';
 export {
@@ -219,6 +235,7 @@ export { PageFooterComponent } from '@ids-group-ltd/ids-design-system/components
 export type { PageFooterVariant } from '@ids-group-ltd/ids-design-system/components/page-footer';
 export { PageHeaderComponent } from '@ids-group-ltd/ids-design-system/components/page-header';
 export { PaginationComponent } from '@ids-group-ltd/ids-design-system/components/pagination';
+export type { PaginationLayout } from '@ids-group-ltd/ids-design-system/components/pagination';
 export {
   PasswordRulesComponent,
   passwordRulesMet,
@@ -227,6 +244,8 @@ export type {
   DsPasswordRule,
   DsPasswordRuleState,
 } from '@ids-group-ltd/ids-design-system/components/password-rules';
+export { PieChartComponent } from '@ids-group-ltd/ids-design-system/components/pie-chart';
+export type { PieChartSlice } from '@ids-group-ltd/ids-design-system/components/pie-chart';
 export { PopoverComponent } from '@ids-group-ltd/ids-design-system/components/popover';
 export type {
   PopoverAlign,
@@ -242,6 +261,13 @@ export type {
   RadioGroupContract,
 } from '@ids-group-ltd/ids-design-system/components/radio-group';
 export { ReserveMessagesDirective } from '@ids-group-ltd/ids-design-system/components/reserve-messages';
+export { ScatterChartComponent } from '@ids-group-ltd/ids-design-system/components/scatter-chart';
+export type {
+  ScatterChartDecimator,
+  ScatterChartReading,
+  ScatterChartSeries,
+  ScatterPoint,
+} from '@ids-group-ltd/ids-design-system/components/scatter-chart';
 export { SearchComponent } from '@ids-group-ltd/ids-design-system/components/search';
 export { SegmentedComponent } from '@ids-group-ltd/ids-design-system/components/segmented';
 export type { SegmentedOption } from '@ids-group-ltd/ids-design-system/components/segmented';
@@ -296,7 +322,7 @@ export {
 export type {
   HeaderFilterContext,
   SortChangeEvent,
-  SortDir,
+  SortDirection,
   TableCellEditEvent,
   TableColumn,
   TableExpandMode,
@@ -360,6 +386,11 @@ export { TopBarComponent } from '@ids-group-ltd/ids-design-system/components/top
 export { TreeComponent } from '@ids-group-ltd/ids-design-system/components/tree';
 export type { TreeNode } from '@ids-group-ltd/ids-design-system/components/tree';
 export { W3wComponent } from '@ids-group-ltd/ids-design-system/components/w3w';
+export { WaterfallChartComponent } from '@ids-group-ltd/ids-design-system/components/waterfall-chart';
+export type {
+  WaterfallChartBar,
+  WaterfallChartKind,
+} from '@ids-group-ltd/ids-design-system/components/waterfall-chart';
 
 // Core
 export {
@@ -374,9 +405,11 @@ export {
 export type {
   ChartAxis,
   ChartAxisMode,
+  ChartCurve,
   ChartDataTable,
   ChartFormatLocation,
   ChartFrame,
+  ChartGaps,
   ChartStackMode,
   ChartThreshold,
   ChartThresholdDash,

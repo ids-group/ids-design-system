@@ -14,18 +14,19 @@
   --_badge-bg-color:          var(--ds-badge-bg-color,          var(--surface-secondary));
   --_badge-label-color:          var(--ds-badge-label-color,          var(--text-secondary));
   --_badge-radius:      var(--ds-badge-radius,      var(--ds-radius-pill));
-  --_badge-pad-x:       var(--ds-badge-pad-x,       var(--badge-pad-x));
-  --_badge-pad-y:       var(--ds-badge-pad-y,       var(--badge-pad-y));
+  --_badge-padding-x:       var(--ds-badge-padding-x,       var(--badge-pad-x));
+  --_badge-padding-y:       var(--ds-badge-padding-y,       var(--badge-pad-y));
   --_badge-font-weight: var(--ds-badge-font-weight, var(--font-weight-bold));
   --_badge-white-space: var(--ds-badge-white-space, nowrap);
+  --_badge-letter-spacing: var(--ds-badge-letter-spacing, var(--letter-spacing-wide));
 
   display: inline-flex;
   align-items: center;
   gap: var(--badge-gap);
-  padding: var(--_badge-pad-y) var(--_badge-pad-x);
+  padding: var(--_badge-padding-y) var(--_badge-padding-x);
   border-radius: var(--_badge-radius);
   font: var(--_badge-font-weight) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
-  letter-spacing: var(--letter-spacing-wide);
+  letter-spacing: var(--_badge-letter-spacing);
   white-space: var(--_badge-white-space);
   background-color: var(--_badge-bg-color);
   color: var(--_badge-label-color);

@@ -5,13 +5,13 @@
    Label — Single line, ellipsis at ~16 ch. Tooltip on hover when clipped. */
 
 :host {
-  --_tag-pad-y:        var(--ds-tag-pad-y, var(--tag-pad-y));
-  --_tag-pad-x:        var(--ds-tag-pad-x, var(--tag-pad-x));
+  --_tag-padding-y:        var(--ds-tag-padding-y, var(--tag-pad-y));
+  --_tag-padding-x:        var(--ds-tag-padding-x, var(--tag-pad-x));
   --_tag-radius:       var(--ds-tag-radius, var(--ds-radius-control));
   --_tag-bg-color:           var(--ds-tag-bg-color, var(--accent));
   --_tag-label-color: var(--ds-tag-label-color, var(--accent-on));
   --_tag-fw:            var(--ds-tag-fw, var(--font-weight-bold));
-  --_tag-fs:            var(--ds-tag-fs, var(--font-size-xs));
+  --_tag-font-size:            var(--ds-tag-font-size, var(--font-size-xs));
   --_tag-lh:            var(--ds-tag-lh, var(--line-height-base));
   --_tag-hover-bg-color:      var(--ds-tag-hover-bg-color,      var(--surface-muted));
   --_tag-hover-label-color:      var(--ds-tag-hover-label-color,      var(--text-primary));
@@ -22,11 +22,11 @@
   display: inline-flex;
   align-items: center;
   gap: var(--tag-gap);
-  padding: var(--_tag-pad-y) var(--_tag-pad-x);
+  padding: var(--_tag-padding-y) var(--_tag-padding-x);
   border-radius: var(--_tag-radius);
   background-color: var(--_tag-bg-color);
   color: var(--_tag-label-color);
-  font: var(--_tag-fw) var(--_tag-fs) / var(--_tag-lh) var(--font-sans);
+  font: var(--_tag-fw) var(--_tag-font-size) / var(--_tag-lh) var(--font-sans);
 }
 
 :host(.closable) {
@@ -41,7 +41,7 @@
   background-color: var(--_tag-bg-color);
   color: var(--_tag-label-color);
   border: var(--border-width-default) solid var(--_tag-border-color);
-  padding: calc(var(--_tag-pad-y) - var(--border-width-default)) calc(var(--_tag-pad-x) - var(--border-width-default));
+  padding: calc(var(--_tag-padding-y) - var(--border-width-default)) calc(var(--_tag-padding-x) - var(--border-width-default));
 }
 
 :host(.neutral.closable) {

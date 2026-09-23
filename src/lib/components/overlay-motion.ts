@@ -36,7 +36,7 @@ const OVERLAY_MOTION_TOKENS = [
  *  every connected picker gets it whether or not it names panel tokens of its own. */
 const DROPDOWN_PANEL_TOKENS = [
   '--ds-dropdown-panel-radius',
-  '--ds-dropdown-panel-maxh',
+  '--ds-dropdown-panel-max-height',
   '--ds-dropdown-panel-border-color',
   '--ds-dropdown-panel-shadow',
   '--ds-option-padding',
@@ -44,7 +44,7 @@ const DROPDOWN_PANEL_TOKENS = [
   '--ds-option-radius',
   '--ds-option-row-gap',
   '--ds-option-bg-color-active',
-  '--ds-option-weight',
+  '--ds-option-font-weight',
   '--ds-option-font-size',
   '--ds-option-line-height',
   '--ds-option-font-family',

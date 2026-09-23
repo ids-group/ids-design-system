@@ -1,14 +1,36 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation, signal } from '@angular/core';
 import {
   ChartComponent,
   ColumnSeriesComponent,
   LineSeriesComponent,
   ReferenceLabelComponent,
   ReferenceLineComponent,
+  SeriesAnnotationComponent,
 } from 'ds/chart';
-import type { ColumnSeriesPoint, LineSeriesData } from 'ds/chart';
+import type {
+  ChartAnnotation,
+  ColumnSeriesPoint,
+  LineSeriesData,
+} from 'ds/chart';
+import { ChartDataTableComponent } from 'ds/chart-data-table';
+import type { ChartDataRow } from 'ds/chart-data-table';
+import { ButtonComponent } from 'ds/button';
+import { ChartTooltipDirective } from 'ds/chart-tooltip';
 import type { ChartThreshold } from 'ds/core';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
+
+const LATENCY_NOTES: readonly ChartAnnotation[] = [
+  { categoryIndex: 4, value: 480, label: 'Cache eviction' },
+];
+
+const LATENCY_TABLE_ROWS: readonly ChartDataRow[] = [
+  { key: 'wk1', cells: ['Wk 1', '210 ms'] },
+  { key: 'wk2', cells: ['Wk 2', '260 ms'] },
+  { key: 'wk3', cells: ['Wk 3', '240 ms'] },
+  { key: 'wk4', cells: ['Wk 4', '330 ms'] },
+  { key: 'wk5', cells: ['Wk 5', '480 ms'] },
+  { key: 'wk6', cells: ['Wk 6', '290 ms'] },
+];
 
 const LATENCY_WEEKS: readonly string[] = [
   'Wk 1',
@@ -61,16 +83,35 @@ const BASKET_SERIES: readonly LineSeriesData[] = [
   },
 ];
 
+const TRAFFIC_SERIES: readonly LineSeriesData[] = [
+  {
+    id: 'organic',
+    label: 'Organic',
+    data: [4400, 4610, 4380, 5120, 5460, 5980],
+    color: 'var(--ds-chart-series-1-color)',
+  },
+  {
+    id: 'paid',
+    label: 'Paid',
+    data: [1180, 1340, 1290, 1610, 1520, 1870],
+    color: 'var(--ds-chart-series-3-color)',
+  },
+];
+
 @Component({
   selector: 'section-charts-chart',
   standalone: true,
   imports: [
+    ButtonComponent,
     ChartComponent,
+    ChartDataTableComponent,
+    ChartTooltipDirective,
     ColumnSeriesComponent,
     DocsSectionComponent,
     LineSeriesComponent,
     ReferenceLabelComponent,
     ReferenceLineComponent,
+    SeriesAnnotationComponent,
   ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './chart.section.html',
@@ -80,6 +121,9 @@ export class ChartSection {
   protected readonly latencyWeeks = LATENCY_WEEKS;
   protected readonly latencyColumns = LATENCY_COLUMNS;
   protected readonly latencyThresholds = LATENCY_THRESHOLDS;
+  protected readonly latencyNotes = LATENCY_NOTES;
+  protected readonly latencyTableRows = LATENCY_TABLE_ROWS;
+  protected readonly latencyTableColumns = ['Week', 'p95'];
   protected readonly latencySummary =
     'p95 response time over six weeks, against a target band of 0 to 300 milliseconds and a breach line at 500. Readings: 210, 260, 240, 330, 480, 290 milliseconds.';
 
@@ -88,6 +132,12 @@ export class ChartSection {
   protected readonly basketSeries = BASKET_SERIES;
   protected readonly columnAxisColor = 'var(--ds-chart-series-1-color)';
   protected readonly lineAxisColor = 'var(--ds-chart-series-4-color)';
+  /** Which series the legend has singled out, so `highlighted` has something to follow. */
+  protected readonly singledOut = signal<string | null>(null);
+
+  protected readonly trafficSeries = TRAFFIC_SERIES;
+  protected readonly seriesDashes = ['none', '7 4'];
+
   protected readonly ordersSummary =
     'Orders a month on the left axis - 620, 710, 680, 840, 790, 960 - against average order value on the right axis - 82, 88, 91, 86, 104, 118 pounds.';
 }

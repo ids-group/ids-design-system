@@ -6,4 +6,8 @@ Group: Layout & navigation
 Inputs: `variant: 'default' | 'strong' | 'vertical' | 'label' = 'default'`, `spacing: 'none' | 'sm' | 'md' | 'lg' = 'md'`
 Content: label text (when `variant="label"`).
 
+<!-- inputs:ds-divider -->
+All inputs: `variant: 'default' | 'strong' | 'vertical' | 'label' = 'default'`, `spacing: 'none' | 'sm' | 'md' | 'lg' = 'md'`
+<!-- /inputs -->
+
 ---

@@ -42,6 +42,21 @@ timeline, two audiences.
   2.5 seconds, not the Angular build. An undocumented component and an unregistered section are
   both caught where the component is added.
 
+- **`npm run check:cards` runs the card gates outside CI.** `check-manual-surface.mjs` reads
+  `elements/gen/sections.json`, which is gitignored, so the check on its own works only in a tree
+  that has already built; `check:cards` bootstraps, builds the elements surface, then runs it and
+  `check-doc-api.mjs`. `ci-pr.sh` carries neither, because nothing there builds `gen/`. CI runs both
+  in `build-design-sync.sh`, beside the build that feeds them — an `after-release` step, so a gap
+  they catch holds back the upload tree and leaves the published package and the deployed docs
+  alone.
+
+- **The shared stylesheet is the union over every rendered card, not the frozen ones.** A block
+  qualifies for it on carrying a scope attribute anywhere in it, and some carry document-level rules
+  alongside — `:root` custom properties, keyframes, `::ng-deep` output. Taking the union from the
+  frozen subset dropped what only a live card contributed and moved 80 frozen cards by 4–32px, so
+  the blocks are not as position-independent as they look. Measure the heights after touching either
+  the union or its order.
+
 ### Cards
 
 - **A card whose control owns a dropdown stays live, so the dropdown still opens.** What freezing
@@ -82,22 +97,21 @@ timeline, two audiences.
   `CalendarDay` and `FieldMessage` do — which is the pair `check-manual-surface.mjs` demands: a doc
   the design agent can read, and a section whose chapter the card is cut from.
 
-### Build
+- **`HeatmapChart`, `ScatterChart` and `WaterfallChart` have docs and routes.** Each got a
+  `docs/<Name>.md` and a `sections` entry in `config.json` pointing at `charts/<kebab name>`, so
+  `build-cards` finds a chapter for them. `BarChart.md` documents the `[low, high]` value, `target`
+  and `ranges`; `LineChart.md` documents `curve` and `stack`; `Chart.md` documents `curve` on
+  `dsLineSeries`; and both `LineChart.md` and `Chart.md` spell the axis modes `'aligned'`,
+  `'exact'`, `'dual-grid'` and `'split'`.
 
-- **`npm run check:cards` runs the card gates outside CI.** `check-manual-surface.mjs` reads
-  `elements/gen/sections.json`, which is gitignored, so the check on its own works only in a tree
-  that has already built; `check:cards` bootstraps, builds the elements surface, then runs it and
-  `check-doc-api.mjs`. `ci-pr.sh` carries neither, because nothing there builds `gen/`. CI runs both
-  in `build-design-sync.sh`, beside the build that feeds them — an `after-release` step, so a gap
-  they catch holds back the upload tree and leaves the published package and the deployed docs
-  alone.
+- **`DonutChart` is `PieChart`.** `docs/DonutChart.md` is `docs/PieChart.md`, documenting
+  `<PieChart>` and `innerRadius` in place of `thickness`, and the `sections` entry in `config.json`
+  is `PieChart` pointing at `charts/pie-chart`, the chapter the docs site now serves.
+  `ChartTooltipPanel.md` and `MANUAL-SURFACE.md` name the pie as well.
 
-- **The shared stylesheet is the union over every rendered card, not the frozen ones.** A block
-  qualifies for it on carrying a scope attribute anywhere in it, and some carry document-level rules
-  alongside — `:root` custom properties, keyframes, `::ng-deep` output. Taking the union from the
-  frozen subset dropped what only a live card contributed and moved 80 frozen cards by 4–32px, so
-  the blocks are not as position-independent as they look. Measure the heights after touching either
-  the union or its order.
+- **`docs/ChartDataTable.md` was added and `ChartDataTable` points at `charts/chart`.** Every chart
+  renders `ds-chart-data-table` under its plot, and the `charts/chart` chapter is where it is shown,
+  so the card is cut from there.
 
 ## 0.12.0 — 2026-09-04
 

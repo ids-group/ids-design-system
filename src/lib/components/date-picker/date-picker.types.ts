@@ -1,10 +1,10 @@
 export type DatePickerMode = 'single' | 'range';
 
 export type DateValue = Date | null;
-export type RangeValue = [Date | null, Date | null];
-export type DatePickerValue = DateValue | RangeValue;
+export type DateRangeValue = [Date | null, Date | null];
+export type DatePickerValue = DateValue | DateRangeValue;
 
 export interface DatePickerPreset {
   label: string;
-  value: Date | RangeValue;
+  value: Date | DateRangeValue;
 }

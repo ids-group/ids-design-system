@@ -1,6 +1,6 @@
 <nav
-  class="pagination"
-  aria-label="Pagination">
+  aria-label="Pagination"
+  [class]="navClass()">
   @if (showLabel()) {
     <span class="label">
       {{ rangeLabel() }}

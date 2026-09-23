@@ -8,6 +8,7 @@ import {
   output,
 } from '@angular/core';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
+import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 import type { IconName } from '@ids-group-ltd/ids-design-system/core';
 import type { AlertVariant } from './alert.types';
 
@@ -34,14 +35,22 @@ export class AlertComponent {
   /** Fires when the user dismisses the alert. */
   readonly closed = output<void>();
 
-  /** Announce this alert to a screen reader when it appears. Off by default — see
-   *  `ds-banner`'s `announce` for why, and prefer `ToastService` for anything
-   *  transient. */
-  readonly announce = input(false, { transform: booleanAttribute });
+  /** Announce this alert to a screen reader when it appears. Unset follows
+   *  `DS_CONFIG.alert.announce`, then `false` — see `ds-banner`'s `announce` for why,
+   *  and prefer `ToastService` for anything transient. */
+  readonly announce = input<boolean | null, unknown>(null, {
+    transform: (value) => (value == null ? null : booleanAttribute(value)),
+  });
+
+  readonly announceResolved = resolveWithConfig(
+    this.announce,
+    (config) => config.alert?.announce,
+    false,
+  );
 
   @HostBinding('attr.role')
   protected get ariaRole(): 'alert' | 'status' | null {
-    if (!this.announce()) {
+    if (!this.announceResolved()) {
       return null;
     }
     const value = this.variant();
@@ -51,7 +60,7 @@ export class AlertComponent {
 
   @HostBinding('attr.aria-live')
   protected get ariaLive(): 'assertive' | 'polite' | null {
-    if (!this.announce()) {
+    if (!this.announceResolved()) {
       return null;
     }
 

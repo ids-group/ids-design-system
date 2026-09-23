@@ -21,16 +21,150 @@ const surface = ({
   symbols = [],
   classes = [],
   elements = {},
+  partials = [],
+  keyframes = [],
 }) => ({
   tokens: new Set(tokens),
   symbols: new Set(symbols),
   classes: new Set(classes),
+  partials: new Set(partials),
+  keyframes: new Set(keyframes),
   elements: new Map(
     Object.entries(elements).map(([tag, members]) => [tag, new Set(members)]),
   ),
 });
 
 const rules = [
+  {
+    name: 'FIRES when a token family matches nothing at the earlier tag',
+    item: {
+      id: 'x',
+      kind: 'token-rename',
+      old: '--ds-*-bg',
+      new: '--ds-*-bg-color',
+    },
+    before: surface({ tokens: ['--ds-card-fg'] }),
+    after: surface({ tokens: ['--ds-card-bg-color'] }),
+    expect: 'fire',
+  },
+  {
+    name: 'HOLDS: a token family and a prefix that match',
+    item: {
+      id: 'x',
+      kind: 'token-rename',
+      old: '--ds-combobox-',
+      new: '--ds-*-w | -h',
+    },
+    before: surface({ tokens: ['--ds-combobox-bg'] }),
+    after: surface({ tokens: ['--ds-select-h', '--ds-select-w'] }),
+    expect: 'hold',
+  },
+  {
+    name: 'FIRES when a @use names a partial the tag does not ship',
+    item: {
+      id: 'x',
+      kind: 'code-add',
+      old: null,
+      new: "@use '@ids-group-ltd/ids-design-system/styles/never' as n;\n@include n.vars;",
+    },
+    before: surface({ partials: ['styles/breakpoints'] }),
+    after: surface({ partials: ['styles/breakpoints'] }),
+    expect: 'fire',
+  },
+  {
+    name: 'FIRES when a keyframe list names one the tag does not declare',
+    item: {
+      id: 'x',
+      kind: 'behavior',
+      old: 'modal-out / drawer-close-left|right',
+      new: null,
+    },
+    before: surface({ keyframes: ['modal-out', 'drawer-close-left'] }),
+    after: surface({ keyframes: [] }),
+    expect: 'fire',
+  },
+  {
+    name: 'FIRES when a compound class under a child combinator never existed',
+    item: {
+      id: 'x',
+      kind: 'class-rename',
+      old: 'ds-select .trigger.never > ds-tag',
+      new: null,
+    },
+    before: surface({
+      classes: ['trigger'],
+      elements: { 'ds-select': [], 'ds-tag': [] },
+    }),
+    after: surface({
+      classes: ['trigger'],
+      elements: { 'ds-select': [], 'ds-tag': [] },
+    }),
+    expect: 'fire',
+  },
+  {
+    name: 'HOLDS: an unknown called function is set aside, not accused',
+    item: {
+      id: 'x',
+      kind: 'scss-api',
+      old: 'avatarTnt(seed)',
+      new: 'avatarTint(seed)',
+    },
+    before: surface({ symbols: ['avatarTint'] }),
+    after: surface({ symbols: ['avatarTint'] }),
+    expect: 'hold',
+    unresolved: 1,
+  },
+  {
+    name: 'FIRES when a note names a --ds-* token neither tag declares',
+    item: {
+      id: 'x',
+      kind: 'removed-api',
+      old: '--chart-tick',
+      new: null,
+      note: 'It fed `--ds-chart-never-shipped`, which reached no rule.',
+    },
+    before: surface({ tokens: ['--chart-tick'] }),
+    after: surface({ tokens: [] }),
+    expect: 'fire',
+  },
+  {
+    name: 'FIRES when an element-scoped class never existed',
+    item: {
+      id: 'x',
+      kind: 'class-rename',
+      old: 'ds-modal .no-such',
+      new: null,
+    },
+    before: surface({ classes: ['danger'], elements: { 'ds-modal': [] } }),
+    after: surface({ classes: ['error'], elements: { 'ds-modal': [] } }),
+    expect: 'fire',
+  },
+  {
+    name: 'HOLDS: an element-scoped class that existed, under a scope renamed in the same release',
+    item: { id: 'x', kind: 'class-rename', old: 'ds-pie .donut', new: null },
+    before: surface({ classes: ['donut'], elements: { 'ds-donut': [] } }),
+    after: surface({ classes: ['pie'], elements: { 'ds-pie': [] } }),
+    expect: 'hold',
+  },
+  {
+    name: 'FIRES when a renamed injection token never existed',
+    item: {
+      id: 'x',
+      kind: 'type-rename',
+      old: 'DS_NEVER_WAS',
+      new: 'DS_TOAST_CONFIG',
+    },
+    before: surface({ symbols: ['DS_TOAST_CONFIG'] }),
+    after: surface({ symbols: ['DS_TOAST_CONFIG'] }),
+    expect: 'fire',
+  },
+  {
+    name: 'FIRES when an opening tag names an element that never existed',
+    item: { id: 'x', kind: 'behavior', old: '<ds-never>', new: null },
+    before: surface({ elements: { 'ds-toast': [] } }),
+    after: surface({ elements: { 'ds-toast': [] } }),
+    expect: 'fire',
+  },
   {
     name: 'FIRES when old never existed and new names nothing either',
     item: {

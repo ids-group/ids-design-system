@@ -6,3 +6,23 @@
   flex-direction: column;
   gap: var(--space-2);
 }
+
+.queue-count {
+  --_toast-queue-bg-color: var(--ds-toast-queue-bg-color, var(--surface-overlay));
+  --_toast-queue-text-color: var(--ds-toast-queue-text-color, var(--text-secondary));
+
+  align-self: center;
+  padding: var(--space-0-5) var(--space-2);
+  border: var(--border-width-default) solid var(--border-default);
+  border-radius: var(--radius-pill);
+  background-color: var(--_toast-queue-bg-color);
+  box-shadow: var(--shadow-toast);
+  color: var(--_toast-queue-text-color);
+  font: var(--font-weight-semibold) var(--font-size-xs) / 1 var(--font-sans);
+}
+
+/* The strip belongs where the NEXT toast will appear, and that follows the anchor: a
+   bottom-anchored stack grows downwards, so the queue sits under it. */
+:host(.stack-newest-last) .queue-count {
+  order: 1;
+}

@@ -35,6 +35,7 @@ const numbered = (family) => {
 
 const series = numbered('series');
 const ramp = numbered('ramp');
+const heat = numbered('heat');
 
 // The two named series tokens are not part of either array: `default` and `accent` are
 // roles, so a chart asks for one by name. Folding them into CHART_SERIES_COLORS would
@@ -55,7 +56,7 @@ const key = (token) =>
     .replace(/-color$/, '')
     .replace(/-(\w)/g, (_, character) => character.toUpperCase());
 
-const entries = [...series, ...named, ...ramp]
+const entries = [...series, ...named, ...ramp, ...heat]
   .map((token) => `  ${key(token)}: 'var(${token})',`)
   .join('\n');
 
@@ -71,7 +72,10 @@ const generated =
   `/** @internal Exported for the chart entry points that import it across the boundary;\n *  not part of the package surface. */\nexport const chartColors = {\n${entries}\n} as const;\n\n` +
   arrayOf('CHART_SERIES_COLORS', series) +
   `\n` +
-  arrayOf('CHART_RAMP_COLORS', ramp);
+  arrayOf('CHART_RAMP_COLORS', ramp) +
+  `
+` +
+  arrayOf('CHART_HEAT_COLORS', heat);
 
 if (process.argv.includes('--check')) {
   let current = '';
@@ -91,11 +95,11 @@ if (process.argv.includes('--check')) {
     process.exit(1);
   }
   console.log(
-    `generate-chart-palette: OK — ${series.length + named.length + ramp.length} colours match the SCSS.`,
+    `generate-chart-palette: OK — ${series.length + named.length + ramp.length + heat.length} colours match the SCSS.`,
   );
 } else {
   writeFileSync(OUT, generated);
   console.log(
-    `generate-chart-palette: wrote ${series.length + named.length + ramp.length} colours`,
+    `generate-chart-palette: wrote ${series.length + named.length + ramp.length + heat.length} colours`,
   );
 }

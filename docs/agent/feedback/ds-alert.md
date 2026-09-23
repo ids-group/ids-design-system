@@ -7,3 +7,7 @@ Inline message, `ds-banner`'s smaller twin — same anatomy, sized for placement
 Inputs: `variant: 'info' | 'success' | 'warning' | 'error' | 'neutral' = 'info'`, `title: string = ''`, `dismissible: boolean = false`, `icon: IconName | null = null` (variant-derived default)
 Output: `(closed): void`
 Content slots: default (body text), `[actions]` (trailing CTAs)
+
+<!-- inputs:ds-alert -->
+All inputs: `variant: 'info' | 'success' | 'warning' | 'error' | 'neutral' = 'info'`, `title: string = ''`, `dismissible: boolean = false`, `icon: IconName | null = null`, `announce: boolean | null = null`
+<!-- /inputs -->
