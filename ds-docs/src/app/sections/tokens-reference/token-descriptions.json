@@ -251,6 +251,7 @@
   "--ds-bar-chart-target-width": "Thickness of that target tick; it also sets the tick's corner radius and the half-width shift that centres it on the target value (default 2px).",
   "--ds-bar-chart-track-color": "Unfilled part of a ds-bar-chart bar (default --chart-grid-line-color).",
   "--ds-bar-chart-track-height": "Thickness of a ds-bar-chart bar and its track (default 8px).",
+  "--ds-bar-radius": "Corner radius of a ds-bar track and its fill (default --radius-pill). The fill follows the track, so a squared track never shows a rounded fill inside it.",
   "--ds-bottom-sheet-bg-color": "Bottom sheet surface fill.",
   "--ds-bottom-sheet-enter-duration": "Bottom-sheet entrance duration (default --duration-base); the scrim uses --duration-fast until this is set.",
   "--ds-bottom-sheet-enter-easing": "Bottom-sheet + scrim entrance easing (default --ease-decelerate).",
@@ -1519,5 +1520,7 @@
   "--yellow-600": "Yellow ramp — stop 600.",
   "--yellow-700": "Yellow ramp — stop 700.",
   "--ds-toast-queue-bg-color": "Background of the `+N` strip shown while toasts wait behind maxVisible (default --surface-overlay).",
-  "--ds-toast-queue-text-color": "Text colour of the `+N` strip shown while toasts wait behind maxVisible (default --text-secondary)."
+  "--ds-toast-queue-text-color": "Text colour of the `+N` strip shown while toasts wait behind maxVisible (default --text-secondary).",
+  "--ds-line-chart-placeholder-height": "Height reserved by a ds-line-chart that has no plot to draw: the loading skeleton, and the empty, error and no-visible-series boxes. Unset, the skeleton takes the plot height and the boxes the height the plot would take with its axis space; set, all of them take this value and the plot keeps --ds-line-chart-plot-height.",
+  "--ds-line-chart-plot-height": "Height of the plot coordinate space a ds-line-chart draws its series in (default 240px). Read back as a number, so it takes a px length only."
 }

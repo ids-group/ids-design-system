@@ -203,12 +203,15 @@
       "kind": "selector-rename",
       "old": "ds-app-shell",
       "new": "ds-app-layout",
-      "action": "Rename the element and its closing tag from `ds-app-shell` to `ds-app-layout`, then apply the class, service and token items below.",
+      "action": "Rename the element and its closing tag from `ds-app-shell` to `ds-app-layout`, and any stylesheet rule that names the element with it, then apply the class, service and token items below.",
       "note": "Behaviour is unchanged; the component shipped as ds-app-shell in the tagged 0.6.3 source.",
       "searchHints": [
         "ds-app-shell"
       ],
-      "surface": "template"
+      "surface": [
+        "template",
+        "style"
+      ]
     },
     {
       "id": "app-shell-class-to-app-layout",

@@ -138,6 +138,49 @@
         "rowExpandTemplate"
       ],
       "restore": null
+    },
+    {
+      "id": "bar-radius-hook",
+      "kind": "code-add",
+      "old": null,
+      "new": "--ds-bar-radius",
+      "surface": "style",
+      "action": "None, unless a bar of yours was squared through the radius hook `ds-meter` had until 0.13.3, or you wrote `--ds-bar-radius` on the strength of the 0.13.3 note: set `--ds-bar-radius` to that value on the `ds-bar`, or keep the declaration you already have, which the bar now reads.",
+      "appliesWhen": "Only a stylesheet that wants a `ds-bar` with corners other than a pill. Every bar without the declaration keeps its pill, and `ds-bar-chart` has its own tokens and is unaffected.",
+      "pitfall": "A `--ds-bar-radius` declaration written after 0.13.3 has been inert until now and becomes live with this upgrade, so a bar you had given up on squaring changes shape without an edit of yours.",
+      "restore": null,
+      "searchHints": [
+        "--ds-bar-radius",
+        "--ds-meter-radius",
+        "ds-bar"
+      ],
+      "detect": [
+        "--ds-bar-radius",
+        "--ds-meter-radius"
+      ],
+      "verify": "A `ds-bar` under `--ds-bar-radius: 2px` renders its track and its fill with a 2px corner radius; without it both are pills.",
+      "note": "`ds-meter` had a radius hook and the 0.13.3 merge into `ds-bar` dropped it, pinning the pill on the track and on the fill. The bar now resolves the radius from `--ds-bar-radius` on both, defaulting to `var(--radius-pill)`, so a squared bar keeps a squared fill."
+    },
+    {
+      "id": "line-chart-placeholder-height-hook",
+      "kind": "code-add",
+      "old": "--ds-line-chart-plot-height",
+      "new": "--ds-line-chart-placeholder-height",
+      "surface": "style",
+      "action": "If you set `--ds-line-chart-plot-height` to size the loading skeleton or the empty and error boxes rather than the plot, move the value to `--ds-line-chart-placeholder-height` and let the plot take its default.",
+      "appliesWhen": "Only a stylesheet that sets `--ds-line-chart-plot-height`. Unset, nothing moves: the skeleton keeps the plot height and the boxes the height the plot would take. A value meant for the plot stays where it is.",
+      "pitfall": "Both tokens parse whatever they hold, so a value left on the plot token keeps resizing every plot with no build error and no console line.",
+      "restore": null,
+      "searchHints": [
+        "--ds-line-chart-plot-height",
+        "--ds-line-chart-placeholder-height",
+        "ds-line-chart"
+      ],
+      "detect": [
+        "--ds-line-chart-plot-height"
+      ],
+      "verify": "A `ds-line-chart` under `--ds-line-chart-placeholder-height: 120px` shows a 120px skeleton while loading and a 120px empty box with no series, while the plot it draws is the height `--ds-line-chart-plot-height` gives it.",
+      "note": "Until 0.13.4 `--ds-line-chart-plot-height` reached the skeleton and the message box alone, and 0.13.4 made it size the plot too, so a value pinned for the placeholder states resized every plot. The placeholder states have their own token now; set, it drives all of them, and the plot reads only the plot token."
     }
   ],
   "informational": [

@@ -135,7 +135,25 @@ const mutations = {
     i.map = { a: 'attr="b"' };
     i.old = 'attr="a"';
   },
+  M045: (m) => {
+    const i = m.items.find((x) => x.kind === 'selector-rename');
+    i.surface = 'template';
+  },
 };
+
+// A rule that fires on the defect and on the fix alike is a rule nobody can satisfy, so a rule
+// with a shape the corpus does not exercise gets its own control: the same mutation with the
+// requirement met, which must stay green.
+const negativeControls = [
+  {
+    label: 'M045 stays quiet on a selector-rename whose surface includes style',
+    code: 'M045',
+    mutate: (m) => {
+      const i = m.items.find((x) => x.kind === 'selector-rename');
+      i.surface = ['template', 'style'];
+    },
+  },
+];
 
 // A defect anywhere in the corpus makes a case pass without its own mutation firing, because the
 // lint sweeps every manifest. Assert the baseline is clean first, or every result below is noise.
@@ -229,8 +247,17 @@ for (const { label, code, mutate, raw: text } of extraCases) {
   console.log(`${fired ? 'fires ' : 'DEAD  '} ${label}`);
 }
 
+for (const { label, code, mutate } of negativeControls) {
+  const m = JSON.parse(PRISTINE);
+  mutate(m);
+  writeFileSync(F, JSON.stringify(m, null, 2).replace(/\n/g, '\r\n') + '\r\n');
+  const fired = run().includes(`${basename(F)}  ${code}  `);
+  if (fired) dead.push(label);
+  console.log(`${fired ? 'FIRED ' : 'quiet '} ${label}`);
+}
+
 rmSync(MIGRATIONS, { recursive: true, force: true });
 if (dead.length) process.exitCode = 1;
 console.log(
-  `\n${dead.length ? 'RULES THAT DID NOT FIRE: ' + dead.join(', ') : 'every rule fired'}`,
+  `\n${dead.length ? 'RULES THAT DID NOT BEHAVE: ' + dead.join(', ') : 'every rule fired, and every control stayed quiet'}`,
 );

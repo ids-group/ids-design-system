@@ -121,7 +121,10 @@ looks defective:
   to look at a screen. An array is legal where a change genuinely spans two (`["template",
   "typescript"]` for a value remap whose values also come from a typed field). A missing `surface`
   and a deliberate `none` must never read the same to a finder — that ambiguity is what let a
-  TypeScript-surface item be searched as a template item.
+  TypeScript-surface item be searched as a template item. A `selector-rename` always lists `style`
+  (lint, M045): an element name is reachable from a consumer stylesheet whatever their templates
+  do, and `.chart-block ds-donut-chart { … }` survived the 0.13.4 rename as a rule that matched
+  nothing while the chart quietly lost its size.
 - **`detect` carries the CONSUMER's shapes, not ours.** Once a `behavior` item's surface reaches
   their `typescript` or their app `config`, `old` and `searchHints` stop being enough: our symbol
   names appear in their templates and not in the logic that has to change. (A `style` surface is the
@@ -357,6 +360,8 @@ Run `npm run migration-lint` before you call the manifest done — it mechanises
       (`--ds-combobox-`), `element .class` selectors, keyframe lists and `@use` paths are read.
 - [ ] `kind` correct; `map` present iff `value-remap`; `new: null` for `behavior`. (lint)
 - [ ] `surface` says which of the consumer's artifacts changes — `none` where nothing does. (lint)
+- [ ] A `selector-rename` lists `style` among its surfaces — an element name is always reachable
+      from a consumer stylesheet. (lint, M045)
 - [ ] A `style` item whose change ships in one of our partials names that partial in `appliesWhen`,
       and its `verify` greps the BUILT CSS rather than their source.
 - [ ] `detect` carries the consumer's own shapes wherever the affected code names no DS symbol; an
