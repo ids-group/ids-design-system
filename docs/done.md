@@ -4,6 +4,26 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## An `informational` entry can carry a `verify` (2026-09-23)
+
+`informational` accepts a bare string, as before, or `{ "text": "...", "verify": "..." }` -
+documented in `migrations/README.md` and `migrations/AUTHORING.md` (fill `verify` whenever the line
+names a layout mechanism: `display`, `grid`, `flex`, `position`, `overflow`, `colspan`, a width, a
+height, a new wrapper element). `tools/migration-lint.mjs` gained M046 (rejects an object with no
+non-empty `text` or a key other than `text`/`verify`); M034's delete-citation scan and
+`tools/check-manifest-truth.mjs`'s phantom-token scan both now read `entry.text` when the entry is
+an object, `entry` itself when it is a string. `node tools/migration-lint-selftest.mjs`: every rule
+fires, every control (including the two new M046 cases and the two new object-shaped M034 cases)
+stays as expected (measured 2026-09-23). The auto-update plugin
+(`plugins/design-system/skills/auto-update-package/SKILL.md`,
+`plugins/design-system/agents/ds-migration-planner.md`) routes a `verify`-bearing entry into the
+existing "applied - human should eyeball" report bucket instead of the plain FYI list; plugin bumped
+1.8.1 -> 1.8.2 (patch: instruction/prompt change, per its own versioning rule). `migrations/0.12.2.json`'s
+matching line is untouched: it was true and complete for its own tag, and AUTHORING.md's
+"Correcting a PUBLISHED manifest" section authorizes rewriting an entry only where it was WRONG for
+its tag, never adding an optional field to one that was already right. Deck `ask-informational-verify`
+and its backlog item are closed.
+
 ## The three abbreviations the spell-out wave missed are spelled out (2026-09-23)
 
 `--ds-input-label-fw` -> `--ds-input-label-font-weight` (`input.component.scss:36`),
