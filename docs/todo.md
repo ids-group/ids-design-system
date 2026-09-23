@@ -14,14 +14,14 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**114 open — 1 P1, 31 P2, 82 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**115 open — 1 P1, 32 P2, 82 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 1
 
 - **Framework & forms**
   - Upgrade to Angular 22 — and re-verify the signal-forms work against it, because one of its breaking changes lands exactly there
 
-### P2 — 31
+### P2 — 32
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Nothing catches a shell that rings on `:focus-within` when it means the keyboard
@@ -38,6 +38,7 @@ item and nothing else.
   - `ds-waterfall-chart` is `ds-cascade-chart` (Stas, 2026-09-23)
 - **Three more things the 0.13.4 migration cost a consumer (recorded 2026-09-23, from the mm-ecm consumer)**
   - `--ds-line-chart-plot-height` changes what it does and no manifest item says so
+  - The spell-out wave was keyed on suffixes, so three abbreviations survive it - and one
 - **Two chart names that collide (recorded 2026-09-21, from the mm-ecm consumer)**
   - `ds-bar` is a prefix of `ds-bar-chart`, and the token surfaces overlap the same way
 - **Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)**
@@ -557,6 +558,28 @@ Found walking mm-ecm from 0.13.3 to 0.13.4. None of the three breaks a build, wh
   searching their stylesheet for what the CHANGELOG told them finds nothing and concludes they are
   unaffected.
   **Wanted:** the prose corrected to `--ds-segmented-btn-*`.
+
+- [ ] **[P2] The spell-out wave was keyed on suffixes, so three abbreviations survive it - and one
+  of them sits beside a token the wave DID rename.** `ds-input` at v0.13.4 declares
+  `--ds-input-label-font-size` and `--ds-input-label-fw` on the same element: `-fs` was spelled out,
+  `-fw` was not, because the rule is `--ds-*-weight` to `--ds-*-font-weight` and a token spelled
+  `-fw` never matches it. Measured across the tags - 46 names ended in an abbreviation at v0.13.3,
+  three still do at v0.13.4:
+
+  ```
+  git grep -hoE -- "--ds-[a-z0-9-]+" v0.13.4 -- src/lib | sort -u \
+    | grep -E -- "-(fw|lh|fs|ff|ls|maxw|maxh|minw|pad|btn|tracking|transform|w|h)$"
+      --ds-input-label-fw   --ds-tag-fw   --ds-tag-lh
+  ```
+
+  **What it costs a consumer:** a stylesheet ends up carrying two conventions in adjacent lines.
+  mm-ecm's `login.page.scss` now reads `--ds-input-label-font-size` on one line and
+  `--ds-input-label-fw` on the next, and neither is wrong. The release's own promise - "118 `--ds-*`
+  tokens take their CSS property's name" - is what makes the survivors read as an oversight rather
+  than a decision.
+  **Wanted:** either `-fw` to `-font-weight` and `-lh` to `-line-height` in a later release with
+  their own migration items, or a line saying these three are deliberate. A gate is cheap here and
+  the grep above is it: no `--ds-*` name may end in an abbreviation.
 
 ## Two 0.13.4 items point `old` at the name the release gives them (recorded 2026-09-23, from the mm-ecm consumer)
 
