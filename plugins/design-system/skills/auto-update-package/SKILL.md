@@ -66,7 +66,7 @@ for behavioral fixes. Manual review is a LAST RESORT (Phase B step 10).
 "verify": "...", "restore": "...|null",
 "supersedes": ["<version>#<id>"] } ],
 "deleteList": [ { "id", "surface", "find": [], "why", "replaceWith" } ],
-"informational": [ "..." ] }
+"informational": [ "..." | { "text": "...", "verify": "..." } ] }
 
 `kind` ∈ selector-rename | type-rename | input-rename | output-rename | token-rename |
 class-rename | value-remap | scss-api | code-add | removed-api | behavior.
@@ -105,7 +105,10 @@ Every actionable item is **auto-applied**; items differ only in how they're VERI
   migration the `action` describes (real code edits), verified **semantically** (opus reads the change
   vs what the changelog requires; `ds-recheck` gives a first-pass verdict + confidence).
 - **informational** = a documented change needing NO consumer code action (purely visual, nothing to
-  edit) → not an item; the planner puts it in `informational` (an FYI line in the report).
+  edit) → not an item; the planner puts it in `informational` (an FYI line in the report). An entry
+  carrying a `verify` (`{ text, verify }`, rather than a bare string) names a rendering-only check
+  nothing else in this workflow performs — route it into **"applied — human should eyeball"**
+  instead of the plain FYI list, with the `verify` sentence as the thing to look at.
 
 ## Reading the DS sources (when the changelog isn't enough)
 
@@ -484,10 +487,13 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
   `check-delete-tables` gate requires every row's `find` shape verbatim in that version's "What you
   can now DELETE" table — a rows-only ask fails the release.
 - **Informational (FYI, no action):** documented changes needing no consumer code edit (from the
-  plan's `informational`) — listed so the human is aware, NOT a to-do.
+  plan's `informational`) — listed so the human is aware, NOT a to-do. A bare-string entry stays
+  here; an entry shaped `{ text, verify }` goes in "applied — human should eyeball" instead, with
+  its `verify` sentence, since that IS the eyeball check.
 - **Applied — human should eyeball:** behavioral edits that were applied but whose correctness is
   only visual (no build/grep signal), plus dynamic bindings the re-check excused as unresolvable
-  (left in place, listed with their `locs`) — committed, but worth a quick look.
+  (left in place, listed with their `locs`), plus any `informational` entry carrying a `verify` —
+  committed (or, for the informational case, nothing to commit), but worth a quick look.
 - **Needs manual review — should be EMPTY in a clean run:** the items the auto attempt + auto-fix
   loop could not resolve (cap or short-circuit), each with why — plus customization-drift residue
   the new theming API genuinely cannot express (listed here; it does not stop the run).

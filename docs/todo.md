@@ -14,9 +14,9 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**134 open — 0 P1, 16 P2, 118 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**133 open — 0 P1, 15 P2, 118 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
-### P2 — 16
+### P2 — 15
 
 - **Defects consumers work around today (swept 2026-09-23)**
   - `ds-modal` footer clips its buttons instead of stacking, against its own truncation contract (from the mm-ecm consumer)
@@ -39,7 +39,6 @@ item and nothing else.
 - **Hooks and APIs consumers reach past the surface for (swept 2026-09-23)**
   - The pager `ds-table` renders takes neither the pagination `size` nor its `layout` (from the mm-ecm-platform-kb consumer)
 - **Tooling**
-  - An `informational` entry describes a pure rendering change, and it is the one array in the manifest schema with no place for a `verify` (recorded 2026-09-23, from a consumer's 0.8.0 to 0.13.4 chain)
   - Publishing to npm stops working in January 2027 and the replacement is not chosen
   - Nothing catches a stale `presentations/ds.css`, and two gates read it as the truth
 - **Localization — every user-visible string is a hardcoded literal (recorded 2026-08-27, from the ITB Workspace picker report)**
@@ -573,11 +572,6 @@ Same sweep, the capabilities that are missing rather than wrong. Each workaround
 - [ ] **[P3] `ds-table`'s pagination footer has no padding hook (from the mm-ecm-platform-kb consumer).** `.pagination-footer` hardcodes `padding-block: var(--space-3)` (`table.component.scss:747-755`); only its inline sides follow `--ds-table-cell-padding-*`. The consumer doubles `.pagination-footer.pagination-footer { padding-top: ... }` (`agent-portal/src/styles.scss:645-646`). **Wanted:** `--ds-table-footer-padding-top` / `-bottom`, defaulting to `var(--space-3)`.
 
 ## Tooling
-
-- [ ] **[P2] An `informational` entry describes a pure rendering change, and it is the one array in the manifest schema with no place for a `verify` (recorded 2026-09-23, from a consumer's 0.8.0 to 0.13.4 chain).** `informational` is a bare array of strings, a sibling of `items` rather than a `kind` value inside it, and the workflow defines it as "a documented change needing NO consumer code action (purely visual, nothing to edit)". That is a statement about the consumer's CODE. It is not a statement about what the library now draws, and it is not a claim the library has checked what it draws.
-  **What it cost.** 0.12.2's line reads "An expanded `ds-table` row opens with a reveal - its cell interpolates `grid-template-rows` from `0fr` to `1fr` over `--duration-base`". Accurate and complete. The same change put `display: grid` on the `<td>`, which stops it being a table cell, so `colspan` is ignored and the panel renders one column wide - the P1 above. A consumer reading that line correctly had nothing to grep, nothing that failed to build, and nothing a re-check could assert. The defect surfaced through a QA ticket against a test environment, eleven releases after it shipped.
-  **The asymmetry is the point.** Every `kind` that changes a SYMBOL carries `verify`, and those are exactly the changes a grep or a build would have caught anyway. The entries that change only RENDERING, where opening the component is the one possible detector, carry no `verify` at all.
-  **The shape that fits.** Let an `informational` entry be either a string, as today, or an object `{ "text": "...", "verify": "..." }`, and fill `verify` whenever the line names a layout mechanism (`display`, `grid`, `flex`, `position`, `overflow`, `colspan`, a width, a height, a new wrapper element). One sentence is enough: "open an expanded row and confirm the panel spans the row rather than one column". Backwards compatible for every existing manifest. The schema change alone gates nothing: `verify` only closes the gap once the auto-update skill and `ds-recheck` route a present `informational.verify` into the existing "applied - human should eyeball" bucket (`SKILL.md:412-416`), the natural place for a check that only rendering can confirm.
 
 *This section also has items under **Decisions**, **Parked**, **Records**.*
 
@@ -1136,7 +1130,7 @@ file** — the number moves; cite the filename.
 | 9 | `9-bar-column-contracts` | How far to converge the bar and the column: name the difference, converge the palette, or give the bar a series model. | the stacking-contract ask under *Two chart names that collide* |
 | 10 | `10-banner-announce-warning` | Whether a dev warning names an error banner no screen reader will read. | the closed `banner.announce` ask, which left this open |
 | 11 | `11-picker-list-height` | Whether the picker list height becomes a public token or stays behind `panelClass`. | the closed `--picker-maxh` ask, same shape |
-| 12 | `12-decision-queue` | Every consumer ask and every open question in one page - 29 asks in four groups, then 35 decisions in six, each drawn as today against after. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
+| 12 | `12-decision-queue` | Every consumer ask and every open question in one page - 28 asks in four groups, then 35 decisions in six, each drawn as today against after. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled

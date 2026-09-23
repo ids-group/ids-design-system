@@ -803,7 +803,7 @@ export function checkFileProse(doc, before, after, prevTag, tag) {
   const defects = [];
   for (const [index, line] of (doc.informational ?? []).entries())
     for (const name of phantomTokens(
-      line,
+      typeof line === 'string' ? line : line?.text,
       before,
       after,
       `${tag} informational`,

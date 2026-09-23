@@ -139,6 +139,9 @@ const mutations = {
     const i = m.items.find((x) => x.kind === 'selector-rename');
     i.surface = 'template';
   },
+  M046: (m) => {
+    m.informational.push({ verify: 'open it and look' });
+  },
 };
 
 // A rule that fires on the defect and on the fix alike is a rule nobody can satisfy, so a rule
@@ -151,6 +154,25 @@ const negativeControls = [
     mutate: (m) => {
       const i = m.items.find((x) => x.kind === 'selector-rename');
       i.surface = ['template', 'style'];
+    },
+  },
+  {
+    label: 'M046 stays quiet on a well-formed { text, verify } informational object',
+    code: 'M046',
+    mutate: (m) => {
+      m.informational.push({
+        text: 'A rendering-only change to the layout.',
+        verify: 'open it and look',
+      });
+    },
+  },
+  {
+    label: 'M034 stays quiet on an informational object whose text cites a real delete-list id',
+    code: 'M034',
+    mutate: (m) => {
+      m.informational.push({
+        text: 'That override was doing nothing after the fix and can go. (delete list: search-height-pinned-for-a-short-row)',
+      });
     },
   },
 ];
@@ -227,6 +249,22 @@ const extraCases = [
       i.kind = 'value-remap';
       i.old = 'ds-x[attr]';
       i.map = ['attr="b"'];
+    },
+  },
+  {
+    label: 'M046 on an informational object with an unknown key',
+    code: 'M046',
+    mutate: (m) => {
+      m.informational.push({ text: 'A rendering-only change.', proof: 'no' });
+    },
+  },
+  {
+    label: 'M034 fires on an uncited delete instruction inside an informational object\'s `text`',
+    code: 'M034',
+    mutate: (m) => {
+      m.informational.push({
+        text: 'That override was doing nothing after the fix and can go.',
+      });
     },
   },
 ];
