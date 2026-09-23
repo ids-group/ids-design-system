@@ -111,8 +111,12 @@
       [thresholds]="latencyThresholds" />
 
     <svg:g
+      #latencyBars="dsColumnSeries"
       dsColumnSeries
-      [data]="latencyColumns" />
+      [data]="latencyColumns"
+      [dsChartTooltip]="latencyBars.tooltipContext()"
+      [dsChartTooltipPreferBelow]="latencyBars.activeMark.pinned()"
+      [dsChartTooltipOrigin]="latencyBars.activeMark.origin()" />
 
     <svg:g
       dsReferenceLabel
@@ -156,13 +160,20 @@
       [secondaryAxisColor]="lineAxisColor"
       [summary]="ordersSummary">
       <svg:g
+        #alignedBars="dsColumnSeries"
         dsColumnSeries
         [data]="orderColumns"
-        [showValues]="false" />
+        [showValues]="false"
+        [dsChartTooltip]="alignedBars.tooltipContext()"
+        [dsChartTooltipPreferBelow]="alignedBars.activeMark.pinned()"
+        [dsChartTooltipOrigin]="alignedBars.activeMark.origin()" />
 
       <svg:g
+        #alignedLine="dsLineSeries"
         dsLineSeries
-        [data]="basketSeries" />
+        [data]="basketSeries"
+        [dsChartTooltip]="alignedLine.tooltipContext()"
+        [dsChartTooltipOrigin]="alignedLine.tooltipOrigin()" />
     </ds-chart>
 
     <ds-chart
@@ -173,13 +184,20 @@
       [secondaryAxisColor]="lineAxisColor"
       [summary]="ordersSummary">
       <svg:g
+        #splitBars="dsColumnSeries"
         dsColumnSeries
         [data]="orderColumns"
-        [showValues]="false" />
+        [showValues]="false"
+        [dsChartTooltip]="splitBars.tooltipContext()"
+        [dsChartTooltipPreferBelow]="splitBars.activeMark.pinned()"
+        [dsChartTooltipOrigin]="splitBars.activeMark.origin()" />
 
       <svg:g
+        #splitLine="dsLineSeries"
         dsLineSeries
-        [data]="basketSeries" />
+        [data]="basketSeries"
+        [dsChartTooltip]="splitLine.tooltipContext()"
+        [dsChartTooltipOrigin]="splitLine.tooltipOrigin()" />
     </ds-chart>
   </div>
 
@@ -211,8 +229,11 @@
     [categories]="latencyWeeks"
     [summary]="latencySummary">
     <svg:g
+      #annotatedLine="dsLineSeries"
       dsLineSeries
-      [data]="basketSeries" />
+      [data]="basketSeries"
+      [dsChartTooltip]="annotatedLine.tooltipContext()"
+      [dsChartTooltipOrigin]="annotatedLine.tooltipOrigin()" />
 
     <svg:g
       dsSeriesAnnotation
@@ -284,13 +305,20 @@
     [secondaryAxisColor]="lineAxisColor"
     [summary]="ordersSummary">
     <svg:g
+      #namedBars="dsColumnSeries"
       dsColumnSeries
       [data]="orderColumns"
-      [showValues]="false" />
+      [showValues]="false"
+      [dsChartTooltip]="namedBars.tooltipContext()"
+      [dsChartTooltipPreferBelow]="namedBars.activeMark.pinned()"
+      [dsChartTooltipOrigin]="namedBars.activeMark.origin()" />
 
     <svg:g
+      #namedLine="dsLineSeries"
       dsLineSeries
-      [data]="basketSeries" />
+      [data]="basketSeries"
+      [dsChartTooltip]="namedLine.tooltipContext()"
+      [dsChartTooltipOrigin]="namedLine.tooltipOrigin()" />
   </ds-chart>
 
   <h3 class="block-title t-h4">
