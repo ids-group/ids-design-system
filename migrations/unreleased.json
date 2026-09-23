@@ -181,6 +181,63 @@
       ],
       "verify": "A `ds-line-chart` under `--ds-line-chart-placeholder-height: 120px` shows a 120px skeleton while loading and a 120px empty box with no series, while the plot it draws is the height `--ds-line-chart-plot-height` gives it.",
       "note": "Until 0.13.4 `--ds-line-chart-plot-height` reached the skeleton and the message box alone, and 0.13.4 made it size the plot too, so a value pinned for the placeholder states resized every plot. The placeholder states have their own token now; set, it drives all of them, and the plot reads only the plot token."
+    },
+    {
+      "id": "input-label-fw-is-input-label-font-weight",
+      "kind": "token-rename",
+      "old": "--ds-input-label-fw",
+      "new": "--ds-input-label-font-weight",
+      "surface": "style",
+      "action": "Rewrite `--ds-input-label-fw` to `--ds-input-label-font-weight`, keeping the value.",
+      "appliesWhen": "Only a stylesheet that sets `--ds-input-label-fw` on `ds-input`. `--ds-input-label-font-size` and `--ds-input-label-color` are different tokens on the same element and are untouched; the family-level fallback this token still chains into, `--ds-field-label-font-weight`, keeps its own name.",
+      "pitfall": "The old name is inert rather than invalid, so a declaration left behind sets nothing and reports nothing — the label quietly falls back to `--ds-field-label-font-weight` or the default bold, which on most pages still looks close to right.",
+      "restore": null,
+      "searchHints": [
+        "--ds-input-label-fw"
+      ],
+      "detect": [
+        "--ds-input-label-fw([^A-Za-z0-9_-]|$)"
+      ],
+      "verify": "No stylesheet declares `--ds-input-label-fw`, and the ds-input label's weight still comes from `--ds-input-label-font-weight` (or the `--ds-field-label-font-weight` / `--font-weight-bold` fallback chain).",
+      "note": "The 0.13.4 spell-out wave matched `--ds-*-weight` to `--ds-*-font-weight`; a token already spelled `-fw` never matched that rule and survived next to the sibling `--ds-input-label-font-size` it was renamed alongside on the same element. This closes that one name on its own."
+    },
+    {
+      "id": "tag-fw-is-tag-font-weight",
+      "kind": "token-rename",
+      "old": "--ds-tag-fw",
+      "new": "--ds-tag-font-weight",
+      "surface": "style",
+      "action": "Rewrite `--ds-tag-fw` to `--ds-tag-font-weight`, keeping the value.",
+      "appliesWhen": "Only a stylesheet that sets `--ds-tag-fw` on `ds-tag`. `--ds-tag-font-size` and `--ds-tag-line-height` are different tokens on the same element, renamed by their own entry in this release.",
+      "pitfall": "The old name is inert rather than invalid, so a declaration left behind sets nothing and reports nothing — the tag's label quietly falls back to `--font-weight-bold`.",
+      "restore": null,
+      "searchHints": [
+        "--ds-tag-fw"
+      ],
+      "detect": [
+        "--ds-tag-fw([^A-Za-z0-9_-]|$)"
+      ],
+      "verify": "No stylesheet declares `--ds-tag-fw`, and `ds-tag`'s label weight comes from `--ds-tag-font-weight` (or the `--font-weight-bold` default).",
+      "note": "One of three abbreviations the 0.13.4 spell-out wave left standing, because that wave matched `--ds-*-weight` to `--ds-*-font-weight` and a token already spelled `-fw` never matched it. `--ds-tag-font-size` sat beside it already spelled out, which is what made the survivor read as an oversight."
+    },
+    {
+      "id": "tag-lh-is-tag-line-height",
+      "kind": "token-rename",
+      "old": "--ds-tag-lh",
+      "new": "--ds-tag-line-height",
+      "surface": "style",
+      "action": "Rewrite `--ds-tag-lh` to `--ds-tag-line-height`, keeping the value.",
+      "appliesWhen": "Only a stylesheet that sets `--ds-tag-lh` on `ds-tag`. `--ds-tag-font-size` and `--ds-tag-font-weight` are different tokens on the same element.",
+      "pitfall": "The old name is inert rather than invalid, so a declaration left behind sets nothing and reports nothing — the tag's label quietly falls back to `--line-height-base`.",
+      "restore": null,
+      "searchHints": [
+        "--ds-tag-lh"
+      ],
+      "detect": [
+        "--ds-tag-lh([^A-Za-z0-9_-]|$)"
+      ],
+      "verify": "No stylesheet declares `--ds-tag-lh`, and `ds-tag`'s label line-height comes from `--ds-tag-line-height` (or the `--line-height-base` default).",
+      "note": "The other of three abbreviations the 0.13.4 spell-out wave left standing, for the same reason as `--ds-tag-fw`: the wave matched `--ds-*-weight` and other named properties, never a token already spelled as the abbreviation itself."
     }
   ],
   "informational": [

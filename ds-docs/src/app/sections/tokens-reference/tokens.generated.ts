@@ -4535,7 +4535,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Label size."
       },
       {
-        "name": "--ds-input-label-fw",
+        "name": "--ds-input-label-font-weight",
         "value": "var(--ds-field-label-font-weight,      var(--font-weight-bold))",
         "notes": "Label weight."
       },
@@ -7419,7 +7419,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Tag text colour (defaults to --accent-on)."
       },
       {
-        "name": "--ds-tag-fw",
+        "name": "--ds-tag-font-weight",
         "value": "var(--font-weight-bold)",
         "notes": "Label weight."
       },
@@ -7429,7 +7429,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Label size."
       },
       {
-        "name": "--ds-tag-lh",
+        "name": "--ds-tag-line-height",
         "value": "var(--line-height-base)",
         "notes": "Label line-height."
       },
