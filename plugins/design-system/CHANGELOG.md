@@ -4,15 +4,6 @@ Versioning: **patch** = instruction/prompt fixes; **minor** = new capability (pi
 source, agent); **major** = a change to the workflow's behavior contract. Bump `plugin.json` +
 `marketplace.json` together on every published change.
 
-## 1.8.2 - 2026-09-23
-
-### Changed
-
-- **An `informational` entry may carry a `verify`** (`{ text, verify }`, not only a bare string) —
-  the planner fills it when the changelog line names a layout mechanism, and the entry then routes
-  into the "applied - human should eyeball" report bucket with its `verify` sentence, instead of the
-  plain FYI list.
-
 ## 1.8.1 - 2026-09-23
 
 ### Changed
