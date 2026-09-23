@@ -16,7 +16,8 @@ One file per released version — `migrations/<version>.json` — mirroring that
   "deleteList": [ { "id": "<slug>", "surface": "<surface>", "find": ["<shape>", "..."],
                     "why": "<what made it unnecessary>",
                     "replaceWith": "<the API that replaces it>" } ],
-  "informational": [ "<one-line FYI per non-actionable change group>" ] }
+  "informational": [ "<one-line FYI per non-actionable change group>" |
+                      { "text": "...", "verify": "<one concrete eyeball check>" } ] }
 ```
 
 - `kind` ∈ `selector-rename | type-rename | input-rename | output-rename | token-rename |
@@ -49,6 +50,11 @@ One file per released version — `migrations/<version>.json` — mirroring that
 - **`pitfall`** — the way to apply the item mechanically correctly and still ship a broken app.
   Read it before deciding a clean build means done.
 - **`deleteList`** — the structured form of "what you can now delete" (see below).
+- **`informational`** — a non-actionable FYI, either a bare string or `{ "text": "...", "verify":
+  "..." }`. Fill `verify` whenever the line names a layout mechanism (`display`, `grid`, `flex`,
+  `position`, `overflow`, `colspan`, a width, a height, a new wrapper element) — one concrete
+  eyeball check ("open an expanded row and confirm the panel spans the row, not one column"),
+  because a change to RENDERING has no symbol a grep or a build can catch.
 
 **Why:** an upgrade tool can read the plan out of the prose changelog, but it re-derives it on
 every run. A shipped manifest makes it deterministic: the tool validates and prefers the
