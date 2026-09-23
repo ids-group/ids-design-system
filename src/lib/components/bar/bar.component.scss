@@ -8,6 +8,7 @@
   --_bar-fill-color: var(--ds-bar-fill-color, var(--accent));
   --_bar-target-color: var(--ds-bar-target-color, var(--text-primary));
   --_bar-target-width: var(--ds-bar-target-width, 2px);
+  --_bar-radius: var(--ds-bar-radius, var(--radius-pill));
 
   display: block;
   position: relative;
@@ -19,19 +20,19 @@
   min-inline-size: var(--ds-bar-min-width, 3rem);
   block-size: var(--_bar-height);
   background: var(--_bar-track-color);
-  border-radius: var(--radius-pill);
+  border-radius: var(--_bar-radius);
   overflow: hidden;
 
   > span {
     display: block;
     block-size: 100%;
     background: var(--_bar-fill-color);
-    border-radius: var(--radius-pill);
+    border-radius: var(--_bar-radius);
     transition: inline-size var(--duration-base) var(--ease-standard);
   }
 
   /* A div rather than a second span: `> span` is what a consumer's own rule targets, and a
-     marker matching it would take the fill's colour and pill radius. */
+     marker matching it would take the fill's colour and radius. */
   > .target {
     position: absolute;
     inset-block-start: 0;
