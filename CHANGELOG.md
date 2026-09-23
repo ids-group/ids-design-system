@@ -21,8 +21,9 @@
   `.is-pinned` added to it.
 
 - **Subclassing one of these breaks on a name collision.** `ChartComponent`,
-  `ColumnSeriesComponent`, `LineSeriesComponent` and `ColumnChartComponent` each gained members
-  while the container took over the tooltip, and so did `ChartTooltipDirective`, which is internal
+  `ColumnSeriesComponent`, `LineSeriesComponent`, `ColumnChartComponent`, `ScatterChartComponent`
+  and `ChartDataTableComponent` each gained members, most of them while the container took over the
+  tooltip, and so did `ChartTooltipDirective`, which is internal
   but reachable through `@ids-group-ltd/ids-design-system/components/chart-tooltip`. Declaring a
   member of the same name in a subclass is a compile error - TS4114, or TS2416 where the signature
   differs - so rename yours or add `override`. Subclassing a DS component is unsupported either
