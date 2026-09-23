@@ -39,6 +39,11 @@
 
 - **`--ds-toast-queue-bg-color` and `--ds-toast-queue-text-color`** paint the `+N` strip.
 
+- **`ChartScales` carries an optional `measured` signal**, true once the plot has its real width.
+  A mark of your own can wait for it before building geometry the first measurement would replace.
+  A container of your own that implements `ChartScales` may leave it out, and a mark reads it as
+  always measured then.
+
 ### Changed
 
 - **A category panel names every series at the category.** `tooltip="axis"` was documented to do
@@ -100,8 +105,9 @@
   asked the browser for its running animations, and in Chrome that call slows down with each
   animation already running, so a scatter of a thousand points held the main thread for seconds -
   longer still on a page with other charts entering. Under zone.js a `ds-chart` also ran two extra
-  change-detection passes of the whole application after its first render, and the default number
-  format built a new formatter for every label.
+  change-detection passes of the whole application after its first render, a column or line series
+  built its geometry at a stand-in width before the real one arrived, and the default number format
+  built a new formatter for every label.
 
 - **Axis labels are measured again when their text changes.** The value gutter and the rotation and
   thinning of category labels were decided on the first render alone, so a chart that started out
