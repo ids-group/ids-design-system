@@ -1,5 +1,7 @@
 ## Unreleased
 
+## 0.13.4 — 2026-09-23
+
 ### Breaking
 
 - **The second-axis modes are renamed: `'rounded'` is `'aligned'`, `'independent'` is `'dual-grid'`,
