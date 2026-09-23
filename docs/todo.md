@@ -252,7 +252,8 @@ mm-broker is on 0.10.3 and mm-ecm-platform's main checkout on 0.8.0 (measured 20
 will swallow every release since in one pass, so those manifests are what has to be complete.
 
 **Two habits that keep catching real defects, worth reading before opening anything.** A number
-measured in ONE theme carried into the other unchecked - three times, all wrong. And a capability
+measured in ONE theme carried into the other unchecked - twice, both wrong: the `tonal` disabled fill
+(4.32:1 light, 1.20:1 dark) and the neutral disabled label (`docs/done.md:1590`, `:1720`). And a capability
 that shipped with zero adoption twice traced to one missing field in a contract: when adoption is
 zero, read the consumer's hand-rolled version rather than re-reading our own API.
 

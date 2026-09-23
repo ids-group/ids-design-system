@@ -435,7 +435,8 @@ mm-broker is on 0.10.3 and mm-ecm-platform's main checkout on 0.8.0 (measured 20
 will swallow every release since in one pass, so those manifests are what has to be complete.
 
 **Two habits that keep catching real defects, worth reading before opening anything.** A number
-measured in ONE theme carried into the other unchecked - three times, all wrong. And a capability
+measured in ONE theme carried into the other unchecked - twice, both wrong: the `tonal` disabled fill
+(4.32:1 light, 1.20:1 dark) and the neutral disabled label (`docs/done.md:1590`, `:1720`). And a capability
 that shipped with zero adoption twice traced to one missing field in a contract: when adoption is
 zero, read the consumer's hand-rolled version rather than re-reading our own API.
 
@@ -564,7 +565,7 @@ and says nothing about the old one. Measured on three grounds: `presentations/fo
   Observed 2026-09-23 on the mm-ecm consumer, where an agent migrating to 0.13.3 reached for exactly
   that guard, believed it was scoped and it was not. The collision is live there: the
   mm-ecm-platform-kb prototype on 0.13.4 has 4 `<ds-bar>` beside 5 `<ds-bar-chart>`. The 0.13.3
-  manifest pitfalls (`ds-progress`/`ds-meter` to `ds-bar`) and CHANGELOG line 959 still prescribe
+  manifest pitfalls (`ds-progress`/`ds-meter` to `ds-bar`) and CHANGELOG.md:969 still prescribe
   the word boundary. A guard that holds needs the longer name excluded explicitly - `ds-bar(?!-chart)`,
   or matching `<ds-bar[\s/>]`. Worth putting in the item's `pitfall` either way, since it turns
   "be careful" into a reason the careful version fails.
@@ -613,16 +614,17 @@ generated API table carries the NAMES, so this is about a reader meeting an inpu
 rather than never meeting it at all.
 
 - [ ] **[P3] `g[dsLineSeries]` demonstrates `stacked` and `tooltipAnchor` only on the preset.**
-  `chart.section.html:256-260` describes both in prose, and no `dsLineSeries` in ds-docs binds
+  `chart.section.html:259-261` describes both in prose, and no `dsLineSeries` in ds-docs binds
   either; the `stack="stacked"` at `line-chart.section.html:92` is on `ds-line-chart`. The
   composable path is the one a consumer reaches for after the preset stops fitting, so its inputs
   are the ones that need an example on the mark itself.
 
 - [ ] **[P3] `--ds-chart-dimmed-opacity` has an empty `notes` and a near-twin name.**
   `column-series.component.scss:171` reads it with a 0.25 fallback, and `tokens.generated.ts:3277`
-  gives it no description. Three chart docblocks cite `--ds-chart-dim-opacity` at 0.3
-  (`bar-chart.component.ts:187`), so one idea carries two spellings and two defaults. Decide whether
-  they are one token, then write the note.
+  gives it no description. Five chart docblocks cite `--ds-chart-dim-opacity` at 0.3
+  (`bar-chart.component.ts:187`, `column-chart.component.ts:256`, `funnel-chart.component.ts:186`,
+  `line-chart.component.ts:154`, `pie-chart.component.ts:184`), so one idea carries two spellings
+  and two defaults. Decide whether they are one token, then write the note.
 
 Constraints and decisions that read as removable and are not.
 
@@ -643,7 +645,7 @@ Constraints and decisions that read as removable and are not.
 *This section also has items under **Decisions**, **Parked**, **Records**.*
 
 - [ ] **[P3] `ds-line-chart`'s `tooltipAnchor` doc does not say it is inert unless `tooltip="axis"`.**
-  `chart/line-series.component.ts:465-472` reads the anchor only for an `axis` panel. `g[dsLineSeries]`
+  `chart/line-series.component.ts:507-515` reads the anchor only for an `axis` panel. `g[dsLineSeries]`
   says so (its docblock at `:148-151` and the CHANGELOG), but `ds-line-chart`'s own docblock
   (`line-chart.component.ts:417-420`, "Where the tooltip is pinned") does not - reachable when a
   consumer overrides the `axis` default. A value that does nothing depending on a sibling is the shape
@@ -861,7 +863,7 @@ how it surfaced - this is the manifest half, not a tooling gap.
   **The shape that fits:** `axis` belongs on the DIRECTIVE, not on `ColumnSeriesPoint`. A column series is a flat list of points under one `seriesLabel`, so a per-point axis would be meaningless; `LineSeriesData` is a per-series object, which is why its own `axis` sits in the data. `<svg:g dsColumnSeries [axis]="'secondary'">` defaulting to `'primary'` mirrors what the line already offers, and leaves every existing chart unchanged.
   **The workaround, for the record:** swap the mark types, visits as columns and requests as a line. That restores the sides at the price of changing what each series looks like, so it is a different trade rather than a fix.
 
-- [ ] **[P3] `_overlay-motion.scss` credits the leave teardown to `animationend`, while under reduced motion it is the fallback timer that does it (recorded 2026-09-23, from the mm-ecm-platform 0.13.4 audit).** The leave comment (`_overlay-motion.scss:65-66`) reads "Reduced motion zeroes the duration at `:root`, so the animation still runs and `animationend` still tears down."; the file header (`:14-16`) and `modal.component.ts:81` ("Reduced-motion zeroes the durations -> close is instant") repeat the claim. A consumer measured the opposite against a running app over CDP: at `animation-duration: 0s` the animation jumps straight to `finished` and does not reliably deliver `animationend` to a listener bound in the same style flush, so the teardown bound to that event never runs. `styles/_tokens.scss:503-508` does zero every `--duration-*` under `reduce`, and Windows 11 with "Animation effects" off reports `reduce`, so this is an ordinary machine rather than an edge case.
+- [ ] **[P3] `_overlay-motion.scss` credits the leave teardown to `animationend`, while under reduced motion it is the fallback timer that does it (recorded 2026-09-23, from the mm-ecm-platform 0.13.4 audit).** The leave comment (`_overlay-motion.scss:65-66`) reads "Reduced motion zeroes the duration at `:root`, so the animation still runs and `animationend` still tears down."; the file header (`:14-16`) and `modal.component.ts:81` ("Reduced-motion zeroes the durations -> close is instant") repeat the claim. A consumer measured the opposite against a running app over CDP: at `animation-duration: 0s` the animation jumps straight to `finished` and does not reliably deliver `animationend` to a listener bound in the same style flush, so the teardown bound to that event never runs. `styles/_tokens.scss:503-509` does zero every `--duration-*` under `reduce`, and Windows 11 with "Animation effects" off reports `reduce`, so this is an ordinary machine rather than an edge case.
   **What the timer covers, and why the comment still matters:** every teardown path already carries a timer - `setTimeout(() => this.finishClose(), 300)` in `components-modal.mjs`, `components-drawer.mjs` and `components-bottom-sheet.mjs`, and `setTimeout(finish, LEAVE_TIMEOUT_MS)` with `LEAVE_TIMEOUT_MS = 400` in `disposeWithLeave` (all measured against 0.13.4's `fesm2022/`). So the scrim or pane is torn down in at most 300-400 ms whatever the event does. Panes are click-safe meanwhile (`.ds-leaving` has `pointer-events: none`), but the modal, drawer and bottom-sheet `.closing` scrims have no such rule (`modal.component.scss:248-253`, drawer-scrim `:63`, sheet-overlay `:49`), so under `reduce` the invisible scrim swallows clicks for up to 300 ms - `pointer-events: none` on `.closing` closes that window in the library. The comment names `animationend` as the guarantee, which invites a future reader to treat the timer as redundant belt-and-braces and delete it. Deleting it under `reduce` restores a `forwards`-filled `opacity: 0` scrim at `position: fixed; inset: 0` with `pointer-events: auto` that swallows every click, with no console error.
   **What would settle it:** either re-word all three copies of the claim so the timer is named as what guarantees teardown at zero duration, or keep the claim and prove it - a test that dismisses a modal under emulated `reduce` with the timer stubbed out and asserts the scrim leaves the DOM. One of the two, because the comment and the timer currently encode opposite beliefs about the same code path.
   **What the consumer ships meanwhile:** `shared-styles/_ds-overlay-motion.scss` forces `animation-duration: 1ms !important` on `.modal-backdrop.closing`, `.drawer-scrim.closing`, `.sheet-overlay.closing`, `.sheet.closing` and the four edge classes, and on `.cdk-overlay-pane.ds-overlay-pane.ds-leaving > *`, so `animationend` fires promptly instead of waiting out the fallback, plus `pointer-events: none` on the three `.closing` scrims under every motion preference. Kept at 0.13.4 by decision (Stas, 2026-09-23): it costs nothing and closes the 300-400 ms window in which a closing scrim still intercepts a click.
@@ -911,7 +913,7 @@ Same sweep, the capabilities that are missing rather than wrong. Each workaround
 
 - [ ] **[P3] `dsCellTemplate` hands the row out as `unknown`, so every table carries a caster (from the ai-sdlc / mm-broker consumers).** `cell-template.directive.ts:29` injects `TemplateRef<{ $implicit: unknown; row: unknown }>` and has no `ngTemplateContextGuard`, although `TableComponent<T>` (`table.component.ts:140-142`) knows `T`. mm-broker ships 39 one-line `asRow(row: unknown): XRow { return row as XRow; }` helpers under `src/` (grep `\(row: unknown\)`), and ai-sdlc-prototype tracks it at `docs/todo.md:225-235`. **Wanted:** a generic `CellTemplateDirective<T>` with an optional typing input (`[dsCellTemplateOf]="rows"`) and a static `ngTemplateContextGuard` narrowing `$implicit` and `row` to `T`, so `let-row` types under strict templates and the casters can be deleted; untyped use stays valid.
 
-- [ ] **[P3] `ds-table`'s pagination footer has no padding hook (from the mm-ecm-platform-kb consumer).** `.pagination-footer` hardcodes `padding-block: var(--space-3)` (`table.component.scss:742-750`); only its inline sides follow `--ds-table-cell-padding-*`. The consumer doubles `.pagination-footer.pagination-footer { padding-top: ... }` (`agent-portal/src/styles.scss:645-646`). **Wanted:** `--ds-table-footer-padding-top` / `-bottom`, defaulting to `var(--space-3)`.
+- [ ] **[P3] `ds-table`'s pagination footer has no padding hook (from the mm-ecm-platform-kb consumer).** `.pagination-footer` hardcodes `padding-block: var(--space-3)` (`table.component.scss:747-755`); only its inline sides follow `--ds-table-cell-padding-*`. The consumer doubles `.pagination-footer.pagination-footer { padding-top: ... }` (`agent-portal/src/styles.scss:645-646`). **Wanted:** `--ds-table-footer-padding-top` / `-bottom`, defaulting to `var(--space-3)`.
 
 ## Tooling
 
@@ -946,7 +948,7 @@ Both found while planning that consumer's move to 0.13.3. Neither blocks it; bot
   arrives in the datum on one side and in an input on the other, and the same flat array is one
   series in the bar, where every row takes `--ds-chart-series-default-color`, against N categories
   in the column, where each mark takes its own palette slot (`bar-chart.component.ts:388` against
-  `column-chart.component.ts:308-313`). Both drawn in deck `9-bar-column-contracts`.
+  `column-chart.component.ts:316-322`). Both drawn in deck `9-bar-column-contracts`.
 
 ## Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)
 
@@ -993,7 +995,7 @@ the service was just the one somebody noticed. Full table and every tested hypot
 `packaging-diagnosis.md`.
 
 - [ ] **[P3] A2 - column filters and persisted layout out of `ds-table`.** A1 is priced (a fixed
-  923 B seam, `done.md:3456`); resizing, reorder with the picker and `@angular/cdk/drag-drop`, and CSV
+  923 B seam, `done.md:3477`); resizing, reorder with the picker and `@angular/cdk/drag-drop`, and CSV
   export already moved out as `dsTableResize`, `dsTableColumns` and `dsTableExport` (0.12.1). Still on
   `ds-table`: `filterMode` / `columnFilterOptions` / `filterQuery` and `persistLayout` / `storageKey`
   (`table.component.ts:265-328`). Three questions the ablation left open: does `truncate` stay in the
@@ -1208,7 +1210,7 @@ beside another lane changing those three files.
 - [ ] **[P3] Transitions are missing or wrong in places, and nothing says where (Stas, 2026-09-04).**
   Asked for as a sweep: add the ones that are absent, correct the ones that are wrong. Two mechanical
   traps are already known and should shape the sweep rather than be rediscovered. First, `transition`
-  is ONE property: whichever rule wins REPLACES the other's list, it never adds to it, and 49
+  is ONE property: whichever rule wins REPLACES the other's list, it never adds to it, and 50
   component stylesheets declare their own — this is why `focus.ring` uses an `animation` instead, and
   why `_press.scss` deliberately declares no transition at all. Second, a state that appears and
   disappears cannot transition unless its resting state exists in the DOM: an element rendered only
@@ -1235,7 +1237,7 @@ beside another lane changing those three files.
   on 2026-09-02 to share the picker internals, and the scope was the index cursor alone: the panel,
   the `DsOptionItem` group shape and the five projection slots are already shared and held by
   `npm run picker-parity`. `src/lib/core/list-cursor.ts` serves select and multi-select fully and
-  autocomplete for PageUp/PageDown and Home/End, but autocomplete's ArrowUp/ArrowDown (`:634`, `:645`)
+  autocomplete for PageUp/PageDown and Home/End, but autocomplete's ArrowDown/ArrowUp (`:634`, `:645`)
   still call the wrap-around walk at `autocomplete.component.ts:534-548`, the one that counts the
   create/no-match slot. The shared helper takes it as
   `{ length: slots, isEnabled: i => !options[i] || !options[i].disabled }`; what the move owes is a
@@ -1821,9 +1823,9 @@ One ask left from that batch. The two column-chart gaps beside it shipped in v0.
 
 ## Docs nav chapters — the two limits the derivation ships with (recorded 2026-09-08)
 
-- [ ] **[P3] A chapter list reaches only sections whose headings are `h3.block-title`.** `docs-section` derives its chapters by walking that one selector, so a section that titles its blocks any other way contributes nothing and its nav item shows no caret — silently, because there is no error to raise for markup that simply does not match. Chapters are opt-in per section (`[chapters]="true"`, 9 sections: the charts overview, seven chart pages and `ds-table`) and dev-only (`chapterNavEnabled()` = `isDevMode()`, `feature-flags.ts:12-16`) until this and the item below close. The limit bites inside opted-in sections: `table.section.html` has 38 `h3` against 30 `h3.block-title`, line-chart 23 against 22, chart 7 against 6. **Fix by** either normalising the remaining sections onto `h3.block-title` or widening the walk to every `h3` inside the section and letting the heading opt out with an attribute. **A check would say which**: count sections whose `h3` elements carry the class against those that have `h3` at all, and fail when the two disagree — the same shape as `check-docs-attrs`. Worth doing before anyone concludes a section "has no chapters" when it has 20.
+- [ ] **[P3] A chapter list reaches only sections whose headings are `h3.block-title`.** `docs-section` derives its chapters by walking that one selector, so a section that titles its blocks any other way contributes nothing and its nav item shows no caret — silently, because there is no error to raise for markup that simply does not match. Chapters are opt-in per section (`[chapters]="true"`, 9 sections: the charts overview, seven chart pages and `ds-table`) and dev-only (`chapterNavEnabled()` = `isDevMode()`, `feature-flags.ts:12-16`) until this and the item below close. The limit is latent rather than biting today: `table.section.html` has 38 `h3` and 38 `h3.block-title`, line-chart 23 and 23, chart 7 and 7 - every heading in the chapter-enabled sections already carries the class, so nothing is dropped. A section that adds a plain `h3` later would lose it silently, with no error to say so. **Fix by** either normalising future sections onto `h3.block-title` or widening the walk to every `h3` inside the section and letting the heading opt out with an attribute. **A check would say which**: count sections whose `h3` elements carry the class against those that have `h3` at all, and fail when the two disagree — the same shape as `check-docs-attrs`. Worth doing before anyone concludes a section "has no chapters" when it has 20.
 
-- [ ] **[P3] The active chapter is not scrolled into the rail's own viewport.** With ~30 chapters under `ds-table`, the highlighted one can sit outside the sidebar's scroll — the reader watches the URL fragment change while the list shows no movement, which is the same "where am I" problem the chapter list was added to solve. It is one of the two limits keeping the chapter nav dev-only. Section items never had this: there are at most ~20 per group and the group collapses. **Fix by** scrolling the active chapter link into view within the nav's scroller when `activeChapter` changes — `scrollIntoView({ block: 'nearest' })` on the element, guarded so a click the reader just made does not fight their own scroll. **The trap:** the nav is itself inside the layout's rail, so a naive `scrollIntoView` scrolls the PAGE as well; it has to be constrained to the nav container the way `onItem` constrains its scroll to the layout's scroller.
+- [ ] **[P3] The active chapter is not scrolled into the rail's own viewport.** With ~38 chapters under `ds-table`, the highlighted one can sit outside the sidebar's scroll — the reader watches the URL fragment change while the list shows no movement, which is the same "where am I" problem the chapter list was added to solve. It is one of the two limits keeping the chapter nav dev-only. Section items never had this: there are at most ~20 per group and the group collapses. **Fix by** scrolling the active chapter link into view within the nav's scroller when `activeChapter` changes — `scrollIntoView({ block: 'nearest' })` on the element, guarded so a click the reader just made does not fight their own scroll. **The trap:** the nav is itself inside the layout's rail, so a naive `scrollIntoView` scrolls the PAGE as well; it has to be constrained to the nav container the way `onItem` constrains its scroll to the layout's scroller.
 
 ## Focus indicators — what the two-wave review left open (recorded 2026-09-04)
 
@@ -1879,7 +1881,7 @@ One ask left from that batch. The two column-chart gaps beside it shipped in v0.
   `FieldMessageComponent`, so every button ships the message line whether or not it binds `hint`,
   `warning` or `error`. Today that is hundreds of bytes: `field-message.component.ts:9-11` needs
   only `IconComponent` and `DS_CONFIG`, both already in the button's closure, and the opt-in
-  directive seam measured 308 B gzip worse (done.md:3497). Re-measure the button with and without the
+  directive seam measured 308 B gzip worse (done.md:3507). Re-measure the button with and without the
   line when `field-message` gains an import the button does not carry, or the button stops rendering
   `ds-icon`; the directive seam is the known way out.
 
@@ -1985,7 +1987,7 @@ One ask left from that batch. The two column-chart gaps beside it shipped in v0.
   around them repeats at `bar-chart.component.ts:228-246`, `pie-chart.component.ts:220-280`,
   `funnel-chart.component.ts:242-282` and `chart/column-series.component.ts:343-361`, differing only in the
   count source and the `.closest()` selector. `ds-scatter-chart` opts out entirely -
-  `scatter-chart.component.html:76` puts `tabindex="0"` on every mark when `interactive`, against the one-tab-stop
+  `scatter-chart.component.html:81` puts `tabindex="0"` on every mark when `interactive`, against the one-tab-stop
   policy the other four follow.
 
 - [ ] **[P3] Three charts hand-roll a legend and three compose their own accessible sentence.**
@@ -1997,8 +1999,8 @@ One ask left from that batch. The two column-chart gaps beside it shipped in v0.
   `scatter-chart.component.ts:309-324`, `waterfall-chart.component.ts:176-195`).
 
 - [ ] **[P3] Six places reimplement something a shared module already does.**
-  `chart/line-series.component.ts:209-220` repeats `alignSeriesValues` (`line-chart.math.ts:12-30`) on
-  data the chart already aligned at `line-chart.component.ts:270`. `scatter-chart.component.ts:56-58,182-187` declares its own
+  `chart/line-series.component.ts:209-222` repeats `alignSeriesValues` (`line-chart.math.ts:12-30`) on
+  data the chart already aligned at `line-chart.component.ts:270`. `scatter-chart.component.ts:57-59,183-188` declares its own
   gutters and plot rectangle beside `chartPlot` (`chart.math.ts:53`), and
   `scatter-chart.math.ts:50-71` its own clamped scale beside `valueScale` (`chart.math.ts:134`) -
   while using `linearScale` for the tick labels, so one component runs two scales.
@@ -2012,7 +2014,7 @@ One ask left from that batch. The two column-chart gaps beside it shipped in v0.
   `chart.math.ts:16`, `line-chart.math.ts:5`, `scatter-chart.math.ts:5` plus bare literals at
   `column-chart.component.ts:174` and `waterfall-chart.component.ts:93`; plot height `240` at
   `chart.math.ts:32` and `line-chart.component.ts:62`; edge gutter `12` at `chart.math.ts:37` and
-  `scatter-chart.component.ts:58`; value-label gap `8` at `column-series.component.ts:53` and
+  `scatter-chart.component.ts:59`; value-label gap `8` at `column-series.component.ts:53` and
   `waterfall-marks.component.ts:15`; column width ratio `0.8` in three places.
 
 # Records — kept so they are not "simplified" away
@@ -2077,7 +2079,7 @@ Bar and column are settled separately and stay apart.
 
 ## One popover instance per trigger — the alternative that was weighed and not taken (recorded 2026-09-08)
 
-- [ ] **[P3] ds-table's two popovers each serve many triggers from ONE instance, and the switch depends on an event order nothing enforces.** The column filter (`#columnFilterPopover`, `table.component.html:445`) and the row-actions menu (`#rowMenuPopover`, `:541-542`) are each declared once and re-anchored per click; clipped cells use `dsTooltipWhenClipped` instead. Clicking a second trigger while the first panel is open works only because the CDK's outside-pointer listener dismisses the open overlay before the button's own click handler runs, then `toggle` re-opens on the new trigger — measured on the filters (Venue → Status). Nothing asserts that order; the comment on `PopoverComponent.toggle` (`popover.component.ts:113-117`) records the dependency, which is not a guarantee, and still lists clipped-cell text among its users.
+- [ ] **[P3] ds-table's two popovers each serve many triggers from ONE instance, and the switch depends on an event order nothing enforces.** The column filter (`#columnFilterPopover`, `table.component.html:448`) and the row-actions menu (`#rowMenuPopover`, `:544`) are each declared once and re-anchored per click; clipped cells use `dsTooltipWhenClipped` instead. Clicking a second trigger while the first panel is open works only because the CDK's outside-pointer listener dismisses the open overlay before the button's own click handler runs, then `toggle` re-opens on the new trigger — measured on the filters (Venue → Status). Nothing asserts that order; the comment on `PopoverComponent.toggle` (`popover.component.ts:113-117`) records the dependency, which is not a guarantee, and still lists clipped-cell text among its users.
   **The alternative, weighed against eight others when the lost-first-click defect was fixed:** declare a `ds-popover` inside each filterable header / each actionable row and reach them with `viewChildren`, so no instance is shared and the ordering stops mattering. It also removes `filterColumn` and `menuRow` as stored state — the trigger's own popover knows what it belongs to.
   **Why it was not taken then:** it is N instances instead of one, a refactor of a core component, and it would leave the table's popovers diverging from `rowMenuPopover`'s config-level gating pattern that the fix had just aligned the filter to. The shared instance is measured working, so the change buys structure rather than behaviour. **Revisit if** a third shared-instance popover appears in the table, or if the dismiss-before-click order ever breaks under a CDK upgrade — the symptom would be a second trigger closing the panel instead of moving it.
 
@@ -2266,8 +2268,8 @@ an 895.475px row at 1366px and 424.258px in a 424.258px row at a 420px viewport,
 reads 0px 40ms after the row opens and 40.4px when it settles.
 
 The 48 chart, option and table tokens that reached the reference with an empty `notes` carry one
-each (`2dfd23a1`; the family was 48, not 49 - `--ds-bar-chart-target-*` is color, overhang and
-width). `ds-toast-region`'s dev warning is stripped from the shipped bundle: the production upload
+each (`2dfd23a1`; `--ds-bar-chart-target-*` is color, overhang and width). `ds-toast-region`'s dev
+warning is stripped from the shipped bundle: the production upload
 bundle keeps the component and none of its message text, and `core/dev-warning.ts` says so.
 `changelog-lint` fails when any single source group resolves nothing, or when `ng-package.json`
 declares no assets (`e160d527`, `changelog-lint.mjs:340-351`), which catches the renamed input the
