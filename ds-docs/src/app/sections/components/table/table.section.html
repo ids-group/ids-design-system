@@ -976,6 +976,40 @@
     [showLabel]="false"
     [stickyHeader]="false" />
 
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      paginationSize
+    </code> and
+    <code class="t-mono-inline">
+      paginationLayout
+    </code> reach the pager's own
+    <code class="t-mono-inline">
+      size
+    </code> and
+    <code class="t-mono-inline">
+      layout
+    </code>:
+    <code class="t-mono-inline">
+      md
+    </code> gives the buttons the md control
+    height, and <code class="t-mono-inline">spread</code> puts the range label
+    under the table's start edge and the controls under its end edge. Unset,
+    both fall back to
+    <code class="t-mono-inline">
+      DS_CONFIG.pagination
+    </code>, which is where an app whose every pager sits under a table says it
+    once.
+  </p>
+
+  <ds-table
+    caption="Projects"
+    paginationSize="md"
+    paginationLayout="spread"
+    [data]="projectRows"
+    [columns]="projectColumns"
+    [pageSize]="4"
+    [stickyHeader]="false" />
+
   <h3 class="block-title t-h4">
     Expandable rows
   </h3>
