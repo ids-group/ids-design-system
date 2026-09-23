@@ -27,6 +27,11 @@ timeline, two audiences.
 
 ### Build
 
+- **A library type named like a wrapper is imported under an alias.** `ChartDataTable` is both the
+  `dataTable` input's union and the `ds-chart-data-table` wrapper, and `wrappers.tsx` declared the
+  name twice (TS2395), so `build:elements` failed. `gen.mjs` imports it as `ChartDataTableType` and
+  writes the props against the alias.
+
 - **The upload tree is no longer rebuilt inside the release commit.** `prepare-release-commit.mjs`
   ran `build-upload.mjs` in the `version` hook, and `cut-release.sh` ran a full
   `build:elements` before the bump to feed it. Neither survived contact with what
@@ -112,6 +117,8 @@ timeline, two audiences.
 - **`docs/ChartDataTable.md` was added and `ChartDataTable` points at `charts/chart`.** Every chart
   renders `ds-chart-data-table` under its plot, and the `charts/chart` chapter is where it is shown,
   so the card is cut from there.
+
+- **`docs/Accordion.md` documents `multiple` in place of `multi`**, the input's name.
 
 ## 0.12.0 — 2026-09-04
 
