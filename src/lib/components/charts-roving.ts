@@ -1,4 +1,5 @@
-import { Signal, computed, signal } from '@angular/core';
+import { computed, signal } from '@angular/core';
+import type { Signal } from '@angular/core';
 
 /** Where a roving tabindex lands after `key`, or `null` when the key does not traverse.
  *
