@@ -3,6 +3,7 @@ import {
   Component,
   ElementRef,
   NgZone,
+  PLATFORM_ID,
   Signal,
   ViewEncapsulation,
   afterRenderEffect,
@@ -24,6 +25,7 @@ import {
   rotationWouldFit,
   tickValues,
 } from '@ids-group-ltd/ids-design-system/components';
+import { isPlatformBrowser } from '@angular/common';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import {
   ChartTooltipDirective,
@@ -220,11 +222,17 @@ export class ChartComponent implements ChartScales {
 
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly zone = inject(NgZone);
+  private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
   /** The `<svg>`'s own rendered width: `:host(.framed)` carries the frame padding, so the host's
    *  CONTENT box - which is what a `ResizeObserver` reports - is the box the canvas fills at
    *  `inline-size: 100%`. Measuring the host is therefore measuring the canvas. */
   private readonly measuredWidth = elementWidth(this.host);
+
+  /** Server-rendered output has no width to wait for, so it draws at the stand-in. */
+  readonly measured = computed(
+    () => !this.isBrowser || this.measuredWidth() > 0,
+  );
 
   protected readonly viewWidth = computed(
     () => this.measuredWidth() || CHART_FALLBACK_WIDTH,

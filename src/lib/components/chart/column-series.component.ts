@@ -269,6 +269,9 @@ export class ColumnSeriesComponent implements OnDestroy {
   ).bypassSecurityTrustHtml(ICONS.pin);
 
   protected readonly marks = computed(() => {
+    if (!(this.scales.measured?.() ?? true)) {
+      return [];
+    }
     const toX = this.scales.xPosition();
     const toY = this.scales.yPosition();
     const spans = this.spans();
