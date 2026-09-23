@@ -343,6 +343,19 @@ export class LineSeriesComponent implements OnDestroy {
    *  pointer answers for every series at once, a focused marker answers for its own. */
   private readonly focusedSeries = signal<string | null>(null);
 
+  /** A reading is active when its own marker is hovered OR when the category cursor is on its
+   *  category: one band, one answer, so the dot grows wherever in the band the pointer is rather
+   *  than only on the 4px dot itself. */
+  protected isActiveMarker(marker: {
+    markIndex: number;
+    categoryIndex: number;
+  }): boolean {
+    return (
+      marker.markIndex === this.activeMark.index() ||
+      marker.categoryIndex === this.scales.activeIndex()
+    );
+  }
+
   protected onMarkerEnter(markIndex: number, event: Event): void {
     this.activeMark.enter(markIndex, event);
   }
