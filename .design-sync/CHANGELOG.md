@@ -27,10 +27,12 @@ timeline, two audiences.
 
 ### Build
 
-- **A card waits for a deferred section body before slicing it.** The slice ran once, as soon as
-  `.section` existed, and a section that `@defer`s its body holds only the placeholder then, so
-  every block was dropped and 21 chart cards froze empty. It now retries until a block is present,
-  inside the same 8s budget.
+- **A card renders a `@defer (on viewport)` body, and one that never gets it fails the build.** A
+  headless page reports no element as intersecting, so a deferred chapter never resolved and its
+  27 chart cards froze the empty placeholder. A card of a chapter whose template holds `@defer`
+  reports every observed element visible once, and the slice waits until the section has a filled
+  child. A card still empty after its 8s budget reports nothing kept, so `measure-cards` names it
+  instead of passing it.
 
 - **A chart gets cards from its own chapter.** `build-cards.mjs` counted a chapter as a
   component's own only under `components/`, so `Chart`, `HeatmapChart`, `ScatterChart` and
