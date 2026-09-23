@@ -102,6 +102,8 @@
         "extends BarChartComponent",
         "extends FunnelChartComponent",
         "extends PieChartComponent",
+        "extends PaginationComponent",
+        "extends TableComponent",
         "extends "
       ],
       "detect": [
@@ -124,10 +126,14 @@
         "extends FunnelChartComponent",
         "FunnelChartComponent",
         "extends PieChartComponent",
-        "PieChartComponent"
+        "PieChartComponent",
+        "extends PaginationComponent",
+        "PaginationComponent",
+        "extends TableComponent",
+        "TableComponent"
       ],
       "verify": "Your build has no TS4114 or TS2416 against any of the listed classes, and no member of your subclass is named like one of the removed members listed in the note.",
-      "note": "Gained: ChartComponent 20 members, most of them the tooltip the container now owns, plus measured; ColumnSeriesComponent 14, LineSeriesComponent 9, ScatterChartComponent 4, ChartDataTableComponent 3, BarChartComponent and FunnelChartComponent two each, PieChartComponent roving, ColumnChartComponent highlightedSeries. Removed: rovingIndex and tabStopIndex from the bar, pie and funnel charts and the column series, onMarkEnter, onMarkNavigation and onPointKey from the column series, onMarkerEnter and onMarkerNavigation from the line series, onPlotPointer and clearCursor from ChartComponent, markIndex from ScatterChartComponent. ChartTooltipDirective gained dsChartTooltipPinned - internal, but reachable through the components/chart-tooltip entry point."
+      "note": "Gained: ChartComponent 20 members, most of them the tooltip the container now owns, plus measured; ColumnSeriesComponent 14, LineSeriesComponent 9, ScatterChartComponent 4, ChartDataTableComponent 3, BarChartComponent and FunnelChartComponent two each, PieChartComponent roving, ColumnChartComponent highlightedSeries. Removed: rovingIndex and tabStopIndex from the bar, pie and funnel charts and the column series, onMarkEnter, onMarkNavigation and onPointKey from the column series, onMarkerEnter and onMarkerNavigation from the line series, onPlotPointer and clearCursor from ChartComponent, markIndex from ScatterChartComponent. ChartTooltipDirective gained dsChartTooltipPinned - internal, but reachable through the components/chart-tooltip entry point. PaginationComponent gained layoutResolved; TableComponent gained paginationSize and paginationLayout."
     },
     {
       "id": "table-expand-panel-content-wrapper",
@@ -247,6 +253,29 @@
       ],
       "verify": "No stylesheet declares `--ds-tag-lh`, and `ds-tag`'s label line-height comes from `--ds-tag-line-height` (or the `--line-height-base` default).",
       "note": "The other of three abbreviations the 0.13.4 spell-out wave left standing, for the same reason as `--ds-tag-fw`: the wave matched `--ds-*-weight` and other named properties, never a token already spelled as the abbreviation itself."
+    },
+    {
+      "id": "pagination-layout-input-nullable",
+      "kind": "behavior",
+      "old": "ds-pagination[layout]",
+      "new": null,
+      "surface": "typescript",
+      "action": "Where you read `layout()` back from a `PaginationComponent` reference, or override `layout` in a subclass, handle `null`: the input is `PaginationLayout | null`, unset is `null`, and `layoutResolved()` gives the effective value.",
+      "appliesWhen": "Only TypeScript that reads `PaginationComponent.layout()` through a `viewChild` or a template reference, or a subclass overriding `layout`. A template binding `layout=\"spread\"` or `[layout]=\"expr\"` is unaffected, and so is every pager that never set it: unset still renders grouped.",
+      "pitfall": "A reader comparing `layout()` to `'grouped'` to detect the default now sees `null` for an unset pager and takes the other branch, with no compile error unless the value is assigned to a `PaginationLayout`. Read `layoutResolved()` for the effective value.",
+      "restore": null,
+      "searchHints": [
+        "PaginationComponent",
+        "layout()",
+        "layoutResolved"
+      ],
+      "detect": [
+        "PaginationComponent",
+        ".layout()",
+        "extends PaginationComponent"
+      ],
+      "verify": "Every read of a pager's `layout()` handles `null` or reads `layoutResolved()` instead, and a subclass overriding `layout` declares it `PaginationLayout | null`.",
+      "note": "`layout` was `input<PaginationLayout>('grouped')` and is `input<PaginationLayout | null>(null)`, so an unset pager can fall back to `DS_CONFIG.pagination.layout`, then `'grouped'`. Writers are fine: `'grouped'` and `'spread'` still bind. Readers of the raw input and overriders see the widened type."
     }
   ],
   "informational": [
@@ -263,7 +292,12 @@
     {
       "text": "ds-modal and ds-modal-card stack their [actions] into a full-width column, confirming action on top, once the buttons outgrow the card; a row that fits stays right-aligned. The row used to overflow past the card's start edge and clip the first button, so a consumer rule that wraps ds-modal-card .actions is redundant (delete list: modal-actions-flex-wrap).",
       "verify": "Open a sm modal whose three buttons carry long labels: each button spans the card's full width and none is clipped, the confirming button on top; a modal with two short buttons keeps them in one right-aligned row."
-    }
+    },
+    {
+      "text": "ds-table takes paginationSize and paginationLayout and forwards them to its footer pager as size and layout, so a larger spread footer under a table is two attributes; a consumer rule that doubles .pagination.pagination or .pagination-button.pagination-button under ds-table to force the pager's width or button height is redundant (delete list: table-pager-size-layout-override).",
+      "verify": "A ds-table with paginationSize=\"md\" paginationLayout=\"spread\" renders its pager buttons at the md control height with the range label at the table's start edge and the controls at its end edge; a table without either input renders its pager as before."
+    },
+    "DS_CONFIG.pagination.size and DS_CONFIG.pagination.layout set the default size and layout of every pager, ds-table's footer included: size resolves the input, then pagination.size, then control.size, then 'sm'; layout resolves the input, then pagination.layout, then 'grouped'. PaginationLayout is exported from the core entry point as well as from components/pagination."
   ],
   "deleteList": [
     {
@@ -296,6 +330,18 @@
       ],
       "why": "The expand cell is a table cell again, so a rule forcing display: table-cell on it restates the default, and while it held it also switched the reveal animation off.",
       "replaceWith": "nothing"
+    },
+    {
+      "id": "table-pager-size-layout-override",
+      "surface": "style",
+      "find": [
+        ".pagination.pagination",
+        ".pagination-button.pagination-button",
+        "ds-table .pagination",
+        "ds-table .pagination-button"
+      ],
+      "why": "ds-table forwards paginationSize and paginationLayout to its pager, and DS_CONFIG.pagination sets the default for every pager, so a doubled-class rule forcing the pager's width, display or button height inside a table restates a size or a layout the component takes.",
+      "replaceWith": "paginationSize=\"md\" paginationLayout=\"spread\" on the ds-table, or provideDsConfig({ pagination: { size: 'md', layout: 'spread' } }) for every pager; a rule that wants a height none of sm, md or lg gives stays"
     }
   ]
 }
