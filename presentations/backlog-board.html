@@ -197,14 +197,14 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**142 open — 1 P1, 23 P2, 118 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**143 open — 1 P1, 24 P2, 118 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 1
 
 - **Component feature gaps**
   - `display: grid` on `.expand-panel-cell` drops the expand panel out of the table, so its `colspan` does nothing and it renders one column wide (recorded 2026-09-23, from a consumer's QA against 0.13.4)
 
-### P2 — 23
+### P2 — 24
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - `_focus.scss`'s top-level CSS is copied into 48 component style strings
@@ -238,6 +238,7 @@ item and nothing else.
 - **Hooks and APIs consumers reach past the surface for (swept 2026-09-23)**
   - The pager `ds-table` renders takes neither the pagination `size` nor its `layout` (from the mm-ecm-platform-kb consumer)
 - **Tooling**
+  - An `informational` entry is the one kind that describes a pure rendering change, and it is the only kind that cannot carry a `verify` (recorded 2026-09-23, from a consumer's 0.8.0 to 0.13.4 chain)
   - Publishing to npm stops working in January 2027 and the replacement is not chosen
   - Nothing catches a stale `presentations/ds.css`, and two gates read it as the truth
 - **Localization — every user-visible string is a hardcoded literal (recorded 2026-08-27, from the ITB Workspace picker report)**
@@ -1248,6 +1249,11 @@ beside another lane changing those three files.
   specimens as well: both pin component internals in places `src/lib` does not reach.
 
 ## Tooling
+
+- [ ] **[P2] An `informational` entry is the one kind that describes a pure rendering change, and it is the only kind that cannot carry a `verify` (recorded 2026-09-23, from a consumer's 0.8.0 to 0.13.4 chain).** The manifest schema makes `informational` a bare array of strings, and the workflow defines it as "a documented change needing NO consumer code action (purely visual, nothing to edit)". That is a statement about the consumer's CODE. It is not a statement about what the library now draws, and it is not a claim the library has checked what it draws.
+  **What it cost.** 0.12.2's line reads "An expanded `ds-table` row opens with a reveal - its cell interpolates `grid-template-rows` from `0fr` to `1fr` over `--duration-base`". Accurate and complete. The same change put `display: grid` on the `<td>`, which stops it being a table cell, so `colspan` is ignored and the panel renders one column wide - the P1 above. A consumer reading that line correctly had nothing to grep, nothing that failed to build, and nothing a re-check could assert. The defect surfaced through a QA ticket against a test environment, eleven releases after it shipped.
+  **The asymmetry is the point.** Every `kind` that changes a SYMBOL carries `verify`, and those are exactly the changes a grep or a build would have caught anyway. The entries that change only RENDERING, where opening the component is the one possible detector, carry no `verify` at all.
+  **The shape that fits.** Let an `informational` entry be either a string, as today, or an object `{ "text": "...", "verify": "..." }`, and fill `verify` whenever the line names a layout mechanism (`display`, `grid`, `flex`, `position`, `overflow`, `colspan`, a width, a height, a new wrapper element). One sentence is enough: "open an expanded row and confirm the panel spans the row rather than one column". Backwards compatible for every existing manifest, and it gives a consumer's upgrade a gate where it currently has none.
 
 *This section also has items under **Decisions**, **Parked**, **Records**.*
 
