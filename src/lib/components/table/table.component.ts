@@ -23,6 +23,10 @@ import {
 import { RouterLink } from '@angular/router';
 import { devWarn } from '@ids-group-ltd/ids-design-system/core';
 import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
+import type {
+  DsSize,
+  PaginationLayout,
+} from '@ids-group-ltd/ids-design-system/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
@@ -299,6 +303,12 @@ export class TableComponent<T extends object> {
   readonly showPageSize = input(true, { transform: booleanAttribute });
   /** Shows the "N of M" range label in the footer pager. */
   readonly showLabel = input(true, { transform: booleanAttribute });
+  /** Control height of the footer pager's buttons and picker. Unset falls back to
+   *  `DS_CONFIG.pagination.size`, then `DS_CONFIG.control.size`, then `'sm'`. */
+  readonly paginationSize = input<DsSize | null>(null);
+  /** `'spread'` gives the footer pager the table's full width, label at one edge and controls
+   *  at the other. Unset falls back to `DS_CONFIG.pagination.layout`, then `'grouped'`. */
+  readonly paginationLayout = input<PaginationLayout | null>(null);
   /** Server-side total row count. `null` (default) = client paging: the table
    *  slices `data()` itself and the pager counts the rows in hand. When set, the
    *  host has already sliced to one page — the pager uses this count and the
