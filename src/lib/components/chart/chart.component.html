@@ -25,7 +25,12 @@
     <div
       class="plot"
       [attr.role]="interactive() ? 'group' : 'img'"
-      [attr.aria-label]="accessibleName()">
+      [attr.aria-label]="accessibleName()"
+      [dsChartTooltip]="tooltipContext()"
+      [dsChartTooltipExtraGap]="tooltipExtraGap()"
+      [dsChartTooltipPreferBelow]="tooltipPreferBelow()"
+      [dsChartTooltipOrigin]="tooltipOrigin()"
+      [dsChartTooltipTemplate]="tooltipTemplate()">
       <svg
         class="canvas"
         preserveAspectRatio="xMidYMid meet"

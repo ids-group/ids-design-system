@@ -2064,6 +2064,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "`axisLabel` for the second axis."
+      },
+      {
+        "name": "tooltipTemplate",
+        "kind": "input",
+        "type": "TemplateRef<{\n    $implicit: ChartTooltipContext;\n  }> | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "A template that replaces the panel's body, for a preset that prints more than label+value."
+      },
+      {
+        "name": "tooltipExtraGap",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "0",
+        "required": false,
+        "description": "Extra clearance between the mark and the panel, for a chart that prints a value label in the gap the panel would otherwise take."
       }
     ],
     "outputs": []

@@ -15,7 +15,6 @@ import type {
 import { ChartDataTableComponent } from 'ds/chart-data-table';
 import type { ChartDataRow } from 'ds/chart-data-table';
 import { ButtonComponent } from 'ds/button';
-import { ChartTooltipDirective } from 'ds/chart-tooltip';
 import type { ChartThreshold } from 'ds/core';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
@@ -105,7 +104,6 @@ const TRAFFIC_SERIES: readonly LineSeriesData[] = [
     ButtonComponent,
     ChartComponent,
     ChartDataTableComponent,
-    ChartTooltipDirective,
     ColumnSeriesComponent,
     DocsSectionComponent,
     LineSeriesComponent,

@@ -57,6 +57,7 @@
     <ds-chart
       frame="none"
       cursor="category"
+      [tooltipTemplate]="tooltipTemplate() ?? null"
       [categories]="categories()"
       [tickCount]="tickCount()"
       [valueFormat]="axisFormat()"
@@ -90,12 +91,6 @@
         [tooltipAnchor]="markAnchor()"
         [tooltipLingerMs]="tooltipLingerResolved()"
         [valueFormat]="valueFormatResolved()"
-        [dsChartTooltip]="mark.tooltipContext()"
-        [dsChartTooltipPreferBelow]="
-          pinnedCategory() || mark.activeMark.pinned()
-        "
-        [dsChartTooltipOrigin]="mark.tooltipOrigin()"
-        [dsChartTooltipTemplate]="tooltipTemplate() ?? null"
         (pointClicked)="onPointClicked($event)" />
 
       <svg:g

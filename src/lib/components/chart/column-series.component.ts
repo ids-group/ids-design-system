@@ -186,9 +186,16 @@ export class ColumnSeriesComponent implements OnDestroy {
         this.spans().flatMap((span) => [span.from, span.to]),
       ),
     );
+    // The container opens the panel, so a plot holding several marks can only ever show one.
+    this.scales.reportTooltip(this.domainId, {
+      context: this.tooltipContext,
+      origin: computed(() => this.activeMark.origin()),
+      preferBelow: computed(() => this.activeMark.pinned()),
+    });
   }
 
   ngOnDestroy(): void {
+    this.scales.releaseTooltip(this.domainId);
     this.scales.releaseDomain(this.domainId);
   }
 

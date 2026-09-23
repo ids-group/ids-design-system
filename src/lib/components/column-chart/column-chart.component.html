@@ -35,6 +35,8 @@
   } @else {
     <ds-chart
       frame="none"
+      [tooltipTemplate]="tooltipTemplate() ?? null"
+      [tooltipExtraGap]="valueClearance()"
       [categories]="categories()"
       [tickCount]="tickCount()"
       [valueFormat]="axisFormat()"
@@ -53,7 +55,6 @@
         let seriesIndex = $index
       ) {
         <svg:g
-          #mark="dsColumnSeries"
           dsColumnSeries
           [data]="series.points"
           [slot]="slotCount() > 1 ? seriesIndex : 0"
@@ -73,11 +74,6 @@
           [tooltipAnchor]="tooltipAnchor()"
           [tooltipLingerMs]="tooltipLingerResolved()"
           [valueFormat]="valueFormatResolved()"
-          [dsChartTooltip]="mark.tooltipContext()"
-          [dsChartTooltipExtraGap]="valueClearance()"
-          [dsChartTooltipPreferBelow]="mark.activeMark.pinned()"
-          [dsChartTooltipOrigin]="mark.activeMark.origin()"
-          [dsChartTooltipTemplate]="tooltipTemplate() ?? null"
           (pointClicked)="pointClicked.emit($event)" />
       }
 

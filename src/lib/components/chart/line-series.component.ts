@@ -176,9 +176,15 @@ export class LineSeriesComponent implements OnDestroy {
         'secondary',
       );
     });
+    // The container opens the panel, so a plot holding several marks can only ever show one.
+    this.scales.reportTooltip(this.domainId, {
+      context: this.tooltipContext,
+      origin: this.tooltipOrigin,
+    });
   }
 
   ngOnDestroy(): void {
+    this.scales.releaseTooltip(this.domainId);
     this.scales.releaseDomain(`${this.domainId}-primary`);
     this.scales.releaseDomain(`${this.domainId}-secondary`);
   }

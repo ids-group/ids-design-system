@@ -42,7 +42,6 @@ import type {
   ChartGaps,
   ChartCurve,
 } from '@ids-group-ltd/ids-design-system/core';
-import { ChartTooltipDirective } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import { ChartLegendComponent } from '@ids-group-ltd/ids-design-system/components/chart-legend';
 import type { ChartLegendItem } from '@ids-group-ltd/ids-design-system/components/chart-legend';
 import { ChartDataTableComponent } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
@@ -101,7 +100,6 @@ const SERIES_DASH_ARRAYS = [
     ChartComponent,
     LineSeriesComponent,
     SeriesAnnotationComponent,
-    ChartTooltipDirective,
     ChartLegendComponent,
     ChartDataTableComponent,
   ],

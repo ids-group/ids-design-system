@@ -12,6 +12,7 @@ import {
   inject,
   input,
   numberAttribute,
+  TemplateRef,
   signal,
   viewChild,
 } from '@angular/core';
@@ -23,7 +24,11 @@ import {
   tickValues,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
-import { chartActiveMark } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
+import {
+  ChartTooltipDirective,
+  chartActiveMark,
+} from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
+import type { ChartTooltipContext } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import { resolveChartDefaults } from '@ids-group-ltd/ids-design-system/components';
 import type {
   ChartAxis,
@@ -53,13 +58,14 @@ import {
   CHART_SCALES,
   type ChartPlot,
   type ChartScales,
+  type ChartTooltipSource,
 } from './chart-scales.token';
 
 @Component({
   selector: 'ds-chart',
   standalone: true,
   exportAs: 'dsChart',
-  imports: [SkeletonComponent],
+  imports: [SkeletonComponent, ChartTooltipDirective],
   templateUrl: './chart.component.html',
   styleUrl: './chart.component.scss',
   host: {
@@ -388,6 +394,55 @@ export class ChartComponent implements ChartScales {
       return next;
     });
   }
+
+  /** A template that replaces the panel's body, for a preset that prints more than label+value. */
+  readonly tooltipTemplate = input<TemplateRef<{
+    $implicit: ChartTooltipContext;
+  }> | null>(null);
+
+  /** Extra clearance between the mark and the panel, for a chart that prints a value label in
+   *  the gap the panel would otherwise take. */
+  readonly tooltipExtraGap = input(0, { transform: numberAttribute });
+
+  private readonly tooltipSources = signal<
+    ReadonlyMap<string, ChartTooltipSource>
+  >(new Map());
+
+  reportTooltip(id: string, source: ChartTooltipSource): void {
+    this.tooltipSources.update((sources) => new Map(sources).set(id, source));
+  }
+
+  releaseTooltip(id: string): void {
+    this.tooltipSources.update((sources) => {
+      const next = new Map(sources);
+      next.delete(id);
+
+      return next;
+    });
+  }
+
+  /** The offer to show, if any mark is making one. At most one mark has a context at a time: a
+   *  per-mark tooltip only fills it while that mark is hovered, and an axis tooltip only while the
+   *  category cursor is on. The container opening the panel is what stops two marks opening two. */
+  private readonly activeTooltip = computed(
+    () =>
+      [...this.tooltipSources().values()].find(
+        (source) => source.context() !== null,
+      ) ?? null,
+  );
+
+  protected readonly tooltipContext = computed(
+    () => this.activeTooltip()?.context() ?? null,
+  );
+
+  protected readonly tooltipOrigin = computed(
+    () => this.activeTooltip()?.origin() ?? null,
+  );
+
+  protected readonly tooltipPreferBelow = computed(
+    () =>
+      (this.activeTooltip()?.preferBelow?.() ?? false) || this.cursorPinned(),
+  );
 
   /** Compared by value, which is what stops a mark that reports AND reads `yPosition()` in one
    *  effect from running forever: every report allocates a fresh `Map` and `niceDomain` a fresh
