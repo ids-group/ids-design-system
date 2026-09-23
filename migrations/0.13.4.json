@@ -301,13 +301,13 @@
       "new": "--ds-alert-padding-x",
       "surface": "style",
       "action": "Rewrite `--ds-alert-pad-x` to `--ds-alert-padding-x`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-alert-pad-x(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-alert-pad-x([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-alert-pad-x"
       ],
       "detect": [
-        "--ds-alert-pad-x(?![A-Za-z0-9_-])"
+        "--ds-alert-pad-x([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -317,13 +317,13 @@
       "new": "--ds-alert-padding-y",
       "surface": "style",
       "action": "Rewrite `--ds-alert-pad-y` to `--ds-alert-padding-y`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-alert-pad-y(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-alert-pad-y([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-alert-pad-y"
       ],
       "detect": [
-        "--ds-alert-pad-y(?![A-Za-z0-9_-])"
+        "--ds-alert-pad-y([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -333,13 +333,13 @@
       "new": "--ds-app-layout-padding-x",
       "surface": "style",
       "action": "Rewrite `--ds-app-layout-pad-x` to `--ds-app-layout-padding-x`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-app-layout-pad-x(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-app-layout-pad-x([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-app-layout-pad-x"
       ],
       "detect": [
-        "--ds-app-layout-pad-x(?![A-Za-z0-9_-])"
+        "--ds-app-layout-pad-x([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -349,13 +349,13 @@
       "new": "--ds-app-layout-padding-y",
       "surface": "style",
       "action": "Rewrite `--ds-app-layout-pad-y` to `--ds-app-layout-padding-y`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-app-layout-pad-y(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-app-layout-pad-y([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-app-layout-pad-y"
       ],
       "detect": [
-        "--ds-app-layout-pad-y(?![A-Za-z0-9_-])"
+        "--ds-app-layout-pad-y([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -365,13 +365,13 @@
       "new": "--ds-auth-layout-padding-block",
       "surface": "style",
       "action": "Rewrite `--ds-auth-layout-pad-block` to `--ds-auth-layout-padding-block`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-auth-layout-pad-block(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-auth-layout-pad-block([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-auth-layout-pad-block"
       ],
       "detect": [
-        "--ds-auth-layout-pad-block(?![A-Za-z0-9_-])"
+        "--ds-auth-layout-pad-block([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -381,13 +381,13 @@
       "new": "--ds-badge-padding-x",
       "surface": "style",
       "action": "Rewrite `--ds-badge-pad-x` to `--ds-badge-padding-x`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-badge-pad-x(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-badge-pad-x([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-badge-pad-x"
       ],
       "detect": [
-        "--ds-badge-pad-x(?![A-Za-z0-9_-])"
+        "--ds-badge-pad-x([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -397,13 +397,13 @@
       "new": "--ds-badge-padding-y",
       "surface": "style",
       "action": "Rewrite `--ds-badge-pad-y` to `--ds-badge-padding-y`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-badge-pad-y(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-badge-pad-y([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-badge-pad-y"
       ],
       "detect": [
-        "--ds-badge-pad-y(?![A-Za-z0-9_-])"
+        "--ds-badge-pad-y([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -413,13 +413,13 @@
       "new": "--ds-banner-padding-x",
       "surface": "style",
       "action": "Rewrite `--ds-banner-pad-x` to `--ds-banner-padding-x`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-banner-pad-x(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-banner-pad-x([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-banner-pad-x"
       ],
       "detect": [
-        "--ds-banner-pad-x(?![A-Za-z0-9_-])"
+        "--ds-banner-pad-x([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -429,13 +429,13 @@
       "new": "--ds-banner-padding-y",
       "surface": "style",
       "action": "Rewrite `--ds-banner-pad-y` to `--ds-banner-padding-y`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-banner-pad-y(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-banner-pad-y([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-banner-pad-y"
       ],
       "detect": [
-        "--ds-banner-pad-y(?![A-Za-z0-9_-])"
+        "--ds-banner-pad-y([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -445,13 +445,13 @@
       "new": "--ds-button-padding-x",
       "surface": "style",
       "action": "Rewrite `--ds-button-pad-x` to `--ds-button-padding-x`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-button-pad-x(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-button-pad-x([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-button-pad-x"
       ],
       "detect": [
-        "--ds-button-pad-x(?![A-Za-z0-9_-])"
+        "--ds-button-pad-x([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -461,13 +461,13 @@
       "new": "--ds-button-padding-y",
       "surface": "style",
       "action": "Rewrite `--ds-button-pad-y` to `--ds-button-padding-y`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-button-pad-y(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-button-pad-y([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-button-pad-y"
       ],
       "detect": [
-        "--ds-button-pad-y(?![A-Za-z0-9_-])"
+        "--ds-button-pad-y([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -477,13 +477,13 @@
       "new": "--ds-card-padding",
       "surface": "style",
       "action": "Rewrite `--ds-card-pad` to `--ds-card-padding`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-card-pad(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-card-pad([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-card-pad"
       ],
       "detect": [
-        "--ds-card-pad(?![A-Za-z0-9_-])"
+        "--ds-card-pad([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -493,13 +493,13 @@
       "new": "--ds-container-padding-x",
       "surface": "style",
       "action": "Rewrite `--ds-container-pad-x` to `--ds-container-padding-x`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-container-pad-x(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-container-pad-x([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-container-pad-x"
       ],
       "detect": [
-        "--ds-container-pad-x(?![A-Za-z0-9_-])"
+        "--ds-container-pad-x([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -509,13 +509,13 @@
       "new": "--ds-date-picker-trigger-padding-x",
       "surface": "style",
       "action": "Rewrite `--ds-date-picker-trigger-pad-x` to `--ds-date-picker-trigger-padding-x`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-date-picker-trigger-pad-x(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-date-picker-trigger-pad-x([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-date-picker-trigger-pad-x"
       ],
       "detect": [
-        "--ds-date-picker-trigger-pad-x(?![A-Za-z0-9_-])"
+        "--ds-date-picker-trigger-pad-x([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -525,13 +525,13 @@
       "new": "--ds-empty-state-padding",
       "surface": "style",
       "action": "Rewrite `--ds-empty-state-pad` to `--ds-empty-state-padding`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-empty-state-pad(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-empty-state-pad([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-empty-state-pad"
       ],
       "detect": [
-        "--ds-empty-state-pad(?![A-Za-z0-9_-])"
+        "--ds-empty-state-pad([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -541,13 +541,13 @@
       "new": "--ds-input-padding-x",
       "surface": "style",
       "action": "Rewrite `--ds-input-pad-x` to `--ds-input-padding-x`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-input-pad-x(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-input-pad-x([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-input-pad-x"
       ],
       "detect": [
-        "--ds-input-pad-x(?![A-Za-z0-9_-])"
+        "--ds-input-pad-x([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -557,13 +557,13 @@
       "new": "--ds-input-padding-y",
       "surface": "style",
       "action": "Rewrite `--ds-input-pad-y` to `--ds-input-padding-y`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-input-pad-y(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-input-pad-y([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-input-pad-y"
       ],
       "detect": [
-        "--ds-input-pad-y(?![A-Za-z0-9_-])"
+        "--ds-input-pad-y([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -573,13 +573,13 @@
       "new": "--ds-list-item-padding-x",
       "surface": "style",
       "action": "Rewrite `--ds-list-item-pad-x` to `--ds-list-item-padding-x`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-list-item-pad-x(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-list-item-pad-x([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-list-item-pad-x"
       ],
       "detect": [
-        "--ds-list-item-pad-x(?![A-Za-z0-9_-])"
+        "--ds-list-item-pad-x([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -589,13 +589,13 @@
       "new": "--ds-list-item-padding-y",
       "surface": "style",
       "action": "Rewrite `--ds-list-item-pad-y` to `--ds-list-item-padding-y`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-list-item-pad-y(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-list-item-pad-y([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-list-item-pad-y"
       ],
       "detect": [
-        "--ds-list-item-pad-y(?![A-Za-z0-9_-])"
+        "--ds-list-item-pad-y([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -605,13 +605,13 @@
       "new": "--ds-menu-item-padding-x",
       "surface": "style",
       "action": "Rewrite `--ds-menu-item-pad-x` to `--ds-menu-item-padding-x`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-menu-item-pad-x(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-menu-item-pad-x([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-menu-item-pad-x"
       ],
       "detect": [
-        "--ds-menu-item-pad-x(?![A-Za-z0-9_-])"
+        "--ds-menu-item-pad-x([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -621,13 +621,13 @@
       "new": "--ds-menu-item-padding-y",
       "surface": "style",
       "action": "Rewrite `--ds-menu-item-pad-y` to `--ds-menu-item-padding-y`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-menu-item-pad-y(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-menu-item-pad-y([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-menu-item-pad-y"
       ],
       "detect": [
-        "--ds-menu-item-pad-y(?![A-Za-z0-9_-])"
+        "--ds-menu-item-pad-y([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -637,13 +637,13 @@
       "new": "--ds-modal-actions-padding-bottom",
       "surface": "style",
       "action": "Rewrite `--ds-modal-actions-pad-bottom` to `--ds-modal-actions-padding-bottom`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-modal-actions-pad-bottom(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-modal-actions-pad-bottom([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-modal-actions-pad-bottom"
       ],
       "detect": [
-        "--ds-modal-actions-pad-bottom(?![A-Za-z0-9_-])"
+        "--ds-modal-actions-pad-bottom([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -653,13 +653,13 @@
       "new": "--ds-modal-actions-padding-top",
       "surface": "style",
       "action": "Rewrite `--ds-modal-actions-pad-top` to `--ds-modal-actions-padding-top`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-modal-actions-pad-top(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-modal-actions-pad-top([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-modal-actions-pad-top"
       ],
       "detect": [
-        "--ds-modal-actions-pad-top(?![A-Za-z0-9_-])"
+        "--ds-modal-actions-pad-top([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -669,13 +669,13 @@
       "new": "--ds-modal-actions-padding-y",
       "surface": "style",
       "action": "Rewrite `--ds-modal-actions-pad-y` to `--ds-modal-actions-padding-y`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-modal-actions-pad-y(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-modal-actions-pad-y([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-modal-actions-pad-y"
       ],
       "detect": [
-        "--ds-modal-actions-pad-y(?![A-Za-z0-9_-])"
+        "--ds-modal-actions-pad-y([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -685,13 +685,13 @@
       "new": "--ds-modal-body-padding-bottom",
       "surface": "style",
       "action": "Rewrite `--ds-modal-body-pad-bottom` to `--ds-modal-body-padding-bottom`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-modal-body-pad-bottom(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-modal-body-pad-bottom([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-modal-body-pad-bottom"
       ],
       "detect": [
-        "--ds-modal-body-pad-bottom(?![A-Za-z0-9_-])"
+        "--ds-modal-body-pad-bottom([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -701,13 +701,13 @@
       "new": "--ds-modal-body-padding-top",
       "surface": "style",
       "action": "Rewrite `--ds-modal-body-pad-top` to `--ds-modal-body-padding-top`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-modal-body-pad-top(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-modal-body-pad-top([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-modal-body-pad-top"
       ],
       "detect": [
-        "--ds-modal-body-pad-top(?![A-Za-z0-9_-])"
+        "--ds-modal-body-pad-top([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -717,13 +717,13 @@
       "new": "--ds-modal-body-padding-y",
       "surface": "style",
       "action": "Rewrite `--ds-modal-body-pad-y` to `--ds-modal-body-padding-y`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-modal-body-pad-y(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-modal-body-pad-y([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-modal-body-pad-y"
       ],
       "detect": [
-        "--ds-modal-body-pad-y(?![A-Za-z0-9_-])"
+        "--ds-modal-body-pad-y([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -733,13 +733,13 @@
       "new": "--ds-modal-header-padding-bottom",
       "surface": "style",
       "action": "Rewrite `--ds-modal-header-pad-bottom` to `--ds-modal-header-padding-bottom`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-modal-header-pad-bottom(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-modal-header-pad-bottom([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-modal-header-pad-bottom"
       ],
       "detect": [
-        "--ds-modal-header-pad-bottom(?![A-Za-z0-9_-])"
+        "--ds-modal-header-pad-bottom([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -749,13 +749,13 @@
       "new": "--ds-modal-header-padding-top",
       "surface": "style",
       "action": "Rewrite `--ds-modal-header-pad-top` to `--ds-modal-header-padding-top`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-modal-header-pad-top(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-modal-header-pad-top([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-modal-header-pad-top"
       ],
       "detect": [
-        "--ds-modal-header-pad-top(?![A-Za-z0-9_-])"
+        "--ds-modal-header-pad-top([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -765,13 +765,13 @@
       "new": "--ds-modal-header-padding-y",
       "surface": "style",
       "action": "Rewrite `--ds-modal-header-pad-y` to `--ds-modal-header-padding-y`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-modal-header-pad-y(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-modal-header-pad-y([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-modal-header-pad-y"
       ],
       "detect": [
-        "--ds-modal-header-pad-y(?![A-Za-z0-9_-])"
+        "--ds-modal-header-pad-y([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -781,13 +781,13 @@
       "new": "--ds-modal-padding-x",
       "surface": "style",
       "action": "Rewrite `--ds-modal-pad-x` to `--ds-modal-padding-x`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-modal-pad-x(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-modal-pad-x([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-modal-pad-x"
       ],
       "detect": [
-        "--ds-modal-pad-x(?![A-Za-z0-9_-])"
+        "--ds-modal-pad-x([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -797,13 +797,13 @@
       "new": "--ds-segmented-padding",
       "surface": "style",
       "action": "Rewrite `--ds-segmented-pad` to `--ds-segmented-padding`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-segmented-pad(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-segmented-pad([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-segmented-pad"
       ],
       "detect": [
-        "--ds-segmented-pad(?![A-Za-z0-9_-])"
+        "--ds-segmented-pad([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -813,13 +813,13 @@
       "new": "--ds-stat-padding",
       "surface": "style",
       "action": "Rewrite `--ds-stat-pad` to `--ds-stat-padding`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-stat-pad(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-stat-pad([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-stat-pad"
       ],
       "detect": [
-        "--ds-stat-pad(?![A-Za-z0-9_-])"
+        "--ds-stat-pad([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -829,13 +829,13 @@
       "new": "--ds-tab-padding-bottom",
       "surface": "style",
       "action": "Rewrite `--ds-tab-pad-bottom` to `--ds-tab-padding-bottom`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-tab-pad-bottom(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-tab-pad-bottom([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-tab-pad-bottom"
       ],
       "detect": [
-        "--ds-tab-pad-bottom(?![A-Za-z0-9_-])"
+        "--ds-tab-pad-bottom([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -845,13 +845,13 @@
       "new": "--ds-tab-padding-top",
       "surface": "style",
       "action": "Rewrite `--ds-tab-pad-top` to `--ds-tab-padding-top`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-tab-pad-top(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-tab-pad-top([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-tab-pad-top"
       ],
       "detect": [
-        "--ds-tab-pad-top(?![A-Za-z0-9_-])"
+        "--ds-tab-pad-top([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -861,13 +861,13 @@
       "new": "--ds-tab-padding-x",
       "surface": "style",
       "action": "Rewrite `--ds-tab-pad-x` to `--ds-tab-padding-x`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-tab-pad-x(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-tab-pad-x([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-tab-pad-x"
       ],
       "detect": [
-        "--ds-tab-pad-x(?![A-Za-z0-9_-])"
+        "--ds-tab-pad-x([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -877,13 +877,13 @@
       "new": "--ds-tab-padding-y",
       "surface": "style",
       "action": "Rewrite `--ds-tab-pad-y` to `--ds-tab-padding-y`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-tab-pad-y(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-tab-pad-y([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-tab-pad-y"
       ],
       "detect": [
-        "--ds-tab-pad-y(?![A-Za-z0-9_-])"
+        "--ds-tab-pad-y([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -893,13 +893,13 @@
       "new": "--ds-table-cell-padding-bottom",
       "surface": "style",
       "action": "Rewrite `--ds-table-cell-pad-bottom` to `--ds-table-cell-padding-bottom`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-table-cell-pad-bottom(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-table-cell-pad-bottom([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-table-cell-pad-bottom"
       ],
       "detect": [
-        "--ds-table-cell-pad-bottom(?![A-Za-z0-9_-])"
+        "--ds-table-cell-pad-bottom([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -909,13 +909,13 @@
       "new": "--ds-table-cell-padding-left",
       "surface": "style",
       "action": "Rewrite `--ds-table-cell-pad-left` to `--ds-table-cell-padding-left`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-table-cell-pad-left(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-table-cell-pad-left([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-table-cell-pad-left"
       ],
       "detect": [
-        "--ds-table-cell-pad-left(?![A-Za-z0-9_-])"
+        "--ds-table-cell-pad-left([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -925,13 +925,13 @@
       "new": "--ds-table-cell-padding-right",
       "surface": "style",
       "action": "Rewrite `--ds-table-cell-pad-right` to `--ds-table-cell-padding-right`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-table-cell-pad-right(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-table-cell-pad-right([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-table-cell-pad-right"
       ],
       "detect": [
-        "--ds-table-cell-pad-right(?![A-Za-z0-9_-])"
+        "--ds-table-cell-pad-right([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -941,13 +941,13 @@
       "new": "--ds-table-cell-padding-top",
       "surface": "style",
       "action": "Rewrite `--ds-table-cell-pad-top` to `--ds-table-cell-padding-top`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-table-cell-pad-top(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-table-cell-pad-top([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-table-cell-pad-top"
       ],
       "detect": [
-        "--ds-table-cell-pad-top(?![A-Za-z0-9_-])"
+        "--ds-table-cell-pad-top([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -957,13 +957,13 @@
       "new": "--ds-table-cell-padding-x",
       "surface": "style",
       "action": "Rewrite `--ds-table-cell-pad-x` to `--ds-table-cell-padding-x`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-table-cell-pad-x(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-table-cell-pad-x([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-table-cell-pad-x"
       ],
       "detect": [
-        "--ds-table-cell-pad-x(?![A-Za-z0-9_-])"
+        "--ds-table-cell-pad-x([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -973,13 +973,13 @@
       "new": "--ds-table-cell-padding-y",
       "surface": "style",
       "action": "Rewrite `--ds-table-cell-pad-y` to `--ds-table-cell-padding-y`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-table-cell-pad-y(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-table-cell-pad-y([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-table-cell-pad-y"
       ],
       "detect": [
-        "--ds-table-cell-pad-y(?![A-Za-z0-9_-])"
+        "--ds-table-cell-pad-y([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -989,13 +989,13 @@
       "new": "--ds-table-head-padding-bottom",
       "surface": "style",
       "action": "Rewrite `--ds-table-head-pad-bottom` to `--ds-table-head-padding-bottom`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-table-head-pad-bottom(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-table-head-pad-bottom([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-table-head-pad-bottom"
       ],
       "detect": [
-        "--ds-table-head-pad-bottom(?![A-Za-z0-9_-])"
+        "--ds-table-head-pad-bottom([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1005,13 +1005,13 @@
       "new": "--ds-table-head-padding-top",
       "surface": "style",
       "action": "Rewrite `--ds-table-head-pad-top` to `--ds-table-head-padding-top`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-table-head-pad-top(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-table-head-pad-top([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-table-head-pad-top"
       ],
       "detect": [
-        "--ds-table-head-pad-top(?![A-Za-z0-9_-])"
+        "--ds-table-head-pad-top([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1021,13 +1021,13 @@
       "new": "--ds-tabs-panel-padding-top",
       "surface": "style",
       "action": "Rewrite `--ds-tabs-panel-pad-top` to `--ds-tabs-panel-padding-top`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-tabs-panel-pad-top(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-tabs-panel-pad-top([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-tabs-panel-pad-top"
       ],
       "detect": [
-        "--ds-tabs-panel-pad-top(?![A-Za-z0-9_-])"
+        "--ds-tabs-panel-pad-top([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1037,13 +1037,13 @@
       "new": "--ds-tag-padding-x",
       "surface": "style",
       "action": "Rewrite `--ds-tag-pad-x` to `--ds-tag-padding-x`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-tag-pad-x(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-tag-pad-x([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-tag-pad-x"
       ],
       "detect": [
-        "--ds-tag-pad-x(?![A-Za-z0-9_-])"
+        "--ds-tag-pad-x([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1053,13 +1053,13 @@
       "new": "--ds-tag-padding-y",
       "surface": "style",
       "action": "Rewrite `--ds-tag-pad-y` to `--ds-tag-padding-y`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-tag-pad-y(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-tag-pad-y([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-tag-pad-y"
       ],
       "detect": [
-        "--ds-tag-pad-y(?![A-Za-z0-9_-])"
+        "--ds-tag-pad-y([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1069,13 +1069,13 @@
       "new": "--ds-time-picker-trigger-padding-x",
       "surface": "style",
       "action": "Rewrite `--ds-time-picker-trigger-pad-x` to `--ds-time-picker-trigger-padding-x`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-time-picker-trigger-pad-x(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-time-picker-trigger-pad-x([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-time-picker-trigger-pad-x"
       ],
       "detect": [
-        "--ds-time-picker-trigger-pad-x(?![A-Za-z0-9_-])"
+        "--ds-time-picker-trigger-pad-x([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1085,13 +1085,13 @@
       "new": "--ds-tree-row-padding-x",
       "surface": "style",
       "action": "Rewrite `--ds-tree-row-pad-x` to `--ds-tree-row-padding-x`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-tree-row-pad-x(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-tree-row-pad-x([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-tree-row-pad-x"
       ],
       "detect": [
-        "--ds-tree-row-pad-x(?![A-Za-z0-9_-])"
+        "--ds-tree-row-pad-x([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1101,13 +1101,13 @@
       "new": "--ds-tree-row-padding-y",
       "surface": "style",
       "action": "Rewrite `--ds-tree-row-pad-y` to `--ds-tree-row-padding-y`.",
-      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-tree-row-pad-y(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-pad` is a prefix of `-padding`, so a substring replace run over a stylesheet that already carries the new name turns `-padding` into `-paddingding`; match the whole old name, anchored: `--ds-tree-row-pad-y([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-tree-row-pad-y"
       ],
       "detect": [
-        "--ds-tree-row-pad-y(?![A-Za-z0-9_-])"
+        "--ds-tree-row-pad-y([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1117,13 +1117,13 @@
       "new": "--ds-button-font-weight",
       "surface": "style",
       "action": "Rewrite `--ds-button-weight` to `--ds-button-font-weight`.",
-      "pitfall": "`-weight` is the tail of `-font-weight`, so a suffix replace run over a stylesheet that already carries the new name turns it into `-font-font-weight`; match the whole old name, anchored: `--ds-button-weight(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-weight` is the tail of `-font-weight`, so a suffix replace run over a stylesheet that already carries the new name turns it into `-font-font-weight`; match the whole old name, anchored: `--ds-button-weight([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-button-weight"
       ],
       "detect": [
-        "--ds-button-weight(?![A-Za-z0-9_-])"
+        "--ds-button-weight([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1133,13 +1133,13 @@
       "new": "--ds-checkbox-label-font-weight",
       "surface": "style",
       "action": "Rewrite `--ds-checkbox-label-weight` to `--ds-checkbox-label-font-weight`.",
-      "pitfall": "`-weight` is the tail of `-font-weight`, so a suffix replace run over a stylesheet that already carries the new name turns it into `-font-font-weight`; match the whole old name, anchored: `--ds-checkbox-label-weight(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-weight` is the tail of `-font-weight`, so a suffix replace run over a stylesheet that already carries the new name turns it into `-font-font-weight`; match the whole old name, anchored: `--ds-checkbox-label-weight([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-checkbox-label-weight"
       ],
       "detect": [
-        "--ds-checkbox-label-weight(?![A-Za-z0-9_-])"
+        "--ds-checkbox-label-weight([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1149,13 +1149,13 @@
       "new": "--ds-date-picker-value-font-weight",
       "surface": "style",
       "action": "Rewrite `--ds-date-picker-value-weight` to `--ds-date-picker-value-font-weight`.",
-      "pitfall": "`-weight` is the tail of `-font-weight`, so a suffix replace run over a stylesheet that already carries the new name turns it into `-font-font-weight`; match the whole old name, anchored: `--ds-date-picker-value-weight(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-weight` is the tail of `-font-weight`, so a suffix replace run over a stylesheet that already carries the new name turns it into `-font-font-weight`; match the whole old name, anchored: `--ds-date-picker-value-weight([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-date-picker-value-weight"
       ],
       "detect": [
-        "--ds-date-picker-value-weight(?![A-Za-z0-9_-])"
+        "--ds-date-picker-value-weight([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1165,13 +1165,13 @@
       "new": "--ds-field-label-font-weight",
       "surface": "style",
       "action": "Rewrite `--ds-field-label-weight` to `--ds-field-label-font-weight`.",
-      "pitfall": "`-weight` is the tail of `-font-weight`, so a suffix replace run over a stylesheet that already carries the new name turns it into `-font-font-weight`; match the whole old name, anchored: `--ds-field-label-weight(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-weight` is the tail of `-font-weight`, so a suffix replace run over a stylesheet that already carries the new name turns it into `-font-font-weight`; match the whole old name, anchored: `--ds-field-label-weight([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-field-label-weight"
       ],
       "detect": [
-        "--ds-field-label-weight(?![A-Za-z0-9_-])"
+        "--ds-field-label-weight([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1181,13 +1181,13 @@
       "new": "--ds-line-chart-annotation-font-weight",
       "surface": "style",
       "action": "Rewrite `--ds-line-chart-annotation-weight` to `--ds-line-chart-annotation-font-weight`.",
-      "pitfall": "`-weight` is the tail of `-font-weight`, so a suffix replace run over a stylesheet that already carries the new name turns it into `-font-font-weight`; match the whole old name, anchored: `--ds-line-chart-annotation-weight(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-weight` is the tail of `-font-weight`, so a suffix replace run over a stylesheet that already carries the new name turns it into `-font-font-weight`; match the whole old name, anchored: `--ds-line-chart-annotation-weight([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-line-chart-annotation-weight"
       ],
       "detect": [
-        "--ds-line-chart-annotation-weight(?![A-Za-z0-9_-])"
+        "--ds-line-chart-annotation-weight([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1197,13 +1197,13 @@
       "new": "--ds-menu-item-label-font-weight",
       "surface": "style",
       "action": "Rewrite `--ds-menu-item-label-weight` to `--ds-menu-item-label-font-weight`.",
-      "pitfall": "`-weight` is the tail of `-font-weight`, so a suffix replace run over a stylesheet that already carries the new name turns it into `-font-font-weight`; match the whole old name, anchored: `--ds-menu-item-label-weight(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-weight` is the tail of `-font-weight`, so a suffix replace run over a stylesheet that already carries the new name turns it into `-font-font-weight`; match the whole old name, anchored: `--ds-menu-item-label-weight([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-menu-item-label-weight"
       ],
       "detect": [
-        "--ds-menu-item-label-weight(?![A-Za-z0-9_-])"
+        "--ds-menu-item-label-weight([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1213,13 +1213,13 @@
       "new": "--ds-modal-eyebrow-font-weight",
       "surface": "style",
       "action": "Rewrite `--ds-modal-eyebrow-weight` to `--ds-modal-eyebrow-font-weight`.",
-      "pitfall": "`-weight` is the tail of `-font-weight`, so a suffix replace run over a stylesheet that already carries the new name turns it into `-font-font-weight`; match the whole old name, anchored: `--ds-modal-eyebrow-weight(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-weight` is the tail of `-font-weight`, so a suffix replace run over a stylesheet that already carries the new name turns it into `-font-font-weight`; match the whole old name, anchored: `--ds-modal-eyebrow-weight([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-modal-eyebrow-weight"
       ],
       "detect": [
-        "--ds-modal-eyebrow-weight(?![A-Za-z0-9_-])"
+        "--ds-modal-eyebrow-weight([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1229,13 +1229,13 @@
       "new": "--ds-modal-title-font-weight",
       "surface": "style",
       "action": "Rewrite `--ds-modal-title-weight` to `--ds-modal-title-font-weight`.",
-      "pitfall": "`-weight` is the tail of `-font-weight`, so a suffix replace run over a stylesheet that already carries the new name turns it into `-font-font-weight`; match the whole old name, anchored: `--ds-modal-title-weight(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-weight` is the tail of `-font-weight`, so a suffix replace run over a stylesheet that already carries the new name turns it into `-font-font-weight`; match the whole old name, anchored: `--ds-modal-title-weight([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-modal-title-weight"
       ],
       "detect": [
-        "--ds-modal-title-weight(?![A-Za-z0-9_-])"
+        "--ds-modal-title-weight([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1245,13 +1245,13 @@
       "new": "--ds-option-font-weight",
       "surface": "style",
       "action": "Rewrite `--ds-option-weight` to `--ds-option-font-weight`.",
-      "pitfall": "`-weight` is the tail of `-font-weight`, so a suffix replace run over a stylesheet that already carries the new name turns it into `-font-font-weight`; match the whole old name, anchored: `--ds-option-weight(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-weight` is the tail of `-font-weight`, so a suffix replace run over a stylesheet that already carries the new name turns it into `-font-font-weight`; match the whole old name, anchored: `--ds-option-weight([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-option-weight"
       ],
       "detect": [
-        "--ds-option-weight(?![A-Za-z0-9_-])"
+        "--ds-option-weight([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1261,13 +1261,13 @@
       "new": "--ds-pagination-label-font-weight",
       "surface": "style",
       "action": "Rewrite `--ds-pagination-label-weight` to `--ds-pagination-label-font-weight`.",
-      "pitfall": "`-weight` is the tail of `-font-weight`, so a suffix replace run over a stylesheet that already carries the new name turns it into `-font-font-weight`; match the whole old name, anchored: `--ds-pagination-label-weight(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-weight` is the tail of `-font-weight`, so a suffix replace run over a stylesheet that already carries the new name turns it into `-font-font-weight`; match the whole old name, anchored: `--ds-pagination-label-weight([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-pagination-label-weight"
       ],
       "detect": [
-        "--ds-pagination-label-weight(?![A-Za-z0-9_-])"
+        "--ds-pagination-label-weight([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1277,13 +1277,13 @@
       "new": "--ds-segmented-label-font-weight",
       "surface": "style",
       "action": "Rewrite `--ds-segmented-label-weight` to `--ds-segmented-label-font-weight`.",
-      "pitfall": "`-weight` is the tail of `-font-weight`, so a suffix replace run over a stylesheet that already carries the new name turns it into `-font-font-weight`; match the whole old name, anchored: `--ds-segmented-label-weight(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-weight` is the tail of `-font-weight`, so a suffix replace run over a stylesheet that already carries the new name turns it into `-font-font-weight`; match the whole old name, anchored: `--ds-segmented-label-weight([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-segmented-label-weight"
       ],
       "detect": [
-        "--ds-segmented-label-weight(?![A-Za-z0-9_-])"
+        "--ds-segmented-label-weight([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1293,13 +1293,13 @@
       "new": "--ds-sidenav-item-label-font-weight",
       "surface": "style",
       "action": "Rewrite `--ds-sidenav-item-label-weight` to `--ds-sidenav-item-label-font-weight`.",
-      "pitfall": "`-weight` is the tail of `-font-weight`, so a suffix replace run over a stylesheet that already carries the new name turns it into `-font-font-weight`; match the whole old name, anchored: `--ds-sidenav-item-label-weight(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-weight` is the tail of `-font-weight`, so a suffix replace run over a stylesheet that already carries the new name turns it into `-font-font-weight`; match the whole old name, anchored: `--ds-sidenav-item-label-weight([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-sidenav-item-label-weight"
       ],
       "detect": [
-        "--ds-sidenav-item-label-weight(?![A-Za-z0-9_-])"
+        "--ds-sidenav-item-label-weight([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1309,13 +1309,13 @@
       "new": "--ds-tab-label-font-weight",
       "surface": "style",
       "action": "Rewrite `--ds-tab-label-weight` to `--ds-tab-label-font-weight`.",
-      "pitfall": "`-weight` is the tail of `-font-weight`, so a suffix replace run over a stylesheet that already carries the new name turns it into `-font-font-weight`; match the whole old name, anchored: `--ds-tab-label-weight(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-weight` is the tail of `-font-weight`, so a suffix replace run over a stylesheet that already carries the new name turns it into `-font-font-weight`; match the whole old name, anchored: `--ds-tab-label-weight([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-tab-label-weight"
       ],
       "detect": [
-        "--ds-tab-label-weight(?![A-Za-z0-9_-])"
+        "--ds-tab-label-weight([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1325,13 +1325,13 @@
       "new": "--ds-table-head-font-weight",
       "surface": "style",
       "action": "Rewrite `--ds-table-head-weight` to `--ds-table-head-font-weight`.",
-      "pitfall": "`-weight` is the tail of `-font-weight`, so a suffix replace run over a stylesheet that already carries the new name turns it into `-font-font-weight`; match the whole old name, anchored: `--ds-table-head-weight(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-weight` is the tail of `-font-weight`, so a suffix replace run over a stylesheet that already carries the new name turns it into `-font-font-weight`; match the whole old name, anchored: `--ds-table-head-weight([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-table-head-weight"
       ],
       "detect": [
-        "--ds-table-head-weight(?![A-Za-z0-9_-])"
+        "--ds-table-head-weight([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1341,13 +1341,13 @@
       "new": "--ds-time-picker-value-font-weight",
       "surface": "style",
       "action": "Rewrite `--ds-time-picker-value-weight` to `--ds-time-picker-value-font-weight`.",
-      "pitfall": "`-weight` is the tail of `-font-weight`, so a suffix replace run over a stylesheet that already carries the new name turns it into `-font-font-weight`; match the whole old name, anchored: `--ds-time-picker-value-weight(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-weight` is the tail of `-font-weight`, so a suffix replace run over a stylesheet that already carries the new name turns it into `-font-font-weight`; match the whole old name, anchored: `--ds-time-picker-value-weight([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-time-picker-value-weight"
       ],
       "detect": [
-        "--ds-time-picker-value-weight(?![A-Za-z0-9_-])"
+        "--ds-time-picker-value-weight([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1357,13 +1357,13 @@
       "new": "--ds-pagination-button-bg-color",
       "surface": "style",
       "action": "Rewrite `--ds-pagination-btn-bg-color` to `--ds-pagination-button-bg-color`.",
-      "pitfall": "Three of these names are prefixes of their `-hover` sibling, so a substring replace of the shorter one corrupts the longer; match the whole old name, anchored: `--ds-pagination-btn-bg-color(?![A-Za-z0-9_-])`. `--ds-segmented-btn-border`, `--ds-segmented-btn-h` and `--ds-segmented-btn-pad-x` are not `-button` names: `segmented-parts-are-segments` renames them.",
+      "pitfall": "Three of these names are prefixes of their `-hover` sibling, so a substring replace of the shorter one corrupts the longer; match the whole old name, anchored: `--ds-pagination-btn-bg-color([^A-Za-z0-9_-]|$)`. `--ds-segmented-btn-border`, `--ds-segmented-btn-h` and `--ds-segmented-btn-pad-x` are not `-button` names: `segmented-parts-are-segments` renames them.",
       "restore": null,
       "searchHints": [
         "--ds-pagination-btn-bg-color"
       ],
       "detect": [
-        "--ds-pagination-btn-bg-color(?![A-Za-z0-9_-])"
+        "--ds-pagination-btn-bg-color([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1373,13 +1373,13 @@
       "new": "--ds-pagination-button-bg-color-hover",
       "surface": "style",
       "action": "Rewrite `--ds-pagination-btn-bg-color-hover` to `--ds-pagination-button-bg-color-hover`.",
-      "pitfall": "Three of these names are prefixes of their `-hover` sibling, so a substring replace of the shorter one corrupts the longer; match the whole old name, anchored: `--ds-pagination-btn-bg-color-hover(?![A-Za-z0-9_-])`. `--ds-segmented-btn-border`, `--ds-segmented-btn-h` and `--ds-segmented-btn-pad-x` are not `-button` names: `segmented-parts-are-segments` renames them.",
+      "pitfall": "Three of these names are prefixes of their `-hover` sibling, so a substring replace of the shorter one corrupts the longer; match the whole old name, anchored: `--ds-pagination-btn-bg-color-hover([^A-Za-z0-9_-]|$)`. `--ds-segmented-btn-border`, `--ds-segmented-btn-h` and `--ds-segmented-btn-pad-x` are not `-button` names: `segmented-parts-are-segments` renames them.",
       "restore": null,
       "searchHints": [
         "--ds-pagination-btn-bg-color-hover"
       ],
       "detect": [
-        "--ds-pagination-btn-bg-color-hover(?![A-Za-z0-9_-])"
+        "--ds-pagination-btn-bg-color-hover([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1389,13 +1389,13 @@
       "new": "--ds-pagination-button-border",
       "surface": "style",
       "action": "Rewrite `--ds-pagination-btn-border` to `--ds-pagination-button-border`.",
-      "pitfall": "Three of these names are prefixes of their `-hover` sibling, so a substring replace of the shorter one corrupts the longer; match the whole old name, anchored: `--ds-pagination-btn-border(?![A-Za-z0-9_-])`. `--ds-segmented-btn-border`, `--ds-segmented-btn-h` and `--ds-segmented-btn-pad-x` are not `-button` names: `segmented-parts-are-segments` renames them.",
+      "pitfall": "Three of these names are prefixes of their `-hover` sibling, so a substring replace of the shorter one corrupts the longer; match the whole old name, anchored: `--ds-pagination-btn-border([^A-Za-z0-9_-]|$)`. `--ds-segmented-btn-border`, `--ds-segmented-btn-h` and `--ds-segmented-btn-pad-x` are not `-button` names: `segmented-parts-are-segments` renames them.",
       "restore": null,
       "searchHints": [
         "--ds-pagination-btn-border"
       ],
       "detect": [
-        "--ds-pagination-btn-border(?![A-Za-z0-9_-])"
+        "--ds-pagination-btn-border([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1405,13 +1405,13 @@
       "new": "--ds-pagination-button-label-color",
       "surface": "style",
       "action": "Rewrite `--ds-pagination-btn-label-color` to `--ds-pagination-button-label-color`.",
-      "pitfall": "Three of these names are prefixes of their `-hover` sibling, so a substring replace of the shorter one corrupts the longer; match the whole old name, anchored: `--ds-pagination-btn-label-color(?![A-Za-z0-9_-])`. `--ds-segmented-btn-border`, `--ds-segmented-btn-h` and `--ds-segmented-btn-pad-x` are not `-button` names: `segmented-parts-are-segments` renames them.",
+      "pitfall": "Three of these names are prefixes of their `-hover` sibling, so a substring replace of the shorter one corrupts the longer; match the whole old name, anchored: `--ds-pagination-btn-label-color([^A-Za-z0-9_-]|$)`. `--ds-segmented-btn-border`, `--ds-segmented-btn-h` and `--ds-segmented-btn-pad-x` are not `-button` names: `segmented-parts-are-segments` renames them.",
       "restore": null,
       "searchHints": [
         "--ds-pagination-btn-label-color"
       ],
       "detect": [
-        "--ds-pagination-btn-label-color(?![A-Za-z0-9_-])"
+        "--ds-pagination-btn-label-color([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1421,13 +1421,13 @@
       "new": "--ds-pagination-button-label-color-hover",
       "surface": "style",
       "action": "Rewrite `--ds-pagination-btn-label-color-hover` to `--ds-pagination-button-label-color-hover`.",
-      "pitfall": "Three of these names are prefixes of their `-hover` sibling, so a substring replace of the shorter one corrupts the longer; match the whole old name, anchored: `--ds-pagination-btn-label-color-hover(?![A-Za-z0-9_-])`. `--ds-segmented-btn-border`, `--ds-segmented-btn-h` and `--ds-segmented-btn-pad-x` are not `-button` names: `segmented-parts-are-segments` renames them.",
+      "pitfall": "Three of these names are prefixes of their `-hover` sibling, so a substring replace of the shorter one corrupts the longer; match the whole old name, anchored: `--ds-pagination-btn-label-color-hover([^A-Za-z0-9_-]|$)`. `--ds-segmented-btn-border`, `--ds-segmented-btn-h` and `--ds-segmented-btn-pad-x` are not `-button` names: `segmented-parts-are-segments` renames them.",
       "restore": null,
       "searchHints": [
         "--ds-pagination-btn-label-color-hover"
       ],
       "detect": [
-        "--ds-pagination-btn-label-color-hover(?![A-Za-z0-9_-])"
+        "--ds-pagination-btn-label-color-hover([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1437,13 +1437,13 @@
       "new": "--ds-table-icon-button-color",
       "surface": "style",
       "action": "Rewrite `--ds-table-icon-btn-color` to `--ds-table-icon-button-color`.",
-      "pitfall": "Three of these names are prefixes of their `-hover` sibling, so a substring replace of the shorter one corrupts the longer; match the whole old name, anchored: `--ds-table-icon-btn-color(?![A-Za-z0-9_-])`. `--ds-segmented-btn-border`, `--ds-segmented-btn-h` and `--ds-segmented-btn-pad-x` are not `-button` names: `segmented-parts-are-segments` renames them.",
+      "pitfall": "Three of these names are prefixes of their `-hover` sibling, so a substring replace of the shorter one corrupts the longer; match the whole old name, anchored: `--ds-table-icon-btn-color([^A-Za-z0-9_-]|$)`. `--ds-segmented-btn-border`, `--ds-segmented-btn-h` and `--ds-segmented-btn-pad-x` are not `-button` names: `segmented-parts-are-segments` renames them.",
       "restore": null,
       "searchHints": [
         "--ds-table-icon-btn-color"
       ],
       "detect": [
-        "--ds-table-icon-btn-color(?![A-Za-z0-9_-])"
+        "--ds-table-icon-btn-color([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1453,13 +1453,13 @@
       "new": "--ds-table-icon-button-color-hover",
       "surface": "style",
       "action": "Rewrite `--ds-table-icon-btn-color-hover` to `--ds-table-icon-button-color-hover`.",
-      "pitfall": "Three of these names are prefixes of their `-hover` sibling, so a substring replace of the shorter one corrupts the longer; match the whole old name, anchored: `--ds-table-icon-btn-color-hover(?![A-Za-z0-9_-])`. `--ds-segmented-btn-border`, `--ds-segmented-btn-h` and `--ds-segmented-btn-pad-x` are not `-button` names: `segmented-parts-are-segments` renames them.",
+      "pitfall": "Three of these names are prefixes of their `-hover` sibling, so a substring replace of the shorter one corrupts the longer; match the whole old name, anchored: `--ds-table-icon-btn-color-hover([^A-Za-z0-9_-]|$)`. `--ds-segmented-btn-border`, `--ds-segmented-btn-h` and `--ds-segmented-btn-pad-x` are not `-button` names: `segmented-parts-are-segments` renames them.",
       "restore": null,
       "searchHints": [
         "--ds-table-icon-btn-color-hover"
       ],
       "detect": [
-        "--ds-table-icon-btn-color-hover(?![A-Za-z0-9_-])"
+        "--ds-table-icon-btn-color-hover([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1469,13 +1469,13 @@
       "new": "--ds-table-icon-button-focus-color",
       "surface": "style",
       "action": "Rewrite `--ds-table-icon-btn-focus-color` to `--ds-table-icon-button-focus-color`.",
-      "pitfall": "Three of these names are prefixes of their `-hover` sibling, so a substring replace of the shorter one corrupts the longer; match the whole old name, anchored: `--ds-table-icon-btn-focus-color(?![A-Za-z0-9_-])`. `--ds-segmented-btn-border`, `--ds-segmented-btn-h` and `--ds-segmented-btn-pad-x` are not `-button` names: `segmented-parts-are-segments` renames them.",
+      "pitfall": "Three of these names are prefixes of their `-hover` sibling, so a substring replace of the shorter one corrupts the longer; match the whole old name, anchored: `--ds-table-icon-btn-focus-color([^A-Za-z0-9_-]|$)`. `--ds-segmented-btn-border`, `--ds-segmented-btn-h` and `--ds-segmented-btn-pad-x` are not `-button` names: `segmented-parts-are-segments` renames them.",
       "restore": null,
       "searchHints": [
         "--ds-table-icon-btn-focus-color"
       ],
       "detect": [
-        "--ds-table-icon-btn-focus-color(?![A-Za-z0-9_-])"
+        "--ds-table-icon-btn-focus-color([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1485,13 +1485,13 @@
       "new": "--ds-autocomplete-input-min-width",
       "surface": "style",
       "action": "Rewrite `--ds-autocomplete-input-minw` to `--ds-autocomplete-input-min-width`.",
-      "pitfall": "`-h` and `-w` are prefixes of `-height` and `-width`, so a suffix replace run over a stylesheet that already carries the new name turns `-height` into `-heighteight`; match the whole old name, anchored: `--ds-autocomplete-input-minw(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-h` and `-w` are prefixes of `-height` and `-width`, so a suffix replace run over a stylesheet that already carries the new name turns `-height` into `-heighteight`; match the whole old name, anchored: `--ds-autocomplete-input-minw([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-autocomplete-input-minw"
       ],
       "detect": [
-        "--ds-autocomplete-input-minw(?![A-Za-z0-9_-])"
+        "--ds-autocomplete-input-minw([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1501,13 +1501,13 @@
       "new": "--ds-autocomplete-max-width",
       "surface": "style",
       "action": "Rewrite `--ds-autocomplete-maxw` to `--ds-autocomplete-max-width`.",
-      "pitfall": "`-h` and `-w` are prefixes of `-height` and `-width`, so a suffix replace run over a stylesheet that already carries the new name turns `-height` into `-heighteight`; match the whole old name, anchored: `--ds-autocomplete-maxw(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-h` and `-w` are prefixes of `-height` and `-width`, so a suffix replace run over a stylesheet that already carries the new name turns `-height` into `-heighteight`; match the whole old name, anchored: `--ds-autocomplete-maxw([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-autocomplete-maxw"
       ],
       "detect": [
-        "--ds-autocomplete-maxw(?![A-Za-z0-9_-])"
+        "--ds-autocomplete-maxw([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1517,13 +1517,13 @@
       "new": "--ds-autocomplete-panel-max-height",
       "surface": "style",
       "action": "Rewrite `--ds-autocomplete-panel-maxh` to `--ds-autocomplete-panel-max-height`.",
-      "pitfall": "`-h` and `-w` are prefixes of `-height` and `-width`, so a suffix replace run over a stylesheet that already carries the new name turns `-height` into `-heighteight`; match the whole old name, anchored: `--ds-autocomplete-panel-maxh(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-h` and `-w` are prefixes of `-height` and `-width`, so a suffix replace run over a stylesheet that already carries the new name turns `-height` into `-heighteight`; match the whole old name, anchored: `--ds-autocomplete-panel-maxh([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-autocomplete-panel-maxh"
       ],
       "detect": [
-        "--ds-autocomplete-panel-maxh(?![A-Za-z0-9_-])"
+        "--ds-autocomplete-panel-maxh([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1533,13 +1533,13 @@
       "new": "--ds-bottom-sheet-max-height",
       "surface": "style",
       "action": "Rewrite `--ds-bottom-sheet-maxh` to `--ds-bottom-sheet-max-height`.",
-      "pitfall": "`-h` and `-w` are prefixes of `-height` and `-width`, so a suffix replace run over a stylesheet that already carries the new name turns `-height` into `-heighteight`; match the whole old name, anchored: `--ds-bottom-sheet-maxh(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-h` and `-w` are prefixes of `-height` and `-width`, so a suffix replace run over a stylesheet that already carries the new name turns `-height` into `-heighteight`; match the whole old name, anchored: `--ds-bottom-sheet-maxh([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-bottom-sheet-maxh"
       ],
       "detect": [
-        "--ds-bottom-sheet-maxh(?![A-Za-z0-9_-])"
+        "--ds-bottom-sheet-maxh([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1549,13 +1549,13 @@
       "new": "--ds-bottom-sheet-max-width",
       "surface": "style",
       "action": "Rewrite `--ds-bottom-sheet-maxw` to `--ds-bottom-sheet-max-width`.",
-      "pitfall": "`-h` and `-w` are prefixes of `-height` and `-width`, so a suffix replace run over a stylesheet that already carries the new name turns `-height` into `-heighteight`; match the whole old name, anchored: `--ds-bottom-sheet-maxw(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-h` and `-w` are prefixes of `-height` and `-width`, so a suffix replace run over a stylesheet that already carries the new name turns `-height` into `-heighteight`; match the whole old name, anchored: `--ds-bottom-sheet-maxw([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-bottom-sheet-maxw"
       ],
       "detect": [
-        "--ds-bottom-sheet-maxw(?![A-Za-z0-9_-])"
+        "--ds-bottom-sheet-maxw([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1565,13 +1565,13 @@
       "new": "--ds-color-picker-hue-height",
       "surface": "style",
       "action": "Rewrite `--ds-color-picker-hue-h` to `--ds-color-picker-hue-height`.",
-      "pitfall": "`-h` and `-w` are prefixes of `-height` and `-width`, so a suffix replace run over a stylesheet that already carries the new name turns `-height` into `-heighteight`; match the whole old name, anchored: `--ds-color-picker-hue-h(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-h` and `-w` are prefixes of `-height` and `-width`, so a suffix replace run over a stylesheet that already carries the new name turns `-height` into `-heighteight`; match the whole old name, anchored: `--ds-color-picker-hue-h([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-color-picker-hue-h"
       ],
       "detect": [
-        "--ds-color-picker-hue-h(?![A-Za-z0-9_-])"
+        "--ds-color-picker-hue-h([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1581,13 +1581,13 @@
       "new": "--ds-color-picker-panel-width",
       "surface": "style",
       "action": "Rewrite `--ds-color-picker-panel-w` to `--ds-color-picker-panel-width`.",
-      "pitfall": "`-h` and `-w` are prefixes of `-height` and `-width`, so a suffix replace run over a stylesheet that already carries the new name turns `-height` into `-heighteight`; match the whole old name, anchored: `--ds-color-picker-panel-w(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-h` and `-w` are prefixes of `-height` and `-width`, so a suffix replace run over a stylesheet that already carries the new name turns `-height` into `-heighteight`; match the whole old name, anchored: `--ds-color-picker-panel-w([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-color-picker-panel-w"
       ],
       "detect": [
-        "--ds-color-picker-panel-w(?![A-Za-z0-9_-])"
+        "--ds-color-picker-panel-w([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1597,13 +1597,13 @@
       "new": "--ds-color-picker-saturation-value-height",
       "surface": "style",
       "action": "Rewrite `--ds-color-picker-sv-h` to `--ds-color-picker-saturation-value-height`.",
-      "pitfall": "`-h` and `-w` are prefixes of `-height` and `-width`, so a suffix replace run over a stylesheet that already carries the new name turns `-height` into `-heighteight`; match the whole old name, anchored: `--ds-color-picker-sv-h(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-h` and `-w` are prefixes of `-height` and `-width`, so a suffix replace run over a stylesheet that already carries the new name turns `-height` into `-heighteight`; match the whole old name, anchored: `--ds-color-picker-sv-h([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-color-picker-sv-h"
       ],
       "detect": [
-        "--ds-color-picker-sv-h(?![A-Za-z0-9_-])"
+        "--ds-color-picker-sv-h([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1613,13 +1613,13 @@
       "new": "--ds-container-max-width",
       "surface": "style",
       "action": "Rewrite `--ds-container-max` to `--ds-container-max-width`.",
-      "pitfall": "`-h` and `-w` are prefixes of `-height` and `-width`, so a suffix replace run over a stylesheet that already carries the new name turns `-height` into `-heighteight`; match the whole old name, anchored: `--ds-container-max(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-h` and `-w` are prefixes of `-height` and `-width`, so a suffix replace run over a stylesheet that already carries the new name turns `-height` into `-heighteight`; match the whole old name, anchored: `--ds-container-max([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-container-max"
       ],
       "detect": [
-        "--ds-container-max(?![A-Za-z0-9_-])"
+        "--ds-container-max([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1629,13 +1629,13 @@
       "new": "--ds-description-list-label-width",
       "surface": "style",
       "action": "Rewrite `--ds-description-list-label-w` to `--ds-description-list-label-width`.",
-      "pitfall": "`-h` and `-w` are prefixes of `-height` and `-width`, so a suffix replace run over a stylesheet that already carries the new name turns `-height` into `-heighteight`; match the whole old name, anchored: `--ds-description-list-label-w(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-h` and `-w` are prefixes of `-height` and `-width`, so a suffix replace run over a stylesheet that already carries the new name turns `-height` into `-heighteight`; match the whole old name, anchored: `--ds-description-list-label-w([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-description-list-label-w"
       ],
       "detect": [
-        "--ds-description-list-label-w(?![A-Za-z0-9_-])"
+        "--ds-description-list-label-w([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1645,13 +1645,13 @@
       "new": "--ds-dropdown-panel-max-height",
       "surface": "style",
       "action": "Rewrite `--ds-dropdown-panel-maxh` to `--ds-dropdown-panel-max-height`.",
-      "pitfall": "`-h` and `-w` are prefixes of `-height` and `-width`, so a suffix replace run over a stylesheet that already carries the new name turns `-height` into `-heighteight`; match the whole old name, anchored: `--ds-dropdown-panel-maxh(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-h` and `-w` are prefixes of `-height` and `-width`, so a suffix replace run over a stylesheet that already carries the new name turns `-height` into `-heighteight`; match the whole old name, anchored: `--ds-dropdown-panel-maxh([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-dropdown-panel-maxh"
       ],
       "detect": [
-        "--ds-dropdown-panel-maxh(?![A-Za-z0-9_-])"
+        "--ds-dropdown-panel-maxh([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1661,13 +1661,13 @@
       "new": "--ds-dropdown-panel-max-width",
       "surface": "style",
       "action": "Rewrite `--ds-dropdown-panel-maxw` to `--ds-dropdown-panel-max-width`.",
-      "pitfall": "`-h` and `-w` are prefixes of `-height` and `-width`, so a suffix replace run over a stylesheet that already carries the new name turns `-height` into `-heighteight`; match the whole old name, anchored: `--ds-dropdown-panel-maxw(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-h` and `-w` are prefixes of `-height` and `-width`, so a suffix replace run over a stylesheet that already carries the new name turns `-height` into `-heighteight`; match the whole old name, anchored: `--ds-dropdown-panel-maxw([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-dropdown-panel-maxw"
       ],
       "detect": [
-        "--ds-dropdown-panel-maxw(?![A-Za-z0-9_-])"
+        "--ds-dropdown-panel-maxw([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1677,13 +1677,13 @@
       "new": "--ds-dropdown-panel-min-width",
       "surface": "style",
       "action": "Rewrite `--ds-dropdown-panel-minw` to `--ds-dropdown-panel-min-width`.",
-      "pitfall": "`-h` and `-w` are prefixes of `-height` and `-width`, so a suffix replace run over a stylesheet that already carries the new name turns `-height` into `-heighteight`; match the whole old name, anchored: `--ds-dropdown-panel-minw(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-h` and `-w` are prefixes of `-height` and `-width`, so a suffix replace run over a stylesheet that already carries the new name turns `-height` into `-heighteight`; match the whole old name, anchored: `--ds-dropdown-panel-minw([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-dropdown-panel-minw"
       ],
       "detect": [
-        "--ds-dropdown-panel-minw(?![A-Za-z0-9_-])"
+        "--ds-dropdown-panel-minw([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1693,13 +1693,13 @@
       "new": "--ds-empty-state-body-max-width",
       "surface": "style",
       "action": "Rewrite `--ds-empty-state-body-maxw` to `--ds-empty-state-body-max-width`.",
-      "pitfall": "`-h` and `-w` are prefixes of `-height` and `-width`, so a suffix replace run over a stylesheet that already carries the new name turns `-height` into `-heighteight`; match the whole old name, anchored: `--ds-empty-state-body-maxw(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-h` and `-w` are prefixes of `-height` and `-width`, so a suffix replace run over a stylesheet that already carries the new name turns `-height` into `-heighteight`; match the whole old name, anchored: `--ds-empty-state-body-maxw([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-empty-state-body-maxw"
       ],
       "detect": [
-        "--ds-empty-state-body-maxw(?![A-Za-z0-9_-])"
+        "--ds-empty-state-body-maxw([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1709,13 +1709,13 @@
       "new": "--ds-otp-cell-height",
       "surface": "style",
       "action": "Rewrite `--ds-otp-cell-h` to `--ds-otp-cell-height`.",
-      "pitfall": "`-h` and `-w` are prefixes of `-height` and `-width`, so a suffix replace run over a stylesheet that already carries the new name turns `-height` into `-heighteight`; match the whole old name, anchored: `--ds-otp-cell-h(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-h` and `-w` are prefixes of `-height` and `-width`, so a suffix replace run over a stylesheet that already carries the new name turns `-height` into `-heighteight`; match the whole old name, anchored: `--ds-otp-cell-h([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-otp-cell-h"
       ],
       "detect": [
-        "--ds-otp-cell-h(?![A-Za-z0-9_-])"
+        "--ds-otp-cell-h([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1725,13 +1725,13 @@
       "new": "--ds-otp-cell-width",
       "surface": "style",
       "action": "Rewrite `--ds-otp-cell-w` to `--ds-otp-cell-width`.",
-      "pitfall": "`-h` and `-w` are prefixes of `-height` and `-width`, so a suffix replace run over a stylesheet that already carries the new name turns `-height` into `-heighteight`; match the whole old name, anchored: `--ds-otp-cell-w(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-h` and `-w` are prefixes of `-height` and `-width`, so a suffix replace run over a stylesheet that already carries the new name turns `-height` into `-heighteight`; match the whole old name, anchored: `--ds-otp-cell-w([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-otp-cell-w"
       ],
       "detect": [
-        "--ds-otp-cell-w(?![A-Za-z0-9_-])"
+        "--ds-otp-cell-w([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1741,13 +1741,13 @@
       "new": "--ds-search-max-width",
       "surface": "style",
       "action": "Rewrite `--ds-search-maxw` to `--ds-search-max-width`.",
-      "pitfall": "`-h` and `-w` are prefixes of `-height` and `-width`, so a suffix replace run over a stylesheet that already carries the new name turns `-height` into `-heighteight`; match the whole old name, anchored: `--ds-search-maxw(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-h` and `-w` are prefixes of `-height` and `-width`, so a suffix replace run over a stylesheet that already carries the new name turns `-height` into `-heighteight`; match the whole old name, anchored: `--ds-search-maxw([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-search-maxw"
       ],
       "detect": [
-        "--ds-search-maxw(?![A-Za-z0-9_-])"
+        "--ds-search-maxw([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1757,13 +1757,13 @@
       "new": "--ds-segmented-radius-inner",
       "surface": "style",
       "action": "Rewrite `--ds-segmented-r-inner` to `--ds-segmented-radius-inner`.",
-      "pitfall": "`-h` and `-w` are prefixes of `-height` and `-width`, so a suffix replace run over a stylesheet that already carries the new name turns `-height` into `-heighteight`; match the whole old name, anchored: `--ds-segmented-r-inner(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-h` and `-w` are prefixes of `-height` and `-width`, so a suffix replace run over a stylesheet that already carries the new name turns `-height` into `-heighteight`; match the whole old name, anchored: `--ds-segmented-r-inner([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-segmented-r-inner"
       ],
       "detect": [
-        "--ds-segmented-r-inner(?![A-Za-z0-9_-])"
+        "--ds-segmented-r-inner([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1773,13 +1773,13 @@
       "new": "--ds-slider-track-height",
       "surface": "style",
       "action": "Rewrite `--ds-slider-track-h` to `--ds-slider-track-height`.",
-      "pitfall": "`-h` and `-w` are prefixes of `-height` and `-width`, so a suffix replace run over a stylesheet that already carries the new name turns `-height` into `-heighteight`; match the whole old name, anchored: `--ds-slider-track-h(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-h` and `-w` are prefixes of `-height` and `-width`, so a suffix replace run over a stylesheet that already carries the new name turns `-height` into `-heighteight`; match the whole old name, anchored: `--ds-slider-track-h([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-slider-track-h"
       ],
       "detect": [
-        "--ds-slider-track-h(?![A-Za-z0-9_-])"
+        "--ds-slider-track-h([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1789,13 +1789,13 @@
       "new": "--ds-table-expand-column-width",
       "surface": "style",
       "action": "Rewrite `--ds-table-expand-col-w` to `--ds-table-expand-column-width`.",
-      "pitfall": "`-h` and `-w` are prefixes of `-height` and `-width`, so a suffix replace run over a stylesheet that already carries the new name turns `-height` into `-heighteight`; match the whole old name, anchored: `--ds-table-expand-col-w(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-h` and `-w` are prefixes of `-height` and `-width`, so a suffix replace run over a stylesheet that already carries the new name turns `-height` into `-heighteight`; match the whole old name, anchored: `--ds-table-expand-col-w([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-table-expand-col-w"
       ],
       "detect": [
-        "--ds-table-expand-col-w(?![A-Za-z0-9_-])"
+        "--ds-table-expand-col-w([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1805,13 +1805,13 @@
       "new": "--ds-table-head-height",
       "surface": "style",
       "action": "Rewrite `--ds-table-head-h` to `--ds-table-head-height`.",
-      "pitfall": "`-h` and `-w` are prefixes of `-height` and `-width`, so a suffix replace run over a stylesheet that already carries the new name turns `-height` into `-heighteight`; match the whole old name, anchored: `--ds-table-head-h(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-h` and `-w` are prefixes of `-height` and `-width`, so a suffix replace run over a stylesheet that already carries the new name turns `-height` into `-heighteight`; match the whole old name, anchored: `--ds-table-head-h([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-table-head-h"
       ],
       "detect": [
-        "--ds-table-head-h(?![A-Za-z0-9_-])"
+        "--ds-table-head-h([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1821,13 +1821,13 @@
       "new": "--ds-table-select-column-width",
       "surface": "style",
       "action": "Rewrite `--ds-table-select-col-w` to `--ds-table-select-column-width`.",
-      "pitfall": "`-h` and `-w` are prefixes of `-height` and `-width`, so a suffix replace run over a stylesheet that already carries the new name turns `-height` into `-heighteight`; match the whole old name, anchored: `--ds-table-select-col-w(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-h` and `-w` are prefixes of `-height` and `-width`, so a suffix replace run over a stylesheet that already carries the new name turns `-height` into `-heighteight`; match the whole old name, anchored: `--ds-table-select-col-w([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-table-select-col-w"
       ],
       "detect": [
-        "--ds-table-select-col-w(?![A-Za-z0-9_-])"
+        "--ds-table-select-col-w([^A-Za-z0-9_-]|$)"
       ]
     },
     {
@@ -1837,13 +1837,13 @@
       "new": "--ds-timeline-spine-width",
       "surface": "style",
       "action": "Rewrite `--ds-timeline-spine-w` to `--ds-timeline-spine-width`.",
-      "pitfall": "`-h` and `-w` are prefixes of `-height` and `-width`, so a suffix replace run over a stylesheet that already carries the new name turns `-height` into `-heighteight`; match the whole old name, anchored: `--ds-timeline-spine-w(?![A-Za-z0-9_-])`.",
+      "pitfall": "`-h` and `-w` are prefixes of `-height` and `-width`, so a suffix replace run over a stylesheet that already carries the new name turns `-height` into `-heighteight`; match the whole old name, anchored: `--ds-timeline-spine-w([^A-Za-z0-9_-]|$)`.",
       "restore": null,
       "searchHints": [
         "--ds-timeline-spine-w"
       ],
       "detect": [
-        "--ds-timeline-spine-w(?![A-Za-z0-9_-])"
+        "--ds-timeline-spine-w([^A-Za-z0-9_-]|$)"
       ]
     },
     {
