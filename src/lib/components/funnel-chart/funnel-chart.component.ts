@@ -9,16 +9,14 @@ import {
   input,
   numberAttribute,
   output,
-  signal,
 } from '@angular/core';
 import {
   CHART_RAMP_COLORS,
   chartColors,
   describeSeries,
   formatPercent,
-  focusMark,
   markAt,
-  nextRovingIndex,
+  rovingMarks,
   leaveMark,
   staggerDelay,
 } from '@ids-group-ltd/ids-design-system/components';
@@ -239,17 +237,10 @@ export class FunnelChartComponent {
       this.activeMark.pin(index, event);
     }
   }
-  /** One tab stop per chart, not one per mark: WCAG 2.1.1's Understanding is explicit that not
-   *  every mouse-operable control has to be separately focusable, and that is what keeps a
-   *  twenty-five mark chart from being twenty-five stops in the page's tab order. */
-  protected readonly rovingIndex = signal(0);
-
-  protected readonly tabStopIndex = computed(() =>
-    Math.min(this.rovingIndex(), Math.max(0, this.stages().length - 1)),
-  );
+  protected readonly roving = rovingMarks(() => this.stages().length);
 
   protected onMarkFocus(index: number, event: FocusEvent): void {
-    this.rovingIndex.set(index);
+    this.roving.focus(index);
     this.activeMark.enter(index, event);
   }
 
@@ -276,13 +267,11 @@ export class FunnelChartComponent {
   }
 
   protected onMarkNavigation(event: KeyboardEvent, index: number): void {
-    const next = nextRovingIndex(event.key, index, this.stages().length);
-    if (next === null) {
-      return;
-    }
-    event.preventDefault();
-    this.rovingIndex.set(next);
-    focusMark((event.currentTarget as Element).closest('svg'), next);
+    this.roving.navigate(
+      event,
+      index,
+      (event.currentTarget as Element).closest('svg'),
+    );
   }
 
   protected readonly tooltipContext = computed<ChartTooltipContext | null>(

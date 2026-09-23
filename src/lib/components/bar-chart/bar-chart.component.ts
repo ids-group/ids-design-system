@@ -9,7 +9,6 @@ import {
   input,
   numberAttribute,
   output,
-  signal,
 } from '@angular/core';
 import {
   CHART_SERIES_COLORS,
@@ -18,8 +17,7 @@ import {
   formatPercent,
   describeShare,
   shareOfTotal,
-  focusMark,
-  nextRovingIndex,
+  rovingMarks,
   leaveMark,
   staggerDelay,
 } from '@ids-group-ltd/ids-design-system/components';
@@ -225,28 +223,19 @@ export class BarChartComponent {
       this.activeMark.pin(index, event, '.fill');
     }
   }
-  /** One tab stop per chart, not one per mark: WCAG 2.1.1's Understanding is explicit that not
-   *  every mouse-operable control has to be separately focusable, and that is what keeps a
-   *  twenty-five mark chart from being twenty-five stops in the page's tab order. */
-  protected readonly rovingIndex = signal(0);
-
-  protected readonly tabStopIndex = computed(() =>
-    Math.min(this.rovingIndex(), Math.max(0, this.rows().length - 1)),
-  );
+  protected readonly roving = rovingMarks(() => this.rows().length);
 
   protected onMarkFocus(index: number, event: FocusEvent): void {
-    this.rovingIndex.set(index);
+    this.roving.focus(index);
     this.activeMark.enter(index, event, '.fill');
   }
 
   protected onMarkNavigation(event: KeyboardEvent, index: number): void {
-    const next = nextRovingIndex(event.key, index, this.rows().length);
-    if (next === null) {
-      return;
-    }
-    event.preventDefault();
-    this.rovingIndex.set(next);
-    focusMark((event.currentTarget as Element).closest('.rows'), next);
+    this.roving.navigate(
+      event,
+      index,
+      (event.currentTarget as Element).closest('.rows'),
+    );
   }
 
   protected readonly tooltipContext = computed<ChartTooltipContext | null>(

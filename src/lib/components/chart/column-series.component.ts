@@ -10,16 +10,14 @@ import {
   input,
   numberAttribute,
   output,
-  signal,
 } from '@angular/core';
 import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
 import {
   CHART_SERIES_COLORS,
   defaultChartFormat,
   describeShare,
-  focusMark,
   markOf,
-  nextRovingIndex,
+  rovingMarks,
   leaveMark,
   staggerDelay,
 } from '@ids-group-ltd/ids-design-system/components';
@@ -355,19 +353,12 @@ export class ColumnSeriesComponent implements OnDestroy {
     }
   }
 
-  /** One tab stop per chart, not one per mark: WCAG 2.1.1's Understanding is explicit that not
-   *  every mouse-operable control has to be separately focusable, and that is what keeps a
-   *  twenty-five mark chart from being twenty-five stops in the page's tab order. */
-  protected readonly rovingIndex = signal(0);
-
-  protected readonly tabStopIndex = computed(() =>
-    Math.min(this.rovingIndex(), Math.max(0, this.marks().length - 1)),
-  );
+  protected readonly roving = rovingMarks(() => this.marks().length);
 
   protected onMarkFocus(event: FocusEvent): void {
     const hit = markOf(event);
     if (hit) {
-      this.rovingIndex.set(hit.index);
+      this.roving.focus(hit.index);
       this.activeMark.enter(hit.index, event, this.tooltipMark(), hit.element);
     }
   }
@@ -394,13 +385,7 @@ export class ColumnSeriesComponent implements OnDestroy {
 
       return;
     }
-    const next = nextRovingIndex(event.key, hit.index, this.marks().length);
-    if (next === null) {
-      return;
-    }
-    event.preventDefault();
-    this.rovingIndex.set(next);
-    focusMark(hit.element.closest('.columns'), next);
+    this.roving.navigate(event, hit.index, hit.element.closest('.columns'));
   }
 
   protected entryLabel(mark: {
