@@ -15,7 +15,10 @@ import {
   type FlexibleConnectedPositionStrategyOrigin,
 } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
-import { closeOnScroll } from '@ids-group-ltd/ids-design-system/components';
+import {
+  closeOnScroll,
+  disposeWithLeave,
+} from '@ids-group-ltd/ids-design-system/components';
 import { ChartTooltipPanelComponent } from './chart-tooltip-panel.component';
 import type {
   ChartTooltipContext,
@@ -194,7 +197,10 @@ export class ChartTooltipDirective {
     this.detachEscape = null;
     this.detachScrollReposition?.();
     this.detachScrollReposition = null;
-    this.overlayRef?.dispose();
+    // A dismissal, never a selection: the panel closes when the reader leaves the plot, and the
+    // family's answer to that is a fade. Moving between marks repositions this overlay rather than
+    // closing it, so nothing here can lag behind the pointer.
+    disposeWithLeave(this.overlayRef, 'dismiss');
     this.overlayRef = null;
     this.panelRef = null;
   }

@@ -49,7 +49,7 @@
           [class.is-dimmed]="isDimmed(entry.series.id)"
           [class.ghost]="!showMarkers()"
           [class.interactive]="interactive()"
-          [class.is-active]="marker.markIndex === activeMark.index()"
+          [class.is-active]="isActiveMarker(marker)"
           [attr.cx]="marker.x"
           [attr.cy]="marker.y"
           [attr.fill]="entry.color"

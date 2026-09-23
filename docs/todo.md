@@ -14,15 +14,19 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**142 open — 1 P1, 23 P2, 118 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**143 open — 1 P1, 24 P2, 118 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 1
 
-- **Component feature gaps**
+- **Defects consumers work around today (swept 2026-09-23)**
   - `display: grid` on `.expand-panel-cell` drops the expand panel out of the table, so its `colspan` does nothing and it renders one column wide (recorded 2026-09-23, from a consumer's QA against 0.13.4)
 
-### P2 — 23
+### P2 — 24
 
+- **Defects consumers work around today (swept 2026-09-23)**
+  - `ds-modal` footer clips its buttons instead of stacking, against its own truncation contract (from the mm-ecm consumer)
+  - The 0.13.3 manifest renames `--ds-meter-radius` to a `--ds-bar-radius` that nothing reads (from the mm-ecm-platform-kb consumer)
+  - The stock control edge and `--secondary-on` fail contrast; the second breaks on any light brand secondary (from the ids-europe-landing consumer)
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - `_focus.scss`'s top-level CSS is copied into 48 component style strings
   - Warning and success fields show a mismatched halo
@@ -36,10 +40,6 @@ item and nothing else.
   - DOCS for A3: `@defer` needs the deep specifier — the one exception to «no consumer
 - **DS-docs**
   - Fourteen focusable elements in ds-docs still have no accessible name, on two components that always could
-- **Defects consumers work around today (swept 2026-09-23)**
-  - `ds-modal` footer clips its buttons instead of stacking, against its own truncation contract (from the mm-ecm consumer)
-  - The 0.13.3 manifest renames `--ds-meter-radius` to a `--ds-bar-radius` that nothing reads (from the mm-ecm-platform-kb consumer)
-  - The stock control edge and `--secondary-on` fail contrast; the second breaks on any light brand secondary (from the ids-europe-landing consumer)
 - **What actually running the 0.13.4 migration cost (recorded 2026-09-23, from the mm-ecm consumer)**
   - The mass spell-out renames old names that are PREFIXES of the new ones, and the pitfall does not mention it
   - Adopting `banner.announce` app-wide silently arms every banner written afterwards, and the variant is a usable discriminator
@@ -55,6 +55,7 @@ item and nothing else.
 - **Hooks and APIs consumers reach past the surface for (swept 2026-09-23)**
   - The pager `ds-table` renders takes neither the pagination `size` nor its `layout` (from the mm-ecm-platform-kb consumer)
 - **Tooling**
+  - An `informational` entry is the one kind that describes a pure rendering change, and it is the only kind that cannot carry a `verify` (recorded 2026-09-23, from a consumer's 0.8.0 to 0.13.4 chain)
   - Publishing to npm stops working in January 2027 and the replacement is not chosen
   - Nothing catches a stale `presentations/ds.css`, and two gates read it as the truth
 - **Localization — every user-visible string is a hardcoded literal (recorded 2026-08-27, from the ITB Workspace picker report)**
@@ -62,6 +63,8 @@ item and nothing else.
 
 ### P3 — 118
 
+- **Defects consumers work around today (swept 2026-09-23)**
+  - `ds-table`'s pager keeps the stale total and stays live under `loading="skeleton"` (from the ai-sdlc consumer)
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - The token reference says the portaled panel reads `--ds-time-picker-focus-shadow`
   - Thirteen ds-docs forced-state pins misrepresent their component
@@ -69,8 +72,6 @@ item and nothing else.
   - Prose-shaped `old` values in 0.11.x remain (hygiene, not breakage)
 - **DS-docs**
   - ds-docs renders a space before punctuation after any inline `<code>` (found 2026-09-01)
-- **Defects consumers work around today (swept 2026-09-23)**
-  - `ds-table`'s pager keeps the stale total and stays live under `loading="skeleton"` (from the ai-sdlc consumer)
 - **What v0.13.3 added and the docs site never shows (measured 2026-09-22)**
   - `g[dsLineSeries]` demonstrates `stacked` and `tooltipAnchor` only on the preset
   - `--ds-chart-dimmed-opacity` has an empty `notes` and a near-twin name
@@ -264,6 +265,24 @@ zero, read the consumer's hand-rolled version rather than re-reading our own API
 
 Highest: each one is wrong in code — or in a surface — a consumer already reads.
 
+## Defects consumers work around today (swept 2026-09-23)
+
+Found by reading every consumer tree for a rule that out-specifies a DS internal, a `::ng-deep` into a `ds-*`, or a wrapper that exists only because the library gets something wrong. Each is checked against `dev`.
+
+- [ ] **[P1] `display: grid` on `.expand-panel-cell` drops the expand panel out of the table, so its `colspan` does nothing and it renders one column wide (recorded 2026-09-23, from a consumer's QA against 0.13.4).** `table.component.scss` gives the expanded row's `<td>` `display: grid; grid-template-rows: 1fr; animation: ds-table-expand …`. A `<td>` whose `display` is not `table-cell` stops being a table cell, so `[attr.colspan]="expandedColspan()"` is ignored and the box sizes to its own content instead of the row. Measured in Chrome: a plain `<td colspan="4">` in a 1000 px table is 997 px; the same cell with `display: grid` is 39 px.
+  **What the consumer sees.** Expanding a journey step draws its wave list in a panel 24 px wide inside a 1559 px row: only the first character of each date is visible, the remaining three columns are not, and the rest of the row is blank. The four inner columns need 436-558 px. It does not follow the viewport, and collapsing and re-expanding does not change it.
+  **When it entered.** Bisected across the tags with `git grep -A 3 expand-panel-cell <tag> -- 'src/lib/components/table/*.scss'`: absent through `v0.12.1`, present from **`v0.12.2`** on, and still on `dev`. Every consumer that uses `expandableRows` with a `rowExpandTemplate` wider than one column has been affected since that release.
+  **The shape that fits.** The template already carries a child, `.expand-panel-inner`, and the comment above it says the animation runs on the grid track. Keep the `<td>` a table cell and move `display: grid`, `grid-template-rows: 1fr` and the `ds-table-expand` animation onto a wrapper INSIDE the cell, with `.expand-panel-inner` as its track content. The reveal is unchanged and the colspan works again.
+
+- [ ] **[P2] `ds-modal` footer clips its buttons instead of stacking, against its own truncation contract (from the mm-ecm consumer).** `ecm-portal/src/styles.scss:105-107` adds `flex-wrap: wrap` to `ds-modal-card .actions`. `modal.component.scss:7` promises "If the row overflows, stack vertically full-width", but `:189-200` is a non-wrapping flex row and `.modal` (`:73-90`) is fixed-width with `overflow: hidden`, and because the row is `justify-content: flex-end` it overflows past its START edge, so the first button is the one cut (measured in headless Chrome on a rebuild, 2026-09-23: its box starts at -124px in a 300px row); `ds-button` keeps `white-space: nowrap` (`button.component.scss:112`) and does not shrink. `ds-modal` and `ds-modal-card` share the sheet. **Wanted:** the footer wraps, or stacks full-width as the contract says, when its buttons outgrow the card, with no consumer rule.
+
+- [ ] **[P2] The 0.13.3 manifest renames `--ds-meter-radius` to a `--ds-bar-radius` that nothing reads (from the mm-ecm-platform-kb consumer).** `migrations/0.13.3.json:85` says `-radius` keeps its suffix, but `bar.component.scss:22,29` pins `border-radius: var(--radius-pill)` on the track and the fill. A consumer who follows the manifest gets a silent no-op and a pill bar. The CHANGELOG (`CHANGELOG.md:962-963`) omits the hook without saying it was removed, and at v0.13.2 `meter.component.scss:4` read it. Consumer note: `mm-ecm-platform-kb/.claude/local/todo/ds-0.13.1-charts-and-reserve-messages.md:26-27`.
+  **Wanted:** either `ds-bar` reads `--ds-bar-radius` (default `var(--radius-pill)`) on the track and the fill, or the manifest item and the CHANGELOG say `--ds-meter-radius` was removed, with no replacement.
+
+- [ ] **[P2] The stock control edge and `--secondary-on` fail contrast; the second breaks on any light brand secondary (from the ids-europe-landing consumer).** `--border-default` is `var(--neutral-200)` (`_semantic.scss:49`, #DCE1EA) and is the resting edge of `ds-input` (`input.component.scss:17`) and 25 more components: 1.31:1 on white in the stock theme against the 3:1 WCAG 1.4.11 floor for a control boundary. `--secondary-on` is the constant `var(--primary-on)` = white (`:134`, `:116`) while `--secondary` recomposes from `--secondary-h/s/l`, so a gold secondary (#FBAC18) gets white text at 1.91:1. ids-europe-landing rebinds both (`_theme.scss:44-57`, `:80-85`). **Wanted:** a control-edge role that clears 3:1 in both themes (or `--border-default` moved to it), and `--secondary-on` derived from `--secondary`'s lightness or listed in the brand must-rebind checklist of the brand-unsafe item.
+
+- [ ] **[P3] `ds-table`'s pager keeps the stale total and stays live under `loading="skeleton"` (from the ai-sdlc consumer).** Skeleton mode swaps the rows for placeholders (`table.component.ts:499`), but the footer at `table.component.html:431-441` is gated on `pageSize()` alone and passes `[total]="total() ?? filteredData().length"` straight through, so '1 of 1' from the previous query sits under the skeleton and its page buttons can fire a second load. ai-sdlc-prototype records it at `docs/todo.md:110-114` and has to clear its store total by hand. **Wanted:** while `isSkeletonLoading()`, the footer keeps its height but disables its controls and masks the count (skeleton text in place of the label), so the pager never contradicts the rows.
+
 ## Focus indicators — what the two-wave review left open (recorded 2026-09-04)
 
 *This section also has items under **Asks**, **Decisions**, **Parked**, **Records**.*
@@ -411,19 +430,6 @@ and says nothing about the old one. Measured on three grounds: `presentations/fo
   section would fight the lint rule and make that section inconsistent with the other sixty. The fix is
   either a rule exemption for inline `<code>` or a CSS-level one; either way it is a single change for the
   whole site. Low priority — it is one space — but it is in every paragraph that names a token.
-
-## Defects consumers work around today (swept 2026-09-23)
-
-Found by reading every consumer tree for a rule that out-specifies a DS internal, a `::ng-deep` into a `ds-*`, or a wrapper that exists only because the library gets something wrong. Each is checked against `dev`.
-
-- [ ] **[P2] `ds-modal` footer clips its buttons instead of stacking, against its own truncation contract (from the mm-ecm consumer).** `ecm-portal/src/styles.scss:105-107` adds `flex-wrap: wrap` to `ds-modal-card .actions`. `modal.component.scss:7` promises "If the row overflows, stack vertically full-width", but `:189-200` is a non-wrapping flex row and `.modal` (`:73-90`) is fixed-width with `overflow: hidden`, and because the row is `justify-content: flex-end` it overflows past its START edge, so the first button is the one cut (measured in headless Chrome on a rebuild, 2026-09-23: its box starts at -124px in a 300px row); `ds-button` keeps `white-space: nowrap` (`button.component.scss:112`) and does not shrink. `ds-modal` and `ds-modal-card` share the sheet. **Wanted:** the footer wraps, or stacks full-width as the contract says, when its buttons outgrow the card, with no consumer rule.
-
-- [ ] **[P2] The 0.13.3 manifest renames `--ds-meter-radius` to a `--ds-bar-radius` that nothing reads (from the mm-ecm-platform-kb consumer).** `migrations/0.13.3.json:85` says `-radius` keeps its suffix, but `bar.component.scss:22,29` pins `border-radius: var(--radius-pill)` on the track and the fill. A consumer who follows the manifest gets a silent no-op and a pill bar. The CHANGELOG (`CHANGELOG.md:962-963`) omits the hook without saying it was removed, and at v0.13.2 `meter.component.scss:4` read it. Consumer note: `mm-ecm-platform-kb/.claude/local/todo/ds-0.13.1-charts-and-reserve-messages.md:26-27`.
-  **Wanted:** either `ds-bar` reads `--ds-bar-radius` (default `var(--radius-pill)`) on the track and the fill, or the manifest item and the CHANGELOG say `--ds-meter-radius` was removed, with no replacement.
-
-- [ ] **[P2] The stock control edge and `--secondary-on` fail contrast; the second breaks on any light brand secondary (from the ids-europe-landing consumer).** `--border-default` is `var(--neutral-200)` (`_semantic.scss:49`, #DCE1EA) and is the resting edge of `ds-input` (`input.component.scss:17`) and 25 more components: 1.31:1 on white in the stock theme against the 3:1 WCAG 1.4.11 floor for a control boundary. `--secondary-on` is the constant `var(--primary-on)` = white (`:134`, `:116`) while `--secondary` recomposes from `--secondary-h/s/l`, so a gold secondary (#FBAC18) gets white text at 1.91:1. ids-europe-landing rebinds both (`_theme.scss:44-57`, `:80-85`). **Wanted:** a control-edge role that clears 3:1 in both themes (or `--border-default` moved to it), and `--secondary-on` derived from `--secondary`'s lightness or listed in the brand must-rebind checklist of the brand-unsafe item.
-
-- [ ] **[P3] `ds-table`'s pager keeps the stale total and stays live under `loading="skeleton"` (from the ai-sdlc consumer).** Skeleton mode swaps the rows for placeholders (`table.component.ts:499`), but the footer at `table.component.html:431-441` is gated on `pageSize()` alone and passes `[total]="total() ?? filteredData().length"` straight through, so '1 of 1' from the previous query sits under the skeleton and its page buttons can fire a second load. ai-sdlc-prototype records it at `docs/todo.md:110-114` and has to clear its store total by hand. **Wanted:** while `isSkeletonLoading()`, the footer keeps its height but disables its controls and masks the count (skeleton text in place of the label), so the pager never contradicts the rows.
 
 ## What v0.13.3 added and the docs site never shows (measured 2026-09-22)
 
@@ -670,11 +676,6 @@ how it surfaced - this is the manifest half, not a tooling gap.
   `old` first - which is what a human does.
 
 ## Component feature gaps
-
-- [ ] **[P1] `display: grid` on `.expand-panel-cell` drops the expand panel out of the table, so its `colspan` does nothing and it renders one column wide (recorded 2026-09-23, from a consumer's QA against 0.13.4).** `table.component.scss` gives the expanded row's `<td>` `display: grid; grid-template-rows: 1fr; animation: ds-table-expand …`. A `<td>` whose `display` is not `table-cell` stops being a table cell, so `[attr.colspan]="expandedColspan()"` is ignored and the box sizes to its own content instead of the row. Measured in Chrome: a plain `<td colspan="4">` in a 1000 px table is 997 px; the same cell with `display: grid` is 39 px.
-  **What the consumer sees.** Expanding a journey step draws its wave list in a panel 24 px wide inside a 1559 px row: only the first character of each date is visible, the remaining three columns are not, and the rest of the row is blank. The four inner columns need 436-558 px. It does not follow the viewport, and collapsing and re-expanding does not change it.
-  **When it entered.** Bisected across the tags with `git grep -A 3 expand-panel-cell <tag> -- 'src/lib/components/table/*.scss'`: absent through `v0.12.1`, present from **`v0.12.2`** on, and still on `dev`. Every consumer that uses `expandableRows` with a `rowExpandTemplate` wider than one column has been affected since that release.
-  **The shape that fits.** The template already carries a child, `.expand-panel-inner`, and the comment above it says the animation runs on the grid track. Keep the `<td>` a table cell and move `display: grid`, `grid-template-rows: 1fr` and the `ds-table-expand` animation onto a wrapper INSIDE the cell, with `.expand-panel-inner` as its track content. The reveal is unchanged and the colspan works again.
 
 *This section also has items under **Decisions**, **Parked**.*
 
@@ -1066,6 +1067,11 @@ beside another lane changing those three files.
 
 ## Tooling
 
+- [ ] **[P2] An `informational` entry is the one kind that describes a pure rendering change, and it is the only kind that cannot carry a `verify` (recorded 2026-09-23, from a consumer's 0.8.0 to 0.13.4 chain).** The manifest schema makes `informational` a bare array of strings, and the workflow defines it as "a documented change needing NO consumer code action (purely visual, nothing to edit)". That is a statement about the consumer's CODE. It is not a statement about what the library now draws, and it is not a claim the library has checked what it draws.
+  **What it cost.** 0.12.2's line reads "An expanded `ds-table` row opens with a reveal - its cell interpolates `grid-template-rows` from `0fr` to `1fr` over `--duration-base`". Accurate and complete. The same change put `display: grid` on the `<td>`, which stops it being a table cell, so `colspan` is ignored and the panel renders one column wide - the P1 above. A consumer reading that line correctly had nothing to grep, nothing that failed to build, and nothing a re-check could assert. The defect surfaced through a QA ticket against a test environment, eleven releases after it shipped.
+  **The asymmetry is the point.** Every `kind` that changes a SYMBOL carries `verify`, and those are exactly the changes a grep or a build would have caught anyway. The entries that change only RENDERING, where opening the component is the one possible detector, carry no `verify` at all.
+  **The shape that fits.** Let an `informational` entry be either a string, as today, or an object `{ "text": "...", "verify": "..." }`, and fill `verify` whenever the line names a layout mechanism (`display`, `grid`, `flex`, `position`, `overflow`, `colspan`, a width, a height, a new wrapper element). One sentence is enough: "open an expanded row and confirm the panel spans the row rather than one column". Backwards compatible for every existing manifest, and it gives a consumer's upgrade a gate where it currently has none.
+
 *This section also has items under **Decisions**, **Parked**, **Records**.*
 
 - [ ] **[P3] A consumer's `--ds-*` override can be write-only, and nothing says so (recorded 2026-09-23, from the mm-ecm consumer's 0.8.0 to 0.13.4 audit).** A name the consumer declares but the library never reads sets nothing, paints nothing and raises nothing: no build error, no console warning, no lint. It reads as styling that works, and it can survive many releases that way. Measured on one consumer: `--ds-button-bg`, `--ds-button-bg-hover`, `--ds-button-bg-active`, `--ds-button-fg` and `--ds-tag-bg`, 16 declarations in mm-ecm-platform (15 in `_buttons.scss`, one `--ds-tag-bg`); the consumer's `fix/dead-ds-token-overrides` branch fixes the tag and leaves the 15. Those names are real - `git grep -P -- '--ds-button-bg(?![a-z0-9-])' <tag> -- src/lib` finds them at `v0.1.0` through `v0.2.2` and nowhere from `v0.3.0` on, where the surface became `--ds-button-bg-color` / `-hover` / `-active` and `--ds-button-label-color`. The consumer entered the chain at 0.8.0, so the overrides were already five releases dead before the upgrade started, and came out the other side still dead.
@@ -1297,7 +1303,7 @@ file** — the number moves; cite the filename.
 | 10 | `10-ds-bar-name-collision` | What the merged progress+meter is called, given `ds-bar` is a prefix of `ds-bar-chart`. | the `ds-bar` rename ask on the same board |
 | 11 | `11-banner-announce-warning` | Whether a dev warning names an error banner no screen reader will read. | the closed `banner.announce` ask, which left this open |
 | 12 | `12-picker-list-height` | Whether the picker list height becomes a public token or stays behind `panelClass`. | the closed `--picker-maxh` ask, same shape |
-| 13 | `13-decision-queue` | Every consumer ask and every open question in one page - 36 asks in four groups, then 36 decisions in six, each drawn as today against after. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
+| 13 | `13-decision-queue` | Every consumer ask and every open question in one page - 37 asks in five groups, then 36 decisions in six, each drawn as today against after. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
