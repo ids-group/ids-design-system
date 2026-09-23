@@ -19,6 +19,7 @@ import {
   focusMark,
   markAt,
   nextRovingIndex,
+  leaveMark,
   staggerDelay,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
@@ -90,6 +91,8 @@ const SKELETON_STAGE_WIDTHS = ['88%', '62%', '80%', '54%', '72%'] as const;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FunnelChartComponent {
+  protected readonly leaveMark = leaveMark;
+
   /** Drawn in the order given. The order of a funnel's stages is its meaning,
    *  so they are never sorted. */
   readonly data = input.required<readonly FunnelChartStage[]>();

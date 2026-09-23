@@ -41,7 +41,7 @@ export {
   tickValues,
 } from './charts-scale';
 export type { BandScale, NiceDomain, PointScale } from './charts-scale';
-export { staggerDelay } from './charts-motion';
+export { leaveMark, staggerDelay } from './charts-motion';
 export { focusMark, markAt, nextRovingIndex } from './charts-roving';
 export { describeSeries } from './charts-summary';
 export type { SummaryPoint } from './charts-summary';

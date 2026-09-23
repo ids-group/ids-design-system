@@ -20,6 +20,7 @@ import {
   shareOfTotal,
   focusMark,
   nextRovingIndex,
+  leaveMark,
   staggerDelay,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
@@ -93,6 +94,8 @@ function segmentsOf(
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BarChartComponent {
+  protected readonly leaveMark = leaveMark;
+
   /** One row per bar, drawn in the order given. */
   readonly data = input.required<readonly BarChartRow[]>();
 

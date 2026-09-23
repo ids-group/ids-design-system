@@ -46,7 +46,6 @@
       @for (entry of rows(); track entry.key; let index = $index) {
         <div
           class="row"
-          animate.leave="mark-leave"
           [style.--_chart-mark-stagger]="markStagger(index)"
           [class.interactive]="interactive()"
           [class.is-pinned]="
@@ -58,6 +57,7 @@
           "
           [attr.data-mark-index]="index"
           [attr.aria-label]="interactive() ? entryLabel(entry) : null"
+          (animate.leave)="leaveMark($event)"
           (pointerenter)="activeMark.enter(index, $event, '.fill')"
           (pointerleave)="activeMark.leave()"
           (focus)="onMarkFocus(index, $event)"

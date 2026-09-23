@@ -19,6 +19,7 @@ import {
   describeShare,
   focusMark,
   nextRovingIndex,
+  leaveMark,
   staggerDelay,
 } from '@ids-group-ltd/ids-design-system/components';
 import { ICONS } from '@ids-group-ltd/ids-design-system/core';
@@ -82,6 +83,8 @@ let nextSeriesId = 0;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ColumnSeriesComponent implements OnDestroy {
+  protected readonly leaveMark = leaveMark;
+
   private readonly scales = inject(CHART_SCALES);
 
   /** Not `input.required`: the preset reads `tooltipContext()` from a binding on this same

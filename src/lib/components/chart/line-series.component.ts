@@ -23,6 +23,7 @@ import {
   lineSegments,
   nextRovingIndex,
   linePath,
+  leaveMark,
   staggerDelay,
 } from '@ids-group-ltd/ids-design-system/components';
 import type { LinePoint } from '@ids-group-ltd/ids-design-system/components';
@@ -82,6 +83,8 @@ let nextSeriesId = 0;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LineSeriesComponent implements OnDestroy {
+  protected readonly leaveMark = leaveMark;
+
   private readonly scales = inject(CHART_SCALES);
 
   /** Not `input.required`: the preset reads `tooltipContext()` from a binding on this same

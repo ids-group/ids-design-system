@@ -34,7 +34,6 @@
   @for (mark of marks(); track mark.key; let index = $index) {
     <svg:g
       class="column"
-      animate.leave="mark-leave"
       [class.interactive]="interactive()"
       [class.below-baseline]="mark.below"
       [class.is-pinned]="activeMark.pinned() && activeMark.index() === index"
@@ -48,6 +47,7 @@
         interactive() ? (index === tabStopIndex() ? 0 : -1) : null
       "
       [attr.aria-label]="interactive() ? entryLabel(mark) : null"
+      (animate.leave)="leaveMark($event)"
       (pointerenter)="onMarkEnter(index, $event)"
       (pointerleave)="activeMark.leave()"
       (focus)="onMarkFocus(index, $event)"

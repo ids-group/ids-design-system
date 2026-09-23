@@ -6,12 +6,12 @@
     @for (path of entry.areaPaths; track $index) {
       <svg:path
         class="series-area"
-        animate.leave="mark-leave"
         [class.is-stacked]="stacked()"
         [class.is-dimmed]="isDimmed(entry.series.id)"
         [style.--_chart-mark-stagger]="seriesStagger(entry.seriesIndex)"
         [attr.d]="path"
-        [attr.fill]="entry.color" />
+        [attr.fill]="entry.color"
+        (animate.leave)="leaveMark($event)" />
     }
   }
 
@@ -31,12 +31,12 @@
     @for (path of entry.linePaths; track $index) {
       <svg:path
         class="series-line"
-        animate.leave="mark-leave"
         [class.is-dimmed]="isDimmed(entry.series.id)"
         [attr.stroke-dasharray]="dashFor(entry.seriesIndex)"
         [style.--_chart-mark-stagger]="seriesStagger(entry.seriesIndex)"
         [attr.d]="path"
-        [attr.stroke]="entry.color" />
+        [attr.stroke]="entry.color"
+        (animate.leave)="leaveMark($event)" />
     }
   }
 

@@ -9,8 +9,10 @@
 // NOT `animate.enter`: its runtime calls `getAnimations()` once per mark, and in Chrome each call
 // costs more the more animations are running, so a chart entering a thousand marks at once blocks
 // the main thread for seconds. `backwards`, not `both`: a finished animation that still fills stays
-// in effect for good, and every later `getAnimations()` on the page pays for it. `animate.leave`
-// still owns the exit, because only Angular can hold a removed mark until it has faded.
+// in effect for good, and every later `getAnimations()` on the page pays for it. The exit still goes
+// through `animate.leave`, because only Angular can hold a removed mark until it has faded, but in
+// its function form: the component puts `.mark-leave` on the mark and Angular removes it on
+// `animationend`, with no `getAnimations()` call.
 //
 // A mark ARRIVES BY GROWING FROM ITS OWN BASELINE, never by scaling about its centre: a uniform
 // scale reads as the whole chart zooming, and it moves the mark's baseline, which is the one line
