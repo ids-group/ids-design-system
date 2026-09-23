@@ -14,7 +14,12 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**141 open — 0 P1, 23 P2, 118 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**142 open — 1 P1, 23 P2, 118 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+
+### P1 — 1
+
+- **Component feature gaps**
+  - `display: grid` on `.expand-panel-cell` drops the expand panel out of the table, so its `colspan` does nothing and it renders one column wide (recorded 2026-09-23, from a consumer's QA against 0.13.4)
 
 ### P2 — 23
 
@@ -665,6 +670,11 @@ how it surfaced - this is the manifest half, not a tooling gap.
   `old` first - which is what a human does.
 
 ## Component feature gaps
+
+- [ ] **[P1] `display: grid` on `.expand-panel-cell` drops the expand panel out of the table, so its `colspan` does nothing and it renders one column wide (recorded 2026-09-23, from a consumer's QA against 0.13.4).** `table.component.scss` gives the expanded row's `<td>` `display: grid; grid-template-rows: 1fr; animation: ds-table-expand …`. A `<td>` whose `display` is not `table-cell` stops being a table cell, so `[attr.colspan]="expandedColspan()"` is ignored and the box sizes to its own content instead of the row. Measured in Chrome: a plain `<td colspan="4">` in a 1000 px table is 997 px; the same cell with `display: grid` is 39 px.
+  **What the consumer sees.** Expanding a journey step draws its wave list in a panel 24 px wide inside a 1559 px row: only the first character of each date is visible, the remaining three columns are not, and the rest of the row is blank. The four inner columns need 436-558 px. It does not follow the viewport, and collapsing and re-expanding does not change it.
+  **When it entered.** Bisected across the tags with `git grep -A 3 expand-panel-cell <tag> -- 'src/lib/components/table/*.scss'`: absent through `v0.12.1`, present from **`v0.12.2`** on, and still on `dev`. Every consumer that uses `expandableRows` with a `rowExpandTemplate` wider than one column has been affected since that release.
+  **The shape that fits.** The template already carries a child, `.expand-panel-inner`, and the comment above it says the animation runs on the grid track. Keep the `<td>` a table cell and move `display: grid`, `grid-template-rows: 1fr` and the `ds-table-expand` animation onto a wrapper INSIDE the cell, with `.expand-panel-inner` as its track content. The reveal is unchanged and the colspan works again.
 
 *This section also has items under **Decisions**, **Parked**.*
 
