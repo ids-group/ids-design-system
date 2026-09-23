@@ -119,10 +119,19 @@
 
 - **A chart destroyed while a reading was pinned no longer leaves a key listener on the document.**
 
+- **An expanded `ds-table` row's panel spans every column.** The panel's `<td>` carried
+  `display: grid` for its reveal, and a cell whose display is not `table-cell` leaves the table
+  layout, so its `colspan` was ignored and the panel rendered one column wide - as narrow as its
+  first word. The grid and the `ds-table-expand` animation sit on `.expand-panel-inner`, and the
+  projected template is wrapped in `.expand-panel-content`, the track the reveal clips. A rule of
+  yours that reached your template's root through `.expand-panel-inner >` selects
+  `.expand-panel-content` now; `.expand-panel-cell > .expand-panel-inner` is unchanged.
+
 ### What you can now DELETE
 
 | Delete | Why | Replace with |
 | --- | --- | --- |
+| `ds-table .expand-panel-cell { display: table-cell }`, or a `::ng-deep` rule of that shape | the expand cell is a table cell, so the rule restates the default - and while it held, it also switched the reveal animation off | nothing |
 | `[dsChartTooltip]="` and the `[dsChartTooltipOrigin]="` / `[dsChartTooltipPreferBelow]="` beside it, on any `g[dsColumnSeries]` or `g[dsLineSeries]` | `ds-chart` opens the panel its marks describe, so a binding on the mark opens a second one | nothing for the ordinary case; `[tooltipTemplate]` and `[tooltipExtraGap]` on `ds-chart` where the panel was customised |
 
 ## 0.13.4 — 2026-09-23

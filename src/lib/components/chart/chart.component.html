@@ -165,12 +165,12 @@
               [style.fill]="secondaryAxisLabelFill()"
               [attr.transform]="
                 'rotate(90 ' +
-                (viewWidth() - 12) +
+                secondaryTitleX() +
                 ' ' +
                 (plot().top + plot().height / 2) +
                 ')'
               "
-              [attr.x]="viewWidth() - 12"
+              [attr.x]="secondaryTitleX()"
               [attr.y]="plot().top + plot().height / 2">
               {{ secondaryAxisLabel() }}
             </text>

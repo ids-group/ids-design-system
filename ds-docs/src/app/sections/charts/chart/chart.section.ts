@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   ViewEncapsulation,
+  computed,
   signal,
 } from '@angular/core';
 import {
@@ -21,6 +22,7 @@ import { ChartDataTableComponent } from 'ds/chart-data-table';
 import type { ChartDataRow } from 'ds/chart-data-table';
 import { ButtonComponent } from 'ds/button';
 import type { ChartThreshold } from 'ds/core';
+import { RadioComponent, RadioGroupComponent } from 'ds/radio-group';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import { DocsLazyDirective } from '../../../shared/docs-lazy.directive';
 
@@ -109,6 +111,8 @@ const TRAFFIC_SERIES: readonly LineSeriesData[] = [
   imports: [
     DocsLazyDirective,
     ButtonComponent,
+    RadioComponent,
+    RadioGroupComponent,
     ChartComponent,
     ChartDataTableComponent,
     ColumnSeriesComponent,
@@ -138,8 +142,13 @@ export class ChartSection {
   protected readonly basketSeries = BASKET_SERIES;
   protected readonly columnAxisColor = 'var(--ds-chart-series-1-color)';
   protected readonly lineAxisColor = 'var(--ds-chart-series-4-color)';
-  /** Which series the legend has singled out, so `highlighted` has something to follow. */
-  protected readonly singledOut = signal<string | null>(null);
+  /** `'all'` rather than `null`, because a radio group always has one answer selected. */
+  protected readonly singledOutChoice = signal<unknown>('all');
+  protected readonly singledOut = computed(() => {
+    const choice = this.singledOutChoice();
+
+    return typeof choice === 'string' && choice !== 'all' ? choice : null;
+  });
 
   protected readonly trafficSeries = TRAFFIC_SERIES;
   protected readonly seriesDashes = ['none', '7 4'];

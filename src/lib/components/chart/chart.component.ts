@@ -353,6 +353,12 @@ export class ChartComponent implements ChartScales {
    *  and the plot. */
   protected readonly axisTitleX = computed(() => CHART_AXIS_TITLE_BAND / 2);
 
+  /** Mirrors `axisTitleX` against the right edge, so the two titles stand the same distance from
+   *  their own ticks. */
+  protected readonly secondaryTitleX = computed(
+    () => this.viewWidth() - CHART_AXIS_TITLE_BAND / 2,
+  );
+
   /** Widest secondary tick label, measured the same way and for the same reason as the primary
    *  one: those labels sit OUTSIDE the plot's right edge and an SVG canvas clips what a DOM
    *  column merely overflowed. */
@@ -364,9 +370,19 @@ export class ChartComponent implements ChartScales {
     this.hasSecondaryAxis() && !this.stacked()
       ? Math.max(
           this.axisGutter(),
-          this.measuredSecondaryLabelWidth() + CHART_AXIS_LABEL_GAP,
+          this.measuredSecondaryLabelWidth() +
+            CHART_AXIS_LABEL_GAP +
+            this.secondaryTitleGutter(),
         )
       : CHART_EDGE_GUTTER,
+  );
+
+  /** The second axis's title stands in the right gutter exactly as the first one's stands in the
+   *  left, so both sides reserve the same band and the plot sits centred between its two labels. */
+  protected readonly secondaryTitleGutter = computed(() =>
+    this.secondaryAxisLabel() && this.hasSecondaryAxis()
+      ? CHART_AXIS_TITLE_BAND
+      : 0,
   );
 
   readonly plot: Signal<ChartPlot> = computed(() =>
@@ -478,9 +494,30 @@ export class ChartComponent implements ChartScales {
       : { ...base, entries: [...base.entries, ...rest] };
   });
 
-  protected readonly tooltipOrigin = computed(
-    () => this.activeTooltip()?.origin() ?? null,
-  );
+  protected readonly tooltipOrigin = computed(() => {
+    const own = this.activeTooltip()?.origin() ?? null;
+    if (this.cursor() !== 'category') {
+      return own;
+    }
+    // A category panel belongs over the TALLEST reading at that category, not over whichever mark
+    // happened to open it: a line that dips under a column would otherwise put the panel low and
+    // let the column stand over it.
+    const boxes = [...this.tooltipSources().values()]
+      .map((source) => source.origin())
+      .filter((origin): origin is Element => origin instanceof Element)
+      .map((element) => ({ element, top: element.getBoundingClientRect().top }))
+      .filter(({ element }) => {
+        const box = element.getBoundingClientRect();
+
+        return box.width > 0 && box.height > 0;
+      });
+
+    return boxes.length === 0
+      ? own
+      : boxes.reduce((highest, candidate) =>
+          candidate.top < highest.top ? candidate : highest,
+        ).element;
+  });
 
   protected readonly tooltipPreferBelow = computed(
     () =>

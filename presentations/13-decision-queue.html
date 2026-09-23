@@ -393,65 +393,11 @@
     </div>
   </div>
 
-  <p class="group">Ждут консьюмеры · сломано сейчас</p>
-
-  <section class="q" data-q="ask-expand-colspan">
-    <div class="q-head">
-      <span class="q-num">01</span>
-      <h2 class="q-title">Раскрытая строка таблицы рисуется полосой в одну колонку</h2>
-      <span class="q-src">P1 · mm-ecm · дефект с v0.12.2</span>
-    </div>
-    <p class="q-sub">
-      <code>.expand-panel-cell</code> получил <code>display: grid</code> ради анимации раскрытия. <code>&lt;td&gt;</code> с таким
-      <code>display</code> перестаёт быть ячейкой таблицы, и <code>colspan</code> не работает. У консьюмера панель шириной 24px в
-      строке шириной 1559px, видна первая буква даты. Консьюмер своё обходное решение не ставит и ждёт фикса.
-    </p>
-    <div class="stage">
-      <div class="spec" style="flex:1 1 320px">
-        <p class="cap">сегодня: td с display: grid</p>
-        <table class="a-exp">
-          <tr><th class="tog"></th><th>Шаг</th><th>Канал</th><th>Волны</th></tr>
-          <tr><td class="tog">▾</td><td>Welcome</td><td>Email</td><td>3</td></tr>
-          <tr><td colspan="4" class="panel sliver">2026-10-01 · Continues to · 1 204 · 38%</td></tr>
-          <tr><td class="tog">▸</td><td>Reminder</td><td>Letter</td><td>2</td></tr>
-        </table>
-      </div>
-      <div class="spec" style="flex:1 1 320px">
-        <p class="cap">после: grid на обёртке внутри td</p>
-        <table class="a-exp">
-          <tr><th class="tog"></th><th>Шаг</th><th>Канал</th><th>Волны</th></tr>
-          <tr><td class="tog">▾</td><td>Welcome</td><td>Email</td><td>3</td></tr>
-          <tr><td colspan="4" class="panel"><table class="inner"><tr><td>2026-10-01</td><td>Continues to</td><td>1 204</td><td>38%</td></tr><tr><td>2026-10-08</td><td>Reminder</td><td>812</td><td>25%</td></tr></table></td></tr>
-          <tr><td class="tog">▸</td><td>Reminder</td><td>Letter</td><td>2</td></tr>
-        </table>
-      </div>
-    </div>
-    <p class="says">Chrome: обычный &lt;td colspan="4"&gt; в таблице 1000px - 997px, тот же td с display: grid - 39px. Сборка зелёная, консоль пуста.</p>
-    <div class="opts">
-      <div class="opt is-today"><h3>Оставить как есть</h3>
-        <p class="css">.expand-panel-cell {
-    <span class="hit">display: grid;</span>
-    grid-template-rows: 1fr;
-    animation: ds-table-expand ...;
-  }</p>
-        <dl class="layer"><dt>Кто страдает</dt><dd>любой expandableRows шире одной колонки</dd><dt>С какого релиза</dt><dd>0.12.2 (35aa2e02)</dd></dl>
-      </div>
-      <div class="opt"><h3>Grid на обёртку внутри td <span class="star">★</span></h3>
-        <p class="css">.expand-panel-cell { /* снова table-cell */ }
-  .expand-panel-inner {
-    display: grid; grid-template-rows: 1fr;
-    animation: ds-table-expand ...;
-  }</p>
-        <dl class="layer"><dt>Раскрытие</dt><dd class="gain">та же анимация 0fr→1fr</dd><dt>Зависимости</dt><dd class="gain">нет: пинов, проб и тестов на класс нет</dd></dl>
-      </div>
-    </div>
-  </section>
-
   <p class="group">Ждут консьюмеры · манифесты и CHANGELOG</p>
 
     <section class="q" data-q="ask-bar-boundary">
       <div class="q-head">
-        <span class="q-num">02</span>
+        <span class="q-num">01</span>
         <h2 class="q-title">Совет «граница слова» не отделяет ds-bar от ds-bar-chart</h2>
         <span class="q-src">P2 · mm-ecm · манифест 0.13.3</span>
       </div>
@@ -494,7 +440,7 @@
 
     <section class="q" data-q="ask-spellout-prefix">
       <div class="q-head">
-        <span class="q-num">03</span>
+        <span class="q-num">02</span>
         <h2 class="q-title">Замена подстрокой портит имена, которые уже правильные</h2>
         <span class="q-src">P2 · mm-ecm · манифест 0.13.4</span>
       </div>
@@ -510,14 +456,14 @@
           <p class="css">-pad    → -padding      --ds-popover-<span class="hit">paddingding</span>
   -weight → -font-weight  --ds-badge-font-<span class="hit">font-weight</span>
   -h      → -height       --ds-button-<span class="hit">heighteight</span></p>
-          <p class="says">refresh-shell.scss:202, waves-preview.component.scss:92</p>
+          <p class="says">refresh-shell.scss:191, waves-preview.component.scss:92</p>
         </div>
         <div class="spec">
           <p class="cap">пункты по порядку манифеста</p>
           <p class="css">--ds-segmented-btn-h
-    #11 btn → button   --ds-segmented-button-h
-    #15 -h → -height   <span class="dead">--ds-segmented-button-height</span>
-  нужно (#18):         --ds-segmented-segment-height</p>
+    #12 btn → button   --ds-segmented-button-h
+    #16 -h → -height   <span class="dead">--ds-segmented-button-height</span>
+  нужно (#19):         --ds-segmented-segment-height</p>
         </div>
       </div>
       <p class="says">Консоль пуста: неизвестный custom property - валидный CSS.</p>
@@ -529,7 +475,7 @@
         </div>
         <div class="opt"><h3>Оговорка и перекрёстная ссылка</h3>
           <div class="ns"><code class="clear">--ds-popover-padding</code><code class="clear">--ds-segmented-segment-height</code></div>
-          <dl class="layer"><dt>Pitfall</dt><dd>«не заменяй подстрокой»</dd><dt>#11</dt><dd>«segmented - см. #18»</dd><dt>Держится на</dt><dd>внимании читателя</dd></dl>
+          <dl class="layer"><dt>Pitfall</dt><dd>«не заменяй подстрокой»</dd><dt>#12</dt><dd>«segmented - см. #19»</dd><dt>Держится на</dt><dd>внимании читателя</dd></dl>
         </div>
         <div class="opt"><h3>Точный список старое-новое <span class="star">★</span></h3>
           <div class="ns"><code class="clear">--ds-popover-pad → --ds-popover-padding</code><code class="clear">--ds-segmented-btn-h → --ds-segmented-segment-height</code></div>
@@ -540,7 +486,7 @@
 
     <section class="q" data-q="ask-bar-radius">
       <div class="q-head">
-        <span class="q-num">04</span>
+        <span class="q-num">03</span>
         <h2 class="q-title">Манифест переводит --ds-meter-radius в --ds-bar-radius, который никто не читает</h2>
         <span class="q-src">P2 · mm-ecm-platform-kb · манифест 0.13.3</span>
       </div>
@@ -582,7 +528,7 @@
 
     <section class="q" data-q="ask-plot-height">
       <div class="q-head">
-        <span class="q-num">05</span>
+        <span class="q-num">04</span>
         <h2 class="q-title">--ds-line-chart-plot-height начал менять plot, а манифест молчит</h2>
         <span class="q-src">P2 · mm-ecm · манифест 0.13.4</span>
       </div>
@@ -621,7 +567,7 @@
 
     <section class="q" data-q="ask-donut-surface">
       <div class="q-head">
-        <span class="q-num">06</span>
+        <span class="q-num">05</span>
         <h2 class="q-title">Переименование donut в pie не ищется в стилях</h2>
         <span class="q-src">P2 · mm-ecm · манифест 0.13.4</span>
       </div>
@@ -647,7 +593,7 @@
   }</p>
         </div>
       </div>
-      <p class="says">Масштаб 1:2. agent-details-panel.component.scss:249 в mm-ecm-platform-kb.</p>
+      <p class="says">130px против 180px. agent-details-panel.component.scss:249 в mm-ecm-platform-kb.</p>
 
       <div class="opts">
         <div class="opt is-today"><h3>Оставить как есть</h3>
@@ -663,7 +609,7 @@
 
     <section class="q" data-q="ask-segmented-changelog">
       <div class="q-head">
-        <span class="q-num">07</span>
+        <span class="q-num">06</span>
         <h2 class="q-title">CHANGELOG 0.13.4 называет токены segmented так, как они никогда не назывались</h2>
         <span class="q-src">P2 · mm-ecm · CHANGELOG 0.13.4</span>
       </div>
@@ -700,7 +646,7 @@
 
     <section class="q" data-q="ask-pie-old-scope">
       <div class="q-head">
-        <span class="q-num">08</span>
+        <span class="q-num">07</span>
         <h2 class="q-title">Два пункта 0.13.4 ищут в old имя, которого на 0.13.3 ещё нет</h2>
         <span class="q-src">P2 · mm-ecm · манифест 0.13.4</span>
       </div>
@@ -718,8 +664,8 @@
           <p class="console">2 name(s) no tag could resolve</p>
         </div>
         <div class="spec">
-          <p class="cap">шаблон консьюмера на 0.13.3</p>
-          <p class="css">&lt;<span class="hit">ds-donut-chart</span> thickness="0.32"&gt;</p>
+          <p class="cap">имя элемента на v0.13.3</p>
+          <p class="css">&lt;<span class="hit">ds-donut-chart</span> thickness="…"&gt;</p>
         </div>
       </div>
       <p class="says">node tools/check-manifest-truth.mjs 0.13.4 - 65 of 67 old/new value(s) hold</p>
@@ -729,16 +675,16 @@
           <div class="ns"><code class="clash">ds-pie-chart[thickness]</code></div>
           <dl class="layer"><dt>Спасает</dt><dd>detect: thickness=, centerValue</dd><dt>Не спасает</dt><dd>того, кто читает old</dd></dl>
         </div>
-        <div class="opt"><h3>old по прошлому тегу <span class="star">★</span></h3>
+        <div class="opt"><h3>Исправить два old <span class="star">★</span></h3>
           <div class="ns"><code class="clear">ds-donut-chart[thickness]</code><code class="clear">ds-donut-chart[centerValue]</code></div>
-          <dl class="layer"><dt>AUTHORING.md</dt><dd class="gain">scoped old = имя на ПРЕДЫДУЩЕМ теге</dd><dt>Truth check</dt><dd class="gain">67 of 67</dd></dl>
+          <dl class="layer"><dt>Правило уже есть</dt><dd>AUTHORING.md:399-406, old = имя на ПРЕДЫДУЩЕМ теге</dd><dt>Truth check</dt><dd class="gain">67 of 67</dd></dl>
         </div>
       </div>
     </section>
 
     <section class="q" data-q="ask-abbrev-survivors">
       <div class="q-head">
-        <span class="q-num">09</span>
+        <span class="q-num">08</span>
         <h2 class="q-title">Три сокращения пережили волну расшифровки, одно - рядом с расшифрованным</h2>
         <span class="q-src">P2 · mm-ecm-platform-kb · токены 0.13.4</span>
       </div>
@@ -772,6 +718,58 @@
         <div class="opt"><h3>Объявить намеренными</h3>
           <div class="ns"><code>--ds-input-label-fw</code></div>
           <dl class="layer"><dt>Что пишем</dt><dd>строку: эти три оставлены сознательно</dd><dt>Гейт</dt><dd>со списком исключений</dd></dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="q" data-q="ask-informational-verify">
+      <div class="q-head">
+        <span class="q-num">09</span>
+        <h2 class="q-title">informational - единственная строка манифеста, у которой нет места для verify</h2>
+        <span class="q-src">P2 · mm-ecm · манифест</span>
+      </div>
+      <p class="q-sub">
+        <code>informational</code> - плоский массив строк рядом с <code>items</code>, не разновидность <code>kind</code>,
+        и поле <code>verify</code> требуется только у <code>behavior</code>, <code>removed-api</code> и
+        <code>value-remap</code>. Строка о раскрытии <code>ds-table</code> в 0.12.2
+        (<code>migrations/0.12.2.json:258</code>) описывает ту самую анимацию, из-за которой ушёл P1-дефект с
+        <code>colspan</code> - манифест зафиксировал изменение, а проверить его было нечем.
+      </p>
+
+      <div class="stage">
+        <div class="spec" style="flex:1 1 320px">
+          <p class="cap">сегодня: строка в informational</p>
+          <p class="css">"informational": [
+    ...,
+    "An expanded ds-table row opens
+     with a reveal - grid-template-rows
+     from 0fr to 1fr. The one structural
+     change, a .expand-panel-inner
+     wrapper, is an item of its own."
+  ]</p>
+          <p class="console quiet">Informational (FYI, no action): An expanded ds-table row opens with a reveal ...</p>
+        </div>
+        <div class="spec" style="flex:1 1 320px">
+          <p class="cap">предлагается: text + verify</p>
+          <p class="css">{
+    <span class="hit">"text"</span>: "An expanded ds-table row
+      opens with a reveal - ...",
+    <span class="hit">"verify"</span>: "open an expanded row
+      and confirm the panel spans
+      the row"
+  }</p>
+          <p class="console">Applied - human should eyeball: open an expanded row and confirm the panel spans the row</p>
+        </div>
+      </div>
+
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <p class="console quiet">Informational (FYI, no action)</p>
+          <dl class="layer"><dt>Схема</dt><dd>только строка</dd><dt>Кто проверяет</dt><dd class="none">никто</dd></dl>
+        </div>
+        <div class="opt"><h3>verify у informational <span class="star">★</span></h3>
+          <p class="console">Applied - human should eyeball</p>
+          <dl class="layer"><dt>Схема</dt><dd class="gain">строка или {text, verify}</dd><dt>Линт</dt><dd>M005 принимает оба вида</dd><dt>Скилл</dt><dd class="gain">кладёт в бакет eyeball</dd></dl>
         </div>
       </div>
     </section>
@@ -859,7 +857,7 @@
         <div class="opt is-today"><h3>Оставить как есть</h3>
           <p class="css">--border-default: var(--neutral-200); <span class="hit">/* 1.31:1 */</span>
   --secondary-on:   var(--primary-on);  <span class="hit">/* white */</span></p>
-          <dl class="layer"><dt>Консьюмер</dt><dd>_theme.scss:44-57, :80-85</dd></dl>
+          <dl class="layer"><dt>Консьюмер</dt><dd>_theme.scss:44-57, :89</dd></dl>
         </div>
         <div class="opt"><h3>Край 3:1 и on от светлоты <span class="star">★</span></h3>
           <p class="css">--border-control: /* 3:1 в обеих темах */;
@@ -910,7 +908,7 @@
   <span class="hit">.pagination-button.pagination-button</span> {
     min-width: 40px; height: 40px;
   }</p>
-          <dl class="layer"><dt>Консьюмер</dt><dd>agent-portal/src/styles.scss:651-673</dd><dt>Альтернатива</dt><dd>DS_CONFIG.control.size - все контролы разом</dd></dl>
+          <dl class="layer"><dt>Консьюмер</dt><dd>agent-portal/src/styles.scss:650-674</dd><dt>Альтернатива</dt><dd>DS_CONFIG.control.size - все контролы разом</dd></dl>
         </div>
         <div class="opt"><h3>paginationSize и paginationLayout <span class="star">★</span></h3>
           <p class="css">&lt;ds-table [pageSize]="10"
@@ -1094,7 +1092,7 @@
         <h2 class="q-title">Info-баннер, написанный после banner.announce, молча начинает озвучиваться</h2>
         <span class="q-src">P2 · mm-ecm · манифест 0.13.4</span>
       </div>
-      <p class="q-sub">Консьюмер включил <code>banner: { announce: true }</code> и заглушил 14 баннеров-мебели. Через merge пришёл баннер, написанный под старый дефолт, и теперь звучит на каждом входе в архивную программу. Обратный случай, неозвученный error-баннер, - отдельный вопрос <code>banner-warning</code> выше.</p>
+      <p class="q-sub">Консьюмер включил <code>banner: { announce: true }</code> и заглушил 14 баннеров-мебели. Через merge пришёл баннер, написанный под старый дефолт, и теперь звучит на каждом входе в архивную программу. Обратный случай, неозвученный error-баннер, - отдельный вопрос <code>banner-warning</code> ниже.</p>
 
       <div class="stage">
         <div class="spec" style="min-inline-size:250px">
@@ -1201,7 +1199,7 @@
           <dl class="layer"><dt>Как находят</dt><dd>ручной аудит, раз в несколько релизов</dd></dl>
         </div>
         <div class="opt"><h3>Проверка у консьюмера <span class="star">★</span></h3>
-          <p class="console">$ npx ds-check-overrides<br>_buttons.scss:46 --ds-button-bg: not read (→ --ds-button-bg-color)<br>_buttons.scss:77 --ds-button-fg: not read (→ --ds-button-label-color)<br>_buttons.scss:68 .button.secondary: never rendered (→ .v-*)<br>16 dead declarations, 7 selectors match nothing</p>
+          <p class="console">$ npx ds-check-overrides<br>_buttons.scss:46 --ds-button-bg: not read (→ --ds-button-bg-color)<br>_buttons.scss:77 --ds-button-fg: not read (→ --ds-button-label-color)<br>_buttons.scss:68 .button.secondary: never rendered (→ .c-secondary)<br>16 dead declarations, 7 selectors match nothing</p>
           <dl class="layer"><dt>Что сверяет</dt><dd>объявленные --ds-* против читаемых пакетом (176 против 1 028)</dd><dt>Где живёт</dt><dd>bin в пакете или schematic</dd></dl>
         </div>
       </div>
@@ -1681,7 +1679,7 @@
         </div>
         <div class="opt"><h3>Хук --ds-autocomplete-*-color <span class="star">★</span></h3>
           <p class="css"><code>ds-autocomplete {
-    --ds-autocomplete-input-color: var(--rp-ink);
+    --ds-autocomplete-text-color: var(--rp-ink);
     --ds-autocomplete-placeholder-color: var(--rp-mute);
   }</code></p>
           <dl class="layer"><dt>Работа DS</dt><dd>2 токена + правило ::placeholder</dd><dt>Дефолт</dt><dd class="gain">--text-tertiary, как у ds-input</dd></dl>

@@ -25,7 +25,7 @@ import type {
   ChartTooltipOrigin,
 } from './chart-tooltip.types';
 
-const POINTER_GAP_PX = 6;
+const POINTER_GAP_PX = 10;
 // A fingertip covers roughly 40 CSS px, so a touch-opened panel has to clear the tap
 // point by more than a pointer-opened one does.
 const TOUCH_GAP_PX = 48;

@@ -41,7 +41,7 @@ nav, and the scatter's phase — which went to phase 2 with its decimation layer
 read whenever rather than at a moment, so they stay unnumbered and sort below the queue.
 
 **`13-decision-queue` sorts last and carries EVERY open question** — first every ask a consumer is
-waiting on, from any bucket of `docs/todo.md`, in five groups (broken now, manifests and CHANGELOG, defects,
+waiting on, from any bucket of `docs/todo.md`, in four groups (manifests and CHANGELOG, defects,
 APIs and features, styling hooks) with priority, consumer and kind beside each; then each open deck
 plus the whole `Decisions` bucket, grouped by area. Every one has its options rendered rather
 than named: live tracks for the indeterminate bar, two palettes side by side for bar-and-column,

@@ -119,6 +119,25 @@
       ],
       "verify": "Your build has no TS4114 or TS2416 against any of the listed classes.",
       "note": "ChartComponent gained 15 members, most of them the tooltip the container now owns (activeTooltip, reportTooltip, tooltipTemplate and the rest) plus measured; ColumnSeriesComponent gained MIN_STACK_HIT, axisEntries, dimmedBySeries, highlighted, hitBox, seriesKey and stacked; LineSeriesComponent gained axisEntries, isActiveMarker and outline; ColumnChartComponent and ScatterChartComponent gained highlightedSeries; ChartDataTableComponent gained built, onToggle and openedOnce. ChartTooltipDirective gained dsChartTooltipPinned - internal, but reachable through the components/chart-tooltip entry point."
+    },
+    {
+      "id": "table-expand-panel-content-wrapper",
+      "kind": "behavior",
+      "surface": "style",
+      "old": "ds-table .expand-panel-inner",
+      "new": null,
+      "action": "Re-point a rule that selected your projected template's root as a direct child of `.expand-panel-inner` at `.expand-panel-content`, or drop the child combinator. Delete a rule of yours that forces `display: table-cell` on `.expand-panel-cell` (delete list: expand-panel-cell-display-override).",
+      "appliesWhen": "Only a stylesheet of yours that reaches below `.expand-panel-inner` in an expanded `ds-table` row with a child combinator, or that overrode the expand cell's `display`. `.expand-panel-cell > .expand-panel-inner` still matches, a descendant selector matches through the new wrapper, and the template you project is untouched.",
+      "pitfall": "The selector stops matching and your rule is silently inert: no build error, and the row still opens with the library's own layout.",
+      "note": "The cell carried `display: grid` for the 0fr to 1fr reveal, and a `<td>` whose display is not `table-cell` leaves the table layout, so its `colspan` was ignored and the panel rendered one column wide. The grid and the `ds-table-expand` animation sit on `.expand-panel-inner`, and `.expand-panel-content` is the clipped track item under it.",
+      "verify": "An expanded row's `td.expand-panel-cell` is as wide as the row above it, and every rule of yours that styled the expanded row's content appears on an element again.",
+      "searchHints": [
+        "expand-panel-inner",
+        "expand-panel-cell",
+        "expand-panel",
+        "rowExpandTemplate"
+      ],
+      "restore": null
     }
   ],
   "informational": [
@@ -144,6 +163,16 @@
       ],
       "why": "ds-chart opens the panel its marks describe, so a binding on the mark now opens a second one.",
       "replaceWith": "nothing for the ordinary case; [tooltipTemplate] and [tooltipExtraGap] on ds-chart where the panel was customised"
+    },
+    {
+      "id": "expand-panel-cell-display-override",
+      "surface": "style",
+      "find": [
+        ".expand-panel-cell",
+        "display: table-cell"
+      ],
+      "why": "The expand cell is a table cell again, so a rule forcing display: table-cell on it restates the default, and while it held it also switched the reveal animation off.",
+      "replaceWith": "nothing"
     }
   ]
 }
