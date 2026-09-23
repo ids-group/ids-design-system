@@ -106,8 +106,12 @@
 
   /* Declared HERE, not in the global partial: Angular's emulated encapsulation rewrites the
      animation name inside a component stylesheet, so a reference to a globally-declared
-     `@keyframes` resolves to a name that does not exist and the element simply never animates. */
-  animation: ds-skeleton-shimmer-loop var(--_skeleton-wave-duration) linear infinite;
+     `@keyframes` resolves to a name that does not exist and the element simply never animates.
+
+     Stepped, not linear: every update is main-thread `background-position` work, and 68 steps over
+     the default 3400ms is twenty a second rather than one per display frame. A step moves the wave
+     about 9px along a ramp some 220px long, about one level of lightness. */
+  animation: ds-skeleton-shimmer-loop var(--_skeleton-wave-duration) steps(68) infinite;
 }
 
 :host(.is-offscreen)::after {

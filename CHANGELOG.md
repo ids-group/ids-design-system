@@ -119,9 +119,12 @@
   thinning of category labels were decided on the first render alone, so a chart that started out
   loading or empty, or whose categories or ticks changed later, kept overlapping labels.
 
-- **A skeleton pauses its shimmer while it is off screen.** The wave is recomputed on the main
-  thread every frame, on screen or not. It resumes where it stopped, so a placeholder that has been
-  scrolled away can come back out of step with its neighbours.
+- **A skeleton pauses its shimmer while it is off screen, and moves it twenty times a second.** The
+  wave is main-thread work on every update, on screen or not. Off screen it now stops, and resumes
+  where it stopped, so a placeholder that has been scrolled away can come back out of step with its
+  neighbours. On screen it advances in 68 steps over the default 3400ms instead of once per display
+  frame; a step is about one level of lightness. A `--ds-skeleton-wave-duration` of yours changes
+  the step rate with it, since the step count is fixed.
 
 - **Reduced motion stops the skeleton shimmer.** The opt-out rule lost to the component's own
   animation, and the wave kept running for readers who asked for less motion.
