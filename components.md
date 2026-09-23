@@ -677,11 +677,11 @@ All inputs: `steps: readonly string[] = []`, `current: number = 0`, `labelPositi
 <!-- /inputs -->
 
 #### `<ds-pagination>` — `PaginationComponent`
-Inputs: `total: required number`, `pageSize: model<number> = 10`, `currentPage: model<number> = 1`, `pageSizeOptions: number[] = [10, 25, 50, 100]`, `showLabel: boolean = true`, `size: DsSize | null = null` (unset resolves `DS_CONFIG.control.size`, then `sm`), `layout: PaginationLayout = 'grouped'` (`'grouped' | 'spread'`; `'spread'` gives the nav full width and pushes the label and the controls to opposite edges)
+Inputs: `total: required number`, `pageSize: model<number> = 10`, `currentPage: model<number> = 1`, `pageSizeOptions: number[] = [10, 25, 50, 100]`, `showLabel: boolean = true`, `size: DsSize | null = null` (unset resolves `DS_CONFIG.pagination.size`, then `DS_CONFIG.control.size`, then `sm`), `layout: PaginationLayout | null = null` (`'grouped' | 'spread'`; unset resolves `DS_CONFIG.pagination.layout`, then `'grouped'`; `'spread'` gives the nav full width and pushes the label and the controls to opposite edges). Inside `ds-table` the same two arrive as `paginationSize` / `paginationLayout`.
 Outputs: `(currentPageChange): number`, `(pageSizeChange): number`
 
 <!-- inputs:ds-pagination -->
-All inputs: `total: required number`, `pageSize: number = 10`, `currentPage: number = 1`, `pageSizeOptions: number[]`, `showLabel: boolean = true`, `showPageSize: boolean = true`, `size: 'sm' | 'md' | 'lg' = null`, `layout: 'grouped' | 'spread' = 'grouped'`
+All inputs: `total: required number`, `pageSize: number = 10`, `currentPage: number = 1`, `pageSizeOptions: number[]`, `showLabel: boolean = true`, `showPageSize: boolean = true`, `size: 'sm' | 'md' | 'lg' = null`, `layout: 'grouped' | 'spread' = null`
 <!-- /inputs -->
 
 #### `<ds-divider>` — `DividerComponent`
@@ -831,10 +831,11 @@ Opening a row: give one column `link: (row) => <route target> | null` and its va
 Cell templates: `<ng-template dsCellTemplate="<colKey>" let-row>…</ng-template>` — `row` is typed `unknown`, narrow via a helper method on the host.
 Content slots: `[empty]` (rendered when `data.length === 0`), `[bulk-actions]` (rendered in the bulk action bar when `selectable && some selected`)
 Loading modes: `'skeleton'` replaces rows with shimmer placeholders driven by the global `--skeleton-shimmer-x` keyframe; `'overlay'` keeps existing rows visible behind a translucent layer with a centred spinner.
+Footer pager: `pageSizeOptions`, `showPageSize`, `showLabel`, `paginationSize: DsSize | null = null` and `paginationLayout: PaginationLayout | null = null` are the embedded `ds-pagination`'s own inputs forwarded one-to-one; the last two unset resolve `DS_CONFIG.pagination.size` (then `DS_CONFIG.control.size`, then `sm`) and `DS_CONFIG.pagination.layout` (then `'grouped'`), so an app whose every pager wants `md` / `spread` says it once in the config.
 Tokens: `--ds-table-border: var(--border-default)`, `--ds-table-radius: var(--radius-md)`, `--ds-table-bg-color`, `--ds-table-head-text-color: var(--text-secondary)`, `--ds-table-head-bg-color: var(--surface-secondary)`, `--ds-table-head-font-size: var(--font-size-xs)`, `--ds-table-row-hover-bg-color`, `--ds-table-row-selected-bg-color`, `--ds-table-divider`, `--ds-table-sort-active-icon-color`, `--ds-table-cell-padding-x/y`. (Renamed 2026-06: `--ds-table-header-*` → `--ds-table-head-*`, matching the tokens reference.)
 
 <!-- inputs:ds-table -->
-All inputs: `data: required readonly T[]`, `rowId: ((row: T) => string) | null = null`, `columns: required readonly TableColumn<T>[]`, `selectable: boolean = false`, `bordered: boolean | null = null`, `loading: boolean | 'skeleton' | 'overlay' = false`, `stickyHeader: boolean = true`, `maxHeight: string | null = null`, `density: 'default' | 'compact' = 'default'`, `zebra: boolean = false`, `animateHeight: boolean = false`, `selectedIds: Set<string>`, `sortKey: string | null = null`, `sortDirection: 'asc' | 'desc' = null`, `sortingOrder: SortDirection[]`, `sortAnnouncement: (label: string, dir: SortDirection) => string`, `rangeAnnouncement: (first: number, last: number, total: number) => string`, `skeletonRows: number = 5`, `caption: string = ''`, `rowInteractive: boolean = false`, `activeRowId: string | null = null`, `filterQuery: string = ''`, `columnFilters: Map<string, ReadonlySet<string>>`, `persistLayout: boolean = false`, `storageKey: string = ''`, `stickyScrollbar: boolean | null = null`, `pageSize: number | null = null`, `page: number = 1`, `pageSizeOptions: number[]`, `showPageSize: boolean = true`, `showLabel: boolean = true`, `total: number | null = null`, `scrollToTopOnPageChange: boolean = false`, `sortMode: 'client' | 'server' | 'none' = null`, `filterMode: 'client' | 'server' | 'none' = null`, `columnFilterOptions: ReadonlyMap<string, readonly string[]>`, `stickyScrollbarOffset: string | null = null`, `stickyFirstColumn: boolean = false`, `virtualScroll: boolean = false`, `virtualRowSize: number = 44`, `lazy: boolean = false`, `rowActions: readonly TableRowAction<T>[] = []`, `cellTemplateMap: Record<string, TemplateRef<{ $implicit: unknown; row: unknown }>> = {}`, `emptyTemplate: TemplateRef<unknown> | null = null`, `expandableRows: boolean = false`, `expandedIds: Set<string>`, `expandMode: 'multiple' | 'single' = 'multiple'`, `expandAllToggle: boolean = false`, `rowExpandTemplate: TemplateRef<{
+All inputs: `data: required readonly T[]`, `rowId: ((row: T) => string) | null = null`, `columns: required readonly TableColumn<T>[]`, `selectable: boolean = false`, `bordered: boolean | null = null`, `loading: boolean | 'skeleton' | 'overlay' = false`, `stickyHeader: boolean = true`, `maxHeight: string | null = null`, `density: 'default' | 'compact' = 'default'`, `zebra: boolean = false`, `animateHeight: boolean = false`, `selectedIds: Set<string>`, `sortKey: string | null = null`, `sortDirection: 'asc' | 'desc' = null`, `sortingOrder: SortDirection[]`, `sortAnnouncement: (label: string, dir: SortDirection) => string`, `rangeAnnouncement: (first: number, last: number, total: number) => string`, `skeletonRows: number = 5`, `caption: string = ''`, `rowInteractive: boolean = false`, `activeRowId: string | null = null`, `filterQuery: string = ''`, `columnFilters: Map<string, ReadonlySet<string>>`, `persistLayout: boolean = false`, `storageKey: string = ''`, `stickyScrollbar: boolean | null = null`, `pageSize: number | null = null`, `page: number = 1`, `pageSizeOptions: number[]`, `showPageSize: boolean = true`, `showLabel: boolean = true`, `paginationSize: 'sm' | 'md' | 'lg' = null`, `paginationLayout: 'grouped' | 'spread' = null`, `total: number | null = null`, `scrollToTopOnPageChange: boolean = false`, `sortMode: 'client' | 'server' | 'none' = null`, `filterMode: 'client' | 'server' | 'none' = null`, `columnFilterOptions: ReadonlyMap<string, readonly string[]>`, `stickyScrollbarOffset: string | null = null`, `stickyFirstColumn: boolean = false`, `virtualScroll: boolean = false`, `virtualRowSize: number = 44`, `lazy: boolean = false`, `rowActions: readonly TableRowAction<T>[] = []`, `cellTemplateMap: Record<string, TemplateRef<{ $implicit: unknown; row: unknown }>> = {}`, `emptyTemplate: TemplateRef<unknown> | null = null`, `expandableRows: boolean = false`, `expandedIds: Set<string>`, `expandMode: 'multiple' | 'single' = 'multiple'`, `expandAllToggle: boolean = false`, `rowExpandTemplate: TemplateRef<{
     $implicit: unknown;
     row: unknown;
   }> | null = null`
@@ -1138,7 +1139,7 @@ bootstrapApplication(AppComponent, {
 
 `DsConfig` shape (the exported `DsConfig` type is the full contract):
 
-Twelve sections. The exported `DsConfig` type is the source of truth — each key carries its own
+Eighteen sections. The exported `DsConfig` type is the source of truth — each key carries its own
 doc comment there, including why it is an app-level decision at all.
 
 ```ts
@@ -1154,6 +1155,7 @@ interface DsConfig {
     };
   };
   control?: { size?: DsSize };             // every control on the field-height contract
+  pagination?: { size?: DsSize; layout?: PaginationLayout }; // every pager, ds-table's footer included
   card?: { elevation?: CardElevation; padding?: CardPadding };
   table?: { stickyScrollbar?: boolean; bordered?: boolean };
   modal?: { dividers?: boolean };          // reaches a ModalService confirm, which has no host to bind

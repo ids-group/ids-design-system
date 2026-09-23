@@ -55,6 +55,7 @@ mq.addEventListener('change', apply);`;
 providers: [
   provideDsConfig({
     control: { size: 'sm' },              // button, field, picker, checkbox…
+    pagination: { size: 'md', layout: 'spread' }, // every pager, ds-table's footer included
     card: { elevation: 'raised', padding: 'lg' },
     table: { stickyScrollbar: true, bordered: true },
     icon: { size: 18 },

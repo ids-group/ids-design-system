@@ -19,7 +19,7 @@ bootstrapApplication(AppComponent, {
 
 `DsConfig` shape (the exported `DsConfig` type is the full contract):
 
-Twelve sections. The exported `DsConfig` type is the source of truth — each key carries its own
+Eighteen sections. The exported `DsConfig` type is the source of truth — each key carries its own
 doc comment there, including why it is an app-level decision at all.
 
 ```ts
@@ -35,6 +35,7 @@ interface DsConfig {
     };
   };
   control?: { size?: DsSize };             // every control on the field-height contract
+  pagination?: { size?: DsSize; layout?: PaginationLayout }; // every pager, ds-table's footer included
   card?: { elevation?: CardElevation; padding?: CardPadding };
   table?: { stickyScrollbar?: boolean; bordered?: boolean };
   modal?: { dividers?: boolean };          // reaches a ModalService confirm, which has no host to bind
