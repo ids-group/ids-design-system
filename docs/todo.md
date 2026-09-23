@@ -14,9 +14,9 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**132 open — 0 P1, 14 P2, 118 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**131 open — 0 P1, 13 P2, 118 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
-### P2 — 14
+### P2 — 13
 
 - **Defects consumers work around today (swept 2026-09-23)**
   - The stock control edge and `--secondary-on` fail contrast; the second breaks on any light brand secondary (from the ids-europe-landing consumer)
@@ -35,8 +35,6 @@ item and nothing else.
   - Adopting `banner.announce` app-wide silently arms every banner written afterwards, and the variant is a usable discriminator
 - **Component feature gaps**
   - `dsColumnSeries` cannot choose its value axis, so in a two-axis chart the column is pinned to the primary (recorded 2026-09-23, from the mm-ecm-platform microsite-analytics port)
-- **Hooks and APIs consumers reach past the surface for (swept 2026-09-23)**
-  - The pager `ds-table` renders takes neither the pagination `size` nor its `layout` (from the mm-ecm-platform-kb consumer)
 - **Tooling**
   - Publishing to npm stops working in January 2027 and the replacement is not chosen
   - Nothing catches a stale `presentations/ds.css`, and two gates read it as the truth
@@ -528,8 +526,6 @@ Three defects the port surfaced by reading every component's template + SCSS aga
 ## Hooks and APIs consumers reach past the surface for (swept 2026-09-23)
 
 Same sweep, the capabilities that are missing rather than wrong. Each workaround is still in the consumer tree and each gap is checked against `dev`.
-
-- [ ] **[P2] The pager `ds-table` renders takes neither the pagination `size` nor its `layout` (from the mm-ecm-platform-kb consumer).** The closed pagination ask is answered by `size` and `layout` on a standalone `ds-pagination`, but `table.component.html:432-441` binds only `total`, `pageSize`, `pageSizeOptions`, `showPageSize`, `showLabel` and `currentPage` on the pager it embeds. `size` falls back to `DS_CONFIG.control.size`, which resizes every control in the app, and `layout` has no config fallback (`pagination.component.ts:41-49`). The consumer still doubles `.pagination.pagination` and `.pagination-button.pagination-button` under `:is(ds-table, ds-pagination)` to get a 40px spread footer (`agent-portal/src/styles.scss:650-674`). **Wanted:** `paginationSize` and `paginationLayout` on `ds-table`, forwarded to its pager.
 
 - [ ] **[P3] `ds-accordion-item` tokenises its colours and nothing of its geometry or type (from the mm-ecm consumer).** `agent-portal/src/styles.scss:678-711` triples `.head`, `.chev` and `.body-content` to set header padding and gap, the header type, a hover text colour, a focus outline colour, a downward chevron and the body padding. `accordion-item.component.scss:7-13` resolves six colours; `:34-47` hardcodes `padding: var(--space-3) var(--space-4)`, `gap: var(--space-2)` and a `font` shorthand on `--font-size-s`; `:55-63` turns a fixed `chevronRight` (`accordion-item.component.html:17`) by 90deg; `:92-94` hardcodes the body padding. **Wanted:** `--ds-accordion-header-padding-*`, `-header-gap`, `-header-font-size` / `-font-weight` / `-font-family` / `-line-height`, `-header-hover-text-color`, `-body-padding-*`, and a chevron option (right-then-down vs down-then-up), all defaulting to today's values.
 
@@ -1127,7 +1123,7 @@ file** — the number moves; cite the filename.
 | 9 | `9-bar-column-contracts` | How far to converge the bar and the column: name the difference, converge the palette, or give the bar a series model. | the stacking-contract ask under *Two chart names that collide* |
 | 10 | `10-banner-announce-warning` | Whether a dev warning names an error banner no screen reader will read. | the closed `banner.announce` ask, which left this open |
 | 11 | `11-picker-list-height` | Whether the picker list height becomes a public token or stays behind `panelClass`. | the closed `--picker-maxh` ask, same shape |
-| 12 | `12-decision-queue` | Every consumer ask and every open question in one page - 29 asks in three groups, then 33 decisions in six, each drawn as today against after. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
+| 12 | `12-decision-queue` | Every consumer ask and every open question in one page - 28 asks in three groups, then 33 decisions in six, each drawn as today against after. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled

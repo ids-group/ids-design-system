@@ -6676,19 +6676,19 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "Control height - sm/md/lg. A pager under a full-width table wants targets bigger than the dense default. Unset falls back to `DS_CONFIG.control.size`, then `'sm'`."
+        "description": "Control height - sm/md/lg. A pager under a full-width table wants targets bigger than the dense default. Unset falls back to `DS_CONFIG.pagination.size`, then `DS_CONFIG.control.size`, then `'sm'`."
       },
       {
         "name": "layout",
         "kind": "input",
-        "type": "PaginationLayout",
+        "type": "PaginationLayout | null",
         "union": [
           "grouped",
           "spread"
         ],
-        "default": "'grouped'",
+        "default": "null",
         "required": false,
-        "description": "`'grouped'`, the default, keeps the label beside the controls. `'spread'` pushes them to opposite edges of whatever width the nav is given."
+        "description": "`'grouped'` keeps the label beside the controls. `'spread'` pushes them to opposite edges of whatever width the nav is given. Unset falls back to `DS_CONFIG.pagination.layout`, then `'grouped'`."
       }
     ],
     "outputs": []
@@ -9610,6 +9610,31 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "true",
         "required": false,
         "description": "Shows the \"N of M\" range label in the footer pager."
+      },
+      {
+        "name": "paginationSize",
+        "kind": "input",
+        "type": "DsSize | null",
+        "union": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "null",
+        "required": false,
+        "description": "Control height of the footer pager's buttons and picker. Unset falls back to `DS_CONFIG.pagination.size`, then `DS_CONFIG.control.size`, then `'sm'`."
+      },
+      {
+        "name": "paginationLayout",
+        "kind": "input",
+        "type": "PaginationLayout | null",
+        "union": [
+          "grouped",
+          "spread"
+        ],
+        "default": "null",
+        "required": false,
+        "description": "`'spread'` gives the footer pager the table's full width, label at one edge and controls at the other. Unset falls back to `DS_CONFIG.pagination.layout`, then `'grouped'`."
       },
       {
         "name": "total",

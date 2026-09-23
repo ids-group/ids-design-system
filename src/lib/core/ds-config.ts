@@ -8,6 +8,7 @@ import type {
   ChartValueFormat,
 } from './chart.types';
 import type { DsToastPosition } from './toast-position';
+import type { PaginationLayout } from './pagination.types';
 
 export interface DsConfig {
   field?: {
@@ -111,6 +112,14 @@ export interface DsConfig {
      *  padding in CSS, this picks which of the three declared sizes a control renders
      *  at. A screen that differs still binds `size` per element. */
     size?: DsSize;
+  };
+  pagination?: {
+    /** Default `size` for every pager, `ds-table`'s footer included. Unset falls back to
+     *  `control.size`, so this is where a pager gets bigger targets than the rest of the
+     *  controls without resizing them all. */
+    size?: DsSize;
+    /** Default `layout` for every pager, `ds-table`'s footer included. Default `'grouped'`. */
+    layout?: PaginationLayout;
   };
   card?: {
     /** Default `elevation` for `ds-card`. Default `'flat'`. */

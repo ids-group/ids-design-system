@@ -438,6 +438,8 @@
       [pageSizeOptions]="pageSizeOptions()"
       [showPageSize]="showPageSize()"
       [showLabel]="showLabel()"
+      [size]="paginationSize()"
+      [layout]="paginationLayout()"
       [(currentPage)]="page"
       (pageSizeChange)="pageSize.set($event)" />
   </div>
