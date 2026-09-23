@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  NgZone,
   Signal,
   ViewEncapsulation,
   afterRenderEffect,
@@ -217,6 +218,7 @@ export class ChartComponent implements ChartScales {
   readonly valueFormatResolved = this.defaults.valueFormat;
 
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly zone = inject(NgZone);
 
   /** The `<svg>`'s own rendered width: `:host(.framed)` carries the frame padding, so the host's
    *  CONTENT box - which is what a `ResizeObserver` reports - is the box the canvas fills at
@@ -244,9 +246,14 @@ export class ChartComponent implements ChartScales {
       if (this.settled() || this.measuredWidth() === 0) {
         return;
       }
+      let first = 0;
       let second = 0;
-      const first = requestAnimationFrame(() => {
-        second = requestAnimationFrame(() => this.settled.set(true));
+      // Outside the zone: under zone.js each frame callback is a full application tick, two per
+      // chart, and the signal write schedules the one render this needs by itself.
+      this.zone.runOutsideAngular(() => {
+        first = requestAnimationFrame(() => {
+          second = requestAnimationFrame(() => this.settled.set(true));
+        });
       });
       onCleanup(() => {
         cancelAnimationFrame(first);
