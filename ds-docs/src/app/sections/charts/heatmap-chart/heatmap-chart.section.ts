@@ -1,4 +1,9 @@
-import { Component, ViewEncapsulation, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ViewEncapsulation,
+  signal,
+} from '@angular/core';
 import { HeatmapChartComponent } from 'ds/heatmap-chart';
 import type { HeatmapChartRow } from 'ds/heatmap-chart';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
@@ -40,6 +45,7 @@ const SMALL_ROWS: readonly HeatmapChartRow[] = [
   standalone: true,
   imports: [DocsLazyDirective, DocsSectionComponent, HeatmapChartComponent],
   encapsulation: ViewEncapsulation.Emulated,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './heatmap-chart.section.html',
   styleUrls: ['../../../shared/section-demo.scss'],
 })

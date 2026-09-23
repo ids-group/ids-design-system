@@ -1,4 +1,9 @@
-import { Component, ViewEncapsulation, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ViewEncapsulation,
+  signal,
+} from '@angular/core';
 import { PieChartComponent } from 'ds/pie-chart';
 import type { PieChartSlice } from 'ds/pie-chart';
 import { DocsChartDataEditorComponent } from '../../../shared/docs-chart-data-editor.component';
@@ -59,6 +64,7 @@ const SLOT_SLICES: readonly PieChartSlice[] = [
     PieChartComponent,
   ],
   encapsulation: ViewEncapsulation.Emulated,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './pie-chart.section.html',
   styleUrls: ['../../../shared/section-demo.scss', './pie-chart.section.scss'],
 })

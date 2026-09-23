@@ -1,4 +1,9 @@
-import { Component, ViewEncapsulation, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ViewEncapsulation,
+  signal,
+} from '@angular/core';
 import {
   ChartComponent,
   ColumnSeriesComponent,
@@ -213,6 +218,7 @@ const CUSTOM_COLOR_POINTS: readonly ColumnChartPoint[] = [
     LineSeriesComponent,
   ],
   encapsulation: ViewEncapsulation.Emulated,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './column-chart.section.html',
   styleUrls: [
     '../../../shared/section-demo.scss',

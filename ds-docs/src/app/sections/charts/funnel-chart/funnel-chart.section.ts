@@ -1,4 +1,9 @@
-import { Component, ViewEncapsulation, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ViewEncapsulation,
+  signal,
+} from '@angular/core';
 import { FunnelChartComponent } from 'ds/funnel-chart';
 import type { FunnelChartStage } from 'ds/funnel-chart';
 import { DocsChartDataEditorComponent } from '../../../shared/docs-chart-data-editor.component';
@@ -46,6 +51,7 @@ const ZERO_FIRST_STAGE_STAGES: readonly FunnelChartStage[] = [
     DocsReplayButtonComponent,
   ],
   encapsulation: ViewEncapsulation.Emulated,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './funnel-chart.section.html',
   styleUrls: [
     '../../../shared/section-demo.scss',

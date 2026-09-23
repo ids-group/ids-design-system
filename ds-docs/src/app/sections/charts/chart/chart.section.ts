@@ -1,4 +1,9 @@
-import { Component, ViewEncapsulation, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ViewEncapsulation,
+  signal,
+} from '@angular/core';
 import {
   ChartComponent,
   ColumnSeriesComponent,
@@ -114,6 +119,7 @@ const TRAFFIC_SERIES: readonly LineSeriesData[] = [
     SeriesAnnotationComponent,
   ],
   encapsulation: ViewEncapsulation.Emulated,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './chart.section.html',
   styleUrls: ['../../../shared/section-demo.scss', './chart.section.scss'],
 })

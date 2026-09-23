@@ -1,4 +1,9 @@
-import { Component, ViewEncapsulation, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ViewEncapsulation,
+  signal,
+} from '@angular/core';
 import { LineChartComponent } from 'ds/line-chart';
 import type { LineChartAnnotation, LineChartSeries } from 'ds/line-chart';
 import { DocsLineChartDataEditorComponent } from '../../../shared/docs-line-chart-data-editor.component';
@@ -194,6 +199,7 @@ const PINNED_AXIS_LOW_SERIES: readonly LineChartSeries[] = [
     LineChartComponent,
   ],
   encapsulation: ViewEncapsulation.Emulated,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './line-chart.section.html',
   styleUrls: ['../../../shared/section-demo.scss', './line-chart.section.scss'],
 })

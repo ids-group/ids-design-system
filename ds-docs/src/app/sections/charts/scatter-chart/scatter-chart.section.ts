@@ -1,4 +1,9 @@
-import { Component, ViewEncapsulation, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ViewEncapsulation,
+  signal,
+} from '@angular/core';
 import { ScatterChartComponent } from 'ds/scatter-chart';
 import type { ScatterChartSeries } from 'ds/scatter-chart';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
@@ -44,6 +49,7 @@ const FLOOD: readonly ScatterChartSeries[] = [
   standalone: true,
   imports: [DocsLazyDirective, DocsSectionComponent, ScatterChartComponent],
   encapsulation: ViewEncapsulation.Emulated,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './scatter-chart.section.html',
   styleUrls: ['../../../shared/section-demo.scss'],
 })

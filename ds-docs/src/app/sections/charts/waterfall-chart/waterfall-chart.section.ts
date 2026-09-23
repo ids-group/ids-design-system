@@ -1,4 +1,9 @@
-import { Component, ViewEncapsulation, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ViewEncapsulation,
+  signal,
+} from '@angular/core';
 import { WaterfallChartComponent } from 'ds/waterfall-chart';
 import type { WaterfallChartBar } from 'ds/waterfall-chart';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
@@ -37,6 +42,7 @@ const BELOW_ZERO: readonly WaterfallChartBar[] = [
   standalone: true,
   imports: [DocsLazyDirective, DocsSectionComponent, WaterfallChartComponent],
   encapsulation: ViewEncapsulation.Emulated,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './waterfall-chart.section.html',
   styleUrls: ['../../../shared/section-demo.scss'],
 })

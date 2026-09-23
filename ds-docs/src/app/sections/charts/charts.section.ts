@@ -1,4 +1,9 @@
-import { Component, ViewEncapsulation, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ViewEncapsulation,
+  signal,
+} from '@angular/core';
 import { BarChartComponent } from 'ds/bar-chart';
 import type { BarChartRow } from 'ds/bar-chart';
 import { DocsChartDataEditorComponent } from '../../shared/docs-chart-data-editor.component';
@@ -157,6 +162,7 @@ const MAX_BELOW_DATA_ROWS: readonly BarChartRow[] = [
     DocsReplayButtonComponent,
   ],
   encapsulation: ViewEncapsulation.Emulated,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './charts.section.html',
   styleUrls: ['../../shared/section-demo.scss', './charts.section.scss'],
 })
