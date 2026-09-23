@@ -4,6 +4,29 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## `ds-table` forwards `paginationSize` and `paginationLayout` to its footer pager (2026-09-23)
+
+`TableComponent` takes `paginationSize: DsSize | null` and `paginationLayout: PaginationLayout | null`
+(`table.component.ts`, beside `showPageSize` / `showLabel`) and binds them to the embedded
+`ds-pagination`'s `size` and `layout` (`table.component.html`, the `.pagination-footer` block). Flat
+inputs, not an object: every input in `src/lib` is flat and the table's five existing pager inputs
+already are, so an object would be the first of its kind and would duplicate or deprecate them. Both
+are nullable so an unset table falls through to the new `DS_CONFIG.pagination` section
+(`core/ds-config.ts`): `size` resolves the input, then `pagination.size`, then `control.size`, then
+`'sm'`; `layout` resolves the input, then `pagination.layout`, then `'grouped'`
+(`pagination.component.ts`, `sizeResolved` / `layoutResolved`, both public readbacks).
+`PaginationLayout` lives in `core/pagination.types.ts` so the config can name it, and
+`components/pagination` re-exports it. Measured 2026-09-23 on the docs table page in the shared
+Chrome: the new demo's nav carries `md pagination spread`, its buttons are 40.0px tall
+(`--field-h-md` = `--hit-cozy` = 40px) and 40px wide, the range label sits 0px from the nav's start
+edge and the last button 0px from its end edge, where the grouped demos leave 80.1px; the two
+existing demos stay `pagination sm` at 32px, and the console holds no error. `class-surface`:
+`TableComponent` gained the two inputs, `PaginationComponent` gained `layoutResolved` and widened
+`layout` to `PaginationLayout | null`, recorded in `migrations/unreleased.json`
+(`exported-class-members-grew`, `pagination-layout-input-nullable`) with the
+`table-pager-size-layout-override` delete row for the consumer's doubled `.pagination.pagination`
+rules. Deck `ask-table-pager-size` and its backlog item are closed.
+
 ## `ds-modal` stacks its actions full-width when the row outgrows the card (2026-09-23)
 
 `ModalCardComponent` measures the `.actions` row after render and, one animation frame after
