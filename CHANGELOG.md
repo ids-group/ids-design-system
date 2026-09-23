@@ -1,5 +1,13 @@
 ## Unreleased
 
+### Fixed
+
+- **The column panel names a column whose header is visually empty.** A column declared with an
+  empty `label` and a `screenReaderLabel` - an actions column, say - was listed in the
+  `dsTableColumns` panel as a bare checkbox with no text, so nothing said which column it stood
+  for. The row now reads the `screenReaderLabel`, which also gives the checkbox its accessible
+  name.
+
 ## 0.13.4 — 2026-09-23
 
 ### Breaking
