@@ -40,6 +40,11 @@ import { DS_VERSION } from '../shared/docs-stats';
 const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
 const CHAPTER_LINE_SLACK_PX = 2;
 
+// Past the 3s timer that resolves any section the reader never scrolled to, plus room for the
+// bodies to lay out.
+const ANCHOR_SETTLE_MS = 12000;
+const ANCHOR_SETTLE_INTERVAL_MS = 120;
+
 @Component({
   selector: 'app-sidebar',
   standalone: true,
@@ -327,7 +332,9 @@ export class SidebarComponent {
 
   // On initial mount, jump to the section named by the URL's anchor segment.
   private scrollToAnchorOnLoad(): void {
-    this.scrollToAnchor(this.anchorFromUrl(this.router.url));
+    const anchor = this.anchorFromUrl(this.router.url);
+    this.scrollToAnchor(anchor);
+    this.holdAnchorWhileContentGrows(anchor);
     // A `#chapter` fragment is finer-grained than the section, so it wins — but the chapters are
     // published after render, so wait for them rather than reading an empty list.
     const wanted = this.initialChapter;
@@ -345,6 +352,37 @@ export class SidebarComponent {
       },
       { injector: this.injector },
     );
+  }
+
+  /** A section whose body is still a deferred placeholder is shorter than the section it becomes,
+   *  so everything under it moves down as the bodies arrive and a deep link lands short of its
+   *  anchor. Re-aims on every height change until a real gesture says the reader has taken over -
+   *  never on `scrollTop` moving, which the growth itself does. */
+  private holdAnchorWhileContentGrows(anchor: string): void {
+    const main = this.layoutScroll.scroller() as HTMLElement | null;
+    if (!anchor || !main) {
+      return;
+    }
+    let height = main.scrollHeight;
+    const stop = (): void => {
+      window.clearInterval(timer);
+      window.clearTimeout(deadline);
+      for (const name of ['wheel', 'touchstart', 'keydown', 'pointerdown']) {
+        main.removeEventListener(name, stop);
+      }
+    };
+    const timer = window.setInterval(() => {
+      if (main.scrollHeight === height) {
+        return;
+      }
+      height = main.scrollHeight;
+      this.scrollToAnchor(anchor);
+    }, ANCHOR_SETTLE_INTERVAL_MS);
+    const deadline = window.setTimeout(stop, ANCHOR_SETTLE_MS);
+    for (const name of ['wheel', 'touchstart', 'keydown', 'pointerdown']) {
+      main.addEventListener(name, stop, { passive: true });
+    }
+    this.destroyRef.onDestroy(stop);
   }
 
   // Scroll main to `anchor`'s section and mark it active. Returns false when the

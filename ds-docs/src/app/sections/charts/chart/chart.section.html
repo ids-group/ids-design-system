@@ -1,7 +1,7 @@
 <docs-section
   anchor="chart"
   eyebrow="Charts"
-  title="Chart"
+  title="Chart container"
   [apiKeys]="['chart-data-table']">
   <span lede>
     The container the column chart is built inside. It owns the plot, the axes,
@@ -168,6 +168,7 @@
     </p>
 
     <ds-chart
+      cursor="category"
       caption="p95 response time, with the week that moved it named"
       [categories]="latencyWeeks"
       [summary]="latencySummary">

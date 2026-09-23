@@ -85,12 +85,20 @@
   }
 }
 
-/* The pane takes the pointer, so the panel can be reached and its text selected — WCAG 1.4.13
-   requires that of anything shown on hover. What stops the flicker an interactive pane used to
-   cause (panel covers the plot, plot takes a `pointerleave`, chart clears, panel closes, pointer
-   lands on the plot again) is the grace period on the chart's own leave, in `chart-active-mark.ts`.
-   The two are one mechanism: make the pane inert again and the criterion breaks silently; drop the
-   grace and the flicker returns. */
+/* The pane is INERT, because it is drawn over the plot it describes: on a funnel or a tight
+   category axis the panel covers the neighbouring marks, and a pane that takes the pointer means
+   the mark underneath never sees it - the reader is over a new segment while the panel still names
+   the old one. Inert, the pointer reaches the mark and the panel follows it.
+
+   WCAG 1.4.13 still holds. Hoverable: moving onto the panel does not dismiss it, because the
+   pointer either stays on the mark under it or the grace period in `chart-active-mark.ts` carries
+   the gap. Dismissible: Escape. Persistent: the panel stays while the mark is hovered, and a press
+   pins it where the chart offers pinning - a pinned pane takes the pointer again so its text can be
+   selected. Drop the grace and the flicker returns. */
 .cdk-overlay-pane.ds-chart-tooltip-pane {
+  pointer-events: none;
+}
+
+.cdk-overlay-pane.ds-chart-tooltip-pane.is-pinned {
   pointer-events: auto;
 }

@@ -103,6 +103,10 @@ export class ChartTooltipDirective {
    *  leaves the plot's top edge — and the Unpin control that lives there — alone. */
   readonly dsChartTooltipPreferBelow = input(false);
 
+  /** A held panel takes the pointer again, so its text can be selected. While it merely follows
+   *  the pointer the pane stays inert, or the mark it covers never sees the pointer at all. */
+  readonly dsChartTooltipPinned = input(false);
+
   private overlayRef: OverlayRef | null = null;
   private panelRef: ComponentRef<ChartTooltipPanelComponent> | null = null;
   private detachScrollReposition: (() => void) | null = null;
@@ -145,6 +149,10 @@ export class ChartTooltipDirective {
     } else {
       this.overlayRef.updatePositionStrategy(this.strategyFor(origin));
     }
+    this.overlayRef.overlayElement.classList.toggle(
+      'is-pinned',
+      this.dsChartTooltipPinned(),
+    );
     this.panelRef?.setInput('context', context);
     this.panelRef?.setInput('template', this.dsChartTooltipTemplate());
   }

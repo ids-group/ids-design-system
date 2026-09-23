@@ -40,6 +40,7 @@
       [attr.aria-label]="accessibleName()"
       [dsChartTooltip]="tooltipContext()"
       [dsChartTooltipPreferBelow]="activeMark.pinned()"
+      [dsChartTooltipPinned]="activeMark.pinned()"
       [dsChartTooltipOrigin]="activeMark.origin()"
       [dsChartTooltipTemplate]="tooltipTemplate() ?? null">
       @for (entry of rows(); track entry.key; let index = $index) {
