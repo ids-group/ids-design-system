@@ -110,6 +110,10 @@
   animation: ds-skeleton-shimmer-loop var(--_skeleton-wave-duration) linear infinite;
 }
 
+:host(.is-offscreen)::after {
+  animation-play-state: paused;
+}
+
 /* Exactly ONE period of travel, resolved along the 45 degree path: moving by period / sqrt(2) in
    each axis advances the gradient by exactly one period along its own direction, which lands on a
    state identical to the start. The loop therefore has no seam to hide rather than one hidden
