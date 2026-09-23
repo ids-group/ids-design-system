@@ -262,9 +262,11 @@ export class ChartComponent implements ChartScales {
     });
 
     // The read phase, so every `getComputedTextLength` lands in one batch before any write:
-    // interleaving them forces a synchronous layout per label.
+    // interleaving them forces a synchronous layout per label. It re-measures when a label's text
+    // changes, and only then - not when a resize merely moves the labels.
     afterRenderEffect({
       read: () => {
+        this.labelTexts();
         this.measuredLabelWidth.set(this.widestLabel('.axis-label.is-primary'));
         this.measuredSecondaryLabelWidth.set(
           this.widestLabel('.axis-label.is-secondary'),
@@ -699,6 +701,14 @@ export class ChartComponent implements ChartScales {
       }),
     );
   });
+
+  private readonly labelTexts = computed(() =>
+    [
+      ...this.ticks().map((tick) => tick.label),
+      ...this.secondaryTicks().map((tick) => tick.label),
+      ...this.categories(),
+    ].join('\n'),
+  );
 
   /** Rotation is spent before thinning: a tilt costs the reader a glance, dropping a label costs
    *  them a reading. Both are decided from the widest label as it actually rendered. */
