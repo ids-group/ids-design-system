@@ -14,7 +14,7 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**110 open — 1 P1, 30 P2, 79 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**111 open — 1 P1, 30 P2, 80 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 1
 
@@ -64,7 +64,7 @@ item and nothing else.
   - The chassis is declared nine times and shared once - about 450 lines of it
   - The template state head and the figcaption rule are copied verbatim, nine times each
 
-### P3 — 79
+### P3 — 80
 
 - **What v0.13.3 added and the docs site never shows (measured 2026-09-22)**
   - Fifteen new inputs have no demo and no prose on the docs site
@@ -89,6 +89,8 @@ item and nothing else.
   - Which of the 8 live chapters can also be frozen
   - `templates` and `startingPoints` in `_ds_manifest.json` are in the schema and empty
   - `.thumbnail` — the project's cover image — has no source that regenerates it
+- **Two 0.13.4 items point `old` at the name the release gives them (recorded 2026-09-23, from the mm-ecm consumer)**
+  - `pie-chart-thickness-is-now-inner-radius` and `pie-chart-centre-content-needs-a-hole` scope `old` to `ds-pie-chart`, which does not exist at the boundary they describe
 - **An indeterminate bar that survives a short track (recorded 2026-09-22, from the mm-ecm consumer)**
   - An indeterminate `ds-bar` is never empty, or 86.7% is enough - one verdict left
 - **Two chart names that collide (recorded 2026-09-21, from the mm-ecm consumer)**
@@ -515,6 +517,33 @@ documented thing or their chapter's demo only exists once opened. Everything bel
   chart that silently vanished.
 
 Each has somebody behind it. Nothing here is speculative work.
+
+## Two 0.13.4 items point `old` at the name the release gives them (recorded 2026-09-23, from the mm-ecm consumer)
+
+Found preparing that consumer's 0.13.4 migration. Your own truth check already flags it, which is
+how it surfaced - this is the manifest half, not a tooling gap.
+
+- [ ] **[P3] `pie-chart-thickness-is-now-inner-radius` and `pie-chart-centre-content-needs-a-hole` scope `old` to `ds-pie-chart`, which does not exist at the boundary they describe.**
+  The two values are `old: "ds-pie-chart[thickness]"` and `old: "ds-pie-chart[centerValue]"`. At
+  `v0.13.3` the element is `ds-donut-chart`; `ds-pie-chart` is what 0.13.4 renames it TO, in the
+  same release, by the item two rows above. So a consumer sitting on 0.13.3 and searching for the
+  `old` value finds nothing, while `<ds-donut-chart thickness="0.32">` is exactly what they have in
+  front of them.
+  `node tools/check-manifest-truth.mjs 0.13.4` reports it without prompting: *"2 name(s) no tag
+  could resolve"*, and closes `65 of 67 old/new value(s) were read against their boundary and hold`
+  - the tolerance for a scope element renamed in the same release does not save these two, because
+  neither tag holds the pair (`ds-pie-chart` is absent at `v0.13.3`, `thickness` is absent at
+  `v0.13.4`).
+  The `migrations/AUTHORING.md` rule added the same day - *"`old` holds our identifiers, never a
+  placeholder or a sentence"* - is satisfied by the letter here: both ARE identifiers. What the two
+  items miss is the boundary half: the identifier has to be the one that exists at the tag the
+  consumer is migrating FROM.
+  **Wanted:** `old: "ds-donut-chart[thickness]"` and `old: "ds-donut-chart[centerValue]"`, and one
+  clause in `AUTHORING.md` saying a scoped `old` names the element as it is spelled at the PREVIOUS
+  tag, even when the same release renames it. The `detect` arrays on both items already carry the
+  unscoped shapes (`thickness=`, `centerValue`), so the practical damage is limited to whoever reads
+  `old` first - which is what a human does.
+
 
 ## What the 0.9.0 - 0.13.3 manifests did not tell a consumer (recorded 2026-09-22, from the mm-ecm consumer)
 
