@@ -197,14 +197,14 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**110 open — 1 P1, 30 P2, 79 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**121 open — 1 P1, 34 P2, 86 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 1
 
 - **Framework & forms**
   - Upgrade to Angular 22 — and re-verify the signal-forms work against it, because one of its breaking changes lands exactly there
 
-### P2 — 30
+### P2 — 34
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Nothing catches a shell that rings on `:focus-within` when it means the keyboard
@@ -219,6 +219,12 @@ item and nothing else.
   - The elements demo has not been opened in a real browser since the rebuilds
   - `ds-toast-region`'s dev-warning strip is unverified
   - `ds-waterfall-chart` is `ds-cascade-chart` (Stas, 2026-09-23)
+- **What actually running the 0.13.4 migration cost (recorded 2026-09-23, from the mm-ecm consumer)**
+  - The mass spell-out renames old names that are PREFIXES of the new ones, and the pitfall does not mention it
+  - Adopting `banner.announce` app-wide silently arms every banner written afterwards, and the variant is a usable discriminator
+- **Three more things the 0.13.4 migration cost a consumer (recorded 2026-09-23, from the mm-ecm consumer)**
+  - `--ds-line-chart-plot-height` changes what it does and no manifest item says so
+  - The spell-out wave was keyed on suffixes, so three abbreviations survive it - and one
 - **Two chart names that collide (recorded 2026-09-21, from the mm-ecm consumer)**
   - `ds-bar` is a prefix of `ds-bar-chart`, and the token surfaces overlap the same way
 - **Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)**
@@ -247,7 +253,7 @@ item and nothing else.
   - The chassis is declared nine times and shared once - about 450 lines of it
   - The template state head and the figcaption rule are copied verbatim, nine times each
 
-### P3 — 79
+### P3 — 86
 
 - **What v0.13.3 added and the docs site never shows (measured 2026-09-22)**
   - Fifteen new inputs have no demo and no prose on the docs site
@@ -272,6 +278,11 @@ item and nothing else.
   - Which of the 8 live chapters can also be frozen
   - `templates` and `startingPoints` in `_ds_manifest.json` are in the schema and empty
   - `.thumbnail` — the project's cover image — has no source that regenerates it
+- **Three more things the 0.13.4 migration cost a consumer (recorded 2026-09-23, from the mm-ecm consumer)**
+  - `donut-chart-renamed-to-pie-chart` declares `surface: ["template","typescript"]`, and …
+  - The 0.13.4 CHANGELOG names the segmented tokens by a spelling that never shipped
+- **Two 0.13.4 items point `old` at the name the release gives them (recorded 2026-09-23, from the mm-ecm consumer)**
+  - `pie-chart-thickness-is-now-inner-radius` and `pie-chart-centre-content-needs-a-hole` scope `old` to `ds-pie-chart`, which does not exist at the boundary they describe
 - **An indeterminate bar that survives a short track (recorded 2026-09-22, from the mm-ecm consumer)**
   - An indeterminate `ds-bar` is never empty, or 86.7% is enough - one verdict left
 - **Two chart names that collide (recorded 2026-09-21, from the mm-ecm consumer)**
@@ -295,6 +306,8 @@ item and nothing else.
   - Three edges left open on `ds-table` row expansion and the resize handle, each a judgement call rather than a defect
   - `ds-number-stepper` — optional numeric formatting (locale / currency / decimals / grouping), ref https://primeng.dev/inputnumber
   - Forms — `ds-select` native `multi` — RESEARCHED 2026-08-06; Stas: keep it in the backlog with the deck attached (not built, not closed)
+  - `dsColumnSeries` cannot choose its value axis, so in a two-axis chart the column is pinned to the primary (recorded 2026-09-23, from the mm-ecm-platform microsite-analytics port)
+  - `_overlay-motion.scss` credits the leave teardown to `animationend`, while under reduced motion it is the fallback timer that does it (recorded 2026-09-23, from the mm-ecm-platform 0.13.4 audit)
 - **DS-docs**
   - Fourteen focusable elements in ds-docs still have no accessible name, on two components that always could
   - ds-docs renders a space before punctuation after any inline `<code>` (found 2026-09-01)
@@ -330,6 +343,8 @@ item and nothing else.
 - **Missing tokens / foundations (from gap analysis)**
   - Primary-button CTA token layer — ASKED 2026-08-05, Stas: keep in the backlog
   - MED cluster — ASKED 2026-08-05, Stas: keep in the backlog
+  - Default muted-text token fails WCAG AA (surfaced 2026-07-13 by the NPA-85 Branding agent's contrast audit)
+  - Brand-unsafe role tokens — several roles keep the blue ramp on a non-blue brand (surfaced 2026-07-13, NPA-85 Branding agent)
 - **Virtualising a long picker list (recorded 2026-08-31, §9 P5, Stas: record only)**
   - Five thousand options render five thousand rows
 - **The chart family read as an architecture (audited 2026-09-22)**
@@ -699,6 +714,148 @@ documented thing or their chapter's demo only exists once opened. Everything bel
 
 Each has somebody behind it. Nothing here is speculative work.
 
+## What actually running the 0.13.4 migration cost (recorded 2026-09-23, from the mm-ecm consumer)
+
+The upgrade itself went clean - 115 edits, green on the first build, two independent re-checks with
+no defects. These are the two places where the manifest left the consumer to work something out
+that the release could have said.
+
+- [ ] **[P2] The mass spell-out renames old names that are PREFIXES of the new ones, and the pitfall does not mention it.**
+  `token-pad-spelled-out-as-padding`, `token-weight-spelled-out-as-font-weight`,
+  `token-dimensions-spelled-out` and `token-btn-spelled-out-as-button` all carry the same pitfall -
+  *"An unknown custom property is not an error … the element draws at the default with nothing
+  reported"* - which is the MISSED-rename hazard. The one that actually bites is the opposite:
+  applying the rename as a substring replace corrupts names that are already correct.
+  Every one of these was live in the consumer we migrated, with the at-risk neighbour present in
+  the same stylesheet:
+
+  | rule | what it corrupts | the neighbour, in this consumer |
+  |---|---|---|
+  | `-pad` -> `-padding` | `--ds-popover-paddingding` | `--ds-popover-padding`, `refresh-shell.scss:191` |
+  | `-weight` -> `-font-weight` | `--ds-badge-font-font-weight` | `--ds-badge-font-weight`, `waves-preview.component.scss:92` |
+  | `-h` -> `-height` | `--ds-button-heighteight` | `--ds-button-height`, `--ds-search-height`, `--ds-field-height` |
+  | `-w` -> `-width` | same shape | `--ds-menu-min-width`, `--ds-tab-indicator-width` |
+
+  There is also a ROUTING collision between two items in the same release: `--ds-segmented-btn-h`
+  matches `token-btn-spelled-out-as-button`, which would yield `--ds-segmented-button-h`. The
+  correct destination is `--ds-segmented-segment-height`, from `segmented-parts-are-segments`. A
+  consumer applying the items in the order the manifest lists them lands on the wrong name, and
+  because an unknown custom property is silent, nothing says so.
+  We handled it by anchoring every replacement to the end of the token name and by running the
+  specific items before the generic ones - but that is a technique a consumer has to invent.
+  **Wanted:** on each spell-out item, one clause in `pitfall`: the old suffix is a substring of the
+  new one, so match the END of the name, never a substring; and on `token-btn-spelled-out-as-button`
+  a cross-reference saying `--ds-segmented-btn-*` is claimed by `segmented-parts-are-segments` and
+  must be excluded. A `map` of exact old-to-new names on these items would remove the question
+  entirely - every other rename kind in the manifests already gets one.
+
+- [ ] **[P2] Adopting `banner.announce` app-wide silently arms every banner written afterwards, and the variant is a usable discriminator.**
+  `banner-alert-announce-takes-a-config-default` says it well for the first pass: set the config,
+  then bind `[announce]="false"` on the page furniture. We did exactly that - config in two apps,
+  29 redundant opt-ins removed, 14 furniture banners given an explicit `false`, no banner's
+  behaviour changed.
+  Then we merged `main`, which carried a banner written days earlier against the OLD default:
+  `<ds-banner variant="info" icon="lock">This program is archived …</ds-banner>`. Its author had no
+  reason to write `[announce]="false"` - under the old default, unbound meant silent. Under the new
+  config it announces on every route into an archived program. We caught it only because we
+  re-counted banners after the merge and the total went 43 -> 44.
+  That is the standing cost of the feature, and it lands on whoever writes the NEXT banner, not on
+  whoever adopted the config.
+  `docs/done.md` records the decision not to build a dev-mode warning, because it *"cannot tell a
+  deliberate opt-out from an oversight"*. That reasoning was about an unannounced ERROR banner, and
+  it holds there. The case here is the mirror image and does not have that problem: an `info` or
+  `success` banner announcing **because an app-wide default was flipped** is almost never intended,
+  and the variant is exactly the discriminator the other direction lacked.
+  **Wanted:** a dev-mode warning when a banner with `variant="info"` or `"success"` resolves
+  `announce` to true from the CONFIG rather than from its own binding - it fires only for the
+  combination that is nearly always an oversight, and never for a deliberate `[announce]="true"`.
+  Failing that, one line in the item's `note`: adopting the config inverts the default for every
+  banner added later, so a team taking it on should expect to mark furniture as it is written.
+
+## Three more things the 0.13.4 migration cost a consumer (recorded 2026-09-23, from the mm-ecm consumer)
+
+Found walking mm-ecm from 0.13.3 to 0.13.4. None of the three breaks a build, which is the point.
+
+- [ ] **[P2] `--ds-line-chart-plot-height` changes what it does and no manifest item says so.**
+  `grep -c plot-height migrations/0.13.4.json` is **0**; the string appears once in the 0.13.4
+  CHANGELOG, in Changed, saying the token "has been declared since the chart shipped and reached
+  only the loading skeleton … the token parsed and changed nothing", and now drives the plot.
+  Verified at both tags: v0.13.3 `line-chart.component.scss:36` declares it and `:48` spends it on
+  `chart-frame.message-box` alone, the comment at `:50` stating the canvas is sized by viewBox
+  ratio; v0.13.4 `line-chart.component.ts:584,618` reads it to size the plot coordinate space.
+  **Why only a manifest item could catch it:** the NAME is identical at both tags, so there is
+  nothing to grep and no build signal. A consumer who pinned it to shape the skeleton silently
+  resizes every plot. mm-ecm never pinned it and is unaffected, which is luck rather than safety.
+  **Wanted:** a `behavior` item whose `verify` is the positive assertion that the plot reads it,
+  since `old`/`new` cannot express a change that keeps its name.
+
+- [ ] **[P3] `donut-chart-renamed-to-pie-chart` declares `surface: ["template","typescript"]`, and
+  a consumer's stylesheet needs the rename too.** A selector written against the ELEMENT rather than
+  an internal class is ordinary consumer CSS: mm-ecm had `.chart-block ds-donut-chart { … }`. It is
+  not covered by `pie-chart-internal-class-renamed`, which is about `.donut-chart`, and a finder
+  obeying the declared surface skips it. The rule then matches nothing and the chart quietly loses
+  its sizing.
+  **Wanted:** `"style"` added to that item's `surface`, and the same check on any future selector
+  rename - an element name is reachable from CSS, so a selector rename is always partly a style one.
+
+- [ ] **[P3] The 0.13.4 CHANGELOG names the segmented tokens by a spelling that never shipped.**
+  The prose says "The three `--ds-segmented-button-*` are `--ds-segmented-segment-*`". At v0.13.3
+  the three are `--ds-segmented-btn-border`, `--ds-segmented-btn-h` and `--ds-segmented-btn-pad-x`
+  (`git grep -ho -- '--ds-segmented-btn-[a-z-]*' v0.13.3 -- src/lib`). The manifest item carries the
+  right `old`, so only the prose is wrong - which makes it the more dangerous half: a reader
+  searching their stylesheet for what the CHANGELOG told them finds nothing and concludes they are
+  unaffected.
+  **Wanted:** the prose corrected to `--ds-segmented-btn-*`.
+
+- [ ] **[P2] The spell-out wave was keyed on suffixes, so three abbreviations survive it - and one
+  of them sits beside a token the wave DID rename.** `ds-input` at v0.13.4 declares
+  `--ds-input-label-font-size` and `--ds-input-label-fw` on the same element: `-fs` was spelled out,
+  `-fw` was not, because the rule is `--ds-*-weight` to `--ds-*-font-weight` and a token spelled
+  `-fw` never matches it. Measured across the tags - 46 names ended in an abbreviation at v0.13.3,
+  three still do at v0.13.4:
+
+  ```
+  git grep -hoE -- "--ds-[a-z0-9-]+" v0.13.4 -- src/lib | sort -u \
+    | grep -E -- "-(fw|lh|fs|ff|ls|maxw|maxh|minw|pad|btn|tracking|transform|w|h)$"
+      --ds-input-label-fw   --ds-tag-fw   --ds-tag-lh
+  ```
+
+  **What it costs a consumer:** a stylesheet ends up carrying two conventions in adjacent lines.
+  mm-ecm's `login.page.scss` now reads `--ds-input-label-font-size` on one line and
+  `--ds-input-label-fw` on the next, and neither is wrong. The release's own promise - "118 `--ds-*`
+  tokens take their CSS property's name" - is what makes the survivors read as an oversight rather
+  than a decision.
+  **Wanted:** either `-fw` to `-font-weight` and `-lh` to `-line-height` in a later release with
+  their own migration items, or a line saying these three are deliberate. A gate is cheap here and
+  the grep above is it: no `--ds-*` name may end in an abbreviation.
+
+## Two 0.13.4 items point `old` at the name the release gives them (recorded 2026-09-23, from the mm-ecm consumer)
+
+Found preparing that consumer's 0.13.4 migration. Your own truth check already flags it, which is
+how it surfaced - this is the manifest half, not a tooling gap.
+
+- [ ] **[P3] `pie-chart-thickness-is-now-inner-radius` and `pie-chart-centre-content-needs-a-hole` scope `old` to `ds-pie-chart`, which does not exist at the boundary they describe.**
+  The two values are `old: "ds-pie-chart[thickness]"` and `old: "ds-pie-chart[centerValue]"`. At
+  `v0.13.3` the element is `ds-donut-chart`; `ds-pie-chart` is what 0.13.4 renames it TO, in the
+  same release, by the item two rows above. So a consumer sitting on 0.13.3 and searching for the
+  `old` value finds nothing, while `<ds-donut-chart thickness="0.32">` is exactly what they have in
+  front of them.
+  `node tools/check-manifest-truth.mjs 0.13.4` reports it without prompting: *"2 name(s) no tag
+  could resolve"*, and closes `65 of 67 old/new value(s) were read against their boundary and hold`
+  - the tolerance for a scope element renamed in the same release does not save these two, because
+  neither tag holds the pair (`ds-pie-chart` is absent at `v0.13.3`, `thickness` is absent at
+  `v0.13.4`).
+  The `migrations/AUTHORING.md` rule added the same day - *"`old` holds our identifiers, never a
+  placeholder or a sentence"* - is satisfied by the letter here: both ARE identifiers. What the two
+  items miss is the boundary half: the identifier has to be the one that exists at the tag the
+  consumer is migrating FROM.
+  **Wanted:** `old: "ds-donut-chart[thickness]"` and `old: "ds-donut-chart[centerValue]"`, and one
+  clause in `AUTHORING.md` saying a scoped `old` names the element as it is spelled at the PREVIOUS
+  tag, even when the same release renames it. The `detect` arrays on both items already carry the
+  unscoped shapes (`thickness=`, `centerValue`), so the practical damage is limited to whoever reads
+  `old` first - which is what a human does.
+
+
 ## What the 0.9.0 - 0.13.3 manifests did not tell a consumer (recorded 2026-09-22, from the mm-ecm consumer)
 
 Found while walking a consumer from 0.8.0 to 0.13.3, nineteen versions, one commit each. Every item
@@ -858,6 +1015,13 @@ Both found while planning that consumer's move to 0.13.3. Neither blocks it; bot
   `--ds-bar-chart-target-color`, `--ds-bar-target-width` against `--ds-bar-chart-target-width`.
   A missed token rename reports nothing and the bar simply returns to its default look, which is the
   failure this collision makes likely rather than merely possible.
+  **The word boundary that warning sends people to does not work.** `\bds-bar\b` still matches
+  inside `ds-bar-chart`: a hyphen is not a `\w` character, so `\b` fires between the `r` and the `-`.
+  Observed 2026-09-23 on the mm-ecm consumer, where an agent migrating to 0.13.3 reached for exactly
+  that guard, believed it was scoped and it was not; the tree was unaffected only because it has no
+  `<ds-bar>` yet. A guard that holds needs the longer name excluded explicitly - `ds-bar(?!-chart)`,
+  or matching `<ds-bar[\s/>]`. Worth putting in the item's `pitfall` either way, since it turns
+  "be careful" into a reason the careful version fails.
   **Wanted:** a name that cannot prefix a chart's, and that does not re-pin the component to
   progress or to meter - the merge dropped both words deliberately, and `semantics` is what carries
   that meaning now. Measured 2026-09-22: of 21 prefix pairs among 99 selectors this is the only one
@@ -1206,6 +1370,16 @@ A0 first, which touches none of it, or wait for that lane to land.
 
 - [ ] **[P3] Forms — `ds-select` native `multi` — RESEARCHED 2026-08-06; Stas: keep it in the backlog with the deck attached (not built, not closed).** Deck `select-native-multi` — three variants live, comparison matrix and sources; it is the prepared answer if a consumer ever pulls on this. Native `<select multiple>` is not a cheaper spelling of the same control, it is a documented antipattern: multi-selection is reachable only through Ctrl/Cmd- or Shift-click with nothing in the control announcing it, an unmodified click **discards the entire prior selection**, non-adjacent options cannot be selected from the keyboard at all, and screen readers handle it worse than a single `<select>`. The consensus alternative is a checkbox list — which is exactly what `ds-multi-select` already is.
   **The soft version of the ask does not survive either:** the moment a hypothetical `ds-select multi` is made usable it has to open a checkbox list, i.e. it becomes `ds-multi-select`, and the only genuine difference left is chips-in-trigger vs an "N selected" summary. If a consumer ever wants the compact trigger, the honest answer is an input (`[triggerDisplay]="'summary'"`) on the existing component, not a second component and a fork in the docs. The one case where nativeness would really matter — a plain HTTP form POST with no JS — is solved by a hidden `<select multiple>` inside `ds-multi-select`, not by changing the UI.
+
+- [ ] **[P3] `dsColumnSeries` cannot choose its value axis, so in a two-axis chart the column is pinned to the primary (recorded 2026-09-23, from the mm-ecm-platform microsite-analytics port).** `LineSeriesData` carries `axis?: ChartAxis` - "Which value axis the readings are measured against. Defaults to `'primary'`" - while `ColumnSeriesPoint` is `id? / label / value / color? / fill?` and `ColumnSeriesComponent` declares `data`, `tooltip`, `tooltipAnchor`, `valueFormat`, `offsets`, `seriesColor`, `seriesFill`, `seriesLabel`, `seriesKey`, `highlighted` and nothing else. Measured 2026-09-23 against 0.13.4's `types/…-components-chart.d.ts` and against `src/lib/components/chart/column-series.component.ts` on `dev` at `5251473d`; `grep -rnE "readonly axis[A-Za-z]* = input" src/lib/components/chart/` returns only `axisGutter`, `axisColor` and `axisLabel`, all three on `ChartComponent` itself. So only the line can pick a side.
+  **What it cost the consumer:** a screen that read visits on the left axis and agent requests on the right could not be reproduced. Requests are the column, so they took the primary and visits moved to the secondary, and the two sides swapped against the screen being replaced. Both axes are labelled through `axisLabel` / `secondaryAxisLabel`, so nothing is ambiguous to a reader - but a port that was meant to preserve the reading could not.
+  **The shape that fits:** `axis` belongs on the DIRECTIVE, not on `ColumnSeriesPoint`. A column series is a flat list of points under one `seriesLabel`, so a per-point axis would be meaningless; `LineSeriesData` is a per-series object, which is why its own `axis` sits in the data. `<svg:g dsColumnSeries [axis]="'secondary'">` defaulting to `'primary'` mirrors what the line already offers, and leaves every existing chart unchanged.
+  **The workaround, for the record:** swap the mark types, visits as columns and requests as a line. That restores the sides at the price of changing what each series looks like, so it is a different trade rather than a fix.
+
+- [ ] **[P3] `_overlay-motion.scss` credits the leave teardown to `animationend`, while under reduced motion it is the fallback timer that does it (recorded 2026-09-23, from the mm-ecm-platform 0.13.4 audit).** The leave comment reads "Reduced motion zeroes the duration at `:root`, so the animation still runs and `animationend` still tears down." A consumer measured the opposite against a running app over CDP: at `animation-duration: 0s` the animation jumps straight to `finished` and does not reliably deliver `animationend` to a listener bound in the same style flush, so the teardown bound to that event never runs. `styles/_tokens.scss:503-510` does zero every `--duration-*` under `reduce`, and Windows 11 with "Animation effects" off reports `reduce`, so this is an ordinary machine rather than an edge case.
+  **Why nothing is on fire, and why the comment still matters:** every teardown path already carries a timer - `setTimeout(() => this.finishClose(), 300)` in `components-modal.mjs`, `components-drawer.mjs` and `components-bottom-sheet.mjs`, and `setTimeout(finish, LEAVE_TIMEOUT_MS)` with `LEAVE_TIMEOUT_MS = 400` in `disposeWithLeave` (all measured against 0.13.4's `fesm2022/`). So the scrim or pane is torn down in at most 300-400 ms whatever the event does. The comment is the problem, not the behaviour: it names `animationend` as the guarantee, which invites a future reader to treat the timer as redundant belt-and-braces and delete it. Deleting it under `reduce` restores a `forwards`-filled `opacity: 0` scrim at `position: fixed; inset: 0` with `pointer-events: auto` that swallows every click, with no console error.
+  **What would settle it:** either re-word the comment so the timer is named as what guarantees teardown at zero duration, or keep the claim and prove it - a test that dismisses a modal under emulated `reduce` with the timer stubbed out and asserts the scrim leaves the DOM. One of the two, because the comment and the timer currently encode opposite beliefs about the same code path.
+  **What the consumer ships meanwhile:** `shared-styles/_ds-overlay-motion.scss` forces `animation-duration: 1ms !important` on `.modal-backdrop.closing`, `.drawer-scrim.closing`, `.sheet-overlay.closing`, `.sheet.closing` and the four edge classes, and on `.cdk-overlay-pane.ds-overlay-pane.ds-leaving > *`, so `animationend` fires promptly instead of waiting out the fallback. Kept at 0.13.4 by decision (Stas, 2026-09-23): it costs nothing and closes the 300-400 ms window in which a closing scrim still intercepts a click.
 
 ### Found while porting the design-sync React bindings (2026-07-28, re-verified 2026-09-01)
 
@@ -1615,6 +1789,9 @@ Most of the original gap list has SHIPPED (verified 2026-07-24: multi-select · 
 
 - [ ] **[P3] MED cluster — ASKED 2026-08-05, Stas: keep in the backlog.** Density beyond hit-targets (fonts/icons/pad — `[data-density]` scales heights/pad/avatars today but NOT `--font-size-*`/`--icon-*`, verified 2026-07-24) · fluid typography (`clamp()` — type tokens are fixed px). **No longer speculative — there is now a MEASURED case (2026-08-10).** Controls that hold chips set a `min-height` rather than a height, so when a tier floor drops below what the text needs they stop following it: under `ultra-compact` `ds-multi-select` measures **33px** and `ds-autocomplete` **29px** where the other seven reach 24px. The floor is applied correctly (`min-height: 24px`); the content cannot shrink, because at a 14px font the line box alone is 19.6px. Proved by hand: dropping `--font-size-s` to 11px in that container pulled them to 31px and 25px. So "density does not scale type" is not a nicety — it is why the bottom tier does not level. `compact` is unaffected in practice (33 against 32). _(The third clause — motion semantic presets — MOVED 2026-07-31 into the customizable-motion item under "Motion / overlays" as its slice 3; don't re-open it here.)_ Both remaining pieces are speculative, no active request; split into their own items if ever prioritized. _(high-contrast/forced-colors + RTL/logical-properties dropped — Stas 2026-07-07.)_
 
+- [ ] **[P3] Default muted-text token fails WCAG AA (surfaced 2026-07-13 by the NPA-85 Branding agent's contrast audit).** The DS-default muted/tertiary text (`#9ba3b4`, mirrored by the starter's `--app-color-text-muted` → `--text-tertiary`) is only ~**2.4:1** on the canvas surface — below the 3.0 large-text bar, let alone 4.5 for body. Any prototype using muted text for real body copy fails AA out of the box. Darkening to ~`#6b7280` gives ~4.65:1. Decide whether the DS default itself should move (a11y default), or muted text is officially "decorative only" (then document the constraint). The starter already patched its own copy; this is about the DS default.
+
+- [ ] **[P3] Brand-unsafe role tokens — several roles keep the blue ramp on a non-blue brand (surfaced 2026-07-13, NPA-85 Branding agent).** When a consumer rebrands via a theme that re-points `--primary`, a handful of DS role tokens are NOT derived from it and keep the literal blue ramp → **blue residue** on a non-blue brand: `--surface-tint` (blue-50; e.g. empty-state tile), `--text-link` (blue-700; `.link`/link buttons), `--focus-ring-inverted` (blue-300). The consumer theme has to hand-rebind each. Either derive them from `--primary` (pairs with the **single-source colour engine** item above) or document them as a "must-rebind" checklist for brand themes. (The starter's branding skill now rebinds `--surface-tint`/`--text-link` per brand as a workaround.)
 ## Virtualising a long picker list (recorded 2026-08-31, §9 P5, Stas: record only)
 
 - [ ] **[P3] Five thousand options render five thousand rows.** No picker uses `cdk-virtual-scroll`,
