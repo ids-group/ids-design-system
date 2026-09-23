@@ -14,14 +14,14 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**122 open — 1 P1, 35 P2, 86 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**120 open — 1 P1, 33 P2, 86 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 1
 
 - **Framework & forms**
   - Upgrade to Angular 22 — and re-verify the signal-forms work against it, because one of its breaking changes lands exactly there
 
-### P2 — 35
+### P2 — 33
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Nothing catches a shell that rings on `:focus-within` when it means the keyboard
@@ -34,7 +34,6 @@ item and nothing else.
 - **Claude Design upload — what the freeze left open (recorded 2026-09-04)**
   - `.design-sync/conventions.md` is a generator INPUT, and nothing stops a reflow desyncing it
   - The elements demo has not been opened in a real browser since the rebuilds
-  - `ds-toast-region`'s dev-warning strip is unverified
   - `ds-waterfall-chart` is `ds-cascade-chart` (Stas, 2026-09-23)
 - **What actually running the 0.13.4 migration cost (recorded 2026-09-23, from the mm-ecm consumer)**
   - The mass spell-out renames old names that are PREFIXES of the new ones, and the pitfall does not mention it
@@ -48,7 +47,6 @@ item and nothing else.
   - Build-time `define` flag: a consumer CAN strip library code from `angular.json` — measured
   - The boundary guard is still `'off'` after A3, with four defects the flip must carry
   - DOCS for A3: `@defer` needs the deep specifier — the one exception to «no consumer
-  - `ds-button`'s field-message line costs 11.0 KB gzip — 35% of the button, ABLATION DONE
 - **Agent-facing docs — the rules an agent needs to prototype a page, and an md layout it can navigate**
   - An md ARCHITECTURE for the whole design system — cross-linked like a graph, not a pile of files (Stas, 2026-09-01, re-scoped 2026-09-02). NEXT UP, and the first step is RESEARCH, not code
 - **The field system — the two controls outside it, and the five with no box to paint**
@@ -56,7 +54,7 @@ item and nothing else.
   - Single-source colour engine — collapse `--primary` + `--primary-h/s/l` into ONE token, derive the rest with `color-mix()` + relative-colour (idea 2026-06-24)
   - `.ds-interactive` — global state-interaction contract (agreed; prototype before spec — [[project-interaction-contract-design]])
   - Theme recipe vs hand-tuned picks — alignment decision
-  - Shared picker internals — DECIDED 2026-09-02 (Stas): BUILD IT
+  - `ds-autocomplete`'s arrow keys walk a private copy of the list cursor
   - The 20 typography CLASSES still read `.t-*`, where the tokens behind them now spell it out
   - The button's colour-family slots are named `--c-*`, which is not an acceptable name
 - **Tooling**
@@ -74,10 +72,10 @@ item and nothing else.
 ### P3 — 86
 
 - **What v0.13.3 added and the docs site never shows (measured 2026-09-22)**
-  - Fifteen new inputs have no demo and no prose on the docs site
-  - Forty-nine new tokens have a row in the reference and an empty `notes`
+  - `g[dsLineSeries]` demonstrates `stacked` and `tooltipAnchor` only on the preset
+  - `--ds-chart-dimmed-opacity` has an empty `notes` and a near-twin name
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
-  - A whole-page keyboard walk is not measurable with the tools here, and the failed
+  - The focus-indicator sweep only sees what is in the DOM when a page loads
   - No indicator has been measured for SIZE or contrast — the 2026-09-10 sweep answered 2.4.7 only
   - `--ds-multi-select-option-bg-color-active` is documented and dead
   - The token reference says the portaled panel reads `--ds-time-picker-focus-shadow`
@@ -115,6 +113,7 @@ item and nothing else.
   - Six things the bundle fixtures do NOT establish, recorded 2026-09-02 rather than left for …
   - A curated `prototype` entry point, now that A3 exists
   - A bundle-size gate in CI
+  - `ds-button` pulls `field-message` statically, and it stays cheap only while the two
 - **Component feature gaps**
   - `ds-select` cannot offer "create «what I typed»", and the reason is that it has no place to type (recorded 2026-09-09, Stas)
   - Portaled CSS as opt-in — PARKED 2026-09-04 by Stas
@@ -177,8 +176,6 @@ item and nothing else.
   - `ds-pie-chart` declares `staggerMs` and documents that it does nothing
 - **Thirteen inputs the chart family declares component by component (measured 2026-09-22)**
   - Only the RESOLUTION of the shared chart inputs is shared, not their declaration
-- **`changelog-lint` cannot tell "checked and clean" from "did not check" (recorded 2026-09-01, §9 G6, Stas: park)**
-  - The gate's own floor does not catch the failure it was written for …
 - **ds-app-layout — the one knowingly duplicated decision**
   - `compact` re-evaluates in TS a condition the stylesheet already owns (recorded 2026-08-04, reviewing my own `118a539`)
 - **A11y — decision record (deferred, NOT a bug)**
@@ -230,38 +227,32 @@ Every new component landed everywhere - five charts plus `g[dsSeriesAnnotation]`
 generated API table carries the NAMES, so this is about a reader meeting an input with no example
 rather than never meeting it at all.
 
-- [ ] **[P3] Fifteen new inputs have no demo and no prose on the docs site.** Seven are not
-  mentioned anywhere outside the generated table: `ds-button[align]`, `ds-chart[axisLabel]`,
-  `ds-chart[cursorPin]`, `g[dsLineSeries][highlighted]`, `ds-pagination[size]`,
-  `ds-pagination[layout]`, `ds-segmented[joined]`. Eight more are demonstrated on a PRESET but not
-  on the mark or container that also takes them: `ds-chart[secondaryAxisLabel]`, `[maxSecondary]`,
-  and `g[dsLineSeries]`'s `pinOnClick`, `dimOthers`, `patterns`, `stacked`, `curve`, `tooltipAnchor`.
-  The composable path is the one a consumer reaches for after the preset stops fitting, so its
-  inputs are exactly the ones that need an example.
+- [ ] **[P3] `g[dsLineSeries]` demonstrates `stacked` and `tooltipAnchor` only on the preset.**
+  `chart.section.html:256-260` describes both in prose, and no `dsLineSeries` in ds-docs binds
+  either; the `stack="stacked"` at `line-chart.section.html:92` is on `ds-line-chart`. The
+  composable path is the one a consumer reaches for after the preset stops fitting, so its inputs
+  are the ones that need an example on the mark itself.
 
-- [ ] **[P3] Forty-nine new tokens have a row in the reference and an empty `notes`.** The whole
-  `--ds-chart-heat-1..8-color` family, `--ds-chart-annotation-*` (5), `--ds-chart-positive-color` /
-  `-negative-color`, `--ds-chart-legend-swatch-size`, `--ds-bar-chart-target-*` (4),
-  `--ds-heatmap-chart-*` (8), `--ds-pie-chart-*` (8), `--ds-scatter-chart-*` (8),
-  `--ds-waterfall-chart-*` (2), `--ds-line-chart-annotation-font-weight`,
-  `--ds-option-font-weight`, `--ds-table-head-height`. `token-descriptions.json` is hand-written,
-  so a name and a value reach the table and the sentence saying what to set it FOR does not.
+- [ ] **[P3] `--ds-chart-dimmed-opacity` has an empty `notes` and a near-twin name.**
+  `column-series.component.scss:171` reads it with a 0.25 fallback, and `tokens.generated.ts:3277`
+  gives it no description. Three chart docblocks cite `--ds-chart-dim-opacity` at 0.3
+  (`bar-chart.component.ts:187`), so one idea carries two spellings and two defaults. Decide whether
+  they are one token, then write the note.
 
 Constraints and decisions that read as removable and are not.
 
 ## Focus indicators — what the two-wave review left open (recorded 2026-09-04)
 
-- [ ] **[P3] A whole-page keyboard walk is not measurable with the tools here, and the failed
-  attempt is worth not repeating.** Tried 2026-09-05 to assert an indicator on all 262 focusables of
-  one docs page by focusing each in turn. Void: `element.focus()` inherits keyboard modality from the
-  last REAL input, and the first call spends it — from the second element on, `:focus-visible` reads
-  false for everything and the walk reports almost nothing indicated whether the CSS is right or
-  wrong. Same shape as the reduced-motion trap.
-  What would work: read the AUTHORED cascade instead of the focused state — for each focusable, find
-  the `:focus-visible` rules that match it with the pseudo stripped, and ask whether any paints. That
-  needs no focus at all, so no modality to lose. Until then the static gate is the coverage claim:
-  88 files, three rejected failure classes, each controlled by planting a defect and watching it
-  exit 1.
+- [ ] **[P3] The focus-indicator sweep only sees what is in the DOM when a page loads.**
+  `tools/focus-indicator-sweep.mjs` forces `:focus`/`:focus-visible`/`:focus-within` over CDP
+  (:385-402) on each visible match of `FOCUSABLE` (:128) and never clicks, opens or scrolls. Two
+  groups never reach it: every focusable inside a closed overlay (modal, drawer, popover, menu, the
+  picker panels, toast, bottom-sheet), and the bodies of the nine chart sections, which render under
+  `@defer (on viewport)` and show a placeholder until scrolled to. Re-check by scrolling each page to
+  its end and opening each overlay demo once before `tag()`. It is run by hand, not a gate, so a
+  regression stays silent until the next run. The sweep forces the pseudo-class because
+  `element.focus()` spends keyboard modality on its first call and reads `:focus-visible` false
+  from the second element on.
 
 
 - [ ] **[P3] No indicator has been measured for SIZE or contrast — the 2026-09-10 sweep answered 2.4.7 only.** It established that all 1807 focusable elements draw something; it read no indicator's area and no contrast against the colours next to it, which is what WCAG 2.4.13 Focus Appearance (AAA) asks for: an area at least the size of a 2px perimeter of the component, at 3:1 against adjacent colours. One known candidate already: `ds-table`'s column-resize handle indicates focus by widening its `::after` hairline to 2px over roughly 24px of height, ~48px² against the ~184px² a 2px perimeter of its own 8×40px box would need. It passes 2.4.7 and would fail 2.4.13. Whether the library targets AAA here is a decision, not a defect — record the answer before measuring the rest.
@@ -470,12 +461,6 @@ documented thing or their chapter's demo only exists once opened. Everything bel
   background or headless one freezes transitions and reports stale layout. Every measurement this
   cycle was headless. Nothing suggests a problem — the 127 live cards render and their panels open —
   but the one check the runbook asks for has not been done.
-- [ ] **[P2] `ds-toast-region`'s dev-warning strip is unverified.** It was the one `devWarn` caller
-  without the `ngDevMode` guard and its message shipped as live code; the guard is now there, but
-  the rebuilt bundle came out byte-identical, which points at a stale `.angular/cache` rather than
-  at the guard. Re-check on a clean cache. `ds-stat` and `ds-split-button` both compile to
-  `constructor(){}`, so the pattern itself is known to work.
-
 **Standing conditions, not tasks.**
 
 - [ ] **[P3] The upload tree tracks `src/lib`, and lags it between a library commit and the next CI
@@ -1156,24 +1141,14 @@ the service was just the one somebody noticed. Full table and every tested hypot
   before writing the guidance. No consumer defers a DS component yet.
 
 
-- [ ] **[P2] `ds-button`'s field-message line costs 11.0 KB gzip — 35% of the button, ABLATION DONE
-  2026-09-01.** `ButtonComponent extends DsMessageBase` and imports `FieldMessageComponent`,
-  `resolveFieldMessage` and `trimmedText` so a button can render a hint/warning/error line under itself.
-  Ablated on `probe/button-field-message` (commit `2c1dbdb7`), control
-  re-measured on the same build:
-
-  | | JS gzip | over bare Angular |
-  | --- | --- | --- |
-  | bare Angular app | 30 646 B | — |
-  | `+ ds-divider` (entry cost) | 35 997 B | +5 351 B |
-  | `+ ds-button` today | **62 733 B** | **+32 087 B** |
-  | `+ ds-button` without field-message | **51 438 B** | **+20 792 B** |
-
-  **11 295 B gzip**, paid by every consumer that renders one button, whether or not they ever bind
-  `hint`, `warning` or `error`. **Entry points do not fix this** — even per-component entries keep
-  `button -> field-message` as a static edge, so the 11 kB arrives with any button. Two ways out: drop
-  the feature from `ds-button`, or move it behind an opt-in directive — **the same seam pattern as
-  the table**, so it belongs in the A1/A2 lane, not A3. Design decision, not a defect.
+- [ ] **[P3] `ds-button` pulls `field-message` statically, and it stays cheap only while the two
+  share their dependencies.** `button.component.ts:40,46` imports `DsMessageBase` and
+  `FieldMessageComponent`, so every button ships the message line whether or not it binds `hint`,
+  `warning` or `error`. Today that is hundreds of bytes: `field-message.component.ts:9-11` needs
+  only `IconComponent` and `DS_CONFIG`, both already in the button's closure, and the opt-in
+  directive seam measured 308 B gzip worse (done.md:3497). Re-measure the button with and without the
+  line when `field-message` gains an import the button does not carry, or the button stops rendering
+  `ds-icon`; the directive seam is the known way out.
 
 **Not doing, and why.** basic/advanced as two packages: smaller prize than A1/A2, and it buys a second
 table to keep in sync forever. `ids-charts`: a real candidate the day it needs a third-party renderer,
@@ -1409,12 +1384,17 @@ its own inline styles. `presentations/README.md` holds the authoring contract an
 
 - [ ] **[P2] Theme recipe vs hand-tuned picks — alignment decision.** Button/icon-button state derivation uses the theme's 88%/76% mix-to-black recipe (**verified `button.component.scss:57-58`, `icon-button.component.scss:109-110,168-169`, `themes/_semantic.scss:109-110`, 2026-09-23**). If the single-source-colour calibration replaces `--primary-hover/-pressed` with hand-tuned values, the button defaults (color-mix off the resolved bg) diverge from the theme roles — decide then: components read role tokens again, or theme keeps the formula. **This is a concrete instance of the single-source item's open question (b); resolve it inside that spec, not separately.**
 
-- [ ] **[P2] Shared picker internals — DECIDED 2026-09-02 (Stas): BUILD IT.** The survey below recommended against, and Stas overruled it: the extraction happens without waiting for a fourth list picker. Everything measured in 2026-08-05 still holds and is the scope, not an argument against it — read it as the cost estimate. What the survey established: it is THREE components, not six, and the duplicated surface is ~25 lines each.
-
-  **SURVEYED 2026-08-05, and the premise was wrong: it is THREE components, not six, and the duplicated surface is ~25 lines each.** Measured: only `ds-select`, `ds-multi-select` and `ds-autocomplete` share the shape (an `activeIndex` signal + wrap-around arrow nav over a flat option list). `ds-date-picker` navigates a 2-D day grid, `ds-time-picker` has NO arrow handling at all (it delegates to `ds-time-columns`), and `ds-color-picker`’s arrows drive a continuous saturation/hue canvas — three different models that a shared list helper would not serve. **Type-ahead does not exist anywhere** (zero hits), so that part of the ask describes code that was never written. And the three that DO overlap differ where it matters: select carries groups + Home/End + `firstEnabledIndex()` skipping disabled, multi-select works over a filtered list with a select-all row, autocomplete counts a create/no-match slot into its modulo. **Recommendation: extract only the index cursor** — a ~30-line `createListCursor({ length, isEnabled })` returning `{ index, next, prev, first, last, reset }` — and NOT a picker base class. **Worth doing when a fourth list picker appears, not before:** 3 × 25 lines against a 30-line helper is a wash today, and the wrong shared abstraction here costs more than the duplication. **Update (0.11.1):** the three now share one panel implementation, one group shape (`DsOptionItem`) and five projection slots, and `docs/picker-contract.md` + `npm run picker-parity` keep that honest — so the remaining duplication is the index cursor alone, exactly as recommended. Still not extracted, still waiting on a fourth picker.
-  **P3 → P2, 2026-09-02:** promoted by the decision above; the demotion below is kept so the reasoning that was overruled is still readable, not deleted.
-
-  **P2 → P3, 2026-08-21 (SUPERSEDED):** demoted, and it should have been on the day it was surveyed: **the item's own conclusion is not to build it** — three components share ~25 lines each, against a ~30-line helper, so extracting now is a wash and the wrong shared abstraction costs more than the duplication. It is kept open only so the survey is not repeated, which makes it a parked record, not a P2. Revisit when a FOURTH list picker appears.
+- [ ] **[P2] `ds-autocomplete`'s arrow keys walk a private copy of the list cursor.** Stas decided
+  on 2026-09-02 to share the picker internals, and the scope was the index cursor alone: the panel,
+  the `DsOptionItem` group shape and the five projection slots are already shared and held by
+  `npm run picker-parity`. `src/lib/core/list-cursor.ts` serves select and multi-select fully and
+  autocomplete for PageUp/PageDown and Home/End, but autocomplete's ArrowUp/ArrowDown (`:634`, `:645`)
+  still call the wrap-around walk at `autocomplete.component.ts:534-548`, the one that counts the
+  create/no-match slot. The shared helper takes it as
+  `{ length: slots, isEnabled: i => !options[i] || !options[i].disabled }`; what the move owes is a
+  decision on the all-disabled case, where the private copy returns -1 and the shared one returns
+  `from`. `ds-menu` keeps its own single-character type-ahead (`menu.component.ts:107-122`) beside
+  the shared `createTypeAhead`.
 
 - [ ] **[P2] The 20 typography CLASSES still read `.t-*`, where the tokens behind them now spell it out.** `.t-h1` through `.t-h5`, `.t-display`, `.t-card-title`, `.t-caption`, `.t-overline`, `.t-l` / `-l-bold`, `.t-m` / `-m-bold`, `.t-s` / `-s-bold`, `.t-xs` / `-xs-bold`, `.t-mono` / `-mono-block` / `-mono-inline`. The 96 tokens they read became `--ds-typography-*` in `4d2ddd7d`; the classes were held back deliberately, so the two halves now disagree on how the word is spelled.
 
@@ -1509,10 +1489,10 @@ its own inline styles. `presentations/README.md` holds the authoring contract an
   **Why it is P3 and not higher:** the audit's damaging findings are all fixed (23 of 23), the lint gained M034–M037 and M039–M044, and the delete-table parity gate is green — so nothing here is protecting a consumer from a live defect. It is the difference between a format that is ahead of the field and one whose *enforcement posture* is too, which is the audit's own summary of the gap.
   **Cheapest honest first cut if it is picked up:** (6) and (7) are additive keys with a lint rule each and, pending a re-count over the 36 manifests, no back-fill. (1), (3) and (4) are the ones that change what the gate actually PROVES, and the board's own rule applies — a gate proves nothing until you have watched it fail.
 
-- [ ] **[P2] A consumer's `--ds-*` override can be write-only, and nothing says so (recorded 2026-09-23, from the mm-ecm consumer's 0.8.0 to 0.13.4 audit).** A name the consumer declares but the library never reads sets nothing, paints nothing and raises nothing: no build error, no console warning, no lint. It reads as styling that works, and it can survive many releases that way. Measured on one consumer: `--ds-button-bg`, `--ds-button-bg-hover`, `--ds-button-bg-active`, `--ds-button-fg` and `--ds-tag-bg`, 17 declarations in two files. Those names are real - `git grep -P -- '--ds-button-bg(?![a-z0-9-])' <tag> -- src/lib` finds them at `v0.1.0` through `v0.2.2` and nowhere from `v0.3.0` on, where the surface became `--ds-button-bg-color` / `-hover` / `-active` and `--ds-button-label-color`. The consumer entered the chain at 0.8.0, so the overrides were already five releases dead before the upgrade started, and came out the other side still dead.
+- [ ] **[P2] A consumer's `--ds-*` override can be write-only, and nothing says so (recorded 2026-09-23, from the mm-ecm consumer's 0.8.0 to 0.13.4 audit).** A name the consumer declares but the library never reads sets nothing, paints nothing and raises nothing: no build error, no console warning, no lint. It reads as styling that works, and it can survive many releases that way. Measured on one consumer: `--ds-button-bg`, `--ds-button-bg-hover`, `--ds-button-bg-active`, `--ds-button-fg` and `--ds-tag-bg`, 16 declarations in mm-ecm-platform (15 in `_buttons.scss`, one `--ds-tag-bg`); the consumer's `fix/dead-ds-token-overrides` branch fixes the tag and leaves the 15. Those names are real - `git grep -P -- '--ds-button-bg(?![a-z0-9-])' <tag> -- src/lib` finds them at `v0.1.0` through `v0.2.2` and nowhere from `v0.3.0` on, where the surface became `--ds-button-bg-color` / `-hover` / `-active` and `--ds-button-label-color`. The consumer entered the chain at 0.8.0, so the overrides were already five releases dead before the upgrade started, and came out the other side still dead.
   **Why no manifest can catch this.** A migration item's `old` is scoped to the one version boundary it describes, so a name that died before the chain's first version is outside every manifest the chain reads. The tooling is correct and the hole is structural: it can only ever report renames inside the range being walked, while a consumer's dead override is a property of the CURRENT installed version alone.
   **The shape that fits:** a check a consumer can run against what is installed - collect every `--ds-*` the consumer DECLARES, collect every `--ds-*` the package READS (`fesm2022/*.mjs` plus `styles/` and `themes/`), and report the declarations that resolve to nothing. That is the same idea `check-doc-tokens` already applies to our own prose, pointed outward; on the consumer above it takes one pass over 176 declared names against 1 028 read names. Shipping it as a bin in the package, or as a schematic, puts it where the consumer can run it on every upgrade rather than once during an audit.
-  **The same silence has a second shape, worth covering together: a selector that stops matching.** `ds-button` marks its variant with `[attr.data-variant]`, so a consumer styling `ds-button .button.secondary` or `.outline` matches nothing. The same consumer carries seven such blocks. Worse than inert: its `primary` block is written as `.button:not(.secondary):not(.tertiary):not(.outline):not(.error):not(.success):not(.warning):not(.text)`, and since none of those classes is ever rendered the negation excludes nothing, so a rule meant for one variant applies to every button. A check that resolved a consumer's `ds-*` selectors against the classes and attributes the components actually render would catch both halves.
+  **The same silence has a second shape, worth covering together: a selector that stops matching.** `ds-button`'s inner button carries `c-<color>` and `v-<variant>` classes, so a consumer styling `ds-button .button.secondary` or `.outline` matches nothing. The same consumer carries seven such blocks, five of them named after a colour. Worse than inert: its `primary` block is written as `.button:not(.secondary):not(.tertiary):not(.outline):not(.error):not(.success):not(.warning):not(.text)`, and since none of those classes is ever rendered the negation excludes nothing, so a rule meant for one variant applies to every button. A check that resolved a consumer's `ds-*` selectors against the classes and attributes the components actually render would catch both halves.
 ## Framework & forms
 
 - [ ] **[P1] Upgrade to Angular 22 — and re-verify the signal-forms work against it, because one of its breaking changes lands exactly there.** This repo builds on **21.2.22** (`v21-lts` is 21.2.23) and declares `"^21.2.0"` for all six Angular peers, which resolves `>=21.2.0 <22.0.0` — so **a consumer on Angular 22 cannot install this package without `--legacy-peer-deps`**. Angular 22 has been out since **2026-06-03**; `@angular/core` and `@angular/forms` are at **22.1.7**, with 22.2.0-rc.0 on `next`, as of 2026-09-23 (checked against the registry, not assumed). No consumer under `C:\Repositories` is on 22 yet - all declare Angular 21 (checked 2026-09-23).
@@ -1834,29 +1814,6 @@ already defaults to 0; their own `TODO(ds-bump)` says so.
 **Pile two — genuine gaps, verified against `dev` today.** _(BOTH are now CLOSED and archived: the region padding, Option A on 08-07 and Option B — `[dividers]` — on 08-10; the status treatment on 08-12, as `status: DsStatus` with the tinted header. See the batch record above and `done.md`.)_
 
 ---
-
-## `changelog-lint` cannot tell "checked and clean" from "did not check" (recorded 2026-09-01, §9 G6, Stas: park)
-
-- [ ] **[P3] The gate's own floor does not catch the failure it was written for.** Before it can
-  check anything, `changelog-lint` builds the list of published artefacts from two resolvers, and
-  both degrade quietly: `publishedFiles()` filters through `existsSync`, and `shippedSources()`
-  reads `assets ?? []` out of `ng-package.json`. Rename a directory, or rename that key, and the
-  list simply gets shorter — the gate checks what it found, prints `OK`, and never opens the rest.
-  A leak in an unopened file ships.
-
-  **Measured 2026-09-01.** The sweep is 320 files, and it is three groups, not one: **30**
-  documents, **36** assets from `src/lib/styles` + `src/lib/themes`, **254** TypeScript sources
-  under `src/lib`. Dropping the `assets` key costs the 36 and leaves **284** — which clears the
-  floor of 100 with room to spare. **The floor is green for exactly the collapse it exists to
-  catch**, because a single total cannot see one group of three go to zero.
-
-  **Two ways out, and the smaller one may be enough.** (a) A committed census per group in
-  `tools/surface-baseline.json`: fewer than last time fails and names the group, more is normal
-  growth, and `tools/changelog-release.mjs` rewrites the numbers at the cut so they land in the
-  release commit rather than dirtying an unrelated branch. (b) Just assert that every directory
-  named in `ng-package.json` `assets` yields at least one file — three lines, catches this exact
-  scenario, no numbers to maintain. **Nothing has broken yet**; this is a guard against a future
-  rename, which is why it is parked rather than open.
 
 ## Board history — the 08-10 actualization, kept for the release-gate reasoning
 

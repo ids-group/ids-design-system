@@ -4,6 +4,16 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## Three backlog items the code had already closed (2026-09-23)
+
+The 48 chart, option and table tokens that reached the reference with an empty `notes` carry one
+each (`2dfd23a1`; the family was 48, not 49 - `--ds-bar-chart-target-*` is color, overhang and
+width). `ds-toast-region`'s dev warning is stripped from the shipped bundle: the production upload
+bundle keeps the component and none of its message text, and `core/dev-warning.ts` says so.
+`changelog-lint` fails when any single source group resolves nothing, or when `ng-package.json`
+declares no assets (`e160d527`, `changelog-lint.mjs:340-351`), which catches the renamed input the
+old floor of 100 passed at 295 targets.
+
 ## Nine manifest and plugin asks from one consumer's re-audit (2026-09-23)
 
 `check-manifest-truth` closes on the fraction it read - `438 of 458 old/new value(s) were read

@@ -16,9 +16,8 @@ import { effect, isDevMode } from '@angular/core';
  * a minifier to fold it and drop the message with it, which `isDevMode()` — an opaque
  * call — can never allow. It cannot become a helper function for the same reason.
  *
- * It does work: `ds-stat` and `ds-split-button` compile to `constructor(){}` in the
- * shipped bundle. `ds-toast-region`'s strip is UNVERIFIED — the bundle came out
- * byte-identical after adding the guard, so re-check on a clean `.angular/cache`.
+ * It does work: `ds-stat`, `ds-split-button` and `ds-toast-region` keep no message text in the
+ * shipped bundle.
  * @internal
  */
 export function devWarn(message: () => string | null): void {
