@@ -18,8 +18,8 @@ an 895.475px row at 1366px and 424.258px in a 424.258px row at a 420px viewport,
 reads 0px 40ms after the row opens and 40.4px when it settles.
 
 The 48 chart, option and table tokens that reached the reference with an empty `notes` carry one
-each (`2dfd23a1`; the family was 48, not 49 - `--ds-bar-chart-target-*` is color, overhang and
-width). `ds-toast-region`'s dev warning is stripped from the shipped bundle: the production upload
+each (`2dfd23a1`; `--ds-bar-chart-target-*` is color, overhang and width). `ds-toast-region`'s dev
+warning is stripped from the shipped bundle: the production upload
 bundle keeps the component and none of its message text, and `core/dev-warning.ts` says so.
 `changelog-lint` fails when any single source group resolves nothing, or when `ng-package.json`
 declares no assets (`e160d527`, `changelog-lint.mjs:340-351`), which catches the renamed input the
