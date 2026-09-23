@@ -650,37 +650,10 @@ const guardInterpolated = (card, values) => {
   }
 };
 
-// A card is a snapshot of the whole block, and a headless page reports no element as
-// intersecting, so a `@defer (on viewport)` body would never resolve and the card would freeze its
-// placeholder. Every observed target is reported visible once; the native observer keeps working.
-const DEFER_RESOLVER = `
-  <script>
-    (function () {
-      var Native = window.IntersectionObserver;
-      if (!Native) return;
-      window.IntersectionObserver = function (callback, options) {
-        var observer = new Native(callback, options);
-        var observe = observer.observe.bind(observer);
-        observer.observe = function (target) {
-          observe(target);
-          setTimeout(function () {
-            var rect = target.getBoundingClientRect();
-            callback([{ target: target, isIntersecting: true, intersectionRatio: 1,
-              boundingClientRect: rect, intersectionRect: rect, rootBounds: null,
-              time: performance.now() }], observer);
-          });
-        };
-        return observer;
-      };
-      window.IntersectionObserver.prototype = Native.prototype;
-    })();
-  </script>`;
-
 function cardHtml({
   name,
   group,
   tag,
-  deferred,
   viewport,
   owns,
   ownedIndex,
@@ -735,7 +708,7 @@ function cardHtml({
   <div class="ds-page"><${tag}></${tag}></div>
   <!-- Sections only: a section renders DS components as Angular components, and registering those
        same tags as custom elements upgrades each host twice. See .design-sync/elements/main.ts. -->
-  <script>window.__dsSectionsOnly = true</script>${deferred ? DEFER_RESOLVER : ''}
+  <script>window.__dsSectionsOnly = true</script>
   <script src="../../../_ds_bundle.js"></script>
   <script>
     /* Keeps this component's blocks and drops the rest, so Menu and MenuItem are two pages rather
@@ -774,8 +747,8 @@ function cardHtml({
           if (Date.now() - start < 8000) setTimeout(slice, 50);
           return;
         }
-        /* A section can @defer its body: until it resolves the only child is an empty
-           placeholder, and slicing then would drop every block before it arrives. */
+        /* Until a section's body has rendered it holds only its header, and slicing then would
+           drop every block before it arrives. */
         var HEADER = 'h2, p.lede, .eyebrow, .tagrow, docs-component-meta, ' + API;
         var filled = function (node) {
           return !node.matches(HEADER) && (node.childElementCount > 0 || node.textContent.trim() !== '');
@@ -1023,7 +996,6 @@ for (const name of [...byName.keys()].sort()) {
         name,
         group,
         tag: section.tag,
-        deferred: /@defer\b/.test(templateOf(section.slug)),
         viewport: height
           ? `${viewports.width}x${declaredHeight(height)}`
           : null,
@@ -1095,7 +1067,6 @@ for (const section of sections.filter((entry) => !claimed.has(entry.slug))) {
         name: chapter,
         group,
         tag: section.tag,
-        deferred: /@defer\b/.test(templateOf(section.slug)),
         viewport: height
           ? `${viewports.width}x${declaredHeight(height)}`
           : null,
