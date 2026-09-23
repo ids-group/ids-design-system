@@ -296,6 +296,15 @@ for (const [name, manifest] of manifests) {
       at('M021', `unknown surface ${JSON.stringify(item.surface)}`);
     }
 
+    // An element name is reachable from a consumer stylesheet whatever their templates do, so a
+    // rule on the old name survives the rename as a selector that matches nothing.
+    if (item.kind === 'selector-rename' && !surfaces.includes('style')) {
+      at(
+        'M045',
+        'a selector-rename must list "style" in `surface` — an element name is always reachable from a consumer stylesheet',
+      );
+    }
+
     if (NEEDS_VERIFY.has(item.kind) && item.verify === undefined) {
       at(
         'M022',
