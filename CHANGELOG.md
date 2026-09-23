@@ -53,6 +53,16 @@
 - **The unpin control sits below the plot.** The panel it undoes opens above the held mark, so a
   control at the top was the one thing that panel covered.
 
+- **A chart's data table is built the first time it is opened.** A closed disclosure carried the
+  whole table in the DOM; it now holds only its summary until the reader opens it, and keeps the
+  table from then on. `dataTable="visible"` is unaffected. The browser's find-in-page no longer
+  reaches the numbers of a table nobody has opened.
+
+- **A mark's entrance is a CSS animation declared on the mark, and the `mark-enter` class is
+  gone.** The entrance plays when the mark is inserted - on first render and for a mark a data
+  change adds - exactly as before. A rule of yours that restyled the entrance through
+  `.mark-enter` targets the mark itself instead.
+
 ### Fixed
 
 - **A stacked mark answers the pointer over its own segment.** Each series carried a hit box
@@ -85,6 +95,22 @@
   `dsTableColumns` panel as a bare checkbox with no text, so nothing said which column it stood
   for. The row now reads the `screenReaderLabel`, which also gives the checkbox its accessible
   name.
+
+- **A chart that enters hundreds of marks at once no longer freezes the page.** Every entering mark
+  asked the browser for its running animations, and in Chrome that call slows down with each
+  animation already running, so a scatter of a thousand points held the main thread for seconds -
+  longer still on a page with other charts entering. Under zone.js a `ds-chart` also ran two extra
+  change-detection passes of the whole application after its first render, and the default number
+  format built a new formatter for every label.
+
+- **Axis labels are measured again when their text changes.** The value gutter and the rotation and
+  thinning of category labels were decided on the first render alone, so a chart that started out
+  loading or empty, or whose categories or ticks changed later, kept overlapping labels.
+
+- **Reduced motion stops the skeleton shimmer.** The opt-out rule lost to the component's own
+  animation, and the wave kept running for readers who asked for less motion.
+
+- **A chart destroyed while a reading was pinned no longer leaves a key listener on the document.**
 
 ### What you can now DELETE
 
