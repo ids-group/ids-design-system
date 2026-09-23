@@ -23,7 +23,7 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 | 10 | `10-ds-bar-name-collision` | the name of the merged progress+meter: `--ds-bar-` is a prefix of `--ds-bar-chart-`, and a namespace replace kills the chart's overrides silently |
 | 11 | `11-banner-announce-warning` | whether a dev warning names an error banner no screen reader will read, now that the input's three states tell an opt-out from an oversight |
 | 12 | `12-picker-list-height` | whether the picker list's height stays an internal token: the cap that governs the visible rows is not the one that looks settable |
-| 13 | `13-decision-queue` | every consumer ask and every open question in one page - 38 asks a consumer waits on, each drawn as today against after, then 36 decisions across six groups; the live indeterminate tracks are the case a text list could not put |
+| 13 | `13-decision-queue` | every consumer ask and every open question in one page - 37 asks a consumer waits on, each drawn as today against after, then 36 decisions across six groups; the live indeterminate tracks are the case a text list could not put |
 
 **Rank 1 is the way in, and ranks 2-4 are the two biggest lanes** — the colour engine, then the interaction formula that reads
 its ramp. Ranks 1-5 are written in Russian and share `deck.css`, which sits beside `ds.css` and
@@ -41,7 +41,7 @@ nav, and the scatter's phase — which went to phase 2 with its decimation layer
 read whenever rather than at a moment, so they stay unnumbered and sort below the queue.
 
 **`13-decision-queue` sorts last and carries EVERY open question** — first every ask a consumer is
-waiting on, from any bucket of `docs/todo.md`, in five groups (broken now, manifests and CHANGELOG, defects,
+waiting on, from any bucket of `docs/todo.md`, in four groups (manifests and CHANGELOG, defects,
 APIs and features, styling hooks) with priority, consumer and kind beside each; then each open deck
 plus the whole `Decisions` bucket, grouped by area. Every one has its options rendered rather
 than named: live tracks for the indeterminate bar, two palettes side by side for bar-and-column,

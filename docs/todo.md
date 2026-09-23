@@ -14,12 +14,7 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**143 open — 1 P1, 24 P2, 118 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
-
-### P1 — 1
-
-- **Defects consumers work around today (swept 2026-09-23)**
-  - `display: grid` on `.expand-panel-cell` drops the expand panel out of the table, so its `colspan` does nothing and it renders one column wide (recorded 2026-09-23, from a consumer's QA against 0.13.4)
+**142 open — 0 P1, 24 P2, 118 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P2 — 24
 
@@ -268,11 +263,6 @@ Highest: each one is wrong in code — or in a surface — a consumer already re
 ## Defects consumers work around today (swept 2026-09-23)
 
 Defects a consumer hit - from a QA pass, or from reading a consumer tree for a rule that out-specifies a DS internal, a `::ng-deep` into a `ds-*`, or a wrapper that exists only because the library gets something wrong. Each is checked against `dev`.
-
-- [ ] **[P1] `display: grid` on `.expand-panel-cell` drops the expand panel out of the table, so its `colspan` does nothing and it renders one column wide (recorded 2026-09-23, from a consumer's QA against 0.13.4).** `table.component.scss` gives the expanded row's `<td>` `display: grid; grid-template-rows: 1fr; animation: ds-table-expand …`. A `<td>` whose `display` is not `table-cell` stops being a table cell, so `[attr.colspan]="expandedColspan()"` is ignored and the box sizes to its own content instead of the row. Measured in Chrome: a plain `<td colspan="4">` in a 1000 px table is 997 px; the same cell with `display: grid` is 39 px.
-  **What the consumer sees.** Expanding a journey step draws its wave list in a panel 24 px wide inside a 1559 px row: only the first character of each date is visible, the remaining three columns are not, and the rest of the row is blank. The four inner columns need 436-558 px. It does not follow the viewport, and collapsing and re-expanding does not change it.
-  **When it entered.** Bisected across the tags with `git grep -A 3 expand-panel-cell <tag> -- 'src/lib/components/table/*.scss'`: absent through `v0.12.1`, present from **`v0.12.2`** on, and still on `dev`. Every consumer that uses `expandableRows` with a `rowExpandTemplate` wider than one column has been affected since that release.
-  **The shape that fits.** The template already carries a child, `.expand-panel-inner`, and the comment above it says the animation runs on the grid track. Keep the `<td>` a table cell and move `display: grid`, `grid-template-rows: 1fr` and the `ds-table-expand` animation onto a wrapper INSIDE the cell, with `.expand-panel-inner` as its track content. The reveal is unchanged and the colspan works again.
 
 - [ ] **[P2] `ds-modal` footer clips its buttons instead of stacking, against its own truncation contract (from the mm-ecm consumer).** `ecm-portal/src/styles.scss:106-108` adds `flex-wrap: wrap` to `ds-modal-card .actions`. `modal.component.scss:7` promises "If the row overflows, stack vertically full-width", but `:189-200` is a non-wrapping flex row and `.modal` (`:73-90`) is fixed-width with `overflow: hidden`, and because the row is `justify-content: flex-end` it overflows past its START edge, so the first button is the one cut (measured in headless Chrome on a rebuild, 2026-09-23: its box starts at -124px in a 300px row); `ds-button` keeps `white-space: nowrap` (`button.component.scss:112`) and does not shrink. `ds-modal` and `ds-modal-card` share the sheet. **Wanted:** the footer wraps, or stacks full-width as the contract says, when its buttons outgrow the card, with no consumer rule.
 
@@ -1307,7 +1297,7 @@ file** — the number moves; cite the filename.
 | 10 | `10-ds-bar-name-collision` | What the merged progress+meter is called, given `ds-bar` is a prefix of `ds-bar-chart`. | the `ds-bar` rename ask on the same board |
 | 11 | `11-banner-announce-warning` | Whether a dev warning names an error banner no screen reader will read. | the closed `banner.announce` ask, which left this open |
 | 12 | `12-picker-list-height` | Whether the picker list height becomes a public token or stays behind `panelClass`. | the closed `--picker-maxh` ask, same shape |
-| 13 | `13-decision-queue` | Every consumer ask and every open question in one page - 38 asks in five groups, then 36 decisions in six, each drawn as today against after. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
+| 13 | `13-decision-queue` | Every consumer ask and every open question in one page - 37 asks in four groups, then 36 decisions in six, each drawn as today against after. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled

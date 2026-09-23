@@ -380,7 +380,7 @@
 
 <main>
   <div class="masthead">
-    <h1>38 асков консьюмеров и 36 решений, каждое с нарисованными вариантами</h1>
+    <h1>37 асков консьюмеров и 36 решений, каждое с нарисованными вариантами</h1>
     <p class="lede">
       Сверху - всё, чего ждёт консьюмер: фиксы, хуки и фичи из бэклога, каждый показан как есть
       сейчас и как будет после. Ниже - открытые деки и бакет <code>Decisions</code>. Вариант
@@ -393,65 +393,11 @@
     </div>
   </div>
 
-  <p class="group">Ждут консьюмеры · сломано сейчас</p>
-
-  <section class="q" data-q="ask-expand-colspan">
-    <div class="q-head">
-      <span class="q-num">01</span>
-      <h2 class="q-title">Раскрытая строка таблицы рисуется полосой в одну колонку</h2>
-      <span class="q-src">P1 · mm-ecm · дефект с v0.12.2</span>
-    </div>
-    <p class="q-sub">
-      <code>.expand-panel-cell</code> получил <code>display: grid</code> ради анимации раскрытия. <code>&lt;td&gt;</code> с таким
-      <code>display</code> перестаёт быть ячейкой таблицы, и <code>colspan</code> не работает. У консьюмера панель шириной 24px в
-      строке шириной 1559px, видна первая буква даты. Консьюмер своё обходное решение не ставит и ждёт фикса.
-    </p>
-    <div class="stage">
-      <div class="spec" style="flex:1 1 320px">
-        <p class="cap">сегодня: td с display: grid</p>
-        <table class="a-exp">
-          <tr><th class="tog"></th><th>Шаг</th><th>Канал</th><th>Волны</th></tr>
-          <tr><td class="tog">▾</td><td>Welcome</td><td>Email</td><td>3</td></tr>
-          <tr><td colspan="4" class="panel sliver">2026-10-01 · Continues to · 1 204 · 38%</td></tr>
-          <tr><td class="tog">▸</td><td>Reminder</td><td>Letter</td><td>2</td></tr>
-        </table>
-      </div>
-      <div class="spec" style="flex:1 1 320px">
-        <p class="cap">после: grid на обёртке внутри td</p>
-        <table class="a-exp">
-          <tr><th class="tog"></th><th>Шаг</th><th>Канал</th><th>Волны</th></tr>
-          <tr><td class="tog">▾</td><td>Welcome</td><td>Email</td><td>3</td></tr>
-          <tr><td colspan="4" class="panel"><table class="inner"><tr><td>2026-10-01</td><td>Continues to</td><td>1 204</td><td>38%</td></tr><tr><td>2026-10-08</td><td>Reminder</td><td>812</td><td>25%</td></tr></table></td></tr>
-          <tr><td class="tog">▸</td><td>Reminder</td><td>Letter</td><td>2</td></tr>
-        </table>
-      </div>
-    </div>
-    <p class="says">Chrome: обычный &lt;td colspan="4"&gt; в таблице 1000px - 997px, тот же td с display: grid - 39px. Сборка зелёная, консоль пуста.</p>
-    <div class="opts">
-      <div class="opt is-today"><h3>Оставить как есть</h3>
-        <p class="css">.expand-panel-cell {
-    <span class="hit">display: grid;</span>
-    grid-template-rows: 1fr;
-    animation: ds-table-expand ...;
-  }</p>
-        <dl class="layer"><dt>Кто страдает</dt><dd>любой expandableRows шире одной колонки</dd><dt>С какого релиза</dt><dd>0.12.2 (35aa2e02)</dd></dl>
-      </div>
-      <div class="opt"><h3>Grid на обёртку внутри td <span class="star">★</span></h3>
-        <p class="css">.expand-panel-cell { /* снова table-cell */ }
-  .expand-panel-inner {
-    display: grid; grid-template-rows: 1fr;
-    animation: ds-table-expand ...;
-  }</p>
-        <dl class="layer"><dt>Раскрытие</dt><dd class="gain">та же анимация 0fr→1fr</dd><dt>Зависимости</dt><dd class="gain">нет: пинов, проб и тестов на класс нет</dd></dl>
-      </div>
-    </div>
-  </section>
-
   <p class="group">Ждут консьюмеры · манифесты и CHANGELOG</p>
 
     <section class="q" data-q="ask-bar-boundary">
       <div class="q-head">
-        <span class="q-num">02</span>
+        <span class="q-num">01</span>
         <h2 class="q-title">Совет «граница слова» не отделяет ds-bar от ds-bar-chart</h2>
         <span class="q-src">P2 · mm-ecm · манифест 0.13.3</span>
       </div>
@@ -494,7 +440,7 @@
 
     <section class="q" data-q="ask-spellout-prefix">
       <div class="q-head">
-        <span class="q-num">03</span>
+        <span class="q-num">02</span>
         <h2 class="q-title">Замена подстрокой портит имена, которые уже правильные</h2>
         <span class="q-src">P2 · mm-ecm · манифест 0.13.4</span>
       </div>
@@ -540,7 +486,7 @@
 
     <section class="q" data-q="ask-bar-radius">
       <div class="q-head">
-        <span class="q-num">04</span>
+        <span class="q-num">03</span>
         <h2 class="q-title">Манифест переводит --ds-meter-radius в --ds-bar-radius, который никто не читает</h2>
         <span class="q-src">P2 · mm-ecm-platform-kb · манифест 0.13.3</span>
       </div>
@@ -582,7 +528,7 @@
 
     <section class="q" data-q="ask-plot-height">
       <div class="q-head">
-        <span class="q-num">05</span>
+        <span class="q-num">04</span>
         <h2 class="q-title">--ds-line-chart-plot-height начал менять plot, а манифест молчит</h2>
         <span class="q-src">P2 · mm-ecm · манифест 0.13.4</span>
       </div>
@@ -621,7 +567,7 @@
 
     <section class="q" data-q="ask-donut-surface">
       <div class="q-head">
-        <span class="q-num">06</span>
+        <span class="q-num">05</span>
         <h2 class="q-title">Переименование donut в pie не ищется в стилях</h2>
         <span class="q-src">P2 · mm-ecm · манифест 0.13.4</span>
       </div>
@@ -663,7 +609,7 @@
 
     <section class="q" data-q="ask-segmented-changelog">
       <div class="q-head">
-        <span class="q-num">07</span>
+        <span class="q-num">06</span>
         <h2 class="q-title">CHANGELOG 0.13.4 называет токены segmented так, как они никогда не назывались</h2>
         <span class="q-src">P2 · mm-ecm · CHANGELOG 0.13.4</span>
       </div>
@@ -700,7 +646,7 @@
 
     <section class="q" data-q="ask-pie-old-scope">
       <div class="q-head">
-        <span class="q-num">08</span>
+        <span class="q-num">07</span>
         <h2 class="q-title">Два пункта 0.13.4 ищут в old имя, которого на 0.13.3 ещё нет</h2>
         <span class="q-src">P2 · mm-ecm · манифест 0.13.4</span>
       </div>
@@ -738,7 +684,7 @@
 
     <section class="q" data-q="ask-abbrev-survivors">
       <div class="q-head">
-        <span class="q-num">09</span>
+        <span class="q-num">08</span>
         <h2 class="q-title">Три сокращения пережили волну расшифровки, одно - рядом с расшифрованным</h2>
         <span class="q-src">P2 · mm-ecm-platform-kb · токены 0.13.4</span>
       </div>
@@ -778,7 +724,7 @@
 
     <section class="q" data-q="ask-informational-verify">
       <div class="q-head">
-        <span class="q-num">10</span>
+        <span class="q-num">09</span>
         <h2 class="q-title">informational - единственная строка манифеста, у которой нет места для verify</h2>
         <span class="q-src">P2 · mm-ecm · манифест</span>
       </div>
@@ -831,7 +777,7 @@
   <p class="group">Ждут консьюмеры · дефекты</p>
     <section class="q" data-q="ask-modal-footer-wrap">
       <div class="q-head">
-        <span class="q-num">11</span>
+        <span class="q-num">10</span>
         <h2 class="q-title">Футер ds-modal режет кнопки о край карточки, а не складывает их</h2>
         <span class="q-src">P2 · mm-ecm · дефект</span>
       </div>
@@ -878,7 +824,7 @@
 
     <section class="q" data-q="ask-control-contrast">
       <div class="q-head">
-        <span class="q-num">12</span>
+        <span class="q-num">11</span>
         <h2 class="q-title">Край поля и текст на secondary не проходят контраст</h2>
         <span class="q-src">P2 · ids-europe-landing · дефект</span>
       </div>
@@ -928,7 +874,7 @@
 
     <section class="q" data-q="ask-table-pager-size">
       <div class="q-head">
-        <span class="q-num">13</span>
+        <span class="q-num">12</span>
         <h2 class="q-title">Пейджер внутри ds-table не принимает size и layout</h2>
         <span class="q-src">P2 · mm-ecm-platform-kb · пробел API</span>
       </div>
@@ -975,7 +921,7 @@
 
     <section class="q" data-q="ask-table-pager-skeleton">
       <div class="q-head">
-        <span class="q-num">14</span>
+        <span class="q-num">13</span>
         <h2 class="q-title">Под скелетоном таблицы пейджер показывает старый итог и кликается</h2>
         <span class="q-src">P3 · ai-sdlc · дефект</span>
       </div>
@@ -1020,7 +966,7 @@
 
     <section class="q" data-q="ask-closing-scrim-clicks">
       <div class="q-head">
-        <span class="q-num">15</span>
+        <span class="q-num">14</span>
         <h2 class="q-title">Невидимый закрывающийся scrim глотает клики до 300 мс</h2>
         <span class="q-src">P3 · mm-ecm-platform · аудит 0.13.4</span>
       </div>
@@ -1067,7 +1013,7 @@
 
     <section class="q" data-q="ask-text-muted">
       <div class="q-head">
-        <span class="q-num">16</span>
+        <span class="q-num">15</span>
         <h2 class="q-title">Приглушённый текст по умолчанию не проходит AA</h2>
         <span class="q-src">P3 · ai-sdlc · контраст, запаркован</span>
       </div>
@@ -1104,7 +1050,7 @@
 
     <section class="q" data-q="ask-brand-residue">
       <div class="q-head">
-        <span class="q-num">17</span>
+        <span class="q-num">16</span>
         <h2 class="q-title">На бренде другого цвета остаются синие ссылки и подложки</h2>
         <span class="q-src">P3 · pinkmoon, ai-sdlc · бренд, запаркован</span>
       </div>
@@ -1142,7 +1088,7 @@
 
     <section class="q" data-q="ask-banner-info-armed">
       <div class="q-head">
-        <span class="q-num">18</span>
+        <span class="q-num">17</span>
         <h2 class="q-title">Info-баннер, написанный после banner.announce, молча начинает озвучиваться</h2>
         <span class="q-src">P2 · mm-ecm · манифест 0.13.4</span>
       </div>
@@ -1183,7 +1129,7 @@
 
     <section class="q" data-q="ask-column-axis">
       <div class="q-head">
-        <span class="q-num">19</span>
+        <span class="q-num">18</span>
         <h2 class="q-title">Колонку нельзя посадить на вторую ось, в двухосевом чарте она всегда слева</h2>
         <span class="q-src">P2 · mm-ecm · порт microsite-analytics</span>
       </div>
@@ -1220,7 +1166,7 @@
 
     <section class="q" data-q="ask-dead-overrides">
       <div class="q-head">
-        <span class="q-num">20</span>
+        <span class="q-num">19</span>
         <h2 class="q-title">Переопределение --ds-* может ничего не делать, и никто об этом не скажет</h2>
         <span class="q-src">P3 · mm-ecm · аудит 0.8.0 → 0.13.4</span>
       </div>
@@ -1261,7 +1207,7 @@
 
     <section class="q" data-q="ask-bar-segment-selected">
       <div class="q-head">
-        <span class="q-num">21</span>
+        <span class="q-num">20</span>
         <h2 class="q-title">Сегмент ds-bar-chart нельзя отметить как выбранный</h2>
         <span class="q-src">P3 · mm-ecm-kb · сегментация</span>
       </div>
@@ -1303,7 +1249,7 @@
 
     <section class="q" data-q="ask-chart-locale">
       <div class="q-head">
-        <span class="q-num">22</span>
+        <span class="q-num">21</span>
         <h2 class="q-title">Чарты берут локаль чисел из браузера, настройки нет</h2>
         <span class="q-src">P3 · mm-ecm-kb · app.config</span>
       </div>
@@ -1344,7 +1290,7 @@
 
     <section class="q" data-q="ask-switch-confirm">
       <div class="q-head">
-        <span class="q-num">23</span>
+        <span class="q-num">22</span>
         <h2 class="q-title">ds-switch нельзя спросить перед переключением</h2>
         <span class="q-src">P3 · mm-broker · 4 экрана</span>
       </div>
@@ -1382,7 +1328,7 @@
 
     <section class="q" data-q="ask-cell-template-type">
       <div class="q-head">
-        <span class="q-num">24</span>
+        <span class="q-num">23</span>
         <h2 class="q-title">dsCellTemplate отдаёт строку как unknown, и каждая таблица носит кастер</h2>
         <span class="q-src">P3 · mm-broker, ai-sdlc · типы</span>
       </div>
@@ -1419,7 +1365,7 @@
 
     <section class="q" data-q="ask-textarea-selection">
       <div class="q-head">
-        <span class="q-num">25</span>
+        <span class="q-num">24</span>
         <h2 class="q-title">У ds-textarea нет API выделения</h2>
         <span class="q-src">P3 · mm-ecm-kb · редактор писем</span>
       </div>
@@ -1456,7 +1402,7 @@
 
     <section class="q" data-q="ask-autocomplete-blur">
       <div class="q-head">
-        <span class="q-num">26</span>
+        <span class="q-num">25</span>
         <h2 class="q-title">У ds-autocomplete нет публичного blur()</h2>
         <span class="q-src">P3 · mm-ecm-kb · поиск в топбаре</span>
       </div>
@@ -1491,7 +1437,7 @@
 
     <section class="q" data-q="ask-intl-strings">
       <div class="q-head">
-        <span class="q-num">27</span>
+        <span class="q-num">26</span>
         <h2 class="q-title">Все видимые строки библиотеки - английские литералы</h2>
         <span class="q-src">P2 · ITB Workspace · припарковано Stas</span>
       </div>
@@ -1526,7 +1472,7 @@
 
     <section class="q" data-q="ask-journey-canvas">
       <div class="q-head">
-        <span class="q-num">28</span>
+        <span class="q-num">27</span>
         <h2 class="q-title">Ни один компонент не рисует ветвящийся граф узлов и рёбер</h2>
         <span class="q-src">P3 · mm-ecm-kb · припарковано Stas: ждать второго консьюмера</span>
       </div>
@@ -1556,7 +1502,7 @@
 
     <section class="q" data-q="ask-accordion-geometry">
       <div class="q-head">
-        <span class="q-num">29</span>
+        <span class="q-num">28</span>
         <h2 class="q-title">У аккордеона токены только на цвета - отступы, шрифт и шеврон не настраиваются</h2>
         <span class="q-src">P3 · mm-ecm · хук стилей</span>
       </div>
@@ -1604,7 +1550,7 @@
 
     <section class="q" data-q="ask-select-focus-border">
       <div class="q-head">
-        <span class="q-num">30</span>
+        <span class="q-num">29</span>
         <h2 class="q-title">У ds-select рамка в фокусе прибита к --accent - единственное поле без хука</h2>
         <span class="q-src">P3 · mm-ecm · хук стилей</span>
       </div>
@@ -1644,7 +1590,7 @@
 
     <section class="q" data-q="ask-field-shared-tokens">
       <div class="q-head">
-        <span class="q-num">31</span>
+        <span class="q-num">30</span>
         <h2 class="q-title">Цвета полей задаются по одному компоненту, а у select и textarea нет размера шрифта</h2>
         <span class="q-src">P3 · mm-ecm · хук стилей</span>
       </div>
@@ -1700,7 +1646,7 @@
 
     <section class="q" data-q="ask-autocomplete-text-color">
       <div class="q-head">
-        <span class="q-num">32</span>
+        <span class="q-num">31</span>
         <h2 class="q-title">У ds-autocomplete нет хука на цвет текста и плейсхолдера, а плейсхолдер браузерный</h2>
         <span class="q-src">P3 · mm-ecm · хук стилей</span>
       </div>
@@ -1743,7 +1689,7 @@
 
     <section class="q" data-q="ask-button-border-hover">
       <div class="q-head">
-        <span class="q-num">33</span>
+        <span class="q-num">32</span>
         <h2 class="q-title">ds-button и ds-icon-button не умеют менять рамку при наведении</h2>
         <span class="q-src">P3 · mm-ecm · хук стилей</span>
       </div>
@@ -1790,7 +1736,7 @@
 
     <section class="q" data-q="ask-empty-state-title-face">
       <div class="q-head">
-        <span class="q-num">34</span>
+        <span class="q-num">33</span>
         <h2 class="q-title">Заголовок ds-empty-state берёт размер и цвет из токенов, а гарнитуру и насыщенность - нет</h2>
         <span class="q-src">P3 · mm-ecm · хук стилей</span>
       </div>
@@ -1827,7 +1773,7 @@
 
     <section class="q" data-q="ask-badge-subtitle-font-size">
       <div class="q-head">
-        <span class="q-num">35</span>
+        <span class="q-num">34</span>
         <h2 class="q-title">У ds-badge и подзаголовка ds-page-header нет хука на размер шрифта</h2>
         <span class="q-src">P3 · mm-broker · хук стилей</span>
       </div>
@@ -1864,7 +1810,7 @@
 
     <section class="q" data-q="ask-banner-title-font-size">
       <div class="q-head">
-        <span class="q-num">36</span>
+        <span class="q-num">35</span>
         <h2 class="q-title">У заголовка ds-banner нет хука на размер, а у тела есть</h2>
         <span class="q-src">P3 · pinkmoon · хук стилей</span>
       </div>
@@ -1899,7 +1845,7 @@
 
     <section class="q" data-q="ask-table-utility-column">
       <div class="q-head">
-        <span class="q-num">37</span>
+        <span class="q-num">36</span>
         <h2 class="q-title">Служебную колонку таблицы нельзя сузить, а без rowActions она пустая полоса</h2>
         <span class="q-src">P3 · mm-ecm · хук стилей</span>
       </div>
@@ -1939,7 +1885,7 @@
 
     <section class="q" data-q="ask-table-footer-padding">
       <div class="q-head">
-        <span class="q-num">38</span>
+        <span class="q-num">37</span>
         <h2 class="q-title">У футера пагинации ds-table нет хука на вертикальные отступы</h2>
         <span class="q-src">P3 · mm-ecm-kb · хук стилей</span>
       </div>
@@ -1975,7 +1921,7 @@
 
   <section class="q" data-q="bar-name">
     <div class="q-head">
-      <span class="q-num">39</span>
+      <span class="q-num">38</span>
       <h2 class="q-title">Как зовётся объединённый progress+meter</h2>
       <a class="q-src" href="10-ds-bar-name-collision.html">дека 10</a>
     </div>
@@ -2032,7 +1978,7 @@
 
   <section class="q" data-q="sparkline">
     <div class="q-head">
-      <span class="q-num">40</span>
+      <span class="q-num">39</span>
       <h2 class="q-title">Спарклайн - пресет линии или свой компонент</h2>
       <a class="q-src" href="7-chart-sparkline-preset.html">дека 7</a>
     </div>
@@ -2084,7 +2030,7 @@
 
   <section class="q" data-q="waterfall">
     <div class="q-head">
-      <span class="q-num">41</span>
+      <span class="q-num">40</span>
       <h2 class="q-title">Водопад - свой тег или режим колоночного чарта</h2>
       <a class="q-src" href="8-waterfall-mode-or-component.html">дека 8</a>
     </div>
@@ -2101,7 +2047,7 @@
 
   <section class="q" data-q="indeterminate">
     <div class="q-head">
-      <span class="q-num">42</span>
+      <span class="q-num">41</span>
       <h2 class="q-title">Форма неопределённого прогресса на узком треке</h2>
       <a class="q-src" href="../docs/todo.md">бэклог, без деки</a>
     </div>
@@ -2146,7 +2092,7 @@
 
   <section class="q" data-q="chart-palette-lightness">
     <div class="q-head">
-      <span class="q-num">43</span>
+      <span class="q-num">42</span>
       <h2 class="q-title">Палитра чартов разделяет по тону и почти не по светлоте</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1363</a>
     </div>
@@ -2165,7 +2111,7 @@
 
   <section class="q" data-q="colour-engine">
     <div class="q-head">
-      <span class="q-num">44</span>
+      <span class="q-num">43</span>
       <h2 class="q-title">Каким методом выводить цвет из одного токена на роль</h2>
       <a class="q-src" href="1-color-engine-derivation.html">дека 1</a>
     </div>
@@ -2188,7 +2134,7 @@
 
   <section class="q" data-q="interaction-b1">
     <div class="q-head">
-      <span class="q-num">45</span>
+      <span class="q-num">44</span>
       <h2 class="q-title">Шаг pressed для тинтов</h2>
       <a class="q-src" href="3-interaction-formula.html">дека 3, В1</a>
     </div>
@@ -2203,7 +2149,7 @@
 
   <section class="q" data-q="interaction-b2">
     <div class="q-head">
-      <span class="q-num">46</span>
+      <span class="q-num">45</span>
       <h2 class="q-title">Нужен ли pressed нейтральным поверхностям</h2>
       <a class="q-src" href="3-interaction-formula.html">дека 3, В2</a>
     </div>
@@ -2218,7 +2164,7 @@
 
   <section class="q" data-q="interaction-b4">
     <div class="q-head">
-      <span class="q-num">47</span>
+      <span class="q-num">46</span>
       <h2 class="q-title">Нужен ли override-слот поверх формулы</h2>
       <a class="q-src" href="3-interaction-formula.html">дека 3, В4</a>
     </div>
@@ -2238,7 +2184,7 @@
 
   <section class="q" data-q="interaction-b5">
     <div class="q-head">
-      <span class="q-num">48</span>
+      <span class="q-num">47</span>
       <h2 class="q-title">Вводим ли pressed для success и warning кнопок</h2>
       <a class="q-src" href="3-interaction-formula.html">дека 3, В5</a>
     </div>
@@ -2253,7 +2199,7 @@
 
   <section class="q" data-q="theme-recipe">
     <div class="q-head">
-      <span class="q-num">49</span>
+      <span class="q-num">48</span>
       <h2 class="q-title">Рецепт темы против ручных пиков</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1331</a>
     </div>
@@ -2270,7 +2216,7 @@
 
   <section class="q" data-q="warning-text">
     <div class="q-head">
-      <span class="q-num">50</span>
+      <span class="q-num">49</span>
       <h2 class="q-title">Какой цвет текста ставить на жёлтый тинт</h2>
       <a class="q-src" href="6-warning-text-colour.html">дека 6</a>
     </div>
@@ -2295,7 +2241,7 @@
 
   <section class="q" data-q="stepper-dropzone-fields">
     <div class="q-head">
-      <span class="q-num">51</span>
+      <span class="q-num">50</span>
       <h2 class="q-title">ds-number-stepper и ds-dropzone - поля или нет</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1320</a>
     </div>
@@ -2312,7 +2258,7 @@
 
   <section class="q" data-q="select-multi">
     <div class="q-head">
-      <span class="q-num">52</span>
+      <span class="q-num">51</span>
       <h2 class="q-title">ds-select с multi - строить ли</h2>
       <a class="q-src" href="5-select-native-multi.html">дека 5</a>
     </div>
@@ -2329,7 +2275,7 @@
 
   <section class="q" data-q="banner-warning">
     <div class="q-head">
-      <span class="q-num">53</span>
+      <span class="q-num">52</span>
       <h2 class="q-title">Предупреждать ли в dev о неозвученном error-баннере</h2>
       <a class="q-src" href="11-banner-announce-warning.html">дека 11</a>
     </div>
@@ -2364,7 +2310,7 @@
 
   <section class="q" data-q="picker-height">
     <div class="q-head">
-      <span class="q-num">54</span>
+      <span class="q-num">53</span>
       <h2 class="q-title">Высота списка пикера - публичный токен или panelClass</h2>
       <a class="q-src" href="12-picker-list-height.html">дека 12</a>
     </div>
@@ -2415,7 +2361,7 @@
 
   <section class="q" data-q="cdk-menu">
     <div class="q-head">
-      <span class="q-num">55</span>
+      <span class="q-num">54</span>
       <h2 class="q-title">Переходить ли на CDK Menu</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1359</a>
     </div>
@@ -2432,7 +2378,7 @@
 
   <section class="q" data-q="signal-forms">
     <div class="q-head">
-      <span class="q-num">56</span>
+      <span class="q-num">55</span>
       <h2 class="q-title">Как выглядят pending и dirty</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1488</a>
     </div>
@@ -2453,7 +2399,7 @@
 
   <section class="q" data-q="typography-classes">
     <div class="q-head">
-      <span class="q-num">57</span>
+      <span class="q-num">56</span>
       <h2 class="q-title">20 классов типографики всё ещё .t-*</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1340</a>
     </div>
@@ -2471,7 +2417,7 @@
 
   <section class="q" data-q="button-c-slots">
     <div class="q-head">
-      <span class="q-num">58</span>
+      <span class="q-num">57</span>
       <h2 class="q-title">Слоты кнопки называются --c-*</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1346</a>
     </div>
@@ -2488,7 +2434,7 @@
 
   <section class="q" data-q="bem-modifiers">
     <div class="q-head">
-      <span class="q-num">59</span>
+      <span class="q-num">58</span>
       <h2 class="q-title">ds-docs пишет модификаторы как --suffix</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1421</a>
     </div>
@@ -2505,7 +2451,7 @@
 
   <section class="q" data-q="docs-brand-examples">
     <div class="q-head">
-      <span class="q-num">60</span>
+      <span class="q-num">59</span>
       <h2 class="q-title">Убрать ли примеры бренда и домена из публичных доков</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1403</a>
     </div>
@@ -2524,7 +2470,7 @@
 
   <section class="q" data-q="angular-22">
     <div class="q-head">
-      <span class="q-num">61</span>
+      <span class="q-num">60</span>
       <h2 class="q-title">Когда переходим на Angular 22</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1439, P1</a>
     </div>
@@ -2543,7 +2489,7 @@
 
   <section class="q" data-q="npm-2027">
     <div class="q-head">
-      <span class="q-num">62</span>
+      <span class="q-num">61</span>
       <h2 class="q-title">Чем заменить публикацию в npm с января 2027</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1369</a>
     </div>
@@ -2562,7 +2508,7 @@
 
   <section class="q" data-q="claude-design-ci">
     <div class="q-head">
-      <span class="q-num">63</span>
+      <span class="q-num">62</span>
       <h2 class="q-title">Публикация в Claude Design из Bitbucket</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1391</a>
     </div>
@@ -2579,7 +2525,7 @@
 
   <section class="q" data-q="release-note-why">
     <div class="q-head">
-      <span class="q-num">64</span>
+      <span class="q-num">63</span>
       <h2 class="q-title">Должна ли запись релиза объяснять ПОЧЕМУ</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1414</a>
     </div>
@@ -2596,7 +2542,7 @@
 
   <section class="q" data-q="deferred-defaults">
     <div class="q-head">
-      <span class="q-num">65</span>
+      <span class="q-num">64</span>
       <h2 class="q-title">Три отложенных смены значений по умолчанию</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1498</a>
     </div>
@@ -2615,7 +2561,7 @@
 
   <section class="q" data-q="changelog-wrap">
     <div class="q-head">
-      <span class="q-num">66</span>
+      <span class="q-num">65</span>
       <h2 class="q-title">Перевёрстывать ли CHANGELOG в 100 колонок</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1408</a>
     </div>
@@ -2634,7 +2580,7 @@
 
   <section class="q" data-q="fix-all-html">
     <div class="q-head">
-      <span class="q-num">67</span>
+      <span class="q-num">66</span>
       <h2 class="q-title">fix:all переформатирует HTML, с которым потом спорит eslint</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1425</a>
     </div>
@@ -2656,7 +2602,7 @@
 
   <section class="q" data-q="stale-ds-css">
     <div class="q-head">
-      <span class="q-num">68</span>
+      <span class="q-num">67</span>
       <h2 class="q-title">Ничто не ловит устаревший presentations/ds.css</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1378</a>
     </div>
@@ -2675,7 +2621,7 @@
 
   <section class="q" data-q="todo-index-gate">
     <div class="q-head">
-      <span class="q-num">69</span>
+      <span class="q-num">68</span>
       <h2 class="q-title">todo-index --check вне lint:all</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1376</a>
     </div>
@@ -2692,7 +2638,7 @@
 
   <section class="q" data-q="manifest-practices">
     <div class="q-head">
-      <span class="q-num">70</span>
+      <span class="q-num">69</span>
       <h2 class="q-title">Какие из восьми практик формата манифестов берём</h2>
       <a class="q-src" href="4-migration-manifest-audit.html">дека 4</a>
     </div>
@@ -2723,7 +2669,7 @@
 
   <section class="q" data-q="automation-coverage">
     <div class="q-head">
-      <span class="q-num">71</span>
+      <span class="q-num">70</span>
       <h2 class="q-title">Три пути ds-table и пять групп компонентов ни разу не прокликаны</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1374</a>
     </div>
@@ -2740,7 +2686,7 @@
 
   <section class="q" data-q="schematics-tsconfig">
     <div class="q-head">
-      <span class="q-num">72</span>
+      <span class="q-num">71</span>
       <h2 class="q-title">schematics/tsconfig просит moduleResolution: node</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1399</a>
     </div>
@@ -2761,7 +2707,7 @@
 
   <section class="q" data-q="design-manifest-templates">
     <div class="q-head">
-      <span class="q-num">73</span>
+      <span class="q-num">72</span>
       <h2 class="q-title">templates и startingPoints в манифесте Claude Design</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1382</a>
     </div>
@@ -2782,7 +2728,7 @@
 
   <section class="q" data-q="docs-blocks">
     <div class="q-head">
-      <span class="q-num">74</span>
+      <span class="q-num">73</span>
       <h2 class="q-title">Четыре компонента без собственного блока в ds-docs</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1385</a>
     </div>

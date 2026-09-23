@@ -4,7 +4,18 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
-## Three backlog items the code had already closed (2026-09-23)
+## The expanded table row spans its row (2026-09-23)
+
+`table.component.scss` gave the expanded row's `<td>` `display: grid` for the 0fr to 1fr reveal,
+and a `<td>` whose display is not `table-cell` leaves the table layout with its `colspan`, so the
+panel rendered one column wide from 0.12.2 (`35aa2e02`) on - 56px inside an 895px row in ds-docs,
+24px inside a 1559px row at a consumer. The grid, the track and the `ds-table-expand` keyframe sit
+on `.expand-panel-inner` (`table.component.scss:395-411`), and the projected template is wrapped in
+`.expand-panel-content`, the clipped track item (`table.component.html:382-397`), so
+`.expand-panel-cell > .expand-panel-inner` - the selector the 0.12.2 manifest sends consumers to -
+still matches. Measured in Chrome after the change: the cell is `table-cell` and 895.475px wide in
+an 895.475px row at 1366px and 424.258px in a 424.258px row at a 420px viewport, and the track
+reads 0px 40ms after the row opens and 40.4px when it settles.
 
 The 48 chart, option and table tokens that reached the reference with an empty `notes` carry one
 each (`2dfd23a1`; the family was 48, not 49 - `--ds-bar-chart-target-*` is color, overhang and
