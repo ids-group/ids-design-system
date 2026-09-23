@@ -1,7 +1,8 @@
 <docs-section
   anchor="chart"
   eyebrow="Charts"
-  title="Chart">
+  title="Chart"
+  [apiKeys]="['chart-data-table']">
   <span lede>
     The container the column chart is built inside. It owns the plot, the axes,
     the grid, the value domain and the loading, empty and error states, and
@@ -185,7 +186,7 @@
   </p>
 
   <h3 class="block-title t-h4">
-    Annotations and the annex table
+    Annotations
   </h3>
 
   <p class="block-desc t-s">
@@ -211,6 +212,12 @@
       dsSeriesAnnotation
       [annotations]="latencyNotes" />
   </ds-chart>
+
+  <h3
+    class="block-title t-h4"
+    data-for="chart-data-table">
+    The annex table
+  </h3>
 
   <p class="block-desc t-s">
     <code class="t-mono-inline">

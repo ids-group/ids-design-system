@@ -27,6 +27,12 @@ timeline, two audiences.
 
 ### Build
 
+- **A chart gets cards from its own chapter.** `build-cards.mjs` counted a chapter as a
+  component's own only under `components/`, so `Chart`, `HeatmapChart`, `ScatterChart` and
+  `WaterfallChart`, whose chapters live under `charts/`, got no card at all and the upload check
+  stopped. A chapter named after the component is its own in any group now, and `ChartDataTable`'s
+  block in `charts/chart` is marked and keyed so its card carries its own API table.
+
 - **A library type named like a wrapper is imported under an alias.** `ChartDataTable` is both the
   `dataTable` input's union and the `ds-chart-data-table` wrapper, and `wrappers.tsx` declared the
   name twice (TS2395), so `build:elements` failed. `gen.mjs` imports it as `ChartDataTableType` and

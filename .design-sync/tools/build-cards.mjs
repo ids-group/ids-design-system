@@ -425,8 +425,9 @@ function cardsFor(name) {
   // second copy under the part's name is the duplication this whole design removes. `TimeColumns`
   // shipped the entire Time Picker chapter — all seven of its blocks — under the name
   // "Time Columns". Only a chapter that publishes nothing at all falls back to a whole-chapter card.
-  const primary =
-    section.slug.startsWith('components/') && section.slug.slice(11) === own;
+  // The chapter named after the component is its own in any group: `charts/heatmap-chart` as much
+  // as `components/button`.
+  const primary = section.slug.split('/').pop() === own;
   const owner = marks.has(own) ? own : primary ? '' : null;
   const label = spacedName(name);
   if (owner === null && blocks.length) return [];
