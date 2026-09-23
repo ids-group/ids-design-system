@@ -1,6 +1,7 @@
 <svg:g
   class="lines"
-  [class.dims-others]="dimOthers()">
+  [class.dims-others]="dimOthers()"
+  [class.is-outlined]="outline()">
   @for (entry of plotted(); track entry.series.id) {
     @for (path of entry.areaPaths; track $index) {
       <svg:path

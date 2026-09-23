@@ -10,10 +10,11 @@
   </span>
 
   <!-- The anchor lives on <docs-section>, so it stays in the DOM and the sidebar's scroll
-       still finds this section while its body is a placeholder. `on idle` carries the OR:
-       a viewport trigger alone never fires where nothing is painted, which is every
-       headless render - the design-sync card pass snapshotted 21 empty placeholders. -->
-  @defer (on idle; on viewport) {
+       still finds this section while its body is a placeholder. the timer carries the OR:
+       a viewport trigger alone never fires where nothing is painted, which is every headless
+       render, and `on idle` fires at once and builds all nine sections into the first seconds
+       of the page. Three seconds sits inside the card pass's own 8s budget per card. -->
+  @defer (on viewport; on timer(3s)) {
 
   <h3 class="block-title t-h4">
     Default
