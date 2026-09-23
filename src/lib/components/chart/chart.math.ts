@@ -15,6 +15,9 @@ import type {
 
 export const CHART_DEFAULT_TICK_COUNT = 5;
 export const CHART_AXIS_LABEL_GAP = 8;
+
+/** Room a rotated axis title needs across the gutter: its line box, turned on its side. */
+export const CHART_AXIS_TITLE_BAND = 20;
 export const CHART_CATEGORY_LABEL_OFFSET = 18;
 export const CHART_BAND_PADDING = 0.3;
 

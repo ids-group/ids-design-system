@@ -39,6 +39,7 @@ import type {
 import {
   categoryAt,
   CHART_AXIS_LABEL_GAP,
+  CHART_AXIS_TITLE_BAND,
   CHART_BAND_PADDING,
   CHART_CATEGORY_LABEL_OFFSET,
   CHART_DEFAULT_AXIS_GUTTER,
@@ -320,9 +321,20 @@ export class ChartComponent implements ChartScales {
   protected readonly effectiveAxisGutter = computed(() =>
     Math.max(
       this.axisGutter(),
-      this.measuredLabelWidth() + CHART_AXIS_LABEL_GAP,
+      this.measuredLabelWidth() + CHART_AXIS_LABEL_GAP + this.axisTitleGutter(),
     ),
   );
+
+  /** A rotated axis title stands in the same gutter as the tick labels, so the gutter has to carry
+   *  both or the widest tick runs through the title. Its own width is its line height, because it
+   *  is turned on its side. */
+  protected readonly axisTitleGutter = computed(() =>
+    this.axisLabel() ? CHART_AXIS_TITLE_BAND : 0,
+  );
+
+  /** Where a rotated axis title sits: hard against the outer edge, with the tick labels between it
+   *  and the plot. */
+  protected readonly axisTitleX = computed(() => CHART_AXIS_TITLE_BAND / 2);
 
   /** Widest secondary tick label, measured the same way and for the same reason as the primary
    *  one: those labels sit OUTSIDE the plot's right edge and an SVG canvas clips what a DOM

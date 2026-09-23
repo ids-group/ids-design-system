@@ -146,11 +146,13 @@
               text-anchor="middle"
               [style.fill]="axisLabelFill()"
               [attr.transform]="
-                'rotate(-90 12 ' +
+                'rotate(-90 ' +
+                axisTitleX() +
+                ' ' +
                 (plot().top + plot().height / 2) +
-                ') translate(0 0)'
+                ')'
               "
-              [attr.x]="12"
+              [attr.x]="axisTitleX()"
               [attr.y]="plot().top + plot().height / 2">
               {{ axisLabel() }}
             </text>

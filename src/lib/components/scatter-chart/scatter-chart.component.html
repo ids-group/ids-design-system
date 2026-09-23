@@ -64,7 +64,12 @@
         [attr.y2]="plotBottom" />
 
       @for (entry of series(); track entry.key) {
-        <g [style.--_scatter-series-color]="entry.color">
+        <g
+          [class.is-dimmed]="
+            highlightedSeries() !== null &&
+            highlightedSeries() !== entry.series.id
+          "
+          [style.--_scatter-series-color]="entry.color">
           @for (mark of entry.points; track mark.key) {
             <circle
               class="point"
@@ -122,7 +127,9 @@
     }
 
     @if (multiSeries()) {
-      <ds-chart-legend [items]="legendItems()" />
+      <ds-chart-legend
+        [items]="legendItems()"
+        [(highlighted)]="highlightedSeries" />
     }
 
     @if (dataTableResolved() !== 'none') {

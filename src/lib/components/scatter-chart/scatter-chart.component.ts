@@ -298,6 +298,9 @@ export class ScatterChartComponent {
 
   protected readonly multiSeries = computed(() => this.data().length > 1);
 
+  /** The series named in the legend under the pointer, which fades the rest. */
+  protected readonly highlightedSeries = signal<string | null>(null);
+
   protected readonly legendItems = computed<readonly ChartLegendItem[]>(() =>
     this.series().map((entry) => ({
       id: entry.series.id,
