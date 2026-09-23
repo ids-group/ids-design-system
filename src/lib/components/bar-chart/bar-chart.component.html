@@ -57,7 +57,7 @@
           "
           [attr.data-mark-index]="index"
           [attr.aria-label]="interactive() ? entryLabel(entry) : null"
-          (pointerenter)="activeMark.enter(index, $event, '.track')"
+          (pointerenter)="activeMark.enter(index, $event, '.fill')"
           (pointerleave)="activeMark.leave()"
           (focus)="onMarkFocus(index, $event)"
           (blur)="activeMark.leave()"

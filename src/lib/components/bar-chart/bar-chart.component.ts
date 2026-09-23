@@ -219,7 +219,7 @@ export class BarChartComponent {
   ): void {
     this.rowClicked.emit(payload);
     if (this.pinOnClick()) {
-      this.activeMark.pin(index, event, '.track');
+      this.activeMark.pin(index, event, '.fill');
     }
   }
   /** One tab stop per chart, not one per mark: WCAG 2.1.1's Understanding is explicit that not
@@ -233,7 +233,7 @@ export class BarChartComponent {
 
   protected onMarkFocus(index: number, event: FocusEvent): void {
     this.rovingIndex.set(index);
-    this.activeMark.enter(index, event, '.track');
+    this.activeMark.enter(index, event, '.fill');
   }
 
   protected onMarkNavigation(event: KeyboardEvent, index: number): void {
@@ -251,6 +251,24 @@ export class BarChartComponent {
       const entry = this.rows()[this.activeMark.index()];
       if (this.tooltip() === 'none' || !entry) {
         return null;
+      }
+
+      // A segmented bar draws several readings the row label cannot name, so the row heads the
+      // panel and each segment gets its own line. Repeating the label the pointer is already on
+      // would tell the reader nothing.
+      if (entry.segments.length) {
+        const values = entry.segments.map((part) => part.segment.value);
+
+        return {
+          category: entry.row.label,
+          entries: entry.segments.map((part, partIndex) => ({
+            label: part.segment.label,
+            value: part.segment.value,
+            formatted: part.formattedValue,
+            color: part.color,
+            detail: describeShare(values, partIndex),
+          })),
+        };
       }
 
       return {

@@ -10,7 +10,7 @@
   }
 
   <ul class="entries">
-    @for (entry of context().entries; track entry.label) {
+    @for (entry of context().entries; track $index) {
       <li class="entry">
         <span
           class="swatch"
