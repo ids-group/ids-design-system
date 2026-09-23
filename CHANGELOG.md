@@ -45,6 +45,29 @@
   A container of your own that implements `ChartScales` may leave it out, and a mark reads it as
   always measured then.
 
+- **`ds-bar` takes `--ds-bar-radius`.** The track and the fill were pinned to `var(--radius-pill)`
+  when `ds-progress` and `ds-meter` merged in 0.13.3, and the radius hook `ds-meter` had went with
+  them. Both now read `--ds-bar-radius`, which defaults to the pill, so a bar squared on the track
+  is squared on its fill too.
+
+  ```scss
+  ds-bar { --ds-bar-radius: 2px; }
+  ```
+
+  A `--ds-bar-radius` declaration written against the 0.13.3 note has been inert until now and
+  takes effect with this release.
+
+- **`--ds-line-chart-placeholder-height` sizes what stands in for the plot.** The loading skeleton
+  and the empty, error and no-visible-series boxes take it; unset, nothing moves - the skeleton
+  keeps the plot height and the boxes the height the plot would take with its axis space. Until
+  0.13.4 `--ds-line-chart-plot-height` reached those states alone, and 0.13.4 made it drive the
+  plot too, so a value pinned for the skeleton resized every plot. The plot reads only its own
+  token.
+
+  ```scss
+  ds-line-chart { --ds-line-chart-placeholder-height: 120px; }
+  ```
+
 ### Changed
 
 - **A category panel names every series at the category.** `tooltip="axis"` was documented to do
@@ -247,7 +270,7 @@
 
   The eight `--ds-description-list-term-*` and `-details-*` tokens are declared in
   `description-item.component.scss` and style one item, so they are `--ds-description-item-*`.
-  The three `--ds-segmented-button-*` are `--ds-segmented-segment-*`, because the component calls
+  The three `--ds-segmented-btn-*` are `--ds-segmented-segment-*`, because the component calls
   its parts segments everywhere else it speaks - `class="segment"` in the template,
   `SegmentedOption` as the published type. `--ds-tabs-strip-gap` is `--ds-tabs-gap`: `strip` is
   our internal word for the tab list and appears nowhere a consumer reads.
@@ -998,14 +1021,17 @@
   appears. Nothing errors and nothing looks different — the change is entirely in what a screen
   reader says, which is what the input exists to control.
 
-  **`ds-bar-chart` is a different component and is NOT renamed.** `ds-bar` is a prefix of it, so a
-  find-and-replace without a word boundary will corrupt every chart in the app.
+  **`ds-bar-chart` is a different component and is NOT renamed.** `ds-bar` is a prefix of it, and
+  a word boundary does not separate them: a hyphen is one, so `\bds-bar\b` matches inside
+  `ds-bar-chart`. Match `ds-bar(?![-\w])`, or the tag as `<ds-bar[\s/>]`, and a find-and-replace
+  leaves every chart alone.
 
 - **The `--ds-progress-*` and `--ds-meter-*` tokens are `--ds-bar-*`.** `-height`,
   `-track-color`, `-target-color`, `-target-width` and `-min-width` keep their suffix.
   `--ds-progress-bar-color` and its `-success` / `-warning` / `-error` siblings became
   `--ds-bar-fill-color` and siblings, because `--ds-bar-bar-color` stutters. The global
   `--progress-h` is `--bar-h` — same 6px, under a name that still describes the component.
+  `--ds-meter-radius` is removed with no replacement: the bar's track and fill are always a pill.
 
   An override of a name nothing reads still parses, so a missed rename reports nothing and the bar
   simply returns to its default look.
