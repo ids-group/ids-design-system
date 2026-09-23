@@ -180,27 +180,1687 @@
   .spk-table th { text-align: start; color: var(--text-tertiary); font-weight: var(--font-weight-bold); padding: 3px var(--space-2); border-bottom: var(--border-width-default) solid var(--border-divider); }
   .spk-table td { padding: 4px var(--space-2); color: var(--text-primary); border-bottom: var(--border-width-default) solid var(--border-divider); }
   .spk-table td:nth-child(2) { font-family: var(--font-mono); text-align: end; }
+  /* consumer asks: M */
+  /* ds-bar track + fill, rebuilt from bar.component.scss; --a-bar-radius stands in for the hook */
+  .a-bar { --a-bar-radius: var(--radius-pill); inline-size: 200px; block-size: 10px; background: var(--surface-muted); border-radius: var(--a-bar-radius); overflow: hidden; }
+  .a-bar i { display: block; inline-size: 64%; block-size: 100%; background: var(--accent); border-radius: var(--a-bar-radius); }
+  .a-bar.is-square { --a-bar-radius: 2px; }
+  
+  /* ds-donut-chart at half scale: 180px default, 130px from the consumer rule */
+  .a-donut { --a-donut-size: 90px; inline-size: var(--a-donut-size); block-size: var(--a-donut-size); border-radius: 50%;
+    background: conic-gradient(var(--ds-chart-series-1-color) 0 46%, var(--ds-chart-series-2-color) 0 78%, var(--ds-chart-series-3-color) 0);
+    mask: radial-gradient(circle, transparent 38%, #000 39%); }
+  .a-donut.is-sized { --a-donut-size: 65px; }
+  
+  /* line-chart plot box; the svg stretches to whatever height the box gets */
+  .a-plot { inline-size: 200px; block-size: 100px; border-block-end: var(--border-width-default) solid var(--border-divider); }
+  .a-plot.is-squashed { block-size: 60px; }
+  .a-plot svg { display: block; inline-size: 100%; block-size: 100%; }
+  .a-plot polyline { fill: none; stroke: var(--ds-chart-series-1-color); stroke-width: 2; vector-effect: non-scaling-stroke; }
+  /* consumer asks: D */
+  /* ds-modal card, rebuilt from modal.component.scss .modal / .actions at a narrow fixed width */
+  .a-modal { inline-size: 300px; display: flex; flex-direction: column; overflow: hidden; background: var(--surface-overlay); border-radius: var(--radius-lg); box-shadow: var(--shadow-modal); }
+  .a-modal .a-m-head { padding: var(--space-3) var(--space-4) var(--space-1); font: var(--font-weight-bold) var(--font-size-s) / 1.3 var(--font-sans); }
+  .a-modal .a-m-body { padding: 0 var(--space-4) var(--space-3); font: var(--font-size-2xs) / 1.5 var(--font-sans); color: var(--text-secondary); }
+  .a-m-actions { display: flex; gap: var(--space-3); justify-content: flex-end; padding: var(--space-3) var(--space-4); border-top: var(--border-width-default) solid var(--border-divider); }
+  .a-m-actions.wrap { flex-wrap: wrap; }
+  .a-m-actions.stack { flex-direction: column; gap: var(--space-2); }
+  .a-modal.mini { inline-size: 168px; }
+  .a-modal.mini .a-m-actions { padding: var(--space-2); gap: var(--space-1); }
+  .a-modal.mini .a-btn { block-size: 24px; padding: 0 var(--space-2); font-size: var(--font-size-2xs); }
+  
+  /* ds-button: nowrap, does not shrink */
+  .a-btn { flex: none; display: inline-flex; align-items: center; justify-content: center; block-size: 32px; padding: 0 var(--space-4); white-space: nowrap; border: var(--border-width-default) solid var(--border-strong); border-radius: var(--ds-radius-control); background: var(--surface-default); color: var(--text-primary); font: var(--font-weight-semibold) var(--font-size-s) / 1 var(--font-sans); }
+  .a-btn.pri { background: var(--primary); border-color: var(--primary); color: var(--primary-on); }
+  .a-m-actions.stack .a-btn { inline-size: 100%; }
+  .a-btn.gold { background: #FBAC18; border-color: #FBAC18; color: #FFFFFF; }
+  .a-btn.gold.dark { color: #161A28; }
+  
+  /* contrast specimens sit on literal white: the ratios are computed against #FFFFFF */
+  .a-white { display: grid; gap: var(--space-3); padding: var(--space-3); border-radius: var(--radius-md); background: #FFFFFF; min-inline-size: 200px; }
+  .a-field { font: var(--font-size-2xs) var(--font-sans); color: #353B4D; }
+  .a-field .a-box { margin-block-start: 3px; padding: var(--space-2); border: var(--border-width-default) solid var(--border-default); border-radius: var(--ds-radius-control); background: #FFFFFF; color: #6B7388; }
+  .a-field .a-box.edge3 { border-color: #8A92A4; }
+  .a-pair { display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; }
+  .a-ratio { padding: 1px var(--space-1); border-radius: 3px; font: var(--font-weight-bold) var(--font-size-2xs) / 1.5 var(--font-mono); }
+  .a-ratio.fail { background: var(--error-subtitle); color: var(--error-text); }
+  .a-ratio.pass { background: var(--success-subtitle); color: var(--success-text); }
+  
+  /* ds-table + its ds-pagination footer, from table.component.scss .pagination-footer and pagination.component.scss */
+  .a-table { inline-size: 100%; border: var(--border-width-default) solid var(--border-divider); border-radius: var(--ds-radius-panel); background: var(--surface-default); overflow: hidden; font: var(--font-size-2xs) var(--font-sans); }
+  .a-tr { display: grid; grid-template-columns: 1fr 4rem; gap: var(--space-2); align-items: center; padding: var(--space-2) var(--table-cell-pad-x); border-bottom: var(--border-width-default) solid var(--border-divider); color: var(--text-primary); }
+  .a-tr.th { color: var(--text-tertiary); font-weight: var(--font-weight-bold); }
+  .a-foot { padding-block: var(--space-3); padding-inline: var(--table-cell-pad-x); }
+  .a-pg { display: inline-flex; gap: var(--space-1); align-items: center; flex-wrap: wrap; }
+  .a-pg.spread { display: flex; inline-size: 100%; }
+  .a-pg .a-pg-label { margin-right: var(--space-2); font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-flat) var(--font-sans); color: var(--text-secondary); }
+  .a-pg.spread .a-pg-label { margin-right: auto; }
+  .a-pg b { min-inline-size: var(--field-h-sm); block-size: var(--field-h-sm); padding: 0 var(--space-2); display: inline-grid; place-items: center; border: var(--border-width-default) solid var(--border-default); border-radius: var(--ds-radius-control); background: var(--surface-default); color: var(--text-secondary); font: var(--font-weight-semibold) var(--font-size-s) / var(--line-height-flat) var(--font-sans); }
+  .a-pg.md b { min-inline-size: var(--field-h-md); block-size: var(--field-h-md); }
+  .a-pg b.on { background: var(--accent); border-color: var(--accent); color: var(--accent-on); }
+  .a-pg i { padding: 0 var(--space-2); color: var(--text-tertiary); font-style: normal; }
+  .a-pg.off b { color: var(--text-disabled); background: var(--surface-default); border-color: var(--border-default); }
+  .a-pg.mini b { min-inline-size: 22px; block-size: 22px; padding: 0 var(--space-1); font-size: var(--font-size-2xs); }
+  .a-pg.mini .a-pg-label { font-size: var(--font-size-2xs); }
+  
+  /* ds-skeleton placeholder */
+  .a-sk { display: block; block-size: 10px; border-radius: var(--radius-md); background: var(--surface-secondary); }
+  .a-sk.lbl { inline-size: 110px; block-size: 12px; margin-right: var(--space-2); }
+  .a-pg.spread .a-sk.lbl { margin-right: auto; }
+  .a-hot { outline: 2px solid var(--error); outline-offset: 1px; }
+  
+  /* closing scrim over the page it covers */
+  .a-page { position: relative; min-inline-size: 220px; block-size: 110px; padding: var(--space-3); border-radius: var(--radius-md); background: var(--surface-default); border: var(--border-width-default) solid var(--border-divider); font: var(--font-size-2xs) var(--font-sans); color: var(--text-secondary); }
+  .a-page .a-btn { margin-block-start: var(--space-3); }
+  .a-page .a-btn.hit { box-shadow: 0 0 0 3px var(--primary-muted); }
+  .a-scrim { position: absolute; inset: 0; border-radius: var(--radius-md); border: 2px dashed var(--error); display: flex; align-items: flex-end; justify-content: flex-end; padding: var(--space-1) var(--space-2); font: var(--font-weight-bold) 9px / 1.3 var(--font-mono); color: var(--error-text); }
+  .a-scrim.pass { border-color: var(--border-strong); color: var(--text-tertiary); }
+  .a-tap { position: absolute; inline-size: 18px; block-size: 18px; border-radius: 50%; border: 2px solid var(--error); background: var(--error-subtitle); inset-block-start: 58px; inset-inline-start: 58px; }
+  .a-tap.pass { border-color: var(--success); background: var(--success-subtitle); }
+  /* consumer asks: F */
+  /* group F: consumer asks, API and features */
+  .bn.a-info { border-inline-start-color: var(--info); background: var(--info-subtitle); }
+  .bn.a-info i { background: var(--info); }
+  
+  .a-switch { position: relative; display: inline-block; inline-size: 36px; block-size: 20px; border-radius: var(--radius-pill); background: var(--border-strong); vertical-align: middle; }
+  .a-switch::after { content: ""; position: absolute; inset-block-start: 2px; inset-inline-start: 2px; inline-size: 16px; block-size: 16px; border-radius: var(--radius-pill); background: var(--surface-default); box-shadow: var(--shadow-1); }
+  .a-switch.is-on { background: var(--error); }
+  .a-switch.is-on::after { transform: translateX(16px); }
+  .a-switch-row { display: flex; align-items: center; gap: var(--space-2); font: var(--font-weight-bold) var(--font-size-2xs) var(--font-sans); }
+  
+  .a-dialog { margin-block-start: var(--space-2); max-inline-size: 230px; padding: var(--space-3); border-radius: var(--ds-radius-panel); background: var(--surface-default); box-shadow: var(--shadow-modal); font: var(--font-size-2xs) / 1.45 var(--font-sans); }
+  .a-dialog b { display: block; margin-block-end: var(--space-1); color: var(--error-text); }
+  .a-dialog .btn-row { justify-content: flex-end; margin-block-start: var(--space-2); }
+  .a-dialog .btn-row .a-ghost { background: transparent; color: var(--text-primary); }
+  
+  .a-seg i + i { border-inline-start: 2px solid var(--surface-default); }
+  .a-seg i.a-dim { opacity: var(--ds-chart-dim-opacity); }
+  
+  .a-num { display: flex; align-items: center; gap: var(--space-2); font: var(--font-size-2xs) var(--font-mono); color: var(--text-primary); }
+  .a-num .bar { flex: 1 1 auto; min-inline-size: 60px; }
+  .a-num .a-clash { color: var(--error-text); font-weight: var(--font-weight-bold); }
+  
+  .a-ta { min-inline-size: 200px; font: var(--font-size-2xs) / 1.5 var(--font-sans); }
+  .a-ta .a-tools { display: flex; gap: var(--space-1); margin-block-end: 3px; }
+  .a-ta .a-tools b { padding: 1px var(--space-2); border: var(--border-width-default) solid var(--border-default); border-radius: var(--radius-sm); background: var(--surface-default); }
+  .a-ta .box { min-block-size: 44px; padding: var(--space-2); border: var(--border-width-default) solid var(--border-default); border-radius: var(--ds-radius-control); background: var(--surface-default); }
+  .a-ta mark { background: var(--primary-subtitle); color: var(--text-primary); }
+  
+  .field-mock .box.a-focused { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-muted); }
+  .field-mock .a-caret { inline-size: 1px; block-size: 0.9rem; background: var(--text-primary); }
+  
+  .a-canvas { min-inline-size: 240px; max-inline-size: 300px; }
+  .a-canvas svg { inline-size: 100%; block-size: auto; display: block; }
+  .a-canvas text { font: var(--font-weight-medium) 9px var(--font-sans); fill: var(--text-primary); }
+  .a-canvas text.a-edge { font: var(--font-weight-bold) 8px var(--font-mono); fill: var(--text-secondary); }
+  /* consumer asks: H */
+  /* group H - consumer style hooks. Consumer colours are literal hex from their own token files. */
+  .a-col { display: grid; gap: var(--space-2); }
+  
+  /* ds-accordion-item, from accordion-item.component.scss */
+  .a-acc { min-inline-size: 230px; border: var(--border-width-default) solid var(--border-divider); border-radius: var(--radius-lg); background: var(--surface-default); overflow: hidden; }
+  .a-acc .h { display: flex; align-items: center; gap: var(--space-2); padding: var(--space-3) var(--space-4); font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-flat) var(--font-sans); color: var(--text-primary); }
+  .a-acc > * + .h { border-top: var(--border-width-default) solid var(--border-divider); }
+  .a-acc .chev { margin-inline-start: auto; color: var(--icon-default); display: inline-block; }
+  .a-acc .h.open .chev { transform: rotate(90deg); }
+  .a-acc .b { padding: var(--space-2) var(--space-4) var(--space-4); font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans); color: var(--text-secondary); }
+  .a-acc.nyl { border: 0; border-radius: 0; background: transparent; }
+  .a-acc.nyl .h { padding: 22px 0; gap: 24px; font: 400 17px / 1.35 Georgia, "Times New Roman", serif; letter-spacing: -0.01em; }
+  .a-acc.nyl .h:hover { color: #0468ff; }
+  .a-acc.nyl .chev { transform: rotate(90deg); }
+  .a-acc.nyl .h.open .chev { transform: rotate(270deg); }
+  .a-acc.nyl .b { padding: 0 48px 24px 0; }
+  
+  /* the field box shared by ds-input / ds-select / ds-textarea / ds-autocomplete */
+  .a-fld { box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); min-inline-size: 190px; min-block-size: 40px; padding: 0 var(--field-pad-x); border: var(--border-width-default) solid var(--border-default); border-radius: var(--ds-radius-control); background: var(--surface-default); font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans); color: var(--text-primary); }
+  .a-fld.area { align-items: flex-start; min-block-size: 60px; padding-block: var(--space-2); }
+  .a-fld .tag { font: var(--font-size-3xs) var(--font-mono); color: var(--text-tertiary); }
+  .a-fld .chv { color: var(--icon-default); }
+  .a-fld.focus { border-color: var(--accent); box-shadow: var(--ds-field-focus-shadow); }
+  .a-fld .ph { color: var(--text-tertiary); }
+  .a-fld .ph.ua { color: #757575; }
+  .a-fld.topaz { border-color: #00acaa; }
+  .a-fld.rp { border-color: #dcd8d4; color: #1a1a1f; }
+  .a-fld.rp .ph { color: #5c5c63; }
+  .a-fld.rp.focus { border-color: #0468ff; }
+  
+  /* ds-button v-outline + ds-icon-button standard */
+  .a-btns { display: flex; align-items: center; gap: var(--space-2); }
+  .a-ib { display: inline-grid; place-items: center; inline-size: 32px; block-size: 32px; border: var(--border-width-default) solid transparent; border-radius: var(--ds-radius-control); color: var(--text-secondary); }
+  .a-ib svg { inline-size: 16px; block-size: 16px; }
+  .a-ib.hov { background: var(--surface-muted); color: var(--text-primary); }
+  .a-ib.hov.firm { border-color: #d1d5db; background: #f3f4f6; }
+  .a-hint { font: var(--font-size-3xs) var(--font-mono); color: var(--text-tertiary); }
+  
+  /* ds-empty-state, from empty-state.component.scss */
+  .a-empty { display: grid; justify-items: center; gap: var(--space-2); padding: var(--space-4) var(--space-3); min-inline-size: 200px; text-align: center; }
+  .a-empty .tile { inline-size: 40px; block-size: 40px; border-radius: var(--radius-lg); background: var(--accent-surface-tint); display: grid; place-items: center; color: var(--text-secondary); }
+  .a-empty .t { margin: 0; font: var(--font-weight-bold) var(--font-size-h5) / var(--line-height-snug) var(--font-sans); color: var(--text-primary); }
+  .a-empty .t.nyl { font-family: Georgia, "Times New Roman", serif; font-weight: 400; color: #000a62; }
+  .a-empty .p { margin: 0; font: var(--font-size-s) / var(--line-height-base) var(--font-sans); color: var(--text-secondary); }
+  
+  /* ds-badge + ds-page-header subtitle */
+  .a-kpi { display: flex; align-items: center; gap: var(--space-2); font: var(--font-weight-bold) 24px / 1.1 var(--font-sans); color: var(--text-primary); }
+  .a-badge { display: inline-flex; align-items: center; padding: var(--badge-pad-y) var(--badge-pad-x); border-radius: var(--ds-radius-pill); background: var(--surface-secondary); color: var(--text-secondary); font: var(--font-weight-bold) var(--font-size-xs) / var(--line-height-base) var(--font-sans); letter-spacing: var(--letter-spacing-wide); white-space: nowrap; }
+  .a-badge.big { font-size: var(--font-size-s); }
+  .a-ph { margin-block-start: var(--space-3); }
+  .a-ph .t { margin: 0; font: var(--font-weight-bold) var(--font-size-h3) / var(--line-height-tight) var(--font-sans); color: var(--text-primary); }
+  .a-ph .s { margin: var(--space-1-5) 0 0; font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans); color: var(--text-secondary); }
+  .a-ph .s.big { font-size: var(--font-size-m); }
+  
+  /* ds-banner compact */
+  .a-banner { display: flex; gap: var(--space-2); padding: var(--space-2) var(--space-3); border-radius: var(--radius-md); background: var(--info-subtitle); min-inline-size: 230px; font: var(--font-size-s) / var(--line-height-base) var(--font-sans); color: var(--text-primary); }
+  .a-banner i { inline-size: 0.9rem; block-size: 0.9rem; border-radius: 50%; background: var(--info); flex: none; margin-block-start: 3px; }
+  .a-banner b { font: var(--font-weight-bold) var(--font-size-s) / var(--line-height-base) var(--font-sans); }
+  .a-banner.small, .a-banner.small b { font-size: var(--font-size-xs); }
+  
+  /* ds-table: utility column and pagination footer */
+  .a-tbl { border-collapse: collapse; font: var(--font-size-2xs) var(--font-sans); color: var(--text-primary); background: var(--surface-default); }
+  .a-tbl th { text-align: start; color: var(--text-tertiary); font-weight: var(--font-weight-bold); padding: var(--space-2) var(--space-3); border-bottom: var(--border-width-default) solid var(--border-divider); }
+  .a-tbl td { padding: var(--space-2) var(--space-3); border-bottom: var(--border-width-default) solid var(--border-divider); }
+  .a-tbl .chevc { color: var(--icon-default); text-align: end; padding-inline-end: 0; }
+  .a-tbl .util { inline-size: var(--space-10); padding-inline: var(--table-cell-pad-x); background: var(--error-subtitle); color: var(--text-tertiary); text-align: center; }
+  .a-tbl .util.slim { inline-size: 32px; padding-inline: 0 4px; background: var(--success-subtitle); }
+  .a-hfoot { display: flex; justify-content: space-between; align-items: center; padding-block: var(--space-3); padding-inline: var(--space-3); border-top: var(--border-width-default) solid var(--border-divider); font: var(--font-size-2xs) var(--font-sans); color: var(--text-secondary); min-inline-size: 220px; background: var(--surface-default); }
+  .a-hfoot { box-shadow: inset 0 12px 0 var(--surface-muted); }
+  .a-hfoot.roomy { padding-block-start: 20px; box-shadow: inset 0 20px 0 var(--success-subtitle); }
+  
+  /* var() inside the code samples is text, and <code> is what the deck linter skips */
+  .css code { font: inherit; padding: 0; background: none; }
 </style>
 
 <main>
   <div class="masthead">
-    <h1>36 решений, каждое с нарисованными вариантами</h1>
+    <h1>36 асков консьюмеров и 36 решений, каждое с нарисованными вариантами</h1>
     <p class="lede">
-      Всё, на что ты ещё не ответил: открытые деки и бакет <code>Decisions</code> из бэклога, в одном
-      месте и по группам. Вариант выбирается кликом, звёздочка - рекомендация, внизу собирается одна
-      строка со всеми ответами. Где спор длинный - ссылка на деку справа от вопроса.
+      Сверху - всё, чего ждёт консьюмер: фиксы, хуки и фичи из бэклога, каждый показан как есть
+      сейчас и как будет после. Ниже - открытые деки и бакет <code>Decisions</code>. Вариант
+      выбирается кликом, звёздочка - рекомендация, внизу собирается одна строка со всеми ответами.
+      Справа от аска - приоритет, консьюмер и вид работы; справа от решения - ссылка на деку.
     </p>
     <div class="chips">
       <span class="chip is-open">Нужно решение</span>
-      <span class="chip">деки + бакет Decisions</span>
+      <span class="chip">аски консьюмеров + деки + бакет Decisions</span>
     </div>
   </div>
+
+  <p class="group">Ждут консьюмеры · манифесты и CHANGELOG</p>
+
+    <section class="q" data-q="ask-bar-boundary">
+      <div class="q-head">
+        <span class="q-num">01</span>
+        <h2 class="q-title">Совет «граница слова» не отделяет ds-bar от ds-bar-chart</h2>
+        <span class="q-src">P2 · mm-ecm · манифест 0.13.3</span>
+      </div>
+      <p class="q-sub">
+        Три пункта манифеста 0.13.3 и CHANGELOG (строка 960) велят искать по границе слова, а дефис не
+        <code>\w</code>, поэтому <code>\bds-bar\b</code> ловит и чарт. Само имя компонента - отдельный вопрос
+        <code>bar-name</code> выше, здесь только текст ловушки.
+      </p>
+
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">grep по совету манифеста</p>
+          <p class="css">\bds-bar\b
+  &lt;<span class="hit">ds-bar</span> [value]="72"&gt;
+  &lt;<span class="hit">ds-bar</span>-chart [data]="rows"&gt;</p>
+          <p class="console">9 совпадений: 4 ds-bar + 5 ds-bar-chart</p>
+        </div>
+        <div class="spec">
+          <p class="cap">с исключённым хвостом</p>
+          <p class="css">ds-bar(?![-\w])
+  &lt;<span class="hit">ds-bar</span> [value]="72"&gt;
+  &lt;ds-bar-chart [data]="rows"&gt;</p>
+          <p class="console quiet">4 совпадения, чарт не тронут</p>
+        </div>
+      </div>
+      <p class="says">mm-ecm-platform-kb на 0.13.4: 4 &lt;ds-bar&gt; рядом с 5 &lt;ds-bar-chart&gt;.</p>
+
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить текст ловушки</h3>
+          <p class="css">"Match on a word boundary"</p>
+          <dl class="layer"><dt>Что делает читатель</dt><dd>\bds-bar\b</dd><dt>Итог</dt><dd>чарт в выборке</dd></dl>
+        </div>
+        <div class="opt"><h3>Ловушка с точной регуляркой <span class="star">★</span></h3>
+          <p class="css">ds-bar(?![-\w])
+  &lt;ds-bar[\s/&gt;]</p>
+          <dl class="layer"><dt>Где</dt><dd>3 pitfall в 0.13.3.json + CHANGELOG:960</dd><dt>Итог</dt><dd class="gain">чарт исключён явно</dd></dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="q" data-q="ask-spellout-prefix">
+      <div class="q-head">
+        <span class="q-num">02</span>
+        <h2 class="q-title">Замена подстрокой портит имена, которые уже правильные</h2>
+        <span class="q-src">P2 · mm-ecm · манифест 0.13.4</span>
+      </div>
+      <p class="q-sub">
+        Старое имя - префикс нового, а pitfall четырёх пунктов предупреждает только о пропущенной замене.
+        У консьюмера каждое правило било по соседу в том же файле, а <code>--ds-segmented-btn-h</code>
+        по порядку пунктов уезжает не туда.
+      </p>
+
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">замена подстрокой</p>
+          <p class="css">-pad    → -padding      --ds-popover-<span class="hit">paddingding</span>
+  -weight → -font-weight  --ds-badge-font-<span class="hit">font-weight</span>
+  -h      → -height       --ds-button-<span class="hit">heighteight</span></p>
+          <p class="says">refresh-shell.scss:202, waves-preview.component.scss:92</p>
+        </div>
+        <div class="spec">
+          <p class="cap">пункты по порядку манифеста</p>
+          <p class="css">--ds-segmented-btn-h
+    #11 btn → button   --ds-segmented-button-h
+    #15 -h → -height   <span class="dead">--ds-segmented-button-height</span>
+  нужно (#18):         --ds-segmented-segment-height</p>
+        </div>
+      </div>
+      <p class="says">Консоль пуста: неизвестный custom property - валидный CSS.</p>
+
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <div class="ns"><code class="clash">--ds-popover-paddingding</code><code class="clash">--ds-segmented-button-height</code></div>
+          <dl class="layer"><dt>Pitfall</dt><dd>только о пропуске</dd></dl>
+        </div>
+        <div class="opt"><h3>Оговорка и перекрёстная ссылка</h3>
+          <div class="ns"><code class="clear">--ds-popover-padding</code><code class="clear">--ds-segmented-segment-height</code></div>
+          <dl class="layer"><dt>Pitfall</dt><dd>«не заменяй подстрокой»</dd><dt>#11</dt><dd>«segmented - см. #18»</dd><dt>Держится на</dt><dd>внимании читателя</dd></dl>
+        </div>
+        <div class="opt"><h3>Точный список старое-новое <span class="star">★</span></h3>
+          <div class="ns"><code class="clear">--ds-popover-pad → --ds-popover-padding</code><code class="clear">--ds-segmented-btn-h → --ds-segmented-segment-height</code></div>
+          <dl class="layer"><dt>Шаблон *</dt><dd class="gain">нет, только целые имена</dd><dt>Маршрут</dt><dd class="gain">одно имя - один пункт</dd></dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="q" data-q="ask-bar-radius">
+      <div class="q-head">
+        <span class="q-num">03</span>
+        <h2 class="q-title">Манифест переводит --ds-meter-radius в --ds-bar-radius, который никто не читает</h2>
+        <span class="q-src">P2 · mm-ecm-platform-kb · манифест 0.13.3</span>
+      </div>
+      <p class="q-sub">
+        <code>0.13.3.json:85</code> говорит, что <code>-radius</code> сохраняет суффикс, а
+        <code>bar.component.scss:22,29</code> жёстко ставит <code>var(--radius-pill)</code>. Кто выполнил
+        пункт, получает пилюлю и тишину; CHANGELOG о хуке молчит.
+      </p>
+
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">v0.13.2 ds-meter: 2px применён</p>
+          <div class="a-bar is-square"><i></i></div>
+          <p class="css">--ds-meter-radius: 2px;</p>
+        </div>
+        <div class="spec">
+          <p class="cap">v0.13.3 ds-bar: 2px проигнорирован</p>
+          <div class="a-bar"><i></i></div>
+          <p class="css"><span class="dead">--ds-bar-radius: 2px;</span></p>
+        </div>
+      </div>
+      <p class="says">Высота 10px для наглядности, по умолчанию --bar-h 6px.</p>
+
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <div class="a-bar"><i></i></div>
+          <dl class="layer"><dt>Манифест</dt><dd>обещает хук</dd><dt>ds-bar</dt><dd>не читает</dd></dl>
+        </div>
+        <div class="opt"><h3>ds-bar читает --ds-bar-radius <span class="star">★</span></h3>
+          <div class="a-bar is-square"><i></i></div>
+          <dl class="layer"><dt>Дефолт</dt><dd>var(--radius-pill)</dd><dt>Где</dt><dd>трек и заливка</dd><dt>Манифест</dt><dd class="gain">становится правдой</dd></dl>
+        </div>
+        <div class="opt"><h3>Написать, что хук удалён</h3>
+          <div class="a-bar"><i></i></div>
+          <dl class="layer"><dt>Манифест + CHANGELOG</dt><dd>--ds-meter-radius: замены нет</dd><dt>Консьюмер</dt><dd>знает, что потерял</dd></dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="q" data-q="ask-plot-height">
+      <div class="q-head">
+        <span class="q-num">04</span>
+        <h2 class="q-title">--ds-line-chart-plot-height начал менять plot, а манифест молчит</h2>
+        <span class="q-src">P2 · mm-ecm · манифест 0.13.4</span>
+      </div>
+      <p class="q-sub">
+        Имя одно и то же на обоих тегах, грепать нечего. Кто задал токен ради скелетона, после апгрейда
+        молча получает другой размер каждого графика; <code>grep -c plot-height migrations/0.13.4.json</code> = 0.
+      </p>
+
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">v0.13.3: токен доходит до скелетона</p>
+          <div class="a-plot"><svg viewBox="0 0 200 100" preserveAspectRatio="none" aria-hidden="true"><polyline points="0,80 40,62 80,70 120,34 160,44 200,18"/></svg></div>
+          <p class="css">--ds-line-chart-plot-height: 60px;
+  <span class="dead">plot: по viewBox, токен не читает</span></p>
+        </div>
+        <div class="spec">
+          <p class="cap">v0.13.4: тот же токен ведёт plot</p>
+          <div class="a-plot is-squashed"><svg viewBox="0 0 200 100" preserveAspectRatio="none" aria-hidden="true"><polyline points="0,80 40,62 80,70 120,34 160,44 200,18"/></svg></div>
+          <p class="css">--ds-line-chart-plot-height: 60px;
+  <span class="hit">plot: line-chart.component.ts:584,618</span></p>
+        </div>
+      </div>
+
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <p class="console quiet">0 пунктов про plot-height</p>
+          <dl class="layer"><dt>Где сказано</dt><dd>CHANGELOG, раздел Changed</dd><dt>Автоапдейт</dt><dd>не видит</dd></dl>
+        </div>
+        <div class="opt"><h3>Пункт behavior с verify <span class="star">★</span></h3>
+          <p class="css">"kind": "behavior",
+  "verify": plot читает токен</p>
+          <dl class="layer"><dt>old / new</dt><dd class="none">не нужны, имя то же</dd><dt>Автоапдейт</dt><dd class="gain">находит каждый override</dd></dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="q" data-q="ask-donut-surface">
+      <div class="q-head">
+        <span class="q-num">05</span>
+        <h2 class="q-title">Переименование donut в pie не ищется в стилях</h2>
+        <span class="q-src">P2 · mm-ecm · манифест 0.13.4</span>
+      </div>
+      <p class="q-sub">
+        <code>donut-chart-renamed-to-pie-chart</code> объявляет <code>surface: ["template","typescript"]</code>,
+        а селектор по имени элемента - обычный CSS консьюмера. Поиск по объявленной поверхности правило
+        пропускает, и чарт тихо теряет размер.
+      </p>
+
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">правило переименовано: 130px</p>
+          <div class="a-donut is-sized"></div>
+          <p class="css">.chart-block ds-pie-chart {
+    --ds-pie-chart-size: 130px;
+  }</p>
+        </div>
+        <div class="spec">
+          <p class="cap">правило пропущено: 180px</p>
+          <div class="a-donut"></div>
+          <p class="css">.chart-block <span class="dead">ds-donut-chart</span> {
+    --ds-pie-chart-size: 130px;
+  }</p>
+        </div>
+      </div>
+      <p class="says">Масштаб 1:2. agent-details-panel.component.scss:249 в mm-ecm-platform-kb.</p>
+
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <div class="ns"><code class="clear">template</code><code class="clear">typescript</code><code class="clash">style - пропущен</code></div>
+          <dl class="layer"><dt>pie-chart-internal-class-renamed</dt><dd>только .donut-chart</dd></dl>
+        </div>
+        <div class="opt"><h3>Добавить style в surface <span class="star">★</span></h3>
+          <div class="ns"><code class="clear">template</code><code class="clear">typescript</code><code class="clear">style</code></div>
+          <dl class="layer"><dt>Правило на будущее</dt><dd class="gain">selector-rename всегда и style</dd></dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="q" data-q="ask-segmented-changelog">
+      <div class="q-head">
+        <span class="q-num">06</span>
+        <h2 class="q-title">CHANGELOG 0.13.4 называет токены segmented так, как они никогда не назывались</h2>
+        <span class="q-src">P2 · mm-ecm · CHANGELOG 0.13.4</span>
+      </div>
+      <p class="q-sub">
+        Проза говорит <code>--ds-segmented-button-*</code>, а на v0.13.3 токены <code>--ds-segmented-btn-*</code>.
+        Манифест прав, неправа проза - читатель ищет её имя, ничего не находит и решает, что его не задело.
+      </p>
+
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">ищет по CHANGELOG</p>
+          <p class="css">grep -- --ds-segmented-button- src</p>
+          <p class="console quiet">0 совпадений - «меня не касается»</p>
+        </div>
+        <div class="spec">
+          <p class="cap">что лежит в его стилях</p>
+          <p class="css"><span class="hit">--ds-segmented-btn-border</span>
+  <span class="hit">--ds-segmented-btn-h</span>
+  <span class="hit">--ds-segmented-btn-pad-x</span></p>
+        </div>
+      </div>
+
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <p class="css">The three <span class="dead">--ds-segmented-button-*</span></p>
+          <dl class="layer"><dt>Поиск по прозе</dt><dd>0 совпадений</dd></dl>
+        </div>
+        <div class="opt"><h3>Исправить прозу на btn <span class="star">★</span></h3>
+          <p class="css">The three --ds-segmented-btn-*</p>
+          <dl class="layer"><dt>Поиск по прозе</dt><dd class="gain">все три находятся</dd><dt>Правка</dt><dd>CHANGELOG.md:208</dd></dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="q" data-q="ask-pie-old-scope">
+      <div class="q-head">
+        <span class="q-num">07</span>
+        <h2 class="q-title">Два пункта 0.13.4 ищут в old имя, которого на 0.13.3 ещё нет</h2>
+        <span class="q-src">P2 · mm-ecm · манифест 0.13.4</span>
+      </div>
+      <p class="q-sub">
+        <code>pie-chart-thickness-is-now-inner-radius</code> и <code>pie-chart-centre-content-needs-a-hole</code>
+        пишут <code>old: "ds-pie-chart[…]"</code>, а на v0.13.3 элемент - <code>ds-donut-chart</code>. Человек
+        читает <code>old</code> первым и не находит то, что у него перед глазами.
+      </p>
+
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">old в манифесте</p>
+          <p class="css">"old": "<span class="dead">ds-pie-chart</span>[thickness]"
+  "old": "<span class="dead">ds-pie-chart</span>[centerValue]"</p>
+          <p class="console">2 name(s) no tag could resolve</p>
+        </div>
+        <div class="spec">
+          <p class="cap">шаблон консьюмера на 0.13.3</p>
+          <p class="css">&lt;<span class="hit">ds-donut-chart</span> thickness="0.32"&gt;</p>
+        </div>
+      </div>
+      <p class="says">node tools/check-manifest-truth.mjs 0.13.4 - 65 of 67 old/new value(s) hold</p>
+
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <div class="ns"><code class="clash">ds-pie-chart[thickness]</code></div>
+          <dl class="layer"><dt>Спасает</dt><dd>detect: thickness=, centerValue</dd><dt>Не спасает</dt><dd>того, кто читает old</dd></dl>
+        </div>
+        <div class="opt"><h3>old по прошлому тегу <span class="star">★</span></h3>
+          <div class="ns"><code class="clear">ds-donut-chart[thickness]</code><code class="clear">ds-donut-chart[centerValue]</code></div>
+          <dl class="layer"><dt>AUTHORING.md</dt><dd class="gain">scoped old = имя на ПРЕДЫДУЩЕМ теге</dd><dt>Truth check</dt><dd class="gain">67 of 67</dd></dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="q" data-q="ask-abbrev-survivors">
+      <div class="q-head">
+        <span class="q-num">08</span>
+        <h2 class="q-title">Три сокращения пережили волну расшифровки, одно - рядом с расшифрованным</h2>
+        <span class="q-src">P2 · mm-ecm-platform-kb · токены 0.13.4</span>
+      </div>
+      <p class="q-sub">
+        Правило было по суффиксу <code>-weight</code>, и <code>-fw</code> под него не попал. В стилях
+        консьюмера две соседние строки пишут по двум конвенциям, и обещание «118 токенов берут имя CSS-свойства»
+        делает это похожим на недосмотр.
+      </p>
+
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">agent-portal login.page.scss:174-175</p>
+          <p class="css">--ds-input-label-font-size: var&#40;--font-size-small);
+  --ds-input-label-<span class="hit">fw</span>: var&#40;--font-weight-semibold);</p>
+        </div>
+        <div class="spec">
+          <p class="cap">выжившие на v0.13.4</p>
+          <div class="ns"><code class="clash">--ds-input-label-fw</code><code class="clash">--ds-tag-fw</code><code class="clash">--ds-tag-lh</code></div>
+        </div>
+      </div>
+
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <div class="ns"><code class="clash">--ds-input-label-fw</code></div>
+          <dl class="layer"><dt>Гейт</dt><dd class="none">нет</dd></dl>
+        </div>
+        <div class="opt"><h3>Расшифровать -fw и -lh <span class="star">★</span></h3>
+          <div class="ns"><code class="clear">--ds-input-label-font-weight</code><code class="clear">--ds-tag-font-weight</code><code class="clear">--ds-tag-line-height</code></div>
+          <dl class="layer"><dt>Миграция</dt><dd>3 пункта в следующем релизе</dd><dt>Гейт</dt><dd class="gain">ни одно --ds-* не кончается сокращением</dd></dl>
+        </div>
+        <div class="opt"><h3>Объявить намеренными</h3>
+          <div class="ns"><code>--ds-input-label-fw</code></div>
+          <dl class="layer"><dt>Что пишем</dt><dd>строку: эти три оставлены сознательно</dd><dt>Гейт</dt><dd>со списком исключений</dd></dl>
+        </div>
+      </div>
+    </section>
+
+  <p class="group">Ждут консьюмеры · дефекты</p>
+    <section class="q" data-q="ask-modal-footer-wrap">
+      <div class="q-head">
+        <span class="q-num">09</span>
+        <h2 class="q-title">Футер ds-modal режет кнопки о край карточки, а не складывает их</h2>
+        <span class="q-src">P2 · mm-ecm · дефект</span>
+      </div>
+      <p class="q-sub">
+        Контракт в <code>modal.component.scss:7</code> обещает стопку во всю ширину, а <code>.actions</code> - ряд
+        без переноса в карточке с <code>overflow: hidden</code>. mm-ecm держит <code>flex-wrap: wrap</code> на всё приложение.
+      </p>
+
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">сегодня</p>
+          <div class="a-modal">
+            <div class="a-m-head">Опубликовать документ</div>
+            <div class="a-m-body">Версия 4 станет видна всем участникам.</div>
+            <div class="a-m-actions"><span class="a-btn">Отмена</span><span class="a-btn">Сохранить черновик</span><span class="a-btn pri">Опубликовать</span></div>
+          </div>
+        </div>
+        <div class="spec">
+          <p class="cap">по контракту</p>
+          <div class="a-modal">
+            <div class="a-m-head">Опубликовать документ</div>
+            <div class="a-m-body">Версия 4 станет видна всем участникам.</div>
+            <div class="a-m-actions stack"><span class="a-btn pri">Опубликовать</span><span class="a-btn">Сохранить черновик</span><span class="a-btn">Отмена</span></div>
+          </div>
+        </div>
+      </div>
+      <p class="says">Консоль пуста: обрезанная кнопка - валидная раскладка.</p>
+
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <div class="a-modal mini"><div class="a-m-actions"><span class="a-btn">Отмена</span><span class="a-btn">Сохранить черновик</span><span class="a-btn pri">Опубликовать</span></div></div>
+          <dl class="layer"><dt>Консьюмер</dt><dd>ds-modal-card .actions { flex-wrap: wrap }</dd><dt>Контракт</dt><dd>врёт</dd></dl>
+        </div>
+        <div class="opt"><h3>Перенос строки</h3>
+          <div class="a-modal mini"><div class="a-m-actions wrap"><span class="a-btn">Отмена</span><span class="a-btn">Сохранить черновик</span><span class="a-btn pri">Опубликовать</span></div></div>
+          <dl class="layer"><dt>В библиотеке</dt><dd>flex-wrap: wrap на .actions</dd><dt>Контракт</dt><dd>переписать под перенос</dd></dl>
+        </div>
+        <div class="opt"><h3>Стопка во всю ширину <span class="star">★</span></h3>
+          <div class="a-modal mini"><div class="a-m-actions stack"><span class="a-btn pri">Опубликовать</span><span class="a-btn">Сохранить черновик</span><span class="a-btn">Отмена</span></div></div>
+          <dl class="layer"><dt>В библиотеке</dt><dd>колонка, когда ряд не влез</dd><dt>Контракт</dt><dd class="gain">уже так написан</dd></dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="q" data-q="ask-control-contrast">
+      <div class="q-head">
+        <span class="q-num">10</span>
+        <h2 class="q-title">Край поля и текст на secondary не проходят контраст</h2>
+        <span class="q-src">P2 · ids-europe-landing · дефект</span>
+      </div>
+      <p class="q-sub">
+        <code>--border-default</code> (#DCE1EA) - рамка <code>ds-input</code> и ещё 25 компонентов. <code>--secondary-on</code>
+        всегда белый, а <code>--secondary</code> пересобирается из бренда. Лендинг переопределяет оба.
+      </p>
+
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">сегодня, на белом</p>
+          <div class="a-white">
+            <div class="a-field">Email<div class="a-box">name@company.com</div></div>
+            <div class="a-pair"><span class="a-ratio fail">1.31:1</span><code>--border-default</code></div>
+            <div class="a-pair"><span class="a-btn gold">Оставить заявку</span><span class="a-ratio fail">1.91:1</span></div>
+          </div>
+        </div>
+        <div class="spec">
+          <p class="cap">после</p>
+          <div class="a-white">
+            <div class="a-field">Email<div class="a-box edge3">name@company.com</div></div>
+            <div class="a-pair"><span class="a-ratio pass">3.12:1</span><code>#8A92A4</code></div>
+            <div class="a-pair"><span class="a-btn gold dark">Оставить заявку</span><span class="a-ratio pass">9.09:1</span></div>
+          </div>
+        </div>
+      </div>
+      <p class="says">WCAG 1.4.11: граница контрола от 3:1. WCAG 1.4.3: текст кнопки от 4.5:1. #FBAC18 на #161A28 - 9.09:1.</p>
+
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <p class="css">--border-default: var(--neutral-200); <span class="hit">/* 1.31:1 */</span>
+  --secondary-on:   var(--primary-on);  <span class="hit">/* white */</span></p>
+          <dl class="layer"><dt>Консьюмер</dt><dd>_theme.scss:44-57, :80-85</dd></dl>
+        </div>
+        <div class="opt"><h3>Край 3:1 и on от светлоты <span class="star">★</span></h3>
+          <p class="css">--border-control: /* 3:1 в обеих темах */;
+  --secondary-on: /* от --secondary-l */;</p>
+          <dl class="layer"><dt>Бренд</dt><dd class="gain">золото получает тёмный текст сам</dd><dt>Работа</dt><dd>новая роль + 26 компонентов</dd></dl>
+        </div>
+        <div class="opt"><h3>Край 3:1 и чеклист бренда</h3>
+          <p class="css">--border-control: /* 3:1 в обеих темах */;
+  <span class="dead">--secondary-on: auto</span> → в must-rebind</p>
+          <dl class="layer"><dt>Бренд</dt><dd>сам ставит --secondary-on</dd><dt>Промах</dt><dd>молчит, как сегодня</dd></dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="q" data-q="ask-table-pager-size">
+      <div class="q-head">
+        <span class="q-num">11</span>
+        <h2 class="q-title">Пейджер внутри ds-table не принимает size и layout</h2>
+        <span class="q-src">P2 · mm-ecm-platform-kb · пробел API</span>
+      </div>
+      <p class="q-sub">
+        У отдельного <code>ds-pagination</code> есть <code>size</code> и <code>layout</code>, но <code>ds-table</code> их не пробрасывает.
+        Консьюмер удваивает селекторы, чтобы получить 40px и разнос по краям.
+      </p>
+
+      <div class="stage">
+        <div class="spec" style="flex:1 1 300px">
+          <p class="cap">сегодня: sm, grouped</p>
+          <div class="a-table">
+            <div class="a-tr th"><span>Документ</span><span>Статус</span></div>
+            <div class="a-tr"><span>Policy 2291</span><span>Активен</span></div>
+            <div class="a-foot"><div class="a-pg"><span class="a-pg-label">Showing 1-10 of 243</span><b>‹</b><b class="on">1</b><b>2</b><i>…</i><b>25</b><b>›</b></div></div>
+          </div>
+        </div>
+        <div class="spec" style="flex:1 1 300px">
+          <p class="cap">нужно: md 40px, spread</p>
+          <div class="a-table">
+            <div class="a-tr th"><span>Документ</span><span>Статус</span></div>
+            <div class="a-tr"><span>Policy 2291</span><span>Активен</span></div>
+            <div class="a-foot"><div class="a-pg md spread"><span class="a-pg-label">Showing 1-10 of 243</span><b>‹</b><b class="on">1</b><b>2</b><i>…</i><b>25</b><b>›</b></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <p class="css"><span class="hit">.pagination.pagination</span> { display: flex; width: 100% }
+  <span class="hit">.pagination-button.pagination-button</span> {
+    min-width: 40px; height: 40px;
+  }</p>
+          <dl class="layer"><dt>Консьюмер</dt><dd>agent-portal/src/styles.scss:651-673</dd><dt>Альтернатива</dt><dd>DS_CONFIG.control.size - все контролы разом</dd></dl>
+        </div>
+        <div class="opt"><h3>paginationSize и paginationLayout <span class="star">★</span></h3>
+          <p class="css">&lt;ds-table [pageSize]="10"
+    paginationSize="md"
+    paginationLayout="spread" /&gt;</p>
+          <dl class="layer"><dt>Консьюмер</dt><dd class="gain">удаляет 2 правила</dd><dt>Новый API</dt><dd>2 инпута, проброс в пейджер</dd></dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="q" data-q="ask-table-pager-skeleton">
+      <div class="q-head">
+        <span class="q-num">12</span>
+        <h2 class="q-title">Под скелетоном таблицы пейджер показывает старый итог и кликается</h2>
+        <span class="q-src">P3 · ai-sdlc · дефект</span>
+      </div>
+      <p class="q-sub">
+        <code>loading="skeleton"</code> меняет строки, а футер зависит только от <code>pageSize()</code>: старый итог
+        стоит под заглушками, кнопка страницы запускает второй запрос. ai-sdlc обнуляет total в сторе руками.
+      </p>
+
+      <div class="stage">
+        <div class="spec" style="flex:1 1 300px">
+          <p class="cap">сегодня</p>
+          <div class="a-table">
+            <div class="a-tr"><span class="a-sk" style="inline-size:70%"></span><span class="a-sk"></span></div>
+            <div class="a-tr"><span class="a-sk" style="inline-size:55%"></span><span class="a-sk"></span></div>
+            <div class="a-tr"><span class="a-sk" style="inline-size:80%"></span><span class="a-sk"></span></div>
+            <div class="a-foot"><div class="a-pg spread"><span class="a-pg-label">Showing 1-10 of 243</span><b>‹</b><b class="on">1</b><b class="a-hot">2</b><i>…</i><b>25</b><b>›</b></div></div>
+          </div>
+        </div>
+        <div class="spec" style="flex:1 1 300px">
+          <p class="cap">после</p>
+          <div class="a-table">
+            <div class="a-tr"><span class="a-sk" style="inline-size:70%"></span><span class="a-sk"></span></div>
+            <div class="a-tr"><span class="a-sk" style="inline-size:55%"></span><span class="a-sk"></span></div>
+            <div class="a-tr"><span class="a-sk" style="inline-size:80%"></span><span class="a-sk"></span></div>
+            <div class="a-foot"><div class="a-pg spread off"><span class="a-sk lbl"></span><b>‹</b><b>1</b><b>2</b><i>…</i><b>25</b><b>›</b></div></div>
+          </div>
+        </div>
+      </div>
+      <p class="says">Клик по «2» под скелетоном - второй запрос поверх первого.</p>
+
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <div class="a-pg mini"><span class="a-pg-label">1-10 of 243</span><b class="on">1</b><b class="a-hot">2</b><b>›</b></div>
+          <dl class="layer"><dt>Консьюмер</dt><dd>чистит total в сторе</dd><dt>Пейджер</dt><dd>живой</dd></dl>
+        </div>
+        <div class="opt"><h3>Маска и disabled <span class="star">★</span></h3>
+          <div class="a-pg mini off"><span class="a-sk lbl" style="inline-size:60px"></span><b>1</b><b>2</b><b>›</b></div>
+          <dl class="layer"><dt>При isSkeletonLoading()</dt><dd class="gain">высота та же, кнопки disabled, счёт скрыт</dd></dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="q" data-q="ask-closing-scrim-clicks">
+      <div class="q-head">
+        <span class="q-num">13</span>
+        <h2 class="q-title">Невидимый закрывающийся scrim глотает клики до 300 мс</h2>
+        <span class="q-src">P3 · mm-ecm-platform · аудит 0.13.4</span>
+      </div>
+      <p class="q-sub">
+        Под <code>reduce</code> <code>animationend</code> не приходит, закрытие делает таймер на 300 мс. Всё это время
+        <code>.modal-backdrop.closing</code> с <code>opacity: 0</code> лежит поверх страницы без <code>pointer-events: none</code>.
+      </p>
+
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">сегодня</p>
+          <div class="a-page">Страница под модалкой<br><span class="a-btn">Сохранить</span>
+            <span class="a-scrim">.closing · opacity 0 · клик съеден</span><span class="a-tap"></span></div>
+        </div>
+        <div class="spec">
+          <p class="cap">после</p>
+          <div class="a-page">Страница под модалкой<br><span class="a-btn hit">Сохранить</span>
+            <span class="a-scrim pass">pointer-events: none</span><span class="a-tap pass"></span></div>
+        </div>
+      </div>
+      <p class="css">.modal-backdrop.closing {
+    animation-fill-mode: forwards;
+    <span class="hit">pointer-events: none;</span>   /* так же drawer-scrim, sheet-overlay */
+  }</p>
+
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <p class="css">// "animationend still tears down"
+  setTimeout(() =&gt; this.finishClose(), 300);</p>
+          <dl class="layer"><dt>Клик</dt><dd>съеден до 300 мс</dd><dt>Коммент</dt><dd>зовёт таймер лишним</dd></dl>
+        </div>
+        <div class="opt"><h3>Клик насквозь и коммент про таймер <span class="star">★</span></h3>
+          <p class="css">.closing { pointer-events: none }
+  // teardown at 0s: the 300ms timer</p>
+          <dl class="layer"><dt>Клик</dt><dd class="gain">проходит сразу</dd><dt>Коммент</dt><dd class="gain">3 копии называют таймер</dd></dl>
+        </div>
+        <div class="opt"><h3>Клик насквозь и тест</h3>
+          <p class="css">.closing { pointer-events: none }
+  it('reduce, timer stubbed: scrim leaves')</p>
+          <dl class="layer"><dt>Клик</dt><dd class="gain">проходит сразу</dd><dt>Риск</dt><dd>консьюмер уже измерил, что тест упадёт</dd></dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="q" data-q="ask-text-muted">
+      <div class="q-head">
+        <span class="q-num">14</span>
+        <h2 class="q-title">Приглушённый текст по умолчанию не проходит AA</h2>
+        <span class="q-src">P3 · ai-sdlc · контраст, запаркован</span>
+      </div>
+      <p class="q-sub">
+        <code>--text-muted</code> = <code>#9BA3B4</code> на канве <code>#F8FAFC</code> - 2.42:1, ниже даже 3:1 для крупного
+        текста. Внутри DS его читают только дни чужого месяца в календаре; стартер ai-sdlc перебивает тему сам.
+      </p>
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">--text-muted, сегодня</p>
+          <p class="tint" style="background:var(--surface-canvas);color:var(--text-muted)">29 30 31 · Последнее изменение 2 дня назад</p>
+          <p class="css"><span class="hit">2.42:1</span> на #F8FAFC</p>
+        </div>
+        <div class="spec">
+          <p class="cap">--text-tertiary, рядом</p>
+          <p class="tint" style="background:var(--surface-canvas);color:var(--text-tertiary)">29 30 31 · Последнее изменение 2 дня назад</p>
+          <p class="css">4.53:1 на #F8FAFC</p>
+        </div>
+      </div>
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <dl class="layer"><dt>Кто платит</dt><dd>консьюмер, который взял токен для текста</dd></dl>
+        </div>
+        <div class="opt"><h3>Объявить декоративным <span class="star">★</span></h3>
+          <p class="css">--text-muted: только декор, не для чтения</p>
+          <dl class="layer"><dt>Работа</dt><dd class="gain">строка в доке токенов</dd><dt>Цвет</dt><dd>не меняется</dd></dl>
+        </div>
+        <div class="opt"><h3>Сдвинуть --text-muted</h3>
+          <p class="css">--text-muted: var(--neutral-500);</p>
+          <dl class="layer"><dt>Цена</dt><dd>сливается с --text-tertiary</dd></dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="q" data-q="ask-brand-residue">
+      <div class="q-head">
+        <span class="q-num">15</span>
+        <h2 class="q-title">На бренде другого цвета остаются синие ссылки и подложки</h2>
+        <span class="q-src">P3 · pinkmoon, ai-sdlc · бренд, запаркован</span>
+      </div>
+      <p class="q-sub">
+        Тема перенаводит <code>--primary</code>, но <code>--text-link</code>, <code>--surface-tint</code>,
+        <code>--primary-subtitle</code> и <code>--primary-muted</code> в светлой теме - литералы синей рампы. Каждый
+        консьюмер с другим брендом переназначает их руками.
+      </p>
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">зелёный бренд, сегодня</p>
+          <div class="btn-row"><b style="background:#1f7a4d">Сохранить</b></div>
+          <p class="tint" style="margin-top:var(--space-2);background:var(--surface-tint)">Выбранная строка списка · <span style="color:var(--text-link)">Подробнее</span></p>
+        </div>
+        <div class="spec">
+          <p class="cap">выведено из --primary</p>
+          <div class="btn-row"><b style="background:#1f7a4d">Сохранить</b></div>
+          <p class="tint" style="margin-top:var(--space-2);background:#e8f4ee">Выбранная строка списка · <span style="color:#1f7a4d">Подробнее</span></p>
+        </div>
+      </div>
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <dl class="layer"><dt>Консьюмер</dt><dd>переназначает 4 токена сам</dd></dl>
+        </div>
+        <div class="opt"><h3>Вывести из --primary <span class="star">★</span></h3>
+          <dl class="layer"><dt>Работа</dt><dd>часть движка цвета из одного токена</dd><dt>Тёмная тема</dt><dd class="gain">уже так делает</dd></dl>
+        </div>
+        <div class="opt"><h3>Чеклист must-rebind</h3>
+          <dl class="layer"><dt>Работа</dt><dd class="gain">строка в доке тем</dd><dt>Остаток</dt><dd>каждый бренд помнит сам</dd></dl>
+        </div>
+      </div>
+    </section>
+
+  <p class="group">Ждут консьюмеры · API и фичи</p>
+
+    <section class="q" data-q="ask-banner-info-armed">
+      <div class="q-head">
+        <span class="q-num">16</span>
+        <h2 class="q-title">Info-баннер, написанный после banner.announce, молча начинает озвучиваться</h2>
+        <span class="q-src">P2 · mm-ecm · манифест 0.13.4</span>
+      </div>
+      <p class="q-sub">Консьюмер включил <code>banner: { announce: true }</code> и заглушил 14 баннеров-мебели. Через merge пришёл баннер, написанный под старый дефолт, и теперь звучит на каждом входе в архивную программу. Обратный случай, неозвученный error-баннер, - отдельный вопрос <code>banner-warning</code> выше.</p>
+
+      <div class="stage">
+        <div class="spec" style="min-inline-size:250px">
+          <p class="cap">написан до конфига: молчал</p>
+          <div class="bn a-info"><i></i><span>This program is archived …</span></div>
+          <p class="css">&lt;ds-banner variant="info" icon="lock"&gt;</p>
+          <p class="says">role и aria-live нет</p>
+        </div>
+        <div class="spec" style="min-inline-size:250px">
+          <p class="cap">после merge под конфигом</p>
+          <div class="bn a-info"><i></i><span>This program is archived …</span></div>
+          <p class="css">provideDsConfig({ banner: { <span class="hit">announce: true</span> } })</p>
+          <p class="says">role="status" aria-live="polite": «This program is archived…»</p>
+        </div>
+      </div>
+
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <p class="console quiet">консоль пуста</p>
+          <dl class="layer"><dt>Как нашли</dt><dd>пересчёт баннеров после merge, 43 → 44</dd><dt>Платит</dt><dd>автор СЛЕДУЮЩЕГО баннера</dd></dl>
+        </div>
+        <div class="opt"><h3>Dev-предупреждение для info/success <span class="star">★</span></h3>
+          <p class="console">[ds-banner] variant="info" announces because DS_CONFIG.banner.announce is true. Bind [announce] to decide.</p>
+          <dl class="layer"><dt>Срабатывает</dt><dd class="gain">info/success, announce из КОНФИГА</dd><dt>Молчит</dt><dd>явный [announce]="true", error/warning</dd></dl>
+        </div>
+        <div class="opt"><h3>Строка в манифесте</h3>
+          <p class="css">"pitfall": "… A banner written after
+  the config announces unless it
+  binds [announce]=\"false\"."</p>
+          <dl class="layer"><dt>Кого ловит</dt><dd>того, кто читает манифест при апгрейде</dd><dt>Кого нет</dt><dd>автора баннера через месяц</dd></dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="q" data-q="ask-column-axis">
+      <div class="q-head">
+        <span class="q-num">17</span>
+        <h2 class="q-title">Колонку нельзя посадить на вторую ось, в двухосевом чарте она всегда слева</h2>
+        <span class="q-src">P2 · mm-ecm · порт microsite-analytics</span>
+      </div>
+      <p class="q-sub">Экран читал визиты по левой оси и запросы агента по правой. Запросы - колонки, <code>dsColumnSeries</code> оси не выбирает, и при порте стороны поменялись местами. Линия умеет: <code>LineSeriesData.axis</code>.</p>
+
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">экран, который портировали</p>
+          <div class="mini-chart">
+            <svg viewBox="0 0 220 104"><line x1="28" y1="10" x2="28" y2="84" stroke="var(--border-default)"/><line x1="192" y1="10" x2="192" y2="84" stroke="var(--border-default)"/><line x1="28" y1="84" x2="192" y2="84" stroke="var(--border-default)"/><g fill="var(--ds-chart-series-2-color)"><rect x="36" y="54" width="16" height="30" rx="2"/><rect x="68" y="32" width="16" height="52" rx="2"/><rect x="102" y="44" width="16" height="40" rx="2"/><rect x="136" y="20" width="16" height="64" rx="2"/><rect x="168" y="36" width="16" height="48" rx="2"/></g><polyline fill="none" stroke="var(--ds-chart-series-1-color)" stroke-width="2" points="44,50 76,38 110,44 144,24 176,30"/><text x="2" y="16" class="tick" style="fill:var(--ds-chart-series-1-color)">4k</text><text x="2" y="50" class="tick" style="fill:var(--ds-chart-series-1-color)">2k</text><text x="196" y="16" class="tick" style="fill:var(--ds-chart-series-2-color)">80</text><text x="196" y="50" class="tick" style="fill:var(--ds-chart-series-2-color)">40</text><text x="2" y="100" class="tick">← визиты</text><text x="156" y="100" class="tick">запросы →</text></svg>
+          </div>
+        </div>
+        <div class="spec">
+          <p class="cap">0.13.4: колонка прибита к primary</p>
+          <div class="mini-chart">
+            <svg viewBox="0 0 220 104"><line x1="28" y1="10" x2="28" y2="84" stroke="var(--border-default)"/><line x1="192" y1="10" x2="192" y2="84" stroke="var(--border-default)"/><line x1="28" y1="84" x2="192" y2="84" stroke="var(--border-default)"/><g fill="var(--ds-chart-series-2-color)"><rect x="36" y="54" width="16" height="30" rx="2"/><rect x="68" y="32" width="16" height="52" rx="2"/><rect x="102" y="44" width="16" height="40" rx="2"/><rect x="136" y="20" width="16" height="64" rx="2"/><rect x="168" y="36" width="16" height="48" rx="2"/></g><polyline fill="none" stroke="var(--ds-chart-series-1-color)" stroke-width="2" points="44,50 76,38 110,44 144,24 176,30"/><text x="2" y="16" class="tick" style="fill:var(--ds-chart-series-2-color)">80</text><text x="2" y="50" class="tick" style="fill:var(--ds-chart-series-2-color)">40</text><text x="196" y="16" class="tick" style="fill:var(--ds-chart-series-1-color)">4k</text><text x="196" y="50" class="tick" style="fill:var(--ds-chart-series-1-color)">2k</text><text x="2" y="100" class="tick">← запросы</text><text x="160" y="100" class="tick">визиты →</text></svg>
+          </div>
+          <p class="says">стороны перевёрнуты против заменяемого экрана</p>
+        </div>
+      </div>
+
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <p class="css">&lt;svg:g dsColumnSeries [data]="requests" /&gt;</p>
+          <dl class="layer"><dt>Обход</dt><dd>визиты колонками, запросы линией</dd><dt>Цена обхода</dt><dd>другой вид у обеих серий</dd></dl>
+        </div>
+        <div class="opt"><h3>axis на dsColumnSeries <span class="star">★</span></h3>
+          <p class="css">&lt;svg:g dsColumnSeries [data]="requests"
+    <span class="hit">axis="secondary"</span> /&gt;</p>
+          <dl class="layer"><dt>По умолчанию</dt><dd class="gain">primary, чарты не меняются</dd><dt>Где</dt><dd>на директиве, не на точке: серия - плоский список</dd></dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="q" data-q="ask-dead-overrides">
+      <div class="q-head">
+        <span class="q-num">18</span>
+        <h2 class="q-title">Переопределение --ds-* может ничего не делать, и никто об этом не скажет</h2>
+        <span class="q-src">P3 · mm-ecm · аудит 0.8.0 → 0.13.4</span>
+      </div>
+      <p class="q-sub">В <code>agent-portal/src/styles/_buttons.scss</code> 15 объявлений <code>--ds-button-bg*</code> / <code>--ds-button-fg</code>: библиотека не читает эти имена с 0.3.0. Манифесты такое не ловят - имя умерло до начала цепочки апгрейда.</p>
+
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">15 объявлений в пустоту</p>
+          <p class="css">#{$btn}.secondary {
+    <span class="dead">--ds-button-bg: linear-gradient(…);</span>
+    <span class="dead">--ds-button-bg-hover: color-mix(…);</span>
+    <span class="dead">--ds-button-fg: var(-&#45;color-brand-900);</span>
+  }</p>
+          <p class="says">библиотека читает --ds-button-bg-color и --ds-button-label-color</p>
+        </div>
+        <div class="spec">
+          <p class="cap">селектор, который ловит все кнопки</p>
+          <p class="css">$primary: 'ds-button .button<span class="hit">:not(.secondary)
+    :not(.tertiary):not(.outline):not(.error)
+    :not(.success):not(.warning):not(.text)</span>';</p>
+          <p class="css">&lt;button class="button c-error v-outline"&gt;</p>
+          <p class="says">рендерятся c-* и v-*, ни один :not() ничего не исключает</p>
+        </div>
+      </div>
+      <p class="says">Сборка зелёная, консоль пуста, линт молчит.</p>
+
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <p class="console quiet">консоль пуста</p>
+          <dl class="layer"><dt>Как находят</dt><dd>ручной аудит, раз в несколько релизов</dd></dl>
+        </div>
+        <div class="opt"><h3>Проверка у консьюмера <span class="star">★</span></h3>
+          <p class="console">$ npx ds-check-overrides<br>_buttons.scss:46 --ds-button-bg: not read (→ --ds-button-bg-color)<br>_buttons.scss:77 --ds-button-fg: not read (→ --ds-button-label-color)<br>_buttons.scss:68 .button.secondary: never rendered (→ .v-*)<br>16 dead declarations, 7 selectors match nothing</p>
+          <dl class="layer"><dt>Что сверяет</dt><dd>объявленные --ds-* против читаемых пакетом (176 против 1 028)</dd><dt>Где живёт</dt><dd>bin в пакете или schematic</dd></dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="q" data-q="ask-bar-segment-selected">
+      <div class="q-head">
+        <span class="q-num">19</span>
+        <h2 class="q-title">Сегмент ds-bar-chart нельзя отметить как выбранный</h2>
+        <span class="q-src">P3 · mm-ecm-kb · сегментация</span>
+      </div>
+      <p class="q-sub">Разбивка аудитории фильтруется по одной части. При переезде на <code>segments</code> подсветка выбранной части пропала, выбор теперь несёт только легенда консьюмера. <code>dimOthers</code> гасит строки, не части.</p>
+
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">сейчас: все части одинаковы</p>
+          <div class="rows" style="min-inline-size:210px">
+            <div class="row"><span>Аудитория</span><span class="bar a-seg"><i style="inline-size:42%;background:var(--ds-chart-series-1-color)"></i><i style="inline-size:28%;background:var(--ds-chart-series-2-color)"></i><i style="inline-size:18%;background:var(--ds-chart-series-3-color)"></i><i style="inline-size:12%;background:var(--ds-chart-series-4-color)"></i></span></div>
+          </div>
+          <p class="legend-row"><i style="background:var(--ds-chart-series-1-color)"></i><strong>High Value Customers</strong> · выбрано</p>
+          <p class="says">выбор виден только в легенде</p>
+        </div>
+        <div class="spec">
+          <p class="cap">выбранная часть, остальные приглушены</p>
+          <div class="rows" style="min-inline-size:210px">
+            <div class="row"><span>Аудитория</span><span class="bar a-seg"><i style="inline-size:42%;background:var(--ds-chart-series-1-color)"></i><i class="a-dim" style="inline-size:28%;background:var(--ds-chart-series-2-color)"></i><i class="a-dim" style="inline-size:18%;background:var(--ds-chart-series-3-color)"></i><i class="a-dim" style="inline-size:12%;background:var(--ds-chart-series-4-color)"></i></span></div>
+          </div>
+          <p class="says">те же --ds-chart-dim-opacity, что у dimOthers</p>
+        </div>
+      </div>
+
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <dl class="layer"><dt>Выбор несёт</dt><dd>легенда консьюмера</dd></dl>
+        </div>
+        <div class="opt"><h3>selected на сегменте <span class="star">★</span></h3>
+          <p class="css">{ label: 'High Value Customers',
+    value: 12400, <span class="hit">selected: true</span> }</p>
+          <dl class="layer"><dt>Где</dt><dd>BarChartSegment, своя часть в каждой строке</dd></dl>
+        </div>
+        <div class="opt"><h3>Вход activeSegment</h3>
+          <p class="css">&lt;ds-bar-chart <span class="hit">activeSegment="s1"</span> /&gt;</p>
+          <dl class="layer"><dt>Где</dt><dd>на чарте, один id на все строки</dd></dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="q" data-q="ask-chart-locale">
+      <div class="q-head">
+        <span class="q-num">20</span>
+        <h2 class="q-title">Чарты берут локаль чисел из браузера, настройки нет</h2>
+        <span class="q-src">P3 · mm-ecm-kb · app.config</span>
+      </div>
+      <p class="q-sub">Форматтер значений идёт через <code>Intl.NumberFormat(undefined)</code>, а процент - через <code>toFixed(1)</code>. На машине с de-DE один чарт печатает две записи. Консьюмер копирует весь дефолтный форматтер, чтобы прибить <code>en-US</code>.</p>
+
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">de-DE, сегодня</p>
+          <div class="a-num"><span class="bar" style="background:var(--surface-default)"><i style="display:block;block-size:12px;inline-size:62%;background:var(--ds-chart-series-default-color)"></i></span><span class="a-clash">13,5</span><span>13.5%</span></div>
+          <p class="says">ось: 1,2 Mio. · подсказка: 13,5 · доля: 13.5%</p>
+        </div>
+        <div class="spec">
+          <p class="cap">chart.locale: 'en-US'</p>
+          <div class="a-num"><span class="bar" style="background:var(--surface-default)"><i style="display:block;block-size:12px;inline-size:62%;background:var(--ds-chart-series-default-color)"></i></span><span>13.5</span><span>13.5%</span></div>
+          <p class="says">ось: 1.2M · подсказка: 13.5 · доля: 13.5%</p>
+        </div>
+      </div>
+
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <p class="css">chart: {
+    valueFormat: (value, location) =&gt;
+      value.toLocaleString('en-US',
+        location === 'tick'
+          ? { notation: 'compact', … }
+          : { maximumFractionDigits: 1 }),
+  }</p>
+          <dl class="layer"><dt>Процент</dt><dd>всё равно toFixed, форматтер его не трогает</dd></dl>
+        </div>
+        <div class="opt"><h3>chart.locale в конфиге <span class="star">★</span></h3>
+          <p class="css">provideDsConfig({
+    chart: { <span class="hit">locale: 'en-US'</span> },
+  })</p>
+          <dl class="layer"><dt>Читают</dt><dd class="gain">дефолтный форматтер и formatPercent</dd><dt>Прецедент</dt><dd>datePicker.locale</dd></dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="q" data-q="ask-switch-confirm">
+      <div class="q-head">
+        <span class="q-num">21</span>
+        <h2 class="q-title">ds-switch нельзя спросить перед переключением</h2>
+        <span class="q-src">P3 · mm-broker · 4 экрана</span>
+      </div>
+      <p class="q-sub">mm-broker оборачивает свитч в <code>app-confirm-switch</code>: гасит клик через <code>preventDefault()</code> и сам решает, когда вернуть значение. <code>ds-switch</code> ставит <code>checked</code> на каждое нативное изменение, так что вето держится на его DOM.</p>
+
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">без обёртки: флип до вопроса</p>
+          <div class="a-switch-row"><span class="a-switch is-on"></span>Global pause</div>
+          <div class="a-dialog"><b>Pause AI engine?</b>All AI recommendations will be suspended platform-wide immediately.<div class="btn-row"><b class="a-ghost">Cancel</b><b style="background:var(--error)">Pause Engine</b></div></div>
+          <p class="says">Cancel - а свитч уже горит</p>
+        </div>
+        <div class="spec">
+          <p class="cap">commit="manual": ждёт хоста</p>
+          <div class="a-switch-row"><span class="a-switch"></span>Global pause</div>
+          <div class="a-dialog"><b>Pause AI engine?</b>All AI recommendations will be suspended platform-wide immediately.<div class="btn-row"><b class="a-ghost">Cancel</b><b style="background:var(--error)">Pause Engine</b></div></div>
+          <p class="says">флипнется, когда хост поставит checked</p>
+        </div>
+      </div>
+
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <p class="css">(click)="$event.preventDefault();
+    requestChange.emit(!checked())"</p>
+          <dl class="layer"><dt>Держится на</dt><dd>DOM ds-switch</dd><dt>Копий</dt><dd>1 обёртка, 4 экрана</dd></dl>
+        </div>
+        <div class="opt"><h3>Режим commit="manual" <span class="star">★</span></h3>
+          <p class="css">&lt;ds-switch <span class="hit">commit="manual"</span>
+    [checked]="store.aiPaused()"
+    (requestChange)="askPause($event)" /&gt;</p>
+          <dl class="layer"><dt>По умолчанию</dt><dd class="gain">выключен, свитч флипается как сейчас</dd></dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="q" data-q="ask-cell-template-type">
+      <div class="q-head">
+        <span class="q-num">22</span>
+        <h2 class="q-title">dsCellTemplate отдаёт строку как unknown, и каждая таблица носит кастер</h2>
+        <span class="q-src">P3 · mm-broker, ai-sdlc · типы</span>
+      </div>
+      <p class="q-sub">Директива инжектит <code>TemplateRef&lt;{ $implicit: unknown }&gt;</code> без <code>ngTemplateContextGuard</code>, хотя <code>TableComponent&lt;T&gt;</code> знает <code>T</code>. В mm-broker 39 однострочных кастеров <code>(row: unknown)</code>.</p>
+
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">сегодня, agent-payouts</p>
+          <p class="css">&lt;ng-template let-row dsCellTemplate="pending"&gt;
+    {{ payoutMoney(<span class="hit">asRow(row)</span>.pending) }}
+
+  protected asRow(row: unknown): Payout {
+    return row as Payout;
+  }</p>
+        </div>
+        <div class="spec">
+          <p class="cap">типизированный let-row</p>
+          <p class="css">&lt;ng-template let-row dsCellTemplate="pending"
+    <span class="hit">[dsCellTemplateOf]="payouts()"</span>&gt;
+    {{ payoutMoney(row.pending) }}</p>
+          <p class="says">row.pendng → Property 'pendng' does not exist on type 'Payout'</p>
+        </div>
+      </div>
+
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <dl class="layer"><dt>Кастеров</dt><dd>39 в mm-broker</dd><dt>Опечатка в поле</dt><dd class="none">молчит</dd></dl>
+        </div>
+        <div class="opt"><h3>Типизированный let-row <span class="star">★</span></h3>
+          <dl class="layer"><dt>Добавляется</dt><dd>CellTemplateDirective&lt;T&gt;, dsCellTemplateOf, context guard</dd><dt>Без входа</dt><dd class="gain">работает как сейчас</dd></dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="q" data-q="ask-textarea-selection">
+      <div class="q-head">
+        <span class="q-num">23</span>
+        <h2 class="q-title">У ds-textarea нет API выделения</h2>
+        <span class="q-src">P3 · mm-ecm-kb · редактор писем</span>
+      </div>
+      <p class="q-sub">Редактор оборачивает выделение в маркеры markdown-lite и ради <code>selectionStart</code> лезет внутрь компонента за приватным <code>&lt;textarea&gt;</code>.</p>
+
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">что делает редактор</p>
+          <div class="a-ta"><div class="a-tools"><b>B</b><b><i>I</i></b><b>^</b></div><div class="box">Dear {{first_name}}, your <mark>policy renewal</mark> is due.</div></div>
+          <p class="says">B → **policy renewal**, выделение сохраняется</p>
+        </div>
+        <div class="spec">
+          <p class="cap">сегодня: querySelector</p>
+          <p class="css">const el = this.ta().nativeElement
+    <span class="hit">.querySelector('textarea')</span>;
+  el.setSelectionRange(start, end);</p>
+          <p class="cap" style="margin-top:var(--space-3)">после: метод компонента</p>
+          <p class="css">this.ta().setSelectionRange(start, end);</p>
+        </div>
+      </div>
+
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <dl class="layer"><dt>Держится на</dt><dd>внутреннем DOM ds-textarea</dd></dl>
+        </div>
+        <div class="opt"><h3>Методы выделения <span class="star">★</span></h3>
+          <p class="css">selectionStart / selectionEnd
+  setSelectionRange(start, end, dir?)
+  select()</p>
+          <dl class="layer"><dt>Прецедент</dt><dd>focus() на базе уже есть</dd></dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="q" data-q="ask-autocomplete-blur">
+      <div class="q-head">
+        <span class="q-num">24</span>
+        <h2 class="q-title">У ds-autocomplete нет публичного blur()</h2>
+        <span class="q-src">P3 · mm-ecm-kb · поиск в топбаре</span>
+      </div>
+      <p class="q-sub">После выбора результата поиск делает <code>clear()</code> и уходит на страницу. <code>clear()</code> намеренно оставляет фокус, поэтому хост снимает его через <code>querySelector('input')</code>.</p>
+
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">после clear(): фокус остался</p>
+          <div class="field-mock"><div class="box a-focused"><span class="a-caret"></span><span style="color:var(--text-tertiary)">Search…</span></div></div>
+          <p class="says">новая страница, а поиск в топбаре горит</p>
+        </div>
+        <div class="spec">
+          <p class="cap">сегодня: querySelector</p>
+          <p class="css">this.search().clear();
+  this.searchBox().nativeElement
+    <span class="hit">.querySelector('input')?.blur()</span>;</p>
+          <p class="cap" style="margin-top:var(--space-3)">после: метод базы</p>
+          <p class="css">this.search().clear();
+  this.search().blur();</p>
+        </div>
+      </div>
+
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <dl class="layer"><dt>Держится на</dt><dd>внутреннем input и обёртке span</dd></dl>
+        </div>
+        <div class="opt"><h3>blur() на базе полей <span class="star">★</span></h3>
+          <dl class="layer"><dt>Получают</dt><dd class="gain">все поля сразу, пара к focus()</dd><dt>Снимает фокус с</dt><dd>того же элемента, что берёт focus()</dd></dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="q" data-q="ask-intl-strings">
+      <div class="q-head">
+        <span class="q-num">25</span>
+        <h2 class="q-title">Все видимые строки библиотеки - английские литералы</h2>
+        <span class="q-src">P2 · ITB Workspace · припарковано Stas</span>
+      </div>
+      <p class="q-sub">В двуязычном приложении панель пикера не переводится. <code>No matches</code> и <code>Create «…»</code> заменяются слотами с 0.11.1, остальные шесть литералов пикеров недостижимы, плюс 36 статических <code>aria-label</code> в 19 файлах.</p>
+
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">русский интерфейс, сегодня</p>
+          <div class="field-mock"><label>Регион</label><div class="box"><span class="chipx">Лондон</span><span class="chipx">+2 more</span></div><div class="panel-mock"><span>☐ Select all</span><span>☐ All of Англия</span><span>☑ Лондон</span><span>☑ Дувр</span></div></div>
+          <p class="says">кнопка очистки: «Clear selection»</p>
+        </div>
+        <div class="spec">
+          <p class="cap">с DS_INTL</p>
+          <div class="field-mock"><label>Регион</label><div class="box"><span class="chipx">Лондон</span><span class="chipx">+2 ещё</span></div><div class="panel-mock"><span>☐ Выбрать все</span><span>☐ Все: Англия</span><span>☑ Лондон</span><span>☑ Дувр</span></div></div>
+          <p class="says">кнопка очистки: «Очистить выбор»</p>
+        </div>
+      </div>
+
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить парковку <span class="star">★</span></h3>
+          <dl class="layer"><dt>Консьюмер</dt><dd>не переводит панель пикера</dd><dt>Прецедент в библиотеке</dt><dd>входы moreLabel / panelLabel у ds-filter-bar</dd></dl>
+        </div>
+        <div class="opt"><h3>Токен DS_INTL</h3>
+          <p class="css">provideDsIntl({
+    selectAll: 'Выбрать все',
+    clearSelection: 'Очистить выбор',
+  })</p>
+          <dl class="layer"><dt>Объём</dt><dd>6 литералов пикеров, 36 aria-label, подписи ds-table</dd><dt>Цена</dt><dd>проект, а не правка</dd></dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="q" data-q="ask-journey-canvas">
+      <div class="q-head">
+        <span class="q-num">26</span>
+        <h2 class="q-title">Ни один компонент не рисует ветвящийся граф узлов и рёбер</h2>
+        <span class="q-src">P3 · mm-ecm-kb · припарковано Stas: ждать второго консьюмера</span>
+      </div>
+      <p class="q-sub">Путь кампании у консьюмера на девяти экранах, свой холст на 2 353 строки. Спека чартов фазы 2 исключает network по имени.</p>
+
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">холст: узлы, рёбра, подписи</p>
+          <div class="a-canvas">
+            <svg viewBox="0 0 260 204"><g fill="none" stroke="var(--border-strong)" stroke-width="1.5"><line x1="130" y1="26" x2="130" y2="42"/><line x1="130" y1="64" x2="130" y2="80"/><path d="M130 102 C130 118 60 112 60 132"/><path d="M130 102 C130 118 200 112 200 132"/><path d="M60 154 C60 174 130 166 130 180"/><path d="M200 154 C200 174 130 166 130 180"/></g><rect x="95" y="4" width="70" height="22" rx="11" fill="var(--success-subtitle)" stroke="var(--success)"/><text x="130" y="18" text-anchor="middle">Старт</text><rect x="95" y="42" width="70" height="22" rx="4" fill="var(--info-subtitle)" stroke="var(--info)"/><text x="130" y="56" text-anchor="middle">Email</text><circle cx="148" cy="72" r="6" fill="var(--surface-default)" stroke="var(--border-strong)"/><text x="148" y="75" text-anchor="middle">+</text><rect x="90" y="80" width="80" height="22" rx="4" fill="var(--warning-subtitle)" stroke="var(--warning)"/><text x="130" y="94" text-anchor="middle">Условие</text><text x="52" y="116" class="a-edge">Yes · 0</text><text x="178" y="116" class="a-edge">No · 0</text><rect x="25" y="132" width="70" height="22" rx="4" fill="var(--info-subtitle)" stroke="var(--info)"/><text x="60" y="146" text-anchor="middle">Письмо</text><rect x="165" y="132" width="70" height="22" rx="4" fill="var(--surface-secondary)" stroke="var(--border-strong)"/><text x="200" y="146" text-anchor="middle">Ожидание</text><rect x="95" y="180" width="70" height="22" rx="11" fill="var(--surface-secondary)" stroke="var(--border-strong)"/><text x="130" y="194" text-anchor="middle">Конец</text></svg>
+          </div>
+          <p class="says">ветка расходится на две колонки и сходится; «+» на ребре - вставка</p>
+        </div>
+      </div>
+
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить парковку <span class="star">★</span></h3>
+          <dl class="layer"><dt>Держится до</dt><dd>второго консьюмера</dd><dt>Non-goal фазы 2</dt><dd>стоит</dd></dl>
+        </div>
+        <div class="opt"><h3>Взять холст без билдера</h3>
+          <dl class="layer"><dt>Вход</dt><dd>список узлов, список рёбер</dd><dt>Выход</dt><dd>раскладка, рёбра с подписями, клик</dd><dt>Остаётся у консьюмера</dt><dd>drag-and-drop, редактор узла, меню добавления</dd><dt>Цена</dt><dd>исключение из non-goal фазы 2</dd></dl>
+        </div>
+      </div>
+    </section>
+
+  <p class="group">Ждут консьюмеры · хуки стилей</p>
+
+    <section class="q" data-q="ask-accordion-geometry">
+      <div class="q-head">
+        <span class="q-num">27</span>
+        <h2 class="q-title">У аккордеона токены только на цвета - отступы, шрифт и шеврон не настраиваются</h2>
+        <span class="q-src">P3 · mm-ecm · хук стилей</span>
+      </div>
+      <p class="q-sub">Help FAQ в agent-portal утраивает <code>.head</code> и учетверяет <code>.chev</code>, чтобы перебить <code>[_nghost] .head[_ngcontent]</code>. Любая правка DOM аккордеона молча ломает страницу.</p>
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">DS по умолчанию</p>
+          <div class="a-acc">
+            <div class="h open">Как сменить агента?<span class="chev">›</span></div>
+            <div class="b">Напишите в поддержку.</div>
+            <div class="h">Где полис?<span class="chev">›</span></div>
+          </div>
+        </div>
+        <div class="spec">
+          <p class="cap">как хочет консьюмер</p>
+          <div class="a-acc nyl">
+            <div class="h open">Как сменить агента?<span class="chev">›</span></div>
+            <div class="b">Напишите в поддержку.</div>
+            <div class="h">Где полис?<span class="chev">›</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <p class="css"><code>agent-help ds-accordion-item {
+    <span class="hit">.head.head.head</span> { padding: 22px 0; gap: 24px; }
+    <span class="hit">.chev.chev.chev.chev</span> { transform: rotate(90deg); }
+    <span class="hit">.body-content.body-content.body-content</span> { padding: 0 48px 24px 0; }
+  }</code></p>
+          <dl class="layer"><dt>Работа DS</dt><dd class="none">нет</dd><dt>Цена</dt><dd>гонка специфичности, ломается от правки DOM</dd></dl>
+        </div>
+        <div class="opt"><h3>Хук --ds-accordion-header-* <span class="star">★</span></h3>
+          <p class="css"><code>agent-help ds-accordion-item {
+    --ds-accordion-header-padding-y: 22px;
+    --ds-accordion-header-padding-x: 0;
+    --ds-accordion-header-gap: 24px;
+    --ds-accordion-header-font-family: Georgia, serif;
+    --ds-accordion-body-padding-right: 48px;
+  }
+  &lt;ds-accordion chevron="down"&gt;</code></p>
+          <dl class="layer"><dt>Работа DS</dt><dd>~10 токенов + опция шеврона, дефолты = сегодня</dd><dt>Консьюмер</dt><dd class="gain">без селекторов в чужой DOM</dd></dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="q" data-q="ask-select-focus-border">
+      <div class="q-head">
+        <span class="q-num">28</span>
+        <h2 class="q-title">У ds-select рамка в фокусе прибита к --accent - единственное поле без хука</h2>
+        <span class="q-src">P3 · mm-ecm · хук стилей</span>
+      </div>
+      <p class="q-sub">Все остальные поля красят фокус через токен, select - напрямую (<code>select.component.scss:107,112</code>). Консьюмер держит бирюзовую рамку через <code>!important</code>.</p>
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">DS по умолчанию, в фокусе</p>
+          <div class="a-col">
+            <div class="a-fld focus">Лондон<span class="tag">ds-input</span></div>
+            <div class="a-fld focus">Лондон<span class="chv">▾</span></div>
+          </div>
+        </div>
+        <div class="spec">
+          <p class="cap">как хочет консьюмер</p>
+          <div class="a-col">
+            <div class="a-fld focus topaz">Лондон<span class="tag">--ds-input-border-focus</span></div>
+            <div class="a-fld focus topaz">Лондон<span class="chv">▾</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <p class="css"><code>:is(ds-select, ds-dropdown) .dropdown:focus-visible:not(.error),
+  :is(ds-select, ds-dropdown) .dropdown.open:not(.error) {
+    border-color: var(--color-focus-border) <span class="hit">!important</span>;
+  }</code></p>
+          <dl class="layer"><dt>Работа DS</dt><dd class="none">нет</dd><dt>Цена</dt><dd>!important глушит и будущие состояния</dd></dl>
+        </div>
+        <div class="opt"><h3>Хук --ds-select-border-color-focus <span class="star">★</span></h3>
+          <p class="css"><code>ds-select {
+    --ds-select-border-color-focus: var(--color-focus-border);
+  }</code></p>
+          <dl class="layer"><dt>Работа DS</dt><dd>1 токен на :focus-visible и .open, дефолт --accent</dd><dt>Консьюмер</dt><dd class="gain">как у остальных полей</dd></dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="q" data-q="ask-field-shared-tokens">
+      <div class="q-head">
+        <span class="q-num">29</span>
+        <h2 class="q-title">Цвета полей задаются по одному компоненту, а у select и textarea нет размера шрифта</h2>
+        <span class="q-src">P3 · mm-ecm · хук стилей</span>
+      </div>
+      <p class="q-sub">Одно решение - тонкая рамка, чернильный текст, синий фокус - консьюмер пишет дважды, под <code>--ds-input-*</code> и <code>--ds-select-*</code>. Шрифт input прибит к 14px, потому что select и textarea хардкодят <code>--font-size-s</code>.</p>
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">DS по умолчанию</p>
+          <div class="a-col">
+            <div class="a-fld">Иван Петров<span class="tag">input</span></div>
+            <div class="a-fld">Активен<span class="chv">▾</span></div>
+            <div class="a-fld area">Звонил во вторник<span class="tag">textarea</span></div>
+          </div>
+        </div>
+        <div class="spec">
+          <p class="cap">как хочет консьюмер</p>
+          <div class="a-col">
+            <div class="a-fld rp">Иван Петров<span class="tag">input</span></div>
+            <div class="a-fld rp">Активен<span class="chv">▾</span></div>
+            <div class="a-fld rp area">Звонил во вторник<span class="tag">textarea</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <p class="css"><code>--ds-input-border: var(--rp-rule);
+  --ds-input-border-hover: var(--rp-mute);
+  --ds-input-border-focus: var(--rp-blue);
+  --ds-input-text-color: var(--rp-ink);
+  <span class="hit">--ds-input-font-size: var(--rp-fs-14);</span>
+  --ds-select-border-color: var(--rp-rule);
+  --ds-select-text-color: var(--rp-ink);</code></p>
+          <dl class="layer"><dt>Работа DS</dt><dd class="none">нет</dd><dt>Цена</dt><dd>каждое поле отдельно, размер select/textarea не задать</dd></dl>
+        </div>
+        <div class="opt"><h3>Хук --ds-field-*, размер по полям</h3>
+          <p class="css"><code>--ds-field-border-color: var(--rp-rule);
+  --ds-field-border-color-hover: var(--rp-mute);
+  --ds-field-border-color-focus: var(--rp-blue);
+  --ds-field-text-color: var(--rp-ink);
+  --ds-input-font-size: 14px;   <span class="a-hint">textarea тоже</span>
+  --ds-select-font-size: 14px;</code></p>
+          <dl class="layer"><dt>Работа DS</dt><dd>4 общих токена + --ds-select-font-size</dd><dt>Размер</dt><dd>два токена</dd></dl>
+        </div>
+        <div class="opt"><h3>Хук --ds-field-*, общий размер <span class="star">★</span></h3>
+          <p class="css"><code>--ds-field-border-color: var(--rp-rule);
+  --ds-field-border-color-hover: var(--rp-mute);
+  --ds-field-border-color-focus: var(--rp-blue);
+  --ds-field-text-color: var(--rp-ink);
+  --ds-field-font-size: 14px;</code></p>
+          <dl class="layer"><dt>Работа DS</dt><dd>5 общих токенов под тремя полями</dd><dt>Размер</dt><dd class="gain">одна строка, как --ds-field-height</dd></dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="q" data-q="ask-autocomplete-text-color">
+      <div class="q-head">
+        <span class="q-num">30</span>
+        <h2 class="q-title">У ds-autocomplete нет хука на цвет текста и плейсхолдера, а плейсхолдер браузерный</h2>
+        <span class="q-src">P3 · mm-ecm · хук стилей</span>
+      </div>
+      <p class="q-sub">Инпут красится <code>var(--text-primary)</code> без резолвера, правила <code>::placeholder</code> нет вовсе, поэтому плейсхолдер серый UA, а у <code>ds-input</code> рядом - <code>--text-tertiary</code>.</p>
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">DS по умолчанию</p>
+          <div class="a-col">
+            <div class="a-fld"><span class="ph">Поиск страхователя</span><span class="tag">ds-input</span></div>
+            <div class="a-fld"><span class="ph ua">Поиск страхователя</span><span class="tag">ds-autocomplete</span></div>
+          </div>
+        </div>
+        <div class="spec">
+          <p class="cap">как хочет консьюмер</p>
+          <div class="a-col">
+            <div class="a-fld rp"><span class="ph">Поиск страхователя</span></div>
+            <div class="a-fld rp">Иван Петр<span class="tag">набранное</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <p class="css"><code>agent-refresh-shell .topbar__search ds-autocomplete {
+    <span class="hit">.autocomplete-input.autocomplete-input</span> {
+      color: var(--rp-ink);
+      &amp;::placeholder { color: var(--rp-mute); }
+    }
+  }</code></p>
+          <dl class="layer"><dt>Работа DS</dt><dd class="none">нет</dd><dt>Дефолт</dt><dd>плейсхолдер не как у ds-input</dd></dl>
+        </div>
+        <div class="opt"><h3>Хук --ds-autocomplete-*-color <span class="star">★</span></h3>
+          <p class="css"><code>ds-autocomplete {
+    --ds-autocomplete-input-color: var(--rp-ink);
+    --ds-autocomplete-placeholder-color: var(--rp-mute);
+  }</code></p>
+          <dl class="layer"><dt>Работа DS</dt><dd>2 токена + правило ::placeholder</dd><dt>Дефолт</dt><dd class="gain">--text-tertiary, как у ds-input</dd></dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="q" data-q="ask-button-border-hover">
+      <div class="q-head">
+        <span class="q-num">31</span>
+        <h2 class="q-title">ds-button и ds-icon-button не умеют менять рамку при наведении</h2>
+        <span class="q-src">P3 · mm-ecm · хук стилей</span>
+      </div>
+      <p class="q-sub">Фон и цвет подписи на hover токенизированы, рамка - одна на все состояния. Иконки в строках таблицы выглядят мёртвыми, консьюмер лезет в них через <code>::ng-deep</code>.</p>
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">DS по умолчанию, средняя на hover</p>
+          <div class="a-btns">
+            <span class="a-ib"><svg viewBox="0 0 16 16"><circle cx="3" cy="8" r="1.4" fill="currentColor"/><circle cx="8" cy="8" r="1.4" fill="currentColor"/><circle cx="13" cy="8" r="1.4" fill="currentColor"/></svg></span>
+            <span class="a-ib hov"><svg viewBox="0 0 16 16"><circle cx="3" cy="8" r="1.4" fill="currentColor"/><circle cx="8" cy="8" r="1.4" fill="currentColor"/><circle cx="13" cy="8" r="1.4" fill="currentColor"/></svg></span>
+            <span class="a-ib"><svg viewBox="0 0 16 16"><circle cx="3" cy="8" r="1.4" fill="currentColor"/><circle cx="8" cy="8" r="1.4" fill="currentColor"/><circle cx="13" cy="8" r="1.4" fill="currentColor"/></svg></span>
+          </div>
+        </div>
+        <div class="spec">
+          <p class="cap">как хочет консьюмер</p>
+          <div class="a-btns">
+            <span class="a-ib"><svg viewBox="0 0 16 16"><circle cx="3" cy="8" r="1.4" fill="currentColor"/><circle cx="8" cy="8" r="1.4" fill="currentColor"/><circle cx="13" cy="8" r="1.4" fill="currentColor"/></svg></span>
+            <span class="a-ib hov firm"><svg viewBox="0 0 16 16"><circle cx="3" cy="8" r="1.4" fill="currentColor"/><circle cx="8" cy="8" r="1.4" fill="currentColor"/><circle cx="13" cy="8" r="1.4" fill="currentColor"/></svg></span>
+            <span class="a-ib"><svg viewBox="0 0 16 16"><circle cx="3" cy="8" r="1.4" fill="currentColor"/><circle cx="8" cy="8" r="1.4" fill="currentColor"/><circle cx="13" cy="8" r="1.4" fill="currentColor"/></svg></span>
+          </div>
+        </div>
+      </div>
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <p class="css"><code><span class="hit">::ng-deep</span> ds-icon-button .icon-button {
+    &amp;:hover { border-color: var(--color-border-strong); }
+  }
+  <span class="hit">ds-button .button.v-outline:hover</span> {
+    border-color: var(--color-border-strong);
+  }</code></p>
+          <dl class="layer"><dt>Работа DS</dt><dd class="none">нет</dd><dt>Цена</dt><dd>::ng-deep на каждой странице</dd></dl>
+        </div>
+        <div class="opt"><h3>Хук border-hover / -active <span class="star">★</span></h3>
+          <p class="css"><code>ds-icon-button {
+    --ds-icon-button-border-hover: var(--color-border-strong);
+  }
+  ds-button {
+    --ds-button-border-color-hover: var(--color-border-strong);
+  }</code></p>
+          <dl class="layer"><dt>Работа DS</dt><dd>4 токена, дефолт = рамка покоя</dd><dt>Сдвиг</dt><dd class="gain">ничего не двигается</dd></dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="q" data-q="ask-empty-state-title-face">
+      <div class="q-head">
+        <span class="q-num">32</span>
+        <h2 class="q-title">Заголовок ds-empty-state берёт размер и цвет из токенов, а гарнитуру и насыщенность - нет</h2>
+        <span class="q-src">P3 · mm-ecm · хук стилей</span>
+      </div>
+      <p class="q-sub">В шортхенде <code>font</code> прибиты <code>--font-weight-bold</code> и <code>--font-sans</code>. У <code>ds-modal</code> эти два хука уже есть.</p>
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">DS по умолчанию</p>
+          <div class="a-empty"><span class="tile">○</span><p class="t">Визитов пока нет</p><p class="p">Запланируйте первый.</p></div>
+        </div>
+        <div class="spec">
+          <p class="cap">как хочет консьюмер</p>
+          <div class="a-empty"><span class="tile">○</span><p class="t nyl">Визитов пока нет</p><p class="p">Запланируйте первый.</p></div>
+        </div>
+      </div>
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <p class="css"><code>:is(agent-dashboard, agent-policyholder-details) ds-empty-state {
+    <span class="hit">.title.title</span> {
+      font-family: var(--rp-font-display);
+      font-weight: var(--rp-fw-400);
+    }
+  }</code></p>
+          <dl class="layer"><dt>Работа DS</dt><dd class="none">нет</dd><dt>Цена</dt><dd>удвоенный класс рядом с токенами того же блока</dd></dl>
+        </div>
+        <div class="opt"><h3>Хук --ds-empty-state-title-font-* <span class="star">★</span></h3>
+          <p class="css"><code>ds-empty-state {
+    --ds-empty-state-title-font-family: var(--rp-font-display);
+    --ds-empty-state-title-font-weight: var(--rp-fw-400);
+  }</code></p>
+          <dl class="layer"><dt>Работа DS</dt><dd>2 токена, как у ds-modal</dd><dt>Дефолт</dt><dd class="gain">--font-sans, --font-weight-bold</dd></dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="q" data-q="ask-badge-subtitle-font-size">
+      <div class="q-head">
+        <span class="q-num">33</span>
+        <h2 class="q-title">У ds-badge и подзаголовка ds-page-header нет хука на размер шрифта</h2>
+        <span class="q-src">P3 · mm-broker · хук стилей</span>
+      </div>
+      <p class="q-sub">У бейджа восемь резолверов, но размер прибит к <code>--font-size-xs</code>; у заголовка страницы размер токенизирован, у подзаголовка - нет. mm-broker пробивает оба.</p>
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">DS по умолчанию</p>
+          <div class="a-kpi">12,5%<span class="a-badge">Комиссия</span></div>
+          <div class="a-ph"><p class="t">Aviva</p><p class="s">Страховщик · 14 продуктов</p></div>
+        </div>
+        <div class="spec">
+          <p class="cap">как хочет консьюмер</p>
+          <div class="a-kpi">12,5%<span class="a-badge big">Комиссия</span></div>
+          <div class="a-ph"><p class="t">Aviva</p><p class="s big">Страховщик · 14 продуктов</p></div>
+        </div>
+      </div>
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <p class="css"><code>.kpi-value <span class="hit">::ng-deep .badge</span> {
+    font-size: var(--font-size-s);
+  }
+  ds-page-header .subtitle {
+    font-size: var(--font-size-m) <span class="hit">!important</span>;
+  }</code></p>
+          <dl class="layer"><dt>Работа DS</dt><dd class="none">нет</dd><dt>Цена</dt><dd>::ng-deep в трёх страницах, !important глобально</dd></dl>
+        </div>
+        <div class="opt"><h3>Хук *-font-size <span class="star">★</span></h3>
+          <p class="css"><code>.kpi-value ds-badge { --ds-badge-font-size: var(--font-size-s); }
+  ds-page-header { --ds-page-header-subtitle-font-size: var(--font-size-m); }</code></p>
+          <dl class="layer"><dt>Работа DS</dt><dd>2 токена, .count 2xs по-прежнему выигрывает</dd><dt>Дефолт</dt><dd class="gain">xs и s, как сегодня</dd></dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="q" data-q="ask-banner-title-font-size">
+      <div class="q-head">
+        <span class="q-num">34</span>
+        <h2 class="q-title">У заголовка ds-banner нет хука на размер, а у тела есть</h2>
+        <span class="q-src">P3 · pinkmoon · хук стилей</span>
+      </div>
+      <p class="q-sub"><code>compact</code> не трогает размер заголовка, поэтому компактная полоса не опускается до 12px без селектора потомка.</p>
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">DS compact по умолчанию</p>
+          <div class="a-banner small"><i></i><span><b style="font-size:var(--font-size-s)">Нет сети</b> Изменения сохранятся позже.</span></div>
+        </div>
+        <div class="spec">
+          <p class="cap">как хочет консьюмер</p>
+          <div class="a-banner small"><i></i><span><b>Нет сети</b> Изменения сохранятся позже.</span></div>
+        </div>
+      </div>
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <p class="css"><code>ds-banner .banner.compact {
+    font-size: var(--font-size-xs);
+    <span class="hit">.title</span> { font-size: var(--font-size-xs); }
+  }</code></p>
+          <dl class="layer"><dt>Работа DS</dt><dd class="none">нет</dd><dt>Цена</dt><dd>селектор по внутренним классам</dd></dl>
+        </div>
+        <div class="opt"><h3>Хук --ds-banner-title-font-size <span class="star">★</span></h3>
+          <p class="css"><code>ds-banner[compact] {
+    --ds-banner-title-font-size: var(--font-size-xs);
+    --ds-banner-body-font-size: var(--font-size-xs);
+  }</code></p>
+          <dl class="layer"><dt>Работа DS</dt><dd>1 токен рядом с body, дефолт --font-size-s</dd><dt>Консьюмер</dt><dd class="gain">два свойства на хосте</dd></dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="q" data-q="ask-table-utility-column">
+      <div class="q-head">
+        <span class="q-num">35</span>
+        <h2 class="q-title">Служебную колонку таблицы нельзя сузить, а без rowActions она пустая полоса</h2>
+        <span class="q-src">P3 · mm-ecm · хук стилей</span>
+      </div>
+      <p class="q-sub">Колонка под кнопкой выбора колонок - <code>var(--space-10)</code> плюс <code>--table-cell-pad-x</code> с каждой стороны, и пустая в каждой строке. Шеврон строки встаёт далеко от края.</p>
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">DS по умолчанию</p>
+          <table class="a-tbl"><tr><th>Страхователь</th><th></th><th class="util">⚙</th></tr><tr><td>Acme Ltd</td><td class="chevc">›</td><td class="util"></td></tr><tr><td>Bolt plc</td><td class="chevc">›</td><td class="util"></td></tr></table>
+        </div>
+        <div class="spec">
+          <p class="cap">как хочет консьюмер</p>
+          <table class="a-tbl"><tr><th>Страхователь</th><th></th><th class="util slim">⚙</th></tr><tr><td>Acme Ltd</td><td class="chevc">›</td><td class="util slim"></td></tr><tr><td>Bolt plc</td><td class="chevc">›</td><td class="util slim"></td></tr></table>
+        </div>
+      </div>
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <p class="css"><code>:host <span class="hit">::ng-deep .actions-col</span> {
+    width: 32px;
+    padding-left: 0;
+    padding-right: 4px;
+  }</code></p>
+          <dl class="layer"><dt>Работа DS</dt><dd class="none">нет</dd><dt>Дефолт</dt><dd>пустые 72px в каждой строке</dd></dl>
+        </div>
+        <div class="opt"><h3>Хук --ds-table-utility-column-* <span class="star">★</span></h3>
+          <p class="css"><code>ds-table {
+    --ds-table-utility-column-width: 32px;
+    --ds-table-utility-column-padding-x: 0 4px;
+  }</code></p>
+          <dl class="layer"><dt>Работа DS</dt><dd>2 токена, дефолт = сегодня</dd><dt>Дефолт</dt><dd>не меняется</dd></dl>
+        </div>
+        <div class="opt"><h3>Колонка по размеру кнопки</h3>
+          <table class="a-tbl"><tr><th>Страхователь</th><th></th><th class="util slim">⚙</th></tr><tr><td>Acme Ltd</td><td class="chevc">›</td><td class="util slim"></td></tr></table>
+          <dl class="layer"><dt>Работа DS</dt><dd>сжать колонку, когда нет rowActions</dd><dt>Консьюмер</dt><dd class="gain">ничего писать не надо</dd></dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="q" data-q="ask-table-footer-padding">
+      <div class="q-head">
+        <span class="q-num">36</span>
+        <h2 class="q-title">У футера пагинации ds-table нет хука на вертикальные отступы</h2>
+        <span class="q-src">P3 · mm-ecm-kb · хук стилей</span>
+      </div>
+      <p class="q-sub"><code>.pagination-footer</code> хардкодит <code>padding-block: var(--space-3)</code>; боковые отступы уже идут за <code>--ds-table-cell-padding-*</code>.</p>
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">DS по умолчанию · 12px сверху</p>
+          <div class="a-hfoot"><span>1-10 из 84</span><span>‹ 1 2 3 ›</span></div>
+        </div>
+        <div class="spec">
+          <p class="cap">как хочет консьюмер · 20px сверху</p>
+          <div class="a-hfoot roomy"><span>1-10 из 84</span><span>‹ 1 2 3 ›</span></div>
+        </div>
+      </div>
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <p class="css"><code><span class="hit">.pagination-footer.pagination-footer</span> {
+    padding-top: var(--rp-sp-20);
+  }</code></p>
+          <dl class="layer"><dt>Работа DS</dt><dd class="none">нет</dd><dt>Цена</dt><dd>удвоенный класс по внутренней разметке</dd></dl>
+        </div>
+        <div class="opt"><h3>Хук --ds-table-footer-padding-* <span class="star">★</span></h3>
+          <p class="css"><code>ds-table {
+    --ds-table-footer-padding-top: var(--rp-sp-20);
+    --ds-table-footer-padding-bottom: var(--space-3);
+  }</code></p>
+          <dl class="layer"><dt>Работа DS</dt><dd>2 токена, дефолт --space-3</dd><dt>Консьюмер</dt><dd class="gain">без селектора</dd></dl>
+        </div>
+      </div>
+    </section>
 
   <p class="group">Чарты</p>
 
   <section class="q" data-q="bar-name">
     <div class="q-head">
-      <span class="q-num">01</span>
+      <span class="q-num">37</span>
       <h2 class="q-title">Как зовётся объединённый progress+meter</h2>
       <a class="q-src" href="10-ds-bar-name-collision.html">дека 10</a>
     </div>
@@ -257,7 +1917,7 @@
 
   <section class="q" data-q="sparkline">
     <div class="q-head">
-      <span class="q-num">02</span>
+      <span class="q-num">38</span>
       <h2 class="q-title">Спарклайн - пресет линии или свой компонент</h2>
       <a class="q-src" href="7-chart-sparkline-preset.html">дека 7</a>
     </div>
@@ -309,7 +1969,7 @@
 
   <section class="q" data-q="waterfall">
     <div class="q-head">
-      <span class="q-num">03</span>
+      <span class="q-num">39</span>
       <h2 class="q-title">Водопад - свой тег или режим колоночного чарта</h2>
       <a class="q-src" href="8-waterfall-mode-or-component.html">дека 8</a>
     </div>
@@ -326,7 +1986,7 @@
 
   <section class="q" data-q="indeterminate">
     <div class="q-head">
-      <span class="q-num">04</span>
+      <span class="q-num">40</span>
       <h2 class="q-title">Форма неопределённого прогресса на узком треке</h2>
       <a class="q-src" href="../docs/todo.md">бэклог, без деки</a>
     </div>
@@ -371,7 +2031,7 @@
 
   <section class="q" data-q="chart-palette-lightness">
     <div class="q-head">
-      <span class="q-num">05</span>
+      <span class="q-num">41</span>
       <h2 class="q-title">Палитра чартов разделяет по тону и почти не по светлоте</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1363</a>
     </div>
@@ -390,7 +2050,7 @@
 
   <section class="q" data-q="colour-engine">
     <div class="q-head">
-      <span class="q-num">06</span>
+      <span class="q-num">42</span>
       <h2 class="q-title">Каким методом выводить цвет из одного токена на роль</h2>
       <a class="q-src" href="1-color-engine-derivation.html">дека 1</a>
     </div>
@@ -413,7 +2073,7 @@
 
   <section class="q" data-q="interaction-b1">
     <div class="q-head">
-      <span class="q-num">07</span>
+      <span class="q-num">43</span>
       <h2 class="q-title">Шаг pressed для тинтов</h2>
       <a class="q-src" href="3-interaction-formula.html">дека 3, В1</a>
     </div>
@@ -428,7 +2088,7 @@
 
   <section class="q" data-q="interaction-b2">
     <div class="q-head">
-      <span class="q-num">08</span>
+      <span class="q-num">44</span>
       <h2 class="q-title">Нужен ли pressed нейтральным поверхностям</h2>
       <a class="q-src" href="3-interaction-formula.html">дека 3, В2</a>
     </div>
@@ -443,7 +2103,7 @@
 
   <section class="q" data-q="interaction-b4">
     <div class="q-head">
-      <span class="q-num">09</span>
+      <span class="q-num">45</span>
       <h2 class="q-title">Нужен ли override-слот поверх формулы</h2>
       <a class="q-src" href="3-interaction-formula.html">дека 3, В4</a>
     </div>
@@ -463,7 +2123,7 @@
 
   <section class="q" data-q="interaction-b5">
     <div class="q-head">
-      <span class="q-num">10</span>
+      <span class="q-num">46</span>
       <h2 class="q-title">Вводим ли pressed для success и warning кнопок</h2>
       <a class="q-src" href="3-interaction-formula.html">дека 3, В5</a>
     </div>
@@ -478,7 +2138,7 @@
 
   <section class="q" data-q="theme-recipe">
     <div class="q-head">
-      <span class="q-num">11</span>
+      <span class="q-num">47</span>
       <h2 class="q-title">Рецепт темы против ручных пиков</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1331</a>
     </div>
@@ -495,7 +2155,7 @@
 
   <section class="q" data-q="warning-text">
     <div class="q-head">
-      <span class="q-num">12</span>
+      <span class="q-num">48</span>
       <h2 class="q-title">Какой цвет текста ставить на жёлтый тинт</h2>
       <a class="q-src" href="6-warning-text-colour.html">дека 6</a>
     </div>
@@ -520,7 +2180,7 @@
 
   <section class="q" data-q="stepper-dropzone-fields">
     <div class="q-head">
-      <span class="q-num">13</span>
+      <span class="q-num">49</span>
       <h2 class="q-title">ds-number-stepper и ds-dropzone - поля или нет</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1320</a>
     </div>
@@ -537,7 +2197,7 @@
 
   <section class="q" data-q="select-multi">
     <div class="q-head">
-      <span class="q-num">14</span>
+      <span class="q-num">50</span>
       <h2 class="q-title">ds-select с multi - строить ли</h2>
       <a class="q-src" href="5-select-native-multi.html">дека 5</a>
     </div>
@@ -554,7 +2214,7 @@
 
   <section class="q" data-q="banner-warning">
     <div class="q-head">
-      <span class="q-num">15</span>
+      <span class="q-num">51</span>
       <h2 class="q-title">Предупреждать ли в dev о неозвученном error-баннере</h2>
       <a class="q-src" href="11-banner-announce-warning.html">дека 11</a>
     </div>
@@ -589,7 +2249,7 @@
 
   <section class="q" data-q="picker-height">
     <div class="q-head">
-      <span class="q-num">16</span>
+      <span class="q-num">52</span>
       <h2 class="q-title">Высота списка пикера - публичный токен или panelClass</h2>
       <a class="q-src" href="12-picker-list-height.html">дека 12</a>
     </div>
@@ -640,7 +2300,7 @@
 
   <section class="q" data-q="cdk-menu">
     <div class="q-head">
-      <span class="q-num">17</span>
+      <span class="q-num">53</span>
       <h2 class="q-title">Переходить ли на CDK Menu</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1359</a>
     </div>
@@ -657,7 +2317,7 @@
 
   <section class="q" data-q="signal-forms">
     <div class="q-head">
-      <span class="q-num">18</span>
+      <span class="q-num">54</span>
       <h2 class="q-title">Как выглядят pending и dirty</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1488</a>
     </div>
@@ -678,7 +2338,7 @@
 
   <section class="q" data-q="typography-classes">
     <div class="q-head">
-      <span class="q-num">19</span>
+      <span class="q-num">55</span>
       <h2 class="q-title">20 классов типографики всё ещё .t-*</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1340</a>
     </div>
@@ -696,7 +2356,7 @@
 
   <section class="q" data-q="button-c-slots">
     <div class="q-head">
-      <span class="q-num">20</span>
+      <span class="q-num">56</span>
       <h2 class="q-title">Слоты кнопки называются --c-*</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1346</a>
     </div>
@@ -713,7 +2373,7 @@
 
   <section class="q" data-q="bem-modifiers">
     <div class="q-head">
-      <span class="q-num">21</span>
+      <span class="q-num">57</span>
       <h2 class="q-title">ds-docs пишет модификаторы как --suffix</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1421</a>
     </div>
@@ -730,7 +2390,7 @@
 
   <section class="q" data-q="docs-brand-examples">
     <div class="q-head">
-      <span class="q-num">22</span>
+      <span class="q-num">58</span>
       <h2 class="q-title">Убрать ли примеры бренда и домена из публичных доков</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1403</a>
     </div>
@@ -749,7 +2409,7 @@
 
   <section class="q" data-q="angular-22">
     <div class="q-head">
-      <span class="q-num">23</span>
+      <span class="q-num">59</span>
       <h2 class="q-title">Когда переходим на Angular 22</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1439, P1</a>
     </div>
@@ -768,7 +2428,7 @@
 
   <section class="q" data-q="npm-2027">
     <div class="q-head">
-      <span class="q-num">24</span>
+      <span class="q-num">60</span>
       <h2 class="q-title">Чем заменить публикацию в npm с января 2027</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1369</a>
     </div>
@@ -787,7 +2447,7 @@
 
   <section class="q" data-q="claude-design-ci">
     <div class="q-head">
-      <span class="q-num">25</span>
+      <span class="q-num">61</span>
       <h2 class="q-title">Публикация в Claude Design из Bitbucket</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1391</a>
     </div>
@@ -804,7 +2464,7 @@
 
   <section class="q" data-q="release-note-why">
     <div class="q-head">
-      <span class="q-num">26</span>
+      <span class="q-num">62</span>
       <h2 class="q-title">Должна ли запись релиза объяснять ПОЧЕМУ</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1414</a>
     </div>
@@ -821,7 +2481,7 @@
 
   <section class="q" data-q="deferred-defaults">
     <div class="q-head">
-      <span class="q-num">27</span>
+      <span class="q-num">63</span>
       <h2 class="q-title">Три отложенных смены значений по умолчанию</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1498</a>
     </div>
@@ -840,7 +2500,7 @@
 
   <section class="q" data-q="changelog-wrap">
     <div class="q-head">
-      <span class="q-num">28</span>
+      <span class="q-num">64</span>
       <h2 class="q-title">Перевёрстывать ли CHANGELOG в 100 колонок</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1408</a>
     </div>
@@ -859,7 +2519,7 @@
 
   <section class="q" data-q="fix-all-html">
     <div class="q-head">
-      <span class="q-num">29</span>
+      <span class="q-num">65</span>
       <h2 class="q-title">fix:all переформатирует HTML, с которым потом спорит eslint</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1425</a>
     </div>
@@ -881,7 +2541,7 @@
 
   <section class="q" data-q="stale-ds-css">
     <div class="q-head">
-      <span class="q-num">30</span>
+      <span class="q-num">66</span>
       <h2 class="q-title">Ничто не ловит устаревший presentations/ds.css</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1378</a>
     </div>
@@ -900,7 +2560,7 @@
 
   <section class="q" data-q="todo-index-gate">
     <div class="q-head">
-      <span class="q-num">31</span>
+      <span class="q-num">67</span>
       <h2 class="q-title">todo-index --check вне lint:all</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1376</a>
     </div>
@@ -917,7 +2577,7 @@
 
   <section class="q" data-q="manifest-practices">
     <div class="q-head">
-      <span class="q-num">32</span>
+      <span class="q-num">68</span>
       <h2 class="q-title">Какие из восьми практик формата манифестов берём</h2>
       <a class="q-src" href="4-migration-manifest-audit.html">дека 4</a>
     </div>
@@ -948,7 +2608,7 @@
 
   <section class="q" data-q="automation-coverage">
     <div class="q-head">
-      <span class="q-num">33</span>
+      <span class="q-num">69</span>
       <h2 class="q-title">Три пути ds-table и пять групп компонентов ни разу не прокликаны</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1374</a>
     </div>
@@ -965,7 +2625,7 @@
 
   <section class="q" data-q="schematics-tsconfig">
     <div class="q-head">
-      <span class="q-num">34</span>
+      <span class="q-num">70</span>
       <h2 class="q-title">schematics/tsconfig просит moduleResolution: node</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1399</a>
     </div>
@@ -986,7 +2646,7 @@
 
   <section class="q" data-q="design-manifest-templates">
     <div class="q-head">
-      <span class="q-num">35</span>
+      <span class="q-num">71</span>
       <h2 class="q-title">templates и startingPoints в манифесте Claude Design</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1382</a>
     </div>
@@ -1007,7 +2667,7 @@
 
   <section class="q" data-q="docs-blocks">
     <div class="q-head">
-      <span class="q-num">36</span>
+      <span class="q-num">72</span>
       <h2 class="q-title">Четыре компонента без собственного блока в ds-docs</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1385</a>
     </div>

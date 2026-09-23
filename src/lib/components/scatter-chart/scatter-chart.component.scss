@@ -93,3 +93,11 @@
   color: var(--text-secondary);
   font-size: var(--font-size-xs);
 }
+
+/* The whole series steps back while another is named in the legend - the same answer the column
+   and line charts give, so one gesture means one thing across the family. */
+g.is-dimmed {
+  opacity: var(--ds-chart-dimmed-opacity, 0.25);
+  transition: opacity var(--ds-motion-chart-mark-duration)
+    var(--ds-motion-chart-mark-easing);
+}
