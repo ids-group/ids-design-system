@@ -14,13 +14,12 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**142 open — 0 P1, 24 P2, 118 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**136 open — 0 P1, 18 P2, 118 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
-### P2 — 24
+### P2 — 18
 
 - **Defects consumers work around today (swept 2026-09-23)**
   - `ds-modal` footer clips its buttons instead of stacking, against its own truncation contract (from the mm-ecm consumer)
-  - The 0.13.3 manifest renames `--ds-meter-radius` to a `--ds-bar-radius` that nothing reads (from the mm-ecm-platform-kb consumer)
   - The stock control edge and `--secondary-on` fail contrast; the second breaks on any light brand secondary (from the ids-europe-landing consumer)
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - `_focus.scss`'s top-level CSS is copied into 48 component style strings
@@ -29,19 +28,13 @@ item and nothing else.
   - `ds-tag` marked `interactive` is mouse-only
 - **Manifest-shape defects the two-wave plugin review surfaced (2026-09-04)**
   - The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27 in a real browser, 4.42:1 against the 4.5:1 threshold
-- **Two chart names that collide (recorded 2026-09-21, from the mm-ecm consumer)**
-  - `ds-bar` is a prefix of `ds-bar-chart`, and the token surfaces overlap the same way
 - **Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)**
   - DOCS for A3: `@defer` needs the deep specifier — the one exception to «no consumer
 - **DS-docs**
   - Fourteen focusable elements in ds-docs still have no accessible name, on two components that always could
 - **What actually running the 0.13.4 migration cost (recorded 2026-09-23, from the mm-ecm consumer)**
-  - The mass spell-out renames old names that are PREFIXES of the new ones, and the pitfall does not mention it
   - Adopting `banner.announce` app-wide silently arms every banner written afterwards, and the variant is a usable discriminator
-- **Four more things the 0.13.4 migration cost a consumer (recorded 2026-09-23, from the mm-ecm consumer)**
-  - `--ds-line-chart-plot-height` changes what it does and no manifest item says so
-  - `donut-chart-renamed-to-pie-chart` declares `surface: ["template","typescript"]`, and …
-  - The 0.13.4 CHANGELOG names the segmented tokens by a spelling that never shipped
+- **One more thing the 0.13.4 migration cost a consumer (recorded 2026-09-23, from the mm-ecm consumer)**
   - The spell-out wave was keyed on suffixes, so three abbreviations survive it - and one
 - **Two 0.13.4 items point `old` at the name the release gives them (recorded 2026-09-23, from the mm-ecm consumer)**
   - `pie-chart-thickness-is-now-inner-radius` and `pie-chart-centre-content-needs-a-hole` scope `old` to `ds-pie-chart`, which does not exist at the boundary they describe
@@ -267,9 +260,6 @@ Defects a consumer hit - from a QA pass, or from reading a consumer tree for a r
 
 - [ ] **[P2] `ds-modal` footer clips its buttons instead of stacking, against its own truncation contract (from the mm-ecm consumer).** `ecm-portal/src/styles.scss:106-108` adds `flex-wrap: wrap` to `ds-modal-card .actions`. `modal.component.scss:7` promises "If the row overflows, stack vertically full-width", but `:189-200` is a non-wrapping flex row and `.modal` (`:73-90`) is fixed-width with `overflow: hidden`, and because the row is `justify-content: flex-end` it overflows past its START edge, so the first button is the one cut (measured in headless Chrome on a rebuild, 2026-09-23: its box starts at -124px in a 300px row); `ds-button` keeps `white-space: nowrap` (`button.component.scss:112`) and does not shrink. `ds-modal` and `ds-modal-card` share the sheet. **Wanted:** the footer wraps, or stacks full-width as the contract says, when its buttons outgrow the card, with no consumer rule.
 
-- [ ] **[P2] The 0.13.3 manifest renames `--ds-meter-radius` to a `--ds-bar-radius` that nothing reads (from the mm-ecm-platform-kb consumer).** `migrations/0.13.3.json:85` says `-radius` keeps its suffix, but `bar.component.scss:22,29` pins `border-radius: var(--radius-pill)` on the track and the fill. A consumer who follows the manifest gets a silent no-op and a pill bar. The CHANGELOG (`CHANGELOG.md:962-963`) omits the hook without saying it was removed, and at v0.13.2 `meter.component.scss:4` read it. Consumer note: `mm-ecm-platform-kb/.claude/local/todo/ds-0.13.1-charts-and-reserve-messages.md:26-27`.
-  **Wanted:** either `ds-bar` reads `--ds-bar-radius` (default `var(--radius-pill)`) on the track and the fill, or the manifest item and the CHANGELOG say `--ds-meter-radius` was removed, with no replacement.
-
 - [ ] **[P2] The stock control edge and `--secondary-on` fail contrast; the second breaks on any light brand secondary (from the ids-europe-landing consumer).** `--border-default` is `var(--neutral-200)` (`_semantic.scss:49`, #DCE1EA) and is the resting edge of `ds-input` (`input.component.scss:17`) and 25 more components: 1.31:1 on white in the stock theme against the 3:1 WCAG 1.4.11 floor for a control boundary. `--secondary-on` is the constant `var(--primary-on)` = white (`:134`, `:116`) while `--secondary` recomposes from `--secondary-h/s/l`, so a gold secondary (#FBAC18) gets white text at 1.91:1. ids-europe-landing rebinds both (`_theme.scss:44-57`, `:89`). **Wanted:** a control-edge role that clears 3:1 in both themes (or `--border-default` moved to it), and `--secondary-on` derived from `--secondary`'s lightness or listed in the brand must-rebind checklist of the brand-unsafe item.
 
 - [ ] **[P3] `ds-table`'s pager keeps the stale total and stays live under `loading="skeleton"` (from the ai-sdlc consumer).** Skeleton mode swaps the rows for placeholders (`table.component.html:185-188`, the
@@ -363,34 +353,6 @@ and says nothing about the old one. Measured on three grounds: `presentations/fo
   (`0.11.1`), a ~95-word `restore` paragraph (`0.11.3` — README wants "a literal snippet or
   `null`"). The plugin now treats a non-token `old` as a non-locator, so these degrade safely;
   tidy them when those manifests are next touched, and consider a lint rule for `restore` length.
-
-## Two chart names that collide (recorded 2026-09-21, from the mm-ecm consumer)
-
-*This section also has items under **Asks**.*
-
-- [ ] **[P2] `ds-bar` is a prefix of `ds-bar-chart`, and the token surfaces overlap the same way.**
-  0.13.3 merged `ds-progress` and `ds-meter` into `ds-bar`, and the CHANGELOG entry announcing it
-  has to carry its own warning: "`ds-bar-chart` is a different component and is NOT renamed. `ds-bar`
-  is a prefix of it, so a find-and-replace without a word boundary will corrupt every chart in the
-  app." The tokens repeat the trap — three pairs differ only by the word `chart`:
-  `--ds-bar-track-color` against `--ds-bar-chart-track-color`, `--ds-bar-target-color` against
-  `--ds-bar-chart-target-color`, `--ds-bar-target-width` against `--ds-bar-chart-target-width`.
-  A missed token rename reports nothing and the bar simply returns to its default look, which is the
-  failure this collision makes likely rather than merely possible.
-  **The word boundary that warning sends people to does not work.** `\bds-bar\b` still matches
-  inside `ds-bar-chart`: a hyphen is not a `\w` character, so `\b` fires between the `r` and the `-`.
-  Observed 2026-09-23 on the mm-ecm consumer, where an agent migrating to 0.13.3 reached for exactly
-  that guard, believed it was scoped and it was not. The collision is live there: the
-  mm-ecm-platform-kb prototype on 0.13.4 has 4 `<ds-bar>` beside 5 `<ds-bar-chart>`. The 0.13.3
-  manifest pitfalls (`ds-progress`/`ds-meter` to `ds-bar`) and CHANGELOG.md:969 still prescribe
-  the word boundary. A guard that holds needs the longer name excluded explicitly - `ds-bar(?!-chart)`,
-  or matching `<ds-bar[\s/>]`. Worth putting in the item's `pitfall` either way, since it turns
-  "be careful" into a reason the careful version fails.
-  **Wanted:** a name that cannot prefix a chart's, and that does not re-pin the component to
-  progress or to meter - the merge dropped both words deliberately, and `semantics` is what carries
-  that meaning now. Measured 2026-09-23: of 22 prefix pairs among 100 selectors this is the only one
-  where the two components are unrelated; the other 21 are parent and child of one family.
-  Candidates drawn in deck `10-ds-bar-name-collision`, which recommends `ds-gauge`.
 
 ## Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)
 
@@ -528,38 +490,6 @@ The upgrade itself went clean - 115 edits, green on the first build, two indepen
 no defects. These are the two places where the manifest left the consumer to work something out
 that the release could have said.
 
-- [ ] **[P2] The mass spell-out renames old names that are PREFIXES of the new ones, and the pitfall does not mention it.**
-  `token-pad-spelled-out-as-padding`, `token-weight-spelled-out-as-font-weight`,
-  `token-dimensions-spelled-out` and `token-btn-spelled-out-as-button` all carry the same pitfall -
-  *"An unknown custom property is not an error … the element draws at the default with nothing
-  reported"* - which is the MISSED-rename hazard. The one that actually bites is the opposite:
-  applying the rename as a substring replace corrupts names that are already correct.
-  Every one of these was live in the consumer we migrated, with the at-risk neighbour present in
-  the same stylesheet:
-
-  | rule | what it corrupts | the neighbour, in this consumer |
-  |---|---|---|
-  | `-pad` -> `-padding` | `--ds-popover-paddingding` | `--ds-popover-padding`, `refresh-shell.scss:191` |
-  | `-weight` -> `-font-weight` | `--ds-badge-font-font-weight` | `--ds-badge-font-weight`, `waves-preview.component.scss:92` |
-  | `-h` -> `-height` | `--ds-button-heighteight` | `--ds-button-height`, `--ds-search-height`, `--ds-field-height` |
-  | `-w` -> `-width` | same shape | `--ds-menu-min-width`, `--ds-tab-indicator-width` |
-
-  There is also a ROUTING collision between two items in the same release: `--ds-segmented-btn-h`
-  matches `token-btn-spelled-out-as-button`, and `token-dimensions-spelled-out`, listed after it,
-  then takes it on to `--ds-segmented-button-height`. The
-  correct destination is `--ds-segmented-segment-height`, from `segmented-parts-are-segments`. A
-  consumer applying the items in the order the manifest lists them lands on the wrong name, and
-  because an unknown custom property is silent, nothing says so.
-  We handled it by anchoring every replacement to the end of the token name and by running the
-  specific items before the generic ones - but that is a technique a consumer has to invent.
-  **Wanted:** on each spell-out item, one clause in `pitfall`: the old suffix is a substring of the
-  new one, so match the END of the name, never a substring; and on `token-btn-spelled-out-as-button`
-  a cross-reference saying `--ds-segmented-btn-*` is claimed by `segmented-parts-are-segments` and
-  must be excluded. As shipped the four items break `AUTHORING.md:65` ("Bound every pattern ...
-  state the boundary in note"): their notes name no boundary and no exclusion. A `map` of exact
-  old-to-new names would remove the question entirely, but it would be a schema extension - per
-  AUTHORING `map` exists only on `value-remap`, and no `token-rename` in any manifest carries one.
-
 - [ ] **[P2] Adopting `banner.announce` app-wide silently arms every banner written afterwards, and the variant is a usable discriminator.**
   `banner-alert-announce-takes-a-config-default` says it well for the first pass: set the config,
   then bind `[announce]="false"` on the page furniture. We did exactly that - config in two apps,
@@ -583,42 +513,11 @@ that the release could have said.
   Failing that, one line in the item's `note`: adopting the config inverts the default for every
   banner added later, so a team taking it on should expect to mark furniture as it is written.
   This is the mirror-image option of the open Decision "Does a dev warning name an error banner no
-  screen reader will read?" (deck `11-banner-announce-warning`); decide the two together.
+  screen reader will read?" (deck `10-banner-announce-warning`); decide the two together.
 
-## Four more things the 0.13.4 migration cost a consumer (recorded 2026-09-23, from the mm-ecm consumer)
+## One more thing the 0.13.4 migration cost a consumer (recorded 2026-09-23, from the mm-ecm consumer)
 
-Found walking mm-ecm from 0.13.3 to 0.13.4. None of the four breaks a build, which is the point.
-
-- [ ] **[P2] `--ds-line-chart-plot-height` changes what it does and no manifest item says so.**
-  `grep -c plot-height migrations/0.13.4.json` is **0**; the string appears once in the 0.13.4
-  CHANGELOG, in Changed, saying the token "has been declared since the chart shipped and reached
-  only the loading skeleton … the token parsed and changed nothing", and now drives the plot.
-  Verified at both tags: v0.13.3 `line-chart.component.scss:36` declares it and `:48` spends it on
-  `chart-frame.message-box` alone, the comment at `:50` stating the canvas is sized by viewBox
-  ratio; v0.13.4 `line-chart.component.ts:584,618` reads it to size the plot coordinate space.
-  **Why only a manifest item could catch it:** the NAME is identical at both tags, so there is
-  nothing to grep and no build signal. A consumer who pinned it to shape the skeleton silently
-  resizes every plot. mm-ecm never pinned it and is unaffected, which is luck rather than safety.
-  **Wanted:** a `behavior` item whose `verify` is the positive assertion that the plot reads it,
-  since `old`/`new` cannot express a change that keeps its name.
-
-- [ ] **[P2] `donut-chart-renamed-to-pie-chart` declares `surface: ["template","typescript"]`, and
-  a consumer's stylesheet needs the rename too.** A selector written against the ELEMENT rather than
-  an internal class is ordinary consumer CSS: mm-ecm had `.chart-block ds-donut-chart { … }`. It is
-  not covered by `pie-chart-internal-class-renamed`, which is about `.donut-chart`, and a finder
-  obeying the declared surface skips it. The rule then matches nothing and the chart quietly loses
-  its sizing.
-  **Wanted:** `"style"` added to that item's `surface`, and the same check on any future selector
-  rename - an element name is reachable from CSS, so a selector rename is always partly a style one.
-
-- [ ] **[P2] The 0.13.4 CHANGELOG names the segmented tokens by a spelling that never shipped.**
-  The prose says "The three `--ds-segmented-button-*` are `--ds-segmented-segment-*`". At v0.13.3
-  the three are `--ds-segmented-btn-border`, `--ds-segmented-btn-h` and `--ds-segmented-btn-pad-x`
-  (`git grep -ho -- '--ds-segmented-btn-[a-z-]*' v0.13.3 -- src/lib`). The manifest item carries the
-  right `old`, so only the prose is wrong - which makes it the more dangerous half: a reader
-  searching their stylesheet for what the CHANGELOG told them finds nothing and concludes they are
-  unaffected.
-  **Wanted:** the prose corrected to `--ds-segmented-btn-*`.
+Found walking mm-ecm from 0.13.3 to 0.13.4. It does not break a build, which is the point.
 
 - [ ] **[P2] The spell-out wave was keyed on suffixes, so three abbreviations survive it - and one
   of them sits beside a token the wave DID rename.** `ds-input` at v0.13.4 declares
@@ -747,8 +646,6 @@ Same sweep, the capabilities that are missing rather than wrong. Each workaround
   **The same silence has a second shape, worth covering together: a selector that stops matching.** `ds-button`'s inner button carries `c-<color>` and `v-<variant>` classes, so a consumer styling `ds-button .button.secondary` or `.outline` matches nothing. The same consumer carries seven such blocks, five of them named after a colour. Worse than inert: its `primary` block is written as `.button:not(.secondary):not(.tertiary):not(.outline):not(.error):not(.success):not(.warning):not(.text)`, and since none of those classes is ever rendered the negation excludes nothing, so a rule meant for one variant applies to every button. A check that resolved a consumer's `ds-*` selectors against the classes and attributes the components actually render would catch both halves.
 
 ## Two chart names that collide (recorded 2026-09-21, from the mm-ecm consumer)
-
-*This section also has items under **Bugs**.*
 
 Both found while planning that consumer's move to 0.13.3. Neither blocks it; both cost a reader.
 
@@ -1275,11 +1172,11 @@ None of these is blocked on effort. Each is a verdict, and most carry a deck tha
 
 ## Decks awaiting a verdict (re-audited 2026-09-20)
 
-**Fourteen** decks carry `ds-deck-status: open` — counted on disk, not from this list, which has been
+**Twelve** decks carry `ds-deck-status: open` — counted on disk, not from this list, which has been
 short before. **The rank is the filename**: an open deck is `<rank>-<slug>.html`, ranked by what
 answering it unblocks, so the folder listing IS the queue. Ranks are renumbered when the queue
 changes and a stale one is never kept to preserve a link; `deck-lint` fails a duplicate rank, a gap
-in 1..N, and an `implemented` deck still carrying one. **`presentations/13-decision-queue.html` carries every open question** — every open
+in 1..N, and an `implemented` deck still carrying one. **`presentations/12-decision-queue.html` carries every open question** — every open
 deck's question with its options in that deck's own words, the recommendation starred, a link back
 for the argument, and the two questions that have no deck. It duplicates no argument, so it cannot
 contradict a deck; re-check it when a deck's OPTIONS change. **Never cite a deck by number from this
@@ -1296,10 +1193,9 @@ file** — the number moves; cite the filename.
 | 7 | `7-chart-sparkline-preset` | A `variant="spark"` on the line chart against a separate `ds-sparkline`. | parked 2026-09-19, so it is decided-not-built |
 | 8 | `8-waterfall-mode-or-component` | The waterfall's own tag against a `stack="waterfall"` mode on the column chart. | the waterfall entry point, already shipped standalone |
 | 9 | `9-bar-column-contracts` | How far to converge the bar and the column: name the difference, converge the palette, or give the bar a series model. | the stacking-contract ask under *Two chart names that collide* |
-| 10 | `10-ds-bar-name-collision` | What the merged progress+meter is called, given `ds-bar` is a prefix of `ds-bar-chart`. | the `ds-bar` rename ask on the same board |
-| 11 | `11-banner-announce-warning` | Whether a dev warning names an error banner no screen reader will read. | the closed `banner.announce` ask, which left this open |
-| 12 | `12-picker-list-height` | Whether the picker list height becomes a public token or stays behind `panelClass`. | the closed `--picker-maxh` ask, same shape |
-| 13 | `13-decision-queue` | Every consumer ask and every open question in one page - 37 asks in four groups, then 36 decisions in six, each drawn as today against after. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
+| 10 | `10-banner-announce-warning` | Whether a dev warning names an error banner no screen reader will read. | the closed `banner.announce` ask, which left this open |
+| 11 | `11-picker-list-height` | Whether the picker list height becomes a public token or stays behind `panelClass`. | the closed `--picker-maxh` ask, same shape |
+| 12 | `12-decision-queue` | Every consumer ask and every open question in one page - 31 asks in four groups, then 35 decisions in six, each drawn as today against after. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
