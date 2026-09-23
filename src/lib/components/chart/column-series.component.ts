@@ -42,6 +42,10 @@ export interface ColumnSeriesPoint {
 
 /** The disc's radius, and half the glyph's box, in the same CSS pixels the plot is drawn in. */
 const PIN_DISC_RADIUS = 11;
+
+// Clears the column's top edge: at one radius the disc sits flush against it and reads as part of
+// the bar rather than as a badge on it.
+const PIN_TOP_GAP = 4;
 const PIN_GLYPH_SIZE = 14;
 
 /** Distance from a mark's own tip to its value label's baseline. */
@@ -253,7 +257,7 @@ export class ColumnSeriesComponent implements OnDestroy {
         top: Math.min(tip, baseline),
         height: Math.abs(tip - baseline),
         labelY: below ? tip + VALUE_LABEL_GAP : tip - VALUE_LABEL_GAP,
-        pinY: Math.min(tip, baseline) + PIN_DISC_RADIUS,
+        pinY: Math.min(tip, baseline) + PIN_DISC_RADIUS + PIN_TOP_GAP,
         // Growing from the baseline, never the mark's own tip - a column below zero grows
         // downward, so its transform-origin flips to the top edge it hangs from.
         origin: below ? 'top' : 'bottom',
