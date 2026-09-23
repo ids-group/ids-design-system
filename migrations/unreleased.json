@@ -87,9 +87,9 @@
       "old": "extends ChartComponent",
       "new": null,
       "surface": "typescript",
-      "action": "Only if you SUBCLASS one of these and declare a member of the same name: rename yours, or add `override` where your member genuinely means the same thing.",
+      "action": "Only if you SUBCLASS one of these: rename a member of yours that collides with a new one, or add `override` where it genuinely means the same thing, and delete an override whose base member is gone.",
       "appliesWhen": "Only a class extending one of the listed components. Using them in a template is unaffected, and so is a consumer who composes rather than subclasses.",
-      "pitfall": "The collision is a compile error, not a silent one - TS4114 for a same-named member, TS2416 where the signature differs - so a build that passes has none.",
+      "pitfall": "A new name colliding is a compile error - TS4114, or TS2416 where the signature differs. A method of yours named like a REMOVED member and declared without `override` still compiles, and is simply never called again.",
       "restore": null,
       "searchHints": [
         "extends ChartComponent",
@@ -99,6 +99,9 @@
         "extends ChartTooltipDirective",
         "extends ScatterChartComponent",
         "extends ChartDataTableComponent",
+        "extends BarChartComponent",
+        "extends FunnelChartComponent",
+        "extends PieChartComponent",
         "extends "
       ],
       "detect": [
@@ -115,10 +118,16 @@
         "extends ScatterChartComponent",
         "ScatterChartComponent",
         "extends ChartDataTableComponent",
-        "ChartDataTableComponent"
+        "ChartDataTableComponent",
+        "extends BarChartComponent",
+        "BarChartComponent",
+        "extends FunnelChartComponent",
+        "FunnelChartComponent",
+        "extends PieChartComponent",
+        "PieChartComponent"
       ],
-      "verify": "Your build has no TS4114 or TS2416 against any of the listed classes.",
-      "note": "ChartComponent gained 15 members, most of them the tooltip the container now owns (activeTooltip, reportTooltip, tooltipTemplate and the rest) plus measured; ColumnSeriesComponent gained MIN_STACK_HIT, axisEntries, dimmedBySeries, highlighted, hitBox, seriesKey and stacked; LineSeriesComponent gained axisEntries, isActiveMarker and outline; ColumnChartComponent and ScatterChartComponent gained highlightedSeries; ChartDataTableComponent gained built, onToggle and openedOnce. ChartTooltipDirective gained dsChartTooltipPinned - internal, but reachable through the components/chart-tooltip entry point."
+      "verify": "Your build has no TS4114 or TS2416 against any of the listed classes, and no member of your subclass is named like one of the removed members listed in the note.",
+      "note": "Gained: ChartComponent 20 members, most of them the tooltip the container now owns, plus measured; ColumnSeriesComponent 14, LineSeriesComponent 9, ScatterChartComponent 4, ChartDataTableComponent 3, BarChartComponent and FunnelChartComponent two each, PieChartComponent roving, ColumnChartComponent highlightedSeries. Removed: rovingIndex and tabStopIndex from the bar, pie and funnel charts and the column series, onMarkEnter, onMarkNavigation and onPointKey from the column series, onMarkerEnter and onMarkerNavigation from the line series, onPlotPointer and clearCursor from ChartComponent, markIndex from ScatterChartComponent. ChartTooltipDirective gained dsChartTooltipPinned - internal, but reachable through the components/chart-tooltip entry point."
     },
     {
       "id": "table-expand-panel-content-wrapper",

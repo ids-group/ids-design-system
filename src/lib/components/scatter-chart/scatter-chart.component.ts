@@ -14,6 +14,7 @@ import {
   decimationTarget,
   linearScale,
   lttbDecimate,
+  markOf,
   minMaxDecimate,
   needsDecimating,
   niceDomain,
@@ -375,10 +376,31 @@ export class ScatterChartComponent {
     ),
   );
 
-  protected markIndex(seriesKey: string, pointKey: string): number {
-    return this.flatMarks().findIndex(
-      (held) => held.entry.key === seriesKey && held.mark.key === pointKey,
-    );
+  /** Where each series starts in `flatMarks`, so a point carries its flat index without a search
+   *  and the series' one listener reads it back. */
+  protected readonly seriesStart = computed(() => {
+    const starts = new Map<string, number>();
+    let next = 0;
+    for (const entry of this.series()) {
+      starts.set(entry.key, next);
+      next += entry.points.length;
+    }
+
+    return starts;
+  });
+
+  protected onPointOver(event: Event): void {
+    const hit = markOf(event);
+    if (hit) {
+      this.activeMark.enter(hit.index, event, undefined, hit.element);
+    }
+  }
+
+  protected onPointActivate(event: Event): void {
+    const held = this.flatMarks()[markOf(event)?.index ?? -1];
+    if (held) {
+      this.onPointClick(held.entry.series, held.mark.point);
+    }
   }
 
   protected readonly tooltipContext = computed<ChartTooltipContext | null>(

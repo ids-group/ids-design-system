@@ -270,6 +270,13 @@ export class ChartComponent implements ChartScales {
       });
     });
 
+    effect((onCleanup) => {
+      const canvas = this.canvasElement()?.nativeElement;
+      if (canvas && this.cursor() === 'category') {
+        onCleanup(this.listenForCursor(canvas));
+      }
+    });
+
     // The read phase, so every `getComputedTextLength` lands in one batch before any write:
     // interleaving them forces a synchronous layout per label. It re-measures when a label's text
     // changes, and only then - not when a resize merely moves the labels.
@@ -681,16 +688,21 @@ export class ChartComponent implements ChartScales {
     this.cursorState.release();
   }
 
-  protected onPlotPointer(event: PointerEvent): void {
-    if (this.cursor() !== 'category') {
-      return;
-    }
-    const canvas = (event.currentTarget as Element).getBoundingClientRect();
+  private readonly canvasElement =
+    viewChild<ElementRef<SVGSVGElement>>('canvasEl');
+
+  // Read once per hover and dropped on any scroll, rather than on every move: a move that follows
+  // the cursor band's own update would otherwise force a second layout in the same frame.
+  private canvasRect: DOMRect | null = null;
+
+  private plotPointer(event: PointerEvent, canvas: SVGSVGElement): void {
+    this.canvasRect ??= canvas.getBoundingClientRect();
     const plot = this.plot();
     // The canvas is scaled to its box, so a client x has to come back through the viewBox before
     // it means anything to a plot measured in view units.
     const viewX =
-      ((event.clientX - canvas.left) / canvas.width) * this.viewWidth();
+      ((event.clientX - this.canvasRect.left) / this.canvasRect.width) *
+      this.viewWidth();
     const index = this.clampIndex(
       categoryAt(viewX, plot.left, plot.width, this.categories().length),
     );
@@ -703,10 +715,39 @@ export class ChartComponent implements ChartScales {
     this.cursorState.enter(index, event);
   }
 
-  protected clearCursor(): void {
-    if (this.cursor() === 'category') {
+  /** The plot listens to the pointer only when it draws a category cursor, and outside the zone:
+   *  the handler writes signals, which schedule the render they need. */
+  private listenForCursor(canvas: SVGSVGElement): () => void {
+    const forgetRect = (): void => {
+      this.canvasRect = null;
+    };
+    const onPointer = (event: PointerEvent): void =>
+      this.plotPointer(event, canvas);
+    const onEnter = (): void =>
+      window.addEventListener('scroll', forgetRect, {
+        capture: true,
+        passive: true,
+      });
+    const onLeave = (): void => {
+      window.removeEventListener('scroll', forgetRect, { capture: true });
+      forgetRect();
       this.cursorState.leave();
-    }
+    };
+    this.zone.runOutsideAngular(() => {
+      canvas.addEventListener('pointerenter', onEnter);
+      canvas.addEventListener('pointermove', onPointer);
+      canvas.addEventListener('pointerdown', onPointer);
+      canvas.addEventListener('pointerleave', onLeave);
+    });
+
+    return () => {
+      canvas.removeEventListener('pointerenter', onEnter);
+      canvas.removeEventListener('pointermove', onPointer);
+      canvas.removeEventListener('pointerdown', onPointer);
+      canvas.removeEventListener('pointerleave', onLeave);
+      window.removeEventListener('scroll', forgetRect, { capture: true });
+      forgetRect();
+    };
   }
 
   private readonly bandElement = viewChild<ElementRef<Element>>('cursorBandEl');

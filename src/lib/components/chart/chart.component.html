@@ -33,13 +33,11 @@
       [dsChartTooltipOrigin]="tooltipOrigin()"
       [dsChartTooltipTemplate]="tooltipTemplate()">
       <svg
+        #canvasEl
         class="canvas"
         preserveAspectRatio="xMidYMid meet"
         [style.block-size.px]="viewHeight()"
-        [attr.viewBox]="viewBox()"
-        (pointermove)="onPlotPointer($event)"
-        (pointerdown)="onPlotPointer($event)"
-        (pointerleave)="clearCursor()">
+        [attr.viewBox]="viewBox()">
         @if (cursorBand(); as band) {
           <g
             class="cursor"

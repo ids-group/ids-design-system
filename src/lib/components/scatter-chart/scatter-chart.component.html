@@ -64,13 +64,20 @@
         [attr.y2]="plotBottom" />
 
       @for (entry of series(); track entry.key) {
+        @let start = seriesStart().get(entry.key) ?? 0;
+
         <g
           [class.is-dimmed]="
             highlightedSeries() !== null &&
             highlightedSeries() !== entry.series.id
           "
-          [style.--_scatter-series-color]="entry.color">
-          @for (mark of entry.points; track mark.key) {
+          [style.--_scatter-series-color]="entry.color"
+          (pointerover)="onPointOver($event)"
+          (focusin)="onPointOver($event)"
+          (click)="onPointActivate($event)"
+          (keydown.enter)="onPointActivate($event)"
+          (keydown.space)="onPointActivate($event)">
+          @for (mark of entry.points; track mark.key; let index = $index) {
             <circle
               class="point"
               [class.interactive]="interactive()"
@@ -78,16 +85,10 @@
               [attr.cy]="mark.cy"
               [attr.role]="interactive() ? 'button' : null"
               [attr.tabindex]="interactive() ? 0 : null"
+              [attr.data-mark-index]="start + index"
               [attr.aria-label]="
                 interactive() ? pointLabel(entry.series, mark.point) : null
-              "
-              (pointerenter)="
-                activeMark.enter(markIndex(entry.key, mark.key), $event)
-              "
-              (focus)="activeMark.enter(markIndex(entry.key, mark.key), $event)"
-              (click)="onPointClick(entry.series, mark.point)"
-              (keydown.enter)="onPointClick(entry.series, mark.point)"
-              (keydown.space)="onPointClick(entry.series, mark.point)" />
+              " />
           }
         </g>
       }

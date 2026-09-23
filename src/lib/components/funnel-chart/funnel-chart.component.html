@@ -53,7 +53,6 @@
         @for (entry of stages(); track entry.stage.id; let index = $index) {
           <polygon
             class="stage"
-            animate.leave="mark-leave"
             [attr.stroke-width]="hitGapUnits()"
             [style.--_chart-mark-stagger]="markStagger(index)"
             [class.interactive]="interactive()"
@@ -65,10 +64,11 @@
             [attr.fill]="entry.color"
             [attr.role]="interactive() ? 'button' : null"
             [attr.tabindex]="
-              interactive() ? (index === tabStopIndex() ? 0 : -1) : null
+              interactive() ? (index === roving.tabStop() ? 0 : -1) : null
             "
             [attr.data-mark-index]="index"
             [attr.aria-label]="interactive() ? entryLabel(entry) : null"
+            (animate.leave)="leaveMark($event)"
             (pointerenter)="activeMark.enter(index, $event)"
             (pointerleave)="activeMark.leave()"
             (focus)="onMarkFocus(index, $event)"

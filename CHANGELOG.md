@@ -21,13 +21,17 @@
   `.is-pinned` added to it.
 
 - **Subclassing one of these breaks on a name collision.** `ChartComponent`,
-  `ColumnSeriesComponent`, `LineSeriesComponent`, `ColumnChartComponent`, `ScatterChartComponent`
-  and `ChartDataTableComponent` each gained members, most of them while the container took over the
-  tooltip, and so did `ChartTooltipDirective`, which is internal
-  but reachable through `@ids-group-ltd/ids-design-system/components/chart-tooltip`. Declaring a
-  member of the same name in a subclass is a compile error - TS4114, or TS2416 where the signature
-  differs - so rename yours or add `override`. Subclassing a DS component is unsupported either
-  way.
+  `ColumnSeriesComponent`, `LineSeriesComponent`, `ColumnChartComponent`, `ScatterChartComponent`,
+  `ChartDataTableComponent`, `BarChartComponent`, `FunnelChartComponent` and `PieChartComponent`
+  each gained members, most of them while the container took over the tooltip, and so did
+  `ChartTooltipDirective`, which is internal but reachable through
+  `@ids-group-ltd/ids-design-system/components/chart-tooltip`. Declaring a member of the same name
+  in a subclass is a compile error - TS4114, or TS2416 where the signature differs - so rename yours
+  or add `override`. Protected members went too: the roving-focus pair on the bar, pie and funnel
+  charts and the column series, the per-mark event handlers of the column and line series, and the
+  plot's pointer handlers. A method of yours named like one of those, declared without `override`,
+  still compiles and is never called again, so delete it. Subclassing a DS component is unsupported
+  either way.
 
 ### Added
 
@@ -102,17 +106,22 @@
   for. The row now reads the `screenReaderLabel`, which also gives the checkbox its accessible
   name.
 
-- **A chart that enters hundreds of marks at once no longer freezes the page.** Every entering mark
-  asked the browser for its running animations, and in Chrome that call slows down with each
+- **A chart that enters hundreds of marks at once no longer freezes the page.** Every entering or
+  leaving mark asked the browser for its running animations, and in Chrome that call slows down with each
   animation already running, so a scatter of a thousand points held the main thread for seconds -
   longer still on a page with other charts entering. Under zone.js a `ds-chart` also ran two extra
   change-detection passes of the whole application after its first render, a column or line series
-  built its geometry at a stand-in width before the real one arrived, and the default number format
-  built a new formatter for every label.
+  built its geometry at a stand-in width before the real one arrived, every point, marker and column
+  carried up to eight event listeners of its own, and the default number format built a new
+  formatter for every label.
 
 - **Axis labels are measured again when their text changes.** The value gutter and the rotation and
   thinning of category labels were decided on the first render alone, so a chart that started out
   loading or empty, or whose categories or ticks changed later, kept overlapping labels.
+
+- **A skeleton pauses its shimmer while it is off screen.** The wave is recomputed on the main
+  thread every frame, on screen or not. It resumes where it stopped, so a placeholder that has been
+  scrolled away can come back out of step with its neighbours.
 
 - **Reduced motion stops the skeleton shimmer.** The opt-out rule lost to the component's own
   animation, and the wave kept running for readers who asked for less motion.
