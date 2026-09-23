@@ -1,12 +1,88 @@
 ## Unreleased
 
+### Breaking
+
+- **`ds-chart` opens the tooltip its marks describe, and a mark no longer takes one.** A mark
+  reported its context and every consumer bound `dsChartTooltip` on the mark themselves; a plot
+  holding two marks could open two panels, and a plot whose consumer forgot the binding opened
+  none. Marks now offer the container a tooltip source the way they already report a domain, and
+  the container draws the single panel.
+
+  Drop `[dsChartTooltip]`, `[dsChartTooltipOrigin]`, `[dsChartTooltipPreferBelow]` and
+  `[dsChartTooltipTemplate]` from `g[dsColumnSeries]` and `g[dsLineSeries]`. What replaces them:
+  nothing for the ordinary case, `[tooltipTemplate]` on `<ds-chart>` for a custom panel body, and
+  `[tooltipExtraGap]` there for a chart that prints value labels in the gap the panel wants.
+
+- **The chart tooltip pane is inert unless the reading is pinned.** The pane is drawn over the plot
+  it describes, so on a funnel or a tight category axis it covered the neighbouring marks and the
+  mark underneath never saw the pointer - the panel named a segment the reader had already left.
+  A pinned pane takes the pointer again, so its text can still be selected. A rule of yours on
+  `.cdk-overlay-pane.ds-chart-tooltip-pane` that assumed `pointer-events: auto` needs
+  `.is-pinned` added to it.
+
+### Added
+
+- **`dsLineSeries` takes an `outline`, on by default.** The line and its markers sit on a band of
+  the surface colour, so they stay legible where they cross columns. Set `[outline]="false"` for a
+  line on an empty plot where the band only separates it from the gridlines.
+
+- **`dsColumnSeries` takes `seriesKey` and `highlighted`.** Naming a series in the legend fades the
+  others, which `ds-column-chart` now wires for you.
+
+- **`--ds-toast-queue-bg-color` and `--ds-toast-queue-text-color`** paint the `+N` strip.
+
+### Changed
+
+- **A category panel names every series at the category.** `tooltip="axis"` was documented to do
+  this and listed only the series that opened it, because a mark could not see the others. Marks
+  now offer the container what they read at the cursor's category and the container merges them,
+  so a column and a line sharing a plot appear in one panel.
+
+- **Legend hover fades the other series whether or not `dimOthers` is set.** That input governs
+  what a pointer over a MARK does; naming a series in the legend is the reader asking for that one
+  directly.
+
+- **The unpin control sits below the plot.** The panel it undoes opens above the held mark, so a
+  control at the top was the one thing that panel covered.
+
 ### Fixed
+
+- **A stacked mark answers the pointer over its own segment.** Each series carried a hit box
+  spanning the whole category slot, so stacked they lay on top of one another and only the series
+  drawn last ever answered - every segment reported the top one.
+
+- **A tooltip anchored to a zero-value mark stays with its reading.** Such a mark is degenerate in
+  one axis - a column loses its height, a bar its width - and the overlay took the viewport corner
+  or the plot's left edge instead of the category.
+
+- **The bar chart's tooltip points at the drawn value, not the track.** A floating bar put its
+  panel a full track width from the reading it describes.
+
+- **A segmented bar's tooltip names its segments.** It repeated the row label the pointer was
+  already on; the row now heads the panel and each segment gets a line with its share.
+
+- **A hatched mark's tooltip dot carries the same break its mark does**, so the panel and the plot
+  encode the distinction the same way and neither relies on hue alone.
+
+- **The pinned-mark badge clears the column's top edge**, instead of sitting flush against it and
+  reading as part of the bar.
+
+- **The chart data table keys its nested rows uniquely.** A bar and its first segment both fell
+  back to a positional index in their own scope, which Angular reported as duplicated track keys on
+  every render.
+
 
 - **The column panel names a column whose header is visually empty.** A column declared with an
   empty `label` and a `screenReaderLabel` - an actions column, say - was listed in the
   `dsTableColumns` panel as a bare checkbox with no text, so nothing said which column it stood
   for. The row now reads the `screenReaderLabel`, which also gives the checkbox its accessible
   name.
+
+### What you can now DELETE
+
+| Delete | Why | Replace with |
+| --- | --- | --- |
+| `[dsChartTooltip]="` and the `[dsChartTooltipOrigin]="` / `[dsChartTooltipPreferBelow]="` beside it, on any `g[dsColumnSeries]` or `g[dsLineSeries]` | `ds-chart` opens the panel its marks describe, so a binding on the mark opens a second one | nothing for the ordinary case; `[tooltipTemplate]` and `[tooltipExtraGap]` on `ds-chart` where the panel was customised |
 
 ## 0.13.4 — 2026-09-23
 
