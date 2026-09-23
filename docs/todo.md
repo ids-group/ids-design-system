@@ -14,14 +14,14 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**111 open — 1 P1, 30 P2, 80 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**113 open — 1 P1, 32 P2, 80 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 1
 
 - **Framework & forms**
   - Upgrade to Angular 22 — and re-verify the signal-forms work against it, because one of its breaking changes lands exactly there
 
-### P2 — 30
+### P2 — 32
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Nothing catches a shell that rings on `:focus-within` when it means the keyboard
@@ -36,6 +36,9 @@ item and nothing else.
   - The elements demo has not been opened in a real browser since the rebuilds
   - `ds-toast-region`'s dev-warning strip is unverified
   - `ds-waterfall-chart` is `ds-cascade-chart` (Stas, 2026-09-23)
+- **What actually running the 0.13.4 migration cost (recorded 2026-09-23, from the mm-ecm consumer)**
+  - The mass spell-out renames old names that are PREFIXES of the new ones, and the pitfall does not mention it
+  - Adopting `banner.announce` app-wide silently arms every banner written afterwards, and the variant is a usable discriminator
 - **Two chart names that collide (recorded 2026-09-21, from the mm-ecm consumer)**
   - `ds-bar` is a prefix of `ds-bar-chart`, and the token surfaces overlap the same way
 - **Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)**
@@ -517,6 +520,65 @@ documented thing or their chapter's demo only exists once opened. Everything bel
   chart that silently vanished.
 
 Each has somebody behind it. Nothing here is speculative work.
+
+## What actually running the 0.13.4 migration cost (recorded 2026-09-23, from the mm-ecm consumer)
+
+The upgrade itself went clean - 115 edits, green on the first build, two independent re-checks with
+no defects. These are the two places where the manifest left the consumer to work something out
+that the release could have said.
+
+- [ ] **[P2] The mass spell-out renames old names that are PREFIXES of the new ones, and the pitfall does not mention it.**
+  `token-pad-spelled-out-as-padding`, `token-weight-spelled-out-as-font-weight`,
+  `token-dimensions-spelled-out` and `token-btn-spelled-out-as-button` all carry the same pitfall -
+  *"An unknown custom property is not an error … the element draws at the default with nothing
+  reported"* - which is the MISSED-rename hazard. The one that actually bites is the opposite:
+  applying the rename as a substring replace corrupts names that are already correct.
+  Every one of these was live in the consumer we migrated, with the at-risk neighbour present in
+  the same stylesheet:
+
+  | rule | what it corrupts | the neighbour, in this consumer |
+  |---|---|---|
+  | `-pad` -> `-padding` | `--ds-popover-paddingding` | `--ds-popover-padding`, `refresh-shell.scss:191` |
+  | `-weight` -> `-font-weight` | `--ds-badge-font-font-weight` | `--ds-badge-font-weight`, `waves-preview.component.scss:92` |
+  | `-h` -> `-height` | `--ds-button-heightight` | `--ds-button-height`, `--ds-search-height`, `--ds-field-height` |
+  | `-w` -> `-width` | same shape | `--ds-menu-min-width`, `--ds-tab-indicator-width` |
+
+  There is also a ROUTING collision between two items in the same release: `--ds-segmented-btn-h`
+  matches `token-btn-spelled-out-as-button`, which would yield `--ds-segmented-button-h`. The
+  correct destination is `--ds-segmented-segment-height`, from `segmented-parts-are-segments`. A
+  consumer applying the items in the order the manifest lists them lands on the wrong name, and
+  because an unknown custom property is silent, nothing says so.
+  We handled it by anchoring every replacement to the end of the token name and by running the
+  specific items before the generic ones - but that is a technique a consumer has to invent.
+  **Wanted:** on each spell-out item, one clause in `pitfall`: the old suffix is a substring of the
+  new one, so match the END of the name, never a substring; and on `token-btn-spelled-out-as-button`
+  a cross-reference saying `--ds-segmented-btn-*` is claimed by `segmented-parts-are-segments` and
+  must be excluded. A `map` of exact old-to-new names on these items would remove the question
+  entirely - every other rename kind in the manifests already gets one.
+
+- [ ] **[P2] Adopting `banner.announce` app-wide silently arms every banner written afterwards, and the variant is a usable discriminator.**
+  `banner-alert-announce-takes-a-config-default` says it well for the first pass: set the config,
+  then bind `[announce]="false"` on the page furniture. We did exactly that - config in two apps,
+  29 redundant opt-ins removed, 14 furniture banners given an explicit `false`, no banner's
+  behaviour changed.
+  Then we merged `main`, which carried a banner written days earlier against the OLD default:
+  `<ds-banner variant="info" icon="lock">This program is archived …</ds-banner>`. Its author had no
+  reason to write `[announce]="false"` - under the old default, unbound meant silent. Under the new
+  config it announces on every route into an archived program. We caught it only because we
+  re-counted banners after the merge and the total went 43 -> 44.
+  That is the standing cost of the feature, and it lands on whoever writes the NEXT banner, not on
+  whoever adopted the config.
+  `docs/done.md` records the decision not to build a dev-mode warning, because it *"cannot tell a
+  deliberate opt-out from an oversight"*. That reasoning was about an unannounced ERROR banner, and
+  it holds there. The case here is the mirror image and does not have that problem: an `info` or
+  `success` banner announcing **because an app-wide default was flipped** is almost never intended,
+  and the variant is exactly the discriminator the other direction lacked.
+  **Wanted:** a dev-mode warning when a banner with `variant="info"` or `"success"` resolves
+  `announce` to true from the CONFIG rather than from its own binding - it fires only for the
+  combination that is nearly always an oversight, and never for a deliberate `[announce]="true"`.
+  Failing that, one line in the item's `note`: adopting the config inverts the default for every
+  banner added later, so a team taking it on should expect to mark furniture as it is written.
+
 
 ## Two 0.13.4 items point `old` at the name the release gives them (recorded 2026-09-23, from the mm-ecm consumer)
 
