@@ -53,8 +53,15 @@ html, body { height: 100%; margin: 0; }
   }
 }
 
-/* Holds the scroll height while a deferred section body is still a placeholder, so the page does
-   not collapse under the reader scrolling past the chart group's nine sections. */
-.section-deferred {
-  min-block-size: 60vh;
+/* A chart DocsLazyDirective has not built yet holds about a chart's height, so the page keeps
+   roughly its real length and the scrollbar and the sidebar's anchor jumps land where they should. */
+.docs-lazy-placeholder {
+  block-size: 18rem;
+}
+
+/* Off screen a built chart costs no style, layout or paint, and its animations stop. `auto` keeps
+   the height it last rendered at, so skipping it moves nothing. */
+.docs-lazy {
+  content-visibility: auto;
+  contain-intrinsic-block-size: auto 18rem;
 }

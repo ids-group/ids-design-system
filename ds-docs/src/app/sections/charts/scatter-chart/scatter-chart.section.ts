@@ -2,6 +2,7 @@ import { Component, ViewEncapsulation, signal } from '@angular/core';
 import { ScatterChartComponent } from 'ds/scatter-chart';
 import type { ScatterChartSeries } from 'ds/scatter-chart';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
+import { DocsLazyDirective } from '../../../shared/docs-lazy.directive';
 
 // A deterministic pseudo-random walk, so the specimen is the same on every render and in every
 // screenshot - a scatter seeded from Math.random cannot be compared against itself.
@@ -41,7 +42,7 @@ const FLOOD: readonly ScatterChartSeries[] = [
 @Component({
   selector: 'section-charts-scatter-chart',
   standalone: true,
-  imports: [DocsSectionComponent, ScatterChartComponent],
+  imports: [DocsLazyDirective, DocsSectionComponent, ScatterChartComponent],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './scatter-chart.section.html',
   styleUrls: ['../../../shared/section-demo.scss'],

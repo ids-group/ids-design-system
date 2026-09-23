@@ -17,6 +17,7 @@ import type { ChartDataRow } from 'ds/chart-data-table';
 import { ButtonComponent } from 'ds/button';
 import type { ChartThreshold } from 'ds/core';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
+import { DocsLazyDirective } from '../../../shared/docs-lazy.directive';
 
 const LATENCY_NOTES: readonly ChartAnnotation[] = [
   { categoryIndex: 4, value: 480, label: 'Cache eviction' },
@@ -101,6 +102,7 @@ const TRAFFIC_SERIES: readonly LineSeriesData[] = [
   selector: 'section-charts-chart',
   standalone: true,
   imports: [
+    DocsLazyDirective,
     ButtonComponent,
     ChartComponent,
     ChartDataTableComponent,

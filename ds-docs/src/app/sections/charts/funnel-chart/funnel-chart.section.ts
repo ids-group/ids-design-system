@@ -4,6 +4,7 @@ import type { FunnelChartStage } from 'ds/funnel-chart';
 import { DocsChartDataEditorComponent } from '../../../shared/docs-chart-data-editor.component';
 import { DocsReplayButtonComponent } from '../../../shared/docs-replay-button.component';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
+import { DocsLazyDirective } from '../../../shared/docs-lazy.directive';
 
 const SPECIMEN_STAGES: readonly FunnelChartStage[] = [
   { id: 'visited', label: 'Visited the site', value: 12400 },
@@ -38,6 +39,7 @@ const ZERO_FIRST_STAGE_STAGES: readonly FunnelChartStage[] = [
   selector: 'section-charts-funnel-chart',
   standalone: true,
   imports: [
+    DocsLazyDirective,
     DocsChartDataEditorComponent,
     DocsSectionComponent,
     FunnelChartComponent,

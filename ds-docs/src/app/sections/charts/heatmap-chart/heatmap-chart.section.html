@@ -9,12 +9,6 @@
     family, and the strictest about what has to sit beside it.
   </span>
 
-  <!-- Nothing here is built until it is scrolled to: nine chart sections at once is a page
-       that stalls on open. The anchor lives on <docs-section>, so the sidebar's scroll still
-       finds this section while its body is a placeholder, and the design-sync card pass
-       resolves the viewport trigger itself. -->
-  @defer (on viewport) {
-
   <h3 class="block-title t-h4">
     Default
   </h3>
@@ -28,6 +22,7 @@
   </p>
 
   <ds-heatmap-chart
+    *docsLazy
     caption="Collections a day, by depot"
     [columns]="weekdays"
     [data]="depotRows" />
@@ -64,6 +59,7 @@
   </p>
 
   <ds-heatmap-chart
+    *docsLazy
     caption="The same week with gaps in the record"
     [columns]="weekdays"
     [data]="partialRows" />
@@ -83,6 +79,7 @@
   </p>
 
   <ds-heatmap-chart
+    *docsLazy
     caption="Escalations by quarter and region"
     showValues
     [columns]="smallColumns"
@@ -102,6 +99,7 @@
   </p>
 
   <ds-heatmap-chart
+    *docsLazy
     caption="Click a cell"
     interactive
     [columns]="smallColumns"
@@ -111,7 +109,4 @@
   <p class="block-desc t-s">
     Last clicked: {{ lastClicked() }}
   </p>
-  } @placeholder (minimum 100ms) {
-    <div class="section-deferred" aria-hidden="true"></div>
-  }
 </docs-section>
