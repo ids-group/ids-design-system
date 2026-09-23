@@ -259,9 +259,23 @@
     "The unpin control sits below the plot, because the panel it undoes opens above the held mark.",
     "Legend hover fades the other series whether or not dimOthers is set, and ds-column-chart wires its legend for it. dsColumnSeries takes seriesKey and highlighted for a hand-composed plot.",
     "The chart data table keys its nested rows uniquely; a bar and its first segment both fell back to a positional index in their own scope, which Angular reported as duplicated track keys (delete list: mark-level-chart-tooltip-bindings covers the separate template cleanup).",
-    "--ds-toast-queue-bg-color and --ds-toast-queue-text-color paint the toast region's +N strip."
+    "--ds-toast-queue-bg-color and --ds-toast-queue-text-color paint the toast region's +N strip.",
+    {
+      "text": "ds-modal and ds-modal-card stack their [actions] into a full-width column, confirming action on top, once the buttons outgrow the card; a row that fits stays right-aligned. The row used to overflow past the card's start edge and clip the first button, so a consumer rule that wraps ds-modal-card .actions is redundant (delete list: modal-actions-flex-wrap).",
+      "verify": "Open a sm modal whose three buttons carry long labels: each button spans the card's full width and none is clipped, the confirming button on top; a modal with two short buttons keeps them in one right-aligned row."
+    }
   ],
   "deleteList": [
+    {
+      "id": "modal-actions-flex-wrap",
+      "surface": "style",
+      "find": [
+        "ds-modal-card .actions",
+        "flex-wrap: wrap"
+      ],
+      "why": "The card measures its actions row and stacks it full-width when the buttons outgrow it, so a rule wrapping the row only restates that the buttons must not be clipped.",
+      "replaceWith": "nothing"
+    },
     {
       "id": "mark-level-chart-tooltip-bindings",
       "surface": "template",

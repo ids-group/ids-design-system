@@ -4,6 +4,30 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## `ds-modal` stacks its actions full-width when the row outgrows the card (2026-09-23)
+
+`ModalCardComponent` measures the `.actions` row after render and, one animation frame after
+every resize of the header, again (`modal-card.component.ts`, `stackOverflowingActions`): the
+children's natural widths plus gaps against the row's content width, read with the `stacked` class
+off so a stacked row still knows its natural width. The frame of deferral is load-bearing: a layout
+change made inside a ResizeObserver callback is reported as "loop completed with undelivered
+notifications" by any observer of an ancestor - measured 2026-09-23 on the docs page, twice per
+420 <-> 1280 viewport flip without it, none with it, and none on the untouched `dev` build driven
+through the same flips. Over budget, `.actions.stacked` (`modal.component.scss`) is a
+`column-reverse` column and an anchored `::ng-deep` pierce gives every projected child
+`width: 100%`, because `ds-button`'s `width: fit-content` opts out of the column's stretch. The DOM
+keeps the cancel-then-confirm order, so Tab and a screen reader read the stack bottom-up while the
+confirming action sits on top. No CSS-only switch exists: the Holy Albatross and a container query
+both key on the CONTAINER's width, and the reported card is a fixed `--modal-w-sm` whose only
+variable is the labels, so a threshold would never fire there. Measured on the docs page in the
+shared Chrome (2026-09-23), `ds-modal-card` `sm` clamped to a 356px stage: three long labels stack
+at 316.3px each = the row's content width, every box inside the card, visual order
+Publish / Save / Discard against DOM order Discard / Save / Publish; two short labels stay a row
+with the last button flush to the content edge (gap 0.0px); the console holds no error or warning.
+`migrations/unreleased.json` carries the `informational` line with a `verify` and the
+`modal-actions-flex-wrap` delete row for the consumer rule wrapping `ds-modal-card .actions`. Deck
+`ask-modal-footer-wrap` and its backlog item are closed.
+
 ## An `informational` entry can carry a `verify` (2026-09-23)
 
 `informational` accepts a bare string, as before, or `{ "text": "...", "verify": "..." }` -

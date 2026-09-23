@@ -4,7 +4,8 @@
    Title — Single line, ellipsis on overflow. Tooltip on hover when clipped. Keep the close
      button visible.
    Body — Wrap, no clip. Scrolls inside the body when content exceeds the modal height.
-   Actions — Single line per label. If the row overflows, stack vertically full-width.
+   Actions — Single line per label. If the row overflows, stack vertically full-width, confirming
+     action on top.
    Form fields inside body — Inherit field truncation rules. Hints wrap to 2 lines; errors never
      clip. */
 
@@ -197,6 +198,17 @@
     // A read-only dialog projects nothing here — without this it still draws a
     // stray padded strip with a divider (same guard as .impact below).
     &:empty { display: none; }
+
+    // Set by ModalCardComponent once the row's natural width outgrows the box. Reversed so the
+    // confirming action tops the stack while the DOM keeps the cancel-then-confirm order that
+    // Tab and a screen reader follow.
+    &.stacked {
+      flex-direction: column-reverse;
+
+      // Projected children carry the CONSUMER's encapsulation attribute, and a ds-button's own
+      // `width: fit-content` opts out of the column's stretch - hence the anchored pierce.
+      & > ::ng-deep * { width: 100%; }
+    }
   }
 
   // The regions are padded to clear a rule; with no rule, header-bottom and
