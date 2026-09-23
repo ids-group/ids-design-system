@@ -44,6 +44,7 @@ const CHAPTER_LINE_SLACK_PX = 2;
 // bodies to lay out.
 const ANCHOR_SETTLE_MS = 12000;
 const ANCHOR_SETTLE_INTERVAL_MS = 120;
+const ANCHOR_SETTLE_SLACK_PX = 4;
 
 @Component({
   selector: 'app-sidebar',
@@ -354,32 +355,46 @@ export class SidebarComponent {
     );
   }
 
-  /** A section whose body is still a deferred placeholder is shorter than the section it becomes,
-   *  so everything under it moves down as the bodies arrive and a deep link lands short of its
-   *  anchor. Re-aims on every height change until a real gesture says the reader has taken over -
-   *  never on `scrollTop` moving, which the growth itself does. */
+  /** A deferred section builds only once it reaches the viewport, and until it does it stands at
+   *  its placeholder height - so a deep link scrolls to where the target WILL NOT be, and the
+   *  sections above it push it further down as they build. Re-aims until the target has a body and
+   *  is sitting under the topbar, and lets a real gesture take over at any point. */
   private holdAnchorWhileContentGrows(anchor: string): void {
     const main = this.layoutScroll.scroller() as HTMLElement | null;
     if (!anchor || !main) {
       return;
     }
-    let height = main.scrollHeight;
     const stop = (): void => {
       window.clearInterval(timer);
       window.clearTimeout(deadline);
-      for (const name of ['wheel', 'touchstart', 'keydown', 'pointerdown']) {
+      for (const name of ['wheel', 'touchstart', 'keydown']) {
         main.removeEventListener(name, stop);
       }
     };
+    const settled = (): boolean => {
+      const section = this.document.querySelector(
+        `[data-anchor="${anchor}"]`,
+      ) as HTMLElement | null;
+      if (!section || section.querySelector('.section-deferred')) {
+        return false;
+      }
+      const offset =
+        section.getBoundingClientRect().top - main.getBoundingClientRect().top;
+
+      return (
+        Math.abs(offset - this.computeTopbarHeight()) <= ANCHOR_SETTLE_SLACK_PX
+      );
+    };
     const timer = window.setInterval(() => {
-      if (main.scrollHeight === height) {
+      if (settled()) {
+        stop();
+
         return;
       }
-      height = main.scrollHeight;
       this.scrollToAnchor(anchor);
     }, ANCHOR_SETTLE_INTERVAL_MS);
     const deadline = window.setTimeout(stop, ANCHOR_SETTLE_MS);
-    for (const name of ['wheel', 'touchstart', 'keydown', 'pointerdown']) {
+    for (const name of ['wheel', 'touchstart', 'keydown']) {
       main.addEventListener(name, stop, { passive: true });
     }
     this.destroyRef.onDestroy(stop);

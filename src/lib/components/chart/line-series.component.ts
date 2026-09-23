@@ -36,6 +36,7 @@ import { chartActiveMark } from '@ids-group-ltd/ids-design-system/components/cha
 import type {
   ChartTooltipTrigger,
   ChartTooltipContext,
+  ChartTooltipEntry,
   ChartTooltipOrigin,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import { CHART_SCALES } from './chart-scales.token';
@@ -185,6 +186,7 @@ export class LineSeriesComponent implements OnDestroy {
     this.scales.reportTooltip(this.domainId, {
       context: this.tooltipContext,
       origin: this.tooltipOrigin,
+      axisEntries: this.axisEntries,
     });
   }
 
@@ -411,6 +413,33 @@ export class LineSeriesComponent implements OnDestroy {
   }): string {
     return `${marker.seriesLabel}, ${marker.category}, ${marker.formattedValue}`;
   }
+
+  /** What this series reads at the category the cursor is on, whatever `tooltip` says. It feeds
+   *  the container's category panel, so one band answers for every mark on the plot rather than
+   *  each mark owning a hover field of its own. */
+  readonly axisEntries = computed<readonly ChartTooltipEntry[]>(() => {
+    const categoryIndex = this.scales.activeIndex();
+    if (categoryIndex < 0) {
+      return [];
+    }
+
+    return this.plotted().flatMap((entry) => {
+      const marker = entry.markers.find(
+        (candidate) => candidate.categoryIndex === categoryIndex,
+      );
+
+      return marker
+        ? [
+            {
+              label: marker.seriesLabel,
+              value: marker.value,
+              formatted: marker.formattedValue,
+              color: marker.color,
+            },
+          ]
+        : [];
+    });
+  });
 
   readonly tooltipContext = computed<ChartTooltipContext | null>(() => {
     if (this.tooltip() === 'none') {

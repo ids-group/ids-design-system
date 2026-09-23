@@ -46,7 +46,7 @@
 .series-halo {
   fill: none;
   stroke: var(--surface-default);
-  stroke-width: calc(var(--_chart-line-width) + var(--_chart-line-outline, 6px));
+  stroke-width: calc(var(--_chart-line-width) + var(--_chart-line-outline, 3px));
   stroke-linecap: round;
   stroke-linejoin: round;
   pointer-events: none;
@@ -72,7 +72,7 @@
    read as a different series where they cross a column. */
 .lines.is-outlined .series-marker {
   stroke: var(--surface-default);
-  stroke-width: var(--_chart-line-outline, 6px);
+  stroke-width: var(--_chart-line-outline, 3px);
   paint-order: stroke;
 }
 
