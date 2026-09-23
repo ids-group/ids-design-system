@@ -14,9 +14,9 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**135 open — 0 P1, 17 P2, 118 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**134 open — 0 P1, 16 P2, 118 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
-### P2 — 17
+### P2 — 16
 
 - **Defects consumers work around today (swept 2026-09-23)**
   - `ds-modal` footer clips its buttons instead of stacking, against its own truncation contract (from the mm-ecm consumer)
@@ -34,8 +34,6 @@ item and nothing else.
   - Fourteen focusable elements in ds-docs still have no accessible name, on two components that always could
 - **What actually running the 0.13.4 migration cost (recorded 2026-09-23, from the mm-ecm consumer)**
   - Adopting `banner.announce` app-wide silently arms every banner written afterwards, and the variant is a usable discriminator
-- **One more thing the 0.13.4 migration cost a consumer (recorded 2026-09-23, from the mm-ecm consumer)**
-  - The spell-out wave was keyed on suffixes, so three abbreviations survive it - and one
 - **Component feature gaps**
   - `dsColumnSeries` cannot choose its value axis, so in a two-axis chart the column is pinned to the primary (recorded 2026-09-23, from the mm-ecm-platform microsite-analytics port)
 - **Hooks and APIs consumers reach past the surface for (swept 2026-09-23)**
@@ -512,34 +510,6 @@ that the release could have said.
   banner added later, so a team taking it on should expect to mark furniture as it is written.
   This is the mirror-image option of the open Decision "Does a dev warning name an error banner no
   screen reader will read?" (deck `10-banner-announce-warning`); decide the two together.
-
-## One more thing the 0.13.4 migration cost a consumer (recorded 2026-09-23, from the mm-ecm consumer)
-
-Found walking mm-ecm from 0.13.3 to 0.13.4. It does not break a build, which is the point.
-
-- [ ] **[P2] The spell-out wave was keyed on suffixes, so three abbreviations survive it - and one
-  of them sits beside a token the wave DID rename.** `ds-input` at v0.13.4 declares
-  `--ds-input-label-font-size` and `--ds-input-label-fw` on the same element: `-fs` was spelled out,
-  `-fw` was not, because the rule is `--ds-*-weight` to `--ds-*-font-weight` and a token spelled
-  `-fw` never matches it. Measured across the tags - 46 names ended in an abbreviation at v0.13.3,
-  three still do at v0.13.4 (the grep prints 8: `transform$` also hits five spelled-out
-  `-text-transform` tokens, which the `grep -v` drops):
-
-  ```
-  git grep -hoE -- "--ds-[a-z0-9-]+" v0.13.4 -- src/lib | sort -u \
-    | grep -E -- "-(fw|lh|fs|ff|ls|maxw|maxh|minw|pad|btn|tracking|transform|w|h)$" \
-    | grep -v -- "-text-transform$"
-      --ds-input-label-fw   --ds-tag-fw   --ds-tag-lh
-  ```
-
-  **What it costs a consumer:** a stylesheet ends up carrying two conventions in adjacent lines.
-  The mm-ecm-platform-kb prototype's `login.page.scss` now reads `--ds-input-label-font-size` on one line and
-  `--ds-input-label-fw` on the next, and neither is wrong. The release's own promise - "118 `--ds-*`
-  tokens take their CSS property's name" - is what makes the survivors read as an oversight rather
-  than a decision.
-  **Wanted:** either `-fw` to `-font-weight` and `-lh` to `-line-height` in a later release with
-  their own migration items, or a line saying these three are deliberate. A gate is cheap here and
-  the grep above is it, `-text-transform` excluded: no `--ds-*` name may end in an abbreviation.
 
 ## Component feature gaps
 
@@ -1166,7 +1136,7 @@ file** — the number moves; cite the filename.
 | 9 | `9-bar-column-contracts` | How far to converge the bar and the column: name the difference, converge the palette, or give the bar a series model. | the stacking-contract ask under *Two chart names that collide* |
 | 10 | `10-banner-announce-warning` | Whether a dev warning names an error banner no screen reader will read. | the closed `banner.announce` ask, which left this open |
 | 11 | `11-picker-list-height` | Whether the picker list height becomes a public token or stays behind `panelClass`. | the closed `--picker-maxh` ask, same shape |
-| 12 | `12-decision-queue` | Every consumer ask and every open question in one page - 30 asks in four groups, then 35 decisions in six, each drawn as today against after. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
+| 12 | `12-decision-queue` | Every consumer ask and every open question in one page - 29 asks in four groups, then 35 decisions in six, each drawn as today against after. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
