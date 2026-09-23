@@ -14,9 +14,9 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**136 open — 0 P1, 18 P2, 118 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**135 open — 0 P1, 17 P2, 118 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
-### P2 — 18
+### P2 — 17
 
 - **Defects consumers work around today (swept 2026-09-23)**
   - `ds-modal` footer clips its buttons instead of stacking, against its own truncation contract (from the mm-ecm consumer)
@@ -36,8 +36,6 @@ item and nothing else.
   - Adopting `banner.announce` app-wide silently arms every banner written afterwards, and the variant is a usable discriminator
 - **One more thing the 0.13.4 migration cost a consumer (recorded 2026-09-23, from the mm-ecm consumer)**
   - The spell-out wave was keyed on suffixes, so three abbreviations survive it - and one
-- **Two 0.13.4 items point `old` at the name the release gives them (recorded 2026-09-23, from the mm-ecm consumer)**
-  - `pie-chart-thickness-is-now-inner-radius` and `pie-chart-centre-content-needs-a-hole` scope `old` to `ds-pie-chart`, which does not exist at the boundary they describe
 - **Component feature gaps**
   - `dsColumnSeries` cannot choose its value axis, so in a two-axis chart the column is pinned to the primary (recorded 2026-09-23, from the mm-ecm-platform microsite-analytics port)
 - **Hooks and APIs consumers reach past the surface for (swept 2026-09-23)**
@@ -542,33 +540,6 @@ Found walking mm-ecm from 0.13.3 to 0.13.4. It does not break a build, which is 
   **Wanted:** either `-fw` to `-font-weight` and `-lh` to `-line-height` in a later release with
   their own migration items, or a line saying these three are deliberate. A gate is cheap here and
   the grep above is it, `-text-transform` excluded: no `--ds-*` name may end in an abbreviation.
-
-## Two 0.13.4 items point `old` at the name the release gives them (recorded 2026-09-23, from the mm-ecm consumer)
-
-Found preparing that consumer's 0.13.4 migration. Your own truth check already flags it, which is
-how it surfaced - this is the manifest half, not a tooling gap.
-
-- [ ] **[P2] `pie-chart-thickness-is-now-inner-radius` and `pie-chart-centre-content-needs-a-hole` scope `old` to `ds-pie-chart`, which does not exist at the boundary they describe.**
-  The two values are `old: "ds-pie-chart[thickness]"` and `old: "ds-pie-chart[centerValue]"`. At
-  `v0.13.3` the element is `ds-donut-chart`; `ds-pie-chart` is what 0.13.4 renames it TO, in the
-  same release, by the item two rows above. So a consumer sitting on 0.13.3 and searching for the
-  `old` value finds nothing. The manifest's own note gives the worked example: `0.68` inner radius
-  is the `0.32` thickness it replaced (`migrations/0.13.4.json:251`).
-  `node tools/check-manifest-truth.mjs 0.13.4` reports it without prompting: *"2 name(s) no tag
-  could resolve"*, and closes `65 of 67 old/new value(s) were read against their boundary and hold`
-  - the tolerance for a scope element renamed in the same release does not save these two, because
-  neither tag holds the pair (`ds-pie-chart` is absent at `v0.13.3`, `thickness` is absent at
-  `v0.13.4`).
-  The `migrations/AUTHORING.md` rule added the same day - *"`old` holds our identifiers, never a
-  placeholder or a sentence"* - is satisfied by the letter here: both ARE identifiers. What the two
-  items miss is the boundary half: the identifier has to be the one that exists at the tag the
-  consumer is migrating FROM.
-  **Wanted:** `old: "ds-donut-chart[thickness]"` and `old: "ds-donut-chart[centerValue]"` - the two
-  values already violate the boundary rule at `migrations/AUTHORING.md:399-406` ("`old` resolves at
-  the PREVIOUS tag, is gone at this one for a rename or a removal, and `new` resolves at this
-  one"). The `detect` arrays on both items already carry the unscoped shapes (`thickness=`,
-  `centerValue`), so the practical damage is limited to whoever reads `old` first - which is what a
-  human does.
 
 ## Component feature gaps
 
@@ -1195,7 +1166,7 @@ file** — the number moves; cite the filename.
 | 9 | `9-bar-column-contracts` | How far to converge the bar and the column: name the difference, converge the palette, or give the bar a series model. | the stacking-contract ask under *Two chart names that collide* |
 | 10 | `10-banner-announce-warning` | Whether a dev warning names an error banner no screen reader will read. | the closed `banner.announce` ask, which left this open |
 | 11 | `11-picker-list-height` | Whether the picker list height becomes a public token or stays behind `panelClass`. | the closed `--picker-maxh` ask, same shape |
-| 12 | `12-decision-queue` | Every consumer ask and every open question in one page - 31 asks in four groups, then 35 decisions in six, each drawn as today against after. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
+| 12 | `12-decision-queue` | Every consumer ask and every open question in one page - 30 asks in four groups, then 35 decisions in six, each drawn as today against after. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled

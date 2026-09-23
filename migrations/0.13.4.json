@@ -226,8 +226,8 @@
     {
       "id": "pie-chart-thickness-is-now-inner-radius",
       "kind": "input-rename",
-      "old": "ds-pie-chart[thickness]",
-      "new": "innerRadius",
+      "old": "ds-donut-chart[thickness]",
+      "new": "ds-pie-chart[innerRadius]",
       "surface": [
         "template",
         "typescript"
@@ -254,7 +254,7 @@
     {
       "id": "pie-chart-centre-content-needs-a-hole",
       "kind": "behavior",
-      "old": "ds-pie-chart[centerValue]",
+      "old": "ds-donut-chart[centerValue]",
       "new": null,
       "surface": "template",
       "action": "On every pie chart set to `innerRadius=\"0\"`, move what `centerValue` or `centerLabel` carried into the caption, the legend or the page around the chart.",

@@ -4,6 +4,15 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## The two 0.13.4 pie items name the element a 0.13.3 consumer has (2026-09-23)
+
+`pie-chart-thickness-is-now-inner-radius` and `pie-chart-centre-content-needs-a-hole` carry
+`old: "ds-donut-chart[thickness]"` and `old: "ds-donut-chart[centerValue]"` - at `v0.13.3` the
+element is `ds-donut-chart` and both inputs live on it - and the rename's `new` is
+`ds-pie-chart[innerRadius]`, the element-scoped shape `0.5.0`'s `ds-dropdown[error]` ->
+`ds-select[invalid]` uses when a release renames the element too. `check-manifest-truth 0.13.4`:
+254 of 254 old/new values hold (measured 2026-09-23).
+
 ## Six consumer asks on the 0.13.3 and 0.13.4 records (2026-09-23)
 
 `ds-bar` reads `--ds-bar-radius` on its track and its fill, default `var(--radius-pill)`
