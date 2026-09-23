@@ -36,11 +36,19 @@ export function defaultChartFormat(
   }
 
   return location === 'tick'
-    ? new Intl.NumberFormat(undefined, {
-        notation: 'compact',
-        maximumFractionDigits: 1,
-      }).format(value)
-    : new Intl.NumberFormat().format(value);
+    ? compactFormatter().format(value)
+    : numberFormatter(undefined).format(value);
+}
+
+let cachedCompactFormatter: Intl.NumberFormat | null = null;
+
+function compactFormatter(): Intl.NumberFormat {
+  cachedCompactFormatter ??= new Intl.NumberFormat(undefined, {
+    notation: 'compact',
+    maximumFractionDigits: 1,
+  });
+
+  return cachedCompactFormatter;
 }
 
 /** @internal */
