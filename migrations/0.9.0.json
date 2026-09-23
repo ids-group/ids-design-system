@@ -44,13 +44,16 @@
       "kind": "selector-rename",
       "old": "ds-auth-shell",
       "new": "ds-auth-layout",
-      "action": "Rename the element and its closing tag from `ds-auth-shell` to `ds-auth-layout`, then apply the class and token items below.",
+      "action": "Rename the element and its closing tag from `ds-auth-shell` to `ds-auth-layout`, and any stylesheet rule that names the element with it, then apply the class and token items below.",
       "appliesWhen": "Behaviour, inputs and slots are unchanged — `brand`, `logoLetter`, `tagline`, `cardElevation`, `cardPadding`, `[brand]`, `[dsBrandName]` and `dsAuthSupport` all keep their names.",
       "note": "\"Shell\" is not this library's word for a layout: the app-level one became ds-app-layout in 0.7.0, and calling the auth counterpart a shell put the split vocabulary back. It shipped as ds-auth-shell in exactly one release.",
       "searchHints": [
         "ds-auth-shell"
       ],
-      "surface": "template"
+      "surface": [
+        "template",
+        "style"
+      ]
     },
     {
       "id": "auth-shell-class-to-auth-layout",

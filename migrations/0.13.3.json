@@ -8,11 +8,12 @@
       "new": "ds-bar",
       "surface": [
         "template",
-        "typescript"
+        "typescript",
+        "style"
       ],
-      "action": "Rename every `<ds-progress>` element to `<ds-bar>`, and `ProgressComponent` to `BarComponent` imported from `@ids-group-ltd/ids-design-system/components/bar`. The type `ProgressVariant` is now `BarVariant` from the same entry point. Behaviour is unchanged — every input keeps its name and its default.",
+      "action": "Rename every `<ds-progress>` element to `<ds-bar>`, and `ProgressComponent` to `BarComponent` imported from `@ids-group-ltd/ids-design-system/components/bar`. The type `ProgressVariant` is now `BarVariant` from the same entry point. Rename a stylesheet rule whose selector names the `ds-progress` element the same way. Behaviour is unchanged — every input keeps its name and its default.",
       "appliesWhen": "Every template rendering `<ds-progress>` and every file importing `ProgressComponent` or `ProgressVariant`. `ds-bar-chart` is a different component and keeps its name.",
-      "pitfall": "The old tag is an unknown element, not an error: Angular renders nothing and logs nothing outside strict schema mode, so a missed one is a bar that silently vanished. `ds-bar` is a prefix of `ds-bar-chart`, which is a DIFFERENT component and is NOT renamed. Match on a word boundary and confirm the tag ends there; rename nothing whose name continues past `ds-bar`.",
+      "pitfall": "The old tag is an unknown element, not an error: Angular renders nothing and logs nothing outside strict schema mode, so a missed one is a bar that silently vanished. `ds-bar` is a prefix of `ds-bar-chart`, which is a DIFFERENT component and is NOT renamed. A word boundary does not separate them - a hyphen is one, so `\\bds-bar\\b` matches inside `ds-bar-chart`. Match `ds-bar([^-\\w]|$)`, or the tag as `<ds-bar[\\s/>]`, and rename nothing whose name continues past `ds-bar`.",
       "restore": null,
       "searchHints": [
         "ds-progress",
@@ -25,7 +26,7 @@
         "ProgressComponent",
         "ProgressVariant"
       ],
-      "verify": "No `ds-progress` tag, `ProgressComponent` or `ProgressVariant` symbol, or `components/progress` import path remains, and every `ds-bar-chart` is still spelled in full.",
+      "verify": "No `ds-progress` tag, `ProgressComponent` or `ProgressVariant` symbol, `components/progress` import path or `ds-progress` stylesheet selector remains, and every `ds-bar-chart` is still spelled in full.",
       "note": "The progress bar and the measurement bar were the same drawing under two names, so they are one component under a neutral one. A rename alone is a complete and behaviour-preserving upgrade for a progress bar; see `bar-semantics-says-what-the-bar-is` for what the merged component can now additionally say."
     },
     {
@@ -35,11 +36,12 @@
       "new": "ds-bar",
       "surface": [
         "template",
-        "typescript"
+        "typescript",
+        "style"
       ],
-      "action": "Rename every `<ds-meter>` element to `<ds-bar>` and `MeterComponent` to `BarComponent` from `@ids-group-ltd/ids-design-system/components/bar`. Then give each one a `semantics` — `\"none\"` where it had no `ariaLabel`, `\"meter\"` where it had one. Without that the bar announces as a progress bar.",
+      "action": "Rename every `<ds-meter>` element to `<ds-bar>` and `MeterComponent` to `BarComponent` from `@ids-group-ltd/ids-design-system/components/bar`.. Rename a stylesheet rule whose selector names the `ds-meter` element the same way. Then give each one a `semantics` — `\"none\"` where it had no `ariaLabel`, `\"meter\"` where it had one. Without that the bar announces as a progress bar.",
       "appliesWhen": "Only code written against `0.13.2`, the single release `ds-meter` existed in. `ds-bar-chart` is a different component and keeps its name.",
-      "pitfall": "The rename alone compiles, renders identically, and silently changes what assistive technology hears: `ds-meter` was `aria-hidden` unless `ariaLabel` named it, and `ds-bar` defaults to `semantics=\"progress\"`. A table of two hundred rates that announced nothing now announces two hundred progress bars. `ds-bar` is a prefix of `ds-bar-chart`, which is a DIFFERENT component and is NOT renamed. Match on a word boundary and confirm the tag ends there; rename nothing whose name continues past `ds-bar`.",
+      "pitfall": "The rename alone compiles, renders identically, and silently changes what assistive technology hears: `ds-meter` was `aria-hidden` unless `ariaLabel` named it, and `ds-bar` defaults to `semantics=\"progress\"`. A table of two hundred rates that announced nothing now announces two hundred progress bars. `ds-bar` is a prefix of `ds-bar-chart`, which is a DIFFERENT component and is NOT renamed. A word boundary does not separate them - a hyphen is one, so `\\bds-bar\\b` matches inside `ds-bar-chart`. Match `ds-bar([^-\\w]|$)`, or the tag as `<ds-bar[\\s/>]`, and rename nothing whose name continues past `ds-bar`.",
       "restore": null,
       "searchHints": [
         "ds-meter",
@@ -50,7 +52,7 @@
         "ds-meter",
         "MeterComponent"
       ],
-      "verify": "No `ds-meter` tag or `MeterComponent` symbol remains, and every bar that replaced one carries `semantics=\"none\"` or `semantics=\"meter\"` — never the default.",
+      "verify": "No `ds-meter` tag, `MeterComponent` symbol or `ds-meter` stylesheet selector remains, and every bar that replaced one carries `semantics=\"none\"` or `semantics=\"meter\"` — never the default.",
       "note": "The `semantics` step is not optional bookkeeping: it is the whole reason `ds-meter` existed, carried across as an input. `0.13.2` is the only release that shipped the tag, so an app on `0.13.1` or earlier has nothing to do here."
     },
     {
@@ -82,9 +84,9 @@
       "old": "--ds-progress-*",
       "new": "--ds-bar-*",
       "surface": "style",
-      "action": "Rename `--ds-progress-height`, `-track-color`, `-target-color` and `-target-width` to `--ds-bar-…` with the same suffix. `--ds-progress-bar-color` and its `-success` / `-warning` / `-error` siblings become `--ds-bar-fill-color`, `--ds-bar-fill-color-success`, `--ds-bar-fill-color-warning`, `--ds-bar-fill-color-error`. The `--ds-meter-*` names go the same way: `-height`, `-min-width`, `-track-color`, `-radius` keep their suffix and `--ds-meter-fill-color` becomes `--ds-bar-fill-color`. The global `--progress-h` is now `--bar-h`.",
+      "action": "Rename `--ds-progress-height`, `-track-color`, `-target-color` and `-target-width` to `--ds-bar-…` with the same suffix. `--ds-progress-bar-color` and its `-success` / `-warning` / `-error` siblings become `--ds-bar-fill-color`, `--ds-bar-fill-color-success`, `--ds-bar-fill-color-warning`, `--ds-bar-fill-color-error`. The `--ds-meter-*` names go the same way: `-height`, `-min-width` and `-track-color` keep their suffix and `--ds-meter-fill-color` becomes `--ds-bar-fill-color`. `--ds-meter-radius` has no `--ds-bar-*` counterpart and is removed: see `meter-radius-removed`. The global `--progress-h` is now `--bar-h`.",
       "appliesWhen": "Any stylesheet setting one of those names. DS tokens only — a consumer's own `--progress-…` variable is untouched, and so are `--stepper-bar-h` and `--calendar-bar-h`, which are different tokens that merely end in `-bar-h`.",
-      "pitfall": "An override of a name nothing reads still parses and cascades, so a missed rename changes nothing and reports nothing: the bar quietly returns to its default look. `ds-bar` is a prefix of `ds-bar-chart`, which is a DIFFERENT component and is NOT renamed. Match on a word boundary and confirm the tag ends there; rename nothing whose name continues past `ds-bar`.",
+      "pitfall": "An override of a name nothing reads still parses and cascades, so a missed rename changes nothing and reports nothing: the bar quietly returns to its default look. `ds-bar` is a prefix of `ds-bar-chart`, which is a DIFFERENT component and is NOT renamed. A word boundary does not separate them - a hyphen is one, so `\\bds-bar\\b` matches inside `ds-bar-chart`. Match `ds-bar([^-\\w]|$)`, or the tag as `<ds-bar[\\s/>]`, and rename nothing whose name continues past `ds-bar`.",
       "restore": null,
       "searchHints": [
         "--ds-progress-",
@@ -99,6 +101,26 @@
       ],
       "verify": "No `--ds-progress-`, `--ds-meter-` or `--progress-h` name remains in the app's stylesheets, and every bar that was restyled still looks restyled.",
       "note": "`bar-color` became `fill-color` because the component is now the bar and `--ds-bar-bar-color` would stutter. `--progress-h` moved with it: same 6px default, under a name that no longer described the component."
+    },
+    {
+      "id": "meter-radius-removed",
+      "kind": "removed-api",
+      "old": "--ds-meter-radius",
+      "new": null,
+      "surface": "style",
+      "action": "Delete the `--ds-meter-radius` declaration. `ds-bar` draws its track and its fill as a pill and has no radius hook, so there is nothing to rename it to.",
+      "appliesWhen": "Only a stylesheet written against `0.13.2`, the single release `ds-meter` existed in, that set `--ds-meter-radius`. Every other `--ds-meter-*` name is renamed by `progress-and-meter-tokens-renamed-to-bar`.",
+      "pitfall": "The declaration parses and cascades after the upgrade like any unknown custom property, so nothing reports it; the bar is a pill whatever value it holds.",
+      "restore": null,
+      "searchHints": [
+        "--ds-meter-radius",
+        "--ds-meter-"
+      ],
+      "detect": [
+        "--ds-meter-radius"
+      ],
+      "verify": "No `--ds-meter-radius` remains in the app's stylesheets, and every bar that carried one is accepted as a pill.",
+      "note": "`ds-meter`'s radius hook did not survive the merge into `ds-bar`, whose track and fill pin `var(--radius-pill)`. A consumer who squared a meter's corners loses that in this release and has no hook to set instead."
     },
     {
       "id": "exported-class-members-moved",

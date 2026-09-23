@@ -6,13 +6,16 @@
       "kind": "selector-rename",
       "old": "ds-combobox",
       "new": "ds-autocomplete",
-      "action": "Replace the element selector `ds-combobox` with `ds-autocomplete`.",
+      "action": "Replace the element selector `ds-combobox` with `ds-autocomplete`, in templates and in any stylesheet rule that names the element.",
       "note": "A rename to the industry word for the control. Behaviour is unchanged.",
       "searchHints": [
         "<ds-combobox",
         "ds-combobox"
       ],
-      "surface": "template"
+      "surface": [
+        "template",
+        "style"
+      ]
     },
     {
       "id": "combobox-component-class-rename",
@@ -84,13 +87,16 @@
       "kind": "selector-rename",
       "old": "ds-dropdown",
       "new": "ds-select",
-      "action": "Replace `ds-dropdown` with `ds-select`, then apply `dropdown-error-input-rename` and `dropdown-option-groups-fold` to the same elements.",
+      "action": "Replace `ds-dropdown` with `ds-select` in templates and in any stylesheet rule that names the element, then apply `dropdown-error-input-rename` and `dropdown-option-groups-fold` to the same elements.",
       "note": "ds-dropdown is gone; ds-select is the one select-only picker, and it carries the CVA, invalid and hint, required and optional, per-option icons and readOnly.",
       "searchHints": [
         "<ds-dropdown",
         "ds-dropdown"
       ],
-      "surface": "template"
+      "surface": [
+        "template",
+        "style"
+      ]
     },
     {
       "id": "dropdown-error-input-rename",

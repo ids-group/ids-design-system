@@ -4,6 +4,53 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## The three abbreviations the spell-out wave missed are spelled out (2026-09-23)
+
+`--ds-input-label-fw` -> `--ds-input-label-font-weight` (`input.component.scss:36`),
+`--ds-tag-fw` -> `--ds-tag-font-weight` and `--ds-tag-lh` -> `--ds-tag-line-height`
+(`tag.component.scss:13-15,29`), with their `--_*` resolvers renamed to match. The 0.13.4 wave
+matched `--ds-*-weight` to `--ds-*-font-weight`, so a token already spelled as the abbreviation
+never matched it; three `token-rename` items land in `migrations/unreleased.json`, each `detect`
+anchored `([^A-Za-z0-9_-]|$)`. `git grep -hoE -- "--ds-[a-z0-9-]+" HEAD -- src/lib | sort -u | grep
+-E -- "-(fw|lh)$"` reads empty (measured 2026-09-23). The gate the backlog item proposed ships as
+`tools/check-abbreviated-tokens.mjs` (wired into `lint:all`), checking every `--ds-*` name's whole
+last hyphen segment against `fw|lh|fs|ff|ls|maxw|maxh|minw|pad|btn|w|h|bg|fg|r` - a selftest of 8
+cases (3 firing, 5 sound, including a planted `--ds-tag-fw` and a `-text-transform` negative
+control) passes, and the gate is green against the renamed tree. Deck `ask-abbrev-survivors` and
+its backlog item are closed.
+
+## The two 0.13.4 pie items name the element a 0.13.3 consumer has (2026-09-23)
+
+`pie-chart-thickness-is-now-inner-radius` and `pie-chart-centre-content-needs-a-hole` carry
+`old: "ds-donut-chart[thickness]"` and `old: "ds-donut-chart[centerValue]"` - at `v0.13.3` the
+element is `ds-donut-chart` and both inputs live on it - and the rename's `new` is
+`ds-pie-chart[innerRadius]`, the element-scoped shape `0.5.0`'s `ds-dropdown[error]` ->
+`ds-select[invalid]` uses when a release renames the element too. `check-manifest-truth 0.13.4`:
+254 of 254 old/new values hold (measured 2026-09-23).
+
+## Six consumer asks on the 0.13.3 and 0.13.4 records (2026-09-23)
+
+`ds-bar` reads `--ds-bar-radius` on its track and its fill, default `var(--radius-pill)`
+(`bar.component.scss`), and the 0.13.3 manifest says what was true at that tag:
+`--ds-meter-radius` was removed with no replacement (`0.13.3#meter-radius-removed`). The
+`ds-bar` name stays (Stas); the three 0.13.3 pitfalls that sent readers to a word boundary now
+give the guard that holds - `ds-bar(?![-\w])` for names and tokens,
+`<ds-bar[\s/>]` for the tag - because a hyphen is a `\b`. The four generic spell-out items of
+0.13.4 are 97 exact `token-rename` pairs generated from the tag diff
+(`git grep -hoE -- '--ds-[a-z0-9-]+' v0.13.3 -- src/lib | sort -u` against v0.13.4: 987 and 1039
+names; 51 `-pad`, 15 `-weight`, 8 `-btn`, 23 dimension pairs, matching the counts the four items
+claimed), each `detect` anchored `(?![A-Za-z0-9_-])` and each group carrying the substring hazard
+in one pitfall line; `check-manifest-truth 0.13.4` reads 252 of 254 values and holds.
+`donut-chart-renamed-to-pie-chart` and the six older selector renames list `style`, and `M045`
+fails a `selector-rename` without it - red on those six before the fix, quiet on the control.
+`--ds-line-chart-plot-height` keeps the plot and `--ds-line-chart-placeholder-height`
+sizes the skeleton and the empty and error boxes, defaulting to what they had, with a 0.13.4
+`behavior` item saying the plot token started driving the plot at that tag. Deck
+`ds-bar-name-collision` is decided and archived; the decision queue drops seven answered questions
+and stands at 31 asks and 35 decisions. Every CHANGELOG line this touches - the two hooks under
+Unreleased, the 0.13.3 meter-radius removal and `ds-bar` guard, the 0.13.4 segmented spelling
+`--ds-segmented-btn-*` - is Stas's to write.
+
 ## The expanded table row spans its row (2026-09-23)
 
 `table.component.scss` gave the expanded row's `<td>` `display: grid` for the 0fr to 1fr reveal,

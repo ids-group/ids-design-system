@@ -2775,6 +2775,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": ""
       },
       {
+        "name": "--ds-bar-radius",
+        "value": "var(--radius-pill)",
+        "notes": "Corner radius of a ds-bar track and its fill (default --radius-pill). The fill follows the track, so a squared track never shows a rounded fill inside it."
+      },
+      {
         "name": "--ds-bar-min-width",
         "value": "3rem",
         "notes": ""
@@ -4530,7 +4535,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Label size."
       },
       {
-        "name": "--ds-input-label-fw",
+        "name": "--ds-input-label-font-weight",
         "value": "var(--ds-field-label-font-weight,      var(--font-weight-bold))",
         "notes": "Label weight."
       },
@@ -4581,7 +4586,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-line-chart-plot-height",
         "value": "240px",
-        "notes": ""
+        "notes": "Height of the plot coordinate space a ds-line-chart draws its series in (default 240px). Read back as a number, so it takes a px length only."
+      },
+      {
+        "name": "--ds-line-chart-placeholder-height",
+        "value": "var(--_line-chart-plot-height)",
+        "notes": "Height reserved by a ds-line-chart that has no plot to draw: the loading skeleton, and the empty, error and no-visible-series boxes. Unset, the skeleton takes the plot height and the boxes the height the plot would take with its axis space; set, all of them take this value and the plot keeps --ds-line-chart-plot-height."
       },
       {
         "name": "--ds-line-chart-grid-line-color",
@@ -7409,7 +7419,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Tag text colour (defaults to --accent-on)."
       },
       {
-        "name": "--ds-tag-fw",
+        "name": "--ds-tag-font-weight",
         "value": "var(--font-weight-bold)",
         "notes": "Label weight."
       },
@@ -7419,7 +7429,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Label size."
       },
       {
-        "name": "--ds-tag-lh",
+        "name": "--ds-tag-line-height",
         "value": "var(--line-height-base)",
         "notes": "Label line-height."
       },
