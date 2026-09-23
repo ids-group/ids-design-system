@@ -27,6 +27,7 @@ import { chartActiveMark } from '@ids-group-ltd/ids-design-system/components/cha
 import type {
   ChartItemTooltipTrigger,
   ChartTooltipContext,
+  ChartTooltipEntry,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import { CHART_SCALES } from './chart-scales.token';
 import { chartViewHeight } from './chart.math';
@@ -203,6 +204,7 @@ export class ColumnSeriesComponent implements OnDestroy {
       context: this.tooltipContext,
       origin: computed(() => this.activeMark.origin()),
       preferBelow: computed(() => this.activeMark.pinned()),
+      axisEntries: this.axisEntries,
     });
   }
 
@@ -375,6 +377,26 @@ export class ColumnSeriesComponent implements OnDestroy {
   }): string {
     return `${mark.point.label}, ${mark.formattedValue}`;
   }
+
+  /** This series' reading at the category the cursor is on. Filled whatever `tooltip` says: it
+   *  feeds the container's category panel, never a panel of this mark's own. */
+  readonly axisEntries = computed<readonly ChartTooltipEntry[]>(() => {
+    const categoryIndex = this.scales.activeIndex();
+    const mark = this.marks()[categoryIndex];
+    if (categoryIndex < 0 || !mark) {
+      return [];
+    }
+
+    return [
+      {
+        label: this.seriesLabel() ?? mark.point.label,
+        value: mark.point.value,
+        formatted: mark.formattedValue,
+        color: mark.color,
+        hatched: mark.hatched,
+      },
+    ];
+  });
 
   readonly tooltipContext = computed<ChartTooltipContext | null>(() => {
     const mark = this.marks()[this.activeMark.index()];

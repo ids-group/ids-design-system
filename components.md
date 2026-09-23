@@ -1052,7 +1052,7 @@ All inputs: `data: readonly ColumnSeriesPoint[] = []`, `showValues: boolean = tr
 #### `<g[dsLineSeries]>` — `LineSeriesComponent`
 
 <!-- inputs:g[dsLineSeries] -->
-All inputs: `data: readonly LineSeriesData[] = []`, `showMarkers: boolean = true`, `outline: boolean = false`, `interactive: boolean = false`, `pinOnClick: boolean = false`, `dimOthers: boolean = false`, `highlighted: string | null = null`, `patterns: readonly string[] = []`, `stacked: boolean = false`, `staggerMs: number = 0`, `gaps: 'break' | 'zero' = 'break'`, `curve: 'linear' | 'step' | 'smooth' = 'linear'`, `tooltip: 'item' | 'axis' | 'none' = 'item'`, `tooltipAnchor: 'reading' | 'pointer' = 'reading'`, `tooltipLingerMs: number = 0`, `valueFormat: ChartValueFormat`
+All inputs: `data: readonly LineSeriesData[] = []`, `showMarkers: boolean = true`, `outline: boolean = true`, `interactive: boolean = false`, `pinOnClick: boolean = false`, `dimOthers: boolean = false`, `highlighted: string | null = null`, `patterns: readonly string[] = []`, `stacked: boolean = false`, `staggerMs: number = 0`, `gaps: 'break' | 'zero' = 'break'`, `curve: 'linear' | 'step' | 'smooth' = 'linear'`, `tooltip: 'item' | 'axis' | 'none' = 'item'`, `tooltipAnchor: 'reading' | 'pointer' = 'reading'`, `tooltipLingerMs: number = 0`, `valueFormat: ChartValueFormat`
 <!-- /inputs -->
 
 #### `<g[dsSeriesAnnotation]>` — `SeriesAnnotationComponent`

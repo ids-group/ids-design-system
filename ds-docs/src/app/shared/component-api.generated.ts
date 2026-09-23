@@ -2331,9 +2331,9 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "kind": "input",
         "type": "boolean",
         "union": null,
-        "default": "false",
+        "default": "true",
         "required": false,
-        "description": "Lays the line on a band of the surface colour, so it stays legible where it crosses other marks. For a line over columns; on an empty plot the band only thickens it."
+        "description": "Lays the line and its markers on a band of the surface colour, so they stay legible where they cross other marks. On by default: a line shares its plot more often than not, and on an empty plot the band only separates it from the gridlines."
       },
       {
         "name": "interactive",

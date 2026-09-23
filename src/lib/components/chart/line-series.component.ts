@@ -91,9 +91,10 @@ export class LineSeriesComponent implements OnDestroy {
    *  roughly twenty points. */
   readonly showMarkers = input(true, { transform: booleanAttribute });
 
-  /** Lays the line on a band of the surface colour, so it stays legible where it crosses other
-   *  marks. For a line over columns; on an empty plot the band only thickens it. */
-  readonly outline = input(false, { transform: booleanAttribute });
+  /** Lays the line and its markers on a band of the surface colour, so they stay legible where
+   *  they cross other marks. On by default: a line shares its plot more often than not, and on an
+   *  empty plot the band only separates it from the gridlines. */
+  readonly outline = input(true, { transform: booleanAttribute });
 
   /** Turns on the click affordance - the pointer cursor and the hover tint. `pointClicked`
    *  fires whether or not this is set. */

@@ -72,10 +72,11 @@ export function chartActiveMark(
       host = target;
       const mark =
         typeof anchor === 'string' ? target.querySelector(anchor) : anchor;
-      // A mark drawn from a zero value has no box, and an overlay anchored to one lands at the
-      // viewport corner rather than near the reading. The hover target always has a box.
+      // A mark drawn from a zero value is degenerate in one axis - a column loses its height, a
+      // bar its width - and an overlay anchored to it lands at that edge rather than near the
+      // reading. Both dimensions have to be real. The hover target always is.
       const box = mark?.getBoundingClientRect();
-      const aimable = box && (box.width > 0 || box.height > 0);
+      const aimable = box && box.width > 0 && box.height > 0;
       origin.set(aimable ? (mark ?? target) : target);
     }
     index.set(at);

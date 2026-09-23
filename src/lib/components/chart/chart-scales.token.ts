@@ -2,6 +2,7 @@ import { InjectionToken, Signal } from '@angular/core';
 import type { ChartAxis } from '@ids-group-ltd/ids-design-system/core';
 import type {
   ChartTooltipContext,
+  ChartTooltipEntry,
   ChartTooltipOrigin,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 
@@ -13,6 +14,10 @@ export interface ChartTooltipSource {
   readonly origin: Signal<ChartTooltipOrigin | null>;
   /** Flips the panel under the mark, for a held reading whose own value label sits above it. */
   readonly preferBelow?: Signal<boolean>;
+  /** What this mark reads at the category the cursor is on, whatever its own tooltip setting. A
+   *  category panel names every series at that category, and a mark that answers per-mark still
+   *  belongs in it. */
+  readonly axisEntries?: Signal<readonly ChartTooltipEntry[]>;
 }
 
 /** The drawable rectangle inside `ds-chart`, in CSS pixels: the container measures itself and

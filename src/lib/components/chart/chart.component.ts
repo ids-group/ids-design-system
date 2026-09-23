@@ -431,9 +431,23 @@ export class ChartComponent implements ChartScales {
       ) ?? null,
   );
 
-  protected readonly tooltipContext = computed(
-    () => this.activeTooltip()?.context() ?? null,
-  );
+  protected readonly tooltipContext = computed(() => {
+    const base = this.activeTooltip()?.context() ?? null;
+    if (base === null || this.cursor() !== 'category') {
+      return base;
+    }
+    // A category panel is about the category, not about the mark that happened to open it, so
+    // every other mark's reading at the same category belongs in it. Matched by label, because a
+    // mark that already named itself must not be listed twice.
+    const named = new Set(base.entries.map((entry) => entry.label));
+    const rest = [...this.tooltipSources().values()]
+      .flatMap((source) => source.axisEntries?.() ?? [])
+      .filter((entry) => !named.has(entry.label));
+
+    return rest.length === 0
+      ? base
+      : { ...base, entries: [...base.entries, ...rest] };
+  });
 
   protected readonly tooltipOrigin = computed(
     () => this.activeTooltip()?.origin() ?? null,
