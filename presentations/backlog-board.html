@@ -1310,7 +1310,7 @@ file** — the number moves; cite the filename.
 | 9 | `9-bar-column-contracts` | How far to converge the bar and the column: name the difference, converge the palette, or give the bar a series model. | the stacking-contract ask under *Two chart names that collide* |
 | 10 | `10-banner-announce-warning` | Whether a dev warning names an error banner no screen reader will read. | the closed `banner.announce` ask, which left this open |
 | 11 | `11-picker-list-height` | Whether the picker list height becomes a public token or stays behind `panelClass`. | the closed `--picker-maxh` ask, same shape |
-| 12 | `12-decision-queue` | Every consumer ask and every open question in one page - 27 asks in four groups, then 35 decisions in six, each drawn as today against after. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
+| 12 | `12-decision-queue` | Every consumer ask and every open question in one page - 29 asks in three groups, then 33 decisions in six, each drawn as today against after. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
@@ -2081,6 +2081,30 @@ _Closed 2026-08-07 from a consumer report: `ds-autocomplete` had no chip cap, so
 Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirrors the live backlog (`todo.md`); deep gap analysis stays in `docs/superpowers/ds-gap-analysis.md`.
 
 ---
+
+## `ds-modal` stacks its actions full-width when the row outgrows the card (2026-09-23)
+
+`ModalCardComponent` measures the `.actions` row after render and, one animation frame after
+every resize of the header, again (`modal-card.component.ts`, `stackOverflowingActions`): the
+children's natural widths plus gaps against the row's content width, read with the `stacked` class
+off so a stacked row still knows its natural width. The frame of deferral is load-bearing: a layout
+change made inside a ResizeObserver callback is reported as "loop completed with undelivered
+notifications" by any observer of an ancestor - measured 2026-09-23 on the docs page, twice per
+420 <-> 1280 viewport flip without it, none with it, and none on the untouched `dev` build driven
+through the same flips. Over budget, `.actions.stacked` (`modal.component.scss`) is a
+`column-reverse` column and an anchored `::ng-deep` pierce gives every projected child
+`width: 100%`, because `ds-button`'s `width: fit-content` opts out of the column's stretch. The DOM
+keeps the cancel-then-confirm order, so Tab and a screen reader read the stack bottom-up while the
+confirming action sits on top. No CSS-only switch exists: the Holy Albatross and a container query
+both key on the CONTAINER's width, and the reported card is a fixed `--modal-w-sm` whose only
+variable is the labels, so a threshold would never fire there. Measured on the docs page in the
+shared Chrome (2026-09-23), `ds-modal-card` `sm` clamped to a 356px stage: three long labels stack
+at 316.3px each = the row's content width, every box inside the card, visual order
+Publish / Save / Discard against DOM order Discard / Save / Publish; two short labels stay a row
+with the last button flush to the content edge (gap 0.0px); the console holds no error or warning.
+`migrations/unreleased.json` carries the `informational` line with a `verify` and the
+`modal-actions-flex-wrap` delete row for the consumer rule wrapping `ds-modal-card .actions`. Deck
+`ask-modal-footer-wrap` and its backlog item are closed.
 
 ## An `informational` entry can carry a `verify` (2026-09-23)
 

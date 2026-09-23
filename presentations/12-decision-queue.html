@@ -363,7 +363,7 @@
 
 <main>
   <div class="masthead">
-    <h1>27 асков консьюмеров и 35 решений, каждое с нарисованными вариантами</h1>
+    <h1>29 асков консьюмеров и 33 решений, каждое с нарисованными вариантами</h1>
     <p class="lede">
       Сверху - всё, чего ждёт консьюмер: фиксы, хуки и фичи из бэклога, каждый показан как есть
       сейчас и как будет после. Ниже - открытые деки и бакет <code>Decisions</code>. Вариант
@@ -376,9 +376,39 @@
     </div>
   </div>
 
-  <p class="group">Ждут консьюмеры · дефекты</p>
 
-    <section class="q" data-q="ask-control-contrast">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <p class="group">Ждут консьюмеры · срочно (P2)</p>
+
+  <section class="q" data-q="ask-control-contrast">
       <div class="q-head">
         <span class="q-num">01</span>
         <h2 class="q-title">Край поля и текст на secondary не проходят контраст</h2>
@@ -428,7 +458,7 @@
       </div>
     </section>
 
-    <section class="q" data-q="ask-table-pager-size">
+  <section class="q" data-q="ask-table-pager-size">
       <div class="q-head">
         <span class="q-num">02</span>
         <h2 class="q-title">Пейджер внутри ds-table не принимает size и layout</h2>
@@ -475,9 +505,89 @@
       </div>
     </section>
 
-    <section class="q" data-q="ask-table-pager-skeleton">
+  <section class="q" data-q="ask-banner-info-armed">
       <div class="q-head">
         <span class="q-num">03</span>
+        <h2 class="q-title">Info-баннер, написанный после banner.announce, молча начинает озвучиваться</h2>
+        <span class="q-src">P2 · mm-ecm · манифест 0.13.4</span>
+      </div>
+      <p class="q-sub">Консьюмер включил <code>banner: { announce: true }</code> и заглушил 14 баннеров-мебели. Через merge пришёл баннер, написанный под старый дефолт, и теперь звучит на каждом входе в архивную программу. Обратный случай, неозвученный error-баннер, - отдельный вопрос <code>ask-banner-warning</code> ниже.</p>
+
+      <div class="stage">
+        <div class="spec" style="min-inline-size:250px">
+          <p class="cap">написан до конфига: молчал</p>
+          <div class="bn a-info"><i></i><span>This program is archived …</span></div>
+          <p class="css">&lt;ds-banner variant="info" icon="lock"&gt;</p>
+          <p class="says">role и aria-live нет</p>
+        </div>
+        <div class="spec" style="min-inline-size:250px">
+          <p class="cap">после merge под конфигом</p>
+          <div class="bn a-info"><i></i><span>This program is archived …</span></div>
+          <p class="css">provideDsConfig({ banner: { <span class="hit">announce: true</span> } })</p>
+          <p class="says">role="status" aria-live="polite": «This program is archived…»</p>
+        </div>
+      </div>
+
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <p class="console quiet">консоль пуста</p>
+          <dl class="layer"><dt>Как нашли</dt><dd>пересчёт баннеров после merge, 43 → 44</dd><dt>Платит</dt><dd>автор СЛЕДУЮЩЕГО баннера</dd></dl>
+        </div>
+        <div class="opt"><h3>Dev-предупреждение для info/success <span class="star">★</span></h3>
+          <p class="console">[ds-banner] variant="info" announces because DS_CONFIG.banner.announce is true. Bind [announce] to decide.</p>
+          <dl class="layer"><dt>Срабатывает</dt><dd class="gain">info/success, announce из КОНФИГА</dd><dt>Молчит</dt><dd>явный [announce]="true", error/warning</dd></dl>
+        </div>
+        <div class="opt"><h3>Строка в манифесте</h3>
+          <p class="css">"pitfall": "… A banner written after
+  the config announces unless it
+  binds [announce]=\"false\"."</p>
+          <dl class="layer"><dt>Кого ловит</dt><dd>того, кто читает манифест при апгрейде</dd><dt>Кого нет</dt><dd>автора баннера через месяц</dd></dl>
+        </div>
+      </div>
+    </section>
+
+  <section class="q" data-q="ask-column-axis">
+      <div class="q-head">
+        <span class="q-num">04</span>
+        <h2 class="q-title">Колонку нельзя посадить на вторую ось, в двухосевом чарте она всегда слева</h2>
+        <span class="q-src">P2 · mm-ecm · порт microsite-analytics</span>
+      </div>
+      <p class="q-sub">Экран читал визиты по левой оси и запросы агента по правой. Запросы - колонки, <code>dsColumnSeries</code> оси не выбирает, и при порте стороны поменялись местами. Линия умеет: <code>LineSeriesData.axis</code>.</p>
+
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">экран, который портировали</p>
+          <div class="mini-chart">
+            <svg viewBox="0 0 220 104"><line x1="28" y1="10" x2="28" y2="84" stroke="var(--border-default)"/><line x1="192" y1="10" x2="192" y2="84" stroke="var(--border-default)"/><line x1="28" y1="84" x2="192" y2="84" stroke="var(--border-default)"/><g fill="var(--ds-chart-series-2-color)"><rect x="36" y="54" width="16" height="30" rx="2"/><rect x="68" y="32" width="16" height="52" rx="2"/><rect x="102" y="44" width="16" height="40" rx="2"/><rect x="136" y="20" width="16" height="64" rx="2"/><rect x="168" y="36" width="16" height="48" rx="2"/></g><polyline fill="none" stroke="var(--ds-chart-series-1-color)" stroke-width="2" points="44,50 76,38 110,44 144,24 176,30"/><text x="2" y="16" class="tick" style="fill:var(--ds-chart-series-1-color)">4k</text><text x="2" y="50" class="tick" style="fill:var(--ds-chart-series-1-color)">2k</text><text x="196" y="16" class="tick" style="fill:var(--ds-chart-series-2-color)">80</text><text x="196" y="50" class="tick" style="fill:var(--ds-chart-series-2-color)">40</text><text x="2" y="100" class="tick">← визиты</text><text x="156" y="100" class="tick">запросы →</text></svg>
+          </div>
+        </div>
+        <div class="spec">
+          <p class="cap">0.13.4: колонка прибита к primary</p>
+          <div class="mini-chart">
+            <svg viewBox="0 0 220 104"><line x1="28" y1="10" x2="28" y2="84" stroke="var(--border-default)"/><line x1="192" y1="10" x2="192" y2="84" stroke="var(--border-default)"/><line x1="28" y1="84" x2="192" y2="84" stroke="var(--border-default)"/><g fill="var(--ds-chart-series-2-color)"><rect x="36" y="54" width="16" height="30" rx="2"/><rect x="68" y="32" width="16" height="52" rx="2"/><rect x="102" y="44" width="16" height="40" rx="2"/><rect x="136" y="20" width="16" height="64" rx="2"/><rect x="168" y="36" width="16" height="48" rx="2"/></g><polyline fill="none" stroke="var(--ds-chart-series-1-color)" stroke-width="2" points="44,50 76,38 110,44 144,24 176,30"/><text x="2" y="16" class="tick" style="fill:var(--ds-chart-series-2-color)">80</text><text x="2" y="50" class="tick" style="fill:var(--ds-chart-series-2-color)">40</text><text x="196" y="16" class="tick" style="fill:var(--ds-chart-series-1-color)">4k</text><text x="196" y="50" class="tick" style="fill:var(--ds-chart-series-1-color)">2k</text><text x="2" y="100" class="tick">← запросы</text><text x="160" y="100" class="tick">визиты →</text></svg>
+          </div>
+          <p class="says">стороны перевёрнуты против заменяемого экрана</p>
+        </div>
+      </div>
+
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <p class="css">&lt;svg:g dsColumnSeries [data]="requests" /&gt;</p>
+          <dl class="layer"><dt>Обход</dt><dd>визиты колонками, запросы линией</dd><dt>Цена обхода</dt><dd>другой вид у обеих серий</dd></dl>
+        </div>
+        <div class="opt"><h3>axis на dsColumnSeries <span class="star">★</span></h3>
+          <p class="css">&lt;svg:g dsColumnSeries [data]="requests"
+    <span class="hit">axis="secondary"</span> /&gt;</p>
+          <dl class="layer"><dt>По умолчанию</dt><dd class="gain">primary, чарты не меняются</dd><dt>Где</dt><dd>на директиве, не на точке: серия - плоский список</dd></dl>
+        </div>
+      </div>
+    </section>
+
+  <p class="group">Ждут консьюмеры · P3</p>
+
+  <section class="q" data-q="ask-table-pager-skeleton">
+      <div class="q-head">
+        <span class="q-num">05</span>
         <h2 class="q-title">Под скелетоном таблицы пейджер показывает старый итог и кликается</h2>
         <span class="q-src">P3 · ai-sdlc · дефект</span>
       </div>
@@ -520,9 +630,9 @@
       </div>
     </section>
 
-    <section class="q" data-q="ask-closing-scrim-clicks">
+  <section class="q" data-q="ask-closing-scrim-clicks">
       <div class="q-head">
-        <span class="q-num">04</span>
+        <span class="q-num">06</span>
         <h2 class="q-title">Невидимый закрывающийся scrim глотает клики до 300 мс</h2>
         <span class="q-src">P3 · mm-ecm-platform · аудит 0.13.4</span>
       </div>
@@ -567,162 +677,9 @@
       </div>
     </section>
 
-    <section class="q" data-q="ask-text-muted">
-      <div class="q-head">
-        <span class="q-num">05</span>
-        <h2 class="q-title">Приглушённый текст по умолчанию не проходит AA</h2>
-        <span class="q-src">P3 · ai-sdlc · контраст, запаркован</span>
-      </div>
-      <p class="q-sub">
-        <code>--text-muted</code> = <code>#9BA3B4</code> на канве <code>#F8FAFC</code> - 2.42:1, ниже даже 3:1 для крупного
-        текста. Внутри DS его читают только дни чужого месяца в календаре; стартер ai-sdlc перебивает тему сам.
-      </p>
-      <div class="stage">
-        <div class="spec">
-          <p class="cap">--text-muted, сегодня</p>
-          <p class="tint" style="background:var(--surface-canvas);color:var(--text-muted)">29 30 31 · Последнее изменение 2 дня назад</p>
-          <p class="css"><span class="hit">2.42:1</span> на #F8FAFC</p>
-        </div>
-        <div class="spec">
-          <p class="cap">--text-tertiary, рядом</p>
-          <p class="tint" style="background:var(--surface-canvas);color:var(--text-tertiary)">29 30 31 · Последнее изменение 2 дня назад</p>
-          <p class="css">4.53:1 на #F8FAFC</p>
-        </div>
-      </div>
-      <div class="opts">
-        <div class="opt is-today"><h3>Оставить как есть</h3>
-          <dl class="layer"><dt>Кто платит</dt><dd>консьюмер, который взял токен для текста</dd></dl>
-        </div>
-        <div class="opt"><h3>Объявить декоративным <span class="star">★</span></h3>
-          <p class="css">--text-muted: только декор, не для чтения</p>
-          <dl class="layer"><dt>Работа</dt><dd class="gain">строка в доке токенов</dd><dt>Цвет</dt><dd>не меняется</dd></dl>
-        </div>
-        <div class="opt"><h3>Сдвинуть --text-muted</h3>
-          <p class="css">--text-muted: var(--neutral-500);</p>
-          <dl class="layer"><dt>Цена</dt><dd>сливается с --text-tertiary</dd></dl>
-        </div>
-      </div>
-    </section>
-
-    <section class="q" data-q="ask-brand-residue">
-      <div class="q-head">
-        <span class="q-num">06</span>
-        <h2 class="q-title">На бренде другого цвета остаются синие ссылки и подложки</h2>
-        <span class="q-src">P3 · pinkmoon, ai-sdlc · бренд, запаркован</span>
-      </div>
-      <p class="q-sub">
-        Тема перенаводит <code>--primary</code>, но <code>--text-link</code>, <code>--surface-tint</code>,
-        <code>--primary-subtitle</code> и <code>--primary-muted</code> в светлой теме - литералы синей рампы. Каждый
-        консьюмер с другим брендом переназначает их руками.
-      </p>
-      <div class="stage">
-        <div class="spec">
-          <p class="cap">зелёный бренд, сегодня</p>
-          <div class="btn-row"><b style="background:#1f7a4d">Сохранить</b></div>
-          <p class="tint" style="margin-top:var(--space-2);background:var(--surface-tint)">Выбранная строка списка · <span style="color:var(--text-link)">Подробнее</span></p>
-        </div>
-        <div class="spec">
-          <p class="cap">выведено из --primary</p>
-          <div class="btn-row"><b style="background:#1f7a4d">Сохранить</b></div>
-          <p class="tint" style="margin-top:var(--space-2);background:#e8f4ee">Выбранная строка списка · <span style="color:#1f7a4d">Подробнее</span></p>
-        </div>
-      </div>
-      <div class="opts">
-        <div class="opt is-today"><h3>Оставить как есть</h3>
-          <dl class="layer"><dt>Консьюмер</dt><dd>переназначает 4 токена сам</dd></dl>
-        </div>
-        <div class="opt"><h3>Вывести из --primary <span class="star">★</span></h3>
-          <dl class="layer"><dt>Работа</dt><dd>часть движка цвета из одного токена</dd><dt>Тёмная тема</dt><dd class="gain">уже так делает</dd></dl>
-        </div>
-        <div class="opt"><h3>Чеклист must-rebind</h3>
-          <dl class="layer"><dt>Работа</dt><dd class="gain">строка в доке тем</dd><dt>Остаток</dt><dd>каждый бренд помнит сам</dd></dl>
-        </div>
-      </div>
-    </section>
-
-  <p class="group">Ждут консьюмеры · API и фичи</p>
-
-    <section class="q" data-q="ask-banner-info-armed">
+  <section class="q" data-q="ask-dead-overrides">
       <div class="q-head">
         <span class="q-num">07</span>
-        <h2 class="q-title">Info-баннер, написанный после banner.announce, молча начинает озвучиваться</h2>
-        <span class="q-src">P2 · mm-ecm · манифест 0.13.4</span>
-      </div>
-      <p class="q-sub">Консьюмер включил <code>banner: { announce: true }</code> и заглушил 14 баннеров-мебели. Через merge пришёл баннер, написанный под старый дефолт, и теперь звучит на каждом входе в архивную программу. Обратный случай, неозвученный error-баннер, - отдельный вопрос <code>banner-warning</code> ниже.</p>
-
-      <div class="stage">
-        <div class="spec" style="min-inline-size:250px">
-          <p class="cap">написан до конфига: молчал</p>
-          <div class="bn a-info"><i></i><span>This program is archived …</span></div>
-          <p class="css">&lt;ds-banner variant="info" icon="lock"&gt;</p>
-          <p class="says">role и aria-live нет</p>
-        </div>
-        <div class="spec" style="min-inline-size:250px">
-          <p class="cap">после merge под конфигом</p>
-          <div class="bn a-info"><i></i><span>This program is archived …</span></div>
-          <p class="css">provideDsConfig({ banner: { <span class="hit">announce: true</span> } })</p>
-          <p class="says">role="status" aria-live="polite": «This program is archived…»</p>
-        </div>
-      </div>
-
-      <div class="opts">
-        <div class="opt is-today"><h3>Оставить как есть</h3>
-          <p class="console quiet">консоль пуста</p>
-          <dl class="layer"><dt>Как нашли</dt><dd>пересчёт баннеров после merge, 43 → 44</dd><dt>Платит</dt><dd>автор СЛЕДУЮЩЕГО баннера</dd></dl>
-        </div>
-        <div class="opt"><h3>Dev-предупреждение для info/success <span class="star">★</span></h3>
-          <p class="console">[ds-banner] variant="info" announces because DS_CONFIG.banner.announce is true. Bind [announce] to decide.</p>
-          <dl class="layer"><dt>Срабатывает</dt><dd class="gain">info/success, announce из КОНФИГА</dd><dt>Молчит</dt><dd>явный [announce]="true", error/warning</dd></dl>
-        </div>
-        <div class="opt"><h3>Строка в манифесте</h3>
-          <p class="css">"pitfall": "… A banner written after
-  the config announces unless it
-  binds [announce]=\"false\"."</p>
-          <dl class="layer"><dt>Кого ловит</dt><dd>того, кто читает манифест при апгрейде</dd><dt>Кого нет</dt><dd>автора баннера через месяц</dd></dl>
-        </div>
-      </div>
-    </section>
-
-    <section class="q" data-q="ask-column-axis">
-      <div class="q-head">
-        <span class="q-num">08</span>
-        <h2 class="q-title">Колонку нельзя посадить на вторую ось, в двухосевом чарте она всегда слева</h2>
-        <span class="q-src">P2 · mm-ecm · порт microsite-analytics</span>
-      </div>
-      <p class="q-sub">Экран читал визиты по левой оси и запросы агента по правой. Запросы - колонки, <code>dsColumnSeries</code> оси не выбирает, и при порте стороны поменялись местами. Линия умеет: <code>LineSeriesData.axis</code>.</p>
-
-      <div class="stage">
-        <div class="spec">
-          <p class="cap">экран, который портировали</p>
-          <div class="mini-chart">
-            <svg viewBox="0 0 220 104"><line x1="28" y1="10" x2="28" y2="84" stroke="var(--border-default)"/><line x1="192" y1="10" x2="192" y2="84" stroke="var(--border-default)"/><line x1="28" y1="84" x2="192" y2="84" stroke="var(--border-default)"/><g fill="var(--ds-chart-series-2-color)"><rect x="36" y="54" width="16" height="30" rx="2"/><rect x="68" y="32" width="16" height="52" rx="2"/><rect x="102" y="44" width="16" height="40" rx="2"/><rect x="136" y="20" width="16" height="64" rx="2"/><rect x="168" y="36" width="16" height="48" rx="2"/></g><polyline fill="none" stroke="var(--ds-chart-series-1-color)" stroke-width="2" points="44,50 76,38 110,44 144,24 176,30"/><text x="2" y="16" class="tick" style="fill:var(--ds-chart-series-1-color)">4k</text><text x="2" y="50" class="tick" style="fill:var(--ds-chart-series-1-color)">2k</text><text x="196" y="16" class="tick" style="fill:var(--ds-chart-series-2-color)">80</text><text x="196" y="50" class="tick" style="fill:var(--ds-chart-series-2-color)">40</text><text x="2" y="100" class="tick">← визиты</text><text x="156" y="100" class="tick">запросы →</text></svg>
-          </div>
-        </div>
-        <div class="spec">
-          <p class="cap">0.13.4: колонка прибита к primary</p>
-          <div class="mini-chart">
-            <svg viewBox="0 0 220 104"><line x1="28" y1="10" x2="28" y2="84" stroke="var(--border-default)"/><line x1="192" y1="10" x2="192" y2="84" stroke="var(--border-default)"/><line x1="28" y1="84" x2="192" y2="84" stroke="var(--border-default)"/><g fill="var(--ds-chart-series-2-color)"><rect x="36" y="54" width="16" height="30" rx="2"/><rect x="68" y="32" width="16" height="52" rx="2"/><rect x="102" y="44" width="16" height="40" rx="2"/><rect x="136" y="20" width="16" height="64" rx="2"/><rect x="168" y="36" width="16" height="48" rx="2"/></g><polyline fill="none" stroke="var(--ds-chart-series-1-color)" stroke-width="2" points="44,50 76,38 110,44 144,24 176,30"/><text x="2" y="16" class="tick" style="fill:var(--ds-chart-series-2-color)">80</text><text x="2" y="50" class="tick" style="fill:var(--ds-chart-series-2-color)">40</text><text x="196" y="16" class="tick" style="fill:var(--ds-chart-series-1-color)">4k</text><text x="196" y="50" class="tick" style="fill:var(--ds-chart-series-1-color)">2k</text><text x="2" y="100" class="tick">← запросы</text><text x="160" y="100" class="tick">визиты →</text></svg>
-          </div>
-          <p class="says">стороны перевёрнуты против заменяемого экрана</p>
-        </div>
-      </div>
-
-      <div class="opts">
-        <div class="opt is-today"><h3>Оставить как есть</h3>
-          <p class="css">&lt;svg:g dsColumnSeries [data]="requests" /&gt;</p>
-          <dl class="layer"><dt>Обход</dt><dd>визиты колонками, запросы линией</dd><dt>Цена обхода</dt><dd>другой вид у обеих серий</dd></dl>
-        </div>
-        <div class="opt"><h3>axis на dsColumnSeries <span class="star">★</span></h3>
-          <p class="css">&lt;svg:g dsColumnSeries [data]="requests"
-    <span class="hit">axis="secondary"</span> /&gt;</p>
-          <dl class="layer"><dt>По умолчанию</dt><dd class="gain">primary, чарты не меняются</dd><dt>Где</dt><dd>на директиве, не на точке: серия - плоский список</dd></dl>
-        </div>
-      </div>
-    </section>
-
-    <section class="q" data-q="ask-dead-overrides">
-      <div class="q-head">
-        <span class="q-num">09</span>
         <h2 class="q-title">Переопределение --ds-* может ничего не делать, и никто об этом не скажет</h2>
         <span class="q-src">P3 · mm-ecm · аудит 0.8.0 → 0.13.4</span>
       </div>
@@ -761,9 +718,9 @@
       </div>
     </section>
 
-    <section class="q" data-q="ask-bar-segment-selected">
+  <section class="q" data-q="ask-bar-segment-selected">
       <div class="q-head">
-        <span class="q-num">10</span>
+        <span class="q-num">08</span>
         <h2 class="q-title">Сегмент ds-bar-chart нельзя отметить как выбранный</h2>
         <span class="q-src">P3 · mm-ecm-kb · сегментация</span>
       </div>
@@ -803,9 +760,9 @@
       </div>
     </section>
 
-    <section class="q" data-q="ask-chart-locale">
+  <section class="q" data-q="ask-chart-locale">
       <div class="q-head">
-        <span class="q-num">11</span>
+        <span class="q-num">09</span>
         <h2 class="q-title">Чарты берут локаль чисел из браузера, настройки нет</h2>
         <span class="q-src">P3 · mm-ecm-kb · app.config</span>
       </div>
@@ -844,9 +801,9 @@
       </div>
     </section>
 
-    <section class="q" data-q="ask-switch-confirm">
+  <section class="q" data-q="ask-switch-confirm">
       <div class="q-head">
-        <span class="q-num">12</span>
+        <span class="q-num">10</span>
         <h2 class="q-title">ds-switch нельзя спросить перед переключением</h2>
         <span class="q-src">P3 · mm-broker · 4 экрана</span>
       </div>
@@ -882,9 +839,9 @@
       </div>
     </section>
 
-    <section class="q" data-q="ask-cell-template-type">
+  <section class="q" data-q="ask-cell-template-type">
       <div class="q-head">
-        <span class="q-num">13</span>
+        <span class="q-num">11</span>
         <h2 class="q-title">dsCellTemplate отдаёт строку как unknown, и каждая таблица носит кастер</h2>
         <span class="q-src">P3 · mm-broker, ai-sdlc · типы</span>
       </div>
@@ -919,9 +876,9 @@
       </div>
     </section>
 
-    <section class="q" data-q="ask-textarea-selection">
+  <section class="q" data-q="ask-textarea-selection">
       <div class="q-head">
-        <span class="q-num">14</span>
+        <span class="q-num">12</span>
         <h2 class="q-title">У ds-textarea нет API выделения</h2>
         <span class="q-src">P3 · mm-ecm-kb · редактор писем</span>
       </div>
@@ -956,9 +913,9 @@
       </div>
     </section>
 
-    <section class="q" data-q="ask-autocomplete-blur">
+  <section class="q" data-q="ask-autocomplete-blur">
       <div class="q-head">
-        <span class="q-num">15</span>
+        <span class="q-num">13</span>
         <h2 class="q-title">У ds-autocomplete нет публичного blur()</h2>
         <span class="q-src">P3 · mm-ecm-kb · поиск в топбаре</span>
       </div>
@@ -991,74 +948,89 @@
       </div>
     </section>
 
-    <section class="q" data-q="ask-intl-strings">
+  <section class="q" data-q="ask-indeterminate">
+    <div class="q-head">
+      <span class="q-num">14</span>
+      <h2 class="q-title">Форма неопределённого прогресса на узком треке</h2>
+      <a class="q-src" href="../docs/todo.md">бэклог, без деки</a>
+    </div>
+    <p class="q-sub">
+      Причина уже исправлена: цикл шёл на кривой, стал <code>linear</code>, и кусок теперь на треке
+      86.7% цикла против 48.3%. Треки ниже живые и узкие - как в карточке узла у консьюмера.
+    </p>
+
+    <div class="stage">
+      <div class="spec">
+        <p class="cap">было, кривая</p>
+        <div class="track narrow"><i class="chunk eased"></i></div>
+        <p class="says">на треке 48.3% цикла</p>
+      </div>
+      <div class="spec">
+        <p class="cap">сейчас, linear</p>
+        <div class="track narrow"><i class="chunk"></i></div>
+        <p class="says">86.7%, целиком 46.8%</p>
+      </div>
+      <div class="spec">
+        <p class="cap">полоса консьюмера</p>
+        <div class="track narrow"><i class="stripe"></i></div>
+        <p class="says">100% трека каждый кадр</p>
+      </div>
+    </div>
+
+    <div class="opts">
+      <div class="opt"><h3>Оставить бегущий кусок <span class="star">★</span></h3>
+        <p>Дефект вылечен. 13.3% цикла куска нет совсем - это бегущий кусок, который так и работает.</p>
+        <dl class="layer"><dt>Кода</dt><dd class="none">нет, уже сделано</dd></dl>
+      </div>
+      <div class="opt"><h3>Полоса по умолчанию</h3>
+        <p>Неопределённый прогресс больше никогда не пуст, на любой ширине.</p>
+        <dl class="layer"><dt>Кода</dt><dd>новый keyframe, градиент</dd><dt>Ломает</dt><dd>вид у всех, кто уже привык к куску</dd></dl>
+      </div>
+      <div class="opt"><h3>Полоса за входом</h3>
+        <p>Узкий трек выбирает форму сам, широкий остаётся как есть.</p>
+        <dl class="layer"><dt>Кода</dt><dd>вход + вторая форма</dd><dt>Цена</dt><dd>две формы одного состояния в API</dd></dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="q" data-q="ask-banner-warning">
+    <div class="q-head">
+      <span class="q-num">15</span>
+      <h2 class="q-title">Предупреждать ли в dev о неозвученном error-баннере</h2>
+      <a class="q-src" href="10-banner-announce-warning.html">дека 10</a>
+    </div>
+    <p class="q-sub">
+      У консьюмера 43 баннера, первый проход пропустил десять. Экран один и тот же, отличается
+      только то, что печатает консоль.
+    </p>
+
+    <div class="stage">
+      <div class="spec" style="min-inline-size:250px">
+        <p class="cap">экран во всех трёх вариантах</p>
+        <div class="bn"><i></i><span><strong>Загрузка манифеста не прошла</strong><br>Файл отклонён на строке 12.</span></div>
+        <div class="bn q2" style="margin-top:var(--space-2)"><i></i><span><strong>Плановые работы в воскресенье</strong><br>С 02:00 до 04:00.</span></div>
+      </div>
+    </div>
+
+    <div class="opts">
+      <div class="opt is-today"><h3>Молчать</h3>
+        <p class="console quiet">консоль пуста</p>
+        <dl class="layer"><dt>Как находят пропуск</dt><dd>ручной обход всех баннеров</dd></dl>
+      </div>
+      <div class="opt"><h3>Предупреждать всегда</h3>
+        <p class="console">[ds-banner] variant="error" without announce - a screen reader will not hear it.</p>
+        <dl class="layer"><dt>Шум</dt><dd>у каждого при апгрейде</dd><dt>Как гасится</dt><dd>правкой каждого элемента</dd></dl>
+      </div>
+      <div class="opt"><h3>Пока ключ не выставлен <span class="star">★</span></h3>
+        <p class="console">[ds-banner] variant="error" without announce. Decide app-wide with provideDsConfig.</p>
+        <dl class="layer"><dt>Шум</dt><dd class="gain">кончается с ключом</dd><dt>Как гасится</dt><dd class="gain">одной строкой</dd></dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="q" data-q="ask-accordion-geometry">
       <div class="q-head">
         <span class="q-num">16</span>
-        <h2 class="q-title">Все видимые строки библиотеки - английские литералы</h2>
-        <span class="q-src">P2 · ITB Workspace · припарковано Stas</span>
-      </div>
-      <p class="q-sub">В двуязычном приложении панель пикера не переводится. <code>No matches</code> и <code>Create «…»</code> заменяются слотами с 0.11.1, остальные шесть литералов пикеров недостижимы, плюс 36 статических <code>aria-label</code> в 19 файлах.</p>
-
-      <div class="stage">
-        <div class="spec">
-          <p class="cap">русский интерфейс, сегодня</p>
-          <div class="field-mock"><label>Регион</label><div class="box"><span class="chipx">Лондон</span><span class="chipx">+2 more</span></div><div class="panel-mock"><span>☐ Select all</span><span>☐ All of Англия</span><span>☑ Лондон</span><span>☑ Дувр</span></div></div>
-          <p class="says">кнопка очистки: «Clear selection»</p>
-        </div>
-        <div class="spec">
-          <p class="cap">с DS_INTL</p>
-          <div class="field-mock"><label>Регион</label><div class="box"><span class="chipx">Лондон</span><span class="chipx">+2 ещё</span></div><div class="panel-mock"><span>☐ Выбрать все</span><span>☐ Все: Англия</span><span>☑ Лондон</span><span>☑ Дувр</span></div></div>
-          <p class="says">кнопка очистки: «Очистить выбор»</p>
-        </div>
-      </div>
-
-      <div class="opts">
-        <div class="opt is-today"><h3>Оставить парковку <span class="star">★</span></h3>
-          <dl class="layer"><dt>Консьюмер</dt><dd>не переводит панель пикера</dd><dt>Прецедент в библиотеке</dt><dd>входы moreLabel / panelLabel у ds-filter-bar</dd></dl>
-        </div>
-        <div class="opt"><h3>Токен DS_INTL</h3>
-          <p class="css">provideDsIntl({
-    selectAll: 'Выбрать все',
-    clearSelection: 'Очистить выбор',
-  })</p>
-          <dl class="layer"><dt>Объём</dt><dd>6 литералов пикеров, 36 aria-label, подписи ds-table</dd><dt>Цена</dt><dd>проект, а не правка</dd></dl>
-        </div>
-      </div>
-    </section>
-
-    <section class="q" data-q="ask-journey-canvas">
-      <div class="q-head">
-        <span class="q-num">17</span>
-        <h2 class="q-title">Ни один компонент не рисует ветвящийся граф узлов и рёбер</h2>
-        <span class="q-src">P3 · mm-ecm-kb · припарковано Stas: ждать второго консьюмера</span>
-      </div>
-      <p class="q-sub">Путь кампании у консьюмера на девяти экранах, свой холст на 2 353 строки. Спека чартов фазы 2 исключает network по имени.</p>
-
-      <div class="stage">
-        <div class="spec">
-          <p class="cap">холст: узлы, рёбра, подписи</p>
-          <div class="a-canvas">
-            <svg viewBox="0 0 260 204"><g fill="none" stroke="var(--border-strong)" stroke-width="1.5"><line x1="130" y1="26" x2="130" y2="42"/><line x1="130" y1="64" x2="130" y2="80"/><path d="M130 102 C130 118 60 112 60 132"/><path d="M130 102 C130 118 200 112 200 132"/><path d="M60 154 C60 174 130 166 130 180"/><path d="M200 154 C200 174 130 166 130 180"/></g><rect x="95" y="4" width="70" height="22" rx="11" fill="var(--success-subtitle)" stroke="var(--success)"/><text x="130" y="18" text-anchor="middle">Старт</text><rect x="95" y="42" width="70" height="22" rx="4" fill="var(--info-subtitle)" stroke="var(--info)"/><text x="130" y="56" text-anchor="middle">Email</text><circle cx="148" cy="72" r="6" fill="var(--surface-default)" stroke="var(--border-strong)"/><text x="148" y="75" text-anchor="middle">+</text><rect x="90" y="80" width="80" height="22" rx="4" fill="var(--warning-subtitle)" stroke="var(--warning)"/><text x="130" y="94" text-anchor="middle">Условие</text><text x="52" y="116" class="a-edge">Yes · 0</text><text x="178" y="116" class="a-edge">No · 0</text><rect x="25" y="132" width="70" height="22" rx="4" fill="var(--info-subtitle)" stroke="var(--info)"/><text x="60" y="146" text-anchor="middle">Письмо</text><rect x="165" y="132" width="70" height="22" rx="4" fill="var(--surface-secondary)" stroke="var(--border-strong)"/><text x="200" y="146" text-anchor="middle">Ожидание</text><rect x="95" y="180" width="70" height="22" rx="11" fill="var(--surface-secondary)" stroke="var(--border-strong)"/><text x="130" y="194" text-anchor="middle">Конец</text></svg>
-          </div>
-          <p class="says">ветка расходится на две колонки и сходится; «+» на ребре - вставка</p>
-        </div>
-      </div>
-
-      <div class="opts">
-        <div class="opt is-today"><h3>Оставить парковку <span class="star">★</span></h3>
-          <dl class="layer"><dt>Держится до</dt><dd>второго консьюмера</dd><dt>Non-goal фазы 2</dt><dd>стоит</dd></dl>
-        </div>
-        <div class="opt"><h3>Взять холст без билдера</h3>
-          <dl class="layer"><dt>Вход</dt><dd>список узлов, список рёбер</dd><dt>Выход</dt><dd>раскладка, рёбра с подписями, клик</dd><dt>Остаётся у консьюмера</dt><dd>drag-and-drop, редактор узла, меню добавления</dd><dt>Цена</dt><dd>исключение из non-goal фазы 2</dd></dl>
-        </div>
-      </div>
-    </section>
-
-  <p class="group">Ждут консьюмеры · хуки стилей</p>
-
-    <section class="q" data-q="ask-accordion-geometry">
-      <div class="q-head">
-        <span class="q-num">18</span>
         <h2 class="q-title">У аккордеона токены только на цвета - отступы, шрифт и шеврон не настраиваются</h2>
         <span class="q-src">P3 · mm-ecm · хук стилей</span>
       </div>
@@ -1104,9 +1076,9 @@
       </div>
     </section>
 
-    <section class="q" data-q="ask-select-focus-border">
+  <section class="q" data-q="ask-select-focus-border">
       <div class="q-head">
-        <span class="q-num">19</span>
+        <span class="q-num">17</span>
         <h2 class="q-title">У ds-select рамка в фокусе прибита к --accent - единственное поле без хука</h2>
         <span class="q-src">P3 · mm-ecm · хук стилей</span>
       </div>
@@ -1144,9 +1116,9 @@
       </div>
     </section>
 
-    <section class="q" data-q="ask-field-shared-tokens">
+  <section class="q" data-q="ask-field-shared-tokens">
       <div class="q-head">
-        <span class="q-num">20</span>
+        <span class="q-num">18</span>
         <h2 class="q-title">Цвета полей задаются по одному компоненту, а у select и textarea нет размера шрифта</h2>
         <span class="q-src">P3 · mm-ecm · хук стилей</span>
       </div>
@@ -1200,9 +1172,9 @@
       </div>
     </section>
 
-    <section class="q" data-q="ask-autocomplete-text-color">
+  <section class="q" data-q="ask-autocomplete-text-color">
       <div class="q-head">
-        <span class="q-num">21</span>
+        <span class="q-num">19</span>
         <h2 class="q-title">У ds-autocomplete нет хука на цвет текста и плейсхолдера, а плейсхолдер браузерный</h2>
         <span class="q-src">P3 · mm-ecm · хук стилей</span>
       </div>
@@ -1243,9 +1215,9 @@
       </div>
     </section>
 
-    <section class="q" data-q="ask-button-border-hover">
+  <section class="q" data-q="ask-button-border-hover">
       <div class="q-head">
-        <span class="q-num">22</span>
+        <span class="q-num">20</span>
         <h2 class="q-title">ds-button и ds-icon-button не умеют менять рамку при наведении</h2>
         <span class="q-src">P3 · mm-ecm · хук стилей</span>
       </div>
@@ -1290,9 +1262,9 @@
       </div>
     </section>
 
-    <section class="q" data-q="ask-empty-state-title-face">
+  <section class="q" data-q="ask-empty-state-title-face">
       <div class="q-head">
-        <span class="q-num">23</span>
+        <span class="q-num">21</span>
         <h2 class="q-title">Заголовок ds-empty-state берёт размер и цвет из токенов, а гарнитуру и насыщенность - нет</h2>
         <span class="q-src">P3 · mm-ecm · хук стилей</span>
       </div>
@@ -1327,9 +1299,9 @@
       </div>
     </section>
 
-    <section class="q" data-q="ask-badge-subtitle-font-size">
+  <section class="q" data-q="ask-badge-subtitle-font-size">
       <div class="q-head">
-        <span class="q-num">24</span>
+        <span class="q-num">22</span>
         <h2 class="q-title">У ds-badge и подзаголовка ds-page-header нет хука на размер шрифта</h2>
         <span class="q-src">P3 · mm-broker · хук стилей</span>
       </div>
@@ -1364,9 +1336,9 @@
       </div>
     </section>
 
-    <section class="q" data-q="ask-banner-title-font-size">
+  <section class="q" data-q="ask-banner-title-font-size">
       <div class="q-head">
-        <span class="q-num">25</span>
+        <span class="q-num">23</span>
         <h2 class="q-title">У заголовка ds-banner нет хука на размер, а у тела есть</h2>
         <span class="q-src">P3 · pinkmoon · хук стилей</span>
       </div>
@@ -1399,9 +1371,9 @@
       </div>
     </section>
 
-    <section class="q" data-q="ask-table-utility-column">
+  <section class="q" data-q="ask-table-utility-column">
       <div class="q-head">
-        <span class="q-num">26</span>
+        <span class="q-num">24</span>
         <h2 class="q-title">Служебную колонку таблицы нельзя сузить, а без rowActions она пустая полоса</h2>
         <span class="q-src">P3 · mm-ecm · хук стилей</span>
       </div>
@@ -1439,9 +1411,9 @@
       </div>
     </section>
 
-    <section class="q" data-q="ask-table-footer-padding">
+  <section class="q" data-q="ask-table-footer-padding">
       <div class="q-head">
-        <span class="q-num">27</span>
+        <span class="q-num">25</span>
         <h2 class="q-title">У футера пагинации ds-table нет хука на вертикальные отступы</h2>
         <span class="q-src">P3 · mm-ecm-kb · хук стилей</span>
       </div>
@@ -1473,11 +1445,149 @@
       </div>
     </section>
 
+  <p class="group">Ждут консьюмеры · запарковано</p>
+
+  <section class="q" data-q="ask-intl-strings">
+      <div class="q-head">
+        <span class="q-num">26</span>
+        <h2 class="q-title">Все видимые строки библиотеки - английские литералы</h2>
+        <span class="q-src">P2 · ITB Workspace · припарковано Stas</span>
+      </div>
+      <p class="q-sub">В двуязычном приложении панель пикера не переводится. <code>No matches</code> и <code>Create «…»</code> заменяются слотами с 0.11.1, остальные шесть литералов пикеров недостижимы, плюс 36 статических <code>aria-label</code> в 19 файлах.</p>
+
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">русский интерфейс, сегодня</p>
+          <div class="field-mock"><label>Регион</label><div class="box"><span class="chipx">Лондон</span><span class="chipx">+2 more</span></div><div class="panel-mock"><span>☐ Select all</span><span>☐ All of Англия</span><span>☑ Лондон</span><span>☑ Дувр</span></div></div>
+          <p class="says">кнопка очистки: «Clear selection»</p>
+        </div>
+        <div class="spec">
+          <p class="cap">с DS_INTL</p>
+          <div class="field-mock"><label>Регион</label><div class="box"><span class="chipx">Лондон</span><span class="chipx">+2 ещё</span></div><div class="panel-mock"><span>☐ Выбрать все</span><span>☐ Все: Англия</span><span>☑ Лондон</span><span>☑ Дувр</span></div></div>
+          <p class="says">кнопка очистки: «Очистить выбор»</p>
+        </div>
+      </div>
+
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить парковку <span class="star">★</span></h3>
+          <dl class="layer"><dt>Консьюмер</dt><dd>не переводит панель пикера</dd><dt>Прецедент в библиотеке</dt><dd>входы moreLabel / panelLabel у ds-filter-bar</dd></dl>
+        </div>
+        <div class="opt"><h3>Токен DS_INTL</h3>
+          <p class="css">provideDsIntl({
+    selectAll: 'Выбрать все',
+    clearSelection: 'Очистить выбор',
+  })</p>
+          <dl class="layer"><dt>Объём</dt><dd>6 литералов пикеров, 36 aria-label, подписи ds-table</dd><dt>Цена</dt><dd>проект, а не правка</dd></dl>
+        </div>
+      </div>
+    </section>
+
+  <section class="q" data-q="ask-journey-canvas">
+      <div class="q-head">
+        <span class="q-num">27</span>
+        <h2 class="q-title">Ни один компонент не рисует ветвящийся граф узлов и рёбер</h2>
+        <span class="q-src">P3 · mm-ecm-kb · припарковано Stas: ждать второго консьюмера</span>
+      </div>
+      <p class="q-sub">Путь кампании у консьюмера на девяти экранах, свой холст на 2 353 строки. Спека чартов фазы 2 исключает network по имени.</p>
+
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">холст: узлы, рёбра, подписи</p>
+          <div class="a-canvas">
+            <svg viewBox="0 0 260 204"><g fill="none" stroke="var(--border-strong)" stroke-width="1.5"><line x1="130" y1="26" x2="130" y2="42"/><line x1="130" y1="64" x2="130" y2="80"/><path d="M130 102 C130 118 60 112 60 132"/><path d="M130 102 C130 118 200 112 200 132"/><path d="M60 154 C60 174 130 166 130 180"/><path d="M200 154 C200 174 130 166 130 180"/></g><rect x="95" y="4" width="70" height="22" rx="11" fill="var(--success-subtitle)" stroke="var(--success)"/><text x="130" y="18" text-anchor="middle">Старт</text><rect x="95" y="42" width="70" height="22" rx="4" fill="var(--info-subtitle)" stroke="var(--info)"/><text x="130" y="56" text-anchor="middle">Email</text><circle cx="148" cy="72" r="6" fill="var(--surface-default)" stroke="var(--border-strong)"/><text x="148" y="75" text-anchor="middle">+</text><rect x="90" y="80" width="80" height="22" rx="4" fill="var(--warning-subtitle)" stroke="var(--warning)"/><text x="130" y="94" text-anchor="middle">Условие</text><text x="52" y="116" class="a-edge">Yes · 0</text><text x="178" y="116" class="a-edge">No · 0</text><rect x="25" y="132" width="70" height="22" rx="4" fill="var(--info-subtitle)" stroke="var(--info)"/><text x="60" y="146" text-anchor="middle">Письмо</text><rect x="165" y="132" width="70" height="22" rx="4" fill="var(--surface-secondary)" stroke="var(--border-strong)"/><text x="200" y="146" text-anchor="middle">Ожидание</text><rect x="95" y="180" width="70" height="22" rx="11" fill="var(--surface-secondary)" stroke="var(--border-strong)"/><text x="130" y="194" text-anchor="middle">Конец</text></svg>
+          </div>
+          <p class="says">ветка расходится на две колонки и сходится; «+» на ребре - вставка</p>
+        </div>
+      </div>
+
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить парковку <span class="star">★</span></h3>
+          <dl class="layer"><dt>Держится до</dt><dd>второго консьюмера</dd><dt>Non-goal фазы 2</dt><dd>стоит</dd></dl>
+        </div>
+        <div class="opt"><h3>Взять холст без билдера</h3>
+          <dl class="layer"><dt>Вход</dt><dd>список узлов, список рёбер</dd><dt>Выход</dt><dd>раскладка, рёбра с подписями, клик</dd><dt>Остаётся у консьюмера</dt><dd>drag-and-drop, редактор узла, меню добавления</dd><dt>Цена</dt><dd>исключение из non-goal фазы 2</dd></dl>
+        </div>
+      </div>
+    </section>
+
+  <section class="q" data-q="ask-text-muted">
+      <div class="q-head">
+        <span class="q-num">28</span>
+        <h2 class="q-title">Приглушённый текст по умолчанию не проходит AA</h2>
+        <span class="q-src">P3 · ai-sdlc · контраст, запаркован</span>
+      </div>
+      <p class="q-sub">
+        <code>--text-muted</code> = <code>#9BA3B4</code> на канве <code>#F8FAFC</code> - 2.42:1, ниже даже 3:1 для крупного
+        текста. Внутри DS его читают только дни чужого месяца в календаре; стартер ai-sdlc перебивает тему сам.
+      </p>
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">--text-muted, сегодня</p>
+          <p class="tint" style="background:var(--surface-canvas);color:var(--text-muted)">29 30 31 · Последнее изменение 2 дня назад</p>
+          <p class="css"><span class="hit">2.42:1</span> на #F8FAFC</p>
+        </div>
+        <div class="spec">
+          <p class="cap">--text-tertiary, рядом</p>
+          <p class="tint" style="background:var(--surface-canvas);color:var(--text-tertiary)">29 30 31 · Последнее изменение 2 дня назад</p>
+          <p class="css">4.53:1 на #F8FAFC</p>
+        </div>
+      </div>
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <dl class="layer"><dt>Кто платит</dt><dd>консьюмер, который взял токен для текста</dd></dl>
+        </div>
+        <div class="opt"><h3>Объявить декоративным <span class="star">★</span></h3>
+          <p class="css">--text-muted: только декор, не для чтения</p>
+          <dl class="layer"><dt>Работа</dt><dd class="gain">строка в доке токенов</dd><dt>Цвет</dt><dd>не меняется</dd></dl>
+        </div>
+        <div class="opt"><h3>Сдвинуть --text-muted</h3>
+          <p class="css">--text-muted: var(--neutral-500);</p>
+          <dl class="layer"><dt>Цена</dt><dd>сливается с --text-tertiary</dd></dl>
+        </div>
+      </div>
+    </section>
+
+  <section class="q" data-q="ask-brand-residue">
+      <div class="q-head">
+        <span class="q-num">29</span>
+        <h2 class="q-title">На бренде другого цвета остаются синие ссылки и подложки</h2>
+        <span class="q-src">P3 · pinkmoon, ai-sdlc · бренд, запаркован</span>
+      </div>
+      <p class="q-sub">
+        Тема перенаводит <code>--primary</code>, но <code>--text-link</code>, <code>--surface-tint</code>,
+        <code>--primary-subtitle</code> и <code>--primary-muted</code> в светлой теме - литералы синей рампы. Каждый
+        консьюмер с другим брендом переназначает их руками.
+      </p>
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">зелёный бренд, сегодня</p>
+          <div class="btn-row"><b style="background:#1f7a4d">Сохранить</b></div>
+          <p class="tint" style="margin-top:var(--space-2);background:var(--surface-tint)">Выбранная строка списка · <span style="color:var(--text-link)">Подробнее</span></p>
+        </div>
+        <div class="spec">
+          <p class="cap">выведено из --primary</p>
+          <div class="btn-row"><b style="background:#1f7a4d">Сохранить</b></div>
+          <p class="tint" style="margin-top:var(--space-2);background:#e8f4ee">Выбранная строка списка · <span style="color:#1f7a4d">Подробнее</span></p>
+        </div>
+      </div>
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <dl class="layer"><dt>Консьюмер</dt><dd>переназначает 4 токена сам</dd></dl>
+        </div>
+        <div class="opt"><h3>Вывести из --primary <span class="star">★</span></h3>
+          <dl class="layer"><dt>Работа</dt><dd>часть движка цвета из одного токена</dd><dt>Тёмная тема</dt><dd class="gain">уже так делает</dd></dl>
+        </div>
+        <div class="opt"><h3>Чеклист must-rebind</h3>
+          <dl class="layer"><dt>Работа</dt><dd class="gain">строка в доке тем</dd><dt>Остаток</dt><dd>каждый бренд помнит сам</dd></dl>
+        </div>
+      </div>
+    </section>
+
   <p class="group">Чарты</p>
 
   <section class="q" data-q="sparkline">
     <div class="q-head">
-      <span class="q-num">28</span>
+      <span class="q-num">30</span>
       <h2 class="q-title">Спарклайн - пресет линии или свой компонент</h2>
       <a class="q-src" href="7-chart-sparkline-preset.html">дека 7</a>
     </div>
@@ -1529,7 +1639,7 @@
 
   <section class="q" data-q="waterfall">
     <div class="q-head">
-      <span class="q-num">29</span>
+      <span class="q-num">31</span>
       <h2 class="q-title">Водопад - свой тег или режим колоночного чарта</h2>
       <a class="q-src" href="8-waterfall-mode-or-component.html">дека 8</a>
     </div>
@@ -1544,54 +1654,10 @@
     </div>
   </section>
 
-  <section class="q" data-q="indeterminate">
-    <div class="q-head">
-      <span class="q-num">30</span>
-      <h2 class="q-title">Форма неопределённого прогресса на узком треке</h2>
-      <a class="q-src" href="../docs/todo.md">бэклог, без деки</a>
-    </div>
-    <p class="q-sub">
-      Причина уже исправлена: цикл шёл на кривой, стал <code>linear</code>, и кусок теперь на треке
-      86.7% цикла против 48.3%. Треки ниже живые и узкие - как в карточке узла у консьюмера.
-    </p>
-
-    <div class="stage">
-      <div class="spec">
-        <p class="cap">было, кривая</p>
-        <div class="track narrow"><i class="chunk eased"></i></div>
-        <p class="says">на треке 48.3% цикла</p>
-      </div>
-      <div class="spec">
-        <p class="cap">сейчас, linear</p>
-        <div class="track narrow"><i class="chunk"></i></div>
-        <p class="says">86.7%, целиком 46.8%</p>
-      </div>
-      <div class="spec">
-        <p class="cap">полоса консьюмера</p>
-        <div class="track narrow"><i class="stripe"></i></div>
-        <p class="says">100% трека каждый кадр</p>
-      </div>
-    </div>
-
-    <div class="opts">
-      <div class="opt"><h3>Оставить бегущий кусок <span class="star">★</span></h3>
-        <p>Дефект вылечен. 13.3% цикла куска нет совсем - это бегущий кусок, который так и работает.</p>
-        <dl class="layer"><dt>Кода</dt><dd class="none">нет, уже сделано</dd></dl>
-      </div>
-      <div class="opt"><h3>Полоса по умолчанию</h3>
-        <p>Неопределённый прогресс больше никогда не пуст, на любой ширине.</p>
-        <dl class="layer"><dt>Кода</dt><dd>новый keyframe, градиент</dd><dt>Ломает</dt><dd>вид у всех, кто уже привык к куску</dd></dl>
-      </div>
-      <div class="opt"><h3>Полоса за входом</h3>
-        <p>Узкий трек выбирает форму сам, широкий остаётся как есть.</p>
-        <dl class="layer"><dt>Кода</dt><dd>вход + вторая форма</dd><dt>Цена</dt><dd>две формы одного состояния в API</dd></dl>
-      </div>
-    </div>
-  </section>
 
   <section class="q" data-q="chart-palette-lightness">
     <div class="q-head">
-      <span class="q-num">31</span>
+      <span class="q-num">32</span>
       <h2 class="q-title">Палитра чартов разделяет по тону и почти не по светлоте</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1363</a>
     </div>
@@ -1610,7 +1676,7 @@
 
   <section class="q" data-q="colour-engine">
     <div class="q-head">
-      <span class="q-num">32</span>
+      <span class="q-num">33</span>
       <h2 class="q-title">Каким методом выводить цвет из одного токена на роль</h2>
       <a class="q-src" href="1-color-engine-derivation.html">дека 1</a>
     </div>
@@ -1633,7 +1699,7 @@
 
   <section class="q" data-q="interaction-b1">
     <div class="q-head">
-      <span class="q-num">33</span>
+      <span class="q-num">34</span>
       <h2 class="q-title">Шаг pressed для тинтов</h2>
       <a class="q-src" href="3-interaction-formula.html">дека 3, В1</a>
     </div>
@@ -1648,7 +1714,7 @@
 
   <section class="q" data-q="interaction-b2">
     <div class="q-head">
-      <span class="q-num">34</span>
+      <span class="q-num">35</span>
       <h2 class="q-title">Нужен ли pressed нейтральным поверхностям</h2>
       <a class="q-src" href="3-interaction-formula.html">дека 3, В2</a>
     </div>
@@ -1663,7 +1729,7 @@
 
   <section class="q" data-q="interaction-b4">
     <div class="q-head">
-      <span class="q-num">35</span>
+      <span class="q-num">36</span>
       <h2 class="q-title">Нужен ли override-слот поверх формулы</h2>
       <a class="q-src" href="3-interaction-formula.html">дека 3, В4</a>
     </div>
@@ -1683,7 +1749,7 @@
 
   <section class="q" data-q="interaction-b5">
     <div class="q-head">
-      <span class="q-num">36</span>
+      <span class="q-num">37</span>
       <h2 class="q-title">Вводим ли pressed для success и warning кнопок</h2>
       <a class="q-src" href="3-interaction-formula.html">дека 3, В5</a>
     </div>
@@ -1698,7 +1764,7 @@
 
   <section class="q" data-q="theme-recipe">
     <div class="q-head">
-      <span class="q-num">37</span>
+      <span class="q-num">38</span>
       <h2 class="q-title">Рецепт темы против ручных пиков</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1331</a>
     </div>
@@ -1715,7 +1781,7 @@
 
   <section class="q" data-q="warning-text">
     <div class="q-head">
-      <span class="q-num">38</span>
+      <span class="q-num">39</span>
       <h2 class="q-title">Какой цвет текста ставить на жёлтый тинт</h2>
       <a class="q-src" href="6-warning-text-colour.html">дека 6</a>
     </div>
@@ -1740,7 +1806,7 @@
 
   <section class="q" data-q="stepper-dropzone-fields">
     <div class="q-head">
-      <span class="q-num">39</span>
+      <span class="q-num">40</span>
       <h2 class="q-title">ds-number-stepper и ds-dropzone - поля или нет</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1320</a>
     </div>
@@ -1757,7 +1823,7 @@
 
   <section class="q" data-q="select-multi">
     <div class="q-head">
-      <span class="q-num">40</span>
+      <span class="q-num">41</span>
       <h2 class="q-title">ds-select с multi - строить ли</h2>
       <a class="q-src" href="5-select-native-multi.html">дека 5</a>
     </div>
@@ -1772,40 +1838,6 @@
     </div>
   </section>
 
-  <section class="q" data-q="banner-warning">
-    <div class="q-head">
-      <span class="q-num">41</span>
-      <h2 class="q-title">Предупреждать ли в dev о неозвученном error-баннере</h2>
-      <a class="q-src" href="10-banner-announce-warning.html">дека 10</a>
-    </div>
-    <p class="q-sub">
-      У консьюмера 43 баннера, первый проход пропустил десять. Экран один и тот же, отличается
-      только то, что печатает консоль.
-    </p>
-
-    <div class="stage">
-      <div class="spec" style="min-inline-size:250px">
-        <p class="cap">экран во всех трёх вариантах</p>
-        <div class="bn"><i></i><span><strong>Загрузка манифеста не прошла</strong><br>Файл отклонён на строке 12.</span></div>
-        <div class="bn q2" style="margin-top:var(--space-2)"><i></i><span><strong>Плановые работы в воскресенье</strong><br>С 02:00 до 04:00.</span></div>
-      </div>
-    </div>
-
-    <div class="opts">
-      <div class="opt is-today"><h3>Молчать</h3>
-        <p class="console quiet">консоль пуста</p>
-        <dl class="layer"><dt>Как находят пропуск</dt><dd>ручной обход всех баннеров</dd></dl>
-      </div>
-      <div class="opt"><h3>Предупреждать всегда</h3>
-        <p class="console">[ds-banner] variant="error" without announce - a screen reader will not hear it.</p>
-        <dl class="layer"><dt>Шум</dt><dd>у каждого при апгрейде</dd><dt>Как гасится</dt><dd>правкой каждого элемента</dd></dl>
-      </div>
-      <div class="opt"><h3>Пока ключ не выставлен <span class="star">★</span></h3>
-        <p class="console">[ds-banner] variant="error" without announce. Decide app-wide with provideDsConfig.</p>
-        <dl class="layer"><dt>Шум</dt><dd class="gain">кончается с ключом</dd><dt>Как гасится</dt><dd class="gain">одной строкой</dd></dl>
-      </div>
-    </div>
-  </section>
 
   <section class="q" data-q="picker-height">
     <div class="q-head">
