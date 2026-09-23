@@ -27,6 +27,11 @@ timeline, two audiences.
 
 ### Build
 
+- **A card waits for a deferred section body before slicing it.** The slice ran once, as soon as
+  `.section` existed, and a section that `@defer`s its body holds only the placeholder then, so
+  every block was dropped and 21 chart cards froze empty. It now retries until a block is present,
+  inside the same 8s budget.
+
 - **A chart gets cards from its own chapter.** `build-cards.mjs` counted a chapter as a
   component's own only under `components/`, so `Chart`, `HeatmapChart`, `ScatterChart` and
   `WaterfallChart`, whose chapters live under `charts/`, got no card at all and the upload check

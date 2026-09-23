@@ -747,6 +747,12 @@ function cardHtml({
           if (Date.now() - start < 8000) setTimeout(slice, 50);
           return;
         }
+        /* A section can @defer its body: until it resolves the only child is the placeholder,
+           and slicing then would drop every block before it arrives. */
+        if (!WHOLE && !section.querySelector(':scope > h3.block-title, :scope > [data-for]')) {
+          if (Date.now() - start < 8000) setTimeout(slice, 50);
+          return;
+        }
         var owner = '';
         var doomed = [];
         var apis = [];
