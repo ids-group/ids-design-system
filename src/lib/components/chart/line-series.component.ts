@@ -335,15 +335,21 @@ export class LineSeriesComponent implements OnDestroy {
     new Map(),
   );
 
-  protected isTabStop(seriesId: string, markIndex: number): boolean {
-    const chosen = this.rovingBySeries().get(seriesId);
-    if (chosen !== undefined) {
-      return chosen === markIndex;
-    }
-    const first = this.plotted().find((entry) => entry.series.id === seriesId)
-      ?.markers[0];
+  private readonly firstMarkerBySeries = computed(
+    () =>
+      new Map(
+        this.plotted().map((entry) => [
+          entry.series.id,
+          entry.markers[0]?.markIndex,
+        ]),
+      ),
+  );
 
-    return first?.markIndex === markIndex;
+  protected isTabStop(seriesId: string, markIndex: number): boolean {
+    return (
+      (this.rovingBySeries().get(seriesId) ??
+        this.firstMarkerBySeries().get(seriesId)) === markIndex
+    );
   }
 
   /** The series a marker holds focus on, which narrows an `'axis'` panel to that one reading: a
