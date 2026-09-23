@@ -55,21 +55,26 @@
   font-size: var(--font-size-2xs);
 }
 
+/* Big enough to read a colour at a glance, and ringed: the panel's own ground is dark, and a dark
+   mark's dot vanishes into it without a rim. The ring is the panel's surface colour, so it reads as
+   a gap between the dot and the panel rather than as a second colour. */
 .swatch {
-  inline-size: var(--space-2);
-  block-size: var(--space-2);
+  inline-size: var(--space-3);
+  block-size: var(--space-3);
   border-radius: var(--radius-pill);
+  box-shadow: 0 0 0 var(--_chart-tooltip-swatch-ring, 1.5px)
+    var(--_chart-tooltip-swatch-ring-color, var(--surface-default));
 }
 
-/* One white rule across the dot, matching the hatch on the mark it stands for: at 8px a stripe
-   pattern reads as noise, a single break reads as the same distinction the column makes. */
+/* The same 45 degrees the mark's hatch is drawn at, so the dot and the column say the distinction
+   the same way. One stripe, not a pattern: at this size a pattern reads as noise. */
 .swatch.hatched {
   background-image: linear-gradient(
-    to bottom,
-    transparent 40%,
-    var(--surface-default) 40%,
-    var(--surface-default) 60%,
-    transparent 60%
+    45deg,
+    transparent 38%,
+    var(--surface-default) 38%,
+    var(--surface-default) 62%,
+    transparent 62%
   );
 }
 

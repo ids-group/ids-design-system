@@ -264,21 +264,20 @@
     </p>
 
     <div class="demo-row">
-      @for (series of trafficSeries; track series.id) {
-        <ds-button
-          size="sm"
-          color="neutral"
-          variant="outline"
-          (pressed)="
-            singledOut.set(singledOut() === series.id ? null : series.id)
-          ">
-          {{
-            singledOut() === series.id
-              ? 'Show both'
-              : 'Single out ' + series.label
-          }}
-        </ds-button>
-      }
+      <ds-radio-group
+        name="singled-out"
+        label="Single out"
+        [(value)]="singledOutChoice">
+        <ds-radio
+          value="all"
+          label="Both" />
+
+        @for (series of trafficSeries; track series.id) {
+          <ds-radio
+            [value]="series.id"
+            [label]="series.label" />
+        }
+      </ds-radio-group>
     </div>
 
     <ds-chart
