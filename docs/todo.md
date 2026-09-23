@@ -546,7 +546,7 @@ that the release could have said.
   |---|---|---|
   | `-pad` -> `-padding` | `--ds-popover-paddingding` | `--ds-popover-padding`, `refresh-shell.scss:191` |
   | `-weight` -> `-font-weight` | `--ds-badge-font-font-weight` | `--ds-badge-font-weight`, `waves-preview.component.scss:92` |
-  | `-h` -> `-height` | `--ds-button-heightight` | `--ds-button-height`, `--ds-search-height`, `--ds-field-height` |
+  | `-h` -> `-height` | `--ds-button-heighteight` | `--ds-button-height`, `--ds-search-height`, `--ds-field-height` |
   | `-w` -> `-width` | same shape | `--ds-menu-min-width`, `--ds-tab-indicator-width` |
 
   There is also a ROUTING collision between two items in the same release: `--ds-segmented-btn-h`
