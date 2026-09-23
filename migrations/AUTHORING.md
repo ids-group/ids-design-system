@@ -301,6 +301,12 @@ Actionable = existing consumer code stops working or *behaving as before*. Every
 components, new optional inputs, additive tokens whose defaults equal the old role token, pure
 bugfixes, visual polish) → `informational`, so a reader knows silence = safe.
 
+**An `informational` entry may itself need a check.** It is either a bare string, as most are, or an
+object `{ "text": "...", "verify": "..." }` — fill `verify` whenever the line names a layout
+mechanism (`display`, `grid`, `flex`, `position`, `overflow`, `colspan`, a width, a height, a new
+wrapper element), because that is a change to RENDERING, and a grep or a build cannot catch it. One
+sentence is enough: "open an expanded row and confirm the panel spans the row, not one column."
+
 **Members added to an exported class are actionable even when the feature is additive.** Subclassing
 a DS component is unsupported (`design-system.md` § Components), but a consumer who does it breaks on
 a name collision — TS4114 demands `override`, TS2416 fires when the signature differs — so a release

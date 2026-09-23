@@ -100,7 +100,11 @@ Pick the kind that lets a downstream agent act mechanically. All specifics come 
   (with user approval), never the applier.
 - **No consumer action?** If a documented breaking/changed item needs NO code edit from the consumer
   (purely visual — e.g. a new press animation or a restyle), do NOT make it an item — list it in
-  `informational` so it's an FYI, not an attempted or manual-review task.
+  `informational` so it's an FYI, not an attempted or manual-review task. Emit it as a bare string
+  unless the changelog line names a layout mechanism (`display`, `grid`, `flex`, `position`,
+  `overflow`, `colspan`, a width, a height, a new wrapper element) — grep and build both stay silent
+  there, so give it `{ "text": "...", "verify": "<one concrete eyeball check>" }` instead of a plain
+  string.
 
 **Catch-all — the most important rule.** If you cannot confidently reduce a breaking/changed item
 to one of the mechanical kinds, classify it **`behavior`**. NEVER drop a documented change because
@@ -195,7 +199,8 @@ Return ONLY a fenced ```json block:
 "detect": [], "verify": "<positive assertion>", "restore": "<snippet | null>",
 "supersedes": ["<version>#<id>"] } ],
 "deleteList": [ { "id", "surface", "find": [], "why", "replaceWith" } ],
-"informational": [ "<one-line summary of each Added/Fixed group>" ]
+"informational": [ "<one-line summary of each Added/Fixed group>" |
+                    { "text": "...", "verify": "<one concrete eyeball check>" } ]
 }
 
 `map` is present ONLY on `value-remap` items; `new` may be null (removals / behavior). `surface` is
@@ -206,5 +211,6 @@ the LATER item that reverses an earlier one) is carried through from the shipped
 emitted from prose ONLY when the block itself names the exact earlier version and change — you
 cannot see earlier plans, so never fabricate the reference; omit the field when unsure. There is
 no `supersededBy` — the link never points forward. `informational` is consumed directly by the orchestrator for
-the final report (no other subagent reads it), and `deleteList` drives its own pass. No preamble, no
-prose outside the JSON block.
+the final report (no other subagent reads it), and `deleteList` drives its own pass. When a shipped
+manifest is passed in, forward each `informational` entry verbatim, object shape included — never
+flatten it back to its `text` alone. No preamble, no prose outside the JSON block.
