@@ -675,6 +675,13 @@ Both found while planning that consumer's move to 0.13.3. Neither blocks it; bot
   `--ds-bar-chart-target-color`, `--ds-bar-target-width` against `--ds-bar-chart-target-width`.
   A missed token rename reports nothing and the bar simply returns to its default look, which is the
   failure this collision makes likely rather than merely possible.
+  **The word boundary that warning sends people to does not work.** `\bds-bar\b` still matches
+  inside `ds-bar-chart`: a hyphen is not a `\w` character, so `\b` fires between the `r` and the `-`.
+  Observed 2026-09-23 on the mm-ecm consumer, where an agent migrating to 0.13.3 reached for exactly
+  that guard, believed it was scoped and it was not; the tree was unaffected only because it has no
+  `<ds-bar>` yet. A guard that holds needs the longer name excluded explicitly - `ds-bar(?!-chart)`,
+  or matching `<ds-bar[\s/>]`. Worth putting in the item's `pitfall` either way, since it turns
+  "be careful" into a reason the careful version fails.
   **Wanted:** a name that cannot prefix a chart's, and that does not re-pin the component to
   progress or to meter - the merge dropped both words deliberately, and `semantics` is what carries
   that meaning now. Measured 2026-09-22: of 21 prefix pairs among 99 selectors this is the only one
