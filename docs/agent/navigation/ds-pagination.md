@@ -7,5 +7,5 @@ Inputs: `total: required number`, `pageSize: model<number> = 10`, `currentPage: 
 Outputs: `(currentPageChange): number`, `(pageSizeChange): number`
 
 <!-- inputs:ds-pagination -->
-All inputs: `total: required number`, `pageSize: number = 10`, `currentPage: number = 1`, `pageSizeOptions: number[]`, `showLabel: boolean = true`, `showPageSize: boolean = true`, `size: 'sm' | 'md' | 'lg' = null`, `layout: 'grouped' | 'spread' = null`
+All inputs: `total: required number`, `pageSize: number = 10`, `currentPage: number = 1`, `pageSizeOptions: number[]`, `showLabel: boolean = true`, `showPageSize: boolean = true`, `size: 'sm' | 'md' | 'lg' = null`, `layout: 'grouped' | 'spread' = null`, `disabled: boolean = false`
 <!-- /inputs -->

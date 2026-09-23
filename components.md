@@ -140,6 +140,9 @@ Every entry below names its exported class (`ButtonComponent`, `TableComponent<T
 checkbox, radio, radio-group, switch, slider, segmented, OTP): `label`, `hint`, `error`, `warning`,
 `errors`, `invalid`, `touched`, `reserveMessage` — and one message line under the control that renders
 whichever of them wins. The ladder is error → errors → warning → advisory errors → success → hint.
+Every field control also has `focus(options?)` and `blur()`. `blur()` drops focus from whichever
+descendant holds it and leaves a portaled panel alone; `ds-autocomplete.clear()` keeps focus on
+purpose, so a host that navigates away calls `clear()` then `blur()`.
 
 `error`, `warning` and `success` lead that line with a glyph; `hint` does not, because it is the resting
 text rather than a state. Retune app-wide with `DS_CONFIG.field.stateIcons` (per state, independent —
@@ -305,7 +308,7 @@ All inputs: `hint: string = ''`, `error: string = ''`, `warning: string = ''`, `
 Pre-styled search input with built-in icon. A form control, but not a field: no label, no message row.
 Inputs: `value: model<string>`, `placeholder: string = 'Search'`, `shortcut: string = ''` (rendered as a hint pill, e.g. `⌘K`), `showIcon: boolean = true`, `clearable: boolean = false`, `ariaLabel: string = ''`, `disabled: boolean = false`, `hidden: boolean = false`, `size: DsSize | null = null`, `debounce: number = 0` (ms held before `value` updates; clearing, Enter and `clear()` all skip the timer)
 Output: `(submitted): string` — emits the current value on Enter / form submit
-Methods: `clear()` — empties the field, drops an armed keystroke and publishes `''` at once, which writing `''` into `value` does not; `focus()`.
+Methods: `clear()` — empties the field, drops an armed keystroke and publishes `''` at once, which writing `''` into `value` does not; `focus()`, `blur()`.
 Binds through `NG_VALUE_ACCESSOR`, taking the value plumbing without the field-message layer — so `hint` / `error` / `warning` / `errors` / `invalid` / `touched` / `reserveMessage` / `messageIcon` are NOT inputs here.
 
 <!-- inputs:ds-search -->
@@ -681,7 +684,7 @@ Inputs: `total: required number`, `pageSize: model<number> = 10`, `currentPage: 
 Outputs: `(currentPageChange): number`, `(pageSizeChange): number`
 
 <!-- inputs:ds-pagination -->
-All inputs: `total: required number`, `pageSize: number = 10`, `currentPage: number = 1`, `pageSizeOptions: number[]`, `showLabel: boolean = true`, `showPageSize: boolean = true`, `size: 'sm' | 'md' | 'lg' = null`, `layout: 'grouped' | 'spread' = null`
+All inputs: `total: required number`, `pageSize: number = 10`, `currentPage: number = 1`, `pageSizeOptions: number[]`, `showLabel: boolean = true`, `showPageSize: boolean = true`, `size: 'sm' | 'md' | 'lg' = null`, `layout: 'grouped' | 'spread' = null`, `disabled: boolean = false`
 <!-- /inputs -->
 
 #### `<ds-divider>` — `DividerComponent`

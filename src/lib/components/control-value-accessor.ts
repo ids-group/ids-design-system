@@ -103,6 +103,13 @@ function focusOwnControl(host: HTMLElement, options?: FocusOptions): void {
   target?.focus(options);
 }
 
+function blurOwnControl(host: HTMLElement): void {
+  const active = host.ownerDocument.activeElement;
+  if (active instanceof HTMLElement && host.contains(active)) {
+    active.blur();
+  }
+}
+
 /**
  * Shared `ControlValueAccessor` for DS form controls whose value is a signal
  * `model()`. Bridges that model with Angular forms (reactive `formControl` /
@@ -140,6 +147,16 @@ export abstract class DsControlValueAccessor<T>
    */
   focus(options?: FocusOptions): void {
     focusOwnControl(this.hostElement.nativeElement, options);
+  }
+
+  /**
+   * The counterpart of `focus()`: drops focus if it sits anywhere inside this
+   * control - the input, a picker trigger, the OTP cell that has it - so no
+   * subclass overrides it. A portaled panel is outside the host and is left alone.
+   * For a host that navigates away after `clear()`, which keeps focus on purpose.
+   */
+  blur(): void {
+    blurOwnControl(this.hostElement.nativeElement);
   }
 
   private readonly bridge = valueControlBridge<T>(() => this.value);
@@ -203,6 +220,11 @@ export abstract class DsBooleanControlValueAccessor
    */
   focus(options?: FocusOptions): void {
     focusOwnControl(this.hostElement.nativeElement, options);
+  }
+
+  /** The counterpart of `focus()` - see `DsControlValueAccessor.blur`. */
+  blur(): void {
+    blurOwnControl(this.hostElement.nativeElement);
   }
 
   /** Driven by the forms API via `setDisabledState`. */

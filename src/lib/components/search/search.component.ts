@@ -131,6 +131,11 @@ export class SearchComponent implements ControlValueAccessor {
     this.inputEl()?.nativeElement.focus(options);
   }
 
+  /** Drops focus from the search input - the counterpart of `focus()`. */
+  blur(): void {
+    this.inputEl()?.nativeElement.blur();
+  }
+
   protected onText(next: string): void {
     this.text.set(next);
     if (this.debounce() > 0 && next !== '') {
