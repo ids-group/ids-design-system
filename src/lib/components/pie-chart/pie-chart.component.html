@@ -74,7 +74,6 @@
         [class.ring-outline]="total() === 0">
         <svg
           class="ring-svg"
-          animate.enter="mark-enter"
           [class.dims-others]="dimOthers()"
           [attr.aria-hidden]="ringCarriesTheRoute() ? null : true"
           [attr.viewBox]="viewBox">
@@ -163,7 +162,6 @@
               (keydown.space)="onSliceKey(entry.slice, $event)">
               <span
                 class="swatch"
-                animate.enter="mark-enter"
                 [style.background]="entry.color">
               </span>
 

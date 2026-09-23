@@ -68,7 +68,6 @@
           @for (mark of entry.points; track mark.key) {
             <circle
               class="point"
-              animate.enter="mark-enter"
               [class.interactive]="interactive()"
               [attr.cx]="mark.cx"
               [attr.cy]="mark.cy"

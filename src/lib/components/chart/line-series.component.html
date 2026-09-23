@@ -6,7 +6,6 @@
     @for (path of entry.areaPaths; track $index) {
       <svg:path
         class="series-area"
-        animate.enter="mark-enter"
         animate.leave="mark-leave"
         [class.is-stacked]="stacked()"
         [class.is-dimmed]="isDimmed(entry.series.id)"
@@ -32,7 +31,6 @@
     @for (path of entry.linePaths; track $index) {
       <svg:path
         class="series-line"
-        animate.enter="mark-enter"
         animate.leave="mark-leave"
         [class.is-dimmed]="isDimmed(entry.series.id)"
         [attr.stroke-dasharray]="dashFor(entry.seriesIndex)"
