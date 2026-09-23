@@ -20,6 +20,14 @@
   `.cdk-overlay-pane.ds-chart-tooltip-pane` that assumed `pointer-events: auto` needs
   `.is-pinned` added to it.
 
+- **Subclassing one of these breaks on a name collision.** `ChartComponent`,
+  `ColumnSeriesComponent`, `LineSeriesComponent` and `ColumnChartComponent` each gained members
+  while the container took over the tooltip, and so did `ChartTooltipDirective`, which is internal
+  but reachable through `@ids-group-ltd/ids-design-system/components/chart-tooltip`. Declaring a
+  member of the same name in a subclass is a compile error - TS4114, or TS2416 where the signature
+  differs - so rename yours or add `override`. Subclassing a DS component is unsupported either
+  way.
+
 ### Added
 
 - **`dsLineSeries` takes an `outline`, on by default.** The line and its markers sit on a band of

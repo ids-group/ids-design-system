@@ -80,6 +80,39 @@
       ],
       "verify": "With cursor=\"category\" over a plot holding a column series and a line series, the panel lists both.",
       "note": "The behaviour was already documented and the code listed only the series whose mark opened the panel, because a mark could not see the others. Marks now offer the container what they read at the cursor's category and the container merges them, matching by label so a series is never listed twice."
+    },
+    {
+      "id": "exported-class-members-grew",
+      "kind": "behavior",
+      "old": "extends ChartComponent",
+      "new": null,
+      "surface": "typescript",
+      "action": "Only if you SUBCLASS one of these and declare a member of the same name: rename yours, or add `override` where your member genuinely means the same thing.",
+      "appliesWhen": "Only a class extending one of the listed components. Using them in a template is unaffected, and so is a consumer who composes rather than subclasses.",
+      "pitfall": "The collision is a compile error, not a silent one - TS4114 for a same-named member, TS2416 where the signature differs - so a build that passes has none.",
+      "restore": null,
+      "searchHints": [
+        "extends ChartComponent",
+        "extends ColumnSeriesComponent",
+        "extends LineSeriesComponent",
+        "extends ColumnChartComponent",
+        "extends ChartTooltipDirective",
+        "extends "
+      ],
+      "detect": [
+        "extends ChartComponent",
+        "ChartComponent",
+        "extends ColumnSeriesComponent",
+        "ColumnSeriesComponent",
+        "extends LineSeriesComponent",
+        "LineSeriesComponent",
+        "extends ColumnChartComponent",
+        "ColumnChartComponent",
+        "extends ChartTooltipDirective",
+        "ChartTooltipDirective"
+      ],
+      "verify": "Your build has no TS4114 or TS2416 against any of the listed classes.",
+      "note": "ChartComponent gained activeTooltip, releaseTooltip, reportTooltip, tooltipContext, tooltipExtraGap, tooltipOrigin, tooltipPreferBelow, tooltipSources and tooltipTemplate; ColumnSeriesComponent gained MIN_STACK_HIT, axisEntries, dimmedBySeries, highlighted, hitBox, seriesKey and stacked; LineSeriesComponent gained outline; ColumnChartComponent gained highlightedSeries. ChartTooltipDirective gained dsChartTooltipPinned - internal, but reachable through the components/chart-tooltip entry point. Most of these carry the tooltip the container now owns."
     }
   ],
   "informational": [
