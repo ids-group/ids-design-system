@@ -500,6 +500,38 @@
     [stickyHeader]="false" />
 
   <h3 class="block-title t-h4">
+    Loading · skeleton with pagination
+  </h3>
+
+  <p class="block-desc t-s">
+    The footer keeps its height while
+    <code class="t-mono-inline">
+      [loading]="'skeleton'"
+    </code> is on. Its buttons and
+    the page-size dropdown disable, and the range label gives way to a
+    <code class="t-mono-inline">
+      &lt;ds-skeleton&gt;
+    </code>
+    placeholder, so the pager never shows a count for rows that are not the
+    ones on screen, and can no longer fire a page change while there is
+    nothing behind it.
+  </p>
+
+  <ds-button
+    size="sm"
+    variant="outline"
+    (pressed)="pagerSkeletonLoading.set(!pagerSkeletonLoading())">
+    Toggle skeleton loading
+  </ds-button>
+
+  <ds-table
+    caption="Projects"
+    [data]="projectRows"
+    [columns]="projectColumns"
+    [pageSize]="4"
+    [loading]="pagerSkeletonLoading() ? 'skeleton' : false" />
+
+  <h3 class="block-title t-h4">
     Loading · overlay
   </h3>
 

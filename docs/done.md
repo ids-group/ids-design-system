@@ -4,6 +4,26 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## `ds-table`'s footer pager disables and masks its label under skeleton loading (2026-09-24)
+
+`PaginationComponent` takes a `disabled` input (`pagination.component.ts`): every button and the
+page-size `ds-select` get the native `disabled` attribute, and the range label swaps to a
+`<ds-skeleton>` placeholder in place of `rangeLabel()` (`pagination.component.html`, the `.label`
+span). `ds-table` forwards `[disabled]="isSkeletonLoading()"` to it (`table.component.html:445`), so
+the footer no longer shows the previous query's count and buttons under `loading="skeleton"`, and
+cannot fire a page change against rows that were swapped for shimmer placeholders. `loading="overlay"`
+only ever runs while `filteredData().length` is already nonzero, so the rows on screen and `total()`
+stay in sync there and the label is never stale; left as-is. `aria-busy` on the table and the
+`role="status"` "Loading…" announcement already covered both loading modes
+(`table.component.html:22-27,33`, `statusMessage()` at `table.component.ts:896`) - nothing added
+there. Measured 2026-09-23/24 on the docs table page (`ds-docs`, "Loading · skeleton with
+pagination" demo) in the shared Chrome: footer height 92.53px before, during and after toggling
+`[loading]="'skeleton'"`; during, all 5 pagination buttons and the size select report
+`disabled: true`, the label holds a `ds-skeleton`, and the table carries `aria-busy="true"`; after,
+the label reads "Showing 1–4 of 12" again and only the page-1 prev button stays disabled.
+
+---
+
 ## `ds-table` forwards `paginationSize` and `paginationLayout` to its footer pager (2026-09-23)
 
 `TableComponent` takes `paginationSize: DsSize | null` and `paginationLayout: PaginationLayout | null`
