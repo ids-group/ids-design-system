@@ -2153,10 +2153,10 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 ## Six consumer asks on the 0.13.3 and 0.13.4 records (2026-09-23)
 
 `ds-bar` reads `--ds-bar-radius` on its track and its fill, default `var(--radius-pill)`
-(`bar.component.scss`), and the 0.13.3 manifest and CHANGELOG say what was true at that tag:
+(`bar.component.scss`), and the 0.13.3 manifest says what was true at that tag:
 `--ds-meter-radius` was removed with no replacement (`0.13.3#meter-radius-removed`). The
-`ds-bar` name stays (Stas); the three 0.13.3 pitfalls and the CHANGELOG line that sent readers to a
-word boundary now give the guard that holds - `ds-bar(?![-\w])` for names and tokens,
+`ds-bar` name stays (Stas); the three 0.13.3 pitfalls that sent readers to a word boundary now
+give the guard that holds - `ds-bar(?![-\w])` for names and tokens,
 `<ds-bar[\s/>]` for the tag - because a hyphen is a `\b`. The four generic spell-out items of
 0.13.4 are 97 exact `token-rename` pairs generated from the tag diff
 (`git grep -hoE -- '--ds-[a-z0-9-]+' v0.13.3 -- src/lib | sort -u` against v0.13.4: 987 and 1039
@@ -2165,12 +2165,13 @@ claimed), each `detect` anchored `(?![A-Za-z0-9_-])` and each group carrying the
 in one pitfall line; `check-manifest-truth 0.13.4` reads 252 of 254 values and holds.
 `donut-chart-renamed-to-pie-chart` and the six older selector renames list `style`, and `M045`
 fails a `selector-rename` without it - red on those six before the fix, quiet on the control.
-The 0.13.4 CHANGELOG names the segmented tokens as `--ds-segmented-btn-*`, the spelling v0.13.3
-shipped. `--ds-line-chart-plot-height` keeps the plot and `--ds-line-chart-placeholder-height`
+`--ds-line-chart-plot-height` keeps the plot and `--ds-line-chart-placeholder-height`
 sizes the skeleton and the empty and error boxes, defaulting to what they had, with a 0.13.4
 `behavior` item saying the plot token started driving the plot at that tag. Deck
 `ds-bar-name-collision` is decided and archived; the decision queue drops seven answered questions
-and stands at 31 asks and 35 decisions.
+and stands at 31 asks and 35 decisions. Every CHANGELOG line this touches - the two hooks under
+Unreleased, the 0.13.3 meter-radius removal and `ds-bar` guard, the 0.13.4 segmented spelling
+`--ds-segmented-btn-*` - is Stas's to write.
 
 ## The expanded table row spans its row (2026-09-23)
 
