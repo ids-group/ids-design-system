@@ -9,12 +9,11 @@
     another.
   </span>
 
-  <!-- The anchor lives on <docs-section>, so it stays in the DOM and the sidebar's scroll
-       still finds this section while its body is a placeholder. the timer carries the OR:
-       a viewport trigger alone never fires where nothing is painted, which is every headless
-       render, and `on idle` fires at once and builds all nine sections into the first seconds
-       of the page. Three seconds sits inside the card pass's own 8s budget per card. -->
-  @defer (on viewport; on timer(3s)) {
+  <!-- Nothing here is built until it is scrolled to: nine chart sections at once is a page
+       that stalls on open. The anchor lives on <docs-section>, so the sidebar's scroll still
+       finds this section while its body is a placeholder, and the design-sync card pass
+       resolves the viewport trigger itself. -->
+  @defer (on viewport) {
 
   <h3 class="block-title t-h4">
     Default
