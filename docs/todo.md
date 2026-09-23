@@ -14,14 +14,14 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**121 open — 1 P1, 34 P2, 86 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**122 open — 1 P1, 35 P2, 86 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 1
 
 - **Framework & forms**
   - Upgrade to Angular 22 — and re-verify the signal-forms work against it, because one of its breaking changes lands exactly there
 
-### P2 — 34
+### P2 — 35
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Nothing catches a shell that rings on `:focus-within` when it means the keyboard
@@ -64,6 +64,7 @@ item and nothing else.
   - Nothing catches a stale `presentations/ds.css`, and two gates read it as the truth
   - Publishing to Claude Design cannot run from Bitbucket, and Stas wants the CI route looked at again (recorded 2026-09-02)
   - `fix:all` reformats HTML that eslint then fights, and it is `fix:all` alone — `lint:all` is green
+  - A consumer's `--ds-*` override can be write-only, and nothing says so (recorded 2026-09-23, from the mm-ecm consumer's 0.8.0 to 0.13.4 audit)
 - **Localization — every user-visible string is a hardcoded literal (recorded 2026-08-27, from the ITB Workspace picker report)**
   - Every user-visible string in the library is a hardcoded English literal — VALIDATED 2026-08-27 against 0.11.0; Stas: defer the whole thing, no code
 - **The chart family read as an architecture (audited 2026-09-22)**
@@ -1482,6 +1483,10 @@ its own inline styles. `presentations/README.md` holds the authoring contract an
   **Why it is P3 and not higher:** the audit's damaging findings are all fixed (23 of 23), the lint gained M034–M037 and M039–M042, and the delete-table parity gate is green — so nothing here is protecting a consumer from a live defect. It is the difference between a format that is ahead of the field and one whose *enforcement posture* is too, which is the audit's own summary of the gap.
   **Cheapest honest first cut if it is picked up:** (6) and (7) are additive keys with a lint rule each and zero back-fill (0 of 22 would fail), and (2) is a one-line default flip with a re-read of the 22 manifests' `replaceIn` values. (1), (3) and (4) are the ones that change what the gate actually PROVES, and the board's own rule applies — a gate proves nothing until you have watched it fail.
 
+- [ ] **[P2] A consumer's `--ds-*` override can be write-only, and nothing says so (recorded 2026-09-23, from the mm-ecm consumer's 0.8.0 to 0.13.4 audit).** A name the consumer declares but the library never reads sets nothing, paints nothing and raises nothing: no build error, no console warning, no lint. It reads as styling that works, and it can survive many releases that way. Measured on one consumer: `--ds-button-bg`, `--ds-button-bg-hover`, `--ds-button-bg-active`, `--ds-button-fg` and `--ds-tag-bg`, 17 declarations in two files. Those names are real - `git grep -P -- '--ds-button-bg(?![a-z0-9-])' <tag> -- src/lib` finds them at `v0.1.0` through `v0.2.2` and nowhere from `v0.3.0` on, where the surface became `--ds-button-bg-color` / `-hover` / `-active` and `--ds-button-label-color`. The consumer entered the chain at 0.8.0, so the overrides were already five releases dead before the upgrade started, and came out the other side still dead.
+  **Why no manifest can catch this.** A migration item's `old` is scoped to the one version boundary it describes, so a name that died before the chain's first version is outside every manifest the chain reads. The tooling is correct and the hole is structural: it can only ever report renames inside the range being walked, while a consumer's dead override is a property of the CURRENT installed version alone.
+  **The shape that fits:** a check a consumer can run against what is installed - collect every `--ds-*` the consumer DECLARES, collect every `--ds-*` the package READS (`fesm2022/*.mjs` plus `styles/` and `themes/`), and report the declarations that resolve to nothing. That is the same idea `check-doc-tokens` already applies to our own prose, pointed outward; on the consumer above it takes one pass over 176 declared names against 1 028 read names. Shipping it as a bin in the package, or as a schematic, puts it where the consumer can run it on every upgrade rather than once during an audit.
+  **The same silence has a second shape, worth covering together: a selector that stops matching.** `ds-button` marks its variant with `[attr.data-variant]`, so a consumer styling `ds-button .button.secondary` or `.outline` matches nothing. The same consumer carries seven such blocks. Worse than inert: its `primary` block is written as `.button:not(.secondary):not(.tertiary):not(.outline):not(.error):not(.success):not(.warning):not(.text)`, and since none of those classes is ever rendered the negation excludes nothing, so a rule meant for one variant applies to every button. A check that resolved a consumer's `ds-*` selectors against the classes and attributes the components actually render would catch both halves.
 ## Framework & forms
 
 - [ ] **[P1] Upgrade to Angular 22 — and re-verify the signal-forms work against it, because one of its breaking changes lands exactly there.** This repo builds on **21.2.17** (`v21-lts` is 21.2.19) and declares `"^21.2.0"` for all six Angular peers, which resolves `>=21.2.0 <22.0.0` — so **a consumer on Angular 22 cannot install this package without `--legacy-peer-deps`**. Angular 22 has been out since **2026-06-03**; `@angular/core` and `@angular/forms` are at **22.1.1** as of 2026-08-07 (checked against the registry, not assumed).
