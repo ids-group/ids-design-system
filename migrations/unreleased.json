@@ -300,7 +300,8 @@
       "text": "ds-table takes paginationSize and paginationLayout and forwards them to its footer pager as size and layout, so a larger spread footer under a table is two attributes; a consumer rule that doubles .pagination.pagination or .pagination-button.pagination-button under ds-table to force the pager's width or button height is redundant (delete list: table-pager-size-layout-override).",
       "verify": "A ds-table with paginationSize=\"md\" paginationLayout=\"spread\" renders its pager buttons at the md control height with the range label at the table's start edge and the controls at its end edge; a table without either input renders its pager as before."
     },
-    "DS_CONFIG.pagination.size and DS_CONFIG.pagination.layout set the default size and layout of every pager, ds-table's footer included: size resolves the input, then pagination.size, then control.size, then 'sm'; layout resolves the input, then pagination.layout, then 'grouped'. PaginationLayout is exported from the core entry point as well as from components/pagination."
+    "DS_CONFIG.pagination.size and DS_CONFIG.pagination.layout set the default size and layout of every pager, ds-table's footer included: size resolves the input, then pagination.size, then control.size, then 'sm'; layout resolves the input, then pagination.layout, then 'grouped'. PaginationLayout is exported from the core entry point as well as from components/pagination.",
+    "A skeleton's shimmer pauses while it is off screen and advances in 68 steps over the default 3400ms. A `--ds-skeleton-wave-duration` of yours changes the step rate with it, since the step count is fixed; nothing needs editing."
   ],
   "deleteList": [
     {
