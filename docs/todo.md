@@ -14,14 +14,14 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**113 open — 1 P1, 32 P2, 80 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**117 open — 1 P1, 34 P2, 82 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P1 — 1
 
 - **Framework & forms**
   - Upgrade to Angular 22 — and re-verify the signal-forms work against it, because one of its breaking changes lands exactly there
 
-### P2 — 32
+### P2 — 34
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - Nothing catches a shell that rings on `:focus-within` when it means the keyboard
@@ -39,6 +39,9 @@ item and nothing else.
 - **What actually running the 0.13.4 migration cost (recorded 2026-09-23, from the mm-ecm consumer)**
   - The mass spell-out renames old names that are PREFIXES of the new ones, and the pitfall does not mention it
   - Adopting `banner.announce` app-wide silently arms every banner written afterwards, and the variant is a usable discriminator
+- **Three more things the 0.13.4 migration cost a consumer (recorded 2026-09-23, from the mm-ecm consumer)**
+  - `--ds-line-chart-plot-height` changes what it does and no manifest item says so
+  - The spell-out wave was keyed on suffixes, so three abbreviations survive it - and one
 - **Two chart names that collide (recorded 2026-09-21, from the mm-ecm consumer)**
   - `ds-bar` is a prefix of `ds-bar-chart`, and the token surfaces overlap the same way
 - **Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)**
@@ -67,7 +70,7 @@ item and nothing else.
   - The chassis is declared nine times and shared once - about 450 lines of it
   - The template state head and the figcaption rule are copied verbatim, nine times each
 
-### P3 — 80
+### P3 — 82
 
 - **What v0.13.3 added and the docs site never shows (measured 2026-09-22)**
   - Fifteen new inputs have no demo and no prose on the docs site
@@ -92,6 +95,9 @@ item and nothing else.
   - Which of the 8 live chapters can also be frozen
   - `templates` and `startingPoints` in `_ds_manifest.json` are in the schema and empty
   - `.thumbnail` — the project's cover image — has no source that regenerates it
+- **Three more things the 0.13.4 migration cost a consumer (recorded 2026-09-23, from the mm-ecm consumer)**
+  - `donut-chart-renamed-to-pie-chart` declares `surface: ["template","typescript"]`, and …
+  - The 0.13.4 CHANGELOG names the segmented tokens by a spelling that never shipped
 - **Two 0.13.4 items point `old` at the name the release gives them (recorded 2026-09-23, from the mm-ecm consumer)**
   - `pie-chart-thickness-is-now-inner-radius` and `pie-chart-centre-content-needs-a-hole` scope `old` to `ds-pie-chart`, which does not exist at the boundary they describe
 - **An indeterminate bar that survives a short track (recorded 2026-09-22, from the mm-ecm consumer)**
@@ -579,6 +585,62 @@ that the release could have said.
   Failing that, one line in the item's `note`: adopting the config inverts the default for every
   banner added later, so a team taking it on should expect to mark furniture as it is written.
 
+## Three more things the 0.13.4 migration cost a consumer (recorded 2026-09-23, from the mm-ecm consumer)
+
+Found walking mm-ecm from 0.13.3 to 0.13.4. None of the three breaks a build, which is the point.
+
+- [ ] **[P2] `--ds-line-chart-plot-height` changes what it does and no manifest item says so.**
+  `grep -c plot-height migrations/0.13.4.json` is **0**; the string appears once in the 0.13.4
+  CHANGELOG, in Changed, saying the token "has been declared since the chart shipped and reached
+  only the loading skeleton … the token parsed and changed nothing", and now drives the plot.
+  Verified at both tags: v0.13.3 `line-chart.component.scss:36` declares it and `:48` spends it on
+  `chart-frame.message-box` alone, the comment at `:50` stating the canvas is sized by viewBox
+  ratio; v0.13.4 `line-chart.component.ts:584,618` reads it to size the plot coordinate space.
+  **Why only a manifest item could catch it:** the NAME is identical at both tags, so there is
+  nothing to grep and no build signal. A consumer who pinned it to shape the skeleton silently
+  resizes every plot. mm-ecm never pinned it and is unaffected, which is luck rather than safety.
+  **Wanted:** a `behavior` item whose `verify` is the positive assertion that the plot reads it,
+  since `old`/`new` cannot express a change that keeps its name.
+
+- [ ] **[P3] `donut-chart-renamed-to-pie-chart` declares `surface: ["template","typescript"]`, and
+  a consumer's stylesheet needs the rename too.** A selector written against the ELEMENT rather than
+  an internal class is ordinary consumer CSS: mm-ecm had `.chart-block ds-donut-chart { … }`. It is
+  not covered by `pie-chart-internal-class-renamed`, which is about `.donut-chart`, and a finder
+  obeying the declared surface skips it. The rule then matches nothing and the chart quietly loses
+  its sizing.
+  **Wanted:** `"style"` added to that item's `surface`, and the same check on any future selector
+  rename - an element name is reachable from CSS, so a selector rename is always partly a style one.
+
+- [ ] **[P3] The 0.13.4 CHANGELOG names the segmented tokens by a spelling that never shipped.**
+  The prose says "The three `--ds-segmented-button-*` are `--ds-segmented-segment-*`". At v0.13.3
+  the three are `--ds-segmented-btn-border`, `--ds-segmented-btn-h` and `--ds-segmented-btn-pad-x`
+  (`git grep -ho -- '--ds-segmented-btn-[a-z-]*' v0.13.3 -- src/lib`). The manifest item carries the
+  right `old`, so only the prose is wrong - which makes it the more dangerous half: a reader
+  searching their stylesheet for what the CHANGELOG told them finds nothing and concludes they are
+  unaffected.
+  **Wanted:** the prose corrected to `--ds-segmented-btn-*`.
+
+- [ ] **[P2] The spell-out wave was keyed on suffixes, so three abbreviations survive it - and one
+  of them sits beside a token the wave DID rename.** `ds-input` at v0.13.4 declares
+  `--ds-input-label-font-size` and `--ds-input-label-fw` on the same element: `-fs` was spelled out,
+  `-fw` was not, because the rule is `--ds-*-weight` to `--ds-*-font-weight` and a token spelled
+  `-fw` never matches it. Measured across the tags - 46 names ended in an abbreviation at v0.13.3,
+  three still do at v0.13.4:
+
+  ```
+  git grep -hoE -- "--ds-[a-z0-9-]+" v0.13.4 -- src/lib | sort -u \
+    | grep -E -- "-(fw|lh|fs|ff|ls|maxw|maxh|minw|pad|btn|tracking|transform|w|h)$"
+      --ds-input-label-fw   --ds-tag-fw   --ds-tag-lh
+  ```
+
+  **What it costs a consumer:** a stylesheet ends up carrying two conventions in adjacent lines.
+  mm-ecm's `login.page.scss` now reads `--ds-input-label-font-size` on one line and
+  `--ds-input-label-fw` on the next, and neither is wrong. The release's own promise - "118 `--ds-*`
+  tokens take their CSS property's name" - is what makes the survivors read as an oversight rather
+  than a decision.
+  **Wanted:** either `-fw` to `-font-weight` and `-lh` to `-line-height` in a later release with
+  their own migration items, or a line saying these three are deliberate. A gate is cheap here and
+  the grep above is it: no `--ds-*` name may end in an abbreviation.
 
 ## Two 0.13.4 items point `old` at the name the release gives them (recorded 2026-09-23, from the mm-ecm consumer)
 
