@@ -13,6 +13,11 @@ import { AppLayoutScrollService } from 'ds/app-layout';
 // in the next task.
 const MOUNT_BUDGET_MS = 8;
 
+// Built this far ahead of the fold rather than on it: building a chart in the very frame it
+// scrolls in makes that frame late, and a tenth of the viewport ahead its entrance still plays on
+// screen.
+const ROOT_MARGIN = '10% 0px';
+
 type Mount = () => void;
 
 const pending = new Map<Element, Mount>();
@@ -56,7 +61,7 @@ function observerFor(root: Element | null): IntersectionObserver {
           setTimeout(drain);
         }
       },
-      { root },
+      { root, rootMargin: ROOT_MARGIN },
     );
     observers.set(root, observer);
   }
@@ -67,10 +72,10 @@ function observerFor(root: Element | null): IntersectionObserver {
 const mounts = new WeakMap<Element, Mount>();
 
 /**
- * Builds its element the first time any of it is on screen, a few at a time, and keeps it after
+ * Builds its element just before it first scrolls into view, a few at a time, and keeps it after
  * that. Until then a fixed-height placeholder holds its place.
  *
- * Two states, then. The first time a chart scrolls into view it is built and plays its entrance
+ * Two states, then. The first time a chart comes up to the fold it is built and plays its entrance
  * where the reader sees it. After that it is never rebuilt: scrolled off, it stays in the DOM and
  * `content-visibility` skips its style, layout and paint, so it costs nothing while hidden and
  * shows again as it was, without replaying anything. Charts the reader scrolls straight past are
