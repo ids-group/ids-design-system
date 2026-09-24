@@ -2073,6 +2073,15 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## The abbreviation gate reads every segment, and informational objects carry a verify (2026-09-24)
+
+`check-abbreviated-tokens` fires on a short last segment other than the `-x`/`-y` axis and on a
+listed abbreviation in any segment, which catches `--ds-slider-thumb-bw`; that token and its theme
+fallback `--slider-thumb-bw` are `-border-width` now, each with a token-rename item. An
+`informational` object requires a non-empty `verify` (M046), AUTHORING, README and the migration
+planner state where `informational` ends and `surface: none` begins, and `0.12.2`'s expanded-row
+line carries the verify its reveal needed.
+
 ## `ds-table`'s footer pager disables and masks its label under skeleton loading (2026-09-24)
 
 `PaginationComponent` takes a `disabled` input (`pagination.component.ts`): every button and the
