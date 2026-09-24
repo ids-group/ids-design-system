@@ -4,6 +4,8 @@
   --_chart-tooltip-bg-color: var(--ds-chart-tooltip-bg-color);
   --_chart-tooltip-text-color: var(--ds-chart-tooltip-text-color);
   --_chart-tooltip-border-color: var(--ds-chart-tooltip-border-color);
+  --_chart-tooltip-hatch-color: var(--ds-chart-hatch-color);
+  --_chart-tooltip-hatch-width: var(--ds-chart-hatch-width);
 
   display: block;
   background: var(--_chart-tooltip-bg-color);
@@ -66,15 +68,16 @@
     var(--_chart-tooltip-swatch-ring-color, var(--surface-default));
 }
 
-/* The same 45 degrees the mark's hatch is drawn at, so the dot and the column say the distinction
-   the same way. One stripe, not a pattern: at this size a pattern reads as noise. */
+/* The same angle, stripe width and stripe colour the mark's hatch is drawn with, so the dot and
+   the column say the distinction the same way. One stripe, not a pattern: at this size a pattern
+   reads as noise. */
 .swatch.hatched {
   background-image: linear-gradient(
     45deg,
-    transparent 38%,
-    var(--surface-default) 38%,
-    var(--surface-default) 62%,
-    transparent 62%
+    transparent calc(50% - var(--_chart-tooltip-hatch-width) / 2),
+    var(--_chart-tooltip-hatch-color) calc(50% - var(--_chart-tooltip-hatch-width) / 2),
+    var(--_chart-tooltip-hatch-color) calc(50% + var(--_chart-tooltip-hatch-width) / 2),
+    transparent calc(50% + var(--_chart-tooltip-hatch-width) / 2)
   );
 }
 

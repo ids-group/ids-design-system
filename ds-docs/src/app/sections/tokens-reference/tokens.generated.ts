@@ -1062,7 +1062,7 @@ export const CHARTS: readonly ColourRow[] = [
   },
   {
     "name": "--chart-hatch-width",
-    "value": "3px",
+    "value": "1.5px",
     "notes": ""
   },
   {
