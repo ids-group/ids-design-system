@@ -65,7 +65,7 @@
   line on an empty plot where the band only separates it from the gridlines.
 
 - **`dsColumnSeries` takes `seriesKey` and `highlighted`.** Naming a series in the legend fades the
-  others, which `ds-column-chart` now wires for you.
+  others to `--ds-chart-dim-opacity`, which `ds-column-chart` now wires for you.
 
 - **`ChartScales` carries an optional `measured` signal**, true once the plot has its real width.
   A mark of your own can wait for it before building geometry the first measurement would replace.
@@ -135,8 +135,8 @@
   gets `loading`, so its controls are disabled and `aria-busy` while the placeholder rows show. The
   overlay mode leaves the pager alone.
 
-- **`ds-scatter-chart` fades the other series while a legend entry is hovered**, as the other
-  charts with a legend do.
+- **`ds-scatter-chart` fades the other series while a legend entry is hovered**, to
+  `--ds-chart-dim-opacity`, as the other charts with a legend do.
 
 - **Under a category cursor, a line chart's active marker grows for the whole category band**, not
   only while the pointer is on the 4px dot, and the panel anchors above the tallest reading at the
@@ -203,6 +203,12 @@
   built its geometry at a stand-in width before the real one arrived, every point, marker and column
   carried up to eight event listeners of its own, and the default number format built a new
   formatter for every label.
+
+- **`ds-date-picker` keeps its border around its value in a container narrower than the mask.**
+  The value cannot clip, so the field shrank its border around it and the value and the calendar
+  button ran past the border - a range picker under `fullWidth` was the common case. The field now
+  keeps its content width as a minimum and overflows the container with its border intact. A
+  container that fits the mask renders as before.
 
 - **A chart with an axis title reserves a band for it.** The widest tick label no longer runs
   through the rotated title, and the secondary axis title gets its own band, so both titles stand the

@@ -468,7 +468,7 @@
       "text": "Under a category cursor the panel anchors above the tallest reading at the category, a line chart's active marker grows anywhere in the category band, and the tooltip fades out when the pointer leaves the plot. The panel's colour dot is larger, with a surface-coloured ring.",
       "verify": "Hover a category on a column-and-line ds-chart with tooltip=\"axis\": the panel opens above the tallest reading, the line's marker at that category is enlarged, and leaving the plot fades the panel out."
     },
-    "ds-scatter-chart fades the other series while a legend entry is hovered, like the other charts with a legend.",
+    "ds-scatter-chart fades the other series while a legend entry is hovered, like the other charts with a legend; it and dsColumnSeries fade to --ds-chart-dim-opacity.",
     {
       "text": "ds-date-picker no longer lets its value or calendar button run past its own border in a container narrower than the value mask (a range picker under fullWidth was the common case): the field keeps its content width as a minimum and overflows the container with its border intact, instead of shrinking the border around a value that cannot clip. A picker whose container fits the mask renders as before.",
       "verify": "Put a range ds-date-picker with fullWidth in a container narrower than its mask (about 200px): the calendar button sits inside the field border with the usual inner padding, and the whole field extends past the container edge; in a wider container the field fills it as before."

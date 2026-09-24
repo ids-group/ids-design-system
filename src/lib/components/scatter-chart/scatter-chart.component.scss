@@ -97,7 +97,7 @@
 /* The whole series steps back while another is named in the legend - the same answer the column
    and line charts give, so one gesture means one thing across the family. */
 g.is-dimmed {
-  opacity: var(--ds-chart-dimmed-opacity, 0.25);
+  opacity: var(--ds-chart-dim-opacity);
   transition: opacity var(--ds-motion-chart-mark-duration)
     var(--ds-motion-chart-mark-easing);
 }
