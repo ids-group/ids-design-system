@@ -94,10 +94,10 @@
       "old": "dsLineSeries",
       "new": null,
       "surface": "template",
-      "action": "Look at a line chart. The line and its markers now sit on a band of the surface colour; set [outline]=\"false\" on the series to take it off.",
+      "action": "Look at a line chart. The line and its markers now sit on a band of the surface colour; set [outline]=\"false\" on the series or on the ds-line-chart to take it off.",
       "appliesWhen": "Every dsLineSeries, and so ds-line-chart too. Column, bar, pie, funnel, scatter, heatmap and waterfall are unaffected.",
       "pitfall": "The band is the surface colour, so where the line crosses gridlines it erases a few pixels of them. That is the point where the line crosses columns and unwanted where the line is alone.",
-      "restore": "[outline]=\"false\" on a g[dsLineSeries] inside a ds-chart. ds-line-chart has no input for it, so its lines keep the band.",
+      "restore": "[outline]=\"false\" on the g[dsLineSeries], or on the ds-line-chart.",
       "searchHints": [
         "dsLineSeries",
         "ds-line-chart",
@@ -172,6 +172,7 @@
         "extends TextareaComponent",
         "extends CellTemplateDirective",
         "extends SwitchComponent",
+        "extends LineChartComponent",
         "extends "
       ],
       "detect": [
@@ -236,10 +237,12 @@
         "extends TimePickerComponent",
         "TimePickerComponent",
         "extends CellTemplateDirective",
-        "CellTemplateDirective"
+        "CellTemplateDirective",
+        "extends LineChartComponent",
+        "LineChartComponent"
       ],
       "verify": "Your build has no TS4114 or TS2416 against any of the listed classes, and no member of your subclass is named like one of the removed members listed in the note.",
-      "note": "Gained: ChartComponent 20 members (mostly the tooltip API, plus measured), ColumnSeriesComponent 14, LineSeriesComponent 9, ScatterChartComponent 4, ChartDataTableComponent 3, BarChartComponent/FunnelChartComponent 2 each, PieChartComponent roving, ColumnChartComponent highlightedSeries, PaginationComponent layoutResolved/loading, TableComponent paginationSize/paginationLayout, ModalCardComponent stackOverflowingActions, ChartTooltipDirective dsChartTooltipPinned (internal, via components/chart-tooltip), DsControlValueAccessor/DsBooleanControlValueAccessor blur (internal, via components; inherited by every field control, so a subclass declaring its own collides), SearchComponent blur, TextareaComponent selectionStart/selectionEnd/setSelectionRange/select, CellTemplateDirective dsCellTemplateOf and a static ngTemplateContextGuard (now generic, defaulting to unknown), SwitchComponent controlled/checkedRequested/onClick. Removed: rovingIndex/tabStopIndex (bar/pie/funnel/column series), onMarkEnter/onMarkNavigation/onPointKey (column series), onMarkerEnter/onMarkerNavigation (line series), onPlotPointer/clearCursor (ChartComponent), markIndex (ScatterChartComponent)."
+      "note": "Gained: ChartComponent 20 members (mostly the tooltip API, plus measured), ColumnSeriesComponent 14, LineSeriesComponent 9, ScatterChartComponent 4, ChartDataTableComponent 3, BarChartComponent/FunnelChartComponent 2 each, PieChartComponent roving, ColumnChartComponent highlightedSeries, PaginationComponent layoutResolved/loading, TableComponent paginationSize/paginationLayout, ModalCardComponent stackOverflowingActions, ChartTooltipDirective dsChartTooltipPinned (internal, via components/chart-tooltip), DsControlValueAccessor/DsBooleanControlValueAccessor blur (internal, via components; inherited by every field control, so a subclass declaring its own collides), SearchComponent blur, TextareaComponent selectionStart/selectionEnd/setSelectionRange/select, CellTemplateDirective dsCellTemplateOf and a static ngTemplateContextGuard (now generic, defaulting to unknown), SwitchComponent controlled/checkedRequested/onClick, LineChartComponent outline. Removed: rovingIndex/tabStopIndex (bar/pie/funnel/column series), onMarkEnter/onMarkNavigation/onPointKey (column series), onMarkerEnter/onMarkerNavigation (line series), onPlotPointer/clearCursor (ChartComponent), markIndex (ScatterChartComponent)."
     },
     {
       "id": "table-expand-panel-content-wrapper",

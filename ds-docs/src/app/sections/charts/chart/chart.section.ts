@@ -22,7 +22,6 @@ import { ChartDataTableComponent } from 'ds/chart-data-table';
 import { ChartLegendComponent } from 'ds/chart-legend';
 import type { ChartLegendItem } from 'ds/chart-legend';
 import type { ChartDataRow } from 'ds/chart-data-table';
-import { ButtonComponent } from 'ds/button';
 import type { ChartThreshold } from 'ds/core';
 import { RadioComponent, RadioGroupComponent } from 'ds/radio-group';
 import { SwitchComponent } from 'ds/switch';
@@ -113,7 +112,6 @@ const TRAFFIC_SERIES: readonly LineSeriesData[] = [
   standalone: true,
   imports: [
     DocsLazyDirective,
-    ButtonComponent,
     RadioComponent,
     RadioGroupComponent,
     ChartComponent,
