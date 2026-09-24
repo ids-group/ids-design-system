@@ -7,21 +7,25 @@
 // which is what caused the PIN-475 double focus ring.
 
 @use '../../styles/press' as press;
+@use '../../styles/field-box' as field-box;
 @use '../../styles/field-group-segment' as field-group-segment;
 @use '../../styles/focus' as focus;
 
 :host {
+  @include field-box.field-box-tokens;
+
   --_search-height:       var(--ds-search-height,       var(--ds-field-height, var(--field-h-md)));
   --_search-bg-color:           var(--ds-search-bg-color,           var(--surface-default));
-  --_search-border:       var(--ds-search-border,       var(--border-default));
+  --_search-border:       var(--ds-search-border,       var(--_field-border-color));
   --_search-radius:       var(--ds-search-radius,       var(--ds-radius-control));
-  --_search-border-hover: var(--ds-search-border-hover, var(--border-default));
+  --_search-border-hover: var(--ds-search-border-hover, var(--_search-border));
   --_search-bg-color-focus:     var(--ds-search-bg-color-focus,     var(--surface-default));
-  --_search-border-focus: var(--ds-search-border-focus, var(--accent));
+  --_search-border-focus: var(--ds-search-border-focus, var(--_field-border-color-focus));
   --_search-focus-shadow: var(--ds-search-focus-shadow, var(--ds-field-focus-shadow));
-  --_search-text-color:           var(--ds-search-text-color,           var(--text-primary));
-  --_search-placeholder:  var(--ds-search-placeholder,  var(--text-tertiary));
+  --_search-text-color:           var(--ds-search-text-color,           var(--_field-text-color));
+  --_search-placeholder:  var(--ds-search-placeholder,  var(--_field-placeholder-color));
   --_search-max-width:         var(--ds-search-max-width,         none);
+  --_search-font-size:    var(--ds-search-font-size,    var(--_field-font-size));
 
   display: block;
 }
@@ -80,7 +84,7 @@
     @include focus.own-indicator;
 
     background: transparent;
-    font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
+    font: var(--font-weight-regular) var(--_search-font-size) / var(--line-height-flat) var(--font-sans);
     color: var(--_search-text-color);
 
     &::placeholder {
