@@ -35,7 +35,7 @@
         <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- mouse affordance; keyboard closes the focused tab via Delete (see onKeydown) -->
         <span
           class="tab-close"
-          [attr.aria-label]="'Close ' + tab.label()"
+          [attr.aria-label]="intl().tabs.close(tab.label())"
           (click)="onCloseClick($event, $index)">
           <ds-icon
             name="x"

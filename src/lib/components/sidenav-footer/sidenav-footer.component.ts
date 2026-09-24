@@ -15,6 +15,7 @@ import { MenuComponent } from '@ids-group-ltd/ids-design-system/components/menu'
 import { MenuItemComponent } from '@ids-group-ltd/ids-design-system/components/menu';
 import { MenuDividerComponent } from '@ids-group-ltd/ids-design-system/components/menu';
 import { PopoverComponent } from '@ids-group-ltd/ids-design-system/components/popover';
+import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 import type {
   SidenavAlertItem,
   SidenavSearchProvider,
@@ -52,6 +53,7 @@ interface SearchGroup {
 })
 export class SidenavFooterComponent {
   private readonly router = inject(Router);
+  protected readonly intl = inject(DS_INTL);
 
   /** Name shown in the footer's account row. */
   readonly userName = input('');
