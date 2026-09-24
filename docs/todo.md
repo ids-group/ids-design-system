@@ -14,7 +14,7 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**113 open — 0 P1, 12 P2, 101 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**114 open — 0 P1, 12 P2, 102 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P2 — 12
 
@@ -37,7 +37,7 @@ item and nothing else.
   - Publishing to npm stops working in January 2027 and the replacement is not chosen
   - Nothing catches a stale `presentations/ds.css`, and two gates read it as the truth
 
-### P3 — 101
+### P3 — 102
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - The token reference says the portaled panel reads `--ds-time-picker-focus-shadow`
@@ -167,6 +167,7 @@ item and nothing else.
   - Three charts hand-roll a legend and three compose their own accessible sentence
   - Six places reimplement something a shared module already does
   - Five constants carry two or three spellings each
+  - A chart waiting for `deferUntilVisible` holds the whole loading skeleton (Stas: parked 2026-09-24)
   - The chassis is declared nine times and shared once - about 450 lines of it
 - **Thirteen inputs the chart family declares component by component (measured 2026-09-22)**
   - Only the RESOLUTION of the shared chart inputs is shared, not their declaration
@@ -1531,6 +1532,13 @@ One ask left from that batch. The two column-chart gaps beside it shipped in v0.
   `chart.math.ts:35` and `line-chart.component.ts:63`; edge gutter `12` at `chart.math.ts:40` and
   `scatter-chart.component.ts:64`; value-label gap `8` at `column-series.component.ts:64` and
   `waterfall-marks.component.ts:15`; column width ratio `0.8` in three places.
+
+- [ ] **[P3] A chart waiting for `deferUntilVisible` holds the whole loading skeleton (Stas: parked 2026-09-24).**
+  The gate placeholder is the `loading` branch - one `ds-skeleton` per row, column, stage or legend
+  entry - so the ds-docs charts page mounts 584 skeletons for 145 unbuilt charts. Hiding them with
+  `display: none` cut 125-233 ms of main-thread time from the first 8 s of load (two runs, CPU x1,
+  measured 2026-09-24). One box of the same height would keep the layout; it changes what a fast
+  scroll shows for the fraction of a second before a chart builds, which is why it is parked.
 
 # Records — kept so they are not "simplified" away
 
