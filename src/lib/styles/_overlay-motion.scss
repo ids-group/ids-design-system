@@ -47,6 +47,12 @@
     --_overlay-enter-origin: center left;
   }
 
+  // A chart tooltip reopens on every mark the pointer crosses, and a scale shifts its rows while it
+  // settles, so a hop reads as the swatch drifting into place. It fades instead.
+  &.ds-chart-tooltip-pane {
+    --_overlay-enter-keyframes: var(--ds-overlay-enter-keyframes, ds-fade-in);
+  }
+
   @media (prefers-reduced-motion: reduce) {
     --_overlay-enter-duration: 0ms;
   }
