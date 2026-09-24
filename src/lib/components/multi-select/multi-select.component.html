@@ -13,7 +13,7 @@
       <span
         class="optional-marker"
         aria-hidden="true">
-        (optional)
+        {{ intl().field.optional }}
       </span>
     }
   </span>
@@ -78,11 +78,11 @@
     } @else if (selectedOptions().length > 0) {
       <ds-badge
         [count]="selectedOptions().length"
-        [countLabel]="'selected'" />
+        [countLabel]="intl().picker.selectedNoun" />
     }
   } @else if (selectedOptions().length === 0) {
     <span class="placeholder">
-      {{ placeholder() }}
+      {{ placeholderResolved() }}
     </span>
   } @else {
     <span
@@ -94,7 +94,7 @@
           data-chip
           variant="neutral"
           closable
-          [closeLabel]="'Remove ' + option.label"
+          [closeLabel]="intl().picker.removeChip(option.label)"
           (closed)="removeValue(option.value)">
           @if (chipTemplate(); as tpl) {
             <ng-container
@@ -113,7 +113,7 @@
         <span
           class="overflow"
           data-chip-overflow>
-          +{{ overflowCount() }} more
+          {{ intl().picker.moreChips(overflowCount()) }}
         </span>
       }
     </span>
@@ -128,7 +128,7 @@
     <button
       type="button"
       class="clear-btn"
-      aria-label="Clear selection"
+      [attr.aria-label]="intl().picker.clearSelection"
       (click)="clearValue($event)">
       <ds-icon
         name="x"
@@ -179,7 +179,7 @@
           aria-expanded="true"
           autocomplete="off"
           spellcheck="false"
-          [placeholder]="searchPlaceholder()"
+          [placeholder]="searchPlaceholderResolved()"
           [value]="filter()"
           [attr.aria-controls]="listboxId"
           [attr.aria-activedescendant]="activeDescendant()"
@@ -209,7 +209,7 @@
         </span>
 
         <span class="select-all-label">
-          Select all
+          {{ intl().picker.selectAll }}
         </span>
       </button>
     }
@@ -265,7 +265,7 @@
                   <span class="tick"></span>
                 </span>
 
-                All of {{ item.label }}
+                {{ intl().picker.selectAllInGroup(item.label) }}
               </button>
             }
 
@@ -384,7 +384,7 @@
                 query: filter(),
               }" />
           } @else {
-            No matches
+            {{ intl().picker.noMatches }}
           }
         </li>
       }
