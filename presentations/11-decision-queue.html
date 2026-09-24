@@ -350,20 +350,11 @@
   
   /* var() inside the code samples is text, and <code> is what the deck linter skips */
   .css code { font: inherit; padding: 0; background: none; }
-  /* consumer asks: P1 */
-  .a-exp { inline-size: 100%; min-inline-size: 300px; border-collapse: collapse; border: 1px solid var(--border-default); background: var(--surface-default); font: var(--font-size-2xs) / 1.4 var(--font-sans); }
-  .a-exp th, .a-exp td { padding: 6px 8px; border-bottom: 1px solid var(--border-default); text-align: start; }
-  .a-exp th { color: var(--text-tertiary); font-weight: var(--font-weight-bold); }
-  .a-exp .tog { inline-size: 20px; color: var(--text-tertiary); }
-  .a-exp .panel { background: var(--surface-secondary); }
-  .a-exp .panel.sliver { display: block; inline-size: 18px; overflow: hidden; white-space: nowrap; outline: 2px dashed var(--error); outline-offset: -2px; }
-  .a-exp .inner { inline-size: 100%; border-collapse: collapse; }
-  .a-exp .inner td { padding: 3px 6px; border: 0; color: var(--text-secondary); white-space: nowrap; }
 </style>
 
 <main>
   <div class="masthead">
-    <h1>5 асков консьюмеров и 29 решений, каждое с нарисованными вариантами</h1>
+    <h1>7 асков консьюмеров и 27 решений, каждое с нарисованными вариантами</h1>
     <p class="lede">
       Сверху - всё, чего ждёт консьюмер: фиксы, хуки и фичи из бэклога, каждый показан как есть
       сейчас и как будет после. Ниже - открытые деки и бакет <code>Decisions</code>. Вариант
@@ -458,7 +449,40 @@
       </div>
     </section>
 
+  <section class="q" data-q="ask-table-expand-leave">
+    <div class="q-head">
+      <span class="q-num">02</span>
+      <h2 class="q-title">Раскрытая строка таблицы не анимирует закрытие</h2>
+      <span class="q-src">P2 · mm-ecm · дефект</span>
+    </div>
+    <p class="q-sub">
+      Открытие интерполирует <code>grid-template-rows</code> от <code>0fr</code> до <code>1fr</code>;
+      закрытие не имеет пары - строка выпадает из DOM на следующем кадре. <code>ds-accordion</code>
+      уже решает это классом вместо structural <code>@if</code>, оверлеи - через
+      <code>disposeWithLeave</code>.
+    </p>
+    <div class="opts">
+      <div class="opt"><h3>Решить по бэклогу</h3></div>
+    </div>
+  </section>
 
+  <section class="q" data-q="ask-template-context">
+    <div class="q-head">
+      <span class="q-num">03</span>
+      <h2 class="q-title">Сужение контекста шаблона не помечено ломающим</h2>
+      <span class="q-src">P2 · mm-ecm · манифест</span>
+    </div>
+    <p class="q-sub">
+      0.14.0 дал <code>CellTemplateDirective</code> статический <code>ngTemplateContextGuard</code>
+      и дженерик по умолчанию <code>unknown</code> - любое чтение <code>let-row</code> из
+      <code>any</code> стало <code>unknown</code> под <code>strictTemplates</code>; у консьюмера упал
+      билд на 194 + 6 ошибках. Нужно правило в <code>AUTHORING.md</code> и гейт на новый
+      <code>ngTemplateContextGuard</code> без пункта манифеста.
+    </p>
+    <div class="opts">
+      <div class="opt"><h3>Решить по бэклогу</h3></div>
+    </div>
+  </section>
 
 
   <p class="group">Ждут консьюмеры · P3</p>
@@ -474,7 +498,7 @@
 
   <section class="q" data-q="ask-indeterminate">
     <div class="q-head">
-      <span class="q-num">02</span>
+      <span class="q-num">04</span>
       <h2 class="q-title">Форма неопределённого прогресса на узком треке</h2>
       <a class="q-src" href="../docs/todo.md">бэклог, без деки</a>
     </div>
@@ -533,7 +557,7 @@
 
   <section class="q" data-q="ask-journey-canvas">
       <div class="q-head">
-        <span class="q-num">03</span>
+        <span class="q-num">05</span>
         <h2 class="q-title">Ни один компонент не рисует ветвящийся граф узлов и рёбер</h2>
         <span class="q-src">P3 · mm-ecm-kb · припарковано Stas: ждать второго консьюмера</span>
       </div>
@@ -561,7 +585,7 @@
 
   <section class="q" data-q="ask-text-muted">
       <div class="q-head">
-        <span class="q-num">04</span>
+        <span class="q-num">06</span>
         <h2 class="q-title">Приглушённый текст по умолчанию не проходит AA</h2>
         <span class="q-src">P3 · ai-sdlc · контраст, запаркован</span>
       </div>
@@ -598,7 +622,7 @@
 
   <section class="q" data-q="ask-brand-residue">
       <div class="q-head">
-        <span class="q-num">05</span>
+        <span class="q-num">07</span>
         <h2 class="q-title">На бренде другого цвета остаются синие ссылки и подложки</h2>
         <span class="q-src">P3 · pinkmoon, ai-sdlc · бренд, запаркован</span>
       </div>
@@ -636,53 +660,13 @@
 
   <section class="q" data-q="sparkline">
     <div class="q-head">
-      <span class="q-num">06</span>
-      <h2 class="q-title">Спарклайн - пресет линии или свой компонент</h2>
+      <span class="q-num">08</span>
+      <h2 class="q-title">Шкала спарклайна - от нуля или по данным</h2>
       <a class="q-src" href="7-chart-sparkline-preset.html">дека 7</a>
     </div>
-    <p class="q-sub">Проверка: что вариант ДОБАВЛЯЕТ к API родителя. Спарклайн не добавляет ничего - только выключает оси, сетку, легенду, рамку и подсказку.</p>
-    <div class="stage">
-      <div class="spec">
-        <p class="cap">1 · рядом с числом на карточке</p>
-        <div class="kpi-card">
-          <span class="kpi-label">Запросы за месяц</span>
-          <div class="kpi-row"><b>12 480</b><svg class="spk" viewBox="0 0 64 18" preserveAspectRatio="none"><polyline fill="none" stroke="var(--ds-chart-series-1-color)" stroke-width="1.6" points="1,15 11,12 21,13 31,8 41,9 51,4 63,2"/></svg></div>
-          <span class="kpi-delta">+18% к августу</span>
-        </div>
-        <p class="says">число даёт значение, линия - что это не всплеск</p>
-      </div>
-
-      <div class="spec">
-        <p class="cap">2 · колонкой в таблице</p>
-        <table class="spk-table">
-          <tr><th>Депо</th><th>Отправлено</th><th>6 месяцев</th></tr>
-          <tr><td>Aberdeen</td><td>412</td><td><svg class="spk" viewBox="0 0 64 18" preserveAspectRatio="none"><polyline fill="none" stroke="var(--ds-chart-series-1-color)" stroke-width="1.6" points="1,15 11,12 21,13 31,8 41,9 51,4 63,2"/></svg></td></tr>
-          <tr><td>Belfast</td><td>260</td><td><svg class="spk" viewBox="0 0 64 18" preserveAspectRatio="none"><polyline fill="none" stroke="var(--ds-chart-series-2-color)" stroke-width="1.6" points="1,3 11,5 21,4 31,9 41,8 51,13 63,15"/></svg></td></tr>
-          <tr><td>Cardiff</td><td>130</td><td><svg class="spk" viewBox="0 0 64 18" preserveAspectRatio="none"><polyline fill="none" stroke="var(--ds-chart-series-3-color)" stroke-width="1.6" points="1,12 11,3 21,14 31,5 41,13 51,4 63,11"/></svg></td></tr>
-          <tr><td>Dover</td><td>98</td><td><svg class="spk" viewBox="0 0 64 18" preserveAspectRatio="none"><polyline fill="none" stroke="var(--ds-chart-series-4-color)" stroke-width="1.6" points="1,9 11,8 21,10 31,9 41,9 51,10 63,9"/></svg></td></tr>
-        </table>
-        <p class="says">четыре строки читаются одним взглядом: растёт, падает, дёргается, стоит</p>
-      </div>
-
-      <div class="spec">
-        <p class="cap">3 · тот же ряд обычным чартом</p>
-        <div class="mini-chart" style="min-inline-size:200px">
-          <svg viewBox="0 0 200 116"><line x1="30" y1="6" x2="30" y2="84" stroke="var(--border-default)"/><line x1="30" y1="84" x2="196" y2="84" stroke="var(--border-default)"/><g stroke="var(--border-divider)" stroke-dasharray="2 3"><line x1="30" y1="26" x2="196" y2="26"/><line x1="30" y1="55" x2="196" y2="55"/></g><polyline fill="none" stroke="var(--ds-chart-series-1-color)" stroke-width="2" points="34,70 66,54 98,58 130,32 162,38 192,14"/><text x="4" y="29" class="tick">600</text><text x="4" y="58" class="tick">300</text><text x="34" y="98" class="tick">Апр</text><text x="166" y="98" class="tick">Сен</text><text x="30" y="112" class="tick">Отправлено по месяцам</text></svg>
-        </div>
-        <p class="says">в ячейку 60px это не влезает - с этого аск и начался</p>
-      </div>
-    </div>
-
-    <p class="q-sub" style="margin-top:var(--space-4)">Прецедент уже был: консьюмер просил
-    <code>ds-meter</code> для ячейки таблицы, потому что «каждый чарт это блок с подписью, легендой
-    и приложенной таблицей». Ответ тогда был не новый компонент, а <code>ds-progress</code>,
-    которому не хватало одного входа. Спарклайн - та же задача, но для ряда.</p>
-
+    <p class="q-sub"><code>variant="spark"</code> решено. Открыта только шкала: от нуля прячет провал и рост у рядов вроде доступности, по размаху данных показывает форму и совпадает с умолчанием Excel и Google Sheets - дека 7 рисует оба варианта на пяти рядах и рекомендует по размаху.</p>
     <div class="opts">
-      <div class="opt"><h3>Пресет variant="spark" <span class="star">★</span></h3>
-        <p>Ноль новых понятий, другой набор значений по умолчанию.</p></div>
-      <div class="opt"><h3>Свой ds-sparkline</h3>
-        <p>Ещё один тег в каталоге и ещё одна страница доков.</p></div>
+      <div class="opt"><h3>Решить в деке 7</h3></div>
     </div>
   </section>
 
@@ -690,9 +674,9 @@
 
   <section class="q" data-q="chart-palette-lightness">
     <div class="q-head">
-      <span class="q-num">07</span>
+      <span class="q-num">09</span>
       <h2 class="q-title">Палитра чартов разделяет по тону и почти не по светлоте</h2>
-      <a class="q-src" href="../docs/todo.md">бэклог 1363</a>
+      <a class="q-src" href="../docs/todo.md">палитра чартов по светлоте</a>
     </div>
     <p class="q-sub">Гейт держит разделение по 6 в OKLab, но светлота в него почти не входит, и тёмная тема не измерялась ни разу. Ты пометил «record only» - вопрос в том, снимать ли эту пометку.</p>
     <div class="stage"><div class="spec"><p class="cap">палитра по позиции</p><div class="swatch-row"><i style="background:hsl(8deg 78% 58%)"></i><i style="background:hsl(172deg 82% 36%)"></i><i style="background:hsl(222deg 70% 62%)"></i><i style="background:hsl(266deg 62% 66%)"></i><i style="background:hsl(330deg 70% 62%)"></i><i style="background:hsl(148deg 58% 41%)"></i><i style="background:hsl(300deg 62% 60%)"></i><i style="background:hsl(222deg 14% 60%)"></i></div></div><div class="spec"><p class="cap">та же палитра в оттенках серого</p><div class="swatch-row"><i style="background:hsl(8deg 78% 58%);filter:grayscale(1)"></i><i style="background:hsl(172deg 82% 36%);filter:grayscale(1)"></i><i style="background:hsl(222deg 70% 62%);filter:grayscale(1)"></i><i style="background:hsl(266deg 62% 66%);filter:grayscale(1)"></i><i style="background:hsl(330deg 70% 62%);filter:grayscale(1)"></i><i style="background:hsl(148deg 58% 41%);filter:grayscale(1)"></i><i style="background:hsl(300deg 62% 60%);filter:grayscale(1)"></i><i style="background:hsl(222deg 14% 60%);filter:grayscale(1)"></i></div><p class="says">светлота почти не разводит их - это и есть вопрос</p></div></div>
@@ -709,7 +693,7 @@
 
   <section class="q" data-q="colour-engine">
     <div class="q-head">
-      <span class="q-num">08</span>
+      <span class="q-num">10</span>
       <h2 class="q-title">Каким методом выводить цвет из одного токена на роль</h2>
       <a class="q-src" href="1-color-engine-derivation.html">дека 1</a>
     </div>
@@ -732,7 +716,7 @@
 
   <section class="q" data-q="interaction-b1">
     <div class="q-head">
-      <span class="q-num">09</span>
+      <span class="q-num">11</span>
       <h2 class="q-title">Pressed у тональной кнопки и у danger-пункта меню</h2>
       <a class="q-src" href="3-interaction-formula.html">дека 3</a>
     </div>
@@ -744,9 +728,9 @@
 
   <section class="q" data-q="theme-recipe">
     <div class="q-head">
-      <span class="q-num">10</span>
+      <span class="q-num">12</span>
       <h2 class="q-title">Рецепт темы против ручных пиков</h2>
-      <a class="q-src" href="../docs/todo.md">бэклог 1331</a>
+      <a class="q-src" href="../docs/todo.md">рецепт темы против ручных пиков</a>
     </div>
     <p class="q-sub">Кнопка выводит состояния из рецепта темы 88%/76% mix-to-black. Если калибровка цвет-движка заменит <code>--primary-hover/-pressed</code> ручными значениями, дефолты кнопки разойдутся с ролями темы.</p>
     <div class="stage"><div class="spec"><p class="cap">рецепт темы 88% / 76%</p><div class="btn-row"><b style="background:var(--primary)">Покой</b><b style="background:color-mix(in srgb, var(--primary) 88%, black)">Hover</b><b style="background:color-mix(in srgb, var(--primary) 76%, black)">Pressed</b></div></div><div class="spec"><p class="cap">ручные пики калибровки</p><div class="btn-row"><b style="background:var(--primary)">Покой</b><b style="background:#1D4ED8">Hover</b><b style="background:#1E3A8A">Pressed</b></div><p class="says">если калибровка заменит роли, кнопка разойдётся с темой</p></div></div>
@@ -761,7 +745,7 @@
 
   <section class="q" data-q="warning-text">
     <div class="q-head">
-      <span class="q-num">11</span>
+      <span class="q-num">13</span>
       <h2 class="q-title">Какой цвет текста ставить на жёлтый тинт</h2>
       <a class="q-src" href="6-warning-text-colour.html">дека 6</a>
     </div>
@@ -786,7 +770,7 @@
 
   <section class="q" data-q="locale-week-and-hour">
     <div class="q-head">
-      <span class="q-num">12</span>
+      <span class="q-num">14</span>
       <h2 class="q-title">Неделя и 12/24 часа по локали</h2>
       <a class="q-src" href="10-locale-week-and-hour.html">дека 10</a>
     </div>
@@ -799,9 +783,9 @@
 
   <section class="q" data-q="stepper-dropzone-fields">
     <div class="q-head">
-      <span class="q-num">13</span>
+      <span class="q-num">15</span>
       <h2 class="q-title">ds-number-stepper и ds-dropzone - поля или нет</h2>
-      <a class="q-src" href="../docs/todo.md">бэклог 1320</a>
+      <a class="q-src" href="../docs/todo.md">ds-number-stepper и ds-dropzone в системе полей</a>
     </div>
     <p class="q-sub">Ни у одного нет <code>label</code>, <code>hint</code>, <code>error</code>, <code>ds-field-message</code> и миксина <code>field-label</code> - они никогда не были в системе полей, а не потеряли её. У остальных четырнадцати полей есть всё.</p>
     <div class="stage"><div class="spec"><p class="cap">поле сегодня</p><div class="field-mock"><label>Количество мест</label><div class="box">12</div><p class="msg">Не больше 40</p></div></div><div class="spec"><p class="cap">ds-number-stepper сегодня</p><div class="field-mock"><div class="box stepper"><span>&minus;</span>12<span>+</span></div></div><p class="says">ни label, ни hint, ни строки сообщения</p></div></div>
@@ -816,7 +800,7 @@
 
   <section class="q" data-q="select-multi">
     <div class="q-head">
-      <span class="q-num">14</span>
+      <span class="q-num">16</span>
       <h2 class="q-title">ds-select с multi - строить ли</h2>
       <a class="q-src" href="5-select-native-multi.html">дека 5</a>
     </div>
@@ -834,60 +818,21 @@
 
   <section class="q" data-q="picker-height">
     <div class="q-head">
-      <span class="q-num">15</span>
-      <h2 class="q-title">Высота списка пикера - публичный токен или panelClass</h2>
+      <span class="q-num">17</span>
+      <h2 class="q-title">Высота списка пикера - какой ручкой задавать</h2>
       <a class="q-src" href="9-picker-list-height.html">дека 9</a>
     </div>
-    <p class="q-sub">
-      Кэпов два. Синий режет список и решает видимые строки, красный режет коробку и форвардится -
-      настраиваемым выглядит именно он.
-    </p>
-
-    <div class="stage">
-      <div class="spec" style="min-inline-size:210px">
-        <p class="cap">как есть</p>
-        <div class="panelbox" style="block-size:128px">
-          <div class="orow">Aberdeen</div><div class="orow">Belfast</div>
-          <div class="orow">Cardiff</div><div class="orow">Dover</div>
-          <span class="rule" style="inset-block-start:100px;border-color:var(--accent);color:var(--accent-strong)">--picker-maxh 280</span>
-          <span class="rule" style="inset-block-start:126px;border-color:var(--error);color:var(--error-text)">--ds-dropdown-panel-max-height 320</span>
-        </div>
-      </div>
-      <div class="spec" style="min-inline-size:210px">
-        <p class="cap">поднять знакомую ручку до 480</p>
-        <div class="panelbox" style="block-size:128px">
-          <div class="orow">Aberdeen</div><div class="orow">Belfast</div>
-          <div class="orow">Cardiff</div><div class="orow">Dover</div>
-          <span class="rule" style="inset-block-start:100px;border-color:var(--accent);color:var(--accent-strong)">--picker-maxh 280</span>
-        </div>
-        <p class="says">картинка не изменилась</p>
-      </div>
-    </div>
-
+    <p class="q-sub">Три варианта нарисованы и измерены в деке 9: одна ручка <code>--ds-dropdown-panel-max-height</code> (рекомендую), только <code>panelClass</code>, отдельный токен списка.</p>
     <div class="opts">
-      <div class="opt"><h3>Через panelClass <span class="star">★</span></h3>
-        <p class="css">&lt;ds-select panelClass="depot" /&gt;
-.depot .dropdown-list { max-height: 480px }</p>
-        <dl class="layer"><dt>Есть с</dt><dd class="gain">0.13.1, работает</dd><dt>Новый API</dt><dd class="none">нет</dd></dl>
-      </div>
-      <div class="opt is-today"><h3>Оставить глобальным</h3>
-        <p class="css">:root { --picker-maxh: 480px }</p>
-        <dl class="layer"><dt>Область</dt><dd>все три пикера</dd><dt>Новый API</dt><dd class="none">нет</dd></dl>
-      </div>
-      <div class="opt"><h3>Публичный токен</h3>
-        <p class="css">ds-select {
-  --ds-picker-list-max-height: 480px
-}</p>
-        <dl class="layer"><dt>Есть с</dt><dd>надо строить</dd><dt>Цена</dt><dd>переименование + гард + миграция</dd></dl>
-      </div>
+      <div class="opt"><h3>Решить в деке 9</h3></div>
     </div>
   </section>
 
   <section class="q" data-q="cdk-menu">
     <div class="q-head">
-      <span class="q-num">16</span>
+      <span class="q-num">18</span>
       <h2 class="q-title">Переходить ли на CDK Menu</h2>
-      <a class="q-src" href="../docs/todo.md">бэклог 1359</a>
+      <a class="q-src" href="../docs/todo.md">переход на CDK Menu</a>
     </div>
     <p class="q-sub">Припарковано: только если появятся вложенные подменю, menubar или контекстное меню.</p>
     <div class="stage"><div class="spec"><p class="cap">наше меню сейчас</p><div class="menu-mock"><span>Открыть</span><span>Дублировать</span><span class="danger">Удалить</span></div><p class="says">своя клавиатура и свой фокус</p></div><div class="spec"><p class="cap">что откроет CDK Menu</p><div class="menu-mock"><span>Открыть</span><span>Экспорт &nbsp;&rsaquo;</span><span class="danger">Удалить</span></div><p class="says">вложенные подменю, menubar, контекстное меню</p></div></div>
@@ -902,9 +847,9 @@
 
   <section class="q" data-q="signal-forms">
     <div class="q-head">
-      <span class="q-num">17</span>
+      <span class="q-num">19</span>
       <h2 class="q-title">Как выглядят pending и dirty</h2>
-      <a class="q-src" href="../docs/todo.md">бэклог 1488</a>
+      <a class="q-src" href="../docs/todo.md">вид pending и dirty у signal-forms</a>
     </div>
     <p class="q-sub">Два из трёх членов контракта signal-forms ждут не проводки, а вида. <code>pending</code>: у <code>ds-input</code> есть спиннер, у остальных нет. <code>dirty</code>: библиотека нигде не рисует «изменено».</p>
     <div class="stage"><div class="spec"><p class="cap">pending: есть у ds-input</p><div class="field-mock"><div class="box">acme-holdings<span class="spin"></span></div></div></div><div class="spec"><p class="cap">pending: у остальных нечем</p><div class="field-mock"><div class="box">12</div></div></div><div class="spec"><p class="cap">dirty: рисовать нечем нигде</p><div class="field-mock"><div class="box">ACME<span class="dot-dirty"></span></div><p class="msg">изменено</p></div><p class="says">такого вида в библиотеке нет</p></div></div>
@@ -923,54 +868,82 @@
 
   <section class="q" data-q="row-chart-row-type">
     <div class="q-head">
-      <span class="q-num">18</span>
+      <span class="q-num">20</span>
       <h2 class="q-title">Имя типа строки у <code>ds-row-chart</code></h2>
       <a class="q-src" href="../docs/todo.md">переименование ds-bar-chart</a>
     </div>
-    <p class="q-sub"><code>ds-bar-chart</code> становится <code>ds-row-chart</code>, и тип одной строки данных <code>BarChartRow</code> при простой замене префикса превращается в <code>RowChartRow</code> - слово «Row» дважды. Одна и та же задача потребителя, записанная с каждым вариантом:</p>
+    <p class="q-sub"><code>ds-bar-chart</code> становится <code>ds-row-chart</code>, и тип одной строки данных нужно назвать заново. Имена данных у остальных графиков: <code>ColumnChartPoint</code>, <code>FunnelChartStage</code>, <code>PieChartSlice</code>, <code>LineChartReading</code>, <code>WaterfallChartBar</code>, <code>HeatmapChartRow</code>. Одна и та же задача потребителя с каждым кандидатом, вывод остаётся <code>rowClicked</code>:</p>
     <div class="stage">
-      <div class="spec"><p class="cap">RowChartRow - замена префикса</p><p class="css">import { RowChartRow } from '.../row-chart';
-
-readonly rows: RowChartRow[] = [
+      <div class="spec"><p class="cap">RowChartRow - замена префикса</p><p class="css">readonly rows: RowChartRow[] = [
   { label: 'Europe', value: 42 },
 ];
-
-onRow(row: RowChartRow) { ... }
-// (rowClicked)="onRow($event)"</p><p class="says">как все остальные типы: префикс компонента + сущность</p></div>
-      <div class="spec"><p class="cap">RowChartItem</p><p class="css">import { RowChartItem } from '.../row-chart';
-
-readonly rows: RowChartItem[] = [
+onRow(row: RowChartRow) { ... }</p><p class="says">как HeatmapChartRow; слово Row дважды</p></div>
+      <div class="spec"><p class="cap">RowChartBar - строка = одна полоса</p><p class="css">readonly rows: RowChartBar[] = [
   { label: 'Europe', value: 42 },
 ];
-
-onRow(row: RowChartItem) { ... }
-// (rowClicked)="onRow($event)"</p><p class="says">без повтора, но вывод называется rowClicked, а тип - Item</p></div>
-      <div class="spec"><p class="cap">RowChartEntry</p><p class="css">import { RowChartEntry } from '.../row-chart';
-
-readonly rows: RowChartEntry[] = [
+onRow(row: RowChartBar) { ... }</p><p class="says">как WaterfallChartBar; но компонент уходит от слова bar</p></div>
+      <div class="spec"><p class="cap">RowChartReading - одно измеренное значение</p><p class="css">readonly rows: RowChartReading[] = [
   { label: 'Europe', value: 42 },
 ];
-
-onRow(row: RowChartEntry) { ... }
-// (rowClicked)="onRow($event)"</p><p class="says">без повтора; «Entry» уже есть у строки тултипа, ChartTooltipEntry</p></div>
+onRow(row: RowChartReading) { ... }</p><p class="says">как LineChartReading и ScatterChartReading</p></div>
+      <div class="spec"><p class="cap">RowChartCategory - строка = категория</p><p class="css">readonly rows: RowChartCategory[] = [
+  { label: 'Europe', value: 42 },
+];
+onRow(row: RowChartCategory) { ... }</p><p class="says">точно для категорий, длинно</p></div>
+      <div class="spec"><p class="cap">RowChartDatum - одна точка данных</p><p class="css">readonly rows: RowChartDatum[] = [
+  { label: 'Europe', value: 42 },
+];
+onRow(row: RowChartDatum) { ... }</p><p class="says">нейтрально, в библиотеке такого слова нет</p></div>
+      <div class="spec"><p class="cap">RowChartItem - элемент списка</p><p class="css">readonly rows: RowChartItem[] = [
+  { label: 'Europe', value: 42 },
+];
+onRow(row: RowChartItem) { ... }</p><p class="says">коротко; расходится с rowClicked</p></div>
+      <div class="spec"><p class="cap">RowChartEntry - запись</p><p class="css">readonly rows: RowChartEntry[] = [
+  { label: 'Europe', value: 42 },
+];
+onRow(row: RowChartEntry) { ... }</p><p class="says">пересекается с ChartTooltipEntry</p></div>
     </div>
 
     <div class="opts">
       <div class="opt"><h3>RowChartRow</h3><span class="badge is-pick">рекомендуем</span>
-        <p>Простая замена префикса, совпадает с <code>rowClicked</code> и <code>RowChartSegment</code>.</p></div>
+        <p>как HeatmapChartRow; слово Row дважды.</p></div>
+      <div class="opt"><h3>RowChartBar</h3>
+        <p>как WaterfallChartBar; но компонент уходит от слова bar.</p></div>
+      <div class="opt"><h3>RowChartReading</h3>
+        <p>как LineChartReading и ScatterChartReading.</p></div>
+      <div class="opt"><h3>RowChartCategory</h3>
+        <p>точно для категорий, длинно.</p></div>
+      <div class="opt"><h3>RowChartDatum</h3>
+        <p>нейтрально, в библиотеке такого слова нет.</p></div>
       <div class="opt"><h3>RowChartItem</h3>
-        <p>Читается чище, но расходится с именем вывода.</p></div>
+        <p>коротко; расходится с rowClicked.</p></div>
       <div class="opt"><h3>RowChartEntry</h3>
-        <p>Без повтора, но пересекается с ChartTooltipEntry.</p></div>
+        <p>пересекается с ChartTooltipEntry.</p></div>
     </div>
   </section>
 
+  <section class="q" data-q="waterfall-rename">
+    <div class="q-head">
+      <span class="q-num">21</span>
+      <h2 class="q-title">Переименовать ли ds-waterfall-chart</h2>
+      <a class="q-src" href="../docs/todo.md">переименование ds-waterfall-chart</a>
+    </div>
+    <p class="q-sub">Английское waterfall - стандартное слово индустрии (Excel, Power BI, Tableau, Highcharts, ECharts); переименование - предпочтение Stas, не исправление, и решать ему.</p>
+    <div class="stage">
+      <div class="spec"><p class="cap">сейчас</p><p class="css">ds-waterfall-chart</p></div>
+      <div class="spec"><p class="cap">предложено</p><p class="css">ds-cascade-chart</p></div>
+    </div>
+    <div class="opts">
+      <div class="opt"><h3>Переименовать</h3></div>
+      <div class="opt"><h3>Оставить waterfall</h3></div>
+    </div>
+  </section>
 
   <section class="q" data-q="typography-classes">
     <div class="q-head">
-      <span class="q-num">19</span>
+      <span class="q-num">22</span>
       <h2 class="q-title">20 классов типографики всё ещё .t-*</h2>
-      <a class="q-src" href="../docs/todo.md">бэклог 1340</a>
+      <a class="q-src" href="../docs/todo.md">классы типографики .t-*</a>
     </div>
     <p class="q-sub">96 токенов под ними стали <code>--ds-typography-*</code>, классы придержали. Измерено 2026-09-22: минимум 3121 использование в одном этом репозитории.</p>
     <div class="stage"><div class="spec"><p class="cap">20 классов, 3121 использование</p><div class="type-mock"><span style="font-size:30px;font-weight:700">.t-h1</span><span style="font-size:22px;font-weight:700">.t-h3</span><span style="font-size:16px">.t-m</span><span style="font-size:14px">.t-s</span><span style="font-size:11px;letter-spacing:.08em;text-transform:uppercase">.t-overline</span></div></div><div class="spec"><p class="cap">токены под ними уже спеллятся</p><p class="css">--ds-typography-h1-font-size
@@ -984,64 +957,13 @@ onRow(row: RowChartEntry) { ... }
     </div>
   </section>
 
-  <section class="q" data-q="button-c-slots">
-    <div class="q-head">
-      <span class="q-num">20</span>
-      <h2 class="q-title">Слоты кнопки называются --c-*</h2>
-      <a class="q-src" href="../docs/todo.md">бэклог 1346</a>
-    </div>
-    <p class="q-sub">Семь слотов на <code>.button</code>, читаются кнопкой и icon-button. Однобуквенное сокращение там, где правило дома - слово целиком; и они внутренние, но без маркера <code>--_</code>, поэтому читаются как публичные.</p>
-    <div class="stage"><div class="spec"><p class="cap">семь слотов на .button</p><div class="swatch-row lbl"><i style="background:var(--primary)"><b>--c-base</b></i><i style="background:var(--primary-on, #fff)"><b>--c-on</b></i><i style="background:var(--primary-strong, #1E3A8A)"><b>--c-strong</b></i><i style="background:var(--primary-subtitle)"><b>--c-subtitle</b></i><i style="background:var(--primary-muted)"><b>--c-muted</b></i></div><p class="says">однобуквенное сокращение, и без маркера --_ читается как публичный</p></div></div>
-
-    <div class="opts">
-      <div class="opt"><h3>Спеллить и пометить --_ <span class="star">★</span></h3>
-        <p>Внутренние слоты честно называются внутренними.</p></div>
-      <div class="opt"><h3>Оставить --c-*</h3>
-        <p>Ноль работы; имя продолжает врать про публичность.</p></div>
-    </div>
-  </section>
-
-  <section class="q" data-q="bem-modifiers">
-    <div class="q-head">
-      <span class="q-num">21</span>
-      <h2 class="q-title">ds-docs пишет модификаторы как --suffix</h2>
-      <a class="q-src" href="../docs/todo.md">бэклог 1421</a>
-    </div>
-    <p class="q-sub">Состояние должно быть своим классом, а не модификатором в имени.</p>
-    <div class="stage"><div class="spec"><p class="cap">сейчас</p><p class="css">&lt;li class="nav-item nav-item--active"&gt;</p></div><div class="spec"><p class="cap">состояние своим классом</p><p class="css">&lt;li class="nav-item is-active"&gt;</p></div></div>
-
-    <div class="opts">
-      <div class="opt"><h3>Состояние своим классом</h3>
-        <p>Переписать модификаторы в ds-docs.</p></div>
-      <div class="opt"><h3>Оставить как есть</h3>
-        <p>Только сайт доков, в пакет не уезжает.</p></div>
-    </div>
-  </section>
-
-  <section class="q" data-q="docs-brand-examples">
-    <div class="q-head">
-      <span class="q-num">22</span>
-      <h2 class="q-title">Убрать ли примеры бренда и домена из публичных доков</h2>
-      <a class="q-src" href="../docs/todo.md">бэклог 1403</a>
-    </div>
-    <p class="q-sub">Имена уже убраны; речь про сами ПРИМЕРЫ.</p>
-    <div class="stage"><div class="spec"><p class="cap">сейчас</p><div class="doc-mock"><b>brand</b> &mdash; wordmark для sidenav<p class="css">provideDsConfig({ brand: { name: 'ACME Logistics' } })</p></div></div><div class="spec"><p class="cap">без примера</p><div class="doc-mock"><b>brand</b> &mdash; wordmark для sidenav<p class="css">provideDsConfig({ brand: { name: '…' } })</p></div></div></div>
-
-    <div class="opts">
-      <div class="opt"><h3>Убрать примеры</h3>
-        <p>Доки становятся абстрактнее.</p></div>
-      <div class="opt"><h3>Оставить</h3>
-        <p>Примеры конкретнее, но узнаваемы.</p></div>
-    </div>
-  </section>
-
   <p class="group">Релиз и публикация</p>
 
   <section class="q" data-q="angular-22">
     <div class="q-head">
       <span class="q-num">23</span>
       <h2 class="q-title">Когда переходим на Angular 22</h2>
-      <a class="q-src" href="../docs/todo.md">бэклог 1439, P1</a>
+      <a class="q-src" href="../docs/todo.md">апгрейд на Angular 22, P3</a>
     </div>
     <p class="q-sub">Библиотека объявляет <code>^21.2.0</code> во всех шести peer-зависимостях, поэтому приложение на 22 не ставится без <code>--legacy-peer-deps</code>. Angular 22 вышел 2026-06-03. Вопрос - когда, а не нужно ли.</p>
     <div class="stage"><div class="spec"><p class="cap">сейчас</p><div class="timeline"><span class="t-done">21.2 — peer-диапазон</span><span class="t-now">22.0 вышел 2026-06-03</span><span class="t-gap">приложение на 22 ставится только с --legacy-peer-deps</span></div></div><div class="spec"><p class="cap">после апгрейда</p><div class="timeline"><span class="t-done">22.x — peer-диапазон</span><span class="t-now">новый мажор пакета</span><span class="t-ok">ставится штатно</span></div></div></div>
@@ -1060,7 +982,7 @@ onRow(row: RowChartEntry) { ... }
     <div class="q-head">
       <span class="q-num">24</span>
       <h2 class="q-title">Чем заменить публикацию в npm с января 2027</h2>
-      <a class="q-src" href="../docs/todo.md">бэклог 1369</a>
+      <a class="q-src" href="../docs/todo.md">публикация в npm после января 2027</a>
     </div>
     <p class="q-sub"><code>publish.sh</code> ходит с гранулярным токеном и Bypass 2FA. npm убирает прямую публикацию такими токенами в январе 2027 - останется чтение и подготовка публикации, которую мейнтейнер подтверждает 2FA.</p>
     <div class="stage"><div class="spec"><p class="cap">сейчас</p><div class="pipe"><span>тег</span><span>сборка</span><span class="p-ok">publish по токену</span></div><p class="says">январь 2027: последний шаг перестаёт работать</p></div><div class="spec"><p class="cap">OIDC</p><div class="pipe"><span>тег</span><span>сборка</span><span class="p-ok">publish без токена</span></div></div><div class="spec"><p class="cap">подтверждение 2FA</p><div class="pipe"><span>тег</span><span>сборка</span><span class="p-wait">ждёт человека</span></div></div></div>
@@ -1079,7 +1001,7 @@ onRow(row: RowChartEntry) { ... }
     <div class="q-head">
       <span class="q-num">25</span>
       <h2 class="q-title">Публикация в Claude Design из Bitbucket</h2>
-      <a class="q-src" href="../docs/todo.md">бэклог 1391</a>
+      <a class="q-src" href="../docs/todo.md">публикация в Claude Design из CI</a>
     </div>
     <p class="q-sub">Всё до публикации уже автоматизировано и гейтится. Не хватает последнего шага - самой загрузки, которая требует Chrome.</p>
     <div class="stage"><div class="spec"><p class="cap">что уже в CI</p><div class="pipe"><span class="p-ok">генератор</span><span class="p-ok">сборка</span><span class="p-ok">бандл</span><span class="p-ok">3 гейта</span><span class="p-wait">загрузка</span></div><p class="says">последний шаг требует Chrome и идёт с машины</p></div></div>
@@ -1098,7 +1020,7 @@ onRow(row: RowChartEntry) { ... }
     <div class="q-head">
       <span class="q-num">26</span>
       <h2 class="q-title">Перевёрстывать ли CHANGELOG в 100 колонок</h2>
-      <a class="q-src" href="../docs/todo.md">бэклог 1408</a>
+      <a class="q-src" href="../docs/todo.md">перевёрстка CHANGELOG в 100 колонок</a>
     </div>
     <p class="q-sub">Твои слова 2026-08-31: «запиши пока в туду, щас не будем».</p>
     <div class="stage"><div class="spec"><p class="cap">сейчас</p><p class="wrap-mock long">Второй режим оси переименован: rounded стал aligned, independent стал dual-grid, stacked стал split. Четыре слова называют то, что делается с линиями сетки.</p></div><div class="spec"><p class="cap">~100 колонок</p><p class="wrap-mock short">Второй режим оси переименован: rounded стал aligned,<br>independent стал dual-grid, stacked стал split. Четыре<br>слова называют то, что делается с линиями сетки.</p></div></div>
@@ -1117,7 +1039,7 @@ onRow(row: RowChartEntry) { ... }
     <div class="q-head">
       <span class="q-num">27</span>
       <h2 class="q-title">fix:all переформатирует HTML, с которым потом спорит eslint</h2>
-      <a class="q-src" href="../docs/todo.md">бэклог 1425</a>
+      <a class="q-src" href="../docs/todo.md">fix:all против eslint на HTML</a>
     </div>
     <p class="q-sub">Разница в двух глобах: <code>format</code> не смотрит шаблоны и гейт зелёный, а <code>format:fix</code> добавляет <code>html</code> и переписывает ~112 шаблонов, которые два правила eslint немедленно хотят обратно.</p>
     <div class="stage"><div class="spec"><p class="cap">после format:fix</p><p class="css">&lt;ds-button variant="solid" color="primary" size="md"&gt;Экспорт&lt;/ds-button&gt;</p></div><div class="spec"><p class="cap">чего немедленно хочет eslint</p><p class="css">&lt;ds-button
@@ -1139,7 +1061,7 @@ onRow(row: RowChartEntry) { ... }
     <div class="q-head">
       <span class="q-num">28</span>
       <h2 class="q-title">Ничто не ловит устаревший presentations/ds.css</h2>
-      <a class="q-src" href="../docs/todo.md">бэклог 1378</a>
+      <a class="q-src" href="../docs/todo.md">устаревший presentations/ds.css</a>
     </div>
     <p class="q-sub">Регенерация 2026-09-10 сдвинула 47 объявлений, не имевших отношения к правке. Два гейта читают этот файл как истину, то есть деки рендерились со старым фокус-кольцом столько, сколько изменения лежали в <code>src/lib</code>.</p>
     <div class="stage"><div class="spec"><p class="cap">деки рендерили это</p><div class="ring-mock old">Кнопка</div><p class="says">кольцо через transition</p></div><div class="spec"><p class="cap">библиотека рисует это</p><div class="ring-mock new">Кнопка</div><p class="says">кольцо через animation, 47 объявлений разошлись</p></div></div>
@@ -1158,7 +1080,7 @@ onRow(row: RowChartEntry) { ... }
     <div class="q-head">
       <span class="q-num">29</span>
       <h2 class="q-title">todo-index --check вне lint:all</h2>
-      <a class="q-src" href="../docs/todo.md">бэклог 1376</a>
+      <a class="q-src" href="../docs/todo.md">todo-index --check вне lint:all</a>
     </div>
     <p class="q-sub">Намеренно: в общем чекауте побайтовая сверка валит прогоны, не связанные с текущей веткой. Цена - индекс может устареть между коммитами.</p>
     <div class="stage"><div class="spec"><p class="cap">вне lint:all - сейчас</p><div class="pipe"><span class="p-ok">lint</span><span class="p-ok">format</span><span class="p-ok">гейты</span></div><p class="says">чужой прогон зелёный, индекс может устареть</p></div><div class="spec"><p class="cap">в lint:all</p><div class="pipe"><span class="p-ok">lint</span><span class="p-ok">format</span><span class="p-wait">todo-index</span></div><p class="says">индекс свеж, чужой прогон падает на твоём коммите</p></div></div>
@@ -1206,7 +1128,7 @@ onRow(row: RowChartEntry) { ... }
     <div class="q-head">
       <span class="q-num">31</span>
       <h2 class="q-title">Три пути ds-table и пять групп компонентов ни разу не прокликаны</h2>
-      <a class="q-src" href="../docs/todo.md">бэклог 1374</a>
+      <a class="q-src" href="../docs/todo.md">непрокликанные пути ds-table</a>
     </div>
     <p class="q-sub">Автоматизация их не трогала.</p>
     <div class="stage"><div class="spec"><p class="cap">что прокликано</p><div class="grid-mock"><i class="g-ok"></i><i class="g-ok"></i><i class="g-ok"></i><i class="g-ok"></i><i class="g-ok"></i><i class="g-no"></i><i class="g-no"></i><i class="g-no"></i><i class="g-ok"></i><i class="g-ok"></i><i class="g-no"></i><i class="g-no"></i><i class="g-ok"></i><i class="g-no"></i><i class="g-ok"></i><i class="g-ok"></i></div><p class="says">три пути ds-table и пять групп компонентов - серые</p></div></div>
@@ -1223,7 +1145,7 @@ onRow(row: RowChartEntry) { ... }
     <div class="q-head">
       <span class="q-num">32</span>
       <h2 class="q-title">schematics/tsconfig просит moduleResolution: node</h2>
-      <a class="q-src" href="../docs/todo.md">бэклог 1399</a>
+      <a class="q-src" href="../docs/todo.md">schematics/tsconfig moduleResolution</a>
     </div>
     <p class="q-sub">TypeScript 6 его удаляет.</p>
     <div class="stage"><div class="spec"><p class="cap">сейчас</p><p class="css">{
@@ -1244,7 +1166,7 @@ onRow(row: RowChartEntry) { ... }
     <div class="q-head">
       <span class="q-num">33</span>
       <h2 class="q-title">templates и startingPoints в манифесте Claude Design</h2>
-      <a class="q-src" href="../docs/todo.md">бэклог 1382</a>
+      <a class="q-src" href="../docs/todo.md">templates и startingPoints в манифесте</a>
     </div>
     <p class="q-sub">Оба в схеме и оба пустые; что они дают - не исследовано.</p>
     <div class="stage"><div class="spec"><p class="cap">манифест сейчас</p><p class="css">{
@@ -1264,17 +1186,17 @@ onRow(row: RowChartEntry) { ... }
   <section class="q" data-q="docs-blocks">
     <div class="q-head">
       <span class="q-num">34</span>
-      <h2 class="q-title">Четыре компонента без собственного блока в ds-docs</h2>
-      <a class="q-src" href="../docs/todo.md">бэклог 1385</a>
+      <h2 class="q-title">TimeColumns без собственного блока в ds-docs</h2>
+      <a class="q-src" href="../docs/todo.md">компоненты без блока в ds-docs</a>
     </div>
-    <p class="q-sub">Два из четырёх уже исправлены.</p>
-    <div class="stage"><div class="spec"><p class="cap">сейчас</p><div class="nav-mock"><span>ds-alert</span><span>ds-badge</span><span class="n-in">ds-status-dot внутри ds-badge</span><span>ds-banner</span></div></div><div class="spec"><p class="cap">со своим блоком</p><div class="nav-mock"><span>ds-alert</span><span>ds-badge</span><span class="n-own">ds-status-dot</span><span>ds-banner</span></div></div></div>
+    <p class="q-sub">Три из четырёх уже исправлены (ModalCard, PasswordRules, SidenavFooter); остался TimeColumns.</p>
+    <div class="stage"><div class="spec"><p class="cap">сейчас</p><div class="nav-mock"><span>ds-alert</span><span>ds-badge</span><span class="n-in">TimeColumns внутри TimePicker</span><span>ds-banner</span></div></div><div class="spec"><p class="cap">со своим блоком</p><div class="nav-mock"><span>ds-alert</span><span>ds-badge</span><span class="n-own">TimeColumns</span><span>ds-banner</span></div></div></div>
 
     <div class="opts">
-      <div class="opt"><h3>Доделать оставшиеся два</h3>
-        <p>Каждый компонент со своим блоком.</p></div>
+      <div class="opt"><h3>Доделать TimeColumns</h3>
+        <p>Последний компонент получает свой блок.</p></div>
       <div class="opt"><h3>Оставить</h3>
-        <p>Два компонента живут внутри чужих блоков.</p></div>
+        <p>TimeColumns остаётся внутри чужого блока.</p></div>
     </div>
   </section>
 

@@ -343,7 +343,7 @@
       dark: b=>({ subtitle:'hsl(from '+b+' h 45% 18%)', muted:'hsl(from '+b+' h 40% 26%)', 'muted-strong':'hsl(from '+b+' h 42% 32%)',
         base:b, hover:'color-mix(in srgb, '+b+' 88%, white)', pressed:'color-mix(in srgb, '+b+' 76%, white)', strong:'hsl(from '+b+' h 90% 72%)', halo:'color-mix(in srgb, '+b+' 35%, transparent)' }),
     },
-    oklh: { // OKLCH hue-only + hand-tuned L/C — RECOMMENDED. L/C CALIBRATED to the real --blue-* ramp (OKLCH conversion) so it reproduces today at brand=blue.
+    oklh: { // OKLCH hue-only + hand-tuned L/C. L/C CALIBRATED to the real --blue-* ramp (OKLCH conversion) so it reproduces today at brand=blue.
       light: b=>({ subtitle:'oklch(from '+b+' 0.9642 calc(c * 0.0669) h)', muted:'oklch(from '+b+' 0.9296 calc(c * 0.1286) h)', 'muted-strong':'oklch(from '+b+' 0.8708 calc(c * 0.2411) h)',
         base:b, hover:'oklch(from '+b+' calc(l - 0.0476) calc(c * 0.902) h)', pressed:'oklch(from '+b+' calc(l - 0.0962) calc(c * 0.802) h)', strong:'oklch(from '+b+' 0.4898 calc(c * 0.998) h)', halo:halo(b,22) }),
       dark: b=>({ subtitle:'oklch(from '+b+' 0.260 calc(c * 0.253) h)', muted:'oklch(from '+b+' 0.331 calc(c * 0.303) h)', 'muted-strong':'oklch(from '+b+' 0.376 calc(c * 0.38) h)',
