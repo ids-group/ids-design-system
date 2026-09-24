@@ -20,7 +20,7 @@ export interface FunnelChartProps {
   /** Accessible name. Generated from the data when omitted. */
   summary?: string | null;
   /** The label-and-value disclosure every chart carries. Ignored while `showTable` is on, which already prints every label and value. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'toggle'`. */
-  dataTable?: ('toggle' | 'visible' | 'none') | null;
+  dataTable?: unknown;
   /** What the Drop column reports: `'relative'` (the default) the share that leaked at this stage, `'absolute'` the count, `'none'` no column at all. */
   drop?: ('relative' | 'absolute' | 'none');
   /** Draws skeleton marks in place of the data, at the same count, so the chart does not resize when the data lands. */

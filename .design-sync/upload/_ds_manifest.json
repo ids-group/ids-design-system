@@ -42,6 +42,10 @@
       "sourcePath": "components/feedback-status/Banner/Banner.jsx"
     },
     {
+      "name": "Bar",
+      "sourcePath": "components/feedback-status/Bar/Bar.jsx"
+    },
+    {
       "name": "BarChart",
       "sourcePath": "components/charts/BarChart/BarChart.jsx"
     },
@@ -64,6 +68,14 @@
     {
       "name": "Card",
       "sourcePath": "components/data-display/Card/Card.jsx"
+    },
+    {
+      "name": "Chart",
+      "sourcePath": "components/charts/Chart/Chart.jsx"
+    },
+    {
+      "name": "ChartDataTable",
+      "sourcePath": "components/charts/ChartDataTable/ChartDataTable.jsx"
     },
     {
       "name": "Checkbox",
@@ -98,10 +110,6 @@
       "sourcePath": "components/foundations/Divider/Divider.jsx"
     },
     {
-      "name": "DonutChart",
-      "sourcePath": "components/charts/DonutChart/DonutChart.jsx"
-    },
-    {
       "name": "Drawer",
       "sourcePath": "components/overlays/Drawer/Drawer.jsx"
     },
@@ -124,6 +132,10 @@
     {
       "name": "FunnelChart",
       "sourcePath": "components/charts/FunnelChart/FunnelChart.jsx"
+    },
+    {
+      "name": "HeatmapChart",
+      "sourcePath": "components/charts/HeatmapChart/HeatmapChart.jsx"
     },
     {
       "name": "Icon",
@@ -170,10 +182,6 @@
       "sourcePath": "components/navigation/MenuItem/MenuItem.jsx"
     },
     {
-      "name": "Meter",
-      "sourcePath": "components/data-display/Meter/Meter.jsx"
-    },
-    {
       "name": "Modal",
       "sourcePath": "components/overlays/Modal/Modal.jsx"
     },
@@ -210,12 +218,12 @@
       "sourcePath": "components/forms-inputs/PasswordRules/PasswordRules.jsx"
     },
     {
-      "name": "Popover",
-      "sourcePath": "components/overlays/Popover/Popover.jsx"
+      "name": "PieChart",
+      "sourcePath": "components/charts/PieChart/PieChart.jsx"
     },
     {
-      "name": "Progress",
-      "sourcePath": "components/feedback-status/Progress/Progress.jsx"
+      "name": "Popover",
+      "sourcePath": "components/overlays/Popover/Popover.jsx"
     },
     {
       "name": "Radio",
@@ -224,6 +232,10 @@
     {
       "name": "RadioGroup",
       "sourcePath": "components/forms-inputs/RadioGroup/RadioGroup.jsx"
+    },
+    {
+      "name": "ScatterChart",
+      "sourcePath": "components/charts/ScatterChart/ScatterChart.jsx"
     },
     {
       "name": "Search",
@@ -348,6 +360,10 @@
     {
       "name": "W3w",
       "sourcePath": "components/forms-inputs/W3w/W3w.jsx"
+    },
+    {
+      "name": "WaterfallChart",
+      "sourcePath": "components/charts/WaterfallChart/WaterfallChart.jsx"
     }
   ],
   "startingPoints": [],
@@ -397,7 +413,7 @@
     {
       "path": "components/actions/Button/Button - Full width.html",
       "group": "actions",
-      "viewport": "1200x374",
+      "viewport": "1200x591",
       "name": "Buttons - full width",
       "subtitle": "Set fullWidth to stretch the button to its container — for mobile primary CTAs and full-bleed form submits."
     },
@@ -439,7 +455,7 @@
     {
       "path": "components/actions/Segmented/Segmented - Segmented control.html",
       "group": "actions",
-      "viewport": "1200x445",
+      "viewport": "1200x608",
       "name": "Segmented & button group - segmented control",
       "subtitle": "Binds to a signal; the selected value is reflected below the control."
     },
@@ -698,7 +714,7 @@
     {
       "path": "components/forms-inputs/DatePicker/Date Picker - Presets.html",
       "group": "forms-inputs",
-      "viewport": "1200x313",
+      "viewport": "1200x333",
       "name": "Date picker - presets",
       "subtitle": "[presets] renders a quick-pick button column inside the calendar panel."
     },
@@ -782,7 +798,7 @@
     {
       "path": "components/forms-inputs/FieldGroup/Field Group - Saying what is wrong.html",
       "group": "forms-inputs",
-      "viewport": "1200x545",
+      "viewport": "1200x541",
       "name": "Field group - saying what is wrong",
       "subtitle": "The group takes the same pair every field takes."
     },
@@ -1057,7 +1073,7 @@
     {
       "path": "components/forms-inputs/Search/Search - Debounce, and the two things it must not delay.html",
       "group": "forms-inputs",
-      "viewport": "1200x505",
+      "viewport": "1200x525",
       "name": "Search - debounce, and the two things it must not delay",
       "subtitle": "[debounce]='200' holds each keystroke back before value updates, so a list screen stops firing a request per character."
     },
@@ -1133,7 +1149,7 @@
     {
       "path": "components/forms-inputs/Select/Select - Clearing from outside.html",
       "group": "forms-inputs",
-      "viewport": "1200x426",
+      "viewport": "1200x446",
       "name": "Select - clearing from outside",
       "subtitle": "clear() empties the value from a template reference — a 'reset filters' button, a form the app clears itself."
     },
@@ -1184,6 +1200,13 @@
       "subtitle": "Use hint for helper text and [invalid]='true' to surface an error."
     },
     {
+      "path": "components/forms-inputs/Switch/Switch - Controlled.html",
+      "group": "forms-inputs",
+      "viewport": "1200x270",
+      "name": "Switch - controlled",
+      "subtitle": "controlled keeps the switch where [checked] puts it."
+    },
+    {
       "path": "components/forms-inputs/Textarea/Textarea - Variant states - default - value - error.html",
       "group": "forms-inputs",
       "viewport": "1200x632",
@@ -1215,6 +1238,13 @@
       "viewport": "1200x319",
       "name": "Textarea - autosize",
       "subtitle": "[autosize]='true' grows the textarea with its content (forces resize='none')."
+    },
+    {
+      "path": "components/forms-inputs/Textarea/Textarea - Selection API.html",
+      "group": "forms-inputs",
+      "viewport": "1200x461",
+      "name": "Textarea - selection API",
+      "subtitle": "selectionStart / selectionEnd, setSelectionRange(start, end, direction?) and select() forward to the native textarea, so an editor toolbar never reaches into the component's DOM."
     },
     {
       "path": "components/forms-inputs/TimePicker/Time Picker - Single.html",
@@ -1446,6 +1476,13 @@
       "subtitle": "Pager with the built-in items-per-page selector."
     },
     {
+      "path": "components/navigation/Pagination/Pagination - Layout and size.html",
+      "group": "navigation",
+      "viewport": "1200x645",
+      "name": "Pagination - layout and size",
+      "subtitle": "layout decides how the pager fills its row."
+    },
+    {
       "path": "components/navigation/Sidenav/Sidenav - Default.html",
       "group": "navigation",
       "viewport": "1200x700",
@@ -1634,10 +1671,10 @@
       "name": "Accordion - default"
     },
     {
-      "path": "components/data-display/Accordion/Accordion - Single-open ( [multi]= false ).html",
+      "path": "components/data-display/Accordion/Accordion - Single-open ( [multiple]= false ).html",
       "group": "data-display",
       "viewport": "1200x355",
-      "name": "Accordion - single-open ( [multi]='false' )"
+      "name": "Accordion - single-open ( [multiple]='false' )"
     },
     {
       "path": "components/data-display/AccordionItem/Accordion Item - States showcase.html",
@@ -1763,41 +1800,6 @@
       "subtitle": "[leading] and [trailing] sit OUTSIDE the row's button, so a row can carry its own controls and still be the thing that selects."
     },
     {
-      "path": "components/data-display/Meter/Meter - In a table cell.html",
-      "group": "data-display",
-      "viewport": "1200x530",
-      "name": "Meter - in a table cell",
-      "subtitle": "A chart is a block with a caption, a legend and an annex table; in a 60px cell that chrome is the whole cell."
-    },
-    {
-      "path": "components/data-display/Meter/Meter - Give the cell a width.html",
-      "group": "data-display",
-      "viewport": "1200x309",
-      "name": "Meter - give the cell a width",
-      "subtitle": "The meter fills whatever box it is in, so the column decides how wide the bar is."
-    },
-    {
-      "path": "components/data-display/Meter/Meter - What it is not.html",
-      "group": "data-display",
-      "viewport": "1200x309",
-      "name": "Meter - what it is not",
-      "subtitle": "It is not ds-progress, which reports how far a task has got and says so with role='progressbar'."
-    },
-    {
-      "path": "components/data-display/Meter/Meter - Colour.html",
-      "group": "data-display",
-      "viewport": "1200x304",
-      "name": "Meter - colour",
-      "subtitle": "The fill takes -ds-meter-fill-color, so a column is coloured once in a stylesheet rather than once per row."
-    },
-    {
-      "path": "components/data-display/Meter/Meter - Edge cases.html",
-      "group": "data-display",
-      "viewport": "1200x284",
-      "name": "Meter - edge cases",
-      "subtitle": "A value past max fills the track rather than overflowing it, a negative one draws nothing, and a max of zero or less falls back to 100 — a scale with no width has no fraction to…"
-    },
-    {
       "path": "components/data-display/Stat/Stat - Stat tiles.html",
       "group": "data-display",
       "viewport": "1200x410",
@@ -1901,6 +1903,13 @@
       "viewport": "1200x700",
       "name": "Table - loading · skeleton",
       "subtitle": "First-load placeholder — rows are replaced with shimmer skeletons that lock-step with every other ds-skeleton on the page."
+    },
+    {
+      "path": "components/data-display/Table/Table - Loading - skeleton with pagination.html",
+      "group": "data-display",
+      "viewport": "1200x573",
+      "name": "Table - loading · skeleton with pagination",
+      "subtitle": "The footer keeps its height while [loading]=''skeleton'' is on."
     },
     {
       "path": "components/data-display/Table/Table - Loading - overlay.html",
@@ -2033,14 +2042,14 @@
       "group": "data-display",
       "viewport": "1200x613",
       "name": "Table - server sort · a host that answers with its own default",
-      "subtitle": "The shape a server-paged list actually has: [sortKey] and [sortDir] are bound ONE-WAY from the host's own state (usually a computed over the URL), and (sortChange) is where it…"
+      "subtitle": "The shape a server-paged list actually has: [sortKey] and [sortDirection] are bound ONE-WAY from the host's own state (usually a computed over the URL), and (sortChange) is where…"
     },
     {
       "path": "components/data-display/Table/Table - The same thing two-way.html",
       "group": "data-display",
       "viewport": "1200x678",
       "name": "Table - the same thing two-way, when the host has no opinion to defend",
-      "subtitle": "sortKey and sortDir each have a matching Change output, so [(sortKey)] and [(sortDir)] work: the table writes the host's state and the host reads it back, with no handler to write."
+      "subtitle": "sortKey and sortDirection each have a matching Change output, so [(sortKey)] and [(sortDirection)] work: the table writes the host's state and the host reads it back, with no…"
     },
     {
       "path": "components/data-display/Table/Table - Column filters.html",
@@ -2235,6 +2244,47 @@
       "subtitle": "[accentRail]='true' (default) renders a coloured rail on the left edge to amplify variant."
     },
     {
+      "path": "components/feedback-status/Bar/Bar - What the bar is.html",
+      "group": "feedback-status",
+      "viewport": "1200x405",
+      "name": "Bar - what the bar is",
+      "subtitle": "The two readings are the same drawing and a different claim, and semantics is which one you are making."
+    },
+    {
+      "path": "components/feedback-status/Bar/Bar - Variants.html",
+      "group": "feedback-status",
+      "viewport": "1200x609",
+      "name": "Bar - variants"
+    },
+    {
+      "path": "components/feedback-status/Bar/Bar - In a table cell.html",
+      "group": "feedback-status",
+      "viewport": "1200x488",
+      "name": "Bar - in a table cell",
+      "subtitle": "A chart is a block with a caption, a legend and an annex table; in a 60px cell that chrome is the whole cell."
+    },
+    {
+      "path": "components/feedback-status/Bar/Bar - Give the cell a width.html",
+      "group": "feedback-status",
+      "viewport": "1200x309",
+      "name": "Bar - give the cell a width",
+      "subtitle": "The bar fills whatever box it is in, so the column decides how wide it is."
+    },
+    {
+      "path": "components/feedback-status/Bar/Bar - Colour.html",
+      "group": "feedback-status",
+      "viewport": "1200x444",
+      "name": "Bar - colour",
+      "subtitle": "variant is the semantic route and should be the first reach."
+    },
+    {
+      "path": "components/feedback-status/Bar/Bar - Edge cases.html",
+      "group": "feedback-status",
+      "viewport": "1200x405",
+      "name": "Bar - edge cases",
+      "subtitle": "A value past max fills the track rather than overflowing it, a negative one draws nothing, and a max of zero or less falls back to 100 — a scale with no width has no fraction to…"
+    },
+    {
       "path": "components/feedback-status/EmptyState/Empty State - Variants.html",
       "group": "feedback-status",
       "viewport": "1200x554",
@@ -2261,12 +2311,6 @@
       "viewport": "1200x401",
       "name": "Loading overlay - the scrim stops the keyboard too",
       "subtitle": "A scrim that only stops the pointer is a trap."
-    },
-    {
-      "path": "components/feedback-status/Progress/Progress - Variants.html",
-      "group": "feedback-status",
-      "viewport": "1200x627",
-      "name": "Progress - variants"
     },
     {
       "path": "components/feedback-status/Skeleton/Skeleton - Common patterns.html",
@@ -2402,6 +2446,13 @@
       "viewport": "1200x700",
       "name": "Modal Card - without dividers",
       "subtitle": "[dividers]='false' drops the rules and tightens the vertical padding in one move, because those are one design decision."
+    },
+    {
+      "path": "components/overlays/ModalCard/Modal Card - Actions that outgrow the card.html",
+      "group": "overlays",
+      "viewport": "1200x700",
+      "name": "Modal Card - actions that outgrow the card",
+      "subtitle": "Labels stay on one line."
     },
     {
       "path": "components/overlays/Modal/Modal - Sizes.html",
@@ -2552,22 +2603,113 @@
       "name": "Bar chart"
     },
     {
+      "path": "components/charts/Chart/Chart - Composing a chart.html",
+      "group": "charts",
+      "viewport": "1200x522",
+      "name": "Chart container - composing a chart",
+      "subtitle": "A mark is an ATTRIBUTE on a real svg:g - dsColumnSeries, dsLineSeries, dsReferenceLine, dsReferenceLabel - because an element the SVG specification does not know renders nothing…"
+    },
+    {
+      "path": "components/charts/Chart/Chart - Category cursor.html",
+      "group": "charts",
+      "viewport": "1200x700",
+      "name": "Chart container - category cursor",
+      "subtitle": "cursor='category' draws a band and a crosshair down the category under the pointer, and reports that category to every mark through the shared scales."
+    },
+    {
+      "path": "components/charts/Chart/Chart - Two value axes.html",
+      "group": "charts",
+      "viewport": "1200x700",
+      "name": "Chart container - two value axes",
+      "subtitle": "A mark declares which axis it is measured against - axis: 'secondary' on a line series' data - and secondaryAxisMode decides how that axis relates to the first."
+    },
+    {
+      "path": "components/charts/Chart/Chart - Annotations.html",
+      "group": "charts",
+      "viewport": "1200x653",
+      "name": "Chart container - annotations",
+      "subtitle": "dsSeriesAnnotation pins a label to one reading, so the point it names is legible with no pointer - in a printed page, or a screenshot."
+    },
+    {
+      "path": "components/charts/ChartDataTable/Chart Data Table - The annex table.html",
+      "group": "charts",
+      "viewport": "1200x334",
+      "name": "Chart Data Table - the annex table",
+      "subtitle": "ds-chart-data-table is the annex every chart puts under its plot: each reading in a details a reader can open."
+    },
+    {
+      "path": "components/charts/Chart/Chart - Naming the axes, and holding the cursor.html",
+      "group": "charts",
+      "viewport": "1200x621",
+      "name": "Chart container - naming the axes, and holding the cursor",
+      "subtitle": "axisLabel and secondaryAxisLabel name the unit each set of ticks counts, rotated down its own gutter."
+    },
+    {
+      "path": "components/charts/Chart/Chart - The tooltip and the legend of a composed chart.html",
+      "group": "charts",
+      "viewport": "1200x700",
+      "name": "Chart container - the tooltip and the legend of a composed chart",
+      "subtitle": "The container opens the one tooltip its marks describe: a mark hands it what the panel shows, so nothing is bound on the mark itself."
+    },
+    {
+      "path": "components/charts/Chart/Chart - What a line series does on its own.html",
+      "group": "charts",
+      "viewport": "1200x700",
+      "name": "Chart container - what a line series does on its own",
+      "subtitle": "These are the mark's inputs, not the preset's - reach for them once ds-line-chart stops fitting."
+    },
+    {
       "path": "components/charts/ColumnChart/Column Chart.html",
       "group": "charts",
       "viewport": "1200x700",
       "name": "Column chart"
     },
     {
-      "path": "components/charts/DonutChart/Donut Chart.html",
+      "path": "components/charts/PieChart/Pie Chart.html",
       "group": "charts",
       "viewport": "1200x700",
-      "name": "Donut chart"
+      "name": "Pie chart"
     },
     {
       "path": "components/charts/FunnelChart/Funnel Chart.html",
       "group": "charts",
       "viewport": "1200x700",
       "name": "Funnel chart"
+    },
+    {
+      "path": "components/charts/HeatmapChart/Heatmap Chart - Default.html",
+      "group": "charts",
+      "viewport": "1200x696",
+      "name": "Heat map - default",
+      "subtitle": "Rows down the side, columns across the top, one reading per cell."
+    },
+    {
+      "path": "components/charts/HeatmapChart/Heatmap Chart - What has to be there.html",
+      "group": "charts",
+      "viewport": "1200x309",
+      "name": "Heat map - what has to be there",
+      "subtitle": "Colour is the only channel carrying the quantity on the grid, so two things are not optional here the way they are on the other charts."
+    },
+    {
+      "path": "components/charts/HeatmapChart/Heatmap Chart - A hole is not a low reading.html",
+      "group": "charts",
+      "viewport": "1200x537",
+      "name": "Heat map - a hole is not a low reading",
+      "subtitle": "A null draws as the surface, not as the heat scale's coldest step, and it is left out of the scale entirely."
+    },
+    {
+      "path": "components/charts/HeatmapChart/Heatmap Chart - Printing the readings.html",
+      "group": "charts",
+      "viewport": "1200x501",
+      "name": "Heat map - printing the readings",
+      "subtitle": "showValues puts each reading inside its own cell."
+    },
+    {
+      "path": "components/charts/HeatmapChart/Heatmap Chart - Drilling in.html",
+      "group": "charts",
+      "viewport": "1200x535",
+      "name": "Heat map - drilling in",
+      "subtitle": "interactive makes every MEASURED cell a button and fires cellClicked with the row, the column and the reading."
     },
     {
       "path": "components/charts/ChartTooltipPanel/Chart Tooltip Panel.html",
@@ -2580,6 +2722,69 @@
       "group": "charts",
       "viewport": "1200x700",
       "name": "Line chart"
+    },
+    {
+      "path": "components/charts/ScatterChart/Scatter Chart - Default.html",
+      "group": "charts",
+      "viewport": "1200x700",
+      "name": "Scatter chart - default",
+      "subtitle": "Both scales are continuous, so a point carries its own position on each rather than an index into a list of categories."
+    },
+    {
+      "path": "components/charts/ScatterChart/Scatter Chart - Several series.html",
+      "group": "charts",
+      "viewport": "1200x700",
+      "name": "Scatter chart - several series",
+      "subtitle": "Each series takes its own palette slot and the legend keys them."
+    },
+    {
+      "path": "components/charts/ScatterChart/Scatter Chart - Thinning, and saying so.html",
+      "group": "charts",
+      "viewport": "1200x700",
+      "name": "Scatter chart - thinning, and saying so",
+      "subtitle": "SVG degrades by the number of NODES, not by the number of readings: the same data as a line is one path, and as a scatter it is one node per point."
+    },
+    {
+      "path": "components/charts/ScatterChart/Scatter Chart - Drilling in.html",
+      "group": "charts",
+      "viewport": "1200x700",
+      "name": "Scatter chart - drilling in",
+      "subtitle": "interactive makes every mark a button and fires pointClicked with the series and the reading."
+    },
+    {
+      "path": "components/charts/WaterfallChart/Waterfall Chart - Default.html",
+      "group": "charts",
+      "viewport": "1200x700",
+      "name": "Waterfall chart - default",
+      "subtitle": "Each bar carries a value that is added to the running total wherever it sits."
+    },
+    {
+      "path": "components/charts/WaterfallChart/Waterfall Chart - Colour never carries it alone.html",
+      "group": "charts",
+      "viewport": "1200x309",
+      "name": "Waterfall chart - colour never carries it alone",
+      "subtitle": "Three meanings, three colours - and none of them is load-bearing on its own."
+    },
+    {
+      "path": "components/charts/WaterfallChart/Waterfall Chart - Subtotals.html",
+      "group": "charts",
+      "viewport": "1200x614",
+      "name": "Waterfall chart - subtotals",
+      "subtitle": "A subtotal stands on zero like a total, but the chain carries on past it."
+    },
+    {
+      "path": "components/charts/WaterfallChart/Waterfall Chart - Crossing the baseline.html",
+      "group": "charts",
+      "viewport": "1200x634",
+      "name": "Waterfall chart - crossing the baseline",
+      "subtitle": "A chain that falls past zero opens the axis downwards rather than clipping, and the dashed connector stays at the level the two bars share whichever side of the baseline that is."
+    },
+    {
+      "path": "components/charts/WaterfallChart/Waterfall Chart - Drilling in.html",
+      "group": "charts",
+      "viewport": "1200x700",
+      "name": "Waterfall chart - drilling in",
+      "subtitle": "interactive turns on the affordance and the keyboard route, and barClicked hands back the datum that was clicked."
     },
     {
       "path": "components/foundations/Divider/Divider - Divider component.html",
@@ -6613,6 +6818,62 @@
       "scope": ":root[data-theme=dark]"
     },
     {
+      "name": "--chart-heat-1",
+      "value": "hsl( 8deg 68% 20%)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-theme=dark]"
+    },
+    {
+      "name": "--chart-heat-2",
+      "value": "hsl( 8deg 74% 29%)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-theme=dark]"
+    },
+    {
+      "name": "--chart-heat-3",
+      "value": "hsl( 8deg 78% 38%)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-theme=dark]"
+    },
+    {
+      "name": "--chart-heat-4",
+      "value": "hsl( 8deg 78% 47%)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-theme=dark]"
+    },
+    {
+      "name": "--chart-heat-5",
+      "value": "hsl( 8deg 76% 56%)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-theme=dark]"
+    },
+    {
+      "name": "--chart-heat-6",
+      "value": "hsl( 8deg 73% 65%)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-theme=dark]"
+    },
+    {
+      "name": "--chart-heat-7",
+      "value": "hsl( 8deg 67% 74%)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-theme=dark]"
+    },
+    {
+      "name": "--chart-heat-8",
+      "value": "hsl( 8deg 60% 84%)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ":root[data-theme=dark]"
+    },
+    {
       "name": "--chart-sequential-1",
       "value": "var(--blue-800)",
       "kind": "color",
@@ -7706,7 +7967,7 @@
       "definedIn": "_ds_bundle.css"
     },
     {
-      "name": "--ds-container-pad",
+      "name": "--ds-surface-padding",
       "value": "var(--space-6)",
       "kind": "spacing",
       "definedIn": "_ds_bundle.css"
@@ -7862,7 +8123,7 @@
       "definedIn": "_ds_bundle.css"
     },
     {
-      "name": "--slider-thumb-bw",
+      "name": "--slider-thumb-border-width",
       "value": "var(--border-width-strong)",
       "kind": "spacing",
       "definedIn": "_ds_bundle.css"
@@ -7994,7 +8255,7 @@
       "definedIn": "_ds_bundle.css"
     },
     {
-      "name": "--progress-h",
+      "name": "--bar-h",
       "value": "6px",
       "kind": "spacing",
       "definedIn": "_ds_bundle.css"
@@ -8935,7 +9196,7 @@
       "scope": "[data-density=ultra-compact]"
     },
     {
-      "name": "--ds-container-pad",
+      "name": "--ds-surface-padding",
       "value": "var(--space-4)",
       "kind": "spacing",
       "definedIn": "_ds_bundle.css",
@@ -9134,7 +9395,7 @@
     },
     {
       "name": "--chart-categorical-6",
-      "value": "hsl(152deg 58% 41%)",
+      "value": "hsl(148deg 58% 41%)",
       "kind": "color",
       "definedIn": "_ds_bundle.css"
     },
@@ -9159,6 +9420,18 @@
     {
       "name": "--chart-series-accent",
       "value": "var(--chart-categorical-2)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--chart-positive",
+      "value": "var(--chart-categorical-2)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--chart-negative",
+      "value": "var(--chart-categorical-1)",
       "kind": "color",
       "definedIn": "_ds_bundle.css"
     },
@@ -9207,6 +9480,54 @@
     {
       "name": "--chart-ramp-8",
       "value": "hsl( 8deg 72% 51%)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--chart-heat-1",
+      "value": "hsl( 8deg 60% 95%)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--chart-heat-2",
+      "value": "hsl( 8deg 67% 88%)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--chart-heat-3",
+      "value": "hsl( 8deg 73% 80%)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--chart-heat-4",
+      "value": "hsl( 8deg 76% 71%)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--chart-heat-5",
+      "value": "hsl( 8deg 78% 61%)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--chart-heat-6",
+      "value": "hsl( 8deg 78% 51%)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--chart-heat-7",
+      "value": "hsl( 8deg 74% 41%)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--chart-heat-8",
+      "value": "hsl( 8deg 68% 31%)",
       "kind": "color",
       "definedIn": "_ds_bundle.css"
     },
@@ -9343,6 +9664,30 @@
       "definedIn": "_ds_bundle.css"
     },
     {
+      "name": "--chart-threshold-color",
+      "value": "var(--neutral-500)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--chart-threshold-band-opacity",
+      "value": ".12",
+      "kind": "other",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--chart-threshold-dashed-pattern",
+      "value": "6 4",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--chart-threshold-dotted-pattern",
+      "value": "1 5",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
       "name": "--chart-dim-opacity",
       "value": ".3",
       "kind": "other",
@@ -9362,13 +9707,13 @@
     },
     {
       "name": "--chart-focus-ring-color",
-      "value": "white",
+      "value": "var(--focus-ring-color)",
       "kind": "color",
       "definedIn": "_ds_bundle.css"
     },
     {
       "name": "--chart-focus-halo-color",
-      "value": "var(--static-ink)",
+      "value": "white",
       "kind": "color",
       "definedIn": "_ds_bundle.css"
     },
@@ -9427,6 +9772,24 @@
       "definedIn": "_ds_bundle.css"
     },
     {
+      "name": "--chart-area-opacity",
+      "value": ".16",
+      "kind": "other",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--chart-hatch-color",
+      "value": "var(--surface-default)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--chart-hatch-width",
+      "value": "3px",
+      "kind": "spacing",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
       "name": "--ds-chart-series-1-color",
       "value": "var(--chart-categorical-1)",
       "kind": "color",
@@ -9471,6 +9834,18 @@
     {
       "name": "--ds-chart-series-8-color",
       "value": "var(--chart-categorical-8)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--ds-chart-positive-color",
+      "value": "var(--chart-positive)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--ds-chart-negative-color",
+      "value": "var(--chart-negative)",
       "kind": "color",
       "definedIn": "_ds_bundle.css"
     },
@@ -9535,6 +9910,54 @@
       "definedIn": "_ds_bundle.css"
     },
     {
+      "name": "--ds-chart-heat-1-color",
+      "value": "var(--chart-heat-1)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--ds-chart-heat-2-color",
+      "value": "var(--chart-heat-2)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--ds-chart-heat-3-color",
+      "value": "var(--chart-heat-3)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--ds-chart-heat-4-color",
+      "value": "var(--chart-heat-4)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--ds-chart-heat-5-color",
+      "value": "var(--chart-heat-5)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--ds-chart-heat-6-color",
+      "value": "var(--chart-heat-6)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--ds-chart-heat-7-color",
+      "value": "var(--chart-heat-7)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--ds-chart-heat-8-color",
+      "value": "var(--chart-heat-8)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
       "name": "--ds-chart-frame-border-color",
       "value": "var(--chart-frame-border-color)",
       "kind": "color",
@@ -9585,6 +10008,30 @@
     {
       "name": "--ds-chart-grid-line-color",
       "value": "var(--chart-grid-line-color)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--ds-chart-threshold-color",
+      "value": "var(--chart-threshold-color)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--ds-chart-threshold-band-opacity",
+      "value": "var(--chart-threshold-band-opacity)",
+      "kind": "other",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--ds-chart-threshold-dashed-pattern",
+      "value": "var(--chart-threshold-dashed-pattern)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--ds-chart-threshold-dotted-pattern",
+      "value": "var(--chart-threshold-dotted-pattern)",
       "kind": "color",
       "definedIn": "_ds_bundle.css"
     },
@@ -9670,6 +10117,24 @@
       "name": "--ds-chart-dot-radius-active",
       "value": "var(--chart-dot-radius-active)",
       "kind": "radius",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--ds-chart-area-opacity",
+      "value": "var(--chart-area-opacity)",
+      "kind": "other",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--ds-chart-hatch-color",
+      "value": "var(--chart-hatch-color)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--ds-chart-hatch-width",
+      "value": "var(--chart-hatch-width)",
+      "kind": "spacing",
       "definedIn": "_ds_bundle.css"
     },
     {
@@ -10247,8 +10712,8 @@
       "scope": ".ds-dropdown-panel"
     },
     {
-      "name": "--_option-weight",
-      "value": "var(--ds-option-weight, var(--font-weight-medium))",
+      "name": "--_option-font-weight",
+      "value": "var(--ds-option-font-weight, var(--font-weight-medium))",
       "kind": "font",
       "definedIn": "_ds_bundle.css",
       "scope": ".ds-dropdown-panel"
@@ -10275,6 +10740,27 @@
       "scope": ".ds-dropdown-panel"
     },
     {
+      "name": "--_option-color",
+      "value": "var(--ds-option-color, var(--text-primary))",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ".ds-dropdown-panel"
+    },
+    {
+      "name": "--_dropdown-empty-color",
+      "value": "var(--ds-dropdown-empty-color, var(--text-tertiary))",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ".ds-dropdown-panel"
+    },
+    {
+      "name": "--_dropdown-empty-font-size",
+      "value": "var(--ds-dropdown-empty-font-size, inherit)",
+      "kind": "font",
+      "definedIn": "_ds_bundle.css",
+      "scope": ".ds-dropdown-panel"
+    },
+    {
       "name": "--_dropdown-panel-bg-color",
       "value": "var(--ds-dropdown-panel-bg-color, var(--surface-overlay))",
       "kind": "color",
@@ -10296,23 +10782,23 @@
       "scope": ".ds-dropdown-panel"
     },
     {
-      "name": "--_dropdown-panel-maxh",
-      "value": "var(--ds-dropdown-panel-maxh, 320px)",
-      "kind": "color",
+      "name": "--_dropdown-panel-max-height",
+      "value": "var(--ds-dropdown-panel-max-height, 320px)",
+      "kind": "spacing",
       "definedIn": "_ds_bundle.css",
       "scope": ".ds-dropdown-panel"
     },
     {
-      "name": "--_dropdown-panel-minw",
-      "value": "var(--ds-dropdown-panel-minw, 0)",
-      "kind": "color",
+      "name": "--_dropdown-panel-min-width",
+      "value": "var(--ds-dropdown-panel-min-width, 0)",
+      "kind": "spacing",
       "definedIn": "_ds_bundle.css",
       "scope": ".ds-dropdown-panel"
     },
     {
-      "name": "--_dropdown-panel-maxw",
-      "value": "var(--ds-dropdown-panel-maxw, none)",
-      "kind": "color",
+      "name": "--_dropdown-panel-max-width",
+      "value": "var(--ds-dropdown-panel-max-width, none)",
+      "kind": "spacing",
       "definedIn": "_ds_bundle.css",
       "scope": ".ds-dropdown-panel"
     },
@@ -10346,7 +10832,7 @@
     },
     {
       "name": "--_overlay-enter-keyframes",
-      "value": "var(--ds-overlay-enter-keyframes, ds-fade-in)",
+      "value": "var(--ds-overlay-enter-keyframes, ds-scale-in)",
       "kind": "color",
       "definedIn": "_ds_bundle.css",
       "scope": ".cdk-overlay-pane.ds-overlay-pane"

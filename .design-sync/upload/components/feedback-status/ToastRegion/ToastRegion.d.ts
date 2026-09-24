@@ -7,6 +7,8 @@ import * as React from 'react';
 export interface ToastRegionProps {
   /** Cap on concurrently visible toasts. Extras are queued and shown as earlier ones dismiss. `0` = unlimited. */
   maxVisible?: number;
+  /** Show a `+N` strip while toasts wait behind `maxVisible`. */
+  showQueueCount?: boolean;
   /** Element content. */
   children?: React.ReactNode;
   className?: string;
