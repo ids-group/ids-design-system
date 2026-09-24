@@ -197,7 +197,7 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**117 open — 0 P1, 13 P2, 104 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**120 open — 0 P1, 13 P2, 107 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P2 — 13
 
@@ -223,7 +223,7 @@ item and nothing else.
 - **Localization — every user-visible string is a hardcoded literal (recorded 2026-08-27, from the ITB Workspace picker report)**
   - Every user-visible string in the library is a hardcoded English literal — VALIDATED 2026-08-27 against 0.11.0; Stas: defer the whole thing, no code
 
-### P3 — 104
+### P3 — 107
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - The token reference says the portaled panel reads `--ds-time-picker-focus-shadow`
@@ -248,6 +248,9 @@ item and nothing else.
   - Charts take their number locale from the browser, with no setting (from the mm-ecm-platform-kb consumer)
 - **Tooling**
   - A consumer's `--ds-*` override can be write-only, and nothing says so (recorded 2026-09-23, from the mm-ecm consumer's 0.8.0 to 0.13.4 audit)
+  - changelog-lint C001 does not scan ds-docs/src or docs/agent (recorded 2026-09-24)
+  - The press feedback guard misses `.disabled` and `[aria-disabled]` (recorded 2026-09-24)
+  - `--picker-maxh` is an abbreviated token name (recorded 2026-09-24)
 - **Two chart names that collide (recorded 2026-09-21, from the mm-ecm consumer)**
   - Extract what bar and column SHARE; their contracts stay different (Stas, 2026-09-22)
 - **Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)**
@@ -682,6 +685,19 @@ Same sweep, the capabilities that are missing rather than wrong. Each workaround
   **Why no manifest can catch this.** A migration item's `old` is scoped to the one version boundary it describes, so a name that died before the chain's first version is outside every manifest the chain reads. The tooling is correct and the hole is structural: it can only ever report renames inside the range being walked, while a consumer's dead override is a property of the CURRENT installed version alone.
   **The shape that fits:** a check a consumer can run against what is installed - collect every `--ds-*` the consumer DECLARES, collect every `--ds-*` the package READS (`fesm2022/*.mjs` plus `styles/` and `themes/`), and report the declarations that resolve to nothing. That is the same idea `check-doc-tokens` already applies to our own prose, pointed outward; on the consumer above it takes one pass over 176 declared names against 1 028 read names. Shipping it as a bin in the package, or as a schematic, puts it where the consumer can run it on every upgrade rather than once during an audit.
   **The same silence has a second shape, worth covering together: a selector that stops matching.** `ds-button`'s inner button carries `c-<color>` and `v-<variant>` classes, so a consumer styling `ds-button .button.secondary` or `.outline` matches nothing. The same consumer carries seven such blocks, five of them named after a colour. Worse than inert: its `primary` block is written as `.button:not(.secondary):not(.tertiary):not(.outline):not(.error):not(.success):not(.warning):not(.text)`, and since none of those classes is ever rendered the negation excludes nothing, so a rule meant for one variant applies to every button. A check that resolved a consumer's `ds-*` selectors against the classes and attributes the components actually render would catch both halves.
+
+- [ ] **[P3] changelog-lint C001 does not scan ds-docs/src or docs/agent (recorded 2026-09-24).**
+  The published-artefact check for client names reads styles, themes, `src/lib/**/*.ts` and migrations (its closing `by group` line),
+  but not the docs site sources or the agent docs, both of which ship to readers outside the team.
+  Stas: extend it as its own item, after the fictional-brand sweep (task 59) lands.
+
+- [ ] **[P3] The press feedback guard misses `.disabled` and `[aria-disabled]` (recorded 2026-09-24).**
+  `src/lib/styles/_press.scss:22` excludes `:disabled`, `[disabled]` and `.is-disabled` only, so a component that disables through a
+  class or `aria-disabled` still plays the press feedback on a control that does nothing.
+
+- [ ] **[P3] `--picker-maxh` is an abbreviated token name (recorded 2026-09-24).**
+  The picker list cap is spelled `-maxh`, against the spelled-out naming convention
+  (`-max-height`); check-abbreviated-tokens reads only `--ds-*` names, so it does not catch it.
 
 ## Two chart names that collide (recorded 2026-09-21, from the mm-ecm consumer)
 
