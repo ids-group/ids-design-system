@@ -12,7 +12,8 @@ could not live there even if it were wanted.
 
 Sections mirror the package's versions, because the upload tree is rebuilt once per release —
 by the after-release `build-design-sync.sh`, which commits it to main straight after the tag. One
-timeline, two audiences.
+timeline, two audiences. The `npm version` hook stamps `## Unreleased` with the new version when it
+holds an entry; what the release bot commits afterwards needs none.
 
 ## Unreleased
 
@@ -24,6 +25,8 @@ timeline, two audiences.
   **twenty** paths the build no longer produces are still there, each listed in `obsolete.txt` for
   the owner to clear. The retired `Progress` card set and the `[multi]` Accordion card carry a
   `[TO BE DELETED]` notice naming what replaced them, and no card registration.
+
+## 0.14.0 — 2026-09-24
 
 ### Build
 

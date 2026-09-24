@@ -197,9 +197,9 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**127 open — 0 P1, 13 P2, 114 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**124 open — 0 P1, 12 P2, 112 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
-### P2 — 13
+### P2 — 12
 
 - **Defects consumers work around today (swept 2026-09-23)**
   - The stock control edge and `--secondary-on` fail contrast; the second breaks on any light brand secondary (from the ids-europe-landing consumer)
@@ -214,8 +214,6 @@ item and nothing else.
   - DOCS for A3: `@defer` needs the deep specifier — the one exception to «no consumer
 - **DS-docs**
   - Fourteen focusable elements in ds-docs still have no accessible name, on two components that always could
-- **What actually running the 0.13.4 migration cost (recorded 2026-09-23, from the mm-ecm consumer)**
-  - Adopting `banner.announce` app-wide silently arms every banner written afterwards, and the variant is a usable discriminator
 - **Component feature gaps**
   - `dsColumnSeries` cannot choose its value axis, so in a two-axis chart the column is pinned to the primary (recorded 2026-09-23, from the mm-ecm-platform microsite-analytics port)
 - **Tooling**
@@ -224,7 +222,7 @@ item and nothing else.
 - **Localization — every user-visible string is a hardcoded literal (recorded 2026-08-27, from the ITB Workspace picker report)**
   - Every user-visible string in the library is a hardcoded English literal — VALIDATED 2026-08-27 against 0.11.0; Stas: defer the whole thing, no code
 
-### P3 — 114
+### P3 — 112
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - The token reference says the portaled panel reads `--ds-time-picker-focus-shadow`
@@ -242,8 +240,6 @@ item and nothing else.
   - `ds-line-chart`'s `tooltipAnchor` doc does not say it is inert unless `tooltip="axis"`
 - **Asked by Stas**
   - `ds-waterfall-chart` is `ds-cascade-chart` (Stas, 2026-09-23)
-- **Component feature gaps**
-  - `_overlay-motion.scss` credits the leave teardown to `animationend`, while under reduced motion it is the fallback timer that does it (recorded 2026-09-23, from the mm-ecm-platform 0.13.4 audit)
 - **Hooks and APIs consumers reach past the surface for (swept 2026-09-23)**
   - `ds-accordion-item` tokenises its colours and nothing of its geometry or type (from the mm-ecm consumer)
   - `ds-autocomplete` input has no text or placeholder colour hook, and its placeholder is the browser default (from the mm-ecm consumer)
@@ -282,7 +278,6 @@ item and nothing else.
   - `ds-autocomplete`'s arrow keys walk a private copy of the list cursor
   - The button's colour-family slots are named `--c-*`, which is not an acceptable name
 - **The eleven styling hooks one consumer reached past the surface for (recorded 2026-09-21)**
-  - Does a dev warning name an error banner no screen reader will read?
   - Does the picker list height become a public token, or stay behind `panelClass`?
   - Does the `variant="spark"` line preset keep zero in its value domain, or scale to the …
 - **Tooling**
@@ -649,37 +644,6 @@ Each has somebody behind it. Nothing here is speculative work.
   error: Angular renders nothing and logs nothing outside strict schema mode, so a missed one is a
   chart that silently vanished.
 
-## What actually running the 0.13.4 migration cost (recorded 2026-09-23, from the mm-ecm consumer)
-
-The upgrade itself went clean - 115 edits, green on the first build, two independent re-checks with
-no defects. These are the two places where the manifest left the consumer to work something out
-that the release could have said.
-
-- [ ] **[P2] Adopting `banner.announce` app-wide silently arms every banner written afterwards, and the variant is a usable discriminator.**
-  `banner-alert-announce-takes-a-config-default` says it well for the first pass: set the config,
-  then bind `[announce]="false"` on the page furniture. We did exactly that - config in two apps,
-  29 redundant opt-ins removed, 14 furniture banners given an explicit `false`, no banner's
-  behaviour changed.
-  Then we merged `main`, which carried a banner written days earlier against the OLD default:
-  `<ds-banner variant="info" icon="lock">This program is archived …</ds-banner>`. Its author had no
-  reason to write `[announce]="false"` - under the old default, unbound meant silent. Under the new
-  config it announces on every route into an archived program. We caught it only because we
-  re-counted banners after the merge and the total went 43 -> 44.
-  That is the standing cost of the feature, and it lands on whoever writes the NEXT banner, not on
-  whoever adopted the config.
-  The closed record for the announce config (in this file's shipped section) explains the missing
-  dev-mode warning: it *"cannot tell a deliberate opt-out from an oversight"*. That reasoning was about an unannounced ERROR banner, and
-  it holds there. The case here is the mirror image and does not have that problem: an `info` or
-  `success` banner announcing **because an app-wide default was flipped** is almost never intended,
-  and the variant is exactly the discriminator the other direction lacked.
-  **Wanted:** a dev-mode warning when a banner with `variant="info"` or `"success"` resolves
-  `announce` to true from the CONFIG rather than from its own binding - it fires only for the
-  combination that is nearly always an oversight, and never for a deliberate `[announce]="true"`.
-  Failing that, one line in the item's `note`: adopting the config inverts the default for every
-  banner added later, so a team taking it on should expect to mark furniture as it is written.
-  This is the mirror-image option of the open Decision "Does a dev warning name an error banner no
-  screen reader will read?" (deck `10-banner-announce-warning`); decide the two together.
-
 ## Component feature gaps
 
 *This section also has items under **Decisions**, **Parked**.*
@@ -688,11 +652,6 @@ that the release could have said.
   **What it cost the consumer:** a screen that read visits on the left axis and agent requests on the right could not be reproduced. Requests are the column, so they took the primary and visits moved to the secondary, and the two sides swapped against the screen being replaced. Both axes are labelled through `axisLabel` / `secondaryAxisLabel`, so nothing is ambiguous to a reader - but a port that was meant to preserve the reading could not.
   **The shape that fits:** `axis` belongs on the DIRECTIVE, not on `ColumnSeriesPoint`. A column series is a flat list of points under one `seriesLabel`, so a per-point axis would be meaningless; `LineSeriesData` is a per-series object, which is why its own `axis` sits in the data. `<svg:g dsColumnSeries [axis]="'secondary'">` defaulting to `'primary'` mirrors what the line already offers, and leaves every existing chart unchanged.
   **The workaround, for the record:** swap the mark types, visits as columns and requests as a line. That restores the sides at the price of changing what each series looks like, so it is a different trade rather than a fix.
-
-- [ ] **[P3] `_overlay-motion.scss` credits the leave teardown to `animationend`, while under reduced motion it is the fallback timer that does it (recorded 2026-09-23, from the mm-ecm-platform 0.13.4 audit).** The leave comment (`_overlay-motion.scss:65-66`) reads "Reduced motion zeroes the duration at `:root`, so the animation still runs and `animationend` still tears down."; the file header (`:14-16`) and `modal.component.ts:81` ("Reduced-motion zeroes the durations -> close is instant") repeat the claim. A consumer measured the opposite against a running app over CDP: at `animation-duration: 0s` the animation jumps straight to `finished` and does not reliably deliver `animationend` to a listener bound in the same style flush, so the teardown bound to that event never runs. `styles/_tokens.scss:503-509` does zero every `--duration-*` under `reduce`, and Windows 11 with "Animation effects" off reports `reduce`, so this is an ordinary machine rather than an edge case.
-  **What the timer covers, and why the comment still matters:** every teardown path already carries a timer - `setTimeout(() => this.finishClose(), 300)` in `components-modal.mjs`, `components-drawer.mjs` and `components-bottom-sheet.mjs`, and `setTimeout(finish, LEAVE_TIMEOUT_MS)` with `LEAVE_TIMEOUT_MS = 400` in `disposeWithLeave` (all measured against 0.13.4's `fesm2022/`). So the scrim or pane is torn down in at most 300-400 ms whatever the event does. Panes are click-safe meanwhile (`.ds-leaving` has `pointer-events: none`), but the modal, drawer and bottom-sheet `.closing` scrims have no such rule (`modal.component.scss:248-253`, drawer-scrim `:63`, sheet-overlay `:49`), so under `reduce` the invisible scrim swallows clicks for up to 300 ms - `pointer-events: none` on `.closing` closes that window in the library. The comment names `animationend` as the guarantee, which invites a future reader to treat the timer as redundant belt-and-braces and delete it. Deleting it under `reduce` restores a `forwards`-filled `opacity: 0` scrim at `position: fixed; inset: 0` with `pointer-events: auto` that swallows every click, with no console error.
-  **What would settle it:** either re-word all three copies of the claim so the timer is named as what guarantees teardown at zero duration, or keep the claim and prove it - a test that dismisses a modal under emulated `reduce` with the timer stubbed out and asserts the scrim leaves the DOM. One of the two, because the comment and the timer currently encode opposite beliefs about the same code path.
-  **What the consumer ships meanwhile:** `shared-styles/_ds-overlay-motion.scss` forces `animation-duration: 1ms !important` on `.modal-backdrop.closing`, `.drawer-scrim.closing`, `.sheet-overlay.closing`, `.sheet.closing` and the four edge classes, and on `.cdk-overlay-pane.ds-overlay-pane.ds-leaving > *`, so `animationend` fires promptly instead of waiting out the fallback, plus `pointer-events: none` on the three `.closing` scrims under every motion preference. Kept at 0.13.4 by decision (Stas, 2026-09-23): it costs nothing and closes the 300-400 ms window in which a closing scrim still intercepts a click.
 
 ### Found while porting the design-sync React bindings (2026-07-28, re-verified 2026-09-01)
 
@@ -1246,13 +1205,6 @@ that already existed, because both are the kind of ask that comes back.
 
 # Decisions — waiting on Stas, not on work
 
-- [ ] **[P3] Does a dev warning name an error banner no screen reader will read?** Drawn in deck
-  `banner-announce-warning`, three options: stay silent, warn on every unannounced `error` or
-  `warning` banner, or warn only while `DS_CONFIG.banner.announce` is unset so the noise ends the
-  moment an app decides. It became answerable only when `announce` gained a third state: `null` is
-  untouched, `false` is a deliberate opt-out, and before that the two were indistinguishable. One
-  consumer's first pass over 43 banners missed ten.
-
 - [ ] **[P3] Does the picker list height become a public token, or stay behind `panelClass`?** Drawn
   in deck `picker-list-height`. Two caps sit on one panel and the settable-looking one is not the
   one that governs the visible rows: `--ds-dropdown-panel-max-height` caps the box and is forwarded,
@@ -1282,7 +1234,7 @@ None of these is blocked on effort. Each is a verdict, and most carry a deck tha
 short before. **The rank is the filename**: an open deck is `<rank>-<slug>.html`, ranked by what
 answering it unblocks, so the folder listing IS the queue. Ranks are renumbered when the queue
 changes and a stale one is never kept to preserve a link; `deck-lint` fails a duplicate rank, a gap
-in 1..N, and an `implemented` deck still carrying one. **`presentations/12-decision-queue.html` carries every open question** — every open
+in 1..N, and an `implemented` deck still carrying one. **`presentations/11-decision-queue.html` carries every open question** — every open
 deck's question with its options in that deck's own words, the recommendation starred, a link back
 for the argument, and the two questions that have no deck. It duplicates no argument, so it cannot
 contradict a deck; re-check it when a deck's OPTIONS change. **Never cite a deck by number from this
@@ -1299,9 +1251,8 @@ file** — the number moves; cite the filename.
 | 7 | `7-chart-sparkline-preset` | A `variant="spark"` on the line chart against a separate `ds-sparkline`. | parked 2026-09-19, so it is decided-not-built |
 | 8 | `8-waterfall-mode-or-component` | The waterfall's own tag against a `stack="waterfall"` mode on the column chart. | the waterfall entry point, already shipped standalone |
 | 9 | `9-bar-column-contracts` | How far to converge the bar and the column: name the difference, converge the palette, or give the bar a series model. | the stacking-contract ask under *Two chart names that collide* |
-| 10 | `10-banner-announce-warning` | Whether a dev warning names an error banner no screen reader will read. | the closed `banner.announce` ask, which left this open |
-| 11 | `11-picker-list-height` | Whether the picker list height becomes a public token or stays behind `panelClass`. | the closed `--picker-maxh` ask, same shape |
-| 12 | `12-decision-queue` | Every consumer ask and every open question in one page - 23 asks in three groups, then 33 decisions in six, each drawn as today against after. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
+| 10 | `10-picker-list-height` | Whether the picker list height becomes a public token or stays behind `panelClass`. | the closed `--picker-maxh` ask, same shape |
+| 11 | `11-decision-queue` | Every consumer ask and every open question in one page - 20 asks in three groups, then 33 decisions in six, each drawn as today against after. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
@@ -2072,6 +2023,36 @@ _Closed 2026-08-07 from a consumer report: `ds-autocomplete` had no chip cap, so
 Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirrors the live backlog (`todo.md`); deep gap analysis stays in `docs/superpowers/ds-gap-analysis.md`.
 
 ---
+
+## `ds-banner` and `ds-alert` warn in dev mode when `announce` was never decided (2026-09-24)
+
+`warnAnnounceOversight` (`core/announce-warning.ts`) is one helper behind `devWarn`, called from both
+components inside the inline `typeof ngDevMode` guard and reading the same predicate as the host
+`role`. Two messages: an assertive banner (`error` / `warning` / `severe`; alert `error` / `warning`)
+left unbound while `DS_CONFIG.banner.announce` (`alert.announce`) is unset, ending when the key is set
+either way (Stas: «пока ключ не выставлен»); and a polite one (`info` / `success` / `neutral`)
+announcing only because the key is `true`, ending at an `[announce]` binding. No config change and no
+directive: the key's three states are the discriminator, and `provideDsConfig` already scopes a
+subtree. ds-docs sets both keys to `false` at the root, since every banner there is a specimen. Deck
+`banner-announce-warning` moved to `implemented/`; `picker-list-height` is rank 10 and
+`decision-queue` rank 11. Measured 2026-09-24: the message text is absent from `dist/ds-docs` after
+`npm run build:docs` and present in the development build; on `/components/banner` 10 warnings with no
+root config, 9 distinct (10 instances) with the key `true`, the `[announce]="true"` specimen silent,
+0 with `false`.
+
+## A closing modal, drawer or bottom sheet is click-through for the whole leave (2026-09-24)
+
+`.modal-backdrop.closing`, `.drawer-root.closing` (a new class binding on the root, which is the
+`fixed; inset: 0` box that hit-tests, not the scrim inside it) and `.sheet-overlay.closing` carry
+`pointer-events: none`, inherited by the card, panel and sheet. Under `prefers-reduced-motion: reduce`
+every `--duration-*` is 0ms and `animationend` is not reliably delivered, so `finishClose()` runs from
+the 300 ms fallback timer, and until then the invisible scrim took the page's first click. Every
+comment that credited the teardown to `animationend` at zero duration now names the timer. Timers
+unchanged (300 / 400 ms). No test: the repo has no unit-test runner. Measured 2026-09-24 in ds-docs
+with the leave duration forced to 0ms through each component's public token (chrome-devtools has no
+reduced-motion emulation): before the fix `elementFromPoint` over the page returned the closing
+backdrop, after it returned the page element, in all three components; teardown ~256-343 ms via the
+timer in every case.
 
 ## `ds-date-picker` keeps its content width in a container narrower than its mask (2026-09-24)
 
