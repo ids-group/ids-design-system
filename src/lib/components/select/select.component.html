@@ -13,7 +13,7 @@
       <span
         class="optional-marker"
         aria-hidden="true">
-        (optional)
+        {{ intl().field.optional }}
       </span>
     }
   </span>
@@ -71,7 +71,7 @@
     <button
       type="button"
       class="clear-btn"
-      aria-label="Clear selection"
+      [attr.aria-label]="intl().picker.clearSelection"
       (click)="clearValue($event)">
       <ds-icon
         name="x"
@@ -272,7 +272,7 @@
           @if (emptyTemplate(); as tpl) {
             <ng-container [ngTemplateOutlet]="tpl" />
           } @else {
-            No options
+            {{ intl().picker.noOptions }}
           }
         </li>
       }

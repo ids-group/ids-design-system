@@ -4,7 +4,7 @@
   <button
     type="button"
     class="close"
-    [attr.aria-label]="closeLabel()"
+    [attr.aria-label]="closeLabelResolved()"
     (click)="$event.stopPropagation(); closed.emit()">
     <ds-icon
       name="x"

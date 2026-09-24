@@ -14,7 +14,7 @@
         <span
           class="optional-marker"
           aria-hidden="true">
-          (optional)
+          {{ intl().field.optional }}
         </span>
       }
     </span>
@@ -102,7 +102,7 @@
         <button
           type="button"
           class="time-clear"
-          aria-label="Clear"
+          [attr.aria-label]="intl().timePicker.clear"
           [disabled]="isDisabled()"
           (click)="clear($event)">
           <ds-icon
@@ -138,7 +138,7 @@
         type="button"
         class="time-action"
         (click)="setNow()">
-        Now
+        {{ intl().timePicker.now }}
       </button>
 
       @if (mode() === 'range') {
@@ -146,7 +146,7 @@
           type="button"
           class="time-action primary"
           (click)="onEscape()">
-          Done
+          {{ intl().timePicker.done }}
         </button>
       }
     </div>

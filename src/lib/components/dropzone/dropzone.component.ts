@@ -3,12 +3,14 @@ import {
   ViewEncapsulation,
   booleanAttribute,
   computed,
+  inject,
   input,
   model,
   output,
   signal,
 } from '@angular/core';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
+import { DS_INTL, injectDsLocale } from '@ids-group-ltd/ids-design-system/core';
 import type { DropzoneFile } from './dropzone.types';
 import { filesToAdd } from './dropzone.files';
 
@@ -21,6 +23,11 @@ import { filesToAdd } from './dropzone.files';
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class DropzoneComponent {
+  protected readonly intl = inject(DS_INTL);
+  private readonly sizeFormat = new Intl.NumberFormat(injectDsLocale(), {
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1,
+  });
   /** Native `accept` attribute — comma-separated MIME types or extensions. */
   readonly accept = input<string>('');
   /** Allows picking more than one file at once. Unset takes one, which is what the native input
@@ -100,7 +107,7 @@ export class DropzoneComponent {
       return size;
     }
 
-    return `${size} · ${file.state}`;
+    return `${size} · ${this.intl().dropzone[file.state]}`;
   }
 
   protected formatSize(bytes: number): string {
@@ -108,10 +115,10 @@ export class DropzoneComponent {
       return `${bytes} B`;
     }
     if (bytes < 1024 * 1024) {
-      return `${(bytes / 1024).toFixed(1)} KB`;
+      return `${this.sizeFormat.format(bytes / 1024)} KB`;
     }
 
-    return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+    return `${this.sizeFormat.format(bytes / 1024 / 1024)} MB`;
   }
 
   protected fileIcon(state: DropzoneFile['state']): 'file' | 'check' | 'error' {
