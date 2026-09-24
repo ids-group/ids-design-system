@@ -12,6 +12,7 @@ import { ButtonComponent } from 'ds/button';
 import { IconButtonComponent } from 'ds/icon-button';
 import { InputComponent } from 'ds/input';
 import { NumberStepperComponent } from 'ds/number-stepper';
+import { IconComponent } from 'ds/icons';
 import { replayMarks } from './replay-marks';
 
 export interface ChartDataEditorRow {
@@ -42,6 +43,7 @@ function magnitudeStep(magnitude: number): number {
   imports: [
     ButtonComponent,
     IconButtonComponent,
+    IconComponent,
     InputComponent,
     NumberStepperComponent,
   ],
