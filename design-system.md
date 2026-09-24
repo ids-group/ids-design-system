@@ -101,6 +101,8 @@ Every field-shaped control resolves it — inputs, selects, pickers, search, but
 field group, the number stepper. A literal `height` on a control is a bug: it will not
 line up with its neighbours and will not follow a density change.
 
+`--ds-field-border-color`, `-border-color-hover`, `-border-color-focus`, `-text-color`, `-placeholder-color` and `-font-size` do the same for the box's colours and type across input, textarea, select, multi-select, autocomplete and search.
+
 ### Corner radius has its own section
 
 Radius is a role, not a step, and nested radii must decrease — see §8.

@@ -12,6 +12,7 @@ import {
   type AccordionItemRef,
 } from './accordion.token';
 import { AccordionItemComponent } from './accordion-item.component';
+import type { AccordionChevron } from './accordion.types';
 
 @Component({
   selector: 'ds-accordion',
@@ -39,6 +40,9 @@ import { AccordionItemComponent } from './accordion-item.component';
 export class AccordionComponent implements AccordionContract {
   /** When false, opening one item automatically closes all others. */
   readonly multiple = input(true, { transform: booleanAttribute });
+
+  /** Which way the closed chevron points on every item: `right` turns down when an item opens, `down` turns up. */
+  readonly chevron = input<AccordionChevron>('right');
 
   private readonly items = contentChildren(AccordionItemComponent);
 

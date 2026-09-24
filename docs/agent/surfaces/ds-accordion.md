@@ -3,10 +3,10 @@
 
 Group: Surfaces
 
-Accordion is a thin wrapper that rounds + borders its children. Item inputs: `title: string = ''`, `expanded: model<boolean> = false`. Content slots on item: default (body), `[badge]` (rendered next to the title in the header).
+Accordion is a thin wrapper that rounds + borders its children. Item inputs: `title: string = ''`, `expanded: model<boolean> = false`. Content slots on item: default (body), `[badge]` (rendered next to the title in the header). `chevron: 'right' | 'down' = 'right'` on `<ds-accordion>` sets every item's chevron: `right` turns down when an item opens, `down` turns up. Header geometry and type are tokens on the item (`--ds-accordion-header-padding`, `-header-gap`, `-header-font-family` / `-font-size` / `-font-weight` / `-line-height`, `-header-hover-text-color`) and so is the body padding (`--ds-accordion-body-padding`); both padding tokens take the CSS shorthand, as `--ds-card-padding` does.
 
 <!-- inputs:ds-accordion -->
-All inputs: `multiple: boolean = true`
+All inputs: `multiple: boolean = true`, `chevron: 'right' | 'down' = 'right'`
 <!-- /inputs -->
 
 ---

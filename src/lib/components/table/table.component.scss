@@ -184,6 +184,9 @@
   --_table-cell-padding-right: var(--ds-table-cell-padding-right, var(--_table-cell-padding-x));
   --_table-cell-padding-bottom: var(--ds-table-cell-padding-bottom, var(--_table-cell-padding-y));
   --_table-cell-padding-left: var(--ds-table-cell-padding-left, var(--_table-cell-padding-x));
+  --_table-utility-column-width: var(--ds-table-utility-column-width, var(--space-6));
+  --_table-utility-column-padding-left: var(--ds-table-utility-column-padding-x, var(--_table-cell-padding-left));
+  --_table-utility-column-padding-right: var(--ds-table-utility-column-padding-x, var(--_table-cell-padding-right));
   --_table-head-padding-top: var(--ds-table-head-padding-top, var(--table-head-pad-y));
   --_table-head-padding-bottom: var(--ds-table-head-padding-bottom, var(--table-head-pad-y));
   --_table-head-border-color: var(--ds-table-head-border-color, var(--_table-divider));
@@ -289,9 +292,14 @@
       width: var(--space-10);
     }
 
-    &.expand-col,
-    &.actions-col {
+    &.expand-col {
       width: var(--space-10);
+    }
+
+    &.actions-col {
+      width: var(--_table-utility-column-width);
+      padding-left: var(--_table-utility-column-padding-left);
+      padding-right: var(--_table-utility-column-padding-right);
     }
   }
 
@@ -384,9 +392,14 @@
       }
     }
 
-    .expand-col,
-    .actions-col {
+    .expand-col {
       width: var(--space-10);
+    }
+
+    .actions-col {
+      width: var(--_table-utility-column-width);
+      padding-left: var(--_table-utility-column-padding-left);
+      padding-right: var(--_table-utility-column-padding-right);
     }
 
     .expand-panel-cell {
@@ -745,10 +758,14 @@
 }
 
 .pagination-footer {
+  --_table-footer-padding-y: var(--ds-table-footer-padding-y, var(--space-3));
+  --_table-footer-padding-top: var(--ds-table-footer-padding-top, var(--_table-footer-padding-y));
+  --_table-footer-padding-bottom: var(--ds-table-footer-padding-bottom, var(--_table-footer-padding-y));
+
   /* The per-side chain the cells resolve, spelled out again: `--_table-cell-pad-*` is declared
      on `.table` and invisible to this sibling. Longhands because one unresolvable var voids a
      whole shorthand, and the summary must stay in line with column one. */
-  padding-block: var(--space-3);
+  padding-block: var(--_table-footer-padding-top) var(--_table-footer-padding-bottom);
   padding-left: var(--ds-table-cell-padding-left, var(--ds-table-cell-padding-x, var(--table-cell-pad-x)));
   padding-right: var(--ds-table-cell-padding-right, var(--ds-table-cell-padding-x, var(--table-cell-pad-x)));
   border-top: var(--border-width-default) solid var(--ds-table-divider, var(--border-divider));
