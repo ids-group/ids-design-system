@@ -12,9 +12,14 @@
 // Two demos back to back IN NORMAL FLOW: every other chart here is separated by the prose that
 // introduces it, so a pair with nothing between them loses the gap the paragraph would have given.
 // Not inside `.demo-pair`, where the two stand side by side and the margin would drop the second
-// one below the first.
-:not(.demo-pair) > ds-chart + ds-chart {
+// one below the first. No parent in the selector: the charts are projected into `docs-section`, so
+// their parent carries that component's scope attribute, never this one's.
+ds-chart + ds-chart {
   margin-block-start: var(--space-5);
+}
+
+.demo-pair > ds-chart + ds-chart {
+  margin-block-start: 0;
 }
 
 .orders-panel {
