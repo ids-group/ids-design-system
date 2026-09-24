@@ -4,6 +4,50 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## `ds-modal-card` measures its actions row again when a label changes (2026-09-24)
+
+The row was measured on first render and when the header resized, so a button label that grew
+after the modal opened left every observed box unchanged: the row stayed a single line and the
+first button ran past the card's start edge (mm-ecm, "Unsaved changes" sm modal on 0.14.0: first
+button at 11-461 inside a card at 460-940). A `MutationObserver` on the actions row (child list,
+subtree, character data, no attributes) schedules the same frame-deferred measurement, so the
+`stacked` toggle never reports back to it. Measured 2026-09-24 on the docs modal page, sm card
+"Cancel / Deactivate" at 700-1180: lengthening "Cancel" after render stacked the row with both
+buttons inside at 720-1160, restoring the label unstacked it, and each change produced exactly one
+measurement (2 then 1 class mutations over 2 s).
+
+## 0.14.0's manifest carries the typed cell-template context as an item (2026-09-24)
+
+`CellTemplateDirective` became generic with a template context guard in 0.14.0, so a
+`dsCellTemplate` without `[dsCellTemplateOf]` types its row as `unknown` where 0.13.4 typed it
+`any`. The manifest filed that as `informational`, and a consumer upgrading 0.13.4 -> 0.14.0 got
+194 build errors in 8 templates of one app and 6 in another (TS2571 / TS2345, measured 2026-09-24).
+`0.14.0.json` now carries `cell-template-context-typed-unknown` (behavior, surface template, with
+the build errors in `detect`) in place of the informational line, and it cites the existing
+`table-row-caster-helpers` delete row.
+
+## Ten consumer styling hooks, one token shape (2026-09-24)
+
+Every hook resolves a public `--ds-*` through a private `--_*` whose default is the value the
+component already drew, so nothing moves until a token is set. The field family
+(`--ds-field-border-color` / `-hover` / `-focus`, `-text-color`, `-placeholder-color`, `-font-size`)
+sits under each field's own token for input, textarea, select, multi-select, autocomplete and search,
+through one `field-box-tokens` mixin in `_field-box.scss`; the pickers, number stepper and OTP stay
+out. `ds-select` gains its focus border (focused and open alike), hover, placeholder and size;
+`ds-autocomplete` its text, placeholder and hover border; `ds-textarea` now reads
+`--ds-input-font-size`, and `ds-search`'s hover border defaults to its own rest border (both
+`behavior` items with a restore). `ds-button` / `ds-icon-button` take hover and active borders that
+fall back rest -> hover -> active; `ds-empty-state` its title face and weight; `ds-badge` a font size
+that a count badge re-resolves; `ds-page-header` a subtitle size; `ds-banner` a title size.
+`ds-accordion-item` tokenises header padding, gap, type, hover colour and body padding, and
+`ds-accordion` takes `chevron: 'right' | 'down'`. `ds-table` takes a utility-column width (default
+moves `--space-10` -> `--space-6`; cells are border-box, so the column stays button + padding) and
+padding, and footer block padding (`-y` with `-top` / `-bottom`). Measured 2026-09-24 in ds-docs:
+every default unchanged (select border rest / hover / open `#DCE1EA` / `#C2C9D6` / `--accent`,
+accordion head padding `12px 16px`, table utility column 56px, footer 12px), and each token takes
+effect when set (`--ds-table-utility-column-padding-x: 0` gives a 24px column; `chevron="down"` turns
+the open chevron 180deg).
+
 ## `ds-banner` and `ds-alert` warn in dev mode when `announce` was never decided (2026-09-24)
 
 `warnAnnounceOversight` (`core/announce-warning.ts`) is one helper behind `devWarn`, called from both

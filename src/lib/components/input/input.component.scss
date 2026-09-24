@@ -13,12 +13,14 @@
    Error message — Wrap, no clip. Always fully visible — error must never hide. */
 
 :host {
+  @include field-box.field-box-tokens;
+
   --_input-bg-color:             var(--ds-input-bg-color,             var(--surface-default));
-  --_input-border:         var(--ds-input-border,         var(--border-default));
-  --_input-border-hover:   var(--ds-input-border-hover,   var(--border-strong));
-  --_input-border-focus:   var(--ds-input-border-focus,   var(--accent));
-  --_input-text-color:             var(--ds-input-text-color,             var(--text-primary));
-  --_input-placeholder:    var(--ds-input-placeholder,    var(--text-tertiary));
+  --_input-border:         var(--ds-input-border,         var(--_field-border-color));
+  --_input-border-hover:   var(--ds-input-border-hover,   var(--_field-border-color-hover));
+  --_input-border-focus:   var(--ds-input-border-focus,   var(--_field-border-color-focus));
+  --_input-text-color:             var(--ds-input-text-color,             var(--_field-text-color));
+  --_input-placeholder:    var(--ds-input-placeholder,    var(--_field-placeholder-color));
   --_input-radius:         var(--ds-input-radius,         var(--ds-radius-control));
   --_input-padding-x:          var(--ds-input-padding-x,          var(--field-pad-x));
   --_input-padding-y:          var(--ds-input-padding-y,          var(--field-pad-y));
@@ -34,7 +36,7 @@
   --_input-label-color:    var(--ds-input-label-color,    var(--ds-field-label-color,       var(--text-secondary)));
   --_input-label-font-size:       var(--ds-input-label-font-size,       var(--ds-field-label-font-size,   var(--font-size-xs)));
   --_input-label-font-weight: var(--ds-input-label-font-weight, var(--ds-field-label-font-weight, var(--font-weight-bold)));
-  --_input-font-size:             var(--ds-input-font-size,             var(--font-size-s));
+  --_input-font-size:             var(--ds-input-font-size,             var(--_field-font-size));
   --_input-clear-color: var(--ds-input-clear-color, var(--text-secondary));
 
   display: block;

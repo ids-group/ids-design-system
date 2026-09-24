@@ -21,7 +21,7 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 | 8 | `8-waterfall-mode-or-component` | the waterfall's own tag against a `stack="waterfall"` mode on the column chart |
 | 9 | `9-bar-column-contracts` | how far the bar and the column converge - the consumer ask that found them diverging in palette and in where composition is declared |
 | 10 | `10-picker-list-height` | whether the picker list's height stays an internal token: the cap that governs the visible rows is not the one that looks settable |
-| 11 | `11-decision-queue` | every consumer ask and every open question in one page - 20 asks a consumer waits on, each drawn as today against after, then 33 decisions across six groups; the live indeterminate tracks are the case a text list could not put |
+| 11 | `11-decision-queue` | every consumer ask and every open question in one page - 10 asks a consumer waits on, each drawn as today against after, then 33 decisions across six groups; the live indeterminate tracks are the case a text list could not put |
 
 **Rank 1 is the way in, and ranks 2-4 are the two biggest lanes** — the colour engine, then the interaction formula that reads
 its ramp. Ranks 1-5 are written in Russian and share `deck.css`, which sits beside `ds.css` and
