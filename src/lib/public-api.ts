@@ -29,6 +29,7 @@ export {
   AccordionItemComponent,
 } from '@ids-group-ltd/ids-design-system/components/accordion';
 export type {
+  AccordionChevron,
   AccordionContract,
   AccordionItemRef,
 } from '@ids-group-ltd/ids-design-system/components/accordion';
@@ -404,6 +405,7 @@ export {
   provideDsConfig,
 } from '@ids-group-ltd/ids-design-system/core';
 export type {
+  AnnounceState,
   ChartAxis,
   ChartAxisMode,
   ChartCurve,

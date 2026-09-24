@@ -363,7 +363,7 @@
 
 <main>
   <div class="masthead">
-    <h1>23 аска консьюмеров и 33 решений, каждое с нарисованными вариантами</h1>
+    <h1>10 асков консьюмеров и 33 решений, каждое с нарисованными вариантами</h1>
     <p class="lede">
       Сверху - всё, чего ждёт консьюмер: фиксы, хуки и фичи из бэклога, каждый показан как есть
       сейчас и как будет после. Ниже - открытые деки и бакет <code>Decisions</code>. Вариант
@@ -459,50 +459,10 @@
     </section>
 
 
-  <section class="q" data-q="ask-banner-info-armed">
-      <div class="q-head">
-        <span class="q-num">02</span>
-        <h2 class="q-title">Info-баннер, написанный после banner.announce, молча начинает озвучиваться</h2>
-        <span class="q-src">P2 · mm-ecm · манифест 0.13.4</span>
-      </div>
-      <p class="q-sub">Консьюмер включил <code>banner: { announce: true }</code> и заглушил 14 баннеров-мебели. Через merge пришёл баннер, написанный под старый дефолт, и теперь звучит на каждом входе в архивную программу. Обратный случай, неозвученный error-баннер, - отдельный вопрос <code>ask-banner-warning</code> ниже.</p>
-
-      <div class="stage">
-        <div class="spec" style="min-inline-size:250px">
-          <p class="cap">написан до конфига: молчал</p>
-          <div class="bn a-info"><i></i><span>This program is archived …</span></div>
-          <p class="css">&lt;ds-banner variant="info" icon="lock"&gt;</p>
-          <p class="says">role и aria-live нет</p>
-        </div>
-        <div class="spec" style="min-inline-size:250px">
-          <p class="cap">после merge под конфигом</p>
-          <div class="bn a-info"><i></i><span>This program is archived …</span></div>
-          <p class="css">provideDsConfig({ banner: { <span class="hit">announce: true</span> } })</p>
-          <p class="says">role="status" aria-live="polite": «This program is archived…»</p>
-        </div>
-      </div>
-
-      <div class="opts">
-        <div class="opt is-today"><h3>Оставить как есть</h3>
-          <p class="console quiet">консоль пуста</p>
-          <dl class="layer"><dt>Как нашли</dt><dd>пересчёт баннеров после merge, 43 → 44</dd><dt>Платит</dt><dd>автор СЛЕДУЮЩЕГО баннера</dd></dl>
-        </div>
-        <div class="opt"><h3>Dev-предупреждение для info/success <span class="star">★</span></h3>
-          <p class="console">[ds-banner] variant="info" announces because DS_CONFIG.banner.announce is true. Bind [announce] to decide.</p>
-          <dl class="layer"><dt>Срабатывает</dt><dd class="gain">info/success, announce из КОНФИГА</dd><dt>Молчит</dt><dd>явный [announce]="true", error/warning</dd></dl>
-        </div>
-        <div class="opt"><h3>Строка в манифесте</h3>
-          <p class="css">"pitfall": "… A banner written after
-  the config announces unless it
-  binds [announce]=\"false\"."</p>
-          <dl class="layer"><dt>Кого ловит</dt><dd>того, кто читает манифест при апгрейде</dd><dt>Кого нет</dt><dd>автора баннера через месяц</dd></dl>
-        </div>
-      </div>
-    </section>
 
   <section class="q" data-q="ask-column-axis">
       <div class="q-head">
-        <span class="q-num">03</span>
+        <span class="q-num">02</span>
         <h2 class="q-title">Колонку нельзя посадить на вторую ось, в двухосевом чарте она всегда слева</h2>
         <span class="q-src">P2 · mm-ecm · порт microsite-analytics</span>
       </div>
@@ -540,56 +500,10 @@
   <p class="group">Ждут консьюмеры · P3</p>
 
 
-  <section class="q" data-q="ask-closing-scrim-clicks">
-      <div class="q-head">
-        <span class="q-num">04</span>
-        <h2 class="q-title">Невидимый закрывающийся scrim глотает клики до 300 мс</h2>
-        <span class="q-src">P3 · mm-ecm-platform · аудит 0.13.4</span>
-      </div>
-      <p class="q-sub">
-        Под <code>reduce</code> <code>animationend</code> не приходит, закрытие делает таймер на 300 мс. Всё это время
-        <code>.modal-backdrop.closing</code> с <code>opacity: 0</code> лежит поверх страницы без <code>pointer-events: none</code>.
-      </p>
-
-      <div class="stage">
-        <div class="spec">
-          <p class="cap">сегодня</p>
-          <div class="a-page">Страница под модалкой<br><span class="a-btn">Сохранить</span>
-            <span class="a-scrim">.closing · opacity 0 · клик съеден</span><span class="a-tap"></span></div>
-        </div>
-        <div class="spec">
-          <p class="cap">после</p>
-          <div class="a-page">Страница под модалкой<br><span class="a-btn hit">Сохранить</span>
-            <span class="a-scrim pass">pointer-events: none</span><span class="a-tap pass"></span></div>
-        </div>
-      </div>
-      <p class="css">.modal-backdrop.closing {
-    animation-fill-mode: forwards;
-    <span class="hit">pointer-events: none;</span>   /* так же drawer-scrim, sheet-overlay */
-  }</p>
-
-      <div class="opts">
-        <div class="opt is-today"><h3>Оставить как есть</h3>
-          <p class="css">// "animationend still tears down"
-  setTimeout(() =&gt; this.finishClose(), 300);</p>
-          <dl class="layer"><dt>Клик</dt><dd>съеден до 300 мс</dd><dt>Коммент</dt><dd>зовёт таймер лишним</dd></dl>
-        </div>
-        <div class="opt"><h3>Клик насквозь и коммент про таймер <span class="star">★</span></h3>
-          <p class="css">.closing { pointer-events: none }
-  // teardown at 0s: the 300ms timer</p>
-          <dl class="layer"><dt>Клик</dt><dd class="gain">проходит сразу</dd><dt>Коммент</dt><dd class="gain">3 копии называют таймер</dd></dl>
-        </div>
-        <div class="opt"><h3>Клик насквозь и тест</h3>
-          <p class="css">.closing { pointer-events: none }
-  it('reduce, timer stubbed: scrim leaves')</p>
-          <dl class="layer"><dt>Клик</dt><dd class="gain">проходит сразу</dd><dt>Риск</dt><dd>консьюмер уже измерил, что тест упадёт</dd></dl>
-        </div>
-      </div>
-    </section>
 
   <section class="q" data-q="ask-dead-overrides">
       <div class="q-head">
-        <span class="q-num">05</span>
+        <span class="q-num">03</span>
         <h2 class="q-title">Переопределение --ds-* может ничего не делать, и никто об этом не скажет</h2>
         <span class="q-src">P3 · mm-ecm · аудит 0.8.0 → 0.13.4</span>
       </div>
@@ -630,7 +544,7 @@
 
   <section class="q" data-q="ask-bar-segment-selected">
       <div class="q-head">
-        <span class="q-num">06</span>
+        <span class="q-num">04</span>
         <h2 class="q-title">Сегмент ds-bar-chart нельзя отметить как выбранный</h2>
         <span class="q-src">P3 · mm-ecm-kb · сегментация</span>
       </div>
@@ -672,7 +586,7 @@
 
   <section class="q" data-q="ask-chart-locale">
       <div class="q-head">
-        <span class="q-num">07</span>
+        <span class="q-num">05</span>
         <h2 class="q-title">Чарты берут локаль чисел из браузера, настройки нет</h2>
         <span class="q-src">P3 · mm-ecm-kb · app.config</span>
       </div>
@@ -717,7 +631,7 @@
 
   <section class="q" data-q="ask-indeterminate">
     <div class="q-head">
-      <span class="q-num">08</span>
+      <span class="q-num">06</span>
       <h2 class="q-title">Форма неопределённого прогресса на узком треке</h2>
       <a class="q-src" href="../docs/todo.md">бэклог, без деки</a>
     </div>
@@ -760,463 +674,22 @@
     </div>
   </section>
 
-  <section class="q" data-q="ask-banner-warning">
-    <div class="q-head">
-      <span class="q-num">09</span>
-      <h2 class="q-title">Предупреждать ли в dev о неозвученном error-баннере</h2>
-      <a class="q-src" href="10-banner-announce-warning.html">дека 10</a>
-    </div>
-    <p class="q-sub">
-      У консьюмера 43 баннера, первый проход пропустил десять. Экран один и тот же, отличается
-      только то, что печатает консоль.
-    </p>
 
-    <div class="stage">
-      <div class="spec" style="min-inline-size:250px">
-        <p class="cap">экран во всех трёх вариантах</p>
-        <div class="bn"><i></i><span><strong>Загрузка манифеста не прошла</strong><br>Файл отклонён на строке 12.</span></div>
-        <div class="bn q2" style="margin-top:var(--space-2)"><i></i><span><strong>Плановые работы в воскресенье</strong><br>С 02:00 до 04:00.</span></div>
-      </div>
-    </div>
 
-    <div class="opts">
-      <div class="opt is-today"><h3>Молчать</h3>
-        <p class="console quiet">консоль пуста</p>
-        <dl class="layer"><dt>Как находят пропуск</dt><dd>ручной обход всех баннеров</dd></dl>
-      </div>
-      <div class="opt"><h3>Предупреждать всегда</h3>
-        <p class="console">[ds-banner] variant="error" without announce - a screen reader will not hear it.</p>
-        <dl class="layer"><dt>Шум</dt><dd>у каждого при апгрейде</dd><dt>Как гасится</dt><dd>правкой каждого элемента</dd></dl>
-      </div>
-      <div class="opt"><h3>Пока ключ не выставлен <span class="star">★</span></h3>
-        <p class="console">[ds-banner] variant="error" without announce. Decide app-wide with provideDsConfig.</p>
-        <dl class="layer"><dt>Шум</dt><dd class="gain">кончается с ключом</dd><dt>Как гасится</dt><dd class="gain">одной строкой</dd></dl>
-      </div>
-    </div>
-  </section>
 
-  <section class="q" data-q="ask-accordion-geometry">
-      <div class="q-head">
-        <span class="q-num">10</span>
-        <h2 class="q-title">У аккордеона токены только на цвета - отступы, шрифт и шеврон не настраиваются</h2>
-        <span class="q-src">P3 · mm-ecm · хук стилей</span>
-      </div>
-      <p class="q-sub">Help FAQ в agent-portal утраивает <code>.head</code> и учетверяет <code>.chev</code>, чтобы перебить <code>[_nghost] .head[_ngcontent]</code>. Любая правка DOM аккордеона молча ломает страницу.</p>
-      <div class="stage">
-        <div class="spec">
-          <p class="cap">DS по умолчанию</p>
-          <div class="a-acc">
-            <div class="h open">Как сменить агента?<span class="chev">›</span></div>
-            <div class="b">Напишите в поддержку.</div>
-            <div class="h">Где полис?<span class="chev">›</span></div>
-          </div>
-        </div>
-        <div class="spec">
-          <p class="cap">как хочет консьюмер</p>
-          <div class="a-acc nyl">
-            <div class="h open">Как сменить агента?<span class="chev">›</span></div>
-            <div class="b">Напишите в поддержку.</div>
-            <div class="h">Где полис?<span class="chev">›</span></div>
-          </div>
-        </div>
-      </div>
-      <div class="opts">
-        <div class="opt is-today"><h3>Оставить как есть</h3>
-          <p class="css"><code>agent-help ds-accordion-item {
-    <span class="hit">.head.head.head</span> { padding: 22px 0; gap: 24px; }
-    <span class="hit">.chev.chev.chev.chev</span> { transform: rotate(90deg); }
-    <span class="hit">.body-content.body-content.body-content</span> { padding: 0 48px 24px 0; }
-  }</code></p>
-          <dl class="layer"><dt>Работа DS</dt><dd class="none">нет</dd><dt>Цена</dt><dd>гонка специфичности, ломается от правки DOM</dd></dl>
-        </div>
-        <div class="opt"><h3>Хук --ds-accordion-header-* <span class="star">★</span></h3>
-          <p class="css"><code>agent-help ds-accordion-item {
-    --ds-accordion-header-padding-y: 22px;
-    --ds-accordion-header-padding-x: 0;
-    --ds-accordion-header-gap: 24px;
-    --ds-accordion-header-font-family: Georgia, serif;
-    --ds-accordion-body-padding-right: 48px;
-  }
-  &lt;ds-accordion chevron="down"&gt;</code></p>
-          <dl class="layer"><dt>Работа DS</dt><dd>~10 токенов + опция шеврона, дефолты = сегодня</dd><dt>Консьюмер</dt><dd class="gain">без селекторов в чужой DOM</dd></dl>
-        </div>
-      </div>
-    </section>
 
-  <section class="q" data-q="ask-select-focus-border">
-      <div class="q-head">
-        <span class="q-num">11</span>
-        <h2 class="q-title">У ds-select рамка в фокусе прибита к --accent - единственное поле без хука</h2>
-        <span class="q-src">P3 · mm-ecm · хук стилей</span>
-      </div>
-      <p class="q-sub">Все остальные поля красят фокус через токен, select - напрямую (<code>select.component.scss:107,112</code>). Консьюмер держит бирюзовую рамку через <code>!important</code>.</p>
-      <div class="stage">
-        <div class="spec">
-          <p class="cap">DS по умолчанию, в фокусе</p>
-          <div class="a-col">
-            <div class="a-fld focus">Лондон<span class="tag">ds-input</span></div>
-            <div class="a-fld focus">Лондон<span class="chv">▾</span></div>
-          </div>
-        </div>
-        <div class="spec">
-          <p class="cap">как хочет консьюмер</p>
-          <div class="a-col">
-            <div class="a-fld focus topaz">Лондон<span class="tag">--ds-input-border-focus</span></div>
-            <div class="a-fld focus topaz">Лондон<span class="chv">▾</span></div>
-          </div>
-        </div>
-      </div>
-      <div class="opts">
-        <div class="opt is-today"><h3>Оставить как есть</h3>
-          <p class="css"><code>:is(ds-select, ds-dropdown) .dropdown:focus-visible:not(.error),
-  :is(ds-select, ds-dropdown) .dropdown.open:not(.error) {
-    border-color: var(--color-focus-border) <span class="hit">!important</span>;
-  }</code></p>
-          <dl class="layer"><dt>Работа DS</dt><dd class="none">нет</dd><dt>Цена</dt><dd>!important глушит и будущие состояния</dd></dl>
-        </div>
-        <div class="opt"><h3>Хук --ds-select-border-color-focus <span class="star">★</span></h3>
-          <p class="css"><code>ds-select {
-    --ds-select-border-color-focus: var(--color-focus-border);
-  }</code></p>
-          <dl class="layer"><dt>Работа DS</dt><dd>1 токен на :focus-visible и .open, дефолт --accent</dd><dt>Консьюмер</dt><dd class="gain">как у остальных полей</dd></dl>
-        </div>
-      </div>
-    </section>
 
-  <section class="q" data-q="ask-field-shared-tokens">
-      <div class="q-head">
-        <span class="q-num">12</span>
-        <h2 class="q-title">Цвета полей задаются по одному компоненту, а у select и textarea нет размера шрифта</h2>
-        <span class="q-src">P3 · mm-ecm · хук стилей</span>
-      </div>
-      <p class="q-sub">Одно решение - тонкая рамка, чернильный текст, синий фокус - консьюмер пишет дважды, под <code>--ds-input-*</code> и <code>--ds-select-*</code>. Шрифт input прибит к 14px, потому что select и textarea хардкодят <code>--font-size-s</code>.</p>
-      <div class="stage">
-        <div class="spec">
-          <p class="cap">DS по умолчанию</p>
-          <div class="a-col">
-            <div class="a-fld">Иван Петров<span class="tag">input</span></div>
-            <div class="a-fld">Активен<span class="chv">▾</span></div>
-            <div class="a-fld area">Звонил во вторник<span class="tag">textarea</span></div>
-          </div>
-        </div>
-        <div class="spec">
-          <p class="cap">как хочет консьюмер</p>
-          <div class="a-col">
-            <div class="a-fld rp">Иван Петров<span class="tag">input</span></div>
-            <div class="a-fld rp">Активен<span class="chv">▾</span></div>
-            <div class="a-fld rp area">Звонил во вторник<span class="tag">textarea</span></div>
-          </div>
-        </div>
-      </div>
-      <div class="opts">
-        <div class="opt is-today"><h3>Оставить как есть</h3>
-          <p class="css"><code>--ds-input-border: var(--rp-rule);
-  --ds-input-border-hover: var(--rp-mute);
-  --ds-input-border-focus: var(--rp-blue);
-  --ds-input-text-color: var(--rp-ink);
-  <span class="hit">--ds-input-font-size: var(--rp-fs-14);</span>
-  --ds-select-border-color: var(--rp-rule);
-  --ds-select-text-color: var(--rp-ink);</code></p>
-          <dl class="layer"><dt>Работа DS</dt><dd class="none">нет</dd><dt>Цена</dt><dd>каждое поле отдельно, размер select/textarea не задать</dd></dl>
-        </div>
-        <div class="opt"><h3>Хук --ds-field-*, размер по полям</h3>
-          <p class="css"><code>--ds-field-border-color: var(--rp-rule);
-  --ds-field-border-color-hover: var(--rp-mute);
-  --ds-field-border-color-focus: var(--rp-blue);
-  --ds-field-text-color: var(--rp-ink);
-  --ds-input-font-size: 14px;   <span class="a-hint">textarea тоже</span>
-  --ds-select-font-size: 14px;</code></p>
-          <dl class="layer"><dt>Работа DS</dt><dd>4 общих токена + --ds-select-font-size</dd><dt>Размер</dt><dd>два токена</dd></dl>
-        </div>
-        <div class="opt"><h3>Хук --ds-field-*, общий размер <span class="star">★</span></h3>
-          <p class="css"><code>--ds-field-border-color: var(--rp-rule);
-  --ds-field-border-color-hover: var(--rp-mute);
-  --ds-field-border-color-focus: var(--rp-blue);
-  --ds-field-text-color: var(--rp-ink);
-  --ds-field-font-size: 14px;</code></p>
-          <dl class="layer"><dt>Работа DS</dt><dd>5 общих токенов под тремя полями</dd><dt>Размер</dt><dd class="gain">одна строка, как --ds-field-height</dd></dl>
-        </div>
-      </div>
-    </section>
 
-  <section class="q" data-q="ask-autocomplete-text-color">
-      <div class="q-head">
-        <span class="q-num">13</span>
-        <h2 class="q-title">У ds-autocomplete нет хука на цвет текста и плейсхолдера, а плейсхолдер браузерный</h2>
-        <span class="q-src">P3 · mm-ecm · хук стилей</span>
-      </div>
-      <p class="q-sub">Инпут красится <code>var(--text-primary)</code> без резолвера, правила <code>::placeholder</code> нет вовсе, поэтому плейсхолдер серый UA, а у <code>ds-input</code> рядом - <code>--text-tertiary</code>.</p>
-      <div class="stage">
-        <div class="spec">
-          <p class="cap">DS по умолчанию</p>
-          <div class="a-col">
-            <div class="a-fld"><span class="ph">Поиск страхователя</span><span class="tag">ds-input</span></div>
-            <div class="a-fld"><span class="ph ua">Поиск страхователя</span><span class="tag">ds-autocomplete</span></div>
-          </div>
-        </div>
-        <div class="spec">
-          <p class="cap">как хочет консьюмер</p>
-          <div class="a-col">
-            <div class="a-fld rp"><span class="ph">Поиск страхователя</span></div>
-            <div class="a-fld rp">Иван Петр<span class="tag">набранное</span></div>
-          </div>
-        </div>
-      </div>
-      <div class="opts">
-        <div class="opt is-today"><h3>Оставить как есть</h3>
-          <p class="css"><code>agent-refresh-shell .topbar__search ds-autocomplete {
-    <span class="hit">.autocomplete-input.autocomplete-input</span> {
-      color: var(--rp-ink);
-      &amp;::placeholder { color: var(--rp-mute); }
-    }
-  }</code></p>
-          <dl class="layer"><dt>Работа DS</dt><dd class="none">нет</dd><dt>Дефолт</dt><dd>плейсхолдер не как у ds-input</dd></dl>
-        </div>
-        <div class="opt"><h3>Хук --ds-autocomplete-*-color <span class="star">★</span></h3>
-          <p class="css"><code>ds-autocomplete {
-    --ds-autocomplete-text-color: var(--rp-ink);
-    --ds-autocomplete-placeholder-color: var(--rp-mute);
-  }</code></p>
-          <dl class="layer"><dt>Работа DS</dt><dd>2 токена + правило ::placeholder</dd><dt>Дефолт</dt><dd class="gain">--text-tertiary, как у ds-input</dd></dl>
-        </div>
-      </div>
-    </section>
 
-  <section class="q" data-q="ask-button-border-hover">
-      <div class="q-head">
-        <span class="q-num">14</span>
-        <h2 class="q-title">ds-button и ds-icon-button не умеют менять рамку при наведении</h2>
-        <span class="q-src">P3 · mm-ecm · хук стилей</span>
-      </div>
-      <p class="q-sub">Фон и цвет подписи на hover токенизированы, рамка - одна на все состояния. Иконки в строках таблицы выглядят мёртвыми, консьюмер лезет в них через <code>::ng-deep</code>.</p>
-      <div class="stage">
-        <div class="spec">
-          <p class="cap">DS по умолчанию, средняя на hover</p>
-          <div class="a-btns">
-            <span class="a-ib"><svg viewBox="0 0 16 16"><circle cx="3" cy="8" r="1.4" fill="currentColor"/><circle cx="8" cy="8" r="1.4" fill="currentColor"/><circle cx="13" cy="8" r="1.4" fill="currentColor"/></svg></span>
-            <span class="a-ib hov"><svg viewBox="0 0 16 16"><circle cx="3" cy="8" r="1.4" fill="currentColor"/><circle cx="8" cy="8" r="1.4" fill="currentColor"/><circle cx="13" cy="8" r="1.4" fill="currentColor"/></svg></span>
-            <span class="a-ib"><svg viewBox="0 0 16 16"><circle cx="3" cy="8" r="1.4" fill="currentColor"/><circle cx="8" cy="8" r="1.4" fill="currentColor"/><circle cx="13" cy="8" r="1.4" fill="currentColor"/></svg></span>
-          </div>
-        </div>
-        <div class="spec">
-          <p class="cap">как хочет консьюмер</p>
-          <div class="a-btns">
-            <span class="a-ib"><svg viewBox="0 0 16 16"><circle cx="3" cy="8" r="1.4" fill="currentColor"/><circle cx="8" cy="8" r="1.4" fill="currentColor"/><circle cx="13" cy="8" r="1.4" fill="currentColor"/></svg></span>
-            <span class="a-ib hov firm"><svg viewBox="0 0 16 16"><circle cx="3" cy="8" r="1.4" fill="currentColor"/><circle cx="8" cy="8" r="1.4" fill="currentColor"/><circle cx="13" cy="8" r="1.4" fill="currentColor"/></svg></span>
-            <span class="a-ib"><svg viewBox="0 0 16 16"><circle cx="3" cy="8" r="1.4" fill="currentColor"/><circle cx="8" cy="8" r="1.4" fill="currentColor"/><circle cx="13" cy="8" r="1.4" fill="currentColor"/></svg></span>
-          </div>
-        </div>
-      </div>
-      <div class="opts">
-        <div class="opt is-today"><h3>Оставить как есть</h3>
-          <p class="css"><code><span class="hit">::ng-deep</span> ds-icon-button .icon-button {
-    &amp;:hover { border-color: var(--color-border-strong); }
-  }
-  <span class="hit">ds-button .button.v-outline:hover</span> {
-    border-color: var(--color-border-strong);
-  }</code></p>
-          <dl class="layer"><dt>Работа DS</dt><dd class="none">нет</dd><dt>Цена</dt><dd>::ng-deep на каждой странице</dd></dl>
-        </div>
-        <div class="opt"><h3>Хук border-hover / -active <span class="star">★</span></h3>
-          <p class="css"><code>ds-icon-button {
-    --ds-icon-button-border-hover: var(--color-border-strong);
-  }
-  ds-button {
-    --ds-button-border-color-hover: var(--color-border-strong);
-  }</code></p>
-          <dl class="layer"><dt>Работа DS</dt><dd>4 токена, дефолт = рамка покоя</dd><dt>Сдвиг</dt><dd class="gain">ничего не двигается</dd></dl>
-        </div>
-      </div>
-    </section>
 
-  <section class="q" data-q="ask-empty-state-title-face">
-      <div class="q-head">
-        <span class="q-num">15</span>
-        <h2 class="q-title">Заголовок ds-empty-state берёт размер и цвет из токенов, а гарнитуру и насыщенность - нет</h2>
-        <span class="q-src">P3 · mm-ecm · хук стилей</span>
-      </div>
-      <p class="q-sub">В шортхенде <code>font</code> прибиты <code>--font-weight-bold</code> и <code>--font-sans</code>. У <code>ds-modal</code> эти два хука уже есть.</p>
-      <div class="stage">
-        <div class="spec">
-          <p class="cap">DS по умолчанию</p>
-          <div class="a-empty"><span class="tile">○</span><p class="t">Визитов пока нет</p><p class="p">Запланируйте первый.</p></div>
-        </div>
-        <div class="spec">
-          <p class="cap">как хочет консьюмер</p>
-          <div class="a-empty"><span class="tile">○</span><p class="t nyl">Визитов пока нет</p><p class="p">Запланируйте первый.</p></div>
-        </div>
-      </div>
-      <div class="opts">
-        <div class="opt is-today"><h3>Оставить как есть</h3>
-          <p class="css"><code>:is(agent-dashboard, agent-policyholder-details) ds-empty-state {
-    <span class="hit">.title.title</span> {
-      font-family: var(--rp-font-display);
-      font-weight: var(--rp-fw-400);
-    }
-  }</code></p>
-          <dl class="layer"><dt>Работа DS</dt><dd class="none">нет</dd><dt>Цена</dt><dd>удвоенный класс рядом с токенами того же блока</dd></dl>
-        </div>
-        <div class="opt"><h3>Хук --ds-empty-state-title-font-* <span class="star">★</span></h3>
-          <p class="css"><code>ds-empty-state {
-    --ds-empty-state-title-font-family: var(--rp-font-display);
-    --ds-empty-state-title-font-weight: var(--rp-fw-400);
-  }</code></p>
-          <dl class="layer"><dt>Работа DS</dt><dd>2 токена, как у ds-modal</dd><dt>Дефолт</dt><dd class="gain">--font-sans, --font-weight-bold</dd></dl>
-        </div>
-      </div>
-    </section>
 
-  <section class="q" data-q="ask-badge-subtitle-font-size">
-      <div class="q-head">
-        <span class="q-num">16</span>
-        <h2 class="q-title">У ds-badge и подзаголовка ds-page-header нет хука на размер шрифта</h2>
-        <span class="q-src">P3 · mm-broker · хук стилей</span>
-      </div>
-      <p class="q-sub">У бейджа восемь резолверов, но размер прибит к <code>--font-size-xs</code>; у заголовка страницы размер токенизирован, у подзаголовка - нет. mm-broker пробивает оба.</p>
-      <div class="stage">
-        <div class="spec">
-          <p class="cap">DS по умолчанию</p>
-          <div class="a-kpi">12,5%<span class="a-badge">Комиссия</span></div>
-          <div class="a-ph"><p class="t">Aviva</p><p class="s">Страховщик · 14 продуктов</p></div>
-        </div>
-        <div class="spec">
-          <p class="cap">как хочет консьюмер</p>
-          <div class="a-kpi">12,5%<span class="a-badge big">Комиссия</span></div>
-          <div class="a-ph"><p class="t">Aviva</p><p class="s big">Страховщик · 14 продуктов</p></div>
-        </div>
-      </div>
-      <div class="opts">
-        <div class="opt is-today"><h3>Оставить как есть</h3>
-          <p class="css"><code>.kpi-value <span class="hit">::ng-deep .badge</span> {
-    font-size: var(--font-size-s);
-  }
-  ds-page-header .subtitle {
-    font-size: var(--font-size-m) <span class="hit">!important</span>;
-  }</code></p>
-          <dl class="layer"><dt>Работа DS</dt><dd class="none">нет</dd><dt>Цена</dt><dd>::ng-deep в трёх страницах, !important глобально</dd></dl>
-        </div>
-        <div class="opt"><h3>Хук *-font-size <span class="star">★</span></h3>
-          <p class="css"><code>.kpi-value ds-badge { --ds-badge-font-size: var(--font-size-s); }
-  ds-page-header { --ds-page-header-subtitle-font-size: var(--font-size-m); }</code></p>
-          <dl class="layer"><dt>Работа DS</dt><dd>2 токена, .count 2xs по-прежнему выигрывает</dd><dt>Дефолт</dt><dd class="gain">xs и s, как сегодня</dd></dl>
-        </div>
-      </div>
-    </section>
 
-  <section class="q" data-q="ask-banner-title-font-size">
-      <div class="q-head">
-        <span class="q-num">17</span>
-        <h2 class="q-title">У заголовка ds-banner нет хука на размер, а у тела есть</h2>
-        <span class="q-src">P3 · pinkmoon · хук стилей</span>
-      </div>
-      <p class="q-sub"><code>compact</code> не трогает размер заголовка, поэтому компактная полоса не опускается до 12px без селектора потомка.</p>
-      <div class="stage">
-        <div class="spec">
-          <p class="cap">DS compact по умолчанию</p>
-          <div class="a-banner small"><i></i><span><b style="font-size:var(--font-size-s)">Нет сети</b> Изменения сохранятся позже.</span></div>
-        </div>
-        <div class="spec">
-          <p class="cap">как хочет консьюмер</p>
-          <div class="a-banner small"><i></i><span><b>Нет сети</b> Изменения сохранятся позже.</span></div>
-        </div>
-      </div>
-      <div class="opts">
-        <div class="opt is-today"><h3>Оставить как есть</h3>
-          <p class="css"><code>ds-banner .banner.compact {
-    font-size: var(--font-size-xs);
-    <span class="hit">.title</span> { font-size: var(--font-size-xs); }
-  }</code></p>
-          <dl class="layer"><dt>Работа DS</dt><dd class="none">нет</dd><dt>Цена</dt><dd>селектор по внутренним классам</dd></dl>
-        </div>
-        <div class="opt"><h3>Хук --ds-banner-title-font-size <span class="star">★</span></h3>
-          <p class="css"><code>ds-banner[compact] {
-    --ds-banner-title-font-size: var(--font-size-xs);
-    --ds-banner-body-font-size: var(--font-size-xs);
-  }</code></p>
-          <dl class="layer"><dt>Работа DS</dt><dd>1 токен рядом с body, дефолт --font-size-s</dd><dt>Консьюмер</dt><dd class="gain">два свойства на хосте</dd></dl>
-        </div>
-      </div>
-    </section>
-
-  <section class="q" data-q="ask-table-utility-column">
-      <div class="q-head">
-        <span class="q-num">18</span>
-        <h2 class="q-title">Служебную колонку таблицы нельзя сузить, а без rowActions она пустая полоса</h2>
-        <span class="q-src">P3 · mm-ecm · хук стилей</span>
-      </div>
-      <p class="q-sub">Колонка под кнопкой выбора колонок - <code>var(--space-10)</code> плюс <code>--table-cell-pad-x</code> с каждой стороны, и пустая в каждой строке. Шеврон строки встаёт далеко от края.</p>
-      <div class="stage">
-        <div class="spec">
-          <p class="cap">DS по умолчанию</p>
-          <table class="a-tbl"><tr><th>Страхователь</th><th></th><th class="util">⚙</th></tr><tr><td>Acme Ltd</td><td class="chevc">›</td><td class="util"></td></tr><tr><td>Bolt plc</td><td class="chevc">›</td><td class="util"></td></tr></table>
-        </div>
-        <div class="spec">
-          <p class="cap">как хочет консьюмер</p>
-          <table class="a-tbl"><tr><th>Страхователь</th><th></th><th class="util slim">⚙</th></tr><tr><td>Acme Ltd</td><td class="chevc">›</td><td class="util slim"></td></tr><tr><td>Bolt plc</td><td class="chevc">›</td><td class="util slim"></td></tr></table>
-        </div>
-      </div>
-      <div class="opts">
-        <div class="opt is-today"><h3>Оставить как есть</h3>
-          <p class="css"><code>:host <span class="hit">::ng-deep .actions-col</span> {
-    width: 32px;
-    padding-left: 0;
-    padding-right: 4px;
-  }</code></p>
-          <dl class="layer"><dt>Работа DS</dt><dd class="none">нет</dd><dt>Дефолт</dt><dd>пустые 72px в каждой строке</dd></dl>
-        </div>
-        <div class="opt"><h3>Хук --ds-table-utility-column-* <span class="star">★</span></h3>
-          <p class="css"><code>ds-table {
-    --ds-table-utility-column-width: 32px;
-    --ds-table-utility-column-padding-x: 0 4px;
-  }</code></p>
-          <dl class="layer"><dt>Работа DS</dt><dd>2 токена, дефолт = сегодня</dd><dt>Дефолт</dt><dd>не меняется</dd></dl>
-        </div>
-        <div class="opt"><h3>Колонка по размеру кнопки</h3>
-          <table class="a-tbl"><tr><th>Страхователь</th><th></th><th class="util slim">⚙</th></tr><tr><td>Acme Ltd</td><td class="chevc">›</td><td class="util slim"></td></tr></table>
-          <dl class="layer"><dt>Работа DS</dt><dd>сжать колонку, когда нет rowActions</dd><dt>Консьюмер</dt><dd class="gain">ничего писать не надо</dd></dl>
-        </div>
-      </div>
-    </section>
-
-  <section class="q" data-q="ask-table-footer-padding">
-      <div class="q-head">
-        <span class="q-num">19</span>
-        <h2 class="q-title">У футера пагинации ds-table нет хука на вертикальные отступы</h2>
-        <span class="q-src">P3 · mm-ecm-kb · хук стилей</span>
-      </div>
-      <p class="q-sub"><code>.pagination-footer</code> хардкодит <code>padding-block: var(--space-3)</code>; боковые отступы уже идут за <code>--ds-table-cell-padding-*</code>.</p>
-      <div class="stage">
-        <div class="spec">
-          <p class="cap">DS по умолчанию · 12px сверху</p>
-          <div class="a-hfoot"><span>1-10 из 84</span><span>‹ 1 2 3 ›</span></div>
-        </div>
-        <div class="spec">
-          <p class="cap">как хочет консьюмер · 20px сверху</p>
-          <div class="a-hfoot roomy"><span>1-10 из 84</span><span>‹ 1 2 3 ›</span></div>
-        </div>
-      </div>
-      <div class="opts">
-        <div class="opt is-today"><h3>Оставить как есть</h3>
-          <p class="css"><code><span class="hit">.pagination-footer.pagination-footer</span> {
-    padding-top: var(--rp-sp-20);
-  }</code></p>
-          <dl class="layer"><dt>Работа DS</dt><dd class="none">нет</dd><dt>Цена</dt><dd>удвоенный класс по внутренней разметке</dd></dl>
-        </div>
-        <div class="opt"><h3>Хук --ds-table-footer-padding-* <span class="star">★</span></h3>
-          <p class="css"><code>ds-table {
-    --ds-table-footer-padding-top: var(--rp-sp-20);
-    --ds-table-footer-padding-bottom: var(--space-3);
-  }</code></p>
-          <dl class="layer"><dt>Работа DS</dt><dd>2 токена, дефолт --space-3</dd><dt>Консьюмер</dt><dd class="gain">без селектора</dd></dl>
-        </div>
-      </div>
-    </section>
 
   <p class="group">Ждут консьюмеры · запарковано</p>
 
   <section class="q" data-q="ask-intl-strings">
       <div class="q-head">
-        <span class="q-num">20</span>
+        <span class="q-num">07</span>
         <h2 class="q-title">Все видимые строки библиотеки - английские литералы</h2>
         <span class="q-src">P2 · ITB Workspace · припарковано Stas</span>
       </div>
@@ -1251,7 +724,7 @@
 
   <section class="q" data-q="ask-journey-canvas">
       <div class="q-head">
-        <span class="q-num">21</span>
+        <span class="q-num">08</span>
         <h2 class="q-title">Ни один компонент не рисует ветвящийся граф узлов и рёбер</h2>
         <span class="q-src">P3 · mm-ecm-kb · припарковано Stas: ждать второго консьюмера</span>
       </div>
@@ -1279,7 +752,7 @@
 
   <section class="q" data-q="ask-text-muted">
       <div class="q-head">
-        <span class="q-num">22</span>
+        <span class="q-num">09</span>
         <h2 class="q-title">Приглушённый текст по умолчанию не проходит AA</h2>
         <span class="q-src">P3 · ai-sdlc · контраст, запаркован</span>
       </div>
@@ -1316,7 +789,7 @@
 
   <section class="q" data-q="ask-brand-residue">
       <div class="q-head">
-        <span class="q-num">23</span>
+        <span class="q-num">10</span>
         <h2 class="q-title">На бренде другого цвета остаются синие ссылки и подложки</h2>
         <span class="q-src">P3 · pinkmoon, ai-sdlc · бренд, запаркован</span>
       </div>
@@ -1354,7 +827,7 @@
 
   <section class="q" data-q="sparkline">
     <div class="q-head">
-      <span class="q-num">24</span>
+      <span class="q-num">11</span>
       <h2 class="q-title">Спарклайн - пресет линии или свой компонент</h2>
       <a class="q-src" href="7-chart-sparkline-preset.html">дека 7</a>
     </div>
@@ -1406,7 +879,7 @@
 
   <section class="q" data-q="waterfall">
     <div class="q-head">
-      <span class="q-num">25</span>
+      <span class="q-num">12</span>
       <h2 class="q-title">Водопад - свой тег или режим колоночного чарта</h2>
       <a class="q-src" href="8-waterfall-mode-or-component.html">дека 8</a>
     </div>
@@ -1424,7 +897,7 @@
 
   <section class="q" data-q="chart-palette-lightness">
     <div class="q-head">
-      <span class="q-num">26</span>
+      <span class="q-num">13</span>
       <h2 class="q-title">Палитра чартов разделяет по тону и почти не по светлоте</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1363</a>
     </div>
@@ -1443,7 +916,7 @@
 
   <section class="q" data-q="colour-engine">
     <div class="q-head">
-      <span class="q-num">27</span>
+      <span class="q-num">14</span>
       <h2 class="q-title">Каким методом выводить цвет из одного токена на роль</h2>
       <a class="q-src" href="1-color-engine-derivation.html">дека 1</a>
     </div>
@@ -1466,7 +939,7 @@
 
   <section class="q" data-q="interaction-b1">
     <div class="q-head">
-      <span class="q-num">28</span>
+      <span class="q-num">15</span>
       <h2 class="q-title">Шаг pressed для тинтов</h2>
       <a class="q-src" href="3-interaction-formula.html">дека 3, В1</a>
     </div>
@@ -1481,7 +954,7 @@
 
   <section class="q" data-q="interaction-b2">
     <div class="q-head">
-      <span class="q-num">29</span>
+      <span class="q-num">16</span>
       <h2 class="q-title">Нужен ли pressed нейтральным поверхностям</h2>
       <a class="q-src" href="3-interaction-formula.html">дека 3, В2</a>
     </div>
@@ -1496,7 +969,7 @@
 
   <section class="q" data-q="interaction-b4">
     <div class="q-head">
-      <span class="q-num">30</span>
+      <span class="q-num">17</span>
       <h2 class="q-title">Нужен ли override-слот поверх формулы</h2>
       <a class="q-src" href="3-interaction-formula.html">дека 3, В4</a>
     </div>
@@ -1516,7 +989,7 @@
 
   <section class="q" data-q="interaction-b5">
     <div class="q-head">
-      <span class="q-num">31</span>
+      <span class="q-num">18</span>
       <h2 class="q-title">Вводим ли pressed для success и warning кнопок</h2>
       <a class="q-src" href="3-interaction-formula.html">дека 3, В5</a>
     </div>
@@ -1531,7 +1004,7 @@
 
   <section class="q" data-q="theme-recipe">
     <div class="q-head">
-      <span class="q-num">32</span>
+      <span class="q-num">19</span>
       <h2 class="q-title">Рецепт темы против ручных пиков</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1331</a>
     </div>
@@ -1548,7 +1021,7 @@
 
   <section class="q" data-q="warning-text">
     <div class="q-head">
-      <span class="q-num">33</span>
+      <span class="q-num">20</span>
       <h2 class="q-title">Какой цвет текста ставить на жёлтый тинт</h2>
       <a class="q-src" href="6-warning-text-colour.html">дека 6</a>
     </div>
@@ -1573,7 +1046,7 @@
 
   <section class="q" data-q="stepper-dropzone-fields">
     <div class="q-head">
-      <span class="q-num">34</span>
+      <span class="q-num">21</span>
       <h2 class="q-title">ds-number-stepper и ds-dropzone - поля или нет</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1320</a>
     </div>
@@ -1590,7 +1063,7 @@
 
   <section class="q" data-q="select-multi">
     <div class="q-head">
-      <span class="q-num">35</span>
+      <span class="q-num">22</span>
       <h2 class="q-title">ds-select с multi - строить ли</h2>
       <a class="q-src" href="5-select-native-multi.html">дека 5</a>
     </div>
@@ -1608,9 +1081,9 @@
 
   <section class="q" data-q="picker-height">
     <div class="q-head">
-      <span class="q-num">36</span>
+      <span class="q-num">23</span>
       <h2 class="q-title">Высота списка пикера - публичный токен или panelClass</h2>
-      <a class="q-src" href="11-picker-list-height.html">дека 11</a>
+      <a class="q-src" href="10-picker-list-height.html">дека 10</a>
     </div>
     <p class="q-sub">
       Кэпов два. Синий режет список и решает видимые строки, красный режет коробку и форвардится -
@@ -1659,7 +1132,7 @@
 
   <section class="q" data-q="cdk-menu">
     <div class="q-head">
-      <span class="q-num">37</span>
+      <span class="q-num">24</span>
       <h2 class="q-title">Переходить ли на CDK Menu</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1359</a>
     </div>
@@ -1676,7 +1149,7 @@
 
   <section class="q" data-q="signal-forms">
     <div class="q-head">
-      <span class="q-num">38</span>
+      <span class="q-num">25</span>
       <h2 class="q-title">Как выглядят pending и dirty</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1488</a>
     </div>
@@ -1697,7 +1170,7 @@
 
   <section class="q" data-q="typography-classes">
     <div class="q-head">
-      <span class="q-num">39</span>
+      <span class="q-num">26</span>
       <h2 class="q-title">20 классов типографики всё ещё .t-*</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1340</a>
     </div>
@@ -1715,7 +1188,7 @@
 
   <section class="q" data-q="button-c-slots">
     <div class="q-head">
-      <span class="q-num">40</span>
+      <span class="q-num">27</span>
       <h2 class="q-title">Слоты кнопки называются --c-*</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1346</a>
     </div>
@@ -1732,7 +1205,7 @@
 
   <section class="q" data-q="bem-modifiers">
     <div class="q-head">
-      <span class="q-num">41</span>
+      <span class="q-num">28</span>
       <h2 class="q-title">ds-docs пишет модификаторы как --suffix</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1421</a>
     </div>
@@ -1749,7 +1222,7 @@
 
   <section class="q" data-q="docs-brand-examples">
     <div class="q-head">
-      <span class="q-num">42</span>
+      <span class="q-num">29</span>
       <h2 class="q-title">Убрать ли примеры бренда и домена из публичных доков</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1403</a>
     </div>
@@ -1768,7 +1241,7 @@
 
   <section class="q" data-q="angular-22">
     <div class="q-head">
-      <span class="q-num">43</span>
+      <span class="q-num">30</span>
       <h2 class="q-title">Когда переходим на Angular 22</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1439, P1</a>
     </div>
@@ -1787,7 +1260,7 @@
 
   <section class="q" data-q="npm-2027">
     <div class="q-head">
-      <span class="q-num">44</span>
+      <span class="q-num">31</span>
       <h2 class="q-title">Чем заменить публикацию в npm с января 2027</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1369</a>
     </div>
@@ -1806,7 +1279,7 @@
 
   <section class="q" data-q="claude-design-ci">
     <div class="q-head">
-      <span class="q-num">45</span>
+      <span class="q-num">32</span>
       <h2 class="q-title">Публикация в Claude Design из Bitbucket</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1391</a>
     </div>
@@ -1823,7 +1296,7 @@
 
   <section class="q" data-q="release-note-why">
     <div class="q-head">
-      <span class="q-num">46</span>
+      <span class="q-num">33</span>
       <h2 class="q-title">Должна ли запись релиза объяснять ПОЧЕМУ</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1414</a>
     </div>
@@ -1840,7 +1313,7 @@
 
   <section class="q" data-q="deferred-defaults">
     <div class="q-head">
-      <span class="q-num">47</span>
+      <span class="q-num">34</span>
       <h2 class="q-title">Три отложенных смены значений по умолчанию</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1498</a>
     </div>
@@ -1859,7 +1332,7 @@
 
   <section class="q" data-q="changelog-wrap">
     <div class="q-head">
-      <span class="q-num">48</span>
+      <span class="q-num">35</span>
       <h2 class="q-title">Перевёрстывать ли CHANGELOG в 100 колонок</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1408</a>
     </div>
@@ -1878,7 +1351,7 @@
 
   <section class="q" data-q="fix-all-html">
     <div class="q-head">
-      <span class="q-num">49</span>
+      <span class="q-num">36</span>
       <h2 class="q-title">fix:all переформатирует HTML, с которым потом спорит eslint</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1425</a>
     </div>
@@ -1900,7 +1373,7 @@
 
   <section class="q" data-q="stale-ds-css">
     <div class="q-head">
-      <span class="q-num">50</span>
+      <span class="q-num">37</span>
       <h2 class="q-title">Ничто не ловит устаревший presentations/ds.css</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1378</a>
     </div>
@@ -1919,7 +1392,7 @@
 
   <section class="q" data-q="todo-index-gate">
     <div class="q-head">
-      <span class="q-num">51</span>
+      <span class="q-num">38</span>
       <h2 class="q-title">todo-index --check вне lint:all</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1376</a>
     </div>
@@ -1936,7 +1409,7 @@
 
   <section class="q" data-q="manifest-practices">
     <div class="q-head">
-      <span class="q-num">52</span>
+      <span class="q-num">39</span>
       <h2 class="q-title">Какие из восьми практик формата манифестов берём</h2>
       <a class="q-src" href="4-migration-manifest-audit.html">дека 4</a>
     </div>
@@ -1967,7 +1440,7 @@
 
   <section class="q" data-q="automation-coverage">
     <div class="q-head">
-      <span class="q-num">53</span>
+      <span class="q-num">40</span>
       <h2 class="q-title">Три пути ds-table и пять групп компонентов ни разу не прокликаны</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1374</a>
     </div>
@@ -1984,7 +1457,7 @@
 
   <section class="q" data-q="schematics-tsconfig">
     <div class="q-head">
-      <span class="q-num">54</span>
+      <span class="q-num">41</span>
       <h2 class="q-title">schematics/tsconfig просит moduleResolution: node</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1399</a>
     </div>
@@ -2005,7 +1478,7 @@
 
   <section class="q" data-q="design-manifest-templates">
     <div class="q-head">
-      <span class="q-num">55</span>
+      <span class="q-num">42</span>
       <h2 class="q-title">templates и startingPoints в манифесте Claude Design</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1382</a>
     </div>
@@ -2026,7 +1499,7 @@
 
   <section class="q" data-q="docs-blocks">
     <div class="q-head">
-      <span class="q-num">56</span>
+      <span class="q-num">43</span>
       <h2 class="q-title">Четыре компонента без собственного блока в ds-docs</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1385</a>
     </div>

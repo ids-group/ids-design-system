@@ -17,27 +17,43 @@ if (!version) {
   process.exit(1);
 }
 
-const path = 'CHANGELOG.md';
-// Normalize CRLF→LF so the regexes work regardless of the contributor's
-// core.autocrlf (CHANGELOG.md is not pinned to LF in .gitattributes).
-const changelog = readFileSync(path, 'utf8').replace(/\r\n/g, '\n');
-
-if (!/^## Unreleased$/m.test(changelog)) {
-  console.error("changelog: no '## Unreleased' heading found — aborting.");
-  process.exit(1);
-}
-
 const now = new Date();
 const date = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
 
-const stamped = changelog.replace(
-  /^## Unreleased$/m,
-  `## Unreleased\n\n## ${version} — ${date}`,
-);
+// Normalize CRLF→LF so the regexes work regardless of the contributor's
+// core.autocrlf (neither changelog is pinned to LF in .gitattributes).
+function stampUnreleased(path) {
+  const changelog = readFileSync(path, 'utf8').replace(/\r\n/g, '\n');
+  if (!/^## Unreleased$/m.test(changelog)) {
+    console.error(
+      `changelog: no '## Unreleased' heading in ${path} — aborting.`,
+    );
+    process.exit(1);
+  }
+  writeFileSync(
+    path,
+    changelog.replace(
+      /^## Unreleased$/m,
+      `## Unreleased\n\n## ${version} — ${date}`,
+    ),
+  );
+  execSync(`git add "${path}"`);
+  console.log(`changelog: stamped ${path} ${version} — ${date}.`);
+}
 
-writeFileSync(path, stamped);
-execSync('git add CHANGELOG.md');
-console.log(`changelog: stamped ${version} — ${date}.`);
+function hasUnreleasedEntry(path) {
+  const text = readFileSync(path, 'utf8').replace(/\r\n/g, '\n');
+  const section = text.split(/^## Unreleased$/m)[1]?.split(/^## /m)[0] ?? '';
+  return /^\s*-\s+\S/m.test(section);
+}
+
+stampUnreleased('CHANGELOG.md');
+
+// Stamped only when the cycle wrote something: an empty version block says nothing.
+const designSyncLog = '.design-sync/CHANGELOG.md';
+if (existsSync(designSyncLog) && hasUnreleasedEntry(designSyncLog)) {
+  stampUnreleased(designSyncLog);
+}
 
 // Promote the draft migration manifest alongside the changelog: the /changelog workflow
 // drafts migrations/unreleased.json; at release time it becomes migrations/<version>.json

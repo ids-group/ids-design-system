@@ -26,6 +26,58 @@ measurement (2 then 1 class mutations over 2 s).
 the build errors in `detect`) in place of the informational line, and it cites the existing
 `table-row-caster-helpers` delete row.
 
+## Ten consumer styling hooks, one token shape (2026-09-24)
+
+Every hook resolves a public `--ds-*` through a private `--_*` whose default is the value the
+component already drew, so nothing moves until a token is set. The field family
+(`--ds-field-border-color` / `-hover` / `-focus`, `-text-color`, `-placeholder-color`, `-font-size`)
+sits under each field's own token for input, textarea, select, multi-select, autocomplete and search,
+through one `field-box-tokens` mixin in `_field-box.scss`; the pickers, number stepper and OTP stay
+out. `ds-select` gains its focus border (focused and open alike), hover, placeholder and size;
+`ds-autocomplete` its text, placeholder and hover border; `ds-textarea` now reads
+`--ds-input-font-size`, and `ds-search`'s hover border defaults to its own rest border (both
+`behavior` items with a restore). `ds-button` / `ds-icon-button` take hover and active borders that
+fall back rest -> hover -> active; `ds-empty-state` its title face and weight; `ds-badge` a font size
+that a count badge re-resolves; `ds-page-header` a subtitle size; `ds-banner` a title size.
+`ds-accordion-item` tokenises header padding, gap, type, hover colour and body padding, and
+`ds-accordion` takes `chevron: 'right' | 'down'`. `ds-table` takes a utility-column width (default
+moves `--space-10` -> `--space-6`; cells are border-box, so the column stays button + padding) and
+padding, and footer block padding (`-y` with `-top` / `-bottom`). Measured 2026-09-24 in ds-docs:
+every default unchanged (select border rest / hover / open `#DCE1EA` / `#C2C9D6` / `--accent`,
+accordion head padding `12px 16px`, table utility column 56px, footer 12px), and each token takes
+effect when set (`--ds-table-utility-column-padding-x: 0` gives a 24px column; `chevron="down"` turns
+the open chevron 180deg).
+
+## `ds-banner` and `ds-alert` warn in dev mode when `announce` was never decided (2026-09-24)
+
+`warnAnnounceOversight` (`core/announce-warning.ts`) is one helper behind `devWarn`, called from both
+components inside the inline `typeof ngDevMode` guard and reading the same predicate as the host
+`role`. Two messages: an assertive banner (`error` / `warning` / `severe`; alert `error` / `warning`)
+left unbound while `DS_CONFIG.banner.announce` (`alert.announce`) is unset, ending when the key is set
+either way (Stas: «пока ключ не выставлен»); and a polite one (`info` / `success` / `neutral`)
+announcing only because the key is `true`, ending at an `[announce]` binding. No config change and no
+directive: the key's three states are the discriminator, and `provideDsConfig` already scopes a
+subtree. ds-docs sets both keys to `false` at the root, since every banner there is a specimen. Deck
+`banner-announce-warning` moved to `implemented/`; `picker-list-height` is rank 10 and
+`decision-queue` rank 11. Measured 2026-09-24: the message text is absent from `dist/ds-docs` after
+`npm run build:docs` and present in the development build; on `/components/banner` 10 warnings with no
+root config, 9 distinct (10 instances) with the key `true`, the `[announce]="true"` specimen silent,
+0 with `false`.
+
+## A closing modal, drawer or bottom sheet is click-through for the whole leave (2026-09-24)
+
+`.modal-backdrop.closing`, `.drawer-root.closing` (a new class binding on the root, which is the
+`fixed; inset: 0` box that hit-tests, not the scrim inside it) and `.sheet-overlay.closing` carry
+`pointer-events: none`, inherited by the card, panel and sheet. Under `prefers-reduced-motion: reduce`
+every `--duration-*` is 0ms and `animationend` is not reliably delivered, so `finishClose()` runs from
+the 300 ms fallback timer, and until then the invisible scrim took the page's first click. Every
+comment that credited the teardown to `animationend` at zero duration now names the timer. Timers
+unchanged (300 / 400 ms). No test: the repo has no unit-test runner. Measured 2026-09-24 in ds-docs
+with the leave duration forced to 0ms through each component's public token (chrome-devtools has no
+reduced-motion emulation): before the fix `elementFromPoint` over the page returned the closing
+backdrop, after it returned the page element, in all three components; teardown ~256-343 ms via the
+timer in every case.
+
 ## `ds-date-picker` keeps its content width in a container narrower than its mask (2026-09-24)
 
 The truncation contract says the value never clips, but the host carried `max-width: 100%` with

@@ -23,6 +23,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "true",
         "required": false,
         "description": "When false, opening one item automatically closes all others."
+      },
+      {
+        "name": "chevron",
+        "kind": "input",
+        "type": "AccordionChevron",
+        "union": [
+          "right",
+          "down"
+        ],
+        "default": "'right'",
+        "required": false,
+        "description": "Which way the closed chevron points on every item: `right` turns down when an item opens, `down` turns up."
       }
     ],
     "outputs": []

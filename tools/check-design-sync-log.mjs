@@ -30,6 +30,13 @@ try {
   process.exit(0);
 }
 
+// What the after-release pipeline regenerates and commits as the release bot (GENERATED in
+// infrastructure/scripts/build-design-sync.sh). Nobody wrote it, so nobody owes an entry for it.
+const BOT_GENERATED = [
+  '.design-sync/upload/',
+  '.design-sync/viewports.json',
+  '.design-sync/live-cards.txt',
+];
 const touched = git([
   'diff',
   '--name-only',
@@ -38,7 +45,8 @@ const touched = git([
   '.design-sync',
 ])
   .split('\n')
-  .filter(Boolean);
+  .filter(Boolean)
+  .filter((file) => !BOT_GENERATED.some((path) => file.startsWith(path)));
 
 if (!touched.length) {
   console.log(
