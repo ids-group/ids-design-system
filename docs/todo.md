@@ -14,7 +14,7 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**124 open — 0 P1, 12 P2, 112 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**114 open — 0 P1, 12 P2, 102 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P2 — 12
 
@@ -39,7 +39,7 @@ item and nothing else.
 - **Localization — every user-visible string is a hardcoded literal (recorded 2026-08-27, from the ITB Workspace picker report)**
   - Every user-visible string in the library is a hardcoded English literal — VALIDATED 2026-08-27 against 0.11.0; Stas: defer the whole thing, no code
 
-### P3 — 112
+### P3 — 102
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - The token reference says the portaled panel reads `--ds-time-picker-focus-shadow`
@@ -58,18 +58,8 @@ item and nothing else.
 - **Asked by Stas**
   - `ds-waterfall-chart` is `ds-cascade-chart` (Stas, 2026-09-23)
 - **Hooks and APIs consumers reach past the surface for (swept 2026-09-23)**
-  - `ds-accordion-item` tokenises its colours and nothing of its geometry or type (from the mm-ecm consumer)
-  - `ds-autocomplete` input has no text or placeholder colour hook, and its placeholder is the browser default (from the mm-ecm consumer)
-  - `ds-select` is the one field whose focus border has no hook (from the mm-ecm consumer)
-  - Field colours are per-component only, and `ds-select` / `ds-textarea` have no font-size hook (from the mm-ecm consumer)
-  - The table's utility column cannot be narrowed, and on a picker-only table it is an empty strip (from the mm-ecm consumer)
-  - `ds-button` and `ds-icon-button` cannot change their border on hover (from the mm-ecm consumer)
-  - `ds-empty-state` title takes its size and colour from tokens but not its face or weight (from the mm-ecm consumer)
   - A `ds-bar-chart` segment cannot be marked as the selected part (from the mm-ecm-platform-kb consumer)
   - Charts take their number locale from the browser, with no setting (from the mm-ecm-platform-kb consumer)
-  - `ds-badge` and the `ds-page-header` subtitle take no font-size hook (from the mm-broker consumer)
-  - `ds-banner`'s title size has no hook, while its body has one (from the pinkmoon consumer)
-  - `ds-table`'s pagination footer has no padding hook (from the mm-ecm-platform-kb consumer)
 - **Tooling**
   - A consumer's `--ds-*` override can be write-only, and nothing says so (recorded 2026-09-23, from the mm-ecm consumer's 0.8.0 to 0.13.4 audit)
 - **Two chart names that collide (recorded 2026-09-21, from the mm-ecm consumer)**
@@ -478,31 +468,11 @@ Three defects the port surfaced by reading every component's template + SCSS aga
 
 Same sweep, the capabilities that are missing rather than wrong. Each workaround is still in the consumer tree and each gap is checked against `dev`.
 
-- [ ] **[P3] `ds-accordion-item` tokenises its colours and nothing of its geometry or type (from the mm-ecm consumer).** `agent-portal/src/styles.scss:678-711` triples `.head`, `.chev` and `.body-content` to set header padding and gap, the header type, a hover text colour, a focus outline colour, a downward chevron and the body padding. `accordion-item.component.scss:7-13` resolves six colours; `:34-47` hardcodes `padding: var(--space-3) var(--space-4)`, `gap: var(--space-2)` and a `font` shorthand on `--font-size-s`; `:55-63` turns a fixed `chevronRight` (`accordion-item.component.html:17`) by 90deg; `:92-94` hardcodes the body padding. **Wanted:** `--ds-accordion-header-padding-*`, `-header-gap`, `-header-font-size` / `-font-weight` / `-font-family` / `-line-height`, `-header-hover-text-color`, `-body-padding-*`, and a chevron option (right-then-down vs down-then-up), all defaulting to today's values.
-
-- [ ] **[P3] `ds-autocomplete` input has no text or placeholder colour hook, and its placeholder is the browser default (from the mm-ecm consumer).** `agent-portal/src/styles.scss:514-520` doubles `.autocomplete-input` to set the typed colour and `::placeholder`. `autocomplete.component.scss:191-192` paints the input `var(--text-primary)` with no resolver, and the file has no `::placeholder` rule, so the placeholder is the UA grey where `ds-input` resolves `--ds-input-placeholder` to `--text-tertiary` (`input.component.scss:21,95-96`). Font size (`--ds-autocomplete-input-font-size`, 0.13.4) and height (`--ds-field-height`) already exist. **Wanted:** `--ds-autocomplete-text-color` and `--ds-autocomplete-placeholder-color` (default `--text-tertiary`, matching `ds-input`).
-
-- [ ] **[P3] `ds-select` is the one field whose focus border has no hook (from the mm-ecm consumer).** `shared-styles/_forms.scss:64-68` recolours `.dropdown:focus-visible` and `.dropdown.open` with `!important`. `select.component.scss:107` and `:112` paint `border-color: var(--accent)` directly, while `ds-autocomplete` (`autocomplete.component.scss:39`), `ds-multi-select` (`multi-select.component.scss:30-33`), `ds-input`, `ds-search`, `ds-field-group` and `ds-otp-input` all resolve a focus-border token. **Wanted:** `--ds-select-border-color-focus`, default `var(--accent)`, read by both the focused and the open trigger.
-
-- [ ] **[P3] Field colours are per-component only, and `ds-select` / `ds-textarea` have no font-size hook (from the mm-ecm consumer).** `agent-portal/src/styles.scss:421-437` restates one border, hover, focus and text decision under `--ds-input-*` and `--ds-select-*`, and pins `--ds-input-font-size` to 14px because `select.component.scss:63` and `textarea.component.scss:72` hardcode `--font-size-s` (textarea reads every other `--ds-input-*` token at `:10-24`, but not `--ds-input-font-size`). The family already shares `--ds-field-height`, `--ds-field-focus-shadow` and `--ds-field-label-*`. **Wanted:** `--ds-field-border-color`, `-border-color-hover`, `-border-color-focus`, `-text-color` as the fallback under every field's own token, plus `--ds-select-font-size` and textarea reading `--ds-input-font-size` (or one `--ds-field-font-size` under all three).
-
-- [ ] **[P3] The table's utility column cannot be narrowed, and on a picker-only table it is an empty strip (from the mm-ecm consumer).** `policyholders-list.page.scss:385-389` reaches `::ng-deep .actions-col` to squeeze it to 32px, because the column the column-picker button rides in is `width: var(--space-10)` plus a full `--table-cell-pad-x` either side (`table.component.scss:292-295`, `:387-390`) and is empty on every body row when there are no `rowActions` (`table.component.html:351-352`). A row's trailing chevron parks that far short of the edge. **Wanted:** `--ds-table-utility-column-width` and `--ds-table-utility-column-padding-x`, or the column shrinking to the picker button's own size when no row carries actions.
-
-- [ ] **[P3] `ds-button` and `ds-icon-button` cannot change their border on hover (from the mm-ecm consumer).** `ecm-portal/src/styles/_buttons.scss:92-95` sets `ds-button .button.v-outline:hover { border-color }` and `workspaces.page.scss:208-219` reaches `::ng-deep ds-icon-button .icon-button:hover` for the same. `button.component.scss:66` resolves one `--ds-button-border-color` for every state and `icon-button.component.scss:20` one `--ds-icon-button-border`, while both tokenise the hover background and label/icon colour (`icon-button.component.scss:21,23`). **Wanted:** `--ds-button-border-color-hover` / `-active` and `--ds-icon-button-border-hover` / `-active`, each defaulting to the rest-state border so nothing moves.
-
-- [ ] **[P3] `ds-empty-state` title takes its size and colour from tokens but not its face or weight (from the mm-ecm consumer).** `agent-portal/src/styles.scss:793-796` doubles `.title` to set `font-family` and `font-weight`. `empty-state.component.scss:10-11` resolves the title colour and size, and `:39` hardcodes `var(--font-weight-bold)` and `var(--font-sans)` in the `font` shorthand, while `ds-modal` already has `--ds-modal-title-font-family` / `-font-weight` (`modal.component.scss:21-23`). **Wanted:** `--ds-empty-state-title-font-family` (default `--font-sans`) and `--ds-empty-state-title-font-weight` (default `--font-weight-bold`).
-
 - [ ] **[P3] A `ds-bar-chart` segment cannot be marked as the selected part (from the mm-ecm-platform-kb consumer).** The consumer's segmentation breakdown filters the audience by one part, and moving it onto `segments` dropped the emphasis on that part (`mm-ecm-platform-kb/.claude/local/todo/ds-0.13.1-charts-and-reserve-messages.md:65-67`). The consumer's own legend now carries the selection. `BarChartSegment` (`bar-chart.types.ts:9-17`) has no state, `.segment` (`bar-chart.component.html:113-118`) gets no class, and `dimOthers` works per row only. The 2px seam between parts already ships (`bar-chart.component.scss:158-160`).
   **Wanted:** a way to emphasise one segment, for example `selected?: boolean` on `BarChartSegment` or an `activeSegment` input by id. Unselected parts would dim the way `dimOthers` dims rows.
 
 - [ ] **[P3] Charts take their number locale from the browser, with no setting (from the mm-ecm-platform-kb consumer).** The consumer copies the whole default formatter into `provideDsConfig` just to pin `en-US`, including the compact-on-tick split (`app.config.ts:20-31`). `defaultChartFormat` calls `Intl.NumberFormat(undefined, ...)` (`charts-format.ts:30-44`). `formatPercent` uses `toFixed(1)` (`:47-60`), so on a de-DE machine one chart prints `13,5` beside `13.5%`. `datePicker.locale` exists in `ds-config.ts:174-175`, and `chart` (`:144-172`) has six fields - `dataTable`, `frame`, `tooltipLingerMs`, `emptyText`, `errorText`, `valueFormat` (`:171`) - and none of them is one.
   **Wanted:** `chart.locale` on `DS_CONFIG`, read by the default value formatter and by `formatPercent`. A consumer then pins one BCP-47 tag in place of a formatter.
-
-- [ ] **[P3] `ds-badge` and the `ds-page-header` subtitle take no font-size hook (from the mm-broker consumer).** The badge sets `font: ... var(--font-size-xs)` at `badge.component.scss:28` beside eight resolvers that stop short of size, and the subtitle sets `var(--font-size-s)` at `page-header.component.scss:130` while the title already has `--ds-page-header-title-font-size` (`:26`). The mm-broker-platform-kb prototype pierces both: `broker-portal/.../carrier-detail.page.ts:238` (`.kpi-value ::ng-deep .badge`, a KPI badge at 14px) and `broker-portal/src/styles.scss:179-181` (`ds-page-header .subtitle { font-size: var(--font-size-m) !important }`). **Wanted:** `--ds-badge-font-size` (fallback `--font-size-xs`, read so the `.count` 2xs rule still wins) and `--ds-page-header-subtitle-font-size` (fallback `--font-size-s`), both in the token reference.
-
-- [ ] **[P3] `ds-banner`'s title size has no hook, while its body has one (from the pinkmoon consumer).** `.title` sets `font: var(--font-weight-bold) var(--font-size-s) / ...` at `banner.component.scss:99`, and `compact` (`:148-158`) leaves it there, so a compact strip cannot drop to 12px without a descendant selector. pinkmoon field ships exactly that: `_ds-overrides.scss:87-95` sets `ds-banner .banner.compact .title { font-size: var(--font-size-xs) }`. The body already reads `--ds-banner-body-font-size` (`:29`). **Wanted:** `--ds-banner-title-font-size` resolved beside the body one (fallback `--font-size-s`), so the consumer's rule becomes two custom properties on the host.
-
-- [ ] **[P3] `ds-table`'s pagination footer has no padding hook (from the mm-ecm-platform-kb consumer).** `.pagination-footer` hardcodes `padding-block: var(--space-3)` (`table.component.scss:747-755`); only its inline sides follow `--ds-table-cell-padding-*`. The consumer doubles `.pagination-footer.pagination-footer { padding-top: ... }` (`agent-portal/src/styles.scss:645-646`). **Wanted:** `--ds-table-footer-padding-top` / `-bottom`, defaulting to `var(--space-3)`.
 
 ## Tooling
 
@@ -1069,7 +1039,7 @@ file** — the number moves; cite the filename.
 | 8 | `8-waterfall-mode-or-component` | The waterfall's own tag against a `stack="waterfall"` mode on the column chart. | the waterfall entry point, already shipped standalone |
 | 9 | `9-bar-column-contracts` | How far to converge the bar and the column: name the difference, converge the palette, or give the bar a series model. | the stacking-contract ask under *Two chart names that collide* |
 | 10 | `10-picker-list-height` | Whether the picker list height becomes a public token or stays behind `panelClass`. | the closed `--picker-maxh` ask, same shape |
-| 11 | `11-decision-queue` | Every consumer ask and every open question in one page - 20 asks in three groups, then 33 decisions in six, each drawn as today against after. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
+| 11 | `11-decision-queue` | Every consumer ask and every open question in one page - 10 asks in three groups, then 33 decisions in six, each drawn as today against after. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled

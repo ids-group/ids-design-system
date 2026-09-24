@@ -4,6 +4,28 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## Ten consumer styling hooks, one token shape (2026-09-24)
+
+Every hook resolves a public `--ds-*` through a private `--_*` whose default is the value the
+component already drew, so nothing moves until a token is set. The field family
+(`--ds-field-border-color` / `-hover` / `-focus`, `-text-color`, `-placeholder-color`, `-font-size`)
+sits under each field's own token for input, textarea, select, multi-select, autocomplete and search,
+through one `field-box-tokens` mixin in `_field-box.scss`; the pickers, number stepper and OTP stay
+out. `ds-select` gains its focus border (focused and open alike), hover, placeholder and size;
+`ds-autocomplete` its text, placeholder and hover border; `ds-textarea` now reads
+`--ds-input-font-size`, and `ds-search`'s hover border defaults to its own rest border (both
+`behavior` items with a restore). `ds-button` / `ds-icon-button` take hover and active borders that
+fall back rest -> hover -> active; `ds-empty-state` its title face and weight; `ds-badge` a font size
+that a count badge re-resolves; `ds-page-header` a subtitle size; `ds-banner` a title size.
+`ds-accordion-item` tokenises header padding, gap, type, hover colour and body padding, and
+`ds-accordion` takes `chevron: 'right' | 'down'`. `ds-table` takes a utility-column width (default
+moves `--space-10` -> `--space-6`; cells are border-box, so the column stays button + padding) and
+padding, and footer block padding (`-y` with `-top` / `-bottom`). Measured 2026-09-24 in ds-docs:
+every default unchanged (select border rest / hover / open `#DCE1EA` / `#C2C9D6` / `--accent`,
+accordion head padding `12px 16px`, table utility column 56px, footer 12px), and each token takes
+effect when set (`--ds-table-utility-column-padding-x: 0` gives a 24px column; `chevron="down"` turns
+the open chevron 180deg).
+
 ## `ds-banner` and `ds-alert` warn in dev mode when `announce` was never decided (2026-09-24)
 
 `warnAnnounceOversight` (`core/announce-warning.ts`) is one helper behind `devWarn`, called from both
