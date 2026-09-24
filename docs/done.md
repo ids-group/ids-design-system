@@ -4,6 +4,16 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## `ds-button` and `ds-icon-button` spell out their colour-family slots and classes (2026-09-24)
+
+The private slots `--c-*` are `--_family-*`, gaining the `--_` marker every other private resolver
+carries, and the inner button's classes `.c-<color>` and `.v-<variant>` are `.color-<color>` and
+`.variant-<variant>` (Stas added the variant half). The slots never reached `components.md`; the
+classes are stylable, so three `class-rename` items point a consumer stylesheet at `data-color` /
+`data-variant` on the host. Measured 2026-09-24 in ds-docs: each colour's solid button and filled icon
+button compute the same background as its theme token (`--accent`, `--secondary`, `--tertiary`,
+`--text-secondary`, `--error`, `--success`, `--warning`), in light and dark.
+
 ## Deck `waterfall-mode-or-component` closed, deck 3 narrowed to two pressed verdicts (2026-09-24)
 
 `ds-waterfall-chart` keeps its own tag (Stas), which is what shipped (`waterfall-chart.component.ts:55`), so the deck moved to `implemented/` with no code; `bar-column-contracts` is rank 8, `picker-list-height` 9, `decision-queue` 10. Deck `3-interaction-formula` was rebuilt against the code: success/warning pressed already exists, neutral-surface pressed is task 45, the override slot is recorded for later and the formula deferred (Stas); the open verdicts are the tonal button's pressed recipe and the danger menu item's invisible press, both rendered live with OKLab deltas measured 2026-09-24. The queue deck's B1, B2, B4, B5 and waterfall sections collapsed to one pointer at deck 3.

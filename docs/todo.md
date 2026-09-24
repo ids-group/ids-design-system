@@ -14,7 +14,7 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**122 open — 0 P1, 14 P2, 108 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**121 open — 0 P1, 14 P2, 107 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P2 — 14
 
@@ -41,7 +41,7 @@ item and nothing else.
 - **Localization — every user-visible string is a hardcoded literal (recorded 2026-08-27, from the ITB Workspace picker report)**
   - Every user-visible string in the library is a hardcoded English literal — VALIDATED 2026-08-27 against 0.11.0; Stas: defer the whole thing, no code
 
-### P3 — 108
+### P3 — 107
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - The token reference says the portaled panel reads `--ds-time-picker-focus-shadow`
@@ -91,7 +91,6 @@ item and nothing else.
   - Thirteen obsolete paths on the project can only be deleted by its owner
 - **The field system — the two controls outside it, and the five with no box to paint**
   - `ds-autocomplete`'s arrow keys walk a private copy of the list cursor
-  - The button's colour-family slots are named `--c-*`, which is not an acceptable name
 - **The eleven styling hooks one consumer reached past the surface for (recorded 2026-09-21)**
   - Does the picker list height become a public token, or stay behind `panelClass`?
   - Does the `variant="spark"` line preset keep zero in its value domain, or scale to the …
@@ -842,19 +841,6 @@ beside another lane changing those three files.
   decision on the all-disabled case, where the private copy returns -1 and the shared one returns
   `from`. `ds-menu` keeps its own single-character type-ahead (`menu.component.ts:107-122`) beside
   the shared `createTypeAhead`.
-
-- [ ] **[P3] The button's colour-family slots are named `--c-*`, which is not an acceptable name.**
-  Seven of them — `--c-base`, `--c-on`, `--c-strong`, `--c-subtitle`, `--c-muted`, `--c-muted-strong`,
-  `--c-outline-border` — declared on `.button` in `button.component.scss` and read by `button` and
-  `icon-button`. Two things are wrong with the name and each on its own is enough: `c` is a
-  one-letter abbreviation where the house rule is a spelled-out word, and these are INTERNAL slots
-  that carry none of the `--_` marker this library uses to say so, so they read like a public hook
-  a consumer may set. The `.c-*` colour classes that override them have the same defect.
-  Rename to the spelled-out internal form (`--_family-base` / `-on` / `-strong` / …) and the classes
-  with them. Not a public break — `components.md` names none of them and only those two components
-  read them — but `0.10.1.json` mentions `--c-on` inside an `informational` line explaining a
-  disabled-icon recipe, so that sentence needs the new name too. Check `.design-sync/` and the docs
-  specimens as well: both pin component internals in places `src/lib` does not reach.
 
 ## What the 0.9.0 - 0.13.3 manifests did not tell a consumer (recorded 2026-09-22, from the mm-ecm consumer)
 
