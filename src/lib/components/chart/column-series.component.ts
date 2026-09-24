@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   OnDestroy,
   ViewEncapsulation,
   booleanAttribute,
@@ -10,19 +11,29 @@ import {
   input,
   numberAttribute,
   output,
+  viewChildren,
 } from '@angular/core';
 import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
 import {
   CHART_SERIES_COLORS,
-  defaultChartFormat,
+  chartValueFormat,
   describeShare,
+  listenForMarkFocus,
   markOf,
   rovingMarks,
   leaveMark,
   staggerDelay,
 } from '@ids-group-ltd/ids-design-system/components';
-import { ICONS } from '@ids-group-ltd/ids-design-system/core';
-import type { ChartValueFormat } from '@ids-group-ltd/ids-design-system/core';
+import {
+  DS_INTL,
+  ICONS,
+  injectDsLocale,
+} from '@ids-group-ltd/ids-design-system/core';
+import type {
+  ChartAxis,
+  ChartValueFormat,
+} from '@ids-group-ltd/ids-design-system/core';
+import type { MarkHit } from '@ids-group-ltd/ids-design-system/components';
 import { chartActiveMark } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import type {
   ChartItemTooltipTrigger,
@@ -85,6 +96,8 @@ export class ColumnSeriesComponent implements OnDestroy {
   protected readonly leaveMark = leaveMark;
 
   private readonly scales = inject(CHART_SCALES);
+  private readonly locale = injectDsLocale();
+  protected readonly intl = inject(DS_INTL);
 
   /** Not `input.required`: the preset reads `tooltipContext()` from a binding on this same
    *  element, and a required input throws NG0950 for the pass before its own value is written. */
@@ -126,7 +139,9 @@ export class ColumnSeriesComponent implements OnDestroy {
 
   /** Formats every value this series prints. Called with `'tick'` for an axis label and
    *  `'tooltip'` everywhere a value is printed in full. */
-  readonly valueFormat = input<ChartValueFormat>(defaultChartFormat);
+  readonly valueFormat = input<ChartValueFormat>(
+    chartValueFormat(injectDsLocale()),
+  );
 
   /** The mark's share of its category's own slot, before the maximum width caps it. Measured off
    *  the slot rather than off `bandWidth()`, which has the container's own padding already taken
@@ -143,6 +158,10 @@ export class ColumnSeriesComponent implements OnDestroy {
   /** Where each mark starts and ends on the value axis, one entry per point. Unset, every mark
    *  runs from zero to its own value, which is the unstacked case. */
   readonly offsets = input<readonly ChartStackOffset[] | null>(null);
+
+  /** Which value axis the columns are measured against. `'secondary'` reads them off the second
+   *  axis, the way `axis: 'secondary'` does on a line series' data. */
+  readonly axis = input<ChartAxis>('primary');
 
   /** One colour for the whole series, which is what several series drawn together need. Unset,
    *  each mark takes the categorical palette by its own position - the right reading when the
@@ -199,15 +218,29 @@ export class ColumnSeriesComponent implements OnDestroy {
       this.scales.reportDomain(
         this.domainId,
         this.spans().flatMap((span) => [span.from, span.to]),
+        this.axis(),
       ),
     );
     // The container opens the panel, so a plot holding several marks can only ever show one.
     this.scales.reportTooltip(this.domainId, {
       context: this.tooltipContext,
       origin: computed(() => this.activeMark.origin()),
-      preferBelow: computed(() => this.activeMark.pinned()),
+      pinned: this.activeMark.pinned,
+      offersTooltip: computed(() => this.tooltip() !== 'none'),
+      axisOrigin: computed(() => {
+        const categoryIndex = this.scales.activeIndex();
+
+        return categoryIndex < 0
+          ? null
+          : (this.barElements()[categoryIndex]?.nativeElement ?? null);
+      }),
       axisEntries: this.axisEntries,
     });
+    listenForMarkFocus(
+      inject(ElementRef),
+      (event, hit) => this.onMarkFocus(event, hit),
+      () => this.activeMark.leave(),
+    );
   }
 
   ngOnDestroy(): void {
@@ -216,6 +249,8 @@ export class ColumnSeriesComponent implements OnDestroy {
   }
 
   readonly activeMark = chartActiveMark(() => this.tooltipLingerMs());
+
+  private readonly barElements = viewChildren<ElementRef<Element>>('barEl');
 
   /** One SERIES' slot inside a category's band: the whole band while a chart draws one series,
    *  a share of it per series when several are grouped. The box that catches the pointer is sized
@@ -270,12 +305,16 @@ export class ColumnSeriesComponent implements OnDestroy {
     DomSanitizer,
   ).bypassSecurityTrustHtml(ICONS.pin);
 
+  protected readonly hatchInUse = computed(() =>
+    this.marks().some((mark) => mark.hatched),
+  );
+
   protected readonly marks = computed(() => {
-    if (!(this.scales.measured?.() ?? true)) {
-      return [];
-    }
     const toX = this.scales.xPosition();
-    const toY = this.scales.yPosition();
+    const toY =
+      this.axis() === 'secondary'
+        ? this.scales.secondaryYPosition()
+        : this.scales.yPosition();
     const spans = this.spans();
     const format = this.valueFormat();
 
@@ -355,18 +394,9 @@ export class ColumnSeriesComponent implements OnDestroy {
 
   protected readonly roving = rovingMarks(() => this.marks().length);
 
-  protected onMarkFocus(event: FocusEvent): void {
-    const hit = markOf(event);
-    if (hit) {
-      this.roving.focus(hit.index);
-      this.activeMark.enter(hit.index, event, this.tooltipMark(), hit.element);
-    }
-  }
-
-  protected onMarkBlur(event: FocusEvent): void {
-    if (markOf(event)) {
-      this.activeMark.leave();
-    }
+  private onMarkFocus(event: FocusEvent, hit: MarkHit): void {
+    this.roving.focus(hit.index);
+    this.activeMark.enter(hit.index, event, this.tooltipMark(), hit.element);
   }
 
   protected onMarkKey(event: KeyboardEvent): void {
@@ -436,6 +466,8 @@ export class ColumnSeriesComponent implements OnDestroy {
             ? describeShare(
                 this.data().map((point) => point.value),
                 this.activeMark.index(),
+                this.locale,
+                (share) => this.intl().chart.shareOfTotal(share),
               )
             : undefined,
         },

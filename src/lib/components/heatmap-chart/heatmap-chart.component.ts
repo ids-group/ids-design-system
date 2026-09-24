@@ -4,10 +4,14 @@ import {
   ViewEncapsulation,
   booleanAttribute,
   computed,
+  inject,
   input,
   output,
 } from '@angular/core';
-import { CHART_HEAT_COLORS } from '@ids-group-ltd/ids-design-system/components';
+import {
+  CHART_HEAT_COLORS,
+  chartRenderGate,
+} from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import { ChartDataTableComponent } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
 import type { ChartDataRow } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
@@ -19,6 +23,7 @@ import type {
   ChartItemTooltipTrigger,
   ChartTooltipContext,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
+import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 import type {
   ChartFrame,
   ChartValueFormat,
@@ -64,6 +69,8 @@ interface PlacedRow {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeatmapChartComponent {
+  protected readonly renderReady = chartRenderGate();
+
   /** The column headings, left to right. Their count decides how many readings of a row are drawn:
    *  a row longer than this loses its tail, a shorter one ends early. */
   readonly columns = input<readonly string[]>([]);
@@ -107,11 +114,11 @@ export class HeatmapChartComponent {
    *  same and mean opposite things. */
   readonly error = input(false, { transform: booleanAttribute });
 
-  /** Shown when there are no rows or no columns. Unset falls back to `DS_CONFIG.chart.emptyText`. */
+  /** Shown when there are no rows or no columns. Unset falls back to `DS_INTL.chart.empty`. */
   readonly emptyText = input<string | null>(null);
 
   /** Shown in place of the grid while `error` is set. Unset falls back to
-   *  `DS_CONFIG.chart.errorText`. */
+   *  `DS_INTL.chart.error`. */
   readonly errorText = input<string | null>(null);
 
   /** Formats every reading the chart prints - the scale's two ends, each cell's accessible name
@@ -127,6 +134,7 @@ export class HeatmapChartComponent {
   readonly cellClicked = output<HeatmapChartCell>();
 
   private readonly defaults = resolveChartDefaults(this);
+  protected readonly intl = inject(DS_INTL);
   readonly frameResolved = this.defaults.frame;
   readonly emptyTextResolved = this.defaults.emptyText;
   readonly errorTextResolved = this.defaults.errorText;
@@ -191,7 +199,9 @@ export class HeatmapChartComponent {
             ? null
             : rampIndexOf(value, min, max, CHART_HEAT_COLORS.length);
         const formattedValue =
-          value === null ? 'No reading' : format(value, 'tooltip');
+          value === null
+            ? this.intl().chart.noReading
+            : format(value, 'tooltip');
 
         return {
           key: `${row.id ?? rowIndex}-${columnIndex}`,
@@ -222,9 +232,14 @@ export class HeatmapChartComponent {
     const caption = this.caption();
     const { min, max } = this.domain();
     const format = this.valueFormatResolved();
-    const size = `${this.data().length} rows by ${this.columns().length} columns`;
 
-    return `${caption ?? 'Heat map'}, ${size}, readings from ${format(min, 'tooltip')} to ${format(max, 'tooltip')}.`;
+    return this.intl().chart.heatmapSummary(
+      caption ?? this.intl().chart.heatmapTitle,
+      this.data().length,
+      this.columns().length,
+      format(min, 'tooltip'),
+      format(max, 'tooltip'),
+    );
   });
 
   protected readonly skeletonRows = computed(() =>

@@ -13,20 +13,19 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 | --- | --- | --- |
 | 1 | `1-color-engine-derivation` | the head of the biggest lane: three P2 decisions and one measured WCAG AA failure sit downstream of the colour-space choice |
 | 2 | `2-color-engine-relative` | the same decision, prototype half — ranked next so the pair is read together |
-| 3 | `3-interaction-formula` | `.ds-interactive`, five verdicts B1-B5; agreed in principle, and `_interaction.scss` still does not exist |
-| 4 | `4-migration-manifest-audit` | eight format practices to ratify — tooling, no consumer pulling on it |
+| 3 | `3-interaction-formula` | two pressed-state verdicts, both rendered and measured: the tonal button's pressed recipe and the danger menu item whose pressed equals its hover. The other three are answered and the `.ds-interactive` formula is deferred |
+| 4 | `4-migration-manifest-audit` | ten format practices to ratify — tooling, no consumer pulling on it |
 | 5 | `5-select-native-multi` | the cheapest to close: "keep parked" is a complete answer, and it is the answer already given — it stays only because closing it was declined |
 | 6 | `6-warning-text-colour` | one colour on one tint, each candidate rendered in itself. It ends "name a number: 1, 2, 3 or 4", and `docs/todo.md` still carries the measured 4.42:1 failure |
-| 7 | `7-chart-sparkline-preset` | `variant="spark"` or a separate `ds-sparkline` — parked on 2026-09-19, so it is decided-not-built rather than unasked |
-| 8 | `8-waterfall-mode-or-component` | the waterfall's own tag against a `stack="waterfall"` mode on the column chart |
-| 9 | `9-bar-column-contracts` | how far the bar and the column converge - the consumer ask that found them diverging in palette and in where composition is declared |
-| 10 | `10-banner-announce-warning` | whether a dev warning names an error banner no screen reader will read, now that the input's three states tell an opt-out from an oversight |
-| 11 | `11-picker-list-height` | whether the picker list's height stays an internal token: the cap that governs the visible rows is not the one that looks settable |
-| 12 | `12-decision-queue` | every consumer ask and every open question in one page - 23 asks a consumer waits on, each drawn as today against after, then 33 decisions across six groups; the live indeterminate tracks are the case a text list could not put |
+| 7 | `7-chart-sparkline-preset` | the sparkline preset's vertical scale: zero in the domain or the data's own min..max, both drawn over five series at cell and tile size; the preset itself is decided as `variant="spark"` |
+| 8 | `8-bar-column-contracts` | decided 2026-09-22, not built: extract the shared layer under the bar and the column, keep their contracts different - the consumer ask that found them diverging in palette and in where composition is declared |
+| 9 | `9-picker-list-height` | which knob caps a picker's list: the public `--ds-dropdown-panel-max-height` lowers the list but cannot raise it past the internal 280px `--picker-maxh`; all three options rendered and measured, one cap recommended |
+| 10 | `10-locale-week-and-hour` | whether the date picker's first day of the week and the time picker's 12h/24h follow the new `DS_CONFIG.locale`: four options drawn over six locales, each computed by `Intl` in the page; the en-US row shows the default every consumer without a locale gets |
+| 11 | `11-decision-queue` | every consumer ask and every open question in one page - 7 asks a consumer waits on, each drawn as today against after, then 27 decisions across six groups; the live indeterminate tracks are the case a text list could not put |
 
 **Rank 1 is the way in, and ranks 2-4 are the two biggest lanes** — the colour engine, then the interaction formula that reads
-its ramp. Ranks 1-5 are written in Russian and share `deck.css`, which sits beside `ds.css` and
-carries the shell; the chart decks share it too.
+its ramp. Ranks 1-5 are written in Russian; `deck.css`, which sits beside `ds.css` and carries the
+shell, is shared by ranks 3, 4 and 7-11 - ranks 1, 2, 5 and 6 render fully inline instead.
 
 **`implemented/` is where the answers live, and it is worth reading.** A closed deck keeps every word
 of the argument — the next person to ask the same question reads it to find out what was already
@@ -39,7 +38,7 @@ nav, and the scatter's phase — which went to phase 2 with its decimation layer
 **A `tool` here takes no number.** `backlog-board.html` and `rejected-with-numbers.html` — both are
 read whenever rather than at a moment, so they stay unnumbered and sort below the queue.
 
-**`12-decision-queue` sorts last and carries EVERY open question** — first every ask a consumer is
+**`11-decision-queue` sorts last and carries EVERY open question** — first every ask a consumer is
 waiting on, from any bucket of `docs/todo.md`, most urgent first in three groups (urgent P2, P3,
 parked) with priority, consumer and kind beside each; then each open deck
 plus the whole `Decisions` bucket, grouped by area. Every one has its options rendered rather
@@ -136,6 +135,7 @@ check. It is in `lint:all`, and every rule is a defect that actually shipped:
 | D012 | `var(--token)` that resolves to nothing: no fallback, undeclared here, absent from `ds.css` |
 | D013 | `ds-deck-evidence` citing a path that does not exist |
 | D015 | no `<title>`, so the tab and every listing show a filename |
+| D016 | `backlog-board.html` links a deck path that does not exist — a rank moved and the card now opens nothing |
 
 **D012 is the one with real blood on it.** On 2026-09-01 ten decks referenced four tokens the DS does
 not define — `--space-7`, `--border-subtle` (missed by the `subtle`→`subtitle` rename), `--shadow-md`

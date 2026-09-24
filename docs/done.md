@@ -4,6 +4,197 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## Numbers and dates follow one locale; every rendered string is in DS_INTL (2026-09-24)
+
+`DsConfig.locale` (defaulting to Angular's `LOCALE_ID`, Stas: one global key, no `chart.locale`) is read
+by chart values and percentages, `ds-date-picker` and `ds-dropzone` file sizes; charts stopped using
+the browser's locale and `toFixed(1)` percentages. A `DS_INTL` token with `provideDsIntl(object |
+signal factory)` carries every string the library renders: 197 keys in 33 sections, English defaults
+byte-identical to the old literals, merged section by section; per-instance text inputs still win and
+now default to `null` with `...Resolved` readbacks (Stas: no bundled `DS_INTL_RU`). `chart.emptyText` /
+`errorText` moved from `DS_CONFIG` to `DS_INTL.chart`. The ds-docs theming page carries a de-DE demo.
+The week start and the 12h/24h default are not locale-driven yet: deck `locale-week-and-hour`.
+Measured 2026-09-24 in ds-docs: under de-DE the bar chart reads `1.350 13,5 %`, the date picker
+`24.09.2026` with `MO DI ... SO`, the pager `1-10 von 1200`; unprovided pages keep `SELECT ALL`,
+`Sorted by Record, ascending`, `Showing 1–4 of 12`, `Export CSV`, `41%`, `61.2%`.
+
+## ds-docs modifier classes become states; brand and domain examples keep, with fictional names (2026-09-24)
+
+Every `<base>--<mod>` class under `ds-docs/src` (112 in 32 `.scss`, 211 in 47 `.html`) is `<base>.is-<mod>`,
+and a stylelint override for `ds-docs/src/**/*.scss` rejects `--` in a class name (Stas: docs only); the
+library's `crumb--current` and avatar `status-dot--*` stay, being public. The brand and domain examples
+stay and every real name in them is fictional under one brand, Acme (Stas): the Tweaks brand-preview
+partial (`_preview-brand-acme.scss`, now a green/red remap), autocomplete demo data, the modal insurer,
+the avatar initials example (Bramley Rovers FC, also a wording fix in released `migrations/0.10.0.json`),
+and the consumer module vocabulary across about twenty sections. Measured 2026-09-24: no `--` modifier
+left in ds-docs (`.x--y` on stdin fails the new rule, `.x.is-y` passes); the brand grep over ds-docs,
+`src/lib`, the manifests and the agent docs returns nothing; under the Acme preview a primary button
+computes `#1B8A2E`, the page's `--green-600`.
+
+## Columns read the second axis; a bar-chart segment can be singled out (2026-09-24)
+
+`g[dsColumnSeries]` takes `axis: 'primary' | 'secondary'` (default `'primary'`): the series reports its
+domain to that axis and draws against it, as a line series' data already could, so a two-axis chart can
+put either mark on either side. `ds-bar-chart` takes `highlighted` (a segment id, or null): every other
+part in every row fades to `--ds-chart-dim-opacity` through the shared `chart-interactive.dims` mixin,
+independent of `dimOthers`; the never-shipped `--ds-chart-dimmed-opacity` twin is gone and both dim
+tokens are described. Measured 2026-09-24 in ds-docs: the secondary-axis columns top out at 0.48 of
+the plot against a 2 000 secondary axis (0.048 had they read the 20 000 primary); with "Tooling"
+highlighted 6 of 9 segments sit at opacity 0.3 and none with it cleared; the column and scatter legend
+hover now fade to the same 0.3.
+
+## Release notes carry a why only where it is non-obvious; check-overrides ships; auth-layout defaults land (2026-09-24)
+
+`CONTRIBUTING.md` says what a CHANGELOG entry carries: what changed and what the reader does, with a
+reason only for a genuinely non-obvious case and no history (Stas); `migrations/AUTHORING.md` redefines
+`note` the same way and makes it optional, `migration-lint` M013 relaxed with a negative control in the
+selftest. `ng g @ids-group-ltd/ids-design-system:check-overrides` reads a consumer's stylesheets
+against a surface built from the compiled package (`tools/build-override-surface.mjs`) and reports
+`--ds-*` properties the installed version never reads and `ds-*` selectors naming a class the
+component does not render; `--strict` fails the run, and the auto-update plugin (1.9.0) runs it in its
+final report. `ds-auth-layout`'s three deferred defaults shipped: an 18px wordmark
+(`--ds-auth-layout-brand-name-font-size`), a fixed 28px letter-mark tile like `ds-sidenav`'s, `landmark`
+defaulting to `'main'`, and a projected `[brand]` logo capped at the tile height, each a `behavior` item
+with a restore. Measured 2026-09-24: surface.json lists 1058 `--ds-*` names and 100 components' classes,
+selftest 5/5 with the gate seen failing on a control; wordmark 22px -> 18px, tile 32px -> 28px.
+
+## Neutral rows and small buttons show a pressed state (2026-09-24)
+
+Every neutral row or small button that had a hover fill and nothing on press now steps to
+`--surface-muted` on `:active`, the value menu items, accordion headers, list and tree rows already
+hardcode: sidenav group header and caret, sidenav footer rows and panels, the date picker's period
+trigger, nav, cells and presets, the time picker's options and actions, the toast action, the
+description-list copy button, multi-select's select-all and the tab close button. An interactive
+`ds-tag`, which already hovers at `--surface-muted`, takes the shared `press.feedback` dip instead. No
+new tokens and no formula (deck `3-interaction-formula`, verdict on neutral surfaces). Measured
+2026-09-24 in ds-docs: each target matches exactly one `:active` rule resolving `var(--surface-muted)`,
+resting and hover values unchanged; the tag's rest filter and transform stay `none`.
+
+## `ds-button` and `ds-icon-button` spell out their colour-family slots and classes (2026-09-24)
+
+The private slots `--c-*` are `--_family-*`, gaining the `--_` marker every other private resolver
+carries, and the inner button's classes `.c-<color>` and `.v-<variant>` are `.color-<color>` and
+`.variant-<variant>` (Stas added the variant half). The slots never reached `components.md`; the
+classes are stylable, so three `class-rename` items point a consumer stylesheet at `data-color` /
+`data-variant` on the host. Measured 2026-09-24 in ds-docs: each colour's solid button and filled icon
+button compute the same background as its theme token (`--accent`, `--secondary`, `--tertiary`,
+`--text-secondary`, `--error`, `--success`, `--warning`), in light and dark.
+
+## Deck `waterfall-mode-or-component` closed, deck 3 narrowed to two pressed verdicts (2026-09-24)
+
+`ds-waterfall-chart` keeps its own tag (Stas), which is what shipped (`waterfall-chart.component.ts:55`), so the deck moved to `implemented/` with no code; `bar-column-contracts` is rank 8, `picker-list-height` 9, `decision-queue` 10. Deck `3-interaction-formula` was rebuilt against the code: success/warning pressed already exists, neutral-surface pressed is task 45, the override slot is recorded for later and the formula deferred (Stas); the open verdicts are the tonal button's pressed recipe and the danger menu item's invisible press, both rendered live with OKLab deltas measured 2026-09-24. The queue deck's B1, B2, B4, B5 and waterfall sections collapsed to one pointer at deck 3.
+
+## Chart tooltips, focus and hatching fixed from Stas's docs review (2026-09-24)
+
+The category panel hangs over the highest reading at the active category wherever the pointer is in
+the band: marks offer an `axisOrigin` (the column's bar, the line's top reading) whether or not the
+pointer is on them. A composed `ds-chart` gives one panel naming every mark's reading: `cursor` takes
+`'auto'`, the new default, which resolves to `'category'` when two or more marks offer a tooltip and
+to `'none'` otherwise; `ds-column-chart` binds `cursor="none"` so a grouped column chart is unchanged
+(Stas: the column and line of one category are one reading). Series groups no longer take focus on a
+click: a focus listener makes an SVG `<g>` focusable in Chromium, so mark focus is heard from the
+document through `listenForMarkFocus` (the group listeners came in with a9229c19); the roving
+tabindex and arrow keys are unchanged. A held tooltip opens above its mark in every chart
+(`dsChartTooltipPreferBelow` removed, the source's flag renamed `pinned`). Hatch stripes slant the
+other way and draw the full `--chart-hatch-width`, whose default moves 3px -> 1.5px so columns look
+the same; the tooltip swatch reads the same width. The container page's stacked cards get their gap
+back (a scoped sibling rule never matched projected charts). Measured 2026-09-24 in ds-docs: category
+panel bottom 351 over a bar top of 360 with the pointer on the column and 30px beside it; the combined
+chart reads "Apr Revenue $16.2K Running total $51.7K" on and beside the column; `.lines.focus()` and
+`.columns.focus()` no longer take focus while a marker does; a pinned column's panel sits at 344-378
+above a bar top of 406; the card gap is 0px before and 20px after.
+
+## Chart legends take a hover state; pie pin badge, funnel tail and line markers fixed (2026-09-24)
+
+Every chart legend entry (`ds-chart-legend` and the pie legend) takes a hover and focus state through
+one `chart-interactive.legend-entry()` mixin: `--ds-chart-legend-hover-bg-color` (default
+`--surface-secondary`) and `--ds-chart-legend-hover-text-color` (default `--text-primary`), with the
+padding cancelled by an equal negative margin so no legend row moves (Stas: the entry itself must
+answer the pointer). A pie legend entry now fades the other slices without `dimOthers`, as the other
+legends already did; `dimOthers` still governs a pointer over the ring. The pie pin badge is an HTML
+span over the ring placed at the slice centre, replacing a `foreignObject` that the viewBox scaled
+1.8x and offset by 7 units. A funnel `shape="area"` stage too thin to clear the band gap keeps half a
+gap of depth about its middle instead of collapsing to a line (a value-0 stage stays a line). Line
+markers enter with their line and area through a CSS entrance on the mark. Measured 2026-09-24 in
+ds-docs: pin badge 39.6px and 7.2px off the slice centroid before, 22px with the glyph on the badge
+centre after; the 10-of-1010 funnel stage 0px tall before, 3.08px after; a hovered legend entry
+`rgb(241,244,249)` on `rgb(22,26,40)`, the other series at opacity 0.3; markers run the line's
+keyframes at 0.12s delay, 0.18s duration.
+
+## `ds-modal-card` measures its actions row again when a label changes (2026-09-24)
+
+The row was measured on first render and when the header resized, so a button label that grew
+after the modal opened left every observed box unchanged: the row stayed a single line and the
+first button ran past the card's start edge (mm-ecm, "Unsaved changes" sm modal on 0.14.0: first
+button at 11-461 inside a card at 460-940). A `MutationObserver` on the actions row (child list,
+subtree, character data, no attributes) schedules the same frame-deferred measurement, so the
+`stacked` toggle never reports back to it. Measured 2026-09-24 on the docs modal page, sm card
+"Cancel / Deactivate" at 700-1180: lengthening "Cancel" after render stacked the row with both
+buttons inside at 720-1160, restoring the label unstacked it, and each change produced exactly one
+measurement (2 then 1 class mutations over 2 s).
+
+## 0.14.0's manifest carries the typed cell-template context as an item (2026-09-24)
+
+`CellTemplateDirective` became generic with a template context guard in 0.14.0, so a
+`dsCellTemplate` without `[dsCellTemplateOf]` types its row as `unknown` where 0.13.4 typed it
+`any`. The manifest filed that as `informational`, and a consumer upgrading 0.13.4 -> 0.14.0 got
+194 build errors in 8 templates of one app and 6 in another (TS2571 / TS2345, measured 2026-09-24).
+`0.14.0.json` now carries `cell-template-context-typed-unknown` (behavior, surface template, with
+the build errors in `detect`) in place of the informational line, and it cites the existing
+`table-row-caster-helpers` delete row.
+
+## Ten consumer styling hooks, one token shape (2026-09-24)
+
+Every hook resolves a public `--ds-*` through a private `--_*` whose default is the value the
+component already drew, so nothing moves until a token is set. The field family
+(`--ds-field-border-color` / `-hover` / `-focus`, `-text-color`, `-placeholder-color`, `-font-size`)
+sits under each field's own token for input, textarea, select, multi-select, autocomplete and search,
+through one `field-box-tokens` mixin in `_field-box.scss`; the pickers, number stepper and OTP stay
+out. `ds-select` gains its focus border (focused and open alike), hover, placeholder and size;
+`ds-autocomplete` its text, placeholder and hover border; `ds-textarea` now reads
+`--ds-input-font-size`, and `ds-search`'s hover border defaults to its own rest border (both
+`behavior` items with a restore). `ds-button` / `ds-icon-button` take hover and active borders that
+fall back rest -> hover -> active; `ds-empty-state` its title face and weight; `ds-badge` a font size
+that a count badge re-resolves; `ds-page-header` a subtitle size; `ds-banner` a title size.
+`ds-accordion-item` tokenises header padding, gap, type, hover colour and body padding, and
+`ds-accordion` takes `chevron: 'right' | 'down'`. `ds-table` takes a utility-column width (default
+moves `--space-10` -> `--space-6`; cells are border-box, so the column stays button + padding) and
+padding, and footer block padding (`-y` with `-top` / `-bottom`). Measured 2026-09-24 in ds-docs:
+every default unchanged (select border rest / hover / open `#DCE1EA` / `#C2C9D6` / `--accent`,
+accordion head padding `12px 16px`, table utility column 56px, footer 12px), and each token takes
+effect when set (`--ds-table-utility-column-padding-x: 0` gives a 24px column; `chevron="down"` turns
+the open chevron 180deg).
+
+## `ds-banner` and `ds-alert` warn in dev mode when `announce` was never decided (2026-09-24)
+
+`warnAnnounceOversight` (`core/announce-warning.ts`) is one helper behind `devWarn`, called from both
+components inside the inline `typeof ngDevMode` guard and reading the same predicate as the host
+`role`. Two messages: an assertive banner (`error` / `warning` / `severe`; alert `error` / `warning`)
+left unbound while `DS_CONFIG.banner.announce` (`alert.announce`) is unset, ending when the key is set
+either way (Stas: «пока ключ не выставлен»); and a polite one (`info` / `success` / `neutral`)
+announcing only because the key is `true`, ending at an `[announce]` binding. No config change and no
+directive: the key's three states are the discriminator, and `provideDsConfig` already scopes a
+subtree. ds-docs sets both keys to `false` at the root, since every banner there is a specimen. Deck
+`banner-announce-warning` moved to `implemented/`; `picker-list-height` is rank 10 and
+`decision-queue` rank 11. Measured 2026-09-24: the message text is absent from `dist/ds-docs` after
+`npm run build:docs` and present in the development build; on `/components/banner` 10 warnings with no
+root config, 9 distinct (10 instances) with the key `true`, the `[announce]="true"` specimen silent,
+0 with `false`.
+
+## A closing modal, drawer or bottom sheet is click-through for the whole leave (2026-09-24)
+
+`.modal-backdrop.closing`, `.drawer-root.closing` (a new class binding on the root, which is the
+`fixed; inset: 0` box that hit-tests, not the scrim inside it) and `.sheet-overlay.closing` carry
+`pointer-events: none`, inherited by the card, panel and sheet. Under `prefers-reduced-motion: reduce`
+every `--duration-*` is 0ms and `animationend` is not reliably delivered, so `finishClose()` runs from
+the 300 ms fallback timer, and until then the invisible scrim took the page's first click. Every
+comment that credited the teardown to `animationend` at zero duration now names the timer. Timers
+unchanged (300 / 400 ms). No test: the repo has no unit-test runner. Measured 2026-09-24 in ds-docs
+with the leave duration forced to 0ms through each component's public token (chrome-devtools has no
+reduced-motion emulation): before the fix `elementFromPoint` over the page returned the closing
+backdrop, after it returned the page element, in all three components; teardown ~256-343 ms via the
+timer in every case.
+
 ## `ds-date-picker` keeps its content width in a container narrower than its mask (2026-09-24)
 
 The truncation contract says the value never clips, but the host carried `max-width: 100%` with

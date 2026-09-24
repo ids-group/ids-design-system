@@ -4,7 +4,7 @@ import { DrawerComponent } from 'ds/drawer';
 import { SegmentedComponent } from 'ds/segmented';
 import { SliderComponent } from 'ds/slider';
 
-type BrandPreview = 'default' | 'manage-my';
+type BrandPreview = 'default' | 'acme';
 
 const BRAND_STORAGE_KEY = 'ds-docs-brand-preview';
 const THEME_STORAGE_KEY = 'ds-docs-theme';
@@ -42,7 +42,7 @@ export class TweaksPanelComponent {
   ];
   protected readonly brandOptions = [
     { label: 'Default', value: 'default' },
-    { label: 'ManageMy', value: 'manage-my' },
+    { label: 'Acme', value: 'acme' },
   ];
   protected readonly neutralsOptions = [
     { label: 'Cool gray', value: 'cool-gray' },
@@ -197,7 +197,7 @@ export class TweaksPanelComponent {
     try {
       const raw = localStorage.getItem(BRAND_STORAGE_KEY);
 
-      return raw === 'manage-my' ? 'manage-my' : null;
+      return raw === 'acme' ? 'acme' : null;
     } catch {
       return null;
     }

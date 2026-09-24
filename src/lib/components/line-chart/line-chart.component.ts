@@ -19,6 +19,8 @@ import {
 import {
   CHART_SERIES_COLORS,
   describeSeries,
+  chartRenderGate,
+  CHART_RENDER_GATE_PASSED,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import {
@@ -34,6 +36,7 @@ import type {
 } from '@ids-group-ltd/ids-design-system/components/chart';
 import { formatPercent } from '@ids-group-ltd/ids-design-system/components';
 import { stackOffsets } from '@ids-group-ltd/ids-design-system/components/chart';
+import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 import type {
   ChartDataTable,
   ChartFrame,
@@ -111,8 +114,11 @@ const SERIES_DASH_ARRAYS = [
   },
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  viewProviders: [{ provide: CHART_RENDER_GATE_PASSED, useValue: true }],
 })
 export class LineChartComponent {
+  protected readonly renderReady = chartRenderGate();
+
   /** X labels. Every series' `data` is read against this length. */
   readonly categories = input.required<readonly string[]>();
 
@@ -232,7 +238,7 @@ export class LineChartComponent {
    *  when the data lands. */
   readonly loading = input(false, { transform: booleanAttribute });
   /** Shown in place of the plot when `data` is empty. Unset falls back to
-   *  `DS_CONFIG.chart.emptyText`, then `'No data'`. */
+   *  `DS_INTL.chart.empty`. */
   readonly emptyText = input<string | null>(null);
 
   /** Shows `errorText` in place of the plot. Separate from `loading` and from an empty `data`,
@@ -240,15 +246,15 @@ export class LineChartComponent {
    *  mean opposite things. */
   readonly error = input(false, { transform: booleanAttribute });
 
-  /** The message the error state prints. Unset falls back to `DS_CONFIG.chart.errorText`, then
-   *  `'Could not load the data'`. */
+  /** The message the error state prints. Unset falls back to `DS_INTL.chart.error`. */
   readonly errorText = input<string | null>(null);
   /** Formats every value the chart prints, the annex table and the generated description
-   *  included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then the browser's locale
-   *  grouping with a K/M/B suffix past four digits. */
+   *  included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` /
+   *  `LOCALE_ID`. */
   readonly valueFormat = input<ChartValueFormat | null>(null);
 
   private readonly defaults = resolveChartDefaults(this);
+  protected readonly intl = inject(DS_INTL);
   readonly frameResolved = this.defaults.frame;
   readonly dataTableResolved = this.defaults.dataTable;
   readonly emptyTextResolved = this.defaults.emptyText;
@@ -301,8 +307,13 @@ export class LineChartComponent {
   readonly legendMode = input<'toggle' | 'isolate'>('isolate');
 
   /** Shown in place of the plot once the legend has switched every series off. Without it the
-   *  reader is left with an empty grid and nothing saying why. */
-  readonly noVisibleSeriesText = input<string>('All series are hidden');
+   *  reader is left with an empty grid and nothing saying why. Unset falls back to
+   *  `DS_INTL.chart.noVisibleSeries`. */
+  readonly noVisibleSeriesText = input<string | null>(null);
+
+  readonly noVisibleSeriesTextResolved = computed(
+    () => this.noVisibleSeriesText() ?? this.intl().chart.noVisibleSeries,
+  );
 
   /** Gives every series a dash pattern of its own, so the lines are told apart by shape as well
    *  as by colour — WCAG technique G111. Off by default: the shipped palette clears the
@@ -379,7 +390,7 @@ export class LineChartComponent {
    *  or the annex table prints stays the reading, which is what `valueFormat` goes on formatting. */
   protected readonly axisFormat = computed<ChartValueFormat>(() =>
     this.stack() === 'normalized'
-      ? (value: number) => formatPercent(value, 1)
+      ? (value: number) => formatPercent(value, 1, this.defaults.locale)
       : this.valueFormatResolved(),
   );
 
@@ -425,7 +436,7 @@ export class LineChartComponent {
   readonly tooltipAnchor = input<'point' | 'pointer'>('point');
 
   protected readonly dataTableColumns = computed<readonly string[]>(() => [
-    'Category',
+    this.intl().chart.categoryColumn,
     ...this.resolvedSeries().map((entry) => entry.series.label),
   ]);
 
@@ -457,7 +468,8 @@ export class LineChartComponent {
       return summary;
     }
 
-    const title = this.caption() ?? 'Chart';
+    const words = this.intl().chart;
+    const title = this.caption() ?? words.title;
     const format = (value: number) =>
       this.valueFormatResolved()(value, 'tooltip');
     const categories = this.categories();
@@ -465,6 +477,7 @@ export class LineChartComponent {
     // the table twice.
     const sentences = this.resolvedSeries().map((entry) =>
       describeSeries(
+        words,
         entry.series.label,
         entry.values.flatMap((value, index) =>
           value === null ? [] : [{ label: categories[index] ?? '', value }],
@@ -474,16 +487,20 @@ export class LineChartComponent {
       ),
     );
     const pointer =
-      this.dataTableResolved() === 'none'
-        ? ''
-        : ' Full values in the table below.';
+      this.dataTableResolved() === 'none' ? '' : ` ${words.tableFollows}`;
     // The plot's own text is inside an `aria-hidden` svg, so an annotation a sighted reader takes
     // as the point of the chart would otherwise reach nobody else.
     const notes = this.markAnnotations().map((note) => note.label);
-    const noted = notes.length ? ` Noted: ${notes.join('; ')}.` : '';
+    const noted = notes.length ? ` ${words.noted(notes)}` : '';
 
     return sentences.length === 0
-      ? describeSeries(title, [], format, this.dataTableResolved() !== 'none')
+      ? describeSeries(
+          words,
+          title,
+          [],
+          format,
+          this.dataTableResolved() !== 'none',
+        )
       : `${title}. ${sentences.join(' ')}${noted}${pointer}`;
   });
 

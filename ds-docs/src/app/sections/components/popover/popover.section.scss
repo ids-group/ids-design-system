@@ -19,14 +19,14 @@
       border: var(--border-width-default) solid var(--border-divider);
       border-radius: var(--radius-lg);
     }
-    .demo--row {
+    .demo.is-row {
       display: flex;
       gap: var(--space-4);
       justify-content: space-between;
     }
     .demo-col { display: flex; flex-direction: column; }
-    .demo-col--end { align-items: flex-end; }
-    .demo--placement {
+    .demo-col.is-end { align-items: flex-end; }
+    .demo.is-placement {
       display: flex;
       flex-wrap: wrap;
       gap: var(--space-3);

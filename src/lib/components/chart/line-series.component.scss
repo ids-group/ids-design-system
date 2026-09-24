@@ -4,6 +4,7 @@
 @use '../../styles/chart-motion' as chart-motion;
 @include chart-motion.fades-in('.series-line');
 @include chart-motion.fades-in('.series-area');
+@include chart-motion.enters('.series-marker', ds-chart-mark-fade-in);
 @include chart-frame.no-bounding-box-focus('.series-marker');
 
 

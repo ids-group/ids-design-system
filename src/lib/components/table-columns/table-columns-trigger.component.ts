@@ -1,4 +1,5 @@
-import { Component, input, output } from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
+import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 
 /**
@@ -16,7 +17,7 @@ import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
       type="button"
       class="col-picker-btn"
       aria-haspopup="dialog"
-      aria-label="Choose columns"
+      [attr.aria-label]="intl().tableColumns.trigger"
       [attr.aria-expanded]="opened()"
       (click)="pressed.emit($event)">
       <ds-icon name="grid" [size]="14" />
@@ -26,4 +27,5 @@ import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 export class TableColumnsTriggerComponent {
   readonly opened = input(false);
   readonly pressed = output<Event>();
+  protected readonly intl = inject(DS_INTL);
 }

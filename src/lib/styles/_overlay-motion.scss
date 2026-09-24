@@ -11,9 +11,10 @@
 // both follow it. The keyframe name never changes with placement, so a mid-scroll
 // CDK flip redirects the motion instead of restarting it.
 //
-// Duration/easing stay longhands the library owns: reduced motion zeroes the
-// duration rather than dropping the animation, which keeps `animationend`-driven
-// teardown working and outranks a consumer keyframe carrying its own timing.
+// Duration/easing stay longhands the library owns, so they outrank a consumer keyframe
+// carrying its own timing. Reduced motion zeroes the duration rather than dropping the
+// animation; at 0s `animationend` is not reliably delivered, and `disposeWithLeave`'s
+// 400 ms timer is what tears the pane down - which is why `.ds-leaving` is inert.
 
 .cdk-overlay-pane.ds-overlay-pane {
   --_overlay-enter-keyframes: var(--ds-overlay-enter-keyframes, ds-scale-in);
@@ -63,7 +64,8 @@
      lagging behind it, which is why the old unconditional leave was cut. Opacity
      only, no travel: a dismissal has nowhere to travel to, and movement would
      re-add exactly the lag this avoids. Reduced motion zeroes the duration at
-     `:root`, so the animation still runs and `animationend` still tears down. */
+     `:root`; at 0s `animationend` is not reliably delivered, and `disposeWithLeave`'s
+     400 ms timer tears the pane down. */
   &.ds-leaving {
     /* A fading panel must not swallow the click aimed at what is behind it. */
     pointer-events: none;

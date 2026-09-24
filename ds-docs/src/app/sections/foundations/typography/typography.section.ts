@@ -70,7 +70,7 @@ const RAMP: readonly TypeRampRow[] = [
     cls: 't-l',
     sizeToken: '--font-size-l',
     sample:
-      'Three schedules and twelve resource allocations will recompute when you save these dates.',
+      'Three schedules and twelve staff rotas will recompute when you save these dates.',
     size: '18',
     lineHeight: '1.4',
     weight: 'regular',
@@ -79,7 +79,7 @@ const RAMP: readonly TypeRampRow[] = [
   {
     cls: 't-m',
     sizeToken: '--font-size-m',
-    sample: 'Three schedules and twelve resource allocations will recompute.',
+    sample: 'Three schedules and twelve staff rotas will recompute.',
     size: '16',
     lineHeight: '1.4',
     weight: 'regular',

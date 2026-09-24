@@ -109,6 +109,14 @@ Every actionable item is **auto-applied**; items differ only in how they're VERI
   carrying a `verify` (`{ text, verify }`, rather than a bare string) names a rendering-only check
   nothing else in this workflow performs — route it into **"applied — human should eyeball"**
   instead of the plain FYI list, with the `verify` sentence as the thing to look at.
+- **An `informational` entry that names a TYPE change is not an FYI**, whatever the manifest calls
+  it: a generic parameter, a template context guard (`ngTemplateContextGuard`), a context or input
+  that becomes `unknown`, a narrowed or widened union, `strictTemplates`. "Without it row stays
+  `unknown`" is the recognizer: against a previous `any` it breaks every consumer template that
+  reads the value. Before the bump, read the symbol at both extracted tags; where the typing
+  tightened, find the consumer's usages and carry it as a synthetic `behavior` item (surface
+  `template` or `typescript`, the expected TS error in `detect`), and report the misfiled entry as
+  manifest feedback beside the locator-dead set. The build after the bump is the verdict either way.
 
 ## Reading the DS sources (when the changelog isn't enough)
 
@@ -454,7 +462,10 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    it names for its `find` shapes (a finder dispatch is fine — map the row to a pseudo-item:
    `id`, `kind: "delete"`, `searchHints` := `find`, its `surface`), then judge
    each hit yourself, because a workaround can still be load-bearing: `[reserveMessage]="false"` is
-   dead against the new default and REQUIRED under a `dsReserveMessages` host. Apply the deletions
+   dead against the new default and REQUIRED under a `dsReserveMessages` host. A row's `why` is the
+   library's claim about V, not evidence: before deleting, confirm in the extracted `v<V>` tree that V
+   really covers every case the consumer's rule covers. A wrap rule is still needed where V measures
+   a row only on first render and the consumer's labels change after it. Apply the deletions
    where they are dead — and where the row's `replaceWith` names an API, the edit is
    delete-and-replace, not a bare removal — leave the rest, and report both halves: deleted, and
    kept with the reason.
@@ -474,6 +485,9 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
 
 ## Phase C — Final report
 
+- **Dead overrides:** run `npx ng g @ids-group-ltd/ids-design-system:check-overrides` in the
+  target once the chain is applied and list every line it reports under "Needs manual review"; a
+  DS version without the schematic (before this release) is skipped with a note.
 - Per target: versions completed + committed (from→to); items **auto-applied** (mechanical AND
   behavioral); items not-applicable — **every item with its hit count**.
 - **Locator-dead — evidence about the manifests, not this consumer:** the items where every locator

@@ -36,29 +36,24 @@ const TOUCH_GAP_PX = 48;
 const VIEWPORT_MARGIN_PX = 12;
 
 // Four fallbacks are what make the panel flip out of a small dashboard card rather than be
-// clipped by it. Above first, except while a mark is HELD: the Unpin control sits at the plot's
-// top edge, and a panel that opens upward from a mark in the upper half lands on top of it. The
-// panel is portaled to the body, so no z-index can lift the control over it — an app layout that
-// isolates its own stacking context traps the chart's chrome below the overlay whatever number it
-// carries.
-function positionsFor(gap: number, preferBelow: boolean): ConnectedPosition[] {
-  const above: ConnectedPosition = {
-    originX: 'center',
-    originY: 'top',
-    overlayX: 'center',
-    overlayY: 'bottom',
-    offsetY: -gap,
-  };
-  const below: ConnectedPosition = {
-    originX: 'center',
-    originY: 'bottom',
-    overlayX: 'center',
-    overlayY: 'top',
-    offsetY: gap,
-  };
-
+// clipped by it. Above first, held or not: the Unpin control sits at the plot's bottom edge, clear
+// of a panel that opens upward.
+function positionsFor(gap: number): ConnectedPosition[] {
   return [
-    ...(preferBelow ? [below, above] : [above, below]),
+    {
+      originX: 'center',
+      originY: 'top',
+      overlayX: 'center',
+      overlayY: 'bottom',
+      offsetY: -gap,
+    },
+    {
+      originX: 'center',
+      originY: 'bottom',
+      overlayX: 'center',
+      overlayY: 'top',
+      offsetY: gap,
+    },
     {
       originX: 'end',
       originY: 'center',
@@ -102,9 +97,6 @@ export class ChartTooltipDirective {
    *  that text as well as the mark, or the two overlap. Ignored for touch, where the gap is already
    *  sized for a fingertip. */
   readonly dsChartTooltipExtraGap = input(0);
-  /** Opens the panel BELOW the mark first. A chart sets it while a mark is held, so the panel
-   *  leaves the plot's top edge — and the Unpin control that lives there — alone. */
-  readonly dsChartTooltipPreferBelow = input(false);
 
   /** A held panel takes the pointer again, so its text can be selected. While it merely follows
    *  the pointer the pane stays inert, or the mark it covers never sees the pointer at all. */
@@ -171,7 +163,7 @@ export class ChartTooltipDirective {
       .withFlexibleDimensions(false)
       .withPush(true)
       .withViewportMargin(VIEWPORT_MARGIN_PX)
-      .withPositions(positionsFor(gap, this.dsChartTooltipPreferBelow()));
+      .withPositions(positionsFor(gap));
   }
 
   // WCAG 1.4.13 wants the panel dismissable WITHOUT moving the pointer or the focus, which rules

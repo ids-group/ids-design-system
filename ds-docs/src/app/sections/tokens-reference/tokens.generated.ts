@@ -983,7 +983,7 @@ export const CHARTS: readonly ColourRow[] = [
   {
     "name": "--chart-dim-opacity",
     "value": "0.3",
-    "notes": ""
+    "notes": "Opacity a chart mark drops to while another is singled out."
   },
   {
     "name": "--chart-hover-bg-color",
@@ -1062,7 +1062,7 @@ export const CHARTS: readonly ColourRow[] = [
   },
   {
     "name": "--chart-hatch-width",
-    "value": "3px",
+    "value": "1.5px",
     "notes": ""
   },
   {
@@ -1273,7 +1273,7 @@ export const CHARTS: readonly ColourRow[] = [
   {
     "name": "--ds-chart-dim-opacity",
     "value": "var(--chart-dim-opacity)",
-    "notes": ""
+    "notes": "Opacity every chart mark that is not singled out drops to - under dimOthers while one is hovered or focused, and under a legend item or a highlighted series or segment. One value for every chart. Set this, not --chart-dim-opacity."
   },
   {
     "name": "--ds-chart-hover-bg-color",
@@ -2245,6 +2245,46 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-accordion-body-text-color",
         "value": "var(--text-secondary)",
         "notes": "Accordion panel body text colour."
+      },
+      {
+        "name": "--ds-accordion-header-hover-text-color",
+        "value": "var(--_accordion-header-text-color)",
+        "notes": "Header label colour on hover. Defaults to the resting --ds-accordion-header-text-color, so nothing moves until it is set."
+      },
+      {
+        "name": "--ds-accordion-header-padding",
+        "value": "var(--space-3) var(--space-4)",
+        "notes": "Header padding, as the CSS shorthand (default `var(--space-3) var(--space-4)`: 12px vertical, 16px horizontal)."
+      },
+      {
+        "name": "--ds-accordion-header-gap",
+        "value": "var(--space-2)",
+        "notes": "Space between the header label, a projected [badge] and the chevron (default --space-2)."
+      },
+      {
+        "name": "--ds-accordion-header-font-family",
+        "value": "var(--font-sans)",
+        "notes": "Header label face (default --font-sans)."
+      },
+      {
+        "name": "--ds-accordion-header-font-size",
+        "value": "var(--font-size-s)",
+        "notes": "Header label size (default --font-size-s)."
+      },
+      {
+        "name": "--ds-accordion-header-font-weight",
+        "value": "var(--font-weight-medium)",
+        "notes": "Header label weight (default --font-weight-medium)."
+      },
+      {
+        "name": "--ds-accordion-header-line-height",
+        "value": "var(--line-height-flat)",
+        "notes": "Header label line-height (default --line-height-flat)."
+      },
+      {
+        "name": "--ds-accordion-body-padding",
+        "value": "var(--space-2) var(--space-4) var(--space-4)",
+        "notes": "Panel body padding, as the CSS shorthand (default `var(--space-2) var(--space-4) var(--space-4)`: 8px top, 16px sides, 16px bottom)."
       }
     ]
   },
@@ -2394,8 +2434,18 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-auth-layout-mark-size",
-        "value": "clamp(var(--space-6), 4svh, var(--space-8))",
-        "notes": "Letter-mark tile size. Defaults to a clamp (24px…32px, reaching 32px at a viewport 800px tall or more). The glyph inside is a fixed size and does not track it."
+        "value": "var(--sidenav-logo-size)",
+        "notes": "Letter-mark tile size (defaults to --sidenav-logo-size, 28px, the sidenav's tile)."
+      },
+      {
+        "name": "--ds-auth-layout-mark-font-size",
+        "value": "var(--font-size-m)",
+        "notes": "Letter-mark glyph size inside the tile (defaults to --font-size-m, 16px)."
+      },
+      {
+        "name": "--ds-auth-layout-brand-name-font-size",
+        "value": "var(--font-size-h5)",
+        "notes": "Wordmark size beside the tile (defaults to --font-size-h5, 18px, as in ds-sidenav)."
       },
       {
         "name": "--ds-auth-layout-mark-radius",
@@ -2419,8 +2469,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-auth-layout-brand-max-height",
-        "value": "none",
-        "notes": "Cap for a logo projected into [brand] (defaults to none — nothing constrains it, so an oversized image sets the masthead's height). Set it to var(--ds-auth-layout-mark-size) to make the logo track the letter-mark tile it replaces."
+        "value": "var(--_auth-layout-mark-size)",
+        "notes": "Cap for a logo projected into [brand] (defaults to the tile size, --ds-auth-layout-mark-size, so a logo matches the letter-mark it replaces). Set none to leave the logo unconstrained."
       }
     ]
   },
@@ -2461,7 +2511,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-autocomplete-input-font-size",
-        "value": "var(--font-size-s)",
+        "value": "var(--_field-font-size)",
         "notes": "Text input size."
       },
       {
@@ -2471,7 +2521,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-autocomplete-border-color",
-        "value": "var(--border-default)",
+        "value": "var(--_field-border-color)",
         "notes": "Autocomplete field border colour."
       },
       {
@@ -2481,8 +2531,23 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-autocomplete-border-color-focus",
-        "value": "var(--accent)",
+        "value": "var(--_field-border-color-focus)",
         "notes": "Autocomplete field border colour on focus."
+      },
+      {
+        "name": "--ds-autocomplete-border-color-hover",
+        "value": "var(--_field-border-color-hover)",
+        "notes": "Autocomplete field border colour on hover (default --ds-field-border-color-hover, then --border-strong)."
+      },
+      {
+        "name": "--ds-autocomplete-text-color",
+        "value": "var(--_field-text-color)",
+        "notes": "Colour of the typed text and of the picked value shown in the trigger (default --ds-field-text-color, then --text-primary)."
+      },
+      {
+        "name": "--ds-autocomplete-placeholder-color",
+        "value": "var(--_field-placeholder-color)",
+        "notes": "Placeholder colour of the filter input (default --ds-field-placeholder-color, then --text-tertiary - the same as ds-input; before this the placeholder was the browser's own grey)."
       },
       {
         "name": "--ds-radius-inner",
@@ -2616,6 +2681,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Label weight."
       },
       {
+        "name": "--ds-badge-font-size",
+        "value": "var(--font-size-xs)",
+        "notes": "Label size (default --font-size-xs). A count badge re-resolves the same token with a --font-size-2xs default, so one value set on the host reaches both forms."
+      },
+      {
         "name": "--ds-badge-white-space",
         "value": "nowrap",
         "notes": "Label wrapping (default nowrap). Set to normal for a badge in a narrow, fixed-layout table column, where nowrap clips the label."
@@ -2696,6 +2766,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-banner-title-text-color",
         "value": "var(--text-primary)",
         "notes": "Title colour."
+      },
+      {
+        "name": "--ds-banner-title-font-size",
+        "value": "var(--font-size-s)",
+        "notes": "Size of the banner's title (default --font-size-s, the same as the body). compact does not change it, so a 12px strip is this token plus --ds-banner-body-font-size on the host."
       },
       {
         "name": "--ds-banner-body-font-size",
@@ -2989,12 +3064,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "tokens": [
       {
         "name": "--ds-button-bg-color",
-        "value": "var(--c-base)",
+        "value": "var(--_family-base)",
         "notes": "Surface fill — variants re-point the default."
       },
       {
         "name": "--ds-button-label-color",
-        "value": "var(--c-on)",
+        "value": "var(--_family-on)",
         "notes": "Label/icon colour."
       },
       {
@@ -3021,6 +3096,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-button-border-color",
         "value": "transparent",
         "notes": "Border colour (outline variant overrides)."
+      },
+      {
+        "name": "--ds-button-border-color-hover",
+        "value": "var(--_button-border-color)",
+        "notes": "Border colour on hover. Defaults to the resting --ds-button-border-color (the outline variant's own border included), so nothing moves until this is set."
+      },
+      {
+        "name": "--ds-button-border-color-active",
+        "value": "var(--_button-border-color-hover)",
+        "notes": "Border colour while pressed. Defaults to --ds-button-border-color-hover, so the edge holds through the press until this is set."
       },
       {
         "name": "--ds-button-border-width",
@@ -3326,6 +3411,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-chart-legend-swatch-size",
         "value": "var(--space-2-5)",
         "notes": "Diameter of the round colour chip in ds-chart-legend, on both axes (default --space-2-5). ds-line-chart feeds it from --ds-line-chart-swatch-size."
+      },
+      {
+        "name": "--ds-chart-legend-hover-bg-color",
+        "value": "var(--surface-secondary)",
+        "notes": "Tint behind a legend entry under the pointer or holding keyboard focus, in ds-chart-legend and the ds-pie-chart legend (default --surface-secondary)."
+      },
+      {
+        "name": "--ds-chart-legend-hover-text-color",
+        "value": "var(--text-primary)",
+        "notes": "Label colour of a hovered or focused legend entry, in ds-chart-legend and the ds-pie-chart legend (default --text-primary)."
       }
     ]
   },
@@ -4132,6 +4227,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Empty state title font size (defaults to --font-size-h5)."
       },
       {
+        "name": "--ds-empty-state-title-font-family",
+        "value": "var(--font-sans)",
+        "notes": "Empty state title face (default --font-sans; ds-modal's title uses --font-heading, so a display face on both is two declarations)."
+      },
+      {
+        "name": "--ds-empty-state-title-font-weight",
+        "value": "var(--font-weight-bold)",
+        "notes": "Empty state title weight (default --font-weight-bold)."
+      },
+      {
         "name": "--ds-empty-state-body-text-color",
         "value": "var(--text-secondary)",
         "notes": "Body colour."
@@ -4157,6 +4262,36 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-field-height",
         "value": "var(--field-h-#{$size})",
         "notes": "Control-box height for the field family, overriding the size class. The sm/md/lg defaults come from the --field-h-* scale; set this to pin one height regardless of size."
+      },
+      {
+        "name": "--ds-field-border-color",
+        "value": "var(--border-default)",
+        "notes": "Resting border colour for the text-entry fields - input, textarea, select, multi-select, autocomplete and search - read under each one's own border token, so --ds-input-border or --ds-select-border-color still wins where set. Default --border-default. The date, time and colour pickers keep their own -trigger-* tokens."
+      },
+      {
+        "name": "--ds-field-border-color-hover",
+        "value": "var(--border-strong)",
+        "notes": "Hovered border colour for the same six fields, under each one's own token. Default --border-strong; ds-search keeps its border steady on hover unless --ds-search-border-hover is set."
+      },
+      {
+        "name": "--ds-field-border-color-focus",
+        "value": "var(--accent)",
+        "notes": "Focused (and open, for the pickers) border colour for the same six fields, under each one's own token. Default --accent."
+      },
+      {
+        "name": "--ds-field-text-color",
+        "value": "var(--text-primary)",
+        "notes": "Value text colour of the same six fields, under each one's own token. Default --text-primary."
+      },
+      {
+        "name": "--ds-field-placeholder-color",
+        "value": "var(--text-tertiary)",
+        "notes": "Placeholder colour of the same six fields, under each one's own token. Default --text-tertiary."
+      },
+      {
+        "name": "--ds-field-font-size",
+        "value": "var(--font-size-s)",
+        "notes": "Text size of the same six fields, under each one's own token (--ds-input-font-size, --ds-select-font-size, ...). Default --font-size-s."
       },
       {
         "name": "--ds-field-label-font-size",
@@ -4393,6 +4528,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Border colour (outlined variant overrides)."
       },
       {
+        "name": "--ds-icon-button-border-hover",
+        "value": "var(--_icon-button-border)",
+        "notes": "Border colour on hover. Defaults to the resting --ds-icon-button-border (the outlined variant's own border included), so nothing moves until this is set."
+      },
+      {
+        "name": "--ds-icon-button-border-active",
+        "value": "var(--_icon-button-border-hover)",
+        "notes": "Border colour while pressed. Defaults to --ds-icon-button-border-hover."
+      },
+      {
         "name": "--ds-icon-button-bg-color-hover",
         "value": "var(--surface-muted)",
         "notes": "Hover fill — filled/selected derive it from the resolved bg."
@@ -4451,27 +4596,27 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-input-border",
-        "value": "var(--border-default)",
+        "value": "var(--_field-border-color)",
         "notes": "Default border."
       },
       {
         "name": "--ds-input-border-hover",
-        "value": "var(--border-strong)",
+        "value": "var(--_field-border-color-hover)",
         "notes": "Hover border."
       },
       {
         "name": "--ds-input-border-focus",
-        "value": "var(--accent)",
+        "value": "var(--_field-border-color-focus)",
         "notes": "Focus border."
       },
       {
         "name": "--ds-input-text-color",
-        "value": "var(--text-primary)",
+        "value": "var(--_field-text-color)",
         "notes": "Value text."
       },
       {
         "name": "--ds-input-placeholder",
-        "value": "var(--text-tertiary)",
+        "value": "var(--_field-placeholder-color)",
         "notes": "Placeholder text."
       },
       {
@@ -4536,8 +4681,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-input-font-size",
-        "value": "var(--font-size-s)",
-        "notes": "Value text size."
+        "value": "var(--_field-font-size)",
+        "notes": "Value text size. Also read by ds-textarea."
       },
       {
         "name": "--ds-input-clear-color",
@@ -5222,7 +5367,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-multi-select-border-color",
-        "value": "var(--border-default)",
+        "value": "var(--_field-border-color)",
         "notes": "Multi-select trigger border (defaults to --border-default)."
       },
       {
@@ -5232,13 +5377,28 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-multi-select-text-color",
-        "value": "var(--text-primary)",
+        "value": "var(--_field-text-color)",
         "notes": "Multi-select selected-value text colour (defaults to --text-primary)."
       },
       {
         "name": "--ds-multi-select-border-color-focus",
-        "value": "var(--accent)",
+        "value": "var(--_field-border-color-focus)",
         "notes": "Multi-select trigger border while the field holds focus (defaults to --accent)."
+      },
+      {
+        "name": "--ds-multi-select-border-color-hover",
+        "value": "var(--_field-border-color-hover)",
+        "notes": "Trigger border colour on hover (default --ds-field-border-color-hover, then --border-strong)."
+      },
+      {
+        "name": "--ds-multi-select-placeholder-color",
+        "value": "var(--_field-placeholder-color)",
+        "notes": "Placeholder colour shown while nothing is selected (default --ds-field-placeholder-color, then --text-tertiary)."
+      },
+      {
+        "name": "--ds-multi-select-font-size",
+        "value": "var(--_field-font-size)",
+        "notes": "Trigger text size (default --ds-field-font-size, then --font-size-s)."
       },
       {
         "name": "--ds-multi-select-option-bg-color-active",
@@ -5454,6 +5614,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-page-header-title-font-size",
         "value": "var(--font-size-h3)",
         "notes": "Title size — 28px, dropping to 22px below the mobile breakpoint. Raise it for a brand-scale header; 28px is the productive-UI rung."
+      },
+      {
+        "name": "--ds-page-header-subtitle-font-size",
+        "value": "var(--font-size-s)",
+        "notes": "Subtitle size (default --font-size-s). The title has --ds-page-header-title-font-size beside it."
       },
       {
         "name": "--ds-page-header-title-gap",
@@ -5793,7 +5958,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-search-border",
-        "value": "var(--border-default)",
+        "value": "var(--_field-border-color)",
         "notes": "Default border."
       },
       {
@@ -5803,7 +5968,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-search-border-hover",
-        "value": "var(--border-default)",
+        "value": "var(--_search-border)",
         "notes": "Hover border."
       },
       {
@@ -5813,7 +5978,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-search-border-focus",
-        "value": "var(--accent)",
+        "value": "var(--_field-border-color-focus)",
         "notes": "Focus border."
       },
       {
@@ -5823,18 +5988,23 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-search-text-color",
-        "value": "var(--text-primary)",
+        "value": "var(--_field-text-color)",
         "notes": "Query text."
       },
       {
         "name": "--ds-search-placeholder",
-        "value": "var(--text-tertiary)",
+        "value": "var(--_field-placeholder-color)",
         "notes": "Placeholder."
       },
       {
         "name": "--ds-search-max-width",
         "value": "none",
         "notes": "Search field max-width cap (none by default)."
+      },
+      {
+        "name": "--ds-search-font-size",
+        "value": "var(--_field-font-size)",
+        "notes": "Query text size (default --ds-field-font-size, then --font-size-s)."
       }
     ]
   },
@@ -5947,18 +6117,38 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-select-border-color",
-        "value": "var(--border-default)",
+        "value": "var(--_field-border-color)",
         "notes": "Select border colour (defaults to --border-default)."
       },
       {
         "name": "--ds-select-text-color",
-        "value": "var(--text-primary)",
+        "value": "var(--_field-text-color)",
         "notes": "Select value text colour (defaults to --text-primary)."
       },
       {
         "name": "--ds-select-radius",
         "value": "var(--ds-radius-control)",
         "notes": "Select corner radius (defaults to --radius-md)."
+      },
+      {
+        "name": "--ds-select-border-color-hover",
+        "value": "var(--_field-border-color-hover)",
+        "notes": "Trigger border colour on hover (default --ds-field-border-color-hover, then --border-strong)."
+      },
+      {
+        "name": "--ds-select-border-color-focus",
+        "value": "var(--_field-border-color-focus)",
+        "notes": "Trigger border colour while focused or open (default --ds-field-border-color-focus, then --accent)."
+      },
+      {
+        "name": "--ds-select-placeholder-color",
+        "value": "var(--_field-placeholder-color)",
+        "notes": "Placeholder colour while no value is selected (default --ds-field-placeholder-color, then --text-tertiary)."
+      },
+      {
+        "name": "--ds-select-font-size",
+        "value": "var(--_field-font-size)",
+        "notes": "Trigger text size (default --ds-field-font-size, then --font-size-s)."
       },
       {
         "name": "--select-bg-color",
@@ -6180,6 +6370,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-skeleton-wave-duration",
         "value": "3400ms",
         "notes": "3400ms — one period of travel, in which two waves cross: a quiet one and a main one. Slower than the shared loop token on purpose: a placeholder is background and should not pull the eye."
+      },
+      {
+        "name": "--ds-skeleton-wave-steps",
+        "value": "68",
+        "notes": ""
       },
       {
         "name": "--ds-skeleton-wave-angle",
@@ -7180,6 +7375,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Per-side cell padding override (also the header gutter) — set 0 for a flush first column; falls back to --ds-table-cell-padding-x."
       },
       {
+        "name": "--ds-table-utility-column-width",
+        "value": "var(--space-6)",
+        "notes": "Width hint of the trailing column the column picker and the row-actions button ride in (default --space-6, the buttons' own 24px). Cells are border-box, so the rendered column is max(this, button + both paddings); narrow it through --ds-table-utility-column-padding-x."
+      },
+      {
+        "name": "--ds-table-utility-column-padding-x",
+        "value": "var(--_table-cell-padding-left)",
+        "notes": "Horizontal padding of the utility column on both sides, one length (default the cell padding chain: --ds-table-cell-padding-left / -right, then -x). 0 makes the column exactly the button's width."
+      },
+      {
         "name": "--ds-table-head-padding-top",
         "value": "var(--table-head-pad-y)",
         "notes": "Per-side header padding override; falls back to the density value --table-head-pad-y."
@@ -7213,6 +7418,21 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-table-expand-column-width",
         "value": "var(--space-10)",
         "notes": "Table row-expand toggle column width (--space-10)."
+      },
+      {
+        "name": "--ds-table-footer-padding-y",
+        "value": "var(--space-3)",
+        "notes": "Block padding of the pagination footer under the rows (default --space-3). The inline sides follow the cell padding chain; -top and -bottom override one side each."
+      },
+      {
+        "name": "--ds-table-footer-padding-top",
+        "value": "var(--_table-footer-padding-y)",
+        "notes": "Top padding of the pagination footer (default --ds-table-footer-padding-y)."
+      },
+      {
+        "name": "--ds-table-footer-padding-bottom",
+        "value": "var(--_table-footer-padding-y)",
+        "notes": "Bottom padding of the pagination footer (default --ds-table-footer-padding-y)."
       },
       {
         "name": "--table-sticky-header-z",

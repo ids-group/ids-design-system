@@ -19,7 +19,8 @@
     @if (options.typeToConfirm; as phrase) {
       <label class="confirm-field">
         <span class="confirm-hint">
-          Type <b>{{ phrase }}</b> to confirm
+          {{ intl().dialog.typeToConfirmBefore }} <b>{{ phrase }}</b>
+          {{ intl().dialog.typeToConfirmAfter }}
         </span>
 
         <input
@@ -38,14 +39,14 @@
       color="neutral"
       variant="outline"
       (pressed)="cancel()">
-      {{ options.cancelLabel ?? 'Cancel' }}
+      {{ options.cancelLabel ?? intl().dialog.cancel }}
     </ds-button>
 
     <ds-button
       [color]="confirmColor"
       [disabled]="confirmDisabled()"
       (pressed)="confirm()">
-      {{ options.confirmLabel ?? 'Confirm' }}
+      {{ options.confirmLabel ?? intl().dialog.confirm }}
     </ds-button>
   </ng-container>
 </ds-modal-card>

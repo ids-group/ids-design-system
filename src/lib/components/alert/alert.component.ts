@@ -4,11 +4,16 @@ import {
   ViewEncapsulation,
   booleanAttribute,
   computed,
+  inject,
   input,
   output,
 } from '@angular/core';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
-import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
+import {
+  DS_INTL,
+  resolveWithConfig,
+  warnAnnounceOversight,
+} from '@ids-group-ltd/ids-design-system/core';
 import type { IconName } from '@ids-group-ltd/ids-design-system/core';
 import type { AlertVariant } from './alert.types';
 
@@ -24,6 +29,8 @@ import type { AlertVariant } from './alert.types';
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class AlertComponent {
+  protected readonly intl = inject(DS_INTL);
+
   /** Severity — drives colour, the default icon and the ARIA role/live. */
   readonly variant = input<AlertVariant>('info');
   /** Optional bold heading above the message. */
@@ -48,14 +55,15 @@ export class AlertComponent {
     false,
   );
 
-  @HostBinding('attr.role')
-  protected get ariaRole(): 'alert' | 'status' | null {
-    if (!this.announceResolved()) {
-      return null;
-    }
+  private readonly liveRole = computed<'alert' | 'status'>(() => {
     const value = this.variant();
 
     return value === 'error' || value === 'warning' ? 'alert' : 'status';
+  });
+
+  @HostBinding('attr.role')
+  protected get ariaRole(): 'alert' | 'status' | null {
+    return this.announceResolved() ? this.liveRole() : null;
   }
 
   @HostBinding('attr.aria-live')
@@ -64,7 +72,18 @@ export class AlertComponent {
       return null;
     }
 
-    return this.ariaRole === 'alert' ? 'assertive' : 'polite';
+    return this.liveRole() === 'alert' ? 'assertive' : 'polite';
+  }
+
+  constructor() {
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      warnAnnounceOversight('ds-alert', 'alert', () => ({
+        variant: this.variant(),
+        title: this.title(),
+        assertive: this.liveRole() === 'alert',
+        announce: this.announce(),
+      }));
+    }
   }
 
   protected readonly classes = computed(() => `alert ${this.variant()}`);

@@ -29,6 +29,7 @@ export {
   AccordionItemComponent,
 } from '@ids-group-ltd/ids-design-system/components/accordion';
 export type {
+  AccordionChevron,
   AccordionContract,
   AccordionItemRef,
 } from '@ids-group-ltd/ids-design-system/components/accordion';
@@ -396,14 +397,18 @@ export type {
 // Core
 export {
   DS_CONFIG,
+  DS_INTL,
+  DS_INTL_DEFAULTS,
   ICONS,
   flattenDsOptions,
   inheritDsConfig,
   isDsOptionGroup,
   isTextClipped,
   provideDsConfig,
+  provideDsIntl,
 } from '@ids-group-ltd/ids-design-system/core';
 export type {
+  AnnounceState,
   ChartAxis,
   ChartAxisMode,
   ChartCurve,
@@ -411,12 +416,17 @@ export type {
   ChartFormatLocation,
   ChartFrame,
   ChartGaps,
+  ChartRendering,
   ChartStackMode,
   ChartThreshold,
   ChartThresholdDash,
   ChartValueFormat,
   DsConfig,
   DsControlWidth,
+  DsIntl,
+  DsIntlOverrides,
+  DsIntlSortDirection,
+  DsIntlStepState,
   DsOption,
   DsOptionGroup,
   DsOptionItem,

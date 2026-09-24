@@ -4,7 +4,7 @@
       class="pin-reset"
       type="button"
       (click)="releaseCategoryPin()">
-      Unpin
+      {{ intl().chart.unpin }}
     </button>
   }
 
@@ -20,18 +20,21 @@
       role="status">
       {{ errorTextResolved() }}
     </p>
-  } @else if (loading()) {
+  } @else if (loading() || !renderReady()) {
     <div
       class="skeleton"
       aria-hidden="true">
-      <ds-skeleton height="var(--_line-chart-skeleton-height)" />
+      <ds-skeleton
+        height="var(--_line-chart-skeleton-height)"
+        [shimmer]="loading()" />
 
       @if (skeletonSeries().length > 1) {
         <div class="skeleton-legend">
           @for (placeholder of skeletonSeries(); track $index) {
             <ds-skeleton
               width="var(--space-16)"
-              height="var(--space-3)" />
+              height="var(--space-3)"
+              [shimmer]="loading()" />
           }
         </div>
       }
@@ -44,7 +47,7 @@
     <p
       class="empty"
       role="status">
-      {{ noVisibleSeriesText() }}
+      {{ noVisibleSeriesTextResolved() }}
     </p>
 
     <ds-chart-legend
@@ -94,9 +97,11 @@
         [valueFormat]="valueFormatResolved()"
         (pointClicked)="onPointClicked($event)" />
 
-      <svg:g
-        dsSeriesAnnotation
-        [annotations]="markAnnotations()" />
+      @if (markAnnotations().length) {
+        <svg:g
+          dsSeriesAnnotation
+          [annotations]="markAnnotations()" />
+      }
     </ds-chart>
 
     @if (showLegend()) {

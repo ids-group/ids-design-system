@@ -16,7 +16,7 @@
     Every banner severity as a permanent specimen.
   </p>
 
-  <div class="states states--cols-1">
+  <div class="states is-cols-1">
     <div class="state-cell">
       <div class="state-cell-stage">
         <ds-banner
@@ -24,7 +24,7 @@
           title="Inventory sync paused"
           [dismissible]="true"
           [announce]="true">
-          Last sync 14 minutes ago. Resume to fetch the latest asset register.
+          Last sync 14 minutes ago. Resume to fetch the latest equipment list.
         </ds-banner>
       </div>
 
@@ -37,7 +37,7 @@
       <div class="state-cell-stage">
         <ds-banner
           variant="success"
-          title="3 logistics plans recomputed"
+          title="3 delivery schedules recomputed"
           [dismissible]="true">
           All allocations are within the 95% capacity limit.
         </ds-banner>
@@ -103,14 +103,14 @@
     Banner with a primary follow-up action — used when the user must respond.
   </p>
 
-  <div class="states states--cols-1">
+  <div class="states is-cols-1">
     <div class="state-cell">
       <div class="state-cell-stage">
         <ds-banner
           variant="severe"
           title="Recompute required">
-          Changing the build start will recompute 3 Logistics plans and 12
-          Resource allocations across Alpha, Beta and Gamma.
+          Changing the build start will recompute 3 Delivery schedules and 12
+          Staff rotas across Alpha, Beta and Gamma.
           <ng-container actions>
             <ds-button size="sm">
               Preview impact
@@ -140,7 +140,7 @@
     Single-line variant — title and dismiss only, no body.
   </p>
 
-  <div class="states states--cols-1">
+  <div class="states is-cols-1">
     <div class="state-cell">
       <div class="state-cell-stage">
         <ds-banner
@@ -186,7 +186,7 @@
     single trailing CTA.
   </p>
 
-  <div class="states states--cols-1">
+  <div class="states is-cols-1">
     <div class="state-cell">
       <div class="state-cell-stage">
         <ds-banner
@@ -248,14 +248,14 @@
     / minimal contexts.
   </p>
 
-  <div class="states states--cols-1">
+  <div class="states is-cols-1">
     <div class="state-cell">
       <div class="state-cell-stage">
         <ds-banner
           variant="success"
           title="All checks passed"
           [accentRail]="true">
-          12 resource allocations validated against the 95% capacity rule.
+          12 staff rotas validated against the 95% capacity rule.
         </ds-banner>
       </div>
 
@@ -270,7 +270,7 @@
           variant="success"
           title="All checks passed"
           [accentRail]="false">
-          12 resource allocations validated against the 95% capacity rule.
+          12 staff rotas validated against the 95% capacity rule.
         </ds-banner>
       </div>
 
@@ -279,4 +279,28 @@
       </div>
     </div>
   </div>
+
+  <h3 class="block-title t-h4">
+    Announcing
+  </h3>
+
+  <p class="block-desc t-s">
+    <code>
+      announce
+    </code> is off unless bound on the element or set app-wide with
+    <code>
+      provideDsConfig(&#123; banner: &#123; announce: true &#125; &#125;)
+    </code>: an alert region fires on
+    insertion, so page furniture would interrupt the reader on every route. Dev mode warns in two
+    cases. An <code>error</code>, <code>warning</code> or <code>severe</code> banner left unbound
+    while the key is unset is one a screen reader will not hear; that warning ends the moment the
+    app sets the key, <code>true</code> or <code>false</code>. An <code>info</code>,
+    <code>
+      success
+    </code> or <code>neutral</code> banner that announces only because the key is
+    <code>
+      true
+    </code> is nearly always furniture written after the key was adopted; that warning
+    ends at an <code>[announce]</code> binding. Neither reaches a production build.
+  </p>
 </docs-section>

@@ -28,7 +28,7 @@
       <div class="motion-cell">
         <div class="loop-track">
           <div
-            class="loop-puck loop-puck--dur"
+            class="loop-puck is-dur"
             [style.transitionDuration]="d.value">
           </div>
         </div>
@@ -62,7 +62,7 @@
       <div class="motion-cell">
         <div class="loop-track">
           <div
-            class="loop-puck loop-puck--ease"
+            class="loop-puck is-ease"
             [style.transitionTimingFunction]="e.curve">
           </div>
         </div>
@@ -94,7 +94,7 @@
     @for (c of combined; track c.label) {
       <div
         class="combined-cell"
-        [class]="'combined-cell--' + c.kind"
+        [class]="'is-' + c.kind"
         [style.--demo-dur]="c.duration"
         [style.--demo-ease]="c.easing">
         <div class="combined-stage">

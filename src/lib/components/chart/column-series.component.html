@@ -8,34 +8,35 @@
   [style.--_column-slots]="slotCount()"
   (pointerover)="onMarkOver($event)"
   (pointerout)="onMarkOut($event)"
-  (focusin)="onMarkFocus($event)"
-  (focusout)="onMarkBlur($event)"
   (keydown)="onMarkKey($event)"
   (click)="onMarkClick($event)">
   <!-- `userSpaceOnUse`, so the stripe pitch is the same on a tall column and a short one: with the
        default object bounding box it would scale with each mark and read as a different texture
-       per bar. -->
-  <svg:defs>
-    <svg:pattern
-      class="hatch"
-      patternUnits="userSpaceOnUse"
-      width="8"
-      height="8"
-      patternTransform="rotate(45)"
-      [attr.id]="hatchId">
-      <svg:rect
-        class="hatch-ground"
+       per bar. The stripe runs down the tile's middle: on its edge the tile clips it to half its
+       width. -->
+  @if (hatchInUse()) {
+    <svg:defs>
+      <svg:pattern
+        class="hatch"
+        patternUnits="userSpaceOnUse"
         width="8"
-        height="8" />
+        height="8"
+        patternTransform="rotate(-45)"
+        [attr.id]="hatchId">
+        <svg:rect
+          class="hatch-ground"
+          width="8"
+          height="8" />
 
-      <svg:line
-        class="hatch-stripe"
-        x1="0"
-        y1="0"
-        x2="0"
-        y2="8" />
-    </svg:pattern>
-  </svg:defs>
+        <svg:line
+          class="hatch-stripe"
+          x1="4"
+          y1="0"
+          x2="4"
+          y2="8" />
+      </svg:pattern>
+    </svg:defs>
+  }
 
   @for (mark of marks(); track mark.key; let index = $index) {
     <svg:g
@@ -65,6 +66,7 @@
         [attr.height]="hit.height" />
 
       <svg:g
+        #barEl
         class="bar"
         [style.transform-origin]="mark.origin">
         <!-- Under the capped rect, not beside it: `rx` rounds all four corners, and the cap

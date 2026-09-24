@@ -26,6 +26,7 @@
   --_banner-radius:    var(--ds-banner-radius,    var(--ds-radius-control));
   --_banner-bar-width: var(--ds-banner-bar-width, var(--banner-bar-w));
   --_banner-title-text-color:  var(--ds-banner-title-text-color,  var(--text-primary));
+  --_banner-title-font-size: var(--ds-banner-title-font-size, var(--font-size-s));
   --_banner-body-font-size: var(--ds-banner-body-font-size, var(--font-size-s));
   --_banner-close-icon-color:  var(--ds-banner-close-icon-color,  var(--icon-default));
   --_banner-close-icon-color-hover: var(--ds-banner-close-icon-color-hover, var(--icon-strong));
@@ -96,7 +97,7 @@
   }
 
   .title {
-    font: var(--font-weight-bold) var(--font-size-s) / var(--line-height-base) var(--font-sans);
+    font: var(--font-weight-bold) var(--_banner-title-font-size) / var(--line-height-base) var(--font-sans);
     color: var(--_banner-title-text-color);
     margin: 0;
   }

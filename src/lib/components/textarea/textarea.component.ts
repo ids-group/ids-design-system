@@ -5,11 +5,12 @@ import {
   booleanAttribute,
   computed,
   forwardRef,
+  inject,
   input,
   model,
   viewChild,
 } from '@angular/core';
-import { optionalBound } from '@ids-group-ltd/ids-design-system/core';
+import { DS_INTL, optionalBound } from '@ids-group-ltd/ids-design-system/core';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DsControlValueAccessor } from '@ids-group-ltd/ids-design-system/components';
 import type { TextareaResize } from './textarea.types';
@@ -42,6 +43,7 @@ import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
   ],
 })
 export class TextareaComponent extends DsControlValueAccessor<string> {
+  protected readonly intl = inject(DS_INTL);
   private readonly control =
     viewChild<ElementRef<HTMLTextAreaElement>>('control');
 

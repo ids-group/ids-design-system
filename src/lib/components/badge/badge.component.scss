@@ -17,6 +17,7 @@
   --_badge-padding-x:       var(--ds-badge-padding-x,       var(--badge-pad-x));
   --_badge-padding-y:       var(--ds-badge-padding-y,       var(--badge-pad-y));
   --_badge-font-weight: var(--ds-badge-font-weight, var(--font-weight-bold));
+  --_badge-font-size: var(--ds-badge-font-size, var(--font-size-xs));
   --_badge-white-space: var(--ds-badge-white-space, nowrap);
   --_badge-letter-spacing: var(--ds-badge-letter-spacing, var(--letter-spacing-wide));
 
@@ -25,7 +26,7 @@
   gap: var(--badge-gap);
   padding: var(--_badge-padding-y) var(--_badge-padding-x);
   border-radius: var(--_badge-radius);
-  font: var(--_badge-font-weight) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
+  font: var(--_badge-font-weight) var(--_badge-font-size) / var(--line-height-base) var(--font-sans);
   letter-spacing: var(--_badge-letter-spacing);
   white-space: var(--_badge-white-space);
   background-color: var(--_badge-bg-color);
@@ -35,8 +36,9 @@
 
   &.solid     { --_badge-bg-color: var(--ds-badge-bg-color, var(--accent));    --_badge-label-color: var(--ds-badge-label-color, var(--accent-on)); }
   &.count {
+    --_badge-font-size: var(--ds-badge-font-size, var(--font-size-2xs));
+
     min-width: var(--badge-count-size); height: var(--badge-count-size); padding: 0 var(--space-1-5);
     display: inline-grid; place-items: center;
-    font-size: var(--font-size-2xs);
   }
 }

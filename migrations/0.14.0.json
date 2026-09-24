@@ -444,6 +444,31 @@
       ],
       "verify": "Every read of a pager's `layout()` handles `null` or reads `layoutResolved()` instead, and a subclass overriding `layout` declares it `PaginationLayout | null`.",
       "note": "`layout` was `input<PaginationLayout>('grouped')` and is `input<PaginationLayout | null>(null)`, so an unset pager can fall back to `DS_CONFIG.pagination.layout`, then `'grouped'`. Writers are fine: `'grouped'` and `'spread'` still bind. Readers of the raw input and overriders see the widened type."
+    },
+    {
+      "id": "cell-template-context-typed-unknown",
+      "kind": "behavior",
+      "old": "CellTemplateDirective",
+      "new": null,
+      "surface": ["template", "typescript"],
+      "action": "On every `<ng-template dsCellTemplate=\"...\">` whose context variable is read as a row, add `[dsCellTemplateOf]` bound to the same expression as that table's `[data]`, so the context types as the row type. A helper that only casts the row (`(row: unknown)` returning `row as Row`) becomes redundant with it (delete list: table-row-caster-helpers).",
+      "appliesWhen": "Every `dsCellTemplate` inside a `ds-table` whose template reads a field of its row or passes the row to a typed method, in an app built with `strictTemplates`. A template that never reads its context variable needs nothing. A template passed to `rowExpandTemplate` or `cellTemplateMap` carries no context guard, so its row stays untyped (`any`) and needs neither.",
+      "pitfall": "Casting the row with `$any()` or a helper silences the error and keeps the template untyped. Binding `[dsCellTemplateOf]` to an array typed `unknown[]` or `any[]` compiles without typing anything, so bind the table's own `[data]` expression.",
+      "restore": null,
+      "searchHints": [
+        "dsCellTemplate",
+        "dsCellTemplateOf",
+        "let-row",
+        "CellTemplateContext"
+      ],
+      "detect": [
+        "dsCellTemplate=\"",
+        "let-row",
+        "Object is of type 'unknown'",
+        "Argument of type 'unknown' is not assignable"
+      ],
+      "verify": "The app builds under strictTemplates with no TS2571 or TS2345 on a cell template's context variable, and every `dsCellTemplate` that reads its row carries `[dsCellTemplateOf]` equal to its table's `[data]` binding.",
+      "note": "`CellTemplateDirective` is generic, `CellTemplateDirective<T = unknown>`, and declares a template context guard, so the context is `CellTemplateContext<T>` with `T` taken from `[dsCellTemplateOf]` and `unknown` without it. Before 0.14.0 the directive declared no guard and the context was typed `any`, so a template reading `row.name` compiled; it now fails with TS2571 until the binding is added. The binding is never read at runtime."
     }
   ],
   "informational": [
@@ -462,7 +487,7 @@
     },
     "Legend hover fades the other series whether or not dimOthers is set, and ds-column-chart wires its legend for it. dsColumnSeries takes seriesKey and highlighted for a hand-composed plot.",
     {
-      "text": "ds-modal and ds-modal-card stack their [actions] into a full-width column once the buttons outgrow the card, confirming action at the bottom by default (DOM order, matching Tab order) - set --ds-modal-actions-stacked-direction: column-reverse to put it on top instead; a row that fits stays right-aligned. The row used to overflow past the card's start edge and clip the first button, so a consumer rule that wraps ds-modal-card .actions is redundant (delete list: modal-actions-flex-wrap).",
+      "text": "ds-modal and ds-modal-card stack their [actions] into a full-width column once the buttons outgrow the card, confirming action at the bottom by default (DOM order, matching Tab order) - set --ds-modal-actions-stacked-direction: column-reverse to put it on top instead; a row that fits stays right-aligned. The row used to overflow past the card's start edge and clip the first button, so a consumer rule that wraps ds-modal-card .actions is redundant where the labels are fixed when the modal opens (delete list: modal-actions-flex-wrap).",
       "verify": "Open a sm modal whose three buttons carry long labels: each button spans the card's full width and none is clipped, the confirming button at the bottom of the stack by default and at the top under --ds-modal-actions-stacked-direction: column-reverse; a modal with two short buttons keeps them in one right-aligned row."
     },
     {
@@ -473,7 +498,6 @@
     "A skeleton's shimmer pauses while it is off screen and advances in 68 steps over the default 3400ms. A `--ds-skeleton-wave-duration` of yours changes the step rate with it, since the step count is fixed; nothing needs editing.",
     "Every field control has blur(), the counterpart of focus(): it drops focus from whichever descendant holds it. ds-search has the same pair.",
     "ds-textarea exposes selectionStart, selectionEnd, setSelectionRange(start, end, direction?) and select(), forwarded to its native textarea. After value.set(...), set the range from a setTimeout: the value reaches the element a microtask later and drops the caret to the end.",
-    "dsCellTemplate is generic: [dsCellTemplateOf]=\"rows\" on the ng-template types let-row as the row type under strict templates and is never read at runtime; without it row stays unknown. CellTemplateContext<T> is exported.",
     "ds-switch takes controlled: the switch cancels its own toggle and emits checkedRequested with the asked-for value, moving only when [checked] changes from outside. Under controlled the gesture does not update a two-way checked, ngModel or form control; the host commits the value through [checked]. Off by default; nothing changes for an existing switch.",
     "ds-pagination takes loading: while true the nav reports aria-busy, the range label becomes an inline skeleton, and Prev, Next, the page buttons and the rows-per-page select are disabled. ds-table sets it on its footer pager whenever it draws skeleton rows, and leaves it off in the overlay mode.",
     "The dsTableColumns panel names a column whose label is empty by its screenReaderLabel, which also gives that row's checkbox an accessible name.",
@@ -503,7 +527,7 @@
         "ds-modal-card .actions",
         "flex-wrap: wrap"
       ],
-      "why": "The card measures its actions row and stacks it full-width when the buttons outgrow it, so a rule wrapping the row only restates that the buttons must not be clipped.",
+      "why": "The card measures its actions row on first render and whenever its header resizes, and stacks it full-width when the buttons outgrow it, so a rule wrapping the row only restates that the buttons must not be clipped. It stays legitimate where a button label or the set of actions changes after the modal opens, because that change is not measured.",
       "replaceWith": "nothing"
     },
     {
@@ -571,7 +595,7 @@
         "return row as "
       ],
       "why": "[dsCellTemplateOf]=\"rows\" on the ng-template types let-row as the row type, so a one-line caster exists only to do what the binding now does.",
-      "replaceWith": "[dsCellTemplateOf] bound to the table's rows, then row.field in the template. Keep a caster only where it serves rowExpandTemplate or cellTemplateMap, whose contexts stay unknown"
+      "replaceWith": "[dsCellTemplateOf] bound to the table's rows, then row.field in the template. A template passed to rowExpandTemplate or cellTemplateMap carries no context guard, so its row is untyped (any) and a caster there only adds a type"
     },
     {
       "id": "switch-confirm-wrapper",

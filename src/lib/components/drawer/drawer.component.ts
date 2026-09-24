@@ -13,6 +13,7 @@ import {
 import { A11yModule } from '@angular/cdk/a11y';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { BodyScrollLockService } from '@ids-group-ltd/ids-design-system/overlay';
+import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 import type { DrawerPlacement } from './drawer.types';
 import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
 
@@ -34,6 +35,7 @@ let nextId = 0;
 })
 export class DrawerComponent implements OnDestroy {
   private readonly scrollLock = inject(BodyScrollLockService);
+  protected readonly intl = inject(DS_INTL);
 
   /** Open state, two-way bound. */
   readonly open = model<boolean>(false);
@@ -72,8 +74,9 @@ export class DrawerComponent implements OnDestroy {
         this.closeFallbackTimer = null;
       } else if (this.wasOpen) {
         this.closing.set(true);
-        // Chrome freezes CSS animations on a backgrounded tab, so animationend
-        // may never fire — this synthetic fallback guarantees teardown anyway.
+        // Two cases never deliver animationend: Chrome freezes CSS animations on a
+        // backgrounded tab, and a 0s reduced-motion leave finishes before a listener
+        // hears it. This timer is the teardown guarantee, not belt-and-braces.
         clearTimeout(this.closeFallbackTimer ?? undefined);
         this.closeFallbackTimer = setTimeout(() => this.finishClose(), 300);
       }

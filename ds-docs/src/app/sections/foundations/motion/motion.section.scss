@@ -41,22 +41,22 @@
     /* Durations · shared easing, varying duration. Hover plays once.
        Animate 'left' (not translateX) — % inside translate references the
        element's own width (24px), so calc(100% - 24px) was always 0. */
-    .loop-puck--dur {
+    .loop-puck.is-dur {
       transition-property: left;
       transition-duration: var(--duration-base);
       transition-timing-function: var(--ease-standard);
     }
-    .motion-cell:hover .loop-puck--dur {
+    .motion-cell:hover .loop-puck.is-dur {
       left: calc(100% - 24px);
     }
 
     /* Eases · shared duration (long enough to read the curve), varying easing. */
-    .loop-puck--ease {
+    .loop-puck.is-ease {
       transition-property: left;
       transition-duration: 1400ms;
       transition-timing-function: var(--ease-standard);
     }
-    .motion-cell:hover .loop-puck--ease {
+    .motion-cell:hover .loop-puck.is-ease {
       left: calc(100% - 24px);
     }
 
@@ -95,7 +95,7 @@
       color: var(--text-primary);
       transition: transform var(--demo-dur) var(--demo-ease), box-shadow var(--demo-dur) var(--demo-ease);
     }
-    .combined-cell--fade:hover .demo-card-lift {
+    .combined-cell.is-fade:hover .demo-card-lift {
       transform: translateY(-4px);
       box-shadow: var(--shadow-3);
     }
@@ -123,7 +123,7 @@
       font: var(--font-weight-bold) var(--font-size-s) / 1 var(--font-sans);
       color: var(--text-primary);
     }
-    .combined-cell--slide:hover .demo-toast {
+    .combined-cell.is-slide:hover .demo-toast {
       transform: translateY(0);
       opacity: 1;
     }
@@ -139,7 +139,7 @@
       opacity: 0;
       transition: transform var(--demo-dur) var(--demo-ease), opacity var(--demo-dur) var(--demo-ease);
     }
-    .combined-cell--scale:hover .demo-modal {
+    .combined-cell.is-scale:hover .demo-modal {
       transform: scale(1);
       opacity: 1;
     }
@@ -157,7 +157,7 @@
       opacity: 0;
       transition: transform var(--demo-dur) var(--demo-ease), opacity var(--demo-dur) var(--demo-ease);
     }
-    .combined-cell--overshoot:hover .demo-tick {
+    .combined-cell.is-overshoot:hover .demo-tick {
       transform: scale(1);
       opacity: 1;
     }

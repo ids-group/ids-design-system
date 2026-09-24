@@ -129,9 +129,9 @@
   border-radius: var(--radius-md);
   vertical-align: middle;
 }
-.focus-demo--ring   { box-shadow: var(--focus-ring); }
-.focus-demo--field  { box-shadow: var(--focus-field); }
-.focus-demo--error { box-shadow: var(--focus-ring-error); }
+.focus-demo.is-ring   { box-shadow: var(--focus-ring); }
+.focus-demo.is-field  { box-shadow: var(--focus-field); }
+.focus-demo.is-error { box-shadow: var(--focus-ring-error); }
 
 /* ---------- Typography samples ---------- */
 .sample-font {

@@ -2,14 +2,15 @@ import {
   ChangeDetectionStrategy,
   Component,
   ViewEncapsulation,
+  computed,
   signal,
 } from '@angular/core';
 import { BarChartComponent } from 'ds/bar-chart';
 import type { BarChartRow } from 'ds/bar-chart';
+import { RadioComponent, RadioGroupComponent } from 'ds/radio-group';
 import { DocsChartDataEditorComponent } from '../../shared/docs-chart-data-editor.component';
 import { DocsReplayButtonComponent } from '../../shared/docs-replay-button.component';
 import { DocsSectionComponent } from '../../shared/docs-section.component';
-import { DocsLazyDirective } from '../../shared/docs-lazy.directive';
 
 // A floating bar: each row starts where its own period does, so the bars compare DURATION and
 // PLACEMENT at once, which a bar from zero cannot do.
@@ -115,27 +116,27 @@ const SEGMENT_ROWS: readonly BarChartRow[] = [
     label: 'Engineering',
     value: 412000,
     segments: [
-      { label: 'Salaries', value: 291000 },
-      { label: 'Tooling', value: 74000 },
-      { label: 'Travel', value: 47000 },
+      { id: 'salaries', label: 'Salaries', value: 291000 },
+      { id: 'tooling', label: 'Tooling', value: 74000 },
+      { id: 'travel', label: 'Travel', value: 47000 },
     ],
   },
   {
     label: 'Sales',
     value: 268000,
     segments: [
-      { label: 'Salaries', value: 154000 },
-      { label: 'Tooling', value: 38000 },
-      { label: 'Travel', value: 76000 },
+      { id: 'salaries', label: 'Salaries', value: 154000 },
+      { id: 'tooling', label: 'Tooling', value: 38000 },
+      { id: 'travel', label: 'Travel', value: 76000 },
     ],
   },
   {
     label: 'Support',
     value: 96000,
     segments: [
-      { label: 'Salaries', value: 71000 },
-      { label: 'Tooling', value: 19000 },
-      { label: 'Travel', value: 6000 },
+      { id: 'salaries', label: 'Salaries', value: 71000 },
+      { id: 'tooling', label: 'Tooling', value: 19000 },
+      { id: 'travel', label: 'Travel', value: 6000 },
     ],
   },
 ];
@@ -155,11 +156,12 @@ const MAX_BELOW_DATA_ROWS: readonly BarChartRow[] = [
   selector: 'section-charts-bar-chart',
   standalone: true,
   imports: [
-    DocsLazyDirective,
     BarChartComponent,
     DocsChartDataEditorComponent,
     DocsSectionComponent,
     DocsReplayButtonComponent,
+    RadioComponent,
+    RadioGroupComponent,
   ],
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -203,10 +205,26 @@ export class BarChartSection {
   protected readonly segmentRows = signal<readonly BarChartRow[]>(SEGMENT_ROWS);
   protected readonly detailRows = signal<readonly BarChartRow[]>(DETAIL_ROWS);
   protected readonly segmentKey = [
-    { label: 'Salaries', color: 'var(--ds-chart-series-1-color)' },
-    { label: 'Tooling', color: 'var(--ds-chart-series-2-color)' },
-    { label: 'Travel', color: 'var(--ds-chart-series-3-color)' },
+    {
+      id: 'salaries',
+      label: 'Salaries',
+      color: 'var(--ds-chart-series-1-color)',
+    },
+    {
+      id: 'tooling',
+      label: 'Tooling',
+      color: 'var(--ds-chart-series-2-color)',
+    },
+    { id: 'travel', label: 'Travel', color: 'var(--ds-chart-series-3-color)' },
   ];
+
+  /** `'all'` rather than `null`, because a radio group always has one answer selected. */
+  protected readonly segmentChoice = signal<unknown>('all');
+  protected readonly singledOutSegment = computed(() => {
+    const choice = this.segmentChoice();
+
+    return typeof choice === 'string' && choice !== 'all' ? choice : null;
+  });
   protected readonly maxBelowDataRows =
     signal<readonly BarChartRow[]>(MAX_BELOW_DATA_ROWS);
 }

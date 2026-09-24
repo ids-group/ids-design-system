@@ -10,7 +10,7 @@
     .state { display: flex; flex-direction: column; gap: var(--space-2); align-items: center; }
     .state-lbl { font-size: 11px; color: var(--text-secondary); }
     .state-stage { display: flex; flex-direction: column; align-items: center; gap: var(--space-3); }
-    .state-stage--horiz { flex-direction: row; gap: var(--space-3); }
+    .state-stage.is-horiz { flex-direction: row; gap: var(--space-3); }
     .anchor { color: var(--text-tertiary); }
 
     .demo {

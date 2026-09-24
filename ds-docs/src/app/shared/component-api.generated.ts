@@ -23,6 +23,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "true",
         "required": false,
         "description": "When false, opening one item automatically closes all others."
+      },
+      {
+        "name": "chevron",
+        "kind": "input",
+        "type": "AccordionChevron",
+        "union": [
+          "right",
+          "down"
+        ],
+        "default": "'right'",
+        "required": false,
+        "description": "Which way the closed chevron points on every item: `right` turns down when an item opens, `down` turns up."
       }
     ],
     "outputs": []
@@ -175,11 +187,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "railLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | null",
         "union": null,
-        "default": "'Navigation'",
+        "default": "null",
         "required": false,
-        "description": "Accessible name for the rail while it is a modal overlay."
+        "description": "Accessible name for the rail while it is a modal overlay. Unset falls back to `DS_INTL.appLayout.railLabel`."
       },
       {
         "name": "restoreScroll",
@@ -300,9 +312,9 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
           "main",
           "none"
         ],
-        "default": "'none'",
+        "default": "'main'",
         "required": false,
-        "description": "Announce the card as the page's `main` landmark. `ds-card` renders an `<article>`, which is NOT a landmark, so by default a screen-reader user has nothing to jump to — set `'main'` on a standalone auth page. Opt-in because the layout is also embedded inside pages that already own a `main`, and two `main`s is its own violation."
+        "description": "Announce the card as the page's `main` landmark. `ds-card` renders an `<article>`, which is not a landmark, so this is what lets a screen-reader user jump to the form. Set `'none'` where the layout sits inside a page that already owns a `main`, such as `ds-app-layout`: two `main` landmarks is its own violation."
       }
     ],
     "outputs": []
@@ -483,11 +495,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "placeholder",
         "kind": "input",
-        "type": "string",
+        "type": "string | null",
         "union": null,
-        "default": "'Select…'",
+        "default": "null",
         "required": false,
-        "description": "Placeholder shown in the input when empty."
+        "description": "Placeholder shown in the input when empty. Unset falls back to `DS_INTL.picker.placeholder`."
       },
       {
         "name": "disabled",
@@ -893,11 +905,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "countLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | null",
         "union": null,
-        "default": "'notifications'",
+        "default": "null",
         "required": false,
-        "description": "Noun used in the count's accessible label — set for non-notification counts (cart, results, …)."
+        "description": "Noun used in the count's accessible label — set for non-notification counts (cart, results, …). Unset falls back to `DS_INTL.badge.noun`."
       }
     ],
     "outputs": []
@@ -1215,7 +1227,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Shown in place of the plot when `data` is empty. Unset falls back to `DS_CONFIG.chart.emptyText`, then `'No data'`."
+        "description": "Shown in place of the plot when `data` is empty. Unset falls back to `DS_INTL.chart.empty`."
       },
       {
         "name": "error",
@@ -1233,7 +1245,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "The message the error state prints. Unset falls back to `DS_CONFIG.chart.errorText`, then `'Could not load the data'`."
+        "description": "The message the error state prints. Unset falls back to `DS_INTL.chart.error`."
       },
       {
         "name": "valueFormat",
@@ -1242,7 +1254,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then the browser's locale grouping with a K/M/B suffix past four digits."
+        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
       },
       {
         "name": "interactive",
@@ -1270,6 +1282,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Dims every OTHER mark while one is hovered or focused, so the reader's eye is held on the one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed marks — measured 2026-09-13, the worst pair of three dimmed series falls from dE 14.8 at full opacity to 2.1 at `--ds-chart-dim-opacity`'s default 0.3 — so it buys loudness for one mark and pays for it with the rest of the chart."
+      },
+      {
+        "name": "highlighted",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "The segment to single out, by its `id` - or by its position as a string where it has none. Every other segment in every row fades, the same answer `highlighted` gives on a series mark. Independent of `dimOthers`, which governs what a pointer does. A row without segments is unaffected."
       },
       {
         "name": "staggerMs",
@@ -1868,14 +1889,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "cursor",
         "kind": "input",
-        "type": "'none' | 'category'",
+        "type": "'none' | 'category' | 'auto'",
         "union": [
           "none",
-          "category"
+          "category",
+          "auto"
         ],
-        "default": "'none'",
+        "default": "'auto'",
         "required": false,
-        "description": "Draws a band and a crosshair down the category under the pointer, and reports that category to every mark through `activeIndex`. `'none'`, the default, leaves the plot alone: a chart whose marks are the hover targets already answers per mark, and two affordances on one plot read as two different questions."
+        "description": "Draws a band and a crosshair down the category under the pointer, and reports that category to every mark through `activeIndex`. On a plot of two or more marks that show a tooltip, the panel then names every mark's reading at that category wherever in it the pointer is. `'auto'`, the default, is `'category'` for such a composed plot and `'none'` for a plot of one mark, whose marks already answer per mark: two affordances on one plot read as two different questions."
       },
       {
         "name": "cursorPin",
@@ -1986,7 +2008,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Shown in place of the plot when `categories` is empty. Unset falls back to `DS_CONFIG.chart.emptyText`, then `'No data'`."
+        "description": "Shown in place of the plot when `categories` is empty. Unset falls back to `DS_INTL.chart.empty`."
       },
       {
         "name": "error",
@@ -2004,7 +2026,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "The message the error state prints. Unset falls back to `DS_CONFIG.chart.errorText`, then `'Could not load the data'`."
+        "description": "The message the error state prints. Unset falls back to `DS_INTL.chart.error`."
       },
       {
         "name": "valueFormat",
@@ -2013,7 +2035,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Formats the value-axis ticks. Unset falls back to `DS_CONFIG.chart.valueFormat`, then the browser's locale grouping with a K/M/B suffix past four digits."
+        "description": "Formats the value-axis ticks. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
       },
       {
         "name": "secondaryAxisMode",
@@ -2197,7 +2219,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "kind": "input",
         "type": "ChartValueFormat",
         "union": null,
-        "default": "defaultChartFormat",
+        "default": "chartValueFormat(injectDsLocale())",
         "required": false,
         "description": "Formats every value this series prints. Called with `'tick'` for an axis label and `'tooltip'` everywhere a value is printed in full."
       },
@@ -2236,6 +2258,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Where each mark starts and ends on the value axis, one entry per point. Unset, every mark runs from zero to its own value, which is the unstacked case."
+      },
+      {
+        "name": "axis",
+        "kind": "input",
+        "type": "ChartAxis",
+        "union": [
+          "primary",
+          "secondary"
+        ],
+        "default": "'primary'",
+        "required": false,
+        "description": "Which value axis the columns are measured against. `'secondary'` reads them off the second axis, the way `axis: 'secondary'` does on a line series' data."
       },
       {
         "name": "seriesColor",
@@ -2462,7 +2496,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "kind": "input",
         "type": "ChartValueFormat",
         "union": null,
-        "default": "defaultChartFormat",
+        "default": "chartValueFormat(injectDsLocale())",
         "required": false,
         "description": "Formats every value this series prints. Called with `'tick'` for an axis label and `'tooltip'` everywhere a value is printed in full."
       }
@@ -2934,11 +2968,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "ariaLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | null",
         "union": null,
-        "default": "'Choose colour'",
+        "default": "null",
         "required": false,
-        "description": "Accessible name for the trigger button and panel."
+        "description": "Accessible name for the trigger button and panel. Unset falls back to `DS_INTL.colorPicker.label`."
       },
       {
         "name": "success",
@@ -3089,7 +3123,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Shown in place of the plot when `data` is empty. Unset falls back to `DS_CONFIG.chart.emptyText`, then `'No data'`."
+        "description": "Shown in place of the plot when `data` is empty. Unset falls back to `DS_INTL.chart.empty`."
       },
       {
         "name": "error",
@@ -3107,7 +3141,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "The message the error state prints. Unset falls back to `DS_CONFIG.chart.errorText`, then `'Could not load the data'`."
+        "description": "The message the error state prints. Unset falls back to `DS_INTL.chart.error`."
       },
       {
         "name": "valueFormat",
@@ -3116,7 +3150,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then the browser's locale grouping with a K/M/B suffix past four digits."
+        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
       },
       {
         "name": "interactive",
@@ -3340,11 +3374,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "placeholder",
         "kind": "input",
-        "type": "string",
+        "type": "string | null",
         "union": null,
-        "default": "'Select date'",
+        "default": "null",
         "required": false,
-        "description": "Accessible-name fallback only — the mask fills the visible placeholder, not this."
+        "description": "Accessible-name fallback only — the mask fills the visible placeholder, not this. Unset falls back to `DS_INTL.datePicker.placeholder`."
       },
       {
         "name": "label",
@@ -3470,7 +3504,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "BCP-47 locale driving month/weekday names and the value format."
+        "description": "BCP-47 locale driving month/weekday names and the value format. Unset falls back to `DS_CONFIG.datePicker.locale`, then `DS_CONFIG.locale`, then `LOCALE_ID`."
       },
       {
         "name": "dateFormat",
@@ -3934,20 +3968,20 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "moreLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | null",
         "union": null,
-        "default": "'more'",
+        "default": "null",
         "required": false,
-        "description": "Trailing word of the trigger, after the count: \"+2 filters\"."
+        "description": "Trailing word of the trigger, after the count: \"+2 filters\". Unset falls back to `DS_INTL.filterBar.more`."
       },
       {
         "name": "panelLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | null",
         "union": null,
-        "default": "'More filters'",
+        "default": "null",
         "required": false,
-        "description": "Accessible name of the overflow panel."
+        "description": "Accessible name of the overflow panel. Unset falls back to `DS_INTL.filterBar.panelLabel`."
       },
       {
         "name": "triggerSize",
@@ -4109,7 +4143,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Shown in place of the plot when `data` is empty. Unset falls back to `DS_CONFIG.chart.emptyText`, then `'No data'`."
+        "description": "Shown in place of the plot when `data` is empty. Unset falls back to `DS_INTL.chart.empty`."
       },
       {
         "name": "error",
@@ -4127,7 +4161,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "The message the error state prints. Unset falls back to `DS_CONFIG.chart.errorText`, then `'Could not load the data'`."
+        "description": "The message the error state prints. Unset falls back to `DS_INTL.chart.error`."
       },
       {
         "name": "valueFormat",
@@ -4136,7 +4170,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then the browser's locale grouping with a K/M/B suffix past four digits."
+        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
       },
       {
         "name": "interactive",
@@ -4330,7 +4364,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Shown when there are no rows or no columns. Unset falls back to `DS_CONFIG.chart.emptyText`."
+        "description": "Shown when there are no rows or no columns. Unset falls back to `DS_INTL.chart.empty`."
       },
       {
         "name": "errorText",
@@ -4339,7 +4373,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Shown in place of the grid while `error` is set. Unset falls back to `DS_CONFIG.chart.errorText`."
+        "description": "Shown in place of the grid while `error` is set. Unset falls back to `DS_INTL.chart.error`."
       },
       {
         "name": "valueFormat",
@@ -5287,7 +5321,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Shown in place of the plot when `data` is empty. Unset falls back to `DS_CONFIG.chart.emptyText`, then `'No data'`."
+        "description": "Shown in place of the plot when `data` is empty. Unset falls back to `DS_INTL.chart.empty`."
       },
       {
         "name": "error",
@@ -5305,7 +5339,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "The message the error state prints. Unset falls back to `DS_CONFIG.chart.errorText`, then `'Could not load the data'`."
+        "description": "The message the error state prints. Unset falls back to `DS_INTL.chart.error`."
       },
       {
         "name": "valueFormat",
@@ -5314,7 +5348,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then the browser's locale grouping with a K/M/B suffix past four digits."
+        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
       },
       {
         "name": "hiddenSeries",
@@ -5358,11 +5392,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "noVisibleSeriesText",
         "kind": "input",
-        "type": "string",
+        "type": "string | null",
         "union": null,
-        "default": "'All series are hidden'",
+        "default": "null",
         "required": false,
-        "description": "Shown in place of the plot once the legend has switched every series off. Without it the reader is left with an empty grid and nothing saying why."
+        "description": "Shown in place of the plot once the legend has switched every series off. Without it the reader is left with an empty grid and nothing saying why. Unset falls back to `DS_INTL.chart.noVisibleSeries`."
       },
       {
         "name": "patterns",
@@ -6018,20 +6052,20 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "placeholder",
         "kind": "input",
-        "type": "string",
+        "type": "string | null",
         "union": null,
-        "default": "'Select…'",
+        "default": "null",
         "required": false,
-        "description": "Placeholder shown in the trigger when nothing is selected."
+        "description": "Placeholder shown in the trigger when nothing is selected. Unset falls back to `DS_INTL.picker.placeholder`."
       },
       {
         "name": "searchPlaceholder",
         "kind": "input",
-        "type": "string",
+        "type": "string | null",
         "union": null,
-        "default": "'Filter…'",
+        "default": "null",
         "required": false,
-        "description": "Placeholder for the in-panel filter input."
+        "description": "Placeholder for the in-panel filter input. Unset falls back to `DS_INTL.picker.filterPlaceholder`."
       },
       {
         "name": "searchable",
@@ -6498,11 +6532,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "ariaLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | null",
         "union": null,
-        "default": "'Verification code'",
+        "default": "null",
         "required": false,
-        "description": "Accessible group label for the cell row."
+        "description": "Accessible group label for the cell row. Unset falls back to `DS_INTL.otpInput.label`."
       }
     ],
     "outputs": [
@@ -6867,11 +6901,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "otherLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | null",
         "union": null,
-        "default": "'Other'",
+        "default": "null",
         "required": false,
-        "description": "Names the grouped slice."
+        "description": "Names the grouped slice. Unset falls back to `DS_INTL.chart.other`."
       },
       {
         "name": "innerRadius",
@@ -6959,7 +6993,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Shown in place of the plot when `data` is empty. Unset falls back to `DS_CONFIG.chart.emptyText`, then `'No data'`."
+        "description": "Shown in place of the plot when `data` is empty. Unset falls back to `DS_INTL.chart.empty`."
       },
       {
         "name": "error",
@@ -6977,7 +7011,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "The message the error state prints. Unset falls back to `DS_CONFIG.chart.errorText`, then `'Could not load the data'`."
+        "description": "The message the error state prints. Unset falls back to `DS_INTL.chart.error`."
       },
       {
         "name": "valueFormat",
@@ -6986,7 +7020,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then the browser's locale grouping with a K/M/B suffix past four digits."
+        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
       },
       {
         "name": "interactive",
@@ -7581,7 +7615,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Shown when no series carries a reading. Unset falls back to `DS_CONFIG.chart.emptyText`."
+        "description": "Shown when no series carries a reading. Unset falls back to `DS_INTL.chart.empty`."
       },
       {
         "name": "errorText",
@@ -7590,7 +7624,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Shown in place of the plot while `error` is set. Unset falls back to `DS_CONFIG.chart.errorText`."
+        "description": "Shown in place of the plot while `error` is set. Unset falls back to `DS_INTL.chart.error`."
       },
       {
         "name": "valueFormat",
@@ -7666,11 +7700,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "placeholder",
         "kind": "input",
-        "type": "string",
+        "type": "string | null",
         "union": null,
-        "default": "'Search'",
+        "default": "null",
         "required": false,
-        "description": "Placeholder shown when empty."
+        "description": "Placeholder shown when empty. Unset falls back to `DS_INTL.search.placeholder`."
       },
       {
         "name": "shortcut",
@@ -8604,6 +8638,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "`display: inline-block` instead of `block`, to sit inline with text."
+      },
+      {
+        "name": "shimmer",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Whether the wave passes over the placeholder. Default `true`. Off, it is a flat block of the same shape and size - for a space held for something that is not loading yet, where motion would claim work that is not happening and cost a main-thread update a frame."
       }
     ],
     "outputs": []
@@ -8852,11 +8895,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "menuLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | null",
         "union": null,
-        "default": "'More actions'",
+        "default": "null",
         "required": false,
-        "description": "Accessible name for the dropdown trigger."
+        "description": "Accessible name for the dropdown trigger. Unset falls back to `DS_INTL.splitButton.menuLabel`."
       }
     ],
     "outputs": [
@@ -9516,20 +9559,20 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "sortAnnouncement",
         "kind": "input",
-        "type": "(label: string, dir: SortDirection) => string",
+        "type": "((label: string, dir: SortDirection) => string) | null",
         "union": null,
-        "default": "(label, dir) =>\n    dir\n      ? `Sorted by ${label}, ${dir === 'asc' ? 'ascending' : 'descending'}`\n      : `Sorting cleared`",
+        "default": "null",
         "required": false,
-        "description": "Wording for the sort announcement, so it can be translated. Receives the column's label and the new direction; return an empty string to say nothing."
+        "description": "Wording for the sort announcement, so it can be translated. Receives the column's label and the new direction; return an empty string to say nothing. Unset falls back to `DS_INTL.table.sorted`."
       },
       {
         "name": "rangeAnnouncement",
         "kind": "input",
-        "type": "(first: number, last: number, total: number) => string",
+        "type": "((first: number, last: number, total: number) => string) | null",
         "union": null,
-        "default": "(first, last, total) => `Showing ${first}–${last} of ${total}`",
+        "default": "null",
         "required": false,
-        "description": "Wording for the row-range announcement, so it can be translated. Receives the 1-based first and last row on screen and the total; return an empty string to say nothing."
+        "description": "Wording for the row-range announcement, so it can be translated. Receives the 1-based first and last row on screen and the total; return an empty string to say nothing. Unset falls back to `DS_INTL.pagination.range`."
       },
       {
         "name": "skeletonRows",
@@ -10256,11 +10299,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "closeLabel",
         "kind": "input",
-        "type": "string",
+        "type": "string | null",
         "union": null,
-        "default": "'Remove'",
+        "default": "null",
         "required": false,
-        "description": "Accessible label for the close button (e.g. \"Remove Source filter\")."
+        "description": "Accessible label for the close button (e.g. \"Remove Source filter\"). Unset falls back to `DS_INTL.tag.remove`."
       }
     ],
     "outputs": [
@@ -11389,7 +11432,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Shown in place of the plot when `data` is empty. Unset falls back to `DS_CONFIG.chart.emptyText`."
+        "description": "Shown in place of the plot when `data` is empty. Unset falls back to `DS_INTL.chart.empty`."
       },
       {
         "name": "errorText",
@@ -11398,7 +11441,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Shown in place of the plot while `error` is set. Unset falls back to `DS_CONFIG.chart.errorText`."
+        "description": "Shown in place of the plot while `error` is set. Unset falls back to `DS_INTL.chart.error`."
       },
       {
         "name": "valueFormat",

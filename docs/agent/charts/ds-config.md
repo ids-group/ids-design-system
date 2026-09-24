@@ -3,7 +3,9 @@
 
 Group: Charts
 
-Four chart inputs resolve through `DS_CONFIG.chart` because they are one decision per APP, not per plot: `valueFormat` (a number reads one way in a product; a formatter passed per chart drifts as soon as there are two screens), `dataTable` (whether the numbers behind a plot have a non-visual route is an accessibility policy), `emptyText` and `errorText` (copy, and the place localisation lands). Precedence is the input, then the config, then the built-in — so binding one on a single chart still wins.
+Four chart inputs resolve through `DS_CONFIG.chart` because they are one decision per APP, not per plot: `valueFormat` (a number reads one way in a product; a formatter passed per chart drifts as soon as there are two screens), `dataTable` (whether the numbers behind a plot have a non-visual route is an accessibility policy), `frame` and `tooltipLingerMs`. Precedence is the input, then the config, then the built-in — so binding one on a single chart still wins. The empty and error copy is wording, so it lives in `DS_INTL.chart.empty` / `.error`; the number locale is `DsConfig.locale`.
+
+`DS_CONFIG.chart.rendering` decides how charts build on a long page and is off by default: every chart draws as soon as it is created. With `deferUntilVisible: true` each chart shows a still placeholder of its own shape until it comes within `visibleMargin` (default `'10% 0px'`) of the viewport; `buildAheadWhileIdle` (default `true`) builds the charts within `buildAheadMargin` (default `'100% 0px'`) while the page is idle; `frameBudgetMs` (default `8`) caps how long one task spends building; `skipWhileOffscreen` (default `true`) lets the browser skip a built chart's rendering off screen through `content-visibility: auto`. Until a deferred chart is built a screen reader meets its caption only.
 
 ```ts
 providers: [provideDsConfig({ chart: { valueFormat: v => v.toLocaleString('de-DE'), dataTable: 'visible' } })]

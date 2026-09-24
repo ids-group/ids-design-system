@@ -14,7 +14,7 @@
         <span
           class="optional-marker"
           aria-hidden="true">
-          (optional)
+          {{ intl().field.optional }}
         </span>
       }
     </label>
@@ -61,7 +61,7 @@
       <button
         type="button"
         class="clear-btn"
-        aria-label="Clear input"
+        [attr.aria-label]="intl().field.clearInput"
         (click)="clear()">
       </button>
     }
@@ -72,7 +72,9 @@
         class="password-toggle"
         tabindex="-1"
         [attr.aria-label]="
-          passwordVisible() ? 'Hide password' : 'Show password'
+          passwordVisible()
+            ? intl().field.hidePassword
+            : intl().field.showPassword
         "
         (click)="togglePassword()">
         <ds-icon

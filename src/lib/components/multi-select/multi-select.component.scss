@@ -8,6 +8,8 @@
 @use '../../styles/field-state' as field-state;
 
 :host {
+  @include field-box.field-box-tokens;
+
   // Flex column + gap so the hint/error (ds-field-message) sits the canonical
   // --space-1-5 below the trigger, matching input/textarea/autocomplete/select.
   display: flex;
@@ -21,16 +23,13 @@
   --ds-dropdown-panel-bg-color: var(--ds-multi-select-panel-bg-color, initial); /* void-ok */
 
   --_multi-select-bg-color: var(--ds-multi-select-bg-color, var(--surface-default));
-  --_multi-select-border-color: var(
-    --ds-multi-select-border-color,
-    var(--border-default)
-  );
+  --_multi-select-border-color: var(--ds-multi-select-border-color, var(--_field-border-color));
   --_multi-select-radius: var(--ds-multi-select-radius, var(--ds-radius-control));
-  --_multi-select-text-color: var(--ds-multi-select-text-color, var(--text-primary));
-  --_multi-select-border-color-focus: var(
-    --ds-multi-select-border-color-focus,
-    var(--accent)
-  );
+  --_multi-select-text-color: var(--ds-multi-select-text-color, var(--_field-text-color));
+  --_multi-select-border-color-focus: var(--ds-multi-select-border-color-focus, var(--_field-border-color-focus));
+  --_multi-select-border-color-hover: var(--ds-multi-select-border-color-hover, var(--_field-border-color-hover));
+  --_multi-select-placeholder-color: var(--ds-multi-select-placeholder-color, var(--_field-placeholder-color));
+  --_multi-select-font-size: var(--ds-multi-select-font-size, var(--_field-font-size));
 }
 
 /* Hugs its own content instead of filling the container. The panel then takes the
@@ -102,16 +101,14 @@
   border: var(--border-width-default) solid var(--_multi-select-border-color);
   border-radius: var(--_multi-select-radius);
   color: var(--_multi-select-text-color);
-  font:
-    var(--font-weight-regular) var(--font-size-s) / var(--line-height-base)
-    var(--font-sans);
+  font: var(--font-weight-regular) var(--_multi-select-font-size) / var(--line-height-base) var(--font-sans);
   cursor: pointer;
   transition:
     border-color var(--duration-fast) var(--ease-standard),
     box-shadow var(--duration-fast) var(--ease-standard);
 
   &:hover:not(.disabled) {
-    border-color: var(--border-strong);
+    border-color: var(--_multi-select-border-color-hover);
   }
 
   &.open,
@@ -144,7 +141,7 @@
 }
 
 .placeholder {
-  color: var(--text-tertiary);
+  color: var(--_multi-select-placeholder-color);
 }
 
 .chip-row {
@@ -243,6 +240,8 @@
   &:hover:not(:disabled) {
     background-color: var(--surface-secondary);
   }
+
+  &:active:not(:disabled) { background-color: var(--surface-muted); }
 
   &:disabled {
     color: var(--text-disabled);

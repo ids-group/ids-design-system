@@ -69,7 +69,7 @@ export class IconButtonComponent {
   protected readonly classes = computed(() => {
     const parts = ['icon-button', this.variant(), this.sizeResolved()];
     if (this.color() !== 'primary') {
-      parts.push(`c-${this.color()}`);
+      parts.push(`color-${this.color()}`);
     }
     if (this.selected()) {
       parts.push('selected');

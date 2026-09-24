@@ -4,6 +4,26 @@ Versioning: **patch** = instruction/prompt fixes; **minor** = new capability (pi
 source, agent); **major** = a change to the workflow's behavior contract. Bump `plugin.json` +
 `marketplace.json` together on every published change.
 
+## 1.9.0 - 2026-09-24
+
+### Added
+
+- **Phase C reports dead overrides.** Runs `npx ng g @ids-group-ltd/ids-design-system:check-overrides`
+  in the target once the chain is applied and lists every reported `--ds-*`/`ds-*` line under "Needs
+  manual review"; a DS version without the schematic is skipped with a note.
+
+## 1.8.3 - 2026-09-24
+
+### Changed
+
+- **An `informational` entry that names a type change is checked, not filed.** A generic parameter,
+  a template context guard, a value that becomes `unknown`, a narrowed or widened union or
+  `strictTemplates` in an informational line sends the orchestrator to the two tag trees before the
+  bump; a tightened typing becomes a synthetic `behavior` item with the expected TS error in `detect`,
+  and the misfiled entry is reported as manifest feedback.
+- **A delete-list row's `why` is checked against the `v<V>` tree before a deletion.** The row states
+  what V covers; a workaround that covers a case V does not stays, with the reason reported.
+
 ## 1.8.2 - 2026-09-24
 
 ### Changed

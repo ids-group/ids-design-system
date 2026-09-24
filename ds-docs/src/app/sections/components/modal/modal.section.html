@@ -25,7 +25,7 @@
     </code> tokens.
   </p>
 
-  <div class="modal-grid modal-grid--1">
+  <div class="modal-grid is-1">
     <div class="state-cell">
       <div class="state-cell-stage">
         <ds-modal-card
@@ -86,12 +86,12 @@
     </code>.
   </p>
 
-  <div class="modal-grid modal-grid--1">
+  <div class="modal-grid is-1">
     <div class="state-cell">
       <div class="state-cell-stage">
         <ds-modal-card
           title="Fleet cover — commercial"
-          subtitle="Aviva · Motor fleet · renews 12 Mar"
+          subtitle="Acme · Motor fleet · renews 12 Mar"
           size="md"
           [showClose]="false">
           <ds-badge
@@ -165,7 +165,7 @@
     </code>.
   </p>
 
-  <div class="modal-grid modal-grid--2">
+  <div class="modal-grid is-2">
     @for (specimen of statusSpecimens; track specimen.status) {
       <div class="state-cell">
         <div class="state-cell-stage">
@@ -243,7 +243,7 @@
     </code> on the element still wins.
   </p>
 
-  <div class="modal-grid modal-grid--2">
+  <div class="modal-grid is-2">
     <div class="state-cell">
       <div class="state-cell-stage">
         <ds-modal-card
@@ -321,7 +321,7 @@
     it on top instead. A row that fits stays right-aligned.
   </p>
 
-  <div class="modal-grid modal-grid--2">
+  <div class="modal-grid is-2">
     <div class="state-cell">
       <div class="state-cell-stage">
         <ds-modal-card
@@ -432,7 +432,7 @@
     sm · md · lg · xl · fullscreen specimens rendered as static cards.
   </p>
 
-  <div class="modal-grid modal-grid--1">
+  <div class="modal-grid is-1">
     <div class="state-cell">
       <div class="state-cell-stage">
         <ds-modal-card
@@ -524,7 +524,7 @@
   </div>
 
   <!-- xl and fullscreen as live demos (static cards would be too wide to diff meaningfully) -->
-  <div class="modal-grid modal-grid--1">
+  <div class="modal-grid is-1">
     <div class="state-cell">
       <div class="state-cell-stage">
         <ds-button
@@ -629,7 +629,7 @@
     because its scrim is a sibling of the panel rather than its parent.
   </p>
 
-  <div class="modal-grid modal-grid--1">
+  <div class="modal-grid is-1">
     <div class="state-cell">
       <div class="state-cell-stage">
         <ds-button
@@ -682,7 +682,7 @@
     Default · danger confirm · impact warning with affected records.
   </p>
 
-  <div class="modal-grid modal-grid--1">
+  <div class="modal-grid is-1">
     <div class="state-cell">
       <div class="state-cell-stage">
         <ds-modal-card
@@ -720,7 +720,7 @@
           status="error"
           [showClose]="false">
           <span body>
-            This cannot be undone. 12 resource allocations will be released.
+            This cannot be undone. 12 staff rotas will be released.
           </span>
 
           <ng-container actions>
@@ -759,15 +759,15 @@
             title="Affected records">
             <ul class="list">
               <li>
-                Project Alpha · 3 Logistics plans
+                Project Alpha · 3 Delivery schedules
               </li>
 
               <li>
-                Project Beta · 8 Resource allocations
+                Project Beta · 8 Staff rotas
               </li>
 
               <li>
-                Project Gamma · 1 Sub-record
+                Project Gamma · 1 Line item
               </li>
             </ul>
           </ds-banner>
@@ -802,18 +802,18 @@
     Modal hosting a small form — label, input, select.
   </p>
 
-  <div class="modal-grid modal-grid--1">
+  <div class="modal-grid is-1">
     <div class="state-cell">
       <div class="state-cell-stage">
         <ds-modal-card
-          title="Edit sub-record"
+          title="Edit line item"
           size="md"
           [showClose]="false">
           <div
             body
             class="form-stack">
             <ds-input
-              label="Sub-record name"
+              label="Line item name"
               value="Project Alpha · Phase 1" />
 
             <ds-input
@@ -863,7 +863,7 @@
     confirm button enables.
   </p>
 
-  <div class="modal-grid modal-grid--1">
+  <div class="modal-grid is-1">
     <div class="state-cell">
       <div class="state-cell-stage">
         <div style="display: flex; gap: var(--space-3); flex-wrap: wrap">

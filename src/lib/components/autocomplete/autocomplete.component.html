@@ -13,7 +13,7 @@
       <span
         class="optional-marker"
         aria-hidden="true">
-        (optional)
+        {{ intl().field.optional }}
       </span>
     }
   </span>
@@ -49,7 +49,7 @@
         <ds-tag
           data-chip
           [closable]="true"
-          [closeLabel]="'Remove ' + selectedOption.label"
+          [closeLabel]="intl().picker.removeChip(selectedOption.label)"
           (closed)="remove(selectedOption.value)">
           @if (chipTemplate(); as tpl) {
             <ng-container
@@ -68,7 +68,7 @@
         <span
           class="overflow"
           data-chip-overflow>
-          +{{ overflowCount() }} more
+          {{ intl().picker.moreChips(overflowCount()) }}
         </span>
       }
     </span>
@@ -118,7 +118,7 @@
     <button
       type="button"
       class="clear-btn"
-      aria-label="Clear selection"
+      [attr.aria-label]="intl().picker.clearSelection"
       (click)="clearValue($event)">
       <ds-icon
         name="x"
@@ -308,7 +308,7 @@
                 query: query(),
               }" />
           } @else {
-            No matches
+            {{ intl().picker.noMatches }}
           }
         </li>
       }
@@ -340,7 +340,7 @@
                   query: query().trim(),
                 }" />
             } @else {
-              Create «{{ query().trim() }}»
+              {{ intl().picker.create(query().trim()) }}
             }
           </span>
         </li>

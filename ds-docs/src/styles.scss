@@ -27,10 +27,8 @@
 // Surfaces for raw showcase specimens (docs only) — see _specimens.scss header.
 @use 'styles/specimens';
 
-// Brand-preview override for the Tweaks panel "Brand preview" toggle. Only
-// activates when <html data-brand="manage-my"> is set. Duplicated from
-// mm-broker for preview purposes; ds itself stays brand-agnostic.
-@use 'styles/preview-brand-manage-my';
+// Brand preview for the Tweaks panel toggle; active only under <html data-brand="acme">.
+@use 'styles/preview-brand-acme';
 @include bp.emit-vars;
 @include status.semantic-preset;
 @include status.define((
@@ -51,17 +49,4 @@ html, body { height: 100%; margin: 0; }
     width: 48px;
     transition-duration: var(--duration-fast);
   }
-}
-
-/* A chart DocsLazyDirective has not built yet holds about a chart's height, so the page keeps
-   roughly its real length and the scrollbar and the sidebar's anchor jumps land where they should. */
-.docs-lazy-placeholder {
-  block-size: 18rem;
-}
-
-/* Off screen a built chart costs no style, layout or paint, and its animations stop. `auto` keeps
-   the height it last rendered at, so skipping it moves nothing. */
-.docs-lazy {
-  content-visibility: auto;
-  contain-intrinsic-block-size: auto 18rem;
 }

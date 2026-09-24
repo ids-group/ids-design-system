@@ -17,8 +17,9 @@ import {
 import {
   CHART_SERIES_COLORS,
   areaPath,
-  defaultChartFormat,
+  chartValueFormat,
   focusMark,
+  listenForMarkFocus,
   markOf,
   bandPath,
   lineSegments,
@@ -27,7 +28,11 @@ import {
   leaveMark,
   staggerDelay,
 } from '@ids-group-ltd/ids-design-system/components';
-import type { LinePoint } from '@ids-group-ltd/ids-design-system/components';
+import type {
+  LinePoint,
+  MarkHit,
+} from '@ids-group-ltd/ids-design-system/components';
+import { injectDsLocale } from '@ids-group-ltd/ids-design-system/core';
 import type {
   ChartAxis,
   ChartCurve,
@@ -161,7 +166,9 @@ export class LineSeriesComponent implements OnDestroy {
 
   /** Formats every value this series prints. Called with `'tick'` for an axis label and
    *  `'tooltip'` everywhere a value is printed in full. */
-  readonly valueFormat = input<ChartValueFormat>(defaultChartFormat);
+  readonly valueFormat = input<ChartValueFormat>(
+    chartValueFormat(injectDsLocale()),
+  );
 
   /** The clicked reading, with the series it belongs to and its position in `categories`.
    *  Fires on click and on Enter or Space, whatever `interactive` says. */
@@ -190,8 +197,18 @@ export class LineSeriesComponent implements OnDestroy {
     this.scales.reportTooltip(this.domainId, {
       context: this.tooltipContext,
       origin: this.tooltipOrigin,
+      offersTooltip: computed(() => this.tooltip() !== 'none'),
+      axisOrigin: this.topReadingElement,
       axisEntries: this.axisEntries,
     });
+    listenForMarkFocus(
+      inject(ElementRef),
+      (event, hit) => this.onMarkerFocus(event, hit),
+      () => {
+        this.focusedSeries.set(null);
+        this.activeMark.leave();
+      },
+    );
   }
 
   ngOnDestroy(): void {
@@ -226,9 +243,6 @@ export class LineSeriesComponent implements OnDestroy {
   }
 
   protected readonly plotted = computed(() => {
-    if (!(this.scales.measured?.() ?? true)) {
-      return [];
-    }
     const toX = this.scales.xPosition();
     const primaryY = this.scales.yPosition();
     const secondaryY = this.scales.secondaryYPosition();
@@ -390,11 +404,7 @@ export class LineSeriesComponent implements OnDestroy {
     }
   }
 
-  protected onMarkerFocus(event: FocusEvent): void {
-    const hit = markOf(event);
-    if (!hit) {
-      return;
-    }
+  private onMarkerFocus(event: FocusEvent, hit: MarkHit): void {
     const marker = this.allMarkers()[hit.index];
     if (marker) {
       this.rovingBySeries.update((roving) =>
@@ -404,13 +414,6 @@ export class LineSeriesComponent implements OnDestroy {
       this.scales.setActiveIndex(marker.categoryIndex);
     }
     this.activeMark.enter(hit.index, event, undefined, hit.element);
-  }
-
-  protected onMarkerBlur(event: FocusEvent): void {
-    if (markOf(event)) {
-      this.focusedSeries.set(null);
-      this.activeMark.leave();
-    }
   }
 
   protected onMarkerKey(event: KeyboardEvent): void {

@@ -54,7 +54,7 @@
     }
 
     <span class="visually-hidden">
-      Step {{ i + 1 }}: {{ label }} ({{ stepState(i) }})
+      {{ intl().stepper.step(i + 1, label, stepState(i)) }}
     </span>
   </span>
 }

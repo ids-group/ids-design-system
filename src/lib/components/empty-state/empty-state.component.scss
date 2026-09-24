@@ -9,6 +9,8 @@
   --_empty-state-tile-icon-color:   var(--ds-empty-state-tile-icon-color,  var(--text-secondary));
   --_empty-state-title-text-color:  var(--ds-empty-state-title-text-color, var(--text-primary));
   --_empty-state-title-font-size: var(--ds-empty-state-title-font-size, var(--font-size-h5));
+  --_empty-state-title-font-family: var(--ds-empty-state-title-font-family, var(--font-sans));
+  --_empty-state-title-font-weight: var(--ds-empty-state-title-font-weight, var(--font-weight-bold));
   --_empty-state-body-text-color:   var(--ds-empty-state-body-text-color,  var(--text-secondary));
   --_empty-state-body-max-width: var(--ds-empty-state-body-max-width, var(--empty-body-maxw));
   --_empty-state-padding:       var(--ds-empty-state-padding,       var(--space-12) var(--space-6));
@@ -36,7 +38,7 @@
     margin-bottom: var(--space-2);
   }
   .title {
-    font: var(--font-weight-bold) var(--_empty-state-title-font-size) / var(--line-height-snug) var(--font-sans);
+    font: var(--_empty-state-title-font-weight) var(--_empty-state-title-font-size) / var(--line-height-snug) var(--_empty-state-title-font-family);
     color: var(--_empty-state-title-text-color);
     margin: 0;
   }

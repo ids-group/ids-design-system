@@ -8,6 +8,7 @@ export type {
   ChartGaps,
   ChartFormatLocation,
   ChartFrame,
+  ChartRendering,
   ChartStackMode,
   ChartThreshold,
   ChartThresholdDash,
@@ -15,8 +16,19 @@ export type {
 } from './chart.types';
 export { resolveWithConfig } from './config-defaults';
 export { devWarn } from './dev-warning';
+export { warnAnnounceOversight } from './announce-warning';
+export type { AnnounceState } from './announce-warning';
 export { DS_CONFIG, inheritDsConfig, provideDsConfig } from './ds-config';
 export type { DsConfig } from './ds-config';
+export { DS_INTL, provideDsIntl } from './ds-intl';
+export { DS_INTL_DEFAULTS } from './ds-intl-defaults';
+export type {
+  DsIntl,
+  DsIntlOverrides,
+  DsIntlSortDirection,
+  DsIntlStepState,
+} from './ds-intl.types';
+export { injectDsLocale } from './ds-locale';
 export { boundOr, optionalBound } from './field-bounds';
 export { ICONS } from './icon-names';
 export type { IconName } from './icon-names';

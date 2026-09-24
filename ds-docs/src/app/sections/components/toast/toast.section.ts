@@ -20,11 +20,11 @@ export class ToastSection {
     const messages = {
       info: {
         title: 'Recompute queued',
-        body: '3 logistics plans will update in a moment.',
+        body: '3 delivery schedules will update in a moment.',
       },
       success: {
         title: 'Alpha saved',
-        body: '12 resource allocations updated.',
+        body: '12 staff rotas updated.',
       },
       warning: { title: 'Volume nearing limit', body: '92% / 95% on Lane 04.' },
       error: {

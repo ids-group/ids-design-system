@@ -3,7 +3,7 @@
 @if (overflow() !== null) {
   <span
     class="avatar-overflow"
-    [attr.aria-label]="overflow() + ' more'">
+    [attr.aria-label]="intl().avatarGroup.more(overflow()!)">
     +{{ overflow() }}
   </span>
 }

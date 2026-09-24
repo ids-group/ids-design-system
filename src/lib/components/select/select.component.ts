@@ -49,7 +49,7 @@ import {
   type SelectOptionGroup,
   type SelectWidth,
 } from './select.types';
-import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
+import { DS_INTL, type DsSize } from '@ids-group-ltd/ids-design-system/core';
 import { FieldMessageComponent } from '@ids-group-ltd/ids-design-system/components/field-message';
 import {
   resolveFieldMessage,
@@ -103,6 +103,7 @@ export class SelectComponent
   implements OnDestroy
 {
   private readonly overlay = inject(Overlay);
+  protected readonly intl = inject(DS_INTL);
   /** Segment of a ds-field-group: the group owns the border, radius and focus
    *  ring, so .in-group strips this control back to its bare contents. */
   protected readonly inGroup = inFieldGroup();

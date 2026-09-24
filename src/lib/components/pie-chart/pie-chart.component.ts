@@ -6,19 +6,24 @@ import {
   booleanAttribute,
   computed,
   contentChild,
+  inject,
   input,
   numberAttribute,
   output,
+  signal,
 } from '@angular/core';
 import {
   CHART_SERIES_COLORS,
   describeSeries,
+  formatWholePercent,
   largestRemainder,
   markAt,
   rovingMarks,
+  chartRenderGate,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
+import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 import type {
   ChartDataTable,
   ChartFrame,
@@ -69,6 +74,8 @@ const RING_OUTER_RADIUS = RING_VIEW_BOX_SIZE / 2;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PieChartComponent {
+  protected readonly renderReady = chartRenderGate();
+
   /** One slice per entry. A non-positive or non-finite value counts as zero — a ring is a
    *  part-to-whole picture and has no way to draw a negative share. */
   readonly data = input.required<readonly PieChartSlice[]>();
@@ -89,8 +96,12 @@ export class PieChartComponent {
     transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
   });
 
-  /** Names the grouped slice. */
-  readonly otherLabel = input<string>('Other');
+  /** Names the grouped slice. Unset falls back to `DS_INTL.chart.other`. */
+  readonly otherLabel = input<string | null>(null);
+
+  readonly otherLabelResolved = computed(
+    () => this.otherLabel() ?? this.intl().chart.other,
+  );
 
   /** The hole, as a fraction of the outer radius. Zero draws a solid pie and takes the centre
    *  content away with the hole that held it. */
@@ -138,7 +149,7 @@ export class PieChartComponent {
    *  when the data lands. */
   readonly loading = input(false, { transform: booleanAttribute });
   /** Shown in place of the plot when `data` is empty. Unset falls back to
-   *  `DS_CONFIG.chart.emptyText`, then `'No data'`. */
+   *  `DS_INTL.chart.empty`. */
   readonly emptyText = input<string | null>(null);
 
   /** Shows `errorText` in place of the plot. Separate from `loading` and from an empty `data`,
@@ -146,15 +157,15 @@ export class PieChartComponent {
    *  mean opposite things. */
   readonly error = input(false, { transform: booleanAttribute });
 
-  /** The message the error state prints. Unset falls back to `DS_CONFIG.chart.errorText`, then
-   *  `'Could not load the data'`. */
+  /** The message the error state prints. Unset falls back to `DS_INTL.chart.error`. */
   readonly errorText = input<string | null>(null);
   /** Formats every value the chart prints, the annex table and the generated description
-   *  included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then the browser's locale
-   *  grouping with a K/M/B suffix past four digits. */
+   *  included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` /
+   *  `LOCALE_ID`. */
   readonly valueFormat = input<ChartValueFormat | null>(null);
 
   private readonly defaults = resolveChartDefaults(this);
+  protected readonly intl = inject(DS_INTL);
   readonly frameResolved = this.defaults.frame;
   readonly dataTableResolved = this.defaults.dataTable;
   readonly emptyTextResolved = this.defaults.emptyText;
@@ -220,10 +231,18 @@ export class PieChartComponent {
     this.activeMark.enter(index, event);
   }
 
+  private readonly legendHighlight = signal(-1);
+
   /** A legend item stands for its arc, so it opens the arc's tooltip over the ARC and dims the
    *  other slices — the same state hovering the arc itself produces. */
   protected onLegendEnter(index: number, event: Event): void {
+    this.legendHighlight.set(index);
     this.activeMark.enter(index, event, this.arcAt(event, index));
+  }
+
+  protected onLegendLeave(): void {
+    this.legendHighlight.set(-1);
+    this.activeMark.leave();
   }
 
   protected onLegendFocus(index: number, event: FocusEvent): void {
@@ -251,6 +270,13 @@ export class PieChartComponent {
   }
 
   protected isDimmed(index: number): boolean {
+    // Naming a slice in the legend fades the rest whether or not `dimOthers` is set, the way every
+    // chart legend singles out its series; `dimOthers` governs what a pointer over the ring does.
+    const legendHighlight = this.legendHighlight();
+    if (legendHighlight !== -1) {
+      return legendHighlight !== index;
+    }
+
     return (
       this.dimOthers() &&
       this.activeMark.index() !== -1 &&
@@ -300,13 +326,17 @@ export class PieChartComponent {
   );
 
   protected readonly visibleSlices = computed(() =>
-    groupSmallest(this.data(), this.maxSlices(), this.otherLabel()),
+    groupSmallest(this.data(), this.maxSlices(), this.otherLabelResolved()),
   );
 
   protected readonly dataTableColumns = computed<readonly string[]>(() =>
     this.partOfWhole()
-      ? ['Label', 'Value', 'Share of total']
-      : ['Label', 'Value'],
+      ? [
+          this.intl().chart.labelColumn,
+          this.intl().chart.valueColumn,
+          this.intl().chart.shareColumn,
+        ]
+      : [this.intl().chart.labelColumn, this.intl().chart.valueColumn],
   );
 
   protected readonly dataTableRows = computed<readonly ChartDataRow[]>(() =>
@@ -355,8 +385,29 @@ export class PieChartComponent {
           paletteIndex(slice.slot, index, CHART_SERIES_COLORS.length)
         ],
       formattedValue: format(slice.value),
-      formattedPercent: `${percents[index]}%`,
+      formattedPercent: formatWholePercent(
+        percents[index],
+        this.defaults.locale,
+      ),
     }));
+  });
+
+  /** The held slice's centre as a share of the ring box. The badge is HTML over the ring rather
+   *  than a `foreignObject` inside it: inside, the viewBox scale grows the badge with the ring and
+   *  the grid that centres the glyph does not lay out. */
+  protected readonly pinnedEntry = computed(() => {
+    const entry = this.activeMark.pinned()
+      ? this.slices()[this.activeMark.index()]
+      : undefined;
+
+    return entry
+      ? {
+          center: {
+            x: (entry.center.x / RING_VIEW_BOX_SIZE) * 100,
+            y: (entry.center.y / RING_VIEW_BOX_SIZE) * 100,
+          },
+        }
+      : null;
   });
 
   protected readonly resolvedCenterValue = computed(
@@ -368,7 +419,8 @@ export class PieChartComponent {
     () =>
       this.summary() ??
       describeSeries(
-        this.caption() ?? 'Chart',
+        this.intl().chart,
+        this.caption() ?? this.intl().chart.title,
         this.data().map((slice) => ({
           label: slice.label,
           value: slice.value,

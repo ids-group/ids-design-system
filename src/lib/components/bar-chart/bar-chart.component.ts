@@ -6,6 +6,7 @@ import {
   booleanAttribute,
   computed,
   contentChild,
+  inject,
   input,
   numberAttribute,
   output,
@@ -20,9 +21,11 @@ import {
   rovingMarks,
   leaveMark,
   staggerDelay,
+  chartRenderGate,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
+import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 import type {
   ChartDataTable,
   ChartFrame,
@@ -92,6 +95,8 @@ function segmentsOf(
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BarChartComponent {
+  protected readonly renderReady = chartRenderGate();
+
   protected readonly leaveMark = leaveMark;
 
   /** One row per bar, drawn in the order given. */
@@ -144,7 +149,7 @@ export class BarChartComponent {
    *  when the data lands. */
   readonly loading = input(false, { transform: booleanAttribute });
   /** Shown in place of the plot when `data` is empty. Unset falls back to
-   *  `DS_CONFIG.chart.emptyText`, then `'No data'`. */
+   *  `DS_INTL.chart.empty`. */
   readonly emptyText = input<string | null>(null);
 
   /** Shows `errorText` in place of the plot. Separate from `loading` and from an empty `data`,
@@ -152,15 +157,15 @@ export class BarChartComponent {
    *  mean opposite things. */
   readonly error = input(false, { transform: booleanAttribute });
 
-  /** The message the error state prints. Unset falls back to `DS_CONFIG.chart.errorText`, then
-   *  `'Could not load the data'`. */
+  /** The message the error state prints. Unset falls back to `DS_INTL.chart.error`. */
   readonly errorText = input<string | null>(null);
   /** Formats every value the chart prints, the annex table and the generated description
-   *  included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then the browser's locale
-   *  grouping with a K/M/B suffix past four digits. */
+   *  included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` /
+   *  `LOCALE_ID`. */
   readonly valueFormat = input<ChartValueFormat | null>(null);
 
   private readonly defaults = resolveChartDefaults(this);
+  protected readonly intl = inject(DS_INTL);
   readonly frameResolved = this.defaults.frame;
   readonly dataTableResolved = this.defaults.dataTable;
   readonly emptyTextResolved = this.defaults.emptyText;
@@ -188,6 +193,18 @@ export class BarChartComponent {
    *  opacity to 2.1 at `--ds-chart-dim-opacity`'s default 0.3 — so it buys loudness for one mark
    *  and pays for it with the rest of the chart. */
   readonly dimOthers = input(false, { transform: booleanAttribute });
+
+  /** The segment to single out, by its `id` - or by its position as a string where it has none.
+   *  Every other segment in every row fades, the same answer `highlighted` gives on a series
+   *  mark. Independent of `dimOthers`, which governs what a pointer does. A row without segments
+   *  is unaffected. */
+  readonly highlighted = input<string | null>(null);
+
+  protected isSegmentDimmed(key: string): boolean {
+    const highlighted = this.highlighted();
+
+    return highlighted !== null && highlighted !== key;
+  }
 
   /** Milliseconds between one mark's entrance and the next. `0`, the default, is no stagger at
    *  all; `40` is the documented non-zero step. The total is capped, so a long series does not
@@ -258,7 +275,12 @@ export class BarChartComponent {
             value: part.segment.value,
             formatted: part.formattedValue,
             color: part.color,
-            detail: describeShare(values, partIndex),
+            detail: describeShare(
+              values,
+              partIndex,
+              this.defaults.locale,
+              (share) => this.intl().chart.shareOfTotal(share),
+            ),
           })),
         };
       }
@@ -279,6 +301,8 @@ export class BarChartComponent {
                     return extent.high - extent.low;
                   }),
                   this.activeMark.index(),
+                  this.defaults.locale,
+                  (share) => this.intl().chart.shareOfTotal(share),
                 )
               : undefined,
           },
@@ -303,8 +327,12 @@ export class BarChartComponent {
 
   protected readonly dataTableColumns = computed<readonly string[]>(() =>
     this.partOfWhole()
-      ? ['Label', 'Value', 'Share of total']
-      : ['Label', 'Value'],
+      ? [
+          this.intl().chart.labelColumn,
+          this.intl().chart.valueColumn,
+          this.intl().chart.shareColumn,
+        ]
+      : [this.intl().chart.labelColumn, this.intl().chart.valueColumn],
   );
 
   /** A row's segments follow it as nested rows: one table reads in one pass, and a segment is
@@ -373,9 +401,11 @@ export class BarChartComponent {
         })),
         formattedPercent:
           row.percent !== undefined
-            ? formatPercent(row.percent, 100)
-            : formatPercent(span, max),
-        share: this.partOfWhole() ? shareOfTotal(values, index) : '',
+            ? formatPercent(row.percent, 100, this.defaults.locale)
+            : formatPercent(span, max, this.defaults.locale),
+        share: this.partOfWhole()
+          ? shareOfTotal(values, index, this.defaults.locale)
+          : '',
         segments: segmentsOf(row, (value) => format(value, 'tooltip')),
         color: row.color ?? chartColors.seriesDefault,
       };
@@ -386,7 +416,8 @@ export class BarChartComponent {
     () =>
       this.summary() ??
       describeSeries(
-        this.caption() ?? 'Chart',
+        this.intl().chart,
+        this.caption() ?? this.intl().chart.title,
         this.data().map((row) => ({
           label: row.label,
           value: barExtent(row.value).high - barExtent(row.value).low,

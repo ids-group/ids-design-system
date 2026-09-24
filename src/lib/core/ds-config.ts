@@ -5,12 +5,19 @@ import type { CardElevation, CardPadding } from './card.types';
 import type {
   ChartDataTable,
   ChartFrame,
+  ChartRendering,
   ChartValueFormat,
 } from './chart.types';
 import type { DsToastPosition } from './toast-position';
 import type { PaginationLayout } from './pagination.types';
 
 export interface DsConfig {
+  /** BCP-47 locale every component formats numbers and dates in - chart values and
+   *  percentages, `ds-date-picker`, file sizes in `ds-dropzone`. Default is Angular's
+   *  `LOCALE_ID`, which is `'en-US'` unless the app provides it, so the library prints numbers
+   *  the way the app's own `| number` does. Set it here only where the library must differ
+   *  from `LOCALE_ID`. A section key that names a locale (`datePicker.locale`) wins over this. */
+  locale?: string;
   field?: {
     /** Default for every field's `reserveMessage` — keeps a message line's worth
      *  of space even when empty. Default `false`. Setting `true` here applies to
@@ -168,19 +175,18 @@ export interface DsConfig {
      *  1.4.13's hoverable clause — which is a property of what an app puts in its tooltips rather
      *  than of one plot. About 140 is enough to cross the gap at an ordinary pointer speed. */
     tooltipLingerMs?: number;
-    /** Shown in place of the plot when a chart's data is empty. Default `'No data'`. */
-    emptyText?: string;
-    /** Shown in place of the plot when a chart has `error` set. Default
-     *  `'Could not load the data'`. */
-    errorText?: string;
     /** How every chart formats its values, the annex table and the generated description included.
-     *  Default is the browser's locale grouping with a K/M/B suffix past four digits. The same
-     *  reason `datePicker.locale` lives here: a number reads one way in an app, and a formatter
-     *  passed per chart drifts as soon as there are two screens. */
+     *  Default groups digits in `locale` and abbreviates on a tick (`1.2M`). The same reason
+     *  `datePicker.locale` lives here: a number reads one way in an app, and a formatter passed
+     *  per chart drifts as soon as there are two screens. */
     valueFormat?: ChartValueFormat;
+    /** How charts build themselves on a long page: build each one as it nears the viewport, build
+     *  ahead while idle, skip the ones off screen. All off by default. */
+    rendering?: ChartRendering;
   };
   datePicker?: {
-    /** BCP-47 locale for `ds-date-picker` names + value format. Default `'en-US'`. */
+    /** BCP-47 locale for `ds-date-picker` names and value format. Unset falls back to
+     *  `locale`, then `LOCALE_ID`. */
     locale?: string;
     /** Explicit token format e.g. `'MM/DD/YYYY'`; overrides the locale-derived order. */
     dateFormat?: string;
@@ -229,8 +235,12 @@ export function inheritDsConfig(config: DsConfig): DsConfig {
 function mergeDsConfig(parent: DsConfig, own: DsConfig): DsConfig {
   const merged: DsConfig = { ...parent };
   for (const section of Object.keys(own) as (keyof DsConfig)[]) {
+    const value = own[section];
     Object.assign(merged, {
-      [section]: { ...parent[section], ...own[section] },
+      [section]:
+        typeof value === 'object' && value !== null
+          ? { ...(parent[section] as object | undefined), ...value }
+          : value,
     });
   }
 

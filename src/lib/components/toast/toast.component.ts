@@ -3,11 +3,13 @@ import {
   ViewEncapsulation,
   booleanAttribute,
   computed,
+  inject,
   input,
   output,
 } from '@angular/core';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { SpinnerComponent } from '@ids-group-ltd/ids-design-system/components/spinner';
+import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 import type { IconName } from '@ids-group-ltd/ids-design-system/core';
 import type { ToastAction, ToastVariant } from './toast.types';
 
@@ -27,6 +29,8 @@ import type { ToastAction, ToastVariant } from './toast.types';
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class ToastComponent {
+  protected readonly intl = inject(DS_INTL);
+
   /** Severity — drives colour and the default icon or spinner. */
   readonly variant = input<ToastVariant>('info');
   /** Optional bold heading above the message. */

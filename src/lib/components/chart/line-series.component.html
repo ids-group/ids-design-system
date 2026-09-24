@@ -4,8 +4,6 @@
   [class.is-outlined]="outline()"
   (pointerover)="onMarkerOver($event)"
   (pointerout)="onMarkerOut($event)"
-  (focusin)="onMarkerFocus($event)"
-  (focusout)="onMarkerBlur($event)"
   (keydown)="onMarkerKey($event)"
   (click)="onMarkerClick($event)">
   @for (entry of plotted(); track entry.series.id) {
@@ -56,6 +54,7 @@
           [class.ghost]="!showMarkers()"
           [class.interactive]="interactive()"
           [class.is-active]="isActiveMarker(marker)"
+          [style.--_chart-mark-stagger]="seriesStagger(entry.seriesIndex)"
           [attr.cx]="marker.x"
           [attr.cy]="marker.y"
           [attr.fill]="entry.color"

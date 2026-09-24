@@ -39,21 +39,21 @@
 }
 
 .button {
-  /* Colour-family slots default to --accent-* (primary unless a ds-color zone/attr
-     flips it); .c-* overrides them. .v-* variant classes below remap these slots
-     into the --_button-* resolvers. */
-  --c-base:           var(--accent);
-  --c-on:             var(--accent-on);
-  --c-strong:         var(--accent-strong);
-  --c-subtitle:       var(--accent-subtitle);
-  --c-muted:          var(--accent-muted);
-  --c-muted-strong:   var(--accent-muted-strong);
-  --c-outline-border: var(--c-muted-strong);
+  /* Colour-family slots default to --accent-* (primary unless a ds-color zone or attribute
+     flips it); .color-* overrides them, and the variant classes below remap them into the
+     --_button-* resolvers. */
+  --_family-base:           var(--accent);
+  --_family-on:             var(--accent-on);
+  --_family-strong:         var(--accent-strong);
+  --_family-subtitle:       var(--accent-subtitle);
+  --_family-muted:          var(--accent-muted);
+  --_family-muted-strong:   var(--accent-muted-strong);
+  --_family-outline-border: var(--_family-muted-strong);
 
   --_button-justify: center;
 
-  --_button-bg-color:        var(--ds-button-bg-color,        var(--c-base));
-  --_button-label-color:     var(--ds-button-label-color,     var(--c-on));
+  --_button-bg-color:        var(--ds-button-bg-color,        var(--_family-base));
+  --_button-label-color:     var(--ds-button-label-color,     var(--_family-on));
   --_button-bg-color-hover:  var(--ds-button-bg-color-hover,  color-mix(in srgb, var(--_button-bg-color) 88%, black));
   --_button-bg-color-active: var(--ds-button-bg-color-active, color-mix(in srgb, var(--_button-bg-color) 76%, black));
 
@@ -64,6 +64,8 @@
      accent for tonal/ghost/outline (set on those fill classes). */
   --_button-accent: var(--_button-bg-color);
   --_button-border-color:    var(--ds-button-border-color,    transparent);
+  --_button-border-color-hover: var(--ds-button-border-color-hover, var(--_button-border-color));
+  --_button-border-color-active: var(--ds-button-border-color-active, var(--_button-border-color-hover));
 
   /* The WIDTH; the colour is --ds-button-border-color beside it. Without this the only way to change a button's
      edge is redefining --border-width-default for the subtree, which moves a scale step. */
@@ -113,7 +115,7 @@
   user-select: none;
 
   /* This class also dresses an `<a>`, whose UA defaults differ — underlined and start-aligned —
-     so both are reset here. `.v-text` puts the underline back afterwards, deliberately. */
+     so both are reset here. `.variant-text` puts the underline back afterwards, deliberately. */
   text-decoration: none;
   text-align: center;
   position: relative;
@@ -128,8 +130,8 @@
   /* All one class deep, so SOURCE ORDER decides: disabled beats hover/active, and the focus ring
      beats disabled — a soft-disabled button still takes focus. Do NOT add `:not()` to hover to
      exclude disabled: it raises hover above the ring and silently deletes it. */
-  &:hover  { background-color: var(--_button-bg-color-hover); color: var(--_button-label-color-hover); box-shadow: var(--_button-shadow-hover); }
-  &:active { background-color: var(--_button-bg-color-active); color: var(--_button-label-color-active); box-shadow: var(--_button-pressed-shadow); transform: scale(var(--_button-press-scale)); }
+  &:hover  { background-color: var(--_button-bg-color-hover); color: var(--_button-label-color-hover); border-color: var(--_button-border-color-hover); box-shadow: var(--_button-shadow-hover); }
+  &:active { background-color: var(--_button-bg-color-active); color: var(--_button-label-color-active); border-color: var(--_button-border-color-active); box-shadow: var(--_button-pressed-shadow); transform: scale(var(--_button-press-scale)); }
 
   &[disabled],
   &[aria-disabled='true'] {
@@ -206,45 +208,45 @@
 
   /* Colour classes — rebind slots only (the base resolvers + fill mappers keep
      consumer --ds-button-* winning). */
-  &.c-secondary {
-    --c-base: var(--secondary); --c-on: var(--secondary-on); --c-strong: var(--secondary-strong);
-    --c-subtitle: var(--secondary-subtitle); --c-muted: var(--secondary-muted); --c-muted-strong: var(--secondary-muted-strong);
+  &.color-secondary {
+    --_family-base: var(--secondary); --_family-on: var(--secondary-on); --_family-strong: var(--secondary-strong);
+    --_family-subtitle: var(--secondary-subtitle); --_family-muted: var(--secondary-muted); --_family-muted-strong: var(--secondary-muted-strong);
   }
-  &.c-tertiary {
-    --c-base: var(--tertiary); --c-on: var(--tertiary-on); --c-strong: var(--tertiary-strong);
-    --c-subtitle: var(--tertiary-subtitle); --c-muted: var(--tertiary-muted); --c-muted-strong: var(--tertiary-muted-strong);
+  &.color-tertiary {
+    --_family-base: var(--tertiary); --_family-on: var(--tertiary-on); --_family-strong: var(--tertiary-strong);
+    --_family-subtitle: var(--tertiary-subtitle); --_family-muted: var(--tertiary-muted); --_family-muted-strong: var(--tertiary-muted-strong);
   }
-  &.c-neutral {
-    --c-base: var(--text-secondary); --c-on: var(--surface-default); --c-strong: var(--text-primary);
-    --c-subtitle: var(--surface-secondary);
+  &.color-neutral {
+    --_family-base: var(--text-secondary); --_family-on: var(--surface-default); --_family-strong: var(--text-primary);
+    --_family-subtitle: var(--surface-secondary);
 
     /* A grey TINT of the ink over the surface, not the flat --surface-secondary; mixed toward
        --surface-default so it flips correctly in dark theme. */
-    --c-muted: color-mix(in srgb, var(--text-secondary) 14%, var(--surface-default));
-    --c-muted-strong: color-mix(in srgb, var(--text-secondary) 22%, var(--surface-default));
-    --c-outline-border: var(--border-default);
+    --_family-muted: color-mix(in srgb, var(--text-secondary) 14%, var(--surface-default));
+    --_family-muted-strong: color-mix(in srgb, var(--text-secondary) 22%, var(--surface-default));
+    --_family-outline-border: var(--border-default);
   }
-  &.c-error {
-    --c-base: var(--error); --c-on: var(--text-on-error); --c-strong: var(--error-text);
-    --c-subtitle: var(--error-subtitle); --c-muted: var(--error-muted); --c-muted-strong: var(--error-muted-strong);
+  &.color-error {
+    --_family-base: var(--error); --_family-on: var(--text-on-error); --_family-strong: var(--error-text);
+    --_family-subtitle: var(--error-subtitle); --_family-muted: var(--error-muted); --_family-muted-strong: var(--error-muted-strong);
   }
-  &.c-success {
-    --c-base: var(--success); --c-on: var(--text-on-success); --c-strong: var(--success-text);
-    --c-subtitle: var(--success-subtitle); --c-muted: var(--success-muted); --c-muted-strong: var(--success-muted-strong);
+  &.color-success {
+    --_family-base: var(--success); --_family-on: var(--text-on-success); --_family-strong: var(--success-text);
+    --_family-subtitle: var(--success-subtitle); --_family-muted: var(--success-muted); --_family-muted-strong: var(--success-muted-strong);
   }
-  &.c-warning {
-    --c-base: var(--warning); --c-on: var(--text-on-warning); --c-strong: var(--warning-text);
-    --c-subtitle: var(--warning-subtitle); --c-muted: var(--warning-muted); --c-muted-strong: var(--warning-muted-strong);
+  &.color-warning {
+    --_family-base: var(--warning); --_family-on: var(--text-on-warning); --_family-strong: var(--warning-text);
+    --_family-subtitle: var(--warning-subtitle); --_family-muted: var(--warning-muted); --_family-muted-strong: var(--warning-muted-strong);
   }
 
   /* Variant (fill) classes — map slots into resolvers (consumer override
      preserved). Solid is the base default (no class). Tonal/ghost/outline also
      set disabled recipe B. */
-  &.v-tonal {
-    --_button-bg-color:        var(--ds-button-bg-color,        var(--c-muted));
-    --_button-label-color:     var(--ds-button-label-color,     var(--c-strong));
-    --_button-bg-color-hover:  var(--ds-button-bg-color-hover,  var(--c-muted-strong));
-    --_button-bg-color-active: var(--ds-button-bg-color-active, color-mix(in srgb, var(--c-muted-strong) 90%, black));
+  &.variant-tonal {
+    --_button-bg-color:        var(--ds-button-bg-color,        var(--_family-muted));
+    --_button-label-color:     var(--ds-button-label-color,     var(--_family-strong));
+    --_button-bg-color-hover:  var(--ds-button-bg-color-hover,  var(--_family-muted-strong));
+    --_button-bg-color-active: var(--ds-button-bg-color-active, color-mix(in srgb, var(--_family-muted-strong) 90%, black));
     --_button-accent: var(--_button-label-color);
     --_button-bg-color-disabled: var(--ds-button-bg-color-disabled, color-mix(in srgb, var(--_button-bg-color) 28%, var(--surface-disabled)));
 
@@ -253,11 +255,11 @@
        recipe cannot serve here — see ghost. */
     --_button-label-color-disabled: var(--ds-button-label-color-disabled, color-mix(in srgb, var(--_button-label-color) 40%, var(--surface-default)));
   }
-  &.v-ghost {
+  &.variant-ghost {
     --_button-bg-color:        var(--ds-button-bg-color,        transparent);
-    --_button-label-color:     var(--ds-button-label-color,     var(--c-strong));
-    --_button-bg-color-hover:  var(--ds-button-bg-color-hover,  var(--c-subtitle));
-    --_button-bg-color-active: var(--ds-button-bg-color-active, var(--c-muted));
+    --_button-label-color:     var(--ds-button-label-color,     var(--_family-strong));
+    --_button-bg-color-hover:  var(--ds-button-bg-color-hover,  var(--_family-subtitle));
+    --_button-bg-color-active: var(--ds-button-bg-color-active, var(--_family-muted));
     --_button-accent: var(--_button-label-color);
     --_button-bg-color-disabled: var(--ds-button-bg-color-disabled, transparent);
     --_button-border-color-disabled: var(--ds-button-border-color-disabled, transparent);
@@ -271,12 +273,12 @@
   /* Transparent, not --surface-default: an outline button has to sit on whatever surface it is
      placed on. A painted white fill reads as a sticker on any tinted ground and identical on a
      white page, which is what hides it. */
-  &.v-outline {
+  &.variant-outline {
     --_button-bg-color:        var(--ds-button-bg-color,        transparent);
-    --_button-label-color:     var(--ds-button-label-color,     var(--c-strong));
-    --_button-border-color:          var(--ds-button-border-color,          var(--c-outline-border));
-    --_button-bg-color-hover:  var(--ds-button-bg-color-hover,  var(--c-subtitle));
-    --_button-bg-color-active: var(--ds-button-bg-color-active, var(--c-muted));
+    --_button-label-color:     var(--ds-button-label-color,     var(--_family-strong));
+    --_button-border-color:          var(--ds-button-border-color,          var(--_family-outline-border));
+    --_button-bg-color-hover:  var(--ds-button-bg-color-hover,  var(--_family-subtitle));
+    --_button-bg-color-active: var(--ds-button-bg-color-active, var(--_family-muted));
     --_button-accent: var(--_button-label-color);
 
     /* Stays transparent when disabled too: mixing a transparent fill toward the
@@ -292,9 +294,9 @@
   }
 
   /* text — no chrome, underlined (a link-styled button). */
-  &.v-text {
+  &.variant-text {
     --_button-bg-color:        var(--ds-button-bg-color,        transparent);
-    --_button-label-color:     var(--ds-button-label-color,     var(--c-strong));
+    --_button-label-color:     var(--ds-button-label-color,     var(--_family-strong));
     --_button-bg-color-hover:  var(--ds-button-bg-color-hover,  transparent);
     --_button-bg-color-active: var(--ds-button-bg-color-active, transparent);
     --_button-accent: var(--_button-label-color);
@@ -307,9 +309,9 @@
     text-underline-offset: var(--btn-link-uloff);
 
     /* Through the resolver like every other variant, so --ds-button-label-color-hover reaches a
-       text button too; as a `color` on `.button.v-text:hover` it would out-rank the base rule and
+       text button too; as a `color` on `.button.variant-text:hover` it would out-rank the base rule and
        the hook would never be seen here. */
-    --_button-label-color-hover: var(--ds-button-label-color-hover, var(--c-base));
+    --_button-label-color-hover: var(--ds-button-label-color-hover, var(--_family-base));
   }
 
   &.loading {

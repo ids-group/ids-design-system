@@ -11,11 +11,11 @@
       role="status">
       {{ errorTextResolved() }}
     </p>
-  } @else if (loading()) {
+  } @else if (loading() || !renderReady()) {
     <div
       class="skeleton"
       aria-hidden="true">
-      <ds-skeleton height="var(--_chart-view-height)" />
+      <ds-skeleton height="var(--_chart-view-height)" [shimmer]="loading()" />
     </div>
   } @else if (isEmpty()) {
     <p class="empty">
@@ -28,8 +28,7 @@
       [attr.aria-label]="accessibleName()"
       [dsChartTooltip]="tooltipContext()"
       [dsChartTooltipExtraGap]="tooltipExtraGap()"
-      [dsChartTooltipPreferBelow]="tooltipPreferBelow()"
-      [dsChartTooltipPinned]="tooltipPreferBelow()"
+      [dsChartTooltipPinned]="tooltipPinned()"
       [dsChartTooltipOrigin]="tooltipOrigin()"
       [dsChartTooltipTemplate]="tooltipTemplate()">
       <svg

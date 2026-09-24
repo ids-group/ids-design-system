@@ -4,7 +4,7 @@
       class="pin-reset"
       type="button"
       (click)="activeMark.release()">
-      Unpin
+      {{ intl().chart.unpin }}
     </button>
   }
 
@@ -20,13 +20,13 @@
       role="status">
       {{ errorTextResolved() }}
     </p>
-  } @else if (loading()) {
+  } @else if (loading() || !renderReady()) {
     <div
       class="skeleton"
       aria-hidden="true">
       @for (placeholderWidth of skeletonStages(); track $index) {
-        <ds-skeleton
-          height="calc(var(--_funnel-chart-stage-height) - var(--_funnel-chart-stage-gap))"
+        <ds-skeleton height="calc(var(--_funnel-chart-stage-height) - var(--_funnel-chart-stage-gap))"
+          [shimmer]="loading()"
           [width]="placeholderWidth" />
       }
     </div>
@@ -41,7 +41,6 @@
       [attr.role]="interactive() ? 'group' : 'img'"
       [attr.aria-label]="accessibleName()"
       [dsChartTooltip]="tooltipContext()"
-      [dsChartTooltipPreferBelow]="activeMark.pinned()"
       [dsChartTooltipPinned]="activeMark.pinned()"
       [dsChartTooltipOrigin]="activeMark.origin()"
       [dsChartTooltipTemplate]="tooltipTemplate() ?? null">
@@ -96,27 +95,28 @@
     @if (showTable()) {
       <table class="stage-table">
         <caption class="visually-hidden">
-          Each stage as a percentage of the first, and the drop from the stage
-          above it.
+          {{
+            intl().chart.funnelCaption
+          }}
         </caption>
 
         <thead>
           <tr>
             <th scope="col">
-              Stage
+              {{ intl().chart.stageColumn }}
             </th>
 
             <th scope="col">
-              Value
+              {{ intl().chart.valueColumn }}
             </th>
 
             <th scope="col">
-              Percent
+              {{ intl().chart.percentColumn }}
             </th>
 
             @if (drop() !== 'none') {
               <th scope="col">
-                Drop
+                {{ intl().chart.dropColumn }}
               </th>
             }
           </tr>
@@ -158,7 +158,7 @@
 
     @if (showDataTable()) {
       <ds-chart-data-table
-        [columns]="['Label', 'Value']"
+        [columns]="[intl().chart.labelColumn, intl().chart.valueColumn]"
         [rows]="tableRows()"
         [caption]="caption()"
         [open]="dataTableResolved() === 'visible'" />

@@ -4,7 +4,7 @@
       class="pin-reset"
       type="button"
       (click)="pinnedSeries()?.activeMark?.release()">
-      Unpin
+      {{ intl().chart.unpin }}
     </button>
   }
 
@@ -20,12 +20,14 @@
       role="status">
       {{ errorTextResolved() }}
     </p>
-  } @else if (loading()) {
+  } @else if (loading() || !renderReady()) {
     <div
       class="skeleton"
       aria-hidden="true">
       @for (placeholder of skeletonColumns(); track $index) {
-        <ds-skeleton [height]="skeletonHeightPx()" />
+        <ds-skeleton
+          [shimmer]="loading()"
+          [height]="skeletonHeightPx()" />
       }
     </div>
   } @else if (isEmpty()) {
@@ -35,6 +37,7 @@
   } @else {
     <ds-chart
       frame="none"
+      cursor="none"
       [tooltipTemplate]="tooltipTemplate() ?? null"
       [tooltipExtraGap]="valueClearance()"
       [categories]="categories()"
@@ -45,9 +48,11 @@
       [plotHeight]="geometry().plotHeight"
       [axisGutter]="geometry().axisGutter"
       [valueSpace]="geometry().valueSpace">
-      <svg:g
-        dsReferenceLine
-        [thresholds]="thresholds()" />
+      @if (thresholds().length) {
+        <svg:g
+          dsReferenceLine
+          [thresholds]="thresholds()" />
+      }
 
       @for (
         series of resolvedSeries();
@@ -79,9 +84,11 @@
           (pointClicked)="pointClicked.emit($event)" />
       }
 
-      <svg:g
-        dsReferenceLabel
-        [thresholds]="thresholds()" />
+      @if (thresholds().length) {
+        <svg:g
+          dsReferenceLabel
+          [thresholds]="thresholds()" />
+      }
     </ds-chart>
 
     @if (multiSeries()) {

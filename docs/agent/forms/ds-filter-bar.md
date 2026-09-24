@@ -4,5 +4,5 @@
 Group: Form & input
 
 <!-- inputs:ds-filter-bar -->
-All inputs: `moreLabel: string = 'more'`, `panelLabel: string = 'More filters'`, `triggerSize: 'sm' | 'md' | 'lg' = 'md'`
+All inputs: `moreLabel: string | null = null`, `panelLabel: string | null = null`, `triggerSize: 'sm' | 'md' | 'lg' = 'md'`
 <!-- /inputs -->

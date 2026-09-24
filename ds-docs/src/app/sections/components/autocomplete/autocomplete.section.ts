@@ -29,10 +29,9 @@ function buildOwners(): AutocompleteItem<DemoOwner>[] {
 }
 
 const MEMBERS: readonly AutocompleteOption<string>[] = [
-  { value: 'acme', label: 'Acme Holdings' },
-  { value: 'festi', label: 'Festicket Ltd' },
-  { value: 'livenation', label: 'Live Nation Festivals' },
-  { value: 'sjm', label: 'SJM Concerts' },
+  { value: 'birchfield', label: 'Birchfield Events Ltd' },
+  { value: 'harbourline', label: 'Harbourline Festivals' },
+  { value: 'copperleaf', label: 'Copperleaf Concerts' },
 ];
 
 const PRODUCTS: readonly AutocompleteOption<string>[] = [
@@ -44,7 +43,7 @@ const PRODUCTS: readonly AutocompleteOption<string>[] = [
 ];
 
 const CHANNELS: readonly AutocompleteOption<string>[] = [
-  { value: 'broker', label: 'Broker portal', icon: 'users' },
+  { value: 'partner', label: 'Partner portal', icon: 'users' },
   {
     value: 'api',
     label: 'Partner API — not enabled',
@@ -60,24 +59,24 @@ const VENUE_GROUPS: AutocompleteOptionGroup<string>[] = [
   {
     label: 'Arenas',
     options: [
-      { value: 'o2', label: 'The O2 Arena' },
-      { value: 'utilita', label: 'Utilita Arena Birmingham' },
-      { value: 'sse', label: 'OVO Hydro Glasgow' },
+      { value: 'northgate', label: 'Northgate Arena' },
+      { value: 'riverside', label: 'Riverside Arena' },
+      { value: 'harbour', label: 'Harbour Hall' },
     ],
   },
   {
     label: 'Festivals',
     options: [
-      { value: 'glastonbury', label: 'Glastonbury Festival' },
-      { value: 'reading', label: 'Reading Festival' },
-      { value: 'download', label: 'Download Festival' },
+      { value: 'meadowlark', label: 'Meadowlark Festival' },
+      { value: 'summerfields', label: 'Summer Fields Festival' },
+      { value: 'lakeside', label: 'Lakeside Weekender' },
     ],
   },
   {
     label: 'Clubs',
     options: [
-      { value: 'fabric', label: 'fabric London' },
-      { value: 'egg', label: 'EGG London' },
+      { value: 'cellar', label: 'Cellar Nine' },
+      { value: 'foundry', label: 'The Foundry Rooms' },
     ],
   },
 ];
@@ -115,8 +114,8 @@ export class AutocompleteSection {
   protected readonly products = PRODUCTS;
   protected readonly channels = CHANNELS;
   protected readonly venueGroups = VENUE_GROUPS;
-  protected readonly channelValue = signal<string | null>('broker');
-  protected readonly memberValue = signal<string | null>('festi');
+  protected readonly channelValue = signal<string | null>('partner');
+  protected readonly memberValue = signal<string | null>('birchfield');
   protected readonly productsValue = signal<readonly string[]>([
     'beer',
     'cider',

@@ -18,6 +18,7 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
+import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 import { DsOverlayCloseRef } from '@ids-group-ltd/ids-design-system/overlay';
 import { DsControlValueAccessor } from '@ids-group-ltd/ids-design-system/components';
 import { FieldMessageComponent } from '@ids-group-ltd/ids-design-system/components/field-message';
@@ -90,6 +91,7 @@ export class ColorPickerComponent
   private readonly overlay = inject(Overlay);
   private readonly vcr = inject(ViewContainerRef);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  protected readonly intl = inject(DS_INTL);
   /** Public panel tokens forwarded onto the portaled overlay pane on open so
    *  a consumer's `ds-color-picker { --ds-color-picker-panel-*: … }` reaches it.
    *  Not the whole set: `prepareOverlayEnter` also forwards `DROPDOWN_PANEL_TOKENS`
@@ -114,8 +116,12 @@ export class ColorPickerComponent
   readonly panelClass = input<string | readonly string[]>([]);
   /** Disables the trigger and blocks all interaction. */
   readonly disabled = input(false, { transform: booleanAttribute });
-  /** Accessible name for the trigger button and panel. */
-  readonly ariaLabel = input<string>('Choose colour');
+  /** Accessible name for the trigger button and panel.
+   *  Unset falls back to `DS_INTL.colorPicker.label`. */
+  readonly ariaLabel = input<string | null>(null);
+  readonly ariaLabelResolved = computed(
+    () => this.ariaLabel() ?? this.intl().colorPicker.label,
+  );
   /** Confirmation text, shown when there is no error or warning — and it paints
    *  the field's success border. A string like `warning`: the text IS the state. */
   readonly success = input<string, string | null | undefined>('', {

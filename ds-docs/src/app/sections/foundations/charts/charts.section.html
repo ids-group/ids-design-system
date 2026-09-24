@@ -16,7 +16,7 @@
     against light AND dark surface-default.
   </p>
 
-  <div class="palette palette--8">
+  <div class="palette is-8">
     @for (n of cats; track n) {
       <div class="swatch">
         <div
@@ -40,7 +40,7 @@
     days-until-deadline).
   </p>
 
-  <div class="palette palette--6">
+  <div class="palette is-6">
     @for (n of seqs; track n) {
       <div class="swatch">
         <div
@@ -63,7 +63,7 @@
     Red ← neutral → green for signed values where 0 is neutral.
   </p>
 
-  <div class="palette palette--7">
+  <div class="palette is-7">
     @for (n of divs; track n) {
       <div class="swatch">
         <div
@@ -127,7 +127,7 @@
   <div class="chart">
     <div class="head">
       <h4 class="title">
-        Resource allocations / week
+        Staff rotas / week
       </h4>
 
       <span class="sub">
@@ -565,7 +565,7 @@
     live in cards is settled once per product, not per plot.
   </p>
 
-  <div class="states states--cols-2">
+  <div class="states is-cols-2">
     <div class="state-cell">
       <ds-column-chart
         dataTable="none"
@@ -629,41 +629,77 @@
   </h3>
 
   <p class="block-desc t-s">
-    Six things are the same decision for every chart in an app rather than a
+    Four things are the same decision for every chart in an app rather than a
     choice per plot, so they resolve through
     <code class="t-mono-inline">
       DS_CONFIG
     </code>:
     <code class="t-mono-inline">
       valueFormat
-    </code> (a number reads one way in
-    a product, and a formatter passed per chart drifts as soon as there are two
-    screens), <code class="t-mono-inline"> dataTable </code> (whether the
-    numbers behind a plot have a non-visual route is an accessibility policy),
+    </code> (a number reads one way in a
+    product, and a formatter passed per chart drifts as soon as there are two
+    screens), <code class="t-mono-inline">dataTable</code> (whether the numbers
+    behind a plot have a non-visual route is an accessibility policy),
     <code class="t-mono-inline">
       frame
-    </code> (whether charts live inside
-    cards), <code class="t-mono-inline"> tooltipLingerMs </code> (a property of
-    what the app puts in its tooltips), and the
+    </code> (whether charts live inside cards)
+    and <code class="t-mono-inline">tooltipLingerMs</code> (a property of what
+    the app puts in its tooltips). Precedence is the input, then the config,
+    then the built-in default — so binding one on a single chart still wins. The
+    empty and error copy is wording, so it lives in
     <code class="t-mono-inline">
-      emptyText
-    </code> /
+      DS_INTL.chart
+    </code>, and the number locale is
     <code class="t-mono-inline">
-      errorText
-    </code> copy. Precedence is the
-    input, then the config, then the built-in default — so binding one on a
-    single chart still wins.
+      DsConfig.locale
+    </code>, then Angular's
+    <code class="t-mono-inline">
+      LOCALE_ID
+    </code>.
+  </p>
+
+  <pre class="t-mono"><code>providers: [
+  provideDsConfig(&#123;
+    locale: 'de-DE',
+    chart: &#123; dataTable: 'visible', frame: 'none', tooltipLingerMs: 140 &#125;,
+  &#125;),
+  provideDsIntl(&#123; chart: &#123; empty: 'Нет данных', error: 'Не удалось загрузить' &#125; &#125;),
+]</code></pre>
+
+  <h3 class="block-title t-h4">
+    A page with dozens of charts
+  </h3>
+
+  <p class="block-desc t-s">
+    Every chart draws the moment it is created, which is right for a screen with
+    a few of them: nothing waits and nothing appears late. A dashboard or a
+    report with dozens turns on
+    <code class="t-mono-inline">
+      rendering.deferUntilVisible
+    </code>, and each
+    chart then holds its place with a still placeholder of its own shape until
+    it comes within <code class="t-mono-inline"> visibleMargin </code> of the
+    viewport. While the page is idle the charts within
+    <code class="t-mono-inline">
+      buildAheadMargin
+    </code> are built ahead, so
+    the next scroll finds them ready, and a built chart that scrolls away costs
+    no style, layout or paint until it returns. Until a deferred chart is built
+    a screen reader meets its caption and nothing else, so leave it off where
+    every chart has to be readable from the first moment.
   </p>
 
   <pre class="t-mono"><code>providers: [
   provideDsConfig(&#123;
     chart: &#123;
-      valueFormat: (value) =&gt; value.toLocaleString('de-DE'),
-      dataTable: 'visible',
-      frame: 'none',
-      tooltipLingerMs: 140,
-      emptyText: 'Нет данных',
-      errorText: 'Не удалось загрузить',
+      rendering: &#123;
+        deferUntilVisible: true,
+        visibleMargin: '10% 0px',
+        buildAheadWhileIdle: true,
+        buildAheadMargin: '100% 0px',
+        frameBudgetMs: 8,
+        skipWhileOffscreen: true,
+      &#125;,
     &#125;,
   &#125;),
 ]</code></pre>

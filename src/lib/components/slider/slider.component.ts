@@ -5,12 +5,14 @@ import {
   booleanAttribute,
   computed,
   forwardRef,
+  inject,
   input,
   model,
   numberAttribute,
   viewChild,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 import { DsControlValueAccessor } from '@ids-group-ltd/ids-design-system/components';
 import { FieldMessageComponent } from '@ids-group-ltd/ids-design-system/components/field-message';
 import { resolveFieldMessage } from '@ids-group-ltd/ids-design-system/components';
@@ -39,6 +41,7 @@ type SliderValue = number | readonly [number, number];
   },
 })
 export class SliderComponent extends DsControlValueAccessor<SliderValue> {
+  protected readonly intl = inject(DS_INTL);
   /** Current value, or `[low, high]` when `range`. Two-way bound. */
   readonly value = model<SliderValue>(0);
   /** Minimum selectable value. */
@@ -154,11 +157,10 @@ export class SliderComponent extends DsControlValueAccessor<SliderValue> {
     if (!this.range()) {
       return base;
     }
-    if (index === 0) {
-      return base ? `${base} minimum` : 'Minimum';
-    }
 
-    return base ? `${base} maximum` : 'Maximum';
+    return index === 0
+      ? this.intl().slider.rangeStart(base ?? '')
+      : this.intl().slider.rangeEnd(base ?? '');
   }
 
   protected onThumbKeydown(event: KeyboardEvent, index: number): void {

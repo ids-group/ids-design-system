@@ -6,15 +6,20 @@ export {
   chartColors,
 } from './chart-palette.generated';
 export {
-  defaultChartFormat,
+  chartValueFormat,
   formatPercent,
   formatTick,
   formatValue,
+  formatWholePercent,
   largestRemainder,
   describeShare,
   shareOfTotal,
 } from './charts-format';
 export { elementWidth } from './charts-measure';
+export {
+  CHART_RENDER_GATE_PASSED,
+  chartRenderGate,
+} from './charts-render-gate';
 export { labelInterval, rotationWouldFit } from './charts-label-fit';
 export {
   decimationTarget,
@@ -44,12 +49,13 @@ export type { BandScale, NiceDomain, PointScale } from './charts-scale';
 export { leaveMark, staggerDelay } from './charts-motion';
 export {
   focusMark,
+  listenForMarkFocus,
   markAt,
   markOf,
   nextRovingIndex,
   rovingMarks,
 } from './charts-roving';
-export type { RovingMarks } from './charts-roving';
+export type { MarkHit, RovingMarks } from './charts-roving';
 export { describeSeries } from './charts-summary';
 export type { SummaryPoint } from './charts-summary';
 export { chipFit } from './chip-overflow';

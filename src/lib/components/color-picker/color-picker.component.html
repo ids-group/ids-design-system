@@ -4,7 +4,7 @@
   class="trigger"
   aria-haspopup="dialog"
   [attr.aria-expanded]="open()"
-  [attr.aria-label]="ariaLabel()"
+  [attr.aria-label]="ariaLabelResolved()"
   [attr.aria-invalid]="invalidResolved() ? 'true' : null"
   [attr.aria-describedby]="hintId()"
   [disabled]="isDisabled()"
@@ -35,11 +35,11 @@
   <div
     class="panel"
     role="dialog"
-    [attr.aria-label]="ariaLabel()">
+    [attr.aria-label]="ariaLabelResolved()">
     <div
       class="sv-plane"
       tabindex="0"
-      aria-label="Saturation and brightness — use arrow keys to adjust"
+      [attr.aria-label]="intl().colorPicker.saturationBrightness"
       [style.background-color]="hueColor()"
       (pointerdown)="onSvPointerDown($event)"
       (pointermove)="onSvPointerMove($event)"
@@ -57,7 +57,7 @@
       class="hue-track"
       role="slider"
       tabindex="0"
-      aria-label="Hue"
+      [attr.aria-label]="intl().colorPicker.hue"
       [attr.aria-valuemin]="0"
       [attr.aria-valuemax]="360"
       [attr.aria-valuenow]="hsv().h"
@@ -83,7 +83,7 @@
         class="hex-input"
         spellcheck="false"
         autocomplete="off"
-        aria-label="Hex colour value"
+        [attr.aria-label]="intl().colorPicker.hexValue"
         [value]="displayHex()"
         (input)="onHexInput($event)" />
     </div>
@@ -91,7 +91,7 @@
     <div
       class="presets"
       role="group"
-      aria-label="Preset colours">
+      [attr.aria-label]="intl().colorPicker.presets">
       @for (preset of presets(); track preset) {
         <button
           type="button"

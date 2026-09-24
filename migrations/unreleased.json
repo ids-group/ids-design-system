@@ -1,0 +1,856 @@
+{
+  "version": "unreleased",
+  "items": [
+    {
+      "id": "textarea-reads-input-font-size",
+      "kind": "behavior",
+      "old": "--ds-input-font-size",
+      "new": null,
+      "surface": "style",
+      "action": "None, unless you set --ds-input-font-size on an ancestor of a ds-textarea and want the textarea to keep 14px: set --ds-input-font-size: var(--font-size-s) on the ds-textarea.",
+      "appliesWhen": "Only a stylesheet that declares --ds-input-font-size somewhere a ds-textarea inherits from. A textarea under no such declaration keeps --font-size-s, and ds-input is unchanged.",
+      "pitfall": "Nothing errors: the textarea's text quietly takes the input's size, which on a form that pinned 14px reads as no change and on one that pinned 16px moves every textarea.",
+      "restore": "ds-textarea { --ds-input-font-size: var(--font-size-s); }",
+      "searchHints": [
+        "--ds-input-font-size",
+        "ds-textarea"
+      ],
+      "detect": [
+        "--ds-input-font-size"
+      ],
+      "verify": "A ds-textarea under --ds-input-font-size: 16px renders its text at 16px; one under no declaration renders at 14px.",
+      "note": "ds-textarea reads every other --ds-input-* token and hardcoded --font-size-s for its text, so the one size hook the pair shares stopped at the input. It now resolves --ds-input-font-size, falling back to --ds-field-font-size and then --font-size-s."
+    },
+    {
+      "id": "search-hover-border-follows-rest-border",
+      "kind": "behavior",
+      "old": "--ds-search-border-hover",
+      "new": null,
+      "surface": "style",
+      "action": "None, unless you set --ds-search-border and relied on the hovered field reverting to --border-default: set --ds-search-border-hover: var(--border-default) on the ds-search.",
+      "appliesWhen": "Only a stylesheet that sets --ds-search-border or --ds-field-border-color without --ds-search-border-hover. A ds-search under neither draws exactly what it drew.",
+      "pitfall": "No error and no console line: a search whose rest border you coloured now keeps that colour under the pointer instead of flashing grey.",
+      "restore": "ds-search { --ds-search-border-hover: var(--border-default); }",
+      "searchHints": [
+        "--ds-search-border",
+        "--ds-search-border-hover",
+        "ds-search"
+      ],
+      "detect": [
+        "--ds-search-border"
+      ],
+      "verify": "A ds-search under --ds-search-border: red keeps a red border while hovered; one under no declaration keeps --border-default at rest and on hover.",
+      "note": "The hover default was the literal --border-default, so a search with a retuned rest border reverted to grey under the pointer. It now defaults to the search's own resolved rest border, which is the same colour when nothing is set and the retuned one when something is."
+    },
+    {
+      "id": "exported-class-members-grew",
+      "kind": "behavior",
+      "old": "AccordionComponent, AccordionItemComponent, AlertComponent, AppLayoutComponent, AuthLayoutComponent, AutocompleteComponent, AvatarComponent, AvatarGroupComponent, BadgeComponent, BannerComponent, BarChartComponent, BreadcrumbsComponent, ChartComponent, ColumnSeriesComponent, LineSeriesComponent, ChartDataTableComponent, ColorPickerComponent, ColumnChartComponent, DatePickerComponent, DescriptionItemComponent, DrawerComponent, DropzoneComponent, FilterBarComponent, FunnelChartComponent, HeatmapChartComponent, InputComponent, LineChartComponent, ModalCardComponent, MultiSelectComponent, NumberStepperComponent, OtpInputComponent, PaginationComponent, PasswordRulesComponent, PieChartComponent, ScatterChartComponent, SearchComponent, SelectComponent, SidenavGroupComponent, SidenavFooterComponent, SliderComponent, SpinnerComponent, SplitButtonComponent, StepperComponent, TableComponent, DsTableExport, TabsComponent, TagComponent, TextareaComponent, TimePickerComponent, ToastComponent, ToastRegionComponent, W3wComponent, WaterfallChartComponent, ChartLegendComponent, ChartTooltipDirective, ModalConfirmComponent, TableColumnsPanelComponent, TableColumnsTriggerComponent, TableExportButtonComponent, TimeColumnsComponent",
+      "new": null,
+      "surface": "typescript",
+      "action": "Build after upgrading, rename or mark `override` every member of yours the compiler reports as colliding, and delete an override whose base member is gone.",
+      "appliesWhen": "Subclassing a DS component is unsupported, but consumers do it. Template users of the listed components and directives need nothing.",
+      "pitfall": "`protected` and `private` are no protection: a redeclared member collides exactly as a public one does. A method of yours named like a removed member and declared without `override` still compiles, and is simply never called again.",
+      "restore": null,
+      "searchHints": [
+        "extends AccordionComponent",
+        "extends AccordionItemComponent",
+        "extends AlertComponent",
+        "extends AppLayoutComponent",
+        "extends AuthLayoutComponent",
+        "extends AutocompleteComponent",
+        "extends AvatarComponent",
+        "extends AvatarGroupComponent",
+        "extends BadgeComponent",
+        "extends BannerComponent",
+        "extends BarChartComponent",
+        "extends BreadcrumbsComponent",
+        "extends ChartComponent",
+        "extends ColumnSeriesComponent",
+        "extends LineSeriesComponent",
+        "extends ChartDataTableComponent",
+        "extends ColorPickerComponent",
+        "extends ColumnChartComponent",
+        "extends DatePickerComponent",
+        "extends DescriptionItemComponent",
+        "extends DrawerComponent",
+        "extends DropzoneComponent",
+        "extends FilterBarComponent",
+        "extends FunnelChartComponent",
+        "extends HeatmapChartComponent",
+        "extends InputComponent",
+        "extends LineChartComponent",
+        "extends ModalCardComponent",
+        "extends MultiSelectComponent",
+        "extends NumberStepperComponent",
+        "extends OtpInputComponent",
+        "extends PaginationComponent",
+        "extends PasswordRulesComponent",
+        "extends PieChartComponent",
+        "extends ScatterChartComponent",
+        "extends SearchComponent",
+        "extends SelectComponent",
+        "extends SidenavGroupComponent",
+        "extends SidenavFooterComponent",
+        "extends SliderComponent",
+        "extends SpinnerComponent",
+        "extends SplitButtonComponent",
+        "extends StepperComponent",
+        "extends TableComponent",
+        "extends DsTableExport",
+        "extends TabsComponent",
+        "extends TagComponent",
+        "extends TextareaComponent",
+        "extends TimePickerComponent",
+        "extends ToastComponent",
+        "extends ToastRegionComponent",
+        "extends W3wComponent",
+        "extends WaterfallChartComponent",
+        "extends ChartLegendComponent",
+        "extends ChartTooltipDirective",
+        "extends ModalConfirmComponent",
+        "extends TableColumnsPanelComponent",
+        "extends TableColumnsTriggerComponent",
+        "extends TableExportButtonComponent",
+        "extends TimeColumnsComponent",
+        "extends SkeletonComponent",
+        "extends "
+      ],
+      "detect": [
+        "extends AccordionComponent",
+        "AccordionComponent",
+        "extends AccordionItemComponent",
+        "AccordionItemComponent",
+        "extends AlertComponent",
+        "AlertComponent",
+        "extends AppLayoutComponent",
+        "AppLayoutComponent",
+        "extends AuthLayoutComponent",
+        "AuthLayoutComponent",
+        "extends AutocompleteComponent",
+        "AutocompleteComponent",
+        "extends AvatarComponent",
+        "AvatarComponent",
+        "extends AvatarGroupComponent",
+        "AvatarGroupComponent",
+        "extends BadgeComponent",
+        "BadgeComponent",
+        "extends BannerComponent",
+        "BannerComponent",
+        "extends BarChartComponent",
+        "BarChartComponent",
+        "extends BreadcrumbsComponent",
+        "BreadcrumbsComponent",
+        "extends ChartComponent",
+        "ChartComponent",
+        "extends ColumnSeriesComponent",
+        "ColumnSeriesComponent",
+        "extends LineSeriesComponent",
+        "LineSeriesComponent",
+        "extends ChartDataTableComponent",
+        "ChartDataTableComponent",
+        "extends ColorPickerComponent",
+        "ColorPickerComponent",
+        "extends ColumnChartComponent",
+        "ColumnChartComponent",
+        "extends DatePickerComponent",
+        "DatePickerComponent",
+        "extends DescriptionItemComponent",
+        "DescriptionItemComponent",
+        "extends DrawerComponent",
+        "DrawerComponent",
+        "extends DropzoneComponent",
+        "DropzoneComponent",
+        "extends FilterBarComponent",
+        "FilterBarComponent",
+        "extends FunnelChartComponent",
+        "FunnelChartComponent",
+        "extends HeatmapChartComponent",
+        "HeatmapChartComponent",
+        "extends InputComponent",
+        "InputComponent",
+        "extends LineChartComponent",
+        "LineChartComponent",
+        "extends ModalCardComponent",
+        "ModalCardComponent",
+        "extends MultiSelectComponent",
+        "MultiSelectComponent",
+        "extends NumberStepperComponent",
+        "NumberStepperComponent",
+        "extends OtpInputComponent",
+        "OtpInputComponent",
+        "extends PaginationComponent",
+        "PaginationComponent",
+        "extends PasswordRulesComponent",
+        "PasswordRulesComponent",
+        "extends PieChartComponent",
+        "PieChartComponent",
+        "extends ScatterChartComponent",
+        "ScatterChartComponent",
+        "extends SearchComponent",
+        "SearchComponent",
+        "extends SelectComponent",
+        "SelectComponent",
+        "extends SidenavGroupComponent",
+        "SidenavGroupComponent",
+        "extends SidenavFooterComponent",
+        "SidenavFooterComponent",
+        "extends SliderComponent",
+        "SliderComponent",
+        "extends SpinnerComponent",
+        "SpinnerComponent",
+        "extends SplitButtonComponent",
+        "SplitButtonComponent",
+        "extends StepperComponent",
+        "StepperComponent",
+        "extends TableComponent",
+        "TableComponent",
+        "extends DsTableExport",
+        "DsTableExport",
+        "extends TabsComponent",
+        "TabsComponent",
+        "extends TagComponent",
+        "TagComponent",
+        "extends TextareaComponent",
+        "TextareaComponent",
+        "extends TimePickerComponent",
+        "TimePickerComponent",
+        "extends ToastComponent",
+        "ToastComponent",
+        "extends ToastRegionComponent",
+        "ToastRegionComponent",
+        "extends W3wComponent",
+        "W3wComponent",
+        "extends WaterfallChartComponent",
+        "WaterfallChartComponent",
+        "extends ChartLegendComponent",
+        "ChartLegendComponent",
+        "extends ChartTooltipDirective",
+        "ChartTooltipDirective",
+        "extends ModalConfirmComponent",
+        "ModalConfirmComponent",
+        "extends TableColumnsPanelComponent",
+        "TableColumnsPanelComponent",
+        "extends TableColumnsTriggerComponent",
+        "TableColumnsTriggerComponent",
+        "extends TableExportButtonComponent",
+        "TableExportButtonComponent",
+        "extends TimeColumnsComponent",
+        "TimeColumnsComponent",
+        "extends SkeletonComponent",
+        "SkeletonComponent"
+      ],
+      "verify": "The app builds with no TS2415, TS2416 or TS4114 naming a class listed in detect, and no member of a subclass is named like a removed member listed in the note.",
+      "note": "Every listed class gained intl except AccordionComponent, AccordionItemComponent, AuthLayoutComponent, LineSeriesComponent and ChartTooltipDirective (internal); each nullable text input gained a matching ...Resolved readback. Also gained: AccordionComponent chevron; AccordionItemComponent chevronDown, chevronName; AlertComponent and BannerComponent liveRole; BarChartComponent highlighted, isSegmentDimmed; ChartComponent composed, cursorResolved, tooltipPinned; ColumnSeriesComponent axis, barElements, hatchInUse, locale; DatePickerComponent appLocale; DropzoneComponent sizeFormat; PieChartComponent legendHighlight, onLegendLeave, pinnedEntry. Lost: ChartComponent tooltipPreferBelow; ColumnSeriesComponent onMarkBlur; LineSeriesComponent onMarkerBlur; ChartTooltipDirective (internal) dsChartTooltipPreferBelow. AuthLayoutComponent's landmark default changes the type an override must match. Internal classes in detect are reached through their entry points. The nine chart components gained renderReady, and SkeletonComponent the shimmer input."
+    },
+    {
+      "id": "chart-cursor-default-auto",
+      "kind": "behavior",
+      "old": "ds-chart[cursor]",
+      "new": null,
+      "surface": "template",
+      "action": "None, unless a ds-chart that composes two or more marks showing a tooltip has to answer per mark: set cursor=\"none\" on it.",
+      "appliesWhen": "Only a ds-chart with no cursor binding that holds two or more g[dsColumnSeries] or g[dsLineSeries] marks whose tooltip is not \"none\". A ds-chart of one such mark, one that binds cursor either way, and the ds-column-chart, ds-line-chart and ds-waterfall-chart presets are unaffected.",
+      "pitfall": "On such a plot the pointer anywhere in a category opens the category panel, which lists every mark's reading there and replaces the per-mark panel, so a column series' partOfWhole share line is not in it while the pointer is on the plot.",
+      "restore": "cursor=\"none\"",
+      "searchHints": [
+        "<ds-chart",
+        "dsColumnSeries",
+        "dsLineSeries",
+        "cursor="
+      ],
+      "detect": [
+        "dsColumnSeries",
+        "dsLineSeries",
+        "cursor=\"category\""
+      ],
+      "verify": "Every ds-chart holding two marks that show a tooltip either opens one panel naming each mark's reading when the pointer is anywhere in a category, or carries cursor=\"none\".",
+      "note": "The default was \"none\", now \"auto\": the category cursor for a plot of two or more marks that show a tooltip, and \"none\" for a plot of one. Two marks drawn over one category axis are read as one comparison, and a panel per mark made the reader hover the column and the line in turn to compare them. A cursor=\"category\" written on such a plot restates the new default (delete list: chart-cursor-category-composed)."
+    },
+    {
+      "id": "chart-cursor-type-widened",
+      "kind": "behavior",
+      "old": "ds-chart[cursor]",
+      "new": null,
+      "surface": "typescript",
+      "action": "Where your code reads ChartComponent.cursor() back, handle \"auto\".",
+      "appliesWhen": "Only code that reads the input back through a ChartComponent reference (viewChild, #chart=\"dsChart\") or a subclass redeclaring it. Binding cursor in a template is unaffected.",
+      "restore": null,
+      "searchHints": [
+        "dsChart",
+        "ChartComponent",
+        ".cursor()"
+      ],
+      "detect": [
+        ".cursor()",
+        "cursor() ===",
+        "extends ChartComponent"
+      ],
+      "verify": "The app builds, and no branch on ChartComponent.cursor() treats \"auto\" as a value it cannot receive.",
+      "note": "The type was 'none' | 'category', now 'none' | 'category' | 'auto'. A reader comparing it exhaustively, or a subclass redeclaring the input with the old type (TS2416), is what breaks; a writer is unaffected."
+    },
+    {
+      "id": "chart-tooltip-prefer-below-removed",
+      "kind": "removed-api",
+      "old": "[dsChartTooltipPreferBelow]",
+      "new": null,
+      "surface": [
+        "template",
+        "typescript"
+      ],
+      "action": "Delete every [dsChartTooltipPreferBelow] binding. In a tooltip source a custom mark hands CHART_SCALES.reportTooltip, rename preferBelow to pinned.",
+      "appliesWhen": "Only an app that binds the dsChartTooltip directive itself, or a custom mark that injects CHART_SCALES and reports a tooltip source carrying preferBelow. The library's own charts are unaffected.",
+      "pitfall": "A preferBelow left in a source reached through a variable rather than an object literal still compiles and is ignored, so a held panel stays inert to the pointer and its text cannot be selected.",
+      "restore": null,
+      "searchHints": [
+        "dsChartTooltipPreferBelow",
+        "preferBelow",
+        "reportTooltip"
+      ],
+      "detect": [
+        "dsChartTooltipPreferBelow",
+        "preferBelow:",
+        "reportTooltip("
+      ],
+      "verify": "No dsChartTooltipPreferBelow or preferBelow remains in the app, and a held chart panel opens above its mark.",
+      "note": "Every chart puts its Unpin control at the plot's bottom edge, so a held panel opens above its mark like a hovered one and the flag that flipped it below has nothing left to steer. pinned carries the other half of what preferBelow fed: a held pane takes the pointer so its text can be selected."
+    },
+    {
+      "id": "chart-hatch-width-full-stroke",
+      "kind": "behavior",
+      "old": "--ds-chart-hatch-width",
+      "new": null,
+      "surface": "style",
+      "action": "None, unless you set --ds-chart-hatch-width: halve the value to keep the stripe you had.",
+      "appliesWhen": "Only a stylesheet that sets --ds-chart-hatch-width. The default draws the same stripe as before. The default ships in styles/tokens-charts, which styles/ds forwards.",
+      "pitfall": "An override left at 3px now draws a 3px stripe in the 8px repeat, which reads as a paler mark rather than a textured one.",
+      "restore": "--ds-chart-hatch-width: calc(<your value> / 2);",
+      "searchHints": [
+        "--ds-chart-hatch-width",
+        "hatch"
+      ],
+      "detect": [
+        "--ds-chart-hatch-width"
+      ],
+      "verify": "In the BUILT css --chart-hatch-width resolves to 1.5px, and a hatched column's stripe measures the width --ds-chart-hatch-width names.",
+      "note": "The default was 3px, now 1.5px. The stripe sat on its pattern tile's edge, which clipped it to half the token, so a column drew 1.5px while the tooltip swatch drew a fixed share of its own diameter. The stripe now runs down the tile's middle at the full token, the default halves so a column looks as it did, and the swatch takes the same token."
+    },
+    {
+      "id": "auth-layout-lockup-matches-sidenav",
+      "kind": "behavior",
+      "old": "ds-auth-layout",
+      "new": null,
+      "surface": "style",
+      "action": "Look at the sign-in masthead: the wordmark is 18px (was 22px) and the letter-mark tile a fixed 28px (was 24-32px by viewport height). To keep the old lockup, set the restore snippet on ds-auth-layout.",
+      "appliesWhen": "Every ds-auth-layout that shows a generated wordmark or letter-mark. A logo projected into [brand] is covered by its own item in this release.",
+      "pitfall": "The tile no longer compresses on a short viewport, so a card that just fitted a landscape phone can now scroll by 4px.",
+      "restore": "ds-auth-layout { --ds-auth-layout-brand-name-font-size: var(--font-size-h4); --ds-auth-layout-mark-size: clamp(var(--space-6), 4svh, var(--space-8)); }",
+      "searchHints": [
+        "ds-auth-layout",
+        ".brand-name",
+        "--ds-auth-layout-mark-size"
+      ],
+      "detect": [
+        "ds-auth-layout[^{]*\\.brand-name",
+        "ds-auth-layout[^{]*\\.mark"
+      ],
+      "verify": "On a sign-in screen the wordmark computes to 18px and the tile to 28px square, or the restore snippet is present.",
+      "note": "The lockup now matches ds-sidenav's rail, so the mark a user meets at sign-in is the one in the app. Two hooks size the type: --ds-auth-layout-brand-name-font-size and --ds-auth-layout-mark-font-size. (delete list: auth-layout-brand-name-font-override)"
+    },
+    {
+      "id": "auth-layout-landmark-defaults-to-main",
+      "kind": "behavior",
+      "old": "ds-auth-layout[landmark]",
+      "new": null,
+      "surface": "template",
+      "action": "Add landmark=\"none\" to every ds-auth-layout rendered inside a <main> or an element with role=\"main\", ds-app-layout's content included. Remove landmark=\"main\" elsewhere (delete list: auth-layout-landmark-main).",
+      "appliesWhen": "Only ds-auth-layout. A standalone sign-in page needs nothing: its card becomes the main landmark on its own.",
+      "pitfall": "Inside another layout the page now has two main landmarks. Nothing errors; an accessibility audit reports it and a screen reader offers two.",
+      "restore": "landmark=\"none\" on the ds-auth-layout",
+      "searchHints": [
+        "ds-auth-layout",
+        "landmark="
+      ],
+      "detect": [
+        "<ds-auth-layout",
+        "ds-app-layout"
+      ],
+      "verify": "Each auth screen exposes exactly one main landmark: document.querySelectorAll('main, [role=main]').length is 1.",
+      "note": "The card renders an article, which is not a landmark, so by default a screen-reader user had nothing to jump to on a sign-in page."
+    },
+    {
+      "id": "auth-layout-brand-logo-capped-at-tile",
+      "kind": "behavior",
+      "old": "--ds-auth-layout-brand-max-height",
+      "new": null,
+      "surface": "style",
+      "action": "Look at every sign-in screen that projects a logo into [brand]: it is now capped at the tile height, 28px. Set the restore snippet to leave it unconstrained, or a height of your own.",
+      "appliesWhen": "Only a logo projected into ds-auth-layout's [brand] slot. ds-sidenav's [brand] slot is unchanged.",
+      "pitfall": "A logo sized by its own width only now shrinks to 28px tall, keeping its ratio, so a wide wordmark logo becomes small without any error.",
+      "restore": "ds-auth-layout { --ds-auth-layout-brand-max-height: none; }",
+      "searchHints": [
+        "[brand]",
+        "ds-auth-layout",
+        "--ds-auth-layout-brand-max-height"
+      ],
+      "detect": [
+        "<[^>]*\\sbrand[\\s>]"
+      ],
+      "verify": "A projected [brand] logo's computed max-height is 28px, or the restore snippet is present.",
+      "note": "A projected logo is the production case, and an uncapped image set the masthead's height. (delete list: auth-layout-brand-max-height-opt-in)"
+    },
+    {
+      "id": "button-color-class-is-color-prefixed",
+      "kind": "class-rename",
+      "old": "ds-button .c-*",
+      "new": ".color-*",
+      "surface": "style",
+      "action": "Rename `.c-secondary`, `.c-tertiary`, `.c-neutral`, `.c-error`, `.c-success` and `.c-warning` to `.color-secondary` … `.color-warning` in selectors scoped under ds-button. Better: key the rule off the host attribute, `ds-button[data-color=\"error\"]`, which does not depend on the inner element's classes.",
+      "appliesWhen": "Only a stylesheet that styles the inner button of ds-button by its colour class. Bindings (`color=\"error\"`) are unaffected. `.color-primary` does not exist: the default colour carries no class, as `.c-primary` never did.",
+      "pitfall": "A selector left on the old class matches nothing and reports nothing, and a `:not(.c-error)` chain stops excluding anything, so a rule written for one colour applies to every button.",
+      "restore": null,
+      "searchHints": [
+        ".c-secondary",
+        ".c-tertiary",
+        ".c-neutral",
+        ".c-error",
+        ".c-success",
+        ".c-warning",
+        "ds-button"
+      ],
+      "detect": [
+        "\\.c-(secondary|tertiary|neutral|error|success|warning)([^A-Za-z0-9_-]|$)"
+      ],
+      "verify": "No stylesheet under ds-button names a `.c-` colour class, and a ds-button color=\"error\" renders an inner button carrying `color-error`.",
+      "note": "The colour class names the `color` input it comes from, spelled out like the rest of the library's names."
+    },
+    {
+      "id": "icon-button-color-class-is-color-prefixed",
+      "kind": "class-rename",
+      "old": "ds-icon-button .c-*",
+      "new": ".color-*",
+      "surface": "style",
+      "action": "Rename `.c-secondary`, `.c-tertiary`, `.c-neutral`, `.c-error`, `.c-success` and `.c-warning` to `.color-secondary` … `.color-warning` in selectors scoped under ds-icon-button.",
+      "appliesWhen": "Only a stylesheet that styles the inner button of ds-icon-button by its colour class. Bindings (`color=\"error\"`) are unaffected. `.color-primary` does not exist: the default colour carries no class, as `.c-primary` never did.",
+      "pitfall": "A selector left on the old class matches nothing and reports nothing, and a `:not(.c-error)` chain stops excluding anything, so a rule written for one colour applies to every icon-button.",
+      "restore": null,
+      "searchHints": [
+        ".c-secondary",
+        ".c-tertiary",
+        ".c-neutral",
+        ".c-error",
+        ".c-success",
+        ".c-warning",
+        "ds-icon-button"
+      ],
+      "detect": [
+        "\\.c-(secondary|tertiary|neutral|error|success|warning)([^A-Za-z0-9_-]|$)"
+      ],
+      "verify": "No stylesheet under ds-icon-button names a `.c-` colour class, and a ds-icon-button color=\"error\" renders an inner button carrying `color-error`.",
+      "note": "The colour class names the `color` input it comes from, spelled out like the rest of the library's names."
+    },
+    {
+      "id": "button-variant-class-is-variant-prefixed",
+      "kind": "class-rename",
+      "old": "ds-button .v-*",
+      "new": ".variant-*",
+      "surface": "style",
+      "action": "Rename `.v-tonal`, `.v-ghost`, `.v-outline` and `.v-text` to `.variant-tonal`, `.variant-ghost`, `.variant-outline` and `.variant-text` in selectors scoped under ds-button. Better: key the rule off the host attribute, `ds-button[data-variant=\"outline\"]`, which does not depend on the inner element's classes.",
+      "appliesWhen": "Only a stylesheet that styles the inner button of ds-button by its fill-variant class. Bindings (`variant=\"outline\"`) are unaffected. `.variant-solid` does not exist: the default variant carries no class, as `.v-solid` never did.",
+      "pitfall": "A selector left on the old class matches nothing and reports nothing, and a `:not(.v-outline)` chain stops excluding anything, so a rule written for one variant applies to every button.",
+      "restore": null,
+      "searchHints": [
+        ".v-tonal",
+        ".v-ghost",
+        ".v-outline",
+        ".v-text",
+        "ds-button"
+      ],
+      "detect": [
+        "\\.v-(tonal|ghost|outline|text)([^A-Za-z0-9_-]|$)"
+      ],
+      "verify": "No stylesheet under ds-button names a `.v-` variant class, and a ds-button variant=\"outline\" renders an inner button carrying `variant-outline`.",
+      "note": "The variant class names the `variant` input it comes from, spelled out like the rest of the library's names."
+    },
+    {
+      "id": "charts-format-in-locale-id",
+      "kind": "behavior",
+      "old": "DS_CONFIG.chart.valueFormat",
+      "new": null,
+      "surface": [
+        "config",
+        "none"
+      ],
+      "action": "None, unless your app does not provide LOCALE_ID and relied on charts following the browser: set provideDsConfig({ locale: '<tag>' }) or provide LOCALE_ID. If you wrote a chart.valueFormat only to pin a locale, delete it and set locale instead (delete list: chart-value-format-pinning-locale).",
+      "appliesWhen": "Every chart that uses the built-in value format: ds-bar-chart, ds-column-chart, ds-line-chart, ds-pie-chart, ds-funnel-chart, ds-heatmap-chart, ds-scatter-chart, ds-waterfall-chart and ds-chart with its series. A chart bound to its own [valueFormat], or an app with DS_CONFIG.chart.valueFormat set, formats values as before; its percentages still change, because percentages never went through valueFormat.",
+      "pitfall": "On a machine whose browser locale differs from LOCALE_ID the numbers change with no build error: an app that never provided LOCALE_ID now prints en-US grouping where it printed the browser's.",
+      "restore": "provideDsConfig({ locale: navigator.language })",
+      "searchHints": [
+        "valueFormat",
+        "provideDsConfig",
+        "LOCALE_ID",
+        "toLocaleString"
+      ],
+      "detect": [
+        "valueFormat:",
+        "toLocaleString('",
+        "new Intl.NumberFormat(",
+        "provide: LOCALE_ID"
+      ],
+      "verify": "A chart's axis tick, tooltip value and percentage use the same decimal separator as a number printed with the app's own | number pipe.",
+      "note": "Values and percentages read one locale, DsConfig.locale then LOCALE_ID. Percentages use Intl's percent style, so de-DE prints 13,5 % with a space, and a test expecting 13,5% fails."
+    },
+    {
+      "id": "date-picker-locale-falls-back-to-locale-id",
+      "kind": "behavior",
+      "old": "ds-date-picker[locale]",
+      "new": null,
+      "surface": [
+        "config",
+        "none"
+      ],
+      "action": "None, unless your app provides LOCALE_ID other than en-US and expects ds-date-picker to stay en-US: set provideDsConfig({ datePicker: { locale: 'en-US' } }).",
+      "appliesWhen": "Only a ds-date-picker with no [locale] binding and no DS_CONFIG.datePicker.locale, in an app that provides LOCALE_ID or DS_CONFIG.locale. An app that provides neither still gets en-US, which is LOCALE_ID's own default.",
+      "pitfall": "Month and weekday names and the typed-value order change together, so a form test that types 12/31/2026 fails under a de-DE LOCALE_ID, where the order becomes DD.MM.YYYY.",
+      "restore": "provideDsConfig({ datePicker: { locale: 'en-US' } })",
+      "searchHints": [
+        "ds-date-picker",
+        "datePicker",
+        "LOCALE_ID"
+      ],
+      "detect": [
+        "provide: LOCALE_ID",
+        "datePicker:",
+        "locale:"
+      ],
+      "verify": "Every ds-date-picker renders month names in the locale the app intends, checked on one page with the calendar open."
+    },
+    {
+      "id": "dropzone-file-size-in-locale",
+      "kind": "behavior",
+      "old": "ds-dropzone",
+      "new": null,
+      "surface": [
+        "config",
+        "none"
+      ],
+      "action": "None, unless a test or a screen expects a file size with a dot decimal under a non-English locale: pin it with provideDsConfig({ locale: 'en-US' }), which also pins chart numbers and ds-date-picker.",
+      "appliesWhen": "Only the size line of a listed file in ds-dropzone, in an app that provides LOCALE_ID or DS_CONFIG.locale. Under en-US the text is unchanged below 1000 MB; from 1000 MB it gains a group separator (1,024.0 MB).",
+      "pitfall": "A test asserting \"1.5 MB\" fails under a de-DE locale, where the size reads 1,5 MB, with no build error.",
+      "restore": "provideDsConfig({ locale: 'en-US' })",
+      "searchHints": [
+        "ds-dropzone",
+        "LOCALE_ID",
+        " KB",
+        " MB"
+      ],
+      "detect": [
+        "provide: LOCALE_ID",
+        "locale:",
+        "KB'",
+        "MB'"
+      ],
+      "verify": "A file listed in ds-dropzone shows its size with the decimal separator of the app locale."
+    },
+    {
+      "id": "chart-copy-moves-to-ds-intl",
+      "kind": "removed-api",
+      "old": "DS_CONFIG.chart.emptyText",
+      "new": "provideDsIntl({ chart: { empty, error } })",
+      "surface": "config",
+      "action": "Move chart.emptyText and chart.errorText out of provideDsConfig into provideDsIntl({ chart: { empty: '…', error: '…' } }) on the same injector.",
+      "appliesWhen": "Only a provideDsConfig call that sets chart.emptyText or chart.errorText. The per-chart [emptyText] and [errorText] inputs are unchanged and still win.",
+      "pitfall": "Deleting the keys without adding provideDsIntl compiles and silently brings back the English 'No data' and 'Could not load the data'.",
+      "restore": null,
+      "searchHints": [
+        "emptyText",
+        "errorText",
+        "provideDsConfig"
+      ],
+      "detect": [
+        "emptyText:",
+        "errorText:"
+      ],
+      "verify": "No provideDsConfig call contains emptyText or errorText, and a chart with empty data shows your wording."
+    },
+    {
+      "id": "text-inputs-default-to-ds-intl",
+      "kind": "behavior",
+      "old": "ds-multi-select[placeholder]",
+      "new": null,
+      "surface": "typescript",
+      "action": "Where you read one of the listed inputs back from a component reference, or override it in a subclass, handle null or read its ...Resolved readback instead.",
+      "appliesWhen": "Only TypeScript reading the raw input through viewChild or a template reference, or a subclass redeclaring it. Binding these inputs in a template is unaffected.",
+      "pitfall": "A reader comparing placeholder() to 'Select…' now sees null for an unset field and takes the other branch with no compile error.",
+      "restore": null,
+      "searchHints": [
+        "placeholder()",
+        "searchPlaceholder()",
+        "ariaLabel()",
+        "closeLabel()",
+        "countLabel()",
+        "moreLabel()",
+        "panelLabel()",
+        "menuLabel()",
+        "railLabel()",
+        "otherLabel()",
+        "noVisibleSeriesText()",
+        "sortAnnouncement()",
+        "rangeAnnouncement()"
+      ],
+      "detect": [
+        ".placeholder()",
+        ".searchPlaceholder()",
+        ".ariaLabel()",
+        ".closeLabel()",
+        ".countLabel()",
+        ".moreLabel()",
+        ".panelLabel()",
+        ".menuLabel()",
+        ".railLabel()",
+        ".otherLabel()",
+        ".noVisibleSeriesText()",
+        ".sortAnnouncement()",
+        ".rangeAnnouncement()"
+      ],
+      "verify": "Every read of a listed input handles null or reads the matching ...Resolved readback.",
+      "note": "Seventeen inputs went from input<string>(English) to input<string | null>(null), or from a function type T to T | null, so unset falls back to DS_INTL: placeholder on ds-autocomplete, ds-multi-select, ds-date-picker, ds-search; searchPlaceholder on ds-multi-select; ariaLabel on ds-color-picker, ds-otp-input; closeLabel on ds-tag; countLabel on ds-badge; moreLabel and panelLabel on ds-filter-bar; menuLabel on ds-split-button; railLabel on ds-app-layout; otherLabel on ds-pie-chart; noVisibleSeriesText on ds-line-chart; sortAnnouncement and rangeAnnouncement on ds-table. Writers are unaffected; readers and overriders break."
+    }
+  ],
+  "informational": [
+    "ds-banner and ds-alert warn in dev mode when announce was never decided: an error, warning or severe banner (error or warning alert) left unbound while DS_CONFIG.banner.announce (alert.announce) is unset, and an info, success or neutral one that announces only because that key is true. The first warning ends when the key is set either way, the second at an [announce] binding; neither reaches a production build.",
+    {
+      "text": "A closing modal backdrop, drawer and bottom sheet are click-through for the whole leave. Under reduced motion the leave is 0 ms long and its animationend is not reliably delivered, so the fallback timer tore the scrim down up to 300 ms later and the invisible scrim took every click aimed at the page in that window. A rule of yours forcing pointer-events: none on .modal-backdrop.closing, .drawer-scrim.closing or .sheet-overlay.closing is redundant (delete list: closing-scrim-pointer-events).",
+      "verify": "With prefers-reduced-motion: reduce emulated, close a modal and click a button under it within 300 ms: the button's handler runs, and document.elementFromPoint over it never returns the .modal-backdrop."
+    },
+    "ds-accordion takes chevron: 'right' (default, the chevron every item drew) or 'down', which draws a downward chevron that turns up when the item opens. ds-accordion-item takes --ds-accordion-header-padding, --ds-accordion-header-gap, --ds-accordion-header-font-family, --ds-accordion-header-font-size, --ds-accordion-header-font-weight, --ds-accordion-header-line-height, --ds-accordion-header-hover-text-color and --ds-accordion-body-padding. Every default is the value the item already drew. Purely additive - nothing to change (delete list: accordion-head-and-body-deep-rules).",
+    "Six family tokens sit under every text-entry field's own token: --ds-field-border-color, --ds-field-border-color-hover, --ds-field-border-color-focus, --ds-field-text-color, --ds-field-placeholder-color and --ds-field-font-size reach ds-input, ds-textarea, ds-select, ds-multi-select, ds-autocomplete and ds-search, and a per-component token such as --ds-input-border or --ds-select-text-color still wins where set. The date, time and colour pickers, the number stepper and the OTP cells are not in the family. Every default is the value each field already drew. Purely additive - nothing to change.",
+    "ds-select takes --ds-select-border-color-focus, read by the focused and the open trigger alike, plus --ds-select-border-color-hover, --ds-select-placeholder-color and --ds-select-font-size; ds-multi-select takes --ds-multi-select-border-color-hover, --ds-multi-select-placeholder-color and --ds-multi-select-font-size; ds-search takes --ds-search-font-size. Every default is the value the trigger already drew. Purely additive - nothing to change (delete list: select-focus-border-important).",
+    "ds-autocomplete takes --ds-autocomplete-text-color for the typed text and the picked value, --ds-autocomplete-placeholder-color for the filter input's placeholder, and --ds-autocomplete-border-color-hover. The placeholder now resolves --text-tertiary through the field family, as ds-input's does, where it was the browser's own grey before. Purely additive - nothing to change (delete list: autocomplete-input-deep-colour-rule).",
+    "ds-button takes --ds-button-border-color-hover and --ds-button-border-color-active, ds-icon-button takes --ds-icon-button-border-hover and --ds-icon-button-border-active. Hover defaults to the resting border and active to hover, so an unset pair draws exactly what the button drew. Purely additive - nothing to change (delete list: button-border-hover-deep-rules).",
+    "ds-empty-state takes --ds-empty-state-title-font-family (default --font-sans) and --ds-empty-state-title-font-weight (default --font-weight-bold) beside the size and colour hooks the title already had. Purely additive - nothing to change (delete list: empty-state-title-deep-rule).",
+    "ds-badge takes --ds-badge-font-size (default --font-size-xs; a count badge keeps --font-size-2xs until the token is set) and ds-page-header takes --ds-page-header-subtitle-font-size (default --font-size-s). Purely additive - nothing to change (delete list: badge-and-subtitle-size-deep-rules).",
+    "ds-banner takes --ds-banner-title-font-size beside --ds-banner-body-font-size (default --font-size-s, what the title drew). Purely additive - nothing to change (delete list: banner-compact-title-deep-rule).",
+    {
+      "text": "ds-table takes --ds-table-utility-column-width and --ds-table-utility-column-padding-x for the trailing column that carries the column picker and the row-actions button. The width default moves from --space-10 to --space-6, the buttons' own size; because cells are border-box and the column already sat at button-plus-padding, nothing moves unless --ds-table-cell-padding-x is below 8px, where the column narrows to that sum. Purely additive otherwise (delete list: table-actions-col-deep-rule).",
+      "verify": "A ds-table with dsTableColumns and no rowActions renders its trailing header cell at the same width as before the upgrade at default density (measured 56px at 16px cell padding); with --ds-table-utility-column-padding-x: 0 on the table the cell is 24px wide and the picker button fills it."
+    },
+    "ds-table takes --ds-table-footer-padding-y (default --space-3) with --ds-table-footer-padding-top and -bottom falling back to it, for the pagination footer's block padding; its inline sides already followed --ds-table-cell-padding-*. Purely additive - nothing to change (delete list: table-pagination-footer-padding-deep-rule).",
+    {
+      "text": "ds-modal and ds-modal-card measure their [actions] row again when a button's label or the set of actions changes after the modal opens, so a label that grows past the card stacks the row instead of clipping the first button at the card's start edge.",
+      "verify": "Open a sm modal with two short buttons, then change one label to a long one while it stays open: the row stacks into a full-width column with both buttons inside the card."
+    },
+    {
+      "text": "Chart legend entries in ds-line-chart, ds-column-chart, ds-scatter-chart, ds-chart-legend and the ds-pie-chart legend take a hover state: an entry under the pointer or holding keyboard focus gets a --surface-secondary tint and --text-primary text, through the new --ds-chart-legend-hover-bg-color and --ds-chart-legend-hover-text-color. The entry's padding is paid back as a negative margin, so no legend row moves. Hovering or focusing a ds-pie-chart legend entry fades the other slices whether or not dimOthers is set, matching the other chart legends; dimOthers still governs a pointer over the ring.",
+      "verify": "Hover a legend entry of a ds-pie-chart without dimOthers: the entry is tinted and every other slice drops to --ds-chart-dim-opacity; the legend rows sit where they sat before the upgrade."
+    },
+    {
+      "text": "ds-pie-chart draws the pin badge of a held slice as an HTML element over the ring instead of inside the svg, so it is 22px (--ds-chart-pin-size) at any ring size and the pin glyph sits centred in its circle.",
+      "verify": "Click a slice of a ds-pie-chart with pinOnClick: the .pin-marker badge is centred on the slice and the glyph's centre matches the badge's centre."
+    },
+    {
+      "text": "ds-funnel-chart with shape=\"area\" draws a stage whose share is too small to clear the gap between bands as a band half a gap deep (about 3px at the default stage height) about its own middle, rather than collapsing it to a zero-height line; a stage of value 0 still draws nothing.",
+      "verify": "A ds-funnel-chart shape=\"area\" with stages 1000 and 10 renders the second stage as a visible band."
+    },
+    "ds-line-chart and ds-chart line series fade their point markers in with the line and the area, on the same delay and stagger; prefers-reduced-motion zeroes it with the rest of the chart motion.",
+    {
+      "text": "Hatched columns slant from top left to bottom right, and the tooltip swatch of a hatched reading draws its stripe at the same angle, in --ds-chart-hatch-color and at --ds-chart-hatch-width.",
+      "verify": "Hover a hatched column: its stripes and the swatch stripe in the panel run the same diagonal at the same width."
+    },
+    {
+      "text": "A click on a g[dsColumnSeries] or g[dsLineSeries] series, or on a ds-scatter-chart series, leaves focus where it was: the series group took focus and drew a focus rectangle around all its marks. The keyboard reaches each mark as before.",
+      "verify": "Click a column of a ds-chart: document.activeElement is not the .columns group and no outline surrounds the series."
+    },
+    {
+      "text": "A category panel hangs over the highest reading at the category wherever in the band the pointer is; with the pointer beside a column it hung over a lower line marker.",
+      "verify": "On a ds-chart with a column, a line and a category cursor, move the pointer across one category: the panel stays above the taller reading."
+    },
+    {
+      "text": "A held (pinned) chart panel opens above its mark, like a hovered one, in ds-chart, ds-column-chart, ds-bar-chart, ds-pie-chart and ds-funnel-chart.",
+      "verify": "Pin a column with pinOnClick: the panel sits above the column and the Unpin control below the plot."
+    },
+    "g[dsColumnSeries] takes an axis input: axis=\"secondary\" measures the columns against the second value axis, as axis: 'secondary' does in a line series' data. Unset is 'primary', so every existing chart draws as before.",
+    "ds-bar-chart takes a highlighted input naming one segment by id, or by its position where it has none; every other segment in every row fades to --ds-chart-dim-opacity. Unset changes nothing.",
+    "A read-only schematic, ng g @ids-group-ltd/ids-design-system:check-overrides, reports every --ds-* custom property a stylesheet sets that the installed version does not read, and every ds-* selector naming a class the component does not render. --strict makes it fail.",
+    "Neutral rows and small buttons that had a hover fill and no pressed state now darken one step on press, to --surface-muted: the sidenav group header and caret, the sidenav footer's rows, more button, search results and alerts, the date picker's period trigger, nav buttons, month and year cells and presets, the time picker's option cells and action buttons, the toast action, the description-list copy button, the multi-select select-all row and the tab close button. An interactive ds-tag, which already hovers at --surface-muted, takes the shared press dip instead.",
+    "DsConfig.locale sets the BCP-47 locale for chart numbers and percentages, ds-date-picker and ds-dropzone file sizes; unset, it is Angular's LOCALE_ID.",
+    "DS_INTL and provideDsIntl hold every string the library renders, English by default; provide an object for one language or a factory returning a signal to switch languages at runtime. Existing text inputs still win (delete list: per-instance-english-overrides)."
+  ],
+  "deleteList": [
+    {
+      "id": "closing-scrim-pointer-events",
+      "surface": "style",
+      "find": [
+        ".modal-backdrop.closing",
+        ".drawer-scrim.closing",
+        ".drawer-root.closing",
+        ".sheet-overlay.closing",
+        "pointer-events: none"
+      ],
+      "why": "The library's closing roots are click-through for the whole leave, so a rule forcing pointer-events: none on them restates it. A rule that also shortens animation-duration under reduced motion still does something - it ends the leave before the fallback timer would - and may stay.",
+      "replaceWith": "nothing"
+    },
+    {
+      "id": "accordion-head-and-body-deep-rules",
+      "surface": "style",
+      "find": [
+        ".head.head",
+        ".chev.chev",
+        ".body-content.body-content",
+        "ds-accordion-item .head",
+        "ds-accordion-item .body-content"
+      ],
+      "why": "The header's padding, gap, type and hover colour, the body padding and the chevron direction are tokens and an input, so a rule that doubles an internal class to out-specify the item restates one of them.",
+      "replaceWith": "--ds-accordion-header-padding, --ds-accordion-header-gap, --ds-accordion-header-font-* and --ds-accordion-header-hover-text-color on the item; --ds-accordion-body-padding for the body; chevron=\"down\" on the ds-accordion for a downward chevron"
+    },
+    {
+      "id": "select-focus-border-important",
+      "surface": "style",
+      "find": [
+        ".dropdown:focus-visible",
+        ".dropdown.open",
+        "ds-select .dropdown"
+      ],
+      "why": "The focused and the open trigger resolve --ds-select-border-color-focus, so a rule recolouring .dropdown:focus-visible or .dropdown.open, with or without !important, restates a token.",
+      "replaceWith": "--ds-select-border-color-focus on the ds-select, or --ds-field-border-color-focus for every field"
+    },
+    {
+      "id": "autocomplete-input-deep-colour-rule",
+      "surface": "style",
+      "find": [
+        ".autocomplete-input.autocomplete-input",
+        "ds-autocomplete .autocomplete-input"
+      ],
+      "why": "The filter input resolves its text colour from --ds-autocomplete-text-color and its placeholder from --ds-autocomplete-placeholder-color, so a doubled-class rule setting color or ::placeholder on it restates a token.",
+      "replaceWith": "--ds-autocomplete-text-color and --ds-autocomplete-placeholder-color on the ds-autocomplete, or --ds-field-text-color and --ds-field-placeholder-color for every field"
+    },
+    {
+      "id": "button-border-hover-deep-rules",
+      "surface": "style",
+      "find": [
+        "ds-button .button.v-outline:hover",
+        "ds-button .button.variant-outline:hover",
+        "ds-button .button:hover",
+        "ds-icon-button .icon-button:hover",
+        ".icon-button:hover"
+      ],
+      "why": "The hovered and pressed border colours are tokens that fall back to the resting border, so a rule reaching the inner button to recolour its edge on hover restates one.",
+      "replaceWith": "--ds-button-border-color-hover / -active on the ds-button, --ds-icon-button-border-hover / -active on the ds-icon-button"
+    },
+    {
+      "id": "empty-state-title-deep-rule",
+      "surface": "style",
+      "find": [
+        "ds-empty-state .title",
+        ".title.title"
+      ],
+      "why": "The title's face and weight are tokens beside its size and colour, so a doubled-class rule setting font-family or font-weight on it restates one.",
+      "replaceWith": "--ds-empty-state-title-font-family and --ds-empty-state-title-font-weight on the ds-empty-state"
+    },
+    {
+      "id": "badge-and-subtitle-size-deep-rules",
+      "surface": "style",
+      "find": [
+        "::ng-deep .badge",
+        "ds-badge .badge",
+        "ds-page-header .subtitle"
+      ],
+      "why": "The badge label size and the page-header subtitle size are tokens, so a deep rule or an !important on the internal class restates one.",
+      "replaceWith": "--ds-badge-font-size on the ds-badge (or its ancestor), --ds-page-header-subtitle-font-size on the ds-page-header"
+    },
+    {
+      "id": "banner-compact-title-deep-rule",
+      "surface": "style",
+      "find": [
+        "ds-banner .banner.compact .title",
+        ".banner.compact .title",
+        "ds-banner .title"
+      ],
+      "why": "The title size is a token beside the body's, so a descendant rule sizing .title restates it.",
+      "replaceWith": "--ds-banner-title-font-size on the ds-banner (ds-banner[compact] { --ds-banner-title-font-size: var(--font-size-xs); --ds-banner-body-font-size: var(--font-size-xs); } for a 12px strip)"
+    },
+    {
+      "id": "table-actions-col-deep-rule",
+      "surface": "style",
+      "find": [
+        "::ng-deep .actions-col",
+        "ds-table .actions-col",
+        ".actions-col"
+      ],
+      "why": "The utility column's width and horizontal padding are tokens, so a deep rule squeezing .actions-col restates them.",
+      "replaceWith": "--ds-table-utility-column-width and --ds-table-utility-column-padding-x on the ds-table"
+    },
+    {
+      "id": "table-pagination-footer-padding-deep-rule",
+      "surface": "style",
+      "find": [
+        ".pagination-footer.pagination-footer",
+        "ds-table .pagination-footer"
+      ],
+      "why": "The footer's top and bottom padding are tokens, so a doubled-class rule re-padding .pagination-footer restates one; the 0.13.1 row about its inline gutters still holds for a compact table that sets no --ds-table-cell-padding-*.",
+      "replaceWith": "--ds-table-footer-padding-top / -bottom (or -y) on the ds-table"
+    },
+    {
+      "id": "chart-cursor-category-composed",
+      "surface": "template",
+      "find": [
+        "cursor=\"category\""
+      ],
+      "why": "On a ds-chart holding two or more marks that show a tooltip, the default cursor resolves to the category cursor. The binding stays legitimate on a ds-chart of one such mark, where the default resolves to none.",
+      "replaceWith": "nothing"
+    },
+    {
+      "id": "auth-layout-landmark-main",
+      "surface": "template",
+      "find": [
+        "landmark=\"main\""
+      ],
+      "why": "main is now the default.",
+      "replaceWith": "nothing"
+    },
+    {
+      "id": "auth-layout-brand-max-height-opt-in",
+      "surface": "style",
+      "find": [
+        "--ds-auth-layout-brand-max-height: var(--ds-auth-layout-mark-size)"
+      ],
+      "why": "The tile size is now the default cap.",
+      "replaceWith": "nothing"
+    },
+    {
+      "id": "auth-layout-brand-name-font-override",
+      "surface": "style",
+      "find": [
+        "ds-auth-layout .brand-name",
+        "::ng-deep .brand-name"
+      ],
+      "why": "The wordmark size is a hook now.",
+      "replaceWith": "--ds-auth-layout-brand-name-font-size on ds-auth-layout"
+    },
+    {
+      "id": "chart-value-format-pinning-locale",
+      "surface": "config",
+      "find": [
+        "valueFormat: (value, location) =>",
+        "value.toLocaleString('en-US'",
+        "notation: 'compact'"
+      ],
+      "why": "The built-in chart format reads DsConfig.locale, then LOCALE_ID, so a formatter copied only to pin a locale restates the default.",
+      "replaceWith": "provideDsConfig({ locale: 'en-US' }); a formatter that changes digits, units or rounding stays"
+    },
+    {
+      "id": "per-instance-english-overrides",
+      "surface": "template",
+      "find": [
+        "[countLabel]=",
+        "moreLabel=",
+        "panelLabel=",
+        "searchPlaceholder=",
+        "[sortAnnouncement]=",
+        "[rangeAnnouncement]="
+      ],
+      "why": "The same wording set once in provideDsIntl reaches every instance, so a binding that repeats the app-wide translation on each element restates the dictionary.",
+      "replaceWith": "provideDsIntl({ ... }) at the root; a binding whose text differs for that one instance stays"
+    }
+  ]
+}

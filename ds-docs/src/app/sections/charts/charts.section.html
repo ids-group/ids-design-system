@@ -18,7 +18,6 @@
   </p>
 
   <ds-bar-chart
-    *docsLazy
     caption="Visitor funnel"
     dataTable="none"
     [data]="specimenRows()" />
@@ -44,7 +43,6 @@
   </p>
 
   <ds-bar-chart
-    *docsLazy
     caption="Phases, by week"
     dataTable="none"
     [data]="rangeRows()" />
@@ -68,7 +66,6 @@
   </p>
 
   <ds-bar-chart
-    *docsLazy
     caption="Against target, this quarter"
     dataTable="none"
     [data]="bulletRows()" />
@@ -85,7 +82,6 @@
   </p>
 
   <ds-bar-chart
-    *docsLazy
     dataTable="none"
     [data]="customColorRows()" />
 
@@ -116,10 +112,9 @@
     the order the segments are passed.
   </p>
 
-  <div class="states states--cols-1">
+  <div class="states is-cols-1">
     <div class="state-cell">
       <ds-bar-chart
-        *docsLazy
         caption="Spend inside each department"
         dataTable="visible"
         [data]="segmentRows()" />
@@ -140,6 +135,45 @@
   </div>
 
   <h3 class="block-title t-h4">
+    Singling out a segment
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      highlighted
+    </code> names one segment by its
+    <code class="t-mono-inline">
+      id
+    </code> and every other part, in every row,
+    steps back to <code class="t-mono-inline"> --ds-chart-dim-opacity </code> -
+    the same input and the same fade the series marks use, so a breakdown
+    filtered by one part can show which part it is. It says nothing to a screen
+    reader: the control that made the choice is what announces it.
+  </p>
+
+  <div class="demo-row">
+    <ds-radio-group
+      name="singled-out-segment"
+      label="Single out"
+      [(value)]="segmentChoice">
+      <ds-radio
+        value="all"
+        label="None" />
+
+      @for (part of segmentKey; track part.id) {
+        <ds-radio
+          [value]="part.id"
+          [label]="part.label" />
+      }
+    </ds-radio-group>
+  </div>
+
+  <ds-bar-chart
+    caption="Spend inside each department"
+    [data]="segmentRows()"
+    [highlighted]="singledOutSegment()" />
+
+  <h3 class="block-title t-h4">
     A second reading per row
   </h3>
 
@@ -155,7 +189,6 @@
   </p>
 
   <ds-bar-chart
-    *docsLazy
     caption="Requests per source"
     dataTable="visible"
     [data]="detailRows()" />
@@ -181,7 +214,6 @@
   </p>
 
   <ds-bar-chart
-    *docsLazy
     partOfWhole
     dataTable="visible"
     caption="Spend by department, as a share of the budget"
@@ -204,7 +236,6 @@
   </p>
 
   <ds-bar-chart
-    *docsLazy
     interactive
     pinOnClick
     dataTable="none"
@@ -234,10 +265,9 @@
     the computed one.
   </p>
 
-  <div class="states states--cols-2">
+  <div class="states is-cols-2">
     <div class="state-cell">
       <ds-bar-chart
-        *docsLazy
         dataTable="none"
         [data]="percentRows()" />
 
@@ -248,7 +278,6 @@
 
     <div class="state-cell">
       <ds-bar-chart
-        *docsLazy
         dataTable="none"
         [showPercent]="false"
         [data]="percentRows()" />
@@ -277,7 +306,6 @@
   </p>
 
   <ds-bar-chart
-    *docsLazy
     interactive
     dimOthers
     dataTable="none"
@@ -302,7 +330,6 @@
   </p>
 
   <ds-bar-chart
-    *docsLazy
     dataTable="none"
     staggerMs="40"
     [data]="staggerRows()" />
@@ -322,7 +349,6 @@
   </p>
 
   <ds-bar-chart
-    *docsLazy
     caption="Long label and nine-digit value together, table forced open"
     dataTable="visible"
     [data]="dataTableRows()" />
@@ -346,10 +372,9 @@
       other track.
     </p>
 
-    <div class="states states--cols-2">
+    <div class="states is-cols-2">
       <div class="state-cell">
         <ds-bar-chart
-          *docsLazy
           dataTable="none"
           [data]="emptyRows()" />
 
@@ -362,7 +387,6 @@
 
       <div class="state-cell">
         <ds-bar-chart
-          *docsLazy
           dataTable="none"
           loading
           [data]="loadingRows()" />
@@ -376,7 +400,6 @@
 
       <div class="state-cell">
         <ds-bar-chart
-          *docsLazy
           dataTable="none"
           [data]="oneRow()" />
 
@@ -389,7 +412,6 @@
 
       <div class="state-cell">
         <ds-bar-chart
-          *docsLazy
           dataTable="none"
           [data]="allZerosRows()" />
 
@@ -402,7 +424,6 @@
 
       <div class="state-cell">
         <ds-bar-chart
-          *docsLazy
           dataTable="none"
           [data]="negativeRows()" />
 
@@ -415,7 +436,6 @@
 
       <div class="state-cell">
         <ds-bar-chart
-          *docsLazy
           dataTable="none"
           [data]="hugeOutlierRows()" />
 
@@ -428,7 +448,6 @@
 
       <div class="state-cell">
         <ds-bar-chart
-          *docsLazy
           dataTable="none"
           [data]="longLabelRows()" />
 
@@ -441,7 +460,6 @@
 
       <div class="state-cell">
         <ds-bar-chart
-          *docsLazy
           dataTable="none"
           [data]="nineDigitValueRows()" />
 
@@ -454,7 +472,6 @@
 
       <div class="state-cell">
         <ds-bar-chart
-          *docsLazy
           caption="Max set below the largest value — bars clip at the track edge"
           dataTable="none"
           [data]="maxBelowDataRows()"
@@ -469,7 +486,6 @@
 
       <div class="state-cell">
         <ds-bar-chart
-          *docsLazy
           dataTable="none"
           error
           [data]="specimenRows()" />

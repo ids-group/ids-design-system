@@ -27,6 +27,9 @@ const { describeSeries } = await import(
 const { formatValue } = await import(
   new URL('../../src/lib/components/charts-format.ts', import.meta.url).href
 );
+const { DS_INTL_DEFAULTS } = await import(
+  new URL('../../src/lib/core/ds-intl-defaults.ts', import.meta.url).href
+);
 
 const points = [
   { label: 'Sep', value: 1620 },
@@ -42,13 +45,19 @@ const englishFormat = (value) => formatValue(value, 'en-US');
 // the encoding is what this replaced, and it is the level blind readers rank lowest.
 check(
   'leads with the scale and the trend, not the encoding',
-  describeSeries('Visits by month', points, englishFormat),
+  describeSeries(
+    DS_INTL_DEFAULTS.chart,
+    'Visits by month',
+    points,
+    englishFormat,
+  ),
   'Visits by month, 3 points, 1,620 to 2,410. Rising throughout. Highest in Nov at 2,410, lowest in Sep at 1,620. Full values in the table below.',
 );
 
 check(
   'names a fall',
   describeSeries(
+    DS_INTL_DEFAULTS.chart,
     'Visits by month',
     [...points].reverse(),
     englishFormat,
@@ -60,6 +69,7 @@ check(
 check(
   'separates an overall rise from a monotonic one',
   describeSeries(
+    DS_INTL_DEFAULTS.chart,
     'Visits',
     [
       { label: 'Sep', value: 100 },
@@ -74,6 +84,7 @@ check(
 check(
   'names a series that ends where it started',
   describeSeries(
+    DS_INTL_DEFAULTS.chart,
     'Visits',
     [
       { label: 'Sep', value: 100 },
@@ -88,33 +99,50 @@ check(
 // A chart rendered with `dataTable="none"` has no table, so the sentence must not promise one.
 check(
   'drops the pointer when no table follows',
-  describeSeries('Visits by month', points, englishFormat, false),
+  describeSeries(
+    DS_INTL_DEFAULTS.chart,
+    'Visits by month',
+    points,
+    englishFormat,
+    false,
+  ),
   'Visits by month, 3 points, 1,620 to 2,410. Rising throughout. Highest in Nov at 2,410, lowest in Sep at 1,620.',
 );
 
 check(
   'handles a single point',
-  describeSeries('Visits', [{ label: 'Sep', value: 5 }], englishFormat),
+  describeSeries(
+    DS_INTL_DEFAULTS.chart,
+    'Visits',
+    [{ label: 'Sep', value: 5 }],
+    englishFormat,
+  ),
   'Visits, one point: 5 at Sep. Full values in the table below.',
 );
 
 check(
   'handles no points',
-  describeSeries('Visits', [], englishFormat),
+  describeSeries(DS_INTL_DEFAULTS.chart, 'Visits', [], englishFormat),
   'Visits. No data.',
 );
 
 // Exercises the default parameter without pinning digits to any one locale.
 check(
   'defaults to formatValue',
-  describeSeries('Visits by month', points),
-  describeSeries('Visits by month', points, formatValue),
+  describeSeries(DS_INTL_DEFAULTS.chart, 'Visits by month', points),
+  describeSeries(
+    DS_INTL_DEFAULTS.chart,
+    'Visits by month',
+    points,
+    formatValue,
+  ),
 );
 
 // A host formatter must reach the screen-reader sentence, not only the visible labels.
 check(
   'honours a host formatter',
   describeSeries(
+    DS_INTL_DEFAULTS.chart,
     'Revenue',
     [{ label: 'Sep', value: 1620 }],
     (value) => `£${value}`,
@@ -132,7 +160,12 @@ const middleExtremes = [
 
 check(
   'finds extremes that are neither first nor last',
-  describeSeries('Quarterly', middleExtremes, englishFormat),
+  describeSeries(
+    DS_INTL_DEFAULTS.chart,
+    'Quarterly',
+    middleExtremes,
+    englishFormat,
+  ),
   'Quarterly, 4 points, 100 to 900. Falling overall. Highest in Mar at 900, lowest in Feb at 100. Full values in the table below.',
 );
 
@@ -140,7 +173,12 @@ check(
 // scale/highest/lowest shows up as a mismatch.
 check(
   'host formatter reaches every value in a multi-point series',
-  describeSeries('Quarterly', middleExtremes, (value) => `$${value}`),
+  describeSeries(
+    DS_INTL_DEFAULTS.chart,
+    'Quarterly',
+    middleExtremes,
+    (value) => `$${value}`,
+  ),
   'Quarterly, 4 points, $100 to $900. Falling overall. Highest in Mar at $900, lowest in Feb at $100. Full values in the table below.',
 );
 
@@ -158,7 +196,7 @@ const tiedExtremes = [
 
 check(
   'breaks a tie by keeping the first occurrence',
-  describeSeries('Weekly', tiedExtremes, englishFormat),
+  describeSeries(DS_INTL_DEFAULTS.chart, 'Weekly', tiedExtremes, englishFormat),
   'Weekly, 6 points, 100 to 900. Falling overall. Highest in Thu at 900, lowest in Tue at 100. Full values in the table below.',
 );
 
@@ -173,9 +211,14 @@ const thresholdPoints = [
 
 check(
   'names a threshold and where the data sits against it',
-  describeSeries('Uptime', thresholdPoints, englishFormat, false, [
-    { value: 50, label: 'Target' },
-  ]),
+  describeSeries(
+    DS_INTL_DEFAULTS.chart,
+    'Uptime',
+    thresholdPoints,
+    englishFormat,
+    false,
+    [{ value: 50, label: 'Target' }],
+  ),
   'Uptime, 3 points, 30 to 55. Rising overall. Highest in Feb at 55, lowest in Jan at 30. Target at 50, 1 of 3 points above.',
 );
 
@@ -183,26 +226,43 @@ check(
 // instruction rather than a reading.
 check(
   'puts the threshold clause before the table pointer',
-  describeSeries('Uptime', thresholdPoints, englishFormat, true, [
-    { value: 50, label: 'Target' },
-  ]),
+  describeSeries(
+    DS_INTL_DEFAULTS.chart,
+    'Uptime',
+    thresholdPoints,
+    englishFormat,
+    true,
+    [{ value: 50, label: 'Target' }],
+  ),
   'Uptime, 3 points, 30 to 55. Rising overall. Highest in Feb at 55, lowest in Jan at 30. Target at 50, 1 of 3 points above. Full values in the table below.',
 );
 
 check(
   'falls back to a generic name for an unlabelled threshold',
-  describeSeries('Uptime', thresholdPoints, englishFormat, false, [
-    { value: 20 },
-  ]),
+  describeSeries(
+    DS_INTL_DEFAULTS.chart,
+    'Uptime',
+    thresholdPoints,
+    englishFormat,
+    false,
+    [{ value: 20 }],
+  ),
   'Uptime, 3 points, 30 to 55. Rising overall. Highest in Feb at 55, lowest in Jan at 30. Threshold at 20, 3 of 3 points above.',
 );
 
 check(
   'names every threshold, in the order given',
-  describeSeries('Uptime', thresholdPoints, englishFormat, false, [
-    { value: 50, label: 'Target' },
-    { value: 20, label: 'Floor' },
-  ]),
+  describeSeries(
+    DS_INTL_DEFAULTS.chart,
+    'Uptime',
+    thresholdPoints,
+    englishFormat,
+    false,
+    [
+      { value: 50, label: 'Target' },
+      { value: 20, label: 'Floor' },
+    ],
+  ),
   'Uptime, 3 points, 30 to 55. Rising overall. Highest in Feb at 55, lowest in Jan at 30. Target at 50, 1 of 3 points above. Floor at 20, 3 of 3 points above.',
 );
 
@@ -210,33 +270,61 @@ check(
 // the reading falls on.
 check(
   'counts a band by what falls inside it',
-  describeSeries('Uptime', thresholdPoints, englishFormat, false, [
-    { value: 50, to: 70, label: 'Target band' },
-  ]),
+  describeSeries(
+    DS_INTL_DEFAULTS.chart,
+    'Uptime',
+    thresholdPoints,
+    englishFormat,
+    false,
+    [{ value: 50, to: 70, label: 'Target band' }],
+  ),
   'Uptime, 3 points, 30 to 55. Rising overall. Highest in Feb at 55, lowest in Jan at 30. Target band from 50 to 70, 1 of 3 points inside.',
 );
 
 // Written high-end-first, which is the natural way to write a ceiling-and-floor pair.
 check(
   'reads a band written in either direction',
-  describeSeries('Uptime', thresholdPoints, englishFormat, false, [
-    { value: 70, to: 50, label: 'Target band' },
-  ]),
+  describeSeries(
+    DS_INTL_DEFAULTS.chart,
+    'Uptime',
+    thresholdPoints,
+    englishFormat,
+    false,
+    [{ value: 70, to: 50, label: 'Target band' }],
+  ),
   'Uptime, 3 points, 30 to 55. Rising overall. Highest in Feb at 55, lowest in Jan at 30. Target band from 50 to 70, 1 of 3 points inside.',
 );
 
 // A chart with no thresholds must read exactly as it did before they existed.
 check(
   'leaves a chart without thresholds untouched',
-  describeSeries('Uptime', thresholdPoints, englishFormat, false, []),
-  describeSeries('Uptime', thresholdPoints, englishFormat, false),
+  describeSeries(
+    DS_INTL_DEFAULTS.chart,
+    'Uptime',
+    thresholdPoints,
+    englishFormat,
+    false,
+    [],
+  ),
+  describeSeries(
+    DS_INTL_DEFAULTS.chart,
+    'Uptime',
+    thresholdPoints,
+    englishFormat,
+    false,
+  ),
 );
 
 check(
   'names a threshold on a single-point series',
-  describeSeries('Uptime', [{ label: 'Jan', value: 30 }], englishFormat, false, [
-    { value: 50, label: 'Target' },
-  ]),
+  describeSeries(
+    DS_INTL_DEFAULTS.chart,
+    'Uptime',
+    [{ label: 'Jan', value: 30 }],
+    englishFormat,
+    false,
+    [{ value: 50, label: 'Target' }],
+  ),
   'Uptime, one point: 30 at Jan. Target at 50, 0 of 1 point above.',
 );
 
