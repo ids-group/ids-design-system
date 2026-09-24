@@ -13,23 +13,23 @@ fallback `--slider-thumb-bw` are `-border-width` now, each with a token-rename i
 planner state where `informational` ends and `surface: none` begins, and `0.12.2`'s expanded-row
 line carries the verify its reveal needed.
 
-## `ds-table`'s footer pager disables and masks its label under skeleton loading (2026-09-24)
+## `ds-table`'s footer pager takes a loading state under skeleton loading (2026-09-24)
 
-`PaginationComponent` takes a `disabled` input (`pagination.component.ts`): every button and the
-page-size `ds-select` get the native `disabled` attribute, and the range label swaps to a
-`<ds-skeleton>` placeholder in place of `rangeLabel()` (`pagination.component.html`, the `.label`
-span). `ds-table` forwards `[disabled]="isSkeletonLoading()"` to it (`table.component.html:445`), so
-the footer no longer shows the previous query's count and buttons under `loading="skeleton"`, and
-cannot fire a page change against rows that were swapped for shimmer placeholders. `loading="overlay"`
-only ever runs while `filteredData().length` is already nonzero, so the rows on screen and `total()`
-stay in sync there and the label is never stale; left as-is. `aria-busy` on the table and the
-`role="status"` "Loading…" announcement already covered both loading modes
-(`table.component.html:22-27,33`, `statusMessage()` at `table.component.ts:896`) - nothing added
-there. Measured 2026-09-23/24 on the docs table page (`ds-docs`, "Loading · skeleton with
-pagination" demo) in the shared Chrome: footer height 92.53px before, during and after toggling
-`[loading]="'skeleton'"`; during, all 5 pagination buttons and the size select report
-`disabled: true`, the label holds a `ds-skeleton`, and the table carries `aria-busy="true"`; after,
-the label reads "Showing 1–4 of 12" again and only the page-1 prev button stays disabled.
+`PaginationComponent` takes a `loading` input (`pagination.component.ts`): every button and the
+page-size `ds-select` get the native `disabled` attribute, the range label swaps to a
+`<ds-skeleton>` placeholder in place of `rangeLabel()`, and the `nav` carries `aria-busy`, since a
+standalone `ds-pagination` has no status region of its own (`pagination.component.html`). The
+current page keeps its accent fill: `&[disabled]` greys only `:not(.active)`
+(`pagination.component.scss`). `ds-table` forwards `[loading]="isSkeletonLoading()"`
+(`table.component.html`), so the footer no longer shows the previous query's count and buttons under
+`loading="skeleton"` and cannot fire a page change against placeholder rows. `loading="overlay"`
+runs only while `filteredData().length` is nonzero and keeps the pager live, like the header: the
+rows behind the scrim are real rows, the label names the requested page, and the host already
+tolerates a second request from a re-sort. Measured 2026-09-24 on the docs table page ("Loading ·
+skeleton with pagination") in the shared Chrome: footer height 56.53px before, during and after;
+during, all 5 buttons and the size select are disabled, the nav carries `aria-busy="true"`, the label
+holds a `ds-skeleton`, the active page stays `rgb(255, 255, 255)` on `rgb(46, 84, 255)` and the
+other four read `--text-disabled`; after, `aria-busy` is gone and the label reads "Showing 1-4 of 12".
 
 ---
 
@@ -65,16 +65,16 @@ off so a stacked row still knows its natural width. The frame of deferral is loa
 change made inside a ResizeObserver callback is reported as "loop completed with undelivered
 notifications" by any observer of an ancestor - measured 2026-09-23 on the docs page, twice per
 420 <-> 1280 viewport flip without it, none with it, and none on the untouched `dev` build driven
-through the same flips. Over budget, `.actions.stacked` (`modal.component.scss`) is a
-`column-reverse` column and an anchored `::ng-deep` pierce gives every projected child
-`width: 100%`, because `ds-button`'s `width: fit-content` opts out of the column's stretch. The DOM
-keeps the cancel-then-confirm order, so Tab and a screen reader read the stack bottom-up while the
-confirming action sits on top. No CSS-only switch exists: the Holy Albatross and a container query
+through the same flips. Over budget, `.actions.stacked` (`modal.component.scss`) is a column
+in `var(--ds-modal-actions-stacked-direction, column)` and an anchored `::ng-deep` pierce gives
+every projected child `width: 100%`, because `ds-button`'s `width: fit-content` opts out of the
+column's stretch. By default the stack keeps DOM order, cancel then confirm, so visual order, Tab and
+a screen reader agree and the confirming action sits at the bottom; `column-reverse` on the token puts
+it on top (Stas's call, 2026-09-24). No CSS-only switch exists: the Holy Albatross and a container query
 both key on the CONTAINER's width, and the reported card is a fixed `--modal-w-sm` whose only
 variable is the labels, so a threshold would never fire there. Measured on the docs page in the
 shared Chrome (2026-09-23), `ds-modal-card` `sm` clamped to a 356px stage: three long labels stack
-at 316.3px each = the row's content width, every box inside the card, visual order
-Publish / Save / Discard against DOM order Discard / Save / Publish; two short labels stay a row
+at 316.3px each = the row's content width, every box inside the card; two short labels stay a row
 with the last button flush to the content edge (gap 0.0px); the console holds no error or warning.
 `migrations/unreleased.json` carries the `informational` line with a `verify` and the
 `modal-actions-flex-wrap` delete row for the consumer rule wrapping `ds-modal-card .actions`. Deck
