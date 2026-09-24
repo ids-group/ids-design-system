@@ -62,9 +62,9 @@ public theming hooks that did nothing.
 
 ## 4. Text the library invents is a slot, not a literal
 
-Any string the component renders that is not passed in must be replaceable. Today that means a
-projected template; when a `DS_INTL` provider lands it will mean both. A hardcoded literal with no
-slot beside it is a defect, because a consumer has no way to change it at all.
+Any string the component renders that is not passed in must be replaceable: through a projected
+template, and through a `DS_INTL` key (`provideDsIntl`). A hardcoded literal with neither beside it
+is a defect, because a consumer has no way to change it at all.
 
 The projection contract is fixed: **a template fills a region, it never replaces the element that
 carries semantics.** `role="option"`, `aria-selected`, `aria-disabled`, the active-row class, the
