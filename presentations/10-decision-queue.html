@@ -363,7 +363,7 @@
 
 <main>
   <div class="masthead">
-    <h1>9 асков консьюмеров и 28 решений, каждое с нарисованными вариантами</h1>
+    <h1>7 асков консьюмеров и 28 решений, каждое с нарисованными вариантами</h1>
     <p class="lede">
       Сверху - всё, чего ждёт консьюмер: фиксы, хуки и фичи из бэклога, каждый показан как есть
       сейчас и как будет после. Ниже - открытые деки и бакет <code>Decisions</code>. Вариант
@@ -460,93 +460,16 @@
 
 
 
-  <section class="q" data-q="ask-column-axis">
-      <div class="q-head">
-        <span class="q-num">02</span>
-        <h2 class="q-title">Колонку нельзя посадить на вторую ось, в двухосевом чарте она всегда слева</h2>
-        <span class="q-src">P2 · mm-ecm · порт microsite-analytics</span>
-      </div>
-      <p class="q-sub">Экран читал визиты по левой оси и запросы агента по правой. Запросы - колонки, <code>dsColumnSeries</code> оси не выбирает, и при порте стороны поменялись местами. Линия умеет: <code>LineSeriesData.axis</code>.</p>
-
-      <div class="stage">
-        <div class="spec">
-          <p class="cap">экран, который портировали</p>
-          <div class="mini-chart">
-            <svg viewBox="0 0 220 104"><line x1="28" y1="10" x2="28" y2="84" stroke="var(--border-default)"/><line x1="192" y1="10" x2="192" y2="84" stroke="var(--border-default)"/><line x1="28" y1="84" x2="192" y2="84" stroke="var(--border-default)"/><g fill="var(--ds-chart-series-2-color)"><rect x="36" y="54" width="16" height="30" rx="2"/><rect x="68" y="32" width="16" height="52" rx="2"/><rect x="102" y="44" width="16" height="40" rx="2"/><rect x="136" y="20" width="16" height="64" rx="2"/><rect x="168" y="36" width="16" height="48" rx="2"/></g><polyline fill="none" stroke="var(--ds-chart-series-1-color)" stroke-width="2" points="44,50 76,38 110,44 144,24 176,30"/><text x="2" y="16" class="tick" style="fill:var(--ds-chart-series-1-color)">4k</text><text x="2" y="50" class="tick" style="fill:var(--ds-chart-series-1-color)">2k</text><text x="196" y="16" class="tick" style="fill:var(--ds-chart-series-2-color)">80</text><text x="196" y="50" class="tick" style="fill:var(--ds-chart-series-2-color)">40</text><text x="2" y="100" class="tick">← визиты</text><text x="156" y="100" class="tick">запросы →</text></svg>
-          </div>
-        </div>
-        <div class="spec">
-          <p class="cap">0.13.4: колонка прибита к primary</p>
-          <div class="mini-chart">
-            <svg viewBox="0 0 220 104"><line x1="28" y1="10" x2="28" y2="84" stroke="var(--border-default)"/><line x1="192" y1="10" x2="192" y2="84" stroke="var(--border-default)"/><line x1="28" y1="84" x2="192" y2="84" stroke="var(--border-default)"/><g fill="var(--ds-chart-series-2-color)"><rect x="36" y="54" width="16" height="30" rx="2"/><rect x="68" y="32" width="16" height="52" rx="2"/><rect x="102" y="44" width="16" height="40" rx="2"/><rect x="136" y="20" width="16" height="64" rx="2"/><rect x="168" y="36" width="16" height="48" rx="2"/></g><polyline fill="none" stroke="var(--ds-chart-series-1-color)" stroke-width="2" points="44,50 76,38 110,44 144,24 176,30"/><text x="2" y="16" class="tick" style="fill:var(--ds-chart-series-2-color)">80</text><text x="2" y="50" class="tick" style="fill:var(--ds-chart-series-2-color)">40</text><text x="196" y="16" class="tick" style="fill:var(--ds-chart-series-1-color)">4k</text><text x="196" y="50" class="tick" style="fill:var(--ds-chart-series-1-color)">2k</text><text x="2" y="100" class="tick">← запросы</text><text x="160" y="100" class="tick">визиты →</text></svg>
-          </div>
-          <p class="says">стороны перевёрнуты против заменяемого экрана</p>
-        </div>
-      </div>
-
-      <div class="opts">
-        <div class="opt is-today"><h3>Оставить как есть</h3>
-          <p class="css">&lt;svg:g dsColumnSeries [data]="requests" /&gt;</p>
-          <dl class="layer"><dt>Обход</dt><dd>визиты колонками, запросы линией</dd><dt>Цена обхода</dt><dd>другой вид у обеих серий</dd></dl>
-        </div>
-        <div class="opt"><h3>axis на dsColumnSeries <span class="star">★</span></h3>
-          <p class="css">&lt;svg:g dsColumnSeries [data]="requests"
-    <span class="hit">axis="secondary"</span> /&gt;</p>
-          <dl class="layer"><dt>По умолчанию</dt><dd class="gain">primary, чарты не меняются</dd><dt>Где</dt><dd>на директиве, не на точке: серия - плоский список</dd></dl>
-        </div>
-      </div>
-    </section>
 
   <p class="group">Ждут консьюмеры · P3</p>
 
 
 
 
-  <section class="q" data-q="ask-bar-segment-selected">
-      <div class="q-head">
-        <span class="q-num">03</span>
-        <h2 class="q-title">Сегмент ds-bar-chart нельзя отметить как выбранный</h2>
-        <span class="q-src">P3 · mm-ecm-kb · сегментация</span>
-      </div>
-      <p class="q-sub">Разбивка аудитории фильтруется по одной части. При переезде на <code>segments</code> подсветка выбранной части пропала, выбор теперь несёт только легенда консьюмера. <code>dimOthers</code> гасит строки, не части.</p>
-
-      <div class="stage">
-        <div class="spec">
-          <p class="cap">сейчас: все части одинаковы</p>
-          <div class="rows" style="min-inline-size:210px">
-            <div class="row"><span>Аудитория</span><span class="bar a-seg"><i style="inline-size:42%;background:var(--ds-chart-series-1-color)"></i><i style="inline-size:28%;background:var(--ds-chart-series-2-color)"></i><i style="inline-size:18%;background:var(--ds-chart-series-3-color)"></i><i style="inline-size:12%;background:var(--ds-chart-series-4-color)"></i></span></div>
-          </div>
-          <p class="legend-row"><i style="background:var(--ds-chart-series-1-color)"></i><strong>High Value Customers</strong> · выбрано</p>
-          <p class="says">выбор виден только в легенде</p>
-        </div>
-        <div class="spec">
-          <p class="cap">выбранная часть, остальные приглушены</p>
-          <div class="rows" style="min-inline-size:210px">
-            <div class="row"><span>Аудитория</span><span class="bar a-seg"><i style="inline-size:42%;background:var(--ds-chart-series-1-color)"></i><i class="a-dim" style="inline-size:28%;background:var(--ds-chart-series-2-color)"></i><i class="a-dim" style="inline-size:18%;background:var(--ds-chart-series-3-color)"></i><i class="a-dim" style="inline-size:12%;background:var(--ds-chart-series-4-color)"></i></span></div>
-          </div>
-          <p class="says">те же --ds-chart-dim-opacity, что у dimOthers</p>
-        </div>
-      </div>
-
-      <div class="opts">
-        <div class="opt is-today"><h3>Оставить как есть</h3>
-          <dl class="layer"><dt>Выбор несёт</dt><dd>легенда консьюмера</dd></dl>
-        </div>
-        <div class="opt"><h3>selected на сегменте <span class="star">★</span></h3>
-          <p class="css">{ label: 'High Value Customers',
-    value: 12400, <span class="hit">selected: true</span> }</p>
-          <dl class="layer"><dt>Где</dt><dd>BarChartSegment, своя часть в каждой строке</dd></dl>
-        </div>
-        <div class="opt"><h3>Вход activeSegment</h3>
-          <p class="css">&lt;ds-bar-chart <span class="hit">activeSegment="s1"</span> /&gt;</p>
-          <dl class="layer"><dt>Где</dt><dd>на чарте, один id на все строки</dd></dl>
-        </div>
-      </div>
-    </section>
 
   <section class="q" data-q="ask-chart-locale">
       <div class="q-head">
-        <span class="q-num">04</span>
+        <span class="q-num">02</span>
         <h2 class="q-title">Чарты берут локаль чисел из браузера, настройки нет</h2>
         <span class="q-src">P3 · mm-ecm-kb · app.config</span>
       </div>
@@ -591,7 +514,7 @@
 
   <section class="q" data-q="ask-indeterminate">
     <div class="q-head">
-      <span class="q-num">05</span>
+      <span class="q-num">03</span>
       <h2 class="q-title">Форма неопределённого прогресса на узком треке</h2>
       <a class="q-src" href="../docs/todo.md">бэклог, без деки</a>
     </div>
@@ -649,7 +572,7 @@
 
   <section class="q" data-q="ask-intl-strings">
       <div class="q-head">
-        <span class="q-num">06</span>
+        <span class="q-num">04</span>
         <h2 class="q-title">Все видимые строки библиотеки - английские литералы</h2>
         <span class="q-src">P2 · ITB Workspace · припарковано Stas</span>
       </div>
@@ -684,7 +607,7 @@
 
   <section class="q" data-q="ask-journey-canvas">
       <div class="q-head">
-        <span class="q-num">07</span>
+        <span class="q-num">05</span>
         <h2 class="q-title">Ни один компонент не рисует ветвящийся граф узлов и рёбер</h2>
         <span class="q-src">P3 · mm-ecm-kb · припарковано Stas: ждать второго консьюмера</span>
       </div>
@@ -712,7 +635,7 @@
 
   <section class="q" data-q="ask-text-muted">
       <div class="q-head">
-        <span class="q-num">08</span>
+        <span class="q-num">06</span>
         <h2 class="q-title">Приглушённый текст по умолчанию не проходит AA</h2>
         <span class="q-src">P3 · ai-sdlc · контраст, запаркован</span>
       </div>
@@ -749,7 +672,7 @@
 
   <section class="q" data-q="ask-brand-residue">
       <div class="q-head">
-        <span class="q-num">09</span>
+        <span class="q-num">07</span>
         <h2 class="q-title">На бренде другого цвета остаются синие ссылки и подложки</h2>
         <span class="q-src">P3 · pinkmoon, ai-sdlc · бренд, запаркован</span>
       </div>
@@ -787,7 +710,7 @@
 
   <section class="q" data-q="sparkline">
     <div class="q-head">
-      <span class="q-num">10</span>
+      <span class="q-num">08</span>
       <h2 class="q-title">Спарклайн - пресет линии или свой компонент</h2>
       <a class="q-src" href="7-chart-sparkline-preset.html">дека 7</a>
     </div>
@@ -841,7 +764,7 @@
 
   <section class="q" data-q="chart-palette-lightness">
     <div class="q-head">
-      <span class="q-num">11</span>
+      <span class="q-num">09</span>
       <h2 class="q-title">Палитра чартов разделяет по тону и почти не по светлоте</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1363</a>
     </div>
@@ -860,7 +783,7 @@
 
   <section class="q" data-q="colour-engine">
     <div class="q-head">
-      <span class="q-num">12</span>
+      <span class="q-num">10</span>
       <h2 class="q-title">Каким методом выводить цвет из одного токена на роль</h2>
       <a class="q-src" href="1-color-engine-derivation.html">дека 1</a>
     </div>
@@ -883,7 +806,7 @@
 
   <section class="q" data-q="interaction-b1">
     <div class="q-head">
-      <span class="q-num">13</span>
+      <span class="q-num">11</span>
       <h2 class="q-title">Pressed у тональной кнопки и у danger-пункта меню</h2>
       <a class="q-src" href="3-interaction-formula.html">дека 3</a>
     </div>
@@ -895,7 +818,7 @@
 
   <section class="q" data-q="theme-recipe">
     <div class="q-head">
-      <span class="q-num">14</span>
+      <span class="q-num">12</span>
       <h2 class="q-title">Рецепт темы против ручных пиков</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1331</a>
     </div>
@@ -912,7 +835,7 @@
 
   <section class="q" data-q="warning-text">
     <div class="q-head">
-      <span class="q-num">15</span>
+      <span class="q-num">13</span>
       <h2 class="q-title">Какой цвет текста ставить на жёлтый тинт</h2>
       <a class="q-src" href="6-warning-text-colour.html">дека 6</a>
     </div>
@@ -937,7 +860,7 @@
 
   <section class="q" data-q="stepper-dropzone-fields">
     <div class="q-head">
-      <span class="q-num">16</span>
+      <span class="q-num">14</span>
       <h2 class="q-title">ds-number-stepper и ds-dropzone - поля или нет</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1320</a>
     </div>
@@ -954,7 +877,7 @@
 
   <section class="q" data-q="select-multi">
     <div class="q-head">
-      <span class="q-num">17</span>
+      <span class="q-num">15</span>
       <h2 class="q-title">ds-select с multi - строить ли</h2>
       <a class="q-src" href="5-select-native-multi.html">дека 5</a>
     </div>
@@ -972,7 +895,7 @@
 
   <section class="q" data-q="picker-height">
     <div class="q-head">
-      <span class="q-num">18</span>
+      <span class="q-num">16</span>
       <h2 class="q-title">Высота списка пикера - публичный токен или panelClass</h2>
       <a class="q-src" href="9-picker-list-height.html">дека 9</a>
     </div>
@@ -1023,7 +946,7 @@
 
   <section class="q" data-q="cdk-menu">
     <div class="q-head">
-      <span class="q-num">19</span>
+      <span class="q-num">17</span>
       <h2 class="q-title">Переходить ли на CDK Menu</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1359</a>
     </div>
@@ -1040,7 +963,7 @@
 
   <section class="q" data-q="signal-forms">
     <div class="q-head">
-      <span class="q-num">20</span>
+      <span class="q-num">18</span>
       <h2 class="q-title">Как выглядят pending и dirty</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1488</a>
     </div>
@@ -1061,7 +984,7 @@
 
   <section class="q" data-q="row-chart-row-type">
     <div class="q-head">
-      <span class="q-num">21</span>
+      <span class="q-num">19</span>
       <h2 class="q-title">Имя типа строки у <code>ds-row-chart</code></h2>
       <a class="q-src" href="../docs/todo.md">переименование ds-bar-chart</a>
     </div>
@@ -1106,7 +1029,7 @@ onRow(row: RowChartEntry) { ... }
 
   <section class="q" data-q="typography-classes">
     <div class="q-head">
-      <span class="q-num">22</span>
+      <span class="q-num">20</span>
       <h2 class="q-title">20 классов типографики всё ещё .t-*</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1340</a>
     </div>
@@ -1124,7 +1047,7 @@ onRow(row: RowChartEntry) { ... }
 
   <section class="q" data-q="button-c-slots">
     <div class="q-head">
-      <span class="q-num">23</span>
+      <span class="q-num">21</span>
       <h2 class="q-title">Слоты кнопки называются --c-*</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1346</a>
     </div>
@@ -1141,7 +1064,7 @@ onRow(row: RowChartEntry) { ... }
 
   <section class="q" data-q="bem-modifiers">
     <div class="q-head">
-      <span class="q-num">24</span>
+      <span class="q-num">22</span>
       <h2 class="q-title">ds-docs пишет модификаторы как --suffix</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1421</a>
     </div>
@@ -1158,7 +1081,7 @@ onRow(row: RowChartEntry) { ... }
 
   <section class="q" data-q="docs-brand-examples">
     <div class="q-head">
-      <span class="q-num">25</span>
+      <span class="q-num">23</span>
       <h2 class="q-title">Убрать ли примеры бренда и домена из публичных доков</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1403</a>
     </div>
@@ -1177,7 +1100,7 @@ onRow(row: RowChartEntry) { ... }
 
   <section class="q" data-q="angular-22">
     <div class="q-head">
-      <span class="q-num">26</span>
+      <span class="q-num">24</span>
       <h2 class="q-title">Когда переходим на Angular 22</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1439, P1</a>
     </div>
@@ -1196,7 +1119,7 @@ onRow(row: RowChartEntry) { ... }
 
   <section class="q" data-q="npm-2027">
     <div class="q-head">
-      <span class="q-num">27</span>
+      <span class="q-num">25</span>
       <h2 class="q-title">Чем заменить публикацию в npm с января 2027</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1369</a>
     </div>
@@ -1215,7 +1138,7 @@ onRow(row: RowChartEntry) { ... }
 
   <section class="q" data-q="claude-design-ci">
     <div class="q-head">
-      <span class="q-num">28</span>
+      <span class="q-num">26</span>
       <h2 class="q-title">Публикация в Claude Design из Bitbucket</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1391</a>
     </div>
@@ -1234,7 +1157,7 @@ onRow(row: RowChartEntry) { ... }
 
   <section class="q" data-q="changelog-wrap">
     <div class="q-head">
-      <span class="q-num">29</span>
+      <span class="q-num">27</span>
       <h2 class="q-title">Перевёрстывать ли CHANGELOG в 100 колонок</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1408</a>
     </div>
@@ -1253,7 +1176,7 @@ onRow(row: RowChartEntry) { ... }
 
   <section class="q" data-q="fix-all-html">
     <div class="q-head">
-      <span class="q-num">30</span>
+      <span class="q-num">28</span>
       <h2 class="q-title">fix:all переформатирует HTML, с которым потом спорит eslint</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1425</a>
     </div>
@@ -1275,7 +1198,7 @@ onRow(row: RowChartEntry) { ... }
 
   <section class="q" data-q="stale-ds-css">
     <div class="q-head">
-      <span class="q-num">31</span>
+      <span class="q-num">29</span>
       <h2 class="q-title">Ничто не ловит устаревший presentations/ds.css</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1378</a>
     </div>
@@ -1294,7 +1217,7 @@ onRow(row: RowChartEntry) { ... }
 
   <section class="q" data-q="todo-index-gate">
     <div class="q-head">
-      <span class="q-num">32</span>
+      <span class="q-num">30</span>
       <h2 class="q-title">todo-index --check вне lint:all</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1376</a>
     </div>
@@ -1311,7 +1234,7 @@ onRow(row: RowChartEntry) { ... }
 
   <section class="q" data-q="manifest-practices">
     <div class="q-head">
-      <span class="q-num">33</span>
+      <span class="q-num">31</span>
       <h2 class="q-title">Какие из восьми практик формата манифестов берём</h2>
       <a class="q-src" href="4-migration-manifest-audit.html">дека 4</a>
     </div>
@@ -1342,7 +1265,7 @@ onRow(row: RowChartEntry) { ... }
 
   <section class="q" data-q="automation-coverage">
     <div class="q-head">
-      <span class="q-num">34</span>
+      <span class="q-num">32</span>
       <h2 class="q-title">Три пути ds-table и пять групп компонентов ни разу не прокликаны</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1374</a>
     </div>
@@ -1359,7 +1282,7 @@ onRow(row: RowChartEntry) { ... }
 
   <section class="q" data-q="schematics-tsconfig">
     <div class="q-head">
-      <span class="q-num">35</span>
+      <span class="q-num">33</span>
       <h2 class="q-title">schematics/tsconfig просит moduleResolution: node</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1399</a>
     </div>
@@ -1380,7 +1303,7 @@ onRow(row: RowChartEntry) { ... }
 
   <section class="q" data-q="design-manifest-templates">
     <div class="q-head">
-      <span class="q-num">36</span>
+      <span class="q-num">34</span>
       <h2 class="q-title">templates и startingPoints в манифесте Claude Design</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1382</a>
     </div>
@@ -1401,7 +1324,7 @@ onRow(row: RowChartEntry) { ... }
 
   <section class="q" data-q="docs-blocks">
     <div class="q-head">
-      <span class="q-num">37</span>
+      <span class="q-num">35</span>
       <h2 class="q-title">Четыре компонента без собственного блока в ds-docs</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1385</a>
     </div>

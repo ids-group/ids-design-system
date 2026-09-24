@@ -4,6 +4,18 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## Columns read the second axis; a bar-chart segment can be singled out (2026-09-24)
+
+`g[dsColumnSeries]` takes `axis: 'primary' | 'secondary'` (default `'primary'`): the series reports its
+domain to that axis and draws against it, as a line series' data already could, so a two-axis chart can
+put either mark on either side. `ds-bar-chart` takes `highlighted` (a segment id, or null): every other
+part in every row fades to `--ds-chart-dim-opacity` through the shared `chart-interactive.dims` mixin,
+independent of `dimOthers`; the never-shipped `--ds-chart-dimmed-opacity` twin is gone and both dim
+tokens are described. Measured 2026-09-24 in ds-docs: the secondary-axis columns top out at 0.48 of
+the plot against a 2 000 secondary axis (0.048 had they read the 20 000 primary); with "Tooling"
+highlighted 6 of 9 segments sit at opacity 0.3 and none with it cleared; the column and scatter legend
+hover now fade to the same 0.3.
+
 ## Release notes carry a why only where it is non-obvious; check-overrides ships; auth-layout defaults land (2026-09-24)
 
 `CONTRIBUTING.md` says what a CHANGELOG entry carries: what changed and what the reader does, with a
