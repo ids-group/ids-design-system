@@ -363,7 +363,7 @@
 
 <main>
   <div class="masthead">
-    <h1>10 асков консьюмеров и 29 решений, каждое с нарисованными вариантами</h1>
+    <h1>10 асков консьюмеров и 30 решений, каждое с нарисованными вариантами</h1>
     <p class="lede">
       Сверху - всё, чего ждёт консьюмер: фиксы, хуки и фичи из бэклога, каждый показан как есть
       сейчас и как будет после. Ниже - открытые деки и бакет <code>Decisions</code>. Вариант
@@ -1099,9 +1099,54 @@
 
   <p class="group">Имена и типографика</p>
 
-  <section class="q" data-q="typography-classes">
+  <section class="q" data-q="row-chart-row-type">
     <div class="q-head">
       <span class="q-num">22</span>
+      <h2 class="q-title">Имя типа строки у <code>ds-row-chart</code></h2>
+      <a class="q-src" href="../docs/todo.md">переименование ds-bar-chart</a>
+    </div>
+    <p class="q-sub"><code>ds-bar-chart</code> становится <code>ds-row-chart</code>, и тип одной строки данных <code>BarChartRow</code> при простой замене префикса превращается в <code>RowChartRow</code> - слово «Row» дважды. Одна и та же задача потребителя, записанная с каждым вариантом:</p>
+    <div class="stage">
+      <div class="spec"><p class="cap">RowChartRow - замена префикса</p><p class="css">import { RowChartRow } from '.../row-chart';
+
+readonly rows: RowChartRow[] = [
+  { label: 'Europe', value: 42 },
+];
+
+onRow(row: RowChartRow) { ... }
+// (rowClicked)="onRow($event)"</p><p class="says">как все остальные типы: префикс компонента + сущность</p></div>
+      <div class="spec"><p class="cap">RowChartItem</p><p class="css">import { RowChartItem } from '.../row-chart';
+
+readonly rows: RowChartItem[] = [
+  { label: 'Europe', value: 42 },
+];
+
+onRow(row: RowChartItem) { ... }
+// (rowClicked)="onRow($event)"</p><p class="says">без повтора, но вывод называется rowClicked, а тип - Item</p></div>
+      <div class="spec"><p class="cap">RowChartEntry</p><p class="css">import { RowChartEntry } from '.../row-chart';
+
+readonly rows: RowChartEntry[] = [
+  { label: 'Europe', value: 42 },
+];
+
+onRow(row: RowChartEntry) { ... }
+// (rowClicked)="onRow($event)"</p><p class="says">без повтора; «Entry» уже есть у строки тултипа, ChartTooltipEntry</p></div>
+    </div>
+
+    <div class="opts">
+      <div class="opt"><h3>RowChartRow</h3><span class="badge is-pick">рекомендуем</span>
+        <p>Простая замена префикса, совпадает с <code>rowClicked</code> и <code>RowChartSegment</code>.</p></div>
+      <div class="opt"><h3>RowChartItem</h3>
+        <p>Читается чище, но расходится с именем вывода.</p></div>
+      <div class="opt"><h3>RowChartEntry</h3>
+        <p>Без повтора, но пересекается с ChartTooltipEntry.</p></div>
+    </div>
+  </section>
+
+
+  <section class="q" data-q="typography-classes">
+    <div class="q-head">
+      <span class="q-num">23</span>
       <h2 class="q-title">20 классов типографики всё ещё .t-*</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1340</a>
     </div>
@@ -1119,7 +1164,7 @@
 
   <section class="q" data-q="button-c-slots">
     <div class="q-head">
-      <span class="q-num">23</span>
+      <span class="q-num">24</span>
       <h2 class="q-title">Слоты кнопки называются --c-*</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1346</a>
     </div>
@@ -1136,7 +1181,7 @@
 
   <section class="q" data-q="bem-modifiers">
     <div class="q-head">
-      <span class="q-num">24</span>
+      <span class="q-num">25</span>
       <h2 class="q-title">ds-docs пишет модификаторы как --suffix</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1421</a>
     </div>
@@ -1153,7 +1198,7 @@
 
   <section class="q" data-q="docs-brand-examples">
     <div class="q-head">
-      <span class="q-num">25</span>
+      <span class="q-num">26</span>
       <h2 class="q-title">Убрать ли примеры бренда и домена из публичных доков</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1403</a>
     </div>
@@ -1172,7 +1217,7 @@
 
   <section class="q" data-q="angular-22">
     <div class="q-head">
-      <span class="q-num">26</span>
+      <span class="q-num">27</span>
       <h2 class="q-title">Когда переходим на Angular 22</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1439, P1</a>
     </div>
@@ -1191,7 +1236,7 @@
 
   <section class="q" data-q="npm-2027">
     <div class="q-head">
-      <span class="q-num">27</span>
+      <span class="q-num">28</span>
       <h2 class="q-title">Чем заменить публикацию в npm с января 2027</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1369</a>
     </div>
@@ -1210,7 +1255,7 @@
 
   <section class="q" data-q="claude-design-ci">
     <div class="q-head">
-      <span class="q-num">28</span>
+      <span class="q-num">29</span>
       <h2 class="q-title">Публикация в Claude Design из Bitbucket</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1391</a>
     </div>
@@ -1227,7 +1272,7 @@
 
   <section class="q" data-q="release-note-why">
     <div class="q-head">
-      <span class="q-num">29</span>
+      <span class="q-num">30</span>
       <h2 class="q-title">Должна ли запись релиза объяснять ПОЧЕМУ</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1414</a>
     </div>
@@ -1244,7 +1289,7 @@
 
   <section class="q" data-q="deferred-defaults">
     <div class="q-head">
-      <span class="q-num">30</span>
+      <span class="q-num">31</span>
       <h2 class="q-title">Три отложенных смены значений по умолчанию</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1498</a>
     </div>
@@ -1263,7 +1308,7 @@
 
   <section class="q" data-q="changelog-wrap">
     <div class="q-head">
-      <span class="q-num">31</span>
+      <span class="q-num">32</span>
       <h2 class="q-title">Перевёрстывать ли CHANGELOG в 100 колонок</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1408</a>
     </div>
@@ -1282,7 +1327,7 @@
 
   <section class="q" data-q="fix-all-html">
     <div class="q-head">
-      <span class="q-num">32</span>
+      <span class="q-num">33</span>
       <h2 class="q-title">fix:all переформатирует HTML, с которым потом спорит eslint</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1425</a>
     </div>
@@ -1304,7 +1349,7 @@
 
   <section class="q" data-q="stale-ds-css">
     <div class="q-head">
-      <span class="q-num">33</span>
+      <span class="q-num">34</span>
       <h2 class="q-title">Ничто не ловит устаревший presentations/ds.css</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1378</a>
     </div>
@@ -1323,7 +1368,7 @@
 
   <section class="q" data-q="todo-index-gate">
     <div class="q-head">
-      <span class="q-num">34</span>
+      <span class="q-num">35</span>
       <h2 class="q-title">todo-index --check вне lint:all</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1376</a>
     </div>
@@ -1340,7 +1385,7 @@
 
   <section class="q" data-q="manifest-practices">
     <div class="q-head">
-      <span class="q-num">35</span>
+      <span class="q-num">36</span>
       <h2 class="q-title">Какие из восьми практик формата манифестов берём</h2>
       <a class="q-src" href="4-migration-manifest-audit.html">дека 4</a>
     </div>
@@ -1371,7 +1416,7 @@
 
   <section class="q" data-q="automation-coverage">
     <div class="q-head">
-      <span class="q-num">36</span>
+      <span class="q-num">37</span>
       <h2 class="q-title">Три пути ds-table и пять групп компонентов ни разу не прокликаны</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1374</a>
     </div>
@@ -1388,7 +1433,7 @@
 
   <section class="q" data-q="schematics-tsconfig">
     <div class="q-head">
-      <span class="q-num">37</span>
+      <span class="q-num">38</span>
       <h2 class="q-title">schematics/tsconfig просит moduleResolution: node</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1399</a>
     </div>
@@ -1409,7 +1454,7 @@
 
   <section class="q" data-q="design-manifest-templates">
     <div class="q-head">
-      <span class="q-num">38</span>
+      <span class="q-num">39</span>
       <h2 class="q-title">templates и startingPoints в манифесте Claude Design</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1382</a>
     </div>
@@ -1430,7 +1475,7 @@
 
   <section class="q" data-q="docs-blocks">
     <div class="q-head">
-      <span class="q-num">39</span>
+      <span class="q-num">40</span>
       <h2 class="q-title">Четыре компонента без собственного блока в ds-docs</h2>
       <a class="q-src" href="../docs/todo.md">бэклог 1385</a>
     </div>
