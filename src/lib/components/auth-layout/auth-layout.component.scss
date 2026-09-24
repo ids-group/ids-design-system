@@ -1,9 +1,8 @@
 /* The layout's own furniture COMPRESSES as the viewport gets shorter, so it is
-   never what pushes a card into scrolling. Three values carry that, and the
-   measured 88px they save between a tall viewport and a landscape phone is
-   exactly theirs: the block padding (48px, two edges), the column gap (32px,
-   two gaps) and the letter-mark tile (8px). Each multiplier reaches its MAX at
-   an 800px-tall viewport.
+   never what pushes a card into scrolling. Two values carry that, and the
+   80px they save between a tall viewport and a landscape phone is exactly
+   theirs: the block padding (48px, two edges) and the column gap (32px, two
+   gaps). Each multiplier reaches its MAX at an 800px-tall viewport.
 
    800px is a VIEWPORT height, not a screen height, and plenty of desktops sit
    below it: a 1366x768 laptop lands near 630px after browser and OS chrome, and
@@ -26,12 +25,10 @@
    host once the URL bar retracts, visible to anyone overriding the layout's
    background.
 
-   NOT pinkmoon's approach for the same exercise, which pins the masthead and the
-   footer with `position: absolute` (top/bottom) so they leave the flow entirely.
-   That buys more room — but a DS card holds arbitrary content, and out-of-flow
-   chrome OVERLAPS a tall form instead of scrolling past it. Compression cannot
-   overlap. The limit is honest either way: a card taller than the space left
-   still scrolls, and should.
+   Compression rather than out-of-flow chrome: a card holds arbitrary content,
+   and absolutely positioned chrome would overlap a tall form instead of
+   scrolling past it. A card taller than the space left still scrolls, and
+   should.
 
    The host is the ONLY full-height box here. The port this replaces nested a
    100vh wrapper inside a 100dvh one, which scrolls a page whose content fits.
@@ -50,7 +47,9 @@
   --_auth-layout-bg-color: var(--ds-auth-layout-bg-color, var(--surface-canvas));
   --_auth-layout-gap: var(--ds-auth-layout-gap, clamp(var(--space-4), 4svh, var(--space-8)));
   --_auth-layout-padding-block: var(--ds-auth-layout-padding-block, clamp(var(--space-4), 5svh, var(--space-10)));
-  --_auth-layout-mark-size: var(--ds-auth-layout-mark-size, clamp(var(--space-6), 4svh, var(--space-8)));
+  --_auth-layout-mark-size: var(--ds-auth-layout-mark-size, var(--sidenav-logo-size));
+  --_auth-layout-mark-font-size: var(--ds-auth-layout-mark-font-size, var(--font-size-m));
+  --_auth-layout-brand-name-font-size: var(--ds-auth-layout-brand-name-font-size, var(--font-size-h5));
   --_auth-layout-mark-radius: var(--ds-auth-layout-mark-radius, var(--ds-radius-control));
   --_auth-layout-card-max-width: var(--ds-auth-layout-card-max-width, var(--auth-card-w));
   --_auth-layout-mark-bg-color: var(--ds-auth-layout-mark-bg-color, var(--accent));
@@ -121,20 +120,16 @@
      the slot's own attribute as a DIRECT child so a logo's inner markup is left
      alone. ds-sidenav's identical slot carries the same rule. */
   ::ng-deep > [brand] {
-    /* `none` by default: constraining a projected logo that consumers already ship
-       unconstrained would silently resize it. Opt in with the tile's own size —
-       `--ds-auth-layout-brand-max-height: var(--ds-auth-layout-mark-size)` — or any
-       height. Height ALONE on purpose: an <img> with no CSS width keeps its ratio
-       under max-height already, so the `width: auto` this used to carry could only
-       ever out-rank a width the consumer set on their own logo. */
-    max-height: var(--ds-auth-layout-brand-max-height, none);
+    /* Capped at the tile it replaces, so a logo is the same height as the
+       letter-mark. Height alone: an <img> with no CSS width keeps its ratio
+       under max-height, and a width here would out-rank one the consumer set
+       on their own logo. */
+    max-height: var(--ds-auth-layout-brand-max-height, var(--_auth-layout-mark-size));
   }
 }
 
-/* The sidenav's letter-mark in spirit — same accent tile, same glyph — but NOT
-   pixel-identical: the rail's is a fixed 28px at weight 800, this one is 24-32px
-   at weight 700. Aligning them is a design call, not a bug fix; until it is
-   made, do not describe them as the same tile. */
+/* The sidenav's letter-mark in size (28px) and tile, but weight 700 against the
+   rail's 800, with its own hooks: retinting the mark means setting both. */
 .mark {
   display: grid;
   place-items: center;
@@ -148,18 +143,11 @@
   border-radius: var(--_auth-layout-mark-radius);
   background-color: var(--_auth-layout-mark-bg-color);
   color: var(--_auth-layout-mark-label-color);
-  font: var(--font-weight-bold) var(--font-size-m) / 1 var(--font-sans);
+  font: var(--font-weight-bold) var(--_auth-layout-mark-font-size) / 1 var(--font-sans);
 }
 
-/* Back to the fixed size this had before the clamp — i.e. what 0.8.0 ships — so
-   this is a revert of unreleased work, not a default change. Note the line box
-   (22 x 1.25 = 27.5px) does exceed the tile's 24px floor, so on a viewport under
-   ~688px the wordmark, not the tile, sets the brand row's height. Dropping to
-   --font-size-h5 would remove that and match the sidenav, but it would shrink the
-   lockup for every 0.8.0 consumer — a default change, and this repo's release gate
-   holds those for the batch after 0.9.0. */
 .brand-name {
-  font: var(--font-weight-extrabold) var(--font-size-h4) / var(--line-height-snug) var(--font-sans);
+  font: var(--font-weight-extrabold) var(--_auth-layout-brand-name-font-size) / var(--line-height-snug) var(--font-sans);
   color: var(--text-primary);
 }
 
