@@ -14,7 +14,7 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**130 open — 0 P1, 13 P2, 117 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**126 open — 0 P1, 13 P2, 113 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P2 — 13
 
@@ -41,7 +41,7 @@ item and nothing else.
 - **Localization — every user-visible string is a hardcoded literal (recorded 2026-08-27, from the ITB Workspace picker report)**
   - Every user-visible string in the library is a hardcoded English literal — VALIDATED 2026-08-27 against 0.11.0; Stas: defer the whole thing, no code
 
-### P3 — 117
+### P3 — 113
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - The token reference says the portaled panel reads `--ds-time-picker-focus-shadow`
@@ -70,13 +70,9 @@ item and nothing else.
   - `ds-button` and `ds-icon-button` cannot change their border on hover (from the mm-ecm consumer)
   - `ds-empty-state` title takes its size and colour from tokens but not its face or weight (from the mm-ecm consumer)
   - A `ds-bar-chart` segment cannot be marked as the selected part (from the mm-ecm-platform-kb consumer)
-  - `ds-textarea` exposes no selection API (from the mm-ecm-platform-kb consumer)
-  - `ds-autocomplete` has no public `blur()` for a host that navigates away after a pick (from the mm-ecm-platform-kb consumer)
   - Charts take their number locale from the browser, with no setting (from the mm-ecm-platform-kb consumer)
-  - `ds-switch` cannot ask before it flips (from the mm-broker consumer)
   - `ds-badge` and the `ds-page-header` subtitle take no font-size hook (from the mm-broker consumer)
   - `ds-banner`'s title size has no hook, while its body has one (from the pinkmoon consumer)
-  - `dsCellTemplate` hands the row out as `unknown`, so every table carries a caster (from the ai-sdlc / mm-broker consumers)
   - `ds-table`'s pagination footer has no padding hook (from the mm-ecm-platform-kb consumer)
 - **Tooling**
   - A consumer's `--ds-*` override can be write-only, and nothing says so (recorded 2026-09-23, from the mm-ecm consumer's 0.8.0 to 0.13.4 audit)
@@ -539,23 +535,12 @@ Same sweep, the capabilities that are missing rather than wrong. Each workaround
 - [ ] **[P3] A `ds-bar-chart` segment cannot be marked as the selected part (from the mm-ecm-platform-kb consumer).** The consumer's segmentation breakdown filters the audience by one part, and moving it onto `segments` dropped the emphasis on that part (`mm-ecm-platform-kb/.claude/local/todo/ds-0.13.1-charts-and-reserve-messages.md:65-67`). The consumer's own legend now carries the selection. `BarChartSegment` (`bar-chart.types.ts:9-17`) has no state, `.segment` (`bar-chart.component.html:113-118`) gets no class, and `dimOthers` works per row only. The 2px seam between parts already ships (`bar-chart.component.scss:158-160`).
   **Wanted:** a way to emphasise one segment, for example `selected?: boolean` on `BarChartSegment` or an `activeSegment` input by id. Unselected parts would dim the way `dimOthers` dims rows.
 
-- [ ] **[P3] `ds-textarea` exposes no selection API (from the mm-ecm-platform-kb consumer).** A markdown-lite editor wraps the current selection in markers. It has to query the inner `<textarea>` through `nativeElement.querySelector('textarea')` to read `selectionStart`/`selectionEnd` and set them back (`rich-text-editor.component.ts:13,42-58`). `focus()` already exists on the base (`control-value-accessor.ts:141`), but the element is private (`textarea.component.ts:45-46`).
-  **Wanted:** public `selectionStart`/`selectionEnd` reads plus `setSelectionRange(start, end, direction?)` and `select()` on `ds-textarea` that forward to the native element. The editor then stops depending on the component's DOM.
-
-- [ ] **[P3] `ds-autocomplete` has no public `blur()` for a host that navigates away after a pick (from the mm-ecm-platform-kb consumer).** A topbar search clears itself with `clear()` after the user picks a result, then drops focus through `nativeElement.querySelector('input')?.blur()` on a wrapper span (`refresh-shell.ts:86-88`). `clear()` leaves focus in place on purpose (`autocomplete.component.ts:790-803`), and the filter input is private (`:314-315`). `focus()` exists on the base (`control-value-accessor.ts:141`) but has no counterpart.
-  **Wanted:** a public `blur()` on the control-value-accessor base that blurs the element `focus()` resolves, so every field gets it at once.
-
 - [ ] **[P3] Charts take their number locale from the browser, with no setting (from the mm-ecm-platform-kb consumer).** The consumer copies the whole default formatter into `provideDsConfig` just to pin `en-US`, including the compact-on-tick split (`app.config.ts:20-31`). `defaultChartFormat` calls `Intl.NumberFormat(undefined, ...)` (`charts-format.ts:30-44`). `formatPercent` uses `toFixed(1)` (`:47-60`), so on a de-DE machine one chart prints `13,5` beside `13.5%`. `datePicker.locale` exists in `ds-config.ts:174-175`, and `chart` (`:144-172`) has six fields - `dataTable`, `frame`, `tooltipLingerMs`, `emptyText`, `errorText`, `valueFormat` (`:171`) - and none of them is one.
   **Wanted:** `chart.locale` on `DS_CONFIG`, read by the default value formatter and by `formatPercent`. A consumer then pins one BCP-47 tag in place of a formatter.
-
-- [ ] **[P3] `ds-switch` cannot ask before it flips (from the mm-broker consumer).** mm-broker wraps it in `app-confirm-switch`, which cancels the host click with `preventDefault()` and emits `requestChange` so the host can confirm first and push the committed value back (`confirm-switch.component.ts:27-35`). It is used on 4 screens. `ds-switch` sets `checked` on every native change (`switch.component.ts:35,97-99`), so the only way to veto a flip is to rely on its DOM.
-  **Wanted:** an opt-in controlled mode, for example `commit="manual"`. The switch then emits the requested value through an output and does not flip until `checked` changes from outside.
 
 - [ ] **[P3] `ds-badge` and the `ds-page-header` subtitle take no font-size hook (from the mm-broker consumer).** The badge sets `font: ... var(--font-size-xs)` at `badge.component.scss:28` beside eight resolvers that stop short of size, and the subtitle sets `var(--font-size-s)` at `page-header.component.scss:130` while the title already has `--ds-page-header-title-font-size` (`:26`). The mm-broker-platform-kb prototype pierces both: `broker-portal/.../carrier-detail.page.ts:238` (`.kpi-value ::ng-deep .badge`, a KPI badge at 14px) and `broker-portal/src/styles.scss:179-181` (`ds-page-header .subtitle { font-size: var(--font-size-m) !important }`). **Wanted:** `--ds-badge-font-size` (fallback `--font-size-xs`, read so the `.count` 2xs rule still wins) and `--ds-page-header-subtitle-font-size` (fallback `--font-size-s`), both in the token reference.
 
 - [ ] **[P3] `ds-banner`'s title size has no hook, while its body has one (from the pinkmoon consumer).** `.title` sets `font: var(--font-weight-bold) var(--font-size-s) / ...` at `banner.component.scss:99`, and `compact` (`:148-158`) leaves it there, so a compact strip cannot drop to 12px without a descendant selector. pinkmoon field ships exactly that: `_ds-overrides.scss:87-95` sets `ds-banner .banner.compact .title { font-size: var(--font-size-xs) }`. The body already reads `--ds-banner-body-font-size` (`:29`). **Wanted:** `--ds-banner-title-font-size` resolved beside the body one (fallback `--font-size-s`), so the consumer's rule becomes two custom properties on the host.
-
-- [ ] **[P3] `dsCellTemplate` hands the row out as `unknown`, so every table carries a caster (from the ai-sdlc / mm-broker consumers).** `cell-template.directive.ts:29` injects `TemplateRef<{ $implicit: unknown; row: unknown }>` and has no `ngTemplateContextGuard`, although `TableComponent<T>` (`table.component.ts:140-142`) knows `T`. mm-broker ships 39 one-line `asRow(row: unknown): XRow { return row as XRow; }` helpers under `src/` (grep `\(row: unknown\)`), and ai-sdlc-prototype tracks it at `docs/todo.md:225-235`. **Wanted:** a generic `CellTemplateDirective<T>` with an optional typing input (`[dsCellTemplateOf]="rows"`) and a static `ngTemplateContextGuard` narrowing `$implicit` and `row` to `T`, so `let-row` types under strict templates and the casters can be deleted; untyped use stays valid.
 
 - [ ] **[P3] `ds-table`'s pagination footer has no padding hook (from the mm-ecm-platform-kb consumer).** `.pagination-footer` hardcodes `padding-block: var(--space-3)` (`table.component.scss:747-755`); only its inline sides follow `--ds-table-cell-padding-*`. The consumer doubles `.pagination-footer.pagination-footer { padding-top: ... }` (`agent-portal/src/styles.scss:645-646`). **Wanted:** `--ds-table-footer-padding-top` / `-bottom`, defaulting to `var(--space-3)`.
 
@@ -1118,7 +1103,7 @@ file** — the number moves; cite the filename.
 | 9 | `9-bar-column-contracts` | How far to converge the bar and the column: name the difference, converge the palette, or give the bar a series model. | the stacking-contract ask under *Two chart names that collide* |
 | 10 | `10-banner-announce-warning` | Whether a dev warning names an error banner no screen reader will read. | the closed `banner.announce` ask, which left this open |
 | 11 | `11-picker-list-height` | Whether the picker list height becomes a public token or stays behind `panelClass`. | the closed `--picker-maxh` ask, same shape |
-| 12 | `12-decision-queue` | Every consumer ask and every open question in one page - 27 asks in three groups, then 33 decisions in six, each drawn as today against after. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
+| 12 | `12-decision-queue` | Every consumer ask and every open question in one page - 23 asks in three groups, then 33 decisions in six, each drawn as today against after. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled

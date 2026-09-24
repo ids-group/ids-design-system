@@ -4,6 +4,18 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## Four control APIs consumers reached past the surface for (2026-09-24)
+
+`ds-switch` takes `controlled` with `(checkedRequested)`: the click is cancelled and the asked-for
+value emitted, and the track moves only when `[checked]` changes from outside (Stas picked the name).
+`ds-textarea` mirrors the native selection API (`selectionStart`, `selectionEnd`,
+`setSelectionRange`, `select`). Every field control and `ds-search` has `blur()` beside `focus()`,
+from one shared `blurOwnControl` that blurs whichever descendant holds focus (checked on
+`ds-otp-input`, whose own logic redirects focus). `[dsCellTemplateOf]` plus a static
+`ngTemplateContextGuard` types `let-row` under strict templates; unbound, `row` stays `unknown`.
+Measured 2026-09-24 in the shared Chrome; both negative controls of the typed row failed the build
+as expected (TS2551 on a typo, TS2571 without the binding).
+
 ## The abbreviation gate reads every segment, and informational objects carry a verify (2026-09-24)
 
 `check-abbreviated-tokens` fires on a short last segment other than the `-x`/`-y` axis and on a
