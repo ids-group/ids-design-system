@@ -5154,6 +5154,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Padding on the modal's actions, bottom edge only. Falls back to --ds-modal-actions-padding-y, which sets both."
       },
       {
+        "name": "--ds-modal-actions-stacked-direction",
+        "value": "column",
+        "notes": "flex-direction of the actions row once it stacks (default column, confirming action at the bottom, DOM order = Tab order). Set to column-reverse to put the confirming action on top."
+      },
+      {
         "name": "--ds-modal-enter-scale",
         "value": "0.97",
         "notes": "Start scale for the modal card with ds-scale-in (default 0.97)."
