@@ -81,8 +81,8 @@
         "extends ChartTooltipDirective",
         "ChartTooltipDirective"
       ],
-      "verify": "The app builds with no TS2415 or TS2416 naming AccordionComponent, AccordionItemComponent, AlertComponent, BannerComponent, ChartComponent, ColumnSeriesComponent, LineSeriesComponent or ChartTooltipDirective, and no member of a subclass is named like a removed member listed in the note.",
-      "note": "AccordionComponent gained chevron; AccordionItemComponent gained chevronDown and chevronName; AlertComponent and BannerComponent each gained liveRole; ChartComponent gained composed, cursorResolved and tooltipPinned and lost tooltipPreferBelow; ColumnSeriesComponent gained barElements and lost onMarkBlur; LineSeriesComponent lost onMarkerBlur; ChartTooltipDirective lost dsChartTooltipPreferBelow. A redeclared member collides whether it is public, protected or private, and the compiler enumerates every collision."
+      "verify": "The app builds with no TS2415 or TS2416 naming AccordionComponent, AccordionItemComponent, AlertComponent, BannerComponent, ChartComponent, ColumnSeriesComponent, LineSeriesComponent or ChartTooltipDirective (internal, via components/chart-tooltip), and no member of a subclass is named like a removed member listed in the note.",
+      "note": "AccordionComponent gained chevron; AccordionItemComponent gained chevronDown and chevronName; AlertComponent and BannerComponent each gained liveRole; ChartComponent gained composed, cursorResolved and tooltipPinned and lost tooltipPreferBelow; ColumnSeriesComponent gained barElements and lost onMarkBlur; LineSeriesComponent lost onMarkerBlur; ChartTooltipDirective (internal, via components/chart-tooltip) lost dsChartTooltipPreferBelow. A redeclared member collides whether it is public, protected or private, and the compiler enumerates every collision."
     },
     {
       "id": "chart-cursor-default-auto",
