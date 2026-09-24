@@ -255,7 +255,10 @@
     "A `ds-table` column filter button now carries `aria-expanded` beside its `aria-haspopup=\"dialog\"`, true only on the column whose panel is showing. Nothing to change unless a test of yours asserts the attribute's absence.",
     "A panel re-opened inside the exit animation of a dismissed one can be closed again: the old panel's disposal no longer clears the state of the one that replaced it, which used to leave a panel that neither Escape nor an outside click would dismiss and that reported itself collapsed. Reaches `ds-date-picker`, `ds-color-picker`, `ds-time-picker` and everything `ds-popover` carries — `ds-table`'s filter, row menu and clipped-cell text, `ds-split-button`, `ds-filter-bar`'s overflow panel, `ds-sidenav-footer`'s search. `ds-select`, `ds-autocomplete` and `ds-multi-select` behave exactly as before.",
     "A `ds-table` bulk-action bar now rests `--bulk-bar-offset` above the scroll container's visible bottom edge rather than that offset plus the container's padding. Nothing to change, and `--bulk-bar-offset` keeps its meaning and its default; only a table with row selection inside a padded scroll container looks different.",
-    "An expanded `ds-table` row opens with a reveal — its cell interpolates `grid-template-rows` from `0fr` to `1fr` over `--duration-base` at `--ease-standard`, and `prefers-reduced-motion: reduce` shows the panel fully open with no animation. Retune it through those two tokens. The one structural change, a `.expand-panel-inner` wrapper inside the cell, is an item of its own."
+    {
+      "text": "An expanded `ds-table` row opens with a reveal — its cell interpolates `grid-template-rows` from `0fr` to `1fr` over `--duration-base` at `--ease-standard`, and `prefers-reduced-motion: reduce` shows the panel fully open with no animation. Retune it through those two tokens. The one structural change, a `.expand-panel-inner` wrapper inside the cell, is an item of its own.",
+      "verify": "Open an expanded row and confirm the panel spans the whole row, not one column"
+    }
   ],
   "deleteList": [
     {

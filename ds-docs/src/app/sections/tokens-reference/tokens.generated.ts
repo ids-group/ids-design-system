@@ -4536,7 +4536,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-input-label-font-weight",
-        "value": "var(--ds-field-label-font-weight,      var(--font-weight-bold))",
+        "value": "var(--ds-field-label-font-weight, var(--font-weight-bold))",
         "notes": "Label weight."
       },
       {
@@ -6214,9 +6214,9 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Slider thumb diameter (defaults to --slider-thumb-size)."
       },
       {
-        "name": "--ds-slider-thumb-bw",
-        "value": "var(--slider-thumb-bw)",
-        "notes": "Slider thumb border width (defaults to --slider-thumb-bw)."
+        "name": "--ds-slider-thumb-border-width",
+        "value": "var(--slider-thumb-border-width)",
+        "notes": "Slider thumb border width (defaults to --slider-thumb-border-width)."
       },
       {
         "name": "--ds-slider-fill-color",
@@ -6249,7 +6249,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Slider thumb diameter (18px)."
       },
       {
-        "name": "--slider-thumb-bw",
+        "name": "--slider-thumb-border-width",
         "value": "var(--border-width-strong)",
         "notes": "Slider thumb border width."
       }

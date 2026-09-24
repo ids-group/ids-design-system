@@ -306,6 +306,10 @@ object `{ "text": "...", "verify": "..." }` — fill `verify` whenever the line 
 mechanism (`display`, `grid`, `flex`, `position`, `overflow`, `colspan`, a width, a height, a new
 wrapper element), because that is a change to RENDERING, and a grep or a build cannot catch it. One
 sentence is enough: "open an expanded row and confirm the panel spans the row, not one column."
+This is not a `surface: none` item. An item exists when there is something a consumer may DO - a
+`restore` snippet, a conditional `action` ("None, unless ...") - and the screen check rides on it
+as its `verify`; when nothing a consumer could write changes the outcome, it is `informational`,
+with `verify` when rendering moved.
 
 **Members added to an exported class are actionable even when the feature is additive.** Subclassing
 a DS component is unsupported (`design-system.md` § Components), but a consumer who does it breaks on
@@ -407,6 +411,8 @@ Run `npm run migration-lint` before you call the manifest done — it mechanises
 - [ ] The boundary is in `appliesWhen` and the silent-failure mode in `pitfall`, not buried in the note.
 - [ ] `note` is under 120 words and carries no ALL-CAPS structural marker. (lint, M040 / M041)
 - [ ] No key outside the allowlist. (lint, M042)
+- [ ] An `informational` entry whose change is to rendering alone carries `verify`; an object entry
+      has a non-empty `text` and `verify` and no other key. (lint, M046 for the shape)
 - [ ] `old` resolves at the PREVIOUS tag, is gone at this one for a rename or a removal, and `new`
       resolves at this one. Checked against the trees, not against HEAD — `0.2.0` named a ninth
       `-subtle` token that never existed and every other check passed it. The same check reads

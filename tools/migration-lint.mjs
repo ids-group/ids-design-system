@@ -221,11 +221,8 @@ for (const [name, manifest] of manifests) {
       if (typeof entry.text !== 'string' || !entry.text.trim()) {
         at046('is an object with no non-empty `text`');
       }
-      if (
-        entry.verify !== undefined &&
-        (typeof entry.verify !== 'string' || !entry.verify.trim())
-      ) {
-        at046('`verify` must be a non-empty string when present');
+      if (typeof entry.verify !== 'string' || !entry.verify.trim()) {
+        at046('is an object with no non-empty `verify` - an entry with nothing to eyeball is a bare string; write it as one');
       }
     });
   }
