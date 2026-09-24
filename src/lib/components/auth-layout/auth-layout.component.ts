@@ -28,7 +28,7 @@ import { resolveBrandValue } from '@ids-group-ltd/ids-design-system/components';
  * projects a two-tone wordmark (import `BrandNameDirective` alongside this
  * component, or the attribute is inert and the wordmark lands in the card), and
  * `[brand]` projects a real logo. The two are not pixel-identical: the rail's tile
- * is a fixed 28px at weight 800, this one 24-32px at 700, and each has its own
+ * is a fixed 28px at weight 800, this one 28px at 700, and each has its own
  * `--ds-*-mark-*` hooks, so retinting the mark means setting both.
  *
  * Projecting into `[brand]` does NOT suppress the tile — leave `brand`/`logoLetter`
@@ -79,11 +79,11 @@ export class AuthLayoutComponent {
   /** Card padding, passed through to `ds-card`. `md` tightens a short form. */
   readonly cardPadding = input<CardPadding>('lg');
   /** Announce the card as the page's `main` landmark. `ds-card` renders an
-   *  `<article>`, which is NOT a landmark, so by default a screen-reader user has
-   *  nothing to jump to — set `'main'` on a standalone auth page. Opt-in because
-   *  the layout is also embedded inside pages that already own a `main`, and two
-   *  `main`s is its own violation. */
-  readonly landmark = input<'main' | 'none'>('none');
+   *  `<article>`, which is not a landmark, so this is what lets a screen-reader
+   *  user jump to the form. Set `'none'` where the layout sits inside a page
+   *  that already owns a `main`, such as `ds-app-layout`: two `main` landmarks
+   *  is its own violation. */
+  readonly landmark = input<'main' | 'none'>('main');
 
   protected readonly brandNameRef = contentChild(BrandNameDirective);
   protected readonly hasBrandName = computed(() => !!this.brandNameRef());

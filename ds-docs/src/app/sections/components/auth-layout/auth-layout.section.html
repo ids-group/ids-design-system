@@ -25,7 +25,7 @@
     </code> contract, and an accent
     letter-mark tile of its own — close enough that the mark a user meets on the
     login screen reads as the mark that greets them in the rail, but not
-    identical: the rail's is a fixed 28px at weight 800, this one 24-32px at
+    identical: the rail's is a fixed 28px at weight 800, this one 28px at
     700, and the two carry separate token hooks, so retinting the mark means
     setting both.
   </p>
@@ -80,18 +80,22 @@
     another layout's <code class="t-mono-inline">main</code> (as on this docs
     site) it is a plain footer. Leave it out and the footer collapses. The card
     itself is an <code class="t-mono-inline">article</code>, which is not a
-    landmark: on a standalone auth page set
+    landmark, so the layout marks it <code class="t-mono-inline">main</code> by
+    default; nested inside another layout's
     <code class="t-mono-inline">
-      landmark="main"
-    </code> so a screen-reader user
-    can jump to the form.
+      main
+    </code>, as on this docs site, set
+    <code class="t-mono-inline">
+      landmark="none"
+    </code>.
   </p>
 
   <div class="auth-demo">
     <ds-auth-layout
       brand="AppAdmin"
       logoLetter="A"
-      tagline="Workspace administration">
+      tagline="Workspace administration"
+      landmark="none">
       <h3 class="demo-title t-h4">
         Sign in
       </h3>
@@ -142,10 +146,11 @@
 
   <div class="auth-demo">
     <ds-auth-layout
-      logoLetter="M"
-      cardElevation="flat">
+      logoLetter="A"
+      cardElevation="flat"
+      landmark="none">
       <span dsBrandName>
-        My<span class="brand-accent">Broker</span>
+        Acme<span class="brand-accent">Works</span>
       </span>
 
       <h3 class="demo-title t-h4">
@@ -176,19 +181,19 @@
   <p class="block-desc t-s">
     A landscape phone leaves about 330px of viewport, and the furniture this
     layout puts around your card — block padding, the column gap, the
-    letter-mark tile, the wordmark, the masthead's inner gap — used to cost
-    ~219px of that before your form got a single pixel. All of it now clamps
-    against
+    wordmark, the masthead's inner gap — used to cost ~219px of that before
+    your form got a single pixel. All of it now clamps against
     <code class="t-mono-inline">
       svh
     </code>, so at ~330px the same chrome costs
-    ~131px. Every multiplier reaches its maximum at a viewport 800px tall or
+    ~135px. Every multiplier reaches its maximum at a viewport 800px tall or
     more — which is a viewport height, not a screen size: a 1366x768 laptop
     lands near 630px after browser and OS chrome, and a 1080p screen at 150%
     display scaling near 585px, so plenty of desktops render the compressed
-    furniture too. Type is deliberately not part of it: the wordmark and the
-    tile's glyph stay fixed, because in a row whose height the tile already sets
-    they cost nothing to shrink and only flatten the brand against the tagline.
+    furniture too. Type is deliberately not part of it: the wordmark, the tile
+    and its glyph stay fixed, because in a row whose height the tile already
+    sets they cost nothing to shrink and only flatten the brand against the
+    tagline.
   </p>
 
   <p class="block-desc t-s">
@@ -206,15 +211,12 @@
       dvh
     </code>: the dynamic unit changes as a
     mobile URL bar hides, which would resize the wordmark and re-space the
-    column while the reader scrolls. Setting any of
+    column while the reader scrolls. Setting either of
     <code class="t-mono-inline">
       --ds-auth-layout-padding-block
-    </code>,
-    <code class="t-mono-inline">
-      -gap
     </code> or
     <code class="t-mono-inline">
-      -mark-size
+      -gap
     </code> to a fixed value opts out of
     the compression for that one dimension.
   </p>

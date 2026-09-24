@@ -485,6 +485,9 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
 
 ## Phase C — Final report
 
+- **Dead overrides:** run `npx ng g @ids-group-ltd/ids-design-system:check-overrides` in the
+  target once the chain is applied and list every line it reports under "Needs manual review"; a
+  DS version without the schematic (before this release) is skipped with a note.
 - Per target: versions completed + committed (from→to); items **auto-applied** (mechanical AND
   behavioral); items not-applicable — **every item with its hit count**.
 - **Locator-dead — evidence about the manifests, not this consumer:** the items where every locator

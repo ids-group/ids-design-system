@@ -5,6 +5,11 @@
       "description": "Wire the IDS design system's global styles into a project.",
       "factory": "./ng-add/index.cjs#ngAdd",
       "schema": "./ng-add/schema.json"
+    },
+    "check-overrides": {
+      "description": "Report --ds-* overrides the installed version never reads, and ds-* selectors naming classes its components do not render.",
+      "factory": "./check-overrides/index.cjs#checkOverrides",
+      "schema": "./check-overrides/schema.json"
     }
   }
 }

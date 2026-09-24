@@ -39,6 +39,7 @@
     "check-color-families": "node tools/check-color-families.mjs",
     "check-delete-tables": "node tools/check-delete-tables.mjs",
     "check-design-sync-log": "node tools/check-design-sync-log.mjs",
+    "check-overrides:selftest": "node tools/check-overrides-selftest.mjs",
     "check-docblock-drift": "node tools/check-docblock-drift.mjs",
     "check-doc-tokens": "node tools/check-doc-tokens.mjs",
     "check-docs-attrs": "node tools/check-docs-attrs.mjs",

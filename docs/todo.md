@@ -14,7 +14,7 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**121 open — 0 P1, 14 P2, 107 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**118 open — 0 P1, 14 P2, 104 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P2 — 14
 
@@ -41,7 +41,7 @@ item and nothing else.
 - **Localization — every user-visible string is a hardcoded literal (recorded 2026-08-27, from the ITB Workspace picker report)**
   - Every user-visible string in the library is a hardcoded English literal — VALIDATED 2026-08-27 against 0.11.0; Stas: defer the whole thing, no code
 
-### P3 — 107
+### P3 — 104
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - The token reference says the portaled panel reads `--ds-time-picker-focus-shadow`
@@ -66,7 +66,6 @@ item and nothing else.
   - A `ds-bar-chart` segment cannot be marked as the selected part (from the mm-ecm-platform-kb consumer)
   - Charts take their number locale from the browser, with no setting (from the mm-ecm-platform-kb consumer)
 - **Tooling**
-  - A consumer's `--ds-*` override can be write-only, and nothing says so (recorded 2026-09-23, from the mm-ecm consumer's 0.8.0 to 0.13.4 audit)
   - changelog-lint C001 does not scan ds-docs/src or docs/agent (recorded 2026-09-24)
   - The press feedback guard misses `.disabled` and `[aria-disabled]` (recorded 2026-09-24)
   - `--picker-maxh` is an abbreviated token name (recorded 2026-09-24)
@@ -98,7 +97,6 @@ item and nothing else.
   - `tools/todo-index.mjs --check` is not in `lint:all`, so the index can still go stale between runs
   - Publishing to Claude Design cannot run from Bitbucket, and Stas wants the CI route looked at again (recorded 2026-09-02)
   - Drop the brand and domain EXAMPLES from the published docs, not just their names (Stas, 2026-08-31)
-  - Does a release note owe the reader a WHY, or only a what-and-what-to-do? (Stas, 2026-08-28, left open on purpose during the public-surface sweep.)
   - ds-docs still writes BEM MODIFIERS as `--suffix`, and a state should be its own class (Stas, 2026-08-26 — the `__` half is done and archived)
   - `fix:all` reformats HTML that eslint then fights, and it is `fix:all` alone — `lint:all` is green
   - Ten manifest-format practices the audit marked *Adopt*, and nobody has ratified any of them (filed 2026-08-27 out of deck `4-migration-manifest-audit`)
@@ -141,8 +139,6 @@ item and nothing else.
   - Five thousand options render five thousand rows
 - **A journey canvas the mm-ecm prototype could not use (recorded 2026-09-16)**
   - Journey / flow diagram - no component draws a branching node-and-edge canvas
-- **ds-auth-layout — residue from the 0.8.0/0.9.0 audit (recorded 2026-08-11, from the ai-sdlc-prototype side)**
-  - Three deferred DEFAULT changes for the batch after 0.9.0
 - **Docs nav chapters — the two limits the derivation ships with (recorded 2026-09-08)**
   - A chapter list reaches only sections whose headings are `h3.block-title`
   - The active chapter is not scrolled into the rail's own viewport
@@ -509,11 +505,6 @@ Same sweep, the capabilities that are missing rather than wrong. Each workaround
 ## Tooling
 
 *This section also has items under **Decisions**, **Parked**, **Records**.*
-
-- [ ] **[P3] A consumer's `--ds-*` override can be write-only, and nothing says so (recorded 2026-09-23, from the mm-ecm consumer's 0.8.0 to 0.13.4 audit).** A name the consumer declares but the library never reads sets nothing, paints nothing and raises nothing: no build error, no console warning, no lint. It reads as styling that works, and it can survive many releases that way. Measured on one consumer: `--ds-button-bg`, `--ds-button-bg-hover`, `--ds-button-bg-active`, `--ds-button-fg` and `--ds-tag-bg`, 16 declarations in mm-ecm-platform (15 in `_buttons.scss`, one `--ds-tag-bg`); the consumer's `fix/dead-ds-token-overrides` branch fixes the tag and leaves the 15. Those names are real - `git grep -P -- '--ds-button-bg(?![a-z0-9-])' <tag> -- src/lib` finds them at `v0.1.0` through `v0.2.2` and nowhere from `v0.3.0` on, where the surface became `--ds-button-bg-color` / `-hover` / `-active` and `--ds-button-label-color`. The consumer entered the chain at 0.8.0, so the overrides were already five releases dead before the upgrade started, and came out the other side still dead.
-  **Why no manifest can catch this.** A migration item's `old` is scoped to the one version boundary it describes, so a name that died before the chain's first version is outside every manifest the chain reads. The tooling is correct and the hole is structural: it can only ever report renames inside the range being walked, while a consumer's dead override is a property of the CURRENT installed version alone.
-  **The shape that fits:** a check a consumer can run against what is installed - collect every `--ds-*` the consumer DECLARES, collect every `--ds-*` the package READS (`fesm2022/*.mjs` plus `styles/` and `themes/`), and report the declarations that resolve to nothing. That is the same idea `check-doc-tokens` already applies to our own prose, pointed outward; on the consumer above it takes one pass over 176 declared names against 1 028 read names. Shipping it as a bin in the package, or as a schematic, puts it where the consumer can run it on every upgrade rather than once during an audit.
-  **The same silence has a second shape, worth covering together: a selector that stops matching.** `ds-button`'s inner button carries `c-<color>` and `v-<variant>` classes, so a consumer styling `ds-button .button.secondary` or `.outline` matches nothing. The same consumer carries seven such blocks, five of them named after a colour. Worse than inert: its `primary` block is written as `.button:not(.secondary):not(.tertiary):not(.outline):not(.error):not(.success):not(.warning):not(.text)`, and since none of those classes is ever rendered the negation excludes nothing, so a rule meant for one variant applies to every button. A check that resolved a consumer's `ds-*` selectors against the classes and attributes the components actually render would catch both halves.
 
 - [ ] **[P3] changelog-lint C001 does not scan ds-docs/src or docs/agent (recorded 2026-09-24).**
   The published-artefact check for client names reads styles, themes, `src/lib/**/*.ts` and migrations (its closing `by group` line),
@@ -1070,7 +1061,7 @@ file** — the number moves; cite the filename.
 | 7 | `7-chart-sparkline-preset` | The sparkline preset's vertical scale: zero in the domain or the data's own range. | the spark-scale Decision, then task 39 |
 | 8 | `8-bar-column-contracts` | How far to converge the bar and the column: name the difference, converge the palette, or give the bar a series model. | the stacking-contract ask under *Two chart names that collide* |
 | 9 | `9-picker-list-height` | Which knob caps a picker's list: one cap, `panelClass`, or a new list token, all three drawn and measured. | the picker-cap Decision (task 53) |
-| 10 | `10-decision-queue` | Every consumer ask and every open question in one page - 10 asks in three groups, then 30 decisions in six, each drawn as today against after. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
+| 10 | `10-decision-queue` | Every consumer ask and every open question in one page - 9 asks in three groups, then 28 decisions in six, each drawn as today against after. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
@@ -1116,12 +1107,6 @@ its own inline styles. `presentations/README.md` holds the authoring contract an
   - `src/lib/themes/README.md` — one brand mention left, the Option C code block (`@use './app/styles/brand-acme'`, `:117`); the "Brand vs theme" and "Rules summary" bullets already use `X`. The question is whether the rule ("a brand is an attribute-scoped overlay authored on a theme") needs a named brand in the example at all, or reads fine with `[data-brand="X"]` alone, which the rest of the file already uses.
   - `design-system.md` §6 — five worked examples, now on orders/catalogue/warehouse: the sentence-case pair (`Order history` / `Order History`), and the three `ds-empty-state` table rows plus the sentence under it that quotes the `none` title back. These were one consumer's domain (logistics plans, asset register, producer roles) until this sweep. The empty-state table is the most useful thing in the section, so removing the examples means finding a way to show "the title states the situation" without a situation.
   - `components.md` — the 9+3 grid line, now "a narrow picker or filter rail", previously named a consumer's two screens.
-
-- [ ] **[P3] Does a release note owe the reader a WHY, or only a what-and-what-to-do? (Stas, 2026-08-28, left open on purpose during the public-surface sweep.)** The case that raised it: `ds-search` lost `hint` / `error` / `warning` / `errors` / `invalid` / `touched` / `reserveMessage` / `messageIcon`. Two shapes are available and the release currently ships BOTH — the entry states the removal, and a following paragraph explains the CVA split that caused it.
-  **The narrow shape** is what the manifest already does: `old`/`new`, an `action`, and the locators to find it. A consumer's agent needs nothing else to migrate — it does not care why the inputs left.
-  **The wide shape** is the changelog paragraph: it answers "why did they leave, and will they come back", which a human deciding whether to upgrade may want and an agent never reads.
-  **What the format itself says**, and this is the argument for keeping the why somewhere: `migrations/AUTHORING.md:34` defines `note` as "what is LEFT once those three are gone: the WHY", capped at 120 words (M041) — so the schema deliberately reserves a field for it, separate from `action`. `migrations/README.md:9` disagrees: its schema sketch still calls `note` "concrete consumer migration steps". That makes "explain" legitimate but bounded: the why belongs in `note` and in the changelog prose, never in `action`.
-  **Held as undecided rather than settled** because the sweep already removed a lot of explanation as archaeology, and the line between "why the API is shaped this way" (useful) and "how we arrived at it" (ours) is exactly what was hard to draw all day. Revisit with the next release note in hand rather than in the abstract.
 
 - [ ] **[P3] ds-docs still writes BEM MODIFIERS as `--suffix`, and a state should be its own class (Stas, 2026-08-26 — the `__` half is done and archived).** `is-*` IS better here and that is the recorded preference: a modifier glued to the name with `--` reads as a different ELEMENT, while our convention says a variant of one thing is a STATE carried alongside it (`.stage.is-tbl`), which is also how a state reads in the DOM and how it composes with two states at once. Counted 2026-08-26: **11** element-plus-modifier forms flattened this pass and now spelled `state-cell-stage--tbl`, `cell-tag--do`, `cell-tag--dont`, `contract-row--no`, `demo-col--end`, `demo-group-btn--start/--mid/--end`, `halo-stage-well--inverted`, `state-stage--horiz`, `state-cell-stage--overflow`, plus a separate standalone set (`demo--centered`, `applied--stacked`, `demo-btn--ghost`, `demo-menu-item--error`, `btn--start/--mid/--end`, `cell--do/--dont`, `col--end`, …).
   **Why it was split off rather than done in the same pass.** Removing `__` was a pure rename — 865 occurrences, zero semantic change, provable (589 classes used and 589 styled, identical before and after). Converting `--mod` to `is-mod` is NOT: it splits one class into two in the markup, which changes selector specificity from (0,1,0) to (0,2,0) wherever the SCSS is nested, and specificity is exactly what a docs section leans on when it pins a component's forced state. That wants its own pass with its own verification, not a rider on a mechanical one.
@@ -1391,23 +1376,6 @@ One ask left from that batch. The two column-chart gaps beside it shipped in v0.
   **PARKED 2026-09-22 by Stas: wait for a second consumer.** One product shipping a shape is not
   demand for it, and the node kinds, the edge count and the per-node run state are campaign
   semantics rather than a rendering primitive. The phase-2 non-goal stands until someone else asks.
-
-## ds-auth-layout — residue from the 0.8.0/0.9.0 audit (recorded 2026-08-11, from the ai-sdlc-prototype side)
-
-> Parent work landed: the type clamps came back out of `ds-auth-layout`, the a11y and robustness
-> fixes shipped, and the false comments were corrected. What follows is what was deliberately NOT
-> done in that pass, each with the reason, so none of it is rediscovered from scratch.
-
-- [ ] **[P3] Three deferred DEFAULT changes for the batch after 0.9.0**, all held back by the release
-  gate rather than by doubt: (1) the auth wordmark at `--font-size-h5` and the tile at 28px, which is
-  what actually makes the sidenav-parity claim true and removes the one remaining case where the
-  wordmark's line box (22 x 1.25 = 27.5px) drives the brand row above the 24px tile floor on a short
-  viewport; (2) `landmark` defaulting to `'main'` instead of `'none'`, so the auth card is a landmark
-  without the consumer asking — held because the docs site embeds the layout inside `ds-app-layout`'s
-  own `<main>` and two of them is its own violation; (3) `--ds-auth-layout-brand-max-height` defaulting
-  to the tile size rather than `none`, which would silently resize logos consumers already ship. Each
-  needs a `behavior` migration item worded "was X, now Y, restore via Z" — and (1) additionally needs
-  two font-size tokens to EXIST first, since neither is exposed today.
 
 ## Docs nav chapters — the two limits the derivation ships with (recorded 2026-09-08)
 

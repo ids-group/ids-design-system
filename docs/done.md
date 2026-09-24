@@ -4,6 +4,21 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## Release notes carry a why only where it is non-obvious; check-overrides ships; auth-layout defaults land (2026-09-24)
+
+`CONTRIBUTING.md` says what a CHANGELOG entry carries: what changed and what the reader does, with a
+reason only for a genuinely non-obvious case and no history (Stas); `migrations/AUTHORING.md` redefines
+`note` the same way and makes it optional, `migration-lint` M013 relaxed with a negative control in the
+selftest. `ng g @ids-group-ltd/ids-design-system:check-overrides` reads a consumer's stylesheets
+against a surface built from the compiled package (`tools/build-override-surface.mjs`) and reports
+`--ds-*` properties the installed version never reads and `ds-*` selectors naming a class the
+component does not render; `--strict` fails the run, and the auto-update plugin (1.9.0) runs it in its
+final report. `ds-auth-layout`'s three deferred defaults shipped: an 18px wordmark
+(`--ds-auth-layout-brand-name-font-size`), a fixed 28px letter-mark tile like `ds-sidenav`'s, `landmark`
+defaulting to `'main'`, and a projected `[brand]` logo capped at the tile height, each a `behavior` item
+with a restore. Measured 2026-09-24: surface.json lists 1058 `--ds-*` names and 100 components' classes,
+selftest 5/5 with the gate seen failing on a control; wordmark 22px -> 18px, tile 32px -> 28px.
+
 ## Neutral rows and small buttons show a pressed state (2026-09-24)
 
 Every neutral row or small button that had a hover fill and nothing on press now steps to

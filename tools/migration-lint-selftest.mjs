@@ -176,6 +176,14 @@ const negativeControls = [
       });
     },
   },
+  {
+    label: 'M013 stays quiet when a non-rename item has no `note` at all',
+    code: 'M013',
+    mutate: (m) => {
+      const i = m.items.find((x) => x.kind === 'behavior');
+      delete i.note;
+    },
+  },
 ];
 
 // A defect anywhere in the corpus makes a case pass without its own mutation firing, because the
