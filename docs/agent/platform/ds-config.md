@@ -19,11 +19,12 @@ bootstrapApplication(AppComponent, {
 
 `DsConfig` shape (the exported `DsConfig` type is the full contract):
 
-Eighteen sections. The exported `DsConfig` type is the source of truth — each key carries its own
+Eighteen sections and one top-level `locale`. The exported `DsConfig` type is the source of truth — each key carries its own
 doc comment there, including why it is an app-level decision at all.
 
 ```ts
 interface DsConfig {
+  locale?: string;                         // BCP-47; default LOCALE_ID
   field?: {
     reserveMessage?: boolean;              // keep a message line of space when empty
     errorMessages?: Record<string, string>; // fallback text per validation-error kind
@@ -57,5 +58,3 @@ effective value rather than re-deriving the chain.
 both resolve their parent with `skipSelf`, so the later wins and the earlier is silently lost. Merging
 happens across injector LEVELS: a route or component inherits the app's config and overrides only the
 keys it names.
-
----
