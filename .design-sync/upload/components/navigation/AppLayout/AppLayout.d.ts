@@ -10,8 +10,8 @@ export interface AppLayoutProps {
   /** Whether the rail is open as an overlay. Only meaningful below the `lg` breakpoint — above it the rail is always in the layout and this is ignored. Two-way, so a burger in your topbar can drive it. */
   railOpen?: boolean;
   onRailOpenChange?: (value: boolean) => void;
-  /** Accessible name for the rail while it is a modal overlay. */
-  railLabel?: string;
+  /** Accessible name for the rail while it is a modal overlay. Unset falls back to `DS_INTL.appLayout.railLabel`. */
+  railLabel?: string | null;
   /** Remember the content scroll per path and restore it on the way BACK. Off by default: a layout that silently moved the scroll would surprise every existing consumer. Only a history traversal restores — following a link into a screen still lands at the top — plus a host that pushes its own "back to list" and says so with `state: { dsRestoreScroll: true }`, and the first navigation after a reload. */
   restoreScroll?: boolean;
   /** How long to wait for the restored screen's content to grow tall enough before landing as close as it allows. Only meaningful with `restoreScroll`. */

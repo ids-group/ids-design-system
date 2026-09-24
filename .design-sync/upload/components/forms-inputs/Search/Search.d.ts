@@ -10,8 +10,8 @@ export interface SearchProps {
   /** Search text, two-way bound. */
   value?: string;
   onValueChange?: (value: string) => void;
-  /** Placeholder shown when empty. */
-  placeholder?: string;
+  /** Placeholder shown when empty. Unset falls back to `DS_INTL.search.placeholder`. */
+  placeholder?: string | null;
   /** Keyboard shortcut hint rendered in a trailing `<kbd>` badge. */
   shortcut?: string;
   /** Shows the leading search icon. */

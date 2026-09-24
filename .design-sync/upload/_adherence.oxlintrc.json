@@ -172,8 +172,8 @@
         "message": "Font not provided by the design system. Available: JetBrains Mono, Mulish."
       },
       {
-        "selector": "JSXOpeningElement[name.name='Accordion'] > JSXAttribute > JSXIdentifier[name!=/^(?:multiple|children|key|ref|className|style)$/]",
-        "message": "<Accordion> doesn't accept that prop. Declared props: multiple, children."
+        "selector": "JSXOpeningElement[name.name='Accordion'] > JSXAttribute > JSXIdentifier[name!=/^(?:multiple|chevron|children|key|ref|className|style)$/]",
+        "message": "<Accordion> doesn't accept that prop. Declared props: multiple, chevron, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='AccordionItem'] > JSXAttribute > JSXIdentifier[name!=/^(?:title|expanded|disabled|onExpandedChange|badge|children|key|ref|className|style)$/]",
@@ -216,8 +216,8 @@
         "message": "<Bar> doesn't accept that prop. Declared props: value, max, semantics, variant, indeterminate, color, ariaLabel, target, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='BarChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:data|max|frame|tooltipLingerMs|caption|summary|dataTable|partOfWhole|showPercent|loading|emptyText|error|errorText|valueFormat|interactive|onRowClicked|pinOnClick|dimOthers|staggerMs|tooltip|children|key|ref|className|style)$/]",
-        "message": "<BarChart> doesn't accept that prop. Declared props: data, max, frame, tooltipLingerMs, caption, summary, dataTable, partOfWhole, showPercent, loading, emptyText, error, errorText, valueFormat, interactive, onRowClicked, pinOnClick, dimOthers, staggerMs, tooltip, children."
+        "selector": "JSXOpeningElement[name.name='BarChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:data|max|frame|tooltipLingerMs|caption|summary|dataTable|partOfWhole|showPercent|loading|emptyText|error|errorText|valueFormat|interactive|onRowClicked|pinOnClick|dimOthers|highlighted|staggerMs|tooltip|children|key|ref|className|style)$/]",
+        "message": "<BarChart> doesn't accept that prop. Declared props: data, max, frame, tooltipLingerMs, caption, summary, dataTable, partOfWhole, showPercent, loading, emptyText, error, errorText, valueFormat, interactive, onRowClicked, pinOnClick, dimOthers, highlighted, staggerMs, tooltip, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='BottomSheet'] > JSXAttribute > JSXIdentifier[name!=/^(?:open|title|onClosed|snapPoints|onOpenChange|actions|children|key|ref|className|style)$/]",
@@ -444,8 +444,8 @@
         "message": "<SidenavItem> doesn't accept that prop. Declared props: icon, label, href, routerLink, active, ariaCurrent, badge, hasAlert, disabled, onActivate, rail, iconContent, trailing, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='Skeleton'] > JSXAttribute > JSXIdentifier[name!=/^(?:width|height|circle|inline|children|key|ref|className|style)$/]",
-        "message": "<Skeleton> doesn't accept that prop. Declared props: width, height, circle, inline, children."
+        "selector": "JSXOpeningElement[name.name='Skeleton'] > JSXAttribute > JSXIdentifier[name!=/^(?:width|height|circle|inline|shimmer|children|key|ref|className|style)$/]",
+        "message": "<Skeleton> doesn't accept that prop. Declared props: width, height, circle, inline, shimmer, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='Slider'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|touched|hidden|value|min|max|step|range|disabled|ariaLabel|onValueChange|children|key|ref|className|style)$/]",

@@ -7,6 +7,8 @@ import * as React from 'react';
 export interface AccordionProps {
   /** When false, opening one item automatically closes all others. */
   multiple?: boolean;
+  /** Which way the closed chevron points on every item: `right` turns down when an item opens, `down` turns up. */
+  chevron?: ('right' | 'down');
   /** Element content. */
   children?: React.ReactNode;
   className?: string;

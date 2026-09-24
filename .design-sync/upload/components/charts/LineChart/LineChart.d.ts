@@ -53,13 +53,13 @@ export interface LineChartProps {
   maxSecondary?: number | null;
   /** Draws skeleton marks in place of the data, at the same count, so the chart does not resize when the data lands. */
   loading?: boolean;
-  /** Shown in place of the plot when `data` is empty. Unset falls back to `DS_CONFIG.chart.emptyText`, then `'No data'`. */
+  /** Shown in place of the plot when `data` is empty. Unset falls back to `DS_INTL.chart.empty`. */
   emptyText?: string | null;
   /** Shows `errorText` in place of the plot. Separate from `loading` and from an empty `data`, because "the request failed" and "there is nothing to show" read the same to a reader and mean opposite things. */
   error?: boolean;
-  /** The message the error state prints. Unset falls back to `DS_CONFIG.chart.errorText`, then `'Could not load the data'`. */
+  /** The message the error state prints. Unset falls back to `DS_INTL.chart.error`. */
   errorText?: string | null;
-  /** Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then the browser's locale grouping with a K/M/B suffix past four digits. */
+  /** Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`. */
   valueFormat?: unknown;
   /** Ids of the series the legend has switched off. Two-way, so a page can drive it from a URL parameter and read back what the reader chose. */
   hiddenSeries?: readonly string[];
@@ -70,8 +70,8 @@ export interface LineChartProps {
   legendFilters?: boolean;
   /** What a legend control does. `'isolate'` shows one series and hides the rest — one action to answer "show me only this" rather than one per series. `'toggle'` hides one and leaves the rest, for taking a dominant series out so the others can be read at a usable scale. Forwarded to `ds-chart-legend`, which renders radios for the first and checkboxes for the second. */
   legendMode?: 'toggle' | 'isolate';
-  /** Shown in place of the plot once the legend has switched every series off. Without it the reader is left with an empty grid and nothing saying why. */
-  noVisibleSeriesText?: string;
+  /** Shown in place of the plot once the legend has switched every series off. Without it the reader is left with an empty grid and nothing saying why. Unset falls back to `DS_INTL.chart.noVisibleSeries`. */
+  noVisibleSeriesText?: string | null;
   /** Gives every series a dash pattern of its own, so the lines are told apart by shape as well as by colour — WCAG technique G111. Off by default: the shipped palette clears the colour-blind separation threshold on its own, so the patterns are for monochrome print, for a retuned palette, and for a reader who asks for them. */
   patterns?: boolean;
   /** Milliseconds between one series' entrance and the next. `0`, the default, is no stagger at all; `40` is the documented non-zero step. The total is capped, so a long list of series does not crawl in. */

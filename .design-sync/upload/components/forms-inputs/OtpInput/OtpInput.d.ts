@@ -36,8 +36,8 @@ export interface OtpInputProps {
   disabled?: boolean;
   /** Confirmation text, shown when there is no error or warning — and it paints the field's success border. A string like `warning`: the text IS the state. */
   success?: string;
-  /** Accessible group label for the cell row. */
-  ariaLabel?: string;
+  /** Accessible group label for the cell row. Unset falls back to `DS_INTL.otpInput.label`. */
+  ariaLabel?: string | null;
   /** Fires once, with the full code, on the partial → complete transition. */
   onCompleted?: (value: string) => void;
   /** Element content. */

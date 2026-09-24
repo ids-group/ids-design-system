@@ -27,9 +27,9 @@ export interface WaterfallChartProps {
   loading?: boolean;
   /** Separate from an empty `data`: "the request failed" and "there is nothing to show" read the same and mean opposite things. */
   error?: boolean;
-  /** Shown in place of the plot when `data` is empty. Unset falls back to `DS_CONFIG.chart.emptyText`. */
+  /** Shown in place of the plot when `data` is empty. Unset falls back to `DS_INTL.chart.empty`. */
   emptyText?: string | null;
-  /** Shown in place of the plot while `error` is set. Unset falls back to `DS_CONFIG.chart.errorText`. */
+  /** Shown in place of the plot while `error` is set. Unset falls back to `DS_INTL.chart.error`. */
   errorText?: string | null;
   /** Formats every value the chart prints - the axis ticks, the bar labels and the annex table. The sign a delta carries is added around it, so a formatter never has to know about one. */
   valueFormat?: unknown;

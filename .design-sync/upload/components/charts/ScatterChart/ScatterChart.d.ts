@@ -29,9 +29,9 @@ export interface ScatterChartProps {
   loading?: boolean;
   /** Separate from empty data: "the request failed" and "there is nothing to show" read the same and mean opposite things. */
   error?: boolean;
-  /** Shown when no series carries a reading. Unset falls back to `DS_CONFIG.chart.emptyText`. */
+  /** Shown when no series carries a reading. Unset falls back to `DS_INTL.chart.empty`. */
   emptyText?: string | null;
-  /** Shown in place of the plot while `error` is set. Unset falls back to `DS_CONFIG.chart.errorText`. */
+  /** Shown in place of the plot while `error` is set. Unset falls back to `DS_INTL.chart.error`. */
   errorText?: string | null;
   /** Formats every number the chart prints - both axes' ticks, the accessible name and the annex table. Unset falls back to `DS_CONFIG.chart.valueFormat`. */
   valueFormat?: unknown;

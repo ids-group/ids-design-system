@@ -32,8 +32,8 @@ export interface DatePickerProps {
   /** Selected date (single) or `[start, end]` (range), two-way bound. */
   value?: Date | ([Date | null, Date | null]) | null;
   onValueChange?: (value: Date | ([Date | null, Date | null]) | null) => void;
-  /** Accessible-name fallback only — the mask fills the visible placeholder, not this. */
-  placeholder?: string;
+  /** Accessible-name fallback only — the mask fills the visible placeholder, not this. Unset falls back to `DS_INTL.datePicker.placeholder`. */
+  placeholder?: string | null;
   /** Field label shown above the trigger. */
   label?: string;
   /** Marks the field required — shows an asterisk and sets `aria-required`. */
@@ -60,7 +60,7 @@ export interface DatePickerProps {
   disabledDate?: unknown;
   /** Quick-pick shortcuts shown as a button column inside the calendar panel. */
   presets?: unknown;
-  /** BCP-47 locale driving month/weekday names and the value format. */
+  /** BCP-47 locale driving month/weekday names and the value format. Unset falls back to `DS_CONFIG.datePicker.locale`, then `DS_CONFIG.locale`, then `LOCALE_ID`. */
   locale?: string | null;
   /** Explicit token format e.g. `'MM/DD/YYYY'`; default derived from `locale`. */
   dateFormat?: string | null;
