@@ -184,4 +184,20 @@
       </div>
     </div>
   </div>
+
+  <h3 class="block-title t-h4">
+    Announcing
+  </h3>
+
+  <p class="block-desc t-s">
+    <code>
+      announce
+    </code> follows <code>DS_CONFIG.alert.announce</code>, then <code>false</code>,
+    for the reason under <code>ds-banner</code>, and dev mode raises the same two warnings, prefixed
+    <code>
+      [ds-alert]
+    </code>: an <code>error</code> or <code>warning</code> alert left unbound while
+    the key is unset, and an <code>info</code>, <code>success</code> or <code>neutral</code> one
+    announcing only because the key is <code>true</code>.
+  </p>
 </docs-section>
