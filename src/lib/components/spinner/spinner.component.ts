@@ -1,4 +1,5 @@
-import { Component, ViewEncapsulation, input } from '@angular/core';
+import { Component, ViewEncapsulation, inject, input } from '@angular/core';
+import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
 
 @Component({
@@ -8,13 +9,15 @@ import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
   styleUrl: './spinner.component.scss',
   host: {
     role: 'status',
-    'aria-label': 'Loading',
+    '[attr.aria-label]': 'intl().spinner.label',
     '[class.sm]': "size() === 'sm'",
     '[class.lg]': "size() === 'lg'",
   },
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class SpinnerComponent {
+  protected readonly intl = inject(DS_INTL);
+
   /** Spinner size — sm/md/lg. */
   readonly size = input<DsSize>('md');
 }

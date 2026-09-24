@@ -1,6 +1,6 @@
 <nav
   class="breadcrumbs"
-  aria-label="Breadcrumb"
+  [attr.aria-label]="intl().breadcrumbs.label"
   [class.is-static]="!effectiveClickable()">
   @for (item of resolvedItems(); track $index; let last = $last) {
     @if (

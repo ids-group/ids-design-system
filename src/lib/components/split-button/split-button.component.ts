@@ -2,11 +2,13 @@ import {
   Component,
   ViewEncapsulation,
   booleanAttribute,
+  computed,
+  inject,
   input,
   output,
 } from '@angular/core';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
-import { devWarn } from '@ids-group-ltd/ids-design-system/core';
+import { DS_INTL, devWarn } from '@ids-group-ltd/ids-design-system/core';
 import type { IconName } from '@ids-group-ltd/ids-design-system/core';
 import { MenuComponent } from '@ids-group-ltd/ids-design-system/components/menu';
 import { MenuItemComponent } from '@ids-group-ltd/ids-design-system/components/menu';
@@ -26,6 +28,8 @@ import type { SplitButtonItem, SplitButtonVariant } from './split-button.types';
   },
 })
 export class SplitButtonComponent {
+  private readonly intl = inject(DS_INTL);
+
   constructor() {
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
       devWarn(() =>
@@ -48,8 +52,12 @@ export class SplitButtonComponent {
   readonly disabled = input(false, { transform: booleanAttribute });
   /** Items listed in the dropdown menu. Empty disables the chevron. */
   readonly menuItems = input<readonly SplitButtonItem[]>([]);
-  /** Accessible name for the dropdown trigger. */
-  readonly menuLabel = input<string>('More actions');
+  /** Accessible name for the dropdown trigger. Unset falls back to
+   *  `DS_INTL.splitButton.menuLabel`. */
+  readonly menuLabel = input<string | null>(null);
+  protected readonly menuLabelResolved = computed(
+    () => this.menuLabel() ?? this.intl().splitButton.menuLabel,
+  );
   /** Fires when the main button (not the dropdown trigger) is clicked. */
   readonly pressed = output<MouseEvent>();
   /** The menu half only — a press on the main button is `pressed`, never this. */

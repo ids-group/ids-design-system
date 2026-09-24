@@ -17,6 +17,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router, type ParamMap } from '@angular/router';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
+import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 import { TabComponent } from './tab.component';
 import type { TabsOrientation, TabsVariant } from './tabs.types';
 
@@ -54,6 +55,8 @@ function slugify(label: string): string {
   },
 })
 export class TabsComponent {
+  protected readonly intl = inject(DS_INTL);
+
   /** Index of the active tab, two-way bound. */
   readonly selectedIndex = model<number>(0);
   /** Visual style of the tab strip. */

@@ -15,7 +15,9 @@
     <button
       type="button"
       class="copy"
-      [attr.aria-label]="copied() ? 'Copied' : 'Copy value'"
+      [attr.aria-label]="
+        copied() ? intl().descriptionList.copied : intl().descriptionList.copy
+      "
       (click)="copy()">
       <ds-icon
         [name]="copied() ? 'check' : 'copy'"
