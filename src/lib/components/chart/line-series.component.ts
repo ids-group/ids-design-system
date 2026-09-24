@@ -194,6 +194,7 @@ export class LineSeriesComponent implements OnDestroy {
     this.scales.reportTooltip(this.domainId, {
       context: this.tooltipContext,
       origin: this.tooltipOrigin,
+      offersTooltip: computed(() => this.tooltip() !== 'none'),
       axisOrigin: this.topReadingElement,
       axisEntries: this.axisEntries,
     });

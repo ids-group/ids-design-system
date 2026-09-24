@@ -1868,14 +1868,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "cursor",
         "kind": "input",
-        "type": "'none' | 'category'",
+        "type": "'none' | 'category' | 'auto'",
         "union": [
           "none",
-          "category"
+          "category",
+          "auto"
         ],
-        "default": "'none'",
+        "default": "'auto'",
         "required": false,
-        "description": "Draws a band and a crosshair down the category under the pointer, and reports that category to every mark through `activeIndex`. `'none'`, the default, leaves the plot alone: a chart whose marks are the hover targets already answers per mark, and two affordances on one plot read as two different questions."
+        "description": "Draws a band and a crosshair down the category under the pointer, and reports that category to every mark through `activeIndex`. On a plot of two or more marks that show a tooltip, the panel then names every mark's reading at that category wherever in it the pointer is. `'auto'`, the default, is `'category'` for such a composed plot and `'none'` for a plot of one mark, whose marks already answer per mark: two affordances on one plot read as two different questions."
       },
       {
         "name": "cursorPin",

@@ -14,6 +14,9 @@ export interface ChartTooltipSource {
   readonly origin: Signal<ChartTooltipOrigin | null>;
   /** Whether the mark is held. A held panel takes the pointer, so its text can be selected. */
   readonly pinned?: Signal<boolean>;
+  /** Whether this mark shows a tooltip at all. Absent means it does. Two marks that do make the
+   *  plot a composed one, which is what turns the category cursor on under `cursor="auto"`. */
+  readonly offersTooltip?: Signal<boolean>;
   /** This mark's own reading at the category the cursor is on, as an element, whether or not the
    *  pointer is over it. A category panel hangs over the highest of these. Absent falls back to
    *  `origin`. */
