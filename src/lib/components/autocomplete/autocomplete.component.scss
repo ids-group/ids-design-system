@@ -18,6 +18,8 @@
 @use '../../styles/text-clip' as text-clip;
 
 :host {
+  @include field-box.field-box-tokens;
+
   /* `initial` on a custom property means UNSET, and that is the point. The pane is
      portaled, so these reach it by being COPIED off this host as an inline style,
      which outranks the `.ds-overlay-pane` rule that is a consumer's only route to a
@@ -32,11 +34,14 @@
   --_autocomplete-focus-shadow: var(--ds-autocomplete-focus-shadow, var(--ds-field-focus-shadow));
   --_autocomplete-max-width: var(--ds-autocomplete-max-width, none);
   --_autocomplete-input-min-width: var(--ds-autocomplete-input-min-width, 40px);
-  --_autocomplete-input-font-size: var(--ds-autocomplete-input-font-size, var(--font-size-s));
+  --_autocomplete-input-font-size: var(--ds-autocomplete-input-font-size, var(--_field-font-size));
   --_autocomplete-bg-color: var(--ds-autocomplete-bg-color, var(--surface-default));
-  --_autocomplete-border-color: var(--ds-autocomplete-border-color, var(--border-default));
+  --_autocomplete-border-color: var(--ds-autocomplete-border-color, var(--_field-border-color));
   --_autocomplete-radius: var(--ds-autocomplete-radius, var(--ds-radius-control));
-  --_autocomplete-border-color-focus: var(--ds-autocomplete-border-color-focus, var(--accent));
+  --_autocomplete-border-color-focus: var(--ds-autocomplete-border-color-focus, var(--_field-border-color-focus));
+  --_autocomplete-border-color-hover: var(--ds-autocomplete-border-color-hover, var(--_field-border-color-hover));
+  --_autocomplete-text-color: var(--ds-autocomplete-text-color, var(--_field-text-color));
+  --_autocomplete-placeholder-color: var(--ds-autocomplete-placeholder-color, var(--_field-placeholder-color));
 
   // The message gap is the field family's, so a form row of mixed field types keeps
   // one rhythm — input, textarea, select and date-picker all use --field-label-gap.
@@ -119,7 +124,7 @@
     &:empty { display: none; }
   }
 
-  &:hover:not(.disabled) { border-color: var(--border-strong); }
+  &:hover:not(.disabled) { border-color: var(--_autocomplete-border-color-hover); }
 
   @include focus.owns-the-focus-ring('.autocomplete-input');
   &:focus-within:not(.disabled) {
@@ -158,7 +163,7 @@
 
 .autocomplete-value {
   font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
-  color: var(--text-primary);
+  color: var(--_autocomplete-text-color);
 
   /* `min-width: 0` is the load-bearing half: a flex item refuses to shrink below
      its content, so the ellipsis never engages without it. */
@@ -189,7 +194,11 @@
 
   background: transparent;
   font: var(--font-weight-regular) var(--_autocomplete-input-font-size) / var(--line-height-flat) var(--font-sans);
-  color: var(--text-primary);
+  color: var(--_autocomplete-text-color);
+
+  &::placeholder {
+    color: var(--_autocomplete-placeholder-color);
+  }
 }
 
 .autocomplete-chevron {

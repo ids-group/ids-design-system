@@ -13,12 +13,18 @@
    Selected value — Single line, ellipsis when overflowing the control. */
 
 :host {
+  @include field-box.field-box-tokens;
+
   --_select-focus-shadow: var(--ds-select-focus-shadow, var(--ds-field-focus-shadow));
   --_select-focus-shadow-error: var(--ds-select-focus-shadow-error, var(--ds-field-focus-shadow-error));
   --_select-bg-color: var(--ds-select-bg-color, var(--surface-default));
-  --_select-border-color: var(--ds-select-border-color, var(--border-default));
-  --_select-text-color: var(--ds-select-text-color, var(--text-primary));
+  --_select-border-color: var(--ds-select-border-color, var(--_field-border-color));
+  --_select-text-color: var(--ds-select-text-color, var(--_field-text-color));
   --_select-radius: var(--ds-select-radius, var(--ds-radius-control));
+  --_select-border-color-hover: var(--ds-select-border-color-hover, var(--_field-border-color-hover));
+  --_select-border-color-focus: var(--ds-select-border-color-focus, var(--_field-border-color-focus));
+  --_select-placeholder-color: var(--ds-select-placeholder-color, var(--_field-placeholder-color));
+  --_select-font-size: var(--ds-select-font-size, var(--_field-font-size));
 
   // Flex column + gap so label→trigger→hint all sit the canonical --space-1-5
   // apart, matching input/textarea/autocomplete/date-picker.
@@ -60,7 +66,7 @@
 
   @include field-box.field-box-height(md);
 
-  font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
+  font: var(--font-weight-regular) var(--_select-font-size) / var(--line-height-base) var(--font-sans);
   color: var(--_select-text-color);
   text-align: left;
   cursor: pointer;
@@ -76,7 +82,7 @@
     @include text-clip.single-line-ellipsis;
 
     &.is-placeholder {
-      color: var(--text-tertiary);
+      color: var(--_select-placeholder-color);
     }
   }
 
@@ -98,18 +104,18 @@
   }
 
   &:hover:not(:disabled) {
-    border-color: var(--border-strong);
+    border-color: var(--_select-border-color-hover);
   }
 
   &:focus-visible {
     @include focus.own-indicator;
 
-    border-color: var(--accent);
+    border-color: var(--_select-border-color-focus);
     box-shadow: var(--_select-focus-shadow);
   }
 
   &.open {
-    border-color: var(--accent);
+    border-color: var(--_select-border-color-focus);
     box-shadow: var(--_select-focus-shadow);
 
     .chevron {
