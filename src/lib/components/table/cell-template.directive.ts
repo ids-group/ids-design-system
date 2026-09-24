@@ -1,30 +1,44 @@
 import { Directive, TemplateRef, inject, input } from '@angular/core';
 
+/** What a `dsCellTemplate` is handed: the row, as `$implicit` and again as `row`. */
+export interface CellTemplateContext<T = unknown> {
+  readonly $implicit: T;
+  readonly row: T;
+}
+
 /**
- * Projects a custom cell template into <ds-table> for a specific column.
+ * Projects a custom cell template into `<ds-table>` for one column.
  *
- * Usage:
- *   <ds-table [data]="rows" [columns]="cols">
- *     <ng-template dsCellTemplate="product" let-row>
- *       <div>{{ asRule(row).product }}</div>
- *     </ng-template>
- *   </ds-table>
+ * ```html
+ * <ds-table [data]="rows" [columns]="cols">
+ *   <ng-template dsCellTemplate="product" [dsCellTemplateOf]="rows" let-row>
+ *     {{ row.product }}
+ *   </ng-template>
+ * </ds-table>
+ * ```
  *
- * The template context type is `unknown` because Angular cannot propagate
- * the parent <ds-table>'s row type to projected templates. Consumers should
- * narrow the row with a typed helper method on the host component.
- *
- * Context shape:
- *   - $implicit: the row object (typed `unknown`)
- *   - row: alias for the row object (typed `unknown`)
+ * `[dsCellTemplateOf]` exists only to TYPE the template: bound to the same rows the
+ * table gets, it makes `let-row` a `T` under strict templates, so a typo in a field
+ * name is a compile error. Left off, `row` is `unknown` and a typed helper on the
+ * host narrows it, as before.
  */
 @Directive({
   selector: '[dsCellTemplate]',
   standalone: true,
 })
-export class CellTemplateDirective {
+export class CellTemplateDirective<T = unknown> {
   /** The `key` of the column this template replaces, matched against the table's
    *  `columns`. A key no column declares renders nothing and warns nowhere. */
   readonly dsCellTemplate = input.required<string>();
-  readonly template = inject(TemplateRef<{ $implicit: unknown; row: unknown }>);
+  /** The table's rows, bound to type `let-row`. Never read at runtime - the table
+   *  hands the row out itself. */
+  readonly dsCellTemplateOf = input<readonly T[] | null>(null);
+  readonly template = inject(TemplateRef<CellTemplateContext<T>>);
+
+  static ngTemplateContextGuard<T>(
+    _directive: CellTemplateDirective<T>,
+    _context: unknown,
+  ): _context is CellTemplateContext<T> {
+    return true;
+  }
 }

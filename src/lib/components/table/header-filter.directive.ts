@@ -34,9 +34,7 @@ export interface HeaderFilterContext {
  * criterion is set, though, so `active` is how the highlight gets told; without
  * it a custom filter renders but the header never marks itself filtered.
  *
- * The column is typed `unknown` for the same reason `dsCellTemplate`'s row is:
- * Angular cannot propagate the parent table's row type into a projected
- * template. Narrow it with a typed helper on the host.
+ * The column is typed `unknown`; narrow it with a typed helper on the host.
  */
 @Directive({
   selector: 'ng-template[dsHeaderFilter]',

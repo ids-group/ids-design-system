@@ -320,6 +320,7 @@ export {
   TableComponent,
 } from '@ids-group-ltd/ids-design-system/components/table';
 export type {
+  CellTemplateContext,
   HeaderFilterContext,
   SortChangeEvent,
   SortDirection,
