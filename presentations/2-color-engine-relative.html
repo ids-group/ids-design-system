@@ -91,10 +91,10 @@
   <section>
     <span class="tag bad">проблема сегодня</span>
     <h2>Два расцепленных представления одного «primary»</h2>
-    <pre><span class="c">/* _palette.scss — рампа генерится из ОДНОГО hue-канала --blue-h */</span>
+    <pre><span class="c">/* themes/_base-palette.scss:45-55 — рампа генерится из ОДНОГО hue-канала --blue-h */</span>
 --blue-h: 229;  --blue-600: hsl(<span class="k">var(--blue-h)</span> var(--blue-s) var(--blue-l));
 
-<span class="c">/* _theme.scss — но «primary» = ПИК рампы, а каналы — отдельный набор */</span>
+<span class="c">/* themes/_semantic.scss:89-91,107 — но «primary» = ПИК рампы, а каналы — отдельный набор */</span>
 --primary:    var(--blue-600);          <span class="c">// (a) читают заливки: checkbox, button…</span>
 --primary-h:  var(--blue-h);            <span class="c">// (b) читают halo/кольцо/серые/рампа</span>
 --focus-field: …hsl(<span class="k">var(--primary-h)</span> var(--primary-s) var(--primary-l) / .22);</pre>
@@ -173,11 +173,11 @@
 }</pre>
       </div>
     </div>
-    <p class="note" style="margin-top:14px">Когда компоненты выводят оттенки из одного токена, <code>--accent</code>-indirection становится тривиальной: зона/атрибут <code>ds-color</code> флипает один указатель, всё каскадит. Уходят обе оговорки того пункта (ramp-пики не пере-собираются из каналов; <code>:root</code>-композиты резолвятся в точке объявления).</p>
+    <p class="note" style="margin-top:14px">Когда компоненты выводят оттенки из одного токена, <code>--accent</code>-indirection уже тривиальна: зона/атрибут <code>ds-color</code> флипает один указатель, всё каскадит (<code>_ds-color.scss</code>, <code>cc8612a3</code>).</p>
   </section>
 
   <p class="foot">
-    Отслеживается в <code>docs/todo.md</code> → Architecture / tokens → «Single-source colour engine» (рядом с <code>ds-color</code>/<code>--accent-*</code>).
+    Отслеживается в <code>docs/todo.md</code> → «Single-source colour engine».
     Открытые вопросы там же: цвет-пространство math (oklab vs srgb), какие роли чисто-производные, edge-cases relative-color + <code>var()</code>, стык с forced-colors/dark.
   </p>
 
