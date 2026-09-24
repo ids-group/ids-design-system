@@ -4,6 +4,23 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## Chart legends take a hover state; pie pin badge, funnel tail and line markers fixed (2026-09-24)
+
+Every chart legend entry (`ds-chart-legend` and the pie legend) takes a hover and focus state through
+one `chart-interactive.legend-entry()` mixin: `--ds-chart-legend-hover-bg-color` (default
+`--surface-secondary`) and `--ds-chart-legend-hover-text-color` (default `--text-primary`), with the
+padding cancelled by an equal negative margin so no legend row moves (Stas: the entry itself must
+answer the pointer). A pie legend entry now fades the other slices without `dimOthers`, as the other
+legends already did; `dimOthers` still governs a pointer over the ring. The pie pin badge is an HTML
+span over the ring placed at the slice centre, replacing a `foreignObject` that the viewBox scaled
+1.8x and offset by 7 units. A funnel `shape="area"` stage too thin to clear the band gap keeps half a
+gap of depth about its middle instead of collapsing to a line (a value-0 stage stays a line). Line
+markers enter with their line and area through a CSS entrance on the mark. Measured 2026-09-24 in
+ds-docs: pin badge 39.6px and 7.2px off the slice centroid before, 22px with the glyph on the badge
+centre after; the 10-of-1010 funnel stage 0px tall before, 3.08px after; a hovered legend entry
+`rgb(241,244,249)` on `rgb(22,26,40)`, the other series at opacity 0.3; markers run the line's
+keyframes at 0.12s delay, 0.18s duration.
+
 ## `ds-modal-card` measures its actions row again when a label changes (2026-09-24)
 
 The row was measured on first render and when the header resized, so a button label that grew

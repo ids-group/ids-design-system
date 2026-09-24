@@ -241,14 +241,22 @@ export function stagePolygonPoints(
   const halfGap = Math.max(gapUnits, 0) / 2;
   const bandTop = clampFraction(geometry.top) * viewBoxHeight;
   const bandBottom = clampFraction(geometry.bottom) * viewBoxHeight;
+  const bandDepth = bandBottom - bandTop;
   let top = bandTop + halfGap;
   let bottom = bandBottom - halfGap;
-  if (bottom < top) {
-    // A band shallower than the gap it has to leave. Collapse it to a line
-    // instead of letting the edges cross and draw a bow tie.
-    const middle = (top + bottom) / 2;
-    top = middle;
-    bottom = middle;
+  if (bandDepth <= 0) {
+    top = bandTop;
+    bottom = bandTop;
+  } else if (bottom - top < halfGap) {
+    // A band shallower than the gap it has to leave, which is where a small tail stage of the area
+    // shape lands. It keeps half a gap of depth about its own middle so it stays a visible mark;
+    // the neighbours are inset by half a gap, so a quarter gap still separates them.
+    const middle = Math.min(
+      Math.max((bandTop + bandBottom) / 2, halfGap / 2),
+      viewBoxHeight - halfGap / 2,
+    );
+    top = middle - halfGap / 2;
+    bottom = middle + halfGap / 2;
   }
   const horizontalCentre = viewBoxWidth / 2;
   const topWidth = clampFraction(geometry.topWidth);
@@ -256,16 +264,14 @@ export function stagePolygonPoints(
   // The widths belong to the band's own boundaries, and the gap moves the drawn edges INSIDE them.
   // Drawing the boundary widths at the inset depths makes every band overhang the silhouette at its
   // top and fall short of it at its bottom, so the stack reads as a fir tree rather than a funnel.
-  // The silhouette is linear in depth for every shape, so the inset widths interpolate exactly.
-  const bandDepth = bandBottom - bandTop;
-  // Capped at half: past that the band has collapsed to a line, and an uncapped fraction would
-  // swap the two edges and draw the bow tie the collapse exists to prevent.
-  const inset =
-    bandDepth > 0 ? Math.min(Math.max(halfGap / bandDepth, 0), 0.5) : 0;
-  const widthAt = (fraction: number) =>
-    topWidth + (bottomWidth - topWidth) * fraction;
-  const halfTopWidth = (widthAt(inset) * viewBoxWidth) / 2;
-  const halfBottomWidth = (widthAt(1 - inset) * viewBoxWidth) / 2;
+  // The silhouette is linear in depth for every shape, so the drawn widths interpolate exactly.
+  const widthAt = (depth: number) =>
+    bandDepth > 0
+      ? topWidth +
+        (bottomWidth - topWidth) * clampFraction((depth - bandTop) / bandDepth)
+      : (topWidth + bottomWidth) / 2;
+  const halfTopWidth = (widthAt(top) * viewBoxWidth) / 2;
+  const halfBottomWidth = (widthAt(bottom) * viewBoxWidth) / 2;
 
   return [
     `${roundCoordinate(horizontalCentre - halfTopWidth)},${roundCoordinate(top)}`,

@@ -58,3 +58,36 @@
     cursor: pointer;
   }
 }
+
+// A legend entry's own hover state, shared by every chart legend. Keyboard focus inside the entry
+// takes the same state. The padding is paid back as a negative margin, so the tint grows around the
+// entry without moving a single legend row; the legend gaps are wider than the overhang.
+//
+// `$label` names the element to recolour when the label sets its own colour and would not inherit
+// the entry's.
+@mixin legend-entry($entry, $hover-bg-color, $hover-text-color, $label: null) {
+  #{$entry} {
+    margin: calc(-1 * var(--space-0-5)) calc(-1 * var(--space-1-5));
+    padding: var(--space-0-5) var(--space-1-5);
+    border-radius: var(--radius-sm);
+    transition:
+      background-color var(--ds-motion-chart-state-duration)
+        var(--ds-motion-chart-state-easing),
+      color var(--ds-motion-chart-state-duration)
+        var(--ds-motion-chart-state-easing);
+  }
+
+  #{$entry}:hover,
+  #{$entry}:focus-visible,
+  #{$entry}:has(:focus-visible) {
+    background-color: $hover-bg-color;
+
+    @if $label {
+      #{$label} {
+        color: $hover-text-color;
+      }
+    } @else {
+      color: $hover-text-color;
+    }
+  }
+}

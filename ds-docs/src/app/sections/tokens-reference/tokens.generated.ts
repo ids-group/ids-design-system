@@ -3401,6 +3401,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-chart-legend-swatch-size",
         "value": "var(--space-2-5)",
         "notes": "Diameter of the round colour chip in ds-chart-legend, on both axes (default --space-2-5). ds-line-chart feeds it from --ds-line-chart-swatch-size."
+      },
+      {
+        "name": "--ds-chart-legend-hover-bg-color",
+        "value": "var(--surface-secondary)",
+        "notes": "Tint behind a legend entry under the pointer or holding keyboard focus, in ds-chart-legend and the ds-pie-chart legend (default --surface-secondary)."
+      },
+      {
+        "name": "--ds-chart-legend-hover-text-color",
+        "value": "var(--text-primary)",
+        "notes": "Label colour of a hovered or focused legend entry, in ds-chart-legend and the ds-pie-chart legend (default --text-primary)."
       }
     ]
   },
