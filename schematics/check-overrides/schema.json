@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "$id": "IdsCheckOverrides",
+  "title": "IDS check-overrides Options",
+  "type": "object",
+  "properties": {
+    "strict": {
+      "type": "boolean",
+      "default": false,
+      "description": "Fail when anything is reported."
+    },
+    "path": {
+      "type": "string",
+      "default": "/",
+      "description": "Workspace folder to scan."
+    }
+  },
+  "required": []
+}

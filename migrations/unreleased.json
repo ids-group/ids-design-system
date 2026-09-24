@@ -228,7 +228,8 @@
     {
       "text": "A held (pinned) chart panel opens above its mark, like a hovered one, in ds-chart, ds-column-chart, ds-bar-chart, ds-pie-chart and ds-funnel-chart.",
       "verify": "Pin a column with pinOnClick: the panel sits above the column and the Unpin control below the plot."
-    }
+    },
+    "A read-only schematic, ng g @ids-group-ltd/ids-design-system:check-overrides, reports every --ds-* custom property a stylesheet sets that the installed version does not read, and every ds-* selector naming a class the component does not render. --strict makes it fail."
   ],
   "deleteList": [
     {
