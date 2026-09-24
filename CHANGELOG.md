@@ -1,5 +1,7 @@
 ## Unreleased
 
+## 0.14.1 — 2026-09-24
+
 ### Breaking
 
 - **`ds-chart`'s `cursor` gains `'auto'` and defaults to it.** The type is `'none' | 'category' | 'auto'`
