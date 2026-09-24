@@ -45,7 +45,7 @@
     {
       "id": "exported-class-members-grew",
       "kind": "behavior",
-      "old": "AccordionComponent, AccordionItemComponent, AlertComponent, BannerComponent, BarChartComponent, ChartComponent, ColumnSeriesComponent, LineSeriesComponent, ChartTooltipDirective",
+      "old": "AccordionComponent, AccordionItemComponent, AlertComponent, BannerComponent, BarChartComponent, ChartComponent, ColumnSeriesComponent, LineSeriesComponent, ChartTooltipDirective, PieChartComponent, AuthLayoutComponent",
       "new": null,
       "surface": "typescript",
       "action": "Build after upgrading, rename or mark `override` every member of yours the compiler reports as colliding, and delete an override whose base member is gone.",
@@ -62,6 +62,8 @@
         "extends ColumnSeriesComponent",
         "extends LineSeriesComponent",
         "extends ChartTooltipDirective",
+        "extends PieChartComponent",
+        "extends AuthLayoutComponent",
         "extends "
       ],
       "detect": [
@@ -82,10 +84,14 @@
         "extends LineSeriesComponent",
         "LineSeriesComponent",
         "extends ChartTooltipDirective",
-        "ChartTooltipDirective"
+        "ChartTooltipDirective",
+        "extends PieChartComponent",
+        "PieChartComponent",
+        "extends AuthLayoutComponent",
+        "AuthLayoutComponent"
       ],
       "verify": "The app builds with no TS2415 or TS2416 naming AccordionComponent, AccordionItemComponent, AlertComponent, BannerComponent, BarChartComponent, ChartComponent, ColumnSeriesComponent, LineSeriesComponent or ChartTooltipDirective (internal, via components/chart-tooltip), and no member of a subclass is named like a removed member listed in the note.",
-      "note": "AccordionComponent gained chevron; AccordionItemComponent gained chevronDown and chevronName; AlertComponent and BannerComponent each gained liveRole; BarChartComponent gained highlighted and isSegmentDimmed; ChartComponent gained composed, cursorResolved and tooltipPinned and lost tooltipPreferBelow; ColumnSeriesComponent gained axis and barElements and lost onMarkBlur; LineSeriesComponent lost onMarkerBlur; ChartTooltipDirective (internal, via components/chart-tooltip) lost dsChartTooltipPreferBelow. A redeclared member collides whether it is public, protected or private, and the compiler enumerates every collision."
+      "note": "AccordionComponent gained chevron; AccordionItemComponent gained chevronDown and chevronName; AlertComponent and BannerComponent each gained liveRole; BarChartComponent gained highlighted and isSegmentDimmed; ChartComponent gained composed, cursorResolved and tooltipPinned and lost tooltipPreferBelow; ColumnSeriesComponent gained axis and barElements and lost onMarkBlur; LineSeriesComponent lost onMarkerBlur; ChartTooltipDirective (internal, via components/chart-tooltip) lost dsChartTooltipPreferBelow. PieChartComponent gained legendHighlight, onLegendLeave and pinnedEntry; AuthLayoutComponent's landmark input defaults to 'main', which changes the declared type an override must match. A redeclared member collides whether it is public, protected or private, and the compiler enumerates every collision."
     },
     {
       "id": "chart-cursor-default-auto",
