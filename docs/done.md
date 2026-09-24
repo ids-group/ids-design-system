@@ -4,6 +4,31 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## ds-docs modifier classes become states; brand and domain examples keep, with fictional names (2026-09-24)
+
+Every `<base>--<mod>` class under `ds-docs/src` (112 in 32 `.scss`, 211 in 47 `.html`) is `<base>.is-<mod>`,
+and a stylelint override for `ds-docs/src/**/*.scss` rejects `--` in a class name (Stas: docs only); the
+library's `crumb--current` and avatar `status-dot--*` stay, being public. The brand and domain examples
+stay and every real name in them is fictional under one brand, Acme (Stas): the Tweaks brand-preview
+partial (`_preview-brand-acme.scss`, now a green/red remap), autocomplete demo data, the modal insurer,
+the avatar initials example (Bramley Rovers FC, also a wording fix in released `migrations/0.10.0.json`),
+and the consumer module vocabulary across about twenty sections. Measured 2026-09-24: no `--` modifier
+left in ds-docs (`.x--y` on stdin fails the new rule, `.x.is-y` passes); the brand grep over ds-docs,
+`src/lib`, the manifests and the agent docs returns nothing; under the Acme preview a primary button
+computes `#1B8A2E`, the page's `--green-600`.
+
+## Columns read the second axis; a bar-chart segment can be singled out (2026-09-24)
+
+`g[dsColumnSeries]` takes `axis: 'primary' | 'secondary'` (default `'primary'`): the series reports its
+domain to that axis and draws against it, as a line series' data already could, so a two-axis chart can
+put either mark on either side. `ds-bar-chart` takes `highlighted` (a segment id, or null): every other
+part in every row fades to `--ds-chart-dim-opacity` through the shared `chart-interactive.dims` mixin,
+independent of `dimOthers`; the never-shipped `--ds-chart-dimmed-opacity` twin is gone and both dim
+tokens are described. Measured 2026-09-24 in ds-docs: the secondary-axis columns top out at 0.48 of
+the plot against a 2 000 secondary axis (0.048 had they read the 20 000 primary); with "Tooling"
+highlighted 6 of 9 segments sit at opacity 0.3 and none with it cleared; the column and scatter legend
+hover now fade to the same 0.3.
+
 ## Release notes carry a why only where it is non-obvious; check-overrides ships; auth-layout defaults land (2026-09-24)
 
 `CONTRIBUTING.md` says what a CHANGELOG entry carries: what changed and what the reader does, with a

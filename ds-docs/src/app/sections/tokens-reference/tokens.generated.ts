@@ -983,7 +983,7 @@ export const CHARTS: readonly ColourRow[] = [
   {
     "name": "--chart-dim-opacity",
     "value": "0.3",
-    "notes": ""
+    "notes": "Opacity a chart mark drops to while another is singled out."
   },
   {
     "name": "--chart-hover-bg-color",
@@ -1273,7 +1273,7 @@ export const CHARTS: readonly ColourRow[] = [
   {
     "name": "--ds-chart-dim-opacity",
     "value": "var(--chart-dim-opacity)",
-    "notes": ""
+    "notes": "Opacity every chart mark that is not singled out drops to - under dimOthers while one is hovered or focused, and under a legend item or a highlighted series or segment. One value for every chart. Set this, not --chart-dim-opacity."
   },
   {
     "name": "--ds-chart-hover-bg-color",

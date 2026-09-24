@@ -14,9 +14,9 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**118 open — 0 P1, 14 P2, 104 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**113 open — 0 P1, 13 P2, 100 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
-### P2 — 14
+### P2 — 13
 
 - **Defects consumers work around today (swept 2026-09-23)**
   - A `ds-table` expanded row animates open and vanishes on close, so the reveal is one-sided (recorded 2026-09-24, from the mm-ecm consumer)
@@ -33,15 +33,13 @@ item and nothing else.
   - DOCS for A3: `@defer` needs the deep specifier — the one exception to «no consumer
 - **DS-docs**
   - Fourteen focusable elements in ds-docs still have no accessible name, on two components that always could
-- **Component feature gaps**
-  - `dsColumnSeries` cannot choose its value axis, so in a two-axis chart the column is pinned to the primary (recorded 2026-09-23, from the mm-ecm-platform microsite-analytics port)
 - **Tooling**
   - Publishing to npm stops working in January 2027 and the replacement is not chosen
   - Nothing catches a stale `presentations/ds.css`, and two gates read it as the truth
 - **Localization — every user-visible string is a hardcoded literal (recorded 2026-08-27, from the ITB Workspace picker report)**
   - Every user-visible string in the library is a hardcoded English literal — VALIDATED 2026-08-27 against 0.11.0; Stas: defer the whole thing, no code
 
-### P3 — 104
+### P3 — 100
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - The token reference says the portaled panel reads `--ds-time-picker-focus-shadow`
@@ -52,7 +50,6 @@ item and nothing else.
   - ds-docs renders a space before punctuation after any inline `<code>` (found 2026-09-01)
 - **What v0.13.3 added and the docs site never shows (measured 2026-09-22)**
   - `g[dsLineSeries]` demonstrates `stacked` and `tooltipAnchor` only on the preset
-  - `--ds-chart-dimmed-opacity` has an empty `notes` and a near-twin name
 - **Reported by Stas from the docs site, 2026-09-05**
   - The shimmer's viewport anchoring breaks inside a transformed ancestor
   - A pressed danger menu item shows its hover colour (recorded 2026-09-24)
@@ -63,7 +60,6 @@ item and nothing else.
 - **Asked by Stas**
   - `ds-waterfall-chart` is `ds-cascade-chart` (Stas, 2026-09-23)
 - **Hooks and APIs consumers reach past the surface for (swept 2026-09-23)**
-  - A `ds-bar-chart` segment cannot be marked as the selected part (from the mm-ecm-platform-kb consumer)
   - Charts take their number locale from the browser, with no setting (from the mm-ecm-platform-kb consumer)
 - **Tooling**
   - changelog-lint C001 does not scan ds-docs/src or docs/agent (recorded 2026-09-24)
@@ -96,8 +92,6 @@ item and nothing else.
 - **Tooling**
   - `tools/todo-index.mjs --check` is not in `lint:all`, so the index can still go stale between runs
   - Publishing to Claude Design cannot run from Bitbucket, and Stas wants the CI route looked at again (recorded 2026-09-02)
-  - Drop the brand and domain EXAMPLES from the published docs, not just their names (Stas, 2026-08-31)
-  - ds-docs still writes BEM MODIFIERS as `--suffix`, and a state should be its own class (Stas, 2026-08-26 — the `__` half is done and archived)
   - `fix:all` reformats HTML that eslint then fights, and it is `fix:all` alone — `lint:all` is green
   - Ten manifest-format practices the audit marked *Adopt*, and nobody has ratified any of them (filed 2026-08-27 out of deck `4-migration-manifest-audit`)
 - **The field system — the two controls outside it, and the five with no box to paint**
@@ -376,13 +370,6 @@ rather than never meeting it at all.
   composable path is the one a consumer reaches for after the preset stops fitting, so its inputs
   are the ones that need an example on the mark itself.
 
-- [ ] **[P3] `--ds-chart-dimmed-opacity` has an empty `notes` and a near-twin name.**
-  `column-series.component.scss:171` reads it with a 0.25 fallback, and `tokens.generated.ts:3277`
-  gives it no description. Five chart docblocks cite `--ds-chart-dim-opacity` at 0.3
-  (`bar-chart.component.ts:187`, `column-chart.component.ts:256`, `funnel-chart.component.ts:186`,
-  `line-chart.component.ts:154`, `pie-chart.component.ts:184`), so one idea carries two spellings
-  and two defaults. Decide whether they are one token, then write the note.
-
 Constraints and decisions that read as removable and are not.
 
 ## Reported by Stas from the docs site, 2026-09-05
@@ -479,25 +466,9 @@ Each has somebody behind it. Nothing here is speculative work.
   error: Angular renders nothing and logs nothing outside strict schema mode, so a missed one is a
   chart that silently vanished.
 
-## Component feature gaps
-
-*This section also has items under **Decisions**, **Parked**.*
-
-- [ ] **[P2] `dsColumnSeries` cannot choose its value axis, so in a two-axis chart the column is pinned to the primary (recorded 2026-09-23, from the mm-ecm-platform microsite-analytics port).** `LineSeriesData` carries `axis?: ChartAxis` - "Which value axis the readings are measured against. Defaults to `'primary'`" - while `ColumnSeriesPoint` is `id? / label / value / color? / fill?` and `ColumnSeriesComponent` declares 20 inputs - `data`, `tooltip`, `tooltipAnchor`, `valueFormat`, `offsets`, `seriesColor`, `seriesFill`, `seriesLabel`, `seriesKey`, `highlighted`, `showValues`, `interactive`, `pinOnClick`, `dimOthers`, `staggerMs`, `partOfWhole`, `tooltipLingerMs`, `columnWidthRatio`, `slot` and `slotCount` - and none of them is an axis. Measured 2026-09-23 against 0.13.4's `types/…-components-chart.d.ts` and against `src/lib/components/chart/column-series.component.ts` on `dev` at `5251473d`; `grep -rnE "readonly axis[A-Za-z]* = input" src/lib/components/chart/` returns only `axisGutter`, `axisColor` and `axisLabel`, all three on `ChartComponent` itself. So only the line can pick a side.
-  **What it cost the consumer:** a screen that read visits on the left axis and agent requests on the right could not be reproduced. Requests are the column, so they took the primary and visits moved to the secondary, and the two sides swapped against the screen being replaced. Both axes are labelled through `axisLabel` / `secondaryAxisLabel`, so nothing is ambiguous to a reader - but a port that was meant to preserve the reading could not.
-  **The shape that fits:** `axis` belongs on the DIRECTIVE, not on `ColumnSeriesPoint`. A column series is a flat list of points under one `seriesLabel`, so a per-point axis would be meaningless; `LineSeriesData` is a per-series object, which is why its own `axis` sits in the data. `<svg:g dsColumnSeries [axis]="'secondary'">` defaulting to `'primary'` mirrors what the line already offers, and leaves every existing chart unchanged.
-  **The workaround, for the record:** swap the mark types, visits as columns and requests as a line. That restores the sides at the price of changing what each series looks like, so it is a different trade rather than a fix.
-
-### Found while porting the design-sync React bindings (2026-07-28, re-verified 2026-09-01)
-
-Three defects the port surfaced by reading every component's template + SCSS against each other. All three still reproduce on `dev` at 0.11.1; line numbers below are that tree's.
-
 ## Hooks and APIs consumers reach past the surface for (swept 2026-09-23)
 
 Same sweep, the capabilities that are missing rather than wrong. Each workaround is still in the consumer tree and each gap is checked against `dev`.
-
-- [ ] **[P3] A `ds-bar-chart` segment cannot be marked as the selected part (from the mm-ecm-platform-kb consumer).** The consumer's segmentation breakdown filters the audience by one part, and moving it onto `segments` dropped the emphasis on that part (`mm-ecm-platform-kb/.claude/local/todo/ds-0.13.1-charts-and-reserve-messages.md:65-67`). The consumer's own legend now carries the selection. `BarChartSegment` (`bar-chart.types.ts:9-17`) has no state, `.segment` (`bar-chart.component.html:113-118`) gets no class, and `dimOthers` works per row only. The 2px seam between parts already ships (`bar-chart.component.scss:158-160`).
-  **Wanted:** a way to emphasise one segment, for example `selected?: boolean` on `BarChartSegment` or an `activeSegment` input by id. Unselected parts would dim the way `dimOthers` dims rows.
 
 - [ ] **[P3] Charts take their number locale from the browser, with no setting (from the mm-ecm-platform-kb consumer).** The consumer copies the whole default formatter into `provideDsConfig` just to pin `en-US`, including the compact-on-tick split (`app.config.ts:20-31`). `defaultChartFormat` calls `Intl.NumberFormat(undefined, ...)` (`charts-format.ts:30-44`). `formatPercent` uses `toFixed(1)` (`:47-60`), so on a de-DE machine one chart prints `13,5` beside `13.5%`. `datePicker.locale` exists in `ds-config.ts:174-175`, and `chart` (`:144-172`) has six fields - `dataTable`, `frame`, `tooltipLingerMs`, `emptyText`, `errorText`, `valueFormat` (`:171`) - and none of them is one.
   **Wanted:** `chart.locale` on `DS_CONFIG`, read by the default value formatter and by `formatPercent`. A consumer then pins one BCP-47 tag in place of a formatter.
@@ -509,7 +480,7 @@ Same sweep, the capabilities that are missing rather than wrong. Each workaround
 - [ ] **[P3] changelog-lint C001 does not scan ds-docs/src or docs/agent (recorded 2026-09-24).**
   The published-artefact check for client names reads styles, themes, `src/lib/**/*.ts` and migrations (its closing `by group` line),
   but not the docs site sources or the agent docs, both of which ship to readers outside the team.
-  Stas: extend it as its own item, after the fictional-brand sweep (task 59) lands.
+  Stas: extend it as its own item; the fictional-brand sweep it waited for landed (merge 8e6c9454), so it is actionable.
 
 - [ ] **[P3] The press feedback guard misses `.disabled` and `[aria-disabled]` (recorded 2026-09-24).**
   `src/lib/styles/_press.scss:22` excludes `:disabled`, `[disabled]` and `.is-disabled` only, so a component that disables through a
@@ -1061,7 +1032,7 @@ file** — the number moves; cite the filename.
 | 7 | `7-chart-sparkline-preset` | The sparkline preset's vertical scale: zero in the domain or the data's own range. | the spark-scale Decision, then task 39 |
 | 8 | `8-bar-column-contracts` | How far to converge the bar and the column: name the difference, converge the palette, or give the bar a series model. | the stacking-contract ask under *Two chart names that collide* |
 | 9 | `9-picker-list-height` | Which knob caps a picker's list: one cap, `panelClass`, or a new list token, all three drawn and measured. | the picker-cap Decision (task 53) |
-| 10 | `10-decision-queue` | Every consumer ask and every open question in one page - 9 asks in three groups, then 28 decisions in six, each drawn as today against after. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
+| 10 | `10-decision-queue` | Every consumer ask and every open question in one page - 7 asks in three groups, then 28 decisions in six, each drawn as today against after. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
@@ -1102,15 +1073,6 @@ its own inline styles. `presentations/README.md` holds the authoring contract an
   **What is worth checking next**, in the order that would settle it fastest: whether a `designOauth` refresh token can be minted with a long enough life and a narrow enough scope to sit in a CI variable; whether the design API exposes a non-interactive equivalent of `finalize_plan` (a pre-approved plan id, or a project-scoped write token); and whether an owner-level grant behaves differently, since `delete_files` already discriminates by ownership.
   **The fallback if none of that exists** is a local one-command publish — a script reading the grant from the profile's own credential store and posting the same three calls — which Stas declined for now in favour of another look at CI. Until then the publish runs from a session: the tree CI produced is byte-identical to what gets sent, so the manual step carries no judgement, only the approval click.
   **And one thing only the owner can finish:** 72 orphaned `_preview/*.js` sit in the live project from the previous showcase design. `delete_files` returns `403 permission_denied — bulk delete requires project ownership`, one path as readily as in bulk, so Misha has to remove them.
-
-- [ ] **[P3] Drop the brand and domain EXAMPLES from the published docs, not just their names (Stas, 2026-08-31).** The sweep genericised them; his instruction was to consider removing them outright. Exact locations:
-  - `src/lib/themes/README.md` — one brand mention left, the Option C code block (`@use './app/styles/brand-acme'`, `:117`); the "Brand vs theme" and "Rules summary" bullets already use `X`. The question is whether the rule ("a brand is an attribute-scoped overlay authored on a theme") needs a named brand in the example at all, or reads fine with `[data-brand="X"]` alone, which the rest of the file already uses.
-  - `design-system.md` §6 — five worked examples, now on orders/catalogue/warehouse: the sentence-case pair (`Order history` / `Order History`), and the three `ds-empty-state` table rows plus the sentence under it that quotes the `none` title back. These were one consumer's domain (logistics plans, asset register, producer roles) until this sweep. The empty-state table is the most useful thing in the section, so removing the examples means finding a way to show "the title states the situation" without a situation.
-  - `components.md` — the 9+3 grid line, now "a narrow picker or filter rail", previously named a consumer's two screens.
-
-- [ ] **[P3] ds-docs still writes BEM MODIFIERS as `--suffix`, and a state should be its own class (Stas, 2026-08-26 — the `__` half is done and archived).** `is-*` IS better here and that is the recorded preference: a modifier glued to the name with `--` reads as a different ELEMENT, while our convention says a variant of one thing is a STATE carried alongside it (`.stage.is-tbl`), which is also how a state reads in the DOM and how it composes with two states at once. Counted 2026-08-26: **11** element-plus-modifier forms flattened this pass and now spelled `state-cell-stage--tbl`, `cell-tag--do`, `cell-tag--dont`, `contract-row--no`, `demo-col--end`, `demo-group-btn--start/--mid/--end`, `halo-stage-well--inverted`, `state-stage--horiz`, `state-cell-stage--overflow`, plus a separate standalone set (`demo--centered`, `applied--stacked`, `demo-btn--ghost`, `demo-menu-item--error`, `btn--start/--mid/--end`, `cell--do/--dont`, `col--end`, …).
-  **Why it was split off rather than done in the same pass.** Removing `__` was a pure rename — 865 occurrences, zero semantic change, provable (589 classes used and 589 styled, identical before and after). Converting `--mod` to `is-mod` is NOT: it splits one class into two in the markup, which changes selector specificity from (0,1,0) to (0,2,0) wherever the SCSS is nested, and specificity is exactly what a docs section leans on when it pins a component's forced state. That wants its own pass with its own verification, not a rider on a mechanical one.
-  **Then extend the guard.** `selector-class-pattern` currently allows `-` freely, which is what lets `--` through; once the conversion lands, tighten it to reject a doubled hyphen in a class name so the notation cannot come back — the same shape as the two rules that now block `__` (`selector-class-pattern` plus `selector-nested-pattern`, because the first one alone does not see `&__x`).
 
 - [ ] **[P3] `fix:all` reformats HTML that eslint then fights, and it is `fix:all` alone — `lint:all` is green.** The two globs differ, which is the whole of it: `format` checks `{src,ds-docs/src,tools}/**/*.{ts,json,md}` and never looks at a template, so the gate passes; `format:fix` adds `html` to the same glob, so the repo's own fixer rewrites ~112 templates that `ds/template/element-content-newline` and `@angular-eslint/template/attributes-order` immediately want back. Measured again 2026-09-10 from both ends: `lint:all` exits 0 on a clean tree, and one `prettier --write` over three docs section files produced 63 eslint warnings, 23 of them attribute-order on the very attributes just added.
   **So the cost is not a red gate, it is a fixer nobody can run.** `fix:all` is the documented way to normalise a branch, and running it dirties every template it touches — which is how an unrelated file lands in a diff (it happened twice in this repo).

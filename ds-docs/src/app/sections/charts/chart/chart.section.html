@@ -70,12 +70,12 @@
     every mark through the shared scales. The default,
     <code class="t-mono-inline">
       cursor="auto"
-    </code>, turns it on for a plot of
-    two or more marks that show a tooltip, whose panel then names every mark's
-    reading at the category wherever in it the pointer is. A plot of one mark
-    stays off: its marks are themselves the hover targets and already answer per
-    mark, and two affordances on one plot read as two different questions. A
-    mark set to
+    </code>, turns it on for a plot
+    of two or more marks that show a tooltip, whose panel then names every
+    mark's reading at the category wherever in it the pointer is. A plot of one
+    mark stays off: its marks are themselves the hover targets and already
+    answer per mark, and two affordances on one plot read as two different
+    questions. A mark set to
     <code class="t-mono-inline">
       tooltip="axis"
     </code> reads that same category
@@ -128,8 +128,9 @@
     A mark declares which axis it is measured against -
     <code class="t-mono-inline">
       axis: 'secondary'
-    </code> on a line series'
-    data - and <code class="t-mono-inline"> secondaryAxisMode </code> decides
+    </code> in a line series'
+    data, <code class="t-mono-inline"> axis="secondary" </code> on a column
+    series - and <code class="t-mono-inline"> secondaryAxisMode </code> decides
     how that axis relates to the first.
     <code class="t-mono-inline">
       'aligned'
@@ -187,6 +188,31 @@
         [data]="basketSeries" />
     </ds-chart>
   </div>
+
+  <p class="block-desc t-s">
+    Either mark can take either side. Here the columns read the right-hand axis
+    and the line the left, which is the arrangement to keep when the screen
+    being replaced put them that way round.
+  </p>
+
+  <ds-chart
+    *docsLazy
+    cursor="category"
+    caption="columns on the second axis"
+    [categories]="orderMonths"
+    [axisColor]="lineAxisColor"
+    [secondaryAxisColor]="columnAxisColor"
+    [summary]="visitsSummary">
+    <svg:g
+      dsColumnSeries
+      axis="secondary"
+      [data]="orderColumns"
+      [showValues]="false" />
+
+    <svg:g
+      dsLineSeries
+      [data]="visitSeries" />
+  </ds-chart>
 
   <p class="block-desc t-s">
     The dressed version of the single-plot case - both marks answering the

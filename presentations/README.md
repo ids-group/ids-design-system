@@ -20,7 +20,7 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 | 7 | `7-chart-sparkline-preset` | the sparkline preset's vertical scale: zero in the domain or the data's own min..max, both drawn over five series at cell and tile size; the preset itself is decided as `variant="spark"` |
 | 8 | `8-bar-column-contracts` | how far the bar and the column converge - the consumer ask that found them diverging in palette and in where composition is declared |
 | 9 | `9-picker-list-height` | which knob caps a picker's list: the public `--ds-dropdown-panel-max-height` lowers the list but cannot raise it past the internal 280px `--picker-maxh`; all three options rendered and measured, one cap recommended |
-| 10 | `10-decision-queue` | every consumer ask and every open question in one page - 9 asks a consumer waits on, each drawn as today against after, then 28 decisions across six groups; the live indeterminate tracks are the case a text list could not put |
+| 10 | `10-decision-queue` | every consumer ask and every open question in one page - 7 asks a consumer waits on, each drawn as today against after, then 28 decisions across six groups; the live indeterminate tracks are the case a text list could not put |
 
 **Rank 1 is the way in, and ranks 2-4 are the two biggest lanes** — the colour engine, then the interaction formula that reads
 its ramp. Ranks 1-5 are written in Russian and share `deck.css`, which sits beside `ds.css` and
