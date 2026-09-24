@@ -412,7 +412,11 @@
     "Every field control has blur(), the counterpart of focus(): it drops focus from whichever descendant holds it. ds-search has the same pair.",
     "ds-textarea exposes selectionStart, selectionEnd, setSelectionRange(start, end, direction?) and select(), forwarded to its native textarea.",
     "dsCellTemplate is generic: [dsCellTemplateOf]=\"rows\" on the ng-template types let-row as the row type under strict templates and is never read at runtime; without it row stays unknown. CellTemplateContext<T> is exported.",
-    "ds-switch takes controlled: the switch cancels its own toggle and emits checkedRequested with the asked-for value, moving only when [checked] changes from outside. Off by default; nothing changes for an existing switch."
+    "ds-switch takes controlled: the switch cancels its own toggle and emits checkedRequested with the asked-for value, moving only when [checked] changes from outside. Off by default; nothing changes for an existing switch.",
+    {
+      "text": "ds-date-picker no longer lets its value or calendar button run past its own border in a container narrower than the value mask (a range picker under fullWidth was the common case): the field keeps its content width as a minimum and overflows the container with its border intact, instead of shrinking the border around a value that cannot clip. A picker whose container fits the mask renders as before.",
+      "verify": "Put a range ds-date-picker with fullWidth in a container narrower than its mask (about 200px): the calendar button sits inside the field border with the usual inner padding, and the whole field extends past the container edge; in a wider container the field fills it as before."
+    }
   ],
   "deleteList": [
     {
