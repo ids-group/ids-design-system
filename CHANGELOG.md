@@ -1,5 +1,13 @@
 ## Unreleased
 
+### Fixed
+
+- **`ds-modal` and `ds-modal-card` measure their actions row again when its content changes.** The
+  row was measured on first render and when the header resized, so a button label that grew after the
+  modal opened ('Saving…', a count) left the row on one line and clipped the first button at the
+  card's start edge. A changed label or a changed set of actions now stacks or unstacks the row the
+  same way the first render does.
+
 ## 0.14.0 — 2026-09-24
 
 ### Breaking
@@ -61,6 +69,13 @@
   the input, then `DS_CONFIG.pagination.layout`, then `'grouped'` - is `layoutResolved()`, which is
   new and public; `sizeResolved()` is public too.
 
+- **A `dsCellTemplate` that reads its row needs `[dsCellTemplateOf]` under strict templates.** The
+  directive declares a template context guard, so its context is `unknown` until
+  `[dsCellTemplateOf]` names the rows; a template reading `row.name` through a context that used to
+  be typed `any` fails with TS2571 or TS2345. Bind `[dsCellTemplateOf]` to the same expression as the
+  table's `[data]`. A template passed to `rowExpandTemplate` or `cellTemplateMap` carries no guard and
+  is unaffected.
+
 ### Added
 
 - **`dsLineSeries` takes an `outline`, on by default.** The line and its markers sit on a band of
@@ -102,8 +117,9 @@
 - **`dsCellTemplate` types its `let-row` from `[dsCellTemplateOf]`.** The directive is generic,
   `CellTemplateDirective<T = unknown>`, and `[dsCellTemplateOf]="rows"` - typing only, never read at
   runtime - types `let-row` as the row type under strict templates. The new exported type
-  `CellTemplateContext<T = unknown>` is `{ readonly $implicit: T; readonly row: T }`. The
-  `rowExpandTemplate` and `cellTemplateMap` contexts stay `unknown`.
+  `CellTemplateContext<T = unknown>` is `{ readonly $implicit: T; readonly row: T }`. A template
+  passed to `rowExpandTemplate` or `cellTemplateMap` carries no context guard, so its row stays
+  untyped (`any`).
 
 - **Every field control and `ds-search` gain `blur(): void`.** The counterpart of `focus()`: it
   drops focus from whichever descendant of the host holds it, leaving an open overlay panel alone.
@@ -251,11 +267,11 @@
 | --- | --- | --- |
 | `ds-table .expand-panel-cell { display: table-cell }`, or a `::ng-deep` rule of that shape | the expand cell is a table cell, so the rule restates the default - and while it held, it also switched the reveal animation off | nothing |
 | `[dsChartTooltip]="` and the `[dsChartTooltipOrigin]="` / `[dsChartTooltipPreferBelow]="` beside it, on any `g[dsColumnSeries]` or `g[dsLineSeries]` | `ds-chart` opens the panel its marks describe, so a binding on the mark opens a second one | nothing for the ordinary case; `[tooltipTemplate]` and `[tooltipExtraGap]` on `ds-chart` where the panel was customised |
-| a `ds-modal-card .actions` rule setting `flex-wrap: wrap` | the actions row stacks full-width on its own once it outgrows the card, so a wrap rule only fights it | nothing |
+| a `ds-modal-card .actions` rule setting `flex-wrap: wrap` | the actions row stacks full-width on its own once it outgrows the card on first render; keep the rule where a label or the set of actions changes after the modal opens | nothing |
 | a `.pagination.pagination` or `.pagination-button.pagination-button` rule under `ds-table` forcing the footer pager's width, layout or button height | the footer pager takes its size and layout as inputs | `paginationSize` / `paginationLayout` on `ds-table`, or `provideDsConfig({ pagination: { ... } })`; a height none of `sm`, `md` or `lg` gives stays |
 | `querySelector('input')?.blur()` reaching into a field control to drop focus | every field control has a public `blur()` | `blur()` on the field instance |
 | `querySelector("textarea")` reaching into `ds-textarea` for its selection | the textarea forwards the native selection API | `selectionStart` / `selectionEnd` / `setSelectionRange()` / `select()` on `ds-textarea` |
-| a `(row: unknown)` helper doing `return row as ` your row type for a cell template | `[dsCellTemplateOf]` types `let-row` | `[dsCellTemplateOf]="rows"` on the `dsCellTemplate`; keep a caster only for `rowExpandTemplate` or `cellTemplateMap` |
+| a `(row: unknown)` helper doing `return row as ` your row type for a cell template | `[dsCellTemplateOf]` types `let-row` | `[dsCellTemplateOf]="rows"` on the `dsCellTemplate`; a template passed to `rowExpandTemplate` or `cellTemplateMap` is untyped (`any`) and needs no caster |
 | a wrapper around `ds-switch` that calls `preventDefault()` and does `emit(!this.checked())` to gate a change | `ds-switch` cancels its own toggle under `controlled` and reports the request | `controlled` with `(checkedRequested)`, `[checked]` bound to the committed state |
 
 ## 0.13.4 — 2026-09-23
