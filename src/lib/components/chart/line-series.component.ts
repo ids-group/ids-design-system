@@ -240,9 +240,6 @@ export class LineSeriesComponent implements OnDestroy {
   }
 
   protected readonly plotted = computed(() => {
-    if (!(this.scales.measured?.() ?? true)) {
-      return [];
-    }
     const toX = this.scales.xPosition();
     const primaryY = this.scales.yPosition();
     const secondaryY = this.scales.secondaryYPosition();

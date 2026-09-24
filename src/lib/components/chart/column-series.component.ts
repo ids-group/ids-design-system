@@ -302,9 +302,6 @@ export class ColumnSeriesComponent implements OnDestroy {
   );
 
   protected readonly marks = computed(() => {
-    if (!(this.scales.measured?.() ?? true)) {
-      return [];
-    }
     const toX = this.scales.xPosition();
     const toY =
       this.axis() === 'secondary'
