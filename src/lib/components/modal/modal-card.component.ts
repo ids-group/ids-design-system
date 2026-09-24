@@ -77,16 +77,26 @@ export class ModalCardComponent {
       let frame = 0;
       // Deferred a frame: a layout change made inside a ResizeObserver callback is reported as an
       // observer loop by whatever else observes an ancestor.
-      const observer = new ResizeObserver(() => {
+      const remeasure = () => {
         cancelAnimationFrame(frame);
         frame = requestAnimationFrame(() => this.stackOverflowingActions());
-      });
+      };
+      const observer = new ResizeObserver(remeasure);
       // The header, not the actions row: the header's box does not move when the row stacks, so
       // the observer never reports this function's own output back to it.
       observer.observe(this.header().nativeElement);
+      // A label that changes after open leaves every box the ResizeObserver watches unchanged.
+      // Attributes stay unobserved, so toggling `stacked` never reports back here.
+      const contentObserver = new MutationObserver(remeasure);
+      contentObserver.observe(this.actionsRow().nativeElement, {
+        childList: true,
+        subtree: true,
+        characterData: true,
+      });
       onCleanup(() => {
         cancelAnimationFrame(frame);
         observer.disconnect();
+        contentObserver.disconnect();
       });
     });
   }
