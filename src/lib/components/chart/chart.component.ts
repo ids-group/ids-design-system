@@ -526,9 +526,8 @@ export class ChartComponent implements ChartScales {
         ).element;
   });
 
-  protected readonly tooltipPreferBelow = computed(
-    () =>
-      (this.activeTooltip()?.preferBelow?.() ?? false) || this.cursorPinned(),
+  protected readonly tooltipPinned = computed(
+    () => (this.activeTooltip()?.pinned?.() ?? false) || this.cursorPinned(),
   );
 
   /** Compared by value, which is what stops a mark that reports AND reads `yPosition()` in one

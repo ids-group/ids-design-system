@@ -208,7 +208,7 @@ export class ColumnSeriesComponent implements OnDestroy {
     this.scales.reportTooltip(this.domainId, {
       context: this.tooltipContext,
       origin: computed(() => this.activeMark.origin()),
-      preferBelow: computed(() => this.activeMark.pinned()),
+      pinned: this.activeMark.pinned,
       axisEntries: this.axisEntries,
     });
     listenForMarkFocus(

@@ -12,8 +12,8 @@ import type {
 export interface ChartTooltipSource {
   readonly context: Signal<ChartTooltipContext | null>;
   readonly origin: Signal<ChartTooltipOrigin | null>;
-  /** Flips the panel under the mark, for a held reading whose own value label sits above it. */
-  readonly preferBelow?: Signal<boolean>;
+  /** Whether the mark is held. A held panel takes the pointer, so its text can be selected. */
+  readonly pinned?: Signal<boolean>;
   /** What this mark reads at the category the cursor is on, whatever its own tooltip setting. A
    *  category panel names every series at that category, and a mark that answers per-mark still
    *  belongs in it. */
