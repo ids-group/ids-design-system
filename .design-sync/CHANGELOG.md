@@ -17,6 +17,8 @@ holds an entry; what the release bot commits afterwards needs none.
 
 ## Unreleased
 
+## 0.14.1 — 2026-09-24
+
 ### Upload
 
 - **The project holds the 0.14.0 tree: 1211 files, 458 cards.** The 588 files that changed since

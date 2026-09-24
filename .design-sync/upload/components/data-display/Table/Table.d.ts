@@ -40,9 +40,9 @@ export interface TableProps {
   onSortDirectionChange?: (value: ('asc' | 'desc' | null)) => void;
   /** Sort states a column cycles through on click. Default includes null (unsorted); pass ['asc','desc'] to forbid the unsorted state (e.g. server-paged lists). */
   sortingOrder?: ('asc' | 'desc' | null)[];
-  /** Wording for the sort announcement, so it can be translated. Receives the column's label and the new direction; return an empty string to say nothing. */
+  /** Wording for the sort announcement, so it can be translated. Receives the column's label and the new direction; return an empty string to say nothing. Unset falls back to `DS_INTL.table.sorted`. */
   sortAnnouncement?: unknown;
-  /** Wording for the row-range announcement, so it can be translated. Receives the 1-based first and last row on screen and the total; return an empty string to say nothing. */
+  /** Wording for the row-range announcement, so it can be translated. Receives the 1-based first and last row on screen and the total; return an empty string to say nothing. Unset falls back to `DS_INTL.pagination.range`. */
   rangeAnnouncement?: unknown;
   /** Number of shimmer rows rendered while `loading` is `'skeleton'`. */
   skeletonRows?: number;

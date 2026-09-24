@@ -15,8 +15,8 @@ export interface BadgeProps {
   count?: number | null;
   /** Count is capped at this value, shown as `"max+"` beyond it. */
   max?: number;
-  /** Noun used in the count's accessible label — set for non-notification counts (cart, results, …). */
-  countLabel?: string;
+  /** Noun used in the count's accessible label — set for non-notification counts (cart, results, …). Unset falls back to `DS_INTL.badge.noun`. */
+  countLabel?: string | null;
   /** Element content. */
   children?: React.ReactNode;
   className?: string;

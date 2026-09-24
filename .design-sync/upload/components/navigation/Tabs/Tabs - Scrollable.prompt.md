@@ -6,7 +6,7 @@ Dashboard panel.
 
 Projects panel.
 
-Resource allocation panel.
+Staff rota panel.
 
 Milestones panel.
 

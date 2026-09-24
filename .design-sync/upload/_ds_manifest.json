@@ -1354,7 +1354,7 @@
       "group": "navigation",
       "viewport": "1200x670",
       "name": "Auth layout - on a short screen the chrome compresses, not the card",
-      "subtitle": "A landscape phone leaves about 330px of viewport, and the furniture this layout puts around your card — block padding, the column gap, the letter-mark tile, the wordmark, the…"
+      "subtitle": "A landscape phone leaves about 330px of viewport, and the furniture this layout puts around your card — block padding, the column gap, the wordmark, the masthead's inner gap — used…"
     },
     {
       "path": "components/navigation/AuthLayout/Auth Layout - Why it centres with auto margins.html",
@@ -1675,6 +1675,12 @@
       "group": "data-display",
       "viewport": "1200x355",
       "name": "Accordion - single-open ( [multiple]='false' )"
+    },
+    {
+      "path": "components/data-display/Accordion/Accordion - Chevron down ( chevron= down ).html",
+      "group": "data-display",
+      "viewport": "1200x315",
+      "name": "Accordion - chevron down ( chevron='down' )"
     },
     {
       "path": "components/data-display/AccordionItem/Accordion Item - States showcase.html",
@@ -2182,6 +2188,13 @@
       "subtitle": "Project buttons into the actions named slot to attach follow-up CTAs."
     },
     {
+      "path": "components/feedback-status/Alert/Alert - Announcing.html",
+      "group": "feedback-status",
+      "viewport": "1200x273",
+      "name": "Alert - announcing",
+      "subtitle": "announce follows DS_CONFIG.alert.announce, then false, for the reason under ds-banner, and dev mode raises the same two warnings, prefixed [ds-alert]: an error or warning alert…"
+    },
+    {
       "path": "components/feedback-status/Badge/Badge - Lifecycle states showcase.html",
       "group": "feedback-status",
       "viewport": "1200x361",
@@ -2242,6 +2255,13 @@
       "viewport": "1200x540",
       "name": "Banner - accent rail",
       "subtitle": "[accentRail]='true' (default) renders a coloured rail on the left edge to amplify variant."
+    },
+    {
+      "path": "components/feedback-status/Banner/Banner - Announcing.html",
+      "group": "feedback-status",
+      "viewport": "1200x354",
+      "name": "Banner - announcing",
+      "subtitle": "announce is off unless bound on the element or set app-wide with provideDsConfig({ banner: { announce: true } }): an alert region fires on insertion, so page furniture would…"
     },
     {
       "path": "components/feedback-status/Bar/Bar - What the bar is.html",
@@ -2621,7 +2641,7 @@
       "group": "charts",
       "viewport": "1200x700",
       "name": "Chart container - two value axes",
-      "subtitle": "A mark declares which axis it is measured against - axis: 'secondary' on a line series' data - and secondaryAxisMode decides how that axis relates to the first."
+      "subtitle": "A mark declares which axis it is measured against - axis: 'secondary' in a line series' data, axis='secondary' on a column series - and secondaryAxisMode decides how that axis…"
     },
     {
       "path": "components/charts/Chart/Chart - Annotations.html",
@@ -2874,9 +2894,16 @@
     {
       "path": "guides/foundations/Charts & dataviz/Charts & dataviz - App-wide chart defaults.html",
       "group": "foundations",
-      "viewport": "1200x572",
+      "viewport": "1200x495",
       "name": "Charts & dataviz - app-wide chart defaults",
-      "subtitle": "Six things are the same decision for every chart in an app rather than a choice per plot, so they resolve through DS_CONFIG: valueFormat (a number reads one way in a product, and a…"
+      "subtitle": "Four things are the same decision for every chart in an app rather than a choice per plot, so they resolve through DS_CONFIG: valueFormat (a number reads one way in a product, and…"
+    },
+    {
+      "path": "guides/foundations/Charts & dataviz/Charts & dataviz - A page with dozens of charts.html",
+      "group": "foundations",
+      "viewport": "1200x630",
+      "name": "Charts & dataviz - a page with dozens of charts",
+      "subtitle": "Every chart draws the moment it is created, which is right for a screen with a few of them: nothing waits and nothing appears late."
     },
     {
       "path": "guides/foundations/Colour/Colour - Secondary role.html",
@@ -3209,6 +3236,13 @@
       "viewport": "1200x700",
       "name": "Theming & dark mode - app-level defaults — provideDsConfig",
       "subtitle": "Tokens answer “what does it look like”."
+    },
+    {
+      "path": "guides/foundations/Theming & dark mode/Theming & dark mode - Locale and wording.html",
+      "group": "foundations",
+      "viewport": "1200x696",
+      "name": "Theming & dark mode - locale and wording",
+      "subtitle": "Numbers and dates follow DsConfig.locale, then Angular's LOCALE_ID: chart values and percentages, the date picker, file sizes."
     },
     {
       "path": "guides/foundations/Theming & dark mode/Theming & dark mode - Worked example - a square brand.html",
@@ -9785,7 +9819,7 @@
     },
     {
       "name": "--chart-hatch-width",
-      "value": "3px",
+      "value": "1.5px",
       "kind": "spacing",
       "definedIn": "_ds_bundle.css"
     },

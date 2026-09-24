@@ -13,8 +13,8 @@ export interface TagProps {
   interactive?: boolean;
   /** Applies the active/selected visual state. */
   selected?: boolean;
-  /** Accessible label for the close button (e.g. "Remove Source filter"). */
-  closeLabel?: string;
+  /** Accessible label for the close button (e.g. "Remove Source filter"). Unset falls back to `DS_INTL.tag.remove`. */
+  closeLabel?: string | null;
   /** Fires when the close button is clicked. */
   onClosed?: (value: void) => void;
   /** Fires on click when `interactive` is true. */

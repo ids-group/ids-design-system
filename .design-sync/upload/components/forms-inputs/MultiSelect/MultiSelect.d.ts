@@ -28,10 +28,10 @@ export interface MultiSelectProps {
   onValueChange?: (value: string[]) => void;
   /** Options, groups, or both mixed — rendered in the order given. */
   options?: unknown;
-  /** Placeholder shown in the trigger when nothing is selected. */
-  placeholder?: string;
-  /** Placeholder for the in-panel filter input. */
-  searchPlaceholder?: string;
+  /** Placeholder shown in the trigger when nothing is selected. Unset falls back to `DS_INTL.picker.placeholder`. */
+  placeholder?: string | null;
+  /** Placeholder for the in-panel filter input. Unset falls back to `DS_INTL.picker.filterPlaceholder`. */
+  searchPlaceholder?: string | null;
   /** Whether the panel carries a filter row. `true` always, `false` never, and a NUMBER is a threshold — the row appears once there are at least that many options. Unset falls back to `DS_CONFIG.picker.searchable`, then `true`. Hiding it moves the panel's keyboard model onto the trigger: the arrows, Enter, Escape and `aria-activedescendant` are the filter input's today. */
   searchable?: boolean | number | null;
   /** Native `name` attribute forwarded to the trigger. */

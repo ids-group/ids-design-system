@@ -4,7 +4,7 @@ Line — primary navigation. Pills — compact filter row. Pills look like a ds-
 
 Project at a glance.
 
-Linked sub-records.
+Linked line items.
 
 Allocation matrix.
 

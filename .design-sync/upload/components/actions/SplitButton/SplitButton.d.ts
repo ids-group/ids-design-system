@@ -15,8 +15,8 @@ export interface SplitButtonProps {
   disabled?: boolean;
   /** Items listed in the dropdown menu. Empty disables the chevron. */
   menuItems?: unknown;
-  /** Accessible name for the dropdown trigger. */
-  menuLabel?: string;
+  /** Accessible name for the dropdown trigger. Unset falls back to `DS_INTL.splitButton.menuLabel`. */
+  menuLabel?: string | null;
   /** Fires when the main button (not the dropdown trigger) is clicked. */
   onPressed?: (value: MouseEvent) => void;
   /** The menu half only — a press on the main button is `pressed`, never this. */

@@ -40,8 +40,8 @@ export interface AutocompleteProps {
   width?: (('fill' | 'content'));
   /** What a settled single value does when it is wider than the trigger. Defaults to `ellipsis`; `wrap` lets the value break onto a second line and pushes the chevron down. Multi mode is unaffected — its chips have their own measured cap. */
   valueOverflow?: ('ellipsis' | 'wrap');
-  /** Placeholder shown in the input when empty. */
-  placeholder?: string;
+  /** Placeholder shown in the input when empty. Unset falls back to `DS_INTL.picker.placeholder`. */
+  placeholder?: string | null;
   /** Disables the trigger and blocks all interaction. */
   disabled?: boolean;
   /** Confirmation text, shown when there is no error or warning — and it paints the field's success border. A string like `warning`: the text IS the state. */
