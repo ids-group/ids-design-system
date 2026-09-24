@@ -5092,6 +5092,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Draws a dot at every reading. Off, the dots appear on hover and on focus only."
       },
       {
+        "name": "outline",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Lays the lines and their markers on a band of the surface colour. Off where the plot holds nothing for them to cross and the band only separates them from the gridlines."
+      },
+      {
         "name": "annotations",
         "kind": "input",
         "type": "readonly LineChartAnnotation[]",

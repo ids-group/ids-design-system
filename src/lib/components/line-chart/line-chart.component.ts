@@ -126,6 +126,10 @@ export class LineChartComponent {
   /** Draws a dot at every reading. Off, the dots appear on hover and on focus only. */
   readonly showMarkers = input(true, { transform: booleanAttribute });
 
+  /** Lays the lines and their markers on a band of the surface colour. Off where the plot holds
+   *  nothing for them to cross and the band only separates them from the gridlines. */
+  readonly outline = input(true, { transform: booleanAttribute });
+
   /** Labels pinned over their readings, for the points that have to read without a pointer. They
    *  are drawn, not announced: the data table already carries every reading, and repeating one in
    *  the plot makes a screen reader say it twice. */
