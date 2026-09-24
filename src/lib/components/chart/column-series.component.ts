@@ -16,7 +16,7 @@ import {
 import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
 import {
   CHART_SERIES_COLORS,
-  defaultChartFormat,
+  chartValueFormat,
   describeShare,
   listenForMarkFocus,
   markOf,
@@ -24,7 +24,11 @@ import {
   leaveMark,
   staggerDelay,
 } from '@ids-group-ltd/ids-design-system/components';
-import { ICONS } from '@ids-group-ltd/ids-design-system/core';
+import {
+  DS_INTL,
+  ICONS,
+  injectDsLocale,
+} from '@ids-group-ltd/ids-design-system/core';
 import type {
   ChartAxis,
   ChartValueFormat,
@@ -92,6 +96,8 @@ export class ColumnSeriesComponent implements OnDestroy {
   protected readonly leaveMark = leaveMark;
 
   private readonly scales = inject(CHART_SCALES);
+  private readonly locale = injectDsLocale();
+  protected readonly intl = inject(DS_INTL);
 
   /** Not `input.required`: the preset reads `tooltipContext()` from a binding on this same
    *  element, and a required input throws NG0950 for the pass before its own value is written. */
@@ -133,7 +139,9 @@ export class ColumnSeriesComponent implements OnDestroy {
 
   /** Formats every value this series prints. Called with `'tick'` for an axis label and
    *  `'tooltip'` everywhere a value is printed in full. */
-  readonly valueFormat = input<ChartValueFormat>(defaultChartFormat);
+  readonly valueFormat = input<ChartValueFormat>(
+    chartValueFormat(injectDsLocale()),
+  );
 
   /** The mark's share of its category's own slot, before the maximum width caps it. Measured off
    *  the slot rather than off `bandWidth()`, which has the container's own padding already taken
@@ -457,6 +465,8 @@ export class ColumnSeriesComponent implements OnDestroy {
             ? describeShare(
                 this.data().map((point) => point.value),
                 this.activeMark.index(),
+                this.locale,
+                (share) => this.intl().chart.shareOfTotal(share),
               )
             : undefined,
         },
