@@ -1,0 +1,186 @@
+{
+  "version": "unreleased",
+  "items": [
+    {
+      "id": "textarea-reads-input-font-size",
+      "kind": "behavior",
+      "old": "--ds-input-font-size",
+      "new": null,
+      "surface": "style",
+      "action": "None, unless you set --ds-input-font-size on an ancestor of a ds-textarea and want the textarea to keep 14px: set --ds-input-font-size: var(--font-size-s) on the ds-textarea.",
+      "appliesWhen": "Only a stylesheet that declares --ds-input-font-size somewhere a ds-textarea inherits from. A textarea under no such declaration keeps --font-size-s, and ds-input is unchanged.",
+      "pitfall": "Nothing errors: the textarea's text quietly takes the input's size, which on a form that pinned 14px reads as no change and on one that pinned 16px moves every textarea.",
+      "restore": "ds-textarea { --ds-input-font-size: var(--font-size-s); }",
+      "searchHints": [
+        "--ds-input-font-size",
+        "ds-textarea"
+      ],
+      "detect": [
+        "--ds-input-font-size"
+      ],
+      "verify": "A ds-textarea under --ds-input-font-size: 16px renders its text at 16px; one under no declaration renders at 14px.",
+      "note": "ds-textarea reads every other --ds-input-* token and hardcoded --font-size-s for its text, so the one size hook the pair shares stopped at the input. It now resolves --ds-input-font-size, falling back to --ds-field-font-size and then --font-size-s."
+    },
+    {
+      "id": "search-hover-border-follows-rest-border",
+      "kind": "behavior",
+      "old": "--ds-search-border-hover",
+      "new": null,
+      "surface": "style",
+      "action": "None, unless you set --ds-search-border and relied on the hovered field reverting to --border-default: set --ds-search-border-hover: var(--border-default) on the ds-search.",
+      "appliesWhen": "Only a stylesheet that sets --ds-search-border or --ds-field-border-color without --ds-search-border-hover. A ds-search under neither draws exactly what it drew.",
+      "pitfall": "No error and no console line: a search whose rest border you coloured now keeps that colour under the pointer instead of flashing grey.",
+      "restore": "ds-search { --ds-search-border-hover: var(--border-default); }",
+      "searchHints": [
+        "--ds-search-border",
+        "--ds-search-border-hover",
+        "ds-search"
+      ],
+      "detect": [
+        "--ds-search-border"
+      ],
+      "verify": "A ds-search under --ds-search-border: red keeps a red border while hovered; one under no declaration keeps --border-default at rest and on hover.",
+      "note": "The hover default was the literal --border-default, so a search with a retuned rest border reverted to grey under the pointer. It now defaults to the search's own resolved rest border, which is the same colour when nothing is set and the retuned one when something is."
+    },
+    {
+      "id": "exported-class-members-grew",
+      "kind": "behavior",
+      "old": "AccordionComponent, AccordionItemComponent",
+      "new": null,
+      "surface": "typescript",
+      "action": "Build after upgrading, and rename or mark `override` every member of yours the compiler reports as colliding.",
+      "appliesWhen": "Subclassing a DS component is unsupported, but consumers do it. Template users of the `<ds-accordion>` / `<ds-accordion-item>` elements need nothing.",
+      "pitfall": "`protected` is no protection: a redeclared protected member collides exactly as a public one does.",
+      "restore": null,
+      "searchHints": [
+        "extends AccordionComponent",
+        "extends AccordionItemComponent",
+        "extends "
+      ],
+      "detect": [
+        "extends AccordionComponent",
+        "AccordionComponent",
+        "extends AccordionItemComponent",
+        "AccordionItemComponent"
+      ],
+      "verify": "The app builds with no TS2415 or TS2416 naming AccordionComponent or AccordionItemComponent.",
+      "note": "AccordionComponent gained chevron; AccordionItemComponent gained chevronDown and chevronName. Subclassing a DS component is unsupported but consumers do it, and a redeclared member collides whether it is public or protected. The compiler enumerates every collision, so a build is the whole check and no list here could stay current."
+    }
+  ],
+  "informational": [
+    "ds-accordion takes chevron: 'right' (default, the chevron every item drew) or 'down', which draws a downward chevron that turns up when the item opens. ds-accordion-item takes --ds-accordion-header-padding, --ds-accordion-header-gap, --ds-accordion-header-font-family, --ds-accordion-header-font-size, --ds-accordion-header-font-weight, --ds-accordion-header-line-height, --ds-accordion-header-hover-text-color and --ds-accordion-body-padding. Every default is the value the item already drew. Purely additive - nothing to change (delete list: accordion-head-and-body-deep-rules).",
+    "Six family tokens sit under every text-entry field's own token: --ds-field-border-color, --ds-field-border-color-hover, --ds-field-border-color-focus, --ds-field-text-color, --ds-field-placeholder-color and --ds-field-font-size reach ds-input, ds-textarea, ds-select, ds-multi-select, ds-autocomplete and ds-search, and a per-component token such as --ds-input-border or --ds-select-text-color still wins where set. The date, time and colour pickers, the number stepper and the OTP cells are not in the family. Every default is the value each field already drew. Purely additive - nothing to change.",
+    "ds-select takes --ds-select-border-color-focus, read by the focused and the open trigger alike, plus --ds-select-border-color-hover, --ds-select-placeholder-color and --ds-select-font-size; ds-multi-select takes --ds-multi-select-border-color-hover, --ds-multi-select-placeholder-color and --ds-multi-select-font-size; ds-search takes --ds-search-font-size. Every default is the value the trigger already drew. Purely additive - nothing to change (delete list: select-focus-border-important).",
+    "ds-autocomplete takes --ds-autocomplete-text-color for the typed text and the picked value, --ds-autocomplete-placeholder-color for the filter input's placeholder, and --ds-autocomplete-border-color-hover. The placeholder now resolves --text-tertiary through the field family, as ds-input's does, where it was the browser's own grey before. Purely additive - nothing to change (delete list: autocomplete-input-deep-colour-rule).",
+    "ds-button takes --ds-button-border-color-hover and --ds-button-border-color-active, ds-icon-button takes --ds-icon-button-border-hover and --ds-icon-button-border-active. Hover defaults to the resting border and active to hover, so an unset pair draws exactly what the button drew. Purely additive - nothing to change (delete list: button-border-hover-deep-rules).",
+    "ds-empty-state takes --ds-empty-state-title-font-family (default --font-sans) and --ds-empty-state-title-font-weight (default --font-weight-bold) beside the size and colour hooks the title already had. Purely additive - nothing to change (delete list: empty-state-title-deep-rule).",
+    "ds-badge takes --ds-badge-font-size (default --font-size-xs; a count badge keeps --font-size-2xs until the token is set) and ds-page-header takes --ds-page-header-subtitle-font-size (default --font-size-s). Purely additive - nothing to change (delete list: badge-and-subtitle-size-deep-rules).",
+    "ds-banner takes --ds-banner-title-font-size beside --ds-banner-body-font-size (default --font-size-s, what the title drew). Purely additive - nothing to change (delete list: banner-compact-title-deep-rule).",
+    {
+      "text": "ds-table takes --ds-table-utility-column-width and --ds-table-utility-column-padding-x for the trailing column that carries the column picker and the row-actions button. The width default moves from --space-10 to --space-6, the buttons' own size; because cells are border-box and the column already sat at button-plus-padding, nothing moves unless --ds-table-cell-padding-x is below 8px, where the column narrows to that sum. Purely additive otherwise (delete list: table-actions-col-deep-rule).",
+      "verify": "A ds-table with dsTableColumns and no rowActions renders its trailing header cell at the same width as before the upgrade at default density (measured 56px at 16px cell padding); with --ds-table-utility-column-padding-x: 0 on the table the cell is 24px wide and the picker button fills it."
+    },
+    "ds-table takes --ds-table-footer-padding-y (default --space-3) with --ds-table-footer-padding-top and -bottom falling back to it, for the pagination footer's block padding; its inline sides already followed --ds-table-cell-padding-*. Purely additive - nothing to change (delete list: table-pagination-footer-padding-deep-rule)."
+  ],
+  "deleteList": [
+    {
+      "id": "accordion-head-and-body-deep-rules",
+      "surface": "style",
+      "find": [
+        ".head.head",
+        ".chev.chev",
+        ".body-content.body-content",
+        "ds-accordion-item .head",
+        "ds-accordion-item .body-content"
+      ],
+      "why": "The header's padding, gap, type and hover colour, the body padding and the chevron direction are tokens and an input, so a rule that doubles an internal class to out-specify the item restates one of them.",
+      "replaceWith": "--ds-accordion-header-padding, --ds-accordion-header-gap, --ds-accordion-header-font-* and --ds-accordion-header-hover-text-color on the item; --ds-accordion-body-padding for the body; chevron=\"down\" on the ds-accordion for a downward chevron"
+    },
+    {
+      "id": "select-focus-border-important",
+      "surface": "style",
+      "find": [
+        ".dropdown:focus-visible",
+        ".dropdown.open",
+        "ds-select .dropdown"
+      ],
+      "why": "The focused and the open trigger resolve --ds-select-border-color-focus, so a rule recolouring .dropdown:focus-visible or .dropdown.open, with or without !important, restates a token.",
+      "replaceWith": "--ds-select-border-color-focus on the ds-select, or --ds-field-border-color-focus for every field"
+    },
+    {
+      "id": "autocomplete-input-deep-colour-rule",
+      "surface": "style",
+      "find": [
+        ".autocomplete-input.autocomplete-input",
+        "ds-autocomplete .autocomplete-input"
+      ],
+      "why": "The filter input resolves its text colour from --ds-autocomplete-text-color and its placeholder from --ds-autocomplete-placeholder-color, so a doubled-class rule setting color or ::placeholder on it restates a token.",
+      "replaceWith": "--ds-autocomplete-text-color and --ds-autocomplete-placeholder-color on the ds-autocomplete, or --ds-field-text-color and --ds-field-placeholder-color for every field"
+    },
+    {
+      "id": "button-border-hover-deep-rules",
+      "surface": "style",
+      "find": [
+        "ds-button .button.v-outline:hover",
+        "ds-button .button:hover",
+        "ds-icon-button .icon-button:hover",
+        ".icon-button:hover"
+      ],
+      "why": "The hovered and pressed border colours are tokens that fall back to the resting border, so a rule reaching the inner button to recolour its edge on hover restates one.",
+      "replaceWith": "--ds-button-border-color-hover / -active on the ds-button, --ds-icon-button-border-hover / -active on the ds-icon-button"
+    },
+    {
+      "id": "empty-state-title-deep-rule",
+      "surface": "style",
+      "find": [
+        "ds-empty-state .title",
+        ".title.title"
+      ],
+      "why": "The title's face and weight are tokens beside its size and colour, so a doubled-class rule setting font-family or font-weight on it restates one.",
+      "replaceWith": "--ds-empty-state-title-font-family and --ds-empty-state-title-font-weight on the ds-empty-state"
+    },
+    {
+      "id": "badge-and-subtitle-size-deep-rules",
+      "surface": "style",
+      "find": [
+        "::ng-deep .badge",
+        "ds-badge .badge",
+        "ds-page-header .subtitle"
+      ],
+      "why": "The badge label size and the page-header subtitle size are tokens, so a deep rule or an !important on the internal class restates one.",
+      "replaceWith": "--ds-badge-font-size on the ds-badge (or its ancestor), --ds-page-header-subtitle-font-size on the ds-page-header"
+    },
+    {
+      "id": "banner-compact-title-deep-rule",
+      "surface": "style",
+      "find": [
+        "ds-banner .banner.compact .title",
+        ".banner.compact .title",
+        "ds-banner .title"
+      ],
+      "why": "The title size is a token beside the body's, so a descendant rule sizing .title restates it.",
+      "replaceWith": "--ds-banner-title-font-size on the ds-banner (ds-banner[compact] { --ds-banner-title-font-size: var(--font-size-xs); --ds-banner-body-font-size: var(--font-size-xs); } for a 12px strip)"
+    },
+    {
+      "id": "table-actions-col-deep-rule",
+      "surface": "style",
+      "find": [
+        "::ng-deep .actions-col",
+        "ds-table .actions-col",
+        ".actions-col"
+      ],
+      "why": "The utility column's width and horizontal padding are tokens, so a deep rule squeezing .actions-col restates them.",
+      "replaceWith": "--ds-table-utility-column-width and --ds-table-utility-column-padding-x on the ds-table"
+    },
+    {
+      "id": "table-pagination-footer-padding-deep-rule",
+      "surface": "style",
+      "find": [
+        ".pagination-footer.pagination-footer",
+        "ds-table .pagination-footer"
+      ],
+      "why": "The footer's top and bottom padding are tokens, so a doubled-class rule re-padding .pagination-footer restates one; the 0.13.1 row about its inline gutters still holds for a compact table that sets no --ds-table-cell-padding-*.",
+      "replaceWith": "--ds-table-footer-padding-top / -bottom (or -y) on the ds-table"
+    }
+  ]
+}
