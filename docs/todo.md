@@ -1034,7 +1034,7 @@ that already existed, because both are the kind of ask that comes back.
   `--ds-dropdown-panel-max-height` governs the rows too, by dropping the list's own
   `max-height: var(--picker-maxh)` so the flex column fills the panel; the panel default becomes
   `calc(var(--picker-maxh) + 40px)` (still 320px), and a select with no header rows shows up to 310px of
-  options instead of 280px (arithmetic from the CSS, not measured); (b) `panelClass` only, the token
+  options instead of 280px (measured 2026-09-24 on the docs ds-select "Region": 310.8px list, 9.71 rows against 8.75; a token of 480px moves nothing today and gives 14.71 rows under (a)); (b) `panelClass` only, the token
   stays internal; (c) a new `--ds-picker-list-max-height`. Every other portaled panel in the library
   is sized by a public host token and none by `panelClass`. Stas leans to (a), verdict later
   (2026-09-24).
@@ -1069,7 +1069,7 @@ file** — the number moves; cite the filename.
 | 6 | `6-warning-text-colour` | Which colour goes on the warning tint. Four candidates, each rendered in itself. | the warning pair under *Bugs* |
 | 7 | `7-chart-sparkline-preset` | The sparkline preset's vertical scale: zero in the domain or the data's own range. | the spark-scale Decision, then task 39 |
 | 8 | `8-bar-column-contracts` | How far to converge the bar and the column: name the difference, converge the palette, or give the bar a series model. | the stacking-contract ask under *Two chart names that collide* |
-| 9 | `9-picker-list-height` | Whether the picker list height becomes a public token or stays behind `panelClass`. | the closed `--picker-maxh` ask, same shape |
+| 9 | `9-picker-list-height` | Which knob caps a picker's list: one cap, `panelClass`, or a new list token, all three drawn and measured. | the picker-cap Decision (task 53) |
 | 10 | `10-decision-queue` | Every consumer ask and every open question in one page - 10 asks in three groups, then 30 decisions in six, each drawn as today against after. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
