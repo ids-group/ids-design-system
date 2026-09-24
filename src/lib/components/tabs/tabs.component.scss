@@ -118,6 +118,8 @@
         background-color: var(--_tab-close-bg-color-hover);
         color: var(--text-primary);
       }
+
+      &:active { background-color: var(--surface-muted); }
     }
 
     &:focus-visible {
