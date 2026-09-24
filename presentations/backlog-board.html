@@ -197,9 +197,9 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**114 open — 0 P1, 12 P2, 102 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**115 open — 0 P1, 13 P2, 102 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
-### P2 — 12
+### P2 — 13
 
 - **Defects consumers work around today (swept 2026-09-23)**
   - The stock control edge and `--secondary-on` fail contrast; the second breaks on any light brand secondary (from the ids-europe-landing consumer)
@@ -209,6 +209,7 @@ item and nothing else.
   - `--ds-multi-select-option-bg-color-active` is documented and dead
   - `ds-tag` marked `interactive` is mouse-only
 - **Manifest-shape defects the two-wave plugin review surfaced (2026-09-04)**
+  - Nothing classifies a tightened template context as actionable (recorded 2026-09-24, from the mm-ecm consumer's 0.13.4 -> 0.14.0 upgrade)
   - The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27 in a real browser, 4.42:1 against the 4.5:1 threshold
 - **Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)**
   - DOCS for A3: `@defer` needs the deep specifier — the one exception to «no consumer
@@ -492,6 +493,9 @@ and says nothing about the old one. Measured on three grounds: `presentations/fo
 ## Manifest-shape defects the two-wave plugin review surfaced (2026-09-04)
 
 *This section also has items under **Records**.*
+
+- [ ] **[P2] Nothing classifies a tightened template context as actionable (recorded 2026-09-24, from the mm-ecm consumer's 0.13.4 -> 0.14.0 upgrade).** 0.14.0 gave `CellTemplateDirective` a static `ngTemplateContextGuard` and a generic `T = unknown`, which turns every consumer `let-row` read from `any` into `unknown` under `strictTemplates`; the consumer's build failed with 194 + 6 errors (TS2571 / TS2345). `class-surface` did see it - `dsCellTemplateOf` and the guard were listed as grown members, so they landed in `exported-class-members-grew`, the subclass-collision item - and the prose went to `informational`. AUTHORING.md's widening rule covers a type that grows for its READERS; the reverse, a context that narrows from `any`, has no rule, and the manifest item was added after release (`0.14.0#cell-template-context-typed-unknown`).
+  **Wanted:** an AUTHORING.md rule that adding a context guard, or a generic parameter defaulting to `unknown`, to a directive a consumer's template reads is a `behavior` item on `surface: template` with the build error in `detect`; and a gate - `check-class-surface-entry` or `class-surface` - that fails when a new `ngTemplateContextGuard` appears on a class no draft item names.
 
 - [ ] **[P2] The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27 in a real browser, 4.42:1 against the 4.5:1 threshold.** `src/lib/styles/_status.scss:53` pairs `bg: var(--warning-subtitle)` with `text: var(--warning-text)`. Resolved in the default theme that is `#8A7400` on `#FFFBEA`, which computes to **4.42:1** by the WCAG relative-luminance formula — under AA for text below 18.66px/700. **It is the only status pair that fails:** error measures **5.92**, success **6.42** and primary **6.16** on their own subtitle backgrounds, so this is one colour out of step, not a palette-wide problem.
   **A darker step does not exist to reach for.** The yellow ramp ends at `--yellow-700` (`#8A7400`), which is what `--warning-text` already resolves to (`themes/_semantic.scss:175`). Closing this needs either a new `--yellow-800`, or a different foreground on the warning tint.
@@ -1993,6 +1997,28 @@ _Closed 2026-08-07 from a consumer report: `ds-autocomplete` had no chip cap, so
 Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirrors the live backlog (`todo.md`); deep gap analysis stays in `docs/superpowers/ds-gap-analysis.md`.
 
 ---
+
+## `ds-modal-card` measures its actions row again when a label changes (2026-09-24)
+
+The row was measured on first render and when the header resized, so a button label that grew
+after the modal opened left every observed box unchanged: the row stayed a single line and the
+first button ran past the card's start edge (mm-ecm, "Unsaved changes" sm modal on 0.14.0: first
+button at 11-461 inside a card at 460-940). A `MutationObserver` on the actions row (child list,
+subtree, character data, no attributes) schedules the same frame-deferred measurement, so the
+`stacked` toggle never reports back to it. Measured 2026-09-24 on the docs modal page, sm card
+"Cancel / Deactivate" at 700-1180: lengthening "Cancel" after render stacked the row with both
+buttons inside at 720-1160, restoring the label unstacked it, and each change produced exactly one
+measurement (2 then 1 class mutations over 2 s).
+
+## 0.14.0's manifest carries the typed cell-template context as an item (2026-09-24)
+
+`CellTemplateDirective` became generic with a template context guard in 0.14.0, so a
+`dsCellTemplate` without `[dsCellTemplateOf]` types its row as `unknown` where 0.13.4 typed it
+`any`. The manifest filed that as `informational`, and a consumer upgrading 0.13.4 -> 0.14.0 got
+194 build errors in 8 templates of one app and 6 in another (TS2571 / TS2345, measured 2026-09-24).
+`0.14.0.json` now carries `cell-template-context-typed-unknown` (behavior, surface template, with
+the build errors in `detect`) in place of the informational line, and it cites the existing
+`table-row-caster-helpers` delete row.
 
 ## Ten consumer styling hooks, one token shape (2026-09-24)
 
