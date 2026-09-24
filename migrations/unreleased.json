@@ -301,7 +301,8 @@
     {
       "text": "A held (pinned) chart panel opens above its mark, like a hovered one, in ds-chart, ds-column-chart, ds-bar-chart, ds-pie-chart and ds-funnel-chart.",
       "verify": "Pin a column with pinOnClick: the panel sits above the column and the Unpin control below the plot."
-    }
+    },
+    "Neutral rows and small buttons that had a hover fill and no pressed state now darken one step on press, to --surface-muted: the sidenav group header and caret, the sidenav footer's rows, more button, search results and alerts, the date picker's period trigger, nav buttons, month and year cells and presets, the time picker's option cells and action buttons, the toast action, the description-list copy button, the multi-select select-all row and the tab close button. An interactive ds-tag, which already hovers at --surface-muted, takes the shared press dip instead."
   ],
   "deleteList": [
     {

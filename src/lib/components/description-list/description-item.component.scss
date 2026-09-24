@@ -81,6 +81,8 @@
     color: var(--text-primary);
   }
 
+  &:active { background: var(--surface-muted); }
+
   &:focus-visible {
     opacity: 1;
 

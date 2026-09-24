@@ -43,6 +43,7 @@
     color var(--duration-fast) var(--ease-standard);
 
   &:hover { background: var(--surface-secondary); }
+  &:active { background: var(--surface-muted); }
 
   &:focus-visible {
     @include focus.ring;
@@ -81,6 +82,7 @@
   cursor: pointer;
 
   &:hover { background: var(--surface-secondary); }
+  &:active { background: var(--surface-muted); }
 
   &:focus-visible {
     @include focus.ring;

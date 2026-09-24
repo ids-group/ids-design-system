@@ -300,6 +300,8 @@
       background-color: var(--_date-picker-day-hover-bg-color);
     }
 
+    &:active { background-color: var(--surface-muted); }
+
     &:focus-visible {
       @include focus.ring;
     }
@@ -340,6 +342,7 @@
       &:hover:not(:disabled) {
         background-color: var(--_date-picker-day-hover-bg-color);
       }
+      &:active:not(:disabled) { background-color: var(--surface-muted); }
       &:disabled {
         opacity: var(--opacity-disabled);
         cursor: not-allowed;
@@ -373,6 +376,8 @@
       background-color: var(--_date-picker-day-hover-bg-color);
     }
 
+    &:active:not(.selected) { background-color: var(--surface-muted); }
+
     &:focus-visible {
       @include focus.ring;
     }
@@ -404,6 +409,8 @@
       &:hover {
         background-color: var(--_date-picker-day-hover-bg-color);
       }
+
+      &:active { background-color: var(--surface-muted); }
     }
   }
 
@@ -481,6 +488,8 @@
     &:hover:not(:disabled) {
       background-color: var(--_date-picker-day-hover-bg-color);
     }
+
+    &:active:not(:disabled) { background-color: var(--surface-muted); }
 
     &:focus-visible {
       @include focus.ring;
