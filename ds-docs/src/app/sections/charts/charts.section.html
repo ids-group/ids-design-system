@@ -7,7 +7,9 @@
     Horizontal bars: each row draws its value as a share of the longest row.
   </span>
 
-  <h3 class="block-title t-h4">Default</h3>
+  <h3 class="block-title t-h4">
+    Default
+  </h3>
 
   <p class="block-desc t-s">
     Rows keep the order you pass them — the chart never sorts. Track length is a
@@ -23,12 +25,18 @@
 
   <docs-chart-data-editor [(rows)]="specimenRows" />
 
-  <h3 class="block-title t-h4">Floating bars</h3>
+  <h3 class="block-title t-h4">
+    Floating bars
+  </h3>
 
   <p class="block-desc t-s">
     A row's
-    <code class="t-mono-inline"> value </code> can be a
-    <code class="t-mono-inline"> [low, high] </code> pair instead of one number,
+    <code class="t-mono-inline">
+      value
+    </code> can be a
+    <code class="t-mono-inline">
+      [low, high]
+    </code> pair instead of one number,
     and the bar then spans between its own two ends rather than from zero. It is
     what compares a duration and its PLACEMENT at once - a phase, a shift, a
     min-to-max - which a bar from zero cannot do. The ends may be written either
@@ -41,12 +49,18 @@
     dataTable="none"
     [data]="rangeRows()" />
 
-  <h3 class="block-title t-h4">Target and bands</h3>
+  <h3 class="block-title t-h4">
+    Target and bands
+  </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline"> target </code> draws a tick across the bar at
+    <code class="t-mono-inline">
+      target
+    </code> draws a tick across the bar at
     one reading - a goal, a budget, last period - and
-    <code class="t-mono-inline"> ranges </code> paints qualitative bands behind
+    <code class="t-mono-inline">
+      ranges
+    </code> paints qualitative bands behind
     it, given as their upper bounds. Together they are the bullet chart, which
     is a bar with two extras rather than a chart type of its own. The bands take
     one neutral hue at rising opacity: a band is a backdrop and the bar is the
@@ -59,11 +73,15 @@
     dataTable="none"
     [data]="bulletRows()" />
 
-  <h3 class="block-title t-h4">Row colour</h3>
+  <h3 class="block-title t-h4">
+    Row colour
+  </h3>
 
   <p class="block-desc t-s">
     Every row takes the same single-series colour; a row that sets
-    <code class="t-mono-inline"> color </code> opts out.
+    <code class="t-mono-inline">
+      color
+    </code> opts out.
   </p>
 
   <ds-bar-chart
@@ -73,11 +91,15 @@
 
   <docs-chart-data-editor [(rows)]="customColorRows" />
 
-  <h3 class="block-title t-h4">Segmented rows</h3>
+  <h3 class="block-title t-h4">
+    Segmented rows
+  </h3>
 
   <p class="block-desc t-s">
     A row that carries
-    <code class="t-mono-inline"> segments </code> divides its bar into parts, so
+    <code class="t-mono-inline">
+      segments
+    </code> divides its bar into parts, so
     the bar still says how the row compares with the rest of the chart and the
     parts say what it is made of — how one department spends its budget, on a
     bar whose length is still that department's share of the largest. The parts
@@ -88,7 +110,9 @@
     colour is unused. Each part reaches the data table as its own row under the
     one it belongs to. The parts carry no text of their own, so draw a key
     beside the chart from the same
-    <code class="t-mono-inline"> --ds-chart-series-N-color </code> values, in
+    <code class="t-mono-inline">
+      --ds-chart-series-N-color
+    </code> values, in
     the order the segments are passed.
   </p>
 
@@ -115,11 +139,17 @@
     </div>
   </div>
 
-  <h3 class="block-title t-h4">Singling out a segment</h3>
+  <h3 class="block-title t-h4">
+    Singling out a segment
+  </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline"> highlighted </code> names one segment by its
-    <code class="t-mono-inline"> id </code> and every other part, in every row,
+    <code class="t-mono-inline">
+      highlighted
+    </code> names one segment by its
+    <code class="t-mono-inline">
+      id
+    </code> and every other part, in every row,
     steps back to <code class="t-mono-inline"> --ds-chart-dim-opacity </code> -
     the same input and the same fade the series marks use, so a breakdown
     filtered by one part can show which part it is. It says nothing to a screen
@@ -149,12 +179,16 @@
     [data]="segmentRows()"
     [highlighted]="singledOutSegment()" />
 
-  <h3 class="block-title t-h4">A second reading per row</h3>
+  <h3 class="block-title t-h4">
+    A second reading per row
+  </h3>
 
   <p class="block-desc t-s">
     A row often encodes a ratio and the bar can only draw one of its two
     numbers.
-    <code class="t-mono-inline"> detail </code> prints the other under the
+    <code class="t-mono-inline">
+      detail
+    </code> prints the other under the
     label, in the row's own words — it is already formatted, because the row
     knows what its second number means and the chart does not. It reaches the
     data table as well.
@@ -166,14 +200,20 @@
     dataTable="visible"
     [data]="detailRows()" />
 
-  <h3 class="block-title t-h4">Share of the total</h3>
+  <h3 class="block-title t-h4">
+    Share of the total
+  </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline"> partOfWhole </code> says the rows add up to
+    <code class="t-mono-inline">
+      partOfWhole
+    </code> says the rows add up to
     something a reader can name — a budget, a headcount, a quarter's revenue.
     Only then does the chart state each row's share of that total, on the
     tooltip's second line and as a
-    <code class="t-mono-inline"> Share of total </code> column in the data
+    <code class="t-mono-inline">
+      Share of total
+    </code> column in the data
     table. It is off by default because rows that are a funnel or a time series
     sum to a number nobody can point at, and a percentage of that is arithmetic
     dressed as a fact. Note that the percentage printed beside each row is a
@@ -189,10 +229,14 @@
 
   <docs-chart-data-editor [(rows)]="shareRows" />
 
-  <h3 class="block-title t-h4">Pinning a reading</h3>
+  <h3 class="block-title t-h4">
+    Pinning a reading
+  </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline"> pinOnClick </code> holds the clicked row and
+    <code class="t-mono-inline">
+      pinOnClick
+    </code> holds the clicked row and
     its tooltip in place, so the reading is still on screen after the pointer
     has gone. A pin glyph marks which row is held, and a Reset appears in the
     corner beside it. <kbd> Esc </kbd> releases it too, and so does clicking the
@@ -209,16 +253,24 @@
 
   <docs-chart-data-editor [(rows)]="pinRows" />
 
-  <h3 class="block-title t-h4">Percent beside the value</h3>
+  <h3 class="block-title t-h4">
+    Percent beside the value
+  </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline"> showPercent </code> is on by default and prints
+    <code class="t-mono-inline">
+      showPercent
+    </code> is on by default and prints
     each row's share of the LARGEST row beside its value — a quick read of how
     the rows compare to the biggest one. Turn it off where the rows are too
     narrow to hold a second figure, or where it would be confused with
-    <code class="t-mono-inline"> partOfWhole </code>, which is a share of the
+    <code class="t-mono-inline">
+      partOfWhole
+    </code>, which is a share of the
     sum rather than of the maximum. A row can also carry its own
-    <code class="t-mono-inline"> percent </code>, which is printed instead of
+    <code class="t-mono-inline">
+      percent
+    </code>, which is printed instead of
     the computed one.
   </p>
 
@@ -229,7 +281,9 @@
         dataTable="none"
         [data]="percentRows()" />
 
-      <div class="state-cell-label">showPercent = true (default)</div>
+      <div class="state-cell-label">
+        showPercent = true (default)
+      </div>
     </div>
 
     <div class="state-cell">
@@ -239,16 +293,24 @@
         [showPercent]="false"
         [data]="percentRows()" />
 
-      <div class="state-cell-label">showPercent = false</div>
+      <div class="state-cell-label">
+        showPercent = false
+      </div>
     </div>
   </div>
 
-  <h3 class="block-title t-h4">Interaction</h3>
+  <h3 class="block-title t-h4">
+    Interaction
+  </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline"> interactive </code> turns on the pointer cursor
+    <code class="t-mono-inline">
+      interactive
+    </code> turns on the pointer cursor
     and the hover tint, and makes each row a tab stop.
-    <code class="t-mono-inline"> rowClicked </code> fires whether or not the
+    <code class="t-mono-inline">
+      rowClicked
+    </code> fires whether or not the
     flag is set. <code class="t-mono-inline">dimOthers</code> fades the rows
     that are not under the pointer — off by default, because the fade costs the
     separation BETWEEN the faded rows.
@@ -267,10 +329,14 @@
     Last clicked: <code class="t-mono-inline">{{ lastRow() || '—' }}</code>
   </p>
 
-  <h3 class="block-title t-h4">Stagger</h3>
+  <h3 class="block-title t-h4">
+    Stagger
+  </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline"> staggerMs </code> spaces the rows' arrivals out
+    <code class="t-mono-inline">
+      staggerMs
+    </code> spaces the rows' arrivals out
     rather than growing them all at once. <code class="t-mono-inline">0</code>,
     the default, means no stagger.
   </p>
@@ -283,10 +349,14 @@
 
   <docs-replay-button />
 
-  <h3 class="block-title t-h4">Data table</h3>
+  <h3 class="block-title t-h4">
+    Data table
+  </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline"> toggle </code>, the default, leaves the
+    <code class="t-mono-inline">
+      toggle
+    </code>, the default, leaves the
     disclosure closed; <code class="t-mono-inline">visible</code> renders it
     open; <code class="t-mono-inline">none</code> leaves it out.
   </p>
@@ -301,9 +371,13 @@
 
   <details class="edge-cases">
     <summary>
-      <h3 class="block-title t-h4">Edge cases</h3>
+      <h3 class="block-title t-h4">
+        Edge cases
+      </h3>
 
-      <span class="chapter-toggle"> Show </span>
+      <span class="chapter-toggle">
+        Show
+      </span>
     </summary>
 
     <p class="block-desc t-s">
@@ -319,7 +393,9 @@
           dataTable="none"
           [data]="emptyRows()" />
 
-        <div class="state-cell-label">Empty</div>
+        <div class="state-cell-label">
+          Empty
+        </div>
 
         <docs-chart-data-editor [(rows)]="emptyRows" />
       </div>
@@ -331,7 +407,9 @@
           loading
           [data]="loadingRows()" />
 
-        <div class="state-cell-label">Loading</div>
+        <div class="state-cell-label">
+          Loading
+        </div>
 
         <docs-chart-data-editor [(rows)]="loadingRows" />
       </div>
@@ -342,7 +420,9 @@
           dataTable="none"
           [data]="oneRow()" />
 
-        <div class="state-cell-label">One row</div>
+        <div class="state-cell-label">
+          One row
+        </div>
 
         <docs-chart-data-editor [(rows)]="oneRow" />
       </div>
@@ -353,7 +433,9 @@
           dataTable="none"
           [data]="allZerosRows()" />
 
-        <div class="state-cell-label">All zeros</div>
+        <div class="state-cell-label">
+          All zeros
+        </div>
 
         <docs-chart-data-editor [(rows)]="allZerosRows" />
       </div>
@@ -364,7 +446,9 @@
           dataTable="none"
           [data]="negativeRows()" />
 
-        <div class="state-cell-label">Negative value</div>
+        <div class="state-cell-label">
+          Negative value
+        </div>
 
         <docs-chart-data-editor [(rows)]="negativeRows" />
       </div>
@@ -375,7 +459,9 @@
           dataTable="none"
           [data]="hugeOutlierRows()" />
 
-        <div class="state-cell-label">Huge outlier</div>
+        <div class="state-cell-label">
+          Huge outlier
+        </div>
 
         <docs-chart-data-editor [(rows)]="hugeOutlierRows" />
       </div>
@@ -386,7 +472,9 @@
           dataTable="none"
           [data]="longLabelRows()" />
 
-        <div class="state-cell-label">Long label</div>
+        <div class="state-cell-label">
+          Long label
+        </div>
 
         <docs-chart-data-editor [(rows)]="longLabelRows" />
       </div>
@@ -397,7 +485,9 @@
           dataTable="none"
           [data]="nineDigitValueRows()" />
 
-        <div class="state-cell-label">Nine-digit value</div>
+        <div class="state-cell-label">
+          Nine-digit value
+        </div>
 
         <docs-chart-data-editor [(rows)]="nineDigitValueRows" />
       </div>
@@ -410,7 +500,9 @@
           [data]="maxBelowDataRows()"
           [max]="200" />
 
-        <div class="state-cell-label">Max below the data</div>
+        <div class="state-cell-label">
+          Max below the data
+        </div>
 
         <docs-chart-data-editor [(rows)]="maxBelowDataRows" />
       </div>
@@ -422,7 +514,9 @@
           error
           [data]="specimenRows()" />
 
-        <div class="state-cell-label">Error</div>
+        <div class="state-cell-label">
+          Error
+        </div>
       </div>
     </div>
   </details>
