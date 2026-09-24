@@ -1,5 +1,261 @@
 ## Unreleased
 
+### Breaking
+
+- **`ds-chart` opens the tooltip its marks describe, and a mark no longer takes one.** A mark
+  reported its context and every consumer bound `dsChartTooltip` on the mark themselves; a plot
+  holding two marks could open two panels, and a plot whose consumer forgot the binding opened
+  none. Marks now offer the container a tooltip source the way they already report a domain, and
+  the container draws the single panel.
+
+  Drop `[dsChartTooltip]`, `[dsChartTooltipOrigin]`, `[dsChartTooltipPreferBelow]` and
+  `[dsChartTooltipTemplate]` from `g[dsColumnSeries]` and `g[dsLineSeries]`. What replaces them:
+  nothing for the ordinary case, `[tooltipTemplate]` on `<ds-chart>` for a custom panel body, and
+  `[tooltipExtraGap]` there for a chart that prints value labels in the gap the panel wants.
+
+- **The chart tooltip pane is inert unless the reading is pinned.** The pane is drawn over the plot
+  it describes, so on a funnel or a tight category axis it covered the neighbouring marks and the
+  mark underneath never saw the pointer - the panel named a segment the reader had already left.
+  A pinned pane takes the pointer again, so its text can still be selected. A rule of yours on
+  `.cdk-overlay-pane.ds-chart-tooltip-pane` that assumed `pointer-events: auto` needs
+  `.is-pinned` added to it.
+
+- **Subclassing one of these breaks on a name collision.** `ChartComponent`,
+  `ColumnSeriesComponent`, `LineSeriesComponent`, `ColumnChartComponent`, `ScatterChartComponent`,
+  `ChartDataTableComponent`, `BarChartComponent`, `FunnelChartComponent` and `PieChartComponent`
+  each gained members, most of them while the container took over the tooltip, and so did
+  `ChartTooltipDirective`, which is internal but reachable through
+  `@ids-group-ltd/ids-design-system/components/chart-tooltip`. Outside the charts,
+  `ModalCardComponent`, `PaginationComponent`, `SearchComponent`, `SwitchComponent`,
+  `TableComponent`, `TextareaComponent`, `LineChartComponent` and `CellTemplateDirective` gained
+  members too, and so did
+  every field control: each extends one of the internal base classes `DsControlValueAccessor` or
+  `DsBooleanControlValueAccessor`, which gained `blur`. Declaring a member of the same name in a
+  subclass is a compile error - TS4114, or TS2416 where the signature differs - so rename yours or
+  add `override`. Protected members went too: the roving-focus pair on the bar, pie and funnel
+  charts and the column series, the per-mark event handlers of the column and line series, and the
+  plot's pointer handlers. A method of yours named like one of those, declared without `override`,
+  still compiles and is never called again, so delete it. Subclassing a DS component is unsupported
+  either way.
+
+- **`ChartScales` requires two tooltip methods.** `reportTooltip(id, source)` and
+  `releaseTooltip(id)` are required members now that the container draws the single tooltip panel.
+  `<ds-chart>` implements both; a container of your own that implements `ChartScales` by hand does
+  not compile until you add them. The type of `source` is not exported - a hand-written container
+  forwards what its marks report without naming it.
+
+- **Five tokens take their property's name.** `--ds-input-label-fw` is
+  `--ds-input-label-font-weight`, `--ds-tag-fw` is `--ds-tag-font-weight`, `--ds-tag-lh` is
+  `--ds-tag-line-height`, and `--ds-slider-thumb-bw` is `--ds-slider-thumb-border-width`. The
+  theme-level `--slider-thumb-bw` in `styles/_tokens.scss` is `--slider-thumb-border-width`; the
+  slider's own token falls back to it, then to `--border-width-strong`. An unknown custom property is
+  not an error, so a declaration left on an old name is inert and the element draws at its fallback
+  with no warning.
+
+- **`ds-pagination`'s `layout` input is `PaginationLayout | null` and defaults to `null`.** It was
+  `PaginationLayout` with a `'grouped'` default. Writing the attribute in a template is unchanged,
+  but code that reads `layout()` back through a `viewChild` now sees `null` on a pager that was never
+  given one, and a subclass overriding `layout` must widen its type to match. The effective value -
+  the input, then `DS_CONFIG.pagination.layout`, then `'grouped'` - is `layoutResolved()`, which is
+  new and public; `sizeResolved()` is public too.
+
+### Added
+
+- **`dsLineSeries` takes an `outline`, on by default.** The line and its markers sit on a band of
+  the surface colour, so they stay legible where they cross columns. Set `[outline]="false"` for a
+  line on an empty plot where the band only separates it from the gridlines. `ds-line-chart` takes
+  the same `outline` input and passes it to its series.
+
+- **`dsColumnSeries` takes `seriesKey` and `highlighted`.** Naming a series in the legend fades the
+  others to `--ds-chart-dim-opacity`, which `ds-column-chart` now wires for you.
+
+- **`ChartScales` carries an optional `measured` signal**, true once the plot has its real width.
+  A mark of your own can wait for it before building geometry the first measurement would replace.
+  A container of your own that implements `ChartScales` may leave it out, and a mark reads it as
+  always measured then.
+
+- **`ds-bar` reads `--ds-bar-radius` on the track and the fill.** It defaults to
+  `var(--radius-pill)`, the shape both hard-coded before, so a bar can now be squared.
+
+- **`ds-line-chart` sizes its loading and empty states from `--ds-line-chart-placeholder-height`.**
+  It sizes the loading skeleton and the empty and error box. Unset, the skeleton falls back to the
+  plot height and the message box to the view height, as before. Since 0.13.4
+  `--ds-line-chart-plot-height` also sizes the plot, so a value you set only to size the placeholder
+  states resizes every plot - move it to the new token.
+
+- **`ds-pagination` takes `loading`.** A boolean attribute, default false: it sets
+  `aria-busy="true"` on the `<nav>`, replaces the "N of M" range label with an inline skeleton so a
+  stale total is never quoted, and disables Prev, Next, every page button and the rows-per-page
+  select. The current page button keeps its colour while disabled.
+
+- **`DS_CONFIG` takes `pagination`.** `pagination?: { size?: DsSize; layout?: PaginationLayout }`
+  sets the default size and layout of every pager, `ds-table`'s footer included. A pager resolves
+  `size` from its input, then `DS_CONFIG.pagination.size`, then `DS_CONFIG.control.size`, then
+  `'sm'`; `layout` from its input, then `DS_CONFIG.pagination.layout`, then `'grouped'`.
+
+- **`ds-table` takes `paginationSize` and `paginationLayout`.** Both default to `null`
+  (`DsSize | null` and `PaginationLayout | null`) and are forwarded to the footer pager's `size` and
+  `layout`, resolved through the same chain as a standalone pager.
+
+- **`dsCellTemplate` types its `let-row` from `[dsCellTemplateOf]`.** The directive is generic,
+  `CellTemplateDirective<T = unknown>`, and `[dsCellTemplateOf]="rows"` - typing only, never read at
+  runtime - types `let-row` as the row type under strict templates. The new exported type
+  `CellTemplateContext<T = unknown>` is `{ readonly $implicit: T; readonly row: T }`. The
+  `rowExpandTemplate` and `cellTemplateMap` contexts stay `unknown`.
+
+- **Every field control and `ds-search` gain `blur(): void`.** The counterpart of `focus()`: it
+  drops focus from whichever descendant of the host holds it, leaving an open overlay panel alone.
+
+- **`ds-textarea` exposes the native selection API.** `selectionStart` and `selectionEnd` (0 before
+  the view exists), `setSelectionRange(start, end, direction?: 'forward' | 'backward' | 'none')`,
+  which does not move focus, and `select()`, each forwarded to the native textarea. A value written
+  through `value` reaches the element a microtask later and drops the caret to the end, so after
+  `value.set(...)` set the range from a `setTimeout`, not synchronously.
+
+- **`ds-switch` takes `controlled` and emits `checkedRequested`.** `controlled` is a boolean
+  attribute, default false; `checkedRequested` is a `boolean` output carrying the value the user
+  asked for. Under `controlled` a click or Space is cancelled on the native toggle,
+  `checkedRequested` emits `!checked()`, and the switch moves only when `[checked]` changes. Because
+  the toggle is cancelled, a two-way `checked`, an `ngModel` or a form control is not updated by the
+  gesture - the host commits the value through `[checked]`. Without `controlled` nothing changes.
+
+- **`PaginationLayout` is exported from `@ids-group-ltd/ids-design-system/core`** as well as from
+  `@ids-group-ltd/ids-design-system/components/pagination` and the package root.
+
+- **`ds-modal` and `ds-modal-card` read `--ds-modal-actions-stacked-direction`.** Default
+  `column`, which stacks the actions in DOM order with the confirming action at the bottom;
+  `column-reverse` puts it on top. It has no effect while the actions row fits on one line.
+
+### Changed
+
+- **Modal actions stack full-width when they outgrow the card.** When the `[actions]` row is wider
+  than the card, `.actions` gains `.stacked` and every projected action becomes full-width in a
+  column, in DOM order - cancel then confirm, matching Tab order. A row that fits stays a
+  right-aligned single line. The row used to overflow past the card's start edge and clip the first
+  button.
+
+- **`ds-table`'s footer pager is disabled while the table shows skeleton rows.** Whenever the
+  table draws skeletons - `loading="skeleton"`, or `loading` on a table with no rows yet - the pager
+  gets `loading`, so its controls are disabled and `aria-busy` while the placeholder rows show. The
+  overlay mode leaves the pager alone.
+
+- **`ds-scatter-chart` fades the other series while a legend entry is hovered**, to
+  `--ds-chart-dim-opacity`, as the other charts with a legend do.
+
+- **Under a category cursor, a line chart's active marker grows for the whole category band**, not
+  only while the pointer is on the 4px dot, and the panel anchors above the tallest reading at the
+  category rather than whichever mark reported first.
+
+- **The chart tooltip fades out when the pointer leaves the plot** instead of vanishing, and its
+  colour dot is larger, with a surface-coloured ring; a hatched dot's stripes run at 45deg.
+
+- **A category panel names every series at the category.** `tooltip="axis"` was documented to do
+  this and listed only the series that opened it, because a mark could not see the others. Marks
+  now offer the container what they read at the cursor's category and the container merges them,
+  so a column and a line sharing a plot appear in one panel.
+
+- **Legend hover fades the other series whether or not `dimOthers` is set.** That input governs
+  what a pointer over a MARK does; naming a series in the legend is the reader asking for that one
+  directly. On `dsLineSeries` this is the `highlighted` input, so a `[highlighted]` binding of yours
+  now fades the other lines without `dimOthers`, where before it only thickened the named one.
+
+- **The unpin control sits below the plot.** The panel it undoes opens above the held mark, so a
+  control at the top was the one thing that panel covered.
+
+- **A chart's data table is built the first time it is opened.** A closed disclosure carried the
+  whole table in the DOM; it now holds only its summary until the reader opens it, and keeps the
+  table from then on. `dataTable="visible"` is unaffected. The browser's find-in-page no longer
+  reaches the numbers of a table nobody has opened.
+
+- **A mark's entrance is a CSS animation declared on the mark, and the `mark-enter` class is
+  gone.** The entrance plays when the mark is inserted - on first render and for a mark a data
+  change adds - exactly as before. A rule of yours that restyled the entrance through
+  `.mark-enter` targets the mark itself instead.
+
+### Fixed
+
+- **A stacked mark answers the pointer over its own segment.** Each series carried a hit box
+  spanning the whole category slot, so stacked they lay on top of one another and only the series
+  drawn last ever answered - every segment reported the top one.
+
+- **A tooltip anchored to a zero-value mark stays with its reading.** Such a mark is degenerate in
+  one axis - a column loses its height, a bar its width - and the overlay took the viewport corner
+  or the plot's left edge instead of the category.
+
+- **The bar chart's tooltip points at the drawn value, not the track.** A floating bar put its
+  panel a full track width from the reading it describes.
+
+- **A segmented bar's tooltip names its segments.** It repeated the row label the pointer was
+  already on; the row now heads the panel and each segment gets a line with its share.
+
+- **A hatched mark's tooltip dot carries the same break its mark does**, so the panel and the plot
+  encode the distinction the same way and neither relies on hue alone.
+
+- **The pinned-mark badge clears the column's top edge**, instead of sitting flush against it and
+  reading as part of the bar.
+
+- **The column panel names a column whose header is visually empty.** A column declared with an
+  empty `label` and a `screenReaderLabel` - an actions column, say - was listed in the
+  `dsTableColumns` panel as a bare checkbox with no text, so nothing said which column it stood
+  for. The row now reads the `screenReaderLabel`, which also gives the checkbox its accessible
+  name.
+
+- **A chart that enters hundreds of marks at once no longer freezes the page.** Every entering or
+  leaving mark asked the browser for its running animations, and in Chrome that call slows down with each
+  animation already running, so a scatter of a thousand points held the main thread for seconds -
+  longer still on a page with other charts entering. Under zone.js a `ds-chart` also ran two extra
+  change-detection passes of the whole application after its first render, a column or line series
+  built its geometry at a stand-in width before the real one arrived, every point, marker and column
+  carried up to eight event listeners of its own, and the default number format built a new
+  formatter for every label.
+
+- **`ds-date-picker` keeps its border around its value in a container narrower than the mask.**
+  The value cannot clip, so the field shrank its border around it and the value and the calendar
+  button ran past the border - a range picker under `fullWidth` was the common case. The field now
+  keeps its content width as a minimum and overflows the container with its border intact. A
+  container that fits the mask renders as before.
+
+- **A chart with an axis title reserves a band for it.** The widest tick label no longer runs
+  through the rotated title, and the secondary axis title gets its own band, so both titles stand the
+  same distance from their ticks.
+
+- **Axis labels are measured again when their text changes.** The value gutter and the rotation and
+  thinning of category labels were decided on the first render alone, so a chart that started out
+  loading or empty, or whose categories or ticks changed later, kept overlapping labels.
+
+- **A skeleton pauses its shimmer while it is off screen, and moves it twenty times a second.** The
+  wave is main-thread work on every update, on screen or not. Off screen it now stops, and resumes
+  where it stopped, so a placeholder that has been scrolled away can come back out of step with its
+  neighbours. On screen it advances in 68 steps over the default 3400ms instead of once per display
+  frame; a step is about one level of lightness. A `--ds-skeleton-wave-duration` of yours changes
+  the step rate with it, since the step count is fixed.
+
+- **Reduced motion stops the skeleton shimmer.** The opt-out rule lost to the component's own
+  animation, and the wave kept running for readers who asked for less motion.
+
+- **A chart destroyed while a reading was pinned no longer leaves a key listener on the document.**
+
+- **An expanded `ds-table` row's panel spans every column.** The panel's `<td>` carried
+  `display: grid` for its reveal, and a cell whose display is not `table-cell` leaves the table
+  layout, so its `colspan` was ignored and the panel rendered one column wide - as narrow as its
+  first word. The grid and the `ds-table-expand` animation sit on `.expand-panel-inner`, and the
+  projected template is wrapped in `.expand-panel-content`, the track the reveal clips. A rule of
+  yours that reached your template's root through `.expand-panel-inner >` selects
+  `.expand-panel-content` now; `.expand-panel-cell > .expand-panel-inner` is unchanged.
+
+### What you can now DELETE
+
+| Delete | Why | Replace with |
+| --- | --- | --- |
+| `ds-table .expand-panel-cell { display: table-cell }`, or a `::ng-deep` rule of that shape | the expand cell is a table cell, so the rule restates the default - and while it held, it also switched the reveal animation off | nothing |
+| `[dsChartTooltip]="` and the `[dsChartTooltipOrigin]="` / `[dsChartTooltipPreferBelow]="` beside it, on any `g[dsColumnSeries]` or `g[dsLineSeries]` | `ds-chart` opens the panel its marks describe, so a binding on the mark opens a second one | nothing for the ordinary case; `[tooltipTemplate]` and `[tooltipExtraGap]` on `ds-chart` where the panel was customised |
+| a `ds-modal-card .actions` rule setting `flex-wrap: wrap` | the actions row stacks full-width on its own once it outgrows the card, so a wrap rule only fights it | nothing |
+| a `.pagination.pagination` or `.pagination-button.pagination-button` rule under `ds-table` forcing the footer pager's width, layout or button height | the footer pager takes its size and layout as inputs | `paginationSize` / `paginationLayout` on `ds-table`, or `provideDsConfig({ pagination: { ... } })`; a height none of `sm`, `md` or `lg` gives stays |
+| `querySelector('input')?.blur()` reaching into a field control to drop focus | every field control has a public `blur()` | `blur()` on the field instance |
+| `querySelector("textarea")` reaching into `ds-textarea` for its selection | the textarea forwards the native selection API | `selectionStart` / `selectionEnd` / `setSelectionRange()` / `select()` on `ds-textarea` |
+| a `(row: unknown)` helper doing `return row as ` your row type for a cell template | `[dsCellTemplateOf]` types `let-row` | `[dsCellTemplateOf]="rows"` on the `dsCellTemplate`; keep a caster only for `rowExpandTemplate` or `cellTemplateMap` |
+| a wrapper around `ds-switch` that calls `preventDefault()` and does `emit(!this.checked())` to gate a change | `ds-switch` cancels its own toggle under `controlled` and reports the request | `controlled` with `(checkedRequested)`, `[checked]` bound to the committed state |
+
 ## 0.13.4 — 2026-09-23
 
 ### Breaking

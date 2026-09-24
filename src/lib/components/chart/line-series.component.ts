@@ -19,10 +19,12 @@ import {
   areaPath,
   defaultChartFormat,
   focusMark,
+  markOf,
   bandPath,
   lineSegments,
   nextRovingIndex,
   linePath,
+  leaveMark,
   staggerDelay,
 } from '@ids-group-ltd/ids-design-system/components';
 import type { LinePoint } from '@ids-group-ltd/ids-design-system/components';
@@ -36,6 +38,7 @@ import { chartActiveMark } from '@ids-group-ltd/ids-design-system/components/cha
 import type {
   ChartTooltipTrigger,
   ChartTooltipContext,
+  ChartTooltipEntry,
   ChartTooltipOrigin,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import { CHART_SCALES } from './chart-scales.token';
@@ -81,6 +84,8 @@ let nextSeriesId = 0;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LineSeriesComponent implements OnDestroy {
+  protected readonly leaveMark = leaveMark;
+
   private readonly scales = inject(CHART_SCALES);
 
   /** Not `input.required`: the preset reads `tooltipContext()` from a binding on this same
@@ -90,6 +95,11 @@ export class LineSeriesComponent implements OnDestroy {
   /** Draws a round marker at every reading. Off leaves the line alone, which reads better past
    *  roughly twenty points. */
   readonly showMarkers = input(true, { transform: booleanAttribute });
+
+  /** Lays the line and its markers on a band of the surface colour, so they stay legible where
+   *  they cross other marks. On by default: a line shares its plot more often than not, and on an
+   *  empty plot the band only separates it from the gridlines. */
+  readonly outline = input(true, { transform: booleanAttribute });
 
   /** Turns on the click affordance - the pointer cursor and the hover tint. `pointClicked`
    *  fires whether or not this is set. */
@@ -105,8 +115,8 @@ export class LineSeriesComponent implements OnDestroy {
 
   /** The one series to single out: every other one draws faded and this one draws bold, so the
    *  comparison survives a monochrome print. Driven from a legend, or from whatever else the app
-   *  uses to mean "show me this one". Needs `dimOthers`, which is what says fading is wanted at
-   *  all. */
+   *  uses to mean "show me this one". Fades the others whether or not `dimOthers` is set, which
+   *  governs only what a pointer over a marker does. */
   readonly highlighted = input<string | null>(null);
 
   /** A dash pattern per series, in the order the series are given. A series past the end of the
@@ -176,9 +186,16 @@ export class LineSeriesComponent implements OnDestroy {
         'secondary',
       );
     });
+    // The container opens the panel, so a plot holding several marks can only ever show one.
+    this.scales.reportTooltip(this.domainId, {
+      context: this.tooltipContext,
+      origin: this.tooltipOrigin,
+      axisEntries: this.axisEntries,
+    });
   }
 
   ngOnDestroy(): void {
+    this.scales.releaseTooltip(this.domainId);
     this.scales.releaseDomain(`${this.domainId}-primary`);
     this.scales.releaseDomain(`${this.domainId}-secondary`);
   }
@@ -209,6 +226,9 @@ export class LineSeriesComponent implements OnDestroy {
   }
 
   protected readonly plotted = computed(() => {
+    if (!(this.scales.measured?.() ?? true)) {
+      return [];
+    }
     const toX = this.scales.xPosition();
     const primaryY = this.scales.yPosition();
     const secondaryY = this.scales.secondaryYPosition();
@@ -315,71 +335,129 @@ export class LineSeriesComponent implements OnDestroy {
     new Map(),
   );
 
-  protected isTabStop(seriesId: string, markIndex: number): boolean {
-    const chosen = this.rovingBySeries().get(seriesId);
-    if (chosen !== undefined) {
-      return chosen === markIndex;
-    }
-    const first = this.plotted().find((entry) => entry.series.id === seriesId)
-      ?.markers[0];
+  private readonly firstMarkerBySeries = computed(
+    () =>
+      new Map(
+        this.plotted().map((entry) => [
+          entry.series.id,
+          entry.markers[0]?.markIndex,
+        ]),
+      ),
+  );
 
-    return first?.markIndex === markIndex;
+  protected isTabStop(seriesId: string, markIndex: number): boolean {
+    return (
+      (this.rovingBySeries().get(seriesId) ??
+        this.firstMarkerBySeries().get(seriesId)) === markIndex
+    );
   }
 
   /** The series a marker holds focus on, which narrows an `'axis'` panel to that one reading: a
    *  pointer answers for every series at once, a focused marker answers for its own. */
   private readonly focusedSeries = signal<string | null>(null);
 
-  protected onMarkerEnter(markIndex: number, event: Event): void {
-    this.activeMark.enter(markIndex, event);
+  /** A reading is active when its own marker is hovered OR when the category cursor is on its
+   *  category: one band, one answer, so the dot grows wherever in the band the pointer is rather
+   *  than only on the 4px dot itself. */
+  protected isActiveMarker(marker: {
+    markIndex: number;
+    categoryIndex: number;
+  }): boolean {
+    return (
+      marker.markIndex === this.activeMark.index() ||
+      marker.categoryIndex === this.scales.activeIndex()
+    );
   }
 
-  protected onMarkerFocus(markIndex: number, event: FocusEvent): void {
-    const marker = this.allMarkers()[markIndex];
+  protected onMarkerOver(event: PointerEvent): void {
+    const hit = markOf(event);
+    if (hit) {
+      this.activeMark.enter(hit.index, event, undefined, hit.element);
+    }
+  }
+
+  protected onMarkerOut(event: PointerEvent): void {
+    const hit = markOf(event);
+    if (!hit) {
+      return;
+    }
+    const next =
+      event.relatedTarget instanceof Element
+        ? event.relatedTarget.closest('[data-mark-index]')
+        : null;
+    if (next !== hit.element) {
+      this.activeMark.leave();
+    }
+  }
+
+  protected onMarkerFocus(event: FocusEvent): void {
+    const hit = markOf(event);
+    if (!hit) {
+      return;
+    }
+    const marker = this.allMarkers()[hit.index];
     if (marker) {
       this.rovingBySeries.update((roving) =>
-        new Map(roving).set(marker.seriesId, markIndex),
+        new Map(roving).set(marker.seriesId, hit.index),
       );
       this.focusedSeries.set(marker.seriesId);
       this.scales.setActiveIndex(marker.categoryIndex);
     }
-    this.onMarkerEnter(markIndex, event);
+    this.activeMark.enter(hit.index, event, undefined, hit.element);
   }
 
-  protected onMarkerBlur(): void {
-    this.focusedSeries.set(null);
-    this.activeMark.leave();
+  protected onMarkerBlur(event: FocusEvent): void {
+    if (markOf(event)) {
+      this.focusedSeries.set(null);
+      this.activeMark.leave();
+    }
   }
 
-  protected onMarkerNavigation(event: KeyboardEvent, markIndex: number): void {
-    const marker = this.allMarkers()[markIndex];
+  protected onMarkerKey(event: KeyboardEvent): void {
+    const hit = markOf(event);
+    if (!hit) {
+      return;
+    }
+    if (event.key === 'Enter' || event.key === ' ') {
+      this.selectMarker(hit.index);
+
+      return;
+    }
+    const marker = this.allMarkers()[hit.index];
     const strand = this.allMarkers().filter(
       (candidate) => candidate.seriesId === marker?.seriesId,
     );
     const current = strand.findIndex(
-      (candidate) => candidate.markIndex === markIndex,
+      (candidate) => candidate.markIndex === hit.index,
     );
     const next = nextRovingIndex(event.key, current, strand.length);
     if (next === null) {
       return;
     }
     event.preventDefault();
-    focusMark(
-      (event.currentTarget as Element).closest('.lines'),
-      strand[next].markIndex,
-    );
+    focusMark(hit.element.closest('.lines'), strand[next].markIndex);
   }
 
   protected isDimmed(seriesId: string): boolean {
     const highlighted = this.highlighted();
 
-    return this.dimOthers() && highlighted !== null && highlighted !== seriesId;
+    // Not gated on `dimOthers`: that input governs what a POINTER over a mark does, and naming a
+    // series in the legend is the reader asking for this one directly.
+    return highlighted !== null && highlighted !== seriesId;
   }
 
-  protected onMarkerClick(markIndex: number, event?: Event): void {
-    if (this.pinOnClick() && event) {
-      this.activeMark.pin(markIndex, event, '.series-marker');
+  protected onMarkerClick(event: MouseEvent): void {
+    const hit = markOf(event);
+    if (!hit) {
+      return;
     }
+    if (this.pinOnClick()) {
+      this.activeMark.pin(hit.index, event, '.series-marker', hit.element);
+    }
+    this.selectMarker(hit.index);
+  }
+
+  private selectMarker(markIndex: number): void {
     const marker = this.allMarkers()[markIndex];
     const series = this.data().find((entry) => entry.id === marker?.seriesId);
     if (marker && series) {
@@ -398,6 +476,33 @@ export class LineSeriesComponent implements OnDestroy {
   }): string {
     return `${marker.seriesLabel}, ${marker.category}, ${marker.formattedValue}`;
   }
+
+  /** What this series reads at the category the cursor is on, whatever `tooltip` says. It feeds
+   *  the container's category panel, so one band answers for every mark on the plot rather than
+   *  each mark owning a hover field of its own. */
+  readonly axisEntries = computed<readonly ChartTooltipEntry[]>(() => {
+    const categoryIndex = this.scales.activeIndex();
+    if (categoryIndex < 0) {
+      return [];
+    }
+
+    return this.plotted().flatMap((entry) => {
+      const marker = entry.markers.find(
+        (candidate) => candidate.categoryIndex === categoryIndex,
+      );
+
+      return marker
+        ? [
+            {
+              label: marker.seriesLabel,
+              value: marker.value,
+              formatted: marker.formattedValue,
+              color: marker.color,
+            },
+          ]
+        : [];
+    });
+  });
 
   readonly tooltipContext = computed<ChartTooltipContext | null>(() => {
     if (this.tooltip() === 'none') {

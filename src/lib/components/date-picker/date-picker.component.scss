@@ -32,6 +32,10 @@
   display: block;
   width: fit-content;
   max-width: 100%;
+
+  /* The mask cannot clip (contract above), so a container narrower than it pushes the whole field
+     past its edge, border included; min-width outranks max-width. */
+  min-width: min-content;
 }
 
 :host(.full-width) {

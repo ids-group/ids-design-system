@@ -1,10 +1,17 @@
 <svg:g
   class="columns"
   [class.dims-others]="dimOthers()"
+  [class.is-dimmed]="dimmedBySeries()"
   [style.--_column-chart-column-share]="markWidthPx()"
   [style.--_column-chart-slot-step]="slotStepPx()"
   [style.--_column-slot]="slot()"
-  [style.--_column-slots]="slotCount()">
+  [style.--_column-slots]="slotCount()"
+  (pointerover)="onMarkOver($event)"
+  (pointerout)="onMarkOut($event)"
+  (focusin)="onMarkFocus($event)"
+  (focusout)="onMarkBlur($event)"
+  (keydown)="onMarkKey($event)"
+  (click)="onMarkClick($event)">
   <!-- `userSpaceOnUse`, so the stripe pitch is the same on a tall column and a short one: with the
        default object bounding box it would scale with each mark and read as a different texture
        per bar. -->
@@ -33,7 +40,6 @@
   @for (mark of marks(); track mark.key; let index = $index) {
     <svg:g
       class="column"
-      animate.leave="mark-leave"
       [class.interactive]="interactive()"
       [class.below-baseline]="mark.below"
       [class.is-pinned]="activeMark.pinned() && activeMark.index() === index"
@@ -44,28 +50,22 @@
       [attr.data-mark-index]="index"
       [attr.role]="interactive() ? 'button' : null"
       [attr.tabindex]="
-        interactive() ? (index === tabStopIndex() ? 0 : -1) : null
+        interactive() ? (index === roving.tabStop() ? 0 : -1) : null
       "
       [attr.aria-label]="interactive() ? entryLabel(mark) : null"
-      (pointerenter)="onMarkEnter(index, $event)"
-      (pointerleave)="activeMark.leave()"
-      (focus)="onMarkFocus(index, $event)"
-      (blur)="activeMark.leave()"
-      (keydown)="onMarkNavigation($event, index)"
-      (click)="onMarkClick(mark.point, index, $event)"
-      (keydown.enter)="onPointKey(mark.point, $event)"
-      (keydown.space)="onPointKey(mark.point, $event)">
+      (animate.leave)="leaveMark($event)">
       <!-- The box that catches the pointer is the whole category slot, not the drawn column: a
            column two pixels tall is otherwise unreachable, and a pointer that has to find the
            mark is a pointer that misses it. -->
+      @let hit = hitBox(mark);
+
       <svg:rect
         class="hit-area"
-        y="0"
-        [attr.height]="hitHeight()" />
+        [attr.y]="hit.y"
+        [attr.height]="hit.height" />
 
       <svg:g
         class="bar"
-        animate.enter="mark-enter"
         [style.transform-origin]="mark.origin">
         <!-- Under the capped rect, not beside it: `rx` rounds all four corners, and the cap
              belongs on the free end alone. This one fills the two corners at the baseline back

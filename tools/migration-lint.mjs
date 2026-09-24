@@ -201,6 +201,30 @@ for (const [name, manifest] of manifests) {
       'M005',
       'no `informational` array (use [] when there is nothing)',
     );
+  } else {
+    // An entry is a bare string (the FYI) or `{ text, verify }` — the object shape carries the
+    // one eyeball check a rendering-only change has no symbol to grep for.
+    manifest.informational.forEach((entry, index) => {
+      if (typeof entry === 'string') return;
+      const at046 = (message) =>
+        report(errors, file, 'M046', `informational[${index}] ${message}`);
+      if (!entry || typeof entry !== 'object' || Array.isArray(entry)) {
+        at046('must be a string or a `{ text, verify }` object');
+        return;
+      }
+      const badKey = Object.keys(entry).find(
+        (key) => key !== 'text' && key !== 'verify',
+      );
+      if (badKey) {
+        at046(`has unknown key \`${badKey}\` — only text/verify are allowed`);
+      }
+      if (typeof entry.text !== 'string' || !entry.text.trim()) {
+        at046('is an object with no non-empty `text`');
+      }
+      if (typeof entry.verify !== 'string' || !entry.verify.trim()) {
+        at046('is an object with no non-empty `verify` - an entry with nothing to eyeball is a bare string; write it as one');
+      }
+    });
   }
   if (!Array.isArray(manifest.deleteList)) {
     report(
@@ -294,6 +318,15 @@ for (const [name, manifest] of manifests) {
       at('M020', "no `surface` — say where the consumer's code changes");
     } else if (!surfaces.length || surfaces.some((one) => !SURFACES.has(one))) {
       at('M021', `unknown surface ${JSON.stringify(item.surface)}`);
+    }
+
+    // An element name is reachable from a consumer stylesheet whatever their templates do, so a
+    // rule on the old name survives the rename as a selector that matches nothing.
+    if (item.kind === 'selector-rename' && !surfaces.includes('style')) {
+      at(
+        'M045',
+        'a selector-rename must list "style" in `surface` — an element name is always reachable from a consumer stylesheet',
+      );
     }
 
     if (NEEDS_VERIFY.has(item.kind) && item.verify === undefined) {
@@ -497,7 +530,10 @@ for (const [name, manifest] of manifests) {
     (manifest.deleteList ?? []).map((entry) => entry.id),
   );
   const deleteProse = [
-    ...(manifest.informational ?? []).map((line) => ['informational', line]),
+    ...(manifest.informational ?? []).map((line) => [
+      'informational',
+      typeof line === 'string' ? line : (line?.text ?? ''),
+    ]),
     ...(manifest.items ?? []).flatMap((item) =>
       ['note', 'action', 'pitfall'].map((field) => [
         `item ${item.id} ${field}`,

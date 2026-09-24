@@ -8,3 +8,17 @@
 .demo-pair {
   align-items: start;
 }
+
+// Two demos back to back IN NORMAL FLOW: every other chart here is separated by the prose that
+// introduces it, so a pair with nothing between them loses the gap the paragraph would have given.
+// Not inside `.demo-pair`, where the two stand side by side and the margin would drop the second
+// one below the first.
+:not(.demo-pair) > ds-chart + ds-chart {
+  margin-block-start: var(--space-5);
+}
+
+.orders-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}

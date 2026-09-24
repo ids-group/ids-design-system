@@ -4,7 +4,9 @@
    Title — Single line, ellipsis on overflow. Tooltip on hover when clipped. Keep the close
      button visible.
    Body — Wrap, no clip. Scrolls inside the body when content exceeds the modal height.
-   Actions — Single line per label. If the row overflows, stack vertically full-width.
+   Actions — Single line per label. If the row overflows, stack vertically full-width, DOM order
+     kept by default (confirming action at the bottom); `--ds-modal-actions-stacked-direction:
+     column-reverse` puts it on top instead.
    Form fields inside body — Inherit field truncation rules. Hints wrap to 2 lines; errors never
      clip. */
 
@@ -58,6 +60,7 @@
   --_modal-body-padding-bottom: var(--ds-modal-body-padding-bottom, var(--_modal-body-padding-y));
   --_modal-actions-padding-top: var(--ds-modal-actions-padding-top, var(--_modal-actions-padding-y));
   --_modal-actions-padding-bottom: var(--ds-modal-actions-padding-bottom, var(--_modal-actions-padding-y));
+  --_modal-actions-stacked-direction: var(--ds-modal-actions-stacked-direction, column);
   --_ds-enter-scale: var(--ds-modal-enter-scale, 0.97);
 
   display: contents;
@@ -197,6 +200,18 @@
     // A read-only dialog projects nothing here — without this it still draws a
     // stray padded strip with a divider (same guard as .impact below).
     &:empty { display: none; }
+
+    // Set by ModalCardComponent once the row's natural width outgrows the box. DOM order is kept
+    // by default (--_modal-actions-stacked-direction: column), so the confirming action lands at
+    // the bottom and Tab/screen-reader order matches what is on screen; a consumer reverses it
+    // with --ds-modal-actions-stacked-direction: column-reverse.
+    &.stacked {
+      flex-direction: var(--_modal-actions-stacked-direction);
+
+      // Projected children carry the CONSUMER's encapsulation attribute, and a ds-button's own
+      // `width: fit-content` opts out of the column's stretch - hence the anchored pierce.
+      & > ::ng-deep * { width: 100%; }
+    }
   }
 
   // The regions are padded to clear a rule; with no rule, header-bottom and

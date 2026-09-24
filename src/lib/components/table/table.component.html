@@ -379,17 +379,19 @@
                   <td
                     class="expand-panel-cell"
                     [attr.colspan]="expandedColspan()">
-                    <!-- The animation runs on the grid track, so the panel needs a child to be the
-                         track's content; `overflow: hidden` on it is what makes the reveal read as
-                         the accordion's rather than as a jump. -->
                     <div class="expand-panel-inner">
-                      <ng-container
-                        [ngTemplateOutlet]="rowExpandTemplate()!"
-                        [ngTemplateOutletContext]="{
-                          $implicit: row,
-                          row: row,
-                        }">
-                      </ng-container>
+                      <!-- The animation runs on the grid track, so the panel needs a child to be the
+                           track's content; `overflow: hidden` on it is what makes the reveal read as
+                           the accordion's rather than as a jump. -->
+                      <div class="expand-panel-content">
+                        <ng-container
+                          [ngTemplateOutlet]="rowExpandTemplate()!"
+                          [ngTemplateOutletContext]="{
+                            $implicit: row,
+                            row: row,
+                          }">
+                        </ng-container>
+                      </div>
                     </div>
                   </td>
                 </tr>
@@ -436,6 +438,9 @@
       [pageSizeOptions]="pageSizeOptions()"
       [showPageSize]="showPageSize()"
       [showLabel]="showLabel()"
+      [size]="paginationSize()"
+      [layout]="paginationLayout()"
+      [loading]="isSkeletonLoading()"
       [(currentPage)]="page"
       (pageSizeChange)="pageSize.set($event)" />
   </div>

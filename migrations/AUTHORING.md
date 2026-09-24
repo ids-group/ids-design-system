@@ -121,7 +121,10 @@ looks defective:
   to look at a screen. An array is legal where a change genuinely spans two (`["template",
   "typescript"]` for a value remap whose values also come from a typed field). A missing `surface`
   and a deliberate `none` must never read the same to a finder — that ambiguity is what let a
-  TypeScript-surface item be searched as a template item.
+  TypeScript-surface item be searched as a template item. A `selector-rename` always lists `style`
+  (lint, M045): an element name is reachable from a consumer stylesheet whatever their templates
+  do, and `.chart-block ds-donut-chart { … }` survived the 0.13.4 rename as a rule that matched
+  nothing while the chart quietly lost its size.
 - **`detect` carries the CONSUMER's shapes, not ours.** Once a `behavior` item's surface reaches
   their `typescript` or their app `config`, `old` and `searchHints` stop being enough: our symbol
   names appear in their templates and not in the logic that has to change. (A `style` surface is the
@@ -298,6 +301,16 @@ Actionable = existing consumer code stops working or *behaving as before*. Every
 components, new optional inputs, additive tokens whose defaults equal the old role token, pure
 bugfixes, visual polish) → `informational`, so a reader knows silence = safe.
 
+**An `informational` entry may itself need a check.** It is either a bare string, as most are, or an
+object `{ "text": "...", "verify": "..." }` — fill `verify` whenever the line names a layout
+mechanism (`display`, `grid`, `flex`, `position`, `overflow`, `colspan`, a width, a height, a new
+wrapper element), because that is a change to RENDERING, and a grep or a build cannot catch it. One
+sentence is enough: "open an expanded row and confirm the panel spans the row, not one column."
+This is not a `surface: none` item. An item exists when there is something a consumer may DO - a
+`restore` snippet, a conditional `action` ("None, unless ...") - and the screen check rides on it
+as its `verify`; when nothing a consumer could write changes the outcome, it is `informational`,
+with `verify` when rendering moved.
+
 **Members added to an exported class are actionable even when the feature is additive.** Subclassing
 a DS component is unsupported (`design-system.md` § Components), but a consumer who does it breaks on
 a name collision — TS4114 demands `override`, TS2416 fires when the signature differs — so a release
@@ -357,6 +370,8 @@ Run `npm run migration-lint` before you call the manifest done — it mechanises
       (`--ds-combobox-`), `element .class` selectors, keyframe lists and `@use` paths are read.
 - [ ] `kind` correct; `map` present iff `value-remap`; `new: null` for `behavior`. (lint)
 - [ ] `surface` says which of the consumer's artifacts changes — `none` where nothing does. (lint)
+- [ ] A `selector-rename` lists `style` among its surfaces — an element name is always reachable
+      from a consumer stylesheet. (lint, M045)
 - [ ] A `style` item whose change ships in one of our partials names that partial in `appliesWhen`,
       and its `verify` greps the BUILT CSS rather than their source.
 - [ ] `detect` carries the consumer's own shapes wherever the affected code names no DS symbol; an
@@ -396,6 +411,8 @@ Run `npm run migration-lint` before you call the manifest done — it mechanises
 - [ ] The boundary is in `appliesWhen` and the silent-failure mode in `pitfall`, not buried in the note.
 - [ ] `note` is under 120 words and carries no ALL-CAPS structural marker. (lint, M040 / M041)
 - [ ] No key outside the allowlist. (lint, M042)
+- [ ] An `informational` entry whose change is to rendering alone carries `verify`; an object entry
+      has a non-empty `text` and `verify` and no other key. (lint, M046 for the shape)
 - [ ] `old` resolves at the PREVIOUS tag, is gone at this one for a rename or a removal, and `new`
       resolves at this one. Checked against the trees, not against HEAD — `0.2.0` named a ninth
       `-subtle` token that never existed and every other check passed it. The same check reads

@@ -2064,6 +2064,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "`axisLabel` for the second axis."
+      },
+      {
+        "name": "tooltipTemplate",
+        "kind": "input",
+        "type": "TemplateRef<{\n    $implicit: ChartTooltipContext;\n  }> | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "A template that replaces the panel's body, for a preset that prints more than label+value."
+      },
+      {
+        "name": "tooltipExtraGap",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "0",
+        "required": false,
+        "description": "Extra clearance between the mark and the panel, for a chart that prints a value label in the gap the panel would otherwise take."
       }
     ],
     "outputs": []
@@ -2248,6 +2266,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Names the series in the tooltip, where the category then becomes the panel's heading. Unset, the panel names the category instead, which is what a chart of one series has to say."
+      },
+      {
+        "name": "seriesKey",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Identifies this series to the legend, so hovering a legend item can single it out."
+      },
+      {
+        "name": "highlighted",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "The series the reader is pointing at in the legend. Every other series fades."
       }
     ],
     "outputs": [
@@ -2291,6 +2327,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Draws a round marker at every reading. Off leaves the line alone, which reads better past roughly twenty points."
       },
       {
+        "name": "outline",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Lays the line and its markers on a band of the surface colour, so they stay legible where they cross other marks. On by default: a line shares its plot more often than not, and on an empty plot the band only separates it from the gridlines."
+      },
+      {
         "name": "interactive",
         "kind": "input",
         "type": "boolean",
@@ -2324,7 +2369,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "The one series to single out: every other one draws faded and this one draws bold, so the comparison survives a monochrome print. Driven from a legend, or from whatever else the app uses to mean \"show me this one\". Needs `dimOthers`, which is what says fading is wanted at all."
+        "description": "The one series to single out: every other one draws faded and this one draws bold, so the comparison survives a monochrome print. Driven from a legend, or from whatever else the app uses to mean \"show me this one\". Fades the others whether or not `dimOthers` is set, which governs only what a pointer over a marker does."
       },
       {
         "name": "patterns",
@@ -5047,6 +5092,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Draws a dot at every reading. Off, the dots appear on hover and on focus only."
       },
       {
+        "name": "outline",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Lays the lines and their markers on a band of the surface colour. Off where the plot holds nothing for them to cross and the band only separates them from the gridlines."
+      },
+      {
         "name": "annotations",
         "kind": "input",
         "type": "readonly LineChartAnnotation[]",
@@ -6631,19 +6685,28 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "Control height - sm/md/lg. A pager under a full-width table wants targets bigger than the dense default. Unset falls back to `DS_CONFIG.control.size`, then `'sm'`."
+        "description": "Control height - sm/md/lg. A pager under a full-width table wants targets bigger than the dense default. Unset falls back to `DS_CONFIG.pagination.size`, then `DS_CONFIG.control.size`, then `'sm'`."
       },
       {
         "name": "layout",
         "kind": "input",
-        "type": "PaginationLayout",
+        "type": "PaginationLayout | null",
         "union": [
           "grouped",
           "spread"
         ],
-        "default": "'grouped'",
+        "default": "null",
         "required": false,
-        "description": "`'grouped'`, the default, keeps the label beside the controls. `'spread'` pushes them to opposite edges of whatever width the nav is given."
+        "description": "`'grouped'` keeps the label beside the controls. `'spread'` pushes them to opposite edges of whatever width the nav is given. Unset falls back to `DS_CONFIG.pagination.layout`, then `'grouped'`."
+      },
+      {
+        "name": "loading",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "The host is still fetching: every control disables, the range label is masked with a `<ds-skeleton>` so a stale `total` is never quoted, and the nav reports `aria-busy`. `ds-table` sets it from `loading=\"skeleton\"`."
       }
     ],
     "outputs": []
@@ -9214,9 +9277,28 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Accessible name for a control with no visible label — the row's `<label>` collapses when it is empty, leaving nothing to name it. Set beside a label it OVERRIDES the label, per ARIA."
+      },
+      {
+        "name": "controlled",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "The switch never flips itself: a click or Space cancels the native toggle and `checkedRequested` carries the value the user asked for. It moves only when `checked` changes from outside, so a cancelled confirmation changes nothing."
       }
     ],
-    "outputs": []
+    "outputs": [
+      {
+        "name": "checkedRequested",
+        "kind": "output",
+        "type": "boolean",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The value the user asked for, emitted in place of a flip when `controlled`. Silent otherwise."
+      }
+    ]
   },
   "table:CellTemplateDirective": {
     "key": "table",
@@ -9236,6 +9318,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": null,
         "required": true,
         "description": "The `key` of the column this template replaces, matched against the table's `columns`. A key no column declares renders nothing and warns nowhere."
+      },
+      {
+        "name": "dsCellTemplateOf",
+        "kind": "input",
+        "type": "readonly T[] | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "The table's rows, bound to type `let-row`. Never read at runtime - the table hands the row out itself."
       }
     ],
     "outputs": []
@@ -9565,6 +9656,31 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "true",
         "required": false,
         "description": "Shows the \"N of M\" range label in the footer pager."
+      },
+      {
+        "name": "paginationSize",
+        "kind": "input",
+        "type": "DsSize | null",
+        "union": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "null",
+        "required": false,
+        "description": "Control height of the footer pager's buttons and picker. Unset falls back to `DS_CONFIG.pagination.size`, then `DS_CONFIG.control.size`, then `'sm'`."
+      },
+      {
+        "name": "paginationLayout",
+        "kind": "input",
+        "type": "PaginationLayout | null",
+        "union": [
+          "grouped",
+          "spread"
+        ],
+        "default": "null",
+        "required": false,
+        "description": "`'spread'` gives the footer pager the table's full width, label at one edge and controls at the other. Unset falls back to `DS_CONFIG.pagination.layout`, then `'grouped'`."
       },
       {
         "name": "total",

@@ -33,7 +33,7 @@
   // it — so one family-level retune reaches ds-input as well.
   --_input-label-color:    var(--ds-input-label-color,    var(--ds-field-label-color,       var(--text-secondary)));
   --_input-label-font-size:       var(--ds-input-label-font-size,       var(--ds-field-label-font-size,   var(--font-size-xs)));
-  --_input-label-fw:       var(--ds-input-label-fw,       var(--ds-field-label-font-weight,      var(--font-weight-bold)));
+  --_input-label-font-weight: var(--ds-input-label-font-weight, var(--ds-field-label-font-weight, var(--font-weight-bold)));
   --_input-font-size:             var(--ds-input-font-size,             var(--font-size-s));
   --_input-clear-color: var(--ds-input-clear-color, var(--text-secondary));
 
@@ -50,7 +50,7 @@
     @include field-label.field-label;
 
     --_field-label-font-size: var(--_input-label-font-size);
-    --_field-label-font-weight: var(--_input-label-fw);
+    --_field-label-font-weight: var(--_input-label-font-weight);
     --_field-label-color: var(--_input-label-color);
 
     .req {

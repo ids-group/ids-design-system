@@ -1,16 +1,21 @@
-import { Component, ViewEncapsulation, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ViewEncapsulation,
+  signal,
+} from '@angular/core';
 import {
   ChartComponent,
   ColumnSeriesComponent,
   LineSeriesComponent,
 } from 'ds/chart';
 import type { ColumnSeriesPoint, LineSeriesData } from 'ds/chart';
-import { ChartTooltipDirective } from 'ds/chart-tooltip';
 import { ColumnChartComponent } from 'ds/column-chart';
 import type { ColumnChartPoint, ColumnChartSeries } from 'ds/column-chart';
 import type { ChartThreshold, ChartValueFormat } from 'ds/core';
 import { DocsChartDataEditorComponent } from '../../../shared/docs-chart-data-editor.component';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
+import { DocsLazyDirective } from '../../../shared/docs-lazy.directive';
 
 const SPECIMEN_POINTS: readonly ColumnChartPoint[] = [
   { label: 'Jan', value: 1840 },
@@ -202,8 +207,8 @@ const CUSTOM_COLOR_POINTS: readonly ColumnChartPoint[] = [
   selector: 'section-charts-column-chart',
   standalone: true,
   imports: [
+    DocsLazyDirective,
     ChartComponent,
-    ChartTooltipDirective,
     ColumnChartComponent,
     ColumnSeriesComponent,
     DocsChartDataEditorComponent,
@@ -211,6 +216,7 @@ const CUSTOM_COLOR_POINTS: readonly ColumnChartPoint[] = [
     LineSeriesComponent,
   ],
   encapsulation: ViewEncapsulation.Emulated,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './column-chart.section.html',
   styleUrls: [
     '../../../shared/section-demo.scss',

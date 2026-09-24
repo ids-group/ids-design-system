@@ -87,7 +87,7 @@ import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
                 [checked]="isVisible()(col)"
                 [disabled]="!col.hideable || isLocked()(col)"
                 (change)="toggled.emit(col)" />
-              {{ col.label }}
+              {{ col.label || col.screenReaderLabel }}
             </label>
 
             @if (rowExtras()) {

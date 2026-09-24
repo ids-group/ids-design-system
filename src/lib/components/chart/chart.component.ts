@@ -2,6 +2,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  NgZone,
+  PLATFORM_ID,
   Signal,
   ViewEncapsulation,
   afterRenderEffect,
@@ -12,6 +14,7 @@ import {
   inject,
   input,
   numberAttribute,
+  TemplateRef,
   signal,
   viewChild,
 } from '@angular/core';
@@ -22,8 +25,13 @@ import {
   rotationWouldFit,
   tickValues,
 } from '@ids-group-ltd/ids-design-system/components';
+import { isPlatformBrowser } from '@angular/common';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
-import { chartActiveMark } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
+import {
+  ChartTooltipDirective,
+  chartActiveMark,
+} from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
+import type { ChartTooltipContext } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import { resolveChartDefaults } from '@ids-group-ltd/ids-design-system/components';
 import type {
   ChartAxis,
@@ -34,6 +42,7 @@ import type {
 import {
   categoryAt,
   CHART_AXIS_LABEL_GAP,
+  CHART_AXIS_TITLE_BAND,
   CHART_BAND_PADDING,
   CHART_CATEGORY_LABEL_OFFSET,
   CHART_DEFAULT_AXIS_GUTTER,
@@ -53,13 +62,14 @@ import {
   CHART_SCALES,
   type ChartPlot,
   type ChartScales,
+  type ChartTooltipSource,
 } from './chart-scales.token';
 
 @Component({
   selector: 'ds-chart',
   standalone: true,
   exportAs: 'dsChart',
-  imports: [SkeletonComponent],
+  imports: [SkeletonComponent, ChartTooltipDirective],
   templateUrl: './chart.component.html',
   styleUrl: './chart.component.scss',
   host: {
@@ -211,11 +221,18 @@ export class ChartComponent implements ChartScales {
   readonly valueFormatResolved = this.defaults.valueFormat;
 
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly zone = inject(NgZone);
+  private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
   /** The `<svg>`'s own rendered width: `:host(.framed)` carries the frame padding, so the host's
    *  CONTENT box - which is what a `ResizeObserver` reports - is the box the canvas fills at
    *  `inline-size: 100%`. Measuring the host is therefore measuring the canvas. */
   private readonly measuredWidth = elementWidth(this.host);
+
+  /** Server-rendered output has no width to wait for, so it draws at the stand-in. */
+  readonly measured = computed(
+    () => !this.isBrowser || this.measuredWidth() > 0,
+  );
 
   protected readonly viewWidth = computed(
     () => this.measuredWidth() || CHART_FALLBACK_WIDTH,
@@ -238,9 +255,14 @@ export class ChartComponent implements ChartScales {
       if (this.settled() || this.measuredWidth() === 0) {
         return;
       }
+      let first = 0;
       let second = 0;
-      const first = requestAnimationFrame(() => {
-        second = requestAnimationFrame(() => this.settled.set(true));
+      // Outside the zone: under zone.js each frame callback is a full application tick, two per
+      // chart, and the signal write schedules the one render this needs by itself.
+      this.zone.runOutsideAngular(() => {
+        first = requestAnimationFrame(() => {
+          second = requestAnimationFrame(() => this.settled.set(true));
+        });
       });
       onCleanup(() => {
         cancelAnimationFrame(first);
@@ -248,10 +270,19 @@ export class ChartComponent implements ChartScales {
       });
     });
 
+    effect((onCleanup) => {
+      const canvas = this.canvasElement()?.nativeElement;
+      if (canvas && this.cursor() === 'category') {
+        onCleanup(this.listenForCursor(canvas));
+      }
+    });
+
     // The read phase, so every `getComputedTextLength` lands in one batch before any write:
-    // interleaving them forces a synchronous layout per label.
+    // interleaving them forces a synchronous layout per label. It re-measures when a label's text
+    // changes, and only then - not when a resize merely moves the labels.
     afterRenderEffect({
       read: () => {
+        this.labelTexts();
         this.measuredLabelWidth.set(this.widestLabel('.axis-label.is-primary'));
         this.measuredSecondaryLabelWidth.set(
           this.widestLabel('.axis-label.is-secondary'),
@@ -314,8 +345,25 @@ export class ChartComponent implements ChartScales {
   protected readonly effectiveAxisGutter = computed(() =>
     Math.max(
       this.axisGutter(),
-      this.measuredLabelWidth() + CHART_AXIS_LABEL_GAP,
+      this.measuredLabelWidth() + CHART_AXIS_LABEL_GAP + this.axisTitleGutter(),
     ),
+  );
+
+  /** A rotated axis title stands in the same gutter as the tick labels, so the gutter has to carry
+   *  both or the widest tick runs through the title. Its own width is its line height, because it
+   *  is turned on its side. */
+  protected readonly axisTitleGutter = computed(() =>
+    this.axisLabel() ? CHART_AXIS_TITLE_BAND : 0,
+  );
+
+  /** Where a rotated axis title sits: hard against the outer edge, with the tick labels between it
+   *  and the plot. */
+  protected readonly axisTitleX = computed(() => CHART_AXIS_TITLE_BAND / 2);
+
+  /** Mirrors `axisTitleX` against the right edge, so the two titles stand the same distance from
+   *  their own ticks. */
+  protected readonly secondaryTitleX = computed(
+    () => this.viewWidth() - CHART_AXIS_TITLE_BAND / 2,
   );
 
   /** Widest secondary tick label, measured the same way and for the same reason as the primary
@@ -329,9 +377,19 @@ export class ChartComponent implements ChartScales {
     this.hasSecondaryAxis() && !this.stacked()
       ? Math.max(
           this.axisGutter(),
-          this.measuredSecondaryLabelWidth() + CHART_AXIS_LABEL_GAP,
+          this.measuredSecondaryLabelWidth() +
+            CHART_AXIS_LABEL_GAP +
+            this.secondaryTitleGutter(),
         )
       : CHART_EDGE_GUTTER,
+  );
+
+  /** The second axis's title stands in the right gutter exactly as the first one's stands in the
+   *  left, so both sides reserve the same band and the plot sits centred between its two labels. */
+  protected readonly secondaryTitleGutter = computed(() =>
+    this.secondaryAxisLabel() && this.hasSecondaryAxis()
+      ? CHART_AXIS_TITLE_BAND
+      : 0,
   );
 
   readonly plot: Signal<ChartPlot> = computed(() =>
@@ -388,6 +446,90 @@ export class ChartComponent implements ChartScales {
       return next;
     });
   }
+
+  /** A template that replaces the panel's body, for a preset that prints more than label+value. */
+  readonly tooltipTemplate = input<TemplateRef<{
+    $implicit: ChartTooltipContext;
+  }> | null>(null);
+
+  /** Extra clearance between the mark and the panel, for a chart that prints a value label in
+   *  the gap the panel would otherwise take. */
+  readonly tooltipExtraGap = input(0, { transform: numberAttribute });
+
+  private readonly tooltipSources = signal<
+    ReadonlyMap<string, ChartTooltipSource>
+  >(new Map());
+
+  reportTooltip(id: string, source: ChartTooltipSource): void {
+    this.tooltipSources.update((sources) => new Map(sources).set(id, source));
+  }
+
+  releaseTooltip(id: string): void {
+    this.tooltipSources.update((sources) => {
+      const next = new Map(sources);
+      next.delete(id);
+
+      return next;
+    });
+  }
+
+  /** The offer to show, if any mark is making one. At most one mark has a context at a time: a
+   *  per-mark tooltip only fills it while that mark is hovered, and an axis tooltip only while the
+   *  category cursor is on. The container opening the panel is what stops two marks opening two. */
+  private readonly activeTooltip = computed(
+    () =>
+      [...this.tooltipSources().values()].find(
+        (source) => source.context() !== null,
+      ) ?? null,
+  );
+
+  protected readonly tooltipContext = computed(() => {
+    const base = this.activeTooltip()?.context() ?? null;
+    if (base === null || this.cursor() !== 'category') {
+      return base;
+    }
+    // A category panel is about the category, not about the mark that happened to open it, so
+    // every other mark's reading at the same category belongs in it. Matched by label, because a
+    // mark that already named itself must not be listed twice.
+    const named = new Set(base.entries.map((entry) => entry.label));
+    const rest = [...this.tooltipSources().values()]
+      .flatMap((source) => source.axisEntries?.() ?? [])
+      .filter((entry) => !named.has(entry.label));
+
+    return rest.length === 0
+      ? base
+      : { ...base, entries: [...base.entries, ...rest] };
+  });
+
+  protected readonly tooltipOrigin = computed(() => {
+    const own = this.activeTooltip()?.origin() ?? null;
+    if (this.cursor() !== 'category') {
+      return own;
+    }
+    // A category panel belongs over the TALLEST reading at that category, not over whichever mark
+    // happened to open it: a line that dips under a column would otherwise put the panel low and
+    // let the column stand over it.
+    const boxes = [...this.tooltipSources().values()]
+      .map((source) => source.origin())
+      .filter((origin): origin is Element => origin instanceof Element)
+      .map((element) => ({ element, top: element.getBoundingClientRect().top }))
+      .filter(({ element }) => {
+        const box = element.getBoundingClientRect();
+
+        return box.width > 0 && box.height > 0;
+      });
+
+    return boxes.length === 0
+      ? own
+      : boxes.reduce((highest, candidate) =>
+          candidate.top < highest.top ? candidate : highest,
+        ).element;
+  });
+
+  protected readonly tooltipPreferBelow = computed(
+    () =>
+      (this.activeTooltip()?.preferBelow?.() ?? false) || this.cursorPinned(),
+  );
 
   /** Compared by value, which is what stops a mark that reports AND reads `yPosition()` in one
    *  effect from running forever: every report allocates a fresh `Map` and `niceDomain` a fresh
@@ -546,16 +688,21 @@ export class ChartComponent implements ChartScales {
     this.cursorState.release();
   }
 
-  protected onPlotPointer(event: PointerEvent): void {
-    if (this.cursor() !== 'category') {
-      return;
-    }
-    const canvas = (event.currentTarget as Element).getBoundingClientRect();
+  private readonly canvasElement =
+    viewChild<ElementRef<SVGSVGElement>>('canvasEl');
+
+  // Read once per hover and dropped on any scroll, rather than on every move: a move that follows
+  // the cursor band's own update would otherwise force a second layout in the same frame.
+  private canvasRect: DOMRect | null = null;
+
+  private plotPointer(event: PointerEvent, canvas: SVGSVGElement): void {
+    this.canvasRect ??= canvas.getBoundingClientRect();
     const plot = this.plot();
     // The canvas is scaled to its box, so a client x has to come back through the viewBox before
     // it means anything to a plot measured in view units.
     const viewX =
-      ((event.clientX - canvas.left) / canvas.width) * this.viewWidth();
+      ((event.clientX - this.canvasRect.left) / this.canvasRect.width) *
+      this.viewWidth();
     const index = this.clampIndex(
       categoryAt(viewX, plot.left, plot.width, this.categories().length),
     );
@@ -568,10 +715,39 @@ export class ChartComponent implements ChartScales {
     this.cursorState.enter(index, event);
   }
 
-  protected clearCursor(): void {
-    if (this.cursor() === 'category') {
+  /** The plot listens to the pointer only when it draws a category cursor, and outside the zone:
+   *  the handler writes signals, which schedule the render they need. */
+  private listenForCursor(canvas: SVGSVGElement): () => void {
+    const forgetRect = (): void => {
+      this.canvasRect = null;
+    };
+    const onPointer = (event: PointerEvent): void =>
+      this.plotPointer(event, canvas);
+    const onEnter = (): void =>
+      window.addEventListener('scroll', forgetRect, {
+        capture: true,
+        passive: true,
+      });
+    const onLeave = (): void => {
+      window.removeEventListener('scroll', forgetRect, { capture: true });
+      forgetRect();
       this.cursorState.leave();
-    }
+    };
+    this.zone.runOutsideAngular(() => {
+      canvas.addEventListener('pointerenter', onEnter);
+      canvas.addEventListener('pointermove', onPointer);
+      canvas.addEventListener('pointerdown', onPointer);
+      canvas.addEventListener('pointerleave', onLeave);
+    });
+
+    return () => {
+      canvas.removeEventListener('pointerenter', onEnter);
+      canvas.removeEventListener('pointermove', onPointer);
+      canvas.removeEventListener('pointerdown', onPointer);
+      canvas.removeEventListener('pointerleave', onLeave);
+      window.removeEventListener('scroll', forgetRect, { capture: true });
+      forgetRect();
+    };
   }
 
   private readonly bandElement = viewChild<ElementRef<Element>>('cursorBandEl');
@@ -623,6 +799,14 @@ export class ChartComponent implements ChartScales {
       }),
     );
   });
+
+  private readonly labelTexts = computed(() =>
+    [
+      ...this.ticks().map((tick) => tick.label),
+      ...this.secondaryTicks().map((tick) => tick.label),
+      ...this.categories(),
+    ].join('\n'),
+  );
 
   /** Rotation is spent before thinning: a tilt costs the reader a glance, dropping a label costs
    *  them a reading. Both are decided from the widest label as it actually rendered. */

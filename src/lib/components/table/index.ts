@@ -9,6 +9,7 @@ export type {
   DsTableView,
 } from './table-layout';
 export type { HeaderFilterContext } from './header-filter.directive';
+export type { CellTemplateContext } from './cell-template.directive';
 export type {
   TableColumn,
   TableExpandMode,

@@ -1,0 +1,2142 @@
+<!doctype html>
+<html lang="ru">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Очередь решений</title>
+<meta name="ds-deck-status" content="open">
+<link rel="stylesheet" href="ds.css">
+<link rel="stylesheet" href="deck.css">
+
+<style>
+  main { padding-bottom: 6.5rem; }
+
+  .q { margin-bottom: var(--space-8); }
+  .q-head { display: flex; align-items: baseline; gap: var(--space-3); flex-wrap: wrap; }
+  .q-num { font: var(--font-weight-bold) var(--font-size-2xs) / 1 var(--font-mono); color: var(--text-tertiary); }
+  .q-title { margin: 0; font: var(--font-weight-bold) var(--font-size-l) / var(--line-height-tight) var(--font-sans); flex: 1 1 18rem; }
+  .q-src { font: var(--font-size-2xs) var(--font-mono); color: var(--text-tertiary); text-decoration: none; border-bottom: 1px dotted var(--border-strong); }
+  .q-src:hover { color: var(--accent-strong); }
+  .q-sub { margin: var(--space-2) 0 0; font: var(--font-size-2xs) / 1.55 var(--font-sans); color: var(--text-secondary); }
+
+  .opt { cursor: pointer; }
+  .opt.is-chosen { border-color: var(--success); box-shadow: inset 0 0 0 1px var(--success); }
+  .opt > h3 { display: flex; align-items: baseline; gap: var(--space-2); }
+  .opt .star { color: var(--success-text); }
+
+  /* one horizontal track with one fill, rebuilt from bar.component.scss */
+  .track { block-size: 6px; border-radius: 999px; background: var(--surface-muted); overflow: hidden; position: relative; }
+  .track.narrow { inline-size: 92px; }
+  .track i { display: block; block-size: 100%; background: var(--primary); }
+  .chunk { inline-size: 30%; animation: indet var(--duration-loop-slow) linear infinite; }
+  .chunk.eased { animation-timing-function: cubic-bezier(0.2, 0, 0, 1); }
+  @keyframes indet { from { transform: translateX(-100%); } to { transform: translateX(400%); } }
+  /* `.track i` sets a flat fill and out-ranks a single class, so the gradient has to name both. */
+  .track i.stripe {
+    inline-size: 100%;
+    background: repeating-linear-gradient(115deg, var(--primary) 0 8px, var(--primary-hover) 8px 16px);
+    background-size: 22.6px 100%;
+    animation: slide 1.4s linear infinite;
+  }
+  @keyframes slide { to { background-position: 22.6px 0; } }
+  @media (prefers-reduced-motion: reduce) {
+    .chunk, .stripe { animation: none; inline-size: 100%; }
+  }
+
+  /* the chart rows and columns, same proportions as the real data */
+  .rows { display: grid; gap: 5px; }
+  .row { display: grid; grid-template-columns: 4.2rem 1fr; align-items: center; gap: var(--space-2); }
+  .row span { font: var(--font-size-2xs) var(--font-sans); color: var(--text-secondary); text-align: end; }
+  .row .bar { block-size: 13px; border-radius: 2px; display: flex; overflow: hidden; }
+  .cols { display: flex; align-items: flex-end; gap: var(--space-2); block-size: 78px; }
+  .cols .col { inline-size: 26px; border-radius: 2px 2px 0 0; }
+
+  .css {
+    margin: var(--space-2) 0 0; padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-sm); background: var(--surface-muted);
+    font: var(--font-size-2xs) / 1.6 var(--font-mono); white-space: pre; overflow-x: auto;
+  }
+  .css .hit { color: var(--error-text); font-weight: var(--font-weight-bold); }
+  .css .dead { color: var(--text-tertiary); text-decoration: line-through; }
+  .console {
+    margin: var(--space-2) 0 0; padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm);
+    background: #1f2430; color: #e7c66b; font: var(--font-size-2xs) / 1.5 var(--font-mono); overflow-x: auto;
+  }
+  .console.quiet { background: var(--surface-muted); color: var(--text-tertiary); font-style: italic; }
+
+  .ns { display: grid; gap: 2px; }
+  .ns code { font: var(--font-size-2xs) / 1.5 var(--font-mono); padding: 1px var(--space-1); border-radius: 2px; background: var(--surface-muted); }
+  .ns code.clash { background: var(--error-subtitle); color: var(--error-text); }
+  .ns code.clear { background: var(--success-subtitle); color: var(--success-text); }
+
+  .panelbox { position: relative; border: var(--border-width-default) solid var(--border-default); border-radius: var(--ds-radius-panel); padding: var(--space-1); overflow: hidden; }
+  .panelbox .orow { padding: 4px var(--space-2); border-radius: var(--ds-radius-inner); font: var(--font-size-2xs) var(--font-sans); }
+  .panelbox .orow:nth-child(odd) { background: var(--surface-secondary); }
+  .rule { position: absolute; inset-inline: 0; border-top: 2px dashed; font: var(--font-weight-bold) 9px / 1 var(--font-mono); padding-inline-start: 3px; }
+
+  .bn { display: flex; gap: var(--space-2); padding: var(--space-2) var(--space-3); border-radius: var(--radius-md); border-inline-start: 3px solid var(--error); background: var(--error-subtitle); }
+  .bn.q2 { border-inline-start-color: var(--border-strong); background: var(--surface-secondary); }
+  .bn i { inline-size: 0.9rem; block-size: 0.9rem; border-radius: 50%; background: var(--error); flex: none; margin-block-start: 2px; }
+  .bn.q2 i { background: var(--text-tertiary); }
+  .tint {
+    margin: 0;
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-sm);
+    font: var(--font-weight-medium) var(--font-size-2xs) / 1.4 var(--font-sans);
+  }
+
+  .bn span { font: var(--font-size-2xs) / 1.45 var(--font-sans); }
+
+  .bar-fixed {
+    position: fixed; inset-inline: 0; inset-block-end: 0; display: flex; align-items: center;
+    gap: var(--space-4); padding: var(--space-3) var(--space-5); background: var(--surface-default);
+    border-top: var(--border-width-default) solid var(--border-divider); box-shadow: var(--shadow-popover);
+    font: var(--font-size-2xs) / 1.4 var(--font-sans); z-index: 10;
+  }
+  .bar-fixed .count { font-weight: var(--font-weight-bold); flex: none; }
+  .bar-fixed output { flex: 1 1 auto; color: var(--text-secondary); font-family: var(--font-mono); overflow-x: auto; white-space: nowrap; }
+  .bar-fixed button { flex: none; padding: var(--space-1-5) var(--space-3); border: var(--border-width-default) solid var(--border-default); border-radius: var(--ds-radius-control); background: var(--surface-default); font: var(--font-weight-bold) var(--font-size-2xs) var(--font-sans); cursor: pointer; }
+  .bar-fixed button:hover { background: var(--surface-secondary); }
+
+  /* specimens added so every question is answerable by looking */
+  .mini-chart { min-inline-size: 210px; }
+  .mini-chart svg { inline-size: 100%; block-size: auto; display: block; }
+  .mini-chart .tick { font: 8px var(--font-sans); fill: var(--text-tertiary); }
+  .legend-row { margin: var(--space-1) 0 0; font: var(--font-size-2xs) var(--font-sans); color: var(--text-secondary); display: flex; align-items: center; gap: var(--space-1); }
+  .legend-row i { inline-size: .7rem; block-size: .7rem; border-radius: 2px; }
+
+  .swatch-row { display: flex; gap: 3px; }
+  .swatch-row i { inline-size: 30px; block-size: 30px; border-radius: 3px; }
+  .swatch-row.lbl { flex-wrap: wrap; gap: var(--space-1); }
+  .swatch-row.lbl i { inline-size: auto; block-size: auto; padding: var(--space-1) var(--space-2); }
+  .swatch-row.lbl b { font: var(--font-weight-bold) 9px var(--font-mono); color: #fff; mix-blend-mode: difference; }
+
+  .tint-steps, .btn-row { display: flex; gap: var(--space-1); }
+  .tint-steps span, .btn-row b { padding: var(--space-2) var(--space-3); border-radius: var(--ds-radius-control); font: var(--font-weight-medium) var(--font-size-2xs) var(--font-sans); }
+  .btn-row b { color: #fff; }
+
+  .menu-mock { border: var(--border-width-default) solid var(--border-divider); border-radius: var(--ds-radius-panel); padding: var(--space-1); min-inline-size: 150px; }
+  .menu-mock span { display: block; padding: 5px var(--space-2); border-radius: var(--ds-radius-inner); font: var(--font-size-2xs) var(--font-sans); }
+  .menu-mock .hov { background: var(--surface-secondary); }
+  .menu-mock .prs { background: var(--surface-muted); }
+  .menu-mock .danger { color: var(--error-text); }
+
+  .field-mock { min-inline-size: 170px; font: var(--font-size-2xs) var(--font-sans); }
+  .field-mock label { display: block; color: var(--text-secondary); margin-block-end: 3px; }
+  .field-mock .box { display: flex; align-items: center; gap: var(--space-1); padding: var(--space-2); border: var(--border-width-default) solid var(--border-default); border-radius: var(--ds-radius-control); background: var(--surface-default); }
+  .field-mock .box.stepper { justify-content: space-between; }
+  .field-mock .msg { margin: 3px 0 0; color: var(--text-tertiary); }
+  .field-mock .chipx { padding: 1px var(--space-1); border-radius: 3px; background: var(--primary-subtitle); color: var(--primary-strong); }
+  .field-mock .spin { inline-size: .7rem; block-size: .7rem; border-radius: 50%; border: 2px solid var(--border-default); border-top-color: var(--primary); margin-inline-start: auto; animation: spinq .8s linear infinite; }
+  @keyframes spinq { to { transform: rotate(360deg); } }
+  .field-mock .dot-dirty { inline-size: 6px; block-size: 6px; border-radius: 50%; background: var(--warning); margin-inline-start: auto; }
+  .panel-mock { margin-block-start: 3px; border: var(--border-width-default) solid var(--border-divider); border-radius: var(--ds-radius-panel); padding: var(--space-1); }
+  .panel-mock span { display: block; padding: 3px var(--space-2); font: var(--font-size-2xs) var(--font-mono); }
+
+  .enter-mock { display: flex; align-items: center; gap: var(--space-2); padding: var(--space-2) var(--space-3); border-radius: var(--radius-md); background: var(--surface-default); box-shadow: var(--shadow-popover); font: var(--font-size-2xs) var(--font-sans); min-inline-size: 170px; }
+  .enter-mock .bar3 { inline-size: 3px; align-self: stretch; border-radius: 2px; background: var(--success); }
+  .enter-mock.fade { animation: qfade 2.2s ease-in-out infinite; }
+  .enter-mock.scale { animation: qscale 2.2s ease-in-out infinite; transform-origin: top right; }
+  @keyframes qfade { 0%, 60%, 100% { opacity: 1; } 70% { opacity: 0; } 85% { opacity: 1; } }
+  @keyframes qscale { 0%, 60%, 100% { opacity: 1; transform: scale(1); } 70% { opacity: 0; transform: scale(.96); } 85% { opacity: 1; transform: scale(1); } }
+
+  .timeline, .pipe { display: flex; flex-wrap: wrap; gap: var(--space-1); }
+  .timeline span, .pipe span { padding: var(--space-1) var(--space-2); border-radius: var(--radius-sm); background: var(--surface-secondary); font: var(--font-size-2xs) var(--font-sans); color: var(--text-secondary); }
+  .t-done, .p-ok { background: var(--success-subtitle) !important; color: var(--success-text) !important; }
+  .t-now { background: var(--primary-subtitle) !important; color: var(--primary-strong) !important; }
+  .t-gap, .p-wait { background: var(--error-subtitle) !important; color: var(--error-text) !important; }
+  .t-ok { background: var(--success) !important; color: var(--surface-default) !important; }
+
+  .doc-mock { padding: var(--space-2) var(--space-3); border: var(--border-width-default) solid var(--border-divider); border-radius: var(--radius-sm); font: var(--font-size-2xs) / 1.5 var(--font-sans); min-inline-size: 190px; }
+  .doc-mock p { margin: var(--space-1) 0 0; }
+
+  .wrap-mock { font: var(--font-size-2xs) / 1.6 var(--font-mono); color: var(--text-secondary); }
+  .wrap-mock.long { max-inline-size: 420px; }
+  .wrap-mock.short { max-inline-size: 260px; }
+
+  .ring-mock { display: inline-block; padding: var(--space-2) var(--space-3); border-radius: var(--ds-radius-control); background: var(--surface-default); border: var(--border-width-default) solid var(--border-default); font: var(--font-size-2xs) var(--font-sans); }
+  .ring-mock.old { box-shadow: 0 0 0 3px var(--primary-muted); }
+  .ring-mock.new { animation: qring 1.8s var(--ease-standard) infinite; }
+  @keyframes qring { 0%, 70%, 100% { box-shadow: 0 0 0 3px var(--primary-muted); } 80% { box-shadow: 0 0 0 6px var(--primary-subtitle); } }
+
+  .grid-mock { display: grid; grid-template-columns: repeat(8, 14px); gap: 3px; }
+  .grid-mock i { block-size: 14px; border-radius: 2px; }
+  .g-ok { background: var(--success); }
+  .g-no { background: var(--neutral-200); }
+
+  .nav-mock span { display: block; padding: 3px var(--space-2); font: var(--font-size-2xs) var(--font-sans); }
+  .nav-mock .n-in { color: var(--text-tertiary); padding-inline-start: var(--space-5); }
+  .nav-mock .n-own { background: var(--success-subtitle); color: var(--success-text); border-radius: 3px; }
+
+  .type-mock { display: grid; gap: var(--space-1); }
+  .type-mock span { font-family: var(--font-mono); color: var(--text-primary); }
+
+  .spk { inline-size: 64px; block-size: 18px; display: block; }
+  .kpi-card { min-inline-size: 190px; padding: var(--space-3); border: var(--border-width-default) solid var(--border-divider); border-radius: var(--ds-radius-panel); background: var(--surface-default); }
+  .kpi-label { font: var(--font-size-2xs) var(--font-sans); color: var(--text-secondary); }
+  .kpi-row { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); margin-block: 2px; }
+  .kpi-row b { font: var(--font-weight-bold) 24px / 1.1 var(--font-sans); color: var(--text-primary); }
+  .kpi-delta { font: var(--font-size-2xs) var(--font-sans); color: var(--success-text); }
+  .spk-table { border-collapse: collapse; font: var(--font-size-2xs) var(--font-sans); min-inline-size: 240px; }
+  .spk-table th { text-align: start; color: var(--text-tertiary); font-weight: var(--font-weight-bold); padding: 3px var(--space-2); border-bottom: var(--border-width-default) solid var(--border-divider); }
+  .spk-table td { padding: 4px var(--space-2); color: var(--text-primary); border-bottom: var(--border-width-default) solid var(--border-divider); }
+  .spk-table td:nth-child(2) { font-family: var(--font-mono); text-align: end; }
+  /* consumer asks: D */
+  /* ds-modal card, rebuilt from modal.component.scss .modal / .actions at a narrow fixed width */
+  .a-modal { inline-size: 300px; display: flex; flex-direction: column; overflow: hidden; background: var(--surface-overlay); border-radius: var(--radius-lg); box-shadow: var(--shadow-modal); }
+  .a-modal .a-m-head { padding: var(--space-3) var(--space-4) var(--space-1); font: var(--font-weight-bold) var(--font-size-s) / 1.3 var(--font-sans); }
+  .a-modal .a-m-body { padding: 0 var(--space-4) var(--space-3); font: var(--font-size-2xs) / 1.5 var(--font-sans); color: var(--text-secondary); }
+  .a-m-actions { display: flex; gap: var(--space-3); justify-content: flex-end; padding: var(--space-3) var(--space-4); border-top: var(--border-width-default) solid var(--border-divider); }
+  .a-m-actions.wrap { flex-wrap: wrap; }
+  .a-m-actions.stack { flex-direction: column; gap: var(--space-2); }
+  .a-modal.mini { inline-size: 168px; }
+  .a-modal.mini .a-m-actions { padding: var(--space-2); gap: var(--space-1); }
+  .a-modal.mini .a-btn { block-size: 24px; padding: 0 var(--space-2); font-size: var(--font-size-2xs); }
+  
+  /* ds-button: nowrap, does not shrink */
+  .a-btn { flex: none; display: inline-flex; align-items: center; justify-content: center; block-size: 32px; padding: 0 var(--space-4); white-space: nowrap; border: var(--border-width-default) solid var(--border-strong); border-radius: var(--ds-radius-control); background: var(--surface-default); color: var(--text-primary); font: var(--font-weight-semibold) var(--font-size-s) / 1 var(--font-sans); }
+  .a-btn.pri { background: var(--primary); border-color: var(--primary); color: var(--primary-on); }
+  .a-m-actions.stack .a-btn { inline-size: 100%; }
+  .a-btn.gold { background: #FBAC18; border-color: #FBAC18; color: #FFFFFF; }
+  .a-btn.gold.dark { color: #161A28; }
+  
+  /* contrast specimens sit on literal white: the ratios are computed against #FFFFFF */
+  .a-white { display: grid; gap: var(--space-3); padding: var(--space-3); border-radius: var(--radius-md); background: #FFFFFF; min-inline-size: 200px; }
+  .a-field { font: var(--font-size-2xs) var(--font-sans); color: #353B4D; }
+  .a-field .a-box { margin-block-start: 3px; padding: var(--space-2); border: var(--border-width-default) solid var(--border-default); border-radius: var(--ds-radius-control); background: #FFFFFF; color: #6B7388; }
+  .a-field .a-box.edge3 { border-color: #8A92A4; }
+  .a-pair { display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; }
+  .a-ratio { padding: 1px var(--space-1); border-radius: 3px; font: var(--font-weight-bold) var(--font-size-2xs) / 1.5 var(--font-mono); }
+  .a-ratio.fail { background: var(--error-subtitle); color: var(--error-text); }
+  .a-ratio.pass { background: var(--success-subtitle); color: var(--success-text); }
+  
+  /* ds-table + its ds-pagination footer, from table.component.scss .pagination-footer and pagination.component.scss */
+  .a-table { inline-size: 100%; border: var(--border-width-default) solid var(--border-divider); border-radius: var(--ds-radius-panel); background: var(--surface-default); overflow: hidden; font: var(--font-size-2xs) var(--font-sans); }
+  .a-tr { display: grid; grid-template-columns: 1fr 4rem; gap: var(--space-2); align-items: center; padding: var(--space-2) var(--table-cell-pad-x); border-bottom: var(--border-width-default) solid var(--border-divider); color: var(--text-primary); }
+  .a-tr.th { color: var(--text-tertiary); font-weight: var(--font-weight-bold); }
+  .a-foot { padding-block: var(--space-3); padding-inline: var(--table-cell-pad-x); }
+  .a-pg { display: inline-flex; gap: var(--space-1); align-items: center; flex-wrap: wrap; }
+  .a-pg.spread { display: flex; inline-size: 100%; }
+  .a-pg .a-pg-label { margin-right: var(--space-2); font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-flat) var(--font-sans); color: var(--text-secondary); }
+  .a-pg.spread .a-pg-label { margin-right: auto; }
+  .a-pg b { min-inline-size: var(--field-h-sm); block-size: var(--field-h-sm); padding: 0 var(--space-2); display: inline-grid; place-items: center; border: var(--border-width-default) solid var(--border-default); border-radius: var(--ds-radius-control); background: var(--surface-default); color: var(--text-secondary); font: var(--font-weight-semibold) var(--font-size-s) / var(--line-height-flat) var(--font-sans); }
+  .a-pg.md b { min-inline-size: var(--field-h-md); block-size: var(--field-h-md); }
+  .a-pg b.on { background: var(--accent); border-color: var(--accent); color: var(--accent-on); }
+  .a-pg i { padding: 0 var(--space-2); color: var(--text-tertiary); font-style: normal; }
+  .a-pg.off b { color: var(--text-disabled); background: var(--surface-default); border-color: var(--border-default); }
+  .a-pg.mini b { min-inline-size: 22px; block-size: 22px; padding: 0 var(--space-1); font-size: var(--font-size-2xs); }
+  .a-pg.mini .a-pg-label { font-size: var(--font-size-2xs); }
+  
+  /* ds-skeleton placeholder */
+  .a-sk { display: block; block-size: 10px; border-radius: var(--radius-md); background: var(--surface-secondary); }
+  .a-sk.lbl { inline-size: 110px; block-size: 12px; margin-right: var(--space-2); }
+  .a-pg.spread .a-sk.lbl { margin-right: auto; }
+  .a-hot { outline: 2px solid var(--error); outline-offset: 1px; }
+  
+  /* closing scrim over the page it covers */
+  .a-page { position: relative; min-inline-size: 220px; block-size: 110px; padding: var(--space-3); border-radius: var(--radius-md); background: var(--surface-default); border: var(--border-width-default) solid var(--border-divider); font: var(--font-size-2xs) var(--font-sans); color: var(--text-secondary); }
+  .a-page .a-btn { margin-block-start: var(--space-3); }
+  .a-page .a-btn.hit { box-shadow: 0 0 0 3px var(--primary-muted); }
+  .a-scrim { position: absolute; inset: 0; border-radius: var(--radius-md); border: 2px dashed var(--error); display: flex; align-items: flex-end; justify-content: flex-end; padding: var(--space-1) var(--space-2); font: var(--font-weight-bold) 9px / 1.3 var(--font-mono); color: var(--error-text); }
+  .a-scrim.pass { border-color: var(--border-strong); color: var(--text-tertiary); }
+  .a-tap { position: absolute; inline-size: 18px; block-size: 18px; border-radius: 50%; border: 2px solid var(--error); background: var(--error-subtitle); inset-block-start: 58px; inset-inline-start: 58px; }
+  .a-tap.pass { border-color: var(--success); background: var(--success-subtitle); }
+  /* consumer asks: F */
+  /* group F: consumer asks, API and features */
+  .bn.a-info { border-inline-start-color: var(--info); background: var(--info-subtitle); }
+  .bn.a-info i { background: var(--info); }
+  
+  .a-switch { position: relative; display: inline-block; inline-size: 36px; block-size: 20px; border-radius: var(--radius-pill); background: var(--border-strong); vertical-align: middle; }
+  .a-switch::after { content: ""; position: absolute; inset-block-start: 2px; inset-inline-start: 2px; inline-size: 16px; block-size: 16px; border-radius: var(--radius-pill); background: var(--surface-default); box-shadow: var(--shadow-1); }
+  .a-switch.is-on { background: var(--error); }
+  .a-switch.is-on::after { transform: translateX(16px); }
+  .a-switch-row { display: flex; align-items: center; gap: var(--space-2); font: var(--font-weight-bold) var(--font-size-2xs) var(--font-sans); }
+  
+  .a-dialog { margin-block-start: var(--space-2); max-inline-size: 230px; padding: var(--space-3); border-radius: var(--ds-radius-panel); background: var(--surface-default); box-shadow: var(--shadow-modal); font: var(--font-size-2xs) / 1.45 var(--font-sans); }
+  .a-dialog b { display: block; margin-block-end: var(--space-1); color: var(--error-text); }
+  .a-dialog .btn-row { justify-content: flex-end; margin-block-start: var(--space-2); }
+  .a-dialog .btn-row .a-ghost { background: transparent; color: var(--text-primary); }
+  
+  .a-seg i + i { border-inline-start: 2px solid var(--surface-default); }
+  .a-seg i.a-dim { opacity: var(--ds-chart-dim-opacity); }
+  
+  .a-num { display: flex; align-items: center; gap: var(--space-2); font: var(--font-size-2xs) var(--font-mono); color: var(--text-primary); }
+  .a-num .bar { flex: 1 1 auto; min-inline-size: 60px; }
+  .a-num .a-clash { color: var(--error-text); font-weight: var(--font-weight-bold); }
+  
+  .a-ta { min-inline-size: 200px; font: var(--font-size-2xs) / 1.5 var(--font-sans); }
+  .a-ta .a-tools { display: flex; gap: var(--space-1); margin-block-end: 3px; }
+  .a-ta .a-tools b { padding: 1px var(--space-2); border: var(--border-width-default) solid var(--border-default); border-radius: var(--radius-sm); background: var(--surface-default); }
+  .a-ta .box { min-block-size: 44px; padding: var(--space-2); border: var(--border-width-default) solid var(--border-default); border-radius: var(--ds-radius-control); background: var(--surface-default); }
+  .a-ta mark { background: var(--primary-subtitle); color: var(--text-primary); }
+  
+  .field-mock .box.a-focused { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-muted); }
+  .field-mock .a-caret { inline-size: 1px; block-size: 0.9rem; background: var(--text-primary); }
+  
+  .a-canvas { min-inline-size: 240px; max-inline-size: 300px; }
+  .a-canvas svg { inline-size: 100%; block-size: auto; display: block; }
+  .a-canvas text { font: var(--font-weight-medium) 9px var(--font-sans); fill: var(--text-primary); }
+  .a-canvas text.a-edge { font: var(--font-weight-bold) 8px var(--font-mono); fill: var(--text-secondary); }
+  /* consumer asks: H */
+  /* group H - consumer style hooks. Consumer colours are literal hex from their own token files. */
+  .a-col { display: grid; gap: var(--space-2); }
+  
+  /* ds-accordion-item, from accordion-item.component.scss */
+  .a-acc { min-inline-size: 230px; border: var(--border-width-default) solid var(--border-divider); border-radius: var(--radius-lg); background: var(--surface-default); overflow: hidden; }
+  .a-acc .h { display: flex; align-items: center; gap: var(--space-2); padding: var(--space-3) var(--space-4); font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-flat) var(--font-sans); color: var(--text-primary); }
+  .a-acc > * + .h { border-top: var(--border-width-default) solid var(--border-divider); }
+  .a-acc .chev { margin-inline-start: auto; color: var(--icon-default); display: inline-block; }
+  .a-acc .h.open .chev { transform: rotate(90deg); }
+  .a-acc .b { padding: var(--space-2) var(--space-4) var(--space-4); font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans); color: var(--text-secondary); }
+  .a-acc.nyl { border: 0; border-radius: 0; background: transparent; }
+  .a-acc.nyl .h { padding: 22px 0; gap: 24px; font: 400 17px / 1.35 Georgia, "Times New Roman", serif; letter-spacing: -0.01em; }
+  .a-acc.nyl .h:hover { color: #0468ff; }
+  .a-acc.nyl .chev { transform: rotate(90deg); }
+  .a-acc.nyl .h.open .chev { transform: rotate(270deg); }
+  .a-acc.nyl .b { padding: 0 48px 24px 0; }
+  
+  /* the field box shared by ds-input / ds-select / ds-textarea / ds-autocomplete */
+  .a-fld { box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); min-inline-size: 190px; min-block-size: 40px; padding: 0 var(--field-pad-x); border: var(--border-width-default) solid var(--border-default); border-radius: var(--ds-radius-control); background: var(--surface-default); font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans); color: var(--text-primary); }
+  .a-fld.area { align-items: flex-start; min-block-size: 60px; padding-block: var(--space-2); }
+  .a-fld .tag { font: var(--font-size-3xs) var(--font-mono); color: var(--text-tertiary); }
+  .a-fld .chv { color: var(--icon-default); }
+  .a-fld.focus { border-color: var(--accent); box-shadow: var(--ds-field-focus-shadow); }
+  .a-fld .ph { color: var(--text-tertiary); }
+  .a-fld .ph.ua { color: #757575; }
+  .a-fld.topaz { border-color: #00acaa; }
+  .a-fld.rp { border-color: #dcd8d4; color: #1a1a1f; }
+  .a-fld.rp .ph { color: #5c5c63; }
+  .a-fld.rp.focus { border-color: #0468ff; }
+  
+  /* ds-button v-outline + ds-icon-button standard */
+  .a-btns { display: flex; align-items: center; gap: var(--space-2); }
+  .a-ib { display: inline-grid; place-items: center; inline-size: 32px; block-size: 32px; border: var(--border-width-default) solid transparent; border-radius: var(--ds-radius-control); color: var(--text-secondary); }
+  .a-ib svg { inline-size: 16px; block-size: 16px; }
+  .a-ib.hov { background: var(--surface-muted); color: var(--text-primary); }
+  .a-ib.hov.firm { border-color: #d1d5db; background: #f3f4f6; }
+  .a-hint { font: var(--font-size-3xs) var(--font-mono); color: var(--text-tertiary); }
+  
+  /* ds-empty-state, from empty-state.component.scss */
+  .a-empty { display: grid; justify-items: center; gap: var(--space-2); padding: var(--space-4) var(--space-3); min-inline-size: 200px; text-align: center; }
+  .a-empty .tile { inline-size: 40px; block-size: 40px; border-radius: var(--radius-lg); background: var(--accent-surface-tint); display: grid; place-items: center; color: var(--text-secondary); }
+  .a-empty .t { margin: 0; font: var(--font-weight-bold) var(--font-size-h5) / var(--line-height-snug) var(--font-sans); color: var(--text-primary); }
+  .a-empty .t.nyl { font-family: Georgia, "Times New Roman", serif; font-weight: 400; color: #000a62; }
+  .a-empty .p { margin: 0; font: var(--font-size-s) / var(--line-height-base) var(--font-sans); color: var(--text-secondary); }
+  
+  /* ds-badge + ds-page-header subtitle */
+  .a-kpi { display: flex; align-items: center; gap: var(--space-2); font: var(--font-weight-bold) 24px / 1.1 var(--font-sans); color: var(--text-primary); }
+  .a-badge { display: inline-flex; align-items: center; padding: var(--badge-pad-y) var(--badge-pad-x); border-radius: var(--ds-radius-pill); background: var(--surface-secondary); color: var(--text-secondary); font: var(--font-weight-bold) var(--font-size-xs) / var(--line-height-base) var(--font-sans); letter-spacing: var(--letter-spacing-wide); white-space: nowrap; }
+  .a-badge.big { font-size: var(--font-size-s); }
+  .a-ph { margin-block-start: var(--space-3); }
+  .a-ph .t { margin: 0; font: var(--font-weight-bold) var(--font-size-h3) / var(--line-height-tight) var(--font-sans); color: var(--text-primary); }
+  .a-ph .s { margin: var(--space-1-5) 0 0; font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans); color: var(--text-secondary); }
+  .a-ph .s.big { font-size: var(--font-size-m); }
+  
+  /* ds-banner compact */
+  .a-banner { display: flex; gap: var(--space-2); padding: var(--space-2) var(--space-3); border-radius: var(--radius-md); background: var(--info-subtitle); min-inline-size: 230px; font: var(--font-size-s) / var(--line-height-base) var(--font-sans); color: var(--text-primary); }
+  .a-banner i { inline-size: 0.9rem; block-size: 0.9rem; border-radius: 50%; background: var(--info); flex: none; margin-block-start: 3px; }
+  .a-banner b { font: var(--font-weight-bold) var(--font-size-s) / var(--line-height-base) var(--font-sans); }
+  .a-banner.small, .a-banner.small b { font-size: var(--font-size-xs); }
+  
+  /* ds-table: utility column and pagination footer */
+  .a-tbl { border-collapse: collapse; font: var(--font-size-2xs) var(--font-sans); color: var(--text-primary); background: var(--surface-default); }
+  .a-tbl th { text-align: start; color: var(--text-tertiary); font-weight: var(--font-weight-bold); padding: var(--space-2) var(--space-3); border-bottom: var(--border-width-default) solid var(--border-divider); }
+  .a-tbl td { padding: var(--space-2) var(--space-3); border-bottom: var(--border-width-default) solid var(--border-divider); }
+  .a-tbl .chevc { color: var(--icon-default); text-align: end; padding-inline-end: 0; }
+  .a-tbl .util { inline-size: var(--space-10); padding-inline: var(--table-cell-pad-x); background: var(--error-subtitle); color: var(--text-tertiary); text-align: center; }
+  .a-tbl .util.slim { inline-size: 32px; padding-inline: 0 4px; background: var(--success-subtitle); }
+  .a-hfoot { display: flex; justify-content: space-between; align-items: center; padding-block: var(--space-3); padding-inline: var(--space-3); border-top: var(--border-width-default) solid var(--border-divider); font: var(--font-size-2xs) var(--font-sans); color: var(--text-secondary); min-inline-size: 220px; background: var(--surface-default); }
+  .a-hfoot { box-shadow: inset 0 12px 0 var(--surface-muted); }
+  .a-hfoot.roomy { padding-block-start: 20px; box-shadow: inset 0 20px 0 var(--success-subtitle); }
+  
+  /* var() inside the code samples is text, and <code> is what the deck linter skips */
+  .css code { font: inherit; padding: 0; background: none; }
+  /* consumer asks: P1 */
+  .a-exp { inline-size: 100%; min-inline-size: 300px; border-collapse: collapse; border: 1px solid var(--border-default); background: var(--surface-default); font: var(--font-size-2xs) / 1.4 var(--font-sans); }
+  .a-exp th, .a-exp td { padding: 6px 8px; border-bottom: 1px solid var(--border-default); text-align: start; }
+  .a-exp th { color: var(--text-tertiary); font-weight: var(--font-weight-bold); }
+  .a-exp .tog { inline-size: 20px; color: var(--text-tertiary); }
+  .a-exp .panel { background: var(--surface-secondary); }
+  .a-exp .panel.sliver { display: block; inline-size: 18px; overflow: hidden; white-space: nowrap; outline: 2px dashed var(--error); outline-offset: -2px; }
+  .a-exp .inner { inline-size: 100%; border-collapse: collapse; }
+  .a-exp .inner td { padding: 3px 6px; border: 0; color: var(--text-secondary); white-space: nowrap; }
+</style>
+
+<main>
+  <div class="masthead">
+    <h1>23 аска консьюмеров и 33 решений, каждое с нарисованными вариантами</h1>
+    <p class="lede">
+      Сверху - всё, чего ждёт консьюмер: фиксы, хуки и фичи из бэклога, каждый показан как есть
+      сейчас и как будет после. Ниже - открытые деки и бакет <code>Decisions</code>. Вариант
+      выбирается кликом, звёздочка - рекомендация, внизу собирается одна строка со всеми ответами.
+      Справа от аска - приоритет, консьюмер и вид работы; справа от решения - ссылка на деку.
+    </p>
+    <div class="chips">
+      <span class="chip is-open">Нужно решение</span>
+      <span class="chip">аски консьюмеров + деки + бакет Decisions</span>
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <p class="group">Ждут консьюмеры · срочно (P2)</p>
+
+  <section class="q" data-q="ask-control-contrast">
+      <div class="q-head">
+        <span class="q-num">01</span>
+        <h2 class="q-title">Край поля и текст на secondary не проходят контраст</h2>
+        <span class="q-src">P2 · ids-europe-landing · дефект</span>
+      </div>
+      <p class="q-sub">
+        <code>--border-default</code> (#DCE1EA) - рамка <code>ds-input</code> и ещё 25 компонентов. <code>--secondary-on</code>
+        всегда белый, а <code>--secondary</code> пересобирается из бренда. Лендинг переопределяет оба.
+      </p>
+
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">сегодня, на белом</p>
+          <div class="a-white">
+            <div class="a-field">Email<div class="a-box">name@company.com</div></div>
+            <div class="a-pair"><span class="a-ratio fail">1.31:1</span><code>--border-default</code></div>
+            <div class="a-pair"><span class="a-btn gold">Оставить заявку</span><span class="a-ratio fail">1.91:1</span></div>
+          </div>
+        </div>
+        <div class="spec">
+          <p class="cap">после</p>
+          <div class="a-white">
+            <div class="a-field">Email<div class="a-box edge3">name@company.com</div></div>
+            <div class="a-pair"><span class="a-ratio pass">3.12:1</span><code>#8A92A4</code></div>
+            <div class="a-pair"><span class="a-btn gold dark">Оставить заявку</span><span class="a-ratio pass">9.09:1</span></div>
+          </div>
+        </div>
+      </div>
+      <p class="says">WCAG 1.4.11: граница контрола от 3:1. WCAG 1.4.3: текст кнопки от 4.5:1. #FBAC18 на #161A28 - 9.09:1.</p>
+
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <p class="css">--border-default: var(--neutral-200); <span class="hit">/* 1.31:1 */</span>
+  --secondary-on:   var(--primary-on);  <span class="hit">/* white */</span></p>
+          <dl class="layer"><dt>Консьюмер</dt><dd>_theme.scss:44-57, :89</dd></dl>
+        </div>
+        <div class="opt"><h3>Край 3:1 и on от светлоты <span class="star">★</span></h3>
+          <p class="css">--border-control: /* 3:1 в обеих темах */;
+  --secondary-on: /* от --secondary-l */;</p>
+          <dl class="layer"><dt>Бренд</dt><dd class="gain">золото получает тёмный текст сам</dd><dt>Работа</dt><dd>новая роль + 26 компонентов</dd></dl>
+        </div>
+        <div class="opt"><h3>Край 3:1 и чеклист бренда</h3>
+          <p class="css">--border-control: /* 3:1 в обеих темах */;
+  <span class="dead">--secondary-on: auto</span> → в must-rebind</p>
+          <dl class="layer"><dt>Бренд</dt><dd>сам ставит --secondary-on</dd><dt>Промах</dt><dd>молчит, как сегодня</dd></dl>
+        </div>
+      </div>
+    </section>
+
+
+  <section class="q" data-q="ask-banner-info-armed">
+      <div class="q-head">
+        <span class="q-num">02</span>
+        <h2 class="q-title">Info-баннер, написанный после banner.announce, молча начинает озвучиваться</h2>
+        <span class="q-src">P2 · mm-ecm · манифест 0.13.4</span>
+      </div>
+      <p class="q-sub">Консьюмер включил <code>banner: { announce: true }</code> и заглушил 14 баннеров-мебели. Через merge пришёл баннер, написанный под старый дефолт, и теперь звучит на каждом входе в архивную программу. Обратный случай, неозвученный error-баннер, - отдельный вопрос <code>ask-banner-warning</code> ниже.</p>
+
+      <div class="stage">
+        <div class="spec" style="min-inline-size:250px">
+          <p class="cap">написан до конфига: молчал</p>
+          <div class="bn a-info"><i></i><span>This program is archived …</span></div>
+          <p class="css">&lt;ds-banner variant="info" icon="lock"&gt;</p>
+          <p class="says">role и aria-live нет</p>
+        </div>
+        <div class="spec" style="min-inline-size:250px">
+          <p class="cap">после merge под конфигом</p>
+          <div class="bn a-info"><i></i><span>This program is archived …</span></div>
+          <p class="css">provideDsConfig({ banner: { <span class="hit">announce: true</span> } })</p>
+          <p class="says">role="status" aria-live="polite": «This program is archived…»</p>
+        </div>
+      </div>
+
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <p class="console quiet">консоль пуста</p>
+          <dl class="layer"><dt>Как нашли</dt><dd>пересчёт баннеров после merge, 43 → 44</dd><dt>Платит</dt><dd>автор СЛЕДУЮЩЕГО баннера</dd></dl>
+        </div>
+        <div class="opt"><h3>Dev-предупреждение для info/success <span class="star">★</span></h3>
+          <p class="console">[ds-banner] variant="info" announces because DS_CONFIG.banner.announce is true. Bind [announce] to decide.</p>
+          <dl class="layer"><dt>Срабатывает</dt><dd class="gain">info/success, announce из КОНФИГА</dd><dt>Молчит</dt><dd>явный [announce]="true", error/warning</dd></dl>
+        </div>
+        <div class="opt"><h3>Строка в манифесте</h3>
+          <p class="css">"pitfall": "… A banner written after
+  the config announces unless it
+  binds [announce]=\"false\"."</p>
+          <dl class="layer"><dt>Кого ловит</dt><dd>того, кто читает манифест при апгрейде</dd><dt>Кого нет</dt><dd>автора баннера через месяц</dd></dl>
+        </div>
+      </div>
+    </section>
+
+  <section class="q" data-q="ask-column-axis">
+      <div class="q-head">
+        <span class="q-num">03</span>
+        <h2 class="q-title">Колонку нельзя посадить на вторую ось, в двухосевом чарте она всегда слева</h2>
+        <span class="q-src">P2 · mm-ecm · порт microsite-analytics</span>
+      </div>
+      <p class="q-sub">Экран читал визиты по левой оси и запросы агента по правой. Запросы - колонки, <code>dsColumnSeries</code> оси не выбирает, и при порте стороны поменялись местами. Линия умеет: <code>LineSeriesData.axis</code>.</p>
+
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">экран, который портировали</p>
+          <div class="mini-chart">
+            <svg viewBox="0 0 220 104"><line x1="28" y1="10" x2="28" y2="84" stroke="var(--border-default)"/><line x1="192" y1="10" x2="192" y2="84" stroke="var(--border-default)"/><line x1="28" y1="84" x2="192" y2="84" stroke="var(--border-default)"/><g fill="var(--ds-chart-series-2-color)"><rect x="36" y="54" width="16" height="30" rx="2"/><rect x="68" y="32" width="16" height="52" rx="2"/><rect x="102" y="44" width="16" height="40" rx="2"/><rect x="136" y="20" width="16" height="64" rx="2"/><rect x="168" y="36" width="16" height="48" rx="2"/></g><polyline fill="none" stroke="var(--ds-chart-series-1-color)" stroke-width="2" points="44,50 76,38 110,44 144,24 176,30"/><text x="2" y="16" class="tick" style="fill:var(--ds-chart-series-1-color)">4k</text><text x="2" y="50" class="tick" style="fill:var(--ds-chart-series-1-color)">2k</text><text x="196" y="16" class="tick" style="fill:var(--ds-chart-series-2-color)">80</text><text x="196" y="50" class="tick" style="fill:var(--ds-chart-series-2-color)">40</text><text x="2" y="100" class="tick">← визиты</text><text x="156" y="100" class="tick">запросы →</text></svg>
+          </div>
+        </div>
+        <div class="spec">
+          <p class="cap">0.13.4: колонка прибита к primary</p>
+          <div class="mini-chart">
+            <svg viewBox="0 0 220 104"><line x1="28" y1="10" x2="28" y2="84" stroke="var(--border-default)"/><line x1="192" y1="10" x2="192" y2="84" stroke="var(--border-default)"/><line x1="28" y1="84" x2="192" y2="84" stroke="var(--border-default)"/><g fill="var(--ds-chart-series-2-color)"><rect x="36" y="54" width="16" height="30" rx="2"/><rect x="68" y="32" width="16" height="52" rx="2"/><rect x="102" y="44" width="16" height="40" rx="2"/><rect x="136" y="20" width="16" height="64" rx="2"/><rect x="168" y="36" width="16" height="48" rx="2"/></g><polyline fill="none" stroke="var(--ds-chart-series-1-color)" stroke-width="2" points="44,50 76,38 110,44 144,24 176,30"/><text x="2" y="16" class="tick" style="fill:var(--ds-chart-series-2-color)">80</text><text x="2" y="50" class="tick" style="fill:var(--ds-chart-series-2-color)">40</text><text x="196" y="16" class="tick" style="fill:var(--ds-chart-series-1-color)">4k</text><text x="196" y="50" class="tick" style="fill:var(--ds-chart-series-1-color)">2k</text><text x="2" y="100" class="tick">← запросы</text><text x="160" y="100" class="tick">визиты →</text></svg>
+          </div>
+          <p class="says">стороны перевёрнуты против заменяемого экрана</p>
+        </div>
+      </div>
+
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <p class="css">&lt;svg:g dsColumnSeries [data]="requests" /&gt;</p>
+          <dl class="layer"><dt>Обход</dt><dd>визиты колонками, запросы линией</dd><dt>Цена обхода</dt><dd>другой вид у обеих серий</dd></dl>
+        </div>
+        <div class="opt"><h3>axis на dsColumnSeries <span class="star">★</span></h3>
+          <p class="css">&lt;svg:g dsColumnSeries [data]="requests"
+    <span class="hit">axis="secondary"</span> /&gt;</p>
+          <dl class="layer"><dt>По умолчанию</dt><dd class="gain">primary, чарты не меняются</dd><dt>Где</dt><dd>на директиве, не на точке: серия - плоский список</dd></dl>
+        </div>
+      </div>
+    </section>
+
+  <p class="group">Ждут консьюмеры · P3</p>
+
+
+  <section class="q" data-q="ask-closing-scrim-clicks">
+      <div class="q-head">
+        <span class="q-num">04</span>
+        <h2 class="q-title">Невидимый закрывающийся scrim глотает клики до 300 мс</h2>
+        <span class="q-src">P3 · mm-ecm-platform · аудит 0.13.4</span>
+      </div>
+      <p class="q-sub">
+        Под <code>reduce</code> <code>animationend</code> не приходит, закрытие делает таймер на 300 мс. Всё это время
+        <code>.modal-backdrop.closing</code> с <code>opacity: 0</code> лежит поверх страницы без <code>pointer-events: none</code>.
+      </p>
+
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">сегодня</p>
+          <div class="a-page">Страница под модалкой<br><span class="a-btn">Сохранить</span>
+            <span class="a-scrim">.closing · opacity 0 · клик съеден</span><span class="a-tap"></span></div>
+        </div>
+        <div class="spec">
+          <p class="cap">после</p>
+          <div class="a-page">Страница под модалкой<br><span class="a-btn hit">Сохранить</span>
+            <span class="a-scrim pass">pointer-events: none</span><span class="a-tap pass"></span></div>
+        </div>
+      </div>
+      <p class="css">.modal-backdrop.closing {
+    animation-fill-mode: forwards;
+    <span class="hit">pointer-events: none;</span>   /* так же drawer-scrim, sheet-overlay */
+  }</p>
+
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <p class="css">// "animationend still tears down"
+  setTimeout(() =&gt; this.finishClose(), 300);</p>
+          <dl class="layer"><dt>Клик</dt><dd>съеден до 300 мс</dd><dt>Коммент</dt><dd>зовёт таймер лишним</dd></dl>
+        </div>
+        <div class="opt"><h3>Клик насквозь и коммент про таймер <span class="star">★</span></h3>
+          <p class="css">.closing { pointer-events: none }
+  // teardown at 0s: the 300ms timer</p>
+          <dl class="layer"><dt>Клик</dt><dd class="gain">проходит сразу</dd><dt>Коммент</dt><dd class="gain">3 копии называют таймер</dd></dl>
+        </div>
+        <div class="opt"><h3>Клик насквозь и тест</h3>
+          <p class="css">.closing { pointer-events: none }
+  it('reduce, timer stubbed: scrim leaves')</p>
+          <dl class="layer"><dt>Клик</dt><dd class="gain">проходит сразу</dd><dt>Риск</dt><dd>консьюмер уже измерил, что тест упадёт</dd></dl>
+        </div>
+      </div>
+    </section>
+
+  <section class="q" data-q="ask-dead-overrides">
+      <div class="q-head">
+        <span class="q-num">05</span>
+        <h2 class="q-title">Переопределение --ds-* может ничего не делать, и никто об этом не скажет</h2>
+        <span class="q-src">P3 · mm-ecm · аудит 0.8.0 → 0.13.4</span>
+      </div>
+      <p class="q-sub">В <code>agent-portal/src/styles/_buttons.scss</code> 15 объявлений <code>--ds-button-bg*</code> / <code>--ds-button-fg</code>: библиотека не читает эти имена с 0.3.0. Манифесты такое не ловят - имя умерло до начала цепочки апгрейда.</p>
+
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">15 объявлений в пустоту</p>
+          <p class="css">#{$btn}.secondary {
+    <span class="dead">--ds-button-bg: linear-gradient(…);</span>
+    <span class="dead">--ds-button-bg-hover: color-mix(…);</span>
+    <span class="dead">--ds-button-fg: var(-&#45;color-brand-900);</span>
+  }</p>
+          <p class="says">библиотека читает --ds-button-bg-color и --ds-button-label-color</p>
+        </div>
+        <div class="spec">
+          <p class="cap">селектор, который ловит все кнопки</p>
+          <p class="css">$primary: 'ds-button .button<span class="hit">:not(.secondary)
+    :not(.tertiary):not(.outline):not(.error)
+    :not(.success):not(.warning):not(.text)</span>';</p>
+          <p class="css">&lt;button class="button c-error v-outline"&gt;</p>
+          <p class="says">рендерятся c-* и v-*, ни один :not() ничего не исключает</p>
+        </div>
+      </div>
+      <p class="says">Сборка зелёная, консоль пуста, линт молчит.</p>
+
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <p class="console quiet">консоль пуста</p>
+          <dl class="layer"><dt>Как находят</dt><dd>ручной аудит, раз в несколько релизов</dd></dl>
+        </div>
+        <div class="opt"><h3>Проверка у консьюмера <span class="star">★</span></h3>
+          <p class="console">$ npx ds-check-overrides<br>_buttons.scss:46 --ds-button-bg: not read (→ --ds-button-bg-color)<br>_buttons.scss:77 --ds-button-fg: not read (→ --ds-button-label-color)<br>_buttons.scss:68 .button.secondary: never rendered (→ .c-secondary)<br>16 dead declarations, 7 selectors match nothing</p>
+          <dl class="layer"><dt>Что сверяет</dt><dd>объявленные --ds-* против читаемых пакетом (176 против 1 028)</dd><dt>Где живёт</dt><dd>bin в пакете или schematic</dd></dl>
+        </div>
+      </div>
+    </section>
+
+  <section class="q" data-q="ask-bar-segment-selected">
+      <div class="q-head">
+        <span class="q-num">06</span>
+        <h2 class="q-title">Сегмент ds-bar-chart нельзя отметить как выбранный</h2>
+        <span class="q-src">P3 · mm-ecm-kb · сегментация</span>
+      </div>
+      <p class="q-sub">Разбивка аудитории фильтруется по одной части. При переезде на <code>segments</code> подсветка выбранной части пропала, выбор теперь несёт только легенда консьюмера. <code>dimOthers</code> гасит строки, не части.</p>
+
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">сейчас: все части одинаковы</p>
+          <div class="rows" style="min-inline-size:210px">
+            <div class="row"><span>Аудитория</span><span class="bar a-seg"><i style="inline-size:42%;background:var(--ds-chart-series-1-color)"></i><i style="inline-size:28%;background:var(--ds-chart-series-2-color)"></i><i style="inline-size:18%;background:var(--ds-chart-series-3-color)"></i><i style="inline-size:12%;background:var(--ds-chart-series-4-color)"></i></span></div>
+          </div>
+          <p class="legend-row"><i style="background:var(--ds-chart-series-1-color)"></i><strong>High Value Customers</strong> · выбрано</p>
+          <p class="says">выбор виден только в легенде</p>
+        </div>
+        <div class="spec">
+          <p class="cap">выбранная часть, остальные приглушены</p>
+          <div class="rows" style="min-inline-size:210px">
+            <div class="row"><span>Аудитория</span><span class="bar a-seg"><i style="inline-size:42%;background:var(--ds-chart-series-1-color)"></i><i class="a-dim" style="inline-size:28%;background:var(--ds-chart-series-2-color)"></i><i class="a-dim" style="inline-size:18%;background:var(--ds-chart-series-3-color)"></i><i class="a-dim" style="inline-size:12%;background:var(--ds-chart-series-4-color)"></i></span></div>
+          </div>
+          <p class="says">те же --ds-chart-dim-opacity, что у dimOthers</p>
+        </div>
+      </div>
+
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <dl class="layer"><dt>Выбор несёт</dt><dd>легенда консьюмера</dd></dl>
+        </div>
+        <div class="opt"><h3>selected на сегменте <span class="star">★</span></h3>
+          <p class="css">{ label: 'High Value Customers',
+    value: 12400, <span class="hit">selected: true</span> }</p>
+          <dl class="layer"><dt>Где</dt><dd>BarChartSegment, своя часть в каждой строке</dd></dl>
+        </div>
+        <div class="opt"><h3>Вход activeSegment</h3>
+          <p class="css">&lt;ds-bar-chart <span class="hit">activeSegment="s1"</span> /&gt;</p>
+          <dl class="layer"><dt>Где</dt><dd>на чарте, один id на все строки</dd></dl>
+        </div>
+      </div>
+    </section>
+
+  <section class="q" data-q="ask-chart-locale">
+      <div class="q-head">
+        <span class="q-num">07</span>
+        <h2 class="q-title">Чарты берут локаль чисел из браузера, настройки нет</h2>
+        <span class="q-src">P3 · mm-ecm-kb · app.config</span>
+      </div>
+      <p class="q-sub">Форматтер значений идёт через <code>Intl.NumberFormat(undefined)</code>, а процент - через <code>toFixed(1)</code>. На машине с de-DE один чарт печатает две записи. Консьюмер копирует весь дефолтный форматтер, чтобы прибить <code>en-US</code>.</p>
+
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">de-DE, сегодня</p>
+          <div class="a-num"><span class="bar" style="background:var(--surface-default)"><i style="display:block;block-size:12px;inline-size:62%;background:var(--ds-chart-series-default-color)"></i></span><span class="a-clash">13,5</span><span>13.5%</span></div>
+          <p class="says">ось: 1,2 Mio. · подсказка: 13,5 · доля: 13.5%</p>
+        </div>
+        <div class="spec">
+          <p class="cap">chart.locale: 'en-US'</p>
+          <div class="a-num"><span class="bar" style="background:var(--surface-default)"><i style="display:block;block-size:12px;inline-size:62%;background:var(--ds-chart-series-default-color)"></i></span><span>13.5</span><span>13.5%</span></div>
+          <p class="says">ось: 1.2M · подсказка: 13.5 · доля: 13.5%</p>
+        </div>
+      </div>
+
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <p class="css">chart: {
+    valueFormat: (value, location) =&gt;
+      value.toLocaleString('en-US',
+        location === 'tick'
+          ? { notation: 'compact', … }
+          : { maximumFractionDigits: 1 }),
+  }</p>
+          <dl class="layer"><dt>Процент</dt><dd>всё равно toFixed, форматтер его не трогает</dd></dl>
+        </div>
+        <div class="opt"><h3>chart.locale в конфиге <span class="star">★</span></h3>
+          <p class="css">provideDsConfig({
+    chart: { <span class="hit">locale: 'en-US'</span> },
+  })</p>
+          <dl class="layer"><dt>Читают</dt><dd class="gain">дефолтный форматтер и formatPercent</dd><dt>Прецедент</dt><dd>datePicker.locale</dd></dl>
+        </div>
+      </div>
+    </section>
+
+
+
+
+
+  <section class="q" data-q="ask-indeterminate">
+    <div class="q-head">
+      <span class="q-num">08</span>
+      <h2 class="q-title">Форма неопределённого прогресса на узком треке</h2>
+      <a class="q-src" href="../docs/todo.md">бэклог, без деки</a>
+    </div>
+    <p class="q-sub">
+      Причина уже исправлена: цикл шёл на кривой, стал <code>linear</code>, и кусок теперь на треке
+      86.7% цикла против 48.3%. Треки ниже живые и узкие - как в карточке узла у консьюмера.
+    </p>
+
+    <div class="stage">
+      <div class="spec">
+        <p class="cap">было, кривая</p>
+        <div class="track narrow"><i class="chunk eased"></i></div>
+        <p class="says">на треке 48.3% цикла</p>
+      </div>
+      <div class="spec">
+        <p class="cap">сейчас, linear</p>
+        <div class="track narrow"><i class="chunk"></i></div>
+        <p class="says">86.7%, целиком 46.8%</p>
+      </div>
+      <div class="spec">
+        <p class="cap">полоса консьюмера</p>
+        <div class="track narrow"><i class="stripe"></i></div>
+        <p class="says">100% трека каждый кадр</p>
+      </div>
+    </div>
+
+    <div class="opts">
+      <div class="opt"><h3>Оставить бегущий кусок <span class="star">★</span></h3>
+        <p>Дефект вылечен. 13.3% цикла куска нет совсем - это бегущий кусок, который так и работает.</p>
+        <dl class="layer"><dt>Кода</dt><dd class="none">нет, уже сделано</dd></dl>
+      </div>
+      <div class="opt"><h3>Полоса по умолчанию</h3>
+        <p>Неопределённый прогресс больше никогда не пуст, на любой ширине.</p>
+        <dl class="layer"><dt>Кода</dt><dd>новый keyframe, градиент</dd><dt>Ломает</dt><dd>вид у всех, кто уже привык к куску</dd></dl>
+      </div>
+      <div class="opt"><h3>Полоса за входом</h3>
+        <p>Узкий трек выбирает форму сам, широкий остаётся как есть.</p>
+        <dl class="layer"><dt>Кода</dt><dd>вход + вторая форма</dd><dt>Цена</dt><dd>две формы одного состояния в API</dd></dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="q" data-q="ask-banner-warning">
+    <div class="q-head">
+      <span class="q-num">09</span>
+      <h2 class="q-title">Предупреждать ли в dev о неозвученном error-баннере</h2>
+      <a class="q-src" href="10-banner-announce-warning.html">дека 10</a>
+    </div>
+    <p class="q-sub">
+      У консьюмера 43 баннера, первый проход пропустил десять. Экран один и тот же, отличается
+      только то, что печатает консоль.
+    </p>
+
+    <div class="stage">
+      <div class="spec" style="min-inline-size:250px">
+        <p class="cap">экран во всех трёх вариантах</p>
+        <div class="bn"><i></i><span><strong>Загрузка манифеста не прошла</strong><br>Файл отклонён на строке 12.</span></div>
+        <div class="bn q2" style="margin-top:var(--space-2)"><i></i><span><strong>Плановые работы в воскресенье</strong><br>С 02:00 до 04:00.</span></div>
+      </div>
+    </div>
+
+    <div class="opts">
+      <div class="opt is-today"><h3>Молчать</h3>
+        <p class="console quiet">консоль пуста</p>
+        <dl class="layer"><dt>Как находят пропуск</dt><dd>ручной обход всех баннеров</dd></dl>
+      </div>
+      <div class="opt"><h3>Предупреждать всегда</h3>
+        <p class="console">[ds-banner] variant="error" without announce - a screen reader will not hear it.</p>
+        <dl class="layer"><dt>Шум</dt><dd>у каждого при апгрейде</dd><dt>Как гасится</dt><dd>правкой каждого элемента</dd></dl>
+      </div>
+      <div class="opt"><h3>Пока ключ не выставлен <span class="star">★</span></h3>
+        <p class="console">[ds-banner] variant="error" without announce. Decide app-wide with provideDsConfig.</p>
+        <dl class="layer"><dt>Шум</dt><dd class="gain">кончается с ключом</dd><dt>Как гасится</dt><dd class="gain">одной строкой</dd></dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="q" data-q="ask-accordion-geometry">
+      <div class="q-head">
+        <span class="q-num">10</span>
+        <h2 class="q-title">У аккордеона токены только на цвета - отступы, шрифт и шеврон не настраиваются</h2>
+        <span class="q-src">P3 · mm-ecm · хук стилей</span>
+      </div>
+      <p class="q-sub">Help FAQ в agent-portal утраивает <code>.head</code> и учетверяет <code>.chev</code>, чтобы перебить <code>[_nghost] .head[_ngcontent]</code>. Любая правка DOM аккордеона молча ломает страницу.</p>
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">DS по умолчанию</p>
+          <div class="a-acc">
+            <div class="h open">Как сменить агента?<span class="chev">›</span></div>
+            <div class="b">Напишите в поддержку.</div>
+            <div class="h">Где полис?<span class="chev">›</span></div>
+          </div>
+        </div>
+        <div class="spec">
+          <p class="cap">как хочет консьюмер</p>
+          <div class="a-acc nyl">
+            <div class="h open">Как сменить агента?<span class="chev">›</span></div>
+            <div class="b">Напишите в поддержку.</div>
+            <div class="h">Где полис?<span class="chev">›</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <p class="css"><code>agent-help ds-accordion-item {
+    <span class="hit">.head.head.head</span> { padding: 22px 0; gap: 24px; }
+    <span class="hit">.chev.chev.chev.chev</span> { transform: rotate(90deg); }
+    <span class="hit">.body-content.body-content.body-content</span> { padding: 0 48px 24px 0; }
+  }</code></p>
+          <dl class="layer"><dt>Работа DS</dt><dd class="none">нет</dd><dt>Цена</dt><dd>гонка специфичности, ломается от правки DOM</dd></dl>
+        </div>
+        <div class="opt"><h3>Хук --ds-accordion-header-* <span class="star">★</span></h3>
+          <p class="css"><code>agent-help ds-accordion-item {
+    --ds-accordion-header-padding-y: 22px;
+    --ds-accordion-header-padding-x: 0;
+    --ds-accordion-header-gap: 24px;
+    --ds-accordion-header-font-family: Georgia, serif;
+    --ds-accordion-body-padding-right: 48px;
+  }
+  &lt;ds-accordion chevron="down"&gt;</code></p>
+          <dl class="layer"><dt>Работа DS</dt><dd>~10 токенов + опция шеврона, дефолты = сегодня</dd><dt>Консьюмер</dt><dd class="gain">без селекторов в чужой DOM</dd></dl>
+        </div>
+      </div>
+    </section>
+
+  <section class="q" data-q="ask-select-focus-border">
+      <div class="q-head">
+        <span class="q-num">11</span>
+        <h2 class="q-title">У ds-select рамка в фокусе прибита к --accent - единственное поле без хука</h2>
+        <span class="q-src">P3 · mm-ecm · хук стилей</span>
+      </div>
+      <p class="q-sub">Все остальные поля красят фокус через токен, select - напрямую (<code>select.component.scss:107,112</code>). Консьюмер держит бирюзовую рамку через <code>!important</code>.</p>
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">DS по умолчанию, в фокусе</p>
+          <div class="a-col">
+            <div class="a-fld focus">Лондон<span class="tag">ds-input</span></div>
+            <div class="a-fld focus">Лондон<span class="chv">▾</span></div>
+          </div>
+        </div>
+        <div class="spec">
+          <p class="cap">как хочет консьюмер</p>
+          <div class="a-col">
+            <div class="a-fld focus topaz">Лондон<span class="tag">--ds-input-border-focus</span></div>
+            <div class="a-fld focus topaz">Лондон<span class="chv">▾</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <p class="css"><code>:is(ds-select, ds-dropdown) .dropdown:focus-visible:not(.error),
+  :is(ds-select, ds-dropdown) .dropdown.open:not(.error) {
+    border-color: var(--color-focus-border) <span class="hit">!important</span>;
+  }</code></p>
+          <dl class="layer"><dt>Работа DS</dt><dd class="none">нет</dd><dt>Цена</dt><dd>!important глушит и будущие состояния</dd></dl>
+        </div>
+        <div class="opt"><h3>Хук --ds-select-border-color-focus <span class="star">★</span></h3>
+          <p class="css"><code>ds-select {
+    --ds-select-border-color-focus: var(--color-focus-border);
+  }</code></p>
+          <dl class="layer"><dt>Работа DS</dt><dd>1 токен на :focus-visible и .open, дефолт --accent</dd><dt>Консьюмер</dt><dd class="gain">как у остальных полей</dd></dl>
+        </div>
+      </div>
+    </section>
+
+  <section class="q" data-q="ask-field-shared-tokens">
+      <div class="q-head">
+        <span class="q-num">12</span>
+        <h2 class="q-title">Цвета полей задаются по одному компоненту, а у select и textarea нет размера шрифта</h2>
+        <span class="q-src">P3 · mm-ecm · хук стилей</span>
+      </div>
+      <p class="q-sub">Одно решение - тонкая рамка, чернильный текст, синий фокус - консьюмер пишет дважды, под <code>--ds-input-*</code> и <code>--ds-select-*</code>. Шрифт input прибит к 14px, потому что select и textarea хардкодят <code>--font-size-s</code>.</p>
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">DS по умолчанию</p>
+          <div class="a-col">
+            <div class="a-fld">Иван Петров<span class="tag">input</span></div>
+            <div class="a-fld">Активен<span class="chv">▾</span></div>
+            <div class="a-fld area">Звонил во вторник<span class="tag">textarea</span></div>
+          </div>
+        </div>
+        <div class="spec">
+          <p class="cap">как хочет консьюмер</p>
+          <div class="a-col">
+            <div class="a-fld rp">Иван Петров<span class="tag">input</span></div>
+            <div class="a-fld rp">Активен<span class="chv">▾</span></div>
+            <div class="a-fld rp area">Звонил во вторник<span class="tag">textarea</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <p class="css"><code>--ds-input-border: var(--rp-rule);
+  --ds-input-border-hover: var(--rp-mute);
+  --ds-input-border-focus: var(--rp-blue);
+  --ds-input-text-color: var(--rp-ink);
+  <span class="hit">--ds-input-font-size: var(--rp-fs-14);</span>
+  --ds-select-border-color: var(--rp-rule);
+  --ds-select-text-color: var(--rp-ink);</code></p>
+          <dl class="layer"><dt>Работа DS</dt><dd class="none">нет</dd><dt>Цена</dt><dd>каждое поле отдельно, размер select/textarea не задать</dd></dl>
+        </div>
+        <div class="opt"><h3>Хук --ds-field-*, размер по полям</h3>
+          <p class="css"><code>--ds-field-border-color: var(--rp-rule);
+  --ds-field-border-color-hover: var(--rp-mute);
+  --ds-field-border-color-focus: var(--rp-blue);
+  --ds-field-text-color: var(--rp-ink);
+  --ds-input-font-size: 14px;   <span class="a-hint">textarea тоже</span>
+  --ds-select-font-size: 14px;</code></p>
+          <dl class="layer"><dt>Работа DS</dt><dd>4 общих токена + --ds-select-font-size</dd><dt>Размер</dt><dd>два токена</dd></dl>
+        </div>
+        <div class="opt"><h3>Хук --ds-field-*, общий размер <span class="star">★</span></h3>
+          <p class="css"><code>--ds-field-border-color: var(--rp-rule);
+  --ds-field-border-color-hover: var(--rp-mute);
+  --ds-field-border-color-focus: var(--rp-blue);
+  --ds-field-text-color: var(--rp-ink);
+  --ds-field-font-size: 14px;</code></p>
+          <dl class="layer"><dt>Работа DS</dt><dd>5 общих токенов под тремя полями</dd><dt>Размер</dt><dd class="gain">одна строка, как --ds-field-height</dd></dl>
+        </div>
+      </div>
+    </section>
+
+  <section class="q" data-q="ask-autocomplete-text-color">
+      <div class="q-head">
+        <span class="q-num">13</span>
+        <h2 class="q-title">У ds-autocomplete нет хука на цвет текста и плейсхолдера, а плейсхолдер браузерный</h2>
+        <span class="q-src">P3 · mm-ecm · хук стилей</span>
+      </div>
+      <p class="q-sub">Инпут красится <code>var(--text-primary)</code> без резолвера, правила <code>::placeholder</code> нет вовсе, поэтому плейсхолдер серый UA, а у <code>ds-input</code> рядом - <code>--text-tertiary</code>.</p>
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">DS по умолчанию</p>
+          <div class="a-col">
+            <div class="a-fld"><span class="ph">Поиск страхователя</span><span class="tag">ds-input</span></div>
+            <div class="a-fld"><span class="ph ua">Поиск страхователя</span><span class="tag">ds-autocomplete</span></div>
+          </div>
+        </div>
+        <div class="spec">
+          <p class="cap">как хочет консьюмер</p>
+          <div class="a-col">
+            <div class="a-fld rp"><span class="ph">Поиск страхователя</span></div>
+            <div class="a-fld rp">Иван Петр<span class="tag">набранное</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <p class="css"><code>agent-refresh-shell .topbar__search ds-autocomplete {
+    <span class="hit">.autocomplete-input.autocomplete-input</span> {
+      color: var(--rp-ink);
+      &amp;::placeholder { color: var(--rp-mute); }
+    }
+  }</code></p>
+          <dl class="layer"><dt>Работа DS</dt><dd class="none">нет</dd><dt>Дефолт</dt><dd>плейсхолдер не как у ds-input</dd></dl>
+        </div>
+        <div class="opt"><h3>Хук --ds-autocomplete-*-color <span class="star">★</span></h3>
+          <p class="css"><code>ds-autocomplete {
+    --ds-autocomplete-text-color: var(--rp-ink);
+    --ds-autocomplete-placeholder-color: var(--rp-mute);
+  }</code></p>
+          <dl class="layer"><dt>Работа DS</dt><dd>2 токена + правило ::placeholder</dd><dt>Дефолт</dt><dd class="gain">--text-tertiary, как у ds-input</dd></dl>
+        </div>
+      </div>
+    </section>
+
+  <section class="q" data-q="ask-button-border-hover">
+      <div class="q-head">
+        <span class="q-num">14</span>
+        <h2 class="q-title">ds-button и ds-icon-button не умеют менять рамку при наведении</h2>
+        <span class="q-src">P3 · mm-ecm · хук стилей</span>
+      </div>
+      <p class="q-sub">Фон и цвет подписи на hover токенизированы, рамка - одна на все состояния. Иконки в строках таблицы выглядят мёртвыми, консьюмер лезет в них через <code>::ng-deep</code>.</p>
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">DS по умолчанию, средняя на hover</p>
+          <div class="a-btns">
+            <span class="a-ib"><svg viewBox="0 0 16 16"><circle cx="3" cy="8" r="1.4" fill="currentColor"/><circle cx="8" cy="8" r="1.4" fill="currentColor"/><circle cx="13" cy="8" r="1.4" fill="currentColor"/></svg></span>
+            <span class="a-ib hov"><svg viewBox="0 0 16 16"><circle cx="3" cy="8" r="1.4" fill="currentColor"/><circle cx="8" cy="8" r="1.4" fill="currentColor"/><circle cx="13" cy="8" r="1.4" fill="currentColor"/></svg></span>
+            <span class="a-ib"><svg viewBox="0 0 16 16"><circle cx="3" cy="8" r="1.4" fill="currentColor"/><circle cx="8" cy="8" r="1.4" fill="currentColor"/><circle cx="13" cy="8" r="1.4" fill="currentColor"/></svg></span>
+          </div>
+        </div>
+        <div class="spec">
+          <p class="cap">как хочет консьюмер</p>
+          <div class="a-btns">
+            <span class="a-ib"><svg viewBox="0 0 16 16"><circle cx="3" cy="8" r="1.4" fill="currentColor"/><circle cx="8" cy="8" r="1.4" fill="currentColor"/><circle cx="13" cy="8" r="1.4" fill="currentColor"/></svg></span>
+            <span class="a-ib hov firm"><svg viewBox="0 0 16 16"><circle cx="3" cy="8" r="1.4" fill="currentColor"/><circle cx="8" cy="8" r="1.4" fill="currentColor"/><circle cx="13" cy="8" r="1.4" fill="currentColor"/></svg></span>
+            <span class="a-ib"><svg viewBox="0 0 16 16"><circle cx="3" cy="8" r="1.4" fill="currentColor"/><circle cx="8" cy="8" r="1.4" fill="currentColor"/><circle cx="13" cy="8" r="1.4" fill="currentColor"/></svg></span>
+          </div>
+        </div>
+      </div>
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <p class="css"><code><span class="hit">::ng-deep</span> ds-icon-button .icon-button {
+    &amp;:hover { border-color: var(--color-border-strong); }
+  }
+  <span class="hit">ds-button .button.v-outline:hover</span> {
+    border-color: var(--color-border-strong);
+  }</code></p>
+          <dl class="layer"><dt>Работа DS</dt><dd class="none">нет</dd><dt>Цена</dt><dd>::ng-deep на каждой странице</dd></dl>
+        </div>
+        <div class="opt"><h3>Хук border-hover / -active <span class="star">★</span></h3>
+          <p class="css"><code>ds-icon-button {
+    --ds-icon-button-border-hover: var(--color-border-strong);
+  }
+  ds-button {
+    --ds-button-border-color-hover: var(--color-border-strong);
+  }</code></p>
+          <dl class="layer"><dt>Работа DS</dt><dd>4 токена, дефолт = рамка покоя</dd><dt>Сдвиг</dt><dd class="gain">ничего не двигается</dd></dl>
+        </div>
+      </div>
+    </section>
+
+  <section class="q" data-q="ask-empty-state-title-face">
+      <div class="q-head">
+        <span class="q-num">15</span>
+        <h2 class="q-title">Заголовок ds-empty-state берёт размер и цвет из токенов, а гарнитуру и насыщенность - нет</h2>
+        <span class="q-src">P3 · mm-ecm · хук стилей</span>
+      </div>
+      <p class="q-sub">В шортхенде <code>font</code> прибиты <code>--font-weight-bold</code> и <code>--font-sans</code>. У <code>ds-modal</code> эти два хука уже есть.</p>
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">DS по умолчанию</p>
+          <div class="a-empty"><span class="tile">○</span><p class="t">Визитов пока нет</p><p class="p">Запланируйте первый.</p></div>
+        </div>
+        <div class="spec">
+          <p class="cap">как хочет консьюмер</p>
+          <div class="a-empty"><span class="tile">○</span><p class="t nyl">Визитов пока нет</p><p class="p">Запланируйте первый.</p></div>
+        </div>
+      </div>
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <p class="css"><code>:is(agent-dashboard, agent-policyholder-details) ds-empty-state {
+    <span class="hit">.title.title</span> {
+      font-family: var(--rp-font-display);
+      font-weight: var(--rp-fw-400);
+    }
+  }</code></p>
+          <dl class="layer"><dt>Работа DS</dt><dd class="none">нет</dd><dt>Цена</dt><dd>удвоенный класс рядом с токенами того же блока</dd></dl>
+        </div>
+        <div class="opt"><h3>Хук --ds-empty-state-title-font-* <span class="star">★</span></h3>
+          <p class="css"><code>ds-empty-state {
+    --ds-empty-state-title-font-family: var(--rp-font-display);
+    --ds-empty-state-title-font-weight: var(--rp-fw-400);
+  }</code></p>
+          <dl class="layer"><dt>Работа DS</dt><dd>2 токена, как у ds-modal</dd><dt>Дефолт</dt><dd class="gain">--font-sans, --font-weight-bold</dd></dl>
+        </div>
+      </div>
+    </section>
+
+  <section class="q" data-q="ask-badge-subtitle-font-size">
+      <div class="q-head">
+        <span class="q-num">16</span>
+        <h2 class="q-title">У ds-badge и подзаголовка ds-page-header нет хука на размер шрифта</h2>
+        <span class="q-src">P3 · mm-broker · хук стилей</span>
+      </div>
+      <p class="q-sub">У бейджа восемь резолверов, но размер прибит к <code>--font-size-xs</code>; у заголовка страницы размер токенизирован, у подзаголовка - нет. mm-broker пробивает оба.</p>
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">DS по умолчанию</p>
+          <div class="a-kpi">12,5%<span class="a-badge">Комиссия</span></div>
+          <div class="a-ph"><p class="t">Aviva</p><p class="s">Страховщик · 14 продуктов</p></div>
+        </div>
+        <div class="spec">
+          <p class="cap">как хочет консьюмер</p>
+          <div class="a-kpi">12,5%<span class="a-badge big">Комиссия</span></div>
+          <div class="a-ph"><p class="t">Aviva</p><p class="s big">Страховщик · 14 продуктов</p></div>
+        </div>
+      </div>
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <p class="css"><code>.kpi-value <span class="hit">::ng-deep .badge</span> {
+    font-size: var(--font-size-s);
+  }
+  ds-page-header .subtitle {
+    font-size: var(--font-size-m) <span class="hit">!important</span>;
+  }</code></p>
+          <dl class="layer"><dt>Работа DS</dt><dd class="none">нет</dd><dt>Цена</dt><dd>::ng-deep в трёх страницах, !important глобально</dd></dl>
+        </div>
+        <div class="opt"><h3>Хук *-font-size <span class="star">★</span></h3>
+          <p class="css"><code>.kpi-value ds-badge { --ds-badge-font-size: var(--font-size-s); }
+  ds-page-header { --ds-page-header-subtitle-font-size: var(--font-size-m); }</code></p>
+          <dl class="layer"><dt>Работа DS</dt><dd>2 токена, .count 2xs по-прежнему выигрывает</dd><dt>Дефолт</dt><dd class="gain">xs и s, как сегодня</dd></dl>
+        </div>
+      </div>
+    </section>
+
+  <section class="q" data-q="ask-banner-title-font-size">
+      <div class="q-head">
+        <span class="q-num">17</span>
+        <h2 class="q-title">У заголовка ds-banner нет хука на размер, а у тела есть</h2>
+        <span class="q-src">P3 · pinkmoon · хук стилей</span>
+      </div>
+      <p class="q-sub"><code>compact</code> не трогает размер заголовка, поэтому компактная полоса не опускается до 12px без селектора потомка.</p>
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">DS compact по умолчанию</p>
+          <div class="a-banner small"><i></i><span><b style="font-size:var(--font-size-s)">Нет сети</b> Изменения сохранятся позже.</span></div>
+        </div>
+        <div class="spec">
+          <p class="cap">как хочет консьюмер</p>
+          <div class="a-banner small"><i></i><span><b>Нет сети</b> Изменения сохранятся позже.</span></div>
+        </div>
+      </div>
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <p class="css"><code>ds-banner .banner.compact {
+    font-size: var(--font-size-xs);
+    <span class="hit">.title</span> { font-size: var(--font-size-xs); }
+  }</code></p>
+          <dl class="layer"><dt>Работа DS</dt><dd class="none">нет</dd><dt>Цена</dt><dd>селектор по внутренним классам</dd></dl>
+        </div>
+        <div class="opt"><h3>Хук --ds-banner-title-font-size <span class="star">★</span></h3>
+          <p class="css"><code>ds-banner[compact] {
+    --ds-banner-title-font-size: var(--font-size-xs);
+    --ds-banner-body-font-size: var(--font-size-xs);
+  }</code></p>
+          <dl class="layer"><dt>Работа DS</dt><dd>1 токен рядом с body, дефолт --font-size-s</dd><dt>Консьюмер</dt><dd class="gain">два свойства на хосте</dd></dl>
+        </div>
+      </div>
+    </section>
+
+  <section class="q" data-q="ask-table-utility-column">
+      <div class="q-head">
+        <span class="q-num">18</span>
+        <h2 class="q-title">Служебную колонку таблицы нельзя сузить, а без rowActions она пустая полоса</h2>
+        <span class="q-src">P3 · mm-ecm · хук стилей</span>
+      </div>
+      <p class="q-sub">Колонка под кнопкой выбора колонок - <code>var(--space-10)</code> плюс <code>--table-cell-pad-x</code> с каждой стороны, и пустая в каждой строке. Шеврон строки встаёт далеко от края.</p>
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">DS по умолчанию</p>
+          <table class="a-tbl"><tr><th>Страхователь</th><th></th><th class="util">⚙</th></tr><tr><td>Acme Ltd</td><td class="chevc">›</td><td class="util"></td></tr><tr><td>Bolt plc</td><td class="chevc">›</td><td class="util"></td></tr></table>
+        </div>
+        <div class="spec">
+          <p class="cap">как хочет консьюмер</p>
+          <table class="a-tbl"><tr><th>Страхователь</th><th></th><th class="util slim">⚙</th></tr><tr><td>Acme Ltd</td><td class="chevc">›</td><td class="util slim"></td></tr><tr><td>Bolt plc</td><td class="chevc">›</td><td class="util slim"></td></tr></table>
+        </div>
+      </div>
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <p class="css"><code>:host <span class="hit">::ng-deep .actions-col</span> {
+    width: 32px;
+    padding-left: 0;
+    padding-right: 4px;
+  }</code></p>
+          <dl class="layer"><dt>Работа DS</dt><dd class="none">нет</dd><dt>Дефолт</dt><dd>пустые 72px в каждой строке</dd></dl>
+        </div>
+        <div class="opt"><h3>Хук --ds-table-utility-column-* <span class="star">★</span></h3>
+          <p class="css"><code>ds-table {
+    --ds-table-utility-column-width: 32px;
+    --ds-table-utility-column-padding-x: 0 4px;
+  }</code></p>
+          <dl class="layer"><dt>Работа DS</dt><dd>2 токена, дефолт = сегодня</dd><dt>Дефолт</dt><dd>не меняется</dd></dl>
+        </div>
+        <div class="opt"><h3>Колонка по размеру кнопки</h3>
+          <table class="a-tbl"><tr><th>Страхователь</th><th></th><th class="util slim">⚙</th></tr><tr><td>Acme Ltd</td><td class="chevc">›</td><td class="util slim"></td></tr></table>
+          <dl class="layer"><dt>Работа DS</dt><dd>сжать колонку, когда нет rowActions</dd><dt>Консьюмер</dt><dd class="gain">ничего писать не надо</dd></dl>
+        </div>
+      </div>
+    </section>
+
+  <section class="q" data-q="ask-table-footer-padding">
+      <div class="q-head">
+        <span class="q-num">19</span>
+        <h2 class="q-title">У футера пагинации ds-table нет хука на вертикальные отступы</h2>
+        <span class="q-src">P3 · mm-ecm-kb · хук стилей</span>
+      </div>
+      <p class="q-sub"><code>.pagination-footer</code> хардкодит <code>padding-block: var(--space-3)</code>; боковые отступы уже идут за <code>--ds-table-cell-padding-*</code>.</p>
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">DS по умолчанию · 12px сверху</p>
+          <div class="a-hfoot"><span>1-10 из 84</span><span>‹ 1 2 3 ›</span></div>
+        </div>
+        <div class="spec">
+          <p class="cap">как хочет консьюмер · 20px сверху</p>
+          <div class="a-hfoot roomy"><span>1-10 из 84</span><span>‹ 1 2 3 ›</span></div>
+        </div>
+      </div>
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <p class="css"><code><span class="hit">.pagination-footer.pagination-footer</span> {
+    padding-top: var(--rp-sp-20);
+  }</code></p>
+          <dl class="layer"><dt>Работа DS</dt><dd class="none">нет</dd><dt>Цена</dt><dd>удвоенный класс по внутренней разметке</dd></dl>
+        </div>
+        <div class="opt"><h3>Хук --ds-table-footer-padding-* <span class="star">★</span></h3>
+          <p class="css"><code>ds-table {
+    --ds-table-footer-padding-top: var(--rp-sp-20);
+    --ds-table-footer-padding-bottom: var(--space-3);
+  }</code></p>
+          <dl class="layer"><dt>Работа DS</dt><dd>2 токена, дефолт --space-3</dd><dt>Консьюмер</dt><dd class="gain">без селектора</dd></dl>
+        </div>
+      </div>
+    </section>
+
+  <p class="group">Ждут консьюмеры · запарковано</p>
+
+  <section class="q" data-q="ask-intl-strings">
+      <div class="q-head">
+        <span class="q-num">20</span>
+        <h2 class="q-title">Все видимые строки библиотеки - английские литералы</h2>
+        <span class="q-src">P2 · ITB Workspace · припарковано Stas</span>
+      </div>
+      <p class="q-sub">В двуязычном приложении панель пикера не переводится. <code>No matches</code> и <code>Create «…»</code> заменяются слотами с 0.11.1, остальные шесть литералов пикеров недостижимы, плюс 36 статических <code>aria-label</code> в 19 файлах.</p>
+
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">русский интерфейс, сегодня</p>
+          <div class="field-mock"><label>Регион</label><div class="box"><span class="chipx">Лондон</span><span class="chipx">+2 more</span></div><div class="panel-mock"><span>☐ Select all</span><span>☐ All of Англия</span><span>☑ Лондон</span><span>☑ Дувр</span></div></div>
+          <p class="says">кнопка очистки: «Clear selection»</p>
+        </div>
+        <div class="spec">
+          <p class="cap">с DS_INTL</p>
+          <div class="field-mock"><label>Регион</label><div class="box"><span class="chipx">Лондон</span><span class="chipx">+2 ещё</span></div><div class="panel-mock"><span>☐ Выбрать все</span><span>☐ Все: Англия</span><span>☑ Лондон</span><span>☑ Дувр</span></div></div>
+          <p class="says">кнопка очистки: «Очистить выбор»</p>
+        </div>
+      </div>
+
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить парковку <span class="star">★</span></h3>
+          <dl class="layer"><dt>Консьюмер</dt><dd>не переводит панель пикера</dd><dt>Прецедент в библиотеке</dt><dd>входы moreLabel / panelLabel у ds-filter-bar</dd></dl>
+        </div>
+        <div class="opt"><h3>Токен DS_INTL</h3>
+          <p class="css">provideDsIntl({
+    selectAll: 'Выбрать все',
+    clearSelection: 'Очистить выбор',
+  })</p>
+          <dl class="layer"><dt>Объём</dt><dd>6 литералов пикеров, 36 aria-label, подписи ds-table</dd><dt>Цена</dt><dd>проект, а не правка</dd></dl>
+        </div>
+      </div>
+    </section>
+
+  <section class="q" data-q="ask-journey-canvas">
+      <div class="q-head">
+        <span class="q-num">21</span>
+        <h2 class="q-title">Ни один компонент не рисует ветвящийся граф узлов и рёбер</h2>
+        <span class="q-src">P3 · mm-ecm-kb · припарковано Stas: ждать второго консьюмера</span>
+      </div>
+      <p class="q-sub">Путь кампании у консьюмера на девяти экранах, свой холст на 2 353 строки. Спека чартов фазы 2 исключает network по имени.</p>
+
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">холст: узлы, рёбра, подписи</p>
+          <div class="a-canvas">
+            <svg viewBox="0 0 260 204"><g fill="none" stroke="var(--border-strong)" stroke-width="1.5"><line x1="130" y1="26" x2="130" y2="42"/><line x1="130" y1="64" x2="130" y2="80"/><path d="M130 102 C130 118 60 112 60 132"/><path d="M130 102 C130 118 200 112 200 132"/><path d="M60 154 C60 174 130 166 130 180"/><path d="M200 154 C200 174 130 166 130 180"/></g><rect x="95" y="4" width="70" height="22" rx="11" fill="var(--success-subtitle)" stroke="var(--success)"/><text x="130" y="18" text-anchor="middle">Старт</text><rect x="95" y="42" width="70" height="22" rx="4" fill="var(--info-subtitle)" stroke="var(--info)"/><text x="130" y="56" text-anchor="middle">Email</text><circle cx="148" cy="72" r="6" fill="var(--surface-default)" stroke="var(--border-strong)"/><text x="148" y="75" text-anchor="middle">+</text><rect x="90" y="80" width="80" height="22" rx="4" fill="var(--warning-subtitle)" stroke="var(--warning)"/><text x="130" y="94" text-anchor="middle">Условие</text><text x="52" y="116" class="a-edge">Yes · 0</text><text x="178" y="116" class="a-edge">No · 0</text><rect x="25" y="132" width="70" height="22" rx="4" fill="var(--info-subtitle)" stroke="var(--info)"/><text x="60" y="146" text-anchor="middle">Письмо</text><rect x="165" y="132" width="70" height="22" rx="4" fill="var(--surface-secondary)" stroke="var(--border-strong)"/><text x="200" y="146" text-anchor="middle">Ожидание</text><rect x="95" y="180" width="70" height="22" rx="11" fill="var(--surface-secondary)" stroke="var(--border-strong)"/><text x="130" y="194" text-anchor="middle">Конец</text></svg>
+          </div>
+          <p class="says">ветка расходится на две колонки и сходится; «+» на ребре - вставка</p>
+        </div>
+      </div>
+
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить парковку <span class="star">★</span></h3>
+          <dl class="layer"><dt>Держится до</dt><dd>второго консьюмера</dd><dt>Non-goal фазы 2</dt><dd>стоит</dd></dl>
+        </div>
+        <div class="opt"><h3>Взять холст без билдера</h3>
+          <dl class="layer"><dt>Вход</dt><dd>список узлов, список рёбер</dd><dt>Выход</dt><dd>раскладка, рёбра с подписями, клик</dd><dt>Остаётся у консьюмера</dt><dd>drag-and-drop, редактор узла, меню добавления</dd><dt>Цена</dt><dd>исключение из non-goal фазы 2</dd></dl>
+        </div>
+      </div>
+    </section>
+
+  <section class="q" data-q="ask-text-muted">
+      <div class="q-head">
+        <span class="q-num">22</span>
+        <h2 class="q-title">Приглушённый текст по умолчанию не проходит AA</h2>
+        <span class="q-src">P3 · ai-sdlc · контраст, запаркован</span>
+      </div>
+      <p class="q-sub">
+        <code>--text-muted</code> = <code>#9BA3B4</code> на канве <code>#F8FAFC</code> - 2.42:1, ниже даже 3:1 для крупного
+        текста. Внутри DS его читают только дни чужого месяца в календаре; стартер ai-sdlc перебивает тему сам.
+      </p>
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">--text-muted, сегодня</p>
+          <p class="tint" style="background:var(--surface-canvas);color:var(--text-muted)">29 30 31 · Последнее изменение 2 дня назад</p>
+          <p class="css"><span class="hit">2.42:1</span> на #F8FAFC</p>
+        </div>
+        <div class="spec">
+          <p class="cap">--text-tertiary, рядом</p>
+          <p class="tint" style="background:var(--surface-canvas);color:var(--text-tertiary)">29 30 31 · Последнее изменение 2 дня назад</p>
+          <p class="css">4.53:1 на #F8FAFC</p>
+        </div>
+      </div>
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <dl class="layer"><dt>Кто платит</dt><dd>консьюмер, который взял токен для текста</dd></dl>
+        </div>
+        <div class="opt"><h3>Объявить декоративным <span class="star">★</span></h3>
+          <p class="css">--text-muted: только декор, не для чтения</p>
+          <dl class="layer"><dt>Работа</dt><dd class="gain">строка в доке токенов</dd><dt>Цвет</dt><dd>не меняется</dd></dl>
+        </div>
+        <div class="opt"><h3>Сдвинуть --text-muted</h3>
+          <p class="css">--text-muted: var(--neutral-500);</p>
+          <dl class="layer"><dt>Цена</dt><dd>сливается с --text-tertiary</dd></dl>
+        </div>
+      </div>
+    </section>
+
+  <section class="q" data-q="ask-brand-residue">
+      <div class="q-head">
+        <span class="q-num">23</span>
+        <h2 class="q-title">На бренде другого цвета остаются синие ссылки и подложки</h2>
+        <span class="q-src">P3 · pinkmoon, ai-sdlc · бренд, запаркован</span>
+      </div>
+      <p class="q-sub">
+        Тема перенаводит <code>--primary</code>, но <code>--text-link</code>, <code>--surface-tint</code>,
+        <code>--primary-subtitle</code> и <code>--primary-muted</code> в светлой теме - литералы синей рампы. Каждый
+        консьюмер с другим брендом переназначает их руками.
+      </p>
+      <div class="stage">
+        <div class="spec">
+          <p class="cap">зелёный бренд, сегодня</p>
+          <div class="btn-row"><b style="background:#1f7a4d">Сохранить</b></div>
+          <p class="tint" style="margin-top:var(--space-2);background:var(--surface-tint)">Выбранная строка списка · <span style="color:var(--text-link)">Подробнее</span></p>
+        </div>
+        <div class="spec">
+          <p class="cap">выведено из --primary</p>
+          <div class="btn-row"><b style="background:#1f7a4d">Сохранить</b></div>
+          <p class="tint" style="margin-top:var(--space-2);background:#e8f4ee">Выбранная строка списка · <span style="color:#1f7a4d">Подробнее</span></p>
+        </div>
+      </div>
+      <div class="opts">
+        <div class="opt is-today"><h3>Оставить как есть</h3>
+          <dl class="layer"><dt>Консьюмер</dt><dd>переназначает 4 токена сам</dd></dl>
+        </div>
+        <div class="opt"><h3>Вывести из --primary <span class="star">★</span></h3>
+          <dl class="layer"><dt>Работа</dt><dd>часть движка цвета из одного токена</dd><dt>Тёмная тема</dt><dd class="gain">уже так делает</dd></dl>
+        </div>
+        <div class="opt"><h3>Чеклист must-rebind</h3>
+          <dl class="layer"><dt>Работа</dt><dd class="gain">строка в доке тем</dd><dt>Остаток</dt><dd>каждый бренд помнит сам</dd></dl>
+        </div>
+      </div>
+    </section>
+
+  <p class="group">Чарты</p>
+
+  <section class="q" data-q="sparkline">
+    <div class="q-head">
+      <span class="q-num">24</span>
+      <h2 class="q-title">Спарклайн - пресет линии или свой компонент</h2>
+      <a class="q-src" href="7-chart-sparkline-preset.html">дека 7</a>
+    </div>
+    <p class="q-sub">Проверка: что вариант ДОБАВЛЯЕТ к API родителя. Спарклайн не добавляет ничего - только выключает оси, сетку, легенду, рамку и подсказку.</p>
+    <div class="stage">
+      <div class="spec">
+        <p class="cap">1 · рядом с числом на карточке</p>
+        <div class="kpi-card">
+          <span class="kpi-label">Запросы за месяц</span>
+          <div class="kpi-row"><b>12 480</b><svg class="spk" viewBox="0 0 64 18" preserveAspectRatio="none"><polyline fill="none" stroke="var(--ds-chart-series-1-color)" stroke-width="1.6" points="1,15 11,12 21,13 31,8 41,9 51,4 63,2"/></svg></div>
+          <span class="kpi-delta">+18% к августу</span>
+        </div>
+        <p class="says">число даёт значение, линия - что это не всплеск</p>
+      </div>
+
+      <div class="spec">
+        <p class="cap">2 · колонкой в таблице</p>
+        <table class="spk-table">
+          <tr><th>Депо</th><th>Отправлено</th><th>6 месяцев</th></tr>
+          <tr><td>Aberdeen</td><td>412</td><td><svg class="spk" viewBox="0 0 64 18" preserveAspectRatio="none"><polyline fill="none" stroke="var(--ds-chart-series-1-color)" stroke-width="1.6" points="1,15 11,12 21,13 31,8 41,9 51,4 63,2"/></svg></td></tr>
+          <tr><td>Belfast</td><td>260</td><td><svg class="spk" viewBox="0 0 64 18" preserveAspectRatio="none"><polyline fill="none" stroke="var(--ds-chart-series-2-color)" stroke-width="1.6" points="1,3 11,5 21,4 31,9 41,8 51,13 63,15"/></svg></td></tr>
+          <tr><td>Cardiff</td><td>130</td><td><svg class="spk" viewBox="0 0 64 18" preserveAspectRatio="none"><polyline fill="none" stroke="var(--ds-chart-series-3-color)" stroke-width="1.6" points="1,12 11,3 21,14 31,5 41,13 51,4 63,11"/></svg></td></tr>
+          <tr><td>Dover</td><td>98</td><td><svg class="spk" viewBox="0 0 64 18" preserveAspectRatio="none"><polyline fill="none" stroke="var(--ds-chart-series-4-color)" stroke-width="1.6" points="1,9 11,8 21,10 31,9 41,9 51,10 63,9"/></svg></td></tr>
+        </table>
+        <p class="says">четыре строки читаются одним взглядом: растёт, падает, дёргается, стоит</p>
+      </div>
+
+      <div class="spec">
+        <p class="cap">3 · тот же ряд обычным чартом</p>
+        <div class="mini-chart" style="min-inline-size:200px">
+          <svg viewBox="0 0 200 116"><line x1="30" y1="6" x2="30" y2="84" stroke="var(--border-default)"/><line x1="30" y1="84" x2="196" y2="84" stroke="var(--border-default)"/><g stroke="var(--border-divider)" stroke-dasharray="2 3"><line x1="30" y1="26" x2="196" y2="26"/><line x1="30" y1="55" x2="196" y2="55"/></g><polyline fill="none" stroke="var(--ds-chart-series-1-color)" stroke-width="2" points="34,70 66,54 98,58 130,32 162,38 192,14"/><text x="4" y="29" class="tick">600</text><text x="4" y="58" class="tick">300</text><text x="34" y="98" class="tick">Апр</text><text x="166" y="98" class="tick">Сен</text><text x="30" y="112" class="tick">Отправлено по месяцам</text></svg>
+        </div>
+        <p class="says">в ячейку 60px это не влезает - с этого аск и начался</p>
+      </div>
+    </div>
+
+    <p class="q-sub" style="margin-top:var(--space-4)">Прецедент уже был: консьюмер просил
+    <code>ds-meter</code> для ячейки таблицы, потому что «каждый чарт это блок с подписью, легендой
+    и приложенной таблицей». Ответ тогда был не новый компонент, а <code>ds-progress</code>,
+    которому не хватало одного входа. Спарклайн - та же задача, но для ряда.</p>
+
+    <div class="opts">
+      <div class="opt"><h3>Пресет variant="spark" <span class="star">★</span></h3>
+        <p>Ноль новых понятий, другой набор значений по умолчанию.</p></div>
+      <div class="opt"><h3>Свой ds-sparkline</h3>
+        <p>Ещё один тег в каталоге и ещё одна страница доков.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="waterfall">
+    <div class="q-head">
+      <span class="q-num">25</span>
+      <h2 class="q-title">Водопад - свой тег или режим колоночного чарта</h2>
+      <a class="q-src" href="8-waterfall-mode-or-component.html">дека 8</a>
+    </div>
+    <p class="q-sub">Та же проверка даёт обратный ответ: водопад добавляет <code>kind</code> на точке, связки, подписи со знаком и три цветовые роли - и все четыре бессмысленны в остальных четырёх режимах <code>stack</code>. Аудит 2026-09-22: это самый тонкий случай из восьми чартов.</p>
+    <div class="stage"><div class="spec"><p class="cap">водопад: что добавляется к колонке</p><div class="mini-chart"><svg viewBox="0 0 240 96"><line x1="6" y1="78" x2="236" y2="78" stroke="var(--border-default)"/><rect x="12" y="20" width="32" height="58" rx="2" fill="var(--ds-chart-series-default-color)"/><rect x="60" y="20" width="32" height="16" rx="2" fill="var(--error)"/><rect x="108" y="36" width="32" height="11" rx="2" fill="var(--error)"/><rect x="156" y="40" width="32" height="7" rx="2" fill="var(--success)"/><rect x="204" y="40" width="32" height="38" rx="2" fill="var(--ds-chart-series-default-color)"/><g stroke="var(--text-tertiary)" stroke-dasharray="3 3"><line x1="44" y1="20" x2="60" y2="20"/><line x1="92" y1="36" x2="108" y2="36"/><line x1="140" y1="47" x2="156" y2="47"/><line x1="188" y1="40" x2="204" y2="40"/></g><text x="62" y="14" class="tick">-320</text><text x="158" y="34" class="tick">+130</text></svg></div><dl class="layer"><dt>Добавляет к API колонки</dt><dd>kind на точке, связки, подписи со знаком, 3 цветовые роли</dd><dt>Бессмысленно в режимах</dt><dd>none, grouped, stacked, normalized</dd></dl></div><div class="spec"><p class="cap">обычная колонка</p><div class="mini-chart"><svg viewBox="0 0 240 96"><line x1="6" y1="78" x2="236" y2="78" stroke="var(--border-default)"/><rect x="12" y="20" width="32" height="58" rx="2" fill="var(--ds-chart-series-1-color)"/><rect x="60" y="40" width="32" height="38" rx="2" fill="var(--ds-chart-series-2-color)"/><rect x="108" y="52" width="32" height="26" rx="2" fill="var(--ds-chart-series-3-color)"/><rect x="156" y="46" width="32" height="32" rx="2" fill="var(--ds-chart-series-4-color)"/><rect x="204" y="58" width="32" height="20" rx="2" fill="var(--ds-chart-series-5-color)"/></svg></div><p class="says">ни одна из четырёх добавок ей не нужна</p></div></div>
+
+    <div class="opts">
+      <div class="opt"><h3>Свой тег <span class="star">★</span></h3>
+        <p>Вход, бессмысленный в 4 случаях из 5, читается как ловушка.</p></div>
+      <div class="opt"><h3>Режим stack="waterfall"</h3>
+        <p>Минус тег в каталоге; API колонки растёт на то, что ей не нужно.</p></div>
+    </div>
+  </section>
+
+
+  <section class="q" data-q="chart-palette-lightness">
+    <div class="q-head">
+      <span class="q-num">26</span>
+      <h2 class="q-title">Палитра чартов разделяет по тону и почти не по светлоте</h2>
+      <a class="q-src" href="../docs/todo.md">бэклог 1363</a>
+    </div>
+    <p class="q-sub">Гейт держит разделение по 6 в OKLab, но светлота в него почти не входит, и тёмная тема не измерялась ни разу. Ты пометил «record only» - вопрос в том, снимать ли эту пометку.</p>
+    <div class="stage"><div class="spec"><p class="cap">палитра по позиции</p><div class="swatch-row"><i style="background:hsl(8deg 78% 58%)"></i><i style="background:hsl(172deg 82% 36%)"></i><i style="background:hsl(222deg 70% 62%)"></i><i style="background:hsl(266deg 62% 66%)"></i><i style="background:hsl(330deg 70% 62%)"></i><i style="background:hsl(148deg 58% 41%)"></i><i style="background:hsl(300deg 62% 60%)"></i><i style="background:hsl(222deg 14% 60%)"></i></div></div><div class="spec"><p class="cap">та же палитра в оттенках серого</p><div class="swatch-row"><i style="background:hsl(8deg 78% 58%);filter:grayscale(1)"></i><i style="background:hsl(172deg 82% 36%);filter:grayscale(1)"></i><i style="background:hsl(222deg 70% 62%);filter:grayscale(1)"></i><i style="background:hsl(266deg 62% 66%);filter:grayscale(1)"></i><i style="background:hsl(330deg 70% 62%);filter:grayscale(1)"></i><i style="background:hsl(148deg 58% 41%);filter:grayscale(1)"></i><i style="background:hsl(300deg 62% 60%);filter:grayscale(1)"></i><i style="background:hsl(222deg 14% 60%);filter:grayscale(1)"></i></div><p class="says">светлота почти не разводит их - это и есть вопрос</p></div></div>
+
+    <div class="opts">
+      <div class="opt"><h3>Оставить record only</h3>
+        <p>Измерение есть, обязательства нет.</p></div>
+      <div class="opt"><h3>Мерить и в тёмной теме</h3>
+        <p>Гейт получает вторую тему и, возможно, перекраску.</p></div>
+    </div>
+  </section>
+
+  <p class="group">Цвет и состояния</p>
+
+  <section class="q" data-q="colour-engine">
+    <div class="q-head">
+      <span class="q-num">27</span>
+      <h2 class="q-title">Каким методом выводить цвет из одного токена на роль</h2>
+      <a class="q-src" href="1-color-engine-derivation.html">дека 1</a>
+    </div>
+    <p class="q-sub">Ниже по течению три P2 и одна измеренная провальная проверка контраста. Дека 2 - прототипная половина того же вопроса, отдельного ответа не требует.</p>
+    <div class="stage"><div class="spec"><p class="cap">сегодня: ручные пики</p><div class="swatch-row"><i style="background:#EFF6FF"></i><i style="background:#DBEAFE"></i><i style="background:#93C5FD"></i><i style="background:#3B82F6"></i><i style="background:#1D4ED8"></i><i style="background:#1E3A8A"></i></div><p class="says">шесть значений записаны руками</p></div><div class="spec"><p class="cap">HSL hue-only из одного токена</p><div class="swatch-row"><i style="background:hsl(217 91% 95%)"></i><i style="background:hsl(217 91% 87%)"></i><i style="background:hsl(217 91% 72%)"></i><i style="background:hsl(217 91% 60%)"></i><i style="background:hsl(217 91% 45%)"></i><i style="background:hsl(217 91% 33%)"></i></div><p class="says">тон из --primary, S и L остаются ручными</p></div><div class="spec"><p class="cap">чистая формула</p><div class="swatch-row"><i style="background:color-mix(in srgb, #3B82F6 12%, white)"></i><i style="background:color-mix(in srgb, #3B82F6 28%, white)"></i><i style="background:color-mix(in srgb, #3B82F6 60%, white)"></i><i style="background:#3B82F6"></i><i style="background:color-mix(in srgb, #3B82F6 76%, black)"></i><i style="background:color-mix(in srgb, #3B82F6 55%, black)"></i></div><p class="says">всё выводится, рампа сплющивается</p></div></div>
+
+    <div class="opts">
+      <div class="opt"><h3>Сегодня, ручные пики</h3>
+        <p>Ничего не меняется, источник остаётся раздвоенным.</p></div>
+      <div class="opt"><h3>HSL hue-only + ручные S/L <span class="star">★</span></h3>
+        <p>Δ0, байт-в-байт как сейчас, и всё из одного токена.</p></div>
+      <div class="opt"><h3>OKLCH hue-only</h3>
+        <p>Ровнее шаги, чище тинты; расхождение с сегодняшним.</p></div>
+      <div class="opt"><h3>OKLCH чистая формула</h3>
+        <p>Всё из calc от base; сплющивает рампу.</p></div>
+      <div class="opt"><h3>color-mix white/black</h3>
+        <p>Мутит на насыщенных.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="interaction-b1">
+    <div class="q-head">
+      <span class="q-num">28</span>
+      <h2 class="q-title">Шаг pressed для тинтов</h2>
+      <a class="q-src" href="3-interaction-formula.html">дека 3, В1</a>
+    </div>
+    <p class="q-sub">28% - правило «2x hover». 34% - точное попадание в нарисованный blue-300.</p>
+    <div class="stage"><div class="spec"><p class="cap">28% - правило 2x hover</p><div class="tint-steps"><span style="background:var(--primary-subtitle)">покой</span><span style="background:color-mix(in srgb, var(--primary) 14%, white)">hover</span><span style="background:color-mix(in srgb, var(--primary) 28%, white)">pressed</span></div></div><div class="spec"><p class="cap">34% - попадание в blue-300</p><div class="tint-steps"><span style="background:var(--primary-subtitle)">покой</span><span style="background:color-mix(in srgb, var(--primary) 14%, white)">hover</span><span style="background:color-mix(in srgb, var(--primary) 34%, white)">pressed</span></div></div></div>
+
+    <div class="opts">
+      <div class="opt"><h3>28%, правило</h3></div>
+      <div class="opt"><h3>34%, попадание в рампу</h3></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="interaction-b2">
+    <div class="q-head">
+      <span class="q-num">29</span>
+      <h2 class="q-title">Нужен ли pressed нейтральным поверхностям</h2>
+      <a class="q-src" href="3-interaction-formula.html">дека 3, В2</a>
+    </div>
+    <p class="q-sub">Сейчас у меню и строк его нет; формула даёт бесплатно.</p>
+    <div class="stage"><div class="spec"><p class="cap">меню сейчас: hover есть, pressed нет</p><div class="menu-mock"><span>Профиль</span><span class="hov">Настройки</span><span>Выйти</span></div></div><div class="spec"><p class="cap">по формуле: появляется pressed</p><div class="menu-mock"><span>Профиль</span><span class="hov">Настройки</span><span class="prs">Выйти</span></div></div></div>
+
+    <div class="opts">
+      <div class="opt"><h3>Как сейчас, без pressed</h3></div>
+      <div class="opt"><h3>По формуле</h3></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="interaction-b4">
+    <div class="q-head">
+      <span class="q-num">30</span>
+      <h2 class="q-title">Нужен ли override-слот поверх формулы</h2>
+      <a class="q-src" href="3-interaction-formula.html">дека 3, В4</a>
+    </div>
+    <p class="q-sub">Любой токен состояния задаётся руками, формула остаётся fallback.</p>
+    <div class="stage"><div class="spec"><p class="cap">только формула</p><p class="css">.ds-interactive {
+  --state-step-hover: 14%;
+  --state-step-pressed: 28%;
+}</p><p class="says">одно правило на всю библиотеку</p></div><div class="spec"><p class="cap">формула + слот</p><p class="css">ds-button[color="error"] {
+  --interactive-pressed-set: #7f1d1d;
+}</p><p class="says">формула остаётся fallback, частный случай задаётся руками</p></div></div>
+
+    <div class="opts">
+      <div class="opt"><h3>Только формула</h3></div>
+      <div class="opt"><h3>Формула + override</h3></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="interaction-b5">
+    <div class="q-head">
+      <span class="q-num">31</span>
+      <h2 class="q-title">Вводим ли pressed для success и warning кнопок</h2>
+      <a class="q-src" href="3-interaction-formula.html">дека 3, В5</a>
+    </div>
+    <p class="q-sub">Сейчас его нет. Это новое видимое состояние, не подгонка существующего.</p>
+    <div class="stage"><div class="spec"><p class="cap">сейчас: у success шага нет</p><div class="btn-row"><b style="background:var(--success)">Покой</b><b style="background:var(--success)">Hover</b><b style="background:var(--success)">Pressed</b></div></div><div class="spec"><p class="cap">вводим pressed</p><div class="btn-row"><b style="background:var(--success)">Покой</b><b style="background:color-mix(in srgb, var(--success) 88%, black)">Hover</b><b style="background:color-mix(in srgb, var(--success) 76%, black)">Pressed</b></div></div></div>
+
+    <div class="opts">
+      <div class="opt"><h3>Вводим</h3></div>
+      <div class="opt"><h3>Глушим шаг до hover</h3></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="theme-recipe">
+    <div class="q-head">
+      <span class="q-num">32</span>
+      <h2 class="q-title">Рецепт темы против ручных пиков</h2>
+      <a class="q-src" href="../docs/todo.md">бэклог 1331</a>
+    </div>
+    <p class="q-sub">Кнопка выводит состояния из рецепта темы 88%/76% mix-to-black. Если калибровка цвет-движка заменит <code>--primary-hover/-pressed</code> ручными значениями, дефолты кнопки разойдутся с ролями темы.</p>
+    <div class="stage"><div class="spec"><p class="cap">рецепт темы 88% / 76%</p><div class="btn-row"><b style="background:var(--primary)">Покой</b><b style="background:color-mix(in srgb, var(--primary) 88%, black)">Hover</b><b style="background:color-mix(in srgb, var(--primary) 76%, black)">Pressed</b></div></div><div class="spec"><p class="cap">ручные пики калибровки</p><div class="btn-row"><b style="background:var(--primary)">Покой</b><b style="background:#1D4ED8">Hover</b><b style="background:#1E3A8A">Pressed</b></div><p class="says">если калибровка заменит роли, кнопка разойдётся с темой</p></div></div>
+
+    <div class="opts">
+      <div class="opt"><h3>Компоненты снова читают роли</h3>
+        <p>Один источник, кнопка теряет свой расчёт.</p></div>
+      <div class="opt"><h3>Тема оставляет формулу</h3>
+        <p>Кнопка считает сама, роли и кнопка расходятся.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="warning-text">
+    <div class="q-head">
+      <span class="q-num">33</span>
+      <h2 class="q-title">Какой цвет текста ставить на жёлтый тинт</h2>
+      <a class="q-src" href="6-warning-text-colour.html">дека 6</a>
+    </div>
+    <p class="q-sub">Пара под Bugs меряется 4.42:1 против порога 4.5:1. Вариант 4 трогает не текст, а тинт, и оставляет ноль запаса.</p>
+    <div class="opts">
+      <div class="opt"><h3>1 · основной текст</h3>
+        <p class="tint" style="background:#FFF9E6;color:#1F2933">Проверьте подключение</p>
+        <dl class="layer"><dt>Контраст</dt><dd>14.22:1</dd></dl></div>
+      <div class="opt"><h3>2 · серый</h3>
+        <p class="tint" style="background:#FFF9E6;color:#323F4B">Проверьте подключение</p>
+        <dl class="layer"><dt>Контраст</dt><dd>10.39:1</dd></dl></div>
+      <div class="opt"><h3>3 · тёмно-жёлтый</h3>
+        <p class="tint" style="background:#FFF9E6;color:#5C4A00">Проверьте подключение</p>
+        <dl class="layer"><dt>Контраст</dt><dd>8.31:1</dd></dl></div>
+      <div class="opt"><h3>4 · осветлить тинт</h3>
+        <p class="tint" style="background:#FFFDF5;color:#8A6D00">Проверьте подключение</p>
+        <dl class="layer"><dt>Контраст</dt><dd>4.50:1</dd></dl></div>
+    </div>
+  </section>
+
+  <p class="group">Компоненты</p>
+
+  <section class="q" data-q="stepper-dropzone-fields">
+    <div class="q-head">
+      <span class="q-num">34</span>
+      <h2 class="q-title">ds-number-stepper и ds-dropzone - поля или нет</h2>
+      <a class="q-src" href="../docs/todo.md">бэклог 1320</a>
+    </div>
+    <p class="q-sub">Ни у одного нет <code>label</code>, <code>hint</code>, <code>error</code>, <code>ds-field-message</code> и миксина <code>field-label</code> - они никогда не были в системе полей, а не потеряли её. У остальных четырнадцати полей есть всё.</p>
+    <div class="stage"><div class="spec"><p class="cap">поле сегодня</p><div class="field-mock"><label>Количество мест</label><div class="box">12</div><p class="msg">Не больше 40</p></div></div><div class="spec"><p class="cap">ds-number-stepper сегодня</p><div class="field-mock"><div class="box stepper"><span>&minus;</span>12<span>+</span></div></div><p class="says">ни label, ни hint, ни строки сообщения</p></div></div>
+
+    <div class="opts">
+      <div class="opt"><h3>Внести в систему полей</h3>
+        <p>Пять входов и обёртка на каждый.</p></div>
+      <div class="opt"><h3>Объявить, что это не поля</h3>
+        <p>Строка в доках; консьюмер перестаёт их искать.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="select-multi">
+    <div class="q-head">
+      <span class="q-num">35</span>
+      <h2 class="q-title">ds-select с multi - строить ли</h2>
+      <a class="q-src" href="5-select-native-multi.html">дека 5</a>
+    </div>
+    <p class="q-sub">Ответ уже дан 2026-08-06: не строить, дека приложена. Пункт держится открытым, потому что закрыть его отказались.</p>
+    <div class="stage"><div class="spec"><p class="cap">ds-multi-select - есть сейчас</p><div class="field-mock"><div class="box"><span class="chipx">Лондон</span><span class="chipx">Дувр</span></div><div class="panel-mock"><span>&#10003; Лондон</span><span>&#10003; Дувр</span><span>&nbsp;&nbsp; Бристоль</span></div></div></div><div class="spec"><p class="cap">гипотетический ds-select multi</p><div class="field-mock"><div class="box">Лондон, Дувр</div><div class="panel-mock"><span>&#10003; Лондон</span><span>&#10003; Дувр</span><span>&nbsp;&nbsp; Бристоль</span></div></div><p class="says">чтобы стать юзабельным, ему нужны те же чекбоксы - и он становится первым</p></div></div>
+
+    <div class="opts">
+      <div class="opt"><h3>Закрыть пункт <span class="star">★</span></h3>
+        <p>Ответ дан, дека остаётся как запись.</p></div>
+      <div class="opt"><h3>Оставить открытым</h3>
+        <p>Как сейчас.</p></div>
+    </div>
+  </section>
+
+
+  <section class="q" data-q="picker-height">
+    <div class="q-head">
+      <span class="q-num">36</span>
+      <h2 class="q-title">Высота списка пикера - публичный токен или panelClass</h2>
+      <a class="q-src" href="11-picker-list-height.html">дека 11</a>
+    </div>
+    <p class="q-sub">
+      Кэпов два. Синий режет список и решает видимые строки, красный режет коробку и форвардится -
+      настраиваемым выглядит именно он.
+    </p>
+
+    <div class="stage">
+      <div class="spec" style="min-inline-size:210px">
+        <p class="cap">как есть</p>
+        <div class="panelbox" style="block-size:128px">
+          <div class="orow">Aberdeen</div><div class="orow">Belfast</div>
+          <div class="orow">Cardiff</div><div class="orow">Dover</div>
+          <span class="rule" style="inset-block-start:100px;border-color:var(--accent);color:var(--accent-strong)">--picker-maxh 280</span>
+          <span class="rule" style="inset-block-start:126px;border-color:var(--error);color:var(--error-text)">--ds-dropdown-panel-max-height 320</span>
+        </div>
+      </div>
+      <div class="spec" style="min-inline-size:210px">
+        <p class="cap">поднять знакомую ручку до 480</p>
+        <div class="panelbox" style="block-size:128px">
+          <div class="orow">Aberdeen</div><div class="orow">Belfast</div>
+          <div class="orow">Cardiff</div><div class="orow">Dover</div>
+          <span class="rule" style="inset-block-start:100px;border-color:var(--accent);color:var(--accent-strong)">--picker-maxh 280</span>
+        </div>
+        <p class="says">картинка не изменилась</p>
+      </div>
+    </div>
+
+    <div class="opts">
+      <div class="opt"><h3>Через panelClass <span class="star">★</span></h3>
+        <p class="css">&lt;ds-select panelClass="depot" /&gt;
+.depot .dropdown-list { max-height: 480px }</p>
+        <dl class="layer"><dt>Есть с</dt><dd class="gain">0.13.1, работает</dd><dt>Новый API</dt><dd class="none">нет</dd></dl>
+      </div>
+      <div class="opt is-today"><h3>Оставить глобальным</h3>
+        <p class="css">:root { --picker-maxh: 480px }</p>
+        <dl class="layer"><dt>Область</dt><dd>все три пикера</dd><dt>Новый API</dt><dd class="none">нет</dd></dl>
+      </div>
+      <div class="opt"><h3>Публичный токен</h3>
+        <p class="css">ds-select {
+  --ds-picker-list-max-height: 480px
+}</p>
+        <dl class="layer"><dt>Есть с</dt><dd>надо строить</dd><dt>Цена</dt><dd>переименование + гард + миграция</dd></dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="q" data-q="cdk-menu">
+    <div class="q-head">
+      <span class="q-num">37</span>
+      <h2 class="q-title">Переходить ли на CDK Menu</h2>
+      <a class="q-src" href="../docs/todo.md">бэклог 1359</a>
+    </div>
+    <p class="q-sub">Припарковано: только если появятся вложенные подменю, menubar или контекстное меню.</p>
+    <div class="stage"><div class="spec"><p class="cap">наше меню сейчас</p><div class="menu-mock"><span>Открыть</span><span>Дублировать</span><span class="danger">Удалить</span></div><p class="says">своя клавиатура и свой фокус</p></div><div class="spec"><p class="cap">что откроет CDK Menu</p><div class="menu-mock"><span>Открыть</span><span>Экспорт &nbsp;&rsaquo;</span><span class="danger">Удалить</span></div><p class="says">вложенные подменю, menubar, контекстное меню</p></div></div>
+
+    <div class="opts">
+      <div class="opt"><h3>Оставить парковку <span class="star">★</span></h3>
+        <p>Как сейчас.</p></div>
+      <div class="opt"><h3>Брать сейчас</h3>
+        <p>Замена своей клавиатуры и фокуса на чужие.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="signal-forms">
+    <div class="q-head">
+      <span class="q-num">38</span>
+      <h2 class="q-title">Как выглядят pending и dirty</h2>
+      <a class="q-src" href="../docs/todo.md">бэклог 1488</a>
+    </div>
+    <p class="q-sub">Два из трёх членов контракта signal-forms ждут не проводки, а вида. <code>pending</code>: у <code>ds-input</code> есть спиннер, у остальных нет. <code>dirty</code>: библиотека нигде не рисует «изменено».</p>
+    <div class="stage"><div class="spec"><p class="cap">pending: есть у ds-input</p><div class="field-mock"><div class="box">acme-holdings<span class="spin"></span></div></div></div><div class="spec"><p class="cap">pending: у остальных нечем</p><div class="field-mock"><div class="box">12</div></div></div><div class="spec"><p class="cap">dirty: рисовать нечем нигде</p><div class="field-mock"><div class="box">ACME<span class="dot-dirty"></span></div><p class="msg">изменено</p></div><p class="says">такого вида в библиотеке нет</p></div></div>
+
+    <div class="opts">
+      <div class="opt"><h3>Нарисовать оба</h3>
+        <p>Спиннер во все поля, треугольник или точка для dirty.</p></div>
+      <div class="opt"><h3>Только pending</h3>
+        <p>Dirty остаётся без визуального представления.</p></div>
+      <div class="opt"><h3>Ни одного</h3>
+        <p>Члены контракта остаются необъявленными.</p></div>
+    </div>
+  </section>
+
+  <p class="group">Имена и типографика</p>
+
+  <section class="q" data-q="typography-classes">
+    <div class="q-head">
+      <span class="q-num">39</span>
+      <h2 class="q-title">20 классов типографики всё ещё .t-*</h2>
+      <a class="q-src" href="../docs/todo.md">бэклог 1340</a>
+    </div>
+    <p class="q-sub">96 токенов под ними стали <code>--ds-typography-*</code>, классы придержали. Измерено 2026-09-22: минимум 3121 использование в одном этом репозитории.</p>
+    <div class="stage"><div class="spec"><p class="cap">20 классов, 3121 использование</p><div class="type-mock"><span style="font-size:30px;font-weight:700">.t-h1</span><span style="font-size:22px;font-weight:700">.t-h3</span><span style="font-size:16px">.t-m</span><span style="font-size:14px">.t-s</span><span style="font-size:11px;letter-spacing:.08em;text-transform:uppercase">.t-overline</span></div></div><div class="spec"><p class="cap">токены под ними уже спеллятся</p><p class="css">--ds-typography-h1-font-size
+--ds-typography-overline-letter-spacing</p><p class="says">две половины пишут одно слово по-разному</p></div></div>
+
+    <div class="opts">
+      <div class="opt"><h3>Переименовать классы</h3>
+        <p>3121 использование здесь плюс все консьюмеры.</p></div>
+      <div class="opt"><h3>Оставить .t-*</h3>
+        <p>Токены и классы пишут одно слово по-разному навсегда.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="button-c-slots">
+    <div class="q-head">
+      <span class="q-num">40</span>
+      <h2 class="q-title">Слоты кнопки называются --c-*</h2>
+      <a class="q-src" href="../docs/todo.md">бэклог 1346</a>
+    </div>
+    <p class="q-sub">Семь слотов на <code>.button</code>, читаются кнопкой и icon-button. Однобуквенное сокращение там, где правило дома - слово целиком; и они внутренние, но без маркера <code>--_</code>, поэтому читаются как публичные.</p>
+    <div class="stage"><div class="spec"><p class="cap">семь слотов на .button</p><div class="swatch-row lbl"><i style="background:var(--primary)"><b>--c-base</b></i><i style="background:var(--primary-on, #fff)"><b>--c-on</b></i><i style="background:var(--primary-strong, #1E3A8A)"><b>--c-strong</b></i><i style="background:var(--primary-subtitle)"><b>--c-subtitle</b></i><i style="background:var(--primary-muted)"><b>--c-muted</b></i></div><p class="says">однобуквенное сокращение, и без маркера --_ читается как публичный</p></div></div>
+
+    <div class="opts">
+      <div class="opt"><h3>Спеллить и пометить --_ <span class="star">★</span></h3>
+        <p>Внутренние слоты честно называются внутренними.</p></div>
+      <div class="opt"><h3>Оставить --c-*</h3>
+        <p>Ноль работы; имя продолжает врать про публичность.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="bem-modifiers">
+    <div class="q-head">
+      <span class="q-num">41</span>
+      <h2 class="q-title">ds-docs пишет модификаторы как --suffix</h2>
+      <a class="q-src" href="../docs/todo.md">бэклог 1421</a>
+    </div>
+    <p class="q-sub">Состояние должно быть своим классом, а не модификатором в имени.</p>
+    <div class="stage"><div class="spec"><p class="cap">сейчас</p><p class="css">&lt;li class="nav-item nav-item--active"&gt;</p></div><div class="spec"><p class="cap">состояние своим классом</p><p class="css">&lt;li class="nav-item is-active"&gt;</p></div></div>
+
+    <div class="opts">
+      <div class="opt"><h3>Состояние своим классом</h3>
+        <p>Переписать модификаторы в ds-docs.</p></div>
+      <div class="opt"><h3>Оставить как есть</h3>
+        <p>Только сайт доков, в пакет не уезжает.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="docs-brand-examples">
+    <div class="q-head">
+      <span class="q-num">42</span>
+      <h2 class="q-title">Убрать ли примеры бренда и домена из публичных доков</h2>
+      <a class="q-src" href="../docs/todo.md">бэклог 1403</a>
+    </div>
+    <p class="q-sub">Имена уже убраны; речь про сами ПРИМЕРЫ.</p>
+    <div class="stage"><div class="spec"><p class="cap">сейчас</p><div class="doc-mock"><b>brand</b> &mdash; wordmark для sidenav<p class="css">provideDsConfig({ brand: { name: 'ACME Logistics' } })</p></div></div><div class="spec"><p class="cap">без примера</p><div class="doc-mock"><b>brand</b> &mdash; wordmark для sidenav<p class="css">provideDsConfig({ brand: { name: '…' } })</p></div></div></div>
+
+    <div class="opts">
+      <div class="opt"><h3>Убрать примеры</h3>
+        <p>Доки становятся абстрактнее.</p></div>
+      <div class="opt"><h3>Оставить</h3>
+        <p>Примеры конкретнее, но узнаваемы.</p></div>
+    </div>
+  </section>
+
+  <p class="group">Релиз и публикация</p>
+
+  <section class="q" data-q="angular-22">
+    <div class="q-head">
+      <span class="q-num">43</span>
+      <h2 class="q-title">Когда переходим на Angular 22</h2>
+      <a class="q-src" href="../docs/todo.md">бэклог 1439, P1</a>
+    </div>
+    <p class="q-sub">Библиотека объявляет <code>^21.2.0</code> во всех шести peer-зависимостях, поэтому приложение на 22 не ставится без <code>--legacy-peer-deps</code>. Angular 22 вышел 2026-06-03. Вопрос - когда, а не нужно ли.</p>
+    <div class="stage"><div class="spec"><p class="cap">сейчас</p><div class="timeline"><span class="t-done">21.2 — peer-диапазон</span><span class="t-now">22.0 вышел 2026-06-03</span><span class="t-gap">приложение на 22 ставится только с --legacy-peer-deps</span></div></div><div class="spec"><p class="cap">после апгрейда</p><div class="timeline"><span class="t-done">22.x — peer-диапазон</span><span class="t-now">новый мажор пакета</span><span class="t-ok">ставится штатно</span></div></div></div>
+
+    <div class="opts">
+      <div class="opt"><h3>В ближайший мажор</h3>
+        <p>Новый мажор Angular = новый мажор пакета.</p></div>
+      <div class="opt"><h3>После текущего релиза</h3>
+        <p>Сначала выпустить накопленное, потом апгрейд.</p></div>
+      <div class="opt"><h3>Ждать 22.1</h3>
+        <p>Дать экосистеме догнать.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="npm-2027">
+    <div class="q-head">
+      <span class="q-num">44</span>
+      <h2 class="q-title">Чем заменить публикацию в npm с января 2027</h2>
+      <a class="q-src" href="../docs/todo.md">бэклог 1369</a>
+    </div>
+    <p class="q-sub"><code>publish.sh</code> ходит с гранулярным токеном и Bypass 2FA. npm убирает прямую публикацию такими токенами в январе 2027 - останется чтение и подготовка публикации, которую мейнтейнер подтверждает 2FA.</p>
+    <div class="stage"><div class="spec"><p class="cap">сейчас</p><div class="pipe"><span>тег</span><span>сборка</span><span class="p-ok">publish по токену</span></div><p class="says">январь 2027: последний шаг перестаёт работать</p></div><div class="spec"><p class="cap">OIDC</p><div class="pipe"><span>тег</span><span>сборка</span><span class="p-ok">publish без токена</span></div></div><div class="spec"><p class="cap">подтверждение 2FA</p><div class="pipe"><span>тег</span><span>сборка</span><span class="p-wait">ждёт человека</span></div></div></div>
+
+    <div class="opts">
+      <div class="opt"><h3>Trusted publishing (OIDC)</h3>
+        <p>CI публикует без долгоживущего токена.</p></div>
+      <div class="opt"><h3>Ручное подтверждение 2FA</h3>
+        <p>Пайплайн готовит, человек подтверждает.</p></div>
+      <div class="opt"><h3>Свой реестр</h3>
+        <p>Уход с публичного npm.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="claude-design-ci">
+    <div class="q-head">
+      <span class="q-num">45</span>
+      <h2 class="q-title">Публикация в Claude Design из Bitbucket</h2>
+      <a class="q-src" href="../docs/todo.md">бэклог 1391</a>
+    </div>
+    <p class="q-sub">Всё до публикации уже автоматизировано и гейтится. Не хватает последнего шага - самой загрузки, которая требует Chrome.</p>
+    <div class="stage"><div class="spec"><p class="cap">что уже в CI</p><div class="pipe"><span class="p-ok">генератор</span><span class="p-ok">сборка</span><span class="p-ok">бандл</span><span class="p-ok">3 гейта</span><span class="p-wait">загрузка</span></div><p class="says">последний шаг требует Chrome и идёт с машины</p></div></div>
+
+    <div class="opts">
+      <div class="opt"><h3>Искать CI-маршрут</h3>
+        <p>Headless Chrome в пайплайне.</p></div>
+      <div class="opt"><h3>Оставить локальным</h3>
+        <p>Загрузка с машины, остальное в CI.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="release-note-why">
+    <div class="q-head">
+      <span class="q-num">46</span>
+      <h2 class="q-title">Должна ли запись релиза объяснять ПОЧЕМУ</h2>
+      <a class="q-src" href="../docs/todo.md">бэклог 1414</a>
+    </div>
+    <p class="q-sub">Или только что изменилось и что делать читателю.</p>
+    <div class="stage"><div class="spec"><p class="cap">только что и что делать</p><div class="doc-mock"><b>ds-bar заменяет ds-progress и ds-meter.</b><p>Переименуйте тег; входы сохранили имена.</p></div></div><div class="spec"><p class="cap">и почему тоже</p><div class="doc-mock"><b>ds-bar заменяет ds-progress и ds-meter.</b><p>Это был один рисунок под двумя именами, и единственное отличие стало входом. Переименуйте тег; входы сохранили имена.</p></div></div></div>
+
+    <div class="opts">
+      <div class="opt"><h3>Только что и что делать</h3>
+        <p>Короче, читается быстрее.</p></div>
+      <div class="opt"><h3>И почему тоже</h3>
+        <p>Длиннее; читатель понимает решение.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="deferred-defaults">
+    <div class="q-head">
+      <span class="q-num">47</span>
+      <h2 class="q-title">Три отложенных смены значений по умолчанию</h2>
+      <a class="q-src" href="../docs/todo.md">бэклог 1498</a>
+    </div>
+    <p class="q-sub">Придержаны под партию после 0.9.0. Партия так и не собралась.</p>
+    <div class="stage"><div class="spec"><p class="cap">один мажор</p><div class="pipe"><span class="p-ok">3 смены дефолтов</span><span>1 миграция</span></div></div><div class="spec"><p class="cap">по релизам</p><div class="pipe"><span>1 смена</span><span>1 смена</span><span>1 смена</span></div><p class="says">три миграции, каждая мельче</p></div></div>
+
+    <div class="opts">
+      <div class="opt"><h3>Выпустить в ближайший мажор</h3>
+        <p>Одна миграция на три смены.</p></div>
+      <div class="opt"><h3>Разнести по релизам</h3>
+        <p>Три миграции, каждая мельче.</p></div>
+      <div class="opt"><h3>Отказаться</h3>
+        <p>Дефолты остаются как есть.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="changelog-wrap">
+    <div class="q-head">
+      <span class="q-num">48</span>
+      <h2 class="q-title">Перевёрстывать ли CHANGELOG в 100 колонок</h2>
+      <a class="q-src" href="../docs/todo.md">бэклог 1408</a>
+    </div>
+    <p class="q-sub">Твои слова 2026-08-31: «запиши пока в туду, щас не будем».</p>
+    <div class="stage"><div class="spec"><p class="cap">сейчас</p><p class="wrap-mock long">Второй режим оси переименован: rounded стал aligned, independent стал dual-grid, stacked стал split. Четыре слова называют то, что делается с линиями сетки.</p></div><div class="spec"><p class="cap">~100 колонок</p><p class="wrap-mock short">Второй режим оси переименован: rounded стал aligned,<br>independent стал dual-grid, stacked стал split. Четыре<br>слова называют то, что делается с линиями сетки.</p></div></div>
+
+    <div class="opts">
+      <div class="opt"><h3>Перевёрстывать</h3>
+        <p>Один большой диффа, дальше единый вид.</p></div>
+      <div class="opt"><h3>Не трогать</h3>
+        <p>Как сейчас.</p></div>
+    </div>
+  </section>
+
+  <p class="group">Тулинг и гейты</p>
+
+  <section class="q" data-q="fix-all-html">
+    <div class="q-head">
+      <span class="q-num">49</span>
+      <h2 class="q-title">fix:all переформатирует HTML, с которым потом спорит eslint</h2>
+      <a class="q-src" href="../docs/todo.md">бэклог 1425</a>
+    </div>
+    <p class="q-sub">Разница в двух глобах: <code>format</code> не смотрит шаблоны и гейт зелёный, а <code>format:fix</code> добавляет <code>html</code> и переписывает ~112 шаблонов, которые два правила eslint немедленно хотят обратно.</p>
+    <div class="stage"><div class="spec"><p class="cap">после format:fix</p><p class="css">&lt;ds-button variant="solid" color="primary" size="md"&gt;Экспорт&lt;/ds-button&gt;</p></div><div class="spec"><p class="cap">чего немедленно хочет eslint</p><p class="css">&lt;ds-button
+  color="primary"
+  variant="solid"
+  size="md"&gt;
+  Экспорт
+&lt;/ds-button&gt;</p><p class="says">~112 шаблонов ходят между двумя формами</p></div></div>
+
+    <div class="opts">
+      <div class="opt"><h3>*.html в .prettierignore <span class="star">★</span></h3>
+        <p>Самый дешёвый пункт на доске.</p></div>
+      <div class="opt"><h3>Подружить правила</h3>
+        <p>Настройка prettier и двух правил eslint.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="stale-ds-css">
+    <div class="q-head">
+      <span class="q-num">50</span>
+      <h2 class="q-title">Ничто не ловит устаревший presentations/ds.css</h2>
+      <a class="q-src" href="../docs/todo.md">бэклог 1378</a>
+    </div>
+    <p class="q-sub">Регенерация 2026-09-10 сдвинула 47 объявлений, не имевших отношения к правке. Два гейта читают этот файл как истину, то есть деки рендерились со старым фокус-кольцом столько, сколько изменения лежали в <code>src/lib</code>.</p>
+    <div class="stage"><div class="spec"><p class="cap">деки рендерили это</p><div class="ring-mock old">Кнопка</div><p class="says">кольцо через transition</p></div><div class="spec"><p class="cap">библиотека рисует это</p><div class="ring-mock new">Кнопка</div><p class="says">кольцо через animation, 47 объявлений разошлись</p></div></div>
+
+    <div class="opts">
+      <div class="opt"><h3>Гейт на свежесть <span class="star">★</span></h3>
+        <p>Сравнивать с пересборкой, падать на расхождении.</p></div>
+      <div class="opt"><h3>Регенерировать в prebuild</h3>
+        <p>Всегда свежий, дольше сборка.</p></div>
+      <div class="opt"><h3>Оставить</h3>
+        <p>Расхождение остаётся невидимым.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="todo-index-gate">
+    <div class="q-head">
+      <span class="q-num">51</span>
+      <h2 class="q-title">todo-index --check вне lint:all</h2>
+      <a class="q-src" href="../docs/todo.md">бэклог 1376</a>
+    </div>
+    <p class="q-sub">Намеренно: в общем чекауте побайтовая сверка валит прогоны, не связанные с текущей веткой. Цена - индекс может устареть между коммитами.</p>
+    <div class="stage"><div class="spec"><p class="cap">вне lint:all - сейчас</p><div class="pipe"><span class="p-ok">lint</span><span class="p-ok">format</span><span class="p-ok">гейты</span></div><p class="says">чужой прогон зелёный, индекс может устареть</p></div><div class="spec"><p class="cap">в lint:all</p><div class="pipe"><span class="p-ok">lint</span><span class="p-ok">format</span><span class="p-wait">todo-index</span></div><p class="says">индекс свеж, чужой прогон падает на твоём коммите</p></div></div>
+
+    <div class="opts">
+      <div class="opt"><h3>Оставить вне <span class="star">★</span></h3>
+        <p>Как сейчас.</p></div>
+      <div class="opt"><h3>Внести в lint:all</h3>
+        <p>Индекс всегда свеж, чужие прогоны падают.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="manifest-practices">
+    <div class="q-head">
+      <span class="q-num">52</span>
+      <h2 class="q-title">Какие из восьми практик формата манифестов берём</h2>
+      <a class="q-src" href="4-migration-manifest-audit.html">дека 4</a>
+    </div>
+    <p class="q-sub">Все 23 находки аудита закрыты, осталась ратификация. Контракт держится на 306 строках регэкспов - первые две практики лечат именно это. Можно отметить несколько.</p>
+    <div class="stage"><div class="spec"><p class="cap">пункт манифеста сейчас</p><p class="css">{
+  "id": "donut-chart-renamed",
+  "kind": "selector-rename",
+  "old": "ds-donut-chart",
+  "new": "ds-pie-chart"
+}</p></div><div class="spec"><p class="cap">первые две практики</p><p class="css">{
+  "schemaVersion": 2,
+  "id": "donut-chart-renamed",
+  "verifyCommand": "grep -r ds-donut-chart src"
+}</p><p class="says">контракт держится на 306 строках регэкспов - это их и лечит</p></div></div>
+
+    <div class="opts" data-multi>
+      <div class="opt"><h3>Исполняемая проверка <span class="star">★</span></h3></div>
+      <div class="opt"><h3>schemaVersion <span class="star">★</span></h3></div>
+      <div class="opt"><h3>Явное «замены нет»</h3></div>
+      <div class="opt"><h3>Рантайм-идентификаторы</h3></div>
+      <div class="opt"><h3>Маркер эскалации</h3></div>
+      <div class="opt"><h3>deprecatedIn</h3></div>
+      <div class="opt"><h3>Ссылка на PR</h3></div>
+      <div class="opt"><h3>Ключ requirements</h3></div>
+      <div class="opt"><h3>Ни одну</h3></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="automation-coverage">
+    <div class="q-head">
+      <span class="q-num">53</span>
+      <h2 class="q-title">Три пути ds-table и пять групп компонентов ни разу не прокликаны</h2>
+      <a class="q-src" href="../docs/todo.md">бэклог 1374</a>
+    </div>
+    <p class="q-sub">Автоматизация их не трогала.</p>
+    <div class="stage"><div class="spec"><p class="cap">что прокликано</p><div class="grid-mock"><i class="g-ok"></i><i class="g-ok"></i><i class="g-ok"></i><i class="g-ok"></i><i class="g-ok"></i><i class="g-no"></i><i class="g-no"></i><i class="g-no"></i><i class="g-ok"></i><i class="g-ok"></i><i class="g-no"></i><i class="g-no"></i><i class="g-ok"></i><i class="g-no"></i><i class="g-ok"></i><i class="g-ok"></i></div><p class="says">три пути ds-table и пять групп компонентов - серые</p></div></div>
+
+    <div class="opts">
+      <div class="opt"><h3>Прокликать</h3>
+        <p>Разовый проход и запись результата.</p></div>
+      <div class="opt"><h3>Оставить</h3>
+        <p>Пробел остаётся известным.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="schematics-tsconfig">
+    <div class="q-head">
+      <span class="q-num">54</span>
+      <h2 class="q-title">schematics/tsconfig просит moduleResolution: node</h2>
+      <a class="q-src" href="../docs/todo.md">бэклог 1399</a>
+    </div>
+    <p class="q-sub">TypeScript 6 его удаляет.</p>
+    <div class="stage"><div class="spec"><p class="cap">сейчас</p><p class="css">{
+  "moduleResolution": "node"
+}</p><p class="says">TypeScript 6 его удаляет</p></div><div class="spec"><p class="cap">после</p><p class="css">{
+  "moduleResolution": "bundler"
+}</p></div></div>
+
+    <div class="opts">
+      <div class="opt"><h3>Перевести сейчас</h3>
+        <p>До того, как оно сломается.</p></div>
+      <div class="opt"><h3>Ждать TS 6</h3>
+        <p>Чинить по факту.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="design-manifest-templates">
+    <div class="q-head">
+      <span class="q-num">55</span>
+      <h2 class="q-title">templates и startingPoints в манифесте Claude Design</h2>
+      <a class="q-src" href="../docs/todo.md">бэклог 1382</a>
+    </div>
+    <p class="q-sub">Оба в схеме и оба пустые; что они дают - не исследовано.</p>
+    <div class="stage"><div class="spec"><p class="cap">манифест сейчас</p><p class="css">{
+  "cards": [ … 96 … ],
+  "templates": [],
+  "startingPoints": []
+}</p><p class="says">оба в схеме и оба пустые</p></div></div>
+
+    <div class="opts">
+      <div class="opt"><h3>Исследовать</h3>
+        <p>Понять, что они меняют для читателя.</p></div>
+      <div class="opt"><h3>Оставить пустыми</h3>
+        <p>Как сейчас.</p></div>
+    </div>
+  </section>
+
+  <section class="q" data-q="docs-blocks">
+    <div class="q-head">
+      <span class="q-num">56</span>
+      <h2 class="q-title">Четыре компонента без собственного блока в ds-docs</h2>
+      <a class="q-src" href="../docs/todo.md">бэклог 1385</a>
+    </div>
+    <p class="q-sub">Два из четырёх уже исправлены.</p>
+    <div class="stage"><div class="spec"><p class="cap">сейчас</p><div class="nav-mock"><span>ds-alert</span><span>ds-badge</span><span class="n-in">ds-status-dot внутри ds-badge</span><span>ds-banner</span></div></div><div class="spec"><p class="cap">со своим блоком</p><div class="nav-mock"><span>ds-alert</span><span>ds-badge</span><span class="n-own">ds-status-dot</span><span>ds-banner</span></div></div></div>
+
+    <div class="opts">
+      <div class="opt"><h3>Доделать оставшиеся два</h3>
+        <p>Каждый компонент со своим блоком.</p></div>
+      <div class="opt"><h3>Оставить</h3>
+        <p>Два компонента живут внутри чужих блоков.</p></div>
+    </div>
+  </section>
+
+  <p class="group">Уже решено</p>
+
+  <section class="q is-settled">
+    <div class="q-head">
+      <span class="q-num">--</span>
+      <h2 class="q-title">Насколько сводить контракты бара и колонки</h2>
+      <a class="q-src" href="9-bar-column-contracts.html">дека 9</a>
+    </div>
+    <p class="q-sub">
+      Один и тот же плоский массив, ни одна запись не несёт <code>color</code>. Бар считает строки
+      ОДНОЙ серией, колонка - КАТЕГОРИЯМИ.
+    </p>
+
+    <div class="stage">
+      <div class="spec">
+        <p class="cap">ds-bar-chart</p>
+        <div class="rows" style="min-inline-size:200px">
+          <div class="row"><span>Eng</span><span class="bar"><i style="inline-size:100%;background:var(--ds-chart-series-default-color)"></i></span></div>
+          <div class="row"><span>Sales</span><span class="bar"><i style="inline-size:63%;background:var(--ds-chart-series-default-color)"></i></span></div>
+          <div class="row"><span>Support</span><span class="bar"><i style="inline-size:32%;background:var(--ds-chart-series-default-color)"></i></span></div>
+          <div class="row"><span>Ops</span><span class="bar"><i style="inline-size:24%;background:var(--ds-chart-series-default-color)"></i></span></div>
+        </div>
+      </div>
+      <div class="spec">
+        <p class="cap">ds-column-chart</p>
+        <div class="cols">
+          <span class="col" style="block-size:100%;background:var(--ds-chart-series-1-color)"></span>
+          <span class="col" style="block-size:63%;background:var(--ds-chart-series-2-color)"></span>
+          <span class="col" style="block-size:32%;background:var(--ds-chart-series-3-color)"></span>
+          <span class="col" style="block-size:24%;background:var(--ds-chart-series-4-color)"></span>
+        </div>
+      </div>
+    </div>
+    <p class="q-sub"><strong>Решено 2026-09-22.</strong> Не сводить: два разных чарта, ни один не
+    растит модель данных другого. Общий слой под ними выносится, переиспользуется и получает
+    способ расширяться там, где одному нужно иначе; уникальное остаётся уникальным. Работа
+    записана в бэклоге - это уже руки, а не вопрос.</p>
+  </section>
+
+  <div class="bar-fixed">
+    <span class="count" id="count">0 из 5</span>
+    <output id="line">пока ничего не выбрано</output>
+    <button type="button" id="copy">Скопировать</button>
+    <button type="button" id="reset">Сбросить</button>
+  </div>
+</main>
+
+<script>
+  const KEY = 'ds-decision-queue-v2';
+  const KEY_SHAPE = 'ds-decision-queue-v3';
+  const load = () => { try { return JSON.parse(localStorage.getItem(KEY_SHAPE)) ?? {}; } catch { return {}; } };
+  const save = (v) => { try { localStorage.setItem(KEY_SHAPE, JSON.stringify(v)); } catch { /* private window */ } };
+
+  const state = load();
+  const sections = [...document.querySelectorAll('.q[data-q]')];
+  const name = (card) => card.querySelector('h3').textContent.replace('★', '').trim();
+
+  function render() {
+    for (const section of sections) {
+      const chosen = state[section.dataset.q] ?? [];
+      for (const card of section.querySelectorAll('.opt')) {
+        card.classList.toggle('is-chosen', chosen.includes(name(card)));
+      }
+    }
+    const done = sections.filter((s) => (state[s.dataset.q] ?? []).length > 0);
+    document.getElementById('count').textContent = `${done.length} из ${sections.length}`;
+    document.getElementById('line').textContent = done.length
+      ? done.map((s) => `${s.querySelector('.q-num').textContent}: ${state[s.dataset.q].join(' + ')}`).join('  ·  ')
+      : 'пока ничего не выбрано';
+  }
+
+  for (const section of sections) {
+    section.addEventListener('click', (event) => {
+      const card = event.target.closest('.opt');
+      if (!card) return;
+      const key = section.dataset.q;
+      const picked = name(card);
+      const chosen = state[key] ?? [];
+      // one question may take several answers - the manifest practices are marked `data-multi`
+      state[key] = card.closest('[data-multi]')
+        ? (chosen.includes(picked) ? chosen.filter((v) => v !== picked) : [...chosen, picked])
+        : (chosen.includes(picked) ? [] : [picked]);
+      if (!state[key].length) delete state[key];
+      save(state);
+      render();
+    });
+  }
+
+  document.getElementById('copy').addEventListener('click', () => {
+    navigator.clipboard?.writeText(document.getElementById('line').textContent);
+  });
+  document.getElementById('reset').addEventListener('click', () => {
+    for (const key of Object.keys(state)) delete state[key];
+    save(state);
+    render();
+  });
+
+  render();
+</script>

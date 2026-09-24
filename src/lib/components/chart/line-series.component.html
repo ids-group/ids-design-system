@@ -1,17 +1,35 @@
 <svg:g
   class="lines"
-  [class.dims-others]="dimOthers()">
+  [class.dims-others]="dimOthers()"
+  [class.is-outlined]="outline()"
+  (pointerover)="onMarkerOver($event)"
+  (pointerout)="onMarkerOut($event)"
+  (focusin)="onMarkerFocus($event)"
+  (focusout)="onMarkerBlur($event)"
+  (keydown)="onMarkerKey($event)"
+  (click)="onMarkerClick($event)">
   @for (entry of plotted(); track entry.series.id) {
     @for (path of entry.areaPaths; track $index) {
       <svg:path
         class="series-area"
-        animate.enter="mark-enter"
-        animate.leave="mark-leave"
         [class.is-stacked]="stacked()"
         [class.is-dimmed]="isDimmed(entry.series.id)"
         [style.--_chart-mark-stagger]="seriesStagger(entry.seriesIndex)"
         [attr.d]="path"
-        [attr.fill]="entry.color" />
+        [attr.fill]="entry.color"
+        (animate.leave)="leaveMark($event)" />
+    }
+  }
+
+  @if (outline()) {
+    @for (entry of plotted(); track entry.series.id) {
+      @for (path of entry.linePaths; track $index) {
+        <svg:path
+          class="series-halo"
+          [class.is-dimmed]="isDimmed(entry.series.id)"
+          [attr.stroke-dasharray]="dashFor(entry.seriesIndex)"
+          [attr.d]="path" />
+      }
     }
   }
 
@@ -19,13 +37,12 @@
     @for (path of entry.linePaths; track $index) {
       <svg:path
         class="series-line"
-        animate.enter="mark-enter"
-        animate.leave="mark-leave"
         [class.is-dimmed]="isDimmed(entry.series.id)"
         [attr.stroke-dasharray]="dashFor(entry.seriesIndex)"
         [style.--_chart-mark-stagger]="seriesStagger(entry.seriesIndex)"
         [attr.d]="path"
-        [attr.stroke]="entry.color" />
+        [attr.stroke]="entry.color"
+        (animate.leave)="leaveMark($event)" />
     }
   }
 
@@ -38,7 +55,7 @@
           [class.is-dimmed]="isDimmed(entry.series.id)"
           [class.ghost]="!showMarkers()"
           [class.interactive]="interactive()"
-          [class.is-active]="marker.markIndex === activeMark.index()"
+          [class.is-active]="isActiveMarker(marker)"
           [attr.cx]="marker.x"
           [attr.cy]="marker.y"
           [attr.fill]="entry.color"
@@ -51,15 +68,7 @@
                 : -1
               : null
           "
-          [attr.aria-label]="interactive() ? markerLabel(marker) : null"
-          (pointerenter)="onMarkerEnter(marker.markIndex, $event)"
-          (pointerleave)="activeMark.leave()"
-          (focus)="onMarkerFocus(marker.markIndex, $event)"
-          (blur)="onMarkerBlur()"
-          (keydown)="onMarkerNavigation($event, marker.markIndex)"
-          (click)="onMarkerClick(marker.markIndex, $event)"
-          (keydown.enter)="onMarkerClick(marker.markIndex)"
-          (keydown.space)="onMarkerClick(marker.markIndex)" />
+          [attr.aria-label]="interactive() ? markerLabel(marker) : null" />
       }
     }
   }

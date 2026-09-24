@@ -719,14 +719,32 @@ if (widened.length) {
   );
   for (const note of widened) console.log('    ' + note);
 }
+const wrapperNames = new Set(
+  components.flatMap((c) => [c.name, `${c.name}Props`]),
+);
+// A library type can share a wrapper's name — `ChartDataTable` is both the `dataTable` input's
+// union and the `ds-chart-data-table` wrapper — so it is imported under an alias.
+const aliasOf = (name) => (wrapperNames.has(name) ? `${name}Type` : name);
+const originalOf = new Map();
+for (const component of components)
+  for (const entry of component.api)
+    for (const dependency of typeDependencies(entry.type))
+      if (typeIndex.has(dependency) && wrapperNames.has(dependency)) {
+        originalOf.set(aliasOf(dependency), dependency);
+        entry.type = entry.type.replace(
+          new RegExp('\\b' + dependency + '\\b', 'g'),
+          aliasOf(dependency),
+        );
+      }
 const byModule = new Map();
 for (const component of components) {
   for (const { type } of component.api) {
     for (const dependency of typeDependencies(type)) {
-      const module = typeIndex.get(dependency);
+      const name = originalOf.get(dependency) ?? dependency;
+      const module = typeIndex.get(name);
       if (!module) continue;
       if (!byModule.has(module)) byModule.set(module, new Set());
-      byModule.get(module).add(dependency);
+      byModule.get(module).add(name);
     }
   }
 }
@@ -734,7 +752,12 @@ const typeImports = [...byModule]
   .sort()
   .map(
     ([module, names]) =>
-      `import type { ${[...names].sort().join(', ')} } from '${module}';`,
+      `import type { ${[...names]
+        .sort()
+        .map((name) =>
+          aliasOf(name) === name ? name : `${name} as ${aliasOf(name)}`,
+        )
+        .join(', ')} } from '${module}';`,
   )
   .join('\n');
 
@@ -759,9 +782,6 @@ ${components.map(wrapper).join('\n')}`,
 // `AutocompleteOptionGroup`, and a caller building that value needs the member type too. Collecting
 // only what props mention left three such types unreachable.
 const exportsByModule = new Map();
-const wrapperNames = new Set(
-  components.flatMap((c) => [c.name, `${c.name}Props`]),
-);
 for (const [name, module] of typeIndex) {
   if (wrapperNames.has(name)) continue;
   if (!exportsByModule.has(module)) exportsByModule.set(module, new Set());

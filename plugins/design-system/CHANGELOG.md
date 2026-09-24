@@ -4,6 +4,21 @@ Versioning: **patch** = instruction/prompt fixes; **minor** = new capability (pi
 source, agent); **major** = a change to the workflow's behavior contract. Bump `plugin.json` +
 `marketplace.json` together on every published change.
 
+## 1.8.2 - 2026-09-24
+
+### Changed
+
+- **An `informational` entry may carry a `verify`.** Besides a bare string it can be
+  `{ text, verify }`. The planner writes the object when the changelog line names a layout
+  mechanism - `display`, `grid`, `flex`, `position`, `overflow`, `colspan`, a width, a height, a new
+  wrapper - where grep and the build both stay silent. Such an entry lands in the report's "applied -
+  human should eyeball" bucket with its `verify` sentence; a bare string stays in the FYI list.
+- **An `informational` object is not a `surface: none` item.** `none` still carries a `restore` or a
+  conditional `action`; a change with neither is `informational`.
+- **A shipped manifest's `informational` entries are forwarded verbatim.** The planner may append to
+  the list but never rewrites an entry: an object keeps its shape, and a bare string that lacks a
+  `verify` is reported as manifest feedback with the locator-dead set, not enriched in the plan.
+
 ## 1.8.1 - 2026-09-23
 
 ### Changed

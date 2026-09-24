@@ -425,8 +425,9 @@ function cardsFor(name) {
   // second copy under the part's name is the duplication this whole design removes. `TimeColumns`
   // shipped the entire Time Picker chapter — all seven of its blocks — under the name
   // "Time Columns". Only a chapter that publishes nothing at all falls back to a whole-chapter card.
-  const primary =
-    section.slug.startsWith('components/') && section.slug.slice(11) === own;
+  // The chapter named after the component is its own in any group: `charts/heatmap-chart` as much
+  // as `components/button`.
+  const primary = section.slug.split('/').pop() === own;
   const owner = marks.has(own) ? own : primary ? '' : null;
   const label = spacedName(name);
   if (owner === null && blocks.length) return [];
@@ -746,6 +747,18 @@ function cardHtml({
           if (Date.now() - start < 8000) setTimeout(slice, 50);
           return;
         }
+        /* Until a section's body has rendered it holds only its header, and slicing then would
+           drop every block before it arrives. */
+        var HEADER = 'h2, p.lede, .eyebrow, .tagrow, docs-component-meta, ' + API;
+        var filled = function (node) {
+          return !node.matches(HEADER) && (node.childElementCount > 0 || node.textContent.trim() !== '');
+        };
+        if (!Array.prototype.some.call(section.children, filled)) {
+          if (Date.now() - start < 8000) return setTimeout(slice, 50);
+          document.documentElement.setAttribute('data-ds-sliced', '0');
+          document.documentElement.setAttribute('data-ds-kept', '0');
+          return;
+        }
         var owner = '';
         var doomed = [];
         var apis = [];
@@ -819,7 +832,7 @@ function cardHtml({
            and a card that removes everything looks exactly like one that removed nothing. */
         var kept = 0;
         for (var k = section.firstElementChild; k; k = k.nextElementSibling) {
-          if (!k.matches(KEEP) && !k.matches(API) && !k.matches('docs-component-meta')) kept += 1;
+          if (filled(k)) kept += 1;
         }
         document.documentElement.setAttribute('data-ds-sliced', String(doomed.length));
         document.documentElement.setAttribute('data-ds-kept', String(kept));

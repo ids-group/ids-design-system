@@ -24,7 +24,7 @@
     <div
       class="skeleton"
       aria-hidden="true">
-      <ds-skeleton height="var(--_line-chart-plot-height)" />
+      <ds-skeleton height="var(--_line-chart-skeleton-height)" />
 
       @if (skeletonSeries().length > 1) {
         <div class="skeleton-legend">
@@ -57,6 +57,7 @@
     <ds-chart
       frame="none"
       cursor="category"
+      [tooltipTemplate]="tooltipTemplate() ?? null"
       [categories]="categories()"
       [tickCount]="tickCount()"
       [valueFormat]="axisFormat()"
@@ -77,6 +78,7 @@
         dsLineSeries
         [data]="markSeries()"
         [showMarkers]="showMarkers()"
+        [outline]="outline()"
         [interactive]="interactive()"
         [pinOnClick]="pinOnClick()"
         [dimOthers]="dimOthers()"
@@ -90,12 +92,6 @@
         [tooltipAnchor]="markAnchor()"
         [tooltipLingerMs]="tooltipLingerResolved()"
         [valueFormat]="valueFormatResolved()"
-        [dsChartTooltip]="mark.tooltipContext()"
-        [dsChartTooltipPreferBelow]="
-          pinnedCategory() || mark.activeMark.pinned()
-        "
-        [dsChartTooltipOrigin]="mark.tooltipOrigin()"
-        [dsChartTooltipTemplate]="tooltipTemplate() ?? null"
         (pointClicked)="onPointClicked($event)" />
 
       <svg:g

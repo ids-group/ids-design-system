@@ -8,7 +8,14 @@ export interface ChartActiveMark {
   readonly origin: Signal<Element | null>;
   /** Whether the active mark is held rather than followed — a tap, or a click under `pinOnClick`. */
   readonly pinned: Signal<boolean>;
-  enter(index: number, event: Event, anchor?: string | Element | null): void;
+  /** `mark` is the hovered element, for a listener delegated to the marks' parent; it defaults to
+   *  the event's `currentTarget`. */
+  enter(
+    index: number,
+    event: Event,
+    anchor?: string | Element | null,
+    mark?: Element,
+  ): void;
   /** Moves the active index with no pointer behind it - a keyboard, or a mark handing over which
    *  category it took focus on. Leaves the anchor alone: the caller that has no event has no
    *  element to aim at either. A pin holds against this too. */
@@ -16,7 +23,12 @@ export interface ChartActiveMark {
   leave(): void;
   /** Holds the mark that was activated, for any pointer type. Activating the mark that is already
    *  pinned releases it, so one gesture both sets and clears. */
-  pin(index: number, event: Event, anchor?: string | Element | null): void;
+  pin(
+    index: number,
+    event: Event,
+    anchor?: string | Element | null,
+    mark?: Element,
+  ): void;
   /** Lets go of a held mark, for a control that offers the way out in as many words. */
   release(): void;
 }
@@ -66,13 +78,19 @@ export function chartActiveMark(
     at: number,
     event: Event,
     anchor?: string | Element | null,
+    mark: EventTarget | null = event.currentTarget,
   ): void => {
-    const target = event.currentTarget;
+    const target = mark;
     if (target instanceof Element) {
       host = target;
       const mark =
         typeof anchor === 'string' ? target.querySelector(anchor) : anchor;
-      origin.set(mark ?? target);
+      // A mark drawn from a zero value is degenerate in one axis - a column loses its height, a
+      // bar its width - and an overlay anchored to it lands at that edge rather than near the
+      // reading. Both dimensions have to be real. The hover target always is.
+      const box = mark?.getBoundingClientRect();
+      const aimable = box && box.width > 0 && box.height > 0;
+      origin.set(aimable ? (mark ?? target) : target);
     }
     index.set(at);
   };
@@ -162,6 +180,7 @@ export function chartActiveMark(
     inject(DestroyRef).onDestroy(() => {
       cancelPendingClear();
       document.removeEventListener('pointerdown', release, true);
+      document.removeEventListener('keydown', releaseOnEscape, true);
       document.removeEventListener('pointerover', trackPointer, true);
     });
   }
@@ -170,14 +189,14 @@ export function chartActiveMark(
     index: index.asReadonly(),
     origin: origin.asReadonly(),
     pinned: pinned.asReadonly(),
-    enter(at, event, anchor) {
+    enter(at, event, anchor, mark) {
       // A pin HOLDS. Without this the next mark the pointer crossed took the active slot straight
       // back, so pinning appeared to work and then followed the pointer anyway — the one thing a
       // pin exists not to do. It is released by Escape, or by a press outside the pinned mark.
       if (pinned()) {
         return;
       }
-      aim(at, event, anchor);
+      aim(at, event, anchor, mark);
       cancelPendingClear();
       if (typeof document !== 'undefined') {
         document.addEventListener('pointerover', trackPointer, true);
@@ -208,7 +227,7 @@ export function chartActiveMark(
         clear();
       }
     },
-    pin(at, event, anchor) {
+    pin(at, event, anchor, mark) {
       if (typeof document === 'undefined') {
         return;
       }
@@ -222,7 +241,7 @@ export function chartActiveMark(
       }
       // Re-aiming while already pinned keeps `pinned` true throughout, so nothing that renders on
       // it — the Unpin control, the held mark's styling — unmounts between the two marks.
-      aim(at, event, anchor);
+      aim(at, event, anchor, mark);
       if (!pinned()) {
         hold();
       }

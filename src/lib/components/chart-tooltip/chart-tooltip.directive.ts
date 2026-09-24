@@ -15,14 +15,17 @@ import {
   type FlexibleConnectedPositionStrategyOrigin,
 } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
-import { closeOnScroll } from '@ids-group-ltd/ids-design-system/components';
+import {
+  closeOnScroll,
+  disposeWithLeave,
+} from '@ids-group-ltd/ids-design-system/components';
 import { ChartTooltipPanelComponent } from './chart-tooltip-panel.component';
 import type {
   ChartTooltipContext,
   ChartTooltipOrigin,
 } from './chart-tooltip.types';
 
-const POINTER_GAP_PX = 6;
+const POINTER_GAP_PX = 10;
 // A fingertip covers roughly 40 CSS px, so a touch-opened panel has to clear the tap
 // point by more than a pointer-opened one does.
 const TOUCH_GAP_PX = 48;
@@ -103,6 +106,10 @@ export class ChartTooltipDirective {
    *  leaves the plot's top edge — and the Unpin control that lives there — alone. */
   readonly dsChartTooltipPreferBelow = input(false);
 
+  /** A held panel takes the pointer again, so its text can be selected. While it merely follows
+   *  the pointer the pane stays inert, or the mark it covers never sees the pointer at all. */
+  readonly dsChartTooltipPinned = input(false);
+
   private overlayRef: OverlayRef | null = null;
   private panelRef: ComponentRef<ChartTooltipPanelComponent> | null = null;
   private detachScrollReposition: (() => void) | null = null;
@@ -145,6 +152,10 @@ export class ChartTooltipDirective {
     } else {
       this.overlayRef.updatePositionStrategy(this.strategyFor(origin));
     }
+    this.overlayRef.overlayElement.classList.toggle(
+      'is-pinned',
+      this.dsChartTooltipPinned(),
+    );
     this.panelRef?.setInput('context', context);
     this.panelRef?.setInput('template', this.dsChartTooltipTemplate());
   }
@@ -186,7 +197,10 @@ export class ChartTooltipDirective {
     this.detachEscape = null;
     this.detachScrollReposition?.();
     this.detachScrollReposition = null;
-    this.overlayRef?.dispose();
+    // A dismissal, never a selection: the panel closes when the reader leaves the plot, and the
+    // family's answer to that is a fade. Moving between marks repositions this overlay rather than
+    // closing it, so nothing here can lag behind the pointer.
+    disposeWithLeave(this.overlayRef, 'dismiss');
     this.overlayRef = null;
     this.panelRef = null;
   }

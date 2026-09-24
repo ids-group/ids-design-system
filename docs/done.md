@@ -4,6 +4,194 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## `ds-date-picker` keeps its content width in a container narrower than its mask (2026-09-24)
+
+The truncation contract says the value never clips, but the host carried `max-width: 100%` with
+nothing holding a minimum, so under `fullWidth` in a narrow container the border shrank while the
+mask and calendar button kept their width and overflowed it (mm-ecm range filter, ME-405). The host
+now takes `min-width: min-content`, which outranks the `max-width`: the whole field overflows the
+container, border included, and the button keeps its inner padding. Inside `ds-field-group` the
+group's own `min-width: 0` on segments still applies, since the group draws the border. Measured
+2026-09-24 on the docs date-picker page, range picker (236.3px mask): in 206px and 150px boxes the
+button sat 18.7px and 74.7px outside the border before, and 11.5px (md) / 7.5px (sm) inside after;
+the other 17 pickers on the page kept their widths.
+
+## Four control APIs consumers reached past the surface for (2026-09-24)
+
+`ds-switch` takes `controlled` with `(checkedRequested)`: the click is cancelled and the asked-for
+value emitted, and the track moves only when `[checked]` changes from outside (Stas picked the name).
+`ds-textarea` mirrors the native selection API (`selectionStart`, `selectionEnd`,
+`setSelectionRange`, `select`). Every field control and `ds-search` has `blur()` beside `focus()`,
+from one shared `blurOwnControl` that blurs whichever descendant holds focus (checked on
+`ds-otp-input`, whose own logic redirects focus). `[dsCellTemplateOf]` plus a static
+`ngTemplateContextGuard` types `let-row` under strict templates; unbound, `row` stays `unknown`.
+Measured 2026-09-24 in the shared Chrome; both negative controls of the typed row failed the build
+as expected (TS2551 on a typo, TS2571 without the binding).
+
+## The abbreviation gate reads every segment, and informational objects carry a verify (2026-09-24)
+
+`check-abbreviated-tokens` fires on a short last segment other than the `-x`/`-y` axis and on a
+listed abbreviation in any segment, which catches `--ds-slider-thumb-bw`; that token and its theme
+fallback `--slider-thumb-bw` are `-border-width` now, each with a token-rename item. An
+`informational` object requires a non-empty `verify` (M046), AUTHORING, README and the migration
+planner state where `informational` ends and `surface: none` begins, and `0.12.2`'s expanded-row
+line carries the verify its reveal needed.
+
+## `ds-table`'s footer pager takes a loading state under skeleton loading (2026-09-24)
+
+`PaginationComponent` takes a `loading` input (`pagination.component.ts`): every button and the
+page-size `ds-select` get the native `disabled` attribute, the range label swaps to a
+`<ds-skeleton>` placeholder in place of `rangeLabel()`, and the `nav` carries `aria-busy`, since a
+standalone `ds-pagination` has no status region of its own (`pagination.component.html`). The
+current page keeps its accent fill: `&[disabled]` greys only `:not(.active)`
+(`pagination.component.scss`). `ds-table` forwards `[loading]="isSkeletonLoading()"`
+(`table.component.html`), so the footer no longer shows the previous query's count and buttons under
+`loading="skeleton"` and cannot fire a page change against placeholder rows. `loading="overlay"`
+runs only while `filteredData().length` is nonzero and keeps the pager live, like the header: the
+rows behind the scrim are real rows, the label names the requested page, and the host already
+tolerates a second request from a re-sort. Measured 2026-09-24 on the docs table page ("Loading ·
+skeleton with pagination") in the shared Chrome: footer height 56.53px before, during and after;
+during, all 5 buttons and the size select are disabled, the nav carries `aria-busy="true"`, the label
+holds a `ds-skeleton`, the active page stays `rgb(255, 255, 255)` on `rgb(46, 84, 255)` and the
+other four read `--text-disabled`; after, `aria-busy` is gone and the label reads "Showing 1-4 of 12".
+
+---
+
+## `ds-table` forwards `paginationSize` and `paginationLayout` to its footer pager (2026-09-23)
+
+`TableComponent` takes `paginationSize: DsSize | null` and `paginationLayout: PaginationLayout | null`
+(`table.component.ts`, beside `showPageSize` / `showLabel`) and binds them to the embedded
+`ds-pagination`'s `size` and `layout` (`table.component.html`, the `.pagination-footer` block). Flat
+inputs, not an object: every input in `src/lib` is flat and the table's five existing pager inputs
+already are, so an object would be the first of its kind and would duplicate or deprecate them. Both
+are nullable so an unset table falls through to the new `DS_CONFIG.pagination` section
+(`core/ds-config.ts`): `size` resolves the input, then `pagination.size`, then `control.size`, then
+`'sm'`; `layout` resolves the input, then `pagination.layout`, then `'grouped'`
+(`pagination.component.ts`, `sizeResolved` / `layoutResolved`, both public readbacks).
+`PaginationLayout` lives in `core/pagination.types.ts` so the config can name it, and
+`components/pagination` re-exports it. Measured 2026-09-23 on the docs table page in the shared
+Chrome: the new demo's nav carries `md pagination spread`, its buttons are 40.0px tall
+(`--field-h-md` = `--hit-cozy` = 40px) and 40px wide, the range label sits 0px from the nav's start
+edge and the last button 0px from its end edge, where the grouped demos leave 80.1px; the two
+existing demos stay `pagination sm` at 32px, and the console holds no error. `class-surface`:
+`TableComponent` gained the two inputs, `PaginationComponent` gained `layoutResolved` and widened
+`layout` to `PaginationLayout | null`, recorded in `migrations/unreleased.json`
+(`exported-class-members-grew`, `pagination-layout-input-nullable`) with the
+`table-pager-size-layout-override` delete row for the consumer's doubled `.pagination.pagination`
+rules. Deck `ask-table-pager-size` and its backlog item are closed.
+
+## `ds-modal` stacks its actions full-width when the row outgrows the card (2026-09-23)
+
+`ModalCardComponent` measures the `.actions` row after render and, one animation frame after
+every resize of the header, again (`modal-card.component.ts`, `stackOverflowingActions`): the
+children's natural widths plus gaps against the row's content width, read with the `stacked` class
+off so a stacked row still knows its natural width. The frame of deferral is load-bearing: a layout
+change made inside a ResizeObserver callback is reported as "loop completed with undelivered
+notifications" by any observer of an ancestor - measured 2026-09-23 on the docs page, twice per
+420 <-> 1280 viewport flip without it, none with it, and none on the untouched `dev` build driven
+through the same flips. Over budget, `.actions.stacked` (`modal.component.scss`) is a column
+in `var(--ds-modal-actions-stacked-direction, column)` and an anchored `::ng-deep` pierce gives
+every projected child `width: 100%`, because `ds-button`'s `width: fit-content` opts out of the
+column's stretch. By default the stack keeps DOM order, cancel then confirm, so visual order, Tab and
+a screen reader agree and the confirming action sits at the bottom; `column-reverse` on the token puts
+it on top (Stas's call, 2026-09-24). No CSS-only switch exists: the Holy Albatross and a container query
+both key on the CONTAINER's width, and the reported card is a fixed `--modal-w-sm` whose only
+variable is the labels, so a threshold would never fire there. Measured on the docs page in the
+shared Chrome (2026-09-23), `ds-modal-card` `sm` clamped to a 356px stage: three long labels stack
+at 316.3px each = the row's content width, every box inside the card; two short labels stay a row
+with the last button flush to the content edge (gap 0.0px); the console holds no error or warning.
+`migrations/unreleased.json` carries the `informational` line with a `verify` and the
+`modal-actions-flex-wrap` delete row for the consumer rule wrapping `ds-modal-card .actions`. Deck
+`ask-modal-footer-wrap` and its backlog item are closed.
+
+## An `informational` entry can carry a `verify` (2026-09-23)
+
+`informational` accepts a bare string, as before, or `{ "text": "...", "verify": "..." }` -
+documented in `migrations/README.md` and `migrations/AUTHORING.md` (fill `verify` whenever the line
+names a layout mechanism: `display`, `grid`, `flex`, `position`, `overflow`, `colspan`, a width, a
+height, a new wrapper element). `tools/migration-lint.mjs` gained M046 (rejects an object with no
+non-empty `text` or a key other than `text`/`verify`); M034's delete-citation scan and
+`tools/check-manifest-truth.mjs`'s phantom-token scan both now read `entry.text` when the entry is
+an object, `entry` itself when it is a string. `node tools/migration-lint-selftest.mjs`: every rule
+fires, every control (including the two new M046 cases and the two new object-shaped M034 cases)
+stays as expected (measured 2026-09-23). The auto-update plugin
+(`plugins/design-system/skills/auto-update-package/SKILL.md`,
+`plugins/design-system/agents/ds-migration-planner.md`) routes a `verify`-bearing entry into the
+existing "applied - human should eyeball" report bucket instead of the plain FYI list; plugin bumped
+1.8.1 -> 1.8.2 (patch: instruction/prompt change, per its own versioning rule). `migrations/0.12.2.json`'s
+matching line is untouched: it was true and complete for its own tag, and AUTHORING.md's
+"Correcting a PUBLISHED manifest" section authorizes rewriting an entry only where it was WRONG for
+its tag, never adding an optional field to one that was already right. Deck `ask-informational-verify`
+and its backlog item are closed.
+
+## The three abbreviations the spell-out wave missed are spelled out (2026-09-23)
+
+`--ds-input-label-fw` -> `--ds-input-label-font-weight` (`input.component.scss:36`),
+`--ds-tag-fw` -> `--ds-tag-font-weight` and `--ds-tag-lh` -> `--ds-tag-line-height`
+(`tag.component.scss:13-15,29`), with their `--_*` resolvers renamed to match. The 0.13.4 wave
+matched `--ds-*-weight` to `--ds-*-font-weight`, so a token already spelled as the abbreviation
+never matched it; three `token-rename` items land in `migrations/unreleased.json`, each `detect`
+anchored `([^A-Za-z0-9_-]|$)`. `git grep -hoE -- "--ds-[a-z0-9-]+" HEAD -- src/lib | sort -u | grep
+-E -- "-(fw|lh)$"` reads empty (measured 2026-09-23). The gate the backlog item proposed ships as
+`tools/check-abbreviated-tokens.mjs` (wired into `lint:all`), checking every `--ds-*` name's whole
+last hyphen segment against `fw|lh|fs|ff|ls|maxw|maxh|minw|pad|btn|w|h|bg|fg|r` - a selftest of 8
+cases (3 firing, 5 sound, including a planted `--ds-tag-fw` and a `-text-transform` negative
+control) passes, and the gate is green against the renamed tree. Deck `ask-abbrev-survivors` and
+its backlog item are closed.
+
+## The two 0.13.4 pie items name the element a 0.13.3 consumer has (2026-09-23)
+
+`pie-chart-thickness-is-now-inner-radius` and `pie-chart-centre-content-needs-a-hole` carry
+`old: "ds-donut-chart[thickness]"` and `old: "ds-donut-chart[centerValue]"` - at `v0.13.3` the
+element is `ds-donut-chart` and both inputs live on it - and the rename's `new` is
+`ds-pie-chart[innerRadius]`, the element-scoped shape `0.5.0`'s `ds-dropdown[error]` ->
+`ds-select[invalid]` uses when a release renames the element too. `check-manifest-truth 0.13.4`:
+254 of 254 old/new values hold (measured 2026-09-23).
+
+## Six consumer asks on the 0.13.3 and 0.13.4 records (2026-09-23)
+
+`ds-bar` reads `--ds-bar-radius` on its track and its fill, default `var(--radius-pill)`
+(`bar.component.scss`), and the 0.13.3 manifest says what was true at that tag:
+`--ds-meter-radius` was removed with no replacement (`0.13.3#meter-radius-removed`). The
+`ds-bar` name stays (Stas); the three 0.13.3 pitfalls that sent readers to a word boundary now
+give the guard that holds - `ds-bar(?![-\w])` for names and tokens,
+`<ds-bar[\s/>]` for the tag - because a hyphen is a `\b`. The four generic spell-out items of
+0.13.4 are 97 exact `token-rename` pairs generated from the tag diff
+(`git grep -hoE -- '--ds-[a-z0-9-]+' v0.13.3 -- src/lib | sort -u` against v0.13.4: 987 and 1039
+names; 51 `-pad`, 15 `-weight`, 8 `-btn`, 23 dimension pairs, matching the counts the four items
+claimed), each `detect` anchored `(?![A-Za-z0-9_-])` and each group carrying the substring hazard
+in one pitfall line; `check-manifest-truth 0.13.4` reads 252 of 254 values and holds.
+`donut-chart-renamed-to-pie-chart` and the six older selector renames list `style`, and `M045`
+fails a `selector-rename` without it - red on those six before the fix, quiet on the control.
+`--ds-line-chart-plot-height` keeps the plot and `--ds-line-chart-placeholder-height`
+sizes the skeleton and the empty and error boxes, defaulting to what they had, with a 0.13.4
+`behavior` item saying the plot token started driving the plot at that tag. Deck
+`ds-bar-name-collision` is decided and archived; the decision queue drops seven answered questions
+and stands at 31 asks and 35 decisions. Every CHANGELOG line this touches - the two hooks under
+Unreleased, the 0.13.3 meter-radius removal and `ds-bar` guard, the 0.13.4 segmented spelling
+`--ds-segmented-btn-*` - is Stas's to write.
+
+## The expanded table row spans its row (2026-09-23)
+
+`table.component.scss` gave the expanded row's `<td>` `display: grid` for the 0fr to 1fr reveal,
+and a `<td>` whose display is not `table-cell` leaves the table layout with its `colspan`, so the
+panel rendered one column wide from 0.12.2 (`35aa2e02`) on - 56px inside an 895px row in ds-docs,
+24px inside a 1559px row at a consumer. The grid, the track and the `ds-table-expand` keyframe sit
+on `.expand-panel-inner` (`table.component.scss:395-411`), and the projected template is wrapped in
+`.expand-panel-content`, the clipped track item (`table.component.html:382-397`), so
+`.expand-panel-cell > .expand-panel-inner` - the selector the 0.12.2 manifest sends consumers to -
+still matches. Measured in Chrome after the change: the cell is `table-cell` and 895.475px wide in
+an 895.475px row at 1366px and 424.258px in a 424.258px row at a 420px viewport, and the track
+reads 0px 40ms after the row opens and 40.4px when it settles.
+
+The 48 chart, option and table tokens that reached the reference with an empty `notes` carry one
+each (`2dfd23a1`; `--ds-bar-chart-target-*` is color, overhang and width). `ds-toast-region`'s dev
+warning is stripped from the shipped bundle: the production upload
+bundle keeps the component and none of its message text, and `core/dev-warning.ts` says so.
+`changelog-lint` fails when any single source group resolves nothing, or when `ng-package.json`
+declares no assets (`e160d527`, `changelog-lint.mjs:340-351`), which catches the renamed input the
+old floor of 100 passed at 295 targets.
+
 ## Nine manifest and plugin asks from one consumer's re-audit (2026-09-23)
 
 `check-manifest-truth` closes on the fraction it read - `438 of 458 old/new value(s) were read

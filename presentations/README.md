@@ -20,10 +20,9 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 | 7 | `7-chart-sparkline-preset` | `variant="spark"` or a separate `ds-sparkline` — parked on 2026-09-19, so it is decided-not-built rather than unasked |
 | 8 | `8-waterfall-mode-or-component` | the waterfall's own tag against a `stack="waterfall"` mode on the column chart |
 | 9 | `9-bar-column-contracts` | how far the bar and the column converge - the consumer ask that found them diverging in palette and in where composition is declared |
-| 10 | `10-ds-bar-name-collision` | the name of the merged progress+meter: `--ds-bar-` is a prefix of `--ds-bar-chart-`, and a namespace replace kills the chart's overrides silently |
-| 11 | `11-banner-announce-warning` | whether a dev warning names an error banner no screen reader will read, now that the input's three states tell an opt-out from an oversight |
-| 12 | `12-picker-list-height` | whether the picker list's height stays an internal token: the cap that governs the visible rows is not the one that looks settable |
-| 13 | `13-decision-queue` | every open question in one page - 36 across six groups, each with its options drawn rather than named; the live indeterminate tracks are the case a text list could not put |
+| 10 | `10-banner-announce-warning` | whether a dev warning names an error banner no screen reader will read, now that the input's three states tell an opt-out from an oversight |
+| 11 | `11-picker-list-height` | whether the picker list's height stays an internal token: the cap that governs the visible rows is not the one that looks settable |
+| 12 | `12-decision-queue` | every consumer ask and every open question in one page - 23 asks a consumer waits on, each drawn as today against after, then 33 decisions across six groups; the live indeterminate tracks are the case a text list could not put |
 
 **Rank 1 is the way in, and ranks 2-4 are the two biggest lanes** — the colour engine, then the interaction formula that reads
 its ramp. Ranks 1-5 are written in Russian and share `deck.css`, which sits beside `ds.css` and
@@ -40,8 +39,10 @@ nav, and the scatter's phase — which went to phase 2 with its decimation layer
 **A `tool` here takes no number.** `backlog-board.html` and `rejected-with-numbers.html` — both are
 read whenever rather than at a moment, so they stay unnumbered and sort below the queue.
 
-**`13-decision-queue` sorts last and carries EVERY open question** — each open deck plus the whole
-`Decisions` bucket of `docs/todo.md`, grouped by area. Every one has its options rendered rather
+**`12-decision-queue` sorts last and carries EVERY open question** — first every ask a consumer is
+waiting on, from any bucket of `docs/todo.md`, most urgent first in three groups (urgent P2, P3,
+parked) with priority, consumer and kind beside each; then each open deck
+plus the whole `Decisions` bucket, grouped by area. Every one has its options rendered rather
 than named: live tracks for the indeterminate bar, two palettes side by side for bar-and-column,
 sparklines in a card and a table cell, rendered ramps for the colour questions, pipelines for the
 release ones, and before-and-after code where the decision is a name. A deck link sits beside each

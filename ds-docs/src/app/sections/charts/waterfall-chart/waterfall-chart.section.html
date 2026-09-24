@@ -32,6 +32,7 @@
   </p>
 
   <ds-waterfall-chart
+    *docsLazy
     caption="Settlement, this month"
     [data]="settlement" />
 
@@ -65,6 +66,7 @@
   </p>
 
   <ds-waterfall-chart
+    *docsLazy
     caption="Headcount over a year, with a half-year subtotal"
     [data]="withSubtotal" />
 
@@ -79,6 +81,7 @@
   </p>
 
   <ds-waterfall-chart
+    *docsLazy
     caption="A balance that goes negative and comes back"
     [data]="belowZero" />
 
@@ -98,6 +101,7 @@
   </p>
 
   <ds-waterfall-chart
+    *docsLazy
     caption="Click a bar"
     interactive
     dataTable="toggle"

@@ -1,3 +1,6 @@
+import { computed, signal } from '@angular/core';
+import type { Signal } from '@angular/core';
+
 /** Where a roving tabindex lands after `key`, or `null` when the key does not traverse.
  *
  *  The ends wrap, as they do in `ds-radio-group`: a chart's marks are a closed set, and Home and
@@ -53,4 +56,61 @@ export function focusMark(
   if (target instanceof HTMLElement || target instanceof SVGElement) {
     target.focus();
   }
+}
+
+/** A chart's roving tab stop.
+ *
+ *  One tab stop per chart, not one per mark: WCAG 2.1.1's Understanding is explicit that not every
+ *  mouse-operable control has to be separately focusable, and that is what keeps a twenty-five
+ *  mark chart from being twenty-five stops in the page's tab order.
+ *
+ *  @internal */
+export interface RovingMarks {
+  /** The index of the one mark that carries `tabindex="0"`. */
+  readonly tabStop: Signal<number>;
+  /** Makes `index` the tab stop, for a mark that has taken focus. */
+  focus(index: number): void;
+  /** Handles an arrow, Home or End pressed on the mark at `index`: moves the tab stop and DOM focus
+   *  to the next mark inside `scope`. Any other key is left alone. */
+  navigate(event: KeyboardEvent, index: number, scope: Element | null): void;
+}
+
+/** @internal */
+export function rovingMarks(count: () => number): RovingMarks {
+  const roving = signal(0);
+
+  return {
+    tabStop: computed(() => Math.min(roving(), Math.max(0, count() - 1))),
+    focus: (index) => roving.set(index),
+    navigate(event, index, scope) {
+      const next = nextRovingIndex(event.key, index, count());
+      if (next === null) {
+        return;
+      }
+      event.preventDefault();
+      roving.set(next);
+      focusMark(scope, next);
+    },
+  };
+}
+
+/** The mark an event on the marks' parent came from - the nearest `[data-mark-index]` inside that
+ *  parent - for a chart that listens once per series rather than once per mark. `null` when the
+ *  event did not start on a mark.
+ *
+ *  @internal */
+export function markOf(
+  event: Event,
+): { readonly element: Element; readonly index: number } | null {
+  const scope = event.currentTarget;
+  const target = event.target;
+  if (!(scope instanceof Element) || !(target instanceof Element)) {
+    return null;
+  }
+  const element = target.closest('[data-mark-index]');
+  if (!element || !scope.contains(element)) {
+    return null;
+  }
+
+  return { element, index: Number(element.getAttribute('data-mark-index')) };
 }

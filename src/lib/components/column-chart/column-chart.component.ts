@@ -40,7 +40,6 @@ import {
 import type { ChartStackOffset } from '@ids-group-ltd/ids-design-system/components/chart';
 import { ChartLegendComponent } from '@ids-group-ltd/ids-design-system/components/chart-legend';
 import type { ChartLegendItem } from '@ids-group-ltd/ids-design-system/components/chart-legend';
-import { ChartTooltipDirective } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import { ChartDataTableComponent } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
 import type { ChartDataRow } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
 import { resolveChartDefaults } from '@ids-group-ltd/ids-design-system/components';
@@ -132,7 +131,6 @@ function readColumnGeometry(host: HTMLElement): typeof COLUMN_GEOMETRY {
     ColumnSeriesComponent,
     ReferenceLabelComponent,
     ReferenceLineComponent,
-    ChartTooltipDirective,
     ChartDataTableComponent,
   ],
   templateUrl: './column-chart.component.html',
@@ -364,6 +362,9 @@ export class ColumnChartComponent {
   protected readonly multiSeries = computed(
     () => this.resolvedSeries().length > 1,
   );
+
+  /** The series named in the legend under the pointer, which fades the rest. */
+  protected readonly highlightedSeries = signal<string | null>(null);
 
   protected readonly legendItems = computed<readonly ChartLegendItem[]>(() =>
     this.resolvedSeries().map((series) => ({

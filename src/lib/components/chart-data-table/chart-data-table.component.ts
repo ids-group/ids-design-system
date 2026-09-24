@@ -3,8 +3,10 @@ import {
   Component,
   ViewEncapsulation,
   booleanAttribute,
+  computed,
   input,
   output,
+  signal,
 } from '@angular/core';
 
 /** Cells arrive formatted: how a value reads is the chart's decision, not the table's. */
@@ -43,4 +45,16 @@ export class ChartDataTableComponent {
   /** Fires with the disclosure's state, so a chart with thousands of readings can build its rows
    *  only while they are on screen. */
   readonly toggled = output<boolean>();
+
+  // The table is built the first time the disclosure opens and kept after that: a closed
+  // `<details>` skips layout but not the DOM, and most readers never open it.
+  private readonly openedOnce = signal(false);
+  protected readonly built = computed(() => this.open() || this.openedOnce());
+
+  protected onToggle(open: boolean): void {
+    if (open) {
+      this.openedOnce.set(true);
+    }
+    this.toggled.emit(open);
+  }
 }

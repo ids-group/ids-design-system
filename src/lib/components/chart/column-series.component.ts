@@ -10,15 +10,15 @@ import {
   input,
   numberAttribute,
   output,
-  signal,
 } from '@angular/core';
 import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
 import {
   CHART_SERIES_COLORS,
   defaultChartFormat,
   describeShare,
-  focusMark,
-  nextRovingIndex,
+  markOf,
+  rovingMarks,
+  leaveMark,
   staggerDelay,
 } from '@ids-group-ltd/ids-design-system/components';
 import { ICONS } from '@ids-group-ltd/ids-design-system/core';
@@ -27,6 +27,7 @@ import { chartActiveMark } from '@ids-group-ltd/ids-design-system/components/cha
 import type {
   ChartItemTooltipTrigger,
   ChartTooltipContext,
+  ChartTooltipEntry,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import { CHART_SCALES } from './chart-scales.token';
 import { chartViewHeight } from './chart.math';
@@ -42,6 +43,10 @@ export interface ColumnSeriesPoint {
 
 /** The disc's radius, and half the glyph's box, in the same CSS pixels the plot is drawn in. */
 const PIN_DISC_RADIUS = 11;
+
+// Clears the column's top edge: at one radius the disc sits flush against it and reads as part of
+// the bar rather than as a badge on it.
+const PIN_TOP_GAP = 4;
 const PIN_GLYPH_SIZE = 14;
 
 /** Distance from a mark's own tip to its value label's baseline. */
@@ -77,6 +82,8 @@ let nextSeriesId = 0;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ColumnSeriesComponent implements OnDestroy {
+  protected readonly leaveMark = leaveMark;
+
   private readonly scales = inject(CHART_SCALES);
 
   /** Not `input.required`: the preset reads `tooltipContext()` from a binding on this same
@@ -150,6 +157,18 @@ export class ColumnSeriesComponent implements OnDestroy {
    *  the panel names the category instead, which is what a chart of one series has to say. */
   readonly seriesLabel = input<string | null>(null);
 
+  /** Identifies this series to the legend, so hovering a legend item can single it out. */
+  readonly seriesKey = input<string | null>(null);
+
+  /** The series the reader is pointing at in the legend. Every other series fades. */
+  readonly highlighted = input<string | null>(null);
+
+  protected readonly dimmedBySeries = computed(() => {
+    const highlighted = this.highlighted();
+
+    return highlighted !== null && highlighted !== this.seriesKey();
+  });
+
   /** The clicked datum. Fires on click and on Enter or Space, whatever `interactive` says. */
   readonly pointClicked = output<ColumnSeriesPoint>();
 
@@ -182,9 +201,17 @@ export class ColumnSeriesComponent implements OnDestroy {
         this.spans().flatMap((span) => [span.from, span.to]),
       ),
     );
+    // The container opens the panel, so a plot holding several marks can only ever show one.
+    this.scales.reportTooltip(this.domainId, {
+      context: this.tooltipContext,
+      origin: computed(() => this.activeMark.origin()),
+      preferBelow: computed(() => this.activeMark.pinned()),
+      axisEntries: this.axisEntries,
+    });
   }
 
   ngOnDestroy(): void {
+    this.scales.releaseTooltip(this.domainId);
     this.scales.releaseDomain(this.domainId);
   }
 
@@ -215,6 +242,27 @@ export class ColumnSeriesComponent implements OnDestroy {
     return chartViewHeight(plot.height, plot.top, true);
   });
 
+  /** Stacked series sit on top of one another, so a full-slot hit box on each one means only the
+   *  series drawn last is ever reachable. Stacked, a mark catches the pointer over its own segment
+   *  and nothing else. */
+  protected readonly stacked = computed(() => this.offsets() !== null);
+
+  /** Keeps a thin segment reachable without letting it reach into its neighbours. */
+  private static readonly MIN_STACK_HIT = 6;
+
+  protected hitBox(mark: { top: number; height: number }): {
+    y: number;
+    height: number;
+  } {
+    if (!this.stacked()) {
+      return { y: 0, height: this.hitHeight() };
+    }
+    const height = Math.max(mark.height, ColumnSeriesComponent.MIN_STACK_HIT);
+    const overflow = height - mark.height;
+
+    return { y: mark.top - overflow / 2, height };
+  }
+
   protected readonly pinDiscRadius = PIN_DISC_RADIUS;
   protected readonly pinGlyphSize = PIN_GLYPH_SIZE;
   protected readonly pinGlyphOffset = -PIN_GLYPH_SIZE / 2;
@@ -223,6 +271,9 @@ export class ColumnSeriesComponent implements OnDestroy {
   ).bypassSecurityTrustHtml(ICONS.pin);
 
   protected readonly marks = computed(() => {
+    if (!(this.scales.measured?.() ?? true)) {
+      return [];
+    }
     const toX = this.scales.xPosition();
     const toY = this.scales.yPosition();
     const spans = this.spans();
@@ -253,7 +304,7 @@ export class ColumnSeriesComponent implements OnDestroy {
         top: Math.min(tip, baseline),
         height: Math.abs(tip - baseline),
         labelY: below ? tip + VALUE_LABEL_GAP : tip - VALUE_LABEL_GAP,
-        pinY: Math.min(tip, baseline) + PIN_DISC_RADIUS,
+        pinY: Math.min(tip, baseline) + PIN_DISC_RADIUS + PIN_TOP_GAP,
         // Growing from the baseline, never the mark's own tip - a column below zero grows
         // downward, so its transform-origin flips to the top edge it hangs from.
         origin: below ? 'top' : 'bottom',
@@ -268,61 +319,73 @@ export class ColumnSeriesComponent implements OnDestroy {
     return `${staggerDelay(index, this.staggerMs())}ms`;
   }
 
-  protected onMarkClick(
-    payload: ColumnSeriesPoint,
-    index: number,
-    event: Event,
-  ): void {
-    this.pointClicked.emit(payload);
-    if (this.pinOnClick()) {
-      this.activeMark.pin(
-        index,
-        event,
-        this.tooltipAnchor() === 'mark' ? '.bar' : undefined,
-      );
-    }
-  }
-
-  protected onMarkEnter(index: number, event: Event): void {
-    this.activeMark.enter(
-      index,
-      event,
-      this.tooltipAnchor() === 'mark' ? '.bar' : undefined,
-    );
-  }
-
-  /** One tab stop per chart, not one per mark: WCAG 2.1.1's Understanding is explicit that not
-   *  every mouse-operable control has to be separately focusable, and that is what keeps a
-   *  twenty-five mark chart from being twenty-five stops in the page's tab order. */
-  protected readonly rovingIndex = signal(0);
-
-  protected readonly tabStopIndex = computed(() =>
-    Math.min(this.rovingIndex(), Math.max(0, this.marks().length - 1)),
+  private readonly tooltipMark = computed(() =>
+    this.tooltipAnchor() === 'mark' ? '.bar' : undefined,
   );
 
-  protected onMarkFocus(index: number, event: FocusEvent): void {
-    this.rovingIndex.set(index);
-    this.onMarkEnter(index, event);
-  }
-
-  protected onMarkNavigation(event: KeyboardEvent, index: number): void {
-    const next = nextRovingIndex(event.key, index, this.marks().length);
-    if (next === null) {
+  protected onMarkClick(event: MouseEvent): void {
+    const hit = markOf(event);
+    const mark = hit && this.marks()[hit.index];
+    if (!hit || !mark) {
       return;
     }
-    event.preventDefault();
-    this.rovingIndex.set(next);
-    focusMark((event.currentTarget as Element).closest('.columns'), next);
+    this.pointClicked.emit(mark.point);
+    if (this.pinOnClick()) {
+      this.activeMark.pin(hit.index, event, this.tooltipMark(), hit.element);
+    }
   }
 
-  protected onPointKey(point: ColumnSeriesPoint, event: Event): void {
-    // Only the column's own key opens it: a key pressed on a control inside belongs to that
-    // control.
-    if (!this.interactive() || event.target !== event.currentTarget) {
+  protected onMarkOver(event: PointerEvent): void {
+    const hit = markOf(event);
+    if (hit) {
+      this.activeMark.enter(hit.index, event, this.tooltipMark(), hit.element);
+    }
+  }
+
+  protected onMarkOut(event: PointerEvent): void {
+    const hit = markOf(event);
+    const next =
+      event.relatedTarget instanceof Element
+        ? event.relatedTarget.closest('[data-mark-index]')
+        : null;
+    if (hit && next !== hit.element) {
+      this.activeMark.leave();
+    }
+  }
+
+  protected readonly roving = rovingMarks(() => this.marks().length);
+
+  protected onMarkFocus(event: FocusEvent): void {
+    const hit = markOf(event);
+    if (hit) {
+      this.roving.focus(hit.index);
+      this.activeMark.enter(hit.index, event, this.tooltipMark(), hit.element);
+    }
+  }
+
+  protected onMarkBlur(event: FocusEvent): void {
+    if (markOf(event)) {
+      this.activeMark.leave();
+    }
+  }
+
+  protected onMarkKey(event: KeyboardEvent): void {
+    const hit = markOf(event);
+    if (!hit) {
       return;
     }
-    event.preventDefault();
-    this.pointClicked.emit(point);
+    if (event.key === 'Enter' || event.key === ' ') {
+      // Only the column's own key opens it: a key pressed on a control inside belongs to that
+      // control.
+      const mark = this.marks()[hit.index];
+      if (this.interactive() && event.target === hit.element && mark) {
+        event.preventDefault();
+        this.pointClicked.emit(mark.point);
+      }
+
+      return;
+    }
+    this.roving.navigate(event, hit.index, hit.element.closest('.columns'));
   }
 
   protected entryLabel(mark: {
@@ -331,6 +394,26 @@ export class ColumnSeriesComponent implements OnDestroy {
   }): string {
     return `${mark.point.label}, ${mark.formattedValue}`;
   }
+
+  /** This series' reading at the category the cursor is on. Filled whatever `tooltip` says: it
+   *  feeds the container's category panel, never a panel of this mark's own. */
+  readonly axisEntries = computed<readonly ChartTooltipEntry[]>(() => {
+    const categoryIndex = this.scales.activeIndex();
+    const mark = this.marks()[categoryIndex];
+    if (categoryIndex < 0 || !mark) {
+      return [];
+    }
+
+    return [
+      {
+        label: this.seriesLabel() ?? mark.point.label,
+        value: mark.point.value,
+        formatted: mark.formattedValue,
+        color: mark.color,
+        hatched: mark.hatched,
+      },
+    ];
+  });
 
   readonly tooltipContext = computed<ChartTooltipContext | null>(() => {
     const mark = this.marks()[this.activeMark.index()];
@@ -348,6 +431,7 @@ export class ColumnSeriesComponent implements OnDestroy {
           value: mark.point.value,
           formatted: mark.formattedValue,
           color: mark.color,
+          hatched: mark.hatched,
           detail: this.partOfWhole()
             ? describeShare(
                 this.data().map((point) => point.value),

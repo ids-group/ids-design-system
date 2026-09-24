@@ -9,14 +9,17 @@ import {
 import { FormsModule } from '@angular/forms';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { SelectComponent } from '@ids-group-ltd/ids-design-system/components/select';
+import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
-import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
-import type { PaginationLayout } from './pagination.types';
+import type {
+  DsSize,
+  PaginationLayout,
+} from '@ids-group-ltd/ids-design-system/core';
 
 @Component({
   selector: 'ds-pagination',
   standalone: true,
-  imports: [FormsModule, IconComponent, SelectComponent],
+  imports: [FormsModule, IconComponent, SelectComponent, SkeletonComponent],
   templateUrl: './pagination.component.html',
   styleUrl: './pagination.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -37,19 +40,30 @@ export class PaginationComponent {
    *  page size — otherwise the control offers a choice the host won't honour. */
   readonly showPageSize = input(true, { transform: booleanAttribute });
   /** Control height - sm/md/lg. A pager under a full-width table wants targets bigger than the
-   *  dense default. Unset falls back to `DS_CONFIG.control.size`, then `'sm'`. */
+   *  dense default. Unset falls back to `DS_CONFIG.pagination.size`, then
+   *  `DS_CONFIG.control.size`, then `'sm'`. */
   readonly size = input<DsSize | null>(null);
-  protected readonly sizeResolved = resolveWithConfig(
+  readonly sizeResolved = resolveWithConfig(
     this.size,
-    (config) => config.control?.size,
+    (config) => config.pagination?.size ?? config.control?.size,
     'sm' as DsSize,
   );
-  /** `'grouped'`, the default, keeps the label beside the controls. `'spread'` pushes them to
-   *  opposite edges of whatever width the nav is given. */
-  readonly layout = input<PaginationLayout>('grouped');
+  /** `'grouped'` keeps the label beside the controls. `'spread'` pushes them to opposite edges
+   *  of whatever width the nav is given. Unset falls back to `DS_CONFIG.pagination.layout`,
+   *  then `'grouped'`. */
+  readonly layout = input<PaginationLayout | null>(null);
+  readonly layoutResolved = resolveWithConfig(
+    this.layout,
+    (config) => config.pagination?.layout,
+    'grouped' as PaginationLayout,
+  );
+  /** The host is still fetching: every control disables, the range label is masked with a
+   *  `<ds-skeleton>` so a stale `total` is never quoted, and the nav reports `aria-busy`.
+   *  `ds-table` sets it from `loading="skeleton"`. */
+  readonly loading = input(false, { transform: booleanAttribute });
 
   protected readonly navClass = computed(() =>
-    ['pagination', this.sizeResolved(), this.layout()]
+    ['pagination', this.sizeResolved(), this.layoutResolved()]
       .filter((part) => part !== 'grouped')
       .join(' '),
   );

@@ -391,6 +391,7 @@ export class TableSection {
   ];
 
   protected readonly projectSelected = signal(new Set<string>());
+  protected readonly pagerSkeletonLoading = signal(false);
 
   // Deliberately keyless: an audit line has no id of its own, which is the case `[rowId]` exists
   // for. Two rows share a channel and two share a timestamp, so only the pair identifies a row.

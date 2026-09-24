@@ -1,7 +1,8 @@
 <docs-section
   anchor="chart"
   eyebrow="Charts"
-  title="Chart">
+  title="Chart container"
+  [apiKeys]="['chart-data-table']">
   <span lede>
     The container the column chart is built inside. It owns the plot, the axes,
     the grid, the value domain and the loading, empty and error states, and
@@ -76,6 +77,7 @@
   </p>
 
   <ds-chart
+    *docsLazy
     cursor="category"
     caption="Hover the plot, not a mark"
     [categories]="orderMonths"
@@ -83,19 +85,19 @@
     <svg:g
       dsColumnSeries
       tooltip="none"
+      seriesLabel="Sessions"
       [data]="orderColumns"
       [showValues]="false" />
 
     <svg:g
-      #axisLine="dsLineSeries"
       dsLineSeries
       tooltip="axis"
-      [data]="basketSeries"
-      [dsChartTooltip]="axisLine.tooltipContext()"
-      [dsChartTooltipOrigin]="axisLine.tooltipOrigin()" />
+      [data]="basketSeries" />
   </ds-chart>
 
   <ds-chart
+    *docsLazy
+    cursor="category"
     caption="Response time against the agreed range"
     [categories]="latencyWeeks"
     [summary]="latencySummary">
@@ -143,6 +145,8 @@
 
   <div class="demo-pair">
     <ds-chart
+      *docsLazy
+      cursor="category"
       caption="aligned - one plot"
       [categories]="orderMonths"
       [axisColor]="columnAxisColor"
@@ -159,6 +163,8 @@
     </ds-chart>
 
     <ds-chart
+      *docsLazy
+      cursor="category"
       caption="split - two plots"
       secondaryAxisMode="split"
       [categories]="orderMonths"
@@ -185,7 +191,7 @@
   </p>
 
   <h3 class="block-title t-h4">
-    Annotations and the annex table
+    Annotations
   </h3>
 
   <p class="block-desc t-s">
@@ -200,6 +206,8 @@
   </p>
 
   <ds-chart
+    *docsLazy
+    cursor="category"
     caption="p95 response time, with the week that moved it named"
     [categories]="latencyWeeks"
     [summary]="latencySummary">
@@ -211,6 +219,12 @@
       dsSeriesAnnotation
       [annotations]="latencyNotes" />
   </ds-chart>
+
+  <h3
+    class="block-title t-h4"
+    data-for="chart-data-table">
+    The annex table
+  </h3>
 
   <p class="block-desc t-s">
     <code class="t-mono-inline">
@@ -261,6 +275,7 @@
   </p>
 
   <ds-chart
+    *docsLazy
     cursor="category"
     cursorPin
     axisLabel="Sessions"
@@ -281,6 +296,113 @@
   </ds-chart>
 
   <h3 class="block-title t-h4">
+    The tooltip and the legend of a composed chart
+  </h3>
+
+  <p class="block-desc t-s">
+    The container opens the one tooltip its marks describe: a mark hands it what
+    the panel shows, so nothing is bound on the mark itself.
+    <code class="t-mono-inline">
+      tooltipTemplate
+    </code> replaces the panel's
+    body and receives the
+    <code class="t-mono-inline">
+      ChartTooltipContext
+    </code> - the category and
+    one entry per series, each already through the chart's
+    <code class="t-mono-inline">
+      valueFormat
+    </code>.
+    <code class="t-mono-inline">
+      tooltipExtraGap
+    </code> pushes the panel
+    further from the mark, for a plot that prints value labels in the gap it
+    would take.
+  </p>
+
+  <p class="block-desc t-s">
+    A legend is yours to place:
+    <code class="t-mono-inline">
+      ds-chart-legend
+    </code>'s
+    <code class="t-mono-inline">
+      highlighted
+    </code> feeds the column series'
+    <code class="t-mono-inline">
+      highlighted
+    </code>, matched against its
+    <code class="t-mono-inline">
+      seriesKey
+    </code>, and the line series'
+    <code class="t-mono-inline">
+      highlighted
+    </code>, matched against its series
+    ids. Hovering a legend entry fades the rest to
+    <code class="t-mono-inline">
+      --ds-chart-dim-opacity
+    </code> whether or not
+    <code class="t-mono-inline">
+      dimOthers
+    </code> is set. A line series sits on
+    a band of the surface colour - <code class="t-mono-inline"> outline </code>,
+    on by default - so it stays legible where it crosses the columns; switch it
+    off here to compare.
+  </p>
+
+  <div class="demo-row">
+    <ds-switch
+      label="Line outline"
+      [(checked)]="lineOutline" />
+  </div>
+
+  <ds-chart
+    *docsLazy
+    cursor="category"
+    caption="Orders against average order value, with a custom panel"
+    [categories]="orderMonths"
+    [axisColor]="columnAxisColor"
+    [secondaryAxisColor]="lineAxisColor"
+    [summary]="ordersSummary"
+    [tooltipTemplate]="ordersPanel">
+    <svg:g
+      dsColumnSeries
+      seriesKey="orders"
+      seriesLabel="Orders"
+      tooltip="none"
+      [data]="orderColumns"
+      [showValues]="false"
+      [seriesColor]="columnAxisColor"
+      [highlighted]="legendHighlighted()" />
+
+    <svg:g
+      dsLineSeries
+      tooltip="axis"
+      [data]="basketSeries"
+      [outline]="lineOutline()"
+      [highlighted]="legendHighlighted()" />
+  </ds-chart>
+
+  <ds-chart-legend
+    [items]="ordersLegend"
+    [(highlighted)]="legendHighlighted" />
+
+  <ng-template
+    #ordersPanel
+    let-context>
+    <div class="orders-panel t-s">
+      <strong>
+        {{ context.category }}
+      </strong>
+
+      @for (entry of context.entries; track entry.label) {
+        <span>
+          {{ entry.label }}: {{ entry.formatted }}
+        </span>
+      }
+    </div>
+  </ng-template>
+
+  <h3 class="block-title t-h4">
     What a line series does on its own
   </h3>
 
@@ -292,9 +414,15 @@
     <code class="t-mono-inline">
       highlighted
     </code> names the one series to
-    single out and <code class="t-mono-inline"> dimOthers </code> is what says
-    fading is wanted at all; the singled-out line thickens as well as keeping
-    its colour, so the comparison survives a monochrome print.
+    single out and fades the rest whatever
+    <code class="t-mono-inline">
+      dimOthers
+    </code> says -
+    <code class="t-mono-inline">
+      dimOthers
+    </code> governs only the fade a
+    pointer over a marker starts. The singled-out line thickens as well as
+    keeping its colour, so the comparison survives a monochrome print.
     <code class="t-mono-inline">
       patterns
     </code> gives each series a dash of
@@ -318,31 +446,30 @@
   </p>
 
   <div class="demo-row">
-    @for (series of trafficSeries; track series.id) {
-      <ds-button
-        size="sm"
-        color="neutral"
-        variant="outline"
-        (pressed)="
-          singledOut.set(singledOut() === series.id ? null : series.id)
-        ">
-        {{
-          singledOut() === series.id
-            ? 'Show both'
-            : 'Single out ' + series.label
-        }}
-      </ds-button>
-    }
+    <ds-radio-group
+      name="singled-out"
+      label="Single out"
+      [(value)]="singledOutChoice">
+      <ds-radio
+        value="all"
+        label="Both" />
+
+      @for (series of trafficSeries; track series.id) {
+        <ds-radio
+          [value]="series.id"
+          [label]="series.label" />
+      }
+    </ds-radio-group>
   </div>
 
   <ds-chart
+    *docsLazy
     cursor="category"
     axisLabel="Sessions"
     summary="Organic and paid sessions a month, six months."
     [categories]="orderMonths"
     [interactive]="true">
     <svg:g
-      #traffic="dsLineSeries"
       dsLineSeries
       curve="smooth"
       tooltip="axis"
@@ -351,8 +478,6 @@
       [data]="trafficSeries"
       [highlighted]="singledOut()"
       [patterns]="seriesDashes"
-      [interactive]="true"
-      [dsChartTooltip]="traffic.tooltipContext()"
-      [dsChartTooltipOrigin]="traffic.tooltipOrigin()" />
+      [interactive]="true" />
   </ds-chart>
 </docs-section>

@@ -165,7 +165,9 @@ export class MotionSection {
   protected readonly presetOptions: SegmentedOption[] = ENTER_PRESETS.map(
     (preset) => ({ label: preset.label, value: preset.keyframes }),
   );
-  protected readonly preset = signal('ds-slide-in');
+  // Opens on what the library actually does with no configuration, so the demo is not read as
+  // the default.
+  protected readonly preset = signal('ds-scale-in');
   protected readonly alertShown = signal(true);
   private readonly injector = inject(Injector);
 

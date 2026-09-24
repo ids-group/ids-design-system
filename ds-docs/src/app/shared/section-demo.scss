@@ -120,6 +120,12 @@
   margin-top: var(--space-3);
 }
 
+/* A row of controls that introduces a specimen is not part of it: without this the buttons sit on
+   the demo's own frame and read as its toolbar. */
+.demo-row + * {
+  margin-top: var(--space-4);
+}
+
 .demo-stack {
   display: flex;
   flex-direction: column;

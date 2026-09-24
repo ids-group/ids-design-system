@@ -35,6 +35,8 @@
   } @else {
     <ds-chart
       frame="none"
+      [tooltipTemplate]="tooltipTemplate() ?? null"
+      [tooltipExtraGap]="valueClearance()"
       [categories]="categories()"
       [tickCount]="tickCount()"
       [valueFormat]="axisFormat()"
@@ -53,9 +55,10 @@
         let seriesIndex = $index
       ) {
         <svg:g
-          #mark="dsColumnSeries"
           dsColumnSeries
           [data]="series.points"
+          [seriesKey]="series.key"
+          [highlighted]="highlightedSeries()"
           [slot]="slotCount() > 1 ? seriesIndex : 0"
           [slotCount]="slotCount()"
           [offsets]="offsetsFor(seriesIndex)"
@@ -73,11 +76,6 @@
           [tooltipAnchor]="tooltipAnchor()"
           [tooltipLingerMs]="tooltipLingerResolved()"
           [valueFormat]="valueFormatResolved()"
-          [dsChartTooltip]="mark.tooltipContext()"
-          [dsChartTooltipExtraGap]="valueClearance()"
-          [dsChartTooltipPreferBelow]="mark.activeMark.pinned()"
-          [dsChartTooltipOrigin]="mark.activeMark.origin()"
-          [dsChartTooltipTemplate]="tooltipTemplate() ?? null"
           (pointClicked)="pointClicked.emit($event)" />
       }
 
@@ -87,7 +85,9 @@
     </ds-chart>
 
     @if (multiSeries()) {
-      <ds-chart-legend [items]="legendItems()" />
+      <ds-chart-legend
+        [items]="legendItems()"
+        [(highlighted)]="highlightedSeries" />
     }
 
     @if (dataTableResolved() !== 'none') {

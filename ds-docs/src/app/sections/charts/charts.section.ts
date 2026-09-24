@@ -1,9 +1,15 @@
-import { Component, ViewEncapsulation, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ViewEncapsulation,
+  signal,
+} from '@angular/core';
 import { BarChartComponent } from 'ds/bar-chart';
 import type { BarChartRow } from 'ds/bar-chart';
 import { DocsChartDataEditorComponent } from '../../shared/docs-chart-data-editor.component';
 import { DocsReplayButtonComponent } from '../../shared/docs-replay-button.component';
 import { DocsSectionComponent } from '../../shared/docs-section.component';
+import { DocsLazyDirective } from '../../shared/docs-lazy.directive';
 
 // A floating bar: each row starts where its own period does, so the bars compare DURATION and
 // PLACEMENT at once, which a bar from zero cannot do.
@@ -149,12 +155,14 @@ const MAX_BELOW_DATA_ROWS: readonly BarChartRow[] = [
   selector: 'section-charts-bar-chart',
   standalone: true,
   imports: [
+    DocsLazyDirective,
     BarChartComponent,
     DocsChartDataEditorComponent,
     DocsSectionComponent,
     DocsReplayButtonComponent,
   ],
   encapsulation: ViewEncapsulation.Emulated,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './charts.section.html',
   styleUrls: ['../../shared/section-demo.scss', './charts.section.scss'],
 })

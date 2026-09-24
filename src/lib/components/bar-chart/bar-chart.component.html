@@ -40,12 +40,12 @@
       [attr.aria-label]="accessibleName()"
       [dsChartTooltip]="tooltipContext()"
       [dsChartTooltipPreferBelow]="activeMark.pinned()"
+      [dsChartTooltipPinned]="activeMark.pinned()"
       [dsChartTooltipOrigin]="activeMark.origin()"
       [dsChartTooltipTemplate]="tooltipTemplate() ?? null">
       @for (entry of rows(); track entry.key; let index = $index) {
         <div
           class="row"
-          animate.leave="mark-leave"
           [style.--_chart-mark-stagger]="markStagger(index)"
           [class.interactive]="interactive()"
           [class.is-pinned]="
@@ -53,11 +53,12 @@
           "
           [attr.role]="interactive() ? 'button' : null"
           [attr.tabindex]="
-            interactive() ? (index === tabStopIndex() ? 0 : -1) : null
+            interactive() ? (index === roving.tabStop() ? 0 : -1) : null
           "
           [attr.data-mark-index]="index"
           [attr.aria-label]="interactive() ? entryLabel(entry) : null"
-          (pointerenter)="activeMark.enter(index, $event, '.track')"
+          (animate.leave)="leaveMark($event)"
+          (pointerenter)="activeMark.enter(index, $event, '.fill')"
           (pointerleave)="activeMark.leave()"
           (focus)="onMarkFocus(index, $event)"
           (blur)="activeMark.leave()"
@@ -105,7 +106,6 @@
 
             <span
               class="fill"
-              animate.enter="mark-enter"
               [style.margin-inline-start.%]="entry.offsetPercent"
               [style.width.%]="entry.widthPercent"
               [style.background]="entry.segments.length ? null : entry.color">

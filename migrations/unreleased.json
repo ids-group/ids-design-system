@@ -1,0 +1,585 @@
+{
+  "version": "unreleased",
+  "items": [
+    {
+      "id": "chart-container-owns-the-tooltip",
+      "kind": "behavior",
+      "old": "dsChartTooltip",
+      "new": null,
+      "surface": "template",
+      "action": "Remove [dsChartTooltip], [dsChartTooltipOrigin], [dsChartTooltipPreferBelow], [dsChartTooltipTemplate] and [dsChartTooltipExtraGap] from every g[dsColumnSeries] and g[dsLineSeries] inside a ds-chart. Move a custom panel body to [tooltipTemplate] on ds-chart, and a value-label gap to [tooltipExtraGap] there.",
+      "appliesWhen": "Only marks projected into ds-chart. The presets ds-column-chart, ds-line-chart, ds-bar-chart, ds-pie-chart and ds-funnel-chart wire themselves and need no edit. A consumer who never composed ds-chart by hand is unaffected.",
+      "pitfall": "Leaving the bindings in place opens TWO panels over one plot: the mark's own and the container's. Nothing errors, and the second panel is easy to read as a redraw.",
+      "restore": null,
+      "searchHints": [
+        "dsChartTooltip",
+        "dsChartTooltipOrigin",
+        "dsChartTooltipTemplate",
+        "dsChartTooltipPreferBelow",
+        "dsChartTooltipExtraGap",
+        "dsColumnSeries",
+        "dsLineSeries"
+      ],
+      "verify": "No g[dsColumnSeries] or g[dsLineSeries] in your templates carries a dsChartTooltip binding, and hovering a mark inside ds-chart opens exactly one ds-chart-tooltip-panel.",
+      "note": "A mark reported its context and the consumer had to bind the directive, so a plot with two marks could open two panels and a plot whose consumer forgot the binding opened none. Marks now offer the container a tooltip source the way they already report a domain, and the container draws the single panel."
+    },
+    {
+      "id": "chart-tooltip-pane-inert-unless-pinned",
+      "kind": "behavior",
+      "old": ".ds-chart-tooltip-pane",
+      "new": null,
+      "surface": "style",
+      "action": "If you style or hit-test .cdk-overlay-pane.ds-chart-tooltip-pane, scope the interactive half to .is-pinned. Ships in styles/overlay-motion, which styles/ds forwards.",
+      "appliesWhen": "Only an app with its own rule on the chart tooltip pane, or one that relied on the pane catching the pointer. The panel's content, position and dismissal are unchanged.",
+      "pitfall": "Text selection inside an unpinned panel no longer works, because the pane does not take the pointer. A pinned panel still does, and that is the supported way to reach the text.",
+      "restore": ".cdk-overlay-pane.ds-chart-tooltip-pane { pointer-events: auto; }",
+      "searchHints": [
+        "ds-chart-tooltip-pane",
+        "cdk-overlay-pane",
+        "pointer-events"
+      ],
+      "detect": [
+        ".ds-chart-tooltip-pane",
+        "ds-chart-tooltip-panel",
+        "pointer-events: auto"
+      ],
+      "verify": "In the BUILT css, .cdk-overlay-pane.ds-chart-tooltip-pane resolves to pointer-events: none and .cdk-overlay-pane.ds-chart-tooltip-pane.is-pinned to auto.",
+      "note": "The pane is drawn over the plot it describes, so on a funnel or a tight category axis it covered the neighbouring marks and the mark underneath never saw the pointer - the panel named a segment the reader had already left. WCAG 1.4.13 still holds: moving onto the panel does not dismiss it, Escape does, and a pinned pane takes the pointer again."
+    },
+    {
+      "id": "chart-scales-reports-tooltips",
+      "kind": "behavior",
+      "old": "ChartScales",
+      "new": null,
+      "surface": "typescript",
+      "action": "If a class of yours implements `ChartScales`, add `reportTooltip(id, source)` and `releaseTooltip(id)` to it. A container that draws no tooltip can implement both as no-ops.",
+      "appliesWhen": "Only TypeScript that implements the exported `ChartScales` interface - a hand-written chart container providing `CHART_SCALES` in place of `ds-chart`. Code that injects `CHART_SCALES` to read positions from a mark of its own, and every template, is unaffected.",
+      "pitfall": "The parameter type of `reportTooltip` is not exported, so type `source` through `Parameters<ChartScales['reportTooltip']>[1]` rather than redeclaring its shape.",
+      "restore": null,
+      "searchHints": [
+        "ChartScales",
+        "CHART_SCALES"
+      ],
+      "detect": [
+        "implements ChartScales",
+        "ChartScales {",
+        "provide: CHART_SCALES",
+        "useExisting"
+      ],
+      "verify": "Every class implementing `ChartScales` declares `reportTooltip` and `releaseTooltip`, and the app builds with no TS2420 against `ChartScales`.",
+      "note": "`ChartScales` gains two required methods, the tooltip counterpart of `reportDomain` / `releaseDomain`: a mark hands the container what its tooltip shows, and the container opens the one panel. The optional `measured` signal added beside them may be left out."
+    },
+    {
+      "id": "chart-mark-enter-class-removed",
+      "kind": "behavior",
+      "old": ".mark-enter",
+      "new": null,
+      "surface": "style",
+      "action": "Retarget a rule of yours on `.mark-enter` to the mark element itself (the column, bar, point, marker, arc or band the chart draws).",
+      "appliesWhen": "Only a stylesheet that selects `.mark-enter` inside a DS chart. The entrance plays exactly as before on first render and for marks a data change adds; `.mark-leave` and the keyframes `ds-chart-mark-grow-y`, `ds-chart-mark-grow-x`, `ds-chart-mark-fade-in` and `ds-chart-mark-exit` keep their names.",
+      "pitfall": "A rule on `.mark-enter` matches nothing and reports nothing, so a restyled entrance quietly reverts to the default one.",
+      "restore": null,
+      "searchHints": [
+        "mark-enter"
+      ],
+      "detect": [
+        ".mark-enter"
+      ],
+      "verify": "No stylesheet selects `.mark-enter`, and a restyled mark entrance still plays when the chart first renders.",
+      "note": "The entrance is a CSS animation declared on the mark, so no class is added for it any more."
+    },
+    {
+      "id": "line-series-outline-on-by-default",
+      "kind": "behavior",
+      "old": "dsLineSeries",
+      "new": null,
+      "surface": "template",
+      "action": "Look at a line chart. The line and its markers now sit on a band of the surface colour; set [outline]=\"false\" on the series or on the ds-line-chart to take it off.",
+      "appliesWhen": "Every dsLineSeries, and so ds-line-chart too. Column, bar, pie, funnel, scatter, heatmap and waterfall are unaffected.",
+      "pitfall": "The band is the surface colour, so where the line crosses gridlines it erases a few pixels of them. That is the point where the line crosses columns and unwanted where the line is alone.",
+      "restore": "[outline]=\"false\" on the g[dsLineSeries], or on the ds-line-chart.",
+      "searchHints": [
+        "dsLineSeries",
+        "ds-line-chart",
+        "series-line"
+      ],
+      "verify": "A rendered line series carries one path.series-halo per line path, stroked in the surface colour.",
+      "note": "A line drawn over other marks was hard to follow where it crossed them. The band is wider than the line and the markers take the same stroke behind their fill, so the series reads as one thing over a busy plot."
+    },
+    {
+      "id": "line-series-highlighted-fades-without-dim-others",
+      "kind": "behavior",
+      "old": "dsLineSeries[highlighted]",
+      "new": null,
+      "surface": "template",
+      "action": "None, unless you bind [highlighted] on a g[dsLineSeries] without dimOthers and want only the named line thickened: the other lines now fade as well, and no input brings back the thicken-only look.",
+      "appliesWhen": "Only a g[dsLineSeries] with a [highlighted] binding and no dimOthers. With dimOthers set nothing changes, and ds-line-chart's legend already faded the others.",
+      "pitfall": "The fade reads as the chart being disabled or loading when the app meant a quiet emphasis, and nothing reports it.",
+      "restore": null,
+      "searchHints": [
+        "highlighted",
+        "dsLineSeries",
+        "dimOthers"
+      ],
+      "verify": "A g[dsLineSeries] with [highlighted] set to one series id and no dimOthers draws that line bold and the other lines at --ds-chart-dim-opacity.",
+      "note": "highlighted used to fade the other lines only alongside dimOthers. It now fades them on its own, because naming a series is the reader asking for that one; dimOthers governs only the fade a pointer over a marker starts."
+    },
+    {
+      "id": "chart-axis-panel-names-every-series",
+      "kind": "behavior",
+      "old": "tooltip=\"axis\"",
+      "new": null,
+      "surface": "none",
+      "action": "None. A category panel now lists every series at that category rather than only the one that opened it.",
+      "appliesWhen": "Only a ds-chart with cursor=\"category\" holding more than one mark. A per-mark tooltip is unchanged.",
+      "pitfall": "A panel that named one series now names several, so a custom tooltipTemplate that assumed a single entry renders more rows than it did.",
+      "restore": null,
+      "searchHints": [
+        "tooltip=\"axis\"",
+        "cursor=\"category\"",
+        "tooltipTemplate"
+      ],
+      "verify": "With cursor=\"category\" over a plot holding a column series and a line series, the panel lists both.",
+      "note": "The behaviour was already documented and the code listed only the series whose mark opened the panel, because a mark could not see the others. Marks now offer the container what they read at the cursor's category and the container merges them, matching by label so a series is never listed twice."
+    },
+    {
+      "id": "exported-class-members-grew",
+      "kind": "behavior",
+      "old": "extends ChartComponent",
+      "new": null,
+      "surface": "typescript",
+      "action": "Only if you SUBCLASS one of these: rename a member of yours that collides with a new one, or add `override` where it genuinely means the same thing, and delete an override whose base member is gone.",
+      "appliesWhen": "Only a class extending one of the listed components. Using them in a template is unaffected, and so is a consumer who composes rather than subclasses.",
+      "pitfall": "A new name colliding is a compile error - TS4114, or TS2416 where the signature differs. A method of yours named like a REMOVED member and declared without `override` still compiles, and is simply never called again.",
+      "restore": null,
+      "searchHints": [
+        "extends ChartComponent",
+        "extends ColumnSeriesComponent",
+        "extends LineSeriesComponent",
+        "extends ColumnChartComponent",
+        "extends ChartTooltipDirective",
+        "extends ScatterChartComponent",
+        "extends ChartDataTableComponent",
+        "extends BarChartComponent",
+        "extends FunnelChartComponent",
+        "extends PieChartComponent",
+        "extends PaginationComponent",
+        "extends TableComponent",
+        "extends ModalCardComponent",
+        "extends DsControlValueAccessor",
+        "extends DsBooleanControlValueAccessor",
+        "extends SearchComponent",
+        "extends TextareaComponent",
+        "extends CellTemplateDirective",
+        "extends SwitchComponent",
+        "extends LineChartComponent",
+        "extends "
+      ],
+      "detect": [
+        "extends ChartComponent",
+        "ChartComponent",
+        "extends ColumnSeriesComponent",
+        "ColumnSeriesComponent",
+        "extends LineSeriesComponent",
+        "LineSeriesComponent",
+        "extends ColumnChartComponent",
+        "ColumnChartComponent",
+        "extends ChartTooltipDirective",
+        "ChartTooltipDirective",
+        "extends ScatterChartComponent",
+        "ScatterChartComponent",
+        "extends ChartDataTableComponent",
+        "ChartDataTableComponent",
+        "extends BarChartComponent",
+        "BarChartComponent",
+        "extends FunnelChartComponent",
+        "FunnelChartComponent",
+        "extends PieChartComponent",
+        "PieChartComponent",
+        "extends PaginationComponent",
+        "PaginationComponent",
+        "extends TableComponent",
+        "TableComponent",
+        "extends ModalCardComponent",
+        "ModalCardComponent",
+        "extends DsControlValueAccessor",
+        "DsControlValueAccessor",
+        "extends DsBooleanControlValueAccessor",
+        "DsBooleanControlValueAccessor",
+        "extends SearchComponent",
+        "SearchComponent",
+        "extends AutocompleteComponent",
+        "AutocompleteComponent",
+        "extends CheckboxComponent",
+        "CheckboxComponent",
+        "extends ColorPickerComponent",
+        "ColorPickerComponent",
+        "extends DatePickerComponent",
+        "DatePickerComponent",
+        "extends InputComponent",
+        "InputComponent",
+        "extends MultiSelectComponent",
+        "MultiSelectComponent",
+        "extends OtpInputComponent",
+        "OtpInputComponent",
+        "extends RadioGroupComponent",
+        "RadioGroupComponent",
+        "extends SegmentedComponent",
+        "SegmentedComponent",
+        "extends SelectComponent",
+        "SelectComponent",
+        "extends SliderComponent",
+        "SliderComponent",
+        "extends SwitchComponent",
+        "SwitchComponent",
+        "extends TextareaComponent",
+        "TextareaComponent",
+        "extends TimePickerComponent",
+        "TimePickerComponent",
+        "extends CellTemplateDirective",
+        "CellTemplateDirective",
+        "extends LineChartComponent",
+        "LineChartComponent"
+      ],
+      "verify": "Your build has no TS4114 or TS2416 against any of the listed classes, and no member of your subclass is named like one of the removed members listed in the note.",
+      "note": "Gained: ChartComponent 20 members (mostly the tooltip API, plus measured), ColumnSeriesComponent 14, LineSeriesComponent 9, ScatterChartComponent 4, ChartDataTableComponent 3, BarChartComponent/FunnelChartComponent 2 each, PieChartComponent roving, ColumnChartComponent highlightedSeries, PaginationComponent layoutResolved/loading, TableComponent paginationSize/paginationLayout, ModalCardComponent stackOverflowingActions, ChartTooltipDirective dsChartTooltipPinned (internal, via components/chart-tooltip), DsControlValueAccessor/DsBooleanControlValueAccessor blur (internal, via components; inherited by every field control, so a subclass declaring its own collides), SearchComponent blur, TextareaComponent selectionStart/selectionEnd/setSelectionRange/select, CellTemplateDirective dsCellTemplateOf and a static ngTemplateContextGuard (now generic, defaulting to unknown), SwitchComponent controlled/checkedRequested/onClick, LineChartComponent outline. Removed: rovingIndex/tabStopIndex (bar/pie/funnel/column series), onMarkEnter/onMarkNavigation/onPointKey (column series), onMarkerEnter/onMarkerNavigation (line series), onPlotPointer/clearCursor (ChartComponent), markIndex (ScatterChartComponent)."
+    },
+    {
+      "id": "table-expand-panel-content-wrapper",
+      "kind": "behavior",
+      "surface": "style",
+      "old": "ds-table .expand-panel-inner",
+      "new": null,
+      "action": "Re-point a rule that selected your projected template's root as a direct child of `.expand-panel-inner` at `.expand-panel-content`, or drop the child combinator. Delete a rule of yours that forces `display: table-cell` on `.expand-panel-cell` (delete list: expand-panel-cell-display-override).",
+      "appliesWhen": "Only a stylesheet of yours that reaches below `.expand-panel-inner` in an expanded `ds-table` row with a child combinator, or that overrode the expand cell's `display`. `.expand-panel-cell > .expand-panel-inner` still matches, a descendant selector matches through the new wrapper, and the template you project is untouched.",
+      "pitfall": "The selector stops matching and your rule is silently inert: no build error, and the row still opens with the library's own layout.",
+      "note": "The cell carried `display: grid` for the 0fr to 1fr reveal, and a `<td>` whose display is not `table-cell` leaves the table layout, so its `colspan` was ignored and the panel rendered one column wide. The grid and the `ds-table-expand` animation sit on `.expand-panel-inner`, and `.expand-panel-content` is the clipped track item under it.",
+      "verify": "An expanded row's `td.expand-panel-cell` is as wide as the row above it, and every rule of yours that styled the expanded row's content appears on an element again.",
+      "searchHints": [
+        "expand-panel-inner",
+        "expand-panel-cell",
+        "expand-panel",
+        "rowExpandTemplate"
+      ],
+      "restore": null
+    },
+    {
+      "id": "bar-radius-hook",
+      "kind": "code-add",
+      "old": null,
+      "new": "--ds-bar-radius",
+      "surface": "style",
+      "action": "None, unless a bar of yours was squared through the radius hook `ds-meter` had before 0.13.3: set `--ds-bar-radius` to that value on the `ds-bar`. A `--ds-bar-radius` declaration you already have is read as it stands.",
+      "appliesWhen": "Only a stylesheet that wants a `ds-bar` with corners other than a pill. Every bar without the declaration keeps its pill, and `ds-bar-chart` has its own tokens and is unaffected.",
+      "pitfall": "A `--ds-bar-radius` declaration already in a stylesheet, inert on 0.13.3 and 0.13.4, becomes live with this upgrade, so that bar changes shape without an edit of yours.",
+      "restore": null,
+      "searchHints": [
+        "--ds-bar-radius",
+        "--ds-meter-radius",
+        "ds-bar"
+      ],
+      "detect": [
+        "--ds-bar-radius",
+        "--ds-meter-radius"
+      ],
+      "verify": "A `ds-bar` under `--ds-bar-radius: 2px` renders its track and its fill with a 2px corner radius; without it both are pills.",
+      "note": "On 0.13.3 and 0.13.4 `ds-bar` pins the pill on the track and on the fill, with no radius hook. The bar now resolves the radius from `--ds-bar-radius` on both, defaulting to `var(--radius-pill)`, so a squared bar keeps a squared fill."
+    },
+    {
+      "id": "line-chart-placeholder-height-hook",
+      "kind": "code-add",
+      "old": "--ds-line-chart-plot-height",
+      "new": "--ds-line-chart-placeholder-height",
+      "surface": "style",
+      "action": "If you set `--ds-line-chart-plot-height` to size the loading skeleton or the empty and error boxes rather than the plot, move the value to `--ds-line-chart-placeholder-height` and let the plot take its default.",
+      "appliesWhen": "Only a stylesheet that sets `--ds-line-chart-plot-height`. Unset, nothing moves: the skeleton keeps the plot height and the boxes the height the plot would take. A value meant for the plot stays where it is.",
+      "pitfall": "Both tokens parse whatever they hold, so a value left on the plot token keeps resizing every plot with no build error and no console line.",
+      "restore": null,
+      "searchHints": [
+        "--ds-line-chart-plot-height",
+        "--ds-line-chart-placeholder-height",
+        "ds-line-chart"
+      ],
+      "detect": [
+        "--ds-line-chart-plot-height"
+      ],
+      "verify": "A `ds-line-chart` under `--ds-line-chart-placeholder-height: 120px` shows a 120px skeleton while loading and a 120px empty box with no series, while the plot it draws is the height `--ds-line-chart-plot-height` gives it.",
+      "note": "Until 0.13.4 `--ds-line-chart-plot-height` reached the skeleton and the message box alone, and 0.13.4 made it size the plot too, so a value pinned for the placeholder states resized every plot. The placeholder states have their own token now; set, it drives all of them, and the plot reads only the plot token."
+    },
+    {
+      "id": "modal-actions-stacked-direction-hook",
+      "kind": "code-add",
+      "old": null,
+      "new": "--ds-modal-actions-stacked-direction",
+      "surface": "style",
+      "action": "None, unless the confirming action should visually top a stacked actions row: set `--ds-modal-actions-stacked-direction: column-reverse` on `ds-modal` or `ds-modal-card`.",
+      "appliesWhen": "Only a stylesheet that wants the confirming action above the others once `.actions` carries `.stacked`. Unset, the stacked column follows DOM order (cancel-then-confirm), which is also Tab order; a row that still fits stays a right-aligned single line and the token has no effect there.",
+      "pitfall": "The token only has an effect once the row has actually stacked, so testing it against a row that still fits shows no change and reads as broken.",
+      "restore": null,
+      "searchHints": [
+        "--ds-modal-actions-stacked-direction",
+        "ds-modal-card",
+        ".actions.stacked"
+      ],
+      "detect": [
+        "--ds-modal-actions-stacked-direction"
+      ],
+      "verify": "A stacked `ds-modal-card` actions row with no override puts the DOM's last child (the confirming action) at the bottom; the same row under `--ds-modal-actions-stacked-direction: column-reverse` puts it at the top. Tab order matches the DOM in both.",
+      "note": "The stacked column reads its `flex-direction` from this resolver, defaulting to `column`, so DOM order, visual order and Tab order agree without a consumer doing anything. `column-reverse` is the escape hatch for a design that still wants the confirming action on top."
+    },
+    {
+      "id": "input-label-fw-is-input-label-font-weight",
+      "kind": "token-rename",
+      "old": "--ds-input-label-fw",
+      "new": "--ds-input-label-font-weight",
+      "surface": "style",
+      "action": "Rewrite `--ds-input-label-fw` to `--ds-input-label-font-weight`, keeping the value.",
+      "appliesWhen": "Any stylesheet that sets `--ds-input-label-fw`, on `ds-input`, an ancestor or `:root`. `--ds-input-label-font-size` and `--ds-input-label-color` are different tokens on the same element and are untouched; the family-level fallback this token still chains into, `--ds-field-label-font-weight`, keeps its own name.",
+      "pitfall": "The old name is inert rather than invalid, so a declaration left behind sets nothing and reports nothing - the label quietly falls back to `--ds-field-label-font-weight` or the default bold, which on most pages still looks close to right.",
+      "restore": null,
+      "searchHints": [
+        "--ds-input-label-fw"
+      ],
+      "detect": [
+        "--ds-input-label-fw([^A-Za-z0-9_-]|$)"
+      ],
+      "verify": "No stylesheet declares `--ds-input-label-fw`, and the ds-input label's weight still comes from `--ds-input-label-font-weight` (or the `--ds-field-label-font-weight` / `--font-weight-bold` fallback chain).",
+      "note": "Every other `--ds-*` weight token is spelled `-font-weight` since 0.13.4, including `--ds-input-label-font-size`'s sibling on the same element; this one now matches them."
+    },
+    {
+      "id": "tag-fw-is-tag-font-weight",
+      "kind": "token-rename",
+      "old": "--ds-tag-fw",
+      "new": "--ds-tag-font-weight",
+      "surface": "style",
+      "action": "Rewrite `--ds-tag-fw` to `--ds-tag-font-weight`, keeping the value.",
+      "appliesWhen": "Any stylesheet that sets `--ds-tag-fw`, on `ds-tag`, an ancestor or `:root`. `--ds-tag-font-size` and `--ds-tag-line-height` are different tokens on the same element, renamed by their own entry in this release.",
+      "pitfall": "The old name is inert rather than invalid, so a declaration left behind sets nothing and reports nothing - the tag's label quietly falls back to `--font-weight-bold`.",
+      "restore": null,
+      "searchHints": [
+        "--ds-tag-fw"
+      ],
+      "detect": [
+        "--ds-tag-fw([^A-Za-z0-9_-]|$)"
+      ],
+      "verify": "No stylesheet declares `--ds-tag-fw`, and `ds-tag`'s label weight comes from `--ds-tag-font-weight` (or the `--font-weight-bold` default).",
+      "note": "`ds-tag`'s typography tokens now read alike: `--ds-tag-font-size`, `--ds-tag-font-weight` and `--ds-tag-line-height`, matching the spelled-out `--ds-*` names elsewhere since 0.13.4."
+    },
+    {
+      "id": "tag-lh-is-tag-line-height",
+      "kind": "token-rename",
+      "old": "--ds-tag-lh",
+      "new": "--ds-tag-line-height",
+      "surface": "style",
+      "action": "Rewrite `--ds-tag-lh` to `--ds-tag-line-height`, keeping the value.",
+      "appliesWhen": "Any stylesheet that sets `--ds-tag-lh`, on `ds-tag`, an ancestor or `:root`. `--ds-tag-font-size` and `--ds-tag-font-weight` are different tokens on the same element.",
+      "pitfall": "The old name is inert rather than invalid, so a declaration left behind sets nothing and reports nothing - the tag's label quietly falls back to `--line-height-base`.",
+      "restore": null,
+      "searchHints": [
+        "--ds-tag-lh"
+      ],
+      "detect": [
+        "--ds-tag-lh([^A-Za-z0-9_-]|$)"
+      ],
+      "verify": "No stylesheet declares `--ds-tag-lh`, and `ds-tag`'s label line-height comes from `--ds-tag-line-height` (or the `--line-height-base` default).",
+      "note": "Renamed with `--ds-tag-fw` so every `ds-tag` typography token is spelled out, matching the `--ds-*` names elsewhere since 0.13.4."
+    },
+    {
+      "id": "slider-thumb-bw-is-slider-thumb-border-width",
+      "kind": "token-rename",
+      "old": "--ds-slider-thumb-bw",
+      "new": "--ds-slider-thumb-border-width",
+      "surface": "style",
+      "action": "Rewrite `--ds-slider-thumb-bw` to `--ds-slider-thumb-border-width`, keeping the value.",
+      "appliesWhen": "Any stylesheet that sets `--ds-slider-thumb-bw`, on `ds-slider`, an ancestor or `:root`. `--ds-slider-thumb-color` and `--ds-slider-thumb-border-color` are different tokens on the same element.",
+      "pitfall": "The old name is inert rather than invalid, so a declaration left behind sets nothing and reports nothing - the thumb border quietly falls back to the theme token `--slider-thumb-border-width` (renamed from `--slider-thumb-bw` by its own item in this release) or `--border-width-strong`.",
+      "restore": null,
+      "searchHints": [
+        "--ds-slider-thumb-bw"
+      ],
+      "detect": [
+        "--ds-slider-thumb-bw([^A-Za-z0-9_-]|$)"
+      ],
+      "verify": "No stylesheet declares `--ds-slider-thumb-bw`, and the slider thumb's border width comes from `--ds-slider-thumb-border-width` (or the `--slider-thumb-border-width` / `--border-width-strong` fallback chain).",
+      "note": "The slider's border width now reads like every other spelled-out `--ds-*` token. The theme-level fallback it chains into is renamed by its own item, so both layers move together."
+    },
+    {
+      "id": "theme-slider-thumb-bw-is-slider-thumb-border-width",
+      "kind": "token-rename",
+      "old": "--slider-thumb-bw",
+      "new": "--slider-thumb-border-width",
+      "surface": "style",
+      "action": "Rewrite `--slider-thumb-bw` to `--slider-thumb-border-width`, keeping the value.",
+      "appliesWhen": "Any stylesheet that sets the theme-level `--slider-thumb-bw` (not the `--ds-slider-thumb-bw` component token, renamed by its own item in this release) on `:root` or a theme class.",
+      "pitfall": "The old name is inert rather than invalid, so a declaration left behind sets nothing and reports nothing - the slider thumb border quietly falls back to `--border-width-strong`.",
+      "restore": null,
+      "searchHints": [
+        "--slider-thumb-bw"
+      ],
+      "detect": [
+        "--slider-thumb-bw([^A-Za-z0-9_-]|$)"
+      ],
+      "verify": "No stylesheet declares `--slider-thumb-bw`, and the slider thumb's border width still resolves through `--slider-thumb-border-width` (or the `--border-width-strong` default).",
+      "note": "This is the theme-layer fallback `--ds-slider-thumb-border-width` chains into, declared in `styles/_tokens.scss`. It is renamed together with the component token so the two layers keep one spelling."
+    },
+    {
+      "id": "pagination-layout-input-nullable",
+      "kind": "behavior",
+      "old": "ds-pagination[layout]",
+      "new": null,
+      "surface": "typescript",
+      "action": "Where you read `layout()` back from a `PaginationComponent` reference, or override `layout` in a subclass, handle `null`: the input is `PaginationLayout | null`, unset is `null`, and `layoutResolved()` gives the effective value.",
+      "appliesWhen": "Only TypeScript that reads `PaginationComponent.layout()` through a `viewChild` or a template reference, or a subclass overriding `layout`. A template binding `layout=\"spread\"` or `[layout]=\"expr\"` is unaffected, and so is every pager that never set it: unset still renders grouped.",
+      "pitfall": "A reader comparing `layout()` to `'grouped'` to detect the default now sees `null` for an unset pager and takes the other branch, with no compile error unless the value is assigned to a `PaginationLayout`. Read `layoutResolved()` for the effective value.",
+      "restore": null,
+      "searchHints": [
+        "PaginationComponent",
+        "layout()",
+        "layoutResolved"
+      ],
+      "detect": [
+        "PaginationComponent",
+        ".layout()",
+        "extends PaginationComponent"
+      ],
+      "verify": "Every read of a pager's `layout()` handles `null` or reads `layoutResolved()` instead, and a subclass overriding `layout` declares it `PaginationLayout | null`.",
+      "note": "`layout` was `input<PaginationLayout>('grouped')` and is `input<PaginationLayout | null>(null)`, so an unset pager can fall back to `DS_CONFIG.pagination.layout`, then `'grouped'`. Writers are fine: `'grouped'` and `'spread'` still bind. Readers of the raw input and overriders see the widened type."
+    }
+  ],
+  "informational": [
+    "A stacked mark answers the pointer over its own segment. Each series carried a hit box spanning the whole category slot, so stacked they lay on top of one another and only the series drawn last answered - every segment reported the top one.",
+    "A tooltip anchored to a zero-value mark stays with its reading. Such a mark is degenerate in one axis - a column loses its height, a bar its width - and the overlay took the viewport corner or the plot's left edge instead.",
+    "ds-bar-chart points its tooltip at the drawn value rather than the track, so a floating bar no longer puts the panel a track width from the reading.",
+    "A segmented bar's tooltip heads the panel with the row and gives each segment a line with its share, instead of repeating the row label the pointer is already on.",
+    "A hatched mark's tooltip dot carries the same break its mark does, so neither the panel nor the plot relies on hue alone.",
+    {
+      "text": "The pinned-mark badge clears the column's top edge instead of sitting flush against it.",
+      "verify": "Pin a column mark: the badge sits above the column's top edge with a visible gap, not touching it."
+    },
+    {
+      "text": "The unpin control sits below the plot, because the panel it undoes opens above the held mark.",
+      "verify": "Pin a mark: the unpin control renders below the plot area, never over the marks."
+    },
+    "Legend hover fades the other series whether or not dimOthers is set, and ds-column-chart wires its legend for it. dsColumnSeries takes seriesKey and highlighted for a hand-composed plot.",
+    {
+      "text": "ds-modal and ds-modal-card stack their [actions] into a full-width column once the buttons outgrow the card, confirming action at the bottom by default (DOM order, matching Tab order) - set --ds-modal-actions-stacked-direction: column-reverse to put it on top instead; a row that fits stays right-aligned. The row used to overflow past the card's start edge and clip the first button, so a consumer rule that wraps ds-modal-card .actions is redundant (delete list: modal-actions-flex-wrap).",
+      "verify": "Open a sm modal whose three buttons carry long labels: each button spans the card's full width and none is clipped, the confirming button at the bottom of the stack by default and at the top under --ds-modal-actions-stacked-direction: column-reverse; a modal with two short buttons keeps them in one right-aligned row."
+    },
+    {
+      "text": "ds-table takes paginationSize and paginationLayout and forwards them to its footer pager as size and layout, so a larger spread footer under a table is two attributes; a consumer rule that doubles .pagination.pagination or .pagination-button.pagination-button under ds-table to force the pager's width or button height is redundant (delete list: table-pager-size-layout-override).",
+      "verify": "A ds-table with paginationSize=\"md\" paginationLayout=\"spread\" renders its pager buttons at the md control height with the range label at the table's start edge and the controls at its end edge; a table without either input renders its pager as before."
+    },
+    "DS_CONFIG.pagination.size and DS_CONFIG.pagination.layout set the default size and layout of every pager, ds-table's footer included: size resolves the input, then pagination.size, then control.size, then 'sm'; layout resolves the input, then pagination.layout, then 'grouped'. PaginationLayout is exported from the core entry point as well as from components/pagination.",
+    "A skeleton's shimmer pauses while it is off screen and advances in 68 steps over the default 3400ms. A `--ds-skeleton-wave-duration` of yours changes the step rate with it, since the step count is fixed; nothing needs editing.",
+    "Every field control has blur(), the counterpart of focus(): it drops focus from whichever descendant holds it. ds-search has the same pair.",
+    "ds-textarea exposes selectionStart, selectionEnd, setSelectionRange(start, end, direction?) and select(), forwarded to its native textarea. After value.set(...), set the range from a setTimeout: the value reaches the element a microtask later and drops the caret to the end.",
+    "dsCellTemplate is generic: [dsCellTemplateOf]=\"rows\" on the ng-template types let-row as the row type under strict templates and is never read at runtime; without it row stays unknown. CellTemplateContext<T> is exported.",
+    "ds-switch takes controlled: the switch cancels its own toggle and emits checkedRequested with the asked-for value, moving only when [checked] changes from outside. Under controlled the gesture does not update a two-way checked, ngModel or form control; the host commits the value through [checked]. Off by default; nothing changes for an existing switch.",
+    "ds-pagination takes loading: while true the nav reports aria-busy, the range label becomes an inline skeleton, and Prev, Next, the page buttons and the rows-per-page select are disabled. ds-table sets it on its footer pager whenever it draws skeleton rows, and leaves it off in the overlay mode.",
+    "The dsTableColumns panel names a column whose label is empty by its screenReaderLabel, which also gives that row's checkbox an accessible name.",
+    "Reduced motion stops the ds-skeleton shimmer; the opt-out in styles/skeleton-shimmer now wins over the component's own animation.",
+    "A chart's data table is built the first time it is opened and kept from then on; dataTable=\"visible\" is unaffected, and find-in-page no longer reaches a table nobody has opened.",
+    "Axis labels are measured again when their text changes, so a chart whose categories or ticks arrive after a loading or empty state no longer keeps overlapping labels.",
+    "A chart that enters hundreds of marks at once no longer blocks the page, ds-chart listens to the pointer only for a category cursor, and a chart destroyed while a reading was pinned no longer leaves a key listener on the document.",
+    {
+      "text": "A chart with an axis title reserves a band for it, so the widest tick label no longer runs through the rotated title, and the secondary axis title stands as far from its ticks as the primary one.",
+      "verify": "Open a ds-line-chart or ds-column-chart with an axis title and long value labels: the rotated title sits clear of every tick label on both value axes."
+    },
+    {
+      "text": "Under a category cursor the panel anchors above the tallest reading at the category, a line chart's active marker grows anywhere in the category band, and the tooltip fades out when the pointer leaves the plot. The panel's colour dot is larger, with a surface-coloured ring.",
+      "verify": "Hover a category on a column-and-line ds-chart with tooltip=\"axis\": the panel opens above the tallest reading, the line's marker at that category is enlarged, and leaving the plot fades the panel out."
+    },
+    "ds-scatter-chart fades the other series while a legend entry is hovered, like the other charts with a legend; it and dsColumnSeries fade to --ds-chart-dim-opacity.",
+    {
+      "text": "ds-date-picker no longer lets its value or calendar button run past its own border in a container narrower than the value mask (a range picker under fullWidth was the common case): the field keeps its content width as a minimum and overflows the container with its border intact, instead of shrinking the border around a value that cannot clip. A picker whose container fits the mask renders as before.",
+      "verify": "Put a range ds-date-picker with fullWidth in a container narrower than its mask (about 200px): the calendar button sits inside the field border with the usual inner padding, and the whole field extends past the container edge; in a wider container the field fills it as before."
+    }
+  ],
+  "deleteList": [
+    {
+      "id": "modal-actions-flex-wrap",
+      "surface": "style",
+      "find": [
+        "ds-modal-card .actions",
+        "flex-wrap: wrap"
+      ],
+      "why": "The card measures its actions row and stacks it full-width when the buttons outgrow it, so a rule wrapping the row only restates that the buttons must not be clipped.",
+      "replaceWith": "nothing"
+    },
+    {
+      "id": "mark-level-chart-tooltip-bindings",
+      "surface": "template",
+      "find": [
+        "[dsChartTooltip]=\"",
+        "[dsChartTooltipOrigin]=\"",
+        "[dsChartTooltipPreferBelow]=\""
+      ],
+      "why": "ds-chart opens the panel its marks describe, so a binding on the mark now opens a second one.",
+      "replaceWith": "nothing for the ordinary case; [tooltipTemplate] and [tooltipExtraGap] on ds-chart where the panel was customised"
+    },
+    {
+      "id": "expand-panel-cell-display-override",
+      "surface": "style",
+      "find": [
+        ".expand-panel-cell",
+        "display: table-cell"
+      ],
+      "why": "The expand cell is a table cell again, so a rule forcing display: table-cell on it restates the default, and while it held it also switched the reveal animation off.",
+      "replaceWith": "nothing"
+    },
+    {
+      "id": "table-pager-size-layout-override",
+      "surface": "style",
+      "find": [
+        ".pagination.pagination",
+        ".pagination-button.pagination-button",
+        "ds-table .pagination",
+        "ds-table .pagination-button"
+      ],
+      "why": "ds-table forwards paginationSize and paginationLayout to its pager, and DS_CONFIG.pagination sets the default for every pager, so a doubled-class rule forcing the pager's width, display or button height inside a table restates a size or a layout the component takes.",
+      "replaceWith": "paginationSize=\"md\" paginationLayout=\"spread\" on the ds-table, or provideDsConfig({ pagination: { size: 'md', layout: 'spread' } }) for every pager; a rule that wants a height none of sm, md or lg gives stays"
+    },
+    {
+      "id": "field-inner-input-blur",
+      "surface": "typescript",
+      "find": [
+        "querySelector('input')?.blur()",
+        "querySelector('input').blur()",
+        "querySelector('textarea')?.blur()"
+      ],
+      "why": "Every field control has a public blur() that drops focus from whichever descendant holds it.",
+      "replaceWith": "blur() on the field instance, after clear() where the field was being emptied"
+    },
+    {
+      "id": "textarea-inner-element-query",
+      "surface": "typescript",
+      "find": [
+        "querySelector('textarea')",
+        "querySelector(\"textarea\")"
+      ],
+      "why": "ds-textarea forwards selectionStart, selectionEnd, setSelectionRange and select to its native element, so the host no longer needs the element itself.",
+      "replaceWith": "selectionStart / selectionEnd / setSelectionRange() / select() on the ds-textarea instance (viewChild(TextareaComponent))"
+    },
+    {
+      "id": "table-row-caster-helpers",
+      "surface": ["typescript", "template"],
+      "find": [
+        "(row: unknown)",
+        "return row as "
+      ],
+      "why": "[dsCellTemplateOf]=\"rows\" on the ng-template types let-row as the row type, so a one-line caster exists only to do what the binding now does.",
+      "replaceWith": "[dsCellTemplateOf] bound to the table's rows, then row.field in the template. Keep a caster only where it serves rowExpandTemplate or cellTemplateMap, whose contexts stay unknown"
+    },
+    {
+      "id": "switch-confirm-wrapper",
+      "surface": ["template", "typescript"],
+      "find": [
+        "preventDefault()",
+        "emit(!this.checked())",
+        "requestChange"
+      ],
+      "why": "ds-switch cancels its own native toggle under `controlled` and reports the asked-for value through `checkedRequested`, so a wrapper that preventDefaults the click and re-emits !checked restates it.",
+      "replaceWith": "controlled with (checkedRequested) on ds-switch, [checked] bound one-way to the committed state"
+    }
+  ]
+}

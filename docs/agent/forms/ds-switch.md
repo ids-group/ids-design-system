@@ -3,8 +3,10 @@
 
 Group: Form & input
 
-Inputs: `checked: model<boolean>`, `disabled: boolean = false`, `name: string | null = null`, `variant: 'default' | 'success' | 'error' = 'default'`, `inputId: string | null = null`
+Inputs: `checked: model<boolean>`, `disabled: boolean = false`, `name: string | null = null`, `variant: 'default' | 'success' | 'error' = 'default'`, `inputId: string | null = null`, `controlled: boolean = false`
+Outputs: `(checkedRequested): boolean` - only when `controlled`: the value the user asked for; the switch waits for `[checked]` to change.
+Controlled: `<ds-switch controlled [checked]="paused()" (checkedRequested)="askPause($event)" />` - a click cancels the native toggle instead of flipping, so a confirm dialog can run first and a cancelled one leaves the track untouched. Off by default; the switch flips on every toggle as before.
 
 <!-- inputs:ds-switch -->
-All inputs: `hint: string = ''`, `error: string = ''`, `warning: string = ''`, `reserveMessage: boolean | null = null`, `messageIcon: IconName | false | null = null`, `errors: readonly DsFieldError[] = []`, `invalid: boolean = false`, `touched: boolean = false`, `hidden: boolean = false`, `checked: boolean = false`, `disabled: boolean = false`, `name: string | null = null`, `variant: 'default' | 'success' | 'error' = 'default'`, `inputId: string | null = null`, `size: 'sm' | 'md' | 'lg' = null`, `required: boolean = false`, `label: string = ''`, `ariaLabel: string | null = null`
+All inputs: `hint: string = ''`, `error: string = ''`, `warning: string = ''`, `reserveMessage: boolean | null = null`, `messageIcon: IconName | false | null = null`, `errors: readonly DsFieldError[] = []`, `invalid: boolean = false`, `touched: boolean = false`, `hidden: boolean = false`, `checked: boolean = false`, `disabled: boolean = false`, `name: string | null = null`, `variant: 'default' | 'success' | 'error' = 'default'`, `inputId: string | null = null`, `size: 'sm' | 'md' | 'lg' = null`, `required: boolean = false`, `label: string = ''`, `ariaLabel: string | null = null`, `controlled: boolean = false`
 <!-- /inputs -->

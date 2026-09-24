@@ -180,6 +180,16 @@
     cancelled only when the incoming text differs from what the control last
     pushed, so clearing an already-empty-looking field left the keystroke armed.
     What the input SHOWS is never delayed by any of the three.
+    <code class="t-mono-inline">
+      clear()
+    </code> keeps focus in the field;
+    <code class="t-mono-inline">
+      blur()
+    </code>, the counterpart of
+    <code class="t-mono-inline">
+      focus()
+    </code>, drops it where the screen
+    moves on.
   </p>
 
   <div class="demo-stack">

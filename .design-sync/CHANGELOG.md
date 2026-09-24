@@ -27,6 +27,23 @@ timeline, two audiences.
 
 ### Build
 
+- **A chart card holds every chart of its block.** The docs build a chart only once it scrolls into
+  view, and a headless page reports nothing as intersecting, so a card would freeze the empty
+  placeholders. A card sets `__dsSectionsOnly`, and under it every chart is built at once. The slice
+  waits until the section has a filled child, and a card still empty after its 8s budget reports
+  nothing kept, so `measure-cards` names it instead of passing it.
+
+- **A chart gets cards from its own chapter.** `build-cards.mjs` counted a chapter as a
+  component's own only under `components/`, so `Chart`, `HeatmapChart`, `ScatterChart` and
+  `WaterfallChart`, whose chapters live under `charts/`, got no card at all and the upload check
+  stopped. A chapter named after the component is its own in any group now, and `ChartDataTable`'s
+  block in `charts/chart` is marked and keyed so its card carries its own API table.
+
+- **A library type named like a wrapper is imported under an alias.** `ChartDataTable` is both the
+  `dataTable` input's union and the `ds-chart-data-table` wrapper, and `wrappers.tsx` declared the
+  name twice (TS2395), so `build:elements` failed. `gen.mjs` imports it as `ChartDataTableType` and
+  writes the props against the alias.
+
 - **The upload tree is no longer rebuilt inside the release commit.** `prepare-release-commit.mjs`
   ran `build-upload.mjs` in the `version` hook, and `cut-release.sh` ran a full
   `build:elements` before the bump to feed it. Neither survived contact with what
@@ -112,6 +129,8 @@ timeline, two audiences.
 - **`docs/ChartDataTable.md` was added and `ChartDataTable` points at `charts/chart`.** Every chart
   renders `ds-chart-data-table` under its plot, and the `charts/chart` chapter is where it is shown,
   so the card is cut from there.
+
+- **`docs/Accordion.md` documents `multiple` in place of `multi`**, the input's name.
 
 ## 0.12.0 — 2026-09-04
 

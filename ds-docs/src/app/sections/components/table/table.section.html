@@ -24,27 +24,30 @@
     [stickyHeader]="false">
     <ng-template
       let-row
-      dsCellTemplate="project">
+      dsCellTemplate="project"
+      [dsCellTemplateOf]="events">
       <span class="t-s-bold">
-        {{ asEvent(row).project }}
+        {{ row.project }}
       </span>
     </ng-template>
 
     <ng-template
       let-row
-      dsCellTemplate="id">
+      dsCellTemplate="id"
+      [dsCellTemplateOf]="events">
       <span class="mono muted">
-        {{ asEvent(row).id }}
+        {{ row.id }}
       </span>
     </ng-template>
 
     <ng-template
       let-row
-      dsCellTemplate="status">
+      dsCellTemplate="status"
+      [dsCellTemplateOf]="events">
       <ds-badge
-        [status]="asEvent(row).status"
+        [status]="row.status"
         [withDot]="true">
-        {{ asEvent(row).statusLabel }}
+        {{ row.statusLabel }}
       </ds-badge>
     </ng-template>
   </ds-table>
@@ -498,6 +501,42 @@
     [loading]="'skeleton'"
     [skeletonRows]="3"
     [stickyHeader]="false" />
+
+  <h3 class="block-title t-h4">
+    Loading · skeleton with pagination
+  </h3>
+
+  <p class="block-desc t-s">
+    The footer keeps its height while
+    <code class="t-mono-inline">
+      [loading]="'skeleton'"
+    </code> is on. Its
+    buttons and the page-size dropdown disable, and the pager reports
+    <code class="t-mono-inline">
+      aria-busy
+    </code>, and the range label gives
+    way to a
+    <code class="t-mono-inline">
+      &lt;ds-skeleton&gt;
+    </code>
+    placeholder, so the pager never shows a count for rows that are not the ones
+    on screen, and can no longer fire a page change while there is nothing
+    behind it.
+  </p>
+
+  <ds-button
+    size="sm"
+    variant="outline"
+    (pressed)="pagerSkeletonLoading.set(!pagerSkeletonLoading())">
+    Toggle skeleton loading
+  </ds-button>
+
+  <ds-table
+    caption="Projects"
+    [data]="projectRows"
+    [columns]="projectColumns"
+    [pageSize]="4"
+    [loading]="pagerSkeletonLoading() ? 'skeleton' : false" />
 
   <h3 class="block-title t-h4">
     Loading · overlay
@@ -974,6 +1013,37 @@
     [pageSize]="4"
     [showPageSize]="false"
     [showLabel]="false"
+    [stickyHeader]="false" />
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      paginationSize
+    </code> and
+    <code class="t-mono-inline">
+      paginationLayout
+    </code> reach the pager's own
+    <code class="t-mono-inline">
+      size
+    </code> and
+    <code class="t-mono-inline">
+      layout
+    </code>:
+    <code class="t-mono-inline">
+      md
+    </code> gives the buttons the md control
+    height, and <code class="t-mono-inline">spread</code> puts the range label
+    under the table's start edge and the controls under its end edge. Unset,
+    both fall back to <code class="t-mono-inline"> DS_CONFIG.pagination </code>,
+    which is where an app whose every pager sits under a table says it once.
+  </p>
+
+  <ds-table
+    caption="Projects"
+    paginationSize="md"
+    paginationLayout="spread"
+    [data]="projectRows"
+    [columns]="projectColumns"
+    [pageSize]="4"
     [stickyHeader]="false" />
 
   <h3 class="block-title t-h4">

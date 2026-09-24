@@ -146,4 +146,57 @@
       [minRows]="2"
       [maxRows]="8" />
   </div>
+
+  <h3 class="block-title t-h4">
+    Selection API
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      selectionStart
+    </code> /
+    <code class="t-mono-inline">
+      selectionEnd
+    </code>,
+    <code class="t-mono-inline">
+      setSelectionRange(start, end, direction?)
+    </code>
+    and <code class="t-mono-inline"> select() </code> forward to the native
+    textarea, so an editor toolbar never reaches into the component's DOM.
+  </p>
+
+  <div class="stack">
+    <ds-textarea
+      #editor
+      label="Renewal notice"
+      [rows]="3"
+      [(value)]="draft" />
+
+    <div class="button-row">
+      <ds-button
+        size="sm"
+        variant="outline"
+        (pressed)="selectRenewal()">
+        Select "policy renewal"
+      </ds-button>
+
+      <ds-button
+        size="sm"
+        variant="outline"
+        (pressed)="selectAll()">
+        Select all
+      </ds-button>
+
+      <ds-button
+        size="sm"
+        variant="outline"
+        (pressed)="readSelection()">
+        Read selection
+      </ds-button>
+    </div>
+
+    <p class="t-s">
+      Selection: {{ selectionReadout() }}
+    </p>
+  </div>
 </docs-section>

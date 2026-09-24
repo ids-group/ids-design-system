@@ -29,6 +29,7 @@ export {
 } from './list-cursor';
 export { flattenDsOptions, isDsOptionGroup } from './option';
 export type { DsOption, DsOptionGroup, DsOptionItem } from './option';
+export type { PaginationLayout } from './pagination.types';
 export type { DsSize } from './size';
 export type { DsStatus, DsStatusKey, DsStatusRegistry } from './status';
 export type {

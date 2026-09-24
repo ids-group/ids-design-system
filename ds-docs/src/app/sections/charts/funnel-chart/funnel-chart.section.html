@@ -19,6 +19,7 @@
   </p>
 
   <ds-funnel-chart
+    *docsLazy
     caption="Checkout funnel"
     dataTable="none"
     [data]="specimenStages()" />
@@ -36,6 +37,7 @@
   </p>
 
   <ds-funnel-chart
+    *docsLazy
     dataTable="none"
     shape="taper"
     [data]="taperStages()" />
@@ -53,6 +55,7 @@
   </p>
 
   <ds-funnel-chart
+    *docsLazy
     dataTable="none"
     shape="width"
     [data]="widthStages()" />
@@ -69,6 +72,7 @@
   </p>
 
   <ds-funnel-chart
+    *docsLazy
     dataTable="none"
     shape="area"
     [data]="areaStages()" />
@@ -82,6 +86,7 @@
   <div class="states states--cols-2">
     <div class="state-cell">
       <ds-funnel-chart
+        *docsLazy
         dataTable="none"
         shape="width"
         [data]="steepDropWidthStages()" />
@@ -95,6 +100,7 @@
 
     <div class="state-cell">
       <ds-funnel-chart
+        *docsLazy
         dataTable="none"
         shape="area"
         [data]="steepDropAreaStages()" />
@@ -121,6 +127,7 @@
   </p>
 
   <ds-funnel-chart
+    *docsLazy
     dataTable="none"
     [data]="stageTableStages()"
     [showTable]="false" />
@@ -137,6 +144,7 @@
   </p>
 
   <ds-funnel-chart
+    *docsLazy
     caption="The annex table, collapsed until asked for"
     [data]="dataTableStages()"
     [showTable]="false" />
@@ -164,6 +172,7 @@
   <div class="states states--cols-2">
     <div class="state-cell">
       <ds-funnel-chart
+        *docsLazy
         dataTable="none"
         [data]="dropStages()" />
 
@@ -174,6 +183,7 @@
 
     <div class="state-cell">
       <ds-funnel-chart
+        *docsLazy
         drop="absolute"
         dataTable="none"
         [data]="dropStages()" />
@@ -206,6 +216,7 @@
   </p>
 
   <ds-funnel-chart
+    *docsLazy
     interactive
     dataTable="none"
     caption="Every band is a control"
@@ -244,6 +255,7 @@
   <div class="states states--cols-2">
     <div class="state-cell">
       <ds-funnel-chart
+        *docsLazy
         interactive
         pinOnClick
         dataTable="none"
@@ -256,6 +268,7 @@
 
     <div class="state-cell">
       <ds-funnel-chart
+        *docsLazy
         interactive
         pinOnClick
         dimOthers
@@ -283,6 +296,7 @@
   </p>
 
   <ds-funnel-chart
+    *docsLazy
     dataTable="none"
     staggerMs="60"
     [data]="staggerStages()" />
@@ -308,6 +322,7 @@
     <div class="states states--cols-2">
       <div class="state-cell">
         <ds-funnel-chart
+          *docsLazy
           dataTable="none"
           [data]="emptyStages()" />
 
@@ -320,6 +335,7 @@
 
       <div class="state-cell">
         <ds-funnel-chart
+          *docsLazy
           dataTable="none"
           loading
           [data]="loadingStages()" />
@@ -333,6 +349,7 @@
 
       <div class="state-cell">
         <ds-funnel-chart
+          *docsLazy
           dataTable="none"
           error
           [data]="emptyStages()" />
@@ -344,6 +361,7 @@
 
       <div class="state-cell">
         <ds-funnel-chart
+          *docsLazy
           dataTable="none"
           [data]="oneStage()" />
 
@@ -356,6 +374,7 @@
 
       <div class="state-cell">
         <ds-funnel-chart
+          *docsLazy
           dataTable="none"
           [data]="allZerosStages()" />
 
@@ -368,6 +387,7 @@
 
       <div class="state-cell">
         <ds-funnel-chart
+          *docsLazy
           caption="Nothing to be a share of — the percentage column reads an em dash"
           dataTable="none"
           [data]="zeroFirstStageStages()" />
@@ -381,6 +401,7 @@
 
       <div class="state-cell">
         <ds-funnel-chart
+          *docsLazy
           dataTable="none"
           error
           [data]="specimenStages()" />

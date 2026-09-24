@@ -9,8 +9,11 @@
 // one invalidates the style of every element that could inherit it — the whole document, every
 // frame. And the phase-lock buys no viewport anchoring anyway, because `mask-position` measures
 // from the host's own box.
+//
+// `!important`, because the travel is declared as `[_nghost-…]::after`, which outranks
+// `ds-skeleton::after` whatever the order.
 @media (prefers-reduced-motion: reduce) {
   ds-skeleton::after {
-    animation: none;
+    animation: none !important;
   }
 }

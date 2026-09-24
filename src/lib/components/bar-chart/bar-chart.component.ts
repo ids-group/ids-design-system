@@ -9,7 +9,6 @@ import {
   input,
   numberAttribute,
   output,
-  signal,
 } from '@angular/core';
 import {
   CHART_SERIES_COLORS,
@@ -18,8 +17,8 @@ import {
   formatPercent,
   describeShare,
   shareOfTotal,
-  focusMark,
-  nextRovingIndex,
+  rovingMarks,
+  leaveMark,
   staggerDelay,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
@@ -93,6 +92,8 @@ function segmentsOf(
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BarChartComponent {
+  protected readonly leaveMark = leaveMark;
+
   /** One row per bar, drawn in the order given. */
   readonly data = input.required<readonly BarChartRow[]>();
 
@@ -219,31 +220,22 @@ export class BarChartComponent {
   ): void {
     this.rowClicked.emit(payload);
     if (this.pinOnClick()) {
-      this.activeMark.pin(index, event, '.track');
+      this.activeMark.pin(index, event, '.fill');
     }
   }
-  /** One tab stop per chart, not one per mark: WCAG 2.1.1's Understanding is explicit that not
-   *  every mouse-operable control has to be separately focusable, and that is what keeps a
-   *  twenty-five mark chart from being twenty-five stops in the page's tab order. */
-  protected readonly rovingIndex = signal(0);
-
-  protected readonly tabStopIndex = computed(() =>
-    Math.min(this.rovingIndex(), Math.max(0, this.rows().length - 1)),
-  );
+  protected readonly roving = rovingMarks(() => this.rows().length);
 
   protected onMarkFocus(index: number, event: FocusEvent): void {
-    this.rovingIndex.set(index);
-    this.activeMark.enter(index, event, '.track');
+    this.roving.focus(index);
+    this.activeMark.enter(index, event, '.fill');
   }
 
   protected onMarkNavigation(event: KeyboardEvent, index: number): void {
-    const next = nextRovingIndex(event.key, index, this.rows().length);
-    if (next === null) {
-      return;
-    }
-    event.preventDefault();
-    this.rovingIndex.set(next);
-    focusMark((event.currentTarget as Element).closest('.rows'), next);
+    this.roving.navigate(
+      event,
+      index,
+      (event.currentTarget as Element).closest('.rows'),
+    );
   }
 
   protected readonly tooltipContext = computed<ChartTooltipContext | null>(
@@ -251,6 +243,24 @@ export class BarChartComponent {
       const entry = this.rows()[this.activeMark.index()];
       if (this.tooltip() === 'none' || !entry) {
         return null;
+      }
+
+      // A segmented bar draws several readings the row label cannot name, so the row heads the
+      // panel and each segment gets its own line. Repeating the label the pointer is already on
+      // would tell the reader nothing.
+      if (entry.segments.length) {
+        const values = entry.segments.map((part) => part.segment.value);
+
+        return {
+          category: entry.row.label,
+          entries: entry.segments.map((part, partIndex) => ({
+            label: part.segment.label,
+            value: part.segment.value,
+            formatted: part.formattedValue,
+            color: part.color,
+            detail: describeShare(values, partIndex),
+          })),
+        };
       }
 
       return {

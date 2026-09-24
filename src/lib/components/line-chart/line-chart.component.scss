@@ -9,6 +9,8 @@
 // from the element a property is declared on or inherited by.
 :host {
   --_line-chart-plot-height: var(--ds-line-chart-plot-height, 240px);
+  --_line-chart-skeleton-height: var(--ds-line-chart-placeholder-height, var(--_line-chart-plot-height));
+  --_line-chart-message-height: var(--ds-line-chart-placeholder-height, var(--_line-chart-view-height));
 }
 
 .line-chart {
@@ -38,7 +40,7 @@
   margin: 0;
 }
 
-@include chart-frame.message-box(var(--_line-chart-view-height), true);
+@include chart-frame.message-box(var(--_line-chart-message-height), true);
 
 // The container and the series mark draw the plot, so every hook of this chart's own reaches them
 // by re-pointing the shared name on the element that owns the rule. Declared on the figure and

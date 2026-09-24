@@ -40,6 +40,12 @@ import { DS_VERSION } from '../shared/docs-stats';
 const STORAGE_KEY = 'ds-docs-sidebar-collapsed';
 const CHAPTER_LINE_SLACK_PX = 2;
 
+// Past the 3s timer that resolves any section the reader never scrolled to, plus room for the
+// bodies to lay out.
+const ANCHOR_SETTLE_MS = 12000;
+const ANCHOR_SETTLE_INTERVAL_MS = 120;
+const ANCHOR_SETTLE_SLACK_PX = 4;
+
 @Component({
   selector: 'app-sidebar',
   standalone: true,
@@ -327,7 +333,9 @@ export class SidebarComponent {
 
   // On initial mount, jump to the section named by the URL's anchor segment.
   private scrollToAnchorOnLoad(): void {
-    this.scrollToAnchor(this.anchorFromUrl(this.router.url));
+    const anchor = this.anchorFromUrl(this.router.url);
+    this.scrollToAnchor(anchor);
+    this.holdAnchorWhileContentGrows(anchor);
     // A `#chapter` fragment is finer-grained than the section, so it wins — but the chapters are
     // published after render, so wait for them rather than reading an empty list.
     const wanted = this.initialChapter;
@@ -345,6 +353,51 @@ export class SidebarComponent {
       },
       { injector: this.injector },
     );
+  }
+
+  /** A chart builds only once it is on screen, and until then it stands at its placeholder
+   *  height - so the charts that build around a deep link's target can move it after the first
+   *  scroll. Re-aims until the target is sitting under the topbar, and lets a real gesture take
+   *  over at any point. */
+  private holdAnchorWhileContentGrows(anchor: string): void {
+    const main = this.layoutScroll.scroller() as HTMLElement | null;
+    if (!anchor || !main) {
+      return;
+    }
+    const stop = (): void => {
+      window.clearInterval(timer);
+      window.clearTimeout(deadline);
+      for (const name of ['wheel', 'touchstart', 'keydown']) {
+        main.removeEventListener(name, stop);
+      }
+    };
+    const settled = (): boolean => {
+      const section = this.document.querySelector(
+        `[data-anchor="${anchor}"]`,
+      ) as HTMLElement | null;
+      if (!section) {
+        return false;
+      }
+      const offset =
+        section.getBoundingClientRect().top - main.getBoundingClientRect().top;
+
+      return (
+        Math.abs(offset - this.computeTopbarHeight()) <= ANCHOR_SETTLE_SLACK_PX
+      );
+    };
+    const timer = window.setInterval(() => {
+      if (settled()) {
+        stop();
+
+        return;
+      }
+      this.scrollToAnchor(anchor);
+    }, ANCHOR_SETTLE_INTERVAL_MS);
+    const deadline = window.setTimeout(stop, ANCHOR_SETTLE_MS);
+    for (const name of ['wheel', 'touchstart', 'keydown']) {
+      main.addEventListener(name, stop, { passive: true });
+    }
+    this.destroyRef.onDestroy(stop);
   }
 
   // Scroll main to `anchor`'s section and mark it active. Returns false when the

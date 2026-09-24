@@ -389,11 +389,16 @@
       width: var(--space-10);
     }
 
-    /* Opens like ds-accordion, on the same 0fr -> 1fr grid track: height 0 -> auto cannot
-       interpolate, and this can. A keyframe rather than a transition because the row is inserted
-       when it opens, and there is no previous state for a transition to run from. */
     .expand-panel-cell {
       padding: var(--_table-cell-padding-top) var(--_table-cell-padding-right) var(--_table-cell-padding-bottom) var(--_table-cell-padding-left);
+    }
+
+    /* Opens like ds-accordion, on the same 0fr -> 1fr grid track: height 0 -> auto cannot
+       interpolate, and this can. A keyframe rather than a transition because the row is inserted
+       when it opens, and there is no previous state for a transition to run from. The grid is on a
+       wrapper inside the cell: a `td` whose display is not `table-cell` leaves the table layout
+       and its `colspan` with it. */
+    .expand-panel-inner {
       display: grid;
       grid-template-rows: 1fr;
       animation: ds-table-expand var(--duration-base) var(--ease-standard);
@@ -403,7 +408,7 @@
       }
     }
 
-    .expand-panel-inner {
+    .expand-panel-content {
       overflow: hidden;
       min-height: 0;
     }

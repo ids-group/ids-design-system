@@ -4,7 +4,6 @@
 @use '../../styles/chart-motion' as chart-motion;
 @include chart-motion.fades-in('.series-line');
 @include chart-motion.fades-in('.series-area');
-@include chart-motion.fades-in('.series-marker');
 @include chart-frame.no-bounding-box-focus('.series-marker');
 
 
@@ -41,6 +40,21 @@
   stroke-width: var(--_chart-line-width-bold);
 }
 
+/* Under the line, never around it: a stroke on the line itself would be clipped by its own dash
+   pattern, and a dashed line would lose the band exactly where it crosses a column. */
+.series-halo {
+  fill: none;
+  stroke: var(--surface-default);
+  stroke-width: calc(var(--_chart-line-width) + var(--_chart-line-outline, 3px));
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+
+.series-halo.is-dimmed {
+  opacity: 0;
+}
+
 .series-line {
   fill: none;
   stroke-width: var(--_chart-line-width);
@@ -51,6 +65,14 @@
 
 .series-marker {
   r: var(--_chart-dot-radius);
+}
+
+/* The dot takes the band too: outlining the line and leaving its readings bare makes the markers
+   read as a different series where they cross a column. */
+.lines.is-outlined .series-marker {
+  stroke: var(--surface-default);
+  stroke-width: var(--_chart-line-outline, 3px);
+  paint-order: stroke;
 }
 
 .series-marker.ghost {

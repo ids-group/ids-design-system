@@ -18,6 +18,7 @@
   </p>
 
   <ds-line-chart
+    *docsLazy
     caption="Sessions and signups by month"
     dataTable="none"
     [categories]="specimenCategories()"
@@ -47,6 +48,7 @@
   </p>
 
   <ds-line-chart
+    *docsLazy
     caption="Sessions and signups by month"
     dataTable="none"
     [categories]="specimenCategories()"
@@ -81,6 +83,7 @@
   <div class="states states--cols-2">
     <div class="state-cell">
       <ds-line-chart
+        *docsLazy
         caption="Deliveries a month, by tier"
         dataTable="none"
         stack="stacked"
@@ -98,6 +101,7 @@
 
     <div class="state-cell">
       <ds-line-chart
+        *docsLazy
         caption="The same tiers as a share of each month"
         dataTable="none"
         stack="normalized"
@@ -142,6 +146,7 @@
   <div class="states states--cols-3">
     <div class="state-cell">
       <ds-line-chart
+        *docsLazy
         caption="Straight between the readings"
         dataTable="none"
         curve="linear"
@@ -159,6 +164,7 @@
 
     <div class="state-cell">
       <ds-line-chart
+        *docsLazy
         caption="The rate holds until the day it moves"
         dataTable="none"
         curve="step"
@@ -176,6 +182,7 @@
 
     <div class="state-cell">
       <ds-line-chart
+        *docsLazy
         caption="Eased through the readings, with no invented trough"
         dataTable="none"
         curve="smooth"
@@ -214,6 +221,7 @@
   <div class="states states--cols-2">
     <div class="state-cell">
       <ds-line-chart
+        *docsLazy
         caption="Wednesday has no reading — the line stops and picks up again"
         dataTable="none"
         gaps="break"
@@ -231,6 +239,7 @@
 
     <div class="state-cell">
       <ds-line-chart
+        *docsLazy
         caption="The same missing Wednesday, read as a zero"
         dataTable="none"
         gaps="zero"
@@ -277,6 +286,7 @@
   <div class="states states--cols-2">
     <div class="state-cell">
       <ds-line-chart
+        *docsLazy
         caption="Right axis to 5%"
         dataTable="none"
         yAxisLabel="Sessions"
@@ -292,6 +302,7 @@
 
     <div class="state-cell">
       <ds-line-chart
+        *docsLazy
         caption="The same readings, right axis to 12%"
         dataTable="none"
         yAxisLabel="Sessions"
@@ -324,6 +335,7 @@
   </p>
 
   <ds-line-chart
+    *docsLazy
     caption="Sessions against conversion rate, aligned secondary axis"
     dataTable="none"
     yAxisMode="aligned"
@@ -344,6 +356,7 @@
   </p>
 
   <ds-line-chart
+    *docsLazy
     caption="Sessions against conversion rate, exact secondary axis"
     dataTable="none"
     yAxisMode="exact"
@@ -365,6 +378,7 @@
   </p>
 
   <ds-line-chart
+    *docsLazy
     caption="Each axis scaled and gridded on its own, the secondary dashed"
     dataTable="none"
     yAxisMode="dual-grid"
@@ -386,6 +400,7 @@
   </p>
 
   <ds-line-chart
+    *docsLazy
     caption="Two plots sharing one category axis, labelled under the lower plot only"
     dataTable="none"
     yAxisMode="split"
@@ -406,6 +421,7 @@
   </p>
 
   <ds-line-chart
+    *docsLazy
     dataTable="none"
     [categories]="markersCategories()"
     [series]="markersSeries()"
@@ -429,6 +445,7 @@
   </p>
 
   <ds-line-chart
+    *docsLazy
     caption="A series with area on, filling down to its axis baseline"
     dataTable="none"
     [categories]="areaFillCategories()"
@@ -449,6 +466,7 @@
   </p>
 
   <ds-line-chart
+    *docsLazy
     caption="Thirty-six days — every third category label is drawn"
     dataTable="none"
     [categories]="manyCategories()"
@@ -475,6 +493,7 @@
   <div class="states states--cols-2">
     <div class="state-cell">
       <ds-line-chart
+        *docsLazy
         dataTable="none"
         [categories]="tickCategories()"
         [series]="tickSeries()" />
@@ -486,6 +505,7 @@
 
     <div class="state-cell">
       <ds-line-chart
+        *docsLazy
         dataTable="none"
         tickCount="3"
         [categories]="tickCategories()"
@@ -519,6 +539,7 @@
   <div class="states states--cols-2">
     <div class="state-cell">
       <ds-line-chart
+        *docsLazy
         dataTable="none"
         [categories]="pinnedAxisCategories()"
         [series]="pinnedAxisLowSeries()" />
@@ -530,6 +551,7 @@
 
     <div class="state-cell">
       <ds-line-chart
+        *docsLazy
         dataTable="none"
         [max]="5000"
         [categories]="pinnedAxisCategories()"
@@ -547,6 +569,7 @@
   </p>
 
   <ds-line-chart
+    *docsLazy
     caption="max = 100, against data that goes past it"
     dataTable="none"
     [max]="100"
@@ -567,6 +590,7 @@
   </p>
 
   <ds-line-chart
+    *docsLazy
     dataTable="none"
     staggerMs="80"
     [categories]="staggerCategories()"
@@ -585,9 +609,18 @@
       noVisibleSeriesText
     </code> is what the plot
     says then; it keeps the plot's height either way, so the page does not jump.
+    The loading skeleton and the empty and error boxes take
+    <code class="t-mono-inline">
+      --ds-line-chart-placeholder-height
+    </code> when
+    it is set, so they can be sized apart from the plot, which reads only
+    <code class="t-mono-inline">
+      --ds-line-chart-plot-height
+    </code>.
   </p>
 
   <ds-line-chart
+    *docsLazy
     legendFilters
     dataTable="none"
     noVisibleSeriesText="Pick a series in the legend to see it plotted"
@@ -613,6 +646,7 @@
   </p>
 
   <ds-line-chart
+    *docsLazy
     caption="The annex table, collapsed until asked for"
     dataTable="toggle"
     [categories]="dataTableCategories()"
@@ -658,6 +692,7 @@
   </p>
 
   <ds-line-chart
+    *docsLazy
     caption="Sessions and signups — every reading is a control"
     dataTable="none"
     interactive
@@ -692,6 +727,7 @@
   <div class="states states--cols-2">
     <div class="state-cell">
       <ds-line-chart
+        *docsLazy
         caption="Colour alone separates the series"
         dataTable="none"
         [categories]="patternCategories()"
@@ -704,6 +740,7 @@
 
     <div class="state-cell">
       <ds-line-chart
+        *docsLazy
         caption="Shape separates them too"
         dataTable="none"
         patterns
@@ -741,6 +778,7 @@
   <div class="states states--cols-2">
     <div class="state-cell">
       <ds-line-chart
+        *docsLazy
         caption="One series at a time"
         dataTable="none"
         dimOthers
@@ -756,6 +794,7 @@
 
     <div class="state-cell">
       <ds-line-chart
+        *docsLazy
         caption="Any combination of series"
         dataTable="none"
         legendFilters
@@ -798,6 +837,7 @@
   <div class="states states--cols-2">
     <div class="state-cell">
       <ds-line-chart
+        *docsLazy
         caption="Hiding a series leaves the axis where it was"
         dataTable="none"
         legendFilters
@@ -812,6 +852,7 @@
 
     <div class="state-cell">
       <ds-line-chart
+        *docsLazy
         caption="Hiding a series re-scales the axis to what is left"
         dataTable="none"
         legendFilters
@@ -850,6 +891,7 @@
     <div class="states states--cols-2">
       <div class="state-cell">
         <ds-line-chart
+          *docsLazy
           dataTable="none"
           [categories]="emptyCategories()"
           [series]="emptySeries()" />
@@ -865,6 +907,7 @@
 
       <div class="state-cell">
         <ds-line-chart
+          *docsLazy
           dataTable="none"
           loading
           [categories]="loadingCategories()"
@@ -881,6 +924,7 @@
 
       <div class="state-cell">
         <ds-line-chart
+          *docsLazy
           dataTable="none"
           error
           [categories]="emptyCategories()"
@@ -893,6 +937,7 @@
 
       <div class="state-cell">
         <ds-line-chart
+          *docsLazy
           caption="A single series carries no legend, and the axes are still drawn"
           dataTable="none"
           [categories]="oneSeriesCategories()"
@@ -909,6 +954,7 @@
 
       <div class="state-cell">
         <ds-line-chart
+          *docsLazy
           dataTable="none"
           error
           [categories]="specimenCategories()"

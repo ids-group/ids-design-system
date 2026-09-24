@@ -1,5 +1,24 @@
 import { InjectionToken, Signal } from '@angular/core';
 import type { ChartAxis } from '@ids-group-ltd/ids-design-system/core';
+import type {
+  ChartTooltipContext,
+  ChartTooltipEntry,
+  ChartTooltipOrigin,
+} from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
+
+/** What a mark hands the container so the container can open the panel for it. The mark decides
+ *  WHAT the panel says and WHERE it points; the container decides that there is one, which is what
+ *  keeps a plot from opening two. */
+export interface ChartTooltipSource {
+  readonly context: Signal<ChartTooltipContext | null>;
+  readonly origin: Signal<ChartTooltipOrigin | null>;
+  /** Flips the panel under the mark, for a held reading whose own value label sits above it. */
+  readonly preferBelow?: Signal<boolean>;
+  /** What this mark reads at the category the cursor is on, whatever its own tooltip setting. A
+   *  category panel names every series at that category, and a mark that answers per-mark still
+   *  belongs in it. */
+  readonly axisEntries?: Signal<readonly ChartTooltipEntry[]>;
+}
 
 /** The drawable rectangle inside `ds-chart`, in CSS pixels: the container measures itself and
  *  sizes its `viewBox` so one user unit is one pixel. A length written into a mark is therefore
@@ -21,6 +40,10 @@ export interface ChartPlot {
 export interface ChartScales {
   readonly categories: Signal<readonly string[]>;
   readonly plot: Signal<ChartPlot>;
+  /** Whether the plot has its real width yet. Until it does, the scales describe a stand-in width
+   *  that the first measurement replaces, so a mark that waits for this builds its geometry once
+   *  instead of twice. Absent means always measured. */
+  readonly measured?: Signal<boolean>;
   /** The CENTRE of a category's band. A mark with a width of its own subtracts half of
    *  `bandWidth` to reach its leading edge. */
   readonly xPosition: Signal<(index: number) => number>;
@@ -58,6 +81,10 @@ export interface ChartScales {
   reportDomain(id: string, values: readonly number[], axis?: ChartAxis): void;
   /** Withdraws a contribution, which a mark does in `ngOnDestroy`. */
   releaseDomain(id: string): void;
+  /** Offers the container a panel to open while this mark is the active one. Reporting again with
+   *  the same id replaces the offer. */
+  reportTooltip(id: string, source: ChartTooltipSource): void;
+  releaseTooltip(id: string): void;
 }
 
 export const CHART_SCALES = new InjectionToken<ChartScales>('CHART_SCALES');

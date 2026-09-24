@@ -1,4 +1,10 @@
-import { Component, ViewEncapsulation, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ViewEncapsulation,
+  computed,
+  signal,
+} from '@angular/core';
 import {
   ChartComponent,
   ColumnSeriesComponent,
@@ -13,11 +19,14 @@ import type {
   LineSeriesData,
 } from 'ds/chart';
 import { ChartDataTableComponent } from 'ds/chart-data-table';
+import { ChartLegendComponent } from 'ds/chart-legend';
+import type { ChartLegendItem } from 'ds/chart-legend';
 import type { ChartDataRow } from 'ds/chart-data-table';
-import { ButtonComponent } from 'ds/button';
-import { ChartTooltipDirective } from 'ds/chart-tooltip';
 import type { ChartThreshold } from 'ds/core';
+import { RadioComponent, RadioGroupComponent } from 'ds/radio-group';
+import { SwitchComponent } from 'ds/switch';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
+import { DocsLazyDirective } from '../../../shared/docs-lazy.directive';
 
 const LATENCY_NOTES: readonly ChartAnnotation[] = [
   { categoryIndex: 4, value: 480, label: 'Cache eviction' },
@@ -102,18 +111,22 @@ const TRAFFIC_SERIES: readonly LineSeriesData[] = [
   selector: 'section-charts-chart',
   standalone: true,
   imports: [
-    ButtonComponent,
+    DocsLazyDirective,
+    RadioComponent,
+    RadioGroupComponent,
     ChartComponent,
     ChartDataTableComponent,
-    ChartTooltipDirective,
+    ChartLegendComponent,
     ColumnSeriesComponent,
     DocsSectionComponent,
     LineSeriesComponent,
     ReferenceLabelComponent,
     ReferenceLineComponent,
     SeriesAnnotationComponent,
+    SwitchComponent,
   ],
   encapsulation: ViewEncapsulation.Emulated,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './chart.section.html',
   styleUrls: ['../../../shared/section-demo.scss', './chart.section.scss'],
 })
@@ -132,8 +145,24 @@ export class ChartSection {
   protected readonly basketSeries = BASKET_SERIES;
   protected readonly columnAxisColor = 'var(--ds-chart-series-1-color)';
   protected readonly lineAxisColor = 'var(--ds-chart-series-4-color)';
-  /** Which series the legend has singled out, so `highlighted` has something to follow. */
-  protected readonly singledOut = signal<string | null>(null);
+  /** `'all'` rather than `null`, because a radio group always has one answer selected. */
+  protected readonly singledOutChoice = signal<unknown>('all');
+  protected readonly singledOut = computed(() => {
+    const choice = this.singledOutChoice();
+
+    return typeof choice === 'string' && choice !== 'all' ? choice : null;
+  });
+
+  protected readonly ordersLegend: readonly ChartLegendItem[] = [
+    { id: 'orders', label: 'Orders', color: 'var(--ds-chart-series-1-color)' },
+    {
+      id: 'basket',
+      label: 'Average order value',
+      color: 'var(--ds-chart-series-4-color)',
+    },
+  ];
+  protected readonly legendHighlighted = signal<string | null>(null);
+  protected readonly lineOutline = signal(true);
 
   protected readonly trafficSeries = TRAFFIC_SERIES;
   protected readonly seriesDashes = ['none', '7 4'];

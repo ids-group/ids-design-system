@@ -140,6 +140,9 @@ Every entry below names its exported class (`ButtonComponent`, `TableComponent<T
 checkbox, radio, radio-group, switch, slider, segmented, OTP): `label`, `hint`, `error`, `warning`,
 `errors`, `invalid`, `touched`, `reserveMessage` — and one message line under the control that renders
 whichever of them wins. The ladder is error → errors → warning → advisory errors → success → hint.
+Every field control also has `focus(options?)` and `blur()`. `blur()` drops focus from whichever
+descendant holds it and leaves a portaled panel alone; `ds-autocomplete.clear()` keeps focus on
+purpose, so a host that navigates away calls `clear()` then `blur()`.
 
 `error`, `warning` and `success` lead that line with a glyph; `hint` does not, because it is the resting
 text rather than a state. Retune app-wide with `DS_CONFIG.field.stateIcons` (per state, independent —
@@ -218,6 +221,7 @@ Multi-line counterpart to `<ds-input>` — same wrapper/states, reuses the `--ds
 Inputs: `value: model<string>`, `size: 'sm' | 'md' | 'lg' = 'md'`, `label`, `hint`, `placeholder`, `disabled`, `invalid`, `required`, `optional: boolean = false`, `name`, `rows: number = 3`
 Tokens: same `--ds-input-*` family as `<ds-input>` (textarea overrides `--ds-input-padding-y` to `--space-3` for vertical breathing room).
 New: `autosize: boolean = false` (grows with content; forces `resize='none'`), `minRows`/`maxRows: number | null = null`, `resize: 'none' | 'vertical' | 'horizontal' | 'both' = 'vertical'`.
+Methods: `focus(options?)`, `selectionStart` / `selectionEnd` (reads), `setSelectionRange(start, end, direction?)`, `select()` - all forwarded to the native `<textarea>`, so an editor toolbar never queries the component's DOM. A value written through `value` lands a microtask later and moves the caret to the end; set a range after `value.set(...)` from a `setTimeout`.
 
 <!-- inputs:ds-textarea -->
 All inputs: `hint: string = ''`, `error: string = ''`, `warning: string = ''`, `reserveMessage: boolean | null = null`, `messageIcon: IconName | false | null = null`, `errors: readonly DsFieldError[] = []`, `invalid: boolean = false`, `touched: boolean = false`, `hidden: boolean = false`, `value: string = ''`, `size: 'sm' | 'md' | 'lg' = null`, `label: string = ''`, `placeholder: string = ''`, `disabled: boolean = false`, `readOnly: boolean = false`, `readonlyBinding: boolean = false`, `success: string = ''`, `required: boolean = false`, `optional: boolean = false`, `rows: number = 3`, `name: string | null = null`, `autosize: boolean = false`, `minRows: number | null = null`, `maxRows: number | null = null`, `resize: 'none' | 'vertical' | 'horizontal' | 'both' = 'vertical'`, `ariaLabel: string | null = null`, `maxLength: number | null = null`, `minLength: number | null = null`, `pattern: readonly RegExp[] = []`
@@ -248,10 +252,12 @@ All inputs: `hint: string = ''`, `error: string = ''`, `warning: string = ''`, `
 <!-- /inputs -->
 
 #### `<ds-switch>` — `SwitchComponent`
-Inputs: `checked: model<boolean>`, `disabled: boolean = false`, `name: string | null = null`, `variant: 'default' | 'success' | 'error' = 'default'`, `inputId: string | null = null`
+Inputs: `checked: model<boolean>`, `disabled: boolean = false`, `name: string | null = null`, `variant: 'default' | 'success' | 'error' = 'default'`, `inputId: string | null = null`, `controlled: boolean = false`
+Outputs: `(checkedRequested): boolean` - only when `controlled`: the value the user asked for; the switch waits for `[checked]` to change.
+Controlled: `<ds-switch controlled [checked]="paused()" (checkedRequested)="askPause($event)" />` - a click cancels the native toggle instead of flipping, so a confirm dialog can run first and a cancelled one leaves the track untouched. Off by default; the switch flips on every toggle as before.
 
 <!-- inputs:ds-switch -->
-All inputs: `hint: string = ''`, `error: string = ''`, `warning: string = ''`, `reserveMessage: boolean | null = null`, `messageIcon: IconName | false | null = null`, `errors: readonly DsFieldError[] = []`, `invalid: boolean = false`, `touched: boolean = false`, `hidden: boolean = false`, `checked: boolean = false`, `disabled: boolean = false`, `name: string | null = null`, `variant: 'default' | 'success' | 'error' = 'default'`, `inputId: string | null = null`, `size: 'sm' | 'md' | 'lg' = null`, `required: boolean = false`, `label: string = ''`, `ariaLabel: string | null = null`
+All inputs: `hint: string = ''`, `error: string = ''`, `warning: string = ''`, `reserveMessage: boolean | null = null`, `messageIcon: IconName | false | null = null`, `errors: readonly DsFieldError[] = []`, `invalid: boolean = false`, `touched: boolean = false`, `hidden: boolean = false`, `checked: boolean = false`, `disabled: boolean = false`, `name: string | null = null`, `variant: 'default' | 'success' | 'error' = 'default'`, `inputId: string | null = null`, `size: 'sm' | 'md' | 'lg' = null`, `required: boolean = false`, `label: string = ''`, `ariaLabel: string | null = null`, `controlled: boolean = false`
 <!-- /inputs -->
 
 #### The picker family — `<ds-select>`, `<ds-multi-select>`, `<ds-autocomplete>`
@@ -305,7 +311,7 @@ All inputs: `hint: string = ''`, `error: string = ''`, `warning: string = ''`, `
 Pre-styled search input with built-in icon. A form control, but not a field: no label, no message row.
 Inputs: `value: model<string>`, `placeholder: string = 'Search'`, `shortcut: string = ''` (rendered as a hint pill, e.g. `⌘K`), `showIcon: boolean = true`, `clearable: boolean = false`, `ariaLabel: string = ''`, `disabled: boolean = false`, `hidden: boolean = false`, `size: DsSize | null = null`, `debounce: number = 0` (ms held before `value` updates; clearing, Enter and `clear()` all skip the timer)
 Output: `(submitted): string` — emits the current value on Enter / form submit
-Methods: `clear()` — empties the field, drops an armed keystroke and publishes `''` at once, which writing `''` into `value` does not; `focus()`.
+Methods: `clear()` — empties the field, drops an armed keystroke and publishes `''` at once, which writing `''` into `value` does not; `focus()`, `blur()`.
 Binds through `NG_VALUE_ACCESSOR`, taking the value plumbing without the field-message layer — so `hint` / `error` / `warning` / `errors` / `invalid` / `touched` / `reserveMessage` / `messageIcon` are NOT inputs here.
 
 <!-- inputs:ds-search -->
@@ -677,11 +683,11 @@ All inputs: `steps: readonly string[] = []`, `current: number = 0`, `labelPositi
 <!-- /inputs -->
 
 #### `<ds-pagination>` — `PaginationComponent`
-Inputs: `total: required number`, `pageSize: model<number> = 10`, `currentPage: model<number> = 1`, `pageSizeOptions: number[] = [10, 25, 50, 100]`, `showLabel: boolean = true`, `size: DsSize | null = null` (unset resolves `DS_CONFIG.control.size`, then `sm`), `layout: PaginationLayout = 'grouped'` (`'grouped' | 'spread'`; `'spread'` gives the nav full width and pushes the label and the controls to opposite edges)
+Inputs: `total: required number`, `pageSize: model<number> = 10`, `currentPage: model<number> = 1`, `pageSizeOptions: number[] = [10, 25, 50, 100]`, `showLabel: boolean = true`, `size: DsSize | null = null` (unset resolves `DS_CONFIG.pagination.size`, then `DS_CONFIG.control.size`, then `sm`), `layout: PaginationLayout | null = null` (`'grouped' | 'spread'`; unset resolves `DS_CONFIG.pagination.layout`, then `'grouped'`; `'spread'` gives the nav full width and pushes the label and the controls to opposite edges), `loading: boolean = false` (every control disables, the range label is masked with a `ds-skeleton` so a stale `total` is never quoted, and the nav reports `aria-busy`). Inside `ds-table` `size` and `layout` arrive as `paginationSize` / `paginationLayout`, and `loading` is set from `loading="skeleton"`.
 Outputs: `(currentPageChange): number`, `(pageSizeChange): number`
 
 <!-- inputs:ds-pagination -->
-All inputs: `total: required number`, `pageSize: number = 10`, `currentPage: number = 1`, `pageSizeOptions: number[]`, `showLabel: boolean = true`, `showPageSize: boolean = true`, `size: 'sm' | 'md' | 'lg' = null`, `layout: 'grouped' | 'spread' = 'grouped'`
+All inputs: `total: required number`, `pageSize: number = 10`, `currentPage: number = 1`, `pageSizeOptions: number[]`, `showLabel: boolean = true`, `showPageSize: boolean = true`, `size: 'sm' | 'md' | 'lg' = null`, `layout: 'grouped' | 'spread' = null`, `loading: boolean = false`
 <!-- /inputs -->
 
 #### `<ds-divider>` — `DividerComponent`
@@ -828,13 +834,14 @@ Inputs: `data: required readonly T[]`, `columns: required readonly TableColumn<T
 Outputs: `(rowClicked): T`, `(sortChange): SortChangeEvent` (`{ key, dir }`)
 Column shape: `{ key: string, label: string, sortable?: boolean, align?: 'left' | 'right' | 'center', cell?: (row: T) => string }`
 Opening a row: give one column `link: (row) => <route target> | null` and its value renders as a real `<a>` — visible without hovering, in the tab order as a link, and Ctrl/Cmd-clickable, none of which a clickable `<tr>` can do. `null` for a row leaves that cell as plain text, so a partly-reachable list stays one column; external URLs go through a `[dsCellTemplate]` instead, since `link` takes Angular route targets only. It composes with `rowInteractive` (the link stops its click from reaching the row), but the two together cost **two tab stops per row** — on a long list prefer the link alone. `interactive: true` only tints a cell on row hover, which a keyboard or touch user never sees; prefer `link` wherever the row actually leads somewhere.
-Cell templates: `<ng-template dsCellTemplate="<colKey>" let-row>…</ng-template>` — `row` is typed `unknown`, narrow via a helper method on the host.
+Cell templates: `<ng-template dsCellTemplate="<colKey>" [dsCellTemplateOf]="rows" let-row>…</ng-template>` — bound to the same rows as `[data]`, `dsCellTemplateOf` types `row` as `T` under strict templates (a field typo is a compile error) and is never read at runtime. Without it `row` is `unknown`; narrow via a helper method on the host. `CellTemplateContext<T>` (`$implicit` and `row`) is exported.
 Content slots: `[empty]` (rendered when `data.length === 0`), `[bulk-actions]` (rendered in the bulk action bar when `selectable && some selected`)
-Loading modes: `'skeleton'` replaces rows with shimmer placeholders driven by the global `--skeleton-shimmer-x` keyframe; `'overlay'` keeps existing rows visible behind a translucent layer with a centred spinner.
+Loading modes: `'skeleton'` replaces rows with shimmer placeholders driven by the global `--skeleton-shimmer-x` keyframe; `'overlay'` keeps existing rows visible behind a translucent layer with a centred spinner; under `'skeleton'` the footer pager takes `loading` as well - its controls disable and its range label is masked, so it never quotes the previous query's count. `'overlay'` leaves the pager live, like the header.
+Footer pager: `pageSizeOptions`, `showPageSize`, `showLabel`, `paginationSize: DsSize | null = null` and `paginationLayout: PaginationLayout | null = null` are the embedded `ds-pagination`'s own inputs forwarded one-to-one; the last two unset resolve `DS_CONFIG.pagination.size` (then `DS_CONFIG.control.size`, then `sm`) and `DS_CONFIG.pagination.layout` (then `'grouped'`), so an app whose every pager wants `md` / `spread` says it once in the config.
 Tokens: `--ds-table-border: var(--border-default)`, `--ds-table-radius: var(--radius-md)`, `--ds-table-bg-color`, `--ds-table-head-text-color: var(--text-secondary)`, `--ds-table-head-bg-color: var(--surface-secondary)`, `--ds-table-head-font-size: var(--font-size-xs)`, `--ds-table-row-hover-bg-color`, `--ds-table-row-selected-bg-color`, `--ds-table-divider`, `--ds-table-sort-active-icon-color`, `--ds-table-cell-padding-x/y`. (Renamed 2026-06: `--ds-table-header-*` → `--ds-table-head-*`, matching the tokens reference.)
 
 <!-- inputs:ds-table -->
-All inputs: `data: required readonly T[]`, `rowId: ((row: T) => string) | null = null`, `columns: required readonly TableColumn<T>[]`, `selectable: boolean = false`, `bordered: boolean | null = null`, `loading: boolean | 'skeleton' | 'overlay' = false`, `stickyHeader: boolean = true`, `maxHeight: string | null = null`, `density: 'default' | 'compact' = 'default'`, `zebra: boolean = false`, `animateHeight: boolean = false`, `selectedIds: Set<string>`, `sortKey: string | null = null`, `sortDirection: 'asc' | 'desc' = null`, `sortingOrder: SortDirection[]`, `sortAnnouncement: (label: string, dir: SortDirection) => string`, `rangeAnnouncement: (first: number, last: number, total: number) => string`, `skeletonRows: number = 5`, `caption: string = ''`, `rowInteractive: boolean = false`, `activeRowId: string | null = null`, `filterQuery: string = ''`, `columnFilters: Map<string, ReadonlySet<string>>`, `persistLayout: boolean = false`, `storageKey: string = ''`, `stickyScrollbar: boolean | null = null`, `pageSize: number | null = null`, `page: number = 1`, `pageSizeOptions: number[]`, `showPageSize: boolean = true`, `showLabel: boolean = true`, `total: number | null = null`, `scrollToTopOnPageChange: boolean = false`, `sortMode: 'client' | 'server' | 'none' = null`, `filterMode: 'client' | 'server' | 'none' = null`, `columnFilterOptions: ReadonlyMap<string, readonly string[]>`, `stickyScrollbarOffset: string | null = null`, `stickyFirstColumn: boolean = false`, `virtualScroll: boolean = false`, `virtualRowSize: number = 44`, `lazy: boolean = false`, `rowActions: readonly TableRowAction<T>[] = []`, `cellTemplateMap: Record<string, TemplateRef<{ $implicit: unknown; row: unknown }>> = {}`, `emptyTemplate: TemplateRef<unknown> | null = null`, `expandableRows: boolean = false`, `expandedIds: Set<string>`, `expandMode: 'multiple' | 'single' = 'multiple'`, `expandAllToggle: boolean = false`, `rowExpandTemplate: TemplateRef<{
+All inputs: `data: required readonly T[]`, `rowId: ((row: T) => string) | null = null`, `columns: required readonly TableColumn<T>[]`, `selectable: boolean = false`, `bordered: boolean | null = null`, `loading: boolean | 'skeleton' | 'overlay' = false`, `stickyHeader: boolean = true`, `maxHeight: string | null = null`, `density: 'default' | 'compact' = 'default'`, `zebra: boolean = false`, `animateHeight: boolean = false`, `selectedIds: Set<string>`, `sortKey: string | null = null`, `sortDirection: 'asc' | 'desc' = null`, `sortingOrder: SortDirection[]`, `sortAnnouncement: (label: string, dir: SortDirection) => string`, `rangeAnnouncement: (first: number, last: number, total: number) => string`, `skeletonRows: number = 5`, `caption: string = ''`, `rowInteractive: boolean = false`, `activeRowId: string | null = null`, `filterQuery: string = ''`, `columnFilters: Map<string, ReadonlySet<string>>`, `persistLayout: boolean = false`, `storageKey: string = ''`, `stickyScrollbar: boolean | null = null`, `pageSize: number | null = null`, `page: number = 1`, `pageSizeOptions: number[]`, `showPageSize: boolean = true`, `showLabel: boolean = true`, `paginationSize: 'sm' | 'md' | 'lg' = null`, `paginationLayout: 'grouped' | 'spread' = null`, `total: number | null = null`, `scrollToTopOnPageChange: boolean = false`, `sortMode: 'client' | 'server' | 'none' = null`, `filterMode: 'client' | 'server' | 'none' = null`, `columnFilterOptions: ReadonlyMap<string, readonly string[]>`, `stickyScrollbarOffset: string | null = null`, `stickyFirstColumn: boolean = false`, `virtualScroll: boolean = false`, `virtualRowSize: number = 44`, `lazy: boolean = false`, `rowActions: readonly TableRowAction<T>[] = []`, `cellTemplateMap: Record<string, TemplateRef<{ $implicit: unknown; row: unknown }>> = {}`, `emptyTemplate: TemplateRef<unknown> | null = null`, `expandableRows: boolean = false`, `expandedIds: Set<string>`, `expandMode: 'multiple' | 'single' = 'multiple'`, `expandAllToggle: boolean = false`, `rowExpandTemplate: TemplateRef<{
     $implicit: unknown;
     row: unknown;
   }> | null = null`
@@ -845,7 +852,7 @@ All inputs: `data: required readonly T[]`, `rowId: ((row: T) => string) | null =
 #### `[dsCellTemplate]` — `CellTemplateDirective`
 
 <!-- inputs:[dsCellTemplate] -->
-All inputs: `dsCellTemplate: required string`
+All inputs: `dsCellTemplate: required string`, `dsCellTemplateOf: readonly T[] | null = null`
 <!-- /inputs -->
 
 #### `<ng-template[dsHeaderFilter]>` — `HeaderFilterDirective`
@@ -1001,7 +1008,7 @@ Colour: series ARE different things, so the categorical palette applies — `--d
 Tokens: `--ds-line-chart-plot-height`, `--ds-line-chart-line-width`, `--ds-line-chart-dot-radius`, `--ds-line-chart-area-opacity`, `--ds-line-chart-swatch-size`, `--ds-line-chart-grid-line-color`, `--ds-line-chart-axis-line-color`, `--ds-line-chart-axis-label-color`, `--ds-line-chart-axis-font-size`, `--ds-line-chart-annotation-color`, `--ds-line-chart-annotation-font-size`, `--ds-line-chart-annotation-font-weight`, `--ds-line-chart-annotation-halo-color`, `--ds-line-chart-annotation-halo-width`.
 
 <!-- inputs:ds-line-chart -->
-All inputs: `categories: required readonly string[]`, `series: required readonly LineChartSeries[]`, `yAxisMode: 'aligned' | 'exact' | 'dual-grid' | 'split' = 'aligned'`, `showMarkers: boolean = true`, `annotations: readonly LineChartAnnotation[] = []`, `interactive: boolean = false`, `pinOnClick: boolean = false`, `dimOthers: boolean = false`, `gaps: 'break' | 'zero' = 'break'`, `curve: 'linear' | 'step' | 'smooth' = 'linear'`, `stack: 'none' | 'stacked' | 'normalized' = 'none'`, `yAxisLabel: string | null = null`, `secondaryAxisLabel: string | null = null`, `tickCount: number = 5`, `frame: 'auto' | 'none' = null`, `tooltipLingerMs: number | null = null`, `caption: string | null = null`, `summary: string | null = null`, `dataTable: 'toggle' | 'visible' | 'none' = null`, `max: number | null = null`, `maxSecondary: number | null = null`, `loading: boolean = false`, `emptyText: string | null = null`, `error: boolean = false`, `errorText: string | null = null`, `valueFormat: ChartValueFormat | null = null`, `hiddenSeries: readonly string[] = []`, `rescaleOnHide: boolean = false`, `legendFilters: boolean = false`, `legendMode: 'toggle' | 'isolate' = 'isolate'`, `noVisibleSeriesText: string = 'All series are hidden'`, `patterns: boolean = false`, `staggerMs: number = 0`, `tooltip: 'item' | 'axis' | 'none' = 'axis'`, `tooltipAnchor: 'point' | 'pointer' = 'point'`
+All inputs: `categories: required readonly string[]`, `series: required readonly LineChartSeries[]`, `yAxisMode: 'aligned' | 'exact' | 'dual-grid' | 'split' = 'aligned'`, `showMarkers: boolean = true`, `outline: boolean = true`, `annotations: readonly LineChartAnnotation[] = []`, `interactive: boolean = false`, `pinOnClick: boolean = false`, `dimOthers: boolean = false`, `gaps: 'break' | 'zero' = 'break'`, `curve: 'linear' | 'step' | 'smooth' = 'linear'`, `stack: 'none' | 'stacked' | 'normalized' = 'none'`, `yAxisLabel: string | null = null`, `secondaryAxisLabel: string | null = null`, `tickCount: number = 5`, `frame: 'auto' | 'none' = null`, `tooltipLingerMs: number | null = null`, `caption: string | null = null`, `summary: string | null = null`, `dataTable: 'toggle' | 'visible' | 'none' = null`, `max: number | null = null`, `maxSecondary: number | null = null`, `loading: boolean = false`, `emptyText: string | null = null`, `error: boolean = false`, `errorText: string | null = null`, `valueFormat: ChartValueFormat | null = null`, `hiddenSeries: readonly string[] = []`, `rescaleOnHide: boolean = false`, `legendFilters: boolean = false`, `legendMode: 'toggle' | 'isolate' = 'isolate'`, `noVisibleSeriesText: string = 'All series are hidden'`, `patterns: boolean = false`, `staggerMs: number = 0`, `tooltip: 'item' | 'axis' | 'none' = 'axis'`, `tooltipAnchor: 'point' | 'pointer' = 'point'`
 <!-- /inputs -->
 
 #### Chart defaults — what `DS_CONFIG` decides once
@@ -1038,19 +1045,21 @@ All inputs: `columns: readonly string[] = []`, `rows: readonly ChartDataRow[] = 
 #### `<ds-chart>` — `ChartComponent`
 
 <!-- inputs:ds-chart -->
-All inputs: `categories: readonly string[] = []`, `tickCount: number = 5`, `min: number | null = null`, `max: number | null = null`, `cursor: 'none' | 'category' = 'none'`, `cursorPin: boolean = false`, `tooltipLingerMs: number | null = null`, `maxSecondary: number | null = null`, `plotHeight: number = 240`, `axisGutter: number = 46`, `valueSpace: number = 20`, `caption: string | null = null`, `interactive: boolean = false`, `summary: string | null = null`, `frame: 'auto' | 'none' = null`, `loading: boolean = false`, `emptyText: string | null = null`, `error: boolean = false`, `errorText: string | null = null`, `valueFormat: ChartValueFormat | null = null`, `secondaryAxisMode: 'aligned' | 'exact' | 'dual-grid' | 'split' = 'aligned'`, `axisColor: string | null = null`, `secondaryAxisColor: string | null = null`, `axisLabel: string | null = null`, `secondaryAxisLabel: string | null = null`
+All inputs: `categories: readonly string[] = []`, `tickCount: number = 5`, `min: number | null = null`, `max: number | null = null`, `cursor: 'none' | 'category' = 'none'`, `cursorPin: boolean = false`, `tooltipLingerMs: number | null = null`, `maxSecondary: number | null = null`, `plotHeight: number = 240`, `axisGutter: number = 46`, `valueSpace: number = 20`, `caption: string | null = null`, `interactive: boolean = false`, `summary: string | null = null`, `frame: 'auto' | 'none' = null`, `loading: boolean = false`, `emptyText: string | null = null`, `error: boolean = false`, `errorText: string | null = null`, `valueFormat: ChartValueFormat | null = null`, `secondaryAxisMode: 'aligned' | 'exact' | 'dual-grid' | 'split' = 'aligned'`, `axisColor: string | null = null`, `secondaryAxisColor: string | null = null`, `axisLabel: string | null = null`, `secondaryAxisLabel: string | null = null`, `tooltipTemplate: TemplateRef<{
+    $implicit: ChartTooltipContext;
+  }> | null = null`, `tooltipExtraGap: number = 0`
 <!-- /inputs -->
 
 #### `<g[dsColumnSeries]>` — `ColumnSeriesComponent`
 
 <!-- inputs:g[dsColumnSeries] -->
-All inputs: `data: readonly ColumnSeriesPoint[] = []`, `showValues: boolean = true`, `interactive: boolean = false`, `pinOnClick: boolean = false`, `dimOthers: boolean = false`, `staggerMs: number = 0`, `partOfWhole: boolean = false`, `tooltip: 'item' | 'none' = 'item'`, `tooltipAnchor: 'mark' | 'cell' = 'mark'`, `tooltipLingerMs: number = 0`, `valueFormat: ChartValueFormat`, `columnWidthRatio: number = 0.8`, `slot: number = 0`, `slotCount: number = 1`, `offsets: readonly ChartStackOffset[] | null = null`, `seriesColor: string | null = null`, `seriesFill: 'solid' | 'hatched' = null`, `seriesLabel: string | null = null`
+All inputs: `data: readonly ColumnSeriesPoint[] = []`, `showValues: boolean = true`, `interactive: boolean = false`, `pinOnClick: boolean = false`, `dimOthers: boolean = false`, `staggerMs: number = 0`, `partOfWhole: boolean = false`, `tooltip: 'item' | 'none' = 'item'`, `tooltipAnchor: 'mark' | 'cell' = 'mark'`, `tooltipLingerMs: number = 0`, `valueFormat: ChartValueFormat`, `columnWidthRatio: number = 0.8`, `slot: number = 0`, `slotCount: number = 1`, `offsets: readonly ChartStackOffset[] | null = null`, `seriesColor: string | null = null`, `seriesFill: 'solid' | 'hatched' = null`, `seriesLabel: string | null = null`, `seriesKey: string | null = null`, `highlighted: string | null = null`
 <!-- /inputs -->
 
 #### `<g[dsLineSeries]>` — `LineSeriesComponent`
 
 <!-- inputs:g[dsLineSeries] -->
-All inputs: `data: readonly LineSeriesData[] = []`, `showMarkers: boolean = true`, `interactive: boolean = false`, `pinOnClick: boolean = false`, `dimOthers: boolean = false`, `highlighted: string | null = null`, `patterns: readonly string[] = []`, `stacked: boolean = false`, `staggerMs: number = 0`, `gaps: 'break' | 'zero' = 'break'`, `curve: 'linear' | 'step' | 'smooth' = 'linear'`, `tooltip: 'item' | 'axis' | 'none' = 'item'`, `tooltipAnchor: 'reading' | 'pointer' = 'reading'`, `tooltipLingerMs: number = 0`, `valueFormat: ChartValueFormat`
+All inputs: `data: readonly LineSeriesData[] = []`, `showMarkers: boolean = true`, `outline: boolean = true`, `interactive: boolean = false`, `pinOnClick: boolean = false`, `dimOthers: boolean = false`, `highlighted: string | null = null`, `patterns: readonly string[] = []`, `stacked: boolean = false`, `staggerMs: number = 0`, `gaps: 'break' | 'zero' = 'break'`, `curve: 'linear' | 'step' | 'smooth' = 'linear'`, `tooltip: 'item' | 'axis' | 'none' = 'item'`, `tooltipAnchor: 'reading' | 'pointer' = 'reading'`, `tooltipLingerMs: number = 0`, `valueFormat: ChartValueFormat`
 <!-- /inputs -->
 
 #### `<g[dsSeriesAnnotation]>` — `SeriesAnnotationComponent`
@@ -1136,7 +1145,7 @@ bootstrapApplication(AppComponent, {
 
 `DsConfig` shape (the exported `DsConfig` type is the full contract):
 
-Twelve sections. The exported `DsConfig` type is the source of truth — each key carries its own
+Eighteen sections. The exported `DsConfig` type is the source of truth — each key carries its own
 doc comment there, including why it is an app-level decision at all.
 
 ```ts
@@ -1152,6 +1161,7 @@ interface DsConfig {
     };
   };
   control?: { size?: DsSize };             // every control on the field-height contract
+  pagination?: { size?: DsSize; layout?: PaginationLayout }; // every pager, ds-table's footer included
   card?: { elevation?: CardElevation; padding?: CardPadding };
   table?: { stickyScrollbar?: boolean; bordered?: boolean };
   modal?: { dividers?: boolean };          // reaches a ModalService confirm, which has no host to bind

@@ -1,9 +1,15 @@
-import { Component, ViewEncapsulation, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ViewEncapsulation,
+  signal,
+} from '@angular/core';
 import { LineChartComponent } from 'ds/line-chart';
 import type { LineChartAnnotation, LineChartSeries } from 'ds/line-chart';
 import { DocsLineChartDataEditorComponent } from '../../../shared/docs-line-chart-data-editor.component';
 import { DocsReplayButtonComponent } from '../../../shared/docs-replay-button.component';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
+import { DocsLazyDirective } from '../../../shared/docs-lazy.directive';
 
 const MANY_CATEGORY_COUNT = 36;
 
@@ -186,12 +192,14 @@ const PINNED_AXIS_LOW_SERIES: readonly LineChartSeries[] = [
   selector: 'section-charts-line-chart',
   standalone: true,
   imports: [
+    DocsLazyDirective,
     DocsReplayButtonComponent,
     DocsLineChartDataEditorComponent,
     DocsSectionComponent,
     LineChartComponent,
   ],
   encapsulation: ViewEncapsulation.Emulated,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './line-chart.section.html',
   styleUrls: ['../../../shared/section-demo.scss', './line-chart.section.scss'],
 })

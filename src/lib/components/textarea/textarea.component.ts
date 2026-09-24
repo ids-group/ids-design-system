@@ -210,4 +210,33 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
   override focus(options?: FocusOptions): void {
     this.control()?.nativeElement.focus(options);
   }
+
+  /** Index of the first selected character of the native textarea; 0 before the view exists. */
+  get selectionStart(): number {
+    return this.control()?.nativeElement.selectionStart ?? 0;
+  }
+
+  /** Index after the last selected character of the native textarea; 0 before the view exists. */
+  get selectionEnd(): number {
+    return this.control()?.nativeElement.selectionEnd ?? 0;
+  }
+
+  /**
+   * Mirrors `HTMLTextAreaElement.setSelectionRange`. Does not move focus - call
+   * `focus()` first when the selection has to be visible. A value written through
+   * `value` reaches the element a microtask later and drops the caret to the end,
+   * so after `value.set(...)` set the range from a `setTimeout`, not synchronously.
+   */
+  setSelectionRange(
+    start: number,
+    end: number,
+    direction?: 'forward' | 'backward' | 'none',
+  ): void {
+    this.control()?.nativeElement.setSelectionRange(start, end, direction);
+  }
+
+  /** Selects the whole text, as `HTMLTextAreaElement.select()` does. */
+  select(): void {
+    this.control()?.nativeElement.select();
+  }
 }

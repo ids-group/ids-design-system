@@ -20,7 +20,7 @@ known `kind`, a locator where one can exist (`searchHints` OR `detect` — a `be
 carry neither), and a `map` only on `value-remap` (full-token convention, see below). A defect in
 ONE item is repaired in place and noted; a missing `action` or detectability field is an
 ENRICHMENT case (next paragraph). Only an unparseable file or a wrong `version` is malformed. If valid, return IT as the plan — cross-check it against the changelog block: you may
-enrich `informational` and APPEND items for documented changes the manifest missed (say so in each
+APPEND to `informational` and APPEND items for documented changes the manifest missed (say so in each
 appended item's `note`), but never silently rewrite the manifest's own items. Manifest missing or
 malformed → derive the plan from the prose block as below.
 
@@ -100,7 +100,12 @@ Pick the kind that lets a downstream agent act mechanically. All specifics come 
   (with user approval), never the applier.
 - **No consumer action?** If a documented breaking/changed item needs NO code edit from the consumer
   (purely visual — e.g. a new press animation or a restyle), do NOT make it an item — list it in
-  `informational` so it's an FYI, not an attempted or manual-review task.
+  `informational` so it's an FYI, not an attempted or manual-review task. Emit it as a bare string
+  unless the changelog line names a layout mechanism (`display`, `grid`, `flex`, `position`,
+  `overflow`, `colspan`, a width, a height, a new wrapper element) — grep and build both stay silent
+  there, so give it `{ "text": "...", "verify": "<one concrete eyeball check>" }` instead of a plain
+  string. This is not a `surface: none` item; `none` still carries a `restore` or a conditional
+  `action`, and an `informational` object exists precisely where neither one does.
 
 **Catch-all — the most important rule.** If you cannot confidently reduce a breaking/changed item
 to one of the mechanical kinds, classify it **`behavior`**. NEVER drop a documented change because
@@ -151,7 +156,8 @@ fields exist so that cannot happen.
 - **`surface`** (every item) — which artifact of the CONSUMER's changes: `"template"`,
   `"typescript"`, `"style"`, `"config"`, or `"none"` when the only action is to look at a screen; an
   array where a change genuinely spans two. Never omit it — a missing surface and a deliberate
-  `none` must not read alike.
+  `none` must not read alike. `none` still carries a `restore` or a conditional `action`; with
+  neither, the change is `informational`.
 - **`detect`** (required on `behavior` / `removed-api` whose surface includes `typescript` or
   `config`; a `style` surface is exempt, since a stylesheet names our tokens verbatim) — the
   shapes to grep for, written the way the CONSUMER writes them rather than the way we name the API:
@@ -195,7 +201,8 @@ Return ONLY a fenced ```json block:
 "detect": [], "verify": "<positive assertion>", "restore": "<snippet | null>",
 "supersedes": ["<version>#<id>"] } ],
 "deleteList": [ { "id", "surface", "find": [], "why", "replaceWith" } ],
-"informational": [ "<one-line summary of each Added/Fixed group>" ]
+"informational": [ "<one-line summary of each Added/Fixed group>" |
+                    { "text": "...", "verify": "<one concrete eyeball check>" } ]
 }
 
 `map` is present ONLY on `value-remap` items; `new` may be null (removals / behavior). `surface` is
@@ -206,5 +213,9 @@ the LATER item that reverses an earlier one) is carried through from the shipped
 emitted from prose ONLY when the block itself names the exact earlier version and change — you
 cannot see earlier plans, so never fabricate the reference; omit the field when unsure. There is
 no `supersededBy` — the link never points forward. `informational` is consumed directly by the orchestrator for
-the final report (no other subagent reads it), and `deleteList` drives its own pass. No preamble, no
-prose outside the JSON block.
+the final report (no other subagent reads it), and `deleteList` drives its own pass. When a shipped
+manifest is passed in, forward each `informational` entry verbatim, object shape included — never
+flatten it back to its `text` alone. A shipped bare string stays a bare string: a `verify` it lacks
+is not an enrichment (the same rule as `pitfall` and `appliesWhen`) - report it with the
+locator-dead set as manifest feedback, so the DS repo adds the check to its own file. No preamble,
+no prose outside the JSON block.
