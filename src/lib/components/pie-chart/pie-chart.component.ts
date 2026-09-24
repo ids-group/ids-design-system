@@ -9,6 +9,7 @@ import {
   input,
   numberAttribute,
   output,
+  signal,
 } from '@angular/core';
 import {
   CHART_SERIES_COLORS,
@@ -220,10 +221,18 @@ export class PieChartComponent {
     this.activeMark.enter(index, event);
   }
 
+  private readonly legendHighlight = signal(-1);
+
   /** A legend item stands for its arc, so it opens the arc's tooltip over the ARC and dims the
    *  other slices — the same state hovering the arc itself produces. */
   protected onLegendEnter(index: number, event: Event): void {
+    this.legendHighlight.set(index);
     this.activeMark.enter(index, event, this.arcAt(event, index));
+  }
+
+  protected onLegendLeave(): void {
+    this.legendHighlight.set(-1);
+    this.activeMark.leave();
   }
 
   protected onLegendFocus(index: number, event: FocusEvent): void {
@@ -251,6 +260,13 @@ export class PieChartComponent {
   }
 
   protected isDimmed(index: number): boolean {
+    // Naming a slice in the legend fades the rest whether or not `dimOthers` is set, the way every
+    // chart legend singles out its series; `dimOthers` governs what a pointer over the ring does.
+    const legendHighlight = this.legendHighlight();
+    if (legendHighlight !== -1) {
+      return legendHighlight !== index;
+    }
+
     return (
       this.dimOthers() &&
       this.activeMark.index() !== -1 &&
