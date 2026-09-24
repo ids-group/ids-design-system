@@ -7,6 +7,7 @@ import {
   computed,
   contentChildren,
   effect,
+  inject,
   input,
   isDevMode,
   signal,
