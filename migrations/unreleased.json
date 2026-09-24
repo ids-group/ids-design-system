@@ -207,8 +207,8 @@
       "new": "--ds-input-label-font-weight",
       "surface": "style",
       "action": "Rewrite `--ds-input-label-fw` to `--ds-input-label-font-weight`, keeping the value.",
-      "appliesWhen": "Only a stylesheet that sets `--ds-input-label-fw` on `ds-input`. `--ds-input-label-font-size` and `--ds-input-label-color` are different tokens on the same element and are untouched; the family-level fallback this token still chains into, `--ds-field-label-font-weight`, keeps its own name.",
-      "pitfall": "The old name is inert rather than invalid, so a declaration left behind sets nothing and reports nothing — the label quietly falls back to `--ds-field-label-font-weight` or the default bold, which on most pages still looks close to right.",
+      "appliesWhen": "Any stylesheet that sets `--ds-input-label-fw`, on `ds-input`, an ancestor or `:root`. `--ds-input-label-font-size` and `--ds-input-label-color` are different tokens on the same element and are untouched; the family-level fallback this token still chains into, `--ds-field-label-font-weight`, keeps its own name.",
+      "pitfall": "The old name is inert rather than invalid, so a declaration left behind sets nothing and reports nothing - the label quietly falls back to `--ds-field-label-font-weight` or the default bold, which on most pages still looks close to right.",
       "restore": null,
       "searchHints": [
         "--ds-input-label-fw"
@@ -226,8 +226,8 @@
       "new": "--ds-tag-font-weight",
       "surface": "style",
       "action": "Rewrite `--ds-tag-fw` to `--ds-tag-font-weight`, keeping the value.",
-      "appliesWhen": "Only a stylesheet that sets `--ds-tag-fw` on `ds-tag`. `--ds-tag-font-size` and `--ds-tag-line-height` are different tokens on the same element, renamed by their own entry in this release.",
-      "pitfall": "The old name is inert rather than invalid, so a declaration left behind sets nothing and reports nothing — the tag's label quietly falls back to `--font-weight-bold`.",
+      "appliesWhen": "Any stylesheet that sets `--ds-tag-fw`, on `ds-tag`, an ancestor or `:root`. `--ds-tag-font-size` and `--ds-tag-line-height` are different tokens on the same element, renamed by their own entry in this release.",
+      "pitfall": "The old name is inert rather than invalid, so a declaration left behind sets nothing and reports nothing - the tag's label quietly falls back to `--font-weight-bold`.",
       "restore": null,
       "searchHints": [
         "--ds-tag-fw"
@@ -245,8 +245,8 @@
       "new": "--ds-tag-line-height",
       "surface": "style",
       "action": "Rewrite `--ds-tag-lh` to `--ds-tag-line-height`, keeping the value.",
-      "appliesWhen": "Only a stylesheet that sets `--ds-tag-lh` on `ds-tag`. `--ds-tag-font-size` and `--ds-tag-font-weight` are different tokens on the same element.",
-      "pitfall": "The old name is inert rather than invalid, so a declaration left behind sets nothing and reports nothing — the tag's label quietly falls back to `--line-height-base`.",
+      "appliesWhen": "Any stylesheet that sets `--ds-tag-lh`, on `ds-tag`, an ancestor or `:root`. `--ds-tag-font-size` and `--ds-tag-font-weight` are different tokens on the same element.",
+      "pitfall": "The old name is inert rather than invalid, so a declaration left behind sets nothing and reports nothing - the tag's label quietly falls back to `--line-height-base`.",
       "restore": null,
       "searchHints": [
         "--ds-tag-lh"
@@ -256,6 +256,44 @@
       ],
       "verify": "No stylesheet declares `--ds-tag-lh`, and `ds-tag`'s label line-height comes from `--ds-tag-line-height` (or the `--line-height-base` default).",
       "note": "The other of three abbreviations the 0.13.4 spell-out wave left standing, for the same reason as `--ds-tag-fw`: the wave matched `--ds-*-weight` and other named properties, never a token already spelled as the abbreviation itself."
+    },
+    {
+      "id": "slider-thumb-bw-is-slider-thumb-border-width",
+      "kind": "token-rename",
+      "old": "--ds-slider-thumb-bw",
+      "new": "--ds-slider-thumb-border-width",
+      "surface": "style",
+      "action": "Rewrite `--ds-slider-thumb-bw` to `--ds-slider-thumb-border-width`, keeping the value.",
+      "appliesWhen": "Any stylesheet that sets `--ds-slider-thumb-bw`, on `ds-slider`, an ancestor or `:root`. `--ds-slider-thumb-color` and `--ds-slider-thumb-border-color` are different tokens on the same element.",
+      "pitfall": "The old name is inert rather than invalid, so a declaration left behind sets nothing and reports nothing - the thumb border quietly falls back to the theme token `--slider-thumb-border-width` (renamed from `--slider-thumb-bw` by its own item in this release) or `--border-width-strong`.",
+      "restore": null,
+      "searchHints": [
+        "--ds-slider-thumb-bw"
+      ],
+      "detect": [
+        "--ds-slider-thumb-bw([^A-Za-z0-9_-]|$)"
+      ],
+      "verify": "No stylesheet declares `--ds-slider-thumb-bw`, and the slider thumb's border width comes from `--ds-slider-thumb-border-width` (or the `--slider-thumb-border-width` / `--border-width-strong` fallback chain).",
+      "note": "The last of the abbreviations the 0.13.4 spell-out wave left standing: that wave matched named properties like `-weight` and `-height`, never a token already spelled as the abbreviation `bw` itself."
+    },
+    {
+      "id": "theme-slider-thumb-bw-is-slider-thumb-border-width",
+      "kind": "token-rename",
+      "old": "--slider-thumb-bw",
+      "new": "--slider-thumb-border-width",
+      "surface": "style",
+      "action": "Rewrite `--slider-thumb-bw` to `--slider-thumb-border-width`, keeping the value.",
+      "appliesWhen": "Any stylesheet that sets the theme-level `--slider-thumb-bw` (not the `--ds-slider-thumb-bw` component token, renamed by its own item in this release) on `:root` or a theme class.",
+      "pitfall": "The old name is inert rather than invalid, so a declaration left behind sets nothing and reports nothing - the slider thumb border quietly falls back to `--border-width-strong`.",
+      "restore": null,
+      "searchHints": [
+        "--slider-thumb-bw"
+      ],
+      "detect": [
+        "--slider-thumb-bw([^A-Za-z0-9_-]|$)"
+      ],
+      "verify": "No stylesheet declares `--slider-thumb-bw`, and the slider thumb's border width still resolves through `--slider-thumb-border-width` (or the `--border-width-strong` default).",
+      "note": "This is the theme-layer fallback the component token above chains into. It sat outside the 0.13.4 --ds-* wave and the abbreviation gate that wave produced, both scoped to --ds-* names only, so it kept its abbreviation until this release renamed it alongside its consumer-facing counterpart."
     },
     {
       "id": "pagination-layout-input-nullable",
@@ -287,8 +325,14 @@
     "ds-bar-chart points its tooltip at the drawn value rather than the track, so a floating bar no longer puts the panel a track width from the reading.",
     "A segmented bar's tooltip heads the panel with the row and gives each segment a line with its share, instead of repeating the row label the pointer is already on.",
     "A hatched mark's tooltip dot carries the same break its mark does, so neither the panel nor the plot relies on hue alone.",
-    "The pinned-mark badge clears the column's top edge instead of sitting flush against it.",
-    "The unpin control sits below the plot, because the panel it undoes opens above the held mark.",
+    {
+      "text": "The pinned-mark badge clears the column's top edge instead of sitting flush against it.",
+      "verify": "Pin a column mark: the badge sits above the column's top edge with a visible gap, not touching it."
+    },
+    {
+      "text": "The unpin control sits below the plot, because the panel it undoes opens above the held mark.",
+      "verify": "Pin a mark: the unpin control renders below the plot area, never over the marks."
+    },
     "Legend hover fades the other series whether or not dimOthers is set, and ds-column-chart wires its legend for it. dsColumnSeries takes seriesKey and highlighted for a hand-composed plot.",
     "The chart data table keys its nested rows uniquely; a bar and its first segment both fell back to a positional index in their own scope, which Angular reported as duplicated track keys (delete list: mark-level-chart-tooltip-bindings covers the separate template cleanup).",
     "--ds-toast-queue-bg-color and --ds-toast-queue-text-color paint the toast region's +N strip.",
