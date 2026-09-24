@@ -64,6 +64,8 @@
      accent for tonal/ghost/outline (set on those fill classes). */
   --_button-accent: var(--_button-bg-color);
   --_button-border-color:    var(--ds-button-border-color,    transparent);
+  --_button-border-color-hover: var(--ds-button-border-color-hover, var(--_button-border-color));
+  --_button-border-color-active: var(--ds-button-border-color-active, var(--_button-border-color-hover));
 
   /* The WIDTH; the colour is --ds-button-border-color beside it. Without this the only way to change a button's
      edge is redefining --border-width-default for the subtree, which moves a scale step. */
@@ -128,8 +130,8 @@
   /* All one class deep, so SOURCE ORDER decides: disabled beats hover/active, and the focus ring
      beats disabled — a soft-disabled button still takes focus. Do NOT add `:not()` to hover to
      exclude disabled: it raises hover above the ring and silently deletes it. */
-  &:hover  { background-color: var(--_button-bg-color-hover); color: var(--_button-label-color-hover); box-shadow: var(--_button-shadow-hover); }
-  &:active { background-color: var(--_button-bg-color-active); color: var(--_button-label-color-active); box-shadow: var(--_button-pressed-shadow); transform: scale(var(--_button-press-scale)); }
+  &:hover  { background-color: var(--_button-bg-color-hover); color: var(--_button-label-color-hover); border-color: var(--_button-border-color-hover); box-shadow: var(--_button-shadow-hover); }
+  &:active { background-color: var(--_button-bg-color-active); color: var(--_button-label-color-active); border-color: var(--_button-border-color-active); box-shadow: var(--_button-pressed-shadow); transform: scale(var(--_button-press-scale)); }
 
   &[disabled],
   &[aria-disabled='true'] {
