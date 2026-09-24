@@ -197,7 +197,7 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**115 open — 0 P1, 13 P2, 102 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**113 open — 0 P1, 13 P2, 100 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P2 — 13
 
@@ -222,7 +222,7 @@ item and nothing else.
 - **Localization — every user-visible string is a hardcoded literal (recorded 2026-08-27, from the ITB Workspace picker report)**
   - Every user-visible string in the library is a hardcoded English literal — VALIDATED 2026-08-27 against 0.11.0; Stas: defer the whole thing, no code
 
-### P3 — 102
+### P3 — 100
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - The token reference says the portaled panel reads `--ds-time-picker-focus-shadow`
@@ -275,8 +275,6 @@ item and nothing else.
 - **Tooling**
   - `tools/todo-index.mjs --check` is not in `lint:all`, so the index can still go stale between runs
   - Publishing to Claude Design cannot run from Bitbucket, and Stas wants the CI route looked at again (recorded 2026-09-02)
-  - Drop the brand and domain EXAMPLES from the published docs, not just their names (Stas, 2026-08-31)
-  - ds-docs still writes BEM MODIFIERS as `--suffix`, and a state should be its own class (Stas, 2026-08-26 — the `__` half is done and archived)
   - `fix:all` reformats HTML that eslint then fights, and it is `fix:all` alone — `lint:all` is green
   - Ten manifest-format practices the audit marked *Adopt*, and nobody has ratified any of them (filed 2026-08-27 out of deck `4-migration-manifest-audit`)
 - **The field system — the two controls outside it, and the five with no box to paint**
@@ -665,7 +663,7 @@ Same sweep, the capabilities that are missing rather than wrong. Each workaround
 - [ ] **[P3] changelog-lint C001 does not scan ds-docs/src or docs/agent (recorded 2026-09-24).**
   The published-artefact check for client names reads styles, themes, `src/lib/**/*.ts` and migrations (its closing `by group` line),
   but not the docs site sources or the agent docs, both of which ship to readers outside the team.
-  Stas: extend it as its own item, after the fictional-brand sweep (task 59) lands.
+  Stas: extend it as its own item; the fictional-brand sweep it waited for landed (merge 8e6c9454), so it is actionable.
 
 - [ ] **[P3] The press feedback guard misses `.disabled` and `[aria-disabled]` (recorded 2026-09-24).**
   `src/lib/styles/_press.scss:22` excludes `:disabled`, `[disabled]` and `.is-disabled` only, so a component that disables through a
@@ -1258,15 +1256,6 @@ its own inline styles. `presentations/README.md` holds the authoring contract an
   **What is worth checking next**, in the order that would settle it fastest: whether a `designOauth` refresh token can be minted with a long enough life and a narrow enough scope to sit in a CI variable; whether the design API exposes a non-interactive equivalent of `finalize_plan` (a pre-approved plan id, or a project-scoped write token); and whether an owner-level grant behaves differently, since `delete_files` already discriminates by ownership.
   **The fallback if none of that exists** is a local one-command publish — a script reading the grant from the profile's own credential store and posting the same three calls — which Stas declined for now in favour of another look at CI. Until then the publish runs from a session: the tree CI produced is byte-identical to what gets sent, so the manual step carries no judgement, only the approval click.
   **And one thing only the owner can finish:** 72 orphaned `_preview/*.js` sit in the live project from the previous showcase design. `delete_files` returns `403 permission_denied — bulk delete requires project ownership`, one path as readily as in bulk, so Misha has to remove them.
-
-- [ ] **[P3] Drop the brand and domain EXAMPLES from the published docs, not just their names (Stas, 2026-08-31).** The sweep genericised them; his instruction was to consider removing them outright. Exact locations:
-  - `src/lib/themes/README.md` — one brand mention left, the Option C code block (`@use './app/styles/brand-acme'`, `:117`); the "Brand vs theme" and "Rules summary" bullets already use `X`. The question is whether the rule ("a brand is an attribute-scoped overlay authored on a theme") needs a named brand in the example at all, or reads fine with `[data-brand="X"]` alone, which the rest of the file already uses.
-  - `design-system.md` §6 — five worked examples, now on orders/catalogue/warehouse: the sentence-case pair (`Order history` / `Order History`), and the three `ds-empty-state` table rows plus the sentence under it that quotes the `none` title back. These were one consumer's domain (logistics plans, asset register, producer roles) until this sweep. The empty-state table is the most useful thing in the section, so removing the examples means finding a way to show "the title states the situation" without a situation.
-  - `components.md` — the 9+3 grid line, now "a narrow picker or filter rail", previously named a consumer's two screens.
-
-- [ ] **[P3] ds-docs still writes BEM MODIFIERS as `--suffix`, and a state should be its own class (Stas, 2026-08-26 — the `__` half is done and archived).** `is-*` IS better here and that is the recorded preference: a modifier glued to the name with `--` reads as a different ELEMENT, while our convention says a variant of one thing is a STATE carried alongside it (`.stage.is-tbl`), which is also how a state reads in the DOM and how it composes with two states at once. Counted 2026-08-26: **11** element-plus-modifier forms flattened this pass and now spelled `state-cell-stage--tbl`, `cell-tag--do`, `cell-tag--dont`, `contract-row--no`, `demo-col--end`, `demo-group-btn--start/--mid/--end`, `halo-stage-well--inverted`, `state-stage--horiz`, `state-cell-stage--overflow`, plus a separate standalone set (`demo--centered`, `applied--stacked`, `demo-btn--ghost`, `demo-menu-item--error`, `btn--start/--mid/--end`, `cell--do/--dont`, `col--end`, …).
-  **Why it was split off rather than done in the same pass.** Removing `__` was a pure rename — 865 occurrences, zero semantic change, provable (589 classes used and 589 styled, identical before and after). Converting `--mod` to `is-mod` is NOT: it splits one class into two in the markup, which changes selector specificity from (0,1,0) to (0,2,0) wherever the SCSS is nested, and specificity is exactly what a docs section leans on when it pins a component's forced state. That wants its own pass with its own verification, not a rider on a mechanical one.
-  **Then extend the guard.** `selector-class-pattern` currently allows `-` freely, which is what lets `--` through; once the conversion lands, tighten it to reject a doubled hyphen in a class name so the notation cannot come back — the same shape as the two rules that now block `__` (`selector-class-pattern` plus `selector-nested-pattern`, because the first one alone does not see `&__x`).
 
 - [ ] **[P3] `fix:all` reformats HTML that eslint then fights, and it is `fix:all` alone — `lint:all` is green.** The two globs differ, which is the whole of it: `format` checks `{src,ds-docs/src,tools}/**/*.{ts,json,md}` and never looks at a template, so the gate passes; `format:fix` adds `html` to the same glob, so the repo's own fixer rewrites ~112 templates that `ds/template/element-content-newline` and `@angular-eslint/template/attributes-order` immediately want back. Measured again 2026-09-10 from both ends: `lint:all` exits 0 on a clean tree, and one `prettier --write` over three docs section files produced 63 eslint warnings, 23 of them attribute-order on the very attributes just added.
   **So the cost is not a red gate, it is a fixer nobody can run.** `fix:all` is the documented way to normalise a branch, and running it dirties every template it touches — which is how an unrelated file lands in a diff (it happened twice in this repo).
@@ -1965,6 +1954,19 @@ _Closed 2026-08-07 from a consumer report: `ds-autocomplete` had no chip cap, so
 Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirrors the live backlog (`todo.md`); deep gap analysis stays in `docs/superpowers/ds-gap-analysis.md`.
 
 ---
+
+## ds-docs modifier classes become states; brand and domain examples keep, with fictional names (2026-09-24)
+
+Every `<base>--<mod>` class under `ds-docs/src` (112 in 32 `.scss`, 211 in 47 `.html`) is `<base>.is-<mod>`,
+and a stylelint override for `ds-docs/src/**/*.scss` rejects `--` in a class name (Stas: docs only); the
+library's `crumb--current` and avatar `status-dot--*` stay, being public. The brand and domain examples
+stay and every real name in them is fictional under one brand, Acme (Stas): the Tweaks brand-preview
+partial (`_preview-brand-acme.scss`, now a green/red remap), autocomplete demo data, the modal insurer,
+the avatar initials example (Bramley Rovers FC, also a wording fix in released `migrations/0.10.0.json`),
+and the consumer module vocabulary across about twenty sections. Measured 2026-09-24: no `--` modifier
+left in ds-docs (`.x--y` on stdin fails the new rule, `.x.is-y` passes); the brand grep over ds-docs,
+`src/lib`, the manifests and the agent docs returns nothing; under the Acme preview a primary button
+computes `#1B8A2E`, the page's `--green-600`.
 
 ## Columns read the second axis; a bar-chart segment can be singled out (2026-09-24)
 

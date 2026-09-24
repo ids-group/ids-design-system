@@ -4,6 +4,19 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## ds-docs modifier classes become states; brand and domain examples keep, with fictional names (2026-09-24)
+
+Every `<base>--<mod>` class under `ds-docs/src` (112 in 32 `.scss`, 211 in 47 `.html`) is `<base>.is-<mod>`,
+and a stylelint override for `ds-docs/src/**/*.scss` rejects `--` in a class name (Stas: docs only); the
+library's `crumb--current` and avatar `status-dot--*` stay, being public. The brand and domain examples
+stay and every real name in them is fictional under one brand, Acme (Stas): the Tweaks brand-preview
+partial (`_preview-brand-acme.scss`, now a green/red remap), autocomplete demo data, the modal insurer,
+the avatar initials example (Bramley Rovers FC, also a wording fix in released `migrations/0.10.0.json`),
+and the consumer module vocabulary across about twenty sections. Measured 2026-09-24: no `--` modifier
+left in ds-docs (`.x--y` on stdin fails the new rule, `.x.is-y` passes); the brand grep over ds-docs,
+`src/lib`, the manifests and the agent docs returns nothing; under the Acme preview a primary button
+computes `#1B8A2E`, the page's `--green-600`.
+
 ## Columns read the second axis; a bar-chart segment can be singled out (2026-09-24)
 
 `g[dsColumnSeries]` takes `axis: 'primary' | 'secondary'` (default `'primary'`): the series reports its
