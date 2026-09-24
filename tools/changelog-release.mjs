@@ -49,8 +49,7 @@ function hasUnreleasedEntry(path) {
 
 stampUnreleased('CHANGELOG.md');
 
-// The upload tree is rebuilt once per release, so its log's sections mirror the package's
-// versions. Stamped only when the cycle wrote something: an empty version block says nothing.
+// Stamped only when the cycle wrote something: an empty version block says nothing.
 const designSyncLog = '.design-sync/CHANGELOG.md';
 if (existsSync(designSyncLog) && hasUnreleasedEntry(designSyncLog)) {
   stampUnreleased(designSyncLog);
