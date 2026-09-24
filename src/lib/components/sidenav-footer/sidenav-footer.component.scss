@@ -33,6 +33,8 @@
     color: var(--text-primary);
     background: var(--surface-secondary);
   }
+
+  &:active { background: var(--surface-muted); }
 }
 
 .dot {
@@ -91,6 +93,8 @@
     color: var(--text-primary);
     background: var(--surface-secondary);
   }
+
+  &:active { background: var(--surface-muted); }
 }
 
 .heading {
@@ -210,6 +214,8 @@
     &:hover {
       background: var(--surface-secondary);
     }
+
+    &:active { background: var(--surface-muted); }
   }
 }
 
@@ -230,6 +236,8 @@
     &:hover {
       background: var(--surface-secondary);
     }
+
+    &:active { background: var(--surface-muted); }
 
     .icon {
       display: inline-flex;

@@ -14,11 +14,12 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**117 open — 0 P1, 13 P2, 104 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**121 open — 0 P1, 14 P2, 107 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
-### P2 — 13
+### P2 — 14
 
 - **Defects consumers work around today (swept 2026-09-23)**
+  - A `ds-table` expanded row animates open and vanishes on close, so the reveal is one-sided (recorded 2026-09-24, from the mm-ecm consumer)
   - The stock control edge and `--secondary-on` fail contrast; the second breaks on any light brand secondary (from the ids-europe-landing consumer)
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - `_focus.scss`'s top-level CSS is copied into 48 component style strings
@@ -40,7 +41,7 @@ item and nothing else.
 - **Localization — every user-visible string is a hardcoded literal (recorded 2026-08-27, from the ITB Workspace picker report)**
   - Every user-visible string in the library is a hardcoded English literal — VALIDATED 2026-08-27 against 0.11.0; Stas: defer the whole thing, no code
 
-### P3 — 104
+### P3 — 107
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - The token reference says the portaled panel reads `--ds-time-picker-focus-shadow`
@@ -54,6 +55,7 @@ item and nothing else.
   - `--ds-chart-dimmed-opacity` has an empty `notes` and a near-twin name
 - **Reported by Stas from the docs site, 2026-09-05**
   - The shimmer's viewport anchoring breaks inside a transformed ancestor
+  - A pressed danger menu item shows its hover colour (recorded 2026-09-24)
 - **The chart family read as an architecture (audited 2026-09-22)**
   - `ds-line-chart`'s `tooltipAnchor` doc does not say it is inert unless `tooltip="axis"`
   - The category panel stays open after keyboard focus leaves a line marker (recorded 2026-09-24)
@@ -65,6 +67,9 @@ item and nothing else.
   - Charts take their number locale from the browser, with no setting (from the mm-ecm-platform-kb consumer)
 - **Tooling**
   - A consumer's `--ds-*` override can be write-only, and nothing says so (recorded 2026-09-23, from the mm-ecm consumer's 0.8.0 to 0.13.4 audit)
+  - changelog-lint C001 does not scan ds-docs/src or docs/agent (recorded 2026-09-24)
+  - The press feedback guard misses `.disabled` and `[aria-disabled]` (recorded 2026-09-24)
+  - `--picker-maxh` is an abbreviated token name (recorded 2026-09-24)
 - **Two chart names that collide (recorded 2026-09-21, from the mm-ecm consumer)**
   - Extract what bar and column SHARE; their contracts stay different (Stas, 2026-09-22)
 - **Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)**
@@ -86,7 +91,6 @@ item and nothing else.
   - Thirteen obsolete paths on the project can only be deleted by its owner
 - **The field system — the two controls outside it, and the five with no box to paint**
   - `ds-autocomplete`'s arrow keys walk a private copy of the list cursor
-  - The button's colour-family slots are named `--c-*`, which is not an acceptable name
 - **The eleven styling hooks one consumer reached past the surface for (recorded 2026-09-21)**
   - Does the picker list height become a public token, or stay behind `panelClass`?
   - Does the `variant="spark"` line preset keep zero in its value domain, or scale to the …
@@ -232,6 +236,11 @@ Highest: each one is wrong in code — or in a surface — a consumer already re
 ## Defects consumers work around today (swept 2026-09-23)
 
 Defects a consumer hit - from a QA pass, or from reading a consumer tree for a rule that out-specifies a DS internal, a `::ng-deep` into a `ds-*`, or a wrapper that exists only because the library gets something wrong. Each is checked against `dev`.
+
+- [ ] **[P2] A `ds-table` expanded row animates open and vanishes on close, so the reveal is one-sided (recorded 2026-09-24, from the mm-ecm consumer).** Opening interpolates `grid-template-rows` from `0fr` to `1fr` over `--duration-base`; closing has no counterpart, and the row is gone on the very next frame. Measured on the docs site's own expandable table: right after the open click, `getAnimations()` on `.expand-panel-inner` returns `ds-table-expand`, duration 180, `running`; right after the close click, on the next `requestAnimationFrame`, the panel is already absent from the DOM. The eye reads the pair as a glitch rather than as a reveal.
+  **Why it is one-sided.** `.expand-panel-row` sits inside a structural `@if`, so a close unmounts the `<tr>` immediately, and the only motion declared is a keyframe - `@keyframes ds-table-expand`, from `0fr`/`opacity: 0` to `1fr`/`opacity: 1`. A keyframe cannot run on an element that is being removed, and there is no leave state for it to run from. The component's own comment picks the keyframe deliberately: "the row is inserted when it opens, and there is no previous state for a transition to run from". That reasoning is right for the enter and leaves the exit with nothing.
+  **The library already solves this twice, and the comment names one of them.** The same comment says the row "Opens like ds-accordion, on the same `0fr -> 1fr` grid track" - but `ds-accordion` keeps its content mounted and toggles a class, `grid-template-rows: 0fr` with `&.is-open { grid-template-rows: 1fr }` under `transition: grid-template-rows var(--duration-base)`, so it animates BOTH ways. The overlay family solves the other shape: `disposeWithLeave` marks the pane `ds-leaving`, waits for `animationend` and tears down on a `LEAVE_TIMEOUT_MS` fallback.
+  **The shape that fits.** Either mirror `ds-accordion` - keep the expanded `<tr>` mounted while the row is open-or-closing and drive `grid-template-rows` from a class, which makes the transition symmetric for free - or mirror `disposeWithLeave` and hold the row for the leave duration behind a `ds-leaving`-style class. The first is the smaller change and matches what the comment already claims the component does.
 
 - [ ] **[P2] The stock control edge and `--secondary-on` fail contrast; the second breaks on any light brand secondary (from the ids-europe-landing consumer).** `--border-default` is `var(--neutral-200)` (`_semantic.scss:49`, #DCE1EA) and is the resting edge of `ds-input` (`input.component.scss:17`) and 25 more components: 1.31:1 on white in the stock theme against the 3:1 WCAG 1.4.11 floor for a control boundary. `--secondary-on` is the constant `var(--primary-on)` = white (`:134`, `:116`) while `--secondary` recomposes from `--secondary-h/s/l`, so a gold secondary (#FBAC18) gets white text at 1.91:1. ids-europe-landing rebinds both (`_theme.scss:44-57`, `:89`). **Wanted:** a control-edge role that clears 3:1 in both themes (or `--border-default` moved to it), and `--secondary-on` derived from `--secondary`'s lightness or listed in the brand must-rebind checklist of the brand-unsafe item.
 
@@ -392,6 +401,12 @@ Constraints and decisions that read as removable and are not.
   No cheap fix: the alternative is the shared `:root` driver this replaced, which invalidated the
   whole document every frame. Worth a note in the skeleton's docs page before it is worth code.
 
+- [ ] **[P3] A pressed danger menu item shows its hover colour (recorded 2026-09-24).**
+  `.menu-item.error:hover` comes after `.menu-item:active:not(.disabled)` at equal specificity
+  (`menu-item.component.scss:78`, `:101`, same order in the compiled menu chunk), so pressing a
+  danger item paints hover, a step of ΔE 0. The fix is Stas's pick in deck `3-interaction-formula`
+  (grey like the neighbours, or `--error-muted`, the error ghost button's pressed pair).
+
 ## The chart family read as an architecture (audited 2026-09-22)
 
 *This section also has items under **Decisions**, **Parked**, **Records**.*
@@ -500,6 +515,19 @@ Same sweep, the capabilities that are missing rather than wrong. Each workaround
   **The shape that fits:** a check a consumer can run against what is installed - collect every `--ds-*` the consumer DECLARES, collect every `--ds-*` the package READS (`fesm2022/*.mjs` plus `styles/` and `themes/`), and report the declarations that resolve to nothing. That is the same idea `check-doc-tokens` already applies to our own prose, pointed outward; on the consumer above it takes one pass over 176 declared names against 1 028 read names. Shipping it as a bin in the package, or as a schematic, puts it where the consumer can run it on every upgrade rather than once during an audit.
   **The same silence has a second shape, worth covering together: a selector that stops matching.** `ds-button`'s inner button carries `c-<color>` and `v-<variant>` classes, so a consumer styling `ds-button .button.secondary` or `.outline` matches nothing. The same consumer carries seven such blocks, five of them named after a colour. Worse than inert: its `primary` block is written as `.button:not(.secondary):not(.tertiary):not(.outline):not(.error):not(.success):not(.warning):not(.text)`, and since none of those classes is ever rendered the negation excludes nothing, so a rule meant for one variant applies to every button. A check that resolved a consumer's `ds-*` selectors against the classes and attributes the components actually render would catch both halves.
 
+- [ ] **[P3] changelog-lint C001 does not scan ds-docs/src or docs/agent (recorded 2026-09-24).**
+  The published-artefact check for client names reads styles, themes, `src/lib/**/*.ts` and migrations (its closing `by group` line),
+  but not the docs site sources or the agent docs, both of which ship to readers outside the team.
+  Stas: extend it as its own item, after the fictional-brand sweep (task 59) lands.
+
+- [ ] **[P3] The press feedback guard misses `.disabled` and `[aria-disabled]` (recorded 2026-09-24).**
+  `src/lib/styles/_press.scss:22` excludes `:disabled`, `[disabled]` and `.is-disabled` only, so a component that disables through a
+  class or `aria-disabled` still plays the press feedback on a control that does nothing.
+
+- [ ] **[P3] `--picker-maxh` is an abbreviated token name (recorded 2026-09-24).**
+  The picker list cap is spelled `-maxh`, against the spelled-out naming convention
+  (`-max-height`); check-abbreviated-tokens reads only `--ds-*` names, so it does not catch it.
+
 ## Two chart names that collide (recorded 2026-09-21, from the mm-ecm consumer)
 
 Both found while planning that consumer's move to 0.13.3. Neither blocks it; both cost a reader.
@@ -517,7 +545,7 @@ Both found while planning that consumer's move to 0.13.3. Neither blocks it; bot
   arrives in the datum on one side and in an input on the other, and the same flat array is one
   series in the bar, where every row takes `--ds-chart-series-default-color`, against N categories
   in the column, where each mark takes its own palette slot (`bar-chart.component.ts:388` against
-  `column-chart.component.ts:316-322`). Both drawn in deck `9-bar-column-contracts`.
+  `column-chart.component.ts:316-322`). Both drawn in deck `8-bar-column-contracts`.
 
 ## Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)
 
@@ -814,19 +842,6 @@ beside another lane changing those three files.
   `from`. `ds-menu` keeps its own single-character type-ahead (`menu.component.ts:107-122`) beside
   the shared `createTypeAhead`.
 
-- [ ] **[P3] The button's colour-family slots are named `--c-*`, which is not an acceptable name.**
-  Seven of them — `--c-base`, `--c-on`, `--c-strong`, `--c-subtitle`, `--c-muted`, `--c-muted-strong`,
-  `--c-outline-border` — declared on `.button` in `button.component.scss` and read by `button` and
-  `icon-button`. Two things are wrong with the name and each on its own is enough: `c` is a
-  one-letter abbreviation where the house rule is a spelled-out word, and these are INTERNAL slots
-  that carry none of the `--_` marker this library uses to say so, so they read like a public hook
-  a consumer may set. The `.c-*` colour classes that override them have the same defect.
-  Rename to the spelled-out internal form (`--_family-base` / `-on` / `-strong` / …) and the classes
-  with them. Not a public break — `components.md` names none of them and only those two components
-  read them — but `0.10.1.json` mentions `--c-on` inside an `informational` line explaining a
-  disabled-icon recipe, so that sentence needs the new name too. Check `.design-sync/` and the docs
-  specimens as well: both pin component internals in places `src/lib` does not reach.
-
 ## What the 0.9.0 - 0.13.3 manifests did not tell a consumer (recorded 2026-09-22, from the mm-ecm consumer)
 
 Found while walking a consumer from 0.8.0 to 0.13.3, nineteen versions, one commit each. Every item
@@ -1038,7 +1053,7 @@ None of these is blocked on effort. Each is a verdict, and most carry a deck tha
 short before. **The rank is the filename**: an open deck is `<rank>-<slug>.html`, ranked by what
 answering it unblocks, so the folder listing IS the queue. Ranks are renumbered when the queue
 changes and a stale one is never kept to preserve a link; `deck-lint` fails a duplicate rank, a gap
-in 1..N, and an `implemented` deck still carrying one. **`presentations/11-decision-queue.html` carries every open question** — every open
+in 1..N, and an `implemented` deck still carrying one. **`presentations/10-decision-queue.html` carries every open question** — every open
 deck's question with its options in that deck's own words, the recommendation starred, a link back
 for the argument, and the two questions that have no deck. It duplicates no argument, so it cannot
 contradict a deck; re-check it when a deck's OPTIONS change. **Never cite a deck by number from this
@@ -1048,15 +1063,14 @@ file** — the number moves; cite the filename.
 | --- | --- | --- | --- |
 | 1 | `1-color-engine-derivation` | One source token per role, derived. | the colour-engine P2 |
 | 2 | `2-color-engine-relative` | The prototype half of the same question. | as above |
-| 3 | `3-interaction-formula` | State interactions by formula, calibrated against the drawn ramp. | the `.ds-interactive` P2 |
+| 3 | `3-interaction-formula` | The pressed recipe of the tonal button, and of the danger menu item. | the pressed-danger-menu P3 and the `.ds-interactive` P3 |
 | 4 | `4-migration-manifest-audit` | Which of eight format practices marked *Adopt* are worth the tooling. | the manifest-practices P3 |
 | 5 | `5-select-native-multi` | Whether `ds-select` native `multi` is worth building. | already *Parked* — "keep parked" closes both |
 | 6 | `6-warning-text-colour` | Which colour goes on the warning tint. Four candidates, each rendered in itself. | the warning pair under *Bugs* |
-| 7 | `7-chart-sparkline-preset` | A `variant="spark"` on the line chart against a separate `ds-sparkline`. | parked 2026-09-19, so it is decided-not-built |
-| 8 | `8-waterfall-mode-or-component` | The waterfall's own tag against a `stack="waterfall"` mode on the column chart. | the waterfall entry point, already shipped standalone |
-| 9 | `9-bar-column-contracts` | How far to converge the bar and the column: name the difference, converge the palette, or give the bar a series model. | the stacking-contract ask under *Two chart names that collide* |
-| 10 | `10-picker-list-height` | Whether the picker list height becomes a public token or stays behind `panelClass`. | the closed `--picker-maxh` ask, same shape |
-| 11 | `11-decision-queue` | Every consumer ask and every open question in one page - 10 asks in three groups, then 33 decisions in six, each drawn as today against after. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
+| 7 | `7-chart-sparkline-preset` | The sparkline preset's vertical scale: zero in the domain or the data's own range. | the spark-scale Decision, then task 39 |
+| 8 | `8-bar-column-contracts` | How far to converge the bar and the column: name the difference, converge the palette, or give the bar a series model. | the stacking-contract ask under *Two chart names that collide* |
+| 9 | `9-picker-list-height` | Whether the picker list height becomes a public token or stays behind `panelClass`. | the closed `--picker-maxh` ask, same shape |
+| 10 | `10-decision-queue` | Every consumer ask and every open question in one page - 10 asks in three groups, then 30 decisions in six, each drawn as today against after. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
@@ -1138,7 +1152,7 @@ its own inline styles. `presentations/README.md` holds the authoring contract an
 
 - [ ] **[P3] Single-source colour engine — collapse `--primary` + `--primary-h/s/l` into ONE token, derive the rest with `color-mix()` + relative-colour (idea 2026-06-24).** ROOT CAUSE (surfaced when a consumer scoped `--primary-h/s/l` on a checkbox and ONLY the focus halo moved): "primary" has TWO decoupled reps — (a) `--primary` + hand-picked ramp shades read by component FILLS; (b) `--primary-h/s/l` HSL channels feeding ONLY math-derived halos/ramp/gray-tint — with **no live link**, so a coherent scoped recolour needs BOTH the channels AND a `--primary` re-composition (the 3-/4-token footgun). **Re-verified true 2026-09-23** (`src/lib/themes/_semantic.scss:89-91` channels; `:109-110` hover/pressed already `color-mix`; halos `:214`, `:257`; gray tint `_base-palette.scss:28`). **IDEA:** one colour token per role as the only source; shades via `color-mix()`, hue via `hsl(from var(--primary) h <S> <L>)` keeping each step's hand-tuned S/L (see [[feedback-handtuned-colors-beat-formulas]] — only the HUE is single-sourced); drop `--primary-h/s/l` as PUBLIC API. Scoped recolour becomes ONE declaration; **UNBLOCKS the `ds-color`/`--accent-*` indirection**. **OPEN for the spec:** (a) colour space (`oklch`/`oklab` perceptual vs `srgb`/`hsl` matches today) — verify each derived role visually; (b) pure-derived vs hand-pick per role; (c) relative-colour + `var()` edge cases in the 3 target engines; (d) dark-theme interplay. Prototype: decks `2-color-engine-relative` and `1-color-engine-derivation`.
 
-- [ ] **[P3] `.ds-interactive` — global state-interaction contract (agreed; prototype before spec — [[project-interaction-contract-design]]).** Replace per-component `--ds-*-bg-hover/-active` + scattered `color-mix()` with ONE contract: a `.ds-interactive` class + presets driven by `--state-step-*` tokens in a NEW `src/lib/styles/_interaction.scss` (**still absent — verified 2026-07-24**), with an override slot (`--interactive-*-set`). Then migrate interactive components off their local recipes. **NEXT — blocking user verdicts B1–B5** (live demo in deck `interaction-formula`): (B1) tint-pressed 28% vs 34%; (B2) pressed step for neutral surfaces (menu-item/table rows); (B3) danger menu-item hover — formula vs `--error-subtitle`; (B4) shape of the `--interactive-*-set` slot; (B5) pressed step for success/warning buttons. **Rewritten 2026-07-24:** the old "retire `_forced-states` duplication" clause is now MOOT — `_forced-states.scss` no longer exists (docs state-forcing is per-section `:host ::ng-deep .pin-*` reading each component's `--_*` resolvers). What survives is the broader "should presentational/state styling live in global partials (like `_link.scss`) with components as thin sugar" question. (Housekeeping DONE — re-grepped 2026-08-10, the stale `_forced-states` refs are gone from `README.md` and `table.component.scss`; nothing outside `.claude/` mentions it.)
+- [ ] **[P3] `.ds-interactive` — global state-interaction contract (agreed; prototype before spec — [[project-interaction-contract-design]]).** Stas 2026-09-24: the formula is not built now, the override slot comes later; deck `3-interaction-formula` keeps only the two pressed verdicts. Replace per-component `--ds-*-bg-hover/-active` + scattered `color-mix()` with ONE contract: a `.ds-interactive` class + presets driven by `--state-step-*` tokens in a NEW `src/lib/styles/_interaction.scss` (**still absent — verified 2026-07-24**), with an override slot (`--interactive-*-set`). Then migrate interactive components off their local recipes. **NEXT — blocking user verdicts B1–B5** (live demo in deck `interaction-formula`): (B1) tint-pressed 28% vs 34%; (B2) pressed step for neutral surfaces (menu-item/table rows); (B3) danger menu-item hover — formula vs `--error-subtitle`; (B4) shape of the `--interactive-*-set` slot; (B5) pressed step for success/warning buttons. **Rewritten 2026-07-24:** the old "retire `_forced-states` duplication" clause is now MOOT — `_forced-states.scss` no longer exists (docs state-forcing is per-section `:host ::ng-deep .pin-*` reading each component's `--_*` resolvers). What survives is the broader "should presentational/state styling live in global partials (like `_link.scss`) with components as thin sugar" question. (Housekeeping DONE — re-grepped 2026-08-10, the stale `_forced-states` refs are gone from `README.md` and `table.component.scss`; nothing outside `.claude/` mentions it.)
 
 - [ ] **[P3] Theme recipe vs hand-tuned picks — alignment decision.** Button/icon-button state derivation uses the theme's 88%/76% mix-to-black recipe (**verified `button.component.scss:57-58`, `icon-button.component.scss:109-110,168-169`, `themes/_semantic.scss:109-110`, 2026-09-23**). If the single-source-colour calibration replaces `--primary-hover/-pressed` with hand-tuned values, the button defaults (color-mix off the resolved bg) diverge from the theme roles — decide then: components read role tokens again, or theme keeps the formula. **This is a concrete instance of the single-source item's open question (b); resolve it inside that spec, not separately.**
 

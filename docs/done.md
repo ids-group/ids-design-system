@@ -4,6 +4,32 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## Neutral rows and small buttons show a pressed state (2026-09-24)
+
+Every neutral row or small button that had a hover fill and nothing on press now steps to
+`--surface-muted` on `:active`, the value menu items, accordion headers, list and tree rows already
+hardcode: sidenav group header and caret, sidenav footer rows and panels, the date picker's period
+trigger, nav, cells and presets, the time picker's options and actions, the toast action, the
+description-list copy button, multi-select's select-all and the tab close button. An interactive
+`ds-tag`, which already hovers at `--surface-muted`, takes the shared `press.feedback` dip instead. No
+new tokens and no formula (deck `3-interaction-formula`, verdict on neutral surfaces). Measured
+2026-09-24 in ds-docs: each target matches exactly one `:active` rule resolving `var(--surface-muted)`,
+resting and hover values unchanged; the tag's rest filter and transform stay `none`.
+
+## `ds-button` and `ds-icon-button` spell out their colour-family slots and classes (2026-09-24)
+
+The private slots `--c-*` are `--_family-*`, gaining the `--_` marker every other private resolver
+carries, and the inner button's classes `.c-<color>` and `.v-<variant>` are `.color-<color>` and
+`.variant-<variant>` (Stas added the variant half). The slots never reached `components.md`; the
+classes are stylable, so three `class-rename` items point a consumer stylesheet at `data-color` /
+`data-variant` on the host. Measured 2026-09-24 in ds-docs: each colour's solid button and filled icon
+button compute the same background as its theme token (`--accent`, `--secondary`, `--tertiary`,
+`--text-secondary`, `--error`, `--success`, `--warning`), in light and dark.
+
+## Deck `waterfall-mode-or-component` closed, deck 3 narrowed to two pressed verdicts (2026-09-24)
+
+`ds-waterfall-chart` keeps its own tag (Stas), which is what shipped (`waterfall-chart.component.ts:55`), so the deck moved to `implemented/` with no code; `bar-column-contracts` is rank 8, `picker-list-height` 9, `decision-queue` 10. Deck `3-interaction-formula` was rebuilt against the code: success/warning pressed already exists, neutral-surface pressed is task 45, the override slot is recorded for later and the formula deferred (Stas); the open verdicts are the tonal button's pressed recipe and the danger menu item's invisible press, both rendered live with OKLab deltas measured 2026-09-24. The queue deck's B1, B2, B4, B5 and waterfall sections collapsed to one pointer at deck 3.
+
 ## Chart tooltips, focus and hatching fixed from Stas's docs review (2026-09-24)
 
 The category panel hangs over the highest reading at the active category wherever the pointer is in

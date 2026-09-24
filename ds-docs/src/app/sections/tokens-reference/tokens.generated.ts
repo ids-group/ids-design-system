@@ -3064,12 +3064,12 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "tokens": [
       {
         "name": "--ds-button-bg-color",
-        "value": "var(--c-base)",
+        "value": "var(--_family-base)",
         "notes": "Surface fill — variants re-point the default."
       },
       {
         "name": "--ds-button-label-color",
-        "value": "var(--c-on)",
+        "value": "var(--_family-on)",
         "notes": "Label/icon colour."
       },
       {

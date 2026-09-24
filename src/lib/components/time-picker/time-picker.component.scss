@@ -223,6 +223,8 @@
     background-color: var(--surface-secondary);
   }
 
+  &:active { background-color: var(--surface-muted); }
+
   &.primary {
     color: var(--accent);
   }

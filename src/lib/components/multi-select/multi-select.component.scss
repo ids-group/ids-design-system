@@ -241,6 +241,8 @@
     background-color: var(--surface-secondary);
   }
 
+  &:active:not(:disabled) { background-color: var(--surface-muted); }
+
   &:disabled {
     color: var(--text-disabled);
     cursor: not-allowed;
