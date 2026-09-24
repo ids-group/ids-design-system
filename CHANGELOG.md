@@ -1,5 +1,140 @@
 ## Unreleased
 
+### Breaking
+
+- **`ds-chart`'s `cursor` gains `'auto'` and defaults to it.** The type is `'none' | 'category' | 'auto'`
+  (was `'none' | 'category'`) and the default is `'auto'` (was `'none'`). `'auto'` draws the category
+  cursor on a plot of two or more marks that show a tooltip, and no cursor otherwise. On such a plot
+  the pointer anywhere in a category now opens one panel naming every mark's reading instead of the
+  per-mark panel; set `cursor="none"` to keep per-mark. Code that reads `ChartComponent.cursor()`
+  back through a `viewChild`, a `#chart="dsChart"` reference or a subclass must handle `'auto'`. The
+  `ds-column-chart`, `ds-line-chart` and `ds-waterfall-chart` presets are unaffected.
+
+- **The chart tooltip's `preferBelow` steering is gone; a held panel opens above its mark.**
+  `ChartComponent.tooltipPreferBelow` is now `tooltipPinned`, and the internal
+  `ChartTooltipDirective` drops `dsChartTooltipPreferBelow` for `dsChartTooltipPinned`. Delete every
+  `[dsChartTooltipPreferBelow]` binding. A custom mark that hands `CHART_SCALES.reportTooltip` a
+  source renames its `preferBelow` field to `pinned`; a `pinned` panel takes the pointer so its text
+  can be selected. A `preferBelow` reached through a variable still compiles and is ignored. The
+  library's own charts need nothing.
+
+- **`--ds-chart-hatch-width` defaults to `1.5px` (was `3px`), and the stripe runs down the middle of
+  its tile.** The hatch slants from top left to bottom right, and the tooltip swatch draws its stripe
+  at the same angle and width. The default draws the same stripe as before. A stylesheet that sets
+  `--ds-chart-hatch-width` halves the value to keep its stripe (`--ds-chart-hatch-width:
+  calc(<your value> / 2)`); an override left at `3px` now draws a 3px stripe in the 8px repeat and
+  reads as a paler mark. The default ships in `styles/tokens-charts`, which `styles/ds` forwards.
+
+- **`ds-auth-layout`'s `landmark` defaults to `'main'` (was `'none'`).** A standalone sign-in page
+  needs nothing; its card is now the main landmark on its own. Add `landmark="none"` to every
+  `ds-auth-layout` rendered inside a `<main>` or a `role="main"` element, `ds-app-layout`'s content
+  included, or the page exposes two main landmarks. Remove a now-redundant `landmark="main"`.
+
+- **`ds-auth-layout`'s generated lockup matches `ds-sidenav`'s rail.** The wordmark is 18px (was
+  22px) and the letter-mark tile is a fixed 28px (was 24-32px by viewport height), so the tile no
+  longer compresses on a short viewport and a card that just fitted a landscape phone can scroll by
+  4px. Two hooks size the type: `--ds-auth-layout-brand-name-font-size` (18px) and
+  `--ds-auth-layout-mark-font-size` (16px). To keep the old lockup: `ds-auth-layout {
+  --ds-auth-layout-brand-name-font-size: var(--font-size-h4); --ds-auth-layout-mark-size:
+  clamp(var(--space-6), 4svh, var(--space-8)); }`.
+
+- **A logo projected into `ds-auth-layout`'s `[brand]` slot is capped at the tile height, 28px.**
+  `--ds-auth-layout-brand-max-height` defaults to the tile (was `none`), so a logo sized by its width
+  alone now shrinks to 28px tall, keeping its ratio. Set `ds-auth-layout {
+  --ds-auth-layout-brand-max-height: none; }` to leave it unconstrained, or a height of your own.
+  `ds-sidenav`'s `[brand]` slot is unchanged.
+
+- **`ds-button` and `ds-icon-button` colour and variant classes are spelled out.** On the inner
+  button `.c-{color}` is now `.color-{color}` and `.v-{variant}` is `.variant-{variant}`: rename
+  `.c-secondary`, `.c-tertiary`, `.c-neutral`, `.c-error`, `.c-success`, `.c-warning` to
+  `.color-secondary` ... `.color-warning`, and `.v-tonal`, `.v-ghost`, `.v-outline`, `.v-text` to
+  `.variant-tonal` ... `.variant-text`, in selectors scoped under `ds-button`; `ds-icon-button` takes
+  the same colour rename. Better: key the rule off the host, `ds-button[data-color="error"]` or
+  `ds-button[data-variant="outline"]`. `.color-primary` and `.variant-solid` do not exist: the
+  default carries no class, as `.c-primary` and `.v-solid` never did. Bindings (`color="error"`,
+  `variant="outline"`) are unaffected; a selector left on an old class matches nothing, and a
+  `:not(.c-error)` chain stops excluding anything.
+
+- **`DS_CONFIG.chart.emptyText` and `DS_CONFIG.chart.errorText` are removed for `provideDsIntl`.**
+  Move them out of `provideDsConfig` into `provideDsIntl({ chart: { empty: '...', error: '...' } })`
+  on the same injector. Deleting the keys without adding `provideDsIntl` compiles and silently
+  restores the English 'No data' and 'Could not load the data'. The per-chart `[emptyText]` and
+  `[errorText]` inputs are unchanged and still win.
+
+- **Seventeen text inputs default to `null` and fall back to `DS_INTL`.** Each went from
+  `input<string>` with an English default to `input<string | null>(null)` (and `ds-table`'s
+  `sortAnnouncement` / `rangeAnnouncement` from a function `T` to `T | null`): `placeholder` on
+  `ds-autocomplete`, `ds-multi-select`, `ds-date-picker`, `ds-search`; `searchPlaceholder` on
+  `ds-multi-select`; `ariaLabel` on `ds-color-picker`, `ds-otp-input`; `closeLabel` on `ds-tag`;
+  `countLabel` on `ds-badge`; `moreLabel` and `panelLabel` on `ds-filter-bar`; `menuLabel` on
+  `ds-split-button`; `railLabel` on `ds-app-layout`; `otherLabel` on `ds-pie-chart`;
+  `noVisibleSeriesText` on `ds-line-chart`; `sortAnnouncement` and `rangeAnnouncement` on `ds-table`.
+  Binding these in a template is unaffected. Code that reads the raw input back, or a subclass
+  overriding it, handles `null` or reads the new matching `...Resolved` readback: a reader comparing
+  `placeholder()` to `'Select…'` now sees `null` for an unset field and takes the other branch with no
+  compile error.
+
+- **Chart numbers and percentages format in `DsConfig.locale`, then `LOCALE_ID`.** The built-in value
+  format (`ds-bar-chart`, `ds-column-chart`, `ds-line-chart`, `ds-pie-chart`, `ds-funnel-chart`,
+  `ds-heatmap-chart`, `ds-scatter-chart`, `ds-waterfall-chart`, and `ds-chart` with its series,
+  including hand-composed `dsColumnSeries` / `dsLineSeries`) reads one locale instead of the
+  browser's default. Percentages use `Intl`'s percent style rather than `toFixed(1)` + `%`, so de-DE
+  prints `13,5 %` with a space and a test expecting `13,5%` fails. An app that never provided
+  `LOCALE_ID` now prints en-US grouping where it printed the browser's: set `provideDsConfig({
+  locale: '<tag>' })` or provide `LOCALE_ID`. A chart bound to its own `[valueFormat]`, or an app
+  with `DS_CONFIG.chart.valueFormat` set, formats values as before; its percentages still change.
+
+- **`ds-date-picker` falls back to `DS_CONFIG.datePicker.locale`, then `DsConfig.locale`, then
+  `LOCALE_ID` (was a hard `'en-US'`).** A picker with no `[locale]` binding, in an app that provides
+  `LOCALE_ID` or `DsConfig.locale`, now renders month and weekday names and the typed-value order in
+  that locale; under a de-DE `LOCALE_ID` the order becomes `DD.MM.YYYY`. An app that provides neither
+  still gets en-US. To keep en-US: `provideDsConfig({ datePicker: { locale: 'en-US' } })`.
+
+- **`ds-dropzone` formats file sizes in the locale.** A listed file's size reads `DsConfig.locale`,
+  then `LOCALE_ID`; under a de-DE locale `1.5 MB` reads `1,5 MB`. Under en-US the text is unchanged
+  below 1000 MB and gains a group separator from 1000 MB (`1,024.0 MB`). To pin a dot decimal:
+  `provideDsConfig({ locale: 'en-US' })`, which also pins chart numbers and `ds-date-picker`.
+
+- **`ds-textarea` text size resolves `--ds-input-font-size`, then `--ds-field-font-size`, then
+  `--font-size-s` (was fixed at `--font-size-s`).** A `ds-textarea` under an ancestor that sets
+  `--ds-input-font-size` now takes that size; one under no such declaration is unchanged, and
+  `ds-input` is unchanged. To keep 14px under an ancestor that pinned another size: `ds-textarea {
+  --ds-input-font-size: var(--font-size-s); }`.
+
+- **`ds-search`'s hover border defaults to its own resting border (was `--border-default`).** A
+  `ds-search` whose rest border you coloured through `--ds-search-border` or
+  `--ds-field-border-color` now keeps that colour under the pointer instead of reverting to grey; one
+  under neither draws exactly what it drew. To restore the grey hover: `ds-search {
+  --ds-search-border-hover: var(--border-default); }`.
+
+- **Subclassing one of these breaks on a name collision.** Every one gained a member - most an
+  `intl` accessor and the `...Resolved` readbacks that pair with the nullable text inputs above, the
+  nine chart components also `renderReady`: `AccordionComponent`, `AccordionItemComponent`,
+  `AlertComponent`, `AppLayoutComponent`, `AuthLayoutComponent`, `AutocompleteComponent`,
+  `AvatarComponent`, `AvatarGroupComponent`, `BadgeComponent`, `BannerComponent`,
+  `BarChartComponent`, `BreadcrumbsComponent`, `ChartComponent`, `ColumnSeriesComponent`,
+  `LineSeriesComponent`, `ChartDataTableComponent`, `ColorPickerComponent`, `ColumnChartComponent`,
+  `DatePickerComponent`, `DescriptionItemComponent`, `DrawerComponent`, `DropzoneComponent`,
+  `FilterBarComponent`, `FunnelChartComponent`, `HeatmapChartComponent`, `InputComponent`,
+  `LineChartComponent`, `ModalCardComponent`, `MultiSelectComponent`, `NumberStepperComponent`,
+  `OtpInputComponent`, `PaginationComponent`, `PasswordRulesComponent`, `PieChartComponent`,
+  `ScatterChartComponent`, `SearchComponent`, `SelectComponent`, `SidenavGroupComponent`,
+  `SidenavFooterComponent`, `SliderComponent`, `SpinnerComponent`, `SplitButtonComponent`,
+  `StepperComponent`, `TableComponent`, `DsTableExport`, `TabsComponent`, `TagComponent`,
+  `TextareaComponent`, `TimePickerComponent`, `ToastComponent`, `ToastRegionComponent`,
+  `W3wComponent` and `WaterfallChartComponent`, and seven internal classes reachable only through
+  their own entry points: the internal `ChartLegendComponent`, the internal `ChartTooltipDirective`,
+  the internal `ModalConfirmComponent`, the internal `TableColumnsPanelComponent`, the internal
+  `TableColumnsTriggerComponent`, the internal `TableExportButtonComponent` and the internal
+  `TimeColumnsComponent`. Four members are gone:
+  `ChartComponent.tooltipPreferBelow`, `ColumnSeriesComponent.onMarkBlur`,
+  `LineSeriesComponent.onMarkerBlur` and the internal `ChartTooltipDirective.dsChartTooltipPreferBelow`.
+  Build after upgrading; rename or mark `override` every member the compiler reports colliding
+  (TS4114, or TS2416 where the signature differs - `AuthLayoutComponent`'s `landmark` default moved),
+  and delete an override whose base member is gone. A method named like a removed member and declared
+  without `override` still compiles and is never called again. Subclassing a DS component is
+  unsupported.
+
 ### Added
 
 - **`DS_CONFIG.chart.rendering` builds charts as they near the viewport, for a page that asks.**
@@ -22,6 +157,128 @@
   a main-thread update each. `SkeletonComponent` gained the `shimmer` input, so a subclass
   declaring that name needs `override`.
 
+- **`DS_INTL` and `provideDsIntl` hold every string the library renders.** `DS_INTL` is a
+  `Signal<DsIntl>`, `DS_INTL_DEFAULTS` its English base, and `provideDsIntl(overrides | () =>
+  Signal<overrides>)` merges per section like `provideDsConfig` - an object for one language, or a
+  factory returning a signal to switch languages at runtime. Exported from the package root and
+  `/core`, with the types `DsIntl`, `DsIntlOverrides`, `DsIntlSortDirection` and `DsIntlStepState`.
+  English by default; a text input set on an instance still wins.
+
+- **`DsConfig.locale?: string` sets the BCP-47 locale for chart numbers and percentages,
+  `ds-date-picker` and `ds-dropzone` file sizes.** Unset, it is Angular's `LOCALE_ID`. Set it through
+  `provideDsConfig({ locale: '<tag>' })`.
+
+- **Six field-family tokens sit under every text-entry field's own token.** `--ds-field-border-color`,
+  `--ds-field-border-color-hover`, `--ds-field-border-color-focus`, `--ds-field-text-color`,
+  `--ds-field-placeholder-color` and `--ds-field-font-size` reach `ds-input`, `ds-textarea`,
+  `ds-select`, `ds-multi-select`, `ds-autocomplete` and `ds-search`; a per-component token such as
+  `--ds-input-border` still wins where set. The date, time and colour pickers, the number stepper and
+  the OTP cells are not in the family. Every default is the value each field already drew.
+
+- **`ds-select`, `ds-multi-select` and `ds-search` take their own size and colour hooks.**
+  `ds-select`: `--ds-select-border-color-focus` (read by the focused and the open trigger alike),
+  `--ds-select-border-color-hover`, `--ds-select-placeholder-color`, `--ds-select-font-size`.
+  `ds-multi-select`: `--ds-multi-select-border-color-hover`, `--ds-multi-select-placeholder-color`,
+  `--ds-multi-select-font-size`. `ds-search`: `--ds-search-font-size`. Every default is the value the
+  trigger already drew.
+
+- **`ds-autocomplete` takes `--ds-autocomplete-text-color`, `--ds-autocomplete-placeholder-color` and
+  `--ds-autocomplete-border-color-hover`.** The text colour covers the typed text and the picked
+  value; the placeholder resolves `--text-tertiary` through the field family, as `ds-input`'s does.
+  Every default is the value it already drew.
+
+- **`ds-button` and `ds-icon-button` take border-colour hooks for hover and press.**
+  `--ds-button-border-color-hover` and `--ds-button-border-color-active` on `ds-button`,
+  `--ds-icon-button-border-hover` and `--ds-icon-button-border-active` on `ds-icon-button`. Hover
+  defaults to the resting border and active to hover, so an unset pair draws what the button drew.
+
+- **`ds-empty-state` takes `--ds-empty-state-title-font-family` (default `--font-sans`) and
+  `--ds-empty-state-title-font-weight` (default `--font-weight-bold`)**, beside the title's existing
+  size and colour hooks.
+
+- **`ds-badge` takes `--ds-badge-font-size` and `ds-page-header` takes
+  `--ds-page-header-subtitle-font-size`.** `--ds-badge-font-size` defaults to `--font-size-xs`; a
+  count badge keeps `--font-size-2xs` until the token is set. `--ds-page-header-subtitle-font-size`
+  defaults to `--font-size-s`.
+
+- **`ds-banner` takes `--ds-banner-title-font-size`** beside `--ds-banner-body-font-size`; it
+  defaults to `--font-size-s`, what the title drew.
+
+- **`ds-table` takes utility-column and footer-padding hooks.** `--ds-table-utility-column-width` and
+  `--ds-table-utility-column-padding-x` size the trailing column that carries the column picker and
+  the row-actions button; the width default moves from `--space-10` to `--space-6`, the buttons' own
+  size, and because cells are border-box nothing moves unless `--ds-table-cell-padding-x` is below
+  8px, where the column narrows to button plus padding. `--ds-table-footer-padding-y` (default
+  `--space-3`), with `--ds-table-footer-padding-top` and `--ds-table-footer-padding-bottom` falling
+  back to it, sets the pagination footer's block padding.
+
+- **Chart legends take `--ds-chart-legend-hover-bg-color` and `--ds-chart-legend-hover-text-color`**
+  for the hover and focus state of a legend entry (defaults `--surface-secondary` and
+  `--text-primary`).
+
+- **`ds-accordion` takes `chevron`, and `ds-accordion-item` takes eight styling hooks.** `chevron:
+  'right' | 'down'` (default `'right'`, type `AccordionChevron`): `'down'` draws a downward chevron
+  that turns up when the item opens. `ds-accordion-item` reads `--ds-accordion-header-padding`,
+  `--ds-accordion-header-gap`, `--ds-accordion-header-font-family`, `--ds-accordion-header-font-size`,
+  `--ds-accordion-header-font-weight`, `--ds-accordion-header-line-height`,
+  `--ds-accordion-header-hover-text-color` and `--ds-accordion-body-padding`. Every default is the
+  value the item already drew.
+
+- **`ds-bar-chart` takes `highlighted`.** It names one segment by id, or by its position where it has
+  none, and fades every other segment in every row to `--ds-chart-dim-opacity`. Unset changes
+  nothing.
+
+- **`g[dsColumnSeries]` takes `axis: 'primary' | 'secondary'` (default `'primary'`).**
+  `axis="secondary"` measures the columns against the second value axis, as `axis: 'secondary'` does
+  in a line series' data.
+
+- **The `check-overrides` schematic: `ng g @ids-group-ltd/ids-design-system:check-overrides`.**
+  Read-only: it reports every `--ds-*` custom property a stylesheet, `[style.--ds-*]` or
+  `setProperty` sets that the installed version never reads, and every `ds-*` selector naming a class
+  the component does not render. Options `strict` (default false; set, it fails when anything is
+  reported) and `path` (default `/`).
+
+- **`AnnounceState` is exported, and `ds-banner` / `ds-alert` warn once per instance in dev mode when
+  `announce` was never decided.** The warning fires for an error, warning or severe banner (error or
+  warning alert) left unbound while `DS_CONFIG.banner.announce` (`alert.announce`) is unset, and for
+  an info, success or neutral one that announces only because that key is true. Setting the key
+  either way ends the first, an `[announce]` binding ends the second; neither reaches a production
+  build.
+
+### Changed
+
+- **Chart legend entries take a hover and focus state.** In `ds-line-chart`, `ds-column-chart`,
+  `ds-scatter-chart`, `ds-chart-legend` and the `ds-pie-chart` legend, an entry under the pointer or
+  holding keyboard focus gets a `--surface-secondary` tint and `--text-primary` text through
+  `--ds-chart-legend-hover-bg-color` and `--ds-chart-legend-hover-text-color`; the entry's padding is
+  paid back as a negative margin, so no legend row moves. Hovering or focusing a `ds-pie-chart`
+  legend entry fades the other slices whether or not `dimOthers` is set, as the other chart legends
+  do; `dimOthers` still governs a pointer over the ring.
+
+- **A category panel hangs over the highest reading at its category, wherever in the band the pointer
+  is.** With the pointer beside a column it hung over a lower line marker.
+
+- **Line-series markers fade in with the line, and a thin funnel `area` stage stays visible.** In
+  `ds-line-chart` and `ds-chart` line series the point markers fade in with the line and area, on the
+  same delay and stagger. A `ds-funnel-chart` with `shape="area"` draws a stage whose share is too
+  small to clear the band gap as a band half a gap deep (about 3px at the default stage height) about
+  its own middle, instead of a zero-height line; a stage of value 0 still draws nothing.
+
+- **`ds-pie-chart` draws a held slice's pin badge as an HTML element over the ring.** It is 22px
+  (`--ds-chart-pin-size`) at any ring size, with the pin glyph centred in its circle.
+
+- **A click on a chart series leaves focus where it was.** Clicking a `g[dsColumnSeries]` or
+  `g[dsLineSeries]` series, or a `ds-scatter-chart` series, no longer moves focus onto the series
+  group and draws a focus rectangle around all its marks. The keyboard reaches each mark as before.
+
+- **Neutral rows and small buttons darken one step on press, to `--surface-muted`.** The controls that
+  had a hover fill and no pressed state: the sidenav group header and caret, the sidenav footer's
+  rows, more button, search results and alerts, the date picker's period trigger, nav buttons, month
+  and year cells and presets, the time picker's option cells and action buttons, the toast action,
+  the description-list copy button, the multi-select select-all row and the tab close button. An
+  interactive `ds-tag` takes the shared press dip too, and reads `--ds-press-brightness` and
+  `--ds-press-scale`.
+
 ### Fixed
 
 - **`ds-modal` and `ds-modal-card` measure their actions row again when its content changes.** The
@@ -33,6 +290,31 @@
 - **Column and line series draw before the width is measured.** They waited for the first
   measurement, so they drew nothing wherever the page is never laid out - a frozen snapshot, a
   headless render in virtual time - and the axes showed a frame before the marks.
+
+- **A closing modal backdrop, drawer and bottom sheet stay click-through for the whole leave.** Under
+  reduced motion the invisible scrim could take a click aimed at the page for up to 300ms after the
+  close; a click on the page during a close now reaches it.
+
+### What you can now DELETE
+
+| Delete | Why | Replace with |
+| --- | --- | --- |
+| a `.modal-backdrop.closing`, `.drawer-scrim.closing` or `.sheet-overlay.closing` rule forcing `pointer-events: none` | the library's closing roots are click-through for the whole leave | nothing; a rule that also shortens `animation-duration` under reduced motion may stay |
+| a doubled-class rule such as `.head.head`, `.chev.chev` or `.body-content.body-content` under `ds-accordion-item` | the header padding, gap, type and hover colour, the body padding and the chevron direction are tokens and an input | `--ds-accordion-header-padding` / `-gap` / `-font-*` / `-hover-text-color` and `--ds-accordion-body-padding` on the item; `chevron="down"` on the `ds-accordion` |
+| a rule recolouring `.dropdown:focus-visible` or `.dropdown.open` under `ds-select`, with or without `!important` | the focused and the open trigger resolve `--ds-select-border-color-focus` | `--ds-select-border-color-focus` on the `ds-select`, or `--ds-field-border-color-focus` for every field |
+| a `.autocomplete-input.autocomplete-input` rule setting `color` or `::placeholder` | the filter input resolves its text and placeholder colours from tokens | `--ds-autocomplete-text-color` and `--ds-autocomplete-placeholder-color`, or `--ds-field-text-color` / `--ds-field-placeholder-color` for every field |
+| a `ds-button .button.v-outline:hover` or `ds-icon-button .icon-button:hover` rule recolouring the inner button's edge | the hover and press border colours are tokens that fall back to the resting border | `--ds-button-border-color-hover` / `-active` on the `ds-button`, `--ds-icon-button-border-hover` / `-active` on the `ds-icon-button` |
+| a `ds-empty-state .title` or `.title.title` rule setting `font-family` or `font-weight` | the title's face and weight are tokens | `--ds-empty-state-title-font-family` and `--ds-empty-state-title-font-weight` on the `ds-empty-state` |
+| a `ds-badge .badge` or `ds-page-header .subtitle` rule sizing the label | the badge label size and the page-header subtitle size are tokens | `--ds-badge-font-size` on the `ds-badge`, `--ds-page-header-subtitle-font-size` on the `ds-page-header` |
+| a `ds-banner .banner.compact .title` rule sizing the title | the title size is a token | `--ds-banner-title-font-size` on the `ds-banner` |
+| a `ds-table .actions-col` or `.actions-col` rule squeezing the utility column | the utility column's width and horizontal padding are tokens | `--ds-table-utility-column-width` and `--ds-table-utility-column-padding-x` on the `ds-table` |
+| a `.pagination-footer.pagination-footer` rule re-padding the footer | the footer's top and bottom padding are tokens | `--ds-table-footer-padding-top` / `-bottom` (or `-y`) on the `ds-table` |
+| `cursor="category"` on a `ds-chart` holding two or more marks that show a tooltip | the default cursor resolves to the category cursor there | nothing; the binding stays legitimate on a `ds-chart` of one such mark |
+| `landmark="main"` on a `ds-auth-layout` | `main` is the default | nothing |
+| `--ds-auth-layout-brand-max-height: var(--ds-auth-layout-mark-size)` | the tile size is the default cap | nothing |
+| a `ds-auth-layout .brand-name` rule sizing the wordmark | the wordmark size is a hook | `--ds-auth-layout-brand-name-font-size` on the `ds-auth-layout` |
+| a `valueFormat: (value, location) =>` copied only to pin a locale, e.g. `value.toLocaleString('en-US'` | the built-in chart format reads `DsConfig.locale`, then `LOCALE_ID` | `provideDsConfig({ locale: 'en-US' })`; a formatter that changes digits, units or rounding stays |
+| a per-element `[countLabel]=`, `[sortAnnouncement]=` or `[rangeAnnouncement]=` that repeats the app-wide translation | the same wording set once in `provideDsIntl` reaches every instance | `provideDsIntl({ ... })` at the root; a binding whose text differs for that one instance stays |
 
 ## 0.14.0 — 2026-09-24
 

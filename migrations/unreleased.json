@@ -683,6 +683,7 @@
       "find": [
         ".modal-backdrop.closing",
         ".drawer-scrim.closing",
+        ".drawer-root.closing",
         ".sheet-overlay.closing",
         "pointer-events: none"
       ],
@@ -728,6 +729,7 @@
       "surface": "style",
       "find": [
         "ds-button .button.v-outline:hover",
+        "ds-button .button.variant-outline:hover",
         "ds-button .button:hover",
         "ds-icon-button .icon-button:hover",
         ".icon-button:hover"
