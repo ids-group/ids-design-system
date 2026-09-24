@@ -4,6 +4,28 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## `ds-modal-card` measures its actions row again when a label changes (2026-09-24)
+
+The row was measured on first render and when the header resized, so a button label that grew
+after the modal opened left every observed box unchanged: the row stayed a single line and the
+first button ran past the card's start edge (mm-ecm, "Unsaved changes" sm modal on 0.14.0: first
+button at 11-461 inside a card at 460-940). A `MutationObserver` on the actions row (child list,
+subtree, character data, no attributes) schedules the same frame-deferred measurement, so the
+`stacked` toggle never reports back to it. Measured 2026-09-24 on the docs modal page, sm card
+"Cancel / Deactivate" at 700-1180: lengthening "Cancel" after render stacked the row with both
+buttons inside at 720-1160, restoring the label unstacked it, and each change produced exactly one
+measurement (2 then 1 class mutations over 2 s).
+
+## 0.14.0's manifest carries the typed cell-template context as an item (2026-09-24)
+
+`CellTemplateDirective` became generic with a template context guard in 0.14.0, so a
+`dsCellTemplate` without `[dsCellTemplateOf]` types its row as `unknown` where 0.13.4 typed it
+`any`. The manifest filed that as `informational`, and a consumer upgrading 0.13.4 -> 0.14.0 got
+194 build errors in 8 templates of one app and 6 in another (TS2571 / TS2345, measured 2026-09-24).
+`0.14.0.json` now carries `cell-template-context-typed-unknown` (behavior, surface template, with
+the build errors in `detect`) in place of the informational line, and it cites the existing
+`table-row-caster-helpers` delete row.
+
 ## `ds-date-picker` keeps its content width in a container narrower than its mask (2026-09-24)
 
 The truncation contract says the value never clips, but the host carried `max-width: 100%` with
