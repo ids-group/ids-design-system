@@ -4,6 +4,18 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## `ds-date-picker` keeps its content width in a container narrower than its mask (2026-09-24)
+
+The truncation contract says the value never clips, but the host carried `max-width: 100%` with
+nothing holding a minimum, so under `fullWidth` in a narrow container the border shrank while the
+mask and calendar button kept their width and overflowed it (mm-ecm range filter, ME-405). The host
+now takes `min-width: min-content`, which outranks the `max-width`: the whole field overflows the
+container, border included, and the button keeps its inner padding. Inside `ds-field-group` the
+group's own `min-width: 0` on segments still applies, since the group draws the border. Measured
+2026-09-24 on the docs date-picker page, range picker (236.3px mask): in 206px and 150px boxes the
+button sat 18.7px and 74.7px outside the border before, and 11.5px (md) / 7.5px (sm) inside after;
+the other 17 pickers on the page kept their widths.
+
 ## Four control APIs consumers reached past the surface for (2026-09-24)
 
 `ds-switch` takes `controlled` with `(checkedRequested)`: the click is cancelled and the asked-for
