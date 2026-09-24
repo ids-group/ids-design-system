@@ -77,8 +77,8 @@ export class ModalComponent implements OnDestroy {
 
   constructor() {
     // open → DOM lifecycle: opening renders now; closing keeps the dialog mounted
-    // so the leave animation can play (teardown in onLeaveEnd). Skipped in preview
-    // (always shown). Reduced-motion zeroes the durations → close is instant.
+    // so the leave animation can play (teardown in onLeaveEnd, or the timer below).
+    // Skipped in preview (always shown).
     effect(() => {
       if (this.preview.staticPreview()) {
         return;
@@ -91,8 +91,9 @@ export class ModalComponent implements OnDestroy {
         this.closeFallbackTimer = null;
       } else if (this.wasOpen) {
         this.closing.set(true);
-        // Chrome freezes CSS animations on a backgrounded tab, so animationend
-        // may never fire — this synthetic fallback guarantees teardown anyway.
+        // Two cases never deliver animationend: Chrome freezes CSS animations on a
+        // backgrounded tab, and a 0s reduced-motion leave finishes before a listener
+        // hears it. This timer is the teardown guarantee, not belt-and-braces.
         clearTimeout(this.closeFallbackTimer ?? undefined);
         this.closeFallbackTimer = setTimeout(() => this.finishClose(), 300);
       }

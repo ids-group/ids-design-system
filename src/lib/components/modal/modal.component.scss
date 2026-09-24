@@ -65,8 +65,9 @@
 
   display: contents;
 
-  // Reduced motion zeroes the DURATION, never the animation — the modal's
-  // animationend teardown must still fire (see styles/_surface-motion.scss).
+  // Reduced motion zeroes the DURATION, never the animation. At 0s `animationend` is not
+  // reliably delivered, so the component's 300 ms fallback timer is what tears down, and
+  // `.closing` is click-through for exactly that window.
   @media (prefers-reduced-motion: reduce) {
     --_modal-enter-duration: 0ms;
     --_modal-leave-duration: 0ms;
@@ -265,6 +266,7 @@
     animation-duration: var(--_modal-leave-duration);
     animation-timing-function: var(--_modal-leave-easing);
     animation-fill-mode: forwards;
+    pointer-events: none;
   }
 }
 
