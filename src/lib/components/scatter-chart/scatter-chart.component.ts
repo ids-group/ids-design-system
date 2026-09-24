@@ -22,6 +22,7 @@ import {
   needsDecimating,
   niceDomain,
   tickValues,
+  chartRenderGate,
 } from '@ids-group-ltd/ids-design-system/components';
 import { ChartLegendComponent } from '@ids-group-ltd/ids-design-system/components/chart-legend';
 import type { ChartLegendItem } from '@ids-group-ltd/ids-design-system/components/chart-legend';
@@ -105,6 +106,8 @@ interface PlacedSeries {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ScatterChartComponent {
+  protected readonly renderReady = chartRenderGate();
+
   /** One entry per series, each carrying its own readings. Both scales are continuous, so a
    *  point holds its position on each rather than an index into a list of categories. */
   readonly data = input<readonly ScatterChartSeries[]>([]);

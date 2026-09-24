@@ -20,6 +20,7 @@ import {
   rovingMarks,
   leaveMark,
   staggerDelay,
+  chartRenderGate,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
@@ -92,6 +93,8 @@ function segmentsOf(
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BarChartComponent {
+  protected readonly renderReady = chartRenderGate();
+
   protected readonly leaveMark = leaveMark;
 
   /** One row per bar, drawn in the order given. */

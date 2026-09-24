@@ -24,6 +24,7 @@ import {
   labelInterval,
   rotationWouldFit,
   tickValues,
+  chartRenderGate,
 } from '@ids-group-ltd/ids-design-system/components';
 import { isPlatformBrowser } from '@angular/common';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
@@ -87,6 +88,8 @@ import {
   ],
 })
 export class ChartComponent implements ChartScales {
+  protected readonly renderReady = chartRenderGate();
+
   /** The category axis. Every projected mark is positioned against this list, so its length is
    *  what decides how many bands the plot has. */
   readonly categories = input<readonly string[]>([]);

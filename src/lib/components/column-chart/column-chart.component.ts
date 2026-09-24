@@ -20,6 +20,8 @@ import {
   describeSeries,
   formatPercent,
   shareOfTotal,
+  chartRenderGate,
+  CHART_RENDER_GATE_PASSED,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import type {
@@ -141,8 +143,11 @@ function readColumnGeometry(host: HTMLElement): typeof COLUMN_GEOMETRY {
   },
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  viewProviders: [{ provide: CHART_RENDER_GATE_PASSED, useValue: true }],
 })
 export class ColumnChartComponent {
+  protected readonly renderReady = chartRenderGate();
+
   /** One column per point, drawn in the order given - or one NAMED SERIES per entry, where every
    *  category carries a column from each. The two forms are told apart by their shape, so a chart
    *  handed a flat list behaves exactly as it always has. */

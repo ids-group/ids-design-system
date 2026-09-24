@@ -29,20 +29,20 @@
         {{ errorTextResolved() }}
       </p>
     </div>
-  } @else if (loading()) {
+  } @else if (loading() || !renderReady()) {
     <div
       class="skeleton"
       aria-hidden="true"
       [class.legend-bottom]="legend() === 'bottom'">
-      <ds-skeleton
-        circle
+      <ds-skeleton circle
         width="var(--_pie-chart-size)"
-        height="var(--_pie-chart-size)" />
+        height="var(--_pie-chart-size)"
+        [shimmer]="loading()" />
 
       @if (legend() !== 'none') {
         <div class="skeleton-legend">
           @for (placeholder of skeletonRows(); track $index) {
-            <ds-skeleton height="var(--_pie-chart-legend-row-height)" />
+            <ds-skeleton height="var(--_pie-chart-legend-row-height)" [shimmer]="loading()" />
           }
         </div>
       }

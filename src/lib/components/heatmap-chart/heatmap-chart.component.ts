@@ -7,7 +7,10 @@ import {
   input,
   output,
 } from '@angular/core';
-import { CHART_HEAT_COLORS } from '@ids-group-ltd/ids-design-system/components';
+import {
+  CHART_HEAT_COLORS,
+  chartRenderGate,
+} from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import { ChartDataTableComponent } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
 import type { ChartDataRow } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
@@ -64,6 +67,8 @@ interface PlacedRow {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeatmapChartComponent {
+  protected readonly renderReady = chartRenderGate();
+
   /** The column headings, left to right. Their count decides how many readings of a row are drawn:
    *  a row longer than this loses its tail, a shorter one ends early. */
   readonly columns = input<readonly string[]>([]);

@@ -11,12 +11,12 @@
       role="status">
       {{ errorTextResolved() }}
     </p>
-  } @else if (loading()) {
+  } @else if (loading() || !renderReady()) {
     <div
       class="skeleton"
       aria-hidden="true">
       @for (placeholder of skeletonRows(); track $index) {
-        <ds-skeleton height="var(--_heatmap-chart-cell-size)" />
+        <ds-skeleton height="var(--_heatmap-chart-cell-size)" [shimmer]="loading()" />
       }
     </div>
   } @else if (isEmpty()) {

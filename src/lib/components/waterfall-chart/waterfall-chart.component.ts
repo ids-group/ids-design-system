@@ -23,7 +23,11 @@ import { waterfallSteps } from './waterfall-chart.math';
 import { WaterfallMarksComponent } from './waterfall-marks.component';
 import { ChartDataTableComponent } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
 import type { ChartDataRow } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
-import { resolveChartDefaults } from '@ids-group-ltd/ids-design-system/components';
+import {
+  resolveChartDefaults,
+  chartRenderGate,
+  CHART_RENDER_GATE_PASSED,
+} from '@ids-group-ltd/ids-design-system/components';
 import type {
   WaterfallChartBar,
   WaterfallChartStep,
@@ -69,8 +73,11 @@ const DIRECTION_WORDS: Record<WaterfallChartStep['direction'], string> = {
   },
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  viewProviders: [{ provide: CHART_RENDER_GATE_PASSED, useValue: true }],
 })
 export class WaterfallChartComponent {
+  protected readonly renderReady = chartRenderGate();
+
   /** The bars in the order they are read, which is the order they happened in - a waterfall is
    *  never sorted, because the sequence is the meaning. */
   readonly data = input<readonly WaterfallChartBar[]>([]);

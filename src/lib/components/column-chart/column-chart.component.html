@@ -20,12 +20,12 @@
       role="status">
       {{ errorTextResolved() }}
     </p>
-  } @else if (loading()) {
+  } @else if (loading() || !renderReady()) {
     <div
       class="skeleton"
       aria-hidden="true">
       @for (placeholder of skeletonColumns(); track $index) {
-        <ds-skeleton [height]="skeletonHeightPx()" />
+        <ds-skeleton [shimmer]="loading()" [height]="skeletonHeightPx()" />
       }
     </div>
   } @else if (isEmpty()) {

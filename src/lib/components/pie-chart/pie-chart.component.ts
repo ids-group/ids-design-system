@@ -17,6 +17,7 @@ import {
   largestRemainder,
   markAt,
   rovingMarks,
+  chartRenderGate,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
@@ -70,6 +71,8 @@ const RING_OUTER_RADIUS = RING_VIEW_BOX_SIZE / 2;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PieChartComponent {
+  protected readonly renderReady = chartRenderGate();
+
   /** One slice per entry. A non-positive or non-finite value counts as zero — a ring is a
    *  part-to-whole picture and has no way to draw a negative share. */
   readonly data = input.required<readonly PieChartSlice[]>();
