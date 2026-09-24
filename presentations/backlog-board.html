@@ -2025,6 +2025,18 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## Neutral rows and small buttons show a pressed state (2026-09-24)
+
+Every neutral row or small button that had a hover fill and nothing on press now steps to
+`--surface-muted` on `:active`, the value menu items, accordion headers, list and tree rows already
+hardcode: sidenav group header and caret, sidenav footer rows and panels, the date picker's period
+trigger, nav, cells and presets, the time picker's options and actions, the toast action, the
+description-list copy button, multi-select's select-all and the tab close button. An interactive
+`ds-tag`, which already hovers at `--surface-muted`, takes the shared `press.feedback` dip instead. No
+new tokens and no formula (deck `3-interaction-formula`, verdict on neutral surfaces). Measured
+2026-09-24 in ds-docs: each target matches exactly one `:active` rule resolving `var(--surface-muted)`,
+resting and hover values unchanged; the tag's rest filter and transform stay `none`.
+
 ## `ds-button` and `ds-icon-button` spell out their colour-family slots and classes (2026-09-24)
 
 The private slots `--c-*` are `--_family-*`, gaining the `--_` marker every other private resolver
