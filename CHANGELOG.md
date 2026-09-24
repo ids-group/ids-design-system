@@ -27,7 +27,8 @@
   `ChartTooltipDirective`, which is internal but reachable through
   `@ids-group-ltd/ids-design-system/components/chart-tooltip`. Outside the charts,
   `ModalCardComponent`, `PaginationComponent`, `SearchComponent`, `SwitchComponent`,
-  `TableComponent`, `TextareaComponent` and `CellTemplateDirective` gained members too, and so did
+  `TableComponent`, `TextareaComponent`, `LineChartComponent` and `CellTemplateDirective` gained
+  members too, and so did
   every field control: each extends one of the internal base classes `DsControlValueAccessor` or
   `DsBooleanControlValueAccessor`, which gained `blur`. Declaring a member of the same name in a
   subclass is a compile error - TS4114, or TS2416 where the signature differs - so rename yours or
@@ -62,8 +63,8 @@
 
 - **`dsLineSeries` takes an `outline`, on by default.** The line and its markers sit on a band of
   the surface colour, so they stay legible where they cross columns. Set `[outline]="false"` for a
-  line on an empty plot where the band only separates it from the gridlines. `ds-line-chart` draws
-  its lines with the band and has no input to take it off.
+  line on an empty plot where the band only separates it from the gridlines. `ds-line-chart` takes
+  the same `outline` input and passes it to its series.
 
 - **`dsColumnSeries` takes `seriesKey` and `highlighted`.** Naming a series in the legend fades the
   others to `--ds-chart-dim-opacity`, which `ds-column-chart` now wires for you.
