@@ -3279,11 +3279,6 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": ""
       },
       {
-        "name": "--ds-chart-dimmed-opacity",
-        "value": "0.25",
-        "notes": ""
-      },
-      {
         "name": "--ds-chart-annotation-color",
         "value": "var(--text-primary)",
         "notes": "Fill of a dsSeriesAnnotation label, the reading a chart prints next to a mark so a screenshot carries what a tooltip would (default --text-primary)."
