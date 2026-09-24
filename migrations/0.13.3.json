@@ -39,7 +39,7 @@
         "typescript",
         "style"
       ],
-      "action": "Rename every `<ds-meter>` element to `<ds-bar>` and `MeterComponent` to `BarComponent` from `@ids-group-ltd/ids-design-system/components/bar`.. Rename a stylesheet rule whose selector names the `ds-meter` element the same way. Then give each one a `semantics` — `\"none\"` where it had no `ariaLabel`, `\"meter\"` where it had one. Without that the bar announces as a progress bar.",
+      "action": "Rename every `<ds-meter>` element to `<ds-bar>` and `MeterComponent` to `BarComponent` from `@ids-group-ltd/ids-design-system/components/bar`. Rename a stylesheet rule whose selector names the `ds-meter` element the same way. Then give each one a `semantics` — `\"none\"` where it had no `ariaLabel`, `\"meter\"` where it had one. Without that the bar announces as a progress bar.",
       "appliesWhen": "Only code written against `0.13.2`, the single release `ds-meter` existed in. `ds-bar-chart` is a different component and keeps its name.",
       "pitfall": "The rename alone compiles, renders identically, and silently changes what assistive technology hears: `ds-meter` was `aria-hidden` unless `ariaLabel` named it, and `ds-bar` defaults to `semantics=\"progress\"`. A table of two hundred rates that announced nothing now announces two hundred progress bars. `ds-bar` is a prefix of `ds-bar-chart`, which is a DIFFERENT component and is NOT renamed. A word boundary does not separate them - a hyphen is one, so `\\bds-bar\\b` matches inside `ds-bar-chart`. Match `ds-bar([^-\\w]|$)`, or the tag as `<ds-bar[\\s/>]`, and rename nothing whose name continues past `ds-bar`.",
       "restore": null,
