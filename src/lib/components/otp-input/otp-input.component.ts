@@ -5,12 +5,14 @@ import {
   booleanAttribute,
   computed,
   forwardRef,
+  inject,
   input,
   model,
   output,
   viewChildren,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 import { DsControlValueAccessor } from '@ids-group-ltd/ids-design-system/components';
 import { FieldMessageComponent } from '@ids-group-ltd/ids-design-system/components/field-message';
 import {
@@ -38,11 +40,12 @@ export type OtpMode = 'numeric' | 'alphanumeric';
   host: {
     '[attr.data-field-state]': 'controlState()',
     role: 'group',
-    '[attr.aria-label]': 'ariaLabel()',
+    '[attr.aria-label]': 'ariaLabelResolved()',
     '[attr.aria-describedby]': 'hintId()',
   },
 })
 export class OtpInputComponent extends DsControlValueAccessor<string> {
+  protected readonly intl = inject(DS_INTL);
   /** Entered code, two-way bound. */
   readonly value = model<string>('');
   /** Number of character cells. */
@@ -58,8 +61,12 @@ export class OtpInputComponent extends DsControlValueAccessor<string> {
   readonly success = input<string, string | null | undefined>('', {
     transform: trimmedText,
   });
-  /** Accessible group label for the cell row. */
-  readonly ariaLabel = input<string>('Verification code');
+  /** Accessible group label for the cell row.
+   *  Unset falls back to `DS_INTL.otpInput.label`. */
+  readonly ariaLabel = input<string | null>(null);
+  readonly ariaLabelResolved = computed(
+    () => this.ariaLabel() ?? this.intl().otpInput.label,
+  );
   /** Fires once, with the full code, on the partial → complete transition. */
   readonly completed = output<string>();
 
@@ -161,9 +168,11 @@ export class OtpInputComponent extends DsControlValueAccessor<string> {
   }
 
   protected cellLabel(index: number): string {
-    const noun = this.mode() === 'numeric' ? 'Digit' : 'Character';
+    const words = this.intl().otpInput;
 
-    return `${noun} ${index + 1}`;
+    return this.mode() === 'numeric'
+      ? words.digit(index + 1)
+      : words.character(index + 1);
   }
 
   protected onBlur(): void {
