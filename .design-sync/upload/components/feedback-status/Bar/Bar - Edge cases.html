@@ -1,0 +1,16 @@
+<!-- @dsCard group="feedback-status" viewport="1200x405" name="Bar - edge cases" subtitle="A value past max fills the track rather than overflowing it, a negative one draws nothing, and a max of zero or less falls back to 100 — a scale with no width has no fraction to…" --><!DOCTYPE html>
+<html data-theme="light"><head><meta charset="utf-8">
+  <title>Bar</title>
+  <link rel="stylesheet" href="../../../styles.css">
+  <link rel="stylesheet" href="../../../_ds_bundle.css">
+  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
+<link rel="stylesheet" href="../../../_ds_cards.css"></head><body>
+  <div class="ds-page"><ds-docs-components-bar _nghost-c3b=""><docs-section _ngcontent-c3b="" anchor="bar" eyebrow="Components" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-bar" data-anchor="bar"><h2 _ngcontent-c1="" class="t-h2">Bar - edge cases</h2><p _ngcontent-c3b="" class="block-desc t-s"> A value past <code _ngcontent-c3b="" class="t-mono-inline"> max </code> fills the track rather than overflowing it, a negative one draws nothing, and a <code _ngcontent-c3b="" class="t-mono-inline"> max </code> of zero or less falls back to 100 — a scale with no width has no fraction to draw. <code _ngcontent-c3b="" class="t-mono-inline"> indeterminate </code> is ignored unless <code _ngcontent-c3b="" class="t-mono-inline"> semantics </code> is <code _ngcontent-c3b="" class="t-mono-inline"> 'progress' </code>: only a task has an unknown duration. </p><div _ngcontent-c3b="" class="states"><div _ngcontent-c3b="" class="state"><code _ngcontent-c3b="" class="t-mono-inline state-lbl"> [value]="140" </code><ds-bar _ngcontent-c3b="" _nghost-c3c="" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><span _ngcontent-c3c="" style="width: 100%;"></span></ds-bar></div><div _ngcontent-c3b="" class="state"><code _ngcontent-c3b="" class="t-mono-inline state-lbl"> [value]="-20" </code><ds-bar _ngcontent-c3b="" _nghost-c3c="" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span _ngcontent-c3c="" style="width: 0%;"></span></ds-bar></div><div _ngcontent-c3b="" class="state"><code _ngcontent-c3b="" class="t-mono-inline state-lbl"> [max]="0" </code><ds-bar _ngcontent-c3b="" _nghost-c3c="" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="40"><span _ngcontent-c3c="" style="width: 40%;"></span></ds-bar></div></div></section></docs-section></ds-docs-components-bar></div>
+  
+  
+  
+
+
+</body></html>

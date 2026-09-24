@@ -4,4 +4,6 @@ Three switches, all on by default. [pageSizeOptions] is the list the picker offe
 
 The same table with the picker and the range label off.
 
+paginationSize and paginationLayout reach the pager's own size and layout: md gives the buttons the md control height, and spread puts the range label under the table's start edge and the controls under its end edge. Unset, both fall back to DS_CONFIG.pagination, which is where an app whose every pager sits under a table says it once.
+
 Full API: `Table.d.ts`. How to use the component anywhere: `Table.prompt.md`.

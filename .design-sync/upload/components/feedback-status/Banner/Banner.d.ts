@@ -21,8 +21,8 @@ export interface BannerProps {
   accentRail?: boolean;
   /** Fires when the user dismisses the banner. */
   onClosed?: (value: void) => void;
-  /** Announce this banner to a screen reader when it appears. Off by default: an `alert` region fires on INSERTION, so a banner that is page furniture would interrupt the reader on every route into the page. Turn it on for one the app raises in response to an event; for anything transient prefer `ToastService`, which owns a live region built for the purpose. */
-  announce?: boolean;
+  /** Announce this banner to a screen reader when it appears. Unset follows `DS_CONFIG.banner.announce`, then `false`. Off by default: an `alert` region fires on INSERTION, so a banner that is page furniture would interrupt the reader on every route into the page. Turn it on for one the app raises in response to an event; for anything transient prefer `ToastService`, which owns a live region built for the purpose. */
+  announce?: boolean | null;
   /** Content for the `[actions]` slot. */
   actions?: React.ReactNode;
   /** Element content. */
