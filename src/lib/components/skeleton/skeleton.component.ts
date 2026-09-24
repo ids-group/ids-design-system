@@ -40,6 +40,7 @@ function observeVisibility(host: Element, zone: NgZone): () => void {
     '[style.height]': 'height()',
     '[class.circle]': 'circle()',
     '[class.inline]': 'inline()',
+    '[class.still]': '!shimmer()',
   },
   encapsulation: ViewEncapsulation.Emulated,
 })
@@ -52,6 +53,10 @@ export class SkeletonComponent {
   readonly circle = input(false, { transform: booleanAttribute });
   /** `display: inline-block` instead of `block`, to sit inline with text. */
   readonly inline = input(false, { transform: booleanAttribute });
+  /** Whether the wave passes over the placeholder. Default `true`. Off, it is a flat block of the
+   *  same shape and size - for a space held for something that is not loading yet, where motion
+   *  would claim work that is not happening and cost a main-thread update a frame. */
+  readonly shimmer = input(true, { transform: booleanAttribute });
 
   constructor() {
     if (typeof IntersectionObserver !== 'undefined') {
