@@ -3,9 +3,9 @@
 
 Group: Layout & navigation
 
-Inputs: `total: required number`, `pageSize: model<number> = 10`, `currentPage: model<number> = 1`, `pageSizeOptions: number[] = [10, 25, 50, 100]`, `showLabel: boolean = true`, `size: DsSize | null = null` (unset resolves `DS_CONFIG.pagination.size`, then `DS_CONFIG.control.size`, then `sm`), `layout: PaginationLayout | null = null` (`'grouped' | 'spread'`; unset resolves `DS_CONFIG.pagination.layout`, then `'grouped'`; `'spread'` gives the nav full width and pushes the label and the controls to opposite edges). Inside `ds-table` the same two arrive as `paginationSize` / `paginationLayout`.
+Inputs: `total: required number`, `pageSize: model<number> = 10`, `currentPage: model<number> = 1`, `pageSizeOptions: number[] = [10, 25, 50, 100]`, `showLabel: boolean = true`, `size: DsSize | null = null` (unset resolves `DS_CONFIG.pagination.size`, then `DS_CONFIG.control.size`, then `sm`), `layout: PaginationLayout | null = null` (`'grouped' | 'spread'`; unset resolves `DS_CONFIG.pagination.layout`, then `'grouped'`; `'spread'` gives the nav full width and pushes the label and the controls to opposite edges), `loading: boolean = false` (every control disables, the range label is masked with a `ds-skeleton` so a stale `total` is never quoted, and the nav reports `aria-busy`). Inside `ds-table` `size` and `layout` arrive as `paginationSize` / `paginationLayout`, and `loading` is set from `loading="skeleton"`.
 Outputs: `(currentPageChange): number`, `(pageSizeChange): number`
 
 <!-- inputs:ds-pagination -->
-All inputs: `total: required number`, `pageSize: number = 10`, `currentPage: number = 1`, `pageSizeOptions: number[]`, `showLabel: boolean = true`, `showPageSize: boolean = true`, `size: 'sm' | 'md' | 'lg' = null`, `layout: 'grouped' | 'spread' = null`
+All inputs: `total: required number`, `pageSize: number = 10`, `currentPage: number = 1`, `pageSizeOptions: number[]`, `showLabel: boolean = true`, `showPageSize: boolean = true`, `size: 'sm' | 'md' | 'lg' = null`, `layout: 'grouped' | 'spread' = null`, `loading: boolean = false`
 <!-- /inputs -->
