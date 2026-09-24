@@ -4,6 +4,26 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## Chart tooltips, focus and hatching fixed from Stas's docs review (2026-09-24)
+
+The category panel hangs over the highest reading at the active category wherever the pointer is in
+the band: marks offer an `axisOrigin` (the column's bar, the line's top reading) whether or not the
+pointer is on them. A composed `ds-chart` gives one panel naming every mark's reading: `cursor` takes
+`'auto'`, the new default, which resolves to `'category'` when two or more marks offer a tooltip and
+to `'none'` otherwise; `ds-column-chart` binds `cursor="none"` so a grouped column chart is unchanged
+(Stas: the column and line of one category are one reading). Series groups no longer take focus on a
+click: a focus listener makes an SVG `<g>` focusable in Chromium, so mark focus is heard from the
+document through `listenForMarkFocus` (the group listeners came in with a9229c19); the roving
+tabindex and arrow keys are unchanged. A held tooltip opens above its mark in every chart
+(`dsChartTooltipPreferBelow` removed, the source's flag renamed `pinned`). Hatch stripes slant the
+other way and draw the full `--chart-hatch-width`, whose default moves 3px -> 1.5px so columns look
+the same; the tooltip swatch reads the same width. The container page's stacked cards get their gap
+back (a scoped sibling rule never matched projected charts). Measured 2026-09-24 in ds-docs: category
+panel bottom 351 over a bar top of 360 with the pointer on the column and 30px beside it; the combined
+chart reads "Apr Revenue $16.2K Running total $51.7K" on and beside the column; `.lines.focus()` and
+`.columns.focus()` no longer take focus while a marker does; a pinned column's panel sits at 344-378
+above a bar top of 406; the card gap is 0px before and 20px after.
+
 ## Chart legends take a hover state; pie pin badge, funnel tail and line markers fixed (2026-09-24)
 
 Every chart legend entry (`ds-chart-legend` and the pie legend) takes a hover and focus state through
