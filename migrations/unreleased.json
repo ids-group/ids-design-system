@@ -45,26 +45,32 @@
     {
       "id": "exported-class-members-grew",
       "kind": "behavior",
-      "old": "AccordionComponent, AccordionItemComponent",
+      "old": "AccordionComponent, AccordionItemComponent, AlertComponent, BannerComponent",
       "new": null,
       "surface": "typescript",
       "action": "Build after upgrading, and rename or mark `override` every member of yours the compiler reports as colliding.",
-      "appliesWhen": "Subclassing a DS component is unsupported, but consumers do it. Template users of the `<ds-accordion>` / `<ds-accordion-item>` elements need nothing.",
-      "pitfall": "`protected` is no protection: a redeclared protected member collides exactly as a public one does.",
+      "appliesWhen": "Subclassing a DS component is unsupported, but consumers do it. Template users of the `<ds-accordion>`, `<ds-accordion-item>`, `<ds-alert>` and `<ds-banner>` elements need nothing.",
+      "pitfall": "`protected` and `private` are no protection: a redeclared member collides exactly as a public one does.",
       "restore": null,
       "searchHints": [
         "extends AccordionComponent",
         "extends AccordionItemComponent",
+        "extends AlertComponent",
+        "extends BannerComponent",
         "extends "
       ],
       "detect": [
         "extends AccordionComponent",
         "AccordionComponent",
         "extends AccordionItemComponent",
-        "AccordionItemComponent"
+        "AccordionItemComponent",
+        "extends AlertComponent",
+        "AlertComponent",
+        "extends BannerComponent",
+        "BannerComponent"
       ],
-      "verify": "The app builds with no TS2415 or TS2416 naming AccordionComponent or AccordionItemComponent.",
-      "note": "AccordionComponent gained chevron; AccordionItemComponent gained chevronDown and chevronName. Subclassing a DS component is unsupported but consumers do it, and a redeclared member collides whether it is public or protected. The compiler enumerates every collision, so a build is the whole check and no list here could stay current."
+      "verify": "The app builds with no TS2415 or TS2416 naming AccordionComponent, AccordionItemComponent, AlertComponent or BannerComponent.",
+      "note": "AccordionComponent gained chevron; AccordionItemComponent gained chevronDown and chevronName; AlertComponent and BannerComponent each gained liveRole. Subclassing a DS component is unsupported but consumers do it, and a redeclared member collides whether it is public, protected or private. The compiler enumerates every collision, so a build is the whole check and no list here could stay current."
     }
   ],
   "informational": [
