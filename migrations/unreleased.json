@@ -1,6 +1,129 @@
 {
   "version": "unreleased",
-  "items": [],
+  "items": [
+    {
+      "id": "chart-cursor-default-auto",
+      "kind": "behavior",
+      "old": "ds-chart[cursor]",
+      "new": null,
+      "surface": "template",
+      "action": "None, unless a ds-chart that composes two or more marks showing a tooltip has to answer per mark: set cursor=\"none\" on it.",
+      "appliesWhen": "Only a ds-chart with no cursor binding that holds two or more g[dsColumnSeries] or g[dsLineSeries] marks whose tooltip is not \"none\". A ds-chart of one such mark, one that binds cursor either way, and the ds-column-chart, ds-line-chart and ds-waterfall-chart presets are unaffected.",
+      "pitfall": "On such a plot the pointer anywhere in a category opens the category panel, which lists every mark's reading there and replaces the per-mark panel, so a column series' partOfWhole share line is not in it while the pointer is on the plot.",
+      "restore": "cursor=\"none\"",
+      "searchHints": [
+        "<ds-chart",
+        "dsColumnSeries",
+        "dsLineSeries",
+        "cursor="
+      ],
+      "detect": [
+        "dsColumnSeries",
+        "dsLineSeries",
+        "cursor=\"category\""
+      ],
+      "verify": "Every ds-chart holding two marks that show a tooltip either opens one panel naming each mark's reading when the pointer is anywhere in a category, or carries cursor=\"none\".",
+      "note": "The default was \"none\", now \"auto\": the category cursor for a plot of two or more marks that show a tooltip, and \"none\" for a plot of one. Two marks drawn over one category axis are read as one comparison, and a panel per mark made the reader hover the column and the line in turn to compare them. A cursor=\"category\" written on such a plot restates the new default (delete list: chart-cursor-category-composed)."
+    },
+    {
+      "id": "chart-cursor-type-widened",
+      "kind": "behavior",
+      "old": "ds-chart[cursor]",
+      "new": null,
+      "surface": "typescript",
+      "action": "Where your code reads ChartComponent.cursor() back, handle \"auto\".",
+      "appliesWhen": "Only code that reads the input back through a ChartComponent reference (viewChild, #chart=\"dsChart\") or a subclass redeclaring it. Binding cursor in a template is unaffected.",
+      "restore": null,
+      "searchHints": [
+        "dsChart",
+        "ChartComponent",
+        ".cursor()"
+      ],
+      "detect": [
+        ".cursor()",
+        "cursor() ===",
+        "extends ChartComponent"
+      ],
+      "verify": "The app builds, and no branch on ChartComponent.cursor() treats \"auto\" as a value it cannot receive.",
+      "note": "The type was 'none' | 'category', now 'none' | 'category' | 'auto'. A reader comparing it exhaustively, or a subclass redeclaring the input with the old type (TS2416), is what breaks; a writer is unaffected."
+    },
+    {
+      "id": "chart-tooltip-prefer-below-removed",
+      "kind": "removed-api",
+      "old": "[dsChartTooltipPreferBelow]",
+      "new": null,
+      "surface": [
+        "template",
+        "typescript"
+      ],
+      "action": "Delete every [dsChartTooltipPreferBelow] binding. In a tooltip source a custom mark hands CHART_SCALES.reportTooltip, rename preferBelow to pinned.",
+      "appliesWhen": "Only an app that binds the dsChartTooltip directive itself, or a custom mark that injects CHART_SCALES and reports a tooltip source carrying preferBelow. The library's own charts are unaffected.",
+      "pitfall": "A preferBelow left in a source reached through a variable rather than an object literal still compiles and is ignored, so a held panel stays inert to the pointer and its text cannot be selected.",
+      "restore": null,
+      "searchHints": [
+        "dsChartTooltipPreferBelow",
+        "preferBelow",
+        "reportTooltip"
+      ],
+      "detect": [
+        "dsChartTooltipPreferBelow",
+        "preferBelow:",
+        "reportTooltip("
+      ],
+      "verify": "No dsChartTooltipPreferBelow or preferBelow remains in the app, and a held chart panel opens above its mark.",
+      "note": "Every chart puts its Unpin control at the plot's bottom edge, so a held panel opens above its mark like a hovered one and the flag that flipped it below has nothing left to steer. pinned carries the other half of what preferBelow fed: a held pane takes the pointer so its text can be selected."
+    },
+    {
+      "id": "chart-hatch-width-full-stroke",
+      "kind": "behavior",
+      "old": "--ds-chart-hatch-width",
+      "new": null,
+      "surface": "style",
+      "action": "None, unless you set --ds-chart-hatch-width: halve the value to keep the stripe you had.",
+      "appliesWhen": "Only a stylesheet that sets --ds-chart-hatch-width. The default draws the same stripe as before. The default ships in styles/tokens-charts, which styles/ds forwards.",
+      "pitfall": "An override left at 3px now draws a 3px stripe in the 8px repeat, which reads as a paler mark rather than a textured one.",
+      "restore": "--ds-chart-hatch-width: calc(<your value> / 2);",
+      "searchHints": [
+        "--ds-chart-hatch-width",
+        "hatch"
+      ],
+      "detect": [
+        "--ds-chart-hatch-width"
+      ],
+      "verify": "In the BUILT css --chart-hatch-width resolves to 1.5px, and a hatched column's stripe measures the width --ds-chart-hatch-width names.",
+      "note": "The default was 3px, now 1.5px. The stripe sat on its pattern tile's edge, which clipped it to half the token, so a column drew 1.5px while the tooltip swatch drew a fixed share of its own diameter. The stripe now runs down the tile's middle at the full token, the default halves so a column looks as it did, and the swatch takes the same token."
+    },
+    {
+      "id": "exported-class-members-changed",
+      "kind": "behavior",
+      "old": "extends ChartComponent",
+      "new": null,
+      "surface": "typescript",
+      "action": "Only if you SUBCLASS one of these: rename a member of yours that collides with a new one, or add `override` where it genuinely means the same thing, and delete an override whose base member is gone.",
+      "appliesWhen": "Only a class extending ChartComponent, ColumnSeriesComponent, LineSeriesComponent or ChartTooltipDirective. Using them in a template is unaffected.",
+      "pitfall": "A method of yours named like a removed member and declared without `override` still compiles, and is simply never called again.",
+      "restore": null,
+      "searchHints": [
+        "extends ChartComponent",
+        "extends ColumnSeriesComponent",
+        "extends LineSeriesComponent",
+        "extends ChartTooltipDirective",
+        "extends "
+      ],
+      "detect": [
+        "extends ChartComponent",
+        "ChartComponent",
+        "extends ColumnSeriesComponent",
+        "ColumnSeriesComponent",
+        "extends LineSeriesComponent",
+        "LineSeriesComponent",
+        "extends ChartTooltipDirective",
+        "ChartTooltipDirective"
+      ],
+      "verify": "Your build has no TS4114 or TS2416 against any of the listed classes, and no member of your subclass is named like one of the removed members listed in the note.",
+      "note": "Gained: ChartComponent composed, cursorResolved and tooltipPinned; ColumnSeriesComponent barElements. Removed: ChartComponent tooltipPreferBelow, ColumnSeriesComponent onMarkBlur, LineSeriesComponent onMarkerBlur, ChartTooltipDirective dsChartTooltipPreferBelow (internal, via components/chart-tooltip). ColumnSeriesComponent onMarkFocus and LineSeriesComponent onMarkerFocus became private and take the mark as a second argument."
+    }
+  ],
   "deleteList": [
     {
       "id": "closing-scrim-pointer-events",
@@ -13,6 +136,15 @@
       ],
       "why": "The library's closing roots are click-through for the whole leave, so a rule forcing pointer-events: none on them restates it. A rule that also shortens animation-duration under reduced motion still does something - it ends the leave before the fallback timer would - and may stay.",
       "replaceWith": "nothing"
+    },
+    {
+      "id": "chart-cursor-category-composed",
+      "surface": "template",
+      "find": [
+        "cursor=\"category\""
+      ],
+      "why": "On a ds-chart holding two or more marks that show a tooltip, the default cursor resolves to the category cursor. The binding stays legitimate on a ds-chart of one such mark, where the default resolves to none.",
+      "replaceWith": "nothing"
     }
   ],
   "informational": [
@@ -20,6 +152,22 @@
     {
       "text": "A closing modal backdrop, drawer and bottom sheet are click-through for the whole leave. Under reduced motion the leave is 0 ms long and its animationend is not reliably delivered, so the fallback timer tore the scrim down up to 300 ms later and the invisible scrim took every click aimed at the page in that window. A rule of yours forcing pointer-events: none on .modal-backdrop.closing, .drawer-scrim.closing or .sheet-overlay.closing is redundant (delete list: closing-scrim-pointer-events).",
       "verify": "With prefers-reduced-motion: reduce emulated, close a modal and click a button under it within 300 ms: the button's handler runs, and document.elementFromPoint over it never returns the .modal-backdrop."
+    },
+    {
+      "text": "Hatched columns slant from top left to bottom right, and the tooltip swatch of a hatched reading draws its stripe at the same angle, in --ds-chart-hatch-color and at --ds-chart-hatch-width.",
+      "verify": "Hover a hatched column: its stripes and the swatch stripe in the panel run the same diagonal at the same width."
+    },
+    {
+      "text": "A click on a g[dsColumnSeries] or g[dsLineSeries] series, or on a ds-scatter-chart series, leaves focus where it was: the series group took focus and drew a focus rectangle around all its marks. The keyboard reaches each mark as before.",
+      "verify": "Click a column of a ds-chart: document.activeElement is not the .columns group and no outline surrounds the series."
+    },
+    {
+      "text": "A category panel hangs over the highest reading at the category wherever in the band the pointer is; with the pointer beside a column it hung over a lower line marker.",
+      "verify": "On a ds-chart with a column, a line and a category cursor, move the pointer across one category: the panel stays above the taller reading."
+    },
+    {
+      "text": "A held (pinned) chart panel opens above its mark, like a hovered one, in ds-chart, ds-column-chart, ds-bar-chart, ds-pie-chart and ds-funnel-chart.",
+      "verify": "Pin a column with pinOnClick: the panel sits above the column and the Unpin control below the plot."
     }
   ]
 }
