@@ -1,5 +1,7 @@
 ## Unreleased
 
+## 0.14.0 — 2026-09-24
+
 ### Breaking
 
 - **`ds-chart` opens the tooltip its marks describe, and a mark no longer takes one.** A mark

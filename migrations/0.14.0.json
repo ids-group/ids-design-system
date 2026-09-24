@@ -1,5 +1,5 @@
 {
-  "version": "unreleased",
+  "version": "0.14.0",
   "items": [
     {
       "id": "chart-container-owns-the-tooltip",
@@ -562,7 +562,10 @@
     },
     {
       "id": "table-row-caster-helpers",
-      "surface": ["typescript", "template"],
+      "surface": [
+        "typescript",
+        "template"
+      ],
       "find": [
         "(row: unknown)",
         "return row as "
@@ -572,7 +575,10 @@
     },
     {
       "id": "switch-confirm-wrapper",
-      "surface": ["template", "typescript"],
+      "surface": [
+        "template",
+        "typescript"
+      ],
       "find": [
         "preventDefault()",
         "emit(!this.checked())",
