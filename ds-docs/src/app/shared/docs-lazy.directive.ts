@@ -18,11 +18,20 @@ const MOUNT_BUDGET_MS = 8;
 // screen.
 const ROOT_MARGIN = '10% 0px';
 
+// While the reader is not scrolling, the charts within a screen of the viewport are built ahead of
+// need, so the next scroll finds them ready instead of building them in its frames. One at a time,
+// and only into an idle period with room left for one.
+const IDLE_AHEAD_MARGIN = '100% 0px';
+const IDLE_ROOM_MS = 12;
+
 type Mount = () => void;
 
 const pending = new Map<Element, Mount>();
+const idleAhead = new Map<Element, Mount>();
 const observers = new Map<Element | null, IntersectionObserver>();
+const idleObservers = new Map<Element | null, IntersectionObserver>();
 let draining = false;
+let idleScheduled = false;
 
 function drain(): void {
   const start = performance.now();
@@ -36,6 +45,53 @@ function drain(): void {
     mount();
   }
   draining = false;
+}
+
+function buildWhileIdle(deadline: IdleDeadline): void {
+  idleScheduled = false;
+  for (const [placeholder, mount] of idleAhead) {
+    if (deadline.timeRemaining() < IDLE_ROOM_MS) {
+      break;
+    }
+    idleAhead.delete(placeholder);
+    mount();
+  }
+  scheduleIdleBuild();
+}
+
+function scheduleIdleBuild(): void {
+  if (
+    idleScheduled ||
+    !idleAhead.size ||
+    typeof requestIdleCallback === 'undefined'
+  ) {
+    return;
+  }
+  idleScheduled = true;
+  requestIdleCallback(buildWhileIdle);
+}
+
+function idleObserverFor(root: Element | null): IntersectionObserver {
+  let observer = idleObservers.get(root);
+  if (!observer) {
+    observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          const mount = mounts.get(entry.target);
+          if (mount && entry.isIntersecting) {
+            idleAhead.set(entry.target, mount);
+          } else {
+            idleAhead.delete(entry.target);
+          }
+        }
+        scheduleIdleBuild();
+      },
+      { root, rootMargin: IDLE_AHEAD_MARGIN },
+    );
+    idleObservers.set(root, observer);
+  }
+
+  return observer;
 }
 
 function observerFor(root: Element | null): IntersectionObserver {
@@ -72,8 +128,9 @@ function observerFor(root: Element | null): IntersectionObserver {
 const mounts = new WeakMap<Element, Mount>();
 
 /**
- * Builds its element just before it first scrolls into view, a few at a time, and keeps it after
- * that. Until then a fixed-height placeholder holds its place.
+ * Builds its element just before it first scrolls into view, a few at a time, or earlier while the
+ * page is idle and it is within a screen of the viewport, and keeps it after that. Until then a
+ * fixed-height placeholder holds its place.
  *
  * Two states, then. The first time a chart comes up to the fold it is built and plays its entrance
  * where the reader sees it. After that it is never rebuilt: scrolled off, it stays in the DOM and
@@ -108,10 +165,14 @@ export class DocsLazyDirective implements OnInit {
     placeholder.setAttribute('aria-hidden', 'true');
     anchor.parentNode?.insertBefore(placeholder, anchor);
 
-    const observer = observerFor(this.scroller?.() ?? null);
+    const root = this.scroller?.() ?? null;
+    const observer = observerFor(root);
+    const idleObserver = idleObserverFor(root);
     const release = (): void => {
       observer.unobserve(placeholder);
+      idleObserver.unobserve(placeholder);
       pending.delete(placeholder);
+      idleAhead.delete(placeholder);
       placeholder.remove();
     };
     mounts.set(placeholder, () => {
@@ -121,6 +182,7 @@ export class DocsLazyDirective implements OnInit {
       markRendered(view);
     });
     observer.observe(placeholder);
+    idleObserver.observe(placeholder);
     this.destroyRef.onDestroy(release);
   }
 }

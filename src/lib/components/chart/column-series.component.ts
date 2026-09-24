@@ -305,6 +305,10 @@ export class ColumnSeriesComponent implements OnDestroy {
     DomSanitizer,
   ).bypassSecurityTrustHtml(ICONS.pin);
 
+  protected readonly hatchInUse = computed(() =>
+    this.marks().some((mark) => mark.hatched),
+  );
+
   protected readonly marks = computed(() => {
     if (!(this.scales.measured?.() ?? true)) {
       return [];
