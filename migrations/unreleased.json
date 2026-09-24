@@ -91,7 +91,11 @@
       "text": "ds-table takes --ds-table-utility-column-width and --ds-table-utility-column-padding-x for the trailing column that carries the column picker and the row-actions button. The width default moves from --space-10 to --space-6, the buttons' own size; because cells are border-box and the column already sat at button-plus-padding, nothing moves unless --ds-table-cell-padding-x is below 8px, where the column narrows to that sum. Purely additive otherwise (delete list: table-actions-col-deep-rule).",
       "verify": "A ds-table with dsTableColumns and no rowActions renders its trailing header cell at the same width as before the upgrade at default density (measured 56px at 16px cell padding); with --ds-table-utility-column-padding-x: 0 on the table the cell is 24px wide and the picker button fills it."
     },
-    "ds-table takes --ds-table-footer-padding-y (default --space-3) with --ds-table-footer-padding-top and -bottom falling back to it, for the pagination footer's block padding; its inline sides already followed --ds-table-cell-padding-*. Purely additive - nothing to change (delete list: table-pagination-footer-padding-deep-rule)."
+    "ds-table takes --ds-table-footer-padding-y (default --space-3) with --ds-table-footer-padding-top and -bottom falling back to it, for the pagination footer's block padding; its inline sides already followed --ds-table-cell-padding-*. Purely additive - nothing to change (delete list: table-pagination-footer-padding-deep-rule).",
+    {
+      "text": "ds-modal and ds-modal-card measure their [actions] row again when a button's label or the set of actions changes after the modal opens, so a label that grows past the card stacks the row instead of clipping the first button at the card's start edge.",
+      "verify": "Open a sm modal with two short buttons, then change one label to a long one while it stays open: the row stacks into a full-width column with both buttons inside the card."
+    }
   ],
   "deleteList": [
     {
