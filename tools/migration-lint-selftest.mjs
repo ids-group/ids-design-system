@@ -172,6 +172,7 @@ const negativeControls = [
     mutate: (m) => {
       m.informational.push({
         text: 'That override was doing nothing after the fix and can go. (delete list: search-height-pinned-for-a-short-row)',
+        verify: 'open it and look',
       });
     },
   },
@@ -255,7 +256,7 @@ const extraCases = [
     label: 'M046 on an informational object with an unknown key',
     code: 'M046',
     mutate: (m) => {
-      m.informational.push({ text: 'A rendering-only change.', proof: 'no' });
+      m.informational.push({ text: 'A rendering-only change.', proof: 'no', verify: 'open it and look' });
     },
   },
   {
@@ -264,7 +265,15 @@ const extraCases = [
     mutate: (m) => {
       m.informational.push({
         text: 'That override was doing nothing after the fix and can go.',
+        verify: 'open it and look',
       });
+    },
+  },
+  {
+    label: 'M046 on an informational object with text but no verify',
+    code: 'M046',
+    mutate: (m) => {
+      m.informational.push({ text: 'A rendering-only change.' });
     },
   },
 ];
