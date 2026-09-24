@@ -32,8 +32,8 @@ export interface ColorPickerProps {
   panelClass?: string | readonly string[];
   /** Disables the trigger and blocks all interaction. */
   disabled?: boolean;
-  /** Accessible name for the trigger button and panel. */
-  ariaLabel?: string;
+  /** Accessible name for the trigger button and panel. Unset falls back to `DS_INTL.colorPicker.label`. */
+  ariaLabel?: string | null;
   /** Confirmation text, shown when there is no error or warning — and it paints the field's success border. A string like `warning`: the text IS the state. */
   success?: string;
   /** Element content. */

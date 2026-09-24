@@ -4,7 +4,7 @@ Setting orientation="vertical" places the tab list in a column beside the panel.
 
 Project at a glance.
 
-Linked sub-records.
+Linked line items.
 
 Activity feed.
 

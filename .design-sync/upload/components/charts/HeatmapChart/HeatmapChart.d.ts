@@ -27,9 +27,9 @@ export interface HeatmapChartProps {
   loading?: boolean;
   /** Separate from an empty matrix: "the request failed" and "there is nothing to show" read the same and mean opposite things. */
   error?: boolean;
-  /** Shown when there are no rows or no columns. Unset falls back to `DS_CONFIG.chart.emptyText`. */
+  /** Shown when there are no rows or no columns. Unset falls back to `DS_INTL.chart.empty`. */
   emptyText?: string | null;
-  /** Shown in place of the grid while `error` is set. Unset falls back to `DS_CONFIG.chart.errorText`. */
+  /** Shown in place of the grid while `error` is set. Unset falls back to `DS_INTL.chart.error`. */
   errorText?: string | null;
   /** Formats every reading the chart prints - the scale's two ends, each cell's accessible name and the annex table. Unset falls back to `DS_CONFIG.chart.valueFormat`. */
   valueFormat?: unknown;

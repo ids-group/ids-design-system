@@ -13,8 +13,8 @@ export interface ChartProps {
   min?: number | null;
   /** Pins the ceiling of the value axis. See `min`. Two charts drawn one subject at a time are only comparable when both are pinned. */
   max?: number | null;
-  /** Draws a band and a crosshair down the category under the pointer, and reports that category to every mark through `activeIndex`. `'none'`, the default, leaves the plot alone: a chart whose marks are the hover targets already answers per mark, and two affordances on one plot read as two different questions. */
-  cursor?: 'none' | 'category';
+  /** Draws a band and a crosshair down the category under the pointer, and reports that category to every mark through `activeIndex`. On a plot of two or more marks that show a tooltip, the panel then names every mark's reading at that category wherever in it the pointer is. `'auto'`, the default, is `'category'` for such a composed plot and `'none'` for a plot of one mark, whose marks already answer per mark: two affordances on one plot read as two different questions. */
+  cursor?: 'none' | 'category' | 'auto';
   /** Whether a press holds the category cursor where it is, so the reader can look away from the plot with the comparison still on screen. Released by pressing it again, by Escape, or by a press outside the plot. */
   cursorPin?: boolean;
   /** Milliseconds the cursor survives the pointer leaving the plot. The tooltip panel is portaled out of the plot, so without a grace period it closes before the pointer can reach it. */
@@ -37,13 +37,13 @@ export interface ChartProps {
   frame?: ('auto' | 'none') | null;
   /** Draws a placeholder in place of the plot, at the plot's own height, so the page does not resize when the data lands. */
   loading?: boolean;
-  /** Shown in place of the plot when `categories` is empty. Unset falls back to `DS_CONFIG.chart.emptyText`, then `'No data'`. */
+  /** Shown in place of the plot when `categories` is empty. Unset falls back to `DS_INTL.chart.empty`. */
   emptyText?: string | null;
   /** Shows `errorText` in place of the plot. Separate from `loading` and from an empty `categories`, because "the request failed" and "there is nothing to show" read the same to a reader and mean opposite things. */
   error?: boolean;
-  /** The message the error state prints. Unset falls back to `DS_CONFIG.chart.errorText`, then `'Could not load the data'`. */
+  /** The message the error state prints. Unset falls back to `DS_INTL.chart.error`. */
   errorText?: string | null;
-  /** Formats the value-axis ticks. Unset falls back to `DS_CONFIG.chart.valueFormat`, then the browser's locale grouping with a K/M/B suffix past four digits. */
+  /** Formats the value-axis ticks. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`. */
   valueFormat?: unknown;
   /** How the second value axis relates to the first, once a mark has reported against it. The same four words `ds-line-chart` takes. */
   secondaryAxisMode?: ('aligned' | 'exact' | 'dual-grid' | 'split');

@@ -162,6 +162,7 @@ guides/foundations/Motion/Motion - Entrance presets - customizing a surface.html
 guides/foundations/Scrollbar/Scrollbar - Live demo.html
 guides/foundations/Scrollbar/Scrollbar - Specification.html
 guides/foundations/Scrollbar/Scrollbar - Tokens.html
+guides/foundations/Theming & dark mode/Theming & dark mode - Locale and wording.html
 guides/patterns/Filter bar/Filter bar - Inline row.html
 guides/patterns/Filter bar/Filter bar - Stacked variant.html
 guides/patterns/Filter bar/Filter bar - Wired to a table.html

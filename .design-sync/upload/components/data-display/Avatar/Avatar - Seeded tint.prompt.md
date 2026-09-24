@@ -6,7 +6,7 @@ The trade this makes, stated plainly. HSL lightness is not perceptually even, so
 
 Or pass the name and let the avatar do both. name replaces the two bindings this demo wires by hand: it derives the initials AND seeds the tint. The tint hashes the NAME, never the initials — two letters collide wholesale, so Alice Brown and Adam Bell would otherwise share one colour. Measured: same "AB", hues 198° and 356°.
 
-The built-in rule takes the first two words, and that is all it claims to be — a Latin-script guess. Reading a name is a cultural convention rather than a UI decision: a Spanish reader wants MG from "María José García López", an insurer wants BC from "Blue Cross Blue Shield". So the rule is replaceable, not configurable-by-mode — [initialsRule] for one table, provideDsConfig({ avatar: { initials } }) for the app. An explicit initials still wins over both.
+The built-in rule takes the first two words, and that is all it claims to be — a Latin-script guess. Reading a name is a cultural convention rather than a UI decision: a Spanish reader wants MG from "María José García López", a club's members want BR from "Bramley Rovers Football Club". So the rule is replaceable, not configurable-by-mode — [initialsRule] for one table, provideDsConfig({ avatar: { initials } }) for the app. An explicit initials still wins over both.
 
 Same seeds with [avoidHues]="[[310, 360], [0, 20]]" — pink and red hues are skipped so seeded avatars never clash with a brand colour:
 

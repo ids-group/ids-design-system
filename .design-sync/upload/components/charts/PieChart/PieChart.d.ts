@@ -15,8 +15,8 @@ export interface PieChartProps {
   legend?: 'end' | 'bottom' | 'none';
   /** Longest legend to draw. Past it the smallest slices are summed into one, so a long tail does not become a legend nobody reads. Off by default: grouping changes what the chart says, and that is the consumer's call. Values below 2 are ignored — one slice is not a pie. */
   maxSlices?: number | null;
-  /** Names the grouped slice. */
-  otherLabel?: string;
+  /** Names the grouped slice. Unset falls back to `DS_INTL.chart.other`. */
+  otherLabel?: string | null;
   /** The hole, as a fraction of the outer radius. Zero draws a solid pie and takes the centre content away with the hole that held it. */
   innerRadius?: number;
   /** Whether the chart draws its own bordered, padded box. `'auto'`, the default, draws it; `'none'` leaves the chart bare, for one placed inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards is one decision per app rather than per plot. */
@@ -33,13 +33,13 @@ export interface PieChartProps {
   partOfWhole?: boolean;
   /** Draws skeleton marks in place of the data, at the same count, so the chart does not resize when the data lands. */
   loading?: boolean;
-  /** Shown in place of the plot when `data` is empty. Unset falls back to `DS_CONFIG.chart.emptyText`, then `'No data'`. */
+  /** Shown in place of the plot when `data` is empty. Unset falls back to `DS_INTL.chart.empty`. */
   emptyText?: string | null;
   /** Shows `errorText` in place of the plot. Separate from `loading` and from an empty `data`, because "the request failed" and "there is nothing to show" read the same to a reader and mean opposite things. */
   error?: boolean;
-  /** The message the error state prints. Unset falls back to `DS_CONFIG.chart.errorText`, then `'Could not load the data'`. */
+  /** The message the error state prints. Unset falls back to `DS_INTL.chart.error`. */
   errorText?: string | null;
-  /** Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then the browser's locale grouping with a K/M/B suffix past four digits. */
+  /** Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`. */
   valueFormat?: unknown;
   /** Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click. */
   interactive?: boolean;

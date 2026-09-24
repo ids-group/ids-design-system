@@ -1,0 +1,29 @@
+<!-- @dsCard group="foundations" viewport="1200x630" name="Charts & dataviz - a page with dozens of charts" subtitle="Every chart draws the moment it is created, which is right for a screen with a few of them: nothing waits and nothing appears late." --><!DOCTYPE html>
+<html data-theme="light"><head><meta charset="utf-8">
+  <title>Charts &amp; dataviz</title>
+  <link rel="stylesheet" href="../../../styles.css">
+  <link rel="stylesheet" href="../../../_ds_bundle.css">
+  <style>body{margin:0;background:var(--surface-canvas, #fff);color:var(--text-primary, #161A28)}
+.ds-page .section > .block-desc:first-of-type{margin-top:var(--space-2)}
+.ds-page{max-width:var(--col-cap-content);margin-inline:auto;padding:var(--space-12) var(--space-16) var(--space-24)}</style>
+<link rel="stylesheet" href="../../../_ds_cards.css"><style>ds-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:0}ds-icon>svg.icon{display:block}</style></head><body>
+  <div class="ds-page"><ds-docs-foundations-charts _nghost-c4m=""><docs-section _ngcontent-c4m="" anchor="charts" eyebrow="Foundations" _nghost-c1=""><section _ngcontent-c1="" class="section" id="section-charts" data-anchor="charts"><h2 _ngcontent-c1="" class="t-h2">Charts &amp; dataviz - a page with dozens of charts</h2><p _ngcontent-c4m="" class="block-desc t-s"> Every chart draws the moment it is created, which is right for a screen with a few of them: nothing waits and nothing appears late. A dashboard or a report with dozens turns on <code _ngcontent-c4m="" class="t-mono-inline"> rendering.deferUntilVisible </code>, and each chart then holds its place with a still placeholder of its own shape until it comes within <code _ngcontent-c4m="" class="t-mono-inline"> visibleMargin </code> of the viewport. While the page is idle the charts within <code _ngcontent-c4m="" class="t-mono-inline"> buildAheadMargin </code> are built ahead, so the next scroll finds them ready, and a built chart that scrolls away costs no style, layout or paint until it returns. Until a deferred chart is built a screen reader meets its caption and nothing else, so leave it off where every chart has to be readable from the first moment. </p><pre _ngcontent-c4m="" class="t-mono"><code _ngcontent-c4m="">providers: [
+  provideDsConfig({
+    chart: {
+      rendering: {
+        deferUntilVisible: true,
+        visibleMargin: '10% 0px',
+        buildAheadWhileIdle: true,
+        buildAheadMargin: '100% 0px',
+        frameBudgetMs: 8,
+        skipWhileOffscreen: true,
+      },
+    },
+  }),
+]</code></pre></section></docs-section></ds-docs-foundations-charts></div>
+  
+  
+  
+
+
+</body></html>
