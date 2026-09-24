@@ -3,11 +3,13 @@ import {
   ElementRef,
   ViewEncapsulation,
   computed,
+  inject,
   input,
   numberAttribute,
   output,
   viewChildren,
 } from '@angular/core';
+import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 import {
   from12h,
   genHours,
@@ -42,10 +44,11 @@ interface Cell<T> {
   host: {
     class: 'ds-time-columns',
     role: 'group',
-    '[attr.aria-label]': "'Time'",
+    '[attr.aria-label]': 'intl().timePicker.time',
   },
 })
 export class TimeColumnsComponent {
+  protected readonly intl = inject(DS_INTL);
   /** Current time as `HH:mm` (24h, always — `format` changes only what is DISPLAYED). */
   readonly value = input<string | null>(null);
   /** Display clock. `12h` adds an AM/PM column; the emitted value stays 24h either way. */
