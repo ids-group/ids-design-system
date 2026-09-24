@@ -1,8 +1,10 @@
 import { InjectionToken } from '@angular/core';
+import type { AccordionChevron } from './accordion.types';
 
 /** Contract that ds-accordion-item reads from its parent ds-accordion. */
 export interface AccordionContract {
   readonly multiple: () => boolean;
+  readonly chevron: () => AccordionChevron;
   /** Called when an item opens; coordinator may close other items. */
   notifyOpen(item: AccordionItemRef): void;
 }
