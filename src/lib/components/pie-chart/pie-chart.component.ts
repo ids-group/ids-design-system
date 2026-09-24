@@ -359,6 +359,24 @@ export class PieChartComponent {
     }));
   });
 
+  /** The held slice's centre as a share of the ring box. The badge is HTML over the ring rather
+   *  than a `foreignObject` inside it: inside, the viewBox scale grows the badge with the ring and
+   *  the grid that centres the glyph does not lay out. */
+  protected readonly pinnedEntry = computed(() => {
+    const entry = this.activeMark.pinned()
+      ? this.slices()[this.activeMark.index()]
+      : undefined;
+
+    return entry
+      ? {
+          center: {
+            x: (entry.center.x / RING_VIEW_BOX_SIZE) * 100,
+            y: (entry.center.y / RING_VIEW_BOX_SIZE) * 100,
+          },
+        }
+      : null;
+  });
+
   protected readonly resolvedCenterValue = computed(
     () =>
       this.centerValue() ?? this.valueFormatResolved()(this.total(), 'tooltip'),

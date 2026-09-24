@@ -224,3 +224,8 @@
 @include chart-frame.pin-reset;
 @include chart-frame.pin-marker;
 
+.ring > .pin-marker {
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+
