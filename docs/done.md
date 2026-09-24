@@ -4,6 +4,10 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## Deck `waterfall-mode-or-component` closed, deck 3 narrowed to two pressed verdicts (2026-09-24)
+
+`ds-waterfall-chart` keeps its own tag (Stas), which is what shipped (`waterfall-chart.component.ts:55`), so the deck moved to `implemented/` with no code; `bar-column-contracts` is rank 8, `picker-list-height` 9, `decision-queue` 10. Deck `3-interaction-formula` was rebuilt against the code: success/warning pressed already exists, neutral-surface pressed is task 45, the override slot is recorded for later and the formula deferred (Stas); the open verdicts are the tonal button's pressed recipe and the danger menu item's invisible press, both rendered live with OKLab deltas measured 2026-09-24. The queue deck's B1, B2, B4, B5 and waterfall sections collapsed to one pointer at deck 3.
+
 ## Chart tooltips, focus and hatching fixed from Stas's docs review (2026-09-24)
 
 The category panel hangs over the highest reading at the active category wherever the pointer is in
