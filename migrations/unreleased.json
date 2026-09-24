@@ -97,7 +97,7 @@
       "action": "Look at a line chart. The line and its markers now sit on a band of the surface colour; set [outline]=\"false\" on the series to take it off.",
       "appliesWhen": "Every dsLineSeries, and so ds-line-chart too. Column, bar, pie, funnel, scatter, heatmap and waterfall are unaffected.",
       "pitfall": "The band is the surface colour, so where the line crosses gridlines it erases a few pixels of them. That is the point where the line crosses columns and unwanted where the line is alone.",
-      "restore": "[outline]=\"false\" on the g[dsLineSeries], or on the series inside ds-line-chart.",
+      "restore": "[outline]=\"false\" on a g[dsLineSeries] inside a ds-chart. ds-line-chart has no input for it, so its lines keep the band.",
       "searchHints": [
         "dsLineSeries",
         "ds-line-chart",
@@ -105,6 +105,24 @@
       ],
       "verify": "A rendered line series carries one path.series-halo per line path, stroked in the surface colour.",
       "note": "A line drawn over other marks was hard to follow where it crossed them. The band is wider than the line and the markers take the same stroke behind their fill, so the series reads as one thing over a busy plot."
+    },
+    {
+      "id": "line-series-highlighted-fades-without-dim-others",
+      "kind": "behavior",
+      "old": "dsLineSeries[highlighted]",
+      "new": null,
+      "surface": "template",
+      "action": "None, unless you bind [highlighted] on a g[dsLineSeries] without dimOthers and want only the named line thickened: the other lines now fade as well, and no input brings back the thicken-only look.",
+      "appliesWhen": "Only a g[dsLineSeries] with a [highlighted] binding and no dimOthers. With dimOthers set nothing changes, and ds-line-chart's legend already faded the others.",
+      "pitfall": "The fade reads as the chart being disabled or loading when the app meant a quiet emphasis, and nothing reports it.",
+      "restore": null,
+      "searchHints": [
+        "highlighted",
+        "dsLineSeries",
+        "dimOthers"
+      ],
+      "verify": "A g[dsLineSeries] with [highlighted] set to one series id and no dimOthers draws that line bold and the other lines at --ds-chart-dim-opacity.",
+      "note": "highlighted used to fade the other lines only alongside dimOthers. It now fades them on its own, because naming a series is the reader asking for that one; dimOthers governs only the fade a pointer over a marker starts."
     },
     {
       "id": "chart-axis-panel-names-every-series",
