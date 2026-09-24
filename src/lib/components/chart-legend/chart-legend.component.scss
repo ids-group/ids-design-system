@@ -1,4 +1,5 @@
 @use '../../styles/check-box' as check-box;
+@use '../../styles/chart-interactive' as chart-interactive;
 @use '../../styles/chart-motion' as chart-motion;
 
 // The colour chips name the series, so they arrive with the marks rather than standing solid while
@@ -9,6 +10,8 @@
 
 :host {
   --_chart-legend-swatch-size: var(--ds-chart-legend-swatch-size, var(--space-2-5));
+  --_chart-legend-hover-bg-color: var(--ds-chart-legend-hover-bg-color, var(--surface-secondary));
+  --_chart-legend-hover-text-color: var(--ds-chart-legend-hover-text-color, var(--text-primary));
 
   display: block;
 }
@@ -29,6 +32,12 @@
   color: var(--text-secondary);
   font-size: var(--font-size-xs);
 }
+
+@include chart-interactive.legend-entry(
+  '.legend-item',
+  var(--_chart-legend-hover-bg-color),
+  var(--_chart-legend-hover-text-color)
+);
 
 .legend-toggle {
   display: inline-flex;
