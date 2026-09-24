@@ -5,6 +5,7 @@ import type { CardElevation, CardPadding } from './card.types';
 import type {
   ChartDataTable,
   ChartFrame,
+  ChartRendering,
   ChartValueFormat,
 } from './chart.types';
 import type { DsToastPosition } from './toast-position';
@@ -178,6 +179,9 @@ export interface DsConfig {
      *  reason `datePicker.locale` lives here: a number reads one way in an app, and a formatter
      *  passed per chart drifts as soon as there are two screens. */
     valueFormat?: ChartValueFormat;
+    /** How charts build themselves on a long page: build each one as it nears the viewport, build
+     *  ahead while idle, skip the ones off screen. All off by default. */
+    rendering?: ChartRendering;
   };
   datePicker?: {
     /** BCP-47 locale for `ds-date-picker` names + value format. Default `'en-US'`. */

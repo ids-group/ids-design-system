@@ -79,3 +79,28 @@ export type ChartGaps = 'break' | 'zero';
  *
  *  Unrelated to `ChartAxisMode`'s `'split'`, which puts two PLOTS one above the other. */
 export type ChartStackMode = 'none' | 'grouped' | 'stacked' | 'normalized';
+
+/** How charts build themselves on a long page, set once for an app in `DS_CONFIG.chart.rendering`.
+ *  Everything is off unless `deferUntilVisible` is on: a screen with a few charts draws them at
+ *  once, with nothing waiting and nothing to flicker. */
+export interface ChartRendering {
+  /** Build a chart only when it comes near the viewport; until then it shows its loading
+   *  placeholder at its own height, and a screen reader meets its caption and nothing else.
+   *  Default `false`. For a page with dozens of charts - a dashboard, a report - where building
+   *  them all at once stalls the page. */
+  deferUntilVisible?: boolean;
+  /** How far outside the viewport a deferred chart is built, as an `IntersectionObserver`
+   *  `rootMargin`. Default `'10% 0px'`: near enough that its entrance still plays on screen. */
+  visibleMargin?: string;
+  /** Also build the deferred charts within `buildAheadMargin` while the page is idle, so the next
+   *  scroll finds them ready. Default `true`. Skipped where `requestIdleCallback` does not exist. */
+  buildAheadWhileIdle?: boolean;
+  /** The reach of `buildAheadWhileIdle`, as a `rootMargin`. Default `'100% 0px'`, one viewport. */
+  buildAheadMargin?: string;
+  /** Milliseconds of chart building one task may spend before it yields, so no frame waits on a
+   *  queue of charts. Default `8`. A single chart that takes longer is still built whole. */
+  frameBudgetMs?: number;
+  /** With `deferUntilVisible`, also let the browser skip a built chart's style, layout and paint
+   *  while it is off screen, through `content-visibility: auto`. Default `true`. */
+  skipWhileOffscreen?: boolean;
+}
