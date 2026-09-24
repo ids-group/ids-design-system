@@ -609,6 +609,14 @@
       noVisibleSeriesText
     </code> is what the plot
     says then; it keeps the plot's height either way, so the page does not jump.
+    The loading skeleton and the empty and error boxes take
+    <code class="t-mono-inline">
+      --ds-line-chart-placeholder-height
+    </code> when
+    it is set, so they can be sized apart from the plot, which reads only
+    <code class="t-mono-inline">
+      --ds-line-chart-plot-height
+    </code>.
   </p>
 
   <ds-line-chart
