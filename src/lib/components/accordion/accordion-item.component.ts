@@ -39,8 +39,12 @@ export class AccordionItemComponent implements AccordionItemRef {
 
   private readonly accordion = inject(ACCORDION, { optional: true });
 
-  protected readonly chevronDown = computed(() => (this.accordion?.chevron() ?? 'right') === 'down');
-  protected readonly chevronName = computed<IconName>(() => (this.chevronDown() ? 'chevronDown' : 'chevronRight'));
+  protected readonly chevronDown = computed(
+    () => (this.accordion?.chevron() ?? 'right') === 'down',
+  );
+  protected readonly chevronName = computed<IconName>(() =>
+    this.chevronDown() ? 'chevronDown' : 'chevronRight',
+  );
 
   /** Tracks last expanded state so we only notify on a true open transition. */
   private previousExpanded = false;
