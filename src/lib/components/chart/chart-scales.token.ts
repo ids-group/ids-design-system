@@ -6,6 +6,14 @@ import type {
   ChartTooltipOrigin,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 
+/** A mark's reading at the cursor's category, with the height it is drawn at. */
+export interface ChartAxisEntry extends ChartTooltipEntry {
+  /** Where the reading is drawn, in plot pixels from the top. A category panel lists its rows in
+   *  the order the reader sees the marks, top to bottom; a reading without one keeps its place
+   *  after the placed ones. */
+  readonly y?: number;
+}
+
 /** What a mark hands the container so the container can open the panel for it. The mark decides
  *  WHAT the panel says and WHERE it points; the container decides that there is one, which is what
  *  keeps a plot from opening two. */
@@ -24,7 +32,7 @@ export interface ChartTooltipSource {
   /** What this mark reads at the category the cursor is on, whatever its own tooltip setting. A
    *  category panel names every series at that category, and a mark that answers per-mark still
    *  belongs in it. */
-  readonly axisEntries?: Signal<readonly ChartTooltipEntry[]>;
+  readonly axisEntries?: Signal<readonly ChartAxisEntry[]>;
 }
 
 /** The drawable rectangle inside `ds-chart`, in CSS pixels: the container measures itself and

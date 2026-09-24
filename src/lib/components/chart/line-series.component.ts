@@ -43,10 +43,11 @@ import { chartActiveMark } from '@ids-group-ltd/ids-design-system/components/cha
 import type {
   ChartTooltipTrigger,
   ChartTooltipContext,
-  ChartTooltipEntry,
   ChartTooltipOrigin,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import { CHART_SCALES } from './chart-scales.token';
+import type { ChartAxisEntry } from './chart-scales.token';
+import { topDown } from './chart.math';
 
 export interface LineSeriesData {
   id: string;
@@ -483,7 +484,11 @@ export class LineSeriesComponent implements OnDestroy {
   /** What this series reads at the category the cursor is on, whatever `tooltip` says. It feeds
    *  the container's category panel, so one band answers for every mark on the plot rather than
    *  each mark owning a hover field of its own. */
-  readonly axisEntries = computed<readonly ChartTooltipEntry[]>(() => {
+  readonly axisEntries = computed<readonly ChartAxisEntry[]>(() =>
+    this.readingsAtCursor().map(({ reading }) => reading),
+  );
+
+  private readonly readingsAtCursor = computed(() => {
     const categoryIndex = this.scales.activeIndex();
     if (categoryIndex < 0) {
       return [];
@@ -497,10 +502,14 @@ export class LineSeriesComponent implements OnDestroy {
       return marker
         ? [
             {
-              label: marker.seriesLabel,
-              value: marker.value,
-              formatted: marker.formattedValue,
-              color: marker.color,
+              seriesId: entry.series.id,
+              reading: {
+                label: marker.seriesLabel,
+                value: marker.value,
+                formatted: marker.formattedValue,
+                color: marker.color,
+                y: marker.y,
+              } satisfies ChartAxisEntry,
             },
           ]
         : [];
@@ -578,25 +587,11 @@ export class LineSeriesComponent implements OnDestroy {
         return null;
       }
       const focused = this.focusedSeries();
-      const reporting = focused
-        ? this.plotted().filter((entry) => entry.series.id === focused)
-        : this.plotted();
-      const entries = reporting.flatMap((entry) => {
-        const marker = entry.markers.find(
-          (candidate) => candidate.categoryIndex === categoryIndex,
-        );
-
-        return marker
-          ? [
-              {
-                label: marker.seriesLabel,
-                value: marker.value,
-                formatted: marker.formattedValue,
-                color: marker.color,
-              },
-            ]
-          : [];
-      });
+      const entries = topDown(
+        this.readingsAtCursor()
+          .filter(({ seriesId }) => !focused || seriesId === focused)
+          .map(({ reading }) => reading),
+      );
       if (!entries.length) {
         return null;
       }

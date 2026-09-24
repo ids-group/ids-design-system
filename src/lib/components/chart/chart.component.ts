@@ -58,6 +58,7 @@ import {
   chartPlot,
   chartViewHeight,
   secondaryAxis,
+  topDown,
   valueScale,
 } from './chart.math';
 import {
@@ -514,8 +515,10 @@ export class ChartComponent implements ChartScales {
       this.composed() &&
       categoryIndex >= 0
     ) {
-      const entries = [...this.tooltipSources().values()].flatMap(
-        (source) => source.axisEntries?.() ?? [],
+      const entries = topDown(
+        [...this.tooltipSources().values()].flatMap(
+          (source) => source.axisEntries?.() ?? [],
+        ),
       );
 
       return entries.length === 0
@@ -527,16 +530,26 @@ export class ChartComponent implements ChartScales {
       return base;
     }
     // A category panel is about the category, not about the mark that happened to open it, so
-    // every other mark's reading at the same category belongs in it. Matched by label, because a
-    // mark that already named itself must not be listed twice.
-    const named = new Set(base.entries.map((entry) => entry.label));
-    const rest = [...this.tooltipSources().values()]
-      .flatMap((source) => source.axisEntries?.() ?? [])
-      .filter((entry) => !named.has(entry.label));
+    // every other mark's reading at the same category belongs in it. Matched by label: the mark
+    // that opened it keeps its own row, detail included, at the height it is drawn.
+    const named = new Map(base.entries.map((entry) => [entry.label, entry]));
+    const readings = [...this.tooltipSources().values()].flatMap(
+      (source) => source.axisEntries?.() ?? [],
+    );
+    if (readings.every((reading) => named.has(reading.label))) {
+      return base;
+    }
+    const drawn = new Set(readings.map((reading) => reading.label));
 
-    return rest.length === 0
-      ? base
-      : { ...base, entries: [...base.entries, ...rest] };
+    return {
+      ...base,
+      entries: [
+        ...base.entries.filter((entry) => !drawn.has(entry.label)),
+        ...topDown(readings).map(
+          (reading) => named.get(reading.label) ?? reading,
+        ),
+      ],
+    };
   });
 
   protected readonly tooltipOrigin = computed(() => {

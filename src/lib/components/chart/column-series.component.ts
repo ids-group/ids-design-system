@@ -38,9 +38,9 @@ import { chartActiveMark } from '@ids-group-ltd/ids-design-system/components/cha
 import type {
   ChartItemTooltipTrigger,
   ChartTooltipContext,
-  ChartTooltipEntry,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import { CHART_SCALES } from './chart-scales.token';
+import type { ChartAxisEntry } from './chart-scales.token';
 import { chartViewHeight } from './chart.math';
 import type { ChartStackOffset } from './chart.math';
 
@@ -427,7 +427,7 @@ export class ColumnSeriesComponent implements OnDestroy {
 
   /** This series' reading at the category the cursor is on. Filled whatever `tooltip` says: it
    *  feeds the container's category panel, never a panel of this mark's own. */
-  readonly axisEntries = computed<readonly ChartTooltipEntry[]>(() => {
+  readonly axisEntries = computed<readonly ChartAxisEntry[]>(() => {
     const categoryIndex = this.scales.activeIndex();
     const mark = this.marks()[categoryIndex];
     if (categoryIndex < 0 || !mark) {
@@ -441,6 +441,7 @@ export class ColumnSeriesComponent implements OnDestroy {
         formatted: mark.formattedValue,
         color: mark.color,
         hatched: mark.hatched,
+        y: mark.tip,
       },
     ];
   });
