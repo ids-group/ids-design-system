@@ -60,6 +60,24 @@ const cases = [
     '--ds-panel-w',
   ],
   [
+    'the shipped survivor: a border-width abbreviated as bw',
+    { 'c2.scss': ':host { --_x: var(--ds-slider-thumb-bw, 2px); }' },
+    true,
+    '--ds-slider-thumb-bw',
+  ],
+  [
+    'a bare truncated dimension, max',
+    { 'c3.scss': ':host { --_x: var(--ds-container-max, 1200px); }' },
+    true,
+    '--ds-container-max',
+  ],
+  [
+    'a middle-segment abbreviation, r for radius',
+    { 'c4.scss': ':host { --_x: var(--ds-segmented-r-inner, 4px); }' },
+    true,
+    '--ds-segmented-r-inner',
+  ],
+  [
     'a spelled-out property that ends in the same letters as an abbreviation',
     {
       'd.scss':
@@ -72,6 +90,14 @@ const cases = [
     {
       'e.scss':
         ':host { --_x: var(--ds-input-label-font-size, 12px); --_y: var(--ds-tag-font-size, 12px); }',
+    },
+    false,
+  ],
+  [
+    'middle segments the rule must allow: bg-color, size words, heading levels, padding axis',
+    {
+      'e2.scss':
+        ':host { --_a: var(--ds-tag-bg-color, red); --_b: var(--ds-badge-xs-font-size, 10px); --_c: var(--ds-typography-h3-font-size, 20px); --_d: var(--ds-tree-row-padding-y, 8px); }',
     },
     false,
   ],

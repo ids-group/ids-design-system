@@ -57,10 +57,10 @@ export class PaginationComponent {
     (config) => config.pagination?.layout,
     'grouped' as PaginationLayout,
   );
-  /** The `total` behind it may no longer describe what is on screen (e.g. a host still
-   *  fetching), so this also masks the range label with a shimmer placeholder instead of
-   *  rendering it. */
-  readonly disabled = input(false, { transform: booleanAttribute });
+  /** The host is still fetching: every control disables, the range label is masked with a
+   *  `<ds-skeleton>` so a stale `total` is never quoted, and the nav reports `aria-busy`.
+   *  `ds-table` sets it from `loading="skeleton"`. */
+  readonly loading = input(false, { transform: booleanAttribute });
 
   protected readonly navClass = computed(() =>
     ['pagination', this.sizeResolved(), this.layoutResolved()]

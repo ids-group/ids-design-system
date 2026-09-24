@@ -312,9 +312,13 @@
 
   <p class="block-desc t-s">
     Labels stay on one line. When the row no longer fits the card, the card
-    measures it and stacks the buttons full-width with the confirming action on
-    top; the DOM keeps the cancel-then-confirm order, so Tab and a screen reader
-    read it as before. A row that fits stays right-aligned.
+    measures it and stacks the buttons full-width; the DOM order is kept, so Tab
+    and a screen reader read it as before and the confirming action lands at the
+    bottom by default. Set
+    <code>
+      --ds-modal-actions-stacked-direction: column-reverse
+    </code> to put it
+    on top instead. A row that fits stays right-aligned.
   </p>
 
   <div class="modal-grid modal-grid--2">
@@ -349,7 +353,44 @@
       </div>
 
       <div class="state-cell-label">
-        three long labels · stacked
+        three long labels · stacked, confirm at the bottom (default)
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage">
+        <ds-modal-card
+          title="Publish this version"
+          size="sm"
+          style="--ds-modal-actions-stacked-direction: column-reverse"
+          [showClose]="false">
+          <span body>
+            Version 4 becomes visible to every participant of the case.
+          </span>
+
+          <ng-container actions>
+            <ds-button
+              color="neutral"
+              variant="ghost">
+              Discard my changes
+            </ds-button>
+
+            <ds-button
+              color="neutral"
+              variant="outline">
+              Save as a draft for later
+            </ds-button>
+
+            <ds-button>
+              Publish to all participants
+            </ds-button>
+          </ng-container>
+        </ds-modal-card>
+      </div>
+
+      <div class="state-cell-label">
+        three long labels · stacked, confirm on top
+        (--ds-modal-actions-stacked-direction: column-reverse)
       </div>
     </div>
 

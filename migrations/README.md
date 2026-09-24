@@ -27,7 +27,8 @@ One file per released version — `migrations/<version>.json` — mirroring that
   a value absent from the map is undocumented-as-changed and must be left untouched.
 - `old` of an element-scoped item is `element[attr]`.
 - **`surface`** — which of the consumer's artifacts changes: their `template`, their `typescript`,
-  their `style`, their app `config`, or `none` when the only action is to LOOK. It is a required
+  their `style`, their app `config`, or `none` when the only action is to LOOK (an item keeps
+  `surface: none` only beside a `restore` or a conditional `action`). It is a required
   statement, not a hint: `none` and "the author forgot" must not read the same to a finder.
 - **`detect`** — the shapes to grep for when `old` is a DS symbol the affected code never mentions.
   Written the way the consumer writes it (`orderBy: sortKey`, `?? config.control?.size`), not the
@@ -50,11 +51,9 @@ One file per released version — `migrations/<version>.json` — mirroring that
 - **`pitfall`** — the way to apply the item mechanically correctly and still ship a broken app.
   Read it before deciding a clean build means done.
 - **`deleteList`** — the structured form of "what you can now delete" (see below).
-- **`informational`** — a non-actionable FYI, either a bare string or `{ "text": "...", "verify":
-  "..." }`. Fill `verify` whenever the line names a layout mechanism (`display`, `grid`, `flex`,
-  `position`, `overflow`, `colspan`, a width, a height, a new wrapper element) — one concrete
-  eyeball check ("open an expanded row and confirm the panel spans the row, not one column"),
-  because a change to RENDERING has no symbol a grep or a build can catch.
+- **`informational`** — a non-actionable FYI, a bare string or `{ "text": "...", "verify": "..." }`
+  where `verify` is the one eyeball check for a change to rendering alone (no symbol for a grep or
+  a build to catch).
 
 **Why:** an upgrade tool can read the plan out of the prose changelog, but it re-derives it on
 every run. A shipped manifest makes it deterministic: the tool validates and prefers the

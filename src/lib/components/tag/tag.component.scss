@@ -10,9 +10,9 @@
   --_tag-radius:       var(--ds-tag-radius, var(--ds-radius-control));
   --_tag-bg-color:           var(--ds-tag-bg-color, var(--accent));
   --_tag-label-color: var(--ds-tag-label-color, var(--accent-on));
-  --_tag-font-weight:            var(--ds-tag-font-weight, var(--font-weight-bold));
+  --_tag-font-weight: var(--ds-tag-font-weight, var(--font-weight-bold));
   --_tag-font-size:            var(--ds-tag-font-size, var(--font-size-xs));
-  --_tag-line-height:            var(--ds-tag-line-height, var(--line-height-base));
+  --_tag-line-height: var(--ds-tag-line-height, var(--line-height-base));
   --_tag-hover-bg-color:      var(--ds-tag-hover-bg-color,      var(--surface-muted));
   --_tag-hover-label-color:      var(--ds-tag-hover-label-color,      var(--text-primary));
   --_tag-active-bg-color:     var(--ds-tag-active-bg-color,     var(--accent-muted));

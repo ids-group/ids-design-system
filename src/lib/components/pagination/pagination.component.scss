@@ -87,8 +87,9 @@
     }
 
     &[disabled] {
-      color: var(--text-disabled);
       cursor: not-allowed;
+
+      &:not(.active) { color: var(--text-disabled); }
     }
 
     &:focus-visible {
