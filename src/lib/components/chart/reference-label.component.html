@@ -1,12 +1,14 @@
-<svg:g class="reference-labels">
-  @for (line of lines(); track line.key) {
-    <svg:text
-      class="threshold-label"
-      text-anchor="start"
-      [style.--_chart-threshold-color]="line.color"
-      [attr.x]="line.labelX"
-      [attr.y]="line.labelY">
-      {{ line.label }}
-    </svg:text>
-  }
-</svg:g>
+@if (lines().length) {
+  <svg:g class="reference-labels">
+    @for (line of lines(); track line.key) {
+      <svg:text
+        class="threshold-label"
+        text-anchor="start"
+        [style.--_chart-threshold-color]="line.color"
+        [attr.x]="line.labelX"
+        [attr.y]="line.labelY">
+        {{ line.label }}
+      </svg:text>
+    }
+  </svg:g>
+}

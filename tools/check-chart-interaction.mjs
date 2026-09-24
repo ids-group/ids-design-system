@@ -7,6 +7,10 @@
 //      consumer sets it and nothing happens, with no error anywhere.
 //   3. `track $index` ON A DATA LOOP — which rewrites every mark's attributes on a reorder and
 //      makes the enter/exit staging animate the wrong marks.
+//   4. THE CLASS FORM OF `animate.enter` / `animate.leave` ON A MARK — its runtime calls
+//      `getAnimations()` once per element, and in Chrome that call costs more the more animations
+//      are running, so a chart entering a thousand marks at once blocks the page for seconds. A
+//      mark enters through a CSS animation declared on it and leaves through `leaveMark`.
 //
 //   node tools/check-chart-interaction.mjs
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
@@ -136,6 +140,53 @@ for (const token of declared) {
         `nothing happens`,
     );
   }
+}
+
+// One element per chart may use the class form - the category cursor. Anything else that repeats
+// per datum does not, and a chart's legend is checked with the charts because its swatches repeat.
+const SINGLE_ELEMENT_ANIMATIONS = new Set(['cursor-in', 'cursor-out']);
+const CLASS_FORM_ANIMATION = /\banimate\.(enter|leave)="([^"]*)"/g;
+
+function classFormAnimations(name, template) {
+  const found = [];
+  for (const [, phase, value] of template.matchAll(CLASS_FORM_ANIMATION)) {
+    if (!SINGLE_ELEMENT_ANIMATIONS.has(value)) {
+      found.push(
+        `${name}: animate.${phase}="${value}" - the class form calls getAnimations() per mark; ` +
+          `declare the entrance in CSS on the mark, and bind (animate.leave)="leaveMark($event)"`,
+      );
+    }
+  }
+
+  return found;
+}
+
+const legend = join(
+  ROOT,
+  'src/lib/components/chart-legend/chart-legend.component',
+);
+for (const { name, base } of [
+  ...charts,
+  { name: 'chart-legend', base: legend },
+]) {
+  problems.push(...classFormAnimations(name, templateOf(base)));
+}
+
+// The negative arm: the same scan must flag a mark that uses the class form, or a regex that
+// stopped matching would pass every template forever.
+if (
+  classFormAnimations(
+    'control',
+    '<rect animate.enter="mark-enter" (animate.leave)="leaveMark($event)" />',
+  ).length !== 1 ||
+  classFormAnimations(
+    'control',
+    '<g animate.enter="cursor-in" animate.leave="cursor-out"></g>',
+  ).length !== 0
+) {
+  problems.push(
+    'the class-form animation scan no longer tells a mark from the cursor',
+  );
 }
 
 for (const line of problems)
