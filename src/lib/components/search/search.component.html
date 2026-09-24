@@ -12,8 +12,8 @@
   <input
     #searchInput
     class="search-input"
-    [placeholder]="placeholder()"
-    [attr.aria-label]="ariaLabel() || placeholder() || null"
+    [placeholder]="placeholderResolved()"
+    [attr.aria-label]="ariaLabel() || placeholderResolved() || null"
     [ngModel]="text()"
     [disabled]="isDisabled()"
     (ngModelChange)="onText($event)"
@@ -24,7 +24,7 @@
     <button
       type="button"
       class="search-clear"
-      aria-label="Clear search"
+      [attr.aria-label]="intl().search.clear"
       [disabled]="isDisabled()"
       (click)="clear()">
       <ds-icon
