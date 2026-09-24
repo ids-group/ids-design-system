@@ -16,3 +16,15 @@
 
   #{$prop}: var(--_field-height);
 }
+
+// The box colours and type every text-entry field resolves its own token through, so one
+// `--ds-field-*` set retunes input, textarea, select, multi-select, autocomplete and search.
+// The date, time and colour pickers keep their own `-trigger-*` vocabulary and are not in it.
+@mixin field-box-tokens {
+  --_field-border-color: var(--ds-field-border-color, var(--border-default));
+  --_field-border-color-hover: var(--ds-field-border-color-hover, var(--border-strong));
+  --_field-border-color-focus: var(--ds-field-border-color-focus, var(--accent));
+  --_field-text-color: var(--ds-field-text-color, var(--text-primary));
+  --_field-placeholder-color: var(--ds-field-placeholder-color, var(--text-tertiary));
+  --_field-font-size: var(--ds-field-font-size, var(--font-size-s));
+}
