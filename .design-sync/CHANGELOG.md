@@ -18,12 +18,12 @@ timeline, two audiences.
 
 ### Upload
 
-- **The project holds the 0.12.3 tree: 1091 files, 16 of them new.** Every card, prompt note, type
-  stub, wrapper, font and the bundle went up in five batches under one plan; a read-back of
-  `list_files` afterwards shows nothing local missing from the project. What the run could NOT do is
-  remove anything: `delete_files` is refused for a non-owner, so the **thirteen** paths the build no
-  longer produces are still there and are all listed in `obsolete.txt` for the owner to clear —
-  ten of them were added to that list by this run, having been left behind by earlier renames.
+- **The project holds the 0.14.0 tree: 1211 files, 458 cards.** The 588 files that changed since
+  the previous upload went up in three batches under one plan; a read-back of `list_files` shows
+  nothing local missing from the project. `delete_files` is refused for a non-owner, so the
+  **twenty** paths the build no longer produces are still there, each listed in `obsolete.txt` for
+  the owner to clear. The retired `Progress` card set and the `[multi]` Accordion card carry a
+  `[TO BE DELETED]` notice naming what replaced them, and no card registration.
 
 ### Build
 

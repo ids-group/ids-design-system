@@ -10,9 +10,11 @@ export interface LineChartProps {
   /** One line per entry. Every series is read against `categories`, so a series longer than it loses its tail and a shorter one ends early. */
   series?: unknown;
   /** How a secondary axis relates to the primary one. */
-  yAxisMode?: ('rounded' | 'exact' | 'independent' | 'stacked');
+  yAxisMode?: ('aligned' | 'exact' | 'dual-grid' | 'split');
   /** Draws a dot at every reading. Off, the dots appear on hover and on focus only. */
   showMarkers?: boolean;
+  /** Lays the lines and their markers on a band of the surface colour. Off where the plot holds nothing for them to cross and the band only separates them from the gridlines. */
+  outline?: boolean;
   /** Labels pinned over their readings, for the points that have to read without a pointer. They are drawn, not announced: the data table already carries every reading, and repeating one in the plot makes a screen reader say it twice. */
   annotations?: unknown;
   /** Makes every reading focusable and clickable. A series drawn without markers grows invisible ones so there is something to land on; they appear on hover and on focus. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click. */
@@ -25,6 +27,14 @@ export interface LineChartProps {
   dimOthers?: boolean;
   /** What a `null` reading draws. The default refuses to assert that a missing reading is a zero. */
   gaps?: ('break' | 'zero');
+  /** How the line joins its readings. `'linear'` by default, which asserts nothing the data does not say; a curve is a claim about what happened BETWEEN two readings. */
+  curve?: ('linear' | 'step' | 'smooth');
+  /** How several series share the value axis. Stacking runs per AXIS, so a series on the secondary axis never piles onto one measured against the primary. */
+  stack?: ('none' | 'stacked' | 'normalized');
+  /** Names the first axis's unit beside it. On a plot carrying two scales the colour says which line reads which axis and this says what the numbers ARE - and a reader who has neither is left comparing two quantities that may not be comparable at all. */
+  yAxisLabel?: string | null;
+  /** `yAxisLabel` for the second axis. */
+  secondaryAxisLabel?: string | null;
   /** How many value-axis ticks to aim for. A hint, not a count: ticks snap to a round step, so the axis may carry one more or one fewer. */
   tickCount?: number;
   /** Whether the chart draws its own bordered, padded box. `'auto'`, the default, draws it; `'none'` leaves the chart bare, for one placed inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards is one decision per app rather than per plot. */
@@ -36,7 +46,7 @@ export interface LineChartProps {
   /** Accessible name. Generated from the data when omitted. */
   summary?: string | null;
   /** The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`. */
-  dataTable?: ('toggle' | 'visible' | 'none') | null;
+  dataTable?: unknown;
   /** Pins the value axis instead of deriving it from the data. A panel opened one subject at a time — one agent, one microsite — derives a different axis for each of them, so two plots with the same gentle wiggle can be four times apart in value and nothing on screen says so. A fixed maximum is what makes two renders comparable. Null, the default, keeps the derived axis. Applies to the primary axis; `maxSecondary` pins the second one where a series sets `axis: 'secondary'`. A maximum below the data does not clip it — the larger of the two wins, because silently hiding a reading is worse than a taller axis than you asked for. */
   max?: number | null;
   /** Pins the secondary value axis. See `max`. */
