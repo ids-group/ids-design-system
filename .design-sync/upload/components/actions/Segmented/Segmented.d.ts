@@ -34,6 +34,8 @@ export interface SegmentedProps {
   label?: string;
   /** Disables every segment. */
   disabled?: boolean;
+  /** Segments share their edges instead of floating in a padded track: borders collapse into one hairline and only the outer ends round. Needs `--ds-segmented-segment-border` to be set, since the shared edge IS the border. */
+  joined?: boolean;
   /** Element content. */
   children?: React.ReactNode;
   className?: string;

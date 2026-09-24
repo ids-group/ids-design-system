@@ -6,7 +6,7 @@ import * as React from 'react';
  */
 export interface AccordionProps {
   /** When false, opening one item automatically closes all others. */
-  multi?: boolean;
+  multiple?: boolean;
   /** Element content. */
   children?: React.ReactNode;
   className?: string;

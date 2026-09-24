@@ -5,8 +5,12 @@ import * as React from 'react';
  * Vertical columns for a short series read left to right — months, stages, teams. Every column is measured against one value axis whose ticks snap to round numbers, each column prints its own value above itself, and a skeleton holds the space while the numbers are still arriving.
  */
 export interface ColumnChartProps {
-  /** One column per point, drawn in the order given. */
+  /** One column per point, drawn in the order given - or one NAMED SERIES per entry, where every category carries a column from each. The two forms are told apart by their shape, so a chart handed a flat list behaves exactly as it always has. */
   data?: unknown;
+  /** How several series share one category's band. `'none'`, the default, and `'grouped'` draw them side by side - a chart of one series takes the whole band either way, so the two differ only in spelling. `'stacked'` puts each series on top of the one before it, and `'normalized'` stacks then divides by the category's total, so every band is full and the axis reads in shares. Unrelated to `ds-line-chart`'s `axisMode="stacked"`, which is two PLOTS one above the other. */
+  stack?: ('none' | 'grouped' | 'stacked' | 'normalized');
+  /** Reference lines and bands drawn across the plot, behind the columns: a target, a budget, an SLA. Each one opens the value axis far enough to hold it, so a target above every column is still on the plot, and each is named in the generated description - a line only the sighted reader gets is an annotation half the audience never receives. */
+  thresholds?: unknown;
   /** Prints each column's value above the column. */
   showValues?: boolean;
   /** How many value-axis ticks to aim for. A hint, not a count: ticks are snapped to a round step, so the axis may carry one more or one fewer. */
@@ -20,7 +24,7 @@ export interface ColumnChartProps {
   /** Accessible name. Generated from the data when omitted. */
   summary?: string | null;
   /** The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`. */
-  dataTable?: ('toggle' | 'visible' | 'none') | null;
+  dataTable?: unknown;
   /** Declares that the marks are parts of one whole, which is what makes a share of their total a real quantity. Off by default: a chart of visitors per stage or revenue per month sums to a number nobody can point at, and "18.6% of total" against it is arithmetic dressed as a fact. On, each mark's share appears on the tooltip's second line and in the data table. */
   partOfWhole?: boolean;
   /** Draws skeleton marks in place of the data, at the same count, so the chart does not resize when the data lands. */

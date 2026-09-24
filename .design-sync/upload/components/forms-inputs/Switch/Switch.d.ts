@@ -42,6 +42,10 @@ export interface SwitchProps {
   label?: string;
   /** Accessible name for a control with no visible label — the row's `<label>` collapses when it is empty, leaving nothing to name it. Set beside a label it OVERRIDES the label, per ARIA. */
   ariaLabel?: string | null;
+  /** The switch never flips itself: a click or Space cancels the native toggle and `checkedRequested` carries the value the user asked for. It moves only when `checked` changes from outside, so a cancelled confirmation changes nothing. */
+  controlled?: boolean;
+  /** The value the user asked for, emitted in place of a flip when `controlled`. Silent otherwise. */
+  onCheckedRequested?: (value: boolean) => void;
   /** Element content. */
   children?: React.ReactNode;
   className?: string;

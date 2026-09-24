@@ -35,9 +35,9 @@ export interface TableProps {
   /** Emitted for `[(sortKey)]`. `sortChange` carries the same click with both halves at once, which is usually the one to listen to. */
   onSortKeyChange?: (value: string | null) => void;
   /** Sort direction for `sortKey`. */
-  sortDir?: ('asc' | 'desc' | null);
-  /** Emitted for `[(sortDir)]`. */
-  onSortDirChange?: (value: ('asc' | 'desc' | null)) => void;
+  sortDirection?: ('asc' | 'desc' | null);
+  /** Emitted for `[(sortDirection)]`. */
+  onSortDirectionChange?: (value: ('asc' | 'desc' | null)) => void;
   /** Sort states a column cycles through on click. Default includes null (unsorted); pass ['asc','desc'] to forbid the unsorted state (e.g. server-paged lists). */
   sortingOrder?: ('asc' | 'desc' | null)[];
   /** Wording for the sort announcement, so it can be translated. Receives the column's label and the new direction; return an empty string to say nothing. */
@@ -75,6 +75,10 @@ export interface TableProps {
   showPageSize?: boolean;
   /** Shows the "N of M" range label in the footer pager. */
   showLabel?: boolean;
+  /** Control height of the footer pager's buttons and picker. Unset falls back to `DS_CONFIG.pagination.size`, then `DS_CONFIG.control.size`, then `'sm'`. */
+  paginationSize?: ('sm' | 'md' | 'lg') | null;
+  /** `'spread'` gives the footer pager the table's full width, label at one edge and controls at the other. Unset falls back to `DS_CONFIG.pagination.layout`, then `'grouped'`. */
+  paginationLayout?: ('grouped' | 'spread') | null;
   /** Server-side total row count. `null` (default) = client paging: the table slices `data()` itself and the pager counts the rows in hand. When set, the host has already sliced to one page — the pager uses this count and the table renders `data()` as-is (no internal slice). */
   total?: number | null;
   /** Scroll the table into view on a page change (opt-in) — keeps a bottom pager from leaving the viewport on the previous page's last rows. */

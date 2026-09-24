@@ -36,3 +36,10 @@ components/forms-inputs/FieldMessage/Field Message - Reserved message row.html
 components/forms-inputs/FieldMessage/Field Message - Reserved message row.prompt.md
 components/forms-inputs/FieldMessage/Field Message - The glyph on the message line.html
 components/forms-inputs/FieldMessage/Field Message - The glyph on the message line.prompt.md
+components/data-display/Accordion/Accordion - Single-open ( [multi]= false ).html
+components/data-display/Accordion/Accordion - Single-open ( [multi]= false ).prompt.md
+components/feedback-status/Progress/Progress - Variants.html
+components/feedback-status/Progress/Progress - Variants.prompt.md
+components/feedback-status/Progress/Progress.d.ts
+components/feedback-status/Progress/Progress.jsx
+components/feedback-status/Progress/Progress.prompt.md

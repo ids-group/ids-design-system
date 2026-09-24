@@ -8,7 +8,7 @@ Vertical columns for a short series read left to right — months, stages, teams
 - `caption`: shown above the plot and reused as the data table's caption.
 - `summary`: the accessible name; generated from `data` when omitted.
 - `valueFormat`: `(value: number) => string`, defaults to `Intl.NumberFormat`; formats the printed values and the generated `summary`.
-- `dataTable`: `'toggle'` (default, closed disclosure) | `'visible'` (open) | `'none'` (omit entirely).
+- `dataTable`: `'none'` (the default, omit entirely) | `'toggle'` (closed disclosure) | `'visible'` (open). Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`.
 - `loading` (default `false`): shows a skeleton block instead of columns.
 - `emptyText` (default `"No data"`): shown in place of columns when `data` is empty.
 - `interactive` (default `false`): turns on the pointer cursor and puts every column in the tab order as a `role="button"` answering Enter and Space; the plot then announces itself as a `group` rather than an `img`.

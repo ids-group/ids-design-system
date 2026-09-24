@@ -15,6 +15,8 @@ export type {
 } from './chart.types';
 export { resolveWithConfig } from './config-defaults';
 export { devWarn } from './dev-warning';
+export { warnAnnounceOversight } from './announce-warning';
+export type { AnnounceState } from './announce-warning';
 export { DS_CONFIG, inheritDsConfig, provideDsConfig } from './ds-config';
 export type { DsConfig } from './ds-config';
 export { boundOr, optionalBound } from './field-bounds';

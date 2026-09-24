@@ -19,6 +19,8 @@ export interface ButtonProps {
   color?: ('primary' | 'secondary' | 'tertiary' | 'neutral' | 'error' | 'success' | 'warning');
   /** Fill pattern. Every color×variant pair renders; the discouraged ones dev-warn with the reason. `text` is discouraged for every colour — prefer the global `.link` class, and keep this one only where the ds-button API is needed. */
   variant?: ('solid' | 'tonal' | 'ghost' | 'outline' | 'text');
+  /** Where the contents sit once the button is wider than them, which in practice means `fullWidth`. `'between'` pushes the label and a trailing icon to opposite edges. */
+  align?: ('center' | 'between');
   /** Button height — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
   size?: ('sm' | 'md' | 'lg') | null;
   /** `RouterLink` target. Set it and the button renders an `<a [routerLink]>` with `routerLinkActive`: middle-click, open-in-new-tab and the announced "link" role depend on the element, not on the look. Accepts a `UrlTree` as well as a path or a command array — `Router.createUrlTree` is the way to reach the `UrlCreationOptions` that have no input of their own here (`relativeTo`, `preserveFragment`). */

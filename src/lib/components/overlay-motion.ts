@@ -126,9 +126,9 @@ export function dropdownOverlay(
   };
 }
 
-// Backstop for the leave animation: if the class never produces an animation
-// (a pane that is display:none, a consumer stylesheet that removed it), the
-// panel must still go away. Comfortably past --ds-motion-exit-duration.
+// The teardown guarantee for the leave: a pane that is display:none, a consumer stylesheet
+// that removed the animation, and a 0s reduced-motion duration (whose animationend is not
+// reliably delivered) all end here. Comfortably past --ds-motion-exit-duration.
 const LEAVE_TIMEOUT_MS = 400;
 
 /**

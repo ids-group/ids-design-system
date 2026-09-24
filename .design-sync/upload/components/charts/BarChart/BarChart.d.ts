@@ -18,7 +18,7 @@ export interface BarChartProps {
   /** Accessible name. Generated from the data when omitted. */
   summary?: string | null;
   /** The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so `'none'` belongs only where the same data is already in a table on the page. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`. */
-  dataTable?: ('toggle' | 'visible' | 'none') | null;
+  dataTable?: unknown;
   /** Declares that the marks are parts of one whole, which is what makes a share of their total a real quantity. Off by default: a chart of visitors per stage or revenue per month sums to a number nobody can point at, and "18.6% of total" against it is arithmetic dressed as a fact. On, each mark's share appears on the tooltip's second line and in the data table. */
   partOfWhole?: boolean;
   /** Prints each row's share of `max` beside its value. */

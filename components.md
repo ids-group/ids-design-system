@@ -508,6 +508,7 @@ Output: `(closed): void`
 Content slots: default (body text), `[actions]` (trailing CTAs)
 - `layout="stacked"` (default): actions wrap onto a new line, indented under the body. Use for multiple-line messages or multiple CTAs.
 - `layout="row"`: actions sit at the right edge, vertically centred with the body. Use for one-line messages with a single trailing CTA.
+- `announce: boolean | null = null` resolves input → `DS_CONFIG.banner.announce` → `false`. Dev mode warns once per instance in two cases: an `error` / `warning` / `severe` banner left unbound while the key is unset (ends when the key is set, `true` or `false`), and an `info` / `success` / `neutral` banner that announces only because the key is `true` (ends at an `[announce]` binding). Neither message reaches a production build.
 
 <!-- inputs:ds-banner -->
 All inputs: `variant: BannerVariant = 'info'`, `title: string = ''`, `dismissible: boolean = false`, `icon: IconName | null = null`, `compact: boolean = false`, `layout: 'stacked' | 'row' = 'stacked'`, `accentRail: boolean = true`, `announce: boolean | null = null`
@@ -518,6 +519,7 @@ Inline message, `ds-banner`'s smaller twin — same anatomy, sized for placement
 Inputs: `variant: 'info' | 'success' | 'warning' | 'error' | 'neutral' = 'info'`, `title: string = ''`, `dismissible: boolean = false`, `icon: IconName | null = null` (variant-derived default)
 Output: `(closed): void`
 Content slots: default (body text), `[actions]` (trailing CTAs)
+- `announce` follows `DS_CONFIG.alert.announce` with the same two dev warnings as `ds-banner`, prefixed `[ds-alert]`.
 
 <!-- inputs:ds-alert -->
 All inputs: `variant: 'info' | 'success' | 'warning' | 'error' | 'neutral' = 'info'`, `title: string = ''`, `dismissible: boolean = false`, `icon: IconName | null = null`, `announce: boolean | null = null`
