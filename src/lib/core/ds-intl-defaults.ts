@@ -218,6 +218,8 @@ export const DS_INTL_DEFAULTS: DsIntl = {
     trigger: 'Choose columns',
   },
   tableExport: {
+    button: 'Export CSV',
+    buttonBusy: 'Preparing…',
     preparing: 'Preparing export…',
     ready: 'Export ready',
     failed: 'Export failed',

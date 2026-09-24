@@ -247,6 +247,8 @@ export interface DsIntl {
     readonly trigger: string;
   };
   readonly tableExport: {
+    readonly button: string;
+    readonly buttonBusy: string;
     readonly preparing: string;
     readonly ready: string;
     readonly failed: string;
