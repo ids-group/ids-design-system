@@ -4,10 +4,12 @@ import {
   ViewEncapsulation,
   booleanAttribute,
   computed,
+  inject,
   input,
   output,
   signal,
 } from '@angular/core';
+import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 
 /** Cells arrive formatted: how a value reads is the chart's decision, not the table's. */
 export interface ChartDataRow {
@@ -31,6 +33,8 @@ export interface ChartDataRow {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChartDataTableComponent {
+  protected readonly intl = inject(DS_INTL);
+
   readonly columns = input<readonly string[]>([]);
   readonly rows = input<readonly ChartDataRow[]>([]);
 

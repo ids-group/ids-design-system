@@ -4,7 +4,7 @@
       class="pin-reset"
       type="button"
       (click)="releaseCategoryPin()">
-      Unpin
+      {{ intl().chart.unpin }}
     </button>
   }
 
@@ -44,7 +44,7 @@
     <p
       class="empty"
       role="status">
-      {{ noVisibleSeriesText() }}
+      {{ noVisibleSeriesTextResolved() }}
     </p>
 
     <ds-chart-legend

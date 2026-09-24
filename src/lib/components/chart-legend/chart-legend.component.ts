@@ -4,10 +4,12 @@ import {
   computed,
   ViewEncapsulation,
   booleanAttribute,
+  inject,
   input,
   model,
 } from '@angular/core';
 import { nextControlId } from '@ids-group-ltd/ids-design-system/components';
+import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 import type { ChartLegendItem } from './chart-legend.types';
 
 /**
@@ -27,6 +29,8 @@ import type { ChartLegendItem } from './chart-legend.types';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChartLegendComponent {
+  protected readonly intl = inject(DS_INTL);
+
   readonly items = input.required<readonly ChartLegendItem[]>();
 
   /** Ids of the hidden items. Two-way, so a page can drive it from a URL parameter and so

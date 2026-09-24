@@ -34,6 +34,7 @@ import type {
   ChartItemTooltipTrigger,
   ChartTooltipContext,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
+import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 import type {
   ChartDataTable,
   ChartFrame,
@@ -151,11 +152,11 @@ export class ScatterChartComponent {
    *  and mean opposite things. */
   readonly error = input(false, { transform: booleanAttribute });
 
-  /** Shown when no series carries a reading. Unset falls back to `DS_CONFIG.chart.emptyText`. */
+  /** Shown when no series carries a reading. Unset falls back to `DS_INTL.chart.empty`. */
   readonly emptyText = input<string | null>(null);
 
   /** Shown in place of the plot while `error` is set. Unset falls back to
-   *  `DS_CONFIG.chart.errorText`. */
+   *  `DS_INTL.chart.error`. */
   readonly errorText = input<string | null>(null);
 
   /** Formats every number the chart prints - both axes' ticks, the accessible name and the annex
@@ -174,6 +175,7 @@ export class ScatterChartComponent {
   readonly pointClicked = output<ScatterChartReading>();
 
   private readonly defaults = resolveChartDefaults(this);
+  protected readonly intl = inject(DS_INTL);
   readonly frameResolved = this.defaults.frame;
   readonly dataTableResolved = this.defaults.dataTable;
   readonly emptyTextResolved = this.defaults.emptyText;
@@ -318,20 +320,26 @@ export class ScatterChartComponent {
     if (given) {
       return given;
     }
+    const words = this.intl().chart;
     const format = this.valueFormatResolved();
     const { xMin, xMax, yMin, yMax } = this.domains();
     const counted = this.series().reduce(
       (total, entry) => total + entry.points.length,
       0,
     );
-    const axes = `${this.xLabel() ?? 'x'} from ${format(xMin, 'tooltip')} to ${format(xMax, 'tooltip')}, ${this.yLabel() ?? 'y'} from ${format(yMin, 'tooltip')} to ${format(yMax, 'tooltip')}`;
+    const axes = `${words.scatterAxis(this.xLabel() ?? 'x', format(xMin, 'tooltip'), format(xMax, 'tooltip'))}, ${words.scatterAxis(this.yLabel() ?? 'y', format(yMin, 'tooltip'), format(yMax, 'tooltip'))}`;
     const dropped = this.droppedCount();
 
-    return `${this.caption() ?? 'Scatter chart'}: ${counted} readings drawn, ${axes}.${dropped > 0 ? ` ${dropped} further readings were thinned out to keep the plot drawable; the data table lists every one.` : ''}`;
+    return words.scatterSummary(
+      this.caption() ?? words.scatterTitle,
+      counted,
+      axes,
+      dropped,
+    );
   });
 
   protected readonly dataTableColumns = computed<readonly string[]>(() => [
-    'Series',
+    this.intl().chart.seriesColumn,
     this.xLabel() ?? 'x',
     this.yLabel() ?? 'y',
   ]);
