@@ -72,5 +72,19 @@
         "message": "Class names are kebab-case with no underscores: `__` claims a nested component, and there are none here — only states. Flatten `block__element` to `block-element`."
       }
     ]
-  }
+  },
+  "overrides": [
+    {
+      "files": ["ds-docs/src/**/*.scss"],
+      "rules": {
+        "selector-class-pattern": [
+          "^(?!.*--)[a-z][a-z0-9-]*$",
+          {
+            "resolveNestedSelectors": true,
+            "message": "A state is its own class: write `.block.is-state`, not `.block--state`."
+          }
+        ]
+      }
+    }
+  ]
 }

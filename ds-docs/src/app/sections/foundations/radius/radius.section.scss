@@ -39,7 +39,7 @@
         border-bottom: var(--border-width-default) solid var(--border-default);
       }
     }
-    .radius-radius-role-row--head {
+    .radius-role-row.is-head {
       color: var(--text-secondary);
 
       @media (width < 1024px) {
@@ -96,10 +96,10 @@
       background: var(--surface-default);
       border: var(--border-width-strong) solid var(--primary);
     }
-    .nest-child--correct {
+    .nest-child.is-correct {
       border-radius: var(--ds-radius-control);
     }
-    .nest-child--wrong {
+    .nest-child.is-wrong {
       border-radius: var(--ds-radius-panel);
     }
 
@@ -145,9 +145,9 @@
       cursor: default;
     }
     .demo-group-btn + .demo-group-btn { margin-left: calc(var(--border-width-default) * -1); }
-    .demo-group-btn--start { border-top-left-radius: var(--radius-md); border-bottom-left-radius: var(--radius-md); }
-    .demo-group-btn--mid   { border-radius: var(--radius-0); }
-    .demo-group-btn--end   { border-top-right-radius: var(--radius-md); border-bottom-right-radius: var(--radius-md); }
+    .demo-group-btn.is-start { border-top-left-radius: var(--radius-md); border-bottom-left-radius: var(--radius-md); }
+    .demo-group-btn.is-mid   { border-radius: var(--radius-0); }
+    .demo-group-btn.is-end   { border-top-right-radius: var(--radius-md); border-bottom-right-radius: var(--radius-md); }
 
     /* ---------- Demo: kbd ---------- */
     .demo-kbd {
@@ -201,11 +201,11 @@
       font: var(--font-weight-semibold) var(--font-size-xs) / var(--line-height-flat) var(--font-sans);
       border-radius: var(--radius-pill);
     }
-    .demo-pill--active {
+    .demo-pill.is-active {
       background-color: var(--success-subtitle);
       color: var(--success-text);
     }
-    .demo-pill--planning {
+    .demo-pill.is-planning {
       background-color: var(--neutral-150);
       color: var(--neutral-700);
     }

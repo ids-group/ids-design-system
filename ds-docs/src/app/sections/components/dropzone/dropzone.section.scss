@@ -24,7 +24,7 @@
     }
 
     /* ---------- States showcase overrides ---------- */
-    .states--cols-1 { grid-template-columns: 1fr; }
+    .states.is-cols-1 { grid-template-columns: 1fr; }
     .state-cell-stage {
       align-items: stretch; justify-content: stretch;
       min-height: 200px;
@@ -34,7 +34,7 @@
 
     /* File row showcase — height follows row content (icon + name + meta),
        no width cap; let each row span the full stage. */
-    .states--file-rows .state-cell-stage {
+    .states.is-file-rows .state-cell-stage {
       min-height: 0;
       align-items: center;
       justify-content: stretch;

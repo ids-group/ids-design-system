@@ -27,10 +27,8 @@
 // Surfaces for raw showcase specimens (docs only) — see _specimens.scss header.
 @use 'styles/specimens';
 
-// Brand-preview override for the Tweaks panel "Brand preview" toggle. Only
-// activates when <html data-brand="manage-my"> is set. Duplicated from
-// mm-broker for preview purposes; ds itself stays brand-agnostic.
-@use 'styles/preview-brand-manage-my';
+// Brand preview for the Tweaks panel toggle; active only under <html data-brand="acme">.
+@use 'styles/preview-brand-acme';
 @include bp.emit-vars;
 @include status.semantic-preset;
 @include status.define((

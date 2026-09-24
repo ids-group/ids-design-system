@@ -6,7 +6,7 @@
       background: var(--surface-secondary);
       border-radius: var(--radius-lg);
     }
-    .stage--narrow { max-width: 560px; }
+    .stage.is-narrow { max-width: 560px; }
     .filterbar {
       display: flex;
       flex-wrap: wrap;
@@ -17,7 +17,7 @@
       border: var(--border-width-default) solid var(--border-divider);
       border-radius: var(--radius-md);
     }
-    .filterbar--stacked {
+    .filterbar.is-stacked {
       flex-direction: column;
       align-items: stretch;
       gap: var(--space-3);
@@ -48,9 +48,9 @@
       align-items: center;
       flex-wrap: wrap;
     }
-    .row--top { width: 100%; }
+    .row.is-top { width: 100%; }
     .search-slot { flex: 1; min-width: 200px; max-width: 320px; }
-    .search-slot--full { flex: 1; max-width: none; }
+    .search-slot.is-full { flex: 1; max-width: none; }
     .divider {
       display: inline-block;
       width: 1px;
@@ -60,7 +60,7 @@
     }
     .applied-label { color: var(--text-tertiary); }
     .applied { display: inline-flex; gap: var(--space-2); flex-wrap: wrap; }
-    .applied--stacked { gap: var(--space-1); }
+    .applied.is-stacked { gap: var(--space-1); }
     .tag {
       display: inline-flex;
       align-items: center;

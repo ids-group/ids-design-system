@@ -36,19 +36,19 @@
   background: var(--surface-secondary);
   border-radius: var(--radius-lg);
 }
-.states--cols-2 {
+.states.is-cols-2 {
   grid-template-columns: repeat(2, 1fr);
 
   @include bp.down(xs) { grid-template-columns: minmax(0, 1fr); }
 }
-.states--cols-3 {
+.states.is-cols-3 {
   grid-template-columns: repeat(3, 1fr);
 
   @include bp.down(md) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
   @include bp.down(xs) { grid-template-columns: minmax(0, 1fr); }
 }
-.states--cols-4 {
+.states.is-cols-4 {
   grid-template-columns: repeat(4, 1fr);
 
   @include bp.down(md) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -66,9 +66,9 @@
 /* A rule between neighbouring specimens. Two charts side by side with nothing between them read as
    one wide picture — the eye needs a boundary to know it is comparing two things rather than
    looking at halves of one. Only BETWEEN columns, so the first cell of each row carries none. */
-.states--cols-2 > .state-cell:nth-child(2n),
-.states--cols-3 > .state-cell:not(:nth-child(3n + 1)),
-.states--cols-4 > .state-cell:not(:nth-child(4n + 1)) {
+.states.is-cols-2 > .state-cell:nth-child(2n),
+.states.is-cols-3 > .state-cell:not(:nth-child(3n + 1)),
+.states.is-cols-4 > .state-cell:not(:nth-child(4n + 1)) {
   padding-inline-start: var(--space-4);
   border-inline-start: var(--border-width-default) solid var(--border-divider);
 }

@@ -5,7 +5,7 @@
       border: var(--border-width-default) solid var(--border-divider);
       border-radius: var(--radius-lg);
     }
-    .demo--centered {
+    .demo.is-centered {
       display: flex;
 
       /* `safe` or the inline stepper's first step is unreachable on a phone: plain

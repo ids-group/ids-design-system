@@ -29,13 +29,13 @@
       gap: var(--space-4) var(--space-6);
       align-items: center;
     }
-    .matrix--states {
+    .matrix.is-states {
       grid-template-columns: 92px repeat(6, minmax(84px, 1fr));
       padding: var(--space-4);
       background: var(--surface-secondary);
       border-radius: var(--radius-lg);
     }
-    .matrix--states .t-overline { text-align: center; }
+    .matrix.is-states .t-overline { text-align: center; }
     .matrix-row-label { color: var(--text-secondary); }
     .matrix-cell {
       display: flex; align-items: center; justify-content: center;

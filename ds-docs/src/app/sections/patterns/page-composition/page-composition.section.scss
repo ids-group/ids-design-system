@@ -30,11 +30,11 @@
       border: var(--border-width-default) solid var(--border-default);
       border-radius: var(--ds-radius-control);
     }
-    .pc-region--chrome {
+    .pc-region.is-chrome {
       border-style: dashed;
       background: transparent;
     }
-    .pc-regions > .pc-region--chrome {
+    .pc-regions > .pc-region.is-chrome {
       flex-direction: column;
       justify-content: flex-start;
       width: 132px;
@@ -44,7 +44,7 @@
         width: auto;
       }
     }
-    .pc-region--content {
+    .pc-region.is-content {
       min-height: 88px;
       align-items: center;
       justify-content: center;
@@ -81,7 +81,7 @@
         gap: var(--space-1);
       }
     }
-    .pc-row--head {
+    .pc-row.is-head {
       color: var(--text-secondary);
       border-bottom-color: var(--border-strong);
 

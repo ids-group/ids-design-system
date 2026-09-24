@@ -78,7 +78,7 @@
       color: var(--text-primary);
       border-radius: var(--radius-md);
     }
-    .demo-menu-item--error { color: var(--error-text); }
+    .demo-menu-item.is-error { color: var(--error-text); }
     .demo-menu-sep {
       height: var(--border-width-default);
       margin: var(--space-1) var(--space-2);
@@ -154,7 +154,7 @@
       font: var(--font-weight-bold) var(--font-size-xs) / 1 var(--font-sans);
       cursor: pointer;
     }
-    .demo-btn--ghost {
+    .demo-btn.is-ghost {
       background: transparent;
       color: var(--text-secondary);
     }

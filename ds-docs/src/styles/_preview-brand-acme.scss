@@ -1,0 +1,18 @@
+// Preview only: a fictional brand for the Tweaks-panel toggle, showing a brand as an
+// attribute-scoped overlay authored on the light theme.
+[data-brand='acme'] {
+  --primary-h: var(--green-h);
+  --primary-s: var(--green-s);
+  --primary-l: var(--green-l);
+  --blue-50: var(--green-50);
+  --blue-100: var(--green-100);
+  --blue-200: var(--green-200);
+  --blue-300: var(--green-300);
+  --blue-400: var(--green-400);
+  --blue-500: var(--green-500);
+  --blue-600: var(--green-600);
+  --blue-700: var(--green-700);
+  --secondary-h: var(--red-h);
+  --secondary-s: var(--red-s);
+  --secondary-l: var(--red-l);
+}

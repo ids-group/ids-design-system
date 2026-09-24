@@ -29,17 +29,12 @@
       display: grid;
       gap: var(--space-3);
     }
-    .row--2 {
+    .row.is-2 {
       grid-template-columns: repeat(2, minmax(0, 1fr));
 
       @include bp.down(md) { grid-template-columns: 1fr; }
     }
-    .row--3 {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-
-      @include bp.down(md) { grid-template-columns: 1fr; }
-    }
-    .row--6-12 {
+    .row.is-6-12 {
       grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
 
       @include bp.down(md) { grid-template-columns: 1fr; }
@@ -98,8 +93,8 @@
       font: var(--font-weight-bold) var(--font-size-xs) / var(--line-height-base) var(--font-sans);
       cursor: pointer;
     }
-    .pill--ghost { background: transparent; color: var(--text-secondary); }
-    .pill--primary {
+    .pill.is-ghost { background: transparent; color: var(--text-secondary); }
+    .pill.is-primary {
       background: var(--primary);
       color: var(--text-on-primary, #fff);
       border-color: var(--primary);

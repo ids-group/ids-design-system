@@ -40,7 +40,7 @@ export class SignalFormsSection {
 
   protected readonly roles = [
     { value: 'admin', label: 'Administrator' },
-    { value: 'broker', label: 'Broker' },
+    { value: 'partner', label: 'Partner' },
   ];
 
   private readonly model = signal({

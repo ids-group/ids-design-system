@@ -77,4 +77,4 @@
     :host ::ng-deep .open-specimen .dropdown-list li:nth-child(3) .option { background: var(--surface-secondary); }
 
     /* The "Open" trigger-state cell panel overflows its min-height stage box. */
-    .state-cell-stage--overflow { overflow: visible; align-items: flex-start; }
+    .state-cell-stage.is-overflow { overflow: visible; align-items: flex-start; }

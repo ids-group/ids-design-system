@@ -36,9 +36,9 @@
       letter-spacing: var(--letter-spacing-wider);
       font: var(--font-weight-bold) var(--font-size-2xs) / 1 var(--font-sans);
     }
-    .refusal-tag--standing { background: var(--error-subtitle); color: var(--error-text); }
-    .refusal-tag--temporary { background: var(--warning-subtitle); color: var(--warning-text); }
-    .refusal-tag--room { background: var(--surface-secondary); color: var(--text-secondary); }
+    .refusal-tag.is-standing { background: var(--error-subtitle); color: var(--error-text); }
+    .refusal-tag.is-temporary { background: var(--warning-subtitle); color: var(--warning-text); }
+    .refusal-tag.is-room { background: var(--surface-secondary); color: var(--text-secondary); }
     .refusal-lede {
       margin: 0;
       color: var(--text-primary);
@@ -78,13 +78,13 @@
       gap: var(--space-4) var(--space-6);
       align-items: center;
     }
-    .matrix--states {
+    .matrix.is-states {
       grid-template-columns: 92px repeat(6, minmax(84px, 1fr));
       padding: var(--space-4);
       background: var(--surface-secondary);
       border-radius: var(--radius-lg);
     }
-    .matrix--states .t-overline { text-align: center; }
+    .matrix.is-states .t-overline { text-align: center; }
     .matrix-row-label { color: var(--text-secondary); }
     .matrix-cell {
       display: flex; align-items: center; justify-content: center;

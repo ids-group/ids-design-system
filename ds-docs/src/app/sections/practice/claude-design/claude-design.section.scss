@@ -59,15 +59,15 @@
       letter-spacing: var(--letter-spacing-wider);
       border-radius: var(--ds-radius-pill);
     }
-    .cd-tag--input {
+    .cd-tag.is-input {
       background-color: var(--success-subtitle);
       color: var(--success-text);
     }
-    .cd-tag--generated {
+    .cd-tag.is-generated {
       background-color: var(--neutral-150);
       color: var(--neutral-700);
     }
-    .cd-tag--remote {
+    .cd-tag.is-remote {
       background-color: var(--warning-subtitle);
       color: var(--warning-text);
     }
