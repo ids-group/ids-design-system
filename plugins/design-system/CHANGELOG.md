@@ -4,6 +4,18 @@ Versioning: **patch** = instruction/prompt fixes; **minor** = new capability (pi
 source, agent); **major** = a change to the workflow's behavior contract. Bump `plugin.json` +
 `marketplace.json` together on every published change.
 
+## 1.8.3 - 2026-09-24
+
+### Changed
+
+- **An `informational` entry that names a type change is checked, not filed.** A generic parameter,
+  a template context guard, a value that becomes `unknown`, a narrowed or widened union or
+  `strictTemplates` in an informational line sends the orchestrator to the two tag trees before the
+  bump; a tightened typing becomes a synthetic `behavior` item with the expected TS error in `detect`,
+  and the misfiled entry is reported as manifest feedback.
+- **A delete-list row's `why` is checked against the `v<V>` tree before a deletion.** The row states
+  what V covers; a workaround that covers a case V does not stays, with the reason reported.
+
 ## 1.8.2 - 2026-09-24
 
 ### Changed
