@@ -22,7 +22,6 @@
   </p>
 
   <ds-heatmap-chart
-    *docsLazy
     caption="Collections a day, by depot"
     [columns]="weekdays"
     [data]="depotRows" />
@@ -59,7 +58,6 @@
   </p>
 
   <ds-heatmap-chart
-    *docsLazy
     caption="The same week with gaps in the record"
     [columns]="weekdays"
     [data]="partialRows" />
@@ -79,7 +77,6 @@
   </p>
 
   <ds-heatmap-chart
-    *docsLazy
     caption="Escalations by quarter and region"
     showValues
     [columns]="smallColumns"
@@ -99,7 +96,6 @@
   </p>
 
   <ds-heatmap-chart
-    *docsLazy
     caption="Click a cell"
     interactive
     [columns]="smallColumns"

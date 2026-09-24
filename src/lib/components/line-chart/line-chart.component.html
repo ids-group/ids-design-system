@@ -20,18 +20,18 @@
       role="status">
       {{ errorTextResolved() }}
     </p>
-  } @else if (loading()) {
+  } @else if (loading() || !renderReady()) {
     <div
       class="skeleton"
       aria-hidden="true">
-      <ds-skeleton height="var(--_line-chart-skeleton-height)" />
+      <ds-skeleton height="var(--_line-chart-skeleton-height)" [shimmer]="loading()" />
 
       @if (skeletonSeries().length > 1) {
         <div class="skeleton-legend">
           @for (placeholder of skeletonSeries(); track $index) {
-            <ds-skeleton
-              width="var(--space-16)"
-              height="var(--space-3)" />
+            <ds-skeleton width="var(--space-16)"
+              height="var(--space-3)"
+              [shimmer]="loading()" />
           }
         </div>
       }

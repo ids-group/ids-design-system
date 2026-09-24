@@ -26,7 +26,6 @@ import type { ChartThreshold } from 'ds/core';
 import { RadioComponent, RadioGroupComponent } from 'ds/radio-group';
 import { SwitchComponent } from 'ds/switch';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
-import { DocsLazyDirective } from '../../../shared/docs-lazy.directive';
 
 const LATENCY_NOTES: readonly ChartAnnotation[] = [
   { categoryIndex: 4, value: 480, label: 'Cache eviction' },
@@ -120,7 +119,6 @@ const TRAFFIC_SERIES: readonly LineSeriesData[] = [
   selector: 'section-charts-chart',
   standalone: true,
   imports: [
-    DocsLazyDirective,
     RadioComponent,
     RadioGroupComponent,
     ChartComponent,

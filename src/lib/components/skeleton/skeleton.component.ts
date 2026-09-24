@@ -1,10 +1,10 @@
 import {
   Component,
-  DestroyRef,
   ElementRef,
   NgZone,
   ViewEncapsulation,
   booleanAttribute,
+  effect,
   inject,
   input,
 } from '@angular/core';
@@ -40,6 +40,7 @@ function observeVisibility(host: Element, zone: NgZone): () => void {
     '[style.height]': 'height()',
     '[class.circle]': 'circle()',
     '[class.inline]': 'inline()',
+    '[class.still]': '!shimmer()',
   },
   encapsulation: ViewEncapsulation.Emulated,
 })
@@ -52,15 +53,23 @@ export class SkeletonComponent {
   readonly circle = input(false, { transform: booleanAttribute });
   /** `display: inline-block` instead of `block`, to sit inline with text. */
   readonly inline = input(false, { transform: booleanAttribute });
+  /** Whether the wave passes over the placeholder. Default `true`. Off, it is a flat block of the
+   *  same shape and size - for a space held for something that is not loading yet, where motion
+   *  would claim work that is not happening and cost a main-thread update a frame. */
+  readonly shimmer = input(true, { transform: booleanAttribute });
 
   constructor() {
-    if (typeof IntersectionObserver !== 'undefined') {
-      inject(DestroyRef).onDestroy(
-        observeVisibility(
-          inject<ElementRef<Element>>(ElementRef).nativeElement,
-          inject(NgZone),
-        ),
-      );
+    if (typeof IntersectionObserver === 'undefined') {
+      return;
     }
+    const host = inject<ElementRef<Element>>(ElementRef).nativeElement;
+    const zone = inject(NgZone);
+    // Only a moving wave has anything to pause, and every observed skeleton is one more
+    // intersection the browser computes on each scrolled frame.
+    effect((onCleanup) => {
+      if (this.shimmer()) {
+        onCleanup(observeVisibility(host, zone));
+      }
+    });
   }
 }

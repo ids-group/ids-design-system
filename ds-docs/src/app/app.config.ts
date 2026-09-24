@@ -18,6 +18,8 @@ export const appConfig: ApplicationConfig = {
     provideDsConfig({
       banner: { announce: false },
       alert: { announce: false },
+      // The chart page alone carries over two hundred charts.
+      chart: { rendering: { deferUntilVisible: true } },
     }),
   ],
 };

@@ -11,10 +11,10 @@
       role="status">
       {{ errorTextResolved() }}
     </p>
-  } @else if (loading()) {
-    <ds-skeleton
-      class="skeleton"
+  } @else if (loading() || !renderReady()) {
+    <ds-skeleton class="skeleton"
       width="100%"
+      [shimmer]="loading()"
       [height]="skeletonHeight + 'px'" />
   } @else if (isEmpty()) {
     <p class="empty">

@@ -7,7 +7,6 @@ import {
 import { HeatmapChartComponent } from 'ds/heatmap-chart';
 import type { HeatmapChartRow } from 'ds/heatmap-chart';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
-import { DocsLazyDirective } from '../../../shared/docs-lazy.directive';
 
 const WEEKDAYS: readonly string[] = [
   'Mon',
@@ -43,7 +42,7 @@ const SMALL_ROWS: readonly HeatmapChartRow[] = [
 @Component({
   selector: 'section-charts-heatmap-chart',
   standalone: true,
-  imports: [DocsLazyDirective, DocsSectionComponent, HeatmapChartComponent],
+  imports: [DocsSectionComponent, HeatmapChartComponent],
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './heatmap-chart.section.html',

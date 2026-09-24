@@ -8,6 +8,7 @@ export type {
   ChartGaps,
   ChartFormatLocation,
   ChartFrame,
+  ChartRendering,
   ChartStackMode,
   ChartThreshold,
   ChartThresholdDash,

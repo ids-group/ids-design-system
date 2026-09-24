@@ -19,6 +19,8 @@ import {
 import {
   CHART_SERIES_COLORS,
   describeSeries,
+  chartRenderGate,
+  CHART_RENDER_GATE_PASSED,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import {
@@ -112,8 +114,11 @@ const SERIES_DASH_ARRAYS = [
   },
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  viewProviders: [{ provide: CHART_RENDER_GATE_PASSED, useValue: true }],
 })
 export class LineChartComponent {
+  protected readonly renderReady = chartRenderGate();
+
   /** X labels. Every series' `data` is read against this length. */
   readonly categories = input.required<readonly string[]>();
 

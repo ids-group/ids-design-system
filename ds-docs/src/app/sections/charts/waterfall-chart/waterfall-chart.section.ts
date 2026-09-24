@@ -7,7 +7,6 @@ import {
 import { WaterfallChartComponent } from 'ds/waterfall-chart';
 import type { WaterfallChartBar } from 'ds/waterfall-chart';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
-import { DocsLazyDirective } from '../../../shared/docs-lazy.directive';
 
 // Deck 10's own numbers, so the page and the probe assert the same chain.
 const SETTLEMENT: readonly WaterfallChartBar[] = [
@@ -40,7 +39,7 @@ const BELOW_ZERO: readonly WaterfallChartBar[] = [
 @Component({
   selector: 'section-charts-waterfall-chart',
   standalone: true,
-  imports: [DocsLazyDirective, DocsSectionComponent, WaterfallChartComponent],
+  imports: [DocsSectionComponent, WaterfallChartComponent],
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './waterfall-chart.section.html',

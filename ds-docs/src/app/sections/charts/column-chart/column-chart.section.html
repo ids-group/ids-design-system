@@ -19,7 +19,6 @@
   </p>
 
   <ds-column-chart
-    *docsLazy
     caption="New accounts by month"
     dataTable="none"
     [data]="specimenPoints()" />
@@ -40,14 +39,12 @@
 
   <div class="demo-pair">
     <ds-column-chart
-      *docsLazy
       caption="tickCount 3"
       dataTable="none"
       [data]="tickCountPoints()"
       [tickCount]="3" />
 
     <ds-column-chart
-      *docsLazy
       caption="tickCount 10"
       dataTable="none"
       [data]="tickCountPoints()"
@@ -75,7 +72,6 @@
   </p>
 
   <ds-column-chart
-    *docsLazy
     interactive
     pinOnClick
     dimOthers
@@ -95,7 +91,6 @@
   </p>
 
   <ds-column-chart
-    *docsLazy
     dataTable="none"
     [data]="showValuesPoints()"
     [showValues]="false" />
@@ -115,7 +110,6 @@
   </p>
 
   <ds-column-chart
-    *docsLazy
     dataTable="none"
     [data]="customColorPoints()" />
 
@@ -139,7 +133,6 @@
   </p>
 
   <ds-column-chart
-    *docsLazy
     caption="Applications a month, last three projected"
     dataTable="none"
     [data]="projectedPoints()" />
@@ -185,7 +178,6 @@
   </p>
 
   <ds-column-chart
-    *docsLazy
     caption="Billed against committed"
     stack="grouped"
     dataTable="none"
@@ -208,7 +200,6 @@
 
   <div class="demo-pair">
     <ds-column-chart
-      *docsLazy
       caption="Revenue by channel"
       stack="stacked"
       dataTable="none"
@@ -216,7 +207,6 @@
       [data]="channelSeries" />
 
     <ds-column-chart
-      *docsLazy
       caption="Share of revenue by channel"
       stack="normalized"
       dataTable="none"
@@ -264,7 +254,6 @@
   </p>
 
   <ds-chart
-    *docsLazy
     interactive
     tickCount="5"
     caption="Revenue a month against the running total"
@@ -312,14 +301,12 @@
 
   <div class="demo-stack">
     <ds-column-chart
-      *docsLazy
       caption="Uptime against target"
       dataTable="none"
       [data]="uptimePoints()"
       [thresholds]="uptimeThresholds" />
 
     <ds-column-chart
-      *docsLazy
       caption="Uptime against the agreed range"
       dataTable="none"
       [data]="uptimePoints()"
@@ -356,7 +343,6 @@
   <div class="states is-cols-2">
     <div class="state-cell">
       <ds-column-chart
-        *docsLazy
         interactive
         dataTable="none"
         [data]="anchorPoints()"
@@ -369,7 +355,6 @@
 
     <div class="state-cell">
       <ds-column-chart
-        *docsLazy
         interactive
         tooltipAnchor="cell"
         dataTable="none"
@@ -403,7 +388,6 @@
   </p>
 
   <ds-column-chart
-    *docsLazy
     partOfWhole
     caption="Revenue by month, as a share of the five months shown"
     [data]="dataTablePoints()" />
@@ -435,7 +419,6 @@
   <div class="states is-cols-2">
     <div class="state-cell">
       <ds-column-chart
-        *docsLazy
         caption="No stagger — every column arrives together"
         dataTable="none"
         [data]="staggerOffPoints()" />
@@ -449,7 +432,6 @@
 
     <div class="state-cell">
       <ds-column-chart
-        *docsLazy
         caption="Columns arrive 40ms apart"
         dataTable="none"
         staggerMs="40"
@@ -483,7 +465,6 @@
     <div class="states is-cols-2">
       <div class="state-cell">
         <ds-column-chart
-          *docsLazy
           dataTable="none"
           [data]="emptyPoints()" />
 
@@ -496,7 +477,6 @@
 
       <div class="state-cell">
         <ds-column-chart
-          *docsLazy
           dataTable="none"
           loading
           [data]="loadingPoints()" />
@@ -510,7 +490,6 @@
 
       <div class="state-cell">
         <ds-column-chart
-          *docsLazy
           dataTable="none"
           [data]="onePoint()" />
 
@@ -523,7 +502,6 @@
 
       <div class="state-cell">
         <ds-column-chart
-          *docsLazy
           dataTable="none"
           [data]="allZerosPoints()" />
 
@@ -536,7 +514,6 @@
 
       <div class="state-cell">
         <ds-column-chart
-          *docsLazy
           dataTable="none"
           [data]="negativePoints()" />
 
@@ -549,7 +526,6 @@
 
       <div class="state-cell">
         <ds-column-chart
-          *docsLazy
           dataTable="none"
           [data]="plPoints()" />
 
@@ -562,7 +538,6 @@
 
       <div class="state-cell">
         <ds-column-chart
-          *docsLazy
           dataTable="none"
           [data]="hugeOutlierPoints()" />
 
@@ -575,7 +550,6 @@
 
       <div class="state-cell">
         <ds-column-chart
-          *docsLazy
           dataTable="none"
           [data]="longLabelPoints()" />
 
@@ -588,7 +562,6 @@
 
       <div class="state-cell">
         <ds-column-chart
-          *docsLazy
           dataTable="none"
           [data]="nineDigitValuePoints()" />
 
@@ -601,7 +574,6 @@
 
       <div class="state-cell">
         <ds-column-chart
-          *docsLazy
           dataTable="none"
           error
           [data]="specimenPoints()" />

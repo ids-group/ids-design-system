@@ -9,7 +9,6 @@ import type { PieChartSlice } from 'ds/pie-chart';
 import { DocsChartDataEditorComponent } from '../../../shared/docs-chart-data-editor.component';
 import { DocsReplayButtonComponent } from '../../../shared/docs-replay-button.component';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
-import { DocsLazyDirective } from '../../../shared/docs-lazy.directive';
 
 const SPECIMEN_SLICES: readonly PieChartSlice[] = [
   { id: 'enterprise', label: 'Enterprise', value: 4820 },
@@ -57,7 +56,6 @@ const SLOT_SLICES: readonly PieChartSlice[] = [
   selector: 'section-charts-pie-chart',
   standalone: true,
   imports: [
-    DocsLazyDirective,
     DocsReplayButtonComponent,
     DocsChartDataEditorComponent,
     DocsSectionComponent,
