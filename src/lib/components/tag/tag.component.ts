@@ -2,10 +2,13 @@ import {
   Component,
   ViewEncapsulation,
   booleanAttribute,
+  computed,
+  inject,
   input,
   output,
 } from '@angular/core';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
+import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 import type { TagVariant } from './tag.types';
 
 @Component({
@@ -24,6 +27,7 @@ import type { TagVariant } from './tag.types';
   },
 })
 export class TagComponent {
+  protected readonly intl = inject(DS_INTL);
   /** Fill style — `solid` for high-emphasis, `neutral` for low-emphasis chips. */
   readonly variant = input<TagVariant>('solid');
   /** Shows a close button that emits `closed`. */
@@ -32,8 +36,12 @@ export class TagComponent {
   readonly interactive = input(false, { transform: booleanAttribute });
   /** Applies the active/selected visual state. */
   readonly selected = input(false, { transform: booleanAttribute });
-  /** Accessible label for the close button (e.g. "Remove Source filter"). */
-  readonly closeLabel = input<string>('Remove');
+  /** Accessible label for the close button (e.g. "Remove Source filter").
+   *  Unset falls back to `DS_INTL.tag.remove`. */
+  readonly closeLabel = input<string | null>(null);
+  readonly closeLabelResolved = computed(
+    () => this.closeLabel() ?? this.intl().tag.remove,
+  );
   /** Fires when the close button is clicked. */
   readonly closed = output<void>();
   /** Fires on click when `interactive` is true. */
