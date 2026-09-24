@@ -25,7 +25,9 @@
       class="skeleton"
       aria-hidden="true">
       @for (placeholder of skeletonColumns(); track $index) {
-        <ds-skeleton [shimmer]="loading()" [height]="skeletonHeightPx()" />
+        <ds-skeleton
+          [shimmer]="loading()"
+          [height]="skeletonHeightPx()" />
       }
     </div>
   } @else if (isEmpty()) {
@@ -46,9 +48,11 @@
       [plotHeight]="geometry().plotHeight"
       [axisGutter]="geometry().axisGutter"
       [valueSpace]="geometry().valueSpace">
-      <svg:g
-        dsReferenceLine
-        [thresholds]="thresholds()" />
+      @if (thresholds().length) {
+        <svg:g
+          dsReferenceLine
+          [thresholds]="thresholds()" />
+      }
 
       @for (
         series of resolvedSeries();
@@ -80,9 +84,11 @@
           (pointClicked)="pointClicked.emit($event)" />
       }
 
-      <svg:g
-        dsReferenceLabel
-        [thresholds]="thresholds()" />
+      @if (thresholds().length) {
+        <svg:g
+          dsReferenceLabel
+          [thresholds]="thresholds()" />
+      }
     </ds-chart>
 
     @if (multiSeries()) {
