@@ -197,7 +197,7 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**126 open — 0 P1, 13 P2, 113 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**127 open — 0 P1, 13 P2, 114 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P2 — 13
 
@@ -224,7 +224,7 @@ item and nothing else.
 - **Localization — every user-visible string is a hardcoded literal (recorded 2026-08-27, from the ITB Workspace picker report)**
   - Every user-visible string in the library is a hardcoded English literal — VALIDATED 2026-08-27 against 0.11.0; Stas: defer the whole thing, no code
 
-### P3 — 113
+### P3 — 114
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - The token reference says the portaled panel reads `--ds-time-picker-focus-shadow`
@@ -284,6 +284,7 @@ item and nothing else.
 - **The eleven styling hooks one consumer reached past the surface for (recorded 2026-09-21)**
   - Does a dev warning name an error banner no screen reader will read?
   - Does the picker list height become a public token, or stay behind `panelClass`?
+  - Does the `variant="spark"` line preset keep zero in its value domain, or scale to the …
 - **Tooling**
   - `tools/todo-index.mjs --check` is not in `lint:all`, so the index can still go stale between runs
   - Publishing to Claude Design cannot run from Bitbucket, and Stas wants the CI route looked at again (recorded 2026-09-02)
@@ -1258,6 +1259,20 @@ that already existed, because both are the kind of ask that comes back.
   `--picker-maxh` caps the list and is not. `panelClass` has expressed a per-picker list height
   since 0.13.1; a public token would add a second way to say it, and `--picker-maxh` resolves at
   `:root`, so forwarding it without the role guard would pin it inline on every open panel.
+  **Three options, all drawn up in the plan (scratchpad plan-F, task 53):** (a) one cap - the existing
+  `--ds-dropdown-panel-max-height` governs the rows too, by dropping the list's own
+  `max-height: var(--picker-maxh)` so the flex column fills the panel; the panel default becomes
+  `calc(var(--picker-maxh) + 40px)` (still 320px), and a select with no header rows shows up to 310px of
+  options instead of 280px (arithmetic from the CSS, not measured); (b) `panelClass` only, the token
+  stays internal; (c) a new `--ds-picker-list-max-height`. Every other portaled panel in the library
+  is sized by a public host token and none by `panelClass`. Stas leans to (a), verdict later
+  (2026-09-24).
+
+- [ ] **[P3] Does the `variant="spark"` line preset keep zero in its value domain, or scale to the
+  data's range?** The preset (deck `chart-sparkline-preset`, decided) is planned (scratchpad plan-B,
+  task 39). Keeping zero is what every chart does today and gives the same polyline point for point;
+  scaling to the data range is what the deck's own tiles and Tufte do, but it needs a new domain mode
+  in `ds-chart`. Stas: undecided, decide before the preset is built (2026-09-24).
 
 None of these is blocked on effort. Each is a verdict, and most carry a deck that renders the options.
 
