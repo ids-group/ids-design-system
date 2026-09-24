@@ -56,6 +56,7 @@
           [class.ghost]="!showMarkers()"
           [class.interactive]="interactive()"
           [class.is-active]="isActiveMarker(marker)"
+          [style.--_chart-mark-stagger]="seriesStagger(entry.seriesIndex)"
           [attr.cx]="marker.x"
           [attr.cy]="marker.y"
           [attr.fill]="entry.color"

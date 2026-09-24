@@ -342,6 +342,8 @@
   "--ds-chart-heat-8-color": "Darkest of the eight heat-scale steps, the high end of the range. Set this, not --chart-heat-8.",
   "--ds-chart-hover-bg-color": "Chart hover highlight wash. Set this, not --chart-hover-bg-color.",
   "--ds-chart-legend-swatch-size": "Diameter of the round colour chip in ds-chart-legend, on both axes (default --space-2-5). ds-line-chart feeds it from --ds-line-chart-swatch-size.",
+  "--ds-chart-legend-hover-bg-color": "Tint behind a legend entry under the pointer or holding keyboard focus, in ds-chart-legend and the ds-pie-chart legend (default --surface-secondary).",
+  "--ds-chart-legend-hover-text-color": "Label colour of a hovered or focused legend entry, in ds-chart-legend and the ds-pie-chart legend (default --text-primary).",
   "--ds-chart-line-width": "Chart line-series stroke width. Set this, not --chart-line-width.",
   "--ds-chart-line-width-bold": "Emphasised chart line-series stroke width. Set this, not --chart-line-width-bold.",
   "--ds-chart-negative-color": "Colour of a falling bar in ds-waterfall-chart, defaulting to the palette's coral --chart-negative rather than to --error for the same reason. Set this, not --chart-negative.",

@@ -23,6 +23,8 @@
   --_pie-chart-legend-row-gap: var(--ds-pie-chart-legend-row-gap, var(--space-2));
   --_pie-chart-legend-row-height: var(--ds-pie-chart-legend-row-height, 16px);
   --_pie-chart-swatch-size: var(--ds-pie-chart-swatch-size, 10px);
+  --_pie-chart-legend-hover-bg-color: var(--ds-chart-legend-hover-bg-color, var(--surface-secondary));
+  --_pie-chart-legend-hover-text-color: var(--ds-chart-legend-hover-text-color, var(--text-primary));
   --_pie-chart-focus-color: var(--ds-pie-chart-focus-color, var(--focus-ring-color));
   --_pie-chart-focus-width: var(--ds-pie-chart-focus-width, var(--focus-ring-width));
 
@@ -179,6 +181,13 @@
   align-items: baseline;
 }
 
+@include chart-interactive.legend-entry(
+  '.legend-item',
+  var(--_pie-chart-legend-hover-bg-color),
+  var(--_pie-chart-legend-hover-text-color),
+  '.legend-label'
+);
+
 .legend-item.interactive {
   cursor: pointer;
 }
@@ -223,4 +232,9 @@
 @include chart-frame.forced-colors;
 @include chart-frame.pin-reset;
 @include chart-frame.pin-marker;
+
+.ring > .pin-marker {
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
 

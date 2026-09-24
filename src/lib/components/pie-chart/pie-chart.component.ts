@@ -9,6 +9,7 @@ import {
   input,
   numberAttribute,
   output,
+  signal,
 } from '@angular/core';
 import {
   CHART_SERIES_COLORS,
@@ -220,10 +221,18 @@ export class PieChartComponent {
     this.activeMark.enter(index, event);
   }
 
+  private readonly legendHighlight = signal(-1);
+
   /** A legend item stands for its arc, so it opens the arc's tooltip over the ARC and dims the
    *  other slices — the same state hovering the arc itself produces. */
   protected onLegendEnter(index: number, event: Event): void {
+    this.legendHighlight.set(index);
     this.activeMark.enter(index, event, this.arcAt(event, index));
+  }
+
+  protected onLegendLeave(): void {
+    this.legendHighlight.set(-1);
+    this.activeMark.leave();
   }
 
   protected onLegendFocus(index: number, event: FocusEvent): void {
@@ -251,6 +260,13 @@ export class PieChartComponent {
   }
 
   protected isDimmed(index: number): boolean {
+    // Naming a slice in the legend fades the rest whether or not `dimOthers` is set, the way every
+    // chart legend singles out its series; `dimOthers` governs what a pointer over the ring does.
+    const legendHighlight = this.legendHighlight();
+    if (legendHighlight !== -1) {
+      return legendHighlight !== index;
+    }
+
     return (
       this.dimOthers() &&
       this.activeMark.index() !== -1 &&
@@ -357,6 +373,24 @@ export class PieChartComponent {
       formattedValue: format(slice.value),
       formattedPercent: `${percents[index]}%`,
     }));
+  });
+
+  /** The held slice's centre as a share of the ring box. The badge is HTML over the ring rather
+   *  than a `foreignObject` inside it: inside, the viewBox scale grows the badge with the ring and
+   *  the grid that centres the glyph does not lay out. */
+  protected readonly pinnedEntry = computed(() => {
+    const entry = this.activeMark.pinned()
+      ? this.slices()[this.activeMark.index()]
+      : undefined;
+
+    return entry
+      ? {
+          center: {
+            x: (entry.center.x / RING_VIEW_BOX_SIZE) * 100,
+            y: (entry.center.y / RING_VIEW_BOX_SIZE) * 100,
+          },
+        }
+      : null;
   });
 
   protected readonly resolvedCenterValue = computed(
