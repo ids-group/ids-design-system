@@ -450,9 +450,9 @@
       "kind": "behavior",
       "old": "CellTemplateDirective",
       "new": null,
-      "surface": "template",
+      "surface": ["template", "typescript"],
       "action": "On every `<ng-template dsCellTemplate=\"...\">` whose context variable is read as a row, add `[dsCellTemplateOf]` bound to the same expression as that table's `[data]`, so the context types as the row type. A helper that only casts the row (`(row: unknown)` returning `row as Row`) becomes redundant with it (delete list: table-row-caster-helpers).",
-      "appliesWhen": "Every `dsCellTemplate` inside a `ds-table` whose template reads a field of its row or passes the row to a typed method, in an app built with `strictTemplates`. A template that never reads its context variable needs nothing. The `rowExpandTemplate` and `cellTemplateMap` contexts are untouched and stay untyped.",
+      "appliesWhen": "Every `dsCellTemplate` inside a `ds-table` whose template reads a field of its row or passes the row to a typed method, in an app built with `strictTemplates`. A template that never reads its context variable needs nothing. A template passed to `rowExpandTemplate` or `cellTemplateMap` carries no context guard, so its row stays untyped (`any`) and needs neither.",
       "pitfall": "Casting the row with `$any()` or a helper silences the error and keeps the template untyped. Binding `[dsCellTemplateOf]` to an array typed `unknown[]` or `any[]` compiles without typing anything, so bind the table's own `[data]` expression.",
       "restore": null,
       "searchHints": [
@@ -527,7 +527,7 @@
         "ds-modal-card .actions",
         "flex-wrap: wrap"
       ],
-      "why": "The card measures its actions row and stacks it full-width when the buttons outgrow it, so a rule wrapping the row only restates that the buttons must not be clipped.",
+      "why": "The card measures its actions row on first render and whenever its header resizes, and stacks it full-width when the buttons outgrow it, so a rule wrapping the row only restates that the buttons must not be clipped. It stays legitimate where a button label or the set of actions changes after the modal opens, because that change is not measured.",
       "replaceWith": "nothing"
     },
     {
@@ -595,7 +595,7 @@
         "return row as "
       ],
       "why": "[dsCellTemplateOf]=\"rows\" on the ng-template types let-row as the row type, so a one-line caster exists only to do what the binding now does.",
-      "replaceWith": "[dsCellTemplateOf] bound to the table's rows, then row.field in the template. Keep a caster only where it serves rowExpandTemplate or cellTemplateMap, whose contexts stay unknown"
+      "replaceWith": "[dsCellTemplateOf] bound to the table's rows, then row.field in the template. A template passed to rowExpandTemplate or cellTemplateMap carries no context guard, so its row is untyped (any) and a caster there only adds a type"
     },
     {
       "id": "switch-confirm-wrapper",
