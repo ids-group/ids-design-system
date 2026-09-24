@@ -55,6 +55,8 @@
     background var(--duration-fast) var(--ease-standard),
     color var(--duration-fast) var(--ease-standard),
     box-shadow var(--duration-fast) var(--ease-standard);
+
+  @include press.feedback;
 }
 
 :host(.interactive:hover):not(.is-active) {

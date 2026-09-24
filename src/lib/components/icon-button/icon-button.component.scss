@@ -6,14 +6,14 @@
 .icon-button {
   /* Colour-family slots — default to the --accent-* pointer (= primary unless a
      ds-color zone/attr flips it), so an icon-button without an explicit color
-     follows the zone. `color` classes (.c-*) override these on the element. The
+     follows the zone. `color` classes (.color-*) override these on the element. The
      filled/tonal/selected fills consume them (standard/outlined are neutral). */
-  --c-base:         var(--accent);
-  --c-on:           var(--accent-on);
-  --c-strong:       var(--accent-strong);
-  --c-subtitle:     var(--accent-subtitle);
-  --c-muted:        var(--accent-muted);
-  --c-muted-strong: var(--accent-muted-strong);
+  --_family-base:         var(--accent);
+  --_family-on:           var(--accent-on);
+  --_family-strong:       var(--accent-strong);
+  --_family-subtitle:     var(--accent-subtitle);
+  --_family-muted:        var(--accent-muted);
+  --_family-muted-strong: var(--accent-muted-strong);
 
   --_icon-button-bg-color:        var(--ds-icon-button-bg-color,        transparent);
   --_icon-button-icon-color:        var(--ds-icon-button-icon-color,        var(--text-secondary));
@@ -102,14 +102,14 @@
     /* No fill and no border here, so the glyph's colour is the whole disabled
        signal — and the base's fixed lightness cannot carry it in dark, where the
        enabled icon is already OKLCH L 80% against a disabled L 70%: a 1.46:1 gap.
-       Scoped to this variant, not the base, because filled's icon is --c-on and
+       Scoped to this variant, not the base, because filled's icon is --_family-on and
        white mixed into a white surface does not move. */
     --_icon-button-icon-color-disabled: var(--ds-icon-button-icon-color-disabled, color-mix(in srgb, var(--_icon-button-icon-color) 40%, var(--surface-default)));
   }
 
   &.filled {
-    --_icon-button-bg-color:        var(--ds-icon-button-bg-color,        var(--c-base));
-    --_icon-button-icon-color:        var(--ds-icon-button-icon-color,        var(--c-on));
+    --_icon-button-bg-color:        var(--ds-icon-button-bg-color,        var(--_family-base));
+    --_icon-button-icon-color:        var(--ds-icon-button-icon-color,        var(--_family-on));
     --_icon-button-bg-color-hover:  var(--ds-icon-button-bg-color-hover,  color-mix(in srgb, var(--_icon-button-bg-color) 88%, black));
     --_icon-button-bg-color-active: var(--ds-icon-button-bg-color-active, color-mix(in srgb, var(--_icon-button-bg-color) 76%, black));
     --_icon-button-icon-color-hover:  var(--ds-icon-button-icon-color-hover,  var(--_icon-button-icon-color));
@@ -117,11 +117,11 @@
     --_icon-button-bg-color-disabled: var(--ds-icon-button-bg-color-disabled, oklch(from var(--_icon-button-accent) 92% 0.03 h));
   }
   &.tonal {
-    --_icon-button-bg-color:        var(--ds-icon-button-bg-color,        var(--c-muted));
-    --_icon-button-icon-color:        var(--ds-icon-button-icon-color,        var(--c-strong));
-    --_icon-button-bg-color-hover:  var(--ds-icon-button-bg-color-hover,  var(--c-subtitle));
-    --_icon-button-bg-color-active: var(--ds-icon-button-bg-color-active, var(--c-muted-strong));
-    --_icon-button-icon-color-hover:  var(--ds-icon-button-icon-color-hover,  var(--c-strong));
+    --_icon-button-bg-color:        var(--ds-icon-button-bg-color,        var(--_family-muted));
+    --_icon-button-icon-color:        var(--ds-icon-button-icon-color,        var(--_family-strong));
+    --_icon-button-bg-color-hover:  var(--ds-icon-button-bg-color-hover,  var(--_family-subtitle));
+    --_icon-button-bg-color-active: var(--ds-icon-button-bg-color-active, var(--_family-muted-strong));
+    --_icon-button-icon-color-hover:  var(--ds-icon-button-icon-color-hover,  var(--_family-strong));
     --_icon-button-bg-color-disabled: var(--ds-icon-button-bg-color-disabled, color-mix(in srgb, var(--_icon-button-bg-color) 28%, var(--surface-disabled)));
   }
 
@@ -139,35 +139,35 @@
   }
 
   /* Colour classes — rebind slots only (the fill variants above consume them). */
-  &.c-secondary {
-    --c-base: var(--secondary); --c-on: var(--secondary-on); --c-strong: var(--secondary-strong);
-    --c-subtitle: var(--secondary-subtitle); --c-muted: var(--secondary-muted); --c-muted-strong: var(--secondary-muted-strong);
+  &.color-secondary {
+    --_family-base: var(--secondary); --_family-on: var(--secondary-on); --_family-strong: var(--secondary-strong);
+    --_family-subtitle: var(--secondary-subtitle); --_family-muted: var(--secondary-muted); --_family-muted-strong: var(--secondary-muted-strong);
   }
-  &.c-tertiary {
-    --c-base: var(--tertiary); --c-on: var(--tertiary-on); --c-strong: var(--tertiary-strong);
-    --c-subtitle: var(--tertiary-subtitle); --c-muted: var(--tertiary-muted); --c-muted-strong: var(--tertiary-muted-strong);
+  &.color-tertiary {
+    --_family-base: var(--tertiary); --_family-on: var(--tertiary-on); --_family-strong: var(--tertiary-strong);
+    --_family-subtitle: var(--tertiary-subtitle); --_family-muted: var(--tertiary-muted); --_family-muted-strong: var(--tertiary-muted-strong);
   }
-  &.c-neutral {
-    --c-base: var(--text-secondary); --c-on: var(--surface-default); --c-strong: var(--text-primary);
-    --c-subtitle: var(--surface-secondary); --c-muted: var(--surface-secondary); --c-muted-strong: var(--border-default);
+  &.color-neutral {
+    --_family-base: var(--text-secondary); --_family-on: var(--surface-default); --_family-strong: var(--text-primary);
+    --_family-subtitle: var(--surface-secondary); --_family-muted: var(--surface-secondary); --_family-muted-strong: var(--border-default);
   }
-  &.c-error {
-    --c-base: var(--error); --c-on: var(--text-on-error); --c-strong: var(--error-text);
-    --c-subtitle: var(--error-subtitle); --c-muted: var(--error-muted); --c-muted-strong: var(--error-muted-strong);
+  &.color-error {
+    --_family-base: var(--error); --_family-on: var(--text-on-error); --_family-strong: var(--error-text);
+    --_family-subtitle: var(--error-subtitle); --_family-muted: var(--error-muted); --_family-muted-strong: var(--error-muted-strong);
   }
-  &.c-success {
-    --c-base: var(--success); --c-on: var(--text-on-success); --c-strong: var(--success-text);
-    --c-subtitle: var(--success-subtitle); --c-muted: var(--success-muted); --c-muted-strong: var(--success-muted-strong);
+  &.color-success {
+    --_family-base: var(--success); --_family-on: var(--text-on-success); --_family-strong: var(--success-text);
+    --_family-subtitle: var(--success-subtitle); --_family-muted: var(--success-muted); --_family-muted-strong: var(--success-muted-strong);
   }
-  &.c-warning {
-    --c-base: var(--warning); --c-on: var(--text-on-warning); --c-strong: var(--warning-text);
-    --c-subtitle: var(--warning-subtitle); --c-muted: var(--warning-muted); --c-muted-strong: var(--warning-muted-strong);
+  &.color-warning {
+    --_family-base: var(--warning); --_family-on: var(--text-on-warning); --_family-strong: var(--warning-text);
+    --_family-subtitle: var(--warning-subtitle); --_family-muted: var(--warning-muted); --_family-muted-strong: var(--warning-muted-strong);
   }
 
   /* Toggle pressed look — stays last so it wins over the resting variant fill. */
   &.selected {
-    --_icon-button-bg-color:        var(--ds-icon-button-bg-color,        var(--c-base));
-    --_icon-button-icon-color:        var(--ds-icon-button-icon-color,        var(--c-on));
+    --_icon-button-bg-color:        var(--ds-icon-button-bg-color,        var(--_family-base));
+    --_icon-button-icon-color:        var(--ds-icon-button-icon-color,        var(--_family-on));
     --_icon-button-border:    var(--ds-icon-button-border,    transparent);
     --_icon-button-bg-color-hover:  var(--ds-icon-button-bg-color-hover,  color-mix(in srgb, var(--_icon-button-bg-color) 88%, black));
     --_icon-button-bg-color-active: var(--ds-icon-button-bg-color-active, color-mix(in srgb, var(--_icon-button-bg-color) 76%, black));

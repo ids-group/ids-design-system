@@ -236,8 +236,8 @@ export class ButtonComponent extends DsMessageBase {
     const variant = this.variant();
     const parts = [
       'button',
-      color === 'primary' ? '' : `c-${color}`,
-      variant === 'solid' ? '' : `v-${variant}`,
+      color === 'primary' ? '' : `color-${color}`,
+      variant === 'solid' ? '' : `variant-${variant}`,
       this.sizeResolved(),
       this.loading() ? 'loading' : '',
     ];

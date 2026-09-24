@@ -3,9 +3,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Водопад — режим колоночного чарта или свой компонент</title>
-<meta name="ds-deck-status" content="open">
-<link rel="stylesheet" href="ds.css">
-<link rel="stylesheet" href="deck.css">
+<meta name="ds-deck-status" content="implemented">
+<meta name="ds-deck-decided" content="2026-09-24">
+<meta name="ds-deck-evidence" content="src/lib/components/waterfall-chart/waterfall-chart.component.ts:55 - docs/done.md">
+<link rel="stylesheet" href="../ds.css">
+<link rel="stylesheet" href="../deck.css">
 
 <style>
   .art {
@@ -72,10 +74,19 @@
       как её попросить, и что при этом происходит с API колоночного чарта.
     </p>
     <div class="chips">
-      <span class="chip is-open">Нужно решение</span>
+      <span class="chip">решено 2026-09-24</span>
       <span class="chip">дека 10, §2</span>
     </div>
   </div>
+
+  <div class="decided">
+    <h2>Решено: свой тег</h2>
+    <p><code class="tok">ds-waterfall-chart</code> остаётся отдельным компонентом на общем контейнере и общей серии. Режим <code class="tok">stack="waterfall"</code> не вводится: четыре добавки водопада бессмысленны в остальных режимах колонки. Так и отгружено, кода эта дека не требует.</p>
+    <p class="evidence">2026-09-24 · src/lib/components/waterfall-chart/waterfall-chart.component.ts:55 - docs/done.md</p>
+  </div>
+
+  <details class="folded">
+    <summary>Разбор, который к этому привёл</summary>
 
   <section class="panel">
     <h2>Что рисуется — одинаково в обоих вариантах</h2>
@@ -208,4 +219,5 @@
       тег в каталоге; он уже оплачен тем, что реализация сидит на общем контейнере и общей серии.
     </p>
   </section>
+  </details>
 </main>

@@ -175,6 +175,143 @@
       ],
       "verify": "In the BUILT css --chart-hatch-width resolves to 1.5px, and a hatched column's stripe measures the width --ds-chart-hatch-width names.",
       "note": "The default was 3px, now 1.5px. The stripe sat on its pattern tile's edge, which clipped it to half the token, so a column drew 1.5px while the tooltip swatch drew a fixed share of its own diameter. The stripe now runs down the tile's middle at the full token, the default halves so a column looks as it did, and the swatch takes the same token."
+    },
+    {
+      "id": "auth-layout-lockup-matches-sidenav",
+      "kind": "behavior",
+      "old": "ds-auth-layout",
+      "new": null,
+      "surface": "style",
+      "action": "Look at the sign-in masthead: the wordmark is 18px (was 22px) and the letter-mark tile a fixed 28px (was 24-32px by viewport height). To keep the old lockup, set the restore snippet on ds-auth-layout.",
+      "appliesWhen": "Every ds-auth-layout that shows a generated wordmark or letter-mark. A logo projected into [brand] is covered by its own item in this release.",
+      "pitfall": "The tile no longer compresses on a short viewport, so a card that just fitted a landscape phone can now scroll by 4px.",
+      "restore": "ds-auth-layout { --ds-auth-layout-brand-name-font-size: var(--font-size-h4); --ds-auth-layout-mark-size: clamp(var(--space-6), 4svh, var(--space-8)); }",
+      "searchHints": [
+        "ds-auth-layout",
+        ".brand-name",
+        "--ds-auth-layout-mark-size"
+      ],
+      "detect": [
+        "ds-auth-layout[^{]*\\.brand-name",
+        "ds-auth-layout[^{]*\\.mark"
+      ],
+      "verify": "On a sign-in screen the wordmark computes to 18px and the tile to 28px square, or the restore snippet is present.",
+      "note": "The lockup now matches ds-sidenav's rail, so the mark a user meets at sign-in is the one in the app. Two hooks size the type: --ds-auth-layout-brand-name-font-size and --ds-auth-layout-mark-font-size. (delete list: auth-layout-brand-name-font-override)"
+    },
+    {
+      "id": "auth-layout-landmark-defaults-to-main",
+      "kind": "behavior",
+      "old": "ds-auth-layout[landmark]",
+      "new": null,
+      "surface": "template",
+      "action": "Add landmark=\"none\" to every ds-auth-layout rendered inside a <main> or an element with role=\"main\", ds-app-layout's content included. Remove landmark=\"main\" elsewhere (delete list: auth-layout-landmark-main).",
+      "appliesWhen": "Only ds-auth-layout. A standalone sign-in page needs nothing: its card becomes the main landmark on its own.",
+      "pitfall": "Inside another layout the page now has two main landmarks. Nothing errors; an accessibility audit reports it and a screen reader offers two.",
+      "restore": "landmark=\"none\" on the ds-auth-layout",
+      "searchHints": [
+        "ds-auth-layout",
+        "landmark="
+      ],
+      "detect": [
+        "<ds-auth-layout",
+        "ds-app-layout"
+      ],
+      "verify": "Each auth screen exposes exactly one main landmark: document.querySelectorAll('main, [role=main]').length is 1.",
+      "note": "The card renders an article, which is not a landmark, so by default a screen-reader user had nothing to jump to on a sign-in page."
+    },
+    {
+      "id": "auth-layout-brand-logo-capped-at-tile",
+      "kind": "behavior",
+      "old": "--ds-auth-layout-brand-max-height",
+      "new": null,
+      "surface": "style",
+      "action": "Look at every sign-in screen that projects a logo into [brand]: it is now capped at the tile height, 28px. Set the restore snippet to leave it unconstrained, or a height of your own.",
+      "appliesWhen": "Only a logo projected into ds-auth-layout's [brand] slot. ds-sidenav's [brand] slot is unchanged.",
+      "pitfall": "A logo sized by its own width only now shrinks to 28px tall, keeping its ratio, so a wide wordmark logo becomes small without any error.",
+      "restore": "ds-auth-layout { --ds-auth-layout-brand-max-height: none; }",
+      "searchHints": [
+        "[brand]",
+        "ds-auth-layout",
+        "--ds-auth-layout-brand-max-height"
+      ],
+      "detect": [
+        "<[^>]*\\sbrand[\\s>]"
+      ],
+      "verify": "A projected [brand] logo's computed max-height is 28px, or the restore snippet is present.",
+      "note": "A projected logo is the production case, and an uncapped image set the masthead's height. (delete list: auth-layout-brand-max-height-opt-in)"
+    },
+    {
+      "id": "button-color-class-is-color-prefixed",
+      "kind": "class-rename",
+      "old": "ds-button .c-*",
+      "new": ".color-*",
+      "surface": "style",
+      "action": "Rename `.c-secondary`, `.c-tertiary`, `.c-neutral`, `.c-error`, `.c-success` and `.c-warning` to `.color-secondary` … `.color-warning` in selectors scoped under ds-button. Better: key the rule off the host attribute, `ds-button[data-color=\"error\"]`, which does not depend on the inner element's classes.",
+      "appliesWhen": "Only a stylesheet that styles the inner button of ds-button by its colour class. Bindings (`color=\"error\"`) are unaffected. `.color-primary` does not exist: the default colour carries no class, as `.c-primary` never did.",
+      "pitfall": "A selector left on the old class matches nothing and reports nothing, and a `:not(.c-error)` chain stops excluding anything, so a rule written for one colour applies to every button.",
+      "restore": null,
+      "searchHints": [
+        ".c-secondary",
+        ".c-tertiary",
+        ".c-neutral",
+        ".c-error",
+        ".c-success",
+        ".c-warning",
+        "ds-button"
+      ],
+      "detect": [
+        "\\.c-(secondary|tertiary|neutral|error|success|warning)([^A-Za-z0-9_-]|$)"
+      ],
+      "verify": "No stylesheet under ds-button names a `.c-` colour class, and a ds-button color=\"error\" renders an inner button carrying `color-error`.",
+      "note": "The colour class names the `color` input it comes from, spelled out like the rest of the library's names."
+    },
+    {
+      "id": "icon-button-color-class-is-color-prefixed",
+      "kind": "class-rename",
+      "old": "ds-icon-button .c-*",
+      "new": ".color-*",
+      "surface": "style",
+      "action": "Rename `.c-secondary`, `.c-tertiary`, `.c-neutral`, `.c-error`, `.c-success` and `.c-warning` to `.color-secondary` … `.color-warning` in selectors scoped under ds-icon-button.",
+      "appliesWhen": "Only a stylesheet that styles the inner button of ds-icon-button by its colour class. Bindings (`color=\"error\"`) are unaffected. `.color-primary` does not exist: the default colour carries no class, as `.c-primary` never did.",
+      "pitfall": "A selector left on the old class matches nothing and reports nothing, and a `:not(.c-error)` chain stops excluding anything, so a rule written for one colour applies to every icon-button.",
+      "restore": null,
+      "searchHints": [
+        ".c-secondary",
+        ".c-tertiary",
+        ".c-neutral",
+        ".c-error",
+        ".c-success",
+        ".c-warning",
+        "ds-icon-button"
+      ],
+      "detect": [
+        "\\.c-(secondary|tertiary|neutral|error|success|warning)([^A-Za-z0-9_-]|$)"
+      ],
+      "verify": "No stylesheet under ds-icon-button names a `.c-` colour class, and a ds-icon-button color=\"error\" renders an inner button carrying `color-error`.",
+      "note": "The colour class names the `color` input it comes from, spelled out like the rest of the library's names."
+    },
+    {
+      "id": "button-variant-class-is-variant-prefixed",
+      "kind": "class-rename",
+      "old": "ds-button .v-*",
+      "new": ".variant-*",
+      "surface": "style",
+      "action": "Rename `.v-tonal`, `.v-ghost`, `.v-outline` and `.v-text` to `.variant-tonal`, `.variant-ghost`, `.variant-outline` and `.variant-text` in selectors scoped under ds-button. Better: key the rule off the host attribute, `ds-button[data-variant=\"outline\"]`, which does not depend on the inner element's classes.",
+      "appliesWhen": "Only a stylesheet that styles the inner button of ds-button by its fill-variant class. Bindings (`variant=\"outline\"`) are unaffected. `.variant-solid` does not exist: the default variant carries no class, as `.v-solid` never did.",
+      "pitfall": "A selector left on the old class matches nothing and reports nothing, and a `:not(.v-outline)` chain stops excluding anything, so a rule written for one variant applies to every button.",
+      "restore": null,
+      "searchHints": [
+        ".v-tonal",
+        ".v-ghost",
+        ".v-outline",
+        ".v-text",
+        "ds-button"
+      ],
+      "detect": [
+        "\\.v-(tonal|ghost|outline|text)([^A-Za-z0-9_-]|$)"
+      ],
+      "verify": "No stylesheet under ds-button names a `.v-` variant class, and a ds-button variant=\"outline\" renders an inner button carrying `variant-outline`.",
+      "note": "The variant class names the `variant` input it comes from, spelled out like the rest of the library's names."
     }
   ],
   "informational": [
@@ -228,7 +365,9 @@
     {
       "text": "A held (pinned) chart panel opens above its mark, like a hovered one, in ds-chart, ds-column-chart, ds-bar-chart, ds-pie-chart and ds-funnel-chart.",
       "verify": "Pin a column with pinOnClick: the panel sits above the column and the Unpin control below the plot."
-    }
+    },
+    "A read-only schematic, ng g @ids-group-ltd/ids-design-system:check-overrides, reports every --ds-* custom property a stylesheet sets that the installed version does not read, and every ds-* selector naming a class the component does not render. --strict makes it fail.",
+    "Neutral rows and small buttons that had a hover fill and no pressed state now darken one step on press, to --surface-muted: the sidenav group header and caret, the sidenav footer's rows, more button, search results and alerts, the date picker's period trigger, nav buttons, month and year cells and presets, the time picker's option cells and action buttons, the toast action, the description-list copy button, the multi-select select-all row and the tab close button. An interactive ds-tag, which already hovers at --surface-muted, takes the shared press dip instead."
   ],
   "deleteList": [
     {
@@ -350,6 +489,34 @@
       ],
       "why": "On a ds-chart holding two or more marks that show a tooltip, the default cursor resolves to the category cursor. The binding stays legitimate on a ds-chart of one such mark, where the default resolves to none.",
       "replaceWith": "nothing"
+    },
+    {
+      "id": "auth-layout-landmark-main",
+      "surface": "template",
+      "find": [
+        "landmark=\"main\""
+      ],
+      "why": "main is now the default.",
+      "replaceWith": "nothing"
+    },
+    {
+      "id": "auth-layout-brand-max-height-opt-in",
+      "surface": "style",
+      "find": [
+        "--ds-auth-layout-brand-max-height: var(--ds-auth-layout-mark-size)"
+      ],
+      "why": "The tile size is now the default cap.",
+      "replaceWith": "nothing"
+    },
+    {
+      "id": "auth-layout-brand-name-font-override",
+      "surface": "style",
+      "find": [
+        "ds-auth-layout .brand-name",
+        "::ng-deep .brand-name"
+      ],
+      "why": "The wordmark size is a hook now.",
+      "replaceWith": "--ds-auth-layout-brand-name-font-size on ds-auth-layout"
     }
   ]
 }

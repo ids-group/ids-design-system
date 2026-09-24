@@ -89,6 +89,7 @@
     border-radius: var(--ds-radius-inner);
 
     &:hover { background: var(--surface-secondary); }
+    &:active { background: var(--surface-muted); }
     &:focus-visible { @include focus.ring; }
   }
 

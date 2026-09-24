@@ -59,6 +59,8 @@
     background-color: var(--_time-picker-option-bg-color-hover);
   }
 
+  &:active:not(:disabled, .is-selected) { background-color: var(--surface-muted); }
+
   &.is-selected {
     background-color: var(--_time-picker-option-bg-color-selected);
     color: var(--_time-picker-option-text-color-selected);
