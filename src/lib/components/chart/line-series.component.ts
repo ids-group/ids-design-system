@@ -115,8 +115,8 @@ export class LineSeriesComponent implements OnDestroy {
 
   /** The one series to single out: every other one draws faded and this one draws bold, so the
    *  comparison survives a monochrome print. Driven from a legend, or from whatever else the app
-   *  uses to mean "show me this one". Needs `dimOthers`, which is what says fading is wanted at
-   *  all. */
+   *  uses to mean "show me this one". Fades the others whether or not `dimOthers` is set, which
+   *  governs only what a pointer over a marker does. */
   readonly highlighted = input<string | null>(null);
 
   /** A dash pattern per series, in the order the series are given. A series past the end of the
