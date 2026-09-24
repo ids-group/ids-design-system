@@ -14,7 +14,7 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**120 open — 0 P1, 13 P2, 107 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**121 open — 0 P1, 13 P2, 108 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P2 — 13
 
@@ -40,7 +40,7 @@ item and nothing else.
 - **Localization — every user-visible string is a hardcoded literal (recorded 2026-08-27, from the ITB Workspace picker report)**
   - Every user-visible string in the library is a hardcoded English literal — VALIDATED 2026-08-27 against 0.11.0; Stas: defer the whole thing, no code
 
-### P3 — 107
+### P3 — 108
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - The token reference says the portaled panel reads `--ds-time-picker-focus-shadow`
@@ -54,6 +54,7 @@ item and nothing else.
   - `--ds-chart-dimmed-opacity` has an empty `notes` and a near-twin name
 - **Reported by Stas from the docs site, 2026-09-05**
   - The shimmer's viewport anchoring breaks inside a transformed ancestor
+  - A pressed danger menu item shows its hover colour (recorded 2026-09-24)
 - **The chart family read as an architecture (audited 2026-09-22)**
   - `ds-line-chart`'s `tooltipAnchor` doc does not say it is inert unless `tooltip="axis"`
   - The category panel stays open after keyboard focus leaves a line marker (recorded 2026-09-24)
@@ -394,6 +395,12 @@ Constraints and decisions that read as removable and are not.
   would show up first in a consumer app with an animated drawer or a `transform`-based layout.
   No cheap fix: the alternative is the shared `:root` driver this replaced, which invalidated the
   whole document every frame. Worth a note in the skeleton's docs page before it is worth code.
+
+- [ ] **[P3] A pressed danger menu item shows its hover colour (recorded 2026-09-24).**
+  `.menu-item.error:hover` comes after `.menu-item:active:not(.disabled)` at equal specificity
+  (`menu-item.component.scss:78`, `:101`, same order in the compiled menu chunk), so pressing a
+  danger item paints hover, a step of ΔE 0. The fix is Stas's pick in deck `3-interaction-formula`
+  (grey like the neighbours, or `--error-muted`, the error ghost button's pressed pair).
 
 ## The chart family read as an architecture (audited 2026-09-22)
 
@@ -1064,7 +1071,7 @@ file** — the number moves; cite the filename.
 | --- | --- | --- | --- |
 | 1 | `1-color-engine-derivation` | One source token per role, derived. | the colour-engine P2 |
 | 2 | `2-color-engine-relative` | The prototype half of the same question. | as above |
-| 3 | `3-interaction-formula` | State interactions by formula, calibrated against the drawn ramp. | the `.ds-interactive` P2 |
+| 3 | `3-interaction-formula` | The pressed recipe of the tonal button, and of the danger menu item. | the pressed-danger-menu P3 and the `.ds-interactive` P3 |
 | 4 | `4-migration-manifest-audit` | Which of eight format practices marked *Adopt* are worth the tooling. | the manifest-practices P3 |
 | 5 | `5-select-native-multi` | Whether `ds-select` native `multi` is worth building. | already *Parked* — "keep parked" closes both |
 | 6 | `6-warning-text-colour` | Which colour goes on the warning tint. Four candidates, each rendered in itself. | the warning pair under *Bugs* |
@@ -1072,7 +1079,7 @@ file** — the number moves; cite the filename.
 | 8 | `8-waterfall-mode-or-component` | The waterfall's own tag against a `stack="waterfall"` mode on the column chart. | the waterfall entry point, already shipped standalone |
 | 9 | `9-bar-column-contracts` | How far to converge the bar and the column: name the difference, converge the palette, or give the bar a series model. | the stacking-contract ask under *Two chart names that collide* |
 | 10 | `10-picker-list-height` | Whether the picker list height becomes a public token or stays behind `panelClass`. | the closed `--picker-maxh` ask, same shape |
-| 11 | `11-decision-queue` | Every consumer ask and every open question in one page - 10 asks in three groups, then 33 decisions in six, each drawn as today against after. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
+| 11 | `11-decision-queue` | Every consumer ask and every open question in one page - 10 asks in three groups, then 30 decisions in six, each drawn as today against after. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
