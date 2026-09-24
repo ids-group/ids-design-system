@@ -1,9 +1,11 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   ViewEncapsulation,
   booleanAttribute,
   computed,
+  inject,
   input,
   numberAttribute,
   output,
@@ -13,6 +15,7 @@ import {
   CHART_SERIES_COLORS,
   decimationTarget,
   linearScale,
+  listenForMarkFocus,
   lttbDecimate,
   markOf,
   minMaxDecimate,
@@ -388,6 +391,12 @@ export class ScatterChartComponent {
 
     return starts;
   });
+
+  constructor() {
+    listenForMarkFocus(inject(ElementRef), (event, hit) =>
+      this.activeMark.enter(hit.index, event, undefined, hit.element),
+    );
+  }
 
   protected onPointOver(event: Event): void {
     const hit = markOf(event);

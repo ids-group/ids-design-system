@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   OnDestroy,
   ViewEncapsulation,
   booleanAttribute,
@@ -10,12 +11,14 @@ import {
   input,
   numberAttribute,
   output,
+  viewChildren,
 } from '@angular/core';
 import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
 import {
   CHART_SERIES_COLORS,
   defaultChartFormat,
   describeShare,
+  listenForMarkFocus,
   markOf,
   rovingMarks,
   leaveMark,
@@ -23,6 +26,7 @@ import {
 } from '@ids-group-ltd/ids-design-system/components';
 import { ICONS } from '@ids-group-ltd/ids-design-system/core';
 import type { ChartValueFormat } from '@ids-group-ltd/ids-design-system/core';
+import type { MarkHit } from '@ids-group-ltd/ids-design-system/components';
 import { chartActiveMark } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import type {
   ChartItemTooltipTrigger,
@@ -205,9 +209,22 @@ export class ColumnSeriesComponent implements OnDestroy {
     this.scales.reportTooltip(this.domainId, {
       context: this.tooltipContext,
       origin: computed(() => this.activeMark.origin()),
-      preferBelow: computed(() => this.activeMark.pinned()),
+      pinned: this.activeMark.pinned,
+      offersTooltip: computed(() => this.tooltip() !== 'none'),
+      axisOrigin: computed(() => {
+        const categoryIndex = this.scales.activeIndex();
+
+        return categoryIndex < 0
+          ? null
+          : (this.barElements()[categoryIndex]?.nativeElement ?? null);
+      }),
       axisEntries: this.axisEntries,
     });
+    listenForMarkFocus(
+      inject(ElementRef),
+      (event, hit) => this.onMarkFocus(event, hit),
+      () => this.activeMark.leave(),
+    );
   }
 
   ngOnDestroy(): void {
@@ -216,6 +233,8 @@ export class ColumnSeriesComponent implements OnDestroy {
   }
 
   readonly activeMark = chartActiveMark(() => this.tooltipLingerMs());
+
+  private readonly barElements = viewChildren<ElementRef<Element>>('barEl');
 
   /** One SERIES' slot inside a category's band: the whole band while a chart draws one series,
    *  a share of it per series when several are grouped. The box that catches the pointer is sized
@@ -355,18 +374,9 @@ export class ColumnSeriesComponent implements OnDestroy {
 
   protected readonly roving = rovingMarks(() => this.marks().length);
 
-  protected onMarkFocus(event: FocusEvent): void {
-    const hit = markOf(event);
-    if (hit) {
-      this.roving.focus(hit.index);
-      this.activeMark.enter(hit.index, event, this.tooltipMark(), hit.element);
-    }
-  }
-
-  protected onMarkBlur(event: FocusEvent): void {
-    if (markOf(event)) {
-      this.activeMark.leave();
-    }
+  private onMarkFocus(event: FocusEvent, hit: MarkHit): void {
+    this.roving.focus(hit.index);
+    this.activeMark.enter(hit.index, event, this.tooltipMark(), hit.element);
   }
 
   protected onMarkKey(event: KeyboardEvent): void {

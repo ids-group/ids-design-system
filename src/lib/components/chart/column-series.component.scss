@@ -20,7 +20,7 @@
     --ds-chart-hatch-color,
     var(--surface-default)
   );
-  --_chart-hatch-width: var(--ds-chart-hatch-width, 3px);
+  --_chart-hatch-width: var(--ds-chart-hatch-width, 1.5px);
 }
 
 // One user unit is one CSS pixel inside `ds-chart`, which is what lets a cap in pixels stay a

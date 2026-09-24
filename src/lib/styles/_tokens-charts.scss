@@ -160,7 +160,7 @@
   /* Stripes wide enough to survive a 24px-wide mark at a glance, and drawn in the surface colour
      so they read as gaps cut out of the mark rather than a second hue competing with it. */
   --chart-hatch-color: var(--surface-default);
-  --chart-hatch-width: 3px;
+  --chart-hatch-width: 1.5px;
 }
 
 /* Public override layer.

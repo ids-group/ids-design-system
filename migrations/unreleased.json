@@ -45,18 +45,22 @@
     {
       "id": "exported-class-members-grew",
       "kind": "behavior",
-      "old": "AccordionComponent, AccordionItemComponent, AlertComponent, BannerComponent",
+      "old": "AccordionComponent, AccordionItemComponent, AlertComponent, BannerComponent, ChartComponent, ColumnSeriesComponent, LineSeriesComponent, ChartTooltipDirective",
       "new": null,
       "surface": "typescript",
-      "action": "Build after upgrading, and rename or mark `override` every member of yours the compiler reports as colliding.",
-      "appliesWhen": "Subclassing a DS component is unsupported, but consumers do it. Template users of the `<ds-accordion>`, `<ds-accordion-item>`, `<ds-alert>` and `<ds-banner>` elements need nothing.",
-      "pitfall": "`protected` and `private` are no protection: a redeclared member collides exactly as a public one does.",
+      "action": "Build after upgrading, rename or mark `override` every member of yours the compiler reports as colliding, and delete an override whose base member is gone.",
+      "appliesWhen": "Subclassing a DS component is unsupported, but consumers do it. Template users of the `<ds-accordion>`, `<ds-accordion-item>`, `<ds-alert>`, `<ds-banner>` and `<ds-chart>` elements, the `g[dsColumnSeries]` and `g[dsLineSeries]` marks and the `[dsChartTooltip]` directive need nothing.",
+      "pitfall": "`protected` and `private` are no protection: a redeclared member collides exactly as a public one does. A method of yours named like a removed member and declared without `override` still compiles, and is simply never called again.",
       "restore": null,
       "searchHints": [
         "extends AccordionComponent",
         "extends AccordionItemComponent",
         "extends AlertComponent",
         "extends BannerComponent",
+        "extends ChartComponent",
+        "extends ColumnSeriesComponent",
+        "extends LineSeriesComponent",
+        "extends ChartTooltipDirective",
         "extends "
       ],
       "detect": [
@@ -67,10 +71,110 @@
         "extends AlertComponent",
         "AlertComponent",
         "extends BannerComponent",
-        "BannerComponent"
+        "BannerComponent",
+        "extends ChartComponent",
+        "ChartComponent",
+        "extends ColumnSeriesComponent",
+        "ColumnSeriesComponent",
+        "extends LineSeriesComponent",
+        "LineSeriesComponent",
+        "extends ChartTooltipDirective",
+        "ChartTooltipDirective"
       ],
-      "verify": "The app builds with no TS2415 or TS2416 naming AccordionComponent, AccordionItemComponent, AlertComponent or BannerComponent.",
-      "note": "AccordionComponent gained chevron; AccordionItemComponent gained chevronDown and chevronName; AlertComponent and BannerComponent each gained liveRole. Subclassing a DS component is unsupported but consumers do it, and a redeclared member collides whether it is public, protected or private. The compiler enumerates every collision, so a build is the whole check and no list here could stay current."
+      "verify": "The app builds with no TS2415 or TS2416 naming AccordionComponent, AccordionItemComponent, AlertComponent, BannerComponent, ChartComponent, ColumnSeriesComponent, LineSeriesComponent or ChartTooltipDirective (internal, via components/chart-tooltip), and no member of a subclass is named like a removed member listed in the note.",
+      "note": "AccordionComponent gained chevron; AccordionItemComponent gained chevronDown and chevronName; AlertComponent and BannerComponent each gained liveRole; ChartComponent gained composed, cursorResolved and tooltipPinned and lost tooltipPreferBelow; ColumnSeriesComponent gained barElements and lost onMarkBlur; LineSeriesComponent lost onMarkerBlur; ChartTooltipDirective (internal, via components/chart-tooltip) lost dsChartTooltipPreferBelow. A redeclared member collides whether it is public, protected or private, and the compiler enumerates every collision."
+    },
+    {
+      "id": "chart-cursor-default-auto",
+      "kind": "behavior",
+      "old": "ds-chart[cursor]",
+      "new": null,
+      "surface": "template",
+      "action": "None, unless a ds-chart that composes two or more marks showing a tooltip has to answer per mark: set cursor=\"none\" on it.",
+      "appliesWhen": "Only a ds-chart with no cursor binding that holds two or more g[dsColumnSeries] or g[dsLineSeries] marks whose tooltip is not \"none\". A ds-chart of one such mark, one that binds cursor either way, and the ds-column-chart, ds-line-chart and ds-waterfall-chart presets are unaffected.",
+      "pitfall": "On such a plot the pointer anywhere in a category opens the category panel, which lists every mark's reading there and replaces the per-mark panel, so a column series' partOfWhole share line is not in it while the pointer is on the plot.",
+      "restore": "cursor=\"none\"",
+      "searchHints": [
+        "<ds-chart",
+        "dsColumnSeries",
+        "dsLineSeries",
+        "cursor="
+      ],
+      "detect": [
+        "dsColumnSeries",
+        "dsLineSeries",
+        "cursor=\"category\""
+      ],
+      "verify": "Every ds-chart holding two marks that show a tooltip either opens one panel naming each mark's reading when the pointer is anywhere in a category, or carries cursor=\"none\".",
+      "note": "The default was \"none\", now \"auto\": the category cursor for a plot of two or more marks that show a tooltip, and \"none\" for a plot of one. Two marks drawn over one category axis are read as one comparison, and a panel per mark made the reader hover the column and the line in turn to compare them. A cursor=\"category\" written on such a plot restates the new default (delete list: chart-cursor-category-composed)."
+    },
+    {
+      "id": "chart-cursor-type-widened",
+      "kind": "behavior",
+      "old": "ds-chart[cursor]",
+      "new": null,
+      "surface": "typescript",
+      "action": "Where your code reads ChartComponent.cursor() back, handle \"auto\".",
+      "appliesWhen": "Only code that reads the input back through a ChartComponent reference (viewChild, #chart=\"dsChart\") or a subclass redeclaring it. Binding cursor in a template is unaffected.",
+      "restore": null,
+      "searchHints": [
+        "dsChart",
+        "ChartComponent",
+        ".cursor()"
+      ],
+      "detect": [
+        ".cursor()",
+        "cursor() ===",
+        "extends ChartComponent"
+      ],
+      "verify": "The app builds, and no branch on ChartComponent.cursor() treats \"auto\" as a value it cannot receive.",
+      "note": "The type was 'none' | 'category', now 'none' | 'category' | 'auto'. A reader comparing it exhaustively, or a subclass redeclaring the input with the old type (TS2416), is what breaks; a writer is unaffected."
+    },
+    {
+      "id": "chart-tooltip-prefer-below-removed",
+      "kind": "removed-api",
+      "old": "[dsChartTooltipPreferBelow]",
+      "new": null,
+      "surface": [
+        "template",
+        "typescript"
+      ],
+      "action": "Delete every [dsChartTooltipPreferBelow] binding. In a tooltip source a custom mark hands CHART_SCALES.reportTooltip, rename preferBelow to pinned.",
+      "appliesWhen": "Only an app that binds the dsChartTooltip directive itself, or a custom mark that injects CHART_SCALES and reports a tooltip source carrying preferBelow. The library's own charts are unaffected.",
+      "pitfall": "A preferBelow left in a source reached through a variable rather than an object literal still compiles and is ignored, so a held panel stays inert to the pointer and its text cannot be selected.",
+      "restore": null,
+      "searchHints": [
+        "dsChartTooltipPreferBelow",
+        "preferBelow",
+        "reportTooltip"
+      ],
+      "detect": [
+        "dsChartTooltipPreferBelow",
+        "preferBelow:",
+        "reportTooltip("
+      ],
+      "verify": "No dsChartTooltipPreferBelow or preferBelow remains in the app, and a held chart panel opens above its mark.",
+      "note": "Every chart puts its Unpin control at the plot's bottom edge, so a held panel opens above its mark like a hovered one and the flag that flipped it below has nothing left to steer. pinned carries the other half of what preferBelow fed: a held pane takes the pointer so its text can be selected."
+    },
+    {
+      "id": "chart-hatch-width-full-stroke",
+      "kind": "behavior",
+      "old": "--ds-chart-hatch-width",
+      "new": null,
+      "surface": "style",
+      "action": "None, unless you set --ds-chart-hatch-width: halve the value to keep the stripe you had.",
+      "appliesWhen": "Only a stylesheet that sets --ds-chart-hatch-width. The default draws the same stripe as before. The default ships in styles/tokens-charts, which styles/ds forwards.",
+      "pitfall": "An override left at 3px now draws a 3px stripe in the 8px repeat, which reads as a paler mark rather than a textured one.",
+      "restore": "--ds-chart-hatch-width: calc(<your value> / 2);",
+      "searchHints": [
+        "--ds-chart-hatch-width",
+        "hatch"
+      ],
+      "detect": [
+        "--ds-chart-hatch-width"
+      ],
+      "verify": "In the BUILT css --chart-hatch-width resolves to 1.5px, and a hatched column's stripe measures the width --ds-chart-hatch-width names.",
+      "note": "The default was 3px, now 1.5px. The stripe sat on its pattern tile's edge, which clipped it to half the token, so a column drew 1.5px while the tooltip swatch drew a fixed share of its own diameter. The stripe now runs down the tile's middle at the full token, the default halves so a column looks as it did, and the swatch takes the same token."
     }
   ],
   "informational": [
@@ -108,7 +212,23 @@
       "text": "ds-funnel-chart with shape=\"area\" draws a stage whose share is too small to clear the gap between bands as a band half a gap deep (about 3px at the default stage height) about its own middle, rather than collapsing it to a zero-height line; a stage of value 0 still draws nothing.",
       "verify": "A ds-funnel-chart shape=\"area\" with stages 1000 and 10 renders the second stage as a visible band."
     },
-    "ds-line-chart and ds-chart line series fade their point markers in with the line and the area, on the same delay and stagger; prefers-reduced-motion zeroes it with the rest of the chart motion."
+    "ds-line-chart and ds-chart line series fade their point markers in with the line and the area, on the same delay and stagger; prefers-reduced-motion zeroes it with the rest of the chart motion.",
+    {
+      "text": "Hatched columns slant from top left to bottom right, and the tooltip swatch of a hatched reading draws its stripe at the same angle, in --ds-chart-hatch-color and at --ds-chart-hatch-width.",
+      "verify": "Hover a hatched column: its stripes and the swatch stripe in the panel run the same diagonal at the same width."
+    },
+    {
+      "text": "A click on a g[dsColumnSeries] or g[dsLineSeries] series, or on a ds-scatter-chart series, leaves focus where it was: the series group took focus and drew a focus rectangle around all its marks. The keyboard reaches each mark as before.",
+      "verify": "Click a column of a ds-chart: document.activeElement is not the .columns group and no outline surrounds the series."
+    },
+    {
+      "text": "A category panel hangs over the highest reading at the category wherever in the band the pointer is; with the pointer beside a column it hung over a lower line marker.",
+      "verify": "On a ds-chart with a column, a line and a category cursor, move the pointer across one category: the panel stays above the taller reading."
+    },
+    {
+      "text": "A held (pinned) chart panel opens above its mark, like a hovered one, in ds-chart, ds-column-chart, ds-bar-chart, ds-pie-chart and ds-funnel-chart.",
+      "verify": "Pin a column with pinOnClick: the panel sits above the column and the Unpin control below the plot."
+    }
   ],
   "deleteList": [
     {
@@ -221,6 +341,15 @@
       ],
       "why": "The footer's top and bottom padding are tokens, so a doubled-class rule re-padding .pagination-footer restates one; the 0.13.1 row about its inline gutters still holds for a compact table that sets no --ds-table-cell-padding-*.",
       "replaceWith": "--ds-table-footer-padding-top / -bottom (or -y) on the ds-table"
+    },
+    {
+      "id": "chart-cursor-category-composed",
+      "surface": "template",
+      "find": [
+        "cursor=\"category\""
+      ],
+      "why": "On a ds-chart holding two or more marks that show a tooltip, the default cursor resolves to the category cursor. The binding stays legitimate on a ds-chart of one such mark, where the default resolves to none.",
+      "replaceWith": "nothing"
     }
   ]
 }

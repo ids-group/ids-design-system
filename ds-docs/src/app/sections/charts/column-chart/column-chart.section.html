@@ -259,7 +259,8 @@
     the default, hangs it on the first axis's own gridlines at a round step. The
     line is written after the columns because a projected mark paints in the
     order it is written, and a cumulative line belongs over the readings it
-    sums.
+    sums. Two marks make it one comparison, so the pointer anywhere in a month
+    names both readings in one panel over the taller of the two.
   </p>
 
   <ds-chart
@@ -275,6 +276,7 @@
     <svg:g
       dsColumnSeries
       interactive
+      seriesLabel="Revenue"
       [data]="comboColumns"
       [showValues]="false"
       [valueFormat]="dollars" />

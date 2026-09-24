@@ -44,12 +44,13 @@ export type { BandScale, NiceDomain, PointScale } from './charts-scale';
 export { leaveMark, staggerDelay } from './charts-motion';
 export {
   focusMark,
+  listenForMarkFocus,
   markAt,
   markOf,
   nextRovingIndex,
   rovingMarks,
 } from './charts-roving';
-export type { RovingMarks } from './charts-roving';
+export type { MarkHit, RovingMarks } from './charts-roving';
 export { describeSeries } from './charts-summary';
 export type { SummaryPoint } from './charts-summary';
 export { chipFit } from './chip-overflow';

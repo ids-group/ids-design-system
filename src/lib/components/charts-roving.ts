@@ -1,5 +1,12 @@
-import { computed, signal } from '@angular/core';
-import type { Signal } from '@angular/core';
+import {
+  DestroyRef,
+  NgZone,
+  afterNextRender,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
+import type { ElementRef, Signal } from '@angular/core';
 
 /** Where a roving tabindex lands after `key`, or `null` when the key does not traverse.
  *
@@ -94,6 +101,12 @@ export function rovingMarks(count: () => number): RovingMarks {
   };
 }
 
+/** @internal */
+export interface MarkHit {
+  readonly element: Element;
+  readonly index: number;
+}
+
 /** The mark an event on the marks' parent came from - the nearest `[data-mark-index]` inside that
  *  parent - for a chart that listens once per series rather than once per mark. `null` when the
  *  event did not start on a mark.
@@ -101,8 +114,8 @@ export function rovingMarks(count: () => number): RovingMarks {
  *  @internal */
 export function markOf(
   event: Event,
-): { readonly element: Element; readonly index: number } | null {
-  const scope = event.currentTarget;
+  scope: EventTarget | null = event.currentTarget,
+): MarkHit | null {
   const target = event.target;
   if (!(scope instanceof Element) || !(target instanceof Element)) {
     return null;
@@ -113,4 +126,43 @@ export function markOf(
   }
 
   return { element, index: Number(element.getAttribute('data-mark-index')) };
+}
+
+/** Focus arriving on and leaving a mark inside `scope`, heard from the document rather than from
+ *  the marks' group: Chromium makes an SVG element focusable once it has a `focus`, `blur`,
+ *  `focusin` or `focusout` listener, so a group that listened would take focus on a click and
+ *  ring every mark it holds. Call from an injection context.
+ *
+ *  @internal */
+export function listenForMarkFocus(
+  scope: ElementRef<Element>,
+  onFocus: (event: FocusEvent, mark: MarkHit) => void,
+  onBlur?: (event: FocusEvent, mark: MarkHit) => void,
+): void {
+  const zone = inject(NgZone);
+  const destroyRef = inject(DestroyRef);
+  afterNextRender(() => {
+    const host = scope.nativeElement;
+    const document = host.ownerDocument;
+    const forward =
+      (handler?: (event: FocusEvent, mark: MarkHit) => void) =>
+      (event: FocusEvent): void => {
+        const hit = handler && markOf(event, host);
+        if (hit) {
+          handler(event, hit);
+        }
+      };
+    const focusIn = forward(onFocus);
+    const focusOut = forward(onBlur);
+    // Outside the zone: every focus change on the page reaches every series, and the handlers
+    // write signals, which schedule the render they need.
+    zone.runOutsideAngular(() => {
+      document.addEventListener('focusin', focusIn);
+      document.addEventListener('focusout', focusOut);
+    });
+    destroyRef.onDestroy(() => {
+      document.removeEventListener('focusin', focusIn);
+      document.removeEventListener('focusout', focusOut);
+    });
+  });
 }

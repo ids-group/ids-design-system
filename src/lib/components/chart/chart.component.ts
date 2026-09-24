@@ -110,10 +110,12 @@ export class ChartComponent implements ChartScales {
   });
 
   /** Draws a band and a crosshair down the category under the pointer, and reports that category
-   *  to every mark through `activeIndex`. `'none'`, the default, leaves the plot alone: a chart
-   *  whose marks are the hover targets already answers per mark, and two affordances on one plot
-   *  read as two different questions. */
-  readonly cursor = input<'none' | 'category'>('none');
+   *  to every mark through `activeIndex`. On a plot of two or more marks that show a tooltip, the
+   *  panel then names every mark's reading at that category wherever in it the pointer is.
+   *  `'auto'`, the default, is `'category'` for such a composed plot and `'none'` for a plot of one
+   *  mark, whose marks already answer per mark: two affordances on one plot read as two different
+   *  questions. */
+  readonly cursor = input<'none' | 'category' | 'auto'>('auto');
 
   /** Whether a press holds the category cursor where it is, so the reader can look away from the
    *  plot with the comparison still on screen. Released by pressing it again, by Escape, or by a
@@ -272,7 +274,7 @@ export class ChartComponent implements ChartScales {
 
     effect((onCleanup) => {
       const canvas = this.canvasElement()?.nativeElement;
-      if (canvas && this.cursor() === 'category') {
+      if (canvas && this.cursorResolved() === 'category') {
         onCleanup(this.listenForCursor(canvas));
       }
     });
@@ -473,6 +475,24 @@ export class ChartComponent implements ChartScales {
     });
   }
 
+  /** Two or more marks that show a tooltip: the plot reads as one comparison, so its panel is about
+   *  the category rather than about whichever mark the pointer happens to be over. */
+  private readonly composed = computed(
+    () =>
+      [...this.tooltipSources().values()].filter(
+        (source) => source.offersTooltip?.() ?? true,
+      ).length > 1,
+  );
+
+  protected readonly cursorResolved = computed(() => {
+    const cursor = this.cursor();
+    if (cursor !== 'auto') {
+      return cursor;
+    }
+
+    return this.composed() ? 'category' : 'none';
+  });
+
   /** The offer to show, if any mark is making one. At most one mark has a context at a time: a
    *  per-mark tooltip only fills it while that mark is hovered, and an axis tooltip only while the
    *  category cursor is on. The container opening the panel is what stops two marks opening two. */
@@ -484,8 +504,22 @@ export class ChartComponent implements ChartScales {
   );
 
   protected readonly tooltipContext = computed(() => {
+    const categoryIndex = this.activeIndex();
+    if (
+      this.cursorResolved() === 'category' &&
+      this.composed() &&
+      categoryIndex >= 0
+    ) {
+      const entries = [...this.tooltipSources().values()].flatMap(
+        (source) => source.axisEntries?.() ?? [],
+      );
+
+      return entries.length === 0
+        ? null
+        : { category: this.categories()[categoryIndex] ?? '', entries };
+    }
     const base = this.activeTooltip()?.context() ?? null;
-    if (base === null || this.cursor() !== 'category') {
+    if (base === null || this.cursorResolved() !== 'category') {
       return base;
     }
     // A category panel is about the category, not about the mark that happened to open it, so
@@ -503,14 +537,19 @@ export class ChartComponent implements ChartScales {
 
   protected readonly tooltipOrigin = computed(() => {
     const own = this.activeTooltip()?.origin() ?? null;
-    if (this.cursor() !== 'category') {
+    // A point rather than an element is a panel that follows the pointer, and stays with it.
+    if (
+      this.cursorResolved() !== 'category' ||
+      (own !== null && !(own instanceof Element))
+    ) {
       return own;
     }
     // A category panel belongs over the TALLEST reading at that category, not over whichever mark
     // happened to open it: a line that dips under a column would otherwise put the panel low and
-    // let the column stand over it.
+    // let the column stand over it. Every mark's reading counts whether or not the pointer is on
+    // it, or the panel jumps between the two as the pointer crosses the column's edge.
     const boxes = [...this.tooltipSources().values()]
-      .map((source) => source.origin())
+      .map((source) => (source.axisOrigin ?? source.origin)())
       .filter((origin): origin is Element => origin instanceof Element)
       .map((element) => ({ element, top: element.getBoundingClientRect().top }))
       .filter(({ element }) => {
@@ -520,15 +559,14 @@ export class ChartComponent implements ChartScales {
       });
 
     return boxes.length === 0
-      ? own
+      ? (own ?? this.cursorOrigin())
       : boxes.reduce((highest, candidate) =>
           candidate.top < highest.top ? candidate : highest,
         ).element;
   });
 
-  protected readonly tooltipPreferBelow = computed(
-    () =>
-      (this.activeTooltip()?.preferBelow?.() ?? false) || this.cursorPinned(),
+  protected readonly tooltipPinned = computed(
+    () => (this.activeTooltip()?.pinned?.() ?? false) || this.cursorPinned(),
   );
 
   /** Compared by value, which is what stops a mark that reports AND reads `yPosition()` in one
@@ -652,7 +690,7 @@ export class ChartComponent implements ChartScales {
 
   protected readonly cursorBand = computed(() => {
     const index = this.activeIndex();
-    if (this.cursor() !== 'category' || index < 0) {
+    if (this.cursorResolved() !== 'category' || index < 0) {
       return null;
     }
     const width = this.bandWidth();
