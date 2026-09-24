@@ -146,15 +146,15 @@
       transform: translateX(2px);
     }
 
-    .start-link--note {
+    .start-link.is-note {
       background: var(--surface-secondary);
       border-style: dashed;
     }
-    .start-link--note:hover {
+    .start-link.is-note:hover {
       transform: none;
       background: var(--surface-secondary);
     }
-    .start-link--note .start-link-num {
+    .start-link.is-note .start-link-num {
       background: var(--surface-default);
       color: var(--text-secondary);
     }

@@ -37,12 +37,12 @@
          different heights. */
       height: 100%;
     }
-    .state-cell-stage--tbl { padding: 0; align-items: stretch; }
+    .state-cell-stage.is-tbl { padding: 0; align-items: stretch; }
 
     /* The one-specimen band keeps the card width the four-across bands use. `1fr` stretched it to
        the full row, which reads as a broken layout rather than as a single example. */
-    .states--cols-1 { grid-template-columns: max-content; }
-    .state-cell-stage--tbl ds-table { width: 100%; }
+    .states.is-cols-1 { grid-template-columns: max-content; }
+    .state-cell-stage.is-tbl ds-table { width: 100%; }
 
     /* State pin — hover on a sortable header reads the component's own resolvers;
        --text-secondary is a bare token (no --_* resolver for header hover fg). */
