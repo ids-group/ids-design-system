@@ -1,11 +1,15 @@
-import { signal, type Signal } from '@angular/core';
-import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
+import { computed, inject, signal, type Signal } from '@angular/core';
+import {
+  DS_INTL,
+  injectDsLocale,
+  resolveWithConfig,
+} from '@ids-group-ltd/ids-design-system/core';
 import type {
   ChartDataTable,
   ChartFrame,
   ChartValueFormat,
 } from '@ids-group-ltd/ids-design-system/core';
-import { defaultChartFormat } from './charts-format';
+import { chartValueFormat } from './charts-format';
 
 /** The five inputs every chart carries for the decisions an app makes once rather than per plot.
  *
@@ -24,11 +28,16 @@ export interface ChartDefaultInputs {
 const NO_DATA_TABLE = signal<ChartDataTable | null>(null);
 const NO_LINGER = signal<number | null>(null);
 
-/** Each resolved input → `DS_CONFIG.chart` → the built-in. Call from an injection context.
+/** Each resolved input → `DS_CONFIG.chart` → the built-in; copy resolves input → `DS_INTL.chart`.
+ *  Call from an injection context.
  *
  *  @internal */
 export function resolveChartDefaults(inputs: ChartDefaultInputs) {
+  const locale = injectDsLocale();
+  const intl = inject(DS_INTL);
+
   return {
+    locale,
     frame: resolveWithConfig(
       inputs.frame,
       (config) => config.chart?.frame,
@@ -39,20 +48,12 @@ export function resolveChartDefaults(inputs: ChartDefaultInputs) {
       (config) => config.chart?.dataTable,
       'none' as ChartDataTable,
     ),
-    emptyText: resolveWithConfig(
-      inputs.emptyText,
-      (config) => config.chart?.emptyText,
-      'No data',
-    ),
-    errorText: resolveWithConfig(
-      inputs.errorText,
-      (config) => config.chart?.errorText,
-      'Could not load the data',
-    ),
+    emptyText: computed(() => inputs.emptyText() ?? intl().chart.empty),
+    errorText: computed(() => inputs.errorText() ?? intl().chart.error),
     valueFormat: resolveWithConfig(
       inputs.valueFormat,
       (config) => config.chart?.valueFormat,
-      defaultChartFormat,
+      chartValueFormat(locale),
     ),
     tooltipLingerMs: resolveWithConfig(
       inputs.tooltipLingerMs ?? NO_LINGER,

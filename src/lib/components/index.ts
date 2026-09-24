@@ -6,10 +6,11 @@ export {
   chartColors,
 } from './chart-palette.generated';
 export {
-  defaultChartFormat,
+  chartValueFormat,
   formatPercent,
   formatTick,
   formatValue,
+  formatWholePercent,
   largestRemainder,
   describeShare,
   shareOfTotal,

@@ -1,4 +1,4 @@
-import type { ChartFormatLocation } from '@ids-group-ltd/ids-design-system/core';
+import type { ChartValueFormat } from '@ids-group-ltd/ids-design-system/core';
 
 const numberFormatters = new Map<string, Intl.NumberFormat>();
 
@@ -22,49 +22,77 @@ export function formatValue(value: number, locale?: string): string {
   return numberFormatter(locale).format(value);
 }
 
-/** The built-in `valueFormat`: compact on a tick (`1.2M`), spelled out everywhere else
- *  (`1 248 392`). A caller-supplied formatter receives the same `location` and decides for
+const chartFormats = new Map<string, ChartValueFormat>();
+
+/** The built-in `valueFormat` in one locale: compact on a tick (`1.2M`), spelled out everywhere
+ *  else (`1,248,392`). A caller-supplied formatter receives the same `location` and decides for
  *  itself; this is only the default.
  *
  *  @internal */
-export function defaultChartFormat(
-  value: number,
-  location: ChartFormatLocation,
-): string {
-  if (!Number.isFinite(value)) {
-    return '—';
+export function chartValueFormat(locale: string): ChartValueFormat {
+  let format = chartFormats.get(locale);
+  if (!format) {
+    const compact = new Intl.NumberFormat(locale, {
+      notation: 'compact',
+      maximumFractionDigits: 1,
+    });
+    const full = new Intl.NumberFormat(locale);
+    format = (value, location) =>
+      !Number.isFinite(value)
+        ? '—'
+        : location === 'tick'
+          ? compact.format(value)
+          : full.format(value);
+    chartFormats.set(locale, format);
   }
 
-  return location === 'tick'
-    ? compactFormatter().format(value)
-    : numberFormatter(undefined).format(value);
+  return format;
 }
 
-let cachedCompactFormatter: Intl.NumberFormat | null = null;
+const percentFormatters = new Map<string, Intl.NumberFormat>();
 
-function compactFormatter(): Intl.NumberFormat {
-  cachedCompactFormatter ??= new Intl.NumberFormat(undefined, {
-    notation: 'compact',
-    maximumFractionDigits: 1,
-  });
+function percentFormatter(locale: string, digits: 0 | 1): Intl.NumberFormat {
+  const key = `${locale}|${digits}`;
+  let formatter = percentFormatters.get(key);
+  if (!formatter) {
+    formatter = new Intl.NumberFormat(locale, {
+      style: 'percent',
+      minimumFractionDigits: digits,
+      maximumFractionDigits: digits,
+    });
+    percentFormatters.set(key, formatter);
+  }
 
-  return cachedCompactFormatter;
+  return formatter;
 }
 
 /** @internal */
-export function formatPercent(value: number, total: number): string {
+export function formatPercent(
+  value: number,
+  total: number,
+  locale: string,
+): string {
   if (!total || !Number.isFinite(value) || !Number.isFinite(total)) {
     return '—';
   }
-
-  const percent = (value / total) * 100;
+  const fraction = value / total;
+  const formatter = percentFormatter(locale, 1);
   // A real share must never print as an exact zero: at one decimal, 214 of 987,654,321 rounds to
   // "0.0%" beside a bar too short to see, and the row reads as nothing when it is not nothing.
-  if (percent !== 0 && Math.abs(percent) < 0.05) {
-    return percent > 0 ? '<0.1%' : '>-0.1%';
+  if (fraction !== 0 && Math.abs(fraction) < 0.0005) {
+    return fraction > 0
+      ? `<${formatter.format(0.001)}`
+      : `>${formatter.format(-0.001)}`;
   }
 
-  return `${percent.toFixed(1)}%`;
+  return formatter.format(fraction);
+}
+
+/** A whole-number percentage (the pie's largest-remainder shares), in `locale`.
+ *
+ *  @internal */
+export function formatWholePercent(percent: number, locale: string): string {
+  return percentFormatter(locale, 0).format(percent / 100);
 }
 
 /** Whole percentages that sum to exactly 100. Rounding each share on its own
@@ -130,7 +158,11 @@ export function formatTick(value: number, step: number): string {
  *  rather than subtracted from it, so a negative mark has no share rather than a misleading one.
  *
  *  @internal */
-export function shareOfTotal(values: readonly number[], index: number): string {
+export function shareOfTotal(
+  values: readonly number[],
+  index: number,
+  locale: string,
+): string {
   const value = values[index];
   if (values.length < 2 || !Number.isFinite(value) || value <= 0) {
     return '';
@@ -139,7 +171,7 @@ export function shareOfTotal(values: readonly number[], index: number): string {
     .filter((entry) => Number.isFinite(entry) && entry > 0)
     .reduce((sum, entry) => sum + entry, 0);
 
-  return total > 0 ? formatPercent(value, total) : '';
+  return total > 0 ? formatPercent(value, total, locale) : '';
 }
 
 /** The same share, phrased for a tooltip line, where no column header stands above it to say what
@@ -149,8 +181,10 @@ export function shareOfTotal(values: readonly number[], index: number): string {
 export function describeShare(
   values: readonly number[],
   index: number,
+  locale: string,
+  phrase: (share: string) => string,
 ): string {
-  const share = shareOfTotal(values, index);
+  const share = shareOfTotal(values, index, locale);
 
-  return share ? `${share} of total` : '';
+  return share ? phrase(share) : '';
 }
