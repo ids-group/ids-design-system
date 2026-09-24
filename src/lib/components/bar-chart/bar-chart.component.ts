@@ -189,6 +189,18 @@ export class BarChartComponent {
    *  and pays for it with the rest of the chart. */
   readonly dimOthers = input(false, { transform: booleanAttribute });
 
+  /** The segment to single out, by its `id` - or by its position as a string where it has none.
+   *  Every other segment in every row fades, the same answer `highlighted` gives on a series
+   *  mark. Independent of `dimOthers`, which governs what a pointer does. A row without segments
+   *  is unaffected. */
+  readonly highlighted = input<string | null>(null);
+
+  protected isSegmentDimmed(key: string): boolean {
+    const highlighted = this.highlighted();
+
+    return highlighted !== null && highlighted !== key;
+  }
+
   /** Milliseconds between one mark's entrance and the next. `0`, the default, is no stagger at
    *  all; `40` is the documented non-zero step. The total is capped, so a long series does not
    *  crawl in. */
