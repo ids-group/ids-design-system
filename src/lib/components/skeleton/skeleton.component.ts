@@ -1,10 +1,10 @@
 import {
   Component,
-  DestroyRef,
   ElementRef,
   NgZone,
   ViewEncapsulation,
   booleanAttribute,
+  effect,
   inject,
   input,
 } from '@angular/core';
@@ -59,13 +59,17 @@ export class SkeletonComponent {
   readonly shimmer = input(true, { transform: booleanAttribute });
 
   constructor() {
-    if (typeof IntersectionObserver !== 'undefined') {
-      inject(DestroyRef).onDestroy(
-        observeVisibility(
-          inject<ElementRef<Element>>(ElementRef).nativeElement,
-          inject(NgZone),
-        ),
-      );
+    if (typeof IntersectionObserver === 'undefined') {
+      return;
     }
+    const host = inject<ElementRef<Element>>(ElementRef).nativeElement;
+    const zone = inject(NgZone);
+    // Only a moving wave has anything to pause, and every observed skeleton is one more
+    // intersection the browser computes on each scrolled frame.
+    effect((onCleanup) => {
+      if (this.shimmer()) {
+        onCleanup(observeVisibility(host, zone));
+      }
+    });
   }
 }
