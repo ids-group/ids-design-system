@@ -240,8 +240,45 @@
     </code> and
     <code class="t-mono-inline">
       --ds-bar-target-width
-    </code> set the rest.
+    </code> set the rest, and
+    <code class="t-mono-inline">
+      --ds-bar-radius
+    </code> rounds the track and
+    the fill together - a pill by default, square corners at
+    <code class="t-mono-inline">
+      var(--radius-0)
+    </code>.
   </p>
+
+  <div class="states">
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        --ds-bar-radius · default
+      </code>
+
+      <ds-bar [value]="60" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        --ds-bar-radius · var(--radius-sm)
+      </code>
+
+      <ds-bar
+        class="radius-small"
+        [value]="60" />
+    </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        --ds-bar-radius · var(--radius-0)
+      </code>
+
+      <ds-bar
+        class="radius-square"
+        [value]="60" />
+    </div>
+  </div>
 
   <h3 class="block-title t-h4">
     Edge cases

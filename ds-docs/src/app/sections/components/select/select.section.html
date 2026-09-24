@@ -527,7 +527,15 @@
     </code> was the only one
     before, so an app with its own reset had to write the empty value by hand
     and guess what empty means for each control. It deliberately does not move
-    focus.
+    focus; where the host moves on after clearing, follow it with
+    <code class="t-mono-inline">
+      blur()
+    </code>, the counterpart of
+    <code class="t-mono-inline">
+      focus()
+    </code> that every field control has.
+    It drops focus from whichever part of the control holds it and leaves an
+    open panel alone.
   </p>
 
   <div class="demo-panel">

@@ -16,3 +16,9 @@
 :not(.demo-pair) > ds-chart + ds-chart {
   margin-block-start: var(--space-5);
 }
+
+.orders-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
