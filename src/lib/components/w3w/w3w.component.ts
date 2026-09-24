@@ -2,10 +2,12 @@ import {
   Component,
   ViewEncapsulation,
   booleanAttribute,
+  inject,
   input,
   output,
 } from '@angular/core';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
+import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 
 @Component({
   selector: 'ds-w3w',
@@ -18,13 +20,15 @@ import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
     '[attr.role]': "copyable() ? 'button' : null",
     '[attr.tabindex]': 'copyable() ? 0 : null',
     '[attr.aria-label]':
-      "copyable() ? ('Copy what3words address ' + prefix() + address()) : null",
+      'copyable() ? intl().what3words.copy(prefix() + address()) : null',
     '(click)': 'onCopy()',
     '(keydown.enter)': 'onCopy()',
     '(keydown.space)': 'onKeyActivate($event)',
   },
 })
 export class W3wComponent {
+  protected readonly intl = inject(DS_INTL);
+
   /** Marker rendered before the address (e.g. the "///" glyph). */
   readonly prefix = input<string>('///');
   /** The three-word address, rendered after `prefix`. */

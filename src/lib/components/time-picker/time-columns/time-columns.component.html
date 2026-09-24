@@ -1,7 +1,7 @@
 <div
   class="col"
   role="listbox"
-  aria-label="Hours">
+  [attr.aria-label]="intl().timePicker.hours">
   @for (cell of hourCells(); track cell.value; let i = $index) {
     <button
       #hourOpt
@@ -22,7 +22,7 @@
 <div
   class="col"
   role="listbox"
-  aria-label="Minutes">
+  [attr.aria-label]="intl().timePicker.minutes">
   @for (cell of minuteCells(); track cell.value; let i = $index) {
     <button
       #minOpt
@@ -44,7 +44,7 @@
   <div
     class="col"
     role="listbox"
-    aria-label="AM/PM">
+    [attr.aria-label]="intl().timePicker.period">
     @for (cell of periodCells(); track cell.value; let i = $index) {
       <button
         #periodOpt

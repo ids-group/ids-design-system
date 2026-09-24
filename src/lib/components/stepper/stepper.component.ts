@@ -2,10 +2,12 @@ import {
   Component,
   ViewEncapsulation,
   booleanAttribute,
+  inject,
   input,
   output,
 } from '@angular/core';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
+import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 
 /** Where the step caption sits relative to its node: stacked beneath it
  *  (`bottom`, full-width wizard) or beside it (`inline`, compact header row). */
@@ -23,12 +25,14 @@ export type StepperOrientation = 'horizontal' | 'vertical';
   encapsulation: ViewEncapsulation.Emulated,
   host: {
     role: 'list',
-    'aria-label': 'Progress',
+    '[attr.aria-label]': 'intl().stepper.label',
     '[class.labels-inline]': "labelPosition() === 'inline'",
     '[class.is-vertical]': "orientation() === 'vertical'",
   },
 })
 export class StepperComponent {
+  protected readonly intl = inject(DS_INTL);
+
   /** Step labels, in order — one node is rendered per entry. */
   readonly steps = input<readonly string[]>([]);
   /** Zero-based index of the active step; earlier steps render as completed. */

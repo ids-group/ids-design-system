@@ -3,11 +3,15 @@ import {
   ViewEncapsulation,
   booleanAttribute,
   computed,
+  inject,
   input,
   numberAttribute,
 } from '@angular/core';
 import type { DsStatusKey } from '@ids-group-ltd/ids-design-system/core';
-import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
+import {
+  DS_INTL,
+  resolveWithConfig,
+} from '@ids-group-ltd/ids-design-system/core';
 
 @Component({
   selector: 'ds-badge',
@@ -20,6 +24,7 @@ import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
   },
 })
 export class BadgeComponent {
+  protected readonly intl = inject(DS_INTL);
   /** Consumer-defined status key; colours are wired via styles/status. Unset → neutral. */
   readonly status = input<DsStatusKey>();
   /** Leading status dot, rendered only while `count` is unset — a count replaces the
@@ -38,8 +43,12 @@ export class BadgeComponent {
   readonly count = input<number | null>(null);
   /** Count is capped at this value, shown as `"max+"` beyond it. */
   readonly max = input(99, { transform: numberAttribute });
-  /** Noun used in the count's accessible label — set for non-notification counts (cart, results, …). */
-  readonly countLabel = input('notifications');
+  /** Noun used in the count's accessible label — set for non-notification counts (cart, results, …).
+   *  Unset falls back to `DS_INTL.badge.noun`. */
+  readonly countLabel = input<string | null>(null);
+  readonly countLabelResolved = computed(
+    () => this.countLabel() ?? this.intl().badge.noun,
+  );
 
   protected readonly countDisplay = computed(() => {
     const value = this.count();
@@ -65,9 +74,10 @@ export class BadgeComponent {
     if (value === null) {
       return null;
     }
+    const noun = this.countLabelResolved();
 
     return value > this.max()
-      ? `More than ${this.max()} ${this.countLabel()}`
-      : `${value} ${this.countLabel()}`;
+      ? this.intl().badge.overMax(this.max(), noun)
+      : this.intl().badge.count(value, noun);
   });
 }

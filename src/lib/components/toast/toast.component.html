@@ -43,7 +43,7 @@
     <button
       type="button"
       class="close"
-      aria-label="Dismiss"
+      [attr.aria-label]="intl().dialog.dismiss"
       (click)="onDismiss()">
       <ds-icon
         name="x"

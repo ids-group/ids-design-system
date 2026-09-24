@@ -5,12 +5,13 @@ import {
   booleanAttribute,
   computed,
   forwardRef,
+  inject,
   input,
   model,
   output,
   viewChild,
 } from '@angular/core';
-import { optionalBound } from '@ids-group-ltd/ids-design-system/core';
+import { DS_INTL, optionalBound } from '@ids-group-ltd/ids-design-system/core';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { SpinnerComponent } from '@ids-group-ltd/ids-design-system/components/spinner';
@@ -58,6 +59,7 @@ import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
   ],
 })
 export class InputComponent extends DsControlValueAccessor<string> {
+  protected readonly intl = inject(DS_INTL);
   private readonly control = viewChild<ElementRef<HTMLInputElement>>('control');
   /** Segment of a ds-field-group: the group owns the border, radius and focus
    *  ring, so .in-group strips this control back to its bare contents. */

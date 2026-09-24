@@ -4,6 +4,7 @@ import {
   ViewEncapsulation,
   booleanAttribute,
   computed,
+  inject,
   input,
   numberAttribute,
   output,
@@ -14,6 +15,7 @@ import {
 } from '@ids-group-ltd/ids-design-system/components/chart';
 import type { ColumnSeriesPoint } from '@ids-group-ltd/ids-design-system/components/chart';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
+import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 import type {
   ChartDataTable,
   ChartFrame,
@@ -39,12 +41,6 @@ const DIRECTION_COLORS: Record<WaterfallChartStep['direction'], string> = {
   increase: 'var(--ds-chart-positive-color)',
   decrease: 'var(--ds-chart-negative-color)',
   total: 'var(--ds-chart-series-default-color)',
-};
-
-const DIRECTION_WORDS: Record<WaterfallChartStep['direction'], string> = {
-  increase: 'increase',
-  decrease: 'decrease',
-  total: 'total',
 };
 
 /**
@@ -119,11 +115,11 @@ export class WaterfallChartComponent {
   readonly error = input(false, { transform: booleanAttribute });
 
   /** Shown in place of the plot when `data` is empty. Unset falls back to
-   *  `DS_CONFIG.chart.emptyText`. */
+   *  `DS_INTL.chart.empty`. */
   readonly emptyText = input<string | null>(null);
 
   /** Shown in place of the plot while `error` is set. Unset falls back to
-   *  `DS_CONFIG.chart.errorText`. */
+   *  `DS_INTL.chart.error`. */
   readonly errorText = input<string | null>(null);
 
   /** Formats every value the chart prints - the axis ticks, the bar labels and the annex table.
@@ -134,6 +130,7 @@ export class WaterfallChartComponent {
   readonly barClicked = output<WaterfallChartBar>();
 
   private readonly defaults = resolveChartDefaults(this);
+  protected readonly intl = inject(DS_INTL);
   readonly frameResolved = this.defaults.frame;
   readonly dataTableResolved = this.defaults.dataTable;
   readonly emptyTextResolved = this.defaults.emptyText;
@@ -173,7 +170,7 @@ export class WaterfallChartComponent {
         id: datum?.id ?? String(index),
         // The word is what carries the meaning where colour cannot - forced colours, a monochrome
         // print, a reader who cannot tell the two hues apart, and every screen reader.
-        label: `${step.label}, ${DIRECTION_WORDS[step.direction]} ${sign}${format(reading, 'tooltip')}`,
+        label: `${step.label}, ${this.intl().chart[step.direction]} ${sign}${format(reading, 'tooltip')}`,
         value: reading,
         color: DIRECTION_COLORS[step.direction],
       };
@@ -185,20 +182,21 @@ export class WaterfallChartComponent {
     if (given) {
       return given;
     }
+    const words = this.intl().chart;
     const steps = this.steps();
     if (steps.length === 0) {
-      return this.caption() ?? 'Waterfall chart';
+      return this.caption() ?? words.waterfallTitle;
     }
     const format = this.valueFormatResolved();
     const last = steps[steps.length - 1];
     const spoken = steps
       .map(
         (step, index) =>
-          `${step.label} ${DIRECTION_WORDS[step.direction]} ${format(this.labelValues()[index], 'tooltip')}`,
+          `${step.label} ${words[step.direction]} ${format(this.labelValues()[index], 'tooltip')}`,
       )
       .join(', ');
 
-    return `${this.caption() ?? 'Waterfall'}: ${spoken}. Ends at ${format(last.to, 'tooltip')}.`;
+    return `${this.caption() ?? words.waterfallCaption}: ${spoken}. ${words.endsAt(format(last.to, 'tooltip'))}`;
   });
 
   protected readonly dataTableRows = computed<readonly ChartDataRow[]>(() =>
@@ -220,7 +218,7 @@ export class WaterfallChartComponent {
     return this.steps().map((step, index) => ({
       key: `${index}-${step.label}`,
       label: step.label,
-      direction: DIRECTION_WORDS[step.direction],
+      direction: this.intl().chart[step.direction],
       formattedValue: format(values[index], 'tooltip'),
       formattedRunningTotal: format(step.to, 'tooltip'),
     }));

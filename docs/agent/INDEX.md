@@ -133,6 +133,7 @@ and token names.** These leaves are for orientation and usage.
 
 - [DS_ICON_REGISTRY / provideDsIcons(icons)](platform/ds-icon-registry.md) — Consumer apps can register additional icons without forking DS. Each entry maps a name to the raw SVG body — e
 - [DS_CONFIG / provideDsConfig(config)](platform/ds-config.md) — Inject DS_CONFIG token (default factory returns {}) to set library-wide defaults that consumer-level component
+- [DS_INTL / provideDsIntl(overrides)](platform/ds-intl.md) — DS_INTL holds every string the library renders itself: picker rows and chips, clear and dismiss
 - [BreadcrumbsService](platform/breadcrumbs-service.md) — @Injectable({ providedIn: 'root' }). Signal-based state primitive — apps push crumbs, <ds-breadcrumbs> reads f
 - [ToastService](platform/toast-service.md) — @Injectable({ providedIn: 'root' }). Inject and call:
 - [BodyScrollLockService](platform/body-scroll-lock-service.md) — @Injectable({ providedIn: 'root' }). Ref-counted lock on document.body scroll, shared by every overlay that co

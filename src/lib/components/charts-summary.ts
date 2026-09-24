@@ -1,4 +1,7 @@
-import type { ChartThreshold } from '@ids-group-ltd/ids-design-system/core';
+import type {
+  ChartThreshold,
+  DsIntl,
+} from '@ids-group-ltd/ids-design-system/core';
 import { formatValue } from './charts-format';
 
 /** @internal */
@@ -7,7 +10,7 @@ export interface SummaryPoint {
   readonly value: number;
 }
 
-function trendOf(values: readonly number[]): string {
+function trendOf(values: readonly number[], words: DsIntl['chart']): string {
   const first = values[0];
   const last = values[values.length - 1];
   const rose = values.every(
@@ -17,19 +20,19 @@ function trendOf(values: readonly number[]): string {
     (value, index) => index === 0 || value < values[index - 1],
   );
   if (rose) {
-    return 'Rising throughout';
+    return words.trendRisingThroughout;
   }
   if (fell) {
-    return 'Falling throughout';
+    return words.trendFallingThroughout;
   }
   if (last > first) {
-    return 'Rising overall';
+    return words.trendRisingOverall;
   }
   if (last < first) {
-    return 'Falling overall';
+    return words.trendFallingOverall;
   }
 
-  return 'Ending where it started';
+  return words.trendFlat;
 }
 
 /** Where the readings sit against each reference line, appended to the description. A line the
@@ -39,19 +42,19 @@ function describeThresholds(
   thresholds: readonly ChartThreshold[],
   points: readonly SummaryPoint[],
   format: (value: number) => string,
+  words: DsIntl['chart'],
 ): string {
   const total = points.length;
-  const noun = total === 1 ? 'point' : 'points';
 
   return thresholds
     .map((threshold) => {
-      const name = threshold.label ?? 'Threshold';
+      const name = threshold.label ?? words.threshold;
       if (threshold.to == null) {
         const above = points.filter(
           (point) => point.value > threshold.value,
         ).length;
 
-        return ` ${name} at ${format(threshold.value)}, ${above} of ${total} ${noun} above.`;
+        return ` ${words.thresholdAbove(name, format(threshold.value), above, total)}`;
       }
       const low = Math.min(threshold.value, threshold.to);
       const high = Math.max(threshold.value, threshold.to);
@@ -59,7 +62,7 @@ function describeThresholds(
         (point) => point.value >= low && point.value <= high,
       ).length;
 
-      return ` ${name} from ${format(low)} to ${format(high)}, ${inside} of ${total} ${noun} inside.`;
+      return ` ${words.thresholdInside(name, format(low), format(high), inside, total)}`;
     })
     .join('');
 }
@@ -74,6 +77,7 @@ function describeThresholds(
  *
  *  @internal */
 export function describeSeries(
+  words: DsIntl['chart'],
   label: string,
   points: readonly SummaryPoint[],
   format: (value: number) => string = formatValue,
@@ -81,13 +85,13 @@ export function describeSeries(
   thresholds: readonly ChartThreshold[] = [],
 ): string {
   if (points.length === 0) {
-    return `${label}. No data.`;
+    return words.noData(label);
   }
   const pointer =
-    describeThresholds(thresholds, points, format) +
-    (tableFollows ? ' Full values in the table below.' : '');
+    describeThresholds(thresholds, points, format, words) +
+    (tableFollows ? ` ${words.tableFollows}` : '');
   if (points.length === 1) {
-    return `${label}, one point: ${format(points[0].value)} at ${points[0].label}.${pointer}`;
+    return `${words.onePoint(label, format(points[0].value), points[0].label)}${pointer}`;
   }
   const lowest = points.reduce((min, point) =>
     point.value < min.value ? point : min,
@@ -97,10 +101,11 @@ export function describeSeries(
   );
 
   return (
-    `${label}, ${points.length} points, ` +
-    `${format(lowest.value)} to ${format(highest.value)}. ` +
-    `${trendOf(points.map((point) => point.value))}. ` +
-    `Highest in ${highest.label} at ${format(highest.value)}, ` +
-    `lowest in ${lowest.label} at ${format(lowest.value)}.${pointer}`
+    `${words.range(label, points.length, format(lowest.value), format(highest.value))} ` +
+    `${trendOf(
+      points.map((point) => point.value),
+      words,
+    )}. ` +
+    `${words.extremes(highest.label, format(highest.value), lowest.label, format(lowest.value))}${pointer}`
   );
 }

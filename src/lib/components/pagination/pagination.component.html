@@ -1,5 +1,5 @@
 <nav
-  aria-label="Pagination"
+  [attr.aria-label]="intl().pagination.label"
   [attr.aria-busy]="loading() ? 'true' : null"
   [class]="navClass()">
   @if (showLabel()) {
@@ -18,7 +18,7 @@
   <button
     class="pagination-button"
     type="button"
-    aria-label="Previous page"
+    [attr.aria-label]="intl().pagination.previous"
     [disabled]="loading() || currentPage() === 1"
     (click)="goTo(currentPage() - 1)">
     <ds-icon
@@ -40,7 +40,7 @@
         type="button"
         [class.active]="item === currentPage()"
         [disabled]="loading()"
-        [attr.aria-label]="'Page ' + item"
+        [attr.aria-label]="intl().pagination.page(item)"
         [attr.aria-current]="item === currentPage() ? 'page' : null"
         (click)="goTo(item)">
         {{ item }}
@@ -51,7 +51,7 @@
   <button
     class="pagination-button"
     type="button"
-    aria-label="Next page"
+    [attr.aria-label]="intl().pagination.next"
     [disabled]="loading() || currentPage() === totalPages()"
     (click)="goTo(currentPage() + 1)">
     <ds-icon
@@ -66,8 +66,8 @@
          default would push the control off the page buttons' baseline. -->
     <ds-select
       class="size"
-      ariaLabel="Rows per page"
       size="sm"
+      [ariaLabel]="intl().pagination.rowsPerPage"
       [reserveMessage]="false"
       [disabled]="loading()"
       [options]="sizeOptions()"

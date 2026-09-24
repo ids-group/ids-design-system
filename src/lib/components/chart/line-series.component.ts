@@ -17,7 +17,7 @@ import {
 import {
   CHART_SERIES_COLORS,
   areaPath,
-  defaultChartFormat,
+  chartValueFormat,
   focusMark,
   listenForMarkFocus,
   markOf,
@@ -32,6 +32,7 @@ import type {
   LinePoint,
   MarkHit,
 } from '@ids-group-ltd/ids-design-system/components';
+import { injectDsLocale } from '@ids-group-ltd/ids-design-system/core';
 import type {
   ChartAxis,
   ChartCurve,
@@ -165,7 +166,9 @@ export class LineSeriesComponent implements OnDestroy {
 
   /** Formats every value this series prints. Called with `'tick'` for an axis label and
    *  `'tooltip'` everywhere a value is printed in full. */
-  readonly valueFormat = input<ChartValueFormat>(defaultChartFormat);
+  readonly valueFormat = input<ChartValueFormat>(
+    chartValueFormat(injectDsLocale()),
+  );
 
   /** The clicked reading, with the series it belongs to and its position in `categories`.
    *  Fires on click and on Enter or Space, whatever `interactive` says. */

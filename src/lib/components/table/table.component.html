@@ -128,7 +128,7 @@
                   aria-haspopup="dialog"
                   [class.active]="isColumnFiltered(col)"
                   [attr.aria-expanded]="isFilterPanelOpen(col)"
-                  [attr.aria-label]="'Filter ' + col.label"
+                  [attr.aria-label]="intl().table.filterColumn(col.label)"
                   (click)="onColumnFilterClick(col, $event)">
                   <ds-icon
                     name="filter"
@@ -144,7 +144,7 @@
                   role="separator"
                   tabindex="0"
                   aria-orientation="vertical"
-                  [attr.aria-label]="'Resize ' + col.label"
+                  [attr.aria-label]="intl().table.resizeColumn(col.label)"
                   [attr.aria-valuenow]="range?.now ?? null"
                   [attr.aria-valuemin]="range?.min ?? null"
                   [attr.aria-valuemax]="range?.max ?? null"
@@ -168,7 +168,7 @@
 
               @if (!layout.wantsUtilityColumn()) {
                 <span class="visually-hidden">
-                  Actions
+                  {{ intl().table.actions }}
                 </span>
               }
             </th>
@@ -243,7 +243,9 @@
                     <input
                       type="checkbox"
                       class="check"
-                      [attr.aria-label]="'Select ' + rowAriaLabel(row)"
+                      [attr.aria-label]="
+                        intl().table.selectRow(rowAriaLabel(row))
+                      "
                       [checked]="isSelected(row)"
                       (change)="onToggleRow(row, $event)"
                       (click)="$event.stopPropagation()" />
@@ -259,7 +261,9 @@
                       class="expand-btn"
                       [attr.aria-expanded]="isExpanded(row)"
                       [attr.aria-label]="
-                        isExpanded(row) ? 'Collapse row' : 'Expand row'
+                        isExpanded(row)
+                          ? intl().table.collapseRow
+                          : intl().table.expandRow
                       "
                       (click)="onToggleExpand(row, $event)">
                       <ds-icon
@@ -356,7 +360,9 @@
                         class="row-actions-btn"
                         aria-haspopup="menu"
                         [attr.aria-expanded]="isMenuOpenFor(row)"
-                        [attr.aria-label]="'Actions for ' + rowAriaLabel(row)"
+                        [attr.aria-label]="
+                          intl().table.actionsFor(rowAriaLabel(row))
+                        "
                         (click)="onRowMenuClick(row, $event)"
                         (keydown.enter)="$event.stopPropagation()"
                         (keydown.space)="$event.stopPropagation()">
@@ -451,7 +457,7 @@
     #columnFilterPopover
     align="start"
     panelRole="dialog"
-    panelLabel="Filter values">
+    [panelLabel]="intl().table.filterValues">
     @if (filterColumn()) {
       @if (headerFilterFor(filterColumn()!); as projected) {
         <div class="col-filter col-filter-custom">
@@ -464,7 +470,7 @@
           <input
             type="text"
             class="col-filter-search"
-            placeholder="Search…"
+            [placeholder]="intl().table.filterSearch"
             [value]="filterSearch()"
             (input)="onFilterSearch($event)"
             (click)="$event.stopPropagation()" />
@@ -477,25 +483,25 @@
                   class="check"
                   [checked]="isFilterValueChecked(value)"
                   (change)="toggleFilterValue(value)" />
-                {{ value || '(empty)' }}
+                {{ value || intl().table.emptyValue }}
               </label>
             } @empty {
               <div class="col-filter-empty">
-                No matches
+                {{ intl().table.noMatches }}
               </div>
             }
           </div>
 
           <div class="col-filter-footer">
             <span class="col-filter-count">
-              {{ filterSelectedCount() }} selected
+              {{ intl().table.selectedCount(filterSelectedCount()) }}
             </span>
 
             <button
               type="button"
               class="col-reset"
               (click)="clearColumnFilter()">
-              Clear
+              {{ intl().table.clear }}
             </button>
           </div>
         </div>
@@ -514,7 +520,7 @@
       <button
         type="button"
         class="col-width-btn"
-        [attr.aria-label]="'Narrow ' + col.label"
+        [attr.aria-label]="intl().table.narrowColumn(col.label)"
         (click)="resize.step(col, -16)">
         <ds-icon
           name="minus"
@@ -524,7 +530,7 @@
       <button
         type="button"
         class="col-width-btn"
-        [attr.aria-label]="'Widen ' + col.label"
+        [attr.aria-label]="intl().table.widenColumn(col.label)"
         (click)="resize.step(col, 16)">
         <ds-icon
           name="plus"
@@ -534,9 +540,9 @@
       <button
         type="button"
         class="col-width-btn col-width-auto"
-        [attr.aria-label]="'Fit ' + col.label + ' to its content'"
+        [attr.aria-label]="intl().table.fitColumn(col.label)"
         (click)="resize.step(col, 'auto')">
-        Fit
+        {{ intl().table.fit }}
       </button>
     </span>
   }
@@ -574,7 +580,7 @@
 @if (selectable() && anySelected()) {
   <div class="bulk-bar">
     <span class="count">
-      {{ selectedIds().size }} selected
+      {{ intl().table.selectedCount(selectedIds().size) }}
     </span>
 
     <span class="sep"></span>

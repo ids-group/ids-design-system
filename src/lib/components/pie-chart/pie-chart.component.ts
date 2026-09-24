@@ -6,6 +6,7 @@ import {
   booleanAttribute,
   computed,
   contentChild,
+  inject,
   input,
   numberAttribute,
   output,
@@ -14,6 +15,7 @@ import {
 import {
   CHART_SERIES_COLORS,
   describeSeries,
+  formatWholePercent,
   largestRemainder,
   markAt,
   rovingMarks,
@@ -21,6 +23,7 @@ import {
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
+import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 import type {
   ChartDataTable,
   ChartFrame,
@@ -93,8 +96,12 @@ export class PieChartComponent {
     transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
   });
 
-  /** Names the grouped slice. */
-  readonly otherLabel = input<string>('Other');
+  /** Names the grouped slice. Unset falls back to `DS_INTL.chart.other`. */
+  readonly otherLabel = input<string | null>(null);
+
+  readonly otherLabelResolved = computed(
+    () => this.otherLabel() ?? this.intl().chart.other,
+  );
 
   /** The hole, as a fraction of the outer radius. Zero draws a solid pie and takes the centre
    *  content away with the hole that held it. */
@@ -142,7 +149,7 @@ export class PieChartComponent {
    *  when the data lands. */
   readonly loading = input(false, { transform: booleanAttribute });
   /** Shown in place of the plot when `data` is empty. Unset falls back to
-   *  `DS_CONFIG.chart.emptyText`, then `'No data'`. */
+   *  `DS_INTL.chart.empty`. */
   readonly emptyText = input<string | null>(null);
 
   /** Shows `errorText` in place of the plot. Separate from `loading` and from an empty `data`,
@@ -150,15 +157,15 @@ export class PieChartComponent {
    *  mean opposite things. */
   readonly error = input(false, { transform: booleanAttribute });
 
-  /** The message the error state prints. Unset falls back to `DS_CONFIG.chart.errorText`, then
-   *  `'Could not load the data'`. */
+  /** The message the error state prints. Unset falls back to `DS_INTL.chart.error`. */
   readonly errorText = input<string | null>(null);
   /** Formats every value the chart prints, the annex table and the generated description
-   *  included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then the browser's locale
-   *  grouping with a K/M/B suffix past four digits. */
+   *  included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` /
+   *  `LOCALE_ID`. */
   readonly valueFormat = input<ChartValueFormat | null>(null);
 
   private readonly defaults = resolveChartDefaults(this);
+  protected readonly intl = inject(DS_INTL);
   readonly frameResolved = this.defaults.frame;
   readonly dataTableResolved = this.defaults.dataTable;
   readonly emptyTextResolved = this.defaults.emptyText;
@@ -319,13 +326,17 @@ export class PieChartComponent {
   );
 
   protected readonly visibleSlices = computed(() =>
-    groupSmallest(this.data(), this.maxSlices(), this.otherLabel()),
+    groupSmallest(this.data(), this.maxSlices(), this.otherLabelResolved()),
   );
 
   protected readonly dataTableColumns = computed<readonly string[]>(() =>
     this.partOfWhole()
-      ? ['Label', 'Value', 'Share of total']
-      : ['Label', 'Value'],
+      ? [
+          this.intl().chart.labelColumn,
+          this.intl().chart.valueColumn,
+          this.intl().chart.shareColumn,
+        ]
+      : [this.intl().chart.labelColumn, this.intl().chart.valueColumn],
   );
 
   protected readonly dataTableRows = computed<readonly ChartDataRow[]>(() =>
@@ -374,7 +385,10 @@ export class PieChartComponent {
           paletteIndex(slice.slot, index, CHART_SERIES_COLORS.length)
         ],
       formattedValue: format(slice.value),
-      formattedPercent: `${percents[index]}%`,
+      formattedPercent: formatWholePercent(
+        percents[index],
+        this.defaults.locale,
+      ),
     }));
   });
 
@@ -405,7 +419,8 @@ export class PieChartComponent {
     () =>
       this.summary() ??
       describeSeries(
-        this.caption() ?? 'Chart',
+        this.intl().chart,
+        this.caption() ?? this.intl().chart.title,
         this.data().map((slice) => ({
           label: slice.label,
           value: slice.value,

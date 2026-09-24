@@ -1,10 +1,11 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
+import { DocsLocaleDemo } from './locale-demo.component';
 
 @Component({
   selector: 'section-foundations-theming',
   standalone: true,
-  imports: [DocsSectionComponent],
+  imports: [DocsSectionComponent, DocsLocaleDemo],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './theming.section.html',
   styleUrl: './theming.section.scss',
@@ -54,6 +55,7 @@ mq.addEventListener('change', apply);`;
   protected readonly configSnippet = `// app.config.ts — say it once, not on every element
 providers: [
   provideDsConfig({
+    locale: 'en-GB',                      // numbers and dates: charts, date picker, file sizes
     control: { size: 'sm' },              // button, field, picker, checkbox…
     pagination: { size: 'md', layout: 'spread' }, // every pager, ds-table's footer included
     card: { elevation: 'raised', padding: 'lg' },
@@ -70,7 +72,7 @@ providers: [
       stateIcons: { warning: false, hint: 'info' },
     },
     brand: { name: 'Acme', tagline: 'Cover, sorted' },
-    datePicker: { locale: 'en-GB', firstDayOfWeek: 1 },
+    datePicker: { firstDayOfWeek: 1 },
     timePicker: { format: '12h' },
     breadcrumbs: { separator: 'chevronRight' },
     avatar: { initials: (name) => name.slice(0, 2).toUpperCase() },

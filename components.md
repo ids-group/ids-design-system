@@ -293,39 +293,39 @@ All inputs: `hint: string = ''`, `error: string = ''`, `warning: string = ''`, `
 <!-- /inputs -->
 
 #### `<ds-multi-select>` — `MultiSelectComponent`
-Inputs: `value: model<string[]>`, `options: readonly MultiSelectItem[]`, `placeholder: string = 'Select…'`, `searchPlaceholder: string = 'Filter…'`, `searchable: boolean | number | null = null` (`true` always shows the filter row, `false` never, a NUMBER shows it once the option count reaches it), `selectAll: boolean | 'group' | 'both' = false` (`'group'` puts a row per group, `'both'` adds a global row beside them), `triggerDisplay: DsTriggerDisplay = 'full'` (`'full' | 'count' | 'labels'`), `maxVisibleChips: number | 'fit' | 'all' | null = null` (a NUMBER is a ceiling, not an exact count — fewer fit when the trigger is narrow), `width`, `size`, `label`, `disabled`, `success`, `required`, `optional`, `ariaLabel`
+Inputs: `value: model<string[]>`, `options: readonly MultiSelectItem[]`, `placeholder: string | null = null` (unset: `DS_INTL.picker.placeholder`), `searchPlaceholder: string | null = null` (unset: `DS_INTL.picker.filterPlaceholder`), `searchable: boolean | number | null = null` (`true` always shows the filter row, `false` never, a NUMBER shows it once the option count reaches it), `selectAll: boolean | 'group' | 'both' = false` (`'group'` puts a row per group, `'both'` adds a global row beside them), `triggerDisplay: DsTriggerDisplay = 'full'` (`'full' | 'count' | 'labels'`), `maxVisibleChips: number | 'fit' | 'all' | null = null` (a NUMBER is a ceiling, not an exact count — fewer fit when the trigger is narrow), `width`, `size`, `label`, `disabled`, `success`, `required`, `optional`, `ariaLabel`
 
 <!-- inputs:ds-multi-select -->
-All inputs: `hint: string = ''`, `error: string = ''`, `warning: string = ''`, `reserveMessage: boolean | null = null`, `messageIcon: IconName | false | null = null`, `errors: readonly DsFieldError[] = []`, `invalid: boolean = false`, `touched: boolean = false`, `hidden: boolean = false`, `value: string[] = []`, `options: readonly MultiSelectItem[] = []`, `placeholder: string = 'Select…'`, `searchPlaceholder: string = 'Filter…'`, `searchable: boolean | number | null = null`, `name: string | null = null`, `panelClass: string | readonly string[] = []`, `readOnly: boolean = false`, `readonlyBinding: boolean = false`, `clearable: boolean = false`, `filterWith: ((option: MultiSelectOption, query: string) => boolean) | 'none'`, `loading: boolean = false`, `scrollActiveIntoView: boolean = true`, `maxVisibleChips: number | 'fit' | 'all' | null = null`, `disabled: boolean = false`, `success: string = ''`, `ariaLabel: string | null = null`, `width: 'fill' | 'content' = 'fill'`, `size: 'sm' | 'md' | 'lg' = null`, `triggerDisplay: 'full' | 'count' | 'labels' = 'full'`, `label: string = ''`, `required: boolean = false`, `optional: boolean = false`, `selectAll: boolean | 'group' | 'both' = false`
+All inputs: `hint: string = ''`, `error: string = ''`, `warning: string = ''`, `reserveMessage: boolean | null = null`, `messageIcon: IconName | false | null = null`, `errors: readonly DsFieldError[] = []`, `invalid: boolean = false`, `touched: boolean = false`, `hidden: boolean = false`, `value: string[] = []`, `options: readonly MultiSelectItem[] = []`, `placeholder: string | null = null`, `searchPlaceholder: string | null = null`, `searchable: boolean | number | null = null`, `name: string | null = null`, `panelClass: string | readonly string[] = []`, `readOnly: boolean = false`, `readonlyBinding: boolean = false`, `clearable: boolean = false`, `filterWith: ((option: MultiSelectOption, query: string) => boolean) | 'none'`, `loading: boolean = false`, `scrollActiveIntoView: boolean = true`, `maxVisibleChips: number | 'fit' | 'all' | null = null`, `disabled: boolean = false`, `success: string = ''`, `ariaLabel: string | null = null`, `width: 'fill' | 'content' = 'fill'`, `size: 'sm' | 'md' | 'lg' = null`, `triggerDisplay: 'full' | 'count' | 'labels' = 'full'`, `label: string = ''`, `required: boolean = false`, `optional: boolean = false`, `selectAll: boolean | 'group' | 'both' = false`
 <!-- /inputs -->
 
 #### `<ds-autocomplete>` — `AutocompleteComponent<T>`
 Type-ahead picker, generic on the option value.
-Inputs: `options: readonly AutocompleteItem<T>[]`, `value: model<T | readonly T[] | null>`, `multiple: boolean = false`, `placeholder: string = 'Select…'`, `showChevron: boolean = true`, `valueOverflow: AutocompleteValueOverflow = 'ellipsis'` (`'ellipsis' | 'wrap'` — a settled single value clips rather than growing the trigger), `maxVisibleChips`, `allowCreate: boolean = false`, `width`, `size`, `label`, `disabled`, `success`, `required`, `optional`, `ariaLabel`
+Inputs: `options: readonly AutocompleteItem<T>[]`, `value: model<T | readonly T[] | null>`, `multiple: boolean = false`, `placeholder: string | null = null` (unset: `DS_INTL.picker.placeholder`), `showChevron: boolean = true`, `valueOverflow: AutocompleteValueOverflow = 'ellipsis'` (`'ellipsis' | 'wrap'` — a settled single value clips rather than growing the trigger), `maxVisibleChips`, `allowCreate: boolean = false`, `width`, `size`, `label`, `disabled`, `success`, `required`, `optional`, `ariaLabel`
 Output: `(create): string` — the typed text, when `allowCreate` is on and nothing matched.
 In multiple mode the selection renders as chips above the trigger.
 
 <!-- inputs:ds-autocomplete -->
-All inputs: `hint: string = ''`, `error: string = ''`, `warning: string = ''`, `reserveMessage: boolean | null = null`, `messageIcon: IconName | false | null = null`, `errors: readonly DsFieldError[] = []`, `invalid: boolean = false`, `touched: boolean = false`, `hidden: boolean = false`, `options: readonly AutocompleteItem<T>[] = []`, `value: T | readonly T[] | null = null`, `multiple: boolean = false`, `showChevron: boolean = true`, `maxVisibleChips: number | 'fit' | 'all' | null = null`, `size: 'sm' | 'md' | 'lg' = null`, `width: 'fill' | 'content' = 'fill'`, `valueOverflow: 'ellipsis' | 'wrap' = 'ellipsis'`, `placeholder: string = 'Select…'`, `disabled: boolean = false`, `success: string = ''`, `allowCreate: boolean = false`, `label: string = ''`, `compareWith: (a: T | null, b: T | null) => boolean`, `name: string | null = null`, `panelClass: string | readonly string[] = []`, `readOnly: boolean = false`, `readonlyBinding: boolean = false`, `clearable: boolean = false`, `searchPlaceholder: string = ''`, `filterWith: ((option: AutocompleteOption<T>, query: string) => boolean) | 'none'`, `loading: boolean = false`, `scrollActiveIntoView: boolean = true`, `required: boolean = false`, `optional: boolean = false`, `ariaLabel: string | null = null`
+All inputs: `hint: string = ''`, `error: string = ''`, `warning: string = ''`, `reserveMessage: boolean | null = null`, `messageIcon: IconName | false | null = null`, `errors: readonly DsFieldError[] = []`, `invalid: boolean = false`, `touched: boolean = false`, `hidden: boolean = false`, `options: readonly AutocompleteItem<T>[] = []`, `value: T | readonly T[] | null = null`, `multiple: boolean = false`, `showChevron: boolean = true`, `maxVisibleChips: number | 'fit' | 'all' | null = null`, `size: 'sm' | 'md' | 'lg' = null`, `width: 'fill' | 'content' = 'fill'`, `valueOverflow: 'ellipsis' | 'wrap' = 'ellipsis'`, `placeholder: string | null = null`, `disabled: boolean = false`, `success: string = ''`, `allowCreate: boolean = false`, `label: string = ''`, `compareWith: (a: T | null, b: T | null) => boolean`, `name: string | null = null`, `panelClass: string | readonly string[] = []`, `readOnly: boolean = false`, `readonlyBinding: boolean = false`, `clearable: boolean = false`, `searchPlaceholder: string = ''`, `filterWith: ((option: AutocompleteOption<T>, query: string) => boolean) | 'none'`, `loading: boolean = false`, `scrollActiveIntoView: boolean = true`, `required: boolean = false`, `optional: boolean = false`, `ariaLabel: string | null = null`
 <!-- /inputs -->
 
 #### `<ds-search>` — `SearchComponent`
 Pre-styled search input with built-in icon. A form control, but not a field: no label, no message row.
-Inputs: `value: model<string>`, `placeholder: string = 'Search'`, `shortcut: string = ''` (rendered as a hint pill, e.g. `⌘K`), `showIcon: boolean = true`, `clearable: boolean = false`, `ariaLabel: string = ''`, `disabled: boolean = false`, `hidden: boolean = false`, `size: DsSize | null = null`, `debounce: number = 0` (ms held before `value` updates; clearing, Enter and `clear()` all skip the timer)
+Inputs: `value: model<string>`, `placeholder: string | null = null` (unset: `DS_INTL.search.placeholder`), `shortcut: string = ''` (rendered as a hint pill, e.g. `⌘K`), `showIcon: boolean = true`, `clearable: boolean = false`, `ariaLabel: string = ''`, `disabled: boolean = false`, `hidden: boolean = false`, `size: DsSize | null = null`, `debounce: number = 0` (ms held before `value` updates; clearing, Enter and `clear()` all skip the timer)
 Output: `(submitted): string` — emits the current value on Enter / form submit
 Methods: `clear()` — empties the field, drops an armed keystroke and publishes `''` at once, which writing `''` into `value` does not; `focus()`, `blur()`.
 Binds through `NG_VALUE_ACCESSOR`, taking the value plumbing without the field-message layer — so `hint` / `error` / `warning` / `errors` / `invalid` / `touched` / `reserveMessage` / `messageIcon` are NOT inputs here.
 
 <!-- inputs:ds-search -->
-All inputs: `hidden: boolean = false`, `value: string = ''`, `placeholder: string = 'Search'`, `shortcut: string = ''`, `showIcon: boolean = true`, `clearable: boolean = false`, `ariaLabel: string = ''`, `disabled: boolean = false`, `size: 'sm' | 'md' | 'lg' = null`, `debounce: number = 0`
+All inputs: `hidden: boolean = false`, `value: string = ''`, `placeholder: string | null = null`, `shortcut: string = ''`, `showIcon: boolean = true`, `clearable: boolean = false`, `ariaLabel: string = ''`, `disabled: boolean = false`, `size: 'sm' | 'md' | 'lg' = null`, `debounce: number = 0`
 <!-- /inputs -->
 
 #### `<ds-date-picker>` — `DatePickerComponent`
-Inputs: `mode: 'single' | 'range' = 'single'`, `size: 'sm' | 'md' | 'lg' = 'md'`, `value: model<Date | DateRangeValue | null>` (`DateRangeValue = [Date | null, Date | null]`), `placeholder: string = 'Select date'`, `label: string = ''`, `hint: string = ''`, `required: boolean = false`, `optional: boolean = false`
+Inputs: `mode: 'single' | 'range' = 'single'`, `size: 'sm' | 'md' | 'lg' = 'md'`, `value: model<Date | DateRangeValue | null>` (`DateRangeValue = [Date | null, Date | null]`), `placeholder: string | null = null` (unset: `DS_INTL.datePicker.placeholder`), `label: string = ''`, `hint: string = ''`, `required: boolean = false`, `optional: boolean = false`
 Trigger button opens a CDK overlay calendar; selecting a day in `'single'` closes the panel, in `'range'` it closes after the second pick.
 
 <!-- inputs:ds-date-picker -->
-All inputs: `hint: string = ''`, `error: string = ''`, `warning: string = ''`, `reserveMessage: boolean | null = null`, `messageIcon: IconName | false | null = null`, `errors: readonly DsFieldError[] = []`, `invalid: boolean = false`, `touched: boolean = false`, `hidden: boolean = false`, `mode: 'single' | 'range' = 'single'`, `size: 'sm' | 'md' | 'lg' = null`, `fullWidth: boolean = false`, `value: Date | DateRangeValue | null = null`, `placeholder: string = 'Select date'`, `label: string = ''`, `required: boolean = false`, `optional: boolean = false`, `panelClass: string | readonly string[] = []`, `disabled: boolean = false`, `success: string = ''`, `ariaLabel: string | null = null`, `minYear: number`, `maxYear: number`, `minDate: Date | null = null`, `maxDate: Date | null = null`, `disabledDate: ((date: Date) => boolean) | null = null`, `presets: readonly DatePickerPreset[] = []`, `locale: string | null = null`, `dateFormat: string | null = null`, `firstDayOfWeek: number | null = null`, `defaultDate: Date | null = null`, `allowInput: boolean = true`
+All inputs: `hint: string = ''`, `error: string = ''`, `warning: string = ''`, `reserveMessage: boolean | null = null`, `messageIcon: IconName | false | null = null`, `errors: readonly DsFieldError[] = []`, `invalid: boolean = false`, `touched: boolean = false`, `hidden: boolean = false`, `mode: 'single' | 'range' = 'single'`, `size: 'sm' | 'md' | 'lg' = null`, `fullWidth: boolean = false`, `value: Date | DateRangeValue | null = null`, `placeholder: string | null = null`, `label: string = ''`, `required: boolean = false`, `optional: boolean = false`, `panelClass: string | readonly string[] = []`, `disabled: boolean = false`, `success: string = ''`, `ariaLabel: string | null = null`, `minYear: number`, `maxYear: number`, `minDate: Date | null = null`, `maxDate: Date | null = null`, `disabledDate: ((date: Date) => boolean) | null = null`, `presets: readonly DatePickerPreset[] = []`, `locale: string | null = null`, `dateFormat: string | null = null`, `firstDayOfWeek: number | null = null`, `defaultDate: Date | null = null`, `allowInput: boolean = true`
 <!-- /inputs -->
 
 #### `<ds-dropzone>` — `DropzoneComponent`
@@ -348,7 +348,7 @@ All inputs: `ariaLabel: string | null = null`
 #### `<ds-split-button>` — `SplitButtonComponent`
 
 <!-- inputs:ds-split-button -->
-All inputs: `label: string = ''`, `variant: 'primary' | 'outline' = 'primary'`, `icon: IconName | null = null`, `disabled: boolean = false`, `menuItems: readonly SplitButtonItem[] = []`, `menuLabel: string = 'More actions'`
+All inputs: `label: string = ''`, `variant: 'primary' | 'outline' = 'primary'`, `icon: IconName | null = null`, `disabled: boolean = false`, `menuItems: readonly SplitButtonItem[] = []`, `menuLabel: string | null = null`
 <!-- /inputs -->
 
 #### `<ds-toggle-button>` — `ToggleButtonComponent`
@@ -360,7 +360,7 @@ All inputs: `pressed: boolean = false`, `icon: string = ''`, `disabled: boolean 
 #### `<ds-color-picker>` — `ColorPickerComponent`
 
 <!-- inputs:ds-color-picker -->
-All inputs: `hint: string = ''`, `error: string = ''`, `warning: string = ''`, `reserveMessage: boolean | null = null`, `messageIcon: IconName | false | null = null`, `errors: readonly DsFieldError[] = []`, `invalid: boolean = false`, `touched: boolean = false`, `hidden: boolean = false`, `value: string = '#2F54FF'`, `presets: readonly string[]`, `panelClass: string | readonly string[] = []`, `disabled: boolean = false`, `ariaLabel: string = 'Choose colour'`, `success: string = ''`
+All inputs: `hint: string = ''`, `error: string = ''`, `warning: string = ''`, `reserveMessage: boolean | null = null`, `messageIcon: IconName | false | null = null`, `errors: readonly DsFieldError[] = []`, `invalid: boolean = false`, `touched: boolean = false`, `hidden: boolean = false`, `value: string = '#2F54FF'`, `presets: readonly string[]`, `panelClass: string | readonly string[] = []`, `disabled: boolean = false`, `ariaLabel: string | null = null`, `success: string = ''`
 <!-- /inputs -->
 
 #### `<ds-field-group>` — `FieldGroupComponent`
@@ -372,7 +372,7 @@ All inputs: `hint: string = ''`, `error: string = ''`, `warning: string = ''`, `
 #### `<ds-otp-input>` — `OtpInputComponent`
 
 <!-- inputs:ds-otp-input -->
-All inputs: `hint: string = ''`, `error: string = ''`, `warning: string = ''`, `reserveMessage: boolean | null = null`, `messageIcon: IconName | false | null = null`, `errors: readonly DsFieldError[] = []`, `invalid: boolean = false`, `touched: boolean = false`, `hidden: boolean = false`, `value: string = ''`, `length: number = 6`, `mode: 'numeric' | 'alphanumeric' = 'numeric'`, `mask: boolean = false`, `disabled: boolean = false`, `success: string = ''`, `ariaLabel: string = 'Verification code'`
+All inputs: `hint: string = ''`, `error: string = ''`, `warning: string = ''`, `reserveMessage: boolean | null = null`, `messageIcon: IconName | false | null = null`, `errors: readonly DsFieldError[] = []`, `invalid: boolean = false`, `touched: boolean = false`, `hidden: boolean = false`, `value: string = ''`, `length: number = 6`, `mode: 'numeric' | 'alphanumeric' = 'numeric'`, `mask: boolean = false`, `disabled: boolean = false`, `success: string = ''`, `ariaLabel: string | null = null`
 <!-- /inputs -->
 
 #### `<ds-password-rules>` — `PasswordRulesComponent`
@@ -408,7 +408,7 @@ All inputs: `hint: string = ''`, `error: string = ''`, `warning: string = ''`, `
 #### `<ds-filter-bar>` — `FilterBarComponent`
 
 <!-- inputs:ds-filter-bar -->
-All inputs: `moreLabel: string = 'more'`, `panelLabel: string = 'More filters'`, `triggerSize: 'sm' | 'md' | 'lg' = 'md'`
+All inputs: `moreLabel: string | null = null`, `panelLabel: string | null = null`, `triggerSize: 'sm' | 'md' | 'lg' = 'md'`
 <!-- /inputs -->
 
 #### `<ng-template[dsFilterItem]>` — `FilterItemDirective`
@@ -424,7 +424,7 @@ Inputs: `status: DsStatusKey` (consumer-registered status key; colours wired via
 Content: label text. Use for status pills, counts, lifecycle markers.
 
 <!-- inputs:ds-badge -->
-All inputs: `status: DsStatusKey`, `withDot: boolean | null = null`, `solid: boolean = false`, `count: number | null = null`, `max: number = 99`, `countLabel: string = 'notifications'`
+All inputs: `status: DsStatusKey`, `withDot: boolean | null = null`, `solid: boolean = false`, `count: number | null = null`, `max: number = 99`, `countLabel: string | null = null`
 <!-- /inputs -->
 
 #### `<ds-status-dot>` — `StatusDotComponent`
@@ -440,7 +440,7 @@ Output: `(closed): void` — emits when the close button is pressed
 Content: label.
 
 <!-- inputs:ds-tag -->
-All inputs: `variant: 'solid' | 'neutral' = 'solid'`, `closable: boolean = false`, `interactive: boolean = false`, `selected: boolean = false`, `closeLabel: string = 'Remove'`
+All inputs: `variant: 'solid' | 'neutral' = 'solid'`, `closable: boolean = false`, `interactive: boolean = false`, `selected: boolean = false`, `closeLabel: string | null = null`
 <!-- /inputs -->
 
 #### `<ds-avatar>` — `AvatarComponent`
@@ -624,14 +624,14 @@ Content slots: `[title]`, `[breadcrumbs]`, `[search]`, `[actions]`. Sits at `--t
 Tokens (on `:host`): `--ds-topbar-height`, `--ds-topbar-bg-color`, `--ds-topbar-border`, `--ds-topbar-title-text-color`, plus the `--ds-topbar-crumb-*` set for the breadcrumb row. **The topbar owns no bottom gap** — it has no margin token and sets no margin; spacing to the next block belongs to the page or to `ds-app-layout`'s content padding.
 
 #### `<ds-app-layout>` — `AppLayoutComponent`
-Inputs: `topbarSpan: 'content' | 'full' = 'content'`, `railOpen: model<boolean> = false` (the overlay rail below `--bp-lg`), `railLabel: string = 'Navigation'`, `restoreScroll: boolean = false`, `restoreScrollTimeout: number = 2000` (ms), `scrollReset: 'path' | 'always' | 'never' = 'path'`
+Inputs: `topbarSpan: 'content' | 'full' = 'content'`, `railOpen: model<boolean> = false` (the overlay rail below `--bp-lg`), `railLabel: string | null = null` (unset: `DS_INTL.appLayout.railLabel`), `restoreScroll: boolean = false`, `restoreScrollTimeout: number = 2000` (ms), `scrollReset: 'path' | 'always' | 'never' = 'path'`
 Content slots: `[sidenav]`, `[topbar]`, default (the page)
 Reads: `railId` and the read-only `railOverlay` signal, for a consumer-built burger; `dsRailTrigger` wires one for you.
 Tokens: `--ds-app-layout-padding-x`, `--ds-app-layout-padding-y`, `--ds-app-layout-content-max-width`, `--ds-app-layout-height`, `--ds-app-layout-rail-bg-color`, `--ds-app-layout-rail-shadow`, `--ds-app-layout-scrim-color`
 It owns the app's scroll CONTAINER, so a screen that needs to move the scroll calls `AppLayoutScrollService` rather than touching `window`.
 
 <!-- inputs:ds-app-layout -->
-All inputs: `topbarSpan: 'content' | 'full' = 'content'`, `railOpen: boolean = false`, `railLabel: string = 'Navigation'`, `restoreScroll: boolean = false`, `restoreScrollTimeout: number = 2000`, `scrollReset: 'path' | 'never' | 'always' = 'path'`
+All inputs: `topbarSpan: 'content' | 'full' = 'content'`, `railOpen: boolean = false`, `railLabel: string | null = null`, `restoreScroll: boolean = false`, `restoreScrollTimeout: number = 2000`, `scrollReset: 'path' | 'never' | 'always' = 'path'`
 <!-- /inputs -->
 
 #### `<ds-auth-layout>` — `AuthLayoutComponent`
@@ -845,7 +845,7 @@ Footer pager: `pageSizeOptions`, `showPageSize`, `showLabel`, `paginationSize: D
 Tokens: `--ds-table-border: var(--border-default)`, `--ds-table-radius: var(--radius-md)`, `--ds-table-bg-color`, `--ds-table-head-text-color: var(--text-secondary)`, `--ds-table-head-bg-color: var(--surface-secondary)`, `--ds-table-head-font-size: var(--font-size-xs)`, `--ds-table-row-hover-bg-color`, `--ds-table-row-selected-bg-color`, `--ds-table-divider`, `--ds-table-sort-active-icon-color`, `--ds-table-cell-padding-x/y`, `--ds-table-utility-column-width` (the column the column picker and the row-actions ⋮ ride in; default `--space-6`, the buttons' own size, so the column is as wide as its padding makes it) and `--ds-table-utility-column-padding-x` (one length for both sides; default the cell padding chain), `--ds-table-footer-padding-y` / `-top` / `-bottom` (the pagination footer's block padding; default `--space-3`). (Renamed 2026-06: `--ds-table-header-*` → `--ds-table-head-*`, matching the tokens reference.)
 
 <!-- inputs:ds-table -->
-All inputs: `data: required readonly T[]`, `rowId: ((row: T) => string) | null = null`, `columns: required readonly TableColumn<T>[]`, `selectable: boolean = false`, `bordered: boolean | null = null`, `loading: boolean | 'skeleton' | 'overlay' = false`, `stickyHeader: boolean = true`, `maxHeight: string | null = null`, `density: 'default' | 'compact' = 'default'`, `zebra: boolean = false`, `animateHeight: boolean = false`, `selectedIds: Set<string>`, `sortKey: string | null = null`, `sortDirection: 'asc' | 'desc' = null`, `sortingOrder: SortDirection[]`, `sortAnnouncement: (label: string, dir: SortDirection) => string`, `rangeAnnouncement: (first: number, last: number, total: number) => string`, `skeletonRows: number = 5`, `caption: string = ''`, `rowInteractive: boolean = false`, `activeRowId: string | null = null`, `filterQuery: string = ''`, `columnFilters: Map<string, ReadonlySet<string>>`, `persistLayout: boolean = false`, `storageKey: string = ''`, `stickyScrollbar: boolean | null = null`, `pageSize: number | null = null`, `page: number = 1`, `pageSizeOptions: number[]`, `showPageSize: boolean = true`, `showLabel: boolean = true`, `paginationSize: 'sm' | 'md' | 'lg' = null`, `paginationLayout: 'grouped' | 'spread' = null`, `total: number | null = null`, `scrollToTopOnPageChange: boolean = false`, `sortMode: 'client' | 'server' | 'none' = null`, `filterMode: 'client' | 'server' | 'none' = null`, `columnFilterOptions: ReadonlyMap<string, readonly string[]>`, `stickyScrollbarOffset: string | null = null`, `stickyFirstColumn: boolean = false`, `virtualScroll: boolean = false`, `virtualRowSize: number = 44`, `lazy: boolean = false`, `rowActions: readonly TableRowAction<T>[] = []`, `cellTemplateMap: Record<string, TemplateRef<{ $implicit: unknown; row: unknown }>> = {}`, `emptyTemplate: TemplateRef<unknown> | null = null`, `expandableRows: boolean = false`, `expandedIds: Set<string>`, `expandMode: 'multiple' | 'single' = 'multiple'`, `expandAllToggle: boolean = false`, `rowExpandTemplate: TemplateRef<{
+All inputs: `data: required readonly T[]`, `rowId: ((row: T) => string) | null = null`, `columns: required readonly TableColumn<T>[]`, `selectable: boolean = false`, `bordered: boolean | null = null`, `loading: boolean | 'skeleton' | 'overlay' = false`, `stickyHeader: boolean = true`, `maxHeight: string | null = null`, `density: 'default' | 'compact' = 'default'`, `zebra: boolean = false`, `animateHeight: boolean = false`, `selectedIds: Set<string>`, `sortKey: string | null = null`, `sortDirection: 'asc' | 'desc' = null`, `sortingOrder: SortDirection[]`, `sortAnnouncement: ((label: string, dir: SortDirection) => string) | null = null`, `rangeAnnouncement: ((first: number, last: number, total: number) => string) | null = null`, `skeletonRows: number = 5`, `caption: string = ''`, `rowInteractive: boolean = false`, `activeRowId: string | null = null`, `filterQuery: string = ''`, `columnFilters: Map<string, ReadonlySet<string>>`, `persistLayout: boolean = false`, `storageKey: string = ''`, `stickyScrollbar: boolean | null = null`, `pageSize: number | null = null`, `page: number = 1`, `pageSizeOptions: number[]`, `showPageSize: boolean = true`, `showLabel: boolean = true`, `paginationSize: 'sm' | 'md' | 'lg' = null`, `paginationLayout: 'grouped' | 'spread' = null`, `total: number | null = null`, `scrollToTopOnPageChange: boolean = false`, `sortMode: 'client' | 'server' | 'none' = null`, `filterMode: 'client' | 'server' | 'none' = null`, `columnFilterOptions: ReadonlyMap<string, readonly string[]>`, `stickyScrollbarOffset: string | null = null`, `stickyFirstColumn: boolean = false`, `virtualScroll: boolean = false`, `virtualRowSize: number = 44`, `lazy: boolean = false`, `rowActions: readonly TableRowAction<T>[] = []`, `cellTemplateMap: Record<string, TemplateRef<{ $implicit: unknown; row: unknown }>> = {}`, `emptyTemplate: TemplateRef<unknown> | null = null`, `expandableRows: boolean = false`, `expandedIds: Set<string>`, `expandMode: 'multiple' | 'single' = 'multiple'`, `expandAllToggle: boolean = false`, `rowExpandTemplate: TemplateRef<{
     $implicit: unknown;
     row: unknown;
   }> | null = null`
@@ -915,7 +915,7 @@ All inputs: `data: required readonly ColumnChartPoint[] | readonly ColumnChartSe
 
 #### `<ds-pie-chart>` — `PieChartComponent`
 A ring that splits one total into its parts, with the middle free for the total or a headline figure of your own.
-Inputs: `data: readonly PieChartSlice[]` (required), `centerValue: string | null = null`, `centerLabel: string | null = null`, `legend: 'end' | 'bottom' | 'none' = 'end'`, `maxSlices: number | null = null`, `otherLabel: string = 'Other'`, `innerRadius: number = 0.68`, `caption: string | null = null`, `summary: string | null = null`, `dataTable: 'none' | 'toggle' | 'visible' = 'none'`, `loading: boolean = false`, `emptyText: string = 'No data'`, `error: boolean = false`, `errorText: string = 'Could not load the data'`, `valueFormat: (value: number) => string`, `interactive: boolean = false`, `tooltip: 'item' | 'none' = 'item'`, `staggerMs: number = 0`
+Inputs: `data: readonly PieChartSlice[]` (required), `centerValue: string | null = null`, `centerLabel: string | null = null`, `legend: 'end' | 'bottom' | 'none' = 'end'`, `maxSlices: number | null = null`, `otherLabel: string | null = null` (unset: `DS_INTL.chart.other`), `innerRadius: number = 0.68`, `caption: string | null = null`, `summary: string | null = null`, `dataTable: 'none' | 'toggle' | 'visible' = 'none'`, `loading: boolean = false`, `emptyText: string = 'No data'`, `error: boolean = false`, `errorText: string = 'Could not load the data'`, `valueFormat: (value: number) => string`, `interactive: boolean = false`, `tooltip: 'item' | 'none' = 'item'`, `staggerMs: number = 0`
 Output: `(sliceClicked): PieChartSlice`
 Interaction: `interactive: boolean = false` turns on the affordance — pointer cursor, hover tint and the keyboard route. `dimOthers: boolean = false` is a SEPARATE opt-in that fades every other mark while one is hovered or focused; off by default, because the fade costs the separation between the faded marks (dE 14.8 -> 2.1 at the default dim opacity) — it buys loudness for one mark and pays for it with the rest. The output fires whether or not it is set. The keyboard route is ONE tab stop for the whole chart, not one per mark: arrows walk the marks, Home and End reach the extremes, and the ends wrap. `tooltip: 'item' | 'none' = 'item'` opens a panel for the hovered, tapped or focused mark; a tap latches it until the next tap outside. Project an `<ng-template #dsChartTooltip let-tip>` to replace its contents — `tip` is `{ category: string; entries: { label, value, formatted, color }[] }`.
 Motion: the RING fades as one object rather than slice by slice — arcs share their edges, and fading them one at a time lets the background through every seam. `staggerMs` is accepted for parity with the other four charts and has no effect here, because there is nothing to stagger. Marks that leave finish leaving before marks that arrive start. `staggerMs: number = 0` spaces the arrivals; `40` is the documented step and the total is capped at 300ms. Every duration is a `--ds-motion-chart-*` role, so `prefers-reduced-motion` zeroes them with nothing per chart.
@@ -929,7 +929,7 @@ Behaviour: percentages use largest-remainder rounding, so a legend's shares add 
 Tokens: `--ds-pie-chart-size`, `--ds-pie-chart-gap`, `--ds-pie-chart-swatch-size`, `--ds-pie-chart-legend-row-gap`, `--ds-pie-chart-legend-row-height`, `--ds-chart-legend-hover-bg-color` and `--ds-chart-legend-hover-text-color` (shared with every chart legend), `--ds-pie-chart-outline-width` (the placeholder ring drawn when there is no data and when every slice is zero).
 
 <!-- inputs:ds-pie-chart -->
-All inputs: `data: required readonly PieChartSlice[]`, `centerValue: string | null = null`, `centerLabel: string | null = null`, `legend: 'end' | 'bottom' | 'none' = 'end'`, `maxSlices: number | null = null`, `otherLabel: string = 'Other'`, `innerRadius: number = 0.68`, `frame: 'auto' | 'none' = null`, `tooltipLingerMs: number | null = null`, `caption: string | null = null`, `summary: string | null = null`, `dataTable: 'toggle' | 'visible' | 'none' = null`, `partOfWhole: boolean = true`, `loading: boolean = false`, `emptyText: string | null = null`, `error: boolean = false`, `errorText: string | null = null`, `valueFormat: ChartValueFormat | null = null`, `interactive: boolean = false`, `pinOnClick: boolean = false`, `dimOthers: boolean = false`, `staggerMs: number = 0`, `tooltip: 'item' | 'none' = 'item'`
+All inputs: `data: required readonly PieChartSlice[]`, `centerValue: string | null = null`, `centerLabel: string | null = null`, `legend: 'end' | 'bottom' | 'none' = 'end'`, `maxSlices: number | null = null`, `otherLabel: string | null = null`, `innerRadius: number = 0.68`, `frame: 'auto' | 'none' = null`, `tooltipLingerMs: number | null = null`, `caption: string | null = null`, `summary: string | null = null`, `dataTable: 'toggle' | 'visible' | 'none' = null`, `partOfWhole: boolean = true`, `loading: boolean = false`, `emptyText: string | null = null`, `error: boolean = false`, `errorText: string | null = null`, `valueFormat: ChartValueFormat | null = null`, `interactive: boolean = false`, `pinOnClick: boolean = false`, `dimOthers: boolean = false`, `staggerMs: number = 0`, `tooltip: 'item' | 'none' = 'item'`
 <!-- /inputs -->
 
 #### `<ds-funnel-chart>` — `FunnelChartComponent`
@@ -1002,7 +1002,7 @@ All inputs: `data: readonly WaterfallChartBar[] = []`, `showValues: boolean = tr
 
 #### `<ds-line-chart>` — `LineChartComponent`
 One or more series plotted over a shared set of categories.
-Inputs: `categories: readonly string[]` (required), `series: readonly LineChartSeries[]` (required), `yAxisMode: 'aligned' | 'exact' | 'dual-grid' | 'split' = 'aligned'`, `curve: 'linear' | 'step' | 'smooth' = 'linear'`, `stack: 'none' | 'stacked' | 'normalized' = 'none'`, `showMarkers: boolean = true`, `gaps: 'break' | 'zero' = 'break'`, `tickCount: number = 5`, `caption: string | null = null`, `summary: string | null = null`, `dataTable: 'none' | 'toggle' | 'visible' = 'none'`, `loading: boolean = false`, `emptyText: string = 'No data'`, `error: boolean = false`, `errorText: string = 'Could not load the data'`, `valueFormat: (value: number) => string`, `interactive: boolean = false`, `tooltip: 'item' | 'axis' | 'none' = 'axis'`, `patterns: boolean = false`, `staggerMs: number = 0`, `legendFilters: boolean = false`, `hiddenSeries: readonly string[] = []` (two-way), `rescaleOnHide: boolean = false`, `noVisibleSeriesText: string = 'All series are hidden'`
+Inputs: `categories: readonly string[]` (required), `series: readonly LineChartSeries[]` (required), `yAxisMode: 'aligned' | 'exact' | 'dual-grid' | 'split' = 'aligned'`, `curve: 'linear' | 'step' | 'smooth' = 'linear'`, `stack: 'none' | 'stacked' | 'normalized' = 'none'`, `showMarkers: boolean = true`, `gaps: 'break' | 'zero' = 'break'`, `tickCount: number = 5`, `caption: string | null = null`, `summary: string | null = null`, `dataTable: 'none' | 'toggle' | 'visible' = 'none'`, `loading: boolean = false`, `emptyText: string = 'No data'`, `error: boolean = false`, `errorText: string = 'Could not load the data'`, `valueFormat: (value: number) => string`, `interactive: boolean = false`, `tooltip: 'item' | 'axis' | 'none' = 'axis'`, `patterns: boolean = false`, `staggerMs: number = 0`, `legendFilters: boolean = false`, `hiddenSeries: readonly string[] = []` (two-way), `rescaleOnHide: boolean = false`, `noVisibleSeriesText: string | null = null` (unset: `DS_INTL.chart.noVisibleSeries`)
 Output: `(pointClicked): LineChartReading` — the reading that was clicked or activated. Fires whether or not `interactive` is set.
 Interaction: a pointer moving over the plot picks the CATEGORY under it — a band paints behind every series and `tooltip="axis"`, the default here, names every series at that category. Tabbing reaches ONE marker per series; arrows walk that series' readings, and a focused marker's tooltip names its own series alone. A tap picks a category and latches the panel until the next tap outside; markers carry a transparent hit stroke of 24px, or 44px under `(pointer: coarse)`. `dimOthers` is the same separate opt-in as on the other four, and here it is the legend hover that drives it.
 Legend: drawn whenever there is more than one series. `legendFilters` turns each entry into a checkbox that hides its series, `hiddenSeries` is two-way so a page can drive it from a URL parameter, and hovering or focusing an entry tints it, dims the others and thickens the one hovered. **The axis does not move when a series is hidden** unless `rescaleOnHide` says so — a silent rescale turns a period-over-period comparison into a different claim. Hiding every series replaces the plot with `noVisibleSeriesText` on a `role="status"` line, legend still rendered.
@@ -1014,11 +1014,11 @@ Colour: series ARE different things, so the categorical palette applies — `--d
 Tokens: `--ds-line-chart-plot-height`, `--ds-line-chart-line-width`, `--ds-line-chart-dot-radius`, `--ds-line-chart-area-opacity`, `--ds-line-chart-swatch-size`, `--ds-line-chart-grid-line-color`, `--ds-line-chart-axis-line-color`, `--ds-line-chart-axis-label-color`, `--ds-line-chart-axis-font-size`, `--ds-line-chart-annotation-color`, `--ds-line-chart-annotation-font-size`, `--ds-line-chart-annotation-font-weight`, `--ds-line-chart-annotation-halo-color`, `--ds-line-chart-annotation-halo-width`.
 
 <!-- inputs:ds-line-chart -->
-All inputs: `categories: required readonly string[]`, `series: required readonly LineChartSeries[]`, `yAxisMode: 'aligned' | 'exact' | 'dual-grid' | 'split' = 'aligned'`, `showMarkers: boolean = true`, `outline: boolean = true`, `annotations: readonly LineChartAnnotation[] = []`, `interactive: boolean = false`, `pinOnClick: boolean = false`, `dimOthers: boolean = false`, `gaps: 'break' | 'zero' = 'break'`, `curve: 'linear' | 'step' | 'smooth' = 'linear'`, `stack: 'none' | 'stacked' | 'normalized' = 'none'`, `yAxisLabel: string | null = null`, `secondaryAxisLabel: string | null = null`, `tickCount: number = 5`, `frame: 'auto' | 'none' = null`, `tooltipLingerMs: number | null = null`, `caption: string | null = null`, `summary: string | null = null`, `dataTable: 'toggle' | 'visible' | 'none' = null`, `max: number | null = null`, `maxSecondary: number | null = null`, `loading: boolean = false`, `emptyText: string | null = null`, `error: boolean = false`, `errorText: string | null = null`, `valueFormat: ChartValueFormat | null = null`, `hiddenSeries: readonly string[] = []`, `rescaleOnHide: boolean = false`, `legendFilters: boolean = false`, `legendMode: 'toggle' | 'isolate' = 'isolate'`, `noVisibleSeriesText: string = 'All series are hidden'`, `patterns: boolean = false`, `staggerMs: number = 0`, `tooltip: 'item' | 'axis' | 'none' = 'axis'`, `tooltipAnchor: 'point' | 'pointer' = 'point'`
+All inputs: `categories: required readonly string[]`, `series: required readonly LineChartSeries[]`, `yAxisMode: 'aligned' | 'exact' | 'dual-grid' | 'split' = 'aligned'`, `showMarkers: boolean = true`, `outline: boolean = true`, `annotations: readonly LineChartAnnotation[] = []`, `interactive: boolean = false`, `pinOnClick: boolean = false`, `dimOthers: boolean = false`, `gaps: 'break' | 'zero' = 'break'`, `curve: 'linear' | 'step' | 'smooth' = 'linear'`, `stack: 'none' | 'stacked' | 'normalized' = 'none'`, `yAxisLabel: string | null = null`, `secondaryAxisLabel: string | null = null`, `tickCount: number = 5`, `frame: 'auto' | 'none' = null`, `tooltipLingerMs: number | null = null`, `caption: string | null = null`, `summary: string | null = null`, `dataTable: 'toggle' | 'visible' | 'none' = null`, `max: number | null = null`, `maxSecondary: number | null = null`, `loading: boolean = false`, `emptyText: string | null = null`, `error: boolean = false`, `errorText: string | null = null`, `valueFormat: ChartValueFormat | null = null`, `hiddenSeries: readonly string[] = []`, `rescaleOnHide: boolean = false`, `legendFilters: boolean = false`, `legendMode: 'toggle' | 'isolate' = 'isolate'`, `noVisibleSeriesText: string | null = null`, `patterns: boolean = false`, `staggerMs: number = 0`, `tooltip: 'item' | 'axis' | 'none' = 'axis'`, `tooltipAnchor: 'point' | 'pointer' = 'point'`
 <!-- /inputs -->
 
 #### Chart defaults — what `DS_CONFIG` decides once
-Four chart inputs resolve through `DS_CONFIG.chart` because they are one decision per APP, not per plot: `valueFormat` (a number reads one way in a product; a formatter passed per chart drifts as soon as there are two screens), `dataTable` (whether the numbers behind a plot have a non-visual route is an accessibility policy), `emptyText` and `errorText` (copy, and the place localisation lands). Precedence is the input, then the config, then the built-in — so binding one on a single chart still wins.
+Four chart inputs resolve through `DS_CONFIG.chart` because they are one decision per APP, not per plot: `valueFormat` (a number reads one way in a product; a formatter passed per chart drifts as soon as there are two screens), `dataTable` (whether the numbers behind a plot have a non-visual route is an accessibility policy), `frame` and `tooltipLingerMs`. Precedence is the input, then the config, then the built-in — so binding one on a single chart still wins. The empty and error copy is wording, so it lives in `DS_INTL.chart.empty` / `.error`; the number locale is `DsConfig.locale`.
 
 `DS_CONFIG.chart.rendering` decides how charts build on a long page and is off by default: every chart draws as soon as it is created. With `deferUntilVisible: true` each chart shows a still placeholder of its own shape until it comes within `visibleMargin` (default `'10% 0px'`) of the viewport; `buildAheadWhileIdle` (default `true`) builds the charts within `buildAheadMargin` (default `'100% 0px'`) while the page is idle; `frameBudgetMs` (default `8`) caps how long one task spends building; `skipWhileOffscreen` (default `true`) lets the browser skip a built chart's rendering off screen through `content-visibility: auto`. Until a deferred chart is built a screen reader meets its caption only.
 
@@ -1153,11 +1153,12 @@ bootstrapApplication(AppComponent, {
 
 `DsConfig` shape (the exported `DsConfig` type is the full contract):
 
-Eighteen sections. The exported `DsConfig` type is the source of truth — each key carries its own
+Eighteen sections and one top-level `locale`. The exported `DsConfig` type is the source of truth — each key carries its own
 doc comment there, including why it is an app-level decision at all.
 
 ```ts
 interface DsConfig {
+  locale?: string;                         // BCP-47; default LOCALE_ID
   field?: {
     reserveMessage?: boolean;              // keep a message line of space when empty
     errorMessages?: Record<string, string>; // fallback text per validation-error kind
@@ -1191,6 +1192,35 @@ effective value rather than re-deriving the chain.
 both resolve their parent with `skipSelf`, so the later wins and the earlier is silently lost. Merging
 happens across injector LEVELS: a route or component inherits the app's config and overrides only the
 keys it names.
+
+#### `DS_INTL` / `provideDsIntl(overrides)`
+
+`DS_INTL` holds every string the library renders itself: picker rows and chips, clear and dismiss
+buttons, pager and table announcements, chart descriptions and annex headers. It is a `Signal<DsIntl>`
+holding the English defaults (`DS_INTL_DEFAULTS`) until an app provides its own.
+
+```ts
+import { LOCALE_ID } from '@angular/core';
+import { provideDsIntl } from '@ids-group-ltd/ids-design-system';
+
+providers: [
+  { provide: LOCALE_ID, useValue: 'ru' },
+  provideDsIntl({ picker: { selectAll: 'Выбрать все', clearSelection: 'Очистить выбор' } }),
+]
+```
+
+- **Object or factory.** An object is one fixed language. A factory returning a signal switches
+  language at runtime, and runs in an injection context, so it can inject the app's own language
+  service:
+  `provideDsIntl(() => { const i18n = inject(I18n); return computed(() => i18n.dictionary().ds); })`.
+- **Section-wise merge across levels.** A route or component `provideDsIntl` inherits the one above
+  it and overrides only the keys it names. Like `provideDsConfig`, call it once per injector.
+- **Precedence: input → `DS_INTL`.** A text input on the element (`placeholder`, `moreLabel`,
+  `sortAnnouncement`, …) still wins; those inputs default to `null` and publish a `…Resolved`
+  readback holding the effective text.
+- **Numbers and dates are not words.** They follow `DsConfig.locale`, then `LOCALE_ID`: chart values
+  and percentages, `ds-date-picker`, `ds-dropzone` file sizes. An app that localizes sets both, once,
+  at the root.
 
 ---
 

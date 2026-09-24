@@ -10,7 +10,7 @@ import {
   input,
   signal,
 } from '@angular/core';
-import { DS_CONFIG } from '@ids-group-ltd/ids-design-system/core';
+import { DS_CONFIG, DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 import { devWarn } from '@ids-group-ltd/ids-design-system/core';
 import { DS_TOAST_POSITION_DEFAULT } from './toast.config';
 import { ToastComponent } from './toast.component';
@@ -37,7 +37,7 @@ const QUEUE_COUNT_CAP = 99;
   encapsulation: ViewEncapsulation.Emulated,
   host: {
     role: 'region',
-    'aria-label': 'Notifications',
+    '[attr.aria-label]': 'intl().toast.region',
     '(mouseenter)': 'onHover(true)',
     '(mouseleave)': 'onHover(false)',
     '(focusin)': 'onFocusWithin(true)',
@@ -46,6 +46,8 @@ const QUEUE_COUNT_CAP = 99;
   },
 })
 export class ToastRegionComponent {
+  protected readonly intl = inject(DS_INTL);
+
   /** Cap on concurrently visible toasts. Extras are queued and shown as
    *  earlier ones dismiss. `0` = unlimited. */
   readonly maxVisible = input<number>(DEFAULT_MAX_VISIBLE);

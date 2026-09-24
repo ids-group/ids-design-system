@@ -34,6 +34,7 @@ import {
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import type { ChartTooltipContext } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import { resolveChartDefaults } from '@ids-group-ltd/ids-design-system/components';
+import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 import type {
   ChartAxis,
   ChartAxisMode,
@@ -182,7 +183,7 @@ export class ChartComponent implements ChartScales {
   readonly loading = input(false, { transform: booleanAttribute });
 
   /** Shown in place of the plot when `categories` is empty. Unset falls back to
-   *  `DS_CONFIG.chart.emptyText`, then `'No data'`. */
+   *  `DS_INTL.chart.empty`. */
   readonly emptyText = input<string | null>(null);
 
   /** Shows `errorText` in place of the plot. Separate from `loading` and from an empty
@@ -190,12 +191,11 @@ export class ChartComponent implements ChartScales {
    *  reader and mean opposite things. */
   readonly error = input(false, { transform: booleanAttribute });
 
-  /** The message the error state prints. Unset falls back to `DS_CONFIG.chart.errorText`, then
-   *  `'Could not load the data'`. */
+  /** The message the error state prints. Unset falls back to `DS_INTL.chart.error`. */
   readonly errorText = input<string | null>(null);
 
-  /** Formats the value-axis ticks. Unset falls back to `DS_CONFIG.chart.valueFormat`, then the
-   *  browser's locale grouping with a K/M/B suffix past four digits. */
+  /** Formats the value-axis ticks. Unset falls back to `DS_CONFIG.chart.valueFormat`, then
+   *  `DS_CONFIG.locale` / `LOCALE_ID`. */
   readonly valueFormat = input<ChartValueFormat | null>(null);
 
   /** How the second value axis relates to the first, once a mark has reported against it. The
@@ -220,6 +220,7 @@ export class ChartComponent implements ChartScales {
   readonly secondaryAxisLabel = input<string | null>(null);
 
   private readonly defaults = resolveChartDefaults(this);
+  protected readonly intl = inject(DS_INTL);
   readonly frameResolved = this.defaults.frame;
   readonly emptyTextResolved = this.defaults.emptyText;
   readonly errorTextResolved = this.defaults.errorText;
@@ -887,6 +888,6 @@ export class ChartComponent implements ChartScales {
   protected readonly isEmpty = computed(() => this.categories().length === 0);
 
   protected readonly accessibleName = computed(
-    () => this.summary() ?? this.caption() ?? 'Chart',
+    () => this.summary() ?? this.caption() ?? this.intl().chart.title,
   );
 }

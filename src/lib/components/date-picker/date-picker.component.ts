@@ -41,7 +41,11 @@ import {
   resolveFieldMessage,
   trimmedText,
 } from '@ids-group-ltd/ids-design-system/components';
-import { DS_CONFIG } from '@ids-group-ltd/ids-design-system/core';
+import {
+  DS_CONFIG,
+  DS_INTL,
+  injectDsLocale,
+} from '@ids-group-ltd/ids-design-system/core';
 import {
   type DateFormatSpec,
   type DisplayPart,
@@ -175,6 +179,8 @@ export class DatePickerComponent
   private readonly vcr = inject(ViewContainerRef);
   private readonly injector = inject(Injector);
   private readonly config = inject(DS_CONFIG);
+  private readonly appLocale = injectDsLocale();
+  protected readonly intl = inject(DS_INTL);
   private readonly host = inject(ElementRef<HTMLElement>);
   /** Public panel tokens forwarded onto the portaled overlay pane on open so
    *  a consumer's `ds-date-picker { --ds-date-picker-*: … }` reaches it.
@@ -217,8 +223,12 @@ export class DatePickerComponent
   readonly fullWidth = input(false, { transform: booleanAttribute });
   /** Selected date (single) or `[start, end]` (range), two-way bound. */
   readonly value = model<Date | DateRangeValue | null>(null);
-  /** Accessible-name fallback only — the mask fills the visible placeholder, not this. */
-  readonly placeholder = input<string>('Select date');
+  /** Accessible-name fallback only — the mask fills the visible placeholder, not this.
+   *  Unset falls back to `DS_INTL.datePicker.placeholder`. */
+  readonly placeholder = input<string | null>(null);
+  readonly placeholderResolved = computed(
+    () => this.placeholder() ?? this.intl().datePicker.placeholder,
+  );
   /** Field label shown above the trigger. */
   readonly label = input<string>('');
   /** Marks the field required — shows an asterisk and sets `aria-required`. */
@@ -251,7 +261,8 @@ export class DatePickerComponent
   readonly disabledDate = input<((date: Date) => boolean) | null>(null);
   /** Quick-pick shortcuts shown as a button column inside the calendar panel. */
   readonly presets = input<readonly DatePickerPreset[]>([]);
-  /** BCP-47 locale driving month/weekday names and the value format. */
+  /** BCP-47 locale driving month/weekday names and the value format. Unset falls
+   *  back to `DS_CONFIG.datePicker.locale`, then `DS_CONFIG.locale`, then `LOCALE_ID`. */
   readonly locale = input<string | null>(null);
   /** Explicit token format e.g. `'MM/DD/YYYY'`; default derived from `locale`. */
   readonly dateFormat = input<string | null>(null);
@@ -285,7 +296,7 @@ export class DatePickerComponent
           ? this.formatSpec().mask
           : rangeMask(this.formatSpec());
 
-      return `Enter a valid date (${mask})`;
+      return this.intl().datePicker.invalidDate(mask);
     }
 
     return '';
@@ -311,7 +322,7 @@ export class DatePickerComponent
   protected readonly invalidResolved = groupInvalid(this.fieldMessage.invalid);
 
   readonly resolvedLocale = computed(
-    () => this.locale() ?? this.config.datePicker?.locale ?? 'en-US',
+    () => this.locale() ?? this.config.datePicker?.locale ?? this.appLocale,
   );
   protected readonly resolvedFirstDay = computed(
     () => this.firstDayOfWeek() ?? this.config.datePicker?.firstDayOfWeek ?? 1,
@@ -354,7 +365,9 @@ export class DatePickerComponent
   // Guards the value→text sync from clobbering the field mid-keystroke.
   private editing = false;
   protected readonly resolvedAriaLabel = computed(() =>
-    this.label() ? null : this.ariaLabel() || this.placeholder() || null,
+    this.label()
+      ? null
+      : this.ariaLabel() || this.placeholderResolved() || null,
   );
 
   protected dayKey(d: Date): string {

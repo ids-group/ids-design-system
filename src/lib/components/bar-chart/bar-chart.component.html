@@ -4,7 +4,7 @@
       class="pin-reset"
       type="button"
       (click)="activeMark.release()">
-      Unpin
+      {{ intl().chart.unpin }}
     </button>
   }
 
@@ -99,7 +99,7 @@
                 class="target"
                 role="img"
                 [style.inset-inline-start.%]="entry.targetPercent"
-                [attr.aria-label]="'Target ' + entry.formattedTarget">
+                [attr.aria-label]="intl().chart.target(entry.formattedTarget)">
               </span>
             }
 

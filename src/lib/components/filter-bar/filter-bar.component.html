@@ -19,14 +19,14 @@
       [size]="triggerSize()"
       [ariaExpanded]="more.opened()"
       (pressed)="more.toggle(moreTrigger.controlRef().nativeElement)">
-      +{{ collapsed().length }} {{ moreLabel() }}
+      +{{ collapsed().length }} {{ moreLabelResolved() }}
     </ds-button>
 
     <ds-popover
       #more
       align="end"
       panelRole="dialog"
-      [panelLabel]="panelLabel()">
+      [panelLabel]="panelLabelResolved()">
       <div class="panel">
         @for (item of collapsed(); track item) {
           <div

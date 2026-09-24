@@ -14,9 +14,9 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**113 open — 0 P1, 13 P2, 100 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**112 open — 0 P1, 12 P2, 100 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
-### P2 — 13
+### P2 — 12
 
 - **Defects consumers work around today (swept 2026-09-23)**
   - A `ds-table` expanded row animates open and vanishes on close, so the reveal is one-sided (recorded 2026-09-24, from the mm-ecm consumer)
@@ -36,8 +36,6 @@ item and nothing else.
 - **Tooling**
   - Publishing to npm stops working in January 2027 and the replacement is not chosen
   - Nothing catches a stale `presentations/ds.css`, and two gates read it as the truth
-- **Localization — every user-visible string is a hardcoded literal (recorded 2026-08-27, from the ITB Workspace picker report)**
-  - Every user-visible string in the library is a hardcoded English literal — VALIDATED 2026-08-27 against 0.11.0; Stas: defer the whole thing, no code
 
 ### P3 — 100
 
@@ -59,8 +57,6 @@ item and nothing else.
   - A focused marker's panel names every series at its category, where the docs say its own (recorded 2026-09-24)
 - **Asked by Stas**
   - `ds-waterfall-chart` is `ds-cascade-chart` (Stas, 2026-09-23)
-- **Hooks and APIs consumers reach past the surface for (swept 2026-09-23)**
-  - Charts take their number locale from the browser, with no setting (from the mm-ecm-platform-kb consumer)
 - **Tooling**
   - changelog-lint C001 does not scan ds-docs/src or docs/agent (recorded 2026-09-24)
   - The press feedback guard misses `.disabled` and `[aria-disabled]` (recorded 2026-09-24)
@@ -89,6 +85,7 @@ item and nothing else.
 - **The eleven styling hooks one consumer reached past the surface for (recorded 2026-09-21)**
   - Does the picker list height become a public token, or stay behind `panelClass`?
   - Does the `variant="spark"` line preset keep zero in its value domain, or scale to the …
+  - Do the date picker's first day of the week and the time picker's 12h/24h default from …
 - **Tooling**
   - `tools/todo-index.mjs --check` is not in `lint:all`, so the index can still go stale between runs
   - Publishing to Claude Design cannot run from Bitbucket, and Stas wants the CI route looked at again (recorded 2026-09-02)
@@ -465,13 +462,6 @@ Each has somebody behind it. Nothing here is speculative work.
   to copy. No consumer uses `ds-waterfall-chart` yet, so the cost is the library's own surface. The old tag is an unknown element rather than an
   error: Angular renders nothing and logs nothing outside strict schema mode, so a missed one is a
   chart that silently vanished.
-
-## Hooks and APIs consumers reach past the surface for (swept 2026-09-23)
-
-Same sweep, the capabilities that are missing rather than wrong. Each workaround is still in the consumer tree and each gap is checked against `dev`.
-
-- [ ] **[P3] Charts take their number locale from the browser, with no setting (from the mm-ecm-platform-kb consumer).** The consumer copies the whole default formatter into `provideDsConfig` just to pin `en-US`, including the compact-on-tick split (`app.config.ts:20-31`). `defaultChartFormat` calls `Intl.NumberFormat(undefined, ...)` (`charts-format.ts:30-44`). `formatPercent` uses `toFixed(1)` (`:47-60`), so on a de-DE machine one chart prints `13,5` beside `13.5%`. `datePicker.locale` exists in `ds-config.ts:174-175`, and `chart` (`:144-172`) has six fields - `dataTable`, `frame`, `tooltipLingerMs`, `emptyText`, `errorText`, `valueFormat` (`:171`) - and none of them is one.
-  **Wanted:** `chart.locale` on `DS_CONFIG`, read by the default value formatter and by `formatPercent`. A consumer then pins one BCP-47 tag in place of a formatter.
 
 ## Tooling
 
@@ -1007,15 +997,27 @@ that already existed, because both are the kind of ask that comes back.
   scaling to the data range is what the deck's own tiles and Tufte do, but it needs a new domain mode
   in `ds-chart`. Stas: undecided, decide before the preset is built (2026-09-24).
 
+- [ ] **[P3] Do the date picker's first day of the week and the time picker's 12h/24h default from
+  the locale?** Drawn in deck `locale-week-and-hour`. Today both are fixed: `resolvedFirstDay` is
+  `firstDayOfWeek() ?? config.datePicker?.firstDayOfWeek ?? 1` (`date-picker.component.ts:317`) and
+  `resolvedFormat` is `format() ?? config.timePicker?.format ?? '24h'` (`time-picker.component.ts:211`).
+  The global `DS_CONFIG.locale` (plan-C, task 21, branch `feat/locale-intl`) defaults to `LOCALE_ID`,
+  which is `en-US` unless an app sets it, so deriving both makes every such app start the week on
+  Sunday and show 12h. The browser gives both: `Intl.Locale#getWeekInfo()` (Chrome 130, Firefox 153,
+  Safari 17; `weekInfo` accessor in Chrome 99-129 and Safari 15.4-16) and
+  `Intl.DateTimeFormat(tag, { hour: 'numeric' }).resolvedOptions().hourCycle`. Four options: fixed as
+  today, both from the locale, week only, hours only. Recommended in the deck: both from the locale,
+  with Monday where the engine has no week data. Decide before task 21 ships (2026-09-24).
+
 None of these is blocked on effort. Each is a verdict, and most carry a deck that renders the options.
 
 ## Decks awaiting a verdict (re-audited 2026-09-20)
 
-**Twelve** decks carry `ds-deck-status: open` — counted on disk, not from this list, which has been
+**Eleven** decks carry `ds-deck-status: open` — counted on disk, not from this list, which has been
 short before. **The rank is the filename**: an open deck is `<rank>-<slug>.html`, ranked by what
 answering it unblocks, so the folder listing IS the queue. Ranks are renumbered when the queue
 changes and a stale one is never kept to preserve a link; `deck-lint` fails a duplicate rank, a gap
-in 1..N, and an `implemented` deck still carrying one. **`presentations/10-decision-queue.html` carries every open question** — every open
+in 1..N, and an `implemented` deck still carrying one. **`presentations/11-decision-queue.html` carries every open question** — every open
 deck's question with its options in that deck's own words, the recommendation starred, a link back
 for the argument, and the two questions that have no deck. It duplicates no argument, so it cannot
 contradict a deck; re-check it when a deck's OPTIONS change. **Never cite a deck by number from this
@@ -1032,7 +1034,8 @@ file** — the number moves; cite the filename.
 | 7 | `7-chart-sparkline-preset` | The sparkline preset's vertical scale: zero in the domain or the data's own range. | the spark-scale Decision, then task 39 |
 | 8 | `8-bar-column-contracts` | How far to converge the bar and the column: name the difference, converge the palette, or give the bar a series model. | the stacking-contract ask under *Two chart names that collide* |
 | 9 | `9-picker-list-height` | Which knob caps a picker's list: one cap, `panelClass`, or a new list token, all three drawn and measured. | the picker-cap Decision (task 53) |
-| 10 | `10-decision-queue` | Every consumer ask and every open question in one page - 7 asks in three groups, then 28 decisions in six, each drawn as today against after. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
+| 10 | `10-locale-week-and-hour` | Whether the date picker's first day of the week and the time picker's 12h/24h follow `DS_CONFIG.locale`: fixed as today, both, week only, or hours only, each drawn over six locales. | the locale-defaults Decision (plan-C, task 21) |
+| 11 | `11-decision-queue` | Every consumer ask and every open question in one page - 5 asks in three groups, then 29 decisions in six, each drawn as today against after. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled
@@ -1229,22 +1232,6 @@ compile on 22 rather than by hope, which is most of the objection to it. Moving 
 # Parked — asked, and deliberately not now
 
 Ordered by how close each is to a first consumer ask, which is the only thing that unparks any of them.
-
-## Localization — every user-visible string is a hardcoded literal (recorded 2026-08-27, from the ITB Workspace picker report)
-
-- [ ] **[P2] Every user-visible string in the library is a hardcoded English literal — VALIDATED 2026-08-27 against 0.11.0; Stas: defer the whole thing, no code.** Asked as proposal P4 (covering findings G4 and A1) of the ITB Workspace filter-picker gap report, written against 0.9.1, which proposed a `DS_INTL` token in the `MatPaginatorIntl` shape scoped to "all overlay text". **The scope in the ask is what makes this a project rather than a change, and is why it was deferred rather than built.** The picker literals were six places, and **0.11.1 took two of them off the list by giving them projection slots** — `No matches` is now the fallback inside `dsEmptyTemplate` (`multi-select.component.html:387`, `autocomplete.component.html:311`) and `Create «…»` the fallback inside `dsCreateTemplate` (`autocomplete.component.html:343`), so a consumer can replace both today without any of this. **Six are still unreachable, and 0.11.1 added two of them.** Located by their text rather than by line, because the numbers here drifted twice — the templates grew between each audit and the next reading, and a stale number sends the reader to the wrong row:
-
-  | Literal | Where |
-  | --- | --- |
-  | `Select all` | the panel-wide select-all row in `multi-select.component.html` |
-  | `+N more` | the chip overflow marker in `multi-select.component.html` and `autocomplete.component.html` |
-  | `'Remove ' + label` | the chip close label in both of those |
-  | `Select…` | the default `placeholder` in `autocomplete.component.ts` |
-  | `All of {{ group.label }}` | the per-group select-all row, **new in 0.11.1** |
-  | `countLabel="selected"` | the count badge on the compact trigger, **new in 0.11.1** | **The last two make 0.11.1 the release that both wrote §4 of `docs/picker-contract.md` and broke it**, which is the strongest argument yet that the slot-by-slot approach does not scale and the provider has to land. Beyond those six, a sweep of `src/lib/**/*.html` finds 36 static `aria-label`s across 19 files (`grep -rn 'aria-label="[A-Za-z]'`, 2026-09-23) - among them alert, banner (`Dismiss`), autocomplete and multi-select (`Clear selection`), breadcrumbs, color-picker, date-picker, drawer, dropzone, input, modal-card, number-stepper, pagination, search, select, sidenav-footer, time-columns, time-picker, toast - plus `ds-table`'s bound label concatenations (`'Filter ' + col`, `'Resize ' + col`, `'Select ' + row`, `'Actions for ' + row`) and visible text in `ds-table` and `ds-sidenav-footer`. Localizing the pickers alone ships half a mechanism to an app that needs all of it.
-  **The fork, written down so the next reader does not re-derive it:** a `DS_INTL` token with `provideDsIntl`, against per-instance inputs on each component. **The library currently leans the other way** — `ds-filter-bar` localizes with `moreLabel` and `panelLabel` inputs (`filter-bar.component.ts:75-77`) — so a token has to justify itself against a shipped precedent rather than arrive as the obvious answer. If the token wins, `provideDsConfig` already exists as the app-wide configuration point and is where it belongs; `resolveWithConfig` is the pattern it would follow.
-  **P2 rather than P3 because a consumer is actually blocked**, which none of the other parked items can claim: ITB Workspace runs a two-language `LanguageService` and cannot translate a picker panel at all. Parked on priority, not on doubt about the need.
-  The rest of that report is live work — the seven surviving findings and their forks are in `presentations/implemented/picker-gaps-decisions.html`, whose closing section is this item.
 
 ## ds-icon does not read the icon size scale (recorded 2026-08-24, from the state-glyph work)
 

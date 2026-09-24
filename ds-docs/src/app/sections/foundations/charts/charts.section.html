@@ -629,43 +629,41 @@
   </h3>
 
   <p class="block-desc t-s">
-    Six things are the same decision for every chart in an app rather than a
+    Four things are the same decision for every chart in an app rather than a
     choice per plot, so they resolve through
     <code class="t-mono-inline">
       DS_CONFIG
     </code>:
     <code class="t-mono-inline">
       valueFormat
-    </code> (a number reads one way in
-    a product, and a formatter passed per chart drifts as soon as there are two
-    screens), <code class="t-mono-inline"> dataTable </code> (whether the
-    numbers behind a plot have a non-visual route is an accessibility policy),
+    </code> (a number reads one way in a
+    product, and a formatter passed per chart drifts as soon as there are two
+    screens), <code class="t-mono-inline">dataTable</code> (whether the numbers
+    behind a plot have a non-visual route is an accessibility policy),
     <code class="t-mono-inline">
       frame
-    </code> (whether charts live inside
-    cards), <code class="t-mono-inline"> tooltipLingerMs </code> (a property of
-    what the app puts in its tooltips), and the
+    </code> (whether charts live inside cards)
+    and <code class="t-mono-inline">tooltipLingerMs</code> (a property of what
+    the app puts in its tooltips). Precedence is the input, then the config,
+    then the built-in default — so binding one on a single chart still wins. The
+    empty and error copy is wording, so it lives in
     <code class="t-mono-inline">
-      emptyText
-    </code> /
+      DS_INTL.chart
+    </code>, and the number locale is
     <code class="t-mono-inline">
-      errorText
-    </code> copy. Precedence is the
-    input, then the config, then the built-in default — so binding one on a
-    single chart still wins.
+      DsConfig.locale
+    </code>, then Angular's
+    <code class="t-mono-inline">
+      LOCALE_ID
+    </code>.
   </p>
 
   <pre class="t-mono"><code>providers: [
   provideDsConfig(&#123;
-    chart: &#123;
-      valueFormat: (value) =&gt; value.toLocaleString('de-DE'),
-      dataTable: 'visible',
-      frame: 'none',
-      tooltipLingerMs: 140,
-      emptyText: 'Нет данных',
-      errorText: 'Не удалось загрузить',
-    &#125;,
+    locale: 'de-DE',
+    chart: &#123; dataTable: 'visible', frame: 'none', tooltipLingerMs: 140 &#125;,
   &#125;),
+  provideDsIntl(&#123; chart: &#123; empty: 'Нет данных', error: 'Не удалось загрузить' &#125; &#125;),
 ]</code></pre>
 
   <h3 class="block-title t-h4">

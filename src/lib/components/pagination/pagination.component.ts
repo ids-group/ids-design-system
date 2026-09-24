@@ -3,6 +3,7 @@ import {
   ViewEncapsulation,
   booleanAttribute,
   computed,
+  inject,
   input,
   model,
 } from '@angular/core';
@@ -10,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { SelectComponent } from '@ids-group-ltd/ids-design-system/components/select';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
+import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 import type {
   DsSize,
@@ -62,6 +64,8 @@ export class PaginationComponent {
    *  `ds-table` sets it from `loading="skeleton"`. */
   readonly loading = input(false, { transform: booleanAttribute });
 
+  protected readonly intl = inject(DS_INTL);
+
   protected readonly navClass = computed(() =>
     ['pagination', this.sizeResolved(), this.layoutResolved()]
       .filter((part) => part !== 'grouped')
@@ -99,7 +103,7 @@ export class PaginationComponent {
     const start = (this.currentPage() - 1) * this.pageSize() + 1;
     const end = Math.min(this.currentPage() * this.pageSize(), this.total());
 
-    return `Showing ${start}–${end} of ${this.total()}`;
+    return this.intl().pagination.range(start, end, this.total());
   });
 
   protected readonly sizeOptions = computed(() => {
@@ -110,7 +114,7 @@ export class PaginationComponent {
       : [current, ...presets].sort((a, b) => a - b);
 
     return merged.map((size) => ({
-      label: `${size} per page`,
+      label: this.intl().pagination.perPage(size),
       value: String(size),
     }));
   });

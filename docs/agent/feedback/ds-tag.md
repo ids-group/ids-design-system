@@ -8,5 +8,5 @@ Output: `(closed): void` — emits when the close button is pressed
 Content: label.
 
 <!-- inputs:ds-tag -->
-All inputs: `variant: 'solid' | 'neutral' = 'solid'`, `closable: boolean = false`, `interactive: boolean = false`, `selected: boolean = false`, `closeLabel: string = 'Remove'`
+All inputs: `variant: 'solid' | 'neutral' = 'solid'`, `closable: boolean = false`, `interactive: boolean = false`, `selected: boolean = false`, `closeLabel: string | null = null`
 <!-- /inputs -->

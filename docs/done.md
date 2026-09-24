@@ -4,6 +4,20 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## Numbers and dates follow one locale; every rendered string is in DS_INTL (2026-09-24)
+
+`DsConfig.locale` (defaulting to Angular's `LOCALE_ID`, Stas: one global key, no `chart.locale`) is read
+by chart values and percentages, `ds-date-picker` and `ds-dropzone` file sizes; charts stopped using
+the browser's locale and `toFixed(1)` percentages. A `DS_INTL` token with `provideDsIntl(object |
+signal factory)` carries every string the library renders: 197 keys in 33 sections, English defaults
+byte-identical to the old literals, merged section by section; per-instance text inputs still win and
+now default to `null` with `...Resolved` readbacks (Stas: no bundled `DS_INTL_RU`). `chart.emptyText` /
+`errorText` moved from `DS_CONFIG` to `DS_INTL.chart`. The ds-docs theming page carries a de-DE demo.
+The week start and the 12h/24h default are not locale-driven yet: deck `locale-week-and-hour`.
+Measured 2026-09-24 in ds-docs: under de-DE the bar chart reads `1.350 13,5 %`, the date picker
+`24.09.2026` with `MO DI ... SO`, the pager `1-10 von 1200`; unprovided pages keep `SELECT ALL`,
+`Sorted by Record, ascending`, `Showing 1–4 of 12`, `Export CSV`, `41%`, `61.2%`.
+
 ## ds-docs modifier classes become states; brand and domain examples keep, with fictional names (2026-09-24)
 
 Every `<base>--<mod>` class under `ds-docs/src` (112 in 32 `.scss`, 211 in 47 `.html`) is `<base>.is-<mod>`,

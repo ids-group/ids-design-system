@@ -9,6 +9,7 @@ import {
   Component,
   TemplateRef,
   computed,
+  inject,
   input,
   model,
   output,
@@ -17,6 +18,7 @@ import {
 import { BottomSheetComponent } from '@ids-group-ltd/ids-design-system/components/bottom-sheet';
 import { PopoverComponent } from '@ids-group-ltd/ids-design-system/components/popover';
 import type { TableColumn } from '@ids-group-ltd/ids-design-system/components/table';
+import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 
 /**
@@ -46,7 +48,7 @@ import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
   ],
   template: `
     @if (coarsePointer()) {
-      <ds-bottom-sheet title="Columns" [(open)]="sheetOpen">
+      <ds-bottom-sheet [title]="intl().tableColumns.title" [(open)]="sheetOpen">
         <ng-container [ngTemplateOutlet]="panel" />
       </ds-bottom-sheet>
     } @else {
@@ -54,7 +56,7 @@ import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
         #popover
         align="end"
         panelRole="dialog"
-        panelLabel="Column visibility">
+        [panelLabel]="intl().tableColumns.panelLabel">
         <ng-container [ngTemplateOutlet]="panel" />
       </ds-popover>
     }
@@ -101,7 +103,7 @@ import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
                 <button
                   type="button"
                   class="col-move-btn"
-                  aria-label="Move up"
+                  [attr.aria-label]="intl().tableColumns.moveUp"
                   [disabled]="first"
                   (click)="moved.emit({ column: col, delta: -1 })">
                   <ds-icon name="chevronUp" [size]="14" />
@@ -110,7 +112,7 @@ import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
                 <button
                   type="button"
                   class="col-move-btn"
-                  aria-label="Move down"
+                  [attr.aria-label]="intl().tableColumns.moveDown"
                   [disabled]="last"
                   (click)="moved.emit({ column: col, delta: 1 })">
                   <ds-icon name="chevronDown" [size]="14" />
@@ -121,7 +123,7 @@ import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
         }
 
         <button type="button" class="col-reset" (click)="resetRequested.emit()">
-          Reset to default
+          {{ intl().tableColumns.reset }}
         </button>
       </div>
     </ng-template>
@@ -138,6 +140,8 @@ export class TableColumnsPanelComponent<T> {
   // would otherwise need a parallel array kept in step with `columns`.
   readonly isVisible = input.required<(column: TableColumn<T>) => boolean>();
   readonly isLocked = input.required<(column: TableColumn<T>) => boolean>();
+
+  protected readonly intl = inject(DS_INTL);
 
   readonly sheetOpen = model(false);
   readonly toggled = output<TableColumn<T>>();

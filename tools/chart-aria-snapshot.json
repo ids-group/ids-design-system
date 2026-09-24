@@ -4,7 +4,7 @@
     "div: aria-hidden=true",
     "div: role={interactive() ? 'group' : 'img'}, aria-label={accessibleName()}",
     "div: role={interactive() ? 'button' : null}, aria-label={interactive() ? entryLabel(entry) : null}",
-    "span: role=img, aria-label={'Target ' + entry.formattedTarget}"
+    "span: role=img, aria-label={intl().chart.target(entry.formattedTarget)}"
   ],
   "chart": [
     "p: role=status",

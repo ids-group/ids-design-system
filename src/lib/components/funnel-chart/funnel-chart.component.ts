@@ -6,6 +6,7 @@ import {
   booleanAttribute,
   computed,
   contentChild,
+  inject,
   input,
   numberAttribute,
   output,
@@ -26,6 +27,7 @@ import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { ChartDataTableComponent } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
 import type { ChartDataRow } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
 import { resolveChartDefaults } from '@ids-group-ltd/ids-design-system/components';
+import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 import type {
   ChartDataTable,
   ChartFrame,
@@ -62,6 +64,7 @@ function formatDrop(
   count: number | null,
   mode: FunnelChartDrop,
   format: (value: number) => string,
+  locale: string,
 ): string {
   if (mode === 'none' || fraction === null) {
     return '—';
@@ -69,7 +72,7 @@ function formatDrop(
 
   return mode === 'absolute' && count !== null
     ? `−${format(Math.abs(count))}`
-    : formatPercent(fraction, 1);
+    : formatPercent(fraction, 1, locale);
 }
 
 const SKELETON_STAGE_WIDTHS = ['88%', '62%', '80%', '54%', '72%'] as const;
@@ -146,7 +149,7 @@ export class FunnelChartComponent {
    *  when the data lands. */
   readonly loading = input(false, { transform: booleanAttribute });
   /** Shown in place of the plot when `data` is empty. Unset falls back to
-   *  `DS_CONFIG.chart.emptyText`, then `'No data'`. */
+   *  `DS_INTL.chart.empty`. */
   readonly emptyText = input<string | null>(null);
 
   /** Shows `errorText` in place of the plot. Separate from `loading` and from an empty `data`,
@@ -154,15 +157,15 @@ export class FunnelChartComponent {
    *  mean opposite things. */
   readonly error = input(false, { transform: booleanAttribute });
 
-  /** The message the error state prints. Unset falls back to `DS_CONFIG.chart.errorText`, then
-   *  `'Could not load the data'`. */
+  /** The message the error state prints. Unset falls back to `DS_INTL.chart.error`. */
   readonly errorText = input<string | null>(null);
   /** Formats every value the chart prints, the annex table and the generated description
-   *  included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then the browser's locale
-   *  grouping with a K/M/B suffix past four digits. */
+   *  included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` /
+   *  `LOCALE_ID`. */
   readonly valueFormat = input<ChartValueFormat | null>(null);
 
   private readonly defaults = resolveChartDefaults(this);
+  protected readonly intl = inject(DS_INTL);
   readonly frameResolved = this.defaults.frame;
   readonly dataTableResolved = this.defaults.dataTable;
   readonly emptyTextResolved = this.defaults.emptyText;
@@ -295,7 +298,7 @@ export class FunnelChartComponent {
             detail:
               entry.formattedDrop === '—'
                 ? ''
-                : `${entry.formattedDrop} fell away since the stage above`,
+                : this.intl().chart.fellAway(entry.formattedDrop),
           },
         ],
       };
@@ -353,12 +356,17 @@ export class FunnelChartComponent {
           gapUnits,
         ),
         formattedValue: format(stage.value),
-        formattedPercent: formatPercent(stage.value, firstValue),
+        formattedPercent: formatPercent(
+          stage.value,
+          firstValue,
+          this.defaults.locale,
+        ),
         formattedDrop: formatDrop(
           drop,
           index > 0 ? values[index - 1] - stage.value : null,
           this.drop(),
           format,
+          this.defaults.locale,
         ),
         color:
           index === lastIndex
@@ -374,7 +382,8 @@ export class FunnelChartComponent {
     () =>
       this.summary() ??
       describeSeries(
-        this.caption() ?? 'Chart',
+        this.intl().chart,
+        this.caption() ?? this.intl().chart.title,
         this.data().map((stage) => ({
           label: stage.label,
           value: stage.value,
