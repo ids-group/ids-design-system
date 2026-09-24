@@ -17,7 +17,7 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 | 4 | `4-migration-manifest-audit` | eight format practices to ratify — tooling, no consumer pulling on it |
 | 5 | `5-select-native-multi` | the cheapest to close: "keep parked" is a complete answer, and it is the answer already given — it stays only because closing it was declined |
 | 6 | `6-warning-text-colour` | one colour on one tint, each candidate rendered in itself. It ends "name a number: 1, 2, 3 or 4", and `docs/todo.md` still carries the measured 4.42:1 failure |
-| 7 | `7-chart-sparkline-preset` | `variant="spark"` or a separate `ds-sparkline` — parked on 2026-09-19, so it is decided-not-built rather than unasked |
+| 7 | `7-chart-sparkline-preset` | the sparkline preset's vertical scale: zero in the domain or the data's own min..max, both drawn over five series at cell and tile size; the preset itself is decided as `variant="spark"` |
 | 8 | `8-bar-column-contracts` | how far the bar and the column converge - the consumer ask that found them diverging in palette and in where composition is declared |
 | 9 | `9-picker-list-height` | whether the picker list's height stays an internal token: the cap that governs the visible rows is not the one that looks settable |
 | 10 | `10-decision-queue` | every consumer ask and every open question in one page - 10 asks a consumer waits on, each drawn as today against after, then 30 decisions across six groups; the live indeterminate tracks are the case a text list could not put |
