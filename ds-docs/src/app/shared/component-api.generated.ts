@@ -8638,6 +8638,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "`display: inline-block` instead of `block`, to sit inline with text."
+      },
+      {
+        "name": "shimmer",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "true",
+        "required": false,
+        "description": "Whether the wave passes over the placeholder. Default `true`. Off, it is a flat block of the same shape and size - for a space held for something that is not loading yet, where motion would claim work that is not happening and cost a main-thread update a frame."
       }
     ],
     "outputs": []

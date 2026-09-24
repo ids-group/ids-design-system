@@ -6372,6 +6372,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "3400ms — one period of travel, in which two waves cross: a quiet one and a main one. Slower than the shared loop token on purpose: a placeholder is background and should not pull the eye."
       },
       {
+        "name": "--ds-skeleton-wave-steps",
+        "value": "68",
+        "notes": ""
+      },
+      {
         "name": "--ds-skeleton-wave-angle",
         "value": "135deg",
         "notes": "135deg — the direction the waves travel, down and to the right. The gradient repeats along this axis, which is what leaves no seam to meet."
