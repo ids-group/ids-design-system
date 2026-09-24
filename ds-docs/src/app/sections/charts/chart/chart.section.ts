@@ -19,10 +19,13 @@ import type {
   LineSeriesData,
 } from 'ds/chart';
 import { ChartDataTableComponent } from 'ds/chart-data-table';
+import { ChartLegendComponent } from 'ds/chart-legend';
+import type { ChartLegendItem } from 'ds/chart-legend';
 import type { ChartDataRow } from 'ds/chart-data-table';
 import { ButtonComponent } from 'ds/button';
 import type { ChartThreshold } from 'ds/core';
 import { RadioComponent, RadioGroupComponent } from 'ds/radio-group';
+import { SwitchComponent } from 'ds/switch';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 import { DocsLazyDirective } from '../../../shared/docs-lazy.directive';
 
@@ -115,12 +118,14 @@ const TRAFFIC_SERIES: readonly LineSeriesData[] = [
     RadioGroupComponent,
     ChartComponent,
     ChartDataTableComponent,
+    ChartLegendComponent,
     ColumnSeriesComponent,
     DocsSectionComponent,
     LineSeriesComponent,
     ReferenceLabelComponent,
     ReferenceLineComponent,
     SeriesAnnotationComponent,
+    SwitchComponent,
   ],
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -149,6 +154,17 @@ export class ChartSection {
 
     return typeof choice === 'string' && choice !== 'all' ? choice : null;
   });
+
+  protected readonly ordersLegend: readonly ChartLegendItem[] = [
+    { id: 'orders', label: 'Orders', color: 'var(--ds-chart-series-1-color)' },
+    {
+      id: 'basket',
+      label: 'Average order value',
+      color: 'var(--ds-chart-series-4-color)',
+    },
+  ];
+  protected readonly legendHighlighted = signal<string | null>(null);
+  protected readonly lineOutline = signal(true);
 
   protected readonly trafficSeries = TRAFFIC_SERIES;
   protected readonly seriesDashes = ['none', '7 4'];
