@@ -175,6 +175,79 @@
       ],
       "verify": "In the BUILT css --chart-hatch-width resolves to 1.5px, and a hatched column's stripe measures the width --ds-chart-hatch-width names.",
       "note": "The default was 3px, now 1.5px. The stripe sat on its pattern tile's edge, which clipped it to half the token, so a column drew 1.5px while the tooltip swatch drew a fixed share of its own diameter. The stripe now runs down the tile's middle at the full token, the default halves so a column looks as it did, and the swatch takes the same token."
+    },
+    {
+      "id": "button-color-class-is-color-prefixed",
+      "kind": "class-rename",
+      "old": "ds-button .c-*",
+      "new": ".color-*",
+      "surface": "style",
+      "action": "Rename `.c-secondary`, `.c-tertiary`, `.c-neutral`, `.c-error`, `.c-success` and `.c-warning` to `.color-secondary` … `.color-warning` in selectors scoped under ds-button. Better: key the rule off the host attribute, `ds-button[data-color=\"error\"]`, which does not depend on the inner element's classes.",
+      "appliesWhen": "Only a stylesheet that styles the inner button of ds-button by its colour class. Bindings (`color=\"error\"`) are unaffected. `.color-primary` does not exist: the default colour carries no class, as `.c-primary` never did.",
+      "pitfall": "A selector left on the old class matches nothing and reports nothing, and a `:not(.c-error)` chain stops excluding anything, so a rule written for one colour applies to every button.",
+      "restore": null,
+      "searchHints": [
+        ".c-secondary",
+        ".c-tertiary",
+        ".c-neutral",
+        ".c-error",
+        ".c-success",
+        ".c-warning",
+        "ds-button"
+      ],
+      "detect": [
+        "\\.c-(secondary|tertiary|neutral|error|success|warning)([^A-Za-z0-9_-]|$)"
+      ],
+      "verify": "No stylesheet under ds-button names a `.c-` colour class, and a ds-button color=\"error\" renders an inner button carrying `color-error`.",
+      "note": "The colour class names the `color` input it comes from, spelled out like the rest of the library's names."
+    },
+    {
+      "id": "icon-button-color-class-is-color-prefixed",
+      "kind": "class-rename",
+      "old": "ds-icon-button .c-*",
+      "new": ".color-*",
+      "surface": "style",
+      "action": "Rename `.c-secondary`, `.c-tertiary`, `.c-neutral`, `.c-error`, `.c-success` and `.c-warning` to `.color-secondary` … `.color-warning` in selectors scoped under ds-icon-button.",
+      "appliesWhen": "Only a stylesheet that styles the inner button of ds-icon-button by its colour class. Bindings (`color=\"error\"`) are unaffected. `.color-primary` does not exist: the default colour carries no class, as `.c-primary` never did.",
+      "pitfall": "A selector left on the old class matches nothing and reports nothing, and a `:not(.c-error)` chain stops excluding anything, so a rule written for one colour applies to every icon-button.",
+      "restore": null,
+      "searchHints": [
+        ".c-secondary",
+        ".c-tertiary",
+        ".c-neutral",
+        ".c-error",
+        ".c-success",
+        ".c-warning",
+        "ds-icon-button"
+      ],
+      "detect": [
+        "\\.c-(secondary|tertiary|neutral|error|success|warning)([^A-Za-z0-9_-]|$)"
+      ],
+      "verify": "No stylesheet under ds-icon-button names a `.c-` colour class, and a ds-icon-button color=\"error\" renders an inner button carrying `color-error`.",
+      "note": "The colour class names the `color` input it comes from, spelled out like the rest of the library's names."
+    },
+    {
+      "id": "button-variant-class-is-variant-prefixed",
+      "kind": "class-rename",
+      "old": "ds-button .v-*",
+      "new": ".variant-*",
+      "surface": "style",
+      "action": "Rename `.v-tonal`, `.v-ghost`, `.v-outline` and `.v-text` to `.variant-tonal`, `.variant-ghost`, `.variant-outline` and `.variant-text` in selectors scoped under ds-button. Better: key the rule off the host attribute, `ds-button[data-variant=\"outline\"]`, which does not depend on the inner element's classes.",
+      "appliesWhen": "Only a stylesheet that styles the inner button of ds-button by its fill-variant class. Bindings (`variant=\"outline\"`) are unaffected. `.variant-solid` does not exist: the default variant carries no class, as `.v-solid` never did.",
+      "pitfall": "A selector left on the old class matches nothing and reports nothing, and a `:not(.v-outline)` chain stops excluding anything, so a rule written for one variant applies to every button.",
+      "restore": null,
+      "searchHints": [
+        ".v-tonal",
+        ".v-ghost",
+        ".v-outline",
+        ".v-text",
+        "ds-button"
+      ],
+      "detect": [
+        "\\.v-(tonal|ghost|outline|text)([^A-Za-z0-9_-]|$)"
+      ],
+      "verify": "No stylesheet under ds-button names a `.v-` variant class, and a ds-button variant=\"outline\" renders an inner button carrying `variant-outline`.",
+      "note": "The variant class names the `variant` input it comes from, spelled out like the rest of the library's names."
     }
   ],
   "informational": [
