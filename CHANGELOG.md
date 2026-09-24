@@ -106,7 +106,9 @@
 
 - **`ds-textarea` exposes the native selection API.** `selectionStart` and `selectionEnd` (0 before
   the view exists), `setSelectionRange(start, end, direction?: 'forward' | 'backward' | 'none')`,
-  which does not move focus, and `select()`, each forwarded to the native textarea.
+  which does not move focus, and `select()`, each forwarded to the native textarea. A value written
+  through `value` reaches the element a microtask later and drops the caret to the end, so after
+  `value.set(...)` set the range from a `setTimeout`, not synchronously.
 
 - **`ds-switch` takes `controlled` and emits `checkedRequested`.** `controlled` is a boolean
   attribute, default false; `checkedRequested` is a `boolean` output carrying the value the user
