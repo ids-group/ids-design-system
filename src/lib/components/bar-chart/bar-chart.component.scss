@@ -141,8 +141,6 @@
    colour would read as a missing category. */
 .segment {
   block-size: 100%;
-  transition: background-color var(--ds-motion-chart-mark-duration)
-    var(--ds-motion-chart-mark-easing);
 
   // The end parts carry the mark's cap themselves. Clipping the fill instead would take the pin
   // badge with it, and the badge is taller than the bar by design.
@@ -160,6 +158,8 @@
     border-inline-start: 2px solid var(--ds-chart-frame-bg-color, var(--surface-default));
   }
 }
+
+@include chart-interactive.dims('.segment', ', background-color var(--ds-motion-chart-mark-duration) var(--ds-motion-chart-mark-easing)');
 
 /* On the mark rather than beside it, at the bar's start: a badge at the END would hang off the left
    of the chart on a row whose value is zero, and the start is a column every row shares. The bar is

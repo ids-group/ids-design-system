@@ -1284,6 +1284,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Dims every OTHER mark while one is hovered or focused, so the reader's eye is held on the one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed marks — measured 2026-09-13, the worst pair of three dimmed series falls from dE 14.8 at full opacity to 2.1 at `--ds-chart-dim-opacity`'s default 0.3 — so it buys loudness for one mark and pays for it with the rest of the chart."
       },
       {
+        "name": "highlighted",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "The segment to single out, by its `id` - or by its position as a string where it has none. Every other segment in every row fades, the same answer `highlighted` gives on a series mark. Independent of `dimOthers`, which governs what a pointer does. A row without segments is unaffected."
+      },
+      {
         "name": "staggerMs",
         "kind": "input",
         "type": "number",
@@ -2249,6 +2258,18 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Where each mark starts and ends on the value axis, one entry per point. Unset, every mark runs from zero to its own value, which is the unstacked case."
+      },
+      {
+        "name": "axis",
+        "kind": "input",
+        "type": "ChartAxis",
+        "union": [
+          "primary",
+          "secondary"
+        ],
+        "default": "'primary'",
+        "required": false,
+        "description": "Which value axis the columns are measured against. `'secondary'` reads them off the second axis, the way `axis: 'secondary'` does on a line series' data."
       },
       {
         "name": "seriesColor",

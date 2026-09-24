@@ -25,7 +25,10 @@ import {
   staggerDelay,
 } from '@ids-group-ltd/ids-design-system/components';
 import { ICONS } from '@ids-group-ltd/ids-design-system/core';
-import type { ChartValueFormat } from '@ids-group-ltd/ids-design-system/core';
+import type {
+  ChartAxis,
+  ChartValueFormat,
+} from '@ids-group-ltd/ids-design-system/core';
 import type { MarkHit } from '@ids-group-ltd/ids-design-system/components';
 import { chartActiveMark } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import type {
@@ -148,6 +151,10 @@ export class ColumnSeriesComponent implements OnDestroy {
    *  runs from zero to its own value, which is the unstacked case. */
   readonly offsets = input<readonly ChartStackOffset[] | null>(null);
 
+  /** Which value axis the columns are measured against. `'secondary'` reads them off the second
+   *  axis, the way `axis: 'secondary'` does on a line series' data. */
+  readonly axis = input<ChartAxis>('primary');
+
   /** One colour for the whole series, which is what several series drawn together need. Unset,
    *  each mark takes the categorical palette by its own position - the right reading when the
    *  marks ARE the categories, which is the single-series case. A point's own colour wins over
@@ -203,6 +210,7 @@ export class ColumnSeriesComponent implements OnDestroy {
       this.scales.reportDomain(
         this.domainId,
         this.spans().flatMap((span) => [span.from, span.to]),
+        this.axis(),
       ),
     );
     // The container opens the panel, so a plot holding several marks can only ever show one.
@@ -294,7 +302,10 @@ export class ColumnSeriesComponent implements OnDestroy {
       return [];
     }
     const toX = this.scales.xPosition();
-    const toY = this.scales.yPosition();
+    const toY =
+      this.axis() === 'secondary'
+        ? this.scales.secondaryYPosition()
+        : this.scales.yPosition();
     const spans = this.spans();
     const format = this.valueFormat();
 

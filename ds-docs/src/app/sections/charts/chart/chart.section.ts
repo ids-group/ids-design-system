@@ -92,6 +92,15 @@ const BASKET_SERIES: readonly LineSeriesData[] = [
   },
 ];
 
+const VISIT_SERIES: readonly LineSeriesData[] = [
+  {
+    id: 'visits',
+    label: 'Visits',
+    data: [12400, 13100, 12800, 14900, 14200, 16100],
+    color: 'var(--ds-chart-series-4-color)',
+  },
+];
+
 const TRAFFIC_SERIES: readonly LineSeriesData[] = [
   {
     id: 'organic',
@@ -143,6 +152,7 @@ export class ChartSection {
   protected readonly orderMonths = ORDER_MONTHS;
   protected readonly orderColumns = ORDER_COLUMNS;
   protected readonly basketSeries = BASKET_SERIES;
+  protected readonly visitSeries = VISIT_SERIES;
   protected readonly columnAxisColor = 'var(--ds-chart-series-1-color)';
   protected readonly lineAxisColor = 'var(--ds-chart-series-4-color)';
   /** `'all'` rather than `null`, because a radio group always has one answer selected. */
@@ -169,4 +179,7 @@ export class ChartSection {
 
   protected readonly ordersSummary =
     'Orders a month on the left axis - 620, 710, 680, 840, 790, 960 - against average order value on the right axis - 82, 88, 91, 86, 104, 118 pounds.';
+
+  protected readonly visitsSummary =
+    'Visits a month on the left axis - 12,400, 13,100, 12,800, 14,900, 14,200, 16,100 - against orders on the right axis - 620, 710, 680, 840, 790, 960.';
 }

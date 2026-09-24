@@ -45,11 +45,11 @@
     {
       "id": "exported-class-members-grew",
       "kind": "behavior",
-      "old": "AccordionComponent, AccordionItemComponent, AlertComponent, BannerComponent, ChartComponent, ColumnSeriesComponent, LineSeriesComponent, ChartTooltipDirective",
+      "old": "AccordionComponent, AccordionItemComponent, AlertComponent, BannerComponent, BarChartComponent, ChartComponent, ColumnSeriesComponent, LineSeriesComponent, ChartTooltipDirective",
       "new": null,
       "surface": "typescript",
       "action": "Build after upgrading, rename or mark `override` every member of yours the compiler reports as colliding, and delete an override whose base member is gone.",
-      "appliesWhen": "Subclassing a DS component is unsupported, but consumers do it. Template users of the `<ds-accordion>`, `<ds-accordion-item>`, `<ds-alert>`, `<ds-banner>` and `<ds-chart>` elements, the `g[dsColumnSeries]` and `g[dsLineSeries]` marks and the `[dsChartTooltip]` directive need nothing.",
+      "appliesWhen": "Subclassing a DS component is unsupported, but consumers do it. Template users of the `<ds-accordion>`, `<ds-accordion-item>`, `<ds-alert>`, `<ds-banner>`, `<ds-bar-chart>` and `<ds-chart>` elements, the `g[dsColumnSeries]` and `g[dsLineSeries]` marks and the `[dsChartTooltip]` directive need nothing.",
       "pitfall": "`protected` and `private` are no protection: a redeclared member collides exactly as a public one does. A method of yours named like a removed member and declared without `override` still compiles, and is simply never called again.",
       "restore": null,
       "searchHints": [
@@ -57,6 +57,7 @@
         "extends AccordionItemComponent",
         "extends AlertComponent",
         "extends BannerComponent",
+        "extends BarChartComponent",
         "extends ChartComponent",
         "extends ColumnSeriesComponent",
         "extends LineSeriesComponent",
@@ -72,6 +73,8 @@
         "AlertComponent",
         "extends BannerComponent",
         "BannerComponent",
+        "extends BarChartComponent",
+        "BarChartComponent",
         "extends ChartComponent",
         "ChartComponent",
         "extends ColumnSeriesComponent",
@@ -81,8 +84,8 @@
         "extends ChartTooltipDirective",
         "ChartTooltipDirective"
       ],
-      "verify": "The app builds with no TS2415 or TS2416 naming AccordionComponent, AccordionItemComponent, AlertComponent, BannerComponent, ChartComponent, ColumnSeriesComponent, LineSeriesComponent or ChartTooltipDirective (internal, via components/chart-tooltip), and no member of a subclass is named like a removed member listed in the note.",
-      "note": "AccordionComponent gained chevron; AccordionItemComponent gained chevronDown and chevronName; AlertComponent and BannerComponent each gained liveRole; ChartComponent gained composed, cursorResolved and tooltipPinned and lost tooltipPreferBelow; ColumnSeriesComponent gained barElements and lost onMarkBlur; LineSeriesComponent lost onMarkerBlur; ChartTooltipDirective (internal, via components/chart-tooltip) lost dsChartTooltipPreferBelow. A redeclared member collides whether it is public, protected or private, and the compiler enumerates every collision."
+      "verify": "The app builds with no TS2415 or TS2416 naming AccordionComponent, AccordionItemComponent, AlertComponent, BannerComponent, BarChartComponent, ChartComponent, ColumnSeriesComponent, LineSeriesComponent or ChartTooltipDirective (internal, via components/chart-tooltip), and no member of a subclass is named like a removed member listed in the note.",
+      "note": "AccordionComponent gained chevron; AccordionItemComponent gained chevronDown and chevronName; AlertComponent and BannerComponent each gained liveRole; BarChartComponent gained highlighted and isSegmentDimmed; ChartComponent gained composed, cursorResolved and tooltipPinned and lost tooltipPreferBelow; ColumnSeriesComponent gained axis and barElements and lost onMarkBlur; LineSeriesComponent lost onMarkerBlur; ChartTooltipDirective (internal, via components/chart-tooltip) lost dsChartTooltipPreferBelow. A redeclared member collides whether it is public, protected or private, and the compiler enumerates every collision."
     },
     {
       "id": "chart-cursor-default-auto",
@@ -366,6 +369,8 @@
       "text": "A held (pinned) chart panel opens above its mark, like a hovered one, in ds-chart, ds-column-chart, ds-bar-chart, ds-pie-chart and ds-funnel-chart.",
       "verify": "Pin a column with pinOnClick: the panel sits above the column and the Unpin control below the plot."
     },
+    "g[dsColumnSeries] takes an axis input: axis=\"secondary\" measures the columns against the second value axis, as axis: 'secondary' does in a line series' data. Unset is 'primary', so every existing chart draws as before.",
+    "ds-bar-chart takes a highlighted input naming one segment by id, or by its position where it has none; every other segment in every row fades to --ds-chart-dim-opacity. Unset changes nothing.",
     "A read-only schematic, ng g @ids-group-ltd/ids-design-system:check-overrides, reports every --ds-* custom property a stylesheet sets that the installed version does not read, and every ds-* selector naming a class the component does not render. --strict makes it fail.",
     "Neutral rows and small buttons that had a hover fill and no pressed state now darken one step on press, to --surface-muted: the sidenav group header and caret, the sidenav footer's rows, more button, search results and alerts, the date picker's period trigger, nav buttons, month and year cells and presets, the time picker's option cells and action buttons, the toast action, the description-list copy button, the multi-select select-all row and the tab close button. An interactive ds-tag, which already hovers at --surface-muted, takes the shared press dip instead."
   ],
