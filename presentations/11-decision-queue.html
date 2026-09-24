@@ -872,41 +872,53 @@
       <h2 class="q-title">Имя типа строки у <code>ds-row-chart</code></h2>
       <a class="q-src" href="../docs/todo.md">переименование ds-bar-chart</a>
     </div>
-    <p class="q-sub"><code>ds-bar-chart</code> становится <code>ds-row-chart</code>, и тип одной строки данных <code>BarChartRow</code> при простой замене префикса превращается в <code>RowChartRow</code> - слово «Row» дважды. Одна и та же задача потребителя, записанная с каждым вариантом:</p>
+    <p class="q-sub"><code>ds-bar-chart</code> становится <code>ds-row-chart</code>, и тип одной строки данных нужно назвать заново. Имена данных у остальных графиков: <code>ColumnChartPoint</code>, <code>FunnelChartStage</code>, <code>PieChartSlice</code>, <code>LineChartReading</code>, <code>WaterfallChartBar</code>, <code>HeatmapChartRow</code>. Одна и та же задача потребителя с каждым кандидатом, вывод остаётся <code>rowClicked</code>:</p>
     <div class="stage">
-      <div class="spec"><p class="cap">RowChartRow - замена префикса</p><p class="css">import { RowChartRow } from '.../row-chart';
-
-readonly rows: RowChartRow[] = [
+      <div class="spec"><p class="cap">RowChartRow - замена префикса</p><p class="css">readonly rows: RowChartRow[] = [
   { label: 'Europe', value: 42 },
 ];
-
-onRow(row: RowChartRow) { ... }
-// (rowClicked)="onRow($event)"</p><p class="says">как все остальные типы: префикс компонента + сущность</p></div>
-      <div class="spec"><p class="cap">RowChartItem</p><p class="css">import { RowChartItem } from '.../row-chart';
-
-readonly rows: RowChartItem[] = [
+onRow(row: RowChartRow) { ... }</p><p class="says">как HeatmapChartRow; слово Row дважды</p></div>
+      <div class="spec"><p class="cap">RowChartBar - строка = одна полоса</p><p class="css">readonly rows: RowChartBar[] = [
   { label: 'Europe', value: 42 },
 ];
-
-onRow(row: RowChartItem) { ... }
-// (rowClicked)="onRow($event)"</p><p class="says">без повтора, но вывод называется rowClicked, а тип - Item</p></div>
-      <div class="spec"><p class="cap">RowChartEntry</p><p class="css">import { RowChartEntry } from '.../row-chart';
-
-readonly rows: RowChartEntry[] = [
+onRow(row: RowChartBar) { ... }</p><p class="says">как WaterfallChartBar; но компонент уходит от слова bar</p></div>
+      <div class="spec"><p class="cap">RowChartReading - одно измеренное значение</p><p class="css">readonly rows: RowChartReading[] = [
   { label: 'Europe', value: 42 },
 ];
-
-onRow(row: RowChartEntry) { ... }
-// (rowClicked)="onRow($event)"</p><p class="says">без повтора; «Entry» уже есть у строки тултипа, ChartTooltipEntry</p></div>
+onRow(row: RowChartReading) { ... }</p><p class="says">как LineChartReading и ScatterChartReading</p></div>
+      <div class="spec"><p class="cap">RowChartCategory - строка = категория</p><p class="css">readonly rows: RowChartCategory[] = [
+  { label: 'Europe', value: 42 },
+];
+onRow(row: RowChartCategory) { ... }</p><p class="says">точно для категорий, длинно</p></div>
+      <div class="spec"><p class="cap">RowChartDatum - одна точка данных</p><p class="css">readonly rows: RowChartDatum[] = [
+  { label: 'Europe', value: 42 },
+];
+onRow(row: RowChartDatum) { ... }</p><p class="says">нейтрально, в библиотеке такого слова нет</p></div>
+      <div class="spec"><p class="cap">RowChartItem - элемент списка</p><p class="css">readonly rows: RowChartItem[] = [
+  { label: 'Europe', value: 42 },
+];
+onRow(row: RowChartItem) { ... }</p><p class="says">коротко; расходится с rowClicked</p></div>
+      <div class="spec"><p class="cap">RowChartEntry - запись</p><p class="css">readonly rows: RowChartEntry[] = [
+  { label: 'Europe', value: 42 },
+];
+onRow(row: RowChartEntry) { ... }</p><p class="says">пересекается с ChartTooltipEntry</p></div>
     </div>
 
     <div class="opts">
       <div class="opt"><h3>RowChartRow</h3><span class="badge is-pick">рекомендуем</span>
-        <p>Простая замена префикса, совпадает с <code>rowClicked</code> и <code>RowChartSegment</code>.</p></div>
+        <p>как HeatmapChartRow; слово Row дважды.</p></div>
+      <div class="opt"><h3>RowChartBar</h3>
+        <p>как WaterfallChartBar; но компонент уходит от слова bar.</p></div>
+      <div class="opt"><h3>RowChartReading</h3>
+        <p>как LineChartReading и ScatterChartReading.</p></div>
+      <div class="opt"><h3>RowChartCategory</h3>
+        <p>точно для категорий, длинно.</p></div>
+      <div class="opt"><h3>RowChartDatum</h3>
+        <p>нейтрально, в библиотеке такого слова нет.</p></div>
       <div class="opt"><h3>RowChartItem</h3>
-        <p>Читается чище, но расходится с именем вывода.</p></div>
+        <p>коротко; расходится с rowClicked.</p></div>
       <div class="opt"><h3>RowChartEntry</h3>
-        <p>Без повтора, но пересекается с ChartTooltipEntry.</p></div>
+        <p>пересекается с ChartTooltipEntry.</p></div>
     </div>
   </section>
 
