@@ -91,7 +91,20 @@
       "text": "ds-table takes --ds-table-utility-column-width and --ds-table-utility-column-padding-x for the trailing column that carries the column picker and the row-actions button. The width default moves from --space-10 to --space-6, the buttons' own size; because cells are border-box and the column already sat at button-plus-padding, nothing moves unless --ds-table-cell-padding-x is below 8px, where the column narrows to that sum. Purely additive otherwise (delete list: table-actions-col-deep-rule).",
       "verify": "A ds-table with dsTableColumns and no rowActions renders its trailing header cell at the same width as before the upgrade at default density (measured 56px at 16px cell padding); with --ds-table-utility-column-padding-x: 0 on the table the cell is 24px wide and the picker button fills it."
     },
-    "ds-table takes --ds-table-footer-padding-y (default --space-3) with --ds-table-footer-padding-top and -bottom falling back to it, for the pagination footer's block padding; its inline sides already followed --ds-table-cell-padding-*. Purely additive - nothing to change (delete list: table-pagination-footer-padding-deep-rule)."
+    "ds-table takes --ds-table-footer-padding-y (default --space-3) with --ds-table-footer-padding-top and -bottom falling back to it, for the pagination footer's block padding; its inline sides already followed --ds-table-cell-padding-*. Purely additive - nothing to change (delete list: table-pagination-footer-padding-deep-rule).",
+    {
+      "text": "Chart legend entries in ds-line-chart, ds-column-chart, ds-scatter-chart, ds-chart-legend and the ds-pie-chart legend take a hover state: an entry under the pointer or holding keyboard focus gets a --surface-secondary tint and --text-primary text, through the new --ds-chart-legend-hover-bg-color and --ds-chart-legend-hover-text-color. The entry's padding is paid back as a negative margin, so no legend row moves. Hovering or focusing a ds-pie-chart legend entry fades the other slices whether or not dimOthers is set, matching the other chart legends; dimOthers still governs a pointer over the ring.",
+      "verify": "Hover a legend entry of a ds-pie-chart without dimOthers: the entry is tinted and every other slice drops to --ds-chart-dim-opacity; the legend rows sit where they sat before the upgrade."
+    },
+    {
+      "text": "ds-pie-chart draws the pin badge of a held slice as an HTML element over the ring instead of inside the svg, so it is 22px (--ds-chart-pin-size) at any ring size and the pin glyph sits centred in its circle.",
+      "verify": "Click a slice of a ds-pie-chart with pinOnClick: the .pin-marker badge is centred on the slice and the glyph's centre matches the badge's centre."
+    },
+    {
+      "text": "ds-funnel-chart with shape=\"area\" draws a stage whose share is too small to clear the gap between bands as a band half a gap deep (about 3px at the default stage height) about its own middle, rather than collapsing it to a zero-height line; a stage of value 0 still draws nothing.",
+      "verify": "A ds-funnel-chart shape=\"area\" with stages 1000 and 10 renders the second stage as a visible band."
+    },
+    "ds-line-chart and ds-chart line series fade their point markers in with the line and the area, on the same delay and stagger; prefers-reduced-motion zeroes it with the rest of the chart motion."
   ],
   "deleteList": [
     {
