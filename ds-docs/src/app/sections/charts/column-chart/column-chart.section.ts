@@ -10,7 +10,6 @@ import {
   LineSeriesComponent,
 } from 'ds/chart';
 import type { ColumnSeriesPoint, LineSeriesData } from 'ds/chart';
-import { ChartTooltipDirective } from 'ds/chart-tooltip';
 import { ColumnChartComponent } from 'ds/column-chart';
 import type { ColumnChartPoint, ColumnChartSeries } from 'ds/column-chart';
 import type { ChartThreshold, ChartValueFormat } from 'ds/core';
@@ -210,7 +209,6 @@ const CUSTOM_COLOR_POINTS: readonly ColumnChartPoint[] = [
   imports: [
     DocsLazyDirective,
     ChartComponent,
-    ChartTooltipDirective,
     ColumnChartComponent,
     ColumnSeriesComponent,
     DocsChartDataEditorComponent,

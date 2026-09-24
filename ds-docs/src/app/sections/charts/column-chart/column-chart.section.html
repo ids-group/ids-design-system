@@ -273,23 +273,17 @@
     [secondaryAxisColor]="lineColor"
     [summary]="comboSummary">
     <svg:g
-      #comboColumnSeries="dsColumnSeries"
       dsColumnSeries
       interactive
       [data]="comboColumns"
       [showValues]="false"
-      [valueFormat]="dollars"
-      [dsChartTooltip]="comboColumnSeries.tooltipContext()"
-      [dsChartTooltipOrigin]="comboColumnSeries.activeMark.origin()" />
+      [valueFormat]="dollars" />
 
     <svg:g
-      #comboLineSeries="dsLineSeries"
       dsLineSeries
       interactive
       [data]="comboCumulative"
-      [valueFormat]="dollars"
-      [dsChartTooltip]="comboLineSeries.tooltipContext()"
-      [dsChartTooltipOrigin]="comboLineSeries.activeMark.origin()" />
+      [valueFormat]="dollars" />
   </ds-chart>
 
   <h3 class="block-title t-h4">
