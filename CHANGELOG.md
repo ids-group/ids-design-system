@@ -1,5 +1,27 @@
 ## Unreleased
 
+### Added
+
+- **`DS_CONFIG.chart.rendering` builds charts as they near the viewport, for a page that asks.**
+  Off by default: every chart draws as soon as it is created, which is right for a screen with a
+  few of them. A dashboard or a report with dozens sets `deferUntilVisible: true`, and each chart
+  then holds its place with a still placeholder of its own shape until it comes within
+  `visibleMargin` (default `'10% 0px'`) of the viewport. `buildAheadWhileIdle` (default `true`)
+  builds the charts within `buildAheadMargin` (default `'100% 0px'`) while the page is idle,
+  `frameBudgetMs` (default `8`) caps how long one task spends building, and `skipWhileOffscreen`
+  (default `true`) lets the browser skip a built chart's rendering off screen. Until a deferred
+  chart is built a screen reader meets its caption only. `BarChartComponent`,
+  `ColumnChartComponent`, `LineChartComponent`, `PieChartComponent`, `FunnelChartComponent`,
+  `HeatmapChartComponent`, `ScatterChartComponent`, `WaterfallChartComponent` and `ChartComponent`
+  each gained a protected `renderReady`, so a subclass declaring that name needs `override`.
+
+- **`ds-skeleton` takes `shimmer` and `--ds-skeleton-wave-steps`.** `[shimmer]="false"` draws a
+  still block of the same shape, for a space held for something that is not loading yet; the
+  charts use it for the placeholder above. `--ds-skeleton-wave-steps` sets how many updates one
+  pass takes, default `68` - twenty a second over the default duration; more is smoother and costs
+  a main-thread update each. `SkeletonComponent` gained the `shimmer` input, so a subclass
+  declaring that name needs `override`.
+
 ### Fixed
 
 - **`ds-modal` and `ds-modal-card` measure their actions row again when its content changes.** The
@@ -7,6 +29,10 @@
   modal opened ('Saving…', a count) left the row on one line and clipped the first button at the
   card's start edge. A changed label or a changed set of actions now stacks or unstacks the row the
   same way the first render does.
+
+- **Column and line series draw before the width is measured.** They waited for the first
+  measurement, so they drew nothing wherever the page is never laid out - a frozen snapshot, a
+  headless render in virtual time - and the axes showed a frame before the marks.
 
 ## 0.14.0 — 2026-09-24
 

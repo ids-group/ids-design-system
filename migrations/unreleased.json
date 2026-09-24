@@ -113,6 +113,7 @@
         "extends TableColumnsTriggerComponent",
         "extends TableExportButtonComponent",
         "extends TimeColumnsComponent",
+        "extends SkeletonComponent",
         "extends "
       ],
       "detect": [
@@ -235,10 +236,12 @@
         "extends TableExportButtonComponent",
         "TableExportButtonComponent",
         "extends TimeColumnsComponent",
-        "TimeColumnsComponent"
+        "TimeColumnsComponent",
+        "extends SkeletonComponent",
+        "SkeletonComponent"
       ],
       "verify": "The app builds with no TS2415, TS2416 or TS4114 naming a class listed in detect, and no member of a subclass is named like a removed member listed in the note.",
-      "note": "Every listed class gained intl except AccordionComponent, AccordionItemComponent, AuthLayoutComponent, LineSeriesComponent and ChartTooltipDirective (internal); each nullable text input gained a matching ...Resolved readback. Also gained: AccordionComponent chevron; AccordionItemComponent chevronDown, chevronName; AlertComponent and BannerComponent liveRole; BarChartComponent highlighted, isSegmentDimmed; ChartComponent composed, cursorResolved, tooltipPinned; ColumnSeriesComponent axis, barElements, hatchInUse, locale; DatePickerComponent appLocale; DropzoneComponent sizeFormat; PieChartComponent legendHighlight, onLegendLeave, pinnedEntry. Lost: ChartComponent tooltipPreferBelow; ColumnSeriesComponent onMarkBlur; LineSeriesComponent onMarkerBlur; ChartTooltipDirective (internal) dsChartTooltipPreferBelow. AuthLayoutComponent's landmark default changes the type an override must match. Internal classes in detect are reached through their entry points."
+      "note": "Every listed class gained intl except AccordionComponent, AccordionItemComponent, AuthLayoutComponent, LineSeriesComponent and ChartTooltipDirective (internal); each nullable text input gained a matching ...Resolved readback. Also gained: AccordionComponent chevron; AccordionItemComponent chevronDown, chevronName; AlertComponent and BannerComponent liveRole; BarChartComponent highlighted, isSegmentDimmed; ChartComponent composed, cursorResolved, tooltipPinned; ColumnSeriesComponent axis, barElements, hatchInUse, locale; DatePickerComponent appLocale; DropzoneComponent sizeFormat; PieChartComponent legendHighlight, onLegendLeave, pinnedEntry. Lost: ChartComponent tooltipPreferBelow; ColumnSeriesComponent onMarkBlur; LineSeriesComponent onMarkerBlur; ChartTooltipDirective (internal) dsChartTooltipPreferBelow. AuthLayoutComponent's landmark default changes the type an override must match. Internal classes in detect are reached through their entry points. The nine chart components gained renderReady, and SkeletonComponent the shimmer input."
     },
     {
       "id": "chart-cursor-default-auto",
