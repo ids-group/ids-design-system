@@ -11,6 +11,14 @@
   --_accordion-divider-color:         var(--ds-accordion-divider-color,         var(--border-divider));
   --_accordion-chevron-color:         var(--ds-accordion-chevron-color,         var(--icon-default));
   --_accordion-body-text-color:       var(--ds-accordion-body-text-color,       var(--text-secondary));
+  --_accordion-header-hover-text-color: var(--ds-accordion-header-hover-text-color, var(--_accordion-header-text-color));
+  --_accordion-header-padding: var(--ds-accordion-header-padding, var(--space-3) var(--space-4));
+  --_accordion-header-gap: var(--ds-accordion-header-gap, var(--space-2));
+  --_accordion-header-font-family: var(--ds-accordion-header-font-family, var(--font-sans));
+  --_accordion-header-font-size: var(--ds-accordion-header-font-size, var(--font-size-s));
+  --_accordion-header-font-weight: var(--ds-accordion-header-font-weight, var(--font-weight-medium));
+  --_accordion-header-line-height: var(--ds-accordion-header-line-height, var(--line-height-flat));
+  --_accordion-body-padding: var(--ds-accordion-body-padding, var(--space-2) var(--space-4) var(--space-4));
 
   display: block;
 
@@ -34,17 +42,17 @@
   .head {
     display: flex;
     align-items: center;
-    gap: var(--space-2);
+    gap: var(--_accordion-header-gap);
     width: 100%;
-    padding: var(--space-3) var(--space-4);
+    padding: var(--_accordion-header-padding);
     border: 0;
     background: var(--_accordion-header-bg-color);
     text-align: left;
     cursor: pointer;
-    font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
+    font: var(--_accordion-header-font-weight) var(--_accordion-header-font-size) / var(--_accordion-header-line-height) var(--_accordion-header-font-family);
     color: var(--_accordion-header-text-color);
 
-    &:hover:not(:disabled) { background: var(--_accordion-header-hover-bg-color); }
+    &:hover:not(:disabled) { background: var(--_accordion-header-hover-bg-color); color: var(--_accordion-header-hover-text-color); }
 
     &:active:not(:disabled) { background: var(--surface-muted); }
 
@@ -70,6 +78,10 @@
     }
   }
 
+  &.chevron-down .head[aria-expanded='true'] .chev {
+    transform: rotate(180deg);
+  }
+
   .body {
     // grid-template-rows 0fr↔1fr animates smoothly (unlike height:0↔auto, which can't interpolate).
     display: grid;
@@ -90,7 +102,7 @@
   }
 
   .body-content {
-    padding: var(--space-2) var(--space-4) var(--space-4);
+    padding: var(--_accordion-body-padding);
     color: var(--_accordion-body-text-color);
     font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
   }
