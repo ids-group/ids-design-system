@@ -136,7 +136,7 @@
         "ModalCardComponent"
       ],
       "verify": "Your build has no TS4114 or TS2416 against any of the listed classes, and no member of your subclass is named like one of the removed members listed in the note.",
-      "note": "Gained: ChartComponent 20 members, most of them the tooltip the container now owns, plus measured; ColumnSeriesComponent 14, LineSeriesComponent 9, ScatterChartComponent 4, ChartDataTableComponent 3, BarChartComponent and FunnelChartComponent two each, PieChartComponent roving, ColumnChartComponent highlightedSeries. Removed: rovingIndex and tabStopIndex from the bar, pie and funnel charts and the column series, onMarkEnter, onMarkNavigation and onPointKey from the column series, onMarkerEnter and onMarkerNavigation from the line series, onPlotPointer and clearCursor from ChartComponent, markIndex from ScatterChartComponent. ChartTooltipDirective gained dsChartTooltipPinned - internal, but reachable through the components/chart-tooltip entry point. PaginationComponent gained layoutResolved and disabled; TableComponent gained paginationSize and paginationLayout. ModalCardComponent gained stackOverflowingActions."
+      "note": "Gained: ChartComponent 20 members, most of them the tooltip the container now owns, plus measured; ColumnSeriesComponent 14, LineSeriesComponent 9, ScatterChartComponent 4, ChartDataTableComponent 3, BarChartComponent and FunnelChartComponent two each, PieChartComponent roving, ColumnChartComponent highlightedSeries. Removed: rovingIndex and tabStopIndex from the bar, pie and funnel charts and the column series, onMarkEnter, onMarkNavigation and onPointKey from the column series, onMarkerEnter and onMarkerNavigation from the line series, onPlotPointer and clearCursor from ChartComponent, markIndex from ScatterChartComponent. ChartTooltipDirective gained dsChartTooltipPinned - internal, but reachable through the components/chart-tooltip entry point. PaginationComponent gained layoutResolved and loading; TableComponent gained paginationSize and paginationLayout. ModalCardComponent gained stackOverflowingActions."
     },
     {
       "id": "table-expand-panel-content-wrapper",
@@ -199,6 +199,27 @@
       ],
       "verify": "A `ds-line-chart` under `--ds-line-chart-placeholder-height: 120px` shows a 120px skeleton while loading and a 120px empty box with no series, while the plot it draws is the height `--ds-line-chart-plot-height` gives it.",
       "note": "Until 0.13.4 `--ds-line-chart-plot-height` reached the skeleton and the message box alone, and 0.13.4 made it size the plot too, so a value pinned for the placeholder states resized every plot. The placeholder states have their own token now; set, it drives all of them, and the plot reads only the plot token."
+    },
+    {
+      "id": "modal-actions-stacked-direction-hook",
+      "kind": "code-add",
+      "old": null,
+      "new": "--ds-modal-actions-stacked-direction",
+      "surface": "style",
+      "action": "None, unless the confirming action should visually top a stacked actions row: set `--ds-modal-actions-stacked-direction: column-reverse` on `ds-modal` or `ds-modal-card`.",
+      "appliesWhen": "Only a stylesheet that wants the confirming action above the others once `.actions` carries `.stacked`. Unset, the stacked column follows DOM order (cancel-then-confirm), which is also Tab order; a row that still fits stays a right-aligned single line and the token has no effect there.",
+      "pitfall": "The token only has an effect once the row has actually stacked, so testing it against a row that still fits shows no change and reads as broken.",
+      "restore": null,
+      "searchHints": [
+        "--ds-modal-actions-stacked-direction",
+        "ds-modal-card",
+        ".actions.stacked"
+      ],
+      "detect": [
+        "--ds-modal-actions-stacked-direction"
+      ],
+      "verify": "A stacked `ds-modal-card` actions row with no override puts the DOM's last child (the confirming action) at the bottom; the same row under `--ds-modal-actions-stacked-direction: column-reverse` puts it at the top. Tab order matches the DOM in both.",
+      "note": "The stacked column reads its `flex-direction` from this resolver, defaulting to `column`, so DOM order, visual order and Tab order agree without a consumer doing anything. `column-reverse` is the escape hatch for a design that still wants the confirming action on top."
     },
     {
       "id": "input-label-fw-is-input-label-font-weight",
@@ -337,8 +358,8 @@
     "The chart data table keys its nested rows uniquely; a bar and its first segment both fell back to a positional index in their own scope, which Angular reported as duplicated track keys (delete list: mark-level-chart-tooltip-bindings covers the separate template cleanup).",
     "--ds-toast-queue-bg-color and --ds-toast-queue-text-color paint the toast region's +N strip.",
     {
-      "text": "ds-modal and ds-modal-card stack their [actions] into a full-width column, confirming action on top, once the buttons outgrow the card; a row that fits stays right-aligned. The row used to overflow past the card's start edge and clip the first button, so a consumer rule that wraps ds-modal-card .actions is redundant (delete list: modal-actions-flex-wrap).",
-      "verify": "Open a sm modal whose three buttons carry long labels: each button spans the card's full width and none is clipped, the confirming button on top; a modal with two short buttons keeps them in one right-aligned row."
+      "text": "ds-modal and ds-modal-card stack their [actions] into a full-width column once the buttons outgrow the card, confirming action at the bottom by default (DOM order, matching Tab order) - set --ds-modal-actions-stacked-direction: column-reverse to put it on top instead; a row that fits stays right-aligned. The row used to overflow past the card's start edge and clip the first button, so a consumer rule that wraps ds-modal-card .actions is redundant (delete list: modal-actions-flex-wrap).",
+      "verify": "Open a sm modal whose three buttons carry long labels: each button spans the card's full width and none is clipped, the confirming button at the bottom of the stack by default and at the top under --ds-modal-actions-stacked-direction: column-reverse; a modal with two short buttons keeps them in one right-aligned row."
     },
     {
       "text": "ds-table takes paginationSize and paginationLayout and forwards them to its footer pager as size and layout, so a larger spread footer under a table is two attributes; a consumer rule that doubles .pagination.pagination or .pagination-button.pagination-button under ds-table to force the pager's width or button height is redundant (delete list: table-pager-size-layout-override).",

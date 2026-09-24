@@ -1,14 +1,14 @@
 <nav
   aria-label="Pagination"
+  [attr.aria-busy]="loading() ? 'true' : null"
   [class]="navClass()">
   @if (showLabel()) {
     <span class="label">
-      @if (disabled()) {
+      @if (loading()) {
         <ds-skeleton
           width="120px"
           height="1em"
-          [inline]="true">
-        </ds-skeleton>
+          [inline]="true" />
       } @else {
         {{ rangeLabel() }}
       }
@@ -19,7 +19,7 @@
     class="pagination-button"
     type="button"
     aria-label="Previous page"
-    [disabled]="disabled() || currentPage() === 1"
+    [disabled]="loading() || currentPage() === 1"
     (click)="goTo(currentPage() - 1)">
     <ds-icon
       name="chevronLeft"
@@ -39,7 +39,7 @@
         class="pagination-button"
         type="button"
         [class.active]="item === currentPage()"
-        [disabled]="disabled()"
+        [disabled]="loading()"
         [attr.aria-label]="'Page ' + item"
         [attr.aria-current]="item === currentPage() ? 'page' : null"
         (click)="goTo(item)">
@@ -52,7 +52,7 @@
     class="pagination-button"
     type="button"
     aria-label="Next page"
-    [disabled]="disabled() || currentPage() === totalPages()"
+    [disabled]="loading() || currentPage() === totalPages()"
     (click)="goTo(currentPage() + 1)">
     <ds-icon
       name="chevronRight"
@@ -69,7 +69,7 @@
       ariaLabel="Rows per page"
       size="sm"
       [reserveMessage]="false"
-      [disabled]="disabled()"
+      [disabled]="loading()"
       [options]="sizeOptions()"
       [value]="pageSizeStr()"
       (valueChange)="onSizeChange($event)">

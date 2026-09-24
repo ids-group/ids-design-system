@@ -4536,7 +4536,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-input-label-font-weight",
-        "value": "var(--ds-field-label-font-weight,      var(--font-weight-bold))",
+        "value": "var(--ds-field-label-font-weight, var(--font-weight-bold))",
         "notes": "Label weight."
       },
       {
@@ -5152,6 +5152,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-modal-actions-padding-bottom",
         "value": "var(--_modal-actions-padding-y)",
         "notes": "Padding on the modal's actions, bottom edge only. Falls back to --ds-modal-actions-padding-y, which sets both."
+      },
+      {
+        "name": "--ds-modal-actions-stacked-direction",
+        "value": "column",
+        "notes": "flex-direction of the actions row once it stacks (default column, confirming action at the bottom, DOM order = Tab order). Set to column-reverse to put the confirming action on top."
       },
       {
         "name": "--ds-modal-enter-scale",

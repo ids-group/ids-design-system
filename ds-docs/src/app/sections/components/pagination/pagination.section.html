@@ -31,6 +31,12 @@
   <p class="block-desc t-s">
     Page-button states side-by-side. Live <code>ds-pagination</code> — pin
     classes target non-active buttons via ::ng-deep (see styles below).
+    <code>
+      loading
+    </code> disables every control, masks the range label and sets
+    <code>
+      aria-busy
+    </code> on the nav.
   </p>
 
   <div class="states states--cols-1">
@@ -89,6 +95,20 @@
 
       <div class="state-cell-label">
         Prev · disabled (page 1)
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage">
+        <ds-pagination
+          [total]="40"
+          [pageSize]="10"
+          [currentPage]="2"
+          [loading]="true" />
+      </div>
+
+      <div class="state-cell-label">
+        Loading · controls disabled, label masked
       </div>
     </div>
   </div>
@@ -191,8 +211,13 @@
     <code class="t-mono-inline">
       size
     </code> takes the control scale - unset it
-    falls back to <code class="t-mono-inline"> DS_CONFIG.pagination.size </code>,
-    then <code class="t-mono-inline"> DS_CONFIG.control.size </code>, then
+    falls back to
+    <code class="t-mono-inline">
+      DS_CONFIG.pagination.size
+    </code>, then
+    <code class="t-mono-inline">
+      DS_CONFIG.control.size
+    </code>, then
     <code class="t-mono-inline">
       'sm'
     </code>. Unset,

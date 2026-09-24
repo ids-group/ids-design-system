@@ -507,14 +507,18 @@
     The footer keeps its height while
     <code class="t-mono-inline">
       [loading]="'skeleton'"
-    </code> is on. Its buttons and
-    the page-size dropdown disable, and the range label gives way to a
+    </code> is on. Its
+    buttons and the page-size dropdown disable, and the pager reports
+    <code class="t-mono-inline">
+      aria-busy
+    </code>, and the range label gives way
+    to a
     <code class="t-mono-inline">
       &lt;ds-skeleton&gt;
     </code>
-    placeholder, so the pager never shows a count for rows that are not the
-    ones on screen, and can no longer fire a page change while there is
-    nothing behind it.
+    placeholder, so the pager never shows a count for rows that are not the ones
+    on screen, and can no longer fire a page change while there is nothing
+    behind it.
   </p>
 
   <ds-button
@@ -1026,11 +1030,8 @@
     </code> gives the buttons the md control
     height, and <code class="t-mono-inline">spread</code> puts the range label
     under the table's start edge and the controls under its end edge. Unset,
-    both fall back to
-    <code class="t-mono-inline">
-      DS_CONFIG.pagination
-    </code>, which is where an app whose every pager sits under a table says it
-    once.
+    both fall back to <code class="t-mono-inline"> DS_CONFIG.pagination </code>,
+    which is where an app whose every pager sits under a table says it once.
   </p>
 
   <ds-table

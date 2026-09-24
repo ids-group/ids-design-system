@@ -577,6 +577,7 @@
   "--ds-modal-actions-padding-bottom": "Padding on the modal's actions, bottom edge only. Falls back to --ds-modal-actions-padding-y, which sets both.",
   "--ds-modal-actions-padding-top": "Padding on the modal's actions, top edge only. Falls back to --ds-modal-actions-padding-y, which sets both.",
   "--ds-modal-actions-padding-y": "Vertical padding of the footer actions row. Worth tightening alongside --ds-modal-divider: transparent, which leaves spacing sized for dividers that are gone.",
+  "--ds-modal-actions-stacked-direction": "flex-direction of the actions row once it stacks (default column, confirming action at the bottom, DOM order = Tab order). Set to column-reverse to put the confirming action on top.",
   "--ds-modal-backdrop": "Backdrop scrim.",
   "--ds-modal-bg-color": "Dialog fill.",
   "--ds-modal-body-padding-bottom": "Padding on the modal's body, bottom edge only. Falls back to --ds-modal-body-padding-y, which sets both.",
