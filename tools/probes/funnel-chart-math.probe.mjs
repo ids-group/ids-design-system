@@ -333,17 +333,37 @@ check(
   '2.5,5 97.5,5 77.5,45 22.5,45',
 );
 // A band shallower than the gap it must leave would otherwise cross its own
-// edges and draw a bow tie.
+// edges and draw a bow tie, or collapse to a line and draw nothing.
 check(
-  'a band shallower than its gap collapses instead of inverting',
+  'a band shallower than its gap keeps half a gap of depth',
   stagePolygonPoints(
     { topWidth: 1, bottomWidth: 0.5, top: 0.5, bottom: 0.52 },
     100,
     100,
     10,
   ),
-  // One line at the band's own middle width, not four corners of a bow tie.
-  '12.5,51 87.5,51 87.5,51 12.5,51',
+  // Five units about the band's middle, at the band's own boundary widths.
+  '0,48.5 100,48.5 75,53.5 25,53.5',
+);
+check(
+  'a thin band at the foot stays inside the viewBox',
+  stagePolygonPoints(
+    { topWidth: 0.4, bottomWidth: 0.38, top: 0.99, bottom: 1 },
+    100,
+    100,
+    10,
+  ),
+  '30,95 70,95 69,100 31,100',
+);
+check(
+  'a zero-depth band stays a line',
+  stagePolygonPoints(
+    { topWidth: 0.4, bottomWidth: 0.38, top: 0.6, bottom: 0.6 },
+    100,
+    100,
+    10,
+  ),
+  '30.5,60 69.5,60 69.5,60 30.5,60',
 );
 for (const bad of [NaN, Infinity, -Infinity]) {
   check(
@@ -452,10 +472,15 @@ check(
   [round(50 * funnelGeometry(FUNNEL, 'taper')[1].topWidth, 4), round(50 * funnelGeometry(FUNNEL, 'taper')[1].bottomWidth, 4)],
 );
 check(
-  'a band narrower than its own gap collapses instead of crossing its edges',
-  cornersOf(
-    stagePolygonPoints({ top: 0.5, bottom: 0.52, topWidth: 0.8, bottomWidth: 0.7 }, 100, 100, 40),
-  ).every(([, y], _, all) => y === all[0][1]),
+  'a band narrower than its own gap keeps its top edge above its bottom edge',
+  ((corners) =>
+    corners[0][1] === corners[1][1] &&
+    corners[2][1] === corners[3][1] &&
+    corners[0][1] < corners[2][1])(
+    cornersOf(
+      stagePolygonPoints({ top: 0.5, bottom: 0.52, topWidth: 0.8, bottomWidth: 0.7 }, 100, 100, 40),
+    ),
+  ),
   true,
 );
 
