@@ -397,12 +397,15 @@ export type {
 // Core
 export {
   DS_CONFIG,
+  DS_INTL,
+  DS_INTL_DEFAULTS,
   ICONS,
   flattenDsOptions,
   inheritDsConfig,
   isDsOptionGroup,
   isTextClipped,
   provideDsConfig,
+  provideDsIntl,
 } from '@ids-group-ltd/ids-design-system/core';
 export type {
   AnnounceState,
@@ -419,6 +422,10 @@ export type {
   ChartValueFormat,
   DsConfig,
   DsControlWidth,
+  DsIntl,
+  DsIntlOverrides,
+  DsIntlSortDirection,
+  DsIntlStepState,
   DsOption,
   DsOptionGroup,
   DsOptionItem,
