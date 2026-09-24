@@ -24,6 +24,7 @@
   --_page-header-crumb-text-color-hover: var(--ds-page-header-crumb-text-color-hover, var(--accent));
   --_page-header-divider:      var(--ds-page-header-divider,      var(--border-divider));
   --_page-header-title-font-size:     var(--ds-page-header-title-font-size,     var(--font-size-h3));
+  --_page-header-subtitle-font-size: var(--ds-page-header-subtitle-font-size, var(--font-size-s));
   --_page-header-title-gap:    var(--ds-page-header-title-gap,    var(--space-1-5));
 
   display: block;
@@ -127,7 +128,7 @@
   .crumb-sep { color: var(--icon-muted); display: inline-flex; align-items: center; }
 
   .subtitle {
-    font: var(--font-weight-regular) var(--font-size-s) / var(--line-height-base) var(--font-sans);
+    font: var(--font-weight-regular) var(--_page-header-subtitle-font-size) / var(--line-height-base) var(--font-sans);
     color: var(--_page-header-subtitle-text-color);
     margin: 0;
   }
