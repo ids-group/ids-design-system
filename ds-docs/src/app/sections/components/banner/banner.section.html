@@ -279,4 +279,28 @@
       </div>
     </div>
   </div>
+
+  <h3 class="block-title t-h4">
+    Announcing
+  </h3>
+
+  <p class="block-desc t-s">
+    <code>
+      announce
+    </code> is off unless bound on the element or set app-wide with
+    <code>
+      provideDsConfig(&#123; banner: &#123; announce: true &#125; &#125;)
+    </code>: an alert region fires on
+    insertion, so page furniture would interrupt the reader on every route. Dev mode warns in two
+    cases. An <code>error</code>, <code>warning</code> or <code>severe</code> banner left unbound
+    while the key is unset is one a screen reader will not hear; that warning ends the moment the
+    app sets the key, <code>true</code> or <code>false</code>. An <code>info</code>,
+    <code>
+      success
+    </code> or <code>neutral</code> banner that announces only because the key is
+    <code>
+      true
+    </code> is nearly always furniture written after the key was adopted; that warning
+    ends at an <code>[announce]</code> binding. Neither reaches a production build.
+  </p>
 </docs-section>

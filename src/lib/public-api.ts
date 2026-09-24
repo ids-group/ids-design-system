@@ -404,6 +404,7 @@ export {
   provideDsConfig,
 } from '@ids-group-ltd/ids-design-system/core';
 export type {
+  AnnounceState,
   ChartAxis,
   ChartAxisMode,
   ChartCurve,

@@ -30,8 +30,9 @@
 
   display: contents;
 
-  // Reduced motion zeroes the DURATION, never the animation — the drawer's
-  // animationend teardown must still fire (see styles/_surface-motion.scss).
+  // Reduced motion zeroes the DURATION, never the animation. At 0s `animationend` is not
+  // reliably delivered, so the component's 300 ms fallback timer is what tears down, and
+  // `.closing` is click-through for exactly that window.
   @media (prefers-reduced-motion: reduce) {
     --_drawer-enter-duration: 0ms;
     --_drawer-leave-duration: 0ms;
@@ -50,6 +51,10 @@
      focus-trap's initial focus() would scroll-into-view and yank the host app's content.
      Scrim and panel are `absolute` (not fixed) so this box clips them. */
   overflow: clip;
+
+  &.closing {
+    pointer-events: none;
+  }
 }
 
 .drawer-scrim {

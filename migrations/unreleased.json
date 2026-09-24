@@ -1,0 +1,25 @@
+{
+  "version": "unreleased",
+  "items": [],
+  "deleteList": [
+    {
+      "id": "closing-scrim-pointer-events",
+      "surface": "style",
+      "find": [
+        ".modal-backdrop.closing",
+        ".drawer-scrim.closing",
+        ".sheet-overlay.closing",
+        "pointer-events: none"
+      ],
+      "why": "The library's closing roots are click-through for the whole leave, so a rule forcing pointer-events: none on them restates it. A rule that also shortens animation-duration under reduced motion still does something - it ends the leave before the fallback timer would - and may stay.",
+      "replaceWith": "nothing"
+    }
+  ],
+  "informational": [
+    "ds-banner and ds-alert warn in dev mode when announce was never decided: an error, warning or severe banner (error or warning alert) left unbound while DS_CONFIG.banner.announce (alert.announce) is unset, and an info, success or neutral one that announces only because that key is true. The first warning ends when the key is set either way, the second at an [announce] binding; neither reaches a production build.",
+    {
+      "text": "A closing modal backdrop, drawer and bottom sheet are click-through for the whole leave. Under reduced motion the leave is 0 ms long and its animationend is not reliably delivered, so the fallback timer tore the scrim down up to 300 ms later and the invisible scrim took every click aimed at the page in that window. A rule of yours forcing pointer-events: none on .modal-backdrop.closing, .drawer-scrim.closing or .sheet-overlay.closing is redundant (delete list: closing-scrim-pointer-events).",
+      "verify": "With prefers-reduced-motion: reduce emulated, close a modal and click a button under it within 300 ms: the button's handler runs, and document.elementFromPoint over it never returns the .modal-backdrop."
+    }
+  ]
+}
