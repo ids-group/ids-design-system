@@ -448,7 +448,7 @@
     {
       "id": "cell-template-context-typed-unknown",
       "kind": "behavior",
-      "old": "dsCellTemplate",
+      "old": "CellTemplateDirective",
       "new": null,
       "surface": "template",
       "action": "On every `<ng-template dsCellTemplate=\"...\">` whose context variable is read as a row, add `[dsCellTemplateOf]` bound to the same expression as that table's `[data]`, so the context types as the row type. A helper that only casts the row (`(row: unknown)` returning `row as Row`) becomes redundant with it (delete list: table-row-caster-helpers).",
