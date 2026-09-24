@@ -503,14 +503,19 @@ export class ChartComponent implements ChartScales {
 
   protected readonly tooltipOrigin = computed(() => {
     const own = this.activeTooltip()?.origin() ?? null;
-    if (this.cursor() !== 'category') {
+    // A point rather than an element is a panel that follows the pointer, and stays with it.
+    if (
+      this.cursor() !== 'category' ||
+      (own !== null && !(own instanceof Element))
+    ) {
       return own;
     }
     // A category panel belongs over the TALLEST reading at that category, not over whichever mark
     // happened to open it: a line that dips under a column would otherwise put the panel low and
-    // let the column stand over it.
+    // let the column stand over it. Every mark's reading counts whether or not the pointer is on
+    // it, or the panel jumps between the two as the pointer crosses the column's edge.
     const boxes = [...this.tooltipSources().values()]
-      .map((source) => source.origin())
+      .map((source) => (source.axisOrigin ?? source.origin)())
       .filter((origin): origin is Element => origin instanceof Element)
       .map((element) => ({ element, top: element.getBoundingClientRect().top }))
       .filter(({ element }) => {

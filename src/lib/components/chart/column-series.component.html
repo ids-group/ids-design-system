@@ -64,6 +64,7 @@
         [attr.height]="hit.height" />
 
       <svg:g
+        #barEl
         class="bar"
         [style.transform-origin]="mark.origin">
         <!-- Under the capped rect, not beside it: `rx` rounds all four corners, and the cap

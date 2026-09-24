@@ -11,6 +11,7 @@ import {
   input,
   numberAttribute,
   output,
+  viewChildren,
 } from '@angular/core';
 import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
 import {
@@ -209,6 +210,13 @@ export class ColumnSeriesComponent implements OnDestroy {
       context: this.tooltipContext,
       origin: computed(() => this.activeMark.origin()),
       pinned: this.activeMark.pinned,
+      axisOrigin: computed(() => {
+        const categoryIndex = this.scales.activeIndex();
+
+        return categoryIndex < 0
+          ? null
+          : (this.barElements()[categoryIndex]?.nativeElement ?? null);
+      }),
       axisEntries: this.axisEntries,
     });
     listenForMarkFocus(
@@ -224,6 +232,8 @@ export class ColumnSeriesComponent implements OnDestroy {
   }
 
   readonly activeMark = chartActiveMark(() => this.tooltipLingerMs());
+
+  private readonly barElements = viewChildren<ElementRef<Element>>('barEl');
 
   /** One SERIES' slot inside a category's band: the whole band while a chart draws one series,
    *  a share of it per series when several are grouped. The box that catches the pointer is sized
