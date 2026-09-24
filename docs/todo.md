@@ -14,7 +14,7 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**115 open — 0 P1, 13 P2, 102 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**117 open — 0 P1, 13 P2, 104 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P2 — 13
 
@@ -40,7 +40,7 @@ item and nothing else.
 - **Localization — every user-visible string is a hardcoded literal (recorded 2026-08-27, from the ITB Workspace picker report)**
   - Every user-visible string in the library is a hardcoded English literal — VALIDATED 2026-08-27 against 0.11.0; Stas: defer the whole thing, no code
 
-### P3 — 102
+### P3 — 104
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - The token reference says the portaled panel reads `--ds-time-picker-focus-shadow`
@@ -56,6 +56,8 @@ item and nothing else.
   - The shimmer's viewport anchoring breaks inside a transformed ancestor
 - **The chart family read as an architecture (audited 2026-09-22)**
   - `ds-line-chart`'s `tooltipAnchor` doc does not say it is inert unless `tooltip="axis"`
+  - The category panel stays open after keyboard focus leaves a line marker (recorded 2026-09-24)
+  - A focused marker's panel names every series at its category, where the docs say its own (recorded 2026-09-24)
 - **Asked by Stas**
   - `ds-waterfall-chart` is `ds-cascade-chart` (Stas, 2026-09-23)
 - **Hooks and APIs consumers reach past the surface for (swept 2026-09-23)**
@@ -400,6 +402,17 @@ Constraints and decisions that read as removable and are not.
   (`line-chart.component.ts:417-420`, "Where the tooltip is pinned") does not - reachable when a
   consumer overrides the `axis` default. A value that does nothing depending on a sibling is the shape
   a consumer reports as a bug.
+
+- [ ] **[P3] The category panel stays open after keyboard focus leaves a line marker (recorded 2026-09-24).**
+  In a `cursor="category"` `ds-chart`, tabbing off a focused marker leaves the axis panel and band on
+  screen: blur never resets the container's `activeIndex` (`chart.component.ts`), and the handler that
+  `listenForMarkFocus` replaced did the same. A pointer leaving the plot clears it; focus leaving does
+  not.
+
+- [ ] **[P3] A focused marker's panel names every series at its category, where the docs say its own (recorded 2026-09-24).**
+  The category merge in `ds-chart.tooltipContext` adds the other marks' readings to a keyboard-focused
+  marker's panel, so focus and a pointer on that one mark read differently from what the chart docs
+  promise. Decide which is right, then align the other.
 
 ## Claude Design upload — what the freeze left open (recorded 2026-09-04)
 
