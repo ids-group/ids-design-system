@@ -4,10 +4,11 @@ import {
   ViewEncapsulation,
   booleanAttribute,
   computed,
+  inject,
   input,
 } from '@angular/core';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
-import type { IconName } from '@ids-group-ltd/ids-design-system/core';
+import { DS_INTL, type IconName } from '@ids-group-ltd/ids-design-system/core';
 import { nextControlId } from '@ids-group-ltd/ids-design-system/components';
 import type {
   DsPasswordRule,
@@ -20,16 +21,6 @@ interface RuleRow {
   readonly icon: IconName;
   readonly announced: string;
 }
-
-// Screen-reader wording per state. The glyph is a decorative SVG with no
-// accessible name, so without these a screen reader hears the rule text and
-// nothing about whether it passed — the state would be conveyed by colour and
-// shape only.
-const ANNOUNCED: Record<DsPasswordRuleState, string> = {
-  pending: 'not yet met',
-  met: 'met',
-  failed: 'not met',
-};
 
 /**
  * Passes when every rule does. Exported separately so a form can gate its submit
@@ -75,6 +66,7 @@ export function passwordRulesMet(
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PasswordRulesComponent {
+  protected readonly intl = inject(DS_INTL);
   /** The password being typed. */
   readonly value = input<string>('');
   /** The rule set, in the order it should read. */
@@ -109,7 +101,15 @@ export class PasswordRulesComponent {
       const icon: IconName =
         state === 'met' ? 'check' : state === 'failed' ? 'x' : 'circle';
 
-      return { label: rule.label, state, icon, announced: ANNOUNCED[state] };
+      // The glyph is a decorative SVG with no accessible name, so without this
+      // a screen reader hears the rule text and nothing about whether it
+      // passed — the state would be conveyed by colour and shape only.
+      return {
+        label: rule.label,
+        state,
+        icon,
+        announced: this.intl().passwordRules[state],
+      };
     });
   });
 
