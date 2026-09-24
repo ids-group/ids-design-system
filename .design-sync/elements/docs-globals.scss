@@ -7,7 +7,7 @@
 //     writes `[data-status]` rules, which a component's scoped styles could never reach
 //   · the raw specimens, which exist because those APIs are not components yet
 //
-// Deliberately NOT here: `preview-brand-manage-my` (a brand override, and the DS ships
+// Deliberately NOT here: `preview-brand-acme` (a brand override, and the DS ships
 // brand-agnostic) and the sidebar-collapse rule (docs-site chrome, not design system).
 @use 'styles/status' as status;
 @use 'styles/specimens';

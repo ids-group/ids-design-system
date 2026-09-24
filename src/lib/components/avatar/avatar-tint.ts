@@ -43,8 +43,8 @@ export function avatarTint(
  *
  *  A deliberately naive Latin-script guess, and the library's ONLY naming rule.
  *  Reading a name is a cultural convention, not a UI decision — "María José
- *  García López" wants MG from a Spanish reader and "Blue Cross Blue Shield" wants
- *  BC from an insurer — so an app with a real rule passes its own through
+ *  García López" wants MG from a Spanish reader and "Bramley Rovers Football Club" wants
+ *  BR from its members — so an app with a real rule passes its own through
  *  `DS_CONFIG.avatar.initials` or `ds-avatar`'s `initialsRule` rather than asking
  *  this to grow modes it cannot get right. */
 export function initialsFrom(first?: string, last?: string): string {

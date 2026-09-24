@@ -24,7 +24,7 @@
           title="Inventory sync paused"
           [dismissible]="true"
           [announce]="true">
-          Last sync 14 minutes ago. Resume to fetch the latest asset register.
+          Last sync 14 minutes ago. Resume to fetch the latest equipment list.
         </ds-banner>
       </div>
 
@@ -37,7 +37,7 @@
       <div class="state-cell-stage">
         <ds-banner
           variant="success"
-          title="3 logistics plans recomputed"
+          title="3 delivery schedules recomputed"
           [dismissible]="true">
           All allocations are within the 95% capacity limit.
         </ds-banner>
@@ -109,8 +109,8 @@
         <ds-banner
           variant="severe"
           title="Recompute required">
-          Changing the build start will recompute 3 Logistics plans and 12
-          Resource allocations across Alpha, Beta and Gamma.
+          Changing the build start will recompute 3 Delivery schedules and 12
+          Staff rotas across Alpha, Beta and Gamma.
           <ng-container actions>
             <ds-button size="sm">
               Preview impact
@@ -255,7 +255,7 @@
           variant="success"
           title="All checks passed"
           [accentRail]="true">
-          12 resource allocations validated against the 95% capacity rule.
+          12 staff rotas validated against the 95% capacity rule.
         </ds-banner>
       </div>
 
@@ -270,7 +270,7 @@
           variant="success"
           title="All checks passed"
           [accentRail]="false">
-          12 resource allocations validated against the 95% capacity rule.
+          12 staff rotas validated against the 95% capacity rule.
         </ds-banner>
       </div>
 

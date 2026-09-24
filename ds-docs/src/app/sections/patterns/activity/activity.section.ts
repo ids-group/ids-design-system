@@ -48,7 +48,7 @@ export class ActivitySection {
       initials: 'SK',
       actor: 'Sara Khan',
       verb: 'recomputed',
-      object: '3 Logistics plans',
+      object: '3 Delivery schedules',
       detail: 'All within volume limits.',
       time: '14 minutes ago',
     },

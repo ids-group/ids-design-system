@@ -29,7 +29,7 @@ const BREAKPOINTS: readonly Breakpoint[] = [
   {
     token: '--bp-lg',
     px: 1024,
-    desc: 'Laptop / tablet landscape — minimum producer dashboard',
+    desc: 'Laptop / tablet landscape — minimum planner dashboard',
   },
   {
     token: '--bp-xl',

@@ -21,7 +21,7 @@ const TIERS: readonly Tier[] = [
     key: 'compact',
     label: 'Compact',
     hit: '32 px',
-    use: 'Power-user desktop screens with high information density (Bulk inventory matrix, Logistics grid)',
+    use: 'Power-user desktop screens with high information density (Bulk inventory matrix, Deliveries grid)',
     wcag: 'Below WCAG 2.5.5 — desktop-only',
   },
   {
