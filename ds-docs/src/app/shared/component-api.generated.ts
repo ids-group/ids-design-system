@@ -2369,7 +2369,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "The one series to single out: every other one draws faded and this one draws bold, so the comparison survives a monochrome print. Driven from a legend, or from whatever else the app uses to mean \"show me this one\". Needs `dimOthers`, which is what says fading is wanted at all."
+        "description": "The one series to single out: every other one draws faded and this one draws bold, so the comparison survives a monochrome print. Driven from a legend, or from whatever else the app uses to mean \"show me this one\". Fades the others whether or not `dimOthers` is set, which governs only what a pointer over a marker does."
       },
       {
         "name": "patterns",

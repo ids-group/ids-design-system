@@ -62,7 +62,8 @@
 
 - **`dsLineSeries` takes an `outline`, on by default.** The line and its markers sit on a band of
   the surface colour, so they stay legible where they cross columns. Set `[outline]="false"` for a
-  line on an empty plot where the band only separates it from the gridlines.
+  line on an empty plot where the band only separates it from the gridlines. `ds-line-chart` draws
+  its lines with the band and has no input to take it off.
 
 - **`dsColumnSeries` takes `seriesKey` and `highlighted`.** Naming a series in the legend fades the
   others to `--ds-chart-dim-opacity`, which `ds-column-chart` now wires for you.
@@ -154,7 +155,8 @@
 
 - **Legend hover fades the other series whether or not `dimOthers` is set.** That input governs
   what a pointer over a MARK does; naming a series in the legend is the reader asking for that one
-  directly.
+  directly. On `dsLineSeries` this is the `highlighted` input, so a `[highlighted]` binding of yours
+  now fades the other lines without `dimOthers`, where before it only thickened the named one.
 
 - **The unpin control sits below the plot.** The panel it undoes opens above the held mark, so a
   control at the top was the one thing that panel covered.
