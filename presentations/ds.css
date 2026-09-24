@@ -987,7 +987,7 @@
   --field-pad-y: 0;
   /* Components default their own --ds-*-pad to this, so a consumer retunes every
      surface container (card, stat, …) at once. */
-  --ds-container-pad: var(--space-6);
+  --ds-surface-padding: var(--space-6);
   /* Two focus families: fields get the soft halo, interactive controls and nav
      the crisp ring. Components default their own --ds-*-focus-shadow to these,
      so a consumer can retune a whole family or a single component. */
@@ -1018,7 +1018,7 @@
   --switch-thumb-travel: 16px; /* track-w − thumb − 2*pad */
   --slider-track-h: 4px;
   --slider-thumb-size: 18px;
-  --slider-thumb-bw: var(--border-width-strong);
+  --slider-thumb-border-width: var(--border-width-strong);
   --status-dot-size: 8px;
   --badge-dot-size: 6px;
   --badge-pad-y: 4px;
@@ -1218,7 +1218,7 @@
   --table-head-pad-y: var(--space-1);
   /* One rung only — a card's frame reads as padding lost long before its cells
      do, so 24 → 16 while the cells inside it go 16 → 8. */
-  --ds-container-pad: var(--space-4);
+  --ds-surface-padding: var(--space-4);
 }
 
 [data-density=compact] {
@@ -1259,7 +1259,7 @@
    screens are built on. NO HUE BETWEEN 35 and 130: yellow and
    lime sit at high luminance by nature, so dragging one down
    to clear 3:1 on white turns it to mustard — an earlier set
-   tried, and the donut read as mud. Every hue clears 3:1 for
+   tried, and the pie read as mud. Every hue clears 3:1 for
    WCAG 1.4.11 and sits in a narrow perceptual band (L* 56-62)
    so no series shouts over another; an older set ran 45% to
    100% saturation and the first bar drowned the last.
@@ -1398,7 +1398,7 @@
   /* Stripes wide enough to survive a 24px-wide mark at a glance, and drawn in the surface colour
      so they read as gaps cut out of the mark rather than a second hue competing with it. */
   --chart-hatch-color: var(--surface-default);
-  --chart-hatch-width: 3px;
+  --chart-hatch-width: 1.5px;
 }
 
 /* Public override layer.
@@ -1565,165 +1565,165 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .t-display {
-  font-weight: var(--ds-t-display-font-weight, var(--font-weight-extrabold));
-  font-size: var(--ds-t-display-font-size, var(--font-size-display));
-  line-height: var(--ds-t-display-line-height, var(--line-height-tight));
-  font-family: var(--ds-t-display-font-family, var(--font-display));
-  letter-spacing: var(--ds-t-display-letter-spacing, var(--letter-spacing-tight));
+  font-weight: var(--ds-typography-display-font-weight, var(--font-weight-extrabold));
+  font-size: var(--ds-typography-display-font-size, var(--font-size-display));
+  line-height: var(--ds-typography-display-line-height, var(--line-height-tight));
+  font-family: var(--ds-typography-display-font-family, var(--font-display));
+  letter-spacing: var(--ds-typography-display-letter-spacing, var(--letter-spacing-tight));
 }
 
 .t-h1 {
-  font-weight: var(--ds-t-h1-font-weight, var(--font-weight-extrabold));
-  font-size: var(--ds-t-h1-font-size, var(--font-size-h1));
-  line-height: var(--ds-t-h1-line-height, var(--line-height-tight));
-  font-family: var(--ds-t-h1-font-family, var(--font-heading));
-  letter-spacing: var(--ds-t-h1-letter-spacing, var(--letter-spacing-tight));
+  font-weight: var(--ds-typography-h1-font-weight, var(--font-weight-extrabold));
+  font-size: var(--ds-typography-h1-font-size, var(--font-size-h1));
+  line-height: var(--ds-typography-h1-line-height, var(--line-height-tight));
+  font-family: var(--ds-typography-h1-font-family, var(--font-heading));
+  letter-spacing: var(--ds-typography-h1-letter-spacing, var(--letter-spacing-tight));
 }
 
 .t-h2 {
-  font-weight: var(--ds-t-h2-font-weight, var(--font-weight-extrabold));
-  font-size: var(--ds-t-h2-font-size, var(--font-size-h2));
-  line-height: var(--ds-t-h2-line-height, var(--line-height-snug));
-  font-family: var(--ds-t-h2-font-family, var(--font-heading));
-  letter-spacing: var(--ds-t-h2-letter-spacing, var(--letter-spacing-snug));
+  font-weight: var(--ds-typography-h2-font-weight, var(--font-weight-extrabold));
+  font-size: var(--ds-typography-h2-font-size, var(--font-size-h2));
+  line-height: var(--ds-typography-h2-line-height, var(--line-height-snug));
+  font-family: var(--ds-typography-h2-font-family, var(--font-heading));
+  letter-spacing: var(--ds-typography-h2-letter-spacing, var(--letter-spacing-snug));
 }
 
 .t-h3 {
-  font-weight: var(--ds-t-h3-font-weight, var(--font-weight-extrabold));
-  font-size: var(--ds-t-h3-font-size, var(--font-size-h3));
-  line-height: var(--ds-t-h3-line-height, var(--line-height-snug));
-  font-family: var(--ds-t-h3-font-family, var(--font-heading));
-  letter-spacing: var(--ds-t-h3-letter-spacing, var(--letter-spacing-snug));
+  font-weight: var(--ds-typography-h3-font-weight, var(--font-weight-extrabold));
+  font-size: var(--ds-typography-h3-font-size, var(--font-size-h3));
+  line-height: var(--ds-typography-h3-line-height, var(--line-height-snug));
+  font-family: var(--ds-typography-h3-font-family, var(--font-heading));
+  letter-spacing: var(--ds-typography-h3-letter-spacing, var(--letter-spacing-snug));
 }
 
 .t-h4 {
-  font-weight: var(--ds-t-h4-font-weight, var(--font-weight-bold));
-  font-size: var(--ds-t-h4-font-size, var(--font-size-h4));
-  line-height: var(--ds-t-h4-line-height, var(--line-height-snug));
-  font-family: var(--ds-t-h4-font-family, var(--font-heading));
+  font-weight: var(--ds-typography-h4-font-weight, var(--font-weight-bold));
+  font-size: var(--ds-typography-h4-font-size, var(--font-size-h4));
+  line-height: var(--ds-typography-h4-line-height, var(--line-height-snug));
+  font-family: var(--ds-typography-h4-font-family, var(--font-heading));
 }
 
 .t-h5 {
-  font-weight: var(--ds-t-h5-font-weight, var(--font-weight-bold));
-  font-size: var(--ds-t-h5-font-size, var(--font-size-h5));
-  line-height: var(--ds-t-h5-line-height, var(--line-height-snug));
-  font-family: var(--ds-t-h5-font-family, var(--font-heading));
+  font-weight: var(--ds-typography-h5-font-weight, var(--font-weight-bold));
+  font-size: var(--ds-typography-h5-font-size, var(--font-size-h5));
+  line-height: var(--ds-typography-h5-line-height, var(--line-height-snug));
+  font-family: var(--ds-typography-h5-font-family, var(--font-heading));
 }
 
 .t-card-title {
-  font-weight: var(--ds-t-card-title-font-weight, var(--font-weight-bold));
-  font-size: var(--ds-t-card-title-font-size, var(--card-title-fs));
-  line-height: var(--ds-t-card-title-line-height, var(--line-height-snug));
-  font-family: var(--ds-t-card-title-font-family, var(--font-heading));
+  font-weight: var(--ds-typography-card-title-font-weight, var(--font-weight-bold));
+  font-size: var(--ds-typography-card-title-font-size, var(--card-title-fs));
+  line-height: var(--ds-typography-card-title-line-height, var(--line-height-snug));
+  font-family: var(--ds-typography-card-title-font-family, var(--font-heading));
   margin: 0;
-  color: var(--ds-t-card-title-color, var(--text-primary));
+  color: var(--ds-typography-card-title-color, var(--text-primary));
 }
 
 .t-l {
-  font-weight: var(--ds-t-l-font-weight, var(--font-weight-regular));
-  font-size: var(--ds-t-l-font-size, var(--font-size-l));
-  line-height: var(--ds-t-l-line-height, var(--line-height-base));
-  font-family: var(--ds-t-l-font-family, var(--font-sans));
+  font-weight: var(--ds-typography-l-font-weight, var(--font-weight-regular));
+  font-size: var(--ds-typography-l-font-size, var(--font-size-l));
+  line-height: var(--ds-typography-l-line-height, var(--line-height-base));
+  font-family: var(--ds-typography-l-font-family, var(--font-sans));
 }
 
 .t-l-bold {
-  font-weight: var(--ds-t-l-bold-font-weight, var(--font-weight-bold));
-  font-size: var(--ds-t-l-bold-font-size, var(--font-size-l));
-  line-height: var(--ds-t-l-bold-line-height, var(--line-height-base));
-  font-family: var(--ds-t-l-bold-font-family, var(--font-sans));
+  font-weight: var(--ds-typography-l-bold-font-weight, var(--font-weight-bold));
+  font-size: var(--ds-typography-l-bold-font-size, var(--font-size-l));
+  line-height: var(--ds-typography-l-bold-line-height, var(--line-height-base));
+  font-family: var(--ds-typography-l-bold-font-family, var(--font-sans));
 }
 
 .t-m {
-  font-weight: var(--ds-t-m-font-weight, var(--font-weight-regular));
-  font-size: var(--ds-t-m-font-size, var(--font-size-m));
-  line-height: var(--ds-t-m-line-height, var(--line-height-base));
-  font-family: var(--ds-t-m-font-family, var(--font-sans));
+  font-weight: var(--ds-typography-m-font-weight, var(--font-weight-regular));
+  font-size: var(--ds-typography-m-font-size, var(--font-size-m));
+  line-height: var(--ds-typography-m-line-height, var(--line-height-base));
+  font-family: var(--ds-typography-m-font-family, var(--font-sans));
 }
 
 .t-m-bold {
-  font-weight: var(--ds-t-m-bold-font-weight, var(--font-weight-bold));
-  font-size: var(--ds-t-m-bold-font-size, var(--font-size-m));
-  line-height: var(--ds-t-m-bold-line-height, var(--line-height-base));
-  font-family: var(--ds-t-m-bold-font-family, var(--font-sans));
+  font-weight: var(--ds-typography-m-bold-font-weight, var(--font-weight-bold));
+  font-size: var(--ds-typography-m-bold-font-size, var(--font-size-m));
+  line-height: var(--ds-typography-m-bold-line-height, var(--line-height-base));
+  font-family: var(--ds-typography-m-bold-font-family, var(--font-sans));
 }
 
 .t-s {
-  font-weight: var(--ds-t-s-font-weight, var(--font-weight-regular));
-  font-size: var(--ds-t-s-font-size, var(--font-size-s));
-  line-height: var(--ds-t-s-line-height, var(--line-height-base));
-  font-family: var(--ds-t-s-font-family, var(--font-sans));
+  font-weight: var(--ds-typography-s-font-weight, var(--font-weight-regular));
+  font-size: var(--ds-typography-s-font-size, var(--font-size-s));
+  line-height: var(--ds-typography-s-line-height, var(--line-height-base));
+  font-family: var(--ds-typography-s-font-family, var(--font-sans));
 }
 
 .t-s-bold {
-  font-weight: var(--ds-t-s-bold-font-weight, var(--font-weight-bold));
-  font-size: var(--ds-t-s-bold-font-size, var(--font-size-s));
-  line-height: var(--ds-t-s-bold-line-height, var(--line-height-base));
-  font-family: var(--ds-t-s-bold-font-family, var(--font-sans));
+  font-weight: var(--ds-typography-s-bold-font-weight, var(--font-weight-bold));
+  font-size: var(--ds-typography-s-bold-font-size, var(--font-size-s));
+  line-height: var(--ds-typography-s-bold-line-height, var(--line-height-base));
+  font-family: var(--ds-typography-s-bold-font-family, var(--font-sans));
 }
 
 .t-xs {
-  font-weight: var(--ds-t-xs-font-weight, var(--font-weight-regular));
-  font-size: var(--ds-t-xs-font-size, var(--font-size-xs));
-  line-height: var(--ds-t-xs-line-height, var(--line-height-base));
-  font-family: var(--ds-t-xs-font-family, var(--font-sans));
+  font-weight: var(--ds-typography-xs-font-weight, var(--font-weight-regular));
+  font-size: var(--ds-typography-xs-font-size, var(--font-size-xs));
+  line-height: var(--ds-typography-xs-line-height, var(--line-height-base));
+  font-family: var(--ds-typography-xs-font-family, var(--font-sans));
 }
 
 .t-xs-bold {
-  font-weight: var(--ds-t-xs-bold-font-weight, var(--font-weight-bold));
-  font-size: var(--ds-t-xs-bold-font-size, var(--font-size-xs));
-  line-height: var(--ds-t-xs-bold-line-height, var(--line-height-base));
-  font-family: var(--ds-t-xs-bold-font-family, var(--font-sans));
+  font-weight: var(--ds-typography-xs-bold-font-weight, var(--font-weight-bold));
+  font-size: var(--ds-typography-xs-bold-font-size, var(--font-size-xs));
+  line-height: var(--ds-typography-xs-bold-line-height, var(--line-height-base));
+  font-family: var(--ds-typography-xs-bold-font-family, var(--font-sans));
 }
 
 .t-overline {
-  font-weight: var(--ds-t-overline-font-weight, var(--font-weight-bold));
-  font-size: var(--ds-t-overline-font-size, var(--font-size-2xs));
-  line-height: var(--ds-t-overline-line-height, var(--line-height-base));
-  font-family: var(--ds-t-overline-font-family, var(--font-sans));
-  letter-spacing: var(--ds-t-overline-letter-spacing, var(--letter-spacing-wider));
-  text-transform: var(--ds-t-overline-text-transform, uppercase);
-  color: var(--ds-t-overline-color, var(--text-tertiary));
+  font-weight: var(--ds-typography-overline-font-weight, var(--font-weight-bold));
+  font-size: var(--ds-typography-overline-font-size, var(--font-size-2xs));
+  line-height: var(--ds-typography-overline-line-height, var(--line-height-base));
+  font-family: var(--ds-typography-overline-font-family, var(--font-sans));
+  letter-spacing: var(--ds-typography-overline-letter-spacing, var(--letter-spacing-wider));
+  text-transform: var(--ds-typography-overline-text-transform, uppercase);
+  color: var(--ds-typography-overline-color, var(--text-tertiary));
 }
 
 .t-caption {
-  font-weight: var(--ds-t-caption-font-weight, var(--font-weight-regular));
-  font-size: var(--ds-t-caption-font-size, var(--font-size-xs));
-  line-height: var(--ds-t-caption-line-height, var(--line-height-base));
-  font-family: var(--ds-t-caption-font-family, var(--font-sans));
-  color: var(--ds-t-caption-color, var(--text-tertiary));
+  font-weight: var(--ds-typography-caption-font-weight, var(--font-weight-regular));
+  font-size: var(--ds-typography-caption-font-size, var(--font-size-xs));
+  line-height: var(--ds-typography-caption-line-height, var(--line-height-base));
+  font-family: var(--ds-typography-caption-font-family, var(--font-sans));
+  color: var(--ds-typography-caption-color, var(--text-tertiary));
 }
 
 .t-mono {
-  font-variant-ligatures: var(--ds-t-mono-ligatures, none);
-  font-weight: var(--ds-t-mono-font-weight, var(--font-weight-medium));
-  font-size: var(--ds-t-mono-font-size, var(--font-size-mono));
-  line-height: var(--ds-t-mono-line-height, var(--line-height-base));
-  font-family: var(--ds-t-mono-font-family, var(--font-mono));
+  font-variant-ligatures: var(--ds-typography-mono-ligatures, none);
+  font-weight: var(--ds-typography-mono-font-weight, var(--font-weight-medium));
+  font-size: var(--ds-typography-mono-font-size, var(--font-size-mono));
+  line-height: var(--ds-typography-mono-line-height, var(--line-height-base));
+  font-family: var(--ds-typography-mono-font-family, var(--font-mono));
 }
 
 .t-mono-inline {
-  font-variant-ligatures: var(--ds-t-mono-ligatures, none);
-  font-weight: var(--ds-t-mono-inline-font-weight, var(--font-weight-regular));
-  font-size: var(--ds-t-mono-inline-font-size, var(--font-size-mono));
-  line-height: var(--ds-t-mono-inline-line-height, 1);
-  font-family: var(--ds-t-mono-inline-font-family, var(--font-mono));
-  color: var(--ds-t-mono-inline-color, var(--text-primary));
-  background-color: var(--ds-t-mono-inline-bg-color, var(--surface-secondary));
+  font-variant-ligatures: var(--ds-typography-mono-ligatures, none);
+  font-weight: var(--ds-typography-mono-inline-font-weight, var(--font-weight-regular));
+  font-size: var(--ds-typography-mono-inline-font-size, var(--font-size-mono));
+  line-height: var(--ds-typography-mono-inline-line-height, 1);
+  font-family: var(--ds-typography-mono-inline-font-family, var(--font-mono));
+  color: var(--ds-typography-mono-inline-color, var(--text-primary));
+  background-color: var(--ds-typography-mono-inline-bg-color, var(--surface-secondary));
   padding: 1px var(--space-1);
-  border-radius: var(--ds-t-mono-inline-radius, var(--ds-radius-inner));
+  border-radius: var(--ds-typography-mono-inline-radius, var(--ds-radius-inner));
 }
 
 .t-mono-block {
-  font-variant-ligatures: var(--ds-t-mono-ligatures, none);
-  font-weight: var(--ds-t-mono-block-font-weight, var(--font-weight-regular));
-  font-size: var(--ds-t-mono-block-font-size, var(--font-size-mono));
-  line-height: var(--ds-t-mono-block-line-height, var(--line-height-loose));
-  font-family: var(--ds-t-mono-block-font-family, var(--font-mono));
-  background-color: var(--ds-t-mono-block-bg-color, var(--surface-secondary));
+  font-variant-ligatures: var(--ds-typography-mono-ligatures, none);
+  font-weight: var(--ds-typography-mono-block-font-weight, var(--font-weight-regular));
+  font-size: var(--ds-typography-mono-block-font-size, var(--font-size-mono));
+  line-height: var(--ds-typography-mono-block-line-height, var(--line-height-loose));
+  font-family: var(--ds-typography-mono-block-font-family, var(--font-mono));
+  background-color: var(--ds-typography-mono-block-bg-color, var(--surface-secondary));
   border-width: var(--border-width-default);
   border-style: solid;
-  border-color: var(--ds-t-mono-block-border-color, var(--border-divider));
-  border-radius: var(--ds-t-mono-block-radius, var(--ds-radius-control));
+  border-color: var(--ds-typography-mono-block-border-color, var(--border-divider));
+  border-radius: var(--ds-typography-mono-block-radius, var(--ds-radius-control));
   padding: var(--space-3) var(--space-4);
   max-width: 100%;
   overflow-x: auto;
@@ -2130,19 +2130,22 @@ html {
   --_option-radius: var(--ds-option-radius, var(--ds-radius-inner));
   --_option-row-gap: var(--ds-option-row-gap, 2px);
   --_option-bg-color-active: var(--ds-option-bg-color-active, var(--surface-secondary));
-  --_option-weight: var(--ds-option-weight, var(--font-weight-medium));
+  --_option-font-weight: var(--ds-option-font-weight, var(--font-weight-medium));
   --_option-font-size: var(--ds-option-font-size, var(--font-size-s));
   --_option-line-height: var(--ds-option-line-height, var(--line-height-flat));
   --_option-font-family: var(--ds-option-font-family, var(--font-sans));
+  --_option-color: var(--ds-option-color, var(--text-primary));
+  --_dropdown-empty-color: var(--ds-dropdown-empty-color, var(--text-tertiary));
+  --_dropdown-empty-font-size: var(--ds-dropdown-empty-font-size, inherit);
   --_dropdown-panel-bg-color: var(--ds-dropdown-panel-bg-color, var(--surface-overlay));
   --_dropdown-panel-border-color: var(--ds-dropdown-panel-border-color, var(--border-default));
   --_dropdown-panel-shadow: var(--ds-dropdown-panel-shadow, var(--shadow-popover));
-  --_dropdown-panel-maxh: var(--ds-dropdown-panel-maxh, 320px);
+  --_dropdown-panel-max-height: var(--ds-dropdown-panel-max-height, 320px);
   /* minw/maxw only bite in `content` width mode, where the pane is auto-sized: in
      `fill` the component pins the pane to the trigger width and there is nothing
      left to bound. */
-  --_dropdown-panel-minw: var(--ds-dropdown-panel-minw, 0);
-  --_dropdown-panel-maxw: var(--ds-dropdown-panel-maxw, none);
+  --_dropdown-panel-min-width: var(--ds-dropdown-panel-min-width, 0);
+  --_dropdown-panel-max-width: var(--ds-dropdown-panel-max-width, none);
 }
 .ds-dropdown-panel .dropdown-panel {
   width: 100%;
@@ -2151,9 +2154,9 @@ html {
   border-radius: var(--_dropdown-panel-radius);
   box-shadow: var(--_dropdown-panel-shadow);
   padding: var(--space-1);
-  min-width: var(--_dropdown-panel-minw);
-  max-width: var(--_dropdown-panel-maxw);
-  max-height: var(--_dropdown-panel-maxh);
+  min-width: var(--_dropdown-panel-min-width);
+  max-width: var(--_dropdown-panel-max-width);
+  max-height: var(--_dropdown-panel-max-height);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -2197,7 +2200,8 @@ html {
 }
 .ds-dropdown-panel .empty {
   padding: var(--space-3) var(--space-4);
-  color: var(--text-tertiary);
+  color: var(--_dropdown-empty-color);
+  font-size: var(--_dropdown-empty-font-size);
   text-align: center;
 }
 .ds-dropdown-panel .option {
@@ -2208,8 +2212,8 @@ html {
   padding: var(--_option-padding);
   border: 0;
   background: transparent;
-  font: var(--_option-weight) var(--_option-font-size)/var(--_option-line-height) var(--_option-font-family);
-  color: var(--text-primary);
+  font: var(--_option-font-weight) var(--_option-font-size)/var(--_option-line-height) var(--_option-font-family);
+  color: var(--_option-color);
   cursor: pointer;
   border-radius: var(--_option-radius);
   text-align: left;
@@ -2366,7 +2370,7 @@ html {
   }
 }
 .cdk-overlay-pane.ds-overlay-pane {
-  --_overlay-enter-keyframes: var(--ds-overlay-enter-keyframes, ds-fade-in);
+  --_overlay-enter-keyframes: var(--ds-overlay-enter-keyframes, ds-scale-in);
   --_overlay-enter-duration: var(--ds-overlay-enter-duration, var(--ds-motion-enter-panel-duration));
   --_overlay-enter-easing: var(--ds-overlay-enter-easing, var(--ds-motion-enter-panel-easing));
   --_overlay-enter-offset: var(--ds-overlay-enter-offset, 4px);
@@ -2409,7 +2413,8 @@ html {
      lagging behind it, which is why the old unconditional leave was cut. Opacity
      only, no travel: a dismissal has nowhere to travel to, and movement would
      re-add exactly the lag this avoids. Reduced motion zeroes the duration at
-     `:root`, so the animation still runs and `animationend` still tears down. */
+     `:root`; at 0s `animationend` is not reliably delivered, and `disposeWithLeave`'s
+     400 ms timer tears the pane down. */
 }
 .cdk-overlay-pane.ds-overlay-pane.ds-leaving {
   /* A fading panel must not swallow the click aimed at what is behind it. */
@@ -2429,19 +2434,27 @@ html {
     opacity: 0;
   }
 }
-/* The pane takes the pointer, so the panel can be reached and its text selected — WCAG 1.4.13
-   requires that of anything shown on hover. What stops the flicker an interactive pane used to
-   cause (panel covers the plot, plot takes a `pointerleave`, chart clears, panel closes, pointer
-   lands on the plot again) is the grace period on the chart's own leave, in `chart-active-mark.ts`.
-   The two are one mechanism: make the pane inert again and the criterion breaks silently; drop the
-   grace and the flicker returns. */
+/* The pane is INERT, because it is drawn over the plot it describes: on a funnel or a tight
+   category axis the panel covers the neighbouring marks, and a pane that takes the pointer means
+   the mark underneath never sees it - the reader is over a new segment while the panel still names
+   the old one. Inert, the pointer reaches the mark and the panel follows it.
+
+   WCAG 1.4.13 still holds. Hoverable: moving onto the panel does not dismiss it, because the
+   pointer either stays on the mark under it or the grace period in `chart-active-mark.ts` carries
+   the gap. Dismissible: Escape. Persistent: the panel stays while the mark is hovered, and a press
+   pins it where the chart offers pinning - a pinned pane takes the pointer again so its text can be
+   selected. Drop the grace and the flicker returns. */
 .cdk-overlay-pane.ds-chart-tooltip-pane {
+  pointer-events: none;
+}
+
+.cdk-overlay-pane.ds-chart-tooltip-pane.is-pinned {
   pointer-events: auto;
 }
 
 @media (prefers-reduced-motion: reduce) {
   ds-skeleton::after {
-    animation: none;
+    animation: none !important;
   }
 }
 :root {
