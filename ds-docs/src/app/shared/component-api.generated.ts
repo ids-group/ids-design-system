@@ -312,9 +312,9 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
           "main",
           "none"
         ],
-        "default": "'none'",
+        "default": "'main'",
         "required": false,
-        "description": "Announce the card as the page's `main` landmark. `ds-card` renders an `<article>`, which is NOT a landmark, so by default a screen-reader user has nothing to jump to — set `'main'` on a standalone auth page. Opt-in because the layout is also embedded inside pages that already own a `main`, and two `main`s is its own violation."
+        "description": "Announce the card as the page's `main` landmark. `ds-card` renders an `<article>`, which is not a landmark, so this is what lets a screen-reader user jump to the form. Set `'none'` where the layout sits inside a page that already owns a `main`, such as `ds-app-layout`: two `main` landmarks is its own violation."
       }
     ],
     "outputs": []

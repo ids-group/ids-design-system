@@ -41,12 +41,15 @@ cpSync('schematics/collection.json', `${distSchematics}/collection.json`);
 // Copy every generator's schema.json (tsc only emits .js, not .json).
 // Architecture generators (feature/store/data-access/page/ui) live in the app
 // starter repo.
-for (const gen of ['ng-add']) {
+for (const gen of ['ng-add', 'check-overrides']) {
   cpSync(
     `schematics/${gen}/schema.json`,
     `${distSchematics}/${gen}/schema.json`,
   );
 }
+
+console.log('▶ Building the override surface…');
+execSync('node tools/build-override-surface.mjs', { stdio: 'inherit' });
 
 // The DS package is `"type": "module"` and schematics are CommonJS, so the
 // compiled file must declare that itself: the source is `.cts`, tsc emits
@@ -67,6 +70,12 @@ writeFileSync(
 if (!existsSync(`${distSchematics}/ng-add/index.cjs`)) {
   console.error(
     'build-schematics: index.cts did not emit index.cjs — ng add would fail to load for every consumer.',
+  );
+  process.exit(1);
+}
+if (!existsSync(`${distSchematics}/check-overrides/index.cjs`)) {
+  console.error(
+    'build-schematics: check-overrides/index.cts did not emit index.cjs — the schematic would fail to load.',
   );
   process.exit(1);
 }

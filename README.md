@@ -54,6 +54,11 @@ check which one you got, grep the built CSS for a rule only ours ships:
 grep -c ':where(:focus-visible)' dist/<app>/browser/styles-*.css   # 0 means ours never loaded
 ```
 
+After an upgrade, `ng g @ids-group-ltd/ids-design-system:check-overrides` lists every `--ds-*`
+your styles set that the installed version does not read, and every `ds-*` selector naming a
+class its component does not render. Add `--strict` to fail a CI step on either. A class
+inside a nested SCSS block on another line is not checked.
+
 Advanced consumers can swap the palette/theme and keep the token layer — global side-effects (fonts, link styles, etc.) become opt-in:
 
 ```scss

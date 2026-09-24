@@ -2434,8 +2434,18 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-auth-layout-mark-size",
-        "value": "clamp(var(--space-6), 4svh, var(--space-8))",
-        "notes": "Letter-mark tile size. Defaults to a clamp (24px…32px, reaching 32px at a viewport 800px tall or more). The glyph inside is a fixed size and does not track it."
+        "value": "var(--sidenav-logo-size)",
+        "notes": "Letter-mark tile size (defaults to --sidenav-logo-size, 28px, the sidenav's tile)."
+      },
+      {
+        "name": "--ds-auth-layout-mark-font-size",
+        "value": "var(--font-size-m)",
+        "notes": "Letter-mark glyph size inside the tile (defaults to --font-size-m, 16px)."
+      },
+      {
+        "name": "--ds-auth-layout-brand-name-font-size",
+        "value": "var(--font-size-h5)",
+        "notes": "Wordmark size beside the tile (defaults to --font-size-h5, 18px, as in ds-sidenav)."
       },
       {
         "name": "--ds-auth-layout-mark-radius",
@@ -2459,8 +2469,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-auth-layout-brand-max-height",
-        "value": "none",
-        "notes": "Cap for a logo projected into [brand] (defaults to none — nothing constrains it, so an oversized image sets the masthead's height). Set it to var(--ds-auth-layout-mark-size) to make the logo track the letter-mark tile it replaces."
+        "value": "var(--_auth-layout-mark-size)",
+        "notes": "Cap for a logo projected into [brand] (defaults to the tile size, --ds-auth-layout-mark-size, so a logo matches the letter-mark it replaces). Set none to leave the logo unconstrained."
       }
     ]
   },
