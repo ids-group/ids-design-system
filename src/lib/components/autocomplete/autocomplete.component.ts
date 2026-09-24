@@ -75,7 +75,10 @@ import {
   groupMessageId,
   inFieldGroup,
 } from '@ids-group-ltd/ids-design-system/components/field-group';
-import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
+import {
+  DS_INTL,
+  resolveWithConfig,
+} from '@ids-group-ltd/ids-design-system/core';
 
 let nextId = 0;
 
@@ -117,6 +120,7 @@ export class AutocompleteComponent<T = unknown>
   private readonly overlay = inject(Overlay);
   private readonly vcr = inject(ViewContainerRef);
   private readonly host = inject(ElementRef<HTMLElement>);
+  protected readonly intl = inject(DS_INTL);
   /** Public panel tokens forwarded onto the portaled overlay pane on open, so a consumer's
    *  `ds-autocomplete { --ds-autocomplete-panel-bg-color | -radius | -maxh: … }` reaches it.
    *  Not the whole set: `prepareOverlayEnter` also forwards `DROPDOWN_PANEL_TOKENS`
@@ -172,8 +176,12 @@ export class AutocompleteComponent<T = unknown>
    *  `ellipsis`; `wrap` lets the value break onto a second line and pushes the chevron
    *  down. Multi mode is unaffected — its chips have their own measured cap. */
   readonly valueOverflow = input<AutocompleteValueOverflow>('ellipsis');
-  /** Placeholder shown in the input when empty. */
-  readonly placeholder = input<string>('Select…');
+  /** Placeholder shown in the input when empty.
+   *  Unset falls back to `DS_INTL.picker.placeholder`. */
+  readonly placeholder = input<string | null>(null);
+  readonly placeholderResolved = computed(
+    () => this.placeholder() ?? this.intl().picker.placeholder,
+  );
   /** Disables the trigger and blocks all interaction. */
   readonly disabled = input(false, { transform: booleanAttribute });
   /** Confirmation text, shown when there is no error or warning — and it paints
@@ -396,7 +404,9 @@ export class AutocompleteComponent<T = unknown>
   /** The visible label wins the accessible name when there is one — otherwise the
    *  placeholder would announce over it, and `placeholder` always carries a default. */
   protected readonly resolvedAriaLabel = computed(() =>
-    this.label() ? null : this.ariaLabel() || this.placeholder() || null,
+    this.label()
+      ? null
+      : this.ariaLabel() || this.placeholderResolved() || null,
   );
 
   protected readonly selectedTags = computed(() => {
@@ -483,7 +493,7 @@ export class AutocompleteComponent<T = unknown>
       return this.searchPlaceholder();
     }
 
-    return this.placeholder();
+    return this.placeholderResolved();
   });
 
   protected isSelected(option: AutocompleteOption<T>): boolean {
