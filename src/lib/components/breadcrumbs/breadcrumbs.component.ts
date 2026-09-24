@@ -7,7 +7,11 @@ import {
   numberAttribute,
   output,
 } from '@angular/core';
-import { DS_CONFIG, devWarn } from '@ids-group-ltd/ids-design-system/core';
+import {
+  DS_CONFIG,
+  DS_INTL,
+  devWarn,
+} from '@ids-group-ltd/ids-design-system/core';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import type { IconName } from '@ids-group-ltd/ids-design-system/core';
 import { BreadcrumbsService } from './breadcrumbs.service';
@@ -24,6 +28,7 @@ import type { BreadcrumbItem } from './breadcrumbs.types';
 export class BreadcrumbsComponent {
   private readonly cfg = inject(DS_CONFIG);
   private readonly svc = inject(BreadcrumbsService);
+  protected readonly intl = inject(DS_INTL);
 
   /** Omitted, the component reads `BreadcrumbsService.items`; an explicit array opts out. */
   readonly items = input<BreadcrumbItem[] | null>(null);

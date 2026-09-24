@@ -4,10 +4,15 @@ import {
   ViewEncapsulation,
   booleanAttribute,
   computed,
+  inject,
   input,
   model,
 } from '@angular/core';
-import { optionalBound, boundOr } from '@ids-group-ltd/ids-design-system/core';
+import {
+  DS_INTL,
+  optionalBound,
+  boundOr,
+} from '@ids-group-ltd/ids-design-system/core';
 import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
 import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 
@@ -20,6 +25,7 @@ import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NumberStepperComponent {
+  protected readonly intl = inject(DS_INTL);
   /** Current numeric value, two-way bound. */
   readonly value = model<number>(0);
   /** Lower bound — the decrement button and typed input clamp to it. */

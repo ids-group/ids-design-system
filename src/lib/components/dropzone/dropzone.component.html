@@ -7,7 +7,7 @@
   <input
     type="file"
     class="dz-input"
-    aria-label="Upload files"
+    [attr.aria-label]="intl().dropzone.label"
     [attr.accept]="accept() || null"
     [multiple]="multiple()"
     [disabled]="disabled()"
@@ -20,11 +20,11 @@
     </ds-icon>
 
     <div class="title">
-      Drop files here
+      {{ intl().dropzone.title }}
     </div>
 
     <div class="hint">
-      or click to browse
+      {{ intl().dropzone.hint }}
     </div>
 
     <ng-content select="[hint]"></ng-content>
@@ -60,7 +60,7 @@
           <button
             class="remove"
             type="button"
-            [attr.aria-label]="'Remove ' + file.name"
+            [attr.aria-label]="intl().dropzone.remove(file.name)"
             (click)="
               onRemove(file); $event.preventDefault(); $event.stopPropagation()
             ">

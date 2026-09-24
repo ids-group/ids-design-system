@@ -40,7 +40,11 @@
       type="button"
       class="group-caret-button"
       [attr.aria-expanded]="expanded()"
-      [attr.aria-label]="(expanded() ? 'Collapse ' : 'Expand ') + label()"
+      [attr.aria-label]="
+        expanded()
+          ? intl().sidenav.collapseGroup(label())
+          : intl().sidenav.expandGroup(label())
+      "
       (click)="toggle()">
       <ds-icon
         class="group-caret"

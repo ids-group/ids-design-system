@@ -1,4 +1,11 @@
-import { Component, ViewEncapsulation, computed, input } from '@angular/core';
+import {
+  Component,
+  ViewEncapsulation,
+  computed,
+  inject,
+  input,
+} from '@angular/core';
+import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 
 @Component({
   selector: 'ds-avatar-group',
@@ -8,6 +15,8 @@ import { Component, ViewEncapsulation, computed, input } from '@angular/core';
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class AvatarGroupComponent {
+  protected readonly intl = inject(DS_INTL);
+
   /** Maximum avatars shown before the rest collapse into an overflow chip. */
   readonly max = input<number>(4);
   /** Total avatar count driving the `+N` overflow; null counts the projected children. */

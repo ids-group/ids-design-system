@@ -6,6 +6,7 @@ import {
   computed,
   effect,
   forwardRef,
+  inject,
   input,
   model,
   numberAttribute,
@@ -21,6 +22,7 @@ import {
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { valueControlBridge } from '@ids-group-ltd/ids-design-system/components';
 import { FieldClickFocusDirective } from '@ids-group-ltd/ids-design-system/components';
+import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
 import { inFieldGroup } from '@ids-group-ltd/ids-design-system/components/field-group';
 import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
@@ -51,6 +53,7 @@ import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
  * that is what `ds-input` is for.
  */
 export class SearchComponent implements ControlValueAccessor {
+  protected readonly intl = inject(DS_INTL);
   /** Segment of a ds-field-group: the group owns the border, radius and focus
    *  ring, so .in-group strips this control back to its bare contents. */
   protected readonly inGroup = inFieldGroup();
@@ -66,8 +69,12 @@ export class SearchComponent implements ControlValueAccessor {
 
   /** Search text, two-way bound. */
   readonly value = model<string>('');
-  /** Placeholder shown when empty. */
-  readonly placeholder = input<string>('Search');
+  /** Placeholder shown when empty.
+   *  Unset falls back to `DS_INTL.search.placeholder`. */
+  readonly placeholder = input<string | null>(null);
+  readonly placeholderResolved = computed(
+    () => this.placeholder() ?? this.intl().search.placeholder,
+  );
   /** Keyboard shortcut hint rendered in a trailing `<kbd>` badge. */
   readonly shortcut = input<string>('');
   /** Shows the leading search icon. */

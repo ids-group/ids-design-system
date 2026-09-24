@@ -51,7 +51,12 @@
 
     @if (dataTableResolved() !== 'none') {
       <ds-chart-data-table
-        [columns]="['Step', 'Direction', 'Value', 'Running total']"
+        [columns]="[
+          intl().chart.stepColumn,
+          intl().chart.directionColumn,
+          intl().chart.valueColumn,
+          intl().chart.runningTotalColumn,
+        ]"
         [rows]="dataTableRows()"
         [caption]="caption()"
         [open]="dataTableResolved() === 'visible'" />

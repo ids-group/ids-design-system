@@ -14,7 +14,7 @@
         <span
           class="optional-marker"
           aria-hidden="true">
-          (optional)
+          {{ intl().field.optional }}
         </span>
       }
     </span>
@@ -106,8 +106,8 @@
   <div
     class="calendar"
     role="dialog"
-    aria-label="Choose date"
     cdkTrapFocus
+    [attr.aria-label]="intl().datePicker.openCalendar"
     [id]="panelId"
     [class.has-presets]="presets().length > 0"
     (click)="closeMenus()">
@@ -146,7 +146,7 @@
                 <div
                   class="picker-grid"
                   role="group"
-                  aria-label="Select month">
+                  [attr.aria-label]="intl().datePicker.selectMonth">
                   @for (name of monthNames(); track $index) {
                     <button
                       type="button"
@@ -190,7 +190,7 @@
                   <button
                     type="button"
                     class="picker-nav"
-                    aria-label="Previous years"
+                    [attr.aria-label]="intl().datePicker.previousYears"
                     [disabled]="!canPrevYearPage()"
                     (click)="prevYearPage($event)">
                     <ds-icon
@@ -205,7 +205,7 @@
                   <button
                     type="button"
                     class="picker-nav"
-                    aria-label="Next years"
+                    [attr.aria-label]="intl().datePicker.nextYears"
                     [disabled]="!canNextYearPage()"
                     (click)="nextYearPage($event)">
                     <ds-icon
@@ -217,7 +217,7 @@
                 <div
                   class="picker-grid"
                   role="group"
-                  aria-label="Select year">
+                  [attr.aria-label]="intl().datePicker.selectYear">
                   @for (year of yearsOnPage(); track year) {
                     <button
                       type="button"

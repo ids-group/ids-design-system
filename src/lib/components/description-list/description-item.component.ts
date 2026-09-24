@@ -7,6 +7,7 @@ import {
   signal,
 } from '@angular/core';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
+import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 import { DescriptionListComponent } from './description-list.component';
 
 @Component({
@@ -23,6 +24,7 @@ import { DescriptionListComponent } from './description-list.component';
 })
 export class DescriptionItemComponent {
   private readonly list = inject(DescriptionListComponent, { optional: true });
+  protected readonly intl = inject(DS_INTL);
 
   /** The label. Plain text; rich values go in the projected content. */
   readonly term = input<string>('');

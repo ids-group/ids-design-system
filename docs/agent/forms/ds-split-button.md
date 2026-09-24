@@ -4,5 +4,5 @@
 Group: Form & input
 
 <!-- inputs:ds-split-button -->
-All inputs: `label: string = ''`, `variant: 'primary' | 'outline' = 'primary'`, `icon: IconName | null = null`, `disabled: boolean = false`, `menuItems: readonly SplitButtonItem[] = []`, `menuLabel: string = 'More actions'`
+All inputs: `label: string = ''`, `variant: 'primary' | 'outline' = 'primary'`, `icon: IconName | null = null`, `disabled: boolean = false`, `menuItems: readonly SplitButtonItem[] = []`, `menuLabel: string | null = null`
 <!-- /inputs -->

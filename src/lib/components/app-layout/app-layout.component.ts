@@ -7,6 +7,7 @@ import {
   ViewEncapsulation,
   afterNextRender,
   booleanAttribute,
+  computed,
   effect,
   inject,
   input,
@@ -16,6 +17,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 import { ScrollbarWidthService } from './scrollbar-width.service';
 import { AppLayoutNavigationService } from './layout-navigation.service';
 import {
@@ -83,8 +85,13 @@ export class AppLayoutComponent {
    */
   readonly railOpen = model(false);
 
-  /** Accessible name for the rail while it is a modal overlay. */
-  readonly railLabel = input<string>('Navigation');
+  /** Accessible name for the rail while it is a modal overlay. Unset falls back to
+   *  `DS_INTL.appLayout.railLabel`. */
+  readonly railLabel = input<string | null>(null);
+  private readonly intl = inject(DS_INTL);
+  protected readonly railLabelResolved = computed(
+    () => this.railLabel() ?? this.intl().appLayout.railLabel,
+  );
 
   /**
    * Remember the content scroll per path and restore it on the way BACK. Off by

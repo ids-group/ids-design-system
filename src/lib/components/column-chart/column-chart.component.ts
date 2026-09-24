@@ -22,6 +22,7 @@ import {
   shareOfTotal,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
+import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 import type {
   ChartDataTable,
   ChartFrame,
@@ -212,7 +213,7 @@ export class ColumnChartComponent {
    *  when the data lands. */
   readonly loading = input(false, { transform: booleanAttribute });
   /** Shown in place of the plot when `data` is empty. Unset falls back to
-   *  `DS_CONFIG.chart.emptyText`, then `'No data'`. */
+   *  `DS_INTL.chart.empty`. */
   readonly emptyText = input<string | null>(null);
 
   /** Shows `errorText` in place of the plot. Separate from `loading` and from an empty `data`,
@@ -220,15 +221,15 @@ export class ColumnChartComponent {
    *  mean opposite things. */
   readonly error = input(false, { transform: booleanAttribute });
 
-  /** The message the error state prints. Unset falls back to `DS_CONFIG.chart.errorText`, then
-   *  `'Could not load the data'`. */
+  /** The message the error state prints. Unset falls back to `DS_INTL.chart.error`. */
   readonly errorText = input<string | null>(null);
   /** Formats every value the chart prints, the annex table and the generated description
-   *  included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then the browser's locale
-   *  grouping with a K/M/B suffix past four digits. */
+   *  included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` /
+   *  `LOCALE_ID`. */
   readonly valueFormat = input<ChartValueFormat | null>(null);
 
   private readonly defaults = resolveChartDefaults(this);
+  protected readonly intl = inject(DS_INTL);
   readonly frameResolved = this.defaults.frame;
   readonly dataTableResolved = this.defaults.dataTable;
   readonly emptyTextResolved = this.defaults.emptyText;
@@ -378,15 +379,15 @@ export class ColumnChartComponent {
    *  beside each mark stays the reading, which is what `valueFormat` goes on formatting. */
   protected readonly axisFormat = computed<ChartValueFormat | null>(() =>
     this.stack() === 'normalized'
-      ? (value: number) => formatPercent(value, 1)
+      ? (value: number) => formatPercent(value, 1, this.defaults.locale)
       : this.valueFormat(),
   );
 
   protected readonly dataTableColumns = computed<readonly string[]>(() => [
-    ...(this.multiSeries() ? ['Series'] : []),
-    'Label',
-    'Value',
-    ...(this.partOfWhole() ? ['Share of total'] : []),
+    ...(this.multiSeries() ? [this.intl().chart.seriesColumn] : []),
+    this.intl().chart.labelColumn,
+    this.intl().chart.valueColumn,
+    ...(this.partOfWhole() ? [this.intl().chart.shareColumn] : []),
   ]);
 
   protected readonly dataTableRows = computed<readonly ChartDataRow[]>(() =>
@@ -412,7 +413,9 @@ export class ColumnChartComponent {
         series: series.label,
         label: point.label,
         formattedValue: format(point.value, 'tooltip'),
-        share: this.partOfWhole() ? shareOfTotal(values, index) : '',
+        share: this.partOfWhole()
+          ? shareOfTotal(values, index, this.defaults.locale)
+          : '',
       }));
     });
   });
@@ -423,7 +426,8 @@ export class ColumnChartComponent {
       this.resolvedSeries()
         .map((series, index) =>
           describeSeries(
-            series.label || this.caption() || 'Chart',
+            this.intl().chart,
+            series.label || this.caption() || this.intl().chart.title,
             series.points.map((point) => ({
               label: point.label,
               value: point.value,

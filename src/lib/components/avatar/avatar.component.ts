@@ -9,14 +9,7 @@ import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import type { IconName } from '@ids-group-ltd/ids-design-system/core';
 import { avatarTint, initialsFrom } from './avatar-tint';
 import type { AvatarSize, AvatarStatus } from './avatar.types';
-import { DS_CONFIG } from '@ids-group-ltd/ids-design-system/core';
-
-const STATUS_ARIA_LABELS: Record<AvatarStatus, string> = {
-  online: 'Online',
-  offline: 'Offline',
-  away: 'Away',
-  busy: 'Busy',
-};
+import { DS_CONFIG, DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 
 @Component({
   selector: 'ds-avatar',
@@ -76,6 +69,7 @@ export class AvatarComponent {
   readonly avoidHues = input<readonly (readonly [number, number])[]>([]);
 
   private readonly config = inject(DS_CONFIG);
+  protected readonly intl = inject(DS_INTL);
 
   protected readonly initialsText = computed(() => {
     const explicit = this.initials();
@@ -111,6 +105,6 @@ export class AvatarComponent {
   protected readonly statusAriaLabel = computed(() => {
     const value = this.status();
 
-    return value ? STATUS_ARIA_LABELS[value] : null;
+    return value ? this.intl().avatar[value] : null;
   });
 }

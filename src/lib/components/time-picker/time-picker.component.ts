@@ -43,7 +43,7 @@ import {
   TimeColumnsComponent,
   type TimeColumnId,
 } from './time-columns/time-columns.component';
-import { DS_CONFIG } from '@ids-group-ltd/ids-design-system/core';
+import { DS_CONFIG, DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 import {
   clampToRange,
   formatTime,
@@ -91,6 +91,7 @@ export class TimePickerComponent
   }
 
   private readonly config = inject(DS_CONFIG);
+  protected readonly intl = inject(DS_INTL);
   private readonly overlay = inject(Overlay);
   private readonly vcr = inject(ViewContainerRef);
   private readonly injector = inject(Injector);
@@ -272,12 +273,13 @@ export class TimePickerComponent
   protected ariaLabelFor(segment: Segment): string {
     // A visible label is the accessible name; range segments still need the
     // from/to suffix, so they keep an aria-label built from it.
-    const base = this.ariaLabel() ?? (this.label() || 'Select time');
+    const base =
+      this.ariaLabel() ?? (this.label() || this.intl().timePicker.selectTime);
     if (segment === 'start') {
-      return `${base} (from)`;
+      return this.intl().timePicker.rangeStart(base);
     }
     if (segment === 'end') {
-      return `${base} (to)`;
+      return this.intl().timePicker.rangeEnd(base);
     }
 
     return base;

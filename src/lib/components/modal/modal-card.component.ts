@@ -5,11 +5,13 @@ import {
   afterRenderEffect,
   booleanAttribute,
   computed,
+  inject,
   input,
   output,
   viewChild,
 } from '@angular/core';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
+import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 import type { IconName } from '@ids-group-ltd/ids-design-system/core';
 import { resolveDividers } from './modal-defaults';
 import type { ModalSize } from './modal.types';
@@ -29,6 +31,8 @@ let nextId = 0;
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class ModalCardComponent {
+  protected readonly intl = inject(DS_INTL);
+
   /** Card width — sm/md/lg/xl/fullscreen. */
   readonly size = input<ModalSize>('md');
   /** Severity — drives the icon-badge tint, the title colour, the DEFAULT icon and

@@ -7,5 +7,5 @@ Inputs: `status: DsStatusKey` (consumer-registered status key; colours wired via
 Content: label text. Use for status pills, counts, lifecycle markers.
 
 <!-- inputs:ds-badge -->
-All inputs: `status: DsStatusKey`, `withDot: boolean | null = null`, `solid: boolean = false`, `count: number | null = null`, `max: number = 99`, `countLabel: string = 'notifications'`
+All inputs: `status: DsStatusKey`, `withDot: boolean | null = null`, `solid: boolean = false`, `count: number | null = null`, `max: number = 99`, `countLabel: string | null = null`
 <!-- /inputs -->

@@ -3,7 +3,7 @@
 
 Group: Charts
 
-Four chart inputs resolve through `DS_CONFIG.chart` because they are one decision per APP, not per plot: `valueFormat` (a number reads one way in a product; a formatter passed per chart drifts as soon as there are two screens), `dataTable` (whether the numbers behind a plot have a non-visual route is an accessibility policy), `emptyText` and `errorText` (copy, and the place localisation lands). Precedence is the input, then the config, then the built-in — so binding one on a single chart still wins.
+Four chart inputs resolve through `DS_CONFIG.chart` because they are one decision per APP, not per plot: `valueFormat` (a number reads one way in a product; a formatter passed per chart drifts as soon as there are two screens), `dataTable` (whether the numbers behind a plot have a non-visual route is an accessibility policy), `frame` and `tooltipLingerMs`. Precedence is the input, then the config, then the built-in — so binding one on a single chart still wins. The empty and error copy is wording, so it lives in `DS_INTL.chart.empty` / `.error`; the number locale is `DsConfig.locale`.
 
 ```ts
 providers: [provideDsConfig({ chart: { valueFormat: v => v.toLocaleString('de-DE'), dataTable: 'visible' } })]

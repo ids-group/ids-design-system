@@ -7,6 +7,7 @@ import {
   computed,
   contentChildren,
   effect,
+  inject,
   input,
   isDevMode,
   signal,
@@ -15,6 +16,7 @@ import {
 import { ButtonComponent } from '@ids-group-ltd/ids-design-system/components/button';
 import { PopoverComponent } from '@ids-group-ltd/ids-design-system/components/popover';
 import { ProjectionDroppedDirective } from '@ids-group-ltd/ids-design-system/components';
+import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
 import { FilterItemDirective } from './filter-item.directive';
 
@@ -71,10 +73,20 @@ const MORE_TRIGGER_WIDTH = 132;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FilterBarComponent {
-  /** Trailing word of the trigger, after the count: "+2 filters". */
-  readonly moreLabel = input<string>('more');
-  /** Accessible name of the overflow panel. */
-  readonly panelLabel = input<string>('More filters');
+  private readonly intl = inject(DS_INTL);
+
+  /** Trailing word of the trigger, after the count: "+2 filters". Unset falls back to
+   *  `DS_INTL.filterBar.more`. */
+  readonly moreLabel = input<string | null>(null);
+  protected readonly moreLabelResolved = computed(
+    () => this.moreLabel() ?? this.intl().filterBar.more,
+  );
+  /** Accessible name of the overflow panel. Unset falls back to
+   *  `DS_INTL.filterBar.panelLabel`. */
+  readonly panelLabel = input<string | null>(null);
+  protected readonly panelLabelResolved = computed(
+    () => this.panelLabel() ?? this.intl().filterBar.panelLabel,
+  );
   /** Height of the "+N" trigger, to match the filters beside it. The bar cannot
    *  infer this: `dsFilterItem` carries a WIDTH, and the filters are arbitrary
    *  projected controls whose own `size` it never sees — so a row of `sm` filters

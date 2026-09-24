@@ -13,6 +13,7 @@ import {
   DsTableLayout,
   type TableColumn,
 } from '@ids-group-ltd/ids-design-system/components/table';
+import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 import { TableExportButtonComponent } from './table-export-button.component';
 
 /**
@@ -39,6 +40,7 @@ import { TableExportButtonComponent } from './table-export-button.component';
 })
 export class DsTableExport<T extends object> {
   private readonly layout = inject<DsTableLayout<T>>(DsTableLayout);
+  private readonly intl = inject(DS_INTL);
 
   /** Renders the built-in toolbar button. `false` keeps the feature and hides the control, for a
    *  table whose export is driven from somewhere else on the page. */
@@ -101,7 +103,7 @@ export class DsTableExport<T extends object> {
       return;
     }
     this.busy.set(true);
-    this.announcement.set('Preparing export…');
+    this.announcement.set(this.intl().tableExport.preparing);
     try {
       const result = await fetcher();
       if (typeof result === 'string' || result instanceof Blob) {
@@ -109,9 +111,9 @@ export class DsTableExport<T extends object> {
       } else {
         this.exportCsv(this.exportFilename(), result);
       }
-      this.announcement.set('Export ready');
+      this.announcement.set(this.intl().tableExport.ready);
     } catch (error) {
-      this.announcement.set('Export failed');
+      this.announcement.set(this.intl().tableExport.failed);
       this.exportFailed.emit(error);
     } finally {
       this.busy.set(false);

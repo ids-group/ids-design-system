@@ -256,6 +256,28 @@
   </p>
 
   <h3 class="block-title t-h4">
+    Locale and wording
+  </h3>
+
+  <p class="block-desc t-s">
+    Numbers and dates follow <code class="t-mono-inline">DsConfig.locale</code>,
+    then Angular's <code class="t-mono-inline">LOCALE_ID</code>: chart values
+    and percentages, the date picker, file sizes. Words follow
+    <code class="t-mono-inline">
+      DS_INTL
+    </code>: every string the library renders
+    itself, English until an app provides
+    <code class="t-mono-inline">
+      provideDsIntl
+    </code>. Set both once, at the
+    root; a factory returning a signal switches language live. The demo below
+    provides <code class="t-mono-inline">locale: 'de-DE'</code> and a few German
+    words.
+  </p>
+
+  <docs-locale-demo />
+
+  <h3 class="block-title t-h4">
     Worked example — a square brand
   </h3>
 

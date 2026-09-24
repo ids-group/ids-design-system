@@ -120,8 +120,7 @@
       <p
         class="thinned"
         role="status">
-        {{ droppedCount() }} readings thinned out to keep the plot drawable -
-        every one is in the data table.
+        {{ intl().chart.scatterThinned(droppedCount()) }}
       </p>
     }
 

@@ -9,12 +9,14 @@ import {
   ViewEncapsulation,
   booleanAttribute,
   computed,
+  inject,
   input,
   model,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
+import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 import type { IconName } from '@ids-group-ltd/ids-design-system/core';
 
 @Component({
@@ -26,6 +28,8 @@ import type { IconName } from '@ids-group-ltd/ids-design-system/core';
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class SidenavGroupComponent {
+  protected readonly intl = inject(DS_INTL);
+
   /** Group heading text. */
   readonly label = input<string>('');
   /** Optional group icon; omit to project custom content via the `[icon]` slot instead. */

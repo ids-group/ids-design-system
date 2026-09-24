@@ -2,7 +2,7 @@
   <button
     type="button"
     class="step minus"
-    aria-label="Decrease"
+    [attr.aria-label]="intl().numberStepper.decrease"
     [disabled]="atMin() || disabled()"
     (click)="dec()">
     −
@@ -21,7 +21,7 @@
   <button
     type="button"
     class="step plus"
-    aria-label="Increase"
+    [attr.aria-label]="intl().numberStepper.increase"
     [disabled]="atMax() || disabled()"
     (click)="inc()">
     +

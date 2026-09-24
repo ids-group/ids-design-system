@@ -4,14 +4,14 @@
   [open]="open()"
   (toggle)="onToggle(disclosure.open)">
   <summary>
-    Data table
+    {{ intl().chart.dataTable }}
   </summary>
 
   @if (built()) {
     <table>
       <caption>
         {{
-          caption() ?? 'Chart data'
+          caption() ?? intl().chart.dataTableCaption
         }}
       </caption>
 

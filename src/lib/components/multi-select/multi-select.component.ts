@@ -44,7 +44,10 @@ import {
   trimmedText,
 } from '@ids-group-ltd/ids-design-system/components';
 import { nextControlId } from '@ids-group-ltd/ids-design-system/components';
-import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
+import {
+  DS_INTL,
+  resolveWithConfig,
+} from '@ids-group-ltd/ids-design-system/core';
 import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
 import { DsOptionTemplateDirective } from '@ids-group-ltd/ids-design-system/components';
 import { DsChipTemplateDirective } from '@ids-group-ltd/ids-design-system/components';
@@ -108,6 +111,7 @@ export class MultiSelectComponent
   private readonly overlay = inject(Overlay);
   private readonly vcr = inject(ViewContainerRef);
   private readonly host = inject(ElementRef<HTMLElement>);
+  protected readonly intl = inject(DS_INTL);
   /** Public panel tokens forwarded onto the portaled overlay pane on open so
    *  a consumer's `ds-multi-select { --ds-multi-select-panel-*: … }` reaches it.
    *  Not the whole set: `prepareOverlayEnter` also forwards `DROPDOWN_PANEL_TOKENS`
@@ -129,10 +133,18 @@ export class MultiSelectComponent
   readonly value = model<string[]>([]);
   /** Options, groups, or both mixed — rendered in the order given. */
   readonly options = input<readonly MultiSelectItem[]>([]);
-  /** Placeholder shown in the trigger when nothing is selected. */
-  readonly placeholder = input<string>('Select…');
-  /** Placeholder for the in-panel filter input. */
-  readonly searchPlaceholder = input<string>('Filter…');
+  /** Placeholder shown in the trigger when nothing is selected.
+   *  Unset falls back to `DS_INTL.picker.placeholder`. */
+  readonly placeholder = input<string | null>(null);
+  readonly placeholderResolved = computed(
+    () => this.placeholder() ?? this.intl().picker.placeholder,
+  );
+  /** Placeholder for the in-panel filter input.
+   *  Unset falls back to `DS_INTL.picker.filterPlaceholder`. */
+  readonly searchPlaceholder = input<string | null>(null);
+  readonly searchPlaceholderResolved = computed(
+    () => this.searchPlaceholder() ?? this.intl().picker.filterPlaceholder,
+  );
   /** Whether the panel carries a filter row. `true` always, `false` never, and a
    *  NUMBER is a threshold — the row appears once there are at least that many
    *  options. Unset falls back to `DS_CONFIG.picker.searchable`, then `true`.
@@ -346,7 +358,7 @@ export class MultiSelectComponent
   );
 
   protected readonly triggerCaption = computed(
-    () => this.label() || this.ariaLabel() || this.placeholder(),
+    () => this.label() || this.ariaLabel() || this.placeholderResolved(),
   );
 
   protected readonly allOptions = computed<MultiSelectOption[]>(() =>
@@ -446,7 +458,7 @@ export class MultiSelectComponent
   });
 
   protected readonly resolvedAriaLabel = computed(
-    () => this.ariaLabel() || this.placeholder(),
+    () => this.ariaLabel() || this.placeholderResolved(),
   );
 
   protected readonly hintId = computed(() =>

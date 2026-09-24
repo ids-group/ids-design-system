@@ -4,11 +4,13 @@ import {
   ViewEncapsulation,
   booleanAttribute,
   computed,
+  inject,
   input,
   output,
 } from '@angular/core';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import {
+  DS_INTL,
   resolveWithConfig,
   warnAnnounceOversight,
 } from '@ids-group-ltd/ids-design-system/core';
@@ -27,6 +29,8 @@ import type { AlertVariant } from './alert.types';
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class AlertComponent {
+  protected readonly intl = inject(DS_INTL);
+
   /** Severity — drives colour, the default icon and the ARIA role/live. */
   readonly variant = input<AlertVariant>('info');
   /** Optional bold heading above the message. */

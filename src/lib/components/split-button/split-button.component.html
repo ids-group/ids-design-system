@@ -25,7 +25,7 @@
   aria-haspopup="menu"
   [class.open]="pop.opened()"
   [attr.aria-expanded]="pop.opened()"
-  [attr.aria-label]="menuLabel()"
+  [attr.aria-label]="menuLabelResolved()"
   [disabled]="disabled() || !menuItems().length"
   (click)="pop.toggle(trigger)"
   (keydown)="onTriggerKeydown($event, pop, trigger)">
