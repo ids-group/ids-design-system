@@ -4,5 +4,5 @@
 Group: Tables
 
 <!-- inputs:[dsCellTemplate] -->
-All inputs: `dsCellTemplate: required string`
+All inputs: `dsCellTemplate: required string`, `dsCellTemplateOf: readonly T[] | null = null`
 <!-- /inputs -->

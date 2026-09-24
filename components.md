@@ -140,6 +140,9 @@ Every entry below names its exported class (`ButtonComponent`, `TableComponent<T
 checkbox, radio, radio-group, switch, slider, segmented, OTP): `label`, `hint`, `error`, `warning`,
 `errors`, `invalid`, `touched`, `reserveMessage` — and one message line under the control that renders
 whichever of them wins. The ladder is error → errors → warning → advisory errors → success → hint.
+Every field control also has `focus(options?)` and `blur()`. `blur()` drops focus from whichever
+descendant holds it and leaves a portaled panel alone; `ds-autocomplete.clear()` keeps focus on
+purpose, so a host that navigates away calls `clear()` then `blur()`.
 
 `error`, `warning` and `success` lead that line with a glyph; `hint` does not, because it is the resting
 text rather than a state. Retune app-wide with `DS_CONFIG.field.stateIcons` (per state, independent —
@@ -218,6 +221,7 @@ Multi-line counterpart to `<ds-input>` — same wrapper/states, reuses the `--ds
 Inputs: `value: model<string>`, `size: 'sm' | 'md' | 'lg' = 'md'`, `label`, `hint`, `placeholder`, `disabled`, `invalid`, `required`, `optional: boolean = false`, `name`, `rows: number = 3`
 Tokens: same `--ds-input-*` family as `<ds-input>` (textarea overrides `--ds-input-padding-y` to `--space-3` for vertical breathing room).
 New: `autosize: boolean = false` (grows with content; forces `resize='none'`), `minRows`/`maxRows: number | null = null`, `resize: 'none' | 'vertical' | 'horizontal' | 'both' = 'vertical'`.
+Methods: `focus(options?)`, `selectionStart` / `selectionEnd` (reads), `setSelectionRange(start, end, direction?)`, `select()` - all forwarded to the native `<textarea>`, so an editor toolbar never queries the component's DOM. A value written through `value` lands a microtask later and moves the caret to the end; set a range after `value.set(...)` from a `setTimeout`.
 
 <!-- inputs:ds-textarea -->
 All inputs: `hint: string = ''`, `error: string = ''`, `warning: string = ''`, `reserveMessage: boolean | null = null`, `messageIcon: IconName | false | null = null`, `errors: readonly DsFieldError[] = []`, `invalid: boolean = false`, `touched: boolean = false`, `hidden: boolean = false`, `value: string = ''`, `size: 'sm' | 'md' | 'lg' = null`, `label: string = ''`, `placeholder: string = ''`, `disabled: boolean = false`, `readOnly: boolean = false`, `readonlyBinding: boolean = false`, `success: string = ''`, `required: boolean = false`, `optional: boolean = false`, `rows: number = 3`, `name: string | null = null`, `autosize: boolean = false`, `minRows: number | null = null`, `maxRows: number | null = null`, `resize: 'none' | 'vertical' | 'horizontal' | 'both' = 'vertical'`, `ariaLabel: string | null = null`, `maxLength: number | null = null`, `minLength: number | null = null`, `pattern: readonly RegExp[] = []`
@@ -248,10 +252,12 @@ All inputs: `hint: string = ''`, `error: string = ''`, `warning: string = ''`, `
 <!-- /inputs -->
 
 #### `<ds-switch>` — `SwitchComponent`
-Inputs: `checked: model<boolean>`, `disabled: boolean = false`, `name: string | null = null`, `variant: 'default' | 'success' | 'error' = 'default'`, `inputId: string | null = null`
+Inputs: `checked: model<boolean>`, `disabled: boolean = false`, `name: string | null = null`, `variant: 'default' | 'success' | 'error' = 'default'`, `inputId: string | null = null`, `controlled: boolean = false`
+Outputs: `(checkedRequested): boolean` - only when `controlled`: the value the user asked for; the switch waits for `[checked]` to change.
+Controlled: `<ds-switch controlled [checked]="paused()" (checkedRequested)="askPause($event)" />` - a click cancels the native toggle instead of flipping, so a confirm dialog can run first and a cancelled one leaves the track untouched. Off by default; the switch flips on every toggle as before.
 
 <!-- inputs:ds-switch -->
-All inputs: `hint: string = ''`, `error: string = ''`, `warning: string = ''`, `reserveMessage: boolean | null = null`, `messageIcon: IconName | false | null = null`, `errors: readonly DsFieldError[] = []`, `invalid: boolean = false`, `touched: boolean = false`, `hidden: boolean = false`, `checked: boolean = false`, `disabled: boolean = false`, `name: string | null = null`, `variant: 'default' | 'success' | 'error' = 'default'`, `inputId: string | null = null`, `size: 'sm' | 'md' | 'lg' = null`, `required: boolean = false`, `label: string = ''`, `ariaLabel: string | null = null`
+All inputs: `hint: string = ''`, `error: string = ''`, `warning: string = ''`, `reserveMessage: boolean | null = null`, `messageIcon: IconName | false | null = null`, `errors: readonly DsFieldError[] = []`, `invalid: boolean = false`, `touched: boolean = false`, `hidden: boolean = false`, `checked: boolean = false`, `disabled: boolean = false`, `name: string | null = null`, `variant: 'default' | 'success' | 'error' = 'default'`, `inputId: string | null = null`, `size: 'sm' | 'md' | 'lg' = null`, `required: boolean = false`, `label: string = ''`, `ariaLabel: string | null = null`, `controlled: boolean = false`
 <!-- /inputs -->
 
 #### The picker family — `<ds-select>`, `<ds-multi-select>`, `<ds-autocomplete>`
@@ -305,7 +311,7 @@ All inputs: `hint: string = ''`, `error: string = ''`, `warning: string = ''`, `
 Pre-styled search input with built-in icon. A form control, but not a field: no label, no message row.
 Inputs: `value: model<string>`, `placeholder: string = 'Search'`, `shortcut: string = ''` (rendered as a hint pill, e.g. `⌘K`), `showIcon: boolean = true`, `clearable: boolean = false`, `ariaLabel: string = ''`, `disabled: boolean = false`, `hidden: boolean = false`, `size: DsSize | null = null`, `debounce: number = 0` (ms held before `value` updates; clearing, Enter and `clear()` all skip the timer)
 Output: `(submitted): string` — emits the current value on Enter / form submit
-Methods: `clear()` — empties the field, drops an armed keystroke and publishes `''` at once, which writing `''` into `value` does not; `focus()`.
+Methods: `clear()` — empties the field, drops an armed keystroke and publishes `''` at once, which writing `''` into `value` does not; `focus()`, `blur()`.
 Binds through `NG_VALUE_ACCESSOR`, taking the value plumbing without the field-message layer — so `hint` / `error` / `warning` / `errors` / `invalid` / `touched` / `reserveMessage` / `messageIcon` are NOT inputs here.
 
 <!-- inputs:ds-search -->
@@ -828,7 +834,7 @@ Inputs: `data: required readonly T[]`, `columns: required readonly TableColumn<T
 Outputs: `(rowClicked): T`, `(sortChange): SortChangeEvent` (`{ key, dir }`)
 Column shape: `{ key: string, label: string, sortable?: boolean, align?: 'left' | 'right' | 'center', cell?: (row: T) => string }`
 Opening a row: give one column `link: (row) => <route target> | null` and its value renders as a real `<a>` — visible without hovering, in the tab order as a link, and Ctrl/Cmd-clickable, none of which a clickable `<tr>` can do. `null` for a row leaves that cell as plain text, so a partly-reachable list stays one column; external URLs go through a `[dsCellTemplate]` instead, since `link` takes Angular route targets only. It composes with `rowInteractive` (the link stops its click from reaching the row), but the two together cost **two tab stops per row** — on a long list prefer the link alone. `interactive: true` only tints a cell on row hover, which a keyboard or touch user never sees; prefer `link` wherever the row actually leads somewhere.
-Cell templates: `<ng-template dsCellTemplate="<colKey>" let-row>…</ng-template>` — `row` is typed `unknown`, narrow via a helper method on the host.
+Cell templates: `<ng-template dsCellTemplate="<colKey>" [dsCellTemplateOf]="rows" let-row>…</ng-template>` — bound to the same rows as `[data]`, `dsCellTemplateOf` types `row` as `T` under strict templates (a field typo is a compile error) and is never read at runtime. Without it `row` is `unknown`; narrow via a helper method on the host. `CellTemplateContext<T>` (`$implicit` and `row`) is exported.
 Content slots: `[empty]` (rendered when `data.length === 0`), `[bulk-actions]` (rendered in the bulk action bar when `selectable && some selected`)
 Loading modes: `'skeleton'` replaces rows with shimmer placeholders driven by the global `--skeleton-shimmer-x` keyframe; `'overlay'` keeps existing rows visible behind a translucent layer with a centred spinner; under `'skeleton'` the footer pager takes `loading` as well - its controls disable and its range label is masked, so it never quotes the previous query's count. `'overlay'` leaves the pager live, like the header.
 Footer pager: `pageSizeOptions`, `showPageSize`, `showLabel`, `paginationSize: DsSize | null = null` and `paginationLayout: PaginationLayout | null = null` are the embedded `ds-pagination`'s own inputs forwarded one-to-one; the last two unset resolve `DS_CONFIG.pagination.size` (then `DS_CONFIG.control.size`, then `sm`) and `DS_CONFIG.pagination.layout` (then `'grouped'`), so an app whose every pager wants `md` / `spread` says it once in the config.
@@ -846,7 +852,7 @@ All inputs: `data: required readonly T[]`, `rowId: ((row: T) => string) | null =
 #### `[dsCellTemplate]` — `CellTemplateDirective`
 
 <!-- inputs:[dsCellTemplate] -->
-All inputs: `dsCellTemplate: required string`
+All inputs: `dsCellTemplate: required string`, `dsCellTemplateOf: readonly T[] | null = null`
 <!-- /inputs -->
 
 #### `<ng-template[dsHeaderFilter]>` — `HeaderFilterDirective`

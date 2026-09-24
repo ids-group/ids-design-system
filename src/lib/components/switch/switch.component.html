@@ -15,6 +15,7 @@
       [attr.aria-invalid]="invalidResolved() ? 'true' : null"
       [attr.aria-describedby]="hintId()"
       [attr.aria-required]="required() ? 'true' : null"
+      (click)="onClick($event)"
       (change)="onCheckedChange($event)"
       (blur)="markTouched()" />
 

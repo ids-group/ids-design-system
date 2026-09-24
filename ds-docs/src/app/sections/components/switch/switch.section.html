@@ -171,4 +171,30 @@
       label="Email notifications"
       error="At least one notification channel must remain active." />
   </div>
+
+  <h3 class="block-title t-h4">
+    Controlled
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      controlled
+    </code> keeps the switch where
+    <code class="t-mono-inline">
+      [checked]
+    </code> puts it. A click emits
+    <code class="t-mono-inline">
+      (checkedRequested)
+    </code> with the value the user
+    asked for, and the host flips the state once it has confirmed.
+  </p>
+
+  <div class="stack">
+    <ds-switch
+      controlled
+      label="Global pause"
+      variant="error"
+      [checked]="aiPaused()"
+      (checkedRequested)="askPause($event)" />
+  </div>
 </docs-section>

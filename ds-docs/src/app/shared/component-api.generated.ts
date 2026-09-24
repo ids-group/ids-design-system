@@ -9268,9 +9268,28 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Accessible name for a control with no visible label — the row's `<label>` collapses when it is empty, leaving nothing to name it. Set beside a label it OVERRIDES the label, per ARIA."
+      },
+      {
+        "name": "controlled",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "The switch never flips itself: a click or Space cancels the native toggle and `checkedRequested` carries the value the user asked for. It moves only when `checked` changes from outside, so a cancelled confirmation changes nothing."
       }
     ],
-    "outputs": []
+    "outputs": [
+      {
+        "name": "checkedRequested",
+        "kind": "output",
+        "type": "boolean",
+        "union": null,
+        "default": null,
+        "required": false,
+        "description": "The value the user asked for, emitted in place of a flip when `controlled`. Silent otherwise."
+      }
+    ]
   },
   "table:CellTemplateDirective": {
     "key": "table",
@@ -9290,6 +9309,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": null,
         "required": true,
         "description": "The `key` of the column this template replaces, matched against the table's `columns`. A key no column declares renders nothing and warns nowhere."
+      },
+      {
+        "name": "dsCellTemplateOf",
+        "kind": "input",
+        "type": "readonly T[] | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "The table's rows, bound to type `let-row`. Never read at runtime - the table hands the row out itself."
       }
     ],
     "outputs": []

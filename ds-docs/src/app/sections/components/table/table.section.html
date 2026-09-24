@@ -24,27 +24,30 @@
     [stickyHeader]="false">
     <ng-template
       let-row
-      dsCellTemplate="project">
+      dsCellTemplate="project"
+      [dsCellTemplateOf]="events">
       <span class="t-s-bold">
-        {{ asEvent(row).project }}
+        {{ row.project }}
       </span>
     </ng-template>
 
     <ng-template
       let-row
-      dsCellTemplate="id">
+      dsCellTemplate="id"
+      [dsCellTemplateOf]="events">
       <span class="mono muted">
-        {{ asEvent(row).id }}
+        {{ row.id }}
       </span>
     </ng-template>
 
     <ng-template
       let-row
-      dsCellTemplate="status">
+      dsCellTemplate="status"
+      [dsCellTemplateOf]="events">
       <ds-badge
-        [status]="asEvent(row).status"
+        [status]="row.status"
         [withDot]="true">
-        {{ asEvent(row).statusLabel }}
+        {{ row.statusLabel }}
       </ds-badge>
     </ng-template>
   </ds-table>
