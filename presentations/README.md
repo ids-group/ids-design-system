@@ -13,7 +13,7 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 | --- | --- | --- |
 | 1 | `1-color-engine-derivation` | the head of the biggest lane: three P2 decisions and one measured WCAG AA failure sit downstream of the colour-space choice |
 | 2 | `2-color-engine-relative` | the same decision, prototype half — ranked next so the pair is read together |
-| 3 | `3-interaction-formula` | `.ds-interactive`, five verdicts B1-B5; agreed in principle, and `_interaction.scss` still does not exist |
+| 3 | `3-interaction-formula` | two pressed-state verdicts, both rendered and measured: the tonal button's pressed recipe and the danger menu item whose pressed equals its hover. The other three are answered and the `.ds-interactive` formula is deferred |
 | 4 | `4-migration-manifest-audit` | eight format practices to ratify — tooling, no consumer pulling on it |
 | 5 | `5-select-native-multi` | the cheapest to close: "keep parked" is a complete answer, and it is the answer already given — it stays only because closing it was declined |
 | 6 | `6-warning-text-colour` | one colour on one tint, each candidate rendered in itself. It ends "name a number: 1, 2, 3 or 4", and `docs/todo.md` still carries the measured 4.42:1 failure |
