@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   OnDestroy,
   ViewEncapsulation,
   booleanAttribute,
@@ -16,6 +17,7 @@ import {
   CHART_SERIES_COLORS,
   defaultChartFormat,
   describeShare,
+  listenForMarkFocus,
   markOf,
   rovingMarks,
   leaveMark,
@@ -23,6 +25,7 @@ import {
 } from '@ids-group-ltd/ids-design-system/components';
 import { ICONS } from '@ids-group-ltd/ids-design-system/core';
 import type { ChartValueFormat } from '@ids-group-ltd/ids-design-system/core';
+import type { MarkHit } from '@ids-group-ltd/ids-design-system/components';
 import { chartActiveMark } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import type {
   ChartItemTooltipTrigger,
@@ -208,6 +211,11 @@ export class ColumnSeriesComponent implements OnDestroy {
       preferBelow: computed(() => this.activeMark.pinned()),
       axisEntries: this.axisEntries,
     });
+    listenForMarkFocus(
+      inject(ElementRef),
+      (event, hit) => this.onMarkFocus(event, hit),
+      () => this.activeMark.leave(),
+    );
   }
 
   ngOnDestroy(): void {
@@ -355,18 +363,9 @@ export class ColumnSeriesComponent implements OnDestroy {
 
   protected readonly roving = rovingMarks(() => this.marks().length);
 
-  protected onMarkFocus(event: FocusEvent): void {
-    const hit = markOf(event);
-    if (hit) {
-      this.roving.focus(hit.index);
-      this.activeMark.enter(hit.index, event, this.tooltipMark(), hit.element);
-    }
-  }
-
-  protected onMarkBlur(event: FocusEvent): void {
-    if (markOf(event)) {
-      this.activeMark.leave();
-    }
+  private onMarkFocus(event: FocusEvent, hit: MarkHit): void {
+    this.roving.focus(hit.index);
+    this.activeMark.enter(hit.index, event, this.tooltipMark(), hit.element);
   }
 
   protected onMarkKey(event: KeyboardEvent): void {

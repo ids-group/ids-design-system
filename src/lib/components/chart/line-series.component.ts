@@ -19,6 +19,7 @@ import {
   areaPath,
   defaultChartFormat,
   focusMark,
+  listenForMarkFocus,
   markOf,
   bandPath,
   lineSegments,
@@ -27,7 +28,10 @@ import {
   leaveMark,
   staggerDelay,
 } from '@ids-group-ltd/ids-design-system/components';
-import type { LinePoint } from '@ids-group-ltd/ids-design-system/components';
+import type {
+  LinePoint,
+  MarkHit,
+} from '@ids-group-ltd/ids-design-system/components';
 import type {
   ChartAxis,
   ChartCurve,
@@ -192,6 +196,14 @@ export class LineSeriesComponent implements OnDestroy {
       origin: this.tooltipOrigin,
       axisEntries: this.axisEntries,
     });
+    listenForMarkFocus(
+      inject(ElementRef),
+      (event, hit) => this.onMarkerFocus(event, hit),
+      () => {
+        this.focusedSeries.set(null);
+        this.activeMark.leave();
+      },
+    );
   }
 
   ngOnDestroy(): void {
@@ -390,11 +402,7 @@ export class LineSeriesComponent implements OnDestroy {
     }
   }
 
-  protected onMarkerFocus(event: FocusEvent): void {
-    const hit = markOf(event);
-    if (!hit) {
-      return;
-    }
+  private onMarkerFocus(event: FocusEvent, hit: MarkHit): void {
     const marker = this.allMarkers()[hit.index];
     if (marker) {
       this.rovingBySeries.update((roving) =>
@@ -404,13 +412,6 @@ export class LineSeriesComponent implements OnDestroy {
       this.scales.setActiveIndex(marker.categoryIndex);
     }
     this.activeMark.enter(hit.index, event, undefined, hit.element);
-  }
-
-  protected onMarkerBlur(event: FocusEvent): void {
-    if (markOf(event)) {
-      this.focusedSeries.set(null);
-      this.activeMark.leave();
-    }
   }
 
   protected onMarkerKey(event: KeyboardEvent): void {
