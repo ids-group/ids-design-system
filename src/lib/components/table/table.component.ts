@@ -23,6 +23,7 @@ import {
 import { RouterLink } from '@angular/router';
 import { devWarn } from '@ids-group-ltd/ids-design-system/core';
 import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
+import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 import type {
   DsSize,
   PaginationLayout,
@@ -232,22 +233,25 @@ export class TableComponent<T extends object> {
   /**
    * Wording for the sort announcement, so it can be translated. Receives the
    * column's label and the new direction; return an empty string to say nothing.
+   * Unset falls back to `DS_INTL.table.sorted`.
    */
   readonly sortAnnouncement = input<
-    (label: string, dir: SortDirection) => string
-  >((label, dir) =>
-    dir
-      ? `Sorted by ${label}, ${dir === 'asc' ? 'ascending' : 'descending'}`
-      : `Sorting cleared`,
+    ((label: string, dir: SortDirection) => string) | null
+  >(null);
+  readonly sortAnnouncementResolved = computed(
+    () => this.sortAnnouncement() ?? this.intl().table.sorted,
   );
   /**
    * Wording for the row-range announcement, so it can be translated. Receives
    * the 1-based first and last row on screen and the total; return an empty
-   * string to say nothing.
+   * string to say nothing. Unset falls back to `DS_INTL.pagination.range`.
    */
   readonly rangeAnnouncement = input<
-    (first: number, last: number, total: number) => string
-  >((first, last, total) => `Showing ${first}–${last} of ${total}`);
+    ((first: number, last: number, total: number) => string) | null
+  >(null);
+  readonly rangeAnnouncementResolved = computed(
+    () => this.rangeAnnouncement() ?? this.intl().pagination.range,
+  );
   /** Number of shimmer rows rendered while `loading` is `'skeleton'`. */
   readonly skeletonRows = input<number>(5);
   /** Accessible name for the table (rendered as a visually-hidden caption).
@@ -528,6 +532,7 @@ export class TableComponent<T extends object> {
   );
 
   protected readonly layout = inject<DsTableLayout<T>>(DsTableLayout);
+  protected readonly intl = inject(DS_INTL);
 
   private readonly toolbarAnchor = viewChild('toolbarAnchor', {
     read: ViewContainerRef,
@@ -895,7 +900,7 @@ export class TableComponent<T extends object> {
    */
   protected readonly statusMessage = computed<string>(() => {
     if (this.loadingMode() !== false) {
-      return 'Loading…';
+      return this.intl().table.loading;
     }
 
     // A contributed line wins while it has one: an "Export failed" has to survive until the
@@ -920,7 +925,7 @@ export class TableComponent<T extends object> {
       open.has(this.rowKey(row)),
     ).length;
 
-    return onPage < 2 ? '' : `${onPage} rows expanded`;
+    return onPage < 2 ? '' : this.intl().table.rowsExpanded(onPage);
   });
 
   private readonly sortMessage = computed<string>(() => {
@@ -931,7 +936,7 @@ export class TableComponent<T extends object> {
     }
     const label = this.columns().find((col) => col.key === key)?.label ?? key;
 
-    return this.sortAnnouncement()(label, dir);
+    return this.sortAnnouncementResolved()(label, dir);
   });
 
   private readonly rangeMessage = computed<string>(() => {
@@ -946,7 +951,7 @@ export class TableComponent<T extends object> {
     const first = (this.page() - 1) * size + 1;
     const total = this.total() ?? this.filteredData().length;
 
-    return this.rangeAnnouncement()(first, first + rows - 1, total);
+    return this.rangeAnnouncementResolved()(first, first + rows - 1, total);
   });
 
   protected readonly virtualizing = computed(
@@ -1040,9 +1045,7 @@ export class TableComponent<T extends object> {
   protected readonly anySelected = computed(() => this.selectedIds().size > 0);
 
   protected readonly selectAllLabel = computed(() =>
-    this.pageSize() !== null
-      ? 'Select all rows on this page'
-      : 'Select all rows',
+    this.intl().table.selectAllRows(this.pageSize() !== null),
   );
 
   protected readonly allExpanded = computed(() => {
@@ -1060,11 +1063,12 @@ export class TableComponent<T extends object> {
   );
 
   protected readonly expandAllLabel = computed(() => {
-    const scope = this.pageSize() !== null ? ' on this page' : '';
+    const words = this.intl().table;
+    const onThisPage = this.pageSize() !== null;
 
     return this.allExpanded()
-      ? `Collapse all rows${scope}`
-      : `Expand all rows${scope}`;
+      ? words.collapseAllRows(onThisPage)
+      : words.expandAllRows(onThisPage);
   });
 
   protected readonly skeletonArray = computed(() =>
