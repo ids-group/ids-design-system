@@ -75,7 +75,7 @@ and token names.** These leaves are for orientation and usage.
 - [<ds-number-stepper> — NumberStepperComponent](forms/ds-number-stepper.md) — Spinbox for bounded quantities — −/+ buttons around a numeric value.
 - [<ds-checkbox> — CheckboxComponent](forms/ds-checkbox.md) — <!-- inputs:ds-checkbox -->
 - [<ds-radio> — RadioComponent](forms/ds-radio.md) — <!-- inputs:ds-radio -->
-- [<ds-switch> — SwitchComponent](forms/ds-switch.md) — <!-- inputs:ds-switch -->
+- [<ds-switch> — SwitchComponent](forms/ds-switch.md) — Controlled: <ds-switch controlled [checked]="paused()" (checkedRequested)="askPause($event)" /> - a click canc
 - [The picker family — <ds-select>, <ds-multi-select>, <ds-autocomplete>](forms/the-picker-family-ds-select-ds-multi-select-ds-autocomplete.md) — Five rules hold across all three: one meaning per member name, difference only where a reason is stated, one p
 - [<ds-select> — SelectComponent](forms/ds-select.md) — Trigger plus a CDK overlay panel. Keyboard: ArrowUp/Down, Enter/Space, Home/End, Escape, skipping group header
 - [<ds-multi-select> — MultiSelectComponent](forms/ds-multi-select.md) — <!-- inputs:ds-multi-select -->

@@ -6,6 +6,7 @@ import {
   forwardRef,
   input,
   model,
+  output,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DsBooleanControlValueAccessor } from '@ids-group-ltd/ids-design-system/components';
@@ -57,6 +58,14 @@ export class SwitchComponent extends DsBooleanControlValueAccessor {
   /** Accessible name for a control with no visible label — the row's `<label>` collapses when it
    *  is empty, leaving nothing to name it. Set beside a label it OVERRIDES the label, per ARIA. */
   readonly ariaLabel = input<string | null>(null);
+  /**
+   * The switch never flips itself: a click or Space cancels the native toggle and
+   * `checkedRequested` carries the value the user asked for. It moves only when
+   * `checked` changes from outside, so a cancelled confirmation changes nothing.
+   */
+  readonly controlled = input(false, { transform: booleanAttribute });
+  /** The value the user asked for, emitted in place of a flip when `controlled`. Silent otherwise. */
+  readonly checkedRequested = output<boolean>();
 
   protected readonly isDisabled = computed(
     () => this.disabled() || this.formDisabled(),
@@ -96,5 +105,13 @@ export class SwitchComponent extends DsBooleanControlValueAccessor {
 
   protected onCheckedChange(event: Event): void {
     this.checked.set((event.target as HTMLInputElement).checked);
+  }
+
+  protected onClick(event: MouseEvent): void {
+    if (!this.controlled()) {
+      return;
+    }
+    event.preventDefault();
+    this.checkedRequested.emit(!this.checked());
   }
 }
