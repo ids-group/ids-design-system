@@ -255,11 +255,16 @@ for (const [name, manifest] of manifests) {
     seen.add(item.id);
 
     if (!KINDS.has(item.kind)) at('M012', `unknown kind "${item.kind}"`);
+    // `note` is optional (only the non-obvious reason an agent needs, per CONTRIBUTING.md's
+    // release-note rule) — so absence is not an error, but a present note that is too short to
+    // carry a real reason still is.
     if (
       !RENAMES.has(item.kind) &&
-      (typeof item.note !== 'string' || item.note.trim().length < 40)
+      typeof item.note === 'string' &&
+      item.note.trim().length > 0 &&
+      item.note.trim().length < 40
     ) {
-      at('M013', 'note is missing or too short to act on');
+      at('M013', 'note is present but too short to act on — remove it or explain the reason');
     }
     if (RENAMES.has(item.kind) && !(item.old && item.new)) {
       at('M018', `${item.kind} needs both \`old\` and \`new\``);

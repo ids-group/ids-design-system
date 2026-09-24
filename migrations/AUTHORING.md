@@ -31,14 +31,13 @@ the notes carried **103** such markers across 189 items, and 64 notes ran past 1
 - **`pitfall`** — the way to do it mechanically right and still ship a broken app. This is the
   highest-value field in the file: a build error announces itself, a pitfall does not. If applying
   the item cannot go quietly wrong, leave it out rather than inventing one.
-- **`note`** — what is LEFT once those three are gone: the WHY. Capped at 120 words (lint, M041),
-  and no ALL-CAPS structural markers (lint, M040) — a marker means a field was not filled.
-
-`note` stays required on non-rename kinds (M013) even though `action` is now mandatory too. The
-two were checked against each other over a full pass of all 189 items: every time M013 forced a note
-onto an item whose instruction already lived in `action`, the note that resulted was a real fact —
-why the docs anchor moved, why three components need a title, why colour and progress state were
-split apart. The overlap earns its keep.
+- **`note`** — optional (M013 does not require it): the WHY, and only when a genuinely non-obvious
+  reason changes what the reader does — never a restatement of `action`, and never history,
+  archaeology or ADR-style narrative (same rule as `CONTRIBUTING.md`'s release-note section, for
+  the same reason: the reader acting on the item needs the fact, not how it was found). Capped at
+  120 words (lint, M041), and no ALL-CAPS structural markers (lint, M040) — a marker means a field
+  was not filled. Most items need none; write one for a fact like why the docs anchor moved, why
+  three components need a title, why colour and progress state were split apart.
 
 Every key is on an allowlist (lint, M042). An unlisted key is a typo that nothing reads and nothing
 reports, which is how a `pitfal` would sit in a published manifest forever.

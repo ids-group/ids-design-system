@@ -153,6 +153,27 @@ the version they describe.
 Manifest-specific guidance, including the two failure shapes this catches that nothing else does, is
 in `migrations/AUTHORING.md` under "Correcting a PUBLISHED manifest".
 
+## What a release note says: what changed, and what to do
+
+A `CHANGELOG.md` entry states what changed and what the reader does about it. It carries no
+paragraph explaining why the library changed: the reader deciding whether to upgrade needs the
+change and the cost, and a reason is one more thing to read past.
+
+- A reason stays only when it changes what the reader does: "the old name is inert, so a
+  declaration left behind sets nothing" tells them to search; "we split the control to share
+  the value accessor" does not.
+- Describing a defect is what changed, not a reason: a `### Fixed` entry says what was wrong
+  and what is true now.
+- A removal names what replaces it, or says nothing does.
+
+Recognizers a reviewer can grep an entry for: a paragraph opening "This is because", "The
+reason", "We", "To keep", "so that the library"; a second paragraph under a bold lead that
+restates the motive.
+
+The same rule governs a manifest item's `note` field (`migrations/AUTHORING.md`): optional,
+and written only for a genuinely non-obvious reason the reader needs to act correctly - never
+on every entry, and never history, archaeology or ADR-style narrative.
+
 ## Never in a published artefact
 
 `CHANGELOG.md`, `README.md`, `design-system.md`, `components.md` and `migrations/` are
