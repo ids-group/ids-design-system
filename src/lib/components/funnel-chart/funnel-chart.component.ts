@@ -204,7 +204,7 @@ export class FunnelChartComponent {
   readonly staggerMs = input(0, { transform: numberAttribute });
 
   protected markStagger(index: number): string {
-    return `${staggerDelay(index, this.staggerMs())}ms`;
+    return `${staggerDelay(index, this.stages().length, this.staggerMs())}ms`;
   }
 
   /** Whether a hovered or focused stage opens a tooltip. `'axis'` is not offered — a

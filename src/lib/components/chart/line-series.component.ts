@@ -365,7 +365,7 @@ export class LineSeriesComponent implements OnDestroy {
   );
 
   protected seriesStagger(index: number): string {
-    return `${staggerDelay(index, this.staggerMs())}ms`;
+    return `${staggerDelay(index, this.plotted().length, this.staggerMs())}ms`;
   }
 
   /** One tab stop PER SERIES: each line is a strand the reader walks with the arrows, and the

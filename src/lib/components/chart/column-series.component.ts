@@ -392,7 +392,7 @@ export class ColumnSeriesComponent implements OnDestroy {
   });
 
   protected markStagger(index: number): string {
-    return `${staggerDelay(index, this.staggerMs())}ms`;
+    return `${staggerDelay(index, this.marks().length, this.staggerMs())}ms`;
   }
 
   private readonly tooltipMark = computed(() =>

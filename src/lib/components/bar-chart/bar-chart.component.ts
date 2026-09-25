@@ -214,7 +214,7 @@ export class BarChartComponent {
   readonly staggerMs = input(0, { transform: numberAttribute });
 
   protected markStagger(index: number): string {
-    return `${staggerDelay(index, this.staggerMs())}ms`;
+    return `${staggerDelay(index, this.rows().length, this.staggerMs())}ms`;
   }
 
   /** Whether a hovered or focused row opens a tooltip. `'axis'` is not offered — a bar
