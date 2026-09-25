@@ -174,6 +174,12 @@
   opens. This covers `ds-select`'s trigger value and `ds-table`'s clipped cells in an interactive row.
   A plain `dsTooltip` without `dsTooltipWhenClipped` on a non-focusable element stays hover-only.
 
+- **A clipped-text tooltip is read once by a screen reader.** A `dsTooltipWhenClipped` tip whose text
+  the host already contains set `aria-describedby` on the focused element, so the text was announced
+  as its name and again as its description. It now sets none, on a focusable host or its ancestor; a
+  tip given a `dsTooltip` that says more than the host still describes it, as does a plain
+  `dsTooltip`. A test asserting `aria-describedby` on a clipped disclosure finds none.
+
 - **`ds-pagination` handles an empty list.** With `total` at `0` the range read `Showing 1-0 of 0` and
   page 1 was marked current; it now reads `Showing 0 of 0`, disables every page button and marks none
   current.
