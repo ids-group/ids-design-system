@@ -10,7 +10,7 @@ import { DS_VERSION } from '../../../shared/docs-stats';
   imports: [DocsSectionComponent],
   encapsulation: ViewEncapsulation.Emulated,
   template: `
-    <docs-section
+    <docs-section data-claude-design
       anchor="practice-rules"
       eyebrow="Practice"
       title="Composition rules">

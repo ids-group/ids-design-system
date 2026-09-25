@@ -5,7 +5,7 @@
 <title>Карточки Claude Design</title>
 <meta name="ds-deck-status" content="implemented">
 <meta name="ds-deck-decided" content="2026-09-25">
-<meta name="ds-deck-evidence" content=".design-sync/tools/build-cards.mjs - .design-sync/obsolete.txt">
+<meta name="ds-deck-evidence" content=".design-sync/CARDS.md - .design-sync/obsolete.txt">
 <link rel="stylesheet" href="../ds.css">
 <link rel="stylesheet" href="../deck.css">
 <style>
@@ -47,12 +47,12 @@
   }
 </style>
 <main>
-  <h1>Claude Design: 269 карточек вместо 472</h1>
+  <h1>Claude Design: 262 карточек вместо 472</h1>
   <section class="decided">
-    <h2>Сделано 2026-09-25: 203 блоков ds-docs помечены <code>data-no-card</code></h2>
+    <h2>Сделано 2026-09-25: публикуется 262 блоков с <code>data-claude-design</code>, остальное выключено по умолчанию</h2>
     <p>Карточка остаётся, если показывает то, что агент перенесёт на экран и чего нет в <code>.d.ts</code>: набор вариантов, размеров или состояний, отдельный режим раскладки, неочевидную композицию. Убраны доказательства фиксов, объяснения для скринридера, поведение, которого не видно на статичной карточке, демонстрации одного пропа и дубли. Страницы доков не изменились.</p>
     <p>Если не согласен с конкретной карточкой, переключи её: строка внизу соберёт правки одной строкой.</p>
-    <p class="evidence">.design-sync/tools/build-cards.mjs (data-no-card) - .design-sync/obsolete.txt (уже загруженные пути, удаляет владелец проекта)</p>
+    <p class="evidence">.design-sync/CARDS.md (правила: что публиковать и сколько) - .design-sync/obsolete.txt (уже загруженные пути, удаляет владелец проекта)</p>
   </section>
 
   <section>
@@ -60,27 +60,27 @@
     <p>Синее - осталось, красное - убрано. Каждый блок доков сейчас становится карточкой 1:1, и доказательства фиксов, объяснения для скринридера и дубли вариантов уходят агенту наравне с базовой матрицей.</p>
     <div class="stage"><div class="g-row"><span class="g-name">components/forms-inputs</span><span class="g-track"><i class="k" style="inline-size:38.392857142857146%"></i><i class="d" style="inline-size:61.60714285714286%"></i></span><span class="g-num">43 + <s>69</s></span></div>
 <div class="g-row"><span class="g-name">components/data-display</span><span class="g-track"><i class="k" style="inline-size:34.82142857142857%"></i><i class="d" style="inline-size:30.357142857142854%"></i></span><span class="g-num">39 + <s>34</s></span></div>
-<div class="g-row"><span class="g-name">guides/foundations</span><span class="g-track"><i class="k" style="inline-size:34.82142857142857%"></i><i class="d" style="inline-size:25%"></i></span><span class="g-num">39 + <s>28</s></span></div>
+<div class="g-row"><span class="g-name">guides/foundations</span><span class="g-track"><i class="k" style="inline-size:33.92857142857143%"></i><i class="d" style="inline-size:25.892857142857146%"></i></span><span class="g-num">38 + <s>29</s></span></div>
 <div class="g-row"><span class="g-name">components/navigation</span><span class="g-track"><i class="k" style="inline-size:30.357142857142854%"></i><i class="d" style="inline-size:16.071428571428573%"></i></span><span class="g-num">34 + <s>18</s></span></div>
 <div class="g-row"><span class="g-name">components/feedback-status</span><span class="g-track"><i class="k" style="inline-size:19.642857142857142%"></i><i class="d" style="inline-size:11.607142857142858%"></i></span><span class="g-num">22 + <s>13</s></span></div>
-<div class="g-row"><span class="g-name">components/charts</span><span class="g-track"><i class="k" style="inline-size:15.178571428571427%"></i><i class="d" style="inline-size:14.285714285714285%"></i></span><span class="g-num">17 + <s>16</s></span></div>
+<div class="g-row"><span class="g-name">components/charts</span><span class="g-track"><i class="k" style="inline-size:14.285714285714285%"></i><i class="d" style="inline-size:15.178571428571427%"></i></span><span class="g-num">16 + <s>17</s></span></div>
 <div class="g-row"><span class="g-name">components/actions</span><span class="g-track"><i class="k" style="inline-size:16.964285714285715%"></i><i class="d" style="inline-size:6.25%"></i></span><span class="g-num">19 + <s>7</s></span></div>
 <div class="g-row"><span class="g-name">components/overlays</span><span class="g-track"><i class="k" style="inline-size:9.821428571428571%"></i><i class="d" style="inline-size:9.821428571428571%"></i></span><span class="g-num">11 + <s>11</s></span></div>
-<div class="g-row"><span class="g-name">guides/patterns</span><span class="g-track"><i class="k" style="inline-size:18.75%"></i><i class="d" style="inline-size:0.8928571428571428%"></i></span><span class="g-num">21 + <s>1</s></span></div>
-<div class="g-row"><span class="g-name">guides/practice</span><span class="g-track"><i class="k" style="inline-size:10.714285714285714%"></i><i class="d" style="inline-size:2.6785714285714284%"></i></span><span class="g-num">12 + <s>3</s></span></div>
+<div class="g-row"><span class="g-name">guides/patterns</span><span class="g-track"><i class="k" style="inline-size:15.178571428571427%"></i><i class="d" style="inline-size:4.464285714285714%"></i></span><span class="g-num">17 + <s>5</s></span></div>
+<div class="g-row"><span class="g-name">guides/practice</span><span class="g-track"><i class="k" style="inline-size:9.821428571428571%"></i><i class="d" style="inline-size:3.571428571428571%"></i></span><span class="g-num">11 + <s>4</s></span></div>
 <div class="g-row"><span class="g-name">components/page-structure</span><span class="g-track"><i class="k" style="inline-size:7.142857142857142%"></i><i class="d" style="inline-size:1.7857142857142856%"></i></span><span class="g-num">8 + <s>2</s></span></div>
 <div class="g-row"><span class="g-name">components/foundations</span><span class="g-track"><i class="k" style="inline-size:3.571428571428571%"></i><i class="d" style="inline-size:0.8928571428571428%"></i></span><span class="g-num">4 + <s>1</s></span></div></div>
   </section>
 
   <section>
     <h2>Карточки</h2>
-    <p class="legend-line"><span>переключатель выключен = карточки не будет, страница доков не меняется</span><span>жёлтая полоса = ты изменил сделанное</span><span>серые переключатели = первая карточка главы (несёт лид и API-таблицу, убрать нельзя)</span></p>
+    <p class="legend-line"><span>переключатель выключен = у блока нет data-claude-design, страница доков не меняется</span><span>жёлтая полоса = ты изменил сделанное</span><span>лид главы и API-таблица едут на первой опубликованной карточке</span></p>
     <details class="ch" open>
 <summary><span class="ch-name">components/actions/Button</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/actions/Button/Button - Color x variant" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/actions/Button/Button - Color x variant" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Color x variant</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -157,20 +157,20 @@
 </details>
 <details class="ch">
 <summary><span class="ch-name">components/actions/ButtonGroup</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/actions/ButtonGroup/Button Group - Button group" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/actions/ButtonGroup/Button Group - Button group" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Button group</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
 </details>
 <details class="ch" open>
 <summary><span class="ch-name">components/actions/IconButton</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/actions/IconButton/Icon Button - Color x variant" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/actions/IconButton/Icon Button - Color x variant" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Color x variant</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -219,10 +219,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="components/actions/Link/Link - States" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="components/actions/Link/Link - States" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">States</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -236,10 +236,10 @@
 </details>
 <details class="ch">
 <summary><span class="ch-name">components/actions/Segmented</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/actions/Segmented/Segmented - Segmented control" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/actions/Segmented/Segmented - Segmented control" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Segmented control</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
@@ -253,10 +253,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="components/actions/SplitButton/Split Button - Primary variant" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="components/actions/SplitButton/Split Button - Primary variant" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Primary variant</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -270,20 +270,20 @@
 </details>
 <details class="ch">
 <summary><span class="ch-name">components/actions/ToggleButton</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/actions/ToggleButton/Toggle Button - Toggle" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/actions/ToggleButton/Toggle Button - Toggle" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Toggle</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
 </details>
 <details class="ch">
 <summary><span class="ch-name">components/charts/BarChart</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/charts/BarChart/Bar Chart" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/charts/BarChart/Bar Chart" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Bar Chart</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
@@ -304,10 +304,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="components/charts/Chart/Chart - Composing a chart" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="components/charts/Chart/Chart - Composing a chart" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Composing a chart</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -342,40 +342,40 @@
 </details>
 <details class="ch">
 <summary><span class="ch-name">components/charts/ChartDataTable</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/charts/ChartDataTable/Chart Data Table - The annex table" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/charts/ChartDataTable/Chart Data Table - The annex table" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">The annex table</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
 </details>
-<details class="ch">
+<details class="ch" open>
 <summary><span class="ch-name">components/charts/ChartTooltipPanel</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/charts/ChartTooltipPanel/Chart Tooltip Panel" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/charts/ChartTooltipPanel/Chart Tooltip Panel" data-proposed="drop">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Chart Tooltip Panel</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why">глава снята целиком</span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
 </details>
 <details class="ch">
 <summary><span class="ch-name">components/charts/ColumnChart</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/charts/ColumnChart/Column Chart" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/charts/ColumnChart/Column Chart" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Column Chart</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
 </details>
 <details class="ch">
 <summary><span class="ch-name">components/charts/FunnelChart</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/charts/FunnelChart/Funnel Chart" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/charts/FunnelChart/Funnel Chart" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Funnel Chart</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
@@ -389,10 +389,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="components/charts/HeatmapChart/Heatmap Chart - Default" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="components/charts/HeatmapChart/Heatmap Chart - Default" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Default</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -434,30 +434,30 @@
 </details>
 <details class="ch">
 <summary><span class="ch-name">components/charts/LineChart</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/charts/LineChart/Line Chart" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/charts/LineChart/Line Chart" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Line Chart</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
 </details>
 <details class="ch">
 <summary><span class="ch-name">components/charts/PieChart</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/charts/PieChart/Pie Chart" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/charts/PieChart/Pie Chart" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Pie Chart</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
 </details>
 <details class="ch" open>
 <summary><span class="ch-name">components/charts/ScatterChart</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/charts/ScatterChart/Scatter Chart - Default" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/charts/ScatterChart/Scatter Chart - Default" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Default</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -506,10 +506,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="components/charts/WaterfallChart/Waterfall Chart - Default" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="components/charts/WaterfallChart/Waterfall Chart - Default" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Default</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -551,10 +551,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="components/data-display/Accordion/Accordion - Default" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="components/data-display/Accordion/Accordion - Default" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Default</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -568,10 +568,10 @@
 </details>
 <details class="ch">
 <summary><span class="ch-name">components/data-display/AccordionItem</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/data-display/AccordionItem/Accordion Item - States showcase" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/data-display/AccordionItem/Accordion Item - States showcase" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">States showcase</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
@@ -592,10 +592,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="components/data-display/Avatar/Avatar - Sizes" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="components/data-display/Avatar/Avatar - Sizes" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Sizes</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -609,10 +609,10 @@
 </details>
 <details class="ch">
 <summary><span class="ch-name">components/data-display/AvatarGroup</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/data-display/AvatarGroup/Avatar Group - Group" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/data-display/AvatarGroup/Avatar Group - Group" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Group</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
@@ -626,10 +626,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="components/data-display/Card/Card - Elevations x paddings" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="components/data-display/Card/Card - Elevations x paddings" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Elevations x paddings</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -643,20 +643,20 @@
 </details>
 <details class="ch">
 <summary><span class="ch-name">components/data-display/DescriptionItem</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/data-display/DescriptionItem/Description Item - Copy-to-clipboard value" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/data-display/DescriptionItem/Description Item - Copy-to-clipboard value" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Copy-to-clipboard value</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
 </details>
 <details class="ch" open>
 <summary><span class="ch-name">components/data-display/DescriptionList</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/data-display/DescriptionList/Description List - Horizontal layout" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/data-display/DescriptionList/Description List - Horizontal layout" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Horizontal layout</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -684,10 +684,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="components/data-display/Icon/Icon - Sizes" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="components/data-display/Icon/Icon - Sizes" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Sizes</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -701,10 +701,10 @@
 </details>
 <details class="ch">
 <summary><span class="ch-name">components/data-display/List</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/data-display/List/List - List with leading and trailing icons" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/data-display/List/List - List with leading and trailing icons" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">List with leading and trailing icons</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -718,10 +718,10 @@
 </details>
 <details class="ch">
 <summary><span class="ch-name">components/data-display/ListItem</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/data-display/ListItem/List Item - A row with its own control" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/data-display/ListItem/List Item - A row with its own control" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">A row with its own control</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
@@ -756,10 +756,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="components/data-display/Stat/Stat - Stat tiles" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="components/data-display/Stat/Stat - Stat tiles" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Stat tiles</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
@@ -808,10 +808,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="components/data-display/Table/Table - Default" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="components/data-display/Table/Table - Default" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Default</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -1056,40 +1056,40 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="components/data-display/Tag/Tag - Variants" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="components/data-display/Tag/Tag - Variants" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Variants</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
 </details>
 <details class="ch">
 <summary><span class="ch-name">components/data-display/Timeline</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/data-display/Timeline/Timeline - Activity feed" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/data-display/Timeline/Timeline - Activity feed" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Activity feed</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
 </details>
 <details class="ch">
 <summary><span class="ch-name">components/data-display/TimelineItem</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/data-display/TimelineItem/Timeline Item - Tone variants" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/data-display/TimelineItem/Timeline Item - Tone variants" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Tone variants</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
 </details>
 <details class="ch">
 <summary><span class="ch-name">components/data-display/Tree</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/data-display/Tree/Tree - Interactive tree" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/data-display/Tree/Tree - Interactive tree" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Interactive tree</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -1117,10 +1117,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="components/feedback-status/Alert/Alert - Variants" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="components/feedback-status/Alert/Alert - Variants" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Variants</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -1141,10 +1141,10 @@
 </details>
 <details class="ch">
 <summary><span class="ch-name">components/feedback-status/Badge</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/feedback-status/Badge/Badge - Lifecycle states showcase" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/feedback-status/Badge/Badge - Lifecycle states showcase" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Lifecycle states showcase</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -1200,10 +1200,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="components/feedback-status/Banner/Banner - Variants" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="components/feedback-status/Banner/Banner - Variants" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Variants</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -1252,10 +1252,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="components/feedback-status/Bar/Bar - What the bar is" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="components/feedback-status/Bar/Bar - What the bar is" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">What the bar is</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
@@ -1269,20 +1269,20 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="components/feedback-status/EmptyState/Empty State - Variants" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="components/feedback-status/EmptyState/Empty State - Variants" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Variants</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
 </details>
 <details class="ch" open>
 <summary><span class="ch-name">components/feedback-status/LoadingOverlay</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/feedback-status/LoadingOverlay/Loading Overlay - Interactive demo" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/feedback-status/LoadingOverlay/Loading Overlay - Interactive demo" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Interactive demo</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -1296,10 +1296,10 @@
 </details>
 <details class="ch">
 <summary><span class="ch-name">components/feedback-status/Skeleton</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/feedback-status/Skeleton/Skeleton - Common patterns" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/feedback-status/Skeleton/Skeleton - Common patterns" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Common patterns</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
@@ -1313,20 +1313,20 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="components/feedback-status/Spinner/Spinner - Sizes" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="components/feedback-status/Spinner/Spinner - Sizes" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Sizes</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
 </details>
 <details class="ch">
 <summary><span class="ch-name">components/feedback-status/StatusDot</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/feedback-status/StatusDot/Status Dot - Variants" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/feedback-status/StatusDot/Status Dot - Variants" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Variants</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
@@ -1354,10 +1354,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="components/feedback-status/Toast/Toast - States showcase (static specimens)" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="components/feedback-status/Toast/Toast - States showcase (static specimens)" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">States showcase (static specimens)</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -1371,10 +1371,10 @@
 </details>
 <details class="ch">
 <summary><span class="ch-name">components/feedback-status/ToastRegion</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/feedback-status/ToastRegion/Toast Region - maxVisible queue" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/feedback-status/ToastRegion/Toast Region - maxVisible queue" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">maxVisible queue</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
@@ -1430,10 +1430,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="components/forms-inputs/Autocomplete/Autocomplete - Single" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="components/forms-inputs/Autocomplete/Autocomplete - Single" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Single</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -1461,10 +1461,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="components/forms-inputs/Checkbox/Checkbox - Checkbox states showcase" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="components/forms-inputs/Checkbox/Checkbox - Checkbox states showcase" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Checkbox states showcase</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -1499,10 +1499,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="components/forms-inputs/ColorPicker/Color Picker - Default presets" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="components/forms-inputs/ColorPicker/Color Picker - Default presets" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Default presets</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -1586,10 +1586,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="components/forms-inputs/DatePicker/Date Picker - Single date" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="components/forms-inputs/DatePicker/Date Picker - Single date" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Single date</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -1617,10 +1617,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="components/forms-inputs/Dropzone/Dropzone - States showcase" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="components/forms-inputs/Dropzone/Dropzone - States showcase" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">States showcase</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
@@ -1648,10 +1648,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="components/forms-inputs/FieldGroup/Field Group - Trailing action, and a unit after the value" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="components/forms-inputs/FieldGroup/Field Group - Trailing action, and a unit after the value" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Trailing action, and a unit after the value</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
@@ -1686,10 +1686,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="components/forms-inputs/Input/Input - States showcase" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="components/forms-inputs/Input/Input - States showcase" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">States showcase</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -1717,10 +1717,10 @@
 </details>
 <details class="ch" open>
 <summary><span class="ch-name">components/forms-inputs/MultiSelect</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/forms-inputs/MultiSelect/Multi Select - Basic usage" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/forms-inputs/MultiSelect/Multi Select - Basic usage" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Basic usage</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -1832,10 +1832,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="components/forms-inputs/NumberStepper/Number Stepper - Sizes" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="components/forms-inputs/NumberStepper/Number Stepper - Sizes" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Sizes</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
@@ -1849,10 +1849,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="components/forms-inputs/OtpInput/Otp Input - 6-digit numeric OTP" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="components/forms-inputs/OtpInput/Otp Input - 6-digit numeric OTP" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">6-digit numeric OTP</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -1866,20 +1866,20 @@
 </details>
 <details class="ch">
 <summary><span class="ch-name">components/forms-inputs/PasswordRules</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/forms-inputs/PasswordRules/Password Rules - Live checklist" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/forms-inputs/PasswordRules/Password Rules - Live checklist" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Live checklist</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
 </details>
 <details class="ch" open>
 <summary><span class="ch-name">components/forms-inputs/Radio</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/forms-inputs/Radio/Radio - Radio states showcase" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/forms-inputs/Radio/Radio - Radio states showcase" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Radio states showcase</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -1907,10 +1907,10 @@
 </details>
 <details class="ch">
 <summary><span class="ch-name">components/forms-inputs/RadioGroup</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/forms-inputs/RadioGroup/Radio Group - Radio group" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/forms-inputs/RadioGroup/Radio Group - Radio group" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Radio group</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
@@ -1931,10 +1931,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="components/forms-inputs/Search/Search - Default - filled - focus" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="components/forms-inputs/Search/Search - Default - filled - focus" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Default - filled - focus</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -2025,10 +2025,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="components/forms-inputs/Select/Select - Sizes" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="components/forms-inputs/Select/Select - Sizes" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Sizes</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -2063,10 +2063,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="components/forms-inputs/Slider/Slider - Single slider" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="components/forms-inputs/Slider/Slider - Single slider" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Single slider</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
@@ -2094,10 +2094,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="components/forms-inputs/Switch/Switch - Switch states showcase" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="components/forms-inputs/Switch/Switch - Switch states showcase" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Switch states showcase</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -2139,10 +2139,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="components/forms-inputs/Textarea/Textarea - Variant states - default - value - error" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="components/forms-inputs/Textarea/Textarea - Variant states - default - value - error" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Variant states - default - value - error</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -2191,10 +2191,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="components/forms-inputs/TimePicker/Time Picker - Single" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="components/forms-inputs/TimePicker/Time Picker - Single" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Single</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -2215,30 +2215,30 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="components/forms-inputs/W3w/W3w - Specimen" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="components/forms-inputs/W3w/W3w - Specimen" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Specimen</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
 </details>
 <details class="ch">
 <summary><span class="ch-name">components/foundations/Container</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/foundations/Container/Container - Container" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/foundations/Container/Container - Container" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Container</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
 </details>
 <details class="ch" open>
 <summary><span class="ch-name">components/foundations/Divider</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/foundations/Divider/Divider - Divider component" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/foundations/Divider/Divider - Divider component" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Divider component</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -2252,30 +2252,30 @@
 </details>
 <details class="ch">
 <summary><span class="ch-name">components/foundations/Inline</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/foundations/Inline/Inline - Inline" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/foundations/Inline/Inline - Inline" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Inline</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
 </details>
 <details class="ch">
 <summary><span class="ch-name">components/foundations/Stack</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/foundations/Stack/Stack - Stack" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/foundations/Stack/Stack - Stack" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Stack</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
 </details>
 <details class="ch" open>
 <summary><span class="ch-name">components/navigation/AppLayout</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/navigation/AppLayout/App Layout - Content-span topbar" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/navigation/AppLayout/App Layout - Content-span topbar" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Content-span topbar</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -2317,10 +2317,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="components/navigation/AuthLayout/Auth Layout - Two-tone wordmark, flat card" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="components/navigation/AuthLayout/Auth Layout - Two-tone wordmark, flat card" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Two-tone wordmark, flat card</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -2341,10 +2341,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="components/navigation/Breadcrumbs/Breadcrumbs - Default" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="components/navigation/Breadcrumbs/Breadcrumbs - Default" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Default</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -2393,40 +2393,40 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="components/navigation/Menu/Menu - Trigger-opened (overlay)" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="components/navigation/Menu/Menu - Trigger-opened (overlay)" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Trigger-opened (overlay)</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
 </details>
 <details class="ch">
 <summary><span class="ch-name">components/navigation/MenuDivider</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/navigation/MenuDivider/Menu Divider - Dividers" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/navigation/MenuDivider/Menu Divider - Dividers" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Dividers</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
 </details>
 <details class="ch">
 <summary><span class="ch-name">components/navigation/MenuItem</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/navigation/MenuItem/Menu Item" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/navigation/MenuItem/Menu Item" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Menu Item</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
 </details>
 <details class="ch" open>
 <summary><span class="ch-name">components/navigation/Pagination</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/navigation/Pagination/Pagination - Default" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/navigation/Pagination/Pagination - Default" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Default</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -2482,10 +2482,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="components/navigation/Sidenav/Sidenav - Default" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="components/navigation/Sidenav/Sidenav - Default" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Default</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -2499,30 +2499,30 @@
 </details>
 <details class="ch">
 <summary><span class="ch-name">components/navigation/SidenavFooter</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/navigation/SidenavFooter/Sidenav Footer - The rail footer on its own" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/navigation/SidenavFooter/Sidenav Footer - The rail footer on its own" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">The rail footer on its own</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
 </details>
 <details class="ch">
 <summary><span class="ch-name">components/navigation/SidenavGroup</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/navigation/SidenavGroup/Sidenav Group - Expandable groups" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/navigation/SidenavGroup/Sidenav Group - Expandable groups" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Expandable groups</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
 </details>
 <details class="ch">
 <summary><span class="ch-name">components/navigation/SidenavItem</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/navigation/SidenavItem/Sidenav Item - Item states showcase" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/navigation/SidenavItem/Sidenav Item - Item states showcase" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Item states showcase</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
@@ -2536,10 +2536,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="components/navigation/Stepper/Stepper - Default" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="components/navigation/Stepper/Stepper - Default" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Default</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -2581,10 +2581,10 @@
 </details>
 <details class="ch">
 <summary><span class="ch-name">components/navigation/Tab</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/navigation/Tab/Tab - States showcase" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/navigation/Tab/Tab - States showcase" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">States showcase</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
@@ -2633,10 +2633,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="components/navigation/Tabs/Tabs - Variants" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="components/navigation/Tabs/Tabs - Variants" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Variants</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -2657,10 +2657,10 @@
 </details>
 <details class="ch">
 <summary><span class="ch-name">components/navigation/Topbar</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/navigation/Topbar/Topbar - Default" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/navigation/Topbar/Topbar - Default" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Default</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -2681,10 +2681,10 @@
 </details>
 <details class="ch" open>
 <summary><span class="ch-name">components/overlays/BottomSheet</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/overlays/BottomSheet/Bottom Sheet - Live demo" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/overlays/BottomSheet/Bottom Sheet - Live demo" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Live demo</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -2705,10 +2705,10 @@
 </details>
 <details class="ch" open>
 <summary><span class="ch-name">components/overlays/Drawer</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/overlays/Drawer/Drawer - Live demo" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/overlays/Drawer/Drawer - Live demo" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Live demo</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -2736,10 +2736,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="components/overlays/Modal/Modal - Sizes" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="components/overlays/Modal/Modal - Sizes" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Sizes</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
@@ -2753,10 +2753,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="components/overlays/ModalCard/Modal Card - Eyebrow - context above the title" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="components/overlays/ModalCard/Modal Card - Eyebrow - context above the title" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Eyebrow - context above the title</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -2798,10 +2798,10 @@
 </details>
 <details class="ch">
 <summary><span class="ch-name">components/overlays/ModalConfirm</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/overlays/ModalConfirm/Modal Confirm - Confirmation" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/overlays/ModalConfirm/Modal Confirm - Confirmation" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Confirmation</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
@@ -2836,30 +2836,30 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="components/overlays/Popover/Popover - Static specimen" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="components/overlays/Popover/Popover - Static specimen" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Static specimen</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
 </details>
 <details class="ch">
 <summary><span class="ch-name">components/overlays/TooltipPanel</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/overlays/TooltipPanel/Tooltip Panel - States showcase (static specimens)" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/overlays/TooltipPanel/Tooltip Panel - States showcase (static specimens)" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">States showcase (static specimens)</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
 </details>
 <details class="ch" open>
 <summary><span class="ch-name">components/page-structure/FilterBar</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="components/page-structure/FilterBar/Filter Bar - Sizing the +N trigger" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="components/page-structure/FilterBar/Filter Bar - Sizing the +N trigger" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Sizing the +N trigger</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -2880,10 +2880,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="components/page-structure/PageFooter/Page Footer - Default" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="components/page-structure/PageFooter/Page Footer - Default" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Default</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -2904,10 +2904,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="components/page-structure/PageHeader/Page Header - Default" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="components/page-structure/PageHeader/Page Header - Default" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Default</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -2942,10 +2942,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="guides/foundations/Browser tab &amp; document/Browser tab &amp; document - Tab specimen" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="guides/foundations/Browser tab &amp; document/Browser tab &amp; document - Tab specimen" data-proposed="drop">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Tab specimen</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why">глава снята целиком</span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
@@ -2973,10 +2973,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="guides/foundations/Charts &amp; dataviz/Charts &amp; dataviz - Categorical palette (8)" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="guides/foundations/Charts &amp; dataviz/Charts &amp; dataviz - Categorical palette (8)" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Categorical palette (8)</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -3074,10 +3074,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="guides/foundations/Colour/Colour - Secondary role" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="guides/foundations/Colour/Colour - Secondary role" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Secondary role</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -3133,10 +3133,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="guides/foundations/Density/Density - The four tiers" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="guides/foundations/Density/Density - The four tiers" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">The four tiers</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -3157,10 +3157,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="guides/foundations/Elevation/Elevation - Shadow scale - primitive tiers" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="guides/foundations/Elevation/Elevation - Shadow scale - primitive tiers" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Shadow scale - primitive tiers</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -3188,20 +3188,20 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="guides/foundations/Iconography/Iconography - Size scale" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="guides/foundations/Iconography/Iconography - Size scale" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Size scale</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
 </details>
 <details class="ch">
 <summary><span class="ch-name">guides/foundations/Layout</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="guides/foundations/Layout/Layout - Breakpoints" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="guides/foundations/Layout/Layout - Breakpoints" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Breakpoints</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -3243,10 +3243,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="guides/foundations/Motion/Motion - Durations" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="guides/foundations/Motion/Motion - Durations" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Durations</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -3274,10 +3274,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="guides/foundations/Opacity &amp; alpha tokens/Opacity &amp; alpha tokens - Semantic opacity tokens" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="guides/foundations/Opacity &amp; alpha tokens/Opacity &amp; alpha tokens - Semantic opacity tokens" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Semantic opacity tokens</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
@@ -3305,20 +3305,20 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="guides/foundations/Radius/Radius - Scale" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="guides/foundations/Radius/Radius - Scale" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Scale</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
 </details>
 <details class="ch" open>
 <summary><span class="ch-name">guides/foundations/Scrollbar</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="guides/foundations/Scrollbar/Scrollbar - Live demo" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="guides/foundations/Scrollbar/Scrollbar - Live demo" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Live demo</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -3339,30 +3339,30 @@
 </details>
 <details class="ch">
 <summary><span class="ch-name">guides/foundations/Spacing</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="guides/foundations/Spacing/Spacing - Scale" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="guides/foundations/Spacing/Spacing - Scale" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Scale</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
 </details>
 <details class="ch">
 <summary><span class="ch-name">guides/foundations/Surface levels</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="guides/foundations/Surface levels/Surface levels" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="guides/foundations/Surface levels/Surface levels" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Surface levels</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
 </details>
 <details class="ch" open>
 <summary><span class="ch-name">guides/foundations/Theming &amp; dark mode</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="guides/foundations/Theming &amp; dark mode/Theming &amp; dark mode - Activation" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="guides/foundations/Theming &amp; dark mode/Theming &amp; dark mode - Activation" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Activation</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -3432,30 +3432,30 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="guides/foundations/Typography/Typography - Type ramp" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="guides/foundations/Typography/Typography - Type ramp" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Type ramp</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
 </details>
 <details class="ch">
 <summary><span class="ch-name">guides/foundations/Z-index</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="guides/foundations/Z-index/Z-index" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="guides/foundations/Z-index/Z-index" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Z-index</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
 </details>
 <details class="ch">
 <summary><span class="ch-name">guides/patterns/Activity</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="guides/patterns/Activity/Activity - Activity stream" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="guides/patterns/Activity/Activity - Activity stream" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Activity stream</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -3474,22 +3474,22 @@
   <div class="frame" hidden></div>
 </li></ul>
 </details>
-<details class="ch">
+<details class="ch" open>
 <summary><span class="ch-name">guides/patterns/Empty-state variants</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="guides/patterns/Empty-state variants/Empty-state variants" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="guides/patterns/Empty-state variants/Empty-state variants" data-proposed="drop">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Empty-state variants</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why">глава снята целиком</span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
 </details>
 <details class="ch">
 <summary><span class="ch-name">guides/patterns/Filter bar</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="guides/patterns/Filter bar/Filter bar - Inline row" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="guides/patterns/Filter bar/Filter bar - Inline row" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Inline row</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -3524,10 +3524,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="guides/patterns/Form layout/Form layout - Multi-column form" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="guides/patterns/Form layout/Form layout - Multi-column form" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Multi-column form</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -3569,10 +3569,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="guides/patterns/Page composition/Page composition - Four regions, and three of them are components" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="guides/patterns/Page composition/Page composition - Four regions, and three of them are components" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Four regions, and three of them are components</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -3598,36 +3598,36 @@
   <div class="frame" hidden></div>
 </li></ul>
 </details>
-<details class="ch">
+<details class="ch" open>
 <summary><span class="ch-name">guides/patterns/Page header</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="guides/patterns/Page header/Page header - Compact variant" data-proposed="keep">
+<ul><li class="c" data-path="guides/patterns/Page header/Page header - Compact variant" data-proposed="drop">
   <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Compact variant</span>
-  <span class="why"></span>
+  <span class="why">глава снята целиком</span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="guides/patterns/Page header/Page header - Full record header" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="guides/patterns/Page header/Page header - Full record header" data-proposed="drop">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Full record header</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why">глава снята целиком</span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="guides/patterns/Page header/Page header - Usage" data-proposed="keep">
+<li class="c" data-path="guides/patterns/Page header/Page header - Usage" data-proposed="drop">
   <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Usage</span>
-  <span class="why"></span>
+  <span class="why">глава снята целиком</span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
 </details>
 <details class="ch">
 <summary><span class="ch-name">guides/practice/Composition rules</span><span class="ch-num" data-chapter-count></span></summary>
-<ul><li class="c" data-path="guides/practice/Composition rules/Composition rules" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<ul><li class="c" data-path="guides/practice/Composition rules/Composition rules" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Composition rules</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li></ul>
@@ -3641,10 +3641,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="guides/practice/Do &amp; Don't/Do &amp; Don't - Button hierarchy" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="guides/practice/Do &amp; Don't/Do &amp; Don't - Button hierarchy" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">Button hierarchy</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -3700,10 +3700,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="guides/practice/Signal Forms/Signal Forms - The whole recipe" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="guides/practice/Signal Forms/Signal Forms - The whole recipe" data-proposed="drop">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">The whole recipe</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why">глава снята целиком</span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -3724,10 +3724,10 @@
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
-<li class="c" data-path="guides/practice/Token discipline/Token discipline - The rule" data-proposed="keep" data-locked>
-  <button type="button" class="tog" disabled aria-label="Оставить или убрать"></button>
+<li class="c" data-path="guides/practice/Token discipline/Token discipline - The rule" data-proposed="keep">
+  <button type="button" class="tog"  aria-label="Оставить или убрать"></button>
   <span class="nm">The rule</span>
-  <span class="why">первая карточка главы: лид и API</span>
+  <span class="why"></span>
   <button type="button" class="peek">показать</button>
   <div class="frame" hidden></div>
 </li>
@@ -3742,7 +3742,7 @@
   </section>
 
   <section>
-    <p class="src">Источник: <code>.design-sync/upload</code>, пересобранный <code>build-cards.mjs</code> 2026-09-25 (472 карточек, 120 заблокированы как первые в главе). Разметка - классификация агентом по названию, описанию и самой карточке. «показать» открывает карточку из <code>.design-sync/upload</code>; убранной карточки после пересборки дерева там нет, и её фрейм пуст.</p>
+    <p class="src">Источник: <code>.design-sync/upload</code>, пересобранный <code>build-cards.mjs</code> 2026-09-25 (472 карточек). Разметка - классификация агентом по названию, описанию и самой карточке. «показать» открывает карточку из <code>.design-sync/upload</code>; убранной карточки после пересборки дерева там нет, и её фрейм пуст.</p>
   </section>
 
   <div class="bar-fixed">

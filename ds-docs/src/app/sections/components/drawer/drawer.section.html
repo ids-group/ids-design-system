@@ -63,7 +63,43 @@
     </ds-button>
   </div>
 
-  <h3 data-no-card class="block-title t-h4">
+  <h3 data-claude-design class="block-title t-h4">
+    Open drawer
+  </h3>
+
+  <p class="block-desc t-s">
+    A right-edge md drawer as it looks open, with header, body and footer
+    actions.
+  </p>
+
+  <div class="demo static-demo">
+    <ds-drawer
+      staticPreview
+      title="Edit shift">
+      <ng-container drawer-body>
+        <p
+          class="t-s"
+          style="color: var(--text-secondary); margin: 0">
+          Update the start time and assigned crew for the Lane 04 morning
+          shift.
+        </p>
+      </ng-container>
+
+      <ng-container drawer-footer>
+        <ds-button
+          color="neutral"
+          variant="outline">
+          Cancel
+        </ds-button>
+
+        <ds-button>
+          Save
+        </ds-button>
+      </ng-container>
+    </ds-drawer>
+  </div>
+
+  <h3 class="block-title t-h4">
     Placements
   </h3>
 
@@ -111,7 +147,7 @@
     </ds-button>
   </div>
 
-  <h3 data-no-card class="block-title t-h4">
+  <h3 class="block-title t-h4">
     Sizes
   </h3>
 
