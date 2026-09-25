@@ -80,6 +80,8 @@
             <path
               class="slice"
               [class.interactive]="interactive()"
+              [class.pins]="defaults.pinOnClick()"
+              [class.is-active]="activeMark.index() === index"
               [class.is-pinned]="
                 activeMark.pinned() && activeMark.index() === index
               "
@@ -143,6 +145,7 @@
             <li
               class="legend-item"
               [class.interactive]="interactive()"
+              [class.pins]="defaults.pinOnClick()"
               [attr.role]="interactive() ? 'button' : null"
               [attr.tabindex]="
                 interactive() ? (index === roving.tabStop() ? 0 : -1) : null

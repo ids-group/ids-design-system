@@ -55,6 +55,8 @@
             [attr.stroke-width]="hitGapUnits()"
             [style.--_chart-mark-stagger]="markStagger(index)"
             [class.interactive]="interactive()"
+            [class.pins]="defaults.pinOnClick()"
+            [class.is-active]="activeMark.index() === index"
             [class.is-pinned]="
               activeMark.pinned() && activeMark.index() === index
             "
@@ -126,7 +128,7 @@
           @for (entry of stages(); track entry.stage.id; let index = $index) {
             <tr
               (pointerenter)="onRowEnter(index, $event)"
-              (pointerleave)="activeMark.leave()">
+              (pointerleave)="onRowLeave()">
               <th scope="row">
                 <span
                   class="swatch"
