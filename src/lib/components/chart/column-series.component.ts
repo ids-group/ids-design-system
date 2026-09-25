@@ -7,6 +7,7 @@ import {
   booleanAttribute,
   computed,
   effect,
+  untracked,
   inject,
   input,
   numberAttribute,
@@ -244,12 +245,42 @@ export class ColumnSeriesComponent implements OnDestroy {
       }),
       axisEntries: this.axisEntries,
     });
+    const host = inject<ElementRef<Element>>(ElementRef);
     listenForMarkFocus(
-      inject(ElementRef),
+      host,
       (event, hit) => this.onMarkFocus(event, hit),
       () => this.activeMark.leave(),
     );
+    let answeringLabel = false;
+    effect(() => {
+      const hover = this.scales.categoryLabelHover?.() ?? null;
+      untracked(() => {
+        const mark =
+          hover &&
+          host.nativeElement.querySelector(
+            `[data-mark-index="${hover.index}"]`,
+          );
+        if (hover && mark) {
+          answeringLabel = true;
+          this.activeMark.enter(
+            hover.index,
+            hover.event,
+            this.tooltipMark(),
+            mark,
+          );
+        } else if (answeringLabel) {
+          answeringLabel = false;
+          this.activeMark.leave();
+        }
+      });
+    });
   }
+
+  // A reader naming a category by its label is asking for that column, so the rest step back
+  // whatever `dimOthers` says, as they do for a legend entry.
+  protected readonly dimsFromLabel = computed(
+    () => (this.scales.categoryLabelHover?.() ?? null) !== null,
+  );
 
   ngOnDestroy(): void {
     this.scales.releaseTooltip(this.domainId);

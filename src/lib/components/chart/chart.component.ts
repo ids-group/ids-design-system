@@ -920,6 +920,24 @@ export class ChartComponent implements ChartScales {
     ),
   );
 
+  private readonly labelHovered = signal<{
+    readonly index: number;
+    readonly event: PointerEvent;
+  } | null>(null);
+
+  readonly categoryLabelHover = this.labelHovered.asReadonly();
+
+  // Under the category cursor a label is already inside its band's hover area.
+  protected onCategoryLabelEnter(index: number, event: PointerEvent): void {
+    if (!this.cursorOn()) {
+      this.labelHovered.set({ index, event });
+    }
+  }
+
+  protected onCategoryLabelLeave(): void {
+    this.labelHovered.set(null);
+  }
+
   protected readonly categoryLabels = computed(() => {
     const toX = this.xPosition();
     const interval = this.categoryLabelInterval();

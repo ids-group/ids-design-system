@@ -1,6 +1,6 @@
 <svg:g
   class="columns"
-  [class.dims-others]="dimOthers()"
+  [class.dims-others]="dimOthers() || dimsFromLabel()"
   [class.is-dimmed]="dimmedBySeries()"
   [style.--_column-chart-column-share]="markWidthPx()"
   [style.--_column-chart-slot-band]="slotBandPx()"

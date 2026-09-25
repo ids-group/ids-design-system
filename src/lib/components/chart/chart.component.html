@@ -209,7 +209,9 @@
                 categoryLabelsRotated()
                   ? 'rotate(-45 ' + label.x + ' ' + categoryLabelY() + ')'
                   : null
-              ">
+              "
+              (pointerenter)="onCategoryLabelEnter(label.index, $event)"
+              (pointerleave)="onCategoryLabelLeave()">
               {{ label.text }}
             </text>
           }
