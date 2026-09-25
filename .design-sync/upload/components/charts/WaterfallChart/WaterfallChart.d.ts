@@ -33,6 +33,10 @@ export interface WaterfallChartProps {
   errorText?: string | null;
   /** Formats every value the chart prints - the axis ticks, the bar labels and the annex table. The sign a delta carries is added around it, so a formatter never has to know about one. */
   valueFormat?: unknown;
+  /** Holds the clicked step and its tooltip in place, with a pin disc on it, until a second click, Escape or a press outside releases it. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. `barClicked` fires either way - pinning is a state, not a handler. */
+  pinOnClick?: boolean | null;
+  /** Milliseconds between one step's entrance and the next; a long waterfall narrows the step to arrive within 260ms. `0` is no stagger. */
+  staggerMs?: number;
   /** The clicked datum, as it was given. Fires on click and on Enter or Space. */
   onBarClicked?: (value: unknown) => void;
   /** Element content. */

@@ -4,6 +4,8 @@ Four canonical row-empty variants. Headers always stay so the schema is legible.
 
 A single tertiary line in the [empty] slot. Use when the empty state is transient or context-obvious.
 
+A paged table announces the empty-state text when a filter leaves it with no rows: type a project that does not exist and a screen reader hears the line below the header.
+
 First-run variant — nothing exists yet, so the CTA invites creation.
 
 Data exists but the current filter or search excluded every row.

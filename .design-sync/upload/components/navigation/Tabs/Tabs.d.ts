@@ -12,7 +12,7 @@ export interface TabsProps {
   variant?: ('line' | 'pills');
   /** When true, a tab's content is instantiated only on first activation and kept alive thereafter. When false (default), all panels render eagerly. */
   lazy?: boolean;
-  /** When true, the tab strip scrolls horizontally instead of wrapping. The active tab is scrolled into view on selection. */
+  /** When true, a horizontal strip scrolls inside its own box and shows previous/next arrows while tabs lie beyond its edges, each arrow hidden at its own edge. The active tab is scrolled into view on selection. When false, tabs keep their width and a strip too long for its container overflows it. */
   scrollable?: boolean;
   /** When true, each tab shows a close button. Clicking it emits tabClosed with the tab's value (or label as fallback) and does not switch to that tab. */
   closable?: boolean;

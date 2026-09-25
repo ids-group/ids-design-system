@@ -21,8 +21,8 @@ export interface LineChartProps {
   interactive?: boolean;
   /** The point that was clicked, or activated with Enter or Space. Fires whether or not `interactive` is set. */
   onPointClicked?: (value: unknown) => void;
-  /** Holds the crosshair and its tooltip on the category that was clicked, until Escape or a press outside releases it. Off by default: a click is already the drill-down hook, and a crosshair left standing after the pointer has gone needs a reader who knows why. `pointClicked` fires either way — pinning is a state, not a handler. */
-  pinOnClick?: boolean;
+  /** Holds the crosshair and its tooltip on the category that was clicked, with a pin disc on it, until a second click, Escape or a press outside releases it. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. `pointClicked` fires either way - pinning is a state, not a handler. */
+  pinOnClick?: boolean | null;
   /** Dims every OTHER mark while one is hovered or focused, so the reader's eye is held on the one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed marks — measured 2026-09-13, the worst pair of three dimmed series falls from dE 14.8 at full opacity to 2.1 at `--ds-chart-dim-opacity`'s default 0.3 — so it buys loudness for one mark and pays for it with the rest of the chart. */
   dimOthers?: boolean;
   /** What a `null` reading draws. The default refuses to assert that a missing reading is a zero. */
@@ -74,7 +74,7 @@ export interface LineChartProps {
   noVisibleSeriesText?: string | null;
   /** Gives every series a dash pattern of its own, so the lines are told apart by shape as well as by colour — WCAG technique G111. Off by default: the shipped palette clears the colour-blind separation threshold on its own, so the patterns are for monochrome print, for a retuned palette, and for a reader who asks for them. */
   patterns?: boolean;
-  /** Milliseconds between one series' entrance and the next. `0`, the default, is no stagger at all; `40` is the documented non-zero step. The total is capped, so a long list of series does not crawl in. */
+  /** Milliseconds between one series' entrance and the next. `0` turns the stagger off. The step narrows so the last series still starts within the stagger budget, so a long list of series does not crawl in. */
   staggerMs?: number;
   /** Whether the plot opens a tooltip, and for what. `'axis'` names every series at the category under the pointer, which is the reading a multi-series line is compared on; `'item'` names only the marker itself. */
   tooltip?: ('item' | 'axis' | 'none');

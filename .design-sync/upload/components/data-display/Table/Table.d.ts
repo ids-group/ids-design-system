@@ -42,7 +42,7 @@ export interface TableProps {
   sortingOrder?: ('asc' | 'desc' | null)[];
   /** Wording for the sort announcement, so it can be translated. Receives the column's label and the new direction; return an empty string to say nothing. Unset falls back to `DS_INTL.table.sorted`. */
   sortAnnouncement?: unknown;
-  /** Wording for the row-range announcement, so it can be translated. Receives the 1-based first and last row on screen and the total; return an empty string to say nothing. Unset falls back to `DS_INTL.pagination.range`. */
+  /** Wording for the row-range announcement, so it can be translated. Receives the 1-based first and last row on screen and the total. A paged table with no rows announces its empty state's text instead, and calls this with `(0, 0, 0)` only when that state has none; return an empty string to say nothing. Unset falls back to `DS_INTL.pagination.range`. */
   rangeAnnouncement?: unknown;
   /** Number of shimmer rows rendered while `loading` is `'skeleton'`. */
   skeletonRows?: number;

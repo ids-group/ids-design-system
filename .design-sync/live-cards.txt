@@ -103,6 +103,7 @@ components/forms-inputs/Select/Select - Clearable.html
 components/forms-inputs/Select/Select - Clearing from outside.html
 components/forms-inputs/Select/Select - Custom dropdown - ds-select.html
 components/forms-inputs/Select/Select - Helper & error text.html
+components/forms-inputs/Select/Select - Long labels.html
 components/forms-inputs/Select/Select - Long option list.html
 components/forms-inputs/Select/Select - Per-option icons.html
 components/forms-inputs/Select/Select - Sizes.html

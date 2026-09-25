@@ -41,12 +41,12 @@ export interface PieChartProps {
   errorText?: string | null;
   /** Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`. */
   valueFormat?: unknown;
+  /** Holds the clicked mark and its tooltip in place, with a pin disc on it, until a second click, Escape or a press outside releases it. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. `sliceClicked` fires either way - pinning is a state, not a handler. */
+  pinOnClick?: boolean | null;
   /** Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click. */
   interactive?: boolean;
   /** The slice that was clicked, or activated with Enter or Space. Fires whether or not `interactive` is set. */
   onSliceClicked?: (value: unknown) => void;
-  /** Holds the hovered mark and its tooltip in place when it is clicked, until Escape or a press outside releases it. Off by default: a click is already the drill-down hook, and a mark left lit after the pointer has gone needs a reader who knows why it is lit. `sliceClicked` fires either way — pinning is a state, not a handler. */
-  pinOnClick?: boolean;
   /** Dims every OTHER mark while one is hovered or focused, so the reader's eye is held on the one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed marks — measured 2026-09-13, the worst pair of three dimmed series falls from dE 14.8 at full opacity to 2.1 at `--ds-chart-dim-opacity`'s default 0.3 — so it buys loudness for one mark and pays for it with the rest of the chart. */
   dimOthers?: boolean;
   /** Accepted for parity with the other four charts and deliberately without effect here: a ring arrives as ONE object, because arcs share their edges and fading them one at a time lets the background through every seam. There is nothing to stagger. */

@@ -39,6 +39,8 @@ export interface ScatterChartProps {
   tooltip?: ('item' | 'none');
   /** Fades every mark but the one under the pointer. Off by default: on a scatter the pile-up IS the reading, and dimming the neighbours takes exactly that away. */
   dimOthers?: boolean;
+  /** Holds the hovered mark and its tooltip in place when it is clicked, until a second click, Escape or a press outside releases it. `pointClicked` fires either way. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. */
+  pinOnClick?: boolean | null;
   /** The clicked reading, with the series it belongs to. Fires on click and on Enter or Space. */
   onPointClicked?: (value: unknown) => void;
   /** Element content. */

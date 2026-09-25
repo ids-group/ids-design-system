@@ -15,7 +15,7 @@ export interface PaginationProps {
   onCurrentPageChange?: (value: number) => void;
   /** Preset choices offered in the page-size dropdown. */
   pageSizeOptions?: number[];
-  /** Shows the "Showing X–Y of Z" range label. */
+  /** Shows the range label, `DS_INTL.pagination.range`: "Showing X-Y of Z", or "Showing 0 of 0" on an empty list. */
   showLabel?: boolean;
   /** Shows the rows-per-page dropdown. Turn it off for a screen with a fixed page size — otherwise the control offers a choice the host won't honour. */
   showPageSize?: boolean;

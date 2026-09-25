@@ -570,7 +570,7 @@
     {
       "path": "components/forms-inputs/Autocomplete/Autocomplete - Width.html",
       "group": "forms-inputs",
-      "viewport": "1200x329",
+      "viewport": "1200x349",
       "name": "Autocomplete - width",
       "subtitle": "Default width='fill' stretches to the container."
     },
@@ -909,7 +909,7 @@
     {
       "path": "components/forms-inputs/MultiSelect/Multi Select - Width.html",
       "group": "forms-inputs",
-      "viewport": "1200x332",
+      "viewport": "1200x352",
       "name": "Multi-select - width",
       "subtitle": "Default width='fill' stretches to the container and pins the panel to the trigger."
     },
@@ -1105,6 +1105,13 @@
       "subtitle": "15 options demonstrate the styled popover — the panel caps at 320px and scrolls internally, with width matched to the trigger."
     },
     {
+      "path": "components/forms-inputs/Select/Select - Long labels.html",
+      "group": "forms-inputs",
+      "viewport": "1200x333",
+      "name": "Select - long labels",
+      "subtitle": "A label too long for its space is cut with an ellipsis, and hovering it shows the whole text in a tooltip; a label that fits shows none."
+    },
+    {
       "path": "components/forms-inputs/Select/Select - Custom dropdown - ds-select.html",
       "group": "forms-inputs",
       "viewport": "1200x700",
@@ -1228,7 +1235,7 @@
     {
       "path": "components/forms-inputs/Textarea/Textarea - Character counter.html",
       "group": "forms-inputs",
-      "viewport": "1200x400",
+      "viewport": "1200x622",
       "name": "Textarea - character counter",
       "subtitle": "[maxLength] caps input length natively and shows a live current/max counter below the field — right-aligned, aligned with the hint."
     },
@@ -1590,7 +1597,7 @@
     {
       "path": "components/navigation/Tabs/Tabs - Scrollable.html",
       "group": "navigation",
-      "viewport": "1200x513",
+      "viewport": "1200x673",
       "name": "Tabs - scrollable",
       "subtitle": "When scrollable is set the tab strip clips to its bounds and scrolls horizontally."
     },
@@ -1755,6 +1762,13 @@
       "viewport": "1200x479",
       "name": "Description list - stacked layout",
       "subtitle": "Term above, value below."
+    },
+    {
+      "path": "components/data-display/DescriptionList/Description List - Narrow containers.html",
+      "group": "data-display",
+      "viewport": "1200x529",
+      "name": "Description list - narrow containers",
+      "subtitle": "Once a value would get less than -ds-description-list-value-min-width (14rem) beside the label, every item puts its label above its value at once."
     },
     {
       "path": "components/data-display/DescriptionItem/Description Item - Copy-to-clipboard value.html",
@@ -2095,7 +2109,7 @@
     {
       "path": "components/data-display/Table/Table - What a screen reader is told.html",
       "group": "data-display",
-      "viewport": "1200x348",
+      "viewport": "1200x407",
       "name": "Table - what a screen reader is told",
       "subtitle": "Sorting and paging are read off the header and the pager by everyone else; the table now says them out loud too."
     },
@@ -2546,8 +2560,9 @@
     {
       "path": "components/overlays/TooltipPanel/Tooltip Panel - States showcase (static specimens).html",
       "group": "overlays",
-      "viewport": "1200x312",
-      "name": "Tooltip Panel - states showcase (static specimens)"
+      "viewport": "1200x495",
+      "name": "Tooltip Panel - states showcase (static specimens)",
+      "subtitle": "A value with no place to break, a file name or an ID, breaks inside -ds-tooltip-max-width (240px) rather than running past the panel."
     },
     {
       "path": "components/page-structure/FilterBar/Filter Bar - Sizing the +N trigger.html",
@@ -2660,7 +2675,7 @@
     {
       "path": "components/charts/Chart/Chart - Naming the axes, and holding the cursor.html",
       "group": "charts",
-      "viewport": "1200x621",
+      "viewport": "1200x700",
       "name": "Chart container - naming the axes, and holding the cursor",
       "subtitle": "axisLabel and secondaryAxisLabel name the unit each set of ticks counts, rotated down its own gutter."
     },
@@ -2706,7 +2721,7 @@
     {
       "path": "components/charts/HeatmapChart/Heatmap Chart - What has to be there.html",
       "group": "charts",
-      "viewport": "1200x309",
+      "viewport": "1200x362",
       "name": "Heat map - what has to be there",
       "subtitle": "Colour is the only channel carrying the quantity on the grid, so two things are not optional here the way they are on the other charts."
     },
@@ -2730,6 +2745,20 @@
       "viewport": "1200x535",
       "name": "Heat map - drilling in",
       "subtitle": "interactive makes every MEASURED cell a button and fires cellClicked with the row, the column and the reading."
+    },
+    {
+      "path": "components/charts/HeatmapChart/Heatmap Chart - Holding a cell.html",
+      "group": "charts",
+      "viewport": "1200x290",
+      "name": "Heat map - holding a cell",
+      "subtitle": "A click on a measured cell holds it and its tooltip in place, with a pin disc on it and an Unpin control at the top end of the chart."
+    },
+    {
+      "path": "components/charts/HeatmapChart/Heatmap Chart - Stagger.html",
+      "group": "charts",
+      "viewport": "1200x270",
+      "name": "Heat map - stagger",
+      "subtitle": "Cells fade in column by column, left to right."
     },
     {
       "path": "components/charts/ChartTooltipPanel/Chart Tooltip Panel.html",
@@ -2772,6 +2801,13 @@
       "subtitle": "interactive makes every mark a button and fires pointClicked with the series and the reading."
     },
     {
+      "path": "components/charts/ScatterChart/Scatter Chart - Holding a point.html",
+      "group": "charts",
+      "viewport": "1200x290",
+      "name": "Scatter chart - holding a point",
+      "subtitle": "A click on a point holds it and its tooltip in place, with a pin disc over it and an Unpin control at the top end of the chart."
+    },
+    {
       "path": "components/charts/WaterfallChart/Waterfall Chart - Default.html",
       "group": "charts",
       "viewport": "1200x700",
@@ -2805,6 +2841,20 @@
       "viewport": "1200x700",
       "name": "Waterfall chart - drilling in",
       "subtitle": "interactive turns on the affordance and the keyboard route, and barClicked hands back the datum that was clicked."
+    },
+    {
+      "path": "components/charts/WaterfallChart/Waterfall Chart - Holding a step.html",
+      "group": "charts",
+      "viewport": "1200x271",
+      "name": "Waterfall chart - holding a step",
+      "subtitle": "A click on a bar holds it and its tooltip in place, with a pin disc on it and an Unpin control at the top end of the chart."
+    },
+    {
+      "path": "components/charts/WaterfallChart/Waterfall Chart - Stagger.html",
+      "group": "charts",
+      "viewport": "1200x270",
+      "name": "Waterfall chart - stagger",
+      "subtitle": "Steps grow out of their baseline one after another."
     },
     {
       "path": "components/foundations/Divider/Divider - Divider component.html",
@@ -2859,6 +2909,13 @@
       "name": "Charts & dataviz - axis · grid · legend tokens"
     },
     {
+      "path": "guides/foundations/Charts & dataviz/Charts & dataviz - How a chart arrives.html",
+      "group": "foundations",
+      "viewport": "1200x329",
+      "name": "Charts & dataviz - how a chart arrives",
+      "subtitle": "Marks arrive in stages."
+    },
+    {
       "path": "guides/foundations/Charts & dataviz/Charts & dataviz - Reference charts.html",
       "group": "foundations",
       "viewport": "1200x700",
@@ -2873,7 +2930,7 @@
     {
       "path": "guides/foundations/Charts & dataviz/Charts & dataviz - Reading a value without keeping the pointer.html",
       "group": "foundations",
-      "viewport": "1200x561",
+      "viewport": "1200x700",
       "name": "Charts & dataviz - reading a value without keeping the pointer still",
       "subtitle": "An inert tooltip cannot be read at high zoom, cannot have its number selected, and cannot be cleared without moving the pointer somewhere else."
     },
@@ -2894,9 +2951,9 @@
     {
       "path": "guides/foundations/Charts & dataviz/Charts & dataviz - App-wide chart defaults.html",
       "group": "foundations",
-      "viewport": "1200x495",
+      "viewport": "1200x630",
       "name": "Charts & dataviz - app-wide chart defaults",
-      "subtitle": "Four things are the same decision for every chart in an app rather than a choice per plot, so they resolve through DS_CONFIG: valueFormat (a number reads one way in a product, and…"
+      "subtitle": "Six things are the same decision for every chart in an app rather than a choice per plot, so they resolve through DS_CONFIG: valueFormat (a number reads one way in a product, and a…"
     },
     {
       "path": "guides/foundations/Charts & dataviz/Charts & dataviz - A page with dozens of charts.html",
@@ -3117,6 +3174,13 @@
       "subtitle": "Hover any tile to replay the transition."
     },
     {
+      "path": "guides/foundations/Motion/Motion - Chart entrances.html",
+      "group": "foundations",
+      "viewport": "1200x329",
+      "name": "Motion - chart entrances",
+      "subtitle": "A chart times each arrival by what arrives."
+    },
+    {
       "path": "guides/foundations/Motion/Motion - Entrance presets - customizing a surface.html",
       "group": "foundations",
       "viewport": "1200x700",
@@ -3240,7 +3304,7 @@
     {
       "path": "guides/foundations/Theming & dark mode/Theming & dark mode - Locale and wording.html",
       "group": "foundations",
-      "viewport": "1200x696",
+      "viewport": "1200x700",
       "name": "Theming & dark mode - locale and wording",
       "subtitle": "Numbers and dates follow DsConfig.locale, then Angular's LOCALE_ID: chart values and percentages, the date picker, file sizes."
     },
@@ -7437,6 +7501,12 @@
       "definedIn": "_ds_bundle.css"
     },
     {
+      "name": "--duration-slowest",
+      "value": ".6s",
+      "kind": "other",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
       "name": "--duration-loop-fast",
       "value": ".7s",
       "kind": "other",
@@ -7475,6 +7545,18 @@
     {
       "name": "--ease-spring",
       "value": "cubic-bezier(.5, 1.5, .5, 1)",
+      "kind": "other",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--ease-emphasized-decelerate",
+      "value": "cubic-bezier(.05, .7, .1, 1)",
+      "kind": "spacing",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--ease-settle",
+      "value": "linear(0, .09 6.3%, .265 12.5%, .444 18.8%, .596 25%, .715 31.3%, .803 37.5%, .867 43.8%, .911 50%, .942 56.3%, .962 62.5%, .976 68.8%, .986 75%, .992 81.3%, .996 87.5%, .998 93.8%, 1)",
       "kind": "other",
       "definedIn": "_ds_bundle.css"
     },
@@ -7588,13 +7670,37 @@
     },
     {
       "name": "--ds-motion-chart-mark-enter-duration",
-      "value": "var(--duration-base)",
+      "value": "var(--duration-slower)",
       "kind": "other",
       "definedIn": "_ds_bundle.css"
     },
     {
       "name": "--ds-motion-chart-mark-enter-easing",
-      "value": "var(--ease-decelerate)",
+      "value": "var(--ease-emphasized-decelerate)",
+      "kind": "spacing",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--ds-motion-chart-mark-grow-duration",
+      "value": "var(--duration-slowest)",
+      "kind": "other",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--ds-motion-chart-mark-grow-easing",
+      "value": "var(--ease-settle)",
+      "kind": "other",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--ds-motion-chart-mark-sweep-duration",
+      "value": "var(--duration-slowest)",
+      "kind": "other",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--ds-motion-chart-mark-detail-duration",
+      "value": "var(--duration-base)",
       "kind": "other",
       "definedIn": "_ds_bundle.css"
     },
@@ -9051,6 +9157,12 @@
       "definedIn": "_ds_bundle.css"
     },
     {
+      "name": "--dl-spec-value-min-w",
+      "value": "14rem",
+      "kind": "spacing",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
       "name": "--scroll-spec-h",
       "value": "220px",
       "kind": "spacing",
@@ -9094,6 +9206,12 @@
     },
     {
       "name": "--duration-slower",
+      "value": "0ms",
+      "kind": "other",
+      "definedIn": "_ds_bundle.css"
+    },
+    {
+      "name": "--duration-slowest",
       "value": "0ms",
       "kind": "other",
       "definedIn": "_ds_bundle.css"
@@ -10989,6 +11107,13 @@
       "kind": "color",
       "definedIn": "_ds_bundle.css",
       "scope": ".cdk-overlay-pane.ds-overlay-pane[data-ds-placement=right]"
+    },
+    {
+      "name": "--_overlay-enter-keyframes",
+      "value": "var(--ds-overlay-enter-keyframes, ds-fade-in)",
+      "kind": "color",
+      "definedIn": "_ds_bundle.css",
+      "scope": ".cdk-overlay-pane.ds-overlay-pane.ds-chart-tooltip-pane"
     },
     {
       "name": "--_overlay-enter-duration",

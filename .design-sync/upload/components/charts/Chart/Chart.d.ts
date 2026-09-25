@@ -15,8 +15,8 @@ export interface ChartProps {
   max?: number | null;
   /** Draws a band and a crosshair down the category under the pointer, and reports that category to every mark through `activeIndex`. On a plot of two or more marks that show a tooltip, the panel then names every mark's reading at that category wherever in it the pointer is. `'auto'`, the default, is `'category'` for such a composed plot and `'none'` for a plot of one mark, whose marks already answer per mark: two affordances on one plot read as two different questions. */
   cursor?: 'none' | 'category' | 'auto';
-  /** Whether a press holds the category cursor where it is, so the reader can look away from the plot with the comparison still on screen. Released by pressing it again, by Escape, or by a press outside the plot. */
-  cursorPin?: boolean;
+  /** Whether a press holds the category cursor where it is, so the reader can look away from the plot with the comparison still on screen. Released by pressing it again, by Escape, or by a press outside the plot. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. */
+  cursorPin?: boolean | null;
   /** Milliseconds the cursor survives the pointer leaving the plot. The tooltip panel is portaled out of the plot, so without a grace period it closes before the pointer can reach it. */
   tooltipLingerMs?: number | null;
   /** Pins the ceiling of the SECOND value axis, the way `max` pins the first. Two plots read against each other need both pinned, or the second rescales under them. */
