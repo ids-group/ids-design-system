@@ -576,7 +576,9 @@
     <kbd>
       Esc
     </kbd> or a press elsewhere releases it, and the click output fires either
-    way, because pinning is a state rather than a handler. Set
+    way, because pinning is a state rather than a handler. A key never
+    pins: <kbd>Enter</kbd> and <kbd>Space</kbd> on a focused mark fire its click
+    output and hold nothing. Set
     <code class="t-mono-inline">
       pinOnClick="false"
     </code> on one chart

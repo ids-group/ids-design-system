@@ -87,7 +87,8 @@
     anywhere in it opens the band and the tooltip together, on a plot of one
     mark as on a composed one, and the gap between two bands answers nothing. A
     mark inside the band opens no panel of its own on hover and does not pin on
-    click. Focus still opens its panel,
+    click. Focus opens the category's band and its panel, naming every mark's
+    reading there,
     <code class="t-mono-inline">
       pointClicked
     </code> still fires, and
@@ -312,7 +313,14 @@
     bands to let go. Set
     <code class="t-mono-inline">
       cursorPin="false"
-    </code> to keep it moving with the pointer.
+    </code> to keep it moving with the pointer. A composed chart draws no
+    Unpin control;
+    <code class="t-mono-inline">
+      cursorPinned()
+    </code> and
+    <code class="t-mono-inline">
+      releaseCursor()
+    </code> let you render your own.
   </p>
 
   <p class="block-desc t-s">

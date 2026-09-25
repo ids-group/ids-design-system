@@ -567,7 +567,9 @@
     </code> is the default and
     <code class="t-mono-inline">
       0
-    </code> draws them all at once.
+    </code> draws them all at once. A solid line draws on and a dashed one
+    fades in; an area fades in under its line, and the markers settle once the
+    line has arrived. The whole spread fits inside 260ms.
   </p>
 
   <ds-line-chart
@@ -646,8 +648,12 @@
     without one so there is something to land on. The hit area is a transparent
     24px stroke on a fine pointer and 44px on a coarse one — a 4px dot is not a
     touch target. Tab to a marker and the tooltip names that series alone; hover
-    the plot and it names every series at the category. A tap latches the
-    tooltip open until the next tap outside.
+    the plot and it names every series at the category. A tap holds the
+    tooltip open: with the default
+    <code class="t-mono-inline">
+      pinOnClick
+    </code> a second tap on the same
+    category lets go, and a tap outside always does.
     <code class="t-mono-inline">
       pointClicked
     </code> fires whether or not the
