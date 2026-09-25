@@ -171,7 +171,7 @@
         "extends WaterfallMarksComponent"
       ],
       "verify": "The app builds with no TS4114 or TS2416 against a DS base class, and no subclass keeps a member named after a removed one.",
-      "note": "The chart components gained the pinning, hover-delay and label-highlight members, PaginationComponent gained empty, TableComponent gained emptyCell and emptyCellText; five protected members of ColumnSeriesComponent are gone (pinDiscRadius, pinGlyph, pinGlyphOffset, pinGlyphSize, slotStepPx). The compiler names every collision."
+      "note": "The chart components gained the pinning, hover-delay and label-highlight members, except ColumnChartComponent and LineChartComponent, whose only change is the type of pinOnClick; PaginationComponent gained empty, TableComponent gained emptyCell and emptyCellText; five protected members of ColumnSeriesComponent are gone (pinDiscRadius, pinGlyph, pinGlyphOffset, pinGlyphSize, slotStepPx). The compiler names every collision."
     },
     {
       "id": "pagination-range-receives-zeros-when-empty",
