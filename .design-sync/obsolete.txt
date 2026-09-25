@@ -49,8 +49,6 @@ components/actions/Button/Button - Full width.html
 components/actions/Button/Button - Full width.prompt.md
 components/actions/Button/Button - Navigation that looks like a button.html
 components/actions/Button/Button - Navigation that looks like a button.prompt.md
-components/actions/Button/Button - Refused with reason.html
-components/actions/Button/Button - Refused with reason.prompt.md
 components/actions/Button/Button - What an active link announces.html
 components/actions/Button/Button - What an active link announces.prompt.md
 components/actions/IconButton/Icon Button - Disabled.html
@@ -69,6 +67,8 @@ components/charts/HeatmapChart/Heatmap Chart - A hole is not a low reading.html
 components/charts/HeatmapChart/Heatmap Chart - A hole is not a low reading.prompt.md
 components/charts/HeatmapChart/Heatmap Chart - Drilling in.html
 components/charts/HeatmapChart/Heatmap Chart - Drilling in.prompt.md
+components/charts/HeatmapChart/Heatmap Chart - What has to be there.html
+components/charts/HeatmapChart/Heatmap Chart - What has to be there.prompt.md
 components/charts/ScatterChart/Scatter Chart - Drilling in.html
 components/charts/ScatterChart/Scatter Chart - Drilling in.prompt.md
 components/charts/ScatterChart/Scatter Chart - Thinning, and saying so.html
@@ -81,6 +81,8 @@ components/charts/WaterfallChart/Waterfall Chart - Drilling in.html
 components/charts/WaterfallChart/Waterfall Chart - Drilling in.prompt.md
 components/data-display/Accordion/Accordion - Single-open ( [multiple]= false ).html
 components/data-display/Accordion/Accordion - Single-open ( [multiple]= false ).prompt.md
+components/data-display/Card/Card - A full-bleed child needs the card to clip.html
+components/data-display/Card/Card - A full-bleed child needs the card to clip.prompt.md
 components/data-display/Icon/Icon - Stroke weight.html
 components/data-display/Icon/Icon - Stroke weight.prompt.md
 components/data-display/Stat/Stat - A formatted number, through Angular's own pipe.html
@@ -123,8 +125,6 @@ components/data-display/Table/Table - Server-side filtering.html
 components/data-display/Table/Table - Server-side filtering.prompt.md
 components/data-display/Table/Table - Sizing a column to its content.html
 components/data-display/Table/Table - Sizing a column to its content.prompt.md
-components/data-display/Table/Table - Sortable columns.html
-components/data-display/Table/Table - Sortable columns.prompt.md
 components/data-display/Table/Table - Sticky header.html
 components/data-display/Table/Table - Sticky header.prompt.md
 components/data-display/Table/Table - Sticky horizontal scrollbar.html
@@ -145,8 +145,6 @@ components/data-display/Table/Table - What the pager shows.html
 components/data-display/Table/Table - What the pager shows.prompt.md
 components/feedback-status/Alert/Alert - Dismissible.html
 components/feedback-status/Alert/Alert - Dismissible.prompt.md
-components/feedback-status/Badge/Badge - Per-instance tone.html
-components/feedback-status/Badge/Badge - Per-instance tone.prompt.md
 components/feedback-status/Banner/Banner - Accent rail.html
 components/feedback-status/Banner/Banner - Accent rail.prompt.md
 components/feedback-status/Banner/Banner - With actions.html
@@ -165,14 +163,20 @@ components/feedback-status/Toast/Toast - Promise toast.html
 components/feedback-status/Toast/Toast - Promise toast.prompt.md
 components/feedback-status/Toast/Toast - Screen readers, and what the service owns.html
 components/feedback-status/Toast/Toast - Screen readers, and what the service owns.prompt.md
+components/feedback-status/Toast/Toast - With action.html
+components/feedback-status/Toast/Toast - With action.prompt.md
 components/forms-inputs/Autocomplete/Autocomplete - A search placeholder of its own.html
 components/forms-inputs/Autocomplete/Autocomplete - A search placeholder of its own.prompt.md
 components/forms-inputs/Autocomplete/Autocomplete - Capping the chips.html
 components/forms-inputs/Autocomplete/Autocomplete - Capping the chips.prompt.md
+components/forms-inputs/Autocomplete/Autocomplete - Create new.html
+components/forms-inputs/Autocomplete/Autocomplete - Create new.prompt.md
 components/forms-inputs/Autocomplete/Autocomplete - Icons in the options.html
 components/forms-inputs/Autocomplete/Autocomplete - Icons in the options.prompt.md
 components/forms-inputs/Autocomplete/Autocomplete - Object values keep their selection.html
 components/forms-inputs/Autocomplete/Autocomplete - Object values keep their selection.prompt.md
+components/forms-inputs/Autocomplete/Autocomplete - Option groups.html
+components/forms-inputs/Autocomplete/Autocomplete - Option groups.prompt.md
 components/forms-inputs/Autocomplete/Autocomplete - Validation states.html
 components/forms-inputs/Autocomplete/Autocomplete - Validation states.prompt.md
 components/forms-inputs/Autocomplete/Autocomplete - Width.html
@@ -201,6 +205,8 @@ components/forms-inputs/DatePicker/Date Picker - Masked manual entry.html
 components/forms-inputs/DatePicker/Date Picker - Masked manual entry.prompt.md
 components/forms-inputs/DatePicker/Date Picker - Min & max date bounds.html
 components/forms-inputs/DatePicker/Date Picker - Min & max date bounds.prompt.md
+components/forms-inputs/DatePicker/Date Picker - Presets.html
+components/forms-inputs/DatePicker/Date Picker - Presets.prompt.md
 components/forms-inputs/DatePicker/Date Picker - Validation states.html
 components/forms-inputs/DatePicker/Date Picker - Validation states.prompt.md
 components/forms-inputs/FieldGroup/Field Group - Saying what is wrong.html
@@ -225,6 +231,8 @@ components/forms-inputs/MultiSelect/Multi Select - Hiding the filter row.html
 components/forms-inputs/MultiSelect/Multi Select - Hiding the filter row.prompt.md
 components/forms-inputs/MultiSelect/Multi Select - Icons in the options.html
 components/forms-inputs/MultiSelect/Multi Select - Icons in the options.prompt.md
+components/forms-inputs/MultiSelect/Multi Select - Option groups.html
+components/forms-inputs/MultiSelect/Multi Select - Option groups.prompt.md
 components/forms-inputs/MultiSelect/Multi Select - Panel header and footer.html
 components/forms-inputs/MultiSelect/Multi Select - Panel header and footer.prompt.md
 components/forms-inputs/MultiSelect/Multi Select - Read-only, clearable.html
@@ -237,6 +245,8 @@ components/forms-inputs/NumberStepper/Number Stepper - Bounds & step.html
 components/forms-inputs/NumberStepper/Number Stepper - Bounds & step.prompt.md
 components/forms-inputs/NumberStepper/Number Stepper - Disabled.html
 components/forms-inputs/NumberStepper/Number Stepper - Disabled.prompt.md
+components/forms-inputs/OtpInput/Otp Input - 4-digit masked PIN.html
+components/forms-inputs/OtpInput/Otp Input - 4-digit masked PIN.prompt.md
 components/forms-inputs/OtpInput/Otp Input - Helper & error text.html
 components/forms-inputs/OtpInput/Otp Input - Helper & error text.prompt.md
 components/forms-inputs/Radio/Radio - Required.html
@@ -255,8 +265,6 @@ components/forms-inputs/Select/Select - Clearable.html
 components/forms-inputs/Select/Select - Clearable.prompt.md
 components/forms-inputs/Select/Select - Clearing from outside.html
 components/forms-inputs/Select/Select - Clearing from outside.prompt.md
-components/forms-inputs/Select/Select - Custom dropdown - ds-select.html
-components/forms-inputs/Select/Select - Custom dropdown - ds-select.prompt.md
 components/forms-inputs/Select/Select - Helper & error text.html
 components/forms-inputs/Select/Select - Helper & error text.prompt.md
 components/forms-inputs/Select/Select - Long option list.html
@@ -281,6 +289,8 @@ components/forms-inputs/Textarea/Textarea - Selection API.html
 components/forms-inputs/Textarea/Textarea - Selection API.prompt.md
 components/forms-inputs/Textarea/Textarea - With value.html
 components/forms-inputs/Textarea/Textarea - With value.prompt.md
+components/forms-inputs/TimePicker/Time Picker - 12-hour (AM PM).html
+components/forms-inputs/TimePicker/Time Picker - 12-hour (AM PM).prompt.md
 components/forms-inputs/TimePicker/Time Picker - Clearable - sizes.html
 components/forms-inputs/TimePicker/Time Picker - Clearable - sizes.prompt.md
 components/forms-inputs/TimePicker/Time Picker - Min - max - disabled slots.html
@@ -311,14 +321,14 @@ components/navigation/Breadcrumbs/Breadcrumbs - Service-driven (route-aware apps
 components/navigation/Breadcrumbs/Breadcrumbs - Service-driven (route-aware apps).prompt.md
 components/navigation/Breadcrumbs/Breadcrumbs - Single level.html
 components/navigation/Breadcrumbs/Breadcrumbs - Single level.prompt.md
+components/navigation/Pagination/Pagination - With page-size select.html
+components/navigation/Pagination/Pagination - With page-size select.prompt.md
 components/navigation/Sidenav/Sidenav - A group that is also a page.html
 components/navigation/Sidenav/Sidenav - A group that is also a page.prompt.md
 components/navigation/Sidenav/Sidenav - Letter-mark & accent wordmark.html
 components/navigation/Sidenav/Sidenav - Letter-mark & accent wordmark.prompt.md
 components/navigation/Stepper/Stepper - Clickable steps.html
 components/navigation/Stepper/Stepper - Clickable steps.prompt.md
-components/navigation/Stepper/Stepper - Error state.html
-components/navigation/Stepper/Stepper - Error state.prompt.md
 components/navigation/Stepper/Stepper - Single node states.html
 components/navigation/Stepper/Stepper - Single node states.prompt.md
 components/navigation/Tabs/Tabs - Keeping the tab in the URL.html
@@ -333,6 +343,10 @@ components/overlays/BottomSheet/Bottom Sheet - Snap points.html
 components/overlays/BottomSheet/Bottom Sheet - Snap points.prompt.md
 components/overlays/BottomSheet/Bottom Sheet - The home indicator needs one line from YOUR.html
 components/overlays/BottomSheet/Bottom Sheet - The home indicator needs one line from YOUR.prompt.md
+components/overlays/Drawer/Drawer - Placements.html
+components/overlays/Drawer/Drawer - Placements.prompt.md
+components/overlays/Drawer/Drawer - Sizes.html
+components/overlays/Drawer/Drawer - Sizes.prompt.md
 components/overlays/Modal/Modal - Persistent.html
 components/overlays/Modal/Modal - Persistent.prompt.md
 components/overlays/ModalCard/Modal Card - Actions that outgrow the card.html
@@ -341,12 +355,18 @@ components/overlays/ModalCard/Modal Card - Without dividers.html
 components/overlays/ModalCard/Modal Card - Without dividers.prompt.md
 components/overlays/Popover/Popover - Alignment.html
 components/overlays/Popover/Popover - Alignment.prompt.md
+components/overlays/Popover/Popover - Arrow.html
+components/overlays/Popover/Popover - Arrow.prompt.md
 components/overlays/Popover/Popover - Live demo.html
 components/overlays/Popover/Popover - Live demo.prompt.md
+components/overlays/Popover/Popover - Placement.html
+components/overlays/Popover/Popover - Placement.prompt.md
 components/page-structure/FilterBar/Filter Bar - What the width buys.html
 components/page-structure/FilterBar/Filter Bar - What the width buys.prompt.md
 components/page-structure/PageHeader/Page Header - With divider.html
 components/page-structure/PageHeader/Page Header - With divider.prompt.md
+guides/foundations/Browser tab & document/Browser tab & document - Rules.html
+guides/foundations/Browser tab & document/Browser tab & document - Rules.prompt.md
 guides/foundations/Charts & dataviz/Charts & dataviz - App-wide chart defaults.html
 guides/foundations/Charts & dataviz/Charts & dataviz - App-wide chart defaults.prompt.md
 guides/foundations/Charts & dataviz/Charts & dataviz - Reading a value without keeping the pointer.html
@@ -363,12 +383,12 @@ guides/foundations/Colour/Colour - Secondary in use.html
 guides/foundations/Colour/Colour - Secondary in use.prompt.md
 guides/foundations/Colour/Colour - Switching the focus style brand-wide.html
 guides/foundations/Colour/Colour - Switching the focus style brand-wide.prompt.md
+guides/foundations/Density/Density - A 32px toolbar - use compact.html
+guides/foundations/Density/Density - A 32px toolbar - use compact.prompt.md
 guides/foundations/Density/Density - Live comparison.html
 guides/foundations/Density/Density - Live comparison.prompt.md
 guides/foundations/Density/Density - What density rewrites.html
 guides/foundations/Density/Density - What density rewrites.prompt.md
-guides/foundations/Elevation/Elevation - Applied.html
-guides/foundations/Elevation/Elevation - Applied.prompt.md
 guides/foundations/Motion/Motion - Combined - how the DS uses motion in practice.html
 guides/foundations/Motion/Motion - Combined - how the DS uses motion in practice.prompt.md
 guides/foundations/Motion/Motion - Entrance presets - customizing a surface.html
@@ -377,12 +397,20 @@ guides/foundations/Opacity & alpha tokens/Opacity & alpha tokens - Literal alpha
 guides/foundations/Opacity & alpha tokens/Opacity & alpha tokens - Literal alphas in tokens (reference).prompt.md
 guides/foundations/Radius/Radius - Applied.html
 guides/foundations/Radius/Radius - Applied.prompt.md
+guides/foundations/Scrollbar/Scrollbar - Specification.html
+guides/foundations/Scrollbar/Scrollbar - Specification.prompt.md
+guides/foundations/Scrollbar/Scrollbar - Tokens.html
+guides/foundations/Scrollbar/Scrollbar - Tokens.prompt.md
 guides/foundations/Theming & dark mode/Theming & dark mode - App-level defaults - provideDsConfig.html
 guides/foundations/Theming & dark mode/Theming & dark mode - App-level defaults - provideDsConfig.prompt.md
+guides/foundations/Theming & dark mode/Theming & dark mode - Picking a theme (consumer).html
+guides/foundations/Theming & dark mode/Theming & dark mode - Picking a theme (consumer).prompt.md
 guides/foundations/Theming & dark mode/Theming & dark mode - Sibling themes, not a patch.html
 guides/foundations/Theming & dark mode/Theming & dark mode - Sibling themes, not a patch.prompt.md
 guides/foundations/Theming & dark mode/Theming & dark mode - Three layers.html
 guides/foundations/Theming & dark mode/Theming & dark mode - Three layers.prompt.md
+guides/foundations/Theming & dark mode/Theming & dark mode - Worked example - a square brand.html
+guides/foundations/Theming & dark mode/Theming & dark mode - Worked example - a square brand.prompt.md
 guides/foundations/Theming & dark mode/Theming & dark mode - Writing your own theme or brand.html
 guides/foundations/Theming & dark mode/Theming & dark mode - Writing your own theme or brand.prompt.md
 guides/patterns/Form layout/Form layout - Reserved rows and the stack gap, side by side.html
