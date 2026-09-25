@@ -21,8 +21,8 @@
     <li
       class="legend-item"
       [class.is-hidden]="isHidden(item.id)"
-      (pointerenter)="highlighted.set(item.id)"
-      (pointerleave)="highlighted.set(null)">
+      (pointerenter)="onItemEnter(item.id, $event)"
+      (pointerleave)="onItemLeave()">
       @if (toggleable() && mode() === 'isolate') {
         <label class="legend-toggle">
           <input
