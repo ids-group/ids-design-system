@@ -172,4 +172,45 @@
       Antwerp
     </span>
   </div>
+
+  <p class="block-desc t-s">
+    A clipped host that cannot take focus itself, like a label inside a button
+    or a cell of a clickable row, opens when keyboard focus lands on the nearest
+    focusable ancestor, and closes on its blur, a click or any key. A click
+    alone opens nothing. Of several clipped values in one control only the
+    first opens.
+  </p>
+
+  <div class="demo">
+    <ds-button
+      color="neutral"
+      variant="outline"
+      size="sm">
+      <span
+        class="clip-line"
+        dsTooltip
+        dsTooltipWhenClipped>
+        Rotterdam, Maasvlakte II deep-sea terminal
+      </span>
+    </ds-button>
+
+    <div
+      class="clip-row"
+      role="button"
+      tabindex="0">
+      <span
+        class="clip-line t-s"
+        dsTooltip
+        dsTooltipWhenClipped>
+        Quarterly renewal notice for commercial policyholders
+      </span>
+
+      <span
+        class="clip-line t-xs"
+        dsTooltip
+        dsTooltipWhenClipped>
+        Template: renewal_notice_commercial_v3_final_approved
+      </span>
+    </div>
+  </div>
 </docs-section>

@@ -3,6 +3,7 @@ import {
   ElementRef,
   HostListener,
   OnDestroy,
+  afterNextRender,
   booleanAttribute,
   inject,
   input,
@@ -15,6 +16,19 @@ import { isTextClipped } from '@ids-group-ltd/ids-design-system/core';
 import type { TooltipPlacement } from './tooltip.types';
 
 const TRIGGER_GAP_PX = 8;
+
+const FOCUSABLE =
+  'a[href], button, input, select, textarea, summary, [tabindex]';
+
+const clippedHostsByAncestor = new WeakMap<HTMLElement, Set<HTMLElement>>();
+
+function firstClippedHost(hosts: Set<HTMLElement>): HTMLElement | undefined {
+  return [...hosts]
+    .sort((a, b) =>
+      a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1,
+    )
+    .find(isTextClipped);
+}
 
 let nextId = 0;
 
@@ -78,6 +92,61 @@ export class TooltipDirective implements OnDestroy {
    * pointing at a panel that no longer exists.
    */
   private describedElement: HTMLElement | null = null;
+
+  private detachAncestor: (() => void) | null = null;
+
+  constructor() {
+    afterNextRender(() => this.listenToFocusableAncestor());
+  }
+
+  /**
+   * A clipped host that cannot take focus (a label inside a button, a cell of a clickable row) is
+   * disclosed when keyboard focus lands on its nearest focusable ancestor. `:focus-visible` keeps a
+   * click, which focuses the ancestor too, from opening it. Of several clipped hosts sharing one
+   * ancestor only the first in document order opens, so their panels never stack on each other.
+   */
+  private listenToFocusableAncestor(): void {
+    const host: HTMLElement = this.host.nativeElement;
+    if (!this.dsTooltipWhenClipped() || host.matches(FOCUSABLE)) {
+      return;
+    }
+    const ancestor = host.parentElement?.closest<HTMLElement>(FOCUSABLE);
+    if (!ancestor) {
+      return;
+    }
+    let hosts = clippedHostsByAncestor.get(ancestor);
+    if (!hosts) {
+      hosts = new Set();
+      clippedHostsByAncestor.set(ancestor, hosts);
+    }
+    hosts.add(host);
+    const open = (event: FocusEvent) => {
+      if (
+        event.target !== ancestor ||
+        !ancestor.matches(':focus-visible') ||
+        firstClippedHost(hosts) !== host
+      ) {
+        return;
+      }
+      this.focusedTarget = ancestor;
+      this.scheduleShow();
+    };
+    const close = () => {
+      this.focusedTarget = null;
+      this.onClose();
+    };
+    ancestor.addEventListener('focusin', open);
+    ancestor.addEventListener('focusout', close);
+    ancestor.addEventListener('click', close);
+    ancestor.addEventListener('keydown', close);
+    this.detachAncestor = () => {
+      hosts.delete(host);
+      ancestor.removeEventListener('focusin', open);
+      ancestor.removeEventListener('focusout', close);
+      ancestor.removeEventListener('click', close);
+      ancestor.removeEventListener('keydown', close);
+    };
+  }
 
   @HostListener('mouseenter')
   protected onPointerEnter(): void {
@@ -222,6 +291,7 @@ export class TooltipDirective implements OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.detachAncestor?.();
     this.onClose();
   }
 }
