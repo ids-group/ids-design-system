@@ -3,9 +3,9 @@
 
 Group: Overlay
 
-Attribute directive. Apply to any focusable element.
-Inputs: `dsTooltip: string = ''` (the text; empty disables), `dsTooltipPlacement: 'top' | 'bottom' | 'left' | 'right' = 'top'`, `dsTooltipDelay: number = 120` (ms)
-Renders `<ds-tooltip-panel>` via CDK overlay on hover / focus; hides on leave / blur. The panel wraps a value with no break opportunity (a file name, an id) inside its max width.
+Attribute directive. Apply to any focusable element; with `dsTooltipWhenClipped` also to a label that cannot take focus.
+Inputs: `dsTooltip: string = ''` (the text; empty disables), `dsTooltipPlacement: 'top' | 'bottom' | 'left' | 'right' = 'top'`, `dsTooltipDelay: number = 120` (ms), `dsTooltipWhenClipped` (open only while the host shows less text than it holds; an empty `dsTooltip` then discloses the host's own text)
+Renders `<ds-tooltip-panel>` via CDK overlay on hover / focus; hides on leave / blur. A `dsTooltipWhenClipped` host that cannot take focus (a label inside a button, a cell of a clickable row) also opens when keyboard focus lands on its nearest focusable ancestor, and closes on that ancestor's blur, click or any key; a mouse click opens nothing, and of several clipped hosts in one ancestor only the first in document order opens. A plain `dsTooltip` on a non-focusable element stays hover-only: put an info tooltip on its own focusable element, not inside a button. The panel wraps a value with no break opportunity (a file name, an id) inside its max width.
 
 <!-- inputs:[dsTooltip] -->
 All inputs: `dsTooltip: string = ''`, `dsTooltipPlacement: 'top' | 'bottom' | 'left' | 'right' = 'top'`, `dsTooltipDelay: number = 120`, `dsTooltipWhenClipped: boolean = false`

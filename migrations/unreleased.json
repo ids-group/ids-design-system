@@ -282,6 +282,10 @@
       "verify": "In a narrow ds-select, hover the closed trigger holding a long value and each long option in the open list: one dark tooltip shows the whole label, and a short label shows none."
     },
     {
+      "text": "A dsTooltipWhenClipped host that cannot take focus (a label inside a button, a cell of a clickable row, ds-select's trigger value, ds-table's clipped cells in an interactive row) also opens when keyboard focus lands on its nearest focusable ancestor, and closes on that ancestor's blur, click or any key. A mouse click opens nothing; of several clipped hosts in one ancestor only the first opens. A plain dsTooltip on a non-focusable element stays hover-only.",
+      "verify": "Tab onto a button whose inner label ends in an ellipsis: one tooltip with the whole label opens; press any key: it closes; click the button with the mouse: no tooltip."
+    },
+    {
       "text": "ds-pagination with total 0 disables every page button and marks none as current (page 1 was highlighted and carried aria-current).",
       "verify": "Render a ds-pagination with total 0: the range reads Showing 0 of 0, every button is disabled, and no button is highlighted or carries aria-current."
     },
