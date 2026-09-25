@@ -73,7 +73,7 @@
   `PieChartComponent`, `ScatterChartComponent` and `WaterfallChartComponent` gained the pinning,
   hover-delay, label-highlight and stagger members; `ColumnChartComponent` and `LineChartComponent`
   only had `pinOnClick` change type; `PaginationComponent` gained `empty`, `TableComponent` gained
-  `emptyCell` and `emptyCellText` and `TooltipDirective` gained `detachAncestor` and
+  `emptyCell` and `emptyCellText` and `TooltipDirective` gained `detachAncestor`, `disclosesOwnText` and
   `listenToFocusableAncestor`; and three classes reachable only through their own entry points
   gained members too - the internal `ChartLegendComponent`, the internal `ChartTooltipPanelComponent`
   and the internal `WaterfallMarksComponent`. Five protected members of `ColumnSeriesComponent` are
