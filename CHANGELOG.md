@@ -7,6 +7,11 @@
   the default wording returns `Showing 0 of 0` for a total of 0. A `range` of your own receives
   `(0, 0, 0)` there.
 
+- **A paged `ds-table` announces a table with no rows.** Its live region went silent when a filter or
+  new data left the table empty. It now announces `rangeAnnouncement(0, 0, 0)`, `Showing 0 of 0` by
+  default, the same words its pager shows; a `rangeAnnouncement` that returns an empty string for a
+  total of 0 keeps it silent.
+
 ## 0.14.1 — 2026-09-24
 
 ### Breaking

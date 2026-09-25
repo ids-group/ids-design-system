@@ -25,6 +25,28 @@
         "provideDsIntl("
       ],
       "verify": "A ds-pagination with total 0 shows your empty-list wording, and a paged ds-table filtered to no rows announces the same words."
+    },
+    {
+      "id": "table-range-announcement-receives-zeros-when-empty",
+      "kind": "behavior",
+      "old": "ds-table[rangeAnnouncement]",
+      "new": null,
+      "surface": [
+        "template",
+        "typescript"
+      ],
+      "action": "None, unless you bind [rangeAnnouncement] on a paged ds-table: return your empty wording, or an empty string to stay silent, when total is 0.",
+      "appliesWhen": "Only a paged ds-table (pageSize set) with its own rangeAnnouncement. A table without pageSize announces no range, and one without the binding follows DS_INTL.pagination.range.",
+      "pitfall": "Nothing errors: a function that formats first and last unconditionally is now called with (0, 0, 0) when a filter or new data empties the table, and a screen reader hears a range of 0 to 0.",
+      "restore": null,
+      "searchHints": [
+        "rangeAnnouncement"
+      ],
+      "detect": [
+        "[rangeAnnouncement]=",
+        "(first: number, last: number, total: number)"
+      ],
+      "verify": "A paged ds-table filtered to no rows announces your empty wording once, or nothing where your function returns an empty string."
     }
   ],
   "informational": [],
