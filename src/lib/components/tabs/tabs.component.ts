@@ -2,6 +2,7 @@ import { NgTemplateOutlet } from '@angular/common';
 import {
   Component,
   ElementRef,
+  afterRenderEffect,
   ViewEncapsulation,
   booleanAttribute,
   computed,
@@ -14,6 +15,7 @@ import {
   model,
   output,
   signal,
+  viewChild,
 } from '@angular/core';
 import { ActivatedRoute, Router, type ParamMap } from '@angular/router';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
@@ -66,8 +68,11 @@ export class TabsComponent {
       kept alive thereafter. When false (default), all panels render eagerly. */
   readonly lazy = input(false, { transform: booleanAttribute });
 
-  /** When true, the tab strip scrolls horizontally instead of wrapping. The
-      active tab is scrolled into view on selection. */
+  /** When true, a horizontal strip scrolls inside its own box and shows
+      previous/next arrows while tabs lie beyond its edges, each arrow hidden at
+      its own edge. The active tab is scrolled into view on selection. When
+      false, tabs keep their width and a strip too long for its container
+      overflows it. */
   readonly scrollable = input(false, { transform: booleanAttribute });
 
   /** When true, each tab shows a close button. Clicking it emits tabClosed with
@@ -114,6 +119,18 @@ export class TabsComponent {
 
   private readonly host = inject(ElementRef<HTMLElement>);
   private readonly uid = `ds-tabs-${++nextId}`;
+  private readonly tablist =
+    viewChild.required<ElementRef<HTMLElement>>('tablist');
+
+  protected readonly scrollsHorizontally = computed(
+    () => this.scrollable() && this.orientation() === 'horizontal',
+  );
+  private readonly overflowing = signal(false);
+  protected readonly showScrollArrows = computed(
+    () => this.scrollsHorizontally() && this.overflowing(),
+  );
+  protected readonly canScrollPrevious = signal(false);
+  protected readonly canScrollNext = signal(false);
 
   protected readonly tabs = contentChildren(TabComponent);
 
@@ -128,6 +145,20 @@ export class TabsComponent {
   private readonly urlParams = signal<ParamMap | null>(null);
 
   constructor() {
+    afterRenderEffect((onCleanup) => {
+      this.tabs();
+      if (!this.scrollsHorizontally()) {
+        this.overflowing.set(false);
+
+        return;
+      }
+      const strip = this.tablist().nativeElement;
+      const observer = new ResizeObserver(() => this.updateScrollArrows());
+      observer.observe(strip);
+      observer.observe(strip.parentElement!);
+      onCleanup(() => observer.disconnect());
+    });
+
     /**
      * Two strips sharing a parameter is the failure mode of going round a screen
      * turning this on: `tab` is the obvious name, so the second strip takes it
@@ -342,6 +373,56 @@ export class TabsComponent {
         button?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
       });
     }
+  }
+
+  protected updateScrollArrows(): void {
+    const strip = this.tablist().nativeElement;
+    const scrolled = Math.abs(strip.scrollLeft);
+    const hidden = strip.scrollWidth - strip.clientWidth;
+    // Against the row, not the strip: the arrows narrow the strip, and a strip
+    // measured against its own width would keep them for tabs that fit without them.
+    this.overflowing.set(
+      strip.scrollWidth > strip.parentElement!.clientWidth + 1,
+    );
+    this.canScrollPrevious.set(scrolled > 1);
+    this.canScrollNext.set(scrolled < hidden - 1);
+  }
+
+  protected scrollPage(towardEnd: boolean): void {
+    const strip = this.tablist().nativeElement;
+    const mirror = getComputedStyle(strip).direction === 'rtl' ? -1 : 1;
+    const inlineStart = (rect: DOMRect): number =>
+      mirror === 1 ? rect.left : -rect.right;
+    const inlineEnd = (rect: DOMRect): number =>
+      mirror === 1 ? rect.right : -rect.left;
+    const view = strip.getBoundingClientRect();
+    const tabRects = Array.from(strip.children, (tab) =>
+      tab.getBoundingClientRect(),
+    );
+    const step = towardEnd ? 1 : -1;
+    let distance = 0;
+    if (towardEnd) {
+      const next = tabRects.find(
+        (rect) => inlineEnd(rect) > inlineEnd(view) + 1,
+      );
+      distance = next ? inlineStart(next) - inlineStart(view) : 0;
+    } else {
+      const previous = tabRects
+        .reverse()
+        .find((rect) => inlineStart(rect) < inlineStart(view) - 1);
+      distance = previous ? inlineEnd(previous) - inlineEnd(view) : 0;
+    }
+    // A tab wider than the strip is already aligned, so move a full width.
+    if (distance * step < 1) {
+      distance = step * strip.clientWidth;
+    }
+    const reducedMotion = matchMedia(
+      '(prefers-reduced-motion: reduce)',
+    ).matches;
+    strip.scrollBy({
+      left: mirror * distance,
+      behavior: reducedMotion ? 'auto' : 'smooth',
+    });
   }
 
   protected onCloseClick(event: MouseEvent, index: number): void {

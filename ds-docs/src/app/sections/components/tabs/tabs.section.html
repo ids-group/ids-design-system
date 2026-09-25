@@ -141,8 +141,10 @@
 
   <p class="block-desc t-s">
     When <code class="t-mono-inline">scrollable</code> is set the tab strip
-    clips to its bounds and scrolls horizontally. The active tab is always
-    scrolled into view. Works for both variants.
+    clips to its bounds and scrolls horizontally. While tabs lie beyond an
+    edge, an arrow on that side turns the strip by a page; a strip that fits
+    shows no arrows. The active tab is always scrolled into view. Works for
+    both variants.
   </p>
 
   <div class="variant-row">
@@ -269,6 +271,28 @@
       <ds-tab label="Archived">
         <p class="t-s muted pad">
           Archived records.
+        </p>
+      </ds-tab>
+    </ds-tabs>
+  </div>
+
+  <div class="variant-row">
+    <div class="variant-row-label t-overline">
+      Fits
+    </div>
+
+    <ds-tabs
+      class="variant-row-stage scrollable-demo"
+      scrollable>
+      <ds-tab label="Overview">
+        <p class="t-s muted pad">
+          Overview panel.
+        </p>
+      </ds-tab>
+
+      <ds-tab label="Files">
+        <p class="t-s muted pad">
+          Files panel.
         </p>
       </ds-tab>
     </ds-tabs>

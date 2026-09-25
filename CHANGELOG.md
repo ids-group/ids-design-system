@@ -82,6 +82,13 @@
 
 ### Added
 
+- **A `scrollable` `ds-tabs` strip shows previous and next arrows while tabs lie beyond its edges.**
+  Each arrow turns the strip by a page of tabs, smoothly unless reduced motion is set, and hides at
+  its own edge; a strip that fits shows none. The arrows sit outside the tab order and are hidden
+  from assistive technology, because the arrow keys already bring the selected tab into view. New
+  `DS_INTL.tabs.scrollPrevious` and `DS_INTL.tabs.scrollNext` label them (`Scroll tabs back`,
+  `Scroll tabs forward`).
+
 - **`DS_CONFIG.chart.pinOnClick` and `DS_CONFIG.chart.hoverDelayMs`.** Across every chart,
   `pinOnClick` (default `true`) sets whether a click holds a mark and `hoverDelayMs` (default `500`)
   how long a resting pointer waits before the chart answers.

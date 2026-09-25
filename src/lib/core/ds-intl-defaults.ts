@@ -161,6 +161,8 @@ export const DS_INTL_DEFAULTS: DsIntl = {
   },
   tabs: {
     close: (label) => `Close ${label}`,
+    scrollPrevious: 'Scroll tabs back',
+    scrollNext: 'Scroll tabs forward',
   },
   splitButton: {
     menuLabel: 'More actions',
