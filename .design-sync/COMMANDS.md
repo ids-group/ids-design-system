@@ -27,14 +27,14 @@ elements upgrades every host a second time.
 
 **One card per BLOCK**, not per component. A block is one demo with its own
 `<h3 class="block-title">` and description, and the card keeps exactly that block
-plus the chapter's heading, tag chip and lede. 85 components, 409 cards.
+plus the chapter's heading, tag chip and lede. 91 components, 283 cards.
 
 That granularity is forced by how the pane renders: it fits a card's declared
 `viewport` into a fixed tile, so **the declared height IS the zoom level**.
 Table's chapter measures 18919px and rendered as an illegible smudge; its 35
 blocks are a few hundred pixels each and legible at the same scale as everything
-else. Nothing is cut from ds-docs — every title, description and demo survives,
-distributed across cards — and because the pane labels a card by its FILENAME,
+else. Every block ships unless ds-docs marks it out (below), and because the
+pane labels a card by its FILENAME,
 `Table-Sortable-columns.html` puts the block's name outside the card too, which
 is the only way to get text out there at all.
 
@@ -43,6 +43,14 @@ MenuItem and MenuDivider. Those blocks carry `data-for="menu-item"` in the
 ds-docs template, which is how a block is attributed to a component; unmarked
 blocks belong to the chapter's own. The API table goes on a component's FIRST
 card only: on Table that is one table instead of thirty-five copies.
+
+A block that is written for a docs reader rather than for an agent building a
+screen - an edge case, a proof, a bug it guards against - carries
+`data-no-card` on its `<h3 class="block-title">` (or on its `data-for`
+container) and gets no card; the docs page is unchanged. The first block of a
+component cannot be marked: its card carries the lede and the API table, and
+`build-cards` fails on it. A mark on a block that already shipped leaves its
+card on the project, so its path goes into `obsolete.txt`.
 
 A component whose chapter marks no block for it falls back to one whole-chapter
 card — the tall shape this design exists to avoid. `check-manual-surface` reports

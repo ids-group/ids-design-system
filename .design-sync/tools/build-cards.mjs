@@ -294,6 +294,7 @@ function blocksOf(slug) {
     const owner = attributes.match(/data-for="([^"]+)"/)?.[1] ?? null;
     const empty =
       attributes.trimEnd().endsWith('/') || VOID_TAGS.has(name.toLowerCase());
+    const noCard = /\sdata-no-card\b/.test(attributes);
 
     if (depth === 1 && heading) {
       // The heading's own text, which is what the card is named after.
@@ -304,10 +305,10 @@ function blocksOf(slug) {
       )
         .replace(/\s+/g, ' ')
         .trim();
-      found.push({ title, owner: owner ?? '', at: match.index });
+      found.push({ title, owner: owner ?? '', at: match.index, noCard });
     } else if (depth === 1 && owner !== null) {
       // A set of demos grouped without a heading of its own — Menu's item states.
-      found.push({ title: '', owner, at: match.index });
+      found.push({ title: '', owner, at: match.index, noCard });
     } else if (
       depth > 1 &&
       (heading || owner !== null) &&
@@ -504,11 +505,17 @@ const displayTitle = (raw) =>
     // Only an ordinary word is lowered: `CSV export`, `W3w`, `12-hour (AM PM)` keep their shape.
     .replace(/^[A-Z](?=[a-z]|\s|$)/, (letter) => letter.toLowerCase());
 
-/** One card per owned block, each named `<chapter> - <block>`. */
+/** One card per owned block, each named `<chapter> - <block>`, except a block marked
+ *  `data-no-card` in ds-docs. The mark drops the card only: `ownedIndex` still counts it, because
+ *  the card's runtime slicer counts every block of the owner on the rendered page. */
 function nameCards(chapter, mine, owner) {
+  if (mine[0]?.noCard)
+    throw new Error(
+      `${chapter}: the first block "${mine[0].title}" carries data-no-card, and its card is the one that ships the lede and the API table`,
+    );
   const seen = new Map();
 
-  return mine.map((block, ownedIndex) => {
+  const cards = mine.map((block, ownedIndex) => {
     // A block with no heading of its own is a grouped set of demos (Menu's item states); the
     // chapter's own name is the best label there is, and it needs an ordinal only if there
     // are several.
@@ -531,6 +538,8 @@ function nameCards(chapter, mine, owner) {
       prose: block.prose ?? [],
     };
   });
+
+  return cards.filter((card, index) => !mine[index].noCard);
 }
 
 /** The API keys a chapter declares, which is the set of parts it renders a chip and a table for.
