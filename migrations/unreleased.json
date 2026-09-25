@@ -4,16 +4,16 @@
     {
       "id": "chart-pin-on-click-default-true",
       "kind": "behavior",
-      "old": "ds-column-chart[pinOnClick]",
+      "old": "pinOnClick",
       "new": null,
       "surface": [
         "template",
         "config"
       ],
       "action": "None, unless a chart has to follow the pointer after a click: set pinOnClick=\"false\" on it (cursorPin=\"false\" on ds-chart), or DS_CONFIG.chart.pinOnClick: false for every chart. Delete a pinOnClick binding that only restates true (delete list: chart-pin-on-click-redundant, chart-cursor-pin-redundant).",
-      "appliesWhen": "Every chart that leaves pinOnClick unbound - ds-bar-chart, ds-column-chart, ds-funnel-chart, ds-line-chart, ds-pie-chart, ds-heatmap-chart, ds-scatter-chart, a hand-composed ds-chart (cursorPin) and its dsColumnSeries / dsLineSeries marks. A chart binding pinOnClick either way keeps what it binds.",
+      "appliesWhen": "Every chart that leaves pinOnClick unbound - ds-bar-chart, ds-column-chart, ds-funnel-chart, ds-line-chart, ds-pie-chart, ds-heatmap-chart, ds-scatter-chart, ds-waterfall-chart, a hand-composed ds-chart (cursorPin) and its dsColumnSeries / dsLineSeries marks. A chart binding pinOnClick either way keeps what it binds.",
       "pitfall": "A click that only selected something now also holds the tooltip and dims the rest until a second click, Escape or a press elsewhere, which reads as a stuck tooltip on a screen that never expected one.",
-      "restore": "DS_CONFIG.chart.pinOnClick: false",
+      "restore": "provideDsConfig({ chart: { pinOnClick: false } })",
       "searchHints": [
         "pinOnClick",
         "cursorPin",
@@ -26,7 +26,7 @@
         "pinOnClick"
       ],
       "verify": "On every chart screen, clicking a mark and moving away either leaves the mark held with a pin disc on it, or the chart or the app config sets pinOnClick false.",
-      "note": "The default was false, now DS_CONFIG.chart.pinOnClick and then true. A held mark shows a pin disc on itself."
+      "note": "The default was false (ds-heatmap-chart, ds-scatter-chart and ds-waterfall-chart did not hold at all), now DS_CONFIG.chart.pinOnClick and then true."
     },
     {
       "id": "chart-hover-delay-500",
@@ -40,7 +40,7 @@
       "action": "None, unless something asserts on a chart tooltip or highlight straight after a hover: wait 500 ms first, or set DS_CONFIG.chart.hoverDelayMs: 0 in that test's providers.",
       "appliesWhen": "Every chart's pointer hover on a mark, a category, a legend entry, a heat map scale step or a bar label. Focus, a tap and a click that pins answer at once, so keyboard and touch tests are unaffected.",
       "pitfall": "An end-to-end test that hovers and reads the tooltip in the same step now finds no tooltip and fails, or passes on a stale panel from an earlier hover.",
-      "restore": "DS_CONFIG.chart.hoverDelayMs: 0",
+      "restore": "provideDsConfig({ chart: { hoverDelayMs: 0 } })",
       "searchHints": [
         "hover()",
         "mouseenter",
@@ -49,7 +49,7 @@
         "provideDsConfig"
       ],
       "detect": [
-        ".hover()",
+        ".hover(",
         "new PointerEvent(",
         "ds-chart-tooltip-panel"
       ],
@@ -59,10 +59,10 @@
     {
       "id": "chart-pin-inputs-widened",
       "kind": "behavior",
-      "old": "ds-column-chart[pinOnClick]",
+      "old": "pinOnClick",
       "new": null,
       "surface": "typescript",
-      "action": "Where your code reads pinOnClick() or cursorPin() back from a chart reference, handle null, or read pinOnClickResolved() on dsColumnSeries / dsLineSeries and cursorPinResolved() on ds-chart.",
+      "action": "Where your code reads pinOnClick() or cursorPin() back from a chart reference, handle null, or read pinOnClickResolved() on dsColumnSeries / dsLineSeries and cursorPinResolved() on ds-chart. A subclass redeclaring pinOnClick or cursorPin types it input<boolean | null, unknown>.",
       "appliesWhen": "Only TypeScript reading the raw input through viewChild or a template reference, or a subclass redeclaring it, on ds-bar-chart, ds-column-chart, ds-funnel-chart, ds-line-chart, ds-pie-chart, dsColumnSeries, dsLineSeries and ds-chart. Binding the inputs in a template is unaffected.",
       "pitfall": "A reader testing pinOnClick() for truthiness now sees null on an unset chart that does pin, and takes the other branch with no compile error.",
       "restore": null,
@@ -85,7 +85,7 @@
       "surface": "template",
       "action": "None, unless a mark under the category cursor has to answer the pointer on its own: set cursor=\"none\" on that ds-chart.",
       "appliesWhen": "Only a ds-chart whose category cursor is on (cursor=\"category\", or \"auto\" with two or more marks showing a tooltip), and its dsColumnSeries / dsLineSeries marks. The ds-column-chart preset, which has no category cursor, is unaffected.",
-      "pitfall": "A column's own per-mark panel, with its partOfWhole share line, no longer opens on hover under the cursor: the category panel replaces it anywhere in the band, and nothing answers in the gap between two bands.",
+      "pitfall": "A column's own per-mark panel, with its partOfWhole share line, no longer opens on hover under the cursor: the category panel replaces it anywhere in the band, nothing answers in the gap between two bands, and a click holds the category, not the column.",
       "restore": "cursor=\"none\"",
       "searchHints": [
         "<ds-chart",
@@ -102,13 +102,33 @@
       "note": "The band answered the whole category step and the tooltip only the mark's own hover box; both now answer the drawn band. A mark of your own reads CHART_SCALES.cursorOn to leave pointer hover to the band."
     },
     {
+      "id": "chart-entrance-slower",
+      "kind": "behavior",
+      "old": "--ds-motion-chart-mark-enter-duration",
+      "new": null,
+      "surface": ["style", "typescript"],
+      "action": "None, unless something waits a fixed time for a chart to finish arriving (a screenshot, an assertion on a mark's final size or opacity): wait about 1.1s, or run it under reduced motion. To shorten every chart's entrance, set --ds-motion-chart-mark-enter-duration, --ds-motion-chart-mark-grow-duration and --ds-motion-chart-mark-sweep-duration.",
+      "appliesWhen": "Every chart's entrance. A stylesheet that already sets --ds-motion-chart-mark-enter-duration or --ds-motion-chart-mark-enter-easing keeps its values for what those tokens time. The defaults ship in styles/tokens, which styles/ds forwards. Under reduced motion every mark appears at once.",
+      "pitfall": "A visual regression test that screenshots a chart a fixed time after render catches marks still growing or value labels not yet shown.",
+      "restore": "--ds-motion-chart-mark-enter-duration: var(--duration-base); --ds-motion-chart-mark-enter-easing: var(--ease-decelerate);",
+      "searchHints": [
+        "--ds-motion-chart-mark-enter-duration",
+        "--ds-motion-chart-mark-enter-easing",
+        "toHaveScreenshot",
+        "waitForTimeout"
+      ],
+      "detect": ["toHaveScreenshot", "matchImageSnapshot", "waitForTimeout(", "reducedMotion"],
+      "verify": "In the built CSS --ds-motion-chart-mark-enter-duration resolves to var(--duration-slower) unless the app overrides it, and every test that captures a chart after its entrance waits about 1.1s or runs under reduced motion.",
+      "note": "--ds-motion-chart-mark-enter-duration was 180ms, now 400ms; --ds-motion-chart-mark-enter-easing was --ease-decelerate, now --ease-emphasized-decelerate. The restore brings back those two only: growing and sweeping marks follow the grow and sweep tokens."
+    },
+    {
       "id": "chart-stagger-default-on",
       "kind": "behavior",
-      "old": "ds-column-chart[staggerMs]",
+      "old": "staggerMs",
       "new": null,
       "surface": "template",
       "action": "None, unless a chart's marks have to arrive all at once: set staggerMs=\"0\" on it.",
-      "appliesWhen": "ds-bar-chart, ds-column-chart, ds-line-chart, ds-funnel-chart and the dsColumnSeries / dsLineSeries marks with no staggerMs binding. A chart binding staggerMs keeps its value, now spread evenly within 260ms.",
+      "appliesWhen": "ds-bar-chart, ds-column-chart, ds-line-chart, ds-funnel-chart and the dsColumnSeries / dsLineSeries marks with no staggerMs binding, plus ds-heatmap-chart and ds-waterfall-chart, which gain staggerMs at 40. ds-pie-chart is unaffected. A chart binding staggerMs keeps its step, narrowed only where the whole series would take longer than 260ms.",
       "pitfall": "A visual regression test that screenshots a chart a fixed time after it renders now catches later marks still arriving.",
       "restore": "staggerMs=\"0\"",
       "searchHints": [
@@ -124,16 +144,16 @@
         "matchImageSnapshot"
       ],
       "verify": "Each chart either lets its marks arrive in order within about a quarter second, or binds staggerMs=\"0\".",
-      "note": "The default was 0, now 40 (60 on ds-funnel-chart), and the stagger spreads evenly within --ds-motion-chart-mark-stagger-budget rather than stopping at a 300ms cap."
+      "note": "The default was 0, now 40 (60 on ds-funnel-chart); a long series narrows its step to arrive within 260ms, where it used to stop at a 300ms cap and land every later mark at once."
     },
     {
       "id": "exported-class-members-grew",
       "kind": "behavior",
-      "old": "BarChartComponent, ChartComponent, ColumnChartComponent, ColumnSeriesComponent, LineChartComponent, LineSeriesComponent, FunnelChartComponent, HeatmapChartComponent, PieChartComponent, ScatterChartComponent, PaginationComponent, TableComponent, ChartLegendComponent, ChartTooltipPanelComponent, WaterfallMarksComponent",
+      "old": "BarChartComponent, ChartComponent, ColumnChartComponent, ColumnSeriesComponent, LineChartComponent, LineSeriesComponent, FunnelChartComponent, HeatmapChartComponent, PieChartComponent, ScatterChartComponent, WaterfallChartComponent, PaginationComponent, TableComponent, ChartLegendComponent, ChartTooltipPanelComponent, WaterfallMarksComponent",
       "new": null,
       "surface": "typescript",
       "action": "Build after upgrading, rename or mark `override` every member of yours the compiler reports as colliding, and delete an override whose base member is gone.",
-      "appliesWhen": "Subclassing a DS component is unsupported, but consumers do it. Template users of the listed components need nothing.",
+      "appliesWhen": "Only a class of yours that extends one of the listed components. Template users of those components need nothing; subclassing a DS component is unsupported.",
       "pitfall": "`protected` and `private` are no protection: a redeclared member collides exactly as a public one does. A method of yours named like a removed member and declared without `override` still compiles, and is simply never called again.",
       "restore": null,
       "searchHints": [
@@ -147,6 +167,7 @@
         "extends HeatmapChartComponent",
         "extends PieChartComponent",
         "extends ScatterChartComponent",
+        "extends WaterfallChartComponent",
         "extends PaginationComponent",
         "extends TableComponent",
         "extends ChartLegendComponent",
@@ -164,6 +185,7 @@
         "extends HeatmapChartComponent",
         "extends PieChartComponent",
         "extends ScatterChartComponent",
+        "extends WaterfallChartComponent",
         "extends PaginationComponent",
         "extends TableComponent",
         "extends ChartLegendComponent",
@@ -222,12 +244,12 @@
     }
   ],
   "informational": [
-    "New chart entrance tokens: --ds-motion-chart-mark-grow-duration, --ds-motion-chart-mark-grow-easing, --ds-motion-chart-mark-sweep-duration, --ds-motion-chart-mark-detail-duration and --ds-motion-chart-mark-stagger-budget, on the new primitives --duration-slowest, --ease-emphasized-decelerate and --ease-settle.",
+    "New chart entrance tokens: --ds-motion-chart-mark-grow-duration, --ds-motion-chart-mark-grow-easing, --ds-motion-chart-mark-sweep-duration and --ds-motion-chart-mark-detail-duration, on the new primitives --duration-slowest, --ease-emphasized-decelerate and --ease-settle.",
     {
-      "text": "Chart entrances are slower and staged: --ds-motion-chart-mark-enter-duration is 400ms (was 180ms) with --ease-emphasized-decelerate; columns, bars and waterfall steps grow over 600ms with no fade, a solid line draws on, the pie ring turns in, funnel stages rise, points and markers settle, heat map cells fade in by column, and value labels, markers and legend swatches follow their mark. Under reduced motion every mark appears at once.",
+      "text": "Chart entrances are staged: columns, bars and waterfall steps grow over 600ms with no fade, a solid line draws on, the pie ring turns in, funnel stages rise, points and markers settle, heat map cells fade in by column, and value labels, markers and legend swatches follow their mark. Under reduced motion every mark appears at once.",
       "verify": "Load a chart page with reduced motion on and confirm every mark is on screen at once, then with it off and confirm no mark is left transparent or half drawn once the entrance ends."
     },
-    "ds-heatmap-chart gains staggerMs, default 40, staggering its columns.",
+    "ds-heatmap-chart and ds-waterfall-chart gain staggerMs, default 40: the heat map staggers its columns, the waterfall its steps.",
     "DS_CONFIG.chart.pinOnClick and DS_CONFIG.chart.hoverDelayMs set, for every chart, whether a click holds a mark (default true) and how long a resting pointer waits (default 500 ms).",
     "ds-heatmap-chart and ds-scatter-chart gain pinOnClick, with an Unpin control.",
     {
@@ -235,7 +257,7 @@
       "verify": "Click a mark on each chart type and confirm a pin disc appears on the held mark."
     },
     "The pointer cursor appears over a mark a click would hold, a mark set interactive, and a category band under the category cursor when a press holds it; the gap between two bands keeps the default cursor.",
-    "Naming a series or a category highlights it on every chart: a funnel stage row dims the other stages whatever dimOthers says, a heat map scale step dims every cell outside it, and a bar label or a ds-chart category label (ds-waterfall-chart included) dims the other bars.",
+    "Naming a series or a category highlights it on every chart: a funnel stage row dims the other stages whatever dimOthers says, a heat map scale step dims every cell outside it, and a bar label, or a category label on a ds-chart without the category cursor (ds-waterfall-chart included), dims the other bars; a mark of your own reads CHART_SCALES.categoryLabelHover and CHART_SCALES.hoverDelayMs to answer the same way.",
     "dimOthers follows the mark the chart has answered rather than the raw hover, so the fade waits out the hover delay with the tooltip and follows focus.",
     {
       "text": "A column's hover area stops at its category's band (was: up to the whole step between two columns), so the gap between two columns answers no pointer.",
@@ -271,7 +293,10 @@
       "text": "A ds-bar-chart bar grows out of its value axis in a right-to-left page (was: from the far end).",
       "verify": "Set dir=\"rtl\" on the page and confirm each bar grows from the axis at the right."
     },
-    "Under the category cursor, focus on a dsColumnSeries column names its category as a dsLineSeries marker does, and focus leaving a column or a marker takes the band and the category panel down."
+    "Under the category cursor, focus on a dsColumnSeries column names its category as a dsLineSeries marker does, and focus leaving a column or a marker takes the band and the category panel down.",
+    "A paged ds-table that a filter or new data leaves empty announces its empty-state text ([empty] content or emptyTemplate) in its live region (was: silent); with none it announces rangeAnnouncement(0, 0, 0), Showing 0 of 0 by default.",
+    "A tap on a chart mark stays held when the click that follows it lands (was: that click let go of it at once).",
+    "ds-waterfall-chart gains pinOnClick (boolean | null, falling back to DS_CONFIG.chart.pinOnClick, then true), with the Unpin control the other charts show."
   ],
   "deleteList": [
     {
