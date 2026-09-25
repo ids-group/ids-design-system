@@ -14,10 +14,12 @@
     "g: aria-hidden=true",
     "g: aria-hidden=true"
   ],
-  "column-chart": ["p: role=status", "div: aria-hidden=true"],
+  "column-chart": [
+    "p: role=status",
+    "div: aria-hidden=true"
+  ],
   "column-series": [
-    "svg: role={interactive() ? 'button' : null}, aria-label={interactive() ? entryLabel(mark) : null}",
-    "svg: aria-hidden=true"
+    "svg: role={interactive() ? 'button' : null}, aria-label={interactive() ? entryLabel(mark) : null}"
   ],
   "funnel-chart": [
     "p: role=status",
@@ -35,7 +37,11 @@
     "span: role=img, aria-label={cell.accessibleName}",
     "span: aria-hidden=true"
   ],
-  "line-chart": ["p: role=status", "div: aria-hidden=true", "p: role=status"],
+  "line-chart": [
+    "p: role=status",
+    "div: aria-hidden=true",
+    "p: role=status"
+  ],
   "line-series": [
     "svg: role={interactive() ? 'button' : null}, aria-label={interactive() ? markerLabel(marker) : null}"
   ],
@@ -50,7 +56,9 @@
     "li: role={interactive() ? 'button' : null}, aria-label={interactive() ? entryLabel(entry) : null}"
   ],
   "reference-label": [],
-  "reference-line": ["svg: aria-hidden=true"],
+  "reference-line": [
+    "svg: aria-hidden=true"
+  ],
   "scatter-chart": [
     "p: role=status",
     "svg: role={interactive() ? 'group' : 'img'}, aria-label={accessibleName()}",
@@ -58,6 +66,11 @@
     "p: role=status"
   ],
   "series-annotation": [],
-  "waterfall-chart": ["p: role=status", "div: aria-hidden=true"],
-  "waterfall-marks": ["svg: aria-hidden=true"]
+  "waterfall-chart": [
+    "p: role=status",
+    "div: aria-hidden=true"
+  ],
+  "waterfall-marks": [
+    "svg: aria-hidden=true"
+  ]
 }

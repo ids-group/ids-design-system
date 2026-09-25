@@ -33,7 +33,9 @@ const NO_LINGER = signal<number | null>(null);
 const NO_PIN = signal<boolean | null>(null);
 const NO_DELAY = signal<number | null>(null);
 
-/** How long a resting pointer waits before a chart answers it, when nothing sets it. */
+/** How long a resting pointer waits before a chart answers it, when nothing sets it.
+ *
+ *  @internal */
 export const CHART_HOVER_DELAY_MS = 500;
 
 /** Each resolved input → `DS_CONFIG.chart` → the built-in; copy resolves input → `DS_INTL.chart`.

@@ -99,7 +99,7 @@
         "dsLineSeries"
       ],
       "verify": "On each ds-chart with the category cursor, the pointer anywhere in a category's band opens one panel for that category, and the pointer between two bands opens nothing.",
-      "note": "The band answered the whole category step and the tooltip only the mark's own hover box; both now answer the drawn band."
+      "note": "The band answered the whole category step and the tooltip only the mark's own hover box; both now answer the drawn band. A mark of your own reads CHART_SCALES.cursorOn to leave pointer hover to the band."
     },
     {
       "id": "exported-class-members-grew",
@@ -153,8 +153,8 @@
       "text": "A column's hover area stops at its category's band (was: up to the whole step between two columns), so the gap between two columns answers no pointer.",
       "verify": "Point between two columns of a ds-column-chart and confirm no tooltip opens."
     },
-    "A chart tooltip fades in rather than scaling in, so its rows no longer drift into place each time it opens on another mark; every other overlay keeps its scale.",
-    "A category tooltip lists its readings top to bottom, in the order their marks are drawn at that category (was: the order the series were declared); the legend keeps the declared order.",
+    "A chart tooltip fades in rather than scaling in, so its rows no longer drift into place each time it opens on another mark; --ds-overlay-enter-keyframes still overrides it, and every other overlay keeps its scale.",
+    "A category tooltip lists its readings top to bottom, in the order their marks are drawn at that category (was: the order the series were declared); the legend keeps the declared order. A mark of your own that reports readings through CHART_SCALES places each one with y, its height in plot pixels from the top.",
     {
       "text": "A hatched column's stripes run from bottom left to top right, and the tooltip swatch's stripe runs the same way.",
       "verify": "Open the tooltip of a hatched column and confirm the swatch stripe and the column stripes slant the same way."
