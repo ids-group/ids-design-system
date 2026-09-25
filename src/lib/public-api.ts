@@ -347,7 +347,10 @@ export type {
 export { TagComponent } from '@ids-group-ltd/ids-design-system/components/tag';
 export type { TagVariant } from '@ids-group-ltd/ids-design-system/components/tag';
 export { TextareaComponent } from '@ids-group-ltd/ids-design-system/components/textarea';
-export type { TextareaResize } from '@ids-group-ltd/ids-design-system/components/textarea';
+export type {
+  TextareaMaxLengthMode,
+  TextareaResize,
+} from '@ids-group-ltd/ids-design-system/components/textarea';
 export { TimePickerComponent } from '@ids-group-ltd/ids-design-system/components/time-picker';
 export type {
   TimeFormat,

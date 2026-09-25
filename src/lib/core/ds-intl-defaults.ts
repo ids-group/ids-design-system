@@ -8,6 +8,10 @@ export const DS_INTL_DEFAULTS: DsIntl = {
     clearInput: 'Clear input',
     showPassword: 'Show password',
     hidePassword: 'Hide password',
+    overLimit: (excess) =>
+      excess === 1
+        ? '1 character over the limit'
+        : `${excess} characters over the limit`,
   },
   picker: {
     placeholder: 'Select…',
