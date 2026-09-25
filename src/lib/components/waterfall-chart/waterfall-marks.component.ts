@@ -7,6 +7,7 @@ import {
   input,
   numberAttribute,
 } from '@angular/core';
+import { staggerDelay } from '@ids-group-ltd/ids-design-system/components';
 import { CHART_SCALES } from '@ids-group-ltd/ids-design-system/components/chart';
 import type { ChartValueFormat } from '@ids-group-ltd/ids-design-system/core';
 import type { WaterfallChartStep } from './waterfall-chart.types';
@@ -55,6 +56,9 @@ export class WaterfallMarksComponent {
   /** The share of a category's band the bars take, so the connector starts where the bar ends. */
   readonly columnWidthRatio = input(0.8, { transform: numberAttribute });
 
+  /** The bars' own `staggerMs`, so each label and rule waits for the bar it belongs to. */
+  readonly staggerMs = input(40, { transform: numberAttribute });
+
   protected readonly markWidth = computed(
     () => this.scales.bandWidth() * this.columnWidthRatio(),
   );
@@ -72,6 +76,7 @@ export class WaterfallMarksComponent {
       x1: toX(index) + half,
       x2: toX(index + 1) - half,
       y: toY(step.to),
+      stagger: this.barStagger(index + 1),
     }));
   });
 
@@ -91,7 +96,12 @@ export class WaterfallMarksComponent {
         x: toX(index),
         y: tip - VALUE_LABEL_GAP,
         text: `${sign}${format(reading, 'tooltip')}`,
+        stagger: this.barStagger(index),
       };
     });
   });
+
+  private barStagger(index: number): string {
+    return `${staggerDelay(index, this.steps().length, this.staggerMs())}ms`;
+  }
 }

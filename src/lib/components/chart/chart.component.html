@@ -15,7 +15,9 @@
     <div
       class="skeleton"
       aria-hidden="true">
-      <ds-skeleton height="var(--_chart-view-height)" [shimmer]="loading()" />
+      <ds-skeleton
+        height="var(--_chart-view-height)"
+        [shimmer]="loading()" />
     </div>
   } @else if (isEmpty()) {
     <p class="empty">
@@ -35,6 +37,7 @@
         #canvasEl
         class="canvas"
         preserveAspectRatio="xMidYMid meet"
+        [class.pins]="bandPins()"
         [style.block-size.px]="viewHeight()"
         [attr.viewBox]="viewBox()">
         @if (cursorBand(); as band) {
@@ -206,7 +209,9 @@
                 categoryLabelsRotated()
                   ? 'rotate(-45 ' + label.x + ' ' + categoryLabelY() + ')'
                   : null
-              ">
+              "
+              (pointerenter)="onCategoryLabelEnter(label.index, $event)"
+              (pointerleave)="onCategoryLabelLeave()">
               {{ label.text }}
             </text>
           }
@@ -215,6 +220,19 @@
                belongs below the readings, its NAME has to survive a column drawn through it. -->
           <ng-content select="[dsReferenceLabel], [dsSeriesAnnotation]" />
         </g>
+
+        @if (cursorPinned() && cursorBand(); as band) {
+          <g
+            dsChartPinMarker
+            [attr.transform]="
+              'translate(' +
+              (band.x + band.width / 2) +
+              ',' +
+              bandPinY(band) +
+              ')'
+            ">
+          </g>
+        }
       </svg>
     </div>
   }

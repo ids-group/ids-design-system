@@ -8,6 +8,7 @@ import {
   input,
   numberAttribute,
   output,
+  viewChild,
 } from '@angular/core';
 import {
   ChartComponent,
@@ -125,6 +126,23 @@ export class WaterfallChartComponent {
   /** Formats every value the chart prints - the axis ticks, the bar labels and the annex table.
    *  The sign a delta carries is added around it, so a formatter never has to know about one. */
   readonly valueFormat = input<ChartValueFormat | null>(null);
+
+  /** Holds the clicked step and its tooltip in place, with a pin disc on it, until a second click,
+   *  Escape or a press outside releases it. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then
+   *  `true`. `barClicked` fires either way - pinning is a state, not a handler. */
+  readonly pinOnClick = input<boolean | null, unknown>(null, {
+    transform: (value) => (value == null ? null : booleanAttribute(value)),
+  });
+
+  /** Milliseconds between one step's entrance and the next; a long waterfall narrows the step to
+   *  arrive within 260ms. `0` is no stagger. */
+  readonly staggerMs = input(40, { transform: numberAttribute });
+
+  protected readonly series = viewChild(ColumnSeriesComponent);
+
+  protected readonly pinned = computed(
+    () => this.series()?.activeMark.pinned() ?? false,
+  );
 
   /** The clicked datum, as it was given. Fires on click and on Enter or Space. */
   readonly barClicked = output<WaterfallChartBar>();

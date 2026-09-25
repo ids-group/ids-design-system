@@ -1,3 +1,7 @@
+@use '../../styles/chart-motion' as chart-motion;
+@include chart-motion.fades-in('.connector', var(--ds-motion-chart-mark-grow-duration));
+@include chart-motion.follows('.value', var(--ds-motion-chart-mark-grow-duration));
+
 // Dashed rather than solid: the chain is furniture, and a solid rule at a bar's own level reads as
 // a threshold the reader is meant to compare against.
 .connector {

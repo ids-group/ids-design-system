@@ -3,10 +3,10 @@
 @use '../../styles/chart-motion' as chart-motion;
 
 // The colour chips name the series, so they arrive with the marks rather than standing solid while
-// the plot is still fading. The checkbox is the chip when the legend toggles.
-@include chart-motion.fades-in('.legend-swatch');
-@include chart-motion.fades-in('.legend-check');
-@include chart-motion.fades-in('.legend-radio');
+// the plot is still arriving. The checkbox is the chip when the legend toggles.
+@include chart-motion.fades-in('.legend-swatch', 0ms, var(--ds-motion-chart-mark-detail-duration));
+@include chart-motion.fades-in('.legend-check', 0ms, var(--ds-motion-chart-mark-detail-duration));
+@include chart-motion.fades-in('.legend-radio', 0ms, var(--ds-motion-chart-mark-detail-duration));
 
 :host {
   --_chart-legend-swatch-size: var(--ds-chart-legend-swatch-size, var(--space-2-5));

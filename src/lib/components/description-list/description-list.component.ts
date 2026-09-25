@@ -13,6 +13,6 @@ export type DescriptionListOrientation = 'horizontal' | 'stacked';
   },
 })
 export class DescriptionListComponent {
-  /** horizontal = label column + value; stacked = label above value. */
+  /** horizontal = label column + value, every item stacking once a value would get less than --ds-description-list-value-min-width; stacked = label above value at every width. */
   readonly orientation = input<DescriptionListOrientation>('horizontal');
 }

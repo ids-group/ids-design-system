@@ -14,23 +14,26 @@
 // its function form: the component puts `.mark-leave` on the mark and Angular removes it on
 // `animationend`, with no `getAnimations()` call.
 //
-// A mark ARRIVES BY GROWING FROM ITS OWN BASELINE, never by scaling about its centre: a uniform
-// scale reads as the whole chart zooming, and it moves the mark's baseline, which is the one line
-// on a chart that must not move. A mark with no baseline to grow from — a ring arc, a funnel band,
-// a line — fades instead, for the same reason.
+// A mark with a baseline ARRIVES BY GROWING FROM IT, never by scaling about its centre: a uniform
+// scale reads as the whole chart zooming, and it moves the baseline, which is the one line on a
+// chart that must not move. A mark with no baseline - a point, a cell, a ring - settles in from a
+// scale close to one, and a line draws on along its own path.
 //
-// `prefers-reduced-motion` is handled globally in `_tokens.scss` — nothing here re-handles it.
+// The phases are staged by delay, not by script: the marks arrive after the exit, and what follows a
+// mark (its value label, a marker) waits `$after` on top of that.
+//
+// `prefers-reduced-motion` zeroes the durations in `_tokens.scss`. The delays are the one thing that
+// stays, because a stagger is written per mark as a plain length, so `enters` zeroes them here: with
+// a zero duration and `backwards` fill a delayed mark would stay invisible for its delay.
 
 @keyframes ds-chart-mark-grow-y {
   from {
-    opacity: 0;
     transform: scaleY(0);
   }
 }
 
 @keyframes ds-chart-mark-grow-x {
   from {
-    opacity: 0;
     transform: scaleX(0);
   }
 }
@@ -38,6 +41,36 @@
 @keyframes ds-chart-mark-fade-in {
   from {
     opacity: 0;
+  }
+}
+
+// `--_chart-rise-distance` is for a canvas whose viewBox stretches: there a pixel is a user unit,
+// so a chart sets a percentage of the mark's own box on the canvas instead.
+@keyframes ds-chart-mark-rise {
+  from {
+    opacity: 0;
+    transform: translateY(var(--_chart-rise-distance, 4px));
+  }
+}
+
+@keyframes ds-chart-mark-settle {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+
+@keyframes ds-chart-ring-sweep {
+  from {
+    opacity: 0;
+    transform: rotate(-30deg) scale(0.96);
+  }
+}
+
+// Needs `pathLength="1"` and `stroke-dasharray: 1` on the path, so one unit is the whole line.
+@keyframes ds-chart-line-draw {
+  from {
+    stroke-dashoffset: 1;
   }
 }
 
@@ -54,14 +87,23 @@
   }
 }
 
-@mixin enters($selector, $keyframes) {
+@mixin enters(
+  $selector,
+  $keyframes,
+  $duration: var(--ds-motion-chart-mark-enter-duration),
+  $easing: var(--ds-motion-chart-mark-enter-easing),
+  $after: 0ms
+) {
   #{$selector} {
-    animation: #{$keyframes} var(--ds-motion-chart-mark-enter-duration)
-      var(--ds-motion-chart-mark-enter-easing)
+    animation: #{$keyframes} #{$duration} #{$easing}
       calc(
-        var(--ds-motion-chart-mark-exit-duration) + var(--_chart-mark-stagger, 0ms)
+        var(--ds-motion-chart-mark-exit-duration) + #{$after} + var(--_chart-mark-stagger, 0ms)
       )
       backwards;
+
+    @media (prefers-reduced-motion: reduce) {
+      animation-delay: 0ms;
+    }
   }
 }
 
@@ -74,7 +116,12 @@
     transform-origin: bottom;
   }
 
-  @include enters('#{$fill}', ds-chart-mark-grow-y);
+  @include enters(
+    '#{$fill}',
+    ds-chart-mark-grow-y,
+    var(--ds-motion-chart-mark-grow-duration),
+    var(--ds-motion-chart-mark-grow-easing)
+  );
   @include leaves($mark);
 }
 
@@ -84,12 +131,88 @@
     transform-origin: left;
   }
 
-  @include enters('#{$fill}', ds-chart-mark-grow-x);
+  #{$mark} #{$fill}:dir(rtl) {
+    transform-origin: right;
+  }
+
+  @include enters(
+    '#{$fill}',
+    ds-chart-mark-grow-x,
+    var(--ds-motion-chart-mark-grow-duration),
+    var(--ds-motion-chart-mark-grow-easing)
+  );
   @include leaves($mark);
 }
 
-/* A mark with no baseline of its own — a ring arc, a funnel band, a line. */
-@mixin fades-in($mark) {
-  @include enters('#{$mark}', ds-chart-mark-fade-in);
+/* A mark that only appears - an area under its line, a connector, a legend swatch. */
+@mixin fades-in($mark, $after: 0ms, $duration: var(--ds-motion-chart-mark-enter-duration)) {
+  @include enters(
+    '#{$mark}',
+    ds-chart-mark-fade-in,
+    $duration,
+    var(--ds-motion-chart-mark-enter-easing),
+    $after
+  );
   @include leaves($mark);
+}
+
+/* A mark with no baseline that stands for one reading - a scatter point, a heat map cell - settles
+   in about its own centre. */
+@mixin settles-in($mark, $after: 0ms) {
+  #{$mark} {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  @include enters(
+    '#{$mark}',
+    ds-chart-mark-settle,
+    var(--ds-motion-chart-mark-enter-duration),
+    var(--ds-motion-chart-mark-enter-easing),
+    $after
+  );
+  @include leaves($mark);
+}
+
+/* A ring turns into place as one element, so its slices keep their angles relative to each other. */
+@mixin sweeps-in($ring) {
+  #{$ring} {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  @include enters(
+    '#{$ring}',
+    ds-chart-ring-sweep,
+    var(--ds-motion-chart-mark-sweep-duration),
+    var(--ds-motion-chart-mark-grow-easing)
+  );
+}
+
+/* A solid line draws on from its first reading. A dashed line fades instead: the draw animates the
+   same dash properties the dash pattern is made of. */
+@mixin draws-on($path) {
+  #{$path} {
+    stroke-dasharray: 1;
+  }
+
+  @include enters(
+    '#{$path}',
+    ds-chart-line-draw,
+    var(--ds-motion-chart-mark-sweep-duration),
+    var(--ds-motion-chart-mark-enter-easing)
+  );
+  @include leaves($path);
+}
+
+/* What belongs to a mark - its value label, a marker on a line - rises in once the mark has
+   arrived. `$after` is how long the mark takes. */
+@mixin follows($detail, $after) {
+  @include enters(
+    '#{$detail}',
+    ds-chart-mark-rise,
+    var(--ds-motion-chart-mark-detail-duration),
+    var(--ds-motion-chart-mark-enter-easing),
+    $after
+  );
 }

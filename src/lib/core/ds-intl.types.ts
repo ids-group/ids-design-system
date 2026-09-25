@@ -13,6 +13,9 @@ export interface DsIntl {
     readonly showPassword: string;
     /** `'Hide password'` - input. */
     readonly hidePassword: string;
+    /** `'1 character over the limit'` / `` `${excess} characters over the limit` `` - textarea
+     *  `maxLengthMode="soft"`. */
+    readonly overLimit: (excess: number) => string;
   };
   readonly picker: {
     /** `'Select…'` - autocomplete, multi-select `placeholder` default. */
@@ -204,7 +207,8 @@ export interface DsIntl {
     readonly previous: string;
     readonly next: string;
     readonly page: (page: number) => string;
-    /** `` `Showing ${first}–${last} of ${total}` `` - pager AND `ds-table` `rangeAnnouncement`. */
+    /** `` `Showing ${first}–${last} of ${total}` ``, `'Showing 0 of 0'` for an empty list, which the
+     *  pager passes as `(0, 0, 0)` - pager AND `ds-table` `rangeAnnouncement`. */
     readonly range: (first: number, last: number, total: number) => string;
     readonly perPage: (size: number) => string;
     readonly rowsPerPage: string;

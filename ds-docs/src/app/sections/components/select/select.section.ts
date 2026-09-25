@@ -112,6 +112,18 @@ export class SelectSection {
     { label: 'Antarctica (research only)', value: 'ant' },
   ];
 
+  protected readonly longLabelOptions: SelectOption[] = [
+    {
+      label: 'Rotterdam, Maasvlakte II deep-sea container terminal, berth 7',
+      value: 'rtm',
+    },
+    {
+      label: 'Felixstowe, Trinity terminal, overflow yard behind gate 3',
+      value: 'fxt',
+    },
+    { label: 'Antwerp', value: 'anr' },
+  ];
+
   protected readonly roleOptions: SelectOption[] = [
     { label: 'Viewer', value: 'viewer' },
     { label: 'Editor', value: 'editor' },

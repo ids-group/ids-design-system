@@ -36,7 +36,8 @@ export class PaginationComponent {
   readonly currentPage = model<number>(1);
   /** Preset choices offered in the page-size dropdown. */
   readonly pageSizeOptions = input<number[]>([10, 25, 50, 100]);
-  /** Shows the "Showing X–Y of Z" range label. */
+  /** Shows the range label, `DS_INTL.pagination.range`: "Showing X-Y of Z", or "Showing 0 of 0"
+   *  on an empty list. */
   readonly showLabel = input(true, { transform: booleanAttribute });
   /** Shows the rows-per-page dropdown. Turn it off for a screen with a fixed
    *  page size — otherwise the control offers a choice the host won't honour. */
@@ -72,6 +73,8 @@ export class PaginationComponent {
       .join(' '),
   );
 
+  protected readonly empty = computed(() => this.total() === 0);
+
   protected readonly totalPages = computed(() =>
     Math.max(1, Math.ceil(this.total() / this.pageSize())),
   );
@@ -100,10 +103,14 @@ export class PaginationComponent {
   });
 
   protected readonly rangeLabel = computed(() => {
+    if (this.empty()) {
+      return this.intl().pagination.range(0, 0, 0);
+    }
+    const total = this.total();
     const start = (this.currentPage() - 1) * this.pageSize() + 1;
-    const end = Math.min(this.currentPage() * this.pageSize(), this.total());
+    const end = Math.min(this.currentPage() * this.pageSize(), total);
 
-    return this.intl().pagination.range(start, end, this.total());
+    return this.intl().pagination.range(start, end, total);
   });
 
   protected readonly sizeOptions = computed(() => {

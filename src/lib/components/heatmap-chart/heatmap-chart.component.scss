@@ -2,7 +2,10 @@
 @use '../../styles/chart-data-table' as chart-data-table;
 @use '../../styles/chart-frame' as chart-frame;
 @use '../../styles/chart-interactive' as chart-interactive;
+@use '../../styles/chart-motion' as chart-motion;
 @include chart-frame.chart-frame;
+@include chart-frame.pin-reset;
+@include chart-frame.pin-marker;
 @include chart-data-table.chart-data-table;
 
 
@@ -66,7 +69,14 @@
 }
 
 .cell-slot {
+  position: relative;
   padding: 0;
+}
+
+.cell-slot > .pin-marker {
+  position: absolute;
+  inset: 0;
+  margin: auto;
 }
 
 .cell {
@@ -77,6 +87,23 @@
   border: 0;
   border-radius: var(--_heatmap-chart-cell-radius);
   padding: 0;
+}
+
+@include chart-motion.fades-in('.cell');
+@include chart-motion.follows('.cell-value', var(--ds-motion-chart-mark-enter-duration));
+
+// The column index comes from the slot's position (the row label is the first child), so the
+// cells of one column match the same rule and share their style instead of each carrying its own.
+// ponytail: columns past the 61st start together at the 61st column's delay; raise the bound if wider
+// grids appear.
+@for $column from 1 through 59 {
+  .cell-slot:nth-child(#{$column + 2}) {
+    --_chart-mark-stagger: calc(#{$column} * var(--_heatmap-chart-column-stagger, 0ms));
+  }
+}
+
+.cell-slot:nth-child(n + 62) {
+  --_chart-mark-stagger: calc(60 * var(--_heatmap-chart-column-stagger, 0ms));
 }
 
 // An unmeasured cell is the surface, not the coldest colour: the ramp's own first step is a real
@@ -96,9 +123,7 @@
   mix-blend-mode: difference;
 }
 
-.cell.interactive {
-  cursor: pointer;
-}
+@include chart-interactive.clickable('.cell');
 
 .cell.interactive:focus-visible {
   @include focus.ring;

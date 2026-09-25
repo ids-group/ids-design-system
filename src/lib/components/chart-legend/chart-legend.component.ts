@@ -1,15 +1,24 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   computed,
   ViewEncapsulation,
   booleanAttribute,
   inject,
   input,
   model,
+  signal,
 } from '@angular/core';
-import { nextControlId } from '@ids-group-ltd/ids-design-system/components';
-import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
+import {
+  CHART_HOVER_DELAY_MS,
+  chartDwell,
+  nextControlId,
+} from '@ids-group-ltd/ids-design-system/components';
+import {
+  DS_INTL,
+  resolveWithConfig,
+} from '@ids-group-ltd/ids-design-system/core';
 import type { ChartLegendItem } from './chart-legend.types';
 
 /**
@@ -50,8 +59,30 @@ export class ChartLegendComponent {
    *  what gives each the keyboard and screen-reader behaviour it should have. */
   readonly mode = input<'toggle' | 'isolate'>('isolate');
 
-  /** The item under the pointer or holding focus, which is what the chart dims from. */
+  /** The item under the pointer or holding focus, which is what the chart dims from. A pointer
+   *  names it once it has rested for `DS_CONFIG.chart.hoverDelayMs`; focus names it at once. */
   readonly highlighted = model<string | null>(null);
+
+  private readonly dwell = chartDwell(
+    resolveWithConfig(
+      signal<number | null>(null),
+      (config) => config.chart?.hoverDelayMs,
+      CHART_HOVER_DELAY_MS,
+    ),
+  );
+
+  constructor() {
+    inject(DestroyRef).onDestroy(() => this.dwell.cancel());
+  }
+
+  protected onItemEnter(id: string, event: PointerEvent): void {
+    this.dwell.schedule(id, () => this.highlighted.set(id), event);
+  }
+
+  protected onItemLeave(): void {
+    this.dwell.cancel();
+    this.highlighted.set(null);
+  }
 
   protected isHidden(id: string): boolean {
     return this.hidden().includes(id);

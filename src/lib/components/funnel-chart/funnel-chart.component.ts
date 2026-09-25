@@ -10,10 +10,12 @@ import {
   input,
   numberAttribute,
   output,
+  signal,
 } from '@angular/core';
 import {
   CHART_RAMP_COLORS,
   chartColors,
+  chartDwell,
   describeSeries,
   formatPercent,
   markAt,
@@ -164,7 +166,15 @@ export class FunnelChartComponent {
    *  `LOCALE_ID`. */
   readonly valueFormat = input<ChartValueFormat | null>(null);
 
-  private readonly defaults = resolveChartDefaults(this);
+  /** Holds the clicked mark and its tooltip in place, with a pin disc on it, until a second click,
+   *  Escape or a press outside releases it. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then
+   *  `true`. `stageClicked` fires either way - pinning is a state, not a handler. */
+  readonly pinOnClick = input<boolean | null, unknown>(null, {
+    transform: (value) => (value == null ? null : booleanAttribute(value)),
+  });
+
+  // Declared after every input it reads: it takes each signal off `this` when it runs.
+  protected readonly defaults = resolveChartDefaults(this);
   protected readonly intl = inject(DS_INTL);
   readonly frameResolved = this.defaults.frame;
   readonly dataTableResolved = this.defaults.dataTable;
@@ -181,12 +191,6 @@ export class FunnelChartComponent {
    *  `interactive` is set. */
   readonly stageClicked = output<FunnelChartStage>();
 
-  /** Holds the hovered mark and its tooltip in place when it is clicked, until Escape or a press
-   *  outside releases it. Off by default: a click is already the drill-down hook, and a mark left
-   *  lit after the pointer has gone needs a reader who knows why it is lit. `stageClicked` fires
-   *  either way — pinning is a state, not a handler. */
-  readonly pinOnClick = input(false, { transform: booleanAttribute });
-
   /** Dims every OTHER mark while one is hovered or focused, so the reader's eye is held on the
    *  one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed
    *  marks — measured 2026-09-13, the worst pair of three dimmed series falls from dE 14.8 at full
@@ -194,13 +198,13 @@ export class FunnelChartComponent {
    *  and pays for it with the rest of the chart. */
   readonly dimOthers = input(false, { transform: booleanAttribute });
 
-  /** Milliseconds between one mark's entrance and the next. `0`, the default, is no stagger at
-   *  all; `40` is the documented non-zero step. The total is capped, so a long series does not
-   *  crawl in. */
-  readonly staggerMs = input(0, { transform: numberAttribute });
+  /** Milliseconds between one stage's entrance and the next, top to bottom. `60` is the default;
+   *  `0` brings every stage in at once. The step narrows once the stages would take longer than
+   *  260ms to start, so a long funnel does not crawl in. */
+  readonly staggerMs = input(60, { transform: numberAttribute });
 
   protected markStagger(index: number): string {
-    return `${staggerDelay(index, this.staggerMs())}ms`;
+    return `${staggerDelay(index, this.stages().length, this.staggerMs())}ms`;
   }
 
   /** Whether a hovered or focused stage opens a tooltip. `'axis'` is not offered — a
@@ -214,8 +218,9 @@ export class FunnelChartComponent {
 
   private readonly tooltipLingerResolved = this.defaults.tooltipLingerMs;
 
-  protected readonly activeMark = chartActiveMark(() =>
-    this.tooltipLingerResolved(),
+  protected readonly activeMark = chartActiveMark(
+    () => this.tooltipLingerResolved(),
+    () => this.defaults.hoverDelayMs(),
   );
 
   /** Where the badge goes, as a percentage of the shape's box. Percentages rather than viewBox
@@ -239,7 +244,7 @@ export class FunnelChartComponent {
     event: Event,
   ): void {
     this.stageClicked.emit(payload);
-    if (this.pinOnClick()) {
+    if (this.defaults.pinOnClick()) {
       this.activeMark.pin(index, event);
     }
   }
@@ -250,9 +255,13 @@ export class FunnelChartComponent {
     this.activeMark.enter(index, event);
   }
 
+  private readonly rowHighlight = signal(-1);
+  private readonly rowDwell = chartDwell(() => this.defaults.hoverDelayMs());
+
   /** A table row stands for its band, so it opens the band's tooltip over the BAND and dims the
-   *  others — the same state hovering the band itself produces. */
+   *  others - the same state hovering the band itself produces. */
   protected onRowEnter(index: number, event: Event): void {
+    this.rowDwell.schedule(index, () => this.rowHighlight.set(index), event);
     this.activeMark.enter(
       index,
       event,
@@ -264,7 +273,20 @@ export class FunnelChartComponent {
     );
   }
 
+  protected onRowLeave(): void {
+    this.rowDwell.cancel();
+    this.rowHighlight.set(-1);
+    this.activeMark.leave();
+  }
+
   protected isDimmed(index: number): boolean {
+    // Naming a stage in the table fades the rest whether or not `dimOthers` is set;
+    // `dimOthers` governs what a pointer over the funnel does.
+    const rowHighlight = this.rowHighlight();
+    if (rowHighlight !== -1) {
+      return rowHighlight !== index;
+    }
+
     return (
       this.dimOthers() &&
       this.activeMark.index() !== -1 &&

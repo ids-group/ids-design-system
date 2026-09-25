@@ -47,6 +47,8 @@ export {
 } from './charts-scale';
 export type { BandScale, NiceDomain, PointScale } from './charts-scale';
 export { leaveMark, staggerDelay } from './charts-motion';
+export { chartDwell } from './charts-dwell';
+export type { ChartDwell } from './charts-dwell';
 export {
   focusMark,
   listenForMarkFocus,
@@ -111,4 +113,4 @@ export { ProjectionDroppedDirective } from './projection-dropped.directive';
 export { scrollActiveOptionIntoView } from './scroll-active-option';
 export { DsStaticPreview } from './static-preview.directive';
 export { createTypeAhead } from './type-ahead';
-export { resolveChartDefaults } from './charts-defaults';
+export { CHART_HOVER_DELAY_MS, resolveChartDefaults } from './charts-defaults';

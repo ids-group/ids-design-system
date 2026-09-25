@@ -1,5 +1,246 @@
 ## Unreleased
 
+### Breaking
+
+- **A click on a chart mark holds it by default.** `pinOnClick` on `ds-bar-chart`, `ds-column-chart`,
+  `ds-funnel-chart`, `ds-line-chart`, `ds-pie-chart`, `ds-heatmap-chart`, `ds-scatter-chart`,
+  `ds-waterfall-chart` and the `dsColumnSeries` / `dsLineSeries` marks, and `cursorPin` on
+  `ds-chart`, now default to `null` and fall back to `DS_CONFIG.chart.pinOnClick`, then `true` (was
+  `false`). A pointer click or tap now holds the mark - its tooltip and highlight stay after the
+  pointer leaves and it shows a pin disc on itself - until a second click, Escape or a press elsewhere
+  lets go; keyboard focus reaches a mark without pinning it (on a heat map, Enter or Space focus a
+  cell, a click pins). `pointClicked` fires either way. To keep marks unheld, set
+  `pinOnClick="false"` (`cursorPin="false"` on `ds-chart`) on the one chart, or
+  `DS_CONFIG.chart.pinOnClick: false` for all.
+
+- **A chart answers a resting pointer after 500 ms.** The tooltip, the highlight and the dimming of a
+  mark, the category cursor, a legend entry, a heat map scale step and a bar's label wait
+  `DS_CONFIG.chart.hoverDelayMs` (default `500`) of rest before they show (was: at once). Once a chart
+  has answered, the next mark answers at once until the pointer leaves it; touch, keyboard focus, a
+  pin and a delay of `0` answer at once. To answer at once, set `DS_CONFIG.chart.hoverDelayMs: 0`. A
+  test that hovers a mark and asserts on its tooltip in the same tick waits the delay, or sets it to
+  `0`.
+
+- **`pinOnClick` and `ds-chart`'s `cursorPin` are `boolean | null`** (was `boolean`), `null` meaning
+  unset, on `ds-bar-chart`, `ds-column-chart`, `ds-funnel-chart`, `ds-line-chart`, `ds-pie-chart`,
+  `dsColumnSeries` and `dsLineSeries`. Binding them in a template is unaffected. Code that reads the
+  raw input back, or a subclass overriding it, must handle `null`, which falls back to
+  `DS_CONFIG.chart.pinOnClick` and then `true`; `dsColumnSeries` and `dsLineSeries` expose the result
+  as `pinOnClickResolved()`, `ds-chart` as `cursorPinResolved()`. A reader testing `pinOnClick()` for
+  truthiness now sees `null` on an unset chart that does pin, and takes the other branch with no
+  compile error.
+
+- **Under the category cursor, the category's drawn band is the one hover area.** The pointer anywhere
+  in the band opens the band and its single category tooltip together; the gap between two bands
+  answers nothing; a `dsColumnSeries` column or `dsLineSeries` mark under the cursor no longer opens a
+  per-mark panel on hover (focus and click still do). This is a `ds-chart` with `cursor="category"`,
+  or `"auto"` on two or more marks that show a tooltip; the column, line and waterfall presets draw no
+  category cursor and are unaffected. To keep a per-mark hover panel there, set `cursor="none"` on that
+  `ds-chart`. A hand-composed mark reads `CHART_SCALES.cursorOn` to leave pointer hover to the band.
+
+- **Chart entrances are slower and staged.** `--ds-motion-chart-mark-enter-duration` is `400ms` (was
+  `180ms`) and `--ds-motion-chart-mark-enter-easing` is `--ease-emphasized-decelerate` (was
+  `--ease-decelerate`). Columns, bars and waterfall steps grow out of their baseline over the grow
+  duration with no fade; a solid line draws on and a dashed one fades; an area fades in under its line;
+  the pie ring turns into place; funnel stages rise in; scatter points and line markers settle about
+  their centre; heat map cells fade in column by column, having not animated before. Value labels,
+  markers, table rows and legend swatches follow once their mark has arrived. Under reduced motion
+  every mark appears at once, delays included. A test that waits a fixed time for a chart to finish
+  arriving waits about 1.1s, or runs under reduced motion. To bring back the old enter timing:
+  `--ds-motion-chart-mark-enter-duration: var(--duration-base); --ds-motion-chart-mark-enter-easing:
+  var(--ease-decelerate);` - growing and sweeping marks follow `--ds-motion-chart-mark-grow-duration`
+  and `--ds-motion-chart-mark-sweep-duration` instead.
+
+- **`staggerMs` defaults to `40` on `ds-bar-chart`, `ds-column-chart`, `ds-line-chart`,
+  `dsColumnSeries` and `dsLineSeries`, and to `60` on `ds-funnel-chart`** (was `0`); `ds-pie-chart` is
+  unchanged, and `ds-heatmap-chart` and `ds-waterfall-chart` gain the input at `40`. A long series
+  narrows its step so the whole arrival fits within 260ms, rather than stopping at a 300ms cap after
+  which every later mark landed at once. To have a series arrive all at once, set `staggerMs="0"`. A
+  visual regression test that screenshots a chart a fixed time after it renders now catches later
+  marks still arriving.
+
+- **A custom pagination `range` or table `[rangeAnnouncement]` receives zeros on an empty list.**
+  `ds-pagination` on an empty list now calls `DS_INTL.pagination.range(0, 0, 0)` (was `(1, 0, 0)`),
+  and a paged `ds-table` with no empty-state text now calls its `[rangeAnnouncement]` with `(0, 0, 0)`
+  (was never called on an empty table). A formatter that prints first and last unconditionally now
+  shows a range of 0 to 0, on the pager and in the table's live-region announcement; guard
+  `total === 0` and return your empty-list wording, or, on the table, an empty string to stay silent.
+  The default wording returns `Showing 0 of 0`, so an app that never overrides the range text has
+  nothing to do.
+
+- **`DsIntl` gains a required key: `field.overLimit: (excess: number) => string`.** A complete
+  `DsIntl` dictionary, or a complete `field` section of one, declared as a typed object stops
+  compiling until it lists it. Overrides passed to `provideDsIntl` are partial and need nothing.
+
+- **A horizontal `ds-description-list` stacks every item once a value would get less than
+  `--ds-description-list-value-min-width`** (default `14rem`, 224px at a 16px root). Each item is a
+  wrapping flex row (was: a two-column grid): when the value column would fall below the minimum,
+  the label moves above the value (was: the value squeezed beside the label and broke mid-word). The
+  label keeps the label width there, so a longer label still wraps at it, where
+  `orientation="stacked"` gives the label the full row. Every item of a list switches at the same
+  list width, label width + column gap + value minimum: 364px with
+  the defaults, 428px with a 180px label and a 24px gap. `orientation="stacked"` is unchanged, and a
+  `ds-description-item` outside a list switches the same way at its own width. In a parent that
+  sizes to its content - an inline-block, a float, an absolutely positioned box, a flex row item
+  with an auto basis, an `auto` grid track - a list whose widest value is narrower than the minimum
+  now stacks; give the list or its parent a width, or lower `--ds-description-list-value-min-width`
+  on it. To stack later or earlier, set `--ds-description-list-value-min-width` on the list.
+
+- **Subclassing one of these breaks on a name collision.** `BarChartComponent`, `ChartComponent`,
+  `ColumnSeriesComponent`, `LineSeriesComponent`, `FunnelChartComponent`, `HeatmapChartComponent`,
+  `PieChartComponent`, `ScatterChartComponent` and `WaterfallChartComponent` gained the pinning,
+  hover-delay, label-highlight and stagger members; `ColumnChartComponent` and `LineChartComponent`
+  only had `pinOnClick` change type; `PaginationComponent` gained `empty`, `TableComponent` gained
+  `emptyCell` and `emptyCellText`, `TooltipDirective` gained `detachAncestor`, `disclosesOwnText` and
+  `listenToFocusableAncestor`, `TextareaComponent` gained `describedBy`, `maxLengthMode`,
+  `nativeMaxLength`, `overflowMirror`, `overflowParts`, `overLimitBy` and `syncOverflowScroll`, and
+  `TabsComponent` gained `tablist`, `scrollsHorizontally`, `overflowing`, `showScrollArrows`,
+  `canScrollPrevious`, `canScrollNext`, `updateScrollArrows` and `scrollPage`; and three classes
+  reachable only through their own entry points gained members too - the internal
+  `ChartLegendComponent`, the internal `ChartTooltipPanelComponent` and the internal
+  `WaterfallMarksComponent`. Five protected members of `ColumnSeriesComponent` are
+  gone: `pinDiscRadius`, `pinGlyph`, `pinGlyphOffset`, `pinGlyphSize` and `slotStepPx`. Build after
+  upgrading; rename or mark `override` every member the compiler reports colliding, and delete an
+  override whose base member is gone. Subclassing a DS component is unsupported.
+
+### Added
+
+- **A `scrollable` `ds-tabs` strip shows previous and next arrows while tabs lie beyond its edges.**
+  Each arrow turns the strip by a page of tabs and hides at its own edge; a strip that fits shows
+  none. The strip scrolls smoothly unless reduced motion is set, on an arrow and when a selected tab
+  comes into view. The arrows sit outside the tab order and are hidden from assistive technology,
+  because the arrow keys already bring the selected tab into view; a click on one leaves focus where
+  it was. A scrollable horizontal `ds-tabs` host is a grid: the arrows sit either side of the tab
+  list, and the panel spans the row below.
+
+- **`maxLengthMode` on `ds-textarea`.** `'hard'` (the default) keeps the native `maxlength`: typing
+  and paste stop at `maxLength`. `'soft'` lets the text run past it: the counter turns red, the
+  characters past the limit are highlighted inside the field, and the field reports `aria-invalid`
+  with the counter, which reads out the excess, as its description. Both modes count `value.length`,
+  whitespace included. A soft limit does not block a submit: validate the length in the form. The type
+  is `TextareaMaxLengthMode`, and `DS_INTL.field.overLimit(excess)` words the excess (default
+  `120 characters over the limit`).
+
+- **`DS_CONFIG.chart.pinOnClick` and `DS_CONFIG.chart.hoverDelayMs`.** Across every chart,
+  `pinOnClick` (default `true`) sets whether a click holds a mark and `hoverDelayMs` (default `500`)
+  how long a resting pointer waits before the chart answers.
+
+- **`pinOnClick` on `ds-heatmap-chart`, `ds-scatter-chart` and `ds-waterfall-chart`.** A
+  `boolean | null` input (default `null`, falling back to `DS_CONFIG.chart.pinOnClick`, then `true`)
+  that none of the three had, with the Unpin control the other charts show.
+
+- **`staggerMs` on `ds-heatmap-chart` and `ds-waterfall-chart`** (default `40`): the heat map
+  staggers its columns, the waterfall its steps. Heat map cells fade in column by column, having not
+  animated before.
+
+- **Chart entrance tokens.** `--ds-motion-chart-mark-grow-duration` (600ms) and
+  `--ds-motion-chart-mark-grow-easing` (`--ease-settle`) time a mark growing out of its baseline;
+  `--ds-motion-chart-mark-sweep-duration` (600ms) a ring turning in or a line drawing on;
+  `--ds-motion-chart-mark-detail-duration` (180ms) what follows a mark, its value label or marker. They
+  sit on three new primitives: `--duration-slowest` (600ms, 0ms under reduced motion),
+  `--ease-emphasized-decelerate` and `--ease-settle`, a critically damped spring that never
+  overshoots.
+
+- **`--ds-description-list-value-min-width`** (default `14rem`): the narrowest value a horizontal
+  `ds-description-list` keeps beside its label before every item stacks.
+
+### Changed
+
+- **The Unpin control sits at the top end of a chart, on its caption's line** (was: floating over the
+  bottom centre, where it covered axis labels, legends and tables). While it shows, a caption leaves
+  room for it and a chart with no caption gains the line, so it covers nothing.
+
+- **A held mark always shows its pin disc**: a column, a bar, a slice, a funnel stage, a heat map
+  cell, a scatter point, a line marker, and a category held under the category cursor (a disc at the
+  foot of its band).
+
+- **The pointer cursor appears where a click does something**: over a mark a click would hold, a mark
+  set `interactive`, and a category band under the category cursor when a press holds it. The gap
+  between two bands keeps the default cursor.
+
+- **Naming a series or a category highlights it on every chart, and the dimming follows the answered
+  mark.** A legend entry dims the other series as before; a `ds-funnel-chart` stage row dims the other
+  stages whatever `dimOthers` says; a heat map's scale step dims every cell outside that step; a bar's
+  label, and a `ds-chart` category label on the axis without the category cursor (`ds-waterfall-chart`
+  included), dim the other bars. `dimOthers` follows the mark the chart has answered rather than the
+  raw hover, so the fade waits out the hover delay with the tooltip and follows focus. A hand-composed
+  mark reads `CHART_SCALES.categoryLabelHover` and `CHART_SCALES.hoverDelayMs` to answer the same way.
+
+- **A column's hover area stops at its own category band** (was: the whole step to the next column),
+  so the gap between two columns answers no pointer.
+
+- **A chart tooltip fades in rather than scaling in**, so its rows no longer drift into place each
+  time it opens on another mark. `--ds-overlay-enter-keyframes` still overrides it; every other
+  overlay keeps its scale.
+
+- **A category tooltip lists its readings top to bottom, in the order their marks are drawn at that
+  category** (was: the order the series were declared). The legend keeps the declared order. A
+  hand-composed mark that reports its readings through `CHART_SCALES` places each one by its `y`, its
+  height in plot pixels from the top; a reading without it follows the placed ones in declared order.
+
+- **A hatched column's stripes run from bottom left to top right, and the tooltip swatch's stripe runs
+  the same way.** Width, colour and repeat are unchanged.
+
+- **A tooltip swatch is ringed only when its colour would vanish into the panel.** A swatch below 3:1
+  contrast against the tooltip background takes a 1.5px ring in the tooltip's text colour, drawn inside
+  the 12px dot; every other swatch has no ring (was: every swatch, ringed outside the dot in the
+  surface colour). The check follows the theme, so a colour ringed on the light panel can go unringed
+  on the dark one.
+
+### Fixed
+
+- **A tap that pins a mark on a touch screen stays pinned.** The click a browser sends after the tap
+  no longer unpins it.
+
+- **Under the category cursor, focus on a column names its category, and focus leaving clears it.**
+  Focusing a `dsColumnSeries` column opens the band and the category panel, as focusing a
+  `dsLineSeries` marker already did, and focus leaving a column or a marker takes the band and the
+  panel down (was: they stayed on screen after focus had gone).
+
+- **A `ds-bar-chart` bar grows out of its value axis in a right-to-left page** (was: from the far
+  end).
+
+- **The `dsTooltip` panel wraps a value with no break opportunity.** A long file name or id ran past
+  the panel's edge on one line; it now breaks inside the panel's max width.
+
+- **`ds-select`, `ds-autocomplete` and `ds-multi-select` disclose a clipped label.** `ds-select` shows
+  its trigger value and option labels, `ds-autocomplete` its option and create labels, and
+  `ds-multi-select` its option labels in a tooltip when an ellipsis cuts one off; a label that fits
+  shows none.
+
+- **A clipped label inside a button or a clickable row discloses on keyboard focus.** A
+  `dsTooltipWhenClipped` host that cannot take focus opened on hover only. It now also opens when
+  keyboard focus lands on its nearest focusable ancestor, and closes on that ancestor's blur, click or
+  any key; a mouse click opens nothing, an ancestor focusable only through a negative `tabindex`
+  (such as a `<main tabindex="-1">` that takes focus on navigation) opens nothing, and of several
+  clipped hosts in one ancestor only the first opens. This covers `ds-select`'s trigger value and
+  `ds-table`'s clipped cells in an interactive row. A plain `dsTooltip` without
+  `dsTooltipWhenClipped` on a non-focusable element stays hover-only.
+
+- **A clipped-text tooltip is read once by a screen reader.** A `dsTooltipWhenClipped` tip whose text
+  the host already contains set `aria-describedby` on the focused element, so the text was announced
+  as its name and again as its description. It now sets none, on a focusable host or its ancestor; a
+  tip given a `dsTooltip` that says more than the host still describes it, as does a plain
+  `dsTooltip`. A test asserting `aria-describedby` on a clipped disclosure finds none.
+
+- **`ds-pagination` handles an empty list.** With `total` at `0` the range read `Showing 1-0 of 0` and
+  page 1 was marked current; it now reads `Showing 0 of 0`, disables every button, Previous and Next
+  included, and marks none current.
+
+- **A paged `ds-table` announces an emptied table.** Its live region went silent when a filter or new
+  data left the table with no rows; it now announces the table's empty state - the `[empty]` content
+  or `emptyTemplate` text - or, with no empty-state text, its range announcement (`Showing 0 of 0` by
+  default).
+
+### What you can now DELETE
+
+| Delete | Why | Replace with |
+| --- | --- | --- |
+| a `pinOnClick`, `pinOnClick="true"` or `[pinOnClick]="true"` binding on a chart or a `dsColumnSeries` / `dsLineSeries` mark | a click holds a mark by default, so a binding of `true` restates it | nothing; keep it where `DS_CONFIG.chart.pinOnClick` is `false` and this chart is the exception |
+| a `cursorPin`, `cursorPin="true"` or `[cursorPin]="true"` binding on `ds-chart` | a press holds the category cursor by default, so a binding of `true` restates it | nothing; keep it where `DS_CONFIG.chart.pinOnClick` is `false` and this chart is the exception |
+| a `[title]=` or `[attr.title]=` on a `ds-select`, `ds-autocomplete` or `ds-multi-select` that repeats the selected or option label | the picker shows a clipped label in full in a tooltip, so the title adds a second, native one | nothing; a `title` that says more than the label stays legitimate |
+| an `[orientation]` on `ds-description-list` switched on a viewport breakpoint, such as `'stacked' : 'horizontal'`, only to stack a narrow list | a horizontal list stacks by itself once a value would get less than `--ds-description-list-value-min-width` | `--ds-description-list-value-min-width` on the list where the switch has to move; keep a switch driven by something other than width |
+
 ## 0.14.1 — 2026-09-24
 
 ### Breaking

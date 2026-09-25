@@ -17,6 +17,9 @@ export class TextareaSection {
     'Dear customer, your policy renewal is due on 1 October.',
   );
   protected readonly selectionReadout = signal('not read yet');
+  protected readonly softNote = signal(
+    'Called the customer about the renewal. They asked for the quote to be resent to the new address, and for a call back next week once the broker has confirmed the excess.',
+  );
 
   protected selectRenewal(): void {
     const start = this.draft().indexOf('policy renewal');

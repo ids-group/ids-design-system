@@ -1,2 +1,2 @@
 export { TextareaComponent } from './textarea.component';
-export type { TextareaResize } from './textarea.types';
+export type { TextareaMaxLengthMode, TextareaResize } from './textarea.types';

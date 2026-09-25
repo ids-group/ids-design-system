@@ -11,6 +11,7 @@ import {
 import { ButtonComponent } from 'ds/button';
 import { IconButtonComponent } from 'ds/icon-button';
 import { InputComponent } from 'ds/input';
+import { IconComponent } from 'ds/icons';
 import { replayMarks } from './replay-marks';
 import type { LineChartSeries } from 'ds/line-chart';
 
@@ -19,7 +20,12 @@ let nextSeriesId = 0;
 @Component({
   selector: 'docs-line-chart-data-editor',
   standalone: true,
-  imports: [ButtonComponent, IconButtonComponent, InputComponent],
+  imports: [
+    ButtonComponent,
+    IconButtonComponent,
+    IconComponent,
+    InputComponent,
+  ],
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'chart-data-editor' },

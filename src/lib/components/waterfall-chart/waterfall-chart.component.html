@@ -1,4 +1,13 @@
 <figure class="waterfall-chart">
+  @if (pinned()) {
+    <button
+      class="pin-reset"
+      type="button"
+      (click)="series()?.activeMark?.release()">
+      {{ intl().chart.unpin }}
+    </button>
+  }
+
   @if (caption()) {
     <figcaption>
       {{ caption() }}
@@ -16,7 +25,9 @@
       class="skeleton"
       aria-hidden="true">
       @for (placeholder of skeletonBars(); track $index) {
-        <ds-skeleton height="var(--_waterfall-chart-skeleton-height)" [shimmer]="loading()" />
+        <ds-skeleton
+          height="var(--_waterfall-chart-skeleton-height)"
+          [shimmer]="loading()" />
       }
     </div>
   } @else if (isEmpty()) {
@@ -37,6 +48,7 @@
         [labelValues]="labelValues()"
         [showValues]="showValues()"
         [showConnectors]="showConnectors()"
+        [staggerMs]="staggerMs()"
         [valueFormat]="valueFormatResolved()" />
 
       <svg:g
@@ -45,6 +57,8 @@
         [data]="points()"
         [offsets]="offsets()"
         [interactive]="interactive()"
+        [pinOnClick]="pinOnClick()"
+        [staggerMs]="staggerMs()"
         [valueFormat]="valueFormatResolved()"
         (pointClicked)="onPointClicked($event)" />
     </ds-chart>

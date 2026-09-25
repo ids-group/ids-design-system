@@ -1,7 +1,7 @@
 @use '../../styles/focus' as focus;
 
-/* The item host is one row. In horizontal mode it is a two-column grid whose
-   label column width inherits --_description-list-label-width from the parent ds-description-list
+/* The item host is one row. In horizontal mode it is a wrapping flex row whose
+   label width inherits --_description-list-label-width from the parent ds-description-list
    (falls back to the global token when used standalone). */
 
 :host {
@@ -19,22 +19,19 @@
   --_description-item-details-color: var(--ds-description-item-details-color, var(--text-primary));
   --_description-item-details-font-size: var(--ds-description-item-details-font-size, var(--font-size-s));
   --_description-item-details-font-weight: var(--ds-description-item-details-font-weight, var(--font-weight-regular));
+  --_description-list-value-min-width: var(--ds-description-list-value-min-width, var(--dl-spec-value-min-w));
 
-  display: grid;
-
-  /* minmax(0, …) stops both tracks from expanding to their min-content width */
-  grid-template-columns: minmax(0, var(--_description-list-label-width, var(--dl-spec-label-w))) minmax(0, 1fr);
-  column-gap: var(--_description-list-column-gap, var(--space-5));
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-0-5) var(--_description-list-column-gap, var(--space-5));
   align-items: baseline;
 }
 
-:host(.stacked) {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-0-5);
-}
-
+/* Line breaking reads the flex bases, never the content, so every item of one
+   list wraps at the same width: label + column gap + value min width. */
 .term {
+  flex: 0 0 var(--_description-list-label-width, var(--dl-spec-label-w));
+  min-width: 0;
   color: var(--_description-item-term-color);
   font:
     var(--_description-item-term-font-weight) var(--_description-item-term-font-size) / var(--line-height-base)
@@ -44,6 +41,7 @@
 }
 
 .details {
+  flex: 1 1 var(--_description-list-value-min-width);
   display: flex;
   align-items: center;
   gap: var(--space-2);
@@ -88,6 +86,10 @@
 
     @include focus.ring(1px);
   }
+}
+
+:host(.stacked) :is(.term, .details) {
+  flex-basis: 100%;
 }
 
 :host(:hover) .copy {

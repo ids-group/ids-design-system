@@ -643,6 +643,29 @@
     </span>
   </ds-table>
 
+  <p class="block-desc t-s">
+    A paged table announces the empty-state text when a filter leaves it with no rows: type a
+    project that does not exist and a screen reader hears the line below the header.
+  </p>
+
+  <ds-search
+    size="sm"
+    placeholder="Filter projects…"
+    ariaLabel="Filter projects"
+    [(value)]="emptyAnnouncementQuery" />
+
+  <ds-table
+    caption="Projects"
+    [data]="projectRows"
+    [columns]="projectColumns"
+    [pageSize]="5"
+    [filterQuery]="emptyAnnouncementQuery()"
+    [stickyHeader]="false">
+    <span empty>
+      No project matches "{{ emptyAnnouncementQuery() }}"
+    </span>
+  </ds-table>
+
   <div class="block-sub t-overline">
     b · No data · primary CTA
   </div>
@@ -1976,7 +1999,19 @@
     <code class="t-mono-inline">
       aria-live="polite"
     </code> announces changes,
-    not initial content.
+    not initial content. A paged table left with no rows says so: it announces
+    the text of its empty state, the words shown in the table, and calls
+    <code class="t-mono-inline">
+      rangeAnnouncement
+    </code> with
+    <code class="t-mono-inline">
+      (0, 0, 0)
+    </code> only when that state has no
+    text, which reads "Showing 0 of 0" by default. A server-paged table whose
+    <code class="t-mono-inline">
+      total
+    </code> is above 0 but whose page came back
+    empty stays silent.
   </p>
 
   <h3 class="block-title t-h4">

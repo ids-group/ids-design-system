@@ -35,7 +35,7 @@
   } @else {
     <div
       class="rows"
-      [class.dims-others]="dimOthers()"
+      [class.dims-others]="dimsOthers()"
       [attr.role]="interactive() ? 'group' : 'img'"
       [attr.aria-label]="accessibleName()"
       [dsChartTooltip]="tooltipContext()"
@@ -47,6 +47,8 @@
           class="row"
           [style.--_chart-mark-stagger]="markStagger(index)"
           [class.interactive]="interactive()"
+          [class.pins]="defaults.pinOnClick()"
+          [class.is-active]="activeMark.index() === index"
           [class.is-pinned]="
             activeMark.pinned() && activeMark.index() === index
           "
@@ -65,7 +67,10 @@
           (click)="onMarkClick(entry.row, index, $event)"
           (keydown.enter)="onRowKey(entry.row, $event)"
           (keydown.space)="onRowKey(entry.row, $event)">
-          <span class="label">
+          <span
+            class="label"
+            (pointerenter)="hoveredLabel.set(index)"
+            (pointerleave)="hoveredLabel.set(-1)">
             {{ entry.row.label }}
 
             @if (entry.row.detail) {

@@ -115,6 +115,7 @@
   --duration-base:    180ms;
   --duration-slow:    260ms;
   --duration-slower:  400ms;
+  --duration-slowest: 600ms;
 
   /* Loop durations sit outside the transition scale on purpose — they describe
      rhythm, not response. */
@@ -126,12 +127,17 @@
      - emphasized: overlay / modal / drawer entries and exits; overshoots
      - decelerate: something appearing (toast, tooltip, popover open)
      - accelerate: something leaving (toast dismiss, modal close)
-     - spring:     overshoot for small celebratory feedback; sparingly */
+     - spring:     overshoot for small celebratory feedback; sparingly
+     - emphasized-decelerate: a large mark arriving, long and calm at the end
+     - settle:     a mark growing into its value; a critically damped spring, so it never
+                   overshoots and never shows a value the data does not hold */
   --ease-standard:   cubic-bezier(.2,  0,    0,   1);
   --ease-emphasized: cubic-bezier(.3,  0,    .1,  1.4);
   --ease-decelerate: cubic-bezier(0,   0,    0,   1);
   --ease-accelerate: cubic-bezier(.3,  0,    1,   1);
   --ease-spring:     cubic-bezier(.5,  1.5, .5,   1);
+  --ease-emphasized-decelerate: cubic-bezier(.05, .7, .1, 1);
+  --ease-settle: linear(0, 0.09 6.3%, 0.265 12.5%, 0.444 18.8%, 0.596 25%, 0.715 31.3%, 0.803 37.5%, 0.867 43.8%, 0.911 50%, 0.942 56.3%, 0.962 62.5%, 0.976 68.8%, 0.986 75%, 0.992 81.3%, 0.996 87.5%, 0.998 93.8%, 1);
 
   /* Motion ROLES — name the intent once and every surface at that scale follows. `exit` and
      `exit-large` stay separate because panel LEAVES run at --duration-base, not fast, and a few
@@ -163,9 +169,16 @@
   --ds-motion-chart-mark-easing:      var(--ease-decelerate);
 
   /* A mark arriving and a mark leaving are separate roles because the enter waits out the exit:
-     the two durations are added, and one role could not carry both halves of that sum. */
-  --ds-motion-chart-mark-enter-duration: var(--duration-base);
-  --ds-motion-chart-mark-enter-easing:   var(--ease-decelerate);
+     the two durations are added, and one role could not carry both halves of that sum. An arrival
+     is timed by what arrives: `enter` for a mark that fades or settles in place, `grow` for one that
+     grows out of its baseline and `sweep` for a ring or a line drawing on, `detail` for what
+     follows a mark (its value label, a marker). */
+  --ds-motion-chart-mark-enter-duration:  var(--duration-slower);
+  --ds-motion-chart-mark-enter-easing:    var(--ease-emphasized-decelerate);
+  --ds-motion-chart-mark-grow-duration:   var(--duration-slowest);
+  --ds-motion-chart-mark-grow-easing:     var(--ease-settle);
+  --ds-motion-chart-mark-sweep-duration:  var(--duration-slowest);
+  --ds-motion-chart-mark-detail-duration: var(--duration-base);
   --ds-motion-chart-mark-exit-duration:  var(--duration-fast);
   --ds-motion-chart-mark-exit-easing:    var(--ease-accelerate);
 
@@ -495,6 +508,7 @@
   --grid-cols-card-minh:     120px;
   --grid-cols-card-thumb:    80px;
   --dl-spec-label-w:         120px;
+  --dl-spec-value-min-w:     14rem;
   --scroll-spec-h:           220px;
   --tab-spec-maxw:           220px;
   --tab-spec-dot-offset:     var(--border-width-strong);       /* negated at the use site */
@@ -507,6 +521,7 @@
     --duration-base:    0ms;
     --duration-slow:    0ms;
     --duration-slower:  0ms;
+    --duration-slowest: 0ms;
 
     /* Loops are slowed, never frozen: a stopped spinner reads as "hung", not
        "loading". The one large motion that does halt is the page-wide skeleton

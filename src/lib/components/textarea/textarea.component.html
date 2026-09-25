@@ -23,6 +23,17 @@
   <div
     class="control"
     dsFieldClickFocus>
+    @if (overLimitBy() > 0) {
+      <div
+        #overflowMirror
+        class="overflow-mirror"
+        aria-hidden="true">
+        <span [textContent]="overflowParts().within"></span>
+
+        <mark [textContent]="overflowParts().over"></mark>
+      </div>
+    }
+
     <textarea
       #control
       [id]="uid"
@@ -31,9 +42,9 @@
       [attr.placeholder]="placeholder() || null"
       [attr.aria-label]="resolvedAriaLabel()"
       [attr.aria-invalid]="invalidResolved() ? 'true' : null"
-      [attr.aria-describedby]="hintId()"
+      [attr.aria-describedby]="describedBy()"
       [attr.aria-required]="required() ? 'true' : null"
-      [attr.maxlength]="maxLength()"
+      [attr.maxlength]="nativeMaxLength()"
       [attr.minlength]="minLength()"
       [attr.pattern]="patternAttribute()"
       [disabled]="isDisabled()"
@@ -44,7 +55,8 @@
       [style.max-height]="autosizeMaxHeight()"
       [style.overflow-y]="autosize() && maxRows() ? 'auto' : null"
       [(ngModel)]="value"
-      (blur)="markTouched()">
+      (blur)="markTouched()"
+      (scroll)="syncOverflowScroll()">
     </textarea>
   </div>
 
@@ -66,8 +78,14 @@
           class="char-counter"
           aria-live="polite"
           aria-atomic="true"
+          [class.over-limit]="overLimitBy() > 0"
           [id]="counterId()">
           {{ currentLength() }}/{{ maxLength() }}
+          @if (overLimitBy() > 0) {
+            <span class="visually-hidden">
+              {{ intl().field.overLimit(overLimitBy()) }}
+            </span>
+          }
         </span>
       }
     </div>

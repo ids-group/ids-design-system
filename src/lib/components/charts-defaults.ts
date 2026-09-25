@@ -11,7 +11,7 @@ import type {
 } from '@ids-group-ltd/ids-design-system/core';
 import { chartValueFormat } from './charts-format';
 
-/** The five inputs every chart carries for the decisions an app makes once rather than per plot.
+/** The inputs every chart carries for the decisions an app makes once rather than per plot.
  *
  *  @internal */
 export interface ChartDefaultInputs {
@@ -23,10 +23,20 @@ export interface ChartDefaultInputs {
   readonly valueFormat: Signal<ChartValueFormat | null>;
   /** Absent on a chart with no tooltip of its own. */
   readonly tooltipLingerMs?: Signal<number | null>;
+  /** Absent on a chart with nothing to pin. */
+  readonly pinOnClick?: Signal<boolean | null>;
+  readonly hoverDelayMs?: Signal<number | null>;
 }
 
 const NO_DATA_TABLE = signal<ChartDataTable | null>(null);
 const NO_LINGER = signal<number | null>(null);
+const NO_PIN = signal<boolean | null>(null);
+const NO_DELAY = signal<number | null>(null);
+
+/** How long a resting pointer waits before a chart answers it, when nothing sets it.
+ *
+ *  @internal */
+export const CHART_HOVER_DELAY_MS = 500;
 
 /** Each resolved input → `DS_CONFIG.chart` → the built-in; copy resolves input → `DS_INTL.chart`.
  *  Call from an injection context.
@@ -59,6 +69,16 @@ export function resolveChartDefaults(inputs: ChartDefaultInputs) {
       inputs.tooltipLingerMs ?? NO_LINGER,
       (config) => config.chart?.tooltipLingerMs,
       0,
+    ),
+    pinOnClick: resolveWithConfig(
+      inputs.pinOnClick ?? NO_PIN,
+      (config) => config.chart?.pinOnClick,
+      true,
+    ),
+    hoverDelayMs: resolveWithConfig(
+      inputs.hoverDelayMs ?? NO_DELAY,
+      (config) => config.chart?.hoverDelayMs,
+      CHART_HOVER_DELAY_MS,
     ),
   };
 }

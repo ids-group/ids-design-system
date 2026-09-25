@@ -3,6 +3,7 @@
 @use '../../styles/chart-interactive' as chart-interactive;
 @use '../../styles/chart-motion' as chart-motion;
 @include chart-motion.grows-across('.row', '.fill');
+@include chart-motion.follows('.value, .percent, .target', var(--ds-motion-chart-mark-grow-duration));
 @include chart-frame.chart-frame;
 @include chart-data-table.chart-data-table;
 
@@ -57,7 +58,10 @@
   calc(3 * (var(--_bar-chart-track-height) + var(--_bar-chart-row-gap)))
 );
 
+// Sized to its text: hovering the label is what fades the other rows, so the empty column beside
+// it must not.
 .label {
+  justify-self: start;
   color: var(--text-secondary);
 }
 

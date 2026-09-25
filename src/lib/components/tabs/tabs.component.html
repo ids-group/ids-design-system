@@ -1,7 +1,25 @@
+@if (showScrollArrows()) {
+  <button
+    type="button"
+    class="scroll-arrow"
+    tabindex="-1"
+    aria-hidden="true"
+    [class.at-edge]="!canScrollPrevious()"
+    (mousedown)="$event.preventDefault()"
+    (click)="scrollPage(false)">
+    <ds-icon
+      name="chevronLeft"
+      [size]="16">
+    </ds-icon>
+  </button>
+}
+
 <div
+  #tablist
   role="tablist"
   [class]="tablistClasses()"
-  [attr.aria-orientation]="orientation()">
+  [attr.aria-orientation]="orientation()"
+  (scroll)="updateScrollArrows()">
   @for (tab of tabs(); track $index) {
     <button
       type="button"
@@ -46,6 +64,22 @@
     </button>
   }
 </div>
+
+@if (showScrollArrows()) {
+  <button
+    type="button"
+    class="scroll-arrow"
+    tabindex="-1"
+    aria-hidden="true"
+    [class.at-edge]="!canScrollNext()"
+    (mousedown)="$event.preventDefault()"
+    (click)="scrollPage(true)">
+    <ds-icon
+      name="chevronRight"
+      [size]="16">
+    </ds-icon>
+  </button>
+}
 
 @for (tab of tabs(); track $index) {
   @if (isPanelVisible($index)) {

@@ -6,6 +6,14 @@ import type {
   ChartTooltipOrigin,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 
+/** A mark's reading at the cursor's category, with the height it is drawn at. */
+export interface ChartAxisEntry extends ChartTooltipEntry {
+  /** Where the reading is drawn, in plot pixels from the top. A category panel lists its rows in
+   *  the order the reader sees the marks, top to bottom; a reading without one keeps its place
+   *  after the placed ones. */
+  readonly y?: number;
+}
+
 /** What a mark hands the container so the container can open the panel for it. The mark decides
  *  WHAT the panel says and WHERE it points; the container decides that there is one, which is what
  *  keeps a plot from opening two. */
@@ -24,7 +32,7 @@ export interface ChartTooltipSource {
   /** What this mark reads at the category the cursor is on, whatever its own tooltip setting. A
    *  category panel names every series at that category, and a mark that answers per-mark still
    *  belongs in it. */
-  readonly axisEntries?: Signal<readonly ChartTooltipEntry[]>;
+  readonly axisEntries?: Signal<readonly ChartAxisEntry[]>;
 }
 
 /** The drawable rectangle inside `ds-chart`, in CSS pixels: the container measures itself and
@@ -70,6 +78,19 @@ export interface ChartScales {
   readonly zeroOffset: Signal<number>;
   /** The category under the pointer or the keyboard, or `-1` for none. */
   readonly activeIndex: Signal<number>;
+  /** Whether the category cursor answers the pointer. While it does, its band is the one hover
+   *  area on the plot: a mark leaves pointer hover to it and answers focus and clicks only.
+   *  Absent means off. */
+  readonly cursorOn?: Signal<boolean>;
+  /** The category whose axis label the pointer is on, with the event, while the category cursor
+   *  is off. A mark answers it as it would the pointer on its own reading at that category. */
+  readonly categoryLabelHover?: Signal<{
+    readonly index: number;
+    readonly event: PointerEvent;
+  } | null>;
+  /** How long a resting pointer waits before a mark answers it, resolved once for the plot so
+   *  every mark in it waits alike. Absent means at once. */
+  readonly hoverDelayMs?: Signal<number>;
   /** The band drawn over the active category, for a mark that anchors a panel to the CATEGORY
    *  rather than to one of its own marks. `null` while `cursor` is off or nothing is active. */
   readonly cursorOrigin: Signal<Element | null>;

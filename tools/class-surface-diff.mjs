@@ -62,7 +62,7 @@ function show(ref, path) {
 // (`onChange: (v: boolean) => void = …`) must not end the annotation at the arrow's `=`,
 // only at the standalone initializer `=`.
 const FIELD =
-  /^ {2}((?:protected |public |private )?)(?:static )?(?:readonly )?(\w+)(\s*:(?:[^=\n]|=>)+)? = /gm;
+  /^ {2}((?:protected |public |private )?)(?:static )?(?:readonly )?(\w+)(\s*:(?:[^=\n]|=>)+)? =\s/gm;
 // A field can also be DECLARED and never assigned — `announceTimer: number | undefined;`. It
 // collides in a subclass like any other, and FIELD cannot see it because it requires an `=`.
 // Only safe inside the bounded class body, where a bare `name: Type;` is a declaration and

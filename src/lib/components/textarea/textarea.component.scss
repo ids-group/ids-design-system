@@ -2,6 +2,7 @@
 @use '../../styles/field-box' as field-box;
 @use '../../styles/field-state' as field-state;
 @use '../../styles/focus' as focus;
+@use '../../styles/visually-hidden' as visually-hidden;
 
 /* Reads the `--ds-input-*` token family, not a `--ds-textarea-*` one: consumers
    retune both fields with one set. Diverges from ds-input only in the inner
@@ -26,6 +27,7 @@
   --_input-border-error:   var(--ds-input-border-error,   var(--error));
   --_input-border-success: var(--ds-input-border-success, var(--success));
   --_input-font-size:             var(--ds-input-font-size,             var(--_field-font-size));
+  --_textarea-font: var(--font-weight-regular) var(--_input-font-size) / var(--line-height-base) var(--font-sans);
 
   display: block;
 }
@@ -73,7 +75,7 @@
       @include focus.own-indicator;
 
       background: transparent;
-      font: var(--font-weight-regular) var(--_input-font-size) / var(--line-height-base) var(--font-sans);
+      font: var(--_textarea-font);
       color: var(--_input-text-color);
       min-height: var(--field-textarea-rows-min, 60px);
       padding: var(--_input-padding-y) 0;
@@ -140,21 +142,84 @@
     white-space: nowrap;
     flex-shrink: 0;
     margin-left: auto;
+
+    &.over-limit {
+      position: relative;
+      color: var(--error-text);
+    }
+
+    .visually-hidden {
+      @include visually-hidden.visually-hidden;
+    }
+  }
+
+  /* The mirror paints the over-limit highlight behind the transparent textarea,
+     so every property that places a glyph must match the textarea's: the text
+     resets repeat what the UA stylesheet gives a textarea, and both reserve the
+     scrollbar gutter so a scrollbar narrows both lines alike. */
+  &.soft-limit {
+    .control {
+      position: relative;
+    }
+
+    .control textarea {
+      position: relative;
+      scrollbar-gutter: stable;
+    }
+  }
+
+  .overflow-mirror {
+    position: absolute;
+    inset: 0;
+    box-sizing: border-box;
+    padding-inline: inherit;
+    overflow: hidden;
+    scrollbar-gutter: stable;
+    font: var(--_textarea-font);
+    letter-spacing: normal;
+    word-spacing: normal;
+    text-transform: none;
+    text-indent: 0;
+    text-align: start;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    color: transparent;
+    pointer-events: none;
+    user-select: none;
+
+    /* A trailing newline opens a line the textarea scrolls to; a div renders it
+       only when something follows it. */
+    &::after {
+      content: ' ';
+    }
+
+    mark {
+      color: transparent;
+      background-color: var(--error-muted-strong);
+      border-radius: var(--ds-radius-inner);
+
+      @media (forced-colors: active) {
+        forced-color-adjust: none;
+        background-color: transparent;
+        text-decoration: underline wavy CanvasText;
+        text-decoration-skip-ink: none;
+      }
+    }
   }
 }
 
 /* Vertical padding lives on the textarea, not the box: `.sm`/`.lg` above zero the
    control's own padding-block through the shorthand. One rule per size, because a
    single pin out-ranks the size variants and flattens all three to md. */
-.field .control textarea {
+.field .control :is(textarea, .overflow-mirror) {
   padding-block: var(--_input-padding-y);
 }
 
-.field.sm .control textarea {
+.field.sm .control :is(textarea, .overflow-mirror) {
   padding-block: var(--space-2);
 }
 
-.field.lg .control textarea {
+.field.lg .control :is(textarea, .overflow-mirror) {
   padding-block: var(--space-4);
 }
 

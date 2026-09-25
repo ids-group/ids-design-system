@@ -39,7 +39,7 @@ grep -q 'url("fonts/' .design-sync/elements/dist/ds-bundle.css || { echo "ds-bun
 ! grep -q './media/' .design-sync/elements/dist/ds-bundle.css || { echo "ds-bundle.css still points at ./media/ - the rewrite was incomplete"; exit 1; }
 
 step "Checking the hand-maintained surface"
-bun run check:manual-surface
+node tools/check.mjs manual-surface
 
 # The docs are the agent's instructions, so a prop that no longer exists gets executed, not read.
 step "Checking the docs against the real surface"

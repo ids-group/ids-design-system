@@ -1,0 +1,427 @@
+{
+  "version": "unreleased",
+  "items": [
+    {
+      "id": "chart-pin-on-click-default-true",
+      "kind": "behavior",
+      "old": "pinOnClick",
+      "new": null,
+      "surface": [
+        "template",
+        "config"
+      ],
+      "action": "None, unless a chart has to follow the pointer after a click: set pinOnClick=\"false\" on it (cursorPin=\"false\" on ds-chart), or DS_CONFIG.chart.pinOnClick: false for every chart. Delete a pinOnClick binding that only restates true (delete list: chart-pin-on-click-redundant, chart-cursor-pin-redundant).",
+      "appliesWhen": "Every chart that leaves pinOnClick unbound - ds-bar-chart, ds-column-chart, ds-funnel-chart, ds-line-chart, ds-pie-chart, ds-heatmap-chart, ds-scatter-chart, ds-waterfall-chart, a hand-composed ds-chart (cursorPin) and its dsColumnSeries / dsLineSeries marks. A chart binding pinOnClick either way keeps what it binds.",
+      "pitfall": "A click that only selected something now also holds the tooltip and dims the rest until a second click, Escape or a press elsewhere, which reads as a stuck tooltip on a screen that never expected one.",
+      "restore": "provideDsConfig({ chart: { pinOnClick: false } })",
+      "searchHints": [
+        "pinOnClick",
+        "cursorPin",
+        "pointClicked",
+        "provideDsConfig"
+      ],
+      "detect": [
+        "(pointClicked)",
+        "chart: {",
+        "pinOnClick"
+      ],
+      "verify": "On every chart screen, clicking a mark and moving away either leaves the mark held with a pin disc on it, or the chart or the app config sets pinOnClick false.",
+      "note": "The default was false (ds-heatmap-chart, ds-scatter-chart and ds-waterfall-chart did not hold at all), now DS_CONFIG.chart.pinOnClick and then true."
+    },
+    {
+      "id": "chart-hover-delay-500",
+      "kind": "behavior",
+      "old": "DS_CONFIG.chart.hoverDelayMs",
+      "new": null,
+      "surface": [
+        "typescript",
+        "config"
+      ],
+      "action": "None, unless something asserts on a chart tooltip or highlight straight after a hover: wait 500 ms first, or set DS_CONFIG.chart.hoverDelayMs: 0 in that test's providers.",
+      "appliesWhen": "Every chart's pointer hover on a mark, a category, a legend entry, a heat map scale step or a bar label. Focus, a tap and a click that pins answer at once, so keyboard and touch tests are unaffected.",
+      "pitfall": "An end-to-end test that hovers and reads the tooltip in the same step now finds no tooltip and fails, or passes on a stale panel from an earlier hover.",
+      "restore": "provideDsConfig({ chart: { hoverDelayMs: 0 } })",
+      "searchHints": [
+        "hover()",
+        "mouseenter",
+        "pointerenter",
+        "ds-chart-tooltip-panel",
+        "provideDsConfig"
+      ],
+      "detect": [
+        ".hover(",
+        "new PointerEvent(",
+        "ds-chart-tooltip-panel"
+      ],
+      "verify": "Every test that hovers a chart and reads its tooltip or highlight either waits at least 500 ms or runs under hoverDelayMs: 0.",
+      "note": "A resting pointer waits DS_CONFIG.chart.hoverDelayMs, default 500, before a chart answers; once it has, the next mark answers at once until the pointer leaves the chart."
+    },
+    {
+      "id": "chart-pin-inputs-widened",
+      "kind": "behavior",
+      "old": "pinOnClick",
+      "new": null,
+      "surface": "typescript",
+      "action": "Where your code reads pinOnClick() or cursorPin() back from a chart reference, handle null, or read pinOnClickResolved() on dsColumnSeries / dsLineSeries and cursorPinResolved() on ds-chart. A subclass redeclaring pinOnClick or cursorPin types it input<boolean | null, unknown>.",
+      "appliesWhen": "Only TypeScript reading the raw input through viewChild or a template reference, or a subclass redeclaring it, on ds-bar-chart, ds-column-chart, ds-funnel-chart, ds-line-chart, ds-pie-chart, dsColumnSeries, dsLineSeries and ds-chart. Binding the inputs in a template is unaffected.",
+      "pitfall": "A reader testing pinOnClick() for truthiness now sees null on an unset chart that does pin, and takes the other branch with no compile error.",
+      "restore": null,
+      "searchHints": [
+        "pinOnClick()",
+        "cursorPin()"
+      ],
+      "detect": [
+        ".pinOnClick()",
+        ".cursorPin()"
+      ],
+      "verify": "Every read of pinOnClick() or cursorPin() handles null or reads the resolved readback.",
+      "note": "The type was boolean, now boolean | null with null meaning unset. Writers are unaffected; readers and overriders (TS2416) break."
+    },
+    {
+      "id": "chart-category-band-one-hover-area",
+      "kind": "behavior",
+      "old": "ds-chart[cursor]",
+      "new": null,
+      "surface": "template",
+      "action": "None, unless a mark under the category cursor has to answer the pointer on its own: set cursor=\"none\" on that ds-chart.",
+      "appliesWhen": "Only a ds-chart whose category cursor is on (cursor=\"category\", or \"auto\" with two or more marks showing a tooltip), and its dsColumnSeries / dsLineSeries marks. The ds-column-chart preset, which has no category cursor, is unaffected.",
+      "pitfall": "A column's own per-mark panel, with its partOfWhole share line, no longer opens on hover under the cursor: the category panel replaces it anywhere in the band, nothing answers in the gap between two bands, and a click holds the category, not the column.",
+      "restore": "cursor=\"none\"",
+      "searchHints": [
+        "<ds-chart",
+        "cursor=",
+        "dsColumnSeries",
+        "dsLineSeries"
+      ],
+      "detect": [
+        "cursor=\"category\"",
+        "dsColumnSeries",
+        "dsLineSeries"
+      ],
+      "verify": "On each ds-chart with the category cursor, the pointer anywhere in a category's band opens one panel for that category, and the pointer between two bands opens nothing.",
+      "note": "The band answered the whole category step and the tooltip only the mark's own hover box; both now answer the drawn band. A mark of your own reads CHART_SCALES.cursorOn to leave pointer hover to the band."
+    },
+    {
+      "id": "chart-entrance-slower",
+      "kind": "behavior",
+      "old": "--ds-motion-chart-mark-enter-duration",
+      "new": null,
+      "surface": [
+        "style",
+        "typescript"
+      ],
+      "action": "None, unless something waits a fixed time for a chart to finish arriving (a screenshot, an assertion on a mark's final size or opacity): wait about 1.1s, or run it under reduced motion. To shorten every chart's entrance, set --ds-motion-chart-mark-enter-duration, --ds-motion-chart-mark-grow-duration and --ds-motion-chart-mark-sweep-duration.",
+      "appliesWhen": "Every chart's entrance. A stylesheet that already sets --ds-motion-chart-mark-enter-duration or --ds-motion-chart-mark-enter-easing keeps its values for what those tokens time. The defaults ship in styles/tokens, which styles/ds forwards. Under reduced motion every mark appears at once.",
+      "pitfall": "A visual regression test that screenshots a chart a fixed time after render catches marks still growing or value labels not yet shown.",
+      "restore": "--ds-motion-chart-mark-enter-duration: var(--duration-base); --ds-motion-chart-mark-enter-easing: var(--ease-decelerate);",
+      "searchHints": [
+        "--ds-motion-chart-mark-enter-duration",
+        "--ds-motion-chart-mark-enter-easing",
+        "toHaveScreenshot",
+        "waitForTimeout"
+      ],
+      "detect": [
+        "toHaveScreenshot",
+        "matchImageSnapshot",
+        "waitForTimeout(",
+        "reducedMotion"
+      ],
+      "verify": "In the built CSS --ds-motion-chart-mark-enter-duration resolves to var(--duration-slower) unless the app overrides it, and every test that captures a chart after its entrance waits about 1.1s or runs under reduced motion.",
+      "note": "--ds-motion-chart-mark-enter-duration was 180ms, now 400ms; --ds-motion-chart-mark-enter-easing was --ease-decelerate, now --ease-emphasized-decelerate. The restore brings back those two only: growing and sweeping marks follow the grow and sweep tokens."
+    },
+    {
+      "id": "chart-stagger-default-on",
+      "kind": "behavior",
+      "old": "staggerMs",
+      "new": null,
+      "surface": "template",
+      "action": "None, unless a chart's marks have to arrive all at once: set staggerMs=\"0\" on it.",
+      "appliesWhen": "ds-bar-chart, ds-column-chart, ds-line-chart, ds-funnel-chart and the dsColumnSeries / dsLineSeries marks with no staggerMs binding, plus ds-heatmap-chart and ds-waterfall-chart, which gain staggerMs at 40. ds-pie-chart is unaffected. A chart binding staggerMs keeps its step, narrowed only where the whole series would take longer than 260ms.",
+      "pitfall": "A visual regression test that screenshots a chart a fixed time after it renders now catches later marks still arriving.",
+      "restore": "staggerMs=\"0\"",
+      "searchHints": [
+        "staggerMs",
+        "<ds-column-chart",
+        "<ds-bar-chart",
+        "<ds-line-chart",
+        "<ds-funnel-chart"
+      ],
+      "detect": [
+        "staggerMs",
+        "toHaveScreenshot",
+        "matchImageSnapshot"
+      ],
+      "verify": "Each chart either lets its marks arrive in order within about a quarter second, or binds staggerMs=\"0\".",
+      "note": "The default was 0, now 40 (60 on ds-funnel-chart); a long series narrows its step to arrive within 260ms, where it used to stop at a 300ms cap and land every later mark at once."
+    },
+    {
+      "id": "exported-class-members-grew",
+      "kind": "behavior",
+      "old": "BarChartComponent, ChartComponent, ColumnChartComponent, ColumnSeriesComponent, LineChartComponent, LineSeriesComponent, FunnelChartComponent, HeatmapChartComponent, PieChartComponent, ScatterChartComponent, WaterfallChartComponent, PaginationComponent, TableComponent, TooltipDirective, TextareaComponent, TabsComponent, ChartLegendComponent, ChartTooltipPanelComponent, WaterfallMarksComponent",
+      "new": null,
+      "surface": "typescript",
+      "action": "Build after upgrading, rename or mark `override` every member of yours the compiler reports as colliding, and delete an override whose base member is gone.",
+      "appliesWhen": "Only a class of yours that extends one of the listed components. Template users of those components need nothing; subclassing a DS component is unsupported.",
+      "pitfall": "`protected` and `private` are no protection: a redeclared member collides exactly as a public one does. A method of yours named like a removed member and declared without `override` still compiles, and is simply never called again.",
+      "restore": null,
+      "searchHints": [
+        "extends BarChartComponent",
+        "extends ChartComponent",
+        "extends ColumnChartComponent",
+        "extends ColumnSeriesComponent",
+        "extends LineChartComponent",
+        "extends LineSeriesComponent",
+        "extends FunnelChartComponent",
+        "extends HeatmapChartComponent",
+        "extends PieChartComponent",
+        "extends ScatterChartComponent",
+        "extends WaterfallChartComponent",
+        "extends PaginationComponent",
+        "extends TableComponent",
+        "extends TooltipDirective",
+        "extends TextareaComponent",
+        "extends ChartLegendComponent",
+        "extends ChartTooltipPanelComponent",
+        "extends WaterfallMarksComponent",
+        "extends TabsComponent"
+      ],
+      "detect": [
+        "extends BarChartComponent",
+        "extends ChartComponent",
+        "extends ColumnChartComponent",
+        "extends ColumnSeriesComponent",
+        "extends LineChartComponent",
+        "extends LineSeriesComponent",
+        "extends FunnelChartComponent",
+        "extends HeatmapChartComponent",
+        "extends PieChartComponent",
+        "extends ScatterChartComponent",
+        "extends WaterfallChartComponent",
+        "extends PaginationComponent",
+        "extends TableComponent",
+        "extends TooltipDirective",
+        "extends TextareaComponent",
+        "extends ChartLegendComponent",
+        "extends ChartTooltipPanelComponent",
+        "extends WaterfallMarksComponent",
+        "extends TabsComponent"
+      ],
+      "verify": "The app builds with no TS4114 or TS2416 against a DS base class, and no subclass keeps a member named after a removed one.",
+      "note": "The chart components gained the pinning, hover-delay and label-highlight members, except ColumnChartComponent and LineChartComponent, whose only change is the type of pinOnClick; PaginationComponent gained empty, TableComponent gained emptyCell and emptyCellText, TooltipDirective gained detachAncestor, disclosesOwnText and listenToFocusableAncestor, TextareaComponent gained describedBy, maxLengthMode, nativeMaxLength, overflowMirror, overflowParts, overLimitBy and syncOverflowScroll, TabsComponent gained tablist, scrollsHorizontally, overflowing, showScrollArrows, canScrollPrevious, canScrollNext, updateScrollArrows and scrollPage; five protected members of ColumnSeriesComponent are gone (pinDiscRadius, pinGlyph, pinGlyphOffset, pinGlyphSize, slotStepPx). The compiler names every collision."
+    },
+    {
+      "id": "intl-field-over-limit-required",
+      "kind": "behavior",
+      "old": "DsIntl",
+      "new": null,
+      "surface": "typescript",
+      "action": "None, unless your code builds a complete DsIntl object of its own: add field.overLimit, a function of the excess character count returning the phrase.",
+      "appliesWhen": "Only an object or signal typed as the full DsIntl, not as DsIntlOverrides. provideDsIntl with a partial override, and every app that leaves DS_INTL alone, is unaffected.",
+      "pitfall": "An object that spreads DS_INTL_DEFAULTS.field compiles, but a field section written out key by key without the spread fails with TS2741 on overLimit.",
+      "restore": null,
+      "searchHints": [
+        "DsIntl",
+        "DS_INTL",
+        "hidePassword"
+      ],
+      "detect": [
+        ": DsIntl =",
+        "Signal<DsIntl>",
+        "hidePassword:"
+      ],
+      "verify": "The app builds, and every complete DsIntl object it declares has field.overLimit."
+    },
+    {
+      "id": "pagination-range-receives-zeros-when-empty",
+      "kind": "behavior",
+      "old": "pagination.range",
+      "new": null,
+      "surface": [
+        "config",
+        "typescript"
+      ],
+      "action": "None, unless you supply your own pagination.range through provideDsIntl or DS_INTL: return your empty-list wording when total is 0.",
+      "appliesWhen": "Only an app that replaces DS_INTL.pagination.range. The default wording already reads Showing 0 of 0, and an app that never overrides the range text has nothing to do.",
+      "pitfall": "Nothing errors: a formatter that prints first and last unconditionally now shows a range of 0 to 0 under an empty list, on every ds-pagination and in every paged ds-table announcement that falls back to it.",
+      "restore": null,
+      "searchHints": [
+        "provideDsIntl",
+        "pagination",
+        "range"
+      ],
+      "detect": [
+        "pagination: {",
+        "range: (first",
+        "provideDsIntl("
+      ],
+      "verify": "A ds-pagination with total 0 shows your empty-list wording, and a paged ds-table filtered to no rows announces the same words."
+    },
+    {
+      "id": "table-range-announcement-receives-zeros-when-empty",
+      "kind": "behavior",
+      "old": "ds-table[rangeAnnouncement]",
+      "new": null,
+      "surface": [
+        "template",
+        "typescript"
+      ],
+      "action": "None, unless you bind [rangeAnnouncement] on a paged ds-table whose empty state has no text: return your empty wording, or an empty string to stay silent, when total is 0.",
+      "appliesWhen": "Only a paged ds-table (pageSize set) with its own rangeAnnouncement and no text in its [empty] content or emptyTemplate. A table with empty-state text announces that text, a table without pageSize announces no range, and one without the binding follows DS_INTL.pagination.range.",
+      "pitfall": "Nothing errors: a function that formats first and last unconditionally is now called with (0, 0, 0) when a filter or new data empties the table, and a screen reader hears a range of 0 to 0.",
+      "restore": null,
+      "searchHints": [
+        "rangeAnnouncement"
+      ],
+      "detect": [
+        "[rangeAnnouncement]=",
+        "(first: number, last: number, total: number)"
+      ],
+      "verify": "A paged ds-table filtered to no rows announces its empty-state text once; with no empty-state text it announces your empty wording, or nothing where your function returns an empty string."
+    },
+    {
+      "id": "description-list-stacks-below-value-min-width",
+      "kind": "behavior",
+      "old": "ds-description-list",
+      "new": null,
+      "surface": [
+        "template",
+        "style"
+      ],
+      "action": "None, unless a list has to switch at another width: set --ds-description-list-value-min-width on it. Delete an orientation binding that switches to stacked on a viewport breakpoint only to stack a narrow list (delete list: description-list-viewport-orientation-switch).",
+      "appliesWhen": "Every horizontal ds-description-list, which is the default orientation, and every ds-description-item outside a list. Each item stacks its label above its value once the list is narrower than label width + column gap + --ds-description-list-value-min-width (14rem), the whole list at once. orientation=\"stacked\" is unaffected.",
+      "pitfall": "In a parent that sizes to its content (an inline-block, a float, an absolutely positioned box, a flex row item with an auto basis, an auto grid track) a list whose widest value is narrower than the value minimum stacks although the page has room; give the list or the parent a width, or lower the token on that list.",
+      "restore": null,
+      "searchHints": [
+        "<ds-description-list",
+        "<ds-description-item",
+        "orientation=",
+        "--ds-description-list-label-width",
+        "grid-template-columns"
+      ],
+      "detect": [
+        "display: inline-block",
+        "float:",
+        "position: absolute",
+        "grid-template-columns: auto",
+        "BreakpointObserver",
+        "ds-description-item {"
+      ],
+      "verify": "On every screen with a ds-description-list, a list narrower than its label width + column gap + 14rem shows each label above its value, a wider one keeps the label beside the value, and no value breaks mid-word unless it is wider than the whole list.",
+      "note": "The item host is a wrapping flex row (was a two-column grid), so a consumer rule setting grid-template-columns on ds-description-item sets nothing. 14rem holds a 25-character address at a 16px value size."
+    }
+  ],
+  "informational": [
+    "ds-textarea gains maxLengthMode: 'hard' (default) keeps the native maxlength, 'soft' lets the text run past maxLength with a red counter, the over-limit characters highlighted and aria-invalid set, without blocking a submit. Both count value.length, whitespace included. New type TextareaMaxLengthMode and DS_INTL.field.overLimit(excess).",
+    "New chart entrance tokens: --ds-motion-chart-mark-grow-duration, --ds-motion-chart-mark-grow-easing, --ds-motion-chart-mark-sweep-duration and --ds-motion-chart-mark-detail-duration, on the new primitives --duration-slowest, --ease-emphasized-decelerate and --ease-settle.",
+    {
+      "text": "Chart entrances are staged: columns, bars and waterfall steps grow over 600ms with no fade, a solid line draws on, the pie ring turns in, funnel stages rise, points and markers settle, heat map cells fade in by column, and value labels, markers and legend swatches follow their mark. Under reduced motion every mark appears at once.",
+      "verify": "Load a chart page with reduced motion on and confirm every mark is on screen at once, then with it off and confirm no mark is left transparent or half drawn once the entrance ends."
+    },
+    "ds-heatmap-chart and ds-waterfall-chart gain staggerMs, default 40: the heat map staggers its columns, the waterfall its steps.",
+    "DS_CONFIG.chart.pinOnClick and DS_CONFIG.chart.hoverDelayMs set, for every chart, whether a click holds a mark (default true) and how long a resting pointer waits (default 500 ms).",
+    "ds-heatmap-chart and ds-scatter-chart gain pinOnClick, with an Unpin control.",
+    {
+      "text": "A held mark shows a pin disc on itself on every chart: column, bar, slice, funnel stage, heat map cell, scatter point, line marker, and a category held under the category cursor, with its disc at the foot of the band.",
+      "verify": "Click a mark on each chart type and confirm a pin disc appears on the held mark."
+    },
+    "The pointer cursor appears over a mark a click would hold, a mark set interactive, and a category band under the category cursor when a press holds it; the gap between two bands keeps the default cursor.",
+    "Naming a series or a category highlights it on every chart: a funnel stage row dims the other stages whatever dimOthers says, a heat map scale step dims every cell outside it, and a bar label, or a category label on a ds-chart without the category cursor (ds-waterfall-chart included), dims the other bars; a mark of your own reads CHART_SCALES.categoryLabelHover and CHART_SCALES.hoverDelayMs to answer the same way.",
+    "dimOthers follows the mark the chart has answered rather than the raw hover, so the fade waits out the hover delay with the tooltip and follows focus.",
+    {
+      "text": "A column's hover area stops at its category's band (was: up to the whole step between two columns), so the gap between two columns answers no pointer.",
+      "verify": "Point between two columns of a ds-column-chart and confirm no tooltip opens."
+    },
+    "A chart tooltip fades in rather than scaling in, so its rows no longer drift into place each time it opens on another mark; --ds-overlay-enter-keyframes still overrides it, and every other overlay keeps its scale.",
+    "A category tooltip lists its readings top to bottom, in the order their marks are drawn at that category (was: the order the series were declared); the legend keeps the declared order. A mark of your own that reports readings through CHART_SCALES places each one with y, its height in plot pixels from the top.",
+    {
+      "text": "A hatched column's stripes run from bottom left to top right, and the tooltip swatch's stripe runs the same way.",
+      "verify": "Open the tooltip of a hatched column and confirm the swatch stripe and the column stripes slant the same way."
+    },
+    {
+      "text": "A tooltip swatch is ringed only when its colour sits below 3:1 against the tooltip background, with a 1.5px ring in the tooltip's text colour drawn inside the 12px dot; every other swatch has no ring.",
+      "verify": "Hover a dark series on the light theme and a mid-tone one, and confirm only the dark one's swatch is ringed and both are 12px."
+    },
+    {
+      "text": "The ds-tooltip panel wraps a value with no break opportunity (a long file name or id) inside its max width instead of running past its edge.",
+      "verify": "Hover a tooltip whose text is one unbroken 60-character token and confirm it breaks onto a second line inside the dark panel."
+    },
+    {
+      "text": "ds-select, ds-autocomplete and ds-multi-select show a clipped trigger value or option label in full in a tooltip on hover; a label that fits shows none. A [title]= set on the picker only to repeat that label now shows a second, native tooltip beside it (delete list: picker-title-repeating-clipped-label).",
+      "verify": "In a narrow ds-select, hover the closed trigger holding a long value and each long option in the open list: one dark tooltip shows the whole label, and a short label shows none."
+    },
+    {
+      "text": "A dsTooltipWhenClipped host that cannot take focus (a label inside a button, a cell of a clickable row, ds-select's trigger value, ds-table's clipped cells in an interactive row) also opens when keyboard focus lands on its nearest focusable ancestor, and closes on that ancestor's blur, click or any key. A mouse click opens nothing, an ancestor focusable only through a negative tabindex (such as a <main tabindex=\"-1\"> that takes focus on navigation) opens nothing, and of several clipped hosts in one ancestor only the first opens. A plain dsTooltip on a non-focusable element stays hover-only.",
+      "verify": "Tab onto a button whose inner label ends in an ellipsis: one tooltip with the whole label opens; press any key: it closes; click the button with the mouse: no tooltip."
+    },
+    {
+      "text": "A dsTooltipWhenClipped tooltip whose text the host already contains sets no aria-describedby, on a focusable host or on its focusable ancestor, so a screen reader announces the text once. One given a [dsTooltip] that says more than the host, and every plain dsTooltip, still set it. A test asserting aria-describedby on a clipped disclosure finds none.",
+      "verify": "Tab onto a button whose inner label ends in an ellipsis: the tooltip opens and the button carries no aria-describedby; Tab onto a button with a plain dsTooltip: it carries aria-describedby naming the panel."
+    },
+    {
+      "text": "ds-pagination with total 0 disables every button, Previous and Next included, and marks none as current (page 1 was highlighted and carried aria-current).",
+      "verify": "Render a ds-pagination with total 0: the range reads Showing 0 of 0, every button is disabled, and no button is highlighted or carries aria-current."
+    },
+    {
+      "text": "The Unpin control sits at the top end of a chart, on its caption's line, and the caption leaves room for it while it shows; a chart with no caption gains the line.",
+      "verify": "Pin a mark on a chart with a caption and on one without, and confirm the Unpin control covers no axis label, legend entry, table cell or caption text."
+    },
+    {
+      "text": "A ds-bar-chart bar grows out of its value axis in a right-to-left page (was: from the far end).",
+      "verify": "Set dir=\"rtl\" on the page and confirm each bar grows from the axis at the right."
+    },
+    "Under the category cursor, focus on a dsColumnSeries column names its category as a dsLineSeries marker does, and focus leaving a column or a marker takes the band and the category panel down.",
+    "A paged ds-table that a filter or new data leaves empty announces its empty-state text ([empty] content or emptyTemplate) in its live region (was: silent); with none it announces rangeAnnouncement(0, 0, 0), Showing 0 of 0 by default.",
+    "A tap on a chart mark stays held when the click that follows it lands (was: that click let go of it at once).",
+    "ds-waterfall-chart gains pinOnClick (boolean | null, falling back to DS_CONFIG.chart.pinOnClick, then true), with the Unpin control the other charts show.",
+    {
+      "text": "A scrollable ds-tabs strip shows previous and next arrows while tabs lie beyond its edges; each turns the strip by a page and hides at its own edge, and a strip that fits shows none. The strip scrolls smoothly unless reduced motion is set, on an arrow and when a selected tab comes into view. The arrows sit outside the tab order and are hidden from assistive technology, and a click on one leaves focus where it was. A scrollable horizontal ds-tabs host is a grid: the arrows sit either side of the tab list and the panel spans the row below.",
+      "verify": "On a phone-width screen with a scrollable ds-tabs whose tabs do not fit, confirm only the next arrow shows at the start, both in the middle, only the previous arrow at the end, and none once the tabs fit, and that the panel spans the full width under the strip."
+    },
+    "New token --ds-description-list-value-min-width (default 14rem): the narrowest value a horizontal ds-description-list keeps beside its label before every item stacks."
+  ],
+  "deleteList": [
+    {
+      "id": "chart-pin-on-click-redundant",
+      "surface": "template",
+      "find": [
+        "pinOnClick=\"true\"",
+        "[pinOnClick]=\"true\""
+      ],
+      "why": "A click holds a mark by default, so a binding of true restates it. It still does something where DS_CONFIG.chart.pinOnClick is false and this chart is the exception, and may stay there.",
+      "replaceWith": "nothing"
+    },
+    {
+      "id": "chart-cursor-pin-redundant",
+      "surface": "template",
+      "find": [
+        "cursorPin=\"true\"",
+        "[cursorPin]=\"true\""
+      ],
+      "why": "A press holds the category cursor by default, so a binding of true restates it. It still does something where DS_CONFIG.chart.pinOnClick is false and this chart is the exception, and may stay there.",
+      "replaceWith": "nothing"
+    },
+    {
+      "id": "picker-title-repeating-clipped-label",
+      "surface": "template",
+      "find": [
+        "[title]=",
+        "[attr.title]="
+      ],
+      "why": "ds-select, ds-autocomplete and ds-multi-select disclose a clipped trigger value or option label in a tooltip, so a title bound on the picker to repeat that label adds a second, native tooltip. A title that carries more than the label, or one on a picker whose label never clips, may stay.",
+      "replaceWith": "nothing"
+    },
+    {
+      "id": "description-list-viewport-orientation-switch",
+      "surface": [
+        "template",
+        "typescript"
+      ],
+      "find": [
+        "'stacked' : 'horizontal'",
+        "'horizontal' : 'stacked'"
+      ],
+      "why": "A horizontal ds-description-list stacks by itself once a value would get less than --ds-description-list-value-min-width, so an orientation switched on a viewport breakpoint to do the same repeats it. A switch driven by something other than width may stay.",
+      "replaceWith": "--ds-description-list-value-min-width on the list, where the switch has to move"
+    }
+  ]
+}

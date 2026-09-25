@@ -14,6 +14,7 @@ import {
 } from '@angular/core';
 import {
   CHART_SERIES_COLORS,
+  chartDwell,
   describeSeries,
   formatWholePercent,
   largestRemainder,
@@ -164,7 +165,15 @@ export class PieChartComponent {
    *  `LOCALE_ID`. */
   readonly valueFormat = input<ChartValueFormat | null>(null);
 
-  private readonly defaults = resolveChartDefaults(this);
+  /** Holds the clicked mark and its tooltip in place, with a pin disc on it, until a second click,
+   *  Escape or a press outside releases it. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then
+   *  `true`. `sliceClicked` fires either way - pinning is a state, not a handler. */
+  readonly pinOnClick = input<boolean | null, unknown>(null, {
+    transform: (value) => (value == null ? null : booleanAttribute(value)),
+  });
+
+  // Declared after every input it reads: it takes each signal off `this` when it runs.
+  protected readonly defaults = resolveChartDefaults(this);
   protected readonly intl = inject(DS_INTL);
   readonly frameResolved = this.defaults.frame;
   readonly dataTableResolved = this.defaults.dataTable;
@@ -180,12 +189,6 @@ export class PieChartComponent {
   /** The slice that was clicked, or activated with Enter or Space. Fires whether or not
    *  `interactive` is set. */
   readonly sliceClicked = output<PieChartSlice>();
-
-  /** Holds the hovered mark and its tooltip in place when it is clicked, until Escape or a press
-   *  outside releases it. Off by default: a click is already the drill-down hook, and a mark left
-   *  lit after the pointer has gone needs a reader who knows why it is lit. `sliceClicked` fires
-   *  either way — pinning is a state, not a handler. */
-  readonly pinOnClick = input(false, { transform: booleanAttribute });
 
   /** Dims every OTHER mark while one is hovered or focused, so the reader's eye is held on the
    *  one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed
@@ -210,8 +213,9 @@ export class PieChartComponent {
 
   private readonly tooltipLingerResolved = this.defaults.tooltipLingerMs;
 
-  protected readonly activeMark = chartActiveMark(() =>
-    this.tooltipLingerResolved(),
+  protected readonly activeMark = chartActiveMark(
+    () => this.tooltipLingerResolved(),
+    () => this.defaults.hoverDelayMs(),
   );
 
   protected onMarkClick(
@@ -220,7 +224,7 @@ export class PieChartComponent {
     event: Event,
   ): void {
     this.sliceClicked.emit(payload);
-    if (this.pinOnClick()) {
+    if (this.defaults.pinOnClick()) {
       this.activeMark.pin(index, event);
     }
   }
@@ -232,15 +236,21 @@ export class PieChartComponent {
   }
 
   private readonly legendHighlight = signal(-1);
+  private readonly legendDwell = chartDwell(() => this.defaults.hoverDelayMs());
 
   /** A legend item stands for its arc, so it opens the arc's tooltip over the ARC and dims the
    *  other slices — the same state hovering the arc itself produces. */
   protected onLegendEnter(index: number, event: Event): void {
-    this.legendHighlight.set(index);
+    this.legendDwell.schedule(
+      index,
+      () => this.legendHighlight.set(index),
+      event,
+    );
     this.activeMark.enter(index, event, this.arcAt(event, index));
   }
 
   protected onLegendLeave(): void {
+    this.legendDwell.cancel();
     this.legendHighlight.set(-1);
     this.activeMark.leave();
   }
@@ -256,7 +266,7 @@ export class PieChartComponent {
     event: Event,
   ): void {
     this.sliceClicked.emit(slice);
-    if (this.pinOnClick()) {
+    if (this.defaults.pinOnClick()) {
       this.activeMark.pin(index, event, this.arcAt(event, index));
     }
   }

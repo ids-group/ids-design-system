@@ -32,21 +32,30 @@ import type {
   LinePoint,
   MarkHit,
 } from '@ids-group-ltd/ids-design-system/components';
-import { injectDsLocale } from '@ids-group-ltd/ids-design-system/core';
+import {
+  injectDsLocale,
+  resolveWithConfig,
+} from '@ids-group-ltd/ids-design-system/core';
 import type {
   ChartAxis,
   ChartCurve,
   ChartGaps,
   ChartValueFormat,
 } from '@ids-group-ltd/ids-design-system/core';
-import { chartActiveMark } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
+import {
+  CHART_PIN_GAP,
+  CHART_PIN_RADIUS,
+  ChartPinMarkerComponent,
+  chartActiveMark,
+} from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import type {
   ChartTooltipTrigger,
   ChartTooltipContext,
-  ChartTooltipEntry,
   ChartTooltipOrigin,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import { CHART_SCALES } from './chart-scales.token';
+import type { ChartAxisEntry } from './chart-scales.token';
+import { topDown } from './chart.math';
 
 export interface LineSeriesData {
   id: string;
@@ -76,12 +85,16 @@ let nextSeriesId = 0;
  * Hosted on a `<g>` rather than an element of its own: an element the SVG specification does not
  * know is not rendered, and neither are its descendants. Written as `<svg:g dsLineSeries>`.
  */
+// The active marker's default radius, `--chart-dot-radius-active`.
+const PIN_MARKER_CLEARANCE = 6;
+
 @Component({
   // The repository's `component-selector` rule asks for an element selector, and one cannot work
   // inside a canvas - see the same exemption on `g[dsColumnSeries]`.
   // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'g[dsLineSeries]',
   standalone: true,
+  imports: [ChartPinMarkerComponent],
   exportAs: 'dsLineSeries',
   templateUrl: './line-series.component.html',
   styleUrl: './line-series.component.scss',
@@ -110,9 +123,20 @@ export class LineSeriesComponent implements OnDestroy {
    *  fires whether or not this is set. */
   readonly interactive = input(false, { transform: booleanAttribute });
 
-  /** Holds the hovered mark and its tooltip in place when it is clicked, until Escape or a
-   *  press outside releases it. Pinning is a state, not a handler. */
-  readonly pinOnClick = input(false, { transform: booleanAttribute });
+  /** Holds the hovered mark and its tooltip in place when it is clicked, until a second click,
+   *  Escape or a press outside releases it. Under the category cursor the container holds the
+   *  category instead. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. */
+  readonly pinOnClick = input<boolean | null, unknown>(null, {
+    transform: (value) => (value == null ? null : booleanAttribute(value)),
+  });
+  readonly pinOnClickResolved = resolveWithConfig(
+    this.pinOnClick,
+    (config) => config.chart?.pinOnClick,
+    true,
+  );
+  protected readonly pins = computed(
+    () => this.pinOnClickResolved() && !this.scales.cursorOn?.(),
+  );
 
   /** Fades every series but the one under the pointer. Off by default: the dimming buys loudness
    *  for one line and pays for it with the separation between the rest. */
@@ -137,8 +161,9 @@ export class LineSeriesComponent implements OnDestroy {
     return this.patterns()[seriesIndex] || null;
   }
 
-  /** Milliseconds between one marker's entrance and the next. The total is capped. */
-  readonly staggerMs = input(0, { transform: numberAttribute });
+  /** Milliseconds between one series' entrance and the next, narrowed so the last series still
+   *  starts within the stagger budget. `0` turns the stagger off. */
+  readonly staggerMs = input(40, { transform: numberAttribute });
 
   /** What a `null` reading draws: `'break'` leaves a hole in the line, `'zero'` plots a point
    *  at zero. A missing measurement and a measured zero are different facts. */
@@ -207,6 +232,7 @@ export class LineSeriesComponent implements OnDestroy {
       () => {
         this.focusedSeries.set(null);
         this.activeMark.leave();
+        this.scales.setActiveIndex(-1);
       },
     );
   }
@@ -217,7 +243,10 @@ export class LineSeriesComponent implements OnDestroy {
     this.scales.releaseDomain(`${this.domainId}-secondary`);
   }
 
-  readonly activeMark = chartActiveMark(() => this.tooltipLingerMs());
+  readonly activeMark = chartActiveMark(
+    () => this.tooltipLingerMs(),
+    () => this.scales.hoverDelayMs?.() ?? 0,
+  );
 
   private valuesOn(axis: ChartAxis): number[] {
     return this.data()
@@ -338,7 +367,7 @@ export class LineSeriesComponent implements OnDestroy {
   );
 
   protected seriesStagger(index: number): string {
-    return `${staggerDelay(index, this.staggerMs())}ms`;
+    return `${staggerDelay(index, this.plotted().length, this.staggerMs())}ms`;
   }
 
   /** One tab stop PER SERIES: each line is a strand the reader walks with the arrows, and the
@@ -383,16 +412,26 @@ export class LineSeriesComponent implements OnDestroy {
     );
   }
 
+  protected readonly pinnedMarker = computed(() =>
+    this.activeMark.pinned()
+      ? (this.allMarkers()[this.activeMark.index()] ?? null)
+      : null,
+  );
+
+  // Above the reading, clear of the marker drawn on it.
+  protected readonly pinLift =
+    CHART_PIN_RADIUS + CHART_PIN_GAP + PIN_MARKER_CLEARANCE;
+
   protected onMarkerOver(event: PointerEvent): void {
     const hit = markOf(event);
-    if (hit) {
+    if (hit && !this.scales.cursorOn?.()) {
       this.activeMark.enter(hit.index, event, undefined, hit.element);
     }
   }
 
   protected onMarkerOut(event: PointerEvent): void {
     const hit = markOf(event);
-    if (!hit) {
+    if (!hit || this.scales.cursorOn?.()) {
       return;
     }
     const next =
@@ -454,7 +493,7 @@ export class LineSeriesComponent implements OnDestroy {
     if (!hit) {
       return;
     }
-    if (this.pinOnClick()) {
+    if (this.pins()) {
       this.activeMark.pin(hit.index, event, '.series-marker', hit.element);
     }
     this.selectMarker(hit.index);
@@ -483,7 +522,11 @@ export class LineSeriesComponent implements OnDestroy {
   /** What this series reads at the category the cursor is on, whatever `tooltip` says. It feeds
    *  the container's category panel, so one band answers for every mark on the plot rather than
    *  each mark owning a hover field of its own. */
-  readonly axisEntries = computed<readonly ChartTooltipEntry[]>(() => {
+  readonly axisEntries = computed<readonly ChartAxisEntry[]>(() =>
+    this.readingsAtCursor().map(({ reading }) => reading),
+  );
+
+  private readonly readingsAtCursor = computed(() => {
     const categoryIndex = this.scales.activeIndex();
     if (categoryIndex < 0) {
       return [];
@@ -497,10 +540,14 @@ export class LineSeriesComponent implements OnDestroy {
       return marker
         ? [
             {
-              label: marker.seriesLabel,
-              value: marker.value,
-              formatted: marker.formattedValue,
-              color: marker.color,
+              seriesId: entry.series.id,
+              reading: {
+                label: marker.seriesLabel,
+                value: marker.value,
+                formatted: marker.formattedValue,
+                color: marker.color,
+                y: marker.y,
+              } satisfies ChartAxisEntry,
             },
           ]
         : [];
@@ -578,25 +625,11 @@ export class LineSeriesComponent implements OnDestroy {
         return null;
       }
       const focused = this.focusedSeries();
-      const reporting = focused
-        ? this.plotted().filter((entry) => entry.series.id === focused)
-        : this.plotted();
-      const entries = reporting.flatMap((entry) => {
-        const marker = entry.markers.find(
-          (candidate) => candidate.categoryIndex === categoryIndex,
-        );
-
-        return marker
-          ? [
-              {
-                label: marker.seriesLabel,
-                value: marker.value,
-                formatted: marker.formattedValue,
-                color: marker.color,
-              },
-            ]
-          : [];
-      });
+      const entries = topDown(
+        this.readingsAtCursor()
+          .filter(({ seriesId }) => !focused || seriesId === focused)
+          .map(({ reading }) => reading),
+      );
       if (!entries.length) {
         return null;
       }
