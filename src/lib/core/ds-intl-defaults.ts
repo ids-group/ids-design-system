@@ -174,7 +174,8 @@ export const DS_INTL_DEFAULTS: DsIntl = {
     previous: 'Previous page',
     next: 'Next page',
     page: (page) => `Page ${page}`,
-    range: (first, last, total) => `Showing ${first}–${last} of ${total}`,
+    range: (first, last, total) =>
+      total === 0 ? 'Showing 0 of 0' : `Showing ${first}–${last} of ${total}`,
     perPage: (size) => `${size} per page`,
     rowsPerPage: 'Rows per page',
   },
