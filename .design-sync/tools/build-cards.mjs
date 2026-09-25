@@ -1231,6 +1231,17 @@ if (!cover) {
 }
 cpSync(join(syncDir, 'assets', cover), join(OUT, '.thumbnail'));
 
+// The composition rules the package ships to every consumer's agents, which the README sends the
+// agent to first. A second copy sits beside each card of the Rules chapter, because that chapter
+// fetches the file relative to its own page and would otherwise freeze the fallback text.
+cpSync(join(repo, 'design-system.md'), join(OUT, 'design-system.md'));
+for (const card of written.filter((entry) => entry.slug === 'practice/rules')) {
+  cpSync(
+    join(repo, 'design-system.md'),
+    join(OUT, dirname(card.path), 'design-system.md'),
+  );
+}
+
 /* Paths the project still holds and this build no longer produces. The list stays in the REPO and
    is printed for whoever is running the upload - it must NOT reach the project. The README there is
    the front door a designer and an agent read, and our clean-up list has no business in it. */
