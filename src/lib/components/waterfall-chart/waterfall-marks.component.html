@@ -8,7 +8,8 @@
         [attr.x1]="connector.x1"
         [attr.x2]="connector.x2"
         [attr.y1]="connector.y"
-        [attr.y2]="connector.y" />
+        [attr.y2]="connector.y"
+        [style.--_chart-mark-stagger]="connector.stagger" />
     }
   }
 
@@ -18,7 +19,8 @@
         class="value"
         text-anchor="middle"
         [attr.x]="label.x"
-        [attr.y]="label.y">
+        [attr.y]="label.y"
+        [style.--_chart-mark-stagger]="label.stagger">
         {{ label.text }}
       </svg:text>
     }

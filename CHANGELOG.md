@@ -1,5 +1,122 @@
 ## Unreleased
 
+### Breaking
+
+- **A click on a chart mark holds it by default.** `pinOnClick` on `ds-bar-chart`, `ds-column-chart`,
+  `ds-funnel-chart`, `ds-line-chart`, `ds-pie-chart` and the `dsColumnSeries` / `dsLineSeries` marks,
+  and `cursorPin` on `ds-chart`, now fall back to `DS_CONFIG.chart.pinOnClick`, then `true` (was
+  `false`); `ds-heatmap-chart` and `ds-scatter-chart` gain `pinOnClick` with the same default. A held
+  mark keeps its tooltip and highlight after the pointer leaves and shows a pin disc on itself; a
+  second click, Escape or a press elsewhere lets go. `pointClicked` fires either way. To keep marks
+  unheld, set `pinOnClick="false"` (`cursorPin="false"` on `ds-chart`) on one chart or
+  `DS_CONFIG.chart.pinOnClick: false` for all. A `pinOnClick` or `[pinOnClick]="true"` binding now
+  restates the default.
+
+- **A chart answers a resting pointer after 500 ms.** The tooltip, the highlight and the dimming of a
+  mark, a category under the cursor, a legend entry, a heat map scale step or a bar's label wait
+  `DS_CONFIG.chart.hoverDelayMs` (default 500) of rest before they show (was: at once). Once a chart
+  has answered, the next mark answers at once until the pointer leaves the chart; focus, a tap and a
+  click that pins answer at once. Set `DS_CONFIG.chart.hoverDelayMs: 0` to answer at once. A test that
+  hovers a mark and asserts on its tooltip in the same tick waits the delay, or sets it to `0`.
+
+- **`pinOnClick` and `ds-chart`'s `cursorPin` are `boolean | null`** (was `boolean`), `null` meaning
+  unset: on `ds-bar-chart`, `ds-column-chart`, `ds-funnel-chart`, `ds-line-chart`, `ds-pie-chart`,
+  `dsColumnSeries` and `dsLineSeries`. Binding them in a template is unaffected. Code that reads the
+  raw input back, or a subclass overriding it, handles `null`, which falls back to
+  `DS_CONFIG.chart.pinOnClick` and then `true`; `dsColumnSeries` and `dsLineSeries` expose the result
+  as `pinOnClickResolved()`, `ds-chart` as `cursorPinResolved()`.
+
+- **Subclassing one of these breaks on a name collision.** Each gained a member or had one change
+  type (`pinOnClick` above): `BarChartComponent`, `ChartComponent`, `ColumnChartComponent`,
+  `ColumnSeriesComponent`, `LineChartComponent`, `LineSeriesComponent`, `FunnelChartComponent`,
+  `HeatmapChartComponent`, `PieChartComponent` and `ScatterChartComponent`, and two internal classes
+  reachable only through their own entry points: the internal `ChartLegendComponent`, the internal
+  `ChartTooltipPanelComponent` and the internal `WaterfallMarksComponent`. Five protected members of `ColumnSeriesComponent` are gone:
+  `pinDiscRadius`, `pinGlyph`, `pinGlyphOffset`, `pinGlyphSize` and `slotStepPx`. Build after
+  upgrading; rename or mark `override` every member the compiler reports colliding, and delete an
+  override whose base member is gone. Subclassing a DS component is unsupported.
+
+### Added
+
+- **`DS_CONFIG.chart.pinOnClick` and `DS_CONFIG.chart.hoverDelayMs`** set, for every chart, whether a
+  click holds a mark (default `true`) and how long a resting pointer waits (default 500 ms).
+
+- **`pinOnClick` on `ds-heatmap-chart` and `ds-scatter-chart`**, with the Unpin control the other
+  charts have.
+
+- **Chart entrance tokens.** `--ds-motion-chart-mark-grow-duration` (600ms) and
+  `--ds-motion-chart-mark-grow-easing` time a mark growing out of its baseline;
+  `--ds-motion-chart-mark-sweep-duration` (600ms) a ring turning in or a line drawing on;
+  `--ds-motion-chart-mark-detail-duration` (180ms) what follows a mark, its value label or marker;
+  `--ds-motion-chart-mark-stagger-budget` (260ms) the whole spread of a series' arrival. They sit on
+  three new primitives: `--duration-slowest` (600ms, 0 under reduced motion),
+  `--ease-emphasized-decelerate` and `--ease-settle`, a spring that never overshoots.
+
+- **`staggerMs` on `ds-heatmap-chart`**, staggering its columns.
+
+### Changed
+
+- **Chart entrances are slower and staged.** `--ds-motion-chart-mark-enter-duration` is 400ms (was
+  180ms) and `--ds-motion-chart-mark-enter-easing` is `--ease-emphasized-decelerate` (was
+  `--ease-decelerate`). Columns, bars and waterfall steps grow out of their baseline over the grow
+  duration with no fade; a solid line draws on and a dashed one fades; an area fades in under its
+  line; the pie ring turns into place; funnel stages rise in; scatter points and line markers settle
+  in about their centre; heat map cells fade in column by column, which they did not animate before.
+  Value labels, markers, table rows and legend swatches follow once their mark has arrived. Under
+  reduced motion every mark appears at once, delays included. A test that waits a fixed time for a
+  chart to finish arriving waits about 1.1s, or runs under reduced motion.
+
+- **`staggerMs` defaults to 40 on `ds-bar-chart`, `ds-column-chart`, `ds-line-chart`,
+  `dsColumnSeries` and `dsLineSeries`, and to 60 on `ds-funnel-chart`** (was `0`), and the stagger
+  spreads evenly within `--ds-motion-chart-mark-stagger-budget` (was: a 300ms cap that landed every
+  later mark at once). Set `staggerMs="0"` to have a series arrive all at once.
+
+- **A held mark always shows its pin disc**: a column, a bar, a slice, a funnel stage, a heat map
+  cell, a scatter point, a line marker, and a category held under the category cursor (a disc at the
+  foot of its band).
+
+- **The pointer cursor appears where a click does something**: over a mark a click would hold, a
+  mark set `interactive`, and a category band under the category cursor when a press holds it. The
+  gap between two bands keeps the default cursor.
+
+- **Naming a series or a category highlights it on every chart.** A legend entry dims the other
+  series as before; a funnel's stage row now dims the other stages whatever `dimOthers` says; a heat
+  map's scale step dims every cell outside that step; a bar's label, and a category label on the
+  axis of a `ds-chart` without the category cursor (`ds-waterfall-chart` included), dims the other
+  bars. A mark of your own reads `CHART_SCALES.categoryLabelHover` and `CHART_SCALES.hoverDelayMs`
+  to answer the same way.
+
+- **`dimOthers` follows the mark the chart has answered, not the raw hover**, so the fade waits out
+  the hover delay with the tooltip and also follows focus.
+
+- **Under the category cursor, the category's drawn band is the one hover area.** The pointer
+  anywhere in the band opens the band and the tooltip together, on a plot of one mark as on a
+  composed one, and the gap between two bands answers nothing; a press there releases a held
+  cursor. A column or line mark under the cursor no longer opens a panel of its own on hover or pins
+  on click: focus still opens its panel, `pointClicked` still fires, and `cursorPin` holds the
+  category. A mark of your own reads `CHART_SCALES.cursorOn` to do the same.
+
+- **A column's hover area stops at its category's band** (was: up to the whole step between two
+  columns), so the gap between two columns answers no pointer.
+
+- **A chart tooltip fades in rather than scaling in**, so its rows no longer drift into place each
+  time it opens on another mark. `--ds-overlay-enter-keyframes` still overrides it; every other
+  overlay keeps its scale.
+
+- **A category tooltip lists its readings top to bottom, in the order their marks are drawn at that
+  category** (was: the order the series were declared). The legend keeps the declared order. A mark
+  of your own that reports its readings through `CHART_SCALES` places each one by adding `y`, its
+  height in plot pixels from the top; a reading without it follows the placed ones in declared order.
+
+- **A hatched column's stripes run from bottom left to top right, and the tooltip swatch's stripe
+  runs the same way.** Width, colour and repeat are unchanged.
+
+- **A tooltip swatch is ringed only when its colour would vanish into the panel.** A swatch below
+  3:1 contrast against the tooltip background takes a 1.5px ring in the tooltip's text colour, drawn
+  inside the 12px dot; every other swatch has no ring (was: every swatch, ringed outside the dot in
+  the surface colour). The check follows the theme, so a colour ringed on the light panel can go
+  unringed on the dark one.
+
 ### Fixed
 
 - **`ds-pagination` reads `Showing 0 of 0` on an empty list.** With `total` at 0 the range label read
@@ -24,6 +141,8 @@
 
 | Delete | Why | Replace with |
 | --- | --- | --- |
+| a `pinOnClick`, `pinOnClick="true"` or `[pinOnClick]="true"` binding on a chart or a `dsColumnSeries` / `dsLineSeries` mark | a click holds a mark by default | nothing; keep it where `DS_CONFIG.chart.pinOnClick` is `false` and this chart is the exception |
+| a `cursorPin`, `cursorPin="true"` or `[cursorPin]="true"` binding on `ds-chart` | a press holds the category cursor by default | nothing; keep it where `DS_CONFIG.chart.pinOnClick` is `false` and this chart is the exception |
 | a `[title]=` on a `ds-select`, `ds-autocomplete` or `ds-multi-select` that repeats the selected or option label | the picker shows a clipped label in full in a tooltip | nothing; a `title` that says more than the label stays legitimate |
 
 ## 0.14.1 — 2026-09-24

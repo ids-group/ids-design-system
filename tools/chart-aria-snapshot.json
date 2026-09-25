@@ -16,8 +16,7 @@
   ],
   "column-chart": ["p: role=status", "div: aria-hidden=true"],
   "column-series": [
-    "svg: role={interactive() ? 'button' : null}, aria-label={interactive() ? entryLabel(mark) : null}",
-    "svg: aria-hidden=true"
+    "svg: role={interactive() ? 'button' : null}, aria-label={interactive() ? entryLabel(mark) : null}"
   ],
   "funnel-chart": [
     "p: role=status",

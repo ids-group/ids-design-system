@@ -12,6 +12,8 @@ import type {
   ChartThreshold,
   ChartThresholdDash,
 } from '@ids-group-ltd/ids-design-system/core';
+import type { ChartTooltipEntry } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
+import type { ChartAxisEntry } from './chart-scales.token';
 
 export const CHART_DEFAULT_TICK_COUNT = 5;
 export const CHART_AXIS_LABEL_GAP = 8;
@@ -443,4 +445,14 @@ export function categoryAt(
   const band = plotWidth / categoryCount;
 
   return Math.min(categoryCount - 1, Math.floor(offset / band));
+}
+
+/** Readings in the order the reader sees their marks, top to bottom, with the height dropped. A
+ *  tie, or a reading with no height, keeps its given place. */
+export function topDown(
+  entries: readonly ChartAxisEntry[],
+): ChartTooltipEntry[] {
+  return [...entries]
+    .sort((above, below) => (above.y ?? Infinity) - (below.y ?? Infinity) || 0)
+    .map(({ y: _drawnAt, ...reading }) => reading);
 }

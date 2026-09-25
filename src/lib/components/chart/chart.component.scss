@@ -23,6 +23,11 @@
   inline-size: 100%;
 }
 
+// Over a category band a press holds the cursor, and the gap between two bands does nothing.
+.canvas.pins {
+  cursor: pointer;
+}
+
 /* Anchored pierce, so the rule reaches a projected mark's own stylesheet without compiling to a
    global one. It holds every mark still until `settled` - a mark inserted at the fallback width
    and corrected by the measurement would otherwise animate that correction on every load. Zeroing

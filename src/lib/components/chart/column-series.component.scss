@@ -3,6 +3,7 @@
 @use '../../styles/chart-interactive' as chart-interactive;
 @use '../../styles/chart-motion' as chart-motion;
 @include chart-motion.grows-up('.column', '.bar');
+@include chart-motion.follows('.value', var(--ds-motion-chart-mark-grow-duration));
 @include chart-frame.no-bounding-box-focus('.column');
 
 
@@ -30,8 +31,11 @@
     var(--_column-chart-column-share),
     var(--_column-chart-column-max-width)
   );
+
+  // The category's drawn band, not its whole step: the gap between two bands answers no pointer, so
+  // the empty ground between columns reads as empty.
   --_column-hit-width: min(
-    var(--_column-chart-slot-step),
+    var(--_column-chart-slot-band),
     calc(
       var(--_column-chart-column-max-width) + var(--_column-chart-column-gap)
     )
@@ -146,23 +150,6 @@
     stroke: Highlight;
     filter: none;
   }
-}
-
-// The badge is drawn, not composed: `ds-icon`'s host is an HTML element, and an element the SVG
-// specification does not know renders nothing inside a canvas, itself and its children alike. The
-// opaque disc is what makes the glyph legible against a palette of eight.
-.pin-marker {
-  pointer-events: none;
-}
-
-.pin-disc {
-  fill: var(--surface-default);
-  stroke: var(--border-divider);
-  stroke-width: var(--border-width-default);
-}
-
-.pin-glyph {
-  color: var(--text-primary);
 }
 
 /* The whole series steps back while another one is named in the legend. On the group, not each

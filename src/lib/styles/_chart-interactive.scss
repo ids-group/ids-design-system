@@ -23,8 +23,10 @@
   }
 }
 
-// Include on the CONTAINER, never on the mark: `:has()` asks the container whether anything inside
-// it is hovered, which is what lets a pointer highlight work with no component state.
+// Include on the CONTAINER, never on the mark: `:has()` asks the container whether one of its
+// marks is the active one. `.is-active` is the component's, set from the same state the tooltip
+// reads, so the highlight waits out the hover delay with the tooltip rather than flashing on every
+// mark the pointer crosses. The component also sets it on focus.
 //
 // Gated on `.dims-others`, which the chart puts on the container from its `dimOthers` input. Off by
 // default, because dimming is not free: measured 2026-09-13, OKLab dE x100, the worst pair of three
@@ -40,12 +42,8 @@
   // it the two rules dim each other out: the hover rule takes down the pinned mark because the
   // pointer has moved off it, the pin rule takes down the hovered mark because it is not the pinned
   // one, and every mark on the chart ends up faded with nothing lit.
-  &.dims-others:not(:has(#{$mark}.is-pinned)):has(#{$mark}.interactive:hover)
-    #{$mark}.interactive:not(:hover),
-  &.dims-others:not(:has(#{$mark}.is-pinned)):has(
-      #{$mark}.interactive:focus-visible
-    )
-    #{$mark}.interactive:not(:focus-visible),
+  &.dims-others:not(:has(#{$mark}.is-pinned)):has(#{$mark}.is-active)
+    #{$mark}:not(.is-active),
   // A pinned mark keeps the others down after the pointer has gone, which is the whole point of
   // pinning: the reader looks away from the chart and the comparison is still on screen.
   &.dims-others:has(#{$mark}.is-pinned) #{$mark}:not(.is-pinned) {
@@ -53,8 +51,11 @@
   }
 }
 
+// `.interactive` is a mark a consumer made clickable, `.pins` one a click would hold. The pointer
+// cursor promises a click, so it goes where one of the two is true and nowhere else.
 @mixin clickable($mark) {
-  #{$mark}.interactive {
+  #{$mark}.interactive,
+  #{$mark}.pins {
     cursor: pointer;
   }
 }

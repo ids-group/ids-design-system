@@ -175,6 +175,15 @@ export interface DsConfig {
      *  1.4.13's hoverable clause — which is a property of what an app puts in its tooltips rather
      *  than of one plot. About 140 is enough to cross the gap at an ordinary pointer speed. */
     tooltipLingerMs?: number;
+    /** Whether a click on a mark, or on a category under the category cursor, holds its tooltip
+     *  and highlight in place, for every chart. Default `true`. A held mark shows a pin disc; a
+     *  second click, Escape or a press elsewhere lets go. A tap holds whatever this says. */
+    pinOnClick?: boolean;
+    /** How long the pointer rests on a mark, a category or a legend entry before the chart answers
+     *  it - highlight and tooltip alike - in milliseconds. Default 500. Once a chart has answered,
+     *  the next mark answers at once until the pointer leaves the chart; focus, a tap and a click
+     *  that pins answer at once. */
+    hoverDelayMs?: number;
     /** How every chart formats its values, the annex table and the generated description included.
      *  Default groups digits in `locale` and abbreviates on a tick (`1.2M`). The same reason
      *  `datePicker.locale` lives here: a number reads one way in an app, and a formatter passed

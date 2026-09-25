@@ -1,4 +1,13 @@
 <figure class="heatmap-chart">
+  @if (activeMark.pinned()) {
+    <button
+      class="pin-reset"
+      type="button"
+      (click)="activeMark.release()">
+      {{ intl().chart.unpin }}
+    </button>
+  }
+
   @if (caption()) {
     <figcaption>
       {{ caption() }}
@@ -29,10 +38,12 @@
       [attr.role]="interactive() ? 'group' : 'img'"
       [attr.aria-label]="accessibleName()"
       [dsChartTooltip]="tooltipContext()"
+      [dsChartTooltipPinned]="activeMark.pinned()"
       [dsChartTooltipOrigin]="activeMark.origin()">
       <table
         class="grid"
-        [class.dims-others]="dimOthers()">
+        [class.dims-others]="dimOthers()"
+        [style.--_heatmap-chart-column-stagger]="columnStagger()">
         <thead>
           <tr>
             <td class="corner"></td>
@@ -57,35 +68,32 @@
               </th>
 
               @for (cell of entry.cells; track cell.key) {
+                @let index = cellIndex(rowIndex, cell.columnIndex);
+                @let pins = defaults.pinOnClick() && cell.value !== null;
+                @let pinned = activeMark.pinned() && activeMark.index() === index;
+
                 <td
                   class="cell-slot"
-                  (pointerenter)="
-                    activeMark.enter(
-                      cellIndex(rowIndex, cell.columnIndex),
-                      $event
-                    )
-                  ">
+                  [attr.data-mark-index]="index"
+                  (pointerenter)="activeMark.enter(index, $event)"
+                  (pointerleave)="activeMark.leave()"
+                  (click)="onCellPress(cell, index, $event)">
                   <!-- A button only where a click means something: an unmeasured cell has no
                        reading to drill into, and a grid of dead buttons is a tab trap. -->
                   @if (interactive() && cell.value !== null) {
                     <button
                       class="cell interactive"
                       type="button"
+                      [class.pins]="pins"
+                      [class.is-active]="activeMark.index() === index"
+                      [class.is-pinned]="pinned"
+                      [class.is-dimmed]="isCellDimmed(cell)"
                       [style.background]="cell.color"
                       [attr.aria-label]="cell.accessibleName"
                       (click)="onCellClick(entry, cell, rowIndex)"
-                      (pointerenter)="
-                        activeMark.enter(
-                          cellIndex(rowIndex, cell.columnIndex),
-                          $event
-                        )
-                      "
-                      (focus)="
-                        activeMark.enter(
-                          cellIndex(rowIndex, cell.columnIndex),
-                          $event
-                        )
-                      ">
+                      (pointerenter)="activeMark.enter(index, $event)"
+                      (focus)="activeMark.enter(index, $event)"
+                      (blur)="activeMark.leave()">
                       @if (showValues()) {
                         <span class="cell-value">
                           {{ cell.formattedValue }}
@@ -97,6 +105,10 @@
                       class="cell"
                       role="img"
                       [class.is-missing]="cell.value === null"
+                      [class.pins]="pins"
+                      [class.is-active]="activeMark.index() === index"
+                      [class.is-pinned]="pinned"
+                      [class.is-dimmed]="isCellDimmed(cell)"
                       [style.background]="cell.color"
                       [attr.aria-label]="cell.accessibleName">
                       @if (showValues() && cell.value !== null) {
@@ -105,6 +117,13 @@
                         </span>
                       }
                     </span>
+                  }
+
+                  @if (pinned) {
+                    <ds-icon
+                      class="pin-marker"
+                      name="pin"
+                      [size]="14" />
                   }
                 </td>
               }
@@ -122,10 +141,12 @@
       <span
         class="scale-ramp"
         aria-hidden="true">
-        @for (step of scaleSteps(); track step) {
+        @for (step of scaleSteps(); track step; let stepIndex = $index) {
           <span
             class="scale-step"
-            [style.background]="step">
+            [style.background]="step"
+            (pointerenter)="onStepEnter(stepIndex, $event)"
+            (pointerleave)="onStepLeave()">
           </span>
         }
       </span>

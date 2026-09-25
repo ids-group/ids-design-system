@@ -4,14 +4,20 @@
 @use '../../styles/chart-interactive' as chart-interactive;
 @use '../../styles/chart-motion' as chart-motion;
 
-// The RING fades, not the slices. Arcs share their edges, and two semi-transparent shapes butting
-// up along one show the background through the seam — which reads as the proportions shifting
-// slightly as the fade finishes. Compositing the ring first and fading the result cannot.
-@include chart-motion.fades-in('.ring-svg');
+// The RING arrives, not the slices. Arcs share their edges, and two semi-transparent shapes butting
+// up along one show the background through the seam, which reads as the proportions shifting
+// slightly as the fade finishes. Compositing the ring first and animating the result cannot.
+// `.ring-svg` is the outer `<svg>`, a CSS box, so the mixin's `fill-box` resolves to its content box
+// and the turn is about the ring's centre, not the viewBox origin.
+@include chart-motion.sweeps-in('.ring-svg');
 
-// The legend's colour chips are part of the same arrival — they name the arcs, so a chip that is
-// already solid while its arc is still fading reads as two objects instead of one.
-@include chart-motion.fades-in('.swatch');
+// The legend chips name the arcs, so they land once the ring has, never solid while it still turns.
+@include chart-motion.fades-in(
+  '.swatch',
+  var(--ds-motion-chart-mark-sweep-duration),
+  var(--ds-motion-chart-mark-detail-duration)
+);
+@include chart-motion.follows('.center', var(--ds-motion-chart-mark-sweep-duration));
 @include chart-frame.chart-frame;
 @include chart-frame.no-bounding-box-focus('.slice');
 @include chart-data-table.chart-data-table;
@@ -188,7 +194,8 @@
   '.legend-label'
 );
 
-.legend-item.interactive {
+.legend-item.interactive,
+.legend-item.pins {
   cursor: pointer;
 }
 

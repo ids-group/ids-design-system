@@ -10,6 +10,7 @@ import {
   input,
   numberAttribute,
   output,
+  signal,
 } from '@angular/core';
 import {
   CHART_SERIES_COLORS,
@@ -164,7 +165,14 @@ export class BarChartComponent {
    *  `LOCALE_ID`. */
   readonly valueFormat = input<ChartValueFormat | null>(null);
 
-  private readonly defaults = resolveChartDefaults(this);
+  /** Holds the clicked row and its tooltip in place, with a pin disc on it, until a second click,
+   *  Escape or a press outside releases it. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then
+   *  `true`. `rowClicked` fires either way - pinning is a state, not a handler. */
+  readonly pinOnClick = input<boolean | null, unknown>(null, {
+    transform: (value) => (value == null ? null : booleanAttribute(value)),
+  });
+
+  protected readonly defaults = resolveChartDefaults(this);
   protected readonly intl = inject(DS_INTL);
   readonly frameResolved = this.defaults.frame;
   readonly dataTableResolved = this.defaults.dataTable;
@@ -180,12 +188,6 @@ export class BarChartComponent {
   /** The row that was clicked, or activated with Enter or Space. Fires whether or not
    *  `interactive` is set. */
   readonly rowClicked = output<BarChartRow>();
-
-  /** Holds the hovered mark and its tooltip in place when it is clicked, until Escape or a press
-   *  outside releases it. Off by default: a click is already the drill-down hook, and a mark left
-   *  lit after the pointer has gone needs a reader who knows why it is lit. `rowClicked` fires
-   *  either way — pinning is a state, not a handler. */
-  readonly pinOnClick = input(false, { transform: booleanAttribute });
 
   /** Dims every OTHER mark while one is hovered or focused, so the reader's eye is held on the
    *  one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed
@@ -206,13 +208,13 @@ export class BarChartComponent {
     return highlighted !== null && highlighted !== key;
   }
 
-  /** Milliseconds between one mark's entrance and the next. `0`, the default, is no stagger at
-   *  all; `40` is the documented non-zero step. The total is capped, so a long series does not
-   *  crawl in. */
-  readonly staggerMs = input(0, { transform: numberAttribute });
+  /** Milliseconds between one row's entrance and the next, `40` by default; `0` turns the stagger
+   *  off. The whole spread stays inside `--ds-motion-chart-mark-stagger-budget`, so a long chart
+   *  narrows the step instead of crawling in. */
+  readonly staggerMs = input(40, { transform: numberAttribute });
 
   protected markStagger(index: number): string {
-    return `${staggerDelay(index, this.staggerMs())}ms`;
+    return `${staggerDelay(index, this.rows().length, this.staggerMs())}ms`;
   }
 
   /** Whether a hovered or focused row opens a tooltip. `'axis'` is not offered — a bar
@@ -226,8 +228,21 @@ export class BarChartComponent {
 
   private readonly tooltipLingerResolved = this.defaults.tooltipLingerMs;
 
-  protected readonly activeMark = chartActiveMark(() =>
-    this.tooltipLingerResolved(),
+  protected readonly activeMark = chartActiveMark(
+    () => this.tooltipLingerResolved(),
+    () => this.defaults.hoverDelayMs(),
+  );
+
+  protected readonly hoveredLabel = signal(-1);
+
+  /** Naming a row by its label fades the rest whether or not `dimOthers` is set, the way a legend
+   *  singles out its series. The row itself answers the pointer, so the fade waits out the same
+   *  hover delay as the tooltip. */
+  protected readonly dimsOthers = computed(
+    () =>
+      this.dimOthers() ||
+      (this.hoveredLabel() !== -1 &&
+        this.hoveredLabel() === this.activeMark.index()),
   );
 
   protected onMarkClick(
@@ -236,7 +251,7 @@ export class BarChartComponent {
     event: Event,
   ): void {
     this.rowClicked.emit(payload);
-    if (this.pinOnClick()) {
+    if (this.defaults.pinOnClick()) {
       this.activeMark.pin(index, event, '.fill');
     }
   }

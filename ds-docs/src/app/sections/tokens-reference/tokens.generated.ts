@@ -1967,6 +1967,11 @@ export const MOTION_DUR: readonly MotionRow[] = [
     "notes": "Long enter/exit (modals, drawers)."
   },
   {
+    "name": "--duration-slowest",
+    "value": "600ms",
+    "notes": ""
+  },
+  {
     "name": "--duration-loop-fast",
     "value": "700ms",
     "notes": "Indeterminate spinner rhythm."
@@ -2003,6 +2008,16 @@ export const MOTION_EASE: readonly MotionRow[] = [
     "name": "--ease-spring",
     "value": "cubic-bezier(.5,  1.5, .5,   1)",
     "notes": "Playful overshoot — sparingly."
+  },
+  {
+    "name": "--ease-emphasized-decelerate",
+    "value": "cubic-bezier(.05, .7, .1, 1)",
+    "notes": ""
+  },
+  {
+    "name": "--ease-settle",
+    "value": "linear(0, 0.09 6.3%, 0.265 12.5%, 0.444 18.8%, 0.596 25%, 0.715 31.3%, 0.803 37.5%, 0.867 43.8%, 0.911 50%, 0.942 56.3%, 0.962 62.5%, 0.976 68.8%, 0.986 75%, 0.992 81.3%, 0.996 87.5%, 0.998 93.8%, 1)",
+    "notes": ""
   }
 ];
 
@@ -2887,6 +2902,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "description": "",
     "tokens": [
       {
+        "name": "--ds-motion-chart-mark-grow-duration",
+        "value": "—",
+        "notes": ""
+      },
+      {
         "name": "--ds-bar-chart-band-color",
         "value": "var(--ds-chart-grid-line-color)",
         "notes": ""
@@ -3364,6 +3384,21 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": ""
       },
       {
+        "name": "--ds-motion-chart-mark-detail-duration",
+        "value": "—",
+        "notes": ""
+      },
+      {
+        "name": "--ds-motion-chart-mark-enter-easing",
+        "value": "—",
+        "notes": ""
+      },
+      {
+        "name": "--ds-motion-chart-mark-sweep-duration",
+        "value": "—",
+        "notes": ""
+      },
+      {
         "name": "--ds-chart-annotation-color",
         "value": "var(--text-primary)",
         "notes": "Fill of a dsSeriesAnnotation label, the reading a chart prints next to a mark so a screenshot carries what a tooltip would (default --text-primary)."
@@ -3440,12 +3475,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": ""
       },
       {
-        "name": "--ds-motion-chart-mark-enter-duration",
-        "value": "—",
-        "notes": ""
-      },
-      {
-        "name": "--ds-motion-chart-mark-enter-easing",
+        "name": "--ds-motion-chart-mark-grow-easing",
         "value": "—",
         "notes": ""
       }
@@ -4421,6 +4451,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "selector": ".funnel-chart",
     "description": "",
     "tokens": [
+      {
+        "name": "--ds-motion-chart-mark-enter-duration",
+        "value": "—",
+        "notes": ""
+      },
       {
         "name": "--ds-funnel-chart-stage-height",
         "value": "44px",
@@ -8524,6 +8559,11 @@ export const NEW_TOKENS: readonly NewToken[] = [
     "name": "--ds-field-focus-shadow",
     "value": "var(--focus-field)",
     "kind": "color"
+  },
+  {
+    "name": "--ds-motion-chart-mark-stagger-budget",
+    "value": "var(--duration-slow)",
+    "kind": "other"
   },
   {
     "name": "--ds-motion-check-enter-duration",

@@ -4,10 +4,16 @@
 @use '../../styles/chart-frame' as chart-frame;
 @use '../../styles/chart-interactive' as chart-interactive;
 @use '../../styles/chart-motion' as chart-motion;
-@include chart-motion.fades-in('.stage');
+@include chart-motion.enters('.stage', ds-chart-mark-rise);
 
-// The stage table's colour chips name the bands, so they arrive with them.
-@include chart-motion.fades-in('.swatch');
+.stage {
+  transform-box: fill-box;
+}
+
+@include chart-motion.leaves('.stage');
+
+// A row names its band, swatch included, so it rises in once that band has arrived.
+@include chart-motion.follows('.stage-table tbody > tr > *', var(--ds-motion-chart-mark-enter-duration));
 @include chart-frame.chart-frame;
 @include chart-frame.no-bounding-box-focus('.stage');
 @include chart-data-table.chart-data-table;
@@ -49,6 +55,9 @@
 }
 
 svg {
+  // The viewBox stretches to the stage count, so a pixel of rise would stretch with it.
+  --_chart-rise-distance: 10%;
+
   display: block;
   inline-size: 100%;
 }

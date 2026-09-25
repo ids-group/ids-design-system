@@ -1,4 +1,13 @@
 <figure class="scatter-chart">
+  @if (activeMark.pinned()) {
+    <button
+      class="pin-reset"
+      type="button"
+      (click)="activeMark.release()">
+      {{ intl().chart.unpin }}
+    </button>
+  }
+
   @if (caption()) {
     <figcaption>
       {{ caption() }}
@@ -28,6 +37,7 @@
       [attr.role]="interactive() ? 'group' : 'img'"
       [attr.aria-label]="accessibleName()"
       [dsChartTooltip]="tooltipContext()"
+      [dsChartTooltipPinned]="activeMark.pinned()"
       [dsChartTooltipOrigin]="activeMark.origin()">
       @for (tick of yTicks(); track tick.value) {
         <line
@@ -73,13 +83,19 @@
           "
           [style.--_scatter-series-color]="entry.color"
           (pointerover)="onPointOver($event)"
-          (click)="onPointActivate($event)"
+          (pointerout)="onPointOut($event)"
+          (click)="onPointPress($event)"
           (keydown.enter)="onPointActivate($event)"
           (keydown.space)="onPointActivate($event)">
           @for (mark of entry.points; track mark.key; let index = $index) {
             <circle
               class="point"
               [class.interactive]="interactive()"
+              [class.pins]="defaults.pinOnClick()"
+              [class.is-active]="activeMark.index() === start + index"
+              [class.is-pinned]="
+                activeMark.pinned() && activeMark.index() === start + index
+              "
               [attr.cx]="mark.cx"
               [attr.cy]="mark.cy"
               [attr.role]="interactive() ? 'button' : null"
@@ -90,6 +106,14 @@
               " />
           }
         </g>
+      }
+
+      @if (pinnedPoint(); as point) {
+        <svg:g
+          dsChartPinMarker
+          [attr.transform]="
+            'translate(' + point.cx + ',' + (point.cy - pinLift) + ')'
+          " />
       }
 
       @if (yLabel()) {
