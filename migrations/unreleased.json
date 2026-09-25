@@ -149,7 +149,7 @@
     {
       "id": "exported-class-members-grew",
       "kind": "behavior",
-      "old": "BarChartComponent, ChartComponent, ColumnChartComponent, ColumnSeriesComponent, LineChartComponent, LineSeriesComponent, FunnelChartComponent, HeatmapChartComponent, PieChartComponent, ScatterChartComponent, WaterfallChartComponent, PaginationComponent, TableComponent, ChartLegendComponent, ChartTooltipPanelComponent, WaterfallMarksComponent",
+      "old": "BarChartComponent, ChartComponent, ColumnChartComponent, ColumnSeriesComponent, LineChartComponent, LineSeriesComponent, FunnelChartComponent, HeatmapChartComponent, PieChartComponent, ScatterChartComponent, WaterfallChartComponent, PaginationComponent, TableComponent, TextareaComponent, ChartLegendComponent, ChartTooltipPanelComponent, WaterfallMarksComponent",
       "new": null,
       "surface": "typescript",
       "action": "Build after upgrading, rename or mark `override` every member of yours the compiler reports as colliding, and delete an override whose base member is gone.",
@@ -170,6 +170,7 @@
         "extends WaterfallChartComponent",
         "extends PaginationComponent",
         "extends TableComponent",
+        "extends TextareaComponent",
         "extends ChartLegendComponent",
         "extends ChartTooltipPanelComponent",
         "extends WaterfallMarksComponent"
@@ -188,12 +189,13 @@
         "extends WaterfallChartComponent",
         "extends PaginationComponent",
         "extends TableComponent",
+        "extends TextareaComponent",
         "extends ChartLegendComponent",
         "extends ChartTooltipPanelComponent",
         "extends WaterfallMarksComponent"
       ],
       "verify": "The app builds with no TS4114 or TS2416 against a DS base class, and no subclass keeps a member named after a removed one.",
-      "note": "The chart components gained the pinning, hover-delay and label-highlight members, except ColumnChartComponent and LineChartComponent, whose only change is the type of pinOnClick; PaginationComponent gained empty, TableComponent gained emptyCell and emptyCellText; five protected members of ColumnSeriesComponent are gone (pinDiscRadius, pinGlyph, pinGlyphOffset, pinGlyphSize, slotStepPx). The compiler names every collision."
+      "note": "The chart components gained the pinning, hover-delay and label-highlight members, except ColumnChartComponent and LineChartComponent, whose only change is the type of pinOnClick; PaginationComponent gained empty, TableComponent gained emptyCell and emptyCellText, TextareaComponent gained maxLengthMode; five protected members of ColumnSeriesComponent are gone (pinDiscRadius, pinGlyph, pinGlyphOffset, pinGlyphSize, slotStepPx). The compiler names every collision."
     },
     {
       "id": "pagination-range-receives-zeros-when-empty",
@@ -244,6 +246,7 @@
     }
   ],
   "informational": [
+    "ds-textarea gains maxLengthMode: 'hard' (default) keeps the native maxlength, 'soft' lets the text run past maxLength with a red counter, the over-limit characters highlighted and aria-invalid set, without blocking a submit. Both count value.length, whitespace included. New type TextareaMaxLengthMode and DS_INTL.field.overLimit(excess).",
     "New chart entrance tokens: --ds-motion-chart-mark-grow-duration, --ds-motion-chart-mark-grow-easing, --ds-motion-chart-mark-sweep-duration and --ds-motion-chart-mark-detail-duration, on the new primitives --duration-slowest, --ease-emphasized-decelerate and --ease-settle.",
     {
       "text": "Chart entrances are staged: columns, bars and waterfall steps grow over 600ms with no fade, a solid line draws on, the pie ring turns in, funnel stages rise, points and markers settle, heat map cells fade in by column, and value labels, markers and legend swatches follow their mark. Under reduced motion every mark appears at once.",
