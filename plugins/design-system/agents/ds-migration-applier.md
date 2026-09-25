@@ -92,12 +92,24 @@ reporting applied; `note` is the why, not an instruction.** An old manifest item
   `styles/`) — at apply time it usually still holds the version being migrated FROM. Both are
   read-only.
 
+## Feedback
+
+Add an entry to `feedback` when an item misled the edit: an `action` that contradicts its `map`,
+`new` or `note`, a `restore` or replacement absent from the `v<V>` tree, finder hits that sit on
+the wrong element, an item whose correct application needs a step it does not name, or
+instructions here that contradicted each other or missed a case you met. Each entry is
+`{ target, kind, severity, summary, evidence, proposal }` as defined in the DS repo's
+`feedback/README.md`; `target` is `manifest:<V>#<itemId>` or `agent:ds-migration-applier`.
+`evidence` is mandatory: file:line in the consumer or in a tag tree. Never file feedback about the
+consumer's own code quality.
+
 ## Output
 
 Return ONLY a fenced ```json block — one object per file (an array when you were given a batch):
 
 [ { "file": "<path>", "applied": ["<item-id>"], "modes": { "<item-id>": "replaced | inserted | no-op" },
-"needsReview": [ { "id": "<item-id>", "why": "<reason>", "locs": ["<path:line> of each occurrence left in place"] } ] } ]
+"needsReview": [ { "id": "<item-id>", "why": "<reason>", "locs": ["<path:line> of each occurrence left in place"] } ],
+"feedback": [] } ]
 
 `modes` says, per item id: `replaced` (edit at a matched site) / `inserted` (snippet placed at the
 described location — `scss-api` / `code-add` only) / `no-op` (an `action` of "None, unless …"

@@ -58,6 +58,17 @@ comes from the item; don't assume anything about particular components.
   though the literal `match` is the binding rather than a value.
 - Do NOT edit anything. Do NOT judge whether the migration is correct — only locate usages.
 
+## Feedback
+
+Add an entry to `feedback` when an item misled the search: a locator that matches a different
+element or feature than the item means, a hit outside the declared `surface`, a `surface: "none"`
+item that has hits, every locator dead while the feature plainly exists under another spelling, or
+instructions here that contradicted each other or missed a case you met. Each entry is
+`{ target, kind, severity, summary, evidence, proposal }` as defined in the DS repo's
+`feedback/README.md`; `target` is `manifest:<V>#<itemId>` or `agent:ds-usage-finder`. `evidence` is
+mandatory: the consumer file:line, or the locator and its match count. Never file feedback about the
+consumer's own code quality.
+
 ## Output
 
 Return ONLY a fenced ```json block mapping each item id to a list of hits:
@@ -66,12 +77,14 @@ Return ONLY a fenced ```json block mapping each item id to a list of hits:
 { "loc": "<path:line>", "match": "<binding text>", "el": "<element>", "dynamic": true },
 { "loc": "<path:line>", "match": "<text>", "el": null, "outOfSurface": true } ],
 "<zero-hit-item-id>": { "hits": [], "searched": ["projects/**/*.ts", "projects/**/*.html", "projects/**/*.scss"],
-"rawMatches": { "<each locator string>": <match count BEFORE element-scoping/filtering> } } }
+"rawMatches": { "<each locator string>": <match count BEFORE element-scoping/filtering> } },
+"feedback": [] }
 
 `loc` is `path:line`; `match` is the exact matched text; `el` is the enclosing element (recorded so
 the scoping is auditable — non-target hits are already filtered out, see above) or null when the
 item isn't element-scoped; `dynamic: true` marks property bindings; `outOfSurface: true` marks a
-hit outside the item's declared `surface`.
+hit outside the item's declared `surface`. The key `feedback` is reserved for the feedback entries
+and is never an item id.
 Zero hits ALWAYS use the `{ "hits": [], "searched": [...], "rawMatches": {...} }` form —
 `rawMatches` carries each locator's pre-filter match count, which is what lets the orchestrator
 tell "the feature is present but the old value isn't" (some counts > 0) from "no locator matches
