@@ -250,7 +250,12 @@ export class ColumnSeriesComponent implements OnDestroy {
     listenForMarkFocus(
       host,
       (event, hit) => this.onMarkFocus(event, hit),
-      () => this.activeMark.leave(),
+      () => {
+        this.activeMark.leave();
+        if (this.scales.cursorOn?.()) {
+          this.scales.setActiveIndex(-1);
+        }
+      },
     );
     let answeringLabel = false;
     effect(() => {
@@ -434,6 +439,10 @@ export class ColumnSeriesComponent implements OnDestroy {
 
   private onMarkFocus(event: FocusEvent, hit: MarkHit): void {
     this.roving.focus(hit.index);
+    // Under the category cursor focus names the category, as a pointer anywhere in its band does.
+    if (this.scales.cursorOn?.()) {
+      this.scales.setActiveIndex(hit.index);
+    }
     this.activeMark.enter(hit.index, event, this.tooltipMark(), hit.element);
   }
 

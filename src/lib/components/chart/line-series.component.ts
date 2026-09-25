@@ -232,6 +232,7 @@ export class LineSeriesComponent implements OnDestroy {
       () => {
         this.focusedSeries.set(null);
         this.activeMark.leave();
+        this.scales.setActiveIndex(-1);
       },
     );
   }
