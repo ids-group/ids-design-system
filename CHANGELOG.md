@@ -68,6 +68,10 @@
   The default wording returns `Showing 0 of 0`, so an app that never overrides the range text has
   nothing to do.
 
+- **`DsIntl.field` gains the required `overLimit: (excess: number) => string`.** Code that declares a
+  complete `DsIntl` object of its own, rather than a `DsIntlOverrides` passed to `provideDsIntl`, adds
+  it or fails to compile.
+
 - **Subclassing one of these breaks on a name collision.** `BarChartComponent`, `ChartComponent`,
   `ColumnSeriesComponent`, `LineSeriesComponent`, `FunnelChartComponent`, `HeatmapChartComponent`,
   `PieChartComponent`, `ScatterChartComponent` and `WaterfallChartComponent` gained the pinning,

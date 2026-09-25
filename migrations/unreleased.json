@@ -198,6 +198,28 @@
       "note": "The chart components gained the pinning, hover-delay and label-highlight members, except ColumnChartComponent and LineChartComponent, whose only change is the type of pinOnClick; PaginationComponent gained empty, TableComponent gained emptyCell and emptyCellText, TextareaComponent gained maxLengthMode; five protected members of ColumnSeriesComponent are gone (pinDiscRadius, pinGlyph, pinGlyphOffset, pinGlyphSize, slotStepPx). The compiler names every collision."
     },
     {
+      "id": "intl-field-over-limit-required",
+      "kind": "behavior",
+      "old": "DsIntl",
+      "new": null,
+      "surface": "typescript",
+      "action": "None, unless your code builds a complete DsIntl object of its own: add field.overLimit, a function of the excess character count returning the phrase.",
+      "appliesWhen": "Only an object or signal typed as the full DsIntl, not as DsIntlOverrides. provideDsIntl with a partial override, and every app that leaves DS_INTL alone, is unaffected.",
+      "pitfall": "An object that spreads DS_INTL_DEFAULTS.field compiles, but a field section written out key by key without the spread fails with TS2741 on overLimit.",
+      "restore": null,
+      "searchHints": [
+        "DsIntl",
+        "DS_INTL",
+        "hidePassword"
+      ],
+      "detect": [
+        ": DsIntl =",
+        "Signal<DsIntl>",
+        "hidePassword:"
+      ],
+      "verify": "The app builds, and every complete DsIntl object it declares has field.overLimit."
+    },
+    {
       "id": "pagination-range-receives-zeros-when-empty",
       "kind": "behavior",
       "old": "pagination.range",
