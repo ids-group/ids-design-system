@@ -36,7 +36,8 @@ export class PaginationComponent {
   readonly currentPage = model<number>(1);
   /** Preset choices offered in the page-size dropdown. */
   readonly pageSizeOptions = input<number[]>([10, 25, 50, 100]);
-  /** Shows the "Showing X–Y of Z" range label. */
+  /** Shows the range label, `DS_INTL.pagination.range`: "Showing X-Y of Z", or "Showing 0 of 0"
+   *  on an empty list. */
   readonly showLabel = input(true, { transform: booleanAttribute });
   /** Shows the rows-per-page dropdown. Turn it off for a screen with a fixed
    *  page size — otherwise the control offers a choice the host won't honour. */

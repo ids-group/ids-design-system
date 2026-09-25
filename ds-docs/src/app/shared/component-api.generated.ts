@@ -6715,7 +6715,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "true",
         "required": false,
-        "description": "Shows the \"Showing X–Y of Z\" range label."
+        "description": "Shows the range label, `DS_INTL.pagination.range`: \"Showing X-Y of Z\", or \"Showing 0 of 0\" on an empty list."
       },
       {
         "name": "showPageSize",

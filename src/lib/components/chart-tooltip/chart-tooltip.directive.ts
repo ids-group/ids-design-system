@@ -36,8 +36,7 @@ const TOUCH_GAP_PX = 48;
 const VIEWPORT_MARGIN_PX = 12;
 
 // Four fallbacks are what make the panel flip out of a small dashboard card rather than be
-// clipped by it. Above first, held or not: the Unpin control sits at the plot's bottom edge, clear
-// of a panel that opens upward.
+// clipped by it. Above first, held or not: the panel opens over the mark it is about.
 function positionsFor(gap: number): ConnectedPosition[] {
   return [
     {

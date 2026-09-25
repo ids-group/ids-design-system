@@ -58,6 +58,7 @@ providers: [
     locale: 'en-GB',                      // numbers and dates: charts, date picker, file sizes
     control: { size: 'sm' },              // button, field, picker, checkbox…
     pagination: { size: 'md', layout: 'spread' }, // every pager, ds-table's footer included
+    chart: { pinOnClick: false, hoverDelayMs: 0 }, // a click holds no mark, a pointer is answered at once
     card: { elevation: 'raised', padding: 'lg' },
     table: { stickyScrollbar: true, bordered: true },
     icon: { size: 18 },
