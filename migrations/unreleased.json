@@ -129,7 +129,7 @@
     {
       "id": "exported-class-members-grew",
       "kind": "behavior",
-      "old": "BarChartComponent, ChartComponent, ColumnChartComponent, ColumnSeriesComponent, LineChartComponent, LineSeriesComponent, FunnelChartComponent, HeatmapChartComponent, PieChartComponent, ScatterChartComponent, PaginationComponent, ChartLegendComponent, ChartTooltipPanelComponent, WaterfallMarksComponent",
+      "old": "BarChartComponent, ChartComponent, ColumnChartComponent, ColumnSeriesComponent, LineChartComponent, LineSeriesComponent, FunnelChartComponent, HeatmapChartComponent, PieChartComponent, ScatterChartComponent, PaginationComponent, TableComponent, ChartLegendComponent, ChartTooltipPanelComponent, WaterfallMarksComponent",
       "new": null,
       "surface": "typescript",
       "action": "Build after upgrading, rename or mark `override` every member of yours the compiler reports as colliding, and delete an override whose base member is gone.",
@@ -148,6 +148,7 @@
         "extends PieChartComponent",
         "extends ScatterChartComponent",
         "extends PaginationComponent",
+        "extends TableComponent",
         "extends ChartLegendComponent",
         "extends ChartTooltipPanelComponent",
         "extends WaterfallMarksComponent"
@@ -164,12 +165,13 @@
         "extends PieChartComponent",
         "extends ScatterChartComponent",
         "extends PaginationComponent",
+        "extends TableComponent",
         "extends ChartLegendComponent",
         "extends ChartTooltipPanelComponent",
         "extends WaterfallMarksComponent"
       ],
       "verify": "The app builds with no TS4114 or TS2416 against a DS base class, and no subclass keeps a member named after a removed one.",
-      "note": "The chart components gained the pinning, hover-delay and label-highlight members, PaginationComponent gained empty; five protected members of ColumnSeriesComponent are gone (pinDiscRadius, pinGlyph, pinGlyphOffset, pinGlyphSize, slotStepPx). The compiler names every collision."
+      "note": "The chart components gained the pinning, hover-delay and label-highlight members, PaginationComponent gained empty, TableComponent gained emptyCell and emptyCellText; five protected members of ColumnSeriesComponent are gone (pinDiscRadius, pinGlyph, pinGlyphOffset, pinGlyphSize, slotStepPx). The compiler names every collision."
     },
     {
       "id": "pagination-range-receives-zeros-when-empty",
@@ -205,8 +207,8 @@
         "template",
         "typescript"
       ],
-      "action": "None, unless you bind [rangeAnnouncement] on a paged ds-table: return your empty wording, or an empty string to stay silent, when total is 0.",
-      "appliesWhen": "Only a paged ds-table (pageSize set) with its own rangeAnnouncement. A table without pageSize announces no range, and one without the binding follows DS_INTL.pagination.range.",
+      "action": "None, unless you bind [rangeAnnouncement] on a paged ds-table whose empty state has no text: return your empty wording, or an empty string to stay silent, when total is 0.",
+      "appliesWhen": "Only a paged ds-table (pageSize set) with its own rangeAnnouncement and no text in its [empty] content or emptyTemplate. A table with empty-state text announces that text, a table without pageSize announces no range, and one without the binding follows DS_INTL.pagination.range.",
       "pitfall": "Nothing errors: a function that formats first and last unconditionally is now called with (0, 0, 0) when a filter or new data empties the table, and a screen reader hears a range of 0 to 0.",
       "restore": null,
       "searchHints": [
@@ -216,7 +218,7 @@
         "[rangeAnnouncement]=",
         "(first: number, last: number, total: number)"
       ],
-      "verify": "A paged ds-table filtered to no rows announces your empty wording once, or nothing where your function returns an empty string."
+      "verify": "A paged ds-table filtered to no rows announces its empty-state text once; with no empty-state text it announces your empty wording, or nothing where your function returns an empty string."
     }
   ],
   "informational": [

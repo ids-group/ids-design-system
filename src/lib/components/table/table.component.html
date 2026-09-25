@@ -202,6 +202,7 @@
         } @else if (showsEmptyRow()) {
           <tr>
             <td
+              #emptyCell
               class="empty"
               [attr.colspan]="expandedColspan()">
               @if (emptyTemplate()) {

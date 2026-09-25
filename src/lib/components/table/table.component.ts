@@ -243,9 +243,10 @@ export class TableComponent<T extends object> {
   );
   /**
    * Wording for the row-range announcement, so it can be translated. Receives
-   * the 1-based first and last row on screen and the total, or `(0, 0, 0)` when
-   * a paged table has no rows; return an empty string to say nothing. Unset
-   * falls back to `DS_INTL.pagination.range`.
+   * the 1-based first and last row on screen and the total. A paged table with
+   * no rows announces its empty state's text instead, and calls this with
+   * `(0, 0, 0)` only when that state has none; return an empty string to say
+   * nothing. Unset falls back to `DS_INTL.pagination.range`.
    */
   readonly rangeAnnouncement = input<
     ((first: number, last: number, total: number) => string) | null
@@ -535,6 +536,9 @@ export class TableComponent<T extends object> {
   protected readonly layout = inject<DsTableLayout<T>>(DsTableLayout);
   protected readonly intl = inject(DS_INTL);
 
+  private readonly emptyCell = viewChild<ElementRef<HTMLElement>>('emptyCell');
+  // null until the empty row has rendered, so the live region never speaks a fallback it is about to replace.
+  private readonly emptyCellText = signal<string | null>(null);
   private readonly toolbarAnchor = viewChild('toolbarAnchor', {
     read: ViewContainerRef,
   });
@@ -948,7 +952,12 @@ export class TableComponent<T extends object> {
     const rows = this.displayData().length;
     const total = this.total() ?? this.filteredData().length;
     if (rows === 0) {
-      return total === 0 ? this.rangeAnnouncementResolved()(0, 0, 0) : '';
+      const emptyText = this.emptyCellText();
+      if (total !== 0 || emptyText === null) {
+        return '';
+      }
+
+      return emptyText || this.rangeAnnouncementResolved()(0, 0, 0);
     }
     const first = (this.page() - 1) * size + 1;
 
@@ -1187,6 +1196,10 @@ export class TableComponent<T extends object> {
       const observer = new ResizeObserver(() => this.publishHeadHeight(head));
       observer.observe(head);
       onCleanup(() => observer.disconnect());
+    });
+    afterRenderEffect(() => {
+      const cell = this.emptyCell()?.nativeElement;
+      this.emptyCellText.set(cell ? (cell.textContent ?? '').trim() : null);
     });
     afterRenderEffect(() => {
       this.isOverlayLoading();
