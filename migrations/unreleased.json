@@ -129,7 +129,7 @@
     {
       "id": "exported-class-members-grew",
       "kind": "behavior",
-      "old": "BarChartComponent, ChartComponent, ColumnChartComponent, ColumnSeriesComponent, LineChartComponent, LineSeriesComponent, FunnelChartComponent, HeatmapChartComponent, PieChartComponent, ScatterChartComponent, ChartLegendComponent, ChartTooltipPanelComponent",
+      "old": "BarChartComponent, ChartComponent, ColumnChartComponent, ColumnSeriesComponent, LineChartComponent, LineSeriesComponent, FunnelChartComponent, HeatmapChartComponent, PieChartComponent, ScatterChartComponent, ChartLegendComponent, ChartTooltipPanelComponent, WaterfallMarksComponent",
       "new": null,
       "surface": "typescript",
       "action": "Build after upgrading, rename or mark `override` every member of yours the compiler reports as colliding, and delete an override whose base member is gone.",
@@ -148,7 +148,8 @@
         "extends PieChartComponent",
         "extends ScatterChartComponent",
         "extends ChartLegendComponent",
-        "extends ChartTooltipPanelComponent"
+        "extends ChartTooltipPanelComponent",
+        "extends WaterfallMarksComponent"
       ],
       "detect": [
         "extends BarChartComponent",
@@ -162,7 +163,8 @@
         "extends PieChartComponent",
         "extends ScatterChartComponent",
         "extends ChartLegendComponent",
-        "extends ChartTooltipPanelComponent"
+        "extends ChartTooltipPanelComponent",
+        "extends WaterfallMarksComponent"
       ],
       "verify": "The app builds with no TS4114 or TS2416 against a DS base class, and no subclass keeps a member named after a removed one.",
       "note": "The chart components gained the pinning, hover-delay and label-highlight members; five protected members of ColumnSeriesComponent are gone (pinDiscRadius, pinGlyph, pinGlyphOffset, pinGlyphSize, slotStepPx). The compiler names every collision."
