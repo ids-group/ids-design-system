@@ -57,7 +57,8 @@ export class TooltipDirective implements OnDestroy {
    *
    *  With this on, `dsTooltip` may be left empty and the host's own text is disclosed. That is
    *  what makes it usable on projected content, where the component holding the tip cannot know
-   *  what it was handed. */
+   *  what it was handed. A tip whose text the host already contains sets no `aria-describedby`;
+   *  one given a `dsTooltip` that says more than the host does describes it as usual. */
   readonly dsTooltipWhenClipped = input(false, { transform: booleanAttribute });
 
   private tipText(): string {
@@ -67,6 +68,19 @@ export class TooltipDirective implements OnDestroy {
     }
 
     return (this.host.nativeElement.textContent ?? '').trim();
+  }
+
+  /** A clipped host's full text is already in the DOM, so a screen reader has it; describing
+   *  the element with it again would announce it twice. */
+  private disclosesOwnText(text: string): boolean {
+    if (!this.dsTooltipWhenClipped()) {
+      return false;
+    }
+    const collapse = (value: string) => value.replace(/\s+/g, ' ').trim();
+
+    return collapse(this.host.nativeElement.textContent ?? '').includes(
+      collapse(text),
+    );
   }
 
   private ref: OverlayRef | null = null;
@@ -99,12 +113,8 @@ export class TooltipDirective implements OnDestroy {
     afterNextRender(() => this.listenToFocusableAncestor());
   }
 
-  /**
-   * A clipped host that cannot take focus (a label inside a button, a cell of a clickable row) is
-   * disclosed when keyboard focus lands on its nearest focusable ancestor. `:focus-visible` keeps a
-   * click, which focuses the ancestor too, from opening it. Of several clipped hosts sharing one
-   * ancestor only the first in document order opens, so their panels never stack on each other.
-   */
+  /** `:focus-visible` keeps a click, which focuses the ancestor too, from opening it. Only the
+   *  first clipped host of one ancestor opens, so two panels never stack. */
   private listenToFocusableAncestor(): void {
     const host: HTMLElement = this.host.nativeElement;
     if (!this.dsTooltipWhenClipped() || host.matches(FOCUSABLE)) {
@@ -241,9 +251,13 @@ export class TooltipDirective implements OnDestroy {
     prepareOverlayEnter(this.ref, this.host.nativeElement, positionStrategy);
 
     const cmpRef = this.ref.attach(new ComponentPortal(TooltipPanelComponent));
-    cmpRef.setInput('text', this.tipText());
+    const text = this.tipText();
+    cmpRef.setInput('text', text);
     cmpRef.setInput('placement', placement);
     cmpRef.setInput('panelId', this.tipId);
+    if (this.disclosesOwnText(text)) {
+      return;
+    }
     const described = this.focusedTarget ?? this.host.nativeElement;
     this.describedElement = described;
     const existing = described.getAttribute('aria-describedby');
