@@ -82,6 +82,21 @@
     and names every series at it.
   </p>
 
+  <p class="block-desc t-s">
+    Under the cursor the category's band is the one hover area: the pointer
+    anywhere in it opens the band and the tooltip together, on a plot of one
+    mark as on a composed one, and the gap between two bands answers nothing. A
+    mark inside the band opens no panel of its own on hover and does not pin on
+    click. Focus opens the category's band and its panel, naming every mark's
+    reading there,
+    <code class="t-mono-inline">
+      pointClicked
+    </code> still fires, and
+    <code class="t-mono-inline">
+      cursorPin
+    </code> holds the category.
+  </p>
+
   <ds-chart
     cursor="category"
     caption="Hover the plot, not a mark"
@@ -292,17 +307,33 @@
       maxSecondary
     </code> pins the second axis's
     ceiling the way <code class="t-mono-inline"> max </code> pins the first, so
-    two plots read against each other do not rescale under one another.
+    two plots read against each other do not rescale under one another. A press
+    holds the category cursor where it is, by default, with a pin disc at the
+    foot of its band: press again, Escape, or a press outside or between two
+    bands to let go. Set
     <code class="t-mono-inline">
-      cursorPin
-    </code> holds the category cursor
-    where it is: press once to hold, press again, Escape, or a press outside to
-    let go.
+      cursorPin="false"
+    </code> to keep it moving with the pointer. A composed chart draws no
+    Unpin control;
+    <code class="t-mono-inline">
+      cursorPinned()
+    </code> and
+    <code class="t-mono-inline">
+      releaseCursor()
+    </code> let you render your own.
+  </p>
+
+  <p class="block-desc t-s">
+    Without the category cursor, resting the pointer on a category's label on
+    the axis answers for its column: the column's tooltip opens and every other
+    column dims, whatever
+    <code class="t-mono-inline">
+      dimOthers
+    </code> says, the way a legend entry singles out its series.
   </p>
 
   <ds-chart
     cursor="category"
-    cursorPin
     axisLabel="Sessions"
     secondaryAxisLabel="Average order value, GBP"
     [categories]="orderMonths"
@@ -464,7 +495,9 @@
       stacked
     </code> separates a piled band from the
     one under it, <code class="t-mono-inline"> pinOnClick </code> holds a
-    reading, and <code class="t-mono-inline"> tooltipAnchor </code> decides
+    reading on a plot without the category cursor (under the cursor the
+    container's <code class="t-mono-inline"> cursorPin </code> holds the whole
+    category instead), and <code class="t-mono-inline"> tooltipAnchor </code> decides
     whether an <code class="t-mono-inline"> 'axis' </code> panel hangs over the
     highest reading or follows the pointer.
   </p>
@@ -497,7 +530,6 @@
       curve="smooth"
       tooltip="axis"
       dimOthers
-      pinOnClick
       [data]="trafficSeries"
       [highlighted]="singledOut()"
       [patterns]="seriesDashes"

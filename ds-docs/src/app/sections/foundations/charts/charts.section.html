@@ -121,6 +121,28 @@
   </table>
 
   <h3 class="block-title t-h4">
+    How a chart arrives
+  </h3>
+
+  <p class="block-desc t-s">
+    Marks arrive in stages. Columns, bars and waterfall steps grow out of their
+    baseline over
+    <code class="t-mono-inline">
+      --ds-motion-chart-mark-grow-duration
+    </code> (600ms), a ring turns in and a line draws on over
+    <code class="t-mono-inline">
+      --ds-motion-chart-mark-sweep-duration
+    </code> (600ms), and value labels and markers follow over
+    <code class="t-mono-inline">
+      --ds-motion-chart-mark-detail-duration
+    </code> (180ms). A mark that fades or settles in place takes
+    <code class="t-mono-inline">
+      --ds-motion-chart-mark-enter-duration
+    </code> (400ms). A series' arrivals spread across 260ms, however many marks it has. Under reduced motion every mark
+    appears at once.
+  </p>
+
+  <h3 class="block-title t-h4">
     Reference charts
   </h3>
 
@@ -510,8 +532,20 @@
   </p>
 
   <p class="block-desc t-s">
-    The panel goes when the pointer does — one left behind sits over the plot
-    you have moved on to.
+    A chart answers a resting pointer, not a passing one: the tooltip, the
+    highlight and the dimming wait
+    <code class="t-mono-inline">
+      DS_CONFIG.chart.hoverDelayMs
+    </code>, <code class="t-mono-inline"> 500 </code> by default, before they
+    show. Once the chart has answered, the next mark answers at once until the
+    pointer leaves the chart. Focus, a tap and a click that pins answer at once.
+    Set it to <code class="t-mono-inline"> 0 </code> to answer at once, which is
+    also what a test that hovers and asserts in the same tick needs.
+  </p>
+
+  <p class="block-desc t-s">
+    An unheld panel goes when the pointer does - one left behind sits over the
+    plot you have moved on to.
     <code class="t-mono-inline">
       tooltipLingerMs
     </code> is how long it stays
@@ -529,23 +563,35 @@
   </p>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      pinOnClick
-    </code> goes further on all five
-    charts: clicking a mark holds it, its tooltip, and — with
+    A click on a mark holds it by default, on every chart: the mark keeps its
+    tooltip, its highlight and, with
     <code class="t-mono-inline">
       dimOthers
-    </code> — the dimming of everything
-    else, so a comparison survives the pointer leaving the chart entirely.
+    </code>, the dimming of everything else, so a comparison survives the
+    pointer leaving the chart entirely. A pin disc marks the held mark, and
+    every chart but a composed
+    <code class="t-mono-inline">
+      ds-chart
+    </code> shows an Unpin control at its top end. A second click,
     <kbd>
       Esc
-    </kbd> or a press outside releases it, and the click output fires
-    either way, because pinning is a state rather than a handler. On
+    </kbd> or a press elsewhere releases it, and the click output fires either
+    way, because pinning is a state rather than a handler. A key never
+    pins: <kbd>Enter</kbd> and <kbd>Space</kbd> on a focused mark fire its click
+    output and hold nothing. Set
+    <code class="t-mono-inline">
+      pinOnClick="false"
+    </code> on one chart
+    (<code class="t-mono-inline">cursorPin="false"</code> on
+    <code class="t-mono-inline">
+      ds-chart
+    </code>), or
+    <code class="t-mono-inline">
+      DS_CONFIG.chart.pinOnClick: false
+    </code> for an app, to keep marks unheld. On
     <code class="t-mono-inline">
       ds-line-chart
-    </code> the pin hangs off the
-    data markers, so <kbd> Enter </kbd> and <kbd> Space </kbd> pin from the
-    keyboard too.
+    </code> a press holds the whole category under the cursor.
   </p>
 
   <h3 class="block-title t-h4">
@@ -629,7 +675,7 @@
   </h3>
 
   <p class="block-desc t-s">
-    Four things are the same decision for every chart in an app rather than a
+    Six things are the same decision for every chart in an app rather than a
     choice per plot, so they resolve through
     <code class="t-mono-inline">
       DS_CONFIG
@@ -642,9 +688,17 @@
     behind a plot have a non-visual route is an accessibility policy),
     <code class="t-mono-inline">
       frame
-    </code> (whether charts live inside cards)
-    and <code class="t-mono-inline">tooltipLingerMs</code> (a property of what
-    the app puts in its tooltips). Precedence is the input, then the config,
+    </code> (whether charts live inside cards),
+    <code class="t-mono-inline">
+      tooltipLingerMs
+    </code> (a property of what the app puts in its tooltips),
+    <code class="t-mono-inline">
+      pinOnClick
+    </code> (whether a click holds a mark) and
+    <code class="t-mono-inline">
+      hoverDelayMs
+    </code> (how long a resting pointer waits before a chart answers it, which
+    has no per-chart input). Precedence is the input, then the config,
     then the built-in default — so binding one on a single chart still wins. The
     empty and error copy is wording, so it lives in
     <code class="t-mono-inline">
@@ -661,7 +715,13 @@
   <pre class="t-mono"><code>providers: [
   provideDsConfig(&#123;
     locale: 'de-DE',
-    chart: &#123; dataTable: 'visible', frame: 'none', tooltipLingerMs: 140 &#125;,
+    chart: &#123;
+      dataTable: 'visible',
+      frame: 'none',
+      tooltipLingerMs: 140,
+      pinOnClick: false,
+      hoverDelayMs: 0,
+    &#125;,
   &#125;),
   provideDsIntl(&#123; chart: &#123; empty: 'Нет данных', error: 'Не удалось загрузить' &#125; &#125;),
 ]</code></pre>

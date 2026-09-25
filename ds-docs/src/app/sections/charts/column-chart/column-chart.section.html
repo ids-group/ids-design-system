@@ -58,22 +58,27 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      pinOnClick
-    </code> holds the hovered column and
-    its tooltip in place when it is clicked, so the reading stays while you look
-    away from the chart. With
+    A click holds the column and its tooltip in place, with a pin disc on it, so
+    the reading stays while you look away from the chart. An Unpin control
+    appears at the top end, on the caption's line.
     <code class="t-mono-inline">
       dimOthers
-    </code> beside it the rest of the
-    plot stays down too, which is what makes the comparison survive the pointer
-    leaving. Escape releases it, and so does a press anywhere outside the mark.
-    The click output fires either way.
+    </code> fades every column but the one the chart is answering: the hovered
+    column once the pointer has rested on it, or the focused one. Beside a pin
+    the rest of the plot stays down too, which is what makes the comparison
+    survive the pointer leaving. Escape, a second click or a press anywhere
+    outside the mark releases it, and the click output fires either way. The
+    pointer cursor shows on any column a click would hold, and on an
+    <code class="t-mono-inline">
+      interactive
+    </code> one. Set
+    <code class="t-mono-inline">
+      pinOnClick="false"
+    </code> to keep columns unheld.
   </p>
 
   <ds-column-chart
     interactive
-    pinOnClick
     dimOthers
     dataTable="none"
     [data]="pinPoints()" />
@@ -320,8 +325,9 @@
   </h3>
 
   <p class="block-desc t-s">
-    The box that catches the pointer is the full-height category cell, not the
-    column — that is what keeps a short column reachable.
+    The box that catches the pointer is the column's full-height band, not the
+    drawn column, which keeps a short column reachable. The gap between two
+    columns answers nothing.
     <code class="t-mono-inline">
       tooltipAnchor
     </code> decides which of the two
@@ -331,13 +337,13 @@
     rather than the mark.
     <code class="t-mono-inline">
       pointClicked
-    </code> fires on click and on
-    <kbd>
-      Enter
-    </kbd> whether or not
+    </code> fires on every click whether or not
     <code class="t-mono-inline">
       interactive
-    </code> is set.
+    </code> is set; <kbd>Enter</kbd> and <kbd>Space</kbd> fire it on an
+    <code class="t-mono-inline">
+      interactive
+    </code> column, and never pin.
   </p>
 
   <div class="states is-cols-2">
@@ -403,12 +409,11 @@
     vanishing column and a new one are never on screen together.
     <code class="t-mono-inline">
       staggerMs
-    </code> spaces the arrivals out —
+    </code> spaces the arrivals out.
     <code class="t-mono-inline">
-      0
-    </code>, the default, is no stagger at all,
-    and <code class="t-mono-inline"> 40 </code> is the documented step. The
-    total delay is capped at 300ms, so a long series does not crawl in. Edit the
+      40
+    </code> is the default and <code class="t-mono-inline"> 0 </code> turns it
+    off. The whole spread fits inside 260ms, so a long series narrows the step instead of crawling in. Edit the
     data below to watch it. Under
     <code class="t-mono-inline">
       prefers-reduced-motion
@@ -419,12 +424,13 @@
   <div class="states is-cols-2">
     <div class="state-cell">
       <ds-column-chart
-        caption="No stagger — every column arrives together"
+        caption="No stagger - every column arrives together"
         dataTable="none"
+        staggerMs="0"
         [data]="staggerOffPoints()" />
 
       <div class="state-cell-label">
-        staggerMs = 0 (default)
+        staggerMs = 0
       </div>
 
       <docs-chart-data-editor [(rows)]="staggerOffPoints" />
@@ -434,11 +440,10 @@
       <ds-column-chart
         caption="Columns arrive 40ms apart"
         dataTable="none"
-        staggerMs="40"
         [data]="staggerOnPoints()" />
 
       <div class="state-cell-label">
-        staggerMs = 40
+        staggerMs = 40 (default)
       </div>
 
       <docs-chart-data-editor [(rows)]="staggerOnPoints" />

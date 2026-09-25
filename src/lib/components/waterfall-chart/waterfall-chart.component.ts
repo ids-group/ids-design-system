@@ -8,6 +8,7 @@ import {
   input,
   numberAttribute,
   output,
+  viewChild,
 } from '@angular/core';
 import {
   ChartComponent,
@@ -136,6 +137,12 @@ export class WaterfallChartComponent {
   /** Milliseconds between one step's entrance and the next; a long waterfall narrows the step to
    *  arrive within 260ms. `0` is no stagger. */
   readonly staggerMs = input(40, { transform: numberAttribute });
+
+  protected readonly series = viewChild(ColumnSeriesComponent);
+
+  protected readonly pinned = computed(
+    () => this.series()?.activeMark.pinned() ?? false,
+  );
 
   /** The clicked datum, as it was given. Fires on click and on Enter or Space. */
   readonly barClicked = output<WaterfallChartBar>();

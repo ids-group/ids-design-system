@@ -1,4 +1,13 @@
 <figure class="waterfall-chart">
+  @if (pinned()) {
+    <button
+      class="pin-reset"
+      type="button"
+      (click)="series()?.activeMark?.release()">
+      {{ intl().chart.unpin }}
+    </button>
+  }
+
   @if (caption()) {
     <figcaption>
       {{ caption() }}
