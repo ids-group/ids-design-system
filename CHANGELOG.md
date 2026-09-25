@@ -3,9 +3,10 @@
 ### Fixed
 
 - **`ds-pagination` reads `Showing 0 of 0` on an empty list.** With `total` at 0 the range label read
-  `Showing 1–0 of 0`. The pager now calls `DS_INTL.pagination.range(0, 0, 0)` for an empty list, and
-  the default wording returns `Showing 0 of 0` for a total of 0. A `range` of your own receives
-  `(0, 0, 0)` there.
+  `Showing 1–0 of 0` and page 1 was marked current. The pager now calls
+  `DS_INTL.pagination.range(0, 0, 0)` for an empty list, the default wording returns `Showing 0 of 0`
+  for a total of 0, and every page button is disabled with none marked current. A `range` of your own
+  receives `(0, 0, 0)` there.
 
 - **A paged `ds-table` announces a table with no rows.** Its live region went silent when a filter or
   new data left the table empty. It now announces `rangeAnnouncement(0, 0, 0)`, `Showing 0 of 0` by
