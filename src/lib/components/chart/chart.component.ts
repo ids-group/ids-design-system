@@ -29,12 +29,18 @@ import {
 import { isPlatformBrowser } from '@angular/common';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import {
+  CHART_PIN_GAP,
+  CHART_PIN_RADIUS,
+  ChartPinMarkerComponent,
   ChartTooltipDirective,
   chartActiveMark,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import type { ChartTooltipContext } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import { resolveChartDefaults } from '@ids-group-ltd/ids-design-system/components';
-import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
+import {
+  DS_INTL,
+  resolveWithConfig,
+} from '@ids-group-ltd/ids-design-system/core';
 import type {
   ChartAxis,
   ChartAxisMode,
@@ -72,7 +78,7 @@ import {
   selector: 'ds-chart',
   standalone: true,
   exportAs: 'dsChart',
-  imports: [SkeletonComponent, ChartTooltipDirective],
+  imports: [SkeletonComponent, ChartTooltipDirective, ChartPinMarkerComponent],
   templateUrl: './chart.component.html',
   styleUrl: './chart.component.scss',
   host: {
@@ -124,8 +130,15 @@ export class ChartComponent implements ChartScales {
 
   /** Whether a press holds the category cursor where it is, so the reader can look away from the
    *  plot with the comparison still on screen. Released by pressing it again, by Escape, or by a
-   *  press outside the plot. */
-  readonly cursorPin = input(false, { transform: booleanAttribute });
+   *  press outside the plot. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. */
+  readonly cursorPin = input<boolean | null, unknown>(null, {
+    transform: (value) => (value == null ? null : booleanAttribute(value)),
+  });
+  readonly cursorPinResolved = resolveWithConfig(
+    this.cursorPin,
+    (config) => config.chart?.pinOnClick,
+    true,
+  );
 
   /** Milliseconds the cursor survives the pointer leaving the plot. The tooltip panel is portaled
    *  out of the plot, so without a grace period it closes before the pointer can reach it. */
@@ -226,6 +239,7 @@ export class ChartComponent implements ChartScales {
   readonly emptyTextResolved = this.defaults.emptyText;
   readonly errorTextResolved = this.defaults.errorText;
   readonly valueFormatResolved = this.defaults.valueFormat;
+  readonly hoverDelayMs = this.defaults.hoverDelayMs;
 
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly zone = inject(NgZone);
@@ -719,13 +733,26 @@ export class ChartComponent implements ChartScales {
   /** The same state machine the element marks run on: pin, linger, the grace period that lets the
    *  pointer reach a portaled panel, Escape and press-outside. A category cursor differs from a
    *  mark only in what the index counts, so it takes the behaviour rather than restating it. */
-  private readonly cursorState = chartActiveMark(() =>
-    this.defaults.tooltipLingerMs(),
+  private readonly cursorState = chartActiveMark(
+    () => this.defaults.tooltipLingerMs(),
+    () => this.hoverDelayMs(),
   );
 
   readonly activeIndex = this.cursorState.index;
 
   private readonly pointerAt = signal<{ x: number; y: number } | null>(null);
+
+  // Set at once, not after the hover delay: the pointer cursor says what a press would do there.
+  private readonly pointerInBand = signal(false);
+
+  // At the band's foot: its head is where the panel opens, over the tallest reading.
+  protected bandPinY(band: { readonly bottom: number }): number {
+    return band.bottom - CHART_PIN_RADIUS - CHART_PIN_GAP;
+  }
+
+  protected readonly bandPins = computed(
+    () => this.cursorPinResolved() && this.pointerInBand(),
+  );
 
   readonly cursorPointer = computed(() =>
     this.activeIndex() < 0 ? null : this.pointerAt(),
@@ -764,6 +791,7 @@ export class ChartComponent implements ChartScales {
         ? category
         : -1;
     this.pointerAt.set({ x: event.clientX, y: event.clientY });
+    this.pointerInBand.set(index >= 0);
     if (index < 0) {
       if (event.type === 'pointerdown' && this.cursorPinned()) {
         this.cursorState.release();
@@ -773,7 +801,7 @@ export class ChartComponent implements ChartScales {
 
       return;
     }
-    if (event.type === 'pointerdown' && this.cursorPin()) {
+    if (event.type === 'pointerdown' && this.cursorPinResolved()) {
       this.cursorState.pin(index, event);
 
       return;
@@ -797,6 +825,7 @@ export class ChartComponent implements ChartScales {
     const onLeave = (): void => {
       window.removeEventListener('scroll', forgetRect, { capture: true });
       forgetRect();
+      this.pointerInBand.set(false);
       this.cursorState.leave();
     };
     this.zone.runOutsideAngular(() => {

@@ -82,6 +82,9 @@ export interface ChartScales {
    *  area on the plot: a mark leaves pointer hover to it and answers focus and clicks only.
    *  Absent means off. */
   readonly cursorOn?: Signal<boolean>;
+  /** How long a resting pointer waits before a mark answers it, resolved once for the plot so
+   *  every mark in it waits alike. Absent means at once. */
+  readonly hoverDelayMs?: Signal<number>;
   /** The band drawn over the active category, for a mark that anchors a panel to the CATEGORY
    *  rather than to one of its own marks. `null` while `cursor` is off or nothing is active. */
   readonly cursorOrigin: Signal<Element | null>;

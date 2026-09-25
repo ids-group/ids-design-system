@@ -47,6 +47,8 @@ export {
 } from './charts-scale';
 export type { BandScale, NiceDomain, PointScale } from './charts-scale';
 export { leaveMark, staggerDelay } from './charts-motion';
+export { chartDwell } from './charts-dwell';
+export type { ChartDwell } from './charts-dwell';
 export {
   focusMark,
   listenForMarkFocus,

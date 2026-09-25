@@ -13,7 +13,6 @@ import {
   output,
   viewChildren,
 } from '@angular/core';
-import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
 import {
   CHART_SERIES_COLORS,
   chartValueFormat,
@@ -26,15 +25,20 @@ import {
 } from '@ids-group-ltd/ids-design-system/components';
 import {
   DS_INTL,
-  ICONS,
   injectDsLocale,
+  resolveWithConfig,
 } from '@ids-group-ltd/ids-design-system/core';
 import type {
   ChartAxis,
   ChartValueFormat,
 } from '@ids-group-ltd/ids-design-system/core';
 import type { MarkHit } from '@ids-group-ltd/ids-design-system/components';
-import { chartActiveMark } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
+import {
+  CHART_PIN_GAP,
+  CHART_PIN_RADIUS,
+  ChartPinMarkerComponent,
+  chartActiveMark,
+} from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import type {
   ChartItemTooltipTrigger,
   ChartTooltipContext,
@@ -51,14 +55,6 @@ export interface ColumnSeriesPoint {
   color?: string;
   fill?: 'solid' | 'hatched';
 }
-
-/** The disc's radius, and half the glyph's box, in the same CSS pixels the plot is drawn in. */
-const PIN_DISC_RADIUS = 11;
-
-// Clears the column's top edge: at one radius the disc sits flush against it and reads as part of
-// the bar rather than as a badge on it.
-const PIN_TOP_GAP = 4;
-const PIN_GLYPH_SIZE = 14;
 
 /** Distance from a mark's own tip to its value label's baseline. */
 const VALUE_LABEL_GAP = 8;
@@ -86,6 +82,7 @@ let nextSeriesId = 0;
   // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'g[dsColumnSeries]',
   standalone: true,
+  imports: [ChartPinMarkerComponent],
   exportAs: 'dsColumnSeries',
   templateUrl: './column-series.component.html',
   styleUrl: './column-series.component.scss',
@@ -110,9 +107,20 @@ export class ColumnSeriesComponent implements OnDestroy {
    *  fires whether or not this is set. */
   readonly interactive = input(false, { transform: booleanAttribute });
 
-  /** Holds the hovered mark and its tooltip in place when it is clicked, until Escape or a
-   *  press outside releases it. Pinning is a state, not a handler. */
-  readonly pinOnClick = input(false, { transform: booleanAttribute });
+  /** Holds the hovered mark and its tooltip in place when it is clicked, until a second click,
+   *  Escape or a press outside releases it. Under the category cursor the container holds the
+   *  category instead. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. */
+  readonly pinOnClick = input<boolean | null, unknown>(null, {
+    transform: (value) => (value == null ? null : booleanAttribute(value)),
+  });
+  readonly pinOnClickResolved = resolveWithConfig(
+    this.pinOnClick,
+    (config) => config.chart?.pinOnClick,
+    true,
+  );
+  protected readonly pins = computed(
+    () => this.pinOnClickResolved() && !this.scales.cursorOn?.(),
+  );
 
   /** Fades every mark but the one under the pointer. Off by default: the dimming buys loudness
    *  for one mark and pays for it with the separation between the rest. */
@@ -248,7 +256,10 @@ export class ColumnSeriesComponent implements OnDestroy {
     this.scales.releaseDomain(this.domainId);
   }
 
-  readonly activeMark = chartActiveMark(() => this.tooltipLingerMs());
+  readonly activeMark = chartActiveMark(
+    () => this.tooltipLingerMs(),
+    () => this.scales.hoverDelayMs?.() ?? 0,
+  );
 
   private readonly barElements = viewChildren<ElementRef<Element>>('barEl');
 
@@ -300,13 +311,6 @@ export class ColumnSeriesComponent implements OnDestroy {
     return { y: mark.top - overflow / 2, height };
   }
 
-  protected readonly pinDiscRadius = PIN_DISC_RADIUS;
-  protected readonly pinGlyphSize = PIN_GLYPH_SIZE;
-  protected readonly pinGlyphOffset = -PIN_GLYPH_SIZE / 2;
-  protected readonly pinGlyph: SafeHtml = inject(
-    DomSanitizer,
-  ).bypassSecurityTrustHtml(ICONS.pin);
-
   protected readonly hatchInUse = computed(() =>
     this.marks().some((mark) => mark.hatched),
   );
@@ -345,7 +349,7 @@ export class ColumnSeriesComponent implements OnDestroy {
         top: Math.min(tip, baseline),
         height: Math.abs(tip - baseline),
         labelY: below ? tip + VALUE_LABEL_GAP : tip - VALUE_LABEL_GAP,
-        pinY: Math.min(tip, baseline) + PIN_DISC_RADIUS + PIN_TOP_GAP,
+        pinY: Math.min(tip, baseline) + CHART_PIN_RADIUS + CHART_PIN_GAP,
         // Growing from the baseline, never the mark's own tip - a column below zero grows
         // downward, so its transform-origin flips to the top edge it hangs from.
         origin: below ? 'top' : 'bottom',
@@ -371,7 +375,7 @@ export class ColumnSeriesComponent implements OnDestroy {
       return;
     }
     this.pointClicked.emit(mark.point);
-    if (this.pinOnClick() && !this.scales.cursorOn?.()) {
+    if (this.pins()) {
       this.activeMark.pin(hit.index, event, this.tooltipMark(), hit.element);
     }
   }

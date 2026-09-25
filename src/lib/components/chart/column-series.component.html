@@ -42,6 +42,8 @@
     <svg:g
       class="column"
       [class.interactive]="interactive()"
+      [class.pins]="pins()"
+      [class.is-active]="activeMark.index() === index"
       [class.below-baseline]="mark.below"
       [class.is-pinned]="activeMark.pinned() && activeMark.index() === index"
       [style.--_chart-mark-stagger]="markStagger(index)"
@@ -106,27 +108,8 @@
 
       @if (activeMark.pinned() && activeMark.index() === index) {
         <svg:g
-          class="pin-marker"
-          aria-hidden="true"
-          [attr.transform]="'translate(0,' + mark.pinY + ')'">
-          <svg:circle
-            class="pin-disc"
-            [attr.r]="pinDiscRadius" />
-
-          <svg:svg
-            class="pin-glyph"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.75"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            [attr.x]="pinGlyphOffset"
-            [attr.y]="pinGlyphOffset"
-            [attr.width]="pinGlyphSize"
-            [attr.height]="pinGlyphSize"
-            [innerHTML]="pinGlyph" />
-        </svg:g>
+          dsChartPinMarker
+          [attr.transform]="'translate(0,' + mark.pinY + ')'" />
       }
     </svg:g>
   }

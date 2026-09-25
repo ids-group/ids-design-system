@@ -152,11 +152,13 @@ export class LineChartComponent {
    *  `interactive` is set. */
   readonly pointClicked = output<LineChartReading>();
 
-  /** Holds the crosshair and its tooltip on the category that was clicked, until Escape or a
-   *  press outside releases it. Off by default: a click is already the drill-down hook, and a
-   *  crosshair left standing after the pointer has gone needs a reader who knows why. `pointClicked`
-   *  fires either way — pinning is a state, not a handler. */
-  readonly pinOnClick = input(false, { transform: booleanAttribute });
+  /** Holds the crosshair and its tooltip on the category that was clicked, with a pin disc on it,
+   *  until a second click, Escape or a press outside releases it. Unset falls back to
+   *  `DS_CONFIG.chart.pinOnClick`, then `true`. `pointClicked` fires either way - pinning is a
+   *  state, not a handler. */
+  readonly pinOnClick = input<boolean | null, unknown>(null, {
+    transform: (value) => (value == null ? null : booleanAttribute(value)),
+  });
 
   /** Dims every OTHER mark while one is hovered or focused, so the reader's eye is held on the
    *  one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed

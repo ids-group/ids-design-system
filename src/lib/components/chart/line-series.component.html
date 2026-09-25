@@ -44,7 +44,11 @@
     }
   }
 
-  @if (showMarkers() || interactive()) {
+  @if (
+      showMarkers() ||
+      interactive() ||
+      pins()
+    ) {
     @for (entry of plotted(); track entry.series.id) {
       @for (marker of entry.markers; track marker.key) {
         <svg:circle
@@ -53,6 +57,7 @@
           [class.is-dimmed]="isDimmed(entry.series.id)"
           [class.ghost]="!showMarkers()"
           [class.interactive]="interactive()"
+          [class.pins]="pins()"
           [class.is-active]="isActiveMarker(marker)"
           [style.--_chart-mark-stagger]="seriesStagger(entry.seriesIndex)"
           [attr.cx]="marker.x"
@@ -70,5 +75,13 @@
           [attr.aria-label]="interactive() ? markerLabel(marker) : null" />
       }
     }
+  }
+
+  @if (pinnedMarker(); as marker) {
+    <svg:g
+      dsChartPinMarker
+      [attr.transform]="
+        'translate(' + marker.x + ',' + (marker.y - pinLift) + ')'
+      " />
   }
 </svg:g>

@@ -32,14 +32,22 @@ import type {
   LinePoint,
   MarkHit,
 } from '@ids-group-ltd/ids-design-system/components';
-import { injectDsLocale } from '@ids-group-ltd/ids-design-system/core';
+import {
+  injectDsLocale,
+  resolveWithConfig,
+} from '@ids-group-ltd/ids-design-system/core';
 import type {
   ChartAxis,
   ChartCurve,
   ChartGaps,
   ChartValueFormat,
 } from '@ids-group-ltd/ids-design-system/core';
-import { chartActiveMark } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
+import {
+  CHART_PIN_GAP,
+  CHART_PIN_RADIUS,
+  ChartPinMarkerComponent,
+  chartActiveMark,
+} from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import type {
   ChartTooltipTrigger,
   ChartTooltipContext,
@@ -77,12 +85,16 @@ let nextSeriesId = 0;
  * Hosted on a `<g>` rather than an element of its own: an element the SVG specification does not
  * know is not rendered, and neither are its descendants. Written as `<svg:g dsLineSeries>`.
  */
+// The active marker's default radius, `--chart-dot-radius-active`.
+const PIN_MARKER_CLEARANCE = 6;
+
 @Component({
   // The repository's `component-selector` rule asks for an element selector, and one cannot work
   // inside a canvas - see the same exemption on `g[dsColumnSeries]`.
   // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'g[dsLineSeries]',
   standalone: true,
+  imports: [ChartPinMarkerComponent],
   exportAs: 'dsLineSeries',
   templateUrl: './line-series.component.html',
   styleUrl: './line-series.component.scss',
@@ -111,9 +123,20 @@ export class LineSeriesComponent implements OnDestroy {
    *  fires whether or not this is set. */
   readonly interactive = input(false, { transform: booleanAttribute });
 
-  /** Holds the hovered mark and its tooltip in place when it is clicked, until Escape or a
-   *  press outside releases it. Pinning is a state, not a handler. */
-  readonly pinOnClick = input(false, { transform: booleanAttribute });
+  /** Holds the hovered mark and its tooltip in place when it is clicked, until a second click,
+   *  Escape or a press outside releases it. Under the category cursor the container holds the
+   *  category instead. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. */
+  readonly pinOnClick = input<boolean | null, unknown>(null, {
+    transform: (value) => (value == null ? null : booleanAttribute(value)),
+  });
+  readonly pinOnClickResolved = resolveWithConfig(
+    this.pinOnClick,
+    (config) => config.chart?.pinOnClick,
+    true,
+  );
+  protected readonly pins = computed(
+    () => this.pinOnClickResolved() && !this.scales.cursorOn?.(),
+  );
 
   /** Fades every series but the one under the pointer. Off by default: the dimming buys loudness
    *  for one line and pays for it with the separation between the rest. */
@@ -218,7 +241,10 @@ export class LineSeriesComponent implements OnDestroy {
     this.scales.releaseDomain(`${this.domainId}-secondary`);
   }
 
-  readonly activeMark = chartActiveMark(() => this.tooltipLingerMs());
+  readonly activeMark = chartActiveMark(
+    () => this.tooltipLingerMs(),
+    () => this.scales.hoverDelayMs?.() ?? 0,
+  );
 
   private valuesOn(axis: ChartAxis): number[] {
     return this.data()
@@ -384,6 +410,16 @@ export class LineSeriesComponent implements OnDestroy {
     );
   }
 
+  protected readonly pinnedMarker = computed(() =>
+    this.activeMark.pinned()
+      ? (this.allMarkers()[this.activeMark.index()] ?? null)
+      : null,
+  );
+
+  // Above the reading, clear of the marker drawn on it.
+  protected readonly pinLift =
+    CHART_PIN_RADIUS + CHART_PIN_GAP + PIN_MARKER_CLEARANCE;
+
   protected onMarkerOver(event: PointerEvent): void {
     const hit = markOf(event);
     if (hit && !this.scales.cursorOn?.()) {
@@ -455,7 +491,7 @@ export class LineSeriesComponent implements OnDestroy {
     if (!hit) {
       return;
     }
-    if (this.pinOnClick() && !this.scales.cursorOn?.()) {
+    if (this.pins()) {
       this.activeMark.pin(hit.index, event, '.series-marker', hit.element);
     }
     this.selectMarker(hit.index);

@@ -37,6 +37,7 @@
         #canvasEl
         class="canvas"
         preserveAspectRatio="xMidYMid meet"
+        [class.pins]="bandPins()"
         [style.block-size.px]="viewHeight()"
         [attr.viewBox]="viewBox()">
         @if (cursorBand(); as band) {
@@ -217,6 +218,19 @@
                belongs below the readings, its NAME has to survive a column drawn through it. -->
           <ng-content select="[dsReferenceLabel], [dsSeriesAnnotation]" />
         </g>
+
+        @if (cursorPinned() && cursorBand(); as band) {
+          <g
+            dsChartPinMarker
+            [attr.transform]="
+              'translate(' +
+              (band.x + band.width / 2) +
+              ',' +
+              bandPinY(band) +
+              ')'
+            ">
+          </g>
+        }
       </svg>
     </div>
   }

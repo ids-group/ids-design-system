@@ -1,4 +1,5 @@
 import { DestroyRef, Signal, inject, signal } from '@angular/core';
+import { chartDwell } from '@ids-group-ltd/ids-design-system/components';
 
 /** @internal */
 export interface ChartActiveMark {
@@ -38,6 +39,9 @@ export interface ChartActiveMark {
  * Pointer and keyboard write the same pair, so a chart wires `pointerenter` and `focus` to
  * `enter` and gets one code path rather than two.
  *
+ * A POINTER WAITS. It is answered once it has rested on a mark for `hoverDelayMs`, and at once
+ * while the chart has already answered it; focus, a tap and a pin are answered at once.
+ *
  * A TAP LATCHES. A touch fires `pointerleave` the moment the finger lifts, so without this the
  * panel would flash and vanish; latched, it stays until the next tap lands outside the mark. Call
  * from an injection context — the release listener is torn down with the component.
@@ -46,6 +50,7 @@ export interface ChartActiveMark {
  */
 export function chartActiveMark(
   lingerMs: () => number = () => 0,
+  hoverDelayMs: () => number = () => 0,
 ): ChartActiveMark {
   const index = signal(-1);
   const origin = signal<Element | null>(null);
@@ -58,6 +63,7 @@ export function chartActiveMark(
   // it misses this, or a click on the cell beside the bar would release the pin and immediately
   // re-take it, leaving the pin looking stuck.
   let host: Element | null = null;
+  const dwell = chartDwell(hoverDelayMs);
 
   const clear = (): void => {
     pinned.set(false);
@@ -178,6 +184,7 @@ export function chartActiveMark(
 
   if (typeof document !== 'undefined') {
     inject(DestroyRef).onDestroy(() => {
+      dwell.cancel();
       cancelPendingClear();
       document.removeEventListener('pointerdown', release, true);
       document.removeEventListener('keydown', releaseOnEscape, true);
@@ -196,38 +203,33 @@ export function chartActiveMark(
       if (pinned()) {
         return;
       }
-      aim(at, event, anchor, mark);
-      cancelPendingClear();
-      if (typeof document !== 'undefined') {
-        document.addEventListener('pointerover', trackPointer, true);
-      }
-      if (
-        typeof document !== 'undefined' &&
-        event instanceof PointerEvent &&
-        event.pointerType === 'touch'
-      ) {
-        hold();
-      }
+      // Taken now: `currentTarget` is gone by the time a delayed answer runs.
+      const target = mark ?? event.currentTarget;
+      dwell.schedule(at, () => answer(at, event, anchor, target), event);
     },
     setIndex(at) {
       if (pinned()) {
         return;
       }
+      dwell.cancel();
       cancelPendingClear();
       index.set(at);
     },
     leave() {
+      dwell.cancel();
       if (pinned()) {
         return;
       }
       scheduleClear();
     },
     release() {
+      dwell.cancel();
       if (typeof document !== 'undefined') {
         clear();
       }
     },
     pin(at, event, anchor, mark) {
+      dwell.cancel();
       if (typeof document === 'undefined') {
         return;
       }
@@ -247,4 +249,27 @@ export function chartActiveMark(
       }
     },
   };
+
+  function answer(
+    at: number,
+    event: Event,
+    anchor: string | Element | null | undefined,
+    target: EventTarget | null,
+  ): void {
+    if (pinned()) {
+      return;
+    }
+    aim(at, event, anchor, target);
+    cancelPendingClear();
+    if (typeof document !== 'undefined') {
+      document.addEventListener('pointerover', trackPointer, true);
+    }
+    if (
+      typeof document !== 'undefined' &&
+      event instanceof PointerEvent &&
+      event.pointerType === 'touch'
+    ) {
+      hold();
+    }
+  }
 }
