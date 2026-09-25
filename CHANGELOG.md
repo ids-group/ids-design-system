@@ -222,8 +222,8 @@
   `dsTooltip`. A test asserting `aria-describedby` on a clipped disclosure finds none.
 
 - **`ds-pagination` handles an empty list.** With `total` at `0` the range read `Showing 1-0 of 0` and
-  page 1 was marked current; it now reads `Showing 0 of 0`, disables every page button and marks none
-  current.
+  page 1 was marked current; it now reads `Showing 0 of 0`, disables every button, Previous and Next
+  included, and marks none current.
 
 - **A paged `ds-table` announces an emptied table.** Its live region went silent when a filter or new
   data left the table with no rows; it now announces the table's empty state - the `[empty]` content

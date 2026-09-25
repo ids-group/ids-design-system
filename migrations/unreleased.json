@@ -379,7 +379,7 @@
       "verify": "Tab onto a button whose inner label ends in an ellipsis: the tooltip opens and the button carries no aria-describedby; Tab onto a button with a plain dsTooltip: it carries aria-describedby naming the panel."
     },
     {
-      "text": "ds-pagination with total 0 disables every page button and marks none as current (page 1 was highlighted and carried aria-current).",
+      "text": "ds-pagination with total 0 disables every button, Previous and Next included, and marks none as current (page 1 was highlighted and carried aria-current).",
       "verify": "Render a ds-pagination with total 0: the range reads Showing 0 of 0, every button is disabled, and no button is highlighted or carries aria-current."
     },
     {
