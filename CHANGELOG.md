@@ -26,8 +26,9 @@
   `DS_CONFIG.chart.pinOnClick` and then `true`; `dsColumnSeries` and `dsLineSeries` expose the result
   as `pinOnClickResolved()`, `ds-chart` as `cursorPinResolved()`.
 
-- **Subclassing one of these breaks on a name collision.** Each gained a member: `BarChartComponent`,
-  `ChartComponent`, `ColumnSeriesComponent`, `LineSeriesComponent`, `FunnelChartComponent`,
+- **Subclassing one of these breaks on a name collision.** Each gained a member or had one change
+  type (`pinOnClick` above): `BarChartComponent`, `ChartComponent`, `ColumnChartComponent`,
+  `ColumnSeriesComponent`, `LineChartComponent`, `LineSeriesComponent`, `FunnelChartComponent`,
   `HeatmapChartComponent`, `PieChartComponent` and `ScatterChartComponent`, and two internal classes
   reachable only through their own entry points: the internal `ChartLegendComponent` and the internal
   `ChartTooltipPanelComponent`. Five protected members of `ColumnSeriesComponent` are gone:
