@@ -1,5 +1,7 @@
 ## Unreleased
 
+## 0.14.2 — 2026-09-25
+
 ### Breaking
 
 - **A click on a chart mark holds it by default.** `pinOnClick` on `ds-bar-chart`, `ds-column-chart`,

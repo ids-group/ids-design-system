@@ -17,6 +17,8 @@ holds an entry; what the release bot commits afterwards needs none.
 
 ## Unreleased
 
+## 0.14.2 — 2026-09-25
+
 ### Build
 
 - **The watch-list gate runs as `node tools/check.mjs manual-surface`.** `build-design-sync.sh`,
