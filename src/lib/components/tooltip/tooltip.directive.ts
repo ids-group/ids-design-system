@@ -20,6 +20,26 @@ const TRIGGER_GAP_PX = 8;
 const NATIVELY_FOCUSABLE = 'a[href], button, input, select, textarea, summary';
 const FOCUSABLE = `${NATIVELY_FOCUSABLE}, [tabindex]`;
 const KEYBOARD_FOCUSABLE = `${NATIVELY_FOCUSABLE}, [tabindex]:not([tabindex^="-"])`;
+const INTERACTIVE = [
+  NATIVELY_FOCUSABLE,
+  'tr:not([role])',
+  ...[
+    'button',
+    'link',
+    'tab',
+    'option',
+    'menuitem',
+    'menuitemcheckbox',
+    'menuitemradio',
+    'row',
+    'gridcell',
+    'combobox',
+    'checkbox',
+    'radio',
+    'switch',
+    'treeitem',
+  ].map((role) => `[role="${role}"]`),
+].join(', ');
 
 const clippedHostsByAncestor = new WeakMap<HTMLElement, Set<HTMLElement>>();
 
@@ -122,7 +142,7 @@ export class TooltipDirective implements OnDestroy {
       return;
     }
     const ancestor = host.parentElement?.closest<HTMLElement>(FOCUSABLE);
-    if (!ancestor) {
+    if (!ancestor?.matches(INTERACTIVE)) {
       return;
     }
     let hosts = clippedHostsByAncestor.get(ancestor);
