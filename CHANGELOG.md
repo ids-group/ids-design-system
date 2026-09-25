@@ -75,10 +75,11 @@
 
 - **A horizontal `ds-description-list` stacks every item once a value would get less than
   `--ds-description-list-value-min-width`** (default `14rem`, 224px at a 16px root). Each item is a
-  wrapping flex row (was: a two-column grid): the label keeps the label width, and when the value
-  column would fall below the minimum the label moves above the value, as under
-  `orientation="stacked"` (was: the value squeezed beside the label and broke mid-word). Every item
-  of a list switches at the same list width, label width + column gap + value minimum: 364px with
+  wrapping flex row (was: a two-column grid): when the value column would fall below the minimum,
+  the label moves above the value (was: the value squeezed beside the label and broke mid-word). The
+  label keeps the label width there, so a longer label still wraps at it, where
+  `orientation="stacked"` gives the label the full row. Every item of a list switches at the same
+  list width, label width + column gap + value minimum: 364px with
   the defaults, 428px with a 180px label and a 24px gap. `orientation="stacked"` is unchanged, and a
   `ds-description-item` outside a list switches the same way at its own width. In a parent that
   sizes to its content - an inline-block, a float, an absolutely positioned box, a flex row item
@@ -92,8 +93,9 @@
   hover-delay, label-highlight and stagger members; `ColumnChartComponent` and `LineChartComponent`
   only had `pinOnClick` change type; `PaginationComponent` gained `empty`, `TableComponent` gained
   `emptyCell` and `emptyCellText`, `TooltipDirective` gained `detachAncestor`, `disclosesOwnText` and
-  `listenToFocusableAncestor`, `TextareaComponent` gained `maxLengthMode` and the soft-limit
-  members, and `TabsComponent` gained the scroll-arrow members; and three classes reachable only through their own entry points
+  `listenToFocusableAncestor`, `TextareaComponent` gained `describedBy`, `maxLengthMode`,
+  `nativeMaxLength`, `overflowParts`, `overLimitBy` and `syncOverflowScroll`, and `TabsComponent`
+  gained the scroll-arrow members; and three classes reachable only through their own entry points
   gained members too - the internal `ChartLegendComponent`, the internal `ChartTooltipPanelComponent`
   and the internal `WaterfallMarksComponent`. Five protected members of `ColumnSeriesComponent` are
   gone: `pinDiscRadius`, `pinGlyph`, `pinGlyphOffset`, `pinGlyphSize` and `slotStepPx`. Build after

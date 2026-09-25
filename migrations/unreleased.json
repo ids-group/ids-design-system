@@ -207,7 +207,7 @@
         "extends TabsComponent"
       ],
       "verify": "The app builds with no TS4114 or TS2416 against a DS base class, and no subclass keeps a member named after a removed one.",
-      "note": "The chart components gained the pinning, hover-delay and label-highlight members, except ColumnChartComponent and LineChartComponent, whose only change is the type of pinOnClick; PaginationComponent gained empty, TableComponent gained emptyCell and emptyCellText, TooltipDirective gained detachAncestor, disclosesOwnText and listenToFocusableAncestor, TextareaComponent gained maxLengthMode, TabsComponent gained the scroll-arrow members; five protected members of ColumnSeriesComponent are gone (pinDiscRadius, pinGlyph, pinGlyphOffset, pinGlyphSize, slotStepPx). The compiler names every collision."
+      "note": "The chart components gained the pinning, hover-delay and label-highlight members, except ColumnChartComponent and LineChartComponent, whose only change is the type of pinOnClick; PaginationComponent gained empty, TableComponent gained emptyCell and emptyCellText, TooltipDirective gained detachAncestor, disclosesOwnText and listenToFocusableAncestor, TextareaComponent gained describedBy, maxLengthMode, nativeMaxLength, overflowParts, overLimitBy and syncOverflowScroll, TabsComponent gained the scroll-arrow members; five protected members of ColumnSeriesComponent are gone (pinDiscRadius, pinGlyph, pinGlyphOffset, pinGlyphSize, slotStepPx). The compiler names every collision."
     },
     {
       "id": "intl-field-over-limit-required",

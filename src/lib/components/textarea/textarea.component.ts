@@ -127,8 +127,10 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
   protected readonly overflowParts = computed(() => {
     const value = this.value();
     let splitAt = value.length - this.overLimitBy();
-    // A limit inside a surrogate pair marks the whole character: half a pair
-    // renders at another width and shifts every mirrored line after it.
+    // A limit inside a surrogate pair marks the whole pair: half a pair renders
+    // at another width and shifts every mirrored line after it.
+    // A limit inside an emoji ZWJ sequence still shifts them; splitting on
+    // Intl.Segmenter graphemes would not, once every supported Firefox has it (125+).
     const previous = value.charCodeAt(splitAt - 1);
     if (previous >= 0xd800 && previous <= 0xdbff) {
       splitAt -= 1;
@@ -252,6 +254,8 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
     super();
     afterRenderEffect({
       write: () => {
+        // The textarea scrolls on input before the mirror re-renders the new
+        // text, so the `(scroll)` sync alone leaves the mirror behind.
         this.overflowParts();
         this.syncOverflowScroll();
       },
