@@ -294,7 +294,7 @@ function blocksOf(slug) {
     const owner = attributes.match(/data-for="([^"]+)"/)?.[1] ?? null;
     const empty =
       attributes.trimEnd().endsWith('/') || VOID_TAGS.has(name.toLowerCase());
-    const noCard = /\sdata-no-card\b/.test(attributes);
+    const card = /\sdata-claude-design(?![\w-])/.test(attributes);
 
     if (depth === 1 && heading) {
       // The heading's own text, which is what the card is named after.
@@ -305,10 +305,10 @@ function blocksOf(slug) {
       )
         .replace(/\s+/g, ' ')
         .trim();
-      found.push({ title, owner: owner ?? '', at: match.index, noCard });
+      found.push({ title, owner: owner ?? '', at: match.index, card });
     } else if (depth === 1 && owner !== null) {
       // A set of demos grouped without a heading of its own — Menu's item states.
-      found.push({ title: '', owner, at: match.index, noCard });
+      found.push({ title: '', owner, at: match.index, card });
     } else if (
       depth > 1 &&
       (heading || owner !== null) &&
@@ -318,6 +318,10 @@ function blocksOf(slug) {
       // five variants out in a `.blocks` grid. Slicing that chapter would silently drop them, so it
       // publishes as one whole-chapter card instead.
       sliceable = false;
+      if (card)
+        throw new Error(
+          `${slug}: a nested block carries data-claude-design, but a card can only address a direct child of <docs-section>. Put data-claude-design on the <docs-section> to publish the chapter whole.`,
+        );
     }
 
     if (!empty) {
@@ -326,6 +330,10 @@ function blocksOf(slug) {
     }
   }
 
+  if (!sliceable && found.some((block) => block.card))
+    throw new Error(
+      `${slug}: nests a block the cards cannot address, so it publishes whole and its block-level data-claude-design marks would be ignored. Move data-claude-design to the <docs-section>.`,
+    );
   if (!sliceable) return [];
 
   // The block's own first paragraph, which becomes the card's subtitle in the pane. Bounded by the
@@ -408,14 +416,36 @@ function blockLabel(title) {
   return clean(kept.join(' '));
 }
 
-/** The cards a component gets: one per block it owns, or one whole-chapter card when the chapter
- *  marks nothing for it.
+const sectionCarded = (slug) =>
+  /<docs-section\b[^>]*\sdata-claude-design(?![\w-])/.test(templateOf(slug));
+
+const wholeChapterCard = (file) => [
+  {
+    file,
+    owns: null,
+    ownedIndex: -1,
+    chapterPosition: -1,
+    title: '',
+    desc: '',
+    prose: [],
+    first: true,
+  },
+];
+
+function refuseSectionMarkOverBlocks(slug) {
+  if (sectionCarded(slug))
+    throw new Error(
+      `${slug}: <docs-section> carries data-claude-design, but the chapter has blocks a card can address. Mark the blocks instead; the section mark is for a chapter that publishes whole.`,
+    );
+}
+
+/** The cards a component gets: one per block it owns that carries `data-claude-design` in ds-docs. Nothing
+ *  is published by default.
  *
  *  One card per block, because the pane fits a card's declared `viewport` into a fixed tile — so a
  *  card's height IS its zoom level. Table's chapter is 18919px tall and rendered as an illegible
- *  smudge; its 35 blocks are a few hundred pixels each and legible at the same scale as everything
- *  else. Nothing is cut from ds-docs: a block carries its own title and prose, and the pane labels
- *  a card by its FILENAME, so the block's name lands outside the card as well. */
+ *  smudge; its blocks are a few hundred pixels each and legible at the same scale as everything
+ *  else. The pane labels a card by its FILENAME, so the block's name lands outside the card too. */
 function cardsFor(name) {
   const section = sectionFor(name);
   const own = kebab(name);
@@ -425,70 +455,37 @@ function cardsFor(name) {
   // nothing for it gets NO card: whatever documents it is already on the chapter's own cards, and a
   // second copy under the part's name is the duplication this whole design removes. `TimeColumns`
   // shipped the entire Time Picker chapter — all seven of its blocks — under the name
-  // "Time Columns". Only a chapter that publishes nothing at all falls back to a whole-chapter card.
-  // The chapter named after the component is its own in any group: `charts/heatmap-chart` as much
-  // as `components/button`.
-  const primary = section.slug.split('/').pop() === own;
+  // "Time Columns". The chapter named after the component is its own in any group:
+  // `charts/heatmap-chart` as much as `components/button`, and so is a chapter named after no
+  // component at all: `charts` documents BarChart.
+  const chapterName = section.slug.split('/').pop();
+  const primary =
+    chapterName === own ||
+    ![...byName.keys()].some((other) => kebab(other) === chapterName);
   const owner = marks.has(own) ? own : primary ? '' : null;
   const label = spacedName(name);
-  if (owner === null && blocks.length) return [];
-  if (owner === null || !blocks.length) {
-    return [
-      {
-        file: label,
-        owns: null,
-        ownedIndex: -1,
-        chapterPosition: -1,
-        title: '',
-        desc: '',
-        prose: [],
-      },
-    ];
-  }
+  if (owner === null) return [];
+  if (!blocks.length)
+    return sectionCarded(section.slug) ? wholeChapterCard(label) : [];
+  refuseSectionMarkOverBlocks(section.slug);
 
   const mine = blocks
     .map((block, chapterPosition) => ({ ...block, chapterPosition }))
     .filter((block) => block.owner === owner);
-  if (!mine.length)
-    return [
-      {
-        file: label,
-        owns: null,
-        ownedIndex: -1,
-        chapterPosition: -1,
-        title: '',
-        desc: '',
-        prose: [],
-      },
-    ];
 
   return nameCards(label, mine, owner);
 }
 
 /** The chapters that document no component of their own — Foundations, Patterns, Practice, and
- *  Link, whose `ds-link` is a directive and so has no entry in the component surface.
- *
- *  They were compiled into the bundle from the first build and shown on nothing: 27 chapters, the
- *  colour ramps and the spacing scale and the do/don't among them, which is most of what an agent
- *  needs before it places a single component. */
+ *  Link, whose `ds-link` is a directive and so has no entry in the component surface. */
 function guideCardsFor(section) {
   const chapter = blockLabel(chapterTitleOf(section.slug));
   const blocks = blocksOf(section.slug)
     .map((block, chapterPosition) => ({ ...block, chapterPosition }))
     .filter((block) => !block.owner);
-  if (!blocks.length) {
-    return [
-      {
-        file: chapter,
-        owns: null,
-        ownedIndex: -1,
-        chapterPosition: -1,
-        title: '',
-        desc: '',
-        prose: [],
-      },
-    ];
-  }
+  if (!blocks.length)
+    return sectionCarded(section.slug) ? wholeChapterCard(chapter) : [];
+  refuseSectionMarkOverBlocks(section.slug);
 
   return nameCards(chapter, blocks, '');
 }
@@ -505,14 +502,10 @@ const displayTitle = (raw) =>
     // Only an ordinary word is lowered: `CSV export`, `W3w`, `12-hour (AM PM)` keep their shape.
     .replace(/^[A-Z](?=[a-z]|\s|$)/, (letter) => letter.toLowerCase());
 
-/** One card per owned block, each named `<chapter> - <block>`, except a block marked
- *  `data-no-card` in ds-docs. The mark drops the card only: `ownedIndex` still counts it, because
- *  the card's runtime slicer counts every block of the owner on the rendered page. */
+/** One card per owned block that carries `data-claude-design`, each named `<chapter> - <block>`. Labels
+ *  and `ownedIndex` count every block, published or not: the card's runtime slicer counts every
+ *  block of the owner on the rendered page. */
 function nameCards(chapter, mine, owner) {
-  if (mine[0]?.noCard)
-    throw new Error(
-      `${chapter}: the first block "${mine[0].title}" carries data-no-card, and its card is the one that ships the lede and the API table`,
-    );
   const seen = new Map();
 
   const cards = mine.map((block, ownedIndex) => {
@@ -539,7 +532,9 @@ function nameCards(chapter, mine, owner) {
     };
   });
 
-  return cards.filter((card, index) => !mine[index].noCard);
+  return cards
+    .filter((_, index) => mine[index].card)
+    .map((card, index) => ({ ...card, first: index === 0 }));
 }
 
 /** The API keys a chapter declares, which is the set of parts it renders a chip and a table for.
@@ -668,6 +663,7 @@ function cardHtml({
   ownedIndex,
   apiKey,
   withTable,
+  withLede,
   head,
   block,
   react,
@@ -738,13 +734,13 @@ function cardHtml({
       var REACT = ${JSON.stringify(react)};
       /* The chapter's title and lede belong to the chapter's OWN component. On a ToggleButton card
          the title said "Buttons" and the lede described Button, and the card already names itself
-         in its block heading and in the pane's label. The lede rides the chapter's first card.
+         in its block heading and in the pane's label. The lede rides the chapter's first published card.
          A chapter with no addressable blocks publishes as ONE card, and then there is nothing to
          slice and nothing repeated — it loses only the eyebrow. */
       var WHOLE = OWNS === null;
       /* The chapter's summary belongs to the chapter, so it rides its first card only - seven
          copies of the same paragraph is what it was before. A whole-chapter card is that card. */
-      var LEDE = WHOLE || (OWNS === '' && INDEX <= 0);
+      var LEDE = WHOLE || (OWNS === '' && ${JSON.stringify(Boolean(withLede))});
       var KEEP = LEDE ? 'h2, p.lede' : 'h2';
       var DROP_ALWAYS = '.eyebrow' + (LEDE ? '' : ', p.lede');
       var API = '[data-key]';
@@ -1011,9 +1007,10 @@ for (const name of [...byName.keys()].sort()) {
         owns: card.owns,
         ownedIndex: card.ownedIndex,
         apiKey: apiKeyBySelector.get(component.selector) ?? '',
-        // The tag is on every card; only the first carries the API table. On Table that is the
-        // difference between one table and thirty-five copies of it.
-        withTable: card.ownedIndex <= 0,
+        // The tag is on every card; only the first published one carries the API table and the
+        // chapter's lede. On Table that is the difference between one table and dozens of copies.
+        withTable: card.first,
+        withLede: card.first,
         // A part's card is titled after the PART. `card.owns` is empty exactly when the card belongs
         // to the chapter's own component, and then the chapter's own h2 text is already right.
         head: card.owns ? spacedName(name) : null,
@@ -1082,7 +1079,8 @@ for (const section of sections.filter((entry) => !claimed.has(entry.slug))) {
         owns: card.owns,
         ownedIndex: card.ownedIndex,
         apiKey: '',
-        withTable: card.ownedIndex <= 0,
+        withTable: card.first,
+        withLede: card.first,
         head: null,
         block: displayTitle(card.title),
         title: paneTitle(chapterTitleOf(section.slug), card.title),
@@ -1130,7 +1128,21 @@ ordered.sort(
 );
 writeFileSync(
   join(elements, 'gen', 'cards.json'),
-  `${JSON.stringify({ generatedBy: 'build-cards.mjs', cards: ordered.map((entry) => entry.path) }, null, 2)}\n`,
+  `${JSON.stringify(
+    {
+      generatedBy: 'build-cards.mjs',
+      cards: ordered.map((entry) => entry.path),
+      // The chapters that opt anything into Claude Design: check-section-coverage holds each of them
+      // to at least one card and leaves the rest unpublished on purpose.
+      opted: sections
+        .filter((section) =>
+          /\sdata-claude-design(?![\w-])/.test(templateOf(section.slug)),
+        )
+        .map((section) => section.tag),
+    },
+    null,
+    2,
+  )}\n`,
 );
 
 cpSync(join(elements, 'dist', 'ds-bundle.js'), join(OUT, '_ds_bundle.js'));
@@ -1218,6 +1230,17 @@ if (!cover) {
   );
 }
 cpSync(join(syncDir, 'assets', cover), join(OUT, '.thumbnail'));
+
+// The composition rules the package ships to every consumer's agents, which the README sends the
+// agent to first. A second copy sits beside each card of the Rules chapter, because that chapter
+// fetches the file relative to its own page and would otherwise freeze the fallback text.
+cpSync(join(repo, 'design-system.md'), join(OUT, 'design-system.md'));
+for (const card of written.filter((entry) => entry.slug === 'practice/rules')) {
+  cpSync(
+    join(repo, 'design-system.md'),
+    join(OUT, dirname(card.path), 'design-system.md'),
+  );
+}
 
 /* Paths the project still holds and this build no longer produces. The list stays in the REPO and
    is printed for whoever is running the upload - it must NOT reach the project. The README there is

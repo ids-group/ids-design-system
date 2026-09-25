@@ -1041,6 +1041,7 @@ file** — the number moves; cite the filename.
 | 9 | `9-picker-list-height` | Which knob caps a picker's list: one cap, `panelClass`, or a new list token, all three drawn and measured. | the picker-cap Decision (task 53) |
 | 10 | `10-locale-week-and-hour` | Whether the date picker's first day of the week and the time picker's 12h/24h follow `DS_CONFIG.locale`: fixed as today, both, week only, or hours only, each drawn over six locales. | the locale-defaults Decision (plan-C, task 21) |
 | 11 | `11-decision-queue` | Every consumer ask and every open question in one page - 7 asks in three groups, then 27 decisions in six, each drawn as today against after. | the consumer asks of every bucket, every open deck, and the whole `Decisions` bucket |
+| 12 | `12-docs-reasoning-blocks` | What ds-docs does with its ~38 reasoning blocks: keep, fold to the chapter end, move to a proof page, or delete. | none - the Claude Design side is settled in `.design-sync/CARDS.md` |
 
 **Closed on 2026-09-12 and moved to `implemented/`:** `field-group-invalid-voice` (the group carries `error`, `hint` and a message row; every segment announces the error and points at that one message), `button-destination-api` (flat modifier inputs, a `UrlTree`-capable `routerLink`, and `aria-current` that stops claiming a page it is only inside of), `opt-in-seam` (all three questions answered —
 directives shipped at −54%, the button's message row built and reverted on measurement, the portaled

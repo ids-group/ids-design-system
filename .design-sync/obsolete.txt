@@ -63,6 +63,8 @@ components/charts/Chart/Chart - The tooltip and the legend of a composed chart.h
 components/charts/Chart/Chart - The tooltip and the legend of a composed chart.prompt.md
 components/charts/Chart/Chart - What a line series does on its own.html
 components/charts/Chart/Chart - What a line series does on its own.prompt.md
+components/charts/ChartTooltipPanel/Chart Tooltip Panel.html
+components/charts/ChartTooltipPanel/Chart Tooltip Panel.prompt.md
 components/charts/HeatmapChart/Heatmap Chart - A hole is not a low reading.html
 components/charts/HeatmapChart/Heatmap Chart - A hole is not a low reading.prompt.md
 components/charts/HeatmapChart/Heatmap Chart - Drilling in.html
@@ -93,12 +95,12 @@ components/data-display/Table/Table - A cell that IS a link.html
 components/data-display/Table/Table - A cell that IS a link.prompt.md
 components/data-display/Table/Table - Bordered.html
 components/data-display/Table/Table - Bordered.prompt.md
+components/data-display/Table/Table - CSV export.html
+components/data-display/Table/Table - CSV export.prompt.md
 components/data-display/Table/Table - Column filters.html
 components/data-display/Table/Table - Column filters.prompt.md
 components/data-display/Table/Table - Column picker - reorder.html
 components/data-display/Table/Table - Column picker - reorder.prompt.md
-components/data-display/Table/Table - CSV export.html
-components/data-display/Table/Table - CSV export.prompt.md
 components/data-display/Table/Table - Header sort states.html
 components/data-display/Table/Table - Header sort states.prompt.md
 components/data-display/Table/Table - Inline editing.html
@@ -165,6 +167,8 @@ components/feedback-status/Toast/Toast - Screen readers, and what the service ow
 components/feedback-status/Toast/Toast - Screen readers, and what the service owns.prompt.md
 components/feedback-status/Toast/Toast - With action.html
 components/feedback-status/Toast/Toast - With action.prompt.md
+components/feedback-status/ToastRegion/Toast Region - maxVisible queue.html
+components/feedback-status/ToastRegion/Toast Region - maxVisible queue.prompt.md
 components/forms-inputs/Autocomplete/Autocomplete - A search placeholder of its own.html
 components/forms-inputs/Autocomplete/Autocomplete - A search placeholder of its own.prompt.md
 components/forms-inputs/Autocomplete/Autocomplete - Capping the chips.html
@@ -339,10 +343,14 @@ components/navigation/Tabs/Tabs - Reopening the last tab.html
 components/navigation/Tabs/Tabs - Reopening the last tab.prompt.md
 components/navigation/Tabs/Tabs - Scrollable.html
 components/navigation/Tabs/Tabs - Scrollable.prompt.md
+components/overlays/BottomSheet/Bottom Sheet - Live demo.html
+components/overlays/BottomSheet/Bottom Sheet - Live demo.prompt.md
 components/overlays/BottomSheet/Bottom Sheet - Snap points.html
 components/overlays/BottomSheet/Bottom Sheet - Snap points.prompt.md
 components/overlays/BottomSheet/Bottom Sheet - The home indicator needs one line from YOUR.html
 components/overlays/BottomSheet/Bottom Sheet - The home indicator needs one line from YOUR.prompt.md
+components/overlays/Drawer/Drawer - Live demo.html
+components/overlays/Drawer/Drawer - Live demo.prompt.md
 components/overlays/Drawer/Drawer - Placements.html
 components/overlays/Drawer/Drawer - Placements.prompt.md
 components/overlays/Drawer/Drawer - Sizes.html
@@ -353,6 +361,8 @@ components/overlays/ModalCard/Modal Card - Actions that outgrow the card.html
 components/overlays/ModalCard/Modal Card - Actions that outgrow the card.prompt.md
 components/overlays/ModalCard/Modal Card - Without dividers.html
 components/overlays/ModalCard/Modal Card - Without dividers.prompt.md
+components/overlays/ModalConfirm/Modal Confirm - Confirmation.html
+components/overlays/ModalConfirm/Modal Confirm - Confirmation.prompt.md
 components/overlays/Popover/Popover - Alignment.html
 components/overlays/Popover/Popover - Alignment.prompt.md
 components/overlays/Popover/Popover - Arrow.html
@@ -367,6 +377,8 @@ components/page-structure/PageHeader/Page Header - With divider.html
 components/page-structure/PageHeader/Page Header - With divider.prompt.md
 guides/foundations/Browser tab & document/Browser tab & document - Rules.html
 guides/foundations/Browser tab & document/Browser tab & document - Rules.prompt.md
+guides/foundations/Browser tab & document/Browser tab & document - Tab specimen.html
+guides/foundations/Browser tab & document/Browser tab & document - Tab specimen.prompt.md
 guides/foundations/Charts & dataviz/Charts & dataviz - App-wide chart defaults.html
 guides/foundations/Charts & dataviz/Charts & dataviz - App-wide chart defaults.prompt.md
 guides/foundations/Charts & dataviz/Charts & dataviz - Reading a value without keeping the pointer.html
@@ -413,11 +425,21 @@ guides/foundations/Theming & dark mode/Theming & dark mode - Worked example - a 
 guides/foundations/Theming & dark mode/Theming & dark mode - Worked example - a square brand.prompt.md
 guides/foundations/Theming & dark mode/Theming & dark mode - Writing your own theme or brand.html
 guides/foundations/Theming & dark mode/Theming & dark mode - Writing your own theme or brand.prompt.md
+guides/patterns/Empty-state variants/Empty-state variants.html
+guides/patterns/Empty-state variants/Empty-state variants.prompt.md
 guides/patterns/Form layout/Form layout - Reserved rows and the stack gap, side by side.html
 guides/patterns/Form layout/Form layout - Reserved rows and the stack gap, side by side.prompt.md
+guides/patterns/Page header/Page header - Compact variant.html
+guides/patterns/Page header/Page header - Compact variant.prompt.md
+guides/patterns/Page header/Page header - Full record header.html
+guides/patterns/Page header/Page header - Full record header.prompt.md
+guides/patterns/Page header/Page header - Usage.html
+guides/patterns/Page header/Page header - Usage.prompt.md
 guides/practice/Signal Forms/Signal Forms - Error text comes from the validator.html
 guides/practice/Signal Forms/Signal Forms - Error text comes from the validator.prompt.md
 guides/practice/Signal Forms/Signal Forms - Reactive and template-driven forms still work.html
 guides/practice/Signal Forms/Signal Forms - Reactive and template-driven forms still work.prompt.md
+guides/practice/Signal Forms/Signal Forms - The whole recipe.html
+guides/practice/Signal Forms/Signal Forms - The whole recipe.prompt.md
 guides/practice/Signal Forms/Signal Forms - What the controls implement.html
 guides/practice/Signal Forms/Signal Forms - What the controls implement.prompt.md

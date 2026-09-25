@@ -35,7 +35,7 @@ Token-based CSS custom properties — **no utility-class framework**. Components
 - Events use DS names: `onPressed` (Button family), `onClosed` (dismissibles), `onValueChange` (inputs). Dismissible components never hide themselves — the parent removes them.
 
 ## Where the truth lives
-Read `_ds_bundle.css` for the tokens and the component rules — it is Angular's own compiled output, so a component's rules are keyed by its `ds-*` tag rather than by a labelled block. Then each component's `<Name>.d.ts` for the exact API, and `<Name>.prompt.md` for usage.
+Read `design-system.md` first: it is the composition rules the library ships to every consumer's agents: which spacing goes between what, which type role a piece of text takes, which colour role decides which word. Then `_ds_bundle.css` for the tokens and the component rules — it is Angular's own compiled output, so a component's rules are keyed by its `ds-*` tag rather than by a labelled block. Then each component's `<Name>.d.ts` for the exact API, and `<Name>.prompt.md` for usage.
 
 ## Example
 ```tsx

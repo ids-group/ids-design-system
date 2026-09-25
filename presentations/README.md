@@ -22,6 +22,7 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 | 9 | `9-picker-list-height` | which knob caps a picker's list: the public `--ds-dropdown-panel-max-height` lowers the list but cannot raise it past the internal 280px `--picker-maxh`; all three options rendered and measured, one cap recommended |
 | 10 | `10-locale-week-and-hour` | whether the date picker's first day of the week and the time picker's 12h/24h follow the new `DS_CONFIG.locale`: four options drawn over six locales, each computed by `Intl` in the page; the en-US row shows the default every consumer without a locale gets |
 | 11 | `11-decision-queue` | every consumer ask and every open question in one page - 7 asks a consumer waits on, each drawn as today against after, then 27 decisions across six groups; the live indeterminate tracks are the case a text list could not put |
+| 12 | `12-docs-reasoning-blocks` | what ds-docs does with its ~38 reasoning blocks (fix proofs, edge-case guards, internals): keep, fold to the chapter end, move to a proof page, or delete - drawn on the real Table chapter |
 
 **Rank 1 is the way in, and ranks 2-4 are the two biggest lanes** — the colour engine, then the interaction formula that reads
 its ramp. Ranks 1-5 are written in Russian; `deck.css`, which sits beside `ds.css` and carries the
@@ -38,7 +39,7 @@ nav, and the scatter's phase — which went to phase 2 with its decimation layer
 **A `tool` here takes no number.** `backlog-board.html` and `rejected-with-numbers.html` — both are
 read whenever rather than at a moment, so they stay unnumbered and sort below the queue.
 
-**`11-decision-queue` sorts last and carries EVERY open question** — first every ask a consumer is
+**`11-decision-queue` carries every open question but the reasoning-blocks one in rank 12** — first every ask a consumer is
 waiting on, from any bucket of `docs/todo.md`, most urgent first in three groups (urgent P2, P3,
 parked) with priority, consumer and kind beside each; then each open deck
 plus the whole `Decisions` bucket, grouped by area. Every one has its options rendered rather

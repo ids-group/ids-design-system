@@ -1,18 +1,68 @@
-import { Component, ViewEncapsulation, inject, signal } from '@angular/core';
+import {
+  Component,
+  ViewEncapsulation,
+  afterNextRender,
+  inject,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { ButtonComponent } from 'ds/button';
-import { ToastComponent, ToastService } from 'ds/toast';
+import { ToastComponent, ToastRegionComponent, ToastService } from 'ds/toast';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
 @Component({
   selector: 'section-components-toast',
   standalone: true,
-  imports: [ButtonComponent, DocsSectionComponent, ToastComponent],
+  imports: [
+    ButtonComponent,
+    DocsSectionComponent,
+    ToastComponent,
+    ToastRegionComponent,
+  ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './toast.section.html',
   styleUrl: './toast.section.scss',
 })
 export class ToastSection {
   private readonly toast = inject(ToastService);
+  private readonly stackSpecimen = viewChild.required(ToastRegionComponent);
+
+  constructor() {
+    afterNextRender(() => {
+      const region = this.stackSpecimen();
+      region.add({
+        id: 1,
+        variant: 'info',
+        title: 'Recompute queued',
+        body: '3 delivery schedules will update in a moment.',
+        dismissible: true,
+        durationMs: 0,
+      });
+      region.add({
+        id: 2,
+        variant: 'warning',
+        title: 'Volume nearing limit',
+        body: '92% / 95% on Lane 04.',
+        dismissible: true,
+        durationMs: 0,
+      });
+      region.add({
+        id: 3,
+        variant: 'success',
+        title: 'Alpha saved',
+        body: '12 staff rotas updated.',
+        dismissible: true,
+        durationMs: 0,
+      });
+      region.add({
+        id: 4,
+        variant: 'info',
+        body: 'Report ready to download.',
+        dismissible: true,
+        durationMs: 0,
+      });
+    });
+  }
 
   readonly promiseRunning = signal(false);
 

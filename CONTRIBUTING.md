@@ -17,6 +17,10 @@ npm start            # serve the docs app
 npm run build:docs   # build the docs app
 ```
 
+A ds-docs block reaches the Claude Design project only when its template marks it
+`data-claude-design`; nothing is published by default. What to mark and how many:
+[`.design-sync/CARDS.md`](.design-sync/CARDS.md).
+
 ## A `>` alone on a line is deliberate — do not tidy it away
 
 `bracketSameLine` keeps the closing bracket of a multi-attribute tag on the last attribute line, so a
