@@ -156,6 +156,9 @@ export class TabsComponent {
       const observer = new ResizeObserver(() => this.updateScrollArrows());
       observer.observe(strip);
       observer.observe(strip.parentElement!);
+      for (const tab of Array.from(strip.children)) {
+        observer.observe(tab);
+      }
       onCleanup(() => observer.disconnect());
     });
 
