@@ -13,6 +13,9 @@ export interface DsIntl {
     readonly showPassword: string;
     /** `'Hide password'` - input. */
     readonly hidePassword: string;
+    /** `'1 character over the limit'` / `` `${excess} characters over the limit` `` - textarea
+     *  `maxLengthMode="soft"`. */
+    readonly overLimit: (excess: number) => string;
   };
   readonly picker: {
     /** `'Select…'` - autocomplete, multi-select `placeholder` default. */

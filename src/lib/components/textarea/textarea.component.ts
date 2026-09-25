@@ -2,6 +2,7 @@ import {
   Component,
   ElementRef,
   ViewEncapsulation,
+  afterRenderEffect,
   booleanAttribute,
   computed,
   forwardRef,
@@ -13,7 +14,7 @@ import {
 import { DS_INTL, optionalBound } from '@ids-group-ltd/ids-design-system/core';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DsControlValueAccessor } from '@ids-group-ltd/ids-design-system/components';
-import type { TextareaResize } from './textarea.types';
+import type { TextareaMaxLengthMode, TextareaResize } from './textarea.types';
 import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
 import { FieldMessageComponent } from '@ids-group-ltd/ids-design-system/components/field-message';
 import {
@@ -46,6 +47,8 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
   protected readonly intl = inject(DS_INTL);
   private readonly control =
     viewChild<ElementRef<HTMLTextAreaElement>>('control');
+  private readonly overflowMirror =
+    viewChild<ElementRef<HTMLDivElement>>('overflowMirror');
 
   /** Text value, two-way bound. */
   readonly value = model<string>('');
@@ -102,10 +105,36 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
   readonly resize = input<TextareaResize>('vertical');
   /** Accessible name when no visible `label` is provided. */
   readonly ariaLabel = input<string | null>(null);
-  /** Hard character cap — applies the native maxlength attribute and shows a
-   *  live "{current}/{max}" counter below the field. */
+  /** Character limit - shows a live "{current}/{max}" counter below the field.
+   *  `maxLengthMode` decides what happens at the limit. Counts `value.length`, the
+   *  UTF-16 units the native `maxlength` counts, whitespace included. */
   readonly maxLength = input<number | null, number | null | undefined>(null, {
     transform: optionalBound,
+  });
+  /** `'hard'` applies the native maxlength attribute, so typing and paste stop at
+   *  `maxLength`. `'soft'` lets the text run past it: the counter turns red, the
+   *  characters past the limit are highlighted, and the field reports invalid
+   *  (`aria-invalid`, with the counter as its description). Blocking a save on
+   *  it is the form's job. */
+  readonly maxLengthMode = input<TextareaMaxLengthMode>('hard');
+  protected readonly overLimitBy = computed(() => {
+    const limit = this.maxLength();
+
+    return this.maxLengthMode() === 'soft' && limit !== null
+      ? Math.max(0, this.value().length - limit)
+      : 0;
+  });
+  protected readonly overflowParts = computed(() => {
+    const value = this.value();
+    let splitAt = value.length - this.overLimitBy();
+    // A limit inside a surrogate pair marks the whole character: half a pair
+    // renders at another width and shifts every mirrored line after it.
+    const previous = value.charCodeAt(splitAt - 1);
+    if (previous >= 0xd800 && previous <= 0xdbff) {
+      splitAt -= 1;
+    }
+
+    return { within: value.slice(0, splitAt), over: value.slice(splitAt) };
   });
 
   // Signal forms binds these by name; without them a `pattern()` or `minLength()`
@@ -149,7 +178,7 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
     warning: this.warning,
     error: this.error,
     errors: this.errors,
-    invalid: this.invalid,
+    invalid: computed(() => this.invalid() || this.overLimitBy() > 0),
     success: this.success,
     touchedSelf: this.touchedSelf,
     touched: this.touched,
@@ -169,6 +198,15 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
   protected readonly currentLength = computed(() => this.value().length);
   protected readonly counterId = computed(() =>
     this.maxLength() !== null ? `${this.uid}-counter` : null,
+  );
+  protected readonly describedBy = computed(
+    () =>
+      [this.hintId(), this.overLimitBy() > 0 ? this.counterId() : null]
+        .filter(Boolean)
+        .join(' ') || null,
+  );
+  protected readonly nativeMaxLength = computed(() =>
+    this.maxLengthMode() === 'hard' ? this.maxLength() : null,
   );
 
   protected readonly wrapperClasses = computed(() => {
@@ -191,6 +229,9 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
     if (this.autosize()) {
       parts.push('autosize');
     }
+    if (this.maxLengthMode() === 'soft' && this.maxLength() !== null) {
+      parts.push('soft-limit');
+    }
 
     return parts.join(' ');
   });
@@ -206,6 +247,24 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
   protected readonly effectiveResize = computed<TextareaResize>(() =>
     this.autosize() ? 'none' : this.resize(),
   );
+
+  constructor() {
+    super();
+    afterRenderEffect({
+      write: () => {
+        this.overflowParts();
+        this.syncOverflowScroll();
+      },
+    });
+  }
+
+  protected syncOverflowScroll(): void {
+    const mirror = this.overflowMirror()?.nativeElement;
+    const control = this.control()?.nativeElement;
+    if (mirror && control) {
+      mirror.scrollTop = control.scrollTop;
+    }
+  }
 
   /** Move keyboard focus to the native textarea — public so a host can drive it
    *  deliberately, e.g. focusing the first invalid field on a failed submit. */

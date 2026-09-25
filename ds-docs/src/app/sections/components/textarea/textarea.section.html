@@ -123,6 +123,36 @@
       [maxLength]="300" />
   </div>
 
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      maxLengthMode="soft"
+    </code> lets the text run
+    past the limit: the counter turns red, the characters past it are
+    highlighted, and the field reports
+    <code class="t-mono-inline">
+      aria-invalid
+    </code> with the counter as its
+    description. The form still decides whether to block a save.
+  </p>
+
+  <div class="grid-2">
+    <ds-textarea
+      label="Case note"
+      maxLengthMode="soft"
+      [rows]="3"
+      [maxLength]="120"
+      [(value)]="softNote" />
+
+    <ds-textarea
+      label="Case note · autosize"
+      maxLengthMode="soft"
+      [autosize]="true"
+      [minRows]="2"
+      [maxRows]="5"
+      [maxLength]="120"
+      [(value)]="softNote" />
+  </div>
+
   <h3 class="block-title t-h4">
     Autosize
   </h3>

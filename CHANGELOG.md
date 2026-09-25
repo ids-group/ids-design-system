@@ -68,13 +68,18 @@
   The default wording returns `Showing 0 of 0`, so an app that never overrides the range text has
   nothing to do.
 
+- **`DsIntl.field` gains the required `overLimit: (excess: number) => string`.** Code that declares a
+  complete `DsIntl` object of its own, rather than a `DsIntlOverrides` passed to `provideDsIntl`, adds
+  it or fails to compile.
+
 - **Subclassing one of these breaks on a name collision.** `BarChartComponent`, `ChartComponent`,
   `ColumnSeriesComponent`, `LineSeriesComponent`, `FunnelChartComponent`, `HeatmapChartComponent`,
   `PieChartComponent`, `ScatterChartComponent` and `WaterfallChartComponent` gained the pinning,
   hover-delay, label-highlight and stagger members; `ColumnChartComponent` and `LineChartComponent`
   only had `pinOnClick` change type; `PaginationComponent` gained `empty`, `TableComponent` gained
-  `emptyCell` and `emptyCellText` and `TooltipDirective` gained `detachAncestor`, `disclosesOwnText` and
-  `listenToFocusableAncestor`; and three classes reachable only through their own entry points
+  `emptyCell` and `emptyCellText`, `TooltipDirective` gained `detachAncestor`, `disclosesOwnText` and
+  `listenToFocusableAncestor`, and `TextareaComponent` gained `maxLengthMode` and the soft-limit
+  members; and three classes reachable only through their own entry points
   gained members too - the internal `ChartLegendComponent`, the internal `ChartTooltipPanelComponent`
   and the internal `WaterfallMarksComponent`. Five protected members of `ColumnSeriesComponent` are
   gone: `pinDiscRadius`, `pinGlyph`, `pinGlyphOffset`, `pinGlyphSize` and `slotStepPx`. Build after
@@ -82,6 +87,14 @@
   override whose base member is gone. Subclassing a DS component is unsupported.
 
 ### Added
+
+- **`maxLengthMode` on `ds-textarea`.** `'hard'` (the default) keeps the native `maxlength`: typing
+  and paste stop at `maxLength`. `'soft'` lets the text run past it: the counter turns red, the
+  characters past the limit are highlighted inside the field, and the field reports `aria-invalid`
+  with the counter, which reads out the excess, as its description. Both modes count `value.length`,
+  whitespace included. A soft limit does not block a submit: validate the length in the form. The type
+  is `TextareaMaxLengthMode`, and `DS_INTL.field.overLimit(excess)` words the excess (default
+  `120 characters over the limit`).
 
 - **`DS_CONFIG.chart.pinOnClick` and `DS_CONFIG.chart.hoverDelayMs`.** Across every chart,
   `pinOnClick` (default `true`) sets whether a click holds a mark and `hoverDelayMs` (default `500`)
