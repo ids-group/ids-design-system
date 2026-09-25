@@ -8,6 +8,7 @@
       tabindex="-1"
       aria-hidden="true"
       [class.at-edge]="!canScrollPrevious()"
+      (mousedown)="$event.preventDefault()"
       (click)="scrollPage(false)">
       <ds-icon
         name="chevronLeft"
@@ -74,6 +75,7 @@
       tabindex="-1"
       aria-hidden="true"
       [class.at-edge]="!canScrollNext()"
+      (mousedown)="$event.preventDefault()"
       (click)="scrollPage(true)">
       <ds-icon
         name="chevronRight"
