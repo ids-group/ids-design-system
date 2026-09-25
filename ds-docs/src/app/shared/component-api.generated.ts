@@ -1257,6 +1257,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
       },
       {
+        "name": "pinOnClick",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Holds the clicked row and its tooltip in place, with a pin disc on it, until a second click, Escape or a press outside releases it. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. `rowClicked` fires either way - pinning is a state, not a handler."
+      },
+      {
         "name": "interactive",
         "kind": "input",
         "type": "boolean",
@@ -1264,15 +1273,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
-      },
-      {
-        "name": "pinOnClick",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Holds the hovered mark and its tooltip in place when it is clicked, until Escape or a press outside releases it. Off by default: a click is already the drill-down hook, and a mark left lit after the pointer has gone needs a reader who knows why it is lit. `rowClicked` fires either way — pinning is a state, not a handler."
       },
       {
         "name": "dimOthers",
@@ -1297,9 +1297,9 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "kind": "input",
         "type": "number",
         "union": null,
-        "default": "0",
+        "default": "40",
         "required": false,
-        "description": "Milliseconds between one mark's entrance and the next. `0`, the default, is no stagger at all; `40` is the documented non-zero step. The total is capped, so a long series does not crawl in."
+        "description": "Milliseconds between one row's entrance and the next, `40` by default; `0` turns the stagger off. The whole spread stays inside `--ds-motion-chart-mark-stagger-budget`, so a long chart narrows the step instead of crawling in."
       },
       {
         "name": "tooltip",
@@ -1902,11 +1902,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "cursorPin",
         "kind": "input",
-        "type": "boolean",
+        "type": "boolean | null",
         "union": null,
-        "default": "false",
+        "default": "null",
         "required": false,
-        "description": "Whether a press holds the category cursor where it is, so the reader can look away from the plot with the comparison still on screen. Released by pressing it again, by Escape, or by a press outside the plot."
+        "description": "Whether a press holds the category cursor where it is, so the reader can look away from the plot with the comparison still on screen. Released by pressing it again, by Escape, or by a press outside the plot. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`."
       },
       {
         "name": "tooltipLingerMs",
@@ -2148,11 +2148,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "pinOnClick",
         "kind": "input",
-        "type": "boolean",
+        "type": "boolean | null",
         "union": null,
-        "default": "false",
+        "default": "null",
         "required": false,
-        "description": "Holds the hovered mark and its tooltip in place when it is clicked, until Escape or a press outside releases it. Pinning is a state, not a handler."
+        "description": "Holds the hovered mark and its tooltip in place when it is clicked, until a second click, Escape or a press outside releases it. Under the category cursor the container holds the category instead. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`."
       },
       {
         "name": "dimOthers",
@@ -2168,9 +2168,9 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "kind": "input",
         "type": "number",
         "union": null,
-        "default": "0",
+        "default": "40",
         "required": false,
-        "description": "Milliseconds between one mark's entrance and the next. The total is capped, so a long series does not crawl in."
+        "description": "Milliseconds between one mark's entrance and the next. The steps narrow to fit the whole spread inside `--ds-motion-chart-mark-stagger-budget`, so a long series does not crawl in. `0` is no stagger."
       },
       {
         "name": "partOfWhole",
@@ -2381,11 +2381,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "pinOnClick",
         "kind": "input",
-        "type": "boolean",
+        "type": "boolean | null",
         "union": null,
-        "default": "false",
+        "default": "null",
         "required": false,
-        "description": "Holds the hovered mark and its tooltip in place when it is clicked, until Escape or a press outside releases it. Pinning is a state, not a handler."
+        "description": "Holds the hovered mark and its tooltip in place when it is clicked, until a second click, Escape or a press outside releases it. Under the category cursor the container holds the category instead. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`."
       },
       {
         "name": "dimOthers",
@@ -2428,9 +2428,9 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "kind": "input",
         "type": "number",
         "union": null,
-        "default": "0",
+        "default": "40",
         "required": false,
-        "description": "Milliseconds between one marker's entrance and the next. The total is capped."
+        "description": "Milliseconds between one series' entrance and the next, narrowed so the last series still starts within the stagger budget. `0` turns the stagger off."
       },
       {
         "name": "gaps",
@@ -3164,11 +3164,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "pinOnClick",
         "kind": "input",
-        "type": "boolean",
+        "type": "boolean | null",
         "union": null,
-        "default": "false",
+        "default": "null",
         "required": false,
-        "description": "Holds the hovered mark and its tooltip in place when it is clicked, until Escape or a press outside releases it. Off by default: a click is already the drill-down hook, and a mark left lit after the pointer has gone needs a reader who knows why it is lit. `pointClicked` fires either way — pinning is a state, not a handler."
+        "description": "Holds the clicked mark and its tooltip in place, with a pin disc on it, until a second click, Escape or a press outside releases it. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. `pointClicked` fires either way - pinning is a state, not a handler."
       },
       {
         "name": "dimOthers",
@@ -3184,9 +3184,9 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "kind": "input",
         "type": "number",
         "union": null,
-        "default": "0",
+        "default": "40",
         "required": false,
-        "description": "Milliseconds between one mark's entrance and the next. `0`, the default, is no stagger at all; `40` is the documented non-zero step. The total is capped, so a long series does not crawl in."
+        "description": "Milliseconds between one mark's entrance and the next. The steps narrow to fit the whole spread inside `--ds-motion-chart-mark-stagger-budget`, so a long series does not crawl in. `0` is no stagger."
       },
       {
         "name": "tooltip",
@@ -4173,6 +4173,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
       },
       {
+        "name": "pinOnClick",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Holds the clicked mark and its tooltip in place, with a pin disc on it, until a second click, Escape or a press outside releases it. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. `stageClicked` fires either way - pinning is a state, not a handler."
+      },
+      {
         "name": "interactive",
         "kind": "input",
         "type": "boolean",
@@ -4180,15 +4189,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
-      },
-      {
-        "name": "pinOnClick",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Holds the hovered mark and its tooltip in place when it is clicked, until Escape or a press outside releases it. Off by default: a click is already the drill-down hook, and a mark left lit after the pointer has gone needs a reader who knows why it is lit. `stageClicked` fires either way — pinning is a state, not a handler."
       },
       {
         "name": "dimOthers",
@@ -4204,9 +4204,9 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "kind": "input",
         "type": "number",
         "union": null,
-        "default": "0",
+        "default": "60",
         "required": false,
-        "description": "Milliseconds between one mark's entrance and the next. `0`, the default, is no stagger at all; `40` is the documented non-zero step. The total is capped, so a long series does not crawl in."
+        "description": "Milliseconds between one stage's entrance and the next, top to bottom. `60` is the default; `0` brings every stage in at once. The step narrows once the stages would take longer than 260ms to start, so a long funnel does not crawl in."
       },
       {
         "name": "tooltip",
@@ -4328,6 +4328,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Fades every cell but the one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed cells, which on a ramp is the only thing carrying magnitude."
       },
       {
+        "name": "pinOnClick",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Holds the hovered cell and its tooltip in place when it is clicked, until a second click, Escape or a press outside releases it. `cellClicked` fires either way. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`."
+      },
+      {
         "name": "frame",
         "kind": "input",
         "type": "ChartFrame | null",
@@ -4395,6 +4404,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "'item'",
         "required": false,
         "description": "Whether a hovered or focused cell opens a tooltip. A heat map's cells carry no printed value by default, so this is where a reading is read without reaching for the annex table."
+      },
+      {
+        "name": "staggerMs",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "40",
+        "required": false,
+        "description": "Milliseconds between one column's entrance and the next, left to right, `40` by default; `0` turns the stagger off. The whole spread stays inside `--ds-motion-chart-mark-stagger-budget`, so a wide grid narrows the step instead of crawling in."
       }
     ],
     "outputs": [
@@ -5155,11 +5173,11 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
       {
         "name": "pinOnClick",
         "kind": "input",
-        "type": "boolean",
+        "type": "boolean | null",
         "union": null,
-        "default": "false",
+        "default": "null",
         "required": false,
-        "description": "Holds the crosshair and its tooltip on the category that was clicked, until Escape or a press outside releases it. Off by default: a click is already the drill-down hook, and a crosshair left standing after the pointer has gone needs a reader who knows why. `pointClicked` fires either way — pinning is a state, not a handler."
+        "description": "Holds the crosshair and its tooltip on the category that was clicked, with a pin disc on it, until a second click, Escape or a press outside releases it. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. `pointClicked` fires either way - pinning is a state, not a handler."
       },
       {
         "name": "dimOthers",
@@ -5412,9 +5430,9 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "kind": "input",
         "type": "number",
         "union": null,
-        "default": "0",
+        "default": "40",
         "required": false,
-        "description": "Milliseconds between one series' entrance and the next. `0`, the default, is no stagger at all; `40` is the documented non-zero step. The total is capped, so a long list of series does not crawl in."
+        "description": "Milliseconds between one series' entrance and the next. `0` turns the stagger off. The step narrows so the last series still starts within the stagger budget, so a long list of series does not crawl in."
       },
       {
         "name": "tooltip",
@@ -7023,6 +7041,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
       },
       {
+        "name": "pinOnClick",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Holds the clicked mark and its tooltip in place, with a pin disc on it, until a second click, Escape or a press outside releases it. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. `sliceClicked` fires either way - pinning is a state, not a handler."
+      },
+      {
         "name": "interactive",
         "kind": "input",
         "type": "boolean",
@@ -7030,15 +7057,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
-      },
-      {
-        "name": "pinOnClick",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Holds the hovered mark and its tooltip in place when it is clicked, until Escape or a press outside releases it. Off by default: a click is already the drill-down hook, and a mark left lit after the pointer has gone needs a reader who knows why it is lit. `sliceClicked` fires either way — pinning is a state, not a handler."
       },
       {
         "name": "dimOthers",
@@ -7655,6 +7673,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Fades every mark but the one under the pointer. Off by default: on a scatter the pile-up IS the reading, and dimming the neighbours takes exactly that away."
+      },
+      {
+        "name": "pinOnClick",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Holds the hovered mark and its tooltip in place when it is clicked, until a second click, Escape or a press outside releases it. `pointClicked` fires either way. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`."
       }
     ],
     "outputs": [
