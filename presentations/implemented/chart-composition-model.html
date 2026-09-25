@@ -242,7 +242,7 @@ export const CHART_SCALES = new InjectionToken&lt;ChartScales&gt;('CHART_SCALES'
       <tbody>
         <tr>
           <td>Пять существующих чартов</td>
-          <td class="yes">Становятся пресетами над контейнером. <code class="tok">ds-bar-chart</code> — это <code class="tok">ds-chart</code> с одной <code class="tok">ds-bar-series</code> и горизонтальной ориентацией. <strong>Ни один публичный вход, выход или токен не меняется</strong> — это доказывает <code class="tok">check:public-api</code>, а не обещание.</td>
+          <td class="yes">Становятся пресетами над контейнером. <code class="tok">ds-bar-chart</code> — это <code class="tok">ds-chart</code> с одной <code class="tok">ds-bar-series</code> и горизонтальной ориентацией. <strong>Ни один публичный вход, выход или токен не меняется</strong> — это доказывает <code class="tok">check.mjs public-api</code>, а не обещание.</td>
         </tr>
         <tr>
           <td>Порядок работ</td>
@@ -250,7 +250,7 @@ export const CHART_SCALES = new InjectionToken&lt;ChartScales&gt;('CHART_SCALES'
         </tr>
         <tr>
           <td>Риск</td>
-          <td class="no">Рефакторинг пяти работающих компонентов без тест-раннера. Страховка — скриншот каждой карточки до и после, и <code class="tok">check:public-api</code> без диффа.</td>
+          <td class="no">Рефакторинг пяти работающих компонентов без тест-раннера. Страховка — скриншот каждой карточки до и после, и <code class="tok">check.mjs public-api</code> без диффа.</td>
         </tr>
         <tr>
           <td>Контрольная точка</td>

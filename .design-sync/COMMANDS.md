@@ -103,7 +103,7 @@ permission prompt once it is granted; writes prompt.
 node .design-sync/elements/tools/gen.mjs             # reads the AST → registrations + typed wrappers
 CI=true npx ng build ds-elements                     # AOT + Ivy linker (the slow step, ~8 s)
 node .design-sync/elements/tools/build-bundle.mjs    # → dist/ds-bundle.js (IIFE, window.IdsDs, react from window)
-bun run check:manual-surface                         # watch-list + doc coverage — see MANUAL-SURFACE.md
+node tools/check.mjs manual-surface                  # watch-list + doc coverage — see MANUAL-SURFACE.md
 ```
 
 `npm run check:cards` is the whole chain above in one command, and the only form

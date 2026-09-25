@@ -2,7 +2,7 @@
 // `presentations/backlog-board.html` embeds `docs/todo.md` and `docs/done.md` verbatim so its
 // popover works over `file://`. The embed is a copy, so it needs diffing against its source.
 //
-// Deliberately NOT in `lint:all`, for the reason `todo-index:check` is not either: `docs/todo.md`
+// Deliberately NOT in `lint:all`, for the reason the `todo-index` check is not either: `docs/todo.md`
 // is edited by parallel sessions in a shared checkout, so a byte-equality check against it fails a
 // run that has nothing to do with the branch in hand. Run it before committing the board, and run
 // it with `--fix` after committing either doc — `--fix` is idempotent and touches nothing else in

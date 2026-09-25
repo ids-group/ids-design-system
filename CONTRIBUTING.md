@@ -53,7 +53,7 @@ tells you about none of them until it fails:
    internals off the root — so a component that is not listed there is not public.
 
 Two rules the entry-point boundary imposes on the code itself, both gated by
-`npm run check-entry-point-imports`:
+`node tools/check.mjs entry-point-imports`:
 
 - **Reaching into another entry point is a package specifier, never a relative path.** Write
   `from '@ids-group-ltd/ids-design-system/core'`, not `from '../../core/size'`. A relative path
@@ -187,7 +187,7 @@ consumer reads about the others.
 is invisible to them and they report OK. Both went green on an uncommitted change and red the
 instant it was committed.
 
-`npm run changelog-lint` fails the PR gate on the mechanical half of this list. The
+`node tools/check.mjs changelog-lint` fails the PR gate on the mechanical half of this list. The
 judgment half is yours.
 
 **Never write, in an entry, a manifest field or a shipped comment:**

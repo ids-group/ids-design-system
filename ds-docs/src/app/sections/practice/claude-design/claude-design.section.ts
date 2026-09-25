@@ -34,7 +34,7 @@ const CHAIN: readonly Step[] = [
     does: 'Wraps it into dist/ds-bundle.js — one IIFE assigning every wrapper to window.IdsDs, taking React from the global the host supplies — plus dist/ds-bundle.css, the upload copy of the stylesheet with its font URLs pointed at the fonts the project already carries. It also type-checks the generated wrappers.',
   },
   {
-    command: 'bun run check:manual-surface',
+    command: 'node tools/check.mjs manual-surface',
     does: 'The gate over what generation cannot cover: doc and preview coverage for all 85 components, the conditional-projection watch-list, and the attribute directives.',
   },
 ];

@@ -11,7 +11,7 @@
 //
 // Step 2 exists because ng-packagr reads the published manifest from src/lib, not the workspace
 // root: `npm version` bumps the root alone, so without this the committed library manifest keeps
-// the outgoing version and `check:lib-package` fails on the first PR after every release.
+// the outgoing version and the `lib-package` check fails on the first PR after every release.
 //
 // The Claude Design upload tree is NOT rebuilt here. Only the after-release step has a browser,
 // so a build in this window leaves the cards live rather than frozen and their heights
