@@ -131,6 +131,10 @@
     transform-origin: left;
   }
 
+  #{$mark} #{$fill}:dir(rtl) {
+    transform-origin: right;
+  }
+
   @include enters(
     '#{$fill}',
     ds-chart-mark-grow-x,

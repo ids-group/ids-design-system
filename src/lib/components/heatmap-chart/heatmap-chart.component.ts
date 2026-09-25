@@ -196,7 +196,10 @@ export class HeatmapChartComponent {
   }
 
   protected onCellPress(cell: PlacedCell, index: number, event: Event): void {
-    if (cell.value !== null && this.defaults.pinOnClick()) {
+    // A cell is a native button, so Enter and Space click it too; `detail` is 0 for those, and a
+    // key that pins would hold one chart where every other chart's keys only focus.
+    const fromKeyboard = event instanceof MouseEvent && event.detail === 0;
+    if (cell.value !== null && this.defaults.pinOnClick() && !fromKeyboard) {
       this.activeMark.pin(index, event);
     }
   }
