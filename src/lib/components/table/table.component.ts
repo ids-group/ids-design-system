@@ -1197,9 +1197,23 @@ export class TableComponent<T extends object> {
       observer.observe(head);
       onCleanup(() => observer.disconnect());
     });
-    afterRenderEffect(() => {
+    afterRenderEffect((onCleanup) => {
       const cell = this.emptyCell()?.nativeElement;
-      this.emptyCellText.set(cell ? (cell.textContent ?? '').trim() : null);
+      if (!cell) {
+        this.emptyCellText.set(null);
+
+        return;
+      }
+      const readText = () =>
+        this.emptyCellText.set((cell.textContent ?? '').trim());
+      readText();
+      const observer = new MutationObserver(readText);
+      observer.observe(cell, {
+        subtree: true,
+        childList: true,
+        characterData: true,
+      });
+      onCleanup(() => observer.disconnect());
     });
     afterRenderEffect(() => {
       this.isOverlayLoading();

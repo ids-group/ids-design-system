@@ -19,7 +19,7 @@
     class="pagination-button"
     type="button"
     [attr.aria-label]="intl().pagination.previous"
-    [disabled]="loading() || currentPage() === 1"
+    [disabled]="loading() || empty() || currentPage() === 1"
     (click)="goTo(currentPage() - 1)">
     <ds-icon
       name="chevronLeft"
@@ -52,7 +52,7 @@
     class="pagination-button"
     type="button"
     [attr.aria-label]="intl().pagination.next"
-    [disabled]="loading() || currentPage() === totalPages()"
+    [disabled]="loading() || empty() || currentPage() === totalPages()"
     (click)="goTo(currentPage() + 1)">
     <ds-icon
       name="chevronRight"
