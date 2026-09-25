@@ -37,16 +37,17 @@
   display: block;
 }
 
-.tab-strip {
-  display: contents;
+:host(.scrolling-host) {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
 
-  &.scrolling {
-    display: flex;
+  > .tabs {
+    grid-column: 2;
+  }
 
-    > .tabs {
-      flex: 1 1 auto;
-      min-width: 0;
-    }
+  > .panel {
+    grid-column: 1 / -1;
+    min-width: 0;
   }
 }
 
@@ -83,7 +84,7 @@
   }
 }
 
-.tab-strip:has(> .pills) .scroll-arrow {
+:host(.scrolling-host:has(> .pills)) .scroll-arrow {
   border-bottom: 0;
   border-radius: var(--ds-radius-control);
 }
@@ -95,6 +96,11 @@
 
   &.scrollable {
     overflow-x: auto;
+    scroll-behavior: smooth;
+
+    @media (prefers-reduced-motion: reduce) {
+      scroll-behavior: auto;
+    }
 
     // Clips, so the ring has to be drawn inward or the overflow eats it.
     --focus-ring-offset: calc(-1 * var(--focus-ring-width));

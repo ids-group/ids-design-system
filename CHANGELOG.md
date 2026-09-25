@@ -68,10 +68,9 @@
   The default wording returns `Showing 0 of 0`, so an app that never overrides the range text has
   nothing to do.
 
-- **`DsIntl` gains three required keys: `field.overLimit: (excess: number) => string`,
-  `tabs.scrollPrevious` and `tabs.scrollNext`.** A complete `DsIntl` dictionary, or a complete `field`
-  or `tabs` section of one, declared as a typed object stops compiling until it lists them. Overrides
-  passed to `provideDsIntl` are partial and need nothing.
+- **`DsIntl` gains a required key: `field.overLimit: (excess: number) => string`.** A complete
+  `DsIntl` dictionary, or a complete `field` section of one, declared as a typed object stops
+  compiling until it lists it. Overrides passed to `provideDsIntl` are partial and need nothing.
 
 - **A horizontal `ds-description-list` stacks every item once a value would get less than
   `--ds-description-list-value-min-width`** (default `14rem`, 224px at a 16px root). Each item is a
@@ -95,9 +94,11 @@
   `emptyCell` and `emptyCellText`, `TooltipDirective` gained `detachAncestor`, `disclosesOwnText` and
   `listenToFocusableAncestor`, `TextareaComponent` gained `describedBy`, `maxLengthMode`,
   `nativeMaxLength`, `overflowParts`, `overLimitBy` and `syncOverflowScroll`, and `TabsComponent`
-  gained the scroll-arrow members; and three classes reachable only through their own entry points
-  gained members too - the internal `ChartLegendComponent`, the internal `ChartTooltipPanelComponent`
-  and the internal `WaterfallMarksComponent`. Five protected members of `ColumnSeriesComponent` are
+  gained `tablist`, `scrollsHorizontally`, `overflowing`, `showScrollArrows`, `canScrollPrevious`,
+  `canScrollNext`, `updateScrollArrows` and `scrollPage`; and three classes reachable only through
+  their own entry points gained members too - the internal `ChartLegendComponent`, the internal
+  `ChartTooltipPanelComponent` and the internal `WaterfallMarksComponent`. Five protected members of
+  `ColumnSeriesComponent` are
   gone: `pinDiscRadius`, `pinGlyph`, `pinGlyphOffset`, `pinGlyphSize` and `slotStepPx`. Build after
   upgrading; rename or mark `override` every member the compiler reports colliding, and delete an
   override whose base member is gone. Subclassing a DS component is unsupported.
@@ -105,13 +106,12 @@
 ### Added
 
 - **A `scrollable` `ds-tabs` strip shows previous and next arrows while tabs lie beyond its edges.**
-  Each arrow turns the strip by a page of tabs, smoothly unless reduced motion is set, and hides at
-  its own edge; a strip that fits shows none. The arrows sit outside the tab order and are hidden
-  from assistive technology, because the arrow keys already bring the selected tab into view. New
-  `DS_INTL.tabs.scrollPrevious` and `DS_INTL.tabs.scrollNext` label them (`Scroll tabs back`,
-  `Scroll tabs forward`). The `role="tablist"` element of every `ds-tabs` now sits inside a
-  `.tab-strip` wrapper, laid out as `display: contents` unless the strip scrolls, so a rule of yours
-  that reaches the tab list with a child combinator from the host selects nothing.
+  Each arrow turns the strip by a page of tabs and hides at its own edge; a strip that fits shows
+  none. The strip scrolls smoothly unless reduced motion is set, on an arrow and when a selected tab
+  comes into view. The arrows sit outside the tab order and are hidden from assistive technology,
+  because the arrow keys already bring the selected tab into view; a click on one leaves focus where
+  it was. A scrollable horizontal `ds-tabs` host is a grid: the arrows sit either side of the tab
+  list, and the panel spans the row below.
 
 - **`maxLengthMode` on `ds-textarea`.** `'hard'` (the default) keeps the native `maxlength`: typing
   and paste stop at `maxLength`. `'soft'` lets the text run past it: the counter turns red, the

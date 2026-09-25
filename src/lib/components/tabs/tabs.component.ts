@@ -54,6 +54,7 @@ function slugify(label: string): string {
   encapsulation: ViewEncapsulation.Emulated,
   host: {
     '[class.vertical-host]': "orientation() === 'vertical'",
+    '[class.scrolling-host]': 'scrollsHorizontally()',
   },
 })
 export class TabsComponent {
@@ -156,6 +157,9 @@ export class TabsComponent {
       const observer = new ResizeObserver(() => this.updateScrollArrows());
       observer.observe(strip);
       observer.observe(strip.parentElement!);
+      for (const tab of Array.from(strip.children)) {
+        observer.observe(tab);
+      }
       onCleanup(() => observer.disconnect());
     });
 
@@ -416,13 +420,7 @@ export class TabsComponent {
     if (distance * step < 1) {
       distance = step * strip.clientWidth;
     }
-    const reducedMotion = matchMedia(
-      '(prefers-reduced-motion: reduce)',
-    ).matches;
-    strip.scrollBy({
-      left: mirror * distance,
-      behavior: reducedMotion ? 'auto' : 'smooth',
-    });
+    strip.scrollBy({ left: mirror * distance });
   }
 
   protected onCloseClick(event: MouseEvent, index: number): void {

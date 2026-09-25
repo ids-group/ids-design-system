@@ -207,7 +207,7 @@
         "extends TabsComponent"
       ],
       "verify": "The app builds with no TS4114 or TS2416 against a DS base class, and no subclass keeps a member named after a removed one.",
-      "note": "The chart components gained the pinning, hover-delay and label-highlight members, except ColumnChartComponent and LineChartComponent, whose only change is the type of pinOnClick; PaginationComponent gained empty, TableComponent gained emptyCell and emptyCellText, TooltipDirective gained detachAncestor, disclosesOwnText and listenToFocusableAncestor, TextareaComponent gained describedBy, maxLengthMode, nativeMaxLength, overflowParts, overLimitBy and syncOverflowScroll, TabsComponent gained the scroll-arrow members; five protected members of ColumnSeriesComponent are gone (pinDiscRadius, pinGlyph, pinGlyphOffset, pinGlyphSize, slotStepPx). The compiler names every collision."
+      "note": "The chart components gained the pinning, hover-delay and label-highlight members, except ColumnChartComponent and LineChartComponent, whose only change is the type of pinOnClick; PaginationComponent gained empty, TableComponent gained emptyCell and emptyCellText, TooltipDirective gained detachAncestor, disclosesOwnText and listenToFocusableAncestor, TextareaComponent gained describedBy, maxLengthMode, nativeMaxLength, overflowParts, overLimitBy and syncOverflowScroll, TabsComponent gained tablist, scrollsHorizontally, overflowing, showScrollArrows, canScrollPrevious, canScrollNext, updateScrollArrows and scrollPage; five protected members of ColumnSeriesComponent are gone (pinDiscRadius, pinGlyph, pinGlyphOffset, pinGlyphSize, slotStepPx). The compiler names every collision."
     },
     {
       "id": "intl-field-over-limit-required",
@@ -277,27 +277,6 @@
         "(first: number, last: number, total: number)"
       ],
       "verify": "A paged ds-table filtered to no rows announces its empty-state text once; with no empty-state text it announces your empty wording, or nothing where your function returns an empty string."
-    },
-    {
-      "id": "intl-tabs-scroll-keys-added",
-      "kind": "behavior",
-      "old": "DsIntl",
-      "new": null,
-      "surface": "typescript",
-      "action": "None, unless your code declares a complete DsIntl, or a complete tabs section of one, as a typed object: add scrollPrevious and scrollNext to its tabs section.",
-      "appliesWhen": "Only an object typed as DsIntl or DsIntl['tabs'] that lists every key. Overrides passed to provideDsIntl are partial and need nothing.",
-      "pitfall": "A dictionary typed loosely (as any, or through a cast) compiles without the keys and falls back to nothing for them, so the tab strip arrows get no label in that language.",
-      "restore": null,
-      "searchHints": [
-        "DsIntl",
-        "tabs: {"
-      ],
-      "detect": [
-        ": DsIntl =",
-        "satisfies DsIntl",
-        "DsIntl['tabs']"
-      ],
-      "verify": "Every complete DsIntl dictionary in the app has scrollPrevious and scrollNext in its tabs section, and the app builds."
     },
     {
       "id": "description-list-stacks-below-value-min-width",
@@ -395,8 +374,8 @@
     "A tap on a chart mark stays held when the click that follows it lands (was: that click let go of it at once).",
     "ds-waterfall-chart gains pinOnClick (boolean | null, falling back to DS_CONFIG.chart.pinOnClick, then true), with the Unpin control the other charts show.",
     {
-      "text": "A scrollable ds-tabs strip shows previous and next arrows while tabs lie beyond its edges; each turns the strip by a page and hides at its own edge, and a strip that fits shows none. The arrows sit outside the tab order and are hidden from assistive technology. DS_INTL.tabs.scrollPrevious and DS_INTL.tabs.scrollNext label them. The role=\"tablist\" element of every ds-tabs now sits inside a .tab-strip wrapper (display: contents unless the strip scrolls), so a rule reaching it with a child combinator from ds-tabs selects nothing.",
-      "verify": "On a phone-width screen with a scrollable ds-tabs whose tabs do not fit, confirm only the next arrow shows at the start, both in the middle, only the previous arrow at the end, and none once the tabs fit."
+      "text": "A scrollable ds-tabs strip shows previous and next arrows while tabs lie beyond its edges; each turns the strip by a page and hides at its own edge, and a strip that fits shows none. The strip scrolls smoothly unless reduced motion is set, on an arrow and when a selected tab comes into view. The arrows sit outside the tab order and are hidden from assistive technology, and a click on one leaves focus where it was. A scrollable horizontal ds-tabs host is a grid: the arrows sit either side of the tab list and the panel spans the row below.",
+      "verify": "On a phone-width screen with a scrollable ds-tabs whose tabs do not fit, confirm only the next arrow shows at the start, both in the middle, only the previous arrow at the end, and none once the tabs fit, and that the panel spans the full width under the strip."
     },
     "New token --ds-description-list-value-min-width (default 14rem): the narrowest value a horizontal ds-description-list keeps beside its label before every item stacks."
   ],
