@@ -52,7 +52,7 @@
     </ng-template>
   </ds-table>
 
-  <h3 class="block-title t-h4">
+  <h3 data-no-card class="block-title t-h4">
     Sortable columns
   </h3>
 
@@ -85,7 +85,7 @@
     </ng-template>
   </ds-table>
 
-  <h3 class="block-title t-h4">
+  <h3 data-no-card class="block-title t-h4">
     Header sort states
   </h3>
 
@@ -155,7 +155,7 @@
     </div>
   </div>
 
-  <h3 class="block-title t-h4">
+  <h3 data-no-card class="block-title t-h4">
     Row interaction states
   </h3>
 
@@ -232,7 +232,7 @@
     </div>
   </div>
 
-  <h3
+  <h3 data-no-card
     class="block-title t-h4"
     data-nav="Naming cell">
     The cell that names what the row opens
@@ -277,7 +277,7 @@
     </div>
   </div>
 
-  <h3
+  <h3 data-no-card
     class="block-title t-h4"
     data-nav="Link cell">
     A cell that IS a link — the accessible way to say a row leads somewhere
@@ -405,7 +405,7 @@
     </ds-button>
   </ds-table>
 
-  <h3 class="block-title t-h4">
+  <h3 data-no-card class="block-title t-h4">
     Sticky header
   </h3>
 
@@ -443,7 +443,7 @@
     </ng-template>
   </ds-table>
 
-  <h3 class="block-title t-h4">
+  <h3 data-no-card class="block-title t-h4">
     Bordered
   </h3>
 
@@ -502,7 +502,7 @@
     [skeletonRows]="3"
     [stickyHeader]="false" />
 
-  <h3 class="block-title t-h4">
+  <h3 data-no-card class="block-title t-h4">
     Loading · skeleton with pagination
   </h3>
 
@@ -557,7 +557,7 @@
     [loading]="'overlay'"
     [stickyHeader]="false" />
 
-  <h3 class="block-title t-h4">
+  <h3 data-no-card class="block-title t-h4">
     Loading · let the table choose
   </h3>
 
@@ -892,7 +892,7 @@
     Selected: {{ projectSelected().size }}
   </p>
 
-  <h3
+  <h3 data-no-card
     class="block-title t-h4"
     data-nav="Wrapper templates">
     Templates a wrapper hands over
@@ -956,7 +956,7 @@
     {{ wrapperRows().length ? 'Empty it again' : 'Give it rows' }}
   </ds-button>
 
-  <h3
+  <h3 data-no-card
     class="block-title t-h4"
     data-nav="Row identity">
     Row identity for data with no key
@@ -995,7 +995,7 @@
     {{ [...deliverySelected()].join(', ') || 'none' }}
   </p>
 
-  <h3 class="block-title t-h4">
+  <h3 data-no-card class="block-title t-h4">
     What the pager shows
   </h3>
 
@@ -1144,7 +1144,7 @@
     Last event: {{ expandLog() }}
   </p>
 
-  <h3 class="block-title t-h4">
+  <h3 data-no-card class="block-title t-h4">
     One row at a time
   </h3>
 
@@ -1334,7 +1334,7 @@
     {{ lastRowAction() ?? '—' }}
   </p>
 
-  <h3 class="block-title t-h4">
+  <h3 data-no-card class="block-title t-h4">
     Column picker · reorder
   </h3>
 
@@ -1369,7 +1369,7 @@
     [reorderableColumns]="true"
     [stickyHeader]="false" />
 
-  <h3 class="block-title t-h4">
+  <h3 data-no-card class="block-title t-h4">
     Resizable columns
   </h3>
 
@@ -1463,7 +1463,7 @@
     </ng-template>
   </ds-table>
 
-  <h3 class="block-title t-h4">
+  <h3 data-no-card class="block-title t-h4">
     Inline editing
   </h3>
 
@@ -1487,7 +1487,7 @@
     [stickyHeader]="false"
     (cellEdited)="onCellEdited($event)" />
 
-  <h3 class="block-title t-h4">
+  <h3 data-no-card class="block-title t-h4">
     Persisted layout &amp; export
   </h3>
 
@@ -1638,7 +1638,7 @@
     </ds-button>
   </ds-table>
 
-  <h3 class="block-title t-h4">
+  <h3 data-no-card class="block-title t-h4">
     Sizing a column to its content
   </h3>
 
@@ -1667,7 +1667,7 @@
     [data]="projectRows"
     [columns]="fitColumns" />
 
-  <h3
+  <h3 data-no-card
     class="block-title t-h4"
     data-nav="Server sort">
     Server sort · a host that answers with its own default
@@ -1710,7 +1710,7 @@
     [sortDirection]="serverSortDir()"
     (sortChange)="onServerSort($event)" />
 
-  <h3
+  <h3 data-no-card
     class="block-title t-h4"
     data-nav="Two-way sort">
     The same thing two-way, when the host has no opinion to defend
@@ -1768,7 +1768,7 @@
     [(sortKey)]="twoWaySortKey"
     [(sortDirection)]="twoWaySortDir" />
 
-  <h3 class="block-title t-h4">
+  <h3 data-no-card class="block-title t-h4">
     Column filters
   </h3>
 
@@ -1799,7 +1799,7 @@
     </ng-template>
   </ds-table>
 
-  <h3 class="block-title t-h4">
+  <h3 data-no-card class="block-title t-h4">
     Truncation · full-text popover
   </h3>
 
@@ -1835,7 +1835,7 @@
     [columns]="truncateColumns"
     [stickyHeader]="false" />
 
-  <h3 class="block-title t-h4">
+  <h3 data-no-card class="block-title t-h4">
     Sticky horizontal scrollbar
   </h3>
 
@@ -1874,7 +1874,7 @@
     [stickyScrollbar]="true"
     [stickyHeader]="false" />
 
-  <h3 class="block-title t-h4">
+  <h3 data-no-card class="block-title t-h4">
     CSV export
   </h3>
 
@@ -1931,7 +1931,7 @@
     </ng-template>
   </ds-table>
 
-  <h3
+  <h3 data-no-card
     class="block-title t-h4"
     data-nav="Server filtering">
     Server-side filtering, and a filter of your own
@@ -1977,7 +1977,7 @@
   &lt;ds-button size="sm" (pressed)="apply(); close()"&gt;Apply&lt;/ds-button&gt;
 &lt;/ng-template&gt;</code></pre>
 
-  <h3 class="block-title t-h4">
+  <h3 data-no-card class="block-title t-h4">
     What a screen reader is told
   </h3>
 
@@ -2014,7 +2014,7 @@
     empty stays silent.
   </p>
 
-  <h3 class="block-title t-h4">
+  <h3 data-no-card class="block-title t-h4">
     Virtual scroll
   </h3>
 
@@ -2060,7 +2060,7 @@
     [zebra]="true"
     [stickyFirstColumn]="true" />
 
-  <h3 class="block-title t-h4">
+  <h3 data-no-card class="block-title t-h4">
     Lazy loading
   </h3>
 

@@ -27,7 +27,7 @@ elements upgrades every host a second time.
 
 **One card per BLOCK**, not per component. A block is one demo with its own
 `<h3 class="block-title">` and description, and the card keeps exactly that block
-plus the chapter's heading, tag chip and lede. 85 components, 409 cards.
+plus the chapter's heading, tag chip and lede. 91 components, 283 cards.
 
 That granularity is forced by how the pane renders: it fits a card's declared
 `viewport` into a fixed tile, so **the declared height IS the zoom level**.
