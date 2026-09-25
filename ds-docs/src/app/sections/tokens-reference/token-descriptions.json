@@ -652,7 +652,6 @@
   "--ds-motion-chart-mark-enter-easing": "Easing a chart mark arrives on. Defaults to --ease-emphasized-decelerate.",
   "--ds-motion-chart-mark-grow-duration": "How long a column, bar or waterfall step takes to grow out of its baseline. Defaults to --duration-slowest (600ms).",
   "--ds-motion-chart-mark-grow-easing": "Easing a mark grows on. Defaults to --ease-settle.",
-  "--ds-motion-chart-mark-stagger-budget": "The whole spread of a series' arrival, however many marks it has. Defaults to --duration-slow (260ms).",
   "--ds-motion-chart-mark-sweep-duration": "How long a pie ring takes to turn in or a line to draw on. Defaults to --duration-slowest (600ms).",
   "--ds-motion-check-enter-duration": "How long a check mark takes to land. Defaults to --duration-base.",
   "--ds-motion-check-enter-easing": "Easing a check mark lands on. Defaults to --ease-spring, which overshoots and settles.",
