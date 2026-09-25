@@ -1,0 +1,32 @@
+{
+  "version": "unreleased",
+  "items": [
+    {
+      "id": "pagination-range-receives-zeros-when-empty",
+      "kind": "behavior",
+      "old": "pagination.range",
+      "new": null,
+      "surface": [
+        "config",
+        "typescript"
+      ],
+      "action": "None, unless you supply your own pagination.range through provideDsIntl or DS_INTL: return your empty-list wording when total is 0.",
+      "appliesWhen": "Only an app that replaces DS_INTL.pagination.range. The default wording already reads Showing 0 of 0, and an app that never overrides the range text has nothing to do.",
+      "pitfall": "Nothing errors: a formatter that prints first and last unconditionally now shows a range of 0 to 0 under an empty list, on every ds-pagination and in every paged ds-table announcement that falls back to it.",
+      "restore": null,
+      "searchHints": [
+        "provideDsIntl",
+        "pagination",
+        "range"
+      ],
+      "detect": [
+        "pagination: {",
+        "range: (first",
+        "provideDsIntl("
+      ],
+      "verify": "A ds-pagination with total 0 shows your empty-list wording, and a paged ds-table filtered to no rows announces the same words."
+    }
+  ],
+  "informational": [],
+  "deleteList": []
+}

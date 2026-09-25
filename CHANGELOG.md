@@ -1,5 +1,12 @@
 ## Unreleased
 
+### Fixed
+
+- **`ds-pagination` reads `Showing 0 of 0` on an empty list.** With `total` at 0 the range label read
+  `Showing 1–0 of 0`. The pager now calls `DS_INTL.pagination.range(0, 0, 0)` for an empty list, and
+  the default wording returns `Showing 0 of 0` for a total of 0. A `range` of your own receives
+  `(0, 0, 0)` there.
+
 ## 0.14.1 — 2026-09-24
 
 ### Breaking
