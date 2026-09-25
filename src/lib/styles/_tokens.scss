@@ -172,15 +172,13 @@
      the two durations are added, and one role could not carry both halves of that sum. An arrival
      is timed by what arrives: `enter` for a mark that fades or settles in place, `grow` for one that
      grows out of its baseline and `sweep` for a ring or a line drawing on, `detail` for what
-     follows a mark (its value label, a marker). `stagger-budget` is the whole spread of a series'
-     arrival, however many marks it has. */
+     follows a mark (its value label, a marker). */
   --ds-motion-chart-mark-enter-duration:  var(--duration-slower);
   --ds-motion-chart-mark-enter-easing:    var(--ease-emphasized-decelerate);
   --ds-motion-chart-mark-grow-duration:   var(--duration-slowest);
   --ds-motion-chart-mark-grow-easing:     var(--ease-settle);
   --ds-motion-chart-mark-sweep-duration:  var(--duration-slowest);
   --ds-motion-chart-mark-detail-duration: var(--duration-base);
-  --ds-motion-chart-mark-stagger-budget:  var(--duration-slow);
   --ds-motion-chart-mark-exit-duration:  var(--duration-fast);
   --ds-motion-chart-mark-exit-easing:    var(--ease-accelerate);
 

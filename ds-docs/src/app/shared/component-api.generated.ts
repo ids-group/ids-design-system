@@ -1299,7 +1299,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "40",
         "required": false,
-        "description": "Milliseconds between one row's entrance and the next, `40` by default; `0` turns the stagger off. The whole spread stays inside `--ds-motion-chart-mark-stagger-budget`, so a long chart narrows the step instead of crawling in."
+        "description": "Milliseconds between one row's entrance and the next, `40` by default; `0` turns the stagger off. The whole spread stays within 260ms, so a long chart narrows the step instead of crawling in."
       },
       {
         "name": "tooltip",
@@ -2170,7 +2170,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "40",
         "required": false,
-        "description": "Milliseconds between one mark's entrance and the next. The steps narrow to fit the whole spread inside `--ds-motion-chart-mark-stagger-budget`, so a long series does not crawl in. `0` is no stagger."
+        "description": "Milliseconds between one mark's entrance and the next. The steps narrow to fit the whole spread within 260ms, so a long series does not crawl in. `0` is no stagger."
       },
       {
         "name": "partOfWhole",
@@ -3186,7 +3186,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "40",
         "required": false,
-        "description": "Milliseconds between one mark's entrance and the next. The steps narrow to fit the whole spread inside `--ds-motion-chart-mark-stagger-budget`, so a long series does not crawl in. `0` is no stagger."
+        "description": "Milliseconds between one mark's entrance and the next. The steps narrow to fit the whole spread within 260ms, so a long series does not crawl in. `0` is no stagger."
       },
       {
         "name": "tooltip",
@@ -4412,7 +4412,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "40",
         "required": false,
-        "description": "Milliseconds between one column's entrance and the next, left to right, `40` by default; `0` turns the stagger off. The whole spread stays inside `--ds-motion-chart-mark-stagger-budget`, so a wide grid narrows the step instead of crawling in."
+        "description": "Milliseconds between one column's entrance and the next, left to right, `40` by default; `0` turns the stagger off. The whole spread stays within 260ms, so a wide grid narrows the step instead of crawling in."
       }
     ],
     "outputs": [
@@ -11478,6 +11478,24 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Formats every value the chart prints - the axis ticks, the bar labels and the annex table. The sign a delta carries is added around it, so a formatter never has to know about one."
+      },
+      {
+        "name": "pinOnClick",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Holds the clicked step and its tooltip in place, with a pin disc on it, until a second click, Escape or a press outside releases it. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. `barClicked` fires either way - pinning is a state, not a handler."
+      },
+      {
+        "name": "staggerMs",
+        "kind": "input",
+        "type": "number",
+        "union": null,
+        "default": "40",
+        "required": false,
+        "description": "Milliseconds between one step's entrance and the next; a long waterfall narrows the step to arrive within 260ms. `0` is no stagger."
       }
     ],
     "outputs": [

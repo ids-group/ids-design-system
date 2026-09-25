@@ -209,7 +209,7 @@ export class BarChartComponent {
   }
 
   /** Milliseconds between one row's entrance and the next, `40` by default; `0` turns the stagger
-   *  off. The whole spread stays inside `--ds-motion-chart-mark-stagger-budget`, so a long chart
+   *  off. The whole spread stays within 260ms, so a long chart
    *  narrows the step instead of crawling in. */
   readonly staggerMs = input(40, { transform: numberAttribute });
 

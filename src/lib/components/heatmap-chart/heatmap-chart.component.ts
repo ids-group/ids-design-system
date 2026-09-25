@@ -148,9 +148,8 @@ export class HeatmapChartComponent {
   readonly tooltip = input<ChartItemTooltipTrigger>('item');
 
   /** Milliseconds between one column's entrance and the next, left to right, `40` by default;
-   *  `0` turns the stagger off. The whole spread stays inside
-   *  `--ds-motion-chart-mark-stagger-budget`, so a wide grid narrows the step instead of crawling
-   *  in. */
+   *  `0` turns the stagger off. The whole spread stays within 260ms, so a wide grid narrows the
+   *  step instead of crawling in. */
   readonly staggerMs = input(40, { transform: numberAttribute });
 
   // One step for the whole grid: each column's delay is its index times this, applied by the
