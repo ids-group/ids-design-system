@@ -117,4 +117,24 @@
   <p class="block-desc t-s">
     Last clicked: {{ lastClicked() }}
   </p>
+
+  <h3 class="block-title t-h4">
+    Holding a point
+  </h3>
+
+  <p class="block-desc t-s">
+    A click on a point holds it and its tooltip in place, with a pin disc over
+    it and an <code class="t-mono-inline">Unpin</code> control at the top end of
+    the chart. A second click, <kbd>Esc</kbd> or a press elsewhere lets go, and
+    <code class="t-mono-inline">
+      pointClicked
+    </code> fires either way. Enter and
+    Space on a point fire <code class="t-mono-inline">pointClicked</code> and do
+    not pin. Set <code class="t-mono-inline">pinOnClick="false"</code> to keep
+    points unheld, or
+    <code class="t-mono-inline">
+      DS_CONFIG.chart.pinOnClick: false
+    </code> for
+    every chart.
+  </p>
 </docs-section>

@@ -191,18 +191,26 @@
   <p class="block-desc t-s">
     <code class="t-mono-inline">
       interactive
-    </code> turns on the pointer cursor
-    and the hover tint, and makes each band a tab stop with
+    </code> turns on the hover tint and
+    makes each band a tab stop with
     <kbd>
       Enter
-    </kbd> and <kbd> Space </kbd> activating it.
+    </kbd> and <kbd> Space </kbd> activating it. The pointer cursor shows
+    wherever a click does something: on an
+    <code class="t-mono-inline">
+      interactive
+    </code> band, and on any band a
+    click would hold.
     <code class="t-mono-inline">
       stageClicked
     </code> fires whether or not the
     flag is set, so a chart that only needs the output does not have to
     advertise the affordance. Hovering a row of the stage table reads as
-    hovering the band it names: the same tooltip opens over the BAND, and the
-    rest of the funnel dims with it.
+    hovering the band it names: once the pointer has rested, the same tooltip
+    opens over the BAND, and the rest of the funnel dims with it whatever
+    <code class="t-mono-inline">
+      dimOthers
+    </code> says.
   </p>
 
   <ds-funnel-chart
@@ -223,47 +231,46 @@
   </h3>
 
   <p class="block-desc t-s">
-    <code class="t-mono-inline">
-      pinOnClick
-    </code> holds the clicked band and
-    its tooltip in place, so the reading stays while you look away from the
-    chart. A pin glyph marks the held band and a
-    <code class="t-mono-inline">
-      Reset
-    </code> appears in the corner;
+    A click holds the band and its tooltip in place, so the reading stays while
+    you look away from the chart. A pin disc marks the held band, and an Unpin
+    control appears at the top end of the chart, on the caption's line.
     <kbd>
       Esc
-    </kbd> releases it, and so does clicking the band again. With
+    </kbd> releases it, and so does clicking the band again or a press
+    elsewhere. With
     <code class="t-mono-inline">
       dimOthers
     </code> the rest of the funnel stays
     down too, which is what keeps the comparison on screen after the pointer has
-    gone.
+    gone. Set <code class="t-mono-inline">pinOnClick="false"</code> to keep
+    bands unheld, or
+    <code class="t-mono-inline">
+      DS_CONFIG.chart.pinOnClick: false
+    </code> for
+    every chart in the app.
   </p>
 
   <div class="states is-cols-2">
     <div class="state-cell">
       <ds-funnel-chart
         interactive
-        pinOnClick
         dataTable="none"
         [data]="pinStages()" />
 
       <div class="state-cell-label">
-        pinOnClick
+        default
       </div>
     </div>
 
     <div class="state-cell">
       <ds-funnel-chart
         interactive
-        pinOnClick
         dimOthers
         dataTable="none"
         [data]="pinDimStages()" />
 
       <div class="state-cell-label">
-        pinOnClick + dimOthers
+        dimOthers
       </div>
     </div>
   </div>
@@ -276,16 +283,36 @@
     <code class="t-mono-inline">
       staggerMs
     </code> spaces the bands' arrivals
-    out rather than fading them all at once.
+    out as they rise in. <code class="t-mono-inline">60</code> is the default,
+    the whole spread fits inside
     <code class="t-mono-inline">
-      0
-    </code>, the default, means no stagger.
+      --ds-motion-chart-mark-stagger-budget
+    </code>,
+    and <code class="t-mono-inline">0</code> has every band arrive together.
   </p>
 
-  <ds-funnel-chart
-    dataTable="none"
-    staggerMs="60"
-    [data]="staggerStages()" />
+  <div class="states is-cols-2">
+    <div class="state-cell">
+      <ds-funnel-chart
+        dataTable="none"
+        staggerMs="0"
+        [data]="staggerStages()" />
+
+      <div class="state-cell-label">
+        staggerMs = 0
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-funnel-chart
+        dataTable="none"
+        [data]="staggerStages()" />
+
+      <div class="state-cell-label">
+        staggerMs = 60 (default)
+      </div>
+    </div>
+  </div>
 
   <docs-replay-button />
 
