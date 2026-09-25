@@ -260,6 +260,10 @@
     {
       "text": "ds-pagination with total 0 disables every page button and marks none as current (page 1 was highlighted and carried aria-current).",
       "verify": "Render a ds-pagination with total 0: the range reads Showing 0 of 0, every button is disabled, and no button is highlighted or carries aria-current."
+    },
+    {
+      "text": "The Unpin control sits at the top end of a chart, on its caption's line, and the caption leaves room for it while it shows; a chart with no caption gains the line.",
+      "verify": "Pin a mark on a chart with a caption and on one without, and confirm the Unpin control covers no axis label, legend entry, table cell or caption text."
     }
   ],
   "deleteList": [
