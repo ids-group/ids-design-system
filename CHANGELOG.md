@@ -93,12 +93,12 @@
   only had `pinOnClick` change type; `PaginationComponent` gained `empty`, `TableComponent` gained
   `emptyCell` and `emptyCellText`, `TooltipDirective` gained `detachAncestor`, `disclosesOwnText` and
   `listenToFocusableAncestor`, `TextareaComponent` gained `describedBy`, `maxLengthMode`,
-  `nativeMaxLength`, `overflowParts`, `overLimitBy` and `syncOverflowScroll`, and `TabsComponent`
-  gained `tablist`, `scrollsHorizontally`, `overflowing`, `showScrollArrows`, `canScrollPrevious`,
-  `canScrollNext`, `updateScrollArrows` and `scrollPage`; and three classes reachable only through
-  their own entry points gained members too - the internal `ChartLegendComponent`, the internal
-  `ChartTooltipPanelComponent` and the internal `WaterfallMarksComponent`. Five protected members of
-  `ColumnSeriesComponent` are
+  `nativeMaxLength`, `overflowMirror`, `overflowParts`, `overLimitBy` and `syncOverflowScroll`, and
+  `TabsComponent` gained `tablist`, `scrollsHorizontally`, `overflowing`, `showScrollArrows`,
+  `canScrollPrevious`, `canScrollNext`, `updateScrollArrows` and `scrollPage`; and three classes
+  reachable only through their own entry points gained members too - the internal
+  `ChartLegendComponent`, the internal `ChartTooltipPanelComponent` and the internal
+  `WaterfallMarksComponent`. Five protected members of `ColumnSeriesComponent` are
   gone: `pinDiscRadius`, `pinGlyph`, `pinGlyphOffset`, `pinGlyphSize` and `slotStepPx`. Build after
   upgrading; rename or mark `override` every member the compiler reports colliding, and delete an
   override whose base member is gone. Subclassing a DS component is unsupported.
