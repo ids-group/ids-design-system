@@ -72,6 +72,8 @@ export class PaginationComponent {
       .join(' '),
   );
 
+  protected readonly empty = computed(() => this.total() === 0);
+
   protected readonly totalPages = computed(() =>
     Math.max(1, Math.ceil(this.total() / this.pageSize())),
   );
