@@ -1,19 +1,21 @@
-@if (rendered()) {
+@if (rendered() || preview.staticPreview()) {
   <div
-    class="drawer-root"
+    [class]="preview.staticPreview() ? 'drawer-static' : 'drawer-root'"
     [class.closing]="closing()">
-    <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- scrim; click dismisses, keyboard dismisses via Escape (host document:keydown.escape) -->
-    <div
-      class="drawer-scrim"
-      [class.closing]="closing()"
-      (click)="onClose()">
-    </div>
+    @if (!preview.staticPreview()) {
+      <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- scrim; click dismisses, keyboard dismisses via Escape (host document:keydown.escape) -->
+      <div
+        class="drawer-scrim"
+        [class.closing]="closing()"
+        (click)="onClose()">
+      </div>
+    }
 
     <div
       role="dialog"
-      aria-modal="true"
-      cdkTrapFocus
-      cdkTrapFocusAutoCapture
+      [attr.aria-modal]="preview.staticPreview() ? null : 'true'"
+      [cdkTrapFocus]="!preview.staticPreview()"
+      [cdkTrapFocusAutoCapture]="!preview.staticPreview()"
       [class]="classes()"
       [class.closing]="closing()"
       [attr.aria-labelledby]="title() ? titleId : null"

@@ -1,5 +1,14 @@
 ## Unreleased
 
+### Added
+
+- **`ds-drawer` and `ds-bottom-sheet` take a showcase-only `staticPreview` input.** Set, the panel
+  renders open in the page flow, with no scrim, fixed positioning, enter animation, scroll lock or
+  focus trap, and closing does nothing; `open` is ignored. It is for static documentation
+  specimens, like the same input on `ds-modal`, `ds-popover` and `ds-select`, and is not part of
+  the production contract. Off by default; nothing changes for a drawer or sheet that does not set
+  it.
+
 ## 0.14.2 — 2026-09-25
 
 ### Breaking

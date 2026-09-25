@@ -57,6 +57,16 @@
   }
 }
 
+.drawer-static {
+  display: contents;
+
+  .drawer {
+    position: relative;
+    max-width: 100%;
+    animation: none;
+  }
+}
+
 .drawer-scrim {
   position: absolute;
   inset: 0;

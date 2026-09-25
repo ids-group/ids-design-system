@@ -1,18 +1,18 @@
-@if (rendered()) {
+@if (rendered() || preview.staticPreview()) {
   <!-- eslint-disable-next-line @angular-eslint/template/interactive-supports-focus -- backdrop; keyboard dismissal is (keydown.escape) on this element, a backdrop isn't a tabbable control -->
   <div
-    class="sheet-overlay"
+    [class]="preview.staticPreview() ? 'sheet-static' : 'sheet-overlay'"
     [class.closing]="closing()"
     (pointerdown)="backdropPress.down($event)"
     (pointerup)="onBackdropRelease($event)"
     (keydown.escape)="onEscape()">
     <div
       #sheet
-      cdkTrapFocus
-      cdkTrapFocusAutoCapture
       class="sheet"
       role="dialog"
-      aria-modal="true"
+      [cdkTrapFocus]="!preview.staticPreview()"
+      [cdkTrapFocusAutoCapture]="!preview.staticPreview()"
+      [attr.aria-modal]="preview.staticPreview() ? null : 'true'"
       [attr.aria-labelledby]="title() ? titleId : null"
       [class.dragging]="dragOffset() !== null"
       [class.closing]="closing()"
