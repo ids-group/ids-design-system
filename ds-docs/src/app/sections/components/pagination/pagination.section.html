@@ -34,7 +34,8 @@
     <code>
       loading
     </code> disables every control, masks the range label and
-    sets <code> aria-busy </code> on the nav.
+    sets <code> aria-busy </code> on the nav. With a <code> total </code> of 0
+    the label reads Showing 0 of 0.
   </p>
 
   <div class="states is-cols-1">
@@ -107,6 +108,19 @@
 
       <div class="state-cell-label">
         Loading · controls disabled, label masked
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage">
+        <ds-pagination
+          [total]="0"
+          [pageSize]="10"
+          [currentPage]="1" />
+      </div>
+
+      <div class="state-cell-label">
+        Empty list · Showing 0 of 0
       </div>
     </div>
   </div>

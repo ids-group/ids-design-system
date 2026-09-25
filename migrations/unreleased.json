@@ -168,6 +168,53 @@
       ],
       "verify": "The app builds with no TS4114 or TS2416 against a DS base class, and no subclass keeps a member named after a removed one.",
       "note": "The chart components gained the pinning, hover-delay and label-highlight members; five protected members of ColumnSeriesComponent are gone (pinDiscRadius, pinGlyph, pinGlyphOffset, pinGlyphSize, slotStepPx). The compiler names every collision."
+    },
+    {
+      "id": "pagination-range-receives-zeros-when-empty",
+      "kind": "behavior",
+      "old": "pagination.range",
+      "new": null,
+      "surface": [
+        "config",
+        "typescript"
+      ],
+      "action": "None, unless you supply your own pagination.range through provideDsIntl or DS_INTL: return your empty-list wording when total is 0.",
+      "appliesWhen": "Only an app that replaces DS_INTL.pagination.range. The default wording already reads Showing 0 of 0, and an app that never overrides the range text has nothing to do.",
+      "pitfall": "Nothing errors: a formatter that prints first and last unconditionally now shows a range of 0 to 0 under an empty list, on every ds-pagination and in every paged ds-table announcement that falls back to it.",
+      "restore": null,
+      "searchHints": [
+        "provideDsIntl",
+        "pagination",
+        "range"
+      ],
+      "detect": [
+        "pagination: {",
+        "range: (first",
+        "provideDsIntl("
+      ],
+      "verify": "A ds-pagination with total 0 shows your empty-list wording, and a paged ds-table filtered to no rows announces the same words."
+    },
+    {
+      "id": "table-range-announcement-receives-zeros-when-empty",
+      "kind": "behavior",
+      "old": "ds-table[rangeAnnouncement]",
+      "new": null,
+      "surface": [
+        "template",
+        "typescript"
+      ],
+      "action": "None, unless you bind [rangeAnnouncement] on a paged ds-table: return your empty wording, or an empty string to stay silent, when total is 0.",
+      "appliesWhen": "Only a paged ds-table (pageSize set) with its own rangeAnnouncement. A table without pageSize announces no range, and one without the binding follows DS_INTL.pagination.range.",
+      "pitfall": "Nothing errors: a function that formats first and last unconditionally is now called with (0, 0, 0) when a filter or new data empties the table, and a screen reader hears a range of 0 to 0.",
+      "restore": null,
+      "searchHints": [
+        "rangeAnnouncement"
+      ],
+      "detect": [
+        "[rangeAnnouncement]=",
+        "(first: number, last: number, total: number)"
+      ],
+      "verify": "A paged ds-table filtered to no rows announces your empty wording once, or nothing where your function returns an empty string."
     }
   ],
   "informational": [
@@ -199,6 +246,14 @@
     {
       "text": "A tooltip swatch is ringed only when its colour sits below 3:1 against the tooltip background, with a 1.5px ring in the tooltip's text colour drawn inside the 12px dot; every other swatch has no ring.",
       "verify": "Hover a dark series on the light theme and a mid-tone one, and confirm only the dark one's swatch is ringed and both are 12px."
+    },
+    {
+      "text": "The ds-tooltip panel wraps a value with no break opportunity (a long file name or id) inside its max width instead of running past its edge.",
+      "verify": "Hover a tooltip whose text is one unbroken 60-character token and confirm it breaks onto a second line inside the dark panel."
+    },
+    {
+      "text": "ds-select, ds-autocomplete and ds-multi-select show a clipped trigger value or option label in full in a tooltip on hover; a label that fits shows none. A [title]= set on the picker only to repeat that label now shows a second, native tooltip beside it (delete list: picker-title-repeating-clipped-label).",
+      "verify": "In a narrow ds-select, hover the closed trigger holding a long value and each long option in the open list: one dark tooltip shows the whole label, and a short label shows none."
     }
   ],
   "deleteList": [
@@ -220,6 +275,16 @@
         "[cursorPin]=\"true\""
       ],
       "why": "A press holds the category cursor by default, so a binding of true restates it. It still does something where DS_CONFIG.chart.pinOnClick is false and this chart is the exception, and may stay there.",
+      "replaceWith": "nothing"
+    },
+    {
+      "id": "picker-title-repeating-clipped-label",
+      "surface": "template",
+      "find": [
+        "[title]=",
+        "[attr.title]="
+      ],
+      "why": "ds-select, ds-autocomplete and ds-multi-select disclose a clipped trigger value or option label in a tooltip, so a title bound on the picker to repeat that label adds a second, native tooltip. A title that carries more than the label, or one on a picker whose label never clips, may stay.",
       "replaceWith": "nothing"
     }
   ]

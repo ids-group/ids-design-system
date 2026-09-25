@@ -38,6 +38,7 @@ import { SpinnerComponent } from '@ids-group-ltd/ids-design-system/components/sp
 import { TagComponent } from '@ids-group-ltd/ids-design-system/components/tag';
 import { DsControlValueAccessor } from '@ids-group-ltd/ids-design-system/components';
 import { FieldMessageComponent } from '@ids-group-ltd/ids-design-system/components/field-message';
+import { TooltipDirective } from '@ids-group-ltd/ids-design-system/components/tooltip';
 import {
   resolveFieldMessage,
   trimmedText,
@@ -91,6 +92,7 @@ let nextId = 0;
     TagComponent,
     FieldMessageComponent,
     NgTemplateOutlet,
+    TooltipDirective,
   ],
   templateUrl: './autocomplete.component.html',
   styleUrl: './autocomplete.component.scss',

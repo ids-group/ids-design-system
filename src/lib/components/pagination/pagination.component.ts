@@ -100,10 +100,14 @@ export class PaginationComponent {
   });
 
   protected readonly rangeLabel = computed(() => {
+    const total = this.total();
+    if (total === 0) {
+      return this.intl().pagination.range(0, 0, 0);
+    }
     const start = (this.currentPage() - 1) * this.pageSize() + 1;
-    const end = Math.min(this.currentPage() * this.pageSize(), this.total());
+    const end = Math.min(this.currentPage() * this.pageSize(), total);
 
-    return this.intl().pagination.range(start, end, this.total());
+    return this.intl().pagination.range(start, end, total);
   });
 
   protected readonly sizeOptions = computed(() => {

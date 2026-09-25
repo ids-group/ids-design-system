@@ -117,12 +117,32 @@
   the surface colour). The check follows the theme, so a colour ringed on the light panel can go
   unringed on the dark one.
 
+### Fixed
+
+- **`ds-pagination` reads `Showing 0 of 0` on an empty list.** With `total` at 0 the range label read
+  `Showing 1–0 of 0`. The pager now calls `DS_INTL.pagination.range(0, 0, 0)` for an empty list, and
+  the default wording returns `Showing 0 of 0` for a total of 0. A `range` of your own receives
+  `(0, 0, 0)` there.
+
+- **A paged `ds-table` announces a table with no rows.** Its live region went silent when a filter or
+  new data left the table empty. It now announces `rangeAnnouncement(0, 0, 0)`, `Showing 0 of 0` by
+  default, the same words its pager shows; a `rangeAnnouncement` that returns an empty string for a
+  total of 0 keeps it silent.
+
+- **The tooltip panel wraps a value with no break opportunity.** A long file name or id ran past the
+  panel's edge on one line; it now breaks inside the panel's max width.
+
+- **`ds-select`, `ds-autocomplete` and `ds-multi-select` disclose a clipped label.** A trigger value or
+  an option label cut off with an ellipsis shows the whole text in a tooltip on hover; a label that
+  fits shows none.
+
 ### What you can now DELETE
 
 | Delete | Why | Replace with |
 | --- | --- | --- |
 | a `pinOnClick`, `pinOnClick="true"` or `[pinOnClick]="true"` binding on a chart or a `dsColumnSeries` / `dsLineSeries` mark | a click holds a mark by default | nothing; keep it where `DS_CONFIG.chart.pinOnClick` is `false` and this chart is the exception |
 | a `cursorPin`, `cursorPin="true"` or `[cursorPin]="true"` binding on `ds-chart` | a press holds the category cursor by default | nothing; keep it where `DS_CONFIG.chart.pinOnClick` is `false` and this chart is the exception |
+| a `[title]=` on a `ds-select`, `ds-autocomplete` or `ds-multi-select` that repeats the selected or option label | the picker shows a clipped label in full in a tooltip | nothing; a `title` that says more than the label stays legitimate |
 
 ## 0.14.1 — 2026-09-24
 

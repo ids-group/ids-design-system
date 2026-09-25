@@ -243,8 +243,9 @@ export class TableComponent<T extends object> {
   );
   /**
    * Wording for the row-range announcement, so it can be translated. Receives
-   * the 1-based first and last row on screen and the total; return an empty
-   * string to say nothing. Unset falls back to `DS_INTL.pagination.range`.
+   * the 1-based first and last row on screen and the total, or `(0, 0, 0)` when
+   * a paged table has no rows; return an empty string to say nothing. Unset
+   * falls back to `DS_INTL.pagination.range`.
    */
   readonly rangeAnnouncement = input<
     ((first: number, last: number, total: number) => string) | null
@@ -945,11 +946,11 @@ export class TableComponent<T extends object> {
       return '';
     }
     const rows = this.displayData().length;
+    const total = this.total() ?? this.filteredData().length;
     if (rows === 0) {
-      return '';
+      return total === 0 ? this.rangeAnnouncementResolved()(0, 0, 0) : '';
     }
     const first = (this.page() - 1) * size + 1;
-    const total = this.total() ?? this.filteredData().length;
 
     return this.rangeAnnouncementResolved()(first, first + rows - 1, total);
   });
