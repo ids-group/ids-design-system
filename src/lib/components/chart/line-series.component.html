@@ -25,7 +25,10 @@
         <svg:path
           class="series-halo"
           [class.is-dimmed]="isDimmed(entry.series.id)"
+          [class.is-dashed]="dashFor(entry.seriesIndex) !== null"
           [attr.stroke-dasharray]="dashFor(entry.seriesIndex)"
+          [attr.pathLength]="dashFor(entry.seriesIndex) === null ? 1 : null"
+          [style.--_chart-mark-stagger]="seriesStagger(entry.seriesIndex)"
           [attr.d]="path" />
       }
     }
@@ -36,7 +39,9 @@
       <svg:path
         class="series-line"
         [class.is-dimmed]="isDimmed(entry.series.id)"
+        [class.is-dashed]="dashFor(entry.seriesIndex) !== null"
         [attr.stroke-dasharray]="dashFor(entry.seriesIndex)"
+        [attr.pathLength]="dashFor(entry.seriesIndex) === null ? 1 : null"
         [style.--_chart-mark-stagger]="seriesStagger(entry.seriesIndex)"
         [attr.d]="path"
         [attr.stroke]="entry.color"

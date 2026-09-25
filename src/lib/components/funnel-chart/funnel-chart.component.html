@@ -127,6 +127,7 @@
         <tbody>
           @for (entry of stages(); track entry.stage.id; let index = $index) {
             <tr
+              [style.--_chart-mark-stagger]="markStagger(index)"
               (pointerenter)="onRowEnter(index, $event)"
               (pointerleave)="onRowLeave()">
               <th scope="row">

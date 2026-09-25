@@ -208,10 +208,10 @@ export class BarChartComponent {
     return highlighted !== null && highlighted !== key;
   }
 
-  /** Milliseconds between one mark's entrance and the next. `0`, the default, is no stagger at
-   *  all; `40` is the documented non-zero step. The total is capped, so a long series does not
-   *  crawl in. */
-  readonly staggerMs = input(0, { transform: numberAttribute });
+  /** Milliseconds between one row's entrance and the next, `40` by default; `0` turns the stagger
+   *  off. The whole spread stays inside `--ds-motion-chart-mark-stagger-budget`, so a long chart
+   *  narrows the step instead of crawling in. */
+  readonly staggerMs = input(40, { transform: numberAttribute });
 
   protected markStagger(index: number): string {
     return `${staggerDelay(index, this.rows().length, this.staggerMs())}ms`;

@@ -42,7 +42,8 @@
       [dsChartTooltipOrigin]="activeMark.origin()">
       <table
         class="grid"
-        [class.dims-others]="dimOthers()">
+        [class.dims-others]="dimOthers()"
+        [style.--_heatmap-chart-column-stagger]="columnStagger()">
         <thead>
           <tr>
             <td class="corner"></td>

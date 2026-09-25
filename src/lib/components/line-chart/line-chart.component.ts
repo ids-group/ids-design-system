@@ -323,10 +323,10 @@ export class LineChartComponent {
    *  retuned palette, and for a reader who asks for them. */
   readonly patterns = input(false, { transform: booleanAttribute });
 
-  /** Milliseconds between one series' entrance and the next. `0`, the default, is no stagger at
-   *  all; `40` is the documented non-zero step. The total is capped, so a long list of series does
-   *  not crawl in. */
-  readonly staggerMs = input(0, { transform: numberAttribute });
+  /** Milliseconds between one series' entrance and the next. `0` turns the stagger off. The step
+   *  narrows so the last series still starts within the stagger budget, so a long list of series
+   *  does not crawl in. */
+  readonly staggerMs = input(40, { transform: numberAttribute });
 
   protected readonly highlightedSeries = signal<string | null>(null);
 

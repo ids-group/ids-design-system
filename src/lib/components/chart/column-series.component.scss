@@ -3,6 +3,7 @@
 @use '../../styles/chart-interactive' as chart-interactive;
 @use '../../styles/chart-motion' as chart-motion;
 @include chart-motion.grows-up('.column', '.bar');
+@include chart-motion.follows('.value', var(--ds-motion-chart-mark-grow-duration));
 @include chart-frame.no-bounding-box-focus('.column');
 
 

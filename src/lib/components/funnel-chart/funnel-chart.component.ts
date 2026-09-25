@@ -198,10 +198,10 @@ export class FunnelChartComponent {
    *  and pays for it with the rest of the chart. */
   readonly dimOthers = input(false, { transform: booleanAttribute });
 
-  /** Milliseconds between one mark's entrance and the next. `0`, the default, is no stagger at
-   *  all; `40` is the documented non-zero step. The total is capped, so a long series does not
-   *  crawl in. */
-  readonly staggerMs = input(0, { transform: numberAttribute });
+  /** Milliseconds between one stage's entrance and the next, top to bottom. `60` is the default;
+   *  `0` brings every stage in at once. The step narrows once the stages would take longer than
+   *  260ms to start, so a long funnel does not crawl in. */
+  readonly staggerMs = input(60, { transform: numberAttribute });
 
   protected markStagger(index: number): string {
     return `${staggerDelay(index, this.stages().length, this.staggerMs())}ms`;

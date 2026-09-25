@@ -161,8 +161,9 @@ export class LineSeriesComponent implements OnDestroy {
     return this.patterns()[seriesIndex] || null;
   }
 
-  /** Milliseconds between one marker's entrance and the next. The total is capped. */
-  readonly staggerMs = input(0, { transform: numberAttribute });
+  /** Milliseconds between one series' entrance and the next, narrowed so the last series still
+   *  starts within the stagger budget. `0` turns the stagger off. */
+  readonly staggerMs = input(40, { transform: numberAttribute });
 
   /** What a `null` reading draws: `'break'` leaves a hole in the line, `'zero'` plots a point
    *  at zero. A missing measurement and a measured zero are different facts. */

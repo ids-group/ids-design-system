@@ -6,6 +6,7 @@ import {
   computed,
   inject,
   input,
+  numberAttribute,
   output,
   signal,
 } from '@angular/core';
@@ -13,6 +14,7 @@ import {
   CHART_HEAT_COLORS,
   chartDwell,
   chartRenderGate,
+  staggerDelay,
 } from '@ids-group-ltd/ids-design-system/components';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
@@ -144,6 +146,18 @@ export class HeatmapChartComponent {
   /** Whether a hovered or focused cell opens a tooltip. A heat map's cells carry no printed value
    *  by default, so this is where a reading is read without reaching for the annex table. */
   readonly tooltip = input<ChartItemTooltipTrigger>('item');
+
+  /** Milliseconds between one column's entrance and the next, left to right, `40` by default;
+   *  `0` turns the stagger off. The whole spread stays inside
+   *  `--ds-motion-chart-mark-stagger-budget`, so a wide grid narrows the step instead of crawling
+   *  in. */
+  readonly staggerMs = input(40, { transform: numberAttribute });
+
+  // One step for the whole grid: each column's delay is its index times this, applied by the
+  // stylesheet, because a table has no element that holds a column's cells.
+  protected readonly columnStagger = computed(
+    () => `${staggerDelay(1, this.columns().length, this.staggerMs())}ms`,
+  );
 
   /** The clicked cell, with the row and the column it sits at. Never fires for an unmeasured
    *  cell, which has no reading to drill into. */

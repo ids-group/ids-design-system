@@ -44,10 +44,12 @@
   }
 }
 
+// `--_chart-rise-distance` is for a canvas whose viewBox stretches: there a pixel is a user unit,
+// so a chart sets a percentage of the mark's own box on the canvas instead.
 @keyframes ds-chart-mark-rise {
   from {
     opacity: 0;
-    transform: translateY(4px);
+    transform: translateY(var(--_chart-rise-distance, 4px));
   }
 }
 

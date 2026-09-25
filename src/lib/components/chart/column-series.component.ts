@@ -127,9 +127,10 @@ export class ColumnSeriesComponent implements OnDestroy {
    *  for one mark and pays for it with the separation between the rest. */
   readonly dimOthers = input(false, { transform: booleanAttribute });
 
-  /** Milliseconds between one mark's entrance and the next. The total is capped, so a long
-   *  series does not crawl in. */
-  readonly staggerMs = input(0, { transform: numberAttribute });
+  /** Milliseconds between one mark's entrance and the next. The steps narrow to fit the whole
+   *  spread inside `--ds-motion-chart-mark-stagger-budget`, so a long series does not crawl in.
+   *  `0` is no stagger. */
+  readonly staggerMs = input(40, { transform: numberAttribute });
 
   /** Declares that the marks are parts of one whole, which is what makes a share of their total
    *  a real quantity. On, each mark's share appears on the tooltip's second line. */
