@@ -11,6 +11,13 @@
 
 ### Fixed
 
+- **A `ds-table` wider than its container no longer widens the page.** The hidden header label of
+  a column that sets `screenReaderLabel` and no `label` was left out of the table's horizontal
+  clip, so with that column past the container's edge the page gained a horizontal scroll as wide
+  as the table. The table's scroll box is now `position: relative`: every visually hidden label in
+  the table is clipped with the rows and scrolls with them. An element positioned absolutely inside
+  a cell template with no positioned ancestor of its own now resolves against that scroll box.
+
 - **A `dsTooltipWhenClipped` tooltip opens from keyboard focus on a control only.** A clipped host
   that cannot take focus itself opens when Tab lands on its nearest focusable ancestor, and that
   ancestor now has to be a control: a native `a[href]`, `button`, `input`, `select`, `textarea` or
