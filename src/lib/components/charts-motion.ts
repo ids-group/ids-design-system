@@ -1,7 +1,7 @@
 import type { AnimationCallbackEvent } from '@angular/core';
 
-// The whole spread of a series' arrival, `--ds-motion-chart-mark-stagger-budget`. Past it the
-// entrance stops reading as one gesture and starts reading as a queue.
+// The whole spread of a series' arrival. Past it the entrance stops reading as one gesture and
+// starts reading as a queue.
 const STAGGER_BUDGET_MS = 260;
 
 /** Entrance delay for the mark at `index` of `count`, in milliseconds: `stepMs` apart, narrowed so

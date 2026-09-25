@@ -128,7 +128,7 @@ export class ColumnSeriesComponent implements OnDestroy {
   readonly dimOthers = input(false, { transform: booleanAttribute });
 
   /** Milliseconds between one mark's entrance and the next. The steps narrow to fit the whole
-   *  spread inside `--ds-motion-chart-mark-stagger-budget`, so a long series does not crawl in.
+   *  spread within 260ms, so a long series does not crawl in.
    *  `0` is no stagger. */
   readonly staggerMs = input(40, { transform: numberAttribute });
 

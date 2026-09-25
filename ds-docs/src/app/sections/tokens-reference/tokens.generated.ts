@@ -8561,11 +8561,6 @@ export const NEW_TOKENS: readonly NewToken[] = [
     "kind": "color"
   },
   {
-    "name": "--ds-motion-chart-mark-stagger-budget",
-    "value": "var(--duration-slow)",
-    "kind": "other"
-  },
-  {
     "name": "--ds-motion-check-enter-duration",
     "value": "var(--duration-base)",
     "kind": "other"
