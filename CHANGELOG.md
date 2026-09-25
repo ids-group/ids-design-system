@@ -59,6 +59,10 @@
   visual regression test that screenshots a chart a fixed time after it renders now catches later
   marks still arriving.
 
+- **`DsIntl.tabs` has two required keys, `scrollPrevious` and `scrollNext`.** A complete `DsIntl`
+  dictionary, or a complete `tabs` section of one, declared as a typed object stops compiling until
+  it lists them. Overrides passed to `provideDsIntl` are partial and need nothing.
+
 - **A custom pagination `range` or table `[rangeAnnouncement]` receives zeros on an empty list.**
   `ds-pagination` on an empty list now calls `DS_INTL.pagination.range(0, 0, 0)` (was `(1, 0, 0)`),
   and a paged `ds-table` with no empty-state text now calls its `[rangeAnnouncement]` with `(0, 0, 0)`
@@ -73,9 +77,10 @@
   `PieChartComponent`, `ScatterChartComponent` and `WaterfallChartComponent` gained the pinning,
   hover-delay, label-highlight and stagger members; `ColumnChartComponent` and `LineChartComponent`
   only had `pinOnClick` change type; `PaginationComponent` gained `empty` and `TableComponent` gained
-  `emptyCell` and `emptyCellText`; and three classes reachable only through their own entry points
-  gained members too - the internal `ChartLegendComponent`, the internal `ChartTooltipPanelComponent`
-  and the internal `WaterfallMarksComponent`. Five protected members of `ColumnSeriesComponent` are
+  `emptyCell` and `emptyCellText`; `TabsComponent` gained the scroll-arrow members; and three
+  classes reachable only through their own entry points gained members too - the internal
+  `ChartLegendComponent`, the internal `ChartTooltipPanelComponent` and the internal
+  `WaterfallMarksComponent`. Five protected members of `ColumnSeriesComponent` are
   gone: `pinDiscRadius`, `pinGlyph`, `pinGlyphOffset`, `pinGlyphSize` and `slotStepPx`. Build after
   upgrading; rename or mark `override` every member the compiler reports colliding, and delete an
   override whose base member is gone. Subclassing a DS component is unsupported.
