@@ -8,3 +8,11 @@
   border: var(--border-width-default) dashed var(--border-default);
   border-radius: var(--ds-radius-panel);
 }
+
+.description-list-resizable + .description-list-resizable {
+  margin-top: var(--space-4);
+}
+
+.description-list-wide-label {
+  --ds-description-list-label-width: 180px;
+}
