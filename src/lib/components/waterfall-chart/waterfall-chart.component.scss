@@ -12,6 +12,7 @@
 }
 
 @include chart-frame.message-box(240px, true);
+@include chart-frame.pin-reset;
 
 .skeleton {
   display: grid;
