@@ -19,7 +19,7 @@
   --_description-item-details-color: var(--ds-description-item-details-color, var(--text-primary));
   --_description-item-details-font-size: var(--ds-description-item-details-font-size, var(--font-size-s));
   --_description-item-details-font-weight: var(--ds-description-item-details-font-weight, var(--font-weight-regular));
-  --_description-list-value-min-width: var(--ds-description-list-value-min-width, 14rem);
+  --_description-list-value-min-width: var(--ds-description-list-value-min-width, var(--dl-spec-value-min-w));
 
   display: flex;
   flex-wrap: wrap;
