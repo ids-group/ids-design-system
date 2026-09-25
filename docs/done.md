@@ -465,7 +465,7 @@ names out of `action` and `appliesWhen` too and fails on one that exists at neit
 ## A void `var(--token)` is now a gate, not a surprise (2026-09-09)
 
 `check-void-tokens` reads every `.scss`/`.css` under `src` and `ds-docs/src` and fails on a
-`var(--x)` the browser cannot resolve. It is in `lint:all`, and `check-void-tokens:selftest`
+`var(--x)` the browser cannot resolve. It is in `lint:all`, and `void-tokens:selftest`
 proves each rule still fires plus a negative control.
 
 **Why a gate and not a fix.** A void reference is invalid at computed-value time, which drops the
@@ -786,7 +786,7 @@ Closes screens 30/32 from the 08-13 batch.
   comment. A doc documents one symbol, so a doc directly above a doc means the first one lost its
   subject. `tools/check-docblock-drift.mjs` fails on that and prints the orphan's first line, and
   it runs as a hard gate in `ci-pr.sh` alongside the other published-surface checks, in
-  `lint:all`, and as `npm run check-docblock-drift`.
+  `lint:all`, and as `node tools/check.mjs docblock-drift`.
 
   On its first run over 367 files it found two more nobody knew about: `MARKER_RESERVE_EM`'s doc
   stranded eleven lines above it in `chip-overflow.ts` (so the magic `5` sat unexplained), and
@@ -1612,12 +1612,12 @@ Opened and closed in one sitting, because the item measured itself: the lint tha
   a "What you can now DELETE" table for exactly two versions while the manifests held delete entries for
   five — 0.10.0's nineteen rows, 0.10.1's and 0.6.2's were generated from the arrays so the two copies
   cannot drift, and Unreleased's table was five rows against eleven entries.
-  **What holds it:** `npm run migration-lint` (34 rules, no warning tier), run by the release preflight
+  **What holds it:** `node tools/check.mjs migration-lint` (34 rules, no warning tier), run by the release preflight
   AND as a hard gate in `ci-pr.sh`. The rule that nearly went wrong is worth keeping in mind — M023
   fired on a stylesheet item whose only locators were `--ds-*` tokens, which is exactly how a consumer
   writes them there, so it is scoped to a `typescript` or `config` surface now.
   ORIGINAL: [P3] 20 published manifests predate `surface` / `detect` / `verify`, and
-  `npm run migration-lint` reports 258 warnings across them (2026-08-21).
+  `node tools/check.mjs migration-lint` reports 258 warnings across them (2026-08-21).
 
 ## Shipped 2026-08-24 (session — four decks answered, and a focus indicator that doubled then vanished)
 
@@ -1861,7 +1861,7 @@ _mm-broker's whole-consumer sweep (08-06) is CLEARED: `--ds-badge-white-space`, 
 - **Decision records, deliberately kept and NOT to be "simplified":** topbar `role="banner"` · `compact` re-evaluated in TS.
 - **Surveyed and deliberately not built:** shared picker internals — three components share ~25 lines each, against a ~30-line helper. Revisit when a fourth list picker appears.
 
-- [x] **DONE 2026-08-21 — `npm run check-docs-links`, inside `extract-docs`, so the build fails instead of the click.**
+- [x] **DONE 2026-08-21 — `node tools/check.mjs docs-links`, inside `extract-docs`, so the build fails instead of the click.**
   Walks every `routerLink="/…"` in `ds-docs/src/**/*.html` and resolves it against NAV, read out of
   `nav.config.ts` as text (it runs BEFORE the build it guards, so importing the TS is not an option).
   Catches all three shapes and says which is which: a group path where an anchor belongs, an anchor that

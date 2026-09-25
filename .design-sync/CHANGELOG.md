@@ -17,6 +17,12 @@ holds an entry; what the release bot commits afterwards needs none.
 
 ## Unreleased
 
+### Build
+
+- **The watch-list gate runs as `node tools/check.mjs manual-surface`.** `build-design-sync.sh`,
+  `npm run check:cards`, `COMMANDS.md` and `MANUAL-SURFACE.md` call it that way; the check itself
+  is unchanged.
+
 ## 0.14.1 — 2026-09-24
 
 ### Upload

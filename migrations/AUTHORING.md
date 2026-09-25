@@ -1,8 +1,8 @@
 # Authoring migration manifests
 > **These files are published.** What must never appear in one — client names, tracker
 > keys, people, our own paths and scripts, unexported symbols, decision history — is listed
-> in `CONTRIBUTING.md` under "Never in a published artefact", and `npm run changelog-lint`
-> enforces the mechanical half.
+> in `CONTRIBUTING.md` under "Never in a published artefact", and `node tools/check.mjs
+> changelog-lint` enforces the mechanical half.
 
 How to write a `migrations/<version>.json` entry so it is complete, unambiguous, and safely
 executable by **both** consumers of these files: a machine transform / grep, and an LLM agent whose
@@ -357,7 +357,7 @@ to absolute), and a CLASS member that moved to a base class (interface members t
 
 ## Per-entry checklist
 
-Run `npm run migration-lint` before you call the manifest done — it mechanises the lines marked
+Run `node tools/check.mjs migration-lint` before you call the manifest done — it mechanises the lines marked
 (lint) below, and a release cannot be cut past it. The rest are judgment the linter cannot make.
 
 - [ ] `id` is a stable, unique kebab slug. (lint)
@@ -400,7 +400,7 @@ Run `npm run migration-lint` before you call the manifest done — it mechanises
       reads as "nobody looked", which is a different statement. (lint, M037)
 - [ ] Every row is reachable from the CHANGELOG: one "What you can now DELETE" row carries one of
       the entry's `find` shapes VERBATIM. A row that only paraphrases the shape cannot be searched
-      for, so it does not count. (`npm run check-delete-tables`, in the PR gate and the preflight)
+      for, so it does not count. (`node tools/check.mjs delete-tables`, in the PR gate and the preflight)
 - [ ] A `value-remap` carries a `verify` like a behavioural item: it changes what a binding MEANS
       with no symbol removed, so a re-check has nothing to grep either. (lint, M022)
 - [ ] A behavioural item on a `typescript` or `config` surface carries `detect` — the shape of the

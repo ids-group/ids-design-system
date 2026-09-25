@@ -264,7 +264,6 @@ item and nothing else.
   - A pressed danger menu item shows its hover colour (recorded 2026-09-24)
 - **The chart family read as an architecture (audited 2026-09-22)**
   - `ds-line-chart`'s `tooltipAnchor` doc does not say it is inert unless `tooltip="axis"`
-  - The category panel stays open after keyboard focus leaves a line marker (recorded 2026-09-24)
   - A focused marker's panel names every series at its category, where the docs say its own (recorded 2026-09-24)
 - **Asked by Stas**
   - `ds-waterfall-chart` is `ds-cascade-chart` (Stas, 2026-09-23)
@@ -378,6 +377,7 @@ item and nothing else.
   - Three charts hand-roll a legend and three compose their own accessible sentence
   - Six places reimplement something a shared module already does
   - Five constants carry two or three spellings each
+  - A chart waiting for `deferUntilVisible` holds the whole loading skeleton (Stas: parked 2026-09-24)
   - The chassis is declared nine times and shared once - about 450 lines of it
 - **Thirteen inputs the chart family declares component by component (measured 2026-09-22)**
   - Only the RESOLUTION of the shared chart inputs is shared, not their declaration
@@ -611,12 +611,6 @@ Constraints and decisions that read as removable and are not.
   (`line-chart.component.ts:428-431`, "Where the tooltip is pinned") does not - reachable when a
   consumer overrides the `axis` default. A value that does nothing depending on a sibling is the shape
   a consumer reports as a bug.
-
-- [ ] **[P3] The category panel stays open after keyboard focus leaves a line marker (recorded 2026-09-24).**
-  In a `cursor="category"` `ds-chart`, tabbing off a focused marker leaves the axis panel and band on
-  screen: blur never resets the container's `activeIndex` (`chart.component.ts`), and the handler that
-  `listenForMarkFocus` replaced did the same. A pointer leaving the plot clears it; focus leaving does
-  not.
 
 - [ ] **[P3] A focused marker's panel names every series at its category, where the docs say its own (recorded 2026-09-24).**
   The category merge in `ds-chart.tooltipContext` adds the other marks' readings to a keyboard-focused
@@ -1291,7 +1285,7 @@ and the fifteen lint rules.
   **Why it matters beyond the decks:** `deck-lint`'s D012 and `check-void-tokens` both resolve `var(--x)` against this file, so a stale copy makes a live token read as void — and could hide a genuinely void one. `presentations/README.md` says to run `build:deck-css` after changing any token; nothing enforces it.
   **The fix has a precedent in this repo:** `build-design-sync.sh` rebuilds its tree and fails when the committed one differs. The same shape here is `npm run build:deck-css` followed by a `git diff --exit-code presentations/ds.css` in `lint:all`.
 
-- [ ] **[P3] `tools/todo-index.mjs --check` is not in `lint:all`, so the index can still go stale between runs.** The generator exists and `npm run todo-index:check` fails on a mismatch, but nothing runs it, which is the same gap that let the hand-kept index drift for months. Held back deliberately: adding a step to `lint:all` changes the PR gate for every branch, and in a shared checkout a parallel session editing `docs/todo.md` mid-run would fail it — the C013 false-positive class this repo has already met. One line in the `lint:all` chain when that trade is accepted.
+- [ ] **[P3] `tools/todo-index.mjs --check` is not in `lint:all`, so the index can still go stale between runs.** The generator exists and `node tools/check.mjs todo-index` fails on a mismatch, but nothing runs it, which is the same gap that let the hand-kept index drift for months. Held back deliberately: adding a step to `lint:all` changes the PR gate for every branch, and in a shared checkout a parallel session editing `docs/todo.md` mid-run would fail it — the C013 false-positive class this repo has already met. One line in the `lint:all` chain when that trade is accepted.
 
 - [ ] **[P3] Publishing to Claude Design cannot run from Bitbucket, and Stas wants the CI route looked at again (recorded 2026-09-02).** Everything up to the publish is already automated and gated: `build-design-sync.sh` runs the generator, the Angular build, the bundle, `check-manual-surface`, `check-doc-api` and `build:upload`, then fails the build if a font file has no `@font-face` or a card has no declaration beside it. A committed `.design-sync/upload` tree that differs from the rebuild fails only a local run; in the after-release step on `node:22-alpine` (`bitbucket-pipelines.yml:132-185`) the script commits the regenerated tree as a separate release-bot commit after the tag, and has done so on 0.12.2, 0.12.3, 0.13.1 and 0.13.2. `tools/prepare-release-commit.mjs` does not rebuild it. **Only the last step is manual**, and it is manual for two reasons, both verified rather than assumed:
   - **The transport is a first-party entitlement, not an API key.** `/design-sync` is built into the Claude Code binary (18 references in the 218 MB executable) and its body arrives by entitlement; the `DesignSync` tool posts to `api.anthropic.com/v1/design/mcp` with a `designOauth` grant that lives in `~/.claude/.credentials.json`. There is nothing to put in a Bitbucket variable — a pipeline has no claude.ai login to grant.
@@ -1742,6 +1736,13 @@ One ask left from that batch. The two column-chart gaps beside it shipped in v0.
   `chart.math.ts:35` and `line-chart.component.ts:63`; edge gutter `12` at `chart.math.ts:40` and
   `scatter-chart.component.ts:64`; value-label gap `8` at `column-series.component.ts:64` and
   `waterfall-marks.component.ts:15`; column width ratio `0.8` in three places.
+
+- [ ] **[P3] A chart waiting for `deferUntilVisible` holds the whole loading skeleton (Stas: parked 2026-09-24).**
+  The gate placeholder is the `loading` branch - one `ds-skeleton` per row, column, stage or legend
+  entry - so the ds-docs charts page mounts 584 skeletons for 145 unbuilt charts. Hiding them with
+  `display: none` cut 125-233 ms of main-thread time from the first 8 s of load (two runs, CPU x1,
+  measured 2026-09-24). One box of the same height would keep the layout; it changes what a fast
+  scroll shows for the fraction of a second before a chart builds, which is why it is parked.
 
 # Records — kept so they are not "simplified" away
 
@@ -2441,7 +2442,7 @@ names out of `action` and `appliesWhen` too and fails on one that exists at neit
 ## A void `var(--token)` is now a gate, not a surprise (2026-09-09)
 
 `check-void-tokens` reads every `.scss`/`.css` under `src` and `ds-docs/src` and fails on a
-`var(--x)` the browser cannot resolve. It is in `lint:all`, and `check-void-tokens:selftest`
+`var(--x)` the browser cannot resolve. It is in `lint:all`, and `void-tokens:selftest`
 proves each rule still fires plus a negative control.
 
 **Why a gate and not a fix.** A void reference is invalid at computed-value time, which drops the
@@ -2762,7 +2763,7 @@ Closes screens 30/32 from the 08-13 batch.
   comment. A doc documents one symbol, so a doc directly above a doc means the first one lost its
   subject. `tools/check-docblock-drift.mjs` fails on that and prints the orphan's first line, and
   it runs as a hard gate in `ci-pr.sh` alongside the other published-surface checks, in
-  `lint:all`, and as `npm run check-docblock-drift`.
+  `lint:all`, and as `node tools/check.mjs docblock-drift`.
 
   On its first run over 367 files it found two more nobody knew about: `MARKER_RESERVE_EM`'s doc
   stranded eleven lines above it in `chip-overflow.ts` (so the magic `5` sat unexplained), and
@@ -3588,12 +3589,12 @@ Opened and closed in one sitting, because the item measured itself: the lint tha
   a "What you can now DELETE" table for exactly two versions while the manifests held delete entries for
   five — 0.10.0's nineteen rows, 0.10.1's and 0.6.2's were generated from the arrays so the two copies
   cannot drift, and Unreleased's table was five rows against eleven entries.
-  **What holds it:** `npm run migration-lint` (34 rules, no warning tier), run by the release preflight
+  **What holds it:** `node tools/check.mjs migration-lint` (34 rules, no warning tier), run by the release preflight
   AND as a hard gate in `ci-pr.sh`. The rule that nearly went wrong is worth keeping in mind — M023
   fired on a stylesheet item whose only locators were `--ds-*` tokens, which is exactly how a consumer
   writes them there, so it is scoped to a `typescript` or `config` surface now.
   ORIGINAL: [P3] 20 published manifests predate `surface` / `detect` / `verify`, and
-  `npm run migration-lint` reports 258 warnings across them (2026-08-21).
+  `node tools/check.mjs migration-lint` reports 258 warnings across them (2026-08-21).
 
 ## Shipped 2026-08-24 (session — four decks answered, and a focus indicator that doubled then vanished)
 
@@ -3837,7 +3838,7 @@ _mm-broker's whole-consumer sweep (08-06) is CLEARED: `--ds-badge-white-space`, 
 - **Decision records, deliberately kept and NOT to be "simplified":** topbar `role="banner"` · `compact` re-evaluated in TS.
 - **Surveyed and deliberately not built:** shared picker internals — three components share ~25 lines each, against a ~30-line helper. Revisit when a fourth list picker appears.
 
-- [x] **DONE 2026-08-21 — `npm run check-docs-links`, inside `extract-docs`, so the build fails instead of the click.**
+- [x] **DONE 2026-08-21 — `node tools/check.mjs docs-links`, inside `extract-docs`, so the build fails instead of the click.**
   Walks every `routerLink="/…"` in `ds-docs/src/**/*.html` and resolves it against NAV, read out of
   `nav.config.ts` as text (it runs BEFORE the build it guards, so importing the TS is not an option).
   Catches all three shapes and says which is which: a group path where an anchor belongs, an anchor that

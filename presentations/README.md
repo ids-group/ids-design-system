@@ -117,8 +117,8 @@ A deck in `implemented/` sits one directory deeper, so `href="ds.css"` has to be
 ### Find the drift
 
 ```bash
-npm run deck-lint              # every rule below, over both folders
-npm run deck-lint:selftest     # and does each rule still fire? see the note under D012
+node tools/check.mjs deck-lint            # every rule below, over both folders
+node tools/check.mjs deck-lint:selftest   # and does each rule still fire? see the note under D012
 ```
 
 `deck-lint` replaces the hand-run greps that used to live here, because a check nobody runs is not a
