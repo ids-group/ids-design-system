@@ -29,8 +29,9 @@
 - **Subclassing one of these breaks on a name collision.** Each gained a member or had one change
   type (`pinOnClick` above): `BarChartComponent`, `ChartComponent`, `ColumnChartComponent`,
   `ColumnSeriesComponent`, `LineChartComponent`, `LineSeriesComponent`, `FunnelChartComponent`,
-  `HeatmapChartComponent`, `PieChartComponent` and `ScatterChartComponent`, and two internal classes
-  reachable only through their own entry points: the internal `ChartLegendComponent`, the internal
+  `HeatmapChartComponent`, `PieChartComponent`, `ScatterChartComponent` and `PaginationComponent`,
+  and internal classes reachable only through their own entry points: the internal
+  `ChartLegendComponent`, the internal
   `ChartTooltipPanelComponent` and the internal `WaterfallMarksComponent`. Five protected members of `ColumnSeriesComponent` are gone:
   `pinDiscRadius`, `pinGlyph`, `pinGlyphOffset`, `pinGlyphSize` and `slotStepPx`. Build after
   upgrading; rename or mark `override` every member the compiler reports colliding, and delete an
