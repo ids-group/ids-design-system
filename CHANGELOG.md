@@ -44,7 +44,32 @@
 - **`pinOnClick` on `ds-heatmap-chart` and `ds-scatter-chart`**, with the Unpin control the other
   charts have.
 
+- **Chart entrance tokens.** `--ds-motion-chart-mark-grow-duration` (600ms) and
+  `--ds-motion-chart-mark-grow-easing` time a mark growing out of its baseline;
+  `--ds-motion-chart-mark-sweep-duration` (600ms) a ring turning in or a line drawing on;
+  `--ds-motion-chart-mark-detail-duration` (180ms) what follows a mark, its value label or marker;
+  `--ds-motion-chart-mark-stagger-budget` (260ms) the whole spread of a series' arrival. They sit on
+  three new primitives: `--duration-slowest` (600ms, 0 under reduced motion),
+  `--ease-emphasized-decelerate` and `--ease-settle`, a spring that never overshoots.
+
+- **`staggerMs` on `ds-heatmap-chart`**, staggering its columns.
+
 ### Changed
+
+- **Chart entrances are slower and staged.** `--ds-motion-chart-mark-enter-duration` is 400ms (was
+  180ms) and `--ds-motion-chart-mark-enter-easing` is `--ease-emphasized-decelerate` (was
+  `--ease-decelerate`). Columns, bars and waterfall steps grow out of their baseline over the grow
+  duration with no fade; a solid line draws on and a dashed one fades; an area fades in under its
+  line; the pie ring turns into place; funnel stages rise in; scatter points and line markers settle
+  in about their centre; heat map cells fade in column by column, which they did not animate before.
+  Value labels, markers, table rows and legend swatches follow once their mark has arrived. Under
+  reduced motion every mark appears at once, delays included. A test that waits a fixed time for a
+  chart to finish arriving waits about 1.1s, or runs under reduced motion.
+
+- **`staggerMs` defaults to 40 on `ds-bar-chart`, `ds-column-chart`, `ds-line-chart`,
+  `dsColumnSeries` and `dsLineSeries`, and to 60 on `ds-funnel-chart`** (was `0`), and the stagger
+  spreads evenly within `--ds-motion-chart-mark-stagger-budget` (was: a 300ms cap that landed every
+  later mark at once). Set `staggerMs="0"` to have a series arrive all at once.
 
 - **A held mark always shows its pin disc**: a column, a bar, a slice, a funnel stage, a heat map
   cell, a scatter point, a line marker, and a category held under the category cursor (a disc at the

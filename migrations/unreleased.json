@@ -102,6 +102,31 @@
       "note": "The band answered the whole category step and the tooltip only the mark's own hover box; both now answer the drawn band. A mark of your own reads CHART_SCALES.cursorOn to leave pointer hover to the band."
     },
     {
+      "id": "chart-stagger-default-on",
+      "kind": "behavior",
+      "old": "ds-column-chart[staggerMs]",
+      "new": null,
+      "surface": "template",
+      "action": "None, unless a chart's marks have to arrive all at once: set staggerMs=\"0\" on it.",
+      "appliesWhen": "ds-bar-chart, ds-column-chart, ds-line-chart, ds-funnel-chart and the dsColumnSeries / dsLineSeries marks with no staggerMs binding. A chart binding staggerMs keeps its value, now spread evenly within 260ms.",
+      "pitfall": "A visual regression test that screenshots a chart a fixed time after it renders now catches later marks still arriving.",
+      "restore": "staggerMs=\"0\"",
+      "searchHints": [
+        "staggerMs",
+        "<ds-column-chart",
+        "<ds-bar-chart",
+        "<ds-line-chart",
+        "<ds-funnel-chart"
+      ],
+      "detect": [
+        "staggerMs",
+        "toHaveScreenshot",
+        "matchImageSnapshot"
+      ],
+      "verify": "Each chart either lets its marks arrive in order within about a quarter second, or binds staggerMs=\"0\".",
+      "note": "The default was 0, now 40 (60 on ds-funnel-chart), and the stagger spreads evenly within --ds-motion-chart-mark-stagger-budget rather than stopping at a 300ms cap."
+    },
+    {
       "id": "exported-class-members-grew",
       "kind": "behavior",
       "old": "BarChartComponent, ChartComponent, ColumnChartComponent, ColumnSeriesComponent, LineChartComponent, LineSeriesComponent, FunnelChartComponent, HeatmapChartComponent, PieChartComponent, ScatterChartComponent, ChartLegendComponent, ChartTooltipPanelComponent",
@@ -144,6 +169,12 @@
     }
   ],
   "informational": [
+    "New chart entrance tokens: --ds-motion-chart-mark-grow-duration, --ds-motion-chart-mark-grow-easing, --ds-motion-chart-mark-sweep-duration, --ds-motion-chart-mark-detail-duration and --ds-motion-chart-mark-stagger-budget, on the new primitives --duration-slowest, --ease-emphasized-decelerate and --ease-settle.",
+    {
+      "text": "Chart entrances are slower and staged: --ds-motion-chart-mark-enter-duration is 400ms (was 180ms) with --ease-emphasized-decelerate; columns, bars and waterfall steps grow over 600ms with no fade, a solid line draws on, the pie ring turns in, funnel stages rise, points and markers settle, heat map cells fade in by column, and value labels, markers and legend swatches follow their mark. Under reduced motion every mark appears at once.",
+      "verify": "Load a chart page with reduced motion on and confirm every mark is on screen at once, then with it off and confirm no mark is left transparent or half drawn once the entrance ends."
+    },
+    "ds-heatmap-chart gains staggerMs, default 40, staggering its columns.",
     "DS_CONFIG.chart.pinOnClick and DS_CONFIG.chart.hoverDelayMs set, for every chart, whether a click holds a mark (default true) and how long a resting pointer waits (default 500 ms).",
     "ds-heatmap-chart and ds-scatter-chart gain pinOnClick, with an Unpin control.",
     {
