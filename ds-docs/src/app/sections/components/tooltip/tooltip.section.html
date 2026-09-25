@@ -81,7 +81,31 @@
           placement="right" />
       </div>
     </div>
+
+    <div class="state">
+      <code class="t-mono-inline state-lbl">
+        Long value · breaks inside the max width
+      </code>
+
+      <div class="state-stage">
+        <ds-tooltip-panel
+          text="invoice-2026-09-24-final-v3-approved-by-finance.pdf"
+          placement="top" />
+
+        <span class="anchor t-xs">
+          Anchor
+        </span>
+      </div>
+    </div>
   </div>
+
+  <p class="block-desc t-s">
+    A value with no place to break, a file name or an ID, breaks inside
+    <code class="t-mono-inline">
+      --ds-tooltip-max-width
+    </code> (240px) rather than
+    running past the panel.
+  </p>
 
   <h3 class="block-title t-h4">
     Live demo
@@ -109,5 +133,43 @@
       [dsTooltip]="'Last synced 14m ago'">
       Hover me · bottom
     </ds-button>
+  </div>
+
+  <h3 class="block-title t-h4">
+    Only while clipped
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      dsTooltipWhenClipped
+    </code> shows the tip only
+    while its host is cut off, re-tested on every open, so it follows a resize.
+    With <code class="t-mono-inline">dsTooltip</code> left empty it discloses
+    the host's own text. The pickers use it for their labels.
+  </p>
+
+  <div class="demo">
+    <span
+      class="t-s"
+      style="
+        display: block;
+        max-inline-size: 160px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      "
+      tabindex="0"
+      dsTooltip
+      dsTooltipWhenClipped>
+      Rotterdam, Maasvlakte II deep-sea terminal
+    </span>
+
+    <span
+      class="t-s"
+      tabindex="0"
+      dsTooltip
+      dsTooltipWhenClipped>
+      Antwerp
+    </span>
   </div>
 </docs-section>

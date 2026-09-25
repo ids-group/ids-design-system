@@ -1969,7 +1969,7 @@ export const MOTION_DUR: readonly MotionRow[] = [
   {
     "name": "--duration-slowest",
     "value": "600ms",
-    "notes": ""
+    "notes": "Longest step: a chart mark growing or drawing on. 0 under reduced motion."
   },
   {
     "name": "--duration-loop-fast",
@@ -2012,12 +2012,12 @@ export const MOTION_EASE: readonly MotionRow[] = [
   {
     "name": "--ease-emphasized-decelerate",
     "value": "cubic-bezier(.05, .7, .1, 1)",
-    "notes": ""
+    "notes": "A large mark arriving, long and calm at the end."
   },
   {
     "name": "--ease-settle",
     "value": "linear(0, 0.09 6.3%, 0.265 12.5%, 0.444 18.8%, 0.596 25%, 0.715 31.3%, 0.803 37.5%, 0.867 43.8%, 0.911 50%, 0.942 56.3%, 0.962 62.5%, 0.976 68.8%, 0.986 75%, 0.992 81.3%, 0.996 87.5%, 0.998 93.8%, 1)",
-    "notes": ""
+    "notes": "A mark growing into its value; a damped spring that never overshoots."
   }
 ];
 
@@ -2904,7 +2904,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-motion-chart-mark-grow-duration",
         "value": "—",
-        "notes": ""
+        "notes": "How long a column, bar or waterfall step takes to grow out of its baseline. Defaults to --duration-slowest (600ms)."
       },
       {
         "name": "--ds-bar-chart-band-color",
@@ -3386,17 +3386,17 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-motion-chart-mark-detail-duration",
         "value": "—",
-        "notes": ""
+        "notes": "How long what follows a mark takes to arrive: its value label, a marker. Defaults to --duration-base (180ms)."
       },
       {
         "name": "--ds-motion-chart-mark-enter-easing",
         "value": "—",
-        "notes": ""
+        "notes": "Easing a chart mark arrives on. Defaults to --ease-emphasized-decelerate."
       },
       {
         "name": "--ds-motion-chart-mark-sweep-duration",
         "value": "—",
-        "notes": ""
+        "notes": "How long a pie ring takes to turn in or a line to draw on. Defaults to --duration-slowest (600ms)."
       },
       {
         "name": "--ds-chart-annotation-color",
@@ -3477,7 +3477,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-motion-chart-mark-grow-easing",
         "value": "—",
-        "notes": ""
+        "notes": "Easing a mark grows on. Defaults to --ease-settle."
       }
     ]
   },
@@ -4454,7 +4454,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-motion-chart-mark-enter-duration",
         "value": "—",
-        "notes": ""
+        "notes": "How long a chart mark takes to fade or settle in. Defaults to --duration-slower (400ms)."
       },
       {
         "name": "--ds-funnel-chart-stage-height",

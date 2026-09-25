@@ -1999,7 +1999,19 @@
     <code class="t-mono-inline">
       aria-live="polite"
     </code> announces changes,
-    not initial content.
+    not initial content. A paged table left with no rows says so: it announces
+    the text of its empty state, the words shown in the table, and calls
+    <code class="t-mono-inline">
+      rangeAnnouncement
+    </code> with
+    <code class="t-mono-inline">
+      (0, 0, 0)
+    </code> only when that state has no
+    text, which reads "Showing 0 of 0" by default. A server-paged table whose
+    <code class="t-mono-inline">
+      total
+    </code> is above 0 but whose page came back
+    empty stays silent.
   </p>
 
   <h3 class="block-title t-h4">

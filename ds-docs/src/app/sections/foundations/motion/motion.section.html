@@ -3,7 +3,7 @@
   eyebrow="Foundations"
   title="Motion">
   <span lede>
-    Five durations, five eases. All motion respects
+    Six durations, seven eases. All motion respects
     <code class="t-mono-inline">
       prefers-reduced-motion
     </code> — durations
@@ -72,7 +72,7 @@
         </code>
 
         <code class="t-mono-inline token-value">
-          {{ e.curve }}
+          {{ e.shownCurve ?? e.curve }}
         </code>
 
         <div class="t-caption token-desc">
@@ -148,6 +148,36 @@
       </div>
     }
   </div>
+
+  <h3 class="block-title t-h4">
+    Chart entrances
+  </h3>
+
+  <p class="block-desc t-s">
+    A chart times each arrival by what arrives.
+    <code class="t-mono-inline">
+      --ds-motion-chart-mark-enter-duration
+    </code>
+    (400ms, on <code class="t-mono-inline">--ease-emphasized-decelerate</code>)
+    is a mark that fades or settles in place;
+    <code class="t-mono-inline">
+      -grow-duration
+    </code> (600ms, on
+    <code class="t-mono-inline">
+      --ease-settle
+    </code>) a column or bar growing
+    out of its baseline; <code class="t-mono-inline">-sweep-duration</code>
+    (600ms) a ring turning in or a line drawing on;
+    <code class="t-mono-inline">
+      -detail-duration
+    </code> (180ms) what follows a
+    mark, its value label or marker.
+    <code class="t-mono-inline">
+      -stagger-budget
+    </code> (260ms) is the whole
+    spread of a series' arrival, however many marks it has. Under reduced
+    motion every mark appears at once, delays included.
+  </p>
 
   <h3 class="block-title t-h4">
     Entrance presets · customizing a surface

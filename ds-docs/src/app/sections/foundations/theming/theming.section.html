@@ -272,7 +272,11 @@
     </code>. Set both once, at the
     root; a factory returning a signal switches language live. The demo below
     provides <code class="t-mono-inline">locale: 'de-DE'</code> and a few German
-    words.
+    words. A <code class="t-mono-inline">range</code> of your own also receives
+    <code class="t-mono-inline">
+      (0, 0, 0)
+    </code> for an empty list, from the
+    pager and from <code class="t-mono-inline">ds-table</code>'s announcement.
   </p>
 
   <docs-locale-demo />

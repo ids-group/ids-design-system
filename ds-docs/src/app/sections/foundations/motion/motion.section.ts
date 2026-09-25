@@ -23,6 +23,7 @@ interface Duration {
 interface Ease {
   readonly name: string;
   readonly curve: string;
+  readonly shownCurve?: string;
   readonly use: string;
 }
 
@@ -40,6 +41,11 @@ const DURATIONS: Duration[] = [
   { name: 'base', value: '180ms', use: 'Default UI transitions' },
   { name: 'slow', value: '260ms', use: 'Drawer, dialog enter' },
   { name: 'slower', value: '400ms', use: 'Page transitions, large reveals' },
+  {
+    name: 'slowest',
+    value: '600ms',
+    use: 'A chart mark growing or drawing on',
+  },
 ];
 
 const EASES: Ease[] = [
@@ -67,6 +73,18 @@ const EASES: Ease[] = [
     name: 'spring',
     curve: 'cubic-bezier(.5, 1.5, .5, 1)',
     use: 'Playful overshoot — celebratory feedback',
+  },
+  {
+    name: 'emphasized-decelerate',
+    curve: 'cubic-bezier(.05, .7, .1, 1)',
+    use: 'A large mark arriving, long and calm at the end',
+  },
+  {
+    name: 'settle',
+    curve:
+      'linear(0, 0.09 6.3%, 0.265 12.5%, 0.444 18.8%, 0.596 25%, 0.715 31.3%, 0.803 37.5%, 0.867 43.8%, 0.911 50%, 0.942 56.3%, 0.962 62.5%, 0.976 68.8%, 0.986 75%, 0.992 81.3%, 0.996 87.5%, 0.998 93.8%, 1)',
+    shownCurve: 'linear(…)',
+    use: 'A mark growing into its value; never overshoots',
   },
 ];
 
