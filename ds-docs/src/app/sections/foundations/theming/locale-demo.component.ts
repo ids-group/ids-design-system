@@ -25,7 +25,8 @@ import { PaginationComponent } from 'ds/pagination';
         removeChip: (label) => `${label} entfernen`,
       },
       pagination: {
-        range: (first, last, total) => `${first}-${last} von ${total}`,
+        range: (first, last, total) =>
+          total === 0 ? '0 von 0' : `${first}-${last} von ${total}`,
         rowsPerPage: 'Zeilen pro Seite',
       },
       chart: { empty: 'Keine Daten' },

@@ -35,7 +35,12 @@
       loading
     </code> disables every control, masks the range label and
     sets <code> aria-busy </code> on the nav. With a <code> total </code> of 0
-    the label reads Showing 0 of 0.
+    the label reads Showing 0 of 0, every page button is disabled and none is
+    marked current. The label comes from
+    <code>
+      DS_INTL.pagination.range(0, 0, 0)
+    </code>, so a <code>range</code> of
+    your own handles that call.
   </p>
 
   <div class="states is-cols-1">
@@ -120,7 +125,7 @@
       </div>
 
       <div class="state-cell-label">
-        Empty list · Showing 0 of 0
+        Empty list · Showing 0 of 0, no current page
       </div>
     </div>
   </div>
