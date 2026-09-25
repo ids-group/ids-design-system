@@ -3887,6 +3887,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "Value weight."
       },
       {
+        "name": "--ds-description-list-value-min-width",
+        "value": "14rem",
+        "notes": "Narrowest value beside the label before every item of the list stacks (14rem)."
+      },
+      {
         "name": "--ds-description-list-label-width",
         "value": "var(--dl-spec-label-w)",
         "notes": "Description list term column width (defaults to --dl-spec-label-w)."
