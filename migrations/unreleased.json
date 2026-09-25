@@ -106,7 +106,10 @@
       "kind": "behavior",
       "old": "--ds-motion-chart-mark-enter-duration",
       "new": null,
-      "surface": ["style", "typescript"],
+      "surface": [
+        "style",
+        "typescript"
+      ],
       "action": "None, unless something waits a fixed time for a chart to finish arriving (a screenshot, an assertion on a mark's final size or opacity): wait about 1.1s, or run it under reduced motion. To shorten every chart's entrance, set --ds-motion-chart-mark-enter-duration, --ds-motion-chart-mark-grow-duration and --ds-motion-chart-mark-sweep-duration.",
       "appliesWhen": "Every chart's entrance. A stylesheet that already sets --ds-motion-chart-mark-enter-duration or --ds-motion-chart-mark-enter-easing keeps its values for what those tokens time. The defaults ship in styles/tokens, which styles/ds forwards. Under reduced motion every mark appears at once.",
       "pitfall": "A visual regression test that screenshots a chart a fixed time after render catches marks still growing or value labels not yet shown.",
@@ -117,7 +120,12 @@
         "toHaveScreenshot",
         "waitForTimeout"
       ],
-      "detect": ["toHaveScreenshot", "matchImageSnapshot", "waitForTimeout(", "reducedMotion"],
+      "detect": [
+        "toHaveScreenshot",
+        "matchImageSnapshot",
+        "waitForTimeout(",
+        "reducedMotion"
+      ],
       "verify": "In the built CSS --ds-motion-chart-mark-enter-duration resolves to var(--duration-slower) unless the app overrides it, and every test that captures a chart after its entrance waits about 1.1s or runs under reduced motion.",
       "note": "--ds-motion-chart-mark-enter-duration was 180ms, now 400ms; --ds-motion-chart-mark-enter-easing was --ease-decelerate, now --ease-emphasized-decelerate. The restore brings back those two only: growing and sweeping marks follow the grow and sweep tokens."
     },
@@ -149,7 +157,7 @@
     {
       "id": "exported-class-members-grew",
       "kind": "behavior",
-      "old": "BarChartComponent, ChartComponent, ColumnChartComponent, ColumnSeriesComponent, LineChartComponent, LineSeriesComponent, FunnelChartComponent, HeatmapChartComponent, PieChartComponent, ScatterChartComponent, WaterfallChartComponent, PaginationComponent, TableComponent, TooltipDirective, TextareaComponent, ChartLegendComponent, ChartTooltipPanelComponent, WaterfallMarksComponent",
+      "old": "BarChartComponent, ChartComponent, ColumnChartComponent, ColumnSeriesComponent, LineChartComponent, LineSeriesComponent, FunnelChartComponent, HeatmapChartComponent, PieChartComponent, ScatterChartComponent, WaterfallChartComponent, PaginationComponent, TableComponent, TooltipDirective, TextareaComponent, TabsComponent, ChartLegendComponent, ChartTooltipPanelComponent, WaterfallMarksComponent",
       "new": null,
       "surface": "typescript",
       "action": "Build after upgrading, rename or mark `override` every member of yours the compiler reports as colliding, and delete an override whose base member is gone.",
@@ -174,7 +182,8 @@
         "extends TextareaComponent",
         "extends ChartLegendComponent",
         "extends ChartTooltipPanelComponent",
-        "extends WaterfallMarksComponent"
+        "extends WaterfallMarksComponent",
+        "extends TabsComponent"
       ],
       "detect": [
         "extends BarChartComponent",
@@ -194,10 +203,11 @@
         "extends TextareaComponent",
         "extends ChartLegendComponent",
         "extends ChartTooltipPanelComponent",
-        "extends WaterfallMarksComponent"
+        "extends WaterfallMarksComponent",
+        "extends TabsComponent"
       ],
       "verify": "The app builds with no TS4114 or TS2416 against a DS base class, and no subclass keeps a member named after a removed one.",
-      "note": "The chart components gained the pinning, hover-delay and label-highlight members, except ColumnChartComponent and LineChartComponent, whose only change is the type of pinOnClick; PaginationComponent gained empty, TableComponent gained emptyCell and emptyCellText, TooltipDirective gained detachAncestor, disclosesOwnText and listenToFocusableAncestor, TextareaComponent gained maxLengthMode; five protected members of ColumnSeriesComponent are gone (pinDiscRadius, pinGlyph, pinGlyphOffset, pinGlyphSize, slotStepPx). The compiler names every collision."
+      "note": "The chart components gained the pinning, hover-delay and label-highlight members, except ColumnChartComponent and LineChartComponent, whose only change is the type of pinOnClick; PaginationComponent gained empty, TableComponent gained emptyCell and emptyCellText, TooltipDirective gained detachAncestor, disclosesOwnText and listenToFocusableAncestor, TextareaComponent gained maxLengthMode, TabsComponent gained the scroll-arrow members; five protected members of ColumnSeriesComponent are gone (pinDiscRadius, pinGlyph, pinGlyphOffset, pinGlyphSize, slotStepPx). The compiler names every collision."
     },
     {
       "id": "intl-field-over-limit-required",
@@ -267,6 +277,27 @@
         "(first: number, last: number, total: number)"
       ],
       "verify": "A paged ds-table filtered to no rows announces its empty-state text once; with no empty-state text it announces your empty wording, or nothing where your function returns an empty string."
+    },
+    {
+      "id": "intl-tabs-scroll-keys-added",
+      "kind": "behavior",
+      "old": "DsIntl",
+      "new": null,
+      "surface": "typescript",
+      "action": "None, unless your code declares a complete DsIntl, or a complete tabs section of one, as a typed object: add scrollPrevious and scrollNext to its tabs section.",
+      "appliesWhen": "Only an object typed as DsIntl or DsIntl['tabs'] that lists every key. Overrides passed to provideDsIntl are partial and need nothing.",
+      "pitfall": "A dictionary typed loosely (as any, or through a cast) compiles without the keys and falls back to nothing for them, so the tab strip arrows get no label in that language.",
+      "restore": null,
+      "searchHints": [
+        "DsIntl",
+        "tabs: {"
+      ],
+      "detect": [
+        ": DsIntl =",
+        "satisfies DsIntl",
+        "DsIntl['tabs']"
+      ],
+      "verify": "Every complete DsIntl dictionary in the app has scrollPrevious and scrollNext in its tabs section, and the app builds."
     }
   ],
   "informational": [
@@ -331,7 +362,11 @@
     "Under the category cursor, focus on a dsColumnSeries column names its category as a dsLineSeries marker does, and focus leaving a column or a marker takes the band and the category panel down.",
     "A paged ds-table that a filter or new data leaves empty announces its empty-state text ([empty] content or emptyTemplate) in its live region (was: silent); with none it announces rangeAnnouncement(0, 0, 0), Showing 0 of 0 by default.",
     "A tap on a chart mark stays held when the click that follows it lands (was: that click let go of it at once).",
-    "ds-waterfall-chart gains pinOnClick (boolean | null, falling back to DS_CONFIG.chart.pinOnClick, then true), with the Unpin control the other charts show."
+    "ds-waterfall-chart gains pinOnClick (boolean | null, falling back to DS_CONFIG.chart.pinOnClick, then true), with the Unpin control the other charts show.",
+    {
+      "text": "A scrollable ds-tabs strip shows previous and next arrows while tabs lie beyond its edges; each turns the strip by a page and hides at its own edge, and a strip that fits shows none. The arrows sit outside the tab order and are hidden from assistive technology. DS_INTL.tabs.scrollPrevious and DS_INTL.tabs.scrollNext label them.",
+      "verify": "On a phone-width screen with a scrollable ds-tabs whose tabs do not fit, confirm only the next arrow shows at the start, both in the middle, only the previous arrow at the end, and none once the tabs fit."
+    }
   ],
   "deleteList": [
     {

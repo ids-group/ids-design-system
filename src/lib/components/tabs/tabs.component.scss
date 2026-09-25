@@ -37,6 +37,57 @@
   display: block;
 }
 
+.tab-strip {
+  display: contents;
+
+  &.scrolling {
+    display: flex;
+
+    > .tabs {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+  }
+}
+
+.scroll-arrow {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--hit-sm);
+  padding: 0;
+  border: 0;
+  border-bottom: var(--border-width-default) solid var(--_tabs-divider);
+  border-radius: var(--ds-radius-control) var(--ds-radius-control) 0 0;
+  background: transparent;
+  color: var(--_tab-label-color);
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard);
+
+  &:hover {
+    background-color: var(--surface-muted);
+    color: var(--_tab-label-color-hover);
+  }
+
+  @include press.feedback;
+
+  &.at-edge {
+    visibility: hidden;
+  }
+
+  &:dir(rtl) ds-icon {
+    transform: scaleX(-1);
+  }
+}
+
+.tab-strip:has(> .pills) .scroll-arrow {
+  border-bottom: 0;
+  border-radius: var(--ds-radius-control);
+}
+
 .tabs {
   display: flex;
   gap: var(--_tabs-gap);

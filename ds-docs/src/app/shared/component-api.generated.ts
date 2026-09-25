@@ -10220,7 +10220,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "When true, the tab strip scrolls horizontally instead of wrapping. The active tab is scrolled into view on selection."
+        "description": "When true, a horizontal strip scrolls inside its own box and shows previous/next arrows while tabs lie beyond its edges, each arrow hidden at its own edge. The active tab is scrolled into view on selection. When false, tabs keep their width and a strip too long for its container overflows it."
       },
       {
         "name": "closable",

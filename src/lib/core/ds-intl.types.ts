@@ -194,6 +194,8 @@ export interface DsIntl {
   };
   readonly tabs: {
     readonly close: (label: string) => string;
+    readonly scrollPrevious: string;
+    readonly scrollNext: string;
   };
   readonly splitButton: {
     readonly menuLabel: string;

@@ -59,6 +59,10 @@
   visual regression test that screenshots a chart a fixed time after it renders now catches later
   marks still arriving.
 
+- **`DsIntl.tabs` has two required keys, `scrollPrevious` and `scrollNext`.** A complete `DsIntl`
+  dictionary, or a complete `tabs` section of one, declared as a typed object stops compiling until
+  it lists them. Overrides passed to `provideDsIntl` are partial and need nothing.
+
 - **A custom pagination `range` or table `[rangeAnnouncement]` receives zeros on an empty list.**
   `ds-pagination` on an empty list now calls `DS_INTL.pagination.range(0, 0, 0)` (was `(1, 0, 0)`),
   and a paged `ds-table` with no empty-state text now calls its `[rangeAnnouncement]` with `(0, 0, 0)`
@@ -78,8 +82,8 @@
   hover-delay, label-highlight and stagger members; `ColumnChartComponent` and `LineChartComponent`
   only had `pinOnClick` change type; `PaginationComponent` gained `empty`, `TableComponent` gained
   `emptyCell` and `emptyCellText`, `TooltipDirective` gained `detachAncestor`, `disclosesOwnText` and
-  `listenToFocusableAncestor`, and `TextareaComponent` gained `maxLengthMode` and the soft-limit
-  members; and three classes reachable only through their own entry points
+  `listenToFocusableAncestor`, `TextareaComponent` gained `maxLengthMode` and the soft-limit
+  members, and `TabsComponent` gained the scroll-arrow members; and three classes reachable only through their own entry points
   gained members too - the internal `ChartLegendComponent`, the internal `ChartTooltipPanelComponent`
   and the internal `WaterfallMarksComponent`. Five protected members of `ColumnSeriesComponent` are
   gone: `pinDiscRadius`, `pinGlyph`, `pinGlyphOffset`, `pinGlyphSize` and `slotStepPx`. Build after
@@ -87,6 +91,13 @@
   override whose base member is gone. Subclassing a DS component is unsupported.
 
 ### Added
+
+- **A `scrollable` `ds-tabs` strip shows previous and next arrows while tabs lie beyond its edges.**
+  Each arrow turns the strip by a page of tabs, smoothly unless reduced motion is set, and hides at
+  its own edge; a strip that fits shows none. The arrows sit outside the tab order and are hidden
+  from assistive technology, because the arrow keys already bring the selected tab into view. New
+  `DS_INTL.tabs.scrollPrevious` and `DS_INTL.tabs.scrollNext` label them (`Scroll tabs back`,
+  `Scroll tabs forward`).
 
 - **`maxLengthMode` on `ds-textarea`.** `'hard'` (the default) keeps the native `maxlength`: typing
   and paste stop at `maxLength`. `'soft'` lets the text run past it: the counter turns red, the
