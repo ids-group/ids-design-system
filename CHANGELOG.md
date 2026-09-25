@@ -11,6 +11,12 @@
 
 ### Fixed
 
+- **A picker with no filter field no longer announces its option count.** Opening a `ds-select`, or
+  a `ds-multi-select` whose search field is not shown, spoke "4 results" through a polite live
+  region although nothing had been filtered. The count is announced only where a filter field is
+  shown: `ds-autocomplete` and a searchable `ds-multi-select`, on opening and as typing changes the
+  list.
+
 - **A `dsTooltipWhenClipped` tooltip opens from keyboard focus on a control only.** A clipped host
   that cannot take focus itself opens when Tab lands on its nearest focusable ancestor, and that
   ancestor now has to be a control: a native `a[href]`, `button`, `input`, `select`, `textarea` or
