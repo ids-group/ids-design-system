@@ -24,6 +24,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const EXTRA = {
   'agent-catalogue': ['tools/split-agent-catalogue.mjs', '--check'],
   'chart-palette': ['tools/generate-chart-palette.mjs', '--check'],
+  statuses: ['tools/extract-statuses.mjs', '--check'],
   'input-lists': ['tools/generate-input-lists.mjs', '--check'],
   'lib-package': ['tools/sync-lib-package.mjs', '--check'],
   'public-api': ['tools/generate-public-api.mjs', '--check'],
@@ -50,6 +51,7 @@ export const GROUPS = {
     'entry-point-imports',
     'lib-package',
     'chart-palette',
+    'statuses',
     'public-api',
     'probes',
     'focus-rings',
