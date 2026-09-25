@@ -241,6 +241,37 @@
         "(first: number, last: number, total: number)"
       ],
       "verify": "A paged ds-table filtered to no rows announces its empty-state text once; with no empty-state text it announces your empty wording, or nothing where your function returns an empty string."
+    },
+    {
+      "id": "description-list-stacks-below-value-min-width",
+      "kind": "behavior",
+      "old": "ds-description-list",
+      "new": null,
+      "surface": [
+        "template",
+        "style"
+      ],
+      "action": "None, unless a list has to switch at another width: set --ds-description-list-value-min-width on it. Delete an orientation binding that switches to stacked on a viewport breakpoint only to stack a narrow list (delete list: description-list-viewport-orientation-switch).",
+      "appliesWhen": "Every horizontal ds-description-list, which is the default orientation, and every ds-description-item outside a list. Each item stacks its label above its value once the list is narrower than label width + column gap + --ds-description-list-value-min-width (14rem), the whole list at once. orientation=\"stacked\" is unaffected.",
+      "pitfall": "In a parent that sizes to its content (an inline-block, a float, an absolutely positioned box, a flex row item with an auto basis, an auto grid track) a list whose widest value is narrower than the value minimum stacks although the page has room; give the list or the parent a width, or lower the token on that list.",
+      "restore": null,
+      "searchHints": [
+        "<ds-description-list",
+        "<ds-description-item",
+        "orientation=",
+        "--ds-description-list-label-width",
+        "grid-template-columns"
+      ],
+      "detect": [
+        "display: inline-block",
+        "float:",
+        "position: absolute",
+        "grid-template-columns: auto",
+        "BreakpointObserver",
+        "ds-description-item {"
+      ],
+      "verify": "On every screen with a ds-description-list, a list narrower than its label width + column gap + 14rem shows each label above its value, a wider one keeps the label beside the value, and no value breaks mid-word unless it is wider than the whole list.",
+      "note": "The item host is a wrapping flex row (was a two-column grid), so a consumer rule setting grid-template-columns on ds-description-item sets nothing. 14rem holds a 25-character address at a 16px value size."
     }
   ],
   "informational": [
@@ -296,7 +327,8 @@
     "Under the category cursor, focus on a dsColumnSeries column names its category as a dsLineSeries marker does, and focus leaving a column or a marker takes the band and the category panel down.",
     "A paged ds-table that a filter or new data leaves empty announces its empty-state text ([empty] content or emptyTemplate) in its live region (was: silent); with none it announces rangeAnnouncement(0, 0, 0), Showing 0 of 0 by default.",
     "A tap on a chart mark stays held when the click that follows it lands (was: that click let go of it at once).",
-    "ds-waterfall-chart gains pinOnClick (boolean | null, falling back to DS_CONFIG.chart.pinOnClick, then true), with the Unpin control the other charts show."
+    "ds-waterfall-chart gains pinOnClick (boolean | null, falling back to DS_CONFIG.chart.pinOnClick, then true), with the Unpin control the other charts show.",
+    "New token --ds-description-list-value-min-width (default 14rem): the narrowest value a horizontal ds-description-list keeps beside its label before every item stacks."
   ],
   "deleteList": [
     {
@@ -328,6 +360,19 @@
       ],
       "why": "ds-select, ds-autocomplete and ds-multi-select disclose a clipped trigger value or option label in a tooltip, so a title bound on the picker to repeat that label adds a second, native tooltip. A title that carries more than the label, or one on a picker whose label never clips, may stay.",
       "replaceWith": "nothing"
+    },
+    {
+      "id": "description-list-viewport-orientation-switch",
+      "surface": [
+        "template",
+        "typescript"
+      ],
+      "find": [
+        "'stacked' : 'horizontal'",
+        "'horizontal' : 'stacked'"
+      ],
+      "why": "A horizontal ds-description-list stacks by itself once a value would get less than --ds-description-list-value-min-width, so an orientation switched on a viewport breakpoint to do the same repeats it. A switch driven by something other than width may stay.",
+      "replaceWith": "--ds-description-list-value-min-width on the list, where the switch has to move"
     }
   ]
 }

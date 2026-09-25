@@ -63,7 +63,7 @@ and token names.** These leaves are for orientation and usage.
 - [<ds-timeline-item> — TimelineItemComponent](feedback/ds-timeline-item.md) — <!-- inputs:ds-timeline-item -->
 - [<ds-toast-region> — ToastRegionComponent](feedback/ds-toast-region.md) — <!-- inputs:ds-toast-region -->
 - [<ds-tree> — TreeComponent](feedback/ds-tree.md) — <!-- inputs:ds-tree -->
-- [<ds-description-list> — DescriptionListComponent](feedback/ds-description-list.md) — <!-- inputs:ds-description-list -->
+- [<ds-description-list> — DescriptionListComponent](feedback/ds-description-list.md) — **A horizontal list stacks when a value would get too narrow.** Each item is a wrapping flex row: once the lis
 - [<ds-description-item> — DescriptionItemComponent](feedback/ds-description-item.md) — <!-- inputs:ds-description-item -->
 
 ## forms

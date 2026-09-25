@@ -575,6 +575,8 @@ All inputs: `nodes: readonly TreeNode[] = []`, `expandedIds: Set<string>`, `sele
 <!-- /inputs -->
 
 #### `<ds-description-list>` — `DescriptionListComponent`
+**A horizontal list stacks when a value would get too narrow.** Each item is a wrapping flex row: once the list is narrower than label width + column gap + `--ds-description-list-value-min-width` (14rem), every item puts its label above its value at once, and the switch follows `--ds-description-list-label-width` by itself. A standalone `ds-description-item` switches the same way at its own width. In a parent that sizes to its content (inline-block, float, absolute position, a flex row item with an auto basis, an `auto` grid track) a list whose widest value is under the minimum stacks; give it a width there. `orientation="stacked"` stacks at every width.
+Tokens: `--ds-description-list-label-width`, `--ds-description-list-column-gap`, `--ds-description-list-row-gap`, `--ds-description-list-value-min-width`
 
 <!-- inputs:ds-description-list -->
 All inputs: `orientation: 'horizontal' | 'stacked' = 'horizontal'`
