@@ -196,7 +196,7 @@
     mark {
       color: transparent;
       background-color: var(--error-muted-strong);
-      border-radius: 2px;
+      border-radius: var(--ds-radius-inner);
 
       @media (forced-colors: active) {
         forced-color-adjust: none;
