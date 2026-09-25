@@ -1,12 +1,13 @@
 const CHARTS =
-  'ds-bar-chart,ds-column-chart,ds-pie-chart,ds-funnel-chart,ds-line-chart';
+  'ds-bar-chart,ds-column-chart,ds-pie-chart,ds-funnel-chart,ds-line-chart,ds-heatmap-chart,ds-scatter-chart,ds-waterfall-chart,ds-chart';
 
-// The element each chart declares its entrance on - the element that ANIMATES, which for a bar
-// row and a column is the fill inside it rather than the row. A class list rather than a
-// library API: this is a docs affordance, and a chart that renamed a mark leaves the button inert
-// rather than breaking anything.
-const MARKS =
-  '.fill,.bar,.ring-svg,.stage,.series-line,.series-area,.swatch,.legend-swatch,.legend-check';
+// Every element a chart gives an entrance to, found by the animation it declares rather than by a
+// list of mark classes: a chart that gains a mark, or names one differently, is replayed too.
+function animatedMarks(chart: Element): (HTMLElement | SVGElement)[] {
+  return [...chart.querySelectorAll<HTMLElement | SVGElement>('*')].filter(
+    (element) => getComputedStyle(element).animationName.includes('ds-chart'),
+  );
+}
 
 /** The charts this control speaks for: the ones in its own specimen cell, or — on a card that is
  *  one chart and one control — whatever stands above it. */
@@ -41,9 +42,7 @@ function chartsNear(host: Element): Element[] {
  * when the data lands, with nothing else moving.
  */
 export function replayMarks(host: Element): void {
-  const marks = chartsNear(host).flatMap((chart) => [
-    ...chart.querySelectorAll<HTMLElement | SVGElement>(MARKS),
-  ]);
+  const marks = chartsNear(host).flatMap(animatedMarks);
   for (const mark of marks) {
     mark.style.animationName = 'none';
   }
