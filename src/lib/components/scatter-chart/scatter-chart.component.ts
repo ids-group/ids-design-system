@@ -28,6 +28,9 @@ import { ChartLegendComponent } from '@ids-group-ltd/ids-design-system/component
 import type { ChartLegendItem } from '@ids-group-ltd/ids-design-system/components/chart-legend';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import {
+  CHART_PIN_GAP,
+  CHART_PIN_RADIUS,
+  ChartPinMarkerComponent,
   ChartTooltipDirective,
   chartActiveMark,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
@@ -63,6 +66,8 @@ import type {
 const AXIS_GUTTER = 52;
 const CATEGORY_GUTTER = 34;
 const EDGE_GUTTER = 12;
+// The point's default radius, `--chart-dot-radius`.
+const PIN_POINT_CLEARANCE = 4;
 
 interface PlacedPoint {
   readonly key: string;
@@ -95,6 +100,7 @@ interface PlacedSeries {
   imports: [
     ChartLegendComponent,
     ChartTooltipDirective,
+    ChartPinMarkerComponent,
     SkeletonComponent,
     ChartDataTableComponent,
   ],
@@ -174,10 +180,17 @@ export class ScatterChartComponent {
    *  the reading, and dimming the neighbours takes exactly that away. */
   readonly dimOthers = input(false, { transform: booleanAttribute });
 
+  /** Holds the hovered mark and its tooltip in place when it is clicked, until a second click,
+   *  Escape or a press outside releases it. `pointClicked` fires either way. Unset falls back to
+   *  `DS_CONFIG.chart.pinOnClick`, then `true`. */
+  readonly pinOnClick = input<boolean | null, unknown>(null, {
+    transform: (value) => (value == null ? null : booleanAttribute(value)),
+  });
+
   /** The clicked reading, with the series it belongs to. Fires on click and on Enter or Space. */
   readonly pointClicked = output<ScatterChartReading>();
 
-  private readonly defaults = resolveChartDefaults(this);
+  protected readonly defaults = resolveChartDefaults(this);
   protected readonly intl = inject(DS_INTL);
   readonly frameResolved = this.defaults.frame;
   readonly dataTableResolved = this.defaults.dataTable;
@@ -185,7 +198,10 @@ export class ScatterChartComponent {
   readonly errorTextResolved = this.defaults.errorText;
   readonly valueFormatResolved = this.defaults.valueFormat;
 
-  protected readonly activeMark = chartActiveMark(() => 0);
+  protected readonly activeMark = chartActiveMark(
+    () => this.defaults.tooltipLingerMs(),
+    () => this.defaults.hoverDelayMs(),
+  );
 
   protected readonly viewBox = `0 0 ${SCATTER_VIEW_WIDTH} ${SCATTER_VIEW_HEIGHT}`;
 
@@ -415,6 +431,37 @@ export class ScatterChartComponent {
       this.activeMark.enter(hit.index, event, undefined, hit.element);
     }
   }
+
+  protected onPointOut(event: PointerEvent): void {
+    const hit = markOf(event);
+    if (!hit) {
+      return;
+    }
+    const next =
+      event.relatedTarget instanceof Element
+        ? event.relatedTarget.closest('[data-mark-index]')
+        : null;
+    if (next !== hit.element) {
+      this.activeMark.leave();
+    }
+  }
+
+  protected onPointPress(event: Event): void {
+    const hit = markOf(event);
+    if (hit && this.defaults.pinOnClick()) {
+      this.activeMark.pin(hit.index, event, undefined, hit.element);
+    }
+    this.onPointActivate(event);
+  }
+
+  protected readonly pinnedPoint = computed(() =>
+    this.activeMark.pinned()
+      ? (this.flatMarks()[this.activeMark.index()]?.mark ?? null)
+      : null,
+  );
+
+  protected readonly pinLift =
+    CHART_PIN_RADIUS + CHART_PIN_GAP + PIN_POINT_CLEARANCE;
 
   protected onPointActivate(event: Event): void {
     const held = this.flatMarks()[markOf(event)?.index ?? -1];

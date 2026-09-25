@@ -3,6 +3,8 @@
 @use '../../styles/chart-frame' as chart-frame;
 @use '../../styles/chart-interactive' as chart-interactive;
 @include chart-frame.chart-frame;
+@include chart-frame.pin-reset;
+@include chart-frame.pin-marker;
 @include chart-data-table.chart-data-table;
 
 
@@ -66,7 +68,14 @@
 }
 
 .cell-slot {
+  position: relative;
   padding: 0;
+}
+
+.cell-slot > .pin-marker {
+  position: absolute;
+  inset: 0;
+  margin: auto;
 }
 
 .cell {
@@ -96,9 +105,7 @@
   mix-blend-mode: difference;
 }
 
-.cell.interactive {
-  cursor: pointer;
-}
+@include chart-interactive.clickable('.cell');
 
 .cell.interactive:focus-visible {
   @include focus.ring;

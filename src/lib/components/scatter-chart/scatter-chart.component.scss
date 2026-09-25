@@ -5,6 +5,7 @@
 @use '../../styles/chart-motion' as chart-motion;
 @include chart-motion.fades-in('.point');
 @include chart-frame.chart-frame;
+@include chart-frame.pin-reset;
 @include chart-frame.no-bounding-box-focus('.point');
 @include chart-data-table.chart-data-table;
 
