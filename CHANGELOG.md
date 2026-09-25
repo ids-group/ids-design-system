@@ -125,6 +125,13 @@
 
 ### Fixed
 
+- **A `ds-bar-chart` bar grows out of its value axis in a right-to-left page** (was: from the far
+  end, since the bar is laid out from the right and grew from the left).
+
+- **Under the category cursor, focus on a column names its category** - the band and the category
+  panel with every mark's reading, as a line marker already did - and **focus leaving a column or a
+  line marker takes the band and the panel down** (was: they stayed on screen after focus had gone).
+
 - **`ds-pagination` reads `Showing 0 of 0` on an empty list.** With `total` at 0 the range label read
   `Showing 1–0 of 0` and page 1 was marked current. The pager now calls
   `DS_INTL.pagination.range(0, 0, 0)` for an empty list, the default wording returns `Showing 0 of 0`
