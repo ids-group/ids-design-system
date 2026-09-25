@@ -9599,7 +9599,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Wording for the row-range announcement, so it can be translated. Receives the 1-based first and last row on screen and the total; return an empty string to say nothing. Unset falls back to `DS_INTL.pagination.range`."
+        "description": "Wording for the row-range announcement, so it can be translated. Receives the 1-based first and last row on screen and the total. A paged table with no rows announces its empty state's text instead, and calls this with `(0, 0, 0)` only when that state has none; return an empty string to say nothing. Unset falls back to `DS_INTL.pagination.range`."
       },
       {
         "name": "skeletonRows",

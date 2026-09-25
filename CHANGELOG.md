@@ -29,8 +29,8 @@
 - **Subclassing one of these breaks on a name collision.** Each gained a member or had one change
   type (`pinOnClick` above): `BarChartComponent`, `ChartComponent`, `ColumnChartComponent`,
   `ColumnSeriesComponent`, `LineChartComponent`, `LineSeriesComponent`, `FunnelChartComponent`,
-  `HeatmapChartComponent`, `PieChartComponent`, `ScatterChartComponent` and `PaginationComponent`,
-  and internal classes reachable only through their own entry points: the internal
+  `HeatmapChartComponent`, `PieChartComponent`, `ScatterChartComponent`, `PaginationComponent` and
+  `TableComponent`, and internal classes reachable only through their own entry points: the internal
   `ChartLegendComponent`, the internal
   `ChartTooltipPanelComponent` and the internal `WaterfallMarksComponent`. Five protected members of `ColumnSeriesComponent` are gone:
   `pinDiscRadius`, `pinGlyph`, `pinGlyphOffset`, `pinGlyphSize` and `slotStepPx`. Build after
@@ -132,9 +132,9 @@
   receives `(0, 0, 0)` there.
 
 - **A paged `ds-table` announces a table with no rows.** Its live region went silent when a filter or
-  new data left the table empty. It now announces `rangeAnnouncement(0, 0, 0)`, `Showing 0 of 0` by
-  default, the same words its pager shows; a `rangeAnnouncement` that returns an empty string for a
-  total of 0 keeps it silent.
+  new data left the table empty. It now announces the text of its empty state (the `[empty]` content
+  or `emptyTemplate`), the words shown in the table; with no empty-state text it announces
+  `rangeAnnouncement(0, 0, 0)`, `Showing 0 of 0` by default.
 
 - **The tooltip panel wraps a value with no break opportunity.** A long file name or id ran past the
   panel's edge on one line; it now breaks inside the panel's max width.

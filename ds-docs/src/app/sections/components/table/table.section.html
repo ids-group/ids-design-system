@@ -643,6 +643,29 @@
     </span>
   </ds-table>
 
+  <p class="block-desc t-s">
+    A paged table announces the empty-state text when a filter leaves it with no rows: type a
+    project that does not exist and a screen reader hears the line below the header.
+  </p>
+
+  <ds-search
+    size="sm"
+    placeholder="Filter projects…"
+    ariaLabel="Filter projects"
+    [(value)]="emptyAnnouncementQuery" />
+
+  <ds-table
+    caption="Projects"
+    [data]="projectRows"
+    [columns]="projectColumns"
+    [pageSize]="5"
+    [filterQuery]="emptyAnnouncementQuery()"
+    [stickyHeader]="false">
+    <span empty>
+      No project matches this filter
+    </span>
+  </ds-table>
+
   <div class="block-sub t-overline">
     b · No data · primary CTA
   </div>
