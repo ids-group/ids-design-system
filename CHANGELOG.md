@@ -72,6 +72,11 @@
   spreads evenly within `--ds-motion-chart-mark-stagger-budget` (was: a 300ms cap that landed every
   later mark at once). Set `staggerMs="0"` to have a series arrive all at once.
 
+- **The Unpin control sits at the top end of a chart, on its caption's line**, drawn at the caption's
+  height with the full touch target around it (was: floating over the bottom centre, where it covered
+  axis labels, legends and tables). While it shows, a caption leaves room for it and a chart with no
+  caption gains the line, so it covers nothing.
+
 - **A held mark always shows its pin disc**: a column, a bar, a slice, a funnel stage, a heat map
   cell, a scatter point, a line marker, and a category held under the category cursor (a disc at the
   foot of its band).
