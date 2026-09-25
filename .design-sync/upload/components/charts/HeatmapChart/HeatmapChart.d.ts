@@ -21,6 +21,8 @@ export interface HeatmapChartProps {
   interactive?: boolean;
   /** Fades every cell but the one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed cells, which on a ramp is the only thing carrying magnitude. */
   dimOthers?: boolean;
+  /** Holds the hovered cell and its tooltip in place when it is clicked, until a second click, Escape or a press outside releases it. `cellClicked` fires either way. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. */
+  pinOnClick?: boolean | null;
   /** `'auto'` draws the bordered, padded box; `'none'` leaves it bare for a chart inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`. */
   frame?: ('auto' | 'none') | null;
   /** A skeleton at the grid's own height, so the page does not resize when the data lands. */
@@ -35,6 +37,8 @@ export interface HeatmapChartProps {
   valueFormat?: unknown;
   /** Whether a hovered or focused cell opens a tooltip. A heat map's cells carry no printed value by default, so this is where a reading is read without reaching for the annex table. */
   tooltip?: ('item' | 'none');
+  /** Milliseconds between one column's entrance and the next, left to right, `40` by default; `0` turns the stagger off. The whole spread stays within 260ms, so a wide grid narrows the step instead of crawling in. */
+  staggerMs?: number;
   /** The clicked cell, with the row and the column it sits at. Never fires for an unmeasured cell, which has no reading to drill into. */
   onCellClicked?: (value: unknown) => void;
   /** Element content. */

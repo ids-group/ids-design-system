@@ -58,8 +58,10 @@ export interface TextareaProps {
   resize?: ('none' | 'vertical' | 'horizontal' | 'both');
   /** Accessible name when no visible `label` is provided. */
   ariaLabel?: string | null;
-  /** Hard character cap — applies the native maxlength attribute and shows a live "{current}/{max}" counter below the field. */
+  /** Character limit - shows a live "{current}/{max}" counter below the field. `maxLengthMode` decides what happens at the limit. Counts `value.length`, the UTF-16 units the native `maxlength` counts, whitespace included. */
   maxLength?: number | null;
+  /** `'hard'` applies the native maxlength attribute, so typing and paste stop at `maxLength`. `'soft'` lets the text run past it: the counter turns red, the characters past the limit are highlighted, and the field reports invalid (`aria-invalid`, with the counter as its description). Blocking a save on it is the form's job. */
+  maxLengthMode?: ('hard' | 'soft');
   /** Native `minlength` attribute. */
   minLength?: number | null;
   /** Native `pattern` attribute — signal forms sends the schema's RegExp list. */
