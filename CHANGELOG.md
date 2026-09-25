@@ -209,9 +209,11 @@
 - **A clipped label inside a button or a clickable row discloses on keyboard focus.** A
   `dsTooltipWhenClipped` host that cannot take focus opened on hover only. It now also opens when
   keyboard focus lands on its nearest focusable ancestor, and closes on that ancestor's blur, click or
-  any key; a mouse click opens nothing, and of several clipped hosts in one ancestor only the first
-  opens. This covers `ds-select`'s trigger value and `ds-table`'s clipped cells in an interactive row.
-  A plain `dsTooltip` without `dsTooltipWhenClipped` on a non-focusable element stays hover-only.
+  any key; a mouse click opens nothing, an ancestor focusable only through a negative `tabindex`
+  (such as a `<main tabindex="-1">` that takes focus on navigation) opens nothing, and of several
+  clipped hosts in one ancestor only the first opens. This covers `ds-select`'s trigger value and
+  `ds-table`'s clipped cells in an interactive row. A plain `dsTooltip` without
+  `dsTooltipWhenClipped` on a non-focusable element stays hover-only.
 
 - **A clipped-text tooltip is read once by a screen reader.** A `dsTooltipWhenClipped` tip whose text
   the host already contains set `aria-describedby` on the focused element, so the text was announced

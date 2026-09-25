@@ -17,8 +17,9 @@ import type { TooltipPlacement } from './tooltip.types';
 
 const TRIGGER_GAP_PX = 8;
 
-const FOCUSABLE =
-  'a[href], button, input, select, textarea, summary, [tabindex]';
+const NATIVELY_FOCUSABLE = 'a[href], button, input, select, textarea, summary';
+const FOCUSABLE = `${NATIVELY_FOCUSABLE}, [tabindex]`;
+const KEYBOARD_FOCUSABLE = `${NATIVELY_FOCUSABLE}, [tabindex]:not([tabindex^="-"])`;
 
 const clippedHostsByAncestor = new WeakMap<HTMLElement, Set<HTMLElement>>();
 
@@ -133,6 +134,8 @@ export class TooltipDirective implements OnDestroy {
     const open = (event: FocusEvent) => {
       if (
         event.target !== ancestor ||
+        // Tested here, not when registering: a disabled trigger carries tabindex="-1" until enabled.
+        !ancestor.matches(KEYBOARD_FOCUSABLE) ||
         !ancestor.matches(':focus-visible') ||
         firstClippedHost(hosts) !== host
       ) {

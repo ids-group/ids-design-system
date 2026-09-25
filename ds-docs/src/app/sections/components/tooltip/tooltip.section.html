@@ -177,8 +177,9 @@
     A clipped host that cannot take focus itself, like a label inside a button
     or a cell of a clickable row, opens when keyboard focus lands on the nearest
     focusable ancestor, and closes on its blur, a click or any key. A click
-    alone opens nothing. Of several clipped values in one control only the
-    first opens.
+    alone opens nothing, and neither does an ancestor focusable only through
+    a negative tabindex, like the page's main region. Of several clipped
+    values in one control only the first opens.
   </p>
 
   <div class="demo">
