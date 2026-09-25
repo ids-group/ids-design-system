@@ -111,7 +111,13 @@ export class RulesSection {
     // Versioned like the changelog: the file has a stable name, so a cached copy
     // would otherwise outlive the release that changed it.
     fetch(new URL(`design-system.md?v=${DS_VERSION}`, document.baseURI))
-      .then((response) => response.text())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`design-system.md: ${response.status}`);
+        }
+
+        return response.text();
+      })
       .then((markdown) => Promise.resolve(marked.parse(markdown)))
       .then((rendered) => this.html.set(rendered))
       .catch(() =>
