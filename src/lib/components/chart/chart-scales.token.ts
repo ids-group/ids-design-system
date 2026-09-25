@@ -78,6 +78,10 @@ export interface ChartScales {
   readonly zeroOffset: Signal<number>;
   /** The category under the pointer or the keyboard, or `-1` for none. */
   readonly activeIndex: Signal<number>;
+  /** Whether the category cursor answers the pointer. While it does, its band is the one hover
+   *  area on the plot: a mark leaves pointer hover to it and answers focus and clicks only.
+   *  Absent means off. */
+  readonly cursorOn?: Signal<boolean>;
   /** The band drawn over the active category, for a mark that anchors a panel to the CATEGORY
    *  rather than to one of its own marks. `null` while `cursor` is off or nothing is active. */
   readonly cursorOrigin: Signal<Element | null>;

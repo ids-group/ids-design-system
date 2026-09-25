@@ -498,6 +498,8 @@ export class ChartComponent implements ChartScales {
     return this.composed() ? 'category' : 'none';
   });
 
+  readonly cursorOn = computed(() => this.cursorResolved() === 'category');
+
   /** The offer to show, if any mark is making one. At most one mark has a context at a time: a
    *  per-mark tooltip only fills it while that mark is hovered, and an axis tooltip only while the
    *  category cursor is on. The container opening the panel is what stops two marks opening two. */
@@ -509,33 +511,26 @@ export class ChartComponent implements ChartScales {
   );
 
   protected readonly tooltipContext = computed(() => {
-    const categoryIndex = this.activeIndex();
-    if (
-      this.cursorResolved() === 'category' &&
-      this.composed() &&
-      categoryIndex >= 0
-    ) {
-      const entries = topDown(
-        [...this.tooltipSources().values()].flatMap(
-          (source) => source.axisEntries?.() ?? [],
-        ),
-      );
-
-      return entries.length === 0
-        ? null
-        : { category: this.categories()[categoryIndex] ?? '', entries };
-    }
     const base = this.activeTooltip()?.context() ?? null;
-    if (base === null || this.cursorResolved() !== 'category') {
+    const categoryIndex = this.activeIndex();
+    if (this.cursorResolved() !== 'category' || categoryIndex < 0) {
       return base;
     }
-    // A category panel is about the category, not about the mark that happened to open it, so
-    // every other mark's reading at the same category belongs in it. Matched by label: the mark
-    // that opened it keeps its own row, detail included, at the height it is drawn.
-    const named = new Map(base.entries.map((entry) => [entry.label, entry]));
     const readings = [...this.tooltipSources().values()].flatMap(
       (source) => source.axisEntries?.() ?? [],
     );
+    if (base === null) {
+      return readings.length === 0
+        ? null
+        : {
+            category: this.categories()[categoryIndex] ?? '',
+            entries: topDown(readings),
+          };
+    }
+    // A mark offers its own panel under the cursor only from focus or an axis tooltip, and that
+    // panel is about the category, so every other mark's reading belongs in it too. Matched by
+    // label: the mark that offered it keeps its own row, detail included, at its drawn height.
+    const named = new Map(base.entries.map((entry) => [entry.label, entry]));
     if (readings.every((reading) => named.has(reading.label))) {
       return base;
     }
@@ -758,10 +753,26 @@ export class ChartComponent implements ChartScales {
     const viewX =
       ((event.clientX - this.canvasRect.left) / this.canvasRect.width) *
       this.viewWidth();
-    const index = this.clampIndex(
+    const category = this.clampIndex(
       categoryAt(viewX, plot.left, plot.width, this.categories().length),
     );
+    // Only the drawn band answers, so the gap between two categories is empty ground rather than a
+    // strip that belongs to one of them.
+    const index =
+      category >= 0 &&
+      Math.abs(viewX - this.xPosition()(category)) <= this.bandWidth() / 2
+        ? category
+        : -1;
     this.pointerAt.set({ x: event.clientX, y: event.clientY });
+    if (index < 0) {
+      if (event.type === 'pointerdown' && this.cursorPinned()) {
+        this.cursorState.release();
+      } else {
+        this.cursorState.leave();
+      }
+
+      return;
+    }
     if (event.type === 'pointerdown' && this.cursorPin()) {
       this.cursorState.pin(index, event);
 

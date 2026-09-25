@@ -262,7 +262,9 @@ export class ColumnSeriesComponent implements OnDestroy {
     return count > 0 ? this.scales.plot().width / count / slots : 0;
   });
 
-  protected readonly slotStepPx = computed(() => `${this.slotStep()}px`);
+  protected readonly slotBandPx = computed(
+    () => `${this.scales.bandWidth() / Math.max(1, this.slotCount())}px`,
+  );
 
   protected readonly markWidthPx = computed(
     () => `${this.slotStep() * this.columnWidthRatio()}px`,
@@ -369,14 +371,14 @@ export class ColumnSeriesComponent implements OnDestroy {
       return;
     }
     this.pointClicked.emit(mark.point);
-    if (this.pinOnClick()) {
+    if (this.pinOnClick() && !this.scales.cursorOn?.()) {
       this.activeMark.pin(hit.index, event, this.tooltipMark(), hit.element);
     }
   }
 
   protected onMarkOver(event: PointerEvent): void {
     const hit = markOf(event);
-    if (hit) {
+    if (hit && !this.scales.cursorOn?.()) {
       this.activeMark.enter(hit.index, event, this.tooltipMark(), hit.element);
     }
   }
@@ -387,7 +389,7 @@ export class ColumnSeriesComponent implements OnDestroy {
       event.relatedTarget instanceof Element
         ? event.relatedTarget.closest('[data-mark-index]')
         : null;
-    if (hit && next !== hit.element) {
+    if (hit && next !== hit.element && !this.scales.cursorOn?.()) {
       this.activeMark.leave();
     }
   }
@@ -441,10 +443,22 @@ export class ColumnSeriesComponent implements OnDestroy {
         formatted: mark.formattedValue,
         color: mark.color,
         hatched: mark.hatched,
+        detail: this.shareDetail(categoryIndex),
         y: mark.tip,
       },
     ];
   });
+
+  private shareDetail(index: number): string | undefined {
+    return this.partOfWhole()
+      ? describeShare(
+          this.data().map((point) => point.value),
+          index,
+          this.locale,
+          (share) => this.intl().chart.shareOfTotal(share),
+        )
+      : undefined;
+  }
 
   readonly tooltipContext = computed<ChartTooltipContext | null>(() => {
     const mark = this.marks()[this.activeMark.index()];
@@ -463,14 +477,7 @@ export class ColumnSeriesComponent implements OnDestroy {
           formatted: mark.formattedValue,
           color: mark.color,
           hatched: mark.hatched,
-          detail: this.partOfWhole()
-            ? describeShare(
-                this.data().map((point) => point.value),
-                this.activeMark.index(),
-                this.locale,
-                (share) => this.intl().chart.shareOfTotal(share),
-              )
-            : undefined,
+          detail: this.shareDetail(this.activeMark.index()),
         },
       ],
     };

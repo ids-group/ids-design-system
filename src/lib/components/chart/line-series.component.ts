@@ -386,14 +386,14 @@ export class LineSeriesComponent implements OnDestroy {
 
   protected onMarkerOver(event: PointerEvent): void {
     const hit = markOf(event);
-    if (hit) {
+    if (hit && !this.scales.cursorOn?.()) {
       this.activeMark.enter(hit.index, event, undefined, hit.element);
     }
   }
 
   protected onMarkerOut(event: PointerEvent): void {
     const hit = markOf(event);
-    if (!hit) {
+    if (!hit || this.scales.cursorOn?.()) {
       return;
     }
     const next =
@@ -455,7 +455,7 @@ export class LineSeriesComponent implements OnDestroy {
     if (!hit) {
       return;
     }
-    if (this.pinOnClick()) {
+    if (this.pinOnClick() && !this.scales.cursorOn?.()) {
       this.activeMark.pin(hit.index, event, '.series-marker', hit.element);
     }
     this.selectMarker(hit.index);

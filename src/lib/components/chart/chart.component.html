@@ -15,7 +15,9 @@
     <div
       class="skeleton"
       aria-hidden="true">
-      <ds-skeleton height="var(--_chart-view-height)" [shimmer]="loading()" />
+      <ds-skeleton
+        height="var(--_chart-view-height)"
+        [shimmer]="loading()" />
     </div>
   } @else if (isEmpty()) {
     <p class="empty">

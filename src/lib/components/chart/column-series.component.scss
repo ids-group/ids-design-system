@@ -30,8 +30,10 @@
     var(--_column-chart-column-share),
     var(--_column-chart-column-max-width)
   );
+  // The category's drawn band, not its whole step: the gap between two bands answers no pointer, so
+  // the empty ground between columns reads as empty.
   --_column-hit-width: min(
-    var(--_column-chart-slot-step),
+    var(--_column-chart-slot-band),
     calc(
       var(--_column-chart-column-max-width) + var(--_column-chart-column-gap)
     )
