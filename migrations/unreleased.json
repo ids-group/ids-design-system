@@ -1,0 +1,11 @@
+{
+  "version": "unreleased",
+  "items": [],
+  "informational": [
+    {
+      "text": "A dsTooltipWhenClipped host that cannot take focus opens on Tab only when its nearest focusable ancestor is a control: a native a[href], button, input, select, textarea or summary, a table row, or an element with the role button, link, tab, option, menuitem, menuitemcheckbox, menuitemradio, row, gridcell, combobox, checkbox, radio, switch or treeitem. A focusable container such as a ds-tabs panel, a scroll region or a role-less div with tabindex=\"0\" opens nothing. A role-less focusable element that acts as a control discloses again once it carries its role.",
+      "verify": "Tab onto a ds-tabs panel holding a clipped dsTooltipWhenClipped label and confirm no tooltip opens; Tab onto a ds-button or ds-select trigger holding a clipped label and confirm its tooltip opens, and that a mouse click on it opens none."
+    }
+  ],
+  "deleteList": []
+}

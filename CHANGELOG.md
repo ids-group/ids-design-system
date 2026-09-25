@@ -9,6 +9,19 @@
   the production contract. Off by default; nothing changes for a drawer or sheet that does not set
   it.
 
+### Fixed
+
+- **A `dsTooltipWhenClipped` tooltip opens from keyboard focus on a control only.** A clipped host
+  that cannot take focus itself opens when Tab lands on its nearest focusable ancestor, and that
+  ancestor now has to be a control: a native `a[href]`, `button`, `input`, `select`, `textarea` or
+  `summary`, a table row, or an element with the role `button`, `link`, `tab`, `option`,
+  `menuitem`, `menuitemcheckbox`, `menuitemradio`, `row`, `gridcell`, `combobox`, `checkbox`,
+  `radio`, `switch` or `treeitem`. A focusable container around it, such as a `ds-tabs` panel, a
+  scroll region or a `div` with `tabindex="0"`, opened the tooltip of the first clipped value
+  inside it and opens nothing now, and the search stops there rather than reaching a control further
+  out. Hover and focus on the host itself are unchanged. A role-less element with a `tabindex` that
+  acts as a control, like a clickable card, discloses again once it carries its role.
+
 ## 0.14.2 — 2026-09-25
 
 ### Breaking
