@@ -39,6 +39,7 @@ import {
   prepareOverlayEnter,
 } from '@ids-group-ltd/ids-design-system/components';
 import { FieldMessageComponent } from '@ids-group-ltd/ids-design-system/components/field-message';
+import { TooltipDirective } from '@ids-group-ltd/ids-design-system/components/tooltip';
 import {
   resolveFieldMessage,
   trimmedText,
@@ -87,6 +88,7 @@ import { createTypeAhead } from '@ids-group-ltd/ids-design-system/components';
     BadgeComponent,
     FieldMessageComponent,
     NgTemplateOutlet,
+    TooltipDirective,
   ],
   templateUrl: './multi-select.component.html',
   styleUrl: './multi-select.component.scss',

@@ -301,7 +301,10 @@
                         [size]="16" />
                     }
 
-                    <span class="option-label">
+                    <span
+                      class="option-label"
+                      dsTooltip
+                      dsTooltipWhenClipped>
                       @if (optionTemplate(); as tpl) {
                         <ng-container
                           [ngTemplateOutlet]="tpl"
@@ -349,7 +352,10 @@
                   [size]="16" />
               }
 
-              <span class="option-label">
+              <span
+                class="option-label"
+                dsTooltip
+                dsTooltipWhenClipped>
                 @if (optionTemplate(); as tpl) {
                   <ng-container
                     [ngTemplateOutlet]="tpl"

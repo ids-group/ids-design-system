@@ -810,7 +810,7 @@ All inputs: `align: 'start' | 'end' = 'start'`, `placement: 'top' | 'bottom' | '
 #### `[dsTooltip]` — `TooltipDirective`
 Attribute directive. Apply to any focusable element.
 Inputs: `dsTooltip: string = ''` (the text; empty disables), `dsTooltipPlacement: 'top' | 'bottom' | 'left' | 'right' = 'top'`, `dsTooltipDelay: number = 120` (ms)
-Renders `<ds-tooltip-panel>` via CDK overlay on hover / focus; hides on leave / blur.
+Renders `<ds-tooltip-panel>` via CDK overlay on hover / focus; hides on leave / blur. The panel wraps a value with no break opportunity (a file name, an id) inside its max width.
 
 <!-- inputs:[dsTooltip] -->
 All inputs: `dsTooltip: string = ''`, `dsTooltipPlacement: 'top' | 'bottom' | 'left' | 'right' = 'top'`, `dsTooltipDelay: number = 120`, `dsTooltipWhenClipped: boolean = false`

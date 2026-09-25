@@ -51,6 +51,7 @@ import {
 } from './select.types';
 import { DS_INTL, type DsSize } from '@ids-group-ltd/ids-design-system/core';
 import { FieldMessageComponent } from '@ids-group-ltd/ids-design-system/components/field-message';
+import { TooltipDirective } from '@ids-group-ltd/ids-design-system/components/tooltip';
 import {
   resolveFieldMessage,
   trimmedText,
@@ -80,6 +81,7 @@ import { createTypeAhead } from '@ids-group-ltd/ids-design-system/components';
     IconComponent,
     NgTemplateOutlet,
     FieldMessageComponent,
+    TooltipDirective,
   ],
   host: {
     '[attr.data-field-state]': 'controlState()',
