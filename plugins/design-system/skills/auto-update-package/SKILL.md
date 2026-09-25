@@ -29,7 +29,8 @@ only when a version cannot be made green.
   selectors/tokens against V's internals WITHOUT installing anything). Report per version: the
   MigrationItems, which are applicable (with file/hit counts), which are not, expected drift, and
   any command-type items (the real run will pause for approval on those) — and
-  make NO edits, NO bump/install, NO commits.
+  make NO edits, NO bump/install, NO commits. Phase D still runs: it writes the feedback files
+  to the OS temp dir and offers only "Just give me the file" or "Skip".
 - **Empty** → default: full run to the latest stable.
 
 Dispatch subagents by name via the Task tool. Don't do a subagent's job inline — with one pragmatic
@@ -39,13 +40,19 @@ and the step-7 re-check covers inline edits the same as agent edits.
 
 ## Model tiering (dispatch these subagents)
 
-- `ds-migration-planner` (opus) — changelog block → structured MigrationPlan.
-- `ds-usage-finder` (sonnet) — locate old-API usages. Parallel across items.
+- `ds-migration-planner` (opus) - changelog block → structured MigrationPlan. One per chain
+  version, all dispatched in Phase A.
+- `ds-usage-finder` (sonnet) - locate old-API usages. One per batch of 3-4 related items (same
+  surface or same component family), never one per item; the output stays keyed per item.
 - `ds-migration-applier` (sonnet) — apply edits. Parallel; one per file, or one per **small
   disjoint batch** of files (≤~5) — a file is never shared between concurrent appliers.
 - `ds-recheck` (sonnet) — independent re-check of every item, ALWAYS run (never skipped, even when
   your own verify was green and you fixed everything inline): grep for mechanical, semantic for
-  behavioral. Parallel.
+  behavioral. One per batch of 3-4 related items, one verdict object per item.
+- `ds-delete-judge` (sonnet) - the deleteList pass (step 8). One per group of rows whose hit files
+  are disjoint; a file is never shared between concurrent judges.
+- `ds-visual-check` (sonnet) - measures a rendering change on a consumer screen in a real browser
+  (step 5). One per screen, dispatched only when the session has browser tools.
 
 Keep at most **~8 subagents concurrent** (the platform's practical ceiling is ~10) — dispatch
 larger sets in waves, collecting each wave before launching the next.
@@ -155,14 +162,18 @@ outside the consumer repo — the OS temp dir, keyed by the consumer's path (e.g
 `<os-tmpdir>/ds-update-ledger-<slug-of-consumer-path>.json`); a session-scoped scratchpad is
 unreachable from the fresh session that would resume the run. A dry-run uses its OWN suffixed path
 (`…-dryrun.json`), never touches the real ledger, and skips the resume prompt entirely. Shape:
-`{ branch, headAtStart, chain, mode, perTarget: { "<t>": { perVersion: { "<V>": {
+`{ branch, headAtStart, chain, mode, feedback: [], perTarget: { "<t>": { baseline, perVersion: { "<V>": {
 plan, items: { "<id>": "applied | not-applicable | locator-dead | superseded | unattempted-degraded
 | needsReview | rechecked" }, hitCounts, touchedFiles: [], attempts,
 deleteList: { "<id>": "deleted | kept-<reason>" }, committed } } } } }` — per TARGET, because
 `attempts` and item statuses are per (target, version), and the version's parsed `plan` is stored
 so a resume reuses the same item ids (a prose-derived plan re-derived later has no id stability).
+`baseline` is the errors and warnings each target's verify command printed on the installed version
+(Phase A step 9); `feedback` is every feedback entry of the run (see "Feedback"), appended the
+moment it arrives so an interrupted run keeps it.
 Update it at every step boundary (plan done / apply wave done / bumped / verified / re-checked /
-delete pass / committed); DELETE it when the run completes. **On skill start (not in dry-run):** if
+delete pass / committed); DELETE it when the run completes, after Phase D has written the feedback
+files. **On skill start (not in dry-run):** if
 a ledger for this repo shows an unfinished version, summarize it, warn when `git rev-parse HEAD`
 no longer matches `headAtStart` (the tree moved since), and ask the user (AskUserQuestion): resume
 from the recorded step, or start fresh — where fresh means re-running the UNFINISHED version from
@@ -170,7 +181,39 @@ step 1, never skipping past it. Either way, Phase A setup (the clone, the extrac
 check) is re-run first — those artifacts lived in the dead session's scratchpad; only the ledger
 survives.
 
+## Feedback (every run, every agent)
+
+Every run leaves evidence-backed feedback about this skill, the agents, the manifests, the
+changelog and the DS tools, and Phase D delivers it to the DS repo. One entry:
+
+`{ id, target, kind, severity, summary, evidence: [{ loc | command | output }], proposal, run: { consumer, dsFrom, dsTo, pluginVersion, date } }`
+
+`target` ∈ `skill:auto-update-package` | `agent:<name>` | `manifest:<V>#<itemId>` |
+`changelog:<V>` | `tool:<script name>` | `plugin:readme`; `kind` ∈ `defect` | `gap` | `ambiguity` |
+`false-positive` | `false-negative` | `cost`; `severity` ∈ `blocker` | `should-fix` | `nit`. The
+field meanings, the verification rule and the triage flow are defined once, in the DS repo's
+`feedback/README.md` (in the clone, when its default branch carries it). An entry without
+`evidence` is dropped.
+
+- **Every agent returns `feedback: []`** (the same shape minus `run`, which you fill: consumer slug,
+  the chain's first and last version, `plugin.json`'s version, today's date). Append each entry to
+  the ledger when the agent's report lands, never later.
+- **Your own entries:** a dispatch you had to redo and why; a phase that ran serially and could have
+  run in parallel; a verification you could not perform and why; an instruction in this file that
+  was wrong, contradicted another, or missed a case the run met.
+- **The manifest evidence the run collects is feedback, not prose:** the locator-dead set,
+  surface-under-declared hits, hits on `surface: "none"` items, a misfiled informational entry,
+  and every manifest-truth defect or unverified value become entries with `target:
+  manifest:<V>#<itemId>` (or `tool:check-manifest-truth` when the tool, not the manifest, is wrong).
+- Never file feedback about the consumer's own code quality. That is not this plugin's business.
+
 ## Phase A — Run setup (do once)
+
+Steps 1-6 are quick local reads and run in order until the chain is known. Everything after that
+is ONE parallel wave: start the clone (step 7), the peers fetch (step 6) and the baseline builds
+(step 9) together as background commands; the moment the clone lands, extract every tree, start the
+manifest-truth check and dispatch a planner for EVERY chain version (step 10), all at once. Ask
+step 8's question while the wave runs. Collect the whole wave before Phase B.
 
 1. **Confirm consumer + find targets.** Read `package.json`; find `@ids-group-ltd/ids-design-system`
    in dependencies/devDependencies. In a monorepo, locate the declaring manifests by
@@ -241,7 +284,7 @@ survives.
    support" = a manifest DEFECT; "nothing could be checked" (or a skipped-versions list) =
    UNVERIFIED, not clean; and its closing "M of N old/new value(s) were read" line bounds even a
    clean result — the values it lists as holding no name, or none it could resolve, are UNVERIFIED
-   too, per item. The two are different evidence, never merged; step 1 of the loop consumes
+   too, per item. The two are different evidence, never merged; step 10 consumes
    the record, and the final report carries both lists. A clone without the tool = every version
    UNVERIFIED, said so once.
    **Migration manifests (deterministic bonus, same source priority).** The DS ships a structured
@@ -251,10 +294,32 @@ survives.
    (`…/raw/main/migrations/<V>.json`); the fallback `node_modules/.../migrations/` only holds
    versions ≤ installed, so it rarely covers a forward chain. A version whose manifest you couldn't
    get is NOT an error — the planner just derives that version's plan from its prose block instead
-   (step 1). Manifests make the plan deterministic; they are never required.
+   (step 10). Manifests make the plan deterministic; they are never required.
 8. **Ask the user (AskUserQuestion):** git strategy — feature branch `chore/update-ds-<latest>`
    vs commit to the current branch — and show the computed chain for confirmation. Create the
    branch if chosen.
+9. **Baseline build (not in dry-run).** Run each target's verify command on the version installed
+   now, before any edit, with its full output to a file, and record every error and warning in the
+   ledger's `baseline`. A later failure that matches a baseline line is pre-existing: it never
+   counts against a version and is reported once in Phase C. A baseline that does not build at all
+   is reported to the user before Phase B; per-version "green" then means "no error beyond the
+   baseline".
+10. **Plan every chain version (parallel, opus).** Extract the tree of every chain version and of
+    `current` (see "Reading the DS sources"). Dispatch one `ds-migration-planner` per chain version,
+    all at once, each with V's changelog block, the `v<V>` tree and the tree of the tag before it,
+    **and, if the clone carries a manifest `migrations/<V>.json`, pass it VERBATIM too**: the
+    planner validates and prefers the manifest (deterministic plan), deriving from prose only when
+    it's absent or malformed. Parse each MigrationPlan into the ledger.
+    When the manifest-truth check lands, apply it to the plans: a flagged item's plan entry is
+    derived from prose instead of trusted (re-dispatch that version's planner with the flagged ids
+    and the check's lines; a fallback, not verified ground: the prose can carry the same phantom,
+    so the item keeps its full `verify` obligations), and the flag itself becomes a feedback entry.
+    **Supersedes skip set, computed once here:** every item that a LATER plan **inside this chain**
+    names in its `supersedes` (read from every plan and from the clone's manifests) is skipped in
+    Phase B for every item kind, with that reason recorded: the later item is the one to act on,
+    and doing both means doing work the next version undoes. The link only points back, so nothing
+    marks an item from its own file, and a chain version with no manifest contributes nothing:
+    note in the report that supersession coverage is partial past it.
 
 ## Phase B — Per-version loop (for each target, for each version V in the chain, ascending)
 
@@ -273,22 +338,18 @@ For a monorepo, invert the loop: for each version V, apply across ALL selected t
 target's `package.json` to V, run ONE install, build each target, and make ONE commit per version
 spanning all targets. (Single-target repos: the plain per-target loop below is fine.)
 
-1. **Plan.** Extract the `v<V>` tree and the tree of the tag before it (see "Reading the DS
-   sources"), unless an earlier version already did; every dispatch in this version carries both
-   paths. Dispatch `ds-migration-planner` with V's changelog block — **and, if the clone carries a
-   manifest `migrations/<V>.json`, pass it VERBATIM too**: the planner validates and prefers the manifest (deterministic
-   plan), deriving from prose only when it's absent or malformed. Consult the manifest-truth result
-   recorded for V in Phase A step 7: a flagged item's plan entry is derived from prose instead of
-   trusted (a fallback, not verified ground: the prose can carry the same phantom, so the item
-   keeps its full `verify` obligations), and the flag itself is reported with the locator-dead set. Parse the MigrationPlan. If
-   `items` is empty → no-migration version: skip steps 2–3 and go to step 4 — but a non-empty
-   `deleteList` still gets its step-8 pass before the commit.
-2. **Find (parallel, sonnet).** Dispatch `ds-usage-finder` across items with the target's source
+1. **Plan.** Take V's MigrationPlan from the ledger (Phase A step 10). Every dispatch in this
+   version carries the `v<V>` tree and the tree of the tag before it. If `items` is empty, V is a
+   no-migration version: skip steps 2-3 and go to step 4, but a non-empty `deleteList` still gets
+   its step-8 pass before the commit.
+2. **Find (parallel, sonnet).** Batch V's items by surface or component family, 3-4 per batch,
+   and dispatch one `ds-usage-finder` per batch with the target's source
    root — passing each MigrationItem **verbatim** (`id` / `kind` / `old` / `new` / `searchHints` /
    `map` / `surface` / `detect` / `appliesWhen` as the planner emitted them — `new` is what lets the
    finder skip old values standing inside an already-applied replacement; the same no-paraphrase
    rule as step 3). Collect per-item
-   `path:line` hits **and record every item's hit count** (ledger + final report). **Classify a
+   `path:line` hits **and record every item's hit count** (ledger + final report). A redo of one
+   item goes out alone; the batching is for the first pass. **Classify a
    zero before dropping it — the finder's `rawMatches` (per-locator pre-filter counts) is the
    evidence; "not in this repo" and "this locator matches nothing anywhere" are different claims:**
    - **not-applicable** — some `rawMatches` count is > 0: the broad locators show the feature is
@@ -296,7 +357,7 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    - **LOCATOR-DEAD** — every `rawMatches` count is 0: `old`, every `detect` shape AND every
      `searchHint` returned zero hits repo-wide, all surfaces. That is evidence about the MANIFEST (a mis-named symbol reads exactly
      like an unused feature), not the consumer. Record it separately (never inside the
-     not-applicable total) and carry the whole set into the Phase C report.
+     not-applicable total), and record each as a feedback entry on `manifest:<V>#<id>`.
      The two exceptions below still run FIRST — locator-dead is the classification of a zero that
      SURVIVES them, never a reason to skip the code-add site resolution or the semantic pass.
 
@@ -315,12 +376,8 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    locator-dead if every `rawMatches` count is 0, not-applicable otherwise — and record it with the
    reason you satisfied yourself of it.
 
-   An item that a LATER manifest **inside this chain** names in its `supersedes` is skipped here —
-   for EVERY item kind, not only zeros — with that reason recorded: the later item is the one to
-   act on, and doing both means doing work the next version undoes. The link only points back, so
-   build the skip set by reading every `supersedes` in the clone's manifests;
-   nothing marks an item from its own file, and a chain version with no manifest contributes
-   nothing — note in the report that supersession coverage is partial past it.
+   An item in the Phase A supersedes skip set is skipped here, for every item kind, with its
+   reason recorded.
 3. **Apply (parallel, sonnet).** Group the finder's hits by file; dispatch one
    `ds-migration-applier` per file — or per **small disjoint batch** of files (≤~5) when many small
    files carry the same items. The invariant is disjointness: a file is NEVER shared between
@@ -329,9 +386,9 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    instead of re-deriving them by re-grepping. **This includes behavioral (`removed-api` / `behavior`) items — the applier
    ATTEMPTS them, not just mechanical ones.** For an item located by its `action` rather than by hits
    (e.g. a `code-add` to the app config or global styles), dispatch an applier for that described
-   file. An `outOfSurface` hit is an ordinary hit for applying — count it in the report as
-   surface-under-declared manifest feedback. A hit on a `surface: "none"` item is manifest feedback
-   ONLY (report it beside locator-dead) — its `action` has nothing to edit. For a `code-add` whose
+   file. An `outOfSurface` hit is an ordinary hit for applying, and a surface-under-declared
+   feedback entry. A hit on a `surface: "none"` item is a feedback entry ONLY: its `action` has
+   nothing to edit. For a `code-add` whose
    described file does not exist while the consumer HAS the thing the addition extends, the applier
    CREATES the file (the creation is the insertion); a missing file is not `needsReview`.
    Collect `applied` / `needsReview`, and start the **touched-files union** (the commit
@@ -372,7 +429,8 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    mechanical item is applied or genuinely not-applicable, and spot-grep each mechanical item's
    (except `code-add` — its hints locate an anchor that must REMAIN)
    `searchHints` (element-scoped) to confirm no removed `old` value remains. Verdict: green, or a
-   list of issues.
+   list of issues. An error or warning that matches the target's `baseline` (Phase A step 9) is
+   pre-existing and never an issue of V; only what the baseline lacks counts.
    **Two change kinds verify differently:** input value/type changes DO surface as build type
    errors under strict templates — the build catches them. Token / CSS-custom-property / CSS-class
    renames do NOT fail the build (an unknown custom property or class is not a compile error) — for
@@ -393,9 +451,18 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    line-item, silently breaking consumer customizations that reach into those internals (deep /
    `::ng-deep` selectors, styling a component's internal classes, overriding internal tokens). The
    build won't catch these and no MigrationItem exists for them, so they never enter the apply
-   pipeline. After install, check whether the consumer's DS-targeting customizations still resolve
-   against the newly-installed bundle (read the bundle to see what it now exposes); where one no
-   longer does, reproduce its INTENT on this version's supported theming API where that's derivable —
+   pipeline. After install, run the drift scan:
+   `node <plugin-root>/scripts/drift-scan.mjs <tree of the tag before V> <v<V> tree> <source root>`.
+   `<plugin-root>` is two levels above this skill's base directory (the path announced as "Base
+   directory for this skill" when the skill loads), so the script is `../../scripts/drift-scan.mjs`
+   relative to it. It prints `{ goneTokens, goneClasses, hits: [{ file, line, name }] }`: the
+   `--ds-*` tokens and CSS classes present at the previous tag and absent at `v<V>`, and every
+   consumer line that still names one. Judge each hit (a class name the consumer also defines for
+   its own markup is not drift), then read the extracted `v<V>` tree for what replaced it. The scan
+   sees names, not DOM shape: a customization that relies on nesting or element order still needs
+   the bundle read by hand. Where the script is missing, read the bundle by hand and file a feedback
+   entry on `skill:auto-update-package`. Where a customization no longer resolves, reproduce its
+   INTENT on this version's supported theming API where that's derivable:
    same visual result, **reproduce don't redesign, never guess brand intent** — then build and list
    it under "applied — human should eyeball". Residue the new API genuinely cannot express goes to
    the Phase C manual-review list, described precisely — it does not stop the run. An item whose
@@ -425,14 +492,27 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    verified. Do NOT silently green it: keep the edit, but list it in the report under **"applied —
    human should eyeball"** (distinct from informational and from manual-review) so a
    plausible-but-visually-wrong edit is never invisible after the `chore(deps)` commit.
+   **Visual checks (parallel, sonnet), once the build is green.** Check silently whether this
+   session has browser tools (Claude in Chrome `mcp__claude-in-chrome__*` or chrome-devtools
+   `mcp__chrome-devtools__*`). If it has none, skip this without asking and say so in the report.
+   If it has them, collect every rendering change of V, an item or a `{ text, verify }`
+   informational entry whose change names a layout
+   mechanism (`display`, `grid`, `flex`, `position`, `overflow`, `colspan`, a width, a height, a
+   wrapper element). Include the `not-applicable` ones: a rendering change can regress a screen
+   with nothing for the consumer to edit. Find the consumer screens that render the affected
+   component, name for each check the state that shows the change (expanded, open, empty, error, a
+   narrow viewport), and dispatch one `ds-visual-check` per screen, all at once, with the app's
+   base URL and the tool family. A `fail` is an issue of V like any other (step 6); a
+   `not-verified` stays on the eyeball list with its reason, never guessed green.
 6. **Auto-fix loop.** If not green, increment `attempts` and dispatch sonnet appliers to fix the
    specific issues — pass forward the previous attempt's diff, the re-checker's failure reason, and
    your semantic objection, and instruct "do not reproduce the prior attempt; if you can't improve on
    it, record `needsReview`." If two consecutive attempts on an item produce an identical edit,
    short-circuit that item to the manual-review list rather than burning the remaining cap. Add any
    newly-touched files to the touched-files union, then re-verify. Bounded by the 3-attempt cap.
-7. **Re-check (parallel, sonnet) — every item, ALWAYS.** Dispatch `ds-recheck` for each item,
-   re-attaching its full MigrationItem by `id` from the plan (the applier's report is id-keyed
+7. **Re-check (parallel, sonnet) - every item, ALWAYS.** Batch the items as in step 2, 3-4
+   related items per `ds-recheck`, each item judged on its own; a redo of one item goes out alone.
+   Re-attach its full MigrationItem by `id` from the plan (the applier's report is id-keyed
    only) — plus the applier's reported mode (`replaced | inserted | no-op` — it decides what the
    re-check greps for, and a `no-op` is confirmed by checking the condition, not the edit), and the
    applier's `needsReview` entries with their `locs` (the only occurrences the re-check may
@@ -458,19 +538,20 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
    manual-review.
 8. **Delete-list pass (the plan's `deleteList`) — a separate sweep, after the items are green.**
    These are not migrations; they are the workarounds this version made unnecessary, and they are the
-   half of an upgrade that is otherwise never done. For each entry, grep the surface
-   it names for its `find` shapes (a finder dispatch is fine — map the row to a pseudo-item:
-   `id`, `kind: "delete"`, `searchHints` := `find`, its `surface`), then judge
-   each hit yourself, because a workaround can still be load-bearing: `[reserveMessage]="false"` is
-   dead against the new default and REQUIRED under a `dsReserveMessages` host. A row's `why` is the
-   library's claim about V, not evidence: before deleting, confirm in the extracted `v<V>` tree that V
-   really covers every case the consumer's rule covers. A wrap rule is still needed where V measures
-   a row only on first render and the consumer's labels change after it. Apply the deletions
-   where they are dead — and where the row's `replaceWith` names an API, the edit is
-   delete-and-replace, not a bare removal — leave the rest, and report both halves: deleted, and
-   kept with the reason.
-   Re-run the verify command after any deletion, before the commit. A deletion that changes
-   rendering belongs in "applied — human should eyeball".
+   half of an upgrade that is otherwise never done. Grep every row's `find` shapes over the source
+   root to learn which files each row hits, then group the rows so that no file is hit by two
+   groups (rows sharing a file go in one group), and dispatch one `ds-delete-judge` per group, all
+   at once, each with its rows verbatim, the files it owns, and both extracted trees. A judge
+   re-greps its rows, decides each hit dead or kept against the `v<V>` tree (a row's `why` is the
+   library's claim about V, not evidence; a workaround can still be load-bearing, e.g.
+   `[reserveMessage]="false"` is dead against the new default and REQUIRED under a
+   `dsReserveMessages` host), applies the dead deletions (delete-and-replace where `replaceWith`
+   names an API), and returns `{ rowId, deleted, kept, rendersDifferently, feedback }`. It never
+   commits. Review the whole diff yourself: a deletion you cannot confirm from the `v<V>` tree is
+   reverted and reported as kept. Report both halves, deleted and kept with the reason.
+   Re-run the verify command after any deletion, before the commit. A deletion in
+   `rendersDifferently` gets a visual check the same way as step 5 and goes to "applied - human
+   should eyeball".
 9. **Green → commit.** Stage EXACTLY the touched-files union (step 3) plus the target's
    `package.json` plus the lockfile, by explicit pathspec (never `git add -A`, never a bare
    directory). Commit `chore(deps): update @ids-group-ltd/ids-design-system to vV`, migration
@@ -492,9 +573,9 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
   behavioral); items not-applicable — **every item with its hit count**.
 - **Locator-dead — evidence about the manifests, not this consumer:** the items where every locator
   matched nothing repo-wide, with version and id. One can be a consumer quirk; several in one chain
-  mean the manifests are wrong — say explicitly that this list should be filed back to the
-  design-system repo, and never fold it into the not-applicable total.
-  **A defect filed back must be complete and evidenced:** any claim that the DS removed or voided
+  mean the manifests are wrong. Each is a feedback entry that Phase D delivers to the
+  design-system repo; never fold them into the not-applicable total.
+  **A feedback entry filed back must be complete and evidenced:** any claim that the DS removed or voided
   something carries file:line at BOTH tag boundaries (see the planner's both-boundaries rule) —
   removal asserted from absence in one file is the known false-positive class; and a defect that
   proposes `deleteList` rows also names the paired CHANGELOG edit, because the DS's
@@ -511,6 +592,10 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
 - **Needs manual review — should be EMPTY in a clean run:** the items the auto attempt + auto-fix
   loop could not resolve (cap or short-circuit), each with why — plus customization-drift residue
   the new theming API genuinely cannot express (listed here; it does not stop the run).
+- **Pre-existing:** the baseline errors and warnings (Phase A step 9) that are still there, listed
+  once, so nobody reads them as the upgrade's.
+- **Visual checks:** per check, the screen, the state reached, the measured numbers and the verdict;
+  or one line saying the step was skipped because the session has no browser tools.
 - If stopped: which target/version, why, what to look at.
 - Suggested next step (review the branch / open a PR).
 - **Team-setup offer.** If the target repo's committed `.claude/settings.json` does not already
@@ -522,3 +607,33 @@ spanning all targets. (Single-target repos: the plain per-target loop below is f
   and `"enabledPlugins": { "design-system@ids": true }`, then commit it separately by pathspec
   (`chore(claude): auto-install the ids design-system plugin for the team`). In dry-run make no
   edit — add a one-line pointer to the report instead.
+
+## Phase D - Feedback (after the Phase C report, every run, dry-run included)
+
+1. **Dedupe** the ledger's `feedback` by (`target`, `summary`), merging the evidence lists.
+2. **Verify each entry yourself** before it ships: open every file:line it cites, re-read the tag
+   tree it quotes, re-run a cheap command it quotes and compare the output. An entry whose evidence
+   does not hold, or that you cannot check, is dropped; the report says how many were dropped and
+   why. Only verified entries ship.
+3. **Write two files in the OS temp dir, never inside the consumer repo:**
+   `ds-feedback-<consumer-slug>-<YYYY-MM-DD>.md` (human-readable, grouped by `target`, most severe
+   first, each entry with its evidence and proposal) and `ds-feedback-<consumer-slug>-<YYYY-MM-DD>.json`
+   (the entries, `run` filled). No verified entry → write nothing and say so in one line.
+4. **Find a local DS clone yourself:** the path in env `IDS_DS_REPO` if set; else the sibling
+   directories of the consumer and of its parent named like the repo (`ids-design-system*`); else
+   every git repo one level under the consumer's parent folder whose `origin` URL matches
+   `itband/ids-design-system`. A candidate counts only when its `.claude-plugin/marketplace.json`
+   names `ids`. The run's scratchpad clone is not a candidate.
+5. **Ask ONCE (AskUserQuestion)** where the feedback goes:
+   - **"Put it on a feedback branch in <path>"** (only when a clone was found, never in dry-run):
+     `git -C <clone> worktree add <os-tmpdir>/ds-feedback-worktree-<consumer-slug>-<YYYY-MM-DD> -b feedback/auto-update-<consumer-slug>-<YYYY-MM-DD> dev`
+     (from `origin/dev` when the clone has no local `dev`); the clone's own checkout is never
+     touched. Copy the two files to `feedback/inbox/<YYYY-MM-DD>-<consumer-slug>.md` and `.json` in
+     that worktree, stage those two paths, commit
+     `docs(feedback): add auto-update feedback from <consumer-slug>`, and print the branch and the
+     worktree path. Never push.
+   - **"Just give me the file"**: print the `.md` path and a 3-line note, ready to paste, for the
+     plugin maintainer (what run, how many entries by severity, where the file is).
+   - **"Skip"**.
+
+   Never post anywhere: no PR, no issue, no comment, no push.
