@@ -3,6 +3,7 @@ import {
   ElementRef,
   HostListener,
   OnDestroy,
+  afterNextRender,
   booleanAttribute,
   inject,
   input,
@@ -15,6 +16,19 @@ import { isTextClipped } from '@ids-group-ltd/ids-design-system/core';
 import type { TooltipPlacement } from './tooltip.types';
 
 const TRIGGER_GAP_PX = 8;
+
+const FOCUSABLE =
+  'a[href], button, input, select, textarea, summary, [tabindex]';
+
+const clippedHostsByAncestor = new WeakMap<HTMLElement, Set<HTMLElement>>();
+
+function firstClippedHost(hosts: Set<HTMLElement>): HTMLElement | undefined {
+  return [...hosts]
+    .sort((a, b) =>
+      a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1,
+    )
+    .find(isTextClipped);
+}
 
 let nextId = 0;
 
@@ -43,7 +57,8 @@ export class TooltipDirective implements OnDestroy {
    *
    *  With this on, `dsTooltip` may be left empty and the host's own text is disclosed. That is
    *  what makes it usable on projected content, where the component holding the tip cannot know
-   *  what it was handed. */
+   *  what it was handed. A tip whose text the host already contains sets no `aria-describedby`;
+   *  one given a `dsTooltip` that says more than the host does describes it as usual. */
   readonly dsTooltipWhenClipped = input(false, { transform: booleanAttribute });
 
   private tipText(): string {
@@ -53,6 +68,19 @@ export class TooltipDirective implements OnDestroy {
     }
 
     return (this.host.nativeElement.textContent ?? '').trim();
+  }
+
+  /** A clipped host's full text is already in the DOM, so a screen reader has it; describing
+   *  the element with it again would announce it twice. */
+  private disclosesOwnText(text: string): boolean {
+    if (!this.dsTooltipWhenClipped()) {
+      return false;
+    }
+    const collapse = (value: string) => value.replace(/\s+/g, ' ').trim();
+
+    return collapse(this.host.nativeElement.textContent ?? '').includes(
+      collapse(text),
+    );
   }
 
   private ref: OverlayRef | null = null;
@@ -78,6 +106,57 @@ export class TooltipDirective implements OnDestroy {
    * pointing at a panel that no longer exists.
    */
   private describedElement: HTMLElement | null = null;
+
+  private detachAncestor: (() => void) | null = null;
+
+  constructor() {
+    afterNextRender(() => this.listenToFocusableAncestor());
+  }
+
+  /** `:focus-visible` keeps a click, which focuses the ancestor too, from opening it. Only the
+   *  first clipped host of one ancestor opens, so two panels never stack. */
+  private listenToFocusableAncestor(): void {
+    const host: HTMLElement = this.host.nativeElement;
+    if (!this.dsTooltipWhenClipped() || host.matches(FOCUSABLE)) {
+      return;
+    }
+    const ancestor = host.parentElement?.closest<HTMLElement>(FOCUSABLE);
+    if (!ancestor) {
+      return;
+    }
+    let hosts = clippedHostsByAncestor.get(ancestor);
+    if (!hosts) {
+      hosts = new Set();
+      clippedHostsByAncestor.set(ancestor, hosts);
+    }
+    hosts.add(host);
+    const open = (event: FocusEvent) => {
+      if (
+        event.target !== ancestor ||
+        !ancestor.matches(':focus-visible') ||
+        firstClippedHost(hosts) !== host
+      ) {
+        return;
+      }
+      this.focusedTarget = ancestor;
+      this.scheduleShow();
+    };
+    const close = () => {
+      this.focusedTarget = null;
+      this.onClose();
+    };
+    ancestor.addEventListener('focusin', open);
+    ancestor.addEventListener('focusout', close);
+    ancestor.addEventListener('click', close);
+    ancestor.addEventListener('keydown', close);
+    this.detachAncestor = () => {
+      hosts.delete(host);
+      ancestor.removeEventListener('focusin', open);
+      ancestor.removeEventListener('focusout', close);
+      ancestor.removeEventListener('click', close);
+      ancestor.removeEventListener('keydown', close);
+    };
+  }
 
   @HostListener('mouseenter')
   protected onPointerEnter(): void {
@@ -172,9 +251,13 @@ export class TooltipDirective implements OnDestroy {
     prepareOverlayEnter(this.ref, this.host.nativeElement, positionStrategy);
 
     const cmpRef = this.ref.attach(new ComponentPortal(TooltipPanelComponent));
-    cmpRef.setInput('text', this.tipText());
+    const text = this.tipText();
+    cmpRef.setInput('text', text);
     cmpRef.setInput('placement', placement);
     cmpRef.setInput('panelId', this.tipId);
+    if (this.disclosesOwnText(text)) {
+      return;
+    }
     const described = this.focusedTarget ?? this.host.nativeElement;
     this.describedElement = described;
     const existing = described.getAttribute('aria-describedby');
@@ -222,6 +305,7 @@ export class TooltipDirective implements OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.detachAncestor?.();
     this.onClose();
   }
 }

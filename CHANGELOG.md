@@ -72,8 +72,9 @@
   `ColumnSeriesComponent`, `LineSeriesComponent`, `FunnelChartComponent`, `HeatmapChartComponent`,
   `PieChartComponent`, `ScatterChartComponent` and `WaterfallChartComponent` gained the pinning,
   hover-delay, label-highlight and stagger members; `ColumnChartComponent` and `LineChartComponent`
-  only had `pinOnClick` change type; `PaginationComponent` gained `empty` and `TableComponent` gained
-  `emptyCell` and `emptyCellText`; and three classes reachable only through their own entry points
+  only had `pinOnClick` change type; `PaginationComponent` gained `empty`, `TableComponent` gained
+  `emptyCell` and `emptyCellText` and `TooltipDirective` gained `detachAncestor`, `disclosesOwnText` and
+  `listenToFocusableAncestor`; and three classes reachable only through their own entry points
   gained members too - the internal `ChartLegendComponent`, the internal `ChartTooltipPanelComponent`
   and the internal `WaterfallMarksComponent`. Five protected members of `ColumnSeriesComponent` are
   gone: `pinDiscRadius`, `pinGlyph`, `pinGlyphOffset`, `pinGlyphSize` and `slotStepPx`. Build after
@@ -165,6 +166,19 @@
   its trigger value and option labels, `ds-autocomplete` its option and create labels, and
   `ds-multi-select` its option labels in a tooltip when an ellipsis cuts one off; a label that fits
   shows none.
+
+- **A clipped label inside a button or a clickable row discloses on keyboard focus.** A
+  `dsTooltipWhenClipped` host that cannot take focus opened on hover only. It now also opens when
+  keyboard focus lands on its nearest focusable ancestor, and closes on that ancestor's blur, click or
+  any key; a mouse click opens nothing, and of several clipped hosts in one ancestor only the first
+  opens. This covers `ds-select`'s trigger value and `ds-table`'s clipped cells in an interactive row.
+  A plain `dsTooltip` without `dsTooltipWhenClipped` on a non-focusable element stays hover-only.
+
+- **A clipped-text tooltip is read once by a screen reader.** A `dsTooltipWhenClipped` tip whose text
+  the host already contains set `aria-describedby` on the focused element, so the text was announced
+  as its name and again as its description. It now sets none, on a focusable host or its ancestor; a
+  tip given a `dsTooltip` that says more than the host still describes it, as does a plain
+  `dsTooltip`. A test asserting `aria-describedby` on a clipped disclosure finds none.
 
 - **`ds-pagination` handles an empty list.** With `total` at `0` the range read `Showing 1-0 of 0` and
   page 1 was marked current; it now reads `Showing 0 of 0`, disables every page button and marks none

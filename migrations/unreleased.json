@@ -149,7 +149,7 @@
     {
       "id": "exported-class-members-grew",
       "kind": "behavior",
-      "old": "BarChartComponent, ChartComponent, ColumnChartComponent, ColumnSeriesComponent, LineChartComponent, LineSeriesComponent, FunnelChartComponent, HeatmapChartComponent, PieChartComponent, ScatterChartComponent, WaterfallChartComponent, PaginationComponent, TableComponent, ChartLegendComponent, ChartTooltipPanelComponent, WaterfallMarksComponent",
+      "old": "BarChartComponent, ChartComponent, ColumnChartComponent, ColumnSeriesComponent, LineChartComponent, LineSeriesComponent, FunnelChartComponent, HeatmapChartComponent, PieChartComponent, ScatterChartComponent, WaterfallChartComponent, PaginationComponent, TableComponent, TooltipDirective, ChartLegendComponent, ChartTooltipPanelComponent, WaterfallMarksComponent",
       "new": null,
       "surface": "typescript",
       "action": "Build after upgrading, rename or mark `override` every member of yours the compiler reports as colliding, and delete an override whose base member is gone.",
@@ -170,6 +170,7 @@
         "extends WaterfallChartComponent",
         "extends PaginationComponent",
         "extends TableComponent",
+        "extends TooltipDirective",
         "extends ChartLegendComponent",
         "extends ChartTooltipPanelComponent",
         "extends WaterfallMarksComponent"
@@ -188,12 +189,13 @@
         "extends WaterfallChartComponent",
         "extends PaginationComponent",
         "extends TableComponent",
+        "extends TooltipDirective",
         "extends ChartLegendComponent",
         "extends ChartTooltipPanelComponent",
         "extends WaterfallMarksComponent"
       ],
       "verify": "The app builds with no TS4114 or TS2416 against a DS base class, and no subclass keeps a member named after a removed one.",
-      "note": "The chart components gained the pinning, hover-delay and label-highlight members, except ColumnChartComponent and LineChartComponent, whose only change is the type of pinOnClick; PaginationComponent gained empty, TableComponent gained emptyCell and emptyCellText; five protected members of ColumnSeriesComponent are gone (pinDiscRadius, pinGlyph, pinGlyphOffset, pinGlyphSize, slotStepPx). The compiler names every collision."
+      "note": "The chart components gained the pinning, hover-delay and label-highlight members, except ColumnChartComponent and LineChartComponent, whose only change is the type of pinOnClick; PaginationComponent gained empty, TableComponent gained emptyCell and emptyCellText, TooltipDirective gained detachAncestor, disclosesOwnText and listenToFocusableAncestor; five protected members of ColumnSeriesComponent are gone (pinDiscRadius, pinGlyph, pinGlyphOffset, pinGlyphSize, slotStepPx). The compiler names every collision."
     },
     {
       "id": "pagination-range-receives-zeros-when-empty",
@@ -280,6 +282,14 @@
     {
       "text": "ds-select, ds-autocomplete and ds-multi-select show a clipped trigger value or option label in full in a tooltip on hover; a label that fits shows none. A [title]= set on the picker only to repeat that label now shows a second, native tooltip beside it (delete list: picker-title-repeating-clipped-label).",
       "verify": "In a narrow ds-select, hover the closed trigger holding a long value and each long option in the open list: one dark tooltip shows the whole label, and a short label shows none."
+    },
+    {
+      "text": "A dsTooltipWhenClipped host that cannot take focus (a label inside a button, a cell of a clickable row, ds-select's trigger value, ds-table's clipped cells in an interactive row) also opens when keyboard focus lands on its nearest focusable ancestor, and closes on that ancestor's blur, click or any key. A mouse click opens nothing; of several clipped hosts in one ancestor only the first opens. A plain dsTooltip on a non-focusable element stays hover-only.",
+      "verify": "Tab onto a button whose inner label ends in an ellipsis: one tooltip with the whole label opens; press any key: it closes; click the button with the mouse: no tooltip."
+    },
+    {
+      "text": "A dsTooltipWhenClipped tooltip whose text the host already contains sets no aria-describedby, on a focusable host or on its focusable ancestor, so a screen reader announces the text once. One given a [dsTooltip] that says more than the host, and every plain dsTooltip, still set it. A test asserting aria-describedby on a clipped disclosure finds none.",
+      "verify": "Tab onto a button whose inner label ends in an ellipsis: the tooltip opens and the button carries no aria-describedby; Tab onto a button with a plain dsTooltip: it carries aria-describedby naming the panel."
     },
     {
       "text": "ds-pagination with total 0 disables every page button and marks none as current (page 1 was highlighted and carried aria-current).",
