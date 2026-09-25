@@ -54,6 +54,7 @@ function slugify(label: string): string {
   encapsulation: ViewEncapsulation.Emulated,
   host: {
     '[class.vertical-host]': "orientation() === 'vertical'",
+    '[class.scrolling-host]': 'scrollsHorizontally()',
   },
 })
 export class TabsComponent {

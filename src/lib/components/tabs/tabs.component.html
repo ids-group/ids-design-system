@@ -1,89 +1,85 @@
+@if (showScrollArrows()) {
+  <button
+    type="button"
+    class="scroll-arrow"
+    tabindex="-1"
+    aria-hidden="true"
+    [class.at-edge]="!canScrollPrevious()"
+    (mousedown)="$event.preventDefault()"
+    (click)="scrollPage(false)">
+    <ds-icon
+      name="chevronLeft"
+      [size]="16">
+    </ds-icon>
+  </button>
+}
+
 <div
-  class="tab-strip"
-  [class.scrolling]="scrollsHorizontally()">
-  @if (showScrollArrows()) {
+  #tablist
+  role="tablist"
+  [class]="tablistClasses()"
+  [attr.aria-orientation]="orientation()"
+  (scroll)="updateScrollArrows()">
+  @for (tab of tabs(); track $index) {
     <button
       type="button"
-      class="scroll-arrow"
-      tabindex="-1"
-      aria-hidden="true"
-      [class.at-edge]="!canScrollPrevious()"
-      (mousedown)="$event.preventDefault()"
-      (click)="scrollPage(false)">
-      <ds-icon
-        name="chevronLeft"
-        [size]="16">
-      </ds-icon>
-    </button>
-  }
+      role="tab"
+      [id]="tabId($index)"
+      [class]="tabClasses($index, tab.disabled())"
+      [attr.aria-selected]="$index === selectedIndex()"
+      [attr.aria-controls]="panelId($index)"
+      [attr.tabindex]="$index === selectedIndex() ? 0 : -1"
+      [disabled]="tab.disabled()"
+      (click)="select($index, tab.disabled())"
+      (keydown)="onKeydown($event, $index)">
+      @if (tab.icon()) {
+        <ds-icon
+          [name]="tab.icon()!"
+          [size]="14">
+        </ds-icon>
+      }
 
-  <div
-    #tablist
-    role="tablist"
-    [class]="tablistClasses()"
-    [attr.aria-orientation]="orientation()"
-    (scroll)="updateScrollArrows()">
-    @for (tab of tabs(); track $index) {
-      <button
-        type="button"
-        role="tab"
-        [id]="tabId($index)"
-        [class]="tabClasses($index, tab.disabled())"
-        [attr.aria-selected]="$index === selectedIndex()"
-        [attr.aria-controls]="panelId($index)"
-        [attr.tabindex]="$index === selectedIndex() ? 0 : -1"
-        [disabled]="tab.disabled()"
-        (click)="select($index, tab.disabled())"
-        (keydown)="onKeydown($event, $index)">
-        @if (tab.icon()) {
-          <ds-icon
-            [name]="tab.icon()!"
-            [size]="14">
-          </ds-icon>
-        }
+      <span>
+        {{ tab.label() }}
+      </span>
 
-        <span>
-          {{ tab.label() }}
+      @if (tab.count() !== null) {
+        <span class="badge">
+          {{ tab.count() }}
         </span>
+      }
 
-        @if (tab.count() !== null) {
-          <span class="badge">
-            {{ tab.count() }}
-          </span>
-        }
-
-        @if (closable()) {
-          <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- mouse affordance; keyboard closes the focused tab via Delete (see onKeydown) -->
-          <span
-            class="tab-close"
-            [attr.aria-label]="intl().tabs.close(tab.label())"
-            (click)="onCloseClick($event, $index)">
-            <ds-icon
-              name="x"
-              [size]="12">
-            </ds-icon>
-          </span>
-        }
-      </button>
-    }
-  </div>
-
-  @if (showScrollArrows()) {
-    <button
-      type="button"
-      class="scroll-arrow"
-      tabindex="-1"
-      aria-hidden="true"
-      [class.at-edge]="!canScrollNext()"
-      (mousedown)="$event.preventDefault()"
-      (click)="scrollPage(true)">
-      <ds-icon
-        name="chevronRight"
-        [size]="16">
-      </ds-icon>
+      @if (closable()) {
+        <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- mouse affordance; keyboard closes the focused tab via Delete (see onKeydown) -->
+        <span
+          class="tab-close"
+          [attr.aria-label]="intl().tabs.close(tab.label())"
+          (click)="onCloseClick($event, $index)">
+          <ds-icon
+            name="x"
+            [size]="12">
+          </ds-icon>
+        </span>
+      }
     </button>
   }
 </div>
+
+@if (showScrollArrows()) {
+  <button
+    type="button"
+    class="scroll-arrow"
+    tabindex="-1"
+    aria-hidden="true"
+    [class.at-edge]="!canScrollNext()"
+    (mousedown)="$event.preventDefault()"
+    (click)="scrollPage(true)">
+    <ds-icon
+      name="chevronRight"
+      [size]="16">
+    </ds-icon>
+  </button>
+}
 
 @for (tab of tabs(); track $index) {
   @if (isPanelVisible($index)) {
