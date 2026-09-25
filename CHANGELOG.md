@@ -1,5 +1,20 @@
 ## Unreleased
 
+### Fixed
+
+- **The tooltip panel wraps a value with no break opportunity.** A long file name or id ran past the
+  panel's edge on one line; it now breaks inside the panel's max width.
+
+- **`ds-select`, `ds-autocomplete` and `ds-multi-select` disclose a clipped label.** A trigger value or
+  an option label cut off with an ellipsis shows the whole text in a tooltip on hover; a label that
+  fits shows none.
+
+### What you can now DELETE
+
+| Delete | Why | Replace with |
+| --- | --- | --- |
+| a `[title]=` on a `ds-select`, `ds-autocomplete` or `ds-multi-select` that repeats the selected or option label | the picker shows a clipped label in full in a tooltip | nothing; a `title` that says more than the label stays legitimate |
+
 ## 0.14.1 — 2026-09-24
 
 ### Breaking

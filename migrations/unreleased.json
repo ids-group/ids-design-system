@@ -1,0 +1,26 @@
+{
+  "version": "unreleased",
+  "items": [],
+  "informational": [
+    {
+      "text": "The ds-tooltip panel wraps a value with no break opportunity (a long file name or id) inside its max width instead of running past its edge.",
+      "verify": "Hover a tooltip whose text is one unbroken 60-character token and confirm it breaks onto a second line inside the dark panel."
+    },
+    {
+      "text": "ds-select, ds-autocomplete and ds-multi-select show a clipped trigger value or option label in full in a tooltip on hover; a label that fits shows none. A [title]= set on the picker only to repeat that label now shows a second, native tooltip beside it (delete list: picker-title-repeating-clipped-label).",
+      "verify": "In a narrow ds-select, hover the closed trigger holding a long value and each long option in the open list: one dark tooltip shows the whole label, and a short label shows none."
+    }
+  ],
+  "deleteList": [
+    {
+      "id": "picker-title-repeating-clipped-label",
+      "surface": "template",
+      "find": [
+        "[title]=",
+        "[attr.title]="
+      ],
+      "why": "ds-select, ds-autocomplete and ds-multi-select disclose a clipped trigger value or option label in a tooltip, so a title bound on the picker to repeat that label adds a second, native tooltip. A title that carries more than the label, or one on a picker whose label never clips, may stay.",
+      "replaceWith": "nothing"
+    }
+  ]
+}
