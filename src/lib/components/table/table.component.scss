@@ -56,6 +56,9 @@
   --_table-radius: var(--ds-table-radius, var(--ds-radius-control));
   --_table-bg-color:     var(--ds-table-bg-color,     var(--surface-default));
 
+  // Contains the absolute `.visually-hidden` nodes inside the table: overflow clips only the
+  // descendants whose containing block it is, so without it one past the right edge widens the page.
+  position: relative;
   width: 100%;
   overflow: auto hidden;
 
