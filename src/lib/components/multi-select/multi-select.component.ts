@@ -618,7 +618,7 @@ export class MultiSelectComponent
     );
     announceOptionCount(
       computed(() => this.filteredOptions().length),
-      this.open,
+      computed(() => this.open() && this.showsSearch()),
     );
   }
 
