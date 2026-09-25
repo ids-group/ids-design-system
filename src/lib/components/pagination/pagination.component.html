@@ -38,10 +38,10 @@
       <button
         class="pagination-button"
         type="button"
-        [class.active]="item === currentPage()"
-        [disabled]="loading()"
+        [class.active]="item === currentPage() && total() !== 0"
+        [disabled]="loading() || total() === 0"
         [attr.aria-label]="intl().pagination.page(item)"
-        [attr.aria-current]="item === currentPage() ? 'page' : null"
+        [attr.aria-current]="item === currentPage() && total() !== 0 ? 'page' : null"
         (click)="goTo(item)">
         {{ item }}
       </button>
