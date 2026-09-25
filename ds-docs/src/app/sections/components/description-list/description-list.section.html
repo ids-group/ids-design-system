@@ -73,6 +73,54 @@
     </ds-description-list>
   </div>
 
+  <h3 class="block-title t-h4">
+    Narrow containers
+  </h3>
+
+  <p class="block-desc t-s">
+    Once a value would get less than
+    <code class="t-mono-inline">
+      --ds-description-list-value-min-width
+    </code>
+    (14rem) beside the label, every item puts its label above its value at
+    once. The switch follows the list's own width and its label width. Drag
+    the handles: the second list has a 180px label, so it switches wider.
+  </p>
+
+  <div class="demo-panel">
+    <div class="description-list-resizable">
+      <ds-description-list>
+        <ds-description-item term="Name">
+          Camille Duval
+        </ds-description-item>
+
+        <ds-description-item term="Email">
+          camille.duval&#64;example.com
+        </ds-description-item>
+
+        <ds-description-item term="Mobile">
+          +44 20 7946 0958
+        </ds-description-item>
+      </ds-description-list>
+    </div>
+
+    <div class="description-list-resizable">
+      <ds-description-list class="description-list-wide-label">
+        <ds-description-item term="Name">
+          Camille Duval
+        </ds-description-item>
+
+        <ds-description-item term="Email">
+          camille.duval&#64;example.com
+        </ds-description-item>
+
+        <ds-description-item term="Mobile">
+          +44 20 7946 0958
+        </ds-description-item>
+      </ds-description-list>
+    </div>
+  </div>
+
   <h3
     class="block-title t-h4"
     data-for="description-item">

@@ -3596,7 +3596,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'horizontal'",
         "required": false,
-        "description": "horizontal = label column + value; stacked = label above value."
+        "description": "horizontal = label column + value, every item stacking once a value would get less than --ds-description-list-value-min-width; stacked = label above value at every width."
       }
     ],
     "outputs": []

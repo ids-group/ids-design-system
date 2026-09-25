@@ -76,6 +76,19 @@
   complete `DsIntl` object of its own, rather than a `DsIntlOverrides` passed to `provideDsIntl`, adds
   it or fails to compile.
 
+- **A horizontal `ds-description-list` stacks every item once a value would get less than
+  `--ds-description-list-value-min-width`** (default `14rem`, 224px at a 16px root). Each item is a
+  wrapping flex row (was: a two-column grid): the label keeps the label width, and when the value
+  column would fall below the minimum the label moves above the value, as under
+  `orientation="stacked"` (was: the value squeezed beside the label and broke mid-word). Every item
+  of a list switches at the same list width, label width + column gap + value minimum: 364px with
+  the defaults, 428px with a 180px label and a 24px gap. `orientation="stacked"` is unchanged, and a
+  `ds-description-item` outside a list switches the same way at its own width. In a parent that
+  sizes to its content - an inline-block, a float, an absolutely positioned box, a flex row item
+  with an auto basis, an `auto` grid track - a list whose widest value is narrower than the minimum
+  now stacks; give the list or its parent a width, or lower `--ds-description-list-value-min-width`
+  on it. To stack later or earlier, set `--ds-description-list-value-min-width` on the list.
+
 - **Subclassing one of these breaks on a name collision.** `BarChartComponent`, `ChartComponent`,
   `ColumnSeriesComponent`, `LineSeriesComponent`, `FunnelChartComponent`, `HeatmapChartComponent`,
   `PieChartComponent`, `ScatterChartComponent` and `WaterfallChartComponent` gained the pinning,
@@ -126,6 +139,9 @@
   sit on three new primitives: `--duration-slowest` (600ms, 0ms under reduced motion),
   `--ease-emphasized-decelerate` and `--ease-settle`, a critically damped spring that never
   overshoots.
+
+- **`--ds-description-list-value-min-width`** (default `14rem`): the narrowest value a horizontal
+  `ds-description-list` keeps beside its label before every item stacks.
 
 ### Changed
 
@@ -220,6 +236,7 @@
 | a `pinOnClick`, `pinOnClick="true"` or `[pinOnClick]="true"` binding on a chart or a `dsColumnSeries` / `dsLineSeries` mark | a click holds a mark by default, so a binding of `true` restates it | nothing; keep it where `DS_CONFIG.chart.pinOnClick` is `false` and this chart is the exception |
 | a `cursorPin`, `cursorPin="true"` or `[cursorPin]="true"` binding on `ds-chart` | a press holds the category cursor by default, so a binding of `true` restates it | nothing; keep it where `DS_CONFIG.chart.pinOnClick` is `false` and this chart is the exception |
 | a `[title]=` or `[attr.title]=` on a `ds-select`, `ds-autocomplete` or `ds-multi-select` that repeats the selected or option label | the picker shows a clipped label in full in a tooltip, so the title adds a second, native one | nothing; a `title` that says more than the label stays legitimate |
+| an `[orientation]` on `ds-description-list` switched on a viewport breakpoint, such as `'stacked' : 'horizontal'`, only to stack a narrow list | a horizontal list stacks by itself once a value would get less than `--ds-description-list-value-min-width` | `--ds-description-list-value-min-width` on the list where the switch has to move; keep a switch driven by something other than width |
 
 ## 0.14.1 — 2026-09-24
 
