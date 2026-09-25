@@ -57,6 +57,9 @@ export function chartActiveMark(
   // One flag for two ways of arriving at the same state: a tap, which has no hover to hold the
   // panel open, and a deliberate click under `pinOnClick`. Both release the same way.
   const pinned = signal(false);
+  // A tap latches on its pointer event and the browser then clicks the same mark; that click belongs
+  // to the tap, and must not read as the second press that lets go.
+  let tapLatched = false;
   let pendingClear: ReturnType<typeof setTimeout> | null = null;
   // The element that OWNS the handlers, which is not always the tooltip anchor: a column anchors
   // its panel to the bar while the whole cell answers the pointer. A press is "outside" only when
@@ -67,6 +70,7 @@ export function chartActiveMark(
 
   const clear = (): void => {
     pinned.set(false);
+    tapLatched = false;
     host = null;
     cancelPendingClear();
     index.set(-1);
@@ -237,10 +241,16 @@ export function chartActiveMark(
       // through `release` by the time the click lands, so this only ever sees a fresh mark or the
       // pinned one.
       if (pinned() && index() === at) {
+        if (tapLatched) {
+          tapLatched = false;
+
+          return;
+        }
         clear();
 
         return;
       }
+      tapLatched = false;
       // Re-aiming while already pinned keeps `pinned` true throughout, so nothing that renders on
       // it — the Unpin control, the held mark's styling — unmounts between the two marks.
       aim(at, event, anchor, mark);
@@ -270,6 +280,7 @@ export function chartActiveMark(
       event.pointerType === 'touch'
     ) {
       hold();
+      tapLatched = true;
     }
   }
 }
