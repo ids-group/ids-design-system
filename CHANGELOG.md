@@ -59,10 +59,6 @@
   visual regression test that screenshots a chart a fixed time after it renders now catches later
   marks still arriving.
 
-- **`DsIntl.tabs` has two required keys, `scrollPrevious` and `scrollNext`.** A complete `DsIntl`
-  dictionary, or a complete `tabs` section of one, declared as a typed object stops compiling until
-  it lists them. Overrides passed to `provideDsIntl` are partial and need nothing.
-
 - **A custom pagination `range` or table `[rangeAnnouncement]` receives zeros on an empty list.**
   `ds-pagination` on an empty list now calls `DS_INTL.pagination.range(0, 0, 0)` (was `(1, 0, 0)`),
   and a paged `ds-table` with no empty-state text now calls its `[rangeAnnouncement]` with `(0, 0, 0)`
@@ -72,9 +68,10 @@
   The default wording returns `Showing 0 of 0`, so an app that never overrides the range text has
   nothing to do.
 
-- **`DsIntl.field` gains the required `overLimit: (excess: number) => string`.** Code that declares a
-  complete `DsIntl` object of its own, rather than a `DsIntlOverrides` passed to `provideDsIntl`, adds
-  it or fails to compile.
+- **`DsIntl` gains three required keys: `field.overLimit: (excess: number) => string`,
+  `tabs.scrollPrevious` and `tabs.scrollNext`.** A complete `DsIntl` dictionary, or a complete `field`
+  or `tabs` section of one, declared as a typed object stops compiling until it lists them. Overrides
+  passed to `provideDsIntl` are partial and need nothing.
 
 - **A horizontal `ds-description-list` stacks every item once a value would get less than
   `--ds-description-list-value-min-width`** (default `14rem`, 224px at a 16px root). Each item is a
@@ -110,7 +107,9 @@
   its own edge; a strip that fits shows none. The arrows sit outside the tab order and are hidden
   from assistive technology, because the arrow keys already bring the selected tab into view. New
   `DS_INTL.tabs.scrollPrevious` and `DS_INTL.tabs.scrollNext` label them (`Scroll tabs back`,
-  `Scroll tabs forward`).
+  `Scroll tabs forward`). The `role="tablist"` element of every `ds-tabs` now sits inside a
+  `.tab-strip` wrapper, laid out as `display: contents` unless the strip scrolls, so a rule of yours
+  that reaches the tab list with a child combinator from the host selects nothing.
 
 - **`maxLengthMode` on `ds-textarea`.** `'hard'` (the default) keeps the native `maxlength`: typing
   and paste stop at `maxLength`. `'soft'` lets the text run past it: the counter turns red, the

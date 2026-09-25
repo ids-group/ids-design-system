@@ -395,7 +395,7 @@
     "A tap on a chart mark stays held when the click that follows it lands (was: that click let go of it at once).",
     "ds-waterfall-chart gains pinOnClick (boolean | null, falling back to DS_CONFIG.chart.pinOnClick, then true), with the Unpin control the other charts show.",
     {
-      "text": "A scrollable ds-tabs strip shows previous and next arrows while tabs lie beyond its edges; each turns the strip by a page and hides at its own edge, and a strip that fits shows none. The arrows sit outside the tab order and are hidden from assistive technology. DS_INTL.tabs.scrollPrevious and DS_INTL.tabs.scrollNext label them.",
+      "text": "A scrollable ds-tabs strip shows previous and next arrows while tabs lie beyond its edges; each turns the strip by a page and hides at its own edge, and a strip that fits shows none. The arrows sit outside the tab order and are hidden from assistive technology. DS_INTL.tabs.scrollPrevious and DS_INTL.tabs.scrollNext label them. The role=\"tablist\" element of every ds-tabs now sits inside a .tab-strip wrapper (display: contents unless the strip scrolls), so a rule reaching it with a child combinator from ds-tabs selects nothing.",
       "verify": "On a phone-width screen with a scrollable ds-tabs whose tabs do not fit, confirm only the next arrow shows at the start, both in the middle, only the previous arrow at the end, and none once the tabs fit."
     },
     "New token --ds-description-list-value-min-width (default 14rem): the narrowest value a horizontal ds-description-list keeps beside its label before every item stacks."
