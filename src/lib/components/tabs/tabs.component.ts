@@ -419,13 +419,7 @@ export class TabsComponent {
     if (distance * step < 1) {
       distance = step * strip.clientWidth;
     }
-    const reducedMotion = matchMedia(
-      '(prefers-reduced-motion: reduce)',
-    ).matches;
-    strip.scrollBy({
-      left: mirror * distance,
-      behavior: reducedMotion ? 'auto' : 'smooth',
-    });
+    strip.scrollBy({ left: mirror * distance });
   }
 
   protected onCloseClick(event: MouseEvent, index: number): void {
