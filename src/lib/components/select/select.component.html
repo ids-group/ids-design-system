@@ -157,6 +157,8 @@
                     role="option"
                     tabindex="-1"
                     class="option"
+                    dsTooltip
+                    dsTooltipWhenClipped
                     [id]="optionId(flatIndexOf(opt))"
                     [attr.aria-selected]="isSelected(opt)"
                     [attr.aria-disabled]="
@@ -171,6 +173,7 @@
                     [class.is-active]="isActive(flatIndexOf(opt))"
                     [class.is-disabled]="isOptionDisabled(opt, item.disabled)"
                     [disabled]="isOptionDisabled(opt, item.disabled)"
+                    [dsTooltipTextElement]="optionLabel"
                     (click)="pick(opt, item.disabled)"
                     (mouseenter)="
                       cursorFromKeyboard.set(false);
@@ -192,9 +195,8 @@
                     }
 
                     <span
-                      class="option-label"
-                      dsTooltip
-                      dsTooltipWhenClipped>
+                      #optionLabel
+                      class="option-label">
                       @if (optionTemplate(); as tpl) {
                         <ng-container
                           [ngTemplateOutlet]="tpl"
@@ -223,6 +225,8 @@
               role="option"
               tabindex="-1"
               class="option"
+              dsTooltip
+              dsTooltipWhenClipped
               [id]="optionId(flatIndexOf(item))"
               [attr.aria-selected]="isSelected(item)"
               [attr.aria-disabled]="item.disabled ? 'true' : null"
@@ -230,6 +234,7 @@
               [class.is-active]="isActive(flatIndexOf(item))"
               [class.is-disabled]="item.disabled"
               [disabled]="item.disabled"
+              [dsTooltipTextElement]="optionLabel"
               (click)="pick(item)"
               (mouseenter)="
                 cursorFromKeyboard.set(false);
@@ -243,9 +248,8 @@
               }
 
               <span
-                class="option-label"
-                dsTooltip
-                dsTooltipWhenClipped>
+                #optionLabel
+                class="option-label">
                 @if (optionTemplate(); as tpl) {
                   <ng-container
                     [ngTemplateOutlet]="tpl"
