@@ -107,7 +107,8 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
   readonly ariaLabel = input<string | null>(null);
   /** Character limit - shows a live "{current}/{max}" counter below the field.
    *  `maxLengthMode` decides what happens at the limit. Counts `value.length`, the
-   *  UTF-16 units the native `maxlength` counts, whitespace included. */
+   *  UTF-16 units the native `maxlength` counts, whitespace included, unless
+   *  `countTrimmed` is set. */
   readonly maxLength = input<number | null, number | null | undefined>(null, {
     transform: optionalBound,
   });
@@ -117,16 +118,36 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
    *  (`aria-invalid`, with the counter as its description). Blocking a save on
    *  it is the form's job. */
   readonly maxLengthMode = input<TextareaMaxLengthMode>('hard');
+  /** Leaves whitespace at either end of the text out of the counter, the soft-limit
+   *  state and the highlight, for a value the server stores trimmed. Whitespace
+   *  between words still counts. The native `maxlength` of `maxLengthMode="hard"`
+   *  counts every character regardless. */
+  readonly countTrimmed = input(false, { transform: booleanAttribute });
+  private readonly countedRange = computed(() => {
+    const value = this.value();
+    if (!this.countTrimmed()) {
+      return { start: 0, end: value.length };
+    }
+    const start = value.length - value.trimStart().length;
+
+    return { start, end: Math.max(start, value.trimEnd().length) };
+  });
+  protected readonly currentLength = computed(() => {
+    const { start, end } = this.countedRange();
+
+    return end - start;
+  });
   protected readonly overLimitBy = computed(() => {
     const limit = this.maxLength();
 
     return this.maxLengthMode() === 'soft' && limit !== null
-      ? Math.max(0, this.value().length - limit)
+      ? Math.max(0, this.currentLength() - limit)
       : 0;
   });
   protected readonly overflowParts = computed(() => {
     const value = this.value();
-    let splitAt = value.length - this.overLimitBy();
+    const { end } = this.countedRange();
+    let splitAt = end - this.overLimitBy();
     // A limit inside a surrogate pair marks the whole pair: half a pair renders
     // at another width and shifts every mirrored line after it.
     // A limit inside an emoji ZWJ sequence still shifts them; splitting on
@@ -136,7 +157,11 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
       splitAt -= 1;
     }
 
-    return { within: value.slice(0, splitAt), over: value.slice(splitAt) };
+    return {
+      within: value.slice(0, splitAt),
+      over: value.slice(splitAt, end),
+      after: value.slice(end),
+    };
   });
 
   // Signal forms binds these by name; without them a `pattern()` or `minLength()`
@@ -197,7 +222,6 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
     () => this.disabled() || this.formDisabled(),
   );
 
-  protected readonly currentLength = computed(() => this.value().length);
   protected readonly counterId = computed(() =>
     this.maxLength() !== null ? `${this.uid}-counter` : null,
   );
