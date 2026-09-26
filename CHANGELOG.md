@@ -17,11 +17,19 @@
   label inside, and the tip opens wherever the row shows its hover state. Off by default: without
   it the host is both.
 
+- **`ds-textarea` takes a `countTrimmed` input.** Set, the character counter, the soft-limit state
+  and the highlight of the excess leave whitespace at either end of the text out, so a value the
+  server stores trimmed counts as the server counts it: 3990 characters followed by 20 spaces read
+  `3990/4000` and are within a limit of 4000. Whitespace between words still counts, so a
+  character typed after those spaces brings them into the count. The native `maxlength` of
+  `maxLengthMode="hard"` still counts every character. Off by default.
+
 ### Changed
 
 - **Subclassing one of these breaks on a name collision.** `DrawerComponent` and
-  `BottomSheetComponent` gained `preview`, and `TooltipDirective` gained `dsTooltipTextSelector`,
-  `hostElement`, `isClipped`, `onKeydown` and `textElement`. Build after upgrading; rename or mark `override` every member the compiler reports
+  `BottomSheetComponent` gained `preview`, `TextareaComponent` gained `countTrimmed` and
+  `countedRange`, and `TooltipDirective` gained `dsTooltipTextSelector`, `hostElement`,
+  `isClipped`, `onKeydown` and `textElement`. Build after upgrading; rename or mark `override` every member the compiler reports
   colliding. Subclassing a DS component is unsupported.
 
 ### Fixed

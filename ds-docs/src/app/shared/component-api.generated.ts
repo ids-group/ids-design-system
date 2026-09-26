@@ -10659,7 +10659,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Character limit - shows a live \"{current}/{max}\" counter below the field. `maxLengthMode` decides what happens at the limit. Counts `value.length`, the UTF-16 units the native `maxlength` counts, whitespace included."
+        "description": "Character limit - shows a live \"{current}/{max}\" counter below the field. `maxLengthMode` decides what happens at the limit. Counts `value.length`, the UTF-16 units the native `maxlength` counts, whitespace included, unless `countTrimmed` is set."
       },
       {
         "name": "maxLengthMode",
@@ -10672,6 +10672,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "'hard'",
         "required": false,
         "description": "`'hard'` applies the native maxlength attribute, so typing and paste stop at `maxLength`. `'soft'` lets the text run past it: the counter turns red, the characters past the limit are highlighted, and the field reports invalid (`aria-invalid`, with the counter as its description). Blocking a save on it is the form's job."
+      },
+      {
+        "name": "countTrimmed",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Leaves whitespace at either end of the text out of the counter, the soft-limit state and the highlight, for a value the server stores trimmed. Whitespace between words still counts. The native `maxlength` of `maxLengthMode=\"hard\"` counts every character regardless."
       },
       {
         "name": "minLength",

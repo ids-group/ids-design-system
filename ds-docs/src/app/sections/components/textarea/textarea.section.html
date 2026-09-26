@@ -153,6 +153,25 @@
       [(value)]="softNote" />
   </div>
 
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      [countTrimmed]="true"
+    </code> leaves whitespace at either
+    end out of the count, the over-limit state and the highlight, for a note
+    the server stores trimmed. Whitespace between words still counts.
+  </p>
+
+  <div class="grid-2">
+    <ds-textarea
+      label="Trimmed note"
+      hint="Ends with spaces the counter leaves out"
+      maxLengthMode="soft"
+      [countTrimmed]="true"
+      [rows]="3"
+      [maxLength]="40"
+      [(value)]="trimmedNote" />
+  </div>
+
   <h3 class="block-title t-h4">
     Autosize
   </h3>
