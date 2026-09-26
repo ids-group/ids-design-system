@@ -281,7 +281,7 @@ Shared panel tokens — the three pickers portal their panel out of the componen
 Shared option tokens, painting the row inside any of the three panels: `--ds-option-selected-bg-color`, `-hover`, `--ds-option-selected-label-color`, `--ds-option-check-color`. `ds-select` and `ds-autocomplete` mark the selection with the check glyph these paint; `ds-multi-select` uses a checkbox and answers to `--ds-multi-select-check-bg-color` instead.
 
 <!-- inputs:ds-select -->
-All inputs: `hint: string = ''`, `error: string = ''`, `warning: string = ''`, `reserveMessage: boolean | null = null`, `messageIcon: IconName | false | null = null`, `errors: readonly DsFieldError[] = []`, `invalid: boolean = false`, `touched: boolean = false`, `hidden: boolean = false`, `value: string = ''`, `options: readonly SelectItem[] = []`, `width: 'fill' | 'content' = 'fill'`, `placeholder: string = ''`, `size: 'sm' | 'md' | 'lg' = null`, `label: string = ''`, `disabled: boolean = false`, `loading: boolean = false`, `scrollActiveIntoView: boolean = true`, `panelClass: string | readonly string[] = []`, `readOnly: boolean = false`, `readonlyBinding: boolean = false`, `success: string = ''`, `required: boolean = false`, `optional: boolean = false`, `name: string | null = null`, `ariaLabel: string | null = null`, `clearable: boolean = false`
+All inputs: `hint: string = ''`, `error: string = ''`, `warning: string = ''`, `reserveMessage: boolean | null = null`, `messageIcon: IconName | false | null = null`, `errors: readonly DsFieldError[] = []`, `invalid: boolean = false`, `touched: boolean = false`, `hidden: boolean = false`, `value: string = ''`, `options: readonly SelectItem[] = []`, `width: 'fill' | 'content' = 'fill'`, `placeholder: string = ''`, `size: 'sm' | 'md' | 'lg' = null`, `label: string = ''`, `disabled: boolean = false`, `loading: boolean = false`, `scrollActiveIntoView: boolean = true`, `panelClass: string | readonly string[] = []`, `readOnly: boolean = false`, `readonlyBinding: boolean = false`, `success: string = ''`, `required: boolean = false`, `optional: boolean = false`, `name: string | null = null`, `ariaLabel: string | null = null`, `clearable: boolean = false`, `staticPreview: boolean = false`
 <!-- /inputs -->
 
 #### `<ds-select>` — `SelectComponent`
@@ -289,7 +289,7 @@ Inputs: `value: model<string>`, `options: SelectItem[]`, `placeholder: string = 
 Trigger plus a CDK overlay panel. Keyboard: ArrowUp/Down, Enter/Space, Home/End, Escape, skipping group headers. `isSelectOptionGroup(item)` is re-exported as a type guard.
 
 <!-- inputs:ds-select -->
-All inputs: `hint: string = ''`, `error: string = ''`, `warning: string = ''`, `reserveMessage: boolean | null = null`, `messageIcon: IconName | false | null = null`, `errors: readonly DsFieldError[] = []`, `invalid: boolean = false`, `touched: boolean = false`, `hidden: boolean = false`, `value: string = ''`, `options: readonly SelectItem[] = []`, `width: 'fill' | 'content' = 'fill'`, `placeholder: string = ''`, `size: 'sm' | 'md' | 'lg' = null`, `label: string = ''`, `disabled: boolean = false`, `loading: boolean = false`, `scrollActiveIntoView: boolean = true`, `panelClass: string | readonly string[] = []`, `readOnly: boolean = false`, `readonlyBinding: boolean = false`, `success: string = ''`, `required: boolean = false`, `optional: boolean = false`, `name: string | null = null`, `ariaLabel: string | null = null`, `clearable: boolean = false`
+All inputs: `hint: string = ''`, `error: string = ''`, `warning: string = ''`, `reserveMessage: boolean | null = null`, `messageIcon: IconName | false | null = null`, `errors: readonly DsFieldError[] = []`, `invalid: boolean = false`, `touched: boolean = false`, `hidden: boolean = false`, `value: string = ''`, `options: readonly SelectItem[] = []`, `width: 'fill' | 'content' = 'fill'`, `placeholder: string = ''`, `size: 'sm' | 'md' | 'lg' = null`, `label: string = ''`, `disabled: boolean = false`, `loading: boolean = false`, `scrollActiveIntoView: boolean = true`, `panelClass: string | readonly string[] = []`, `readOnly: boolean = false`, `readonlyBinding: boolean = false`, `success: string = ''`, `required: boolean = false`, `optional: boolean = false`, `name: string | null = null`, `ariaLabel: string | null = null`, `clearable: boolean = false`, `staticPreview: boolean = false`
 <!-- /inputs -->
 
 #### `<ds-multi-select>` — `MultiSelectComponent`
@@ -773,7 +773,7 @@ Output: `(closed): void` — fires on backdrop click, close button, or `open` be
 Content slots: `[body]`, `[impact]` (highlighted strip under the body for destructive consequences), `[actions]` (footer button row). Backdrop click + close button close the dialog.
 
 <!-- inputs:ds-modal -->
-All inputs: `open: boolean = false`, `size: 'sm' | 'md' | 'lg' | 'xl' | 'fullscreen' = 'md'`, `status: 'info' | 'success' | 'warning' | 'error' = null`, `title: required string`, `subtitle: string | null = null`, `dividers: boolean | null = null`, `closeOnBackdrop: boolean = true`, `persistent: boolean = false`
+All inputs: `open: boolean = false`, `size: 'sm' | 'md' | 'lg' | 'xl' | 'fullscreen' = 'md'`, `status: 'info' | 'success' | 'warning' | 'error' = null`, `title: required string`, `subtitle: string | null = null`, `dividers: boolean | null = null`, `closeOnBackdrop: boolean = true`, `persistent: boolean = false`, `staticPreview: boolean = false`
 <!-- /inputs -->
 
 #### `<ds-modal-card>` — `ModalCardComponent`
@@ -790,7 +790,7 @@ Output: `(closed): void`
 Content slots: `[drawer-body]`, `[drawer-footer]`.
 
 <!-- inputs:ds-drawer -->
-All inputs: `open: boolean = false`, `size: 'sm' | 'md' | 'lg' = 'md'`, `placement: 'right' | 'left' | 'top' | 'bottom' = 'right'`, `title: required string`
+All inputs: `open: boolean = false`, `size: 'sm' | 'md' | 'lg' = 'md'`, `placement: 'right' | 'left' | 'top' | 'bottom' = 'right'`, `title: required string`, `staticPreview: boolean = false`
 <!-- /inputs -->
 
 #### `<ds-bottom-sheet>` — `BottomSheetComponent`
@@ -800,14 +800,14 @@ Output: `(closed): void`
 Content slots: default (body), `[actions]` (footer).
 
 <!-- inputs:ds-bottom-sheet -->
-All inputs: `open: boolean = false`, `title: required string`, `snapPoints: readonly number[] = []`
+All inputs: `open: boolean = false`, `title: required string`, `snapPoints: readonly number[] = []`, `staticPreview: boolean = false`
 <!-- /inputs -->
 
 #### `<ds-popover>` — `PopoverComponent`
 Floating panel anchored to a trigger via CDK overlay. Input: `align: 'start' | 'end' = 'start'` — controls overlay alignment relative to the trigger (`start` = left-edge anchored, `end` = right-edge anchored). Open via the component method `toggle(triggerElement)` (or `close()`), and project the panel body inside a `<ng-template #panel>` (read internally via `viewChild`).
 
 <!-- inputs:ds-popover -->
-All inputs: `align: 'start' | 'end' = 'start'`, `placement: 'top' | 'bottom' | 'left' | 'right' = 'bottom'`, `arrow: boolean = false`, `panelRole: string | null = null`, `panelLabel: string | null = null`
+All inputs: `align: 'start' | 'end' = 'start'`, `placement: 'top' | 'bottom' | 'left' | 'right' = 'bottom'`, `arrow: boolean = false`, `panelRole: string | null = null`, `panelLabel: string | null = null`, `staticPreview: boolean = false`
 <!-- /inputs -->
 
 #### `[dsTooltip]` — `TooltipDirective`

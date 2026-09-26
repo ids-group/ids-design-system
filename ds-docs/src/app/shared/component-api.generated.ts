@@ -1362,6 +1362,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "[]",
         "required": false,
         "description": "Snap-point heights as fractions of viewport height (0–1), ascending. e.g. [0.4, 0.9]. When provided the sheet opens at the first snap point; dragging snaps to the nearest point; dragging below the lowest closes. When empty (default) the original single-height behavior is preserved."
+      },
+      {
+        "name": "staticPreview",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": ""
       }
     ],
     "outputs": [
@@ -3696,6 +3705,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": null,
         "required": true,
         "description": "Drawer title, shown in the header and used for `aria-labelledby`."
+      },
+      {
+        "name": "staticPreview",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": ""
       }
     ],
     "outputs": [
@@ -5935,6 +5953,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "When true, neither backdrop click nor Escape closes the modal — only programmatic or explicit close button."
+      },
+      {
+        "name": "staticPreview",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": ""
       }
     ],
     "outputs": [
@@ -7163,6 +7190,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Accessible name for the panel; pair with `panelRole`."
+      },
+      {
+        "name": "staticPreview",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": ""
       }
     ],
     "outputs": []
@@ -8220,6 +8256,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Shows an inline clear (×) button when a value is selected."
+      },
+      {
+        "name": "staticPreview",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": ""
       }
     ],
     "outputs": [

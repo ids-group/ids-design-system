@@ -270,7 +270,55 @@ function collectProps(classInfo, classIndex, aliases, seen = new Map()) {
     const prop = propFromMember(member, sf, aliases);
     if (prop) seen.set(prop.name, prop);
   }
+  for (const prop of hostDirectiveProps(node, sf, classIndex, aliases))
+    seen.set(prop.name, prop);
   return seen;
+}
+
+// `hostDirectives: [{ directive: X, inputs: ['a', 'b: alias'] }]` makes the listed members of X
+// bindable on the host under the public name, so they belong to the host's API.
+function hostDirectiveProps(node, sf, classIndex, aliases) {
+  const out = [];
+  const decorators = ts.canHaveDecorators(node)
+    ? (ts.getDecorators(node) ?? [])
+    : [];
+  for (const dec of decorators) {
+    const arg = ts.isCallExpression(dec.expression)
+      ? dec.expression.arguments[0]
+      : null;
+    if (!arg || !ts.isObjectLiteralExpression(arg)) continue;
+    const hostDirectives = arg.properties.find(
+      (p) =>
+        ts.isPropertyAssignment(p) && p.name.getText(sf) === 'hostDirectives',
+    );
+    if (
+      !hostDirectives ||
+      !ts.isArrayLiteralExpression(hostDirectives.initializer)
+    )
+      continue;
+    for (const entry of hostDirectives.initializer.elements) {
+      if (!ts.isObjectLiteralExpression(entry)) continue;
+      const field = (name) =>
+        entry.properties.find(
+          (p) => ts.isPropertyAssignment(p) && p.name.getText(sf) === name,
+        )?.initializer;
+      const directive = classIndex.get(field('directive')?.getText(sf));
+      if (!directive) continue;
+      const members = collectProps(directive, classIndex, aliases);
+      for (const list of [field('inputs'), field('outputs')]) {
+        if (!list || !ts.isArrayLiteralExpression(list)) continue;
+        for (const item of list.elements) {
+          if (!ts.isStringLiteral(item)) continue;
+          const [memberName, publicName = memberName] = item.text
+            .split(':')
+            .map((part) => part.trim());
+          const member = members.get(memberName);
+          if (member) out.push({ ...member, name: publicName });
+        }
+      }
+    }
+  }
+  return out;
 }
 
 // Class names the package actually exports. Every entry point's index is a barrel of

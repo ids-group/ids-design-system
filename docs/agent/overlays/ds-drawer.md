@@ -9,5 +9,5 @@ Output: `(closed): void`
 Content slots: `[drawer-body]`, `[drawer-footer]`.
 
 <!-- inputs:ds-drawer -->
-All inputs: `open: boolean = false`, `size: 'sm' | 'md' | 'lg' = 'md'`, `placement: 'right' | 'left' | 'top' | 'bottom' = 'right'`, `title: required string`
+All inputs: `open: boolean = false`, `size: 'sm' | 'md' | 'lg' = 'md'`, `placement: 'right' | 'left' | 'top' | 'bottom' = 'right'`, `title: required string`, `staticPreview: boolean = false`
 <!-- /inputs -->

@@ -9,5 +9,5 @@ Output: `(closed): void`
 Content slots: default (body), `[actions]` (footer).
 
 <!-- inputs:ds-bottom-sheet -->
-All inputs: `open: boolean = false`, `title: required string`, `snapPoints: readonly number[] = []`
+All inputs: `open: boolean = false`, `title: required string`, `snapPoints: readonly number[] = []`, `staticPreview: boolean = false`
 <!-- /inputs -->
