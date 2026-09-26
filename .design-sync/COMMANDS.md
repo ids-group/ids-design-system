@@ -30,7 +30,7 @@ own `<h3 class="block-title">` and description, and the card keeps exactly that
 block plus the chapter's heading, tag chip and lede. **Nothing is published by
 default**: a block reaches Claude Design only when ds-docs marks it
 `data-claude-design`. What to mark, what not to, and how many:
-[`CARDS.md`](CARDS.md). 91 components, 262 cards.
+[`CARDS.md`](CARDS.md). 91 components, 259 cards.
 
 That granularity is forced by how the pane renders: it fits a card's declared
 `viewport` into a fixed tile, so **the declared height IS the zoom level**.

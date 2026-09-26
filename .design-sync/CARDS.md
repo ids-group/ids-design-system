@@ -76,17 +76,17 @@ Rules the build enforces:
 
 ## How many
 
-Measured on the published set of 2026-09-25 (262 cards: 196 component, 66 guide):
+Measured on the published set of 2026-09-26 (259 cards: 195 component, 64 guide):
 
 | cards per component | components |
 | --- | --- |
-| 1 | 46 |
-| 2 | 20 |
-| 3 | 13 |
-| 4 | 8 |
+| 1 | 45 |
+| 2 | 21 |
+| 3 | 14 |
+| 4 | 7 |
 | 5 | 4 |
 | 7 | 1 (Button) |
-| 12 | 1 (Table) |
+| 11 | 1 (Table) |
 
 Aim for 1-3 per component. Past 5 needs a layout the others genuinely do not show; Table is the
 only one past 7. A guide chapter publishes its specifications and rules, 1-4 cards; Do & Don't and

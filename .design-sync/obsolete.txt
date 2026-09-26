@@ -59,6 +59,8 @@ components/actions/SplitButton/Split Button - Without menu items.html
 components/actions/SplitButton/Split Button - Without menu items.prompt.md
 components/charts/Chart/Chart - Category cursor.html
 components/charts/Chart/Chart - Category cursor.prompt.md
+components/charts/Chart/Chart - Composing a chart.html
+components/charts/Chart/Chart - Composing a chart.prompt.md
 components/charts/Chart/Chart - The tooltip and the legend of a composed chart.html
 components/charts/Chart/Chart - The tooltip and the legend of a composed chart.prompt.md
 components/charts/Chart/Chart - What a line series does on its own.html
@@ -97,6 +99,8 @@ components/data-display/Table/Table - Bordered.html
 components/data-display/Table/Table - Bordered.prompt.md
 components/data-display/Table/Table - CSV export.html
 components/data-display/Table/Table - CSV export.prompt.md
+components/data-display/Table/Table - Clickable rows - drawer detail.html
+components/data-display/Table/Table - Clickable rows - drawer detail.prompt.md
 components/data-display/Table/Table - Column filters.html
 components/data-display/Table/Table - Column filters.prompt.md
 components/data-display/Table/Table - Column picker - reorder.html
@@ -157,6 +161,8 @@ components/feedback-status/Bar/Bar - Edge cases.html
 components/feedback-status/Bar/Bar - Edge cases.prompt.md
 components/feedback-status/Bar/Bar - Give the cell a width.html
 components/feedback-status/Bar/Bar - Give the cell a width.prompt.md
+components/feedback-status/Bar/Bar - What the bar is.html
+components/feedback-status/Bar/Bar - What the bar is.prompt.md
 components/feedback-status/LoadingOverlay/Loading Overlay - The scrim stops the keyboard too.html
 components/feedback-status/LoadingOverlay/Loading Overlay - The scrim stops the keyboard too.prompt.md
 components/feedback-status/Toast/Toast - Live demo.html
@@ -325,6 +331,8 @@ components/navigation/Breadcrumbs/Breadcrumbs - Service-driven (route-aware apps
 components/navigation/Breadcrumbs/Breadcrumbs - Service-driven (route-aware apps).prompt.md
 components/navigation/Breadcrumbs/Breadcrumbs - Single level.html
 components/navigation/Breadcrumbs/Breadcrumbs - Single level.prompt.md
+components/navigation/Menu/Menu - Trigger-opened (overlay).html
+components/navigation/Menu/Menu - Trigger-opened (overlay).prompt.md
 components/navigation/Pagination/Pagination - With page-size select.html
 components/navigation/Pagination/Pagination - With page-size select.prompt.md
 components/navigation/Sidenav/Sidenav - A group that is also a page.html
@@ -397,6 +405,8 @@ guides/foundations/Colour/Colour - Switching the focus style brand-wide.html
 guides/foundations/Colour/Colour - Switching the focus style brand-wide.prompt.md
 guides/foundations/Density/Density - A 32px toolbar - use compact.html
 guides/foundations/Density/Density - A 32px toolbar - use compact.prompt.md
+guides/foundations/Density/Density - Choosing density per screen.html
+guides/foundations/Density/Density - Choosing density per screen.prompt.md
 guides/foundations/Density/Density - Live comparison.html
 guides/foundations/Density/Density - Live comparison.prompt.md
 guides/foundations/Density/Density - What density rewrites.html
@@ -409,6 +419,8 @@ guides/foundations/Opacity & alpha tokens/Opacity & alpha tokens - Literal alpha
 guides/foundations/Opacity & alpha tokens/Opacity & alpha tokens - Literal alphas in tokens (reference).prompt.md
 guides/foundations/Radius/Radius - Applied.html
 guides/foundations/Radius/Radius - Applied.prompt.md
+guides/foundations/Scrollbar/Scrollbar - Live demo.html
+guides/foundations/Scrollbar/Scrollbar - Live demo.prompt.md
 guides/foundations/Scrollbar/Scrollbar - Specification.html
 guides/foundations/Scrollbar/Scrollbar - Specification.prompt.md
 guides/foundations/Scrollbar/Scrollbar - Tokens.html
