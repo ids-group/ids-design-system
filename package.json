@@ -87,7 +87,9 @@
     "release:patch": "npm version patch -m \"release: %s\"",
     "start": "npm run dev:docs",
     "version": "node tools/prepare-release-commit.mjs",
-    "watch": "ng build ds --watch --configuration development"
+    "watch": "ng build ds --watch --configuration development",
+    "compare:docs": "node tools/compare-docs-pixels.mjs",
+    "serve:static": "node tools/serve-static.mjs"
   },
   "peerDependencies": {
     "@angular/cdk": "^21.2.0",
