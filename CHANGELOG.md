@@ -9,7 +9,32 @@
   the production contract. Off by default; nothing changes for a drawer or sheet that does not set
   it.
 
+- **`[dsTooltip]` takes a `dsTooltipTextSelector` input.** Given a selector, `dsTooltipWhenClipped`
+  tests the matching element inside the host for clipping and discloses its text, while the host
+  stays the area that opens the tip on hover. Put the directive on a whole row, point it at the
+  label inside, and the tip opens wherever the row shows its hover state. Off by default: without
+  it the host is both.
+
+### Changed
+
+- **Subclassing one of these breaks on a name collision.** `DrawerComponent` and
+  `BottomSheetComponent` gained `preview`, and `TooltipDirective` gained `dsTooltipTextSelector`,
+  `hostElement`, `isClipped`, `onKeydown` and `textElement`. Build after upgrading; rename or mark `override` every member the compiler reports
+  colliding. Subclassing a DS component is unsupported.
+
 ### Fixed
+
+- **A clipped label shows its tooltip wherever its control shows hover.** In `ds-select`,
+  `ds-multi-select` and `ds-autocomplete` the tip of an option opened only over the label text,
+  while the row highlighted across its padding, icon, checkbox and check mark; it now opens from
+  the whole row, the create row of `ds-autocomplete` included. The `ds-select` trigger's tip opens
+  from the whole field, not only its text, and a `truncate` cell of `ds-table` opens from the whole
+  cell, padding included.
+
+- **A focused `dsTooltipWhenClipped` host opens its tip on keyboard focus only.** A clipped host
+  that takes focus itself opened on any focus, a mouse click included, and stayed open while keys
+  were pressed. It now opens when Tab lands on it, and closes on any key, as a host reached
+  through its focusable ancestor does.
 
 - **A `ds-table` wider than its container no longer widens the page.** The hidden header label of
   a column that sets `screenReaderLabel` and no `label` was left out of the table's horizontal

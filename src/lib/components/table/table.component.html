@@ -282,11 +282,14 @@
                   let first = $first
                 ) {
                   <td
+                    dsTooltipTextSelector=":scope > .cell-clip"
                     [class.numeric]="col.align === 'right'"
                     [class.pin-first]="first && stickyFirstColumn()"
                     [class.editable-cell]="col.editable"
                     [class.interactive-cell]="col.interactive"
                     [class.fit-content]="fitsContent(col)"
+                    [dsTooltipWhenClipped]="!!col.truncate"
+                    [dsTooltip]="col.truncate ? cellValue(row, col) : ''"
                     (dblclick)="startEdit(row, col, $event)">
                     @if (isEditing(row, col)) {
                       <input
@@ -303,9 +306,7 @@
                       @if (col.truncate) {
                         <span
                           class="cell-clip"
-                          dsTooltipWhenClipped
-                          [style.max-width.px]="clipWidth(col)"
-                          [dsTooltip]="cellValue(row, col)">
+                          [style.max-width.px]="clipWidth(col)">
                           <ng-container
                             [ngTemplateOutlet]="tpl"
                             [ngTemplateOutletContext]="{
@@ -326,9 +327,7 @@
                     } @else if (col.truncate) {
                       <span
                         class="cell-clip"
-                        dsTooltipWhenClipped
-                        [style.max-width.px]="clipWidth(col)"
-                        [dsTooltip]="cellValue(row, col)">
+                        [style.max-width.px]="clipWidth(col)">
                         @if (cellLink(row, col); as target) {
                           <a
                             class="cell-link"

@@ -189,6 +189,9 @@
               <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- listbox option; activated via the combobox input + aria-activedescendant, options aren't individually focusable -->
               <div
                 role="option"
+                dsTooltip
+                dsTooltipWhenClipped
+                dsTooltipTextSelector=".option-label"
                 [class]="optionClass(option)"
                 [id]="optionId(flatIndexOf(option))"
                 [class.is-active]="flatIndexOf(option) === activeIndex()"
@@ -215,9 +218,7 @@
                 }
 
                 <span
-                  class="option-label"
-                  dsTooltip
-                  dsTooltipWhenClipped>
+                  class="option-label">
                   @if (optionTemplate(); as tpl) {
                     <ng-container
                       [ngTemplateOutlet]="tpl"
@@ -245,6 +246,9 @@
           <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- listbox option; activated via the combobox input + aria-activedescendant, options aren't individually focusable -->
           <li
             role="option"
+            dsTooltip
+            dsTooltipWhenClipped
+            dsTooltipTextSelector=".option-label"
             [class]="optionClass(option)"
             [id]="optionId(flatIndexOf(option))"
             [class.is-active]="flatIndexOf(option) === activeIndex()"
@@ -271,9 +275,7 @@
             }
 
             <span
-              class="option-label"
-              dsTooltip
-              dsTooltipWhenClipped>
+              class="option-label">
               @if (optionTemplate(); as tpl) {
                 <ng-container
                   [ngTemplateOutlet]="tpl"
@@ -324,6 +326,9 @@
         <li
           class="option create-row"
           role="option"
+          dsTooltip
+          dsTooltipWhenClipped
+          dsTooltipTextSelector=".option-label"
           [id]="optionId(visibleOptions().length)"
           [class.is-active]="activeIndex() === visibleOptions().length"
           [attr.aria-selected]="false"
@@ -338,9 +343,7 @@
             [size]="16" />
 
           <span
-            class="option-label"
-            dsTooltip
-            dsTooltipWhenClipped>
+            class="option-label">
             @if (createTemplate(); as tpl) {
               <ng-container
                 [ngTemplateOutlet]="tpl"
