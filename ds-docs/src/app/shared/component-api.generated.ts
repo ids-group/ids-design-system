@@ -11187,6 +11187,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Show the tip only while the host is actually showing less text than it holds. For a label that already reads in full, a tip repeating it is noise. Re-tested on every open, so a tip appears and stops appearing as the column, panel or window is resized, with no observer to run. With this on, `dsTooltip` may be left empty and the host's own text is disclosed. That is what makes it usable on projected content, where the component holding the tip cannot know what it was handed. A tip whose text the host already contains sets no `aria-describedby`; one given a `dsTooltip` that says more than the host does describes it as usual."
+      },
+      {
+        "name": "dsTooltipTextElement",
+        "kind": "input",
+        "type": "HTMLElement | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "The element whose clipping `dsTooltipWhenClipped` tests and whose text it discloses, when that is not the host. It lets the pointer area be a whole row while the text is one cell of it: hovering anywhere on the row opens the tip, and only for the text the row clips."
       }
     ],
     "outputs": []

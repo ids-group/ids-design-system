@@ -81,6 +81,14 @@ export class TooltipDirective implements OnDestroy {
    *  what it was handed. A tip whose text the host already contains sets no `aria-describedby`;
    *  one given a `dsTooltip` that says more than the host does describes it as usual. */
   readonly dsTooltipWhenClipped = input(false, { transform: booleanAttribute });
+  /** The element whose clipping `dsTooltipWhenClipped` tests and whose text it discloses, when
+   *  that is not the host. It lets the pointer area be a whole row while the text is one cell of
+   *  it: hovering anywhere on the row opens the tip, and only for the text the row clips. */
+  readonly dsTooltipTextElement = input<HTMLElement | null>(null);
+
+  private textElement(): HTMLElement {
+    return this.dsTooltipTextElement() ?? this.host.nativeElement;
+  }
 
   private tipText(): string {
     const given = this.dsTooltip();
@@ -88,7 +96,7 @@ export class TooltipDirective implements OnDestroy {
       return given;
     }
 
-    return (this.host.nativeElement.textContent ?? '').trim();
+    return (this.textElement().textContent ?? '').trim();
   }
 
   /** A clipped host's full text is already in the DOM, so a screen reader has it; describing
@@ -99,7 +107,7 @@ export class TooltipDirective implements OnDestroy {
     }
     const collapse = (value: string) => value.replace(/\s+/g, ' ').trim();
 
-    return collapse(this.host.nativeElement.textContent ?? '').includes(
+    return collapse(this.textElement().textContent ?? '').includes(
       collapse(text),
     );
   }
@@ -204,10 +212,7 @@ export class TooltipDirective implements OnDestroy {
     if (!this.tipText()) {
       return;
     }
-    if (
-      this.dsTooltipWhenClipped() &&
-      !isTextClipped(this.host.nativeElement)
-    ) {
+    if (this.dsTooltipWhenClipped() && !isTextClipped(this.textElement())) {
       return;
     }
     if (this.timer !== null) {
