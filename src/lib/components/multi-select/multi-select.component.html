@@ -281,11 +281,11 @@
                     class="option"
                     dsTooltip
                     dsTooltipWhenClipped
+                    dsTooltipTextSelector=".option-label"
                     [id]="optionId(flatIndexOf(option))"
                     [class.is-active]="activeIndex() === flatIndexOf(option)"
                     [attr.aria-selected]="isSelected(option.value)"
                     [disabled]="option.disabled"
-                    [dsTooltipTextElement]="optionLabel"
                     (click)="toggleValue(option)"
                     (mouseenter)="
                       cursorFromKeyboard.set(false);
@@ -305,7 +305,6 @@
                     }
 
                     <span
-                      #optionLabel
                       class="option-label">
                       @if (optionTemplate(); as tpl) {
                         <ng-container
@@ -334,11 +333,11 @@
               class="option"
               dsTooltip
               dsTooltipWhenClipped
+              dsTooltipTextSelector=".option-label"
               [id]="optionId(flatIndexOf(option))"
               [class.is-active]="activeIndex() === flatIndexOf(option)"
               [attr.aria-selected]="isSelected(option.value)"
               [disabled]="option.disabled"
-              [dsTooltipTextElement]="optionLabel"
               (click)="toggleValue(option)"
               (mouseenter)="
                 cursorFromKeyboard.set(false);
@@ -358,7 +357,6 @@
               }
 
               <span
-                #optionLabel
                 class="option-label">
                 @if (optionTemplate(); as tpl) {
                   <ng-container

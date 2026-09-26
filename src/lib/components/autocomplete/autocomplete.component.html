@@ -191,12 +191,12 @@
                 role="option"
                 dsTooltip
                 dsTooltipWhenClipped
+                dsTooltipTextSelector=".option-label"
                 [class]="optionClass(option)"
                 [id]="optionId(flatIndexOf(option))"
                 [class.is-active]="flatIndexOf(option) === activeIndex()"
                 [attr.aria-selected]="isSelected(option)"
                 [attr.aria-disabled]="option.disabled ? 'true' : null"
-                [dsTooltipTextElement]="optionLabel"
                 (click)="onPick(option)"
                 (mouseenter)="
                   cursorFromKeyboard.set(false);
@@ -218,7 +218,6 @@
                 }
 
                 <span
-                  #optionLabel
                   class="option-label">
                   @if (optionTemplate(); as tpl) {
                     <ng-container
@@ -249,12 +248,12 @@
             role="option"
             dsTooltip
             dsTooltipWhenClipped
+            dsTooltipTextSelector=".option-label"
             [class]="optionClass(option)"
             [id]="optionId(flatIndexOf(option))"
             [class.is-active]="flatIndexOf(option) === activeIndex()"
             [attr.aria-selected]="isSelected(option)"
             [attr.aria-disabled]="option.disabled ? 'true' : null"
-            [dsTooltipTextElement]="optionLabel"
             (click)="onPick(option)"
             (mouseenter)="
               cursorFromKeyboard.set(false);
@@ -276,7 +275,6 @@
             }
 
             <span
-              #optionLabel
               class="option-label">
               @if (optionTemplate(); as tpl) {
                 <ng-container
@@ -330,10 +328,10 @@
           role="option"
           dsTooltip
           dsTooltipWhenClipped
+          dsTooltipTextSelector=".option-label"
           [id]="optionId(visibleOptions().length)"
           [class.is-active]="activeIndex() === visibleOptions().length"
           [attr.aria-selected]="false"
-          [dsTooltipTextElement]="optionLabel"
           (click)="onCreateNew()"
           (mouseenter)="
             cursorFromKeyboard.set(false);
@@ -345,7 +343,6 @@
             [size]="16" />
 
           <span
-            #optionLabel
             class="option-label">
             @if (createTemplate(); as tpl) {
               <ng-container

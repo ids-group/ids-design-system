@@ -23,6 +23,9 @@
   #trigger
   role="combobox"
   aria-haspopup="listbox"
+  dsTooltip
+  dsTooltipWhenClipped
+  dsTooltipTextSelector=".trigger-text"
   [class]="triggerClasses()"
   [attr.name]="name()"
   [attr.tabindex]="isDisabled() ? -1 : 0"
@@ -57,8 +60,6 @@
   } @else {
     <span
       class="trigger-text"
-      dsTooltip
-      dsTooltipWhenClipped
       [class.is-placeholder]="!hasValue()">
       {{ displayLabel() }}
     </span>
@@ -159,6 +160,7 @@
                     class="option"
                     dsTooltip
                     dsTooltipWhenClipped
+                    dsTooltipTextSelector=".option-label"
                     [id]="optionId(flatIndexOf(opt))"
                     [attr.aria-selected]="isSelected(opt)"
                     [attr.aria-disabled]="
@@ -173,7 +175,6 @@
                     [class.is-active]="isActive(flatIndexOf(opt))"
                     [class.is-disabled]="isOptionDisabled(opt, item.disabled)"
                     [disabled]="isOptionDisabled(opt, item.disabled)"
-                    [dsTooltipTextElement]="optionLabel"
                     (click)="pick(opt, item.disabled)"
                     (mouseenter)="
                       cursorFromKeyboard.set(false);
@@ -195,7 +196,6 @@
                     }
 
                     <span
-                      #optionLabel
                       class="option-label">
                       @if (optionTemplate(); as tpl) {
                         <ng-container
@@ -227,6 +227,7 @@
               class="option"
               dsTooltip
               dsTooltipWhenClipped
+              dsTooltipTextSelector=".option-label"
               [id]="optionId(flatIndexOf(item))"
               [attr.aria-selected]="isSelected(item)"
               [attr.aria-disabled]="item.disabled ? 'true' : null"
@@ -234,7 +235,6 @@
               [class.is-active]="isActive(flatIndexOf(item))"
               [class.is-disabled]="item.disabled"
               [disabled]="item.disabled"
-              [dsTooltipTextElement]="optionLabel"
               (click)="pick(item)"
               (mouseenter)="
                 cursorFromKeyboard.set(false);
@@ -248,7 +248,6 @@
               }
 
               <span
-                #optionLabel
                 class="option-label">
                 @if (optionTemplate(); as tpl) {
                   <ng-container
