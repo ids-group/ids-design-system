@@ -3888,8 +3888,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-description-list-value-min-width",
-        "value": "14rem",
-        "notes": "Narrowest value beside the label before every item of the list stacks (14rem)."
+        "value": "var(--dl-spec-value-min-w)",
+        "notes": "Narrowest value beside the label before every item of the list stacks (defaults to --dl-spec-value-min-w)."
       },
       {
         "name": "--ds-description-list-label-width",
@@ -8543,6 +8543,11 @@ export const NEW_TOKENS: readonly NewToken[] = [
   {
     "name": "--dl-spec-label-w",
     "value": "120px",
+    "kind": "length"
+  },
+  {
+    "name": "--dl-spec-value-min-w",
+    "value": "14rem",
     "kind": "length"
   },
   {
