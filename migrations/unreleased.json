@@ -22,7 +22,7 @@
         "extends TooltipDirective"
       ],
       "verify": "The app builds with no TS4114 or TS2416 against a DS base class.",
-      "note": "DrawerComponent and BottomSheetComponent gained preview; TooltipDirective gained dsTooltipTextElement and textElement. The compiler names every collision."
+      "note": "DrawerComponent and BottomSheetComponent gained preview; TooltipDirective gained dsTooltipTextSelector, hostElement, isClipped, onKeydown and textElement. The compiler names every collision."
     }
   ],
   "informational": [
