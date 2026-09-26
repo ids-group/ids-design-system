@@ -11,11 +11,12 @@
 
 ### Fixed
 
-- **A picker with no filter field no longer announces its option count.** Opening a `ds-select`, or
-  a `ds-multi-select` whose search field is not shown, spoke "4 results" through a polite live
-  region although nothing had been filtered. The count is announced only where a filter field is
-  shown: `ds-autocomplete` and a searchable `ds-multi-select`, on opening and as typing changes the
-  list.
+- **A filterable picker announces its result count.** `ds-autocomplete` and a `ds-multi-select`
+  with its search field shown removed their live region from the page the first time they opened,
+  so no count ever reached a screen reader. They now announce the count on opening and each time
+  typing changes the list ("4 results", "No results"). A `ds-select`, and a `ds-multi-select` whose
+  search field is not shown, announce no count: nothing is filtered there, and the listbox already
+  conveys its size.
 
 - **A `dsTooltipWhenClipped` tooltip opens from keyboard focus on a control only.** A clipped host
   that cannot take focus itself opens when Tab lands on its nearest focusable ancestor, and that
