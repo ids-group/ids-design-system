@@ -35,6 +35,10 @@
     {
       "text": "The ds-table scroll box is position: relative, so the hidden header label of a column with screenReaderLabel and no label is clipped with the rows and no longer widens the page when the table overflows its container. An element positioned absolutely inside a cell template with no positioned ancestor of its own resolves against that scroll box.",
       "verify": "At a viewport narrower than the table, put a column with screenReaderLabel and no label past the container's edge and confirm document.documentElement.scrollWidth equals clientWidth while the table still scrolls horizontally inside its box."
+    },
+    {
+      "text": "The ds-tabs scrollable arrows are padded like a tab, so each chevron sits on the tab label line under any --ds-tab-padding-top / --ds-tab-padding-bottom / --ds-tab-indicator-width values, and the hover surface is centred on that line inside the strip. With the default padding nothing moves. In the pills variant the hover surface matches the pill's height and radius.",
+      "verify": "On a scrollable ds-tabs whose --ds-tab-padding-bottom exceeds --ds-tab-padding-top, confirm the next arrow's chevron and a tab label share a vertical centre within 1px, and that hovering the arrow shows a surface centred on that line."
     }
   ],
   "deleteList": []

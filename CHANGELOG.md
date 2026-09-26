@@ -71,6 +71,14 @@
   out. Hover and focus on the host itself are unchanged. A role-less element with a `tabindex` that
   acts as a control, like a clickable card, discloses again once it carries its role.
 
+- **The `scrollable` arrows of `ds-tabs` sit on the tab label line.** A strip whose tabs pad the
+  bottom more than the top, as `--ds-tab-padding-top` and `--ds-tab-padding-bottom` allow, drew
+  each chevron centred on the whole strip height, below the labels by half the difference plus the
+  indicator width, and its hover surface ran down to the divider. The chevron now shares the label's
+  centre line and the hover surface is centred on it, inside the strip; with the default padding
+  the arrows look as before. In the `pills` variant the hover surface matches a pill's height and
+  radius instead of filling the strip.
+
 ## 0.14.2 — 2026-09-25
 
 ### Breaking
