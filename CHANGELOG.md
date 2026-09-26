@@ -9,7 +9,18 @@
   the production contract. Off by default; nothing changes for a drawer or sheet that does not set
   it.
 
+- **`[dsTooltip]` takes a `dsTooltipTextElement` input.** Given an element, `dsTooltipWhenClipped`
+  tests that element's clipping and discloses its text, while the host stays the area that opens
+  the tip on hover. Put the directive on a whole row and point it at the label inside, and the tip
+  opens wherever the row shows its hover state. Off by default: without it the host is
+  both.
+
 ### Fixed
+
+- **A clipped option label in `ds-select`, `ds-multi-select` and `ds-autocomplete` shows its
+  tooltip from anywhere on the option row.** The tip opened only over the label text, while the
+  row highlighted on hover across its padding, icon, checkbox and check mark, so a pointer resting
+  on the highlighted row often showed no tip. The create row of `ds-autocomplete` behaves the same.
 
 - **A `ds-table` wider than its container no longer widens the page.** The hidden header label of
   a column that sets `screenReaderLabel` and no `label` was left out of the table's horizontal
