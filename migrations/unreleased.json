@@ -1,6 +1,30 @@
 {
   "version": "unreleased",
-  "items": [],
+  "items": [
+    {
+      "id": "exported-class-members-grew",
+      "kind": "behavior",
+      "old": "DrawerComponent, BottomSheetComponent, TooltipDirective",
+      "new": null,
+      "surface": "typescript",
+      "action": "Build after upgrading, and rename or mark `override` every member of yours the compiler reports as colliding.",
+      "appliesWhen": "Only a class of yours that extends one of the listed components. Template users of those components need nothing; subclassing a DS component is unsupported.",
+      "pitfall": "`protected` and `private` are no protection: a redeclared member collides exactly as a public one does.",
+      "restore": null,
+      "searchHints": [
+        "extends DrawerComponent",
+        "extends BottomSheetComponent",
+        "extends TooltipDirective"
+      ],
+      "detect": [
+        "extends DrawerComponent",
+        "extends BottomSheetComponent",
+        "extends TooltipDirective"
+      ],
+      "verify": "The app builds with no TS4114 or TS2416 against a DS base class.",
+      "note": "DrawerComponent and BottomSheetComponent gained preview; TooltipDirective gained dsTooltipTextElement and textElement. The compiler names every collision."
+    }
+  ],
   "informational": [
     {
       "text": "A dsTooltipWhenClipped host that cannot take focus opens on Tab only when its nearest focusable ancestor is a control: a native a[href], button, input, select, textarea or summary, a table row, or an element with the role button, link, tab, option, menuitem, menuitemcheckbox, menuitemradio, row, gridcell, combobox, checkbox, radio, switch or treeitem. A focusable container such as a ds-tabs panel, a scroll region or a role-less div with tabindex=\"0\" opens nothing. A role-less focusable element that acts as a control discloses again once it carries its role.",

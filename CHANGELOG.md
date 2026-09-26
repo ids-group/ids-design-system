@@ -15,6 +15,13 @@
   opens wherever the row shows its hover state. Off by default: without it the host is
   both.
 
+### Changed
+
+- **Subclassing one of these breaks on a name collision.** `DrawerComponent` and
+  `BottomSheetComponent` gained `preview`, and `TooltipDirective` gained `dsTooltipTextElement` and
+  `textElement`. Build after upgrading; rename or mark `override` every member the compiler reports
+  colliding. Subclassing a DS component is unsupported.
+
 ### Fixed
 
 - **A clipped option label in `ds-select`, `ds-multi-select` and `ds-autocomplete` shows its
