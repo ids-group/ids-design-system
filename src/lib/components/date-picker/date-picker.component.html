@@ -91,6 +91,10 @@
     </button>
   </div>
 
+  @if (preview.staticPreview()) {
+    <ng-container [ngTemplateOutlet]="panelTpl()" />
+  }
+
   <ds-field-message
     [icon]="messageIcon()"
     [text]="message().text"
@@ -106,7 +110,7 @@
   <div
     class="calendar"
     role="dialog"
-    cdkTrapFocus
+    [cdkTrapFocus]="!preview.staticPreview()"
     [attr.aria-label]="intl().datePicker.openCalendar"
     [id]="panelId"
     [class.has-presets]="presets().length > 0"

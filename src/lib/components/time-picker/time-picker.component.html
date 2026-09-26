@@ -113,6 +113,12 @@
     </div>
   }
 
+  @if (preview.staticPreview()) {
+    <div class="time-static">
+      <ng-container [ngTemplateOutlet]="panelTpl()" />
+    </div>
+  }
+
   <ds-field-message
     [icon]="messageIcon()"
     [text]="message().text"

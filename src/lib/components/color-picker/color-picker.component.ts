@@ -7,6 +7,7 @@ import {
   ViewEncapsulation,
   booleanAttribute,
   computed,
+  effect,
   forwardRef,
   inject,
   input,
@@ -17,10 +18,14 @@ import {
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
+import { NgTemplateOutlet } from '@angular/common';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 import { DsOverlayCloseRef } from '@ids-group-ltd/ids-design-system/overlay';
-import { DsControlValueAccessor } from '@ids-group-ltd/ids-design-system/components';
+import {
+  DsControlValueAccessor,
+  DsStaticPreview,
+} from '@ids-group-ltd/ids-design-system/components';
 import { FieldMessageComponent } from '@ids-group-ltd/ids-design-system/components/field-message';
 import {
   resolveFieldMessage,
@@ -63,7 +68,7 @@ const DEFAULT_PRESETS: readonly string[] = [
 @Component({
   selector: 'ds-color-picker',
   standalone: true,
-  imports: [IconComponent, FieldMessageComponent],
+  imports: [IconComponent, FieldMessageComponent, NgTemplateOutlet],
   templateUrl: './color-picker.component.html',
   styleUrl: './color-picker.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -80,9 +85,10 @@ const DEFAULT_PRESETS: readonly string[] = [
   ],
   host: {
     '[attr.data-field-state]': 'controlState()',
-    '[class.open]': 'open()',
+    '[class.open]': 'open() || preview.staticPreview()',
     '[class.disabled]': 'isDisabled()',
   },
+  hostDirectives: [{ directive: DsStaticPreview, inputs: ['staticPreview'] }],
 })
 export class ColorPickerComponent
   extends DsControlValueAccessor<string>
@@ -92,6 +98,7 @@ export class ColorPickerComponent
   private readonly vcr = inject(ViewContainerRef);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   protected readonly intl = inject(DS_INTL);
+  protected readonly preview = inject(DsStaticPreview);
   /** Public panel tokens forwarded onto the portaled overlay pane on open so
    *  a consumer's `ds-color-picker { --ds-color-picker-panel-*: … }` reaches it.
    *  Not the whole set: `prepareOverlayEnter` also forwards `DROPDOWN_PANEL_TOKENS`
@@ -144,6 +151,19 @@ export class ColorPickerComponent
   private svDragging = false;
   private hueDragging = false;
 
+  constructor() {
+    super();
+    effect(() => {
+      if (!this.preview.staticPreview()) {
+        return;
+      }
+      const parsed = hexToHsv(this.value());
+      if (parsed) {
+        this.hsv.set(parsed);
+      }
+    });
+  }
+
   ngOnDestroy(): void {
     // Host torn down while open → close() never runs. Dispose the overlay so
     // its pane and event subscriptions don't leak.
@@ -193,7 +213,7 @@ export class ColorPickerComponent
   protected readonly huePercent = computed(() => (this.hsv().h / 360) * 100);
 
   protected toggle(): void {
-    if (this.isDisabled()) {
+    if (this.isDisabled() || this.preview.staticPreview()) {
       return;
     }
     if (this.open()) {

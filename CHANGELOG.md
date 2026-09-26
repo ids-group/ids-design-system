@@ -2,12 +2,14 @@
 
 ### Added
 
-- **`ds-drawer` and `ds-bottom-sheet` take a showcase-only `staticPreview` input.** Set, the panel
-  renders open in the page flow, with no scrim, fixed positioning, enter animation, scroll lock or
-  focus trap, and closing does nothing; `open` is ignored. It is for static documentation
-  specimens, like the same input on `ds-modal`, `ds-popover` and `ds-select`, and is not part of
-  the production contract. Off by default; nothing changes for a drawer or sheet that does not set
-  it.
+- **`ds-drawer`, `ds-bottom-sheet`, `ds-date-picker`, `ds-time-picker` and `ds-color-picker` take a
+  showcase-only `staticPreview` input.** Set, the component renders its panel open in the page
+  flow: the drawer and sheet with no scrim, fixed positioning, enter animation, scroll lock or focus
+  trap, the three pickers under their trigger instead of in an overlay, showing the bound `value`,
+  with no focus trap and no close on Escape or an outside click. Closing does nothing and the
+  trigger does not toggle. It is for static documentation specimens, like the same input on
+  `ds-modal`, `ds-popover` and `ds-select`, and is not part of the production contract. Off by
+  default; nothing changes for a component that does not set it.
 
 ## 0.14.2 — 2026-09-25
 
