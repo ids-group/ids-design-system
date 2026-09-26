@@ -111,8 +111,8 @@ export async function open(
     return result.result.value;
   };
 
-  // Chrome holds the profile open for a moment after Browser.close, and a profile left behind is about 60 MB
-  // per run. 544 of them once reached 30 GB, so the removal retries rather than being attempted once.
+  // Chrome keeps the profile open for a moment after Browser.close, so removing it once fails; each one left
+  // behind is about 60 MB.
   const close = async () => {
     await send('Browser.close').catch(() => {});
     await new Promise((resolve) => {

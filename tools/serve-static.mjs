@@ -2,7 +2,7 @@
 //
 //   node tools/serve-static.mjs <root> <port>
 //
-// Anything that is not a file on disk falls back to index.html, so a client-routed app works.
+// A path that is not a file on disk serves index.html, so client-side routes resolve.
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
