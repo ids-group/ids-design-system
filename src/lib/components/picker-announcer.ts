@@ -1,4 +1,10 @@
-import { type Signal, effect, inject, DOCUMENT } from '@angular/core';
+import {
+  type Signal,
+  DestroyRef,
+  effect,
+  inject,
+  DOCUMENT,
+} from '@angular/core';
 import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 
 /**
@@ -24,9 +30,9 @@ export function announceOptionCount(
   region.style.cssText =
     'position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;margin:-1px;padding:0';
   documentRef.body.appendChild(region);
+  inject(DestroyRef).onDestroy(() => region.remove());
 
-  effect((onCleanup) => {
-    onCleanup(() => region.remove());
+  effect(() => {
     if (!active()) {
       region.textContent = '';
 

@@ -18,6 +18,13 @@
   the table is clipped with the rows and scrolls with them. An element positioned absolutely inside
   a cell template with no positioned ancestor of its own now resolves against that scroll box.
 
+- **A filterable picker announces its result count.** `ds-autocomplete` and a `ds-multi-select`
+  with its search field shown removed their live region from the page the first time they opened,
+  so no count ever reached a screen reader. They now announce the count on opening and each time
+  typing changes the list ("4 results", "No results"). A `ds-select`, and a `ds-multi-select` whose
+  search field is not shown, announce no count: nothing is filtered there, and the listbox already
+  conveys its size.
+
 - **A `dsTooltipWhenClipped` tooltip opens from keyboard focus on a control only.** A clipped host
   that cannot take focus itself opens when Tab lands on its nearest focusable ancestor, and that
   ancestor now has to be a control: a native `a[href]`, `button`, `input`, `select`, `textarea` or
