@@ -177,6 +177,10 @@
   @include press.feedback;
 }
 
+.time-static {
+  align-self: flex-start;
+}
+
 .time-panel {
   display: flex;
   flex-direction: column;

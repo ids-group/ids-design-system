@@ -20,6 +20,11 @@ import { DocsNonmodalNoteComponent } from '../../../shared/docs-nonmodal-note.co
   ],
 })
 export class DatePickerSection {
+  protected readonly specimenRange: [Date, Date] = [
+    new Date(2026, 2, 9),
+    new Date(2026, 2, 13),
+  ];
+
   protected readonly minDateToday = new Date();
 
   protected readonly maxDateThirtyDays = new Date(

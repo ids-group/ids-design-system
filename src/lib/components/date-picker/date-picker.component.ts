@@ -17,6 +17,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
@@ -35,7 +36,10 @@ import {
 } from '@ids-group-ltd/ids-design-system/components';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { CalendarDayComponent } from '@ids-group-ltd/ids-design-system/components/calendar-day';
-import { DsControlValueAccessor } from '@ids-group-ltd/ids-design-system/components';
+import {
+  DsControlValueAccessor,
+  DsStaticPreview,
+} from '@ids-group-ltd/ids-design-system/components';
 import { FieldMessageComponent } from '@ids-group-ltd/ids-design-system/components/field-message';
 import {
   resolveFieldMessage,
@@ -107,6 +111,7 @@ interface DayCell {
     CalendarDayComponent,
     FieldMessageComponent,
     A11yModule,
+    NgTemplateOutlet,
   ],
   templateUrl: './date-picker.component.html',
   styleUrl: './date-picker.component.scss',
@@ -123,6 +128,7 @@ interface DayCell {
     '[class.in-group]': 'inGroup',
     '[class.full-width]': 'fullWidth()',
   },
+  hostDirectives: [{ directive: DsStaticPreview, inputs: ['staticPreview'] }],
 })
 export class DatePickerComponent
   extends DsControlValueAccessor<Date | DateRangeValue | null>
@@ -131,9 +137,20 @@ export class DatePickerComponent
   /** Segment of a ds-field-group: the group owns the border, radius and focus
    *  ring, so .in-group strips this control back to its bare contents. */
   protected readonly inGroup = inFieldGroup();
+  protected readonly preview = inject(DsStaticPreview);
 
   constructor() {
     super();
+    effect(() => {
+      if (!this.preview.staticPreview()) {
+        return;
+      }
+      const focus = this.clampToBounds(
+        this.selectedAnchorDate() ?? this.defaultDate() ?? new Date(),
+      );
+      this.gridFocus.set(focus);
+      this.viewMonth.set(new Date(focus.getFullYear(), focus.getMonth(), 1));
+    });
     effect(() => {
       const spec = this.formatSpec();
       const value = this.value();
@@ -491,7 +508,7 @@ export class DatePickerComponent
     // glyph moves focus into the day grid, so the trigger would go dark while
     // its OWN panel is open. A control stays visibly active for as long as it
     // owns an open panel, wherever focus went.
-    if (this.isOpen()) {
+    if (this.isOpen() || this.preview.staticPreview()) {
       parts.push('open');
     }
 
@@ -753,7 +770,7 @@ export class DatePickerComponent
   }
 
   protected open(moveFocusToGrid = true): void {
-    if (this.isDisabled() || this.overlayRef) {
+    if (this.isDisabled() || this.overlayRef || this.preview.staticPreview()) {
       return;
     }
     const { positionStrategy, config } = dropdownOverlay(
@@ -802,12 +819,8 @@ export class DatePickerComponent
     const portal = new TemplatePortal(this.panelTpl(), this.vcr);
     this.overlayRef.attach(portal);
     this.isOpen.set(true);
-    const selected =
-      this.mode() === 'single'
-        ? (this.value() as Date | null)
-        : ((this.value() as DateRangeValue | null)?.[0] ?? null);
     const focus = this.clampToBounds(
-      selected ?? this.defaultDate() ?? new Date(),
+      this.selectedAnchorDate() ?? this.defaultDate() ?? new Date(),
     );
     this.gridFocus.set(focus);
     this.viewMonth.set(new Date(focus.getFullYear(), focus.getMonth(), 1));
@@ -816,7 +829,16 @@ export class DatePickerComponent
     }
   }
 
+  private selectedAnchorDate(): Date | null {
+    return this.mode() === 'single'
+      ? (this.value() as Date | null)
+      : ((this.value() as DateRangeValue | null)?.[0] ?? null);
+  }
+
   protected close(cause: DsOverlayCloseCause = 'select'): void {
+    if (this.preview.staticPreview()) {
+      return;
+    }
     const focusWasInPanel = this.overlayRef
       ? focusIsInside(this.overlayRef)
       : false;

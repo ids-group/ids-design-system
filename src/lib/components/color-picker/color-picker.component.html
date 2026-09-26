@@ -3,7 +3,7 @@
   type="button"
   class="trigger"
   aria-haspopup="dialog"
-  [attr.aria-expanded]="open()"
+  [attr.aria-expanded]="open() || preview.staticPreview()"
   [attr.aria-label]="ariaLabelResolved()"
   [attr.aria-invalid]="invalidResolved() ? 'true' : null"
   [attr.aria-describedby]="hintId()"
@@ -23,6 +23,10 @@
     name="chevronDown"
     [size]="16" />
 </button>
+
+@if (preview.staticPreview()) {
+  <ng-container [ngTemplateOutlet]="panelTpl()" />
+}
 
 <ds-field-message
   [icon]="messageIcon()"

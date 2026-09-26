@@ -742,7 +742,9 @@ function cardHtml({
          copies of the same paragraph is what it was before. A whole-chapter card is that card. */
       var LEDE = WHOLE || (OWNS === '' && ${JSON.stringify(Boolean(withLede))});
       var KEEP = LEDE ? 'h2, p.lede' : 'h2';
-      var DROP_ALWAYS = '.eyebrow' + (LEDE ? '' : ', p.lede');
+      /* docs-section appends a chapter's service tables after its last block, so without this they
+         ride that block's card; a service is Angular-only and has no place on the React canvas. */
+      var DROP_ALWAYS = '.eyebrow, docs-api-table:not([data-key])' + (LEDE ? '' : ', p.lede');
       var API = '[data-key]';
       var host = document.querySelector(${JSON.stringify(tag)});
       var start = Date.now();
