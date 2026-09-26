@@ -25,8 +25,9 @@
 ### Changed
 
 - **Subclassing one of these breaks on a name collision.** `DrawerComponent` and
-  `BottomSheetComponent` gained `preview`, and `TooltipDirective` gained `dsTooltipTextSelector`,
-  `hostElement`, `isClipped`, `onKeydown` and `textElement`. Build after upgrading; rename or mark `override` every member the compiler reports
+  `BottomSheetComponent` gained `preview`, `TextareaComponent` gained `countTrimmed` and
+  `countedRange`, and `TooltipDirective` gained `dsTooltipTextSelector`, `hostElement`,
+  `isClipped`, `onKeydown` and `textElement`. Build after upgrading; rename or mark `override` every member the compiler reports
   colliding. Subclassing a DS component is unsupported.
 
 ### Fixed
