@@ -1177,6 +1177,7 @@
   "--empty-icon-size": "64px — empty-state illustration/icon size.",
   "--error": "Destructive action fill, error border.",
   "--error-border": "Border on subtle danger surfaces.",
+  "--error-highlight": "Fill behind a range of text marked as in error, with body text over it: the over-limit characters of a soft-limit textarea.",
   "--error-hover": "Hover on danger fill.",
   "--error-muted": "Slightly stronger tint than subtle.",
   "--error-muted-strong": "Error muted-strong tint — subtle error fills/backgrounds.",
