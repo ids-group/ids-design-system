@@ -52,25 +52,41 @@
 }
 
 .scroll-arrow {
+  --_scroll-arrow-padding-bottom: calc(var(--_tab-padding-bottom) + var(--_tab-indicator-width) - var(--border-width-default));
+  --_scroll-arrow-surface-shift: calc(var(--_scroll-arrow-padding-bottom) - var(--_tab-padding-top));
+
+  position: relative;
+  isolation: isolate;
+  contain: size;
   display: inline-flex;
   flex: none;
   align-items: center;
   justify-content: center;
   width: var(--hit-sm);
-  padding: 0;
+  padding: var(--_tab-padding-top) 0 var(--_scroll-arrow-padding-bottom);
   border: 0;
   border-bottom: var(--border-width-default) solid var(--_tabs-divider);
-  border-radius: var(--ds-radius-control) var(--ds-radius-control) 0 0;
   background: transparent;
   color: var(--_tab-label-color);
   cursor: pointer;
-  transition:
-    background-color var(--duration-fast) var(--ease-standard),
-    color var(--duration-fast) var(--ease-standard);
+  transition: color var(--duration-fast) var(--ease-standard);
+
+  // The surface is centred on the label line, which asymmetric tab padding moves off the box centre.
+  &::before {
+    content: '';
+    position: absolute;
+    inset: max(0px, -1 * var(--_scroll-arrow-surface-shift)) 0 max(0px, var(--_scroll-arrow-surface-shift));
+    z-index: -1;
+    border-radius: var(--ds-radius-control) var(--ds-radius-control) 0 0;
+    transition: background-color var(--duration-fast) var(--ease-standard);
+  }
 
   &:hover {
-    background-color: var(--surface-muted);
     color: var(--_tab-label-color-hover);
+
+    &::before {
+      background-color: var(--surface-muted);
+    }
   }
 
   @include press.feedback;
@@ -85,8 +101,13 @@
 }
 
 :host(.scrolling-host:has(> .pills)) .scroll-arrow {
+  padding: 0;
   border-bottom: 0;
-  border-radius: var(--ds-radius-control);
+
+  &::before {
+    inset: var(--space-1) 0;
+    border-radius: var(--_tab-pill-radius);
+  }
 }
 
 .tabs {
