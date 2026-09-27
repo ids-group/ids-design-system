@@ -1,5 +1,22 @@
 ## Unreleased
 
+### Breaking
+
+- **Subclassing one of these breaks on a name collision.** `DrawerComponent`,
+  `BottomSheetComponent`, `ColorPickerComponent` and `TimePickerComponent` gained `preview`,
+  `DatePickerComponent` gained `preview` and `selectedAnchorDate`, `TextareaComponent` gained
+  `countTrimmed` and `countedRange`, and `TooltipDirective` gained `dsTooltipTextSelector`,
+  `hostElement`, `isClipped`, `onKeydown` and `textElement`. Build after upgrading; rename or mark
+  `override` every member the compiler reports colliding. Subclassing a DS component is unsupported.
+
+- **The `scrollable` arrows of `ds-tabs` take the active tab colour on hover, over a lighter
+  surface.** A hovered arrow colours its chevron as the selected tab's label (`--accent` by
+  default, `--secondary-strong` under `secondary`, the pill label colour in `pills`) over a
+  `--surface-secondary` fill, where it was `--text-primary` over `--surface-muted`. Two new hooks set
+  them: `--ds-tabs-scroll-arrow-icon-color-hover` and `--ds-tabs-scroll-arrow-bg-color-hover`. The
+  arrow no longer reads `--ds-tab-label-color-hover`, so an override of it meant for the arrows
+  moves to `--ds-tabs-scroll-arrow-icon-color-hover`.
+
 ### Added
 
 - **`ds-drawer`, `ds-bottom-sheet`, `ds-date-picker`, `ds-time-picker` and `ds-color-picker` take a
@@ -24,23 +41,6 @@
   character typed after those spaces brings them into the count. The native `maxlength` of
   `maxLengthMode="hard"` still counts every character. Off by default.
 
-### Changed
-
-- **Subclassing one of these breaks on a name collision.** `DrawerComponent`,
-  `BottomSheetComponent`, `ColorPickerComponent` and `TimePickerComponent` gained `preview`,
-  `DatePickerComponent` gained `preview` and `selectedAnchorDate`, `TextareaComponent` gained
-  `countTrimmed` and `countedRange`, and `TooltipDirective` gained `dsTooltipTextSelector`,
-  `hostElement`, `isClipped`, `onKeydown` and `textElement`. Build after upgrading; rename or mark
-  `override` every member the compiler reports colliding. Subclassing a DS component is unsupported.
-
-- **The `scrollable` arrows of `ds-tabs` take the active tab colour on hover, over a lighter
-  surface.** A hovered arrow colours its chevron as the selected tab's label (`--accent` by
-  default, `--secondary-strong` under `secondary`, the pill label colour in `pills`) over a
-  `--surface-secondary` fill, where it was `--text-primary` over `--surface-muted`. Two new hooks set
-  them: `--ds-tabs-scroll-arrow-icon-color-hover` and `--ds-tabs-scroll-arrow-bg-color-hover`. The
-  arrow no longer reads `--ds-tab-label-color-hover`, so an override of it meant for the arrows
-  moves to `--ds-tabs-scroll-arrow-icon-color-hover`.
-
 ### Fixed
 
 - **A clipped label shows its tooltip wherever its control shows hover.** In `ds-select`,
@@ -50,10 +50,18 @@
   from the whole field, not only its text, and a `truncate` cell of `ds-table` opens from the whole
   cell, padding included.
 
-- **A focused `dsTooltipWhenClipped` host opens its tip on keyboard focus only.** A clipped host
-  that takes focus itself opened on any focus, a mouse click included, and stayed open while keys
-  were pressed. It now opens when Tab lands on it, and closes on any key, as a host reached
-  through its focusable ancestor does.
+- **A clipped `dsTooltipWhenClipped` tooltip opens on keyboard focus, and only from a control.** A
+  host that takes focus itself opens its tip when Tab lands on it, not on a mouse click, and closes
+  on any key; before, it opened on any focus, a mouse click included, and stayed open while keys were
+  pressed. A host that cannot take focus opens when Tab lands on its nearest focusable ancestor, and
+  that ancestor now has to be a control: a native `a[href]`, `button`, `input`, `select`, `textarea`
+  or `summary`, a plain table row, or an element with the role `button`, `link`, `tab`, `option`,
+  `menuitem`, `menuitemcheckbox`, `menuitemradio`, `row`, `gridcell`, `combobox`, `checkbox`,
+  `radio`, `switch` or `treeitem`. A focusable container around it, such as a `ds-tabs` panel, a
+  scroll region or a `div` with `tabindex="0"`, opened the tip of the first clipped value inside it
+  and opens nothing now; the search stops at that first focusable ancestor rather than reaching a
+  control further out. A role-less element with a `tabindex` that acts as a control, like a clickable
+  card, discloses again once it carries its role. Hover is unchanged.
 
 - **A `ds-table` wider than its container no longer widens the page.** The hidden header label of
   a column that sets `screenReaderLabel` and no `label` was left out of the table's horizontal
@@ -69,25 +77,12 @@
   search field is not shown, announce no count: nothing is filtered there, and the listbox already
   conveys its size.
 
-- **A `dsTooltipWhenClipped` tooltip opens from keyboard focus on a control only.** A clipped host
-  that cannot take focus itself opens when Tab lands on its nearest focusable ancestor, and that
-  ancestor now has to be a control: a native `a[href]`, `button`, `input`, `select`, `textarea` or
-  `summary`, a table row, or an element with the role `button`, `link`, `tab`, `option`,
-  `menuitem`, `menuitemcheckbox`, `menuitemradio`, `row`, `gridcell`, `combobox`, `checkbox`,
-  `radio`, `switch` or `treeitem`. A focusable container around it, such as a `ds-tabs` panel, a
-  scroll region or a `div` with `tabindex="0"`, opened the tooltip of the first clipped value
-  inside it and opens nothing now, and the search stops there rather than reaching a control further
-  out. Hover and focus on the host itself are unchanged. A role-less element with a `tabindex` that
-  acts as a control, like a clickable card, discloses again once it carries its role.
-
-- **The `scrollable` arrows of `ds-tabs` sit on the tab label line.** A strip whose tabs pad the
-  bottom more than the top, as `--ds-tab-padding-top` and `--ds-tab-padding-bottom` allow, drew
-  each chevron centred on the whole strip height, below the labels by half the difference plus the
-  indicator width, and its hover surface ran down to the divider. The chevron now shares the label's
-  centre line and the hover surface is centred on it, inside the strip; with the default padding
-  the arrows look as before. In the `pills` variant the hover surface matches a pill's height and
-  radius instead of filling the strip.
-
+- **The `scrollable` arrows of `ds-tabs` sit on the tab label line.** Where a strip's tabs pad the
+  bottom more than the top, as `--ds-tab-padding-top` and `--ds-tab-padding-bottom` allow, each
+  chevron sat below the labels and its hover surface ran to the divider; the chevron now shares the
+  label's centre line and the hover surface is centred on it, inside the strip. With the default
+  padding the arrows look as before. In the `pills` variant the hover surface matches a pill's
+  height and radius instead of filling the strip.
 ## 0.14.2 — 2026-09-25
 
 ### Breaking
