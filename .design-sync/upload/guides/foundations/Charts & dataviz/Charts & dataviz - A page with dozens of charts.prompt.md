@@ -1,3 +1,0 @@
-# Charts & dataviz - a page with dozens of charts
-
-Every chart draws the moment it is created, which is right for a screen with a few of them: nothing waits and nothing appears late. A dashboard or a report with dozens turns on rendering.deferUntilVisible, and each chart then holds its place with a still placeholder of its own shape until it comes within visibleMargin of the viewport. While the page is idle the charts within buildAheadMargin are built ahead, so the next scroll finds them ready, and a built chart that scrolls away costs no style, layout or paint until it returns. Until a deferred chart is built a screen reader meets its caption and nothing else, so leave it off where every chart has to be readable from the first moment.

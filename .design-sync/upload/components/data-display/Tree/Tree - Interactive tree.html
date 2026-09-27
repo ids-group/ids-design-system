@@ -22,9 +22,9 @@
       var BLOCK = "interactive tree";
       var REACT = "Tree";
       var WHOLE = OWNS === null;
-      var LEDE = WHOLE || (OWNS === '' && INDEX <= 0);
+      var LEDE = WHOLE || (OWNS === '' && true);
       var KEEP = LEDE ? 'h2, p.lede' : 'h2';
-      var DROP_ALWAYS = '.eyebrow' + (LEDE ? '' : ', p.lede');
+      var DROP_ALWAYS = '.eyebrow, docs-api-table:not([data-key])' + (LEDE ? '' : ', p.lede');
       var API = '[data-key]';
       var host = document.querySelector("ds-docs-components-tree");
       var start = Date.now();

@@ -15,16 +15,16 @@
   <script>
     (function () {
       var OWNS = "";
-      var INDEX = 1;
+      var INDEX = 2;
       var KEY = "date-picker";
       var TABLE = false;
       var HEAD = null;
       var BLOCK = "date range";
       var REACT = "DatePicker";
       var WHOLE = OWNS === null;
-      var LEDE = WHOLE || (OWNS === '' && INDEX <= 0);
+      var LEDE = WHOLE || (OWNS === '' && false);
       var KEEP = LEDE ? 'h2, p.lede' : 'h2';
-      var DROP_ALWAYS = '.eyebrow' + (LEDE ? '' : ', p.lede');
+      var DROP_ALWAYS = '.eyebrow, docs-api-table:not([data-key])' + (LEDE ? '' : ', p.lede');
       var API = '[data-key]';
       var host = document.querySelector("ds-docs-components-date-picker");
       var start = Date.now();

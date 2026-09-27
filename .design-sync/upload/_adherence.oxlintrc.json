@@ -220,8 +220,8 @@
         "message": "<BarChart> doesn't accept that prop. Declared props: data, max, frame, tooltipLingerMs, caption, summary, dataTable, partOfWhole, showPercent, loading, emptyText, error, errorText, valueFormat, pinOnClick, interactive, onRowClicked, dimOthers, highlighted, staggerMs, tooltip, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='BottomSheet'] > JSXAttribute > JSXIdentifier[name!=/^(?:open|title|onClosed|snapPoints|onOpenChange|actions|children|key|ref|className|style)$/]",
-        "message": "<BottomSheet> doesn't accept that prop. Declared props: open, title, onClosed, snapPoints, onOpenChange, actions, children."
+        "selector": "JSXOpeningElement[name.name='BottomSheet'] > JSXAttribute > JSXIdentifier[name!=/^(?:open|title|onClosed|snapPoints|staticPreview|onOpenChange|actions|children|key|ref|className|style)$/]",
+        "message": "<BottomSheet> doesn't accept that prop. Declared props: open, title, onClosed, snapPoints, staticPreview, onOpenChange, actions, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='Breadcrumbs'] > JSXAttribute > JSXIdentifier[name!=/^(?:items|separator|clickable|maxItems|onNavigate|children|key|ref|className|style)$/]",
@@ -256,8 +256,8 @@
         "message": "<Checkbox> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, touched, hidden, checked, indeterminate, disabled, name, inputId, size, required, label, ariaLabel, onCheckedChange, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='ColorPicker'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|touched|hidden|value|presets|panelClass|disabled|ariaLabel|success|onValueChange|children|key|ref|className|style)$/]",
-        "message": "<ColorPicker> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, touched, hidden, value, presets, panelClass, disabled, ariaLabel, success, onValueChange, children."
+        "selector": "JSXOpeningElement[name.name='ColorPicker'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|touched|hidden|value|presets|panelClass|disabled|ariaLabel|success|staticPreview|onValueChange|children|key|ref|className|style)$/]",
+        "message": "<ColorPicker> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, touched, hidden, value, presets, panelClass, disabled, ariaLabel, success, staticPreview, onValueChange, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='ColumnChart'] > JSXAttribute > JSXIdentifier[name!=/^(?:data|stack|thresholds|showValues|tickCount|frame|tooltipLingerMs|caption|summary|dataTable|partOfWhole|loading|emptyText|error|errorText|valueFormat|interactive|onPointClicked|pinOnClick|dimOthers|staggerMs|tooltip|tooltipAnchor|children|key|ref|className|style)$/]",
@@ -268,8 +268,8 @@
         "message": "<Container> doesn't accept that prop. Declared props: size, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='DatePicker'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|touched|hidden|mode|size|fullWidth|value|placeholder|label|required|optional|panelClass|disabled|success|ariaLabel|minYear|maxYear|minDate|maxDate|disabledDate|presets|locale|dateFormat|firstDayOfWeek|defaultDate|allowInput|onValueChange|children|key|ref|className|style)$/]",
-        "message": "<DatePicker> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, touched, hidden, mode, size, fullWidth, value, placeholder, label, required, optional, panelClass, disabled, success, ariaLabel, minYear, maxYear, minDate, maxDate, disabledDate, presets, locale, dateFormat, firstDayOfWeek, defaultDate, allowInput, onValueChange, children."
+        "selector": "JSXOpeningElement[name.name='DatePicker'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|touched|hidden|mode|size|fullWidth|value|placeholder|label|required|optional|panelClass|disabled|success|ariaLabel|minYear|maxYear|minDate|maxDate|disabledDate|presets|locale|dateFormat|firstDayOfWeek|defaultDate|allowInput|staticPreview|onValueChange|children|key|ref|className|style)$/]",
+        "message": "<DatePicker> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, touched, hidden, mode, size, fullWidth, value, placeholder, label, required, optional, panelClass, disabled, success, ariaLabel, minYear, maxYear, minDate, maxDate, disabledDate, presets, locale, dateFormat, firstDayOfWeek, defaultDate, allowInput, staticPreview, onValueChange, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='DescriptionItem'] > JSXAttribute > JSXIdentifier[name!=/^(?:term|copyValue|children|key|ref|className|style)$/]",
@@ -284,8 +284,8 @@
         "message": "<Divider> doesn't accept that prop. Declared props: variant, spacing, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='Drawer'] > JSXAttribute > JSXIdentifier[name!=/^(?:open|size|placement|title|onClosed|onOpenChange|drawerBody|drawerFooter|children|key|ref|className|style)$/]",
-        "message": "<Drawer> doesn't accept that prop. Declared props: open, size, placement, title, onClosed, onOpenChange, drawerBody, drawerFooter, children."
+        "selector": "JSXOpeningElement[name.name='Drawer'] > JSXAttribute > JSXIdentifier[name!=/^(?:open|size|placement|title|onClosed|staticPreview|onOpenChange|drawerBody|drawerFooter|children|key|ref|className|style)$/]",
+        "message": "<Drawer> doesn't accept that prop. Declared props: open, size, placement, title, onClosed, staticPreview, onOpenChange, drawerBody, drawerFooter, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='Dropzone'] > JSXAttribute > JSXIdentifier[name!=/^(?:accept|multiple|files|disabled|onFilesAdded|onFileRemoved|onFilesChange|hint|children|key|ref|className|style)$/]",
@@ -496,8 +496,8 @@
         "message": "<Tag> doesn't accept that prop. Declared props: variant, closable, interactive, selected, closeLabel, onClosed, onToggled, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='Textarea'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|touched|hidden|value|size|label|placeholder|disabled|readOnly|readonlyBinding|success|required|optional|rows|name|autosize|minRows|maxRows|resize|ariaLabel|maxLength|maxLengthMode|minLength|pattern|onValueChange|children|key|ref|className|style)$/]",
-        "message": "<Textarea> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, touched, hidden, value, size, label, placeholder, disabled, readOnly, readonlyBinding, success, required, optional, rows, name, autosize, minRows, maxRows, resize, ariaLabel, maxLength, maxLengthMode, minLength, pattern, onValueChange, children."
+        "selector": "JSXOpeningElement[name.name='Textarea'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|touched|hidden|value|size|label|placeholder|disabled|readOnly|readonlyBinding|success|required|optional|rows|name|autosize|minRows|maxRows|resize|ariaLabel|maxLength|maxLengthMode|countTrimmed|minLength|pattern|onValueChange|children|key|ref|className|style)$/]",
+        "message": "<Textarea> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, touched, hidden, value, size, label, placeholder, disabled, readOnly, readonlyBinding, success, required, optional, rows, name, autosize, minRows, maxRows, resize, ariaLabel, maxLength, maxLengthMode, countTrimmed, minLength, pattern, onValueChange, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='TimeColumns'] > JSXAttribute > JSXIdentifier[name!=/^(?:value|format|minuteStep|minTime|maxTime|disabledTime|onTimeChange|onPartPicked|children|key|ref|className|style)$/]",
@@ -512,8 +512,8 @@
         "message": "<TimelineItem> doesn't accept that prop. Declared props: heading, time, icon, tone, children."
       },
       {
-        "selector": "JSXOpeningElement[name.name='TimePicker'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|touched|hidden|value|mode|minuteStep|minTime|maxTime|disabledTime|size|fullWidth|label|required|optional|panelClass|disabled|success|placeholder|clearable|ariaLabel|format|onValueChange|children|key|ref|className|style)$/]",
-        "message": "<TimePicker> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, touched, hidden, value, mode, minuteStep, minTime, maxTime, disabledTime, size, fullWidth, label, required, optional, panelClass, disabled, success, placeholder, clearable, ariaLabel, format, onValueChange, children."
+        "selector": "JSXOpeningElement[name.name='TimePicker'] > JSXAttribute > JSXIdentifier[name!=/^(?:hint|error|warning|reserveMessage|messageIcon|errors|invalid|touched|hidden|value|mode|minuteStep|minTime|maxTime|disabledTime|size|fullWidth|label|required|optional|panelClass|disabled|success|placeholder|clearable|ariaLabel|format|staticPreview|onValueChange|children|key|ref|className|style)$/]",
+        "message": "<TimePicker> doesn't accept that prop. Declared props: hint, error, warning, reserveMessage, messageIcon, errors, invalid, touched, hidden, value, mode, minuteStep, minTime, maxTime, disabledTime, size, fullWidth, label, required, optional, panelClass, disabled, success, placeholder, clearable, ariaLabel, format, staticPreview, onValueChange, children."
       },
       {
         "selector": "JSXOpeningElement[name.name='Toast'] > JSXAttribute > JSXIdentifier[name!=/^(?:variant|title|body|dismissible|icon|action|onClosed|actions|children|key|ref|className|style)$/]",
@@ -1381,6 +1381,7 @@
       "--error",
       "--error-border",
       "--error-h",
+      "--error-highlight",
       "--error-hover",
       "--error-l",
       "--error-muted",
@@ -2039,6 +2040,7 @@
       "--error-subtitle": "color",
       "--error-muted": "color",
       "--error-muted-strong": "color",
+      "--error-highlight": "color",
       "--error-border": "color",
       "--error-text": "color",
       "--success-pressed": "color",

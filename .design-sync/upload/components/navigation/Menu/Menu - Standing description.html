@@ -1,4 +1,4 @@
-<!-- @dsCard group="navigation" viewport="1200x519" name="Menu - standing description" subtitle="description puts a second line under the label for a limitation the action carries." --><!doctype html>
+<!-- @dsCard group="navigation" viewport="1200x629" name="Menu - standing description" subtitle="description puts a second line under the label for a limitation the action carries." --><!doctype html>
 <html data-theme="light"><head><meta charset="utf-8">
   <title>Menu</title>
   <link rel="stylesheet" href="../../../styles.css">
@@ -17,14 +17,14 @@
       var OWNS = "";
       var INDEX = 1;
       var KEY = "menu";
-      var TABLE = false;
+      var TABLE = true;
       var HEAD = null;
       var BLOCK = "standing description";
       var REACT = "Menu";
       var WHOLE = OWNS === null;
-      var LEDE = WHOLE || (OWNS === '' && INDEX <= 0);
+      var LEDE = WHOLE || (OWNS === '' && true);
       var KEEP = LEDE ? 'h2, p.lede' : 'h2';
-      var DROP_ALWAYS = '.eyebrow' + (LEDE ? '' : ', p.lede');
+      var DROP_ALWAYS = '.eyebrow, docs-api-table:not([data-key])' + (LEDE ? '' : ', p.lede');
       var API = '[data-key]';
       var host = document.querySelector("ds-docs-components-menu");
       var start = Date.now();

@@ -1,5 +1,0 @@
-# Table - what a screen reader is told
-
-Sorting and paging are read off the header and the pager by everyone else; the table now says them out loud too. One role="status" region carries "Sorted by Owner, ascending" and "Showing 1–25 of 240", with loading taking precedence while it lasts — announcing a new sort order over rows that are still being replaced describes a state the reader cannot inspect. Both strings are inputs (sortAnnouncement, rangeAnnouncement) taking the facts and returning the sentence, so translation and word order stay yours; return an empty string to stay silent. The first render is silent regardless — aria-live="polite" announces changes, not initial content. A paged table left with no rows says so: it announces the text of its empty state, the words shown in the table, and calls rangeAnnouncement with (0, 0, 0) only when that state has no text, which reads "Showing 0 of 0" by default. A server-paged table whose total is above 0 but whose page came back empty stays silent.
-
-Full API: `Table.d.ts`. How to use the component anywhere: `Table.prompt.md`.

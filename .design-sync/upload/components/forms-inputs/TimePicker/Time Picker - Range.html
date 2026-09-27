@@ -15,16 +15,16 @@
   <script>
     (function () {
       var OWNS = "";
-      var INDEX = 5;
+      var INDEX = 6;
       var KEY = "time-picker";
       var TABLE = false;
       var HEAD = null;
       var BLOCK = "range";
       var REACT = "TimePicker";
       var WHOLE = OWNS === null;
-      var LEDE = WHOLE || (OWNS === '' && INDEX <= 0);
+      var LEDE = WHOLE || (OWNS === '' && false);
       var KEEP = LEDE ? 'h2, p.lede' : 'h2';
-      var DROP_ALWAYS = '.eyebrow' + (LEDE ? '' : ', p.lede');
+      var DROP_ALWAYS = '.eyebrow, docs-api-table:not([data-key])' + (LEDE ? '' : ', p.lede');
       var API = '[data-key]';
       var host = document.querySelector("ds-docs-components-time-picker");
       var start = Date.now();
