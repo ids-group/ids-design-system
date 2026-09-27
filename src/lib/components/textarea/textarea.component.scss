@@ -195,7 +195,7 @@
 
     mark {
       color: transparent;
-      background-color: var(--error-muted-strong);
+      background-color: var(--error-highlight);
       border-radius: var(--ds-radius-inner);
 
       @media (forced-colors: active) {

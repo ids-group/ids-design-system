@@ -41,6 +41,14 @@
   character typed after those spaces brings them into the count. The native `maxlength` of
   `maxLengthMode="hard"` still counts every character. Off by default.
 
+### Changed
+
+- **The over-limit characters of a soft-limit `ds-textarea` are highlighted in a stronger red**,
+  from a new semantic role, `--error-highlight`: `--red-300` in light and `hsl(0deg 38% 40%)` in
+  dark (was `--error-muted-strong`). The text keeps its colour, at 7.5:1 over the highlight in
+  light and 6:1 in dark with the default text colour. Set `--error-highlight` to retune the
+  highlight; `--error-muted-strong` no longer reaches it.
+
 ### Fixed
 
 - **A clipped label shows its tooltip wherever its control shows hover.** In `ds-select`,

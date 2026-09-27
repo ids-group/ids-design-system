@@ -149,6 +149,11 @@ export const SEMANTIC_ERROR: readonly ColourRow[] = [
     "notes": "Error muted-strong tint — subtle error fills/backgrounds."
   },
   {
+    "name": "--error-highlight",
+    "value": "var(--red-300)",
+    "notes": "Fill behind a range of text marked as in error, with body text over it: the over-limit characters of a soft-limit textarea."
+  },
+  {
     "name": "--error-border",
     "value": "var(--red-200)",
     "notes": "Border on subtle danger surfaces."
