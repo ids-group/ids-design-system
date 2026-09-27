@@ -1,171 +1,76 @@
 # Written by snapshot-cards.mjs — the cards it left live. Do not edit; see live-chapters.txt.
 components/actions/SplitButton/Split Button - Outline variant.html
 components/actions/SplitButton/Split Button - Primary variant.html
-components/actions/SplitButton/Split Button - Without menu items.html
-components/data-display/Stat/Stat - A formatted number, through Angular's own pipe.html
-components/data-display/Stat/Stat - A value that is a phrase.html
 components/data-display/Stat/Stat - A value that is not a number.html
 components/data-display/Stat/Stat - Sizes.html
 components/data-display/Stat/Stat - Stat tiles.html
-components/data-display/Table/Table - A cell that IS a link.html
-components/data-display/Table/Table - Bordered.html
-components/data-display/Table/Table - CSV export.html
-components/data-display/Table/Table - Clickable rows - drawer detail.html
-components/data-display/Table/Table - Column filters.html
-components/data-display/Table/Table - Column picker - reorder.html
 components/data-display/Table/Table - Default.html
 components/data-display/Table/Table - Dense - zebra.html
 components/data-display/Table/Table - Empty states.html
 components/data-display/Table/Table - Expandable rows.html
-components/data-display/Table/Table - Header sort states.html
-components/data-display/Table/Table - Inline editing.html
-components/data-display/Table/Table - Lazy loading.html
-components/data-display/Table/Table - Loading - let the table choose.html
 components/data-display/Table/Table - Loading - overlay.html
-components/data-display/Table/Table - Loading - skeleton with pagination.html
 components/data-display/Table/Table - Loading - skeleton.html
-components/data-display/Table/Table - One row at a time.html
 components/data-display/Table/Table - Pagination - sticky column.html
-components/data-display/Table/Table - Persisted layout & export.html
-components/data-display/Table/Table - Resizable columns.html
 components/data-display/Table/Table - Row actions - kebab menu.html
-components/data-display/Table/Table - Row identity for data with no key.html
-components/data-display/Table/Table - Row interaction states.html
 components/data-display/Table/Table - Row selection - bulk-action bar.html
-components/data-display/Table/Table - Server sort - a host that answers with its own.html
-components/data-display/Table/Table - Sizing a column to its content.html
 components/data-display/Table/Table - Sortable columns.html
-components/data-display/Table/Table - Sticky header.html
-components/data-display/Table/Table - Sticky horizontal scrollbar.html
-components/data-display/Table/Table - Templates a wrapper hands over.html
-components/data-display/Table/Table - The cell that names what the row opens.html
-components/data-display/Table/Table - The same thing two-way.html
 components/data-display/Table/Table - Toolbar slot - the export button anywhere.html
-components/data-display/Table/Table - Truncation - full-text popover.html
-components/data-display/Table/Table - Virtual scroll.html
-components/data-display/Table/Table - What the pager shows.html
 components/data-display/Tree/Tree - Interactive tree.html
 components/data-display/Tree/Tree - Single node states.html
 components/feedback-status/Bar/Bar - In a table cell.html
 components/feedback-status/LoadingOverlay/Loading Overlay - Interactive demo.html
-components/feedback-status/LoadingOverlay/Loading Overlay - The scrim stops the keyboard too.html
-components/feedback-status/Toast/Toast - Live demo.html
-components/feedback-status/Toast/Toast - Promise toast.html
-components/feedback-status/Toast/Toast - Screen readers, and what the service owns.html
 components/feedback-status/Toast/Toast - States showcase (static specimens).html
-components/feedback-status/Toast/Toast - With action.html
-components/feedback-status/ToastRegion/Toast Region - maxVisible queue.html
-components/forms-inputs/Autocomplete/Autocomplete - A search placeholder of its own.html
-components/forms-inputs/Autocomplete/Autocomplete - Capping the chips.html
-components/forms-inputs/Autocomplete/Autocomplete - Create new.html
-components/forms-inputs/Autocomplete/Autocomplete - Icons in the options.html
+components/feedback-status/ToastRegion/Toast Region - Toast stack.html
 components/forms-inputs/Autocomplete/Autocomplete - Multi.html
-components/forms-inputs/Autocomplete/Autocomplete - Object values keep their selection.html
-components/forms-inputs/Autocomplete/Autocomplete - Option groups.html
 components/forms-inputs/Autocomplete/Autocomplete - Single.html
-components/forms-inputs/Autocomplete/Autocomplete - Validation states.html
-components/forms-inputs/Autocomplete/Autocomplete - Width.html
-components/forms-inputs/ColorPicker/Color Picker - Custom presets.html
 components/forms-inputs/ColorPicker/Color Picker - Default presets.html
-components/forms-inputs/ColorPicker/Color Picker - Helper & error text.html
-components/forms-inputs/DatePicker/Date Picker - Calendar-only.html
-components/forms-inputs/DatePicker/Date Picker - Custom format.html
-components/forms-inputs/DatePicker/Date Picker - Date of birth.html
+components/forms-inputs/ColorPicker/Color Picker - Open picker.html
 components/forms-inputs/DatePicker/Date Picker - Date range.html
-components/forms-inputs/DatePicker/Date Picker - Disabled-date predicate.html
-components/forms-inputs/DatePicker/Date Picker - Label - hint - required.html
-components/forms-inputs/DatePicker/Date Picker - Localization.html
-components/forms-inputs/DatePicker/Date Picker - Masked manual entry.html
-components/forms-inputs/DatePicker/Date Picker - Min & max date bounds.html
-components/forms-inputs/DatePicker/Date Picker - Presets.html
+components/forms-inputs/DatePicker/Date Picker - Open calendar.html
 components/forms-inputs/DatePicker/Date Picker - Single date.html
-components/forms-inputs/DatePicker/Date Picker - Validation states.html
 components/forms-inputs/FieldGroup/Field Group - Every supported control.html
-components/forms-inputs/FieldGroup/Field Group - Saying what is wrong.html
 components/forms-inputs/FieldGroup/Field Group - Sizes, error and full width.html
 components/forms-inputs/FieldGroup/Field Group - Trailing action, and a unit after the value.html
 components/forms-inputs/MultiSelect/Multi Select - Basic usage.html
 components/forms-inputs/MultiSelect/Multi Select - Compact trigger.html
 components/forms-inputs/MultiSelect/Multi Select - Custom option and chip content.html
-components/forms-inputs/MultiSelect/Multi Select - Group headings, and why an option is off.html
-components/forms-inputs/MultiSelect/Multi Select - Helper & error text.html
-components/forms-inputs/MultiSelect/Multi Select - Hiding the filter row.html
-components/forms-inputs/MultiSelect/Multi Select - Icons in the options.html
 components/forms-inputs/MultiSelect/Multi Select - Labels in the trigger.html
-components/forms-inputs/MultiSelect/Multi Select - Option groups.html
 components/forms-inputs/MultiSelect/Multi Select - Overflow collapse.html
-components/forms-inputs/MultiSelect/Multi Select - Panel header and footer.html
-components/forms-inputs/MultiSelect/Multi Select - Read-only, clearable.html
-components/forms-inputs/MultiSelect/Multi Select - Server-side search.html
-components/forms-inputs/MultiSelect/Multi Select - Width.html
-components/forms-inputs/Select/Select - A panel footer, and a reason an option is off.html
-components/forms-inputs/Select/Select - Clearable.html
-components/forms-inputs/Select/Select - Clearing from outside.html
 components/forms-inputs/Select/Select - Custom dropdown - ds-select.html
-components/forms-inputs/Select/Select - Helper & error text.html
-components/forms-inputs/Select/Select - Long labels.html
-components/forms-inputs/Select/Select - Long option list.html
 components/forms-inputs/Select/Select - Per-option icons.html
 components/forms-inputs/Select/Select - Sizes.html
 components/forms-inputs/Select/Select - States showcase.html
-components/forms-inputs/Select/Select - Type-ahead, and the cursor staying in view.html
-components/forms-inputs/TimePicker/Time Picker - 12-hour (AM PM).html
-components/forms-inputs/TimePicker/Time Picker - Clearable - sizes.html
-components/forms-inputs/TimePicker/Time Picker - Min - max - disabled slots.html
-components/forms-inputs/TimePicker/Time Picker - Minute step.html
+components/forms-inputs/TimePicker/Time Picker - Open wheels.html
 components/forms-inputs/TimePicker/Time Picker - Range.html
 components/forms-inputs/TimePicker/Time Picker - Single.html
-components/forms-inputs/TimePicker/Time Picker - Validation - reactive forms.html
 components/navigation/AppLayout/App Layout - Content-span topbar.html
 components/navigation/AppLayout/App Layout - Full-span topbar.html
 components/navigation/Menu/Menu - Standing description.html
 components/navigation/Menu/Menu - Submenus.html
-components/navigation/Menu/Menu - Trigger-opened (overlay).html
 components/navigation/MenuDivider/Menu Divider - Dividers.html
 components/navigation/MenuItem/Menu Item.html
 components/navigation/Pagination/Pagination - Default.html
 components/navigation/Pagination/Pagination - Layout and size.html
 components/navigation/Pagination/Pagination - Ranges.html
 components/navigation/Pagination/Pagination - States showcase.html
-components/navigation/Pagination/Pagination - With page-size select.html
-components/navigation/Sidenav/Sidenav - A group that is also a page.html
 components/navigation/Sidenav/Sidenav - Collapsed.html
 components/navigation/Sidenav/Sidenav - Custom brand logo.html
 components/navigation/Sidenav/Sidenav - Default.html
-components/navigation/Sidenav/Sidenav - Letter-mark & accent wordmark.html
 components/navigation/SidenavFooter/Sidenav Footer - The rail footer on its own.html
 components/navigation/SidenavGroup/Sidenav Group - Expandable groups.html
 components/navigation/SidenavItem/Sidenav Item - Item states showcase.html
-components/overlays/BottomSheet/Bottom Sheet - Live demo.html
-components/overlays/BottomSheet/Bottom Sheet - Snap points.html
-components/overlays/BottomSheet/Bottom Sheet - The home indicator needs one line from YOUR.html
-components/overlays/Drawer/Drawer - Live demo.html
-components/overlays/Drawer/Drawer - Placements.html
-components/overlays/Drawer/Drawer - Sizes.html
-components/overlays/Modal/Modal - Persistent.html
+components/overlays/BottomSheet/Bottom Sheet - Open sheet.html
+components/overlays/Drawer/Drawer - Open drawer.html
 components/overlays/Modal/Modal - Sizes.html
-components/overlays/ModalCard/Modal Card - Actions that outgrow the card.html
 components/overlays/ModalCard/Modal Card - Eyebrow - context above the title.html
 components/overlays/ModalCard/Modal Card - Status.html
 components/overlays/ModalCard/Modal Card - Title badge - subtitle.html
 components/overlays/ModalCard/Modal Card - Variants.html
 components/overlays/ModalCard/Modal Card - With form.html
-components/overlays/ModalCard/Modal Card - Without dividers.html
-components/overlays/ModalConfirm/Modal Confirm - Confirmation.html
-components/overlays/Popover/Popover - Alignment.html
-components/overlays/Popover/Popover - Arrow.html
-components/overlays/Popover/Popover - Live demo.html
-components/overlays/Popover/Popover - Placement.html
+components/overlays/ModalConfirm/Modal Confirm - Confirmation dialog.html
 components/overlays/Popover/Popover - Static specimen.html
 components/page-structure/FilterBar/Filter Bar - Sizing the +N trigger.html
-guides/foundations/Colour/Colour - Secondary in use.html
-guides/foundations/Motion/Motion - Entrance presets - customizing a surface.html
-guides/foundations/Scrollbar/Scrollbar - Live demo.html
-guides/foundations/Scrollbar/Scrollbar - Specification.html
-guides/foundations/Scrollbar/Scrollbar - Tokens.html
-guides/foundations/Theming & dark mode/Theming & dark mode - Locale and wording.html
 guides/patterns/Filter bar/Filter bar - Inline row.html
 guides/patterns/Filter bar/Filter bar - Stacked variant.html
 guides/patterns/Filter bar/Filter bar - Wired to a table.html
 guides/patterns/Form layout/Form layout - Multi-column form.html
-guides/practice/Signal Forms/Signal Forms - The whole recipe.html

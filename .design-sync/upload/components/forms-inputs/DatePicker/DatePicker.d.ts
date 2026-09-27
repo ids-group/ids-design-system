@@ -70,6 +70,7 @@ export interface DatePickerProps {
   defaultDate?: Date | null;
   /** Allow masked manual typing. When false the field is read-only and a date can only be picked from the calendar. */
   allowInput?: boolean;
+  staticPreview?: boolean;
   /** Element content. */
   children?: React.ReactNode;
   className?: string;

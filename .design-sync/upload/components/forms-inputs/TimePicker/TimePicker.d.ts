@@ -60,6 +60,7 @@ export interface TimePickerProps {
   ariaLabel?: string | null;
   /** Override the DS-config format for this instance. */
   format?: ('24h' | '12h') | null;
+  staticPreview?: boolean;
   /** Element content. */
   children?: React.ReactNode;
   className?: string;

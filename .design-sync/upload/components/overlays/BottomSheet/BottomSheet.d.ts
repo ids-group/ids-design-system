@@ -14,6 +14,7 @@ export interface BottomSheetProps {
   onClosed?: (value: void) => void;
   /** Snap-point heights as fractions of viewport height (0–1), ascending. e.g. [0.4, 0.9]. When provided the sheet opens at the first snap point; dragging snaps to the nearest point; dragging below the lowest closes. When empty (default) the original single-height behavior is preserved. */
   snapPoints?: readonly number[];
+  staticPreview?: boolean;
   /** Content for the `[actions]` slot. */
   actions?: React.ReactNode;
   /** Element content. */

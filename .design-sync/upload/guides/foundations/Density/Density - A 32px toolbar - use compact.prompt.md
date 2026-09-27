@@ -1,7 +1,0 @@
-# Density - a 32px toolbar — use compact, not a per-control pin
-
-density="compact" levels a toolbar at 32px, and it is the supported way to get one. Measured on a nine-control row at default size: search, input, select, autocomplete, date picker, time picker, multi-select, number stepper and button are all 40px out of the box and all 32px under compact. So a screen whose controls should be 32px sets density once on its container, rather than pinning --ds-search-height and its siblings per component — which is what the height contract exists to remove.
-
-The known limit is at the bottom of the scale. Controls that grow with their content — multi-select and autocomplete, which hold chips — set a min-height rather than a height, so once the tier floor drops below what the text needs they stop following it. Under ultra-compact they measure 33px and 29px where the rest reach 24px, because a density tier scales hit targets and padding but not the type scale — the line box stays 19.6px at a 14px font. Compact is unaffected in practice (33px against 32px). If you need a genuinely 24px row, shrink the type for that container as well.
-
-Padding follows the tier only at the bottom. compact and comfy resize controls and leave padding alone; ultra-compact also compresses field padding, table cells and --ds-surface-padding — the inner padding ds-card and ds-stat share — from 24px to 16px. For a surface padding between the two rungs, set that one token at :root; it is the lever both components default to.

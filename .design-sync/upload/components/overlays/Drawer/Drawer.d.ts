@@ -16,6 +16,7 @@ export interface DrawerProps {
   title?: string;
   /** Fires once the close (slide-out) animation finishes. */
   onClosed?: (value: void) => void;
+  staticPreview?: boolean;
   /** Content for the `[drawer-body]` slot. */
   drawerBody?: React.ReactNode;
   /** Content for the `[drawer-footer]` slot. */

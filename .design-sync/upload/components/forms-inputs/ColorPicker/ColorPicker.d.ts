@@ -36,6 +36,7 @@ export interface ColorPickerProps {
   ariaLabel?: string | null;
   /** Confirmation text, shown when there is no error or warning — and it paints the field's success border. A string like `warning`: the text IS the state. */
   success?: string;
+  staticPreview?: boolean;
   /** Element content. */
   children?: React.ReactNode;
   className?: string;
