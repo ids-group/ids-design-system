@@ -32,6 +32,14 @@
   `isClipped`, `onKeydown` and `textElement`. Build after upgrading; rename or mark `override` every member the compiler reports
   colliding. Subclassing a DS component is unsupported.
 
+- **The `scrollable` arrows of `ds-tabs` take the active tab colour on hover, over a lighter
+  surface.** A hovered arrow colours its chevron as the selected tab's label (`--accent` by
+  default, `--secondary-strong` under `secondary`, the pill label colour in `pills`) over a
+  `--surface-secondary` fill, where it was `--text-primary` over `--surface-muted`. Two new hooks set
+  them: `--ds-tabs-scroll-arrow-icon-color-hover` and `--ds-tabs-scroll-arrow-bg-color-hover`. The
+  arrow no longer reads `--ds-tab-label-color-hover`, so an override of it meant for the arrows
+  moves to `--ds-tabs-scroll-arrow-icon-color-hover`.
+
 ### Fixed
 
 - **A clipped label shows its tooltip wherever its control shows hover.** In `ds-select`,

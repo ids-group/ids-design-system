@@ -33,6 +33,7 @@
   --_tab-badge-label-color: var(--ds-tab-badge-label-color, var(--text-secondary));
   --_tab-close-icon-color: var(--ds-tab-close-icon-color, var(--text-tertiary));
   --_tab-close-bg-color-hover: var(--ds-tab-close-bg-color-hover, var(--surface-secondary));
+  --_tabs-scroll-arrow-bg-color-hover: var(--ds-tabs-scroll-arrow-bg-color-hover, var(--surface-secondary));
 
   display: block;
 }
@@ -54,6 +55,7 @@
 .scroll-arrow {
   --_scroll-arrow-padding-bottom: calc(var(--_tab-padding-bottom) + var(--_tab-indicator-width) - var(--border-width-default));
   --_scroll-arrow-surface-shift: calc(var(--_scroll-arrow-padding-bottom) - var(--_tab-padding-top));
+  --_tabs-scroll-arrow-icon-color-hover: var(--ds-tabs-scroll-arrow-icon-color-hover, var(--_tab-label-color-active));
 
   position: relative;
   isolation: isolate;
@@ -82,10 +84,10 @@
   }
 
   &:hover {
-    color: var(--_tab-label-color-hover);
+    color: var(--_tabs-scroll-arrow-icon-color-hover);
 
     &::before {
-      background-color: var(--surface-muted);
+      background-color: var(--_tabs-scroll-arrow-bg-color-hover);
     }
   }
 
@@ -101,6 +103,8 @@
 }
 
 :host(.scrolling-host:has(> .pills)) .scroll-arrow {
+  --_tabs-scroll-arrow-icon-color-hover: var(--ds-tabs-scroll-arrow-icon-color-hover, var(--_tab-pill-label-color-active));
+
   padding: 0;
   border-bottom: 0;
 
@@ -218,7 +222,7 @@
   /* Secondary variant — opt-in secondary-toned active indicator + label.
      `secondary` lands on the <ds-tabs> host, not the inner .tabs div, so match
      the host (@at-root escapes the .tabs nesting). */
-  @at-root :host(.secondary) .tab.active {
+  @at-root :host(.secondary) {
     --_tab-label-color-active: var(--ds-tab-label-color-active, var(--secondary-strong));
     --_tab-indicator-color: var(--ds-tab-indicator-color, var(--secondary));
   }
