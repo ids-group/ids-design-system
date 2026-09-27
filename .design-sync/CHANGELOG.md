@@ -17,6 +17,8 @@ holds an entry; what the release bot commits afterwards needs none.
 
 ## Unreleased
 
+## 0.14.3 — 2026-09-27
+
 ### Cards
 
 - **A block reaches Claude Design only when ds-docs marks it `data-claude-design`.** Nothing is

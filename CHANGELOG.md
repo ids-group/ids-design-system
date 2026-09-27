@@ -1,5 +1,7 @@
 ## Unreleased
 
+## 0.14.3 — 2026-09-27
+
 ### Breaking
 
 - **Subclassing one of these breaks on a name collision.** `DrawerComponent`,
