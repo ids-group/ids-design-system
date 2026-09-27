@@ -11,7 +11,7 @@
     </code> directive.
   </span>
 
-  <h3
+  <h3 data-claude-design
     class="block-title t-h4"
     data-for="tooltip-panel">
     States showcase (static specimens)
@@ -176,10 +176,13 @@
   <p class="block-desc t-s">
     A clipped host that cannot take focus itself, like a label inside a button
     or a cell of a clickable row, opens when keyboard focus lands on the nearest
-    focusable ancestor, and closes on its blur, a click or any key. A click
-    alone opens nothing, and neither does an ancestor focusable only through
-    a negative tabindex, like the page's main region. Of several clipped
-    values in one control only the first opens.
+    focusable ancestor, and closes on its blur, a click or any key. That
+    ancestor has to be a control: a native one, or an element with a widget
+    role such as button, link, tab, option, row or combobox. A container that
+    takes focus, like a tab panel or a scroll region, opens nothing, and
+    neither does an ancestor focusable only through a negative tabindex. A
+    click alone opens nothing either. Of several clipped values in one control
+    only the first opens.
   </p>
 
   <div class="demo">
@@ -213,5 +216,18 @@
         Template: renewal_notice_commercial_v3_final_approved
       </span>
     </div>
+  </div>
+
+  <div class="demo">
+    <ds-tabs>
+      <ds-tab label="Terminal">
+        <span
+          class="clip-line t-s"
+          dsTooltip
+          dsTooltipWhenClipped>
+          Rotterdam, Maasvlakte II deep-sea terminal
+        </span>
+      </ds-tab>
+    </ds-tabs>
   </div>
 </docs-section>

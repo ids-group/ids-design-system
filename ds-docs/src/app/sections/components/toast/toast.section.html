@@ -12,7 +12,7 @@
     system event severity.
   </span>
 
-  <h3 class="block-title t-h4">
+  <h3 data-claude-design class="block-title t-h4">
     States showcase (static specimens)
   </h3>
 
@@ -181,6 +181,21 @@
     that on its own, because overlays live in the browser's top layer where
     z-index does not apply.
   </p>
+
+  <h3 data-claude-design
+    class="block-title t-h4"
+    data-for="toast-region">
+    Toast stack
+  </h3>
+
+  <p class="block-desc t-s">
+    A region holding four toasts at <code>maxVisible: 3</code>: newest on top,
+    and a <code>+1</code> strip for the one still queued.
+  </p>
+
+  <div class="states">
+    <ds-toast-region [maxVisible]="3" />
+  </div>
 
   <h3
     class="block-title t-h4"

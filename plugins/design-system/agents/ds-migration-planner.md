@@ -202,7 +202,8 @@ Return ONLY a fenced ```json block:
 "supersedes": ["<version>#<id>"] } ],
 "deleteList": [ { "id", "surface", "find": [], "why", "replaceWith" } ],
 "informational": [ "<one-line summary of each Added/Fixed group>" |
-                    { "text": "...", "verify": "<one concrete eyeball check>" } ]
+                    { "text": "...", "verify": "<one concrete eyeball check>" } ],
+"feedback": []
 }
 
 `map` is present ONLY on `value-remap` items; `new` may be null (removals / behavior). `surface` is
@@ -216,6 +217,13 @@ no `supersededBy` — the link never points forward. `informational` is consumed
 the final report (no other subagent reads it), and `deleteList` drives its own pass. When a shipped
 manifest is passed in, forward each `informational` entry verbatim, object shape included — never
 flatten it back to its `text` alone. A shipped bare string stays a bare string: a `verify` it lacks
-is not an enrichment (the same rule as `pitfall` and `appliesWhen`) - report it with the
-locator-dead set as manifest feedback, so the DS repo adds the check to its own file. No preamble,
-no prose outside the JSON block.
+is not an enrichment (the same rule as `pitfall` and `appliesWhen`) - report it in `feedback`, so
+the DS repo adds the check to its own file. No preamble, no prose outside the JSON block.
+
+`feedback` carries what the manifest or changelog got wrong: an item you repaired or enriched, a
+documented change the manifest missed, a bare informational string that names a layout mechanism,
+a manifest claim the two tag trees contradict, or instructions here that contradicted each other or
+missed a case you met. Each entry is `{ target, kind, severity, summary, evidence, proposal }` as
+defined in the DS repo's `feedback/README.md`; `target` is `manifest:<V>#<itemId>`,
+`changelog:<V>` or `agent:ds-migration-planner`. `evidence` is mandatory: the manifest field, the
+changelog line, or file:line at a tag. The `proposal` is the field value the manifest should carry.

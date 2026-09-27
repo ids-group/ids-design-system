@@ -10,7 +10,7 @@
     the backdrop so all sizes can be compared side by side.
   </span>
 
-  <h3
+  <h3 data-claude-design
     class="block-title t-h4"
     data-for="modal-card">
     Eyebrow · context above the title
@@ -61,7 +61,7 @@
     </div>
   </div>
 
-  <h3
+  <h3 data-claude-design
     class="block-title t-h4"
     data-for="modal-card">
     Title badge · subtitle
@@ -121,7 +121,7 @@
     </div>
   </div>
 
-  <h3
+  <h3 data-claude-design
     class="block-title t-h4"
     data-for="modal-card">
     Status
@@ -424,7 +424,7 @@
     </div>
   </div>
 
-  <h3 class="block-title t-h4">
+  <h3 data-claude-design class="block-title t-h4">
     Sizes
   </h3>
 
@@ -672,7 +672,7 @@
     </div>
   </div>
 
-  <h3
+  <h3 data-claude-design
     class="block-title t-h4"
     data-for="modal-card">
     Variants
@@ -792,7 +792,7 @@
     </div>
   </div>
 
-  <h3
+  <h3 data-claude-design
     class="block-title t-h4"
     data-for="modal-card">
     With form
@@ -843,6 +843,86 @@
 
       <div class="state-cell-label">
         Form modal · md
+      </div>
+    </div>
+  </div>
+
+  <h3 data-claude-design
+    class="block-title t-h4"
+    data-for="modal-confirm">
+    Confirmation dialog
+  </h3>
+
+  <p class="block-desc t-s">
+    What <code>modal.confirm()</code> opens, in its default and
+    <code>
+      tone: 'error'
+    </code> forms.
+  </p>
+
+  <div class="modal-grid is-2">
+    <div class="state-cell">
+      <div class="state-cell-stage">
+        <ds-modal-card
+          dialogRole="alertdialog"
+          title="Publish the September rota?"
+          [showClose]="false">
+          <p
+            class="t-s confirm-message"
+            body>
+            Every assigned member of staff is notified of their shifts.
+          </p>
+
+          <ng-container actions>
+            <ds-button
+              color="neutral"
+              variant="outline">
+              Cancel
+            </ds-button>
+
+            <ds-button>
+              Publish
+            </ds-button>
+          </ng-container>
+        </ds-modal-card>
+      </div>
+
+      <div class="state-cell-label">
+        default
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="state-cell-stage">
+        <ds-modal-card
+          dialogRole="alertdialog"
+          status="error"
+          icon="trash"
+          title="Delete &quot;Q3 Roadmap&quot;?"
+          [showClose]="false">
+          <p
+            class="t-s confirm-message"
+            body>
+            This project and its 14 tasks will be permanently removed. This
+            can't be undone.
+          </p>
+
+          <ng-container actions>
+            <ds-button
+              color="neutral"
+              variant="outline">
+              Cancel
+            </ds-button>
+
+            <ds-button color="error">
+              Delete project
+            </ds-button>
+          </ng-container>
+        </ds-modal-card>
+      </div>
+
+      <div class="state-cell-label">
+        tone: 'error'
       </div>
     </div>
   </div>

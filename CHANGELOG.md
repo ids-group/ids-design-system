@@ -1,5 +1,96 @@
 ## Unreleased
 
+### Breaking
+
+- **Subclassing one of these breaks on a name collision.** `DrawerComponent`,
+  `BottomSheetComponent`, `ColorPickerComponent` and `TimePickerComponent` gained `preview`,
+  `DatePickerComponent` gained `preview` and `selectedAnchorDate`, `TextareaComponent` gained
+  `countTrimmed` and `countedRange`, and `TooltipDirective` gained `dsTooltipTextSelector`,
+  `hostElement`, `isClipped`, `onKeydown` and `textElement`. Build after upgrading; rename or mark
+  `override` every member the compiler reports colliding. Subclassing a DS component is unsupported.
+
+- **The `scrollable` arrows of `ds-tabs` take the active tab colour on hover, over a lighter
+  surface.** A hovered arrow colours its chevron as the selected tab's label (`--accent` by
+  default, `--secondary-strong` under `secondary`, the pill label colour in `pills`) over a
+  `--surface-secondary` fill, where it was `--text-primary` over `--surface-muted`. Two new hooks set
+  them: `--ds-tabs-scroll-arrow-icon-color-hover` and `--ds-tabs-scroll-arrow-bg-color-hover`. The
+  arrow no longer reads `--ds-tab-label-color-hover`, so an override of it meant for the arrows
+  moves to `--ds-tabs-scroll-arrow-icon-color-hover`.
+
+### Added
+
+- **`ds-drawer`, `ds-bottom-sheet`, `ds-date-picker`, `ds-time-picker` and `ds-color-picker` take a
+  showcase-only `staticPreview` input.** Set, the component renders its panel open in the page
+  flow: the drawer and sheet with no scrim, fixed positioning, enter animation, scroll lock or focus
+  trap, the three pickers under their trigger instead of in an overlay, showing the bound `value`,
+  with no focus trap and no close on Escape or an outside click. Closing does nothing and the
+  trigger does not toggle. It is for static documentation specimens, like the same input on
+  `ds-modal`, `ds-popover` and `ds-select`, and is not part of the production contract. Off by
+  default; nothing changes for a component that does not set it.
+
+- **`[dsTooltip]` takes a `dsTooltipTextSelector` input.** Given a selector, `dsTooltipWhenClipped`
+  tests the matching element inside the host for clipping and discloses its text, while the host
+  stays the area that opens the tip on hover. Put the directive on a whole row, point it at the
+  label inside, and the tip opens wherever the row shows its hover state. Off by default: without
+  it the host is both.
+
+- **`ds-textarea` takes a `countTrimmed` input.** Set, the character counter, the soft-limit state
+  and the highlight of the excess leave whitespace at either end of the text out, so a value the
+  server stores trimmed counts as the server counts it: 3990 characters followed by 20 spaces read
+  `3990/4000` and are within a limit of 4000. Whitespace between words still counts, so a
+  character typed after those spaces brings them into the count. The native `maxlength` of
+  `maxLengthMode="hard"` still counts every character. Off by default.
+
+### Changed
+
+- **The over-limit characters of a soft-limit `ds-textarea` are highlighted in a stronger red**,
+  from a new semantic role, `--error-highlight`: `--red-300` in light and `hsl(0deg 38% 40%)` in
+  dark (was `--error-muted-strong`). The text keeps its colour, at 7.5:1 over the highlight in
+  light and 6:1 in dark with the default text colour. Set `--error-highlight` to retune the
+  highlight; `--error-muted-strong` no longer reaches it.
+
+### Fixed
+
+- **A clipped label shows its tooltip wherever its control shows hover.** In `ds-select`,
+  `ds-multi-select` and `ds-autocomplete` the tip of an option opened only over the label text,
+  while the row highlighted across its padding, icon, checkbox and check mark; it now opens from
+  the whole row, the create row of `ds-autocomplete` included. The `ds-select` trigger's tip opens
+  from the whole field, not only its text, and a `truncate` cell of `ds-table` opens from the whole
+  cell, padding included.
+
+- **A clipped `dsTooltipWhenClipped` tooltip opens on keyboard focus, and only from a control.** A
+  host that takes focus itself opens its tip when Tab lands on it, not on a mouse click, and closes
+  on any key; before, it opened on any focus, a mouse click included, and stayed open while keys were
+  pressed. A host that cannot take focus opens when Tab lands on its nearest focusable ancestor, and
+  that ancestor now has to be a control: a native `a[href]`, `button`, `input`, `select`, `textarea`
+  or `summary`, a plain table row, or an element with the role `button`, `link`, `tab`, `option`,
+  `menuitem`, `menuitemcheckbox`, `menuitemradio`, `row`, `gridcell`, `combobox`, `checkbox`,
+  `radio`, `switch` or `treeitem`. A focusable container around it, such as a `ds-tabs` panel, a
+  scroll region or a `div` with `tabindex="0"`, opened the tip of the first clipped value inside it
+  and opens nothing now; the search stops at that first focusable ancestor rather than reaching a
+  control further out. A role-less element with a `tabindex` that acts as a control, like a clickable
+  card, discloses again once it carries its role. Hover is unchanged.
+
+- **A `ds-table` wider than its container no longer widens the page.** The hidden header label of
+  a column that sets `screenReaderLabel` and no `label` was left out of the table's horizontal
+  clip, so with that column past the container's edge the page gained a horizontal scroll as wide
+  as the table. The table's scroll box is now `position: relative`: every visually hidden label in
+  the table is clipped with the rows and scrolls with them. An element positioned absolutely inside
+  a cell template with no positioned ancestor of its own now resolves against that scroll box.
+
+- **A filterable picker announces its result count.** `ds-autocomplete` and a `ds-multi-select`
+  with its search field shown removed their live region from the page the first time they opened,
+  so no count ever reached a screen reader. They now announce the count on opening and each time
+  typing changes the list ("4 results", "No results"). A `ds-select`, and a `ds-multi-select` whose
+  search field is not shown, announce no count: nothing is filtered there, and the listbox already
+  conveys its size.
+
+- **The `scrollable` arrows of `ds-tabs` sit on the tab label line.** Where a strip's tabs pad the
+  bottom more than the top, as `--ds-tab-padding-top` and `--ds-tab-padding-bottom` allow, each
+  chevron sat below the labels and its hover surface ran to the divider; the chevron now shares the
+  label's centre line and the hover surface is centred on it, inside the strip. With the default
+  padding the arrows look as before. In the `pills` variant the hover surface matches a pill's
+  height and radius instead of filling the strip.
 ## 0.14.2 — 2026-09-25
 
 ### Breaking

@@ -1,11 +1,6 @@
 #!/usr/bin/env node
-// Fails if a ds-docs chapter is compiled into the bundle and shown on no card.
-//
-// Twenty-seven were: every Foundations page, every Pattern, every Practice page and Link. They cost
-// their bytes in the bundle and were reachable from nothing — so the colour ramps, the spacing
-// scale and the do/don't, which is most of what an agent needs before it places a component, were
-// published and invisible. Nothing reported it, because each half was internally consistent: the
-// manifest listed every card, and every card rendered a section.
+// Fails if a ds-docs chapter opts a block into Claude Design (`data-claude-design`) and still backs no card.
+// A chapter that opts nothing in is unpublished on purpose; see .design-sync/CARDS.md.
 //
 //   node .design-sync/tools/check-section-coverage.mjs      # after build-cards.mjs
 import { readFileSync } from 'node:fs';
@@ -17,7 +12,8 @@ const read = (...path) =>
   JSON.parse(readFileSync(join(syncDir, ...path), 'utf8'));
 
 const { sections } = read('elements', 'gen', 'sections.json');
-const { cards } = read('elements', 'gen', 'cards.json');
+const { cards, opted } = read('elements', 'gen', 'cards.json');
+const optedIn = new Set(opted);
 
 const shown = new Set();
 for (const path of cards) {
@@ -29,15 +25,17 @@ for (const path of cards) {
   if (tag) shown.add(tag[1]);
 }
 
-const orphans = sections.filter((section) => !shown.has(section.tag));
+const orphans = sections.filter(
+  (section) => optedIn.has(section.tag) && !shown.has(section.tag),
+);
 if (orphans.length) {
   console.error(
-    `✗ ${orphans.length} ds-docs section(s) ship in the bundle and back no card:`,
+    `✗ ${orphans.length} ds-docs section(s) opt into Claude Design and back no card:`,
   );
   for (const section of orphans) console.error(`    ${section.slug}`);
   process.exit(1);
 }
 
 console.log(
-  `✓ every one of ${sections.length} ds-docs section(s) backs a card`,
+  `✓ every one of ${optedIn.size} opted-in ds-docs section(s) backs a card; ${sections.length - optedIn.size} unpublished`,
 );

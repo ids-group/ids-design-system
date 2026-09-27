@@ -18,7 +18,7 @@
 
   <docs-nonmodal-note />
 
-  <h3 class="block-title t-h4">
+  <h3 data-claude-design class="block-title t-h4">
     Single
   </h3>
 
@@ -41,6 +41,23 @@
     <span class="value-tag t-mono-inline">
       {{ single() ?? '—' }}
     </span>
+  </div>
+
+  <h3 data-claude-design class="block-title t-h4">
+    Open wheels
+  </h3>
+
+  <p class="block-desc t-s">
+    The hour, minute and AM/PM wheels as they look open, holding 2:30 PM.
+  </p>
+
+  <div class="row">
+    <ds-time-picker
+      staticPreview
+      label="Start time"
+      value="14:30"
+      format="12h"
+      minuteStep="15" />
   </div>
 
   <h3 class="block-title t-h4">
@@ -141,7 +158,7 @@
       [(value)]="single" />
   </div>
 
-  <h3 class="block-title t-h4">
+  <h3 data-claude-design class="block-title t-h4">
     Range
   </h3>
 

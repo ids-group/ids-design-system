@@ -4,6 +4,51 @@ Versioning: **patch** = instruction/prompt fixes; **minor** = new capability (pi
 source, agent); **major** = a change to the workflow's behavior contract. Bump `plugin.json` +
 `marketplace.json` together on every published change.
 
+## 1.10.1 - 2026-09-27
+
+### Fixed
+
+- **The push guard reads only the Bash command.** The `auto-update-package` and `triage-feedback`
+  hooks test `tool_input.command` for `git ... push` within one shell segment; the command's
+  description and every other field are ignored. Unparseable hook input passes.
+
+## 1.10.0 - 2026-09-25
+
+### Added
+
+- **Every run leaves feedback.** Each agent returns `feedback: []` and the orchestrator adds its
+  own entries; the locator-dead set, surface-under-declared hits, misfiled informational entries
+  and manifest-truth findings are entries too. One entry shape, defined in the DS repo's
+  `feedback/README.md`; `evidence` is mandatory. Entries live in the run ledger.
+- **Phase D - Feedback.** After the report the orchestrator dedupes the entries, re-verifies each
+  one's evidence, writes `ds-feedback-<consumer>-<date>.md` and `.json` to the OS temp dir, and asks
+  once where they go: a `feedback/auto-update-*` branch in a local DS clone it finds itself (a new
+  worktree from `dev`, committed, never pushed), the file path with a paste-ready note, or nowhere.
+  A dry-run offers the last two.
+- **`ds-delete-judge` (sonnet).** Runs the deleteList pass, one agent per group of rows whose hit
+  files are disjoint: re-greps the `find` shapes, judges each hit against the `v<V>` tree, applies
+  the dead deletions, keeps what it is unsure of with the reason. Never commits.
+- **`ds-visual-check` (sonnet).** Drives a consumer screen to the state a rendering change affects
+  and measures the element against its container with `getBoundingClientRect` and computed styles.
+  Dispatched per screen when the session has browser tools, skipped with a report line when it has
+  none. Covers `not-applicable` and informational rendering changes too.
+- **`scripts/drift-scan.mjs`.** Lists the `--ds-*` tokens and CSS classes present at the previous
+  tag and absent at `v<V>`, and every consumer line that still names one. Step 5 runs it for
+  customization drift. `scripts/drift-scan-selftest.mjs` checks it.
+- **`triage-feedback` skill.** For the DS maintainer: re-verifies every inbox entry against `dev`,
+  fixes each target in its own branch and worktree, removes the triaged inbox files. Never pushes
+  or merges.
+
+### Changed
+
+- **Phase A is one parallel wave.** The clone and tree extraction, the manifest-truth check, the
+  peers fetch, a baseline build of every target on the installed version, and the planners for
+  every chain version run together. The supersedes skip set is computed once from all plans.
+- **A failure the baseline already had is pre-existing,** never an issue of the version being
+  migrated, and is reported once.
+- **Finders and re-checks go out in batches of 3-4 related items,** one verdict per item; a redo
+  of one item goes out alone.
+
 ## 1.9.0 - 2026-09-24
 
 ### Added

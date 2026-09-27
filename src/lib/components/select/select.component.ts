@@ -70,7 +70,6 @@ import {
   nextEnabledIndex,
 } from '@ids-group-ltd/ids-design-system/core';
 import { scrollActiveOptionIntoView } from '@ids-group-ltd/ids-design-system/components';
-import { announceOptionCount } from '@ids-group-ltd/ids-design-system/components';
 import { createTypeAhead } from '@ids-group-ltd/ids-design-system/components';
 
 @Component({
@@ -337,10 +336,6 @@ export class SelectComponent
       this.activeDescendant,
       this.scrollActiveIntoView,
       this.cursorFromKeyboard,
-    );
-    announceOptionCount(
-      computed(() => this.flatOptions().length),
-      this.open,
     );
 
     effect(() => {

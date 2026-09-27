@@ -8,5 +8,5 @@ Output: `(closed): void` — fires on backdrop click, close button, or `open` be
 Content slots: `[body]`, `[impact]` (highlighted strip under the body for destructive consequences), `[actions]` (footer button row). Backdrop click + close button close the dialog.
 
 <!-- inputs:ds-modal -->
-All inputs: `open: boolean = false`, `size: 'sm' | 'md' | 'lg' | 'xl' | 'fullscreen' = 'md'`, `status: 'info' | 'success' | 'warning' | 'error' = null`, `title: required string`, `subtitle: string | null = null`, `dividers: boolean | null = null`, `closeOnBackdrop: boolean = true`, `persistent: boolean = false`
+All inputs: `open: boolean = false`, `size: 'sm' | 'md' | 'lg' | 'xl' | 'fullscreen' = 'md'`, `status: 'info' | 'success' | 'warning' | 'error' = null`, `title: required string`, `subtitle: string | null = null`, `dividers: boolean | null = null`, `closeOnBackdrop: boolean = true`, `persistent: boolean = false`, `staticPreview: boolean = false`
 <!-- /inputs -->

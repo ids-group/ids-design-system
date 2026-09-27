@@ -9,7 +9,7 @@
 
   <docs-nonmodal-note />
 
-  <h3 class="block-title t-h4">
+  <h3 data-claude-design class="block-title t-h4">
     Single date
   </h3>
 
@@ -29,7 +29,22 @@
       placeholder="Pick a date" />
   </div>
 
-  <h3 class="block-title t-h4">
+  <h3 data-claude-design class="block-title t-h4">
+    Open calendar
+  </h3>
+
+  <p class="block-desc t-s">
+    The range calendar as it looks open, with a five-day span selected.
+  </p>
+
+  <div class="row">
+    <ds-date-picker
+      staticPreview
+      mode="range"
+      [value]="specimenRange" />
+  </div>
+
+  <h3 data-claude-design class="block-title t-h4">
     Date range
   </h3>
 

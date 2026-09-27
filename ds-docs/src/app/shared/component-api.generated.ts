@@ -1362,6 +1362,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "[]",
         "required": false,
         "description": "Snap-point heights as fractions of viewport height (0–1), ascending. e.g. [0.4, 0.9]. When provided the sheet opens at the first snap point; dragging snaps to the nearest point; dragging below the lowest closes. When empty (default) the original single-height behavior is preserved."
+      },
+      {
+        "name": "staticPreview",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": ""
       }
     ],
     "outputs": [
@@ -2982,6 +2991,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Confirmation text, shown when there is no error or warning — and it paints the field's success border. A string like `warning`: the text IS the state."
+      },
+      {
+        "name": "staticPreview",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": ""
       }
     ],
     "outputs": []
@@ -3541,6 +3559,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "true",
         "required": false,
         "description": "Allow masked manual typing. When false the field is read-only and a date can only be picked from the calendar."
+      },
+      {
+        "name": "staticPreview",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": ""
       }
     ],
     "outputs": []
@@ -3696,6 +3723,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": null,
         "required": true,
         "description": "Drawer title, shown in the header and used for `aria-labelledby`."
+      },
+      {
+        "name": "staticPreview",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": ""
       }
     ],
     "outputs": [
@@ -5935,6 +5971,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "When true, neither backdrop click nor Escape closes the modal — only programmatic or explicit close button."
+      },
+      {
+        "name": "staticPreview",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": ""
       }
     ],
     "outputs": [
@@ -7163,6 +7208,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Accessible name for the panel; pair with `panelRole`."
+      },
+      {
+        "name": "staticPreview",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": ""
       }
     ],
     "outputs": []
@@ -8220,6 +8274,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Shows an inline clear (×) button when a value is selected."
+      },
+      {
+        "name": "staticPreview",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": ""
       }
     ],
     "outputs": [
@@ -10614,7 +10677,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Character limit - shows a live \"{current}/{max}\" counter below the field. `maxLengthMode` decides what happens at the limit. Counts `value.length`, the UTF-16 units the native `maxlength` counts, whitespace included."
+        "description": "Character limit - shows a live \"{current}/{max}\" counter below the field. `maxLengthMode` decides what happens at the limit. Counts `value.length`, the UTF-16 units the native `maxlength` counts, whitespace included, unless `countTrimmed` is set."
       },
       {
         "name": "maxLengthMode",
@@ -10627,6 +10690,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "'hard'",
         "required": false,
         "description": "`'hard'` applies the native maxlength attribute, so typing and paste stop at `maxLength`. `'soft'` lets the text run past it: the counter turns red, the characters past the limit are highlighted, and the field reports invalid (`aria-invalid`, with the counter as its description). Blocking a save on it is the form's job."
+      },
+      {
+        "name": "countTrimmed",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Leaves whitespace at either end of the text out of the counter, the soft-limit state and the highlight, for a value the server stores trimmed. Whitespace between words still counts. The native `maxlength` of `maxLengthMode=\"hard\"` counts every character regardless."
       },
       {
         "name": "minLength",
@@ -10911,6 +10983,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Override the DS-config format for this instance."
+      },
+      {
+        "name": "staticPreview",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": ""
       }
     ],
     "outputs": []
@@ -11187,6 +11268,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Show the tip only while the host is actually showing less text than it holds. For a label that already reads in full, a tip repeating it is noise. Re-tested on every open, so a tip appears and stops appearing as the column, panel or window is resized, with no observer to run. With this on, `dsTooltip` may be left empty and the host's own text is disclosed. That is what makes it usable on projected content, where the component holding the tip cannot know what it was handed. A tip whose text the host already contains sets no `aria-describedby`; one given a `dsTooltip` that says more than the host does describes it as usual."
+      },
+      {
+        "name": "dsTooltipTextSelector",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "A selector for the element inside the host whose clipping `dsTooltipWhenClipped` tests and whose text it discloses. It lets the pointer area be a whole row while the text is one part of it. Resolved on every open, so the element may come and go with the host's content; while nothing matches, no clipped tip opens."
       }
     ],
     "outputs": []

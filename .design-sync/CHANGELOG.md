@@ -17,6 +17,25 @@ holds an entry; what the release bot commits afterwards needs none.
 
 ## Unreleased
 
+### Cards
+
+- **A block reaches Claude Design only when ds-docs marks it `data-claude-design`.** Nothing is
+  published by default; `CARDS.md` says what to mark, what not to, and how many. A chapter whose
+  blocks a card cannot address publishes as one whole-chapter card only when its `<docs-section>`
+  carries the attribute. The API table and the lede go on a component's first published card, and
+  `check-section-coverage.mjs` fails only for a chapter that opts a block in and backs no card.
+- **The paths the new cut stops producing are listed in `obsolete.txt`** for the project owner to
+  clear, 412 of them.
+- **The overlay chapters and the three pickers publish open static specimens**, so their card shows
+  the panel rather than a closed trigger.
+- **A chapter's service tables stay off its last card.** A service is Angular-only and has no place
+  on the React canvas.
+
+### Upload
+
+- **`design-system.md` ships to the project**, at the root and beside each card of the Rules
+  chapter, and `conventions.md` sends the agent to it before `_ds_bundle.css`.
+
 ## 0.14.2 — 2026-09-25
 
 ### Build

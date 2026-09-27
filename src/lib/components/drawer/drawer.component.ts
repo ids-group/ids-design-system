@@ -14,6 +14,7 @@ import { A11yModule } from '@angular/cdk/a11y';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { BodyScrollLockService } from '@ids-group-ltd/ids-design-system/overlay';
 import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
+import { DsStaticPreview } from '@ids-group-ltd/ids-design-system/components';
 import type { DrawerPlacement } from './drawer.types';
 import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
 
@@ -32,10 +33,12 @@ let nextId = 0;
     '[attr.title]': 'null',
     '(document:keydown.escape)': 'onEscape()',
   },
+  hostDirectives: [{ directive: DsStaticPreview, inputs: ['staticPreview'] }],
 })
 export class DrawerComponent implements OnDestroy {
   private readonly scrollLock = inject(BodyScrollLockService);
   protected readonly intl = inject(DS_INTL);
+  protected readonly preview = inject(DsStaticPreview);
 
   /** Open state, two-way bound. */
   readonly open = model<boolean>(false);
@@ -66,6 +69,9 @@ export class DrawerComponent implements OnDestroy {
     // open → DOM lifecycle: opening renders now; closing keeps the panel mounted
     // and flips `closing` so the slide-out can play (teardown in onLeaveEnd).
     effect(() => {
+      if (this.preview.staticPreview()) {
+        return;
+      }
       const isOpen = this.open();
       if (isOpen) {
         this.closing.set(false);
@@ -87,7 +93,7 @@ export class DrawerComponent implements OnDestroy {
     // overlays don't unlock each other. The effect's cleanup fires on the
     // rendered→false transition and on destroy, keeping lock/unlock paired.
     effect((onCleanup) => {
-      if (!this.rendered()) {
+      if (this.preview.staticPreview() || !this.rendered()) {
         return;
       }
       this.scrollLock.lock();
@@ -101,6 +107,9 @@ export class DrawerComponent implements OnDestroy {
   }
 
   protected onClose(): void {
+    if (this.preview.staticPreview()) {
+      return;
+    }
     this.open.set(false);
   }
 

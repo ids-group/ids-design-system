@@ -10,7 +10,7 @@
 
   <docs-nonmodal-note />
 
-  <h3 class="block-title t-h4">
+  <h3 data-claude-design class="block-title t-h4">
     Default presets
   </h3>
 
@@ -43,6 +43,22 @@
       </span>
       {{ brand() }}
     </p>
+  </div>
+
+  <h3 data-claude-design class="block-title t-h4">
+    Open picker
+  </h3>
+
+  <p class="block-desc t-s">
+    The picker as it looks open: colour plane, hue slider, hex field and
+    presets, holding a preset colour.
+  </p>
+
+  <div class="demo-panel">
+    <ds-color-picker
+      staticPreview
+      ariaLabel="Accent colour"
+      value="#0EA5E9" />
   </div>
 
   <h3 class="block-title t-h4">

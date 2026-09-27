@@ -163,8 +163,8 @@ for decl in $(find .design-sync/upload/components -name '*.d.ts'); do
   fi
 done
 [ "$cardless" = "0" ] || { echo "$cardless component(s) would ship with no card at all"; exit 1; }
-# A chapter compiled into the bundle and shown on no card costs its bytes and is reachable
-# from nothing.
+# A chapter that opts a block into Claude Design and backs no card lost the mark somewhere;
+# see .design-sync/CARDS.md.
 node .design-sync/tools/check-section-coverage.mjs
 sections=$(grep -ho 'ds-docs-[a-z0-9-]*' .design-sync/upload/components/*/*/*.html .design-sync/upload/guides/*/*/*.html | sort -u | wc -l)
 echo "Upload artefacts: $cards card(s) for $declarations component(s) over $sections ds-docs section(s)"

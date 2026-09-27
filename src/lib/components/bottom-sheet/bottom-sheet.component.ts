@@ -16,6 +16,7 @@ import {
 import { A11yModule } from '@angular/cdk/a11y';
 import { BodyScrollLockService } from '@ids-group-ltd/ids-design-system/overlay';
 import { backdropDismiss } from '@ids-group-ltd/ids-design-system/core';
+import { DsStaticPreview } from '@ids-group-ltd/ids-design-system/components';
 
 let nextId = 0;
 
@@ -35,6 +36,7 @@ let nextId = 0;
   // which makes the host a native browser tooltip over everything inside it.
   host: { '[attr.title]': 'null' },
   encapsulation: ViewEncapsulation.Emulated,
+  hostDirectives: [{ directive: DsStaticPreview, inputs: ['staticPreview'] }],
 })
 export class BottomSheetComponent implements OnDestroy {
   /** Open state, two-way bound. */
@@ -55,6 +57,7 @@ export class BottomSheetComponent implements OnDestroy {
 
   private readonly doc = inject(DOCUMENT);
   private readonly scrollLock = inject(BodyScrollLockService);
+  protected readonly preview = inject(DsStaticPreview);
   private readonly sheetRef = viewChild<ElementRef<HTMLElement>>('sheet');
 
   protected readonly dragOffset = signal<number | null>(null);
@@ -88,6 +91,9 @@ export class BottomSheetComponent implements OnDestroy {
     // sheet mounted and flips `closing` so the leave animation can play
     // (teardown in onLeaveEnd, or the timer below).
     effect(() => {
+      if (this.preview.staticPreview()) {
+        return;
+      }
       const isOpen = this.open();
       if (isOpen) {
         this.closing.set(false);
@@ -112,7 +118,7 @@ export class BottomSheetComponent implements OnDestroy {
     // overlays don't unlock each other. The cleanup fires on the rendered→false
     // transition and on destroy, keeping lock/unlock paired.
     effect((onCleanup) => {
-      if (!this.rendered()) {
+      if (this.preview.staticPreview() || !this.rendered()) {
         return;
       }
       this.scrollLock.lock();
@@ -126,6 +132,9 @@ export class BottomSheetComponent implements OnDestroy {
   }
 
   protected close(): void {
+    if (this.preview.staticPreview()) {
+      return;
+    }
     this.dragOffset.set(null);
     this.open.set(false);
   }
@@ -166,6 +175,9 @@ export class BottomSheetComponent implements OnDestroy {
   }
 
   protected onGrabStart(event: PointerEvent): void {
+    if (this.preview.staticPreview()) {
+      return;
+    }
     (event.target as HTMLElement).setPointerCapture(event.pointerId);
     this.dragStartY = event.clientY;
     this.lastMoveY = event.clientY;

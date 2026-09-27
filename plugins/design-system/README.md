@@ -72,6 +72,24 @@ documented mechanism for marketplace fetches — do not rely on it.
   disjoint batch) per agent — a file is never shared between concurrent agents.
 - `agents/ds-recheck.md` (sonnet) — independently re-verify every migration item (grep for
   mechanical, semantic for behavioral); always runs as a second pass.
+- `agents/ds-delete-judge.md` (sonnet) - the deleteList pass: judge each hit dead or kept against
+  the release's tree and delete the dead ones; one per group of rows with disjoint files.
+- `agents/ds-visual-check.md` (sonnet) - measure a rendering change on a consumer screen in a real
+  browser; dispatched only when the session has browser tools.
+- `scripts/drift-scan.mjs` - the `--ds-*` tokens and CSS classes a release dropped, and every
+  consumer line still naming one (plain `node`, no dependencies; `drift-scan-selftest.mjs` beside it).
+- `skills/triage-feedback/SKILL.md` - for the DS maintainer: triage `feedback/inbox/` into one fix
+  branch per target.
+
+## Feedback
+
+Every run ends by writing what it learned about the plugin, the manifests, the changelog and the
+DS tools: evidence-backed entries, each re-verified before it ships, as
+`ds-feedback-<consumer>-<date>.md` and `.json` in the OS temp dir (never in your repo). It then
+asks once: commit them to a `feedback/auto-update-*` branch of your local DS clone (found via
+`IDS_DS_REPO`, a sibling folder, or a repo whose `origin` is `itband/ids-design-system`), just
+print the file path, or skip. Nothing is pushed or posted anywhere; the entry format is in the DS
+repo's `feedback/README.md`.
 
 ## Versioning
 

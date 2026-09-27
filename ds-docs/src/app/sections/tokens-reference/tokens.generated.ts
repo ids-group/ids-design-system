@@ -149,6 +149,11 @@ export const SEMANTIC_ERROR: readonly ColourRow[] = [
     "notes": "Error muted-strong tint — subtle error fills/backgrounds."
   },
   {
+    "name": "--error-highlight",
+    "value": "var(--red-300)",
+    "notes": "Fill behind a range of text marked as in error, with body text over it: the over-limit characters of a soft-limit textarea."
+  },
+  {
     "name": "--error-border",
     "value": "var(--red-200)",
     "notes": "Border on subtle danger surfaces."
@@ -3888,8 +3893,8 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-description-list-value-min-width",
-        "value": "14rem",
-        "notes": "Narrowest value beside the label before every item of the list stacks (14rem)."
+        "value": "var(--dl-spec-value-min-w)",
+        "notes": "Narrowest value beside the label before every item of the list stacks (defaults to --dl-spec-value-min-w)."
       },
       {
         "name": "--ds-description-list-label-width",
@@ -7645,6 +7650,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-tab-close-bg-color-hover",
         "value": "var(--surface-secondary)",
         "notes": "Tab close button hover fill (defaults to --surface-secondary)."
+      },
+      {
+        "name": "--ds-tabs-scroll-arrow-bg-color-hover",
+        "value": "var(--surface-secondary)",
+        "notes": "Hover fill behind a `scrollable` strip's prev/next arrow (defaults to --surface-secondary)."
+      },
+      {
+        "name": "--ds-tabs-scroll-arrow-icon-color-hover",
+        "value": "var(--_tab-label-color-active)",
+        "notes": "Hover colour of a `scrollable` strip's prev/next chevron (defaults to the active tab label colour: --ds-tab-label-color-active, or --ds-tab-pill-label-color-active in pills)."
       }
     ]
   },
@@ -8543,6 +8558,11 @@ export const NEW_TOKENS: readonly NewToken[] = [
   {
     "name": "--dl-spec-label-w",
     "value": "120px",
+    "kind": "length"
+  },
+  {
+    "name": "--dl-spec-value-min-w",
+    "value": "14rem",
     "kind": "length"
   },
   {

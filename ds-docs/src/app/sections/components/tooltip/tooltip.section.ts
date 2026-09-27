@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { ButtonComponent } from 'ds/button';
+import { TabComponent, TabsComponent } from 'ds/tabs';
 import { TooltipDirective, TooltipPanelComponent } from 'ds/tooltip';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
 
@@ -9,6 +10,8 @@ import { DocsSectionComponent } from '../../../shared/docs-section.component';
   imports: [
     ButtonComponent,
     DocsSectionComponent,
+    TabComponent,
+    TabsComponent,
     TooltipDirective,
     TooltipPanelComponent,
   ],

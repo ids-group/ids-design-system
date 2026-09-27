@@ -54,6 +54,39 @@
     </ds-bottom-sheet>
   </div>
 
+  <h3 data-claude-design class="block-title t-h4">
+    Open sheet
+  </h3>
+
+  <p class="block-desc t-s">
+    The sheet as it looks open: grab strip, title, body and stacked
+    full-width actions.
+  </p>
+
+  <div class="demo static-demo">
+    <ds-bottom-sheet
+      staticPreview
+      title="Edit registration">
+      <p class="t-s sheet-body">
+        Update the vehicle registration. Changes apply to the current event
+        only.
+      </p>
+
+      <ng-container actions>
+        <ds-button class="full-width">
+          Save
+        </ds-button>
+
+        <ds-button
+          class="full-width"
+          color="neutral"
+          variant="outline">
+          Cancel
+        </ds-button>
+      </ng-container>
+    </ds-bottom-sheet>
+  </div>
+
   <h3 class="block-title t-h4">
     Snap points
   </h3>

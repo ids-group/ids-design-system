@@ -25,27 +25,31 @@ the one people look at every day. The flag is load-bearing: a section renders DS
 components as ANGULAR components, and registering those same tags as custom
 elements upgrades every host a second time.
 
-**One card per BLOCK**, not per component. A block is one demo with its own
-`<h3 class="block-title">` and description, and the card keeps exactly that block
-plus the chapter's heading, tag chip and lede. 85 components, 409 cards.
+**One card per PUBLISHED BLOCK**, not per component. A block is one demo with its
+own `<h3 class="block-title">` and description, and the card keeps exactly that
+block plus the chapter's heading, tag chip and lede. **Nothing is published by
+default**: a block reaches Claude Design only when ds-docs marks it
+`data-claude-design`. What to mark, what not to, and how many:
+[`CARDS.md`](CARDS.md). 91 components, 259 cards.
 
 That granularity is forced by how the pane renders: it fits a card's declared
 `viewport` into a fixed tile, so **the declared height IS the zoom level**.
 Table's chapter measures 18919px and rendered as an illegible smudge; its 35
 blocks are a few hundred pixels each and legible at the same scale as everything
-else. Nothing is cut from ds-docs — every title, description and demo survives,
-distributed across cards — and because the pane labels a card by its FILENAME,
+else. Because the pane labels a card by its FILENAME,
 `Table-Sortable-columns.html` puts the block's name outside the card too, which
 is the only way to get text out there at all.
 
 A chapter also documents the parts that only exist inside it — Menu covers
 MenuItem and MenuDivider. Those blocks carry `data-for="menu-item"` in the
 ds-docs template, which is how a block is attributed to a component; unmarked
-blocks belong to the chapter's own. The API table goes on a component's FIRST
-card only: on Table that is one table instead of thirty-five copies.
+blocks belong to the chapter's own. The API table and the lede go on a
+component's first PUBLISHED card only: on Table that is one table instead of a
+dozen copies.
 
-A component whose chapter marks no block for it falls back to one whole-chapter
-card — the tall shape this design exists to avoid. `check-manual-surface` reports
+A chapter whose blocks a card cannot address publishes as one whole-chapter
+card, and only when its `<docs-section>` carries `data-claude-design` — the tall
+shape this design exists to avoid. `check-manual-surface` reports
 by measured HEIGHT rather than by markup, because height is the actual risk: any
 card over 3000px is named on every run.
 

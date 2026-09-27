@@ -56,6 +56,14 @@
   }
 }
 
+.sheet-static {
+  display: contents;
+
+  .sheet {
+    animation: none;
+  }
+}
+
 .sheet {
   --_ds-enter-y: 100%;
 

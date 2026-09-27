@@ -17,6 +17,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
@@ -33,7 +34,10 @@ import {
   prepareOverlayEnter,
 } from '@ids-group-ltd/ids-design-system/components';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
-import { DsControlValueAccessor } from '@ids-group-ltd/ids-design-system/components';
+import {
+  DsControlValueAccessor,
+  DsStaticPreview,
+} from '@ids-group-ltd/ids-design-system/components';
 import { FieldMessageComponent } from '@ids-group-ltd/ids-design-system/components/field-message';
 import {
   resolveFieldMessage,
@@ -66,7 +70,12 @@ let nextId = 0;
 @Component({
   selector: 'ds-time-picker',
   standalone: true,
-  imports: [IconComponent, FieldMessageComponent, TimeColumnsComponent],
+  imports: [
+    IconComponent,
+    FieldMessageComponent,
+    TimeColumnsComponent,
+    NgTemplateOutlet,
+  ],
   templateUrl: './time-picker.component.html',
   styleUrl: './time-picker.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
@@ -81,6 +90,7 @@ let nextId = 0;
     '[attr.data-field-state]': 'controlState()',
     '[class.full-width]': 'fullWidth()',
   },
+  hostDirectives: [{ directive: DsStaticPreview, inputs: ['staticPreview'] }],
 })
 export class TimePickerComponent
   extends DsControlValueAccessor<string | TimeRangeValue | null>
@@ -92,6 +102,7 @@ export class TimePickerComponent
 
   private readonly config = inject(DS_CONFIG);
   protected readonly intl = inject(DS_INTL);
+  protected readonly preview = inject(DsStaticPreview);
   private readonly overlay = inject(Overlay);
   private readonly vcr = inject(ViewContainerRef);
   private readonly injector = inject(Injector);
@@ -346,7 +357,7 @@ export class TimePickerComponent
   }
 
   protected onTriggerClick(segment: Segment): void {
-    if (this.isDisabled()) {
+    if (this.isDisabled() || this.preview.staticPreview()) {
       return;
     }
     if (this.overlayRef) {
@@ -360,6 +371,9 @@ export class TimePickerComponent
   }
 
   protected close(cause: DsOverlayCloseCause = 'select'): void {
+    if (this.preview.staticPreview()) {
+      return;
+    }
     const segment = this.openSegment();
     const focusWasInPanel = this.overlayRef
       ? focusIsInside(this.overlayRef)

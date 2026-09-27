@@ -133,7 +133,7 @@
       [thresholds]="latencyThresholds" />
   </ds-chart>
 
-  <h3 class="block-title t-h4">
+  <h3 data-claude-design class="block-title t-h4">
     Two value axes
   </h3>
 
@@ -232,7 +232,7 @@
     is where the question is asked.
   </p>
 
-  <h3 class="block-title t-h4">
+  <h3 data-claude-design class="block-title t-h4">
     Annotations
   </h3>
 
@@ -261,7 +261,7 @@
       [annotations]="latencyNotes" />
   </ds-chart>
 
-  <h3
+  <h3 data-claude-design
     class="block-title t-h4"
     data-for="chart-data-table">
     The annex table
@@ -288,10 +288,11 @@
 
   <ds-chart-data-table
     caption="p95 response time"
+    open
     [columns]="latencyTableColumns"
     [rows]="latencyTableRows" />
 
-  <h3 class="block-title t-h4">
+  <h3 data-claude-design class="block-title t-h4">
     Naming the axes, and holding the cursor
   </h3>
 

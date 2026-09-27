@@ -20,15 +20,43 @@ const TRIGGER_GAP_PX = 8;
 const NATIVELY_FOCUSABLE = 'a[href], button, input, select, textarea, summary';
 const FOCUSABLE = `${NATIVELY_FOCUSABLE}, [tabindex]`;
 const KEYBOARD_FOCUSABLE = `${NATIVELY_FOCUSABLE}, [tabindex]:not([tabindex^="-"])`;
+const INTERACTIVE = [
+  NATIVELY_FOCUSABLE,
+  'tr:not([role])',
+  ...[
+    'button',
+    'link',
+    'tab',
+    'option',
+    'menuitem',
+    'menuitemcheckbox',
+    'menuitemradio',
+    'row',
+    'gridcell',
+    'combobox',
+    'checkbox',
+    'radio',
+    'switch',
+    'treeitem',
+  ].map((role) => `[role="${role}"]`),
+].join(', ');
 
-const clippedHostsByAncestor = new WeakMap<HTMLElement, Set<HTMLElement>>();
+const clippedHostsByAncestor = new WeakMap<
+  HTMLElement,
+  Set<TooltipDirective>
+>();
 
-function firstClippedHost(hosts: Set<HTMLElement>): HTMLElement | undefined {
-  return [...hosts]
+function firstClippedHost(
+  tooltips: Set<TooltipDirective>,
+): TooltipDirective | undefined {
+  return [...tooltips]
     .sort((a, b) =>
-      a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1,
+      a.hostElement.compareDocumentPosition(b.hostElement) &
+      Node.DOCUMENT_POSITION_FOLLOWING
+        ? -1
+        : 1,
     )
-    .find(isTextClipped);
+    .find((tooltip) => tooltip.isClipped());
 }
 
 let nextId = 0;
@@ -61,6 +89,29 @@ export class TooltipDirective implements OnDestroy {
    *  what it was handed. A tip whose text the host already contains sets no `aria-describedby`;
    *  one given a `dsTooltip` that says more than the host does describes it as usual. */
   readonly dsTooltipWhenClipped = input(false, { transform: booleanAttribute });
+  /** A selector for the element inside the host whose clipping `dsTooltipWhenClipped` tests and
+   *  whose text it discloses. It lets the pointer area be a whole row while the text is one part
+   *  of it. Resolved on every open, so the element may come and go with the host's content; while
+   *  nothing matches, no clipped tip opens. */
+  readonly dsTooltipTextSelector = input<string | null>(null);
+
+  get hostElement(): HTMLElement {
+    return this.host.nativeElement;
+  }
+
+  private textElement(): HTMLElement | null {
+    const selector = this.dsTooltipTextSelector();
+
+    return selector
+      ? this.hostElement.querySelector<HTMLElement>(selector)
+      : this.hostElement;
+  }
+
+  isClipped(): boolean {
+    const textElement = this.textElement();
+
+    return textElement !== null && isTextClipped(textElement);
+  }
 
   private tipText(): string {
     const given = this.dsTooltip();
@@ -68,7 +119,7 @@ export class TooltipDirective implements OnDestroy {
       return given;
     }
 
-    return (this.host.nativeElement.textContent ?? '').trim();
+    return (this.textElement()?.textContent ?? '').trim();
   }
 
   /** A clipped host's full text is already in the DOM, so a screen reader has it; describing
@@ -79,7 +130,7 @@ export class TooltipDirective implements OnDestroy {
     }
     const collapse = (value: string) => value.replace(/\s+/g, ' ').trim();
 
-    return collapse(this.host.nativeElement.textContent ?? '').includes(
+    return collapse(this.textElement()?.textContent ?? '').includes(
       collapse(text),
     );
   }
@@ -122,22 +173,22 @@ export class TooltipDirective implements OnDestroy {
       return;
     }
     const ancestor = host.parentElement?.closest<HTMLElement>(FOCUSABLE);
-    if (!ancestor) {
+    if (!ancestor?.matches(INTERACTIVE)) {
       return;
     }
-    let hosts = clippedHostsByAncestor.get(ancestor);
-    if (!hosts) {
-      hosts = new Set();
-      clippedHostsByAncestor.set(ancestor, hosts);
+    let tooltips = clippedHostsByAncestor.get(ancestor);
+    if (!tooltips) {
+      tooltips = new Set();
+      clippedHostsByAncestor.set(ancestor, tooltips);
     }
-    hosts.add(host);
+    tooltips.add(this);
     const open = (event: FocusEvent) => {
       if (
         event.target !== ancestor ||
         // Tested here, not when registering: a disabled trigger carries tabindex="-1" until enabled.
         !ancestor.matches(KEYBOARD_FOCUSABLE) ||
         !ancestor.matches(':focus-visible') ||
-        firstClippedHost(hosts) !== host
+        firstClippedHost(tooltips) !== this
       ) {
         return;
       }
@@ -153,7 +204,7 @@ export class TooltipDirective implements OnDestroy {
     ancestor.addEventListener('click', close);
     ancestor.addEventListener('keydown', close);
     this.detachAncestor = () => {
-      hosts.delete(host);
+      tooltips.delete(this);
       ancestor.removeEventListener('focusin', open);
       ancestor.removeEventListener('focusout', close);
       ancestor.removeEventListener('click', close);
@@ -166,8 +217,18 @@ export class TooltipDirective implements OnDestroy {
     this.scheduleShow();
   }
 
+  // A clipped host that takes focus itself follows the same rule as one reached through its
+  // focusable ancestor: keyboard focus on the host opens, a click's focus does not.
   @HostListener('focusin', ['$event'])
   protected onFocusIn(event: FocusEvent): void {
+    const host = this.hostElement;
+    if (
+      this.dsTooltipWhenClipped() &&
+      host.matches(FOCUSABLE) &&
+      (event.target !== host || !host.matches(':focus-visible'))
+    ) {
+      return;
+    }
     if (event.target instanceof HTMLElement) {
       this.focusedTarget = event.target;
     }
@@ -184,10 +245,7 @@ export class TooltipDirective implements OnDestroy {
     if (!this.tipText()) {
       return;
     }
-    if (
-      this.dsTooltipWhenClipped() &&
-      !isTextClipped(this.host.nativeElement)
-    ) {
+    if (this.dsTooltipWhenClipped() && !this.isClipped()) {
       return;
     }
     if (this.timer !== null) {
@@ -225,6 +283,13 @@ export class TooltipDirective implements OnDestroy {
       described.setAttribute('aria-describedby', remaining);
     } else {
       described.removeAttribute('aria-describedby');
+    }
+  }
+
+  @HostListener('keydown')
+  protected onKeydown(): void {
+    if (this.dsTooltipWhenClipped()) {
+      this.onClose();
     }
   }
 
