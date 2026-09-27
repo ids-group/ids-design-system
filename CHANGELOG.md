@@ -26,11 +26,12 @@
 
 ### Changed
 
-- **Subclassing one of these breaks on a name collision.** `DrawerComponent` and
-  `BottomSheetComponent` gained `preview`, `TextareaComponent` gained `countTrimmed` and
-  `countedRange`, and `TooltipDirective` gained `dsTooltipTextSelector`, `hostElement`,
-  `isClipped`, `onKeydown` and `textElement`. Build after upgrading; rename or mark `override` every member the compiler reports
-  colliding. Subclassing a DS component is unsupported.
+- **Subclassing one of these breaks on a name collision.** `DrawerComponent`,
+  `BottomSheetComponent`, `ColorPickerComponent` and `TimePickerComponent` gained `preview`,
+  `DatePickerComponent` gained `preview` and `selectedAnchorDate`, `TextareaComponent` gained
+  `countTrimmed` and `countedRange`, and `TooltipDirective` gained `dsTooltipTextSelector`,
+  `hostElement`, `isClipped`, `onKeydown` and `textElement`. Build after upgrading; rename or mark
+  `override` every member the compiler reports colliding. Subclassing a DS component is unsupported.
 
 - **The `scrollable` arrows of `ds-tabs` take the active tab colour on hover, over a lighter
   surface.** A hovered arrow colours its chevron as the selected tab's label (`--accent` by
