@@ -7,7 +7,7 @@ hooks:
     - matcher: 'Bash'
       hooks:
         - type: command
-          command: "grep -qE '\\bgit\\b[^|&;]*\\bpush\\b' && { echo 'BLOCKED by triage-feedback: pushing is forbidden - the maintainer reviews and pushes each branch.' >&2; exit 2; } || exit 0"
+          command: "node -e \"let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{let c;try{c=JSON.parse(s).tool_input.command}catch{process.exit(0)}if(typeof c==='string'&&/\\bgit\\b[^|&;\\n]*\\bpush\\b/.test(c)){console.error('BLOCKED by triage-feedback: pushing is forbidden - the maintainer reviews and pushes each branch.');process.exit(2)}})\""
 ---
 
 # Triage the feedback inbox (`/design-system:triage-feedback`)

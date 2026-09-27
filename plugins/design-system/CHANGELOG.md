@@ -4,6 +4,14 @@ Versioning: **patch** = instruction/prompt fixes; **minor** = new capability (pi
 source, agent); **major** = a change to the workflow's behavior contract. Bump `plugin.json` +
 `marketplace.json` together on every published change.
 
+## 1.10.1 - 2026-09-27
+
+### Fixed
+
+- **The push guard reads only the Bash command.** The `auto-update-package` and `triage-feedback`
+  hooks test `tool_input.command` for `git ... push` within one shell segment; the command's
+  description and every other field are ignored. Unparseable hook input passes.
+
 ## 1.10.0 - 2026-09-25
 
 ### Added

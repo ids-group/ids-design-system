@@ -8,7 +8,7 @@ hooks:
     - matcher: 'Bash'
       hooks:
         - type: command
-          command: "grep -qE '\\bgit\\b[^|&;]*\\bpush\\b' && { echo 'BLOCKED by auto-update-package: pushing is forbidden during a migration run — review the branch and push yourself.' >&2; exit 2; } || exit 0"
+          command: "node -e \"let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{let c;try{c=JSON.parse(s).tool_input.command}catch{process.exit(0)}if(typeof c==='string'&&/\\bgit\\b[^|&;\\n]*\\bpush\\b/.test(c)){console.error('BLOCKED by auto-update-package: pushing is forbidden during a migration run — review the branch and push yourself.');process.exit(2)}})\""
 ---
 
 # Auto-update the IDS design system (`/design-system:auto-update-package`)
