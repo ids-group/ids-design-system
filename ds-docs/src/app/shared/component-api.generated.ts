@@ -2991,6 +2991,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "''",
         "required": false,
         "description": "Confirmation text, shown when there is no error or warning — and it paints the field's success border. A string like `warning`: the text IS the state."
+      },
+      {
+        "name": "staticPreview",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": ""
       }
     ],
     "outputs": []
@@ -3550,6 +3559,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "true",
         "required": false,
         "description": "Allow masked manual typing. When false the field is read-only and a date can only be picked from the calendar."
+      },
+      {
+        "name": "staticPreview",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": ""
       }
     ],
     "outputs": []
@@ -10965,6 +10983,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Override the DS-config format for this instance."
+      },
+      {
+        "name": "staticPreview",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": ""
       }
     ],
     "outputs": []
