@@ -7645,6 +7645,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-tab-close-bg-color-hover",
         "value": "var(--surface-secondary)",
         "notes": "Tab close button hover fill (defaults to --surface-secondary)."
+      },
+      {
+        "name": "--ds-tabs-scroll-arrow-bg-color-hover",
+        "value": "var(--surface-secondary)",
+        "notes": "Hover fill behind a `scrollable` strip's prev/next arrow (defaults to --surface-secondary)."
+      },
+      {
+        "name": "--ds-tabs-scroll-arrow-icon-color-hover",
+        "value": "var(--_tab-label-color-active)",
+        "notes": "Hover colour of a `scrollable` strip's prev/next chevron (defaults to the active tab label colour: --ds-tab-label-color-active, or --ds-tab-pill-label-color-active in pills)."
       }
     ]
   },

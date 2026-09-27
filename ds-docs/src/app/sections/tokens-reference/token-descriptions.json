@@ -1058,6 +1058,8 @@
   "--ds-tabs-gap": "Gap between tabs in the strip.",
   "--ds-tabs-panel-padding-top": "Space between the tab strip and its panel.",
   "--ds-tabs-pills-bg-color": "Pills track fill.",
+  "--ds-tabs-scroll-arrow-bg-color-hover": "Hover fill behind a `scrollable` strip's prev/next arrow (defaults to --surface-secondary).",
+  "--ds-tabs-scroll-arrow-icon-color-hover": "Hover colour of a `scrollable` strip's prev/next chevron (defaults to the active tab label colour: --ds-tab-label-color-active, or --ds-tab-pill-label-color-active in pills).",
   "--ds-tag-active-bg-color": "Selected fill.",
   "--ds-tag-active-border": "Selected border.",
   "--ds-tag-active-label-color": "Selected label.",

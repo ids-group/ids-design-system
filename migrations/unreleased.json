@@ -25,6 +25,22 @@
       ],
       "verify": "The app builds with no TS4114 or TS2416 against a DS base class.",
       "note": "DrawerComponent and BottomSheetComponent gained preview; TextareaComponent gained countTrimmed and countedRange; TooltipDirective gained dsTooltipTextSelector, hostElement, isClipped, onKeydown and textElement. The compiler names every collision."
+    },
+    {
+      "id": "tabs-scroll-arrow-hover-colors",
+      "kind": "behavior",
+      "old": "--ds-tab-label-color-hover",
+      "new": null,
+      "surface": "style",
+      "action": "None, unless you set --ds-tab-label-color-hover or relied on the arrow hover look: set --ds-tabs-scroll-arrow-icon-color-hover and --ds-tabs-scroll-arrow-bg-color-hover on ds-tabs instead.",
+      "appliesWhen": "Only a ds-tabs with scrollable, and only its prev/next arrows on hover. Tab labels still read --ds-tab-label-color-hover.",
+      "pitfall": "An override of --ds-tab-label-color-hover still applies to the tabs, so the arrows quietly change colour while the override looks intact.",
+      "restore": "ds-tabs { --ds-tabs-scroll-arrow-icon-color-hover: var(--ds-tab-label-color-hover, var(--text-primary)); --ds-tabs-scroll-arrow-bg-color-hover: var(--surface-muted); }",
+      "searchHints": [
+        "--ds-tab-label-color-hover",
+        "scroll-arrow"
+      ],
+      "verify": "Hover the next arrow of a scrollable ds-tabs and confirm the chevron's computed colour equals the active tab label's and its surface is --surface-secondary, or your override."
     }
   ],
   "informational": [
