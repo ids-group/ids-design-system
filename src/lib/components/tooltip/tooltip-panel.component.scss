@@ -1,5 +1,5 @@
 :host {
-  /* Portaled by the CDK overlay, so --ds-tooltip-* overrides are theme-level (:root), not per-instance. */
+  /* Portaled, so --ds-tooltip-* overrides are theme-level (:root). */
   --_tooltip-bg-color:   var(--ds-tooltip-bg-color,   var(--surface-inverted));
   --_tooltip-text-color: var(--ds-tooltip-text-color, var(--text-inverted));
   --_tooltip-radius:     var(--ds-tooltip-radius,     var(--ds-radius-control));

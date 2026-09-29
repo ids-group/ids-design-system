@@ -28,8 +28,6 @@
   /* Not clipped by default: clipping would eat the focus ring of a child at the card's edge.
      A card that opts in clips and uses `data-focus="inset"`. */
   overflow: var(--_card-overflow);
-
-  // Fills a stretched host so cards in a grid row paint equal-height boxes.
   height: 100%;
   transition: box-shadow var(--duration-base) var(--ease-standard), transform var(--duration-base) var(--ease-standard);
 

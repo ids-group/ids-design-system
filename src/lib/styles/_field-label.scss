@@ -1,7 +1,6 @@
-// One label contract (`.label`, one token set) for the field family. A mixin, not a global rule,
-// which would match consumer markup using the same class. Per-instance retune is variable scoping:
-// `ds-select { --ds-field-label-text-transform: uppercase; }`. ds-input's `--ds-input-label-*`
-// trio still wins over this.
+// A mixin, not a global rule, which would match consumer markup using the same class.
+// Per-instance retune is variable scoping: `ds-select { --ds-field-label-text-transform: uppercase; }`.
+// ds-input's `--ds-input-label-*` trio still wins.
 @mixin field-label {
   --_field-label-font-size: var(--ds-field-label-font-size, var(--font-size-xs));
   --_field-label-font-weight: var(--ds-field-label-font-weight, var(--font-weight-bold));

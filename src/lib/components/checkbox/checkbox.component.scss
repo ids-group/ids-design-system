@@ -8,13 +8,11 @@
   --_checkbox-row-align: var(--ds-checkbox-row-align, center);
   --_checkbox-gap: var(--ds-checkbox-gap, var(--space-2));
 
-  /* Zero keeps the message under the box; box width plus gap lines it up with the label text. */
   --_checkbox-message-indent: var(--ds-checkbox-message-indent, 0px);
 
   display: inline-flex;
 }
 
-/* At 16px a tinted fill reads as "checked", so only the border changes. */
 :host([data-field-state='error']) {
   --_checkbox-border-color: var(--error);
   --_checkbox-hover-border-color: var(--error);

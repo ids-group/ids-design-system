@@ -1,7 +1,5 @@
 // Keyed off `data-field-state` on the host. Only error carries a fill: a warning or success tint
-// measures 1.05:1 against a white field, too faint to be findable.
-//
-// Disabled takes no state paint: it is neither submitted nor validated. Read-only keeps it.
+// measures 1.05:1 against a white field. Disabled takes no state paint; read-only keeps it.
 // The colour arguments let a component pass its own `--ds-<name>-*-error` resolver.
 @mixin field-state(
   $box,
@@ -11,9 +9,9 @@
   $warning-border: var(--warning-text),
   $success-border: var(--success)
 ) {
-  // `:not(.in-group)`: a segment ties `.in-group` at (0,3,0) and this mixin is included last, so
-  // without it the fill repaints one segment mid-row. `:not(.disabled)`: state is (0,3,0) against
-  // (0,2,0), so it out-ranks every disabled rule unless it stops matching.
+  // `:not(.in-group)`: a segment ties `.in-group` at (0,3,0) and this mixin is included last, so the fill
+  // would repaint one segment mid-row. `:not(.disabled)`: state is (0,3,0) against (0,2,0) and would
+  // out-rank every disabled rule.
   :host([data-field-state='error']:not(.in-group)) #{$box}:not(.disabled):not(:disabled) {
     border-color: #{$error-border};
     background-color: #{$error-bg};
@@ -24,8 +22,7 @@
     }
   }
 
-  // --warning is 1.47:1 against a white field, where WCAG 1.4.11 asks 3:1 for a boundary.
-  // --warning-text is the first rung of the ramp that clears it, at 4.59:1.
+  // --warning is 1.47:1 against a white field (WCAG 1.4.11 asks 3:1); --warning-text is the first ramp rung that clears it, at 4.59:1.
   :host([data-field-state='warning']:not(.in-group)) #{$box}:not(.disabled):not(:disabled) {
     border-color: #{$warning-border};
   }

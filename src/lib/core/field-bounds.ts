@@ -1,7 +1,6 @@
 /**
  * Signal forms binds `min`, `max`, `minLength` and `maxLength` BY NAME and sends `undefined`
- * when the schema sets no bound. The DS spells an absent bound as `null`, so the write type
- * accepts both while the read type stays `number | null`.
+ * for no bound; the DS spells it `null`, so the write type accepts both.
  * @internal
  */
 export function optionalBound(value: number | null | undefined): number | null {

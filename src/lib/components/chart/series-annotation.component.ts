@@ -16,19 +16,16 @@ export interface ChartAnnotation {
   /** The reading the label names, in the axis's own unit. */
   readonly value: number;
   readonly label: string;
-  /** Which value axis the reading is measured against. Defaults to `'primary'`. */
+  /** Which value axis the reading is measured against. */
   readonly axis?: ChartAxis;
 }
 
 /**
- * A tooltip answers "what is this?" on hover; an annotation answers it in a printed page or a
- * screenshot.
- *
- * Takes the readings rather than finding them: a mark never sees other marks, so the caller that
- * owns the series knows which value a label belongs to. Reports no domain.
+ * A tooltip answers "what is this?" on hover; an annotation answers it on a printed page or in a
+ * screenshot. Takes the readings rather than finding them: the caller that owns the series knows
+ * which value a label belongs to. Reports no domain.
  */
 @Component({
-  // An element selector cannot work inside a canvas; see `g[dsColumnSeries]`.
   // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'g[dsSeriesAnnotation]',
   standalone: true,

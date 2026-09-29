@@ -30,9 +30,8 @@ import { TableExportButtonComponent } from './table-export-button.component';
  * <ds-table dsTableExport [exportFetcher]="fetchAll" (exportFailed)="report($event)" />
  * ```
  *
- * `table.runExport()` and `table.exporting()` keep working — they delegate to whichever export
- * directive is present, so a button of your own in `[toolbar]` or a page header still drives it.
- * Pass `[dsTableExport]="false"` to keep the code and drop the built-in button.
+ * `table.runExport()` and `table.exporting()` delegate to the export directive, so a button of
+ * your own still drives it. `[dsTableExport]="false"` drops the built-in button.
  */
 @Directive({
   selector: '[dsTableExport]',
@@ -42,8 +41,7 @@ export class DsTableExport<T extends object> {
   private readonly layout = inject<DsTableLayout<T>>(DsTableLayout);
   private readonly intl = inject(DS_INTL);
 
-  /** Renders the built-in toolbar button. `false` keeps the feature and hides the control, for a
-   *  table whose export is driven from somewhere else on the page. */
+  /** Renders the built-in toolbar button. `false` hides it and keeps the feature. */
   readonly dsTableExport = input(true, { transform: booleanAttribute });
 
   /** The download's name, extension included - it is passed through, never derived. A custom
@@ -92,8 +90,6 @@ export class DsTableExport<T extends object> {
     inject(DestroyRef).onDestroy(() => created?.destroy());
   }
 
-  /** Without `exportFetcher` this serialises only what the table holds, which on a server-paged
-   *  table is one page. */
   async runExport(): Promise<void> {
     const fetcher = this.exportFetcher();
     if (!fetcher) {
@@ -148,7 +144,7 @@ export class DsTableExport<T extends object> {
     );
   }
 
-  /** Only a Blob gets its object URL revoked — a URL the caller supplied is theirs to manage. */
+  /** Only a Blob's object URL is revoked; a supplied URL is the caller's. */
   private downloadFile(source: Blob | string, filename: string): void {
     if (typeof document === 'undefined') {
       return;

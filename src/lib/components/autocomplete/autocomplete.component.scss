@@ -4,7 +4,6 @@
      narrow).
    Secondary metadata - Single line, ellipsis. Drop before the primary label clips. */
 
-/* The portaled panel still carries this component's encapsulation attributes, so it is styled here, not in a global partial. */
 @use '../../styles/clear-button' as clear-button;
 @use '../../styles/field-box' as field-box;
 @use '../../styles/check-mark';
@@ -18,8 +17,7 @@
 :host {
   @include field-box.field-box-tokens;
 
-  /* `initial` means UNSET on purpose: the pane gets these copied off the host as an inline style, which outranks a consumer's
-     `.ds-overlay-pane` rule. A real fallback would always be copied and the consumer rule never win. */
+  /* `initial` means unset on purpose: a real fallback would be copied to the pane inline and outrank a consumer's `.ds-overlay-pane` rule. */
   --ds-dropdown-panel-bg-color: var(--ds-autocomplete-panel-bg-color, initial); /* void-ok */
   --ds-dropdown-panel-radius: var(--ds-autocomplete-panel-radius, initial); /* void-ok */
   --ds-dropdown-panel-max-height: var(--ds-autocomplete-panel-max-height, var(--picker-maxh));
@@ -36,7 +34,6 @@
   --_autocomplete-text-color: var(--ds-autocomplete-text-color, var(--_field-text-color));
   --_autocomplete-placeholder-color: var(--ds-autocomplete-placeholder-color, var(--_field-placeholder-color));
 
-  // The field family shares --field-label-gap so mixed-field form rows keep one rhythm.
   display: flex;
   flex-direction: column;
   gap: var(--field-label-gap);
@@ -45,7 +42,7 @@
   position: relative;
 }
 
-/* The maxw resolver re-defaults to 100% so chips still wrap at the parent edge; an explicit --ds-autocomplete-max-width wins in both modes. */
+/* Re-defaults max-width to 100% so chips wrap at the parent edge; an explicit --ds-autocomplete-max-width wins. */
 :host(.content-width) {
   --_autocomplete-max-width: var(--ds-autocomplete-max-width, 100%);
 
@@ -82,12 +79,12 @@
   text-align: left;
   flex-wrap: wrap;
 
-  /* A wrapping flex container never shrinks its chip row, it pushes the text input to a second line. `:has()` keys off the measured row. */
+  /* A wrapping flex container never shrinks its chip row; `:has()` keys off the measured row. */
   &:has(> .chip-row.fit) {
     flex-wrap: nowrap;
   }
 
-  /* Single mode: same rule unless the host asks for wrapping back; otherwise a long value breaks onto a second line and the chevron onto a third. */
+  /* Single mode: no wrap unless the host asks for it. */
   :host(:not(.value-wraps)) & {
     flex-wrap: nowrap;
   }

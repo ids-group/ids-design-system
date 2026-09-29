@@ -9,11 +9,7 @@ import {
 } from '@angular/core';
 import type { BarSemantics, BarVariant } from './bar.types';
 
-/**
- * One horizontal track with one fill: a task's completion, or a measurement on a known scale.
- * `semantics` carries the difference: a table of two hundred rates under `'progress'` announces
- * two hundred progress bars.
- */
+/** One horizontal track with one fill: a task's completion, or a measurement on a known scale. */
 @Component({
   selector: 'ds-bar',
   standalone: true,
@@ -38,27 +34,20 @@ import type { BarSemantics, BarVariant } from './bar.types';
 export class BarComponent {
   /** The reading, in units of `max`; clamped, and ignored while `indeterminate`. */
   readonly value = input(0, { transform: numberAttribute });
-  /** The full scale `value` and `target` are read against; at 100 they are percentages. With the
-   *  real total (`[value]="37" [max]="80"`) the accessible name carries "37 of 80". Zero or less
-   *  falls back to 100. */
+  /** The full scale `value` and `target` are read against; the accessible name reads "value of max". Zero or less falls back to 100. */
   readonly max = input(100, { transform: numberAttribute });
-  /** What the bar is, and therefore how it is announced. See `BarSemantics`. Defaults to
-   *  `'progress'`. */
+  /** What the bar is, and so how it is announced. See `BarSemantics`. */
   readonly semantics = input<BarSemantics>('progress');
   /** Colour role: drives the success/warning/error styling. */
   readonly variant = input<BarVariant>('default');
-  /** Indeterminate (unknown-duration) animation instead of a fixed `value`. Only a task has an
-   *  unknown duration, so it is ignored unless `semantics` is `'progress'`. */
+  /** Indeterminate animation instead of a fixed `value`; ignored unless `semantics` is `'progress'`. */
   readonly indeterminate = input(false, { transform: booleanAttribute });
-  /** Overrides the fill for this one bar. Colour a whole column through `--ds-bar-fill-color`
-   *  instead. */
+  /** Overrides the fill for this one bar. */
   readonly color = input<string | null>(null);
-  /** Accessible name (e.g. "Upload progress"). With a `target` set, name the comparison here
-   *  ("Resolved 62% against a 75% target"): the role has no second value to announce. Unused under
-   *  `semantics="none"`. */
+  /** Accessible name. With a `target`, name the comparison here: the role has no second value to
+   *  announce. Unused under `semantics="none"`. */
   readonly ariaLabel = input<string | null>(null);
-  /** A second point on the same scale as `value`, drawn as a hairline across the track (goal,
-   *  baseline or threshold). Clamped like `value`, ignored while `indeterminate`. */
+  /** A second point on the scale, drawn as a hairline across the track. Clamped like `value`, ignored while `indeterminate`. */
   readonly target = input<number | null>(null);
 
   protected readonly role = computed(() => {

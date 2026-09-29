@@ -16,7 +16,7 @@ import { chartValueFormat } from './charts-format';
  *  @internal */
 export interface ChartDefaultInputs {
   readonly frame: Signal<ChartFrame | null>;
-  /** Absent on a chart with no annex table of its own - the container, the heat map. */
+  /** Absent on a chart with no annex table of its own. */
   readonly dataTable?: Signal<ChartDataTable | null>;
   readonly emptyText: Signal<string | null>;
   readonly errorText: Signal<string | null>;
@@ -41,8 +41,7 @@ const NO_SWATCHES = signal<boolean | null>(null);
  *  @internal */
 export const CHART_HOVER_DELAY_MS = 0;
 
-/** How long a tooltip outlives the pointer leaving its mark, when nothing sets it. Long enough for the
- *  pointer to cross to the next mark and find the same panel; a shorter wait closes and reopens it.
+/** How long a tooltip outlives the pointer leaving its mark, when nothing sets it; long enough to cross to the next mark and find the same panel.
  *
  *  @internal */
 export const CHART_TOOLTIP_LINGER_MS = 500;

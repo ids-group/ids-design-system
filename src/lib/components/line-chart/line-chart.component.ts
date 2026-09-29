@@ -81,7 +81,6 @@ interface ResolvedSeries {
   readonly dash: string | null;
 }
 
-// One dash per palette slot; slot 1 stays solid so a single-series chart is unchanged by patterns.
 const SERIES_DASH_ARRAYS = [
   'none',
   '7 4',
@@ -142,21 +141,17 @@ export class LineChartComponent {
    *  ones to land on, shown on hover and focus. `pointClicked` fires whether or not this is set. */
   readonly interactive = input(false, { transform: booleanAttribute });
 
-  /** The point that was clicked, or activated with Enter or Space. Fires whether or not
-   *  `interactive` is set. */
+  /** The point clicked or activated with Enter or Space, whether or not `interactive` is set. */
   readonly pointClicked = output<LineChartReading>();
 
-  /** Holds the crosshair and its tooltip on the category that was clicked, with a pin disc on it,
-   *  until a second click, Escape or a press outside releases it. Unset falls back to
-   *  `DS_CONFIG.chart.pinOnClick`, then `true`. `pointClicked` fires either way - pinning is a
-   *  state, not a handler. */
+  /** Holds the clicked category's crosshair and tooltip in place, with a pin disc, until a second click, Escape or a press
+   *  outside. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. `pointClicked` fires either way. */
   readonly pinOnClick = input<boolean | null, unknown>(null, {
     transform: (value) => (value == null ? null : booleanAttribute(value)),
   });
 
-  /** Dims every OTHER mark while one is hovered or focused. Off by default: it costs the separation
-   *  between the dimmed marks (worst pair of three series: dE 14.8 to 2.1 at the default
-   *  `--ds-chart-dim-opacity` 0.3, measured 2026-09-13). */
+  /** Dims every OTHER mark while one is hovered or focused. Off by default: it costs separation
+   *  between the dimmed marks. */
   readonly dimOthers = input(false, { transform: booleanAttribute });
 
   /** What a `null` reading draws. The default `'break'` does not assert a missing reading is zero. */
@@ -180,33 +175,30 @@ export class LineChartComponent {
     transform: numberAttribute,
   });
 
-  /** `'auto'` draws the chart's own bordered, padded box; `'none'` leaves it bare, for a chart inside
-   *  a card. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'`. */
+  /** `'auto'` draws a bordered, padded box; `'none'` leaves it bare. Unset falls back to
+   *  `DS_CONFIG.chart.frame`, then `'auto'`. */
   readonly frame = input<ChartFrame | null>(null);
 
-  /** Whether the tooltip draws a colour dot beside each reading. Unset falls back to
-   *  `DS_CONFIG.chart.tooltipSwatches`, then draws them for up to four readings. */
+  /** Colour dot beside each tooltip reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`,
+   *  then dots for up to four readings. */
   readonly tooltipSwatches = input<boolean | null>(null, {
     transform: (value: unknown) =>
       value == null ? null : booleanAttribute(value),
   });
 
-  /** Milliseconds the tooltip stays after the pointer leaves the mark, so it can glide to the next
-   *  mark instead of reopening. Zero closes it at once. Unset falls back to
-   *  `DS_CONFIG.chart.tooltipLingerMs`, then 500. */
+  /** Milliseconds the tooltip stays after the pointer leaves the mark; zero closes it at once. Unset
+   *  falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500. */
   readonly tooltipLingerMs = input<number | null>(null, {
     transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
   });
-  /** Printed above the plot as the chart's visible title, and reused as the annex table's
-   *  caption. */
+  /** Visible title above the plot, reused as the annex table's caption. */
   readonly caption = input<string | null>(null);
 
   /** Accessible name. Generated from the data when omitted. */
   readonly summary = input<string | null>(null);
 
-  /** The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'`
-   *  opens it, `'none'` renders none. It is the non-visual route to the numbers, so use `'none'`
-   *  only where the data is already in a table on the page. Unset falls back to
+  /** Label-and-value table under the plot: `'toggle'` behind a disclosure, `'visible'` open, `'none'`
+   *  none. Use `'none'` only where the data is already in a table on the page. Unset falls back to
    *  `DS_CONFIG.chart.dataTable`, then `'none'`. */
   readonly dataTable = input<ChartDataTable | null>(null);
   /** Pins the value axis maximum so separate renders are comparable. Null keeps the derived axis.
@@ -232,9 +224,8 @@ export class LineChartComponent {
 
   /** The message the error state prints. Unset falls back to `DS_INTL.chart.error`. */
   readonly errorText = input<string | null>(null);
-  /** Formats every value the chart prints, the annex table and the generated description
-   *  included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` /
-   *  `LOCALE_ID`. */
+  /** Formats every printed value, including the annex table and generated description. Unset falls
+   *  back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`. */
   readonly valueFormat = input<ChartValueFormat | null>(null);
 
   private readonly defaults = resolveChartDefaults(this);
@@ -271,11 +262,10 @@ export class LineChartComponent {
     },
   );
 
-  /** Ids of the series the legend has switched off. Two-way, so a page can drive and read it. */
+  /** Ids of the series the legend has switched off. */
   readonly hiddenSeries = model<readonly string[]>([]);
 
-  /** Whether hiding a series re-scales the value axis to what is left. Off by default: a silent
-   *  rescale changes what a period-over-period comparison claims. */
+  /** Whether hiding a series re-scales the value axis to what is left. Off by default, so comparisons stay on one scale. */
   readonly rescaleOnHide = input(false, { transform: booleanAttribute });
 
   /** Whether the legend switches series off. Off leaves it a plain key. */
@@ -294,8 +284,7 @@ export class LineChartComponent {
     () => this.noVisibleSeriesText() ?? this.intl().chart.noVisibleSeries,
   );
 
-  /** Gives every series a dash pattern of its own, so lines differ by shape as well as colour (WCAG
-   *  G111). Off by default: the shipped palette clears the colour-blind separation threshold alone;
+  /** Gives every series a dash pattern, so lines differ by shape as well as colour. Off by default;
    *  use it for monochrome print or a retuned palette. */
   readonly patterns = input(false, { transform: booleanAttribute });
 
@@ -370,8 +359,6 @@ export class LineChartComponent {
       : this.valueFormatResolved(),
   );
 
-  /** Each axis takes the colour of its series, but only where two scales share one plot: not on a
-   *  single-scale chart, and not under `'split'`. */
   private readonly axisTint = computed(() => {
     if (!this.hasSecondaryAxis() || this.yAxisMode() === 'split') {
       return { primary: null, secondary: null };
@@ -445,7 +432,6 @@ export class LineChartComponent {
     const format = (value: number) =>
       this.valueFormatResolved()(value, 'tooltip');
     const categories = this.categories();
-    // The table pointer is added once for the chart, not per series.
     const sentences = this.resolvedSeries().map((entry) =>
       describeSeries(
         words,
@@ -476,7 +462,6 @@ export class LineChartComponent {
 
   private readonly plot = viewChild(ChartComponent);
 
-  /** Whether the category cursor is held; the container owns the cursor and its pin. */
   protected readonly pinnedCategory = computed(
     () => this.plot()?.cursorPinned() ?? false,
   );
@@ -503,8 +488,6 @@ export class LineChartComponent {
     this.visibleSeries().map((entry) => entry.dash ?? ''),
   );
 
-  /** Resolves each label to its reading, since the mark never sees the series list. Labels whose
-   *  series is hidden or reading is missing are dropped. */
   protected readonly markAnnotations = computed<readonly ChartAnnotation[]>(
     () =>
       this.annotations().flatMap((annotation) => {
@@ -566,10 +549,8 @@ export class LineChartComponent {
       : derived;
   }
 
-  /** `--ds-line-chart-plot-height` is read back off the host as a number: the plot is an SVG coordinate space. */
   protected readonly plotHeight = signal(DEFAULT_PLOT_HEIGHT);
 
-  /** Every state occupies the plot's box, so nothing moves when the data lands. */
   protected readonly viewHeightPx = computed(
     () => `${chartViewHeight(this.plotHeight(), CHART_DEFAULT_VALUE_SPACE)}px`,
   );
@@ -617,7 +598,6 @@ export class LineChartComponent {
     () => this.series().length > 0 && this.visibleSeries().length === 0,
   );
 
-  /** Placeholder legend rows: the real series count, or three while `series` is empty. */
   protected readonly skeletonSeries = computed(() =>
     Array.from({ length: Math.max(this.series().length, 3) }),
   );

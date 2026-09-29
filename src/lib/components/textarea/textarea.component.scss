@@ -4,7 +4,7 @@
 @use '../../styles/focus' as focus;
 @use '../../styles/visually-hidden' as visually-hidden;
 
-/* Reads the `--ds-input-*` token family, not a `--ds-textarea-*` one, so consumers retune both fields with one set. */
+/* Reads the `--ds-input-*` token family, not a `--ds-textarea-*` one. */
 :host {
   @include field-box.field-box-tokens;
 
@@ -110,7 +110,7 @@
     textarea { cursor: default; }
   }
 
-  /* Only padding scales; height stays driven by rows + resize. The inner textarea's vertical pad is set by the pins at the end of this file, which out-rank anything here. */
+  /* Only padding scales; the inner textarea's vertical pad is set by the pins at the end of this file, which out-rank anything here. */
   &.sm .control {
     padding: 0 var(--space-2);
   }
@@ -148,8 +148,7 @@
     }
   }
 
-  /* The mirror paints the over-limit highlight behind the transparent textarea, so every glyph-placing property must match the textarea's;
-     both reserve the scrollbar gutter so a scrollbar narrows both lines alike. */
+  /* The mirror paints the highlight behind the transparent textarea, so every glyph-placing property must match the textarea's. */
   &.soft-limit {
     .control {
       position: relative;

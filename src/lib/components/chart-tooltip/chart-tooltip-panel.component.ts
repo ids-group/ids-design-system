@@ -13,8 +13,7 @@ import { NgTemplateOutlet } from '@angular/common';
 import type { ChartTooltipContext } from './chart-tooltip.types';
 import { swatchBlendsInto } from './swatch-contrast';
 
-// Past four readings the dots stop telling rows apart and start reading as a column of noise; the
-// labels carry the series on their own.
+// Past four readings the dots stop telling rows apart.
 const AUTO_SWATCH_LIMIT = 4;
 
 @Component({
@@ -24,8 +23,7 @@ const AUTO_SWATCH_LIMIT = 4;
   templateUrl: './chart-tooltip-panel.component.html',
   styleUrl: './chart-tooltip-panel.component.scss',
   host: {
-    // Every interactive mark already carries the same label and value in its `aria-label`;
-    // exposing the panel would read each reading twice.
+    // Every interactive mark's `aria-label` already carries the reading.
     'aria-hidden': 'true',
   },
   encapsulation: ViewEncapsulation.Emulated,
@@ -52,7 +50,6 @@ export class ChartTooltipPanelComponent {
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
 
   constructor() {
-    // Before the frame paints, so a ring never lands a frame after its row.
     afterRenderEffect({
       earlyRead: () => {
         this.context();

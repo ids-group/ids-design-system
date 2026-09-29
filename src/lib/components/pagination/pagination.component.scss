@@ -36,7 +36,6 @@
   &.md { --_pagination-button-size: var(--field-h-md); }
   &.lg { --_pagination-button-size: var(--field-h-lg); --_pagination-button-font-size: var(--font-size-m); }
 
-  /* The label takes the slack; only visible once the caller stretches the nav past its contents. */
   &.spread {
     display: flex;
     width: 100%;

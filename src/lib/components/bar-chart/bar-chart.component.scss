@@ -7,7 +7,6 @@
 @include chart-frame.chart-frame;
 @include chart-data-table.chart-data-table;
 
-
 .bar-chart {
   --_bar-chart-band-color: var(--ds-bar-chart-band-color, var(--ds-chart-grid-line-color));
   --_bar-chart-target-color: var(--ds-bar-chart-target-color, var(--text-primary));
@@ -47,7 +46,6 @@
   gap: var(--_bar-chart-label-gap) var(--space-2);
   align-items: baseline;
 }
-
 
 @include chart-frame.message-box(
   calc(3 * (var(--_bar-chart-track-height) + var(--_bar-chart-row-gap)))
@@ -111,19 +109,17 @@
       var(--ds-motion-chart-mark-easing);
 }
 
-
 @include chart-frame.forced-colors;
 @include chart-frame.pin-reset;
 @include chart-frame.pin-marker;
 
-/* Under the label, not in the value column: that column is on the bar's scale. */
 .label > .detail {
   display: block;
   color: var(--text-secondary);
   font-size: var(--font-size-xs);
 }
 
-/* The 2px seam is surface-coloured, not a margin: a gap in the track colour would read as a missing category. */
+/* The seam is surface-coloured, not a margin: a track-coloured gap would read as a missing category. */
 .segment {
   block-size: 100%;
 

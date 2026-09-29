@@ -66,9 +66,9 @@ import type {
 const AXIS_GUTTER = 52;
 const CATEGORY_GUTTER = 34;
 const EDGE_GUTTER = 12;
-// The point's default radius, `--chart-dot-radius`.
+// Clearance past the point's default radius, `--chart-dot-radius`.
 const PIN_POINT_CLEARANCE = 4;
-// Screen pixels from the pointer to a point's centre: hover answers the nearest point within reach.
+// Screen pixels from the pointer to a point's centre within which hover answers.
 const HOVER_REACH_PX = 16;
 
 interface PlacedPoint {
@@ -85,13 +85,7 @@ interface PlacedSeries {
   readonly points: readonly PlacedPoint[];
 }
 
-/**
- * Two continuous quantities against each other: weight against carriage cost, distance against
- * time, volume against conversion.
- *
- * The caller decides the mark count, so past four times the plot's width in marks a series is
- * decimated, and the chart says so on its face.
- */
+/** Two continuous quantities against each other. Past four times the plot's width in marks a series is decimated, and the chart says so. */
 @Component({
   selector: 'ds-scatter-chart',
   standalone: true,
@@ -114,18 +108,16 @@ interface PlacedSeries {
 export class ScatterChartComponent {
   protected readonly renderReady = chartRenderGate();
 
-  /** One entry per series, each carrying its own readings. */
+  /** One entry per series. */
   readonly data = input<readonly ScatterChartSeries[]>([]);
 
-  /** Names the horizontal quantity under the plot. Without it the reader cannot tell the two
-   *  numbers apart. */
+  /** Names the horizontal quantity under the plot. */
   readonly xLabel = input<string | null>(null);
 
   /** Names the vertical quantity beside the plot. */
   readonly yLabel = input<string | null>(null);
 
-  /** Which decimator thins a series past the budget. `'minMax'` by default, because it is the only
-   *  one that promises each bucket's extremum survives. */
+  /** Which decimator thins a series past the budget. See `ScatterChartDecimator`. */
   readonly decimator = input<ScatterChartDecimator>('minMax');
 
   /** A hint, not a count, applied to both axes. Ticks snap to a round step. */
@@ -133,36 +125,31 @@ export class ScatterChartComponent {
     transform: numberAttribute,
   });
 
-  /** Printed above the plot as the visible title, and reused as the annex table's caption. */
+  /** Visible title above the plot; also the annex table's caption. */
   readonly caption = input<string | null>(null);
 
-  /** The accessible name. Generated when omitted, naming both axes' spans, how many readings
-   *  were drawn and how many were thinned out. */
+  /** The accessible name. Generated from the data when omitted. */
   readonly summary = input<string | null>(null);
 
-  /** Makes every mark a button and gives it a keyboard route. `pointClicked` fires whether or
-   *  not this is set. */
+  /** Makes every mark a button with a keyboard route. */
   readonly interactive = input(false, { transform: booleanAttribute });
 
-  /** `'auto'` draws the bordered, padded box; `'none'` leaves it bare for a chart inside a card
-   *  the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`. */
+  /** `'auto'` draws the bordered, padded box; `'none'` leaves it bare. Unset falls back to `DS_CONFIG.chart.frame`. */
   readonly frame = input<ChartFrame | null>(null);
 
-  /** Whether the tooltip draws a colour dot beside each reading. Unset falls back to
-   *  `DS_CONFIG.chart.tooltipSwatches`, then draws them for up to four readings. */
+  /** Whether the tooltip draws a colour dot per reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`. */
   readonly tooltipSwatches = input<boolean | null>(null, {
     transform: (value: unknown) =>
       value == null ? null : booleanAttribute(value),
   });
 
-  /** The annex table under the plot. It lists every reading, including those decimation left out of
-   *  the drawing. */
+  /** The annex table under the plot; lists every reading, including those decimation left out. */
   readonly dataTable = input<ChartDataTable | null>(null);
 
-  /** A skeleton at the plot's own height, so the page does not resize when the data lands. */
+  /** A skeleton at the plot's own height. */
   readonly loading = input(false, { transform: booleanAttribute });
 
-  /** Separate from empty data: a failed request and no data mean different things. */
+  /** Shows the error message; distinct from empty data. */
   readonly error = input(false, { transform: booleanAttribute });
 
   /** Shown when no series carries a reading. Unset falls back to `DS_INTL.chart.empty`. */
@@ -172,21 +159,16 @@ export class ScatterChartComponent {
    *  `DS_INTL.chart.error`. */
   readonly errorText = input<string | null>(null);
 
-  /** Formats every number the chart prints - both axes' ticks, the accessible name and the annex
-   *  table. Unset falls back to `DS_CONFIG.chart.valueFormat`. */
+  /** Formats every number the chart prints. Unset falls back to `DS_CONFIG.chart.valueFormat`. */
   readonly valueFormat = input<ChartValueFormat | null>(null);
 
-  /** Whether a hovered or focused mark opens a tooltip. A scatter prints no value beside its
-   *  marks. */
+  /** Whether a hovered or focused mark opens a tooltip. */
   readonly tooltip = input<ChartItemTooltipTrigger>('item');
 
-  /** Fades every mark but the one under the pointer. Off by default: on a scatter the pile-up is
-   *  the reading, and dimming the neighbours hides it. */
+  /** Fades every mark but the one under the pointer; on a scatter this hides pile-ups. */
   readonly dimOthers = input(false, { transform: booleanAttribute });
 
-  /** Holds the hovered mark and its tooltip in place when it is clicked, until a second click,
-   *  Escape or a press outside releases it. `pointClicked` fires either way. Unset falls back to
-   *  `DS_CONFIG.chart.pinOnClick`, then `true`. */
+  /** Holds the clicked mark and its tooltip until a second click, Escape or an outside press. `pointClicked` fires either way. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. */
   readonly pinOnClick = input<boolean | null, unknown>(null, {
     transform: (value) => (value == null ? null : booleanAttribute(value)),
   });
@@ -220,8 +202,7 @@ export class ScatterChartComponent {
     this.data().every((series) => series.data.length === 0),
   );
 
-  /** One mark per drawn unit of plot width is the ceiling; the viewBox is one unit per pixel at a
-   *  typical card width. */
+  /** One mark per drawn unit of plot width is the ceiling. */
   private readonly budget = computed(() => decimationTarget(this.plot.width));
 
   protected readonly drawnSeries = computed(() => {
@@ -389,8 +370,7 @@ export class ScatterChartComponent {
     );
   });
 
-  /** `<details>` keeps its children in the DOM while shut, so table rows for thousands of readings
-   *  would cost more nodes than decimating the plot saves; rows exist only while it is open. */
+  /** `<details>` keeps its children in the DOM while shut, so rows exist only while it is open. */
   protected readonly tableOpen = signal(false);
 
   protected readonly tableIsOpen = computed(
@@ -399,14 +379,14 @@ export class ScatterChartComponent {
 
   protected readonly skeletonHeight = `${SCATTER_VIEW_HEIGHT}`;
 
-  /** Flattened so one index addresses a mark, which is what `chartActiveMark` counts. */
+  /** Flattened so one index addresses a mark (`chartActiveMark` counts marks). */
   private readonly flatMarks = computed(() =>
     this.series().flatMap((entry) =>
       entry.points.map((mark) => ({ entry, mark })),
     ),
   );
 
-  /** Where each series starts in `flatMarks`, so a point carries its flat index without a search. */
+  /** Where each series starts in `flatMarks`. */
   protected readonly seriesStart = computed(() => {
     const starts = new Map<string, number>();
     let next = 0;

@@ -29,10 +29,8 @@ interface SearchGroup {
 
 /**
  * Bottom block of the app sidenav: quick actions (Search / Alerts / Collapse)
- * and the signed-in user with an account menu (popover). Pinned to the bottom
- * via `margin-top: auto`. Collapse is driven by the parent (emits
- * `collapseToggled`, reflects `collapsed`); sign-out is delegated to the parent
- * (emits `signOutSelected`) so the layout keeps a single logout path.
+ * and the signed-in user with an account menu (popover). Collapse and sign-out
+ * are delegated to the parent (`collapseToggled`, `signOutSelected`).
  */
 @Component({
   selector: 'ds-sidenav-footer',
@@ -70,8 +68,7 @@ export class SidenavFooterComponent {
   /** Route for the account menu's "Your profile"; empty = the item is a no-op. */
   readonly profileRoute = input('');
 
-  /** The collapse control was activated. The footer does not collapse itself; `ds-app-layout`
-   *  owns the rail state, so the host relays this. */
+  /** The collapse control was activated; the footer does not collapse itself. */
   readonly collapseToggled = output<void>();
   /** Emitted when the Alerts popover is opened, so the layout can mark-all-read. */
   readonly alertsOpened = output<void>();

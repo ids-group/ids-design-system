@@ -30,15 +30,8 @@ export class StatComponent {
 
   /** Metric name shown above the value. */
   readonly label = input.required<string>();
-  /** Headline metric; `unit` is appended directly after it.
-   *
-   *  Optional because the value can be projected instead: `[dsStatValue]` takes a badge, a status
-   *  dot, anything a tile needs where a number would go. A bare `value` attribute is not the
-   *  projection slot, since many components have a `value` input.
-   *
-   *  Takes `null` so `[value]="count | number"` typechecks under `strictTemplates` (Angular's
-   *  `number`/`date`/`percent` pipes return `string | null`). Renders as nothing, like the empty
-   *  default. */
+  /** Headline metric; `unit` is appended directly after it. Optional: `[dsStatValue]` projects any content in its place.
+   *  Accepts `null` so pipes returning `string | null` typecheck; renders as nothing. */
   readonly value = input<string | number | null>('');
   /** Change amount; sign drives the up/down arrow and color. */
   readonly delta = input<number | null>(null);

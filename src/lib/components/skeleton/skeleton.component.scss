@@ -1,21 +1,15 @@
-/* The ::after shimmer is a viewport-anchored band shared by every skeleton on screen: one wave
-   crossing the page, each placeholder showing its own slice. */
-
 :host {
   --_skeleton-bg-color:      var(--ds-skeleton-bg-color,      var(--surface-secondary));
 
-  /* Darker than the base: the pass is a shadow moving over the placeholders. A brighter crest reads as a flash. */
   --_skeleton-shimmer-color: var(--ds-skeleton-shimmer-color, var(--surface-muted));
 
-  /* Distance between waves of the same kind along the travel direction, in rem: as a viewport
-     fraction a wide screen turns the band into a flat wash. The quiet wave sits at half of it. */
+  /* Distance between waves in rem: as a viewport fraction a wide screen flattens the band. */
   --_skeleton-wave-period: var(--ds-skeleton-wave-period, 56rem);
   --_skeleton-wave-duration: var(--ds-skeleton-wave-duration, 3400ms);
 
-  /* Updates per pass; each is main-thread work. 68 over the default duration is twenty a second. */
+  /* Updates per pass; each is main-thread work. */
   --_skeleton-wave-steps: var(--ds-skeleton-wave-steps, 68);
 
-  /* Tilted: a band square to its travel sweeps every placeholder at once and reads as rows blinking in step. */
   --_skeleton-wave-angle: var(--ds-skeleton-wave-angle, 135deg);
 
   /* The same tone at zero alpha, never `transparent` (transparent black): a ramp to it darkens at the midpoint. */
@@ -42,13 +36,10 @@
   inset: 0;
   pointer-events: none;
 
-  /* `fixed` anchors the background to the viewport, so the same `background-position` on every
-     skeleton puts the band at the same screen x. Animating an inherited registered custom property
-     on :root instead invalidates the style of the whole document every frame.
-
-     `repeating-linear-gradient`: an angled gradient in a rectangular tile does not meet itself at
-     the tile edges and shows a diagonal seam. First and last stops share a colour so periods join
-     without a step. */
+  /* `fixed` anchors the background to the viewport, so one `background-position` puts the band at
+     the same screen x on every skeleton (animating a registered property on :root restyles the
+     whole document per frame). First and last stops share a colour so repeating periods join
+     without a seam. */
   background-image: repeating-linear-gradient(
     var(--_skeleton-wave-angle),
     var(--_skeleton-wave-echo-color) 0,
@@ -58,20 +49,15 @@
     var(--_skeleton-wave-echo-color) var(--_skeleton-wave-period)
   );
 
-  /* Square tile of side period x sqrt(2): at 135deg a tile of side S advances the phase by
-     S / sqrt(2), and the gradient only meets itself across a tile edge when that is a whole period.
-     At `auto` the tile is the viewport under `fixed` and every boundary shows as a hard line. */
+  /* Square tile of side period x sqrt(2): at 135deg the gradient only meets itself across a tile
+     edge when the tile advances a whole period. At `auto` every boundary shows as a hard line. */
   background-size: calc(var(--_skeleton-wave-period) * 1.4142)
     calc(var(--_skeleton-wave-period) * 1.4142);
   background-attachment: fixed;
 
   /* No `will-change`: the extra compositing layer makes Chrome paint the `fixed` background per
-     layer, and the layer edge shows as a vertical seam through the wave. `background-position`
-     is not compositable, so it would not help anyway.
-
-     The keyframes are declared here, not in a global partial: emulated encapsulation rewrites the
-     animation name in a component stylesheet, so a global `@keyframes` never runs. Stepped,
-     because each update is main-thread work. */
+     layer and shows the layer edge as a seam. Keyframes live here, not in a global partial:
+     emulated encapsulation rewrites the animation name, so a global `@keyframes` never runs. */
   animation: ds-skeleton-shimmer-loop var(--_skeleton-wave-duration) steps(var(--_skeleton-wave-steps)) infinite;
 }
 
@@ -83,8 +69,6 @@
   animation: none;
 }
 
-/* One period of travel: period / sqrt(2) on each axis advances the 135deg gradient by exactly one
-   period, so the end state equals the start. */
 @keyframes ds-skeleton-shimmer-loop {
   from {
     background-position: 0 0;

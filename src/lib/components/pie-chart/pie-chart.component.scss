@@ -4,11 +4,8 @@
 @use '../../styles/chart-interactive' as chart-interactive;
 @use '../../styles/chart-motion' as chart-motion;
 
-// The ring arrives, not the slices: semi-transparent arcs butting along a shared edge show the
-// background through the seam. `.ring-svg` is a CSS box, so `fill-box` turns about the ring's centre.
+// The ring arrives, not the slices: semi-transparent arcs sharing an edge show the background through the seam.
 @include chart-motion.sweeps-in('.ring-svg');
-
-// The chips land once the ring has, never solid while it still turns.
 @include chart-motion.fades-in(
   '.swatch',
   var(--ds-motion-chart-mark-sweep-duration),
@@ -48,7 +45,6 @@
   align-items: center;
 }
 
-// Also when every slice is zero: not the empty state, but no arc has any sweep.
 .empty-ring,
 .ring-outline {
   position: relative;
@@ -58,7 +54,6 @@
   border-radius: var(--radius-pill);
 }
 
-// Drawn at the real hole fraction, so a solid pie's placeholder has no hole.
 .empty-ring::before,
 .ring-outline::before {
   content: '';
@@ -111,8 +106,7 @@
   @include chart-frame.drawn-focus-ring;
 }
 
-// `70%` is the square that fits inside the hole (1/√2); the 56% floor overrides it at the default
-// hole, so a long label overhangs the slices and needs the halo below.
+// `70%` is the square inside the hole (1/√2); the 56% floor overrides it at the default hole, so a long label overhangs the slices.
 .center {
   position: absolute;
   inset: 0;
@@ -126,7 +120,7 @@
   pointer-events: none;
 }
 
-// Halo of the frame background: overhanging text sits on several hues; invisible over the hole.
+// Halo of the frame background for text overhanging several hues.
 .center-value,
 .center-label {
   text-shadow:

@@ -4,8 +4,8 @@ import { Directive, ElementRef, inject } from '@angular/core';
  * Focuses the field's inner `input`/`textarea` when the click lands on the frame chrome
  * (padding, an icon, an addon slot). Applied to a field's wrapper element.
  *
- * `preventDefault` on that mousedown stops focus bouncing off the non-focusable chrome. Clicks
- * on the control or a nested button/link/input are left alone so caret placement and toggles work.
+ * `preventDefault` on that mousedown stops focus bouncing off the chrome. Clicks on the
+ * control or a nested button/link/input are left alone.
  */
 @Directive({
   selector: '[dsFieldClickFocus]',

@@ -42,7 +42,7 @@ function drain(): void {
   draining = false;
 }
 
-// An idle period with less than this left would run a chart's build into the next frame.
+// An idle period with less than this left would run a build into the next frame.
 const IDLE_ROOM_MS = 12;
 
 function buildWhileIdle(deadline: IdleDeadline): void {
@@ -87,7 +87,6 @@ function observer(
       (entries) => {
         for (const entry of entries) {
           const build = builders.get(entry.target);
-          // A chart scrolled past leaves the queue.
           if (build && entry.isIntersecting) {
             queue.set(entry.target, build);
           } else {
@@ -130,9 +129,9 @@ function scrollRoot(host: Element): Element | null {
   return null;
 }
 
-/** Whether a chart may build its plot yet, under `DS_CONFIG.chart.rendering`. `true` from the
- *  start unless `deferUntilVisible` is on; with it on, `true` once the chart nears the viewport or
- *  is built ahead while the page is idle, and it stays `true`. Call from an injection context.
+/** Whether a chart may build its plot yet, under `DS_CONFIG.chart.rendering`. `true` from the start
+ *  unless `deferUntilVisible` is on; then `true` once the chart nears the viewport or is built ahead
+ *  while the page is idle, and it stays `true`. Call from an injection context.
  *
  *  @internal */
 export function chartRenderGate(): Signal<boolean> {

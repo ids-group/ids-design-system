@@ -1,10 +1,10 @@
-/** One reading on two continuous scales. Structural, so the shared entry point does not name a chart's own type. */
+/** One reading on two continuous scales. Structural, so the shared entry point names no chart's own type. */
 interface Reading {
   readonly x: number;
   readonly y: number;
 }
 
-/** A series only decimates past four times the target: at two the saving is invisible and the loss of detail is not. */
+/** A series only decimates past four times the target: below that the saving is invisible and the loss of detail is not. */
 const DECIMATION_HEADROOM = 4;
 
 /** How many marks the plot can carry: one per pixel of its width.
@@ -23,9 +23,8 @@ export function needsDecimating(count: number, target: number): boolean {
 
 /** Buckets the series by position and keeps each bucket's highest and lowest reading.
  *
- *  The default: a bucket's extremum is in the output by construction, so a spike cannot be the
- *  point dropped. It also stays stable while panning, since a bucket's answer does not depend on
- *  its neighbours.
+ *  The default: a bucket's extremum is in the output by construction, so a spike cannot be dropped,
+ *  and the result is stable while panning.
  *
  *  @internal */
 export function minMaxDecimate(
@@ -69,8 +68,8 @@ export function minMaxDecimate(
 /** Largest Triangle Three Buckets: keeps the reading in each bucket that makes the biggest triangle
  *  with the point already kept and the next bucket's centre of mass.
  *
- *  Draws a truer shape than MinMax at the same budget but does not promise the extremum: a spike is
- *  dropped whenever another point describes the silhouette better. Use where the outline is the reading.
+ *  Draws a truer shape than MinMax at the same budget but does not promise the extremum: use where
+ *  the outline is the reading.
  *
  *  @internal */
 export function lttbDecimate(

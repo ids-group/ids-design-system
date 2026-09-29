@@ -37,8 +37,7 @@ function relativeLuminance([red, green, blue]: readonly [
   return 0.2126 * linear(red) + 0.7152 * linear(green) + 0.0722 * linear(blue);
 }
 
-/** Whether a swatch of `color` sits on `ground` below the non-text contrast a graphical object
- *  needs, and so has to be ringed to be seen. Both are computed CSS colours. */
+/** Whether `color` on `ground` falls below non-text contrast and needs a ring. Both are computed CSS colours. */
 export function swatchBlendsInto(color: string, ground: string): boolean {
   const pair = `${color}|${ground}`;
   const known = blendsByPair.get(pair);

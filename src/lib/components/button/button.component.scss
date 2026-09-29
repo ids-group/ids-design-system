@@ -8,8 +8,6 @@
 
 :host {
   display: inline-flex;
-
-  /* Opts out of the stretch a flex/grid parent applies; otherwise the button fills the column without `fullWidth`. */
   width: fit-content;
 }
 
@@ -54,7 +52,6 @@
   --_button-label-color-hover: var(--ds-button-label-color-hover, var(--_button-label-color));
   --_button-label-color-active: var(--ds-button-label-color-active, var(--_button-label-color));
 
-  /* Hue source for the muted disabled tone: the fill for solid, the label for tonal/ghost/outline. */
   --_button-accent: var(--_button-bg-color);
   --_button-border-color:    var(--ds-button-border-color,    transparent);
   --_button-border-color-hover: var(--ds-button-border-color-hover, var(--_button-border-color));
@@ -78,8 +75,6 @@
   --_button-padding-x:     var(--ds-button-padding-x,     var(--space-5));
   --_button-padding-y:     var(--ds-button-padding-y,     0);
 
-  /* Disabled label at L 70% trades label contrast (2.1-2.7:1) for a state that cannot be mistaken
-     for the live button. Tonal/ghost/outline mix toward --surface-disabled instead. */
   --_button-bg-color-disabled: var(--ds-button-bg-color-disabled, oklch(from var(--_button-accent) 92% 0.03 h));
   --_button-label-color-disabled: var(--ds-button-label-color-disabled, oklch(from var(--_button-accent) 70% 0.035 h));
   --_button-border-color-disabled: var(--ds-button-border-color-disabled, oklch(from var(--_button-accent) 86% 0.04 h));
@@ -138,7 +133,6 @@
 
   .icon { width: var(--icon-md); height: var(--icon-md); flex-shrink: 0; }
 
-  /* Secondary line from [dsButtonSubtext] or the refusal reason; its presence stacks the button into a column. */
   .button-main { display: contents; }
   .subtext-slot:empty { display: none; }
   .subtext-slot,
@@ -148,7 +142,6 @@
     text-align: center;
   }
 
-  /* Uncapped on purpose: a long reason wraps instead of truncating the explanation. */
   .reason { max-width: 100%; text-wrap: pretty; }
 
   &:has(.subtext-slot:not(:empty)),
@@ -197,7 +190,6 @@
     --_family-base: var(--text-secondary); --_family-on: var(--surface-default); --_family-strong: var(--text-primary);
     --_family-subtitle: var(--surface-secondary);
 
-    /* Mixed toward --surface-default so it flips correctly in dark theme. */
     --_family-muted: color-mix(in srgb, var(--text-secondary) 14%, var(--surface-default));
     --_family-muted-strong: color-mix(in srgb, var(--text-secondary) 22%, var(--surface-default));
     --_family-outline-border: var(--border-default);
@@ -240,7 +232,6 @@
     --_button-label-color-disabled: var(--ds-button-label-color-disabled, color-mix(in srgb, var(--_button-label-color) 40%, var(--surface-default)));
   }
 
-  /* Transparent, not --surface-default: a painted white fill reads as a sticker on a tinted ground. */
   &.variant-outline {
     --_button-bg-color:        var(--ds-button-bg-color,        transparent);
     --_button-label-color:     var(--ds-button-label-color,     var(--_family-strong));
@@ -253,7 +244,6 @@
     --_button-bg-color-disabled: var(--ds-button-bg-color-disabled, transparent);
     --_button-border-color-disabled: var(--ds-button-border-color-disabled, color-mix(in srgb, var(--_button-border-color) 55%, var(--surface-disabled)));
 
-    /* Same mix as ghost: the disabled border alone (1.30:1 against the page) is fainter than the enabled one. */
     --_button-label-color-disabled: var(--ds-button-label-color-disabled, color-mix(in srgb, var(--_button-label-color) 40%, var(--surface-default)));
   }
 

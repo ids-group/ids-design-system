@@ -43,12 +43,7 @@ const DIRECTION_COLORS: Record<WaterfallChartStep['direction'], string> = {
   total: 'var(--ds-chart-series-default-color)',
 };
 
-/**
- * A running total, bar by bar: what a figure started at, what moved it, and what it ended at.
- *
- * Colour never carries the increase/decrease semantic alone: every bar's label prints its own sign
- * and its accessible name says "increase" or "decrease" in words.
- */
+/** A running total, bar by bar: what a figure started at, what moved it, and what it ended at. */
 @Component({
   selector: 'ds-waterfall-chart',
   standalone: true,
@@ -72,48 +67,43 @@ const DIRECTION_COLORS: Record<WaterfallChartStep['direction'], string> = {
 export class WaterfallChartComponent {
   protected readonly renderReady = chartRenderGate();
 
-  /** The bars in the order they are read. Never sorted: the sequence is the meaning. */
+  /** The bars in reading order; never sorted. */
   readonly data = input<readonly WaterfallChartBar[]>([]);
 
   /** Prints each bar's own reading above it, with its sign. */
   readonly showValues = input(true, { transform: booleanAttribute });
 
-  /** The dashed rule chaining one bar to the next at the level they share. */
+  /** The dashed rule chaining one bar to the next. */
   readonly showConnectors = input(true, { transform: booleanAttribute });
 
-  /** Printed above the plot as the visible title, and reused as the annex table's caption. */
+  /** Visible title above the plot; also the annex table's caption. */
   readonly caption = input<string | null>(null);
 
-  /** The accessible name. Generated from the steps when omitted, naming each one's direction in
-   *  words and the figure the chain ends at. */
+  /** The accessible name. Generated from the steps when omitted. */
   readonly summary = input<string | null>(null);
 
   /** A hint, not a count. Ticks snap to a round step. */
   readonly tickCount = input(5, { transform: numberAttribute });
 
-  /** Turns on the click affordance and the keyboard route. `barClicked` fires whether or not
-   *  this is set. */
+  /** Turns on the click affordance and the keyboard route. */
   readonly interactive = input(false, { transform: booleanAttribute });
 
-  /** `'auto'` draws the bordered, padded box; `'none'` leaves it bare for a chart inside a card
-   *  the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`. */
+  /** `'auto'` draws the bordered, padded box; `'none'` leaves it bare. Unset falls back to `DS_CONFIG.chart.frame`. */
   readonly frame = input<ChartFrame | null>(null);
 
-  /** Whether the tooltip draws a colour dot beside each reading. Unset falls back to
-   *  `DS_CONFIG.chart.tooltipSwatches`, then draws them for up to four readings. */
+  /** Whether the tooltip draws a colour dot per reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`. */
   readonly tooltipSwatches = input<boolean | null>(null, {
     transform: (value: unknown) =>
       value == null ? null : booleanAttribute(value),
   });
 
-  /** The annex table under the plot. Unset falls back to `DS_CONFIG.chart.dataTable`, then
-   *  `'none'`. It prints each step's direction, its own reading and the running total. */
+  /** The annex table under the plot: each step's direction, reading and running total. Unset falls back to `DS_CONFIG.chart.dataTable`. */
   readonly dataTable = input<ChartDataTable | null>(null);
 
-  /** Skeleton bars at the real count, so the page does not resize when the data lands. */
+  /** Skeleton bars at the real count. */
   readonly loading = input(false, { transform: booleanAttribute });
 
-  /** Separate from an empty `data`: a failed request and no data mean different things. */
+  /** Shows the error message; distinct from an empty `data`. */
   readonly error = input(false, { transform: booleanAttribute });
 
   /** Shown in place of the plot when `data` is empty. Unset falls back to
@@ -124,19 +114,15 @@ export class WaterfallChartComponent {
    *  `DS_INTL.chart.error`. */
   readonly errorText = input<string | null>(null);
 
-  /** Formats every value the chart prints - the axis ticks, the bar labels and the annex table.
-   *  The sign a delta carries is added around it, so a formatter never has to know about one. */
+  /** Formats every value the chart prints. A delta's sign is added around it. */
   readonly valueFormat = input<ChartValueFormat | null>(null);
 
-  /** Holds the clicked step and its tooltip in place, with a pin disc on it, until a second click,
-   *  Escape or a press outside releases it. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then
-   *  `true`. `barClicked` fires either way - pinning is a state, not a handler. */
+  /** Holds the clicked step and its tooltip until a second click, Escape or an outside press. `barClicked` fires either way. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. */
   readonly pinOnClick = input<boolean | null, unknown>(null, {
     transform: (value) => (value == null ? null : booleanAttribute(value)),
   });
 
-  /** Milliseconds between one step's entrance and the next; a long waterfall narrows the step to
-   *  arrive within 260ms. `0` is no stagger. */
+  /** Milliseconds between one step's entrance and the next; capped at 260ms in total. `0` is no stagger. */
   readonly staggerMs = input(40, { transform: numberAttribute });
 
   protected readonly series = viewChild(ColumnSeriesComponent);
@@ -168,8 +154,7 @@ export class WaterfallChartComponent {
     this.steps().map((step) => ({ from: step.from, to: step.to })),
   );
 
-  /** What each bar's label prints: a delta's own change, a total's running sum. Only a delta takes
-   *  a sign. */
+  /** What each bar's label prints: a delta's change, a total's running sum. */
   protected readonly labelValues = computed(() =>
     this.steps().map((step, index) =>
       step.direction === 'total' ? step.to : (this.data()[index]?.value ?? 0),

@@ -14,8 +14,7 @@ export abstract class DsMessageBase {
   readonly hint = input<string, string | null | undefined>('', {
     transform: trimmedText,
   });
-  /** Error text. Shown immediately - binding it says the consumer has already
-   *  decided this is in error. Takes precedence over `errors`. */
+  /** Error text. Shown immediately; takes precedence over `errors`. */
   readonly error = input<string, string | null | undefined>('', {
     transform: trimmedText,
   });
@@ -23,10 +22,8 @@ export abstract class DsMessageBase {
   readonly warning = input<string, string | null | undefined>('', {
     transform: trimmedText,
   });
-  /** Reserve the message-row height even when empty, so the control doesn't shift
-   *  the layout below it when a hint/error appears. What an unset value falls back
-   *  to is the subclass's call, in `reserveMessageResolved`: a field takes
-   *  `DS_CONFIG.field.reserveMessage`, a button does not. */
+  /** Reserve the message-row height even when empty, so a hint/error does not shift the layout.
+   *  Unset falls back to `DS_CONFIG.field.reserveMessage` for a field, not for a button. */
   readonly reserveMessage = input<boolean | null, unknown>(null, {
     transform: (value) => (value == null ? null : booleanAttribute(value)),
   });
@@ -36,8 +33,7 @@ export abstract class DsMessageBase {
   readonly messageIcon = input<IconName | false | null>(null);
 
   /** Whether an unset `reserveMessage` falls back to `DS_CONFIG.field.reserveMessage`.
-   *  `ds-button` turns it off, or an app-wide field setting would give every button an
-   *  empty message row. Read lazily, so a subclass initializer running later still decides it. */
+   *  Read lazily, so a subclass initializer running later still decides it. */
   protected readonly reserveFollowsFieldDefault: boolean = true;
 
   readonly reserveMessageResolved = resolveReserveMessage(

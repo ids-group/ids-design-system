@@ -2,9 +2,8 @@ import { Directive, TemplateRef, inject } from '@angular/core';
 
 /**
  * Replaces the CONTENTS of a picker's trigger (chips, value, placeholder) with your own
- * markup. The trigger ELEMENT stays library-owned, so `aria-haspopup`, `aria-expanded`,
- * `aria-controls`, `aria-activedescendant` and the Enter/Space/ArrowDown/Escape handling
- * cannot be lost with it.
+ * markup. The trigger ELEMENT stays library-owned: its ARIA attributes and
+ * Enter/Space/ArrowDown/Escape handling are kept.
  *
  * ```html
  * <ds-multi-select [options]="labels()" [(value)]="picked">

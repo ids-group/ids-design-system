@@ -1,7 +1,6 @@
 @use '../../styles/field-box' as field-box;
 
-/* One chrome around N controls. Border, radius, focus ring and dividers live on `.row`, not the host: the group's message must sit OUTSIDE the bordered box.
-   Segments are stripped by their own `.in-group` block when DS_FIELD_GROUP resolves. */
+/* Border, radius, focus ring and dividers live on `.row`, not the host: the group's message must sit outside the bordered box. */
 :host {
   --_field-group-bg-color: var(--ds-field-group-bg-color, var(--surface-default));
   --_field-group-border-color: var(--ds-field-group-border-color, var(--border-default));
@@ -42,13 +41,12 @@
 :host(.sm) .row { @include field-box.field-box-height(sm); }
 :host(.lg) .row { @include field-box.field-box-height(lg); }
 
-/* `:not(.invalid)` instead of a heavier error rule: `.invalid` is a plain host class and loses the specificity race to `:hover`/`:focus-within`. */
+/* `.invalid` is a plain host class and loses the specificity race to `:hover`/`:focus-within`, hence the `:not`. */
 :host(:not(.disabled, .invalid)) .row:hover {
   border-color: var(--border-strong);
 }
 
-/* ONE ring for the whole group, so focusing any segment lights the shared chrome.
-   focus-ring-guard: the group owns no control; each segment silences its own via focus.owns-the-focus-ring. */
+/* focus-ring-guard: the group owns no control; each segment silences its own via focus.owns-the-focus-ring. */
 
 :host(:not(.disabled, .invalid)) .row:focus-within {
   border-color: var(--_field-group-border-color-focus);
@@ -57,7 +55,7 @@
 
 :host(.invalid:not(.disabled)) .row { border-color: var(--_field-group-border-color-error); }
 
-/* The halo takes the error tint, so a focused invalid group reads as one state. `:not(.disabled)` is explicit, not left to source order. */
+/* `:not(.disabled)` is explicit, not left to source order. */
 :host(.invalid:not(.disabled)) .row:focus-within {
   box-shadow: var(--_field-group-focus-shadow-error);
 }
@@ -67,9 +65,8 @@
   border-color: var(--border-disabled);
 }
 
-/* Projected content carries the CONSUMER's encapsulation attribute, so ::ng-deep is the only route. Scoped under `.row` to stay off the message row. */
+/* Projected content carries the consumer's encapsulation attribute, so ::ng-deep is the only route. */
 .row ::ng-deep > * {
-  /* Hug by default, `grow` takes the slack: a segment filling the row by default would leave no room for the one the consumer meant. */
   flex: 0 0 auto;
   min-width: 0;
 }

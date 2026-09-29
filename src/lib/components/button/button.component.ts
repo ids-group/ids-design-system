@@ -113,8 +113,7 @@ export class ButtonComponent extends DsMessageBase {
   /** Brand/status hue family. */
   readonly color = input<ButtonColor>('primary');
   /** Fill pattern. Every color×variant pair renders; the discouraged ones dev-warn with the
-   *  reason. `text` is discouraged for every colour: prefer the global `.link` class, and use
-   *  this one only where the ds-button API is needed. */
+   *  reason. Prefer the global `.link` class over `text` unless the ds-button API is needed. */
   readonly variant = input<ButtonVariant>('solid');
   /** Where the contents sit once the button is wider than them (`fullWidth`, a stretching grid
    *  cell). `'between'` pushes the label and a trailing icon to opposite edges. */
@@ -128,8 +127,7 @@ export class ButtonComponent extends DsMessageBase {
   );
   /** `RouterLink` target. Set it and the button renders an `<a [routerLink]>` with
    *  `routerLinkActive`, so middle-click, open-in-new-tab and the "link" role work.
-   *  Accepts a `UrlTree` as well as a path or command array; `Router.createUrlTree` reaches the
-   *  `UrlCreationOptions` with no input here (`relativeTo`, `preserveFragment`). */
+   *  Accepts a `UrlTree` as well as a path or command array. */
   readonly routerLink = input<DsRouterLink>(null);
   /** Plain `href` target, used when `routerLink` is not set (external address, download).
    *  Renders an `<a href>`. */
@@ -145,8 +143,7 @@ export class ButtonComponent extends DsMessageBase {
   );
   /** Browsing context for the link (`'_blank'`, ...). Ignored with a dev warning on a plain button. */
   readonly target = input<string | undefined>(undefined);
-  /** `rel` for the link. Pair it with `target="_blank"`: without `noopener` the opened page can
-   *  reach back through `window.opener`. */
+  /** `rel` for the link; pair with `target="_blank"` (`noopener` blocks `window.opener` access). */
   readonly rel = input<string | undefined>(undefined);
   /** How `routerLinkActive` decides the `active` class; prefix by default. It also bounds the
    *  announcement: with `{ exact: true }` a prefix match announces nothing rather than `true`.
@@ -182,9 +179,8 @@ export class ButtonComponent extends DsMessageBase {
   /** `aria-controls` on the inner <button>: the id of the panel this button opens. */
   readonly ariaControls = input<string | null>(null);
   /** Why the button is refused, shown as its second line and read only while `disabled`. Setting
-   *  it disables via `aria-disabled` instead of the native attribute (a native disabled button
-   *  cannot be focused, so the reason would never be announced) and swallows the click in
-   *  `onClick`. Uncapped: the text wraps and the button grows. */
+   *  it uses `aria-disabled` instead of the native attribute (a native disabled button cannot be
+   *  focused, so the reason would go unannounced) and swallows the click. Uncapped: the text wraps. */
   readonly disabledReason = input<string, string | null | undefined>('', {
     transform: trimmedText,
   });
@@ -194,8 +190,7 @@ export class ButtonComponent extends DsMessageBase {
   /** Fires on click unless `disabled` or `loading`. */
   readonly pressed = output<MouseEvent>();
 
-  /** The inner control, for an overlay to position against and restore focus to. Typed
-   *  `HTMLElement` because the element follows the destination. */
+  /** The inner control, for an overlay to position against and restore focus to. */
   readonly controlRef = viewChild.required<ElementRef<HTMLElement>>('btn');
 
   protected readonly destination = dsDestination(this.routerLink, this.href);

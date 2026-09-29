@@ -55,7 +55,7 @@
       "
       [attr.aria-label]="interactive() ? entryLabel(mark) : null"
       (animate.leave)="leaveMark($event)">
-      <!-- The pointer target is the whole category slot, not the drawn column, so a two-pixel column stays reachable. -->
+      <!-- The pointer target is the whole category slot, so a two-pixel column stays reachable. -->
       @let hit = hitBox(mark);
 
       <svg:rect

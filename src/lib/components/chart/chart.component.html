@@ -64,7 +64,7 @@
           </g>
         }
 
-        <!-- Not on the svg: a projected mark may be focusable, and an aria-hidden ancestor leaves it
+        <!-- Not on the svg: an aria-hidden ancestor leaves a focusable projected mark
              reachable by Tab yet invisible to a reader. -->
         <g
           class="axes"
@@ -129,8 +129,8 @@
           }
         </g>
 
-        <!-- Two slots so a reference line paints under the marks whatever order the consumer wrote
-             them in. Both stay inside `.marks`, which the boot transition guard is keyed on. -->
+        <!-- Two slots so a reference line paints under the marks in any source order. Both stay
+             inside `.marks`, which the boot transition guard is keyed on. -->
         <g class="marks">
           <ng-content select="[dsReferenceLine]" />
 
@@ -216,7 +216,7 @@
             </text>
           }
 
-          <!-- Over the marks: an annotation's name has to survive a column drawn through it. -->
+          <!-- Over the marks so an annotation's name survives a column drawn through it. -->
           <ng-content select="[dsReferenceLabel], [dsSeriesAnnotation]" />
         </g>
 
@@ -229,7 +229,8 @@
               ',' +
               bandPinY(band) +
               ')'
-            "></g>
+            ">
+          </g>
         }
       </svg>
     </div>

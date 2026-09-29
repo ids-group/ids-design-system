@@ -52,8 +52,7 @@ export class SkeletonComponent {
   readonly circle = input(false, { transform: booleanAttribute });
   /** `display: inline-block` instead of `block`, to sit inline with text. */
   readonly inline = input(false, { transform: booleanAttribute });
-  /** Whether the wave passes over the placeholder. Off, it is a flat block of the same shape,
-   *  for a space held for something that is not loading yet. */
+  /** Whether the wave passes over the placeholder; off, it is a flat block of the same shape. */
   readonly shimmer = input(true, { transform: booleanAttribute });
 
   constructor() {

@@ -69,26 +69,20 @@ export class TooltipDirective implements OnDestroy {
   private readonly overlay = inject(Overlay);
   private readonly host = inject(ElementRef<HTMLElement>);
 
-  /** Tip text. An empty string turns the tooltip off, so a host bound to a possibly
-   *  blank value needs no separate condition. */
+  /** Tip text. An empty string turns the tooltip off. */
   readonly dsTooltip = input<string>('');
-  /** Which side the tip opens on. It does NOT flip: only the requested side is
-   *  offered to the overlay, so a tip with no room there is pushed, not moved. */
+  /** Which side the tip opens on. It does NOT flip: with no room it is pushed, not moved. */
   readonly dsTooltipPlacement = input<TooltipPlacement>('top');
-  /** Milliseconds before the tip appears. Hiding is immediate; the delay only
-   *  suppresses a tip the pointer passed over on its way elsewhere. */
+  /** Milliseconds before the tip appears. Hiding is immediate. */
   readonly dsTooltipDelay = input<number>(120);
-  /** Show the tip only while the host shows less text than it holds. Re-tested on every
-   *  open, so it tracks resizing with no observer.
+  /** Show the tip only while the host shows less text than it holds. Re-tested on every open.
    *
-   *  With this on, `dsTooltip` may be left empty and the host's own text is disclosed, which
-   *  suits projected content the holding component cannot know. A tip whose text the host
-   *  already contains sets no `aria-describedby`;
-   *  one given a `dsTooltip` that says more than the host does describes it as usual. */
+   *  With this on, `dsTooltip` may be left empty and the host's own text is disclosed. A tip
+   *  whose text the host already contains sets no `aria-describedby`; one given a `dsTooltip`
+   *  that says more than the host does describes it as usual. */
   readonly dsTooltipWhenClipped = input(false, { transform: booleanAttribute });
-  /** A selector for the element inside the host whose clipping `dsTooltipWhenClipped` tests and
-   *  whose text it discloses, so the pointer area can be a whole row. Resolved on every open;
-   *  while nothing matches, no clipped tip opens. */
+  /** Selector for the element inside the host whose clipping `dsTooltipWhenClipped` tests and
+   *  whose text it discloses. Resolved on every open; while nothing matches, no clipped tip opens. */
   readonly dsTooltipTextSelector = input<string | null>(null);
 
   get hostElement(): HTMLElement {
@@ -118,8 +112,7 @@ export class TooltipDirective implements OnDestroy {
     return (this.textElement()?.textContent ?? '').trim();
   }
 
-  /** A clipped host's full text is already in the DOM, so a screen reader has it; describing
-   *  the element with it again would announce it twice. */
+  /** A clipped host's full text is already in the DOM; describing it again would announce it twice. */
   private disclosesOwnText(text: string): boolean {
     if (!this.dsTooltipWhenClipped()) {
       return false;
@@ -136,17 +129,15 @@ export class TooltipDirective implements OnDestroy {
   private readonly tipId = `ds-tooltip-${++nextId}`;
 
   /**
-   * Where `aria-describedby` belongs when focus is involved. A host that is not itself
-   * focusable never reaches a screen reader (`ds-menu-item` has `role="none"` and a
-   * real `<button>` inside), so `focusin`'s target, whatever took focus, is recorded
-   * instead. A pointer-only open leaves this null and falls back to the host.
+   * Where `aria-describedby` belongs when focus is involved: a non-focusable host
+   * (`ds-menu-item` is `role="none"` around a real `<button>`) never reaches a screen
+   * reader, so `focusin`'s target is recorded. A pointer-only open leaves it null.
    */
   private focusedTarget: HTMLElement | null = null;
 
   /**
-   * Where `aria-describedby` was written, so teardown strips it from the same element.
-   * Focus can arrive after the panel opened, moving `focusedTarget` and otherwise
-   * stranding the attribute on the host, pointing at a dead panel.
+   * Where `aria-describedby` was written, so teardown strips it from the same element
+   * even if focus moved `focusedTarget` after the panel opened.
    */
   private describedElement: HTMLElement | null = null;
 
@@ -156,8 +147,7 @@ export class TooltipDirective implements OnDestroy {
     afterNextRender(() => this.listenToFocusableAncestor());
   }
 
-  /** `:focus-visible` keeps a click, which focuses the ancestor too, from opening it. Only the
-   *  first clipped host of one ancestor opens, so two panels never stack. */
+  /** `:focus-visible` keeps a click from opening it. Only the first clipped host of one ancestor opens. */
   private listenToFocusableAncestor(): void {
     const host: HTMLElement = this.host.nativeElement;
     if (!this.dsTooltipWhenClipped() || host.matches(FOCUSABLE)) {
@@ -176,7 +166,7 @@ export class TooltipDirective implements OnDestroy {
     const open = (event: FocusEvent) => {
       if (
         event.target !== ancestor ||
-        // Tested here, not when registering: a disabled trigger carries tabindex="-1" until enabled.
+        // Tested here, not at registration: a disabled trigger carries tabindex="-1" until enabled.
         !ancestor.matches(KEYBOARD_FOCUSABLE) ||
         !ancestor.matches(':focus-visible') ||
         firstClippedHost(tooltips) !== this
@@ -208,8 +198,7 @@ export class TooltipDirective implements OnDestroy {
     this.scheduleShow();
   }
 
-  // A clipped host that takes focus itself follows the same rule as one reached through its
-  // focusable ancestor: keyboard focus on the host opens, a click's focus does not.
+  // Same rule as via a focusable ancestor: keyboard focus opens, a click's focus does not.
   @HostListener('focusin', ['$event'])
   protected onFocusIn(event: FocusEvent): void {
     const host = this.hostElement;
@@ -245,8 +234,7 @@ export class TooltipDirective implements OnDestroy {
     this.timer = window.setTimeout(() => this.show(), this.dsTooltipDelay());
   }
 
-  // Close on click too: a re-rendered anchor (e.g. a navigated sidenav item) under a
-  // stationary cursor fires no mouseleave, which would strand the panel.
+  // Close on click too: a re-rendered anchor under a stationary cursor fires no mouseleave.
   @HostListener('mouseleave')
   @HostListener('click')
   protected onClose(): void {
@@ -291,8 +279,7 @@ export class TooltipDirective implements OnDestroy {
   }
 
   private show(): void {
-    // A re-render or re-entrant hover can call show() with a panel still open: dispose
-    // it first so the OverlayRef isn't leaked and the id isn't added twice.
+    // show() can be re-entered with a panel open: dispose it first to avoid a leaked OverlayRef and a duplicate id.
     this.disposeRef();
     const placement = this.dsTooltipPlacement();
     const positionStrategy = this.overlay

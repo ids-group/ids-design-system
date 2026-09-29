@@ -1,7 +1,6 @@
 /**
- * Jump-to-option-by-typing, as a native `<select>` does: "ba" moves to the first option
- * starting with "ba". The timeout separates "ba" from two separate presses; 500ms is the
- * native and APG interval.
+ * Jump-to-option-by-typing, as a native `<select>` does. 500ms is the native and APG
+ * interval separating "ba" from two separate presses.
  */
 const RESET_AFTER_MS = 500;
 
@@ -18,7 +17,6 @@ export function createTypeAhead(): DsTypeAhead {
 
   return {
     match(key, labels, from) {
-      // Named keys ("Enter", "ArrowDown") are not text; only a single printable character counts.
       if (key.length !== 1 || !/\S/.test(key)) {
         return -1;
       }

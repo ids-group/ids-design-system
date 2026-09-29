@@ -23,9 +23,7 @@ import type { ChartLegendItem } from './chart-legend.types';
 
 /**
  * The key beside a chart, and, when `toggleable`, the control that hides a series.
- *
- * Ordinary DOM, never inside the `<svg>`: an item is a real input, so the toggle is
- * keyboard-operable and announced without a custom role.
+ * Real inputs in ordinary DOM, never inside the `<svg>`.
  *
  * @internal
  */
@@ -45,15 +43,15 @@ export class ChartLegendComponent {
   /** Ids of the hidden items. Two-way, so a page can drive it from a URL parameter. */
   readonly hidden = model<readonly string[]>([]);
 
-  /** Offers the control. Off leaves the legend a plain key. */
+  /** Makes each item hide its series; off leaves a plain key. */
   readonly toggleable = input(false, { transform: booleanAttribute });
 
   /** `'isolate'` shows one series and hides the rest (a radio group with an "All" option);
    *  `'toggle'` hides one and leaves the rest (checkboxes). */
   readonly mode = input<'toggle' | 'isolate'>('isolate');
 
-  /** The item under the pointer or holding focus, which the chart dims from. A pointer names it after
-   *  resting for `DS_CONFIG.chart.hoverDelayMs`; focus names it at once. */
+  /** The item under the pointer or holding focus, which the chart dims from; a pointer waits
+   *  `DS_CONFIG.chart.hoverDelayMs`. */
   readonly highlighted = model<string | null>(null);
 
   private readonly dwell = chartDwell(
@@ -91,12 +89,10 @@ export class ChartLegendComponent {
     );
   }
 
-  /** Radio groups are scoped by name across the document; a shared name would make every legend on
-   *  the page one group. */
+  /** Radio group name; unique per legend. */
   protected readonly groupName = nextControlId('ds-chart-legend');
 
-  /** Which radio is on: an item's id or `'all'`, never none (an empty radio group reads as broken).
-   *  A partial hidden set left over from `'toggle'` settles on `'all'`. */
+  /** The radio that is on: an item id, `'all'`, or `'none'`. */
   protected readonly isolated = computed(() => {
     const items = this.items();
     const visible = items.filter((item) => !this.isHidden(item.id));

@@ -34,8 +34,7 @@
   stroke: none;
 }
 
-// A stacked band is separated by a surface-colour stroke, not a darker rule (a third ink that
-// vanishes in print). Unstacked areas sit on the baseline and need none.
+// A stacked band is separated by a surface-colour stroke, not a darker rule (which vanishes in print).
 .series-area.is-stacked {
   stroke: var(--surface-default);
   stroke-width: 2;

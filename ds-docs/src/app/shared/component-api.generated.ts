@@ -138,7 +138,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Announce this alert to a screen reader when it appears. Unset follows `DS_CONFIG.alert.announce`, then `false`. Prefer `ToastService` for anything transient."
+        "description": "Announce this alert to a screen reader when it appears. Unset follows `DS_CONFIG.alert.announce`, then `false`."
       }
     ],
     "outputs": [
@@ -173,7 +173,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'content'",
         "required": false,
-        "description": "`'content'` (default): the rail spans the full viewport height on the left and the topbar sits above the content column only. `'full'`: the topbar spans the full width and the rail + content sit below it."
+        "description": "`'content'` (default): rail spans the full height, topbar sits above the content only. `'full'`: topbar spans the full width."
       },
       {
         "name": "railOpen",
@@ -182,7 +182,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Whether the rail is open as an overlay. Only meaningful below the `lg` breakpoint; above it the rail is always in the layout and this is ignored. Two-way, so a burger in your topbar can drive it."
+        "description": "Whether the rail is open as an overlay. Ignored at and above the `lg` breakpoint."
       },
       {
         "name": "railLabel",
@@ -200,7 +200,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Remember the content scroll per path and restore it on the way BACK. Off by default. Only a history traversal restores (following a link into a screen still lands at the top), plus a host that pushes its own \"back to list\" and says so with `state: { dsRestoreScroll: true }`, and the first navigation after a reload."
+        "description": "Remember the content scroll per path and restore it on the way BACK. Off by default. Restores on a history traversal, on `state: { dsRestoreScroll: true }`, and on the first navigation after a reload."
       },
       {
         "name": "restoreScrollTimeout",
@@ -209,7 +209,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "2000",
         "required": false,
-        "description": "How long to wait for the restored screen's content to grow tall enough before landing as close as it allows. Only meaningful with `restoreScroll`."
+        "description": "Milliseconds to wait for the restored content to grow tall enough. Only with `restoreScroll`."
       },
       {
         "name": "scrollReset",
@@ -222,7 +222,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'path'",
         "required": false,
-        "description": "When the content scroll resets to the top. `'path'` (default) resets when the path changes; `'always'` also resets on a query- or fragment-only navigation, which is what a server-paged list wants; `'never'` hands the decision to the screen, which can still call `AppLayoutScrollService.scrollToTop()`."
+        "description": "When the content scroll resets to the top: on path change (`'path'`), also on query/fragment-only navigation (`'always'`), or never (`'never'`)."
       }
     ],
     "outputs": []
@@ -256,7 +256,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Wordmark beside the letter-mark tile. For a logo image/SVG, project it into the `[brand]` slot instead; for a two-tone wordmark use `[dsBrandName]`. Unset falls back to `DS_CONFIG.brand.name`. Each field resolves on its own, so `brand=\"\"` drops the wordmark but a `logoLetter` in the config still paints its tile; clear both to give one screen no brand row."
+        "description": "Wordmark beside the letter-mark tile. Unset falls back to `DS_CONFIG.brand.name`. Each field resolves on its own: `brand=\"\"` drops the wordmark but a configured `logoLetter` still paints its tile; clear both for no brand row."
       },
       {
         "name": "logoLetter",
@@ -265,7 +265,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Letter-mark glyph when it differs from the brand's first letter (e.g. an \"A\" tile beside the \"AppAdmin\" wordmark). Empty = first letter of `brand`; unset falls back to `DS_CONFIG.brand.logoLetter`."
+        "description": "Letter-mark glyph when it differs from the brand's first letter. Empty = first letter of `brand`; unset falls back to `DS_CONFIG.brand.logoLetter`."
       },
       {
         "name": "tagline",
@@ -274,7 +274,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "One line under the wordmark naming the product or audience. Unset falls back to `DS_CONFIG.brand.tagline`."
+        "description": "One line under the wordmark. Unset falls back to `DS_CONFIG.brand.tagline`."
       },
       {
         "name": "cardElevation",
@@ -288,7 +288,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'raised'",
         "required": false,
-        "description": "Card treatment. `flat` suits a screen that already sits on a tinted canvas."
+        "description": "Card elevation."
       },
       {
         "name": "cardPadding",
@@ -302,7 +302,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'lg'",
         "required": false,
-        "description": "Card padding, passed through to `ds-card`. `md` tightens a short form."
+        "description": "Card padding, passed through to `ds-card`."
       },
       {
         "name": "landmark",
@@ -314,7 +314,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'main'",
         "required": false,
-        "description": "Announce the card as the page's `main` landmark. `ds-card` renders an `<article>`, which is not a landmark, so this is what lets a screen-reader user jump to the form. Set `'none'` where the layout sits inside a page that already owns a `main`, such as `ds-app-layout`: two `main` landmarks is its own violation."
+        "description": "Announces the card as the page's `main` landmark (`ds-card` renders an `<article>`). Set `'none'` inside a page that already owns a `main`, such as `ds-app-layout`."
       }
     ],
     "outputs": []
@@ -345,7 +345,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Error text. Shown immediately - binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
+        "description": "Error text. Shown immediately; takes precedence over `errors`."
       },
       {
         "name": "warning",
@@ -363,7 +363,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. What an unset value falls back to is the subclass's call, in `reserveMessageResolved`: a field takes `DS_CONFIG.field.reserveMessage`, a button does not."
+        "description": "Reserve the message-row height even when empty, so a hint/error does not shift the layout. Unset falls back to `DS_CONFIG.field.reserveMessage` for a field, not for a button."
       },
       {
         "name": "messageIcon",
@@ -381,7 +381,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+        "description": "Validation errors, shown once the user has interacted. Bound by signal forms; reactive and template-driven forms are read through `NgControl`."
       },
       {
         "name": "invalid",
@@ -390,7 +390,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Paints the error state and sets `aria-invalid`, WITHOUT a message of its own, for when the text lives elsewhere (an error summary, one message covering a field group). Use `error` to show text."
+        "description": "Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text."
       },
       {
         "name": "touched",
@@ -399,7 +399,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
       },
       {
         "name": "hidden",
@@ -408,7 +408,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Hides the control. Inline `display`, not the `hidden` attribute: each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
+        "description": "Hides the control. Inline `display`: the `hidden` attribute loses to each control's `:host` display."
       },
       {
         "name": "options",
@@ -453,7 +453,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Chip collapse when they outgrow one line. `\"fit\"` (default) measures and shows as many as fit, the rest behind \"+N more\". A number is a ceiling, not a promise: the row still measures, so narrow triggers show fewer. `\"all\"` shows every chip and lets the trigger grow a line per selection. Unset (`null`) resolves to `\"fit\"`, not `\"all\"`."
+        "description": "Chip collapse: `\"fit\"` (default) shows as many as fit, the rest behind \"+N more\"; a number is a ceiling, not a promise; `\"all\"` shows every chip and grows the trigger a line per selection."
       },
       {
         "name": "size",
@@ -466,7 +466,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "Trigger height - sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
+        "description": "Trigger height; falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "width",
@@ -490,7 +490,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'ellipsis'",
         "required": false,
-        "description": "What a settled single value does when it is wider than the trigger. Defaults to `ellipsis`; `wrap` lets the value break onto a second line and pushes the chevron down. Multi mode is unaffected - its chips have their own measured cap."
+        "description": "A settled single value wider than the trigger: `ellipsis` (default) or `wrap` onto a second line. Multi mode is unaffected."
       },
       {
         "name": "placeholder",
@@ -499,7 +499,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Placeholder shown in the input when empty. Unset falls back to `DS_INTL.picker.placeholder`."
+        "description": "Placeholder when empty; falls back to `DS_INTL.picker.placeholder`."
       },
       {
         "name": "disabled",
@@ -517,7 +517,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Confirmation text, shown when there is no error or warning - and it paints the field's success border. A string like `warning`: the text IS the state."
+        "description": "Confirmation text, shown when there is no error or warning; paints the success border."
       },
       {
         "name": "allowCreate",
@@ -562,7 +562,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Extra classes for the portaled panel, beside `ds-dropdown-panel`, `ds-overlay-pane` and this component's own `ds-autocomplete-panel`. The panel is portaled out of the host, so a class on the pane is the only way a consumer stylesheet reaches ONE instance of it."
+        "description": "Extra classes for the portaled panel, the only way to style one instance of it."
       },
       {
         "name": "readOnly",
@@ -598,7 +598,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Placeholder while the field is being typed in, when a value is already settled - `placeholder` is the empty-field caption and cannot be both. Empty (the default) keeps `placeholder` doing both jobs."
+        "description": "Placeholder while typing over a settled value; empty keeps `placeholder`."
       },
       {
         "name": "filterWith",
@@ -607,7 +607,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "(option, query) => option.label.toLowerCase().includes(query)",
         "required": false,
-        "description": "How the typed query narrows the list. Default: case-insensitive substring of `label`. Pass a predicate to match on anything else. Pass `'none'` when the list arrives already filtered (server-side search): the query is reported through `filterChange` and every option given is rendered."
+        "description": "How the typed query narrows the list. Default: case-insensitive substring of `label`. `'none'` renders every option (server-side search)."
       },
       {
         "name": "loading",
@@ -616,7 +616,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Options are still being fetched. The panel shows a spinner instead of the empty row - which would otherwise claim there are no matches - and the list reports `aria-busy`."
+        "description": "Options are still being fetched: the panel shows a spinner instead of the empty row and reports `aria-busy`."
       },
       {
         "name": "scrollActiveIntoView",
@@ -625,7 +625,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "true",
         "required": false,
-        "description": "Scrolls the keyboard cursor's row into view. On by default: a list longer than the panel otherwise walks the cursor out of sight. Set `false` only if you are driving the scroll position yourself."
+        "description": "Scrolls the keyboard cursor's row into view. Set `false` only when driving the scroll position yourself."
       },
       {
         "name": "required",
@@ -663,7 +663,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": "The query the user typed, on every change. The input for a server-side search; pair it with `filterWith=\"none\"` so the list is not narrowed twice."
+        "description": "The typed query, on every change; pair with `filterWith=\"none\"` for server-side search."
       },
       {
         "name": "opened",
@@ -672,7 +672,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": "The panel opened. The moment to fetch options for a picker whose list is loaded on demand."
+        "description": "The panel opened."
       },
       {
         "name": "closed",
@@ -734,7 +734,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "The person or thing this avatar stands for; drives both the initials and the tint seed. The tint hashes the name, not the initials, which would collide (Alice Brown, Adam Bell)."
+        "description": "The person or thing this avatar stands for; drives the initials and the tint seed."
       },
       {
         "name": "initialsRule",
@@ -1004,7 +1004,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Announce this banner to a screen reader when it appears. Unset follows `DS_CONFIG.banner.announce`, then `false`. Off by default: an `alert` region fires on insertion, so page-furniture banners would interrupt the reader on every route. Turn it on for a banner raised in response to an event; for anything transient prefer `ToastService`."
+        "description": "Announces the banner to a screen reader when it appears. Unset follows `DS_CONFIG.banner.announce`, then `false`. Off by default: an `alert` region fires on insertion. Turn it on for a banner raised in response to an event."
       }
     ],
     "outputs": [
@@ -1045,7 +1045,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "100",
         "required": false,
-        "description": "The full scale `value` and `target` are read against; at 100 they are percentages. With the real total (`[value]=\"37\" [max]=\"80\"`) the accessible name carries \"37 of 80\". Zero or less falls back to 100."
+        "description": "The full scale `value` and `target` are read against; the accessible name reads \"value of max\". Zero or less falls back to 100."
       },
       {
         "name": "semantics",
@@ -1058,7 +1058,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'progress'",
         "required": false,
-        "description": "What the bar is, and therefore how it is announced. See `BarSemantics`. Defaults to `'progress'`."
+        "description": "What the bar is, and so how it is announced. See `BarSemantics`."
       },
       {
         "name": "variant",
@@ -1081,7 +1081,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Indeterminate (unknown-duration) animation instead of a fixed `value`. Only a task has an unknown duration, so it is ignored unless `semantics` is `'progress'`."
+        "description": "Indeterminate animation instead of a fixed `value`; ignored unless `semantics` is `'progress'`."
       },
       {
         "name": "color",
@@ -1090,7 +1090,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Overrides the fill for this one bar. Colour a whole column through `--ds-bar-fill-color` instead."
+        "description": "Overrides the fill for this one bar."
       },
       {
         "name": "ariaLabel",
@@ -1099,7 +1099,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Accessible name (e.g. \"Upload progress\"). With a `target` set, name the comparison here (\"Resolved 62% against a 75% target\"): the role has no second value to announce. Unused under `semantics=\"none\"`."
+        "description": "Accessible name. With a `target`, name the comparison here: the role has no second value to announce. Unused under `semantics=\"none\"`."
       },
       {
         "name": "target",
@@ -1108,7 +1108,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "A second point on the same scale as `value`, drawn as a hairline across the track (goal, baseline or threshold). Clamped like `value`, ignored while `indeterminate`."
+        "description": "A second point on the scale, drawn as a hairline across the track. Clamped like `value`, ignored while `indeterminate`."
       }
     ],
     "outputs": []
@@ -1139,7 +1139,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Track length is relative to this. Null uses the largest value, so the longest row always fills its track."
+        "description": "Track length is relative to this. Null uses the largest value."
       },
       {
         "name": "frame",
@@ -1151,7 +1151,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "`'auto'` draws the chart's own bordered, padded box; `'none'` leaves it bare, for a chart inside a card. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'`."
+        "description": "`'auto'` draws a bordered, padded box; `'none'` leaves it bare. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'`."
       },
       {
         "name": "tooltipSwatches",
@@ -1160,7 +1160,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for up to four readings."
+        "description": "Colour dot beside each tooltip reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then dots for up to four readings."
       },
       {
         "name": "tooltipLingerMs",
@@ -1169,7 +1169,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Milliseconds the tooltip stays after the pointer leaves the mark, so it can glide to the next mark instead of reopening. Zero closes it at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
+        "description": "Milliseconds the tooltip stays after the pointer leaves the mark; zero closes it at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
       },
       {
         "name": "caption",
@@ -1178,7 +1178,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Printed above the plot as the chart's visible title, and reused as the annex table's caption."
+        "description": "Visible title above the plot, reused as the annex table's caption."
       },
       {
         "name": "summary",
@@ -1200,7 +1200,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so use `'none'` only where the data is already in a table on the page. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`."
+        "description": "Label-and-value table under the plot: `'toggle'` behind a disclosure, `'visible'` open, `'none'` none. Use `'none'` only where the data is already in a table on the page. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`."
       },
       {
         "name": "partOfWhole",
@@ -1209,7 +1209,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Declares that the marks are parts of one whole. Off by default: a total over stages or months is not a real quantity. On, each mark's share appears on the tooltip's second line and in the data table."
+        "description": "Declares the marks parts of one whole: each mark's share appears on the tooltip's second line and in the data table. Off by default, since a total over stages or months is not a real quantity."
       },
       {
         "name": "showPercent",
@@ -1263,7 +1263,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
+        "description": "Formats every printed value, including the annex table and generated description. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
       },
       {
         "name": "pinOnClick",
@@ -1272,7 +1272,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Holds the clicked row and its tooltip in place, with a pin disc on it, until a second click, Escape or a press outside releases it. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. `rowClicked` fires either way - pinning is a state, not a handler."
+        "description": "Holds the clicked mark and its tooltip in place, with a pin disc, until a second click, Escape or a press outside. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. `rowClicked` fires either way."
       },
       {
         "name": "interactive",
@@ -1281,7 +1281,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Turns on the click affordance: the pointer cursor and any hover tint. `rowClicked` fires whether or not this is set."
+        "description": "Adds the pointer cursor and hover tint. `rowClicked` fires either way."
       },
       {
         "name": "dimOthers",
@@ -1290,7 +1290,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Dims every OTHER mark while one is hovered or focused. Off by default: it costs the separation between the dimmed marks (worst pair of three series: dE 14.8 to 2.1 at the default `--ds-chart-dim-opacity` 0.3, measured 2026-09-13)."
+        "description": "Dims every OTHER mark while one is hovered or focused. Off by default: it costs separation between the dimmed marks."
       },
       {
         "name": "highlighted",
@@ -1308,7 +1308,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "40",
         "required": false,
-        "description": "Milliseconds between one row's entrance and the next; `0` turns the stagger off. The whole spread stays within 260ms, so a long chart narrows the step."
+        "description": "Milliseconds between one row's entrance and the next; `0` turns the stagger off. The step narrows to keep the spread within 260ms."
       },
       {
         "name": "tooltip",
@@ -1320,7 +1320,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'item'",
         "required": false,
-        "description": "Whether a hovered or focused row opens a tooltip. `'axis'` is not offered: a bar chart's marks are its categories."
+        "description": "Whether a hovered or focused row opens a tooltip."
       }
     ],
     "outputs": [
@@ -1331,7 +1331,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": "The row that was clicked, or activated with Enter or Space. Fires whether or not `interactive` is set."
+        "description": "The row clicked or activated with Enter or Space, whether or not `interactive` is set."
       }
     ]
   },
@@ -1438,7 +1438,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Caps how many crumbs render, collapsing the middle; the first and the LAST always survive. Worth setting on any deep trail: the row is `nowrap` with `overflow: hidden`, so uncapped it is clipped from the END, which is the current page."
+        "description": "Caps how many crumbs render, collapsing the middle; the first and the LAST always survive. Uncapped, a long trail is clipped from the END, which is the current page."
       }
     ],
     "outputs": [
@@ -1479,7 +1479,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Error text. Shown immediately - binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
+        "description": "Error text. Shown immediately; takes precedence over `errors`."
       },
       {
         "name": "warning",
@@ -1497,7 +1497,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. What an unset value falls back to is the subclass's call, in `reserveMessageResolved`: a field takes `DS_CONFIG.field.reserveMessage`, a button does not."
+        "description": "Reserve the message-row height even when empty, so a hint/error does not shift the layout. Unset falls back to `DS_CONFIG.field.reserveMessage` for a field, not for a button."
       },
       {
         "name": "messageIcon",
@@ -1538,7 +1538,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'solid'",
         "required": false,
-        "description": "Fill pattern. Every color×variant pair renders; the discouraged ones dev-warn with the reason. `text` is discouraged for every colour: prefer the global `.link` class, and use this one only where the ds-button API is needed."
+        "description": "Fill pattern. Every color×variant pair renders; the discouraged ones dev-warn with the reason. Prefer the global `.link` class over `text` unless the ds-button API is needed."
       },
       {
         "name": "align",
@@ -1572,7 +1572,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "`RouterLink` target. Set it and the button renders an `<a [routerLink]>` with `routerLinkActive`, so middle-click, open-in-new-tab and the \"link\" role work. Accepts a `UrlTree` as well as a path or command array; `Router.createUrlTree` reaches the `UrlCreationOptions` with no input here (`relativeTo`, `preserveFragment`)."
+        "description": "`RouterLink` target. Set it and the button renders an `<a [routerLink]>` with `routerLinkActive`, so middle-click, open-in-new-tab and the \"link\" role work. Accepts a `UrlTree` as well as a path or command array."
       },
       {
         "name": "href",
@@ -1626,7 +1626,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "undefined",
         "required": false,
-        "description": "`rel` for the link. Pair it with `target=\"_blank\"`: without `noopener` the opened page can reach back through `window.opener`."
+        "description": "`rel` for the link; pair with `target=\"_blank\"` (`noopener` blocks `window.opener` access)."
       },
       {
         "name": "routerLinkActiveOptions",
@@ -1761,7 +1761,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Why the button is refused, shown as its second line and read only while `disabled`. Setting it disables via `aria-disabled` instead of the native attribute (a native disabled button cannot be focused, so the reason would never be announced) and swallows the click in `onClick`. Uncapped: the text wraps and the button grows."
+        "description": "Why the button is refused, shown as its second line and read only while `disabled`. Setting it uses `aria-disabled` instead of the native attribute (a native disabled button cannot be focused, so the reason would go unannounced) and swallows the click. Uncapped: the text wraps."
       },
       {
         "name": "ariaDescribedBy",
@@ -1875,7 +1875,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "The category axis; its length is the number of bands every projected mark is positioned against."
+        "description": "One band per category; every projected mark is positioned against them."
       },
       {
         "name": "tickCount",
@@ -1951,7 +1951,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "CHART_DEFAULT_PLOT_HEIGHT",
         "required": false,
-        "description": "Height of the plot itself, in CSS pixels, axis labels and value headroom excluded; it does not scale with the card width."
+        "description": "Plot height in CSS pixels, axis labels and headroom excluded; fixed across card widths."
       },
       {
         "name": "axisGutter",
@@ -1960,7 +1960,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "CHART_DEFAULT_AXIS_GUTTER",
         "required": false,
-        "description": "Width in CSS pixels of the gutter down the left that carries the value-axis labels. Widen it for long tick labels; the plot takes whatever is left."
+        "description": "Width in CSS pixels of the left gutter that carries the value-axis labels."
       },
       {
         "name": "valueSpace",
@@ -1969,7 +1969,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "CHART_DEFAULT_VALUE_SPACE",
         "required": false,
-        "description": "Pixels reserved for a value label at each end of the plot (above the top tick, below the baseline for a negative mark). Reserved whether or not a label is drawn, so the height is stable."
+        "description": "Pixels reserved at each end of the plot for a value label, drawn or not, so the height holds."
       },
       {
         "name": "caption",
@@ -1978,7 +1978,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Printed above the plot as the chart's visible title."
+        "description": "Visible title above the plot."
       },
       {
         "name": "interactive",
@@ -1996,7 +1996,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Accessible name for the plot; the container holds no readings, so a chart that needs its numbers described supplies the sentence here (presets build it with `describeSeries`). It is the whole label in the static case."
+        "description": "Accessible name for the plot. The container holds no readings, so a chart whose numbers need describing supplies the sentence here (presets build it with `describeSeries`)."
       },
       {
         "name": "frame",
@@ -2076,7 +2076,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'aligned'",
         "required": false,
-        "description": "How the second value axis relates to the first, once a mark has reported against it. The same four words `ds-line-chart` takes."
+        "description": "How the second value axis relates to the first once a mark reports against it; the same values `ds-line-chart` takes."
       },
       {
         "name": "axisColor",
@@ -2085,7 +2085,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Paints the first axis's tick labels in the colour of the marks measured against it, so a two-scale plot says which line reads which axis. Set by the author: several marks can share one."
+        "description": "Colours the first axis's tick labels like the marks measured against it."
       },
       {
         "name": "secondaryAxisColor",
@@ -2179,7 +2179,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Holds the clicked mark and its tooltip until a second click, Escape or a press outside. Under the category cursor the container holds the category instead. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`."
+        "description": "Holds the clicked mark and its tooltip until a second click, Escape or a press outside. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`; the category cursor holds the category instead."
       },
       {
         "name": "dimOthers",
@@ -2188,7 +2188,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Fades every mark but the one under the pointer. Off by default: it costs the separation between the rest."
+        "description": "Fades every mark but the one under the pointer. Off by default: it costs separation between the rest."
       },
       {
         "name": "staggerMs",
@@ -2197,7 +2197,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "40",
         "required": false,
-        "description": "Milliseconds between one mark's entrance and the next; steps narrow to fit the spread within 260ms. `0` is no stagger."
+        "description": "Milliseconds between one mark's entrance and the next, narrowed to fit 260ms. `0` is no stagger."
       },
       {
         "name": "partOfWhole",
@@ -2230,7 +2230,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'mark'",
         "required": false,
-        "description": "Where the tooltip is pinned. `'mark'` is the column itself; `'cell'` is the full-height category cell, which puts the panel at the top of the plot."
+        "description": "Where the tooltip is pinned: `'mark'` is the column, `'cell'` the full-height category cell (panel at the plot top)."
       },
       {
         "name": "tooltipLingerMs",
@@ -2239,7 +2239,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "CHART_TOOLTIP_LINGER_MS",
         "required": false,
-        "description": "How long the panel survives the pointer leaving the mark, in milliseconds. The default lets the pointer reach the next mark before the panel closes."
+        "description": "Milliseconds the panel survives the pointer leaving the mark."
       },
       {
         "name": "valueFormat",
@@ -2248,7 +2248,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "chartValueFormat(injectDsLocale())",
         "required": false,
-        "description": "Formats every value this series prints. Called with `'tick'` for an axis label and `'tooltip'` everywhere a value is printed in full."
+        "description": "Formats every value this series prints: `'tick'` for an axis label, `'tooltip'` for a value in full."
       },
       {
         "name": "columnWidthRatio",
@@ -2257,7 +2257,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "0.8",
         "required": false,
-        "description": "The mark's share of its category slot, before the maximum width caps it. Measured off the slot, not `bandWidth()`, whose padding is already taken out (both would narrow columns twice)."
+        "description": "The mark's share of its category slot before the maximum width caps it. Measured off the slot, not `bandWidth()`, whose padding is already taken out (both would narrow columns twice)."
       },
       {
         "name": "slot",
@@ -2275,7 +2275,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "1",
         "required": false,
-        "description": "How many slots the band is divided into: the series drawn side by side. One is the whole band."
+        "description": "How many slots the band is divided into: the series drawn side by side."
       },
       {
         "name": "offsets",
@@ -2284,7 +2284,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Where each mark starts and ends on the value axis, one entry per point. Unset, every mark runs from zero to its own value (unstacked)."
+        "description": "Where each mark starts and ends on the value axis, one entry per point. Unset, marks run from zero."
       },
       {
         "name": "soleSeries",
@@ -2293,7 +2293,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "The only series in its slot, as a waterfall's floating bars are: `offsets` lifts each mark off the axis, but nothing is stacked above or below it, so the mark answers the pointer over the whole plot height rather than over its own span."
+        "description": "The only series in its slot, as a waterfall's floating bars are: each answers the pointer over the whole plot height."
       },
       {
         "name": "axis",
@@ -2314,7 +2314,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "One colour for the whole series. Unset, each mark takes the categorical palette by position (right when the marks are the categories). A point's own colour wins over both."
+        "description": "One colour for the whole series. Unset, each mark takes the categorical palette by position; a point's own colour wins."
       },
       {
         "name": "seriesFill",
@@ -2335,7 +2335,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Names the series in the tooltip, making the category the panel's heading. Unset, the panel names the category."
+        "description": "Names the series in the tooltip, making the category the panel's heading."
       },
       {
         "name": "seriesKey",
@@ -2385,7 +2385,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Not `input.required`: the preset reads `tooltipContext()` from a binding on this same element, and a required input throws NG0950 before its value is written."
+        "description": "Not `input.required`: the preset reads `tooltipContext()` from a binding on this element (NG0950)."
       },
       {
         "name": "showMarkers",
@@ -2394,7 +2394,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "true",
         "required": false,
-        "description": "Draws a round marker at every reading. Reads better off past roughly twenty points."
+        "description": "Draws a round marker at every reading; reads better off past roughly twenty points."
       },
       {
         "name": "outline",
@@ -2403,7 +2403,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "true",
         "required": false,
-        "description": "Lays the line and its markers on a surface-colour band so they stay legible where they cross other marks. On by default."
+        "description": "Lays the line and markers on a surface-colour band so they stay legible where they cross other marks."
       },
       {
         "name": "interactive",
@@ -2421,7 +2421,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Holds the clicked mark and its tooltip until a second click, Escape or a press outside. Under the category cursor the container holds the category instead. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`."
+        "description": "Holds the clicked mark and its tooltip until a second click, Escape or a press outside. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`; the category cursor holds the category instead."
       },
       {
         "name": "dimOthers",
@@ -2430,7 +2430,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Fades every series but the one under the pointer. Off by default: it costs the separation between the rest."
+        "description": "Fades every series but the one under the pointer. Off by default: it costs separation between the rest."
       },
       {
         "name": "highlighted",
@@ -2439,7 +2439,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "The series to single out: the others draw faded and this one bold (survives monochrome print). Fades the others whether or not `dimOthers` is set; that governs only pointer hover."
+        "description": "The series to single out: the others draw faded and this one bold. Fades the others whether or not `dimOthers` is set."
       },
       {
         "name": "patterns",
@@ -2466,7 +2466,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "40",
         "required": false,
-        "description": "Milliseconds between one series' entrance and the next, narrowed to fit the stagger budget. `0` turns the stagger off."
+        "description": "Milliseconds between one series' entrance and the next, narrowed to fit the stagger budget; `0` is off."
       },
       {
         "name": "gaps",
@@ -2491,7 +2491,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'linear'",
         "required": false,
-        "description": "How the line joins its readings. `'linear'` (default) asserts nothing between readings; `'step'` holds each reading to the next; `'smooth'` is a monotone cubic that draws no peak the data lacks."
+        "description": "How the line joins its readings: `'linear'` (default) asserts nothing between them; `'step'` holds each reading to the next; `'smooth'` is a monotone cubic that draws no peak the data lacks."
       },
       {
         "name": "tooltip",
@@ -2504,7 +2504,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'item'",
         "required": false,
-        "description": "Whether a hovered or focused reading opens a tooltip, and for what. `'item'` names the marker; `'axis'` names every series at the category under the pointer. `'axis'` follows the container's `cursor`: set `cursor=\"category\"` on `ds-chart` or nothing marks the category being read."
+        "description": "Whether a hovered or focused reading opens a tooltip: `'item'` names the marker, `'axis'` every series at the category. `'axis'` needs `cursor=\"category\"` on `ds-chart`."
       },
       {
         "name": "tooltipAnchor",
@@ -2516,7 +2516,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'reading'",
         "required": false,
-        "description": "Where an `'axis'` panel hangs: `'reading'` over the highest reading in the category (stays put within one band); `'pointer'` follows the cursor."
+        "description": "Where an `'axis'` panel hangs: `'reading'` over the highest reading in the category; `'pointer'` follows the cursor."
       },
       {
         "name": "tooltipLingerMs",
@@ -2525,7 +2525,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "CHART_TOOLTIP_LINGER_MS",
         "required": false,
-        "description": "How long the panel survives the pointer leaving the marker, in milliseconds. The default lets the pointer reach the next marker before the panel closes."
+        "description": "Milliseconds the panel survives the pointer leaving the marker."
       },
       {
         "name": "valueFormat",
@@ -2534,7 +2534,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "chartValueFormat(injectDsLocale())",
         "required": false,
-        "description": "Formats every value this series prints. Called with `'tick'` for an axis label and `'tooltip'` everywhere a value is printed in full."
+        "description": "Formats every value this series prints: `'tick'` for an axis label, `'tooltip'` for a value in full."
       }
     ],
     "outputs": [
@@ -2545,7 +2545,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": "The clicked reading, with the series it belongs to and its position in `categories`. Fires on click and on Enter or Space, whatever `interactive` says."
+        "description": "The clicked reading, its series and position in `categories`. Fires on click and Enter or Space, whatever `interactive` says."
       }
     ]
   },
@@ -2566,7 +2566,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "The same list `dsReferenceLine` is given. Place this mark after the series and the line mark before it, so labels stay legible over marks."
+        "description": "The same list `dsReferenceLine` is given. Place this mark after the series so labels stay legible over marks."
       }
     ],
     "outputs": []
@@ -2588,7 +2588,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "The lines and bands to draw. Each entry is one `value` plus optional `label`, `color` and `dash`; a `to` makes it a band. Each widens the value axis to hold it."
+        "description": "The lines and bands to draw: one `value` plus optional `label`, `color` and `dash`; a `to` makes it a band. Each widens the value axis."
       }
     ],
     "outputs": []
@@ -2668,7 +2668,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Renders each row's first cell as a `<th scope=\"row\">`, for a matrix whose rows are named rather than numbered."
+        "description": "First cell of each row as a row header."
       }
     ],
     "outputs": [
@@ -2679,7 +2679,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": "Fires with the disclosure's state, so a chart with thousands of readings can build its rows only while they are on screen."
+        "description": "Fires with the disclosure's state."
       }
     ]
   },
@@ -2709,7 +2709,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Error text. Shown immediately - binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
+        "description": "Error text. Shown immediately; takes precedence over `errors`."
       },
       {
         "name": "warning",
@@ -2727,7 +2727,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. What an unset value falls back to is the subclass's call, in `reserveMessageResolved`: a field takes `DS_CONFIG.field.reserveMessage`, a button does not."
+        "description": "Reserve the message-row height even when empty, so a hint/error does not shift the layout. Unset falls back to `DS_CONFIG.field.reserveMessage` for a field, not for a button."
       },
       {
         "name": "messageIcon",
@@ -2745,7 +2745,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+        "description": "Validation errors, shown once the user has interacted. Bound by signal forms; reactive and template-driven forms are read through `NgControl`."
       },
       {
         "name": "invalid",
@@ -2754,7 +2754,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Paints the error state and sets `aria-invalid`, WITHOUT a message of its own, for when the text lives elsewhere (an error summary, one message covering a field group). Use `error` to show text."
+        "description": "Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text."
       },
       {
         "name": "touched",
@@ -2763,7 +2763,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
       },
       {
         "name": "hidden",
@@ -2857,7 +2857,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Accessible name for a control with no visible label. Set beside a label it overrides the label, per ARIA."
+        "description": "Accessible name for a control with no visible label; overrides `label` when both are set."
       }
     ],
     "outputs": []
@@ -2900,7 +2900,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Error text. Shown immediately - binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
+        "description": "Error text. Shown immediately; takes precedence over `errors`."
       },
       {
         "name": "warning",
@@ -2918,7 +2918,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. What an unset value falls back to is the subclass's call, in `reserveMessageResolved`: a field takes `DS_CONFIG.field.reserveMessage`, a button does not."
+        "description": "Reserve the message-row height even when empty, so a hint/error does not shift the layout. Unset falls back to `DS_CONFIG.field.reserveMessage` for a field, not for a button."
       },
       {
         "name": "messageIcon",
@@ -2936,7 +2936,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+        "description": "Validation errors, shown once the user has interacted. Bound by signal forms; reactive and template-driven forms are read through `NgControl`."
       },
       {
         "name": "invalid",
@@ -2945,7 +2945,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Paints the error state and sets `aria-invalid`, WITHOUT a message of its own, for when the text lives elsewhere (an error summary, one message covering a field group). Use `error` to show text."
+        "description": "Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text."
       },
       {
         "name": "touched",
@@ -2954,7 +2954,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
       },
       {
         "name": "hidden",
@@ -2963,7 +2963,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Hides the control. Inline `display`, not the `hidden` attribute: each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
+        "description": "Hides the control. Inline `display`: the `hidden` attribute loses to each control's `:host` display."
       },
       {
         "name": "value",
@@ -2990,7 +2990,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Extra classes for the portaled panel. The panel is outside the host, so a class on the pane is the only way a stylesheet reaches one instance of it."
+        "description": "Extra classes for the portaled panel, the only way a stylesheet reaches one instance of it."
       },
       {
         "name": "disabled",
@@ -3017,7 +3017,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Confirmation text, shown when there is no error or warning; also paints the success border. A string like `warning`: the text is the state."
+        "description": "Confirmation text, shown when there is no error or warning; also paints the success border."
       },
       {
         "name": "staticPreview",
@@ -3062,7 +3062,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'none'",
         "required": false,
-        "description": "How several series share one category's band. `'none'` (default) and `'grouped'` both draw them side by side. `'stacked'` puts each series on top of the one before it; `'normalized'` stacks then divides by the category's total, so the axis reads in shares. Unrelated to `ds-line-chart`'s `axisMode=\"stacked\"`, which is two plots one above the other."
+        "description": "How several series share one category's band. `'none'` (default) and `'grouped'` draw them side by side; `'stacked'` piles them; `'normalized'` piles then divides by the category's total."
       },
       {
         "name": "thresholds",
@@ -3071,7 +3071,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Reference lines and bands drawn across the plot, behind the columns. Each one widens the value axis to hold it and is named in the generated description."
+        "description": "Reference lines and bands behind the columns. Each widens the value axis and is named in the generated description."
       },
       {
         "name": "showValues",
@@ -3101,7 +3101,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "`'auto'` draws the chart's own bordered, padded box; `'none'` leaves it bare, for a chart inside a card. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'`."
+        "description": "`'auto'` draws a bordered, padded box; `'none'` leaves it bare. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'`."
       },
       {
         "name": "tooltipSwatches",
@@ -3110,7 +3110,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for up to four readings."
+        "description": "Colour dot beside each tooltip reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then dots for up to four readings."
       },
       {
         "name": "tooltipLingerMs",
@@ -3119,7 +3119,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Milliseconds the tooltip stays after the pointer leaves the mark, so it can glide to the next mark instead of reopening. Zero closes it at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
+        "description": "Milliseconds the tooltip stays after the pointer leaves the mark; zero closes it at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
       },
       {
         "name": "caption",
@@ -3128,7 +3128,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Printed above the plot as the chart's visible title, and reused as the annex table's caption."
+        "description": "Visible title above the plot, reused as the annex table's caption."
       },
       {
         "name": "summary",
@@ -3150,7 +3150,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so use `'none'` only where the data is already in a table on the page. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`."
+        "description": "Label-and-value table under the plot: `'toggle'` behind a disclosure, `'visible'` open, `'none'` none. Use `'none'` only where the data is already in a table on the page. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`."
       },
       {
         "name": "partOfWhole",
@@ -3159,7 +3159,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Declares that the marks are parts of one whole. Off by default: a total over stages or months is not a real quantity. On, each mark's share appears on the tooltip's second line and in the data table."
+        "description": "Declares the marks parts of one whole: each mark's share appears on the tooltip's second line and in the data table. Off by default, since a total over stages or months is not a real quantity."
       },
       {
         "name": "loading",
@@ -3204,7 +3204,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
+        "description": "Formats every printed value, including the annex table and generated description. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
       },
       {
         "name": "interactive",
@@ -3213,7 +3213,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Turns on the click affordance: the pointer cursor and any hover tint. `pointClicked` fires whether or not this is set."
+        "description": "Adds the pointer cursor and hover tint. `pointClicked` fires either way."
       },
       {
         "name": "pinOnClick",
@@ -3222,7 +3222,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Holds the clicked mark and its tooltip in place, with a pin disc on it, until a second click, Escape or a press outside releases it. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. `pointClicked` fires either way - pinning is a state, not a handler."
+        "description": "Holds the clicked mark and its tooltip in place, with a pin disc, until a second click, Escape or a press outside. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. `pointClicked` fires either way."
       },
       {
         "name": "dimOthers",
@@ -3231,7 +3231,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Dims every OTHER mark while one is hovered or focused. Off by default: it costs the separation between the dimmed marks (worst pair of three series: dE 14.8 to 2.1 at the default `--ds-chart-dim-opacity` 0.3, measured 2026-09-13)."
+        "description": "Dims every OTHER mark while one is hovered or focused. Off by default: it costs separation between the dimmed marks."
       },
       {
         "name": "staggerMs",
@@ -3252,7 +3252,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'item'",
         "required": false,
-        "description": "Whether a hovered or focused column opens a tooltip. `'axis'` is not offered: a column chart's marks are its categories."
+        "description": "Whether a hovered or focused column opens a tooltip."
       },
       {
         "name": "tooltipAnchor",
@@ -3264,7 +3264,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'mark'",
         "required": false,
-        "description": "Where the tooltip is pinned: `'mark'` (default) is the column itself; `'cell'` is the full-height category cell, which puts the panel at the top of the plot."
+        "description": "Where the tooltip is pinned: `'mark'` (default) is the column; `'cell'` is the full-height category cell."
       }
     ],
     "outputs": [
@@ -3275,7 +3275,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": "The point that was clicked, or activated with Enter or Space. Fires whether or not `interactive` is set."
+        "description": "The point clicked or activated with Enter or Space, whether or not `interactive` is set."
       }
     ]
   },
@@ -3317,7 +3317,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Error text. Shown immediately - binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
+        "description": "Error text. Shown immediately; takes precedence over `errors`."
       },
       {
         "name": "warning",
@@ -3335,7 +3335,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. What an unset value falls back to is the subclass's call, in `reserveMessageResolved`: a field takes `DS_CONFIG.field.reserveMessage`, a button does not."
+        "description": "Reserve the message-row height even when empty, so a hint/error does not shift the layout. Unset falls back to `DS_CONFIG.field.reserveMessage` for a field, not for a button."
       },
       {
         "name": "messageIcon",
@@ -3353,7 +3353,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+        "description": "Validation errors, shown once the user has interacted. Bound by signal forms; reactive and template-driven forms are read through `NgControl`."
       },
       {
         "name": "invalid",
@@ -3362,7 +3362,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Paints the error state and sets `aria-invalid`, WITHOUT a message of its own, for when the text lives elsewhere (an error summary, one message covering a field group). Use `error` to show text."
+        "description": "Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text."
       },
       {
         "name": "touched",
@@ -3371,7 +3371,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
       },
       {
         "name": "hidden",
@@ -3380,7 +3380,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Hides the control. Inline `display`, not the `hidden` attribute: each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
+        "description": "Hides the control. Inline `display`: the `hidden` attribute loses to each control's `:host` display."
       },
       {
         "name": "mode",
@@ -3405,7 +3405,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "Trigger height - sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
+        "description": "Trigger height; falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "fullWidth",
@@ -3414,7 +3414,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Stretches the trigger to fill its container instead of hugging the mask width. Opt in when sharing a grid/flex track with inputs."
+        "description": "Stretches the trigger to fill its container instead of hugging the mask width."
       },
       {
         "name": "value",
@@ -3432,7 +3432,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Accessible-name fallback only - the mask fills the visible placeholder, not this. Unset falls back to `DS_INTL.datePicker.placeholder`."
+        "description": "Accessible-name fallback only; the mask fills the visible placeholder. Falls back to `DS_INTL.datePicker.placeholder`."
       },
       {
         "name": "label",
@@ -3468,7 +3468,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Extra classes for the portaled panel, beside `ds-dropdown-panel`, `ds-overlay-pane` and `ds-date-picker-panel`. The panel is portaled out of the host, so a class on the pane is the only way a consumer stylesheet reaches ONE instance."
+        "description": "Extra classes for the portaled panel, the only way to style one instance of it."
       },
       {
         "name": "disabled",
@@ -3486,7 +3486,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Confirmation text, shown when there is no error or warning. It paints the success border: the text IS the state."
+        "description": "Confirmation text, shown when there is no error or warning; paints the success border."
       },
       {
         "name": "ariaLabel",
@@ -3558,7 +3558,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "BCP-47 locale driving month/weekday names and the value format. Unset falls back to `DS_CONFIG.datePicker.locale`, then `DS_CONFIG.locale`, then `LOCALE_ID`."
+        "description": "BCP-47 locale for names and value format; falls back to `DS_CONFIG.datePicker.locale`, `DS_CONFIG.locale`, then `LOCALE_ID`."
       },
       {
         "name": "dateFormat",
@@ -3585,7 +3585,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Date the calendar opens on when the value is empty (e.g. a Date Of Birth): the panel shows its month and grid focus lands on its exact day. Never written to `value` - selection stays with the user."
+        "description": "Date the calendar opens on when the value is empty; never written to `value`."
       },
       {
         "name": "allowInput",
@@ -3594,7 +3594,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "true",
         "required": false,
-        "description": "Allow masked manual typing. When false the field is read-only and a date can only be picked from the calendar."
+        "description": "Allow masked manual typing; when false a date can only be picked from the calendar."
       },
       {
         "name": "staticPreview",
@@ -3955,7 +3955,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Error text. Shown immediately - binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
+        "description": "Error text. Shown immediately; takes precedence over `errors`."
       },
       {
         "name": "warning",
@@ -3973,7 +3973,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. What an unset value falls back to is the subclass's call, in `reserveMessageResolved`: a field takes `DS_CONFIG.field.reserveMessage`, a button does not."
+        "description": "Reserve the message-row height even when empty, so a hint/error does not shift the layout. Unset falls back to `DS_CONFIG.field.reserveMessage` for a field, not for a button."
       },
       {
         "name": "messageIcon",
@@ -3995,7 +3995,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "Segment height, the field family's scale. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
+        "description": "Segment height; falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "invalid",
@@ -4004,7 +4004,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Paints the error state WITHOUT a message of its own, for when the text lives in a form-level summary. Use `error` to show text; binding either one is enough, as on a field. Segments read `invalidResolved`, so an `error` string announces itself without this flag."
+        "description": "Paints the error state without a message, for when the text lives elsewhere. Use `error` to show text; either one is enough."
       },
       {
         "name": "disabled",
@@ -4013,7 +4013,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Dims the group. Disable the CONTROLS too: this is the chrome, not their interactivity."
+        "description": "Dims the group's chrome; disable the controls too."
       },
       {
         "name": "fullWidth",
@@ -4066,7 +4066,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'md'",
         "required": false,
-        "description": "Height of the \"+N\" trigger; set it to match the filters beside it. The bar cannot infer it from the projected controls."
+        "description": "Height of the \"+N\" trigger; set it to match the filters beside it."
       }
     ],
     "outputs": []
@@ -4144,7 +4144,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "`'auto'` draws the chart's own bordered, padded box; `'none'` leaves it bare, for a chart inside a card. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'`."
+        "description": "`'auto'` draws a bordered, padded box; `'none'` leaves it bare. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'`."
       },
       {
         "name": "tooltipSwatches",
@@ -4153,7 +4153,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for up to four readings."
+        "description": "Colour dot beside each tooltip reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then dots for up to four readings."
       },
       {
         "name": "tooltipLingerMs",
@@ -4162,7 +4162,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Milliseconds the tooltip stays after the pointer leaves the mark, so it can glide to the next mark instead of reopening. Zero closes it at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
+        "description": "Milliseconds the tooltip stays after the pointer leaves the mark; zero closes it at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
       },
       {
         "name": "caption",
@@ -4171,7 +4171,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Printed above the plot as the chart's visible title, and reused as the annex table's caption."
+        "description": "Visible title above the plot, reused as the annex table's caption."
       },
       {
         "name": "summary",
@@ -4251,7 +4251,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
+        "description": "Formats every printed value, including the annex table and generated description. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
       },
       {
         "name": "pinOnClick",
@@ -4260,7 +4260,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Holds the clicked mark and its tooltip in place, with a pin disc on it, until a second click, Escape or a press outside releases it. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. `stageClicked` fires either way - pinning is a state, not a handler."
+        "description": "Holds the clicked mark and its tooltip in place, with a pin disc, until a second click, Escape or a press outside. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. `stageClicked` fires either way."
       },
       {
         "name": "interactive",
@@ -4269,7 +4269,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Turns on the click affordance: the pointer cursor and any hover tint. `stageClicked` fires whether or not this is set."
+        "description": "Adds the pointer cursor and hover tint. `stageClicked` fires either way."
       },
       {
         "name": "dimOthers",
@@ -4278,7 +4278,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Dims every OTHER mark while one is hovered or focused. Off by default: it costs the separation between the dimmed marks (worst pair of three series: dE 14.8 to 2.1 at the default `--ds-chart-dim-opacity` 0.3, measured 2026-09-13)."
+        "description": "Dims every OTHER mark while one is hovered or focused. Off by default: it costs separation between the dimmed marks."
       },
       {
         "name": "staggerMs",
@@ -4287,7 +4287,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "60",
         "required": false,
-        "description": "Milliseconds between one stage's entrance and the next, top to bottom; `0` brings every stage in at once. The step narrows once the stages would take longer than 260ms to start."
+        "description": "Milliseconds between one stage's entrance and the next, top to bottom; `0` brings every stage in at once. The step narrows to keep the spread within 260ms."
       },
       {
         "name": "tooltip",
@@ -4299,7 +4299,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'item'",
         "required": false,
-        "description": "Whether a hovered or focused stage opens a tooltip. `'axis'` is not offered: a funnel's stages are its categories."
+        "description": "Whether a hovered or focused stage opens a tooltip."
       }
     ],
     "outputs": [
@@ -4310,7 +4310,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": "The stage that was clicked, or activated with Enter or Space. Fires whether or not `interactive` is set."
+        "description": "The stage clicked or activated with Enter or Space, whether or not `interactive` is set."
       }
     ]
   },
@@ -4343,7 +4343,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "The column headings, left to right. Their count decides how many readings of a row are drawn: a longer row loses its tail."
+        "description": "The column headings, left to right; a row longer than this loses its tail."
       },
       {
         "name": "data",
@@ -4352,7 +4352,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "One entry per row, each carrying one reading per column. A `null` reading is drawn as the surface, not the ramp's coldest step."
+        "description": "One entry per row, one reading per column; a `null` reading is drawn as the surface."
       },
       {
         "name": "caption",
@@ -4370,7 +4370,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Pins the floor of the colour scale. It only ever widens the scale, so a floor above the data cannot push a reading off the ramp. Unset, the scale starts at the lowest reading."
+        "description": "Pins the floor of the colour scale; it only ever widens it. Unset, the lowest reading."
       },
       {
         "name": "max",
@@ -4379,7 +4379,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Pins the ceiling of the colour scale, the same way `min` pins its floor. Set both to compare two heat maps by colour; unset, each spans its own readings."
+        "description": "Pins the ceiling of the colour scale, as `min` pins the floor."
       },
       {
         "name": "showValues",
@@ -4388,7 +4388,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Prints each cell's reading inside it. Off by default: a dense grid has no room for numbers."
+        "description": "Prints each cell's reading inside it."
       },
       {
         "name": "interactive",
@@ -4406,7 +4406,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Fades every cell but the one under the pointer. Off by default: dimming costs the separation between cells, which on a ramp carries magnitude."
+        "description": "Fades every cell but the one under the pointer."
       },
       {
         "name": "pinOnClick",
@@ -4415,7 +4415,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Holds the hovered cell and its tooltip in place when it is clicked, until a second click, Escape or a press outside releases it. `cellClicked` fires either way. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`."
+        "description": "Holds the clicked cell and its tooltip until a second click, Escape or an outside press. `cellClicked` fires either way. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`."
       },
       {
         "name": "frame",
@@ -4427,7 +4427,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "`'auto'` draws the bordered, padded box; `'none'` leaves it bare for a chart inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`."
+        "description": "`'auto'` draws the bordered, padded box; `'none'` leaves it bare. Unset falls back to `DS_CONFIG.chart.frame`."
       },
       {
         "name": "tooltipSwatches",
@@ -4436,7 +4436,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for up to four readings."
+        "description": "Whether the tooltip draws a colour dot per reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`."
       },
       {
         "name": "loading",
@@ -4445,7 +4445,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "A skeleton at the grid's own height, so the page does not resize when the data lands."
+        "description": "A skeleton at the grid's own height."
       },
       {
         "name": "error",
@@ -4454,7 +4454,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Separate from an empty matrix: a failed request and no data mean different things."
+        "description": "Shows the error message; distinct from an empty matrix."
       },
       {
         "name": "emptyText",
@@ -4502,7 +4502,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "40",
         "required": false,
-        "description": "Milliseconds between one column's entrance and the next, left to right; `0` turns the stagger off. The whole spread stays within 260ms, so a wide grid narrows the step."
+        "description": "Milliseconds between one column's entrance and the next; `0` turns the stagger off. The spread is capped at 260ms."
       }
     ],
     "outputs": [
@@ -4552,7 +4552,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "`aria-describedby`: the id of text the app already renders beside the button, such as why the action is refused. There is no `disabledReason` here, unlike `ds-button`."
+        "description": "`aria-describedby`: the id of text the app already renders beside the button, such as why the action is refused."
       },
       {
         "name": "variant",
@@ -4686,7 +4686,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Error text. Shown immediately - binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
+        "description": "Error text. Shown immediately; takes precedence over `errors`."
       },
       {
         "name": "warning",
@@ -4704,7 +4704,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. What an unset value falls back to is the subclass's call, in `reserveMessageResolved`: a field takes `DS_CONFIG.field.reserveMessage`, a button does not."
+        "description": "Reserve the message-row height even when empty, so a hint/error does not shift the layout. Unset falls back to `DS_CONFIG.field.reserveMessage` for a field, not for a button."
       },
       {
         "name": "messageIcon",
@@ -4722,7 +4722,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+        "description": "Validation errors, shown once the user has interacted. Bound by signal forms; reactive and template-driven forms are read through `NgControl`."
       },
       {
         "name": "invalid",
@@ -4731,7 +4731,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Paints the error state and sets `aria-invalid`, WITHOUT a message of its own, for when the text lives elsewhere (an error summary, one message covering a field group). Use `error` to show text."
+        "description": "Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text."
       },
       {
         "name": "touched",
@@ -4740,7 +4740,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
       },
       {
         "name": "hidden",
@@ -4749,7 +4749,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Hides the control. Inline `display`, not the `hidden` attribute: each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
+        "description": "Hides the control. Inline `display`: the `hidden` attribute loses to each control's `:host` display."
       },
       {
         "name": "value",
@@ -4775,7 +4775,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'text'",
         "required": false,
-        "description": "Native input type - also affects the default clear button and password toggle."
+        "description": "Native input type; also drives the default clear button and password toggle."
       },
       {
         "name": "size",
@@ -4788,7 +4788,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "Field height - sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
+        "description": "Field height; falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "label",
@@ -4842,7 +4842,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Confirmation text, shown when there is no error or warning. It paints the success border: the text IS the state."
+        "description": "Confirmation text, shown when there is no error or warning; paints the success border."
       },
       {
         "name": "loading",
@@ -4851,7 +4851,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Shows a trailing spinner - e.g. async validation in flight. The input stays editable; pair with a `hint` like \"Checking availability…\"."
+        "description": "Shows a trailing spinner, e.g. while async validation runs. The input stays editable."
       },
       {
         "name": "required",
@@ -4932,7 +4932,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Accessible name when no visible `label` is provided (falls back to the placeholder so the control is never unnamed)."
+        "description": "Accessible name when no visible `label` is provided; falls back to the placeholder."
       },
       {
         "name": "ariaDescribedBy",
@@ -4941,7 +4941,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Extra element ids to describe the control with (a password-rule list, a policy note), MERGED with the field's own message id. An input because the attribute belongs on the inner `<input>`; on the host it lands on a wrapper no screen reader reads."
+        "description": "Extra element ids to describe the control with, merged with the field's own message id. Set on the inner `<input>`; on the host it would reach no screen reader."
       },
       {
         "name": "maxLength",
@@ -4950,7 +4950,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Hard character cap - applies the native maxlength attribute and shows a live \"{current}/{max}\" counter below the field."
+        "description": "Hard character cap: native maxlength plus a live \"{current}/{max}\" counter."
       },
       {
         "name": "minLength",
@@ -5012,7 +5012,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Show an inline clear (×) button when the input has a non-empty value. Defaults to true when `type=\"search\"`, false otherwise - pass an explicit boolean to override."
+        "description": "Shows a clear (×) button on a non-empty value. Defaults to true for `type=\"search\"`, false otherwise."
       },
       {
         "name": "passwordToggle",
@@ -5267,7 +5267,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Holds the crosshair and its tooltip on the category that was clicked, with a pin disc on it, until a second click, Escape or a press outside releases it. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. `pointClicked` fires either way - pinning is a state, not a handler."
+        "description": "Holds the clicked category's crosshair and tooltip in place, with a pin disc, until a second click, Escape or a press outside. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. `pointClicked` fires either way."
       },
       {
         "name": "dimOthers",
@@ -5276,7 +5276,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Dims every OTHER mark while one is hovered or focused. Off by default: it costs the separation between the dimmed marks (worst pair of three series: dE 14.8 to 2.1 at the default `--ds-chart-dim-opacity` 0.3, measured 2026-09-13)."
+        "description": "Dims every OTHER mark while one is hovered or focused. Off by default: it costs separation between the dimmed marks."
       },
       {
         "name": "gaps",
@@ -5353,7 +5353,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "`'auto'` draws the chart's own bordered, padded box; `'none'` leaves it bare, for a chart inside a card. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'`."
+        "description": "`'auto'` draws a bordered, padded box; `'none'` leaves it bare. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'`."
       },
       {
         "name": "tooltipSwatches",
@@ -5362,7 +5362,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for up to four readings."
+        "description": "Colour dot beside each tooltip reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then dots for up to four readings."
       },
       {
         "name": "tooltipLingerMs",
@@ -5371,7 +5371,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Milliseconds the tooltip stays after the pointer leaves the mark, so it can glide to the next mark instead of reopening. Zero closes it at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
+        "description": "Milliseconds the tooltip stays after the pointer leaves the mark; zero closes it at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
       },
       {
         "name": "caption",
@@ -5380,7 +5380,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Printed above the plot as the chart's visible title, and reused as the annex table's caption."
+        "description": "Visible title above the plot, reused as the annex table's caption."
       },
       {
         "name": "summary",
@@ -5402,7 +5402,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so use `'none'` only where the data is already in a table on the page. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`."
+        "description": "Label-and-value table under the plot: `'toggle'` behind a disclosure, `'visible'` open, `'none'` none. Use `'none'` only where the data is already in a table on the page. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`."
       },
       {
         "name": "max",
@@ -5465,7 +5465,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
+        "description": "Formats every printed value, including the annex table and generated description. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
       },
       {
         "name": "hiddenSeries",
@@ -5474,7 +5474,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Ids of the series the legend has switched off. Two-way, so a page can drive and read it."
+        "description": "Ids of the series the legend has switched off."
       },
       {
         "name": "rescaleOnHide",
@@ -5483,7 +5483,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Whether hiding a series re-scales the value axis to what is left. Off by default: a silent rescale changes what a period-over-period comparison claims."
+        "description": "Whether hiding a series re-scales the value axis to what is left. Off by default, so comparisons stay on one scale."
       },
       {
         "name": "legendFilters",
@@ -5522,7 +5522,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Gives every series a dash pattern of its own, so lines differ by shape as well as colour (WCAG G111). Off by default: the shipped palette clears the colour-blind separation threshold alone; use it for monochrome print or a retuned palette."
+        "description": "Gives every series a dash pattern, so lines differ by shape as well as colour. Off by default; use it for monochrome print or a retuned palette."
       },
       {
         "name": "staggerMs",
@@ -5567,7 +5567,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": "The point that was clicked, or activated with Enter or Space. Fires whether or not `interactive` is set."
+        "description": "The point clicked or activated with Enter or Space, whether or not `interactive` is set."
       }
     ]
   },
@@ -5727,7 +5727,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "true",
         "required": false,
-        "description": "Whether the projected content goes `inert` while the scrim is up. On by default: a scrim that only stops the pointer lets focus walk under it, and a keyboard user activates controls the mouse cannot reach. Turn it off only when the scrim covers part of the content (`insetTop`), and then mark the covered subtree `inert` yourself; a blanket flag would take the uncovered part with it."
+        "description": "Whether the projected content goes `inert` while the scrim is up. On by default, so focus cannot walk under the scrim. Turn it off only when the scrim covers part of the content (`insetTop`) and mark the covered subtree `inert` yourself."
       }
     ],
     "outputs": []
@@ -5782,7 +5782,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Blocks activation and styles the item as inactive. It stays keyboard-focusable (`aria-disabled`, ARIA menu practice) and in `ds-menu`'s roving order, so a `[dsTooltip]` explaining why can be reached and shown."
+        "description": "Blocks activation and styles the item as inactive. It stays focusable (`aria-disabled`) and in the roving order, so a `[dsTooltip]` can explain why."
       },
       {
         "name": "error",
@@ -5800,7 +5800,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Renders the item muted, e.g. \"Sign out\" under a divider: still actionable but not competing with the items above it."
+        "description": "Renders the item muted but still actionable."
       },
       {
         "name": "description",
@@ -5809,7 +5809,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "A standing second line under the label naming a limitation the action carries (\"will not be saved\", \"read-only in this workspace\"). Visible without hover or focus, which is what separates it from a `[dsTooltip]`. Reaches assistive tech as `aria-describedby`, NOT as part of the item's name: the projected label names the action, and a caveat is a description of it. That is why the line is `aria-hidden` in the DOM and referenced by id; inside the button and visible, it would otherwise be concatenated into the name."
+        "description": "A standing second line under the label naming a limitation the action carries (\"will not be saved\"). Visible without hover or focus, unlike a `[dsTooltip]`. Reaches assistive tech as `aria-describedby`, NOT as part of the item's name: the line is `aria-hidden` and referenced by id, else it would be concatenated into the name."
       },
       {
         "name": "submenu",
@@ -5870,7 +5870,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "Severity: drives the icon-badge tint, the title colour, the DEFAULT icon and the ARIA role, the same set `ds-alert`'s variant drives. Null (default) is a neutral dialog. It picks an icon as well as a tint so severity is not carried by colour alone; `icon` overrides the pick. `false` and `undefined` land on null too, so `[status]=\"isDangerous && 'error'\"` binds."
+        "description": "Severity: drives the icon-badge tint, title colour, DEFAULT icon and ARIA role. Null (default) is a neutral dialog; `icon` overrides the picked icon. `false` and `undefined` land on null too, so `[status]=\"isDangerous && 'error'\"` binds."
       },
       {
         "name": "title",
@@ -5906,7 +5906,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Draws the rules under the header and over the actions. Turning them off also tightens the vertical padding they were sized for. Unset falls back to `DS_CONFIG.modal.dividers`, then `true`."
+        "description": "Draws the rules under the header and over the actions; off also tightens the vertical padding. Unset falls back to `DS_CONFIG.modal.dividers`, then `true`."
       },
       {
         "name": "icon",
@@ -5927,7 +5927,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "ARIA role. Unset, an error or warning becomes `alertdialog` (a dialog that interrupts with something the reader must act on) and anything else stays `dialog`, the split `ds-alert` makes between `alert` and `status`."
+        "description": "ARIA role. Unset, an error or warning becomes `alertdialog`; anything else stays `dialog`."
       }
     ],
     "outputs": [
@@ -5988,7 +5988,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "Severity, forwarded to the card: drives its icon-badge tint, title colour, default icon and ARIA role. Null (default) is a neutral dialog. `false` and `undefined` land on null too, so `[status]=\"isDangerous && 'error'\"` binds."
+        "description": "Severity, forwarded to the card. Null (default) is a neutral dialog. `false` and `undefined` land on null too, so `[status]=\"isDangerous && 'error'\"` binds."
       },
       {
         "name": "title",
@@ -6015,7 +6015,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Draws the rules under the header and over the actions. Turning them off also tightens the vertical padding they were sized for. Unset falls back to `DS_CONFIG.modal.dividers`, then `true`."
+        "description": "Draws the rules under the header and over the actions; off also tightens the vertical padding. Unset falls back to `DS_CONFIG.modal.dividers`, then `true`."
       },
       {
         "name": "closeOnBackdrop",
@@ -6033,7 +6033,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "When true, neither backdrop click nor Escape closes the modal; only a programmatic or explicit close button does."
+        "description": "When true, neither backdrop click nor Escape closes the modal."
       },
       {
         "name": "staticPreview",
@@ -6092,7 +6092,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Error text. Shown immediately - binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
+        "description": "Error text. Shown immediately; takes precedence over `errors`."
       },
       {
         "name": "warning",
@@ -6110,7 +6110,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. What an unset value falls back to is the subclass's call, in `reserveMessageResolved`: a field takes `DS_CONFIG.field.reserveMessage`, a button does not."
+        "description": "Reserve the message-row height even when empty, so a hint/error does not shift the layout. Unset falls back to `DS_CONFIG.field.reserveMessage` for a field, not for a button."
       },
       {
         "name": "messageIcon",
@@ -6128,7 +6128,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+        "description": "Validation errors, shown once the user has interacted. Bound by signal forms; reactive and template-driven forms are read through `NgControl`."
       },
       {
         "name": "invalid",
@@ -6137,7 +6137,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Paints the error state and sets `aria-invalid`, WITHOUT a message of its own, for when the text lives elsewhere (an error summary, one message covering a field group). Use `error` to show text."
+        "description": "Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text."
       },
       {
         "name": "touched",
@@ -6146,7 +6146,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
       },
       {
         "name": "hidden",
@@ -6155,7 +6155,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Hides the control. Inline `display`, not the `hidden` attribute: each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
+        "description": "Hides the control. Inline `display`: the `hidden` attribute loses to each control's `:host` display."
       },
       {
         "name": "value",
@@ -6182,7 +6182,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Placeholder shown in the trigger when nothing is selected. Unset falls back to `DS_INTL.picker.placeholder`."
+        "description": "Placeholder when nothing is selected; falls back to `DS_INTL.picker.placeholder`."
       },
       {
         "name": "searchPlaceholder",
@@ -6191,7 +6191,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Placeholder for the in-panel filter input. Unset falls back to `DS_INTL.picker.filterPlaceholder`."
+        "description": "Placeholder for the filter input; falls back to `DS_INTL.picker.filterPlaceholder`."
       },
       {
         "name": "searchable",
@@ -6200,7 +6200,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Whether the panel carries a filter row. `true` always, `false` never, a NUMBER is a threshold (row appears at that many options). Unset falls back to `DS_CONFIG.picker.searchable`, then `true`. Hiding it moves the keyboard model (arrows, Enter, Escape, `aria-activedescendant`) onto the trigger."
+        "description": "Whether the panel has a filter row: `true` always, `false` never, a number is the option-count threshold. Falls back to `DS_CONFIG.picker.searchable`, then `true`. Hiding it moves the keyboard model onto the trigger."
       },
       {
         "name": "name",
@@ -6218,7 +6218,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Extra classes for the portaled panel, beside `ds-dropdown-panel`, `ds-overlay-pane` and `ds-multi-select-panel`. The panel is portaled out of the host, so a class on the pane is the only way a consumer stylesheet reaches ONE instance."
+        "description": "Extra classes for the portaled panel, the only way to style one instance of it."
       },
       {
         "name": "readOnly",
@@ -6254,7 +6254,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "(option, query) => option.label.toLowerCase().includes(query)",
         "required": false,
-        "description": "How the typed query narrows the list. Default: case-insensitive substring of `label`. Pass a predicate to match on anything else. Pass `'none'` when the list arrives already filtered (server-side search): the query is reported through `filterChange` and every option given is rendered."
+        "description": "How the typed query narrows the list. Default: case-insensitive substring of `label`. `'none'` renders every option (server-side search)."
       },
       {
         "name": "loading",
@@ -6263,7 +6263,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Options are still being fetched. The panel shows a spinner instead of the empty row - which would otherwise claim there are no matches - and the list reports `aria-busy`."
+        "description": "Options are still being fetched: the panel shows a spinner instead of the empty row and reports `aria-busy`."
       },
       {
         "name": "scrollActiveIntoView",
@@ -6272,7 +6272,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "true",
         "required": false,
-        "description": "Scrolls the keyboard cursor's row into view. On by default: a list longer than the panel otherwise walks the cursor out of sight. Set `false` only if you are driving the scroll position yourself."
+        "description": "Scrolls the keyboard cursor's row into view. Set `false` only when driving the scroll position yourself."
       },
       {
         "name": "maxVisibleChips",
@@ -6281,7 +6281,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Chip collapse when they outgrow one line. `\"fit\"` (default) measures and shows as many as fit, the rest behind \"+N more\". A number is a ceiling, not a promise: the row still measures, so narrow triggers show fewer. `\"all\"` shows every chip and lets the trigger grow a line per selection. Unset (`null`) resolves to `\"fit\"`, not `\"all\"`."
+        "description": "Chip collapse: `\"fit\"` (default) shows as many as fit, the rest behind \"+N more\"; a number is a ceiling, not a promise; `\"all\"` shows every chip and grows the trigger a line per selection."
       },
       {
         "name": "disabled",
@@ -6299,7 +6299,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Confirmation text, shown when there is no error or warning. It paints the success border: the text IS the state."
+        "description": "Confirmation text, shown when there is no error or warning; paints the success border."
       },
       {
         "name": "ariaLabel",
@@ -6320,7 +6320,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'fill'",
         "required": false,
-        "description": "Trigger width - `fill` stretches to the container and pins the panel to the trigger's width; `content` hugs the trigger's own content and takes that width as the panel's FLOOR, so a compact trigger does not force an unreadable panel."
+        "description": "Trigger width: `fill` stretches to the container and pins the panel to it; `content` hugs the trigger and uses its width as the panel's floor."
       },
       {
         "name": "size",
@@ -6333,7 +6333,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "Trigger height - sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
+        "description": "Trigger height; falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "triggerDisplay",
@@ -6346,7 +6346,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'full'",
         "required": false,
-        "description": "What the trigger shows. `count` is a caption plus a selected-count badge at intrinsic width; `labels` names the selection instead, cut to the width with the rest behind \"+N\". A projected `dsPickerTrigger` template WINS over this - the input is then not read at all."
+        "description": "What the trigger shows. `count` is a caption plus a count badge; `labels` names the selection, rest behind \"+N\". A projected `dsPickerTrigger` template wins and this input is not read."
       },
       {
         "name": "label",
@@ -6382,7 +6382,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Where a \"select all\" row appears. `false` nowhere, `true` one row over the whole panel, `'group'` one row per group, `'both'` for either. Group rows need groups in `options` - with a flat list they have nothing to head."
+        "description": "Where a \"select all\" row appears: `false` nowhere, `true` one over the panel, `'group'` one per group, `'both'` either. Group rows need groups in `options`."
       }
     ],
     "outputs": [
@@ -6393,7 +6393,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": "The query the user typed, on every change. The input for a server-side search; pair it with `filterWith=\"none\"` so the list is not narrowed twice."
+        "description": "The typed query, on every change; pair with `filterWith=\"none\"` for server-side search."
       },
       {
         "name": "opened",
@@ -6402,7 +6402,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": "The panel opened. The moment to fetch options for a picker whose list is loaded on demand."
+        "description": "The panel opened."
       },
       {
         "name": "closed",
@@ -6533,7 +6533,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Error text. Shown immediately - binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
+        "description": "Error text. Shown immediately; takes precedence over `errors`."
       },
       {
         "name": "warning",
@@ -6551,7 +6551,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. What an unset value falls back to is the subclass's call, in `reserveMessageResolved`: a field takes `DS_CONFIG.field.reserveMessage`, a button does not."
+        "description": "Reserve the message-row height even when empty, so a hint/error does not shift the layout. Unset falls back to `DS_CONFIG.field.reserveMessage` for a field, not for a button."
       },
       {
         "name": "messageIcon",
@@ -6569,7 +6569,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+        "description": "Validation errors, shown once the user has interacted. Bound by signal forms; reactive and template-driven forms are read through `NgControl`."
       },
       {
         "name": "invalid",
@@ -6578,7 +6578,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Paints the error state and sets `aria-invalid`, WITHOUT a message of its own, for when the text lives elsewhere (an error summary, one message covering a field group). Use `error` to show text."
+        "description": "Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text."
       },
       {
         "name": "touched",
@@ -6587,7 +6587,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
       },
       {
         "name": "hidden",
@@ -6596,7 +6596,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Hides the control. Inline `display`, not the `hidden` attribute: each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
+        "description": "Hides the control. Inline `display`: the `hidden` attribute loses to each control's `:host` display."
       },
       {
         "name": "value",
@@ -6653,7 +6653,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Confirmation text, shown when there is no error or warning; also paints the success border. A string like `warning`: the text is the state."
+        "description": "Confirmation text, shown when there is no error or warning; also paints the success border."
       },
       {
         "name": "ariaLabel",
@@ -6930,7 +6930,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Whether an unmet rule may read as FAILED. Bind it to \"the user has tried to submit\": before that an unmet rule is only pending, so a half-typed password is not scolded."
+        "description": "Whether an unmet rule may read as failed; bind it to \"the user has tried to submit\", before that it is only pending."
       },
       {
         "name": "columns",
@@ -6948,7 +6948,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "nextControlId('ds-password-rules')",
         "required": false,
-        "description": "Id put on the rule list, for the field's `aria-describedby`. Defaults to a generated one; set it explicitly so both sides can name the same string without threading a template ref between siblings."
+        "description": "Id on the rule list, for the field's `aria-describedby`. Defaults to a generated one."
       }
     ],
     "outputs": []
@@ -6982,7 +6982,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": true,
-        "description": "One slice per entry. A non-positive or non-finite value counts as zero: a ring cannot draw a negative share."
+        "description": "One slice per entry. A non-positive or non-finite value counts as zero."
       },
       {
         "name": "centerValue",
@@ -7013,7 +7013,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'end'",
         "required": false,
-        "description": "Logical placement, so a right-to-left page needs no second value."
+        "description": "Legend placement, logical so it flips in right-to-left."
       },
       {
         "name": "maxSlices",
@@ -7022,7 +7022,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Longest legend to draw. Past it the smallest slices are summed into one. Off by default: grouping changes what the chart says. Values below 2 are ignored."
+        "description": "Longest legend to draw; past it the smallest slices are summed into one. Values below 2 are ignored."
       },
       {
         "name": "otherLabel",
@@ -7040,7 +7040,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "DEFAULT_INNER_RADIUS",
         "required": false,
-        "description": "The hole, as a fraction of the outer radius. Zero draws a solid pie and takes the centre content away with the hole that held it."
+        "description": "The hole, as a fraction of the outer radius. Zero draws a solid pie without centre content."
       },
       {
         "name": "frame",
@@ -7052,7 +7052,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "Whether the chart draws its own bordered, padded box. `'auto'` draws it; `'none'` leaves the chart bare, for one placed inside a card. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'`."
+        "description": "`'auto'` draws the bordered, padded box; `'none'` leaves it bare. Unset falls back to `DS_CONFIG.chart.frame`."
       },
       {
         "name": "tooltipSwatches",
@@ -7061,7 +7061,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for up to four readings."
+        "description": "Whether the tooltip draws a colour dot per reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`."
       },
       {
         "name": "tooltipLingerMs",
@@ -7070,7 +7070,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds. Long enough to cross to the next mark and find the same panel, which glides there. Zero closes it at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
+        "description": "Milliseconds the tooltip stays after the pointer leaves the mark; zero closes it at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`."
       },
       {
         "name": "caption",
@@ -7079,7 +7079,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Printed above the plot as the chart's visible title, and reused as the annex table's caption."
+        "description": "Visible title above the plot; also the annex table's caption."
       },
       {
         "name": "summary",
@@ -7101,7 +7101,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so use `'none'` only where the same data is already in a table on the page. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`."
+        "description": "The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'` opens it, `'none'` renders none. Unset falls back to `DS_CONFIG.chart.dataTable`."
       },
       {
         "name": "partOfWhole",
@@ -7110,7 +7110,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "true",
         "required": false,
-        "description": "Prints each slice's share of the ring in the legend, the tooltip and the data table. On by default, unlike the other charts, because a ring is parts of one whole. Off drops all three, for a ring whose slices are already labelled in percent."
+        "description": "Prints each slice's share in the legend, the tooltip and the data table."
       },
       {
         "name": "loading",
@@ -7119,7 +7119,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize when the data lands."
+        "description": "Draws skeleton marks in place of the data, at the same count."
       },
       {
         "name": "emptyText",
@@ -7137,7 +7137,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from an empty `data`."
+        "description": "Shows `errorText` in place of the plot."
       },
       {
         "name": "errorText",
@@ -7155,7 +7155,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
+        "description": "Formats every value the chart prints. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
       },
       {
         "name": "pinOnClick",
@@ -7164,7 +7164,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Holds the clicked mark and its tooltip in place, with a pin disc on it, until a second click, Escape or a press outside releases it. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. `sliceClicked` fires either way - pinning is a state, not a handler."
+        "description": "Holds the clicked mark and its tooltip until a second click, Escape or an outside press. `sliceClicked` fires either way. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`."
       },
       {
         "name": "interactive",
@@ -7173,7 +7173,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Turns on the click affordance (pointer cursor, hover tint). The click output fires whether or not this is set."
+        "description": "Turns on the click affordance (pointer cursor, hover tint)."
       },
       {
         "name": "dimOthers",
@@ -7182,7 +7182,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Dims every other mark while one is hovered or focused. Off by default: dimming costs the separation between the dimmed marks (worst pair of three series: dE 14.8 at full opacity to 2.1 at the default `--ds-chart-dim-opacity` of 0.3, measured 2026-09-13)."
+        "description": "Dims every other mark while one is hovered or focused; dimmed marks lose separation from each other."
       },
       {
         "name": "staggerMs",
@@ -7191,7 +7191,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "0",
         "required": false,
-        "description": "Accepted for parity with the other charts and without effect: the ring arrives as one object, since fading arcs one at a time shows the background through every seam."
+        "description": "Accepted for parity with the other charts; has no effect."
       },
       {
         "name": "tooltip",
@@ -7203,7 +7203,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'item'",
         "required": false,
-        "description": "Whether a hovered or focused slice opens a tooltip. `'axis'` is not offered: a ring has no axis."
+        "description": "Whether a hovered or focused slice opens a tooltip."
       }
     ],
     "outputs": [
@@ -7214,7 +7214,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": "The slice that was clicked, or activated with Enter or Space. Fires whether or not `interactive` is set."
+        "description": "The slice that was clicked or activated with Enter or Space."
       }
     ]
   },
@@ -7270,7 +7270,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "ARIA role for the panel (e.g. 'dialog' for interactive popovers). When set, the panel traps focus and captures it on open; a keyboard (Escape) or in-panel close returns focus to the trigger, while an outside click or scroll leaves focus where it lands (non-modal). Leave null for plain, non-interactive text popovers."
+        "description": "ARIA role for the panel (e.g. 'dialog'). When set, the panel traps focus and captures it on open; Escape or an in-panel close returns focus to the trigger, an outside click or scroll does not (non-modal). Leave null for plain text popovers."
       },
       {
         "name": "panelLabel",
@@ -7319,7 +7319,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Error text. Shown immediately - binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
+        "description": "Error text. Shown immediately; takes precedence over `errors`."
       },
       {
         "name": "warning",
@@ -7337,7 +7337,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. What an unset value falls back to is the subclass's call, in `reserveMessageResolved`: a field takes `DS_CONFIG.field.reserveMessage`, a button does not."
+        "description": "Reserve the message-row height even when empty, so a hint/error does not shift the layout. Unset falls back to `DS_CONFIG.field.reserveMessage` for a field, not for a button."
       },
       {
         "name": "messageIcon",
@@ -7355,7 +7355,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+        "description": "Validation errors, shown once the user has interacted. Bound by signal forms; reactive and template-driven forms are read through `NgControl`."
       },
       {
         "name": "invalid",
@@ -7364,7 +7364,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Paints the error state and sets `aria-invalid`, WITHOUT a message of its own, for when the text lives elsewhere (an error summary, one message covering a field group). Use `error` to show text."
+        "description": "Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text."
       },
       {
         "name": "touched",
@@ -7373,7 +7373,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
       },
       {
         "name": "checked",
@@ -7467,7 +7467,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Accessible name for a control with no visible label. Set beside a label it overrides the label, per ARIA."
+        "description": "Accessible name for a control with no visible label; overrides `label` when both are set."
       }
     ],
     "outputs": []
@@ -7498,7 +7498,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Error text. Shown immediately - binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
+        "description": "Error text. Shown immediately; takes precedence over `errors`."
       },
       {
         "name": "warning",
@@ -7516,7 +7516,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. What an unset value falls back to is the subclass's call, in `reserveMessageResolved`: a field takes `DS_CONFIG.field.reserveMessage`, a button does not."
+        "description": "Reserve the message-row height even when empty, so a hint/error does not shift the layout. Unset falls back to `DS_CONFIG.field.reserveMessage` for a field, not for a button."
       },
       {
         "name": "messageIcon",
@@ -7534,7 +7534,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+        "description": "Validation errors, shown once the user has interacted. Bound by signal forms; reactive and template-driven forms are read through `NgControl`."
       },
       {
         "name": "invalid",
@@ -7543,7 +7543,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Paints the error state and sets `aria-invalid`, WITHOUT a message of its own, for when the text lives elsewhere (an error summary, one message covering a field group). Use `error` to show text."
+        "description": "Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text."
       },
       {
         "name": "touched",
@@ -7552,7 +7552,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
       },
       {
         "name": "hidden",
@@ -7561,7 +7561,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Hides the control. Inline `display`, not the `hidden` attribute: each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
+        "description": "Hides the control. Inline `display`: the `hidden` attribute loses to each control's `:host` display."
       },
       {
         "name": "value",
@@ -7640,7 +7640,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "One entry per series, each carrying its own readings."
+        "description": "One entry per series."
       },
       {
         "name": "xLabel",
@@ -7649,7 +7649,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Names the horizontal quantity under the plot. Without it the reader cannot tell the two numbers apart."
+        "description": "Names the horizontal quantity under the plot."
       },
       {
         "name": "yLabel",
@@ -7671,7 +7671,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'minMax'",
         "required": false,
-        "description": "Which decimator thins a series past the budget. `'minMax'` by default, because it is the only one that promises each bucket's extremum survives."
+        "description": "Which decimator thins a series past the budget. See `ScatterChartDecimator`."
       },
       {
         "name": "tickCount",
@@ -7689,7 +7689,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Printed above the plot as the visible title, and reused as the annex table's caption."
+        "description": "Visible title above the plot; also the annex table's caption."
       },
       {
         "name": "summary",
@@ -7698,7 +7698,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "The accessible name. Generated when omitted, naming both axes' spans, how many readings were drawn and how many were thinned out."
+        "description": "The accessible name. Generated from the data when omitted."
       },
       {
         "name": "interactive",
@@ -7707,7 +7707,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Makes every mark a button and gives it a keyboard route. `pointClicked` fires whether or not this is set."
+        "description": "Makes every mark a button with a keyboard route."
       },
       {
         "name": "frame",
@@ -7719,7 +7719,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "`'auto'` draws the bordered, padded box; `'none'` leaves it bare for a chart inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`."
+        "description": "`'auto'` draws the bordered, padded box; `'none'` leaves it bare. Unset falls back to `DS_CONFIG.chart.frame`."
       },
       {
         "name": "tooltipSwatches",
@@ -7728,7 +7728,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for up to four readings."
+        "description": "Whether the tooltip draws a colour dot per reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`."
       },
       {
         "name": "dataTable",
@@ -7741,7 +7741,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "The annex table under the plot. It lists every reading, including those decimation left out of the drawing."
+        "description": "The annex table under the plot; lists every reading, including those decimation left out."
       },
       {
         "name": "loading",
@@ -7750,7 +7750,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "A skeleton at the plot's own height, so the page does not resize when the data lands."
+        "description": "A skeleton at the plot's own height."
       },
       {
         "name": "error",
@@ -7759,7 +7759,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Separate from empty data: a failed request and no data mean different things."
+        "description": "Shows the error message; distinct from empty data."
       },
       {
         "name": "emptyText",
@@ -7786,7 +7786,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Formats every number the chart prints - both axes' ticks, the accessible name and the annex table. Unset falls back to `DS_CONFIG.chart.valueFormat`."
+        "description": "Formats every number the chart prints. Unset falls back to `DS_CONFIG.chart.valueFormat`."
       },
       {
         "name": "tooltip",
@@ -7798,7 +7798,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'item'",
         "required": false,
-        "description": "Whether a hovered or focused mark opens a tooltip. A scatter prints no value beside its marks."
+        "description": "Whether a hovered or focused mark opens a tooltip."
       },
       {
         "name": "dimOthers",
@@ -7807,7 +7807,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Fades every mark but the one under the pointer. Off by default: on a scatter the pile-up is the reading, and dimming the neighbours hides it."
+        "description": "Fades every mark but the one under the pointer; on a scatter this hides pile-ups."
       },
       {
         "name": "pinOnClick",
@@ -7816,7 +7816,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Holds the hovered mark and its tooltip in place when it is clicked, until a second click, Escape or a press outside releases it. `pointClicked` fires either way. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`."
+        "description": "Holds the clicked mark and its tooltip until a second click, Escape or an outside press. `pointClicked` fires either way. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`."
       }
     ],
     "outputs": [
@@ -7848,7 +7848,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Hides the control, as every DS control does. Inline `display`, not the attribute: the host sets its own, which the weaker UA rule loses to."
+        "description": "Inline `display`, not the attribute: the host sets its own `display`, which beats the UA `[hidden]` rule."
       },
       {
         "name": "value",
@@ -7866,7 +7866,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Placeholder shown when empty. Unset falls back to `DS_INTL.search.placeholder`."
+        "description": "Placeholder when empty; falls back to `DS_INTL.search.placeholder`."
       },
       {
         "name": "shortcut",
@@ -7924,7 +7924,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "Control height. `md` (default) is the 36px search-row height; `sm` (32px) aligns with dense toolbars; `lg` is touch. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
+        "description": "Control height; falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "debounce",
@@ -7933,7 +7933,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "0",
         "required": false,
-        "description": "Milliseconds to hold each keystroke back before `value` updates; 0 (default) writes on every keystroke. Clearing the field BYPASSES the delay (waiting to see the full list back reads as a hang), and Enter flushes. What the input SHOWS is never delayed."
+        "description": "Milliseconds to hold each keystroke back before `value` updates; 0 (default) writes on every keystroke. Clearing bypasses the delay and Enter flushes; the displayed text is never delayed."
       }
     ],
     "outputs": [
@@ -7974,7 +7974,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Error text. Shown immediately - binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
+        "description": "Error text. Shown immediately; takes precedence over `errors`."
       },
       {
         "name": "warning",
@@ -7992,7 +7992,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. What an unset value falls back to is the subclass's call, in `reserveMessageResolved`: a field takes `DS_CONFIG.field.reserveMessage`, a button does not."
+        "description": "Reserve the message-row height even when empty, so a hint/error does not shift the layout. Unset falls back to `DS_CONFIG.field.reserveMessage` for a field, not for a button."
       },
       {
         "name": "messageIcon",
@@ -8010,7 +8010,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+        "description": "Validation errors, shown once the user has interacted. Bound by signal forms; reactive and template-driven forms are read through `NgControl`."
       },
       {
         "name": "invalid",
@@ -8019,7 +8019,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Paints the error state and sets `aria-invalid`, WITHOUT a message of its own, for when the text lives elsewhere (an error summary, one message covering a field group). Use `error` to show text."
+        "description": "Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text."
       },
       {
         "name": "touched",
@@ -8028,7 +8028,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
       },
       {
         "name": "hidden",
@@ -8037,7 +8037,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Hides the control. Inline `display`, not the `hidden` attribute: each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
+        "description": "Hides the control. Inline `display`: the `hidden` attribute loses to each control's `:host` display."
       },
       {
         "name": "options",
@@ -8122,7 +8122,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Error text. Shown immediately - binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
+        "description": "Error text. Shown immediately; takes precedence over `errors`."
       },
       {
         "name": "warning",
@@ -8140,7 +8140,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. What an unset value falls back to is the subclass's call, in `reserveMessageResolved`: a field takes `DS_CONFIG.field.reserveMessage`, a button does not."
+        "description": "Reserve the message-row height even when empty, so a hint/error does not shift the layout. Unset falls back to `DS_CONFIG.field.reserveMessage` for a field, not for a button."
       },
       {
         "name": "messageIcon",
@@ -8158,7 +8158,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+        "description": "Validation errors, shown once the user has interacted. Bound by signal forms; reactive and template-driven forms are read through `NgControl`."
       },
       {
         "name": "invalid",
@@ -8167,7 +8167,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Paints the error state and sets `aria-invalid`, WITHOUT a message of its own, for when the text lives elsewhere (an error summary, one message covering a field group). Use `error` to show text."
+        "description": "Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text."
       },
       {
         "name": "touched",
@@ -8176,7 +8176,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
       },
       {
         "name": "hidden",
@@ -8185,7 +8185,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Hides the control. Inline `display`, not the `hidden` attribute: each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
+        "description": "Hides the control. Inline `display`: the `hidden` attribute loses to each control's `:host` display."
       },
       {
         "name": "value",
@@ -8215,7 +8215,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'fill'",
         "required": false,
-        "description": "Trigger width. `fill` stretches to the container and pins the panel to the trigger width; `content` hugs the trigger's content and uses that width as the panel's FLOOR."
+        "description": "Trigger width: `fill` stretches to the container and pins the panel to it; `content` hugs the trigger and uses its width as the panel's floor."
       },
       {
         "name": "placeholder",
@@ -8237,7 +8237,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "Trigger height - sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
+        "description": "Trigger height; falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "label",
@@ -8264,7 +8264,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Options are still being fetched. The panel shows a spinner instead of the empty row (which would claim there are no matches) and the list reports `aria-busy`."
+        "description": "Options are still being fetched: the panel shows a spinner instead of the empty row and reports `aria-busy`."
       },
       {
         "name": "scrollActiveIntoView",
@@ -8273,7 +8273,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "true",
         "required": false,
-        "description": "Scrolls the keyboard cursor's row into view. On by default: a list longer than the panel otherwise walks the cursor out of sight. Set `false` only if you are driving the scroll position yourself."
+        "description": "Scrolls the keyboard cursor's row into view. Set `false` only when driving the scroll position yourself."
       },
       {
         "name": "panelClass",
@@ -8282,7 +8282,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Extra classes for the portaled panel, beside `ds-dropdown-panel`, `ds-overlay-pane` and `ds-select-panel`. The panel is portaled out of the host, so a class on the pane is the only way a consumer stylesheet reaches ONE instance."
+        "description": "Extra classes for the portaled panel, the only way to style one instance of it."
       },
       {
         "name": "readOnly",
@@ -8309,7 +8309,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Confirmation text, shown when there is no error or warning. It paints the success border: the text IS the state."
+        "description": "Confirmation text, shown when there is no error or warning; paints the success border."
       },
       {
         "name": "required",
@@ -8374,7 +8374,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": "The panel opened. The moment to fetch options for a picker whose list is loaded on demand."
+        "description": "The panel opened."
       },
       {
         "name": "closed",
@@ -8425,7 +8425,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "true",
         "required": false,
-        "description": "Whether the ACTIVE item draws its edge marker, for the whole sidenav. Off leaves the active state on the fill and the label alone; check that is still distinguishable before turning it off. An individual `ds-sidenav-item` can override this with its own `rail`."
+        "description": "Whether the ACTIVE item draws its edge marker, for the whole sidenav. An individual `ds-sidenav-item` can override it with its own `rail`."
       },
       {
         "name": "brand",
@@ -8434,7 +8434,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Brand text at the top of the rail (auto letter-mark + name). For a custom logo image/SVG, project it into the `[brand]` slot instead. Unset falls back to `DS_CONFIG.brand.name`. Each field resolves on its own, so `brand=\"\"` drops the wordmark while a `logoLetter` in the config still paints its tile."
+        "description": "Brand text at the top of the rail (auto letter-mark + name). Unset falls back to `DS_CONFIG.brand.name`. Each field resolves on its own: `brand=\"\"` drops the wordmark while a configured `logoLetter` still paints its tile."
       },
       {
         "name": "logoLetter",
@@ -8443,7 +8443,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Letter-mark glyph when it differs from the brand's first letter (e.g. an \"A\" tile beside the \"AppAdmin\" wordmark). Empty = first letter of `brand`; unset falls back to `DS_CONFIG.brand.logoLetter`."
+        "description": "Letter-mark glyph when it differs from the brand's first letter. Empty = first letter of `brand`; unset falls back to `DS_CONFIG.brand.logoLetter`."
       },
       {
         "name": "brandRoute",
@@ -8452,7 +8452,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Route the brand row links to, typically the app's home. Unset leaves the row a plain, non-interactive block. Router targets only, and `RouterLink` is instantiated only once this is set, so an app with no router still renders."
+        "description": "Route the brand row links to. Unset leaves the row non-interactive. `RouterLink` is instantiated only once this is set, so an app with no router still renders."
       },
       {
         "name": "brandLinkLabel",
@@ -8510,7 +8510,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Makes the group a destination of its own as well as a container: the header navigates here and the caret becomes a separate control, because one control cannot both go somewhere and stay to open something. Unset (the default) the whole header only expands, so reaching for the group never navigates away from the page being read."
+        "description": "Makes the group a destination as well as a container: the header navigates here and the caret becomes a separate control. Unset, the whole header only expands."
       },
       {
         "name": "ariaCurrent",
@@ -8645,7 +8645,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Whether THIS item draws its edge marker when active. Unset follows the parent `ds-sidenav`, then on, so a sidenav-wide `[rail]=\"false\"` is not fought per item."
+        "description": "Whether THIS item draws its edge marker when active. Unset follows the parent `ds-sidenav`, then on."
       }
     ],
     "outputs": [
@@ -8656,7 +8656,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": "Emitted on click, carrying the `MouseEvent`. On an `href` item, `preventDefault()` intercepts navigation (e.g. a docs sidebar driving scroll-spy); a `routerLink` item navigates regardless (Angular's RouterLink ignores `defaultPrevented`), so treat it as a click hook there."
+        "description": "Emitted on click, carrying the `MouseEvent`. On an `href` item, `preventDefault()` intercepts navigation; a `routerLink` item navigates regardless (RouterLink ignores `defaultPrevented`)."
       }
     ]
   },
@@ -8742,7 +8742,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": "The collapse control was activated. The footer does not collapse itself; `ds-app-layout` owns the rail state, so the host relays this."
+        "description": "The collapse control was activated; the footer does not collapse itself."
       },
       {
         "name": "alertsOpened",
@@ -8817,7 +8817,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "true",
         "required": false,
-        "description": "Whether the wave passes over the placeholder. Off, it is a flat block of the same shape, for a space held for something that is not loading yet."
+        "description": "Whether the wave passes over the placeholder; off, it is a flat block of the same shape."
       }
     ],
     "outputs": []
@@ -8848,7 +8848,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Error text. Shown immediately - binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
+        "description": "Error text. Shown immediately; takes precedence over `errors`."
       },
       {
         "name": "warning",
@@ -8866,7 +8866,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. What an unset value falls back to is the subclass's call, in `reserveMessageResolved`: a field takes `DS_CONFIG.field.reserveMessage`, a button does not."
+        "description": "Reserve the message-row height even when empty, so a hint/error does not shift the layout. Unset falls back to `DS_CONFIG.field.reserveMessage` for a field, not for a button."
       },
       {
         "name": "messageIcon",
@@ -8884,7 +8884,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+        "description": "Validation errors, shown once the user has interacted. Bound by signal forms; reactive and template-driven forms are read through `NgControl`."
       },
       {
         "name": "invalid",
@@ -8893,7 +8893,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Paints the error state and sets `aria-invalid`, WITHOUT a message of its own, for when the text lives elsewhere (an error summary, one message covering a field group). Use `error` to show text."
+        "description": "Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text."
       },
       {
         "name": "touched",
@@ -8902,7 +8902,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
       },
       {
         "name": "hidden",
@@ -8911,7 +8911,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Hides the control. Inline `display`, not the `hidden` attribute: each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
+        "description": "Hides the control. Inline `display`: the `hidden` attribute loses to each control's `:host` display."
       },
       {
         "name": "value",
@@ -9014,7 +9014,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Accessible name, and the series name in the tooltip. Left out, the sparkline is decorative and hidden from assistive technology: it is then taken to sit beside a value that says it."
+        "description": "Accessible name, and the series name in the tooltip. Left out, the sparkline is decorative and hidden from assistive technology."
       },
       {
         "name": "scale",
@@ -9035,7 +9035,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "true",
         "required": false,
-        "description": "Shows the reading under the pointer, and under the keyboard where `label` makes the sparkline focusable: focus opens the last reading, the arrow keys, Home and End move."
+        "description": "Shows the reading under the pointer, and under the keyboard where `label` makes the sparkline focusable: focus opens the last reading; arrows, Home and End move."
       },
       {
         "name": "valueFormat",
@@ -9190,7 +9190,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Headline metric; `unit` is appended directly after it. Optional because the value can be projected instead: `[dsStatValue]` takes a badge, a status dot, anything a tile needs where a number would go. A bare `value` attribute is not the projection slot, since many components have a `value` input. Takes `null` so `[value]=\"count | number\"` typechecks under `strictTemplates` (Angular's `number`/`date`/`percent` pipes return `string | null`). Renders as nothing, like the empty default."
+        "description": "Headline metric; `unit` is appended directly after it. Optional: `[dsStatValue]` projects any content in its place. Accepts `null` so pipes returning `string | null` typecheck; renders as nothing."
       },
       {
         "name": "delta",
@@ -9408,7 +9408,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Error text. Shown immediately - binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
+        "description": "Error text. Shown immediately; takes precedence over `errors`."
       },
       {
         "name": "warning",
@@ -9426,7 +9426,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. What an unset value falls back to is the subclass's call, in `reserveMessageResolved`: a field takes `DS_CONFIG.field.reserveMessage`, a button does not."
+        "description": "Reserve the message-row height even when empty, so a hint/error does not shift the layout. Unset falls back to `DS_CONFIG.field.reserveMessage` for a field, not for a button."
       },
       {
         "name": "messageIcon",
@@ -9444,7 +9444,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+        "description": "Validation errors, shown once the user has interacted. Bound by signal forms; reactive and template-driven forms are read through `NgControl`."
       },
       {
         "name": "invalid",
@@ -9453,7 +9453,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Paints the error state and sets `aria-invalid`, WITHOUT a message of its own, for when the text lives elsewhere (an error summary, one message covering a field group). Use `error` to show text."
+        "description": "Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text."
       },
       {
         "name": "touched",
@@ -9462,7 +9462,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
       },
       {
         "name": "hidden",
@@ -9560,7 +9560,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Accessible name for a control with no visible label. Set beside a label it overrides the label, per ARIA."
+        "description": "Accessible name for a control with no visible label; overrides `label` when both are set."
       },
       {
         "name": "controlled",
@@ -9601,7 +9601,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": true,
-        "description": "The `key` of the column this template replaces, matched against the table's `columns`. A key no column declares renders nothing and warns nowhere."
+        "description": "The `key` of the column this template replaces. An undeclared key renders nothing, silently."
       },
       {
         "name": "dsCellTemplateOf",
@@ -9610,7 +9610,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "The table's rows, bound to type `let-row`. Never read at runtime - the table hands the row out itself."
+        "description": "The table's rows, bound to type `let-row`; never read at runtime."
       }
     ],
     "outputs": []
@@ -9641,7 +9641,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Whether YOUR criterion is currently set, which drives the header's active-filter styling."
+        "description": "Whether YOUR criterion is set; drives the header's active-filter styling."
       }
     ],
     "outputs": []
@@ -9672,7 +9672,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Row identity used for tracking, selection, expansion and the active-row highlight. Defaults to `row.id`; pass an accessor for display-only data with no natural key (`[rowId]=\"row => row.channel + row.sentAt\"`), which beats mapping synthetic ids into the data just to satisfy the table."
+        "description": "Row identity for tracking, selection, expansion and the active-row highlight. Defaults to `row.id`; pass an accessor (`[rowId]=\"row => row.channel + row.sentAt\"`) for data with no key."
       },
       {
         "name": "columns",
@@ -9699,7 +9699,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Opt-in outer border + radius. Off by default so tables flush inside a `<ds-card padding=\"none\">` don't double-border. Unset falls back to `DS_CONFIG.table.bordered`, then `false`."
+        "description": "Opt-in outer border + radius, off so tables flush in a `<ds-card padding=\"none\">` don't double-border. Unset falls back to `DS_CONFIG.table.bordered`, then `false`."
       },
       {
         "name": "loading",
@@ -9708,7 +9708,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "false — no loading state. `true` — the table picks: skeleton rows while it has nothing to show, overlay once rows are on screen. Prefer it; the right choice is a function of the row count, which only the table holds. 'skeleton' — first-load placeholder; rows are replaced with shimmer rows. 'overlay' — re-fetch indicator; existing rows stay visible behind a translucent overlay with a centred spinner. Pin either one only to override the rule deliberately."
+        "description": "`false`: no loading state. `true`: the table picks, skeleton rows while it has nothing to show, overlay once rows are on screen. Prefer it. `'skeleton'`: first-load shimmer rows. `'overlay'`: re-fetch spinner over the existing rows."
       },
       {
         "name": "stickyHeader",
@@ -9726,7 +9726,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Caps the scroll body height (any CSS length, e.g. `'320px'`) and scrolls it vertically — pair with `stickyHeader` for a self-contained scroll region. `null` (default) lets the table grow to its content."
+        "description": "Caps the scroll body height (any CSS length) and scrolls it vertically; pair with `stickyHeader`. `null` (default) grows to content."
       },
       {
         "name": "density",
@@ -9738,7 +9738,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'default'",
         "required": false,
-        "description": "Row density — `'compact'` tightens cell padding for spreadsheet-dense lists."
+        "description": "`'compact'` tightens cell padding."
       },
       {
         "name": "zebra",
@@ -9747,7 +9747,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Tints odd rows for easier row-tracking across wide tables."
+        "description": "Tints odd rows."
       },
       {
         "name": "animateHeight",
@@ -9756,7 +9756,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Animate the body height when the row set changes (page/filter) instead of snapping. Opt-in; instant under reduced-motion (the DS zeroes the token)."
+        "description": "Animate the body height when the row set changes. Instant under reduced motion."
       },
       {
         "name": "selectedIds",
@@ -9774,7 +9774,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Column key currently sorted by; `null` when unsorted. Two-way bindable (`[(sortKey)]`) or one-way from your own state with `(sortChange)`."
+        "description": "Column key currently sorted by; `null` when unsorted. Bind `[(sortKey)]` or use `(sortChange)`."
       },
       {
         "name": "sortDirection",
@@ -9795,7 +9795,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "['asc', 'desc', null]",
         "required": false,
-        "description": "Sort states a column cycles through on click. Default includes null (unsorted); pass ['asc','desc'] to forbid the unsorted state (e.g. server-paged lists)."
+        "description": "Sort states a column cycles through on click. Pass `['asc','desc']` to forbid unsorted."
       },
       {
         "name": "sortAnnouncement",
@@ -9804,7 +9804,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Wording for the sort announcement, so it can be translated. Receives the column's label and the new direction; return an empty string to say nothing. Unset falls back to `DS_INTL.table.sorted`."
+        "description": "Wording for the sort announcement: receives the column label and direction; return `''` to say nothing. Unset falls back to `DS_INTL.table.sorted`."
       },
       {
         "name": "rangeAnnouncement",
@@ -9813,7 +9813,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Wording for the row-range announcement, so it can be translated. Receives the 1-based first and last row on screen and the total. A paged table with no rows announces its empty state's text instead, and calls this with `(0, 0, 0)` only when that state has none; return an empty string to say nothing. Unset falls back to `DS_INTL.pagination.range`."
+        "description": "Wording for the row-range announcement: receives the 1-based first and last row on screen and the total; return `''` to say nothing. A paged table with no rows announces its empty state's text instead, calling this with `(0, 0, 0)` only when that state has none. Unset falls back to `DS_INTL.pagination.range`."
       },
       {
         "name": "skeletonRows",
@@ -9831,7 +9831,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Accessible name for the table (rendered as a visually-hidden caption). Without it, screen-reader users get an unlabelled table."
+        "description": "Accessible name, rendered as a visually-hidden caption."
       },
       {
         "name": "rowInteractive",
@@ -9840,7 +9840,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "When true, each row becomes a keyboard-operable control (tabindex, Enter/Space → rowClicked) with an accessible name from the first column. Off by default so non-navigating tables don't advertise a false click affordance. Also the gate for the hover/pressed row tints."
+        "description": "Each row becomes a keyboard-operable control (Enter/Space emit `rowClicked`) named from the first column. Also gates the hover/pressed row tints."
       },
       {
         "name": "activeRowId",
@@ -9849,7 +9849,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Id of the row rendered as current (highlight + `aria-current`) — e.g. the row whose detail drawer or side panel is open. `null` — none."
+        "description": "Id of the row rendered as current (highlight + `aria-current`), e.g. the one whose detail panel is open. `null`: none."
       },
       {
         "name": "filterQuery",
@@ -9858,7 +9858,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Client-side row filter — case-insensitive substring match against cell text. Columns with `filterable: true` restrict the match set (none marked — every column matches, hidden ones included). '' — no filtering."
+        "description": "Client-side substring filter (case-insensitive) on cell text. `filterable` columns restrict the match; with none marked every column matches, hidden ones included."
       },
       {
         "name": "columnFilters",
@@ -9867,7 +9867,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "new Map()",
         "required": false,
-        "description": "Two-way per-column set-filters: column key → the still-checked values. A column absent from the map (or with every value checked) is unfiltered."
+        "description": "Two-way per-column set-filters: column key to the still-checked values. Absent or full: unfiltered."
       },
       {
         "name": "persistLayout",
@@ -9876,7 +9876,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Round-trip whatever the column features persist (order, widths, hidden keys) through `localStorage`, so a reader's column layout survives a reload. Needs `storageKey` — without one there is nothing to key a screen by, and two tables would overwrite each other. Off by default."
+        "description": "Persist the column layout (order, widths, hidden keys) in `localStorage`. Needs `storageKey`."
       },
       {
         "name": "storageKey",
@@ -9885,7 +9885,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Screen id the persisted layout is stored under. Pick something stable per table, not per route instance."
+        "description": "Stable per-table id the persisted layout is stored under."
       },
       {
         "name": "stickyScrollbar",
@@ -9894,7 +9894,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Keeps the horizontal scrollbar reachable on tall tables: the scroll container's native bar is hidden and a proxy stuck to the bottom of the nearest scroll ancestor mirrors it both ways. Off by default. Unset falls back to `DS_CONFIG.table.stickyScrollbar`, then `false`."
+        "description": "Keeps the horizontal scrollbar reachable on tall tables: the native bar is hidden and a proxy stuck to the bottom of the nearest scroll ancestor mirrors it. Unset falls back to `DS_CONFIG.table.stickyScrollbar`, then `false`."
       },
       {
         "name": "pageSize",
@@ -9930,7 +9930,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "true",
         "required": false,
-        "description": "Shows the page-size picker in the footer pager. Set false for a table whose page size is fixed — the standalone `ds-pagination` has always taken this."
+        "description": "Shows the page-size picker in the footer pager."
       },
       {
         "name": "showLabel",
@@ -9952,7 +9952,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "Control height of the footer pager's buttons and picker. Unset falls back to `DS_CONFIG.pagination.size`, then `DS_CONFIG.control.size`, then `'sm'`."
+        "description": "Control height of the footer pager. Unset falls back to `DS_CONFIG.pagination.size`, then `DS_CONFIG.control.size`, then `'sm'`."
       },
       {
         "name": "paginationLayout",
@@ -9964,7 +9964,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "`'spread'` gives the footer pager the table's full width, label at one edge and controls at the other. Unset falls back to `DS_CONFIG.pagination.layout`, then `'grouped'`."
+        "description": "`'spread'` stretches the footer pager to the table's full width. Unset falls back to `DS_CONFIG.pagination.layout`, then `'grouped'`."
       },
       {
         "name": "total",
@@ -9973,7 +9973,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Server-side total row count. `null` (default) = client paging: the table slices `data()` itself and the pager counts the rows in hand. When set, the host has already sliced to one page — the pager uses this count and the table renders `data()` as-is (no internal slice)."
+        "description": "Server-side total row count. `null` (default): client paging, the table slices `data()`. When set, the host has sliced to one page and `data()` renders as-is."
       },
       {
         "name": "scrollToTopOnPageChange",
@@ -9982,7 +9982,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Scroll the table into view on a page change (opt-in) — keeps a bottom pager from leaving the viewport on the previous page's last rows."
+        "description": "Scroll the table into view on a page change."
       },
       {
         "name": "sortMode",
@@ -9995,7 +9995,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "Who sorts — see `TableSortMode`. Unset resolves to `'server'`: the table emits `(sortChange)` and reorders nothing, which is what a paged table needs. Declare `'client'` when the table holds every row, or `'none'` to drop the affordance entirely."
+        "description": "Who sorts, see `TableSortMode`. Unset resolves to `'server'`: the table emits `(sortChange)` and reorders nothing."
       },
       {
         "name": "filterMode",
@@ -10008,7 +10008,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "Who filters — see `TableFilterMode`. Unset resolves to `'server'`: the table tracks the selection in `columnFilters` for the host to turn into a request, and runs no local pass. Declare `'client'` when the table holds every row and should filter them itself."
+        "description": "Who filters, see `TableFilterMode`. Unset resolves to `'server'`: the table tracks `columnFilters` and runs no local pass."
       },
       {
         "name": "columnFilterOptions",
@@ -10017,7 +10017,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "new Map()",
         "required": false,
-        "description": "The full value domain per column key, for a header filter the table cannot derive itself. Without it the checklist is built from the rows in hand, which on a server-paged table offers only the values that happen to be on the current page."
+        "description": "Full value domain per column key for a header filter the table cannot derive; without it the checklist offers only the values on the current page."
       },
       {
         "name": "stickyScrollbarOffset",
@@ -10026,7 +10026,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Where the sticky horizontal scrollbar comes to rest, as any CSS length. Unset, the table measures its scroll container's bottom padding and cancels it, so the bar sits on the edge the reader can see. Set it for a scrollport whose reachable edge is not its padding edge. Falls back to `DS_CONFIG.table.stickyScrollbarOffset`; `--ds-table-sticky-scrollbar-offset` still wins over both, for a rule that has to reach one table from a stylesheet."
+        "description": "Where the sticky horizontal scrollbar rests, as a CSS length. Unset, the table cancels its scroll container's bottom padding. Falls back to `DS_CONFIG.table.stickyScrollbarOffset`; `--ds-table-sticky-scrollbar-offset` wins over both."
       },
       {
         "name": "stickyFirstColumn",
@@ -10044,7 +10044,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Render only the rows in view, padding the rest with two spacer rows. Opt-in, and it needs `maxHeight` — without a bounded scroller there is no viewport to window against, so nothing is virtualized (dev-warned). Every row must be the same height, which is `virtualRowSize`: the arithmetic that decides what is in view has no other way to know where a row starts. So virtual mode forces `table-layout: fixed` and single-line cells, and the expansion panel is suppressed — a row that can grow breaks the maths."
+        "description": "Render only the rows in view, padding the rest with spacer rows. Needs `maxHeight` (dev-warned, nothing virtualizes without a bounded scroller). Every row must be `virtualRowSize` tall, so virtual mode forces `table-layout: fixed`, single-line cells and no expansion panel."
       },
       {
         "name": "virtualRowSize",
@@ -10053,7 +10053,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "44",
         "required": false,
-        "description": "Row height in px in virtual mode. Must match what the rows actually measure, so it drives the CSS height rather than merely describing it."
+        "description": "Row height in px in virtual mode. Drives the CSS height, so it must match the rendered rows."
       },
       {
         "name": "lazy",
@@ -10062,7 +10062,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Fetch rows as they scroll into view instead of receiving them all. `data` becomes a SPARSE array `total` long: put each fetched row at its absolute index and leave the rest empty. Every gap inside the window renders a skeleton row, and `(lazyLoad)` asks for the range covering it. Needs `virtualScroll` — without a window there is nothing to load lazily AGAINST — and `total`, which is what the scrollbar is sized from."
+        "description": "Fetch rows as they scroll into view. `data` becomes a SPARSE array `total` long: put each fetched row at its absolute index; every gap in the window renders a skeleton row and `(lazyLoad)` asks for its range. Needs `virtualScroll` and `total`."
       },
       {
         "name": "rowActions",
@@ -10071,7 +10071,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Row-action menu items rendered as a trailing kebab (⋮) column. Empty (default) — no column. Menu clicks never trigger `rowClicked`."
+        "description": "Row-action items rendered as a trailing kebab column; empty: no column. Menu clicks never trigger `rowClicked`."
       },
       {
         "name": "cellTemplateMap",
@@ -10080,7 +10080,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "{}",
         "required": false,
-        "description": "Cell templates supplied as an explicit map instead of (or in addition to) projected `dsCellTemplate` directives. Lets a wrapper component collect the directives itself and pass them down, since content projected through a wrapper's `<ng-content>` is not seen by this component's content query. Entries here override projected ones."
+        "description": "Cell templates as an explicit map, for wrappers whose `<ng-content>` hides projected `dsCellTemplate` directives from this component's content query. Overrides projected ones."
       },
       {
         "name": "emptyTemplate",
@@ -10089,7 +10089,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Empty-state template, as an alternative to the `[empty]` content slot — again for wrappers that can't rely on slot re-projection."
+        "description": "Empty-state template, alternative to the `[empty]` slot for wrappers that cannot re-project."
       },
       {
         "name": "expandableRows",
@@ -10098,7 +10098,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "When true, each row renders a leading chevron button that toggles an inline expansion panel below it."
+        "description": "Each row renders a leading chevron that toggles an inline expansion panel."
       },
       {
         "name": "expandedIds",
@@ -10119,7 +10119,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'multiple'",
         "required": false,
-        "description": "`'single'` collapses the open row when another expander is clicked. Enforced on interaction only: a set seeded with several ids is left alone (and warned about in dev) rather than silently rewritten under the host."
+        "description": "`'single'` collapses the open row when another expands. Enforced on interaction only: a set seeded with several ids is left alone (dev-warned)."
       },
       {
         "name": "expandAllToggle",
@@ -10128,7 +10128,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Renders an expand-all/collapse-all chevron in the expander column header, page-scoped when paginating, like select-all. Suppressed under `expandMode=\"single\"`, which it would contradict."
+        "description": "Expand-all/collapse-all chevron in the expander header, page-scoped when paginating. Suppressed under `expandMode=\"single\"`."
       },
       {
         "name": "rowExpandTemplate",
@@ -10137,7 +10137,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Template rendered inside an expanded row's panel. Context: `$implicit` = row, `row` = row."
+        "description": "Template rendered inside an expanded row's panel; `$implicit` and `row` are the row."
       }
     ],
     "outputs": [
@@ -10148,7 +10148,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": "Emitted for `[(sortKey)]`. `sortChange` carries the same click with both halves at once, which is usually the one to listen to."
+        "description": "Emitted for `[(sortKey)]`. `sortChange` carries both halves at once."
       },
       {
         "name": "sortDirectionChange",
@@ -10169,7 +10169,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": "The range now on screen that `data` has gaps in — fetch it and write the rows back at their absolute indices. Re-emits only when the range moves."
+        "description": "The on-screen range with gaps in `data`; write fetched rows back at their absolute indices. Re-emits only when the range moves."
       },
       {
         "name": "rowClicked",
@@ -10214,7 +10214,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": "Fires with the row when an expander opens it — including each row opened by expand-all, so a host lazy-loading panel content sees every one."
+        "description": "Fires with the row when an expander opens it, including each row opened by expand-all."
       },
       {
         "name": "rowCollapsed",
@@ -10223,7 +10223,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": "Fires with the row when an expander closes it, the row auto-closed by `expandMode=\"single\"` included. It carries a row, so it cannot speak for an id whose row is no longer in `data()` — under server-side paging that id is cleared silently. `expandedIds` is the complete signal; this one is the convenient one."
+        "description": "Fires with the row when an expander closes it, including the row auto-closed by `expandMode=\"single\"`. An id whose row left `data()` (server paging) is cleared silently, so `expandedIds` is the complete signal."
       }
     ]
   },
@@ -10284,7 +10284,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "true",
         "required": false,
-        "description": "Renders the built-in toolbar button. `false` keeps the feature and hides the control, for a table whose export is driven from somewhere else on the page."
+        "description": "Renders the built-in toolbar button. `false` hides it and keeps the feature."
       },
       {
         "name": "exportFilename",
@@ -10425,7 +10425,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "When true, a tab's content is instantiated only on first activation and kept alive thereafter. When false (default), all panels render eagerly."
+        "description": "When true, a tab's content is instantiated on first activation and kept alive. Default renders all panels eagerly."
       },
       {
         "name": "scrollable",
@@ -10434,7 +10434,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "When true, a horizontal strip scrolls inside its own box and shows previous/next arrows while tabs lie beyond its edges, each arrow hidden at its own edge. The active tab is scrolled into view on selection. When false, tabs keep their width and a strip too long for its container overflows it."
+        "description": "When true, a horizontal strip scrolls inside its own box with previous/next arrows while tabs lie beyond its edges, and the active tab is scrolled into view. When false, an overlong strip overflows its container."
       },
       {
         "name": "closable",
@@ -10443,7 +10443,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "When true, each tab shows a close button. Clicking it emits tabClosed with the tab's value (or label as fallback) and does not switch to that tab."
+        "description": "When true, each tab shows a close button; clicking it emits `tabClosed` and does not switch to that tab."
       },
       {
         "name": "orientation",
@@ -10455,7 +10455,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'horizontal'",
         "required": false,
-        "description": "Controls whether the tab list and panel are stacked horizontally (default) or the tab list runs vertically beside the panel."
+        "description": "Tab list above the panel (`horizontal`, default) or beside it (`vertical`)."
       },
       {
         "name": "urlParam",
@@ -10464,7 +10464,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Keep the active tab in a query parameter, so it survives F5, a shared link and the Back button: `urlParam=\"tab\"` gives `?tab=activity`. Empty (the default) leaves the URL alone. The names come from each `ds-tab`'s `value` (falling back to its `label`). **Names, not indices**: `?tab=1` would silently repoint every old link the moment a tab is inserted. The FIRST tab writes no parameter and every write REPLACES the history entry, so flipping tabs does not fill the Back button. An unknown or missing name lands on the first tab rather than throwing. Outside a routed context the input is inert; no router lookup or subscription happens until you set it."
+        "description": "Keep the active tab in a query parameter so it survives reload and sharing: `urlParam=\"tab\"` gives `?tab=activity`. Empty (default) leaves the URL alone. Names come from each `ds-tab`'s `value` (falling back to its `label`), not indices, so inserting a tab does not repoint old links. The FIRST tab writes no parameter and every write REPLACES the history entry. An unknown name lands on the first tab. Outside a routed context the input is inert."
       },
       {
         "name": "rememberLastTab",
@@ -10473,7 +10473,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Reopen the tab this screen was last left on, per path, from `sessionStorage`. Off by default, and needs `urlParam` for the names (a remembered INDEX would repoint when a tab is inserted). A link always wins: the parameter is read first, memory only fills the gap the first tab leaves in the URL. Kept in `sessionStorage`, so tomorrow is a fresh visit."
+        "description": "Reopen the tab this screen was last left on, per path, from `sessionStorage`. Off by default; needs `urlParam` for the names. A link always wins: memory only fills the gap the first tab leaves in the URL."
       }
     ],
     "outputs": [
@@ -10484,7 +10484,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": null,
         "required": false,
-        "description": "Emitted when a close button is clicked. Carries the tab's value input, or its label when value is not set. The host is responsible for removing the tab from its list."
+        "description": "Emitted when a close button is clicked, with the tab's value (or label). The host removes the tab."
       }
     ]
   },
@@ -10594,7 +10594,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Error text. Shown immediately - binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
+        "description": "Error text. Shown immediately; takes precedence over `errors`."
       },
       {
         "name": "warning",
@@ -10612,7 +10612,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. What an unset value falls back to is the subclass's call, in `reserveMessageResolved`: a field takes `DS_CONFIG.field.reserveMessage`, a button does not."
+        "description": "Reserve the message-row height even when empty, so a hint/error does not shift the layout. Unset falls back to `DS_CONFIG.field.reserveMessage` for a field, not for a button."
       },
       {
         "name": "messageIcon",
@@ -10630,7 +10630,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+        "description": "Validation errors, shown once the user has interacted. Bound by signal forms; reactive and template-driven forms are read through `NgControl`."
       },
       {
         "name": "invalid",
@@ -10639,7 +10639,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Paints the error state and sets `aria-invalid`, WITHOUT a message of its own, for when the text lives elsewhere (an error summary, one message covering a field group). Use `error` to show text."
+        "description": "Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text."
       },
       {
         "name": "touched",
@@ -10648,7 +10648,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
       },
       {
         "name": "hidden",
@@ -10657,7 +10657,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Hides the control. Inline `display`, not the `hidden` attribute: each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
+        "description": "Hides the control. Inline `display`: the `hidden` attribute loses to each control's `:host` display."
       },
       {
         "name": "value",
@@ -10679,7 +10679,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "Field height - sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
+        "description": "Field height; falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "label",
@@ -10733,7 +10733,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Confirmation text, shown when there is no error or warning. It paints the success border: the text IS the state."
+        "description": "Confirmation text, shown when there is no error or warning; paints the success border."
       },
       {
         "name": "required",
@@ -10828,7 +10828,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Character limit; shows a live \"{current}/{max}\" counter below the field. `maxLengthMode` decides what happens at the limit. Counts `value.length` (UTF-16 units, as native `maxlength` does), whitespace included, unless `countTrimmed` is set."
+        "description": "Character limit with a live \"{current}/{max}\" counter; `maxLengthMode` decides what happens at the limit. Counts `value.length` (UTF-16 units, as native `maxlength` does) unless `countTrimmed` is set."
       },
       {
         "name": "maxLengthMode",
@@ -10840,7 +10840,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'hard'",
         "required": false,
-        "description": "`'hard'` applies the native maxlength attribute, so typing and paste stop at `maxLength`. `'soft'` lets the text run past it: the counter turns red, the excess is highlighted, and the field reports invalid (`aria-invalid`, counter as description). Blocking a save on it is the form's job."
+        "description": "`'hard'` applies the native maxlength attribute. `'soft'` lets the text run past it: the counter turns red, the excess is highlighted and the field reports invalid (`aria-invalid`)."
       },
       {
         "name": "countTrimmed",
@@ -10849,7 +10849,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Leaves whitespace at either end out of the counter, the soft-limit state and the highlight, for a value the server stores trimmed. Whitespace between words still counts. The native `maxlength` of `maxLengthMode=\"hard\"` counts every character regardless."
+        "description": "Leaves leading and trailing whitespace out of the counter, soft-limit state and highlight. The native `maxlength` of `maxLengthMode=\"hard\"` counts every character regardless."
       },
       {
         "name": "minLength",
@@ -10898,7 +10898,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Error text. Shown immediately - binding it says the consumer has already decided this is in error. Takes precedence over `errors`."
+        "description": "Error text. Shown immediately; takes precedence over `errors`."
       },
       {
         "name": "warning",
@@ -10916,7 +10916,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Reserve the message-row height even when empty, so the control doesn't shift the layout below it when a hint/error appears. What an unset value falls back to is the subclass's call, in `reserveMessageResolved`: a field takes `DS_CONFIG.field.reserveMessage`, a button does not."
+        "description": "Reserve the message-row height even when empty, so a hint/error does not shift the layout. Unset falls back to `DS_CONFIG.field.reserveMessage` for a field, not for a button."
       },
       {
         "name": "messageIcon",
@@ -10934,7 +10934,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Validation errors, shown once the user has interacted. Bound automatically by signal forms; reactive and template-driven forms are read through `NgControl` and need nothing here. Accepts a string, one error, or an array."
+        "description": "Validation errors, shown once the user has interacted. Bound by signal forms; reactive and template-driven forms are read through `NgControl`."
       },
       {
         "name": "invalid",
@@ -10943,7 +10943,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Paints the error state and sets `aria-invalid`, WITHOUT a message of its own, for when the text lives elsewhere (an error summary, one message covering a field group). Use `error` to show text."
+        "description": "Paints the error state and sets `aria-invalid` WITHOUT a message; use `error` to show text."
       },
       {
         "name": "touched",
@@ -10952,7 +10952,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`, so a `required` error does not greet an untouched form."
+        "description": "Whether the user has interacted with the field. Bound by signal forms; gates `errors`."
       },
       {
         "name": "hidden",
@@ -10961,7 +10961,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Hides the control. Inline `display`, not the `hidden` attribute: each control sets its own `:host` display, which the attribute's weaker UA rule would lose to."
+        "description": "Hides the control. Inline `display`: the `hidden` attribute loses to each control's `:host` display."
       },
       {
         "name": "value",
@@ -11031,7 +11031,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "Trigger height - sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`."
+        "description": "Trigger height; falls back to `DS_CONFIG.control.size`, then `'md'`."
       },
       {
         "name": "fullWidth",
@@ -11040,7 +11040,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Stretches the trigger to fill its container instead of hugging its content. Opt in when sharing a grid/flex track with inputs."
+        "description": "Stretches the trigger to fill its container instead of hugging its content."
       },
       {
         "name": "label",
@@ -11049,7 +11049,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Field label above the trigger, in the same row a `ds-date-picker` label occupies so date + time line up."
+        "description": "Field label above the trigger."
       },
       {
         "name": "required",
@@ -11076,7 +11076,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "Extra classes for the portaled panel, beside `ds-dropdown-panel`, `ds-overlay-pane` and `ds-time-picker-panel`. The panel is portaled out of the host, so a class on the pane is the only way a consumer stylesheet reaches ONE instance."
+        "description": "Extra classes for the portaled panel, the only way to style one instance of it."
       },
       {
         "name": "disabled",
@@ -11094,7 +11094,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Confirmation text, shown when there is no error or warning. It paints the success border: the text IS the state."
+        "description": "Confirmation text, shown when there is no error or warning; paints the success border."
       },
       {
         "name": "placeholder",
@@ -11256,7 +11256,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "The same field `ToastOptions.body` carries, so a specimen and a raised toast agree."
+        "description": "Message text; the same field as `ToastOptions.body`."
       },
       {
         "name": "dismissible",
@@ -11386,7 +11386,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "''",
         "required": false,
-        "description": "Tip text. An empty string turns the tooltip off, so a host bound to a possibly blank value needs no separate condition."
+        "description": "Tip text. An empty string turns the tooltip off."
       },
       {
         "name": "dsTooltipPlacement",
@@ -11400,7 +11400,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'top'",
         "required": false,
-        "description": "Which side the tip opens on. It does NOT flip: only the requested side is offered to the overlay, so a tip with no room there is pushed, not moved."
+        "description": "Which side the tip opens on. It does NOT flip: with no room it is pushed, not moved."
       },
       {
         "name": "dsTooltipDelay",
@@ -11409,7 +11409,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "120",
         "required": false,
-        "description": "Milliseconds before the tip appears. Hiding is immediate; the delay only suppresses a tip the pointer passed over on its way elsewhere."
+        "description": "Milliseconds before the tip appears. Hiding is immediate."
       },
       {
         "name": "dsTooltipWhenClipped",
@@ -11418,7 +11418,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Show the tip only while the host shows less text than it holds. Re-tested on every open, so it tracks resizing with no observer. With this on, `dsTooltip` may be left empty and the host's own text is disclosed, which suits projected content the holding component cannot know. A tip whose text the host already contains sets no `aria-describedby`; one given a `dsTooltip` that says more than the host does describes it as usual."
+        "description": "Show the tip only while the host shows less text than it holds. Re-tested on every open. With this on, `dsTooltip` may be left empty and the host's own text is disclosed. A tip whose text the host already contains sets no `aria-describedby`; one given a `dsTooltip` that says more than the host does describes it as usual."
       },
       {
         "name": "dsTooltipTextSelector",
@@ -11427,7 +11427,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "A selector for the element inside the host whose clipping `dsTooltipWhenClipped` tests and whose text it discloses, so the pointer area can be a whole row. Resolved on every open; while nothing matches, no clipped tip opens."
+        "description": "Selector for the element inside the host whose clipping `dsTooltipWhenClipped` tests and whose text it discloses. Resolved on every open; while nothing matches, no clipped tip opens."
       }
     ],
     "outputs": []
@@ -11606,7 +11606,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "[]",
         "required": false,
-        "description": "The bars in the order they are read. Never sorted: the sequence is the meaning."
+        "description": "The bars in reading order; never sorted."
       },
       {
         "name": "showValues",
@@ -11624,7 +11624,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "true",
         "required": false,
-        "description": "The dashed rule chaining one bar to the next at the level they share."
+        "description": "The dashed rule chaining one bar to the next."
       },
       {
         "name": "caption",
@@ -11633,7 +11633,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Printed above the plot as the visible title, and reused as the annex table's caption."
+        "description": "Visible title above the plot; also the annex table's caption."
       },
       {
         "name": "summary",
@@ -11642,7 +11642,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "The accessible name. Generated from the steps when omitted, naming each one's direction in words and the figure the chain ends at."
+        "description": "The accessible name. Generated from the steps when omitted."
       },
       {
         "name": "tickCount",
@@ -11660,7 +11660,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Turns on the click affordance and the keyboard route. `barClicked` fires whether or not this is set."
+        "description": "Turns on the click affordance and the keyboard route."
       },
       {
         "name": "frame",
@@ -11672,7 +11672,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "`'auto'` draws the bordered, padded box; `'none'` leaves it bare for a chart inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`."
+        "description": "`'auto'` draws the bordered, padded box; `'none'` leaves it bare. Unset falls back to `DS_CONFIG.chart.frame`."
       },
       {
         "name": "tooltipSwatches",
@@ -11681,7 +11681,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for up to four readings."
+        "description": "Whether the tooltip draws a colour dot per reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`."
       },
       {
         "name": "dataTable",
@@ -11694,7 +11694,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "The annex table under the plot. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`. It prints each step's direction, its own reading and the running total."
+        "description": "The annex table under the plot: each step's direction, reading and running total. Unset falls back to `DS_CONFIG.chart.dataTable`."
       },
       {
         "name": "loading",
@@ -11703,7 +11703,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Skeleton bars at the real count, so the page does not resize when the data lands."
+        "description": "Skeleton bars at the real count."
       },
       {
         "name": "error",
@@ -11712,7 +11712,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "false",
         "required": false,
-        "description": "Separate from an empty `data`: a failed request and no data mean different things."
+        "description": "Shows the error message; distinct from an empty `data`."
       },
       {
         "name": "emptyText",
@@ -11739,7 +11739,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Formats every value the chart prints - the axis ticks, the bar labels and the annex table. The sign a delta carries is added around it, so a formatter never has to know about one."
+        "description": "Formats every value the chart prints. A delta's sign is added around it."
       },
       {
         "name": "pinOnClick",
@@ -11748,7 +11748,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Holds the clicked step and its tooltip in place, with a pin disc on it, until a second click, Escape or a press outside releases it. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. `barClicked` fires either way - pinning is a state, not a handler."
+        "description": "Holds the clicked step and its tooltip until a second click, Escape or an outside press. `barClicked` fires either way. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`."
       },
       {
         "name": "staggerMs",
@@ -11757,7 +11757,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "40",
         "required": false,
-        "description": "Milliseconds between one step's entrance and the next; a long waterfall narrows the step to arrive within 260ms. `0` is no stagger."
+        "description": "Milliseconds between one step's entrance and the next; capped at 260ms in total. `0` is no stagger."
       }
     ],
     "outputs": [
@@ -11780,7 +11780,7 @@ export const SERVICE_API: Record<string, ServiceApi> = {
     "className": "AppLayoutNavigationService",
     "importName": "AppLayoutNavigationService",
     "importPath": "@ids-group-ltd/ids-design-system",
-    "summary": "Emits the new path whenever navigation lands on a DIFFERENT one. A query- or fragment-only navigation is a search, sort or page step on the same screen, and everything that reacts to \"went somewhere else\" (the scroll reset, the responsive rail, your own code) reads this one source. Inject it and read `pathChanged` rather than re-deriving the path change: ```ts private readonly navigation = inject(AppLayoutNavigationService); constructor() { this.navigation.pathChanged .pipe(takeUntilDestroyed()) .subscribe((path) => …); } ``` A PATH change is not always a page change. An app whose URL mirrors the reader's position (a docs layout rewriting `/area/section` from a scroll spy, a wizard that names its step) changes the path while staying on the screen, and resetting the scroll there fights the user: the reset moves the scroll, the spy rewrites the path again, and the page ping-pongs. Such a navigation must carry `state: { dsSamePage: true }`, which is skipped here. Root-provided and stateless, so one instance serves every reader. `AppLayoutScrollService` depends on it, so a consumer providing THAT outside `ds-app-layout` needs this one resolvable too.",
+    "summary": "Emits the new path whenever navigation lands on a DIFFERENT one; query- or fragment-only navigations are ignored. Read `pathChanged` instead of re-deriving the path change: ```ts private readonly navigation = inject(AppLayoutNavigationService); constructor() { this.navigation.pathChanged .pipe(takeUntilDestroyed()) .subscribe((path) => …); } ``` A navigation that changes the path while staying on the same screen (a scroll spy rewriting the URL, a wizard step) must carry `state: { dsSamePage: true }`, which is skipped here; otherwise the scroll reset and the spy ping-pong. `AppLayoutScrollService` depends on it, so a consumer providing THAT outside `ds-app-layout` needs this one resolvable too.",
     "members": [
       {
         "name": "pathChanged",
@@ -11796,21 +11796,21 @@ export const SERVICE_API: Record<string, ServiceApi> = {
     "className": "AppLayoutScrollService",
     "importName": "AppLayoutScrollService",
     "importPath": "@ids-group-ltd/ids-design-system",
-    "summary": "Owns the layout's content scroller. In the fixed-frame layout the window never scrolls, so the router's built-in window-based scrolling no-ops; this service resets the registered container to the top when navigation lands on a different PATH instead. Provided by `ds-app-layout`, so routed pages can `inject(AppLayoutScrollService)` and call `scrollToTop()` manually (e.g. list pages that DO want the top after a filter change). With `restoreScroll` on the layout it also restores the reader's place. Only when armed: going BACK to a list returns to where the reader was, following a link into a new screen does not.",
+    "summary": "Owns the layout's content scroller. The window never scrolls in the fixed-frame layout, so the router's window-based scrolling no-ops; this service resets the registered container when navigation lands on a different PATH. Provided by `ds-app-layout`; routed pages can inject it and call `scrollToTop()`. With `restoreScroll` on the layout it also restores the reader's place, but only when armed: going BACK restores, following a link does not.",
     "members": [
       {
         "name": "scroller",
         "kind": "property",
         "signature": "scroller",
         "type": "Signal<Element | null>",
-        "description": "The content scroller, once the layout has rendered it. Exposed so a host that must measure or drive the scroll itself (a scroll-spy, a virtualizer) can read it instead of querying the layout's internal markup."
+        "description": "The content scroller, once the layout has rendered it."
       },
       {
         "name": "setScrollContainer",
         "kind": "method",
         "signature": "setScrollContainer(element: Element)",
         "type": "void",
-        "description": "Wiring, called by `ds-app-layout` once its content region exists. Not for consumers: calling it points the service at the wrong element."
+        "description": "Wiring for `ds-app-layout`; not for consumers."
       },
       {
         "name": "configureRestore",
@@ -11838,21 +11838,21 @@ export const SERVICE_API: Record<string, ServiceApi> = {
         "kind": "method",
         "signature": "scrollTo(top: number)",
         "type": "void",
-        "description": "Scroll the content region to an absolute offset. Assigns `scrollTop` rather than calling `scrollTo`, so a themed `scroll-behavior: smooth` cannot turn a positioning jump into an animation."
+        "description": "Scrolls the content region to an absolute offset. Assigns `scrollTop`, so `scroll-behavior: smooth` cannot animate it."
       },
       {
         "name": "consumePendingOffset",
         "kind": "method",
         "signature": "consumePendingOffset()",
         "type": "number | null",
-        "description": "Take the offset this navigation is going to restore, and cancel the restore. For a host that renders its own scroll position: a virtualizer needs the offset BEFORE it builds rows, so assigning `scrollTop` afterwards would scroll a list that does not exist yet. Returns null when nothing is pending (any navigation that is not a back)."
+        "description": "Takes the offset this navigation is going to restore, and cancels the restore. For a host that must know the offset BEFORE it builds rows (a virtualizer). Returns null when nothing is pending."
       },
       {
         "name": "contentReady",
         "kind": "method",
         "signature": "contentReady()",
         "type": "void",
-        "description": "Optional accelerator: tell the layout the content for this route is in the DOM. Without it the restore still lands (it waits for the container to grow and clamps at the deadline), but a host that knows when its data arrived can end the wait early."
+        "description": "Optional: tells the layout the route's content is in the DOM, ending the restore wait early."
       }
     ]
   },
@@ -11884,7 +11884,7 @@ export const SERVICE_API: Record<string, ServiceApi> = {
     "className": "BreadcrumbsService",
     "importName": "BreadcrumbsService",
     "importPath": "@ids-group-ltd/ids-design-system",
-    "summary": "Breadcrumb state that `<ds-breadcrumbs>` reads when no `[items]` input is provided. Apps push items programmatically (page constructor / effect) or from router data.",
+    "summary": "Breadcrumb state that `<ds-breadcrumbs>` reads when no `[items]` input is provided.",
     "members": [
       {
         "name": "items",
@@ -11965,7 +11965,7 @@ export const SERVICE_API: Record<string, ServiceApi> = {
         "kind": "method",
         "signature": "promise(source: Promise<T>, messages: ToastPromiseMessages<T>)",
         "type": "Promise<T>",
-        "description": "Show a loading toast for the duration of `source`. Resolution and rejection are reflected in-place (same toast, no stack-up) as success/error variants, each with its own auto-dismiss delay. Returns `source` itself, so the caller still owns rejection handling: an un-`catch`ed call produces an unhandled rejection exactly as it would without a toast."
+        "description": "Shows a loading toast for the duration of `source`; resolution and rejection turn the same toast into a success/error variant with its own auto-dismiss delay. Returns `source` itself, so the caller still owns rejection handling."
       },
       {
         "name": "dismissAll",

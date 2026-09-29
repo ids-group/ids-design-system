@@ -98,7 +98,7 @@ import {
 export class ChartComponent implements ChartScales {
   protected readonly renderReady = chartRenderGate();
 
-  /** The category axis; its length is the number of bands every projected mark is positioned against. */
+  /** One band per category; every projected mark is positioned against them. */
   readonly categories = input<readonly string[]>([]);
 
   /** How many value-axis ticks to aim for. A hint: ticks snap to a round step, so one more or fewer may appear. */
@@ -145,34 +145,30 @@ export class ChartComponent implements ChartScales {
     transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
   });
 
-  /** Height of the plot itself, in CSS pixels, axis labels and value headroom excluded; it does not
-   *  scale with the card width. */
+  /** Plot height in CSS pixels, axis labels and headroom excluded; fixed across card widths. */
   readonly plotHeight = input(CHART_DEFAULT_PLOT_HEIGHT, {
     transform: numberAttribute,
   });
 
-  /** Width in CSS pixels of the gutter down the left that carries the value-axis labels. Widen it
-   *  for long tick labels; the plot takes whatever is left. */
+  /** Width in CSS pixels of the left gutter that carries the value-axis labels. */
   readonly axisGutter = input(CHART_DEFAULT_AXIS_GUTTER, {
     transform: numberAttribute,
   });
 
-  /** Pixels reserved for a value label at each end of the plot (above the top tick, below the
-   *  baseline for a negative mark). Reserved whether or not a label is drawn, so the height is stable. */
+  /** Pixels reserved at each end of the plot for a value label, drawn or not, so the height holds. */
   readonly valueSpace = input(CHART_DEFAULT_VALUE_SPACE, {
     transform: numberAttribute,
   });
 
-  /** Printed above the plot as the chart's visible title. */
+  /** Visible title above the plot. */
   readonly caption = input<string | null>(null);
 
   /** Whether the projected marks answer to the pointer and keyboard; sets the plot's role (a group
    *  of controls, or a single image). */
   readonly interactive = input(false, { transform: booleanAttribute });
 
-  /** Accessible name for the plot; the container holds no readings, so a chart that needs its numbers
-   *  described supplies the sentence here (presets build it with `describeSeries`). It is the whole
-   *  label in the static case. */
+  /** Accessible name for the plot. The container holds no readings, so a chart whose numbers need
+   *  describing supplies the sentence here (presets build it with `describeSeries`). */
   readonly summary = input<string | null>(null);
 
   /** Whether the chart draws its own bordered, padded box: `'auto'` draws it, `'none'` leaves it bare
@@ -203,12 +199,11 @@ export class ChartComponent implements ChartScales {
    *  `DS_CONFIG.locale` / `LOCALE_ID`. */
   readonly valueFormat = input<ChartValueFormat | null>(null);
 
-  /** How the second value axis relates to the first, once a mark has reported against it. The
-   *  same four words `ds-line-chart` takes. */
+  /** How the second value axis relates to the first once a mark reports against it; the same
+   *  values `ds-line-chart` takes. */
   readonly secondaryAxisMode = input<ChartAxisMode>('aligned');
 
-  /** Paints the first axis's tick labels in the colour of the marks measured against it, so a
-   *  two-scale plot says which line reads which axis. Set by the author: several marks can share one. */
+  /** Colours the first axis's tick labels like the marks measured against it. */
   readonly axisColor = input<string | null>(null);
 
   /** `axisColor` for the second axis. */
@@ -247,13 +242,9 @@ export class ChartComponent implements ChartScales {
     () => this.measuredWidth() || CHART_FALLBACK_WIDTH,
   );
 
-  /** Whether the marks may animate yet. The first frame draws at `CHART_FALLBACK_WIDTH`, so the
-   *  measurement that follows moves every mark and a transitioning mark would animate that
-   *  correction on every load, hydration included.
-   *
-   *  Two frames, not one: a transition starts when a property changes in a style that also enables
-   *  it. One `requestAnimationFrame` runs at the start of the next frame, before the corrected
-   *  geometry has been through a style recalculation, and `transitionrun` fires on `x` and `width`. */
+  /** Whether the marks may animate yet: the first frame draws at `CHART_FALLBACK_WIDTH` and the
+   *  correction after measuring must not animate. Two frames, because after one the corrected
+   *  geometry has not been through style recalculation and `transitionrun` fires on `x` and `width`. */
   protected readonly settled = signal(false);
 
   constructor() {
@@ -282,8 +273,7 @@ export class ChartComponent implements ChartScales {
       }
     });
 
-    // Read phase: batching every `getComputedTextLength` before any write avoids a synchronous layout
-    // per label. Re-measures only when a label's text changes, not when a resize moves the labels.
+    // Read phase: every `getComputedTextLength` before any write, or each label forces a layout.
     afterRenderEffect({
       read: () => {
         this.labelTexts();
@@ -336,11 +326,8 @@ export class ChartComponent implements ChartScales {
 
   private readonly measuredCategoryLabelWidth = signal(0);
 
-  /** `axisGutter` is the floor: compact numbers are wider in some locales (`3,5 тыс.` against `3.5k`)
-   *  and an SVG canvas clips the leading digit of what overflows. Takes the larger of the two.
-   *
-   *  Converges: tick text depends on the domain and tick count, not the gutter, so the second
-   *  measurement equals the first. */
+  /** `axisGutter` is the floor: compact numbers are wider in some locales and an SVG canvas clips
+   *  what overflows. Converges, since tick text does not depend on the gutter. */
   protected readonly effectiveAxisGutter = computed(() =>
     Math.max(
       this.axisGutter(),
@@ -360,8 +347,7 @@ export class ChartComponent implements ChartScales {
     () => this.viewWidth() - CHART_AXIS_TITLE_BAND / 2,
   );
 
-  /** Widest secondary tick label, measured like the primary (they sit outside the right edge and
-   *  the canvas clips). */
+  /** Widest secondary tick label, measured like the primary. */
   private readonly measuredSecondaryLabelWidth = signal(0);
 
   /** Right-hand label room only when drawn there; a stacked second axis puts both columns on the left. */
@@ -534,9 +520,8 @@ export class ChartComponent implements ChartScales {
     ) {
       return own;
     }
-    // Anchor over the tallest reading at the category, not the mark that opened it, or a line dipping
-    // under a column puts the panel low. Every reading counts pointer-over or not, or the panel jumps
-    // as the pointer crosses the column's edge.
+    // Anchor over the tallest reading at the category, pointer over it or not: the opening mark
+    // puts the panel low under a column, and pointer-only readings make it jump at the column's edge.
     const boxes = [...this.tooltipSources().values()]
       .map((source) => (source.axisOrigin ?? source.origin)())
       .filter((origin): origin is Element => origin instanceof Element)
@@ -732,7 +717,7 @@ export class ChartComponent implements ChartScales {
   private plotPointer(event: PointerEvent, canvas: SVGSVGElement): void {
     this.canvasRect ??= canvas.getBoundingClientRect();
     const plot = this.plot();
-    // The canvas is scaled to its box: convert client x through the viewBox into view units.
+    // Client x to view units: the canvas is scaled to its box.
     const viewX =
       ((event.clientX - this.canvasRect.left) / this.canvasRect.width) *
       this.viewWidth();

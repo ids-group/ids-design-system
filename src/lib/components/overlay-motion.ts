@@ -47,9 +47,8 @@ const DROPDOWN_PANEL_TOKENS = [
 ] as const;
 
 /**
- * Why a panel is closing. `'select'` is a deliberate action that produced a result (option
- * chosen, date picked, trigger pressed again, Tab moving on); `'dismiss'` is ambient (Escape,
- * a press outside, the page scrolling away).
+ * Why a panel is closing. `'select'` is a deliberate action (option chosen, trigger pressed
+ * again, Tab moving on); `'dismiss'` is ambient (Escape, a press outside, scrolling away).
  * @internal
  */
 export type DsOverlayCloseCause = 'select' | 'dismiss';
@@ -57,8 +56,7 @@ export type DsOverlayCloseCause = 'select' | 'dismiss';
 const DROPDOWN_GAP = 4;
 
 /**
- * One panel-class input as an array. Spreading the raw input would scatter a
- * string into its characters, which is a silent per-letter class list.
+ * One panel-class input as an array; spreading the raw string would give a per-letter class list.
  * @internal
  */
 export function panelClassesOf(
@@ -70,8 +68,7 @@ export function panelClassesOf(
 }
 
 /**
- * The geometry every DS dropdown shares. Width is deliberately NOT set here: each caller has
- * its own policy (the exact trigger width, or the trigger as a floor).
+ * The geometry every DS dropdown shares. Width is NOT set here: each caller has its own policy.
  * @internal
  */
 export function dropdownOverlay(
@@ -107,8 +104,7 @@ export function dropdownOverlay(
     config: {
       positionStrategy,
       hasBackdrop: false,
-      // The panel skin is global CSS: a portaled node sits outside the host's DOM tree, so
-      // `:host ::ng-deep` cannot reach it. The shared pair is never optional; callers add to it.
+      // The panel skin is global CSS: `:host ::ng-deep` cannot reach a portaled node.
       panelClass: [
         'ds-dropdown-panel',
         'ds-overlay-pane',
@@ -119,17 +115,14 @@ export function dropdownOverlay(
   };
 }
 
-// The teardown guarantee for the leave: a pane that is display:none, a consumer stylesheet
-// that removed the animation, and a 0s reduced-motion duration (whose animationend is not
-// reliably delivered) all end here. Comfortably past --ds-motion-exit-duration.
+// Teardown fallback: a display:none pane, a removed animation or a 0s reduced-motion duration
+// (animationend is not reliably delivered) all end here. Past --ds-motion-exit-duration.
 const LEAVE_TIMEOUT_MS = 400;
 
 /**
- * Closes a DS overlay panel instantly on a `'select'`, with a short fade on a `'dismiss'`
- * (a fade after a deliberate pick reads as the panel lagging behind the decision).
+ * Closes a DS overlay panel instantly on a `'select'`, with a short fade on a `'dismiss'`.
  *
- * NOTE: teardown paths dispose directly: a destroyed host has no time to animate, and
- * `ModalService` owns its own leave.
+ * NOTE: teardown paths dispose directly; `ModalService` owns its own leave.
  * @internal
  */
 export function disposeWithLeave(
@@ -156,8 +149,7 @@ export function disposeWithLeave(
     pane.removeEventListener('animationend', onAnimationEnd);
     overlayRef.dispose();
   };
-  // The pane's ROOT CHILD is what animates (CDK owns transforms on the pane
-  // itself), so the event arrives from a descendant and bubbles up to here.
+  // The pane's ROOT CHILD animates (CDK owns transforms on the pane), so the event bubbles up.
   const onAnimationEnd = (event: AnimationEvent): void => {
     if (event.animationName.endsWith('ds-overlay-out')) {
       finish();
@@ -170,9 +162,8 @@ export function disposeWithLeave(
 
 /**
  * Forwards a portaled panel's public `--ds-*` override tokens from the component host onto
- * the overlay pane, which sits in `document.body` outside `:host`. Only non-empty values are
- * set, so an unset token still falls through to the panel's own `var(--ds-*, <default>)`.
- * Call once per open, right after `overlay.create()`.
+ * the overlay pane (in `document.body`, outside `:host`). Only non-empty values are set, so an
+ * unset token falls through to the panel's `var(--ds-*, <default>)`. Call once per open.
  * @internal
  */
 export function forwardOverlayTokens(
@@ -189,11 +180,9 @@ export function forwardOverlayTokens(
     }
   }
 
-  // Roles resolve at :root, so copying them unconditionally would PIN them inline on the pane
-  // and an open panel would ignore a theme switch. Forward only where the host declares the
-  // role ITSELF, compared against the PARENT and not :root: custom properties inherit, so a
-  // shell that sets a role for its chrome would otherwise be pinned inline on every panel,
-  // outranking the `.ds-overlay-pane` rule that is a consumer's route to a portaled panel.
+  // Roles resolve at :root; pinning them unconditionally would freeze an open panel against a
+  // theme switch. Forward only where the host declares the role ITSELF, compared against the
+  // PARENT (custom properties inherit) so an inline pin never outranks `.ds-overlay-pane`.
   const inheritedStyle = getComputedStyle(
     host.parentElement ?? host.ownerDocument.documentElement,
   );
@@ -227,10 +216,10 @@ export function overlayPlacementOf(
 
 /**
  * Primes a `ds-overlay-pane` for its enter animation. Call right after `overlay.create()`:
- * CDK applies the position in `afterNextRender`, so the placement stamp lands before the first
- * painted frame. Until it does (or with no strategy) the CSS default applies: entering from above.
+ * CDK positions in `afterNextRender`, so the placement stamp lands before the first painted
+ * frame. Until then (or with no strategy) the CSS default enters from above.
  *
- * The subscription needs no teardown: disposing the overlay completes `positionChanges`.
+ * No teardown needed: disposing the overlay completes `positionChanges`.
  * @internal
  */
 export function prepareOverlayEnter(
@@ -248,8 +237,7 @@ export function prepareOverlayEnter(
   });
 }
 
-/** Closes a non-modal overlay on a pointer press outside it, EXCEPT on its trigger, which stays
- *  interactive (caret, re-focus) while open. Use with `hasBackdrop: false`.
+/** Closes a non-modal overlay on a pointer press outside it, EXCEPT on its trigger. Use with `hasBackdrop: false`.
  * @internal
  */
 export function closeOnOutsidePointer(
@@ -267,9 +255,8 @@ export function closeOnOutsidePointer(
 }
 
 /** Closes a non-modal overlay when the page scrolls. CDK's scroll strategies miss a plain
- *  `overflow:auto` container, so this listens on the document in the CAPTURE phase, which
- *  catches the non-bubbling `scroll` event from ANY nested container. A scroll inside the
- *  panel itself is ignored.
+ *  `overflow:auto` container, so this listens on the document in the CAPTURE phase (`scroll`
+ *  does not bubble). A scroll inside the panel is ignored.
  * @internal
  */
 export function closeOnScroll(
@@ -281,7 +268,6 @@ export function closeOnScroll(
     if (target && overlayRef.overlayElement.contains(target)) {
       return;
     }
-    // A form control scrolling its own text never moves the panel's anchor.
     if (
       target instanceof HTMLElement &&
       (target.tagName === 'INPUT' ||
@@ -302,12 +288,9 @@ export function closeOnScroll(
  * Syncs a component's "which overlay is mine, and is it open" state when THIS overlay detaches,
  * skipping the write when a newer one has taken over.
  *
- * `disposeWithLeave` defers the dispose of a dismissed overlay until its exit animation ends, so a
- * dismiss followed by a re-open inside that window delivers the OLD overlay's detachment while
- * the NEW one is live. Clearing unconditionally would leave that panel on screen with its
- * component believing it closed (no `aria-expanded`, and `close()` a no-op on the null ref).
- *
- * A detachment of the CURRENT overlay always clears, whatever caused it.
+ * `disposeWithLeave` defers the dispose until the exit animation ends, so a dismiss followed
+ * by a re-open delivers the OLD overlay's detachment while the NEW one is live. Clearing
+ * unconditionally would leave that panel on screen with its component believing it closed.
  * @internal
  */
 export function clearOnDetach(
@@ -335,8 +318,7 @@ export function clearOnDetach(
 }
 
 /** True when keyboard focus sits inside the overlay pane. Read it BEFORE disposing, to decide
- *  whether the close must refocus the trigger rather than strand focus on `<body>`. An
- *  outside-pointer close returns false: mousedown already moved focus out of the pane.
+ *  whether the close must refocus the trigger rather than strand focus on `<body>`.
  * @internal
  */
 export function focusIsInside(overlayRef: OverlayRef): boolean {

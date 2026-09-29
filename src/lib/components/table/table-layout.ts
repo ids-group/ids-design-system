@@ -7,22 +7,18 @@ import {
 } from '@angular/core';
 import type { TableColumn } from './table.types';
 
-/** A stage in the column pipeline: ordering, hiding, widths. */
+/** A column pipeline stage: ordering, hiding, widths. */
 export type DsTableColumnStage<T> = (
   columns: readonly TableColumn<T>[],
 ) => readonly TableColumn<T>[];
 
-/** A stage in the row pipeline: the set filters, ahead of the substring search. */
+/** A row pipeline stage, run ahead of the substring search. */
 export type DsTableRowStage<T> = (rows: readonly T[]) => readonly T[];
 
-/**
- * Where in the table a feature may put markup: the toolbar, the utility header cell, and the
- * end of the host where overlays belong.
- */
+/** Where in the table a feature may put markup. */
 export type DsTableAnchor = 'toolbar' | 'header-utility' | 'overlays';
 
-/** Everything a resize feature hands the table: the width it overrides, and the handlers the
- *  header's separator calls. */
+/** What a resize feature hands the table: width overrides and the header separator's handlers. */
 export interface DsTableResizeContribution<T> {
   readonly widthOverride: (key: string) => number | undefined;
   readonly range: (
@@ -38,47 +34,37 @@ export interface DsTableResizeContribution<T> {
 }
 
 /**
- * What a feature is allowed to read back out of the table, and where it may put markup.
- *
- * The derived state a feature needs (`visibleColumns`, `sortedRows`, `cellText`) is `protected`
- * on the component and unreachable from a directive, so it is published here instead of
- * widening the component's public API.
+ * What a feature may read back out of the table. This state is `protected` on the component,
+ * so it is published here instead of widening the public API.
  */
 export interface DsTableView<T> {
-  /** As declared, before any feature reorders or hides. A feature that OWNS the order needs the
-   *  unfolded list - reading `visibleColumns` would fold its own stage back in. */
+  /** As declared, before any stage runs; `visibleColumns` would fold a feature's own stage back in. */
   readonly declaredColumns: Signal<readonly TableColumn<T>[]>;
   readonly visibleColumns: Signal<readonly TableColumn<T>[]>;
   readonly sortedRows: Signal<readonly T[]>;
   readonly cellText: (row: T, column: TableColumn<T>) => string;
-  /** A directive cannot insert markup into another component's template, so a feature with a
-   *  control of its own creates it in one of these. Undefined until the view exists. */
+  /** Container a feature creates its control in. Undefined until the view exists. */
   readonly anchor: (
     name: DsTableAnchor,
   ) => Signal<ViewContainerRef | undefined>;
-  /** The scroll container. A width ceiling has to be the viewport, and the header cells are
-   *  looked up inside it. */
+  /** The scroll container. */
   readonly scrollViewport: Signal<HTMLElement | undefined>;
 }
 
 /**
- * One named piece of the persisted column layout.
- *
- * The stored shape is `{ order, widths, hidden }` and the key IS the JSON key, so a saved layout
- * still restores. Persistence walks whatever is registered.
+ * One named piece of the persisted column layout. The stored shape is `{ order, widths, hidden }`
+ * and `key` IS the JSON key.
  */
 export interface DsTablePersistedSlice {
   readonly key: string;
-  /** Serialisable. Read inside the caller's effect, so whatever it touches is tracked. */
+  /** Serialisable. Read inside the caller's effect, so what it touches is tracked. */
   readonly read: () => unknown;
   readonly write: (value: unknown) => void;
-  /** Back to the declared layout. "Reset to default" has to reach every slice, and only the
-   *  slice knows what its own default is. */
+  /** Back to the declared layout. */
   readonly reset: () => void;
 }
 
-/** What an export feature hands the table, so `runExport()` and `exporting()` stay public API
- *  while the implementation lives outside the component. */
+/** What an export feature hands the table. */
 export interface DsTableExportContribution<T> {
   readonly run: () => Promise<void>;
   readonly csv: (filename?: string, rows?: readonly T[]) => void;
@@ -88,12 +74,8 @@ export interface DsTableExportContribution<T> {
 /**
  * The seam an opt-in table feature writes into, so the table never names the feature.
  *
- * The table owns derived values (`visibleColumns`, `filteredData`, the live region) that a
- * feature contributes to; a registry of contributions expresses that where moving methods out
- * one at a time cannot.
- *
- * @internal Not API. Provided by `ds-table` on itself, so a directive on the same element injects
- * the instance it belongs to and two tables on one screen stay independent.
+ * @internal Not API. Provided by `ds-table` on itself, so two tables on one screen stay
+ * independent.
  */
 @Injectable()
 export class DsTableLayout<T = unknown> {
@@ -101,8 +83,7 @@ export class DsTableLayout<T = unknown> {
   private readonly rowStages = signal<readonly DsTableRowStage<T>[]>([]);
   private readonly statusFragments = signal<readonly Signal<string>[]>([]);
 
-  /** Register once, at the contributing directive's construction. The fold runs inside the
-   *  table's `computed`, so signals a stage reads are tracked there. */
+  /** Register once, at construction. The fold runs in the table's `computed`, so signals a stage reads are tracked. */
   addColumnStage(stage: DsTableColumnStage<T>): void {
     this.columnStages.update((stages) => [...stages, stage]);
   }
@@ -113,8 +94,7 @@ export class DsTableLayout<T = unknown> {
 
   private readonly utilityColumnWanted = signal(false);
 
-  /** The table knows about the row-action kebab but must be told about the picker trigger, or
-   *  the utility cell it anchors into is never rendered. */
+  /** Without it the utility cell a picker trigger anchors into is never rendered. */
   requestUtilityColumn(): void {
     this.utilityColumnWanted.set(true);
   }
@@ -143,8 +123,6 @@ export class DsTableLayout<T = unknown> {
     $implicit: TableColumn<T>;
   }> | null>(null);
 
-  /** A per-column control in the column panel, for a feature the panel must not name - resize
-   *  puts its width buttons there. */
   registerPanelRowTemplate(
     template: TemplateRef<{ $implicit: TableColumn<T> }>,
   ): void {
@@ -155,7 +133,6 @@ export class DsTableLayout<T = unknown> {
     return this.rowTemplate();
   }
 
-  /** A line for the live region, folded in ahead of the table's own events. */
   addStatusFragment(fragment: Signal<string>): void {
     this.statusFragments.update((fragments) => [...fragments, fragment]);
   }
@@ -171,7 +148,6 @@ export class DsTableLayout<T = unknown> {
     return this.rowStages().reduce((carried, stage) => stage(carried), rows);
   }
 
-  /** Empty when nothing contributes, so the table's own message is unchanged. */
   status(): string {
     return this.statusFragments()
       .map((fragment) => fragment())
@@ -183,8 +159,7 @@ export class DsTableLayout<T = unknown> {
   private readonly exportContribution =
     signal<DsTableExportContribution<T> | null>(null);
 
-  /** Called by the table itself, before any directive can ask for it: a directive on the same
-   *  element is constructed after the component that provides this service. */
+  /** Called by the table before any directive asks: a directive on the same element is constructed after the component. */
   publish(view: DsTableView<T>): void {
     this.published = view;
   }
@@ -199,8 +174,6 @@ export class DsTableLayout<T = unknown> {
     return this.published;
   }
 
-  /** `runExport()` and `exporting()` stay public on the table and delegate here, so "no export
-   *  directive" is distinguishable from "nothing to export". */
   setExport(contribution: DsTableExportContribution<T>): void {
     this.exportContribution.set(contribution);
   }
@@ -209,7 +182,7 @@ export class DsTableLayout<T = unknown> {
     return this.exportContribution()?.run() ?? null;
   }
 
-  /** True when it ran, so the caller can tell "no feature" from "nothing to export". */
+  /** False when no export feature is present. */
   exportCsv(filename?: string, rows?: readonly T[]): boolean {
     const contribution = this.exportContribution();
     contribution?.csv(filename, rows);
@@ -228,7 +201,6 @@ export class DsTableLayout<T = unknown> {
     this.resizeContribution.set(contribution);
   }
 
-  /** Null when no resize feature is present, which is what the header's `@if` reads. */
   resize(): DsTableResizeContribution<T> | null {
     return this.resizeContribution();
   }

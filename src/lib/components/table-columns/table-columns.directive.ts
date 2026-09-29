@@ -20,16 +20,14 @@ import { TableColumnsTriggerComponent } from './table-columns-trigger.component'
 
 /**
  * Showing, hiding and reordering columns for `<ds-table>`, as a directive so a table that does
- * none of it never carries the panel — nor `@angular/cdk/drag-drop`, which comes with the drag
- * handle:
+ * none of it never carries the panel or `@angular/cdk/drag-drop`:
  *
  * ```html
  * <ds-table dsTableColumns [reorderableColumns]="true" [columns]="cols" [data]="rows" />
  * ```
  *
- * Hiding needs no input: a column marked `hideable` becomes hideable the moment this directive is
- * present. `[(hiddenKeys)]` and `[(columnOrder)]` are two-way, so the layout can be driven from
- * the host, and both round-trip through `persistLayout` on the table.
+ * A column marked `hideable` becomes hideable once this directive is present. `[(hiddenKeys)]`
+ * and `[(columnOrder)]` are two-way and round-trip through `persistLayout` on the table.
  */
 @Directive({
   selector: '[dsTableColumns]',
@@ -64,7 +62,6 @@ export class DsTableColumns<T extends object> {
       .map((column) => column.key);
   }
 
-  /** Declaration order with the reader's order applied first, then anything they never moved. */
   private readonly ordered = computed<readonly TableColumn<T>[]>(() => {
     const order = this.columnOrder();
     const columns = this.declaredColumns();
@@ -180,7 +177,6 @@ export class DsTableColumns<T extends object> {
     return !this.effectiveHiddenKeys().has(column.key);
   }
 
-  /** The last visible column cannot be hidden. */
   private isLocked(column: TableColumn<T>): boolean {
     return this.isVisible(column) && this.visible().length === 1;
   }

@@ -37,8 +37,7 @@ export class BreadcrumbsComponent {
   /** Whether crumbs render as links; falls back to `DS_CONFIG.breadcrumbs.clickable`, then `true`. */
   readonly clickable = input<boolean | null>(null);
   /** Caps how many crumbs render, collapsing the middle; the first and the LAST always survive.
-   *  Worth setting on any deep trail: the row is `nowrap` with `overflow: hidden`, so uncapped it
-   *  is clipped from the END, which is the current page. */
+   *  Uncapped, a long trail is clipped from the END, which is the current page. */
   readonly maxItems = input<number | null>(null, {
     transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
   });

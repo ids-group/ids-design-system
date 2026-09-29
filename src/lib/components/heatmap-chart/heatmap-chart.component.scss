@@ -19,8 +19,7 @@
   --_heatmap-chart-focus-color: var(--ds-heatmap-chart-focus-color, var(--focus-ring-color));
   --_heatmap-chart-focus-width: var(--ds-heatmap-chart-focus-width, var(--focus-ring-width));
 
-  /* The shared mixins read `--focus-ring-*` and `--ds-chart-focus-ring-color`; without these the two
-     hooks above reach nothing. */
+  /* The shared mixins read these; without them the hooks above reach nothing. */
   --ds-chart-focus-ring-color: var(--_heatmap-chart-focus-color);
   --focus-ring-color: var(--_heatmap-chart-focus-color);
   --focus-ring-width: var(--_heatmap-chart-focus-width);
@@ -38,7 +37,6 @@
   gap: var(--_heatmap-chart-cell-gap);
 }
 
-// One cell per column sets a hard minimum width; below it the grid scrolls.
 .grid-scroll {
   overflow-x: auto;
 }
@@ -89,8 +87,7 @@
   padding: 0;
 }
 
-// The gap between two cells is the table's border-spacing and belongs to no cell, so each cell
-// reaches half of it on every side and the pointer never crosses ground that answers nothing.
+// The gap is table border-spacing owned by no cell; each cell reaches half of it so hover has no dead ground.
 .cell::before {
   position: absolute;
   inset: calc(var(--_heatmap-chart-cell-gap) / -2);
@@ -100,7 +97,7 @@
 @include chart-motion.fades-in('.cell');
 @include chart-motion.follows('.cell-value', var(--ds-motion-chart-mark-enter-duration));
 
-// The row label is the first child, so a column's index is its slot's position.
+// The row label is the first child, so a slot's position is its column index + 1.
 // ponytail: columns past the 61st start together at the 61st column's delay; raise the bound if wider
 // grids appear.
 @for $column from 1 through 59 {
@@ -122,8 +119,7 @@
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-bold);
 
-  // The ramp spans 1.14:1 to 9.07:1 against white, so one ink cannot serve both ends; `difference`
-  // inverts the cell's own colour.
+  // The ramp spans 1.14:1 to 9.07:1 against white; `difference` inverts the cell's colour so one ink serves both ends.
   color: white;
   mix-blend-mode: difference;
 }

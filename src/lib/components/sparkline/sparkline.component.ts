@@ -20,9 +20,8 @@ import { sparklineGeometry } from './sparkline.math';
 import type { SparklinePoint } from './sparkline.math';
 import type { SparklineScale } from './sparkline.types';
 
-/** A word-sized trend line: no axes, gridlines, legend or frame, a dot on the last reading, and a
- *  tooltip naming the reading under the pointer. Sized by `--ds-sparkline-width` and
- *  `--ds-sparkline-height`. */
+/** A word-sized trend line: no axes, legend or frame, a dot on the last reading, and a tooltip.
+ *  Sized by `--ds-sparkline-width` and `--ds-sparkline-height`. */
 @Component({
   selector: 'ds-sparkline',
   standalone: true,
@@ -49,13 +48,13 @@ export class SparklineComponent {
   readonly categories = input<readonly string[]>([]);
 
   /** Accessible name, and the series name in the tooltip. Left out, the sparkline is decorative
-   *  and hidden from assistive technology: it is then taken to sit beside a value that says it. */
+   *  and hidden from assistive technology. */
   readonly label = input<string | null>(null);
 
   readonly scale = input<SparklineScale>('data');
 
-  /** Shows the reading under the pointer, and under the keyboard where `label` makes the
-   *  sparkline focusable: focus opens the last reading, the arrow keys, Home and End move. */
+  /** Shows the reading under the pointer, and under the keyboard where `label` makes the sparkline
+   *  focusable: focus opens the last reading; arrows, Home and End move. */
   readonly tooltip = input(true, { transform: booleanAttribute });
 
   /** Formats the value the tooltip prints. Unset, the locale's plain number format. */

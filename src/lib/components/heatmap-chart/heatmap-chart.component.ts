@@ -54,12 +54,7 @@ interface PlacedRow {
   readonly cells: readonly PlacedCell[];
 }
 
-/**
- * A matrix of readings, coloured by magnitude: depot by weekday, hour by date, queue by region.
- *
- * Colour is the only carrier of the quantity, so every cell names its own reading to assistive
- * tech and the annex table is always present (WCAG 1.4.1).
- */
+/** A matrix of readings, coloured by magnitude. Every cell names its reading to assistive tech and the annex table is always present. */
 @Component({
   selector: 'ds-heatmap-chart',
   standalone: true,
@@ -81,61 +76,53 @@ interface PlacedRow {
 export class HeatmapChartComponent {
   protected readonly renderReady = chartRenderGate();
 
-  /** The column headings, left to right. Their count decides how many readings of a row are drawn:
-   *  a longer row loses its tail. */
+  /** The column headings, left to right; a row longer than this loses its tail. */
   readonly columns = input<readonly string[]>([]);
 
-  /** One entry per row, each carrying one reading per column. A `null` reading is drawn as the
-   *  surface, not the ramp's coldest step. */
+  /** One entry per row, one reading per column; a `null` reading is drawn as the surface. */
   readonly data = input<readonly HeatmapChartRow[]>([]);
 
   /** Printed above the grid as the visible title. */
   readonly caption = input<string | null>(null);
 
-  /** Pins the floor of the colour scale. It only ever widens the scale, so a floor above the data
-   *  cannot push a reading off the ramp. Unset, the scale starts at the lowest reading. */
+  /** Pins the floor of the colour scale; it only ever widens it. Unset, the lowest reading. */
   readonly min = input<number | null>(null, {
     transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
   });
 
-  /** Pins the ceiling of the colour scale, the same way `min` pins its floor. Set both to compare
-   *  two heat maps by colour; unset, each spans its own readings. */
+  /** Pins the ceiling of the colour scale, as `min` pins the floor. */
   readonly max = input<number | null>(null, {
     transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
   });
 
-  /** Prints each cell's reading inside it. Off by default: a dense grid has no room for numbers. */
+  /** Prints each cell's reading inside it. */
   readonly showValues = input(false, { transform: booleanAttribute });
 
   /** Makes every measured cell a button. An unmeasured cell stays inert (no tab stop). */
   readonly interactive = input(false, { transform: booleanAttribute });
 
-  /** Fades every cell but the one under the pointer. Off by default: dimming costs the separation
-   *  between cells, which on a ramp carries magnitude. */
+  /** Fades every cell but the one under the pointer. */
   readonly dimOthers = input(false, { transform: booleanAttribute });
 
-  /** Holds the hovered cell and its tooltip in place when it is clicked, until a second click,
-   *  Escape or a press outside releases it. `cellClicked` fires either way. Unset falls back to
+  /** Holds the clicked cell and its tooltip until a second click, Escape or an outside press. `cellClicked` fires either way. Unset falls back to
    *  `DS_CONFIG.chart.pinOnClick`, then `true`. */
   readonly pinOnClick = input<boolean | null, unknown>(null, {
     transform: (value) => (value == null ? null : booleanAttribute(value)),
   });
 
-  /** `'auto'` draws the bordered, padded box; `'none'` leaves it bare for a chart inside a card the
-   *  page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`. */
+  /** `'auto'` draws the bordered, padded box; `'none'` leaves it bare. Unset falls back to `DS_CONFIG.chart.frame`. */
   readonly frame = input<ChartFrame | null>(null);
 
-  /** Whether the tooltip draws a colour dot beside each reading. Unset falls back to
-   *  `DS_CONFIG.chart.tooltipSwatches`, then draws them for up to four readings. */
+  /** Whether the tooltip draws a colour dot per reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`. */
   readonly tooltipSwatches = input<boolean | null>(null, {
     transform: (value: unknown) =>
       value == null ? null : booleanAttribute(value),
   });
 
-  /** A skeleton at the grid's own height, so the page does not resize when the data lands. */
+  /** A skeleton at the grid's own height. */
   readonly loading = input(false, { transform: booleanAttribute });
 
-  /** Separate from an empty matrix: a failed request and no data mean different things. */
+  /** Shows the error message; distinct from an empty matrix. */
   readonly error = input(false, { transform: booleanAttribute });
 
   /** Shown when there are no rows or no columns. Unset falls back to `DS_INTL.chart.empty`. */
@@ -152,11 +139,10 @@ export class HeatmapChartComponent {
   /** Whether a hovered or focused cell opens a tooltip. */
   readonly tooltip = input<ChartItemTooltipTrigger>('item');
 
-  /** Milliseconds between one column's entrance and the next, left to right; `0` turns the stagger
-   *  off. The whole spread stays within 260ms, so a wide grid narrows the step. */
+  /** Milliseconds between one column's entrance and the next; `0` turns the stagger off. The spread is capped at 260ms. */
   readonly staggerMs = input(40, { transform: numberAttribute });
 
-  // The stylesheet multiplies this by the column index; a table has no element holding a column.
+  // The stylesheet multiplies this by the column index.
   protected readonly columnStagger = computed(
     () => `${staggerDelay(1, this.columns().length, this.staggerMs())}ms`,
   );
@@ -198,8 +184,7 @@ export class HeatmapChartComponent {
   }
 
   protected onCellPress(cell: PlacedCell, index: number, event: Event): void {
-    // Enter and Space click the native button with `detail` 0; keys only focus in every other
-    // chart, so they must not pin.
+    // Enter and Space click the native button with `detail` 0; keys must not pin.
     const fromKeyboard = event instanceof MouseEvent && event.detail === 0;
     if (cell.value !== null && this.defaults.pinOnClick() && !fromKeyboard) {
       this.activeMark.pin(index, event);
@@ -307,8 +292,7 @@ export class HeatmapChartComponent {
     Array.from({ length: Math.max(this.data().length, 4) }),
   );
 
-  /** Flattened so one index addresses a cell: `chartActiveMark` counts marks, and a grid's marks
-   *  are its cells. */
+  /** Flattened so one index addresses a cell (`chartActiveMark` counts marks). */
   private readonly flatCells = computed(() =>
     this.rows().flatMap((row) => row.cells),
   );

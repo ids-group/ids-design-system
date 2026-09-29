@@ -10,9 +10,8 @@ import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 /**
  * Announces how many options survived the filter.
  *
- * Deliberately NOT a row inside the listbox: a live region there is an invalid child, and a
- * region created together with its text is not reliably announced (no content CHANGE to fire
- * on). The node is created once, empty, and only its text changes.
+ * NOT a row inside the listbox (a live region there is an invalid child). The node is created
+ * once, empty, and only its text changes: a region created with its text is not reliably announced.
  * @internal
  */
 export function announceOptionCount(

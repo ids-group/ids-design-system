@@ -1,15 +1,13 @@
-// Light applies at bare :root. Dark is opt-in via <html data-theme="dark">; its block declares the
-// complete token set, so it replaces light rather than patching it. There is no automatic
-// prefers-color-scheme switch: opt in with provideDsTheme({ followSystem: true }).
-//
-// The dark block comes last so it wins over the light-context overrides (brand-gray neutrals) at
-// equal specificity.
+// Light applies at bare :root. Dark is opt-in via <html data-theme="dark">; its block declares the complete
+// token set, so it replaces light rather than patching it. No automatic prefers-color-scheme switch:
+// opt in with provideDsTheme({ followSystem: true }). The dark block comes last so it wins over the
+// light-context overrides (brand-gray neutrals) at equal specificity.
 
 @use '../themes/light/theme' as light;
 @use '../themes/dark/theme' as dark;
 
 :root {
-  color-scheme: light; // native UI (scrollbars, form controls) match; opts out of UA force-dark
+  color-scheme: light; // opts out of UA force-dark
 
   @include light.theme;
 }
@@ -32,7 +30,7 @@
 }
 
 :root[data-theme='dark'] {
-  color-scheme: dark; // native UI (scrollbars, form controls) render dark to match
+  color-scheme: dark;
 
   @include dark.theme;
 }

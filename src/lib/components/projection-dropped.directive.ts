@@ -7,9 +7,8 @@ import {
 } from '@angular/core';
 
 /**
- * Dev-only guard for a component that DROPS whatever is projected into it, so the author gets
- * a warning instead of silence. Put it on a probe around the `<ng-content>`, gated on dev
- * mode so production renders no extra node:
+ * Dev-only guard for a component that DROPS whatever is projected into it: warns instead of
+ * staying silent. Put it on a probe around the `<ng-content>`, gated on dev mode:
  *
  * ```html
  * @if (devMode) {
@@ -17,11 +16,8 @@ import {
  * }
  * ```
  *
- * It is NOT projection support: the probe exists so the warning can see that content
- * arrived, and then hides it.
- *
- * `reason` replaces the default `[label]` wording for a host that drops content for a
- * different reason.
+ * It is NOT projection support: the probe only detects that content arrived, then hides it.
+ * `reason` replaces the default `[label]` wording.
  * @internal
  */
 @Directive({
