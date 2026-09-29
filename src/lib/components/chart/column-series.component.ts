@@ -16,6 +16,7 @@ import {
 } from '@angular/core';
 import {
   CHART_SERIES_COLORS,
+  CHART_TOOLTIP_LINGER_MS,
   chartValueFormat,
   describeShare,
   listenForMarkFocus,
@@ -143,9 +144,11 @@ export class ColumnSeriesComponent implements OnDestroy {
    *  category cell, which puts the panel at the top of the plot whatever the column's value. */
   readonly tooltipAnchor = input<'mark' | 'cell'>('mark');
 
-  /** How long the panel survives the pointer leaving the mark. Raise it only for a panel a
-   *  reader has to REACH, which is WCAG 1.4.13's hoverable clause; about 140 crosses the gap. */
-  readonly tooltipLingerMs = input(0, { transform: numberAttribute });
+  /** How long the panel survives the pointer leaving the mark, in milliseconds. The default lets
+   *  the pointer reach the next mark before the panel closes, so it glides there instead. */
+  readonly tooltipLingerMs = input(CHART_TOOLTIP_LINGER_MS, {
+    transform: numberAttribute,
+  });
 
   /** Formats every value this series prints. Called with `'tick'` for an axis label and
    *  `'tooltip'` everywhere a value is printed in full. */
