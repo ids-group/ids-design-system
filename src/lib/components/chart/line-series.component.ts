@@ -65,8 +65,9 @@ export interface LineSeriesData {
   data: readonly (number | null)[];
   /** Which value axis the readings are measured against. Defaults to `'primary'`. */
   axis?: ChartAxis;
-  /** Fills the band between the line and its axis baseline. */
-  area?: boolean;
+  /** Fills the band between the line and its axis baseline: `true` in one flat tint, `'fade'`
+   *  from the line down to nothing at the baseline. */
+  area?: boolean | 'fade';
   /** The band's floor, one entry per category, in the axis's own unit. Unset fills to the
    *  baseline. Given, the fill is the band between the two curves - which is what a stacked plot
    *  needs, and the caller that owns the pile is the one that knows where each band starts. A
@@ -207,6 +208,10 @@ export class LineSeriesComponent implements OnDestroy {
   }>();
 
   private readonly domainId = `line-series-${nextSeriesId++}`;
+
+  protected fadeId(seriesIndex: number): string {
+    return `${this.domainId}-fade-${seriesIndex}`;
+  }
 
   constructor() {
     effect(() => {

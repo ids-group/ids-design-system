@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   ViewEncapsulation,
+  computed,
   signal,
 } from '@angular/core';
 import { LineChartComponent } from 'ds/line-chart';
@@ -298,6 +299,12 @@ export class LineChartSection {
     signal<readonly string[]>(SPECIMEN_CATEGORIES);
   protected readonly areaFillSeries =
     signal<readonly LineChartSeries[]>(AREA_SERIES);
+
+  protected readonly areaFadeSeries = computed(() =>
+    this.areaFillSeries().map((series) =>
+      series.area ? { ...series, area: 'fade' as const } : series,
+    ),
+  );
 
   protected readonly manyCategories =
     signal<readonly string[]>(MANY_CATEGORIES);

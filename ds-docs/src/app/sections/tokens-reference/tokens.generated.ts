@@ -1061,6 +1061,11 @@ export const CHARTS: readonly ColourRow[] = [
     "notes": "Opacity of a line series' area fill (0.16)."
   },
   {
+    "name": "--chart-area-fade-opacity",
+    "value": "0.32",
+    "notes": ""
+  },
+  {
     "name": "--chart-hatch-color",
     "value": "var(--surface-default)",
     "notes": ""
@@ -1349,6 +1354,11 @@ export const CHARTS: readonly ColourRow[] = [
     "name": "--ds-chart-area-opacity",
     "value": "var(--chart-area-opacity)",
     "notes": "Opacity of the band a line series fills down to its axis baseline. Set this, not --chart-area-opacity."
+  },
+  {
+    "name": "--ds-chart-area-fade-opacity",
+    "value": "var(--chart-area-fade-opacity)",
+    "notes": ""
   },
   {
     "name": "--ds-chart-hatch-color",
@@ -3402,6 +3412,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "name": "--ds-motion-chart-mark-sweep-duration",
         "value": "—",
         "notes": "How long a pie ring takes to turn in or a line to draw on. Defaults to --duration-slowest (600ms)."
+      },
+      {
+        "name": "--ds-chart-area-color",
+        "value": "var(--_series-area-color)",
+        "notes": ""
       },
       {
         "name": "--ds-chart-annotation-color",
@@ -6518,6 +6533,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-sparkline-dot-radius",
         "value": "2.5px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-sparkline-area-color",
+        "value": "var(--_sparkline-line-color)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-sparkline-area-opacity",
+        "value": "var(--ds-chart-area-opacity)",
         "notes": ""
       }
     ]
