@@ -163,7 +163,7 @@
     subtracting two rows, which a reader should not have to do.
   </p>
 
-  <div class="states is-cols-2">
+  <div class="states is-cols-3">
     <div class="state-cell">
       <ds-funnel-chart
         dataTable="none"
@@ -182,6 +182,17 @@
 
       <div class="state-cell-label">
         drop = absolute
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-funnel-chart
+        drop="none"
+        dataTable="none"
+        [data]="dropStages()" />
+
+      <div class="state-cell-label">
+        drop = none
       </div>
     </div>
   </div>

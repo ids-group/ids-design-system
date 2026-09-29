@@ -350,10 +350,30 @@
     from the legend, the tooltip and the table alike.
   </p>
 
-  <ds-pie-chart
-    dataTable="toggle"
-    caption="The annex table, collapsed until asked for"
-    [data]="dataTableSlices()" />
+  <div class="states is-cols-2">
+    <div class="state-cell">
+      <ds-pie-chart
+        dataTable="toggle"
+        caption="The annex table, collapsed until asked for"
+        [data]="dataTableSlices()" />
+
+      <div class="state-cell-label">
+        partOfWhole = true (default)
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-pie-chart
+        dataTable="toggle"
+        caption="The same slices, no share"
+        [data]="dataTableSlices()"
+        [partOfWhole]="false" />
+
+      <div class="state-cell-label">
+        partOfWhole = false
+      </div>
+    </div>
+  </div>
 
   <docs-chart-data-editor [(rows)]="dataTableSlices" />
 

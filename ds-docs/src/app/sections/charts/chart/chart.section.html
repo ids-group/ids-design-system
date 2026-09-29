@@ -85,7 +85,8 @@
   <p class="block-desc t-s">
     Under the cursor the category's band is the one hover area: the pointer
     anywhere in it opens the band and the tooltip together, on a plot of one
-    mark as on a composed one, and the gap between two bands answers nothing. A
+    mark as on a composed one, and every point of the plot belongs to its
+    nearest category, so the pointer moves from one band straight to the next. A
     mark inside the band opens no panel of its own on hover and does not pin on
     click. Focus opens the category's band and its panel, naming every mark's
     reading there,
@@ -132,6 +133,42 @@
       dsReferenceLabel
       [thresholds]="latencyThresholds" />
   </ds-chart>
+
+  <div class="states is-cols-2">
+    <div class="state-cell">
+      <ds-chart [categories]="orderMonths">
+        <svg:g
+          dsColumnSeries
+          seriesLabel="Sessions"
+          [data]="orderColumns"
+          [showValues]="false" />
+      </ds-chart>
+
+      <div class="state-cell-label">
+        cursor = auto, one mark: each column answers
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-chart
+        cursor="none"
+        [categories]="orderMonths">
+        <svg:g
+          dsColumnSeries
+          seriesLabel="Sessions"
+          [data]="orderColumns"
+          [showValues]="false" />
+
+        <svg:g
+          dsLineSeries
+          [data]="basketSeries" />
+      </ds-chart>
+
+      <div class="state-cell-label">
+        cursor = none, two marks: each mark answers
+      </div>
+    </div>
+  </div>
 
   <h3
     data-claude-design
@@ -187,6 +224,44 @@
       cursor="category"
       caption="split - two plots"
       secondaryAxisMode="split"
+      [categories]="orderMonths"
+      [axisColor]="columnAxisColor"
+      [secondaryAxisColor]="lineAxisColor"
+      [summary]="ordersSummary">
+      <svg:g
+        dsColumnSeries
+        [data]="orderColumns"
+        [showValues]="false" />
+
+      <svg:g
+        dsLineSeries
+        [data]="basketSeries" />
+    </ds-chart>
+  </div>
+
+  <div class="demo-pair">
+    <ds-chart
+      cursor="category"
+      caption="exact - the second axis ends at its largest reading"
+      secondaryAxisMode="exact"
+      [categories]="orderMonths"
+      [axisColor]="columnAxisColor"
+      [secondaryAxisColor]="lineAxisColor"
+      [summary]="ordersSummary">
+      <svg:g
+        dsColumnSeries
+        [data]="orderColumns"
+        [showValues]="false" />
+
+      <svg:g
+        dsLineSeries
+        [data]="basketSeries" />
+    </ds-chart>
+
+    <ds-chart
+      cursor="category"
+      caption="dual-grid - each axis scaled and gridded on its own"
+      secondaryAxisMode="dual-grid"
       [categories]="orderMonths"
       [axisColor]="columnAxisColor"
       [secondaryAxisColor]="lineAxisColor"
