@@ -133,7 +133,9 @@
       [thresholds]="latencyThresholds" />
   </ds-chart>
 
-  <h3 data-claude-design class="block-title t-h4">
+  <h3
+    data-claude-design
+    class="block-title t-h4">
     Two value axes
   </h3>
 
@@ -232,7 +234,9 @@
     is where the question is asked.
   </p>
 
-  <h3 data-claude-design class="block-title t-h4">
+  <h3
+    data-claude-design
+    class="block-title t-h4">
     Annotations
   </h3>
 
@@ -261,7 +265,8 @@
       [annotations]="latencyNotes" />
   </ds-chart>
 
-  <h3 data-claude-design
+  <h3
+    data-claude-design
     class="block-title t-h4"
     data-for="chart-data-table">
     The annex table
@@ -292,7 +297,9 @@
     [columns]="latencyTableColumns"
     [rows]="latencyTableRows" />
 
-  <h3 data-claude-design class="block-title t-h4">
+  <h3
+    data-claude-design
+    class="block-title t-h4">
     Naming the axes, and holding the cursor
   </h3>
 
@@ -314,14 +321,15 @@
     bands to let go. Set
     <code class="t-mono-inline">
       cursorPin="false"
-    </code> to keep it moving with the pointer. A composed chart draws no
-    Unpin control;
+    </code> to keep it moving
+    with the pointer. A composed chart draws no Unpin control;
     <code class="t-mono-inline">
       cursorPinned()
     </code> and
     <code class="t-mono-inline">
       releaseCursor()
-    </code> let you render your own.
+    </code> let you render your
+    own.
   </p>
 
   <p class="block-desc t-s">
@@ -330,7 +338,8 @@
     column dims, whatever
     <code class="t-mono-inline">
       dimOthers
-    </code> says, the way a legend entry singles out its series.
+    </code> says, the way a legend entry
+    singles out its series.
   </p>
 
   <ds-chart
@@ -498,9 +507,14 @@
     one under it, <code class="t-mono-inline"> pinOnClick </code> holds a
     reading on a plot without the category cursor (under the cursor the
     container's <code class="t-mono-inline"> cursorPin </code> holds the whole
-    category instead), and <code class="t-mono-inline"> tooltipAnchor </code> decides
-    whether an <code class="t-mono-inline"> 'axis' </code> panel hangs over the
-    highest reading or follows the pointer.
+    category instead), and
+    <code class="t-mono-inline">
+      tooltipAnchor
+    </code> decides whether an
+    <code class="t-mono-inline">
+      'axis'
+    </code> panel hangs over the highest
+    reading or follows the pointer.
   </p>
 
   <div class="demo-row">

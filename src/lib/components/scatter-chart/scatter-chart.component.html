@@ -21,7 +21,8 @@
       {{ errorTextResolved() }}
     </p>
   } @else if (loading() || !renderReady()) {
-    <ds-skeleton class="skeleton"
+    <ds-skeleton
+      class="skeleton"
       width="100%"
       [shimmer]="loading()"
       [height]="skeletonHeight + 'px'" />
