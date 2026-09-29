@@ -99,7 +99,6 @@ export class ColorPickerComponent
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   protected readonly intl = inject(DS_INTL);
   protected readonly preview = inject(DsStaticPreview);
-  // Forwarded onto the portaled pane on open; `prepareOverlayEnter` forwards `DROPDOWN_PANEL_TOKENS` too.
   private readonly panelTokens = [
     '--ds-color-picker-swatch',
     '--ds-color-picker-preview',
@@ -113,8 +112,7 @@ export class ColorPickerComponent
   readonly value = model<string>('#2F54FF');
   /** Swatches shown in the panel; defaults to a built-in palette. */
   readonly presets = input<readonly string[]>(DEFAULT_PRESETS);
-  /** Extra classes for the portaled panel. The panel is outside the host, so a class on the pane
-   *  is the only way a stylesheet reaches one instance of it. */
+  /** Extra classes for the portaled panel, the only way a stylesheet reaches one instance of it. */
   readonly panelClass = input<string | readonly string[]>([]);
   /** Disables the trigger and blocks all interaction. */
   readonly disabled = input(false, { transform: booleanAttribute });
@@ -124,8 +122,7 @@ export class ColorPickerComponent
   readonly ariaLabelResolved = computed(
     () => this.ariaLabel() ?? this.intl().colorPicker.label,
   );
-  /** Confirmation text, shown when there is no error or warning; also paints the success
-   *  border. A string like `warning`: the text is the state. */
+  /** Confirmation text, shown when there is no error or warning; also paints the success border. */
   readonly success = input<string, string | null | undefined>('', {
     transform: trimmedText,
   });
@@ -136,7 +133,6 @@ export class ColorPickerComponent
     viewChild.required<TemplateRef<unknown>>('panel');
   protected readonly open = signal(false);
 
-  // Working state while the panel is open; the hex `value` is derived from it.
   protected readonly hsv = signal<Hsv>(
     hexToHsv('#2F54FF') ?? { h: 0, s: 0, v: 0 },
   );

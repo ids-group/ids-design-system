@@ -1,6 +1,5 @@
-// Overlap pierces the projected avatar host via ::ng-deep. Matched as the direct child, not as
-// `ds-avatar`: custom-element hosts rename a nested tag (angular/angular#24536) and a tag
-// selector then misses it.
+// Overlap matched as the direct child, not `ds-avatar`: custom-element hosts rename a nested
+// tag (angular/angular#24536) and a tag selector misses it.
 :host {
   --_avatar-group-overlap: var(--ds-avatar-group-overlap, calc(-1 * var(--space-2)));
   --_avatar-group-ring:    var(--ds-avatar-group-ring,    var(--surface-default));
@@ -9,8 +8,7 @@
 
   display: inline-flex;
 
-  /* Anchored: an unanchored ::ng-deep compiles to a global rule hitting every ds-avatar.
-     The chip is a direct child too and already carries both declarations. */
+  /* Anchored: an unanchored ::ng-deep compiles to a global rule hitting every ds-avatar. */
   & > ::ng-deep *:not(.avatar-overflow) {
     border: var(--avatar-bw-group) solid var(--_avatar-group-ring);
     margin-left: var(--_avatar-group-overlap);

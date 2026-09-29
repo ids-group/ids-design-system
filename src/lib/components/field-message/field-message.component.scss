@@ -10,14 +10,11 @@
   --_field-message-icon-offset: var(--ds-field-message-icon-offset, calc((var(--_field-message-font-size) * var(--line-height-base) - var(--icon-sm)) / 2));
 
   display: flex;
-
-  /* Top, not centre: a two-line message would put the glyph mid-block. */
   align-items: flex-start;
   gap: var(--_field-message-icon-gap);
   font: var(--font-weight-regular) var(--_field-message-font-size) / var(--line-height-base) var(--font-sans);
   color: var(--_field-message-color);
 
-  /* Centred on the first line; the offset derives from the tokens that size that line. */
   .message-icon {
     margin-top: var(--_field-message-icon-offset);
   }

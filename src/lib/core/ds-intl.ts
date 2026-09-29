@@ -22,30 +22,38 @@ export const DS_INTL = new InjectionToken<Signal<DsIntl>>('DS_INTL', {
  *   providers: [provideDsIntl({ picker: { selectAll: 'Выбрать все' } })]
  *
  * Pass an object for a fixed language, or a factory returning a signal for a language that
- * changes at runtime; the factory runs in an injection context, so it can inject the app's own
- * language service:
+ * changes at runtime (the factory runs in an injection context):
  *
  *   provideDsIntl(() => { const language = inject(LanguageService); return computed(() => language.dictionary().ds); })
  *
- * Works at the root, on a `Route` or on a component. A nested call MERGES with the one above it
- * section by section, as `provideDsConfig` does. Numbers and dates do not come from here: they
- * follow `DsConfig.locale`, then `LOCALE_ID`. */
+ * Works at the root, on a `Route` or on a component; a nested call MERGES section by section,
+ * as `provideDsConfig` does, and several calls in one `providers` array merge in order. Numbers
+ * and dates follow `DsConfig.locale`, then `LOCALE_ID`. */
 export function provideDsIntl(
   overrides: DsIntlOverrides | (() => Signal<DsIntlOverrides>),
 ): Provider {
-  return {
-    provide: DS_INTL,
-    useFactory: () => {
-      const parent =
-        inject(DS_INTL, { skipSelf: true, optional: true }) ?? DEFAULTS;
-      const own =
-        typeof overrides === 'function'
-          ? overrides()
-          : signal(overrides).asReadonly();
+  return [
+    { provide: DS_INTL_LAYERS, useValue: overrides, multi: true },
+    { provide: DS_INTL, useFactory: mergeDsIntlLayers },
+  ];
+}
 
-      return computed(() => mergeDsIntl(parent(), own()));
-    },
-  };
+type DsIntlLayer = DsIntlOverrides | (() => Signal<DsIntlOverrides>);
+
+const DS_INTL_LAYERS = new InjectionToken<readonly DsIntlLayer[]>(
+  'DS_INTL_LAYERS',
+);
+
+function mergeDsIntlLayers(): Signal<DsIntl> {
+  const parent =
+    inject(DS_INTL, { skipSelf: true, optional: true }) ?? DEFAULTS;
+  const layers = inject(DS_INTL_LAYERS, { self: true }).map((layer) =>
+    typeof layer === 'function' ? layer() : signal(layer).asReadonly(),
+  );
+
+  return computed(() =>
+    layers.reduce((merged, layer) => mergeDsIntl(merged, layer()), parent()),
+  );
 }
 
 function mergeDsIntl(parent: DsIntl, own: DsIntlOverrides): DsIntl {

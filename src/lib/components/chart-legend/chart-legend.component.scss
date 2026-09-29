@@ -1,8 +1,6 @@
 @use '../../styles/check-box' as check-box;
 @use '../../styles/chart-interactive' as chart-interactive;
 @use '../../styles/chart-motion' as chart-motion;
-
-// Chips fade in with the marks; the checkbox is the chip when the legend toggles.
 @include chart-motion.fades-in('.legend-swatch', 0ms, var(--ds-motion-chart-mark-detail-duration));
 @include chart-motion.fades-in('.legend-check', 0ms, var(--ds-motion-chart-mark-detail-duration));
 @include chart-motion.fades-in('.legend-radio', 0ms, var(--ds-motion-chart-mark-detail-duration));

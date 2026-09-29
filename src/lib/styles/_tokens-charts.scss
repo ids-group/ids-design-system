@@ -1,15 +1,12 @@
 /* Chart and dataviz tokens.
 
-   Categorical: no hue between 35 and 130 - yellow and lime sit at high luminance, and darkening
-   one to clear 3:1 on white turns it mustard. Every hue clears 3:1 (WCAG 1.4.11) inside a narrow
-   band (L* 56-62) so no series shouts over another. Slot 8 is the "rest"/"other" bucket: neutral,
-   because an eighth hue lands within dE 4 of another under protanopia or deuteranopia, and darker
-   than the band because a mid grey is drained toward the emerald by colour-vision deficiency.
-
+   Categorical: no hue between 35 and 130 (yellow and lime sit at high luminance; darkening one to clear
+   3:1 turns it mustard). Every hue clears 3:1 (WCAG 1.4.11) inside a narrow band (L* 56-62) so no series
+   shouts. Slot 8 is the neutral "rest"/"other" bucket, darker than the band because a mid grey is drained
+   toward the emerald by colour-vision deficiency.
    Sequential: single-hue ramp for ordinal data. Divergent: red, neutral, green for signed data. */
 
 :root {
-  /* CATEGORICAL (8) ----------------------------------------- */
   --chart-categorical-1: hsl(  8deg 78% 58%);   /* coral */
   --chart-categorical-2: hsl(172deg 82% 36%);   /* teal */
   --chart-categorical-3: hsl(222deg 70% 62%);   /* blue */
@@ -19,18 +16,16 @@
   --chart-categorical-7: hsl(300deg 62% 60%);   /* orchid */
   --chart-categorical-8: hsl(222deg 14% 29%);   /* slate */
 
-  /* Rows of one series, plus the accent for the row to land on; categorical slots separate series. */
+  /* Rows of one series, plus the accent for the row to land on. */
   --chart-series-default: hsl(222deg 16% 42%);
   --chart-series-accent:  var(--chart-categorical-2);
 
-  /* A waterfall's up and down are not success and failure (a cost rising is bad), so these point
-     at the lead hues, not --success/--error. The label and accessible name carry the sign too. */
+  /* A waterfall's up and down are not success and failure, so these point at the lead hues, not --success/--error. */
   --chart-positive: var(--chart-categorical-2);
   --chart-negative: var(--chart-categorical-1);
 
-  /* RAMP: one hue, light to deep, for the ordered stages of one quantity. Stays in the middle of
-     the lightness range (76% to 51%) so no stage reads as a different object. Magnitude read
-     from the step between two colours takes --chart-heat-* instead. */
+  /* RAMP: one hue, light to deep, for the ordered stages of one quantity, kept mid-lightness (76% to 51%) so no
+     stage reads as a different object. Magnitude read from the step between two colours takes --chart-heat-*. */
   --chart-ramp-1: hsl(  8deg 78% 76%);
   --chart-ramp-2: hsl(  8deg 78% 72%);
   --chart-ramp-3: hsl(  8deg 78% 69%);
@@ -40,10 +35,9 @@
   --chart-ramp-7: hsl(  8deg 75% 55%);
   --chart-ramp-8: hsl(  8deg 72% 51%);
 
-  /* HEAT: the same hue across lightness 95% to 31%, for a grid where magnitude is read from the
-     step between cells. Adjacent dE 6.9-10.6, first to last 55.0 (OKLab, measured 2026-09-19;
-     the ramp: 2.1-3.9 and 20.7). Contrast on white runs 1.14:1 to 9.07:1, so choose a label colour
-     per cell, never once for the grid. */
+  /* HEAT: the same hue across lightness 95% to 31%, for a grid where magnitude is read from the step between
+     cells (adjacent OKLab dE 6.9-10.6, measured 2026-09-19). Contrast on white runs 1.14:1 to 9.07:1, so
+     choose a label colour per cell, never once for the grid. */
   --chart-heat-1: hsl(  8deg 60% 95%);
   --chart-heat-2: hsl(  8deg 67% 88%);
   --chart-heat-3: hsl(  8deg 73% 80%);
@@ -53,7 +47,6 @@
   --chart-heat-7: hsl(  8deg 74% 41%);
   --chart-heat-8: hsl(  8deg 68% 31%);
 
-  /* SEQUENTIAL */
   --chart-sequential-1: var(--blue-100);
   --chart-sequential-2: var(--blue-200);
   --chart-sequential-3: var(--blue-300);
@@ -70,46 +63,39 @@
   --chart-divergent-2:  hsl(145deg 38% 52%);
   --chart-divergent-3:  hsl(145deg 46% 34%);      /* large positive (best) */
 
-  /* FRAME: on by default so the chart does not bleed into its surroundings. Inside a card, drop
-     it with --ds-chart-frame-border-width: 0 and --ds-chart-frame-padding: 0. */
+  /* BACKGROUND: the frame and every knockout between marks. Read where it is used: a token deriving
+     from it on :root would ignore one set on a single chart. */
+  --chart-bg-color: var(--surface-default);
+
+  /* FRAME: inside a card, drop it with --ds-chart-frame-border-width: 0 and --ds-chart-frame-padding: 0. */
   --chart-frame-border-color: var(--border-default);
   --chart-frame-border-width: var(--border-width-default);
   --chart-frame-radius: var(--radius-lg);
   --chart-frame-padding: var(--space-5);
-  --chart-frame-bg-color: var(--surface-default);
 
-  /* AXIS / GRID / LEGEND */
   --chart-axis-line-color:    var(--neutral-300);
   --chart-axis-label-color:   var(--text-tertiary);
   --chart-grid-line-color:    var(--neutral-150);
   --chart-axis-font-size:      var(--font-size-2xs);
 
-  /* REFERENCE LINES: an annotation, not a series. A neutral dashed stroke keeps a target from
-     reading as a category; the band opacity keeps marks over it their own colour. */
+  /* REFERENCE LINES: an annotation, not a series; the band opacity keeps marks over it their own colour. */
   --chart-threshold-color: var(--neutral-500);
   --chart-threshold-band-opacity: 0.12;
   --chart-threshold-dashed-pattern: 6 4;
   --chart-threshold-dotted-pattern: 1 5;
 
-  /* HIGHLIGHT / HOVER */
-
-  /* Dimming costs the separation between dimmed series (OKLab dE x100, worst pair of three:
-     14.8 at full opacity, 5.2 at 60%, 2.1 at 30%, measured 2026-09-13). No level keeps them
-     apart: this buys accent loudness, not readable context. */
+  /* Dimming costs the separation between dimmed series (OKLab dE x100, worst pair of three: 14.8 at full
+     opacity, 2.1 at 30%, measured 2026-09-13): this buys accent loudness, not readable context. */
   --chart-dim-opacity:        0.3;
   --chart-hover-bg-color:     hsl(225deg 39% 7% / 4%);
   --chart-cursor-line-color:  var(--neutral-400);
 
-  /* Two tones: a single ring disappears on a mark of the same hue. The ring is the app's focus
-     colour; the white keyline separates it from the mark. */
+  /* Two tones: a single ring disappears on a mark of the same hue; the white keyline separates it. */
   --chart-focus-ring-color:  var(--focus-ring-color);
-  --chart-focus-halo-color:  white;
 
   --chart-tooltip-bg-color:   var(--neutral-900);
   --chart-tooltip-text-color:   var(--neutral-0);
   --chart-tooltip-border-color: var(--neutral-700);
-
-  /* DIMENSIONS */
 
   /* Not a pill: the cap squashes with the body while a mark grows in; 3px keeps that unreadable. */
   --chart-mark-cap-radius: 3px;
@@ -119,14 +105,13 @@
   --chart-dot-radius:        4px;
   --chart-dot-radius-active: 6px;
   --chart-area-opacity:      0.16;
+  --chart-area-fade-opacity: 0.32;
 
-  /* Wide enough to survive a 24px mark; surface-coloured so they read as gaps, not a second hue. */
-  --chart-hatch-color: var(--surface-default);
+  /* Wide enough to survive a 24px mark; background-coloured so they read as gaps. */
   --chart-hatch-width: 1.5px;
 }
 
-/* Public override layer: consumers set --ds-chart-*, never the palette. Series slots are numbered,
-   not named after a hue, so they stay meaningful after a retune. */
+/* Public override layer: consumers set --ds-chart-*, never the palette. */
 
 :root {
   --ds-chart-series-1-color: var(--chart-categorical-1);
@@ -160,11 +145,11 @@
   --ds-chart-heat-7-color: var(--chart-heat-7);
   --ds-chart-heat-8-color: var(--chart-heat-8);
 
+  --ds-chart-bg-color: var(--chart-bg-color);
   --ds-chart-frame-border-color: var(--chart-frame-border-color);
   --ds-chart-frame-border-width: var(--chart-frame-border-width);
   --ds-chart-frame-radius: var(--chart-frame-radius);
   --ds-chart-frame-padding: var(--chart-frame-padding);
-  --ds-chart-frame-bg-color: var(--chart-frame-bg-color);
 
   --ds-chart-axis-line-color: var(--chart-axis-line-color);
   --ds-chart-axis-label-color: var(--chart-axis-label-color);
@@ -180,7 +165,6 @@
   --ds-chart-hover-bg-color: var(--chart-hover-bg-color);
   --ds-chart-cursor-line-color: var(--chart-cursor-line-color);
   --ds-chart-focus-ring-color: var(--chart-focus-ring-color);
-  --ds-chart-focus-halo-color: var(--chart-focus-halo-color);
   --ds-chart-tooltip-bg-color: var(--chart-tooltip-bg-color);
   --ds-chart-tooltip-text-color: var(--chart-tooltip-text-color);
   --ds-chart-tooltip-border-color: var(--chart-tooltip-border-color);
@@ -192,6 +176,6 @@
   --ds-chart-dot-radius: var(--chart-dot-radius);
   --ds-chart-dot-radius-active: var(--chart-dot-radius-active);
   --ds-chart-area-opacity: var(--chart-area-opacity);
-  --ds-chart-hatch-color: var(--chart-hatch-color);
+  --ds-chart-area-fade-opacity: var(--chart-area-fade-opacity);
   --ds-chart-hatch-width: var(--chart-hatch-width);
 }

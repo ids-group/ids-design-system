@@ -29,15 +29,33 @@
 @include chart-interactive.dims('.series-marker', ', fill var(--ds-motion-chart-mark-duration) var(--ds-motion-chart-mark-easing), r var(--ds-motion-chart-state-duration) var(--ds-motion-chart-state-easing)');
 @include chart-interactive.clickable('.series-marker');
 
+// `--ds-chart-area-color` is left undeclared, so an unset one falls through to the series colour.
 .series-area {
+  fill: var(--ds-chart-area-color, var(--_series-area-color));
   fill-opacity: var(--_chart-area-opacity);
   stroke: none;
 }
 
-// A stacked band is separated by a surface-colour stroke, not a darker rule (a third ink that
-// vanishes in print). Unstacked areas sit on the baseline and need none.
+.series-area.is-fade {
+  fill-opacity: 1;
+}
+
+.fade-start,
+.fade-end {
+  stop-color: var(--ds-chart-area-color, var(--_series-area-color));
+}
+
+.fade-start {
+  stop-opacity: var(--ds-chart-area-fade-opacity);
+}
+
+.fade-end {
+  stop-opacity: 0;
+}
+
+// A stacked band is separated by a background-colour stroke, not a darker rule (which vanishes in print).
 .series-area.is-stacked {
-  stroke: var(--surface-default);
+  stroke: var(--ds-chart-bg-color);
   stroke-width: 2;
   stroke-linejoin: round;
 }
@@ -50,7 +68,7 @@
 /* A stroke on the line itself would be clipped by its own dash pattern. */
 .series-halo {
   fill: none;
-  stroke: var(--surface-default);
+  stroke: var(--ds-chart-bg-color);
   stroke-width: calc(var(--_chart-line-width) + var(--_chart-line-outline, 3px));
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -76,7 +94,7 @@
 }
 
 .lines.is-outlined .series-marker {
-  stroke: var(--surface-default);
+  stroke: var(--ds-chart-bg-color);
   stroke-width: var(--_chart-line-outline, 3px);
   paint-order: stroke;
 }

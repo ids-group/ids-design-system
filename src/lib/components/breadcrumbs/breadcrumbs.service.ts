@@ -3,7 +3,6 @@ import type { BreadcrumbItem } from './breadcrumbs.types';
 
 /**
  * Breadcrumb state that `<ds-breadcrumbs>` reads when no `[items]` input is provided.
- * Apps push items programmatically (page constructor / effect) or from router data.
  */
 @Injectable({ providedIn: 'root' })
 export class BreadcrumbsService {

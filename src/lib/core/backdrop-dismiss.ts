@@ -1,11 +1,9 @@
 /**
  * Dismiss-on-backdrop for a backdrop that WRAPS its dialog.
  *
- * `click` cannot be trusted there: the browser fires it at the nearest common ancestor of the
- * press and the release, so a drag that starts inside the dialog and ends on the backdrop fires
- * `click` ON THE BACKDROP and a `target === currentTarget` check waves it through. Hence the press
- * is tracked: dismiss only when press AND release both land on the backdrop itself. `ds-drawer`
- * needs none of this because its scrim is a SIBLING of the panel.
+ * `click` cannot be trusted there: it fires at the nearest common ancestor of press and release,
+ * so a drag from inside the dialog to the backdrop fires `click` ON THE BACKDROP. Dismiss only
+ * when press AND release both land on the backdrop itself.
  * @internal
  */
 export function backdropDismiss(): {

@@ -115,7 +115,6 @@ export class SelectComponent
   readonly value = model<string>('');
   /** Flat options or option groups rendered in the dropdown panel. */
   readonly options = input<readonly SelectItem[]>([]);
-  /** Forwarded onto the portaled pane on open so consumer `--ds-dropdown-panel-*` overrides reach it. */
   private readonly panelTokens = [
     '--ds-dropdown-panel-bg-color',
     '--ds-dropdown-panel-min-width',
@@ -126,12 +125,11 @@ export class SelectComponent
     '--ds-option-check-color',
   ];
 
-  /** Trigger width. `fill` stretches to the container and pins the panel to the trigger width; `content` hugs the trigger's content and uses that width as the panel's FLOOR. */
+  /** Trigger width: `fill` stretches to the container and pins the panel to it; `content` hugs the trigger and uses its width as the panel's floor. */
   readonly width = input<SelectWidth>('fill');
   /** Shown in the trigger when nothing is selected. */
   readonly placeholder = input<string>('');
-  /** Trigger height - sm/md/lg.
-   *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
+  /** Trigger height; falls back to `DS_CONFIG.control.size`, then `'md'`. */
   readonly size = input<DsSize | null>(null);
   readonly sizeResolved = resolveWithConfig(
     this.size,
@@ -142,19 +140,15 @@ export class SelectComponent
   readonly label = input<string>('');
   /** Disables the trigger and blocks all interaction. */
   readonly disabled = input(false, { transform: booleanAttribute });
-  /** Options are still being fetched. The panel shows a spinner instead of the empty row (which would claim there are no matches) and the list reports `aria-busy`. */
+  /** Options are still being fetched: the panel shows a spinner instead of the empty row and reports `aria-busy`. */
   readonly loading = input(false, { transform: booleanAttribute });
-  /** The panel opened. The moment to fetch options for a picker whose list is
-   *  loaded on demand. */
+  /** The panel opened. */
   readonly opened = output<void>();
   /** The panel closed, for any reason - a pick, Escape, an outside click, a scroll. */
   readonly closed = output<void>();
-  /** Scrolls the keyboard cursor's row into view. On by default: a list longer
-   *  than the panel otherwise walks the cursor out of sight. Set `false` only if
-   *  you are driving the scroll position yourself. */
+  /** Scrolls the keyboard cursor's row into view. Set `false` only when driving the scroll position yourself. */
   readonly scrollActiveIntoView = input(true, { transform: booleanAttribute });
-  /** Extra classes for the portaled panel, beside `ds-dropdown-panel`, `ds-overlay-pane` and `ds-select-panel`.
-   *  The panel is portaled out of the host, so a class on the pane is the only way a consumer stylesheet reaches ONE instance. */
+  /** Extra classes for the portaled panel, the only way to style one instance of it. */
   readonly panelClass = input<string | readonly string[]>([]);
   /** Prevents opening the dropdown while still allowing focus. */
   readonly readOnly = input(false, { transform: booleanAttribute });
@@ -167,7 +161,7 @@ export class SelectComponent
   protected readonly isReadOnly = computed(
     () => this.readOnly() || this.readonlyBinding(),
   );
-  /** Confirmation text, shown when there is no error or warning. It paints the success border: the text IS the state. */
+  /** Confirmation text, shown when there is no error or warning; paints the success border. */
   readonly success = input<string, string | null | undefined>('', {
     transform: trimmedText,
   });
@@ -432,9 +426,7 @@ export class SelectComponent
     this.markTouched();
   }
 
-  /**
-   * Empties the selection from outside (a "reset filters" button). Does NOT move focus: the caller may be navigating away.
-   */
+  /** Empties the selection from outside. Does not move focus. */
   clear(): void {
     this.value.set('');
     if (this.open()) {
@@ -462,7 +454,7 @@ export class SelectComponent
     ) {
       return;
     }
-    // Only handle keys aimed at the trigger itself: a keydown bubbling from the nested clear <button> must reach its own activation (Enter/Space).
+    // A keydown bubbling from the nested clear <button> must reach its own activation (Enter/Space).
     if (event.target !== event.currentTarget) {
       return;
     }
@@ -488,7 +480,7 @@ export class SelectComponent
       return;
     }
     if (key === 'Tab') {
-      // Close the panel but let Tab move focus naturally (no preventDefault), else the open panel lingers behind the moved focus.
+      // No preventDefault: the open panel would linger behind the moved focus.
       this.close();
 
       return;

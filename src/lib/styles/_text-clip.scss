@@ -1,7 +1,6 @@
 @mixin single-line-ellipsis {
-  /* `clip` with a margin, not `hidden`: where the line box is tighter than the glyph box (Mulish
-     is 1.257em; --line-height-flat and -tight are below it) `hidden` shaves every label.
-     `text-overflow` applies under `clip` too. */
+  /* `clip` with a margin, not `hidden`: where the line box is tighter than the glyph box (Mulish is 1.257em;
+     --line-height-flat and -tight are below it) `hidden` shaves every label. `text-overflow` applies under `clip` too. */
   overflow: clip;
   overflow-clip-margin: var(--space-1);
   text-overflow: ellipsis;

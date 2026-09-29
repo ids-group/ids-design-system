@@ -11,43 +11,35 @@ import type {
 } from '@ids-group-ltd/ids-design-system/core';
 import { chartValueFormat } from './charts-format';
 
-/** The inputs every chart carries for the decisions an app makes once rather than per plot.
- *
- *  @internal */
+/** The inputs every chart carries for app-wide decisions. @internal */
 export interface ChartDefaultInputs {
   readonly frame: Signal<ChartFrame | null>;
-  /** Absent on a chart with no annex table of its own - the container, the heat map. */
   readonly dataTable?: Signal<ChartDataTable | null>;
   readonly emptyText: Signal<string | null>;
   readonly errorText: Signal<string | null>;
   readonly valueFormat: Signal<ChartValueFormat | null>;
-  /** Absent on a chart with no tooltip of its own. */
   readonly tooltipLingerMs?: Signal<number | null>;
-  /** Absent on a chart with nothing to pin. */
   readonly pinOnClick?: Signal<boolean | null>;
-  readonly hoverDelayMs?: Signal<number | null>;
+  readonly tooltipSwatches?: Signal<boolean | null>;
 }
 
-const NO_DATA_TABLE = signal<ChartDataTable | null>(null);
-const NO_LINGER = signal<number | null>(null);
-const NO_PIN = signal<boolean | null>(null);
-const NO_DELAY = signal<number | null>(null);
+const NO_HOVER_DELAY_INPUT = signal<number | null>(null);
 
-/** How long a resting pointer waits before a chart answers it, when nothing sets it.
- *
- *  @internal */
+// Lazy: a chart's own optional inputs are declared after the base that calls this, so they do not exist yet.
+function optional<T>(
+  input: () => Signal<T | null> | undefined,
+): Signal<T | null> {
+  return computed(() => input()?.() ?? null);
+}
+
+/** Default hover delay, in milliseconds. @internal */
 export const CHART_HOVER_DELAY_MS = 0;
 
-/** How long a tooltip outlives the pointer leaving its mark, when nothing sets it. Long enough for the
- *  pointer to cross to the next mark and find the same panel; a shorter wait closes and reopens it.
- *
- *  @internal */
+/** Default tooltip linger, in milliseconds; long enough to cross to the next mark. @internal */
 export const CHART_TOOLTIP_LINGER_MS = 500;
 
-/** Each resolved input → `DS_CONFIG.chart` → the built-in; copy resolves input → `DS_INTL.chart`.
- *  Call from an injection context.
- *
- *  @internal */
+/** Resolves each input, then `DS_CONFIG.chart`, then the built-in; copy resolves input, then `DS_INTL.chart`.
+ *  Call from an injection context. @internal */
 export function resolveChartDefaults(inputs: ChartDefaultInputs) {
   const locale = injectDsLocale();
   const intl = inject(DS_INTL);
@@ -60,7 +52,7 @@ export function resolveChartDefaults(inputs: ChartDefaultInputs) {
       'auto' as ChartFrame,
     ),
     dataTable: resolveWithConfig(
-      inputs.dataTable ?? NO_DATA_TABLE,
+      optional(() => inputs.dataTable),
       (config) => config.chart?.dataTable,
       'none' as ChartDataTable,
     ),
@@ -72,19 +64,24 @@ export function resolveChartDefaults(inputs: ChartDefaultInputs) {
       chartValueFormat(locale),
     ),
     tooltipLingerMs: resolveWithConfig(
-      inputs.tooltipLingerMs ?? NO_LINGER,
+      optional(() => inputs.tooltipLingerMs),
       (config) => config.chart?.tooltipLingerMs,
       CHART_TOOLTIP_LINGER_MS,
     ),
     pinOnClick: resolveWithConfig(
-      inputs.pinOnClick ?? NO_PIN,
+      optional(() => inputs.pinOnClick),
       (config) => config.chart?.pinOnClick,
       true,
     ),
     hoverDelayMs: resolveWithConfig(
-      inputs.hoverDelayMs ?? NO_DELAY,
+      NO_HOVER_DELAY_INPUT,
       (config) => config.chart?.hoverDelayMs,
       CHART_HOVER_DELAY_MS,
+    ),
+    tooltipSwatches: resolveWithConfig<boolean | 'auto'>(
+      optional(() => inputs.tooltipSwatches),
+      (config) => config.chart?.tooltipSwatches,
+      'auto',
     ),
   };
 }

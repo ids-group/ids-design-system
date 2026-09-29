@@ -54,14 +54,12 @@ export class SidenavItemComponent {
   readonly hasAlert = input(false, { transform: booleanAttribute });
   /** Disables the item: non-navigable and styled as inactive. */
   readonly disabled = input(false, { transform: booleanAttribute });
-  /** Emitted on click, carrying the `MouseEvent`. On an `href` item,
-   *  `preventDefault()` intercepts navigation (e.g. a docs sidebar driving
-   *  scroll-spy); a `routerLink` item navigates regardless (Angular's
-   *  RouterLink ignores `defaultPrevented`), so treat it as a click hook there. */
+  /** Emitted on click, carrying the `MouseEvent`. On an `href` item, `preventDefault()`
+   *  intercepts navigation; a `routerLink` item navigates regardless (RouterLink ignores
+   *  `defaultPrevented`). */
   readonly activate = output<MouseEvent>();
 
-  /** Whether THIS item draws its edge marker when active. Unset follows the parent
-   *  `ds-sidenav`, then on, so a sidenav-wide `[rail]="false"` is not fought per item. */
+  /** Whether THIS item draws its edge marker when active. Unset follows the parent `ds-sidenav`, then on. */
   readonly rail = input<boolean | null, unknown>(null, {
     transform: (value) => (value == null ? null : booleanAttribute(value)),
   });
@@ -91,8 +89,7 @@ export class SidenavItemComponent {
     this.sidenav?.collapsed() ? this.label() : '',
   );
 
-  // aria-label only when collapsed (icon-only). Expanded, it would override the visible
-  // label and drop the badge count / alert dot from the name.
+  // Only when collapsed: expanded, it would override the visible label and drop the badge count / alert dot.
   protected readonly collapsedAriaLabel = computed(() =>
     this.sidenav?.collapsed() ? this.label() : null,
   );
@@ -102,7 +99,7 @@ export class SidenavItemComponent {
     if (this.active()) {
       parts.push('active');
     }
-    // The routerLink variant gets `active` from routerLinkActive, so the rail opt-out needs its own class.
+    // The routerLink variant gets `active` from routerLinkActive, so the opt-out needs its own class.
     if (!this.railResolved()) {
       parts.push('no-rail');
     }

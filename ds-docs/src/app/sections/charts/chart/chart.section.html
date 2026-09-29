@@ -72,20 +72,18 @@
       cursor="auto"
     </code>, turns it on for a plot
     of two or more marks that show a tooltip, whose panel then names every
-    mark's reading at the category wherever in it the pointer is. A plot of one
-    mark stays off: its marks are themselves the hover targets and already
-    answer per mark, and two affordances on one plot read as two different
-    questions. A mark set to
-    <code class="t-mono-inline">
-      tooltip="axis"
-    </code> reads that same category
-    and names every series at it.
+    mark's reading at the category wherever in it the pointer is, and for a mark
+    set to <code class="t-mono-inline"> tooltip="axis" </code>, which reads that
+    same category and names every series at it. Any other plot of one mark stays
+    off: its marks are themselves the hover targets and already answer per mark,
+    and two affordances on one plot read as two different questions.
   </p>
 
   <p class="block-desc t-s">
     Under the cursor the category's band is the one hover area: the pointer
     anywhere in it opens the band and the tooltip together, on a plot of one
-    mark as on a composed one, and the gap between two bands answers nothing. A
+    mark as on a composed one, and every point of the plot belongs to its
+    nearest category, so the pointer moves from one band straight to the next. A
     mark inside the band opens no panel of its own on hover and does not pin on
     click. Focus opens the category's band and its panel, naming every mark's
     reading there,
@@ -93,7 +91,7 @@
       pointClicked
     </code> still fires, and
     <code class="t-mono-inline">
-      cursorPin
+      pinOnClick
     </code> holds the category.
   </p>
 
@@ -132,6 +130,42 @@
       dsReferenceLabel
       [thresholds]="latencyThresholds" />
   </ds-chart>
+
+  <div class="states is-cols-2">
+    <div class="state-cell">
+      <ds-chart [categories]="orderMonths">
+        <svg:g
+          dsColumnSeries
+          seriesLabel="Sessions"
+          [data]="orderColumns"
+          [showValues]="false" />
+      </ds-chart>
+
+      <div class="state-cell-label">
+        cursor = auto, one mark: each column answers
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-chart
+        cursor="none"
+        [categories]="orderMonths">
+        <svg:g
+          dsColumnSeries
+          seriesLabel="Sessions"
+          [data]="orderColumns"
+          [showValues]="false" />
+
+        <svg:g
+          dsLineSeries
+          [data]="basketSeries" />
+      </ds-chart>
+
+      <div class="state-cell-label">
+        cursor = none, two marks: each mark answers
+      </div>
+    </div>
+  </div>
 
   <h3
     data-claude-design
@@ -187,6 +221,44 @@
       cursor="category"
       caption="split - two plots"
       secondaryAxisMode="split"
+      [categories]="orderMonths"
+      [axisColor]="columnAxisColor"
+      [secondaryAxisColor]="lineAxisColor"
+      [summary]="ordersSummary">
+      <svg:g
+        dsColumnSeries
+        [data]="orderColumns"
+        [showValues]="false" />
+
+      <svg:g
+        dsLineSeries
+        [data]="basketSeries" />
+    </ds-chart>
+  </div>
+
+  <div class="demo-pair">
+    <ds-chart
+      cursor="category"
+      caption="exact - the second axis ends at its largest reading"
+      secondaryAxisMode="exact"
+      [categories]="orderMonths"
+      [axisColor]="columnAxisColor"
+      [secondaryAxisColor]="lineAxisColor"
+      [summary]="ordersSummary">
+      <svg:g
+        dsColumnSeries
+        [data]="orderColumns"
+        [showValues]="false" />
+
+      <svg:g
+        dsLineSeries
+        [data]="basketSeries" />
+    </ds-chart>
+
+    <ds-chart
+      cursor="category"
+      caption="dual-grid - each axis scaled and gridded on its own"
+      secondaryAxisMode="dual-grid"
       [categories]="orderMonths"
       [axisColor]="columnAxisColor"
       [secondaryAxisColor]="lineAxisColor"
@@ -317,12 +389,9 @@
     ceiling the way <code class="t-mono-inline"> max </code> pins the first, so
     two plots read against each other do not rescale under one another. A press
     holds the category cursor where it is, by default, with a pin disc at the
-    foot of its band: press again, Escape, or a press outside or between two
-    bands to let go. Set
-    <code class="t-mono-inline">
-      cursorPin="false"
-    </code> to keep it moving
-    with the pointer. A composed chart draws no Unpin control;
+    foot of its band: press again, Escape, or a press outside the plot to let
+    go. Set <code class="t-mono-inline"> pinOnClick="false" </code> to keep it
+    moving with the pointer. A composed chart draws no Unpin control;
     <code class="t-mono-inline">
       cursorPinned()
     </code> and
@@ -333,13 +402,12 @@
   </p>
 
   <p class="block-desc t-s">
-    Without the category cursor, resting the pointer on a category's label on
-    the axis answers for its column: the column's tooltip opens and every other
-    column dims, whatever
+    Without the category cursor, the pointer on a category's label on the axis
+    answers for its column exactly as the column does: its tooltip opens, and
+    the rest dim only under
     <code class="t-mono-inline">
       dimOthers
-    </code> says, the way a legend entry
-    singles out its series.
+    </code>.
   </p>
 
   <ds-chart
@@ -362,7 +430,7 @@
   </ds-chart>
 
   <h3 class="block-title t-h4">
-    The tooltip and the legend of a composed chart
+    The tooltip of a composed chart
   </h3>
 
   <p class="block-desc t-s">
@@ -387,32 +455,11 @@
   </p>
 
   <p class="block-desc t-s">
-    A legend is yours to place:
+    A line series sits on a band of the surface colour -
     <code class="t-mono-inline">
-      ds-chart-legend
-    </code>'s
-    <code class="t-mono-inline">
-      highlighted
-    </code> feeds the column series'
-    <code class="t-mono-inline">
-      highlighted
-    </code>, matched against its
-    <code class="t-mono-inline">
-      seriesKey
-    </code>, and the line series'
-    <code class="t-mono-inline">
-      highlighted
-    </code>, matched against its series
-    ids. Hovering a legend entry fades the rest to
-    <code class="t-mono-inline">
-      --ds-chart-dim-opacity
-    </code> whether or not
-    <code class="t-mono-inline">
-      dimOthers
-    </code> is set. A line series sits on
-    a band of the surface colour - <code class="t-mono-inline"> outline </code>,
-    on by default - so it stays legible where it crosses the columns; switch it
-    off here to compare.
+      outline
+    </code>, on by default - so it stays
+    legible where it crosses the columns; switch it off here to compare.
   </p>
 
   <div class="demo-row">
@@ -436,20 +483,14 @@
       tooltip="none"
       [data]="orderColumns"
       [showValues]="false"
-      [seriesColor]="columnAxisColor"
-      [highlighted]="legendHighlighted()" />
+      [seriesColor]="columnAxisColor" />
 
     <svg:g
       dsLineSeries
       tooltip="axis"
       [data]="basketSeries"
-      [outline]="lineOutline()"
-      [highlighted]="legendHighlighted()" />
+      [outline]="lineOutline()" />
   </ds-chart>
-
-  <ds-chart-legend
-    [items]="ordersLegend"
-    [(highlighted)]="legendHighlighted" />
 
   <ng-template
     #ordersPanel
@@ -506,7 +547,7 @@
     </code> separates a piled band from the
     one under it, <code class="t-mono-inline"> pinOnClick </code> holds a
     reading on a plot without the category cursor (under the cursor the
-    container's <code class="t-mono-inline"> cursorPin </code> holds the whole
+    container's <code class="t-mono-inline"> pinOnClick </code> holds the whole
     category instead), and
     <code class="t-mono-inline">
       tooltipAnchor

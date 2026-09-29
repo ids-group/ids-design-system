@@ -1,28 +1,17 @@
 // Focus-indicator style, switched in one place: `<html data-focus="...">`.
-//
-// Controls take an `outline` (`outline-offset` leaves the gap unpainted, and a negative offset
-// draws inside an `overflow` ancestor); fields a halo through `--ds-field-focus-shadow`.
+// Controls take an `outline` (a negative offset draws inside an `overflow` ancestor); fields a halo through `--ds-field-focus-shadow`.
 
 // The control indicator. Does not touch box-shadow, so a focused card keeps its elevation; a state
 // painting its own shadow must yield, see `state-shadow`.
-//
-// A ring host must have a radius: an outline follows the element's border-radius, so a
-// square-cornered shell rings square. A shell that only carries the ring takes `--focus-ring-radius`.
-//
-// Include inside the element's `&:focus-visible` block, never on the element itself: the mixin
-// paints, it does not decide when to show, and every instance would be ringed at all times.
-//
-// Usually include nothing: `:where(:focus-visible)` below rings anything focusable that styles
-// nothing itself. Needed only for a different offset, or to put a ring back after silencing it.
-//
-// Usage: `&:focus-visible { @include focus.ring; }`, or
-// `@include focus.ring(calc(-1 * var(--focus-ring-offset)))` where an ancestor clips.
+// An outline follows the element's border-radius: a shell that only carries the ring takes `--focus-ring-radius`.
+// Include inside `&:focus-visible`, never on the element itself, or every instance is ringed at all times.
+// Usually include nothing: `:where(:focus-visible)` below rings anything focusable that styles nothing itself.
+// Pass a negative offset where an ancestor clips.
 @mixin ring($offset: var(--focus-ring-offset)) {
   outline: var(--focus-ring-width) solid var(--focus-ring-color);
   outline-offset: $offset;
 
-  // An animation, not a transition: a `transition` here would replace the component's own list.
-  // Colour only: animating the offset makes the ring lag the caret on a fast Tab.
+  // An animation, not a transition: a `transition` here would replace the component's own list. Colour only, so the ring does not lag the caret.
   animation: ds-focus-ring-in var(--duration-fast) var(--ease-standard);
 }
 
@@ -32,7 +21,6 @@
   @include ring;
 }
 
-// Only `from` is declared; the end value is whatever the ring resolves to.
 @keyframes ds-focus-ring-in {
   from {
     outline-color: transparent;
@@ -40,12 +28,8 @@
 }
 
 // A shell that rings on its control's behalf and silences $control in the same call.
-//
-// `:has(:focus-visible)`, not `:focus-within`: the latter matches pointer focus, and a clicked
-// checkbox is not `:focus-visible`, so it would keep its ring. Field shells use `:focus-within`
-// (clicking a text input does grant `:focus-visible`).
-//
-// Usage: `.control-line { @include focus.ring-for('.check'); }`
+// `:has(:focus-visible)`, not `:focus-within`: a clicked checkbox is not `:focus-visible` but matches
+// `:focus-within`, so it would keep its ring. Field shells use `:focus-within` (a text input does grant `:focus-visible`).
 @mixin ring-for($control, $offset: var(--focus-ring-offset)) {
   &:has(:focus-visible) {
     @include ring($offset);
@@ -54,8 +38,7 @@
   @include owns-the-focus-ring($control);
 }
 
-// `$control` names one control, never a blanket, which would silence tab stops such as a clear
-// button or stepper arrow.
+// `$control` names one control, never a blanket, which would silence tab stops such as a clear button.
 @mixin owns-the-focus-ring($control) {
   #{$control}:where(:focus-visible) {
     @include own-indicator;
@@ -70,21 +53,18 @@
   }
 }
 
-// For a persistent state painting its own box-shadow on the ring's element: the ring wins while
-// focused. Only for states with another channel, or the state is unreadable while focused.
+// A persistent state painting its own box-shadow: the ring wins while focused. Only for states with another channel.
 @mixin state-shadow($shadow) {
   &:not(:focus-visible) {
     box-shadow: $shadow;
   }
 }
 
-// Fields ring like controls: the halo role is retargeted at the ring token.
 :root[data-focus='ring'] {
   --ds-field-focus-shadow: var(--focus-ring);
   --ds-field-focus-shadow-error: var(--focus-ring-error);
 }
 
-// Hairline flush against the element.
 :root[data-focus='edge'] {
   --focus-ring-offset: 0px;
   --ds-field-focus-shadow: 0 0 0 var(--border-width-default) var(--primary);
@@ -100,7 +80,6 @@
 
 // Applies under every style: forced colours drops box-shadow, so the field halo vanishes.
 @media (forced-colors: active) {
-  // A system keyword is the only value guaranteed to contrast with the forced background.
   :where(:focus-visible) {
     outline: var(--focus-ring-width) solid CanvasText;
     outline-offset: var(--focus-ring-offset);

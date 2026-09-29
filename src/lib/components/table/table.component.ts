@@ -55,7 +55,6 @@ import type {
 
 const NUMERIC = /^-?\d+(\.\d+)?$/;
 
-// Assumed viewport until the scroller has been measured.
 const VIRTUAL_FALLBACK_HEIGHT = 720;
 
 const VIRTUAL_OVERSCAN = 6;
@@ -136,29 +135,22 @@ function compareSortValues(
 export class TableComponent<T extends object> {
   /** Rows to render. */
   readonly data = input.required<readonly T[]>();
-  /** Row identity used for tracking, selection, expansion and the active-row
-   *  highlight. Defaults to `row.id`; pass an accessor for display-only data
-   *  with no natural key (`[rowId]="row => row.channel + row.sentAt"`), which
-   *  beats mapping synthetic ids into the data just to satisfy the table. */
+  /** Row identity for tracking, selection, expansion and the active-row highlight. Defaults to
+   *  `row.id`; pass an accessor (`[rowId]="row => row.channel + row.sentAt"`) for data with no key. */
   readonly rowId = input<((row: T) => string) | null>(null);
   /** Column definitions driving headers, cells and sorting. */
   readonly columns = input.required<readonly TableColumn<T>[]>();
   /** Adds a checkbox column for row/select-all selection. */
   readonly selectable = input(false, { transform: booleanAttribute });
-  /** Opt-in outer border + radius. Off by default so tables flush inside a
-   *  `<ds-card padding="none">` don't double-border.
-   *  Unset falls back to `DS_CONFIG.table.bordered`, then `false`. */
+  /** Opt-in outer border + radius, off so tables flush in a `<ds-card padding="none">` don't
+   *  double-border. Unset falls back to `DS_CONFIG.table.bordered`, then `false`. */
   readonly bordered = input<boolean | null, unknown>(null, {
     transform: (value) => (value == null ? null : booleanAttribute(value)),
   });
-  /** false — no loading state.
-   *  `true` — the table picks: skeleton rows while it has nothing to show, overlay
-   *  once rows are on screen. Prefer it; the right choice is a function of the row
-   *  count, which only the table holds.
-   *  'skeleton' — first-load placeholder; rows are replaced with shimmer rows.
-   *  'overlay'  — re-fetch indicator; existing rows stay visible behind
-   *  a translucent overlay with a centred spinner. Pin either one only to
-   *  override the rule deliberately. */
+  /** `false`: no loading state.
+   *  `true`: the table picks, skeleton rows while it has nothing to show, overlay once rows are
+   *  on screen. Prefer it.
+   *  `'skeleton'`: first-load shimmer rows. `'overlay'`: re-fetch spinner over the existing rows. */
   readonly loading = input<boolean | 'skeleton' | 'overlay'>(false);
   protected readonly loadingMode = computed<'skeleton' | 'overlay' | false>(
     () => {
@@ -175,33 +167,28 @@ export class TableComponent<T extends object> {
   );
   /** Keeps the header row pinned while the body scrolls. */
   readonly stickyHeader = input(true, { transform: booleanAttribute });
-  /** Caps the scroll body height (any CSS length, e.g. `'320px'`) and scrolls it
-   *  vertically — pair with `stickyHeader` for a self-contained scroll region.
-   *  `null` (default) lets the table grow to its content. */
+  /** Caps the scroll body height (any CSS length) and scrolls it vertically; pair with
+   *  `stickyHeader`. `null` (default) grows to content. */
   readonly maxHeight = input<string | null>(null);
-  /** Row density — `'compact'` tightens cell padding for spreadsheet-dense lists. */
+  /** `'compact'` tightens cell padding. */
   readonly density = input<'default' | 'compact'>('default');
-  /** Tints odd rows for easier row-tracking across wide tables. */
+  /** Tints odd rows. */
   readonly zebra = input(false, { transform: booleanAttribute });
-  /** Animate the body height when the row set changes (page/filter) instead of
-   *  snapping. Opt-in; instant under reduced-motion (the DS zeroes the token). */
+  /** Animate the body height when the row set changes. Instant under reduced motion. */
   readonly animateHeight = input(false, { transform: booleanAttribute });
   /** Two-way set of currently selected row ids. */
   readonly selectedIds = model<Set<string>>(new Set<string>());
-  /** Column key currently sorted by; `null` when unsorted. Two-way bindable
-   *  (`[(sortKey)]`) or one-way from your own state with `(sortChange)`. */
+  /** Column key currently sorted by; `null` when unsorted. Bind `[(sortKey)]` or use `(sortChange)`. */
   readonly sortKey = input<string | null>(null);
-  /** Emitted for `[(sortKey)]`. `sortChange` carries the same click with both
-   *  halves at once, which is usually the one to listen to. */
+  /** Emitted for `[(sortKey)]`. `sortChange` carries both halves at once. */
   readonly sortKeyChange = output<string | null>();
   /** Sort direction for `sortKey`. */
   readonly sortDirection = input<SortDirection>(null);
   /** Emitted for `[(sortDirection)]`. */
   readonly sortDirectionChange = output<SortDirection>();
-  // What the header marks, and what a client sort reads. A `linkedSignal` over both inputs, not
-  // a `model`: Angular diffs an input against the value IT last wrote and an internal `.set()`
-  // never updates that slot, so a host answering with its own default must re-seed the pair.
-  // A host that binds neither never re-seeds, so the optimistic state survives.
+  // A `linkedSignal`, not a `model`: Angular diffs an input against the value IT last wrote and an
+  // internal `.set()` never updates that slot, so a host answering with its own default must
+  // re-seed the pair. A host that binds neither never re-seeds, so the optimistic state survives.
 
   private readonly sortState = linkedSignal<{
     readonly key: string | null;
@@ -209,28 +196,20 @@ export class TableComponent<T extends object> {
   }>(() => ({ key: this.sortKey(), dir: this.sortDirection() }));
   protected readonly activeSortKey = computed(() => this.sortState().key);
   protected readonly activeSortDir = computed(() => this.sortState().dir);
-  /** Sort states a column cycles through on click. Default includes null
-   *  (unsorted); pass ['asc','desc'] to forbid the unsorted state (e.g.
-   *  server-paged lists). */
+  /** Sort states a column cycles through on click. Pass `['asc','desc']` to forbid unsorted. */
   readonly sortingOrder = input<SortDirection[]>(['asc', 'desc', null]);
-  /**
-   * Wording for the sort announcement, so it can be translated. Receives the
-   * column's label and the new direction; return an empty string to say nothing.
-   * Unset falls back to `DS_INTL.table.sorted`.
-   */
+  /** Wording for the sort announcement: receives the column label and direction; return `''` to
+   *  say nothing. Unset falls back to `DS_INTL.table.sorted`. */
   readonly sortAnnouncement = input<
     ((label: string, dir: SortDirection) => string) | null
   >(null);
   readonly sortAnnouncementResolved = computed(
     () => this.sortAnnouncement() ?? this.intl().table.sorted,
   );
-  /**
-   * Wording for the row-range announcement, so it can be translated. Receives
-   * the 1-based first and last row on screen and the total. A paged table with
-   * no rows announces its empty state's text instead, and calls this with
-   * `(0, 0, 0)` only when that state has none; return an empty string to say
-   * nothing. Unset falls back to `DS_INTL.pagination.range`.
-   */
+  /** Wording for the row-range announcement: receives the 1-based first and last row on screen and
+   *  the total; return `''` to say nothing. A paged table with no rows announces its empty state's
+   *  text instead, calling this with `(0, 0, 0)` only when that state has none. Unset falls back
+   *  to `DS_INTL.pagination.range`. */
   readonly rangeAnnouncement = input<
     ((first: number, last: number, total: number) => string) | null
   >(null);
@@ -239,44 +218,33 @@ export class TableComponent<T extends object> {
   );
   /** Number of shimmer rows rendered while `loading` is `'skeleton'`. */
   readonly skeletonRows = input<number>(5);
-  /** Accessible name for the table (rendered as a visually-hidden caption).
-   *  Without it, screen-reader users get an unlabelled table. */
+  /** Accessible name, rendered as a visually-hidden caption. */
   readonly caption = input<string>('');
-  /** When true, each row becomes a keyboard-operable control (tabindex,
-   *  Enter/Space → rowClicked) with an accessible name from the first
-   *  column. Off by default so non-navigating tables don't advertise a false
-   *  click affordance. Also the gate for the hover/pressed row tints. */
+  /** Each row becomes a keyboard-operable control (Enter/Space emit `rowClicked`) named from the
+   *  first column. Also gates the hover/pressed row tints. */
   readonly rowInteractive = input(false, { transform: booleanAttribute });
 
-  /** Id of the row rendered as current (highlight + `aria-current`) — e.g. the
-   *  row whose detail drawer or side panel is open. `null` — none. */
+  /** Id of the row rendered as current (highlight + `aria-current`), e.g. the one whose detail
+   *  panel is open. `null`: none. */
   readonly activeRowId = input<string | null>(null);
 
-  /** Client-side row filter — case-insensitive substring match against cell
-   *  text. Columns with `filterable: true` restrict the match set (none
-   *  marked — every column matches, hidden ones included). '' — no filtering. */
+  /** Client-side substring filter (case-insensitive) on cell text. `filterable` columns restrict
+   *  the match; with none marked every column matches, hidden ones included. */
   readonly filterQuery = input<string>('');
-  /** Two-way per-column set-filters: column key → the still-checked values.
-   *  A column absent from the map (or with every value checked) is unfiltered. */
+  /** Two-way per-column set-filters: column key to the still-checked values. Absent or full: unfiltered. */
   readonly columnFilters = model<Map<string, ReadonlySet<string>>>(new Map());
 
-  /** Round-trip whatever the column features persist (order, widths, hidden keys) through
-   *  `localStorage`, so a reader's column layout survives a reload. Needs
-   *  `storageKey` — without one there is nothing to key a screen by, and two
-   *  tables would overwrite each other. Off by default. */
+  /** Persist the column layout (order, widths, hidden keys) in `localStorage`. Needs `storageKey`. */
   readonly persistLayout = input(false, { transform: booleanAttribute });
-  /** Screen id the persisted layout is stored under. Pick something stable per
-   *  table, not per route instance. */
+  /** Stable per-table id the persisted layout is stored under. */
   readonly storageKey = input<string>('');
 
-  /** True while an export is in flight. Public so a button OUTSIDE the table can show the same
-   *  state as the built-in one. `false` when no export directive is present. */
+  /** True while an export is in flight; `false` without an export directive. Public for buttons outside the table. */
   readonly exporting = computed(() => this.layout.exporting());
 
-  /** Keeps the horizontal scrollbar reachable on tall tables: the scroll
-   *  container's native bar is hidden and a proxy stuck to the bottom of the
-   *  nearest scroll ancestor mirrors it both ways. Off by default. Unset falls
-   *  back to `DS_CONFIG.table.stickyScrollbar`, then `false`. */
+  /** Keeps the horizontal scrollbar reachable on tall tables: the native bar is hidden and a proxy
+   *  stuck to the bottom of the nearest scroll ancestor mirrors it. Unset falls back to
+   *  `DS_CONFIG.table.stickyScrollbar`, then `false`. */
   readonly stickyScrollbar = input<boolean | null, unknown>(null, {
     transform: (value) => (value == null ? null : booleanAttribute(value)),
   });
@@ -287,43 +255,31 @@ export class TableComponent<T extends object> {
   readonly page = model<number>(1);
   /** Selectable page-size choices shown in the pagination control. */
   readonly pageSizeOptions = input<number[]>([10, 25, 50, 100]);
-  /** Shows the page-size picker in the footer pager. Set false for a table whose
-   *  page size is fixed — the standalone `ds-pagination` has always taken this. */
+  /** Shows the page-size picker in the footer pager. */
   readonly showPageSize = input(true, { transform: booleanAttribute });
   /** Shows the "N of M" range label in the footer pager. */
   readonly showLabel = input(true, { transform: booleanAttribute });
-  /** Control height of the footer pager's buttons and picker. Unset falls back to
-   *  `DS_CONFIG.pagination.size`, then `DS_CONFIG.control.size`, then `'sm'`. */
+  /** Control height of the footer pager. Unset falls back to `DS_CONFIG.pagination.size`, then
+   *  `DS_CONFIG.control.size`, then `'sm'`. */
   readonly paginationSize = input<DsSize | null>(null);
-  /** `'spread'` gives the footer pager the table's full width, label at one edge and controls
-   *  at the other. Unset falls back to `DS_CONFIG.pagination.layout`, then `'grouped'`. */
+  /** `'spread'` stretches the footer pager to the table's full width. Unset falls back to
+   *  `DS_CONFIG.pagination.layout`, then `'grouped'`. */
   readonly paginationLayout = input<PaginationLayout | null>(null);
-  /** Server-side total row count. `null` (default) = client paging: the table
-   *  slices `data()` itself and the pager counts the rows in hand. When set, the
-   *  host has already sliced to one page — the pager uses this count and the
-   *  table renders `data()` as-is (no internal slice). */
+  /** Server-side total row count. `null` (default): client paging, the table slices `data()`.
+   *  When set, the host has sliced to one page and `data()` renders as-is. */
   readonly total = input<number | null>(null);
-  /** Scroll the table into view on a page change (opt-in) — keeps a bottom
-   *  pager from leaving the viewport on the previous page's last rows. */
+  /** Scroll the table into view on a page change. */
   readonly scrollToTopOnPageChange = input(false, {
     transform: booleanAttribute,
   });
-  /** Who sorts — see `TableSortMode`. Unset resolves to `'server'`: the table
-   *  emits `(sortChange)` and reorders nothing, which is what a paged table
-   *  needs. Declare `'client'` when the table holds every row, or `'none'` to
-   *  drop the affordance entirely. */
+  /** Who sorts, see `TableSortMode`. Unset resolves to `'server'`: the table emits `(sortChange)`
+   *  and reorders nothing. */
   readonly sortMode = input<TableSortMode | null>(null);
-  /** Who filters — see `TableFilterMode`. Unset resolves to `'server'`: the
-   *  table tracks the selection in `columnFilters` for the host to turn into a
-   *  request, and runs no local pass. Declare `'client'` when the table holds
-   *  every row and should filter them itself. */
+  /** Who filters, see `TableFilterMode`. Unset resolves to `'server'`: the table tracks
+   *  `columnFilters` and runs no local pass. */
   readonly filterMode = input<TableFilterMode | null>(null);
-  /**
-   * The full value domain per column key, for a header filter the table cannot
-   * derive itself. Without it the checklist is built from the rows in hand,
-   * which on a server-paged table offers only the values that happen to be on
-   * the current page.
-   */
+  /** Full value domain per column key for a header filter the table cannot derive; without it the
+   *  checklist offers only the values on the current page. */
   readonly columnFilterOptions = input<ReadonlyMap<string, readonly string[]>>(
     new Map(),
   );
@@ -343,15 +299,9 @@ export class TableComponent<T extends object> {
     (config) => config.table?.stickyScrollbar,
     false,
   );
-  /**
-   * Where the sticky horizontal scrollbar comes to rest, as any CSS length.
-   *
-   * Unset, the table measures its scroll container's bottom padding and cancels it, so the bar
-   * sits on the edge the reader can see. Set it for a scrollport whose reachable edge is not its
-   * padding edge. Falls back to `DS_CONFIG.table.stickyScrollbarOffset`;
-   * `--ds-table-sticky-scrollbar-offset` still wins over both, for a rule that has to reach one
-   * table from a stylesheet.
-   */
+  /** Where the sticky horizontal scrollbar rests, as a CSS length. Unset, the table cancels its
+   *  scroll container's bottom padding. Falls back to `DS_CONFIG.table.stickyScrollbarOffset`;
+   *  `--ds-table-sticky-scrollbar-offset` wins over both. */
   readonly stickyScrollbarOffset = input<string | null>(null);
   readonly stickyScrollbarOffsetResolved = resolveWithConfig(
     this.stickyScrollbarOffset,
@@ -362,33 +312,18 @@ export class TableComponent<T extends object> {
   /** Pin the first data column (and the select column) on horizontal scroll. */
   readonly stickyFirstColumn = input(false, { transform: booleanAttribute });
 
-  /**
-   * Render only the rows in view, padding the rest with two spacer rows. Opt-in,
-   * and it needs `maxHeight` — without a bounded scroller there is no viewport to
-   * window against, so nothing is virtualized (dev-warned).
-   *
-   * Every row must be the same height, which is `virtualRowSize`: the arithmetic
-   * that decides what is in view has no other way to know where a row starts. So
-   * virtual mode forces `table-layout: fixed` and single-line cells, and the
-   * expansion panel is suppressed — a row that can grow breaks the maths.
-   */
+  /** Render only the rows in view, padding the rest with spacer rows. Needs `maxHeight` (dev-warned,
+   *  nothing virtualizes without a bounded scroller). Every row must be `virtualRowSize` tall, so
+   *  virtual mode forces `table-layout: fixed`, single-line cells and no expansion panel. */
   readonly virtualScroll = input(false, { transform: booleanAttribute });
-  /** Row height in px in virtual mode. Must match what the rows actually
-   *  measure, so it drives the CSS height rather than merely describing it. */
+  /** Row height in px in virtual mode. Drives the CSS height, so it must match the rendered rows. */
   readonly virtualRowSize = input(44);
-  /**
-   * Fetch rows as they scroll into view instead of receiving them all.
-   *
-   * `data` becomes a SPARSE array `total` long: put each fetched row at its
-   * absolute index and leave the rest empty. Every gap inside the window
-   * renders a skeleton row, and `(lazyLoad)` asks for the range covering it.
-   *
-   * Needs `virtualScroll` — without a window there is nothing to load
-   * lazily AGAINST — and `total`, which is what the scrollbar is sized from.
-   */
+  /** Fetch rows as they scroll into view. `data` becomes a SPARSE array `total` long: put each
+   *  fetched row at its absolute index; every gap in the window renders a skeleton row and
+   *  `(lazyLoad)` asks for its range. Needs `virtualScroll` and `total`. */
   readonly lazy = input(false, { transform: booleanAttribute });
-  /** The range now on screen that `data` has gaps in — fetch it and write the
-   *  rows back at their absolute indices. Re-emits only when the range moves. */
+  /** The on-screen range with gaps in `data`; write fetched rows back at their absolute indices.
+   *  Re-emits only when the range moves. */
   readonly lazyLoad = output<{ first: number; rows: number }>();
 
   /** Fires with the row on click (or Enter/Space when `rowInteractive`). */
@@ -396,8 +331,8 @@ export class TableComponent<T extends object> {
   /** Fires whenever sort key/direction changes, in every `sortMode` but `'none'`. */
   readonly sortChange = output<SortChangeEvent>();
 
-  /** Row-action menu items rendered as a trailing kebab (⋮) column.
-   *  Empty (default) — no column. Menu clicks never trigger `rowClicked`. */
+  /** Row-action items rendered as a trailing kebab column; empty: no column. Menu clicks never
+   *  trigger `rowClicked`. */
   readonly rowActions = input<readonly TableRowAction<T>[]>([]);
   /** Fires with the chosen action and its row when a kebab menu item is selected. */
   readonly rowActionSelected = output<TableRowActionEvent<T>>();
@@ -405,49 +340,38 @@ export class TableComponent<T extends object> {
   /** Fires when an `editable` cell is committed (Enter or blur) with the new value. */
   readonly cellEdited = output<TableCellEditEvent<T>>();
 
-  /** Cell templates supplied as an explicit map instead of (or in addition to)
-   *  projected `dsCellTemplate` directives. Lets a wrapper component collect
-   *  the directives itself and pass them down, since content projected through
-   *  a wrapper's `<ng-content>` is not seen by this component's content query.
-   *  Entries here override projected ones. */
+  /** Cell templates as an explicit map, for wrappers whose `<ng-content>` hides projected
+   *  `dsCellTemplate` directives from this component's content query. Overrides projected ones. */
   readonly cellTemplateMap = input<
     Record<string, TemplateRef<{ $implicit: unknown; row: unknown }>>
   >({});
 
-  /** Empty-state template, as an alternative to the `[empty]` content slot —
-   *  again for wrappers that can't rely on slot re-projection. */
+  /** Empty-state template, alternative to the `[empty]` slot for wrappers that cannot re-project. */
   readonly emptyTemplate = input<TemplateRef<unknown> | null>(null);
 
-  /** When true, each row renders a leading chevron button that toggles an
-   *  inline expansion panel below it. */
+  /** Each row renders a leading chevron that toggles an inline expansion panel. */
   readonly expandableRows = input(false, { transform: booleanAttribute });
 
   /** Two-way set of currently expanded row ids. */
   readonly expandedIds = model<Set<string>>(new Set<string>());
 
-  /** `'single'` collapses the open row when another expander is clicked.
-   *  Enforced on interaction only: a set seeded with several ids is left alone
-   *  (and warned about in dev) rather than silently rewritten under the host. */
+  /** `'single'` collapses the open row when another expands. Enforced on interaction only: a set
+   *  seeded with several ids is left alone (dev-warned). */
   readonly expandMode = input<TableExpandMode>('multiple');
 
-  /** Renders an expand-all/collapse-all chevron in the expander column header,
-   *  page-scoped when paginating, like select-all. Suppressed under
-   *  `expandMode="single"`, which it would contradict. */
+  /** Expand-all/collapse-all chevron in the expander header, page-scoped when paginating. Suppressed
+   *  under `expandMode="single"`. */
   readonly expandAllToggle = input(false, { transform: booleanAttribute });
 
-  /** Fires with the row when an expander opens it — including each row opened
-   *  by expand-all, so a host lazy-loading panel content sees every one. */
+  /** Fires with the row when an expander opens it, including each row opened by expand-all. */
   readonly rowExpanded = output<T>();
 
-  /** Fires with the row when an expander closes it, the row auto-closed by
-   *  `expandMode="single"` included. It carries a row, so it cannot speak for an
-   *  id whose row is no longer in `data()` — under server-side paging that id is
-   *  cleared silently. `expandedIds` is the complete signal; this one is the
-   *  convenient one. */
+  /** Fires with the row when an expander closes it, including the row auto-closed by
+   *  `expandMode="single"`. An id whose row left `data()` (server paging) is cleared silently, so
+   *  `expandedIds` is the complete signal. */
   readonly rowCollapsed = output<T>();
 
-  /** Template rendered inside an expanded row's panel.
-   *  Context: `$implicit` = row, `row` = row. */
+  /** Template rendered inside an expanded row's panel; `$implicit` and `row` are the row. */
   readonly rowExpandTemplate = input<TemplateRef<{
     $implicit: unknown;
     row: unknown;
@@ -764,7 +688,6 @@ export class TableComponent<T extends object> {
     this.editingCell.set(null);
   }
 
-  /** Clip width for `truncate`; `'content'` has none. */
   protected clipWidth(col: TableColumn<T>): number | null {
     return typeof col.width === 'number'
       ? col.width
@@ -969,10 +892,8 @@ export class TableComponent<T extends object> {
     };
   });
 
-  /**
-   * What the row loop walks: a `null` row is a gap the host has not filled. The index is
-   * absolute because striping parity, the skeleton seed and the `(lazyLoad)` range need it.
-   */
+  /** What the row loop walks: a `null` row is a gap the host has not filled. The index is absolute
+   *  because striping parity, the skeleton seed and the `(lazyLoad)` range need it. */
   protected readonly rowSlots = computed<
     readonly { row: T | null; index: number }[]
   >(() => {
@@ -988,8 +909,7 @@ export class TableComponent<T extends object> {
     return slots;
   });
 
-  /** Parity from the absolute index, since `:nth-child` cannot see past windowing. Matches
-   *  `:nth-child(odd)`, which is 1-based. */
+  /** Parity from the absolute index; `:nth-child` cannot see past windowing. 1-based like `:nth-child(odd)`. */
   protected isStriped(absoluteIndex: number): boolean {
     return !!this.virtualWindow() && absoluteIndex % 2 === 0;
   }
@@ -1004,8 +924,7 @@ export class TableComponent<T extends object> {
     return data.every((row) => sel.has(this.rowKey(row)));
   });
 
-  // Header checkbox indeterminate predicate: false when all of the page is selected. Use
-  // `anySelected` for "is a selection live".
+  // Header checkbox indeterminate predicate; `anySelected` answers "is a selection live".
   protected readonly someSelected = computed(() => {
     const data = this.displayData();
     const sel = this.selectedIds();
@@ -1111,8 +1030,7 @@ export class TableComponent<T extends object> {
   private lastLazyRequest: { first: number; rows: number } | null = null;
 
   constructor() {
-    // The panel's width buttons are declared in this template (a directive has no view for an
-    // ng-template); the resize feature owns what they do.
+    // A directive has no view for an ng-template, so the panel's width buttons are declared here.
     effect(() => {
       const template = this.columnWidthControls();
       if (template) {
@@ -1120,8 +1038,8 @@ export class TableComponent<T extends object> {
       }
     });
 
-    // A directive on the same element is constructed after this component, so publishing here
-    // is early enough. Anchors go over as signals: a viewChild is undefined until the view exists.
+    // Publishing here is early enough: a directive on the same element is constructed after this
+    // component. Anchors go over as signals: a viewChild is undefined until the view exists.
     this.layout.publish({
       visibleColumns: this.visibleColumns,
       sortedRows: this.sortedData,
@@ -1136,11 +1054,9 @@ export class TableComponent<T extends object> {
             : this.overlaysAnchor,
     });
 
-    // The scrim starts below the header. Measured, not summed from padding and line-height:
-    // `vertical-align: middle` on the inline-flex label extends the line box by a font-metric
-    // amount no calc() can carry. After render, or the read lands before layout and publishes
-    // 0px. The observer catches header growth; the second effect re-reads whenever the scrim is
-    // about to appear, so a load never depends on the observer having fired.
+    // The scrim starts below the header. Measured, not summed: `vertical-align: middle` on the inline-flex
+    // label adds a font-metric amount no calc() can carry. Read after render, or it publishes 0px; the
+    // second effect re-reads before the scrim appears, so a load never depends on the observer.
     afterRenderEffect((onCleanup) => {
       const head = this.tableHead()?.nativeElement;
       if (!head || typeof ResizeObserver === 'undefined') {
@@ -1305,9 +1221,8 @@ export class TableComponent<T extends object> {
     }
 
     // A sticky `bottom` resolves against the scrollport's content box, so anything stuck to the
-    // bottom rests one padding-bottom above the visible edge. The scrollbar proxy and the bulk
-    // bar subtract this. Measured, not a token: the padding belongs to the consumer's container
-    // and can change with a media query.
+    // bottom rests one padding-bottom above the visible edge; the scrollbar proxy and the bulk bar
+    // subtract this. Measured, not a token: the padding can change with a media query.
     effect((onCleanup) => {
       const host = this.hostElement.nativeElement;
       const scroller = this.scrollAncestor();
@@ -1662,8 +1577,7 @@ export class TableComponent<T extends object> {
     return first ? this.cellValue(row, first) : '';
   }
 
-  /** Row identity — the `rowId` accessor when given, else `row.id`. Public so a
-   *  host reading `selectedIds`/`expandedIds` can compute the same keys. */
+  /** Row identity: the `rowId` accessor when given, else `row.id`. Public so a host can compute the same keys. */
   rowKey(row: T): string {
     const accessor = this.rowId();
     if (accessor) {
@@ -1746,8 +1660,6 @@ export class TableComponent<T extends object> {
     return col.link?.(row) ?? null;
   }
 
-  // localStorage, not session: a column layout the reader arranged should still
-  // be there tomorrow.
   private layoutKey(): string | null {
     const key = this.storageKey().trim();
 
@@ -1784,17 +1696,16 @@ export class TableComponent<T extends object> {
     }
   }
 
-  /** Serialises the visible columns as a CSV download, through whichever export feature is on the
-   *  table. Pass `rows` to serialise a set you fetched yourself. Needs `dsTableExport`. */
+  /** Serialises the visible columns as a CSV download via the export feature. Pass `rows` to export a
+   *  set you fetched yourself. Needs `dsTableExport`. */
   exportCsv(filename = 'table.csv', rows?: readonly T[]): void {
     if (!this.layout.exportCsv(filename, rows)) {
       this.warnNoExport('exportCsv');
     }
   }
 
-  /** Runs the export: awaits the feature's `exportFetcher` when one is given, downloads the
-   *  result, drives `exporting()` and emits its `exportFailed`. Public so the button can live
-   *  anywhere: `<ds-button [loading]="table.exporting()" (pressed)="table.runExport()">`. */
+  /** Runs the export: awaits `exportFetcher` when given, downloads, drives `exporting()`, emits
+   *  `exportFailed`. Public so a button can live anywhere. */
   async runExport(): Promise<void> {
     const running = this.layout.runExport();
     if (!running) {
@@ -1805,11 +1716,13 @@ export class TableComponent<T extends object> {
     await running;
   }
 
+  // A click handler is outside an injection context, where `devWarn`'s effect throws.
   private warnNoExport(called: string): void {
-    devWarn(
-      () =>
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      console.warn(
         `ds-table: ${called}() found no export feature. Add the dsTableExport directive to the table.`,
-    );
+      );
+    }
   }
 
   protected skeletonWidth(col: TableColumn<T>, rowIndex: number): string {

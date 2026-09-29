@@ -5,12 +5,16 @@ import {
   TemplateRef,
   ViewEncapsulation,
   afterRenderEffect,
+  computed,
   inject,
   input,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import type { ChartTooltipContext } from './chart-tooltip.types';
 import { swatchBlendsInto } from './swatch-contrast';
+
+const AUTO_SWATCH_MIN = 2;
+const AUTO_SWATCH_MAX = 4;
 
 @Component({
   selector: 'ds-chart-tooltip-panel',
@@ -19,8 +23,7 @@ import { swatchBlendsInto } from './swatch-contrast';
   templateUrl: './chart-tooltip-panel.component.html',
   styleUrl: './chart-tooltip-panel.component.scss',
   host: {
-    // Every interactive mark already carries the same label and value in its `aria-label`;
-    // exposing the panel would read each reading twice.
+    // Hidden from AT: every interactive mark's `aria-label` already carries the reading.
     'aria-hidden': 'true',
   },
   encapsulation: ViewEncapsulation.Emulated,
@@ -34,10 +37,21 @@ export class ChartTooltipPanelComponent {
     $implicit: ChartTooltipContext;
   }> | null>(null);
 
+  readonly swatches = input<boolean | 'auto'>('auto');
+
+  protected readonly showsSwatches = computed(() => {
+    const swatches = this.swatches();
+
+    const count = this.context().entries.length;
+
+    return swatches === 'auto'
+      ? count >= AUTO_SWATCH_MIN && count <= AUTO_SWATCH_MAX
+      : swatches;
+  });
+
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
 
   constructor() {
-    // Before the frame paints, so a ring never lands a frame after its row.
     afterRenderEffect({
       earlyRead: () => {
         this.context();

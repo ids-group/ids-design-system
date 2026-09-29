@@ -1,15 +1,6 @@
 // Four-tier responsive layout grid. Sub-regions inherit the page grid, never a local one. The
 // sidenav lives outside it: reserve its rail first, then start `.page-grid` in the remaining width.
-//
-//   Tier         | Range          | Cols | Gutter        | Margin        | Cap
-//   ------------ | -------------- | ---- | ------------- | ------------- | ----------------
-//   Mobile       | < 640px        | 4    | --space-3 (12px)  | --space-4 (16px)  | fluid
-//   Tablet       | 640-1023px     | 8    | --space-4 (16px)  | --space-6 (24px)  | fluid
-//   Desktop      | 1024-1440px    | 12   | --space-5 (20px)  | --space-8 (32px)  | fluid
-//   Desktop wide | >= 1441px      | 12   | --space-6 (24px)  | --space-10 (40px) | --col-cap-content (1280px)
-//
-// Snap to columns: 8+4 / 6+6 / 9+3 are canonical splits, 7+5 is forbidden. Prose blocks cap at
-// --col-cap-text (720px) regardless of grid width.
+// Tiers: < 640px 4 columns, 640-1023px 8, 1024-1440px 12, >= 1441px 12 capped at `--col-cap-content`.
 
 @use 'breakpoints' as bp;
 

@@ -7,7 +7,6 @@ import {
   Signal,
   ViewEncapsulation,
   afterRenderEffect,
-  booleanAttribute,
   computed,
   effect,
   forwardRef,
@@ -25,6 +24,7 @@ import {
   rotationWouldFit,
   tickValues,
   chartRenderGate,
+  DsChartBase,
 } from '@ids-group-ltd/ids-design-system/components';
 import { isPlatformBrowser } from '@angular/common';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
@@ -36,16 +36,10 @@ import {
   chartActiveMark,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import type { ChartTooltipContext } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
-import { resolveChartDefaults } from '@ids-group-ltd/ids-design-system/components';
-import {
-  DS_INTL,
-  resolveWithConfig,
-} from '@ids-group-ltd/ids-design-system/core';
+import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 import type {
   ChartAxis,
   ChartAxisMode,
-  ChartFrame,
-  ChartValueFormat,
 } from '@ids-group-ltd/ids-design-system/core';
 import {
   categoryAt,
@@ -95,19 +89,18 @@ import {
     },
   ],
 })
-export class ChartComponent implements ChartScales {
+export class ChartComponent extends DsChartBase implements ChartScales {
   protected readonly renderReady = chartRenderGate();
 
-  /** The category axis; its length is the number of bands every projected mark is positioned against. */
+  /** One band per category; every projected mark is positioned against them. */
   readonly categories = input<readonly string[]>([]);
 
-  /** How many value-axis ticks to aim for. A hint: ticks snap to a round step, so one more or fewer may appear. */
+  /** How many value-axis ticks to aim for; ticks snap to a round step, so the count may differ by one. */
   readonly tickCount = input(CHART_DEFAULT_TICK_COUNT, {
     transform: numberAttribute,
   });
 
-  /** Pins the floor of the value axis. It only ever opens the axis further: a floor above the data
-   *  would push readings off the plot. */
+  /** Pins the floor of the value axis. It only opens the axis further; a floor above the data is ignored. */
   readonly min = input<number | null>(null, {
     transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
   });
@@ -117,91 +110,42 @@ export class ChartComponent implements ChartScales {
     transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
   });
 
-  /** Draws a band and a crosshair down the category under the pointer and reports it to every mark
-   *  through `activeIndex`; with two or more tooltip-showing marks the panel names every reading at
-   *  that category. `'auto'` (default) is `'category'` for such a composed plot and `'none'` for a
-   *  single-mark plot, which already answers per mark. */
+  /** Draws a band and crosshair down the category under the pointer and reports it to every mark
+   *  through `activeIndex`; the panel then names every reading at that category. `'auto'` (default)
+   *  is `'category'` with two or more tooltip-showing marks or a mark with `tooltip="axis"`, else
+   *  `'none'`. */
   readonly cursor = input<'none' | 'category' | 'auto'>('auto');
 
-  /** Whether a press holds the category cursor where it is. Released by pressing again, Escape, or a
-   *  press outside the plot. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. */
-  readonly cursorPin = input<boolean | null, unknown>(null, {
-    transform: (value) => (value == null ? null : booleanAttribute(value)),
-  });
-  readonly cursorPinResolved = resolveWithConfig(
-    this.cursorPin,
+  readonly pinOnClickResolved = resolveWithConfig(
+    this.pinOnClick,
     (config) => config.chart?.pinOnClick,
     true,
   );
 
-  /** Milliseconds the cursor survives the pointer leaving the plot; the panel is portaled out, so
-   *  with no grace period it closes before the pointer reaches it. */
-  readonly tooltipLingerMs = input<number | null>(null, {
-    transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
-  });
-
-  /** Pins the ceiling of the second value axis, as `max` does the first. */
+  /** Pins the ceiling of the SECOND value axis, the way `max` pins the first. */
   readonly maxSecondary = input<number | null>(null, {
     transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
   });
 
-  /** Height of the plot itself, in CSS pixels, axis labels and value headroom excluded; it does not
-   *  scale with the card width. */
+  /** Plot height in CSS pixels, axis labels and headroom excluded; fixed across card widths. */
   readonly plotHeight = input(CHART_DEFAULT_PLOT_HEIGHT, {
     transform: numberAttribute,
   });
 
-  /** Width in CSS pixels of the gutter down the left that carries the value-axis labels. Widen it
-   *  for long tick labels; the plot takes whatever is left. */
+  /** Width in CSS pixels of the left gutter that carries the value-axis labels. */
   readonly axisGutter = input(CHART_DEFAULT_AXIS_GUTTER, {
     transform: numberAttribute,
   });
 
-  /** Pixels reserved for a value label at each end of the plot (above the top tick, below the
-   *  baseline for a negative mark). Reserved whether or not a label is drawn, so the height is stable. */
+  /** Pixels reserved at each end of the plot for a value label, drawn or not. */
   readonly valueSpace = input(CHART_DEFAULT_VALUE_SPACE, {
     transform: numberAttribute,
   });
 
-  /** Printed above the plot as the chart's visible title. */
-  readonly caption = input<string | null>(null);
-
-  /** Whether the projected marks answer to the pointer and keyboard; sets the plot's role (a group
-   *  of controls, or a single image). */
-  readonly interactive = input(false, { transform: booleanAttribute });
-
-  /** Accessible name for the plot; the container holds no readings, so a chart that needs its numbers
-   *  described supplies the sentence here (presets build it with `describeSeries`). It is the whole
-   *  label in the static case. */
-  readonly summary = input<string | null>(null);
-
-  /** Whether the chart draws its own bordered, padded box: `'auto'` draws it, `'none'` leaves it bare
-   *  for a chart inside a card. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'`. */
-  readonly frame = input<ChartFrame | null>(null);
-
-  /** Draws a placeholder at the plot's own height in place of the plot. */
-  readonly loading = input(false, { transform: booleanAttribute });
-
-  /** Shown in place of the plot when `categories` is empty. Unset falls back to
-   *  `DS_INTL.chart.empty`. */
-  readonly emptyText = input<string | null>(null);
-
-  /** Shows `errorText` in place of the plot; separate from `loading` and from empty `categories`. */
-  readonly error = input(false, { transform: booleanAttribute });
-
-  /** The message the error state prints. Unset falls back to `DS_INTL.chart.error`. */
-  readonly errorText = input<string | null>(null);
-
-  /** Formats the value-axis ticks. Unset falls back to `DS_CONFIG.chart.valueFormat`, then
-   *  `DS_CONFIG.locale` / `LOCALE_ID`. */
-  readonly valueFormat = input<ChartValueFormat | null>(null);
-
-  /** How the second value axis relates to the first, once a mark has reported against it. The
-   *  same four words `ds-line-chart` takes. */
+  /** How the second value axis relates to the first, once a mark has reported against it. */
   readonly secondaryAxisMode = input<ChartAxisMode>('aligned');
 
-  /** Paints the first axis's tick labels in the colour of the marks measured against it, so a
-   *  two-scale plot says which line reads which axis. Set by the author: several marks can share one. */
+  /** Colours the first axis's tick labels like the marks measured against it. */
   readonly axisColor = input<string | null>(null);
 
   /** `axisColor` for the second axis. */
@@ -213,23 +157,17 @@ export class ChartComponent implements ChartScales {
   /** `axisLabel` for the second axis. */
   readonly secondaryAxisLabel = input<string | null>(null);
 
-  private readonly defaults = resolveChartDefaults(this);
-  protected readonly intl = inject(DS_INTL);
-  readonly frameResolved = this.defaults.frame;
-  readonly emptyTextResolved = this.defaults.emptyText;
-  readonly errorTextResolved = this.defaults.errorText;
-  readonly valueFormatResolved = this.defaults.valueFormat;
+  protected readonly tooltipSwatchesResolved = this.defaults.tooltipSwatches;
   readonly hoverDelayMs = this.defaults.hoverDelayMs;
 
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly zone = inject(NgZone);
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
-  /** The `<svg>`'s rendered width. `:host(.framed)` carries the frame padding, so the host's content
-   *  box (what `ResizeObserver` reports) is the box the canvas fills. */
+  /** The `<svg>`'s rendered width: the host's content box, since `:host(.framed)` carries the padding. */
   private readonly measuredWidth = elementWidth(this.host);
 
-  /** Server-rendered output has no width to wait for, so it draws at the stand-in. */
+  /** True under SSR, which draws at the fallback width. */
   readonly measured = computed(
     () => !this.isBrowser || this.measuredWidth() > 0,
   );
@@ -238,23 +176,19 @@ export class ChartComponent implements ChartScales {
     () => this.measuredWidth() || CHART_FALLBACK_WIDTH,
   );
 
-  /** Whether the marks may animate yet. The first frame draws at `CHART_FALLBACK_WIDTH`, so the
-   *  measurement that follows moves every mark and a transitioning mark would animate that
-   *  correction on every load, hydration included.
-   *
-   *  Two frames, not one: a transition starts when a property changes in a style that also enables
-   *  it. One `requestAnimationFrame` runs at the start of the next frame, before the corrected
-   *  geometry has been through a style recalculation, and `transitionrun` fires on `x` and `width`. */
+  /** Whether the marks may animate: the correction after measuring must not. Two frames, because
+   *  after one the corrected geometry is unstyled and `transitionrun` fires on `x` and `width`. */
   protected readonly settled = signal(false);
 
   constructor() {
+    super();
     effect((onCleanup) => {
       if (this.settled() || this.measuredWidth() === 0) {
         return;
       }
       let first = 0;
       let second = 0;
-      // Outside the zone: under zone.js each frame callback is a full application tick; the signal write schedules the one render needed.
+      // Outside the zone: under zone.js each frame callback is a full application tick.
       this.zone.runOutsideAngular(() => {
         first = requestAnimationFrame(() => {
           second = requestAnimationFrame(() => this.settled.set(true));
@@ -273,8 +207,7 @@ export class ChartComponent implements ChartScales {
       }
     });
 
-    // Read phase: batching every `getComputedTextLength` before any write avoids a synchronous layout
-    // per label. Re-measures only when a label's text changes, not when a resize moves the labels.
+    // Read phase: every `getComputedTextLength` before any write, or each label forces a layout.
     afterRenderEffect({
       read: () => {
         this.labelTexts();
@@ -300,8 +233,7 @@ export class ChartComponent implements ChartScales {
     return Math.ceil(widest);
   }
 
-  /** Two plots stacked on a shared category axis: the only mode whose second axis is a second plot,
-   *  not a second scale over the first. */
+  /** Two plots stacked on a shared category axis. */
   protected readonly stacked = computed(
     () => this.secondaryAxisMode() === 'split' && this.hasSecondaryAxis(),
   );
@@ -315,23 +247,17 @@ export class ChartComponent implements ChartScales {
       ) + (this.stacked() ? this.plotHeight() + CHART_STACKED_PLOT_GAP : 0),
   );
 
-  /** One viewBox unit is one CSS pixel in both axes, so lengths set inside the plot hold at every
-   *  card width. */
+  /** One viewBox unit is one CSS pixel, so lengths inside the plot hold at every width. */
   protected readonly viewBox = computed(
     () => `0 0 ${this.viewWidth()} ${this.viewHeight()}`,
   );
 
-  /** Widest tick label as rendered, in CSS pixels. Zero until the first read and under SSR, where
-   *  `axisGutter` alone decides. */
+  /** Widest tick label as rendered, in CSS pixels. Zero until the first read and under SSR. */
   private readonly measuredLabelWidth = signal(0);
 
   private readonly measuredCategoryLabelWidth = signal(0);
 
-  /** `axisGutter` is the floor: compact numbers are wider in some locales (`3,5 тыс.` against `3.5k`)
-   *  and an SVG canvas clips the leading digit of what overflows. Takes the larger of the two.
-   *
-   *  Converges: tick text depends on the domain and tick count, not the gutter, so the second
-   *  measurement equals the first. */
+  /** `axisGutter` is the floor: compact numbers are wider in some locales and the SVG clips overflow. */
   protected readonly effectiveAxisGutter = computed(() =>
     Math.max(
       this.axisGutter(),
@@ -339,8 +265,7 @@ export class ChartComponent implements ChartScales {
     ),
   );
 
-  /** A rotated axis title shares the tick gutter, so the gutter carries both. Its width is its line
-   *  height. */
+  /** A rotated axis title shares the tick gutter; its width is its line height. */
   protected readonly axisTitleGutter = computed(() =>
     this.axisLabel() ? CHART_AXIS_TITLE_BAND : 0,
   );
@@ -351,11 +276,9 @@ export class ChartComponent implements ChartScales {
     () => this.viewWidth() - CHART_AXIS_TITLE_BAND / 2,
   );
 
-  /** Widest secondary tick label, measured like the primary (they sit outside the right edge and
-   *  the canvas clips). */
   private readonly measuredSecondaryLabelWidth = signal(0);
 
-  /** Right-hand label room only when drawn there; a stacked second axis puts both columns on the left. */
+  /** Right-hand label room only when the second axis is drawn there; a stacked one is on the left. */
   protected readonly rightGutter = computed(() =>
     this.hasSecondaryAxis() && !this.stacked()
       ? Math.max(
@@ -433,7 +356,7 @@ export class ChartComponent implements ChartScales {
     $implicit: ChartTooltipContext;
   }> | null>(null);
 
-  /** Extra clearance between the mark and the panel, for a chart that prints a value label in that gap. */
+  /** Extra clearance between the mark and the panel, for a value label printed in that gap. */
   readonly tooltipExtraGap = input(0, { transform: numberAttribute });
 
   private readonly tooltipSources = signal<
@@ -467,13 +390,16 @@ export class ChartComponent implements ChartScales {
       return cursor;
     }
 
-    return this.composed() ? 'category' : 'none';
+    const readsCategory = [...this.tooltipSources().values()].some(
+      (source) => source.readsCategory?.() ?? false,
+    );
+
+    return this.composed() || readsCategory ? 'category' : 'none';
   });
 
   readonly cursorOn = computed(() => this.cursorResolved() === 'category');
 
-  /** The offer to show, if any. At most one mark has a context at a time: a per-mark tooltip fills
-   *  it only while hovered, an axis tooltip only while the category cursor is on. */
+  /** The tooltip context to show, if any; at most one mark has one at a time. */
   private readonly activeTooltip = computed(
     () =>
       [...this.tooltipSources().values()].find(
@@ -498,8 +424,7 @@ export class ChartComponent implements ChartScales {
             entries: topDown(readings),
           };
     }
-    // A mark's panel under the cursor (focus or axis tooltip) is about the category, so every other
-    // mark's reading belongs in it. Matched by label: the offering mark keeps its own row and detail.
+    // The panel is about the category, so every other mark's reading joins it, matched by label; the offering mark keeps its own row and detail.
     const named = new Map(base.entries.map((entry) => [entry.label, entry]));
     if (readings.every((reading) => named.has(reading.label))) {
       return base;
@@ -525,9 +450,8 @@ export class ChartComponent implements ChartScales {
     ) {
       return own;
     }
-    // Anchor over the tallest reading at the category, not the mark that opened it, or a line dipping
-    // under a column puts the panel low. Every reading counts pointer-over or not, or the panel jumps
-    // as the pointer crosses the column's edge.
+    // Anchor over the tallest reading at the category, pointer over it or not: the opening mark
+    // puts the panel low under a column, and pointer-only readings make it jump at the column's edge.
     const boxes = [...this.tooltipSources().values()]
       .map((source) => (source.axisOrigin ?? source.origin)())
       .filter((origin): origin is Element => origin instanceof Element)
@@ -549,8 +473,7 @@ export class ChartComponent implements ChartScales {
     () => (this.activeTooltip()?.pinned?.() ?? false) || this.cursorPinned(),
   );
 
-  /** Compared by value: a mark that reports and reads `yPosition()` in one effect would otherwise
-   *  loop forever, since every report allocates a fresh `Map` and `niceDomain` a fresh object. */
+  /** Compared by value: a mark that reports and reads `yPosition()` in one effect would otherwise loop forever. */
   protected readonly domain = computed(
     () =>
       axisDomain(
@@ -562,8 +485,7 @@ export class ChartComponent implements ChartScales {
     { equal: (a, b) => a.min === b.min && a.max === b.max },
   );
 
-  // Counts values, not reporters: a line series registers both axes unconditionally, so an empty
-  // contribution would otherwise raise a second axis.
+  // Counts values, not reporters: a line series registers both axes, so an empty one would raise a second axis.
   readonly hasSecondaryAxis = computed(() =>
     this.valuesOn('secondary').some((values) => values.length > 0),
   );
@@ -610,8 +532,7 @@ export class ChartComponent implements ChartScales {
     }));
   });
 
-  /** A second set of gridlines only where the scales do not share rows; against an aligned axis they
-   *  would double every stroke. */
+  /** Second gridlines only where the scales do not share rows; an aligned axis would double every stroke. */
   protected readonly showSecondaryGridlines = computed(
     () =>
       this.hasSecondaryAxis() &&
@@ -680,8 +601,7 @@ export class ChartComponent implements ChartScales {
     };
   });
 
-  /** The state machine the element marks run on (pin, linger, grace period, Escape, press-outside);
-   *  a category cursor differs only in what the index counts. */
+  /** The same state machine the element marks run on; here the index counts categories. */
   private readonly cursorState = chartActiveMark(
     () => this.defaults.tooltipLingerMs(),
     () => this.hoverDelayMs(),
@@ -700,14 +620,14 @@ export class ChartComponent implements ChartScales {
   }
 
   protected readonly bandPins = computed(
-    () => this.cursorPinResolved() && this.pointerInBand(),
+    () => this.pinOnClickResolved() && this.pointerInBand(),
   );
 
   readonly cursorPointer = computed(() =>
     this.activeIndex() < 0 ? null : this.pointerAt(),
   );
 
-  /** Whether the cursor is held. A preset renders its own way out of the pin from this. */
+  /** Whether the cursor is held. */
   readonly cursorPinned = this.cursorState.pinned;
 
   releaseCursor(): void {
@@ -723,7 +643,7 @@ export class ChartComponent implements ChartScales {
   private plotPointer(event: PointerEvent, canvas: SVGSVGElement): void {
     this.canvasRect ??= canvas.getBoundingClientRect();
     const plot = this.plot();
-    // The canvas is scaled to its box: convert client x through the viewBox into view units.
+    // Client x to view units: the canvas is scaled to its box.
     const viewX =
       ((event.clientX - this.canvasRect.left) / this.canvasRect.width) *
       this.viewWidth();
@@ -742,7 +662,7 @@ export class ChartComponent implements ChartScales {
 
       return;
     }
-    if (event.type === 'pointerdown' && this.cursorPinResolved()) {
+    if (event.type === 'pointerdown' && this.pinOnClickResolved()) {
       this.cursorState.pin(index, event);
 
       return;
@@ -750,8 +670,7 @@ export class ChartComponent implements ChartScales {
     this.cursorState.enter(index, event);
   }
 
-  /** Listens only when a category cursor is drawn, outside the zone: the handler writes signals,
-   *  which schedule the render. */
+  /** Listens only when a category cursor is drawn, outside the zone. */
   private listenForCursor(canvas: SVGSVGElement): () => void {
     const forgetRect = (): void => {
       this.canvasRect = null;
@@ -813,8 +732,7 @@ export class ChartComponent implements ChartScales {
   protected readonly axisLabelX = computed(
     () => this.plot().left - CHART_AXIS_LABEL_GAP,
   );
-  /** Clears the reservation the view height budgets, and only when it is there; unconditionally it
-   *  would drop the labels past the viewBox. */
+  /** Clears the reservation the view height budgets, only when it is there; otherwise the labels fall past the viewBox. */
   protected readonly categoryLabelY = computed(
     () =>
       this.secondaryPlotBottom() +
@@ -844,8 +762,7 @@ export class ChartComponent implements ChartScales {
     ].join('\n'),
   );
 
-  /** Rotation is spent before thinning: a tilt costs a glance, a dropped label a reading. Both use
-   *  the widest label as rendered. */
+  /** Rotation is tried before thinning; both use the widest label as rendered. */
   protected readonly categoryLabelsRotated = computed(() =>
     rotationWouldFit(
       [this.measuredCategoryLabelWidth()],
@@ -882,18 +799,14 @@ export class ChartComponent implements ChartScales {
     const toX = this.xPosition();
     const interval = this.categoryLabelInterval();
 
-    return (
-      this.categories()
-        .map((text, index) => ({ x: toX(index), text, index }))
-        // The first is always drawn, giving the reader an anchor to count from.
-        .filter((label) => label.index % interval === 0)
-    );
+    return this.categories()
+      .map((text, index) => ({ x: toX(index), text, index }))
+      .filter((label) => label.index % interval === 0);
   });
 
   protected readonly reachesBelowZero = computed(() => this.domain().min < 0);
 
-  /** Read off `categories` alone, never the reported domains: the marks are projected into the branch
-   *  this decides, so waiting for a report would deadlock. */
+  /** Read off `categories` alone: the marks are projected into the branch this decides, so waiting for a report would deadlock. */
   protected readonly isEmpty = computed(() => this.categories().length === 0);
 
   protected readonly accessibleName = computed(

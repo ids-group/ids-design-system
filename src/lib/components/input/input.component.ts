@@ -65,10 +65,9 @@ export class InputComponent extends DsControlValueAccessor<string> {
 
   /** Text value, two-way bound. */
   readonly value = model<string>('');
-  /** Native input type - also affects the default clear button and password toggle. */
+  /** Native input type; also drives the default clear button and password toggle. */
   readonly type = input<InputType>('text');
-  /** Field height - sm/md/lg.
-   *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
+  /** Field height; falls back to `DS_CONFIG.control.size`, then `'md'`. */
   readonly size = input<DsSize | null>(null);
   readonly sizeResolved = resolveWithConfig(
     this.size,
@@ -92,12 +91,11 @@ export class InputComponent extends DsControlValueAccessor<string> {
   protected readonly isReadOnly = computed(
     () => this.readOnly() || this.readonlyBinding(),
   );
-  /** Confirmation text, shown when there is no error or warning. It paints the success border: the text IS the state. */
+  /** Confirmation text, shown when there is no error or warning; paints the success border. */
   readonly success = input<string, string | null | undefined>('', {
     transform: trimmedText,
   });
-  /** Shows a trailing spinner - e.g. async validation in flight. The input
-   *  stays editable; pair with a `hint` like "Checking availability…". */
+  /** Shows a trailing spinner, e.g. while async validation runs. The input stays editable. */
   readonly loading = input(false, { transform: booleanAttribute });
   /** Marks the field required - shows an asterisk and sets `aria-required`. */
   readonly required = input(false, { transform: booleanAttribute });
@@ -119,19 +117,15 @@ export class InputComponent extends DsControlValueAccessor<string> {
   readonly autocomplete = input<string | null>(null);
   /** Focuses the field automatically on render. */
   readonly autofocus = input(false, { transform: booleanAttribute });
-  /** Accessible name when no visible `label` is provided (falls back to the
-   *  placeholder so the control is never unnamed). */
+  /** Accessible name when no visible `label` is provided; falls back to the placeholder. */
   readonly ariaLabel = input<string | null>(null);
-  /** Extra element ids to describe the control with (a password-rule list, a policy note), MERGED with the field's own message id.
-   *  An input because the attribute belongs on the inner `<input>`; on the host it lands on a wrapper no screen reader reads. */
+  /** Extra element ids to describe the control with, merged with the field's own message id. Set on the inner `<input>`; on the host it would reach no screen reader. */
   readonly ariaDescribedBy = input<string | null>(null);
-  /** Hard character cap - applies the native maxlength attribute and shows a
-   *  live "{current}/{max}" counter below the field. */
+  /** Hard character cap: native maxlength plus a live "{current}/{max}" counter. */
   readonly maxLength = input<number | null, number | null | undefined>(null, {
     transform: optionalBound,
   });
-  // Signal forms binds these by name; without them a `pattern()` or `minLength()`
-  // rule validates in the form model while the native element advertises nothing.
+  // Signal forms binds these by name; without them the native element advertises no rule.
   /** Native `minlength` attribute. */
   readonly minLength = input<number | null, number | null | undefined>(null, {
     transform: optionalBound,
@@ -166,11 +160,7 @@ export class InputComponent extends DsControlValueAccessor<string> {
   >(null);
   /** Emits when the native input loses focus. */
   readonly blurred = output<void>();
-  /**
-   * Show an inline clear (×) button when the input has a non-empty value.
-   * Defaults to true when `type="search"`, false otherwise - pass an explicit
-   * boolean to override.
-   */
+  /** Shows a clear (×) button on a non-empty value. Defaults to true for `type="search"`, false otherwise. */
   readonly clearable = input<boolean | null>(null);
 
   /** Shows a show/hide button when `type="password"`. */
@@ -187,8 +177,7 @@ export class InputComponent extends DsControlValueAccessor<string> {
     return this.type() === 'search';
   });
 
-  /** A native `pattern` takes ONE expression; the schema can carry several, so
-   *  they are ANDed with lookaheads rather than silently dropping all but one. */
+  /** A native `pattern` takes one expression; several are ANDed with lookaheads. */
   protected readonly patternAttribute = computed(() => {
     const expressions = this.pattern();
     if (!expressions.length) {
@@ -283,8 +272,7 @@ export class InputComponent extends DsControlValueAccessor<string> {
     return parts.join(' ');
   });
 
-  /** Move keyboard focus to the native input - public so a host can drive it
-   *  deliberately, e.g. focusing the first invalid field on a failed submit. */
+  /** Moves keyboard focus to the native input. */
   override focus(options?: FocusOptions): void {
     this.control()?.nativeElement.focus(options);
   }

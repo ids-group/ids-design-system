@@ -17,6 +17,8 @@ holds an entry; what the release bot commits afterwards needs none.
 
 ## Unreleased
 
+## 0.14.4 — 2026-09-29
+
 ### Upload
 
 - **`last-upload.json` points at the 0.14.3 upload tree**, 815 files uploaded 2026-09-27, so

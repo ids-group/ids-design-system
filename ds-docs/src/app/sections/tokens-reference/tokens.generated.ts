@@ -921,6 +921,11 @@ export const CHARTS: readonly ColourRow[] = [
     "notes": "Diverging chart scale colour, positive extreme (step 3)."
   },
   {
+    "name": "--chart-bg-color",
+    "value": "var(--surface-default)",
+    "notes": ""
+  },
+  {
     "name": "--chart-frame-border-color",
     "value": "var(--border-default)",
     "notes": ""
@@ -938,11 +943,6 @@ export const CHARTS: readonly ColourRow[] = [
   {
     "name": "--chart-frame-padding",
     "value": "var(--space-5)",
-    "notes": ""
-  },
-  {
-    "name": "--chart-frame-bg-color",
-    "value": "var(--surface-default)",
     "notes": ""
   },
   {
@@ -1006,11 +1006,6 @@ export const CHARTS: readonly ColourRow[] = [
     "notes": ""
   },
   {
-    "name": "--chart-focus-halo-color",
-    "value": "white",
-    "notes": ""
-  },
-  {
     "name": "--chart-tooltip-bg-color",
     "value": "var(--neutral-900)",
     "notes": "Chart tooltip background colour."
@@ -1061,8 +1056,8 @@ export const CHARTS: readonly ColourRow[] = [
     "notes": "Opacity of a line series' area fill (0.16)."
   },
   {
-    "name": "--chart-hatch-color",
-    "value": "var(--surface-default)",
+    "name": "--chart-area-fade-opacity",
+    "value": "0.32",
     "notes": ""
   },
   {
@@ -1211,6 +1206,11 @@ export const CHARTS: readonly ColourRow[] = [
     "notes": "Darkest of the eight heat-scale steps, the high end of the range. Set this, not --chart-heat-8."
   },
   {
+    "name": "--ds-chart-bg-color",
+    "value": "var(--chart-bg-color)",
+    "notes": ""
+  },
+  {
     "name": "--ds-chart-frame-border-color",
     "value": "var(--chart-frame-border-color)",
     "notes": ""
@@ -1228,11 +1228,6 @@ export const CHARTS: readonly ColourRow[] = [
   {
     "name": "--ds-chart-frame-padding",
     "value": "var(--chart-frame-padding)",
-    "notes": ""
-  },
-  {
-    "name": "--ds-chart-frame-bg-color",
-    "value": "var(--chart-frame-bg-color)",
     "notes": ""
   },
   {
@@ -1296,11 +1291,6 @@ export const CHARTS: readonly ColourRow[] = [
     "notes": ""
   },
   {
-    "name": "--ds-chart-focus-halo-color",
-    "value": "var(--chart-focus-halo-color)",
-    "notes": ""
-  },
-  {
     "name": "--ds-chart-tooltip-bg-color",
     "value": "var(--chart-tooltip-bg-color)",
     "notes": "Chart tooltip fill. Set this, not --chart-tooltip-bg-color."
@@ -1351,8 +1341,8 @@ export const CHARTS: readonly ColourRow[] = [
     "notes": "Opacity of the band a line series fills down to its axis baseline. Set this, not --chart-area-opacity."
   },
   {
-    "name": "--ds-chart-hatch-color",
-    "value": "var(--chart-hatch-color)",
+    "name": "--ds-chart-area-fade-opacity",
+    "value": "var(--chart-area-fade-opacity)",
     "notes": ""
   },
   {
@@ -3374,6 +3364,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": ""
       },
       {
+        "name": "--ds-chart-plot-bg-color",
+        "value": "transparent",
+        "notes": ""
+      },
+      {
         "name": "--ds-column-chart-column-max-width",
         "value": "48px",
         "notes": ""
@@ -3386,6 +3381,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-column-chart-cap-radius",
         "value": "var(--ds-chart-mark-cap-radius)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-chart-hatch-color",
+        "value": "var(--ds-chart-bg-color)",
         "notes": ""
       },
       {
@@ -3404,6 +3404,11 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
         "notes": "How long a pie ring takes to turn in or a line to draw on. Defaults to --duration-slowest (600ms)."
       },
       {
+        "name": "--ds-chart-area-color",
+        "value": "var(--_series-area-color)",
+        "notes": ""
+      },
+      {
         "name": "--ds-chart-annotation-color",
         "value": "var(--text-primary)",
         "notes": "Fill of a dsSeriesAnnotation label, the reading a chart prints next to a mark so a screenshot carries what a tooltip would (default --text-primary)."
@@ -3420,7 +3425,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-chart-annotation-halo-color",
-        "value": "var(--surface-default)",
+        "value": "var(--ds-chart-bg-color)",
         "notes": "Colour of the halo painted under an annotation label so it survives over a line or a mark (default --surface-default)."
       },
       {
@@ -3435,6 +3440,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
     "selector": ".chart-frame",
     "description": "",
     "tokens": [
+      {
+        "name": "--ds-chart-frame-bg-color",
+        "value": "var(--ds-chart-bg-color)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-chart-focus-halo-color",
+        "value": "var(--ds-chart-bg-color)",
+        "notes": ""
+      },
       {
         "name": "--ds-chart-pin-size",
         "value": "22px",
@@ -4815,7 +4830,7 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       },
       {
         "name": "--ds-line-chart-annotation-halo-color",
-        "value": "var(--surface-default)",
+        "value": "var(--ds-chart-bg-color)",
         "notes": ""
       },
       {
@@ -6518,6 +6533,16 @@ export const COMPONENT_TOKENS: readonly ComponentTokenGroup[] = [
       {
         "name": "--ds-sparkline-dot-radius",
         "value": "2.5px",
+        "notes": ""
+      },
+      {
+        "name": "--ds-sparkline-area-color",
+        "value": "var(--_sparkline-line-color)",
+        "notes": ""
+      },
+      {
+        "name": "--ds-sparkline-area-opacity",
+        "value": "var(--ds-chart-area-opacity)",
         "notes": ""
       }
     ]

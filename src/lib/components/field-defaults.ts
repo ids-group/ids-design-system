@@ -2,12 +2,11 @@ import { Signal, computed, inject } from '@angular/core';
 import { DS_CONFIG } from '@ids-group-ltd/ids-design-system/core';
 
 /**
- * Resolves a field's `reserveMessage` against the app-level default: the component input, then
- * `DS_CONFIG.field.reserveMessage`, then `false`. The input is `boolean | null` because a signal
- * input cannot report whether it was bound.
+ * Resolves a field's `reserveMessage`: the input, then `DS_CONFIG.field.reserveMessage`, then
+ * `false`. The input is `boolean | null` because a signal input cannot report whether it was bound.
  *
  * `appWideDefaultApplies` is read lazily and drops the middle step for a control that is not a
- * form row (`ds-button`), so an app-wide field setting does not give it an empty row.
+ * form row (`ds-button`).
  *
  * Call from a field initializer (an injection context).
  */

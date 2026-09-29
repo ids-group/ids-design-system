@@ -21,14 +21,13 @@ import type { FieldMessageState } from '@ids-group-ltd/ids-design-system/compone
 /**
  * One validation error, structurally identical to Angular's signal-forms `ValidationError`.
  *
- * Declared here rather than imported from `@angular/forms/signals` because that module is
- * `@experimental`: a public DS type must not depend on something that can be renamed. Signal
- * forms binds by input NAME and assigns its own `ValidationError[]`, which this shape accepts.
+ * Declared here because `@angular/forms/signals` is `@experimental`. Signal forms binds by
+ * input NAME and assigns its own `ValidationError[]`, which this shape accepts.
  */
 export interface DsFieldError {
   /** Identifies the kind of error, e.g. `required`, `minlength`, `server`. */
   readonly kind: string;
-  /** Human-readable text. Authored by the consumer, at the validator. */
+  /** Human-readable text. */
   readonly message?: string;
 }
 
@@ -43,9 +42,8 @@ export type DsFieldErrorsInput =
 const NO_ERRORS: readonly DsFieldError[] = [];
 
 /**
- * The one reserved `DsFieldError.kind`. An error carrying it is advisory: it shows
- * in the warning state and does NOT make the control invalid. It is how a form model
- * raises a non-blocking remark, which `AbstractControl` has no channel for.
+ * The one reserved `DsFieldError.kind`. An error carrying it is advisory: it shows in the
+ * warning state and does NOT make the control invalid.
  */
 export const DS_FIELD_WARNING_KIND = 'warning';
 
@@ -85,9 +83,8 @@ export interface DsFieldMessageSources {
   error: Signal<string>;
   errors: Signal<readonly DsFieldError[]>;
   invalid: Signal<boolean>;
-  /** The control's own disabled state. A disabled control is neither submitted nor validated, so
-   *  it is not announced as invalid. A plain getter rather than a `Signal` so a caller can hand
-   *  it over before its own `isDisabled` field is initialised. */
+  /** The control's own disabled state (a disabled control is not announced as invalid). A getter,
+   *  not a `Signal`, so a caller can hand it over before its own `isDisabled` is initialised. */
   disabled?: () => boolean;
   success?: Signal<string>;
   /** The field's own touched state, if it tracks one (CVA blur). */
@@ -99,11 +96,7 @@ export interface DsFieldMessageSources {
 export interface DsFieldMessageResolution {
   readonly message: Signal<DsFieldMessage>;
   readonly invalid: Signal<boolean>;
-  /**
-   * The state the CONTROL paints, for `[attr.data-field-state]`. Deliberately not
-   * `message().state`: a field can be in a state with nothing to say, and can have
-   * text in a state the box does not paint.
-   */
+  /** The state the CONTROL paints, for `[attr.data-field-state]`; not `message().state`, which can differ. */
   readonly controlState: Signal<FieldMessageState | null>;
 }
 
@@ -117,8 +110,7 @@ interface ControlState {
 const NO_CONTROL: ControlState = { errors: NO_ERRORS, touched: false };
 
 /**
- * Resolves the one message a field shows, from every source that can supply one. Only ONE line
- * ever shows, so the field's height does not depend on how many sources are populated.
+ * Resolves the one message a field shows, from every source that can supply one.
  *
  * Precedence, highest first:
  *
@@ -131,11 +123,10 @@ const NO_CONTROL: ControlState = { errors: NO_ERRORS, touched: false };
  * 6. `hint` - helper text.
  *
  * Signal forms binds `errors` and `touched` by input name (`FormUiControl`); reactive and
- * template-driven forms expose the same through `NgControl`, read here. A field instance is
- * driven by exactly one of them.
+ * template-driven forms expose the same through `NgControl`, read here.
  *
  * Every rung carries its OWN text; `hint` is never recoloured into another state. `invalid` has
- * no text on purpose: it paints the control and sets `aria-invalid` when the message lives elsewhere.
+ * no text: it paints the control and sets `aria-invalid`.
  *
  * Call from a field initializer (an injection context).
  * @internal
@@ -159,8 +150,6 @@ export function resolveFieldMessage(
       controlState().touched,
   );
 
-  // Signal forms' ValidationError[] already carries `kind`; fromValidationErrors turns a
-  // reactive validator's `{ warning: 'text' }` KEY into the same kind.
   const blocking = computed(() =>
     errors().filter((error) => error.kind !== DS_FIELD_WARNING_KIND),
   );
@@ -187,9 +176,8 @@ export function resolveFieldMessage(
   });
 
   // Advisory errors are deliberately absent: a warning never sets aria-invalid.
-  // Disabled wins over every source of invalidity: `aria-invalid` on a NATIVELY disabled input
-  // still reports invalid=true in Chrome's accessibility tree, so a reader would hear "invalid"
-  // on a control they cannot act on.
+  // Disabled wins: `aria-invalid` on a NATIVELY disabled input still reports invalid in
+  // Chrome's accessibility tree.
   const invalid = computed(
     () =>
       !(sources.disabled?.() ?? false) &&
@@ -198,8 +186,7 @@ export function resolveFieldMessage(
         (blocking().length > 0 && interacted())),
   );
 
-  // Message inputs trim via `trimmedText`, so a non-empty string here is real text; a new
-  // one declared without that transform breaks this quietly.
+  // Relies on message inputs trimming via `trimmedText`; one declared without it breaks this quietly.
   const message = computed<DsFieldMessage>(() => {
     const explicit = sources.error();
     if (explicit) {
@@ -241,11 +228,10 @@ export function resolveFieldMessage(
 }
 
 /**
- * `NgControl` cannot be injected in the constructor: a field provides `NG_VALUE_ACCESSOR`
- * pointing at itself, so that is a DI cycle. Resolving it after first render avoids it.
+ * `NgControl` cannot be injected in the constructor (`NG_VALUE_ACCESSOR` points at the field
+ * itself: a DI cycle), so it is resolved after first render.
  *
- * `events` (not `statusChanges`) is the subscription: touching a control emits
- * `TouchedChangeEvent`, not a status change, and touched gates showing an error.
+ * `events`, not `statusChanges`: touching a control emits `TouchedChangeEvent`, not a status change.
  */
 function watchNgControl(): Signal<ControlState> {
   const injector = inject(Injector);
@@ -270,8 +256,7 @@ function watchNgControl(): Signal<ControlState> {
       });
 
     // Signal forms bridges an NgControl whose `control` has no `events` stream. Staying at
-    // NO_CONTROL is deliberate: there the component's own inputs carry errors and touched, and
-    // a snapshot frozen at first render would keep serving a stale error.
+    // NO_CONTROL is deliberate: the component's own inputs carry errors and touched there.
     if (typeof control.events?.pipe !== 'function') {
       return;
     }

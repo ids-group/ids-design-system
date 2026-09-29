@@ -15,9 +15,8 @@ export interface AvatarTintOptions {
 /** Deterministic `{ bg, fg }` tint for a seed string (an email, a name): the same seed always
  *  gives the same colour.
  *
- *  The background is `hsl(H 50% 62%)` and the text is always white. White on the lighter hues
- *  measures as little as 1.65:1, under the 4.5:1 WCAG AA asks of text. Where the initials are
- *  the only identifier, pass `lightness` about 50 and keep white (5.3-6.6:1). */
+ *  White on the lighter hues measures as little as 1.65:1 (WCAG AA asks 4.5:1 for text); where
+ *  initials are the only identifier, pass `lightness` about 50 and keep white (5.3-6.6:1). */
 export function avatarTint(
   seed: string,
   options?: AvatarTintOptions,
@@ -32,12 +31,9 @@ export function avatarTint(
   };
 }
 
-/** Uppercased initials from the first two words. Accepts `(first, last)` parts or a single
- *  full name (`initialsFrom('Ada Lovelace')` gives `AL`); a lone name gives one letter, `?`
- *  when empty.
- *
- *  A deliberately naive Latin-script guess. An app with a real naming rule passes its own via
- *  `DS_CONFIG.avatar.initials` or `ds-avatar`'s `initialsRule`. */
+/** Uppercased initials from the first two words: `(first, last)` parts or one full name
+ *  (`initialsFrom('Ada Lovelace')` gives `AL`); `?` when empty. A naive Latin-script guess: apps
+ *  with a real naming rule use `DS_CONFIG.avatar.initials` or `ds-avatar`'s `initialsRule`. */
 export function initialsFrom(first?: string, last?: string): string {
   const words =
     last === undefined
@@ -49,7 +45,6 @@ export function initialsFrom(first?: string, last?: string): string {
   return `${firstInitial}${lastInitial}`.toUpperCase() || '?';
 }
 
-// Java String.hashCode shape; the `<< 5` keeps hash in int range.
 function hashSeed(seed: string): number {
   let hash = 0;
   for (let index = 0; index < seed.length; index++) {

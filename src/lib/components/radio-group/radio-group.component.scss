@@ -6,7 +6,6 @@
   @include field-label.field-label;
 }
 
-/* The group carries the error state, not the rings: no single radio of an unanswered group is wrong. */
 :host([data-field-state='error']) .label { color: var(--error-text); }
 :host([data-field-state='warning']) .label { color: var(--warning-text); }
 

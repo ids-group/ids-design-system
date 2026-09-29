@@ -1,11 +1,10 @@
-/** A label turned 45 degrees takes this fraction of its width across the axis. 45 is the policy's ceiling. */
+/** A label turned 45 degrees takes this fraction of its width across the axis. */
 const ROTATED_FOOTPRINT = Math.sin(Math.PI / 4);
 
-/** Labels that merely fail to overlap read as one run, so a label's footprint is its width plus
- *  this. 16 sits mid-band of the 12-36 range that keeps the interval decisions stable. */
+/** Labels that merely fail to overlap read as one run, so a footprint is its width plus this. */
 const LABEL_GAP = 16;
 
-/** The widest label decides for all: thinning on the average still collides on the one long label.
+/** The widest label decides for all.
  *
  *  @internal */
 export function labelInterval(

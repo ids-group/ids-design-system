@@ -26,14 +26,12 @@
   display: block;
 }
 
-/* Through the resolver, not `color` on `.value`: emulated encapsulation makes `:host(.error) .value`
-   tie with `.stat .value`, and source order decides. */
+/* Through the resolver: `:host(.error) .value` ties with `.stat .value` under emulated encapsulation. */
 :host(.error) {
   --_stat-value-color: var(--ds-stat-value-color, var(--error-text));
 }
 
-/* Through the resolver, not `font-size` on `.value`, which would out-rank the public hook and make
-   it work at md only. */
+/* Through the resolver: `font-size` on `.value` would out-rank the public hook. */
 :host(.size-sm) {
   --_stat-value-font-size: var(--ds-stat-value-font-size, var(--font-size-h4));
 }
@@ -73,9 +71,6 @@
     margin: 0;
     white-space: var(--_stat-value-white-space);
     overflow-wrap: var(--_stat-value-wrap);
-
-    /* Declared even when nothing is clamped: the box display moves no geometry while the clamp is
-       `none`, so binding it to the hook would only add a style query. */
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: var(--_stat-value-lines);

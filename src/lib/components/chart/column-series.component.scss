@@ -19,7 +19,7 @@
   );
   --_chart-hatch-color: var(
     --ds-chart-hatch-color,
-    var(--surface-default)
+    var(--ds-chart-bg-color)
   );
   --_chart-hatch-width: var(--ds-chart-hatch-width, 1.5px);
 }
@@ -81,7 +81,6 @@
   rx: var(--_column-chart-cap-radius);
 }
 
-// Only the stripes are painted (surface colour); the mark under the ground supplies the hue.
 .hatch-ground {
   fill: none;
 }
@@ -115,7 +114,6 @@
   pointer-events: none;
 }
 
-// The tip of a below-zero column is above the label, so it hangs from that edge.
 .column.below-baseline .value {
   dominant-baseline: hanging;
 }

@@ -58,12 +58,10 @@ export interface ColumnSeriesPoint {
   fill?: 'solid' | 'hatched';
 }
 
-/** Distance from a mark's own tip to its value label's baseline. */
+/** Distance from a mark's tip to its value label's baseline. */
 const VALUE_LABEL_GAP = 8;
 
-/** Blank left at a stacked segment's lower end, so the boundary is a surface-colour gap rather than a
- *  drawn rule (which vanishes in print). It is the secondary encoding the palette's 6-8 dE
- *  separation band asks for. */
+/** Blank at a stacked segment's lower end: a background-colour gap, not a drawn rule (which vanishes in print). */
 const STACK_SEGMENT_GAP = 2;
 
 let nextSeriesId = 0;
@@ -71,13 +69,10 @@ let nextSeriesId = 0;
 /**
  * One column per datum, drawn against the scales `ds-chart` supplies.
  *
- * Hosted on a `<g>`: an element the SVG specification does not know is not rendered, nor are its
- * descendants, so `<ds-column-series>` inside the canvas would draw nothing. Written as
- * `<svg:g dsColumnSeries>`.
+ * Hosted on a `<g>`: an element SVG does not know renders nothing, nor do its descendants. Written
+ * as `<svg:g dsColumnSeries>`.
  */
 @Component({
-  // An element selector cannot work inside a canvas: an element the SVG specification does not know
-  // renders nothing, nor do its children.
   // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'g[dsColumnSeries]',
   standalone: true,
@@ -105,9 +100,8 @@ export class ColumnSeriesComponent implements OnDestroy {
   /** Turns on the click affordance (pointer cursor and hover tint). `pointClicked` fires either way. */
   readonly interactive = input(false, { transform: booleanAttribute });
 
-  /** Holds the clicked mark and its tooltip until a second click, Escape or a press outside. Under
-   *  the category cursor the container holds the category instead. Unset falls back to
-   *  `DS_CONFIG.chart.pinOnClick`, then `true`. */
+  /** Holds the clicked mark and its tooltip until a second click, Escape or a press outside. Unset
+   *  falls back to `DS_CONFIG.chart.pinOnClick`, then `true`; the category cursor holds the category instead. */
   readonly pinOnClick = input<boolean | null, unknown>(null, {
     transform: (value) => (value == null ? null : booleanAttribute(value)),
   });
@@ -120,11 +114,10 @@ export class ColumnSeriesComponent implements OnDestroy {
     () => this.pinOnClickResolved() && !this.scales.cursorOn?.(),
   );
 
-  /** Fades every mark but the one under the pointer. Off by default: it costs the separation between the rest. */
+  /** Fades every mark but the one under the pointer. Off by default: it costs separation between the rest. */
   readonly dimOthers = input(false, { transform: booleanAttribute });
 
-  /** Milliseconds between one mark's entrance and the next; steps narrow to fit the spread within
-   *  260ms. `0` is no stagger. */
+  /** Milliseconds between one mark's entrance and the next, narrowed to fit 260ms. `0` is no stagger. */
   readonly staggerMs = input(40, { transform: numberAttribute });
 
   /** Declares the marks are parts of one whole; each mark's share then appears on the tooltip's second line. */
@@ -133,48 +126,46 @@ export class ColumnSeriesComponent implements OnDestroy {
   /** Whether a hovered or focused column opens a tooltip. */
   readonly tooltip = input<ChartItemTooltipTrigger>('item');
 
-  /** Where the tooltip is pinned. `'mark'` is the column itself; `'cell'` is the full-height category
-   *  cell, which puts the panel at the top of the plot. */
+  /** Where the tooltip is pinned: `'mark'` is the column, `'cell'` the full-height category cell (panel at the plot top). */
   readonly tooltipAnchor = input<'mark' | 'cell'>('mark');
 
-  /** How long the panel survives the pointer leaving the mark, in milliseconds. The default lets the
-   *  pointer reach the next mark before the panel closes. */
+  /** Milliseconds the panel survives the pointer leaving the mark. */
   readonly tooltipLingerMs = input(CHART_TOOLTIP_LINGER_MS, {
     transform: numberAttribute,
   });
 
-  /** Formats every value this series prints. Called with `'tick'` for an axis label and
-   *  `'tooltip'` everywhere a value is printed in full. */
+  /** Formats every value this series prints: `'tick'` for an axis label, `'tooltip'` for a value in full. */
   readonly valueFormat = input<ChartValueFormat>(
     chartValueFormat(injectDsLocale()),
   );
 
-  /** The mark's share of its category slot, before the maximum width caps it. Measured off the slot,
+  /** The mark's share of its category slot before the maximum width caps it. Measured off the slot,
    *  not `bandWidth()`, whose padding is already taken out (both would narrow columns twice). */
   readonly columnWidthRatio = input(0.8, { transform: numberAttribute });
 
   /** This series' position among the slots a category's band is divided into. */
   readonly slot = input(0, { transform: numberAttribute });
 
-  /** How many slots the band is divided into: the series drawn side by side. One is the whole band. */
+  /** How many slots the band is divided into: the series drawn side by side. */
   readonly slotCount = input(1, { transform: numberAttribute });
 
-  /** Where each mark starts and ends on the value axis, one entry per point. Unset, every mark runs
-   *  from zero to its own value (unstacked). */
+  /** Where each mark starts and ends on the value axis, one entry per point. Unset, marks run from zero. */
   readonly offsets = input<readonly ChartStackOffset[] | null>(null);
+
+  /** The only series in its slot, as a waterfall's floating bars are: each answers the pointer over the whole plot height. */
+  readonly soleSeries = input(false, { transform: booleanAttribute });
 
   /** Which value axis the columns are measured against; `'secondary'` reads the second axis. */
   readonly axis = input<ChartAxis>('primary');
 
-  /** One colour for the whole series. Unset, each mark takes the categorical palette by position
-   *  (right when the marks are the categories). A point's own colour wins over both. */
+  /** One colour for the whole series. Unset, each mark takes the categorical palette by position;
+   *  a point's own colour wins. */
   readonly seriesColor = input<string | null>(null);
 
   /** `seriesColor` for the fill pattern. A point's own `fill` wins. */
   readonly seriesFill = input<'solid' | 'hatched' | null>(null);
 
-  /** Names the series in the tooltip, making the category the panel's heading. Unset, the panel
-   *  names the category. */
+  /** Names the series in the tooltip, making the category the panel's heading. */
   readonly seriesLabel = input<string | null>(null);
 
   /** Identifies this series to the legend, so hovering a legend item can single it out. */
@@ -196,11 +187,10 @@ export class ColumnSeriesComponent implements OnDestroy {
 
   private readonly domainId = `column-series-${this.seriesId}`;
 
-  /** Per instance: charts on one page would otherwise share the first `<pattern>` in the document
-   *  and every hatched mark would take that chart's colour. */
+  /** Per instance: otherwise every hatched mark takes the first chart's `<pattern>` colour. */
   protected readonly hatchId = `ds-column-hatch-${this.seriesId}`;
 
-  /** Where each mark actually spans, which the axis has to hold: a stacked segment's top is the running total. */
+  /** Where each mark spans, which the axis has to hold: a stacked segment's top is the running total. */
   private readonly spans = computed<readonly ChartStackOffset[]>(() => {
     const given = this.offsets();
 
@@ -271,11 +261,6 @@ export class ColumnSeriesComponent implements OnDestroy {
     });
   }
 
-  // Naming a category by its label dims the rest whatever `dimOthers` says, as for a legend entry.
-  protected readonly dimsFromLabel = computed(
-    () => (this.scales.categoryLabelHover?.() ?? null) !== null,
-  );
-
   ngOnDestroy(): void {
     this.scales.releaseTooltip(this.domainId);
     this.scales.releaseDomain(this.domainId);
@@ -288,8 +273,7 @@ export class ColumnSeriesComponent implements OnDestroy {
 
   private readonly barElements = viewChildren<ElementRef<Element>>('barEl');
 
-  /** One series' slot inside a category's band: the whole band for one series, a share per series
-   *  when grouped. The pointer box is sized from this so a short column stays reachable. */
+  /** One series' slot inside a category's band: the whole band, or a share per series when grouped. The pointer box is sized from it. */
   private readonly slotStep = computed(() => {
     const count = this.data().length;
     const slots = Math.max(1, this.slotCount());
@@ -303,17 +287,17 @@ export class ColumnSeriesComponent implements OnDestroy {
     () => `${this.slotStep() * this.columnWidthRatio()}px`,
   );
 
-  /** The whole canvas, reserved end included. Overshooting is free (the outer `<svg>` clips); falling
-   *  short leaves a strip under the plot that answers no pointer. */
+  /** The whole canvas, reserved end included: falling short leaves a strip under the plot that answers no pointer. */
   protected readonly hitHeight = computed(() => {
     const plot = this.scales.plot();
 
     return chartViewHeight(plot.height, plot.top, true);
   });
 
-  /** Stacked series overlap, so full-slot hit boxes would make only the last drawn reachable; a
-   *  stacked mark catches the pointer over its own segment only. */
-  protected readonly stacked = computed(() => this.offsets() !== null);
+  /** Stacked series overlap, so a stacked mark catches the pointer over its own segment only. */
+  protected readonly stacked = computed(
+    () => this.offsets() !== null && !this.soleSeries(),
+  );
 
   /** Keeps a thin segment reachable without letting it reach into its neighbours. */
   private static readonly MIN_STACK_HIT = 6;
@@ -369,7 +353,6 @@ export class ColumnSeriesComponent implements OnDestroy {
         height: Math.abs(tip - baseline),
         labelY: below ? tip + VALUE_LABEL_GAP : tip - VALUE_LABEL_GAP,
         pinY: Math.min(tip, baseline) + CHART_PIN_RADIUS + CHART_PIN_GAP,
-        // Grows from the baseline; a below-zero column hangs from its top edge.
         origin: below ? 'top' : 'bottom',
         formattedValue: format(point.value, 'tooltip'),
         color,
@@ -451,8 +434,7 @@ export class ColumnSeriesComponent implements OnDestroy {
     return `${mark.point.label}, ${mark.formattedValue}`;
   }
 
-  /** This series' reading at the cursor's category, filled whatever `tooltip` says: it feeds the
-   *  container's category panel only. */
+  /** This series' reading at the cursor's category, filled whatever `tooltip` says; feeds only the container's category panel. */
   readonly axisEntries = computed<readonly ChartAxisEntry[]>(() => {
     const categoryIndex = this.scales.activeIndex();
     const mark = this.marks()[categoryIndex];

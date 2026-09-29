@@ -14,8 +14,7 @@ import type { IconName } from '@ids-group-ltd/ids-design-system/core';
 import type { ToastAction, ToastVariant } from './toast.types';
 
 /**
- * Single toast pill. Consumed by ToastRegion for service-driven runtime toasts
- * AND by static showcases that need to display a toast specimen inline.
+ * Single toast pill, rendered by ToastRegion for service-driven toasts or placed inline as a specimen.
  */
 @Component({
   selector: 'ds-toast',
@@ -23,7 +22,7 @@ import type { ToastAction, ToastVariant } from './toast.types';
   imports: [IconComponent, SpinnerComponent],
   templateUrl: './toast.component.html',
   styleUrl: './toast.component.scss',
-  // A static `title="..."` also stays in the DOM as the global attribute and would make the host a native tooltip.
+  // Keeps a static `title` attribute from becoming a native tooltip on the host.
   host: { '[attr.title]': 'null' },
   encapsulation: ViewEncapsulation.Emulated,
 })
@@ -34,7 +33,7 @@ export class ToastComponent {
   readonly variant = input<ToastVariant>('info');
   /** Optional bold heading above the message. */
   readonly title = input<string>('');
-  /** The same field `ToastOptions.body` carries, so a specimen and a raised toast agree. */
+  /** Message text; the same field as `ToastOptions.body`. */
   readonly body = input<string>('');
   /** Show a close button that emits `closed`. */
   readonly dismissible = input(false, { transform: booleanAttribute });

@@ -28,13 +28,12 @@ const MORE_TRIGGER_WIDTH = 132;
  * Priority+ filter row: renders as many filters as fit and collapses the rest into a "+N more"
  * panel.
  *
- * The split is decided from each item's declared width (`[dsFilterItem]`) plus one
- * `ResizeObserver` on the row, never by measuring the filters, which would flash before being
- * removed.
+ * The split comes from each item's declared width (`[dsFilterItem]`) plus one `ResizeObserver`
+ * on the row, never from measuring the filters (they would flash before being removed).
  *
  * Anything marked `dsFilterBarTrailing` (search, a Clear button) sits at the trailing edge and
- * never collapses. Mark each control rather than wrapping them: the bar owns that row's gap and
- * alignment, and a projected wrapper is a plain block whose children stack.
+ * never collapses. Mark each control rather than wrapping them: a projected wrapper is a plain
+ * block whose children stack.
  *
  * ```html
  * <ds-filter-bar>
@@ -79,8 +78,7 @@ export class FilterBarComponent {
   protected readonly panelLabelResolved = computed(
     () => this.panelLabel() ?? this.intl().filterBar.panelLabel,
   );
-  /** Height of the "+N" trigger; set it to match the filters beside it. The bar cannot infer it
-   *  from the projected controls. */
+  /** Height of the "+N" trigger; set it to match the filters beside it. */
   readonly triggerSize = input<DsSize>('md');
 
   protected readonly devMode = isDevMode();

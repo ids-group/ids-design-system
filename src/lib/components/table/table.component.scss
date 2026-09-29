@@ -32,7 +32,6 @@
   }
 }
 
-/* Three rows' worth, built from a real row's padding and line height so it tracks density. */
 .loading-space {
   height: calc(
     (var(--_table-cell-padding-y) * 2 + var(--line-height-base) * var(--font-size-s)) * 3
@@ -132,10 +131,6 @@
 
 .hscroll-proxy {
   position: sticky;
-
-  /* Most specific first: the stylesheet hook, then `[stickyScrollbarOffset]` /
-     `DS_CONFIG.table.stickyScrollbarOffset` as `--_table-sticky-scrollbar-offset`, then the
-     padding measured off the scroll ancestor and negated. */
   bottom: var(
     --ds-table-sticky-scrollbar-offset,
     var(
@@ -260,7 +255,7 @@
       opacity: var(--sort-ic-opacity-idle);
       transition: opacity var(--duration-fast) var(--ease-standard), color var(--duration-fast) var(--ease-standard);
 
-      /* The global .icon rule sizes the svg to --icon-md; force it back to --sort-ic-size. */
+      /* The global .icon rule sizes the svg to --icon-md. */
       .icon {
         width: var(--sort-ic-size);
         height: var(--sort-ic-size);
@@ -336,14 +331,11 @@
         background-color: var(--_table-row-hover-bg-color);
       }
 
-      /* Colour plus a decoration, so the target text does not rest on hue alone. Scoped to
-         .clickable like the tint. */
       &.clickable:hover td.interactive-cell {
         color: var(--_table-cell-link-color);
         text-decoration: var(--_table-cell-link-decoration);
       }
 
-      /* Not gated on hover, unlike `interactive-cell`: keyboard and touch users never hover. */
       td .cell-link {
         color: var(--_table-cell-link-color);
         text-decoration: var(--_table-cell-link-decoration);
@@ -390,7 +382,7 @@
       padding: var(--_table-cell-padding-top) var(--_table-cell-padding-right) var(--_table-cell-padding-bottom) var(--_table-cell-padding-left);
     }
 
-    /* 0fr -> 1fr grid track, like ds-accordion. A keyframe, not a transition: the row is
+    /* A keyframe, not a transition: the row is
        inserted when it opens, so there is no previous state. The grid sits on a wrapper because a
        `td` whose display is not `table-cell` leaves the table layout and its `colspan`. */
     .expand-panel-inner {
@@ -429,7 +421,6 @@
     }
   }
 
-  /* Outside `tbody`: the expand-all toggle in `thead` wears the same chevron. */
   .expand-chev {
     display: block;
     transition: transform var(--duration-base) var(--ease-standard);
@@ -483,7 +474,6 @@
     }
   }
 
-  /* Pure height standing in for unrendered rows: no border, stripe or hover. */
   tbody tr.spacer {
     padding: 0;
     border: 0;

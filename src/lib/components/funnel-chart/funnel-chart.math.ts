@@ -17,12 +17,11 @@ export function rampPosition(
   return Math.min(Math.max(position, 0), rampLength - 1);
 }
 
-/** The viewBox is normalised: depth runs 0..100 whatever the stage count. */
 export const FUNNEL_VIEW_BOX_WIDTH = 100;
 
 export const FUNNEL_VIEW_BOX_HEIGHT = 100;
 
-/** One inter-stage gap as a share of a stage's depth; fixed units would grow on screen with every stage added. */
+/** One inter-stage gap as a share of a stage's depth. */
 const FUNNEL_STAGE_GAP_SHARE = 0.14;
 
 export interface FunnelStageGeometry {
@@ -61,9 +60,8 @@ function largestValue(values: readonly number[]): number {
   );
 }
 
-/** The depth at which `areaShare` of the silhouette's area lies above. The area down to depth `t` is
- *  `t - (1 - tail) * t² / 2` against a whole of `(1 + tail) / 2`, so the depth is a quadratic root.
- *  The discriminant bottoms out at `tail²`, so the root is always real. */
+/** The depth at which `areaShare` of the silhouette's area lies above: the quadratic root of
+ *  `t - (1 - tail) * t² / 2 = areaShare * (1 + tail) / 2`, always real. */
 export function depthForAreaShare(
   areaShare: number,
   tailWidth: number,
@@ -130,11 +128,9 @@ function boundaryWidths(
   );
 }
 
-/** One trapezoid per stage, in fractions of the full width and of the total depth.
- *
- *  `'taper'` and `'area'` share one silhouette (full width at the top, `FUNNEL_TAIL_WIDTH` at the
- *  bottom) and differ in where the boundaries land: evenly for `'taper'`, at depths that make each
- *  band's area proportional to its value for `'area'`. `'width'` reads every boundary off the values. */
+/** One trapezoid per stage, in fractions of the full width and of the total depth. `'taper'` and
+ *  `'area'` share one silhouette and differ in boundary depths: even for `'taper'`, area-proportional
+ *  for `'area'`. `'width'` reads every boundary off the values. */
 export function funnelGeometry(
   values: readonly number[],
   shape: FunnelChartShape,
@@ -178,7 +174,6 @@ export function stageDrops(values: readonly number[]): (number | null)[] {
   );
 }
 
-/** Depth of one inter-stage gap, in viewBox units. */
 export function stageGapUnits(
   stageCount: number,
   viewBoxHeight: number,
@@ -228,8 +223,7 @@ export function stagePolygonPoints(
     top = bandTop;
     bottom = bandTop;
   } else if (bottom - top < halfGap) {
-    // A band shallower than its gap (a small tail stage of the area shape) keeps half a gap of depth
-    // about its middle so it stays visible; a quarter gap still separates it from its neighbours.
+    // A band shallower than its gap keeps half a gap of depth about its middle so it stays visible.
     const middle = Math.min(
       Math.max((bandTop + bandBottom) / 2, halfGap / 2),
       viewBoxHeight - halfGap / 2,
@@ -240,8 +234,7 @@ export function stagePolygonPoints(
   const horizontalCentre = viewBoxWidth / 2;
   const topWidth = clampFraction(geometry.topWidth);
   const bottomWidth = clampFraction(geometry.bottomWidth);
-  // The widths belong to the band's boundaries but the gap insets the drawn edges: using the boundary
-  // widths at the inset depths would draw a fir tree. The silhouette is linear in depth, so interpolating is exact.
+  // Boundary widths at the inset depths would draw a fir tree; the silhouette is linear, so interpolate.
   const widthAt = (depth: number) =>
     bandDepth > 0
       ? topWidth +

@@ -1,8 +1,5 @@
-// One control-box height for the field family, resolved through `--field-h-sm/-md/-lg`.
-// `--ds-field-height` is the public override and beats the size class:
-// `ds-select { --ds-field-height: 44px; }`.
-// `$prop` is `min-height` for a box that must grow (autocomplete and multi-select wrap chips).
-// `--_field-height` holds the resolved height for controls deriving geometry from it.
+// Resolves the control-box height through `--field-h-sm/-md/-lg`; `--ds-field-height` is the public override and beats the size class.
+// `$prop` is `min-height` for a box that must grow (chips wrap). `--_field-height` holds the resolved value.
 @mixin field-box-height($size: md, $prop: height) {
   --_field-height: var(--ds-field-height, var(--field-h-#{$size}));
 

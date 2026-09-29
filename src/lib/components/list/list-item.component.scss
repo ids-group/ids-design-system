@@ -44,7 +44,6 @@ button.activator {
   }
 }
 
-/* Tinted from the host so the control gutters light up too, not only the button. */
 :host(:has(button.activator:hover)) {
   background-color: var(--_list-item-hover-bg-color);
 }
@@ -96,7 +95,6 @@ button.activator {
   color: var(--_list-item-selected-label-color);
 }
 
-// Selection retints only `.title`; the leading icon would stay near-black beside it.
 :host(.selected) .leading {
   color: var(--_list-item-selected-icon-color);
 }

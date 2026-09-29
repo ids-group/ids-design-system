@@ -1,9 +1,6 @@
 @use 'check-mark' as check-mark;
 @use 'press' as press;
 
-// The box a checkbox draws: a native `<input type="checkbox">` with `appearance: none` and a
-// styled `::after`, so any native checkbox (ds-table row selection) can include it.
-
 // Declared on the scope, not the box: a declaration on the box itself would outrank a host state
 // override (error, warning) and pin the resting colour.
 @mixin resolvers {
@@ -16,9 +13,8 @@
   --_checkbox-glyph: var(--check-size);
 }
 
-// Every `--_checkbox-*` reference carries its own default: a checkbox in a portaled CDK panel sits
-// outside its component's host, never sees `resolvers`, and the whole declaration would be invalid
-// at computed-value time (no border, no fill). The global `:root` tokens need no fallback.
+// Every `--_checkbox-*` reference carries its own default: a checkbox in a portaled CDK panel sits outside
+// its component's host, never sees `resolvers`, and the declaration would be invalid at computed-value time.
 @mixin box {
   appearance: none;
   width: var(--_checkbox-glyph, var(--check-size));
@@ -30,9 +26,7 @@
   display: inline-grid;
   place-items: center;
 
-  /* An inline-grid's baseline is its first item's, which moves when the mark swaps between the
-     tick and the bar (ds-table header row: 45.50px indeterminate vs 45.30px checked). `middle`
-     takes the box off the baseline. */
+  /* An inline-grid's baseline is its first item's, which moves when the mark swaps between tick and bar; `middle` avoids that. */
   vertical-align: middle;
   flex-shrink: 0;
   margin: 0;

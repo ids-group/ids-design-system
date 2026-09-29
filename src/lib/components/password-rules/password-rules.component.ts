@@ -23,8 +23,7 @@ interface RuleRow {
 }
 
 /**
- * Passes when every rule does. Exported separately so a form can gate its submit
- * from a validator without reaching for the component instance.
+ * Passes when every rule does; usable from a validator without the component instance.
  */
 export function passwordRulesMet(
   value: string,
@@ -36,8 +35,7 @@ export function passwordRulesMet(
 /**
  * Live checklist under a "new password" field.
  *
- * The consumer keeps the POLICY: each rule carries its own `test`, which has to mirror the server or the checklist lies.
- * This component owns the rendering: tri-state glyph, met and failed colours, type scale.
+ * Each rule carries its own `test`, which has to mirror the server or the checklist lies.
  *
  * ```html
  * <ds-input
@@ -68,18 +66,12 @@ export class PasswordRulesComponent {
   readonly value = input<string>('');
   /** The rule set, in the order it should read. */
   readonly rules = input<readonly DsPasswordRule[]>([]);
-  /**
-   * Whether an unmet rule may read as FAILED. Bind it to "the user has tried to submit": before that an unmet rule is only pending,
-   * so a half-typed password is not scolded.
-   */
+  /** Whether an unmet rule may read as failed; bind it to "the user has tried to submit", before that it is only pending. */
   readonly showUnmet = input(false, { transform: booleanAttribute });
   /** Lays the rows out in two columns, for a checklist beside a wide form. */
   readonly columns = input<1 | 2>(1);
 
-  /**
-   * Id put on the rule list, for the field's `aria-describedby`. Defaults to a generated one; set it explicitly so both sides
-   * can name the same string without threading a template ref between siblings.
-   */
+  /** Id on the rule list, for the field's `aria-describedby`. Defaults to a generated one. */
   readonly listId = input<string>(nextControlId('ds-password-rules'));
 
   protected readonly rows = computed<readonly RuleRow[]>(() => {
@@ -96,7 +88,7 @@ export class PasswordRulesComponent {
       const icon: IconName =
         state === 'met' ? 'check' : state === 'failed' ? 'x' : 'circle';
 
-      // The glyph is a decorative SVG with no accessible name; without this a screen reader hears the rule text but not whether it passed.
+      // The glyph is a decorative SVG; without this a screen reader does not hear whether the rule passed.
       return {
         label: rule.label,
         state,
@@ -106,7 +98,7 @@ export class PasswordRulesComponent {
     });
   });
 
-  /** How many rules pass - for a host that wants to gate its own submit. */
+  /** How many rules pass. */
   readonly metCount = computed(
     () => this.rows().filter((row) => row.state === 'met').length,
   );

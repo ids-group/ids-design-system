@@ -1,14 +1,11 @@
-// Shared enter-motion presets every DS surface picks from via `--ds-<surface>-enter-keyframes`.
+// Enter-motion presets every DS surface picks from via `--ds-<surface>-enter-keyframes`.
 //
-// Global on purpose: emulated encapsulation renames @keyframes declared in a component stylesheet
-// but not a name held in a custom property. A consumer's own @keyframes must be global too.
+// Global on purpose: emulated encapsulation renames @keyframes declared in a component stylesheet but not
+// a name held in a custom property. A consumer's own @keyframes must be global too.
 //
-// Shape comes from the surface: presets read the private `--_ds-enter-*` hooks, filled from the
-// surface's public `--ds-<surface>-enter-offset` / `-scale`.
-//
-// Exit presets mirror the entrances, via `--ds-<surface>-leave-keyframes`. Swapping is safe because
-// teardown checks the animationend came from the animated element, not the animation name. An exit
-// reads `--_ds-exit-*` and falls back to `--_ds-enter-*`.
+// Presets read the private `--_ds-enter-*` hooks, filled from the surface's `--ds-<surface>-enter-offset` / `-scale`.
+// Exit presets (`--ds-<surface>-leave-keyframes`) read `--_ds-exit-*` and fall back to `--_ds-enter-*`; swapping is
+// safe because teardown checks that animationend came from the animated element, not the animation name.
 
 @keyframes ds-fade-in {
   from {
@@ -16,7 +13,6 @@
   }
 }
 
-/* The surface's transform-origin decides what it grows out of. */
 @keyframes ds-scale-in {
   from {
     opacity: 0;
@@ -61,7 +57,6 @@
   }
 }
 
-/* No fade: see ds-slide-edge-in. */
 @keyframes ds-slide-edge-out {
   to {
     transform: translate(

@@ -69,7 +69,7 @@ function describeThresholds(
  *  required one is left at the component's default and lies.
  *
  *  The order is the contract: what the chart is and its scale, the trend, the extremes, then where
- *  the numbers are. A recital of the visual encoding ranks lowest for screen-reader users.
+ *  the numbers are.
  *
  *  @internal */
 export function describeSeries(

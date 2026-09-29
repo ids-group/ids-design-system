@@ -22,7 +22,6 @@
   --space-24:  96px;
   --space-32: 128px;
 
-  /* Default rhythm for ds-stack / ds-inline. */
   --space-stack:  var(--space-4);
   --space-inline: var(--space-2);
 
@@ -45,7 +44,7 @@
   --ds-radius-panel:   var(--radius-lg);
   --ds-radius-pill:    var(--radius-pill);
 
-  --radius-flat:         var(--radius-0);    /* intentionally squared */
+  --radius-flat:         var(--radius-0);
 
   /* Two stops only: 1.5/2.5 mid-stops read identically to 1/2 on standard displays. */
   --border-width-default: 1px;
@@ -59,9 +58,8 @@
   /* For a box that exists only to carry the ring; a control with its own shape ignores it. */
   --focus-ring-radius:    var(--ds-radius-inner);
 
-  /* Composed from a channel-split tint so a theme can re-colour them: -h/-s are theme-independent,
-     -l comes from each theme's palette. Constant alphas make the same values read as glows over
-     dark surfaces. */
+  /* Composed from a channel-split tint so a theme can re-colour them (-h/-s are theme-independent, -l comes
+     from each theme's palette). Constant alphas make the same values read as glows over dark surfaces. */
   --shadow-1: 0 1px 2px  hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 6%),
               0 1px 3px  hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 8%);
   --shadow-2: 0 4px 8px  hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 6%),
@@ -109,19 +107,10 @@
   --duration-slower:  400ms;
   --duration-slowest: 600ms;
 
-  /* Loop durations describe rhythm, not response, so sit outside the transition scale. */
   --duration-loop-fast: 700ms;
   --duration-loop-slow: 1400ms;
 
-  /* Easing, which to pick:
-     - standard:   state changes (hover, focus, toggle)
-     - emphasized: overlay / modal / drawer entries and exits; overshoots
-     - decelerate: something appearing (toast, tooltip, popover open)
-     - accelerate: something leaving (toast dismiss, modal close)
-     - spring:     overshoot for small celebratory feedback; sparingly
-     - emphasized-decelerate: a large mark arriving, long and calm at the end
-     - settle:     a mark growing into its value; a critically damped spring, so it never
-                   overshoots and never shows a value the data does not hold */
+  /* Easing: `settle` is a critically damped spring, so a growing mark never overshoots and never shows a value the data does not hold. */
   --ease-standard:   cubic-bezier(.2,  0,    0,   1);
   --ease-emphasized: cubic-bezier(.3,  0,    .1,  1.4);
   --ease-decelerate: cubic-bezier(0,   0,    0,   1);
@@ -130,8 +119,7 @@
   --ease-emphasized-decelerate: cubic-bezier(.05, .7, .1, 1);
   --ease-settle: linear(0, 0.09 6.3%, 0.265 12.5%, 0.444 18.8%, 0.596 25%, 0.715 31.3%, 0.803 37.5%, 0.867 43.8%, 0.911 50%, 0.942 56.3%, 0.962 62.5%, 0.976 68.8%, 0.986 75%, 0.992 81.3%, 0.996 87.5%, 0.998 93.8%, 1);
 
-  /* Motion roles: name the intent once and every surface at that scale follows. `exit-large` is
-     separate because panel leaves run at --duration-base. */
+  /* Motion roles: name the intent once and every surface at that scale follows. `exit-large` is separate because panel leaves run at --duration-base. */
   --ds-motion-enter-panel-duration:   var(--duration-fast);
   --ds-motion-enter-panel-easing:     var(--ease-decelerate);
   --ds-motion-enter-surface-duration: var(--duration-base);
@@ -149,8 +137,7 @@
   --ds-motion-check-exit-duration:    var(--duration-fast);
   --ds-motion-check-exit-easing:      var(--ease-accelerate);
 
-  /* `state` answers a pointer, so it runs fast; slower reads as lag. `mark` is a datum changing
-     size, a redraw the reader should follow. */
+  /* `state` answers a pointer, so it runs fast; slower reads as lag. `mark` is a datum changing size. */
   --ds-motion-chart-state-duration:   var(--duration-fast);
   --ds-motion-chart-state-easing:     var(--ease-standard);
   --ds-motion-chart-mark-duration:    var(--duration-base);
@@ -177,12 +164,8 @@
   --opacity-scrim:           0.55;
   --opacity-state-hover:     0.08;
   --opacity-state-pressed:   0.16;
-  --opacity-state-active:    0.24;  /* a third press level, deeper than -pressed */
+  --opacity-state-active:    0.24;
 
-  /* Breakpoints: Sass aliases and mixins live in `breakpoints`; the --bp-* runtime mirror is emitted
-     once by `ds`. */
-
-  /* Tier gutters and margins for `.page-grid`, swapped at the matching breakpoint. */
   --page-gutter-mobile:  var(--space-3);
   --page-gutter-tablet:  var(--space-4);
   --page-gutter-desktop: var(--space-5);
@@ -200,7 +183,6 @@
   --col-cap-text:    720px;
   --col-cap-content: 1280px;
 
-  /* Font families are a theme choice (base palette); this scale is constant across themes. */
   --font-weight-regular:  400;
   --font-weight-medium:   500;
   --font-weight-semibold: 600;
@@ -238,8 +220,8 @@
   --hit-xs:    24px;
   --hit-sm:    28px;
   --hit-md:    36px;
-  --hit-min:   32px;   /* dense desktop default */
-  --hit-cozy:  40px;   /* default control height */
+  --hit-min:   32px;
+  --hit-cozy:  40px;
   --hit-comfy: 44px;   /* WCAG 2.5.5 minimum for touch */
   --hit-touch: 48px;
 
@@ -252,7 +234,6 @@
   --field-pad-x:       var(--space-3);
   --field-pad-y:       0;
 
-  /* Default padding of surface containers (card, stat, ...). */
   --ds-surface-padding:  var(--space-6);
 
   /* Fields get the soft halo, controls and nav the crisp ring. Use the flat tokens, not the
@@ -343,7 +324,7 @@
   --popover-maxh: 360px;
 
   --field-label-gap:   var(--space-1-5);   /* both label↔control and control↔hint */
-  --field-gap-req:     var(--space-1);     /* label↔asterisk */
+  --field-gap-req:     var(--space-1);
   --field-h-sm:        var(--hit-min);
   --field-h-md:        var(--hit-cozy);
   --field-h-lg:        var(--hit-touch);
@@ -378,11 +359,11 @@
   --bottom-sheet-handle-w:   36px;
   --bottom-sheet-handle-h:   4px;
 
-  --field-textarea-rows-min: 60px;                   /* the inline textarea inside the field wrapper */
-  --field-select-pad-r:      var(--space-6);             /* chevron clearance */
+  --field-textarea-rows-min: 60px;
+  --field-select-pad-r:      var(--space-6);
   --field-affix-overlap:     var(--border-width-default);
 
-  --btn-group-overlap:       calc(var(--border-width-default) * -1); /* collapses adjacent borders */
+  --btn-group-overlap:       calc(var(--border-width-default) * -1);
   --btn-link-uloff:          3px;
   --breadcrumbs-link-uloff:  2px;
 
@@ -396,14 +377,14 @@
   /* The literal svg inside .tag .x, not the button box (--tag-close-size). */
   --tag-close-glyph:         var(--icon-xs);
 
-  --bulk-bar-offset:         var(--space-4);             /* sticky offset from the container bottom */
+  --bulk-bar-offset:         var(--space-4);
 
   --menu-minw:               200px;
   --menu-sep-h:              var(--border-width-default);
 
   --list-item-pad-y:         var(--space-3);
   --list-item-pad-x:         var(--space-4);
-  --list-item-gap:           var(--space-3);             /* leading, body, trailing */
+  --list-item-gap:           var(--space-3);
 
   --tooltip-maxw:            240px;
   --tooltip-arrow:           var(--space-2);             /* caret edge length, halved for offset */
@@ -420,7 +401,6 @@
   --empty-icon-size:         var(--space-16);
   --empty-body-maxw:         360px;
 
-  /* The listbox panel shared by select, autocomplete and multi-select. */
   --picker-offset:           var(--space-1);
   --picker-maxh:             280px;
 
@@ -463,7 +443,7 @@
   --timeline-spine-w:        var(--border-width-strong);
   --timeline-gap:            var(--space-5);
 
-  --tree-indent:             var(--space-5);             /* per nesting level */
+  --tree-indent:             var(--space-5);
   --tree-row-pad-y:          var(--space-1-5);
   --tree-row-pad-x:          var(--space-3);
 
@@ -485,9 +465,9 @@
   --dodont-stage-minh:       100px;
 
   --statemap-arrow-w:        var(--space-8);
-  --statemap-arrow-cap:      var(--space-1);             /* caret border-width */
+  --statemap-arrow-cap:      var(--space-1);
 
-  --grid-table-min:          220px;                  /* auto-fit minmax floor */
+  --grid-table-min:          220px;
   --grid-cols-card-minh:     120px;
   --grid-cols-card-thumb:    80px;
   --dl-spec-label-w:         120px;

@@ -59,7 +59,8 @@
   } @else {
     <ds-chart
       frame="none"
-      cursor="category"
+      [cursor]="plotCursor()"
+      [tooltipSwatches]="tooltipSwatches()"
       [tooltipTemplate]="tooltipTemplate() ?? null"
       [categories]="categories()"
       [tickCount]="tickCount()"
@@ -73,7 +74,7 @@
       [secondaryAxisLabel]="secondaryAxisLabel()"
       [axisColor]="primaryAxisFill()"
       [secondaryAxisColor]="secondaryAxisFill()"
-      [cursorPin]="pinOnClick()"
+      [pinOnClick]="pinOnClick()"
       [tooltipLingerMs]="tooltipLingerMs()"
       [plotHeight]="plotHeight()">
       <svg:g
@@ -92,7 +93,7 @@
         [gaps]="gaps()"
         [curve]="curve()"
         [tooltip]="tooltip()"
-        [tooltipAnchor]="markAnchor()"
+        [tooltipAnchor]="tooltipAnchor()"
         [tooltipLingerMs]="tooltipLingerResolved()"
         [valueFormat]="valueFormatResolved()"
         (pointClicked)="onPointClicked($event)" />

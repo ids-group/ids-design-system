@@ -23,16 +23,15 @@ let nextId = 0;
 /** Bottom-anchored sheet, the mobile sibling of ds-drawer. Closes on scrim
  * tap, Escape, or a downward drag on the grab strip. While open it locks
  * body scroll. On wide viewports the panel is capped by
- * --ds-bottom-sheet-max-width and centred; prefer ds-modal / ds-drawer for
- * desktop-first layouts. position: fixed resolves against the nearest
- * ancestor containing block, so framed hosts contain the sheet. */
+ * --ds-bottom-sheet-max-width and centred. position: fixed resolves against
+ * the nearest ancestor containing block, so framed hosts contain the sheet. */
 @Component({
   selector: 'ds-bottom-sheet',
   standalone: true,
   imports: [A11yModule],
   templateUrl: './bottom-sheet.component.html',
   styleUrl: './bottom-sheet.component.scss',
-  // A static `title="..."` also stays in the DOM as the global attribute and would make the host a native tooltip.
+  // Keeps a static `title` attribute from becoming a native tooltip on the host.
   host: { '[attr.title]': 'null' },
   encapsulation: ViewEncapsulation.Emulated,
   hostDirectives: [{ directive: DsStaticPreview, inputs: ['staticPreview'] }],
@@ -59,7 +58,6 @@ export class BottomSheetComponent implements OnDestroy {
   private readonly sheetRef = viewChild<ElementRef<HTMLElement>>('sheet');
 
   protected readonly dragOffset = signal<number | null>(null);
-  /** Sheet is in the DOM (kept true through the leave animation). */
   protected readonly rendered = signal(false);
   protected readonly closing = signal(false);
   protected readonly activeSnapIndex = signal(0);
@@ -82,8 +80,6 @@ export class BottomSheetComponent implements OnDestroy {
   private closeFallbackTimer: ReturnType<typeof setTimeout> | null = null;
 
   constructor() {
-    // Closing keeps the sheet mounted and flips `closing` so the leave animation can
-    // play (teardown in onLeaveEnd, or the timer below).
     effect(() => {
       if (this.preview.staticPreview()) {
         return;
@@ -107,7 +103,7 @@ export class BottomSheetComponent implements OnDestroy {
       this.wasOpen = isOpen;
     });
 
-    // Ref-counted lock shared with modal/drawer so stacked overlays don't unlock each other.
+    // Ref-counted, so stacked overlays don't unlock each other.
     effect((onCleanup) => {
       if (this.preview.staticPreview() || !this.rendered()) {
         return;
@@ -131,8 +127,7 @@ export class BottomSheetComponent implements OnDestroy {
   }
 
   protected onLeaveEnd(event: AnimationEvent): void {
-    // Only the host's OWN animationend counts; ones bubbling from inside do not. Matching
-    // the keyframes name would make the exit animation un-overridable.
+    // Host's OWN animationend only; matching the keyframes name would make the exit un-overridable.
     if (event.target !== event.currentTarget) {
       return;
     }

@@ -11,7 +11,7 @@ import {
   standalone: true,
   templateUrl: './page-header.component.html',
   styleUrl: './page-header.component.scss',
-  // A static `title="..."` also stays in the DOM as the global attribute and would make the host a native tooltip.
+  // Keeps a static `title` attribute from becoming a native tooltip on the host.
   host: { '[attr.title]': 'null' },
   encapsulation: ViewEncapsulation.Emulated,
 })

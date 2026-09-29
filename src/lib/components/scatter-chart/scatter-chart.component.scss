@@ -65,8 +65,7 @@
   font-weight: var(--font-weight-bold);
 }
 
-// Semi-transparent so pile-ups show: at full opacity a cluster of forty and a cluster of four are
-// the same solid disc.
+// Semi-transparent so pile-ups show.
 .point {
   r: var(--_scatter-chart-dot-radius);
   fill: var(--_scatter-series-color);
@@ -97,4 +96,11 @@ g.is-dimmed {
   opacity: var(--ds-chart-dim-opacity);
   transition: opacity var(--ds-motion-chart-mark-duration)
     var(--ds-motion-chart-mark-easing);
+}
+
+// The rectangle inside the axes. Transparent unless `--ds-chart-plot-bg-color` is set, so the plot
+// shows the chart's background by default.
+.plot-bg {
+  fill: var(--ds-chart-plot-bg-color, transparent);
+  pointer-events: none;
 }
