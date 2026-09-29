@@ -172,6 +172,11 @@ export class ColumnSeriesComponent implements OnDestroy {
    *  runs from zero to its own value, which is the unstacked case. */
   readonly offsets = input<readonly ChartStackOffset[] | null>(null);
 
+  /** The only series in its slot, as a waterfall's floating bars are: `offsets` lifts each mark
+   *  off the axis, but nothing is stacked above or below it, so the mark answers the pointer over
+   *  the whole plot height rather than over its own span. */
+  readonly soleSeries = input(false, { transform: booleanAttribute });
+
   /** Which value axis the columns are measured against. `'secondary'` reads them off the second
    *  axis, the way `axis: 'secondary'` does on a line series' data. */
   readonly axis = input<ChartAxis>('primary');
@@ -331,7 +336,9 @@ export class ColumnSeriesComponent implements OnDestroy {
   /** Stacked series sit on top of one another, so a full-slot hit box on each one means only the
    *  series drawn last is ever reachable. Stacked, a mark catches the pointer over its own segment
    *  and nothing else. */
-  protected readonly stacked = computed(() => this.offsets() !== null);
+  protected readonly stacked = computed(
+    () => this.offsets() !== null && !this.soleSeries(),
+  );
 
   /** Keeps a thin segment reachable without letting it reach into its neighbours. */
   private static readonly MIN_STACK_HIT = 6;
