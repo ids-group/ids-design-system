@@ -290,12 +290,6 @@ export class ColumnSeriesComponent implements OnDestroy {
     });
   }
 
-  // A reader naming a category by its label is asking for that column, so the rest step back
-  // whatever `dimOthers` says, as they do for a legend entry.
-  protected readonly dimsFromLabel = computed(
-    () => (this.scales.categoryLabelHover?.() ?? null) !== null,
-  );
-
   ngOnDestroy(): void {
     this.scales.releaseTooltip(this.domainId);
     this.scales.releaseDomain(this.domainId);
