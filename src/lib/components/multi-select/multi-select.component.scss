@@ -10,13 +10,11 @@
 :host {
   @include field-box.field-box-tokens;
 
-  // Flex column + gap so the hint/error sits --space-1-5 below the trigger, matching input/textarea/autocomplete/select.
   display: flex;
   flex-direction: column;
   gap: var(--field-label-gap);
 
-  /* `initial` means UNSET (see `ds-autocomplete`): a value here is copied onto the portaled pane as an inline style, which outranks a consumer's
-     `.ds-overlay-pane` rule. */
+  /* `initial` means unset (see `ds-autocomplete`). */
   --ds-dropdown-panel-bg-color: var(--ds-multi-select-panel-bg-color, initial); /* void-ok */
 
   --_multi-select-bg-color: var(--ds-multi-select-bg-color, var(--surface-default));
@@ -29,12 +27,12 @@
   --_multi-select-font-size: var(--ds-multi-select-font-size, var(--_field-font-size));
 }
 
-/* Hugs its own content; the panel then takes the trigger width as a floor, not its width (see openPanel()). */
+/* The panel takes the trigger width as a floor, not its width (see openPanel()). */
 :host(.content-width) {
   width: fit-content;
 }
 
-/* The compact trigger is a fixed footprint, so it hugs without being asked and turns the panel's width mode on: a caption-width panel is unreadable. */
+/* The compact trigger hugs without being asked and turns the panel's width-floor mode on. */
 :host(.compact-trigger) {
   width: fit-content;
 
@@ -63,7 +61,7 @@
   }
 }
 
-/* Unique class: a bare `.field` collides with consumer/docs form styles that set flex-direction:column and turn the chip row into a column. */
+/* Unique class: a bare `.field` collides with consumer form styles that set flex-direction:column. */
 .field-trigger {
   display: flex;
   flex-wrap: wrap;
@@ -72,8 +70,7 @@
     @include clear-button.button;
   }
 
-  /* Wrapping suits an UNCAPPED trigger; with a cap a wrapping flex container never shrinks its chip row, it moves the input to a second line.
-     `:has()` keys off the measured row, so the rule follows the mode without a second class. */
+  /* A wrapping flex container never shrinks its chip row, so a capped trigger must not wrap; `:has()` keys off the measured row. */
   &:has(> .chip-row.fit) {
     flex-wrap: nowrap;
   }
@@ -83,7 +80,7 @@
 
   @include field-box.field-box-height(md, min-height);
 
-  /* min-height, not height: the chip row wraps in `all` mode, so a size sets the floor. */
+  /* min-height, not height: the chip row wraps in `all` mode. */
   &.sm { @include field-box.field-box-height(sm, min-height); }
   &.lg { @include field-box.field-box-height(lg, min-height); }
 
@@ -150,10 +147,9 @@
   color: var(--text-tertiary);
 }
 
-/* Portaled panel: plain selectors reach it via the emulated _ngcontent attr, but custom-property inheritance follows DOM position,
-   so the panel and option resolvers must live HERE (outside :host). */
+/* Portaled panel: custom-property inheritance follows DOM position, so the panel and option resolvers live here, outside :host. */
 
-/* Qualified with the pane class so it OUTRANKS styles/_dropdown-overlay.scss by specificity, not stylesheet order (SSR critical CSS or a late partial load flips a tie). */
+/* Qualified with the pane class so it outranks the shared dropdown overlay styles by specificity, not stylesheet order. */
 .dropdown-panel {
   --ds-option-bg-color-active: var(
     --ds-multi-select-option-bg-color-active,
@@ -170,7 +166,7 @@
   padding: var(--space-2) var(--space-3);
   border-bottom: var(--border-width-default) solid var(--border-divider);
 
-  // An outline has no radius of its own and follows the box it is drawn on; without this the ring is a hard rectangle in a rounded panel.
+  // An outline follows the box it is drawn on; without this the ring is a hard rectangle in a rounded panel.
   border-radius: var(--ds-radius-inner);
 
   // The row spans the panel edge to edge and the panel clips, so the ring is drawn inward.
@@ -197,7 +193,7 @@
     var(--font-sans);
 }
 
-// Option rows clip their label; without the same treatment a long group name wraps and makes its select-all row two lines tall.
+// Same clipping as option rows, or a long group name wraps its select-all row.
 .select-all-label {
   min-width: 0;
 

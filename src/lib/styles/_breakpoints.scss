@@ -1,8 +1,6 @@
 // Single source of the breakpoint scale: `$bp-*` Sass aliases (a custom property
 // is ignored inside a @media condition) and the `--bp-*` runtime mirror, emitted
 // only by `emit-vars`. A plain @use emits no CSS.
-//   @use 'breakpoints' as bp;
-//   @include bp.up(md) { ... }
 
 @use 'sass:map';
 
@@ -11,7 +9,7 @@ $breakpoints: (
   'sm':  640px,
   'md':  768px,
   'lg':  1024px,
-  'xl':  1441px, // page-grid wide tier: 12 columns, capped at --col-cap-content
+  'xl':  1441px,
   '2xl': 1536px,
 );
 $bp-xs: map.get($breakpoints, 'xs');

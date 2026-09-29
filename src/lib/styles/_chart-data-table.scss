@@ -1,9 +1,7 @@
 @use 'visually-hidden';
 
-// The data table every chart offers under a disclosure; all charts share the markup.
 @mixin chart-data-table {
   .data-table {
-    // Half the marker triangle's height: border-drawn geometry, not spacing.
     --_chart-data-table-marker: var(--space-1);
 
     margin-block-start: var(--space-4);
@@ -82,8 +80,7 @@
     text-align: start;
   }
 
-  // End-aligned numeric columns touch without a start gutter. Body cells only, never the first
-  // column: a gutter there would indent the labels off their heading.
+  // Body cells after the first only: a gutter on the first column would indent labels off their heading.
   .data-table td + td {
     padding-inline-start: var(--space-3);
   }

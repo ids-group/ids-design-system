@@ -50,8 +50,8 @@
   text-align: center;
   transition: background-color var(--duration-fast) var(--ease-standard);
 
-  // `:not(.is-selected)` is load-bearing: `.opt:hover:not(:disabled)` scores (0,3,0) and out-ranks `.opt.is-selected` (0,2,0), painting the neutral hover fill
-  // over the selected fill while the TEXT colour stays (white on pale grey). On touch the last-tapped cell keeps `:hover`.
+  // `:not(.is-selected)` is load-bearing: `.opt:hover:not(:disabled)` (0,3,0) out-ranks `.opt.is-selected` (0,2,0) and paints the
+  // hover fill over the selected one (white text on pale grey). On touch the last-tapped cell keeps `:hover`.
   &:hover:not(:disabled, .is-selected) {
     background-color: var(--_time-picker-option-bg-color-hover);
   }

@@ -1,6 +1,5 @@
-<!-- Single <ng-content> outside any @if: duplicates silently drop children when control
-     flow picks a non-matching branch. Same for [ds-group-icon], so the icon and title
-     live in ONE template both header branches stamp out. -->
+<!-- Single <ng-content> outside any @if: duplicates silently drop children on a non-matching branch.
+     Same for [ds-group-icon], so both header branches stamp out ONE template. -->
 <ng-template #headerContent>
   @if (icon()) {
     <ds-icon

@@ -10,7 +10,6 @@
   --_split-button-bg-color-hover: var(--ds-split-button-bg-color-hover, var(--accent-hover));
   --_split-button-divider-color: var(--ds-split-button-divider-color, var(--btn-split-divider));
 
-  /* Transparent, so the outlined half adopts the surface under it, as ds-button's outline does. */
   --_split-button-outline-bg-color: var(--ds-split-button-outline-bg-color, transparent);
   --_split-button-outline-border-color: var(--ds-split-button-outline-border-color, var(--border-default));
 
@@ -101,7 +100,6 @@
   border-left: var(--border-width-default) solid var(--_split-button-divider-color);
 }
 
-/* The -1px overlap collapses adjacent borders into one divider. */
 :host(.outline) .main:not(:disabled),
 :host(.outline) .toggle:not(:disabled) {
   background: var(--_split-button-outline-bg-color);

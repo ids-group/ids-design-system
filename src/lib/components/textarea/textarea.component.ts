@@ -52,8 +52,7 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
 
   /** Text value, two-way bound. */
   readonly value = model<string>('');
-  /** Field height - sm/md/lg.
-   *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
+  /** Field height; falls back to `DS_CONFIG.control.size`, then `'md'`. */
   readonly size = input<DsSize | null>(null);
   readonly sizeResolved = resolveWithConfig(
     this.size,
@@ -70,8 +69,6 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
   readonly readOnly = input(false, { transform: booleanAttribute });
   /** The contract spelling of `readOnly`: signal forms binds by NAME, so a `readonly()` rule reaches nothing without it. */
   readonly readonlyBinding = input(false, {
-    // The alias IS the point: signal forms binds by name, and the contract
-    // spells it `readonly` where the DS spells it `readOnly`.
     // eslint-disable-next-line @angular-eslint/no-input-rename
     alias: 'readonly',
     transform: booleanAttribute,
@@ -79,7 +76,7 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
   protected readonly isReadOnly = computed(
     () => this.readOnly() || this.readonlyBinding(),
   );
-  /** Confirmation text, shown when there is no error or warning. It paints the success border: the text IS the state. */
+  /** Confirmation text, shown when there is no error or warning; paints the success border. */
   readonly success = input<string, string | null | undefined>('', {
     transform: trimmedText,
   });
@@ -101,17 +98,16 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
   readonly resize = input<TextareaResize>('vertical');
   /** Accessible name when no visible `label` is provided. */
   readonly ariaLabel = input<string | null>(null);
-  /** Character limit; shows a live "{current}/{max}" counter below the field. `maxLengthMode` decides what happens at the limit.
-   *  Counts `value.length` (UTF-16 units, as native `maxlength` does), whitespace included, unless `countTrimmed` is set. */
+  /** Character limit with a live "{current}/{max}" counter; `maxLengthMode` decides what happens at the limit.
+   *  Counts `value.length` (UTF-16 units, as native `maxlength` does) unless `countTrimmed` is set. */
   readonly maxLength = input<number | null, number | null | undefined>(null, {
     transform: optionalBound,
   });
-  /** `'hard'` applies the native maxlength attribute, so typing and paste stop at `maxLength`. `'soft'` lets the text run past it:
-   *  the counter turns red, the excess is highlighted, and the field reports invalid (`aria-invalid`, counter as description).
-   *  Blocking a save on it is the form's job. */
+  /** `'hard'` applies the native maxlength attribute. `'soft'` lets the text run past it: the counter turns red, the excess is
+   *  highlighted and the field reports invalid (`aria-invalid`). */
   readonly maxLengthMode = input<TextareaMaxLengthMode>('hard');
-  /** Leaves whitespace at either end out of the counter, the soft-limit state and the highlight, for a value the server stores trimmed.
-   *  Whitespace between words still counts. The native `maxlength` of `maxLengthMode="hard"` counts every character regardless. */
+  /** Leaves leading and trailing whitespace out of the counter, soft-limit state and highlight.
+   *  The native `maxlength` of `maxLengthMode="hard"` counts every character regardless. */
   readonly countTrimmed = input(false, { transform: booleanAttribute });
   private readonly countedRange = computed(() => {
     const value = this.value();
@@ -152,7 +148,7 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
     };
   });
 
-  // Signal forms binds these by name; without them a `pattern()` or `minLength()` rule validates in the form model while the native element advertises nothing.
+  // Signal forms binds these by name; without them the native element advertises no rule.
   /** Native `minlength` attribute. */
   readonly minLength = input<number | null, number | null | undefined>(null, {
     transform: optionalBound,
@@ -169,8 +165,7 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
           ? [new RegExp(value)]
           : value,
   });
-  /** A native `pattern` takes ONE expression; the schema can carry several, so
-   *  they are ANDed with lookaheads rather than silently dropping all but one. */
+  /** A native `pattern` takes one expression; several are ANDed with lookaheads. */
   protected readonly patternAttribute = computed(() => {
     const expressions = this.pattern();
     if (!expressions.length) {
@@ -255,7 +250,6 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
     this.autosize() && this.maxRows() ? `${this.maxRows()}lh` : null,
   );
 
-  // Autosize grows with content, so a manual resize handle conflicts - force none.
   protected readonly effectiveResize = computed<TextareaResize>(() =>
     this.autosize() ? 'none' : this.resize(),
   );
@@ -279,7 +273,7 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
     }
   }
 
-  /** Public so a host can drive focus deliberately, e.g. to the first invalid field on a failed submit. */
+  /** Moves keyboard focus to the native textarea. */
   override focus(options?: FocusOptions): void {
     this.control()?.nativeElement.focus(options);
   }
@@ -295,9 +289,8 @@ export class TextareaComponent extends DsControlValueAccessor<string> {
   }
 
   /**
-   * Mirrors `HTMLTextAreaElement.setSelectionRange`. Does not move focus: call `focus()` first when the selection must be visible.
-   * A value written through `value` reaches the element a microtask later and drops the caret to the end,
-   * so after `value.set(...)` set the range from a `setTimeout`.
+   * Mirrors `HTMLTextAreaElement.setSelectionRange`; does not move focus. A value written through `value` reaches the
+   * element a microtask later and drops the caret to the end, so after `value.set(...)` set the range from a `setTimeout`.
    */
   setSelectionRange(
     start: number,

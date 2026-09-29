@@ -16,12 +16,10 @@
   grid-template-rows: auto 1fr;
   height: var(--ds-app-layout-height, 100dvh);
 
-  // Containing block for the overlay rail: without it `position: fixed` resolves
-  // against the viewport and an embedded layout throws its rail over the whole window.
+  // Containing block for the fixed overlay rail, so an embedded layout stays inside itself.
   position: relative;
 
-  // Own stacking context: nested layouts would otherwise z-index against the root
-  // at the same --layer-drawer, and the later one paints over the outer open rail.
+  // Own stacking context: a nested layout's rail otherwise paints over the outer open rail.
   isolation: isolate;
   overflow: hidden;
 }
@@ -37,8 +35,7 @@
   grid-area: sidenav;
   overflow-y: auto;
 
-  // Below lg the rail becomes an overlay in the SAME DOM position, so the projected
-  // sidenav keeps its state and scroll across open/close.
+  // Same DOM position as the inline rail, so the projected sidenav keeps its state across open/close.
   // `left`, not a logical property: RTL is unsupported.
   @include bp.down(lg) {
     position: absolute;
@@ -51,8 +48,7 @@
     transform: translateX(-100%);
     transition: transform var(--duration-base) var(--ease-standard);
 
-    // `&.open`, NOT `:host(.rail-open) &`: that compiles to a descendant selector,
-    // so an outer layout's `.rail-open` would open the rail of every nested layout.
+    // `&.open`, NOT `:host(.rail-open) &`: that opens the rail of every nested layout.
     &.open {
       transform: translateX(0);
     }
@@ -90,8 +86,7 @@
   grid-area: content;
   padding: var(--_app-layout-padding-y) var(--_app-layout-padding-x);
 
-  // Gutter + scrollbar count toward the right inset: subtract the measured width
-  // so it matches the left edge (0 with overlay scrollbars).
+  // Subtract the measured scrollbar width so the right inset matches the left.
   padding-right: calc(var(--_app-layout-padding-x) - var(--ds-scrollbar-width, 0px));
   overflow: auto;
   scrollbar-gutter: stable;

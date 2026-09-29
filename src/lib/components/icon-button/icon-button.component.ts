@@ -31,7 +31,7 @@ export class IconButtonComponent {
   /** Accessible name; required since the button has no visible text. */
   readonly ariaLabel = input.required<string>();
   /** `aria-describedby`: the id of text the app already renders beside the button, such as why
-   *  the action is refused. There is no `disabledReason` here, unlike `ds-button`. */
+   *  the action is refused. */
   readonly ariaDescribedBy = input<string | null>(null);
   /** Fill style; `standard` is chromeless. */
   readonly variant = input<IconButtonVariant>('standard');

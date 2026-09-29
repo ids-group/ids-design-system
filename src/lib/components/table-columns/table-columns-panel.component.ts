@@ -22,10 +22,8 @@ import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 
 /**
- * The column panel: reorder, show and hide, and whatever else contributed a row control.
- *
- * Renders twice over one template: a popover on a fine pointer, a bottom sheet on a coarse one
- * (keyed on the pointer, not the viewport). `rowExtras` lands a contributed template per row.
+ * The column panel: reorder, show and hide, plus contributed row controls (`rowExtras`).
+ * A popover on a fine pointer, a bottom sheet on a coarse one.
  *
  * @internal Not API - created by `DsTableColumns`, never written in a consumer's template.
  */

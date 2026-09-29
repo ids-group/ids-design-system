@@ -1,7 +1,7 @@
 import type { BarChartValue } from './bar-chart.types';
 
-/** Where a row's bar starts and ends on the value axis. A pair is normalised because a bar of
- *  negative width draws nothing; a non-finite end collapses the extent to zero.
+/** Where a row's bar starts and ends on the value axis. A pair is normalised (a negative width draws
+ *  nothing); a non-finite end collapses the extent to zero.
  *
  *  @internal */
 export function barExtent(value: BarChartValue): { low: number; high: number } {
@@ -40,8 +40,8 @@ export function widthPercent(value: number, max: number): number {
   return Math.max((value / max) * 100, 0);
 }
 
-/** Each segment's share in percent, against the segments' OWN sum, never the row's `value`: a gap would
- *  read as an unlabelled category. Returns none without a positive finite total. */
+/** Each segment's share in percent, against the segments' OWN sum, never the row's `value`.
+ *  Returns none without a positive finite total. */
 export function segmentWidths(values: readonly number[]): number[] {
   const total = values
     .filter((value) => Number.isFinite(value) && value > 0)

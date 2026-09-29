@@ -1,8 +1,5 @@
-// The separation between a boolean control and its label lives inside the hit area as label
-// padding; a flex `gap` is dead space that ignores clicks. The negative block margin cancels the
-// block padding so no layout moves. Include in the label's selector and give the row no gap:
-//   .control-line { display: flex; align-items: center; }
-//   .control-text { @include control-label.hit-area; }
+// Label padding inside the hit area instead of a flex `gap`, which is dead space that ignores clicks.
+// The negative block margin cancels the block padding; give the row no gap.
 @mixin hit-area {
   padding-inline-start: var(--space-2);
   padding-block: var(--space-1);

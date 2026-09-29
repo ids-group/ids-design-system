@@ -32,12 +32,9 @@ export class LoadingOverlayComponent {
 
   /**
    * Whether the projected content goes `inert` while the scrim is up. On by
-   * default: a scrim that only stops the pointer lets focus walk under it, and a
-   * keyboard user activates controls the mouse cannot reach.
-   *
-   * Turn it off only when the scrim covers part of the content (`insetTop`), and
-   * then mark the covered subtree `inert` yourself; a blanket flag would take
-   * the uncovered part with it.
+   * default, so focus cannot walk under the scrim. Turn it off only when the
+   * scrim covers part of the content (`insetTop`) and mark the covered subtree
+   * `inert` yourself.
    */
   readonly inertContent = input(true, { transform: booleanAttribute });
 }

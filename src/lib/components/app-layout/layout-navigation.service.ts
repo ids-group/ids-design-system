@@ -3,11 +3,9 @@ import { NavigationEnd, Router } from '@angular/router';
 import { distinctUntilChanged, filter, map, type Observable } from 'rxjs';
 
 /**
- * Emits the new path whenever navigation lands on a DIFFERENT one. A query- or
- * fragment-only navigation is a search, sort or page step on the same screen, and
- * everything that reacts to "went somewhere else" (the scroll reset, the responsive
- * rail, your own code) reads this one source. Inject it and read `pathChanged`
- * rather than re-deriving the path change:
+ * Emits the new path whenever navigation lands on a DIFFERENT one; query- or
+ * fragment-only navigations are ignored. Read `pathChanged` instead of
+ * re-deriving the path change:
  *
  * ```ts
  * private readonly navigation = inject(AppLayoutNavigationService);
@@ -18,14 +16,10 @@ import { distinctUntilChanged, filter, map, type Observable } from 'rxjs';
  * }
  * ```
  *
- * A PATH change is not always a page change. An app whose URL mirrors the
- * reader's position (a docs layout rewriting `/area/section` from a scroll spy,
- * a wizard that names its step) changes the path while staying on the screen,
- * and resetting the scroll there fights the user: the reset moves the scroll,
- * the spy rewrites the path again, and the page ping-pongs. Such a navigation
- * must carry `state: { dsSamePage: true }`, which is skipped here.
+ * A navigation that changes the path while staying on the same screen (a scroll
+ * spy rewriting the URL, a wizard step) must carry `state: { dsSamePage: true }`,
+ * which is skipped here; otherwise the scroll reset and the spy ping-pong.
  *
- * Root-provided and stateless, so one instance serves every reader.
  * `AppLayoutScrollService` depends on it, so a consumer providing THAT
  * outside `ds-app-layout` needs this one resolvable too.
  */

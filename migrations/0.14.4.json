@@ -1,0 +1,231 @@
+{
+  "version": "0.14.4",
+  "items": [
+    {
+      "id": "chart-hover-delay-0",
+      "kind": "behavior",
+      "old": "DS_CONFIG.chart.hoverDelayMs",
+      "new": null,
+      "surface": [
+        "typescript",
+        "config"
+      ],
+      "action": "None, unless you want a resting pointer to wait before a chart answers: set provideDsConfig({ chart: { hoverDelayMs: 500 } }). Delete a hoverDelayMs: 0 that only restated the new default (delete list: chart-hover-delay-zero-redundant).",
+      "appliesWhen": "Every chart's pointer hover on a mark, a category, a legend entry, a heat map scale step, a funnel stage row, a pie legend entry or a bar label. Focus, a tap and a click that pins already answered at once.",
+      "pitfall": "A test written to wait out the delay before reading the tooltip still passes, and one that asserts nothing is shown yet straight after a hover now fails.",
+      "restore": "provideDsConfig({ chart: { hoverDelayMs: 500 } })",
+      "searchHints": [
+        "hoverDelayMs",
+        "provideDsConfig",
+        "hover()",
+        "ds-chart-tooltip-panel"
+      ],
+      "detect": [
+        "hoverDelayMs",
+        ".hover(",
+        "ds-chart-tooltip-panel"
+      ],
+      "verify": "No test asserts that a chart tooltip or highlight is absent right after a hover, unless it runs under hoverDelayMs: 500.",
+      "supersedes": [
+        "0.14.2#chart-hover-delay-500"
+      ]
+    },
+    {
+      "id": "chart-tooltip-linger-500",
+      "kind": "behavior",
+      "old": "tooltipLingerMs",
+      "new": null,
+      "surface": [
+        "template",
+        "typescript",
+        "config"
+      ],
+      "action": "None, unless something expects a chart tooltip gone the moment the pointer leaves a mark: wait 500 ms first, or set provideDsConfig({ chart: { tooltipLingerMs: 0 } }), or tooltipLingerMs=\"0\" on the series.",
+      "appliesWhen": "Every chart's tooltip after the pointer leaves a mark, and dsColumnSeries / dsLineSeries with no tooltipLingerMs of their own. The highlight, the dimming and the category cursor still go at once. A pinned tooltip is unaffected.",
+      "pitfall": "A test that moves the pointer off a chart and asserts the tooltip is gone in the same step now finds it still open.",
+      "restore": "provideDsConfig({ chart: { tooltipLingerMs: 0 } })",
+      "searchHints": [
+        "tooltipLingerMs",
+        "provideDsConfig",
+        "mouseleave",
+        "pointerleave",
+        "ds-chart-tooltip-panel"
+      ],
+      "detect": [
+        "tooltipLingerMs",
+        "mouseleave",
+        "pointerleave",
+        "ds-chart-tooltip-panel"
+      ],
+      "verify": "Every test that leaves a chart and asserts its tooltip closed waits at least 500 ms or runs under tooltipLingerMs: 0.",
+      "note": "DS_CONFIG.chart.tooltipLingerMs and the per-series tooltipLingerMs both default to 500, was 0."
+    },
+    {
+      "id": "chart-tooltip-swatches-auto",
+      "kind": "behavior",
+      "old": "ds-chart-tooltip-panel",
+      "new": null,
+      "surface": [
+        "template",
+        "config"
+      ],
+      "action": "None, unless a tooltip listing five or more readings must keep its colour dots: set [tooltipSwatches]=\"true\" on that chart, or provideDsConfig({ chart: { tooltipSwatches: true } }) for every chart.",
+      "appliesWhen": "A tooltip of ds-chart, ds-bar-chart, ds-column-chart, ds-funnel-chart, ds-pie-chart, ds-heatmap-chart, ds-scatter-chart, ds-waterfall-chart or ds-line-chart that lists five or more readings. Four or fewer keep their dots.",
+      "pitfall": "A test or style that reads the swatch of each tooltip row finds none once the chart has five series.",
+      "restore": "provideDsConfig({ chart: { tooltipSwatches: true } })",
+      "searchHints": [
+        "ds-chart-tooltip-panel",
+        "swatch",
+        "provideDsConfig"
+      ],
+      "detect": [
+        "ds-chart-tooltip-panel",
+        "swatch"
+      ],
+      "verify": "A tooltip with five or more readings shows colour dots only where tooltipSwatches is true on the chart or in DS_CONFIG.chart."
+    },
+    {
+      "id": "chart-category-label-dims-only-under-dim-others",
+      "kind": "behavior",
+      "old": "dimOthers",
+      "new": null,
+      "surface": "template",
+      "action": "None, unless you want hovering a category label to dim the other columns: set dimOthers on that chart.",
+      "appliesWhen": "ds-chart and ds-column-chart with columns and a category axis, dimOthers unset. A legend entry still dims the other series, and a chart with dimOthers set is unchanged.",
+      "restore": "dimOthers",
+      "searchHints": [
+        "dimOthers",
+        "ds-column-chart",
+        "ds-chart"
+      ],
+      "verify": "Hovering a category label dims the other columns only on charts that set dimOthers."
+    },
+    {
+      "id": "line-chart-tooltip-item-none-honoured",
+      "kind": "behavior",
+      "old": "ds-line-chart[tooltip]",
+      "new": null,
+      "surface": "template",
+      "action": "None, unless a ds-line-chart sets tooltip=\"item\" or tooltip=\"none\" and should keep the all-series category panel: set tooltip=\"axis\", or remove the binding.",
+      "appliesWhen": "Only ds-line-chart with tooltip set to \"item\" or \"none\". The default \"axis\" is unchanged; the tooltip input of other charts is not affected.",
+      "pitfall": "A chart set to \"item\" to get per-marker tooltips alongside the category panel now shows only the per-marker ones, and nothing fails.",
+      "restore": "tooltip=\"axis\"",
+      "searchHints": [
+        "tooltip=\"item\"",
+        "tooltip=\"none\"",
+        "[tooltip]="
+      ],
+      "verify": "Every ds-line-chart with tooltip=\"item\" is meant to show per-marker tooltips only, and every one with tooltip=\"none\" no tooltip."
+    },
+    {
+      "id": "chart-range-inputs-take-number-attribute",
+      "kind": "behavior",
+      "old": "HeatmapChartComponent, LineChartComponent",
+      "new": null,
+      "surface": "typescript",
+      "action": "Only in a subclass that redeclares min or max of HeatmapChartComponent, or max or maxSecondary of LineChartComponent: declare it input<number | null, unknown> with the same numberAttribute transform.",
+      "appliesWhen": "A class of yours that extends ds-heatmap-chart or ds-line-chart and redeclares one of those four inputs. Reading the value back and binding it in a template are unaffected.",
+      "restore": null,
+      "searchHints": [
+        "extends HeatmapChartComponent",
+        "extends LineChartComponent"
+      ],
+      "detect": [
+        "extends HeatmapChartComponent",
+        "extends LineChartComponent"
+      ],
+      "verify": "The app builds with no TS2416 on min, max or maxSecondary of a chart subclass.",
+      "note": "The write type widened from number | null to unknown; the value read back is still number | null. Subclassing a DS component is unsupported."
+    },
+    {
+      "id": "exported-class-members-grew",
+      "kind": "behavior",
+      "old": "BarChartComponent, ChartComponent, ColumnChartComponent, ColumnSeriesComponent, FunnelChartComponent, HeatmapChartComponent, LineChartComponent, LineSeriesComponent, PieChartComponent, ScatterChartComponent, WaterfallChartComponent, ChartTooltipPanelComponent, ChartTooltipDirective",
+      "new": null,
+      "surface": "typescript",
+      "action": "Build after upgrading, rename or mark `override` every member of yours the compiler reports as colliding, and delete an override whose base member is gone.",
+      "appliesWhen": "Only a class of yours that extends one of the listed components. Template users of those components need nothing; subclassing a DS component is unsupported.",
+      "pitfall": "`protected` and `private` are no protection: a redeclared member collides exactly as a public one does. A method of yours named like a removed member and declared without `override` still compiles, and is simply never called again.",
+      "restore": null,
+      "searchHints": [
+        "extends BarChartComponent",
+        "extends ChartComponent",
+        "extends ColumnChartComponent",
+        "extends ColumnSeriesComponent",
+        "extends FunnelChartComponent",
+        "extends HeatmapChartComponent",
+        "extends LineChartComponent",
+        "extends LineSeriesComponent",
+        "extends PieChartComponent",
+        "extends ScatterChartComponent",
+        "extends WaterfallChartComponent",
+        "extends ChartTooltipPanelComponent",
+        "extends ChartTooltipDirective"
+      ],
+      "detect": [
+        "extends BarChartComponent",
+        "extends ChartComponent",
+        "extends ColumnChartComponent",
+        "extends ColumnSeriesComponent",
+        "extends FunnelChartComponent",
+        "extends HeatmapChartComponent",
+        "extends LineChartComponent",
+        "extends LineSeriesComponent",
+        "extends PieChartComponent",
+        "extends ScatterChartComponent",
+        "extends WaterfallChartComponent",
+        "extends ChartTooltipPanelComponent",
+        "extends ChartTooltipDirective"
+      ],
+      "verify": "The app builds with no TS4114 or TS2416 against a DS base class, and no subclass keeps a member named after a removed one.",
+      "note": "Every chart component gained tooltipSwatches; ChartComponent also tooltipSwatchesResolved, LineChartComponent plotCursor, ScatterChartComponent hoveredIndex, nearestMark, onCanvasLeave and onCanvasPointer, ColumnSeriesComponent soleSeries and slotStepPx, the internal ChartTooltipPanelComponent showsSwatches and swatches, the internal ChartTooltipDirective dsChartTooltipSwatches, glide and glideFrom. tooltipLingerMs on ColumnSeriesComponent and LineSeriesComponent defaults to 500. ScatterChartComponent lost onPointOver and onPointOut, ColumnSeriesComponent lost dimsFromLabel and slotBandPx. The compiler names every collision."
+    }
+  ],
+  "informational": [
+    {
+      "text": "A toast's announcement stays off screen from the first toast on a page. ToastService speaks through the CDK LiveAnnouncer, whose region carries .cdk-visually-hidden, and the CDK loads that rule only with a dialog or a focus trap, so until one opened the announcement rendered as text at the page's bottom-left. styles/toast-overlay, which styles/ds forwards, declares the rule, and an app's own include of it is redundant (delete list: cdk-visually-hidden-include).",
+      "verify": "On a freshly loaded page, show a toast before opening any dialog: .cdk-live-announcer-element measures 1x1 px and the toast text appears nowhere else on the page."
+    },
+    "The chart tooltip glides from the mark it left to the mark it reached, tuned by --ds-motion-chart-tooltip-move-duration (300ms, 0ms under reduced motion) and --ds-motion-chart-tooltip-move-easing (var(--ease-standard)).",
+    {
+      "text": "A scroll of the window or an ancestor scroll container closes an unpinned chart tooltip instead of repositioning it; a pinned one repositions and stays.",
+      "verify": "Hover a chart mark inside a scroll container, scroll the container, and confirm the tooltip closes; pin a mark, scroll, and confirm it follows the mark."
+    },
+    {
+      "text": "A captionless chart no longer gains top padding while a mark is held; the Unpin control floats over the top end of the plot. A captioned chart keeps the control on its caption line.",
+      "verify": "Click a mark of a chart with no caption and confirm the chart's height does not change and Unpin sits over the plot's top end."
+    },
+    {
+      "text": "Chart hit areas tile the plot: ds-chart and ds-column-chart answer the nearest category across the gap between column bands, a ds-waterfall-chart step answers at any plot height in its category, a ds-heatmap-chart cell reaches half the gap on each side, and a ds-scatter-chart point answers within 16 screen pixels of its centre. dsColumnSeries takes soleSeries for an offsets series drawn as one series.",
+      "verify": "Move the pointer across the gap between two columns and between two heat-map cells and confirm a mark answers at every position."
+    },
+    "The hovered ds-heatmap-chart colour-scale step grows to 1.75x its height.",
+    "A hovered ds-funnel-chart stage-table row is tinted edge to edge with --ds-chart-legend-hover-bg-color and --ds-chart-legend-hover-text-color.",
+    {
+      "text": "The ds-funnel-chart figure clips its vertical overflow, so stage rows rising in the entrance no longer flash a vertical scrollbar; horizontal scrolling is kept.",
+      "verify": "Replay a funnel chart's entrance and confirm no vertical scrollbar appears while a narrow one still scrolls horizontally."
+    },
+    "min and max on ds-heatmap-chart and max and maxSecondary on ds-line-chart accept a static attribute such as min=\"0\", coerced with numberAttribute."
+  ],
+  "deleteList": [
+    {
+      "id": "cdk-visually-hidden-include",
+      "surface": "style",
+      "find": [
+        "a11y-visually-hidden",
+        "a11y-prebuilt.css"
+      ],
+      "why": "styles/toast-overlay, which styles/ds forwards, declares .cdk-visually-hidden for the announcer region ToastService writes to, so an app-level include of the CDK rule restates it.",
+      "replaceWith": "nothing; keep it where the app loads neither styles/ds nor styles/toast-overlay"
+    },
+    {
+      "id": "chart-hover-delay-zero-redundant",
+      "surface": "config",
+      "find": [
+        "hoverDelayMs: 0"
+      ],
+      "why": "DS_CONFIG.chart.hoverDelayMs defaults to 0, so setting it to 0 restates the default.",
+      "replaceWith": "nothing"
+    }
+  ]
+}

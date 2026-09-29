@@ -1,6 +1,6 @@
 <svg:g
   class="columns"
-  [class.dims-others]="dimOthers() || dimsFromLabel()"
+  [class.dims-others]="dimOthers()"
   [class.is-dimmed]="dimmedBySeries()"
   [style.--_column-chart-column-share]="markWidthPx()"
   [style.--_column-chart-slot-step]="slotStepPx()"
@@ -55,7 +55,7 @@
       "
       [attr.aria-label]="interactive() ? entryLabel(mark) : null"
       (animate.leave)="leaveMark($event)">
-      <!-- The pointer target is the whole category slot, not the drawn column, so a two-pixel column stays reachable. -->
+      <!-- The pointer target is the whole category slot, so a two-pixel column stays reachable. -->
       @let hit = hitBox(mark);
 
       <svg:rect

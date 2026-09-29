@@ -2,8 +2,8 @@
 export type DsStatus = 'info' | 'success' | 'warning' | 'error';
 
 /**
- * Consumer-extensible registry of product status keys for ds-badge / ds-status-dot. It ships
- * EMPTY; a consumer registers keys via declaration merging to get autocomplete on `status`:
+ * Registry of product status keys for ds-badge / ds-status-dot. Ships EMPTY; register keys via
+ * declaration merging to get autocomplete on `status`:
  *
  *   declare module '@ids-group-ltd/ids-design-system' {
  *     interface DsStatusRegistry { shipped: true; delivered: true; }

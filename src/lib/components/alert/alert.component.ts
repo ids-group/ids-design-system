@@ -23,7 +23,6 @@ import type { AlertVariant } from './alert.types';
   imports: [IconComponent],
   templateUrl: './alert.component.html',
   styleUrl: './alert.component.scss',
-  // A static `title="…"` also stays as the global attribute, giving the whole host a native tooltip.
   host: { '[attr.title]': 'null' },
   encapsulation: ViewEncapsulation.Emulated,
 })
@@ -42,7 +41,7 @@ export class AlertComponent {
   readonly closed = output<void>();
 
   /** Announce this alert to a screen reader when it appears. Unset follows
-   *  `DS_CONFIG.alert.announce`, then `false`. Prefer `ToastService` for anything transient. */
+   *  `DS_CONFIG.alert.announce`, then `false`. */
   readonly announce = input<boolean | null, unknown>(null, {
     transform: (value) => (value == null ? null : booleanAttribute(value)),
   });

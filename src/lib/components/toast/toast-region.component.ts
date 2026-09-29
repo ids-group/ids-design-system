@@ -19,12 +19,11 @@ import type { ToastEntry } from './toast.types';
 // Fallback floor; leaveDuration() reads the real length off the node.
 const LEAVE_FALLBACK_MS = 180;
 
-// A toast whose clock ran out under the pointer gets this long to be seen going once the pointer leaves.
+// Grace period once the pointer leaves a toast whose clock ran out under it.
 const MIN_RESUME_MS = 600;
 
 const DEFAULT_MAX_VISIBLE = 5;
 
-// The counter says "99+" past this.
 const QUEUE_COUNT_CAP = 99;
 
 @Component({
@@ -88,7 +87,7 @@ export class ToastRegionComponent {
       this.maxVisible();
       this.drainQueue();
     });
-    // An uncancelled timer fires into a destroyed component (shows up as pending timers under fakeAsync).
+    // An uncancelled timer fires into a destroyed component.
     inject(DestroyRef).onDestroy(() => {
       this.timers.forEach((timer) => window.clearTimeout(timer));
       this.leaveTimers.forEach((timer) => window.clearTimeout(timer));
@@ -97,8 +96,7 @@ export class ToastRegionComponent {
     });
   }
 
-  /** Newest goes NEAREST the anchor, where the stack is pinned. DOM order is the
-   *  visual order, so this also keeps the reading order. */
+  /** Newest goes NEAREST the anchor; DOM order is the visual and reading order. */
   protected readonly newestFirst =
     (this.position?.verticalPosition ??
       DS_TOAST_POSITION_DEFAULT.verticalPosition) === 'top';
@@ -123,8 +121,7 @@ export class ToastRegionComponent {
     this.slideNeighbours(before);
   }
 
-  /** FLIP, not an absolute stack: absolute positioning collapses the region (and its hit
-   *  area) to zero height inside the content-sized CDK pane. */
+  /** FLIP, not an absolute stack: that collapses the region to zero height inside the content-sized CDK pane. */
   private slideNeighbours(before: Map<number, number>): void {
     if (!before.size) {
       return;
@@ -215,8 +212,7 @@ export class ToastRegionComponent {
     this.syncPause();
   }
 
-  // `focusout` also fires when focus moves BETWEEN elements inside the region; without the
-  // containment check that reads as leaving and re-floors the remainder at MIN_RESUME_MS.
+  // `focusout` also fires when focus moves BETWEEN elements inside the region; the containment check avoids re-flooring at MIN_RESUME_MS.
   protected onFocusWithin(event: FocusEvent | true): void {
     this.focusWithin =
       event === true ||
@@ -258,9 +254,8 @@ export class ToastRegionComponent {
     }
   }
 
-  /** Replace fields of an already-visible or queued toast in place. Patching
-   *  `durationMs` restarts the clock, and on a QUEUED toast it takes effect only on
-   *  promotion, otherwise a duration would burn down while the toast is invisible. */
+  /** Replaces fields of a visible or queued toast in place. Patching `durationMs`
+   *  restarts the clock; on a QUEUED toast it takes effect on promotion. */
   update(
     id: number,
     patch: Partial<
@@ -327,9 +322,8 @@ export class ToastRegionComponent {
     );
   }
 
-  /** The leave transition is a public token, so its length is whatever the consumer
-   *  set, so read it off the node. Reduced motion zeroes it, which
-   *  is why the floor applies only when there is nothing to measure. */
+  /** The leave transition length is a public token, so read it off the node. Reduced
+   *  motion zeroes it, so the floor applies only when there is nothing to measure. */
   private leaveDuration(id: number): number {
     const node = this.toastNodes().get(id);
     if (!node) {

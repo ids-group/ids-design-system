@@ -1,5 +1,3 @@
-// `display: contents` by default: the wrapper adds no box.
-//
 // Fit mode needs `min-width: 0` with `overflow: hidden`, or the measuring frame that renders every
 // chip would widen the trigger instead of clipping.
 @mixin chip-row {
@@ -11,8 +9,6 @@
     align-items: center;
     min-width: 0;
     overflow: hidden;
-
-    // The trigger owns chip spacing in both modes; pickers' gap tokens differ.
     gap: inherit;
 
     // A squeezed chip must clip, never wrap: a two-line chip grows the trigger.

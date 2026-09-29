@@ -18,8 +18,7 @@ export interface ScatterExtent {
   readonly yMax: number;
 }
 
-/** The span of every plotted reading on both scales. A non-finite coordinate is not a position, so
- *  it neither widens the plot nor lands on an edge of it.
+/** The span of every plotted reading on both scales; non-finite coordinates are ignored.
  *
  *  @internal */
 export function scatterExtent(
@@ -41,8 +40,7 @@ export function scatterExtent(
   };
 }
 
-/** Where one reading lands, clamped into the plot: a domain pinned narrower than the data would
- *  otherwise put a mark over the axis labels.
+/** Where one reading lands, clamped into the plot so a narrower pinned domain cannot put a mark over the axis labels.
  *
  *  @internal */
 export function scatterPlacement(

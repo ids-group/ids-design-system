@@ -21,8 +21,6 @@
   font: var(--font-weight-bold) var(--font-size-xs) / var(--line-height-flat) var(--font-sans);
   letter-spacing: var(--letter-spacing-wide);
   flex-shrink: 0;
-
-  /* Visible so the status dot can escape the avatar boundary. */
   overflow: visible;
   position: relative;
 }
@@ -32,8 +30,6 @@ img {
   height: 100%;
   object-fit: cover;
   border-radius: inherit;
-
-  /* Clips the image to the avatar shape, not the status dot. */
   overflow: hidden;
 }
 

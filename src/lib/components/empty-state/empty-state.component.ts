@@ -10,7 +10,6 @@ import type { EmptyStateVariant } from './empty-state.types';
   imports: [IconComponent, LoadingOverlayComponent],
   templateUrl: './empty-state.component.html',
   styleUrl: './empty-state.component.scss',
-  // A static `title="…"` also stays as the global attribute, giving the whole host a native tooltip.
   host: { '[attr.title]': 'null' },
   encapsulation: ViewEncapsulation.Emulated,
 })

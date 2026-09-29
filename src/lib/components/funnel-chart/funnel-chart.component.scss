@@ -11,13 +11,10 @@
 }
 
 @include chart-motion.leaves('.stage');
-
-// A row rises in once its band has arrived.
 @include chart-motion.follows('.stage-table tbody > tr > *', var(--ds-motion-chart-mark-enter-duration));
 @include chart-frame.chart-frame;
 @include chart-frame.no-bounding-box-focus('.stage');
 @include chart-data-table.chart-data-table;
-
 
 .funnel-chart {
   --_funnel-chart-stage-height: var(--ds-funnel-chart-stage-height, 44px);
@@ -28,7 +25,6 @@
   --_funnel-chart-row-hover-bg-color: var(--ds-chart-legend-hover-bg-color, var(--surface-secondary));
   --_funnel-chart-row-hover-text-color: var(--ds-chart-legend-hover-text-color, var(--text-primary));
 
-  /* The shared mixins read `--focus-ring-*` and `--ds-chart-focus-ring-color`; the hooks above need these. */
   --ds-chart-focus-ring-color: var(--_funnel-chart-focus-color);
   --focus-ring-color: var(--_funnel-chart-focus-color);
   --focus-ring-width: var(--_funnel-chart-focus-width);
@@ -62,12 +58,8 @@ svg {
   inline-size: 100%;
 }
 
-
-
-
 /* focus-ring-guard: an outline on an SVG element paints its bounding box, not its silhouette (Chrome
    153), so the ring is a stroke; `own-indicator` keeps the outline under forced colours. */
-// Transparent, so the gap looks unchanged while the band answers a pointer across it.
 .stage {
   stroke: transparent;
 }
@@ -117,7 +109,6 @@ svg {
   text-align: start;
 }
 
-// The stage table is the funnel's legend.
 @include chart-interactive.legend-entry(
   '.stage-table tbody > tr',
   var(--_funnel-chart-row-hover-bg-color),
@@ -133,7 +124,6 @@ svg {
   border-radius: var(--radius-sm);
 }
 
-
 .shape {
   @include chart-interactive.fades('.stage', ', fill var(--ds-motion-chart-mark-duration) var(--ds-motion-chart-mark-easing)');
   @include chart-interactive.clickable('.stage');
@@ -142,7 +132,6 @@ svg {
 @include chart-frame.forced-colors;
 @include chart-frame.pin-reset;
 @include chart-frame.pin-marker;
-
 
 /* Against the shape, not the svg, so the horizontal stretch never reaches the marker. */
 .shape {

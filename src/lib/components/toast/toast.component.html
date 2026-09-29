@@ -1,6 +1,5 @@
-<!-- No role or aria-live: a region created with its text already in it announces
-     nothing, so ToastService speaks through the CDK LiveAnnouncer. A hand-placed
-     <ds-toast> is silent to a reader: it is a specimen, not an event. -->
+<!-- No role or aria-live: a region created with its text already in it announces nothing;
+     ToastService speaks through the CDK LiveAnnouncer. A hand-placed <ds-toast> is silent. -->
 <div [class]="classes()">
   @if (isLoading()) {
     <!-- aria-hidden because ds-spinner is a role="status" of its own: the message is

@@ -25,12 +25,11 @@ import type { TabsOrientation, TabsVariant } from './tabs.types';
 
 let nextId = 0;
 
-// Claimed query parameters, so two strips on one screen cannot fight over one. Dev-only.
+// Dev-only: query parameters claimed by a strip.
 const claimedUrlParams = new Map<string, number>();
 
-/** Label to URL name. Diacritics are dropped ("Zusätze" gives `zusatze`); a label
- *  with nothing sluggable in it (CJK, bare punctuation) keeps its raw text rather
- *  than becoming an empty parameter. */
+/** Label to URL name. Diacritics are dropped; a label with nothing sluggable in it
+ *  (CJK, bare punctuation) keeps its raw text. */
 function slugify(label: string): string {
   const slug = label
     .normalize('NFKD')
@@ -62,52 +61,39 @@ export class TabsComponent {
   /** Visual style of the tab strip. */
   readonly variant = input<TabsVariant>('line');
 
-  /** When true, a tab's content is instantiated only on first activation and
-      kept alive thereafter. When false (default), all panels render eagerly. */
+  /** When true, a tab's content is instantiated on first activation and kept alive. Default renders all panels eagerly. */
   readonly lazy = input(false, { transform: booleanAttribute });
 
-  /** When true, a horizontal strip scrolls inside its own box and shows
-      previous/next arrows while tabs lie beyond its edges, each arrow hidden at
-      its own edge. The active tab is scrolled into view on selection. When
-      false, tabs keep their width and a strip too long for its container
-      overflows it. */
+  /** When true, a horizontal strip scrolls inside its own box with previous/next arrows
+      while tabs lie beyond its edges, and the active tab is scrolled into view.
+      When false, an overlong strip overflows its container. */
   readonly scrollable = input(false, { transform: booleanAttribute });
 
-  /** When true, each tab shows a close button. Clicking it emits tabClosed with
-      the tab's value (or label as fallback) and does not switch to that tab. */
+  /** When true, each tab shows a close button; clicking it emits `tabClosed` and does not switch to that tab. */
   readonly closable = input(false, { transform: booleanAttribute });
 
-  /** Controls whether the tab list and panel are stacked horizontally (default)
-      or the tab list runs vertically beside the panel. */
+  /** Tab list above the panel (`horizontal`, default) or beside it (`vertical`). */
   readonly orientation = input<TabsOrientation>('horizontal');
 
   /**
-   * Keep the active tab in a query parameter, so it survives F5, a shared link
-   * and the Back button: `urlParam="tab"` gives `?tab=activity`. Empty (the
-   * default) leaves the URL alone.
+   * Keep the active tab in a query parameter so it survives reload and sharing:
+   * `urlParam="tab"` gives `?tab=activity`. Empty (default) leaves the URL alone.
    *
-   * The names come from each `ds-tab`'s `value` (falling back to its `label`).
-   * **Names, not indices**: `?tab=1` would silently repoint every old link the
-   * moment a tab is inserted. The FIRST tab writes no parameter and every write
-   * REPLACES the history entry, so flipping tabs does not fill the Back button.
+   * Names come from each `ds-tab`'s `value` (falling back to its `label`), not
+   * indices, so inserting a tab does not repoint old links. The FIRST tab writes
+   * no parameter and every write REPLACES the history entry. An unknown name
+   * lands on the first tab.
    *
-   * An unknown or missing name lands on the first tab rather than throwing.
-   *
-   * Outside a routed context the input is inert; no router lookup or subscription
-   * happens until you set it.
+   * Outside a routed context the input is inert.
    */
   readonly urlParam = input<string>('');
 
   /** Reopen the tab this screen was last left on, per path, from `sessionStorage`.
-   *  Off by default, and needs `urlParam` for the names (a remembered INDEX would
-   *  repoint when a tab is inserted). A link always wins: the parameter is read
-   *  first, memory only fills the gap the first tab leaves in the URL. Kept in
-   *  `sessionStorage`, so tomorrow is a fresh visit. */
+   *  Off by default; needs `urlParam` for the names. A link always wins: memory only
+   *  fills the gap the first tab leaves in the URL. */
   readonly rememberLastTab = input(false, { transform: booleanAttribute });
 
-  /** Emitted when a close button is clicked. Carries the tab's value input, or
-      its label when value is not set. The host is responsible for removing the
-      tab from its list. */
+  /** Emitted when a close button is clicked, with the tab's value (or label). The host removes the tab. */
   readonly tabClosed = output<string>();
 
   private readonly host = inject(ElementRef<HTMLElement>);
@@ -127,8 +113,7 @@ export class TabsComponent {
 
   protected readonly tabs = contentChildren(TabComponent);
 
-  // Router lookups go through the Injector on demand: `inject(Router)` at construction
-  // would run for every strip, and most are outside a routed context (dialogs, static pages).
+  // On-demand Router lookup: most strips sit outside a routed context (dialogs, static pages).
   private readonly injector = inject(Injector);
   private router: Router | null = null;
   private route: ActivatedRoute | null = null;
@@ -152,8 +137,7 @@ export class TabsComponent {
       onCleanup(() => observer.disconnect());
     });
 
-    // Two strips sharing a parameter erase each other's tab; nothing throws, the reload
-    // just restores the wrong one.
+    // Two strips sharing a parameter silently erase each other's tab.
     if (isDevMode()) {
       effect((onCleanup) => {
         const param = this.urlParam();
@@ -191,8 +175,7 @@ export class TabsComponent {
       onCleanup(() => subscription.unsubscribe());
     });
 
-    // URL -> tab. Re-runs when the tabs arrive (content children resolve after the first
-    // pass) and on Back/Forward. The equality check below stops it looping with `writeUrl`.
+    // URL -> tab. Re-runs when the tabs arrive and on Back/Forward; the equality check stops a loop with `writeUrl`.
     effect(() => {
       const param = this.urlParam();
       const params = this.urlParams();
@@ -219,9 +202,8 @@ export class TabsComponent {
     return !!this.router && !!this.route;
   }
 
-  /** The tab's name as it appears in the URL, deliberately NOT what `tabClosed` emits
-   *  (the label, which a host matches against its own list). A slug derives from display
-   *  copy, so renaming a tab breaks saved links unless `value` is set. */
+  /** The tab's name in the URL, deliberately NOT what `tabClosed` emits. A slug derives from
+   *  display copy, so renaming a tab breaks saved links unless `value` is set. */
   private tabName(tab: TabComponent): string {
     return tab.value() ?? slugify(tab.label());
   }
@@ -412,7 +394,6 @@ export class TabsComponent {
     if (!count) {
       return;
     }
-    // APG: Delete removes the focused tab when the tablist is closable.
     if (this.closable() && event.key === 'Delete') {
       event.preventDefault();
       this.closeTab(index);
@@ -422,9 +403,7 @@ export class TabsComponent {
     const isVertical = this.orientation() === 'vertical';
     const forwardKey = isVertical ? 'ArrowDown' : 'ArrowRight';
     const backwardKey = isVertical ? 'ArrowUp' : 'ArrowLeft';
-    // Keep both axes active so vertical also responds to Left/Right and
-    // horizontal also responds to Up/Down for cross-axis discoverability,
-    // matching the ARIA APG recommendation for roving tabindex.
+    // Both axes stay active (cross-axis keys too), per the APG roving tabindex recommendation.
     const forward =
       event.key === forwardKey ||
       (!isVertical && event.key === 'ArrowDown') ||

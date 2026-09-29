@@ -37,6 +37,7 @@
   } @else {
     <ds-chart
       frame="none"
+      [tooltipSwatches]="tooltipSwatches()"
       [categories]="categories()"
       [tickCount]="tickCount()"
       [valueFormat]="valueFormatResolved()"
@@ -54,10 +55,14 @@
       <svg:g
         dsColumnSeries
         showValues="false"
+        soleSeries
         [data]="points()"
         [offsets]="offsets()"
         [interactive]="interactive()"
         [pinOnClick]="pinOnClick()"
+        [dimOthers]="dimOthers()"
+        [tooltip]="tooltip()"
+        [tooltipLingerMs]="defaults.tooltipLingerMs()"
         [staggerMs]="staggerMs()"
         [valueFormat]="valueFormatResolved()"
         (pointClicked)="onPointClicked($event)" />

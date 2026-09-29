@@ -25,7 +25,6 @@
   --warning-pressed:        color-mix(in srgb, var(--warning) 76%, white);
   --info-hover:             color-mix(in srgb, var(--info) 88%, white);
 
-  // Channel-derived so they track a rebrand.
   --surface-tint:         hsl(var(--primary-h) 45% 16%);
   --primary-subtitle:     hsl(var(--primary-h) 45% 18%);
   --primary-muted:        hsl(var(--primary-h) 40% 26%);
@@ -72,23 +71,20 @@
   // Must not follow --shadow-tint-l (95%) or the scrim turns light.
   --surface-scrim: hsl(225deg 39% 4% / 70%);
 
-  // Boosted for legibility on dark.
   --focus-field-alpha: .35;
 
   // Axis, grid, label and cursor already flip via --neutral-* / --text-*; only light-tuned values move.
-  --chart-hover-bg-color:     hsl(0deg 0% 100% / 6%); // light wash (default dark wash is invisible on dark)
-  --chart-tooltip-bg-color:   var(--surface-overlay);  // native dark tooltip, not an inverted light box
+  --chart-hover-bg-color:     hsl(0deg 0% 100% / 6%);
+  --chart-tooltip-bg-color:   var(--surface-overlay);
   --chart-tooltip-text-color: var(--text-primary);
   --chart-tooltip-border-color:     var(--border-strong);
 
-  // The two chart neutrals are dark on light to keep a lightness gap from the emerald; on a dark
-  // canvas that gap points the wrong way and they read as holes, so both flip. Slot 8 sits at dE 12
-  // from the orchid under protanopia (the rest of the set holds dE 15); the orchid desaturates
-  // almost to grey there, and slot 8 is the "other" bucket.
+  // The two chart neutrals are dark on light to keep a lightness gap from the emerald; on a dark canvas that
+  // gap points the wrong way and they read as holes, so both flip. Slot 8 sits at dE 12 from the orchid under
+  // protanopia (the rest hold dE 15), and slot 8 is the "other" bucket.
   --chart-categorical-8: hsl(222deg 14% 60%);
   --chart-series-default: hsl(222deg 14% 64%);
 
-  // Ramp: deep to bright, first to last.
   --chart-ramp-1: hsl(  8deg 52% 32%);
   --chart-ramp-2: hsl(  8deg 56% 37%);
   --chart-ramp-3: hsl(  8deg 61% 42%);
@@ -98,9 +94,7 @@
   --chart-ramp-7: hsl(  8deg 79% 64%);
   --chart-ramp-8: hsl(  8deg 84% 70%);
 
-  // Heat: flipped so a heat map keeps the same readable steps in either theme. Adjacent dE
-  // 5.9-10.1, first to last 54.5 (OKLab, measured 2026-09-19). The lightness curve mirrors the
-  // light scale.
+  // Heat: flipped so a heat map keeps the same readable steps in either theme (adjacent OKLab dE 5.9-10.1, measured 2026-09-19).
   --chart-heat-1: hsl(  8deg 68% 20%);
   --chart-heat-2: hsl(  8deg 74% 29%);
   --chart-heat-3: hsl(  8deg 78% 38%);
@@ -110,7 +104,6 @@
   --chart-heat-7: hsl(  8deg 67% 74%);
   --chart-heat-8: hsl(  8deg 60% 84%);
 
-  // Sequential: dark to bright, low to high.
   --chart-sequential-1: var(--blue-800);
   --chart-sequential-2: var(--blue-700);
   --chart-sequential-3: var(--blue-600);

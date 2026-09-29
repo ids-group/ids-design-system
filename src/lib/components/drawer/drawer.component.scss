@@ -19,15 +19,13 @@
   --_drawer-leave-duration: var(--ds-drawer-leave-duration, var(--ds-motion-exit-large-duration));
   --_drawer-leave-easing: var(--ds-drawer-leave-easing, var(--ds-motion-exit-large-easing));
 
-  /* The scrim reads the same public tokens but keeps its own faster default. */
   --_drawer-scrim-enter-duration: var(--ds-drawer-enter-duration, var(--ds-motion-enter-panel-duration));
   --_drawer-scrim-leave-duration: var(--ds-drawer-leave-duration, var(--ds-motion-exit-duration));
   --_ds-enter-scale: var(--ds-drawer-enter-scale, 0.96);
 
   display: contents;
 
-  // Reduced motion zeroes the duration, never the animation: at 0s `animationend` is not
-  // reliably delivered, so the component's 300 ms fallback timer tears down.
+  // Zero duration, never `animation: none`: the component's fallback timer tears down.
   @media (prefers-reduced-motion: reduce) {
     --_drawer-enter-duration: 0ms;
     --_drawer-leave-duration: 0ms;
@@ -41,9 +39,8 @@
   inset: 0;
   z-index: var(--layer-modal);
 
-  /* clip, not hidden: the sliding panel (translate +-100%) must not add scrollable
-     overflow to ancestor frames, where the focus-trap's initial focus() would scroll
-     the host app's content. Scrim and panel are `absolute` so this box clips them. */
+  /* clip, not hidden: the sliding panel must not add scrollable overflow to ancestor
+     frames, where the focus-trap's initial focus() would scroll the host app. */
   overflow: clip;
 
   &.closing {
@@ -86,11 +83,8 @@
   display: flex;
   flex-direction: column;
 
-  /* Stacking context so negative z-index content projected into the body can't sink under the scrim. */
+  /* Keeps negative z-index projected content from sinking under the scrim. */
   isolation: isolate;
-
-  /* Enter is shared; only the travel (--_ds-enter-x/y) and the leave keyframe
-     differ per side, so --ds-drawer-enter-keyframes re-skins all four. */
   animation-name: var(--_drawer-enter-keyframes);
   animation-duration: var(--_drawer-enter-duration);
   animation-timing-function: var(--_drawer-enter-easing);
@@ -101,7 +95,6 @@
     animation-fill-mode: forwards;
   }
 
-  /* Size variants apply to right/left panels. */
   &.sm { width: var(--_drawer-width-sm); }
   &.md { width: var(--_drawer-width-md); }
   &.lg { width: var(--_drawer-width-lg); }

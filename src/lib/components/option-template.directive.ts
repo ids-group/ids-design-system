@@ -12,9 +12,8 @@ import { Directive, TemplateRef, inject } from '@angular/core';
  * </ds-multi-select>
  * ```
  *
- * The row itself stays library-owned: `role="option"`, `aria-selected`, the
- * active-row class, the checkbox and the check glyph are not projected, so a
- * template cannot take the listbox semantics with it.
+ * The row stays library-owned: `role="option"`, `aria-selected`, the active-row class,
+ * the checkbox and the check glyph are not projected.
  */
 @Directive({
   selector: '[dsOptionTemplate]',

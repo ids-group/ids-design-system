@@ -22,8 +22,6 @@
   --_icon-button-radius: var(--ds-icon-button-radius, var(--ds-radius-control));
   --_icon-button-press-scale: var(--ds-icon-button-press-scale, 0.96);
 
-  /* Disabled tone, mirroring ds-button: the fill differs per variant, the icon has one recipe at
-     70% lightness. There is no word to read, only a 16px glyph at 1.75px stroke. */
   --_icon-button-accent: var(--_icon-button-icon-color);
   --_icon-button-bg-color-disabled: var(--ds-icon-button-bg-color-disabled, transparent);
   --_icon-button-icon-color-disabled: var(--ds-icon-button-icon-color-disabled, oklch(from var(--_icon-button-accent) 70% 0.035 h));
@@ -114,7 +112,6 @@
     --_icon-button-bg-color-disabled: var(--ds-icon-button-bg-color-disabled, color-mix(in srgb, var(--_icon-button-bg-color) 28%, var(--surface-disabled)));
   }
 
-  /* Transparent so it adopts the surface under it, as ds-button's outline does. */
   &.outlined {
     --_icon-button-bg-color:        var(--ds-icon-button-bg-color,        transparent);
     --_icon-button-icon-color:        var(--ds-icon-button-icon-color,        var(--text-primary));

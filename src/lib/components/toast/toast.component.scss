@@ -13,8 +13,7 @@
     transform var(--_toast-shift-duration) var(--_toast-shift-easing);
 }
 
-/* Restates the transform timing rather than inheriting the shift's: a dismissal and a
-   re-stack are different motions. */
+/* Restates the transform timing rather than inheriting the shift's. */
 :host(.leaving) {
   opacity: 0;
   transform: translateY(calc(var(--space-2) * -1));
@@ -24,8 +23,7 @@
     transform var(--_toast-leave-duration) var(--_toast-leave-easing);
 }
 
-/* The inverted half of the region's FLIP. The transition is suppressed so the
-   jump-back is not itself animated; releasing the class carries it to 0. */
+/* Inverted half of the region's FLIP; the transition is suppressed so the jump-back is not animated. */
 :host(.shifting) {
   transform: translateY(var(--_toast-shift, 0));
   transition: none;
@@ -43,7 +41,6 @@
   --_toast-min-width: var(--ds-toast-min-width, var(--toast-minw));
   --_toast-max-width: var(--ds-toast-max-width, var(--toast-maxw));
 
-  /* Positive: the toast rises INTO place from below its resting spot. */
   --_ds-enter-y: var(--_toast-enter-offset);
   --_ds-enter-scale: var(--ds-toast-enter-scale, 0.96);
 

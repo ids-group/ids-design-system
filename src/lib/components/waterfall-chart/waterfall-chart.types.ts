@@ -1,16 +1,12 @@
-/** What a bar is, which decides where it stands rather than how it is coloured.
- *
- *  A `'delta'` hangs from the level the bar before it left off at. A `'total'` or a `'subtotal'`
- *  stands on zero at the running sum. The two differ only in the chain: the running sum carries on
- *  past a subtotal and a closing total ends it. */
+/** What a bar is, which decides where it stands. A `'delta'` hangs from the level the bar before it
+ *  left off at; a `'total'` or `'subtotal'` stands on zero at the running sum. */
 export type WaterfallChartKind = 'delta' | 'total' | 'subtotal';
 
 export interface WaterfallChartBar {
-  /** Falls back to the bar's position when left out, so a reorder rewrites the DOM. */
+  /** Falls back to the bar's position; a reorder then rewrites the DOM. */
   readonly id?: string;
   readonly label: string;
-  /** Added to the running sum wherever it sits. A closing total usually carries `0`: it prints the
-   *  sum reached, not a change of its own. */
+  /** Added to the running sum wherever it sits. A closing total usually carries `0`. */
   readonly value: number;
   /** Defaults to `'delta'`. */
   readonly kind?: WaterfallChartKind;

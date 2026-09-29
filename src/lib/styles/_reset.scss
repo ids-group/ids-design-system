@@ -1,7 +1,6 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
-/* Lets components transition height between 0 and auto (accordion, sidenav group). */
 :root { interpolate-size: allow-keywords; }
 html, body {
   margin: 0;
@@ -11,11 +10,8 @@ html, body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizelegibility;
 
-  /* Android Chrome's tap overlay is a rectangle that ignores border-radius and overflow, so it
-     pokes square corners past rounded controls. Controls provide their own :active feedback. */
+  /* Android Chrome's tap overlay is a rectangle that ignores border-radius; controls provide their own :active feedback. */
   -webkit-tap-highlight-color: transparent;
 }
 button, input, select, textarea { font-family: inherit; }
-
-/* Spacing is owned by the surrounding layout, not the heading; size comes from .t-* utils. */
 h1, h2, h3, h4, h5, h6 { margin: 0; }

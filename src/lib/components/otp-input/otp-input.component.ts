@@ -56,8 +56,7 @@ export class OtpInputComponent extends DsControlValueAccessor<string> {
   readonly mask = input(false, { transform: booleanAttribute });
   /** Disables all cells and blocks interaction. */
   readonly disabled = input(false, { transform: booleanAttribute });
-  /** Confirmation text, shown when there is no error or warning; also paints the success
-   *  border. A string like `warning`: the text is the state. */
+  /** Confirmation text, shown when there is no error or warning; also paints the success border. */
   readonly success = input<string, string | null | undefined>('', {
     transform: trimmedText,
   });

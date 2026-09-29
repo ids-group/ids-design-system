@@ -12,11 +12,10 @@ export interface AnnounceState {
 }
 
 /**
- * Warns about the two ways `announce` on `ds-banner` / `ds-alert` goes wrong without anyone
- * deciding it: an assertive element left unbound while `DS_CONFIG.<section>.announce` is unset
- * (a screen reader will not hear it), and a polite one that announces only because that key is
- * `true` (nearly always page furniture). Once per instance, dev mode only; the caller wraps the
- * call in the `typeof ngDevMode` guard (see `devWarn`). Must be called from an injection context.
+ * Warns about two undecided `announce` cases on `ds-banner` / `ds-alert`: an assertive element
+ * left unbound while `DS_CONFIG.<section>.announce` is unset (not heard), and a polite one that
+ * announces only because that key is `true`. Once per instance, dev mode only; the caller wraps
+ * the call in the `typeof ngDevMode` guard (see `devWarn`). Must be called from an injection context.
  * @internal
  */
 export function warnAnnounceOversight(

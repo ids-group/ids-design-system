@@ -2,10 +2,9 @@
 @use '../../styles/press' as press;
 
 :host {
-  /* `display: contents` makes the inner <button> the grid item while the a11y tree keeps grid > row > gridcell(host) > button. */
+  /* Makes the inner <button> the grid item while the a11y tree keeps grid > row > gridcell(host) > button. */
   display: contents;
 
-  /* Reads the --ds-date-picker-day-* family, so overrides on <ds-date-picker> inherit straight in. */
   --_date-picker-day-hover-bg-color:          var(--ds-date-picker-day-hover-bg-color,          var(--surface-secondary));
   --_date-picker-day-today-label-color:       var(--ds-date-picker-day-today-label-color,       var(--accent));
   --_date-picker-day-selected-bg-color:       var(--ds-date-picker-day-selected-bg-color,       var(--accent));

@@ -33,7 +33,6 @@
   gap: var(--space-2);
   padding: var(--space-2) var(--space-2) var(--space-6);
 
-  /* No brand text and no projected [brand] logo: collapse the row. */
   &:empty { display: none; }
 }
 
@@ -46,13 +45,10 @@
     @include focus.ring;
   }
 
-  /* ::ng-deep because projected nodes carry the consumer's attribute; anchored on `.brand`
-     to stay scoped, and a DIRECT child match so a logo's inner markup is left alone. */
+  /* ::ng-deep for projected nodes; direct child so a logo's inner markup is left alone. */
   ::ng-deep > [brand] {
-    /* `none` by default: constraining an existing projected logo would silently resize it.
-       Opt in with `--ds-sidenav-brand-max-height: var(--sidenav-logo-size)` or any height.
-       Height alone: an <img> keeps its ratio under max-height, and a width here would
-       out-rank one the consumer set. */
+    /* `none` by default: a cap would silently resize an existing logo. Height alone: a width
+       here would out-rank one the consumer set. */
     max-height: var(--ds-sidenav-brand-max-height, none);
   }
 }
@@ -74,15 +70,14 @@
 }
 
 :host(.collapsed) {
-// Collapsed, the rail clips its own content, and the brand link fills it edge to edge.
+// The collapsed rail clips its own content.
 --focus-ring-offset: calc(-1 * var(--focus-ring-width));
 
   width: var(--_sidenav-width-collapsed);
   padding: var(--space-3);
   overflow-x: clip;
 
-  /* NOT `align-items: center`: items and groups would stop stretching and shrink to their
-     icon, so `.item`'s `width: 100%` would turn the active tile into a 20x40 lozenge. */
+  /* NOT `align-items: center`: items would shrink to their icon and the active tile become a lozenge. */
 
   .brand {
     padding: var(--sidenav-pad-brand-y) 0 var(--sidenav-pad-brand-b);

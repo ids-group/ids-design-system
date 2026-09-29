@@ -9,14 +9,18 @@
     </p>
   }
 
-  <ul class="entries">
+  <ul
+    class="entries"
+    [class.no-swatches]="!showsSwatches()">
     @for (entry of context().entries; track $index) {
       <li class="entry">
-        <span
-          class="swatch"
-          [class.hatched]="entry.hatched"
-          [style.background-color]="entry.color">
-        </span>
+        @if (showsSwatches()) {
+          <span
+            class="swatch"
+            [class.hatched]="entry.hatched"
+            [style.background-color]="entry.color">
+          </span>
+        }
 
         <span class="label">
           {{ entry.label }}

@@ -30,8 +30,8 @@ import { FieldMessageComponent } from '@ids-group-ltd/ids-design-system/componen
  * </ds-field-group>
  * ```
  *
- * A control knows it is a segment by injecting `DS_FIELD_GROUP` (see the token for why DI, not an input). A segment's own label and
- * message stay suppressed, so the group carries the pair every field has: `error` for state WITH text, `invalid` for state whose text lives elsewhere.
+ * A control knows it is a segment by injecting `DS_FIELD_GROUP`. A segment's own label and message stay suppressed; the group
+ * carries them: `error` for state with text, `invalid` for state whose text lives elsewhere.
  */
 @Component({
   selector: 'ds-field-group',
@@ -59,23 +59,21 @@ export class FieldGroupComponent
   extends DsMessageBase
   implements DsFieldGroupContext
 {
-  /** Segment height, the field family's scale. Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
+  /** Segment height; falls back to `DS_CONFIG.control.size`, then `'md'`. */
   readonly size = input<DsSize | null>(null);
   readonly sizeResolved = resolveWithConfig(
     this.size,
     (config) => config.control?.size,
     'md' as DsSize,
   );
-  /** Paints the error state WITHOUT a message of its own, for when the text lives in a form-level summary. Use `error` to show text;
-   *  binding either one is enough, as on a field. Segments read `invalidResolved`, so an `error` string announces itself without this flag. */
+  /** Paints the error state without a message, for when the text lives elsewhere. Use `error` to show text; either one is enough. */
   readonly invalid = input(false, { transform: booleanAttribute });
-  /** Dims the group. Disable the CONTROLS too: this is the chrome, not their interactivity. */
+  /** Dims the group's chrome; disable the controls too. */
   readonly disabled = input(false, { transform: booleanAttribute });
   /** Fills the container instead of hugging its segments. */
   readonly fullWidth = input(false, { transform: booleanAttribute });
 
   private readonly uid = nextControlId('ds-field-group');
-  // A group has no form control of its own, so no `errors`/`touched`: its state is only what the consumer bound.
   private readonly fieldMessage = resolveFieldMessage({
     hint: this.hint,
     warning: this.warning,

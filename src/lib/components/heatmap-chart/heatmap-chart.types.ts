@@ -1,7 +1,6 @@
-/** One row of the matrix. `data` carries one reading per column, in column order; a `null` is a
- *  cell never measured, drawn as a hole rather than as a low value. */
+/** One row of the matrix. `data` has one reading per column; a `null` is a cell never measured. */
 export interface HeatmapChartRow {
-  /** Falls back to the row's position when left out, so a reorder rewrites the DOM. */
+  /** Falls back to the row's position; a reorder then rewrites the DOM. */
   id?: string;
   label: string;
   data: readonly (number | null)[];

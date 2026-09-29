@@ -26,8 +26,6 @@
     border-top: var(--border-width-default) solid var(--_accordion-divider-color);
   }
 
-  // The rounded corner belongs to <ds-accordion>; without this radius the focus outline of the
-  // first/last row is a square ring inside a rounded box.
   &:first-of-type .head {
     border-top-left-radius: var(--radius-lg);
     border-top-right-radius: var(--radius-lg);

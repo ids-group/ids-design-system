@@ -2,6 +2,7 @@ import {
   ComponentRef,
   DestroyRef,
   Directive,
+  ElementRef,
   TemplateRef,
   ViewContainerRef,
   effect,
@@ -18,6 +19,7 @@ import { ComponentPortal } from '@angular/cdk/portal';
 import {
   closeOnScroll,
   disposeWithLeave,
+  forwardOverlayTokens,
 } from '@ids-group-ltd/ids-design-system/components';
 import { ChartTooltipPanelComponent } from './chart-tooltip-panel.component';
 import type {
@@ -26,13 +28,19 @@ import type {
 } from './chart-tooltip.types';
 
 const POINTER_GAP_PX = 10;
-// A fingertip covers roughly 40 CSS px.
+// Portaled to the body, so a chart's own values reach the panel only by being copied.
+const CHART_TOOLTIP_TOKENS = [
+  '--ds-chart-tooltip-bg-color',
+  '--ds-chart-tooltip-text-color',
+  '--ds-chart-tooltip-border-color',
+] as const;
+// A fingertip covers roughly 40 CSS px, so a touch-opened panel clears the tap point further.
 const TOUCH_GAP_PX = 48;
 
-// Must equal the `--space-3` the panel reserves in its `max-height`, or CDK cannot fit a tall panel.
+// Must equal the `--space-3` in the panel's `max-height`.
 const VIEWPORT_MARGIN_PX = 12;
 
-// Four fallbacks let the panel flip out of a small dashboard card instead of being clipped. Above first.
+// Four fallbacks let the panel flip out of a small card instead of being clipped. Above first.
 function positionsFor(gap: number): ConnectedPosition[] {
   return [
     {
@@ -66,13 +74,7 @@ function positionsFor(gap: number): ConnectedPosition[] {
   ];
 }
 
-/**
- * The chart tooltip, driven entirely by the context a chart hands it: non-null opens the
- * panel, null closes it. Pointer and keyboard share one path: a chart that sets the context on
- * `focus` gets the panel with no pointer involved.
- *
- * @internal
- */
+/** The chart tooltip: a non-null context opens the panel, null closes it. @internal */
 @Directive({
   selector: '[dsChartTooltip]',
   standalone: true,
@@ -80,6 +82,7 @@ function positionsFor(gap: number): ConnectedPosition[] {
 export class ChartTooltipDirective {
   private readonly overlay = inject(Overlay);
   private readonly viewContainerRef = inject(ViewContainerRef);
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
 
   readonly dsChartTooltip = input<ChartTooltipContext | null>(null);
   readonly dsChartTooltipOrigin = input<ChartTooltipOrigin | null>(null);
@@ -87,13 +90,15 @@ export class ChartTooltipDirective {
     $implicit: ChartTooltipContext;
   }> | null>(null);
 
-  /** Extra clearance between the mark and the panel, for a chart that prints text above its mark
-   *  (a column's value). Ignored for touch. */
+  /** Extra clearance between the mark and the panel, for text printed above the mark. Ignored for touch. */
   readonly dsChartTooltipExtraGap = input(0);
 
   /** A held panel takes the pointer so its text can be selected; a following one stays inert or
    *  the mark under it never sees the pointer. */
   readonly dsChartTooltipPinned = input(false);
+
+  /** Whether each reading carries its colour dot. `'auto'` draws them for two to four readings. */
+  readonly dsChartTooltipSwatches = input<boolean | 'auto'>('auto');
 
   private overlayRef: OverlayRef | null = null;
   private panelRef: ComponentRef<ChartTooltipPanelComponent> | null = null;
@@ -116,12 +121,12 @@ export class ChartTooltipDirective {
   }
 
   private open(context: ChartTooltipContext, origin: ChartTooltipOrigin): void {
-    // Measured before the glide in flight is dropped, so a mid-glide re-aim leaves from where the panel is on screen.
+    // Measured before the in-flight glide is dropped, so a mid-glide re-aim starts from the visible position.
     const from =
       this.overlayRef?.overlayElement.getBoundingClientRect() ?? null;
     this.glide?.cancel();
     this.glide = null;
-    // Reposition, not re-create: a fresh OverlayRef per mark restarts the enter transition.
+    // Reposition, not re-create: a fresh OverlayRef restarts the enter transition.
     if (!this.overlayRef) {
       this.overlayRef = this.overlay.create({
         positionStrategy: this.strategyFor(origin),
@@ -131,11 +136,17 @@ export class ChartTooltipDirective {
       this.panelRef = this.overlayRef.attach(
         new ComponentPortal(ChartTooltipPanelComponent, this.viewContainerRef),
       );
-      // CDK's reposition strategy misses an app's own `overflow: auto` container. Moved, not closed:
-      // a pinned mark ignores pointer moves, so a close would be permanent and leave the pin glyph
-      // and Unpin control over a reading that is gone.
+      forwardOverlayTokens(
+        this.overlayRef,
+        this.host.nativeElement,
+        CHART_TOOLTIP_TOKENS,
+      );
+      // CDK's reposition strategy misses an app's own `overflow: auto` container. A following panel
+      // closes; a pinned one moves, or a close would strand the pin glyph and Unpin.
       this.detachScrollReposition = closeOnScroll(this.overlayRef, () =>
-        this.overlayRef?.updatePosition(),
+        this.dsChartTooltipPinned()
+          ? this.overlayRef?.updatePosition()
+          : this.close(),
       );
       this.detachEscape = this.closeOnEscape();
     } else {
@@ -147,8 +158,9 @@ export class ChartTooltipDirective {
     );
     this.panelRef?.setInput('context', context);
     this.panelRef?.setInput('template', this.dsChartTooltipTemplate());
+    this.panelRef?.setInput('swatches', this.dsChartTooltipSwatches());
     if (from) {
-      // Render the new reading before measuring the landing, or a resized panel lands where the old one would.
+      // Render the new reading first, or a resized panel lands where the old one would.
       this.panelRef?.changeDetectorRef.detectChanges();
       this.overlayRef.updatePosition();
       this.glideFrom(from, this.overlayRef.overlayElement);
@@ -196,8 +208,7 @@ export class ChartTooltipDirective {
       .withPositions(positionsFor(gap));
   }
 
-  // WCAG 1.4.13: dismissable without moving the pointer or focus. Nothing re-opens the panel until
-  // the context or origin changes, i.e. the reader visits another mark.
+  // WCAG 1.4.13: dismissable without moving pointer or focus. Stays closed until the context or origin changes.
   private closeOnEscape(): () => void {
     if (typeof document === 'undefined') {
       return () => undefined;
@@ -217,7 +228,6 @@ export class ChartTooltipDirective {
     this.detachEscape = null;
     this.detachScrollReposition?.();
     this.detachScrollReposition = null;
-    // A dismissal (fade), never a selection; moving between marks repositions rather than closes.
     disposeWithLeave(this.overlayRef, 'dismiss');
     this.glide = null;
     this.overlayRef = null;

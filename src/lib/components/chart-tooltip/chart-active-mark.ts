@@ -5,7 +5,7 @@ import { chartDwell } from '@ids-group-ltd/ids-design-system/components';
 export interface ChartActiveMark {
   /** Index of the mark under the pointer or holding focus; `-1` when none is. */
   readonly index: Signal<number>;
-  /** The mark's own element, which is what the tooltip anchors to. */
+  /** The element the tooltip anchors to. */
   readonly origin: Signal<Element | null>;
   /** Whether the active mark is held rather than followed: a tap, or a click under `pinOnClick`. */
   readonly pinned: Signal<boolean>;
@@ -17,8 +17,7 @@ export interface ChartActiveMark {
     anchor?: string | Element | null,
     mark?: Element,
   ): void;
-  /** Moves the active index with no pointer behind it (keyboard, or a mark handing over its category).
-   *  Leaves the anchor alone; a pin holds against this too. */
+  /** Moves the active index with no pointer (keyboard, category handover); leaves the anchor alone, and a pin holds. */
   setIndex(index: number): void;
   leave(): void;
   /** Holds the activated mark, for any pointer type. Activating the already-pinned mark releases it. */
@@ -28,21 +27,18 @@ export interface ChartActiveMark {
     anchor?: string | Element | null,
     mark?: Element,
   ): void;
-  /** Lets go of a held mark. */
   release(): void;
 }
 
 /**
  * The pointer-and-focus target the tooltip reads, for a chart whose marks are elements.
- * Pointer and keyboard write the same pair, so a chart wires `pointerenter` and `focus` to
- * `enter` and gets one code path rather than two.
+ * Pointer and keyboard write the same pair: wire `pointerenter` and `focus` to `enter`.
  *
- * A POINTER WAITS. It is answered once it has rested on a mark for `hoverDelayMs`, and at once
- * while the chart has already answered it; focus, a tap and a pin are answered at once.
+ * A pointer is answered after resting `hoverDelayMs` on a mark (at once while the chart has
+ * already answered); focus, a tap and a pin are answered at once.
  *
- * A TAP LATCHES. A touch fires `pointerleave` the moment the finger lifts, so without this the
- * panel would flash and vanish; latched, it stays until the next tap lands outside the mark. Call
- * from an injection context: the release listener is torn down with the component.
+ * A tap latches: touch fires `pointerleave` on lift, so the panel stays until the next tap
+ * outside the mark. Call from an injection context.
  *
  * @internal
  */
@@ -52,14 +48,12 @@ export function chartActiveMark(
 ): ChartActiveMark {
   const index = signal(-1);
   const origin = signal<Element | null>(null);
-  // Set by a tap (no hover to hold the panel open) and by a click under `pinOnClick`.
   const pinned = signal(false);
-  // The click the browser fires after a latching tap belongs to the tap, not to a second press that lets go.
+  // The click after a latching tap belongs to the tap, not to a press that lets go.
   let tapLatched = false;
   let pendingClear: ReturnType<typeof setTimeout> | null = null;
-  // The element that owns the handlers, not always the anchor (a column anchors to the bar, the whole
-  // cell answers the pointer). A press is "outside" only when it misses this, or a click beside the
-  // bar would release the pin and immediately re-take it.
+  // Owns the handlers (a column anchors to the bar, the whole cell takes the pointer). A press is
+  // outside only when it misses this, or a click beside the bar releases and re-takes the pin.
   let host: Element | null = null;
   const dwell = chartDwell(hoverDelayMs);
 
@@ -75,9 +69,8 @@ export function chartActiveMark(
     document.removeEventListener('pointerover', trackPointer, true);
   };
 
-  // Anchors to the mark, not the box that catches the pointer: a column's cell is the full plot
-  // height, so the panel would open at the top of the chart. A selector resolves inside the box; a
-  // legend item's mark is outside it, so that caller passes the element.
+  // Anchors to the mark, not the pointer-catching box (a column cell spans the plot height). A
+  // selector resolves inside the box; a legend item's mark is outside it, so its caller passes the element.
   const aim = (
     at: number,
     event: Event,
@@ -89,8 +82,7 @@ export function chartActiveMark(
       host = target;
       const mark =
         typeof anchor === 'string' ? target.querySelector(anchor) : anchor;
-      // A zero-value mark is degenerate in one axis (no height, no width); anchoring to it lands the
-      // overlay at that edge. Both dimensions must be real; the hover target always is.
+      // A zero-value mark has no height or width and would anchor to an edge.
       const box = mark?.getBoundingClientRect();
       const aimable = box && box.width > 0 && box.height > 0;
       origin.set(aimable ? (mark ?? target) : target);
@@ -105,7 +97,6 @@ export function chartActiveMark(
     document.addEventListener('keydown', releaseOnEscape, true);
   };
 
-  // Escape releases the mark too, or the dimming would outlive the panel.
   const releaseOnEscape = (event: KeyboardEvent): void => {
     if (event.key === 'Escape') {
       clear();
@@ -132,9 +123,8 @@ export function chartActiveMark(
     );
   };
 
-  // `pointerover` fires on every element crossed: arriving on the panel cancels the clear, leaving it
-  // for anything but the mark schedules one. Without the second half a panel the pointer once
-  // touched never closes, since the mark's `pointerleave` already fired.
+  // `pointerover` fires per element crossed: the panel cancels the clear, anything else but the mark
+  // schedules one. Without that a panel the pointer once touched never closes.
   const trackPointer = (event: PointerEvent): void => {
     if (!(event.target instanceof Element)) {
       return;
@@ -144,14 +134,12 @@ export function chartActiveMark(
 
       return;
     }
-    // Host, not anchor: a legend item and the arc its panel points at are disjoint, so testing the
-    // anchor would clear the panel as the pointer moves inside the legend item.
+    // Host, not anchor: a legend item and the arc its panel points at are disjoint.
     if (!host || !host.contains(event.target)) {
       scheduleClear();
     }
   };
 
-  // Every chart puts its plot in one `<figure>`.
   const chartOf = (element: Element | null): Element | null =>
     element ? element.closest('figure') : null;
 
@@ -164,8 +152,7 @@ export function chartActiveMark(
     if (host && host.contains(event.target)) {
       return;
     }
-    // Hopping the pin between marks must not pass through "nothing pinned": this runs on
-    // `pointerdown`, the re-aim on the following `click`, so clearing here flickers the Unpin control.
+    // Runs on `pointerdown`; the re-aim comes on `click`, so clearing here flickers the Unpin control.
     const pressedMark = event.target.closest('[data-mark-index]');
     if (pressedMark && chartOf(pressedMark) === chartOf(host)) {
       return;
@@ -188,11 +175,10 @@ export function chartActiveMark(
     origin: origin.asReadonly(),
     pinned: pinned.asReadonly(),
     enter(at, event, anchor, mark) {
-      // A pin holds: released only by Escape or a press outside the pinned mark.
       if (pinned()) {
         return;
       }
-      // Taken now: `currentTarget` is gone by the time a delayed answer runs.
+      // `currentTarget` is gone by the time a delayed answer runs.
       const target = mark ?? event.currentTarget;
       dwell.schedule(at, () => answer(at, event, anchor, target), event);
     },
@@ -222,7 +208,6 @@ export function chartActiveMark(
       if (typeof document === 'undefined') {
         return;
       }
-      // A press on a different mark already went through `release`, so this sees a fresh mark or the pinned one.
       if (pinned() && index() === at) {
         if (tapLatched) {
           tapLatched = false;
@@ -234,7 +219,7 @@ export function chartActiveMark(
         return;
       }
       tapLatched = false;
-      // Re-aiming while pinned keeps `pinned` true, so the Unpin control does not unmount between marks.
+      // Keeps `pinned` true so the Unpin control stays mounted.
       aim(at, event, anchor, mark);
       if (!pinned()) {
         hold();
