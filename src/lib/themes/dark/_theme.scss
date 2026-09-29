@@ -75,9 +75,9 @@
 
   // Axis, grid, label and cursor already flip via --neutral-* / --text-*; only light-tuned values move.
   --chart-hover-bg-color:     hsl(0deg 0% 100% / 6%);
-  --chart-tooltip-bg-color:   var(--surface-overlay);
+  --chart-tooltip-bg-color: var(--surface-overlay);
   --chart-tooltip-text-color: var(--text-primary);
-  --chart-tooltip-border-color:     var(--border-strong);
+  --chart-tooltip-border-color: var(--border-strong);
 
   // The two chart neutrals are dark on light to keep a lightness gap from the emerald; on a dark canvas that
   // gap points the wrong way and they read as holes, so both flip. Slot 8 sits at dE 12 from the orchid under

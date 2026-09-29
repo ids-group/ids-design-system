@@ -142,10 +142,10 @@
 
     .empty-msg { margin: var(--space-2) 0 0; }
 
-.light-tooltip {
-  --ds-chart-tooltip-bg-color: var(--surface-default);
-  --ds-chart-tooltip-text-color: var(--text-primary);
-  --ds-chart-tooltip-border-color: var(--border-default);
+.dark-tooltip {
+  --ds-chart-tooltip-bg-color: var(--neutral-900);
+  --ds-chart-tooltip-text-color: var(--neutral-0);
+  --ds-chart-tooltip-border-color: var(--neutral-700);
 }
 
 .tinted-card {

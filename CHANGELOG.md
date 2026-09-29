@@ -2,6 +2,14 @@
 
 ### Breaking
 
+- **A chart tooltip is light on the light theme.** The panel takes `--surface-overlay`,
+  `--text-primary` and `--border-default`, where it was `--neutral-900` with white text; the
+  dark theme keeps its dark panel. A reading's colour dot takes a ring only when its colour is
+  close to the panel itself (below 1.5:1, the palest heat-map steps), where any dot below 3:1 took
+  one. To keep the dark panel, set `--ds-chart-tooltip-bg-color: var(--neutral-900)`,
+  `--ds-chart-tooltip-text-color: var(--neutral-0)` and
+  `--ds-chart-tooltip-border-color: var(--neutral-700)` on `:root`.
+
 - **`ds-pie-chart` (`PieChartComponent`) drops the `staggerMs` input.** The input was accepted and did nothing: the ring
   turns into place as one object. Remove the binding; a template that keeps it fails to compile.
   Nothing replaces it.
@@ -25,6 +33,7 @@
 
 | Delete | Why | Replace with |
 | --- | --- | --- |
+| `--ds-chart-tooltip-bg-color`, `--ds-chart-tooltip-text-color` and `--ds-chart-tooltip-border-color` set to light surface and text colours so the tooltip matches a light page | the panel takes `--surface-overlay`, `--text-primary` and `--border-default` by default | nothing; keep an override that sets any other colour |
 | `cursor="category"` on a `ds-chart` set only so a `tooltip="axis"` line opens its panel | `cursor="auto"` turns the category cursor on for a mark with `tooltip="axis"` | nothing; keep it on a plot whose marks do not use `tooltip="axis"` |
 
 ## 0.14.4 — 2026-09-29
