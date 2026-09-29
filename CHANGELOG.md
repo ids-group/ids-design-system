@@ -1,5 +1,19 @@
 ## Unreleased
 
+### Fixed
+
+- **A toast's announcement stays off screen before any dialog has opened.** `ToastService` speaks
+  through the CDK `LiveAnnouncer`, whose region carries `.cdk-visually-hidden`, and the CDK loads that
+  rule only with a dialog or a focus trap. On a page where neither had opened yet, the first toast's
+  text also rendered as plain text at the bottom-left. `styles/toast-overlay`, which `styles/ds`
+  forwards, now declares the rule.
+
+### What you can now DELETE
+
+| Delete | Why | Replace with |
+| --- | --- | --- |
+| an app-level `@include cdk.a11y-visually-hidden()` or `a11y-prebuilt.css` added so toast announcements stay hidden | `styles/toast-overlay` declares `.cdk-visually-hidden` | nothing; keep it where the app loads neither `styles/ds` nor `styles/toast-overlay` |
+
 ## 0.14.3 — 2026-09-27
 
 ### Breaking
