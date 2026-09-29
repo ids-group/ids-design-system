@@ -12,6 +12,10 @@
 
 ### Fixed
 
+- **`ds-table`'s `exportCsv()` and `runExport()` warn when the table has no `dsTableExport`.**
+  In a development build either call threw NG0203 from the click handler that made it; it now
+  logs the missing directive. Production builds were unaffected.
+
 - **A toast's announcement stays off screen before any dialog has opened.** `ToastService` speaks
   through the CDK `LiveAnnouncer`, whose region carries `.cdk-visually-hidden`, and the CDK loads that
   rule only with a dialog or a focus trap. On a page where neither had opened yet, the first toast's

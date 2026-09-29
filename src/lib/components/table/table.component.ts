@@ -1805,11 +1805,13 @@ export class TableComponent<T extends object> {
     await running;
   }
 
+  // A click handler is outside an injection context, where `devWarn`'s effect throws.
   private warnNoExport(called: string): void {
-    devWarn(
-      () =>
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      console.warn(
         `ds-table: ${called}() found no export feature. Add the dsTableExport directive to the table.`,
-    );
+      );
+    }
   }
 
   protected skeletonWidth(col: TableColumn<T>, rowIndex: number): string {
