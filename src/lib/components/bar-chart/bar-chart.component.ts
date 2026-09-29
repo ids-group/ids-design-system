@@ -10,7 +10,6 @@ import {
   input,
   numberAttribute,
   output,
-  signal,
 } from '@angular/core';
 import {
   CHART_SERIES_COLORS,
@@ -234,18 +233,6 @@ export class BarChartComponent {
   protected readonly activeMark = chartActiveMark(
     () => this.tooltipLingerResolved(),
     () => this.defaults.hoverDelayMs(),
-  );
-
-  protected readonly hoveredLabel = signal(-1);
-
-  /** Naming a row by its label fades the rest whether or not `dimOthers` is set, the way a legend
-   *  singles out its series. The row itself answers the pointer, so the fade waits out the same
-   *  hover delay as the tooltip. */
-  protected readonly dimsOthers = computed(
-    () =>
-      this.dimOthers() ||
-      (this.hoveredLabel() !== -1 &&
-        this.hoveredLabel() === this.activeMark.index()),
   );
 
   protected onMarkClick(
