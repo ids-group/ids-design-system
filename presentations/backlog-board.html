@@ -226,9 +226,9 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**114 open — 0 P1, 12 P2, 102 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**112 open — 0 P1, 11 P2, 101 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
-### P2 — 12
+### P2 — 11
 
 - **Defects consumers work around today (swept 2026-09-23)**
   - A `ds-table` expanded row animates open and vanishes on close, so the reveal is one-sided (recorded 2026-09-24, from the mm-ecm consumer)
@@ -239,7 +239,6 @@ item and nothing else.
   - `--ds-multi-select-option-bg-color-active` is documented and dead
   - `ds-tag` marked `interactive` is mouse-only
 - **Manifest-shape defects the two-wave plugin review surfaced (2026-09-04)**
-  - Nothing classifies a tightened template context as actionable (recorded 2026-09-24, from the mm-ecm consumer's 0.13.4 -> 0.14.0 upgrade)
   - The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27 in a real browser, 4.42:1 against the 4.5:1 threshold
 - **Getting bytes out of a consumer's bundle — the sequenced plan (agreed 2026-09-01, Stas)**
   - DOCS for A3: `@defer` needs the deep specifier — the one exception to «no consumer
@@ -249,7 +248,7 @@ item and nothing else.
   - Publishing to npm stops working in January 2027 and the replacement is not chosen
   - Nothing catches a stale `presentations/ds.css`, and two gates read it as the truth
 
-### P3 — 102
+### P3 — 101
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - The token reference says the portaled panel reads `--ds-time-picker-focus-shadow`
@@ -328,7 +327,6 @@ item and nothing else.
   - Four exports on the package surface have no consumer in `src/`
   - `'none'` and `'grouped'` are the same value on `ds-column-chart`
   - Two inputs decide one thing on `ds-funnel-chart`, and two vocabularies name one idea
-  - `ds-pie-chart` declares `staggerMs` and documents that it does nothing
 - **ds-icon does not read the icon size scale (recorded 2026-08-24, from the state-glyph work)**
   - `--icon-xs/sm/md/lg` exist (12/14/16/20) and `ds-icon` cannot be sized by them
 - **Missing components (from gap analysis)**
@@ -409,10 +407,10 @@ item and nothing else.
 
 **Consumer asks are the head of the board.** Every item a consumer is waiting on is drawn, with its
 before and after, in deck `decision-queue` under *Ждут консьюмеры*; pick there, and the items here
-are the work. Five are open: the `ds-table` expand-leave animation (:227) and the control-edge
-contrast (:232) under *Bugs*, the tightened template context (:312) under *Bugs*, the bar/column
-extract (:487) under *Two chart names that collide*, and the indeterminate bar's stripe verdict
-(:1138). The 0.9.0-0.13.3 manifest walk and the eleven reached-past styling hooks are both closed.
+are the work. Four are open: the `ds-table` expand-leave animation (:229) and the control-edge
+contrast (:234) under *Bugs*, the bar/column extract (:510) under *Two chart names that collide*,
+and the indeterminate bar's stripe verdict (:1146). The 0.9.0-0.13.3 manifest walk and the eleven
+reached-past styling hooks are both closed.
 
 **Nobody is blocked from installing.** All six consumer repos declare Angular `^21` or `~21`, so the
 Angular 22 upgrade is parked rather than P1; the probe and its price stay in the item.
@@ -524,9 +522,6 @@ and says nothing about the old one. Measured on three grounds: `presentations/fo
 ## Manifest-shape defects the two-wave plugin review surfaced (2026-09-04)
 
 *This section also has items under **Records**.*
-
-- [ ] **[P2] Nothing classifies a tightened template context as actionable (recorded 2026-09-24, from the mm-ecm consumer's 0.13.4 -> 0.14.0 upgrade).** 0.14.0 gave `CellTemplateDirective` a static `ngTemplateContextGuard` and a generic `T = unknown`, which turns every consumer `let-row` read from `any` into `unknown` under `strictTemplates`; the consumer's build failed with 194 + 6 errors (TS2571 / TS2345). `class-surface` did see it - `dsCellTemplateOf` and the guard were listed as grown members, so they landed in `exported-class-members-grew`, the subclass-collision item - and the prose went to `informational`. AUTHORING.md's widening rule covers a type that grows for its READERS; the reverse, a context that narrows from `any`, has no rule, and the manifest item was added after release (`0.14.0#cell-template-context-typed-unknown`).
-  **Wanted:** an AUTHORING.md rule that adding a context guard, or a generic parameter defaulting to `unknown`, to a directive a consumer's template reads is a `behavior` item on `surface: template` with the build error in `detect`; and a gate - `check-class-surface-entry` or `class-surface` - that fails when a new `ngTemplateContextGuard` appears on a class no draft item names.
 
 - [ ] **[P2] The warning status pair fails WCAG AA for normal text — MEASURED 2026-08-27 in a real browser, 4.42:1 against the 4.5:1 threshold.** `src/lib/styles/_status.scss:53` pairs `bg: var(--warning-subtitle)` with `text: var(--warning-text)`. Resolved in the default theme that is `#8A7400` on `#FFFBEA`, which computes to **4.42:1** by the WCAG relative-luminance formula — under AA for text below 18.66px/700. **It is the only status pair that fails:** error measures **5.92**, success **6.42** and primary **6.16** on their own subtitle backgrounds, so this is one colour out of step, not a palette-wide problem.
   **A darker step does not exist to reach for.** The yellow ramp ends at `--yellow-700` (`#8A7400`), which is what `--warning-text` already resolves to (`themes/_semantic.scss:175`). Closing this needs either a new `--yellow-800`, or a different foreground on the warning tint.
@@ -1448,10 +1443,6 @@ and the fifteen lint rules.
   `line-chart.types.ts:22` declares `LineChartStack` rather than narrowing `ChartStackMode`, then
   feeds it to `stackOffsets`, which is typed on the full union (`chart.math.ts:329-331`).
 
-- [ ] **[P3] `ds-pie-chart` declares `staggerMs` and documents that it does nothing.**
-  `pie-chart.component.ts:194-197`. It exists for parity with the other charts. Either it works or
-  it goes.
-
 # Parked — asked, and deliberately not now
 
 Ordered by how close each is to a first consumer ask, which is the only thing that unparks any of them.
@@ -1999,6 +1990,20 @@ _Closed 2026-08-07 from a consumer report: `ds-autocomplete` had no chip cap, so
 Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirrors the live backlog (`todo.md`); deep gap analysis stays in `docs/superpowers/ds-gap-analysis.md`.
 
 ---
+
+## A tightened template context is classified as actionable, and the cut gates it (2026-09-30)
+
+`migrations/AUTHORING.md` states that a directive gaining a static `ngTemplateContextGuard` or a
+generic parameter defaulting to `unknown` breaks every consumer template that read its context as
+`any`, and is a `behavior` item on `surface: template` with the build error in `detect`, not a line
+in `informational` or the subclass-collision item. `tools/check-class-surface-entry.mjs`, in the
+`release` group, fails when a static `ngTemplateContextGuard` appears since the base tag in a file
+that existed there and whose exported class no `surface: template` item in
+`migrations/unreleased.json` names; `class-surface-diff` never lists static members, so the gate
+reads the guards from the two refs itself. Measured 2026-09-30: against `v0.13.4` it names
+`components/table/cell-template.directive.ts - CellTemplateDirective` (the 0.14.0 precedent,
+`0.14.0#cell-template-context-typed-unknown`); against `v0.14.4` it names nothing; a draft item on
+`surface: template` naming the class silences it, and one on `surface: typescript` does not.
 
 ## A toast's announcement stays off screen before any dialog has opened (2026-09-29)
 
