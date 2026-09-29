@@ -12,6 +12,10 @@
 
 ### Fixed
 
+- **Several `provideDsConfig` calls in one `providers` array all apply.** The last one replaced
+  the others, whose keys were lost without a warning; they now merge in order, the later call
+  winning per key. `provideDsIntl` merges the same way.
+
 - **A toast's announcement stays off screen before any dialog has opened.** `ToastService` speaks
   through the CDK `LiveAnnouncer`, whose region carries `.cdk-visually-hidden`, and the CDK loads that
   rule only with a dialog or a focus trap. On a page where neither had opened yet, the first toast's
