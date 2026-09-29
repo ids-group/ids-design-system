@@ -1,8 +1,5 @@
-// Does every dev-only warning helper sit behind the inline `ngDevMode` guard?
-//
-// `devWarn` and `warnAnnounceOversight` check `isDevMode()` themselves, but that is a call a
-// bundler cannot fold, so an unguarded call ships its message closures to production. The guard
-// has to be the inline `typeof` form on the branch; `src/lib/core/build-flags.d.ts` says why.
+// Every dev-warning helper call must sit inside the inline `typeof ngDevMode` guard, or its message
+// closures ship to production; `src/lib/core/build-flags.d.ts` says why.
 //
 //   node tools/check-dev-guards.mjs [root...]
 import { readdirSync, readFileSync, statSync } from 'node:fs';
