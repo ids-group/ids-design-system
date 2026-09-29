@@ -29,9 +29,28 @@
 @include chart-interactive.dims('.series-marker', ', fill var(--ds-motion-chart-mark-duration) var(--ds-motion-chart-mark-easing), r var(--ds-motion-chart-state-duration) var(--ds-motion-chart-state-easing)');
 @include chart-interactive.clickable('.series-marker');
 
+// `--ds-chart-area-color` is left undeclared, so an unset one falls through to the series colour.
 .series-area {
+  fill: var(--ds-chart-area-color, var(--_series-area-color));
   fill-opacity: var(--_chart-area-opacity);
   stroke: none;
+}
+
+.series-area.is-fade {
+  fill-opacity: 1;
+}
+
+.fade-start,
+.fade-end {
+  stop-color: var(--ds-chart-area-color, var(--_series-area-color));
+}
+
+.fade-start {
+  stop-opacity: var(--ds-chart-area-fade-opacity);
+}
+
+.fade-end {
+  stop-opacity: 0;
 }
 
 // A stacked band is separated from the one below it by a stroke in the SURFACE colour, never a
