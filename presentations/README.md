@@ -22,7 +22,6 @@ anything. Ranked 2026-09-01, and renumbered whenever a deck closes:
 | 9 | `9-locale-week-and-hour` | whether the date picker's first day of the week and the time picker's 12h/24h follow the new `DS_CONFIG.locale`: four options drawn over six locales, each computed by `Intl` in the page; the en-US row shows the default every consumer without a locale gets |
 | 10 | `10-decision-queue` | every consumer ask and every open question in one page - 7 asks a consumer waits on, each drawn as today against after, then 27 decisions across six groups; the live indeterminate tracks are the case a text list could not put |
 | 11 | `11-docs-reasoning-blocks` | what ds-docs does with its ~38 reasoning blocks (fix proofs, edge-case guards, internals): keep, fold to the chapter end, move to a proof page, or delete - drawn on the real Table chapter |
-| 12 | `12-charts-audit` | six chart decisions from one audit: where the inputs every chart shares are demonstrated, whether `ds-chart-legend` goes public, whether the bar chart's range, bullet and segment kinds stay one component, how the 9 inputs every chart repeats are declared once, which partial inputs fill in, and which of five split names unify |
 
 **Rank 1 is the way in, and ranks 2-4 are the two biggest lanes** — the colour engine, then the interaction formula that reads
 its ramp. Ranks 1-5 are written in Russian; `deck.css`, which sits beside `ds.css` and carries the
