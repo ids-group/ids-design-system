@@ -3,9 +3,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Чарты - фон, заливка и цвета</title>
-<meta name="ds-deck-status" content="open">
-<link rel="stylesheet" href="ds.css">
-<link rel="stylesheet" href="deck.css">
+<meta name="ds-deck-status" content="implemented">
+<meta name="ds-deck-decided" content="2026-09-29">
+<meta name="ds-deck-evidence" content="src/lib/styles/_tokens-charts.scss:68">
+<link rel="stylesheet" href="../ds.css">
+<link rel="stylesheet" href="../deck.css">
 
 <style>
   .opt { cursor: pointer; }
@@ -56,8 +58,17 @@
       то, что меняет устройство: есть заливка или нет. Сейчас <code>--ds-chart-area-opacity</code> задаёт только прозрачность,
       цвет заливки всегда цвет серии. Ниже пять решений.
     </p>
-    <div class="chips"><span class="chip">открыт 2026-09-29</span></div>
+    <div class="chips"><span class="chip is-done">Решено 2026-09-29</span></div>
   </div>
+
+  <div class="decided">
+    <h2>Решено и построено</h2>
+    <p>1. <code>--ds-chart-bg-color</code> - одно имя для фона и всех выбивок: рамка, полоса под линией, швы bar, штриховка, ореолы подписей, аннотаций и фокуса. Каждое место читает его напрямую, поэтому токен, заданный на одном чарте, доходит до всех. Имя как у <code>--highcharts-background-color</code>, который в Highcharts красит и фон, и выбивки. 2. <code>--ds-chart-plot-bg-color</code> красит прямоугольник внутри осей, по умолчанию прозрачный. 3. <code>area: 'fade'</code>, <code>--ds-chart-area-color</code> и <code>--ds-chart-area-fade-opacity</code>. 4. <code>area</code> у sparkline с <code>--ds-sparkline-area-color</code> и <code>-opacity</code>. 5. <code>--ds-chart-tooltip-*</code> на одном чарте копируются на панель тултипа.</p>
+    <p class="evidence">2026-09-29 · src/lib/styles/_tokens-charts.scss:68</p>
+  </div>
+
+  <details class="folded">
+    <summary>Разбор, который к этому привёл</summary>
 
   <section class="panel">
     <h2>Что уже настраивается</h2>
@@ -232,6 +243,8 @@ area: 'fade'               <b>// у серии, рядом с true</b></p>
       </tbody>
     </table>
   </section>
+
+  </details>
 
   <p class="src"><b>Источники, проверено 2026-09-29 на <code>dev</code>.</b> Выбивки цветом <code>--ds-chart-frame-bg-color</code>: <code>bar-chart.component.scss:162</code>, <code>reference-label.component.scss:11</code>, <code>pie-chart.component.scss:151</code>; цветом <code>--surface-default</code>: <code>line-series.component.scss:42</code>, <code>:57</code>, <code>:85</code>, <code>column-series.component.scss:22</code>, <code>series-annotation.component.scss:5</code>, <code>line-chart.component.scss:24</code>; <code>--chart-focus-halo-color: white</code> в <code>_tokens-charts.scss:142</code>. Фон рамки только при <code>frame="auto"</code>: <code>_chart-frame.scss:26-28</code>. Заливка: <code>.series-area</code> с <code>fill-opacity: var(--ds-chart-area-opacity)</code>, <code>line-series.component.scss:33</code>. Проброс токенов на панель overlay: <code>DROPDOWN_PANEL_TOKENS</code>, <code>overlay-motion.ts:37</code>. Картинки в деке нарисованы вручную на токенах <code>ds.css</code>, это иллюстрации вариантов, а не рендер компонентов.</p>
 
