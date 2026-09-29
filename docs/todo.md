@@ -14,7 +14,7 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**112 open — 0 P1, 12 P2, 100 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**113 open — 0 P1, 12 P2, 101 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P2 — 12
 
@@ -37,7 +37,7 @@ item and nothing else.
   - Publishing to npm stops working in January 2027 and the replacement is not chosen
   - Nothing catches a stale `presentations/ds.css`, and two gates read it as the truth
 
-### P3 — 100
+### P3 — 101
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - The token reference says the portaled panel reads `--ds-time-picker-focus-shadow`
@@ -57,6 +57,7 @@ item and nothing else.
 - **Asked by Stas**
   - `ds-waterfall-chart` is `ds-cascade-chart` (Stas, 2026-09-23)
   - Rename `ds-bar-chart` to `ds-row-chart` (Stas, 2026-09-24)
+  - Pin more than one mark at a time (Stas, 2026-09-29)
 - **Tooling**
   - changelog-lint C001 does not scan ds-docs/src or docs/agent (recorded 2026-09-24)
   - The press feedback guard misses `.disabled` and `[aria-disabled]` (recorded 2026-09-24)
@@ -465,6 +466,18 @@ Each has somebody behind it. Nothing here is speculative work.
   `selector-rename`, one `type-rename` per exported symbol, a `token-rename` for the
   `--ds-bar-chart-*` prefix and a `class-rename` for the internal `.bar-chart` class - the same shape
   as the `ds-waterfall-chart` item above.
+
+- [ ] **[P3] Pin more than one mark at a time (Stas, 2026-09-29).** Today a chart holds one pin:
+  `chartActiveMark` keeps a single `index` and a `pinned` flag
+  (`components/chart-tooltip/chart-active-mark.ts`), the tooltip directive keeps one overlay per
+  chart (`chart-tooltip.directive.ts`), and a press on another mark moves the pin rather than adding
+  one. **What moves:** the active-mark state becomes a set of pinned indices beside the hovered one;
+  the directive opens one panel per pin while the hover panel keeps gliding; each pinned mark carries
+  its disc; `Unpin` releases all of them, and a click on a pinned mark releases that one. The
+  category cursor of `ds-chart` (`pinOnClick`) needs the same, one band per pin.
+  **To decide before building:** whether a plain click adds a pin or a modifier does (a plain click
+  that adds changes what every chart does today), a cap on how many, how panels that would overlap
+  are placed, what a press outside the plot releases, and how the keyboard adds and removes one.
 
 ## Tooling
 

@@ -149,7 +149,7 @@
   </div>
 
   <div class="lane">
-    <div class="lane-head"><h2>⏳ Ждёт твоего решения</h2><span class="count c-you">12</span><span class="why">Твой вход. У открытых дек по карточке; очередь решений собирает все вопросы на одной странице.</span></div>
+    <div class="lane-head"><h2>⏳ Ждёт твоего решения</h2><span class="count c-you">13</span><span class="why">Твой вход. У открытых дек по карточке; очередь решений собирает все вопросы на одной странице.</span></div>
     <div class="cards">
       <div class="card you"><span class="chip ch-you">решить</span><div class="t">Очередь решений - всё открытое на одной странице</div><p class="d">7 асков, которых ждёт консюмер, в трёх группах, и 27 решений в шести - каждый вопрос нарисован как «сейчас» против «после», со ссылкой на деку с аргументом. Выборы запоминаются в браузере, панель внизу отдаёт их одной строкой.</p><div class="meta">10-decision-queue.html</div></div>
       <div class="card you"><span class="chip ch-you">решить</span><div class="t">Single-source colour engine</div><p class="d">«primary» живёт в двух расцепленных видах: <code>--primary</code> с ручными пиками рампы для заливок и каналы <code>--primary-h/s/l</code> для гало и серых. <b>Перепроверено 23.09</b> (<code>_semantic.scss:89-91</code>). Открыто для спеки: цветовое пространство, чистая деривация против ручных пиков, тёмная тема. Recipe-vs-hand-tuned - вопрос (b) внутри этой спеки. Прототип-половина - дека 2.</p><div class="meta">1-color-engine-derivation.html</div></div>
@@ -162,6 +162,7 @@
       <div class="card you"><span class="chip ch-you">решить</span><div class="t">fix:all переформатирует HTML, который eslint возвращает</div><p class="d"><code>lint:all</code> зелёный - сломан только фиксер: <code>format:fix</code> добавляет <code>html</code> в глоб, и prettier переписывает ~112 шаблонов, которые два правила <code>ds/template/*</code> тут же хотят назад. Замерено 10.09: один <code>prettier --write</code> по трём файлам секций дал 63 предупреждения eslint. Фикс - убрать <code>html</code> из <code>format:fix</code>, но это файл политики.</p></div>
       <div class="card you"><span class="chip ch-you">решить</span><div class="t">ds-number-stepper и ds-dropzone вне field-message</div><p class="d">Не «полям не хватает фичи» - <b>обёртки не было никогда</b>: ни <code>label</code>, ни <code>hint</code>, ни <code>error</code>, ни <code>ds-field-message</code>, тогда как у остальных четырнадцати полей есть всё. Значит, это добавление возможности, а не унификация, и вступление делает оба forms CVA. Образец уже есть: <code>ds-button</code> вшил message-половину в компонент, который полем не был.</p></div>
       <div class="card you"><span class="chip ch-you">решить</span><div class="t">Signal Forms: dirty и pending (disabledReasons отвечен)</div><p class="d"><code>disabledReasons</code> <b>отвечен 26.08</b> и стал проводкой: причина идёт внутрь контрола, а не в тултип, потому что тултипу нужен hover, а нативно <code>disabled</code> контрол не берёт фокус. <code>ds-button.disabledReason</code> - образец. Остальные два блокированы <b>видом</b>: как выглядит поле с валидатором в полёте и рисует ли DS «изменено» хоть где-нибудь.</p><div class="meta">implemented/button-refusal-reason.html</div></div>
+      <div class="card you"><span class="chip ch-you">решить</span><div class="t">Мульти-пин: закреплять больше одной метки</div><p class="d">Сейчас чарт держит один пин: <code>chartActiveMark</code> хранит один индекс, у тултипа одна панель, клик по другой метке переносит пин. Решить до постройки: добавляет ли пин обычный клик или клик с модификатором (обычный клик меняет поведение всех чартов), лимит, как раскладывать панели, которые перекрылись бы, что отпускает клик вне плота, как добавлять и снимать пин с клавиатуры.</p></div>
     </div>
   </div>
 
@@ -224,7 +225,7 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**112 open — 0 P1, 12 P2, 100 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**113 open — 0 P1, 12 P2, 101 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P2 — 12
 
@@ -247,7 +248,7 @@ item and nothing else.
   - Publishing to npm stops working in January 2027 and the replacement is not chosen
   - Nothing catches a stale `presentations/ds.css`, and two gates read it as the truth
 
-### P3 — 100
+### P3 — 101
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - The token reference says the portaled panel reads `--ds-time-picker-focus-shadow`
@@ -267,6 +268,7 @@ item and nothing else.
 - **Asked by Stas**
   - `ds-waterfall-chart` is `ds-cascade-chart` (Stas, 2026-09-23)
   - Rename `ds-bar-chart` to `ds-row-chart` (Stas, 2026-09-24)
+  - Pin more than one mark at a time (Stas, 2026-09-29)
 - **Tooling**
   - changelog-lint C001 does not scan ds-docs/src or docs/agent (recorded 2026-09-24)
   - The press feedback guard misses `.disabled` and `[aria-disabled]` (recorded 2026-09-24)
@@ -675,6 +677,18 @@ Each has somebody behind it. Nothing here is speculative work.
   `selector-rename`, one `type-rename` per exported symbol, a `token-rename` for the
   `--ds-bar-chart-*` prefix and a `class-rename` for the internal `.bar-chart` class - the same shape
   as the `ds-waterfall-chart` item above.
+
+- [ ] **[P3] Pin more than one mark at a time (Stas, 2026-09-29).** Today a chart holds one pin:
+  `chartActiveMark` keeps a single `index` and a `pinned` flag
+  (`components/chart-tooltip/chart-active-mark.ts`), the tooltip directive keeps one overlay per
+  chart (`chart-tooltip.directive.ts`), and a press on another mark moves the pin rather than adding
+  one. **What moves:** the active-mark state becomes a set of pinned indices beside the hovered one;
+  the directive opens one panel per pin while the hover panel keeps gliding; each pinned mark carries
+  its disc; `Unpin` releases all of them, and a click on a pinned mark releases that one. The
+  category cursor of `ds-chart` (`pinOnClick`) needs the same, one band per pin.
+  **To decide before building:** whether a plain click adds a pin or a modifier does (a plain click
+  that adds changes what every chart does today), a cap on how many, how panels that would overlap
+  are placed, what a press outside the plot releases, and how the keyboard adds and removes one.
 
 ## Tooling
 
@@ -5906,6 +5920,7 @@ mark, because each is waiting on a deck verdict rather than on work.
       ["fix:all переформатирует HTML, который eslint возвращает",    "`fix:all` reformats HTML that eslint then fights",                            ""],
       ["ds-number-stepper и ds-dropzone вне field-message",          "outside the field-message system entirely",                                   ""],
       ["Signal Forms: dirty и pending (disabledReasons отвечен)",    "blocked on a LOOK, not on wiring",                                            "implemented/button-refusal-reason.html"],
+      ["Мульти-пин: закреплять больше одной метки",                  "Pin more than one mark at a time",                                            ""],
       ["Бар и колонка: вынести общее, контракты разные",             "Extract what bar and column SHARE",                                           "7-bar-column-contracts.html"],
       ["ds-bar-chart → ds-row-chart",                                "Rename `ds-bar-chart` to `ds-row-chart`",                                     "10-decision-queue.html"],
       ["ds-waterfall-chart → ds-cascade-chart",                      "`ds-waterfall-chart` is `ds-cascade-chart`",                                  ""],
