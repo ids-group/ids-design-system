@@ -434,6 +434,12 @@ export class LineChartComponent {
    *  `'item'` names only the marker itself. */
   readonly tooltip = input<ChartTooltipTrigger>('axis');
 
+  // The category cursor is the one hover area over the plot and names every series, so a
+  // marker-only or silent tooltip needs it off.
+  protected readonly plotCursor = computed(() =>
+    this.tooltip() === 'axis' ? 'category' : 'none',
+  );
+
   protected readonly tooltipTemplate =
     contentChild<TemplateRef<{ $implicit: ChartTooltipContext }>>(
       'dsChartTooltip',
