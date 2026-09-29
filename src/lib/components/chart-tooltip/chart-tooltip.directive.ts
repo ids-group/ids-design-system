@@ -105,6 +105,7 @@ export class ChartTooltipDirective {
   private panelRef: ComponentRef<ChartTooltipPanelComponent> | null = null;
   private detachScrollReposition: (() => void) | null = null;
   private detachEscape: (() => void) | null = null;
+  private glide: Animation | null = null;
 
   constructor() {
     effect(() => {
@@ -121,6 +122,12 @@ export class ChartTooltipDirective {
   }
 
   private open(context: ChartTooltipContext, origin: ChartTooltipOrigin): void {
+    // Measured before the glide in flight is dropped, so a panel re-aimed mid-glide leaves from
+    // where it is on screen rather than jumping to where that glide was heading.
+    const from =
+      this.overlayRef?.overlayElement.getBoundingClientRect() ?? null;
+    this.glide?.cancel();
+    this.glide = null;
     // Reposition rather than re-create while the pointer moves between marks: a fresh
     // OverlayRef per mark restarts the enter transition on every band it crosses.
     if (!this.overlayRef) {
@@ -149,6 +156,41 @@ export class ChartTooltipDirective {
     );
     this.panelRef?.setInput('context', context);
     this.panelRef?.setInput('template', this.dsChartTooltipTemplate());
+    if (from) {
+      // The new reading is rendered before the landing is measured, or a panel that changes size
+      // lands where the old one would have.
+      this.panelRef?.changeDetectorRef.detectChanges();
+      this.overlayRef.updatePosition();
+      this.glideFrom(from, this.overlayRef.overlayElement);
+    }
+  }
+
+  // `translate`, not `transform`: the pane's own enter and leave animate `transform`, and a glide
+  // that replaced it would cut an entrance short.
+  private glideFrom(from: DOMRect, pane: HTMLElement): void {
+    const to = pane.getBoundingClientRect();
+    const deltaX = from.left - to.left;
+    const deltaY = from.top - to.top;
+    if ((deltaX === 0 && deltaY === 0) || typeof pane.animate !== 'function') {
+      return;
+    }
+    const style = getComputedStyle(pane);
+    const duration = milliseconds(
+      style.getPropertyValue('--ds-motion-chart-tooltip-move-duration'),
+    );
+    if (duration <= 0) {
+      return;
+    }
+    this.glide = pane.animate(
+      [{ translate: `${deltaX}px ${deltaY}px` }, { translate: '0 0' }],
+      {
+        duration,
+        easing:
+          style
+            .getPropertyValue('--ds-motion-chart-tooltip-move-easing')
+            .trim() || 'ease',
+      },
+    );
   }
 
   private strategyFor(origin: ChartTooltipOrigin) {
@@ -192,9 +234,19 @@ export class ChartTooltipDirective {
     // family's answer to that is a fade. Moving between marks repositions this overlay rather than
     // closing it, so nothing here can lag behind the pointer.
     disposeWithLeave(this.overlayRef, 'dismiss');
+    this.glide = null;
     this.overlayRef = null;
     this.panelRef = null;
   }
+}
+
+function milliseconds(duration: string): number {
+  const value = parseFloat(duration);
+  if (!Number.isFinite(value)) {
+    return 0;
+  }
+
+  return duration.trim().endsWith('ms') ? value : value * 1000;
 }
 
 function coarsePointer(): boolean {

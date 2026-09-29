@@ -16,6 +16,7 @@ import {
 } from '@angular/core';
 import {
   CHART_SERIES_COLORS,
+  CHART_TOOLTIP_LINGER_MS,
   areaPath,
   chartValueFormat,
   focusMark,
@@ -185,9 +186,11 @@ export class LineSeriesComponent implements OnDestroy {
    *  `'pointer'` follows the cursor. */
   readonly tooltipAnchor = input<'reading' | 'pointer'>('reading');
 
-  /** How long the panel survives the pointer leaving the marker. Raise it only for a panel a
-   *  reader has to REACH, which is WCAG 1.4.13's hoverable clause; about 140 crosses the gap. */
-  readonly tooltipLingerMs = input(0, { transform: numberAttribute });
+  /** How long the panel survives the pointer leaving the marker, in milliseconds. The default lets
+   *  the pointer reach the next marker before the panel closes, so it glides there instead. */
+  readonly tooltipLingerMs = input(CHART_TOOLTIP_LINGER_MS, {
+    transform: numberAttribute,
+  });
 
   /** Formats every value this series prints. Called with `'tick'` for an axis label and
    *  `'tooltip'` everywhere a value is printed in full. */

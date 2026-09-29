@@ -121,14 +121,10 @@ export class FunnelChartComponent {
    *  is one decision per app rather than per plot. */
   readonly frame = input<ChartFrame | null>(null);
 
-  /** How long the tooltip stays after the pointer leaves the mark, in milliseconds. Zero, the
-   *  default, takes it away at once: a panel that outlives the pointer sits over the plot the
-   *  reader has moved on to.
-   *
-   *  Raise it only for a panel a reader has to REACH — one carrying a link, a figure, or anything
-   *  selectable — which is WCAG 1.4.13's hoverable clause. The panel is portaled to the body, so
-   *  crossing the gap to it at an ordinary pointer speed needs about 140. Unset falls back to
-   *  `DS_CONFIG.chart.tooltipLingerMs`, then 0. */
+  /** How long the tooltip stays after the pointer leaves the mark, in milliseconds. The default,
+   *  500, lets the pointer cross to the next mark and find the same panel, which glides there
+   *  instead of closing and opening again. Zero takes it away at once. Unset falls back to
+   *  `DS_CONFIG.chart.tooltipLingerMs`, then 500. */
   readonly tooltipLingerMs = input<number | null>(null, {
     transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
   });

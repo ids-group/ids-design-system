@@ -8618,6 +8618,16 @@ export const NEW_TOKENS: readonly NewToken[] = [
     "kind": "color"
   },
   {
+    "name": "--ds-motion-chart-tooltip-move-duration",
+    "value": "300ms",
+    "kind": "motion"
+  },
+  {
+    "name": "--ds-motion-chart-tooltip-move-easing",
+    "value": "var(--ease-standard)",
+    "kind": "other"
+  },
+  {
     "name": "--ds-motion-check-enter-duration",
     "value": "var(--duration-base)",
     "kind": "other"

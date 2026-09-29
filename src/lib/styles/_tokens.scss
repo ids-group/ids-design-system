@@ -182,6 +182,11 @@
   --ds-motion-chart-mark-exit-duration:  var(--duration-fast);
   --ds-motion-chart-mark-exit-easing:    var(--ease-accelerate);
 
+  /* The one tooltip gliding from the mark it left to the mark it reached. Off the duration scale on
+     purpose, matching Highcharts' tooltip animation, so the reduced-motion block zeroes it by name. */
+  --ds-motion-chart-tooltip-move-duration: 300ms;
+  --ds-motion-chart-tooltip-move-easing: var(--ease-standard);
+
   --opacity-disabled:        0.5;
   --opacity-text-disabled:   0.38;  /* WCAG-derived */
   --opacity-scrim:           0.55;
@@ -522,6 +527,7 @@
     --duration-slow:    0ms;
     --duration-slower:  0ms;
     --duration-slowest: 0ms;
+    --ds-motion-chart-tooltip-move-duration: 0ms;
 
     /* Loops are slowed, never frozen: a stopped spinner reads as "hung", not
        "loading". The one large motion that does halt is the page-wide skeleton

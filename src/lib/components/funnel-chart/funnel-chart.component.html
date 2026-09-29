@@ -25,7 +25,8 @@
       class="skeleton"
       aria-hidden="true">
       @for (placeholderWidth of skeletonStages(); track $index) {
-        <ds-skeleton height="calc(var(--_funnel-chart-stage-height) - var(--_funnel-chart-stage-gap))"
+        <ds-skeleton
+          height="calc(var(--_funnel-chart-stage-height) - var(--_funnel-chart-stage-gap))"
           [shimmer]="loading()"
           [width]="placeholderWidth" />
       }
