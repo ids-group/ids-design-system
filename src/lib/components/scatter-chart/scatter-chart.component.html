@@ -39,7 +39,10 @@
       [attr.aria-label]="accessibleName()"
       [dsChartTooltip]="tooltipContext()"
       [dsChartTooltipPinned]="activeMark.pinned()"
-      [dsChartTooltipOrigin]="activeMark.origin()">
+      [dsChartTooltipOrigin]="activeMark.origin()"
+      (pointerover)="onCanvasPointer($event)"
+      (pointermove)="onCanvasPointer($event)"
+      (pointerleave)="onCanvasLeave()">
       @for (tick of yTicks(); track tick.value) {
         <line
           class="grid-line"
@@ -83,8 +86,6 @@
             highlightedSeries() !== entry.series.id
           "
           [style.--_scatter-series-color]="entry.color"
-          (pointerover)="onPointOver($event)"
-          (pointerout)="onPointOut($event)"
           (click)="onPointPress($event)"
           (keydown.enter)="onPointActivate($event)"
           (keydown.space)="onPointActivate($event)">
