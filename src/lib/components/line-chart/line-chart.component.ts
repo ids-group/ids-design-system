@@ -234,10 +234,14 @@ export class LineChartComponent {
    *  the second one where a series sets `axis: 'secondary'`. A maximum below the data does not clip
    *  it — the larger of the two wins, because silently hiding a reading is worse than a taller axis
    *  than you asked for. */
-  readonly max = input<number | null>(null);
+  readonly max = input<number | null>(null, {
+    transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
+  });
 
   /** Pins the secondary value axis. See `max`. */
-  readonly maxSecondary = input<number | null>(null);
+  readonly maxSecondary = input<number | null>(null, {
+    transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
+  });
 
   /** Draws skeleton marks in place of the data, at the same count, so the chart does not resize
    *  when the data lands. */
