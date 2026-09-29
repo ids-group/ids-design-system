@@ -13,9 +13,10 @@ import { NgTemplateOutlet } from '@angular/common';
 import type { ChartTooltipContext } from './chart-tooltip.types';
 import { swatchBlendsInto } from './swatch-contrast';
 
-// Past four readings the dots stop telling rows apart and start reading as a column of noise; the
-// labels carry the series on their own.
-const AUTO_SWATCH_LIMIT = 4;
+// A dot tells readings apart, so a lone reading has nothing to tell it from, and past four the dots
+// read as a column of noise; in both cases the labels carry the series on their own.
+const AUTO_SWATCH_MIN = 2;
+const AUTO_SWATCH_MAX = 4;
 
 @Component({
   selector: 'ds-chart-tooltip-panel',
@@ -45,8 +46,10 @@ export class ChartTooltipPanelComponent {
   protected readonly showsSwatches = computed(() => {
     const swatches = this.swatches();
 
+    const count = this.context().entries.length;
+
     return swatches === 'auto'
-      ? this.context().entries.length <= AUTO_SWATCH_LIMIT
+      ? count >= AUTO_SWATCH_MIN && count <= AUTO_SWATCH_MAX
       : swatches;
   });
 

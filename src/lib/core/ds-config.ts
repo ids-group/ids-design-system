@@ -183,8 +183,9 @@ export interface DsConfig {
      *  the next mark answers at once until the pointer leaves the chart; focus, a tap and a click
      *  that pins answer at once. */
     hoverDelayMs?: number;
-    /** Whether every chart's tooltip draws a colour dot beside each reading. Unset draws them for up
-     *  to four readings and leaves them out from five, where a column of dots reads as noise. */
+    /** Whether every chart's tooltip draws a colour dot beside each reading. Unset draws them for two
+     *  to four readings: a lone reading has nothing to tell apart, and from five a column of dots
+     *  reads as noise. */
     tooltipSwatches?: boolean;
     /** How every chart formats its values, the annex table and the generated description included.
      *  Default groups digits in `locale` and abbreviates on a tick (`1.2M`). The same reason
