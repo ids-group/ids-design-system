@@ -18,7 +18,7 @@
   resolved signals move to an internal base class that `BarChartComponent`, `ChartComponent`,
   `ColumnChartComponent`, `FunnelChartComponent`, `HeatmapChartComponent`,
   `LineChartComponent`, `PieChartComponent`, `ScatterChartComponent` and
-  `WaterfallChartComponent` extend. `ChartTooltipDirective` gained `host`,
+  `WaterfallChartComponent` extend. The internal `ChartTooltipDirective` gained `host`,
   `LineSeriesComponent` `fadeId`, `SparklineComponent` `area`, and `WaterfallChartComponent`
   `dimOthers` and `tooltip`. `data` on the bar, column, funnel, pie and sparkline charts, and
   `ds-line-chart`'s `categories` and `series`, are optional and default to empty. Build after
