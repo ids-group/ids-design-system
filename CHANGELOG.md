@@ -2,8 +2,9 @@
 
 ### Breaking
 
-- **`ds-chart`'s `cursorPin` is `pinOnClick`,** the name every other chart already uses. Rename
-  the binding; `DS_CONFIG.chart.pinOnClick` still sets the default.
+- **`ds-chart`'s `cursorPin` input is `pinOnClick`,** the name every other chart already uses, and
+  its readback signal `cursorPinResolved()` is `pinOnClickResolved()`. There is no alias: rename
+  both. `DS_CONFIG.chart.pinOnClick` still sets the default.
 
 - **`ds-line-chart`'s `tooltipAnchor` takes `'reading'` where it took `'point'`.** The behaviour is
   unchanged: the panel hangs over the highest reading in the category. Replace
@@ -11,19 +12,6 @@
 
 - **`LineChartSeries.area` and a `dsLineSeries` entry's `area` are `boolean | 'fade'`.** Code that
   reads `area` back as a boolean handles `'fade'` too; code that only sets it needs nothing.
-
-- **Subclassing a chart breaks on moved, grown and loosened members.** The inputs every chart
-  shares (`caption`, `summary`, `frame`, `loading`, `error`, `emptyText`, `errorText`,
-  `valueFormat`, `interactive`, `tooltipSwatches`, `tooltipLingerMs`, `pinOnClick`) and their
-  resolved signals move to an internal base class that `BarChartComponent`, `ChartComponent`,
-  `ColumnChartComponent`, `FunnelChartComponent`, `HeatmapChartComponent`,
-  `LineChartComponent`, `PieChartComponent`, `ScatterChartComponent` and
-  `WaterfallChartComponent` extend. The internal `ChartTooltipDirective` gained `host`,
-  `LineSeriesComponent` `fadeId`, `SparklineComponent` `area`, and `WaterfallChartComponent`
-  `dimOthers` and `tooltip`. `data` on the bar, column, funnel, pie and sparkline charts, and
-  `ds-line-chart`'s `categories` and `series`, are optional and default to empty. Build after
-  upgrading; rename or mark `override` every member the compiler reports. Subclassing a DS
-  component is unsupported.
 
 - **A chart tooltip is light on the light theme.** The panel takes `--surface-overlay`,
   `--text-primary` and `--border-default`, where it was `--neutral-900` with white text; the
@@ -33,9 +21,83 @@
   `--ds-chart-tooltip-text-color: var(--neutral-0)` and
   `--ds-chart-tooltip-border-color: var(--neutral-700)` on `:root`.
 
-- **`ds-pie-chart` (`PieChartComponent`) drops the `staggerMs` input.** The input was accepted and did nothing: the ring
-  turns into place as one object. Remove the binding; a template that keeps it fails to compile.
+- **A chart tooltip listing one reading shows no colour dot.** Under the default auto rule the
+  tooltip now shows dots only when it lists two to four readings (was one to four); a single-reading
+  tooltip drops its dot and the label alone carries the series. `tooltipSwatches` set to `true`
+  still forces the dot on; set it to keep a dot on a one-reading tooltip.
+
+- **Three chart tokens lose their declared defaults and fall back to `--ds-chart-bg-color`.**
+  `--ds-chart-frame-bg-color`, `--ds-chart-focus-halo-color` and `--ds-chart-hatch-color` no longer
+  declare a value; each resolves to `--ds-chart-bg-color` (default `var(--surface-default)`) unless
+  you set it. The focus halo, which was white, is now the chart background. Setting any of the three
+  still overrides as before; reading one in your own CSS, which used to resolve to its old default,
+  now resolves to nothing.
+
+- **Hovering a `ds-bar-chart` row label dims the other rows only when `dimOthers` is set.** A
+  row-axis label used to dim the other rows on hover whatever `dimOthers` was; it now does so only
+  when `dimOthers` is set on the chart (default `false`), matching the category-label behaviour on
+  `ds-chart`. To keep the dimming, set `dimOthers`.
+
+- **`ds-pie-chart` drops the `staggerMs` input.** It was accepted and did nothing; the ring turns
+  into place as one object. Remove the binding, or a template that keeps it fails to compile.
   Nothing replaces it.
+
+- **Subclassing a chart breaks on moved, grown and renamed members.** The inputs every chart shares
+  (`caption`, `summary`, `frame`, `loading`, `error`, `emptyText`, `errorText`, `valueFormat`,
+  `interactive`, `tooltipSwatches`, `tooltipLingerMs`, `pinOnClick`) and their resolved signals move
+  to an internal base class (`DsChartBase`) that `BarChartComponent`, `ChartComponent`,
+  `ColumnChartComponent`, `FunnelChartComponent`, `HeatmapChartComponent`, `LineChartComponent`,
+  `PieChartComponent`, `ScatterChartComponent` and `WaterfallChartComponent` extend, each dropping
+  its own declaration of them. On top of that: `ChartComponent` loses `cursorPin` and
+  `cursorPinResolved` and gains `pinOnClickResolved`; `BarChartComponent` loses `dimsOthers` and
+  `hoveredLabel`; `LineChartComponent` loses `markAnchor`; `PieChartComponent` loses `staggerMs`;
+  `SparklineComponent` gains `area`; `LineSeriesComponent` gains `fadeId`; `WaterfallChartComponent`
+  gains `dimOthers` and `tooltip`; and the internal `ChartTooltipDirective` gains `host`. Build
+  after upgrading; rename or mark `override` every member the compiler reports. Subclassing a DS
+  component is unsupported.
+
+### Added
+
+- **`--ds-chart-bg-color` paints the chart frame and every knockout.** A new token, default
+  `var(--surface-default)`. It fills the frame background and every knockout cut into the plot:
+  stacked line band separators, the line halo, the outlined line-marker ring, stacked-column gaps
+  and hatch stripes, bar segment seams, reference-label and annotation halos, the pie centre-text
+  knockout and the focus halo. Set it to the surface the chart sits on - a card, say - and the frame
+  and every knockout match it. A second new token, `--ds-chart-plot-bg-color` (default
+  `transparent`), fills the plot area of `ds-chart` and `ds-scatter-chart`.
+
+- **`dsLineSeries` and `LineChartSeries` take `area: 'fade'`.** Beside `true` (a flat tint at
+  `--ds-chart-area-opacity`, `0.16`), `area` now accepts `'fade'`: a vertical gradient from
+  `--ds-chart-area-fade-opacity` (new, default `0.32`) at the line down to transparent at the
+  baseline. A new optional `--ds-chart-area-color` overrides the fill colour, which otherwise
+  follows the series colour.
+
+- **`ds-sparkline` takes an `area` input.** A boolean attribute (default `false`) that fills flat
+  under the line, tuned by `--ds-sparkline-area-color` (default the line colour) and
+  `--ds-sparkline-area-opacity` (default `--ds-chart-area-opacity`).
+
+- **`ds-heatmap-chart`, `ds-scatter-chart` and `ds-waterfall-chart` gain inputs from the shared
+  chart base.** `ds-heatmap-chart` adds `summary` (an accessible summary of the chart) and
+  `tooltipLingerMs`; `ds-scatter-chart` and `ds-waterfall-chart` add `tooltipLingerMs`, which holds
+  a tooltip open the set number of milliseconds after the pointer leaves a mark (default from
+  `DS_CONFIG.chart.tooltipLingerMs`).
+
+- **`ds-waterfall-chart` takes `dimOthers` and `tooltip`.** `dimOthers` (boolean attribute, default
+  `false`) dims the other steps while one is hovered; `tooltip` (`ChartItemTooltipTrigger`, default
+  `'item'`) sets its tooltip trigger.
+
+### Changed
+
+- **A chart tooltip picks up `--ds-chart-tooltip-*` set on the chart.** `--ds-chart-tooltip-bg-color`,
+  `--ds-chart-tooltip-text-color` and `--ds-chart-tooltip-border-color` set on a chart element or
+  any ancestor now reach the panel; the tooltip copies them onto its overlay pane each time it
+  opens. Before, only `:root` reached it, because the panel renders in an overlay outside the chart.
+
+- **A chart with no `data` renders its empty state instead of throwing.** `data` on `ds-bar-chart`,
+  `ds-column-chart`, `ds-funnel-chart`, `ds-pie-chart` and `ds-sparkline`, and `categories` and
+  `series` on `ds-line-chart`, are optional and default to empty; omitting one now shows the empty
+  state, where a missing required input used to throw NG0950. `ds-scatter-chart`, `ds-heatmap-chart`
+  and `ds-waterfall-chart` already treated their data as optional.
 
 ### Fixed
 
@@ -57,6 +119,7 @@
 | Delete | Why | Replace with |
 | --- | --- | --- |
 | `--ds-chart-tooltip-bg-color`, `--ds-chart-tooltip-text-color` and `--ds-chart-tooltip-border-color` set to light surface and text colours so the tooltip matches a light page | the panel takes `--surface-overlay`, `--text-primary` and `--border-default` by default | nothing; keep an override that sets any other colour |
+| `--ds-chart-frame-bg-color` set on a chart only to match the surface behind it | `--ds-chart-bg-color` paints the frame and every knockout together | `--ds-chart-bg-color` set to that surface; keep `--ds-chart-frame-bg-color` only to colour the frame apart from the knockouts |
 | `cursor="category"` on a `ds-chart` set only so a `tooltip="axis"` line opens its panel | `cursor="auto"` turns the category cursor on for a mark with `tooltip="axis"` | nothing; keep it on a plot whose marks do not use `tooltip="axis"` |
 
 ## 0.14.4 — 2026-09-29
