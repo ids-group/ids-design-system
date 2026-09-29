@@ -2,6 +2,10 @@
 
 ### Fixed
 
+- **Several `provideDsConfig` calls in one `providers` array all apply.** The last one replaced
+  the others, whose keys were lost without a warning; they now merge in order, the later call
+  winning per key. `provideDsIntl` merges the same way.
+
 - **`ds-table`'s `exportCsv()` and `runExport()` warn when the table has no `dsTableExport`.**
   In a development build either call threw NG0203 from the click handler that made it; it now
   logs the missing directive. Production builds were unaffected.
