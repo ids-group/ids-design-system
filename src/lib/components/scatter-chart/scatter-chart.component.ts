@@ -154,6 +154,13 @@ export class ScatterChartComponent {
    *  the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`. */
   readonly frame = input<ChartFrame | null>(null);
 
+  /** Whether the tooltip draws a colour dot beside each reading. Unset falls back to
+   *  `DS_CONFIG.chart.tooltipSwatches`, then draws them for up to four readings. */
+  readonly tooltipSwatches = input<boolean | null>(null, {
+    transform: (value: unknown) =>
+      value == null ? null : booleanAttribute(value),
+  });
+
   /** The annex table under the plot. It lists EVERY reading, including the ones decimation left
    *  out of the drawing, which is what keeps a thinned chart honest. */
   readonly dataTable = input<ChartDataTable | null>(null);

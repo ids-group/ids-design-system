@@ -125,6 +125,13 @@ export class HeatmapChartComponent {
    *  page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`. */
   readonly frame = input<ChartFrame | null>(null);
 
+  /** Whether the tooltip draws a colour dot beside each reading. Unset falls back to
+   *  `DS_CONFIG.chart.tooltipSwatches`, then draws them for up to four readings. */
+  readonly tooltipSwatches = input<boolean | null>(null, {
+    transform: (value: unknown) =>
+      value == null ? null : booleanAttribute(value),
+  });
+
   /** A skeleton at the grid's own height, so the page does not resize when the data lands. */
   readonly loading = input(false, { transform: booleanAttribute });
 
