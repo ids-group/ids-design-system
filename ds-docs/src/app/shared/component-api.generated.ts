@@ -1124,24 +1124,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
-        "name": "data",
-        "kind": "input",
-        "type": "readonly BarChartRow[]",
-        "union": null,
-        "default": "[]",
-        "required": false,
-        "description": "One row per bar, drawn in the order given."
-      },
-      {
-        "name": "max",
-        "kind": "input",
-        "type": "number | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Track length is relative to this. Null uses the largest value, so the longest row always fills its track."
-      },
-      {
         "name": "frame",
         "kind": "input",
         "type": "ChartFrame | null",
@@ -1151,7 +1133,79 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "null",
         "required": false,
-        "description": "Whether the chart draws its own bordered, padded box. `'auto'`, the default, draws it; `'none'` leaves the chart bare, for one placed inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards is one decision per app rather than per plot."
+        "description": "`'auto'` draws the chart's own bordered, padded box, so it reads as one object on a bare page; `'none'` leaves the chart bare, for one placed inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards is one decision per app rather than per plot."
+      },
+      {
+        "name": "caption",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Printed above the plot as the chart's visible title, and reused as the annex table's caption."
+      },
+      {
+        "name": "summary",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Accessible name. Generated from the data when omitted."
+      },
+      {
+        "name": "loading",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize when the data lands."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from empty data, because \"the request failed\" and \"there is nothing to show\" read the same to a reader and mean opposite things."
+      },
+      {
+        "name": "emptyText",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Shown in place of the plot when there is no data. Unset falls back to `DS_INTL.chart.empty`."
+      },
+      {
+        "name": "errorText",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "The message the error state prints. Unset falls back to `DS_INTL.chart.error`."
+      },
+      {
+        "name": "valueFormat",
+        "kind": "input",
+        "type": "ChartValueFormat | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
+      },
+      {
+        "name": "interactive",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
       },
       {
         "name": "tooltipSwatches",
@@ -1172,22 +1226,31 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds. The default, 500, lets the pointer cross to the next mark and find the same panel, which glides there instead of closing and opening again. Zero takes it away at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
       },
       {
-        "name": "caption",
+        "name": "pinOnClick",
         "kind": "input",
-        "type": "string | null",
+        "type": "boolean | null",
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Printed above the plot as the chart's visible title, and reused as the annex table's caption."
+        "description": "Holds the clicked mark and its tooltip in place, with a pin disc on it, until a second click, Escape or a press outside releases it. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. The click output fires either way - pinning is a state, not a handler."
       },
       {
-        "name": "summary",
+        "name": "data",
         "kind": "input",
-        "type": "string | null",
+        "type": "readonly BarChartRow[]",
+        "union": null,
+        "default": "[]",
+        "required": false,
+        "description": "One row per bar, drawn in the order given."
+      },
+      {
+        "name": "max",
+        "kind": "input",
+        "type": "number | null",
         "union": null,
         "default": "null",
         "required": false,
-        "description": "Accessible name. Generated from the data when omitted."
+        "description": "Track length is relative to this. Null uses the largest value, so the longest row always fills its track."
       },
       {
         "name": "dataTable",
@@ -1219,69 +1282,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "true",
         "required": false,
         "description": "Prints each row's share of `max` beside its value."
-      },
-      {
-        "name": "loading",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize when the data lands."
-      },
-      {
-        "name": "emptyText",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Shown in place of the plot when `data` is empty. Unset falls back to `DS_INTL.chart.empty`."
-      },
-      {
-        "name": "error",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from an empty `data`, because \"the request failed\" and \"there is nothing to show\" read the same to a reader and mean opposite things."
-      },
-      {
-        "name": "errorText",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "The message the error state prints. Unset falls back to `DS_INTL.chart.error`."
-      },
-      {
-        "name": "valueFormat",
-        "kind": "input",
-        "type": "ChartValueFormat | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
-      },
-      {
-        "name": "pinOnClick",
-        "kind": "input",
-        "type": "boolean | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Holds the clicked row and its tooltip in place, with a pin disc on it, until a second click, Escape or a press outside releases it. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. `rowClicked` fires either way - pinning is a state, not a handler."
-      },
-      {
-        "name": "interactive",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
       },
       {
         "name": "dimOthers",
@@ -1869,6 +1869,117 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
+        "name": "frame",
+        "kind": "input",
+        "type": "ChartFrame | null",
+        "union": [
+          "auto",
+          "none"
+        ],
+        "default": "null",
+        "required": false,
+        "description": "`'auto'` draws the chart's own bordered, padded box, so it reads as one object on a bare page; `'none'` leaves the chart bare, for one placed inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards is one decision per app rather than per plot."
+      },
+      {
+        "name": "caption",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Printed above the plot as the chart's visible title, and reused as the annex table's caption."
+      },
+      {
+        "name": "summary",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Accessible name. Generated from the data when omitted."
+      },
+      {
+        "name": "loading",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize when the data lands."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from empty data, because \"the request failed\" and \"there is nothing to show\" read the same to a reader and mean opposite things."
+      },
+      {
+        "name": "emptyText",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Shown in place of the plot when there is no data. Unset falls back to `DS_INTL.chart.empty`."
+      },
+      {
+        "name": "errorText",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "The message the error state prints. Unset falls back to `DS_INTL.chart.error`."
+      },
+      {
+        "name": "valueFormat",
+        "kind": "input",
+        "type": "ChartValueFormat | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
+      },
+      {
+        "name": "interactive",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
+      },
+      {
+        "name": "tooltipSwatches",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for two to four readings."
+      },
+      {
+        "name": "tooltipLingerMs",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds. The default, 500, lets the pointer cross to the next mark and find the same panel, which glides there instead of closing and opening again. Zero takes it away at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
+      },
+      {
+        "name": "pinOnClick",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Holds the clicked mark and its tooltip in place, with a pin disc on it, until a second click, Escape or a press outside releases it. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. The click output fires either way - pinning is a state, not a handler."
+      },
+      {
         "name": "categories",
         "kind": "input",
         "type": "readonly string[]",
@@ -1918,24 +2029,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Draws a band and a crosshair down the category under the pointer, and reports that category to every mark through `activeIndex`. On a plot of two or more marks that show a tooltip, the panel then names every mark's reading at that category wherever in it the pointer is. `'auto'`, the default, is `'category'` for such a composed plot and `'none'` for a plot of one mark, whose marks already answer per mark: two affordances on one plot read as two different questions."
       },
       {
-        "name": "pinOnClick",
-        "kind": "input",
-        "type": "boolean | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Whether a press holds the category cursor where it is, so the reader can look away from the plot with the comparison still on screen. Released by pressing it again, by Escape, or by a press outside the plot. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`."
-      },
-      {
-        "name": "tooltipLingerMs",
-        "kind": "input",
-        "type": "number | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Milliseconds the cursor survives the pointer leaving the plot. The tooltip panel is portaled out of the plot, so without a grace period it closes before the pointer can reach it."
-      },
-      {
         "name": "maxSecondary",
         "kind": "input",
         "type": "number | null",
@@ -1970,99 +2063,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "CHART_DEFAULT_VALUE_SPACE",
         "required": false,
         "description": "Pixels reserved for a value label at each end of the plot: above the top tick for a mark at the ceiling, and below the baseline for a negative mark, whose label would otherwise print over the category labels. Reserved whether or not a mark draws one, because a chart that gains a label on one value must not change height."
-      },
-      {
-        "name": "caption",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Printed above the plot as the chart's visible title."
-      },
-      {
-        "name": "interactive",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Whether the projected marks answer to the pointer and the keyboard. The container draws no marks of its own and only reads this for the plot's role: a group of controls to step through, against a single image to be described."
-      },
-      {
-        "name": "summary",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Accessible name for the plot. The container holds no readings of its own, so a chart that needs its numbers described supplies the sentence here - `describeSeries` is what the five presets build it with. It is the whole label in the static case, where nothing else is reachable."
-      },
-      {
-        "name": "frame",
-        "kind": "input",
-        "type": "ChartFrame | null",
-        "union": [
-          "auto",
-          "none"
-        ],
-        "default": "null",
-        "required": false,
-        "description": "Whether the chart draws its own bordered, padded box. `'auto'`, the default, draws it; `'none'` leaves it bare, for one placed inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'`."
-      },
-      {
-        "name": "tooltipSwatches",
-        "kind": "input",
-        "type": "boolean | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for two to four readings."
-      },
-      {
-        "name": "loading",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Draws a placeholder in place of the plot, at the plot's own height, so the page does not resize when the data lands."
-      },
-      {
-        "name": "emptyText",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Shown in place of the plot when `categories` is empty. Unset falls back to `DS_INTL.chart.empty`."
-      },
-      {
-        "name": "error",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from an empty `categories`, because \"the request failed\" and \"there is nothing to show\" read the same to a reader and mean opposite things."
-      },
-      {
-        "name": "errorText",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "The message the error state prints. Unset falls back to `DS_INTL.chart.error`."
-      },
-      {
-        "name": "valueFormat",
-        "kind": "input",
-        "type": "ChartValueFormat | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Formats the value-axis ticks. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
       },
       {
         "name": "secondaryAxisMode",
@@ -3042,6 +3042,117 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
+        "name": "frame",
+        "kind": "input",
+        "type": "ChartFrame | null",
+        "union": [
+          "auto",
+          "none"
+        ],
+        "default": "null",
+        "required": false,
+        "description": "`'auto'` draws the chart's own bordered, padded box, so it reads as one object on a bare page; `'none'` leaves the chart bare, for one placed inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards is one decision per app rather than per plot."
+      },
+      {
+        "name": "caption",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Printed above the plot as the chart's visible title, and reused as the annex table's caption."
+      },
+      {
+        "name": "summary",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Accessible name. Generated from the data when omitted."
+      },
+      {
+        "name": "loading",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize when the data lands."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from empty data, because \"the request failed\" and \"there is nothing to show\" read the same to a reader and mean opposite things."
+      },
+      {
+        "name": "emptyText",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Shown in place of the plot when there is no data. Unset falls back to `DS_INTL.chart.empty`."
+      },
+      {
+        "name": "errorText",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "The message the error state prints. Unset falls back to `DS_INTL.chart.error`."
+      },
+      {
+        "name": "valueFormat",
+        "kind": "input",
+        "type": "ChartValueFormat | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
+      },
+      {
+        "name": "interactive",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
+      },
+      {
+        "name": "tooltipSwatches",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for two to four readings."
+      },
+      {
+        "name": "tooltipLingerMs",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds. The default, 500, lets the pointer cross to the next mark and find the same panel, which glides there instead of closing and opening again. Zero takes it away at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
+      },
+      {
+        "name": "pinOnClick",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Holds the clicked mark and its tooltip in place, with a pin disc on it, until a second click, Escape or a press outside releases it. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. The click output fires either way - pinning is a state, not a handler."
+      },
+      {
         "name": "data",
         "kind": "input",
         "type": "readonly ColumnChartPoint[] | readonly ColumnChartSeries[]",
@@ -3092,54 +3203,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "How many value-axis ticks to aim for. A hint, not a count: ticks are snapped to a round step, so the axis may carry one more or one fewer."
       },
       {
-        "name": "frame",
-        "kind": "input",
-        "type": "ChartFrame | null",
-        "union": [
-          "auto",
-          "none"
-        ],
-        "default": "null",
-        "required": false,
-        "description": "Whether the chart draws its own bordered, padded box. `'auto'`, the default, draws it; `'none'` leaves the chart bare, for one placed inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards is one decision per app rather than per plot."
-      },
-      {
-        "name": "tooltipSwatches",
-        "kind": "input",
-        "type": "boolean | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for two to four readings."
-      },
-      {
-        "name": "tooltipLingerMs",
-        "kind": "input",
-        "type": "number | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds. The default, 500, lets the pointer cross to the next mark and find the same panel, which glides there instead of closing and opening again. Zero takes it away at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
-      },
-      {
-        "name": "caption",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Printed above the plot as the chart's visible title, and reused as the annex table's caption."
-      },
-      {
-        "name": "summary",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Accessible name. Generated from the data when omitted."
-      },
-      {
         "name": "dataTable",
         "kind": "input",
         "type": "ChartDataTable | null",
@@ -3160,69 +3223,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Declares that the marks are parts of one whole, which is what makes a share of their total a real quantity. Off by default: a chart of visitors per stage or revenue per month sums to a number nobody can point at, and \"18.6% of total\" against it is arithmetic dressed as a fact. On, each mark's share appears on the tooltip's second line and in the data table."
-      },
-      {
-        "name": "loading",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize when the data lands."
-      },
-      {
-        "name": "emptyText",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Shown in place of the plot when `data` is empty. Unset falls back to `DS_INTL.chart.empty`."
-      },
-      {
-        "name": "error",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from an empty `data`, because \"the request failed\" and \"there is nothing to show\" read the same to a reader and mean opposite things."
-      },
-      {
-        "name": "errorText",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "The message the error state prints. Unset falls back to `DS_INTL.chart.error`."
-      },
-      {
-        "name": "valueFormat",
-        "kind": "input",
-        "type": "ChartValueFormat | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
-      },
-      {
-        "name": "interactive",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
-      },
-      {
-        "name": "pinOnClick",
-        "kind": "input",
-        "type": "boolean | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Holds the clicked mark and its tooltip in place, with a pin disc on it, until a second click, Escape or a press outside releases it. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. `pointClicked` fires either way - pinning is a state, not a handler."
       },
       {
         "name": "dimOthers",
@@ -4104,6 +4104,117 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
+        "name": "frame",
+        "kind": "input",
+        "type": "ChartFrame | null",
+        "union": [
+          "auto",
+          "none"
+        ],
+        "default": "null",
+        "required": false,
+        "description": "`'auto'` draws the chart's own bordered, padded box, so it reads as one object on a bare page; `'none'` leaves the chart bare, for one placed inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards is one decision per app rather than per plot."
+      },
+      {
+        "name": "caption",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Printed above the plot as the chart's visible title, and reused as the annex table's caption."
+      },
+      {
+        "name": "summary",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Accessible name. Generated from the data when omitted."
+      },
+      {
+        "name": "loading",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize when the data lands."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from empty data, because \"the request failed\" and \"there is nothing to show\" read the same to a reader and mean opposite things."
+      },
+      {
+        "name": "emptyText",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Shown in place of the plot when there is no data. Unset falls back to `DS_INTL.chart.empty`."
+      },
+      {
+        "name": "errorText",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "The message the error state prints. Unset falls back to `DS_INTL.chart.error`."
+      },
+      {
+        "name": "valueFormat",
+        "kind": "input",
+        "type": "ChartValueFormat | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
+      },
+      {
+        "name": "interactive",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
+      },
+      {
+        "name": "tooltipSwatches",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for two to four readings."
+      },
+      {
+        "name": "tooltipLingerMs",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds. The default, 500, lets the pointer cross to the next mark and find the same panel, which glides there instead of closing and opening again. Zero takes it away at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
+      },
+      {
+        "name": "pinOnClick",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Holds the clicked mark and its tooltip in place, with a pin disc on it, until a second click, Escape or a press outside releases it. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. The click output fires either way - pinning is a state, not a handler."
+      },
+      {
         "name": "data",
         "kind": "input",
         "type": "readonly FunnelChartStage[]",
@@ -4135,54 +4246,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "The value, percent and drop table printed under the funnel. It supersedes `dataTable`: while this is on, the disclosure every chart carries would repeat a strict subset of these same numbers, so it is not rendered."
       },
       {
-        "name": "frame",
-        "kind": "input",
-        "type": "ChartFrame | null",
-        "union": [
-          "auto",
-          "none"
-        ],
-        "default": "null",
-        "required": false,
-        "description": "Whether the chart draws its own bordered, padded box. `'auto'`, the default, draws it; `'none'` leaves the chart bare, for one placed inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards is one decision per app rather than per plot."
-      },
-      {
-        "name": "tooltipSwatches",
-        "kind": "input",
-        "type": "boolean | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for two to four readings."
-      },
-      {
-        "name": "tooltipLingerMs",
-        "kind": "input",
-        "type": "number | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds. The default, 500, lets the pointer cross to the next mark and find the same panel, which glides there instead of closing and opening again. Zero takes it away at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
-      },
-      {
-        "name": "caption",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Printed above the plot as the chart's visible title, and reused as the annex table's caption."
-      },
-      {
-        "name": "summary",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Accessible name. Generated from the data when omitted."
-      },
-      {
         "name": "dataTable",
         "kind": "input",
         "type": "ChartDataTable | null",
@@ -4207,69 +4270,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "'relative'",
         "required": false,
         "description": "What the Drop column reports: `'relative'` (the default) the share that leaked at this stage, `'absolute'` the count, `'none'` no column at all."
-      },
-      {
-        "name": "loading",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize when the data lands."
-      },
-      {
-        "name": "emptyText",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Shown in place of the plot when `data` is empty. Unset falls back to `DS_INTL.chart.empty`."
-      },
-      {
-        "name": "error",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from an empty `data`, because \"the request failed\" and \"there is nothing to show\" read the same to a reader and mean opposite things."
-      },
-      {
-        "name": "errorText",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "The message the error state prints. Unset falls back to `DS_INTL.chart.error`."
-      },
-      {
-        "name": "valueFormat",
-        "kind": "input",
-        "type": "ChartValueFormat | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
-      },
-      {
-        "name": "pinOnClick",
-        "kind": "input",
-        "type": "boolean | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Holds the clicked mark and its tooltip in place, with a pin disc on it, until a second click, Escape or a press outside releases it. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. `stageClicked` fires either way - pinning is a state, not a handler."
-      },
-      {
-        "name": "interactive",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
       },
       {
         "name": "dimOthers",
@@ -4337,6 +4337,117 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
+        "name": "frame",
+        "kind": "input",
+        "type": "ChartFrame | null",
+        "union": [
+          "auto",
+          "none"
+        ],
+        "default": "null",
+        "required": false,
+        "description": "`'auto'` draws the chart's own bordered, padded box, so it reads as one object on a bare page; `'none'` leaves the chart bare, for one placed inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards is one decision per app rather than per plot."
+      },
+      {
+        "name": "caption",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Printed above the plot as the chart's visible title, and reused as the annex table's caption."
+      },
+      {
+        "name": "summary",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Accessible name. Generated from the data when omitted."
+      },
+      {
+        "name": "loading",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize when the data lands."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from empty data, because \"the request failed\" and \"there is nothing to show\" read the same to a reader and mean opposite things."
+      },
+      {
+        "name": "emptyText",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Shown in place of the plot when there is no data. Unset falls back to `DS_INTL.chart.empty`."
+      },
+      {
+        "name": "errorText",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "The message the error state prints. Unset falls back to `DS_INTL.chart.error`."
+      },
+      {
+        "name": "valueFormat",
+        "kind": "input",
+        "type": "ChartValueFormat | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
+      },
+      {
+        "name": "interactive",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
+      },
+      {
+        "name": "tooltipSwatches",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for two to four readings."
+      },
+      {
+        "name": "tooltipLingerMs",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds. The default, 500, lets the pointer cross to the next mark and find the same panel, which glides there instead of closing and opening again. Zero takes it away at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
+      },
+      {
+        "name": "pinOnClick",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Holds the clicked mark and its tooltip in place, with a pin disc on it, until a second click, Escape or a press outside releases it. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. The click output fires either way - pinning is a state, not a handler."
+      },
+      {
         "name": "columns",
         "kind": "input",
         "type": "readonly string[]",
@@ -4353,15 +4464,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "[]",
         "required": false,
         "description": "One entry per row, each carrying one reading per column. A `null` reading is a cell that was never measured and is drawn as the surface rather than as the ramp's coldest step."
-      },
-      {
-        "name": "caption",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Printed above the grid as the visible title."
       },
       {
         "name": "min",
@@ -4391,15 +4493,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Prints each cell's reading inside it. Off by default: a grid dense enough to be worth a heat map has no room for the numbers, which is why the annex table is always there."
       },
       {
-        "name": "interactive",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Makes every measured cell a button. An unmeasured cell stays inert - a grid of buttons with nothing behind them is a tab trap."
-      },
-      {
         "name": "dimOthers",
         "kind": "input",
         "type": "boolean",
@@ -4407,81 +4500,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Fades every cell but the one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed cells, which on a ramp is the only thing carrying magnitude."
-      },
-      {
-        "name": "pinOnClick",
-        "kind": "input",
-        "type": "boolean | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Holds the hovered cell and its tooltip in place when it is clicked, until a second click, Escape or a press outside releases it. `cellClicked` fires either way. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`."
-      },
-      {
-        "name": "frame",
-        "kind": "input",
-        "type": "ChartFrame | null",
-        "union": [
-          "auto",
-          "none"
-        ],
-        "default": "null",
-        "required": false,
-        "description": "`'auto'` draws the bordered, padded box; `'none'` leaves it bare for a chart inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`."
-      },
-      {
-        "name": "tooltipSwatches",
-        "kind": "input",
-        "type": "boolean | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for two to four readings."
-      },
-      {
-        "name": "loading",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "A skeleton at the grid's own height, so the page does not resize when the data lands."
-      },
-      {
-        "name": "error",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Separate from an empty matrix: \"the request failed\" and \"there is nothing to show\" read the same and mean opposite things."
-      },
-      {
-        "name": "emptyText",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Shown when there are no rows or no columns. Unset falls back to `DS_INTL.chart.empty`."
-      },
-      {
-        "name": "errorText",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Shown in place of the grid while `error` is set. Unset falls back to `DS_INTL.chart.error`."
-      },
-      {
-        "name": "valueFormat",
-        "kind": "input",
-        "type": "ChartValueFormat | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Formats every reading the chart prints - the scale's two ends, each cell's accessible name and the annex table. Unset falls back to `DS_CONFIG.chart.valueFormat`."
       },
       {
         "name": "tooltip",
@@ -5193,6 +5211,117 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
+        "name": "frame",
+        "kind": "input",
+        "type": "ChartFrame | null",
+        "union": [
+          "auto",
+          "none"
+        ],
+        "default": "null",
+        "required": false,
+        "description": "`'auto'` draws the chart's own bordered, padded box, so it reads as one object on a bare page; `'none'` leaves the chart bare, for one placed inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards is one decision per app rather than per plot."
+      },
+      {
+        "name": "caption",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Printed above the plot as the chart's visible title, and reused as the annex table's caption."
+      },
+      {
+        "name": "summary",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Accessible name. Generated from the data when omitted."
+      },
+      {
+        "name": "loading",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize when the data lands."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from empty data, because \"the request failed\" and \"there is nothing to show\" read the same to a reader and mean opposite things."
+      },
+      {
+        "name": "emptyText",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Shown in place of the plot when there is no data. Unset falls back to `DS_INTL.chart.empty`."
+      },
+      {
+        "name": "errorText",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "The message the error state prints. Unset falls back to `DS_INTL.chart.error`."
+      },
+      {
+        "name": "valueFormat",
+        "kind": "input",
+        "type": "ChartValueFormat | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
+      },
+      {
+        "name": "interactive",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
+      },
+      {
+        "name": "tooltipSwatches",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for two to four readings."
+      },
+      {
+        "name": "tooltipLingerMs",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds. The default, 500, lets the pointer cross to the next mark and find the same panel, which glides there instead of closing and opening again. Zero takes it away at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
+      },
+      {
+        "name": "pinOnClick",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Holds the clicked mark and its tooltip in place, with a pin disc on it, until a second click, Escape or a press outside releases it. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. The click output fires either way - pinning is a state, not a handler."
+      },
+      {
         "name": "categories",
         "kind": "input",
         "type": "readonly string[]",
@@ -5250,24 +5379,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "[]",
         "required": false,
         "description": "Labels pinned over their readings, for the points that have to read without a pointer. They are drawn, not announced: the data table already carries every reading, and repeating one in the plot makes a screen reader say it twice."
-      },
-      {
-        "name": "interactive",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Makes every reading focusable and clickable. A series drawn without markers grows invisible ones so there is something to land on; they appear on hover and on focus. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
-      },
-      {
-        "name": "pinOnClick",
-        "kind": "input",
-        "type": "boolean | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Holds the crosshair and its tooltip on the category that was clicked, with a pin disc on it, until a second click, Escape or a press outside releases it. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. `pointClicked` fires either way - pinning is a state, not a handler."
       },
       {
         "name": "dimOthers",
@@ -5344,54 +5455,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "How many value-axis ticks to aim for. A hint, not a count: ticks snap to a round step, so the axis may carry one more or one fewer."
       },
       {
-        "name": "frame",
-        "kind": "input",
-        "type": "ChartFrame | null",
-        "union": [
-          "auto",
-          "none"
-        ],
-        "default": "null",
-        "required": false,
-        "description": "Whether the chart draws its own bordered, padded box. `'auto'`, the default, draws it; `'none'` leaves the chart bare, for one placed inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards is one decision per app rather than per plot."
-      },
-      {
-        "name": "tooltipSwatches",
-        "kind": "input",
-        "type": "boolean | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for two to four readings."
-      },
-      {
-        "name": "tooltipLingerMs",
-        "kind": "input",
-        "type": "number | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds. The default, 500, lets the pointer cross to the next mark and find the same panel, which glides there instead of closing and opening again. Zero takes it away at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
-      },
-      {
-        "name": "caption",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Printed above the plot as the chart's visible title, and reused as the annex table's caption."
-      },
-      {
-        "name": "summary",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Accessible name. Generated from the data when omitted."
-      },
-      {
         "name": "dataTable",
         "kind": "input",
         "type": "ChartDataTable | null",
@@ -5421,51 +5484,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "Pins the secondary value axis. See `max`."
-      },
-      {
-        "name": "loading",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize when the data lands."
-      },
-      {
-        "name": "emptyText",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Shown in place of the plot when `data` is empty. Unset falls back to `DS_INTL.chart.empty`."
-      },
-      {
-        "name": "error",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from an empty `data`, because \"the request failed\" and \"there is nothing to show\" read the same to a reader and mean opposite things."
-      },
-      {
-        "name": "errorText",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "The message the error state prints. Unset falls back to `DS_INTL.chart.error`."
-      },
-      {
-        "name": "valueFormat",
-        "kind": "input",
-        "type": "ChartValueFormat | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
       },
       {
         "name": "hiddenSeries",
@@ -6976,6 +6994,117 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
+        "name": "frame",
+        "kind": "input",
+        "type": "ChartFrame | null",
+        "union": [
+          "auto",
+          "none"
+        ],
+        "default": "null",
+        "required": false,
+        "description": "`'auto'` draws the chart's own bordered, padded box, so it reads as one object on a bare page; `'none'` leaves the chart bare, for one placed inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards is one decision per app rather than per plot."
+      },
+      {
+        "name": "caption",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Printed above the plot as the chart's visible title, and reused as the annex table's caption."
+      },
+      {
+        "name": "summary",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Accessible name. Generated from the data when omitted."
+      },
+      {
+        "name": "loading",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize when the data lands."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from empty data, because \"the request failed\" and \"there is nothing to show\" read the same to a reader and mean opposite things."
+      },
+      {
+        "name": "emptyText",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Shown in place of the plot when there is no data. Unset falls back to `DS_INTL.chart.empty`."
+      },
+      {
+        "name": "errorText",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "The message the error state prints. Unset falls back to `DS_INTL.chart.error`."
+      },
+      {
+        "name": "valueFormat",
+        "kind": "input",
+        "type": "ChartValueFormat | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
+      },
+      {
+        "name": "interactive",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
+      },
+      {
+        "name": "tooltipSwatches",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for two to four readings."
+      },
+      {
+        "name": "tooltipLingerMs",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds. The default, 500, lets the pointer cross to the next mark and find the same panel, which glides there instead of closing and opening again. Zero takes it away at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
+      },
+      {
+        "name": "pinOnClick",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Holds the clicked mark and its tooltip in place, with a pin disc on it, until a second click, Escape or a press outside releases it. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. The click output fires either way - pinning is a state, not a handler."
+      },
+      {
         "name": "data",
         "kind": "input",
         "type": "readonly PieChartSlice[]",
@@ -7043,54 +7172,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "The hole, as a fraction of the outer radius. Zero draws a solid pie and takes the centre content away with the hole that held it."
       },
       {
-        "name": "frame",
-        "kind": "input",
-        "type": "ChartFrame | null",
-        "union": [
-          "auto",
-          "none"
-        ],
-        "default": "null",
-        "required": false,
-        "description": "Whether the chart draws its own bordered, padded box. `'auto'`, the default, draws it; `'none'` leaves the chart bare, for one placed inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards is one decision per app rather than per plot."
-      },
-      {
-        "name": "tooltipSwatches",
-        "kind": "input",
-        "type": "boolean | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for two to four readings."
-      },
-      {
-        "name": "tooltipLingerMs",
-        "kind": "input",
-        "type": "number | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds. The default, 500, lets the pointer cross to the next mark and find the same panel, which glides there instead of closing and opening again. Zero takes it away at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
-      },
-      {
-        "name": "caption",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Printed above the plot as the chart's visible title, and reused as the annex table's caption."
-      },
-      {
-        "name": "summary",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Accessible name. Generated from the data when omitted."
-      },
-      {
         "name": "dataTable",
         "kind": "input",
         "type": "ChartDataTable | null",
@@ -7111,69 +7192,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "true",
         "required": false,
         "description": "Prints each slice's share of the ring — in the legend, on the tooltip and in the data table. On by default, unlike every other chart, because a ring IS parts of one whole: the share is a real quantity here whatever the data, not a claim the consumer has to make. Off drops all three, for a ring whose slices are already labelled in percent."
-      },
-      {
-        "name": "loading",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize when the data lands."
-      },
-      {
-        "name": "emptyText",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Shown in place of the plot when `data` is empty. Unset falls back to `DS_INTL.chart.empty`."
-      },
-      {
-        "name": "error",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from an empty `data`, because \"the request failed\" and \"there is nothing to show\" read the same to a reader and mean opposite things."
-      },
-      {
-        "name": "errorText",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "The message the error state prints. Unset falls back to `DS_INTL.chart.error`."
-      },
-      {
-        "name": "valueFormat",
-        "kind": "input",
-        "type": "ChartValueFormat | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
-      },
-      {
-        "name": "pinOnClick",
-        "kind": "input",
-        "type": "boolean | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Holds the clicked mark and its tooltip in place, with a pin disc on it, until a second click, Escape or a press outside releases it. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. `sliceClicked` fires either way - pinning is a state, not a handler."
-      },
-      {
-        "name": "interactive",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
       },
       {
         "name": "dimOthers",
@@ -7634,6 +7652,117 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
+        "name": "frame",
+        "kind": "input",
+        "type": "ChartFrame | null",
+        "union": [
+          "auto",
+          "none"
+        ],
+        "default": "null",
+        "required": false,
+        "description": "`'auto'` draws the chart's own bordered, padded box, so it reads as one object on a bare page; `'none'` leaves the chart bare, for one placed inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards is one decision per app rather than per plot."
+      },
+      {
+        "name": "caption",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Printed above the plot as the chart's visible title, and reused as the annex table's caption."
+      },
+      {
+        "name": "summary",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Accessible name. Generated from the data when omitted."
+      },
+      {
+        "name": "loading",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize when the data lands."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from empty data, because \"the request failed\" and \"there is nothing to show\" read the same to a reader and mean opposite things."
+      },
+      {
+        "name": "emptyText",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Shown in place of the plot when there is no data. Unset falls back to `DS_INTL.chart.empty`."
+      },
+      {
+        "name": "errorText",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "The message the error state prints. Unset falls back to `DS_INTL.chart.error`."
+      },
+      {
+        "name": "valueFormat",
+        "kind": "input",
+        "type": "ChartValueFormat | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
+      },
+      {
+        "name": "interactive",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
+      },
+      {
+        "name": "tooltipSwatches",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for two to four readings."
+      },
+      {
+        "name": "tooltipLingerMs",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds. The default, 500, lets the pointer cross to the next mark and find the same panel, which glides there instead of closing and opening again. Zero takes it away at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
+      },
+      {
+        "name": "pinOnClick",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Holds the clicked mark and its tooltip in place, with a pin disc on it, until a second click, Escape or a press outside releases it. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. The click output fires either way - pinning is a state, not a handler."
+      },
+      {
         "name": "data",
         "kind": "input",
         "type": "readonly ScatterChartSeries[]",
@@ -7683,54 +7812,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "A hint, not a count, and it applies to BOTH axes. Ticks snap to a round step."
       },
       {
-        "name": "caption",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Printed above the plot as the visible title, and reused as the annex table's caption."
-      },
-      {
-        "name": "summary",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "The accessible name. Generated when omitted, naming both axes' spans, how many readings were drawn and how many were thinned out."
-      },
-      {
-        "name": "interactive",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Makes every mark a button and gives it a keyboard route. `pointClicked` fires whether or not this is set."
-      },
-      {
-        "name": "frame",
-        "kind": "input",
-        "type": "ChartFrame | null",
-        "union": [
-          "auto",
-          "none"
-        ],
-        "default": "null",
-        "required": false,
-        "description": "`'auto'` draws the bordered, padded box; `'none'` leaves it bare for a chart inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`."
-      },
-      {
-        "name": "tooltipSwatches",
-        "kind": "input",
-        "type": "boolean | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for two to four readings."
-      },
-      {
         "name": "dataTable",
         "kind": "input",
         "type": "ChartDataTable | null",
@@ -7742,51 +7823,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "The annex table under the plot. It lists EVERY reading, including the ones decimation left out of the drawing, which is what keeps a thinned chart honest."
-      },
-      {
-        "name": "loading",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "A skeleton at the plot's own height, so the page does not resize when the data lands."
-      },
-      {
-        "name": "error",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Separate from empty data: \"the request failed\" and \"there is nothing to show\" read the same and mean opposite things."
-      },
-      {
-        "name": "emptyText",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Shown when no series carries a reading. Unset falls back to `DS_INTL.chart.empty`."
-      },
-      {
-        "name": "errorText",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Shown in place of the plot while `error` is set. Unset falls back to `DS_INTL.chart.error`."
-      },
-      {
-        "name": "valueFormat",
-        "kind": "input",
-        "type": "ChartValueFormat | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Formats every number the chart prints - both axes' ticks, the accessible name and the annex table. Unset falls back to `DS_CONFIG.chart.valueFormat`."
       },
       {
         "name": "tooltip",
@@ -7808,15 +7844,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Fades every mark but the one under the pointer. Off by default: on a scatter the pile-up IS the reading, and dimming the neighbours takes exactly that away."
-      },
-      {
-        "name": "pinOnClick",
-        "kind": "input",
-        "type": "boolean | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Holds the hovered mark and its tooltip in place when it is clicked, until a second click, Escape or a press outside releases it. `pointClicked` fires either way. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`."
       }
     ],
     "outputs": [
@@ -11600,6 +11627,117 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
+        "name": "frame",
+        "kind": "input",
+        "type": "ChartFrame | null",
+        "union": [
+          "auto",
+          "none"
+        ],
+        "default": "null",
+        "required": false,
+        "description": "`'auto'` draws the chart's own bordered, padded box, so it reads as one object on a bare page; `'none'` leaves the chart bare, for one placed inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards is one decision per app rather than per plot."
+      },
+      {
+        "name": "caption",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Printed above the plot as the chart's visible title, and reused as the annex table's caption."
+      },
+      {
+        "name": "summary",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Accessible name. Generated from the data when omitted."
+      },
+      {
+        "name": "loading",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Draws skeleton marks in place of the data, at the same count, so the chart does not resize when the data lands."
+      },
+      {
+        "name": "error",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Shows `errorText` in place of the plot. Separate from `loading` and from empty data, because \"the request failed\" and \"there is nothing to show\" read the same to a reader and mean opposite things."
+      },
+      {
+        "name": "emptyText",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Shown in place of the plot when there is no data. Unset falls back to `DS_INTL.chart.empty`."
+      },
+      {
+        "name": "errorText",
+        "kind": "input",
+        "type": "string | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "The message the error state prints. Unset falls back to `DS_INTL.chart.error`."
+      },
+      {
+        "name": "valueFormat",
+        "kind": "input",
+        "type": "ChartValueFormat | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Formats every value the chart prints, the annex table and the generated description included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` / `LOCALE_ID`."
+      },
+      {
+        "name": "interactive",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Turns on the click affordance — the pointer cursor and any hover tint. The click output fires whether or not this is set, so a consumer that binds the output and forgets the flag still receives every click."
+      },
+      {
+        "name": "tooltipSwatches",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for two to four readings."
+      },
+      {
+        "name": "tooltipLingerMs",
+        "kind": "input",
+        "type": "number | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "How long the tooltip stays after the pointer leaves the mark, in milliseconds. The default, 500, lets the pointer cross to the next mark and find the same panel, which glides there instead of closing and opening again. Zero takes it away at once. Unset falls back to `DS_CONFIG.chart.tooltipLingerMs`, then 500."
+      },
+      {
+        "name": "pinOnClick",
+        "kind": "input",
+        "type": "boolean | null",
+        "union": null,
+        "default": "null",
+        "required": false,
+        "description": "Holds the clicked mark and its tooltip in place, with a pin disc on it, until a second click, Escape or a press outside releases it. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. The click output fires either way - pinning is a state, not a handler."
+      },
+      {
         "name": "data",
         "kind": "input",
         "type": "readonly WaterfallChartBar[]",
@@ -11627,22 +11765,25 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "The dashed rule chaining one bar to the next at the level they share. Without it the bars read as separate columns rather than as one running total."
       },
       {
-        "name": "caption",
+        "name": "dimOthers",
         "kind": "input",
-        "type": "string | null",
+        "type": "boolean",
         "union": null,
-        "default": "null",
+        "default": "false",
         "required": false,
-        "description": "Printed above the plot as the visible title, and reused as the annex table's caption."
+        "description": "Dims every OTHER bar while one is hovered or focused, so the reader's eye is held on the one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed bars."
       },
       {
-        "name": "summary",
+        "name": "tooltip",
         "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
+        "type": "ChartItemTooltipTrigger",
+        "union": [
+          "item",
+          "none"
+        ],
+        "default": "'item'",
         "required": false,
-        "description": "The accessible name. Generated from the steps when omitted, naming each one's direction in words and the figure the chain ends at."
+        "description": "Whether a hovered or focused bar opens a tooltip. `'axis'` is not offered - each bar is its own category, so an axis tooltip would repeat the item one."
       },
       {
         "name": "tickCount",
@@ -11652,36 +11793,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "5",
         "required": false,
         "description": "A hint, not a count. Ticks snap to a round step."
-      },
-      {
-        "name": "interactive",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Turns on the click affordance and the keyboard route. `barClicked` fires whether or not this is set."
-      },
-      {
-        "name": "frame",
-        "kind": "input",
-        "type": "ChartFrame | null",
-        "union": [
-          "auto",
-          "none"
-        ],
-        "default": "null",
-        "required": false,
-        "description": "`'auto'` draws the bordered, padded box; `'none'` leaves it bare for a chart inside a card the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`."
-      },
-      {
-        "name": "tooltipSwatches",
-        "kind": "input",
-        "type": "boolean | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Whether the tooltip draws a colour dot beside each reading. Unset falls back to `DS_CONFIG.chart.tooltipSwatches`, then draws them for two to four readings."
       },
       {
         "name": "dataTable",
@@ -11695,60 +11806,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "null",
         "required": false,
         "description": "The annex table under the plot. Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`. It prints each step's direction, its own reading and the running total."
-      },
-      {
-        "name": "loading",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Skeleton bars at the real count, so the page does not resize when the data lands."
-      },
-      {
-        "name": "error",
-        "kind": "input",
-        "type": "boolean",
-        "union": null,
-        "default": "false",
-        "required": false,
-        "description": "Separate from an empty `data`: \"the request failed\" and \"there is nothing to show\" read the same and mean opposite things."
-      },
-      {
-        "name": "emptyText",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Shown in place of the plot when `data` is empty. Unset falls back to `DS_INTL.chart.empty`."
-      },
-      {
-        "name": "errorText",
-        "kind": "input",
-        "type": "string | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Shown in place of the plot while `error` is set. Unset falls back to `DS_INTL.chart.error`."
-      },
-      {
-        "name": "valueFormat",
-        "kind": "input",
-        "type": "ChartValueFormat | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Formats every value the chart prints - the axis ticks, the bar labels and the annex table. The sign a delta carries is added around it, so a formatter never has to know about one."
-      },
-      {
-        "name": "pinOnClick",
-        "kind": "input",
-        "type": "boolean | null",
-        "union": null,
-        "default": "null",
-        "required": false,
-        "description": "Holds the clicked step and its tooltip in place, with a pin disc on it, until a second click, Escape or a press outside releases it. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. `barClicked` fires either way - pinning is a state, not a handler."
       },
       {
         "name": "staggerMs",

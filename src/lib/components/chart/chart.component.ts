@@ -7,7 +7,6 @@ import {
   Signal,
   ViewEncapsulation,
   afterRenderEffect,
-  booleanAttribute,
   computed,
   effect,
   forwardRef,
@@ -25,6 +24,7 @@ import {
   rotationWouldFit,
   tickValues,
   chartRenderGate,
+  DsChartBase,
 } from '@ids-group-ltd/ids-design-system/components';
 import { isPlatformBrowser } from '@angular/common';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
@@ -36,16 +36,10 @@ import {
   chartActiveMark,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import type { ChartTooltipContext } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
-import { resolveChartDefaults } from '@ids-group-ltd/ids-design-system/components';
-import {
-  DS_INTL,
-  resolveWithConfig,
-} from '@ids-group-ltd/ids-design-system/core';
+import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
 import type {
   ChartAxis,
   ChartAxisMode,
-  ChartFrame,
-  ChartValueFormat,
 } from '@ids-group-ltd/ids-design-system/core';
 import {
   categoryAt,
@@ -95,7 +89,7 @@ import {
     },
   ],
 })
-export class ChartComponent implements ChartScales {
+export class ChartComponent extends DsChartBase implements ChartScales {
   protected readonly renderReady = chartRenderGate();
 
   /** The category axis. Every projected mark is positioned against this list, so its length is
@@ -128,23 +122,11 @@ export class ChartComponent implements ChartScales {
    *  questions. */
   readonly cursor = input<'none' | 'category' | 'auto'>('auto');
 
-  /** Whether a press holds the category cursor where it is, so the reader can look away from the
-   *  plot with the comparison still on screen. Released by pressing it again, by Escape, or by a
-   *  press outside the plot. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then `true`. */
-  readonly pinOnClick = input<boolean | null, unknown>(null, {
-    transform: (value) => (value == null ? null : booleanAttribute(value)),
-  });
   readonly pinOnClickResolved = resolveWithConfig(
     this.pinOnClick,
     (config) => config.chart?.pinOnClick,
     true,
   );
-
-  /** Milliseconds the cursor survives the pointer leaving the plot. The tooltip panel is portaled
-   *  out of the plot, so without a grace period it closes before the pointer can reach it. */
-  readonly tooltipLingerMs = input<number | null>(null, {
-    transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
-  });
 
   /** Pins the ceiling of the SECOND value axis, the way `max` pins the first. Two plots read
    *  against each other need both pinned, or the second rescales under them. */
@@ -173,52 +155,6 @@ export class ChartComponent implements ChartScales {
     transform: numberAttribute,
   });
 
-  /** Printed above the plot as the chart's visible title. */
-  readonly caption = input<string | null>(null);
-
-  /** Whether the projected marks answer to the pointer and the keyboard. The container draws no
-   *  marks of its own and only reads this for the plot's role: a group of controls to step
-   *  through, against a single image to be described. */
-  readonly interactive = input(false, { transform: booleanAttribute });
-
-  /** Accessible name for the plot. The container holds no readings of its own, so a chart that
-   *  needs its numbers described supplies the sentence here - `describeSeries` is what the five
-   *  presets build it with. It is the whole label in the static case, where nothing else is
-   *  reachable. */
-  readonly summary = input<string | null>(null);
-
-  /** Whether the chart draws its own bordered, padded box. `'auto'`, the default, draws it;
-   *  `'none'` leaves it bare, for one placed inside a card the page has already drawn. Unset
-   *  falls back to `DS_CONFIG.chart.frame`, then `'auto'`. */
-  readonly frame = input<ChartFrame | null>(null);
-
-  /** Whether the tooltip draws a colour dot beside each reading. Unset falls back to
-   *  `DS_CONFIG.chart.tooltipSwatches`, then draws them for two to four readings. */
-  readonly tooltipSwatches = input<boolean | null>(null, {
-    transform: (value: unknown) =>
-      value == null ? null : booleanAttribute(value),
-  });
-
-  /** Draws a placeholder in place of the plot, at the plot's own height, so the page does not
-   *  resize when the data lands. */
-  readonly loading = input(false, { transform: booleanAttribute });
-
-  /** Shown in place of the plot when `categories` is empty. Unset falls back to
-   *  `DS_INTL.chart.empty`. */
-  readonly emptyText = input<string | null>(null);
-
-  /** Shows `errorText` in place of the plot. Separate from `loading` and from an empty
-   *  `categories`, because "the request failed" and "there is nothing to show" read the same to a
-   *  reader and mean opposite things. */
-  readonly error = input(false, { transform: booleanAttribute });
-
-  /** The message the error state prints. Unset falls back to `DS_INTL.chart.error`. */
-  readonly errorText = input<string | null>(null);
-
-  /** Formats the value-axis ticks. Unset falls back to `DS_CONFIG.chart.valueFormat`, then
-   *  `DS_CONFIG.locale` / `LOCALE_ID`. */
-  readonly valueFormat = input<ChartValueFormat | null>(null);
-
   /** How the second value axis relates to the first, once a mark has reported against it. The
    *  same four words `ds-line-chart` takes. */
   readonly secondaryAxisMode = input<ChartAxisMode>('aligned');
@@ -240,14 +176,7 @@ export class ChartComponent implements ChartScales {
   /** `axisLabel` for the second axis. */
   readonly secondaryAxisLabel = input<string | null>(null);
 
-  private readonly defaults = resolveChartDefaults(this);
-
   protected readonly tooltipSwatchesResolved = this.defaults.tooltipSwatches;
-  protected readonly intl = inject(DS_INTL);
-  readonly frameResolved = this.defaults.frame;
-  readonly emptyTextResolved = this.defaults.emptyText;
-  readonly errorTextResolved = this.defaults.errorText;
-  readonly valueFormatResolved = this.defaults.valueFormat;
   readonly hoverDelayMs = this.defaults.hoverDelayMs;
 
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
@@ -281,6 +210,7 @@ export class ChartComponent implements ChartScales {
   protected readonly settled = signal(false);
 
   constructor() {
+    super();
     effect((onCleanup) => {
       if (this.settled() || this.measuredWidth() === 0) {
         return;

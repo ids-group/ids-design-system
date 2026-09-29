@@ -1,10 +1,14 @@
+import type {
+  ChartDimmable,
+  ChartStaggered,
+  ChartWithTooltipTrigger,
+} from '@ids-group-ltd/ids-design-system/components';
 import {
   ChangeDetectionStrategy,
   Component,
   ViewEncapsulation,
   booleanAttribute,
   computed,
-  inject,
   input,
   numberAttribute,
   output,
@@ -15,6 +19,7 @@ import {
   chartDwell,
   chartRenderGate,
   staggerDelay,
+  DsChartBase,
 } from '@ids-group-ltd/ids-design-system/components';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
@@ -28,14 +33,8 @@ import type {
   ChartItemTooltipTrigger,
   ChartTooltipContext,
 } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
-import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
-import type {
-  ChartFrame,
-  ChartValueFormat,
-} from '@ids-group-ltd/ids-design-system/core';
 import { heatmapDomain, rampIndexOf } from './heatmap-chart.math';
 import type { HeatmapChartCell, HeatmapChartRow } from './heatmap-chart.types';
-import { resolveChartDefaults } from '@ids-group-ltd/ids-design-system/components';
 
 interface PlacedCell {
   readonly key: string;
@@ -79,7 +78,10 @@ interface PlacedRow {
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HeatmapChartComponent {
+export class HeatmapChartComponent
+  extends DsChartBase
+  implements ChartDimmable, ChartStaggered, ChartWithTooltipTrigger
+{
   protected readonly renderReady = chartRenderGate();
 
   /** The column headings, left to right. Their count decides how many readings of a row are drawn:
@@ -89,9 +91,6 @@ export class HeatmapChartComponent {
   /** One entry per row, each carrying one reading per column. A `null` reading is a cell that
    *  was never measured and is drawn as the surface rather than as the ramp's coldest step. */
   readonly data = input<readonly HeatmapChartRow[]>([]);
-
-  /** Printed above the grid as the visible title. */
-  readonly caption = input<string | null>(null);
 
   /** Pins the floor of the colour scale. It only ever OPENS the scale further, so a floor above
    *  the data cannot push a reading off the ramp. Unset, the scale starts at the lowest reading. */
@@ -110,49 +109,9 @@ export class HeatmapChartComponent {
    *  map has no room for the numbers, which is why the annex table is always there. */
   readonly showValues = input(false, { transform: booleanAttribute });
 
-  /** Makes every measured cell a button. An unmeasured cell stays inert - a grid of buttons with
-   *  nothing behind them is a tab trap. */
-  readonly interactive = input(false, { transform: booleanAttribute });
-
   /** Fades every cell but the one under the pointer. Off by default: the dimming costs the
    *  separation BETWEEN the dimmed cells, which on a ramp is the only thing carrying magnitude. */
   readonly dimOthers = input(false, { transform: booleanAttribute });
-
-  /** Holds the hovered cell and its tooltip in place when it is clicked, until a second click,
-   *  Escape or a press outside releases it. `cellClicked` fires either way. Unset falls back to
-   *  `DS_CONFIG.chart.pinOnClick`, then `true`. */
-  readonly pinOnClick = input<boolean | null, unknown>(null, {
-    transform: (value) => (value == null ? null : booleanAttribute(value)),
-  });
-
-  /** `'auto'` draws the bordered, padded box; `'none'` leaves it bare for a chart inside a card the
-   *  page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`. */
-  readonly frame = input<ChartFrame | null>(null);
-
-  /** Whether the tooltip draws a colour dot beside each reading. Unset falls back to
-   *  `DS_CONFIG.chart.tooltipSwatches`, then draws them for two to four readings. */
-  readonly tooltipSwatches = input<boolean | null>(null, {
-    transform: (value: unknown) =>
-      value == null ? null : booleanAttribute(value),
-  });
-
-  /** A skeleton at the grid's own height, so the page does not resize when the data lands. */
-  readonly loading = input(false, { transform: booleanAttribute });
-
-  /** Separate from an empty matrix: "the request failed" and "there is nothing to show" read the
-   *  same and mean opposite things. */
-  readonly error = input(false, { transform: booleanAttribute });
-
-  /** Shown when there are no rows or no columns. Unset falls back to `DS_INTL.chart.empty`. */
-  readonly emptyText = input<string | null>(null);
-
-  /** Shown in place of the grid while `error` is set. Unset falls back to
-   *  `DS_INTL.chart.error`. */
-  readonly errorText = input<string | null>(null);
-
-  /** Formats every reading the chart prints - the scale's two ends, each cell's accessible name
-   *  and the annex table. Unset falls back to `DS_CONFIG.chart.valueFormat`. */
-  readonly valueFormat = input<ChartValueFormat | null>(null);
 
   /** Whether a hovered or focused cell opens a tooltip. A heat map's cells carry no printed value
    *  by default, so this is where a reading is read without reaching for the annex table. */
@@ -172,13 +131,6 @@ export class HeatmapChartComponent {
   /** The clicked cell, with the row and the column it sits at. Never fires for an unmeasured
    *  cell, which has no reading to drill into. */
   readonly cellClicked = output<HeatmapChartCell>();
-
-  protected readonly defaults = resolveChartDefaults(this);
-  protected readonly intl = inject(DS_INTL);
-  readonly frameResolved = this.defaults.frame;
-  readonly emptyTextResolved = this.defaults.emptyText;
-  readonly errorTextResolved = this.defaults.errorText;
-  readonly valueFormatResolved = this.defaults.valueFormat;
 
   protected readonly activeMark = chartActiveMark(
     () => this.defaults.tooltipLingerMs(),
@@ -302,6 +254,10 @@ export class HeatmapChartComponent {
   );
 
   protected readonly accessibleName = computed(() => {
+    const summary = this.summary();
+    if (summary) {
+      return summary;
+    }
     const caption = this.caption();
     const { min, max } = this.domain();
     const format = this.valueFormatResolved();
