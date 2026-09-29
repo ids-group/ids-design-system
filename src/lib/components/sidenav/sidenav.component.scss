@@ -1,26 +1,12 @@
 @use '../../styles/focus' as focus;
 
-/* Truncation contract:
-   Item label (expanded) — Single line, ellipsis at panel width. Tooltip on hover when clipped.
-   Item label (collapsed) — Hidden — the full label moves to a tooltip on hover or keyboard
-     focus.
-   Count badge — No clip — numeric, fixed surface area. Caps at 99+ if needed.
-   Group label — Uppercase, single line, no clip. Wraps if forced (unlikely at panel widths).
-   Brand name — Single line, ellipsis at panel width. Tooltip on hover. Hidden entirely when
-     collapsed.
-   User name (footer) — Single line, ellipsis. Tooltip on hover. Role row truncates the same way. */
+/* Truncation contract: item labels, brand name and user name are single-line with
+   ellipsis; collapsed, labels hide and move to a tooltip; count badge and group label
+   never clip.
 
-/* Sidenav parent container only.
- *
- * Item / group / group-label styles live in the child components
- * (sidenav-item.component.scss / sidenav-group.component.scss) so that
- * Angular's emulated encapsulation `_ngcontent` markers match the
- * elements they target. Cross-component selectors like `.sidenav .item`
- * would never match because the `.item` lives in the child's view.
- *
- * Collapsed-state visuals for inner items / labels are handled in the
- * child components via `:host-context(.sidenav.collapsed)`.
- */
+   Item / group styles live in the child components: emulated encapsulation would not
+   match a `.sidenav .item` selector written here. Collapsed visuals there use
+   `:host-context(.sidenav.collapsed)`. */
 
 :host {
   --_sidenav-bg-color:              var(--ds-sidenav-bg-color,              var(--surface-default));
@@ -47,7 +33,6 @@
   gap: var(--space-2);
   padding: var(--space-2) var(--space-2) var(--space-6);
 
-  /* No brand text and no projected [brand] logo → collapse the row. */
   &:empty { display: none; }
 }
 
@@ -60,16 +45,10 @@
     @include focus.ring;
   }
 
-  /* Pierces encapsulation because projected nodes carry the CONSUMER's attribute,
-     not this component's; anchored on `.brand` so it compiles scoped rather than
-     global, and matched as a DIRECT child so a logo's inner markup is left alone. */
+  /* ::ng-deep for projected nodes; direct child so a logo's inner markup is left alone. */
   ::ng-deep > [brand] {
-    /* `none` by default: constraining a projected logo that consumers already ship
-       unconstrained would silently resize it. Opt in with the tile's own size —
-       `--ds-sidenav-brand-max-height: var(--sidenav-logo-size)` — or any height.
-       Height ALONE on purpose: an <img> with no CSS width keeps its ratio under
-       max-height already, so a `width: auto` here would only ever out-rank a width
-       the consumer set on their own logo. */
+    /* `none` by default: a cap would silently resize an existing logo. Height alone: a width
+       here would out-rank one the consumer set. */
     max-height: var(--ds-sidenav-brand-max-height, none);
   }
 }
@@ -91,17 +70,14 @@
 }
 
 :host(.collapsed) {
-// Collapsed, the rail clips its own content, and the brand link fills it edge to edge.
+// The collapsed rail clips its own content.
 --focus-ring-offset: calc(-1 * var(--focus-ring-width));
 
   width: var(--_sidenav-width-collapsed);
   padding: var(--space-3);
   overflow-x: clip;
 
-  /* NOT `align-items: center`. That stopped the projected items and groups from
-     stretching, so each shrank to its icon — 20px inside a 40px rail — and the
-     `width: 100%` on `.item` resolved against that, turning the active tile into a
-     20x40 lozenge. `.brand` centres its own contents, so nothing here needed it. */
+  /* NOT `align-items: center`: items would shrink to their icon and the active tile become a lozenge. */
 
   .brand {
     padding: var(--sidenav-pad-brand-y) 0 var(--sidenav-pad-brand-b);

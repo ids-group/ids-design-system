@@ -17,6 +17,6 @@ import {
   },
 })
 export class ListComponent {
-  /** Draw a hairline separator between adjacent items. */
+  /** Hairline separator between adjacent items. */
   readonly dividers = input(true, { transform: booleanAttribute });
 }

@@ -73,8 +73,7 @@
   color: var(--icon-default, var(--text-secondary));
 }
 
-// `.row.selected` sets `color` on the row and it would cascade, but the rule above declares
-// its own and wins — so without this the label goes accent and the icon stays grey.
+// The rule above declares its own icon color, so the row's selected color does not cascade.
 .row.selected .node-icon {
   color: var(--_tree-row-selected-icon-color);
 }

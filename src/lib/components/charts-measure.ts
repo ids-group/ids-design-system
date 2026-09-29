@@ -9,8 +9,7 @@ import {
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 
-/** Container width as a signal. It is 0 under SSR, while the container is
- *  `display: none`, and before the first observation.
+/** Container width as a signal; 0 under SSR, while `display: none`, and before the first observation.
  *
  *  @internal */
 export function elementWidth(host: ElementRef<HTMLElement>): Signal<number> {
@@ -33,8 +32,7 @@ export function elementWidth(host: ElementRef<HTMLElement>): Signal<number> {
 const widths = new WeakMap<Element, WritableSignal<number>>();
 let observer: ResizeObserver | null = null;
 
-// One observer for every chart on the page, so a resize is one callback with every entry in it
-// rather than one callback per chart.
+// One observer for every chart on the page: a resize is one callback carrying every entry.
 function sharedObserver(): ResizeObserver {
   observer ??= new ResizeObserver((entries) => {
     for (const entry of entries) {

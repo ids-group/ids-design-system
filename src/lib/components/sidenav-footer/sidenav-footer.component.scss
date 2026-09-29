@@ -117,7 +117,7 @@
   padding-bottom: var(--space-1);
   overflow-y: auto;
 
-  // Clips, so the ring has to be drawn inward or the overflow eats it.
+  // Inward ring: the overflow clips an outer one.
   --focus-ring-offset: calc(-1 * var(--focus-ring-width));
 
   .text {
@@ -161,8 +161,7 @@
   border-radius: var(--radius-md);
   color: var(--text-tertiary);
 
-  // The border tint alone was the whole indicator, and 1px is under the WCAG 2.4.13
-  // floor for a perimeter. It stays as a second signal; the ring carries the weight.
+  // A 1px border tint is under the WCAG 2.4.13 perimeter floor; the ring carries the weight.
   &:focus-within {
     border-color: var(--accent);
 
@@ -305,7 +304,6 @@
     display: none;
   }
 
-  /* Keep the unread indicator visible on the collapsed rail (pinned to the icon). */
   .dot {
     position: absolute;
     top: var(--space-1);

@@ -1,5 +1,4 @@
-/** Hue 0–360, saturation/value 0–100 — the model the Photoshop-style picker
- *  manipulates. Hex is the public value; these convert between the two. */
+/** Hue 0-360, saturation/value 0-100. */
 export interface Hsv {
   h: number;
   s: number;

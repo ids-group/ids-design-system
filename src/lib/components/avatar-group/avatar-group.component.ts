@@ -17,7 +17,7 @@ import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 export class AvatarGroupComponent {
   protected readonly intl = inject(DS_INTL);
 
-  /** Maximum avatars shown before the rest collapse into an overflow chip. */
+  /** Avatars shown before the rest collapse into the `+N` chip. */
   readonly max = input<number>(4);
   /** Total avatar count driving the `+N` overflow; null counts the projected children. */
   readonly total = input<number | null>(null);

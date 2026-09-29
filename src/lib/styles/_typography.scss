@@ -1,13 +1,7 @@
-// GLOBAL by design — a consumer applies these by class, so the names are part of the
-// published surface.
-//
-// Consumer-first token contract (same as components): every token-driven
-// property is a longhand read through a public `--ds-typography-<name>-*` custom
-// property that FALLS BACK to the current semantic token, so a consumer can
-// retune a single axis in a scope — e.g.
-// `[data-brand] .t-h3 { --ds-typography-h3-font-weight: var(--font-weight-bold) }` —
-// without re-declaring the rest or forking the class. Structural box props
-// (padding / margin / border-width / max-width / overflow) stay raw.
+// Global: consumers apply these by class. Every token-driven property is a longhand read through
+// a public `--ds-typography-<name>-*` property falling back to the semantic token, so one axis can
+// be retuned in a scope: `[data-brand] .t-h3 { --ds-typography-h3-font-weight: var(--font-weight-bold) }`.
+// Structural box props (padding, margin, border-width, max-width, overflow) stay raw.
 
 .t-display {
   font-weight: var(--ds-typography-display-font-weight, var(--font-weight-extrabold));
@@ -139,9 +133,8 @@
 }
 
 .t-mono {
-  // JetBrains Mono ligates operators by default, so `===` paints as one triple-bar glyph
-  // and `!=` as a struck equals: prose that NAMES an operator then shows something other
-  // than the characters it discusses. Set --ds-typography-mono-ligatures to `normal` to get them back.
+  // JetBrains Mono ligates operators (`===`, `!=`), so text naming an operator shows other glyphs.
+  // Set --ds-typography-mono-ligatures to `normal` to restore them.
   font-variant-ligatures: var(--ds-typography-mono-ligatures, none);
   font-weight: var(--ds-typography-mono-font-weight, var(--font-weight-medium));
   font-size: var(--ds-typography-mono-font-size, var(--font-size-mono));

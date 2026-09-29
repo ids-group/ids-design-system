@@ -1,28 +1,13 @@
 @use 'focus' as focus;
 
-// The box a chart draws around itself. All five draw the same one, so the rules live here.
-//
-// ON by default, which is unusual for this library: most components resist owning chrome. A chart
-// is the exception because it is read as an OBJECT — a plot with axes, a legend and an annex table
-// — and without an edge those parts run into whatever sits beside them on the page.
-//
-// A chart already inside a card turns it off through the `frame` input, or once for a whole app
-// through `DS_CONFIG.chart.frame`, which is where an app-wide layout decision belongs. The
-// `--ds-chart-frame-*` tokens still size it.
 @mixin chart-frame {
   :host {
     display: block;
 
-    // A drag across a plot selects the chart's chrome — axis ticks, legend labels, and the
-    // caption a screen reader needs that is clipped to a thin strip for everyone else. The
-    // selection then paints as bars across the card, over content that is not visibly there.
-    // None of it is text anyone copies; the numbers live in the annex table, which stays
-    // selectable below.
+    // Dragging across a plot would select axis ticks, legend labels and the hidden caption; the data table stays selectable below.
     user-select: none;
   }
 
-  // The class is the resolved answer, not the input: the component reads `frame`, falls back to
-  // `DS_CONFIG.chart.frame`, and puts this on only when the result is `'auto'`.
   :host(.framed) {
     padding: var(--ds-chart-frame-padding);
     background: var(--ds-chart-frame-bg-color);
@@ -43,19 +28,14 @@
     user-select: text;
   }
 
-  /* "The request failed" and "there is nothing to show" read the same in grey and mean opposite
-     things. Two selectors because the pie names its element `.empty-text`. */
   .empty.is-error,
   .empty-text.is-error {
     color: var(--error);
   }
 }
 
-// The focus indicator, drawn rather than outlined: `outline` on an SVG element paints its BOUNDING
-// BOX, not its silhouette, so a slice would ring as a rectangle. Two tones, because one is not
-// enough: the ring is the app's own focus colour, so a focused mark reads as the same indicator as
-// every other control, and the light keyline around it is what separates that colour from a mark
-// of the same hue family. `drop-shadow` rather than a second stroke: an SVG shape has one stroke.
+// `outline` on an SVG element paints its bounding box, not its silhouette, so the ring is drawn as stroke.
+// The halo separates the ring from a same-hue mark; `drop-shadow` because a shape has one stroke.
 @mixin drawn-focus-ring {
   stroke: var(--ds-chart-focus-ring-color);
   stroke-width: var(--focus-ring-width);
@@ -63,23 +43,15 @@
   filter: drop-shadow(0 0 var(--focus-ring-width) var(--ds-chart-focus-halo-color));
 }
 
-// A CLICK focuses an SVG shape in Chromium even with no `tabindex` on it, and `:focus-visible` is
-// false for that focus — so a rule keyed on `:focus-visible` never fires and the user-agent paints
-// its own outline around the BOUNDING BOX. On a ring or a funnel band that is a rectangle standing
-// off the shape, which reads as a selection nobody asked for.
-//
-// Keyed on `:focus` so it catches the pointer case too. The keyboard indicator is unaffected:
-// `drawn-focus-ring` under `:focus-visible` still paints, and `own-indicator` keeps the outline
-// under forced colours, where `stroke` is not remapped and the outline is all there is.
+// Chromium focuses a clicked SVG shape without a `tabindex` but `:focus-visible` is false, so the UA outlines
+// the bounding box. `:focus` catches it; `own-indicator` keeps the outline under forced colours.
 @mixin no-bounding-box-focus($mark) {
   #{$mark}:focus {
     @include focus.own-indicator;
   }
 }
 
-// `fill` and `stroke` are NOT remapped by forced colours: the chart keeps every series colour and
-// they all become the same one against the forced background, with nothing reporting a problem.
-// The system keywords are what put the structure back.
+// `fill` and `stroke` are not remapped by forced colours; system keywords restore the structure.
 @mixin forced-colors {
   @media (forced-colors: active) {
     .axis-line,
@@ -99,16 +71,7 @@
   }
 }
 
-// Every state a chart can be in occupies the same box. A chart that shrinks to a line of text when
-// its data is empty, its request failed, or its legend switched the last series off drags the whole
-// page up under the reader's cursor — and the state they are being told about is exactly the moment
-// they are least able to afford the jump. `$height` is the plot the message stands in for.
-// `$axes` keeps the L of a plot that HAS axes — the value axis down the left, the category axis
-// along the bottom. A chart whose data went away still has the frame its readings were measured
-// against, and drawing it keeps the message inside a plot rather than floating in a blank card.
-// Borders rather than an SVG: with no data there is nothing to scale against, and an axis without
-// ticks or labels is exactly two lines. Off for the pie and the funnel, which have no axes to
-// keep.
+// Keeps the plot's height in empty/error states. `$axes` keeps the L of axis lines (off for pie and funnel).
 @mixin message-box($height, $axes: false) {
   .empty {
     display: grid;
@@ -125,9 +88,6 @@
   }
 }
 
-/* The way out of a pin, said in a word. A held mark is a state the reader did not have before and
-   cannot obviously undo — Escape is invisible, and clicking the mark again is a guess. It reads
-   `Unpin` rather than `Reset`, which would leave a reader wondering what else it resets. */
 @mixin pin-reset {
   :host {
     position: relative;
@@ -137,22 +97,13 @@
     --_chart-pin-reset-inset: var(--ds-chart-frame-padding);
   }
 
-  // Room on the caption's line while the control is up, so a long caption wraps short of it rather
-  // than running under it. The chart keeps its height: with no caption the control floats over the
-  // plot's top end.
   // ponytail: a fixed room fits `Unpin`; a translation longer than about ten characters overlaps
   // the caption's end, measure the control if one ever does.
   :host:has(.pin-reset) figure > figcaption {
     padding-inline-end: calc(5rem + var(--space-2));
   }
 
-  /* Top END, on the caption's line: the bottom of a chart carries its axis labels, its legend or its
-     table, and a control floating over them hides the words the reader is comparing. The caption
-     line is the one run of a chart with room to its end, and without a caption the plot's top end
-     is the next.
-
-     Drawn at the caption's height; the 44px the library's touch rule asks of a real control is the
-     hit area around it, not its box. */
+  /* Top end: the bottom carries axis labels, legend and table. The 44px touch target is the ::before. */
   .pin-reset {
     position: absolute;
     inset-block-start: var(--_chart-pin-reset-inset, 0);
@@ -188,10 +139,7 @@
   }
 }
 
-/* The pinned mark's badge: a pushpin on an opaque disc. The disc is what makes it legible — a bare
-   glyph with a halo has to win against whatever colour the series happens to be, and a palette of
-   eight cannot promise that. Size is the icon's touch-free minimum: it is a STATE, never a target,
-   so it carries `pointer-events: none` and no tab stop. */
+/* A state, not a target: no pointer events, no tab stop. */
 @mixin pin-marker {
   .pin-marker {
     display: grid;

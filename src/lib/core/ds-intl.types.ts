@@ -40,7 +40,7 @@ export interface DsIntl {
     readonly removeChip: (label: string) => string;
     /** `'selected'` - multi-select compact trigger badge `countLabel`. */
     readonly selectedNoun: string;
-    /** `'No results'` / `'1 result'` / `` `${n} results` `` - picker-announcer.ts. */
+    /** `'No results'` / `'1 result'` / `` `${n} results` `` - picker live region. */
     readonly resultCount: (count: number) => string;
   };
   readonly datePicker: {
@@ -258,9 +258,7 @@ export interface DsIntl {
     readonly failed: string;
   };
   readonly chart: {
-    /** Was `DS_CONFIG.chart.emptyText`'s default. */
     readonly empty: string;
-    /** Was `DS_CONFIG.chart.errorText`'s default. */
     readonly error: string;
     /** `'Chart'` - accessible-name fallback, 6 charts. */
     readonly title: string;

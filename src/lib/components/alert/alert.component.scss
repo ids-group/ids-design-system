@@ -5,7 +5,6 @@
 }
 
 .alert {
-  /* Public --ds-alert-* hooks with fallbacks; never declared here. */
   --_alert-bg-color:           var(--ds-alert-bg-color,           var(--info-subtitle));
   --_alert-text-color:         var(--ds-alert-text-color,         var(--info-text));
   --_alert-title-text-color:   var(--ds-alert-title-text-color,   var(--text-primary));

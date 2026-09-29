@@ -1,6 +1,5 @@
-/* The theme-INDEPENDENT layer. Tier 1 primitives live in ../themes/_base-palette.scss and each
-   theme's _palette.scss, Tier 2 roles in ../themes/_semantic.scss. Components consume Tier 2/3
-   ONLY — reaching for --blue-600 from a component style is a violation, add or reuse a role. */
+/* The theme-independent layer. Components consume role (Tier 2) and these (Tier 3) tokens only;
+   reaching for --blue-600 from a component style is a violation, add or reuse a role. */
 
 :root {
   --space-0:    0;
@@ -23,8 +22,6 @@
   --space-24:  96px;
   --space-32: 128px;
 
-  /* Default rhythm for the layout primitives (ds-stack / ds-inline); components
-     default their gap here so the rhythm retunes in one place. */
   --space-stack:  var(--space-4);
   --space-inline: var(--space-2);
 
@@ -33,41 +30,36 @@
   --radius-md:       8px;
   --radius-lg:      12px;
   --radius-xl:      16px;
-  --radius-2xl:     24px;   /* reserved — no current consumer */
+  --radius-2xl:     24px;
 
-  /* Themes can square every pill-shaped surface (switches, status chips,
-     avatars, segmented thumb) without forking the radius scale:
+  /* Themes can square every pill-shaped surface:
        :root[data-theme="squared"] { --radius-pill-value: var(--radius-sm); } */
   --radius-pill-value: 999px;
   --radius-pill: var(--radius-pill-value);
 
-  /* Radius ROLES — the layer a consumer retunes; components resolve
-     --ds-<comp>-radius -> role -> value, so a per-component override still wins. No `field` role
-     on purpose: scope the control role instead — `ds-input { --ds-radius-control: 4px; }`. */
+  /* Radius roles: components resolve --ds-<comp>-radius -> role -> value. No `field` role; scope
+     the control role instead: `ds-input { --ds-radius-control: 4px; }`. */
   --ds-radius-inner:   var(--radius-sm);
   --ds-radius-control: var(--radius-md);
   --ds-radius-panel:   var(--radius-lg);
   --ds-radius-pill:    var(--radius-pill);
 
-  --radius-flat:         var(--radius-0);    /* explicit "intentionally squared", not an unset radius */
+  --radius-flat:         var(--radius-0);
 
   /* Two stops only: 1.5/2.5 mid-stops read identically to 1/2 on standard displays. */
   --border-width-default: 1px;
   --border-width-strong:  2px;
 
-  /* 2px is the floor WCAG 2.4.13 measures against, and only the CONTRASTING part counts —
-     an indicator whose 2px is half gap does not meet it. The offset is a real gap: the
-     outline is not painted there, so whatever the control sits on shows through. */
+  /* 2px is the WCAG 2.4.13 floor and only the contrasting part counts. The offset is a real gap:
+     the outline is not painted there. */
   --focus-ring-width:     2px;
   --focus-ring-offset:    2px;
 
-  /* The radius a box takes when it exists only to carry the ring. A control with a shape of its
-     own keeps it and ignores this. */
+  /* For a box that exists only to carry the ring; a control with its own shape ignores it. */
   --focus-ring-radius:    var(--ds-radius-inner);
 
-  /* Composed from a channel-split tint so a theme can re-colour them: -h/s come from
-     ../themes/_base-palette.scss, -l from each theme's _palette.scss. The alphas stay constant
-     across themes, which is what makes the same values read as glows over dark surfaces. */
+  /* Composed from a channel-split tint so a theme can re-colour them (-h/-s are theme-independent, -l comes
+     from each theme's palette). Constant alphas make the same values read as glows over dark surfaces. */
   --shadow-1: 0 1px 2px  hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 6%),
               0 1px 3px  hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 8%);
   --shadow-2: 0 4px 8px  hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 6%),
@@ -77,9 +69,7 @@
   --shadow-4: 0 16px 32px hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 12%),
               0 24px 48px hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 18%);
 
-  /* Elevation ROLES — the --shadow-<surface> aliases below resolve through these,
-     so setting a role moves every surface at that height while an alias still
-     retunes one family. */
+  /* Elevation roles: setting one moves every --shadow-<surface> alias at that height. */
   --ds-elevation-raised:   var(--shadow-1);
   --ds-elevation-overlay:  var(--shadow-2);
   --ds-elevation-floating: var(--shadow-3);
@@ -106,9 +96,9 @@
 
   --table-sticky-header-z: var(--layer-raised);
   --table-sticky-col-z:    var(--layer-raised);
-  --table-sticky-corner-z: 2;          /* sticky col header sits over both axes */
+  --table-sticky-corner-z: 2;
   --btn-focus-z:           var(--layer-raised);
-  --btn-group-focus-z:     2;          /* focused button rises above its neighbour */
+  --btn-group-focus-z:     2;
 
   --duration-instant: 80ms;
   --duration-fast:    120ms;
@@ -117,20 +107,10 @@
   --duration-slower:  400ms;
   --duration-slowest: 600ms;
 
-  /* Loop durations sit outside the transition scale on purpose — they describe
-     rhythm, not response. */
   --duration-loop-fast: 700ms;
   --duration-loop-slow: 1400ms;
 
-  /* Easing — which to pick:
-     - standard:   state changes (hover, focus, toggle)
-     - emphasized: overlay / modal / drawer entries and exits; overshoots
-     - decelerate: something appearing (toast, tooltip, popover open)
-     - accelerate: something leaving (toast dismiss, modal close)
-     - spring:     overshoot for small celebratory feedback; sparingly
-     - emphasized-decelerate: a large mark arriving, long and calm at the end
-     - settle:     a mark growing into its value; a critically damped spring, so it never
-                   overshoots and never shows a value the data does not hold */
+  /* Easing: `settle` is a critically damped spring, so a growing mark never overshoots and never shows a value the data does not hold. */
   --ease-standard:   cubic-bezier(.2,  0,    0,   1);
   --ease-emphasized: cubic-bezier(.3,  0,    .1,  1.4);
   --ease-decelerate: cubic-bezier(0,   0,    0,   1);
@@ -139,9 +119,7 @@
   --ease-emphasized-decelerate: cubic-bezier(.05, .7, .1, 1);
   --ease-settle: linear(0, 0.09 6.3%, 0.265 12.5%, 0.444 18.8%, 0.596 25%, 0.715 31.3%, 0.803 37.5%, 0.867 43.8%, 0.911 50%, 0.942 56.3%, 0.962 62.5%, 0.976 68.8%, 0.986 75%, 0.992 81.3%, 0.996 87.5%, 0.998 93.8%, 1);
 
-  /* Motion ROLES — name the intent once and every surface at that scale follows. `exit` and
-     `exit-large` stay separate because panel LEAVES run at --duration-base, not fast, and a few
-     resolvers stay on the raw scale where no role carries what they need. */
+  /* Motion roles: name the intent once and every surface at that scale follows. `exit-large` is separate because panel leaves run at --duration-base. */
   --ds-motion-enter-panel-duration:   var(--duration-fast);
   --ds-motion-enter-panel-easing:     var(--ease-decelerate);
   --ds-motion-enter-surface-duration: var(--duration-base);
@@ -153,26 +131,21 @@
   --ds-motion-exit-large-duration:    var(--duration-base);
   --ds-motion-exit-large-easing:      var(--ease-accelerate);
 
-  /* Its own role because the mark overshoots and nothing else at this scale does. Enter and exit
-     differ so it leaves faster than it arrives, which reads as weight rather than lag. */
+  /* Its own role: the mark overshoots. It leaves faster than it arrives, which reads as weight. */
   --ds-motion-check-enter-duration:   var(--duration-base);
   --ds-motion-check-enter-easing:     var(--ease-spring);
   --ds-motion-check-exit-duration:    var(--duration-fast);
   --ds-motion-check-exit-easing:      var(--ease-accelerate);
 
-  /* `state` is a hover or focus answering a pointer, so it runs at the fast step — anything slower
-     reads as lag on a mark the cursor is already leaving. `mark` is a datum changing size, which is
-     a redraw the reader is meant to follow rather than catch up with. */
+  /* `state` answers a pointer, so it runs fast; slower reads as lag. `mark` is a datum changing size. */
   --ds-motion-chart-state-duration:   var(--duration-fast);
   --ds-motion-chart-state-easing:     var(--ease-standard);
   --ds-motion-chart-mark-duration:    var(--duration-base);
   --ds-motion-chart-mark-easing:      var(--ease-decelerate);
 
-  /* A mark arriving and a mark leaving are separate roles because the enter waits out the exit:
-     the two durations are added, and one role could not carry both halves of that sum. An arrival
-     is timed by what arrives: `enter` for a mark that fades or settles in place, `grow` for one that
-     grows out of its baseline and `sweep` for a ring or a line drawing on, `detail` for what
-     follows a mark (its value label, a marker). */
+  /* Enter and exit are separate roles because the enter waits out the exit (the durations add).
+     `enter`: fades or settles in place; `grow`: grows from a baseline; `sweep`: ring or line
+     drawing on; `detail`: what follows a mark (value label, marker). */
   --ds-motion-chart-mark-enter-duration:  var(--duration-slower);
   --ds-motion-chart-mark-enter-easing:    var(--ease-emphasized-decelerate);
   --ds-motion-chart-mark-grow-duration:   var(--duration-slowest);
@@ -182,32 +155,25 @@
   --ds-motion-chart-mark-exit-duration:  var(--duration-fast);
   --ds-motion-chart-mark-exit-easing:    var(--ease-accelerate);
 
-  /* The one tooltip gliding from the mark it left to the mark it reached. Off the duration scale on
-     purpose, matching Highcharts' tooltip animation, so the reduced-motion block zeroes it by name. */
+  /* Tooltip glide between marks. Off the duration scale so the reduced-motion block zeroes it by name. */
   --ds-motion-chart-tooltip-move-duration: 300ms;
   --ds-motion-chart-tooltip-move-easing: var(--ease-standard);
 
   --opacity-disabled:        0.5;
-  --opacity-text-disabled:   0.38;  /* WCAG-derived */
+  --opacity-text-disabled:   0.38;
   --opacity-scrim:           0.55;
   --opacity-state-hover:     0.08;
   --opacity-state-pressed:   0.16;
-  --opacity-state-active:    0.24;  /* deeper than -pressed, for a third press level */
+  --opacity-state-active:    0.24;
 
-  /* Breakpoints: the $bp-* Sass aliases and up()/down() mixins live in
-     _breakpoints.scss; the --bp-* runtime mirror comes from its emit-vars mixin,
-     included once by styles/ds. */
-
-  /* Tier gutters and margins for `.page-grid`; _page-grid.scss owns the tier
-     table and swaps these at the matching min-width breakpoint. */
-  --page-gutter-mobile:  var(--space-3);   /* 12px */
-  --page-gutter-tablet:  var(--space-4);   /* 16px */
-  --page-gutter-desktop: var(--space-5);   /* 20px */
-  --page-gutter-wide:    var(--space-6);   /* 24px */
-  --page-margin-mobile:  var(--space-4);   /* 16px */
-  --page-margin-tablet:  var(--space-6);   /* 24px */
-  --page-margin-desktop: var(--space-8);   /* 32px */
-  --page-margin-wide:    var(--space-10);  /* 40px */
+  --page-gutter-mobile:  var(--space-3);
+  --page-gutter-tablet:  var(--space-4);
+  --page-gutter-desktop: var(--space-5);
+  --page-gutter-wide:    var(--space-6);
+  --page-margin-mobile:  var(--space-4);
+  --page-margin-tablet:  var(--space-6);
+  --page-margin-desktop: var(--space-8);
+  --page-margin-wide:    var(--space-10);
 
   --scrollbar-w: 10px;
   --scrollbar-thumb:        var(--neutral-300);
@@ -217,8 +183,6 @@
   --col-cap-text:    720px;
   --col-cap-content: 1280px;
 
-  /* Font FAMILIES are a theme choice and live in ../themes/_base-palette.scss;
-     the size/weight/leading/tracking scale below is constant across themes. */
   --font-weight-regular:  400;
   --font-weight-medium:   500;
   --font-weight-semibold: 600;
@@ -256,8 +220,8 @@
   --hit-xs:    24px;
   --hit-sm:    28px;
   --hit-md:    36px;
-  --hit-min:   32px;   /* dense desktop default */
-  --hit-cozy:  40px;   /* default control height; retuned by every density tier */
+  --hit-min:   32px;
+  --hit-cozy:  40px;
   --hit-comfy: 44px;   /* WCAG 2.5.5 minimum for touch */
   --hit-touch: 48px;
 
@@ -270,16 +234,11 @@
   --field-pad-x:       var(--space-3);
   --field-pad-y:       0;
 
-  /* Components default their own --ds-*-pad to this, so a consumer retunes every
-     surface container (card, stat, …) at once. */
   --ds-surface-padding:  var(--space-6);
 
-  /* Two focus families: fields get the soft halo, interactive controls and nav
-     the crisp ring. Components default their own --ds-*-focus-shadow to these,
-     so a consumer can retune a whole family or a single component. */
-
-  /* The flat tokens, NOT the --accent-focus-* aliases. A `var()` inside a custom property is
-     substituted where it is DECLARED, so a ds-color zone can never reach what is written here. */
+  /* Fields get the soft halo, controls and nav the crisp ring. Use the flat tokens, not the
+     --accent-focus-* aliases: a `var()` inside a custom property is substituted where it is
+     declared, so a ds-color zone could never reach it. */
   --ds-field-focus-shadow:         var(--focus-field);
   --ds-field-focus-shadow-error:   var(--focus-field-error);
   --ds-control-focus-shadow:       var(--focus-ring);
@@ -295,7 +254,7 @@
   --check-indet-h:     2px;
   --radio-dot-size:    10px;
   --radio-bw-checked:  var(--border-width-strong);
-  --check-glyph-sm:    14px;   /* size-sm / size-lg boxes — fixed, not density-scaled like --check-size */
+  --check-glyph-sm:    14px;   /* fixed, not density-scaled like --check-size */
   --check-glyph-lg:    24px;
   --radio-glyph-sm:    14px;
   --radio-glyph-lg:    24px;
@@ -304,7 +263,7 @@
   --switch-track-h:    20px;
   --switch-thumb-size: 16px;
   --switch-thumb-pad:  2px;
-  --switch-thumb-travel: 16px;   /* track-w − thumb − 2*pad */
+  --switch-thumb-travel: 16px;   /* track-w - thumb - 2*pad */
 
   --slider-track-h:    4px;
   --slider-thumb-size: 18px;
@@ -338,7 +297,7 @@
 
   --bar-h: 6px;
 
-  --stepper-node-size: 28px;   /* === --hit-sm */
+  --stepper-node-size: 28px;
   --stepper-bar-w:     56px;
   --stepper-bar-h:     2px;
 
@@ -365,31 +324,31 @@
   --popover-maxh: 360px;
 
   --field-label-gap:   var(--space-1-5);   /* both label↔control and control↔hint */
-  --field-gap-req:     var(--space-1);     /* label↔asterisk */
+  --field-gap-req:     var(--space-1);
   --field-h-sm:        var(--hit-min);
   --field-h-md:        var(--hit-cozy);
   --field-h-lg:        var(--hit-touch);
   --field-textarea-min: 96px;
   --field-num-stepper-w: var(--space-8);
 
-  --otp-cell-w: var(--space-12);   /* 48px */
-  --otp-cell-h: var(--space-14);   /* 56px */
-  --otp-gap:    var(--space-2);    /*  8px */
+  --otp-cell-w: var(--space-12);
+  --otp-cell-h: var(--space-14);
+  --otp-gap:    var(--space-2);
 
-  --color-picker-swatch:  var(--space-6);    /* 24px */
-  --color-picker-preview: var(--space-10);   /* 40px */
+  --color-picker-swatch:  var(--space-6);
+  --color-picker-preview: var(--space-10);
   --color-picker-panel-w: 240px;
-  --color-picker-sv-h:    160px;             /* saturation/value plane height */
-  --color-picker-hue-h:   var(--space-3);    /* 12px */
+  --color-picker-sv-h:    160px;
+  --color-picker-hue-h:   var(--space-3);
   --color-picker-thumb:   14px;
 
-  --topbar-h:                var(--space-14);            /* 56px */
+  --topbar-h:                var(--space-14);
 
   --sidenav-pad-brand-y:     var(--space-2);
   --sidenav-pad-brand-b:     var(--space-6);
-  --sidenav-logo-size:       var(--hit-sm);          /* 28px */
-  --sidenav-collapsed-item:  var(--hit-cozy);        /* 40px */
-  --sidenav-collapsed-glyph: var(--icon-lg);         /* 20px — must match the size the item template renders its icon at */
+  --sidenav-logo-size:       var(--hit-sm);
+  --sidenav-collapsed-item:  var(--hit-cozy);
+  --sidenav-collapsed-glyph: var(--icon-lg);         /* must match the icon size the item template renders */
   --sidenav-section-pad-b:   var(--space-1-5);
   --sidenav-item-rail-width: 3px;
 
@@ -400,35 +359,35 @@
   --bottom-sheet-handle-w:   36px;
   --bottom-sheet-handle-h:   4px;
 
-  --field-textarea-rows-min: 60px;                   /* the inline textarea inside the field wrapper, not --field-textarea-min */
-  --field-select-pad-r:      var(--space-6);             /* chevron clearance */
+  --field-textarea-rows-min: 60px;
+  --field-select-pad-r:      var(--space-6);
   --field-affix-overlap:     var(--border-width-default);
 
-  --btn-group-overlap:       calc(var(--border-width-default) * -1); /* collapses adjacent borders */
-  --btn-link-uloff:          3px;                    /* underline-offset */
+  --btn-group-overlap:       calc(var(--border-width-default) * -1);
+  --btn-link-uloff:          3px;
   --breadcrumbs-link-uloff:  2px;
 
   --card-hover-lift:         1px;
   --card-title-fs:           var(--font-size-h4);
 
-  --sort-ic-size:            var(--icon-xs);         /* 12px */
-  --sort-ic-gap:             var(--space-1-5);           /* 6px */
+  --sort-ic-size:            var(--icon-xs);
+  --sort-ic-gap:             var(--space-1-5);
   --sort-ic-opacity-idle:    0.4;
 
   /* The literal svg inside .tag .x, not the button box (--tag-close-size). */
-  --tag-close-glyph:         var(--icon-xs);         /* 12px */
+  --tag-close-glyph:         var(--icon-xs);
 
-  --bulk-bar-offset:         var(--space-4);             /* sticky offset from the container bottom */
+  --bulk-bar-offset:         var(--space-4);
 
   --menu-minw:               200px;
   --menu-sep-h:              var(--border-width-default);
 
-  --list-item-pad-y:         var(--space-3);             /* 12px */
-  --list-item-pad-x:         var(--space-4);             /* 16px */
-  --list-item-gap:           var(--space-3);             /* 12px leading↔body↔trailing */
+  --list-item-pad-y:         var(--space-3);
+  --list-item-pad-x:         var(--space-4);
+  --list-item-gap:           var(--space-3);
 
   --tooltip-maxw:            240px;
-  --tooltip-arrow:           var(--space-2);             /* 8px — caret edge length, halved for offset */
+  --tooltip-arrow:           var(--space-2);             /* caret edge length, halved for offset */
 
   --popover-maxw:            320px;
 
@@ -439,77 +398,76 @@
 
   --banner-bar-w:            4px;
 
-  --empty-icon-size:         var(--space-16);            /* 64px */
+  --empty-icon-size:         var(--space-16);
   --empty-body-maxw:         360px;
 
-  /* Pickers — the listbox panel shared by select, autocomplete and multi-select. */
-  --picker-offset:           var(--space-1);             /* gap below the trigger */
+  --picker-offset:           var(--space-1);
   --picker-maxh:             280px;
 
   --cmdk-w:                  560px;
-  --cmdk-list-maxh:          var(--popover-maxh);    /* alias — keeps cmdk and popover in step */
+  --cmdk-list-maxh:          var(--popover-maxh);    /* alias, keeps cmdk and popover in step */
 
   --date-picker-w:            280px;
-  --date-picker-cell-gap:     var(--space-0-5);           /* 2px */
-  --date-picker-nav-size:     var(--hit-xs);          /* 24px */
+  --date-picker-cell-gap:     var(--space-0-5);
+  --date-picker-nav-size:     var(--hit-xs);
 
-  --modal-close-size:        var(--hit-xs);          /* 24px */
-  --modal-enter-y:           var(--space-2);             /* 8px */
+  --modal-close-size:        var(--hit-xs);
+  --modal-enter-y:           var(--space-2);
 
   --errorpage-body-maxw:     520px;
 
   --wizard-body-minh:        200px;
-  --wizard-step-bar-w:       var(--space-8);             /* 32px */
+  --wizard-step-bar-w:       var(--space-8);
 
-  --inline-edit-input-minw:  var(--space-20);            /* 80px */
-  --inline-edit-btn-size:    var(--hit-xs);          /* 24px */
+  --inline-edit-input-minw:  var(--space-20);
+  --inline-edit-btn-size:    var(--hit-xs);
 
   --settings-nav-w:          220px;
   --settings-row-label-w:    240px;
-  --settings-row-label-gap:  var(--space-0-5);           /* 2px */
+  --settings-row-label-gap:  var(--space-0-5);
 
-  --matrix-maxh:             360px;                  /* deliberately the same optic as --popover-maxh, not an alias */
-  --matrix-cell-pad-y:       var(--space-2);             /* 8px */
-  --matrix-cell-pad-x:       var(--space-2-5);           /* 10px */
-  --matrix-cell-minw:        var(--space-16);            /* 64px */
+  --matrix-maxh:             360px;                  /* same look as --popover-maxh, deliberately not an alias */
+  --matrix-cell-pad-y:       var(--space-2);
+  --matrix-cell-pad-x:       var(--space-2-5);
+  --matrix-cell-minw:        var(--space-16);
   --matrix-rowhdr-minw:      160px;
 
   --calendar-rowlabel-w:     160px;
-  --calendar-row-h:          var(--hit-touch);       /* 48px */
-  --calendar-cell-min:       var(--hit-cozy);        /* 40px */
-  --calendar-cell-pad:       var(--space-1);             /* 4px */
-  --calendar-bar-h:          var(--space-8);             /* 32px */
-  --calendar-bar-inset-y:    var(--space-2);             /* 8px */
+  --calendar-row-h:          var(--hit-touch);
+  --calendar-cell-min:       var(--hit-cozy);
+  --calendar-cell-pad:       var(--space-1);
+  --calendar-bar-h:          var(--space-8);
+  --calendar-bar-inset-y:    var(--space-2);
 
-  --timeline-node-size:      var(--hit-sm);              /* 28px */
-  --timeline-spine-w:        var(--border-width-strong); /* 2px */
+  --timeline-node-size:      var(--hit-sm);
+  --timeline-spine-w:        var(--border-width-strong);
   --timeline-gap:            var(--space-5);
 
-  --tree-indent:             var(--space-5);             /* 20px per nesting level */
-  --tree-row-pad-y:          var(--space-1-5);           /* 6px */
-  --tree-row-pad-x:          var(--space-3);             /* 12px */
+  --tree-indent:             var(--space-5);
+  --tree-row-pad-y:          var(--space-1-5);
+  --tree-row-pad-x:          var(--space-3);
 
-  --binpack-bay-h:           var(--hit-touch);       /* 48px */
+  --binpack-bay-h:           var(--hit-touch);
 
-  --map-chip-pad-y:          var(--space-1-5);           /* 6px */
-  --map-chip-pad-x:          var(--space-2-5);           /* 10px */
-  --map-chip-inset:          var(--space-3);             /* 12px */
+  --map-chip-pad-y:          var(--space-1-5);
+  --map-chip-pad-x:          var(--space-2-5);
+  --map-chip-inset:          var(--space-3);
 
-  --kbd-pad-y:               var(--space-0-5);           /* 2px */
-  --kbd-pad-x:               var(--space-1-5);           /* 6px */
+  --kbd-pad-y:               var(--space-0-5);
+  --kbd-pad-x:               var(--space-1-5);
 
   --chart-empty-h:           160px;
   --chart-skeleton-h:        160px;
-  --chart-legend-dot:        var(--icon-2xs);        /* 10px */
+  --chart-legend-dot:        var(--icon-2xs);
 
   --compare-dt-w:            90px;
 
   --dodont-stage-minh:       100px;
 
-  --statemap-arrow-w:        var(--space-8);             /* 32px */
-  --statemap-arrow-cap:      var(--space-1);             /* 4px — caret border-width */
+  --statemap-arrow-w:        var(--space-8);
+  --statemap-arrow-cap:      var(--space-1);
 
-  --grid-table-min:          220px;                  /* auto-fit minmax floor */
+  --grid-table-min:          220px;
   --grid-cols-card-minh:     120px;
   --grid-cols-card-thumb:    80px;
   --dl-spec-label-w:         120px;
@@ -529,26 +487,21 @@
     --duration-slowest: 0ms;
     --ds-motion-chart-tooltip-move-duration: 0ms;
 
-    /* Loops are slowed, never frozen: a stopped spinner reads as "hung", not
-       "loading". The one large motion that does halt is the page-wide skeleton
-       sweep, which stops itself in _skeleton-shimmer.scss. */
+    /* Loops are slowed, never frozen: a stopped spinner reads as "hung". The skeleton sweep is the
+       one loop that halts, via its own reduced-motion rule. */
     --duration-loop-fast: 1400ms;
     --duration-loop-slow: 2800ms;
   }
 
-  /* One-shot motion only. Every entrance/transition is token-driven, so zeroing
-     the durations above already makes them instant — loops must NOT be
-     blanket-zeroed here or they freeze. */
+  /* One-shot motion only: zeroing loops here would freeze them. */
   *, *::before, *::after {
     transition-duration: 0ms !important;
   }
 }
 
 [data-density="ultra-compact"] {
-  /* 24px hits sit BELOW WCAG 2.5.5 (44px enhanced) and WCAG 2.5.8 (24px
-     minimum) margins — acceptable only when: (a) the screen is keyboard-first,
-     (b) input is mouse/keys not touch, (c) accidental-tap risk is low, (d) the
-     user opted in. Do not enable for mobile or touch-first layouts. */
+  /* 24px hits sit below WCAG 2.5.5 (44px enhanced) and at the WCAG 2.5.8 minimum. Only for
+     keyboard-first, mouse-driven screens the user opted into; never mobile or touch-first. */
   --hit-cozy:          24px;
   --hit-min:           24px;
   --check-size:        14px;
@@ -568,8 +521,7 @@
   --table-cell-pad-y:  var(--space-1);
   --table-head-pad-y:  var(--space-1);
 
-  /* One rung only — a card's frame reads as padding lost long before its cells
-     do, so 24 → 16 while the cells inside it go 16 → 8. */
+  /* One rung only: a card's frame reads as lost padding before its cells do (24 to 16, cells 16 to 8). */
   --ds-surface-padding:  var(--space-4);
 }
 [data-density="compact"] {

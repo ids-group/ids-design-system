@@ -1,12 +1,12 @@
 @use '../../styles/text-clip' as text-clip;
 
 /* Truncation contract:
-   Stat label — single line, ellipsis; tip on hover when clipped.
-   Stat value — single line, ellipsis; tip on hover when clipped. Three hooks reshape it and they
+   Stat label - single line, ellipsis; tip on hover when clipped.
+   Stat value - single line, ellipsis; tip on hover when clipped. Three hooks reshape it and they
      compose: `--ds-stat-value-white-space: normal` wraps instead of clipping,
      `--ds-stat-value-lines: N` then puts the ellipsis on line N, and
      `--ds-stat-value-wrap: anywhere` breaks a word wider than the tile. `lines` only bites once
-     the value wraps — a clamp on a `nowrap` box has nothing to clamp. */
+     the value wraps - a clamp on a `nowrap` box has nothing to clamp. */
 
 :host {
   --_stat-bg-color:          var(--ds-stat-bg-color,          var(--surface-default));
@@ -26,15 +26,12 @@
   display: block;
 }
 
-/* Through the resolver, not `color` on `.value`: emulated encapsulation adds one attribute
-   selector to each side, which ties `:host(.error) .value` with `.stat .value` and hands it to
-   source order. The size variants below move the font size the same way. */
+/* Through the resolver: `:host(.error) .value` ties with `.stat .value` under emulated encapsulation. */
 :host(.error) {
   --_stat-value-color: var(--ds-stat-value-color, var(--error-text));
 }
 
-/* Through the same resolver, not `font-size` on `.value`, where they would out-rank the public
-   hook and make it work at md only. */
+/* Through the resolver: `font-size` on `.value` would out-rank the public hook. */
 :host(.size-sm) {
   --_stat-value-font-size: var(--ds-stat-value-font-size, var(--font-size-h4));
 }
@@ -53,9 +50,6 @@
   border: var(--border-width-default) solid var(--_stat-border);
   border-radius: var(--_stat-radius);
   padding: var(--_stat-padding);
-
-  // Fills a stretched host, so a KPI row of tiles with different content paints equal-height
-  // cards. Content-sized when the host is not stretched.
   height: 100%;
 
   .label {
@@ -77,10 +71,6 @@
     margin: 0;
     white-space: var(--_stat-value-white-space);
     overflow-wrap: var(--_stat-value-wrap);
-
-    /* Declared even when nothing is clamped: measured against plain `block` on a number, a phrase
-       and projected element content, the box display moves no geometry while the clamp is `none`,
-       so binding it to the hook would buy a style query and nothing else. */
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: var(--_stat-value-lines);

@@ -1,28 +1,21 @@
 /**
  * Who applies the header filters.
  *
- * `'server'` (the default when unset) means the host does it: the table tracks
- * `columnFilters` so a request can be driven from it, but runs no local pass —
- * on a paged table a local pass would filter what the server already filtered,
- * and paged is the normal case. `'client'` filters the rows in hand, for a table
- * that holds every one of them. `'none'` drops the affordance,
- * so a column left marked `filter: 'set'` renders no button rather than a
- * control that does nothing.
+ * `'server'` (default): the host filters; the table only tracks `columnFilters`. `'client'`
+ * filters the rows in hand. `'none'` renders no filter button.
  */
 export type TableFilterMode = 'client' | 'server' | 'none';
 
 /**
  * Who sorts a `ds-table`.
  *
- * - `'server'` (default) — the table only emits `sortChange`; the host reorders.
- * - `'client'` — the table reorders `data()` itself, for a table holding every row.
- * - `'none'` — nothing sorts, and `sortable` columns render no affordance rather
- *   than a control that does nothing.
+ * - `'server'` (default): the table only emits `sortChange`; the host reorders.
+ * - `'client'`: the table reorders `data()` itself.
+ * - `'none'`: nothing sorts and `sortable` columns render no affordance.
  */
 export type TableSortMode = 'client' | 'server' | 'none';
 
-/** `'single'` closes the open row when another is expanded; `'multiple'` (default)
- *  leaves every expanded row open. */
+/** `'single'` closes the open row when another expands; `'multiple'` (default) does not. */
 export type TableExpandMode = 'multiple' | 'single';
 
 import type { IconName } from '@ids-group-ltd/ids-design-system/core';
@@ -30,73 +23,47 @@ import type { IconName } from '@ids-group-ltd/ids-design-system/core';
 export interface TableColumn<T = unknown> {
   key: string;
   label: string;
-  /** Visually-hidden accessible header name — use when `label` is
-   *  intentionally empty (e.g. an actions column). */
+  /** Visually-hidden header name, for an intentionally empty `label`. */
   screenReaderLabel?: string;
   sortable?: boolean;
-  /** Include the column in `filterQuery` matching. When no column is marked,
-   *  every column matches. Works on `hidden` columns too. */
+  /** Include the column in `filterQuery` matching; when none is marked, all match. Works on `hidden` columns. */
   filterable?: boolean;
-  /** Adds a header filter menu. `'set'` lists the column's distinct values as
-   *  a searchable checkbox list; a row passes when its value stays checked. */
+  /** Adds a header filter menu; `'set'` is a searchable checkbox list of distinct values. */
   filter?: 'set';
-  /** Ellipsis-clip long cell text at `width` (240px when unset); the full value
-   *  reaches a tooltip on hover and focus. */
+  /** Ellipsis-clip long cell text at `width` (240px when unset); the full value shows in a tooltip. */
   truncate?: boolean;
-  /** Column width in px — also the clip width for `truncate`.
+  /** Column width in px, also the clip width for `truncate`.
    *
-   *  `'content'` instead sizes the column to its widest cell and stops it wrapping,
-   *  leaving the remaining width to the columns that should absorb it. An
-   *  auto-layout table spreads slack evenly, so a short column (a status, a count,
-   *  an actions cell) ends up as wide as its own header while the name column that
-   *  should take the slack does not. A pixel width cannot express that — pin one
-   *  column and the rest still spread. Dragging the column's edge overrides it. */
+   *  `'content'` sizes the column to its widest cell without wrapping and leaves the rest to
+   *  the other columns. Dragging the edge overrides it. */
   width?: number | 'content';
   align?: 'left' | 'right' | 'center';
   cell?: (row: T) => string;
-  /** Sort this column by a DOMAIN value instead of the rendered text. Without
-   *  it, client sorting compares what the cell displays, so `$1.2M / $840K / $95K`
-   *  sorts by the leading character and `Oct 09, 2023 / Feb 27, 2024` sorts by
-   *  month NAME — the table looks sorted and is not. Return the underlying
-   *  number, `Date` or plain string; `null`/`undefined`/`''` counts as blank and
-   *  sorts last in BOTH directions. Only affects sorting — the header filter
-   *  still lists what the user can see. */
+  /** Sort by a domain value instead of the rendered text (`$1.2M`, `Oct 09, 2023` sort wrongly
+   *  as text). `null`/`undefined`/`''` counts as blank and sorts last in BOTH directions.
+   *  The header filter still lists the rendered text. */
   sortValue?: (row: T) => string | number | Date | null | undefined;
-  /** Double-click the cell to edit it inline; the committed value is emitted
-   *  via the table's `cellEdited` output (the consumer owns the data update). */
+  /** Double-click to edit inline; the value is emitted via `cellEdited`, the consumer owns the data. */
   editable?: boolean;
-  /** Let the user toggle the column in the header column picker. Needs the
-   *  `dsTableColumns` directive on the table: that is what renders the picker,
-   *  and without it this flag does nothing. */
+  /** Toggleable in the column picker. Needs the `dsTableColumns` directive; does nothing without it. */
   hideable?: boolean;
-  /** Marks the cell whose TEXT tells the reader what the row opens, so it takes a link
-   *  colour and underline while the row is hovered. Only has an effect on a
-   *  `rowInteractive` table: on a passive one every hover treatment is suppressed on
-   *  purpose, so a tint cannot promise a click that does not happen. Style it with
-   *  `--ds-table-cell-link-color` / `--ds-table-cell-link-decoration`.
+  /** Marks the cell whose text names what the row opens: link colour and underline on row hover.
+   *  Only on a `rowInteractive` table. Style with `--ds-table-cell-link-color` /
+   *  `--ds-table-cell-link-decoration`.
    *
-   *  Prefer `link` where the row leads somewhere: a tint appears only on hover, which
-   *  a keyboard or touch user never sees. */
+   *  Prefer `link` where the row navigates: the hover tint is invisible to keyboard and touch. */
   interactive?: boolean;
-  /** Renders this column's value as a real `<a>`, which is the accessible way to say
-   *  a row leads somewhere: it is visible without hovering, lands in the tab order as
-   *  a link rather than as a table row, and opens in a new tab on Ctrl/Cmd-click —
-   *  none of which a clickable `<tr>` can offer.
+  /** Renders the value as a real `<a>` (tab order, Ctrl/Cmd-click).
    *
-   *  Return an Angular route target (a string, or the array form for dynamic
-   *  segments); `null` / `undefined` leaves that row's cell as plain text, so a list
-   *  where only some rows are reachable needs no second column. For an external URL,
-   *  render the cell through a `[cell]` template instead — this takes route targets
-   *  only, and the router is touched at all only once a column sets `link`.
+   *  Return an Angular route target (string or array form); `null` / `undefined` leaves that
+   *  row's cell as plain text. Route targets only: for an external URL use a `[cell]` template.
    *
-   *  Composes with `rowInteractive`: the link stops its own click from reaching the
-   *  row, so the row handler fires for the rest of the row and the link navigates
-   *  once. Style it with the same `--ds-table-cell-link-*` tokens as `interactive`. */
+   *  With `rowInteractive` the link stops its click from reaching the row. Same
+   *  `--ds-table-cell-link-*` tokens as `interactive`. */
   link?: (row: T) => string | readonly unknown[] | null | undefined;
-  /** Initial visibility: start hidden. Needs the `dsTableColumns` directive on
-   *  the table — visibility is its stage, so without it the column renders. The
-   *  picker (or a bound `hiddenKeys` set) owns the state from then on; a hidden
-   *  column stays available to `filterable` matching and sorting. */
+  /** Start hidden. Needs the `dsTableColumns` directive, without it the column renders. The
+   *  picker (or bound `hiddenKeys`) owns the state afterwards; a hidden column still takes part
+   *  in `filterable` matching and sorting. */
   hidden?: boolean;
 }
 
@@ -110,28 +77,19 @@ export interface SortChangeEvent {
 export interface TableRowAction<T = unknown> {
   /** Stable identifier — use it to branch in `rowActionSelected`. */
   id: string;
-  /** Per-row where one action reads two ways: Deactivate on a live row and
-   *  Reactivate on a suspended one. It is ONE action — the same `id` reaches
-   *  `rowActionSelected` either way. */
+  /** A function reads per row (Deactivate / Reactivate); the same `id` reaches `rowActionSelected`. */
   label: string | ((row: T) => string);
   icon?: IconName;
   /** Renders the item in the destructive style. */
   error?: boolean;
-  /** Draws a divider ABOVE this item. For the destructive tail, where colour
-   *  alone is the only thing separating Delete from the actions above it. */
+  /** Draws a divider ABOVE this item. */
   divider?: boolean;
-  /** Per-row predicate — return true to disable the item for that row. */
+  /** Per-row predicate: true disables the item. */
   disabled?: (row: T) => boolean;
-  /** Per-row predicate — return true to leave the item OUT for that row. Use it
-   *  where the action does not apply rather than `disabled`, which greys an item
-   *  that is always there: a draft offers Edit + Launch and a live one Revert +
-   *  Delete, so greying leaves every row with a permanently dead half. When every
-   *  item of a row is hidden the kebab is not rendered at all, rather than opening
-   *  an empty menu. */
+  /** Per-row predicate: true leaves the item OUT (use instead of `disabled` where the action does
+   *  not apply). The kebab is not rendered when every item of a row is hidden. */
   hidden?: (row: T) => boolean;
-  /** Why the item is disabled, shown as the item's second line. Only read when
-   *  `disabled` returns true for the row — a greyed item that does not say why is
-   *  the same dead control as a greyed button. */
+  /** Second line of a disabled item; read only when `disabled` returns true. */
   disabledReason?: string | ((row: T) => string);
 }
 

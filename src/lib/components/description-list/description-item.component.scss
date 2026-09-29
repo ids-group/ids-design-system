@@ -1,21 +1,12 @@
 @use '../../styles/focus' as focus;
 
-/* The item host is one row. In horizontal mode it is a wrapping flex row whose
-   label width inherits --_description-list-label-width from the parent ds-description-list
-   (falls back to the global token when used standalone). */
-
 :host {
-  /* The term is the same eyebrow role ds-field-label and the modal eyebrow
-     expose in full, so it takes the same five properties. Defaults reproduce
-     what the shorthand pinned, so nothing moves until one is set. */
   --_description-item-term-color: var(--ds-description-item-term-color, var(--text-tertiary));
   --_description-item-term-font-size: var(--ds-description-item-term-font-size, var(--font-size-s));
   --_description-item-term-font-weight: var(--ds-description-item-term-font-weight, var(--font-weight-regular));
   --_description-item-term-letter-spacing: var(--ds-description-item-term-letter-spacing, normal);
   --_description-item-term-text-transform: var(--ds-description-item-term-text-transform, none);
 
-  /* The details side is the VALUE, not a label: it gets the three properties it
-     actually sets. Transform and tracking would be API with no case behind it. */
   --_description-item-details-color: var(--ds-description-item-details-color, var(--text-primary));
   --_description-item-details-font-size: var(--ds-description-item-details-font-size, var(--font-size-s));
   --_description-item-details-font-weight: var(--ds-description-item-details-font-weight, var(--font-weight-regular));
@@ -27,8 +18,7 @@
   align-items: baseline;
 }
 
-/* Line breaking reads the flex bases, never the content, so every item of one
-   list wraps at the same width: label + column gap + value min width. */
+/* Wrapping reads the flex bases, not the content, so every item of a list wraps at the same width. */
 .term {
   flex: 0 0 var(--_description-list-label-width, var(--dl-spec-label-w));
   min-width: 0;

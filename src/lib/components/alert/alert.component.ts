@@ -23,15 +23,13 @@ import type { AlertVariant } from './alert.types';
   imports: [IconComponent],
   templateUrl: './alert.component.html',
   styleUrl: './alert.component.scss',
-  // A static `title="…"` feeding the input below ALSO stays in the DOM as the global attribute,
-  // which makes the host a native browser tooltip over everything inside it.
   host: { '[attr.title]': 'null' },
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class AlertComponent {
   protected readonly intl = inject(DS_INTL);
 
-  /** Severity — drives colour, the default icon and the ARIA role/live. */
+  /** Severity: drives colour, the default icon and the ARIA role/live. */
   readonly variant = input<AlertVariant>('info');
   /** Optional bold heading above the message. */
   readonly title = input<string>('');
@@ -43,8 +41,7 @@ export class AlertComponent {
   readonly closed = output<void>();
 
   /** Announce this alert to a screen reader when it appears. Unset follows
-   *  `DS_CONFIG.alert.announce`, then `false` — see `ds-banner`'s `announce` for why,
-   *  and prefer `ToastService` for anything transient. */
+   *  `DS_CONFIG.alert.announce`, then `false`. */
   readonly announce = input<boolean | null, unknown>(null, {
     transform: (value) => (value == null ? null : booleanAttribute(value)),
   });

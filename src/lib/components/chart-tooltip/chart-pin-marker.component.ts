@@ -7,14 +7,12 @@ import {
 import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
 import { ICONS } from '@ids-group-ltd/ids-design-system/core';
 
-/** Radius of the pin disc, in plot pixels. A mark that places a disc inside itself keeps this
- *  much room from its edge.
+/** Radius of the pin disc, in plot pixels.
  *
  *  @internal */
 export const CHART_PIN_RADIUS = 11;
 
-/** How far a disc sits inside the top edge of what it holds. At one radius it sits flush against
- *  the edge and reads as part of the mark rather than as a badge on it.
+/** Gap between a disc and the top edge of what it holds.
  *
  *  @internal */
 export const CHART_PIN_GAP = 4;
@@ -22,16 +20,13 @@ export const CHART_PIN_GAP = 4;
 const GLYPH_SIZE = 14;
 
 /**
- * The disc an SVG chart draws on the mark or category it holds. Drawn rather than composed:
- * `ds-icon`'s host is an HTML element, and an element the SVG specification does not know renders
- * nothing inside a canvas. The opaque disc is what keeps the glyph legible on any series colour.
+ * The disc an SVG chart draws on the mark or category it holds. Drawn, not composed:
+ * `ds-icon`'s host is an element SVG does not know, which renders nothing inside a canvas.
  * Centred on the host's origin; place it with a `transform`.
  *
  * @internal
  */
 @Component({
-  // An element selector cannot work inside a canvas: an element the SVG specification does not
-  // know renders nothing, and neither do its children.
   // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'g[dsChartPinMarker]',
   standalone: true,

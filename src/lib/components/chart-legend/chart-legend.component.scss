@@ -1,9 +1,6 @@
 @use '../../styles/check-box' as check-box;
 @use '../../styles/chart-interactive' as chart-interactive;
 @use '../../styles/chart-motion' as chart-motion;
-
-// The colour chips name the series, so they arrive with the marks rather than standing solid while
-// the plot is still arriving. The checkbox is the chip when the legend toggles.
 @include chart-motion.fades-in('.legend-swatch', 0ms, var(--ds-motion-chart-mark-detail-duration));
 @include chart-motion.fades-in('.legend-check', 0ms, var(--ds-motion-chart-mark-detail-duration));
 @include chart-motion.fades-in('.legend-radio', 0ms, var(--ds-motion-chart-mark-detail-duration));
@@ -47,14 +44,11 @@
 }
 
 .legend-check {
-  /* No `check-box.resolvers` on the scope on purpose: the mixin's `--_checkbox-*` locals would
-     outrank the `--ds-checkbox-selected-*` pair the template sets per item, and every box would
-     come out in `--accent` instead of its own series colour. */
+  /* No `check-box.resolvers` here: its `--_checkbox-*` locals would outrank the per-item
+     `--ds-checkbox-selected-*` pair and every box would come out in `--accent`. */
   @include check-box.box;
 }
 
-/* The same box the toggle uses, rounded: a single choice among many should look like one, and
-   reusing the box keeps the series colour arriving through the same two custom properties. */
 .legend-radio {
   @include check-box.box;
 
@@ -73,8 +67,6 @@
     var(--ds-motion-chart-state-easing);
 }
 
-/* Hiding a series is a filter, not a deletion: the unchecked box says what happened and the muted
-   label agrees with it. A strike-through says the label itself is wrong. */
 .legend-item.is-hidden .legend-label {
   color: var(--text-disabled);
 }

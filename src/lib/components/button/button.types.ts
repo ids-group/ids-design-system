@@ -1,7 +1,5 @@
-// `text` coexists with the global `.link` class: use `.link` on bare <a>/<button>;
-// use variant="text" for the ds-button API (loading, fullWidth, color, typed) on
-// a link look. All color×variant pairs render; some are UX-discouraged and
-// dev-warned — see DISCOURAGED_COMBOS in button.component.ts.
+// `text` coexists with the global `.link` class: `.link` on bare <a>/<button>, variant="text"
+// where the ds-button API (loading, fullWidth, color) is needed. Some color×variant pairs are dev-warned.
 export type ButtonColor =
   | 'primary'
   | 'secondary'
@@ -13,6 +11,4 @@ export type ButtonColor =
 export type ButtonVariant = 'solid' | 'tonal' | 'ghost' | 'outline' | 'text';
 export type ButtonType = 'button' | 'submit' | 'reset';
 
-// Only meaningful once the button is wider than its contents, which in practice means
-// `fullWidth` or a grid cell that stretches it.
 export type ButtonAlign = 'center' | 'between';

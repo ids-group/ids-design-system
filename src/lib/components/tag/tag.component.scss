@@ -2,7 +2,7 @@
 @use '../../styles/press' as press;
 
 /* Truncation contract:
-   Label — Single line, ellipsis at ~16 ch. Tooltip on hover when clipped. */
+   Label - single line, ellipsis at ~16 ch, tooltip on hover when clipped. */
 
 :host {
   --_tag-padding-y:        var(--ds-tag-padding-y, var(--tag-pad-y));

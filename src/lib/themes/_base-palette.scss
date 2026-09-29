@@ -1,13 +1,8 @@
-// Base palette — Tier 1 primitives that are identical in every theme, emitted at
-// :root. What is NOT here, because it is per-theme, lives in each theme's
-// _palette.scss mixin: the --neutral-* family slot (which gray ramp is active)
-// and --shadow-tint-l. Components consume only semantic roles; they never
-// reference this file directly.
+// Tier 1 primitives identical in every theme. Each theme's palette mixin supplies the --neutral-* slot and --shadow-tint-l.
 
 :root {
-  // Hand-drawn slate gray. The hue drifts 210 → 227 toward the brand hue (229)
-  // as it darkens and chroma follows a U-curve (S 40% → 12% → 37%); the stops
-  // are hex, so a new one has to be placed on those curves by hand.
+  // Hand-drawn slate gray: hue drifts 210 to 227 toward the brand hue (229) as it darkens, chroma follows a
+  // U-curve (S 40%, 12%, 37%). Stops are hex, so place a new one on the curves by hand.
   --cool-gray-0:   #FFF;
   --cool-gray-50:  #F8FAFC;
   --cool-gray-100: #F1F4F9;
@@ -22,9 +17,7 @@
   --cool-gray-900: #161A28;
   --cool-gray-950: #0B0E18;
 
-  // The same S/L curve and hue drift as cool-gray, but sourced from --neutral-h,
-  // so re-skinning --primary-h re-tints every gray to match the brand. With the
-  // default blue brand the two ramps match to within rounding.
+  // The cool-gray curve sourced from --neutral-h, so re-skinning --primary-h re-tints every gray.
   --neutral-h: var(--primary-h, var(--blue-h));
   --brand-gray-0:   #FFF;
   --brand-gray-50:  hsl(calc(var(--neutral-h) - 19) 40.0% 98.0%);
@@ -40,8 +33,7 @@
   --brand-gray-900: hsl(calc(var(--neutral-h) - 2)  29.0% 12.2%);
   --brand-gray-950: hsl(calc(var(--neutral-h) - 3)  37.1% 6.9%);
 
-  // Blue — channel-split so halos and tints compose from the same source.
-  // #2F54FF ≈ hsl(229, 100%, 59%). _semantic.scss maps --primary onto this ramp.
+  // Blue, channel-split so halos and tints compose from the same source.
   --blue-h: 229;
   --blue-s: 100%;
   --blue-l: 59%;
@@ -57,9 +49,7 @@
   --blue-800: hsl(var(--blue-h)  79% 40%);
   --blue-900: hsl(var(--blue-h)  77% 30%);
 
-  // Orange — the secondary / accent family. The channels reproduce --orange-500
-  // ≈ #FF7A2E for composing fills and tints; the ramp stops stay hand-picked hex
-  // and are NOT derived from them.
+  // Orange, the secondary family. The channels reproduce --orange-500 for fills and tints; the ramp stops are hand-picked hex.
   --orange-h: 22; --orange-s: 100%; --orange-l: 59%;
   --orange-50:  #FFF7F0;
   --orange-100: #FFEEDF;
@@ -71,8 +61,7 @@
   --orange-700: #B84812;
   --orange-800: #8A340A;
 
-  // Green — success. The channels reproduce --green-500 ≈ #22A33A for focus-ring
-  // composition and ds-color; the ramp stops stay hand-picked hex.
+  // Green, success. The channels reproduce --green-500 for focus rings and ds-color; the ramp stops are hand-picked hex.
   --green-h: 132; --green-s: 66%; --green-l: 39%;
   --green-50:  #ECFAEE;
   --green-100: #D6F3DB;
@@ -83,8 +72,7 @@
   --green-600: #1B8A2E;
   --green-700: #156822;
 
-  // Yellow — warning. The channels reproduce --yellow-400 ≈ #F4D43A for
-  // focus-ring composition and ds-color; the ramp stops stay hand-picked hex.
+  // Yellow, warning. The channels reproduce --yellow-400 for focus rings and ds-color; the ramp stops are hand-picked hex.
   --yellow-h: 47; --yellow-s: 89%; --yellow-l: 59%;
   --yellow-50:  #FFFBEA;
   --yellow-100: #FEF8DC;
@@ -95,8 +83,7 @@
   --yellow-600: #B89B00;
   --yellow-700: #8A7400;
 
-  // Red — channel-split for halo derivation. #D81F1F ≈ hsl(0, 75%, 49%).
-  // _semantic.scss maps --error onto this ramp.
+  // Red, channel-split for halo derivation.
   --red-h: 0;
   --red-s: 75%;
   --red-l: 49%;
@@ -110,9 +97,6 @@
   --red-600: hsl(var(--red-h) 78% 41%);
   --red-700: hsl(var(--red-h) 78% 31%);
 
-  // Sky — the info role. A brighter, cooler blue (#3B82F6) kept distinct from the
-  // primary --blue ramp (#2F54FF) so "informational" reads apart from "primary
-  // action".
   --sky-50:  #EFF6FF;
   --sky-100: #DBEAFE;
   --sky-200: #BFDBFE;
@@ -122,23 +106,16 @@
   --sky-600: #2563EB;
   --sky-700: #1D4ED8;
 
-  // Violet — the tertiary brand hue, channel-split only. No discrete ramp stops
-  // yet; add hand-picked hex if a component ever needs stepped violet swatches.
   --violet-h: 262; --violet-s: 70%; --violet-l: 56%;
 
-  // Shadow substrate, h/s only — the lightness is per-theme and each theme's
-  // _palette.scss mixin sets it (light 7%, dark 95%).
+  // Shadow tint h/s only; lightness is per-theme (light 7%, dark 95%).
   --shadow-tint-h: 225;
   --shadow-tint-s: 39%;
 
-  // Never flips with the theme. Text on a DARK fill (e.g. the yellow warning
-  // fill) points here so it stays dark in both themes. There is no counterpart
-  // for text on a LIGHT fill: that uses the `white` keyword directly, since a
-  // token for a constant would be pure indirection.
+  // Never flips with the theme: text on a dark fill (the yellow warning fill) stays dark in both.
+  // Text on a light fill uses the `white` keyword directly.
   --static-ink:   #161A28;
 
-  // Font families are a theme/brand choice; the size/weight/leading SCALE is
-  // theme-independent and lives in ../styles/_tokens.scss.
   --font-sans:    "Mulish", -apple-system, blinkmacsystemfont, "Segoe UI", roboto, sans-serif;
   --font-mono:    "JetBrains Mono", ui-monospace, sfmono-regular, menlo, monospace;
   --font-display: var(--font-sans);

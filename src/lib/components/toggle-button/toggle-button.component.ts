@@ -7,9 +7,8 @@ import {
 } from '@angular/core';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 
-/** A single binary toggle button (pressed / not pressed) with an optional
- *  leading icon and a projected label. Distinct from `ds-segmented` (a
- *  one-of-many value toggle) — this is a standalone on/off control. */
+/** A standalone on/off toggle button with an optional leading icon and a projected label.
+ *  For a one-of-many choice use `ds-segmented`. */
 @Component({
   selector: 'ds-toggle-button',
   standalone: true,

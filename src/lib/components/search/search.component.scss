@@ -1,10 +1,8 @@
 /* Truncation contract:
-   Query — Single line, no clip while focused. Ellipsis when blurred + overflowing.
-   Hint kbd — No clip — fixed glyph length. */
+   Query - Single line, no clip while focused. Ellipsis when blurred + overflowing.
+   Hint kbd - No clip - fixed glyph length. */
 
-// `.search-input` and `.kbd` rather than bare `input` / `kbd` descendants: emulated
-// encapsulation does not stop a consumer's global `.input` reset from reaching in,
-// which is what caused the PIN-475 double focus ring.
+// `.search-input` and `.kbd` rather than bare `input`/`kbd`: a consumer's global `.input` reset reaches in otherwise (PIN-475 double focus ring).
 
 @use '../../styles/press' as press;
 @use '../../styles/field-box' as field-box;
@@ -56,9 +54,7 @@
     box-shadow: var(--_search-focus-shadow);
   }
 
-  // `:has(:disabled)` rather than a host class: the state arrives on the inner
-  // <input> (bound, or from a form calling setDisabledState) while the shell carries
-  // the border. After :hover, so a pointer over a dead field does not light it.
+  // `:has(:disabled)` not a host class: the state arrives on the inner <input>. After :hover so a dead field does not light.
   &:has(.search-input:disabled) {
     background-color: var(--surface-disabled);
     border-color: var(--border-disabled);
@@ -126,15 +122,13 @@
     color: var(--text-tertiary);
   }
 
-  /* The field scale, not a scale of its own: search sits in control rows beside
-     input/select/button, and ds-button resolves --field-h-md like the fields do. */
+  /* ds-button resolves --field-h-md like the fields. */
   &.sm { --_search-height: var(--ds-search-height, var(--ds-field-height, var(--field-h-sm))); }
   &.md { --_search-height: var(--ds-search-height, var(--ds-field-height, var(--field-h-md))); }
   &.lg { --_search-height: var(--ds-search-height, var(--ds-field-height, var(--field-h-lg))); }
 }
 
-/* Segment of a ds-field-group — see input.component.scss for why. The group
-   draws the border, the radius and the one shared focus ring. */
+/* Segment of a ds-field-group - see input.component.scss. The group draws the border, radius and shared focus ring. */
 :host(.in-group) {
   @include field-group-segment.field-group-segment('.search');
 }

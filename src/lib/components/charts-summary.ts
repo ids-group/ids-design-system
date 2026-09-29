@@ -35,9 +35,7 @@ function trendOf(values: readonly number[], words: DsIntl['chart']): string {
   return words.trendFlat;
 }
 
-/** Where the readings sit against each reference line, appended to the description. A line the
- *  reader cannot see is a line that does not exist for them, and its whole point is the
- *  comparison, not its position. */
+/** Where the readings sit against each reference line, appended to the description. */
 function describeThresholds(
   thresholds: readonly ChartThreshold[],
   points: readonly SummaryPoint[],
@@ -67,13 +65,11 @@ function describeThresholds(
     .join('');
 }
 
-/** The sentence a screen reader gets as the chart's accessible name. Generated rather than
- *  required, because a required one is a field that gets left at the component's default and then
- *  lies.
+/** The sentence a screen reader gets as the chart's accessible name. Generated, not required: a
+ *  required one is left at the component's default and lies.
  *
- *  The ORDER is the contract: what the chart is and its scale, then the trend, then the extremes,
- *  then where the numbers are. Blind readers rank a recital of the encoding lowest of the four
- *  levels of chart description, and the encoding is the one thing a screen-reader user cannot use.
+ *  The order is the contract: what the chart is and its scale, the trend, the extremes, then where
+ *  the numbers are.
  *
  *  @internal */
 export function describeSeries(

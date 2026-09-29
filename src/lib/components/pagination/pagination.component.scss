@@ -2,9 +2,9 @@
 @use '../../styles/press' as press;
 
 /* Truncation contract:
-   Page number — Single digit / short numeral — no clip ever.
-   Ellipsis — Three dots only — no clip.
-   Total count — Plain text — wraps in narrow viewports. */
+   Page number - short numeral, never clipped.
+   Ellipsis - three dots only, no clip.
+   Total count - plain text, wraps in narrow viewports. */
 
 :host {
   --_pagination-button-bg-color:       var(--ds-pagination-button-bg-color,       var(--surface-default));
@@ -36,8 +36,6 @@
   &.md { --_pagination-button-size: var(--field-h-md); }
   &.lg { --_pagination-button-size: var(--field-h-lg); --_pagination-button-font-size: var(--font-size-m); }
 
-  /* The label takes the slack, so the controls land on the far edge. Only visible once
-     something stretches the nav past its contents, which is the caller's job. */
   &.spread {
     display: flex;
     width: 100%;

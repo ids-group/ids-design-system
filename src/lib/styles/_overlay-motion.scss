@@ -1,20 +1,13 @@
-// Enter motion for CDK-overlay panels that carry the `ds-overlay-pane`
-// panelClass (select, autocomplete, multi-select, date-picker, time-picker,
-// color-picker, popover, tooltip, menu submenu). Animates the panel's ROOT
-// CHILD, not the pane itself, so CDK's positioning transforms on
-// `.cdk-overlay-pane` are left untouched. A leave animation runs on an ambient
-// dismiss only; picking an option closes instantly (see `.ds-leaving` below).
+// Enter motion for CDK-overlay panels carrying the `ds-overlay-pane` panelClass. Animates the panel's
+// root child, not the pane, so CDK's positioning transforms are untouched. A leave runs on an ambient
+// dismiss only; picking an option closes instantly.
 //
-// `data-ds-placement` names WHERE the panel sits relative to its trigger and is
-// stamped by `prepareOverlayEnter()` before the panel is attached, so the panel
-// always enters FROM the trigger edge: the offset axis/sign and the scale origin
-// both follow it. The keyframe name never changes with placement, so a mid-scroll
-// CDK flip redirects the motion instead of restarting it.
+// `data-ds-placement` (stamped by `prepareOverlayEnter()` before attach) makes the panel enter from the
+// trigger edge. The keyframe name never changes with placement, so a mid-scroll CDK flip redirects the
+// motion instead of restarting it.
 //
-// Duration/easing stay longhands the library owns, so they outrank a consumer keyframe
-// carrying its own timing. Reduced motion zeroes the duration rather than dropping the
-// animation; at 0s `animationend` is not reliably delivered, and `disposeWithLeave`'s
-// 400 ms timer is what tears the pane down - which is why `.ds-leaving` is inert.
+// Duration and easing are longhands so they outrank a consumer keyframe's own timing. Reduced motion
+// zeroes the duration; at 0s `animationend` is unreliable, and `disposeWithLeave`'s 400 ms timer tears the pane down.
 
 .cdk-overlay-pane.ds-overlay-pane {
   --_overlay-enter-keyframes: var(--ds-overlay-enter-keyframes, ds-scale-in);
@@ -47,8 +40,7 @@
     --_overlay-enter-origin: center left;
   }
 
-  // A chart tooltip reopens on every mark the pointer crosses, and a scale shifts its rows while it
-  // settles, so a hop reads as the swatch drifting into place. It fades instead.
+  // A chart tooltip reopens on every mark crossed; a scale would shift its rows, so it fades.
   &.ds-chart-tooltip-pane {
     --_overlay-enter-keyframes: var(--ds-overlay-enter-keyframes, ds-fade-in);
   }
@@ -64,16 +56,8 @@
     transform-origin: var(--_overlay-enter-origin);
   }
 
-  /* Leave, on an AMBIENT DISMISS only — Escape, a press outside, a scroll —
-     which `disposeWithLeave` marks by adding `ds-leaving`. Picking an option
-     still closes instantly: a fade on a deliberate choice reads as the panel
-     lagging behind it, which is why the old unconditional leave was cut. Opacity
-     only, no travel: a dismissal has nowhere to travel to, and movement would
-     re-add exactly the lag this avoids. Reduced motion zeroes the duration at
-     `:root`; at 0s `animationend` is not reliably delivered, and `disposeWithLeave`'s
-     400 ms timer tears the pane down. */
+  /* Ambient dismiss only (Escape, outside press, scroll), marked by `disposeWithLeave` adding `ds-leaving`. Opacity only, no travel. */
   &.ds-leaving {
-    /* A fading panel must not swallow the click aimed at what is behind it. */
     pointer-events: none;
 
     > * {
@@ -85,24 +69,17 @@
   }
 }
 
-/* Global, like the enter presets: a keyframe declared in a component stylesheet
-   is renamed by emulated encapsulation. */
+/* Global: emulated encapsulation renames keyframes declared in a component stylesheet. */
 @keyframes ds-overlay-out {
   to {
     opacity: 0;
   }
 }
 
-/* The pane is INERT, because it is drawn over the plot it describes: on a funnel or a tight
-   category axis the panel covers the neighbouring marks, and a pane that takes the pointer means
-   the mark underneath never sees it - the reader is over a new segment while the panel still names
-   the old one. Inert, the pointer reaches the mark and the panel follows it.
-
-   WCAG 1.4.13 still holds. Hoverable: moving onto the panel does not dismiss it, because the
-   pointer either stays on the mark under it or the grace period in `chart-active-mark.ts` carries
-   the gap. Dismissible: Escape. Persistent: the panel stays while the mark is hovered, and a press
-   pins it where the chart offers pinning - a pinned pane takes the pointer again so its text can be
-   selected. Drop the grace and the flicker returns. */
+/* Inert: the pane covers neighbouring marks, and a pointer-taking pane hides the mark underneath from the
+   pointer so the panel names a stale segment. WCAG 1.4.13 still holds: hoverable (the pointer stays on the
+   mark, or the hover grace period carries the gap), dismissible (Escape), persistent (stays while the mark
+   is hovered; a pinned pane takes the pointer again so its text can be selected). */
 .cdk-overlay-pane.ds-chart-tooltip-pane {
   pointer-events: none;
 }

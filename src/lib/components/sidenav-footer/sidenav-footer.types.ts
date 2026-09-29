@@ -1,9 +1,7 @@
 import type { IconName } from '@ids-group-ltd/ids-design-system/core';
 
 /**
- * A notification rendered in the sidenav Alerts popover. The footer is
- * domain-agnostic: the layout derives its own alerts and feeds them in, and the
- * footer only knows how to render this shape.
+ * A notification rendered in the sidenav Alerts popover.
  */
 export interface SidenavAlertItem {
   readonly id: string;
@@ -19,10 +17,8 @@ export interface SidenavAlertItem {
 }
 
 /**
- * A single global-search hit rendered in the sidenav Search popover. The footer
- * stays domain-agnostic: the layout supplies a {@link SidenavSearchProvider} that maps
- * a query string to these results, so the footer never needs to know about the
- * app's sections or entities.
+ * A single global-search hit rendered in the sidenav Search popover, produced by a
+ * {@link SidenavSearchProvider}.
  */
 export interface SidenavSearchResult {
   readonly id: string;
@@ -35,7 +31,7 @@ export interface SidenavSearchResult {
   readonly group: string;
   /** Router path to navigate to on select. */
   readonly route: string;
-  /** Optional query params — used to deep-open in-page detail views. */
+  /** Optional query params, used to deep-open in-page detail views. */
   readonly queryParams?: Record<string, string>;
 }
 

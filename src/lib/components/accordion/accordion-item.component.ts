@@ -20,8 +20,7 @@ let nextId = 0;
   imports: [IconComponent],
   templateUrl: './accordion-item.component.html',
   styleUrl: './accordion-item.component.scss',
-  // A static `title="…"` feeding the input below ALSO stays in the DOM as the global attribute,
-  // which makes the host a native browser tooltip over everything inside it.
+  // A static `title="…"` also stays as the global attribute, giving the whole host a native tooltip.
   host: { '[attr.title]': 'null', '[class.chevron-down]': 'chevronDown()' },
   encapsulation: ViewEncapsulation.Emulated,
 })
@@ -30,7 +29,7 @@ export class AccordionItemComponent implements AccordionItemRef {
   readonly title = input.required<string>();
   /** Open state, two-way bound. */
   readonly expanded = model<boolean>(false);
-  /** Disables the toggle button; state stays as-is. */
+  /** Disables the toggle; `expanded` is left as-is. */
   readonly disabled = input(false, { transform: booleanAttribute });
 
   protected readonly uid = `ds-accordion-${++nextId}`;
@@ -46,7 +45,6 @@ export class AccordionItemComponent implements AccordionItemRef {
     this.chevronDown() ? 'chevronDown' : 'chevronRight',
   );
 
-  /** Tracks last expanded state so we only notify on a true open transition. */
   private previousExpanded = false;
 
   constructor() {
@@ -66,7 +64,6 @@ export class AccordionItemComponent implements AccordionItemRef {
     this.expanded.set(!this.expanded());
   }
 
-  /** Called by the accordion coordinator to enforce single-open mode. */
   closeItem(): void {
     this.expanded.set(false);
   }

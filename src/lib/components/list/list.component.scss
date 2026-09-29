@@ -4,7 +4,6 @@
   --_divider-color: var(--ds-list-divider-color, var(--border-divider));
 }
 
-/* Anchored pierce — divider between adjacent projected items. */
 :host(.dividers) ::ng-deep ds-list-item:not(:last-child) {
   border-bottom: var(--border-width-default) solid var(--_divider-color);
 }

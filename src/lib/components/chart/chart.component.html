@@ -64,8 +64,8 @@
           </g>
         }
 
-        <!-- Hidden as a group rather than on the svg: a projected mark may be focusable, and an
-             aria-hidden ancestor would leave it reachable by Tab and invisible to a reader. -->
+        <!-- Not on the svg: an aria-hidden ancestor leaves a focusable projected mark
+             reachable by Tab yet invisible to a reader. -->
         <g
           class="axes"
           aria-hidden="true">
@@ -129,9 +129,8 @@
           }
         </g>
 
-        <!-- Two slots, one group: a reference line has to paint UNDER the marks whatever order the
-             consumer wrote it in, and a selected slot is what decides that instead of the author.
-             Both stay inside `.marks`, which is what the boot transition guard is keyed on. -->
+        <!-- Two slots so a reference line paints under the marks in any source order. Both stay
+             inside `.marks`, which the boot transition guard is keyed on. -->
         <g class="marks">
           <ng-content select="[dsReferenceLine]" />
 
@@ -217,8 +216,7 @@
             </text>
           }
 
-          <!-- Over the marks, where `.marks` is under them: an annotation's LINE is furniture and
-               belongs below the readings, its NAME has to survive a column drawn through it. -->
+          <!-- Over the marks so an annotation's name survives a column drawn through it. -->
           <ng-content select="[dsReferenceLabel], [dsSeriesAnnotation]" />
         </g>
 

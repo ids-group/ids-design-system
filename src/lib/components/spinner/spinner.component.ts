@@ -18,6 +18,6 @@ import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
 export class SpinnerComponent {
   protected readonly intl = inject(DS_INTL);
 
-  /** Spinner size — sm/md/lg. */
+  /** Spinner size - sm/md/lg. */
   readonly size = input<DsSize>('md');
 }

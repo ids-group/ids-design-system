@@ -23,15 +23,14 @@ import type { BannerVariant } from './banner.types';
   imports: [IconComponent],
   templateUrl: './banner.component.html',
   styleUrl: './banner.component.scss',
-  // A static `title="…"` feeding the input below ALSO stays in the DOM as the global attribute,
-  // which makes the host a native browser tooltip over everything inside it.
+  // Keeps a static `title` attribute from becoming a native tooltip on the host.
   host: { '[attr.title]': 'null' },
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class BannerComponent {
   protected readonly intl = inject(DS_INTL);
 
-  /** Severity — drives colour, the default icon and the ARIA role/live. */
+  /** Severity: drives colour, the default icon and the ARIA role/live. */
   readonly variant = input<BannerVariant>('info');
   /** Optional bold heading above the message. */
   readonly title = input<string>('');
@@ -53,13 +52,9 @@ export class BannerComponent {
     return !this.accentRail();
   }
 
-  /** Announce this banner to a screen reader when it appears. Unset follows
-   *  `DS_CONFIG.banner.announce`, then `false`.
-   *
-   *  Off by default: an `alert` region fires on INSERTION, so a banner that is page
-   *  furniture would interrupt the reader on every route into the page. Turn it on for
-   *  one the app raises in response to an event; for anything transient prefer
-   *  `ToastService`, which owns a live region built for the purpose. */
+  /** Announces the banner to a screen reader when it appears. Unset follows
+   *  `DS_CONFIG.banner.announce`, then `false`. Off by default: an `alert` region
+   *  fires on insertion. Turn it on for a banner raised in response to an event. */
   readonly announce = input<boolean | null, unknown>(null, {
     transform: (value) => (value == null ? null : booleanAttribute(value)),
   });

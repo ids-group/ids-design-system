@@ -4,8 +4,7 @@ const NON_TEXT_CONTRAST = 3;
 let probe: CanvasRenderingContext2D | null = null;
 const blendsByPair = new Map<string, boolean>();
 
-// Painting the colour and reading the pixel back resolves any CSS colour syntax to sRGB -
-// `oklch()`, `color-mix()` and named colours included - where parsing the string would not.
+// Painting and reading the pixel back resolves any CSS colour syntax (`oklch()`, `color-mix()`) to sRGB.
 function srgbOf(color: string): readonly [number, number, number] {
   if (!probe) {
     const canvas = document.createElement('canvas');
@@ -38,8 +37,7 @@ function relativeLuminance([red, green, blue]: readonly [
   return 0.2126 * linear(red) + 0.7152 * linear(green) + 0.0722 * linear(blue);
 }
 
-/** Whether a swatch of `color` sits on `ground` below the non-text contrast a graphical object
- *  needs, and so has to be ringed to be seen. Both are computed CSS colours. */
+/** Whether `color` on `ground` falls below non-text contrast and needs a ring. Both are computed CSS colours. */
 export function swatchBlendsInto(color: string, ground: string): boolean {
   const pair = `${color}|${ground}`;
   const known = blendsByPair.get(pair);

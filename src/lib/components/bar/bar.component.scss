@@ -1,6 +1,6 @@
 /* Truncation contract:
-   Value — Clamped to 0..max in the wrapper.
-   Indeterminate — Width input is ignored. Animation runs at --duration-loop-slow. */
+   Value - Clamped to 0..max in the wrapper.
+   Indeterminate - Width input is ignored. Animation runs at --duration-loop-slow. */
 
 :host {
   --_bar-height: var(--ds-bar-height, var(--bar-h));
@@ -14,9 +14,8 @@
   position: relative;
   inline-size: 100%;
 
-  /* A box sized to its content — a `width: 'content'` table column, a shrink-to-fit flex or grid
-     item — is sized by what its contents contribute intrinsically, and a `100%`-wide child
-     contributes nothing. Measured 2026-09-15: a bar alone in such a cell came out 0px. */
+  /* A content-sized box (`width: 'content'` table column, shrink-to-fit flex/grid item) gets nothing
+     from a `100%`-wide child, so a lone bar would collapse to 0px. */
   min-inline-size: var(--ds-bar-min-width, 3rem);
   block-size: var(--_bar-height);
   background: var(--_bar-track-color);
@@ -31,16 +30,12 @@
     transition: inline-size var(--duration-base) var(--ease-standard);
   }
 
-  /* A div rather than a second span: `> span` is what a consumer's own rule targets, and a
-     marker matching it would take the fill's colour and radius. */
+  /* Not a span: a consumer's `> span` rule would give the marker the fill's colour and radius. */
   > .target {
     position: absolute;
     inset-block-start: 0;
     block-size: 100%;
     inline-size: var(--_bar-target-width);
-
-    /* Centred on the value it marks, so the hairline reads as the point rather than as the
-       start of a band. */
     transform: translateX(-50%);
     background: var(--_bar-target-color);
     transition: left var(--duration-base) var(--ease-standard);
@@ -51,9 +46,7 @@
   --_bar-fill-color-success: var(--ds-bar-fill-color-success, var(--success));
 }
 
-/* `--warning-hover` is a HOVER derivation — the warning yellow mixed 88% with black — and mixing a
-   yellow toward black desaturates it into olive, which is why this one bar read as dirty rather
-   than as bright. `--yellow-500` is the ramp's own deeper yellow and stays a yellow. */
+/* Not `--warning-hover`: mixing yellow toward black desaturates it into olive. */
 :host(.warning) {
   --_bar-fill-color-warning: var(--ds-bar-fill-color-warning, var(--yellow-500));
 }
@@ -77,8 +70,7 @@
 :host(.indeterminate) > span {
   inline-size: 30%;
 
-  /* linear, like every other loop here: an ease curve has no start and end state to shape, so on a
-     repeat it just parks the chunk at the extremes, where it is off the track. */
+  /* linear: an ease curve would park the chunk at the extremes, off the track. */
   animation: bar-indet var(--duration-loop-slow) linear infinite;
 }
 

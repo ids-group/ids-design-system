@@ -12,38 +12,27 @@ import type { DsToastPosition } from './toast-position';
 import type { PaginationLayout } from './pagination.types';
 
 export interface DsConfig {
-  /** BCP-47 locale every component formats numbers and dates in - chart values and
-   *  percentages, `ds-date-picker`, file sizes in `ds-dropzone`. Default is Angular's
-   *  `LOCALE_ID`, which is `'en-US'` unless the app provides it, so the library prints numbers
-   *  the way the app's own `| number` does. Set it here only where the library must differ
-   *  from `LOCALE_ID`. A section key that names a locale (`datePicker.locale`) wins over this. */
+  /** BCP-47 locale every component formats numbers and dates in. Default is Angular's
+   *  `LOCALE_ID`. A section key that names a locale (`datePicker.locale`) wins over this. */
   locale?: string;
   field?: {
-    /** Default for every field's `reserveMessage` — keeps a message line's worth
-     *  of space even when empty. Default `false`. Setting `true` here applies to
-     *  EVERY field in the injector's subtree, which is rarely what a whole app
-     *  wants; prefer `dsReserveMessages` on the individual form that validates. */
+    /** Default for every field's `reserveMessage`. Default `false`. `true` applies to EVERY field
+     *  in the injector's subtree; prefer `dsReserveMessages` on the form that validates. */
     reserveMessage?: boolean;
-    /** Fallback text per validation-error kind, for errors whose validator did
-     *  not carry a `message` — Angular's built-ins never do, so this is where
-     *  `required`, `minlength`, `email` and friends get their wording. A message
-     *  on the error itself always wins, so one shared map here plus a per-case
-     *  override at the validator covers both. Unmapped kinds warn in dev. */
+    /** Fallback text per validation-error kind, for validators with no `message` (Angular's
+     *  built-ins never carry one). A message on the error itself wins. Unmapped kinds warn in dev. */
     errorMessages?: Record<string, string>;
-    /** Leading glyph on a field's message line, per state. Defaults carry one for
-     *  `error`, `warning` and `success` and NONE for `hint`, which is resting text
-     *  rather than a state. Each key is independent — a glyph name replaces the
-     *  default, `false` removes it, and `stateIcons: false` removes all four.
-     *
-     *  The glyphs exist because warning and success differ from each other by hue
-     *  and nothing else, which WCAG 1.4.1 forbids a state from resting on. */
+    /** Leading glyph on a field's message line, per state. Defaults carry one for `error`,
+     *  `warning` and `success` (WCAG 1.4.1: not hue alone) and NONE for `hint`. Each key is
+     *  independent: a glyph name replaces the default, `false` removes it, and
+     *  `stateIcons: false` removes all four. */
     stateIcons?:
       | false
       | {
           error?: IconName | false;
           warning?: IconName | false;
           success?: IconName | false;
-          /** The `default` state — the hint line. Off unless set. */
+          /** The `default` state (the hint line). Off unless set. */
           hint?: IconName | false;
         };
   };
@@ -52,78 +41,61 @@ export interface DsConfig {
     clickable?: boolean;
   };
   timePicker?: {
-    /** Display format for `ds-time-picker` / date-picker time — 24h or 12h AM/PM. Default `'24h'`. */
+    /** Display format for `ds-time-picker` / date-picker time - 24h or 12h AM/PM. Default `'24h'`. */
     format?: '24h' | '12h';
   };
   avatar?: {
-    /** How `ds-avatar` turns its `name` into initials, app-wide. The built-in rule
-     *  takes the first two words, which is a Latin-script guess — an app whose names
-     *  follow another convention supplies its own here. */
+    /** How `ds-avatar` turns its `name` into initials, app-wide. The built-in rule takes the
+     *  first two words (a Latin-script guess). */
     initials?: (name: string) => string;
   };
   brand?: {
-    /** Brand text for `ds-sidenav` and `ds-auth-layout` — the wordmark, and the
-     *  source of the letter-mark's glyph when `logoLetter` is unset. */
+    /** Brand text for `ds-sidenav` and `ds-auth-layout`: the wordmark, and the source of the
+     *  letter-mark's glyph when `logoLetter` is unset. */
     name?: string;
     /** Letter-mark glyph when it differs from the brand's first character. */
     logoLetter?: string;
     /** Strapline under the brand row. `ds-auth-layout` only. */
     tagline?: string;
-    /* No accent key on purpose: a two-tone wordmark is projected markup
-       (`[dsBrandName]`), so the consumer says where the accent belongs. A config
-       string would have to be split back apart, which is the guessing the
-       projection exists to avoid. */
   };
   modal?: {
-    /** Default for `dividers` on `ds-modal` and `ds-modal-card`. Default `true`.
-     *  Configurable app-wide because a `ModalService` confirm renders a card with no
-     *  `ds-modal` ancestor to bind — an attribute cannot reach it. */
+    /** Default for `dividers` on `ds-modal` and `ds-modal-card`. Default `true`. */
     dividers?: boolean;
   };
   banner?: {
-    /** Default for every `ds-banner`'s `announce`. Default `false`, because an
-     *  `alert` region fires on INSERTION: a banner that is page furniture would
-     *  interrupt the reader on every route into the page. Set `true` where the app
-     *  raises banners in response to events, and bind `[announce]="false"` on the
-     *  furniture. `ds-alert` has its own key, so the two can differ. */
+    /** Default for every `ds-banner`'s `announce`. Default `false`: an `alert` region fires on
+     *  INSERTION, so page-furniture banners would interrupt on every route. Set `true` where banners
+     *  answer events, and bind `[announce]="false"` on the furniture. `ds-alert` has its own key. */
     announce?: boolean;
   };
   alert?: {
-    /** Default for every `ds-alert`'s `announce`. Default `false`, for the reason
-     *  under `banner.announce`. */
+    /** Default for every `ds-alert`'s `announce`. Default `false`, as `banner.announce`. */
     announce?: boolean;
   };
   toast?: {
     /** Where the stack sits. Merged field by field over the built-in
-     *  `right` / `top` / `var(--space-6)`, so naming one key keeps the other two. */
+     *  `right` / `top` / `var(--space-6)`. */
     position?: Partial<DsToastPosition>;
-    /** Maximum number of toasts visible at once. Extras are queued and shown as
-     *  earlier ones dismiss. Default `5`; `0` means unlimited. */
+    /** Maximum number of toasts visible at once; extras queue. Default `5`; `0` is unlimited. */
     maxVisible?: number;
     /** Show a `+N` strip while toasts wait behind `maxVisible`. Default `true`. */
     showQueueCount?: boolean;
   };
   picker?: {
-    /** Default for `ds-multi-select``s `searchable`. `true` always shows the panel's
-     *  filter row, `false` never, and a NUMBER is a threshold — the row appears once
-     *  there are at least that many options. Default `true`. One threshold for the
-     *  app is the point: left to each call site, two panels of the same length in
-     *  the same screen end up disagreeing. */
+    /** Default for `ds-multi-select`'s `searchable`. `true` always shows the panel's filter row,
+     *  `false` never, and a NUMBER is a threshold: the row appears once there are at least that
+     *  many options. Default `true`. */
     searchable?: boolean | number;
   };
 
   control?: {
-    /** Default `size` for every control on the field-height contract. Default `'md'`.
-     *
-     *  A different axis from `[data-density]`: that tier rewrites hit targets and
-     *  padding in CSS, this picks which of the three declared sizes a control renders
-     *  at. A screen that differs still binds `size` per element. */
+    /** Default `size` for every control on the field-height contract. Default `'md'`. A different
+     *  axis from `[data-density]`, which rewrites hit targets and padding in CSS. */
     size?: DsSize;
   };
   pagination?: {
     /** Default `size` for every pager, `ds-table`'s footer included. Unset falls back to
-     *  `control.size`, so this is where a pager gets bigger targets than the rest of the
-     *  controls without resizing them all. */
+     *  `control.size`. */
     size?: DsSize;
     /** Default `layout` for every pager, `ds-table`'s footer included. Default `'grouped'`. */
     layout?: PaginationLayout;
@@ -135,18 +107,12 @@ export interface DsConfig {
     padding?: CardPadding;
   };
   table?: {
-    /** Default for `ds-table`'s `stickyScrollbar` — the proxy that keeps the
-     *  horizontal bar reachable on a tall table. Default `false`. Here rather than
-     *  per table because every new table is one forgotten binding away from
-     *  scrolling invisibly. */
+    /** Default for `ds-table`'s `stickyScrollbar` (keeps the horizontal bar reachable). Default `false`. */
     stickyScrollbar?: boolean;
-    /** Default for `ds-table`'s `bordered` — the outer border and radius.
-     *  Default `false`. */
+    /** Default for `ds-table`'s `bordered` (the outer border and radius). Default `false`. */
     bordered?: boolean;
-    /** Default for `ds-table`'s `stickyScrollbarOffset` — where the sticky horizontal bar comes
-     *  to rest, as any CSS length. Unset, each table measures its own scroll container's bottom
-     *  padding and cancels it, which puts the bar on the edge the reader sees; set this for an app
-     *  whose scrollports end somewhere else, so every table agrees without a binding each. */
+    /** Default for `ds-table`'s `stickyScrollbarOffset`, as any CSS length. Unset, each table
+     *  cancels its scroll container's bottom padding. */
     stickyScrollbarOffset?: string;
   };
   icon?: {
@@ -154,55 +120,40 @@ export interface DsConfig {
     size?: number;
   };
   badge?: {
-    /** Default for `ds-badge`'s `withDot` — the leading status dot. Default `false`. */
+    /** Default for `ds-badge`'s `withDot` (the leading status dot). Default `false`. */
     withDot?: boolean;
   };
   chart?: {
-    /** Default `dataTable` for all five charts. Default `'none'`. It is an accessibility policy
-     *  rather than a per-chart taste — whether the numbers behind a plot have a non-visual route is
-     *  decided once for an app, not thirty times, so an app that wants the annex everywhere sets
-     *  `'toggle'` here once rather than on every chart. Off by default: a chart usually sits in a
-     *  page that already carries its numbers, and an unasked-for disclosure under every plot is
-     *  chrome the page did not ask for. */
+    /** Default `dataTable` for every chart. Default `'none'`; `'toggle'` offers the annex everywhere. */
     dataTable?: ChartDataTable;
-    /** Whether every chart draws its own bordered, padded box. Default `'auto'`, which draws it.
-     *  Whether charts live inside cards is decided once for an app — a page that puts every chart
-     *  in a card sets `'none'` here rather than reaching into five components' chrome from a
-     *  global stylesheet. */
+    /** Whether every chart draws its own bordered, padded box. Default `'auto'`, which draws it. */
     frame?: ChartFrame;
-    /** How long every chart's tooltip stays after the pointer leaves the mark, in milliseconds.
-     *  Default 500: the pointer crossing to the next mark finds the same panel, which glides there
-     *  instead of closing and opening again. Zero takes it away at once. */
+    /** How long a chart's tooltip stays after the pointer leaves the mark, in milliseconds.
+     *  Default 500; zero closes it at once. */
     tooltipLingerMs?: number;
-    /** Whether a click on a mark, or on a category under the category cursor, holds its tooltip
-     *  and highlight in place, for every chart. Default `true`. A held mark shows a pin disc; a
-     *  second click, Escape or a press elsewhere lets go. A tap holds whatever this says. */
+    /** Whether a click on a mark or category holds its tooltip and highlight. Default `true`.
+     *  A second click, Escape or a press elsewhere releases. A tap holds whatever this says. */
     pinOnClick?: boolean;
-    /** How long the pointer rests on a mark, a category or a legend entry before the chart answers
-     *  it - highlight and tooltip alike - in milliseconds. Default 0. Once a chart has answered,
-     *  the next mark answers at once until the pointer leaves the chart; focus, a tap and a click
-     *  that pins answer at once. */
+    /** Milliseconds the pointer rests on a mark, category or legend entry before the chart answers.
+     *  Default 0. After one answer the next is immediate until the pointer leaves the chart;
+     *  focus, a tap and a pinning click are always immediate. */
     hoverDelayMs?: number;
-    /** Whether every chart's tooltip draws a colour dot beside each reading. Unset draws them for two
-     *  to four readings: a lone reading has nothing to tell apart, and from five a column of dots
-     *  reads as noise. */
+    /** Whether a chart's tooltip draws a colour dot beside each reading. Unset draws them for two
+     *  to four readings. */
     tooltipSwatches?: boolean;
-    /** How every chart formats its values, the annex table and the generated description included.
-     *  Default groups digits in `locale` and abbreviates on a tick (`1.2M`). The same reason
-     *  `datePicker.locale` lives here: a number reads one way in an app, and a formatter passed
-     *  per chart drifts as soon as there are two screens. */
+    /** How charts format values, annex table and description included. Default groups digits in
+     *  `locale` and abbreviates on a tick (`1.2M`). */
     valueFormat?: ChartValueFormat;
-    /** How charts build themselves on a long page: build each one as it nears the viewport, build
-     *  ahead while idle, skip the ones off screen. All off by default. */
+    /** How charts build themselves on a long page. All off by default. */
     rendering?: ChartRendering;
   };
   datePicker?: {
     /** BCP-47 locale for `ds-date-picker` names and value format. Unset falls back to
      *  `locale`, then `LOCALE_ID`. */
     locale?: string;
-    /** Explicit token format e.g. `'MM/DD/YYYY'`; overrides the locale-derived order. */
+    /** Explicit token format, e.g. `'MM/DD/YYYY'`; overrides the locale-derived order. */
     dateFormat?: string;
-    /** First weekday column: 0=Sunday … 6=Saturday. Default `1` (Monday). */
+    /** First weekday column: 0=Sunday to 6=Saturday. Default `1` (Monday). */
     firstDayOfWeek?: number;
   };
 }
@@ -211,29 +162,22 @@ export const DS_CONFIG = new InjectionToken<DsConfig>('DS_CONFIG', {
   factory: () => ({}),
 });
 
-/** Provide DS-level defaults.
+/** Provides DS-level defaults: `providers: [provideDsConfig({ control: { size: 'sm' } })]`.
  *
- *   providers: [provideDsConfig({ control: { size: 'sm' } })]
+ * Works at the app root, on a `Route`, or on a component/directive. Component inputs still win.
  *
- * Works at the app root, on a `Route`, or on a component/directive — the config
- * resolves through the element-injector chain, so a subtree can differ from the
- * app. Component inputs (e.g. `<ds-card padding="lg">`) still win.
- *
- * A nested call MERGES with the config above it section by section; only the keys
- * you name are replaced. ONE call per injector, though: two in the SAME
- * `providers` array both resolve their parent with `skipSelf`, so the later wins
- * and the earlier is silently lost.
+ * A nested call MERGES with the config above it section by section; only the keys you name are
+ * replaced. ONE call per injector: two in the SAME `providers` array both resolve their parent
+ * with `skipSelf`, so the later wins and the earlier is silently lost.
  */
 export function provideDsConfig(config: DsConfig): Provider {
   return { provide: DS_CONFIG, useFactory: () => inheritDsConfig(config) };
 }
 
 /**
- * The factory body behind `provideDsConfig`, exported so a directive can put the
- * provider in its metadata as a plain object literal. Calling `provideDsConfig`
- * there instead runs at module-evaluation time, which makes the module
- * side-effectful and costs the consumer its tree-shaking (measured at +566 kB
- * moved into the eager chunk).
+ * The factory body behind `provideDsConfig`, exported so a directive can put the provider in its
+ * metadata as an object literal: calling `provideDsConfig` there makes the module side-effectful
+ * and defeats tree-shaking.
  *
  * Must be called from an injection context.
  */

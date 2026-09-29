@@ -1,14 +1,8 @@
 @use '../../styles/press' as press;
 
-/* Truncation contract:
-   Title — Single line, ellipsis on overflow. Tooltip on hover when clipped. Keep the close
-     button visible.
-   Body — Wrap, no clip. Scrolls inside the body when content exceeds the modal height.
-   Actions — Single line per label. If the row overflows, stack vertically full-width, DOM order
-     kept by default (confirming action at the bottom); `--ds-modal-actions-stacked-direction:
-     column-reverse` puts it on top instead.
-   Form fields inside body — Inherit field truncation rules. Hints wrap to 2 lines; errors never
-     clip. */
+/* Truncation contract: title is single-line with ellipsis and never hides the close
+   button; body wraps and scrolls inside the modal; action labels are single-line and
+   the row stacks when it overflows; fields inside the body keep their own rules. */
 
 :host {
   --_modal-bg-color:              var(--ds-modal-bg-color,              var(--surface-overlay));
@@ -42,18 +36,11 @@
   --_modal-leave-keyframes: var(--ds-modal-leave-keyframes, ds-fade-out);
   --_modal-leave-easing: var(--ds-modal-leave-easing, var(--ds-motion-exit-easing));
 
-  /* The horizontal gutter is one value for all three regions, and was already
-     uniform before it was tokenised — so it is one knob, not three. Only the
-     vertical differs, because the header and the actions sit against a divider
-     and the body does not. */
   --_modal-padding-x: var(--ds-modal-padding-x, var(--space-5));
   --_modal-header-padding-y: var(--ds-modal-header-padding-y, var(--space-4));
   --_modal-body-padding-y: var(--ds-modal-body-padding-y, var(--space-5));
   --_modal-actions-padding-y: var(--ds-modal-actions-padding-y, var(--space-4));
 
-  /* Per-side, each falling back to its region's pad-y. One pad-y is applied to both
-     edges, so a header that pads only at the top could not be said without reaching
-     past the API into .header / .actions. */
   --_modal-header-padding-top: var(--ds-modal-header-padding-top, var(--_modal-header-padding-y));
   --_modal-header-padding-bottom: var(--ds-modal-header-padding-bottom, var(--_modal-header-padding-y));
   --_modal-body-padding-top: var(--ds-modal-body-padding-top, var(--_modal-body-padding-y));
@@ -65,9 +52,7 @@
 
   display: contents;
 
-  // Reduced motion zeroes the DURATION, never the animation. At 0s `animationend` is not
-  // reliably delivered, so the component's 300 ms fallback timer is what tears down, and
-  // `.closing` is click-through for exactly that window.
+  // Zero duration, never `animation: none`: the component's fallback timer tears down.
   @media (prefers-reduced-motion: reduce) {
     --_modal-enter-duration: 0ms;
     --_modal-leave-duration: 0ms;
@@ -93,10 +78,7 @@
   &.lg { width: var(--modal-w-lg); }
   &.xl { width: var(--modal-w-xl); }
 
-  /* `height`, not `max-height`: every other size is a cap the content fills as far as it needs, but
-     fullscreen is a claim about the viewport — with a cap, a short body left an immersive editor
-     200px tall in the middle of the screen. The panel is already a flex column with a scrolling
-     body, so a fixed height gives the body the room rather than overflowing. */
+  /* `height`, not `max-height`: with a cap a short body leaves the fullscreen dialog tiny. */
   &.fullscreen {
     width: var(--modal-w-fullscreen);
     height: var(--modal-h-fullscreen);
@@ -123,16 +105,13 @@
     background-color: var(--_modal-icon-badge-bg-color);
     color: var(--_modal-icon-badge-icon-color);
 
-    /* One pair per severity, from the same families ds-alert reads, so a status
-       dialog and a status alert on one screen cannot disagree. */
     &.error   { background-color: var(--error-subtitle);   color: var(--error); }
     &.warning { background-color: var(--warning-subtitle); color: var(--warning); }
     &.success { background-color: var(--success-subtitle); color: var(--success); }
     &.info    { background-color: var(--info-subtitle);    color: var(--info); }
   }
 
-  // The flex slot lives here, not on .title, so an eyebrow stacks ABOVE the
-  // title instead of beside it.
+  // The flex slot is here, not on .title, so an eyebrow stacks ABOVE the title.
   .heading {
     flex: 1;
     min-width: 0;
@@ -198,26 +177,20 @@
       var(--_modal-actions-padding-bottom);
     border-top: var(--border-width-default) solid var(--_modal-divider);
 
-    // A read-only dialog projects nothing here — without this it still draws a
-    // stray padded strip with a divider (same guard as .impact below).
+    // A read-only dialog projects nothing here; hide the empty padded strip.
     &:empty { display: none; }
 
-    // Set by ModalCardComponent once the row's natural width outgrows the box. DOM order is kept
-    // by default (--_modal-actions-stacked-direction: column), so the confirming action lands at
-    // the bottom and Tab/screen-reader order matches what is on screen; a consumer reverses it
-    // with --ds-modal-actions-stacked-direction: column-reverse.
+    // Set by ModalCardComponent once the row outgrows the box. DOM order is kept so Tab order
+    // matches the screen; --ds-modal-actions-stacked-direction: column-reverse reverses it.
     &.stacked {
       flex-direction: var(--_modal-actions-stacked-direction);
 
-      // Projected children carry the CONSUMER's encapsulation attribute, and a ds-button's own
-      // `width: fit-content` opts out of the column's stretch - hence the anchored pierce.
+      // ::ng-deep for projected children; a ds-button's own `width: fit-content` opts out of the stretch.
       & > ::ng-deep * { width: 100%; }
     }
   }
 
-  // The regions are padded to clear a rule; with no rule, header-bottom and
-  // body-top stack into one oversized gap. Zero the FALLBACK, not the resolver —
-  // collapsing this to `0` would silently drop a consumer's override.
+  // Zero the FALLBACK, not the resolver: `0` here would drop a consumer's override.
   &.no-dividers {
     --_modal-body-padding-y: var(--ds-modal-body-padding-y, 0);
 
@@ -243,7 +216,6 @@
   }
 }
 
-/* Static-preview wrapper — transparent: the card renders inline, unwrapped. */
 .modal-static {
   display: contents;
 }

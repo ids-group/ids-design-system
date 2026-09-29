@@ -1,8 +1,7 @@
 import { Directive, TemplateRef, inject } from '@angular/core';
 
 /**
- * Replaces a picker panel's "no matches" row — an icon, a sentence in the app's
- * own language, a "clear the filter" button.
+ * Replaces a picker panel's "no matches" row.
  *
  * Context: `query` is the text that matched nothing.
  *

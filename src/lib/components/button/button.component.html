@@ -1,6 +1,5 @@
-<!-- Every branch must keep #btn: `controlRef` is required, so dropping it leaves that destination
-     throwing. `type`, `loading` and the native `disabled` are button-only, which is why the
-     anchors take `aria-disabled` and `tabindex="-1"` instead. -->
+<!-- Every branch must keep #btn: `controlRef` is required, so dropping it makes that destination throw.
+     `type`, `loading` and native `disabled` are button-only; anchors take `aria-disabled` and `tabindex="-1"`. -->
 @switch (destination()) {
   @case ('routerLink') {
     <a
@@ -81,9 +80,7 @@
   </span>
 
   @if (softDisabled()) {
-    <!-- aria-hidden keeps the reason out of the button's accessible NAME; the
-         aria-describedby above still reaches it, because a node referenced
-         directly is read even when hidden. -->
+    <!-- aria-hidden keeps the reason out of the accessible name; aria-describedby still reads it. -->
     <span
       class="reason"
       aria-hidden="true"

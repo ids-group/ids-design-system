@@ -36,9 +36,8 @@ export class BreadcrumbsComponent {
   readonly separator = input<IconName | null>(null);
   /** Whether crumbs render as links; falls back to `DS_CONFIG.breadcrumbs.clickable`, then `true`. */
   readonly clickable = input<boolean | null>(null);
-  /** Caps how many crumbs render, collapsing the middle — the first and the LAST always survive.
-   *  Worth setting on any deep trail: the row is `nowrap` with `overflow: hidden`, so uncapped it
-   *  is clipped from the END, which is the current page. */
+  /** Caps how many crumbs render, collapsing the middle; the first and the LAST always survive.
+   *  Uncapped, a long trail is clipped from the END, which is the current page. */
   readonly maxItems = input<number | null>(null, {
     transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
   });
@@ -49,16 +48,13 @@ export class BreadcrumbsComponent {
     () => this.items() ?? this.svc.items(),
   );
 
-  // The collapsed crumb carries no `href`, so it is inert rather than a link to nowhere, and its
-  // label is the count rather than an ellipsis alone.
   protected readonly resolvedItems = computed<BreadcrumbItem[]>(() => {
     const items = this.allItems();
     const max = this.maxItems();
     if (!max || max < 2 || items.length <= max) {
       return items;
     }
-    // max - 2, not max - 1: the collapsed crumb occupies one of the slots too,
-    // so counting only the first would render one crumb more than asked for.
+    // max - 2: the collapsed crumb occupies a slot too.
     const tail = items.slice(items.length - (max - 2));
 
     return [items[0], { label: `… ${items.length - max + 1} more` }, ...tail];

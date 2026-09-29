@@ -1,5 +1,3 @@
-// Applied globally, not per component: a consumer gets the thumb without opting in.
-
 html { scrollbar-width: thin; scrollbar-color: var(--scrollbar-thumb) transparent; }
 *::-webkit-scrollbar { width: var(--scrollbar-w); height: var(--scrollbar-w); }
 *::-webkit-scrollbar-track { background: transparent; }

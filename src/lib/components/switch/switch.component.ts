@@ -40,23 +40,20 @@ export class SwitchComponent extends DsBooleanControlValueAccessor {
   readonly name = input<string | null>(null);
   /** Track colour when checked. */
   readonly variant = input<'default' | 'success' | 'error'>('default');
-  /** Overrides the generated id used by the native `<input>` and its `<label for>`. */
+  /** Overrides the generated id of the native `<input>` and its `<label for>`. */
   readonly inputId = input<string | null>(null);
-  /** Switch size — sm/md/lg.
-   *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
+  /** Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
   readonly size = input<DsSize | null>(null);
   readonly sizeResolved = resolveWithConfig(
     this.size,
     (config) => config.control?.size,
     'md' as DsSize,
   );
-  /** Marks the field required — shows an asterisk and sets `aria-required`. */
+  /** Shows an asterisk and sets `aria-required`. */
   readonly required = input(false, { transform: booleanAttribute });
-  /** Inline label rendered beside the track and wired via for/id. Omit to
-   *  bring your own <label>. */
+  /** Label beside the track, wired via for/id. Omit to bring your own <label>. */
   readonly label = input<string>('');
-  /** Accessible name for a control with no visible label — the row's `<label>` collapses when it
-   *  is empty, leaving nothing to name it. Set beside a label it OVERRIDES the label, per ARIA. */
+  /** Accessible name for a control with no visible label; overrides `label` when both are set. */
   readonly ariaLabel = input<string | null>(null);
   /**
    * The switch never flips itself: a click or Space cancels the native toggle and
@@ -87,7 +84,6 @@ export class SwitchComponent extends DsBooleanControlValueAccessor {
     touched: this.touched,
   });
   protected readonly message = this.fieldMessage.message;
-  /** Only name via aria-label when there is no visible `<label for>` to do it. */
   protected readonly resolvedAriaLabel = computed(() =>
     this.label() ? null : this.ariaLabel() || null,
   );
