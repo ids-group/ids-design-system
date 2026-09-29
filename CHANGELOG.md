@@ -1,5 +1,11 @@
 ## Unreleased
 
+### Breaking
+
+- **`ds-pie-chart` (`PieChartComponent`) drops the `staggerMs` input.** The input was accepted and did nothing: the ring
+  turns into place as one object. Remove the binding; a template that keeps it fails to compile.
+  Nothing replaces it.
+
 ### Fixed
 
 - **A `dsLineSeries` with `tooltip="axis"` opens its panel under the default `cursor`.**

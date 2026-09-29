@@ -1,6 +1,5 @@
 import type {
   ChartDimmable,
-  ChartStaggered,
   ChartWithDataTable,
   ChartWithTooltipTrigger,
 } from '@ids-group-ltd/ids-design-system/components';
@@ -76,11 +75,7 @@ const RING_OUTER_RADIUS = RING_VIEW_BOX_SIZE / 2;
 })
 export class PieChartComponent
   extends DsChartBase
-  implements
-    ChartDimmable,
-    ChartStaggered,
-    ChartWithDataTable,
-    ChartWithTooltipTrigger
+  implements ChartDimmable, ChartWithDataTable, ChartWithTooltipTrigger
 {
   protected readonly renderReady = chartRenderGate();
 
@@ -128,9 +123,6 @@ export class PieChartComponent
 
   /** Dims every other mark while one is hovered or focused. */
   readonly dimOthers = input(false, { transform: booleanAttribute });
-
-  /** Accepted for parity with the other charts; has no effect. */
-  readonly staggerMs = input(0, { transform: numberAttribute });
 
   /** Whether a hovered or focused slice opens a tooltip. */
   readonly tooltip = input<ChartItemTooltipTrigger>('item');

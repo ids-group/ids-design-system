@@ -1,6 +1,25 @@
 {
   "version": "unreleased",
-  "items": [],
+  "items": [
+    {
+      "id": "pie-chart-stagger-ms-removed",
+      "kind": "removed-api",
+      "old": "ds-pie-chart[staggerMs]",
+      "new": null,
+      "action": "Remove the `staggerMs` attribute or `[staggerMs]` binding from every ds-pie-chart.",
+      "appliesWhen": "ds-pie-chart only. `staggerMs` on the other charts and on the chart series is unchanged and still spaces their arrivals.",
+      "searchHints": [
+        "staggerMs",
+        "ds-pie-chart"
+      ],
+      "surface": "template",
+      "verify": "No ds-pie-chart element carries a staggerMs attribute or binding, and the app compiles.",
+      "detect": [
+        "extends PieChartComponent",
+        "staggerMs"
+      ]
+    }
+  ],
   "informational": [
     "ds-table's exportCsv() and runExport() log a warning in a development build when the table has no dsTableExport, where they threw NG0203 from the calling click handler.",
     "provideDsConfig and provideDsIntl merge several calls in one providers array in order, the later winning per key, where the last call used to replace the others.",

@@ -7203,15 +7203,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "description": "Dims every other mark while one is hovered or focused."
       },
       {
-        "name": "staggerMs",
-        "kind": "input",
-        "type": "number",
-        "union": null,
-        "default": "0",
-        "required": false,
-        "description": "Accepted for parity with the other charts; has no effect."
-      },
-      {
         "name": "tooltip",
         "kind": "input",
         "type": "ChartItemTooltipTrigger",
