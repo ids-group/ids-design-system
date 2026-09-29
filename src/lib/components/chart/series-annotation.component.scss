@@ -2,7 +2,7 @@
   --_chart-annotation-color: var(--ds-chart-annotation-color, var(--text-primary));
   --_chart-annotation-font-size: var(--ds-chart-annotation-font-size, var(--ds-chart-axis-font-size));
   --_chart-annotation-font-weight: var(--ds-chart-annotation-font-weight, var(--font-weight-bold));
-  --_chart-annotation-halo-color: var(--ds-chart-annotation-halo-color, var(--surface-default));
+  --_chart-annotation-halo-color: var(--ds-chart-annotation-halo-color, var(--ds-chart-bg-color));
   --_chart-annotation-halo-width: var(--ds-chart-annotation-halo-width, 3px);
 }
 

@@ -736,6 +736,68 @@
   </p>
 
   <h3 class="block-title t-h4">
+    Background
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      --ds-chart-bg-color
+    </code> is what sits behind
+    the marks. The frame is painted in it, and so is every cut a chart makes
+    between two marks: the band a line rides on, the seam between segments,
+    hatching, the halo round a label or a focused mark. On a card of another
+    colour with <code class="t-mono-inline"> frame="none" </code>, set it to the
+    card's colour and the cuts disappear into it.
+    <code class="t-mono-inline">
+      --ds-chart-plot-bg-color
+    </code> paints only
+    the rectangle inside the axes; unset, it is transparent.
+  </p>
+
+  <div class="states is-cols-3">
+    <div class="state-cell">
+      <div class="tinted-card">
+        <ds-line-chart
+          frame="none"
+          dataTable="none"
+          [categories]="tooltipDemoMonths"
+          [series]="tooltipDemoSeries" />
+      </div>
+
+      <div class="state-cell-label">
+        grey card, background unset
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <div class="tinted-card">
+        <ds-line-chart
+          class="on-tinted-card"
+          frame="none"
+          dataTable="none"
+          [categories]="tooltipDemoMonths"
+          [series]="tooltipDemoSeries" />
+      </div>
+
+      <div class="state-cell-label">
+        --ds-chart-bg-color = the card
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-line-chart
+        class="tinted-plot"
+        dataTable="none"
+        [categories]="tooltipDemoMonths"
+        [series]="tooltipDemoSeries" />
+
+      <div class="state-cell-label">
+        --ds-chart-plot-bg-color set
+      </div>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
     The annex table
   </h3>
 

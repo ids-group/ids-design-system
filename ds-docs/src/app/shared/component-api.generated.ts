@@ -2403,7 +2403,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "true",
         "required": false,
-        "description": "Lays the line and markers on a surface-colour band so they stay legible where they cross other marks."
+        "description": "Lays the line and markers on a background-colour band so they stay legible where they cross other marks."
       },
       {
         "name": "interactive",
@@ -5369,7 +5369,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "true",
         "required": false,
-        "description": "Lays the lines and their markers on a band of the surface colour."
+        "description": "Lays the lines and their markers on a band of the background colour."
       },
       {
         "name": "annotations",

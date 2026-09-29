@@ -53,9 +53,9 @@
   stop-opacity: 0;
 }
 
-// A stacked band is separated by a surface-colour stroke, not a darker rule (which vanishes in print).
+// A stacked band is separated by a background-colour stroke, not a darker rule (which vanishes in print).
 .series-area.is-stacked {
-  stroke: var(--surface-default);
+  stroke: var(--ds-chart-bg-color);
   stroke-width: 2;
   stroke-linejoin: round;
 }
@@ -68,7 +68,7 @@
 /* A stroke on the line itself would be clipped by its own dash pattern. */
 .series-halo {
   fill: none;
-  stroke: var(--surface-default);
+  stroke: var(--ds-chart-bg-color);
   stroke-width: calc(var(--_chart-line-width) + var(--_chart-line-outline, 3px));
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -94,7 +94,7 @@
 }
 
 .lines.is-outlined .series-marker {
-  stroke: var(--surface-default);
+  stroke: var(--ds-chart-bg-color);
   stroke-width: var(--_chart-line-outline, 3px);
   paint-order: stroke;
 }

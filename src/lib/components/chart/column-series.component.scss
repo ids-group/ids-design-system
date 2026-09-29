@@ -19,7 +19,7 @@
   );
   --_chart-hatch-color: var(
     --ds-chart-hatch-color,
-    var(--surface-default)
+    var(--ds-chart-bg-color)
   );
   --_chart-hatch-width: var(--ds-chart-hatch-width, 1.5px);
 }

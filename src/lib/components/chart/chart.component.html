@@ -41,6 +41,22 @@
         [class.pins]="bandPins()"
         [style.block-size.px]="viewHeight()"
         [attr.viewBox]="viewBox()">
+        <rect
+          class="plot-bg"
+          [attr.x]="plot().left"
+          [attr.y]="plot().top"
+          [attr.width]="plot().width"
+          [attr.height]="plot().height" />
+
+        @if (secondaryPlot().top !== plot().top) {
+          <rect
+            class="plot-bg"
+            [attr.x]="secondaryPlot().left"
+            [attr.y]="secondaryPlot().top"
+            [attr.width]="secondaryPlot().width"
+            [attr.height]="secondaryPlot().height" />
+        }
+
         @if (cursorBand(); as band) {
           <g
             class="cursor"
