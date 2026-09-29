@@ -130,7 +130,7 @@ export class HeatmapChartComponent {
   readonly frame = input<ChartFrame | null>(null);
 
   /** Whether the tooltip draws a colour dot beside each reading. Unset falls back to
-   *  `DS_CONFIG.chart.tooltipSwatches`, then draws them for up to four readings. */
+   *  `DS_CONFIG.chart.tooltipSwatches`, then draws them for two to four readings. */
   readonly tooltipSwatches = input<boolean | null>(null, {
     transform: (value: unknown) =>
       value == null ? null : booleanAttribute(value),
