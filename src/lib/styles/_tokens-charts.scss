@@ -103,6 +103,7 @@
   --chart-dot-radius:        4px;
   --chart-dot-radius-active: 6px;
   --chart-area-opacity:      0.16;
+  --chart-area-fade-opacity: 0.32;
 
   /* Wide enough to survive a 24px mark; surface-coloured so they read as gaps. */
   --chart-hatch-color: var(--surface-default);
@@ -175,6 +176,7 @@
   --ds-chart-dot-radius: var(--chart-dot-radius);
   --ds-chart-dot-radius-active: var(--chart-dot-radius-active);
   --ds-chart-area-opacity: var(--chart-area-opacity);
+  --ds-chart-area-fade-opacity: var(--chart-area-fade-opacity);
   --ds-chart-hatch-color: var(--chart-hatch-color);
   --ds-chart-hatch-width: var(--chart-hatch-width);
 }

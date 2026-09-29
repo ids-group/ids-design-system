@@ -2,6 +2,7 @@ import {
   ComponentRef,
   DestroyRef,
   Directive,
+  ElementRef,
   TemplateRef,
   ViewContainerRef,
   effect,
@@ -18,6 +19,7 @@ import { ComponentPortal } from '@angular/cdk/portal';
 import {
   closeOnScroll,
   disposeWithLeave,
+  forwardOverlayTokens,
 } from '@ids-group-ltd/ids-design-system/components';
 import { ChartTooltipPanelComponent } from './chart-tooltip-panel.component';
 import type {
@@ -26,6 +28,13 @@ import type {
 } from './chart-tooltip.types';
 
 const POINTER_GAP_PX = 10;
+// Portaled to the body, so a chart's own values reach the panel only by being copied.
+const CHART_TOOLTIP_TOKENS = [
+  '--ds-chart-tooltip-bg-color',
+  '--ds-chart-tooltip-text-color',
+  '--ds-chart-tooltip-border-color',
+] as const;
+// A fingertip covers roughly 40 CSS px, so a touch-opened panel clears the tap point further.
 const TOUCH_GAP_PX = 48;
 
 // Must equal the `--space-3` in the panel's `max-height`.
@@ -73,6 +82,7 @@ function positionsFor(gap: number): ConnectedPosition[] {
 export class ChartTooltipDirective {
   private readonly overlay = inject(Overlay);
   private readonly viewContainerRef = inject(ViewContainerRef);
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
 
   readonly dsChartTooltip = input<ChartTooltipContext | null>(null);
   readonly dsChartTooltipOrigin = input<ChartTooltipOrigin | null>(null);
@@ -125,6 +135,11 @@ export class ChartTooltipDirective {
       });
       this.panelRef = this.overlayRef.attach(
         new ComponentPortal(ChartTooltipPanelComponent, this.viewContainerRef),
+      );
+      forwardOverlayTokens(
+        this.overlayRef,
+        this.host.nativeElement,
+        CHART_TOOLTIP_TOKENS,
       );
       // CDK's reposition strategy misses an app's own `overflow: auto` container. A following panel
       // closes; a pinned one moves, or a close would strand the pin glyph and Unpin.

@@ -41,6 +41,10 @@ import type { SparklineScale } from './sparkline.types';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SparklineComponent {
+  /** Fills the band under the line down to the baseline. The colour is
+   *  `--ds-sparkline-area-color`, the line's own by default, at `--ds-sparkline-area-opacity`. */
+  readonly area = input(false, { transform: booleanAttribute });
+
   /** One reading per step, oldest first. `null` breaks the line. */
   readonly data = input<readonly (number | null)[]>([]);
 

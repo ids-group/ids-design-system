@@ -7,14 +7,38 @@
   (keydown)="onMarkerKey($event)"
   (click)="onMarkerClick($event)">
   @for (entry of plotted(); track entry.series.id) {
+    @let fades = entry.series.area === 'fade';
+
+    @if (fades && entry.areaPaths.length) {
+      <svg:defs>
+        <svg:linearGradient
+          x1="0"
+          x2="0"
+          y1="0"
+          y2="1"
+          [attr.id]="fadeId(entry.seriesIndex)"
+          [style.--_series-area-color]="entry.color">
+          <svg:stop
+            class="fade-start"
+            offset="0" />
+
+          <svg:stop
+            class="fade-end"
+            offset="1" />
+        </svg:linearGradient>
+      </svg:defs>
+    }
+
     @for (path of entry.areaPaths; track $index) {
       <svg:path
         class="series-area"
+        [class.is-fade]="fades"
         [class.is-stacked]="stacked()"
         [class.is-dimmed]="isDimmed(entry.series.id)"
         [style.--_chart-mark-stagger]="seriesStagger(entry.seriesIndex)"
+        [style.--_series-area-color]="entry.color"
+        [style.fill]="fades ? 'url(#' + fadeId(entry.seriesIndex) + ')' : null"
         [attr.d]="path"
-        [attr.fill]="entry.color"
         (animate.leave)="leaveMark($event)" />
     }
   }

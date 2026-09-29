@@ -1,5 +1,6 @@
 :host {
-  /* Portaled through the CDK overlay: a `--ds-chart-tooltip-*` override must be set on `:root`, not the chart. */
+  /* Portaled out of the chart's inheritance: the directive copies a chart's
+     `--ds-chart-tooltip-*` onto the pane. */
   --_chart-tooltip-bg-color: var(--ds-chart-tooltip-bg-color);
   --_chart-tooltip-text-color: var(--ds-chart-tooltip-text-color);
   --_chart-tooltip-border-color: var(--ds-chart-tooltip-border-color);

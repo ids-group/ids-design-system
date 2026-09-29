@@ -9017,6 +9017,15 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
     "summary": null,
     "inputs": [
       {
+        "name": "area",
+        "kind": "input",
+        "type": "boolean",
+        "union": null,
+        "default": "false",
+        "required": false,
+        "description": "Fills the band under the line down to the baseline. The colour is `--ds-sparkline-area-color`, the line's own by default, at `--ds-sparkline-area-opacity`."
+      },
+      {
         "name": "data",
         "kind": "input",
         "type": "readonly (number | null)[]",

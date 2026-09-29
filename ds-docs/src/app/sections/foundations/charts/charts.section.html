@@ -631,6 +631,28 @@
   </div>
 
   <p class="block-desc t-s">
+    The panel's colours are
+    <code class="t-mono-inline">
+      --ds-chart-tooltip-bg-color
+    </code>,
+    <code class="t-mono-inline">
+      -text-color
+    </code> and
+    <code class="t-mono-inline">
+      -border-color
+    </code>. Set them on the theme
+    for every chart, or on one chart: the panel is portaled out to the page, and
+    the chart copies its own values onto it when it opens.
+  </p>
+
+  <ds-line-chart
+    class="light-tooltip"
+    caption="A light tooltip on this chart alone"
+    dataTable="none"
+    [categories]="tooltipDemoMonths"
+    [series]="tooltipDemoSeries" />
+
+  <p class="block-desc t-s">
     A click on a mark holds it by default, on every chart: the mark keeps its
     tooltip, its highlight and, with
     <code class="t-mono-inline">

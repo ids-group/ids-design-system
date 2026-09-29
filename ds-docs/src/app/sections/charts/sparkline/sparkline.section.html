@@ -97,6 +97,60 @@
   </div>
 
   <h3 class="block-title t-h4">
+    Area
+  </h3>
+
+  <p class="block-desc t-s">
+    <code class="t-mono-inline">
+      area
+    </code> fills the band under the line down
+    to the baseline: zero on the
+    <code class="t-mono-inline">
+      zero
+    </code> scale, the foot of the box on
+    <code class="t-mono-inline">
+      data
+    </code>. Its colour is
+    <code class="t-mono-inline">
+      --ds-sparkline-area-color
+    </code>, the line's
+    own by default, at
+    <code class="t-mono-inline">
+      --ds-sparkline-area-opacity
+    </code>.
+  </p>
+
+  <div class="states is-cols-2">
+    <div class="state-cell">
+      <ds-sparkline
+        class="wide"
+        area
+        label="Sessions"
+        [data]="rows[0].data"
+        [categories]="months" />
+
+      <div class="state-cell-label">
+        area
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-sparkline
+        class="wide"
+        area
+        label="Availability"
+        scale="zero"
+        [data]="availability"
+        [categories]="months"
+        [valueFormat]="percent" />
+
+      <div class="state-cell-label">
+        area, scale="zero"
+      </div>
+    </div>
+  </div>
+
+  <h3 class="block-title t-h4">
     Gaps and no tooltip
   </h3>
 
