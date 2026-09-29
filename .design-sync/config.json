@@ -38,6 +38,7 @@
     "SidenavFooter": "components/app-layout",
     "SidenavGroup": "components/sidenav",
     "SidenavItem": "components/sidenav",
+    "Sparkline": "charts/sparkline",
     "Stack": "components/layout-primitives",
     "Tab": "components/tabs",
     "TimeColumns": "components/time-picker",
