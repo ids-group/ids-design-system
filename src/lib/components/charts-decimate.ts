@@ -1,17 +1,13 @@
-/** One reading on two continuous scales. Structural and local: the decimators work on any pair
- *  of continuous coordinates, and naming the published type here would put a chart's own type in
- *  the shared entry point. */
+/** One reading on two continuous scales. Structural, so the shared entry point does not name a chart's own type. */
 interface Reading {
   readonly x: number;
   readonly y: number;
 }
 
-/** A series only decimates past FOUR times the target, not two: at two the saving is invisible on
- *  any profile and the loss of detail is not, so the trade is the wrong way round. */
+/** A series only decimates past four times the target: at two the saving is invisible and the loss of detail is not. */
 const DECIMATION_HEADROOM = 4;
 
-/** How many marks the plot can carry: one per pixel of its own width. Drawing two marks where the
- *  screen has one pixel is two DOM nodes the reader cannot tell apart.
+/** How many marks the plot can carry: one per pixel of its width.
  *
  *  @internal */
 export function decimationTarget(plotWidth: number): number {
@@ -27,10 +23,9 @@ export function needsDecimating(count: number, target: number): boolean {
 
 /** Buckets the series by position and keeps each bucket's highest and lowest reading.
  *
- *  The default, because it is the only one of the two that can PROMISE something: a bucket's
- *  extremum is in the output by construction, so a spike the reader is looking for cannot be the
- *  point that was dropped. It also parallelises and stays stable while the reader pans, since a
- *  bucket's answer does not depend on the buckets around it.
+ *  The default: a bucket's extremum is in the output by construction, so a spike cannot be the
+ *  point dropped. It also stays stable while panning, since a bucket's answer does not depend on
+ *  its neighbours.
  *
  *  @internal */
 export function minMaxDecimate(
@@ -40,7 +35,6 @@ export function minMaxDecimate(
   if (target <= 0 || points.length <= target) {
     return points;
   }
-  // Two points leave each bucket, so the bucket count is half the budget.
   const buckets = Math.max(1, Math.floor(target / 2));
   const size = points.length / buckets;
   const kept: Reading[] = [];
@@ -61,7 +55,6 @@ export function minMaxDecimate(
         highest = points[index];
       }
     }
-    // In the order they occur, so the output still reads left to right.
     const [first, second] =
       lowest.x <= highest.x ? [lowest, highest] : [highest, lowest];
     kept.push(first);
@@ -76,9 +69,8 @@ export function minMaxDecimate(
 /** Largest Triangle Three Buckets: keeps the reading in each bucket that makes the biggest triangle
  *  with the point already kept and the next bucket's centre of mass.
  *
- *  It draws a truer SHAPE than MinMax at the same budget, and it makes no promise about the
- *  extremum - a spike is dropped whenever a different point describes the silhouette better. Reach
- *  for it where the outline is the reading and an individual point is not.
+ *  Draws a truer shape than MinMax at the same budget but does not promise the extremum: a spike is
+ *  dropped whenever another point describes the silhouette better. Use where the outline is the reading.
  *
  *  @internal */
 export function lttbDecimate(
@@ -89,7 +81,6 @@ export function lttbDecimate(
     return points;
   }
   const kept: Reading[] = [points[0]];
-  // The first and the last are fixed, so the buckets divide what is between them.
   const size = (points.length - 2) / (target - 2);
   let previous = points[0];
 

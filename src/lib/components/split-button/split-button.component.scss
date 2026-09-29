@@ -6,17 +6,14 @@
   --_split-button-bg-color: var(--ds-split-button-bg-color, var(--accent));
   --_split-button-text-color: var(--ds-split-button-text-color, var(--accent-on));
 
-  /* Not --accent-strong: that is the family's ON-TINT colour, meant for text on a light
-     surface, and as a background it leaves the label unreadable. */
+  /* Not --accent-strong: it is the on-tint text colour and as a background leaves the label unreadable. */
   --_split-button-bg-color-hover: var(--ds-split-button-bg-color-hover, var(--accent-hover));
   --_split-button-divider-color: var(--ds-split-button-divider-color, var(--btn-split-divider));
 
-  /* Transparent, matching ds-button's outline variant — the split button's outlined
-     half must adopt the surface it sits on. */
+  /* Transparent, so the outlined half adopts the surface under it, as ds-button's outline does. */
   --_split-button-outline-bg-color: var(--ds-split-button-outline-bg-color, transparent);
   --_split-button-outline-border-color: var(--ds-split-button-outline-border-color, var(--border-default));
 
-  /* Press mirrors ds-button: darken plus a micro scale-down. */
   --_split-button-bg-color-active: var(--ds-split-button-bg-color-active, color-mix(in srgb, var(--_split-button-bg-color) 76%, black));
   --_split-button-outline-bg-color-active: var(--ds-split-button-outline-bg-color-active, var(--surface-muted));
   --_split-button-press-scale: var(--ds-split-button-press-scale, 0.98);
@@ -44,8 +41,7 @@
     border-color var(--duration-fast) var(--ease-standard),
     transform var(--duration-instant) var(--ease-standard);
 
-  /* Scaled away from the seam, not about the half's own centre: a centred scale pulls the
-     pressed half's inner edge inward and opens a hairline gap in the joint. */
+  /* Scaled away from the seam: a centred scale opens a hairline gap in the joint. */
   &:active:not(:disabled) {
     box-shadow: var(--_split-button-pressed-shadow);
     transform: scale(var(--_split-button-press-scale));
@@ -88,7 +84,6 @@
   transform: rotate(180deg);
 }
 
-/* Primary (filled) variant */
 :host(.primary) .main:not(:disabled),
 :host(.primary) .toggle:not(:disabled) {
   background: var(--_split-button-bg-color);
@@ -106,7 +101,7 @@
   border-left: var(--border-width-default) solid var(--_split-button-divider-color);
 }
 
-/* Outline variant — the -1px overlap collapses adjacent borders into one divider */
+/* The -1px overlap collapses adjacent borders into one divider. */
 :host(.outline) .main:not(:disabled),
 :host(.outline) .toggle:not(:disabled) {
   background: var(--_split-button-outline-bg-color);

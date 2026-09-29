@@ -1,26 +1,16 @@
-// Shared role structure — Tier 2 semantic role ASSIGNMENTS.
-//
-// Exposes @mixin roles: the role map whose structure is identical across
-// themes and which resolves through the per-theme palette (surfaces →
-// --neutral-*, text/icon/border → --neutral-*, brand channels, status, focus,
-// semantic→palette bridge). These are the LIGHT-DEFAULT values — dark theme
-// overrides only the deltas in its own _theme.scss mixin body.
-//
-// This mixin is an authoring-DRY device. At runtime, exactly one theme block
-// matches (`:not([data-theme='dark'])` vs `[data-theme='dark']`), and that
-// block declares the complete token set itself (palette + roles + overrides).
+// Tier 2 semantic role assignments, identical in structure across themes and resolved through the
+// per-theme palette. These are the light-default values; dark overrides only the deltas. At runtime
+// exactly one theme block matches and declares the complete token set itself.
 
 @mixin roles {
-  /* Surfaces — six-stop scale.
+  /* Surfaces.
      · canvas    : page background
-     · default   : cards, sheets, toolbars (the "paper")
+     · default   : cards, sheets, toolbars
      · secondary : hover lanes, table heads, addons, code blocks
      · overlay   : modals, drawers, popovers (paired with scrim)
      · tint      : brand-tinted (active rows, sidenav active item)
      · inverted  : dark-on-light callouts, toasts
-     Conceptual elevation is communicated by SHADOW tokens,
-     not by surface tokens. Hover/pressed states use
-     --opacity-state-* overlays on top of the underlying surface. */
+     Elevation comes from shadow tokens; hover/pressed use --opacity-state-* overlays. */
   --surface-canvas:         var(--neutral-50);
   --surface-default:        var(--neutral-0);
   --surface-secondary:      var(--neutral-100);
@@ -31,21 +21,15 @@
   --surface-disabled:       var(--neutral-100);
   --surface-muted:          var(--neutral-150);
 
-  /* Scrim — modal/drawer backdrop. Derived from inverted surface
-     so dark-mode override flips automatically. */
+  /* Modal/drawer backdrop; the dark theme flips the tint. */
   --surface-scrim:     hsl(var(--shadow-tint-h) var(--shadow-tint-s) var(--shadow-tint-l) / 55%);
 
-  /* Visible-on-coloured-fill divider. The split-button right-hand chevron
-     sits ON the brand fill, so a transparent white hairline reads correctly
-     across any brand hue. Override per theme if the brand is too light. */
+  /* Divider on a coloured fill (split-button chevron); a translucent white reads on any brand hue. */
   --btn-split-divider: hsl(0deg 0% 100% / 25%);
 
-  /* Visited link — derives from --primary-muted by default so it sympathetically
-     shifts with the brand hue. Override (e.g. for financial dashboards that
-     want neutral-grey visited links) by setting this token directly. */
+  /* Derived from the primary channels so it follows the brand hue. */
   --link-visited:      hsl(var(--primary-h) calc(var(--primary-s) * 0.6) 45%);
 
-  /* Borders */
   --border-default:    var(--neutral-200);
   --border-strong:     var(--neutral-300);
   --border-subtitle:     var(--neutral-150);
@@ -53,7 +37,6 @@
   --border-inverted:   var(--neutral-700);
   --border-disabled:   var(--neutral-150);
 
-  /* Text */
   --text-primary:      var(--neutral-900);
   --text-secondary:    var(--neutral-700);
   --text-tertiary:     var(--neutral-500);
@@ -61,31 +44,25 @@
   --text-disabled:     var(--neutral-400);
   --text-inverted:     var(--neutral-0);
 
-  /* Text overlaid on arbitrary imagery (camera feeds, photos) — pairs a
-     guaranteed-light colour with a contrast shadow. */
+  /* Text over arbitrary imagery: a guaranteed-light colour with a contrast shadow. */
   --text-on-media:        white;
   --text-on-media-shadow: 0 1px 3px hsl(0deg 0% 0% / 70%);
   --text-link:         var(--blue-700);
   --text-on-primary:     white;
   --text-on-success:   white;
 
-  /* Warning fill is yellow (--yellow-400 #F4D43A) — white text on it is only
-     ~1.5:1 (fails WCAG). On-warning text is the darkest neutral (~10:1). */
+  /* White on the yellow warning fill (--yellow-400) is ~1.5:1 and fails WCAG; the darkest neutral is ~10:1. */
   --text-on-warning:   var(--static-ink);
   --text-on-error:     white;
 
-  /* Icons */
   --icon-default:      var(--neutral-500);
   --icon-strong:       var(--neutral-700);
   --icon-muted:        var(--neutral-400);
   --icon-on-primary:     white;
 
-  /* Semantic → palette bridge. The lib knows colours by PURPOSE; the theme
-     (themes/_base-palette.scss) ships the concrete ramps + HSL channels. This
-     is the one place that maps semantic roles onto a concrete palette. A brand
-     re-skins by overriding either the palette (--blue-*, --red-*) or these
-     role tokens directly.
-     Channel mappings let hsla() halos/tints compose from the same hue source. */
+  /* The one place semantic roles map onto the concrete palette. A brand re-skins by overriding
+     the palette (--blue-*, --red-*) or these roles. The channels let halos and tints compose from
+     the same hue source. */
   --primary-h:  var(--blue-h);
   --primary-s:  var(--blue-s);
   --primary-l:  var(--blue-l);
@@ -99,12 +76,9 @@
   --warning-s:  var(--yellow-s);
   --warning-l:  var(--yellow-l);
 
-  /* Primary roles.
-     Hover / pressed / selected-hover are DERIVED from --primary at runtime via
-     color-mix() so a brand swap (overriding only --primary) propagates to every
-     interaction state automatically. A brand that wants a non-derived hover
-     hue can still override these tokens directly.
-     Step sizes (12% / 24% darker) mirror the blue 600→700→800 ramp. */
+  /* Hover, pressed and selected-hover derive from --primary via color-mix(), so overriding only
+     --primary propagates to every interaction state. Steps (12% / 24% darker) mirror the blue
+     600, 700, 800 ramp. */
   --primary:                 var(--blue-600);
   --primary-hover:           color-mix(in srgb, var(--primary) 88%, black);
   --primary-pressed:         color-mix(in srgb, var(--primary) 76%, black);
@@ -115,11 +89,8 @@
   --primary-strong:          var(--blue-700);
   --primary-on:              white;
 
-  /* Accent / secondary role — maps onto the palette --orange family (Tier-1),
-     kept distinct from --primary so the brand slots read apart. Override
-     --secondary-h/s/l per-brand to reskin it —
-     --secondary recomposes automatically. Hover/pressed derive from --secondary
-     so any hue change propagates. */
+  /* Maps onto the --orange family. Override --secondary-h/s/l to reskin; --secondary, hover and
+     pressed recompose. */
   --secondary-h:       var(--orange-h);
   --secondary-s:       var(--orange-s);
   --secondary-l:       var(--orange-l);
@@ -133,13 +104,9 @@
   --secondary-muted-strong: hsl(var(--secondary-h) 95% 89%);
   --secondary-on:      var(--primary-on);
 
-  /* Tertiary — third brand hue. Used by the tertiary button variant and
-     tonal accents (decorative chips, hierarchy tones, indicators). Mirrors
-     the --primary / --secondary token-family shape: HSL channels for halo
-     composition, hover/pressed via color-mix, subtle/muted ramps for tonal
-     surfaces. Maps onto the palette --violet family (Tier-1), distinct from
-     --primary / --secondary. Brands override --tertiary-h/s/l (or --tertiary
-     directly for non-HSL values) to reskin it. */
+  /* Third brand hue (tertiary button, tonal accents), mirroring the --primary/--secondary family
+     shape. Maps onto the --violet family. Override --tertiary-h/s/l (or --tertiary for non-HSL
+     values) to reskin. */
   --tertiary-h:       var(--violet-h);
   --tertiary-s:       var(--violet-s);
   --tertiary-l:       var(--violet-l);
@@ -153,11 +120,8 @@
   --tertiary-muted-strong: hsl(var(--tertiary-h) 95% 89%);
   --tertiary-on:      var(--primary-on);
 
-  /* Status roles.
-     -hover / -pressed are derived from the base role via the same color-mix()
-     rule as --primary-hover. Override per role if a brand needs a non-derived
-     hue. -text / -border / -subtle / -muted stay as ramp picks because their
-     contrast targets are tuned, not procedural. */
+  /* -hover and -pressed derive from the base role like --primary-hover. -text, -border, -subtitle
+     and -muted are ramp picks: their contrast targets are tuned, not procedural. */
   --success:           var(--green-500);
   --success-hover:     color-mix(in srgb, var(--success) 88%, black);
   --success-subtitle:    var(--green-50);
@@ -184,11 +148,9 @@
   --error-border:     var(--red-200);
   --error-text:       var(--red-600);
 
-  /* -pressed (success/warning) and -on — roles the --accent-* pointer family needs from
-     every ds-color family and the status block above does not spell out. There is
-     deliberately no --<status>-strong: the readable on-tint colour of a status family is
-     what -text already is, and --accent-strong asks for -text by name. The brand families
-     are the ones that carry it as -strong, because they have no -text. */
+  /* -pressed (success/warning) and -on: roles the --accent-* pointers need from every ds-color
+     family. There is no --<status>-strong: for status families -text is the readable on-tint
+     colour and --accent-strong asks for it by name; brand families carry it as -strong. */
   --success-pressed:  color-mix(in srgb, var(--success) 76%, black);
   --warning-pressed:  color-mix(in srgb, var(--warning) 76%, black);
   --error-on:         var(--text-on-error);
@@ -202,30 +164,21 @@
   --info-border:       var(--sky-200);
   --info-text:         var(--sky-700);
 
-  /* Focus rings.
-     Outer halos use hsla() composed from brand/danger HSL channels
-     so re-skinning --primary-h propagates into focus state. */
+  /* Focus halos compose from the brand/danger channels, so re-skinning --primary-h propagates. */
 
-  /* Separates the two bands of the FIELD halo, and nothing else — controls draw an
-     `outline`, whose gap needs no colour at all. It cannot be `transparent`: a transparent
-     shadow layer is a no-op, not a hole, so the outer band would show through as one solid
-     4px slab. `--surface-default` and not `--surface-canvas`: a field sits on the surface,
-     and painting the page ground here drew a dark rim around a light card. */
+  /* Separates the two bands of the field halo. Not `transparent`: a transparent shadow layer is a
+     no-op, so the outer band would show as one solid 4px slab. `--surface-default`, not
+     `--surface-canvas`: a field sits on the surface, and the page ground draws a dark rim. */
   --focus-ring-inner:        var(--surface-default);
   --focus-ring-outer-h:      var(--primary-h);
   --focus-ring-outer-s:      var(--primary-s);
   --focus-ring-outer-l:      var(--primary-l);
   --focus-ring-outer-alpha:  1;
 
-  /* A flat focus colour, for components that draw an `outline` instead of a shadow (a row
-     inside a clipping list, a swatch grid). It must stay DEFINED: an `outline-color` that
-     falls through resolves to `currentColor`, so a row rings itself in its own text colour.
-
-     `--accent`, not the ring's own primary channels: outside a zone it IS `--primary`, and
-     inside `[ds-color="error"]` it becomes that family, which is the same adaptivity the
-     zone already gives the shadow ring through `--accent-focus-ring`. Composing it from
-     `--focus-ring-outer-*` would have pinned the outline to the brand hue in a zone whose
-     every other accent had moved. */
+  /* Flat focus colour for components drawing an `outline` (a row in a clipping list, a swatch
+     grid). It must stay defined: an unresolved `outline-color` falls to `currentColor`.
+     `--accent`, not `--focus-ring-outer-*`: inside a `ds-color` zone it follows the family instead
+     of pinning the outline to the brand hue. */
   --focus-ring-color: var(--accent);
 
   --focus-ring:
@@ -238,11 +191,9 @@
     0 0 0 2px var(--focus-ring-inner),
     0 0 0 4px hsl(var(--error-h) var(--error-s) var(--error-l) / 100%);
 
-  /* Same ring drawn INSIDE the border box, for a subtree under a clipping
-     ancestor. An outset shadow is outside the box, so any `overflow: hidden`
-     ancestor eats it and leaves the element focusable with no indicator at all —
-     and clipping is the normal way to hold a full-bleed child inside a rounded
-     card. Reached through `[data-focus="inset"]`, not by re-declaring the role. */
+  /* The ring drawn inside the border box, for a subtree under a clipping ancestor, where an
+     outset shadow is eaten by `overflow: hidden` and leaves no indicator. Reached through
+     `[data-focus="inset"]`. */
   --focus-ring-inset:
     inset 0 0 0 2px var(--focus-ring-inner),
     inset 0 0 0 4px hsl(var(--focus-ring-outer-h) var(--focus-ring-outer-s) var(--focus-ring-outer-l) / var(--focus-ring-outer-alpha));
@@ -250,18 +201,14 @@
     inset 0 0 0 2px var(--focus-ring-inner),
     inset 0 0 0 4px hsl(var(--error-h) var(--error-s) var(--error-l) / 100%);
 
-  /* Field focus — coloured halo only (no double-ring). Derived from
-     brand HSL so it tracks rebrand. Alpha is a token so dark themes
-     can boost it for legibility. */
+  /* Field focus: coloured halo only. The alpha is a token so dark themes can boost it. */
   --focus-field-alpha: .22;
   --focus-field:
     0 0 0 3px hsl(var(--primary-h) var(--primary-s) var(--primary-l) / var(--focus-field-alpha));
   --focus-field-error:
     0 0 0 3px hsl(var(--error-h) var(--error-s) var(--error-l) / var(--focus-field-alpha));
 
-  /* Per-family focus rings/fields — pre-composed once from each family's
-     channels so ds-color flips a single --accent-focus-* pointer (no :root
-     composite re-declaration in the scope). --focus-ring-error exists above. */
+  /* Pre-composed per family so ds-color flips a single --accent-focus-* pointer. */
   --focus-ring-secondary:
     0 0 0 2px var(--focus-ring-inner),
     0 0 0 4px hsl(var(--secondary-h) var(--secondary-s) var(--secondary-l) / 100%);
@@ -283,10 +230,8 @@
   --focus-field-warning:
     0 0 0 3px hsl(var(--warning-h) var(--warning-s) var(--warning-l) / var(--focus-field-alpha));
 
-  /* Accent pointer layer — the single indirection ds-color flips. Defaults to
-     the primary family (+ existing focus/tint tokens) so the unbranded theme is
-     pixel-identical. Components read these for their accent instead of
-     --primary* / --focus-* / --surface-tint. */
+  /* The indirection ds-color flips, defaulting to the primary family. Components read these for
+     their accent instead of --primary* / --focus-* / --surface-tint. */
   --accent:               var(--primary);
   --accent-hover:         var(--primary-hover);
   --accent-pressed:       var(--primary-pressed);

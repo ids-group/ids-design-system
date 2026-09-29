@@ -1,8 +1,4 @@
 @use '../../styles/focus' as focus;
-
-/* Toast pill — single notification surface. Consumed by ToastRegion (service-
-   driven runtime stack) and by static showcases. */
-
 @use '../../styles/press' as press;
 
 :host {

@@ -4,9 +4,7 @@
 @include chart-data-table.chart-data-table;
 
 
-// Declared on the host rather than on the figure inside it: the plot is an SVG coordinate space, so
-// these four reach it as numbers read back off this element, and a computed style can only be read
-// from the element a property is declared on or inherited by.
+// On the host, not the figure: the component reads these back as numbers via getComputedStyle(host).
 :host {
   --_column-chart-plot-height: var(--ds-column-chart-plot-height, 200px);
   --_column-chart-axis-width: var(--ds-column-chart-axis-width, 40px);
@@ -21,9 +19,7 @@
   margin: 0;
 }
 
-// The container draws the grid, so the column chart's own hook reaches it by re-pointing the
-// shared one on the element that owns the rule. Declared on the figure and consumed here, which is
-// what keeps the two names off the same element and out of a custom-property cycle.
+// Re-points the shared grid token on `ds-chart`; declaring both names on one element would be a custom-property cycle.
 ds-chart {
   --ds-chart-grid-line-color: var(--_column-chart-grid-line-color);
 }

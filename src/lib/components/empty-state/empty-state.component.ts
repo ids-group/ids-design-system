@@ -10,13 +10,12 @@ import type { EmptyStateVariant } from './empty-state.types';
   imports: [IconComponent, LoadingOverlayComponent],
   templateUrl: './empty-state.component.html',
   styleUrl: './empty-state.component.scss',
-  // A static `title="…"` feeding the input below ALSO stays in the DOM as the global attribute,
-  // which makes the host a native browser tooltip over everything inside it.
+  // A static `title="…"` also stays as the global attribute, giving the whole host a native tooltip.
   host: { '[attr.title]': 'null' },
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class EmptyStateComponent {
-  /** State — drives the default icon and shows a loading overlay when `'loading'`. */
+  /** Drives the default icon; `'loading'` shows a loading overlay. */
   readonly variant = input<EmptyStateVariant>('none');
   /** Override the variant's default icon. */
   readonly icon = input<IconName | null>(null);

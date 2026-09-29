@@ -4,8 +4,7 @@ export interface ScatterPoint {
   readonly y: number;
 }
 
-/** One named set of readings. Both scales are continuous, so a point carries its own position on
- *  each rather than an index into a list of categories. */
+/** One named set of readings; each point carries its own position on both continuous scales. */
 export interface ScatterChartSeries {
   id: string;
   label: string;
@@ -16,11 +15,10 @@ export interface ScatterChartSeries {
 
 /** Which decimator thins a series that exceeds the plot's budget.
  *
- *  `'minMax'` is the default because it is the only one that can promise something: each bucket's
- *  highest and lowest reading are in the output by construction, so the spike a reader is looking
- *  for cannot be the point that was dropped. `'lttb'` draws a truer silhouette at the same budget
- *  and makes no such promise - reach for it where the outline is the reading. `'none'` draws every
- *  point and is the caller taking the node budget on themselves. */
+ *  `'minMax'` (default) keeps each bucket's highest and lowest reading, so a spike cannot be the
+ *  point dropped. `'lttb'` draws a truer silhouette at the same budget with no such guarantee; use
+ *  it where the outline is the reading. `'none'` draws every point and leaves the node budget to
+ *  the caller. */
 export type ScatterChartDecimator = 'minMax' | 'lttb' | 'none';
 
 /** One reading, named by the series it belongs to. */

@@ -2,16 +2,14 @@
 @include chart-motion.fades-in('.connector', var(--ds-motion-chart-mark-grow-duration));
 @include chart-motion.follows('.value', var(--ds-motion-chart-mark-grow-duration));
 
-// Dashed rather than solid: the chain is furniture, and a solid rule at a bar's own level reads as
-// a threshold the reader is meant to compare against.
+// Dashed: a solid rule at a bar's own level reads as a threshold to compare against.
 .connector {
   stroke: var(--_waterfall-chart-connector-color);
   stroke-width: 1;
   stroke-dasharray: 3 3;
 }
 
-// `fill`, not `color`: SVG text takes its paint from `fill`, and `currentColor` is what keeps the
-// inherited colour the DOM label read from its ancestor.
+// SVG text takes its paint from `fill`; `currentcolor` keeps the inherited colour.
 .value {
   fill: currentcolor;
   font-size: var(--font-size-xs);

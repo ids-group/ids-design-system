@@ -14,9 +14,8 @@ export function holeFraction(innerRadius: number): number {
 }
 
 /** The slices a legend can carry, with everything past `limit` summed into one. The kept slices stay
- *  in the order given — a ring is read against its legend top to bottom, so reordering by value
- *  would move every other slice to make room for the grouping. The remainder takes the neutral
- *  eighth palette slot, which is what that slot is for. */
+ *  in the order given, since a ring is read against its legend top to bottom. The remainder takes
+ *  the neutral eighth palette slot. */
 export function groupSmallest(
   slices: readonly PieChartSlice[],
   limit: number | null,
@@ -47,10 +46,8 @@ export interface PieArc {
   readonly endAngle: number;
 }
 
-/** A ring is a part-to-whole picture, so anything that is not a positive share
- *  becomes zero. Non-finite values go in the same pass: one NaN reaches every
- *  other slice through the total, and a `d` attribute holding NaN draws nothing
- *  at all rather than failing loudly. */
+/** Anything that is not a positive share becomes zero. Non-finite values go in the same pass: one
+ *  NaN reaches every other slice through the total, and a `d` holding NaN draws nothing, silently. */
 export function positiveValues(values: readonly number[]): number[] {
   return values.map((value) =>
     Number.isFinite(value) && value > 0 ? value : 0,
@@ -103,9 +100,8 @@ export function paletteIndex(
   return index % paletteLength;
 }
 
-/** One `"x y"` pair for a path. Angles run clockwise from 12 o'clock, where a
- *  reader expects a ring to start; SVG's y axis points down, so that is
- *  (sin, -cos) rather than the (cos, sin) of the maths convention. */
+/** One `"x y"` pair for a path. Angles run clockwise from 12 o'clock; SVG's y axis points down, so
+ *  that is (sin, -cos) rather than (cos, sin). */
 export function ringPoint(
   centerX: number,
   centerY: number,
@@ -117,7 +113,7 @@ export function ringPoint(
   return `${x} ${y}`;
 }
 
-/** The same point as numbers, for PLACING something rather than drawing a path. */
+/** The same point as numbers, for placing something rather than drawing a path. */
 export function ringCoords(
   centerX: number,
   centerY: number,
@@ -184,13 +180,12 @@ function fullRingPath(
     return outer;
   }
 
-  // The hole is cut by winding the inner circle the other way, which the default
-  // nonzero fill rule then cancels against the outer one.
+  // The inner circle winds the other way so the nonzero fill rule cancels it against the outer one.
   return `${outer} ${circlePath(centerX, centerY, innerRadius, 0)}`;
 }
 
-/** A single arc of a full turn ends where it starts and SVG draws nothing for
- *  it, so a closed circle is two half-turns. */
+/** A single arc of a full turn ends where it starts and SVG draws nothing, so a closed circle is
+ *  two half-turns. */
 function circlePath(
   centerX: number,
   centerY: number,

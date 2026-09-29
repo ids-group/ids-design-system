@@ -1,11 +1,8 @@
 /* Truncation contract:
-   Initials fallback — 2 chars max — no clip. Generated from first + last name.
-   Adjacent name label — Single line, ellipsis. Tooltip on hover with full name.
-   +N overflow — Numeric only — no clip. Hidden member names are not surfaced by the component. */
+   Initials fallback - 2 chars max, no clip.
+   Adjacent name label - single line, ellipsis, tooltip on hover with full name.
+   +N overflow - numeric only, no clip. */
 
-// Group-overlap visuals live in avatar-group.component.scss, reaching this host
-// via ::ng-deep — emulated encapsulation otherwise scopes the two stylesheets
-// independently.
 :host {
   --_avatar-size:       var(--ds-avatar-size,       var(--avatar-md));
   --_avatar-bg-color:         var(--ds-avatar-bg-color,         var(--accent-muted));
@@ -25,7 +22,7 @@
   letter-spacing: var(--letter-spacing-wide);
   flex-shrink: 0;
 
-  /* overflow visible to let status dot escape the avatar boundary */
+  /* Visible so the status dot can escape the avatar boundary. */
   overflow: visible;
   position: relative;
 }
@@ -36,17 +33,15 @@ img {
   object-fit: cover;
   border-radius: inherit;
 
-  /* clip image to the avatar shape without clipping the status dot */
+  /* Clips the image to the avatar shape, not the status dot. */
   overflow: hidden;
 }
 
-/* Redefine the private size var per step (not width/height directly) so a
-   consumer's --ds-avatar-size still wins at every size, not only md. */
+/* Rebinds the private size var per step so a consumer's --ds-avatar-size wins at every size. */
 :host(.xs) { --_avatar-size: var(--ds-avatar-size, var(--avatar-xs)); font-size: var(--font-size-4xs); }
 :host(.sm) { --_avatar-size: var(--ds-avatar-size, var(--avatar-sm)); font-size: var(--font-size-3xs); }
 :host(.lg) { --_avatar-size: var(--ds-avatar-size, var(--avatar-lg)); font-size: var(--font-size-s); }
 
-/* Neutral tint — used by the +N overflow chip in avatar groups. */
 :host(.neutral) {
   --_avatar-bg-color: var(--ds-avatar-bg-color, var(--surface-secondary));
   --_avatar-label-color: var(--ds-avatar-label-color, var(--text-secondary));

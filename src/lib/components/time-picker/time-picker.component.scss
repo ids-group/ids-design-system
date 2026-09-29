@@ -37,8 +37,7 @@
   gap: var(--field-label-gap);
   width: 100%;
 
-  // Same class names and tokens as ds-date-picker's label block, so a date and a
-  // time in one form row keep an identical label row and a shared baseline.
+  // Same class names and tokens as ds-date-picker's label block, so date and time in one form row share a label row and baseline.
   .label {
     @include field-label.field-label;
 
@@ -60,7 +59,7 @@
   width: fit-content;
 }
 
-// All three hug by default, so all three have to give for the field to fill a track.
+// All three hug by default, so all three must give for the field to fill a track.
 :host(.full-width) {
   .trigger-wrap,
   .range-wrap,
@@ -129,7 +128,7 @@
     cursor: not-allowed;
   }
 
-  // Clear-button room — after the size rules so their padding shorthand can't reset padding-right.
+  // Clear-button room, after the size rules so their padding shorthand cannot reset padding-right.
   &.has-clear {
     padding-right: var(--space-8);
   }
@@ -140,8 +139,7 @@
 }
 
 .time-value {
-  // Takes the slack, so in fullWidth the trailing glyph lands on the right edge —
-  // the same vertical line as ds-date-picker's calendar button.
+  // Takes the slack, so in fullWidth the trailing glyph lands on the right edge, in line with ds-date-picker's calendar button.
   flex: 1;
   text-align: left;
   font-family: var(--_time-picker-value-font-family);
@@ -188,9 +186,8 @@
   border: var(--border-width-default) solid
     var(--ds-time-picker-border, var(--border-default));
 
-  /* The PUBLIC token, like the declarations around it: this panel is portaled out of
-     the host, so a :host-declared `--_…` resolves to nothing here and the property
-     silently falls back to its initial value — 0 for a radius, square corners. */
+  /* The PUBLIC token: this panel is portaled out of the host, so a :host-declared `--_…` resolves to nothing here and the property
+     falls back to its initial value (square corners for a radius). */
   border-radius: var(--ds-time-picker-panel-radius, var(--ds-radius-panel));
   box-shadow: var(--ds-time-picker-shadow, var(--ds-elevation-overlay));
   padding: var(--space-2);
@@ -233,7 +230,7 @@
     color: var(--accent);
   }
 
-  /* Public token, for the portal reason spelled out on .time-panel above. */
+  /* Public token, for the portal reason on .time-panel above. */
   &:focus-visible {
     @include focus.ring;
   }

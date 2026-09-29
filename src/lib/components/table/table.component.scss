@@ -5,26 +5,25 @@
 @use '../../styles/text-clip' as text-clip;
 
 /* Truncation contract:
-   Cell text — Single line, ellipsis at column width (truncate + width), full value in a tooltip.
-   Header label — Single line, no clip.
-   Action column — No clip — icon-only buttons. */
+   Cell text - Single line, ellipsis at column width (truncate + width), full value in a tooltip.
+   Header label - Single line, no clip.
+   Action column - No clip - icon-only buttons. */
 
-// Positioned to contain the absolute `.visually-hidden` nodes below; without it they resolve against
-// the initial containing block and grow the consuming PAGE's root scroller into a second scrollbar.
+// Contains the absolute `.visually-hidden` nodes below; without it they resolve against the
+// initial containing block and grow the page's root scroller into a second scrollbar.
 :host {
   @include check-box.resolvers;
 
-  /* On the host, not in the `.table` resolver block with its siblings: the loading scrim that
-     offsets by it sits OUTSIDE the table element, and a custom property only reaches descendants.
-     `publishHeadHeight` writes `--_table-head-measured`. */
+  /* On the host: the loading scrim that offsets by it sits outside the table element, and a
+     custom property only reaches descendants. */
   --_table-head-height: var(--ds-table-head-height, var(--_table-head-measured, 40px));
 
   display: block;
   position: relative;
 }
 
-// Stated here rather than in the shared box: a control WITH a shell has that shell ring for it, and
-// a ring in the mixin is one the shell then has to suppress. A table cell has no shell.
+// Not in the shared box: a control with a shell rings the shell, and a ring in the mixin would
+// have to be suppressed there. A table cell has no shell.
 .check {
   @include check-box.box;
 
@@ -33,9 +32,7 @@
   }
 }
 
-/* Three rows' worth, built from the same padding and line height a real row is, so it tracks
-   density instead of restating a number. The spinner then has a body to sit in and the table does
-   not jump when the first page arrives. */
+/* Three rows' worth, built from a real row's padding and line height so it tracks density. */
 .loading-space {
   height: calc(
     (var(--_table-cell-padding-y) * 2 + var(--line-height-base) * var(--font-size-s)) * 3
@@ -56,8 +53,8 @@
   --_table-radius: var(--ds-table-radius, var(--ds-radius-control));
   --_table-bg-color:     var(--ds-table-bg-color,     var(--surface-default));
 
-  // Contains the absolute `.visually-hidden` nodes inside the table: overflow clips only the
-  // descendants whose containing block it is, so without it one past the right edge widens the page.
+  // Containing block for the absolute `.visually-hidden` nodes: one past the right edge would
+  // otherwise widen the page.
   position: relative;
   width: 100%;
   overflow: auto hidden;
@@ -84,16 +81,13 @@
   }
 }
 
-/* Drag-to-resize handles (opt-in via the `dsTableResize` directive). The header clips its
-   label so a narrowed column can't spill into its neighbour. */
 :host(.resizable) thead th {
   position: relative;
   overflow: hidden;
 }
 
 /* A coarse pointer paints no `:hover`, so the handle is invisible while `touch-action: none` still
-   eats the swipe that scrolls the table. The column panel is the touch path instead.
-   Matches `coarsePointer` in table-columns.directive.ts. */
+   eats the swipe that scrolls the table. Matches `coarsePointer` in DsTableColumns. */
 @media (hover: none) and (pointer: coarse) {
   .col-resize {
     display: none;
@@ -125,8 +119,8 @@
     background-color: var(--_table-sort-active-icon-color);
   }
 
-  /* A hairline, so the standard ring would sit outside it and read as the neighbouring column's.
-     Widening the line IS the indicator here, and the outline is dropped rather than doubled. */
+  /* A hairline: the standard ring would read as the neighbouring column's. Widening the line is
+     the indicator. */
   &:focus-visible {
     @include focus.own-indicator;
 
@@ -139,9 +133,9 @@
 .hscroll-proxy {
   position: sticky;
 
-  /* Three layers, most specific first: the stylesheet hook, then `[stickyScrollbarOffset]` /
-     `DS_CONFIG.table.stickyScrollbarOffset` published as `--_table-sticky-scrollbar-offset`, then
-     the padding the .ts measured off the scroll ancestor and negates — see the note there. */
+  /* Most specific first: the stylesheet hook, then `[stickyScrollbarOffset]` /
+     `DS_CONFIG.table.stickyScrollbarOffset` as `--_table-sticky-scrollbar-offset`, then the
+     padding measured off the scroll ancestor and negated. */
   bottom: var(
     --ds-table-sticky-scrollbar-offset,
     var(
@@ -181,8 +175,6 @@
   --_table-cell-padding-x:      var(--ds-table-cell-padding-x,      var(--table-cell-pad-x));
   --_table-cell-padding-y:      var(--ds-table-cell-padding-y,      var(--table-cell-pad-y));
 
-  /* Per-side overrides fall back to the x/y pair, so an editorial table can ask
-     for a right-only gutter (first column flush) without redefining both axes. */
   --_table-cell-padding-top: var(--ds-table-cell-padding-top, var(--_table-cell-padding-y));
   --_table-cell-padding-right: var(--ds-table-cell-padding-right, var(--_table-cell-padding-x));
   --_table-cell-padding-bottom: var(--ds-table-cell-padding-bottom, var(--_table-cell-padding-y));
@@ -226,8 +218,6 @@
       display: inline-flex;
       align-items: center;
       vertical-align: middle;
-
-      // Button reset so the sortable <button> matches the plain header label.
       appearance: none;
       background: none;
       border: 0;
@@ -263,17 +253,14 @@
       margin-left: var(--sort-ic-gap);
       vertical-align: middle;
 
-      /* Nudge up by 1px: vertical-align:middle aligns to x-height centre,
-         but the header label is UPPERCASE — its visual centre sits at
-         cap-height/2, ~1px higher. Compensates the optical offset. */
+      /* vertical-align:middle aligns to x-height centre, but the UPPERCASE label centres ~1px
+         higher. */
       transform: translateY(-1px);
       color: var(--icon-default);
       opacity: var(--sort-ic-opacity-idle);
       transition: opacity var(--duration-fast) var(--ease-standard), color var(--duration-fast) var(--ease-standard);
 
-      /* Inner <svg class="icon"> defaults to var(--icon-md) (16px) via the
-         global .icon rule — force it back to the host's sort-ic-size so the
-         glyph actually sits at the centre of the header label. */
+      /* The global .icon rule sizes the svg to --icon-md; force it back to --sort-ic-size. */
       .icon {
         width: var(--sort-ic-size);
         height: var(--sort-ic-size);
@@ -306,9 +293,9 @@
     }
   }
 
-  /* Pinned header cells are EXCLUDED from the z-index here, because this rule out-specifies
-     `--table-sticky-corner-z` and a tie hands the paint to DOM order — which put the first body
-     row over the header. Position and offset still apply to every header cell. */
+  /* Pinned header cells are excluded from the z-index here: this rule out-specifies
+     `--table-sticky-corner-z`, and a tie hands the paint to DOM order (first body row over the
+     header). */
   &.sticky-header thead th {
     position: sticky;
     top: 0;
@@ -324,9 +311,8 @@
       line-height: var(--line-height-flat);
       transition: background-color var(--duration-fast) var(--ease-standard);
 
-      /* Inset shadow instead of border-bottom so the divider paints inside
-         the cell — row height stays identical regardless of selected/hover
-         background and is not affected by border-collapse quirks. */
+      /* Inset shadow, not border-bottom: row height stays identical and border-collapse quirks
+         do not apply. */
       box-shadow: inset 0 calc(-1 * var(--border-width-default)) 0 var(--_table-divider);
       vertical-align: middle;
 
@@ -346,23 +332,18 @@
         box-shadow: none;
       }
 
-      /* Interaction tints are exclusive to rowInteractive tables — a passive
-         table stays static so the tint honestly signals clickability. */
       &.clickable:not(.active):hover td {
         background-color: var(--_table-row-hover-bg-color);
       }
 
-      /* The cell that NAMES what the row opens, opted into per column. The row tint says
-         "clickable" and this says WHICH text is the target — colour plus a decoration, so it
-         does not rest on hue alone. Scoped to .clickable for the same reason the tint is. */
+      /* Colour plus a decoration, so the target text does not rest on hue alone. Scoped to
+         .clickable like the tint. */
       &.clickable:hover td.interactive-cell {
         color: var(--_table-cell-link-color);
         text-decoration: var(--_table-cell-link-decoration);
       }
 
-      /* Unlike `interactive-cell` this is NOT gated on hover: a link a reader only
-         sees once the pointer is over the row is invisible to a keyboard or touch
-         user, which is the whole reason the column kind exists. */
+      /* Not gated on hover, unlike `interactive-cell`: keyboard and touch users never hover. */
       td .cell-link {
         color: var(--_table-cell-link-color);
         text-decoration: var(--_table-cell-link-decoration);
@@ -384,8 +365,8 @@
         cursor: pointer;
       }
 
-      /* On the ROW, not inside :focus-visible: a shape that appears only while focused pops. The
-         row paints nothing itself — its tints sit on the `td` — so this shapes the ring alone. */
+      /* On the row, not inside :focus-visible: a shape that appears only while focused pops. The
+         row paints nothing itself (tints sit on the `td`), so this shapes the ring alone. */
       &.clickable {
         border-radius: var(--focus-ring-radius);
       }
@@ -409,11 +390,9 @@
       padding: var(--_table-cell-padding-top) var(--_table-cell-padding-right) var(--_table-cell-padding-bottom) var(--_table-cell-padding-left);
     }
 
-    /* Opens like ds-accordion, on the same 0fr -> 1fr grid track: height 0 -> auto cannot
-       interpolate, and this can. A keyframe rather than a transition because the row is inserted
-       when it opens, and there is no previous state for a transition to run from. The grid is on a
-       wrapper inside the cell: a `td` whose display is not `table-cell` leaves the table layout
-       and its `colspan` with it. */
+    /* 0fr -> 1fr grid track, like ds-accordion. A keyframe, not a transition: the row is
+       inserted when it opens, so there is no previous state. The grid sits on a wrapper because a
+       `td` whose display is not `table-cell` leaves the table layout and its `colspan`. */
     .expand-panel-inner {
       display: grid;
       grid-template-rows: 1fr;
@@ -441,20 +420,16 @@
       }
     }
 
-    /* Ellipsis clip for `truncate` text cells — the inline max-width (column
-       `width`, 240px fallback) caps the cell's max-content so auto table
-       layout can't stretch the column to fit the full text. */
     .cell-clip {
       display: block;
 
-      /* `scrollWidth > clientWidth` still reports true under `clip`, checked in
-         Chromium — which is how `dsTooltipWhenClipped` sees a clipped cell. */
+      /* `scrollWidth > clientWidth` still reports true under `clip`, which is how
+         `dsTooltipWhenClipped` sees a clipped cell. */
       @include text-clip.single-line-ellipsis;
     }
   }
 
-  /* Hoisted out of `tbody`: the expand-all toggle wears the same chevron in
-     `thead`, and a tbody-scoped rule left it stuck pointing right. */
+  /* Outside `tbody`: the expand-all toggle in `thead` wears the same chevron. */
   .expand-chev {
     display: block;
     transition: transform var(--duration-base) var(--ease-standard);
@@ -473,21 +448,18 @@
     @include table-controls.header-icon-button;
   }
 
-  /* Retunes the density tokens the resolvers already read: `padding` on the cells here
-     out-specifies every `--ds-table-*-pad-*` hook and silently ignores all of them. */
+  /* Retunes tokens rather than setting `padding`, which would out-specify and silently ignore
+     every `--ds-table-*-pad-*` hook. */
   &.compact {
     --table-cell-pad-x: var(--space-3);
     --table-cell-pad-y: var(--space-2);
     --table-head-pad-y: var(--space-2);
   }
 
-  /* A readability floor: below it the columns stop shrinking and the horizontal scroller takes
-     over. Defaults to 0, so a table with few columns is still free to be narrow. */
   min-width: var(--_table-min-width);
 
-  /* :nth-child cannot see past windowing — a rendered row's parity depends on its
-     ABSOLUTE index, and the spacer rows are children too, so virtual mode takes
-     the parity from a class and these two rules cannot be folded into one. */
+  /* :nth-child cannot see past windowing (parity depends on the absolute index, and spacer rows
+     are children too), so virtual mode takes parity from a class. */
   &.zebra:not(.virtual) tbody tr:nth-child(odd) td {
     background-color: var(--_table-row-stripe-bg-color);
   }
@@ -496,10 +468,9 @@
     background-color: var(--_table-row-stripe-bg-color);
   }
 
-  /* Every row must be exactly --_table-virtual-row-h tall: it is the only thing telling the
-     arithmetic where a row starts, so a row that grows puts every offset below it out. Hence no
-     wrapping whatever the column asked for, and a FIXED layout — auto re-measures against
-     whichever rows are rendered and the columns twitch as you scroll. */
+  /* Every row must be exactly --_table-virtual-row-h tall or every offset below it is wrong:
+     no wrapping, and a fixed layout (auto re-measures against the rendered rows and columns
+     twitch on scroll). */
   &.virtual {
     table-layout: fixed;
 
@@ -512,8 +483,7 @@
     }
   }
 
-  /* Pure height: it stands in for the rows that are not rendered, so it must not
-     take a border, a stripe or a hover. */
+  /* Pure height standing in for unrendered rows: no border, stripe or hover. */
   tbody tr.spacer {
     padding: 0;
     border: 0;
@@ -526,8 +496,8 @@
 
 }
 
-/* The width buttons `dsTableResize` hands to the column panel through the row seam: declared
-   here, so they carry ds-table's attribute and are ds-table's to style wherever they render. */
+/* Rendered inside the column panel by `dsTableResize`, but styled here so they carry ds-table's
+   scoping attribute. */
 .col-width {
   display: inline-flex;
   gap: var(--space-1);
@@ -649,15 +619,15 @@
   color: var(--text-primary);
   background-color: var(--surface-default);
 
-  // The accent border is this field's resting chrome, so it says nothing about focus.
+  // The accent border is resting chrome, so it says nothing about focus.
   &:focus-visible {
     @include focus.ring;
   }
 }
 
-/* Pinned cells need an opaque background and a raised z to survive sideways scroll. Sticky
-   positioning is unreliable with `border-collapse: collapse`, so under this flag ONLY the table
-   switches to separated borders with explicit per-cell `border-bottom`. */
+/* Pinned cells need an opaque background and a raised z to survive sideways scroll. Sticky is
+   unreliable with `border-collapse: collapse`, so only under this flag the table switches to
+   separated borders with explicit per-cell `border-bottom`. */
 :host(.pinned) {
   --_table-select-column-width: var(--ds-table-select-column-width, var(--space-10));
 
@@ -765,9 +735,8 @@
   --_table-footer-padding-top: var(--ds-table-footer-padding-top, var(--_table-footer-padding-y));
   --_table-footer-padding-bottom: var(--ds-table-footer-padding-bottom, var(--_table-footer-padding-y));
 
-  /* The per-side chain the cells resolve, spelled out again: `--_table-cell-pad-*` is declared
-     on `.table` and invisible to this sibling. Longhands because one unresolvable var voids a
-     whole shorthand, and the summary must stay in line with column one. */
+  /* The cells' per-side chain again: `--_table-cell-pad-*` is declared on `.table` and invisible
+     to this sibling. Longhands because one unresolvable var voids a whole shorthand. */
   padding-block: var(--_table-footer-padding-top) var(--_table-footer-padding-bottom);
   padding-left: var(--ds-table-cell-padding-left, var(--ds-table-cell-padding-x, var(--table-cell-pad-x)));
   padding-right: var(--ds-table-cell-padding-right, var(--ds-table-cell-padding-x, var(--table-cell-pad-x)));
@@ -777,9 +746,8 @@
 .bulk-bar {
   position: sticky;
 
-  /* Same subtraction the sticky scrollbar makes, for the same reason: a sticky `bottom` resolves
-     against the scrollport's CONTENT box, so the offset alone left the bar floating
-     `--bulk-bar-offset` PLUS the container's padding above the edge the reader sees. */
+  /* Same subtraction as the sticky scrollbar: a sticky `bottom` resolves against the scrollport's
+     content box, so the container's padding would add to `--bulk-bar-offset`. */
   bottom: calc(
     var(--bulk-bar-offset) - var(--_table-scroller-pad-bottom, 0px)
   );
@@ -804,9 +772,8 @@
     background: var(--border-inverted);
   }
 
-  /* An inverted surface, and a ds-button resolves its label from --ds-button-label-color while
-     ignoring the inherited `color` — without this the label lands on the same token as the bar's
-     background. Only the label: the outline border already measures 13.20:1 against it. */
+  /* Inverted surface: a ds-button takes its label from --ds-button-label-color and ignores the
+     inherited `color`, so without this the label lands on the bar's own background token. */
   --ds-button-label-color: var(--text-inverted);
   --ds-button-bg-color: transparent;
   --ds-button-bg-color-hover: var(--surface-inverted-hover);
@@ -820,16 +787,13 @@
   gap: var(--space-2);
   margin-bottom: var(--space-2);
 
-  /* Always in the markup, so it takes itself out when nothing filled the slot — otherwise every
-     table pays its margin. `:has()`, not `:empty`, which whitespace text nodes defeat. */
+  /* Always in the markup, so it hides itself when the slot is empty. `:has()`, not `:empty`,
+     which whitespace text nodes defeat. */
   &:not(:has(.toolbar-slot > *, > ds-button)) {
     display: none;
   }
 }
 
-/* Lays out a HANDFUL of projected controls so the simple case needs no CSS at
-   all. Project one element of your own instead and the flex has a single child,
-   so your layout is untouched. */
 .toolbar-slot {
   display: flex;
   flex: 1 1 auto;
@@ -838,9 +802,9 @@
   gap: var(--space-2);
   min-width: 0;
 
-  /* One projected element means the consumer brought their own layout, so it gets the whole row.
-     ::ng-deep because projected nodes carry the CONSUMER's attribute; anchored here so it compiles
-     scoped, and a DIRECT child so their inner markup is left alone. */
+  /* One projected element is the consumer's own layout and gets the whole row. ::ng-deep because
+     projected nodes carry the consumer's attribute; a direct child so their inner markup is left
+     alone. */
   ::ng-deep > :only-child {
     flex: 1 1 auto;
     min-width: 0;

@@ -50,24 +50,23 @@ export class OtpInputComponent extends DsControlValueAccessor<string> {
   readonly value = model<string>('');
   /** Number of character cells. */
   readonly length = input<number>(6);
-  /** Restricts input and the mobile keyboard to digits-only, or allows letters too. */
+  /** `numeric` restricts input and the mobile keyboard to digits; otherwise letters are allowed. */
   readonly mode = input<OtpMode>('numeric');
-  /** Renders each cell as a password dot instead of the typed character. */
+  /** Renders each cell as a password dot. */
   readonly mask = input(false, { transform: booleanAttribute });
   /** Disables all cells and blocks interaction. */
   readonly disabled = input(false, { transform: booleanAttribute });
-  /** Confirmation text, shown when there is no error or warning — and it paints
-   *  the field's success border. A string like `warning`: the text IS the state. */
+  /** Confirmation text, shown when there is no error or warning; also paints the success
+   *  border. A string like `warning`: the text is the state. */
   readonly success = input<string, string | null | undefined>('', {
     transform: trimmedText,
   });
-  /** Accessible group label for the cell row.
-   *  Unset falls back to `DS_INTL.otpInput.label`. */
+  /** Accessible group label for the cell row. Unset falls back to `DS_INTL.otpInput.label`. */
   readonly ariaLabel = input<string | null>(null);
   readonly ariaLabelResolved = computed(
     () => this.ariaLabel() ?? this.intl().otpInput.label,
   );
-  /** Fires once, with the full code, on the partial → complete transition. */
+  /** Fires once, with the full code, on the partial-to-complete transition. */
   readonly completed = output<string>();
 
   private readonly boxes = viewChildren<ElementRef<HTMLInputElement>>('box');
@@ -96,7 +95,6 @@ export class OtpInputComponent extends DsControlValueAccessor<string> {
     () => this.disabled() || this.formDisabled(),
   );
 
-  // Fixed-length, position-preserving view of the current value.
   protected readonly cells = computed<string[]>(() => {
     const value = this.value().slice(0, this.length());
 
@@ -112,9 +110,8 @@ export class OtpInputComponent extends DsControlValueAccessor<string> {
 
       return;
     }
-    // Every branch writes element.value itself: Angular diffs `[value]` against the
-    // value IT last wrote, so a split that leaves this cell's signal unchanged skips
-    // the DOM write and the browser's own text stays on screen.
+    // Every branch writes element.value itself: Angular diffs `[value]` against what it last wrote, so an
+    // unchanged cell signal skips the DOM write and the browser's own text stays on screen.
     if (cleaned.length === 1) {
       this.writeCell(index, cleaned);
       element.value = cleaned;
@@ -159,8 +156,7 @@ export class OtpInputComponent extends DsControlValueAccessor<string> {
 
   protected onFocus(event: FocusEvent, index: number): void {
     (event.target as HTMLInputElement).select();
-    // Keep entry left-packed: redirect focus to the first empty cell so the user
-    // can't type into a gap (the flat value string can't represent middle gaps).
+    // Left-packed: the flat value string cannot represent a gap, so focus goes to the first empty cell.
     const firstEmpty = this.firstEmptyIndex();
     if (firstEmpty >= 0 && index > firstEmpty) {
       this.focusBox(firstEmpty);
@@ -205,8 +201,7 @@ export class OtpInputComponent extends DsControlValueAccessor<string> {
   private commit(cells: string[]): void {
     const value = cells.join('').slice(0, this.length());
     this.value.set(value);
-    // Fire `completed` only on the partial → full transition, not on every
-    // edit of an already-complete code (which would re-trigger consumers).
+    // Only on partial-to-full; editing an already-complete code must not re-trigger consumers.
     const complete = value.length === this.length();
     if (complete && !this.wasComplete) {
       this.completed.emit(value);

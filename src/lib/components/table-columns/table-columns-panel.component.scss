@@ -2,9 +2,8 @@
 @use '../../styles/focus' as focus;
 @use '../../styles/table-controls' as table-controls;
 
-// Encapsulated, even though the panel is portaled out of ds-table into the popover overlay: the
-// attribute travels on the elements, so scoping survives the move — where a rule inherited from
-// ds-table's own stylesheet never arrives at all.
+// Encapsulated on purpose: the panel is portaled into the popover overlay, where ds-table's own
+// stylesheet never arrives but the scoping attribute travels with the elements.
 
 .col-picker {
   display: grid;

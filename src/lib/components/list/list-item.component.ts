@@ -14,8 +14,7 @@ import { NgTemplateOutlet } from '@angular/common';
   templateUrl: './list-item.component.html',
   styleUrl: './list-item.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
-  // A static `title="…"` feeding the input below ALSO stays in the DOM as the global attribute,
-  // which makes the host a native browser tooltip over everything inside it.
+  // A static `title="…"` also stays as the global attribute, giving the whole host a native tooltip.
   host: {
     '[attr.title]': 'null',
     role: 'listitem',
@@ -26,14 +25,14 @@ import { NgTemplateOutlet } from '@angular/common';
   },
 })
 export class ListItemComponent {
-  /** Convenience text; richer middle content can be projected as default content. */
+  /** Row text; richer content can be projected instead. */
   readonly title = input<string>('');
   /** Secondary line below `title`. */
   readonly subtitle = input<string>('');
   /** Makes the row's text a button that emits `activated`. `[leading]` and
    *  `[trailing]` stay outside it, so a row can hold its own controls as well. */
   readonly clickable = input(false, { transform: booleanAttribute });
-  /** Marks the row current — `aria-current` and the selected tint. */
+  /** Marks the row current: `aria-current` and the selected tint. */
   readonly selected = input(false, { transform: booleanAttribute });
   /** Disables the row's own button. Controls projected into `[leading]` or
    *  `[trailing]` keep their own disabled state. */

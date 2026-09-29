@@ -18,18 +18,15 @@ import type { ChartAxisEntry } from './chart-scales.token';
 export const CHART_DEFAULT_TICK_COUNT = 5;
 export const CHART_AXIS_LABEL_GAP = 8;
 
-/** Room a rotated axis title needs across the gutter: its line box, turned on its side. */
+/** Room a rotated axis title needs across the gutter: its line box turned on its side. */
 export const CHART_AXIS_TITLE_BAND = 20;
 export const CHART_CATEGORY_LABEL_OFFSET = 18;
 export const CHART_BAND_PADDING = 0.3;
 
-/** What the chart lays out at while it measures zero: under SSR, while the host is
- *  `display: none`, and for the frame before the first `ResizeObserver` callback. Without it the
- *  plot is `0 - axisGutter - EDGE_GUTTER` wide, which clamps to zero and stacks every category on
- *  one x rather than leaving a blank space that the measurement then fills.
- *
- *  The client cost is one frame drawn at this width and scaled to fit - measured at a 400px card
- *  in Chrome 153: `viewBox="0 0 640 310"` at t=242ms, `"0 0 358 310"` at t=260ms.
+/** The width the chart lays out at while it measures zero: under SSR, while the host is
+ *  `display: none`, and before the first `ResizeObserver` callback. Without it the plot is
+ *  `0 - axisGutter - EDGE_GUTTER` wide, which clamps to zero and stacks every category on one x.
+ *  On the client that costs one frame drawn at this width and scaled to fit.
  *
  *  @internal */
 export const CHART_FALLBACK_WIDTH = 640;
@@ -41,18 +38,15 @@ export const CHART_DEFAULT_VALUE_SPACE = 20;
 /** Room past the last band, so a mark centred on it is not cut by the viewBox edge. */
 export const CHART_EDGE_GUTTER = 12;
 
-/** Blank between two stacked plots: enough for the lower plot's top tick label to clear the upper
- *  plot's category-free bottom edge. */
+/** Blank between two stacked plots, so the lower plot's top tick label clears the upper plot's bottom edge. */
 export const CHART_STACKED_PLOT_GAP = 34;
 
-/** Height of the category-label row under the plot: one line plus its descenders. */
 const CATEGORY_GUTTER = 30;
 
-/** The drawable rectangle, in the same CSS pixels the container was measured in.
+/** The drawable rectangle, in CSS pixels.
  *
- *  `measuredWidth` is the `<svg>`'s own rendered width, which is what makes every coordinate
- *  derived from this an exact CSS pixel: the viewBox is sized to match, so one user unit is one
- *  pixel and a mark capped at 48 is 48 pixels wide at every card width.
+ *  `measuredWidth` is the `<svg>`'s rendered width; the viewBox is sized to match, so one user unit
+ *  is one pixel at every card width.
  *
  *  @internal */
 export function chartPlot(
@@ -70,13 +64,11 @@ export function chartPlot(
   };
 }
 
-/** The viewBox's height, and the `<svg>`'s rendered height in pixels - the two are the same
- *  number, which is what holds the 1:1 scale on the vertical axis too.
+/** The viewBox's height, equal to the `<svg>`'s rendered height in pixels (the 1:1 vertical scale).
  *
- *  `valueSpace` is always budgeted above the plot, for a value label over the tallest mark. It is
- *  budgeted a SECOND time below the baseline only when the domain reaches under zero, where a
- *  negative mark's label would otherwise print into the category labels: reserving it for every
- *  chart costs the all-positive ones - the common case - that much height for nothing.
+ *  `valueSpace` is budgeted above the plot for a value label over the tallest mark, and again below
+ *  the baseline only when the domain reaches under zero (a negative mark's label would print into
+ *  the category labels); all-positive charts do not pay for it.
  *
  *  @internal */
 export function chartViewHeight(
@@ -89,12 +81,9 @@ export function chartViewHeight(
   return valueSpace + Math.max(0, plotHeight) + below + CATEGORY_GUTTER;
 }
 
-/** The domain the value axis draws: the union of every reported set, always reaching zero,
- *  widened by the pins and snapped to a round tick step.
- *
- *  Zero is always in it because a bar measured against a floating floor misstates its own size,
- *  and a pin only ever widens because a maximum under the data would push readings off the plot
- *  rather than rescale them.
+/** The domain the value axis draws: the union of every reported set, always reaching zero (a bar
+ *  against a floating floor misstates its size), widened by the pins (a pin under the data would
+ *  push readings off the plot) and snapped to a round tick step.
  *
  *  @internal */
 export function axisDomain(
@@ -132,8 +121,7 @@ export function axisDomain(
 }
 
 /** Where a value sits vertically, clamped inside the plot. An unplottable value lands on the
- *  baseline rather than becoming a `NaN`, which would void the whole coordinate attribute it was
- *  written into and take the mark off screen with nothing logged.
+ *  baseline: a `NaN` would void the whole coordinate attribute and hide the mark silently.
  *
  *  @internal */
 export function valueScale(
@@ -154,17 +142,14 @@ export function valueScale(
 /** Distance from a reference line, or a band's upper edge, to its label's baseline. */
 const THRESHOLD_LABEL_GAP = 5;
 
-/** Inset from the plot's LEFT edge. The label sits at the start of the line rather than its end
- *  because a value label is centred on its column, and the last column's is the one nearest the
- *  edge the line stops at - measured on the docs demo, a right-anchored "Escalation" printed over
- *  the last column's own value. */
+/** Inset from the plot's left edge. The label sits at the line's start because a right-anchored one
+ *  collides with the last column's centred value label. */
 const THRESHOLD_LABEL_INSET = 4;
 
 /** @internal */
 export interface ThresholdMark {
-  /** Position in the list, not the reading: two thresholds may legitimately name the same value -
-   *  a target and the floor of the band around it - and keying on the value would collapse them
-   *  into one drawn line. */
+  /** Position in the list, not the reading: two thresholds may share a value, and keying on it would
+   *  collapse them into one line. */
   readonly key: number;
   readonly label: string;
   readonly color: string | null;
@@ -180,9 +165,8 @@ export interface ThresholdMark {
   readonly labelY: number;
 }
 
-/** Every drawable coordinate of a chart's reference lines and bands, so the strokes and the labels
- *  - which paint in different layers, under the marks and over them - are laid out by one
- *  calculation rather than by two that can disagree.
+/** Every drawable coordinate of a chart's reference lines and bands, so strokes and labels (which
+ *  paint in different layers) share one calculation.
  *
  *  @internal */
 export function thresholdMarks(
@@ -215,9 +199,8 @@ export function thresholdMarks(
 
 /** A tick row's index for the value zero, or `null` when the rows do not carry one.
  *
- *  Two axes share gridlines only if they also share a zero: a second scale hung on the first's
- *  rows has to put its own zero on the same row, or a reading above the line on one axis sits
- *  below it on the other. */
+ *  Two axes share gridlines only if they share a zero row, or a reading above the line on one axis
+ *  sits below it on the other. */
 function zeroRow(ticks: readonly number[]): number | null {
   if (ticks.length < 2) {
     return null;
@@ -240,20 +223,18 @@ function zeroRow(ticks: readonly number[]): number | null {
 export interface SecondaryAxis {
   readonly domain: NiceDomain;
   readonly ticks: readonly number[];
-  /** True when the labels below belong on the PRIMARY axis's own tick rows, so the plot carries
-   *  one set of gridlines rather than two crossing each other. */
+  /** True when the labels below sit on the primary axis's own tick rows (one set of gridlines). */
   readonly aligned: boolean;
 }
 
 /** The second value axis, as the four modes define it.
  *
- *  `'aligned'` and `'exact'` hang the second scale on the first's tick rows and differ only in the
- *  step: `'aligned'` snaps it up to a round number and overshoots the data, `'exact'` takes the
- *  step the data needs and lands on it. `'dual-grid'` and `'split'` nice the second domain on
- *  its own - stacked plots sit one above the other, so there is nothing to align.
+ *  `'aligned'` and `'exact'` hang the second scale on the first's tick rows; `'aligned'` snaps the
+ *  step to a round number and overshoots the data, `'exact'` takes the step the data needs.
+ *  `'dual-grid'` and `'split'` nice the second domain on its own.
  *
- *  Falls back to an independent scale wherever alignment is not available: fewer than two rows, no
- *  shared zero row, or a domain whose sign has no rows on its side of that zero.
+ *  Falls back to an independent scale when alignment is unavailable: fewer than two rows, no shared
+ *  zero row, or a domain whose sign has no rows on its side of zero.
  *
  *  @internal */
 export function secondaryAxis(
@@ -314,21 +295,18 @@ export function secondaryAxis(
   };
 }
 
-/** A step multiplied back out rarely lands on itself, and an axis label that prints
- *  `149.99999999999997` is the visible form of that. */
+/** A step multiplied back out rarely lands on itself (`149.99999999999997`). */
 function roundTick(value: number): number {
   return Number(value.toFixed(6));
 }
 
 /** Every segment's span on the value axis, series-major: `offsets[series][category]`.
  *
- *  `'none'` and `'grouped'` give every series the same span it would have alone - the two differ in
- *  where the band puts them, which is geometry rather than value. The stacking modes run a
- *  POSITIVE and a NEGATIVE pile per category, so a negative segment hangs below the baseline
- *  instead of being subtracted from the positive pile it sits in.
+ *  `'none'` and `'grouped'` give every series the span it would have alone. The stacking modes run a
+ *  positive and a negative pile per category, so a negative segment hangs below the baseline.
  *
- *  `'normalized'` divides a running SUM rather than each share in turn: adding 20/60 to 40/60
- *  lands on 0.9999999999999999, which draws a category that visibly falls short of full.
+ *  `'normalized'` divides a running sum, not each share in turn: 20/60 + 40/60 is
+ *  0.9999999999999999 and draws a category visibly short of full.
  */
 export function stackOffsets(
   series: readonly (readonly number[])[],
@@ -399,14 +377,12 @@ export function annotationMarks(
     key: reading.key,
     label: reading.label,
     x: reading.x,
-    // Above the reading, and below it where there is no room - a peak sits at the top of the
-    // plot, which is exactly where a label clamped upward lands on its own marker.
+    // Below the reading where there is no room above: a label clamped upward at a peak lands on its own marker.
     y:
       reading.y - ANNOTATION_GAP >= ANNOTATION_GAP
         ? reading.y - ANNOTATION_GAP
         : reading.y + ANNOTATION_GAP,
-    // Anchored away from the plot edges: a centred label at the first or last category hangs
-    // half outside the viewBox and is clipped rather than merely tight.
+    // Anchored away from the plot edges: a centred first/last label hangs half outside the viewBox and is clipped.
     anchor:
       reading.x < ANNOTATION_EDGE_GUARD
         ? 'start'
@@ -424,9 +400,8 @@ export interface ChartStackOffset {
   readonly to: number;
 }
 
-/** Which category a pointer at `x` is over, or `-1` outside the plot. Bands are equal and abut,
- *  so the reading is a division rather than a search - and the half band at each end belongs to
- *  the first and last category, which is where a reader aiming at the edge means to be.
+/** Which category a pointer at `x` is over, or `-1` outside the plot. Bands are equal and abut, so
+ *  it is a division; the half band at each end belongs to the first and last category.
  *
  *  @internal */
 export function categoryAt(
@@ -447,8 +422,7 @@ export function categoryAt(
   return Math.min(categoryCount - 1, Math.floor(offset / band));
 }
 
-/** Readings in the order the reader sees their marks, top to bottom, with the height dropped. A
- *  tie, or a reading with no height, keeps its given place. */
+/** Readings ordered top to bottom with the height dropped; ties and readings with no height keep their place. */
 export function topDown(
   entries: readonly ChartAxisEntry[],
 ): ChartTooltipEntry[] {

@@ -2,22 +2,14 @@
 
 $families: secondary, tertiary, error, success, warning;
 
-// Scoped accent recolour. A `ds-color="<family>"` attribute — on a zone
-// container, on a component host, or applied via the ds.color() mixin in
-// consumer config — flips the --accent-* pointer family to another brand/status
-// family for its subtree. Components read --accent-* for their accent, so the whole
-// subtree recolours from this one rule. Pairs with the button/icon-button `color`
-// input, which flips the same pointers
-// per instance. With no attribute, --accent-* stays the primary family (see
-// themes/_semantic.scss), so the default theme is unchanged.
+// Scoped accent recolour: `ds-color="<family>"` on a container or host (or the ds.color() mixin)
+// flips the --accent-* pointers to another family for its subtree. Without it --accent-* stays the
+// primary family.
 
-// Each pointer ends in a fallback, because a role a family does not define is not a wrong
-// colour: it is a GUARANTEED-INVALID value, so every declaration reading the pointer becomes
-// invalid at computed-value time and resets to `unset` — a label rendered as body text, a fill
-// rendered transparent, and nothing in the console either way. Where the fallback leads differs
-// by pointer and is deliberate: -hover, -pressed and -strong fall back to the family's own base
-// colour, the tint pointers to the family's -muted, and -on and the two focus pointers to the
-// theme-wide role, since no family-shaped answer exists for them.
+// Each pointer ends in a fallback: a role a family does not define is guaranteed-invalid, so every
+// declaration reading it resets to `unset` (body-text label, transparent fill) with no console
+// message. -hover, -pressed and -strong fall back to the family base, tints to its -muted, and
+// -on and the focus pointers to the theme-wide role.
 @mixin family-vars($family) {
   --accent: var(--#{$family});
   --accent-hover: var(--#{$family}-hover, var(--#{$family}));
@@ -31,21 +23,16 @@ $families: secondary, tertiary, error, success, warning;
   --accent-focus-field: var(--focus-field-#{$family}, var(--focus-field));
   --accent-surface-tint: var(--#{$family}-subtitle, var(--#{$family}-muted));
 
-  // Re-declared rather than left to inherit: `--focus-ring-color: var(--accent)` on :root
-  // substitutes ON :root, so the brand hue is what reaches this subtree already resolved. The flat
-  // outline colour has to be written again where the accent actually changed, or a focused row
-  // inside an error zone rings brand-blue while every other accent around it is red.
+  // Re-declared: `--focus-ring-color: var(--accent)` on :root is resolved there, so the subtree
+  // would inherit the brand hue and ring brand-blue inside an error zone.
   --focus-ring-color: var(--#{$family});
 }
 
 /// Recolour the DS accent for a type or scope from consumer SCSS, e.g.
 /// `ds-switch { @include ds.color(secondary); }`.
 ///
-/// A name outside $families is refused rather than emitted. Without this the mixin accepts any
-/// string and writes `--accent: var(--<whatever>)`, which is guaranteed-invalid — so every rule
-/// reading the accent resets to `unset` and the subtree renders as body text, with nothing in the
-/// console. That is the failure `check-color-families.mjs` exists to prevent, and it is the one
-/// form of it no CSS-side check can see: a consumer's `@include` never reaches our compiled output.
+/// A name outside $families is refused: `--accent: var(--<unknown>)` is guaranteed-invalid and the
+/// subtree would render as body text with no console message.
 @mixin color($family) {
   @if not list.index($families, $family) {
     @error 'ds.color(): unknown family "#{$family}". Available: #{$families}.';

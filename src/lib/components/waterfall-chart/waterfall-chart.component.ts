@@ -36,8 +36,7 @@ import type {
   WaterfallChartStep,
 } from './waterfall-chart.types';
 
-/** What each direction is painted with. A total is the neutral series colour because it is not a
- *  change at all, and reading it as one is the mistake the three-colour scheme exists to prevent. */
+/** A total is the neutral series colour because it is not a change. */
 const DIRECTION_COLORS: Record<WaterfallChartStep['direction'], string> = {
   increase: 'var(--ds-chart-positive-color)',
   decrease: 'var(--ds-chart-negative-color)',
@@ -47,10 +46,8 @@ const DIRECTION_COLORS: Record<WaterfallChartStep['direction'], string> = {
 /**
  * A running total, bar by bar: what a figure started at, what moved it, and what it ended at.
  *
- * The one chart in the family that cannot be a mode on another, because it needs three things at
- * once - an accumulating level, bars pinned to zero for the totals, and its own three-colour
- * semantic. Colour never carries that semantic alone: every bar's label prints its own sign and
- * every bar's accessible name says "increase" or "decrease" in words.
+ * Colour never carries the increase/decrease semantic alone: every bar's label prints its own sign
+ * and its accessible name says "increase" or "decrease" in words.
  */
 @Component({
   selector: 'ds-waterfall-chart',
@@ -75,15 +72,13 @@ const DIRECTION_COLORS: Record<WaterfallChartStep['direction'], string> = {
 export class WaterfallChartComponent {
   protected readonly renderReady = chartRenderGate();
 
-  /** The bars in the order they are read, which is the order they happened in - a waterfall is
-   *  never sorted, because the sequence is the meaning. */
+  /** The bars in the order they are read. Never sorted: the sequence is the meaning. */
   readonly data = input<readonly WaterfallChartBar[]>([]);
 
   /** Prints each bar's own reading above it, with its sign. */
   readonly showValues = input(true, { transform: booleanAttribute });
 
-  /** The dashed rule chaining one bar to the next at the level they share. Without it the bars
-   *  read as separate columns rather than as one running total. */
+  /** The dashed rule chaining one bar to the next at the level they share. */
   readonly showConnectors = input(true, { transform: booleanAttribute });
 
   /** Printed above the plot as the visible title, and reused as the annex table's caption. */
@@ -111,8 +106,7 @@ export class WaterfallChartComponent {
   /** Skeleton bars at the real count, so the page does not resize when the data lands. */
   readonly loading = input(false, { transform: booleanAttribute });
 
-  /** Separate from an empty `data`: "the request failed" and "there is nothing to show" read the
-   *  same and mean opposite things. */
+  /** Separate from an empty `data`: a failed request and no data mean different things. */
   readonly error = input(false, { transform: booleanAttribute });
 
   /** Shown in place of the plot when `data` is empty. Unset falls back to
@@ -167,8 +161,8 @@ export class WaterfallChartComponent {
     this.steps().map((step) => ({ from: step.from, to: step.to })),
   );
 
-  /** What each bar's label prints: a delta's own change, a total's running sum. The two are
-   *  different readings and only one of them takes a sign. */
+  /** What each bar's label prints: a delta's own change, a total's running sum. Only a delta takes
+   *  a sign. */
   protected readonly labelValues = computed(() =>
     this.steps().map((step, index) =>
       step.direction === 'total' ? step.to : (this.data()[index]?.value ?? 0),
@@ -186,8 +180,7 @@ export class WaterfallChartComponent {
 
       return {
         id: datum?.id ?? String(index),
-        // The word is what carries the meaning where colour cannot - forced colours, a monochrome
-        // print, a reader who cannot tell the two hues apart, and every screen reader.
+        // The word carries the meaning where colour cannot: forced colours, print, screen readers.
         label: `${step.label}, ${this.intl().chart[step.direction]} ${sign}${format(reading, 'tooltip')}`,
         value: reading,
         color: DIRECTION_COLORS[step.direction],

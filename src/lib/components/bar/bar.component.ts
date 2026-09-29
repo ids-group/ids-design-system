@@ -11,10 +11,8 @@ import type { BarSemantics, BarVariant } from './bar.types';
 
 /**
  * One horizontal track with one fill: a task's completion, or a measurement on a known scale.
- *
- * The two are the same drawing and a different claim, which is what `semantics` carries — the
- * platform splits them the same way, into `<progress>` and `<meter>`. Getting it wrong is not
- * cosmetic: a table of two hundred rates under `'progress'` announces two hundred progress bars.
+ * `semantics` carries the difference: a table of two hundred rates under `'progress'` announces
+ * two hundred progress bars.
  */
 @Component({
   selector: 'ds-bar',
@@ -40,31 +38,27 @@ import type { BarSemantics, BarVariant } from './bar.types';
 export class BarComponent {
   /** The reading, in units of `max`; clamped, and ignored while `indeterminate`. */
   readonly value = input(0, { transform: numberAttribute });
-  /** The full scale `value` and `target` are read against. Left at 100 they are percentages. Set
-   *  it to the real total — `[value]="37" [max]="80"` — and the accessible name carries "37 of 80"
-   *  rather than the 46% a caller would otherwise have to compute. For a column of measurements
-   *  it is usually the column's own largest value, so the longest bar fills its track and the rest
-   *  are its share. Zero or less falls back to 100, because a scale with no width has no fraction
-   *  to draw. */
+  /** The full scale `value` and `target` are read against; at 100 they are percentages. With the
+   *  real total (`[value]="37" [max]="80"`) the accessible name carries "37 of 80". Zero or less
+   *  falls back to 100. */
   readonly max = input(100, { transform: numberAttribute });
   /** What the bar is, and therefore how it is announced. See `BarSemantics`. Defaults to
    *  `'progress'`. */
   readonly semantics = input<BarSemantics>('progress');
-  /** Colour role — drives the success/warning/error styling. */
+  /** Colour role: drives the success/warning/error styling. */
   readonly variant = input<BarVariant>('default');
   /** Indeterminate (unknown-duration) animation instead of a fixed `value`. Only a task has an
    *  unknown duration, so it is ignored unless `semantics` is `'progress'`. */
   readonly indeterminate = input(false, { transform: booleanAttribute });
-  /** Overrides the fill for this one bar. A whole column is coloured once through
-   *  `--ds-bar-fill-color` instead; use this where the colour carries meaning on one row. */
+  /** Overrides the fill for this one bar. Colour a whole column through `--ds-bar-fill-color`
+   *  instead. */
   readonly color = input<string | null>(null);
-  /** Accessible name (e.g. "Upload progress"). With a `target` set, name the comparison here —
-   *  the mark is drawn and the role has no second value to announce, so "Resolved 62% against a
-   *  75% target" is what reaches a screen reader. Unused under `semantics="none"`. */
+  /** Accessible name (e.g. "Upload progress"). With a `target` set, name the comparison here
+   *  ("Resolved 62% against a 75% target"): the role has no second value to announce. Unused under
+   *  `semantics="none"`. */
   readonly ariaLabel = input<string | null>(null);
-  /** A second point on the same scale as `value`, drawn as a hairline across the track — a goal,
-   *  a baseline or a threshold to read `value` against. Clamped like `value`, ignored while
-   *  `indeterminate`, and unset draws nothing. */
+  /** A second point on the same scale as `value`, drawn as a hairline across the track (goal,
+   *  baseline or threshold). Clamped like `value`, ignored while `indeterminate`. */
   readonly target = input<number | null>(null);
 
   protected readonly role = computed(() => {
@@ -91,7 +85,6 @@ export class BarComponent {
       : 0;
   });
 
-  /** Width and offset are percentages of the track whatever the scale is. */
   protected readonly valuePercent = computed(
     () => (this.clampedValue() / this.scale()) * 100,
   );

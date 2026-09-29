@@ -4,7 +4,6 @@ export const SCATTER_VIEW_WIDTH = 640;
 export const SCATTER_VIEW_HEIGHT = 360;
 export const SCATTER_DEFAULT_TICK_COUNT = 5;
 
-/** The drawable rectangle, in the canvas's own units. */
 export interface ScatterPlot {
   readonly left: number;
   readonly top: number;
@@ -12,7 +11,6 @@ export interface ScatterPlot {
   readonly height: number;
 }
 
-/** What both axes have to hold. */
 export interface ScatterExtent {
   readonly xMin: number;
   readonly xMax: number;
@@ -43,8 +41,8 @@ export function scatterExtent(
   };
 }
 
-/** Where one reading lands, clamped into the plot. A domain pinned narrower than the data would
- *  otherwise put a mark over the axis labels rather than on an edge.
+/** Where one reading lands, clamped into the plot: a domain pinned narrower than the data would
+ *  otherwise put a mark over the axis labels.
  *
  *  @internal */
 export function scatterPlacement(

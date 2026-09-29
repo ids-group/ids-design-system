@@ -7,11 +7,8 @@ import {
   output,
 } from '@angular/core';
 
-/** A single calendar day cell — the building block of `<ds-date-picker>`'s grid,
- *  also usable standalone (e.g. a state showcase). Renders a focusable
- *  `<button class="day">` whose state classes are driven by inputs. The host is
- *  `display: contents` so the inner button is the grid item, and the date-picker
- *  can still focus a specific day via `[data-day]` (roving tabindex).
+/** A single calendar day cell of `<ds-date-picker>`'s grid, also usable standalone. The host is `display: contents` so the inner
+ *  `<button class="day">` is the grid item and the date-picker can focus a day via `[data-day]` (roving tabindex).
  * @internal
  */
 @Component({
@@ -29,17 +26,17 @@ import {
 export class CalendarDayComponent {
   /** The chosen day in single mode, or an end of the range in range mode. Drives `aria-selected`. */
   readonly selected = input(false, { transform: booleanAttribute });
-  /** A day BETWEEN the two ends of a range — tinted, but not itself selected. */
+  /** A day BETWEEN the two ends of a range - tinted, but not itself selected. */
   readonly inRange = input(false, { transform: booleanAttribute });
   /** First day of a range: rounds the leading corners and counts as selected. */
   readonly rangeStart = input(false, { transform: booleanAttribute });
   /** Last day of a range: rounds the trailing corners and counts as selected. */
   readonly rangeEnd = input(false, { transform: booleanAttribute });
-  /** Marks the current date. Independent of selection — today can be unselected. */
+  /** Marks the current date. Independent of selection - today can be unselected. */
   readonly today = input(false, { transform: booleanAttribute });
-  /** Day from an adjacent month — dimmed. */
+  /** Day from an adjacent month - dimmed. */
   readonly muted = input(false, { transform: booleanAttribute });
-  /** Outside `minDate`/`maxDate` or rejected by `disabledDate` — dimmed and not clickable. */
+  /** Outside `minDate`/`maxDate` or rejected by `disabledDate` - dimmed and not clickable. */
   readonly disabled = input(false, { transform: booleanAttribute });
   /** Stable key the date-picker uses to focus a specific day (roving tabindex). */
   readonly dataDay = input<string | null>(null);
@@ -51,7 +48,7 @@ export class CalendarDayComponent {
 
   /** Click on an enabled day. Carries the event so the host can read modifier keys. */
   readonly daySelected = output<MouseEvent>();
-  /** Key press on the focused day — the grid owns arrow/Home/End navigation, not the cell. */
+  /** Key press on the focused day - the grid owns arrow/Home/End navigation, not the cell. */
   readonly dayKeydown = output<KeyboardEvent>();
 
   protected readonly classes = computed(() => {

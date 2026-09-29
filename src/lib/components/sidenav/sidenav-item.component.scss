@@ -2,23 +2,18 @@
 @use '../../styles/text-clip' as text-clip;
 @use '../../styles/press' as press;
 
-// Tokens on :host so consumer overrides (ds-sidenav-item { --ds-…: … }) win
-// against the inner .item rule's specificity.
+// Tokens on :host so consumer overrides win against the inner .item rule's specificity.
 :host {
   --_sidenav-item-label-color:              var(--ds-sidenav-item-label-color,              var(--text-secondary));
   --_sidenav-item-label-color-hover:        var(--ds-sidenav-item-label-color-hover,        var(--text-primary));
   --_sidenav-item-label-font-weight: var(--ds-sidenav-item-label-font-weight, var(--font-weight-semibold));
   --_sidenav-item-bg-color-hover:        var(--ds-sidenav-item-bg-color-hover,        var(--surface-secondary));
 
-  /* A tinted wash with a coloured label, not a solid brand pill: Material's
-     navigation drawer fills its active item with `secondary-container` and labels
-     it `on-secondary-container`, and Carbon uses `$background-selected` with a
-     border and a weight bump. Neither fills with the brand accent. */
+  /* A tinted wash with a coloured label, not a solid brand pill. */
   --_sidenav-item-bg-color-active:       var(--ds-sidenav-item-bg-color-active,       var(--accent-subtitle));
   --_sidenav-item-label-color-active:       var(--ds-sidenav-item-label-color-active,       var(--accent-strong));
 
-  /* Toward the accent, not toward white: hovering a pale wash has to deepen it,
-     and the old mix lightened whatever it was given — invisible on a wash. */
+  /* Toward the accent, not toward white: hovering a pale wash must deepen it. */
   --_sidenav-item-bg-color-active-hover: var(--ds-sidenav-item-bg-color-active-hover, var(--accent-muted));
   --_sidenav-item-rail:            var(--ds-sidenav-item-rail,            var(--accent-strong));
   --_sidenav-item-radius:          var(--ds-sidenav-item-radius,          var(--ds-radius-control));
@@ -28,8 +23,7 @@
 }
 
 .item {
-  /* The destination-less variant is a <button>, so the UA's chrome has to go for
-     it to sit level with the two <a> variants. Inert on an anchor. */
+  /* Resets the UA chrome of the destination-less <button> variant; inert on an anchor. */
   width: 100%;
   border: 0;
   background: transparent;
@@ -151,10 +145,8 @@
       display: none;
     }
 
-    /* The dot rides the GLYPH's top-right corner, not the tile's. Anchored to the
-       tile it sat 4px clear of a 20px glyph and would drift further on any wider
-       rail — the template renders that glyph at 20px, centred, so its corner is
-       half its size out from the tile's centre. */
+    /* The dot rides the GLYPH's top-right corner, not the tile's: the template renders the
+       glyph centred, so its corner is half its size out from the tile's centre. */
     .alert {
       position: absolute;
       top: calc(50% - var(--sidenav-collapsed-glyph) / 2);

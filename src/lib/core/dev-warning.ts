@@ -2,22 +2,16 @@ import { effect, isDevMode } from '@angular/core';
 
 /**
  * Warns once per distinct message, not once per recomputation: the effect re-runs whenever any
- * signal the condition reads changes, so without that a static misconfiguration would log again
- * on every keystroke.
- *
- * Returning the message from the condition keeps the two together — a condition
- * that drifts from its message is how a warning ends up describing a state that
- * cannot happen any more.
+ * signal the condition reads changes, so a static misconfiguration would otherwise log on every
+ * keystroke. Returning the message from the condition keeps a condition from drifting away from
+ * its message.
  *
  * Must be called from an injection context.
  *
- * Callers wrap this in `if (typeof ngDevMode === 'undefined' || ngDevMode)`. That is
- * a BUILD-time expression, not a repeat of the `isDevMode()` below: the intent is for
- * a minifier to fold it and drop the message with it, which `isDevMode()` — an opaque
- * call — can never allow. It cannot become a helper function for the same reason.
- *
- * It does work: `ds-stat`, `ds-split-button` and `ds-toast-region` keep no message text in the
- * shipped bundle.
+ * Callers wrap this in `if (typeof ngDevMode === 'undefined' || ngDevMode)`. That is a
+ * BUILD-time expression, not a repeat of the `isDevMode()` below: a minifier folds it and drops
+ * the message with it, which the opaque `isDevMode()` call never allows. For the same reason it
+ * cannot become a helper function.
  * @internal
  */
 export function devWarn(message: () => string | null): void {

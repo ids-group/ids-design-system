@@ -53,9 +53,8 @@ export function lineSegments(
   return segments;
 }
 
-/** `''` rather than a partial list when a coordinate is unplottable: one `NaN` in a
- *  `points` list or a path `d` voids the whole attribute, and the line then vanishes
- *  with nothing logged.
+/** `''` rather than a partial list when a coordinate is unplottable: one `NaN` voids the whole
+ *  `points` attribute and the line vanishes silently.
  *
  *  @internal */
 export function polylinePoints(segment: readonly LinePoint[]): string {
@@ -66,9 +65,8 @@ export function polylinePoints(segment: readonly LinePoint[]): string {
   return segment.map((point) => coordinatePair(point)).join(' ');
 }
 
-/** Fritsch-Carlson tangents: the slope at each reading, clamped so no segment can turn back on
- *  itself. A zero slope on either side of a reading pins the tangent flat, which is what keeps a
- *  plateau flat instead of bulging through it. */
+/** Fritsch-Carlson tangents: the slope at each reading, clamped so no segment turns back on itself.
+ *  A zero slope on either side pins the tangent flat, keeping a plateau flat. */
 function monotoneTangents(segment: readonly LinePoint[]): number[] {
   const count = segment.length;
   const secants: number[] = [];
@@ -94,8 +92,7 @@ function monotoneTangents(segment: readonly LinePoint[]): number[] {
       tangents[index + 1] = 0;
       continue;
     }
-    // Fritsch-Carlson's circle condition: keeping each tangent within three times the secant it
-    // sits on is what makes the cubic monotone on that span.
+    // Tangent within three times its secant keeps the cubic monotone on that span.
     const alpha = tangents[index] / secant;
     const beta = tangents[index + 1] / secant;
     const magnitude = Math.hypot(alpha, beta);
@@ -132,8 +129,7 @@ function smoothPath(segment: readonly LinePoint[]): string {
   return path;
 }
 
-/** One unbroken run as a path `d`. `''` rather than a partial path when a coordinate is
- *  unplottable: one `NaN` voids the whole attribute and the line vanishes with nothing logged.
+/** One unbroken run as a path `d`. `''` when a coordinate is unplottable (one `NaN` voids the attribute).
  *
  *  @internal */
 export function linePath(
@@ -158,10 +154,9 @@ export function linePath(
   return smoothPath(segment);
 }
 
-/** The filled band between two edges - a stacked area sitting on the series below it, or a
- *  confidence band around a line. The lower edge is walked BACKWARDS, so its curve is rebuilt from
- *  the reversed points rather than reused: a monotone cubic is not symmetric, and closing the shape
- *  along the forward path would bend the bottom of the band the wrong way.
+/** The filled band between two edges (a stacked area, or a confidence band). The lower edge is
+ *  walked backwards, so its curve is rebuilt from the reversed points: a monotone cubic is not
+ *  symmetric, and reusing the forward path would bend the bottom the wrong way.
  *
  *  @internal */
 export function bandPath(
@@ -182,8 +177,8 @@ export function bandPath(
   return `${linePath(upper, curve)} L ${back.slice('M '.length)} Z`;
 }
 
-/** The same run as `linePath`, closed down to the baseline. It takes the curve so a filled series
- *  and its own line share one edge - drawn apart, a smooth line floats off a straight-edged fill.
+/** The same run as `linePath`, closed down to the baseline. It takes the curve so a fill and its
+ *  line share one edge (a smooth line would float off a straight-edged fill).
  *
  *  @internal */
 export function areaPath(

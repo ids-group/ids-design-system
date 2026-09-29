@@ -1,8 +1,7 @@
 @use '../../styles/focus' as focus;
 
-/* The panel is portaled by the CDK OUTSIDE the host, and custom properties inherit
-   down the DOM tree — which the portaled panel is not part of. So the private
-   resolvers are declared twice: on :host for the trigger, and on .panel. */
+/* The panel is portaled outside the host and does not inherit custom properties from it, so the
+   private resolvers are declared on both :host and .panel. */
 @use '../../styles/field-box' as field-box;
 @use '../../styles/field-state' as field-state;
 
@@ -100,9 +99,6 @@
   box-shadow: var(--shadow-popover);
 }
 
-/* Saturation (x) × brightness (y) plane. The element fill is the pure hue;
-   the two overlays add the white→clear (saturation) and clear→black (value)
-   gradients — the canonical HSV square. */
 .sv-plane {
   position: relative;
   width: 100%;

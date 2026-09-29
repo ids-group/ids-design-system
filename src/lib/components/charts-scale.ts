@@ -2,8 +2,7 @@ const E10 = Math.sqrt(50);
 const E5 = Math.sqrt(10);
 const E2 = Math.sqrt(2);
 
-/** d3's tick-increment rule. A naive `span / count` produces steps like 482, which
- *  no reader parses; this snaps to 1, 2, 5 or 10 times a power of ten. */
+/** d3's tick-increment rule: snaps to 1, 2, 5 or 10 times a power of ten, not `span / count` steps like 482. */
 function tickIncrement(span: number, targetCount: number): number {
   const step = span / Math.max(1, targetCount);
   const power = Math.floor(Math.log10(step));
@@ -109,12 +108,11 @@ export interface BandScale {
   indexAt(offset: number): number;
 }
 
-/** Positions for marks that sit AT a category rather than inside it — the readings of a line.
- *  The first is at the plot's start and the last at its end, so the run fills the axis rather than
- *  floating half a slot inside it. A single reading has no run to fill and takes the middle.
+/** Positions for marks that sit at a category rather than inside it (a line's readings). The first
+ *  is at the plot's start and the last at its end; a single reading takes the middle.
  *
- *  `step` is the distance between neighbours, which is what a crosshair band is a slot of; at the
- *  two ends that slot is half outside the plot and the caller clamps it.
+ *  `step` is the distance between neighbours, the crosshair band's slot; at the two ends that slot
+ *  is half outside the plot and the caller clamps it.
  *
  *  @internal */
 export function pointScale(count: number, rangeSize: number): PointScale {
@@ -137,8 +135,7 @@ export function pointScale(count: number, rangeSize: number): PointScale {
     step,
     count: total,
     position: (index) => Math.min(Math.max(index, 0), total - 1) * step,
-    // Nearest reading, not the slot the pointer is over: with the ends on the axes the first and
-    // last slots are half-width, and rounding is what makes both of them reachable.
+    // Nearest reading, not the slot the pointer is over: the end slots are half-width, and rounding keeps them reachable.
     indexAt: (offset) => {
       if (!Number.isFinite(offset) || step === 0) {
         return -1;
@@ -179,15 +176,13 @@ export function bandScale(
 }
 
 const ROUND_STEP_FACTORS = [1, 2, 5, 10];
-// A step divided out of a domain and multiplied back rarely lands on itself, so a
-// candidate equal to the minimum can compare as smaller by one bit and push the
-// whole axis up a rung.
+// A step divided out and multiplied back rarely lands on itself: a candidate equal to the minimum
+// can compare smaller by one bit and push the axis up a rung.
 const ROUND_STEP_TOLERANCE = 1 - 1e-12;
 
-/** The smallest 1/2/5/10 x power-of-ten step that is not below `minimumStep`.
- *  `niceDomain` picks its own number of intervals, so it cannot answer this: a second
- *  axis drawn against the first's gridlines has to reach its data within the intervals
- *  the first already drew.
+/** The smallest 1/2/5/10 x power-of-ten step not below `minimumStep`. `niceDomain` picks its own
+ *  interval count, so it cannot answer this: a second axis on the first's gridlines must reach its
+ *  data within the intervals the first drew.
  *
  *  @internal */
 export function roundStepAtLeast(minimumStep: number): number {

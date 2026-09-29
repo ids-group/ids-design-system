@@ -38,8 +38,8 @@ export class SidenavGroupComponent {
   readonly expandable = input(false, { transform: booleanAttribute });
   /** Makes the group a destination of its own as well as a container: the header navigates here
    *  and the caret becomes a separate control, because one control cannot both go somewhere and
-   *  stay to open something. Unset (the default) the whole header only expands — a heading that
-   *  navigates closes the page being read the moment someone reaches for the group beneath it. */
+   *  stay to open something. Unset (the default) the whole header only expands, so reaching for the group
+   *  never navigates away from the page being read. */
   readonly routerLink = input<DsRouterLink>(null);
   /** Overrides what the group header announces when it is itself a destination. Unset, the page
    *  the reader is on announces `page` and the section containing it announces `true`. */

@@ -4,8 +4,7 @@ const NON_TEXT_CONTRAST = 3;
 let probe: CanvasRenderingContext2D | null = null;
 const blendsByPair = new Map<string, boolean>();
 
-// Painting the colour and reading the pixel back resolves any CSS colour syntax to sRGB -
-// `oklch()`, `color-mix()` and named colours included - where parsing the string would not.
+// Painting and reading the pixel back resolves any CSS colour syntax (`oklch()`, `color-mix()`) to sRGB.
 function srgbOf(color: string): readonly [number, number, number] {
   if (!probe) {
     const canvas = document.createElement('canvas');

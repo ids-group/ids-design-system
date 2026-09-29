@@ -61,7 +61,7 @@ export class SidenavFooterComponent {
   readonly userRole = input('');
   /** Show the unread dot on the Alerts row. */
   readonly alerts = input(false);
-  /** Mirrors the rail's collapsed state — labels hide, the avatar + icons stay. */
+  /** Mirrors the rail's collapsed state: labels hide, the avatar + icons stay. */
   readonly collapsed = input(false);
   /** When set, the Search row opens a live results popover; unset keeps it inert. */
   readonly searchProvider = input<SidenavSearchProvider | null>(null);
@@ -70,7 +70,7 @@ export class SidenavFooterComponent {
   /** Route for the account menu's "Your profile"; empty = the item is a no-op. */
   readonly profileRoute = input('');
 
-  /** The collapse control was activated. The footer does not collapse itself — `ds-app-layout`
+  /** The collapse control was activated. The footer does not collapse itself; `ds-app-layout`
    *  owns the rail state, so the host relays this. */
   readonly collapseToggled = output<void>();
   /** Emitted when the Alerts popover is opened, so the layout can mark-all-read. */

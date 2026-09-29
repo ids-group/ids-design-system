@@ -2,7 +2,7 @@ import { Directive, TemplateRef, inject } from '@angular/core';
 
 /**
  * Fills an option row's LABEL AREA in `ds-select`, `ds-multi-select` and
- * `ds-autocomplete` — an avatar, a colour dot, a second line of metadata.
+ * `ds-autocomplete`.
  *
  * ```html
  * <ds-multi-select [options]="assignees()">

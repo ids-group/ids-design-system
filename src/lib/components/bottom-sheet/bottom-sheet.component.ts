@@ -20,7 +20,7 @@ import { DsStaticPreview } from '@ids-group-ltd/ids-design-system/components';
 
 let nextId = 0;
 
-/** Bottom-anchored sheet — the mobile sibling of ds-drawer. Closes on scrim
+/** Bottom-anchored sheet, the mobile sibling of ds-drawer. Closes on scrim
  * tap, Escape, or a downward drag on the grab strip. While open it locks
  * body scroll. On wide viewports the panel is capped by
  * --ds-bottom-sheet-max-width and centred; prefer ds-modal / ds-drawer for
@@ -32,8 +32,7 @@ let nextId = 0;
   imports: [A11yModule],
   templateUrl: './bottom-sheet.component.html',
   styleUrl: './bottom-sheet.component.scss',
-  // A static `title="…"` feeding the input below ALSO stays in the DOM as the global attribute,
-  // which makes the host a native browser tooltip over everything inside it.
+  // A static `title="..."` also stays in the DOM as the global attribute and would make the host a native tooltip.
   host: { '[attr.title]': 'null' },
   encapsulation: ViewEncapsulation.Emulated,
   hostDirectives: [{ directive: DsStaticPreview, inputs: ['staticPreview'] }],
@@ -48,10 +47,9 @@ export class BottomSheetComponent implements OnDestroy {
 
   protected readonly titleId = `ds-bottom-sheet-title-${++nextId}`;
   /**
-   * Snap-point heights as fractions of viewport height (0–1), ascending.
-   * e.g. [0.4, 0.9]. When provided the sheet opens at the first snap point;
-   * dragging snaps to the nearest point; dragging below the lowest closes.
-   * When empty (default) the original single-height behavior is preserved.
+   * Snap-point heights as fractions of viewport height (0-1), ascending,
+   * e.g. [0.4, 0.9]. The sheet opens at the first snap point; dragging snaps to the
+   * nearest point; dragging below the lowest closes. Empty (default) means a single height.
    */
   readonly snapPoints = input<readonly number[]>([]);
 
@@ -63,12 +61,9 @@ export class BottomSheetComponent implements OnDestroy {
   protected readonly dragOffset = signal<number | null>(null);
   /** Sheet is in the DOM (kept true through the leave animation). */
   protected readonly rendered = signal(false);
-  /** Playing the slide-down + scrim-fade leave animation. */
   protected readonly closing = signal(false);
-  /** Index of the currently active snap point (only used when snapPoints is non-empty). */
   protected readonly activeSnapIndex = signal(0);
 
-  /** CSS height string derived from the active snap point, or null when snapPoints is empty. */
   protected readonly snapHeight = computed(() => {
     const points = this.snapPoints();
     if (points.length === 0) {
@@ -87,9 +82,8 @@ export class BottomSheetComponent implements OnDestroy {
   private closeFallbackTimer: ReturnType<typeof setTimeout> | null = null;
 
   constructor() {
-    // open → DOM lifecycle. Opening renders immediately; closing keeps the
-    // sheet mounted and flips `closing` so the leave animation can play
-    // (teardown in onLeaveEnd, or the timer below).
+    // Closing keeps the sheet mounted and flips `closing` so the leave animation can
+    // play (teardown in onLeaveEnd, or the timer below).
     effect(() => {
       if (this.preview.staticPreview()) {
         return;
@@ -105,18 +99,15 @@ export class BottomSheetComponent implements OnDestroy {
         }
       } else if (this.wasOpen) {
         this.closing.set(true);
-        // Two cases never deliver animationend: Chrome freezes CSS animations on a
-        // backgrounded tab, and a 0s reduced-motion leave finishes before a listener
-        // hears it. This timer is the teardown guarantee, not belt-and-braces.
+        // animationend is never delivered on a backgrounded tab (Chrome freezes CSS
+        // animations) or for a 0s reduced-motion leave; this timer is the teardown.
         clearTimeout(this.closeFallbackTimer ?? undefined);
         this.closeFallbackTimer = setTimeout(() => this.finishClose(), 300);
       }
       this.wasOpen = isOpen;
     });
 
-    // Ref-counted body-scroll lock, shared with modal/drawer so stacked
-    // overlays don't unlock each other. The cleanup fires on the rendered→false
-    // transition and on destroy, keeping lock/unlock paired.
+    // Ref-counted lock shared with modal/drawer so stacked overlays don't unlock each other.
     effect((onCleanup) => {
       if (this.preview.staticPreview() || !this.rendered()) {
         return;
@@ -140,9 +131,8 @@ export class BottomSheetComponent implements OnDestroy {
   }
 
   protected onLeaveEnd(event: AnimationEvent): void {
-    // The animated element is the one with the handler, so its OWN animationend is
-    // the signal; anything bubbling from inside is not. This replaces matching the
-    // keyframes NAME, which is what made the exit un-overridable.
+    // Only the host's OWN animationend counts; ones bubbling from inside do not. Matching
+    // the keyframes name would make the exit animation un-overridable.
     if (event.target !== event.currentTarget) {
       return;
     }
@@ -208,7 +198,6 @@ export class BottomSheetComponent implements OnDestroy {
     const points = this.snapPoints();
 
     if (points.length === 0) {
-      // Original single-height behavior.
       const sheetHeight = this.sheetRef()?.nativeElement.offsetHeight ?? 0;
       const pastThreshold = sheetHeight > 0 && offset > sheetHeight * 0.3;
       const flicked = this.velocity > 0.5;
@@ -221,17 +210,14 @@ export class BottomSheetComponent implements OnDestroy {
       return;
     }
 
-    // Snap-point behavior: determine which snap point to land on.
     const viewportHeight =
       this.doc.defaultView?.innerHeight ?? window.innerHeight;
     const currentIndex = this.activeSnapIndex();
     const currentHeightPx = points[currentIndex] * viewportHeight;
-    // Positive offset = dragged downward.
     const targetHeightPx = currentHeightPx - offset;
     const flicked = this.velocity > 0.5;
 
     if (flicked || targetHeightPx < points[0] * viewportHeight * 0.7) {
-      // Dragged below lowest snap point or flicked down → close.
       this.close();
 
       return;

@@ -15,15 +15,15 @@ import { BrandNameDirective } from '@ids-group-ltd/ids-design-system/components/
 import { resolveBrandValue } from '@ids-group-ltd/ids-design-system/components';
 
 /**
- * Scaffold for the UNauthenticated screens — sign-in, forgot password, reset,
- * MFA — and the counterpart to `ds-app-layout`, which only ever covers the
+ * Scaffold for the UNauthenticated screens (sign-in, forgot password, reset,
+ * MFA) and the counterpart to `ds-app-layout`, which only ever covers the
  * screens behind the login.
  *
- * The host is the ONLY full-height box — nesting a `100vh` wrapper inside a
- * `100dvh` one scrolls a page whose content fits — and it carries the safe-area
+ * The host is the ONLY full-height box (nesting a `100vh` wrapper inside a
+ * `100dvh` one scrolls a page whose content fits) and it carries the safe-area
  * insets a notched phone in landscape needs.
  *
- * The brand row takes the same CONTRACT as `ds-sidenav` — a `brand` string gets a
+ * The brand row takes the same CONTRACT as `ds-sidenav`: a `brand` string gets a
  * letter-mark tile plus wordmark, `logoLetter` overrides the glyph, `[dsBrandName]`
  * projects a two-tone wordmark (import `BrandNameDirective` alongside this
  * component, or the attribute is inert and the wordmark lands in the card), and
@@ -31,7 +31,7 @@ import { resolveBrandValue } from '@ids-group-ltd/ids-design-system/components';
  * is a fixed 28px at weight 800, this one 28px at 700, and each has its own
  * `--ds-*-mark-*` hooks, so retinting the mark means setting both.
  *
- * Projecting into `[brand]` does NOT suppress the tile — leave `brand`/`logoLetter`
+ * Projecting into `[brand]` does NOT suppress the tile; leave `brand`/`logoLetter`
  * unset when you supply a logo.
  *
  * ```html
@@ -69,7 +69,7 @@ export class AuthLayoutComponent {
    *  to `DS_CONFIG.brand.tagline`. */
   readonly tagline = input<string | null>(null);
 
-  /** The template must read THIS, never the input beside it — that one is null
+  /** The template must read THIS, never the input beside it: that one is null
    *  until bound, and the config default lives here. */
   readonly brandName = resolveBrandValue(this.brand, 'name');
   readonly letterGlyph = resolveBrandValue(this.logoLetter, 'logoLetter');

@@ -28,20 +28,19 @@ export class DropzoneComponent {
     minimumFractionDigits: 1,
     maximumFractionDigits: 1,
   });
-  /** Native `accept` attribute — comma-separated MIME types or extensions. */
+  /** Native `accept`: comma-separated MIME types or extensions. */
   readonly accept = input<string>('');
-  /** Allows picking more than one file at once. Unset takes one, which is what the native input
-   *  does with no `multiple`. */
+  /** Allows picking more than one file at once. */
   readonly multiple = input(false, { transform: booleanAttribute });
-  /** Files shown in the list — the consumer owns upload state and progress. */
+  /** Files shown in the list; the consumer owns upload state and progress. */
   readonly files = model<DropzoneFile[]>([]);
-  /** Disables the dropzone: blocks all file-picking interactions and signals unavailability. */
+  /** Blocks all file picking. */
   readonly disabled = input(false, { transform: booleanAttribute });
   protected readonly dragOver = signal<boolean>(false);
 
   /** Fires with the raw files picked or dropped; the consumer adds them to `files`. */
   readonly filesAdded = output<File[]>();
-  /** Fires when the user removes a file; unlike `filesAdded`, the consumer must remove the matching entry from `files` itself. */
+  /** Fires when the user removes a file; the consumer removes the matching entry from `files`. */
   readonly fileRemoved = output<DropzoneFile>();
 
   protected readonly classes = computed(() => {

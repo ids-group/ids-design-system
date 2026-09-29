@@ -35,7 +35,7 @@ export interface SidenavSearchResult {
   readonly group: string;
   /** Router path to navigate to on select. */
   readonly route: string;
-  /** Optional query params — used to deep-open in-page detail views. */
+  /** Optional query params, used to deep-open in-page detail views. */
   readonly queryParams?: Record<string, string>;
 }
 

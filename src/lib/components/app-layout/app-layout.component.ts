@@ -40,7 +40,7 @@ import { nextControlId } from '@ids-group-ltd/ids-design-system/components';
  * </ds-app-layout>
  * ```
  *
- * The layout renders the `<main>` landmark itself — do not nest another
+ * The layout renders the `<main>` landmark itself, so do not nest another
  * `<main>` in the content. Scroll-to-top is built in (`AppLayoutScrollService`)
  * and fires when navigation changes the PATH, so a URL-driven list can page
  * and filter without losing the reader's place; inject the service and call
@@ -80,7 +80,7 @@ export class AppLayoutComponent {
 
   /**
    * Whether the rail is open as an overlay. Only meaningful below the `lg`
-   * breakpoint — above it the rail is always in the layout and this is
+   * breakpoint; above it the rail is always in the layout and this is
    * ignored. Two-way, so a burger in your topbar can drive it.
    */
   readonly railOpen = model(false);
@@ -95,9 +95,8 @@ export class AppLayoutComponent {
 
   /**
    * Remember the content scroll per path and restore it on the way BACK. Off by
-   * default: a layout that silently moved the scroll would surprise every existing
-   * consumer. Only a history traversal restores — following a link into a screen
-   * still lands at the top — plus a host that pushes its own "back to list" and
+   * default. Only a history traversal restores (following a link into a screen
+   * still lands at the top), plus a host that pushes its own "back to list" and
    * says so with `state: { dsRestoreScroll: true }`, and the first navigation after
    * a reload.
    */
@@ -110,13 +109,9 @@ export class AppLayoutComponent {
   readonly restoreScrollTimeout = input(2000);
 
   /**
-   * When the content scroll resets to the top. `'path'` (default) is what the
-   * layout has always done; `'always'` also resets on a query- or fragment-only
+   * When the content scroll resets to the top. `'path'` (default) resets when the path changes; `'always'` also resets on a query- or fragment-only
    * navigation, which is what a server-paged list wants; `'never'` hands the
    * decision to the screen, which can still call `AppLayoutScrollService.scrollToTop()`.
-   *
-   * It exists because the layout owning the scroll CONTAINER also meant it owned
-   * the POLICY: a screen could add a reset but had no way to suppress one.
    */
   readonly scrollReset = input<DsAppLayoutScrollReset>('path');
 
@@ -173,8 +168,8 @@ export class AppLayoutComponent {
       return;
     }
     // cdkTrapFocusAutoCapture returns focus only when the directive is DESTROYED, not when it flips
-    // off, so without this the caret stays inside the now off-canvas panel. Whatever control claims
-    // the rail through aria-controls owns it — dsRailTrigger and the DS-button forwarding both set it.
+    // off, so without this focus stays inside the now off-canvas panel. Whichever control claims
+    // the rail through aria-controls owns it (dsRailTrigger and the DS-button forwarding both set it).
     this.content()
       .nativeElement.ownerDocument.querySelector<HTMLElement>(
         `[aria-controls="${this.railId}"]`,
@@ -183,11 +178,8 @@ export class AppLayoutComponent {
   }
 
   private watchDesktopBreakpoint(): void {
-    // Single source of truth: the stylesheet's media block and this query both
-    // resolve to `--bp-lg`. There is deliberately NO literal fallback — one here
-    // could disagree with the scale and the rail would flip at a different width
-    // than the CSS, silently. A missing value means the DS global styles were
-    // never included, which breaks far more than this component, so say so.
+    // Same `--bp-lg` as the stylesheet's media block. No literal fallback: it could
+    // disagree with the scale and flip the rail at a different width than the CSS.
     const lg = getComputedStyle(document.documentElement)
       .getPropertyValue('--bp-lg')
       .trim();
@@ -203,10 +195,8 @@ export class AppLayoutComponent {
     const desktop = window.matchMedia(`(width >= ${lg})`);
     const sync = (): void => {
       this.compact.set(!desktop.matches);
-      // Crossing UP drops the overlay state: leaving it set would re-open the
-      // rail unprompted the next time the viewport narrows. Set the model
-      // directly rather than calling closeRail(), whose focus restore has no
-      // business firing here - the trigger it would focus is hidden on desktop.
+      // Crossing up drops the overlay state, or the rail re-opens unprompted on the
+      // next narrowing. Not closeRail(): its focus restore targets a trigger hidden on desktop.
       if (desktop.matches) {
         this.railOpen.set(false);
       }

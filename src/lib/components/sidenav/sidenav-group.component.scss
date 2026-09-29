@@ -50,8 +50,7 @@
   }
 }
 
-/* A navigating header splits into a link plus its own caret button; the link keeps the whole
-   header's look so the row reads as one control either way. */
+/* A navigating header splits into a link plus a caret button; the link keeps the header's look. */
 .group-header-row {
   display: flex;
   align-items: center;

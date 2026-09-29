@@ -1,12 +1,10 @@
 @use '../../styles/focus' as focus;
 
 /* Truncation contract:
-   Header title — Single line, ellipsis at ~32 ch. Tooltip on hover when clipped.
-   Body copy — Wrap freely. No line clamp by default; consumer applies clamp if needed.
-   Footer actions — Stay below; collapse to icon-only on narrow widths. */
+   Header title - single line, ellipsis at ~32 ch, tooltip on hover when clipped.
+   Body copy - wraps freely, no line clamp by default.
+   Footer actions - stay below; collapse to icon-only on narrow widths. */
 
-/* Ported verbatim from vendor/claude-design-ds/components.css (lines 603-614).
-   padding-none/-sm/-md/-lg are our addition; base .card's padding already equals .padding-md. */
 :host {
   display: block;
 
@@ -27,16 +25,11 @@
   padding: var(--_card-padding);
   box-shadow: var(--_card-shadow);
 
-  /* `visible` by default and NOT clipped: the rounded box here is the card, so a
-     consumer cannot reach it from the host, but clipping every card would eat the
-     focus ring of any child sitting at its edge — which is the case Foundations →
-     Colour names, with `data-focus="inset"` as the answer for a card that opts in. */
+  /* Not clipped by default: clipping would eat the focus ring of a child at the card's edge.
+     A card that opts in clips and uses `data-focus="inset"`. */
   overflow: var(--_card-overflow);
 
-  // Fills a stretched host, so a grid row of cards with unequal content paints
-  // equal-height boxes instead of a stretched host wrapping a short box. Same
-  // treatment ds-stat already carries; in an unstretched context the host is
-  // still content-sized, so nothing changes.
+  // Fills a stretched host so cards in a grid row paint equal-height boxes.
   height: 100%;
   transition: box-shadow var(--duration-base) var(--ease-standard), transform var(--duration-base) var(--ease-standard);
 
@@ -49,7 +42,6 @@
   &.interactive { cursor: pointer; }
   &.interactive:focus-visible { @include focus.ring; }
 
-  // Padding presets re-bind the resolver; a consumer --ds-card-padding still wins.
   &.padding-none { --_card-padding: var(--ds-card-padding, 0); }
   &.padding-sm   { --_card-padding: var(--ds-card-padding, var(--space-4)); }
   &.padding-md   { --_card-padding: var(--ds-card-padding, var(--space-6)); }

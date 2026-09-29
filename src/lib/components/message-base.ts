@@ -4,13 +4,8 @@ import type { IconName } from '@ids-group-ltd/ids-design-system/core';
 import { trimmedText } from './field-errors';
 
 /**
- * The inputs of anything that renders a `ds-field-message` line — the message half
- * of a field, split out so `ds-button` can take it without also taking `errors`,
- * `invalid` and `touched`, which describe a form control's validation state and
- * mean nothing on a button.
- *
- * `@Directive()` is required, not decoration: Angular refuses to compile a base
- * class that declares inputs without it.
+ * The inputs of anything that renders a `ds-field-message` line. Split from `DsFieldBase` so
+ * `ds-button` can take it without `errors`, `invalid` and `touched`.
  * @internal
  */
 @Directive()
@@ -19,7 +14,7 @@ export abstract class DsMessageBase {
   readonly hint = input<string, string | null | undefined>('', {
     transform: trimmedText,
   });
-  /** Error text. Shown immediately — binding it says the consumer has already
+  /** Error text. Shown immediately - binding it says the consumer has already
    *  decided this is in error. Takes precedence over `errors`. */
   readonly error = input<string, string | null | undefined>('', {
     transform: trimmedText,
@@ -41,10 +36,8 @@ export abstract class DsMessageBase {
   readonly messageIcon = input<IconName | false | null>(null);
 
   /** Whether an unset `reserveMessage` falls back to `DS_CONFIG.field.reserveMessage`.
-   *  True for a field, whose row reserves so its neighbours do not shift; `ds-button`
-   *  turns it off, because a button is not in that column and an app-wide field
-   *  setting would otherwise give every button an empty message row. Read lazily, so
-   *  a subclass initializer running after this one still decides it. */
+   *  `ds-button` turns it off, or an app-wide field setting would give every button an
+   *  empty message row. Read lazily, so a subclass initializer running later still decides it. */
   protected readonly reserveFollowsFieldDefault: boolean = true;
 
   readonly reserveMessageResolved = resolveReserveMessage(

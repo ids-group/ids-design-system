@@ -17,7 +17,7 @@ import type {
   ToastRef,
 } from './toast.types';
 
-// An error stays longer than a success: it usually needs reading, and often acting on.
+// An error stays longer than a success: it needs reading and often acting on.
 const SETTLED_SUCCESS_MS = 4000;
 const SETTLED_ERROR_MS = 6000;
 
@@ -62,13 +62,13 @@ export class ToastService {
       body: opts.body,
       variant,
       // Nothing that cannot expire may also be unclosable, or it holds a slot for the
-      // life of the page — which is how a hung promise blocked the whole region.
+      // life of the page (a hung promise would block the whole region).
       dismissible: durationMs > 0 ? (opts.dismissible ?? true) : true,
       action: opts.action,
       durationMs,
     };
-    // The region runs the countdown, because only it knows when the toast became
-    // visible — started here, one queued behind `maxVisible` expires unseen.
+    // The region runs the countdown: only it knows when the toast became visible, and one
+    // queued behind `maxVisible` would expire unseen if started here.
     this.regionRef!.instance.add(entry);
     this.announce(variant, entry.body, entry.title);
 
@@ -82,7 +82,7 @@ export class ToastService {
    *  reflected in-place (same toast, no stack-up) as success/error variants, each with
    *  its own auto-dismiss delay.
    *
-   *  Returns `source` itself, so the caller still owns rejection handling — an
+   *  Returns `source` itself, so the caller still owns rejection handling: an
    *  un-`catch`ed call produces an unhandled rejection exactly as it would without a
    *  toast. */
   promise<T>(
@@ -95,7 +95,6 @@ export class ToastService {
       durationMs: 0,
     });
 
-    // The duration goes to the region, for the reason given on `add()` above.
     source.then(
       (value) => {
         const successBody =
@@ -132,7 +131,7 @@ export class ToastService {
    *  together with its text announces nothing in NVDA or JAWS. The CDK announcer's region
    *  exists from construction and only its text changes.
    *
-   *  Serialising a burst does not work either — `announce()` clears the region and writes
+   *  Serialising a burst does not work either: `announce()` clears the region and writes
    *  on a timeout, resolving its promise inside that callback, so the next message wipes
    *  the previous one before anything can read it. One region change carrying every
    *  message is the only shape that survives. */

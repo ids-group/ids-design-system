@@ -1,11 +1,10 @@
 /** Which mark a chart's tooltip answers for. `'item'` is the mark under the pointer;
- *  `'axis'` is every series at the category under the pointer, which is what a line
- *  chart needs and a bar chart does not. */
+ *  `'axis'` is every series at the category under the pointer (line charts). */
 export type ChartTooltipTrigger = 'item' | 'axis' | 'none';
 
-/** The subset a chart whose marks ARE its categories offers. Spelled out rather than written as
+/** The subset a chart whose marks ARE its categories offers. Not written as
  *  `Exclude<ChartTooltipTrigger, 'axis'>`: the React wrapper generator cannot resolve a built-in
- *  utility type, so the conditional collapses the whole input to `unknown` on that side. */
+ *  utility type and collapses the input to `unknown`. */
 export type ChartItemTooltipTrigger = 'item' | 'none';
 
 export interface ChartTooltipEntry {
@@ -14,12 +13,11 @@ export interface ChartTooltipEntry {
   /** Already through the chart's `valueFormat`, so the panel never formats. */
   readonly formatted: string;
   readonly color: string;
-  /** Marks whose fill is hatched rather than solid. The swatch takes the same treatment, so the
-   *  panel and the plot encode the distinction the same way and neither relies on hue alone. */
+  /** Marks whose fill is hatched rather than solid. The swatch is hatched too, so the distinction
+   *  does not rely on hue alone. */
   readonly hatched?: boolean;
-  /** A second line under the value, for what the chart does NOT already print beside the mark —
-   *  its share of the total, its rank, the drop into it. A tooltip that repeats the label a
-   *  reader is looking at has told them nothing. */
+  /** A second line under the value, for what the chart does not already print beside the mark:
+   *  its share of the total, its rank, the drop into it. */
   readonly detail?: string;
 }
 

@@ -16,17 +16,13 @@ export type DsTableColumnStage<T> = (
 export type DsTableRowStage<T> = (rows: readonly T[]) => readonly T[];
 
 /**
- * Where in the table a feature may put markup.
- *
- * Three, because the column picker needs three: a trigger in the utility header cell, and its
- * popover and bottom sheet at the end of the host where an overlay belongs. One
- * `ViewContainerRef` was enough for the export button and is not enough for anything else.
+ * Where in the table a feature may put markup: the toolbar, the utility header cell, and the
+ * end of the host where overlays belong.
  */
 export type DsTableAnchor = 'toolbar' | 'header-utility' | 'overlays';
 
 /** Everything a resize feature hands the table: the width it overrides, and the handlers the
- *  header's separator calls. The markup stays in the table because a directive has no view to
- *  declare it in, so the table needs somewhere to send the events. */
+ *  header's separator calls. */
 export interface DsTableResizeContribution<T> {
   readonly widthOverride: (key: string) => number | undefined;
   readonly range: (
@@ -44,10 +40,9 @@ export interface DsTableResizeContribution<T> {
 /**
  * What a feature is allowed to read back out of the table, and where it may put markup.
  *
- * A feature needs the table's derived state — the export serialises `visibleColumns` and
- * `sortedRows` through `cellText`. Those live on the component as `protected`, which a directive
- * cannot reach, so the contract is published here rather than by widening the component's surface:
- * this way the table's public API does not grow one member per feature.
+ * The derived state a feature needs (`visibleColumns`, `sortedRows`, `cellText`) is `protected`
+ * on the component and unreachable from a directive, so it is published here instead of
+ * widening the component's public API.
  */
 export interface DsTableView<T> {
   /** As declared, before any feature reorders or hides. A feature that OWNS the order needs the
@@ -69,10 +64,8 @@ export interface DsTableView<T> {
 /**
  * One named piece of the persisted column layout.
  *
- * The stored shape stays `{ order, widths, hidden }`, so a layout saved by an earlier version
- * still restores — the key IS the JSON key. Persistence walks whatever is registered instead of
- * naming the three inputs, which is what lets reorder, the picker and resize move out from under
- * it without the storage code changing.
+ * The stored shape is `{ order, widths, hidden }` and the key IS the JSON key, so a saved layout
+ * still restores. Persistence walks whatever is registered.
  */
 export interface DsTablePersistedSlice {
   readonly key: string;
@@ -95,11 +88,9 @@ export interface DsTableExportContribution<T> {
 /**
  * The seam an opt-in table feature writes into, so the table never names the feature.
  *
- * The ablation that priced this split (`docs/basic-advanced-split-audit.md` §9) kept hitting the
- * same shape: the table owns a derived value and a feature wants to contribute to it —
- * `visibleColumns` is the chain the column picker writes to, `filteredData` folds the set filters
- * into the substring search, the live region folds in the export state. Moving methods out one at a
- * time cannot express that; a registry of contributions can.
+ * The table owns derived values (`visibleColumns`, `filteredData`, the live region) that a
+ * feature contributes to; a registry of contributions expresses that where moving methods out
+ * one at a time cannot.
  *
  * @internal Not API. Provided by `ds-table` on itself, so a directive on the same element injects
  * the instance it belongs to and two tables on one screen stay independent.
@@ -110,11 +101,8 @@ export class DsTableLayout<T = unknown> {
   private readonly rowStages = signal<readonly DsTableRowStage<T>[]>([]);
   private readonly statusFragments = signal<readonly Signal<string>[]>([]);
 
-  /** Registered once, at the contributing directive's construction — never per change
-   *  detection. A stage may read signals of its own: the fold runs inside the table's
-   *  `computed`, so whatever the stage touches is tracked by that computed rather than by
-   *  this service, which is what lets a feature stay reactive without the table knowing it
-   *  exists. */
+  /** Register once, at the contributing directive's construction. The fold runs inside the
+   *  table's `computed`, so signals a stage reads are tracked there. */
   addColumnStage(stage: DsTableColumnStage<T>): void {
     this.columnStages.update((stages) => [...stages, stage]);
   }
@@ -125,9 +113,8 @@ export class DsTableLayout<T = unknown> {
 
   private readonly utilityColumnWanted = signal(false);
 
-  /** The utility column carries the row-action kebab and the picker trigger. The table knows
-   *  about the first and must be told about the second, or the cell it anchors into is never
-   *  rendered and the feature has nowhere to go. */
+  /** The table knows about the row-action kebab but must be told about the picker trigger, or
+   *  the utility cell it anchors into is never rendered. */
   requestUtilityColumn(): void {
     this.utilityColumnWanted.set(true);
   }
@@ -212,10 +199,8 @@ export class DsTableLayout<T = unknown> {
     return this.published;
   }
 
-  /** The table keeps `runExport()` and `exporting()` as public API, because their docblocks
-   *  promise a button outside the table can drive them. The implementation is the feature's, so
-   *  the table asks here and can tell the difference between "no export directive" and "nothing
-   *  to export" — which is the one silent failure this whole shape is prone to. */
+  /** `runExport()` and `exporting()` stay public on the table and delegate here, so "no export
+   *  directive" is distinguishable from "nothing to export". */
   setExport(contribution: DsTableExportContribution<T>): void {
     this.exportContribution.set(contribution);
   }

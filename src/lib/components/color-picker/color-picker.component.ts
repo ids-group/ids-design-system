@@ -99,10 +99,7 @@ export class ColorPickerComponent
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   protected readonly intl = inject(DS_INTL);
   protected readonly preview = inject(DsStaticPreview);
-  /** Public panel tokens forwarded onto the portaled overlay pane on open so
-   *  a consumer's `ds-color-picker { --ds-color-picker-panel-*: … }` reaches it.
-   *  Not the whole set: `prepareOverlayEnter` also forwards `DROPDOWN_PANEL_TOKENS`
-   *  (overlay-motion.ts) onto every pane, the `--ds-option-*` family among them. */
+  // Forwarded onto the portaled pane on open; `prepareOverlayEnter` forwards `DROPDOWN_PANEL_TOKENS` too.
   private readonly panelTokens = [
     '--ds-color-picker-swatch',
     '--ds-color-picker-preview',
@@ -112,14 +109,12 @@ export class ColorPickerComponent
     '--ds-color-picker-thumb',
   ];
 
-  /** Selected colour as a hex string, two-way bound. */
+  /** Selected colour as a hex string. */
   readonly value = model<string>('#2F54FF');
-  /** Swatches shown in the panel — defaults to a built-in palette. */
+  /** Swatches shown in the panel; defaults to a built-in palette. */
   readonly presets = input<readonly string[]>(DEFAULT_PRESETS);
-  /** Extra classes for the portaled panel, beside `ds-dropdown-panel`,
-   *  `ds-overlay-pane` and this component's own `ds-color-picker-panel`. The panel
-   *  is portaled out of the host, so a class on the pane is the only way a consumer
-   *  stylesheet reaches ONE instance of it. */
+  /** Extra classes for the portaled panel. The panel is outside the host, so a class on the pane
+   *  is the only way a stylesheet reaches one instance of it. */
   readonly panelClass = input<string | readonly string[]>([]);
   /** Disables the trigger and blocks all interaction. */
   readonly disabled = input(false, { transform: booleanAttribute });
@@ -129,8 +124,8 @@ export class ColorPickerComponent
   readonly ariaLabelResolved = computed(
     () => this.ariaLabel() ?? this.intl().colorPicker.label,
   );
-  /** Confirmation text, shown when there is no error or warning — and it paints
-   *  the field's success border. A string like `warning`: the text IS the state. */
+  /** Confirmation text, shown when there is no error or warning; also paints the success
+   *  border. A string like `warning`: the text is the state. */
   readonly success = input<string, string | null | undefined>('', {
     transform: trimmedText,
   });
@@ -141,8 +136,7 @@ export class ColorPickerComponent
     viewChild.required<TemplateRef<unknown>>('panel');
   protected readonly open = signal(false);
 
-  // Working HSV state while the panel is open — the saturation/value plane and
-  // the hue slider both manipulate this; the hex `value` is derived from it.
+  // Working state while the panel is open; the hex `value` is derived from it.
   protected readonly hsv = signal<Hsv>(
     hexToHsv('#2F54FF') ?? { h: 0, s: 0, v: 0 },
   );
@@ -165,8 +159,7 @@ export class ColorPickerComponent
   }
 
   ngOnDestroy(): void {
-    // Host torn down while open → close() never runs. Dispose the overlay so
-    // its pane and event subscriptions don't leak.
+    // Destroyed while open: close() never runs, so dispose here to avoid leaking the pane and subscriptions.
     this.overlayRef?.dispose();
     this.overlayRef = null;
   }
@@ -194,12 +187,10 @@ export class ColorPickerComponent
     () => this.disabled() || this.formDisabled(),
   );
 
-  // Normalised hex for the trigger swatch + hex field.
   protected readonly displayHex = computed(
     () => normalizeHex(this.value()) ?? '#000000',
   );
 
-  // Pure-hue fill behind the saturation/value plane.
   protected readonly hueColor = computed(() =>
     hsvToHex({ h: this.hsv().h, s: 100, v: 100 }),
   );
@@ -364,8 +355,7 @@ export class ColorPickerComponent
       (target) => this.trigger().nativeElement.contains(target),
       () => this.close('dismiss'),
     );
-    // No backdrop catches a page scroll and CDK's scroll strategies miss a plain
-    // overflow container, so close on any outside scroll ourselves.
+    // No backdrop catches page scroll and CDK scroll strategies miss a plain overflow container.
     const removeScrollClose = closeOnScroll(this.overlayRef, () =>
       this.close('dismiss'),
     );

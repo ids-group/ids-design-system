@@ -8,9 +8,9 @@
 @use '../../styles/field-state' as field-state;
 
 /* Truncation contract:
-   Option label — Single line, ellipsis at control width. Panel scrolls internally past its 320px
+   Option label - Single line, ellipsis at control width. Panel scrolls internally past its 320px
      max-height.
-   Selected value — Single line, ellipsis when overflowing the control. */
+   Selected value - Single line, ellipsis when overflowing the control. */
 
 :host {
   @include field-box.field-box-tokens;
@@ -26,16 +26,14 @@
   --_select-placeholder-color: var(--ds-select-placeholder-color, var(--_field-placeholder-color));
   --_select-font-size: var(--ds-select-font-size, var(--_field-font-size));
 
-  // Flex column + gap so label→trigger→hint all sit the canonical --space-1-5
-  // apart, matching input/textarea/autocomplete/date-picker.
+  // Flex column + gap so label, trigger and hint sit --space-1-5 apart, matching input/textarea/autocomplete/date-picker.
   display: flex;
   flex-direction: column;
   gap: var(--field-label-gap);
   width: 100%;
 }
 
-/* Hugs its own content instead of filling the container. The panel then takes the
-   trigger width as a floor rather than as its width — see openPanel(). */
+/* Hugs its own content; the panel then takes the trigger width as a floor, not its width (see openPanel()). */
 :host(.content-width) {
   width: fit-content;
 }
@@ -154,17 +152,11 @@
   }
 }
 
-/* Panel styles live globally in `styles/_dropdown-overlay.scss` keyed off
-   the `ds-dropdown-panel` class (set on the overlay config). The portaled
-   panel sits outside this component's encapsulation, so `:host ::ng-deep`
-   selectors here would never reach it. */
+/* Panel styles live globally in `styles/_dropdown-overlay.scss`, keyed off `ds-dropdown-panel`. The portaled panel sits outside this
+   component's encapsulation, so `:host ::ng-deep` selectors here would never reach it. */
 
-/* Segment of a ds-field-group. The group draws the border, the radius and the
-   ONE focus ring for the whole row, so this control gives all three up — a
-   second box mid-row is exactly what the group exists to remove. Width goes to
-   auto because the host stretches to 100% inside a flex segment, and the label
-   and message row are suppressed: they would break the glued line, and a
-   group-level label is not built yet. */
+/* Segment of a ds-field-group. The group draws the border, radius and the ONE focus ring, so this control gives all three up.
+   Width goes to auto because the host stretches to 100% inside a flex segment; label and message row are suppressed to keep the line glued. */
 :host(.in-group) {
   @include field-group-segment.field-group-segment('.dropdown');
 }

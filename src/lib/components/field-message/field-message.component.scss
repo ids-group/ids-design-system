@@ -1,5 +1,4 @@
-/* display: contents — an empty message must add no flex gap to the field, and the
-   span has to sit directly in the field's own flow rather than in a wrapper. */
+/* display: contents: an empty message must add no flex gap to the field. */
 :host {
   display: contents;
 }
@@ -12,15 +11,13 @@
 
   display: flex;
 
-  /* Top, not centre: a two-line message would otherwise put the glyph in the middle
-     of the block instead of beside the first line. */
+  /* Top, not centre: a two-line message would put the glyph mid-block. */
   align-items: flex-start;
   gap: var(--_field-message-icon-gap);
   font: var(--font-weight-regular) var(--_field-message-font-size) / var(--line-height-base) var(--font-sans);
   color: var(--_field-message-color);
 
-  /* Centred against the FIRST line, not the block: the offset is computed from the
-     two tokens that decide that line, so it survives a retuned message type. */
+  /* Centred on the first line; the offset derives from the tokens that size that line. */
   .message-icon {
     margin-top: var(--_field-message-icon-offset);
   }
@@ -29,7 +26,6 @@
   &.warning { color: var(--warning-text); }
   &.success { color: var(--success-text); }
 
-  /* An nbsp, so the reserved row is exactly one line tall and the footer holds its
-     height with no message — otherwise the field shifts when one appears. */
+  /* An nbsp makes the reserved row one line tall so the field does not shift when a message appears. */
   &.reserve-placeholder::before { content: '\00a0'; }
 }

@@ -1,10 +1,5 @@
-/* Tooltip — host IS the dark popover.
-   Arrow direction set via :host(.top|.bottom|.left|.right). Positioning is
-   the consumer's job (CDK Overlay via [dsTooltip] directive). */
-
 :host {
-  /* Panel is portaled (CDK overlay via [dsTooltip]) → --ds-tooltip-* overrides
-     are theme-level (:root), not per-instance. */
+  /* Portaled by the CDK overlay, so --ds-tooltip-* overrides are theme-level (:root), not per-instance. */
   --_tooltip-bg-color:   var(--ds-tooltip-bg-color,   var(--surface-inverted));
   --_tooltip-text-color: var(--ds-tooltip-text-color, var(--text-inverted));
   --_tooltip-radius:     var(--ds-tooltip-radius,     var(--ds-radius-control));

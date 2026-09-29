@@ -1,16 +1,11 @@
 @use 'check-mark' as check-mark;
 @use 'press' as press;
 
-// The box a checkbox draws, in one place.
-//
-// ds-checkbox is a native `<input type="checkbox">` with `appearance: none` and a styled `::after`,
-// so anything else that already renders a native checkbox — ds-table's row selection — becomes the
-// design system's checkbox by including this, without swapping in a component or rewiring an
-// event.
+// The box a checkbox draws: a native `<input type="checkbox">` with `appearance: none` and a
+// styled `::after`, so any native checkbox (ds-table row selection) can include it.
 
-// Declared on the SCOPE rather than on the box, so a state override on the host (error, warning)
-// still reaches the box through the cascade: a declaration on the element itself would outrank the
-// inherited one and pin the resting colour.
+// Declared on the scope, not the box: a declaration on the box itself would outrank a host state
+// override (error, warning) and pin the resting colour.
 @mixin resolvers {
   --_checkbox-bg-color: var(--ds-checkbox-bg-color, var(--surface-default));
   --_checkbox-border-color: var(--ds-checkbox-border-color, var(--border-strong));
@@ -21,13 +16,9 @@
   --_checkbox-glyph: var(--check-size);
 }
 
-// Every reference to a `--_checkbox-*` resolver carries that resolver's OWN default, so a box which
-// never saw `resolvers` still paints. The `:root` tokens it also reads — `--check-bw`,
-// `--check-size`, `--icon-on-primary` — are global and need no fallback; strip the token layer and
-// the border goes invalid again. That is not belt and braces: a checkbox inside a portaled CDK panel is
-// outside its component's host, custom properties inherit by DOM position, and the whole
-// declaration is then invalid at computed-value time — measured on ds-table's column picker, where
-// six boxes came out 12x12 with no border and no fill, invisible on the panel.
+// Every `--_checkbox-*` reference carries its own default: a checkbox in a portaled CDK panel sits
+// outside its component's host, never sees `resolvers`, and the whole declaration would be invalid
+// at computed-value time (no border, no fill). The global `:root` tokens need no fallback.
 @mixin box {
   appearance: none;
   width: var(--_checkbox-glyph, var(--check-size));
@@ -39,11 +30,9 @@
   display: inline-grid;
   place-items: center;
 
-  /* Inline-level, so without this the box sits on the text baseline — and the baseline of an
-     inline-grid is its first item's, which moves when the mark swaps between the 12px tick and the
-     10x2 bar. Measured in ds-table: the header row was 45.50px with the box indeterminate and
-     45.30px with it checked, a 0.2px twitch on every selection change. `middle` takes the box off
-     the baseline entirely. ds-checkbox never showed it — there the input is a flex item. */
+  /* An inline-grid's baseline is its first item's, which moves when the mark swaps between the
+     tick and the bar (ds-table header row: 45.50px indeterminate vs 45.30px checked). `middle`
+     takes the box off the baseline. */
   vertical-align: middle;
   flex-shrink: 0;
   margin: 0;
@@ -62,12 +51,10 @@
     cursor: not-allowed;
   }
 
-  // The mark paints in currentColor, and an input inherits the label's text colour — so without
-  // this the tick would come out dark on the filled box.
+  // The mark paints in currentColor; an input inherits the label colour, which is dark on the filled box.
   color: var(--icon-on-primary);
 
-  // Persistent pseudo (content always set) so the check/indeterminate mark scales + fades in and
-  // out — a checked-only ::after would just pop in.
+  // Always present so the mark can scale and fade; a checked-only ::after would pop in.
   &::after {
     content: "";
 

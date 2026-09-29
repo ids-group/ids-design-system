@@ -1,6 +1,5 @@
 /**
- * One password requirement. The consumer owns the POLICY — `test` must mirror
- * whatever their server enforces — and the DS owns only how the row reads.
+ * One password requirement. The consumer owns the POLICY (`test` must mirror whatever their server enforces); the DS owns only how the row reads.
  */
 export interface DsPasswordRule {
   /** Row text, e.g. "At least 8 characters". */

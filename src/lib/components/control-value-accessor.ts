@@ -13,26 +13,20 @@ import type { ControlValueAccessor } from '@angular/forms';
 import { DsFieldBase } from './field-base';
 
 /**
- * Value-bearing elements come FIRST, and that ordering is the whole point: the
- * number stepper renders its decrement button before its input, so "the first
- * focusable descendant" would land on minus. `tabindex="-1"` is excluded from
- * both passes so a roving-tabindex group (ds-radio-group) yields the radio that
- * is actually tabbable rather than the first one in the DOM. Portaled panels are
- * outside the host, so a closed picker cannot be focused by accident.
+ * Value-bearing elements are searched FIRST: the number stepper renders its decrement button
+ * before its input, so "the first focusable descendant" would land on minus. `tabindex="-1"` is
+ * excluded so a roving-tabindex group yields the tabbable radio, not the first in the DOM.
  */
 const NOT_ROVED = ':not([tabindex="-1"]):not([disabled])';
 const VALUE_ELEMENTS = `input:not([type="hidden"])${NOT_ROVED}, textarea${NOT_ROVED}`;
 const TRIGGER_ELEMENTS = `button${NOT_ROVED}, [tabindex="0"]${NOT_ROVED}`;
 
 /**
- * The `ControlValueAccessor` half of a DS value control, with no message API
- * attached. `DsControlValueAccessor` is this plus `DsFieldBase`; a control that
- * holds a value and renders no message row — `ds-search`, a toolbar filter rather
- * than a validated field — takes this directly and gets no message inputs with it.
+ * The `ControlValueAccessor` half of a DS value control, with no message API. For a control
+ * that renders no message row (`ds-search`).
  *
- * The model arrives as a THUNK, not a signal: on a base class `value` is abstract
- * and on a component it is a field initialiser, so it does not exist yet when this
- * runs. Every read defers to call time, which is also when the effect first runs.
+ * The model arrives as a THUNK: on a base class `value` is abstract and on a component it is a
+ * field initialiser, so it does not exist yet when this runs.
  *
  * Must be called from an injection context (it owns an `effect`).
  * @internal
@@ -50,16 +44,15 @@ export function valueControlBridge<T>(model: () => ModelSignal<T>): {
   const touchedSelf = signal(false);
   let onChange: (next: T) => void = () => {};
   let onTouched: () => void = () => {};
-  // Last value synced with the forms API. Guards the watching effect from echoing
-  // a form-driven write back as a user change (which would dirty the control or
-  // loop), while still emitting every genuine model change.
+  // Last value synced with the forms API. Stops the effect echoing a form-driven write
+  // back as a user change (which would dirty the control or loop).
   let synced: T | undefined;
   let hasSynced = false;
 
   effect(() => {
     const next = model()();
     if (!hasSynced) {
-      // Adopt the initial value once, silently — never emit on init.
+      // Adopt the initial value silently; never emit on init.
       hasSynced = true;
       synced = next;
 
@@ -111,14 +104,9 @@ function blurOwnControl(host: HTMLElement): void {
 }
 
 /**
- * Shared `ControlValueAccessor` for DS form controls whose value is a signal
- * `model()`. Bridges that model with Angular forms (reactive `formControl` /
- * `formControlName` and template `ngModel`) in both directions, WITHOUT
- * touching the existing `[(value)]` signal API — both keep working.
- *
- * A subclass must expose the `value` model and OR `formDisabled()` into its
- * effective disabled state so `FormControl.disable()` actually reaches the
- * control; it should also call `markTouched()` from a blur handler.
+ * Shared `ControlValueAccessor` for DS form controls whose value is a signal `model()`.
+ * A subclass must OR `formDisabled()` into its effective disabled state so
+ * `FormControl.disable()` reaches the control, and call `markTouched()` from a blur handler.
  * @internal
  */
 @Directive({
@@ -128,32 +116,26 @@ export abstract class DsControlValueAccessor<T>
   extends DsFieldBase
   implements ControlValueAccessor
 {
-  /** The component's two-way value model. */
   abstract readonly value: ModelSignal<T>;
 
   /**
-   * Hides the control. On the base so signal forms reaches every control at once.
-   * Inline `display`, not the `hidden` attribute — each control sets its own
+   * Hides the control. Inline `display`, not the `hidden` attribute: each control sets its own
    * `:host` display, which the attribute's weaker UA rule would lose to.
    */
   readonly hidden = input(false, { transform: booleanAttribute });
   private readonly hostElement = inject<ElementRef<HTMLElement>>(ElementRef);
 
   /**
-   * Signal forms calls this through `focusBoundControl()` — typically to reach
-   * the first invalid field after a failed submit. Without it the default is to
-   * focus the HOST, and a `<ds-*>` element is not focusable, so focus went
-   * nowhere. A control with a more precise target overrides this.
+   * Signal forms calls this through `focusBoundControl()` (e.g. to reach the first invalid field
+   * after a failed submit); the default would focus the HOST, which is not focusable.
    */
   focus(options?: FocusOptions): void {
     focusOwnControl(this.hostElement.nativeElement, options);
   }
 
   /**
-   * The counterpart of `focus()`: drops focus if it sits anywhere inside this
-   * control - the input, a picker trigger, the OTP cell that has it - so no
-   * subclass overrides it. A portaled panel is outside the host and is left alone.
-   * For a host that navigates away after `clear()`, which keeps focus on purpose.
+   * Drops focus if it sits anywhere inside this control (input, picker trigger, OTP cell).
+   * A portaled panel is outside the host and is left alone.
    */
   blur(): void {
     blurOwnControl(this.hostElement.nativeElement);
@@ -161,14 +143,12 @@ export abstract class DsControlValueAccessor<T>
 
   private readonly bridge = valueControlBridge<T>(() => this.value);
 
-  /** Driven by the forms API via `setDisabledState`. */
   protected readonly formDisabled = this.bridge.formDisabled;
 
   // Separate from the control's `touched`, which only exists once `NgControl`
-  // resolves — too late to gate the first blur.
+  // resolves: too late to gate the first blur.
   protected readonly touchedSelf = this.bridge.touchedSelf;
 
-  /** Call from a blur handler so the control reports `ng-touched`. */
   protected markTouched(): void {
     this.bridge.markTouched();
   }
@@ -191,10 +171,8 @@ export abstract class DsControlValueAccessor<T>
 }
 
 /**
- * Shared `ControlValueAccessor` for DS boolean controls (checkbox, switch)
- * whose state lives in a `checked` model signal rather than `value`. Bridges
- * with Angular forms in both directions without affecting the `[(checked)]`
- * signal API. Subclasses must OR `formDisabled()` into their effective disabled
+ * Shared `ControlValueAccessor` for DS boolean controls (checkbox, switch) whose state lives
+ * in a `checked` model. Subclasses must OR `formDisabled()` into their effective disabled
  * state and call `markTouched()` from a blur handler.
  * @internal
  */
@@ -205,33 +183,26 @@ export abstract class DsBooleanControlValueAccessor
   extends DsFieldBase
   implements ControlValueAccessor
 {
-  /** The component's two-way checked model. */
   abstract readonly checked: ModelSignal<boolean>;
 
-  /** Hides the control — see the note on `DsControlValueAccessor.hidden`. */
+  /** Hides the control; see `DsControlValueAccessor.hidden`. */
   readonly hidden = input(false, { transform: booleanAttribute });
   private readonly hostElement = inject<ElementRef<HTMLElement>>(ElementRef);
 
-  /**
-   * Signal forms calls this through `focusBoundControl()` — typically to reach
-   * the first invalid field after a failed submit. Without it the default is to
-   * focus the HOST, and a `<ds-*>` element is not focusable, so focus went
-   * nowhere. A control with a more precise target overrides this.
-   */
+  /** See `DsControlValueAccessor.focus`. */
   focus(options?: FocusOptions): void {
     focusOwnControl(this.hostElement.nativeElement, options);
   }
 
-  /** The counterpart of `focus()` - see `DsControlValueAccessor.blur`. */
+  /** See `DsControlValueAccessor.blur`. */
   blur(): void {
     blurOwnControl(this.hostElement.nativeElement);
   }
 
-  /** Driven by the forms API via `setDisabledState`. */
   protected readonly formDisabled = signal(false);
 
   // Separate from the control's `touched`, which only exists once `NgControl`
-  // resolves — too late to gate the first blur.
+  // resolves: too late to gate the first blur.
   protected readonly touchedSelf = signal(false);
 
   private onChange: (value: boolean) => void = () => {};
@@ -258,7 +229,6 @@ export abstract class DsBooleanControlValueAccessor
     });
   }
 
-  /** Call from a blur handler so the control reports `ng-touched`. */
   protected markTouched(): void {
     this.touchedSelf.set(true);
     this.onTouched();

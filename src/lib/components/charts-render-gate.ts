@@ -11,8 +11,7 @@ import {
 import { isPlatformBrowser } from '@angular/common';
 import { DS_CONFIG } from '@ids-group-ltd/ids-design-system/core';
 
-/** Provided by a chart that has already waited for the viewport, so the `ds-chart` it draws
- *  through builds at once instead of waiting a second time.
+/** Provided by a chart that has already waited for the viewport, so its `ds-chart` builds at once.
  *
  *  @internal */
 export const CHART_RENDER_GATE_PASSED = new InjectionToken<boolean>(
@@ -88,8 +87,7 @@ function observer(
       (entries) => {
         for (const entry of entries) {
           const build = builders.get(entry.target);
-          // A chart the reader has already scrolled past leaves the queue instead of being built
-          // behind them.
+          // A chart scrolled past leaves the queue.
           if (build && entry.isIntersecting) {
             queue.set(entry.target, build);
           } else {
@@ -113,10 +111,9 @@ function scheduleDrain(): void {
   }
 }
 
-// A margin on the root only widens the root: an element inside a scrolling container is clipped by
-// that container first, so the container has to BE the root for the margin to reach past its edge.
-// The overflow test alone is not enough - a box that only scrolls sideways computes `overflow-y:
-// auto` too - so the container also has to be taller inside than out.
+// A margin on the root only widens the root: an element in a scrolling container is clipped by it
+// first, so the container must be the root. Overflow alone is not enough (a sideways-only scroller
+// computes `overflow-y: auto` too), so it must also be taller inside than out.
 function scrollRoot(host: Element): Element | null {
   for (let node = host.parentElement; node; node = node.parentElement) {
     const overflow = getComputedStyle(node).overflowY;
@@ -140,7 +137,7 @@ function scrollRoot(host: Element): Element | null {
  *  @internal */
 export function chartRenderGate(): Signal<boolean> {
   const rendering = inject(DS_CONFIG).chart?.rendering;
-  // `skipSelf`: a preset provides the token to its own view, and must not read it back itself.
+  // `skipSelf`: a preset provides the token to its own view and must not read it back.
   const passed = inject(CHART_RENDER_GATE_PASSED, {
     optional: true,
     skipSelf: true,
@@ -185,7 +182,7 @@ export function chartRenderGate(): Signal<boolean> {
     builders.set(host, () => {
       release();
       if (skipWhileOffscreen) {
-        // `auto` remembers the height the chart last rendered at, so skipping it moves nothing.
+        // `auto` remembers the last rendered height, so skipping moves nothing.
         host.style.contentVisibility = 'auto';
         host.style.containIntrinsicBlockSize = 'auto 300px';
       }

@@ -38,9 +38,8 @@ const NO_DELAY = signal<number | null>(null);
  *  @internal */
 export const CHART_HOVER_DELAY_MS = 0;
 
-/** How long a tooltip outlives the pointer leaving its mark, when nothing sets it. Long enough
- *  that the pointer crossing the gap to the next mark finds the same panel and it glides there,
- *  where a shorter wait closes it and opens a new one.
+/** How long a tooltip outlives the pointer leaving its mark, when nothing sets it. Long enough for the
+ *  pointer to cross to the next mark and find the same panel; a shorter wait closes and reopens it.
  *
  *  @internal */
 export const CHART_TOOLTIP_LINGER_MS = 500;

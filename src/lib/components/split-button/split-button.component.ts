@@ -44,23 +44,22 @@ export class SplitButtonComponent {
 
   /** Label text on the main button. */
   readonly label = input<string>('');
-  /** Visual style — primary (solid) or outline. */
+  /** Visual style - primary (solid) or outline. */
   readonly variant = input<SplitButtonVariant>('primary');
-  /** Icon shown on the main button, before the label. */
+  /** Icon before the label on the main button. */
   readonly icon = input<IconName | null>(null);
-  /** Disables both the main button and the dropdown trigger. */
+  /** Disables the main button and the dropdown trigger. */
   readonly disabled = input(false, { transform: booleanAttribute });
   /** Items listed in the dropdown menu. Empty disables the chevron. */
   readonly menuItems = input<readonly SplitButtonItem[]>([]);
-  /** Accessible name for the dropdown trigger. Unset falls back to
-   *  `DS_INTL.splitButton.menuLabel`. */
+  /** Accessible name of the dropdown trigger. Unset falls back to `DS_INTL.splitButton.menuLabel`. */
   readonly menuLabel = input<string | null>(null);
   protected readonly menuLabelResolved = computed(
     () => this.menuLabel() ?? this.intl().splitButton.menuLabel,
   );
-  /** Fires when the main button (not the dropdown trigger) is clicked. */
+  /** Fires on a click of the main button, not the dropdown trigger. */
   readonly pressed = output<MouseEvent>();
-  /** The menu half only — a press on the main button is `pressed`, never this. */
+  /** Fires for a menu item only; the main button emits `pressed`. */
   readonly itemSelected = output<SplitButtonItem>();
 
   protected onItemSelect(item: SplitButtonItem): void {

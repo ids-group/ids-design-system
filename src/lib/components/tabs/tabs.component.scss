@@ -1,17 +1,14 @@
 @use '../../styles/focus' as focus;
 @use '../../styles/press' as press;
 
-/* Truncation contract:
-   Tab label — Single line, no clip — labels are short. Tooltip on hover if forced clip.
-   Badge count — Numeric only — no clip. */
+/* Truncation contract: tab labels are single-line and short; the badge count never clips. */
 
 :host {
   --_tabs-divider:          var(--ds-tabs-divider,          var(--border-divider));
   --_tab-padding-x:             var(--ds-tab-padding-x,             var(--space-4));
   --_tab-padding-y:             var(--ds-tab-padding-y,             var(--space-3));
 
-  /* Per-side, falling back to the symmetric pair: an underline tab usually
-     wants its padding on the bottom only, and could not say so. */
+  /* Per-side, falling back to the symmetric pair, so an underline tab can pad only the bottom. */
   --_tab-padding-top:           var(--ds-tab-padding-top,           var(--_tab-padding-y));
   --_tab-padding-bottom:        var(--ds-tab-padding-bottom,        var(--_tab-padding-y));
   --_tab-label-font-weight:      var(--ds-tab-label-font-weight,      var(--font-weight-semibold));
@@ -166,8 +163,7 @@
       border-bottom-color: var(--_tab-indicator-color);
     }
 
-    /* Count chip is rendered by the tab template itself — the component owns
-       its styling (the badge component's CSS is encapsulated, unreachable). */
+    /* Styled here because the badge component's encapsulated CSS is unreachable. */
     .badge {
       min-width: var(--badge-count-size);
       height: var(--badge-count-size);
@@ -219,15 +215,13 @@
     }
   }
 
-  /* Secondary variant — opt-in secondary-toned active indicator + label.
-     `secondary` lands on the <ds-tabs> host, not the inner .tabs div, so match
-     the host (@at-root escapes the .tabs nesting). */
+  /* `secondary` lands on the <ds-tabs> host, not the inner .tabs div, so match the host
+     (@at-root escapes the .tabs nesting). */
   @at-root :host(.secondary) {
     --_tab-label-color-active: var(--ds-tab-label-color-active, var(--secondary-strong));
     --_tab-indicator-color: var(--ds-tab-indicator-color, var(--secondary));
   }
 
-  /* Pills variant — segmented filter row, no underline */
   &.pills {
     border-bottom: 0;
     gap: var(--space-1);
@@ -263,14 +257,13 @@
       }
     }
 
-    /* Pills + scrollable: remove the inline-flex constraint so scrollable can take over */
+    /* Drops the inline-flex constraint so scrollable can take over. */
     &.scrollable {
       display: flex;
       width: 100%;
     }
   }
 
-  /* Vertical orientation — tab list becomes a column, indicator runs on the right edge */
   &.vertical {
     flex-direction: column;
     border-bottom: 0;
@@ -294,7 +287,6 @@
   }
 }
 
-/* Vertical host layout — tab list beside the panel */
 :host(.vertical-host) {
   display: flex;
   flex-direction: row;
@@ -305,9 +297,7 @@
 .panel {
   padding-top: var(--_tabs-panel-padding-top);
 
-  /* When tabs are used purely as a filter selector (content rendered outside
-     the panel), the empty panel would still add its padding-top as a phantom
-     gap. Collapse it when there's nothing to show. */
+  /* A filter-only strip (content rendered outside the panel) would otherwise keep a phantom padding-top gap. */
   &:empty {
     display: none;
   }
@@ -317,7 +307,6 @@
   }
 }
 
-/* Vertical-host adjustments — panel sits beside the tablist */
 :host(.vertical-host) .panel {
   padding-top: 0;
   padding-left: var(--space-4);

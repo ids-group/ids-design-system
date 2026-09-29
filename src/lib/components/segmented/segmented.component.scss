@@ -27,8 +27,7 @@
   --_segmented-label-font-weight: var(--ds-segmented-label-font-weight, var(--font-weight-semibold));
   --_segmented-label-font-size: var(--ds-segmented-label-font-size, var(--font-size-s));
 
-  /* Own our width — an outer flex/grid (e.g. a stretch column) must not be able
-     to stretch the track full-bleed; segments size to their content. */
+  /* Own width: an outer flex/grid must not stretch the track; segments size to their content. */
   display: inline-flex;
   flex-direction: column;
   align-items: flex-start;
@@ -49,9 +48,7 @@
   border-radius: var(--_segmented-radius);
 }
 
-/* The ends carry the group's radius and the seams between segments are square, so a row of
-   bordered chips reads as one control rather than as several. The negative margin is what
-   collapses two adjacent 1px borders into one. */
+/* The negative margin collapses two adjacent 1px borders into one. */
 :host(.joined) .track {
   gap: 0;
   padding: 0;

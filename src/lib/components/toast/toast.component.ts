@@ -23,15 +23,14 @@ import type { ToastAction, ToastVariant } from './toast.types';
   imports: [IconComponent, SpinnerComponent],
   templateUrl: './toast.component.html',
   styleUrl: './toast.component.scss',
-  // A static `title="…"` feeding the input below ALSO stays in the DOM as the global attribute,
-  // which makes the host a native browser tooltip over everything inside it.
+  // A static `title="..."` also stays in the DOM as the global attribute and would make the host a native tooltip.
   host: { '[attr.title]': 'null' },
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class ToastComponent {
   protected readonly intl = inject(DS_INTL);
 
-  /** Severity — drives colour and the default icon or spinner. */
+  /** Severity: drives colour and the default icon or spinner. */
   readonly variant = input<ToastVariant>('info');
   /** Optional bold heading above the message. */
   readonly title = input<string>('');

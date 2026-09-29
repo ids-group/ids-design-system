@@ -1,9 +1,7 @@
 // Keyed off `data-field-state` on the host. Only error carries a fill: a warning or success tint
 // measures 1.05:1 against a white field, too faint to be findable.
 //
-// Disabled takes no state paint — it is neither submitted nor validated, so an error border
-// promises a correction that cannot be made. Read-only keeps it, because it IS submitted.
-//
+// Disabled takes no state paint: it is neither submitted nor validated. Read-only keeps it.
 // The colour arguments let a component pass its own `--ds-<name>-*-error` resolver.
 @mixin field-state(
   $box,

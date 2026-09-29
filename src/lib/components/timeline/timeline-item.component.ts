@@ -25,9 +25,9 @@ export type TimelineTone =
 export class TimelineItemComponent {
   /** Primary text for the entry. */
   readonly heading = input<string>('');
-  /** Timestamp or date label shown below the content. */
+  /** Timestamp or date label below the content. */
   readonly time = input<string>('');
-  /** Icon shown in the marker; omit for a plain dot. */
+  /** Marker icon; omit for a plain dot. */
   readonly icon = input<IconName | null>(null);
   /** Semantic accent color for the marker. */
   readonly tone = input<TimelineTone>('default');

@@ -10,28 +10,23 @@
   margin: 0;
 }
 
-/* `--_chart-view-height` is set on the host in px, from the same TS geometry the canvas is drawn
-   with: the plot's height is an SVG coordinate, so CSS cannot be its source, and a message box
-   that does not match it jumps the card when the data lands. */
+/* `--_chart-view-height` is set on the host in px from the TS geometry; a message box that does not
+   match the plot height jumps the card when the data lands. */
 @include chart-frame.message-box(var(--_chart-view-height), true);
 
-/* The canvas is measured, not ratio-sized: `inline-size` is what the ResizeObserver reads back to
-   set the viewBox width, and `block-size` is bound to the viewBox height. Giving either of them
-   to the other would be circular. */
+/* Measured, not ratio-sized: the ResizeObserver reads `inline-size` for the viewBox width and
+   `block-size` is bound to the viewBox height; deriving one from the other is circular. */
 .canvas {
   display: block;
   inline-size: 100%;
 }
 
-// Anywhere over the plot a press holds the cursor on the nearest category.
 .canvas.pins {
   cursor: pointer;
 }
 
-/* Anchored pierce, so the rule reaches a projected mark's own stylesheet without compiling to a
-   global one. It holds every mark still until `settled` - a mark inserted at the fallback width
-   and corrected by the measurement would otherwise animate that correction on every load. Zeroing
-   the duration rather than dropping `transition`, which is what the reduced-motion block does. */
+/* Holds every mark still until `settled`, or a mark inserted at the fallback width would animate
+   its correction on every load. `::ng-deep` reaches projected marks' own stylesheets. */
 :host(.measuring) .marks ::ng-deep * {
   transition-duration: 0ms !important;
 }
@@ -53,14 +48,11 @@
   font-size: var(--_chart-axis-font-size);
 }
 
-// A rotated label hangs from the axis by its END, so `dominant-baseline` has to stop centring it
-// on a line it no longer sits on.
+// A rotated label hangs from the axis by its end, so it must stop centring on the old line.
 .category-label.is-rotated {
   dominant-baseline: middle;
 }
 
-/* Names the unit a set of ticks is counting. Bolder than the ticks so it reads as a heading for
-   them rather than as one more reading, and it takes the axis's own colour where there are two. */
 .axis-title {
   fill: var(--_chart-axis-label-color);
   font-size: var(--_chart-axis-font-size);

@@ -19,9 +19,8 @@ import { swatchBlendsInto } from './swatch-contrast';
   templateUrl: './chart-tooltip-panel.component.html',
   styleUrl: './chart-tooltip-panel.component.scss',
   host: {
-    // Hidden from assistive technology on purpose: every interactive mark already
-    // carries the same label and value in its `aria-label`, so exposing the panel
-    // makes a screen reader read each reading twice.
+    // Every interactive mark already carries the same label and value in its `aria-label`;
+    // exposing the panel would read each reading twice.
     'aria-hidden': 'true',
   },
   encapsulation: ViewEncapsulation.Emulated,

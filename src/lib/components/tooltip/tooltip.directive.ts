@@ -69,30 +69,26 @@ export class TooltipDirective implements OnDestroy {
   private readonly overlay = inject(Overlay);
   private readonly host = inject(ElementRef<HTMLElement>);
 
-  /** Tip text. An empty string is how you turn the tooltip off — a host bound to a
-   *  value that may be blank needs no separate condition. */
+  /** Tip text. An empty string turns the tooltip off, so a host bound to a possibly
+   *  blank value needs no separate condition. */
   readonly dsTooltip = input<string>('');
   /** Which side the tip opens on. It does NOT flip: only the requested side is
-   *  offered to the overlay, so a tip with no room there is pushed rather than moved
-   *  to the opposite side. */
+   *  offered to the overlay, so a tip with no room there is pushed, not moved. */
   readonly dsTooltipPlacement = input<TooltipPlacement>('top');
-  /** Milliseconds before the tip appears. Hiding is immediate — this delay only ever
-   *  suppresses a tip the pointer passed over on its way somewhere else. */
+  /** Milliseconds before the tip appears. Hiding is immediate; the delay only
+   *  suppresses a tip the pointer passed over on its way elsewhere. */
   readonly dsTooltipDelay = input<number>(120);
-  /** Show the tip only while the host is actually showing less text than it holds. For a label
-   *  that already reads in full, a tip repeating it is noise. Re-tested on every open, so a tip
-   *  appears and stops appearing as the column, panel or window is resized, with no observer to
-   *  run.
+  /** Show the tip only while the host shows less text than it holds. Re-tested on every
+   *  open, so it tracks resizing with no observer.
    *
-   *  With this on, `dsTooltip` may be left empty and the host's own text is disclosed. That is
-   *  what makes it usable on projected content, where the component holding the tip cannot know
-   *  what it was handed. A tip whose text the host already contains sets no `aria-describedby`;
+   *  With this on, `dsTooltip` may be left empty and the host's own text is disclosed, which
+   *  suits projected content the holding component cannot know. A tip whose text the host
+   *  already contains sets no `aria-describedby`;
    *  one given a `dsTooltip` that says more than the host does describes it as usual. */
   readonly dsTooltipWhenClipped = input(false, { transform: booleanAttribute });
   /** A selector for the element inside the host whose clipping `dsTooltipWhenClipped` tests and
-   *  whose text it discloses. It lets the pointer area be a whole row while the text is one part
-   *  of it. Resolved on every open, so the element may come and go with the host's content; while
-   *  nothing matches, no clipped tip opens. */
+   *  whose text it discloses, so the pointer area can be a whole row. Resolved on every open;
+   *  while nothing matches, no clipped tip opens. */
   readonly dsTooltipTextSelector = input<string | null>(null);
 
   get hostElement(): HTMLElement {
@@ -140,22 +136,17 @@ export class TooltipDirective implements OnDestroy {
   private readonly tipId = `ds-tooltip-${++nextId}`;
 
   /**
-   * Where `aria-describedby` belongs, when focus is involved. A host that is not
-   * focusable itself never reaches a screen reader — `ds-menu-item` carries
-   * `role="none"` and puts the real `<button>` inside — so describing the host
-   * describes something the user never focuses. `focusin` bubbles, so its target
-   * IS whatever took focus; recording it is what keeps this directive out of the
-   * host component's internal DOM. A pointer-only open leaves this null and
-   * falls back to the host, where no screen reader is involved anyway.
+   * Where `aria-describedby` belongs when focus is involved. A host that is not itself
+   * focusable never reaches a screen reader (`ds-menu-item` has `role="none"` and a
+   * real `<button>` inside), so `focusin`'s target, whatever took focus, is recorded
+   * instead. A pointer-only open leaves this null and falls back to the host.
    */
   private focusedTarget: HTMLElement | null = null;
 
   /**
-   * Where `aria-describedby` was actually written, remembered so teardown strips
-   * it from the same element. Not derivable at teardown: focus can arrive after
-   * the panel opened (hover, then click or arrow onto it), which moves
-   * `focusedTarget` and would otherwise strand the attribute on the host,
-   * pointing at a panel that no longer exists.
+   * Where `aria-describedby` was written, so teardown strips it from the same element.
+   * Focus can arrive after the panel opened, moving `focusedTarget` and otherwise
+   * stranding the attribute on the host, pointing at a dead panel.
    */
   private describedElement: HTMLElement | null = null;
 
@@ -254,9 +245,8 @@ export class TooltipDirective implements OnDestroy {
     this.timer = window.setTimeout(() => this.show(), this.dsTooltipDelay());
   }
 
-  // Close on activation too: clicking the thing the tip describes is a clear
-  // dismiss, and a re-rendered anchor (e.g. a navigated sidenav item) under a
-  // stationary cursor fires no mouseleave, which would otherwise strand the panel.
+  // Close on click too: a re-rendered anchor (e.g. a navigated sidenav item) under a
+  // stationary cursor fires no mouseleave, which would strand the panel.
   @HostListener('mouseleave')
   @HostListener('click')
   protected onClose(): void {
@@ -301,9 +291,8 @@ export class TooltipDirective implements OnDestroy {
   }
 
   private show(): void {
-    // A re-render or re-entrant hover can call show() with a panel still open;
-    // dispose it first so the OverlayRef isn't leaked and aria-describedby
-    // doesn't accumulate the same id twice.
+    // A re-render or re-entrant hover can call show() with a panel still open: dispose
+    // it first so the OverlayRef isn't leaked and the id isn't added twice.
     this.disposeRef();
     const placement = this.dsTooltipPlacement();
     const positionStrategy = this.overlay

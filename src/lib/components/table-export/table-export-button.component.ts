@@ -11,11 +11,7 @@ import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 /**
  * The toolbar control `DsTableExport` renders for itself.
  *
- * It exists as a component rather than a `createComponent(ButtonComponent)` call with
- * `setInput` per binding, so the button's markup stays ordinary template code instead of a
- * hand-rolled imperative copy that drifts from `ds-button`'s own API.
- *
- * @internal Not API — created by the directive, never written in a consumer's template.
+ * @internal Not API - created by the directive, never written in a consumer's template.
  */
 @Component({
   selector: 'ds-table-export-button',

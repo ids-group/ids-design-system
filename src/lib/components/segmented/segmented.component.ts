@@ -40,19 +40,18 @@ import type { SegmentedOption } from './segmented.types';
   ],
 })
 export class SegmentedComponent extends DsControlValueAccessor<string> {
-  /** Segments to render — each needs a `label` and `value`, optional `icon`/`disabled`. */
+  /** Segments to render; each needs a `label` and `value`, optional `icon`/`disabled`. */
   readonly options = input<readonly SegmentedOption[]>([]);
-  /** Selected segment's `value`, two-way bound. */
+  /** `value` of the selected segment. */
   readonly value = model<string>('');
-  /** Accessible name for the segmented control (radiogroup role). */
+  /** Accessible name of the radiogroup. */
   readonly ariaLabel = input<string | null>(null);
-  /** Visible label above the track; omit to supply your own. */
+  /** Visible label above the track. */
   readonly label = input<string>('');
   /** Disables every segment. */
   readonly disabled = input(false, { transform: booleanAttribute });
-  /** Segments share their edges instead of floating in a padded track: borders collapse into one
-   *  hairline and only the outer ends round. Needs `--ds-segmented-segment-border` to be set,
-   *  since the shared edge IS the border. */
+  /** Segments share edges instead of floating in a padded track; only the outer ends round.
+   *  Needs `--ds-segmented-segment-border` set, since the shared edge is the border. */
   readonly joined = input(false, { transform: booleanAttribute });
 
   readonly isDisabled = computed(() => this.disabled() || this.formDisabled());
@@ -76,8 +75,6 @@ export class SegmentedComponent extends DsControlValueAccessor<string> {
 
   private readonly buttons = viewChildren<ElementRef<HTMLButtonElement>>('seg');
 
-  // The single roving-tabindex entry point: the selected segment, or the first
-  // enabled one when nothing is selected yet.
   protected readonly focusableValue = computed(() => {
     const value = this.value();
     const options = this.options();

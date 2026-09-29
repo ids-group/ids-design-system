@@ -15,8 +15,7 @@ import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
 export interface ChartDataRow {
   readonly key: string;
   readonly cells: readonly string[];
-  /** A part of the row above rather than a row of its own - one bar's segment, one stage's drop.
-   *  Drawn indented and quieter, so the nesting survives without a second table. */
+  /** A part of the row above (one bar's segment, one stage's drop); drawn indented and quieter. */
   readonly nested?: boolean;
 }
 

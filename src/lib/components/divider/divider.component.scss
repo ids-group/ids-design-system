@@ -1,6 +1,3 @@
-/* Divider — host renders the rule. Variants: default | strong | vertical | label.
-   Spacing: none | sm (4px) | md (8px, default) | lg (16px). */
-
 :host {
   --_divider-color:        var(--ds-divider-color,        var(--border-divider));
   --_divider-label-color:  var(--ds-divider-label-color,  var(--text-tertiary));

@@ -161,8 +161,7 @@
   border-radius: var(--radius-md);
   color: var(--text-tertiary);
 
-  // The border tint alone was the whole indicator, and 1px is under the WCAG 2.4.13
-  // floor for a perimeter. It stays as a second signal; the ring carries the weight.
+  // A 1px border tint is under the WCAG 2.4.13 perimeter floor, so it is a second signal; the ring carries the weight.
   &:focus-within {
     border-color: var(--accent);
 

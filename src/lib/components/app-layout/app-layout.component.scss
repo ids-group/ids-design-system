@@ -16,16 +16,12 @@
   grid-template-rows: auto 1fr;
   height: var(--ds-app-layout-height, 100dvh);
 
-  // Containing block for the overlay rail below lg. Without it the rail's
-  // `position: fixed` resolves against the VIEWPORT, so a layout embedded in a
-  // page - a docs demo, a preview pane - throws its rail over the whole window
-  // instead of its own box. For a full-viewport layout the two are identical.
+  // Containing block for the overlay rail: without it `position: fixed` resolves
+  // against the viewport and an embedded layout throws its rail over the whole window.
   position: relative;
 
-  // Own stacking context, so a layout nested in the content area keeps its rail
-  // and scrim inside its own box. Without it both layouts z-index against the
-  // ROOT context at the same --layer-drawer, and the later one in the DOM - the
-  // embedded demo - paints over the outer layout's open overlay rail.
+  // Own stacking context: nested layouts would otherwise z-index against the root
+  // at the same --layer-drawer, and the later one paints over the outer open rail.
   isolation: isolate;
   overflow: hidden;
 }
@@ -41,12 +37,9 @@
   grid-area: sidenav;
   overflow-y: auto;
 
-  // Below lg the rail leaves the grid and becomes an overlay. It stays in the
-  // SAME DOM position on purpose: the consumer projects its sidenav once, and
-  // the component's state and scroll position survive open/close.
-  // `left`, not a logical property: RTL support was dropped for this library
-  // (2026-07-07), so a logical inset here would imply a guarantee nothing else
-  // honours.
+  // Below lg the rail becomes an overlay in the SAME DOM position, so the projected
+  // sidenav keeps its state and scroll across open/close.
+  // `left`, not a logical property: RTL is unsupported.
   @include bp.down(lg) {
     position: absolute;
     z-index: var(--layer-drawer);
@@ -58,11 +51,8 @@
     transform: translateX(-100%);
     transition: transform var(--duration-base) var(--ease-standard);
 
-    // `&.open`, NOT `:host(.rail-open) &`: the latter compiles to a DESCENDANT
-    // selector, and every instance of this component shares one encapsulation
-    // attribute - so an outer layout carrying `.rail-open` opened the rail of
-    // every layout nested inside it, and its scrim swallowed the clicks meant
-    // for the outer one. The state has to live on the element it styles.
+    // `&.open`, NOT `:host(.rail-open) &`: that compiles to a descendant selector,
+    // so an outer layout's `.rail-open` would open the rail of every nested layout.
     &.open {
       transform: translateX(0);
     }
@@ -100,10 +90,8 @@
   grid-area: content;
   padding: var(--_app-layout-padding-y) var(--_app-layout-padding-x);
 
-  // The reserved gutter + scrollbar count towards the right inset: subtract
-  // the measured width so gutter + padding always equals --_app-layout-padding-x and
-  // the inset matches the left edge on every device (0 with overlay
-  // scrollbars).
+  // Gutter + scrollbar count toward the right inset: subtract the measured width
+  // so it matches the left edge (0 with overlay scrollbars).
   padding-right: calc(var(--_app-layout-padding-x) - var(--ds-scrollbar-width, 0px));
   overflow: auto;
   scrollbar-gutter: stable;

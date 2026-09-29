@@ -10,8 +10,7 @@ import type { ElementRef, Signal } from '@angular/core';
 
 /** Where a roving tabindex lands after `key`, or `null` when the key does not traverse.
  *
- *  The ends wrap, as they do in `ds-radio-group`: a chart's marks are a closed set, and Home and
- *  End are the direct way to either extreme.
+ *  The ends wrap, as in `ds-radio-group`; Home and End jump to either extreme.
  *
  *  @internal */
 export function nextRovingIndex(
@@ -50,8 +49,7 @@ export function markAt(
   return scope?.querySelector(`${within}[data-mark-index="${index}"]`) ?? null;
 }
 
-/** Moves DOM focus to the mark `index` within `scope`, which is what makes the roving tabindex a
- *  traversal rather than a state change nobody can see.
+/** Moves DOM focus to the mark `index` within `scope`.
  *
  *  @internal */
 export function focusMark(
@@ -67,9 +65,8 @@ export function focusMark(
 
 /** A chart's roving tab stop.
  *
- *  One tab stop per chart, not one per mark: WCAG 2.1.1's Understanding is explicit that not every
- *  mouse-operable control has to be separately focusable, and that is what keeps a twenty-five
- *  mark chart from being twenty-five stops in the page's tab order.
+ *  One tab stop per chart, not one per mark: WCAG 2.1.1 does not require every mouse-operable
+ *  control to be separately focusable, and 25 marks would be 25 tab stops.
  *
  *  @internal */
 export interface RovingMarks {
@@ -107,9 +104,8 @@ export interface MarkHit {
   readonly index: number;
 }
 
-/** The mark an event on the marks' parent came from - the nearest `[data-mark-index]` inside that
- *  parent - for a chart that listens once per series rather than once per mark. `null` when the
- *  event did not start on a mark.
+/** The mark an event on the marks' parent came from (the nearest `[data-mark-index]`), for a chart
+ *  that listens once per series. `null` when the event did not start on a mark.
  *
  *  @internal */
 export function markOf(
@@ -128,10 +124,9 @@ export function markOf(
   return { element, index: Number(element.getAttribute('data-mark-index')) };
 }
 
-/** Focus arriving on and leaving a mark inside `scope`, heard from the document rather than from
- *  the marks' group: Chromium makes an SVG element focusable once it has a `focus`, `blur`,
- *  `focusin` or `focusout` listener, so a group that listened would take focus on a click and
- *  ring every mark it holds. Call from an injection context.
+/** Focus arriving on and leaving a mark inside `scope`, heard from the document, not the marks' group:
+ *  Chromium makes an SVG element focusable once it has a focus listener, so a listening group would
+ *  take focus on a click and ring every mark it holds. Call from an injection context.
  *
  *  @internal */
 export function listenForMarkFocus(
@@ -154,8 +149,7 @@ export function listenForMarkFocus(
       };
     const focusIn = forward(onFocus);
     const focusOut = forward(onBlur);
-    // Outside the zone: every focus change on the page reaches every series, and the handlers
-    // write signals, which schedule the render they need.
+    // Outside the zone: every focus change reaches every series; the signal writes schedule the render.
     zone.runOutsideAngular(() => {
       document.addEventListener('focusin', focusIn);
       document.addEventListener('focusout', focusOut);

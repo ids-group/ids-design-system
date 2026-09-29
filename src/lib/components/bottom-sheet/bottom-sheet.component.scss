@@ -19,9 +19,8 @@
 
   display: contents;
 
-  // Reduced motion zeroes the DURATION, never the animation. At 0s `animationend` is not
-  // reliably delivered, so the component's 300 ms fallback timer is what tears down, and
-  // `.closing` is click-through for exactly that window.
+  // Reduced motion zeroes the duration, never the animation: at 0s `animationend` is not
+  // reliably delivered, so the component's 300 ms fallback timer tears down.
   @media (prefers-reduced-motion: reduce) {
     --_bottom-sheet-enter-duration: 0ms;
     --_bottom-sheet-leave-duration: 0ms;
@@ -40,8 +39,8 @@
   justify-content: flex-end;
 
   /* clip, not hidden: the entering sheet (translateY(100%)) must not add scrollable
-     overflow to ancestor frames (filter containing-block + overflow: hidden), where the
-     focus-trap's initial focus() would scroll-into-view and yank the host app's content. */
+     overflow to ancestor frames, where the focus-trap's initial focus() would scroll
+     the host app's content. */
   overflow: clip;
   animation-name: ds-fade-in;
   animation-duration: var(--_bottom-sheet-scrim-enter-duration);
@@ -88,8 +87,6 @@
     transition: none;
   }
 
-  /* When snap points are active, animate height changes between snap stops.
-     Reduced-motion collapses this to an instant switch. */
   &.snapping {
     transition:
       transform var(--duration-base) var(--ease-decelerate),

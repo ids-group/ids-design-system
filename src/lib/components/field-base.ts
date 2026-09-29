@@ -10,13 +10,8 @@ import {
  * The inputs every DS form field has, declared once.
  *
  * Only the UNIVERSAL ones belong here. `success`, `label`, `required` and
- * `optional` stay on the components: they exist on some fields and not others, so
- * lifting them would hand a checkbox a `success` or a slider a `label` it never
- * had — a silent public-API addition.
- *
- * The message half lives one level up in `DsMessageBase`, which anything with a
- * message line can take. What stays here is the validation state a form control
- * has and a plain control does not.
+ * `optional` stay on the components: lifting them would hand a checkbox a
+ * `success` or a slider a `label` it never had, a silent public-API addition.
  * @internal
  */
 @Directive()
@@ -27,9 +22,9 @@ export abstract class DsFieldBase extends DsMessageBase {
   readonly errors = input<readonly DsFieldError[], DsFieldErrorsInput>([], {
     transform: normalizeFieldErrors,
   });
-  /** Paints the error state and sets `aria-invalid`, WITHOUT a message of its own
-   *  — for when the text lives elsewhere, such as a form-level error summary or
-   *  one message covering a whole field group. Use `error` to show text. */
+  /** Paints the error state and sets `aria-invalid`, WITHOUT a message of its own, for when
+   *  the text lives elsewhere (an error summary, one message covering a field group).
+   *  Use `error` to show text. */
   readonly invalid = input(false, { transform: booleanAttribute });
   /** Whether the user has interacted with the field. Bound by signal forms; gates
    *  `errors`, so a `required` error does not greet an untouched form. */

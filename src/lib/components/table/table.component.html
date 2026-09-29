@@ -6,9 +6,8 @@
   <ng-container #toolbarAnchor />
 </div>
 
-<!-- Wraps the SCROLL CONTAINER, not the table inside it: the scrim is
-     `position: absolute; inset: 0`, so from in there it is sized to one viewport of
-     the table and scrolls away with the content. -->
+<!-- Wraps the scroll container, not the table: the scrim is `position: absolute; inset: 0`,
+     so inside it would be one viewport tall and scroll away with the content. -->
 <ds-loading-overlay
   [loading]="isOverlayLoading()"
   [blur]="true"
@@ -176,11 +175,8 @@
         </tr>
       </thead>
 
-      <!-- Matches what the scrim covers, which is everything below the header:
-           a row keeps its tabindex and its Enter handler otherwise, so a keyboard
-           user could open a row whose data is mid-replacement while the pointer
-           was stopped by the scrim. The header stays live on purpose — re-sorting
-           is what puts the scrim up in the first place. -->
+      <!-- Covers what the scrim covers, else a keyboard user could open a row that is
+           mid-replacement. The header stays live: re-sorting puts the scrim up. -->
       <tbody [attr.inert]="isOverlayLoading() ? '' : null">
         @if (isSkeletonLoading()) {
           @for (_ of skeletonArray(); track $index; let rowIndex = $index) {
@@ -190,14 +186,12 @@
             </ng-container>
           }
         } @else if (showsLoadingSpace()) {
-          <!-- Height, not a message. The empty state is a claim about the data and stays withheld
-               while the table is still asking; without this the tbody is empty, the table collapses
-               onto its header and the overlay spinner floats over nothing. -->
+          <!-- Height, not a message: without it the tbody is empty while loading, the table
+               collapses onto its header and the overlay spinner floats over nothing. -->
           <tr aria-hidden="true">
             <td
               class="loading-space"
-              [attr.colspan]="expandedColspan()">
-            </td>
+              [attr.colspan]="expandedColspan()"></td>
           </tr>
         } @else if (showsEmptyRow()) {
           <tr>
@@ -218,8 +212,7 @@
             <tr
               class="spacer"
               aria-hidden="true"
-              [style.height.px]="window.padTop">
-            </tr>
+              [style.height.px]="window.padTop"></tr>
           }
 
           @for (slot of rowSlots(); track slot.index) {
@@ -376,19 +369,18 @@
               </tr>
 
               @if (
-                  expandableRows() &&
-                  isExpanded(row) &&
-                  rowExpandTemplate() &&
-                  !virtualizing()
-                ) {
+                expandableRows() &&
+                isExpanded(row) &&
+                rowExpandTemplate() &&
+                !virtualizing()
+              ) {
                 <tr class="expand-panel-row">
                   <td
                     class="expand-panel-cell"
                     [attr.colspan]="expandedColspan()">
                     <div class="expand-panel-inner">
-                      <!-- The animation runs on the grid track, so the panel needs a child to be the
-                           track's content; `overflow: hidden` on it is what makes the reveal read as
-                           the accordion's rather than as a jump. -->
+                      <!-- The animation runs on the grid track; the child with `overflow: hidden`
+                           is its content. -->
                       <div class="expand-panel-content">
                         <ng-container
                           [ngTemplateOutlet]="rowExpandTemplate()!"
@@ -414,8 +406,7 @@
             <tr
               class="spacer"
               aria-hidden="true"
-              [style.height.px]="window.padBottom">
-            </tr>
+              [style.height.px]="window.padBottom"></tr>
           }
         }
       </tbody>
@@ -431,8 +422,7 @@
     [class.hscroll-hidden]="!hscrollNeeded()">
     <div
       class="hscroll-spacer"
-      [style.width.px]="hscrollContentWidth()">
-    </div>
+      [style.width.px]="hscrollContentWidth()"></div>
   </div>
 }
 
@@ -558,8 +548,6 @@
         track action.id;
         let first = $first
       ) {
-        <!-- Not before the first item: a divider at the top of a menu separates the menu from its
-             own edge, which is a line with nothing on one side of it. -->
         @if (action.divider && !first) {
           <ds-menu-divider />
         }
@@ -589,9 +577,8 @@
   </div>
 }
 
-<!-- One skeleton row, shared by loading="skeleton" and the gaps a lazy
-     window has not filled yet. `$implicit` is the row's index: skeletonWidth
-     varies the bar lengths from it, so a block of them does not read as a grid. -->
+<!-- One skeleton row for loading="skeleton" and unfilled lazy-window gaps. `$implicit` is the
+     row index, which skeletonWidth varies the bar lengths from. -->
 <ng-template
   #skeletonRow
   let-rowIndex>
@@ -608,8 +595,7 @@
     @if (expandableRows()) {
       <td
         class="expand-col"
-        [class.pin-expand]="stickyFirstColumn()">
-      </td>
+        [class.pin-expand]="stickyFirstColumn()"></td>
     }
 
     @for (col of visibleColumns(); track col.key; let first = $first) {

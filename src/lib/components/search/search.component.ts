@@ -47,24 +47,19 @@ import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
   ],
 })
 /**
- * Takes the CVA bridge rather than `DsControlValueAccessor`, which also carries
- * `DsFieldBase`: a search box is a toolbar filter, not a validated field, so it has
- * no message row and no message API. Where a search needs a label or an error line,
- * that is what `ds-input` is for.
+ * Takes the CVA bridge rather than `DsControlValueAccessor` (which carries `DsFieldBase`): a search box is a toolbar filter with no message row;
+ * where a label or error line is needed, use `ds-input`.
  */
 export class SearchComponent implements ControlValueAccessor {
   protected readonly intl = inject(DS_INTL);
-  /** Segment of a ds-field-group: the group owns the border, radius and focus
-   *  ring, so .in-group strips this control back to its bare contents. */
   protected readonly inGroup = inFieldGroup();
 
   private readonly bridge = valueControlBridge<string>(() => this.value);
 
-  /** Hides the control, as every other DS control does. Inline `display`, not the
-   *  attribute: the host sets its own, which the weaker UA rule would lose to. */
+  /** Hides the control, as every DS control does. Inline `display`, not the attribute: the host sets its own, which the weaker UA rule loses to. */
   readonly hidden = input(false, { transform: booleanAttribute });
 
-  /** Driven by the forms API — OR'd into `isDisabled` like every other control. */
+  /** Driven by the forms API, OR'd into `isDisabled`. */
   protected readonly formDisabled = this.bridge.formDisabled;
 
   /** Search text, two-way bound. */
@@ -87,8 +82,7 @@ export class SearchComponent implements ControlValueAccessor {
   readonly disabled = input(false, { transform: booleanAttribute });
 
   readonly isDisabled = computed(() => this.disabled() || this.formDisabled());
-  /** Control height. `md` (default) keeps the 36px search-row height; `sm` (32px)
-   *  aligns search with dense toolbars beside `sm` inputs/buttons; `lg` is touch.
+  /** Control height. `md` (default) is the 36px search-row height; `sm` (32px) aligns with dense toolbars; `lg` is touch.
    *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
   readonly size = input<DsSize | null>(null);
   readonly sizeResolved = resolveWithConfig(
@@ -98,26 +92,19 @@ export class SearchComponent implements ControlValueAccessor {
   );
   /** Fires with the current value on Enter. */
   readonly submitted = output<string>();
-  /** Milliseconds to hold each keystroke back before `value` updates — 0 (default)
-   *  writes on every keystroke, exactly as this control always has.
-   *
-   *  Clearing the field BYPASSES the delay, which is the part a plain
-   *  `debounceTime` gets wrong: emptying a search is a deliberate act, and making
-   *  the user wait 200ms to see the full list back reads as a hang. Enter flushes
-   *  for the same reason. What the input SHOWS is never delayed. */
+  /** Milliseconds to hold each keystroke back before `value` updates; 0 (default) writes on every keystroke.
+   *  Clearing the field BYPASSES the delay (waiting to see the full list back reads as a hang), and Enter flushes.
+   *  What the input SHOWS is never delayed. */
   readonly debounce = input(0, { transform: numberAttribute });
 
   private readonly inputEl =
     viewChild<ElementRef<HTMLInputElement>>('searchInput');
 
-  /** What the input shows. Separate from `value` only so typing never waits on
-   *  the timer; with `debounce` at 0 the two move together. */
+  /** What the input shows. Separate from `value` so typing never waits on the timer. */
   protected readonly text = signal(this.value());
 
   private pending: ReturnType<typeof setTimeout> | null = null;
-  /** The last text this component pushed into `value`, so an update arriving from
-   *  the HOST can be told apart from its own echo — a host resetting the field
-   *  mid-typing has to win, and cancel the keystroke still in flight. */
+  /** The last text this component pushed into `value`, to tell a HOST update from its own echo: a host reset mid-typing must win and cancel the keystroke in flight. */
   private pushed = this.value();
 
   constructor() {
@@ -131,9 +118,7 @@ export class SearchComponent implements ControlValueAccessor {
     });
   }
 
-  /** Move keyboard focus to the search input. Public so a host can hand focus
-   *  over deliberately — e.g. a Clear button that disables itself on activation
-   *  would otherwise blur into `<body>` and restart Tab order at the top. */
+  /** Public so a host can hand focus over deliberately, e.g. a Clear button that disables itself on activation would otherwise blur into `<body>`. */
   focus(options?: FocusOptions): void {
     this.inputEl()?.nativeElement.focus(options);
   }
@@ -163,18 +148,13 @@ export class SearchComponent implements ControlValueAccessor {
     this.submitted.emit(this.value());
   }
 
-  /** Empties the field, DROPS any armed keystroke, and publishes '' immediately.
-   *  Public for the same reason `focus()` is: a host-owned Clear button outside the
-   *  control needs it. Writing `''` into `value` is not equivalent — the effect
-   *  that watches `value` only cancels the timer when the incoming text DIFFERS
-   *  from what this control last pushed, so clearing an already-empty-looking field
-   *  mid-debounce left the keystroke armed. */
+  /** Empties the field, DROPS any armed keystroke, and publishes '' immediately. Public for host-owned Clear buttons.
+   *  Writing `''` into `value` is not equivalent: the effect only cancels the timer when the text DIFFERS from the last pushed value. */
   clear(): void {
     this.text.set('');
     this.cancel();
     this.push('');
-    // The × is removed once empty; return focus to the input so keyboard
-    // users don't get dropped onto <body>.
+    // The × is removed once empty; return focus to the input so keyboard users are not dropped onto <body>.
     this.inputEl()?.nativeElement.focus();
   }
 

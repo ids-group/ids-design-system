@@ -25,15 +25,12 @@ import type { TabsOrientation, TabsVariant } from './tabs.types';
 
 let nextId = 0;
 
-// Which query parameters are already claimed, so two strips on one screen cannot
-// quietly fight over the same one. Dev-only bookkeeping; nothing reads it in
-// production.
+// Claimed query parameters, so two strips on one screen cannot fight over one. Dev-only.
 const claimedUrlParams = new Map<string, number>();
 
-/** Label → URL name. Diacritics are decomposed and dropped so "Zusätze" gives
- *  `zusatze` rather than a percent-encoded umlaut. A label with nothing sluggable
- *  in it — CJK, or bare punctuation — keeps its raw text rather than becoming an
- *  empty parameter. */
+/** Label to URL name. Diacritics are dropped ("Zusätze" gives `zusatze`); a label
+ *  with nothing sluggable in it (CJK, bare punctuation) keeps its raw text rather
+ *  than becoming an empty parameter. */
 function slugify(label: string): string {
   const slug = label
     .normalize('NFKD')
@@ -87,30 +84,25 @@ export class TabsComponent {
   /**
    * Keep the active tab in a query parameter, so it survives F5, a shared link
    * and the Back button: `urlParam="tab"` gives `?tab=activity`. Empty (the
-   * default) leaves the URL alone, and the strip works exactly as before.
+   * default) leaves the URL alone.
    *
-   * The names come from each `ds-tab`'s `value` (falling back to its `label`),
-   * so there is no second list to keep in step. **Names, not indices** — writing
-   * `?tab=1` would silently repoint every old link the moment a tab is inserted.
-   * The FIRST tab writes no parameter and every write REPLACES the history
-   * entry, so a pristine screen keeps a clean address and flipping tabs does not
-   * fill the Back button.
+   * The names come from each `ds-tab`'s `value` (falling back to its `label`).
+   * **Names, not indices**: `?tab=1` would silently repoint every old link the
+   * moment a tab is inserted. The FIRST tab writes no parameter and every write
+   * REPLACES the history entry, so flipping tabs does not fill the Back button.
    *
-   * An unknown or missing name lands on the first tab rather than throwing: a
-   * URL is user input, and a stale bookmark should still open the screen.
+   * An unknown or missing name lands on the first tab rather than throwing.
    *
-   * Outside a routed context the input is inert. Nothing router-shaped is even
-   * resolved until you set it — no DI lookup and, more to the point, no
-   * subscription — so a strip that never uses this costs exactly what it did
-   * before the input existed.
+   * Outside a routed context the input is inert; no router lookup or subscription
+   * happens until you set it.
    */
   readonly urlParam = input<string>('');
 
   /** Reopen the tab this screen was last left on, per path, from `sessionStorage`.
-   *  Off by default, and needs `urlParam` for the names — a remembered INDEX would
-   *  repoint the moment a tab is inserted. A link always wins: the parameter is read
-   *  first, memory only fills the gap the first tab leaves in the URL. Session, not
-   *  local, so tomorrow is a fresh visit. */
+   *  Off by default, and needs `urlParam` for the names (a remembered INDEX would
+   *  repoint when a tab is inserted). A link always wins: the parameter is read
+   *  first, memory only fills the gap the first tab leaves in the URL. Kept in
+   *  `sessionStorage`, so tomorrow is a fresh visit. */
   readonly rememberLastTab = input(false, { transform: booleanAttribute });
 
   /** Emitted when a close button is clicked. Carries the tab's value input, or
@@ -135,11 +127,8 @@ export class TabsComponent {
 
   protected readonly tabs = contentChildren(TabComponent);
 
-  // Nothing router-shaped is touched until `urlParam` is set: no DI lookup, and
-  // above all no subscription. A tab strip is perfectly valid outside a routed
-  // context — in a dialog, on a static page — and most are, so the default must
-  // cost nothing. Resolved through the component's own Injector rather than
-  // `inject(Router)` at construction, which would run for every instance.
+  // Router lookups go through the Injector on demand: `inject(Router)` at construction
+  // would run for every strip, and most are outside a routed context (dialogs, static pages).
   private readonly injector = inject(Injector);
   private router: Router | null = null;
   private route: ActivatedRoute | null = null;
@@ -163,12 +152,8 @@ export class TabsComponent {
       onCleanup(() => observer.disconnect());
     });
 
-    /**
-     * Two strips sharing a parameter is the failure mode of going round a screen
-     * turning this on: `tab` is the obvious name, so the second strip takes it
-     * too, and from then on each write erases the other's tab. Nothing throws and
-     * the URL looks plausible — it just restores the wrong tab on reload.
-     */
+    // Two strips sharing a parameter erase each other's tab; nothing throws, the reload
+    // just restores the wrong one.
     if (isDevMode()) {
       effect((onCleanup) => {
         const param = this.urlParam();
@@ -182,8 +167,7 @@ export class TabsComponent {
           );
         }
         claimedUrlParams.set(param, held + 1);
-        // onCleanup alone: it runs before every re-run AND on destroy, so
-        // releasing again from a DestroyRef would double-count the way out.
+        // onCleanup alone: it runs on every re-run AND on destroy; a DestroyRef release would double-count.
         onCleanup(() => {
           const now = (claimedUrlParams.get(param) ?? 1) - 1;
           if (now > 0) {
@@ -195,8 +179,6 @@ export class TabsComponent {
       });
     }
 
-    // Subscribe only while the feature is on, and drop the subscription again if
-    // `urlParam` is cleared.
     effect((onCleanup) => {
       if (!this.urlParam() || !this.resolveRouting()) {
         this.urlParams.set(null);
@@ -209,10 +191,8 @@ export class TabsComponent {
       onCleanup(() => subscription.unsubscribe());
     });
 
-    // URL -> tab. Runs again when the tabs arrive (content children resolve
-    // after the first pass) and on every Back/Forward, which is what makes the
-    // history walk the tabs. Writing back is guarded by the equality check
-    // below, so this cannot loop with `writeUrl`.
+    // URL -> tab. Re-runs when the tabs arrive (content children resolve after the first
+    // pass) and on Back/Forward. The equality check below stops it looping with `writeUrl`.
     effect(() => {
       const param = this.urlParam();
       const params = this.urlParams();
@@ -231,8 +211,7 @@ export class TabsComponent {
     });
   }
 
-  /** Resolves the router pair on first use. Null outside a routed context, which
-   *  makes `urlParam` inert there rather than an error. */
+  /** Resolves the router pair on first use; false outside a routed context, which makes `urlParam` inert. */
   private resolveRouting(): boolean {
     this.router ??= this.injector.get(Router, null);
     this.route ??= this.injector.get(ActivatedRoute, null);
@@ -240,18 +219,14 @@ export class TabsComponent {
     return !!this.router && !!this.route;
   }
 
-  /** The tab's name AS IT APPEARS IN THE URL, and deliberately NOT what
-   *  `tabClosed` emits — that stays the label, because a host matches it against
-   *  its own list. A slug is still derived from display copy, so renaming a tab
-   *  still breaks saved links; `value` is the only fix for that. */
+  /** The tab's name as it appears in the URL, deliberately NOT what `tabClosed` emits
+   *  (the label, which a host matches against its own list). A slug derives from display
+   *  copy, so renaming a tab breaks saved links unless `value` is set. */
   private tabName(tab: TabComponent): string {
     return tab.value() ?? slugify(tab.label());
   }
 
-  /** Storage key for `rememberLastTab`: the path plus the parameter name. Per
-   *  path because that is the screen a reader returns to, and the parameter is
-   *  what keeps two strips on one path apart — which the dev warning above
-   *  already insists is unique. */
+  /** Storage key for `rememberLastTab`: the path plus the parameter name, which keeps two strips on one path apart. */
   private memoryKey(): string | null {
     const param = this.urlParam();
     if (!this.rememberLastTab() || !param || !this.resolveRouting()) {
@@ -261,9 +236,7 @@ export class TabsComponent {
     return `ds-tabs:${this.router!.url.split('?')[0]}:${param}`;
   }
 
-  /** Every access is wrapped: Safari in private mode throws on write, and a
-   *  quota error must not take a tab strip down with it. Same guard as
-   *  `ds-table`'s persisted layout. */
+  /** Guarded: Safari private mode throws on write, and a quota error must not take the strip down. */
   private rememberedName(): string | null {
     const key = this.memoryKey();
     if (!key) {
@@ -283,12 +256,10 @@ export class TabsComponent {
       return;
     }
     try {
-      // Stored for the first tab too, which writes no parameter: without that,
-      // deliberately going back to tab one would be forgotten and the next visit
-      // would reopen the tab before it.
+      // Stored for the first tab too (it writes no parameter), or going back to tab one would be forgotten.
       sessionStorage.setItem(key, this.tabName(tab));
     } catch {
-      // Storage unavailable — the strip simply stops remembering.
+      // Storage unavailable: the strip stops remembering.
     }
   }
 
@@ -307,7 +278,6 @@ export class TabsComponent {
     });
   }
 
-  /** Tracks which tab indices have ever been activated (for lazy rendering). */
   private readonly activatedIndices = signal<ReadonlySet<number>>(new Set([0]));
 
   protected tabId(index: number): string {
@@ -333,7 +303,6 @@ export class TabsComponent {
     return parts.join(' ');
   });
 
-  /** Whether the panel for a given index should be rendered (lazy gate). */
   protected isPanelVisible(index: number): boolean {
     if (!this.lazy()) {
       return index === this.selectedIndex();
@@ -478,7 +447,6 @@ export class TabsComponent {
       return;
     }
     event.preventDefault();
-    // Skip disabled tabs in the travel direction.
     const step = backward || event.key === 'End' ? -1 : 1;
     let guard = 0;
     while (this.tabs()[next]?.disabled() && guard < count) {

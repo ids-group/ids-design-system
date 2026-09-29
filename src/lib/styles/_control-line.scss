@@ -1,16 +1,14 @@
 @use 'focus' as focus;
 @use 'control-label' as control-label;
 
-// The ring goes on the ROW and $control's own is suppressed: a checked box already draws a brand
-// box, so a ring around the glyph lands concentric with it and reads as a target rather than as two
-// states. ds-table adds its own ring because it has no row to speak for it.
+// The ring goes on the row and $control's own is suppressed: a ring around the glyph would sit
+// concentric with a checked box's own brand box.
 @mixin line($control, $label-font, $label-color) {
   @include focus.ring-for($control);
 
-  // The row paints nothing, so this shapes the ring and nothing else.
   border-radius: var(--focus-ring-radius);
 
-  // No label: the row IS the glyph, so the concentric read comes back and the ring stands off.
+  // No label: the row is the glyph, so the ring stands off.
   &:has(.control-text:empty) {
     --focus-ring-offset: var(--space-1-5);
   }
@@ -26,7 +24,7 @@
     cursor: pointer;
     user-select: none;
 
-    /* Collapse, or the empty caption still takes the row gap and offsets the control. */
+    /* Otherwise the empty caption still takes the row gap. */
     &:empty {
       display: none;
     }

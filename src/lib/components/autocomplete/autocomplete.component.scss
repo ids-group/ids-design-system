@@ -1,12 +1,10 @@
 /* Truncation contract:
-   Token chip in the input — Single line, ellipsis at ~16 ch. Tooltip on hover when clipped.
-   Option label in dropdown — Single line, ellipsis. Tooltip on hover always (the popover is
+   Token chip in the input - Single line, ellipsis at ~16 ch. Tooltip on hover when clipped.
+   Option label in dropdown - Single line, ellipsis. Tooltip on hover always (the popover is
      narrow).
-   Secondary metadata — Single line, ellipsis. Drop before the primary label clips. */
+   Secondary metadata - Single line, ellipsis. Drop before the primary label clips. */
 
-/* The listbox panel is portaled through a TemplatePortal, so its DOM still carries
-   this component's encapsulation attributes — which is why both halves are styled
-   here rather than the panel living in a global partial. */
+/* The portaled panel still carries this component's encapsulation attributes, so it is styled here, not in a global partial. */
 @use '../../styles/clear-button' as clear-button;
 @use '../../styles/field-box' as field-box;
 @use '../../styles/check-mark';
@@ -20,13 +18,8 @@
 :host {
   @include field-box.field-box-tokens;
 
-  /* `initial` on a custom property means UNSET, and that is the point. The pane is
-     portaled, so these reach it by being COPIED off this host as an inline style,
-     which outranks the `.ds-overlay-pane` rule that is a consumer's only route to a
-     portaled panel. Given a real fallback they always compute to something, so the
-     copy always happened and the consumer's rule never won. Unset while the picker's
-     own hook is unset, nothing is copied, and `styles/_dropdown-overlay.scss`
-     supplies the same default it always did. */
+  /* `initial` means UNSET on purpose: the pane gets these copied off the host as an inline style, which outranks a consumer's
+     `.ds-overlay-pane` rule. A real fallback would always be copied and the consumer rule never win. */
   --ds-dropdown-panel-bg-color: var(--ds-autocomplete-panel-bg-color, initial); /* void-ok */
   --ds-dropdown-panel-radius: var(--ds-autocomplete-panel-radius, initial); /* void-ok */
   --ds-dropdown-panel-max-height: var(--ds-autocomplete-panel-max-height, var(--picker-maxh));
@@ -43,8 +36,7 @@
   --_autocomplete-text-color: var(--ds-autocomplete-text-color, var(--_field-text-color));
   --_autocomplete-placeholder-color: var(--ds-autocomplete-placeholder-color, var(--_field-placeholder-color));
 
-  // The message gap is the field family's, so a form row of mixed field types keeps
-  // one rhythm — input, textarea, select and date-picker all use --field-label-gap.
+  // The field family shares --field-label-gap so mixed-field form rows keep one rhythm.
   display: flex;
   flex-direction: column;
   gap: var(--field-label-gap);
@@ -53,9 +45,7 @@
   position: relative;
 }
 
-/* Hugs its chips and typing area instead of filling the container. The maxw resolver
-   re-defaults to 100% so chips still wrap at the parent edge, and an explicit
-   --ds-autocomplete-max-width wins in both modes. */
+/* The maxw resolver re-defaults to 100% so chips still wrap at the parent edge; an explicit --ds-autocomplete-max-width wins in both modes. */
 :host(.content-width) {
   --_autocomplete-max-width: var(--ds-autocomplete-max-width, 100%);
 
@@ -92,16 +82,12 @@
   text-align: left;
   flex-wrap: wrap;
 
-  /* A wrapping flex container never shrinks its chip row — it pushes the text input
-     to a second line, which is exactly what the cap exists to prevent. `:has()` keys
-     off the measured row, so the mode drives the rule without a second class. */
+  /* A wrapping flex container never shrinks its chip row, it pushes the text input to a second line. `:has()` keys off the measured row. */
   &:has(> .chip-row.fit) {
     flex-wrap: nowrap;
   }
 
-  /* Single mode has no chip row to wrap FOR, so the same rule applies unless the
-     host asks for wrapping back. Without it a long value breaks onto a second line
-     and the chevron onto a third: measured 40px → 63px at a 144px trigger. */
+  /* Single mode: same rule unless the host asks for wrapping back; otherwise a long value breaks onto a second line and the chevron onto a third. */
   :host(:not(.value-wraps)) & {
     flex-wrap: nowrap;
   }
@@ -112,8 +98,7 @@
     @include clear-button.button;
   }
 
-  /* ds-input's addon class names on purpose: a consumer styling a leading glyph
-     writes one rule for the whole field family. */
+  /* ds-input's addon class names on purpose: one rule styles a leading glyph across the field family. */
   .addon-slot {
     display: inline-flex;
     align-items: center;
@@ -145,8 +130,7 @@
     .autocomplete-chevron { color: var(--text-disabled); }
   }
 
-  /* min-height, not height: multi chips wrap, so a size sets the floor and the row
-     grows past it. */
+  /* min-height, not height: multi chips wrap, so a size sets the floor. */
   &.sm { @include field-box.field-box-height(sm, min-height); }
   &.lg { @include field-box.field-box-height(lg, min-height); }
 }
@@ -165,8 +149,7 @@
   font: var(--font-weight-medium) var(--font-size-s) / var(--line-height-flat) var(--font-sans);
   color: var(--_autocomplete-text-color);
 
-  /* `min-width: 0` is the load-bearing half: a flex item refuses to shrink below
-     its content, so the ellipsis never engages without it. */
+  /* `min-width: 0` is load-bearing: a flex item will not shrink below its content, so the ellipsis never engages without it. */
   :host(:not(.value-wraps)) & {
     min-width: 0;
 
@@ -178,9 +161,7 @@
   flex: 1;
   min-width: var(--_autocomplete-input-min-width);
 
-  /* Collapsed, not removed: the input keeps focus, so clicking the field opens the
-     panel and expands it again, and typing still filters. Removing it would drop
-     focus and break both. */
+  /* Collapsed, not removed: the input keeps focus, so clicking the field opens the panel and typing still filters. */
   &.collapsed {
     flex: 0 0 0;
     min-width: 0;
@@ -211,8 +192,7 @@
     padding-left: var(--space-2);
   }
 
-  /* A painted `<span>`, not a ds-checkbox: the option row is the button, so a real
-     control in it would add a second tab stop inside one tab stop. */
+  /* A painted `<span>`, not a ds-checkbox: the row is the button, a real control would add a second tab stop inside one. */
   .check-box {
     flex: none;
     display: inline-flex;
@@ -223,8 +203,7 @@
     border: var(--check-bw) solid var(--border-strong);
     border-radius: var(--ds-radius-inner);
 
-    // ds-checkbox paints its own surface, so an unchecked box stays white over a hovered or
-    // selected row instead of letting the row's tint through it.
+    // ds-checkbox paints its own surface; an unchecked box stays white over a hovered or selected row.
     background-color: var(--surface-default);
     color: var(--text-on-primary);
 
@@ -249,8 +228,7 @@
   }
 }
 
-/* Segment of a ds-field-group — see input.component.scss for why. The group
-   draws the border, the radius and the one shared focus ring. */
+/* Segment of a ds-field-group - see input.component.scss. The group draws the border, radius and shared focus ring. */
 :host(.in-group) {
   @include field-group-segment.field-group-segment('.autocomplete-trigger');
 }

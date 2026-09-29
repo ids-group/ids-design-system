@@ -1,27 +1,12 @@
 /* Chart and dataviz tokens.
 
-   Categorical: led by the coral and teal the product's own
-   screens are built on. NO HUE BETWEEN 35 and 130: yellow and
-   lime sit at high luminance by nature, so dragging one down
-   to clear 3:1 on white turns it to mustard — an earlier set
-   tried, and the pie read as mud. Every hue clears 3:1 for
-   WCAG 1.4.11 and sits in a narrow perceptual band (L* 56-62)
-   so no series shouts over another; an older set ran 45% to
-   100% saturation and the first bar drowned the last.
-   Slot 8 is the "rest" / "other" bucket: neutral, and darker
-   than the band on purpose. Neutral, because every eighth HUE
-   that clears the floor lands within dE 4 of one of the seven
-   under protanopia or deuteranopia. Darker, because a mid
-   grey is not safe either — colour-vision deficiency drains
-   the emerald toward grey, and only the lightness gap keeps
-   the two apart.
+   Categorical: no hue between 35 and 130 - yellow and lime sit at high luminance, and darkening
+   one to clear 3:1 on white turns it mustard. Every hue clears 3:1 (WCAG 1.4.11) inside a narrow
+   band (L* 56-62) so no series shouts over another. Slot 8 is the "rest"/"other" bucket: neutral,
+   because an eighth hue lands within dE 4 of another under protanopia or deuteranopia, and darker
+   than the band because a mid grey is drained toward the emerald by colour-vision deficiency.
 
-   Sequential: single-hue ramp (blue) for ordinal data —
-   "low → high" magnitudes.
-
-   Divergent: red ↔ neutral ↔ green for signed data —
-   "bad ← zero → good". Used for Excess / Shortage matrix.
-   ============================================================ */
+   Sequential: single-hue ramp for ordinal data. Divergent: red, neutral, green for signed data. */
 
 :root {
   /* CATEGORICAL (8) ----------------------------------------- */
@@ -34,26 +19,18 @@
   --chart-categorical-7: hsl(300deg 62% 60%);   /* orchid */
   --chart-categorical-8: hsl(222deg 14% 29%);   /* slate */
 
-  /* SINGLE SERIES — every row of ONE series, plus the accent that marks the
-     row the reader is meant to land on. A categorical slot is the wrong tool
-     here: those separate series from each other, not rows within one. */
+  /* Rows of one series, plus the accent for the row to land on; categorical slots separate series. */
   --chart-series-default: hsl(222deg 16% 42%);
   --chart-series-accent:  var(--chart-categorical-2);
 
-  /* A waterfall's up and down are NOT success and failure - a cost rising is a rise and a bad
-     one - so the pair points at the palette's own two lead hues rather than at --success and
-     --error. The sign is carried by the label and the accessible name as well, because a hue
-     cannot say which direction is the welcome one. */
+  /* A waterfall's up and down are not success and failure (a cost rising is bad), so these point
+     at the lead hues, not --success/--error. The label and accessible name carry the sign too. */
   --chart-positive: var(--chart-categorical-2);
   --chart-negative: var(--chart-categorical-1);
 
-  /* RAMP — one hue, light → deep, for the ordered stages of a single
-     quantity. Shares the lead hue so a funnel reads as one object rather
-     than as eight unrelated categories. It stays in the middle of the
-     lightness range, 76% to 51%: a funnel's stages are a shape to read at
-     a glance, and a stage at either extreme reads as a different object
-     rather than as the next step. A scale that needs magnitude read from
-     the step between two colours takes --chart-heat-* instead. */
+  /* RAMP: one hue, light to deep, for the ordered stages of one quantity. Stays in the middle of
+     the lightness range (76% to 51%) so no stage reads as a different object. Magnitude read
+     from the step between two colours takes --chart-heat-* instead. */
   --chart-ramp-1: hsl(  8deg 78% 76%);
   --chart-ramp-2: hsl(  8deg 78% 72%);
   --chart-ramp-3: hsl(  8deg 78% 69%);
@@ -63,12 +40,10 @@
   --chart-ramp-7: hsl(  8deg 75% 55%);
   --chart-ramp-8: hsl(  8deg 72% 51%);
 
-  /* HEAT — the same hue across the FULL lightness range, 95% to 31%, for a
-     grid where magnitude is read from the step between two cells and
-     nothing else: adjacent dE 6.9–10.6, first to last 55.0, measured
-     2026-09-19 in OKLab against the ramp's 2.1–3.9 and 20.7. Contrast on
-     white runs 1.14:1 to 9.07:1, so a label over a cell is chosen against
-     that cell's own end of the scale, never once for the whole of it. */
+  /* HEAT: the same hue across lightness 95% to 31%, for a grid where magnitude is read from the
+     step between cells. Adjacent dE 6.9-10.6, first to last 55.0 (OKLab, measured 2026-09-19;
+     the ramp: 2.1-3.9 and 20.7). Contrast on white runs 1.14:1 to 9.07:1, so choose a label colour
+     per cell, never once for the grid. */
   --chart-heat-1: hsl(  8deg 60% 95%);
   --chart-heat-2: hsl(  8deg 67% 88%);
   --chart-heat-3: hsl(  8deg 73% 80%);
@@ -78,7 +53,7 @@
   --chart-heat-7: hsl(  8deg 74% 41%);
   --chart-heat-8: hsl(  8deg 68% 31%);
 
-  /* SEQUENTIAL — single-hue, light → dark */
+  /* SEQUENTIAL */
   --chart-sequential-1: var(--blue-100);
   --chart-sequential-2: var(--blue-200);
   --chart-sequential-3: var(--blue-300);
@@ -86,10 +61,7 @@
   --chart-sequential-5: var(--blue-700);
   --chart-sequential-6: var(--blue-900);
 
-  /* DIVERGENT — red ← neutral → green
-     Explicit HSL keeps the ramp
-     independent of palette retunes — re-skinning brand/red/green
-     should not shift the dataviz colour story. */
+  /* DIVERGENT: explicit HSL keeps the ramp independent of palette retunes. */
   --chart-divergent--3: hsl(  8deg 48% 38%);      /* large negative (worst) */
   --chart-divergent--2: hsl(  8deg 42% 56%);
   --chart-divergent--1: hsl(  8deg 34% 80%);
@@ -98,11 +70,8 @@
   --chart-divergent-2:  hsl(145deg 38% 52%);
   --chart-divergent-3:  hsl(145deg 46% 34%);      /* large positive (best) */
 
-  /* FRAME — the box a chart draws around itself. On by default: a chart is
-     read as an object on the page, not as a block of text, and without an
-     edge it bleeds into whatever sits under it. A chart already inside a
-     card drops it with --ds-chart-frame-border-width: 0 and
-     --ds-chart-frame-padding: 0. */
+  /* FRAME: on by default so the chart does not bleed into its surroundings. Inside a card, drop
+     it with --ds-chart-frame-border-width: 0 and --ds-chart-frame-padding: 0. */
   --chart-frame-border-color: var(--border-default);
   --chart-frame-border-width: var(--border-width-default);
   --chart-frame-radius: var(--radius-lg);
@@ -115,9 +84,8 @@
   --chart-grid-line-color:    var(--neutral-150);
   --chart-axis-font-size:      var(--font-size-2xs);
 
-  /* REFERENCE LINES - an annotation, not a series. A neutral stroke and a dash are what keep a
-     target from reading as one more category, and the band's opacity is low enough that a mark
-     drawn over it stays its own colour. */
+  /* REFERENCE LINES: an annotation, not a series. A neutral dashed stroke keeps a target from
+     reading as a category; the band opacity keeps marks over it their own colour. */
   --chart-threshold-color: var(--neutral-500);
   --chart-threshold-band-opacity: 0.12;
   --chart-threshold-dashed-pattern: 6 4;
@@ -125,19 +93,15 @@
 
   /* HIGHLIGHT / HOVER */
 
-  /* Every level of dimming costs the separation BETWEEN the dimmed series: measured 2026-09-13,
-     OKLab dE x100, the worst pair of three dimmed series falls from 14.8 at full opacity to 5.2 at
-     60% and 2.1 at 30%. There is no level that keeps them apart, so this number buys accent
-     loudness, not readable context. 30% is Carbon's. */
+  /* Dimming costs the separation between dimmed series (OKLab dE x100, worst pair of three:
+     14.8 at full opacity, 5.2 at 60%, 2.1 at 30%, measured 2026-09-13). No level keeps them
+     apart: this buys accent loudness, not readable context. */
   --chart-dim-opacity:        0.3;
   --chart-hover-bg-color:     hsl(225deg 39% 7% / 4%);
   --chart-cursor-line-color:  var(--neutral-400);
 
-  /* The focus indicator is TWO tones, not one: a single accent ring disappears on a mark of the
-     same hue family, and a chart's marks are exactly the surfaces a ring has to survive. The ring
-     itself is the app's, so a focused mark reads as the same indicator as every other control;
-     the white keyline is what separates it from the mark underneath, and it is the keyline rather
-     than the ring that does the surviving. */
+  /* Two tones: a single ring disappears on a mark of the same hue. The ring is the app's focus
+     colour; the white keyline separates it from the mark. */
   --chart-focus-ring-color:  var(--focus-ring-color);
   --chart-focus-halo-color:  white;
 
@@ -147,8 +111,7 @@
 
   /* DIMENSIONS */
 
-  /* Soft, not a pill: the cap squashes with the body while a mark grows in, and 3px is small
-     enough that the squash is not readable. */
+  /* Not a pill: the cap squashes with the body while a mark grows in; 3px keeps that unreadable. */
   --chart-mark-cap-radius: 3px;
   --chart-bar-gap:      4px;
   --chart-line-width:       2px;
@@ -157,19 +120,13 @@
   --chart-dot-radius-active: 6px;
   --chart-area-opacity:      0.16;
 
-  /* Stripes wide enough to survive a 24px-wide mark at a glance, and drawn in the surface colour
-     so they read as gaps cut out of the mark rather than a second hue competing with it. */
+  /* Wide enough to survive a 24px mark; surface-coloured so they read as gaps, not a second hue. */
   --chart-hatch-color: var(--surface-default);
   --chart-hatch-width: 1.5px;
 }
 
-/* Public override layer.
-   The block above is the palette; this block is the contract. A consumer sets
-   --ds-chart-*, never the palette itself, so recolouring one series costs one
-   declaration instead of the whole ramp. Series slots are numbered rather than
-   named after a hue: --ds-chart-series-3-color stays meaningful after a retune,
-   --ds-chart-orange-color would not.
-   ============================================================ */
+/* Public override layer: consumers set --ds-chart-*, never the palette. Series slots are numbered,
+   not named after a hue, so they stay meaningful after a retune. */
 
 :root {
   --ds-chart-series-1-color: var(--chart-categorical-1);

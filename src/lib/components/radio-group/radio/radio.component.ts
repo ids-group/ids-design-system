@@ -26,22 +26,20 @@ import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class RadioComponent extends DsFieldBase {
-  /** The ONLY way to drive a lone radio: this is deliberately not a `ControlValueAccessor`, so
-   *  `[formControl]` and `ngModel` do not bind to it — inside `ds-radio-group` the GROUP is the
-   *  form control, and a second accessor on one option would fight it. Inside a group this input
-   *  is not read at all. */
+  /** The only way to drive a lone radio: it is not a `ControlValueAccessor`, so `[formControl]`
+   *  and `ngModel` do not bind to it (inside `ds-radio-group` the group is the form control).
+   *  Not read inside a group. */
   readonly checked = model<boolean>(false);
-  /** Lets a checked standalone radio be cleared by clicking it again. Off by default, and
-   *  ignored inside `ds-radio-group`: there a radio is one option of a choice, and clearing it
-   *  would leave the group with no value through a gesture the group cannot see. */
+  /** Lets a checked standalone radio be cleared by clicking it again. Ignored inside
+   *  `ds-radio-group`, which cannot see that gesture. */
   readonly deselectable = input(false, { transform: booleanAttribute });
   /** A disabled parent `ds-radio-group` also disables it, whatever this is set to. */
   readonly disabled = input(false, { transform: booleanAttribute });
-  /** Native `name` attribute — overridden by the group's name when inside `ds-radio-group`. */
+  /** Native `name`; the group's name overrides it inside `ds-radio-group`. */
   readonly name = input<string>('');
   /** Value compared against the group's selection when inside `ds-radio-group`. */
   readonly value = input<unknown>('');
-  /** Overrides the auto-generated id used for the input and its label's `for`. */
+  /** Overrides the generated id of the input and its label's `for`. */
   readonly inputId = input<string | null>(null);
   /** Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
   readonly size = input<DsSize | null>(null);
@@ -50,13 +48,12 @@ export class RadioComponent extends DsFieldBase {
     (config) => config.control?.size,
     'md' as DsSize,
   );
-  /** Marks the radio required — shows an asterisk on the label and sets `aria-required`. */
+  /** Shows an asterisk on the label and sets `aria-required`. */
   readonly required = input(false, { transform: booleanAttribute });
-  /** Inline label rendered beside the dot and wired via for/id. Omit to bring
-   *  your own <label>. */
+  /** Label beside the dot, wired via for/id. Omit to bring your own <label>. */
   readonly label = input<string>('');
-  /** Accessible name for a control with no visible label — the row's `<label>` collapses when it
-   *  is empty, leaving nothing to name it. Set beside a label it OVERRIDES the label, per ARIA. */
+  /** Accessible name for a control with no visible label. Set beside a label it overrides the
+   *  label, per ARIA. */
   readonly ariaLabel = input<string | null>(null);
 
   protected readonly uid = nextControlId('ds-radio');
@@ -74,13 +71,11 @@ export class RadioComponent extends DsFieldBase {
     touched: this.touched,
   });
   protected readonly message = this.fieldMessage.message;
-  /** Only name via aria-label when there is no visible `<label for>` to do it. */
   protected readonly resolvedAriaLabel = computed(() =>
     this.label() ? null : this.ariaLabel() || null,
   );
   protected readonly invalidResolved = this.fieldMessage.invalid;
 
-  /** Injected via token to avoid circular import with RadioGroupComponent. */
   protected readonly group = inject(RADIO_GROUP, { optional: true });
 
   readonly effectiveDisabled = computed(
@@ -97,7 +92,6 @@ export class RadioComponent extends DsFieldBase {
     () => `radio-field size-${this.sizeResolved()}`,
   );
 
-  /** Exposed so the group can implement roving tabindex. */
   readonly inputElement = viewChild<ElementRef<HTMLInputElement>>('inputRef');
 
   protected get tabIndexAttr(): 0 | -1 {
@@ -108,7 +102,6 @@ export class RadioComponent extends DsFieldBase {
     return this.group.isTabbable(this) ? 0 : -1;
   }
 
-  /** Called by the group's keyboard handler to focus this radio's input. */
   focus(): void {
     this.inputElement()?.nativeElement.focus();
   }

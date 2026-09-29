@@ -4,8 +4,7 @@
   --_chart-threshold-dashed-pattern: var(--ds-chart-threshold-dashed-pattern, var(--chart-threshold-dashed-pattern));
   --_chart-threshold-dotted-pattern: var(--ds-chart-threshold-dotted-pattern, var(--chart-threshold-dotted-pattern));
 
-  // An annotation answers no pointer: the marks underneath are what the reader is aiming at, and a
-  // line across the whole plot would otherwise swallow every hover along its own row.
+  // A line across the whole plot would otherwise swallow every hover along its row.
   pointer-events: none;
 }
 
@@ -18,7 +17,7 @@
   stroke-dasharray: var(--_chart-threshold-dashed-pattern);
 }
 
-// Round caps are what make a one-unit dash read as a dot rather than as a short dash.
+// Round caps make a one-unit dash read as a dot.
 .threshold-line.is-dotted {
   stroke-dasharray: var(--_chart-threshold-dotted-pattern);
   stroke-linecap: round;

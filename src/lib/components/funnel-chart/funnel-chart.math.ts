@@ -1,12 +1,9 @@
 import type { FunnelChartShape } from './funnel-chart.types';
 
-/** Bottom width of the fixed silhouette, as a fraction of the full width. The
- *  tail carries a label, so it never narrows past this. */
+/** Bottom width of the fixed silhouette, as a fraction of the full width; the tail carries a label. */
 export const FUNNEL_TAIL_WIDTH = 0.38;
 
-/** Ramp step for one stage, spread across the whole ramp rather than taking its
- *  first `rampedCount` entries — a three-stage funnel that used steps 1-3 would
- *  never reach the deep end the ramp exists to provide. */
+/** Ramp step for one stage, spread across the whole ramp rather than its first `rampedCount` entries. */
 export function rampPosition(
   index: number,
   rampedCount: number,
@@ -20,15 +17,12 @@ export function rampPosition(
   return Math.min(Math.max(position, 0), rampLength - 1);
 }
 
-/** The viewBox is normalised: depth runs 0..100 whatever the stage count, and
- *  the rendered block size carries the real height. */
+/** The viewBox is normalised: depth runs 0..100 whatever the stage count. */
 export const FUNNEL_VIEW_BOX_WIDTH = 100;
 
 export const FUNNEL_VIEW_BOX_HEIGHT = 100;
 
-/** One inter-stage gap, as a share of a single stage's own depth. A share and
- *  not a count of units, because the viewBox depth is normalised: a fixed
- *  number of units would grow on screen with every stage added. */
+/** One inter-stage gap as a share of a stage's depth; fixed units would grow on screen with every stage added. */
 const FUNNEL_STAGE_GAP_SHARE = 0.14;
 
 export interface FunnelStageGeometry {
@@ -40,10 +34,8 @@ export interface FunnelStageGeometry {
   readonly bottom: number;
 }
 
-/** Every value as a finite, non-negative number. A negative would mirror a
- *  stage about its own centre line, and a non-finite one reaches an SVG
- *  attribute as `NaN`, where the renderer drops the whole shape without an
- *  error. */
+/** Every value as a finite, non-negative number: a negative mirrors a stage about its centre line, and
+ *  `NaN` in an SVG attribute drops the whole shape silently. */
 export function sanitizeValues(values: readonly number[]): number[] {
   return values.map((value) =>
     Number.isFinite(value) ? Math.max(value, 0) : 0,
@@ -69,11 +61,9 @@ function largestValue(values: readonly number[]): number {
   );
 }
 
-/** The depth at which `areaShare` of the silhouette's area lies above. The area
- *  down to depth `t` is `t - (1 - tail) * t² / 2` against a whole of
- *  `(1 + tail) / 2`, so the depth is a root of that quadratic rather than a
- *  ratio — this is the step that makes area, not width, carry the value. The
- *  discriminant bottoms out at `tail²`, so the root is always real. */
+/** The depth at which `areaShare` of the silhouette's area lies above. The area down to depth `t` is
+ *  `t - (1 - tail) * t² / 2` against a whole of `(1 + tail) / 2`, so the depth is a quadratic root.
+ *  The discriminant bottoms out at `tail²`, so the root is always real. */
 export function depthForAreaShare(
   areaShare: number,
   tailWidth: number,
@@ -81,8 +71,7 @@ export function depthForAreaShare(
   const share = clampFraction(areaShare);
   const tail = clampFraction(tailWidth);
   const narrowing = 1 - tail;
-  // A silhouette that does not narrow is a rectangle, where area is linear in
-  // depth and the quadratic degenerates to 0/0.
+  // A rectangle: area is linear in depth and the quadratic degenerates to 0/0.
   if (narrowing <= 0) {
     return share;
   }
@@ -135,22 +124,17 @@ function boundaryWidths(
     return depths.map(() => 0);
   }
 
-  // The last boundary repeats the last value, which flattens the closing edge:
-  // there is no following stage to taper towards.
+  // The last boundary repeats the last value: no following stage to taper towards.
   return Array.from({ length: count + 1 }, (_, index) =>
     clampFraction(values[Math.min(index, count - 1)] / largest),
   );
 }
 
-/** One trapezoid per stage, in fractions of the full width and of the total
- *  depth.
+/** One trapezoid per stage, in fractions of the full width and of the total depth.
  *
- *  `'taper'` and `'area'` share one fixed silhouette — full width at the top,
- *  `FUNNEL_TAIL_WIDTH` at the bottom — and differ only in where the stage
- *  boundaries land on it: evenly spaced for `'taper'`, so width encodes
- *  nothing, and at the depths that make each band's area proportional to its
- *  value for `'area'`. `'width'` abandons the silhouette and reads every
- *  boundary straight off the values. */
+ *  `'taper'` and `'area'` share one silhouette (full width at the top, `FUNNEL_TAIL_WIDTH` at the
+ *  bottom) and differ in where the boundaries land: evenly for `'taper'`, at depths that make each
+ *  band's area proportional to its value for `'area'`. `'width'` reads every boundary off the values. */
 export function funnelGeometry(
   values: readonly number[],
   shape: FunnelChartShape,
@@ -174,9 +158,8 @@ export function funnelGeometry(
   }));
 }
 
-/** The fall from `previousValue` to `value`, as a fraction of `previousValue`.
- *  Null where there is nothing to fall from — a zero or non-finite predecessor
- *  makes the ratio 0/0. Negative where the stage grew, which is real data. */
+/** The fall from `previousValue` to `value`, as a fraction of `previousValue`. Null for a zero or
+ *  non-finite predecessor; negative where the stage grew. */
 export function stageDrop(previousValue: number, value: number): number | null {
   if (!Number.isFinite(previousValue) || !Number.isFinite(value)) {
     return null;
@@ -188,9 +171,7 @@ export function stageDrop(previousValue: number, value: number): number | null {
   return (previousValue - value) / previousValue;
 }
 
-/** The drop into each stage. The first entry is null and not zero: a printed
- *  `0%` there would claim nobody fell away, rather than that there was no
- *  earlier stage to fall from. */
+/** The drop into each stage. The first entry is null, not zero: `0%` would claim nobody fell away. */
 export function stageDrops(values: readonly number[]): (number | null)[] {
   return values.map((value, index) =>
     index === 0 ? null : stageDrop(values[index - 1], value),
@@ -217,9 +198,8 @@ function roundCoordinate(value: number): number {
   return Math.round(value * 1000) / 1000;
 }
 
-/** The stage's four corners as an SVG `points` value, or an empty string when
- *  any input is non-finite. An attribute holding `NaN` is discarded by the
- *  renderer without an error, so the shape would go missing in silence. */
+/** The stage's four corners as an SVG `points` value, or an empty string when any input is
+ *  non-finite (`NaN` in the attribute drops the shape silently). */
 export function stagePolygonPoints(
   geometry: FunnelStageGeometry,
   viewBoxWidth: number,
@@ -248,9 +228,8 @@ export function stagePolygonPoints(
     top = bandTop;
     bottom = bandTop;
   } else if (bottom - top < halfGap) {
-    // A band shallower than the gap it has to leave, which is where a small tail stage of the area
-    // shape lands. It keeps half a gap of depth about its own middle so it stays a visible mark;
-    // the neighbours are inset by half a gap, so a quarter gap still separates them.
+    // A band shallower than its gap (a small tail stage of the area shape) keeps half a gap of depth
+    // about its middle so it stays visible; a quarter gap still separates it from its neighbours.
     const middle = Math.min(
       Math.max((bandTop + bandBottom) / 2, halfGap / 2),
       viewBoxHeight - halfGap / 2,
@@ -261,10 +240,8 @@ export function stagePolygonPoints(
   const horizontalCentre = viewBoxWidth / 2;
   const topWidth = clampFraction(geometry.topWidth);
   const bottomWidth = clampFraction(geometry.bottomWidth);
-  // The widths belong to the band's own boundaries, and the gap moves the drawn edges INSIDE them.
-  // Drawing the boundary widths at the inset depths makes every band overhang the silhouette at its
-  // top and fall short of it at its bottom, so the stack reads as a fir tree rather than a funnel.
-  // The silhouette is linear in depth for every shape, so the drawn widths interpolate exactly.
+  // The widths belong to the band's boundaries but the gap insets the drawn edges: using the boundary
+  // widths at the inset depths would draw a fir tree. The silhouette is linear in depth, so interpolating is exact.
   const widthAt = (depth: number) =>
     bandDepth > 0
       ? topWidth +
@@ -281,8 +258,7 @@ export function stagePolygonPoints(
   ].join(' ');
 }
 
-/** The middle of a band, for placing a marker inside it. The x is the viewBox centre because every
- *  funnel band is symmetrical about it, whatever its two widths.
+/** The middle of a band, for placing a marker inside it.
  *
  *  @internal */
 export function stageCenter(

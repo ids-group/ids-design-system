@@ -1,9 +1,7 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
-/* Opt into animating to/from intrinsic sizes (height: auto, max-content).
-   Inherited, so components can transition height:0 ↔ auto natively
-   (accordion, sidenav group) without max-height magic numbers. */
+/* Lets components transition height between 0 and auto (accordion, sidenav group). */
 :root { interpolate-size: allow-keywords; }
 html, body {
   margin: 0;
@@ -13,18 +11,11 @@ html, body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizelegibility;
 
-  /* Suppress the native mobile tap-highlight. Android Chrome paints a flat
-     rectangular overlay on tap whose geometry is browser-controlled (ignores
-     border-radius, NOT clipped by overflow), so on pill/rounded controls it
-     pokes square corners out past the shape. We can only set its colour, not
-     reshape it — so we remove it and let each control's own rounded
-     :active/:focus-visible state provide press feedback. Inherited → covers all
-     descendants. */
+  /* Android Chrome's tap overlay is a rectangle that ignores border-radius and overflow, so it
+     pokes square corners past rounded controls. Controls provide their own :active feedback. */
   -webkit-tap-highlight-color: transparent;
 }
 button, input, select, textarea { font-family: inherit; }
 
-/* Zero the browser's default heading margins (~0.83em) — they otherwise leak
-   into consumers and mangle spacing. Headings get their size from .t-* utils;
-   spacing is owned by the surrounding layout (gap / margin), not the element. */
+/* Spacing is owned by the surrounding layout, not the heading; size comes from .t-* utils. */
 h1, h2, h3, h4, h5, h6 { margin: 0; }

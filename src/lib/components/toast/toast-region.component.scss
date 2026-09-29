@@ -1,6 +1,3 @@
-/* Toast region — vertical stack of toasts. Placement is owned by the overlay
-   (ToastService position strategy); this component lays out the stack only. */
-
 :host {
   display: flex;
   flex-direction: column;

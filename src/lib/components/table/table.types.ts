@@ -46,18 +46,14 @@ export interface TableColumn<T = unknown> {
   /** Column width in px — also the clip width for `truncate`.
    *
    *  `'content'` instead sizes the column to its widest cell and stops it wrapping,
-   *  leaving the remaining width to the columns that should absorb it. An
-   *  auto-layout table spreads slack evenly, so a short column (a status, a count,
-   *  an actions cell) ends up as wide as its own header while the name column that
-   *  should take the slack does not. A pixel width cannot express that — pin one
-   *  column and the rest still spread. Dragging the column's edge overrides it. */
+   *  leaving the remaining width to the other columns. A pixel width cannot express
+   *  that: pin one column and the rest still spread. Dragging the edge overrides it. */
   width?: number | 'content';
   align?: 'left' | 'right' | 'center';
   cell?: (row: T) => string;
   /** Sort this column by a DOMAIN value instead of the rendered text. Without
    *  it, client sorting compares what the cell displays, so `$1.2M / $840K / $95K`
-   *  sorts by the leading character and `Oct 09, 2023 / Feb 27, 2024` sorts by
-   *  month NAME — the table looks sorted and is not. Return the underlying
+   *  and `Oct 09, 2023 / Feb 27, 2024` sort wrongly. Return the underlying
    *  number, `Date` or plain string; `null`/`undefined`/`''` counts as blank and
    *  sorts last in BOTH directions. Only affects sorting — the header filter
    *  still lists what the user can see. */
@@ -71,27 +67,22 @@ export interface TableColumn<T = unknown> {
   hideable?: boolean;
   /** Marks the cell whose TEXT tells the reader what the row opens, so it takes a link
    *  colour and underline while the row is hovered. Only has an effect on a
-   *  `rowInteractive` table: on a passive one every hover treatment is suppressed on
-   *  purpose, so a tint cannot promise a click that does not happen. Style it with
-   *  `--ds-table-cell-link-color` / `--ds-table-cell-link-decoration`.
+   *  `rowInteractive` table: a passive one suppresses every hover treatment. Style it
+   *  with `--ds-table-cell-link-color` / `--ds-table-cell-link-decoration`.
    *
-   *  Prefer `link` where the row leads somewhere: a tint appears only on hover, which
+   *  Prefer `link` where the row leads somewhere: the tint appears only on hover, which
    *  a keyboard or touch user never sees. */
   interactive?: boolean;
-  /** Renders this column's value as a real `<a>`, which is the accessible way to say
-   *  a row leads somewhere: it is visible without hovering, lands in the tab order as
-   *  a link rather than as a table row, and opens in a new tab on Ctrl/Cmd-click —
-   *  none of which a clickable `<tr>` can offer.
+  /** Renders this column's value as a real `<a>`: visible without hovering, in the tab
+   *  order as a link, and opens in a new tab on Ctrl/Cmd-click.
    *
    *  Return an Angular route target (a string, or the array form for dynamic
    *  segments); `null` / `undefined` leaves that row's cell as plain text, so a list
    *  where only some rows are reachable needs no second column. For an external URL,
-   *  render the cell through a `[cell]` template instead — this takes route targets
-   *  only, and the router is touched at all only once a column sets `link`.
+   *  render the cell through a `[cell]` template instead: this takes route targets only.
    *
-   *  Composes with `rowInteractive`: the link stops its own click from reaching the
-   *  row, so the row handler fires for the rest of the row and the link navigates
-   *  once. Style it with the same `--ds-table-cell-link-*` tokens as `interactive`. */
+   *  With `rowInteractive` the link stops its own click from reaching the row, so it
+   *  navigates once. Same `--ds-table-cell-link-*` tokens as `interactive`. */
   link?: (row: T) => string | readonly unknown[] | null | undefined;
   /** Initial visibility: start hidden. Needs the `dsTableColumns` directive on
    *  the table — visibility is its stage, so without it the column renders. The
@@ -124,14 +115,11 @@ export interface TableRowAction<T = unknown> {
   disabled?: (row: T) => boolean;
   /** Per-row predicate — return true to leave the item OUT for that row. Use it
    *  where the action does not apply rather than `disabled`, which greys an item
-   *  that is always there: a draft offers Edit + Launch and a live one Revert +
-   *  Delete, so greying leaves every row with a permanently dead half. When every
-   *  item of a row is hidden the kebab is not rendered at all, rather than opening
-   *  an empty menu. */
+   *  that is always there. When every item of a row is hidden the kebab is not
+   *  rendered. */
   hidden?: (row: T) => boolean;
   /** Why the item is disabled, shown as the item's second line. Only read when
-   *  `disabled` returns true for the row — a greyed item that does not say why is
-   *  the same dead control as a greyed button. */
+   *  `disabled` returns true for the row. */
   disabledReason?: string | ((row: T) => string);
 }
 

@@ -1,3 +1,2 @@
-// solid — brand fill (high-emphasis selected token / active label)
-// neutral — surface-secondary fill + divider border (low-emphasis metadata / filter chip)
+// solid: brand fill, high emphasis. neutral: secondary surface with divider border, low emphasis.
 export type TagVariant = 'solid' | 'neutral';

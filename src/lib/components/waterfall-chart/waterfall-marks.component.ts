@@ -12,25 +12,22 @@ import { CHART_SCALES } from '@ids-group-ltd/ids-design-system/components/chart'
 import type { ChartValueFormat } from '@ids-group-ltd/ids-design-system/core';
 import type { WaterfallChartStep } from './waterfall-chart.types';
 
-/** Distance from a bar's own tip to its value label's baseline. */
 const VALUE_LABEL_GAP = 8;
 
 /**
  * The two things a waterfall needs that a column series cannot carry: the dashed rule chaining one
  * bar to the next, and a value label that prints its own sign.
  *
- * The label lives here rather than on the column series because the sign is not a property of the
- * number - a delta of `130` reads `+130` and a total of `800` reads `800` - and a series-wide
- * formatter sees only the value, never which of the two it is holding.
+ * The label lives here because the sign depends on the kind of bar (delta `130` reads `+130`,
+ * total `800` reads `800`), which a series-wide formatter cannot see.
  *
- * Hosted on a `<g>` rather than an element of its own: an element the SVG specification does not
- * know is not rendered, and neither are its descendants. Written as `<svg:g dsWaterfallMarks>`.
+ * Hosted on a `<g>`: an element unknown to the SVG specification is not rendered, nor are its
+ * descendants. Written as `<svg:g dsWaterfallMarks>`.
  *
  * @internal
  */
 @Component({
-  // The repository's `component-selector` rule asks for an element selector, and one cannot work
-  // inside a canvas - see the same exemption on `g[dsColumnSeries]`.
+  // An element selector cannot work inside a canvas; same exemption as `g[dsColumnSeries]`.
   // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'g[dsWaterfallMarks]',
   standalone: true,
@@ -63,8 +60,7 @@ export class WaterfallMarksComponent {
     () => this.scales.bandWidth() * this.columnWidthRatio(),
   );
 
-  /** One rule per gap between two bars, drawn at the level they share - the level the left bar
-   *  ended on. Without it the bars read as five separate columns instead of one chain. */
+  /** One rule per gap between two bars, drawn at the level the left bar ended on. */
   protected readonly connectors = computed(() => {
     const toX = this.scales.xPosition();
     const toY = this.scales.yPosition();

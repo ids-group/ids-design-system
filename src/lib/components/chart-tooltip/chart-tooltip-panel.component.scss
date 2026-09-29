@@ -1,6 +1,5 @@
 :host {
-  /* Portaled through the CDK overlay, so a `--ds-chart-tooltip-*` override has to be
-     theme-level (`:root`) rather than set on the chart element. */
+  /* Portaled through the CDK overlay: a `--ds-chart-tooltip-*` override must be set on `:root`, not the chart. */
   --_chart-tooltip-bg-color: var(--ds-chart-tooltip-bg-color);
   --_chart-tooltip-text-color: var(--ds-chart-tooltip-text-color);
   --_chart-tooltip-border-color: var(--ds-chart-tooltip-border-color);
@@ -16,9 +15,8 @@
   padding: var(--space-2) var(--space-2-5);
   max-width: var(--tooltip-maxw);
 
-  /* Without a ceiling a tall panel is pushed until its top meets the viewport and the rest runs off
-     the bottom, where nothing can reach it - `withFlexibleDimensions(false)` means CDK never shrinks
-     it. The 12px each side is the overlay's own viewport margin; the two have to stay equal. */
+  /* `withFlexibleDimensions(false)`: CDK never shrinks the panel, so a tall one runs off the bottom
+     unreachable. The `--space-3` each side must equal the overlay's viewport margin. */
   max-height: calc(100dvh - 2 * var(--space-3));
   overflow-y: auto;
   z-index: var(--layer-tooltip);
@@ -47,8 +45,6 @@
   gap: var(--space-2);
 }
 
-/* Under the value, in the swatch's column and the label's: the detail belongs to the reading
-   above it, not to the next one. */
 .detail {
   grid-column: 2 / -1;
   margin-block-start: calc(var(--space-1) * -1);
@@ -57,23 +53,19 @@
   font-size: var(--font-size-2xs);
 }
 
-/* Big enough to read a colour at a glance. */
 .swatch {
   inline-size: var(--space-3);
   block-size: var(--space-3);
   border-radius: var(--radius-pill);
 }
 
-/* Only a dot that would vanish into the panel's ground is ringed (`swatchBlendsInto`), and the ring
-   is drawn inside the dot so a ringed row lines up with the rest. The panel's text colour is the
-   one colour guaranteed to stand off its ground in every theme. */
+/* Ringed only when `swatchBlendsInto`; inset so a ringed row lines up. The text colour is the one
+   colour that stands off the panel ground in every theme. */
 .swatch.ringed {
   box-shadow: inset 0 0 0 1.5px var(--_chart-tooltip-text-color);
 }
 
-/* The same angle, stripe width and stripe colour the mark's hatch is drawn with, so the dot and
-   the column say the distinction the same way. One stripe, not a pattern: at this size a pattern
-   reads as noise. */
+/* Same angle, width and colour as the mark's hatch; one stripe, since a pattern reads as noise at this size. */
 .swatch.hatched {
   background-image: linear-gradient(
     -45deg,

@@ -1,10 +1,7 @@
 /**
- * The jump-to-option-by-typing that a native `<select>` has and ours did not.
- *
- * Typing "ba" on a closed control moves to the first option starting with "ba",
- * and keeps extending the buffer while the user keeps typing. The timeout is what
- * separates "ba" from two separate "b" and "a" presses; 500ms is the interval
- * every native control and APG example uses.
+ * Jump-to-option-by-typing, as a native `<select>` does: "ba" moves to the first option
+ * starting with "ba". The timeout separates "ba" from two separate presses; 500ms is the
+ * native and APG interval.
  */
 const RESET_AFTER_MS = 500;
 
@@ -21,8 +18,7 @@ export function createTypeAhead(): DsTypeAhead {
 
   return {
     match(key, labels, from) {
-      // A modifier combination and any named key ("Enter", "ArrowDown") are not
-      // text; only a single printable character extends the buffer.
+      // Named keys ("Enter", "ArrowDown") are not text; only a single printable character counts.
       if (key.length !== 1 || !/\S/.test(key)) {
         return -1;
       }

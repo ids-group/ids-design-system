@@ -1,22 +1,8 @@
-// =========================================================================
-// Dark palette — Tier 1b per-theme primitives.
+// Dark-specific primitives only: hand-tuned dark neutrals (not a linear inverse: --neutral-0 is an
+// elevated card surface, lighter than the --neutral-50 canvas) and --shadow-tint-l.
 //
-// Exposes @mixin palette with ONLY the dark-specific primitives:
-//   · --neutral-* slot: hand-tuned dark neutrals (NOT a linear inverse —
-//     note --neutral-0 is an ELEVATED card surface, LIGHTER than the
-//     --neutral-50 canvas — the opposite of light, where 0 (#FFF) is the
-//     brightest stop). Brand/status ramps are left to the role layer.
-//   · --shadow-tint-l: 95%  (flipped so same alphas read as soft glows)
-//
-// Theme-independent ramps (--cool-gray-*, --brand-gray-*, --blue-*, etc.)
-// and HSL channels live in themes/_base-palette.scss and emit at :root.
-//
-// KNOWN LIMITATION — data-neutrals="brand" + dark: this ramp overrides
-// --neutral-* directly, so when both `[data-neutrals='brand']` and
-// `[data-theme='dark']` are set (equal specificity) dark wins by source order —
-// the brand-gray hue-tint is dropped and these fixed dark neutrals apply. Benign
-// (renders correctly dark, just not brand-hue-tinted).
-// =========================================================================
+// With `[data-neutrals='brand']` and `[data-theme='dark']` both set, dark wins by source order at
+// equal specificity: the brand-gray tint is dropped and the fixed dark neutrals apply.
 
 @mixin palette {
   --neutral-0:   #171B24; // surface-default / overlay (cards) — elevated
@@ -33,6 +19,6 @@
   --neutral-900: #E7EAF2; // text-primary, surface-inverted
   --neutral-950: #F4F6FA;
 
-  // Shadow substrate flips light so the same alphas read as soft glows on dark.
+  // Flipped light so the same alphas read as soft glows.
   --shadow-tint-l: 95%;
 }

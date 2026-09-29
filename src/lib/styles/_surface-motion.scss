@@ -1,36 +1,22 @@
-// Shared enter-motion presets — the vocabulary every DS surface picks from via
-// `--ds-<surface>-enter-keyframes` (overlay panels, modal, drawer, bottom-sheet,
-// toast, banner, alert, loading-overlay).
+// Shared enter-motion presets every DS surface picks from via `--ds-<surface>-enter-keyframes`.
 //
-// They live GLOBALLY on purpose: emulated view encapsulation renames @keyframes
-// declared inside a component stylesheet but leaves a name held in a custom
-// property untouched, so a scoped default would resolve to a name that no longer
-// exists. Global keyframes are also what lets a consumer point a surface at its
-// own @keyframes — those must likewise be declared in global styles.
+// Global on purpose: emulated encapsulation renames @keyframes declared in a component stylesheet
+// but not a name held in a custom property. A consumer's own @keyframes must be global too.
 //
-// Shape comes from the SURFACE, not the keyframe: each preset reads the private
-// `--_ds-enter-*` hooks that a surface's token block fills from its public
-// `--ds-<surface>-enter-offset` / `-scale`. One keyframe therefore serves every
-// surface, and swapping presets never loses the surface's own geometry.
+// Shape comes from the surface: presets read the private `--_ds-enter-*` hooks, filled from the
+// surface's public `--ds-<surface>-enter-offset` / `-scale`.
 //
-// Exit presets mirror the entrances and are swappable the same way, via
-// `--ds-<surface>-leave-keyframes`. Swapping one is only safe because teardown checks
-// that the animationend came from the animated element rather than matching the
-// animation NAME — a name match would break closing entirely on a renamed keyframe.
-//
-// An exit reads `--_ds-exit-*` and falls back to the matching `--_ds-enter-*`, so
-// a surface that leaves the way it arrived declares nothing: one preset replaces
-// the drawer's four direction-specific keyframes.
+// Exit presets mirror the entrances, via `--ds-<surface>-leave-keyframes`. Swapping is safe because
+// teardown checks the animationend came from the animated element, not the animation name. An exit
+// reads `--_ds-exit-*` and falls back to `--_ds-enter-*`.
 
-/* Opacity only — the calmest entrance. */
 @keyframes ds-fade-in {
   from {
     opacity: 0;
   }
 }
 
-/* Grows into place from a micro-scale — reads --_ds-enter-scale, and the
-   surface's transform-origin decides what it grows out of. */
+/* The surface's transform-origin decides what it grows out of. */
 @keyframes ds-scale-in {
   from {
     opacity: 0;
@@ -38,7 +24,6 @@
   }
 }
 
-/* Travels a short distance while fading — reads --_ds-enter-x / --_ds-enter-y. */
 @keyframes ds-slide-in {
   from {
     opacity: 0;
@@ -46,24 +31,19 @@
   }
 }
 
-/* Edge-anchored travel with NO fade, for panels that slide fully on-screen
-   (drawer, bottom-sheet) where a fade would read as a flicker. */
+/* No fade: for panels sliding fully on-screen (drawer, bottom-sheet), where a fade flickers. */
 @keyframes ds-slide-edge-in {
   from {
     transform: translate(var(--_ds-enter-x, 0), var(--_ds-enter-y, 0));
   }
 }
 
-/* ── Exits ───────────────────────────────────────────────────────────────── */
-
-/* Opacity only — the calmest exit, and what a scrim wants. */
 @keyframes ds-fade-out {
   to {
     opacity: 0;
   }
 }
 
-/* Shrinks away as it fades — the mirror of ds-scale-in. */
 @keyframes ds-scale-out {
   to {
     opacity: 0;
@@ -71,7 +51,6 @@
   }
 }
 
-/* Travels a short distance while fading — the mirror of ds-slide-in. */
 @keyframes ds-slide-out {
   to {
     opacity: 0;
@@ -82,8 +61,7 @@
   }
 }
 
-/* Edge-anchored travel with NO fade, for panels that slide fully off-screen
-   (drawer, bottom-sheet) where a fade would read as a flicker. */
+/* No fade: see ds-slide-edge-in. */
 @keyframes ds-slide-edge-out {
   to {
     transform: translate(

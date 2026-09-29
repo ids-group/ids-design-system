@@ -36,11 +36,8 @@ export function passwordRulesMet(
 /**
  * Live checklist under a "new password" field.
  *
- * The consumer keeps the POLICY — each rule carries its own `test`, which has to
- * mirror the server, or the checklist is a lie — and this owns the rendering: the
- * tri-state glyph, the met and failed colours, the type scale. One consumer had
- * written it twice and the copies had already drifted (different labels for the
- * same rule, a different order, different state classes), which is why it is here.
+ * The consumer keeps the POLICY: each rule carries its own `test`, which has to mirror the server or the checklist lies.
+ * This component owns the rendering: tri-state glyph, met and failed colours, type scale.
  *
  * ```html
  * <ds-input
@@ -72,18 +69,16 @@ export class PasswordRulesComponent {
   /** The rule set, in the order it should read. */
   readonly rules = input<readonly DsPasswordRule[]>([]);
   /**
-   * Whether an unmet rule may read as FAILED. Bind it to "the user has tried to
-   * submit": before that an unmet rule is merely pending, because marking a
-   * half-typed password with errors scolds someone who is still typing.
+   * Whether an unmet rule may read as FAILED. Bind it to "the user has tried to submit": before that an unmet rule is only pending,
+   * so a half-typed password is not scolded.
    */
   readonly showUnmet = input(false, { transform: booleanAttribute });
-  /** Lay the rows out in two columns — for a checklist beside a wide form. */
+  /** Lays the rows out in two columns, for a checklist beside a wide form. */
   readonly columns = input<1 | 2>(1);
 
   /**
-   * Id put on the rule list, for the field's `aria-describedby`. Defaults to a
-   * generated one; set it explicitly and both sides can name the same string,
-   * which avoids threading a template ref between two siblings.
+   * Id put on the rule list, for the field's `aria-describedby`. Defaults to a generated one; set it explicitly so both sides
+   * can name the same string without threading a template ref between siblings.
    */
   readonly listId = input<string>(nextControlId('ds-password-rules'));
 
@@ -101,9 +96,7 @@ export class PasswordRulesComponent {
       const icon: IconName =
         state === 'met' ? 'check' : state === 'failed' ? 'x' : 'circle';
 
-      // The glyph is a decorative SVG with no accessible name, so without this
-      // a screen reader hears the rule text and nothing about whether it
-      // passed — the state would be conveyed by colour and shape only.
+      // The glyph is a decorative SVG with no accessible name; without this a screen reader hears the rule text but not whether it passed.
       return {
         label: rule.label,
         state,
@@ -113,7 +106,7 @@ export class PasswordRulesComponent {
     });
   });
 
-  /** How many rules pass — for a host that wants to gate its own submit. */
+  /** How many rules pass - for a host that wants to gate its own submit. */
   readonly metCount = computed(
     () => this.rows().filter((row) => row.state === 'met').length,
   );

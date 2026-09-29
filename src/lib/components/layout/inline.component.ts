@@ -20,12 +20,11 @@ import type { LayoutAlign, LayoutGap, LayoutJustify } from './layout.types';
   },
 })
 export class InlineComponent {
-  // null → semantic --space-inline default; named sizes map to the spacing scale.
   /** Space between children. `null` inherits whatever the enclosing layout set. */
   readonly gap = input<LayoutGap | null>(null);
-  /** Cross-axis alignment — vertical, for a row. */
+  /** Cross-axis alignment: vertical, for a row. */
   readonly align = input<LayoutAlign | null>(null);
-  /** Main-axis distribution — horizontal, for a row. `between` pushes the ends apart. */
+  /** Main-axis distribution: horizontal, for a row. `between` pushes the ends apart. */
   readonly justify = input<LayoutJustify | null>(null);
   /** Let the row wrap onto more lines (default). `false` keeps one line and lets it overflow. */
   readonly wrap = input(true, { transform: booleanAttribute });

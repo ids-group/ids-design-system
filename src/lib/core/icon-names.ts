@@ -106,11 +106,9 @@ export const ICONS = {
   'eye-off':
     '<path d="M3 3l18 18" /><path d="M10.6 6.1A10 10 0 0 1 12 6c6 0 10 7 10 7a14 14 0 0 1-2.4 3.1" /><path d="M6.7 6.7A14 14 0 0 0 2 12s4 7 10 7a10 10 0 0 0 4.5-1" /><path d="M9.9 14.1A3 3 0 0 1 9 12a3 3 0 0 1 3-3 3 3 0 0 1 2.1.9" />',
   'check-circle': '<circle cx="12" cy="12" r="9" /><path d="m8 12 3 3 5-6" />',
-  // r=8, not the 9 of check-circle: this is the empty counterpart of a tick, and
-  // at 14px a ring the same size as the filled state reads as the heavier of the
-  // two rather than the lighter.
+  // r=8, not the 9 of check-circle: at 14px a ring the size of the filled state reads heavier.
   circle: '<circle cx="12" cy="12" r="8" />',
-  // Drag handle: 6 dots in 2 cols × 3 rows. Use 1.6 radius to read at 12-16px.
+  // Drag handle: 6 dots in 2 cols x 3 rows; r=1.6 reads at 12-16px.
   drag: '<circle cx="9" cy="6" r="1.6" /><circle cx="15" cy="6" r="1.6" /><circle cx="9" cy="12" r="1.6" /><circle cx="15" cy="12" r="1.6" /><circle cx="9" cy="18" r="1.6" /><circle cx="15" cy="18" r="1.6" />',
   scan: '<path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3" />',
   wifi: '<path d="M2 9.5a15 15 0 0 1 20 0" /><path d="M5 13a10 10 0 0 1 14 0" /><path d="M8.5 16.5a5 5 0 0 1 7 0" /><path d="M12 20h.01" />',
@@ -118,7 +116,6 @@ export const ICONS = {
     '<path d="m3 3 18 18" /><path d="M12 20h.01" /><path d="M8.5 16.5a5 5 0 0 1 7 0" /><path d="M5 13a10 10 0 0 1 3.5-2.3" /><path d="M11 8.6A10 10 0 0 1 19 13" /><path d="M2 9.5a15 15 0 0 1 5.7-3.2" /><path d="M11.6 5.6A15 15 0 0 1 22 9.5" />',
 } as const;
 
-/** Built-in DS icon names. Consumers can extend the runtime set via `provideDsIcons({...})` —
- * the type widens to `string` so any custom name is accepted at the call site (at the cost of
- * autocomplete for those custom names). */
+/** Built-in DS icon names. Consumers extend the runtime set via `provideDsIcons({...})`; the
+ * type widens to `string` so a custom name is accepted, without autocomplete. */
 export type IconName = keyof typeof ICONS | (string & {});

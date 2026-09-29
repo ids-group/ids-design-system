@@ -9,8 +9,8 @@ import { debounceTime, fromEvent } from 'rxjs';
  * `ds-app-layout` subtracts it from the content region's right padding so the
  * visual inset stays equal on both sides whether the scrollbar area is a real
  * bar (classic scrollbars), a reserved gutter, or nothing (overlay
- * scrollbars, where the measured width is 0). Internal — instantiated by
- * `ds-app-layout`; not part of the public API.
+ * scrollbars, where the measured width is 0). Internal, instantiated by
+ * `ds-app-layout`.
  */
 @Injectable({ providedIn: 'root' })
 export class ScrollbarWidthService {

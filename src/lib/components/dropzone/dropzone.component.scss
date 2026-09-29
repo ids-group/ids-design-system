@@ -2,9 +2,9 @@
 @use '../../styles/press' as press;
 
 /* Truncation contract:
-   File name — Single line, ellipsis. Tooltip on hover with full name.
-   Progress percentage — Numeric — no clip.
-   Error message — Wrap, no clip — must remain visible. */
+   File name - single line, ellipsis, tooltip on hover with full name.
+   Progress percentage - numeric, no clip.
+   Error message - wraps, no clip; must remain visible. */
 
 :host {
   --_dropzone-bg-color:               var(--ds-dropzone-bg-color,               var(--surface-default));
@@ -29,8 +29,7 @@
   min-width: 0;
 }
 
-// Keep the file input out of view but focusable (display:none would drop it
-// from the tab order), so keyboard users can open the picker with Enter/Space.
+// Visually hidden but focusable: display:none would drop it from the tab order.
 .dz-input {
   position: absolute;
   width: 1px;
@@ -43,15 +42,12 @@
   border: 0;
 }
 
-// Surface keyboard focus on the zone when its (visually-hidden) input is focused.
 .dropzone {
   @include focus.ring-for('.dz-input');
 }
 
 .dropzone {
-  // Fill the host when it's placed in a flex parent — keeps the dropzone the
-  // same height as sibling cards. `min-height` below is the floor when there
-  // is no parent flex stretch.
+  // Fills a flex parent so it matches sibling cards; `min-height` is the floor without a stretch.
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -77,9 +73,7 @@
     background-color: var(--_dropzone-bg-color-active);
   }
 
-  /* No `cursor: default` here: the zone is a <label> wrapping the file input, so it opens the
-     picker with files present exactly as it does when empty. Saying otherwise denied an affordance
-     that still worked. */
+  /* No `cursor: default`: the zone is a <label> wrapping the input, so it still opens the picker with files present. */
   &.has-files {
     align-items: stretch;
     text-align: left;
@@ -106,9 +100,7 @@
     color: var(--_dropzone-text-color);
   }
 
-  // Consumer-provided secondary hint (e.g. "Max file size: 5GB | CSV | UTF-8").
-  // Project via `<p hint>...</p>`; styled separately from .hint so consumers
-  // don't have to fight the host "or click to browse" line.
+  // Projected `<p hint>`; styled apart from .hint so it does not fight the "or click to browse" line.
   [hint] {
     margin: var(--space-3) calc(var(--space-6) * -1) 0;
     padding: var(--space-3) var(--space-6) 0;

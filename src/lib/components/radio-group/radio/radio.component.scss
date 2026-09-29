@@ -7,7 +7,7 @@
   --_radio-border-color: var(--ds-radio-border-color, var(--border-strong));
   --_radio-label-color: var(--ds-radio-label-color, var(--text-primary));
 
-  // md references the global token so it stays density-responsive; sm/lg are explicit overrides.
+  // md references the global token to stay density-responsive.
   --_radio-glyph: var(--check-size);
   --_radio-label-fs: var(--font-size-s);
 
@@ -57,7 +57,7 @@
     cursor: not-allowed;
   }
 
-  // Content is always set so the dot can scale and fade; a checked-only ::after would pop in.
+  // Always present so the dot can scale and fade; a checked-only ::after would pop in.
   &::after {
     content: "";
     transform: scale(0);

@@ -85,8 +85,7 @@ export class DsTableExport<T extends object> {
       created.setInput('busy', this.busy());
       created.instance.pressed.subscribe(() => void this.runExport());
     });
-    // The button is a separate view, so it is not reached by the host's change detection: its
-    // input has to be written when the state moves.
+    // Separate view, not reached by the host's change detection: write the input when state moves.
     effect(() => {
       created?.setInput('busy', this.busy());
     });
@@ -134,7 +133,7 @@ export class DsTableExport<T extends object> {
       columns.map((column: TableColumn<T>) =>
         escapeCell(view.cellText(row, column)),
       );
-    // Leading BOM so Excel reads UTF-8 (accented labels and values) correctly.
+    // Leading BOM so Excel reads UTF-8.
     const csv =
       '﻿' +
       [

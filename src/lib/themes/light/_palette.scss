@@ -1,20 +1,6 @@
-// =========================================================================
-// Light palette — Tier 1b per-theme primitives.
-//
-// Exposes @mixin palette with ONLY the light-specific primitives:
-//   · --neutral-* slot pointed at the cool-gray ramp
-//   · --shadow-tint-l: 7%  (light shadow substrate lightness)
-//
-// Theme-independent ramps (--cool-gray-*, --brand-gray-*, --blue-*, etc.)
-// and HSL channels live in themes/_base-palette.scss and emit at :root.
-// =========================================================================
-
 @mixin palette {
-  /* Neutral family slot — semantic pointer at the active gray ramp from the
-     palette. Default: hand-drawn cool-gray. <html data-neutrals="brand">
-     repoints it at the brand-derived brand-gray ramp,
-     where --primary-h re-tints every gray. Roles below consume --neutral-*
-     so the family switch never touches them. */
+  /* Points at the cool-gray ramp; <html data-neutrals="brand"> repoints it at brand-gray, where
+     --primary-h re-tints every gray. Roles consume --neutral-*, so the switch never touches them. */
   --neutral-0:   var(--cool-gray-0);
   --neutral-50:  var(--cool-gray-50);
   --neutral-100: var(--cool-gray-100);
@@ -29,6 +15,5 @@
   --neutral-900: var(--cool-gray-900);
   --neutral-950: var(--cool-gray-950);
 
-  // Shadow substrate lightness for light theme.
   --shadow-tint-l: 7%;
 }

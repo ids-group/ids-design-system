@@ -114,10 +114,7 @@ export class MultiSelectComponent
   private readonly vcr = inject(ViewContainerRef);
   private readonly host = inject(ElementRef<HTMLElement>);
   protected readonly intl = inject(DS_INTL);
-  /** Public panel tokens forwarded onto the portaled overlay pane on open so
-   *  a consumer's `ds-multi-select { --ds-multi-select-panel-*: … }` reaches it.
-   *  Not the whole set: `prepareOverlayEnter` also forwards `DROPDOWN_PANEL_TOKENS`
-   *  (overlay-motion.ts) onto every pane, the `--ds-option-*` family among them. */
+  /** Forwarded onto the portaled pane on open so consumer `--ds-multi-select-panel-*` overrides reach it. */
   private readonly panelTokens = [
     '--ds-multi-select-panel-bg-color',
     '--ds-multi-select-option-bg-color-active',
@@ -133,7 +130,7 @@ export class MultiSelectComponent
 
   /** Selected values, two-way bound. */
   readonly value = model<string[]>([]);
-  /** Options, groups, or both mixed — rendered in the order given. */
+  /** Options, groups, or both mixed - rendered in the order given. */
   readonly options = input<readonly MultiSelectItem[]>([]);
   /** Placeholder shown in the trigger when nothing is selected.
    *  Unset falls back to `DS_INTL.picker.placeholder`. */
@@ -147,19 +144,15 @@ export class MultiSelectComponent
   readonly searchPlaceholderResolved = computed(
     () => this.searchPlaceholder() ?? this.intl().picker.filterPlaceholder,
   );
-  /** Whether the panel carries a filter row. `true` always, `false` never, and a
-   *  NUMBER is a threshold — the row appears once there are at least that many
-   *  options. Unset falls back to `DS_CONFIG.picker.searchable`, then `true`.
-   *
-   *  Hiding it moves the panel's keyboard model onto the trigger: the arrows,
-   *  Enter, Escape and `aria-activedescendant` are the filter input's today. */
+  /** Whether the panel carries a filter row. `true` always, `false` never, a NUMBER is a threshold (row appears at that many options).
+   *  Unset falls back to `DS_CONFIG.picker.searchable`, then `true`. Hiding it moves the keyboard model (arrows, Enter, Escape,
+   *  `aria-activedescendant`) onto the trigger. */
   readonly searchable = input<boolean | number | null, unknown>(null, {
     transform: (raw: unknown) => {
       if (raw === null || raw === undefined) {
         return null;
       }
-      // A bare attribute arrives as '' and has to beat the config default, which
-      // treating it as "unset" would not.
+      // A bare attribute arrives as '' and must beat the config default, which treating it as "unset" would not.
       if (raw === '') {
         return true;
       }
@@ -181,17 +174,12 @@ export class MultiSelectComponent
   );
   /** Native `name` attribute forwarded to the trigger. */
   readonly name = input<string | null>(null);
-  /** Extra classes for the portaled panel, beside `ds-dropdown-panel`,
-   *  `ds-overlay-pane` and this component's own `ds-multi-select-panel`. The panel
-   *  is portaled out of the host, so a class on the pane is the only way a consumer
-   *  stylesheet reaches ONE instance of it. */
+  /** Extra classes for the portaled panel, beside `ds-dropdown-panel`, `ds-overlay-pane` and `ds-multi-select-panel`.
+   *  The panel is portaled out of the host, so a class on the pane is the only way a consumer stylesheet reaches ONE instance. */
   readonly panelClass = input<string | readonly string[]>([]);
   /** Prevents opening the panel while still allowing focus. */
   readonly readOnly = input(false, { transform: booleanAttribute });
-  /**
-   * The contract spelling of `readOnly`, a second input because signal forms binds
-   * by NAME — a `readonly()` rule was reaching nothing before this existed.
-   */
+  /** The contract spelling of `readOnly`: signal forms binds by NAME, so a `readonly()` rule reaches nothing without it. */
   readonly readonlyBinding = input(false, {
     // eslint-disable-next-line @angular-eslint/no-input-rename
     alias: 'readonly',
@@ -199,14 +187,9 @@ export class MultiSelectComponent
   });
   /** Shows a clear affordance once there is something to clear. */
   readonly clearable = input(false, { transform: booleanAttribute });
-  /** How the typed query narrows the list.
-   *
-   *  The default matches a case-insensitive substring of `label`. Pass a predicate
-   *  to match on anything else — a second field, ignoring diacritics, a fuzzy score.
-   *  Pass `'none'` when the list arrives already filtered, which is what a
-   *  server-side search needs: the query is reported through `filterChange` and
-   *  every option given is rendered.
-   */
+  /** How the typed query narrows the list. Default: case-insensitive substring of `label`. Pass a predicate to match on anything else.
+   *  Pass `'none'` when the list arrives already filtered (server-side search): the query is reported through `filterChange`
+   *  and every option given is rendered. */
   readonly filterWith = input<
     ((option: MultiSelectOption, query: string) => boolean) | 'none'
   >((option, query) => option.label.toLowerCase().includes(query));
@@ -214,27 +197,21 @@ export class MultiSelectComponent
    *  pair it with `filterWith="none"` so the list is not narrowed twice. */
   readonly filterChange = output<string>();
   /** Options are still being fetched. The panel shows a spinner instead of the
-   *  empty row — which would otherwise claim there are no matches — and the list
+   *  empty row - which would otherwise claim there are no matches - and the list
    *  reports `aria-busy`. */
   readonly loading = input(false, { transform: booleanAttribute });
   /** The panel opened. The moment to fetch options for a picker whose list is
    *  loaded on demand. */
   readonly opened = output<void>();
-  /** The panel closed, for any reason — a pick, Escape, an outside click, a scroll. */
+  /** The panel closed, for any reason - a pick, Escape, an outside click, a scroll. */
   readonly closed = output<void>();
   /** Scrolls the keyboard cursor's row into view. On by default: a list longer
    *  than the panel otherwise walks the cursor out of sight. Set `false` only if
    *  you are driving the scroll position yourself. */
   readonly scrollActiveIntoView = input(true, { transform: booleanAttribute });
-  /** How the chips collapse when they outgrow one line. `"fit"` (the default)
-   *  measures and shows as many as the trigger is wide, the rest behind "+N more".
-   *  A NUMBER is a CEILING, not a promise: the row still measures, so you get at
-   *  most that many and fewer when the trigger is narrow. `"all"` shows every chip and
-   *  lets the trigger grow a line per selection.
-   *
-   *  Unset (`null`) means "not deciding", as it does on every other input in the
-   *  library — it resolves to `"fit"`. It does NOT mean "show all": that is
-   *  `"all"`, which is the loudest of the three modes and has to be asked for. */
+  /** Chip collapse when they outgrow one line. `"fit"` (default) measures and shows as many as fit, the rest behind "+N more".
+   *  A number is a ceiling, not a promise: the row still measures, so narrow triggers show fewer. `"all"` shows every chip
+   *  and lets the trigger grow a line per selection. Unset (`null`) resolves to `"fit"`, not `"all"`. */
   readonly maxVisibleChips = input<number | 'fit' | 'all' | null>(null, {
     transform: (raw: unknown) => {
       if (raw === 'fit' || raw === 'all') {
@@ -246,18 +223,17 @@ export class MultiSelectComponent
   });
   /** Disables the trigger and blocks all interaction. */
   readonly disabled = input(false, { transform: booleanAttribute });
-  /** Confirmation text, shown when there is no error or warning — and it paints
-   *  the field's success border. A string like `warning`: the text IS the state. */
+  /** Confirmation text, shown when there is no error or warning. It paints the success border: the text IS the state. */
   readonly success = input<string, string | null | undefined>('', {
     transform: trimmedText,
   });
-  /** Accessible name for the trigger — falls back to `placeholder`. */
+  /** Accessible name for the trigger - falls back to `placeholder`. */
   readonly ariaLabel = input<string | null>(null);
-  /** Trigger width — `fill` stretches to the container and pins the panel to the
+  /** Trigger width - `fill` stretches to the container and pins the panel to the
    *  trigger's width; `content` hugs the trigger's own content and takes that width
    *  as the panel's FLOOR, so a compact trigger does not force an unreadable panel. */
   readonly width = input<MultiSelectWidth>('fill');
-  /** Trigger height — sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
+  /** Trigger height - sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
   readonly size = input<DsSize | null>(null);
   readonly sizeResolved = resolveWithConfig(
     this.size,
@@ -266,11 +242,10 @@ export class MultiSelectComponent
   );
   /** What the trigger shows. `count` is a caption plus a selected-count badge at
    *  intrinsic width; `labels` names the selection instead, cut to the width with the
-   *  rest behind "+N". A projected `dsPickerTrigger` template WINS over this — the
+   *  rest behind "+N". A projected `dsPickerTrigger` template WINS over this - the
    *  input is then not read at all. */
   readonly triggerDisplay = input<DsTriggerDisplay>('full');
-  /** Field label above the control — the same meaning it has on `ds-select`, and the
-   *  caption a `count`/`labels` trigger uses when it needs one. */
+  /** Field label above the control, and the caption a `count`/`labels` trigger uses when it needs one. */
   readonly label = input<string>('');
   /** Marks the field required: a `*` beside the label and `aria-required` on the trigger. */
   readonly required = input(false, { transform: booleanAttribute });
@@ -278,7 +253,7 @@ export class MultiSelectComponent
   readonly optional = input(false, { transform: booleanAttribute });
   /** Where a "select all" row appears. `false` nowhere, `true` one row over the whole
    *  panel, `'group'` one row per group, `'both'` for either. Group rows need groups
-   *  in `options` — with a flat list they have nothing to head. */
+   *  in `options` - with a flat list they have nothing to head. */
   readonly selectAll = input<boolean | 'group' | 'both', unknown>(false, {
     transform: (raw: unknown) =>
       raw === 'group' || raw === 'both' ? raw : booleanAttribute(raw),
@@ -332,8 +307,7 @@ export class MultiSelectComponent
   private focusTimer: ReturnType<typeof setTimeout> | null = null;
 
   ngOnDestroy(): void {
-    // Host torn down while open → close() never runs. Dispose the overlay so
-    // its pane and event subscriptions don't leak.
+    // Host torn down while open never runs close(): dispose the overlay so its pane and subscriptions do not leak.
     clearTimeout(this.focusTimer ?? undefined);
     this.overlayRef?.dispose();
     this.overlayRef = null;
@@ -377,12 +351,8 @@ export class MultiSelectComponent
 
   private readonly chipsMode = computed(() => this.maxVisibleChips() ?? 'fit');
   private readonly showsEveryChip = computed(() => this.chipsMode() === 'all');
-  /** True for BOTH `'fit'` and a number: a number is a ceiling, not a promise, so
-   *  the row still measures and shows only what the trigger is wide enough for. */
   protected readonly fitsChipsToWidth = computed(() => !this.showsEveryChip());
-  /** How many chips the row is ASKED to render before measuring: everything for
-   *  `'fit'`, the ceiling for a number. It must be the ceiling and not the selection —
-   *  the width cache only fills from a render that holds every chip. */
+  /** Chips rendered before measuring: everything for `'fit'`, the ceiling for a number. Never the selection: the width cache only fills from a render holding every chip. */
   private readonly chipBudget = computed(() => {
     const max = this.chipsMode();
     const total = this.selectedOptions().length;
@@ -422,9 +392,7 @@ export class MultiSelectComponent
         }
         continue;
       }
-      // A disabled group disables its options HERE, not only in the flattened
-      // list: the template renders these objects, so a group left to inherit
-      // later would paint enabled rows that refuse to be picked.
+      // A disabled group must disable its options here: the template renders these objects, not the flattened list.
       const options = item.options
         .filter(matches)
         .map((option) =>
@@ -446,9 +414,7 @@ export class MultiSelectComponent
     return isDsOptionGroup(item);
   }
 
-  /** Where an option sits in the flat visible list — the id the listbox's
-   *  `aria-activedescendant` points at, which a grouped render cannot get from
-   *  the loop index. */
+  /** Position in the flat visible list: the id `aria-activedescendant` points at, which a grouped render cannot get from the loop index. */
   protected flatIndexOf(option: MultiSelectOption): number {
     return this.filteredOptions().indexOf(option);
   }
@@ -584,15 +550,12 @@ export class MultiSelectComponent
     event.stopPropagation();
     this.clear();
     this.markTouched();
-    // The button that ran this is destroyed with the chips, so focus would fall
-    // to <body>.
+    // The button that ran this is destroyed with the chips; focus would fall to <body>.
     this.trigger().nativeElement.focus();
   }
 
   /**
-   * Empties the selection from outside — a "reset filters" button, a form the app
-   * clears itself. Deliberately does NOT move focus: the caller may be navigating
-   * away.
+   * Empties the selection from outside (a "reset filters" button). Does NOT move focus: the caller may be navigating away.
    */
   clear(): void {
     this.value.set([]);
@@ -604,8 +567,7 @@ export class MultiSelectComponent
 
   protected removeValue(value: string): void {
     this.value.set(this.value().filter((entry) => entry !== value));
-    // The close button that ran this is destroyed with its chip, so focus would
-    // fall to <body>.
+    // The close button that ran this is destroyed with its chip; focus would fall to <body>.
     this.trigger().nativeElement.focus();
   }
 
@@ -677,8 +639,7 @@ export class MultiSelectComponent
     if (this.isDisabled()) {
       return;
     }
-    // With no filter row the trigger runs the input's handler, and must take Enter
-    // first — otherwise Enter toggles the panel instead of picking the active row.
+    // With no filter row the trigger runs the input's handler and must take Enter first, or Enter toggles the panel instead of picking the active row.
     if (this.open() && !this.showsSearch()) {
       this.onSearchKeydown(event);
 
@@ -767,9 +728,7 @@ export class MultiSelectComponent
       ['ds-multi-select-panel', ...panelClassesOf(this.panelClass())],
     );
     const triggerWidth = triggerElement.getBoundingClientRect().width;
-    // A compact trigger hugs its caption, so pinning the panel to it gives a panel
-    // too narrow to read its own options — the trigger width becomes a FLOOR here
-    // whether or not the consumer asked for `content`.
+    // A compact trigger hugs its caption, which would make the panel too narrow to read: the trigger width is a FLOOR here even without `content`.
     if (this.width() === 'content' || this.showsCompactTrigger()) {
       config.minWidth = triggerWidth;
     } else {
@@ -791,8 +750,7 @@ export class MultiSelectComponent
       (target) => this.trigger().nativeElement.contains(target),
       () => this.close('dismiss'),
     );
-    // No backdrop catches a page scroll and CDK's scroll strategies miss a plain
-    // overflow container, so close on any outside scroll ourselves.
+    // No backdrop catches a page scroll and CDK scroll strategies miss a plain overflow container, so close on any outside scroll ourselves.
     const removeScrollClose = closeOnScroll(this.overlayRef, () =>
       this.close('dismiss'),
     );
@@ -851,9 +809,7 @@ export class MultiSelectComponent
     }
   }
 
-  /** How far PageUp and PageDown move. Ten rows is the native `<select>` step and
-   *  the APG listbox example's — a fixed number rather than a measured screenful,
-   *  so the jump is the same wherever the panel happens to be clipped. */
+  /** PageUp/PageDown step: the native `<select>` and APG listbox value, fixed so it does not depend on how the panel is clipped. */
   private static readonly pageStep = 10;
 
   private moveActive(delta: number): void {

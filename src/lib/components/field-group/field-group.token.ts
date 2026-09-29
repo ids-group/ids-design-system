@@ -3,41 +3,28 @@ import type { DsSize } from '@ids-group-ltd/ids-design-system/core';
 
 /** What a grouped control can read off the group that encloses it. */
 export interface DsFieldGroupContext {
-  /** The group's size, so a segment matches its neighbours without being told.
-   *  Resolved, not the raw input: `size` is unset by default and falls back to
-   *  `DS_CONFIG.control.size`, which a segment must not have to resolve again. */
+  /** The group's size, so a segment matches its neighbours. Resolved (unset falls back to `DS_CONFIG.control.size`), so a segment need not resolve again. */
   readonly sizeResolved: () => DsSize;
-  /** Whether the GROUP is in error — RESOLVED, so an `error` string counts and not only the
-   *  `invalid` flag. A segment ORs it into its own state, so focusing any of them announces the
-   *  error: the pair is invalid, and a reader who tabs to the second segment must hear it too.
-   *  Named for the resolved value so it cannot be confused with the group's raw `invalid` input. */
+  /** Whether the GROUP is in error, resolved so an `error` string counts and not only the `invalid` flag. A segment ORs it into its own state,
+   *  so tabbing to any segment announces the error. Distinct from the group's raw `invalid` input. */
   readonly invalidResolved: () => boolean;
-  /** A segment adds this to its `aria-describedby`, which is what connects the
-   *  group's one sentence to every control it describes. */
+  /** A segment adds this to its `aria-describedby`, connecting the group's one sentence to every control it describes. */
   readonly messageId: () => string | null;
 }
 
 /**
- * Provided by `ds-field-group`, injected `{ optional: true }` by every control
- * that can be a segment.
+ * Provided by `ds-field-group`, injected `{ optional: true }` by every control that can be a segment.
  *
- * DI rather than a `[grouped]` input on each child: the alternative is manual,
- * and one segment where it was forgotten renders its own border and radius in
- * the middle of a glued row — a broken control that still looks deliberate.
- * Presence of the token IS the fact the child needs, and the consumer already
- * declared it by wrapping them.
+ * DI rather than a `[grouped]` input on each child: a segment where the input was forgotten would render its own border and radius
+ * mid-row. Presence of the token IS the fact the child needs.
  */
 export const DS_FIELD_GROUP = new InjectionToken<DsFieldGroupContext>(
   'DS_FIELD_GROUP',
 );
 
 /**
- * Whether this control is a segment of a `ds-field-group`. Call it in a field
- * component and bind the result to a host `.in-group` class; the component's own
- * `.in-group` block then strips the chrome the group has taken over.
- *
- * A function so the six supported controls share one line instead of six copies
- * of the same optional inject — and so the contract has one place to change.
+ * Whether this control is a segment of a `ds-field-group`. Bind the result to a host `.in-group` class; the component's `.in-group`
+ * block then strips the chrome the group has taken over.
  * @internal
  */
 export function inFieldGroup(): boolean {
@@ -45,8 +32,7 @@ export function inFieldGroup(): boolean {
 }
 
 /**
- * The enclosing group, or `null`. Use it where the boolean is not enough — the
- * group's error state and the id of its message.
+ * The enclosing group, or `null`. For where the boolean is not enough: the group's error state and message id.
  * @internal
  */
 export function fieldGroupContext(): DsFieldGroupContext | null {
@@ -54,9 +40,7 @@ export function fieldGroupContext(): DsFieldGroupContext | null {
 }
 
 /**
- * A segment's own error state, ORed with the enclosing group's. The pair is what is invalid, so
- * every segment announces it: a reader who tabs straight to the second one has to hear it too,
- * and the group's border is not something a screen reader can see.
+ * A segment's own error state, ORed with the enclosing group's: the pair is what is invalid, so every segment announces it.
  * @internal
  */
 export function groupInvalid(own: Signal<boolean>): Signal<boolean> {
@@ -66,8 +50,7 @@ export function groupInvalid(own: Signal<boolean>): Signal<boolean> {
 }
 
 /**
- * The id of the enclosing group's message, for a segment's `aria-describedby` — one sentence
- * describing every control it covers.
+ * The id of the enclosing group's message, for a segment's `aria-describedby`.
  * @internal
  */
 export function groupMessageId(): Signal<string | null> {

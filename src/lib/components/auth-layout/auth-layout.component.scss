@@ -1,46 +1,25 @@
-/* The layout's own furniture COMPRESSES as the viewport gets shorter, so it is
-   never what pushes a card into scrolling. Two values carry that, and the
-   80px they save between a tall viewport and a landscape phone is exactly
-   theirs: the block padding (48px, two edges) and the column gap (32px, two
-   gaps). Each multiplier reaches its MAX at an 800px-tall viewport.
+/* The layout's own furniture compresses as the viewport gets shorter, so it never
+   pushes a card into scrolling: the block padding (48px, two edges) and the column
+   gap (32px, two gaps) each reach their MAX at an 800px-tall viewport. 800px is a
+   viewport height, and plenty of desktops sit below it (a 1366x768 laptop lands near
+   630px), so the clamps are not desktop-inert.
 
-   800px is a VIEWPORT height, not a screen height, and plenty of desktops sit
-   below it: a 1366x768 laptop lands near 630px after browser and OS chrome, and
-   a 1080p screen at 150% display scaling lands near 585px. Those users get
-   compressed furniture — which is the intended behaviour, but it is not "only
-   phones", so do not read the clamps as desktop-inert.
+   Type is deliberately NOT clamped: the wordmark's line box is always shorter than
+   the tile beside it, so clamping bought no vertical gain and shrank the brand
+   against a fixed 14px tagline.
 
-   Type is deliberately NOT clamped. It used to be, and it bought nothing: the
-   wordmark sits in a flex row beside the tile, whose height (4svh) exceeds the
-   wordmark's line box (2.75svh x 1.25 = 3.4375svh) at every viewport height, and
-   the tile's glyph lives in a fixed-size grid box. Both clamps moved type around
-   for zero vertical gain while shrinking the brand against a fixed 14px tagline —
-   worst for the users who scale their display up.
+   `svh`, not `dvh`, for the clamps: `dvh` changes as the mobile URL bar hides and
+   would re-space the column mid-scroll. `min-height` stays on `dvh`: `100svh` leaves
+   a strip of body background below the host once the URL bar retracts.
 
-   `svh`, not `dvh`, for the clamps: `dvh` changes as the mobile URL bar hides,
-   which would re-space the column mid-scroll. `svh` is the URL-bar-visible
-   height, so it holds still — and it is also unaffected by the software
-   keyboard, which resizes the visual viewport only. `min-height` deliberately
-   stays on `dvh`: `100svh` would leave a strip of body background below the
-   host once the URL bar retracts, visible to anyone overriding the layout's
-   background.
+   Compression rather than out-of-flow chrome: absolutely positioned chrome would
+   overlap a tall form instead of scrolling past it.
 
-   Compression rather than out-of-flow chrome: a card holds arbitrary content,
-   and absolutely positioned chrome would overlap a tall form instead of
-   scrolling past it. A card taller than the space left still scrolls, and
-   should.
-
-   The host is the ONLY full-height box here. The port this replaces nested a
-   100vh wrapper inside a 100dvh one, which scrolls a page whose content fits.
-
-   `.auth` is centred with auto margins rather than centre ALIGNMENT. While the
-   host is free to grow — the default, `min-height: 100dvh` — the two are
-   identical. They part company once it cannot: embedded through
-   `--ds-auth-layout-min-height: 100%` inside a fixed-height parent, a form
-   taller than the box lands 115px above the scroll origin under
-   `align-items: center` (measured), and `scrollTop = 0` does not reach it. Auto
-   margins collapse to zero when free space runs out, so the same form pins to
-   the padding edge and scrolls normally. */
+   `.auth` is centred with auto margins, not `align-items: center`. Embedded through
+   `--ds-auth-layout-min-height: 100%` in a fixed-height parent, a form taller than
+   the box lands 115px above the scroll origin under `align-items: center`
+   (measured) and `scrollTop = 0` cannot reach it. Auto margins collapse to zero when
+   free space runs out, so the form pins to the padding edge and scrolls. */
 
 :host {
   --_auth-layout-min-height: var(--ds-auth-layout-min-height, 100dvh);
@@ -55,19 +34,15 @@
   --_auth-layout-mark-bg-color: var(--ds-auth-layout-mark-bg-color, var(--accent));
   --_auth-layout-mark-label-color: var(--ds-auth-layout-mark-label-color, var(--accent-on));
 
-  /* Not inherited from the global reset on purpose: `min-height: 100dvh` plus up
-     to 80px of padding overflows by exactly that padding under `content-box`,
-     which is the scrollbar this component exists to avoid. Stated here so it
-     survives a consumer composing the style partials without `styles/reset`. */
+  /* Stated here, not inherited from the global reset: `min-height: 100dvh` plus the
+     padding overflows under `content-box`, and the reset may be absent. */
   box-sizing: border-box;
   display: flex;
   min-height: var(--_auth-layout-min-height);
   background-color: var(--_auth-layout-bg-color);
 
-  /* Physical left/right, not logical: the safe area is a property of the device,
-     so in RTL the insets must NOT swap sides with the text direction.
-     These are 0 unless the HOST APP sets `viewport-fit=cover` in its viewport
-     meta — a cutout alone is not enough, and the library cannot set it. */
+  /* Physical left/right, not logical: the safe area belongs to the device, not the
+     text direction. 0 unless the host app sets `viewport-fit=cover`. */
   padding-block:
     calc(var(--_auth-layout-padding-block) + env(safe-area-inset-top, 0px))
     calc(var(--_auth-layout-padding-block) + env(safe-area-inset-bottom, 0px));
@@ -85,19 +60,15 @@
   max-width: var(--_auth-layout-card-max-width);
 }
 
-/* Brand lockup and tagline read as one block, set apart from the card by the
-   column's larger gap. */
 .masthead {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: clamp(var(--space-1), 1svh, var(--space-2));
 
-  /* Nothing to show — no brand text, no projected logo, no tagline. Hidden
-     rather than left empty, because an empty flex child still takes the
-     column's gap and would push the card off centre.
-     `:not(:has(*))` rather than `:empty`, which a single whitespace text node
-     defeats — the same correction ds-filter-bar's slots already carry. */
+  /* Hidden when there is no brand text, logo or tagline: an empty flex child still
+     takes the column gap and pushes the card off centre. `:not(:has(*))`, not
+     `:empty`, which a whitespace text node defeats. */
   &:has(> .brand:not(:has(*))):not(:has(> .tagline)) {
     display: none;
   }
@@ -112,33 +83,25 @@
     display: none;
   }
 
-  /* A projected logo is the production case — the letter-mark tile is only the
-     fallback — so it is the one thing that must not be free to set the masthead's
-     height. Pierces encapsulation because projected nodes carry the CONSUMER's
-     attribute, not this component's (same reason as ds-field-group); anchored on
-     `.brand` so it compiles to a scoped rule and not a global one, and matched by
-     the slot's own attribute as a DIRECT child so a logo's inner markup is left
-     alone. ds-sidenav's identical slot carries the same rule. */
+  /* A projected logo must not set the masthead's height. ::ng-deep because projected
+     nodes carry the consumer's attribute; anchored on `.brand` to stay scoped, and a
+     DIRECT child match so a logo's inner markup is left alone. */
   ::ng-deep > [brand] {
-    /* Capped at the tile it replaces, so a logo is the same height as the
-       letter-mark. Height alone: an <img> with no CSS width keeps its ratio
-       under max-height, and a width here would out-rank one the consumer set
-       on their own logo. */
+    /* Height alone: an <img> keeps its ratio under max-height, and a width here
+       would out-rank one the consumer set on their own logo. */
     max-height: var(--ds-auth-layout-brand-max-height, var(--_auth-layout-mark-size));
   }
 }
 
-/* The sidenav's letter-mark in size (28px) and tile, but weight 700 against the
-   rail's 800, with its own hooks: retinting the mark means setting both. */
+/* Same size and tile as the sidenav mark, weight 700 against 800, with its own
+   hooks: retinting the mark means setting both. */
 .mark {
   display: grid;
   place-items: center;
   width: var(--_auth-layout-mark-size);
   height: var(--_auth-layout-mark-size);
 
-  /* The row is a flex line capped at --auth-card-w; without this a long wordmark
-     shrinks the tile horizontally while its height stays fixed, i.e. the square
-     accent tile becomes a rectangle. */
+  /* Without this a long wordmark squeezes the tile into a rectangle. */
   flex-shrink: 0;
   border-radius: var(--_auth-layout-mark-radius);
   background-color: var(--_auth-layout-mark-bg-color);

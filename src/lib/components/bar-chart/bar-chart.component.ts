@@ -51,9 +51,6 @@ import { ChartDataTableComponent } from '@ids-group-ltd/ids-design-system/compon
 import type { ChartDataRow } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
 import { resolveChartDefaults } from '@ids-group-ltd/ids-design-system/components';
 
-/** A row's parts, ready to draw: a width, a colour and a formatted value each. Segments are
- *  CATEGORIES, so they take the categorical palette in order — unlike the rows, which are one
- *  series and share one colour. */
 function segmentsOf(
   row: BarChartRow,
   format: (value: number) => string,
@@ -109,15 +106,12 @@ export class BarChartComponent {
     transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
   });
 
-  /** Whether the chart draws its own bordered, padded box. `'auto'`, the default, draws it;
-   *  `'none'` leaves the chart bare, for one placed inside a card the page has already drawn.
-   *  Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards
-   *  is one decision per app rather than per plot. */
+  /** `'auto'` draws the chart's own bordered, padded box; `'none'` leaves it bare, for a chart inside
+   *  a card. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'`. */
   readonly frame = input<ChartFrame | null>(null);
 
-  /** How long the tooltip stays after the pointer leaves the mark, in milliseconds. The default,
-   *  500, lets the pointer cross to the next mark and find the same panel, which glides there
-   *  instead of closing and opening again. Zero takes it away at once. Unset falls back to
+  /** Milliseconds the tooltip stays after the pointer leaves the mark, so it can glide to the next
+   *  mark instead of reopening. Zero closes it at once. Unset falls back to
    *  `DS_CONFIG.chart.tooltipLingerMs`, then 500. */
   readonly tooltipLingerMs = input<number | null>(null, {
     transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
@@ -129,29 +123,25 @@ export class BarChartComponent {
   /** Accessible name. Generated from the data when omitted. */
   readonly summary = input<string | null>(null);
 
-  /** The label-and-value table under the plot: `'toggle'` puts it behind a disclosure,
-   *  `'visible'` opens it, `'none'` renders none. It is the non-visual route to the numbers, so
-   *  `'none'` belongs only where the same data is already in a table on the page.
-   *  Unset falls back to `DS_CONFIG.chart.dataTable`, then `'none'`. */
+  /** The label-and-value table under the plot: `'toggle'` puts it behind a disclosure, `'visible'`
+   *  opens it, `'none'` renders none. It is the non-visual route to the numbers, so use `'none'`
+   *  only where the data is already in a table on the page. Unset falls back to
+   *  `DS_CONFIG.chart.dataTable`, then `'none'`. */
   readonly dataTable = input<ChartDataTable | null>(null);
-  /** Declares that the marks are parts of one whole, which is what makes a share of their total a
-   *  real quantity. Off by default: a chart of visitors per stage or revenue per month sums to a
-   *  number nobody can point at, and "18.6% of total" against it is arithmetic dressed as a fact.
-   *  On, each mark's share appears on the tooltip's second line and in the data table. */
+  /** Declares that the marks are parts of one whole. Off by default: a total over stages or months
+   *  is not a real quantity. On, each mark's share appears on the tooltip's second line and in the
+   *  data table. */
   readonly partOfWhole = input(false, { transform: booleanAttribute });
 
   /** Prints each row's share of `max` beside its value. */
   readonly showPercent = input(true, { transform: booleanAttribute });
-  /** Draws skeleton marks in place of the data, at the same count, so the chart does not resize
-   *  when the data lands. */
+  /** Draws skeleton marks in place of the data, at the same count. */
   readonly loading = input(false, { transform: booleanAttribute });
   /** Shown in place of the plot when `data` is empty. Unset falls back to
    *  `DS_INTL.chart.empty`. */
   readonly emptyText = input<string | null>(null);
 
-  /** Shows `errorText` in place of the plot. Separate from `loading` and from an empty `data`,
-   *  because "the request failed" and "there is nothing to show" read the same to a reader and
-   *  mean opposite things. */
+  /** Shows `errorText` in place of the plot. Distinct from `loading` and from an empty `data`. */
   readonly error = input(false, { transform: booleanAttribute });
 
   /** The message the error state prints. Unset falls back to `DS_INTL.chart.error`. */
@@ -176,26 +166,22 @@ export class BarChartComponent {
   readonly errorTextResolved = this.defaults.errorText;
   readonly valueFormatResolved = this.defaults.valueFormat;
 
-  /** Turns on the click affordance — the pointer cursor and any hover tint.
-   *  The click output fires whether or not this is set, so a consumer that
-   *  binds the output and forgets the flag still receives every click. */
+  /** Turns on the click affordance: the pointer cursor and any hover tint. `rowClicked` fires
+   *  whether or not this is set. */
   readonly interactive = input(false, { transform: booleanAttribute });
 
   /** The row that was clicked, or activated with Enter or Space. Fires whether or not
    *  `interactive` is set. */
   readonly rowClicked = output<BarChartRow>();
 
-  /** Dims every OTHER mark while one is hovered or focused, so the reader's eye is held on the
-   *  one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed
-   *  marks — measured 2026-09-13, the worst pair of three dimmed series falls from dE 14.8 at full
-   *  opacity to 2.1 at `--ds-chart-dim-opacity`'s default 0.3 — so it buys loudness for one mark
-   *  and pays for it with the rest of the chart. */
+  /** Dims every OTHER mark while one is hovered or focused. Off by default: it costs the separation
+   *  between the dimmed marks (worst pair of three series: dE 14.8 to 2.1 at the default
+   *  `--ds-chart-dim-opacity` 0.3, measured 2026-09-13). */
   readonly dimOthers = input(false, { transform: booleanAttribute });
 
-  /** The segment to single out, by its `id` - or by its position as a string where it has none.
-   *  Every other segment in every row fades, the same answer `highlighted` gives on a series
-   *  mark. Independent of `dimOthers`, which governs what a pointer does. A row without segments
-   *  is unaffected. */
+  /** The segment to single out, by its `id` or by its position as a string where it has none. Every
+   *  other segment in every row fades. Independent of `dimOthers`; rows without segments are
+   *  unaffected. */
   readonly highlighted = input<string | null>(null);
 
   protected isSegmentDimmed(key: string): boolean {
@@ -204,17 +190,16 @@ export class BarChartComponent {
     return highlighted !== null && highlighted !== key;
   }
 
-  /** Milliseconds between one row's entrance and the next, `40` by default; `0` turns the stagger
-   *  off. The whole spread stays within 260ms, so a long chart
-   *  narrows the step instead of crawling in. */
+  /** Milliseconds between one row's entrance and the next; `0` turns the stagger off. The whole
+   *  spread stays within 260ms, so a long chart narrows the step. */
   readonly staggerMs = input(40, { transform: numberAttribute });
 
   protected markStagger(index: number): string {
     return `${staggerDelay(index, this.rows().length, this.staggerMs())}ms`;
   }
 
-  /** Whether a hovered or focused row opens a tooltip. `'axis'` is not offered — a bar
-   *  chart's marks ARE its categories, so an axis tooltip would repeat the item one. */
+  /** Whether a hovered or focused row opens a tooltip. `'axis'` is not offered: a bar chart's marks
+   *  are its categories. */
   readonly tooltip = input<ChartItemTooltipTrigger>('item');
 
   protected readonly tooltipTemplate =
@@ -231,9 +216,7 @@ export class BarChartComponent {
 
   protected readonly hoveredLabel = signal(-1);
 
-  /** Naming a row by its label fades the rest whether or not `dimOthers` is set, the way a legend
-   *  singles out its series. The row itself answers the pointer, so the fade waits out the same
-   *  hover delay as the tooltip. */
+  /** Hovering a row's label fades the rest even without `dimOthers`, after the same hover delay as the tooltip. */
   protected readonly dimsOthers = computed(
     () =>
       this.dimOthers() ||
@@ -273,9 +256,7 @@ export class BarChartComponent {
         return null;
       }
 
-      // A segmented bar draws several readings the row label cannot name, so the row heads the
-      // panel and each segment gets its own line. Repeating the label the pointer is already on
-      // would tell the reader nothing.
+      // A segmented row heads the panel; each segment gets its own line.
       if (entry.segments.length) {
         const values = entry.segments.map((part) => part.segment.value);
 
@@ -322,9 +303,8 @@ export class BarChartComponent {
     },
   );
 
-  /** The track has to hold the far end of every bar, the target tick and the outermost band -
-   *  a goal above every reading is the one the chart is read for, and an axis derived from the
-   *  bars alone would draw it off the end. */
+  /** The track holds every bar end, target tick and outermost band, so a goal above every reading
+   *  is not drawn off the end. */
   protected readonly resolvedMax = computed(() =>
     resolveMax(
       this.max(),
@@ -346,8 +326,6 @@ export class BarChartComponent {
       : [this.intl().chart.labelColumn, this.intl().chart.valueColumn],
   );
 
-  /** A row's segments follow it as nested rows: one table reads in one pass, and a segment is
-   *  read against the bar it belongs to rather than against the other bars. */
   protected readonly dataTableRows = computed<readonly ChartDataRow[]>(() =>
     this.rows().flatMap((entry) => [
       {
@@ -364,8 +342,7 @@ export class BarChartComponent {
             ],
       },
       ...entry.segments.map((part) => ({
-        // Both keys fall back to a positional index in their OWN scope, and flattening puts
-        // them in one list - a bar and its first segment would otherwise both be "0".
+        // Both keys fall back to a positional index in their own scope; flattened, a bar and its first segment would both be "0".
         key: `bar:${entry.key}/${part.key}`,
         nested: true,
         cells: this.partOfWhole()
@@ -378,8 +355,7 @@ export class BarChartComponent {
   protected readonly rows = computed(() => {
     const max = this.resolvedMax();
     const format = this.valueFormatResolved();
-    // The bar's LENGTH is what a share is a share of, and on a floating bar that is the span
-    // between its ends rather than either end on its own.
+    // A share is of the bar's length: on a floating bar, the span between its ends.
     const values = this.data().map((row) => {
       const extent = barExtent(row.value);
 
@@ -406,8 +382,7 @@ export class BarChartComponent {
         bands: (row.ranges ?? []).map((bound, bandIndex, all) => ({
           key: `${row.id ?? index}-band-${bandIndex}`,
           widthPercent: widthPercent(bound, max),
-          // Rising opacity rather than rising hue: the bands are one backdrop read as an order,
-          // and a second palette behind the bars would compete with the bars themselves.
+          // Opacity, not hue: a second palette behind the bars would compete with them.
           opacity: (bandIndex + 1) / (all.length + 1),
         })),
         formattedPercent:
@@ -443,8 +418,7 @@ export class BarChartComponent {
   }
 
   protected onRowKey(row: BarChartRow, event: Event): void {
-    // Only the row's own key opens the row: a key pressed on a control inside it belongs to that
-    // control.
+    // A key pressed on a control inside the row belongs to that control.
     if (!this.interactive() || event.target !== event.currentTarget) {
       return;
     }
@@ -454,8 +428,7 @@ export class BarChartComponent {
 
   protected readonly isEmpty = computed(() => this.data().length === 0);
 
-  /** Placeholder bars while loading. Follows the real row count so the chart does not resize
-   *  when the data lands; falls back to three when `data` is still empty. */
+  /** Placeholder bars: the real row count, or three while `data` is empty. */
   protected readonly skeletonRows = computed(() =>
     Array.from({ length: Math.max(this.data().length, 3) }),
   );

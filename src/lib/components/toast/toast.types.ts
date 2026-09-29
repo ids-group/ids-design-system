@@ -32,8 +32,8 @@ export interface ToastEntry {
   readonly variant: ToastVariant;
   readonly dismissible: boolean;
   readonly action?: ToastAction;
-  /** Auto-dismiss delay, counted from the moment the toast becomes VISIBLE — a
-   *  queued toast must not expire while it is still waiting behind the cap.
+  /** Auto-dismiss delay, counted from the moment the toast becomes VISIBLE, so a
+   *  queued toast does not expire while waiting behind the cap.
    *  `0`, and any negative, means it never expires. */
   readonly durationMs: number;
 }

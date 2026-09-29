@@ -25,23 +25,21 @@ let nextId = 0;
   imports: [IconComponent],
   templateUrl: './modal-card.component.html',
   styleUrl: './modal.component.scss',
-  // A static `title="…"` feeding the input below ALSO stays in the DOM as the global attribute,
-  // which makes the host a native browser tooltip over everything inside it.
+  // A static `title="..."` also stays in the DOM as the global attribute and would make the host a native tooltip.
   host: { '[attr.title]': 'null' },
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class ModalCardComponent {
   protected readonly intl = inject(DS_INTL);
 
-  /** Card width — sm/md/lg/xl/fullscreen. */
+  /** Card width. */
   readonly size = input<ModalSize>('md');
-  /** Severity — drives the icon-badge tint, the title colour, the DEFAULT icon and
-   *  the ARIA role, which is the same set `ds-alert`'s variant drives. Null (the
-   *  default) is a neutral dialog. It picks an icon as well as a tint because a tint
-   *  alone signals by colour only; `icon` overrides the pick.
+  /** Severity: drives the icon-badge tint, the title colour, the DEFAULT icon and
+   *  the ARIA role, the same set `ds-alert`'s variant drives. Null (default) is a
+   *  neutral dialog. It picks an icon as well as a tint so severity is not carried by
+   *  colour alone; `icon` overrides the pick.
    *
-   *  `false` and `undefined` land on null too, so a template can bind the short
-   *  `[status]="isDangerous && 'error'"` instead of spelling out the ternary. */
+   *  `false` and `undefined` land on null too, so `[status]="isDangerous && 'error'"` binds. */
   readonly status = input<DsStatus | null, DsStatus | false | null | undefined>(
     null,
     { transform: (value) => value || null },
@@ -61,9 +59,9 @@ export class ModalCardComponent {
   readonly dividersResolved = resolveDividers(this.dividers);
   /** Icon badge shown next to the title. Overrides the icon `status` would pick. */
   readonly icon = input<IconName | null>(null);
-  /** ARIA role. Unset, an error or warning becomes `alertdialog` — the role for a
-   *  dialog that interrupts with something the reader must act on — and anything
-   *  else stays `dialog`. Same split `ds-alert` makes between `alert` and `status`. */
+  /** ARIA role. Unset, an error or warning becomes `alertdialog` (a dialog that
+   *  interrupts with something the reader must act on) and anything else stays
+   *  `dialog`, the split `ds-alert` makes between `alert` and `status`. */
   readonly dialogRole = input<'dialog' | 'alertdialog' | null>(null);
   /** Fires when the header close button is clicked. */
   readonly closed = output<void>();
@@ -79,15 +77,15 @@ export class ModalCardComponent {
     afterRenderEffect((onCleanup) => {
       this.stackOverflowingActions();
       let frame = 0;
-      // Deferred a frame: a layout change made inside a ResizeObserver callback is reported as an
+      // Deferred a frame: a layout change inside a ResizeObserver callback is reported as an
       // observer loop by whatever else observes an ancestor.
       const remeasure = () => {
         cancelAnimationFrame(frame);
         frame = requestAnimationFrame(() => this.stackOverflowingActions());
       };
       const observer = new ResizeObserver(remeasure);
-      // The header, not the actions row: the header's box does not move when the row stacks, so
-      // the observer never reports this function's own output back to it.
+      // The header, not the actions row: its box does not move when the row stacks, so the
+      // observer never sees this function's own output.
       observer.observe(this.header().nativeElement);
       // A label that changes after open leaves every box the ResizeObserver watches unchanged.
       // Attributes stay unobserved, so toggling `stacked` never reports back here.
@@ -122,7 +120,6 @@ export class ModalCardComponent {
     row.classList.toggle('stacked', needed > available);
   }
 
-  /** Status picks the glyph so a severity is never carried by colour alone. */
   protected readonly resolvedIcon = computed<IconName | null>(() => {
     const explicit = this.icon();
     if (explicit) {

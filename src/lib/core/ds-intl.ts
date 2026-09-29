@@ -28,8 +28,8 @@ export const DS_INTL = new InjectionToken<Signal<DsIntl>>('DS_INTL', {
  *   provideDsIntl(() => { const language = inject(LanguageService); return computed(() => language.dictionary().ds); })
  *
  * Works at the root, on a `Route` or on a component. A nested call MERGES with the one above it
- * section by section, for the reason given on `provideDsConfig`. Numbers and dates do not come
- * from here: they follow `DsConfig.locale`, then `LOCALE_ID`. */
+ * section by section, as `provideDsConfig` does. Numbers and dates do not come from here: they
+ * follow `DsConfig.locale`, then `LOCALE_ID`. */
 export function provideDsIntl(
   overrides: DsIntlOverrides | (() => Signal<DsIntlOverrides>),
 ): Provider {

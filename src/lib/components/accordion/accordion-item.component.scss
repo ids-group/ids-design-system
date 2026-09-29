@@ -1,8 +1,8 @@
 @use '../../styles/focus' as focus;
 
 /* Truncation contract:
-   Head label — Single line, ellipsis. Tooltip on hover when clipped.
-   Body — Wraps, no clip — the panel exists to give body text room. */
+   Head label - single line, ellipsis, tooltip on hover when clipped.
+   Body - wraps, no clip. */
 
 :host {
   --_accordion-header-bg-color:       var(--ds-accordion-header-bg-color,       var(--surface-default));
@@ -26,10 +26,8 @@
     border-top: var(--border-width-default) solid var(--_accordion-divider-color);
   }
 
-  // An `outline` follows the ELEMENT's border-radius, and the rounded corner belongs to
-  // <ds-accordion>, not to this button — so a focused first or last row drew a square ring
-  // inside a rounded box. `--radius-lg` is what the parent paints; the inner rows stay square
-  // because there is no corner there to follow.
+  // The rounded corner belongs to <ds-accordion>; without this radius the focus outline of the
+  // first/last row is a square ring inside a rounded box.
   &:first-of-type .head {
     border-top-left-radius: var(--radius-lg);
     border-top-right-radius: var(--radius-lg);
@@ -83,7 +81,7 @@
   }
 
   .body {
-    // grid-template-rows 0fr↔1fr animates smoothly (unlike height:0↔auto, which can't interpolate).
+    // 0fr-1fr animates; height 0-auto cannot.
     display: grid;
     grid-template-rows: 0fr;
     transition: grid-template-rows var(--duration-base) var(--ease-standard);
@@ -94,9 +92,7 @@
   }
 
   .body-inner {
-    // overflow:hidden + min-height:0 let the 0fr grid row crush this to zero.
-    // Padding lives on .body-content so it's clipped too — padding on this box
-    // isn't crushed by its own overflow, so it would otherwise leak a sliver.
+    // Padding stays on .body-content: padding here survives the 0fr crush and leaks a sliver.
     overflow: hidden;
     min-height: 0;
   }

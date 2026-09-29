@@ -2,11 +2,9 @@
   <ng-content select="[leading]"></ng-content>
 </span>
 
-<!-- `[leading]` and `[trailing]` are siblings of the activator, never inside it: a
-     row that carries its own control (a checkbox, a kebab) alongside a row-level
-     action cannot nest that control in a <button> — invalid, and its click would
-     bubble into `activated`. Legal here because `role="listitem"` places no
-     restriction on interactive descendants, unlike `role="option"`. -->
+<!-- `[leading]` and `[trailing]` stay outside the activator: a control nested in a <button> is
+     invalid and its click would bubble into `activated`. Legal because `role="listitem"` allows
+     interactive descendants, unlike `role="option"`. -->
 @if (clickable()) {
   <button
     type="button"

@@ -41,29 +41,27 @@ export class SidenavItemComponent {
   readonly label = input.required<string>();
   /** Plain `href` target, used when `routerLink` is not set. */
   readonly href = input<string>('');
-  /** Angular `RouterLink` target — string or array form for dynamic segments. */
+  /** Angular `RouterLink` target, string or array form for dynamic segments. */
   readonly routerLink = input<DsRouterLink>(null);
   /** Applies the active style; also drives `aria-current` when not using `routerLink`. */
   readonly active = input(false, { transform: booleanAttribute });
   /** Overrides what an active item announces. Unset, an exact match announces `page` and a prefix
-   *  match announces `true` — in a sidenav the prefix case is "you are in this section", which is
-   *  exactly what `true` means. */
+   *  match announces `true` ("you are in this section"). */
   readonly ariaCurrent = input<DsAriaCurrent | null | undefined>(undefined);
   /** Numeric count shown at the end of the item. */
   readonly badge = input<number | null>(null);
   /** Shows an alert dot alongside the badge. */
   readonly hasAlert = input(false, { transform: booleanAttribute });
-  /** Disables the item — non-navigable and styled as inactive. */
+  /** Disables the item: non-navigable and styled as inactive. */
   readonly disabled = input(false, { transform: booleanAttribute });
   /** Emitted on click, carrying the `MouseEvent`. On an `href` item,
    *  `preventDefault()` intercepts navigation (e.g. a docs sidebar driving
-   *  scroll-spy); a `routerLink` item navigates regardless — Angular's
-   *  RouterLink ignores `defaultPrevented` — so treat it as a click hook there. */
+   *  scroll-spy); a `routerLink` item navigates regardless (Angular's
+   *  RouterLink ignores `defaultPrevented`), so treat it as a click hook there. */
   readonly activate = output<MouseEvent>();
 
   /** Whether THIS item draws its edge marker when active. Unset follows the parent
-   *  `ds-sidenav`, then on — the same "null means not deciding" reading as the rest
-   *  of the library, so a sidenav-wide `[rail]="false"` is not fought per item. */
+   *  `ds-sidenav`, then on, so a sidenav-wide `[rail]="false"` is not fought per item. */
   readonly rail = input<boolean | null, unknown>(null, {
     transform: (value) => (value == null ? null : booleanAttribute(value)),
   });
@@ -93,9 +91,8 @@ export class SidenavItemComponent {
     this.sidenav?.collapsed() ? this.label() : '',
   );
 
-  // Only name the link via aria-label when collapsed (icon-only, the .item-label
-  // is display:none). Expanded, the visible label names it and any aria-label
-  // would override it — suppressing the badge count / alert dot from the name.
+  // aria-label only when collapsed (icon-only). Expanded, it would override the visible
+  // label and drop the badge count / alert dot from the name.
   protected readonly collapsedAriaLabel = computed(() =>
     this.sidenav?.collapsed() ? this.label() : null,
   );
@@ -105,8 +102,7 @@ export class SidenavItemComponent {
     if (this.active()) {
       parts.push('active');
     }
-    // The routerLink variant gets `active` from routerLinkActive, not from here,
-    // so the rail opt-out has to be a class of its own rather than folded in.
+    // The routerLink variant gets `active` from routerLinkActive, so the rail opt-out needs its own class.
     if (!this.railResolved()) {
       parts.push('no-rail');
     }

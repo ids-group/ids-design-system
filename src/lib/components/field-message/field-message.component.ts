@@ -13,9 +13,8 @@ import { DS_CONFIG } from '@ids-group-ltd/ids-design-system/core';
 /** @internal */
 export type FieldMessageState = 'default' | 'error' | 'warning' | 'success';
 
-/** Internal shared helper/error line for form fields. Renders nothing when
- *  `text` is empty. The host field owns the `aria-describedby` relationship
- *  and passes `messageId`; this only renders the element that carries it.
+/** Helper/error line for form fields. Renders nothing when `text` is empty. The host field owns
+ *  the `aria-describedby` relationship and passes `messageId`.
  * @internal
  */
 @Component({
@@ -29,23 +28,20 @@ export type FieldMessageState = 'default' | 'error' | 'warning' | 'success';
 export class FieldMessageComponent {
   /** The one line under a field. Empty renders nothing (or reserved space, if the field asks). */
   readonly text = input<string>('');
-  /** Which role the line is playing — hint, error, warning or success. Decides the colour. */
+  /** Hint, error, warning or success; decides the colour. */
   readonly state = input<FieldMessageState>('default');
-  /** Id the field points `aria-describedby` at, so the message is announced with the control. */
+  /** Id the field's `aria-describedby` points at. */
   readonly messageId = input<string | null>(null);
-  /** Leading glyph. Unset resolves from the state through
-   *  `DS_CONFIG.field.stateIcons` — error, warning and success carry one by default and
-   *  the hint line does not. A name here overrides that for this message; `false`
+  /** Leading glyph. Unset resolves from the state via `DS_CONFIG.field.stateIcons` (error,
+   *  warning and success carry one by default, hint does not). A name overrides it; `false`
    *  removes it. */
   readonly icon = input<IconName | false | null>(null);
-  /** Reserve one line of height even when there's no `text`, so a field that
-   *  gains/loses a message doesn't shift the layout below it. */
+  /** Reserves one line of height with no `text`, so the layout below does not shift. */
   readonly reserve = input(false, { transform: booleanAttribute });
 
   private readonly config = inject(DS_CONFIG);
 
-  /** `hint` rather than `default` in the config: every field calls this line a hint,
-   *  and `default` would read as "the default icon". */
+  /** Keyed `hint` in the config, not `default`, which would read as "the default icon". */
   private static readonly BUILT_IN: Record<
     FieldMessageState,
     IconName | false

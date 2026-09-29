@@ -11,8 +11,7 @@ import {
   standalone: true,
   templateUrl: './page-header.component.html',
   styleUrl: './page-header.component.scss',
-  // A static `title="…"` feeding the input below ALSO stays in the DOM as the global attribute,
-  // which makes the host a native browser tooltip over everything inside it.
+  // A static `title="..."` also stays in the DOM as the global attribute and would make the host a native tooltip.
   host: { '[attr.title]': 'null' },
   encapsulation: ViewEncapsulation.Emulated,
 })

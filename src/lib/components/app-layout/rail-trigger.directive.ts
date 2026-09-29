@@ -17,7 +17,7 @@ import { AppLayoutComponent } from './app-layout.component';
  * PUT IT ON THE FOCUSABLE CONTROL, not on a wrapper: the attributes go on the
  * host element, and on `<ds-icon-button>` that is the wrapper, whose inner
  * `<button>` is what a screen reader actually reads. With a DS button, skip this
- * directive and bind its forwarding inputs instead —
+ * directive and bind its forwarding inputs instead:
  * `[ariaExpanded]="layout.railOverlay() ? layout.railOpen() : null"` and
  * `[ariaControls]="layout.railId"` off a `<ds-app-layout #layout>` template ref.
  *
@@ -25,9 +25,7 @@ import { AppLayoutComponent } from './app-layout.component';
  * breakpoint the rail is permanently in the layout, so `aria-expanded="false"`
  * would state the opposite of what the user sees.
  *
- * Must sit inside a `ds-app-layout` — the injector walks the declaration tree, so
- * anywhere in the projected chrome works. Outside one, DI fails naming
- * `AppLayoutComponent`, which says what is missing.
+ * Must sit inside a `ds-app-layout`; anywhere in the projected chrome works.
  */
 @Directive({
   selector: '[dsRailTrigger]',

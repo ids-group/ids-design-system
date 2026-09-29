@@ -19,8 +19,7 @@ export interface CellTemplateContext<T = unknown> {
  *
  * `[dsCellTemplateOf]` exists only to TYPE the template: bound to the same rows the
  * table gets, it makes `let-row` a `T` under strict templates, so a typo in a field
- * name is a compile error. Left off, `row` is `unknown` and a typed helper on the
- * host narrows it, as before.
+ * name is a compile error. Left off, `row` is `unknown`.
  */
 @Directive({
   selector: '[dsCellTemplate]',

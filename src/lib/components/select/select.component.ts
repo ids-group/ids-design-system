@@ -105,8 +105,6 @@ export class SelectComponent
 {
   private readonly overlay = inject(Overlay);
   protected readonly intl = inject(DS_INTL);
-  /** Segment of a ds-field-group: the group owns the border, radius and focus
-   *  ring, so .in-group strips this control back to its bare contents. */
   protected readonly inGroup = inFieldGroup();
 
   private readonly vcr = inject(ViewContainerRef);
@@ -117,10 +115,7 @@ export class SelectComponent
   readonly value = model<string>('');
   /** Flat options or option groups rendered in the dropdown panel. */
   readonly options = input<readonly SelectItem[]>([]);
-  /** Public panel tokens forwarded onto the portaled overlay pane on open, so a
-   *  consumer's `ds-select { --ds-dropdown-panel-*: … }` reaches it.
-   *  Not the whole set: `prepareOverlayEnter` also forwards `DROPDOWN_PANEL_TOKENS`
-   *  (overlay-motion.ts) onto every pane, the `--ds-option-*` family among them. */
+  /** Forwarded onto the portaled pane on open so consumer `--ds-dropdown-panel-*` overrides reach it. */
   private readonly panelTokens = [
     '--ds-dropdown-panel-bg-color',
     '--ds-dropdown-panel-min-width',
@@ -131,13 +126,11 @@ export class SelectComponent
     '--ds-option-check-color',
   ];
 
-  /** Trigger width — `fill` stretches to the container and pins the panel to the
-   *  trigger's width; `content` hugs the trigger's own content and takes that width
-   *  as the panel's FLOOR, so the panel can still grow to its options. */
+  /** Trigger width. `fill` stretches to the container and pins the panel to the trigger width; `content` hugs the trigger's content and uses that width as the panel's FLOOR. */
   readonly width = input<SelectWidth>('fill');
   /** Shown in the trigger when nothing is selected. */
   readonly placeholder = input<string>('');
-  /** Trigger height — sm/md/lg.
+  /** Trigger height - sm/md/lg.
    *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
   readonly size = input<DsSize | null>(null);
   readonly sizeResolved = resolveWithConfig(
@@ -149,30 +142,23 @@ export class SelectComponent
   readonly label = input<string>('');
   /** Disables the trigger and blocks all interaction. */
   readonly disabled = input(false, { transform: booleanAttribute });
-  /** Options are still being fetched. The panel shows a spinner instead of the
-   *  empty row — which would otherwise claim there are no matches — and the list
-   *  reports `aria-busy`. */
+  /** Options are still being fetched. The panel shows a spinner instead of the empty row (which would claim there are no matches) and the list reports `aria-busy`. */
   readonly loading = input(false, { transform: booleanAttribute });
   /** The panel opened. The moment to fetch options for a picker whose list is
    *  loaded on demand. */
   readonly opened = output<void>();
-  /** The panel closed, for any reason — a pick, Escape, an outside click, a scroll. */
+  /** The panel closed, for any reason - a pick, Escape, an outside click, a scroll. */
   readonly closed = output<void>();
   /** Scrolls the keyboard cursor's row into view. On by default: a list longer
    *  than the panel otherwise walks the cursor out of sight. Set `false` only if
    *  you are driving the scroll position yourself. */
   readonly scrollActiveIntoView = input(true, { transform: booleanAttribute });
-  /** Extra classes for the portaled panel, beside `ds-dropdown-panel`,
-   *  `ds-overlay-pane` and this component's own `ds-select-panel`. The panel is
-   *  portaled out of the host, so a class on the pane is the only way a consumer
-   *  stylesheet reaches ONE instance of it. */
+  /** Extra classes for the portaled panel, beside `ds-dropdown-panel`, `ds-overlay-pane` and `ds-select-panel`.
+   *  The panel is portaled out of the host, so a class on the pane is the only way a consumer stylesheet reaches ONE instance. */
   readonly panelClass = input<string | readonly string[]>([]);
   /** Prevents opening the dropdown while still allowing focus. */
   readonly readOnly = input(false, { transform: booleanAttribute });
-  /**
-   * The contract spelling of `readOnly`: signal forms binds by NAME, so a
-   * `readonly()` rule reaches nothing without it.
-   */
+  /** The contract spelling of `readOnly`: signal forms binds by NAME, so a `readonly()` rule reaches nothing without it. */
   readonly readonlyBinding = input(false, {
     // eslint-disable-next-line @angular-eslint/no-input-rename
     alias: 'readonly',
@@ -181,12 +167,11 @@ export class SelectComponent
   protected readonly isReadOnly = computed(
     () => this.readOnly() || this.readonlyBinding(),
   );
-  /** Confirmation text, shown when there is no error or warning — and it paints
-   *  the field's success border. A string like `warning`: the text IS the state. */
+  /** Confirmation text, shown when there is no error or warning. It paints the success border: the text IS the state. */
   readonly success = input<string, string | null | undefined>('', {
     transform: trimmedText,
   });
-  /** Marks the field required — shows an asterisk and sets `aria-required`. */
+  /** Marks the field required - shows an asterisk and sets `aria-required`. */
   readonly required = input(false, { transform: booleanAttribute });
   /** Shows an "(optional)" marker next to the label (ignored when `required`). */
   readonly optional = input(false, { transform: booleanAttribute });
@@ -269,8 +254,7 @@ export class SelectComponent
 
   private overlayRef: OverlayRef | null = null;
 
-  // An entry's index here IS `activeIndex` — group headers are not entries, so
-  // keyboard nav never lands on one.
+  // An entry's index IS `activeIndex`; group headers are not entries, so keyboard nav never lands on one.
   protected readonly flatOptions = computed<
     { option: SelectOption; groupDisabled: boolean }[]
   >(() => {
@@ -449,11 +433,7 @@ export class SelectComponent
   }
 
   /**
-   * Empties the selection from outside — a "reset filters" button, a form the app
-   * clears itself.
-   *
-   * Deliberately does NOT move focus: the caller may be navigating away, and
-   * stealing focus back into a field they just left is worse than leaving it.
+   * Empties the selection from outside (a "reset filters" button). Does NOT move focus: the caller may be navigating away.
    */
   clear(): void {
     this.value.set('');
@@ -482,9 +462,7 @@ export class SelectComponent
     ) {
       return;
     }
-    // Only handle keys aimed at the trigger itself — a keydown bubbling up from
-    // the nested clear <button> must reach its own activation (Enter/Space to
-    // clear), not be hijacked here into reopening the panel.
+    // Only handle keys aimed at the trigger itself: a keydown bubbling from the nested clear <button> must reach its own activation (Enter/Space).
     if (event.target !== event.currentTarget) {
       return;
     }
@@ -501,8 +479,7 @@ export class SelectComponent
 
         return;
       }
-      // A native <select> commits as you type without opening, so the value changes under
-      // the closed trigger.
+      // A native <select> commits as you type without opening, so the value changes under the closed trigger.
       if (this.handleTypeAhead(key)) {
         event.preventDefault();
         this.pickActive();
@@ -511,8 +488,7 @@ export class SelectComponent
       return;
     }
     if (key === 'Tab') {
-      // Close the panel but let Tab move focus naturally (no preventDefault),
-      // else the open overlay panel lingers behind the moved focus.
+      // Close the panel but let Tab move focus naturally (no preventDefault), else the open panel lingers behind the moved focus.
       this.close();
 
       return;
@@ -613,9 +589,7 @@ export class SelectComponent
     };
   }
 
-  /** How far PageUp and PageDown move. Ten rows is the native `<select>` step and
-   *  the APG listbox example's — a fixed number rather than a measured screenful,
-   *  so the jump is the same wherever the panel happens to be clipped. */
+  /** PageUp/PageDown step: the native `<select>` and APG listbox value, fixed so it does not depend on how the panel is clipped. */
   private static readonly pageStep = 10;
 
   private moveActive(delta: number): void {

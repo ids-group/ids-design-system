@@ -17,16 +17,14 @@ let nextReferenceId = 0;
 /**
  * Reference lines and bands across the plot, drawn against the scales `ds-chart` supplies.
  *
- * Strokes only: the LABELS are a second element, `g[dsReferenceLabel]`, because the two belong in
- * different layers of the canvas - a line reads as furniture under the marks, a label has to stay
- * legible over them - and one projected element can only land in one of the container's slots.
+ * Strokes only: the labels are a second element, `g[dsReferenceLabel]`, because they paint in a
+ * different layer and one projected element lands in only one of the container's slots.
  *
- * Hosted on a `<g>` rather than an element of its own: an element the SVG specification does not
- * know is not rendered, and neither are its descendants. Written as `<svg:g dsReferenceLine>`.
+ * Hosted on a `<g>`: an element the SVG specification does not know is not rendered, nor are its
+ * descendants. Written as `<svg:g dsReferenceLine>`.
  */
 @Component({
-  // The repository's `component-selector` rule asks for an element selector, and one cannot work
-  // inside a canvas - see the same exemption on `g[dsColumnSeries]`.
+  // An element selector cannot work inside a canvas; see `g[dsColumnSeries]`.
   // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'g[dsReferenceLine]',
   standalone: true,
@@ -38,16 +36,14 @@ let nextReferenceId = 0;
 export class ReferenceLineComponent implements OnDestroy {
   private readonly scales = inject(CHART_SCALES);
 
-  /** The lines and bands to draw across the plot. Each entry is ONE reading, `value`, plus an
-   *  optional `label`, `color` and `dash`; a `to` makes it a band between two readings. Each one
-   *  widens the value axis to hold it, so a target above every mark still lands on the plot. */
+  /** The lines and bands to draw. Each entry is one `value` plus optional `label`, `color` and `dash`;
+   *  a `to` makes it a band. Each widens the value axis to hold it. */
   readonly thresholds = input<readonly ChartThreshold[]>([]);
 
   private readonly domainId = `reference-line-${nextReferenceId++}`;
 
   constructor() {
-    // Reported like a series: a target above every reading is the one the reader most needs to
-    // see, and an axis derived from the data alone would draw it off the plot.
+    // Reported like a series: an axis derived from the data alone would draw a high target off the plot.
     effect(() =>
       this.scales.reportDomain(
         this.domainId,

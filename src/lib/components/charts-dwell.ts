@@ -10,9 +10,8 @@ export interface ChartDwell {
   cancel(): void;
 }
 
-// A chart stays warm from its first answer until the pointer leaves it, so a reader moving along
-// the marks is answered at once rather than waiting at every mark. One set for the whole page:
-// a legend and the plot beside it are one chart.
+// A chart stays warm from its first answer until the pointer leaves it. One set for the whole page:
+// a legend and its plot are one chart.
 const warmCharts = new WeakSet<Element>();
 
 function chartOf(event: Event): Element | null {

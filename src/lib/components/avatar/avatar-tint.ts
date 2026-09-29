@@ -1,9 +1,8 @@
 /** Options for {@link avatarTint}. */
 export interface AvatarTintOptions {
-  /** Hue arcs (degrees, `[start, end]` with `start < end`, within 0–360) the
-   *  derived hue must never land in — e.g. `[[310, 360], [0, 20]]` to skip a
-   *  pink brand hue and reds. An arc crossing 0° must be given as two arcs.
-   *  Default: none (full 0–360 range). */
+  /** Hue arcs (degrees, `[start, end]` with `start < end`, within 0-360) the derived hue
+   *  never lands in, e.g. `[[310, 360], [0, 20]]`. An arc crossing 0 is given as two arcs.
+   *  Default: none. */
   avoidHues?: readonly (readonly [number, number])[];
   /** HSL lightness percentage. Default 62. */
   lightness?: number;
@@ -13,16 +12,12 @@ export interface AvatarTintOptions {
   foreground?: string;
 }
 
-/** Deterministic `{ bg, fg }` tint for a seed string (an email, a name), so the
- *  same person always gets the same colour.
+/** Deterministic `{ bg, fg }` tint for a seed string (an email, a name): the same seed always
+ *  gives the same colour.
  *
- *  The background is `hsl(H 50% 62%)` and the text is always WHITE. HSL lightness is
- *  not perceptually even, so the set reads bright — at the cost of contrast: white on
- *  the lighter hues measures as little as 1.65:1, under the 4.5:1 WCAG AA asks of
- *  text. Where the initials are the only identifier, pass your own `lightness`
- *  (about 50) and keep white, which measures 5.3-6.6:1.
- *
- *  Pass to `ds-avatar`'s `tint`, or let the component derive it via `seed`. */
+ *  The background is `hsl(H 50% 62%)` and the text is always white. White on the lighter hues
+ *  measures as little as 1.65:1, under the 4.5:1 WCAG AA asks of text. Where the initials are
+ *  the only identifier, pass `lightness` about 50 and keep white (5.3-6.6:1). */
 export function avatarTint(
   seed: string,
   options?: AvatarTintOptions,
@@ -37,16 +32,12 @@ export function avatarTint(
   };
 }
 
-/** Uppercased initials from the first two words. Accepts `(first, last)` parts or
- *  a single full name (`initialsFrom('Ada Lovelace')` → `AL`); a lone name gives
- *  one letter, `?` when empty.
+/** Uppercased initials from the first two words. Accepts `(first, last)` parts or a single
+ *  full name (`initialsFrom('Ada Lovelace')` gives `AL`); a lone name gives one letter, `?`
+ *  when empty.
  *
- *  A deliberately naive Latin-script guess, and the library's ONLY naming rule.
- *  Reading a name is a cultural convention, not a UI decision — "María José
- *  García López" wants MG from a Spanish reader and "Bramley Rovers Football Club" wants
- *  BR from its members — so an app with a real rule passes its own through
- *  `DS_CONFIG.avatar.initials` or `ds-avatar`'s `initialsRule` rather than asking
- *  this to grow modes it cannot get right. */
+ *  A deliberately naive Latin-script guess. An app with a real naming rule passes its own via
+ *  `DS_CONFIG.avatar.initials` or `ds-avatar`'s `initialsRule`. */
 export function initialsFrom(first?: string, last?: string): string {
   const words =
     last === undefined
@@ -58,7 +49,7 @@ export function initialsFrom(first?: string, last?: string): string {
   return `${firstInitial}${lastInitial}`.toUpperCase() || '?';
 }
 
-// Java String.hashCode shape (hash*31 + charCode); the `<< 5` keeps hash in int range.
+// Java String.hashCode shape; the `<< 5` keeps hash in int range.
 function hashSeed(seed: string): number {
   let hash = 0;
   for (let index = 0; index < seed.length; index++) {
@@ -68,8 +59,6 @@ function hashSeed(seed: string): number {
   return hash;
 }
 
-// Distribute the hash evenly across 0–360 minus the excluded arcs, so the result
-// can never fall inside one.
 function pickHue(
   hash: number,
   avoidHues: readonly (readonly [number, number])[],
@@ -95,7 +84,6 @@ function pickHue(
   return cursor + position;
 }
 
-// Clamp to 0–360, drop empties, sort, merge overlaps → clean non-overlapping arcs.
 function normalizeArcs(
   arcs: readonly (readonly [number, number])[],
 ): [number, number][] {

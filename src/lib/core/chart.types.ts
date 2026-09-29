@@ -1,6 +1,6 @@
-/** Whether the label-and-value table under a chart's plot is offered, and how. It is the non-visual
- *  route to the numbers, so `'none'` belongs only where the same data is already in a table on the
- *  page. */
+/** Whether the label-and-value table under a chart's plot is offered, and how. It is the
+ *  non-visual route to the numbers, so `'none'` belongs only where the same data is already in a
+ *  table on the page. */
 export type ChartDataTable = 'toggle' | 'visible' | 'none';
 
 /** Whether a chart draws its own bordered, padded box. `'auto'` draws it; `'none'` leaves the
@@ -12,7 +12,7 @@ export type ChartFrame = 'auto' | 'none';
  *  generated description, and a value printed beside a mark. */
 export type ChartFormatLocation = 'tick' | 'tooltip';
 
-/** Formats every value a chart prints — the annex table and the generated description included.
+/** Formats every value a chart prints, the annex table and the generated description included.
  *  Called with the location it is formatting for, so one function can abbreviate on the axis and
  *  spell the value out everywhere else. */
 export type ChartValueFormat = (
@@ -20,15 +20,14 @@ export type ChartValueFormat = (
   location: ChartFormatLocation,
 ) => string;
 
-/** How a reference line is stroked. Named rather than a `stroke-dasharray`, so the rhythm is the
- *  design system's to retune once and the same word draws the same line on every chart. */
+/** How a reference line is stroked. Named rather than a `stroke-dasharray`, so the same word
+ *  draws the same line on every chart. */
 export type ChartThresholdDash = 'solid' | 'dashed' | 'dotted';
 
 /** A line drawn across a chart's plot at one reading - a target, a budget, an SLA - or, with `to`,
  *  the band between two of them.
  *
- *  ONE number, not a coordinate pair: a horizontal line has a single reading, and a shape that
- *  makes it write that reading twice is a shape whose two ends can drift apart. */
+ *  ONE number, not a coordinate pair: a horizontal line has a single reading. */
 export interface ChartThreshold {
   readonly value: number;
   /** Printed at the line's left end and named in the generated description. An unlabelled one
@@ -47,8 +46,8 @@ export interface ChartThreshold {
 /** Which of a chart's two value axes a mark is measured against. */
 export type ChartAxis = 'primary' | 'secondary';
 
-/** How a chart's second value axis relates to its first. Every name says what is done to the
- *  GRIDLINES, which is the only thing the four modes actually differ in.
+/** How a chart's second value axis relates to its first. The modes differ only in what is done
+ *  to the GRIDLINES.
  *
  *  - `'aligned'` - one set of gridlines, and the secondary axis rounds its step up to a round
  *    number, so its series stops short of the top.
@@ -69,8 +68,7 @@ export type ChartGaps = 'break' | 'zero';
 
 /** How several series share one category's band.
  *
- *  - `'none'` - every series draws from the baseline at the band's centre, which is the single
- *    series case and what a chart that was handed one list has always done.
+ *  - `'none'` - every series draws from the baseline at the band's centre (the single-series case).
  *  - `'grouped'` - each series takes its own slot inside the band, side by side.
  *  - `'stacked'` - each series starts where the one before it ended, so the band's full height is
  *    the category's total.

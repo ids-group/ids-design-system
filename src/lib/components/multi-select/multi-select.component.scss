@@ -10,16 +10,13 @@
 :host {
   @include field-box.field-box-tokens;
 
-  // Flex column + gap so the hint/error (ds-field-message) sits the canonical
-  // --space-1-5 below the trigger, matching input/textarea/autocomplete/select.
+  // Flex column + gap so the hint/error sits --space-1-5 below the trigger, matching input/textarea/autocomplete/select.
   display: flex;
   flex-direction: column;
   gap: var(--field-label-gap);
 
-  /* `initial` means UNSET - see the same pair on `ds-autocomplete`. A value here is
-     copied onto the portaled pane as an inline style, which outranks the
-     `.ds-overlay-pane` rule a consumer writes; unset while the picker's own hook is
-     unset, nothing is copied and the shared partial supplies the default. */
+  /* `initial` means UNSET (see `ds-autocomplete`): a value here is copied onto the portaled pane as an inline style, which outranks a consumer's
+     `.ds-overlay-pane` rule. */
   --ds-dropdown-panel-bg-color: var(--ds-multi-select-panel-bg-color, initial); /* void-ok */
 
   --_multi-select-bg-color: var(--ds-multi-select-bg-color, var(--surface-default));
@@ -32,15 +29,12 @@
   --_multi-select-font-size: var(--ds-multi-select-font-size, var(--_field-font-size));
 }
 
-/* Hugs its own content instead of filling the container. The panel then takes the
-   trigger width as a floor rather than as its width — see openPanel(). */
+/* Hugs its own content; the panel then takes the trigger width as a floor, not its width (see openPanel()). */
 :host(.content-width) {
   width: fit-content;
 }
 
-/* The compact trigger is a fixed footprint by definition, so it hugs without being
-   asked and turns the panel's width mode on for the same reason `content` exists:
-   a caption-width panel is unreadable. */
+/* The compact trigger is a fixed footprint, so it hugs without being asked and turns the panel's width mode on: a caption-width panel is unreadable. */
 :host(.compact-trigger) {
   width: fit-content;
 
@@ -69,8 +63,7 @@
   }
 }
 
-/* Unique class — a bare `.field` collides with consumer/docs form styles that
-   set flex-direction:column and silently turn the chip row into a column. */
+/* Unique class: a bare `.field` collides with consumer/docs form styles that set flex-direction:column and turn the chip row into a column. */
 .field-trigger {
   display: flex;
   flex-wrap: wrap;
@@ -79,9 +72,8 @@
     @include clear-button.button;
   }
 
-  /* Wrapping is right for an UNCAPPED trigger and is the failure a cap exists to prevent: a flex
-     container that wraps never shrinks its chip row, it moves the input to a second line. `:has()`
-     keys off the measured row, so the rule follows the mode without a second class. */
+  /* Wrapping suits an UNCAPPED trigger; with a cap a wrapping flex container never shrinks its chip row, it moves the input to a second line.
+     `:has()` keys off the measured row, so the rule follows the mode without a second class. */
   &:has(> .chip-row.fit) {
     flex-wrap: nowrap;
   }
@@ -91,8 +83,7 @@
 
   @include field-box.field-box-height(md, min-height);
 
-  /* min-height, not height: the chip row wraps in `all` mode, so a size sets the
-     floor and the trigger grows past it. */
+  /* min-height, not height: the chip row wraps in `all` mode, so a size sets the floor. */
   &.sm { @include field-box.field-box-height(sm, min-height); }
   &.lg { @include field-box.field-box-height(lg, min-height); }
 
@@ -159,13 +150,10 @@
   color: var(--text-tertiary);
 }
 
-/* Portaled panel — plain selectors reach it via the emulated _ngcontent attr,
-   but custom-property inheritance follows DOM position, so the panel + option
-   resolvers must live HERE (portaled outside :host), not on :host. */
+/* Portaled panel: plain selectors reach it via the emulated _ngcontent attr, but custom-property inheritance follows DOM position,
+   so the panel and option resolvers must live HERE (outside :host). */
 
-/* Qualified with the pane class so it OUTRANKS styles/_dropdown-overlay.scss by
-   specificity rather than by stylesheet order — the two were an exact tie, and an
-   SSR critical-CSS inline or a consumer loading the partial later flipped it. */
+/* Qualified with the pane class so it OUTRANKS styles/_dropdown-overlay.scss by specificity, not stylesheet order (SSR critical CSS or a late partial load flips a tie). */
 .dropdown-panel {
   --ds-option-bg-color-active: var(
     --ds-multi-select-option-bg-color-active,
@@ -182,8 +170,7 @@
   padding: var(--space-2) var(--space-3);
   border-bottom: var(--border-width-default) solid var(--border-divider);
 
-  // An outline has no radius of its own — it follows the box it is drawn on. Without this the
-  // ring came out as a 470px hard rectangle inside a panel whose every other control is rounded.
+  // An outline has no radius of its own and follows the box it is drawn on; without this the ring is a hard rectangle in a rounded panel.
   border-radius: var(--ds-radius-inner);
 
   // The row spans the panel edge to edge and the panel clips, so the ring is drawn inward.
@@ -210,8 +197,7 @@
     var(--font-sans);
 }
 
-// The option rows clip their label; without the same treatment a long group name wraps and makes
-// its select-all row two lines tall next to single-line options.
+// Option rows clip their label; without the same treatment a long group name wraps and makes its select-all row two lines tall.
 .select-all-label {
   min-width: 0;
 
@@ -259,8 +245,7 @@
   border-radius: var(--ds-radius-inner);
   border: var(--check-bw) solid var(--border-strong);
 
-  // ds-checkbox paints its own surface, so an unchecked box stays white over a hovered or selected
-  // row instead of letting the row's tint through it.
+  // ds-checkbox paints its own surface; an unchecked box stays white over a hovered or selected row.
   background-color: var(--surface-default);
   color: var(--text-on-primary);
 

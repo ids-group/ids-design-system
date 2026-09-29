@@ -134,8 +134,6 @@ export class DatePickerComponent
   extends DsControlValueAccessor<Date | DateRangeValue | null>
   implements OnDestroy
 {
-  /** Segment of a ds-field-group: the group owns the border, radius and focus
-   *  ring, so .in-group strips this control back to its bare contents. */
   protected readonly inGroup = inFieldGroup();
   protected readonly preview = inject(DsStaticPreview);
 
@@ -158,9 +156,7 @@ export class DatePickerComponent
       if (this.editing) {
         return;
       }
-      // Every typing path holds `editing` while it runs, so reaching here means the
-      // value did NOT come from the keyboard and a leftover typing error no longer
-      // describes what the field is about to show.
+      // Reaching here means the value did not come from the keyboard, so a leftover typing error is stale.
       this.typedInvalid.set(false);
       this.rangeInvalid.set(false);
       if (this.mode() === 'single') {
@@ -183,9 +179,7 @@ export class DatePickerComponent
     });
   }
 
-  /** Field text for the DOM: fixed-width `_`-padded once any digit exists,
-   *  else '' (so an untouched field is genuinely empty — no error on blur,
-   *  nothing for AT to read out). */
+  /** Field text for the DOM: fixed-width `_`-padded once any digit exists, else '' so an untouched field is empty (no blur error, nothing for AT to read). */
   private toFieldText(segments: string[], layout: FieldLayout): string {
     return segments.some((segment) => segment.length > 0)
       ? renderFieldValue(segments, layout)
@@ -199,10 +193,7 @@ export class DatePickerComponent
   private readonly appLocale = injectDsLocale();
   protected readonly intl = inject(DS_INTL);
   private readonly host = inject(ElementRef<HTMLElement>);
-  /** Public panel tokens forwarded onto the portaled overlay pane on open so
-   *  a consumer's `ds-date-picker { --ds-date-picker-*: … }` reaches it.
-   *  Not the whole set: `prepareOverlayEnter` also forwards `DROPDOWN_PANEL_TOKENS`
-   *  (overlay-motion.ts) onto every pane, the `--ds-option-*` family among them. */
+  /** Forwarded onto the portaled pane on open so consumer `--ds-date-picker-*` overrides reach it. */
   private readonly panelTokens = [
     '--ds-date-picker-bg-color',
     '--ds-date-picker-border',
@@ -225,9 +216,9 @@ export class DatePickerComponent
     '--ds-date-picker-panel-radius',
   ];
 
-  /** Selection mode — single date or start/end range. */
+  /** Selection mode - single date or start/end range. */
   readonly mode = input<DatePickerMode>('single');
-  /** Trigger height — sm/md/lg.
+  /** Trigger height - sm/md/lg.
    *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
   readonly size = input<DsSize | null>(null);
   readonly sizeResolved = resolveWithConfig(
@@ -235,12 +226,11 @@ export class DatePickerComponent
     (config) => config.control?.size,
     'md' as DsSize,
   );
-  /** Stretch the trigger to fill its container instead of hugging the mask
-   *  width — opt in when the field shares a grid/flex track with inputs. */
+  /** Stretches the trigger to fill its container instead of hugging the mask width. Opt in when sharing a grid/flex track with inputs. */
   readonly fullWidth = input(false, { transform: booleanAttribute });
   /** Selected date (single) or `[start, end]` (range), two-way bound. */
   readonly value = model<Date | DateRangeValue | null>(null);
-  /** Accessible-name fallback only — the mask fills the visible placeholder, not this.
+  /** Accessible-name fallback only - the mask fills the visible placeholder, not this.
    *  Unset falls back to `DS_INTL.datePicker.placeholder`. */
   readonly placeholder = input<string | null>(null);
   readonly placeholderResolved = computed(
@@ -248,19 +238,16 @@ export class DatePickerComponent
   );
   /** Field label shown above the trigger. */
   readonly label = input<string>('');
-  /** Marks the field required — shows an asterisk and sets `aria-required`. */
+  /** Marks the field required - shows an asterisk and sets `aria-required`. */
   readonly required = input(false, { transform: booleanAttribute });
-  /** Shows an "(optional)" marker beside the label — ignored when `required` is set. */
+  /** Shows an "(optional)" marker beside the label - ignored when `required` is set. */
   readonly optional = input(false, { transform: booleanAttribute });
-  /** Extra classes for the portaled panel, beside `ds-dropdown-panel`,
-   *  `ds-overlay-pane` and this component's own `ds-date-picker-panel`. The panel
-   *  is portaled out of the host, so a class on the pane is the only way a consumer
-   *  stylesheet reaches ONE instance of it. */
+  /** Extra classes for the portaled panel, beside `ds-dropdown-panel`, `ds-overlay-pane` and `ds-date-picker-panel`.
+   *  The panel is portaled out of the host, so a class on the pane is the only way a consumer stylesheet reaches ONE instance. */
   readonly panelClass = input<string | readonly string[]>([]);
   /** Disables the picker and blocks all interaction. */
   readonly disabled = input(false, { transform: booleanAttribute });
-  /** Confirmation text, shown when there is no error or warning — and it paints
-   *  the field's success border. A string like `warning`: the text IS the state. */
+  /** Confirmation text, shown when there is no error or warning. It paints the success border: the text IS the state. */
   readonly success = input<string, string | null | undefined>('', {
     transform: trimmedText,
   });
@@ -274,7 +261,7 @@ export class DatePickerComponent
   readonly minDate = input<Date | null>(null);
   /** Latest selectable date (inclusive). Days after this are disabled. */
   readonly maxDate = input<Date | null>(null);
-  /** Predicate — return true to disable an individual day. */
+  /** Predicate - return true to disable an individual day. */
   readonly disabledDate = input<((date: Date) => boolean) | null>(null);
   /** Quick-pick shortcuts shown as a button column inside the calendar panel. */
   readonly presets = input<readonly DatePickerPreset[]>([]);
@@ -287,7 +274,7 @@ export class DatePickerComponent
   readonly firstDayOfWeek = input<number | null>(null);
   /** Date the calendar opens on when the value is empty (e.g. a Date Of Birth):
    *  the panel shows its month and grid focus lands on its exact day.
-   *  Never written to `value` — selection stays with the user. */
+   *  Never written to `value` - selection stays with the user. */
   readonly defaultDate = input<Date | null>(null);
   /** Allow masked manual typing. When false the field is read-only and a date can
    *  only be picked from the calendar. */
@@ -299,9 +286,8 @@ export class DatePickerComponent
   protected readonly hintId = computed(() =>
     this.message().text ? `${this.uid}-hint` : null,
   );
-  // An unparseable date is the picker's OWN error, so it enters the ladder at the
-  // error rung rather than replacing the hint. An explicit `error` still wins:
-  // the consumer knows something this component cannot.
+  // An unparseable date is the picker's OWN error: it enters the ladder at the error rung rather than replacing the hint.
+  // An explicit `error` still wins.
   private readonly localError = computed(() => {
     const explicit = this.error().trim();
     if (explicit) {
@@ -373,7 +359,6 @@ export class DatePickerComponent
   protected readonly panelId = `${this.uid}-panel`;
   protected readonly captionId = `${this.uid}-caption`;
   protected readonly isOpen = signal(false);
-  /** The day that holds keyboard focus in the open grid (roving tabindex). */
   protected readonly gridFocus = signal<Date | null>(null);
   protected readonly inputText = signal<string>('');
   protected readonly rangeText = signal<string>('');
@@ -397,7 +382,6 @@ export class DatePickerComponent
     return !!f && this.dayKey(f) === this.dayKey(cell.date);
   }
 
-  /** Arrow-key roving navigation across the calendar grid (APG date grid). */
   protected onGridKeydown(event: KeyboardEvent, cell: DayCell): void {
     if (this.isDisabled()) {
       return;
@@ -504,10 +488,7 @@ export class DatePickerComponent
     if (this.invalidResolved()) {
       parts.push('error');
     }
-    // The indicator cannot be left to :focus-within: opening from the calendar
-    // glyph moves focus into the day grid, so the trigger would go dark while
-    // its OWN panel is open. A control stays visibly active for as long as it
-    // owns an open panel, wherever focus went.
+    // Not :focus-within: opening from the calendar glyph moves focus into the day grid, and the trigger must stay active while it owns an open panel.
     if (this.isOpen() || this.preview.staticPreview()) {
       parts.push('open');
     }
@@ -536,11 +517,8 @@ export class DatePickerComponent
       ? this.formatSpec().mask
       : rangeMask(this.formatSpec()),
   );
-  /** `size` attribute so the field hugs its mask width instead of stretching.
-   * +1 covers `size` under-counting the mask's wide glyphs (M/D/Y), which
-   * otherwise clip the last chars of the longer range mask. The field's
-   * `font-family: var(--font-mono)` keeps every glyph equal width, so the
-   * width never shifts as you type. */
+  /** `size` attribute so the field hugs its mask width. +1 covers `size` under-counting wide glyphs (M/D/Y) that would clip the
+   *  last chars of the longer range mask; `--font-mono` keeps the width stable while typing. */
   protected readonly fieldSize = computed(
     () => this.fieldPlaceholder().length + 1,
   );
@@ -588,7 +566,6 @@ export class DatePickerComponent
     () => this.yearPageStart() + YEAR_PAGE_SIZE <= this.maxYear(),
   );
 
-  /** Aligns the page so `year` lands on a stable grid boundary measured from minYear. */
   private yearPageStartFor(year: number): number {
     const min = this.minYear();
 
@@ -687,8 +664,7 @@ export class DatePickerComponent
     const cells: DayCell[] = [];
     const today = new Date();
     const todayKey = today.toDateString();
-    // Six weeks of seven days, whatever the month: a fixed cell count keeps the
-    // panel from changing height as you page through the year.
+    // Always six weeks of seven days so the panel height does not change while paging.
     for (let i = 0; i < 42; i++) {
       const d = new Date(gridStart);
       d.setDate(d.getDate() + i);
@@ -798,9 +774,8 @@ export class DatePickerComponent
     const removeScrollClose = closeOnScroll(this.overlayRef, () =>
       this.close('dismiss'),
     );
-    // Syncs on every detach of the CURRENT overlay, whatever caused it, so a stray CDK detach
-    // cannot leave a stale `overlayRef` wedging this method's reopen guard — and skips a
-    // superseded one, which would otherwise strand the panel that replaced it.
+    // Syncs on every detach of the CURRENT overlay so a stray CDK detach cannot leave a stale `overlayRef` wedging the reopen guard;
+    // skips a superseded overlay, which would strand the panel that replaced it.
     clearOnDetach(this.overlayRef, {
       current: () => this.overlayRef,
       always: removeScrollClose,
@@ -847,8 +822,7 @@ export class DatePickerComponent
     this.isOpen.set(false);
     this.closeMenus();
     this.markTouched();
-    // Refocusing the editable field on a coarse pointer would summon the soft
-    // keyboard mid-scroll; the readonly field (allowInput=false) never does.
+    // Refocusing the editable field on a coarse pointer summons the soft keyboard mid-scroll; the readonly field never does.
     if (
       focusWasInPanel &&
       (!this.allowInput() || !window.matchMedia('(pointer: coarse)').matches)
@@ -863,11 +837,8 @@ export class DatePickerComponent
   }
 
   /**
-   * Also the calendar glyph's handler. A POINTER open must not drag focus into
-   * the day grid: the reader did not ask to leave a field they may want to type
-   * in. So focus follows what the field IS — typeable, and the caret stays;
-   * read-only, and the grid is the only thing worth focusing. The keyboard path is
-   * unaffected: ArrowDown on the field calls `open(true)`.
+   * Also the calendar glyph's handler. A POINTER open must not drag focus into the day grid: focus follows what the field IS,
+   * so a typeable field keeps its caret and a read-only one focuses the grid. ArrowDown on the field calls `open(true)`.
    */
   protected onFieldClick(): void {
     this.open(!this.allowInput());
@@ -895,8 +866,7 @@ export class DatePickerComponent
     this.commitRaw(element, element.value);
   }
 
-  /** Physical-keyboard editing (desktop): typed digits fill the caret's slot;
-   *  Backspace/Delete never shift digits across a separator. */
+  /** Physical-keyboard editing: typed digits fill the caret's slot; Backspace/Delete never shift digits across a separator. */
   protected onFieldKeydown(event: KeyboardEvent): void {
     if (!this.allowInput()) {
       return;
@@ -920,11 +890,9 @@ export class DatePickerComponent
     );
   }
 
-  /** Mobile keyboards don't fire a reliable `keydown` (Gboard reports keyCode 229 /
-   *  "Unidentified"), so edits are routed here via `beforeinput`'s `inputType` instead.
-   *  Android Chrome can also ignore `preventDefault()` here, so the intended result is
-   *  stashed and re-asserted in `onFieldInput`; the microtask expires the stash once
-   *  preventDefault worked (no following `input` in the same task). */
+  /** Mobile keyboards do not fire a reliable `keydown` (Gboard reports keyCode 229), so edits arrive via `beforeinput`'s `inputType`.
+   *  Android Chrome can ignore `preventDefault()` there, so the intended result is stashed and re-asserted in `onFieldInput`;
+   *  the microtask expires the stash once preventDefault worked. */
   protected onFieldBeforeInput(event: InputEvent): void {
     if (!this.allowInput()) {
       return;
@@ -944,9 +912,8 @@ export class DatePickerComponent
       return;
     }
     event.preventDefault();
-    // Gboard reports Backspace/Delete on mobile with a full-segment "selection" (its
-    // composing region), which would hit the selection-clear branch below and wipe
-    // the whole slot. Collapse to the caret edge so a mobile delete removes one digit.
+    // Gboard reports Backspace/Delete with a full-segment selection (its composing region), which would wipe the whole slot.
+    // Collapse to the caret edge so a mobile delete removes one digit.
     const collapsed =
       kind === 'backspace'
         ? element.selectionEnd
@@ -962,7 +929,7 @@ export class DatePickerComponent
   }
 
   /** A selection is cleared through the model so `_` placeholders are never
-   *  natively erased — only digits are editable. */
+   *  natively erased - only digits are editable. */
   private runSegmentEdit(
     element: HTMLInputElement,
     kind: 'type' | 'backspace' | 'delete',
@@ -972,7 +939,7 @@ export class DatePickerComponent
     const layout = this.layout();
     const segments = parseFieldText(element.value, layout);
     // A caretOverride collapses the range (caret === selectionEnd), forcing the
-    // single-character branch below — used by the mobile beforeinput path.
+    // single-character branch below - used by the mobile beforeinput path.
     const caret =
       caretOverride ?? element.selectionStart ?? element.value.length;
     const selectionEnd = caretOverride ?? element.selectionEnd ?? caret;
@@ -1008,8 +975,7 @@ export class DatePickerComponent
     );
   }
 
-  /** Paste digits into the segment model at the caret slot — never a global
-   *  flatten — so existing digits elsewhere in the field survive untouched. */
+  /** Paste digits into the segment model at the caret slot, never a global flatten, so digits elsewhere survive. */
   protected onFieldPaste(event: ClipboardEvent): void {
     if (!this.allowInput()) {
       return;
@@ -1130,9 +1096,7 @@ export class DatePickerComponent
     }
   }
 
-  /** Writing `value` parks the caret at the end, so the explicit range has to
-   *  follow it; the later `[value]` binding writes the same string, which leaves
-   *  the caret untouched. */
+  /** Writing `value` parks the caret at the end, so the explicit range must follow; the later `[value]` binding writes the same string and leaves it. */
   private writeBackText(
     element: HTMLInputElement,
     text: string,
@@ -1144,8 +1108,6 @@ export class DatePickerComponent
     element.setSelectionRange(caret, caret);
   }
 
-  /** Caret just past the last digit a flat digit stream filled — the first slot
-   *  short of its max length, or the very end once every slot is full. */
   private caretAfterFill(segments: string[], layout: FieldLayout): number {
     for (let slot = 0; slot < segments.length; slot++) {
       if (segments[slot].length < layout.slots[slot].maxLength) {
@@ -1157,8 +1119,7 @@ export class DatePickerComponent
     return slotToCaret(layout, last, layout.slots[last].maxLength);
   }
 
-  /** `commit` is the blur pass: only then is the field text rewritten from the
-   *  parsed value, and a half-filled range written through to `value`. */
+  /** `commit` is the blur pass: only then is the field text rewritten from the parsed value and a half-filled range written to `value`. */
   private applyRangeText(
     text: string,
     spec: DateFormatSpec,

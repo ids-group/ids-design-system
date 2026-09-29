@@ -2,9 +2,8 @@ import { Injectable, type Signal, signal } from '@angular/core';
 import type { BreadcrumbItem } from './breadcrumbs.types';
 
 /**
- * Library-level breadcrumb state. Apps push items either programmatically
- * (page constructor / effect) or via a router-data driver (see app docs).
- * `<ds-breadcrumbs>` reads from here when no `[items]` input is provided.
+ * Breadcrumb state that `<ds-breadcrumbs>` reads when no `[items]` input is provided.
+ * Apps push items programmatically (page constructor / effect) or from router data.
  */
 @Injectable({ providedIn: 'root' })
 export class BreadcrumbsService {

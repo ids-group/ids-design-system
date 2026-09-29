@@ -59,8 +59,6 @@ import type {
   FunnelChartStage,
 } from './funnel-chart.types';
 
-/** The Drop cell, in whichever unit the chart was asked for. A null fall is the first stage, which
- *  has nothing above it to fall from. */
 function formatDrop(
   fraction: number | null,
   count: number | null,
@@ -99,31 +97,25 @@ export class FunnelChartComponent {
 
   protected readonly leaveMark = leaveMark;
 
-  /** Drawn in the order given. The order of a funnel's stages is its meaning,
-   *  so they are never sorted. */
+  /** Drawn in the order given; a funnel's order is its meaning, so stages are never sorted. */
   readonly data = input.required<readonly FunnelChartStage[]>();
 
-  /** What the silhouette encodes. `'area'`, the default, makes each stage's AREA proportional to
-   *  its value, which is the honest encoding that still leaves a tail wide enough to label.
-   *  `'width'` reads the widths straight off the values, which collapses the tail of a steep
-   *  funnel below a labellable width. `'taper'` encodes NOTHING: the shape is fixed whatever the
-   *  data, and the numbers are read from the table beside it. */
+  /** What the silhouette encodes. `'area'` (default) makes each stage's area proportional to its
+   *  value and keeps the tail wide enough to label. `'width'` reads widths straight off the values,
+   *  which collapses the tail of a steep funnel. `'taper'` encodes nothing: the shape is fixed and
+   *  the numbers are read from the table. */
   readonly shape = input<FunnelChartShape>('area');
 
-  /** The value, percent and drop table printed under the funnel. It supersedes
-   *  `dataTable`: while this is on, the disclosure every chart carries would
-   *  repeat a strict subset of these same numbers, so it is not rendered. */
+  /** The value, percent and drop table printed under the funnel. While on, `dataTable` is not
+   *  rendered: it would repeat a subset of these numbers. */
   readonly showTable = input(true, { transform: booleanAttribute });
 
-  /** Whether the chart draws its own bordered, padded box. `'auto'`, the default, draws it;
-   *  `'none'` leaves the chart bare, for one placed inside a card the page has already drawn.
-   *  Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'` — whether charts live inside cards
-   *  is one decision per app rather than per plot. */
+  /** `'auto'` draws the chart's own bordered, padded box; `'none'` leaves it bare, for a chart inside
+   *  a card. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'`. */
   readonly frame = input<ChartFrame | null>(null);
 
-  /** How long the tooltip stays after the pointer leaves the mark, in milliseconds. The default,
-   *  500, lets the pointer cross to the next mark and find the same panel, which glides there
-   *  instead of closing and opening again. Zero takes it away at once. Unset falls back to
+  /** Milliseconds the tooltip stays after the pointer leaves the mark, so it can glide to the next
+   *  mark instead of reopening. Zero closes it at once. Unset falls back to
    *  `DS_CONFIG.chart.tooltipLingerMs`, then 500. */
   readonly tooltipLingerMs = input<number | null>(null, {
     transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
@@ -135,24 +127,20 @@ export class FunnelChartComponent {
   /** Accessible name. Generated from the data when omitted. */
   readonly summary = input<string | null>(null);
 
-  /** The label-and-value disclosure every chart carries. Ignored while `showTable` is on, which
-   *  already prints every label and value. Unset falls back to `DS_CONFIG.chart.dataTable`, then
-   *  `'toggle'`. */
+  /** The label-and-value disclosure. Ignored while `showTable` is on. Unset falls back to
+   *  `DS_CONFIG.chart.dataTable`, then `'toggle'`. */
   readonly dataTable = input<ChartDataTable | null>(null);
-  /** What the Drop column reports: `'relative'` (the default) the share that leaked at this
-   *  stage, `'absolute'` the count, `'none'` no column at all. */
+  /** What the Drop column reports: `'relative'` (default) the share that leaked at this stage,
+   *  `'absolute'` the count, `'none'` no column. */
   readonly drop = input<FunnelChartDrop>('relative');
 
-  /** Draws skeleton marks in place of the data, at the same count, so the chart does not resize
-   *  when the data lands. */
+  /** Draws skeleton marks in place of the data, at the same count. */
   readonly loading = input(false, { transform: booleanAttribute });
   /** Shown in place of the plot when `data` is empty. Unset falls back to
    *  `DS_INTL.chart.empty`. */
   readonly emptyText = input<string | null>(null);
 
-  /** Shows `errorText` in place of the plot. Separate from `loading` and from an empty `data`,
-   *  because "the request failed" and "there is nothing to show" read the same to a reader and
-   *  mean opposite things. */
+  /** Shows `errorText` in place of the plot. Distinct from `loading` and from an empty `data`. */
   readonly error = input(false, { transform: booleanAttribute });
 
   /** The message the error state prints. Unset falls back to `DS_INTL.chart.error`. */
@@ -178,33 +166,29 @@ export class FunnelChartComponent {
   readonly errorTextResolved = this.defaults.errorText;
   readonly valueFormatResolved = this.defaults.valueFormat;
 
-  /** Turns on the click affordance — the pointer cursor and any hover tint.
-   *  The click output fires whether or not this is set, so a consumer that
-   *  binds the output and forgets the flag still receives every click. */
+  /** Turns on the click affordance: the pointer cursor and any hover tint. `stageClicked` fires
+   *  whether or not this is set. */
   readonly interactive = input(false, { transform: booleanAttribute });
 
   /** The stage that was clicked, or activated with Enter or Space. Fires whether or not
    *  `interactive` is set. */
   readonly stageClicked = output<FunnelChartStage>();
 
-  /** Dims every OTHER mark while one is hovered or focused, so the reader's eye is held on the
-   *  one under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed
-   *  marks — measured 2026-09-13, the worst pair of three dimmed series falls from dE 14.8 at full
-   *  opacity to 2.1 at `--ds-chart-dim-opacity`'s default 0.3 — so it buys loudness for one mark
-   *  and pays for it with the rest of the chart. */
+  /** Dims every OTHER mark while one is hovered or focused. Off by default: it costs the separation
+   *  between the dimmed marks (worst pair of three series: dE 14.8 to 2.1 at the default
+   *  `--ds-chart-dim-opacity` 0.3, measured 2026-09-13). */
   readonly dimOthers = input(false, { transform: booleanAttribute });
 
-  /** Milliseconds between one stage's entrance and the next, top to bottom. `60` is the default;
-   *  `0` brings every stage in at once. The step narrows once the stages would take longer than
-   *  260ms to start, so a long funnel does not crawl in. */
+  /** Milliseconds between one stage's entrance and the next, top to bottom; `0` brings every stage
+   *  in at once. The step narrows once the stages would take longer than 260ms to start. */
   readonly staggerMs = input(60, { transform: numberAttribute });
 
   protected markStagger(index: number): string {
     return `${staggerDelay(index, this.stages().length, this.staggerMs())}ms`;
   }
 
-  /** Whether a hovered or focused stage opens a tooltip. `'axis'` is not offered — a
-   *  funnel's stages are its categories, so an axis tooltip would repeat the item one. */
+  /** Whether a hovered or focused stage opens a tooltip. `'axis'` is not offered: a funnel's stages
+   *  are its categories. */
   readonly tooltip = input<ChartItemTooltipTrigger>('item');
 
   protected readonly tooltipTemplate =
@@ -219,9 +203,8 @@ export class FunnelChartComponent {
     () => this.defaults.hoverDelayMs(),
   );
 
-  /** Where the badge goes, as a percentage of the shape's box. Percentages rather than viewBox
-   *  units because this svg is `preserveAspectRatio="none"`: it stretches horizontally with the
-   *  card, and anything measured in user units stretches with it. */
+  /** Badge position as a percentage of the shape's box, not viewBox units: the svg is
+   *  `preserveAspectRatio="none"` and stretches horizontally. */
   protected readonly pinnedCenter = computed(() => {
     const entry = this.stages()[this.activeMark.index()];
     if (!this.activeMark.pinned() || !entry) {
@@ -254,8 +237,7 @@ export class FunnelChartComponent {
   private readonly rowHighlight = signal(-1);
   private readonly rowDwell = chartDwell(() => this.defaults.hoverDelayMs());
 
-  /** A table row stands for its band, so it opens the band's tooltip over the BAND and dims the
-   *  others - the same state hovering the band itself produces. */
+  /** A table row opens its band's tooltip over the band and dims the others, as hovering the band does. */
   protected onRowEnter(index: number, event: Event): void {
     this.rowDwell.schedule(index, () => this.rowHighlight.set(index), event);
     this.activeMark.enter(
@@ -276,8 +258,7 @@ export class FunnelChartComponent {
   }
 
   protected isDimmed(index: number): boolean {
-    // Naming a stage in the table fades the rest whether or not `dimOthers` is set;
-    // `dimOthers` governs what a pointer over the funnel does.
+    // A table row fades the rest even without `dimOthers`, which governs the pointer over the funnel.
     const rowHighlight = this.rowHighlight();
     if (rowHighlight !== -1) {
       return rowHighlight !== index;
@@ -325,9 +306,8 @@ export class FunnelChartComponent {
 
   protected readonly viewBox = `0 0 ${FUNNEL_VIEW_BOX_WIDTH} ${FUNNEL_VIEW_BOX_HEIGHT}`;
 
-  /** The gap between two bands, painted as a TRANSPARENT STROKE on each. A stroke straddles the
-   *  edge it is drawn on, so each band claims half the gap above it and half below — the gap stays
-   *  exactly as wide to the eye and stops being dead space to the pointer. */
+  /** Gap between two bands, painted as a transparent stroke on each: it straddles the edge, so the
+   *  gap looks unchanged but is not dead space to the pointer. */
   protected readonly hitGapUnits = computed(() =>
     stageGapUnits(this.data().length, FUNNEL_VIEW_BOX_HEIGHT),
   );
@@ -347,12 +327,9 @@ export class FunnelChartComponent {
     const gapUnits = stageGapUnits(data.length, FUNNEL_VIEW_BOX_HEIGHT);
     const format = (value: number) =>
       this.valueFormatResolved()(value, 'tooltip');
-    // Every stage is a share of the funnel's mouth, not of the column total:
-    // the stages are nested subsets, so they do not add up to 100%.
+    // A share of the funnel's mouth, not of the column total: the stages are nested subsets.
     const firstValue = values.length ? values[0] : 0;
-    // The stages are one quantity draining, not eight categories, so they take a
-    // single-hue ramp. The last one is the outcome the funnel is read for, so it
-    // leaves the ramp and takes the accent.
+    // A single-hue ramp (one quantity draining); the last stage, the outcome, takes the accent.
     const lastIndex = data.length - 1;
 
     return data.map((stage, index) => {
@@ -360,8 +337,7 @@ export class FunnelChartComponent {
 
       return {
         stage,
-        // The middle of the band, for the marker that says this one is held. A polygon has no
-        // centre of its own, and its bounding box centre drifts outside a steeply tapered band.
+        // A polygon has no centre, and its bounding box centre drifts outside a steeply tapered band.
         center: stageCenter(
           geometry[index],
           FUNNEL_VIEW_BOX_WIDTH,
@@ -438,13 +414,8 @@ export class FunnelChartComponent {
       `calc(var(--_funnel-chart-stage-height) * ${Math.max(this.data().length, 1)})`,
   );
 
-  /** Placeholder stage widths while loading. The count follows the real stage
-   *  count so the chart does not resize when the data lands, falling back to
-   *  three when `data` is still empty. The widths vary — and deliberately do
-   *  not narrow in order — because a column of equal full-width bars is
-   *  indistinguishable from a funnel whose stages have all gone grey, and a
-   *  narrowing one just reads as the funnel itself. Same reasoning as the
-   *  table's skeleton rows. */
+  /** Placeholder stage widths: the real stage count, or three while `data` is empty. The widths
+   *  deliberately do not narrow in order: equal bars read as a grey funnel, narrowing ones as the funnel. */
   protected readonly skeletonStages = computed(() =>
     Array.from(
       { length: Math.max(this.data().length, 3) },

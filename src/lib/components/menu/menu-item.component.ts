@@ -27,13 +27,11 @@ import { prepareOverlayEnter } from '@ids-group-ltd/ids-design-system/components
   templateUrl: './menu-item.component.html',
   styleUrl: './menu-item.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
-  // The host sits between the role="menu" <ul> and the role="menuitem" button,
-  // so mark it presentational to keep the menu→menuitem ownership intact.
+  // Presentational: the host sits between the role="menu" <ul> and the role="menuitem" button.
   host: { role: 'none' },
 })
 export class MenuItemComponent implements OnDestroy {
-  // The containing overlay (e.g. popover), if any — selecting an item closes it.
-  // Optional, so menu-items also work standalone.
+  // Optional so menu-items work standalone; selecting an item closes the containing overlay.
   private readonly closeRef = inject(DsOverlayCloseRef, { optional: true });
   private readonly overlay = inject(Overlay);
   private readonly vcr = inject(ViewContainerRef);
@@ -49,26 +47,26 @@ export class MenuItemComponent implements OnDestroy {
   readonly disabled = input(false, { transform: booleanAttribute });
   /** Renders the item in an error/destructive style. */
   readonly error = input(false, { transform: booleanAttribute });
-  /** Renders the item muted — a secondary row like "Sign out" under a divider,
+  /** Renders the item muted, e.g. "Sign out" under a divider:
    *  still actionable but not competing with the items above it. */
   readonly quiet = input(false, { transform: booleanAttribute });
-  /** A standing second line under the label — a limitation the action carries
+  /** A standing second line under the label naming a limitation the action carries
    *  ("will not be saved", "read-only in this workspace"). Visible without hover
    *  or focus, which is what separates it from a `[dsTooltip]`.
    *
    *  Reaches assistive tech as `aria-describedby`, NOT as part of the item's name:
    *  the projected label names the action, and a caveat is a description of it.
-   *  That is why the line is `aria-hidden` in the DOM and referenced by id — inside
+   *  That is why the line is `aria-hidden` in the DOM and referenced by id; inside
    *  the button and visible, it would otherwise be concatenated into the name. */
   readonly description = input<string>('');
-  /** Optional submenu template — renders a nested `ds-menu` on hover / ArrowRight. */
+  /** Optional submenu template; renders a nested `ds-menu` on hover / ArrowRight. */
   readonly submenu = input<TemplateRef<unknown> | null>(null);
   /** Fires on click, unless the item is disabled or opens a submenu. */
   readonly pressed = output<MouseEvent>();
 
   protected readonly descriptionId = nextControlId('ds-menu-item-desc');
 
-  /** Roving tabindex, owned by ds-menu — exactly one item is tabbable (0), the
+  /** Roving tabindex, owned by ds-menu: exactly one item is tabbable (0), the
    *  rest -1. Defaults true so a standalone item (outside ds-menu) stays
    *  reachable. */
   readonly tabbable = signal(true);
@@ -89,7 +87,7 @@ export class MenuItemComponent implements OnDestroy {
     return !!node && this.button().nativeElement.contains(node);
   }
 
-  /** Visible label text — used by ds-menu's type-ahead. */
+  /** Visible label text, used by ds-menu's type-ahead. */
   label(): string {
     return this.button().nativeElement.textContent?.trim() ?? '';
   }
@@ -135,9 +133,8 @@ export class MenuItemComponent implements OnDestroy {
       return;
     }
     this.clearOpenTimer();
-    // Delay close so moving into the submenu panel doesn't close it immediately.
+    // Delayed so moving into the submenu panel doesn't close it.
     this.closeTimer = setTimeout(() => {
-      // If focus/mouse is now inside the submenu panel, keep it open.
       const submenuElement = this.submenuRef?.overlayElement;
       if (
         submenuElement &&

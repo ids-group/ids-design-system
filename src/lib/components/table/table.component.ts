@@ -55,22 +55,15 @@ import type {
 
 const NUMERIC = /^-?\d+(\.\d+)?$/;
 
-// Assumed viewport until the scroller has been measured. Tall enough to fill a
-// laptop screen, so the first paint is not visibly short, and nowhere near the
-// row count a virtualized table is reached for.
+// Assumed viewport until the scroller has been measured.
 const VIRTUAL_FALLBACK_HEIGHT = 720;
 
-// Extra rows each side of the viewport, so a flick shows no blank gap.
 const VIRTUAL_OVERSCAN = 6;
 
-// Documented on `TableColumn.truncate`, which is where a consumer reads it.
 const DEFAULT_CLIP_WIDTH_PX = 240;
 
-/** Rendered values that read as "no data", matched case-insensitively. */
 const BLANK_CELL = new Set(['', '—', '-', '–', 'n/a', 'never', 'none']);
 
-/** Normalises "no data" to a single `null`, so the comparator has one blank
- *  case to test and TypeScript narrows the rest without a cast. */
 function sortableOf(
   value: string | number | Date | null | undefined,
 ): string | number | Date | null {
@@ -84,8 +77,7 @@ function sortableOf(
   return value;
 }
 
-/** Both sides are known non-blank here. `numeric: true` keeps "item 10" after
- *  "item 9" instead of before it. */
+/** Both sides are known non-blank here. */
 function compareSortValues(
   first: string | number | Date,
   second: string | number | Date,
@@ -125,8 +117,7 @@ function compareSortValues(
     MenuComponent,
     MenuItemComponent,
     MenuDividerComponent,
-    // Only instantiated when a column sets `link`, so a consumer app with no router
-    // provided still renders the table — the directive is never constructed.
+    // Only instantiated when a column sets `link`, so an app without a router still renders.
     RouterLink,
   ],
   templateUrl: './table.component.html',
@@ -169,9 +160,6 @@ export class TableComponent<T extends object> {
    *  a translucent overlay with a centred spinner. Pin either one only to
    *  override the rule deliberately. */
   readonly loading = input<boolean | 'skeleton' | 'overlay'>(false);
-  /** The mode actually rendered. Skeletons replace what the reader is looking at and
-   *  an overlay on an empty card says nothing, so `true` resolves per state rather
-   *  than picking a favourite. */
   protected readonly loadingMode = computed<'skeleton' | 'overlay' | false>(
     () => {
       const loading = this.loading();
@@ -210,16 +198,11 @@ export class TableComponent<T extends object> {
   readonly sortDirection = input<SortDirection>(null);
   /** Emitted for `[(sortDirection)]`. */
   readonly sortDirectionChange = output<SortDirection>();
-  /**
-   * What the header marks, and what a client sort reads.
-   *
-   * `linkedSignal` over BOTH inputs, not a `model`: Angular writes an input only
-   * when the bound expression changed, diffing against the value IT last wrote, and
-   * an internal `.set()` never updates that slot. Seeding from both means a host
-   * answering with its own default re-seeds the pair even when one half of that
-   * default equals what it last bound. A host that binds neither never re-seeds, so
-   * the optimistic state survives.
-   */
+  // What the header marks, and what a client sort reads. A `linkedSignal` over both inputs, not
+  // a `model`: Angular diffs an input against the value IT last wrote and an internal `.set()`
+  // never updates that slot, so a host answering with its own default must re-seed the pair.
+  // A host that binds neither never re-seeds, so the optimistic state survives.
+
   private readonly sortState = linkedSignal<{
     readonly key: string | null;
     readonly dir: SortDirection;
@@ -518,10 +501,8 @@ export class TableComponent<T extends object> {
   protected readonly isOverlayLoading = computed(
     () => this.loadingMode() === 'overlay',
   );
-  /** The empty row is a CLAIM about the data — "there are none" — so it must not
-   *  appear while the table is still asking, in EITHER loading mode. `overlay` is
-   *  what a list uses on every read after the first, so suppressing only under
-   *  `skeleton` paints "No rows yet" under the spinner on a zero-row reload. */
+  /** Withheld in either loading mode: `overlay` is what a list uses on every read after the
+   *  first, so suppressing only under `skeleton` paints "No rows yet" under the spinner. */
   protected readonly showsEmptyRow = computed(
     () => this.loadingMode() === false && !this.filteredData().length,
   );
@@ -537,7 +518,7 @@ export class TableComponent<T extends object> {
   protected readonly intl = inject(DS_INTL);
 
   private readonly emptyCell = viewChild<ElementRef<HTMLElement>>('emptyCell');
-  // null until the empty row has rendered, so the live region never speaks a fallback it is about to replace.
+  // null until the empty row has rendered, so the live region never speaks a fallback it replaces.
   private readonly emptyCellText = signal<string | null>(null);
   private readonly toolbarAnchor = viewChild('toolbarAnchor', {
     read: ViewContainerRef,
@@ -556,7 +537,7 @@ export class TableComponent<T extends object> {
     this.layout.foldColumns(this.columns()),
   );
 
-  /** `'content'` is not a pixel value — it is carried by a class instead, see `fitsContent`. */
+  /** `'content'` is not a pixel value; it is carried by a class, see `fitsContent`. */
   protected columnWidth(col: TableColumn<T>): number | null {
     const dragged = this.layout.resize()?.widthOverride(col.key);
     if (dragged !== undefined) {
@@ -582,9 +563,8 @@ export class TableComponent<T extends object> {
   private readonly columnFilterPopover = viewChild<PopoverComponent>(
     'columnFilterPopover',
   );
-  // Gates the panel's EXISTENCE on configuration, never on the clicked column: a handler that
-  // raises its own `@if` reads the viewChild back in the same synchronous line, before change
-  // detection has created it, and loses the click that opened it.
+  // Gated on configuration, never on the clicked column: a handler that raises its own `@if`
+  // reads the viewChild back before change detection has created it and loses the click.
   protected readonly hasAnyColumnFilter = computed(() =>
     this.columns().some((col) => this.hasColumnFilter(col)),
   );
@@ -624,8 +604,7 @@ export class TableComponent<T extends object> {
   }
 
   protected isColumnFiltered(col: TableColumn<T>): boolean {
-    // A projected filter owns its own criterion, so only the host can say
-    // whether it is set; the table still draws the highlight.
+    // A projected filter owns its criterion, so only the host can say whether it is set.
     const projected = this.headerFilterFor(col);
     if (projected) {
       return projected.active();
@@ -785,8 +764,7 @@ export class TableComponent<T extends object> {
     this.editingCell.set(null);
   }
 
-  /** Clip width for `truncate`. `'content'` has no clip width — the column is as
-   *  wide as its widest cell, so there is nothing to ellipsis against. */
+  /** Clip width for `truncate`; `'content'` has none. */
   protected clipWidth(col: TableColumn<T>): number | null {
     return typeof col.width === 'number'
       ? col.width
@@ -797,9 +775,8 @@ export class TableComponent<T extends object> {
 
   protected readonly filteredData = computed<readonly T[]>(() => {
     const query = this.filterQuery().trim().toLowerCase();
-    // In 'server' mode the host has already filtered; running the set filters
-    // again here would filter the filtered. `filterQuery` is deliberately left
-    // alone — it is a separate input with its own client/server story.
+    // In 'server' mode the host has already filtered. `filterQuery` is a separate input and is
+    // deliberately left alone.
     const setFilters =
       this.filterModeResolved() === 'client'
         ? this.columnFilters()
@@ -864,9 +841,7 @@ export class TableComponent<T extends object> {
         sortValue ? sortValue(b) : this.cellValue(b, column),
       );
 
-      // Blanks sink in BOTH directions, so `direction` is deliberately not
-      // applied to this branch — a descending sort must not open with a screen
-      // of empty rows.
+      // Blanks sink in both directions: `direction` is deliberately not applied here.
       if (aValue === null || bValue === null) {
         if (aValue === null && bValue === null) {
           return 0;
@@ -881,7 +856,6 @@ export class TableComponent<T extends object> {
 
   protected readonly pagedData = computed<readonly T[]>(() => {
     const size = this.pageSize();
-    // Server-side paging (`total` set): the host already sliced to one page.
     if (size === null || this.total() !== null) {
       return this.sortedData();
     }
@@ -890,26 +864,20 @@ export class TableComponent<T extends object> {
     return this.sortedData().slice(start, start + size);
   });
 
-  /** Virtual mode windows this further; `rowSlots` is what the loop walks. */
   protected readonly displayData = computed<readonly T[]>(() =>
     this.pageSize() !== null ? this.pagedData() : this.sortedData(),
   );
 
-  /**
-   * The single live-region line. Loading wins while it lasts — a sort
-   * announcement over rows that are being replaced tells the reader about a
-   * state they cannot inspect yet.
-   *
-   * `aria-live="polite"` does not announce a region's INITIAL content, so the
-   * unsorted first render is silent; only real changes speak.
-   */
+  // Loading wins while it lasts. `aria-live="polite"` does not announce a region's initial
+  // content, so the unsorted first render is silent; only real changes speak.
+
   protected readonly statusMessage = computed<string>(() => {
     if (this.loadingMode() !== false) {
       return this.intl().table.loading;
     }
 
-    // A contributed line wins while it has one: an "Export failed" has to survive until the
-    // reader moves on, and the feature that raised it is what clears it.
+    // A contributed line wins while it has one: "Export failed" must survive until the reader
+    // moves on.
     return this.layout.status() || this.eventMessages();
   });
 
@@ -919,8 +887,7 @@ export class TableComponent<T extends object> {
       .join('. '),
   );
 
-  /** Only from two rows up: a single expander announces itself through its own
-   *  `aria-expanded`, and repeating that here would say everything twice. */
+  /** Only from two rows up: a single expander announces itself through `aria-expanded`. */
   private readonly expansionMessage = computed<string>(() => {
     const open = this.expandedIds();
     if (open.size < 2) {
@@ -972,9 +939,8 @@ export class TableComponent<T extends object> {
     () => `${this.virtualRowSize()}px`,
   );
 
-  /** How many rows the scroller spans. Lazy counts the rows that EXIST, not the
-   *  ones that have arrived — otherwise the spacers shrink to the loaded slice
-   *  and the scrollbar lies about the length of the list. */
+  /** Lazy counts the rows that exist, not the ones that have arrived, or the scrollbar
+   *  understates the list. */
   protected readonly virtualCount = computed(() =>
     this.lazy()
       ? (this.total() ?? this.displayData().length)
@@ -1004,12 +970,8 @@ export class TableComponent<T extends object> {
   });
 
   /**
-   * What the row loop walks: each slot carries its ABSOLUTE index, and a `null`
-   * row is a gap the host has not filled yet.
-   *
-   * Absolute rather than loop-relative because everything downstream needs it —
-   * striping parity, the skeleton's width seed, and the range `(lazyLoad)` asks
-   * for.
+   * What the row loop walks: a `null` row is a gap the host has not filled. The index is
+   * absolute because striping parity, the skeleton seed and the `(lazyLoad)` range need it.
    */
   protected readonly rowSlots = computed<
     readonly { row: T | null; index: number }[]
@@ -1026,9 +988,8 @@ export class TableComponent<T extends object> {
     return slots;
   });
 
-  /** Zebra striping cannot come from `:nth-child` while windowing — the parity
-   *  of a rendered row depends on its ABSOLUTE index, and the spacer rows are
-   *  children too. Matches `:nth-child(odd)`, which is 1-based. */
+  /** Parity from the absolute index, since `:nth-child` cannot see past windowing. Matches
+   *  `:nth-child(odd)`, which is 1-based. */
   protected isStriped(absoluteIndex: number): boolean {
     return !!this.virtualWindow() && absoluteIndex % 2 === 0;
   }
@@ -1043,8 +1004,8 @@ export class TableComponent<T extends object> {
     return data.every((row) => sel.has(this.rowKey(row)));
   });
 
-  // The header checkbox's indeterminate predicate: false when ALL of the page is selected.
-  // Anything asking "is a selection live" wants `anySelected`.
+  // Header checkbox indeterminate predicate: false when all of the page is selected. Use
+  // `anySelected` for "is a selection live".
   protected readonly someSelected = computed(() => {
     const data = this.displayData();
     const sel = this.selectedIds();
@@ -1128,7 +1089,6 @@ export class TableComponent<T extends object> {
   }
   private readonly hostElement = inject<ElementRef<HTMLElement>>(ElementRef);
 
-  // The scrollport a `position: sticky` offset inside this table resolves against.
   private scrollAncestor(): HTMLElement | null {
     for (
       let element = this.hostElement.nativeElement.parentElement;
@@ -1151,9 +1111,8 @@ export class TableComponent<T extends object> {
   private lastLazyRequest: { first: number; rows: number } | null = null;
 
   constructor() {
-    // The width buttons the column panel renders are still declared in this template, because a
-    // directive has no view to declare an ng-template in — so the table hands the template over
-    // and the resize feature owns everything the buttons DO.
+    // The panel's width buttons are declared in this template (a directive has no view for an
+    // ng-template); the resize feature owns what they do.
     effect(() => {
       const template = this.columnWidthControls();
       if (template) {
@@ -1161,10 +1120,8 @@ export class TableComponent<T extends object> {
       }
     });
 
-    // Published here rather than from an init hook: a directive on the same element is
-    // constructed after this component, so by the time a feature asks, the view is here. The
-    // anchor goes over as a signal — a viewChild is undefined until the view exists, and a
-    // feature that renders a control of its own has to wait for it.
+    // A directive on the same element is constructed after this component, so publishing here
+    // is early enough. Anchors go over as signals: a viewChild is undefined until the view exists.
     this.layout.publish({
       visibleColumns: this.visibleColumns,
       sortedRows: this.sortedData,
@@ -1179,15 +1136,11 @@ export class TableComponent<T extends object> {
             : this.overlaysAnchor,
     });
 
-    // The scrim starts below the header, so it needs the header's height. Measured, not summed
-    // from padding and line-height: `vertical-align: middle` on the inline-flex label extends
-    // the line box past the strut by a font-metric amount no calc() can carry, and a sum is
-    // blind to a taller control in the header.
-    //
-    // After RENDER, or the read lands before layout and publishes 0px, which insets the scrim by
-    // nothing and covers the whole header. Twice: the observer catches a
-    // header that grows on a narrower column or a density change, and the second pass re-reads
-    // whenever the scrim is about to appear, so a load never depends on an observer having fired.
+    // The scrim starts below the header. Measured, not summed from padding and line-height:
+    // `vertical-align: middle` on the inline-flex label extends the line box by a font-metric
+    // amount no calc() can carry. After render, or the read lands before layout and publishes
+    // 0px. The observer catches header growth; the second effect re-reads whenever the scrim is
+    // about to appear, so a load never depends on the observer having fired.
     afterRenderEffect((onCleanup) => {
       const head = this.tableHead()?.nativeElement;
       if (!head || typeof ResizeObserver === 'undefined') {
@@ -1222,13 +1175,10 @@ export class TableComponent<T extends object> {
         this.publishHeadHeight(head);
       }
     });
-    // One effect for both halves, because the restore CANNOT run in the
-    // constructor: input signals are not set yet there, so storageKey() is still
-    // '' and the restore silently no-ops. The first run with a usable key
-    // restores; every later run saves.
+    // Restore cannot run in the constructor: inputs are not set yet, so storageKey() is still ''
+    // and it would silently no-op. The first run with a usable key restores; later runs save.
     effect(() => {
       const key = this.layoutKey();
-      // Read every slice so the effect tracks them, whichever feature owns them.
       const stored = Object.fromEntries(
         this.layout.persistedSlices().map((slice) => [slice.key, slice.read()]),
       );
@@ -1280,9 +1230,8 @@ export class TableComponent<T extends object> {
       });
     });
 
-    // Ask for the visible range whenever it has gaps. Keyed on the range itself,
-    // so scrolling within an already-requested window stays quiet and a request
-    // in flight is not repeated every frame — the host is free to answer slowly.
+    // Keyed on the range, so scrolling within an already-requested window stays quiet and a
+    // request in flight is not repeated while the host answers slowly.
     effect(() => {
       if (!this.lazy()) {
         return;
@@ -1294,9 +1243,8 @@ export class TableComponent<T extends object> {
       }
       const first = gaps[0].index;
       const rows = gaps[gaps.length - 1].index - first + 1;
-      // Contained, not equal: the viewport is measured after the first paint, so
-      // the window grows by an overscan or two right after opening and an
-      // exact-match guard would fetch the same rows twice.
+      // Contained, not equal: the viewport is measured after first paint, so the window grows
+      // by an overscan or two and an exact-match guard would fetch the same rows twice.
       const covered =
         this.lastLazyRequest &&
         first >= this.lastLazyRequest.first &&
@@ -1356,12 +1304,10 @@ export class TableComponent<T extends object> {
       );
     }
 
-    // A sticky `bottom` resolves against the scrollport's CONTENT box, so anything this table
-    // sticks to the bottom comes to rest one padding-bottom above the edge the reader sees. Both
-    // the horizontal scrollbar proxy and the bulk-action bar subtract this; it is published on the
-    // HOST so every descendant inherits one measurement, and measured rather than taken from a
-    // token because the padding belongs to the consumer's scroll container and moves with a media
-    // query.
+    // A sticky `bottom` resolves against the scrollport's content box, so anything stuck to the
+    // bottom rests one padding-bottom above the visible edge. The scrollbar proxy and the bulk
+    // bar subtract this. Measured, not a token: the padding belongs to the consumer's container
+    // and can change with a media query.
     effect((onCleanup) => {
       const host = this.hostElement.nativeElement;
       const scroller = this.scrollAncestor();
@@ -1379,8 +1325,8 @@ export class TableComponent<T extends object> {
       onCleanup(() => observer.disconnect());
     });
 
-    // Published as a custom property rather than bound on the proxy: the proxy is behind an
-    // `@if`, and the stylesheet must be able to out-rank it with --ds-table-sticky-scrollbar-offset.
+    // A custom property, not a binding on the proxy: the proxy is behind an `@if`, and the
+    // stylesheet must be able to out-rank it with --ds-table-sticky-scrollbar-offset.
     effect(() => {
       const host = this.hostElement.nativeElement;
       const resolved = this.stickyScrollbarOffsetResolved();
@@ -1392,8 +1338,7 @@ export class TableComponent<T extends object> {
       host.style.setProperty('--_table-sticky-scrollbar-offset', resolved);
     });
 
-    // Assigning an equal scrollLeft fires no scroll event, so the two mirrors
-    // can't loop.
+    // Assigning an equal scrollLeft fires no scroll event, so the mirrors cannot loop.
     effect((onCleanup) => {
       const proxy = this.hscrollProxy()?.nativeElement;
       if (!proxy) {
@@ -1410,12 +1355,10 @@ export class TableComponent<T extends object> {
       proxy.addEventListener('scroll', fromProxy, { passive: true });
       const measure = (): void => {
         this.hscrollContentWidth.set(wrap.scrollWidth);
-        // Both are rounded integers, so a fractional layout width makes an
-        // unscrollable wrap report one px more than it holds.
+        // Both are rounded integers: a fractional width makes an unscrollable wrap report 1px more.
         this.hscrollNeeded.set(wrap.scrollWidth > wrap.clientWidth + 1);
       };
-      // The wrap's own box never changes with content — watch the table too
-      // (column toggles, data swaps change its width).
+      // The wrap's own box never changes with content; watch the table too.
       const resizeObserver = new ResizeObserver(measure);
       resizeObserver.observe(wrap);
       const table = wrap.querySelector('table');
@@ -1430,9 +1373,9 @@ export class TableComponent<T extends object> {
       });
     });
 
-    // Opt-in height tween. Observer fires pre-paint: freezing the old height
-    // here stops the jump being painted; disconnect during the anim so its own
-    // resizes don't re-trigger it; clip (not hidden) avoids a scroll container.
+    // The observer fires pre-paint, so freezing the old height stops the jump being painted.
+    // Disconnect during the animation so its own resizes do not re-trigger it; `clip`, not
+    // `hidden`, avoids creating a scroll container.
     effect((onCleanup) => {
       if (!this.animateHeight()) {
         return;
@@ -1450,9 +1393,7 @@ export class TableComponent<T extends object> {
         const widthChanged = nextWidth !== previousWidth;
         previousHeight = nextHeight;
         previousWidth = nextWidth;
-        // Only a height change at a stable width is a row-set swap; skip the
-        // first measure and width-driven reflows (window/column resize) so the
-        // tween doesn't chase a resize.
+        // Only a height change at a stable width is a row-set swap, not a resize.
         if (fromHeight === null || widthChanged || nextHeight === fromHeight) {
           return;
         }
@@ -1495,9 +1436,7 @@ export class TableComponent<T extends object> {
       });
     });
 
-    // Client-side paging only (with `total` set the host owns the clamp): when a
-    // filter shrinks the result set below the current page, pull `page` back to
-    // the last page that still has rows so the body never renders empty.
+    // Client-side paging only (with `total` set the host owns the clamp).
     effect(() => {
       const size = this.pageSize();
       if (size === null || this.total() !== null) {
@@ -1551,8 +1490,8 @@ export class TableComponent<T extends object> {
     return row !== null && !!action.disabled?.(row);
   }
 
-  /** Items that apply to `row`. Called from the trigger's own gate as well as the
-   *  menu, so a row with nothing applicable shows no kebab instead of an empty one. */
+  /** Called from the trigger's own gate as well as the menu, so a row with nothing applicable
+   *  shows no kebab. */
   protected actionsFor(row: T): readonly TableRowAction<T>[] {
     return this.rowActions().filter((action) => !action.hidden?.(row));
   }
@@ -1579,8 +1518,7 @@ export class TableComponent<T extends object> {
     return row === null ? '' : label(row);
   }
 
-  /** Empty unless the item is actually disabled for this row: a reason on a live
-   *  item would read as a caveat on something that works. */
+  /** Empty unless the item is disabled for this row: a reason on a live item reads as a caveat. */
   protected actionReason(action: TableRowAction<T>): string {
     const row = this.menuRow();
     if (row === null || !action.disabled?.(row)) {
@@ -1618,9 +1556,8 @@ export class TableComponent<T extends object> {
     }
 
     if (this.expandMode() === 'single') {
-      // `data()` rather than `displayData()` so a row left open on another page
-      // is reported too — but an event carries a row, so an id whose row is not
-      // loaded at all is dropped without one. Documented on `rowCollapsed`.
+      // `data()` rather than `displayData()` so a row left open on another page is reported too.
+      // An id whose row is not loaded is dropped: see `rowCollapsed`.
       const closing =
         open.size > 0
           ? this.data().filter((other) => open.has(this.rowKey(other)))
@@ -1701,8 +1638,8 @@ export class TableComponent<T extends object> {
     if ((event.target as HTMLElement).closest('input')) {
       return;
     }
-    // Only a selection created by this gesture blocks the click — a stale one
-    // mousedown can't collapse (user-select:none content) must not wedge rows.
+    // Only a selection created by this gesture blocks the click: a stale one that mousedown
+    // cannot collapse (user-select:none content) must not wedge rows.
     const selection = window.getSelection()?.toString() ?? '';
     if (selection && selection !== this.selectionBeforeGesture) {
       return;
@@ -1711,8 +1648,7 @@ export class TableComponent<T extends object> {
   }
 
   protected onRowKey(row: T, event: Event): void {
-    // Only the row's own key opens the row: a key pressed on a control inside a
-    // cell belongs to that control (Space on the select box, Enter on a button).
+    // A key pressed on a control inside a cell belongs to that control.
     if (!this.rowInteractive() || event.target !== event.currentTarget) {
       return;
     }
@@ -1767,8 +1703,8 @@ export class TableComponent<T extends object> {
       const currentIndex = order.indexOf(this.activeSortDir());
       dir = order[(currentIndex + 1) % order.length] ?? null;
     }
-    // The key survives `dir === null`: nulling it too would send a host that maps off
-    // `sortKey` back to its own default sort.
+    // The key survives `dir === null`: nulling it would send a host mapping off `sortKey` back
+    // to its default sort.
     this.sortState.set({ key: col.key, dir });
     this.sortKeyChange.emit(col.key);
     this.sortDirectionChange.emit(dir);
@@ -1827,9 +1763,8 @@ export class TableComponent<T extends object> {
         return;
       }
       const saved = JSON.parse(raw) as Record<string, unknown>;
-      // Only apply what was actually stored, and only what something owns: a table that has
-      // never been rearranged must keep its declaration order and `hidden` flags, and a layout
-      // saved when a feature was present must not be forced on a table that no longer has it.
+      // Only what was stored and is owned: an unrearranged table keeps its declared order and
+      // `hidden` flags, and a stale slice is not forced on a table that lost the feature.
       for (const slice of this.layout.persistedSlices()) {
         const value = saved[slice.key];
         if (value !== undefined && value !== null) {
@@ -1877,8 +1812,6 @@ export class TableComponent<T extends object> {
     );
   }
 
-  /** Deterministic per-cell width so skeleton rows look organic but stable
-   *  across re-renders. */
   protected skeletonWidth(col: TableColumn<T>, rowIndex: number): string {
     const seed = `${col.key}-${rowIndex}`;
     let hash = 0;

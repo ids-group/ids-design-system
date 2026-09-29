@@ -14,6 +14,6 @@ import type { PageFooterVariant } from './page-footer.types';
   },
 })
 export class PageFooterComponent {
-  /** Visual style — default, compact, or the accented `save`-bar look. */
+  /** Visual style: default, compact, or the accented `save`-bar look. */
   readonly variant = input<PageFooterVariant>('default');
 }

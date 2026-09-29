@@ -4,10 +4,6 @@
 }
 
 .icon-button {
-  /* Colour-family slots — default to the --accent-* pointer (= primary unless a
-     ds-color zone/attr flips it), so an icon-button without an explicit color
-     follows the zone. `color` classes (.color-*) override these on the element. The
-     filled/tonal/selected fills consume them (standard/outlined are neutral). */
   --_family-base:         var(--accent);
   --_family-on:           var(--accent-on);
   --_family-strong:       var(--accent-strong);
@@ -26,10 +22,8 @@
   --_icon-button-radius: var(--ds-icon-button-radius, var(--ds-radius-control));
   --_icon-button-press-scale: var(--ds-icon-button-press-scale, 0.96);
 
-  /* Disabled tone, mirroring ds-button: the FILL differs per variant (pale tint for
-     filled, mix toward --surface-disabled for tonal/outlined, nothing for standard)
-     and the ICON has one recipe at 70% lightness. It matters more here than on
-     ds-button — there is no word to read, just a 16px glyph at 1.75px stroke. */
+  /* Disabled tone, mirroring ds-button: the fill differs per variant, the icon has one recipe at
+     70% lightness. There is no word to read, only a 16px glyph at 1.75px stroke. */
   --_icon-button-accent: var(--_icon-button-icon-color);
   --_icon-button-bg-color-disabled: var(--ds-icon-button-bg-color-disabled, transparent);
   --_icon-button-icon-color-disabled: var(--ds-icon-button-icon-color-disabled, oklch(from var(--_icon-button-accent) 70% 0.035 h));
@@ -63,7 +57,6 @@
     border-color: var(--_icon-button-border-hover);
   }
 
-  /* Pressed — bg darken + a micro scale-down (no halo on a square icon button). */
   &:active {
     background-color: var(--_icon-button-bg-color-active);
     border-color: var(--_icon-button-border-active);
@@ -80,7 +73,6 @@
     pointer-events: none;
   }
 
-  /* Sizes — align with field/button heights (32 / 40 / 48). */
   &.sm {
     --_icon-button-size: var(--ds-icon-button-size, var(--hit-min));
 
@@ -97,13 +89,10 @@
     width: var(--_icon-button-size); height: var(--_icon-button-size);
   }
 
-  /* Variants re-bind the resolvers (consumer token still wins). */
   &.standard {
-    /* No fill and no border here, so the glyph's colour is the whole disabled
-       signal — and the base's fixed lightness cannot carry it in dark, where the
-       enabled icon is already OKLCH L 80% against a disabled L 70%: a 1.46:1 gap.
-       Scoped to this variant, not the base, because filled's icon is --_family-on and
-       white mixed into a white surface does not move. */
+    /* The glyph colour is the whole disabled signal, and the base's fixed lightness gives only 1.46:1
+       in dark (enabled OKLCH L 80% against disabled L 70%). Scoped here, not the base: filled's icon is
+       --_family-on, and white mixed into a white surface does not move. */
     --_icon-button-icon-color-disabled: var(--ds-icon-button-icon-color-disabled, color-mix(in srgb, var(--_icon-button-icon-color) 40%, var(--surface-default)));
   }
 
@@ -125,8 +114,7 @@
     --_icon-button-bg-color-disabled: var(--ds-icon-button-bg-color-disabled, color-mix(in srgb, var(--_icon-button-bg-color) 28%, var(--surface-disabled)));
   }
 
-  /* Transparent for the same reason as ds-button's outline: the variant must adopt
-     the surface under it rather than paint its own. */
+  /* Transparent so it adopts the surface under it, as ds-button's outline does. */
   &.outlined {
     --_icon-button-bg-color:        var(--ds-icon-button-bg-color,        transparent);
     --_icon-button-icon-color:        var(--ds-icon-button-icon-color,        var(--text-primary));
@@ -138,7 +126,6 @@
     --_icon-button-border-disabled: var(--ds-icon-button-border-disabled, color-mix(in srgb, var(--_icon-button-border) 55%, var(--surface-disabled)));
   }
 
-  /* Colour classes — rebind slots only (the fill variants above consume them). */
   &.color-secondary {
     --_family-base: var(--secondary); --_family-on: var(--secondary-on); --_family-strong: var(--secondary-strong);
     --_family-subtitle: var(--secondary-subtitle); --_family-muted: var(--secondary-muted); --_family-muted-strong: var(--secondary-muted-strong);
@@ -164,7 +151,7 @@
     --_family-subtitle: var(--warning-subtitle); --_family-muted: var(--warning-muted); --_family-muted-strong: var(--warning-muted-strong);
   }
 
-  /* Toggle pressed look — stays last so it wins over the resting variant fill. */
+  /* Stays last so it wins over the resting variant fill. */
   &.selected {
     --_icon-button-bg-color:        var(--ds-icon-button-bg-color,        var(--_family-base));
     --_icon-button-icon-color:        var(--ds-icon-button-icon-color,        var(--_family-on));

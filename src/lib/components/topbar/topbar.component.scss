@@ -1,11 +1,8 @@
 @use '../../styles/text-clip' as text-clip;
 
-/* Truncation contract:
-   App / account label — Single line, ellipsis at ~20 ch. Tooltip on hover when clipped.
-   Search input — Single line, no clip while focused. Placeholder ellipses if the bar shrinks.
-   Breadcrumb segments — Middle segments collapse to … before the leaf clips. Leaf truncates last
-     with a tooltip.
-   Action icons — No visible label — full label lives in aria-label and tooltip-on-hover. */
+/* Truncation contract: the app / account label is single-line with ellipsis; the search
+   input never clips while focused; middle breadcrumb segments collapse before the leaf
+   truncates; action icons have no visible label (it lives in aria-label and the tooltip). */
 
 :host {
   --_topbar-height:   var(--ds-topbar-height,   var(--topbar-h));
@@ -46,8 +43,6 @@
     margin-left: auto;
   }
 
-  /* Breadcrumb trail anchored next to the brand title — used on deep
-     record pages where context outweighs lookup. */
   .crumbs-trail {
     display: flex;
     align-items: center;

@@ -81,8 +81,6 @@
                   (pointerenter)="activeMark.enter(index, $event)"
                   (pointerleave)="activeMark.leave()"
                   (click)="onCellPress(cell, index, $event)">
-                  <!-- A button only where a click means something: an unmeasured cell has no
-                       reading to drill into, and a grid of dead buttons is a tab trap. -->
                   @if (interactive() && cell.value !== null) {
                     <button
                       class="cell interactive"
@@ -159,8 +157,7 @@
       </span>
     </div>
 
-    <!-- Always present, never a `dataTable` choice: colour is the only channel carrying magnitude
-         on the grid, so the numbers have to be reachable somewhere that is not a colour. -->
+    <!-- Always present: colour is the only channel carrying magnitude on the grid. -->
     <ds-chart-data-table
       rowHeader
       [columns]="tableColumns()"

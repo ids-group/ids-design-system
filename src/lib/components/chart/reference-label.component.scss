@@ -1,6 +1,4 @@
-// `paint-order`, so the halo is a stroke UNDER the glyphs rather than over them: it is what keeps
-// the name legible where it crosses a gridline or a mark, without a backing rectangle whose width
-// would have to be measured.
+// `paint-order` puts the halo stroke under the glyphs; no backing rectangle to measure.
 .threshold-label {
   --_chart-threshold-color: var(--ds-chart-threshold-color, var(--chart-threshold-color));
 

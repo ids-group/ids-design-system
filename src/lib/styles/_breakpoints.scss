@@ -1,21 +1,8 @@
-// Breakpoint scale — SINGLE source for both representations:
-//   --bp-*  runtime custom properties (JS via getComputedStyle) — emitted only
-//           by the emit-vars mixin below, never by a plain @use
-//   $bp-*   compile-time Sass aliases, usable inside @media
-//
-// Why $bp-* exist: a custom property CANNOT be used in a @media condition
-// (`@media (width >= var(--bp-md))` is ignored — the condition is evaluated
-// before custom-property resolution). Sass variables resolve at build time, so
-// they can. Use this partial wherever a media query needs the scale:
-//   @use 'breakpoints' as bp;          // same dir; relative path elsewhere
-//   @include bp.up(md) { … }           // width >= 768px
-//   @include bp.down(sm) { … }         // width <  640px
-//   @media (width >= #{bp.$bp-lg}) { } // or read an alias directly
-//
-// Plain @use above is side-effect-free (no CSS emitted) — safe from any
-// component SCSS without duplicating output. The runtime mirror is opt-in via
-// the emit-vars mixin (see bottom of file) — call it from exactly one global
-// stylesheet, not per component.
+// Single source of the breakpoint scale: `$bp-*` Sass aliases (a custom property
+// is ignored inside a @media condition) and the `--bp-*` runtime mirror, emitted
+// only by `emit-vars`. A plain @use emits no CSS.
+//   @use 'breakpoints' as bp;
+//   @include bp.up(md) { ... }
 
 @use 'sass:map';
 
@@ -24,7 +11,7 @@ $breakpoints: (
   'sm':  640px,
   'md':  768px,
   'lg':  1024px,
-  'xl':  1441px, // page-grid wide-tier threshold (12 cols, caps at --col-cap-content)
+  'xl':  1441px, // page-grid wide tier: 12 columns, capped at --col-cap-content
   '2xl': 1536px,
 );
 $bp-xs: map.get($breakpoints, 'xs');
@@ -34,22 +21,20 @@ $bp-lg: map.get($breakpoints, 'lg');
 $bp-xl: map.get($breakpoints, 'xl');
 $bp-2xl: map.get($breakpoints, '2xl');
 
-// width >= breakpoint — mobile-first / min-width semantics.
 @mixin up($name) {
   @media (width >= #{map.get($breakpoints, $name)}) {
     @content;
   }
 }
 
-// width < breakpoint — max-width semantics, exclusive of the breakpoint itself.
+// Exclusive of the breakpoint itself.
 @mixin down($name) {
   @media (width < #{map.get($breakpoints, $name)}) {
     @content;
   }
 }
 
-// Emits the --bp-* runtime mirror once — call from exactly one global stylesheet
-// (styles/ds does this); plain @use stays CSS-free for component styles.
+// Call from exactly one global stylesheet.
 @mixin emit-vars {
   :root {
     @each $name, $value in $breakpoints {

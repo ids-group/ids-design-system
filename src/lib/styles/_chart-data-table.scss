@@ -1,11 +1,9 @@
 @use 'visually-hidden';
 
-// The annex table every chart offers under a disclosure. All five render the same markup, so the
-// rules live here rather than five times over.
+// The data table every chart offers under a disclosure; all charts share the markup.
 @mixin chart-data-table {
   .data-table {
-    // Half the marker triangle's height. A border-drawn triangle has no token equivalent — these
-    // are the arrow's own geometry, not spacing — so the two numbers behind it live in one name.
+    // Half the marker triangle's height: border-drawn geometry, not spacing.
     --_chart-data-table-marker: var(--space-1);
 
     margin-block-start: var(--space-4);
@@ -48,14 +46,12 @@
     transform: rotate(90deg);
   }
 
-  // An outline follows the border-radius of the box it is painted on, and the focus catch-all in
-  // `styles/focus` rings this summary without any help; a square-cornered box would ring square.
+  // The focus ring follows this radius; without it the ring is square.
   .data-table > summary {
     border-radius: var(--radius-sm);
   }
 
-  // The caption repeats the figure's own caption directly beneath it. Kept for a screen reader
-  // reaching the table out of context, hidden for the eye — same call as ds-table.
+  // Repeats the figure caption; kept for screen readers reaching the table out of context.
   .data-table caption {
     @include visually-hidden.visually-hidden;
   }
@@ -86,9 +82,8 @@
     text-align: start;
   }
 
-  // Numeric columns end-align, so without a start gutter two adjacent figures touch as soon as the
-  // measure tightens. Body cells only, and never the first: the header labels set the table's
-  // minimum width, and a gutter on the first column indents the labels off their own heading.
+  // End-aligned numeric columns touch without a start gutter. Body cells only, never the first
+  // column: a gutter there would indent the labels off their heading.
   .data-table td + td {
     padding-inline-start: var(--space-3);
   }

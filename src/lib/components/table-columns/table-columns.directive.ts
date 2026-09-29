@@ -144,8 +144,8 @@ export class DsTableColumns<T extends object> {
       );
     });
 
-    // Both are separate views, so the host's change detection does not reach them: every input
-    // they read has to be written when it moves.
+    // Separate views, not reached by the host's change detection: every input has to be written
+    // when it moves.
     effect(() => {
       panel?.setInput('columns', this.ordered());
       panel?.setInput('reorderable', this.reorderableColumns());
@@ -180,7 +180,7 @@ export class DsTableColumns<T extends object> {
     return !this.effectiveHiddenKeys().has(column.key);
   }
 
-  /** The last visible column cannot be hidden — an all-hidden grid is useless. */
+  /** The last visible column cannot be hidden. */
   private isLocked(column: TableColumn<T>): boolean {
     return this.isVisible(column) && this.visible().length === 1;
   }

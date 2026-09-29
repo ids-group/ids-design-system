@@ -1,30 +1,19 @@
-// Mark enter and exit, in one place for all five charts.
+// Mark enter and exit for all charts.
 //
-// The enter is DELAYED by the exit duration, and that delay is what stages the three phases:
-// removals finish before additions start, so a vanishing mark and an arriving one are never on
-// screen together. `--_chart-mark-stagger` is set per mark by the component and adds to the delay.
+// The enter is delayed by the exit duration so removals finish before additions start;
+// `--_chart-mark-stagger` (set per mark) adds to the delay.
 //
-// The enter is a plain CSS animation declared on the mark, so the browser plays it once when the
-// mark is inserted - on first render and for a mark a data change adds - with no script at all.
-// NOT `animate.enter`: its runtime calls `getAnimations()` once per mark, and in Chrome each call
-// costs more the more animations are running, so a chart entering a thousand marks at once blocks
-// the main thread for seconds. `backwards`, not `both`: a finished animation that still fills stays
-// in effect for good, and every later `getAnimations()` on the page pays for it. The exit still goes
-// through `animate.leave`, because only Angular can hold a removed mark until it has faded, but in
-// its function form: the component puts `.mark-leave` on the mark and Angular removes it on
-// `animationend`, with no `getAnimations()` call.
+// The enter is a plain CSS animation, not `animate.enter`: that runtime calls `getAnimations()`
+// once per mark, which in Chrome grows costlier with every running animation and blocks the main
+// thread for seconds on a thousand marks. `backwards`, not `both`: a filling animation stays in
+// effect and every later `getAnimations()` pays for it. The exit uses `animate.leave` in function
+// form: the component puts `.mark-leave` on the mark and Angular removes it on `animationend`.
 //
-// A mark with a baseline ARRIVES BY GROWING FROM IT, never by scaling about its centre: a uniform
-// scale reads as the whole chart zooming, and it moves the baseline, which is the one line on a
-// chart that must not move. A mark with no baseline - a point, a cell, a ring - settles in from a
-// scale close to one, and a line draws on along its own path.
+// A mark with a baseline grows from it; a uniform scale would move the baseline. Baseline-less
+// marks settle in from a scale near one, a line draws along its path.
 //
-// The phases are staged by delay, not by script: the marks arrive after the exit, and what follows a
-// mark (its value label, a marker) waits `$after` on top of that.
-//
-// `prefers-reduced-motion` zeroes the durations in `_tokens.scss`. The delays are the one thing that
-// stays, because a stagger is written per mark as a plain length, so `enters` zeroes them here: with
-// a zero duration and `backwards` fill a delayed mark would stay invisible for its delay.
+// Reduced motion zeroes the durations (tokens); `enters` zeroes the delays, or a delayed
+// mark with `backwards` fill would stay invisible.
 
 @keyframes ds-chart-mark-grow-y {
   from {
@@ -44,8 +33,8 @@
   }
 }
 
-// `--_chart-rise-distance` is for a canvas whose viewBox stretches: there a pixel is a user unit,
-// so a chart sets a percentage of the mark's own box on the canvas instead.
+// On a canvas whose viewBox stretches a pixel is a user unit; set `--_chart-rise-distance` to a
+// percentage of the mark's box there.
 @keyframes ds-chart-mark-rise {
   from {
     opacity: 0;
@@ -107,10 +96,9 @@
   }
 }
 
-// `animate.leave` goes on the element the `@for` creates - that is what leaves - while the enter
-// is declared on the element that animates, which for a column and a bar row is the fill inside.
+// `animate.leave` goes on the element the `@for` creates; the enter goes on the element that
+// animates (the fill inside, for a column and a bar row).
 
-/* A column: the fill grows up out of the category axis. */
 @mixin grows-up($mark, $fill) {
   #{$mark} #{$fill} {
     transform-origin: bottom;
@@ -125,7 +113,6 @@
   @include leaves($mark);
 }
 
-/* A bar row: the fill grows out of the value axis, which is the inline start. */
 @mixin grows-across($mark, $fill) {
   #{$mark} #{$fill} {
     transform-origin: left;
@@ -144,7 +131,6 @@
   @include leaves($mark);
 }
 
-/* A mark that only appears - an area under its line, a connector, a legend swatch. */
 @mixin fades-in($mark, $after: 0ms, $duration: var(--ds-motion-chart-mark-enter-duration)) {
   @include enters(
     '#{$mark}',
@@ -156,8 +142,6 @@
   @include leaves($mark);
 }
 
-/* A mark with no baseline that stands for one reading - a scatter point, a heat map cell - settles
-   in about its own centre. */
 @mixin settles-in($mark, $after: 0ms) {
   #{$mark} {
     transform-box: fill-box;
@@ -174,7 +158,6 @@
   @include leaves($mark);
 }
 
-/* A ring turns into place as one element, so its slices keep their angles relative to each other. */
 @mixin sweeps-in($ring) {
   #{$ring} {
     transform-box: fill-box;
@@ -189,8 +172,7 @@
   );
 }
 
-/* A solid line draws on from its first reading. A dashed line fades instead: the draw animates the
-   same dash properties the dash pattern is made of. */
+/* Solid lines only: the draw animates the dash properties a dashed line is made of. */
 @mixin draws-on($path) {
   #{$path} {
     stroke-dasharray: 1;
@@ -205,8 +187,7 @@
   @include leaves($path);
 }
 
-/* What belongs to a mark - its value label, a marker on a line - rises in once the mark has
-   arrived. `$after` is how long the mark takes. */
+/* `$after` is how long the mark itself takes. */
 @mixin follows($detail, $after) {
   @include enters(
     '#{$detail}',

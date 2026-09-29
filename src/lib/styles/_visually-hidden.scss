@@ -1,6 +1,5 @@
-// `position: absolute` needs a positioned ancestor: without one the node resolves
-// against the initial containing block and can grow the consuming page's root
-// scroller into a second scrollbar.
+// Needs a positioned ancestor: otherwise the node resolves against the initial containing block
+// and can grow the page's root scroller into a second scrollbar.
 @mixin visually-hidden {
   position: absolute;
   width: 1px;

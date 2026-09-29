@@ -1,19 +1,15 @@
 @use '../../styles/press' as press;
 @use '../../styles/text-clip' as text-clip;
 
-/* Truncation contract:
-   Title — Single line, ellipsis at row width. Tooltip on hover when clipped.
-   Body — Wrap, no clip. No clamp — banners are page-level and must stay fully readable.
-   Inline link in body — Wraps with the body text. Underlined; never clipped.
-   Dismiss icon — Always visible. Never overlapped by title or body — body min-width: 0 keeps
-     wrap correct. */
+/* Truncation contract: title is a single line with ellipsis; body wraps and is
+   never clamped (banners are page-level and stay fully readable); the dismiss icon
+   is never overlapped, which body `min-width: 0` guarantees. */
 
 :host {
   display: block;
 
-  /* A flex or grid ROW parent hands its items min-width: auto — this banner's
-     min-content — so without this it overflows a narrow column instead of letting
-     the text degrade. */
+  /* A flex or grid row parent gives items min-width: auto (min-content), so without
+     this the banner overflows a narrow column instead of letting the text degrade. */
   min-width: 0;
 }
 
@@ -40,8 +36,7 @@
   display: flex;
   gap: var(--space-3);
 
-  /* Owned, not inherited: a banner is two text blocks that have to read as one
-     alignment, and a centred ancestor otherwise drags both of them with it. */
+  /* Owned, not inherited: a centred ancestor would drag both text blocks with it. */
   text-align: start;
   padding: var(--_banner-padding-y) var(--_banner-padding-x);
   border-radius: var(--_banner-radius);
@@ -102,8 +97,8 @@
     margin: 0;
   }
 
-  /* The gap belongs to the BODY, not the title: on the title it would fire with no
-     body under it, and never fire in `compact`, which zeroes that margin. */
+  /* The gap sits on the body: on the title it would show with no body under it
+     and not vanish in `compact`. */
   .text:not(:empty) {
     display: block;
     margin-top: var(--space-1);
@@ -151,9 +146,8 @@
     --_banner-padding-y: var(--ds-banner-padding-y, var(--space-2));
     --_banner-padding-x: var(--ds-banner-padding-x, var(--space-3));
 
-    /* A one-line strip, so the title cannot wrap — hence the ellipsis: without it a
-       title longer than its container cuts off with nothing to show it was cut, and
-       forces the banner past its column. */
+    /* One-line strip: the ellipsis shows the cut and stops a long title forcing
+       the banner past its column. */
     .title {
       @include text-clip.single-line-ellipsis;
     }

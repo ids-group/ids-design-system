@@ -12,7 +12,7 @@
 
 @include chart-motion.leaves('.stage');
 
-// A row names its band, swatch included, so it rises in once that band has arrived.
+// A row rises in once its band has arrived.
 @include chart-motion.follows('.stage-table tbody > tr > *', var(--ds-motion-chart-mark-enter-duration));
 @include chart-frame.chart-frame;
 @include chart-frame.no-bounding-box-focus('.stage');
@@ -28,20 +28,16 @@
   --_funnel-chart-row-hover-bg-color: var(--ds-chart-legend-hover-bg-color, var(--surface-secondary));
   --_funnel-chart-row-hover-text-color: var(--ds-chart-legend-hover-text-color, var(--text-primary));
 
-  /* The shared mixins draw the ring from `--focus-ring-*` and `--ds-chart-focus-ring-color`, so
-     the two hooks above reach nothing without this. */
+  /* The shared mixins read `--focus-ring-*` and `--ds-chart-focus-ring-color`; the hooks above need these. */
   --ds-chart-focus-ring-color: var(--_funnel-chart-focus-color);
   --focus-ring-color: var(--_funnel-chart-focus-color);
   --focus-ring-width: var(--_funnel-chart-focus-width);
 
-  // Contains the absolutely-positioned caption below; without it the caption resolves against the
-  // initial containing block and can grow the consuming page's root scroller.
+  // Contains the absolutely-positioned caption, which would otherwise grow the page's root scroller.
   position: relative;
 
-  // Four end-aligned columns have a hard minimum width, and below it the stage table would spill
-  // past whatever the chart is sitting in. Scrolling the annex table is what ds-table does too.
-  // Y is hidden, not left visible: a scrolling x computes a visible y to `auto`, and the table rows
-  // rising in overshoot the bottom edge for the length of the entrance.
+  // The four end-aligned columns have a minimum width; below it the table scrolls. Y is hidden
+  // because a scrolling x computes a visible y to `auto`, and rows rising in overshoot the bottom edge.
   overflow: auto hidden;
   margin: 0;
 }
@@ -59,7 +55,7 @@
 }
 
 svg {
-  // The viewBox stretches to the stage count, so a pixel of rise would stretch with it.
+  // The viewBox stretches with the stage count, so a pixel of rise would stretch too.
   --_chart-rise-distance: 10%;
 
   display: block;
@@ -69,11 +65,9 @@ svg {
 
 
 
-/* focus-ring-guard: an outline on an SVG element paints its BOUNDING BOX, not its silhouette —
-   measured in Chrome 153, a funnel stage rings as a flat bar across the trapezoid. The ring is a
-   stroke on the shape instead; `own-indicator` keeps the outline under forced colours, where
-   `stroke` is not remapped. */
-// Transparent, so the gap reads exactly as it did while the band answers a pointer across it.
+/* focus-ring-guard: an outline on an SVG element paints its bounding box, not its silhouette (Chrome
+   153), so the ring is a stroke; `own-indicator` keeps the outline under forced colours. */
+// Transparent, so the gap looks unchanged while the band answers a pointer across it.
 .stage {
   stroke: transparent;
 }
@@ -112,9 +106,7 @@ svg {
   text-align: start;
 }
 
-// The numeric columns end-align, so with no start gutter a percent and the drop beside it touch as
-// soon as the measure tightens. On the body cells only: the header labels set the table's minimum
-// width, and padding those as well would widen that minimum and start the scroll earlier.
+// Body cells only: padding the headers too would widen the table's minimum width and start the scroll earlier.
 .stage-table td {
   padding-inline-start: var(--space-3);
 }
@@ -125,8 +117,7 @@ svg {
   text-align: start;
 }
 
-// The stage table is the funnel's legend. A row takes no margin or padding, so the tint fills it
-// edge to edge.
+// The stage table is the funnel's legend.
 @include chart-interactive.legend-entry(
   '.stage-table tbody > tr',
   var(--_funnel-chart-row-hover-bg-color),
@@ -153,7 +144,7 @@ svg {
 @include chart-frame.pin-marker;
 
 
-/* Positioned against the shape rather than the svg, so the stretch never reaches it. */
+/* Against the shape, not the svg, so the horizontal stretch never reaches the marker. */
 .shape {
   position: relative;
 }

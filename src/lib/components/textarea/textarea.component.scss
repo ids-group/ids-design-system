@@ -4,10 +4,7 @@
 @use '../../styles/focus' as focus;
 @use '../../styles/visually-hidden' as visually-hidden;
 
-/* Reads the `--ds-input-*` token family, not a `--ds-textarea-*` one: consumers
-   retune both fields with one set. Diverges from ds-input only in the inner
-   element — vertical resize, min-height from --field-textarea-rows-min, and a
-   height: auto control box so it grows with rows. */
+/* Reads the `--ds-input-*` token family, not a `--ds-textarea-*` one, so consumers retune both fields with one set. */
 :host {
   @include field-box.field-box-tokens;
 
@@ -113,9 +110,7 @@
     textarea { cursor: default; }
   }
 
-  /* Only padding scales; height stays driven by rows + resize. The inner
-     textarea's vertical pad is set with the pins at the end of this file, which
-     out-rank anything declared here. */
+  /* Only padding scales; height stays driven by rows + resize. The inner textarea's vertical pad is set by the pins at the end of this file, which out-rank anything here. */
   &.sm .control {
     padding: 0 var(--space-2);
   }
@@ -153,10 +148,8 @@
     }
   }
 
-  /* The mirror paints the over-limit highlight behind the transparent textarea,
-     so every property that places a glyph must match the textarea's: the text
-     resets repeat what the UA stylesheet gives a textarea, and both reserve the
-     scrollbar gutter so a scrollbar narrows both lines alike. */
+  /* The mirror paints the over-limit highlight behind the transparent textarea, so every glyph-placing property must match the textarea's;
+     both reserve the scrollbar gutter so a scrollbar narrows both lines alike. */
   &.soft-limit {
     .control {
       position: relative;
@@ -187,8 +180,7 @@
     pointer-events: none;
     user-select: none;
 
-    /* A trailing newline opens a line the textarea scrolls to; a div renders it
-       only when something follows it. */
+    /* A trailing newline opens a line the textarea scrolls to; a div renders it only when something follows. */
     &::after {
       content: ' ';
     }
@@ -208,9 +200,8 @@
   }
 }
 
-/* Vertical padding lives on the textarea, not the box: `.sm`/`.lg` above zero the
-   control's own padding-block through the shorthand. One rule per size, because a
-   single pin out-ranks the size variants and flattens all three to md. */
+/* Vertical padding lives on the textarea, not the box: `.sm`/`.lg` zero the control's padding-block through the shorthand.
+   One rule per size, because a single pin out-ranks the size variants and flattens all three to md. */
 .field .control :is(textarea, .overflow-mirror) {
   padding-block: var(--_input-padding-y);
 }

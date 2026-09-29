@@ -1,16 +1,8 @@
-/* Truncation contract:
-   Title — Single line, ellipsis. Tooltip on hover when clipped — the title carries identity.
-   Subtitle / lede — Single line, ellipsis. Tooltip on hover when clipped.
-   Eyebrow — Single line, no clip — keep eyebrow short by spec. Wraps if forced.
-   Breadcrumb segment — Single line, ellipsis at ~24 ch per segment. Middle segments collapse to
-     … before the leaf clips.
-   Status badge — Single line, no clip — status labels are short by spec. Max one badge per
-     header.
-   Action buttons — Single line, no clip. Beyond two ghost + one primary actions, collapse the
-     rest into an overflow menu. */
+/* Truncation contract: title, subtitle and breadcrumb segments are single-line with
+   ellipsis (middle breadcrumb segments collapse before the leaf clips); eyebrow and
+   status badge never clip and are short by spec, one badge per header; beyond two
+   ghost + one primary action, collapse the rest into an overflow menu. */
 
-// Ported from vendor/claude-design-ds components-extras.css (.page-hdr, lines 636-706).
-// patterns.css's .page-header is a dropped duplicate, not the source.
 @use '../../styles/breakpoints' as bp;
 @use '../../styles/text-clip' as text-clip;
 
@@ -39,17 +31,12 @@
   flex-direction: column;
   gap: var(--space-3);
 
-  /* Bottom divider is opt-in via the `divider` input. Default-on for the
-     standard "header separated from content" composition; consumers turn
-     it off when a tabs strip or other element supplies its own border. */
   &.with-divider {
     padding-bottom: var(--space-4);
     border-bottom: var(--border-width-default) solid var(--_page-header-divider);
   }
 
-  /* When tabs are projected, the strip supplies its own bottom border —
-     suppress the page-header divider so we don't paint two stacked lines
-     even if the consumer left the default `divider` on. */
+  /* Projected tabs supply their own bottom border; suppress the divider so two lines don't stack. */
   &:has(> [tabs]) {
     padding-bottom: 0;
     border-bottom: 0;
@@ -57,7 +44,7 @@
 
   .row {
     /* flex-start is load-bearing: title-block must hug the row's top so its
-       internal title→sub→meta stack stays independent of the actions slot height. */
+       stack stays independent of the actions slot height. */
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
@@ -149,9 +136,7 @@
     align-items: center;
     gap: var(--space-3);
 
-    // Combined with title-block's flex gap, this makes subtitle→meta spacing
-    // equal to meta→tabs spacing (both --space-3 = 12px) so the header stack reads
-    // evenly.
+    // With title-block's flex gap, makes subtitle-to-meta spacing equal meta-to-tabs (both --space-3).
     margin-top: var(--space-1-5);
 
     &:not(:has(> *)) { display: none; }

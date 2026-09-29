@@ -1,22 +1,13 @@
-// Complements the global tap-highlight reset (_reset.scss), which drops the native
-// mobile overlay — a rectangle that ignored border-radius. This replaces it with a
-// press state that INHERITS the control shape:
-// `filter` + `transform` apply to the rendered element, so any border-radius /
-// clip is followed automatically, and neither conflicts with the box-shadow
-// focus rings (different properties).
+// Replaces the native tap highlight (dropped in the reset, a rectangle ignoring border-radius)
+// with a press state that follows the control shape; `filter` and `transform` do not conflict with
+// box-shadow focus rings.
 //
-// Usage — @include INSIDE the clickable element's own selector, so `&:active`
-// resolves to that element:
-//   @use '../../styles/press' as press;   // relative path from the component
-//   .check { …; @include press.feedback; }
-//
-// Tunable per component (read-with-fallback, like the --ds-* layer):
+// Include inside the clickable element's own selector so `&:active` resolves to it.
 //   --ds-press-brightness  (default .9)   darken amount on press
-//   --ds-press-scale       (default .97)  micro press-scale
+//   --ds-press-scale       (default .97)  press scale
 //
-// Intentionally does NOT declare `transition` — that would clobber the host
-// element's existing transition. Press is immediate (crisp on tap); components
-// wanting an eased release add `filter`/`transform` to their own transition.
+// Declares no `transition`, which would clobber the host's own. Components wanting an eased
+// release add `filter`/`transform` to their transition.
 
 @mixin feedback {
   &:active:not(:disabled, [disabled], .is-disabled) {

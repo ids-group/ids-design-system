@@ -57,9 +57,8 @@ interface PlacedRow {
 /**
  * A matrix of readings, coloured by magnitude: depot by weekday, hour by date, queue by region.
  *
- * Colour carries the quantity and nothing else carries it on the plot, so every cell names its own
- * reading to assistive tech and the annex table is not optional here the way it is on the other
- * charts - WCAG 1.4.1 is not satisfied by a grid of coloured squares.
+ * Colour is the only carrier of the quantity, so every cell names its own reading to assistive
+ * tech and the annex table is always present (WCAG 1.4.1).
  */
 @Component({
   selector: 'ds-heatmap-chart',
@@ -83,35 +82,32 @@ export class HeatmapChartComponent {
   protected readonly renderReady = chartRenderGate();
 
   /** The column headings, left to right. Their count decides how many readings of a row are drawn:
-   *  a row longer than this loses its tail, a shorter one ends early. */
+   *  a longer row loses its tail. */
   readonly columns = input<readonly string[]>([]);
 
-  /** One entry per row, each carrying one reading per column. A `null` reading is a cell that
-   *  was never measured and is drawn as the surface rather than as the ramp's coldest step. */
+  /** One entry per row, each carrying one reading per column. A `null` reading is drawn as the
+   *  surface, not the ramp's coldest step. */
   readonly data = input<readonly HeatmapChartRow[]>([]);
 
   /** Printed above the grid as the visible title. */
   readonly caption = input<string | null>(null);
 
-  /** Pins the floor of the colour scale. It only ever OPENS the scale further, so a floor above
-   *  the data cannot push a reading off the ramp. Unset, the scale starts at the lowest reading. */
+  /** Pins the floor of the colour scale. It only ever widens the scale, so a floor above the data
+   *  cannot push a reading off the ramp. Unset, the scale starts at the lowest reading. */
   readonly min = input<number | null>(null);
 
   /** Pins the ceiling of the colour scale, the same way `min` pins its floor. Set both to compare
-   *  two heat maps by colour: unset, each one spans its own readings and the same hue means a
-   *  different quantity on each. */
+   *  two heat maps by colour; unset, each spans its own readings. */
   readonly max = input<number | null>(null);
 
-  /** Prints each cell's reading inside it. Off by default: a grid dense enough to be worth a heat
-   *  map has no room for the numbers, which is why the annex table is always there. */
+  /** Prints each cell's reading inside it. Off by default: a dense grid has no room for numbers. */
   readonly showValues = input(false, { transform: booleanAttribute });
 
-  /** Makes every measured cell a button. An unmeasured cell stays inert - a grid of buttons with
-   *  nothing behind them is a tab trap. */
+  /** Makes every measured cell a button. An unmeasured cell stays inert (no tab stop). */
   readonly interactive = input(false, { transform: booleanAttribute });
 
-  /** Fades every cell but the one under the pointer. Off by default: the dimming costs the
-   *  separation BETWEEN the dimmed cells, which on a ramp is the only thing carrying magnitude. */
+  /** Fades every cell but the one under the pointer. Off by default: dimming costs the separation
+   *  between cells, which on a ramp carries magnitude. */
   readonly dimOthers = input(false, { transform: booleanAttribute });
 
   /** Holds the hovered cell and its tooltip in place when it is clicked, until a second click,
@@ -128,8 +124,7 @@ export class HeatmapChartComponent {
   /** A skeleton at the grid's own height, so the page does not resize when the data lands. */
   readonly loading = input(false, { transform: booleanAttribute });
 
-  /** Separate from an empty matrix: "the request failed" and "there is nothing to show" read the
-   *  same and mean opposite things. */
+  /** Separate from an empty matrix: a failed request and no data mean different things. */
   readonly error = input(false, { transform: booleanAttribute });
 
   /** Shown when there are no rows or no columns. Unset falls back to `DS_INTL.chart.empty`. */
@@ -143,23 +138,20 @@ export class HeatmapChartComponent {
    *  and the annex table. Unset falls back to `DS_CONFIG.chart.valueFormat`. */
   readonly valueFormat = input<ChartValueFormat | null>(null);
 
-  /** Whether a hovered or focused cell opens a tooltip. A heat map's cells carry no printed value
-   *  by default, so this is where a reading is read without reaching for the annex table. */
+  /** Whether a hovered or focused cell opens a tooltip. */
   readonly tooltip = input<ChartItemTooltipTrigger>('item');
 
-  /** Milliseconds between one column's entrance and the next, left to right, `40` by default;
-   *  `0` turns the stagger off. The whole spread stays within 260ms, so a wide grid narrows the
-   *  step instead of crawling in. */
+  /** Milliseconds between one column's entrance and the next, left to right; `0` turns the stagger
+   *  off. The whole spread stays within 260ms, so a wide grid narrows the step. */
   readonly staggerMs = input(40, { transform: numberAttribute });
 
-  // One step for the whole grid: each column's delay is its index times this, applied by the
-  // stylesheet, because a table has no element that holds a column's cells.
+  // The stylesheet multiplies this by the column index; a table has no element holding a column.
   protected readonly columnStagger = computed(
     () => `${staggerDelay(1, this.columns().length, this.staggerMs())}ms`,
   );
 
   /** The clicked cell, with the row and the column it sits at. Never fires for an unmeasured
-   *  cell, which has no reading to drill into. */
+   *  cell. */
   readonly cellClicked = output<HeatmapChartCell>();
 
   protected readonly defaults = resolveChartDefaults(this);
@@ -195,8 +187,8 @@ export class HeatmapChartComponent {
   }
 
   protected onCellPress(cell: PlacedCell, index: number, event: Event): void {
-    // A cell is a native button, so Enter and Space click it too; `detail` is 0 for those, and a
-    // key that pins would hold one chart where every other chart's keys only focus.
+    // Enter and Space click the native button with `detail` 0; keys only focus in every other
+    // chart, so they must not pin.
     const fromKeyboard = event instanceof MouseEvent && event.detail === 0;
     if (cell.value !== null && this.defaults.pinOnClick() && !fromKeyboard) {
       this.activeMark.pin(index, event);
@@ -228,8 +220,6 @@ export class HeatmapChartComponent {
     };
   });
 
-  /** The row header column has no name of its own: the corner cell above it is blank, which is
-   *  what a matrix's top-left is. */
   protected readonly tableColumns = computed<readonly string[]>(() => [
     '',
     ...this.columns(),
@@ -278,8 +268,6 @@ export class HeatmapChartComponent {
     }));
   });
 
-  /** The legend under the grid: the ramp's own steps with the readings at either end, which is the
-   *  only thing that says what a colour is worth. */
   protected readonly scaleSteps = computed(() => CHART_HEAT_COLORS);
 
   protected readonly scaleMinLabel = computed(() =>
@@ -309,7 +297,7 @@ export class HeatmapChartComponent {
   );
 
   /** Flattened so one index addresses a cell: `chartActiveMark` counts marks, and a grid's marks
-   *  are its cells rather than its rows. */
+   *  are its cells. */
   private readonly flatCells = computed(() =>
     this.rows().flatMap((row) => row.cells),
   );

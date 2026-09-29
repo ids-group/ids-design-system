@@ -49,26 +49,23 @@ interface Cell<T> {
 })
 export class TimeColumnsComponent {
   protected readonly intl = inject(DS_INTL);
-  /** Current time as `HH:mm` (24h, always — `format` changes only what is DISPLAYED). */
+  /** Current time as `HH:mm` (24h always; `format` changes only what is DISPLAYED). */
   readonly value = input<string | null>(null);
   /** Display clock. `12h` adds an AM/PM column; the emitted value stays 24h either way. */
   readonly format = input<TimeFormat>('24h');
-  /** Minute granularity — 15 gives four rows an hour instead of sixty. */
+  /** Minute granularity - 15 gives four rows an hour instead of sixty. */
   readonly minuteStep = input(1, { transform: numberAttribute });
   /** Earliest selectable time, `HH:mm`. Earlier rows render disabled rather than being removed,
    *  so the columns do not reflow as the bound changes. */
   readonly minTime = input<string | null>(null);
   /** Latest selectable time, `HH:mm`. */
   readonly maxTime = input<string | null>(null);
-  /** Per-time predicate for what a range cannot express — booked slots, a lunch break.
+  /** Per-time predicate for what a range cannot express - booked slots, a lunch break.
    *  Receives `HH:mm`; return true to disable. */
   readonly disabledTime = input<((time: string) => boolean) | null>(null);
   /** A complete time was picked, as `HH:mm`. Not emitted while only one column has moved. */
   readonly timeChange = output<string>();
-  /** Which column the pick came from. `timeChange` alone cannot say: it carries a
-   *  whole time, and a host that wants to close once the user has been through
-   *  both columns cannot infer the difference between "chose the same hour again"
-   *  and "did not touch hours". Emitted immediately after `timeChange`. */
+  /** Which column the pick came from. `timeChange` carries a whole time, so a host closing after both columns were visited cannot tell "same hour again" from "hours untouched". Emitted right after `timeChange`. */
   readonly partPicked = output<TimeColumnId>();
 
   private readonly hourButtons =
@@ -227,7 +224,6 @@ export class TimeColumnsComponent {
     this.buttonsFor(column)()[target]?.nativeElement.focus();
   }
 
-  /** Called by the parent after the overlay renders. */
   focusSelected(): void {
     this.hourButtons()[Math.max(this.hourEntry(), 0)]?.nativeElement.focus();
     this.scrollSelectedIntoView();

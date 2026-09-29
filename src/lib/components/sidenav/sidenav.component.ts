@@ -29,7 +29,7 @@ export class SidenavComponent implements SidenavContract {
   /** Collapses the rail to icon-only width; read by nested `ds-sidenav-item`/`ds-sidenav-group`. */
   readonly collapsed = input(false, { transform: booleanAttribute });
   /** Whether the ACTIVE item draws its edge marker, for the whole sidenav. Off
-   *  leaves the active state on the fill and the label alone — check that is still
+   *  leaves the active state on the fill and the label alone; check that is still
    *  distinguishable before turning it off. An individual `ds-sidenav-item` can
    *  override this with its own `rail`. */
   readonly rail = input(true, { transform: booleanAttribute });
@@ -42,7 +42,7 @@ export class SidenavComponent implements SidenavContract {
    *  "A" tile beside the "AppAdmin" wordmark). Empty = first letter of `brand`;
    *  unset falls back to `DS_CONFIG.brand.logoLetter`. */
   readonly logoLetter = input<string | null>(null);
-  /** Route the brand row links to — typically the app's home. Unset leaves the row a
+  /** Route the brand row links to, typically the app's home. Unset leaves the row a
    *  plain, non-interactive block. Router targets only, and `RouterLink` is
    *  instantiated only once this is set, so an app with no router still renders. */
   readonly brandRoute = input<string | readonly unknown[] | null>(null);
@@ -50,7 +50,7 @@ export class SidenavComponent implements SidenavContract {
    *  while `brandRoute` is unset. */
   readonly brandLinkLabel = input<string | null>(null);
 
-  /** The template must read THIS, never the input beside it — that one is null
+  /** The template must read THIS, never the input beside it: that one is null
    *  until bound, and the config default lives here. */
   readonly brandName = resolveBrandValue(this.brand, 'name');
   readonly letterGlyph = resolveBrandValue(this.logoLetter, 'logoLetter');

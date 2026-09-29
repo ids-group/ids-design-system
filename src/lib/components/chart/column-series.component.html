@@ -10,10 +10,8 @@
   (pointerout)="onMarkOut($event)"
   (keydown)="onMarkKey($event)"
   (click)="onMarkClick($event)">
-  <!-- `userSpaceOnUse`, so the stripe pitch is the same on a tall column and a short one: with the
-       default object bounding box it would scale with each mark and read as a different texture
-       per bar. The stripe runs down the tile's middle: on its edge the tile clips it to half its
-       width. -->
+  <!-- `userSpaceOnUse` keeps the stripe pitch equal on tall and short columns (the object bounding box
+       scales it per mark). The stripe runs down the tile's middle: on its edge the tile clips it to half. -->
   @if (hatchInUse()) {
     <svg:defs>
       <svg:pattern
@@ -57,9 +55,7 @@
       "
       [attr.aria-label]="interactive() ? entryLabel(mark) : null"
       (animate.leave)="leaveMark($event)">
-      <!-- The box that catches the pointer is the whole category slot, not the drawn column: a
-           column two pixels tall is otherwise unreachable, and a pointer that has to find the
-           mark is a pointer that misses it. -->
+      <!-- The pointer target is the whole category slot, not the drawn column, so a two-pixel column stays reachable. -->
       @let hit = hitBox(mark);
 
       <svg:rect
@@ -71,10 +67,8 @@
         #barEl
         class="bar"
         [style.transform-origin]="mark.origin">
-        <!-- Under the capped rect, not beside it: `rx` rounds all four corners, and the cap
-             belongs on the free end alone. This one fills the two corners at the baseline back
-             in, and both keep `y` and `height` a plain interpolable length, which a `<path>`
-             would not. -->
+        <!-- `rx` rounds all four corners but the cap belongs on the free end alone; this rect fills the
+             two baseline corners back in. Unlike a `<path>`, both keep `y` and `height` interpolable. -->
         <svg:rect
           class="bar-base"
           [attr.fill]="mark.color" />
@@ -85,9 +79,8 @@
           [attr.height]="mark.height"
           [attr.fill]="mark.color" />
 
-        <!-- Stripes OVER the painted mark, not a pattern in place of its fill: a pattern carries
-             its own colour, so one shared definition cannot take each mark's. Painting the surface
-             colour through it leaves the mark's own hue showing between the stripes. -->
+        <!-- Stripes over the painted mark, not a pattern as its fill: a pattern carries its own colour,
+             so one shared definition could not take each mark's. -->
         @if (mark.hatched) {
           <svg:rect
             class="bar-hatch"
