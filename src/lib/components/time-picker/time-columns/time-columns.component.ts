@@ -33,8 +33,7 @@ interface Cell<T> {
   selected: boolean;
 }
 
-/** Internal (not public API): Hours / Minutes / AM-PM listbox columns.
- * Reused by ds-time-picker's overlay and the date-picker time footer. */
+/** Hours / Minutes / AM-PM listbox columns inside ds-time-picker's overlay. Not exported. */
 @Component({
   selector: 'ds-time-columns',
   standalone: true,
