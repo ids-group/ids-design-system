@@ -43,7 +43,6 @@
         [attr.viewBox]="viewBox()">
         <rect
           class="plot-bg"
-          aria-hidden="true"
           [attr.x]="plot().left"
           [attr.y]="plot().top"
           [attr.width]="plot().width"
@@ -52,7 +51,6 @@
         @if (secondaryPlot().top !== plot().top) {
           <rect
             class="plot-bg"
-            aria-hidden="true"
             [attr.x]="secondaryPlot().left"
             [attr.y]="secondaryPlot().top"
             [attr.width]="secondaryPlot().width"
@@ -249,8 +247,7 @@
               ',' +
               bandPinY(band) +
               ')'
-            ">
-          </g>
+            "></g>
         }
       </svg>
     </div>
