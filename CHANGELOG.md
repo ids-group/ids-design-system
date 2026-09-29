@@ -1,5 +1,29 @@
 ## Unreleased
 
+### Added
+
+- **`ds-sparkline`, a word-sized trend line for a table cell or a stat.** One `svg` with no axes,
+  gridlines, legend or frame and a dot on the last reading. `scale` is `'data'` (the readings' own
+  min..max, default) or `'zero'`; a `null` in `data` breaks the line. A tooltip names the reading
+  under the pointer, on by default and off with `[tooltip]="false"`; with a `label` the sparkline
+  is a tab stop whose arrow keys, Home and End move it. Sized by `--ds-sparkline-width` and
+  `--ds-sparkline-height`, 80×24 by default. Import from
+  `@ids-group-ltd/ids-design-system/components/sparkline`.
+
+### Fixed
+
+- **A toast's announcement stays off screen before any dialog has opened.** `ToastService` speaks
+  through the CDK `LiveAnnouncer`, whose region carries `.cdk-visually-hidden`, and the CDK loads that
+  rule only with a dialog or a focus trap. On a page where neither had opened yet, the first toast's
+  text also rendered as plain text at the bottom-left. `styles/toast-overlay`, which `styles/ds`
+  forwards, now declares the rule.
+
+### What you can now DELETE
+
+| Delete | Why | Replace with |
+| --- | --- | --- |
+| an app-level `@include cdk.a11y-visually-hidden()` or `a11y-prebuilt.css` added so toast announcements stay hidden | `styles/toast-overlay` declares `.cdk-visually-hidden` | nothing; keep it where the app loads neither `styles/ds` nor `styles/toast-overlay` |
+
 ## 0.14.3 — 2026-09-27
 
 ### Breaking

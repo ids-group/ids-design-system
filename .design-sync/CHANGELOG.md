@@ -17,6 +17,14 @@ holds an entry; what the release bot commits afterwards needs none.
 
 ## Unreleased
 
+### Upload
+
+- **`last-upload.json` points at the 0.14.3 upload tree**, 815 files uploaded 2026-09-27, so
+  `design-sync-upload-plan.mjs` diffs the next upload against it.
+- **`design-sync-upload-plan.mjs --remote` blanks every `obsolete.txt` path the project still
+  holds**, as `blank-obsolete-N.json` `write_files` batches, until the owner deletes them.
+  `--record` stores the blanked paths in `last-upload.json`, so each is sent once.
+
 ## 0.14.3 — 2026-09-27
 
 ### Cards

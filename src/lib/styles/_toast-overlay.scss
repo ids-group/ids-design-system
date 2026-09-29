@@ -1,6 +1,15 @@
+@use 'visually-hidden' as visually-hidden;
+
 // Toast overlay panel — GLOBAL (portaled via CDK Overlay, outside component DOM).
 // ToastService sets panelClass: 'ds-toast-panel'. CDK overlays stack by DOM
 // insertion order, so lift the toast wrapper above modals/drawers explicitly.
 .cdk-global-overlay-wrapper:has(> .ds-toast-panel) {
   z-index: var(--layer-toast);
+}
+
+// ToastService announces every toast through the CDK LiveAnnouncer, whose region carries
+// .cdk-visually-hidden. The CDK loads that rule only with a dialog or a focus trap, so without
+// this the first announcement on a page renders as visible text.
+.cdk-visually-hidden {
+  @include visually-hidden.visually-hidden;
 }
