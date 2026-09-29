@@ -461,19 +461,17 @@ export class ChartComponent implements ChartScales {
       ).length > 1,
   );
 
-  private readonly readsCategory = computed(() =>
-    [...this.tooltipSources().values()].some(
-      (source) => source.readsCategory?.() ?? false,
-    ),
-  );
-
   protected readonly cursorResolved = computed(() => {
     const cursor = this.cursor();
     if (cursor !== 'auto') {
       return cursor;
     }
 
-    return this.composed() || this.readsCategory() ? 'category' : 'none';
+    const readsCategory = [...this.tooltipSources().values()].some(
+      (source) => source.readsCategory?.() ?? false,
+    );
+
+    return this.composed() || readsCategory ? 'category' : 'none';
   });
 
   readonly cursorOn = computed(() => this.cursorResolved() === 'category');
