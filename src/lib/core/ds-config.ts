@@ -1,4 +1,4 @@
-import { InjectionToken, Provider, inject } from '@angular/core';
+import { InjectionToken, inject, type Provider } from '@angular/core';
 import type { IconName } from './icon-names';
 import type { DsSize } from './size';
 import type { CardElevation, CardPadding } from './card.types';
@@ -167,11 +167,24 @@ export const DS_CONFIG = new InjectionToken<DsConfig>('DS_CONFIG', {
  * Works at the app root, on a `Route`, or on a component/directive. Component inputs still win.
  *
  * A nested call MERGES with the config above it section by section; only the keys you name are
- * replaced. ONE call per injector: two in the SAME `providers` array both resolve their parent
- * with `skipSelf`, so the later wins and the earlier is silently lost.
+ * replaced. Several calls in one `providers` array merge in order, the later winning per key.
  */
 export function provideDsConfig(config: DsConfig): Provider {
-  return { provide: DS_CONFIG, useFactory: () => inheritDsConfig(config) };
+  return [
+    { provide: DS_CONFIG_LAYERS, useValue: config, multi: true },
+    { provide: DS_CONFIG, useFactory: mergeDsConfigLayers },
+  ];
+}
+
+const DS_CONFIG_LAYERS = new InjectionToken<readonly DsConfig[]>(
+  'DS_CONFIG_LAYERS',
+);
+
+function mergeDsConfigLayers(): DsConfig {
+  return inject(DS_CONFIG_LAYERS, { self: true }).reduce(
+    mergeDsConfig,
+    inject(DS_CONFIG, { skipSelf: true, optional: true }) ?? {},
+  );
 }
 
 /**

@@ -10,7 +10,7 @@
 
   :host(.framed) {
     padding: var(--ds-chart-frame-padding);
-    background: var(--ds-chart-frame-bg-color);
+    background: var(--ds-chart-frame-bg-color, var(--ds-chart-bg-color));
     border: var(--ds-chart-frame-border-width) solid
       var(--ds-chart-frame-border-color);
     border-radius: var(--ds-chart-frame-radius);
@@ -40,7 +40,10 @@
   stroke: var(--ds-chart-focus-ring-color);
   stroke-width: var(--focus-ring-width);
   paint-order: stroke;
-  filter: drop-shadow(0 0 var(--focus-ring-width) var(--ds-chart-focus-halo-color));
+  filter: drop-shadow(
+    0 0 var(--focus-ring-width)
+      var(--ds-chart-focus-halo-color, var(--ds-chart-bg-color))
+  );
 }
 
 // Chromium focuses a clicked SVG shape without a `tabindex` but `:focus-visible` is false, so the UA outlines

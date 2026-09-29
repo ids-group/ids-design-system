@@ -119,7 +119,7 @@
   font-size: var(--font-size-xs);
 }
 
-/* The seam is surface-coloured, not a margin: a track-coloured gap would read as a missing category. */
+/* The seam is background-coloured, not a margin: a track-coloured gap would read as a missing category. */
 .segment {
   block-size: 100%;
 
@@ -135,7 +135,7 @@
   }
 
   & + & {
-    border-inline-start: 2px solid var(--ds-chart-frame-bg-color, var(--surface-default));
+    border-inline-start: 2px solid var(--ds-chart-bg-color);
   }
 }
 

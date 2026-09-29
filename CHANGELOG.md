@@ -1,5 +1,32 @@
 ## Unreleased
 
+### Breaking
+
+- **`ds-pie-chart` (`PieChartComponent`) drops the `staggerMs` input.** The input was accepted and did nothing: the ring
+  turns into place as one object. Remove the binding; a template that keeps it fails to compile.
+  Nothing replaces it.
+
+### Fixed
+
+- **A `dsLineSeries` with `tooltip="axis"` opens its panel under the default `cursor`.**
+  `cursor="auto"` turned the category cursor on only for two or more marks that show a tooltip,
+  so a plot whose one tooltip-showing mark was an axis-tooltip line answered nothing until
+  `cursor="category"` was set. `auto` now turns it on for any mark with `tooltip="axis"`.
+
+- **Several `provideDsConfig` calls in one `providers` array all apply.** The last one replaced
+  the others, whose keys were lost without a warning; they now merge in order, the later call
+  winning per key. `provideDsIntl` merges the same way.
+
+- **`ds-table`'s `exportCsv()` and `runExport()` warn when the table has no `dsTableExport`.**
+  In a development build either call threw NG0203 from the click handler that made it; it now
+  logs the missing directive. Production builds were unaffected.
+
+### What you can now DELETE
+
+| Delete | Why | Replace with |
+| --- | --- | --- |
+| `cursor="category"` on a `ds-chart` set only so a `tooltip="axis"` line opens its panel | `cursor="auto"` turns the category cursor on for a mark with `tooltip="axis"` | nothing; keep it on a plot whose marks do not use `tooltip="axis"` |
+
 ## 0.14.4 — 2026-09-29
 
 ### Breaking

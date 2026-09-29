@@ -14,7 +14,7 @@ item and nothing else.
 
 <!-- todo-index:start -->
 
-**111 open — 0 P1, 11 P2, 100 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
+**112 open — 0 P1, 11 P2, 101 P3**. Counted by `node tools/todo-index.mjs` from the items themselves, never incremented from the last figure — three summaries in this file had drifted apart before it existed.
 
 ### P2 — 11
 
@@ -36,7 +36,7 @@ item and nothing else.
   - Publishing to npm stops working in January 2027 and the replacement is not chosen
   - Nothing catches a stale `presentations/ds.css`, and two gates read it as the truth
 
-### P3 — 100
+### P3 — 101
 
 - **Focus indicators — what the two-wave review left open (recorded 2026-09-04)**
   - The token reference says the portaled panel reads `--ds-time-picker-focus-shadow`
@@ -56,6 +56,8 @@ item and nothing else.
 - **Asked by Stas**
   - `ds-waterfall-chart` is `ds-cascade-chart` (Stas, 2026-09-23)
   - Rename `ds-bar-chart` to `ds-row-chart` (Stas, 2026-09-24)
+  - Pin more than one mark at a time (Stas, 2026-09-29)
+  - Cut the prose in ds-docs (Stas, 2026-09-29: "слишком много и никто это не читает")
 - **Tooling**
   - changelog-lint C001 does not scan ds-docs/src or docs/agent (recorded 2026-09-24)
   - The press feedback guard misses `.disabled` and `[aria-disabled]` (recorded 2026-09-24)
@@ -113,7 +115,6 @@ item and nothing else.
   - Four exports on the package surface have no consumer in `src/`
   - `'none'` and `'grouped'` are the same value on `ds-column-chart`
   - Two inputs decide one thing on `ds-funnel-chart`, and two vocabularies name one idea
-  - `ds-pie-chart` declares `staggerMs` and documents that it does nothing
 - **ds-icon does not read the icon size scale (recorded 2026-08-24, from the state-glyph work)**
   - `--icon-xs/sm/md/lg` exist (12/14/16/20) and `ds-icon` cannot be sized by them
 - **Missing components (from gap analysis)**
@@ -194,9 +195,9 @@ item and nothing else.
 
 **Consumer asks are the head of the board.** Every item a consumer is waiting on is drawn, with its
 before and after, in deck `decision-queue` under *Ждут консьюмеры*; pick there, and the items here
-are the work. Four are open: the `ds-table` expand-leave animation (:228) and the control-edge
-contrast (:233) under *Bugs*, the bar/column extract (:486) under *Two chart names that collide*,
-and the indeterminate bar's stripe verdict (:1122). The 0.9.0-0.13.3 manifest walk and the eleven
+are the work. Four are open: the `ds-table` expand-leave animation (:229) and the control-edge
+contrast (:234) under *Bugs*, the bar/column extract (:510) under *Two chart names that collide*,
+and the indeterminate bar's stripe verdict (:1146). The 0.9.0-0.13.3 manifest walk and the eleven
 reached-past styling hooks are both closed.
 
 **Nobody is blocked from installing.** All six consumer repos declare Angular `^21` or `~21`, so the
@@ -461,6 +462,29 @@ Each has somebody behind it. Nothing here is speculative work.
   `selector-rename`, one `type-rename` per exported symbol, a `token-rename` for the
   `--ds-bar-chart-*` prefix and a `class-rename` for the internal `.bar-chart` class - the same shape
   as the `ds-waterfall-chart` item above.
+
+- [ ] **[P3] Pin more than one mark at a time (Stas, 2026-09-29).** Today a chart holds one pin:
+  `chartActiveMark` keeps a single `index` and a `pinned` flag
+  (`components/chart-tooltip/chart-active-mark.ts`), the tooltip directive keeps one overlay per
+  chart (`chart-tooltip.directive.ts`), and a press on another mark moves the pin rather than adding
+  one. **What moves:** the active-mark state becomes a set of pinned indices beside the hovered one;
+  the directive opens one panel per pin while the hover panel keeps gliding; each pinned mark carries
+  its disc; `Unpin` releases all of them, and a click on a pinned mark releases that one. The
+  category cursor of `ds-chart` (`pinOnClick`) needs the same, one band per pin.
+  **To decide before building:** whether a plain click adds a pin or a modifier does (a plain click
+  that adds changes what every chart does today), a cap on how many, how panels that would overlap
+  are placed, what a press outside the plot releases, and how the keyboard adds and removes one.
+
+- [ ] **[P3] Cut the prose in ds-docs (Stas, 2026-09-29: "слишком много и никто это не читает").**
+  The pages explain too much. Readers skip the text and look at the demos. Keep what a demo cannot
+  show: the input or token name, a default value, and a constraint that is easy to break. Cut the
+  rest: paragraphs that restate what the demo shows, rationale, and a fact that repeats on several
+  pages (for example, shared chart inputs belong on Foundations only). Size, measured 2026-09-29:
+  103 `ds-docs/src/app/sections/**/*.section.html` hold 53448 words once tags are stripped. That
+  count also includes demo data and code-sample text, so the prose share is smaller. The largest
+  files are `table` (5080), `line-chart` (2422), `charts` (2082), `tokens-reference` (1548) and
+  `chart` (1504). Start with those. Re-measure with the same command, which pipes `find`, then
+  `sed 's/<[^>]*>/ /g'`, then `wc -w`.
 
 ## Tooling
 
@@ -1206,10 +1230,6 @@ and the fifteen lint rules.
   `line-series` spells the same idea `'reading' | 'pointer'` (`:161`), in one folder. And
   `line-chart.types.ts:22` declares `LineChartStack` rather than narrowing `ChartStackMode`, then
   feeds it to `stackOffsets`, which is typed on the full union (`chart.math.ts:329-331`).
-
-- [ ] **[P3] `ds-pie-chart` declares `staggerMs` and documents that it does nothing.**
-  `pie-chart.component.ts:194-197`. It exists for parity with the other charts. Either it works or
-  it goes.
 
 # Parked — asked, and deliberately not now
 

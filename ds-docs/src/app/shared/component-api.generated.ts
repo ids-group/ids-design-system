@@ -2026,7 +2026,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'auto'",
         "required": false,
-        "description": "Draws a band and crosshair down the category under the pointer and reports it to every mark through `activeIndex`; the panel then names every reading at that category. `'auto'` (default) is `'category'` with two or more tooltip-showing marks, else `'none'`."
+        "description": "Draws a band and crosshair down the category under the pointer and reports it to every mark through `activeIndex`; the panel then names every reading at that category. `'auto'` (default) is `'category'` with two or more tooltip-showing marks or a mark with `tooltip=\"axis\"`, else `'none'`."
       },
       {
         "name": "maxSecondary",
@@ -2403,7 +2403,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "true",
         "required": false,
-        "description": "Lays the line and markers on a surface-colour band so they stay legible where they cross other marks."
+        "description": "Lays the line and markers on a background-colour band so they stay legible where they cross other marks."
       },
       {
         "name": "interactive",
@@ -2504,7 +2504,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'item'",
         "required": false,
-        "description": "Whether a hovered or focused reading opens a tooltip: `'item'` names the marker, `'axis'` every series at the category. `'axis'` needs `cursor=\"category\"` on `ds-chart`."
+        "description": "Whether a hovered or focused reading opens a tooltip: `'item'` names the marker, `'axis'` every series at the category, turning the container's category cursor on under `cursor=\"auto\"`."
       },
       {
         "name": "tooltipAnchor",
@@ -5369,7 +5369,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "true",
         "required": false,
-        "description": "Lays the lines and their markers on a band of the surface colour."
+        "description": "Lays the lines and their markers on a band of the background colour."
       },
       {
         "name": "annotations",
@@ -7201,15 +7201,6 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "default": "false",
         "required": false,
         "description": "Dims every other mark while one is hovered or focused."
-      },
-      {
-        "name": "staggerMs",
-        "kind": "input",
-        "type": "number",
-        "union": null,
-        "default": "0",
-        "required": false,
-        "description": "Accepted for parity with the other charts; has no effect."
       },
       {
         "name": "tooltip",

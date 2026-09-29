@@ -63,12 +63,15 @@
   --chart-divergent-2:  hsl(145deg 38% 52%);
   --chart-divergent-3:  hsl(145deg 46% 34%);      /* large positive (best) */
 
+  /* BACKGROUND: the frame and every knockout between marks. Read where it is used: a token deriving
+     from it on :root would ignore one set on a single chart. */
+  --chart-bg-color: var(--surface-default);
+
   /* FRAME: inside a card, drop it with --ds-chart-frame-border-width: 0 and --ds-chart-frame-padding: 0. */
   --chart-frame-border-color: var(--border-default);
   --chart-frame-border-width: var(--border-width-default);
   --chart-frame-radius: var(--radius-lg);
   --chart-frame-padding: var(--space-5);
-  --chart-frame-bg-color: var(--surface-default);
 
   --chart-axis-line-color:    var(--neutral-300);
   --chart-axis-label-color:   var(--text-tertiary);
@@ -89,7 +92,6 @@
 
   /* Two tones: a single ring disappears on a mark of the same hue; the white keyline separates it. */
   --chart-focus-ring-color:  var(--focus-ring-color);
-  --chart-focus-halo-color:  white;
 
   --chart-tooltip-bg-color:   var(--neutral-900);
   --chart-tooltip-text-color:   var(--neutral-0);
@@ -105,8 +107,7 @@
   --chart-area-opacity:      0.16;
   --chart-area-fade-opacity: 0.32;
 
-  /* Wide enough to survive a 24px mark; surface-coloured so they read as gaps. */
-  --chart-hatch-color: var(--surface-default);
+  /* Wide enough to survive a 24px mark; background-coloured so they read as gaps. */
   --chart-hatch-width: 1.5px;
 }
 
@@ -144,11 +145,11 @@
   --ds-chart-heat-7-color: var(--chart-heat-7);
   --ds-chart-heat-8-color: var(--chart-heat-8);
 
+  --ds-chart-bg-color: var(--chart-bg-color);
   --ds-chart-frame-border-color: var(--chart-frame-border-color);
   --ds-chart-frame-border-width: var(--chart-frame-border-width);
   --ds-chart-frame-radius: var(--chart-frame-radius);
   --ds-chart-frame-padding: var(--chart-frame-padding);
-  --ds-chart-frame-bg-color: var(--chart-frame-bg-color);
 
   --ds-chart-axis-line-color: var(--chart-axis-line-color);
   --ds-chart-axis-label-color: var(--chart-axis-label-color);
@@ -164,7 +165,6 @@
   --ds-chart-hover-bg-color: var(--chart-hover-bg-color);
   --ds-chart-cursor-line-color: var(--chart-cursor-line-color);
   --ds-chart-focus-ring-color: var(--chart-focus-ring-color);
-  --ds-chart-focus-halo-color: var(--chart-focus-halo-color);
   --ds-chart-tooltip-bg-color: var(--chart-tooltip-bg-color);
   --ds-chart-tooltip-text-color: var(--chart-tooltip-text-color);
   --ds-chart-tooltip-border-color: var(--chart-tooltip-border-color);
@@ -177,6 +177,5 @@
   --ds-chart-dot-radius-active: var(--chart-dot-radius-active);
   --ds-chart-area-opacity: var(--chart-area-opacity);
   --ds-chart-area-fade-opacity: var(--chart-area-fade-opacity);
-  --ds-chart-hatch-color: var(--chart-hatch-color);
   --ds-chart-hatch-width: var(--chart-hatch-width);
 }
