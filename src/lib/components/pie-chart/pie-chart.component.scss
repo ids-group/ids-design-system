@@ -124,8 +124,8 @@
 .center-value,
 .center-label {
   text-shadow:
-    0 0 var(--space-1) var(--ds-chart-frame-bg-color),
-    0 0 var(--space-0-5) var(--ds-chart-frame-bg-color);
+    0 0 var(--space-1) var(--ds-chart-bg-color),
+    0 0 var(--space-0-5) var(--ds-chart-bg-color);
 }
 
 .center-value {

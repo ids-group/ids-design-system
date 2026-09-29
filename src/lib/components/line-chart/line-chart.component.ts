@@ -139,7 +139,7 @@ export class LineChartComponent
   /** Draws a dot at every reading. Off, the dots appear on hover and on focus only. */
   readonly showMarkers = input(true, { transform: booleanAttribute });
 
-  /** Lays the lines and their markers on a band of the surface colour. */
+  /** Lays the lines and their markers on a band of the background colour. */
   readonly outline = input(true, { transform: booleanAttribute });
 
   /** Labels pinned over their readings. Drawn `aria-hidden`; their text is appended to the accessible name. */

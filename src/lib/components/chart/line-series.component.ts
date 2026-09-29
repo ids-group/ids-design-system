@@ -108,7 +108,7 @@ export class LineSeriesComponent implements OnDestroy {
   /** Draws a round marker at every reading; reads better off past roughly twenty points. */
   readonly showMarkers = input(true, { transform: booleanAttribute });
 
-  /** Lays the line and markers on a surface-colour band so they stay legible where they cross other marks. */
+  /** Lays the line and markers on a background-colour band so they stay legible where they cross other marks. */
   readonly outline = input(true, { transform: booleanAttribute });
 
   /** Turns on the click affordance (pointer cursor and hover tint). `pointClicked` fires either way. */

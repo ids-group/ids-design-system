@@ -81,3 +81,10 @@
   stroke: var(--ds-chart-cursor-line-color);
   stroke-width: 1;
 }
+
+// The rectangle inside the axes. Transparent unless `--ds-chart-plot-bg-color` is set, so the plot
+// shows the chart's background by default.
+.plot-bg {
+  fill: var(--ds-chart-plot-bg-color, transparent);
+  pointer-events: none;
+}

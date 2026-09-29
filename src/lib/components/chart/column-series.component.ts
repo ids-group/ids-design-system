@@ -61,7 +61,7 @@ export interface ColumnSeriesPoint {
 /** Distance from a mark's tip to its value label's baseline. */
 const VALUE_LABEL_GAP = 8;
 
-/** Blank at a stacked segment's lower end: a surface-colour gap, not a drawn rule (which vanishes in print). */
+/** Blank at a stacked segment's lower end: a background-colour gap, not a drawn rule (which vanishes in print). */
 const STACK_SEGMENT_GAP = 2;
 
 let nextSeriesId = 0;
