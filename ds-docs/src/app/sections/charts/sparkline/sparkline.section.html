@@ -9,14 +9,18 @@
     legend or frame, a dot on the last reading and a tooltip on hover.
   </span>
 
-  <h3 class="block-title t-h4">Default</h3>
+  <h3 class="block-title t-h4">
+    Default
+  </h3>
 
   <p class="block-desc t-s">
     One <code class="t-mono-inline">svg</code> per instance, with no container
     to measure, so a table of a thousand rows stays cheap. It is decorative
     unless it gets a <code class="t-mono-inline">label</code>: beside a value
     that already says the number, the line only adds the shape. With a
-    <code class="t-mono-inline">label</code> it is also a tab stop: focus opens
+    <code class="t-mono-inline">
+      label
+    </code> it is also a tab stop: focus opens
     the tooltip on the last reading, the arrow keys, Home and End move it.
   </p>
 
@@ -43,15 +47,23 @@
     </tbody>
   </table>
 
-  <h3 class="block-title t-h4">Scale</h3>
+  <h3 class="block-title t-h4">
+    Scale
+  </h3>
 
   <p class="block-desc t-s">
     One series, two pictures: service availability over a year, 93.1-99.5 %.
-    <code class="t-mono-inline"> data </code>, the default, spans the readings'
+    <code class="t-mono-inline">
+      data
+    </code>, the default, spans the readings'
     own range and shows the dip in May.
-    <code class="t-mono-inline"> zero </code> keeps zero on the scale and shows
+    <code class="t-mono-inline">
+      zero
+    </code> keeps zero on the scale and shows
     the size of it - a sliver at the top. Pick
-    <code class="t-mono-inline"> zero </code> where the amount matters more than
+    <code class="t-mono-inline">
+      zero
+    </code> where the amount matters more than
     the movement.
   </p>
 
@@ -64,7 +76,9 @@
         [categories]="months"
         [valueFormat]="percent" />
 
-      <div class="state-cell-label">scale="data" (default)</div>
+      <div class="state-cell-label">
+        scale="data" (default)
+      </div>
     </div>
 
     <div class="state-cell">
@@ -76,11 +90,15 @@
         [categories]="months"
         [valueFormat]="percent" />
 
-      <div class="state-cell-label">scale="zero"</div>
+      <div class="state-cell-label">
+        scale="zero"
+      </div>
     </div>
   </div>
 
-  <h3 class="block-title t-h4">Gaps and no tooltip</h3>
+  <h3 class="block-title t-h4">
+    Gaps and no tooltip
+  </h3>
 
   <p class="block-desc t-s">
     A <code class="t-mono-inline">null</code> breaks the line rather than
@@ -94,7 +112,9 @@
         class="wide"
         [data]="gapped" />
 
-      <div class="state-cell-label">null readings</div>
+      <div class="state-cell-label">
+        null readings
+      </div>
     </div>
 
     <div class="state-cell">
@@ -103,7 +123,9 @@
         [data]="availability"
         [tooltip]="false" />
 
-      <div class="state-cell-label">[tooltip]="false"</div>
+      <div class="state-cell-label">
+        [tooltip]="false"
+      </div>
     </div>
   </div>
 </docs-section>
