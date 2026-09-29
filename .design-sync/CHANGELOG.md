@@ -17,6 +17,11 @@ holds an entry; what the release bot commits afterwards needs none.
 
 ## Unreleased
 
+### Upload
+
+- **`last-upload.json` points at the 0.14.3 upload tree**, 815 files uploaded 2026-09-27, so
+  `design-sync-upload-plan.mjs` diffs the next upload against it.
+
 ## 0.14.3 — 2026-09-27
 
 ### Cards
