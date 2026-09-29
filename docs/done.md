@@ -10,8 +10,10 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 CDK 21.2.14 loads that rule only from `FocusTrapFactory` and `CdkAriaLive`, never from
 `LiveAnnouncer` itself, so on a page where no dialog had opened the first toast's text also rendered
 as page text bottom-left (mm-ecm agent portal, ME-413 retest on test). angular/components#30585 is
-open with the maintainers' workaround, `@include cdk.a11y-visually-hidden`, which `styles/toast-overlay`
-now carries. Measured 2026-09-29: on the docs toast page, before any overlay, the rule is present
+open with the maintainers' workaround, `@include cdk.a11y-visually-hidden`. `styles/toast-overlay`
+declares `.cdk-visually-hidden` with the DS `visually-hidden` recipe instead of that mixin, because a
+partial that `@use`s `@angular/cdk` does not compile where Sass has no package importer (the colour
+families gate is one). Measured 2026-09-29: on the docs toast page, before any overlay, the rule is present
 and the announcer region measures 1x1 px while holding "Alpha saved. 12 staff rotas updated."; in
 the consumer before its own bridge the same region was `position: static`, 1487x23 px.
 
