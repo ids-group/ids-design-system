@@ -2,6 +2,29 @@
 
 ### Breaking
 
+- **`ds-chart`'s `cursorPin` is `pinOnClick`,** the name every other chart already uses. Rename
+  the binding; `DS_CONFIG.chart.pinOnClick` still sets the default.
+
+- **`ds-line-chart`'s `tooltipAnchor` takes `'reading'` where it took `'point'`.** The behaviour is
+  unchanged: the panel hangs over the highest reading in the category. Replace
+  `tooltipAnchor="point"`.
+
+- **`LineChartSeries.area` and a `dsLineSeries` entry's `area` are `boolean | 'fade'`.** Code that
+  reads `area` back as a boolean handles `'fade'` too; code that only sets it needs nothing.
+
+- **Subclassing a chart breaks on moved, grown and loosened members.** The inputs every chart
+  shares (`caption`, `summary`, `frame`, `loading`, `error`, `emptyText`, `errorText`,
+  `valueFormat`, `interactive`, `tooltipSwatches`, `tooltipLingerMs`, `pinOnClick`) and their
+  resolved signals move to an internal base class that `BarChartComponent`, `ChartComponent`,
+  `ColumnChartComponent`, `FunnelChartComponent`, `HeatmapChartComponent`,
+  `LineChartComponent`, `PieChartComponent`, `ScatterChartComponent` and
+  `WaterfallChartComponent` extend. `ChartTooltipDirective` gained `host`,
+  `LineSeriesComponent` `fadeId`, `SparklineComponent` `area`, and `WaterfallChartComponent`
+  `dimOthers` and `tooltip`. `data` on the bar, column, funnel, pie and sparkline charts, and
+  `ds-line-chart`'s `categories` and `series`, are optional and default to empty. Build after
+  upgrading; rename or mark `override` every member the compiler reports. Subclassing a DS
+  component is unsupported.
+
 - **A chart tooltip is light on the light theme.** The panel takes `--surface-overlay`,
   `--text-primary` and `--border-default`, where it was `--neutral-900` with white text; the
   dark theme keeps its dark panel. A reading's colour dot takes a ring only when its colour is
