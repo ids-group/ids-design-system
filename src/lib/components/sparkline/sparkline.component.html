@@ -1,10 +1,11 @@
 <svg
+  #canvas
   class="sparkline"
   aria-hidden="true"
   [dsChartTooltip]="tooltipContext()"
   [dsChartTooltipOrigin]="tooltipOrigin()"
   (pointermove)="onPointerMove($event)"
-  (pointerleave)="onPointerLeave()">
+  (pointerleave)="clearActive()">
   <svg
     viewBox="0 0 100 100"
     preserveAspectRatio="none"

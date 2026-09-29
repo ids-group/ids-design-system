@@ -8954,7 +8954,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         "union": null,
         "default": "true",
         "required": false,
-        "description": "Shows the reading under the pointer."
+        "description": "Shows the reading under the pointer, and under the keyboard where `label` makes the sparkline focusable: focus opens the last reading, the arrow keys, Home and End move."
       },
       {
         "name": "valueFormat",

@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   LOCALE_ID,
   ViewEncapsulation,
   booleanAttribute,
@@ -8,6 +9,7 @@ import {
   inject,
   input,
   signal,
+  viewChild,
 } from '@angular/core';
 import { ChartTooltipDirective } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import type {
@@ -31,6 +33,10 @@ import type { SparklineScale } from './sparkline.types';
     '[attr.role]': "label() ? 'img' : null",
     '[attr.aria-label]': 'label()',
     '[attr.aria-hidden]': "label() ? null : 'true'",
+    '[attr.tabindex]': 'focusable() ? 0 : null',
+    '(focus)': 'onFocus()',
+    '(blur)': 'clearActive()',
+    '(keydown)': 'onKeydown($event)',
   },
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -48,13 +54,21 @@ export class SparklineComponent {
 
   readonly scale = input<SparklineScale>('data');
 
-  /** Shows the reading under the pointer. */
+  /** Shows the reading under the pointer, and under the keyboard where `label` makes the
+   *  sparkline focusable: focus opens the last reading, the arrow keys, Home and End move. */
   readonly tooltip = input(true, { transform: booleanAttribute });
 
   /** Formats the value the tooltip prints. Unset, the locale's plain number format. */
   readonly valueFormat = input<((value: number) => string) | null>(null);
 
   private readonly locale = inject(LOCALE_ID);
+
+  private readonly canvas =
+    viewChild.required<ElementRef<SVGSVGElement>>('canvas');
+
+  protected readonly focusable = computed(
+    () => this.tooltip() && this.label() !== null,
+  );
 
   protected readonly geometry = computed(() =>
     sparklineGeometry(this.data(), this.scale()),
@@ -99,23 +113,56 @@ export class SparklineComponent {
     if (!this.tooltip() || points.length === 0) {
       return;
     }
-    const box = (event.currentTarget as Element).getBoundingClientRect();
+    const box = this.canvas().nativeElement.getBoundingClientRect();
     const across = ((event.clientX - box.left) / box.width) * 100;
-    const nearest = points.reduce((best, point) =>
-      Math.abs(point.x - across) < Math.abs(best.x - across) ? point : best,
+    this.activate(
+      points.reduce((best, point) =>
+        Math.abs(point.x - across) < Math.abs(best.x - across) ? point : best,
+      ),
     );
-    if (nearest === this.activePoint()) {
-      return;
-    }
-    this.activePoint.set(nearest);
-    this.tooltipOrigin.set({
-      x: box.left + (nearest.x / 100) * box.width,
-      y: box.top + (nearest.y / 100) * box.height,
-    });
   }
 
-  protected onPointerLeave(): void {
+  protected onFocus(): void {
+    const last = this.geometry().points.at(-1);
+    if (this.focusable() && last) {
+      this.activate(last);
+    }
+  }
+
+  protected onKeydown(event: KeyboardEvent): void {
+    const points = this.geometry().points;
+    const current = this.activePoint();
+    if (!this.focusable() || !current) {
+      return;
+    }
+    const position = points.indexOf(current);
+    const target = {
+      ArrowLeft: position - 1,
+      ArrowRight: position + 1,
+      Home: 0,
+      End: points.length - 1,
+    }[event.key];
+    if (target === undefined) {
+      return;
+    }
+    event.preventDefault();
+    this.activate(points[Math.min(Math.max(target, 0), points.length - 1)]);
+  }
+
+  protected clearActive(): void {
     this.activePoint.set(null);
     this.tooltipOrigin.set(null);
+  }
+
+  private activate(point: SparklinePoint): void {
+    if (point === this.activePoint()) {
+      return;
+    }
+    const box = this.canvas().nativeElement.getBoundingClientRect();
+    this.activePoint.set(point);
+    this.tooltipOrigin.set({
+      x: box.left + (point.x / 100) * box.width,
+      y: box.top + (point.y / 100) * box.height,
+    });
   }
 }

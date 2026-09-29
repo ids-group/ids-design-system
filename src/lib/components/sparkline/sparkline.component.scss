@@ -1,3 +1,5 @@
+@use '../../styles/focus' as focus;
+
 :host {
   --_sparkline-width: var(--ds-sparkline-width, 80px);
   --_sparkline-height: var(--ds-sparkline-height, 24px);
@@ -9,6 +11,10 @@
   inline-size: var(--_sparkline-width);
   block-size: var(--_sparkline-height);
   vertical-align: middle;
+}
+
+:host(:focus-visible) {
+  @include focus.ring;
 }
 
 .sparkline {
