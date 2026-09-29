@@ -313,9 +313,7 @@ export class ColumnSeriesComponent implements OnDestroy {
     return count > 0 ? this.scales.plot().width / count / slots : 0;
   });
 
-  protected readonly slotBandPx = computed(
-    () => `${this.scales.bandWidth() / Math.max(1, this.slotCount())}px`,
-  );
+  protected readonly slotStepPx = computed(() => `${this.slotStep()}px`);
 
   protected readonly markWidthPx = computed(
     () => `${this.slotStep() * this.columnWidthRatio()}px`,
