@@ -1,10 +1,15 @@
+import type {
+  ChartDimmable,
+  ChartStaggered,
+  ChartWithDataTable,
+  ChartWithTooltipTrigger,
+} from '@ids-group-ltd/ids-design-system/components';
 import {
   ChangeDetectionStrategy,
   Component,
   ViewEncapsulation,
   booleanAttribute,
   computed,
-  inject,
   input,
   numberAttribute,
   output,
@@ -16,20 +21,16 @@ import {
 } from '@ids-group-ltd/ids-design-system/components/chart';
 import type { ColumnSeriesPoint } from '@ids-group-ltd/ids-design-system/components/chart';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
-import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
-import type {
-  ChartDataTable,
-  ChartFrame,
-  ChartValueFormat,
-} from '@ids-group-ltd/ids-design-system/core';
+import type { ChartDataTable } from '@ids-group-ltd/ids-design-system/core';
+import type { ChartItemTooltipTrigger } from '@ids-group-ltd/ids-design-system/components/chart-tooltip';
 import { waterfallSteps } from './waterfall-chart.math';
 import { WaterfallMarksComponent } from './waterfall-marks.component';
 import { ChartDataTableComponent } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
 import type { ChartDataRow } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
 import {
-  resolveChartDefaults,
   chartRenderGate,
   CHART_RENDER_GATE_PASSED,
+  DsChartBase,
 } from '@ids-group-ltd/ids-design-system/components';
 import type {
   WaterfallChartBar,
@@ -72,7 +73,14 @@ const DIRECTION_COLORS: Record<WaterfallChartStep['direction'], string> = {
   changeDetection: ChangeDetectionStrategy.OnPush,
   viewProviders: [{ provide: CHART_RENDER_GATE_PASSED, useValue: true }],
 })
-export class WaterfallChartComponent {
+export class WaterfallChartComponent
+  extends DsChartBase
+  implements
+    ChartDimmable,
+    ChartStaggered,
+    ChartWithDataTable,
+    ChartWithTooltipTrigger
+{
   protected readonly renderReady = chartRenderGate();
 
   /** The bars in the order they are read, which is the order they happened in - a waterfall is
@@ -86,60 +94,20 @@ export class WaterfallChartComponent {
    *  read as separate columns rather than as one running total. */
   readonly showConnectors = input(true, { transform: booleanAttribute });
 
-  /** Printed above the plot as the visible title, and reused as the annex table's caption. */
-  readonly caption = input<string | null>(null);
+  /** Dims every OTHER bar while one is hovered or focused, so the reader's eye is held on the one
+   *  under the pointer. Off by default: the dimming costs the separation BETWEEN the dimmed bars. */
+  readonly dimOthers = input(false, { transform: booleanAttribute });
 
-  /** The accessible name. Generated from the steps when omitted, naming each one's direction in
-   *  words and the figure the chain ends at. */
-  readonly summary = input<string | null>(null);
+  /** Whether a hovered or focused bar opens a tooltip. `'axis'` is not offered - each bar is its
+   *  own category, so an axis tooltip would repeat the item one. */
+  readonly tooltip = input<ChartItemTooltipTrigger>('item');
 
   /** A hint, not a count. Ticks snap to a round step. */
   readonly tickCount = input(5, { transform: numberAttribute });
 
-  /** Turns on the click affordance and the keyboard route. `barClicked` fires whether or not
-   *  this is set. */
-  readonly interactive = input(false, { transform: booleanAttribute });
-
-  /** `'auto'` draws the bordered, padded box; `'none'` leaves it bare for a chart inside a card
-   *  the page has already drawn. Unset falls back to `DS_CONFIG.chart.frame`. */
-  readonly frame = input<ChartFrame | null>(null);
-
-  /** Whether the tooltip draws a colour dot beside each reading. Unset falls back to
-   *  `DS_CONFIG.chart.tooltipSwatches`, then draws them for two to four readings. */
-  readonly tooltipSwatches = input<boolean | null>(null, {
-    transform: (value: unknown) =>
-      value == null ? null : booleanAttribute(value),
-  });
-
   /** The annex table under the plot. Unset falls back to `DS_CONFIG.chart.dataTable`, then
    *  `'none'`. It prints each step's direction, its own reading and the running total. */
   readonly dataTable = input<ChartDataTable | null>(null);
-
-  /** Skeleton bars at the real count, so the page does not resize when the data lands. */
-  readonly loading = input(false, { transform: booleanAttribute });
-
-  /** Separate from an empty `data`: "the request failed" and "there is nothing to show" read the
-   *  same and mean opposite things. */
-  readonly error = input(false, { transform: booleanAttribute });
-
-  /** Shown in place of the plot when `data` is empty. Unset falls back to
-   *  `DS_INTL.chart.empty`. */
-  readonly emptyText = input<string | null>(null);
-
-  /** Shown in place of the plot while `error` is set. Unset falls back to
-   *  `DS_INTL.chart.error`. */
-  readonly errorText = input<string | null>(null);
-
-  /** Formats every value the chart prints - the axis ticks, the bar labels and the annex table.
-   *  The sign a delta carries is added around it, so a formatter never has to know about one. */
-  readonly valueFormat = input<ChartValueFormat | null>(null);
-
-  /** Holds the clicked step and its tooltip in place, with a pin disc on it, until a second click,
-   *  Escape or a press outside releases it. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then
-   *  `true`. `barClicked` fires either way - pinning is a state, not a handler. */
-  readonly pinOnClick = input<boolean | null, unknown>(null, {
-    transform: (value) => (value == null ? null : booleanAttribute(value)),
-  });
 
   /** Milliseconds between one step's entrance and the next; a long waterfall narrows the step to
    *  arrive within 260ms. `0` is no stagger. */
@@ -154,13 +122,7 @@ export class WaterfallChartComponent {
   /** The clicked datum, as it was given. Fires on click and on Enter or Space. */
   readonly barClicked = output<WaterfallChartBar>();
 
-  private readonly defaults = resolveChartDefaults(this);
-  protected readonly intl = inject(DS_INTL);
-  readonly frameResolved = this.defaults.frame;
   readonly dataTableResolved = this.defaults.dataTable;
-  readonly emptyTextResolved = this.defaults.emptyText;
-  readonly errorTextResolved = this.defaults.errorText;
-  readonly valueFormatResolved = this.defaults.valueFormat;
 
   protected readonly isEmpty = computed(() => this.data().length === 0);
 
