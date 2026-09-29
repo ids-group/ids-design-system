@@ -1,0 +1,49 @@
+@use '../../styles/focus' as focus;
+
+:host {
+  --_sparkline-width: var(--ds-sparkline-width, 80px);
+  --_sparkline-height: var(--ds-sparkline-height, 24px);
+  --_sparkline-line-color: var(--ds-sparkline-line-color, var(--ds-chart-series-1-color));
+  --_sparkline-line-width: var(--ds-sparkline-line-width, 1.5px);
+  --_sparkline-dot-radius: var(--ds-sparkline-dot-radius, 2.5px);
+
+  display: inline-block;
+  inline-size: var(--_sparkline-width);
+  block-size: var(--_sparkline-height);
+  vertical-align: middle;
+}
+
+:host(:focus-visible) {
+  @include focus.ring;
+}
+
+.sparkline {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  overflow: visible;
+}
+
+.line {
+  fill: none;
+  stroke: var(--_sparkline-line-color);
+  stroke-width: var(--_sparkline-line-width);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.dot {
+  r: var(--_sparkline-dot-radius);
+  fill: var(--_sparkline-line-color);
+}
+
+@media (forced-colors: active) {
+  .line {
+    stroke: CanvasText;
+  }
+
+  .dot {
+    fill: CanvasText;
+  }
+}
