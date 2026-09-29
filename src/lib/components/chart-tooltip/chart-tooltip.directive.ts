@@ -142,12 +142,15 @@ export class ChartTooltipDirective {
       this.panelRef = this.overlayRef.attach(
         new ComponentPortal(ChartTooltipPanelComponent, this.viewContainerRef),
       );
-      // CDK's reposition strategy watches `window` and registered `cdkScrollable`s only, so it
-      // misses an app's own `overflow: auto` container. Moved rather than closed: a PINNED mark
-      // stops answering pointer moves, so a close here would be permanent, leaving the pin glyph
-      // and the Unpin control standing over a reading that is gone.
+      // Heard on the document, because CDK's reposition strategy misses an app's own
+      // `overflow: auto` container. A panel that follows the pointer closes: a scroll carries the
+      // mark out from under it, and moved instead it rides the viewport edge, one panel per chart
+      // the pointer crossed. A PINNED panel moves: its mark stops answering pointer moves, so a close
+      // would be permanent, leaving the pin glyph and the Unpin control over a reading that is gone.
       this.detachScrollReposition = closeOnScroll(this.overlayRef, () =>
-        this.overlayRef?.updatePosition(),
+        this.dsChartTooltipPinned()
+          ? this.overlayRef?.updatePosition()
+          : this.close(),
       );
       this.detachEscape = this.closeOnEscape();
     } else {
