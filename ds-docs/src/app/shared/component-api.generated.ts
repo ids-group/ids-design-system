@@ -2026,7 +2026,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'auto'",
         "required": false,
-        "description": "Draws a band and crosshair down the category under the pointer and reports it to every mark through `activeIndex`; the panel then names every reading at that category. `'auto'` (default) is `'category'` with two or more tooltip-showing marks, else `'none'`."
+        "description": "Draws a band and crosshair down the category under the pointer and reports it to every mark through `activeIndex`; the panel then names every reading at that category. `'auto'` (default) is `'category'` with two or more tooltip-showing marks or a mark with `tooltip=\"axis\"`, else `'none'`."
       },
       {
         "name": "maxSecondary",
@@ -2504,7 +2504,7 @@ export const COMPONENT_API: Record<string, ComponentApi> = {
         ],
         "default": "'item'",
         "required": false,
-        "description": "Whether a hovered or focused reading opens a tooltip: `'item'` names the marker, `'axis'` every series at the category. `'axis'` needs `cursor=\"category\"` on `ds-chart`."
+        "description": "Whether a hovered or focused reading opens a tooltip: `'item'` names the marker, `'axis'` every series at the category, turning the container's category cursor on under `cursor=\"auto\"`."
       },
       {
         "name": "tooltipAnchor",

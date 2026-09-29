@@ -112,7 +112,8 @@ export class ChartComponent extends DsChartBase implements ChartScales {
 
   /** Draws a band and crosshair down the category under the pointer and reports it to every mark
    *  through `activeIndex`; the panel then names every reading at that category. `'auto'` (default)
-   *  is `'category'` with two or more tooltip-showing marks, else `'none'`. */
+   *  is `'category'` with two or more tooltip-showing marks or a mark with `tooltip="axis"`, else
+   *  `'none'`. */
   readonly cursor = input<'none' | 'category' | 'auto'>('auto');
 
   readonly pinOnClickResolved = resolveWithConfig(
@@ -389,7 +390,11 @@ export class ChartComponent extends DsChartBase implements ChartScales {
       return cursor;
     }
 
-    return this.composed() ? 'category' : 'none';
+    const readsCategory = [...this.tooltipSources().values()].some(
+      (source) => source.readsCategory?.() ?? false,
+    );
+
+    return this.composed() || readsCategory ? 'category' : 'none';
   });
 
   readonly cursorOn = computed(() => this.cursorResolved() === 'category');
