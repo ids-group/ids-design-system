@@ -1,5 +1,11 @@
 ## Unreleased
 
+### Fixed
+
+- **`ds-table`'s `exportCsv()` and `runExport()` warn when the table has no `dsTableExport`.**
+  In a development build either call threw NG0203 from the click handler that made it; it now
+  logs the missing directive. Production builds were unaffected.
+
 ## 0.14.4 — 2026-09-29
 
 ### Breaking
