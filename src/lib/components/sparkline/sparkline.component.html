@@ -1,0 +1,25 @@
+<svg
+  class="sparkline"
+  aria-hidden="true"
+  [dsChartTooltip]="tooltipContext()"
+  [dsChartTooltipOrigin]="tooltipOrigin()"
+  (pointermove)="onPointerMove($event)"
+  (pointerleave)="onPointerLeave()">
+  <svg
+    viewBox="0 0 100 100"
+    preserveAspectRatio="none"
+    width="100%"
+    height="100%"
+    overflow="visible">
+    <path
+      class="line"
+      [attr.d]="geometry().path" />
+  </svg>
+
+  @if (shownPoint(); as point) {
+    <circle
+      class="dot"
+      [attr.cx]="point.x + '%'"
+      [attr.cy]="point.y + '%'" />
+  }
+</svg>

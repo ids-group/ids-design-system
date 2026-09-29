@@ -301,6 +301,8 @@ export type {
 } from '@ids-group-ltd/ids-design-system/components/sidenav-footer';
 export { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 export { SliderComponent } from '@ids-group-ltd/ids-design-system/components/slider';
+export { SparklineComponent } from '@ids-group-ltd/ids-design-system/components/sparkline';
+export type { SparklineScale } from '@ids-group-ltd/ids-design-system/components/sparkline';
 export { SpinnerComponent } from '@ids-group-ltd/ids-design-system/components/spinner';
 export { SplitButtonComponent } from '@ids-group-ltd/ids-design-system/components/split-button';
 export type {
