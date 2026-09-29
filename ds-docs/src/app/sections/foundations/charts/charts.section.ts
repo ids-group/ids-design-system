@@ -37,7 +37,7 @@ const AXIS_TOKENS: readonly AxisToken[] = [
   {
     token: '--chart-tooltip-bg-color / fg',
     role: 'Tooltip surface',
-    value: 'neutral-900 → neutral-0 (inverted)',
+    value: 'surface-overlay / text-primary (follows the theme)',
   },
   {
     token: '--chart-line-width',

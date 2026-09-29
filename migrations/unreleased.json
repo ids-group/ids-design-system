@@ -18,6 +18,29 @@
         "extends PieChartComponent",
         "staggerMs"
       ]
+    },
+    {
+      "id": "chart-tooltip-light-panel",
+      "kind": "behavior",
+      "old": "--chart-tooltip-bg-color",
+      "new": null,
+      "surface": "style",
+      "action": "None, unless a screen relies on the dark tooltip panel on the light theme: set the three --ds-chart-tooltip-* colours on :root as in restore. Delete an override that only restated the new light colours (delete list: chart-tooltip-light-override-redundant).",
+      "appliesWhen": "Every chart tooltip panel on the light theme, which ships in styles/tokens-charts. The dark theme is unchanged.",
+      "pitfall": "A screenshot test of an open chart tooltip on the light theme changes, and a page styled to sit a dark panel on a light card loses that contrast.",
+      "restore": ":root { --ds-chart-tooltip-bg-color: var(--neutral-900); --ds-chart-tooltip-text-color: var(--neutral-0); --ds-chart-tooltip-border-color: var(--neutral-700); }",
+      "searchHints": [
+        "--ds-chart-tooltip-bg-color",
+        "--ds-chart-tooltip-text-color",
+        "--ds-chart-tooltip-border-color",
+        "ds-chart-tooltip-panel"
+      ],
+      "detect": [
+        "--ds-chart-tooltip-bg-color",
+        "ds-chart-tooltip-panel",
+        "toHaveScreenshot"
+      ],
+      "verify": "On the light theme an open chart tooltip panel computes a light background, unless the app sets --ds-chart-tooltip-bg-color on purpose."
     }
   ],
   "informational": [
@@ -34,6 +57,17 @@
       ],
       "why": "cursor=\"auto\", the default, turns the category cursor on for any mark with tooltip=\"axis\".",
       "replaceWith": "nothing; keep it on a plot whose marks do not use tooltip=\"axis\", where it is what turns the cursor on"
+    },
+    {
+      "id": "chart-tooltip-light-override-redundant",
+      "surface": "style",
+      "find": [
+        "--ds-chart-tooltip-bg-color",
+        "--ds-chart-tooltip-text-color",
+        "--ds-chart-tooltip-border-color"
+      ],
+      "why": "The panel takes --surface-overlay, --text-primary and --border-default by default, so an override setting those light colours restates it.",
+      "replaceWith": "nothing; keep an override that sets any other colour"
     }
   ]
 }

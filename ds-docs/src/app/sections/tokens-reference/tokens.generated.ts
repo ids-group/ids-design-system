@@ -1007,17 +1007,17 @@ export const CHARTS: readonly ColourRow[] = [
   },
   {
     "name": "--chart-tooltip-bg-color",
-    "value": "var(--neutral-900)",
+    "value": "var(--surface-overlay)",
     "notes": "Chart tooltip background colour."
   },
   {
     "name": "--chart-tooltip-text-color",
-    "value": "var(--neutral-0)",
+    "value": "var(--text-primary)",
     "notes": "Chart tooltip text colour."
   },
   {
     "name": "--chart-tooltip-border-color",
-    "value": "var(--neutral-700)",
+    "value": "var(--border-default)",
     "notes": "Chart tooltip border colour."
   },
   {
