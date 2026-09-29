@@ -59,7 +59,7 @@
   } @else {
     <ds-chart
       frame="none"
-      cursor="category"
+      [cursor]="plotCursor()"
       [tooltipSwatches]="tooltipSwatches()"
       [tooltipTemplate]="tooltipTemplate() ?? null"
       [categories]="categories()"
