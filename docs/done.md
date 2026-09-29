@@ -4,6 +4,20 @@ Closed items moved out of `todo.md` during the 2026-06-24 review. Structure mirr
 
 ---
 
+## A tightened template context is classified as actionable, and the cut gates it (2026-09-30)
+
+`migrations/AUTHORING.md` states that a directive gaining a static `ngTemplateContextGuard` or a
+generic parameter defaulting to `unknown` breaks every consumer template that read its context as
+`any`, and is a `behavior` item on `surface: template` with the build error in `detect`, not a line
+in `informational` or the subclass-collision item. `tools/check-class-surface-entry.mjs`, in the
+`release` group, fails when a static `ngTemplateContextGuard` appears since the base tag in a file
+that existed there and whose exported class no `surface: template` item in
+`migrations/unreleased.json` names; `class-surface-diff` never lists static members, so the gate
+reads the guards from the two refs itself. Measured 2026-09-30: against `v0.13.4` it names
+`components/table/cell-template.directive.ts - CellTemplateDirective` (the 0.14.0 precedent,
+`0.14.0#cell-template-context-typed-unknown`); against `v0.14.4` it names nothing; a draft item on
+`surface: template` naming the class silences it, and one on `surface: typescript` does not.
+
 ## A toast's announcement stays off screen before any dialog has opened (2026-09-29)
 
 `ToastService` announces through the CDK `LiveAnnouncer`, whose region carries `.cdk-visually-hidden`.
