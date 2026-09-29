@@ -113,4 +113,8 @@ export { ProjectionDroppedDirective } from './projection-dropped.directive';
 export { scrollActiveOptionIntoView } from './scroll-active-option';
 export { DsStaticPreview } from './static-preview.directive';
 export { createTypeAhead } from './type-ahead';
-export { CHART_HOVER_DELAY_MS, resolveChartDefaults } from './charts-defaults';
+export {
+  CHART_HOVER_DELAY_MS,
+  CHART_TOOLTIP_LINGER_MS,
+  resolveChartDefaults,
+} from './charts-defaults';
