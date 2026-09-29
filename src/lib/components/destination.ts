@@ -10,8 +10,7 @@ import {
 
 export type DsDestination = 'routerLink' | 'href' | 'button';
 
-// The query string is a subset match and the fragment is ignored in both: a sort order, a page
-// number or an open accordion does not make it a different page.
+// Query is a subset match and fragment is ignored: sort order or page number is not another page.
 const EXACT_PATH: Partial<IsActiveMatchOptions> = {
   paths: 'exact',
   queryParams: 'subset',
@@ -23,12 +22,10 @@ const PREFIX_PATH: Partial<IsActiveMatchOptions> = {
   paths: 'subset',
 };
 
-/** What a `routerLink` input accepts. A `UrlTree` (from `Router.createUrlTree`) carries the
- *  fragment, query and relative base the string and command-array forms cannot. */
+/** What a `routerLink` input accepts. A `UrlTree` carries the fragment, query and relative base the other forms cannot. */
 export type DsRouterLink = string | readonly unknown[] | UrlTree | null;
 
-/** The values `aria-current` may take. `true` rather than `'true'` so it drops straight into
- *  `RouterLinkActive.ariaCurrentWhenActive`. */
+/** The values `aria-current` may take; `true` (not `'true'`) fits `RouterLinkActive.ariaCurrentWhenActive`. */
 export type DsAriaCurrent =
   | 'page'
   | 'step'
@@ -45,9 +42,8 @@ export interface DsLinkModifiers {
 }
 
 /**
- * No destination is a `<button>`, never an `<a href="#">`: a `#` href navigates, rewriting the URL
- * and discarding the scroll position. Only the decision is shared; a shared template would need a
- * wrapper that changes the control's box.
+ * No destination is a `<button>`, never an `<a href="#">`: a `#` href rewrites the URL and
+ * discards the scroll position.
  *
  * @internal
  */
@@ -84,8 +80,7 @@ export function dsAriaCurrent(
   override: Signal<DsAriaCurrent | null | undefined>,
 ): Signal<DsAriaCurrent | undefined> {
   const router = inject(Router, { optional: true });
-  // `RouterLink` resolves relative commands against its own route. Without the same base, `.`
-  // would land on `/`, a prefix of every page, and the current page would announce `true`.
+  // Same base as `RouterLink`: otherwise `.` lands on `/`, a prefix of every page.
   const route = inject(ActivatedRoute, { optional: true });
 
   return computed<DsAriaCurrent | undefined>(() => {
@@ -109,9 +104,8 @@ export function dsAriaCurrent(
           });
 
     // `lastSuccessfulNavigation` is only the reactive trigger. `Router.isActive` (deprecated in
-    // 21.1, no public replacement) reads the LIVE url; the standalone `isActive()` compares
-    // against the navigation's `finalUrl`, so an app that rewrites its path without navigating
-    // would keep announcing the page it landed on.
+    // 21.1, no replacement) reads the LIVE url; the standalone `isActive()` uses the navigation's
+    // `finalUrl` and goes stale when the path is rewritten without navigating.
     router.lastSuccessfulNavigation();
 
     return router.isActive(tree, EXACT_PATH)

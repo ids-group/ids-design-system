@@ -1,6 +1,5 @@
-// Tier 2 semantic role assignments, identical in structure across themes and resolved through the
-// per-theme palette. These are the light-default values; dark overrides only the deltas. At runtime
-// exactly one theme block matches and declares the complete token set itself.
+// Tier 2 semantic role assignments: the light-default values, resolved through the per-theme palette; dark
+// overrides only the deltas. At runtime exactly one theme block matches and declares the complete token set itself.
 
 @mixin roles {
   /* Surfaces.
@@ -10,7 +9,7 @@
      · overlay   : modals, drawers, popovers (paired with scrim)
      · tint      : brand-tinted (active rows, sidenav active item)
      · inverted  : dark-on-light callouts, toasts
-     Elevation comes from shadow tokens; hover/pressed use --opacity-state-* overlays. */
+     Hover/pressed use --opacity-state-* overlays. */
   --surface-canvas:         var(--neutral-50);
   --surface-default:        var(--neutral-0);
   --surface-secondary:      var(--neutral-100);
@@ -27,7 +26,6 @@
   /* Divider on a coloured fill (split-button chevron); a translucent white reads on any brand hue. */
   --btn-split-divider: hsl(0deg 0% 100% / 25%);
 
-  /* Derived from the primary channels so it follows the brand hue. */
   --link-visited:      hsl(var(--primary-h) calc(var(--primary-s) * 0.6) 45%);
 
   --border-default:    var(--neutral-200);
@@ -44,7 +42,6 @@
   --text-disabled:     var(--neutral-400);
   --text-inverted:     var(--neutral-0);
 
-  /* Text over arbitrary imagery: a guaranteed-light colour with a contrast shadow. */
   --text-on-media:        white;
   --text-on-media-shadow: 0 1px 3px hsl(0deg 0% 0% / 70%);
   --text-link:         var(--blue-700);
@@ -60,9 +57,8 @@
   --icon-muted:        var(--neutral-400);
   --icon-on-primary:     white;
 
-  /* The one place semantic roles map onto the concrete palette. A brand re-skins by overriding
-     the palette (--blue-*, --red-*) or these roles. The channels let halos and tints compose from
-     the same hue source. */
+  /* The one place semantic roles map onto the concrete palette. A brand re-skins by overriding the palette
+     (--blue-*, --red-*) or these roles. */
   --primary-h:  var(--blue-h);
   --primary-s:  var(--blue-s);
   --primary-l:  var(--blue-l);
@@ -76,9 +72,8 @@
   --warning-s:  var(--yellow-s);
   --warning-l:  var(--yellow-l);
 
-  /* Hover, pressed and selected-hover derive from --primary via color-mix(), so overriding only
-     --primary propagates to every interaction state. Steps (12% / 24% darker) mirror the blue
-     600, 700, 800 ramp. */
+  /* Hover, pressed and selected-hover derive from --primary via color-mix(), so overriding only --primary
+     propagates to every state. Steps (12% / 24% darker) mirror the blue 600, 700, 800 ramp. */
   --primary:                 var(--blue-600);
   --primary-hover:           color-mix(in srgb, var(--primary) 88%, black);
   --primary-pressed:         color-mix(in srgb, var(--primary) 76%, black);
@@ -89,8 +84,7 @@
   --primary-strong:          var(--blue-700);
   --primary-on:              white;
 
-  /* Maps onto the --orange family. Override --secondary-h/s/l to reskin; --secondary, hover and
-     pressed recompose. */
+  /* Override --secondary-h/s/l to reskin; --secondary, hover and pressed recompose. */
   --secondary-h:       var(--orange-h);
   --secondary-s:       var(--orange-s);
   --secondary-l:       var(--orange-l);
@@ -104,9 +98,7 @@
   --secondary-muted-strong: hsl(var(--secondary-h) 95% 89%);
   --secondary-on:      var(--primary-on);
 
-  /* Third brand hue (tertiary button, tonal accents), mirroring the --primary/--secondary family
-     shape. Maps onto the --violet family. Override --tertiary-h/s/l (or --tertiary for non-HSL
-     values) to reskin. */
+  /* Third brand hue (tertiary button, tonal accents). Override --tertiary-h/s/l (or --tertiary for non-HSL values) to reskin. */
   --tertiary-h:       var(--violet-h);
   --tertiary-s:       var(--violet-s);
   --tertiary-l:       var(--violet-l);
@@ -164,21 +156,17 @@
   --info-border:       var(--sky-200);
   --info-text:         var(--sky-700);
 
-  /* Focus halos compose from the brand/danger channels, so re-skinning --primary-h propagates. */
-
-  /* Separates the two bands of the field halo. Not `transparent`: a transparent shadow layer is a
-     no-op, so the outer band would show as one solid 4px slab. `--surface-default`, not
-     `--surface-canvas`: a field sits on the surface, and the page ground draws a dark rim. */
+  /* Separates the two bands of the field halo. Not `transparent`: a transparent shadow layer is a no-op, so
+     the outer band shows as one solid slab. `--surface-default`, not `--surface-canvas`, which draws a dark rim. */
   --focus-ring-inner:        var(--surface-default);
   --focus-ring-outer-h:      var(--primary-h);
   --focus-ring-outer-s:      var(--primary-s);
   --focus-ring-outer-l:      var(--primary-l);
   --focus-ring-outer-alpha:  1;
 
-  /* Flat focus colour for components drawing an `outline` (a row in a clipping list, a swatch
-     grid). It must stay defined: an unresolved `outline-color` falls to `currentColor`.
-     `--accent`, not `--focus-ring-outer-*`: inside a `ds-color` zone it follows the family instead
-     of pinning the outline to the brand hue. */
+  /* Flat focus colour for components drawing an `outline` (a row in a clipping list, a swatch grid); it must
+     stay defined or `outline-color` falls to `currentColor`. `--accent`, not `--focus-ring-outer-*`, so a
+     `ds-color` zone follows the family. */
   --focus-ring-color: var(--accent);
 
   --focus-ring:
@@ -191,9 +179,8 @@
     0 0 0 2px var(--focus-ring-inner),
     0 0 0 4px hsl(var(--error-h) var(--error-s) var(--error-l) / 100%);
 
-  /* The ring drawn inside the border box, for a subtree under a clipping ancestor, where an
-     outset shadow is eaten by `overflow: hidden` and leaves no indicator. Reached through
-     `[data-focus="inset"]`. */
+  /* The ring drawn inside the border box for a subtree under a clipping ancestor, where an outset shadow is
+     eaten by `overflow: hidden`. Reached through `[data-focus="inset"]`. */
   --focus-ring-inset:
     inset 0 0 0 2px var(--focus-ring-inner),
     inset 0 0 0 4px hsl(var(--focus-ring-outer-h) var(--focus-ring-outer-s) var(--focus-ring-outer-l) / var(--focus-ring-outer-alpha));
@@ -208,7 +195,6 @@
   --focus-field-error:
     0 0 0 3px hsl(var(--error-h) var(--error-s) var(--error-l) / var(--focus-field-alpha));
 
-  /* Pre-composed per family so ds-color flips a single --accent-focus-* pointer. */
   --focus-ring-secondary:
     0 0 0 2px var(--focus-ring-inner),
     0 0 0 4px hsl(var(--secondary-h) var(--secondary-s) var(--secondary-l) / 100%);

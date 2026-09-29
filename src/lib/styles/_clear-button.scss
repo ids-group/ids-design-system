@@ -1,8 +1,7 @@
 @use 'press' as press;
 
-// The `×` for ds-select, ds-autocomplete and ds-multi-select (`.clear-btn` behind `clearable`).
-// Include inside the selector holding the trigger's layout. ds-input keeps its own filled-disc
-// clear button.
+// The `×` behind `clearable` for ds-select, ds-autocomplete and ds-multi-select (ds-input has its own).
+// Include inside the selector holding the trigger's layout.
 @mixin button {
   border: 0;
   background: transparent;

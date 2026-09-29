@@ -11,12 +11,11 @@ import {
  * @fileoverview How many chips fit one line of a trigger.
  *
  * INVARIANT: nothing here may measure something the cut itself changes, or the
- * measurement feeds back into its own input and the split never settles (a hung
- * page). Hence the budget comes off the trigger's PARENT content box, never the
- * row, and the "+N more" marker gets a fixed reserve rather than a measurement.
+ * measurement feeds back into its own input and never settles (a hung page).
+ * The budget comes off the trigger's PARENT content box, and the "+N more"
+ * marker gets a fixed reserve rather than a measurement.
  *
  * Chips carry `data-chip` and sit in a row that is a direct child of the trigger.
- * `enabled` gates the whole thing because measuring forces layout.
  */
 
 /**
@@ -53,7 +52,7 @@ function hostContentWidth(
   );
 }
 
-/** Room held for "+N more": 4.5em wide with three digits, 5em so a chip is not dropped for a pixel. */
+/** Room held for "+N more" (4.5em with three digits, rounded up). */
 const MARKER_RESERVE_EM = 5;
 
 /** A sibling that can grow gives back what it does not use, so only its floor is owed. */
@@ -70,7 +69,7 @@ export function chipFit(
   count: Signal<number>,
   chipRow: Signal<ElementRef<HTMLElement> | undefined>,
   enabled: Signal<boolean>,
-  /** The whole selection, which `count` may already cap. */
+  /** The whole selection; `count` may cap it. */
   selectionSize: Signal<number> = count,
 ): Signal<number> {
   const available = signal(0);
@@ -78,9 +77,8 @@ export function chipFit(
   const markerReserve = signal(0);
   /** Widths of ALL chips, from the last render that held all of them. */
   const chipWidths = signal<readonly number[]>([]);
-  /** `count` at that render, so a stale cache is never trusted. */
   const measuredFor = signal(-1);
-  /** Geometry the last measure ran against; a repeat is skipped because each measure forces layout. */
+  /** A repeat of the last geometry is skipped: each measure forces layout. */
   let lastWidth = -1;
   let lastCount = -1;
 
@@ -90,9 +88,8 @@ export function chipFit(
       return;
     }
 
-    // A trigger that hugs its content (`width: fit-content`, set by both compact modes) is
-    // sized by the chips this cut removes. The parent's content box does not move when the
-    // chips do. The trigger-width fallback is that same feedback loop: last resort only.
+    // A `fit-content` trigger is sized by the chips this cut removes; the parent's
+    // content box is not. The trigger-width fallback is that feedback loop.
     const host = trigger.parentElement;
     const budget = hostContentWidth(host, trigger) ?? trigger.clientWidth;
 
@@ -161,8 +158,7 @@ export function chipFit(
       return total;
     }
     const widths = chipWidths();
-    // Until the widths for THIS selection are in, render all of them: that render
-    // is what gets measured, and the row clips it until the cut lands.
+    // Until widths for THIS selection are in, render all: that render is measured.
     if (measuredFor() !== total || available() <= 0) {
       return total;
     }
@@ -170,17 +166,15 @@ export function chipFit(
     let used = 0;
     for (let index = 0; index < widths.length; index++) {
       const next = used + widths[index] + (index > 0 ? gap() : 0);
-      // The marker is only owed room once something is actually hidden, so the
-      // last chip may spend what the marker would have taken - but only if this
-      // really is the end of the selection, not the end of a capped slice.
+      // The marker needs room only if something is hidden; a capped slice's last
+      // chip is not the end of the selection.
       const isLast =
         index === widths.length - 1 && selectionSize() <= widths.length;
       const budget = isLast
         ? available()
         : available() - markerReserve() - gap();
       if (next > budget) {
-        // One chip always shows: a trigger too narrow for even that is a layout
-        // bug upstream, and 0 would render a bare "+N" with nothing to anchor it.
+        // At least one chip: 0 would render a bare "+N".
         return Math.max(1, index);
       }
       used = next;

@@ -5,17 +5,14 @@ const FULL_TURN_EPSILON = 1e-9;
 
 export const DEFAULT_INNER_RADIUS = 0.68;
 
-/** Valid over [0, 1): zero is a solid pie, and one would leave no ring to draw, so it falls back
- *  along with every other unusable value. */
+/** Valid over [0, 1); anything else falls back. */
 export function holeFraction(innerRadius: number): number {
   return Number.isFinite(innerRadius) && innerRadius >= 0 && innerRadius < 1
     ? round(innerRadius)
     : DEFAULT_INNER_RADIUS;
 }
 
-/** The slices a legend can carry, with everything past `limit` summed into one. The kept slices stay
- *  in the order given, since a ring is read against its legend top to bottom. The remainder takes
- *  the neutral eighth palette slot. */
+/** The slices a legend can carry, with everything past `limit` summed into one that takes the neutral eighth palette slot. */
 export function groupSmallest(
   slices: readonly PieChartSlice[],
   limit: number | null,
@@ -46,8 +43,7 @@ export interface PieArc {
   readonly endAngle: number;
 }
 
-/** Anything that is not a positive share becomes zero. Non-finite values go in the same pass: one
- *  NaN reaches every other slice through the total, and a `d` holding NaN draws nothing, silently. */
+/** Anything that is not a positive share becomes zero; a NaN would reach every slice through the total and draw nothing, silently. */
 export function positiveValues(values: readonly number[]): number[] {
   return values.map((value) =>
     Number.isFinite(value) && value > 0 ? value : 0,
@@ -100,8 +96,7 @@ export function paletteIndex(
   return index % paletteLength;
 }
 
-/** One `"x y"` pair for a path. Angles run clockwise from 12 o'clock; SVG's y axis points down, so
- *  that is (sin, -cos) rather than (cos, sin). */
+/** One `"x y"` pair for a path. Angles run clockwise from 12 o'clock. */
 export function ringPoint(
   centerX: number,
   centerY: number,
@@ -113,7 +108,7 @@ export function ringPoint(
   return `${x} ${y}`;
 }
 
-/** The same point as numbers, for placing something rather than drawing a path. */
+/** The same point as numbers. */
 export function ringCoords(
   centerX: number,
   centerY: number,
@@ -184,8 +179,7 @@ function fullRingPath(
   return `${outer} ${circlePath(centerX, centerY, innerRadius, 0)}`;
 }
 
-/** A single arc of a full turn ends where it starts and SVG draws nothing, so a closed circle is
- *  two half-turns. */
+/** A closed circle is two half-turns: a single full-turn SVG arc draws nothing. */
 function circlePath(
   centerX: number,
   centerY: number,

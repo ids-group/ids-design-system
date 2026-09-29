@@ -1,17 +1,13 @@
 @use 'focus' as focus;
 
-// The box every chart draws around itself. On by default so the plot, legend and data table do
-// not run into neighbours; the `frame` input or `DS_CONFIG.chart.frame` turns it off.
 @mixin chart-frame {
   :host {
     display: block;
 
-    // A drag across a plot would select axis ticks, legend labels and the visually-hidden caption
-    // (painting bars over invisible content); the data table stays selectable below.
+    // Dragging across a plot would select axis ticks, legend labels and the hidden caption; the data table stays selectable below.
     user-select: none;
   }
 
-  // Set by the component from `frame` falling back to `DS_CONFIG.chart.frame`.
   :host(.framed) {
     padding: var(--ds-chart-frame-padding);
     background: var(--ds-chart-frame-bg-color);
@@ -32,15 +28,14 @@
     user-select: text;
   }
 
-  /* The pie names its element `.empty-text`. */
   .empty.is-error,
   .empty-text.is-error {
     color: var(--error);
   }
 }
 
-// Drawn focus indicator: `outline` on an SVG element paints its bounding box, not its silhouette.
-// The halo separates the ring from a mark of the same hue; `drop-shadow` because a shape has one stroke.
+// `outline` on an SVG element paints its bounding box, not its silhouette, so the ring is drawn as stroke.
+// The halo separates the ring from a same-hue mark; `drop-shadow` because a shape has one stroke.
 @mixin drawn-focus-ring {
   stroke: var(--ds-chart-focus-ring-color);
   stroke-width: var(--focus-ring-width);
@@ -48,9 +43,8 @@
   filter: drop-shadow(0 0 var(--focus-ring-width) var(--ds-chart-focus-halo-color));
 }
 
-// A click focuses an SVG shape in Chromium without a `tabindex`, and `:focus-visible` is false
-// for that focus, so the user agent outlines the bounding box. Keyed on `:focus` to catch it;
-// `own-indicator` keeps the outline under forced colours, where `stroke` is not remapped.
+// Chromium focuses a clicked SVG shape without a `tabindex` but `:focus-visible` is false, so the UA outlines
+// the bounding box. `:focus` catches it; `own-indicator` keeps the outline under forced colours.
 @mixin no-bounding-box-focus($mark) {
   #{$mark}:focus {
     @include focus.own-indicator;
@@ -77,8 +71,7 @@
   }
 }
 
-// Empty/error states keep the plot's height so the page does not jump. `$height` is the plot the
-// message stands in for; `$axes` keeps the L of axis lines (off for pie and funnel).
+// Keeps the plot's height in empty/error states. `$axes` keeps the L of axis lines (off for pie and funnel).
 @mixin message-box($height, $axes: false) {
   .empty {
     display: grid;
@@ -95,7 +88,6 @@
   }
 }
 
-/* Visible way out of a pin (Escape is invisible). Reads `Unpin`, not `Reset`, which would imply more. */
 @mixin pin-reset {
   :host {
     position: relative;
@@ -105,15 +97,13 @@
     --_chart-pin-reset-inset: var(--ds-chart-frame-padding);
   }
 
-  // Keeps a long caption from running under the control.
   // ponytail: a fixed room fits `Unpin`; a translation longer than about ten characters overlaps
   // the caption's end, measure the control if one ever does.
   :host:has(.pin-reset) figure > figcaption {
     padding-inline-end: calc(5rem + var(--space-2));
   }
 
-  /* Top end: the bottom carries axis labels, legend and table. The 44px touch target is the
-     ::before hit area, not the box. */
+  /* Top end: the bottom carries axis labels, legend and table. The 44px touch target is the ::before. */
   .pin-reset {
     position: absolute;
     inset-block-start: var(--_chart-pin-reset-inset, 0);
@@ -149,7 +139,7 @@
   }
 }
 
-/* Pushpin on an opaque disc, legible on any series colour. A state, not a target: no pointer events, no tab stop. */
+/* A state, not a target: no pointer events, no tab stop. */
 @mixin pin-marker {
   .pin-marker {
     display: grid;

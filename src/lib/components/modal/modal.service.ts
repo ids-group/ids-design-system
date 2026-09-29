@@ -56,7 +56,7 @@ export class ModalService {
         new ComponentPortal(ModalConfirmComponent, null, injector),
       );
 
-      // The library ships no CDK dark-backdrop CSS, so paint the scrim from the DS token, as ds-modal does.
+      // No CDK backdrop CSS ships; paint the scrim from the DS token.
       if (overlayRef.backdropElement) {
         overlayRef.backdropElement.style.backgroundColor =
           'var(--surface-scrim)';

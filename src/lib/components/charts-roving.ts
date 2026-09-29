@@ -9,7 +9,6 @@ import {
 import type { ElementRef, Signal } from '@angular/core';
 
 /** Where a roving tabindex lands after `key`, or `null` when the key does not traverse.
- *
  *  The ends wrap, as in `ds-radio-group`; Home and End jump to either extreme.
  *
  *  @internal */
@@ -37,8 +36,7 @@ export function nextRovingIndex(
   }
 }
 
-/** The mark `index` within `scope`. `within` narrows the search for a chart whose marks repeat the
- *  same index once per series.
+/** The mark `index` within `scope`. `within` narrows the search for a chart whose marks repeat an index per series.
  *
  *  @internal */
 export function markAt(
@@ -63,19 +61,15 @@ export function focusMark(
   }
 }
 
-/** A chart's roving tab stop.
- *
- *  One tab stop per chart, not one per mark: WCAG 2.1.1 does not require every mouse-operable
- *  control to be separately focusable, and 25 marks would be 25 tab stops.
+/** A chart's roving tab stop: one per chart, not one per mark.
  *
  *  @internal */
 export interface RovingMarks {
-  /** The index of the one mark that carries `tabindex="0"`. */
+  /** The index of the mark that carries `tabindex="0"`. */
   readonly tabStop: Signal<number>;
-  /** Makes `index` the tab stop, for a mark that has taken focus. */
+  /** Makes `index` the tab stop. */
   focus(index: number): void;
-  /** Handles an arrow, Home or End pressed on the mark at `index`: moves the tab stop and DOM focus
-   *  to the next mark inside `scope`. Any other key is left alone. */
+  /** Handles an arrow, Home or End on the mark at `index`: moves the tab stop and DOM focus within `scope`. */
   navigate(event: KeyboardEvent, index: number, scope: Element | null): void;
 }
 
@@ -104,8 +98,7 @@ export interface MarkHit {
   readonly index: number;
 }
 
-/** The mark an event on the marks' parent came from (the nearest `[data-mark-index]`), for a chart
- *  that listens once per series. `null` when the event did not start on a mark.
+/** The mark an event on the marks' parent came from (the nearest `[data-mark-index]`), or `null`.
  *
  *  @internal */
 export function markOf(
@@ -149,7 +142,7 @@ export function listenForMarkFocus(
       };
     const focusIn = forward(onFocus);
     const focusOut = forward(onBlur);
-    // Outside the zone: every focus change reaches every series; the signal writes schedule the render.
+    // Outside the zone: every focus change reaches every series.
     zone.runOutsideAngular(() => {
       document.addEventListener('focusin', focusIn);
       document.addEventListener('focusout', focusOut);

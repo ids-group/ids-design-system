@@ -8,8 +8,7 @@
 :host {
   display: block;
 
-  /* A flex or grid row parent gives items min-width: auto (min-content), so without
-     this the banner overflows a narrow column instead of letting the text degrade. */
+  /* Flex/grid parents give items min-width: auto, which would overflow a narrow column. */
   min-width: 0;
 }
 
@@ -36,7 +35,7 @@
   display: flex;
   gap: var(--space-3);
 
-  /* Owned, not inherited: a centred ancestor would drag both text blocks with it. */
+  /* Not inherited: a centred ancestor would centre both text blocks. */
   text-align: start;
   padding: var(--_banner-padding-y) var(--_banner-padding-x);
   border-radius: var(--_banner-radius);
@@ -97,8 +96,7 @@
     margin: 0;
   }
 
-  /* The gap sits on the body: on the title it would show with no body under it
-     and not vanish in `compact`. */
+  /* The gap sits on the body: on the title it would show with no body and survive `compact`. */
   .text:not(:empty) {
     display: block;
     margin-top: var(--space-1);
@@ -146,8 +144,6 @@
     --_banner-padding-y: var(--ds-banner-padding-y, var(--space-2));
     --_banner-padding-x: var(--ds-banner-padding-x, var(--space-3));
 
-    /* One-line strip: the ellipsis shows the cut and stops a long title forcing
-       the banner past its column. */
     .title {
       @include text-clip.single-line-ellipsis;
     }

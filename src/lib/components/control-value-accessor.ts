@@ -13,20 +13,18 @@ import type { ControlValueAccessor } from '@angular/forms';
 import { DsFieldBase } from './field-base';
 
 /**
- * Value-bearing elements are searched FIRST: the number stepper renders its decrement button
- * before its input, so "the first focusable descendant" would land on minus. `tabindex="-1"` is
- * excluded so a roving-tabindex group yields the tabbable radio, not the first in the DOM.
+ * Value elements are searched FIRST: the number stepper renders its decrement button before its
+ * input. `tabindex="-1"` is excluded so a roving-tabindex group yields the tabbable radio.
  */
 const NOT_ROVED = ':not([tabindex="-1"]):not([disabled])';
 const VALUE_ELEMENTS = `input:not([type="hidden"])${NOT_ROVED}, textarea${NOT_ROVED}`;
 const TRIGGER_ELEMENTS = `button${NOT_ROVED}, [tabindex="0"]${NOT_ROVED}`;
 
 /**
- * The `ControlValueAccessor` half of a DS value control, with no message API. For a control
- * that renders no message row (`ds-search`).
+ * The `ControlValueAccessor` half of a DS value control, with no message API (`ds-search`).
  *
- * The model arrives as a THUNK: on a base class `value` is abstract and on a component it is a
- * field initialiser, so it does not exist yet when this runs.
+ * The model arrives as a THUNK: `value` is abstract on a base class and a field initialiser on
+ * a component, so it does not exist yet when this runs.
  *
  * Must be called from an injection context (it owns an `effect`).
  * @internal
@@ -44,15 +42,13 @@ export function valueControlBridge<T>(model: () => ModelSignal<T>): {
   const touchedSelf = signal(false);
   let onChange: (next: T) => void = () => {};
   let onTouched: () => void = () => {};
-  // Last value synced with the forms API. Stops the effect echoing a form-driven write
-  // back as a user change (which would dirty the control or loop).
+  // Stops the effect echoing a form-driven write back as a user change.
   let synced: T | undefined;
   let hasSynced = false;
 
   effect(() => {
     const next = model()();
     if (!hasSynced) {
-      // Adopt the initial value silently; never emit on init.
       hasSynced = true;
       synced = next;
 
@@ -118,25 +114,16 @@ export abstract class DsControlValueAccessor<T>
 {
   abstract readonly value: ModelSignal<T>;
 
-  /**
-   * Hides the control. Inline `display`, not the `hidden` attribute: each control sets its own
-   * `:host` display, which the attribute's weaker UA rule would lose to.
-   */
+  /** Hides the control. Inline `display`: the `hidden` attribute loses to each control's `:host` display. */
   readonly hidden = input(false, { transform: booleanAttribute });
   private readonly hostElement = inject<ElementRef<HTMLElement>>(ElementRef);
 
-  /**
-   * Signal forms calls this through `focusBoundControl()` (e.g. to reach the first invalid field
-   * after a failed submit); the default would focus the HOST, which is not focusable.
-   */
+  /** Signal forms calls this via `focusBoundControl()`; the default would focus the unfocusable HOST. */
   focus(options?: FocusOptions): void {
     focusOwnControl(this.hostElement.nativeElement, options);
   }
 
-  /**
-   * Drops focus if it sits anywhere inside this control (input, picker trigger, OTP cell).
-   * A portaled panel is outside the host and is left alone.
-   */
+  /** Drops focus from anywhere inside this control; a portaled panel is left alone. */
   blur(): void {
     blurOwnControl(this.hostElement.nativeElement);
   }
@@ -200,9 +187,6 @@ export abstract class DsBooleanControlValueAccessor
   }
 
   protected readonly formDisabled = signal(false);
-
-  // Separate from the control's `touched`, which only exists once `NgControl`
-  // resolves: too late to gate the first blur.
   protected readonly touchedSelf = signal(false);
 
   private onChange: (value: boolean) => void = () => {};

@@ -12,7 +12,7 @@
   --_menu-item-description-font-size: var(--ds-menu-item-description-font-size, var(--font-size-2xs));
   --_menu-item-description-max-width: var(--ds-menu-item-description-max-width, 14rem);
 
-  // Must match the template's `[size]="16"` on ds-icon: it is the width the empty slot reserves.
+  // Must match the template's `[size]="16"` on ds-icon.
   --_menu-item-icon-size: var(--ds-menu-item-icon-size, 16px);
 
   display: block;
@@ -25,12 +25,11 @@
   min-width: 0;
 }
 
-// `display: contents` keeps an empty icon wrapper from costing the row's flex gap.
+// `contents`: an empty wrapper must not cost the row's flex gap.
 .menu-item-icon {
   display: contents;
 }
 
-// One item with an icon makes every item reserve the slot, so the labels share one axis.
 :host-context(ds-menu.has-icons) .menu-item-icon {
   display: block;
   flex: none;
@@ -56,8 +55,7 @@
   background: transparent;
   border: 0;
 
-  // Square: the row is flush to its container, so any radius here cannot be concentric
-  // with the panel's and leaves slivers in the corners. The menu clips the fill.
+  // Square: a radius here cannot be concentric with the panel's and leaves corner slivers. The menu clips the fill.
   border-radius: var(--ds-menu-item-radius, 0);
   font: var(--_menu-item-label-font-weight) var(--_menu-item-label-font-size) / var(--line-height-base) var(--font-sans);
   color: var(--_menu-item-label-color);
@@ -69,7 +67,6 @@
 
   &:active:not(.disabled) { background: var(--surface-muted); }
 
-  // The ring offset comes from the menu host's data-focus="inset" (the panel clips).
   &:focus-visible { @include focus.ring; }
 
   &.disabled {
@@ -79,8 +76,7 @@
     &:hover { background: transparent; }
   }
 
-  /* Before `.error` so an item marked both reads destructive. Hover is left alone:
-     a quiet row is still actionable. */
+  /* Before `.error` so an item marked both reads destructive. */
   &.quiet {
     color: var(--_menu-item-quiet-label-color);
   }

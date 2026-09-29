@@ -16,8 +16,7 @@ function toWidth(value: unknown): number {
  * boundary destroys and re-creates the view, so a control's internal state (open panel, focus)
  * is lost on collapse; its value survives in the consumer's own signal or form control.
  *
- * The width is a contract, not a hint: the slot is sized to exactly this, so a wider control is
- * narrowed rather than allowed to break the row.
+ * The width is a contract, not a hint: a wider control is narrowed to fit the slot.
  */
 @Directive({
   selector: 'ng-template[dsFilterItem]',

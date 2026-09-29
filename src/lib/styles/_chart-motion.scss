@@ -1,19 +1,13 @@
-// Mark enter and exit for all charts.
-//
 // The enter is delayed by the exit duration so removals finish before additions start;
-// `--_chart-mark-stagger` (set per mark) adds to the delay.
+// `--_chart-mark-stagger` (set per mark) adds to it.
 //
-// The enter is a plain CSS animation, not `animate.enter`: that runtime calls `getAnimations()`
-// once per mark, which in Chrome grows costlier with every running animation and blocks the main
-// thread for seconds on a thousand marks. `backwards`, not `both`: a filling animation stays in
-// effect and every later `getAnimations()` pays for it. The exit uses `animate.leave` in function
-// form: the component puts `.mark-leave` on the mark and Angular removes it on `animationend`.
+// The enter is a plain CSS animation, not `animate.enter`: that runtime calls `getAnimations()` once per
+// mark, which in Chrome blocks the main thread for seconds on a thousand marks. `backwards`, not `both`:
+// a filling animation stays in effect and every later `getAnimations()` pays for it. The exit uses
+// `animate.leave`: the component puts `.mark-leave` on the mark and Angular removes it on `animationend`.
 //
-// A mark with a baseline grows from it; a uniform scale would move the baseline. Baseline-less
-// marks settle in from a scale near one, a line draws along its path.
-//
-// Reduced motion zeroes the durations (tokens); `enters` zeroes the delays, or a delayed
-// mark with `backwards` fill would stay invisible.
+// Reduced motion zeroes the durations (tokens); `enters` zeroes the delays, or a delayed mark with
+// `backwards` fill would stay invisible.
 
 @keyframes ds-chart-mark-grow-y {
   from {
@@ -33,8 +27,7 @@
   }
 }
 
-// On a canvas whose viewBox stretches a pixel is a user unit; set `--_chart-rise-distance` to a
-// percentage of the mark's box there.
+// On a canvas whose viewBox stretches, a pixel is a user unit: set `--_chart-rise-distance` as a percentage of the mark's box.
 @keyframes ds-chart-mark-rise {
   from {
     opacity: 0;
@@ -96,8 +89,7 @@
   }
 }
 
-// `animate.leave` goes on the element the `@for` creates; the enter goes on the element that
-// animates (the fill inside, for a column and a bar row).
+// `animate.leave` goes on the element the `@for` creates; the enter goes on the element that animates.
 
 @mixin grows-up($mark, $fill) {
   #{$mark} #{$fill} {
@@ -187,7 +179,6 @@
   @include leaves($path);
 }
 
-/* `$after` is how long the mark itself takes. */
 @mixin follows($detail, $after) {
   @include enters(
     '#{$detail}',

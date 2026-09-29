@@ -1,17 +1,14 @@
 import { effect, isDevMode } from '@angular/core';
 
 /**
- * Warns once per distinct message, not once per recomputation: the effect re-runs whenever any
- * signal the condition reads changes, so a static misconfiguration would otherwise log on every
- * keystroke. Returning the message from the condition keeps a condition from drifting away from
- * its message.
+ * Warns once per distinct message: the effect re-runs whenever a signal the condition reads
+ * changes, so a static misconfiguration would otherwise log on every keystroke.
  *
  * Must be called from an injection context.
  *
- * Callers wrap this in `if (typeof ngDevMode === 'undefined' || ngDevMode)`. That is a
- * BUILD-time expression, not a repeat of the `isDevMode()` below: a minifier folds it and drops
- * the message with it, which the opaque `isDevMode()` call never allows. For the same reason it
- * cannot become a helper function.
+ * Callers wrap this in `if (typeof ngDevMode === 'undefined' || ngDevMode)`: a BUILD-time
+ * expression a minifier folds away with the message, which the opaque `isDevMode()` call never
+ * allows. It cannot become a helper function for the same reason.
  * @internal
  */
 export function devWarn(message: () => string | null): void {

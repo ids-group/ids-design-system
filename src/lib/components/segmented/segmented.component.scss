@@ -27,7 +27,6 @@
   --_segmented-label-font-weight: var(--ds-segmented-label-font-weight, var(--font-weight-semibold));
   --_segmented-label-font-size: var(--ds-segmented-label-font-size, var(--font-size-s));
 
-  /* Own width: an outer flex/grid must not stretch the track; segments size to their content. */
   display: inline-flex;
   flex-direction: column;
   align-items: flex-start;
@@ -48,7 +47,6 @@
   border-radius: var(--_segmented-radius);
 }
 
-/* The negative margin collapses two adjacent 1px borders into one. */
 :host(.joined) .track {
   gap: 0;
   padding: 0;

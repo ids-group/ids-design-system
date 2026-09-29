@@ -17,19 +17,12 @@
   }
 }
 
-// Include on the container, never on the mark: `:has()` asks the container whether one of its
-// marks is active. `.is-active` follows the tooltip state (hover delay, focus).
-//
-// Gated on `.dims-others` (the `dimOthers` input), off by default: dimming costs the reader the
-// ability to tell the rest apart (OKLab dE x100, worst pair of three series: 14.8 at full opacity,
-// 2.1 at 30%, measured 2026-09-13).
-//
-// Usage: `.columns { @include chart-interactive.fades('.column'); }`
+// Include on the container, never on the mark: `:has()` asks the container whether one of its marks is active.
+// Gated on `.dims-others` (the `dimOthers` input), off by default: dimming makes the rest hard to tell apart.
 @mixin fades($mark, $also: '') {
   @include dims($mark, $also);
 
-  // `:not(:has(.is-pinned))` suspends the hover rule under a pin; otherwise the two rules dim
-  // each other's mark and every mark ends up faded.
+  // Suspends the hover rule under a pin, or the two rules dim each other's mark and every mark fades.
   &.dims-others:not(:has(#{$mark}.is-pinned)):has(#{$mark}.is-active)
     #{$mark}:not(.is-active),
   &.dims-others:has(#{$mark}.is-pinned) #{$mark}:not(.is-pinned) {
@@ -37,7 +30,6 @@
   }
 }
 
-// `.interactive` (consumer click) or `.pins` (click holds): the pointer cursor promises a click.
 @mixin clickable($mark) {
   #{$mark}.interactive,
   #{$mark}.pins {
@@ -45,9 +37,7 @@
   }
 }
 
-// Legend entry hover (and focus-within) state. The padding is offset by a negative margin so the
-// tint grows without moving rows; legend gaps are wider than the overhang.
-// `$label` is the element to recolour when it sets its own colour.
+// The negative margin offsets the padding so the tint grows without moving rows. `$label` is recoloured when it sets its own colour.
 @mixin legend-entry($entry, $hover-bg-color, $hover-text-color, $label: null) {
   #{$entry} {
     margin: calc(-1 * var(--space-0-5)) calc(-1 * var(--space-1-5));

@@ -114,7 +114,6 @@ export class MultiSelectComponent
   private readonly vcr = inject(ViewContainerRef);
   private readonly host = inject(ElementRef<HTMLElement>);
   protected readonly intl = inject(DS_INTL);
-  /** Forwarded onto the portaled pane on open so consumer `--ds-multi-select-panel-*` overrides reach it. */
   private readonly panelTokens = [
     '--ds-multi-select-panel-bg-color',
     '--ds-multi-select-option-bg-color-active',
@@ -132,21 +131,18 @@ export class MultiSelectComponent
   readonly value = model<string[]>([]);
   /** Options, groups, or both mixed - rendered in the order given. */
   readonly options = input<readonly MultiSelectItem[]>([]);
-  /** Placeholder shown in the trigger when nothing is selected.
-   *  Unset falls back to `DS_INTL.picker.placeholder`. */
+  /** Placeholder when nothing is selected; falls back to `DS_INTL.picker.placeholder`. */
   readonly placeholder = input<string | null>(null);
   readonly placeholderResolved = computed(
     () => this.placeholder() ?? this.intl().picker.placeholder,
   );
-  /** Placeholder for the in-panel filter input.
-   *  Unset falls back to `DS_INTL.picker.filterPlaceholder`. */
+  /** Placeholder for the filter input; falls back to `DS_INTL.picker.filterPlaceholder`. */
   readonly searchPlaceholder = input<string | null>(null);
   readonly searchPlaceholderResolved = computed(
     () => this.searchPlaceholder() ?? this.intl().picker.filterPlaceholder,
   );
-  /** Whether the panel carries a filter row. `true` always, `false` never, a NUMBER is a threshold (row appears at that many options).
-   *  Unset falls back to `DS_CONFIG.picker.searchable`, then `true`. Hiding it moves the keyboard model (arrows, Enter, Escape,
-   *  `aria-activedescendant`) onto the trigger. */
+  /** Whether the panel has a filter row: `true` always, `false` never, a number is the option-count threshold.
+   *  Falls back to `DS_CONFIG.picker.searchable`, then `true`. Hiding it moves the keyboard model onto the trigger. */
   readonly searchable = input<boolean | number | null, unknown>(null, {
     transform: (raw: unknown) => {
       if (raw === null || raw === undefined) {
@@ -174,8 +170,7 @@ export class MultiSelectComponent
   );
   /** Native `name` attribute forwarded to the trigger. */
   readonly name = input<string | null>(null);
-  /** Extra classes for the portaled panel, beside `ds-dropdown-panel`, `ds-overlay-pane` and `ds-multi-select-panel`.
-   *  The panel is portaled out of the host, so a class on the pane is the only way a consumer stylesheet reaches ONE instance. */
+  /** Extra classes for the portaled panel, the only way to style one instance of it. */
   readonly panelClass = input<string | readonly string[]>([]);
   /** Prevents opening the panel while still allowing focus. */
   readonly readOnly = input(false, { transform: booleanAttribute });
@@ -187,31 +182,22 @@ export class MultiSelectComponent
   });
   /** Shows a clear affordance once there is something to clear. */
   readonly clearable = input(false, { transform: booleanAttribute });
-  /** How the typed query narrows the list. Default: case-insensitive substring of `label`. Pass a predicate to match on anything else.
-   *  Pass `'none'` when the list arrives already filtered (server-side search): the query is reported through `filterChange`
-   *  and every option given is rendered. */
+  /** How the typed query narrows the list. Default: case-insensitive substring of `label`. `'none'` renders every option (server-side search). */
   readonly filterWith = input<
     ((option: MultiSelectOption, query: string) => boolean) | 'none'
   >((option, query) => option.label.toLowerCase().includes(query));
-  /** The query the user typed, on every change. The input for a server-side search;
-   *  pair it with `filterWith="none"` so the list is not narrowed twice. */
+  /** The typed query, on every change; pair with `filterWith="none"` for server-side search. */
   readonly filterChange = output<string>();
-  /** Options are still being fetched. The panel shows a spinner instead of the
-   *  empty row - which would otherwise claim there are no matches - and the list
-   *  reports `aria-busy`. */
+  /** Options are still being fetched: the panel shows a spinner instead of the empty row and reports `aria-busy`. */
   readonly loading = input(false, { transform: booleanAttribute });
-  /** The panel opened. The moment to fetch options for a picker whose list is
-   *  loaded on demand. */
+  /** The panel opened. */
   readonly opened = output<void>();
   /** The panel closed, for any reason - a pick, Escape, an outside click, a scroll. */
   readonly closed = output<void>();
-  /** Scrolls the keyboard cursor's row into view. On by default: a list longer
-   *  than the panel otherwise walks the cursor out of sight. Set `false` only if
-   *  you are driving the scroll position yourself. */
+  /** Scrolls the keyboard cursor's row into view. Set `false` only when driving the scroll position yourself. */
   readonly scrollActiveIntoView = input(true, { transform: booleanAttribute });
-  /** Chip collapse when they outgrow one line. `"fit"` (default) measures and shows as many as fit, the rest behind "+N more".
-   *  A number is a ceiling, not a promise: the row still measures, so narrow triggers show fewer. `"all"` shows every chip
-   *  and lets the trigger grow a line per selection. Unset (`null`) resolves to `"fit"`, not `"all"`. */
+  /** Chip collapse: `"fit"` (default) shows as many as fit, the rest behind "+N more"; a number is a ceiling, not a promise;
+   *  `"all"` shows every chip and grows the trigger a line per selection. */
   readonly maxVisibleChips = input<number | 'fit' | 'all' | null>(null, {
     transform: (raw: unknown) => {
       if (raw === 'fit' || raw === 'all') {
@@ -223,27 +209,23 @@ export class MultiSelectComponent
   });
   /** Disables the trigger and blocks all interaction. */
   readonly disabled = input(false, { transform: booleanAttribute });
-  /** Confirmation text, shown when there is no error or warning. It paints the success border: the text IS the state. */
+  /** Confirmation text, shown when there is no error or warning; paints the success border. */
   readonly success = input<string, string | null | undefined>('', {
     transform: trimmedText,
   });
   /** Accessible name for the trigger - falls back to `placeholder`. */
   readonly ariaLabel = input<string | null>(null);
-  /** Trigger width - `fill` stretches to the container and pins the panel to the
-   *  trigger's width; `content` hugs the trigger's own content and takes that width
-   *  as the panel's FLOOR, so a compact trigger does not force an unreadable panel. */
+  /** Trigger width: `fill` stretches to the container and pins the panel to it; `content` hugs the trigger and uses its width as the panel's floor. */
   readonly width = input<MultiSelectWidth>('fill');
-  /** Trigger height - sm/md/lg. Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
+  /** Trigger height; falls back to `DS_CONFIG.control.size`, then `'md'`. */
   readonly size = input<DsSize | null>(null);
   readonly sizeResolved = resolveWithConfig(
     this.size,
     (config) => config.control?.size,
     'md' as DsSize,
   );
-  /** What the trigger shows. `count` is a caption plus a selected-count badge at
-   *  intrinsic width; `labels` names the selection instead, cut to the width with the
-   *  rest behind "+N". A projected `dsPickerTrigger` template WINS over this - the
-   *  input is then not read at all. */
+  /** What the trigger shows. `count` is a caption plus a count badge; `labels` names the selection, rest behind "+N".
+   *  A projected `dsPickerTrigger` template wins and this input is not read. */
   readonly triggerDisplay = input<DsTriggerDisplay>('full');
   /** Field label above the control, and the caption a `count`/`labels` trigger uses when it needs one. */
   readonly label = input<string>('');
@@ -251,9 +233,7 @@ export class MultiSelectComponent
   readonly required = input(false, { transform: booleanAttribute });
   /** Marks the field optional in words, for a form where most fields are required. */
   readonly optional = input(false, { transform: booleanAttribute });
-  /** Where a "select all" row appears. `false` nowhere, `true` one row over the whole
-   *  panel, `'group'` one row per group, `'both'` for either. Group rows need groups
-   *  in `options` - with a flat list they have nothing to head. */
+  /** Where a "select all" row appears: `false` nowhere, `true` one over the panel, `'group'` one per group, `'both'` either. Group rows need groups in `options`. */
   readonly selectAll = input<boolean | 'group' | 'both', unknown>(false, {
     transform: (raw: unknown) =>
       raw === 'group' || raw === 'both' ? raw : booleanAttribute(raw),
@@ -307,7 +287,7 @@ export class MultiSelectComponent
   private focusTimer: ReturnType<typeof setTimeout> | null = null;
 
   ngOnDestroy(): void {
-    // Host torn down while open never runs close(): dispose the overlay so its pane and subscriptions do not leak.
+    // A host torn down while open never runs close().
     clearTimeout(this.focusTimer ?? undefined);
     this.overlayRef?.dispose();
     this.overlayRef = null;
@@ -554,9 +534,7 @@ export class MultiSelectComponent
     this.trigger().nativeElement.focus();
   }
 
-  /**
-   * Empties the selection from outside (a "reset filters" button). Does NOT move focus: the caller may be navigating away.
-   */
+  /** Empties the selection from outside. Does not move focus. */
   clear(): void {
     this.value.set([]);
     this.filter.set('');
@@ -728,7 +706,7 @@ export class MultiSelectComponent
       ['ds-multi-select-panel', ...panelClassesOf(this.panelClass())],
     );
     const triggerWidth = triggerElement.getBoundingClientRect().width;
-    // A compact trigger hugs its caption, which would make the panel too narrow to read: the trigger width is a FLOOR here even without `content`.
+    // A compact trigger hugs its caption: its width is a floor here even without `content`.
     if (this.width() === 'content' || this.showsCompactTrigger()) {
       config.minWidth = triggerWidth;
     } else {

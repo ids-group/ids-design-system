@@ -27,7 +27,7 @@ let nextId = 0;
   templateUrl: './drawer.component.html',
   styleUrl: './drawer.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
-  // A static `title="..."` also stays in the DOM as the global attribute and would make the host a native tooltip.
+  // Keeps a static `title` attribute from becoming a native tooltip on the host.
   host: {
     '[attr.title]': 'null',
     '(document:keydown.escape)': 'onEscape()',
@@ -51,7 +51,6 @@ export class DrawerComponent implements OnDestroy {
   readonly closed = output<void>();
 
   protected readonly titleId = `ds-drawer-title-${++nextId}`;
-  /** In the DOM; stays true through the slide-out. */
   protected readonly rendered = signal(false);
   protected readonly closing = signal(false);
   private wasOpen = false;
@@ -64,8 +63,6 @@ export class DrawerComponent implements OnDestroy {
   });
 
   constructor() {
-    // Closing keeps the panel mounted and flips `closing` so the slide-out can play
-    // (teardown in onLeaveEnd, or the timer below).
     effect(() => {
       if (this.preview.staticPreview()) {
         return;
@@ -86,7 +83,7 @@ export class DrawerComponent implements OnDestroy {
       this.wasOpen = isOpen;
     });
 
-    // Ref-counted lock shared with modal/bottom-sheet so stacked overlays don't unlock each other.
+    // Ref-counted, so stacked overlays don't unlock each other.
     effect((onCleanup) => {
       if (this.preview.staticPreview() || !this.rendered()) {
         return;
@@ -109,8 +106,7 @@ export class DrawerComponent implements OnDestroy {
   }
 
   protected onLeaveEnd(event: AnimationEvent): void {
-    // Only the panel's OWN animationend counts. Matching keyframes names would make the
-    // exit animation un-overridable.
+    // Panel's OWN animationend only; matching the keyframes name would make the exit un-overridable.
     if (event.target !== event.currentTarget) {
       return;
     }

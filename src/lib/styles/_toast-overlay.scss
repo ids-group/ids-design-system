@@ -1,13 +1,11 @@
 @use 'visually-hidden' as visually-hidden;
 
-// Global: portaled via CDK Overlay (`panelClass: 'ds-toast-panel'`). Overlays stack by DOM
-// insertion order, so lift the toast wrapper above modals and drawers explicitly.
+// Overlays stack by DOM insertion order, so the toast wrapper (portaled via `panelClass: 'ds-toast-panel'`) is lifted above modals and drawers explicitly.
 .cdk-global-overlay-wrapper:has(> .ds-toast-panel) {
   z-index: var(--layer-toast);
 }
 
-// The CDK LiveAnnouncer region carries .cdk-visually-hidden, but the CDK loads that rule only with
-// a dialog or focus trap; otherwise the first announcement renders as visible text.
+// The CDK loads the `.cdk-visually-hidden` rule only with a dialog or focus trap; without it the LiveAnnouncer's first announcement renders visibly.
 .cdk-visually-hidden {
   @include visually-hidden.visually-hidden;
 }

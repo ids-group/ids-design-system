@@ -1,8 +1,5 @@
-// The tick a selection draws. Multi-select and autocomplete draw their own box and need it alone.
-// Do not use `ds-icon name="check"` there: at a 13px glyph it paints a 0.95px line against this
-// mark's 2px.
-//
 // A mask over `currentColor`, so one mark serves a filled box and a bare trailing indicator.
+// Not `ds-icon name="check"`: at a 13px glyph it paints a 0.95px line against this mark's 2px.
 @mixin mark {
   --_check-mark-enter-duration: var(--ds-check-mark-enter-duration, var(--ds-motion-check-enter-duration));
   --_check-mark-enter-easing: var(--ds-check-mark-enter-easing, var(--ds-motion-check-enter-easing));
@@ -11,8 +8,6 @@
 
   width: var(--check-tick-size);
   height: var(--check-tick-size);
-
-  // Always rendered so it can scale and fade rather than pop.
   transform: scale(0.6);
   opacity: 0;
   transform-origin: center;
@@ -23,8 +18,7 @@
               opacity var(--_check-mark-exit-duration) var(--_check-mark-exit-easing);
   background-color: currentcolor;
 
-  // Forced colours override `background-color`, turning the mark Canvas (the box fill colour) and
-  // making checked and unchecked identical; the mask survives, so name the text colour.
+  // Forced colours override `background-color` to Canvas, making checked and unchecked identical; the mask survives, so name the text colour.
   @media (forced-colors: active) {
     background-color: CanvasText;
   }

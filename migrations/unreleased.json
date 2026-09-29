@@ -2,22 +2,8 @@
   "version": "unreleased",
   "items": [],
   "informational": [
-    {
-      "text": "A toast's announcement stays off screen from the first toast on a page. ToastService speaks through the CDK LiveAnnouncer, whose region carries .cdk-visually-hidden, and the CDK loads that rule only with a dialog or a focus trap, so until one opened the announcement rendered as text at the page's bottom-left. styles/toast-overlay, which styles/ds forwards, declares the rule, and an app's own include of it is redundant (delete list: cdk-visually-hidden-include).",
-      "verify": "On a freshly loaded page, show a toast before opening any dialog: .cdk-live-announcer-element measures 1x1 px and the toast text appears nowhere else on the page."
-    },
+    "ds-table's exportCsv() and runExport() log a warning in a development build when the table has no dsTableExport, where they threw NG0203 from the calling click handler.",
     "provideDsConfig and provideDsIntl merge several calls in one providers array in order, the later winning per key, where the last call used to replace the others."
   ],
-  "deleteList": [
-    {
-      "id": "cdk-visually-hidden-include",
-      "surface": "style",
-      "find": [
-        "a11y-visually-hidden",
-        "a11y-prebuilt.css"
-      ],
-      "why": "styles/toast-overlay, which styles/ds forwards, declares .cdk-visually-hidden for the announcer region ToastService writes to, so an app-level include of the CDK rule restates it.",
-      "replaceWith": "nothing; keep it where the app loads neither styles/ds nor styles/toast-overlay"
-    }
-  ]
+  "deleteList": []
 }

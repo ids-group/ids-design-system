@@ -14,7 +14,6 @@ import { NgTemplateOutlet } from '@angular/common';
   templateUrl: './list-item.component.html',
   styleUrl: './list-item.component.scss',
   encapsulation: ViewEncapsulation.Emulated,
-  // A static `title="…"` also stays as the global attribute, giving the whole host a native tooltip.
   host: {
     '[attr.title]': 'null',
     role: 'listitem',

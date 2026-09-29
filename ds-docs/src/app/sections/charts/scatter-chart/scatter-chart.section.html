@@ -92,12 +92,33 @@
     is the caller taking the node budget on themselves.
   </p>
 
-  <ds-scatter-chart
-    caption="12 000 readings, thinned to what the plot can hold"
-    xLabel="Weight, kg"
-    yLabel="Reading"
-    dataTable="toggle"
-    [data]="flood" />
+  <div class="states is-cols-2">
+    <div class="state-cell">
+      <ds-scatter-chart
+        caption="12 000 readings, thinned to what the plot can hold"
+        xLabel="Weight, kg"
+        yLabel="Reading"
+        dataTable="toggle"
+        [data]="flood" />
+
+      <div class="state-cell-label">
+        decimator = minMax (default)
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-scatter-chart
+        caption="The same 12 000, thinned by shape"
+        decimator="lttb"
+        xLabel="Weight, kg"
+        yLabel="Reading"
+        [data]="flood" />
+
+      <div class="state-cell-label">
+        decimator = lttb
+      </div>
+    </div>
+  </div>
 
   <h3 class="block-title t-h4">
     Drilling in

@@ -36,14 +36,11 @@
   --_modal-leave-keyframes: var(--ds-modal-leave-keyframes, ds-fade-out);
   --_modal-leave-easing: var(--ds-modal-leave-easing, var(--ds-motion-exit-easing));
 
-  /* One horizontal gutter for all three regions; only the vertical differs, because
-     the header and actions sit against a divider and the body does not. */
   --_modal-padding-x: var(--ds-modal-padding-x, var(--space-5));
   --_modal-header-padding-y: var(--ds-modal-header-padding-y, var(--space-4));
   --_modal-body-padding-y: var(--ds-modal-body-padding-y, var(--space-5));
   --_modal-actions-padding-y: var(--ds-modal-actions-padding-y, var(--space-4));
 
-  /* Per-side, each falling back to its region's pad-y, so one edge can differ without piercing into .header / .actions. */
   --_modal-header-padding-top: var(--ds-modal-header-padding-top, var(--_modal-header-padding-y));
   --_modal-header-padding-bottom: var(--ds-modal-header-padding-bottom, var(--_modal-header-padding-y));
   --_modal-body-padding-top: var(--ds-modal-body-padding-top, var(--_modal-body-padding-y));
@@ -55,8 +52,7 @@
 
   display: contents;
 
-  // Reduced motion zeroes the duration, never the animation: at 0s `animationend` is not
-  // reliably delivered, so the component's 300 ms fallback timer tears down.
+  // Zero duration, never `animation: none`: the component's fallback timer tears down.
   @media (prefers-reduced-motion: reduce) {
     --_modal-enter-duration: 0ms;
     --_modal-leave-duration: 0ms;
@@ -82,8 +78,7 @@
   &.lg { width: var(--modal-w-lg); }
   &.xl { width: var(--modal-w-xl); }
 
-  /* `height`, not `max-height`: fullscreen claims the viewport; with a cap a short body
-     leaves an immersive editor 200px tall mid-screen. */
+  /* `height`, not `max-height`: with a cap a short body leaves the fullscreen dialog tiny. */
   &.fullscreen {
     width: var(--modal-w-fullscreen);
     height: var(--modal-h-fullscreen);
@@ -110,7 +105,6 @@
     background-color: var(--_modal-icon-badge-bg-color);
     color: var(--_modal-icon-badge-icon-color);
 
-    /* Same families ds-alert reads, so a status dialog and alert cannot disagree. */
     &.error   { background-color: var(--error-subtitle);   color: var(--error); }
     &.warning { background-color: var(--warning-subtitle); color: var(--warning); }
     &.success { background-color: var(--success-subtitle); color: var(--success); }
@@ -183,23 +177,20 @@
       var(--_modal-actions-padding-bottom);
     border-top: var(--border-width-default) solid var(--_modal-divider);
 
-    // A read-only dialog projects nothing here; without this it draws a padded strip with a divider.
+    // A read-only dialog projects nothing here; hide the empty padded strip.
     &:empty { display: none; }
 
-    // Set by ModalCardComponent once the row's natural width outgrows the box. DOM order is kept
-    // (confirming action at the bottom, Tab order matches the screen); a consumer reverses it
-    // with --ds-modal-actions-stacked-direction: column-reverse.
+    // Set by ModalCardComponent once the row outgrows the box. DOM order is kept so Tab order
+    // matches the screen; --ds-modal-actions-stacked-direction: column-reverse reverses it.
     &.stacked {
       flex-direction: var(--_modal-actions-stacked-direction);
 
-      // ::ng-deep because projected children carry the consumer's encapsulation attribute, and a
-      // ds-button's own `width: fit-content` opts out of the column's stretch.
+      // ::ng-deep for projected children; a ds-button's own `width: fit-content` opts out of the stretch.
       & > ::ng-deep * { width: 100%; }
     }
   }
 
-  // With no rule, header-bottom and body-top padding stack into an oversized gap. Zero the
-  // FALLBACK, not the resolver: `0` here would silently drop a consumer's override.
+  // Zero the FALLBACK, not the resolver: `0` here would drop a consumer's override.
   &.no-dividers {
     --_modal-body-padding-y: var(--ds-modal-body-padding-y, 0);
 
@@ -225,7 +216,6 @@
   }
 }
 
-/* Static-preview wrapper: the card renders inline, unwrapped. */
 .modal-static {
   display: contents;
 }

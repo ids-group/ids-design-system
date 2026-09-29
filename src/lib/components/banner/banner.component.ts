@@ -23,7 +23,7 @@ import type { BannerVariant } from './banner.types';
   imports: [IconComponent],
   templateUrl: './banner.component.html',
   styleUrl: './banner.component.scss',
-  // A static `title="..."` also stays in the DOM as the global attribute and would make the host a native tooltip.
+  // Keeps a static `title` attribute from becoming a native tooltip on the host.
   host: { '[attr.title]': 'null' },
   encapsulation: ViewEncapsulation.Emulated,
 })
@@ -52,12 +52,9 @@ export class BannerComponent {
     return !this.accentRail();
   }
 
-  /** Announce this banner to a screen reader when it appears. Unset follows
-   *  `DS_CONFIG.banner.announce`, then `false`.
-   *
-   *  Off by default: an `alert` region fires on insertion, so page-furniture banners
-   *  would interrupt the reader on every route. Turn it on for a banner raised in
-   *  response to an event; for anything transient prefer `ToastService`. */
+  /** Announces the banner to a screen reader when it appears. Unset follows
+   *  `DS_CONFIG.banner.announce`, then `false`. Off by default: an `alert` region
+   *  fires on insertion. Turn it on for a banner raised in response to an event. */
   readonly announce = input<boolean | null, unknown>(null, {
     transform: (value) => (value == null ? null : booleanAttribute(value)),
   });

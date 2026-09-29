@@ -17,14 +17,12 @@ let nextReferenceId = 0;
 /**
  * Reference lines and bands across the plot, drawn against the scales `ds-chart` supplies.
  *
- * Strokes only: the labels are a second element, `g[dsReferenceLabel]`, because they paint in a
- * different layer and one projected element lands in only one of the container's slots.
+ * Strokes only: labels are `g[dsReferenceLabel]`, a second element, since they paint in another layer.
  *
- * Hosted on a `<g>`: an element the SVG specification does not know is not rendered, nor are its
- * descendants. Written as `<svg:g dsReferenceLine>`.
+ * Hosted on a `<g>`: an element SVG does not know renders nothing, nor do its descendants.
+ * Written as `<svg:g dsReferenceLine>`.
  */
 @Component({
-  // An element selector cannot work inside a canvas; see `g[dsColumnSeries]`.
   // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'g[dsReferenceLine]',
   standalone: true,
@@ -36,8 +34,7 @@ let nextReferenceId = 0;
 export class ReferenceLineComponent implements OnDestroy {
   private readonly scales = inject(CHART_SCALES);
 
-  /** The lines and bands to draw. Each entry is one `value` plus optional `label`, `color` and `dash`;
-   *  a `to` makes it a band. Each widens the value axis to hold it. */
+  /** The lines and bands to draw: one `value` plus optional `label`, `color` and `dash`; a `to` makes it a band. Each widens the value axis. */
   readonly thresholds = input<readonly ChartThreshold[]>([]);
 
   private readonly domainId = `reference-line-${nextReferenceId++}`;

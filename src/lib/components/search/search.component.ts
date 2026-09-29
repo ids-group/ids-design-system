@@ -47,8 +47,7 @@ import { resolveWithConfig } from '@ids-group-ltd/ids-design-system/core';
   ],
 })
 /**
- * Takes the CVA bridge rather than `DsControlValueAccessor` (which carries `DsFieldBase`): a search box is a toolbar filter with no message row;
- * where a label or error line is needed, use `ds-input`.
+ * A toolbar filter with no message row; where a label or error line is needed, use `ds-input`.
  */
 export class SearchComponent implements ControlValueAccessor {
   protected readonly intl = inject(DS_INTL);
@@ -56,7 +55,7 @@ export class SearchComponent implements ControlValueAccessor {
 
   private readonly bridge = valueControlBridge<string>(() => this.value);
 
-  /** Hides the control, as every DS control does. Inline `display`, not the attribute: the host sets its own, which the weaker UA rule loses to. */
+  /** Inline `display`, not the attribute: the host sets its own `display`, which beats the UA `[hidden]` rule. */
   readonly hidden = input(false, { transform: booleanAttribute });
 
   /** Driven by the forms API, OR'd into `isDisabled`. */
@@ -64,8 +63,7 @@ export class SearchComponent implements ControlValueAccessor {
 
   /** Search text, two-way bound. */
   readonly value = model<string>('');
-  /** Placeholder shown when empty.
-   *  Unset falls back to `DS_INTL.search.placeholder`. */
+  /** Placeholder when empty; falls back to `DS_INTL.search.placeholder`. */
   readonly placeholder = input<string | null>(null);
   readonly placeholderResolved = computed(
     () => this.placeholder() ?? this.intl().search.placeholder,
@@ -82,8 +80,7 @@ export class SearchComponent implements ControlValueAccessor {
   readonly disabled = input(false, { transform: booleanAttribute });
 
   readonly isDisabled = computed(() => this.disabled() || this.formDisabled());
-  /** Control height. `md` (default) is the 36px search-row height; `sm` (32px) aligns with dense toolbars; `lg` is touch.
-   *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
+  /** Control height; falls back to `DS_CONFIG.control.size`, then `'md'`. */
   readonly size = input<DsSize | null>(null);
   readonly sizeResolved = resolveWithConfig(
     this.size,
@@ -93,8 +90,7 @@ export class SearchComponent implements ControlValueAccessor {
   /** Fires with the current value on Enter. */
   readonly submitted = output<string>();
   /** Milliseconds to hold each keystroke back before `value` updates; 0 (default) writes on every keystroke.
-   *  Clearing the field BYPASSES the delay (waiting to see the full list back reads as a hang), and Enter flushes.
-   *  What the input SHOWS is never delayed. */
+   *  Clearing bypasses the delay and Enter flushes; the displayed text is never delayed. */
   readonly debounce = input(0, { transform: numberAttribute });
 
   private readonly inputEl =
@@ -104,7 +100,7 @@ export class SearchComponent implements ControlValueAccessor {
   protected readonly text = signal(this.value());
 
   private pending: ReturnType<typeof setTimeout> | null = null;
-  /** The last text this component pushed into `value`, to tell a HOST update from its own echo: a host reset mid-typing must win and cancel the keystroke in flight. */
+  /** The last text pushed into `value`, to tell a host update from the component's own echo: a host reset mid-typing must win. */
   private pushed = this.value();
 
   constructor() {
@@ -118,12 +114,12 @@ export class SearchComponent implements ControlValueAccessor {
     });
   }
 
-  /** Public so a host can hand focus over deliberately, e.g. a Clear button that disables itself on activation would otherwise blur into `<body>`. */
+  /** Moves focus to the search input. */
   focus(options?: FocusOptions): void {
     this.inputEl()?.nativeElement.focus(options);
   }
 
-  /** Drops focus from the search input - the counterpart of `focus()`. */
+  /** Drops focus from the search input. */
   blur(): void {
     this.inputEl()?.nativeElement.blur();
   }
@@ -148,17 +144,16 @@ export class SearchComponent implements ControlValueAccessor {
     this.submitted.emit(this.value());
   }
 
-  /** Empties the field, DROPS any armed keystroke, and publishes '' immediately. Public for host-owned Clear buttons.
-   *  Writing `''` into `value` is not equivalent: the effect only cancels the timer when the text DIFFERS from the last pushed value. */
+  /** Empties the field, drops any armed keystroke and publishes '' immediately.
+   *  Writing `''` into `value` is not equivalent: the timer is cancelled only when the text differs from the last pushed value. */
   clear(): void {
     this.text.set('');
     this.cancel();
     this.push('');
-    // The × is removed once empty; return focus to the input so keyboard users are not dropped onto <body>.
+    // The × is removed once empty, so focus would fall to <body>.
     this.inputEl()?.nativeElement.focus();
   }
 
-  /** So Enter searches what the reader can see, not what the timer last let past. */
   private flush(): void {
     if (this.pending) {
       this.cancel();

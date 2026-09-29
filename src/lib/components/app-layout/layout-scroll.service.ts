@@ -14,8 +14,7 @@ const STORAGE_KEY = 'ds-app-layout:scroll';
 
 const MAX_ENTRIES = 20;
 
-// Input events only. NOT `scroll`: our own restore writes emit one, so listening
-// for it would cancel the restore we are performing.
+// NOT `scroll`: our own restore emits one and would cancel itself.
 const CANCEL_EVENTS = ['wheel', 'touchstart', 'keydown'] as const;
 
 const pathOf = (url: string): string => url.split(/[?#]/)[0];
@@ -23,26 +22,21 @@ const pathOf = (url: string): string => url.split(/[?#]/)[0];
 /**
  * When the layout resets the content scroll to the top.
  *
- * `'path'` (default): only when navigation lands on a
- * different PATH, so a search, a sort or a page step on the same screen keeps
- * the reader's place. `'always'` resets on every navigation, which is what a
- * server-paged list usually wants.
- * `'never'` hands the decision back to the screen, which can still call
- * `AppLayoutScrollService.scrollToTop()` itself.
+ * `'path'` (default): only when navigation lands on a different PATH.
+ * `'always'` resets on every navigation. `'never'` leaves it to the screen,
+ * which can call `AppLayoutScrollService.scrollToTop()`.
  */
 export type DsAppLayoutScrollReset = 'path' | 'never' | 'always';
 
 /**
- * Owns the layout's content scroller. In the fixed-frame layout the window never
- * scrolls, so the router's built-in window-based scrolling no-ops; this service
- * resets the registered container to the top when navigation lands on a different
- * PATH instead. Provided by `ds-app-layout`, so routed pages can
- * `inject(AppLayoutScrollService)` and call `scrollToTop()` manually (e.g. list pages
- * that DO want the top after a filter change).
+ * Owns the layout's content scroller. The window never scrolls in the
+ * fixed-frame layout, so the router's window-based scrolling no-ops; this
+ * service resets the registered container when navigation lands on a different
+ * PATH. Provided by `ds-app-layout`; routed pages can inject it and call
+ * `scrollToTop()`.
  *
- * With `restoreScroll` on the layout it also restores the reader's place. Only
- * when armed: going BACK to a list returns to where the reader was, following a
- * link into a new screen does not.
+ * With `restoreScroll` on the layout it also restores the reader's place, but
+ * only when armed: going BACK restores, following a link does not.
  */
 @Injectable()
 export class AppLayoutScrollService {
@@ -51,11 +45,7 @@ export class AppLayoutScrollService {
   private readonly destroyRef = inject(DestroyRef);
   private readonly container = signal<Element | null>(null);
 
-  /**
-   * The content scroller, once the layout has rendered it. Exposed so a host that
-   * must measure or drive the scroll itself (a scroll-spy, a virtualizer) can
-   * read it instead of querying the layout's internal markup.
-   */
+  /** The content scroller, once the layout has rendered it. */
   readonly scroller: Signal<Element | null> = this.container.asReadonly();
 
   // null = restoration off.
@@ -69,8 +59,7 @@ export class AppLayoutScrollService {
   constructor() {
     this.navigation.pathChanged
       .pipe(takeUntilDestroyed(this.destroyRef))
-      // Skipped while a restore is armed for this very navigation: the reset would
-      // undo the offset we are about to apply.
+      // Skipped while a restore is armed: the reset would undo the offset about to be applied.
       .subscribe(() => {
         if (this.resetStrategy === 'path' && !this.armed) {
           this.scrollToTop();
@@ -98,10 +87,7 @@ export class AppLayoutScrollService {
     this.destroyRef.onDestroy(() => this.finishRestore());
   }
 
-  /**
-   * Wiring, called by `ds-app-layout` once its content region exists. Not for
-   * consumers: calling it points the service at the wrong element.
-   */
+  /** Wiring for `ds-app-layout`; not for consumers. */
   setScrollContainer(element: Element): void {
     this.container.set(element);
   }
@@ -120,11 +106,7 @@ export class AppLayoutScrollService {
     this.scrollTo(0);
   }
 
-  /**
-   * Scroll the content region to an absolute offset. Assigns `scrollTop` rather
-   * than calling `scrollTo`, so a themed `scroll-behavior: smooth` cannot turn a
-   * positioning jump into an animation.
-   */
+  /** Scrolls the content region to an absolute offset. Assigns `scrollTop`, so `scroll-behavior: smooth` cannot animate it. */
   scrollTo(top: number): void {
     const element = this.container();
     if (element) {
@@ -133,12 +115,9 @@ export class AppLayoutScrollService {
   }
 
   /**
-   * Take the offset this navigation is going to restore, and cancel the restore.
-   *
-   * For a host that renders its own scroll position: a virtualizer needs the
-   * offset BEFORE it builds rows, so assigning `scrollTop` afterwards would scroll
-   * a list that does not exist yet. Returns null when nothing is pending (any
-   * navigation that is not a back).
+   * Takes the offset this navigation is going to restore, and cancels the restore.
+   * For a host that must know the offset BEFORE it builds rows (a virtualizer).
+   * Returns null when nothing is pending.
    */
   consumePendingOffset(): number | null {
     const offset = this.pendingOffset;
@@ -150,12 +129,7 @@ export class AppLayoutScrollService {
     return offset;
   }
 
-  /**
-   * Optional accelerator: tell the layout the content for this route is in the
-   * DOM. Without it the restore still lands (it waits for the container to grow
-   * and clamps at the deadline), but a host that knows when its data arrived can
-   * end the wait early.
-   */
+  /** Optional: tells the layout the route's content is in the DOM, ending the restore wait early. */
   contentReady(): void {
     if (this.pendingOffset !== null) {
       this.applyClamped(this.pendingOffset);
@@ -169,11 +143,8 @@ export class AppLayoutScrollService {
     if (this.restoreTimeoutMs === null) {
       return;
     }
-    // Save the position we are leaving while the old content is still mounted.
     this.remember(pathOf(this.router.url), this.container()?.scrollTop ?? 0);
 
-    // Armed by a popstate traversal (back, forward, side button, Alt+left, edge swipe),
-    // by a host that pushes and says so, or by the first navigation after a reload.
     const explicit =
       this.router.currentNavigation()?.extras.state?.['dsRestoreScroll'] ===
       true;
@@ -185,8 +156,7 @@ export class AppLayoutScrollService {
   }
 
   private onNavigationEnd(): void {
-    // 'always' also resets on the query/fragment-only navigations `pathChanged`
-    // ignores; `armed` guards it so a pending restore is not undone first.
+    // `pathChanged` ignores query/fragment-only navigations, which 'always' still resets.
     if (this.resetStrategy === 'always' && !this.armed) {
       this.scrollToTop();
     }
@@ -209,7 +179,6 @@ export class AppLayoutScrollService {
     }
 
     const deadline = window.setTimeout(() => {
-      // Land as close as the content allows rather than not at all.
       this.applyClamped(target);
       this.finishRestore();
     }, this.restoreTimeoutMs ?? 0);
@@ -222,7 +191,6 @@ export class AppLayoutScrollService {
     };
 
     // Observe the child: the container's own box does not change as content arrives.
-    // A frame count would differ between engines.
     const growth = new ResizeObserver(settle);
     growth.observe(element.firstElementChild ?? element);
 
@@ -230,8 +198,7 @@ export class AppLayoutScrollService {
     for (const type of CANCEL_EVENTS) {
       element.addEventListener(type, cancel, { passive: true });
     }
-    // A bfcache restore brings its own scroll position back; fighting it would
-    // move the page under a reader who never asked.
+    // A bfcache restore brings its own scroll position back.
     const onPageShow = (event: PageTransitionEvent): void => {
       if (event.persisted) {
         this.finishRestore();
@@ -248,7 +215,6 @@ export class AppLayoutScrollService {
       window.removeEventListener('pageshow', onPageShow);
     };
 
-    // A cached list may already be tall enough.
     settle();
   }
 
@@ -270,8 +236,7 @@ export class AppLayoutScrollService {
     }
   }
 
-  // sessionStorage, not local: a position is worthless once the tab outlives the visit.
-  // Guarded because Safari private mode throws on write and quota errors must not break navigation.
+  // Guarded: Safari private mode throws on write, and that must not break navigation.
   private read(): Record<string, number> {
     try {
       const raw = sessionStorage.getItem(STORAGE_KEY);
@@ -284,7 +249,7 @@ export class AppLayoutScrollService {
 
   private remember(path: string, offset: number): void {
     const entries = this.read();
-    // Re-insert so the key moves to the end: insertion order makes the oldest droppable below.
+    // Re-insert so the key moves to the end and the oldest is dropped below.
     delete entries[path];
     entries[path] = Math.round(offset);
     const keys = Object.keys(entries);

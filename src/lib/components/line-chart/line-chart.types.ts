@@ -5,8 +5,10 @@ export interface LineChartSeries {
   data: readonly (number | null)[];
   /** Which y axis this series is measured against. Defaults to `'primary'`. */
   axis?: 'primary' | 'secondary';
-  /** Fills the band between the line and its axis baseline. */
-  area?: boolean;
+  /** Fills the band between the line and its axis baseline: `true` in one flat tint, `'fade'`
+   *  fading to nothing at the baseline. The colour is
+   *  `--ds-chart-area-color`, the series' own by default. */
+  area?: boolean | 'fade';
   /** 1-based palette slot. Pinning it keeps every other series on its own colour when one is hidden;
    *  left out, a series takes the colour of its position. */
   slot?: number;

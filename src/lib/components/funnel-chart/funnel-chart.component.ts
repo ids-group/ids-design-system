@@ -1,3 +1,9 @@
+import type {
+  ChartDimmable,
+  ChartStaggered,
+  ChartWithDataTable,
+  ChartWithTooltipTrigger,
+} from '@ids-group-ltd/ids-design-system/components';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -6,7 +12,6 @@ import {
   booleanAttribute,
   computed,
   contentChild,
-  inject,
   input,
   numberAttribute,
   output,
@@ -23,18 +28,13 @@ import {
   leaveMark,
   staggerDelay,
   chartRenderGate,
+  DsChartBase,
 } from '@ids-group-ltd/ids-design-system/components';
 import { SkeletonComponent } from '@ids-group-ltd/ids-design-system/components/skeleton';
 import { IconComponent } from '@ids-group-ltd/ids-design-system/icons';
 import { ChartDataTableComponent } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
 import type { ChartDataRow } from '@ids-group-ltd/ids-design-system/components/chart-data-table';
-import { resolveChartDefaults } from '@ids-group-ltd/ids-design-system/components';
-import { DS_INTL } from '@ids-group-ltd/ids-design-system/core';
-import type {
-  ChartDataTable,
-  ChartFrame,
-  ChartValueFormat,
-} from '@ids-group-ltd/ids-design-system/core';
+import type { ChartDataTable } from '@ids-group-ltd/ids-design-system/core';
 import {
   ChartTooltipDirective,
   chartActiveMark,
@@ -92,103 +92,53 @@ const SKELETON_STAGE_WIDTHS = ['88%', '62%', '80%', '54%', '72%'] as const;
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FunnelChartComponent {
+export class FunnelChartComponent
+  extends DsChartBase
+  implements
+    ChartDimmable,
+    ChartStaggered,
+    ChartWithDataTable,
+    ChartWithTooltipTrigger
+{
   protected readonly renderReady = chartRenderGate();
 
   protected readonly leaveMark = leaveMark;
 
-  /** Drawn in the order given; a funnel's order is its meaning, so stages are never sorted. */
-  readonly data = input.required<readonly FunnelChartStage[]>();
+  /** Drawn in the order given; stages are never sorted, since their order is the meaning. */
+  readonly data = input<readonly FunnelChartStage[]>([]);
 
   /** What the silhouette encodes. `'area'` (default) makes each stage's area proportional to its
-   *  value and keeps the tail wide enough to label. `'width'` reads widths straight off the values,
-   *  which collapses the tail of a steep funnel. `'taper'` encodes nothing: the shape is fixed and
-   *  the numbers are read from the table. */
+   *  value. `'width'` reads widths straight off the values, which collapses the tail of a steep
+   *  funnel. `'taper'` encodes nothing: the shape is fixed. */
   readonly shape = input<FunnelChartShape>('area');
 
-  /** The value, percent and drop table printed under the funnel. While on, `dataTable` is not
-   *  rendered: it would repeat a subset of these numbers. */
+  /** The value, percent and drop table printed under the funnel. While on, `dataTable` is not rendered. */
   readonly showTable = input(true, { transform: booleanAttribute });
 
-  /** `'auto'` draws the chart's own bordered, padded box; `'none'` leaves it bare, for a chart inside
-   *  a card. Unset falls back to `DS_CONFIG.chart.frame`, then `'auto'`. */
-  readonly frame = input<ChartFrame | null>(null);
-
-  /** Milliseconds the tooltip stays after the pointer leaves the mark, so it can glide to the next
-   *  mark instead of reopening. Zero closes it at once. Unset falls back to
-   *  `DS_CONFIG.chart.tooltipLingerMs`, then 500. */
-  readonly tooltipLingerMs = input<number | null>(null, {
-    transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
-  });
-  /** Printed above the plot as the chart's visible title, and reused as the annex table's
-   *  caption. */
-  readonly caption = input<string | null>(null);
-
-  /** Accessible name. Generated from the data when omitted. */
-  readonly summary = input<string | null>(null);
-
   /** The label-and-value disclosure. Ignored while `showTable` is on. Unset falls back to
-   *  `DS_CONFIG.chart.dataTable`, then `'toggle'`. */
+   *  `DS_CONFIG.chart.dataTable`, then `'none'`. */
   readonly dataTable = input<ChartDataTable | null>(null);
   /** What the Drop column reports: `'relative'` (default) the share that leaked at this stage,
    *  `'absolute'` the count, `'none'` no column. */
   readonly drop = input<FunnelChartDrop>('relative');
 
-  /** Draws skeleton marks in place of the data, at the same count. */
-  readonly loading = input(false, { transform: booleanAttribute });
-  /** Shown in place of the plot when `data` is empty. Unset falls back to
-   *  `DS_INTL.chart.empty`. */
-  readonly emptyText = input<string | null>(null);
-
-  /** Shows `errorText` in place of the plot. Distinct from `loading` and from an empty `data`. */
-  readonly error = input(false, { transform: booleanAttribute });
-
-  /** The message the error state prints. Unset falls back to `DS_INTL.chart.error`. */
-  readonly errorText = input<string | null>(null);
-  /** Formats every value the chart prints, the annex table and the generated description
-   *  included. Unset falls back to `DS_CONFIG.chart.valueFormat`, then `DS_CONFIG.locale` /
-   *  `LOCALE_ID`. */
-  readonly valueFormat = input<ChartValueFormat | null>(null);
-
-  /** Holds the clicked mark and its tooltip in place, with a pin disc on it, until a second click,
-   *  Escape or a press outside releases it. Unset falls back to `DS_CONFIG.chart.pinOnClick`, then
-   *  `true`. `stageClicked` fires either way - pinning is a state, not a handler. */
-  readonly pinOnClick = input<boolean | null, unknown>(null, {
-    transform: (value) => (value == null ? null : booleanAttribute(value)),
-  });
-
-  // Declared after every input it reads: it takes each signal off `this` when it runs.
-  protected readonly defaults = resolveChartDefaults(this);
-  protected readonly intl = inject(DS_INTL);
-  readonly frameResolved = this.defaults.frame;
   readonly dataTableResolved = this.defaults.dataTable;
-  readonly emptyTextResolved = this.defaults.emptyText;
-  readonly errorTextResolved = this.defaults.errorText;
-  readonly valueFormatResolved = this.defaults.valueFormat;
 
-  /** Turns on the click affordance: the pointer cursor and any hover tint. `stageClicked` fires
-   *  whether or not this is set. */
-  readonly interactive = input(false, { transform: booleanAttribute });
-
-  /** The stage that was clicked, or activated with Enter or Space. Fires whether or not
-   *  `interactive` is set. */
+  /** The stage clicked or activated with Enter or Space, whether or not `interactive` is set. */
   readonly stageClicked = output<FunnelChartStage>();
 
-  /** Dims every OTHER mark while one is hovered or focused. Off by default: it costs the separation
-   *  between the dimmed marks (worst pair of three series: dE 14.8 to 2.1 at the default
-   *  `--ds-chart-dim-opacity` 0.3, measured 2026-09-13). */
+  /** Dims every OTHER mark while one is hovered or focused. */
   readonly dimOthers = input(false, { transform: booleanAttribute });
 
-  /** Milliseconds between one stage's entrance and the next, top to bottom; `0` brings every stage
-   *  in at once. The step narrows once the stages would take longer than 260ms to start. */
+  /** Milliseconds between one stage's entrance and the next, top to bottom; `0` turns it off. The
+   *  step narrows to keep the spread within 260ms. */
   readonly staggerMs = input(60, { transform: numberAttribute });
 
   protected markStagger(index: number): string {
     return `${staggerDelay(index, this.stages().length, this.staggerMs())}ms`;
   }
 
-  /** Whether a hovered or focused stage opens a tooltip. `'axis'` is not offered: a funnel's stages
-   *  are its categories. */
+  /** Whether a hovered or focused stage opens a tooltip. */
   readonly tooltip = input<ChartItemTooltipTrigger>('item');
 
   protected readonly tooltipTemplate =
@@ -237,7 +187,6 @@ export class FunnelChartComponent {
   private readonly rowHighlight = signal(-1);
   private readonly rowDwell = chartDwell(() => this.defaults.hoverDelayMs());
 
-  /** A table row opens its band's tooltip over the band and dims the others, as hovering the band does. */
   protected onRowEnter(index: number, event: Event): void {
     this.rowDwell.schedule(index, () => this.rowHighlight.set(index), event);
     this.activeMark.enter(
@@ -258,7 +207,6 @@ export class FunnelChartComponent {
   }
 
   protected isDimmed(index: number): boolean {
-    // A table row fades the rest even without `dimOthers`, which governs the pointer over the funnel.
     const rowHighlight = this.rowHighlight();
     if (rowHighlight !== -1) {
       return rowHighlight !== index;
@@ -306,8 +254,7 @@ export class FunnelChartComponent {
 
   protected readonly viewBox = `0 0 ${FUNNEL_VIEW_BOX_WIDTH} ${FUNNEL_VIEW_BOX_HEIGHT}`;
 
-  /** Gap between two bands, painted as a transparent stroke on each: it straddles the edge, so the
-   *  gap looks unchanged but is not dead space to the pointer. */
+  /** Gap between two bands, painted as a transparent stroke on each so the gap still answers the pointer. */
   protected readonly hitGapUnits = computed(() =>
     stageGapUnits(this.data().length, FUNNEL_VIEW_BOX_HEIGHT),
   );
@@ -329,7 +276,6 @@ export class FunnelChartComponent {
       this.valueFormatResolved()(value, 'tooltip');
     // A share of the funnel's mouth, not of the column total: the stages are nested subsets.
     const firstValue = values.length ? values[0] : 0;
-    // A single-hue ramp (one quantity draining); the last stage, the outcome, takes the accent.
     const lastIndex = data.length - 1;
 
     return data.map((stage, index) => {
@@ -395,7 +341,6 @@ export class FunnelChartComponent {
   }
 
   protected onStageKey(stage: FunnelChartStage, event: Event): void {
-    // A key pressed on a control inside the stage belongs to that control.
     if (!this.interactive() || event.target !== event.currentTarget) {
       return;
     }
@@ -414,8 +359,7 @@ export class FunnelChartComponent {
       `calc(var(--_funnel-chart-stage-height) * ${Math.max(this.data().length, 1)})`,
   );
 
-  /** Placeholder stage widths: the real stage count, or three while `data` is empty. The widths
-   *  deliberately do not narrow in order: equal bars read as a grey funnel, narrowing ones as the funnel. */
+  /** Placeholder widths deliberately do not narrow in order: equal bars read as a grey funnel. */
   protected readonly skeletonStages = computed(() =>
     Array.from(
       { length: Math.max(this.data().length, 3) },

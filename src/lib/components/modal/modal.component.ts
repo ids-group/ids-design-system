@@ -25,7 +25,7 @@ import { backdropDismiss } from '@ids-group-ltd/ids-design-system/core';
   imports: [ModalCardComponent, A11yModule],
   templateUrl: './modal.component.html',
   styleUrl: './modal.component.scss',
-  // A static `title="..."` also stays in the DOM as the global attribute and would make the host a native tooltip.
+  // Keeps a static `title` attribute from becoming a native tooltip on the host.
   host: { '[attr.title]': 'null' },
   encapsulation: ViewEncapsulation.Emulated,
   hostDirectives: [{ directive: DsStaticPreview, inputs: ['staticPreview'] }],
@@ -38,8 +38,7 @@ export class ModalComponent implements OnDestroy {
   readonly open = model<boolean>(false);
   /** Dialog width. */
   readonly size = input<ModalSize>('md');
-  /** Severity, forwarded to the card: drives its icon-badge tint, title colour,
-   *  default icon and ARIA role. Null (default) is a neutral dialog. `false` and
+  /** Severity, forwarded to the card. Null (default) is a neutral dialog. `false` and
    *  `undefined` land on null too, so `[status]="isDangerous && 'error'"` binds. */
   readonly status = input<DsStatus | null, DsStatus | false | null | undefined>(
     null,
@@ -53,28 +52,25 @@ export class ModalComponent implements OnDestroy {
   readonly closed = output<void>();
   /** Emit this yourself from a confirm action in the projected content; the modal never fires it. */
   readonly confirmed = output<void>();
-  /** Draws the rules under the header and over the actions. Turning them off also
-   *  tightens the vertical padding they were sized for. Unset falls back to
-   *  `DS_CONFIG.modal.dividers`, then `true`. */
+  /** Draws the rules under the header and over the actions; off also tightens the vertical padding.
+   *  Unset falls back to `DS_CONFIG.modal.dividers`, then `true`. */
   readonly dividers = input<boolean | null, unknown>(null, {
     transform: (value) => (value == null ? null : booleanAttribute(value)),
   });
-  /** Resolved here and passed down: resolving again in the card could disagree if a provider sat between them. */
+  /** Resolved here and passed down, so the card cannot disagree if a provider sits between them. */
   readonly dividersResolved = resolveDividers(this.dividers);
   /** When false, clicking the scrim does not close the modal. */
   readonly closeOnBackdrop = input(true, { transform: booleanAttribute });
-  /** When true, neither backdrop click nor Escape closes the modal; only a programmatic or explicit close button does. */
+  /** When true, neither backdrop click nor Escape closes the modal. */
   readonly persistent = input(false, { transform: booleanAttribute });
 
-  /** In the DOM; stays true through the leave animation. */
   protected readonly rendered = signal(false);
   protected readonly closing = signal(false);
   private wasOpen = false;
   private closeFallbackTimer: ReturnType<typeof setTimeout> | null = null;
 
   constructor() {
-    // Closing keeps the dialog mounted so the leave animation can play (teardown in
-    // onLeaveEnd, or the timer below). Skipped in preview, which is always shown.
+    // Skipped in preview, which is always shown.
     effect(() => {
       if (this.preview.staticPreview()) {
         return;
@@ -95,7 +91,7 @@ export class ModalComponent implements OnDestroy {
       this.wasOpen = isOpen;
     });
 
-    // Ref-counted lock shared with drawer/bottom-sheet so stacked overlays don't unlock each other.
+    // Ref-counted, so stacked overlays don't unlock each other.
     effect((onCleanup) => {
       if (this.preview.staticPreview() || !this.rendered()) {
         return;
@@ -118,8 +114,7 @@ export class ModalComponent implements OnDestroy {
   }
 
   protected onLeaveEnd(event: AnimationEvent): void {
-    // Only the host's OWN animationend counts; ones bubbling from inside do not. Matching
-    // the keyframes name would make the exit animation un-overridable.
+    // Host's OWN animationend only; matching the keyframes name would make the exit un-overridable.
     if (event.target !== event.currentTarget) {
       return;
     }

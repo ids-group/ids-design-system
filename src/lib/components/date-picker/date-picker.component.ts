@@ -193,7 +193,6 @@ export class DatePickerComponent
   private readonly appLocale = injectDsLocale();
   protected readonly intl = inject(DS_INTL);
   private readonly host = inject(ElementRef<HTMLElement>);
-  /** Forwarded onto the portaled pane on open so consumer `--ds-date-picker-*` overrides reach it. */
   private readonly panelTokens = [
     '--ds-date-picker-bg-color',
     '--ds-date-picker-border',
@@ -218,20 +217,18 @@ export class DatePickerComponent
 
   /** Selection mode - single date or start/end range. */
   readonly mode = input<DatePickerMode>('single');
-  /** Trigger height - sm/md/lg.
-   *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
+  /** Trigger height; falls back to `DS_CONFIG.control.size`, then `'md'`. */
   readonly size = input<DsSize | null>(null);
   readonly sizeResolved = resolveWithConfig(
     this.size,
     (config) => config.control?.size,
     'md' as DsSize,
   );
-  /** Stretches the trigger to fill its container instead of hugging the mask width. Opt in when sharing a grid/flex track with inputs. */
+  /** Stretches the trigger to fill its container instead of hugging the mask width. */
   readonly fullWidth = input(false, { transform: booleanAttribute });
   /** Selected date (single) or `[start, end]` (range), two-way bound. */
   readonly value = model<Date | DateRangeValue | null>(null);
-  /** Accessible-name fallback only - the mask fills the visible placeholder, not this.
-   *  Unset falls back to `DS_INTL.datePicker.placeholder`. */
+  /** Accessible-name fallback only; the mask fills the visible placeholder. Falls back to `DS_INTL.datePicker.placeholder`. */
   readonly placeholder = input<string | null>(null);
   readonly placeholderResolved = computed(
     () => this.placeholder() ?? this.intl().datePicker.placeholder,
@@ -242,12 +239,11 @@ export class DatePickerComponent
   readonly required = input(false, { transform: booleanAttribute });
   /** Shows an "(optional)" marker beside the label - ignored when `required` is set. */
   readonly optional = input(false, { transform: booleanAttribute });
-  /** Extra classes for the portaled panel, beside `ds-dropdown-panel`, `ds-overlay-pane` and `ds-date-picker-panel`.
-   *  The panel is portaled out of the host, so a class on the pane is the only way a consumer stylesheet reaches ONE instance. */
+  /** Extra classes for the portaled panel, the only way to style one instance of it. */
   readonly panelClass = input<string | readonly string[]>([]);
   /** Disables the picker and blocks all interaction. */
   readonly disabled = input(false, { transform: booleanAttribute });
-  /** Confirmation text, shown when there is no error or warning. It paints the success border: the text IS the state. */
+  /** Confirmation text, shown when there is no error or warning; paints the success border. */
   readonly success = input<string, string | null | undefined>('', {
     transform: trimmedText,
   });
@@ -265,19 +261,15 @@ export class DatePickerComponent
   readonly disabledDate = input<((date: Date) => boolean) | null>(null);
   /** Quick-pick shortcuts shown as a button column inside the calendar panel. */
   readonly presets = input<readonly DatePickerPreset[]>([]);
-  /** BCP-47 locale driving month/weekday names and the value format. Unset falls
-   *  back to `DS_CONFIG.datePicker.locale`, then `DS_CONFIG.locale`, then `LOCALE_ID`. */
+  /** BCP-47 locale for names and value format; falls back to `DS_CONFIG.datePicker.locale`, `DS_CONFIG.locale`, then `LOCALE_ID`. */
   readonly locale = input<string | null>(null);
   /** Explicit token format e.g. `'MM/DD/YYYY'`; default derived from `locale`. */
   readonly dateFormat = input<string | null>(null);
   /** First weekday column: 0=Sunday … 6=Saturday. Default 1 (Monday). */
   readonly firstDayOfWeek = input<number | null>(null);
-  /** Date the calendar opens on when the value is empty (e.g. a Date Of Birth):
-   *  the panel shows its month and grid focus lands on its exact day.
-   *  Never written to `value` - selection stays with the user. */
+  /** Date the calendar opens on when the value is empty; never written to `value`. */
   readonly defaultDate = input<Date | null>(null);
-  /** Allow masked manual typing. When false the field is read-only and a date can
-   *  only be picked from the calendar. */
+  /** Allow masked manual typing; when false a date can only be picked from the calendar. */
   readonly allowInput = input(true, { transform: booleanAttribute });
 
   protected readonly isDisabled = computed(
@@ -517,8 +509,7 @@ export class DatePickerComponent
       ? this.formatSpec().mask
       : rangeMask(this.formatSpec()),
   );
-  /** `size` attribute so the field hugs its mask width. +1 covers `size` under-counting wide glyphs (M/D/Y) that would clip the
-   *  last chars of the longer range mask; `--font-mono` keeps the width stable while typing. */
+  /** `size` attribute so the field hugs its mask width; +1 covers `size` under-counting wide glyphs (M/D/Y). */
   protected readonly fieldSize = computed(
     () => this.fieldPlaceholder().length + 1,
   );
@@ -664,7 +655,7 @@ export class DatePickerComponent
     const cells: DayCell[] = [];
     const today = new Date();
     const todayKey = today.toDateString();
-    // Always six weeks of seven days so the panel height does not change while paging.
+    // Always six weeks so the panel height is stable while paging.
     for (let i = 0; i < 42; i++) {
       const d = new Date(gridStart);
       d.setDate(d.getDate() + i);
@@ -836,10 +827,7 @@ export class DatePickerComponent
     this.overlayRef = null;
   }
 
-  /**
-   * Also the calendar glyph's handler. A POINTER open must not drag focus into the day grid: focus follows what the field IS,
-   * so a typeable field keeps its caret and a read-only one focuses the grid. ArrowDown on the field calls `open(true)`.
-   */
+  /** Also the calendar glyph's handler: a pointer open keeps focus on a typeable field and focuses the grid on a read-only one. */
   protected onFieldClick(): void {
     this.open(!this.allowInput());
     if (this.allowInput()) {
@@ -847,8 +835,7 @@ export class DatePickerComponent
     }
   }
 
-  // Intended result of a `beforeinput` segment edit, re-asserted in onFieldInput
-  // when a native mutation slips past a non-cancelable beforeinput (Android).
+  // Intended result of a `beforeinput` edit, re-asserted in onFieldInput when Android ignores preventDefault.
   private mobileEdit: { value: string; caret: number } | null = null;
 
   protected onFieldInput(event: Event): void {
@@ -890,9 +877,8 @@ export class DatePickerComponent
     );
   }
 
-  /** Mobile keyboards do not fire a reliable `keydown` (Gboard reports keyCode 229), so edits arrive via `beforeinput`'s `inputType`.
-   *  Android Chrome can ignore `preventDefault()` there, so the intended result is stashed and re-asserted in `onFieldInput`;
-   *  the microtask expires the stash once preventDefault worked. */
+  /** Mobile keyboards fire no reliable `keydown` (Gboard reports 229), so edits arrive via `beforeinput`. Android Chrome can ignore
+   *  `preventDefault()`, so the result is stashed and re-asserted in `onFieldInput`; a microtask expires the stash. */
   protected onFieldBeforeInput(event: InputEvent): void {
     if (!this.allowInput()) {
       return;
@@ -928,8 +914,7 @@ export class DatePickerComponent
     queueMicrotask(() => (this.mobileEdit = null));
   }
 
-  /** A selection is cleared through the model so `_` placeholders are never
-   *  natively erased - only digits are editable. */
+  /** A selection is cleared through the model so `_` placeholders are never natively erased. */
   private runSegmentEdit(
     element: HTMLInputElement,
     kind: 'type' | 'backspace' | 'delete',
@@ -938,8 +923,7 @@ export class DatePickerComponent
   ): void {
     const layout = this.layout();
     const segments = parseFieldText(element.value, layout);
-    // A caretOverride collapses the range (caret === selectionEnd), forcing the
-    // single-character branch below - used by the mobile beforeinput path.
+    // A caretOverride collapses the range, forcing the single-character branch (mobile beforeinput path).
     const caret =
       caretOverride ?? element.selectionStart ?? element.value.length;
     const selectionEnd = caretOverride ?? element.selectionEnd ?? caret;
@@ -1014,9 +998,7 @@ export class DatePickerComponent
     return text.replace(/\D/g, '').length;
   }
 
-  /** The fallback for any `input` event with no preceding handled `beforeinput`
-   *  (IME, autofill, a suggestion): `raw` is re-read as a flat digit stream and
-   *  redistributed over the slots, since its own layout cannot be trusted. */
+  /** Fallback for an `input` event with no handled `beforeinput` (IME, autofill): `raw` is redistributed over the slots as a flat digit stream. */
   private commitRaw(element: HTMLInputElement, raw: string): void {
     const layout = this.layout();
     const capacity = layout.slots.reduce(

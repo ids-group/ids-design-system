@@ -7,7 +7,7 @@ export interface DateFormatSpec {
 
 const SEGMENT_LENGTH: Record<'D' | 'M' | 'Y', number> = { D: 2, M: 2, Y: 4 };
 const TOKEN: Record<'D' | 'M' | 'Y', string> = { D: 'DD', M: 'MM', Y: 'YYYY' };
-// 2023-11-22: day, month and year are all distinct values.
+// Day, month and year are all distinct values.
 const REFERENCE_DATE = new Date(2023, 10, 22);
 
 function buildSpec(
@@ -184,7 +184,7 @@ export function rangeFieldLayout(spec: DateFormatSpec): FieldLayout {
   };
 }
 
-/** Split a fixed-width renderFieldValue output into per-slot digits by fixed position, so a `_` pad or stray char is dropped. */
+/** Splits a fixed-width renderFieldValue output into per-slot digits by position, dropping `_` pads. */
 export function parseFieldText(text: string, layout: FieldLayout): string[] {
   const segments: string[] = [];
   let position = 0;
@@ -211,7 +211,7 @@ function slotPlaceholder(slot: FieldSlot): string {
   return slot.type === 'Y' ? 'YYYY' : slot.type === 'M' ? 'MM' : 'DD';
 }
 
-/** Fixed-width value: every slot padded to maxLength with `_`, all literals present. */
+/** Fixed-width value: every slot padded with `_`, all literals present. */
 export function renderFieldValue(
   segments: string[],
   layout: FieldLayout,
@@ -228,8 +228,7 @@ export function renderFieldValue(
   return out;
 }
 
-/** Ordered runs for the overlay: digits (not muted), placeholders (muted), literals (not muted).
- *  Untouched slot → its format letters; partial slot → digits + `_` for the missing positions. */
+/** Ordered runs for the overlay; an untouched slot shows its format letters, a partial one digits + `_`. */
 export function displayParts(
   segments: string[],
   layout: FieldLayout,
@@ -320,8 +319,7 @@ function advanceAfterType(
   return { segments, slot, offset };
 }
 
-/** Type a digit into the caret's slot: overtype under the caret, else append;
- *  a full slot spills the digit into the next one instead of shifting. */
+/** Types a digit into the caret's slot: overtype, else append; a full slot spills into the next. */
 export function editType(
   segments: string[],
   layout: FieldLayout,
@@ -349,8 +347,7 @@ export function editType(
   return { segments: next, slot, offset };
 }
 
-/** Backspace: drop the digit left of the caret within its slot, else the last
- *  digit of the nearest earlier non-empty slot. Null when nothing precedes it. */
+/** Backspace: null when nothing precedes the caret. */
 export function editBackspace(
   segments: string[],
   layout: FieldLayout,
@@ -374,8 +371,7 @@ export function editBackspace(
   return null;
 }
 
-/** Delete: drop the digit at the caret within its slot, else the first digit of
- *  the nearest later non-empty slot. Null when nothing follows it. */
+/** Delete: null when nothing follows the caret. */
 export function editDelete(
   segments: string[],
   layout: FieldLayout,

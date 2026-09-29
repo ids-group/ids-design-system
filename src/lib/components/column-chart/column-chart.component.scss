@@ -3,7 +3,6 @@
 @include chart-frame.chart-frame;
 @include chart-data-table.chart-data-table;
 
-
 // On the host, not the figure: the component reads these back as numbers via getComputedStyle(host).
 :host {
   --_column-chart-plot-height: var(--ds-column-chart-plot-height, 200px);
@@ -19,7 +18,7 @@
   margin: 0;
 }
 
-// Re-points the shared grid token on `ds-chart`; declaring both names on one element would be a custom-property cycle.
+// Re-points the shared token on `ds-chart`; both names on one element would be a custom-property cycle.
 ds-chart {
   --ds-chart-grid-line-color: var(--_column-chart-grid-line-color);
 }
@@ -32,6 +31,5 @@ ds-chart {
   grid-auto-columns: 1fr;
   column-gap: var(--_column-chart-column-gap);
 }
-
 
 @include chart-frame.pin-reset;

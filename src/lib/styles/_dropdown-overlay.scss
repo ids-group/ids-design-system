@@ -8,7 +8,6 @@
 @use 'visually-hidden' as visually-hidden;
 
 .ds-dropdown-panel {
-  /* Shared by select, autocomplete and multi-select rows. */
   --_option-selected-bg-color: var(--ds-option-selected-bg-color, var(--primary-subtitle));
   --_option-selected-label-color: var(--ds-option-selected-label-color, var(--primary-strong));
   --_option-selected-bg-color-hover: var(--ds-option-selected-bg-color-hover, var(--primary-muted));
@@ -49,8 +48,6 @@
     min-width: var(--_dropdown-panel-min-width);
     max-width: var(--_dropdown-panel-max-width);
     max-height: var(--_dropdown-panel-max-height);
-
-    // The panel clips and the list scrolls, so filter and select-all rows stay in view.
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -58,7 +55,6 @@
   }
 
   .dropdown-list {
-    // Separate from the panel cap; the difference is room for the non-scrolling rows.
     max-height: var(--picker-maxh);
     list-style: none;
     margin: 0;
@@ -140,7 +136,6 @@
       @include visually-hidden.visually-hidden;
     }
 
-    // Always rendered so the mark can transition rather than pop in.
     .option-check {
       @include check-mark.mark;
 
@@ -157,15 +152,12 @@
       cursor: not-allowed;
     }
 
-    // `:not(.is-selected)` is load-bearing: this branch outranks `.is-selected`, and a hovered
-    // selected row would get the neutral surface with the selected label colour (unreadable on a
-    // dark selected fill).
+    // `:not(.is-selected)` is load-bearing: this branch outranks `.is-selected`, and a hovered selected row would get the neutral surface with the selected label colour.
     &:hover:not(.is-disabled, .is-selected, :disabled),
     &.is-active:not(.is-disabled, .is-selected, :disabled) {
       background: var(--_option-bg-color-active);
     }
 
-    // Touch has no hover; this is the only hit feedback.
     &:active:not(.is-disabled, :disabled) {
       background: var(--surface-muted);
     }

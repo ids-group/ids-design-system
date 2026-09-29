@@ -10,8 +10,6 @@
 
   display: flex;
   flex-direction: column;
-
-  /* Keeps the thumb, taller than the track, from being clipped. */
   padding-block: calc((var(--_slider-thumb-size) - var(--_slider-track-height)) / 2);
   gap: calc(
     (var(--_slider-thumb-size) - var(--_slider-track-height)) / 2 + var(--space-1-5)

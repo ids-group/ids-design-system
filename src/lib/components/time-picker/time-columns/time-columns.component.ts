@@ -48,23 +48,21 @@ interface Cell<T> {
 })
 export class TimeColumnsComponent {
   protected readonly intl = inject(DS_INTL);
-  /** Current time as `HH:mm` (24h always; `format` changes only what is DISPLAYED). */
+  /** Current time as `HH:mm`, always 24h; `format` changes only the display. */
   readonly value = input<string | null>(null);
-  /** Display clock. `12h` adds an AM/PM column; the emitted value stays 24h either way. */
+  /** Display clock; `12h` adds an AM/PM column. */
   readonly format = input<TimeFormat>('24h');
-  /** Minute granularity - 15 gives four rows an hour instead of sixty. */
+  /** Minute granularity. */
   readonly minuteStep = input(1, { transform: numberAttribute });
-  /** Earliest selectable time, `HH:mm`. Earlier rows render disabled rather than being removed,
-   *  so the columns do not reflow as the bound changes. */
+  /** Earliest selectable time, `HH:mm`. Earlier rows render disabled, not removed, so the columns do not reflow. */
   readonly minTime = input<string | null>(null);
   /** Latest selectable time, `HH:mm`. */
   readonly maxTime = input<string | null>(null);
-  /** Per-time predicate for what a range cannot express - booked slots, a lunch break.
-   *  Receives `HH:mm`; return true to disable. */
+  /** Per-time predicate receiving `HH:mm`; return true to disable. */
   readonly disabledTime = input<((time: string) => boolean) | null>(null);
-  /** A complete time was picked, as `HH:mm`. Not emitted while only one column has moved. */
+  /** A complete time was picked, as `HH:mm`; not emitted while only one column has moved. */
   readonly timeChange = output<string>();
-  /** Which column the pick came from. `timeChange` carries a whole time, so a host closing after both columns were visited cannot tell "same hour again" from "hours untouched". Emitted right after `timeChange`. */
+  /** Which column the pick came from, emitted right after `timeChange`, which carries a whole time and cannot say which half moved. */
   readonly partPicked = output<TimeColumnId>();
 
   private readonly hourButtons =

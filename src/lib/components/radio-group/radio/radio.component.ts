@@ -52,8 +52,7 @@ export class RadioComponent extends DsFieldBase {
   readonly required = input(false, { transform: booleanAttribute });
   /** Label beside the dot, wired via for/id. Omit to bring your own <label>. */
   readonly label = input<string>('');
-  /** Accessible name for a control with no visible label. Set beside a label it overrides the
-   *  label, per ARIA. */
+  /** Accessible name for a control with no visible label; overrides `label` when both are set. */
   readonly ariaLabel = input<string | null>(null);
 
   protected readonly uid = nextControlId('ds-radio');

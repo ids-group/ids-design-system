@@ -163,7 +163,7 @@
     subtracting two rows, which a reader should not have to do.
   </p>
 
-  <div class="states is-cols-2">
+  <div class="states is-cols-3">
     <div class="state-cell">
       <ds-funnel-chart
         dataTable="none"
@@ -182,6 +182,17 @@
 
       <div class="state-cell-label">
         drop = absolute
+      </div>
+    </div>
+
+    <div class="state-cell">
+      <ds-funnel-chart
+        drop="none"
+        dataTable="none"
+        [data]="dropStages()" />
+
+      <div class="state-cell-label">
+        drop = none
       </div>
     </div>
   </div>
@@ -205,8 +216,8 @@
     </code> fires whether or not the
     flag is set, so a chart that only needs the output does not have to
     advertise the affordance. Hovering a row of the stage table reads as
-    hovering the band it names: once the pointer has rested, the same tooltip
-    opens over the BAND, and the rest of the funnel dims with it whatever
+    hovering the band it names: the row tints, the same tooltip opens over the
+    BAND, and the rest of the funnel dims with it whatever
     <code class="t-mono-inline">
       dimOthers
     </code> says.

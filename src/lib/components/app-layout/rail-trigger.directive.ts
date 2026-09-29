@@ -14,18 +14,16 @@ import { AppLayoutComponent } from './app-layout.component';
  * </ds-app-layout>
  * ```
  *
- * PUT IT ON THE FOCUSABLE CONTROL, not on a wrapper: the attributes go on the
- * host element, and on `<ds-icon-button>` that is the wrapper, whose inner
- * `<button>` is what a screen reader actually reads. With a DS button, skip this
+ * PUT IT ON THE FOCUSABLE CONTROL, not on a wrapper: on `<ds-icon-button>` the
+ * host is the wrapper, not the inner `<button>`. With a DS button, skip this
  * directive and bind its forwarding inputs instead:
  * `[ariaExpanded]="layout.railOverlay() ? layout.railOpen() : null"` and
  * `[ariaControls]="layout.railId"` off a `<ds-app-layout #layout>` template ref.
  *
- * Both attributes are dropped while the rail is NOT an overlay: above the
- * breakpoint the rail is permanently in the layout, so `aria-expanded="false"`
- * would state the opposite of what the user sees.
+ * Both attributes are dropped while the rail is NOT an overlay, since
+ * `aria-expanded="false"` would misstate a permanently visible rail.
  *
- * Must sit inside a `ds-app-layout`; anywhere in the projected chrome works.
+ * Must sit inside a `ds-app-layout`.
  */
 @Directive({
   selector: '[dsRailTrigger]',

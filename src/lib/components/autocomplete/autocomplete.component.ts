@@ -121,7 +121,6 @@ export class AutocompleteComponent<T = unknown>
   private readonly vcr = inject(ViewContainerRef);
   private readonly host = inject(ElementRef<HTMLElement>);
   protected readonly intl = inject(DS_INTL);
-  /** Forwarded onto the portaled pane on open so consumer `--ds-autocomplete-panel-*` overrides reach it. */
   private readonly panelTokens = [
     '--ds-dropdown-panel-bg-color',
     '--ds-dropdown-panel-min-width',
@@ -140,9 +139,8 @@ export class AutocompleteComponent<T = unknown>
   readonly multiple = input(false, { transform: booleanAttribute });
   /** Draws the trailing chevron. Turn it off for a search field, where an arrow invites a click that lists everything. */
   readonly showChevron = input(true, { transform: booleanAttribute });
-  /** Chip collapse when they outgrow one line. `"fit"` (default) measures and shows as many as fit, the rest behind "+N more".
-   *  A number is a ceiling, not a promise: the row still measures, so narrow triggers show fewer. `"all"` shows every chip
-   *  and lets the trigger grow a line per selection. Unset (`null`) resolves to `"fit"`, not `"all"`. */
+  /** Chip collapse: `"fit"` (default) shows as many as fit, the rest behind "+N more"; a number is a ceiling, not a promise;
+   *  `"all"` shows every chip and grows the trigger a line per selection. */
   readonly maxVisibleChips = input<number | 'fit' | 'all' | null>(null, {
     transform: (raw: unknown) => {
       if (raw === 'fit' || raw === 'all') {
@@ -152,8 +150,7 @@ export class AutocompleteComponent<T = unknown>
       return raw == null ? null : numberAttribute(raw);
     },
   });
-  /** Trigger height - sm/md/lg.
-   *  Unset falls back to `DS_CONFIG.control.size`, then `'md'`. */
+  /** Trigger height; falls back to `DS_CONFIG.control.size`, then `'md'`. */
   readonly size = input<DsSize | null>(null);
   readonly sizeResolved = resolveWithConfig(
     this.size,
@@ -162,20 +159,16 @@ export class AutocompleteComponent<T = unknown>
   );
   /** Trigger width - `fill` stretches to the container, `content` hugs the value. */
   readonly width = input<AutocompleteWidth>('fill');
-  /** What a settled single value does when it is wider than the trigger. Defaults to
-   *  `ellipsis`; `wrap` lets the value break onto a second line and pushes the chevron
-   *  down. Multi mode is unaffected - its chips have their own measured cap. */
+  /** A settled single value wider than the trigger: `ellipsis` (default) or `wrap` onto a second line. Multi mode is unaffected. */
   readonly valueOverflow = input<AutocompleteValueOverflow>('ellipsis');
-  /** Placeholder shown in the input when empty.
-   *  Unset falls back to `DS_INTL.picker.placeholder`. */
+  /** Placeholder when empty; falls back to `DS_INTL.picker.placeholder`. */
   readonly placeholder = input<string | null>(null);
   readonly placeholderResolved = computed(
     () => this.placeholder() ?? this.intl().picker.placeholder,
   );
   /** Disables the trigger and blocks all interaction. */
   readonly disabled = input(false, { transform: booleanAttribute });
-  /** Confirmation text, shown when there is no error or warning - and it paints
-   *  the field's success border. A string like `warning`: the text IS the state. */
+  /** Confirmation text, shown when there is no error or warning; paints the success border. */
   readonly success = input<string, string | null | undefined>('', {
     transform: trimmedText,
   });
@@ -191,10 +184,7 @@ export class AutocompleteComponent<T = unknown>
 
   /** Native `name` attribute forwarded to the trigger. */
   readonly name = input<string | null>(null);
-  /** Extra classes for the portaled panel, beside `ds-dropdown-panel`,
-   *  `ds-overlay-pane` and this component's own `ds-autocomplete-panel`. The panel
-   *  is portaled out of the host, so a class on the pane is the only way a consumer
-   *  stylesheet reaches ONE instance of it. */
+  /** Extra classes for the portaled panel, the only way to style one instance of it. */
   readonly panelClass = input<string | readonly string[]>([]);
   /** Prevents opening the panel while still allowing focus. */
   readonly readOnly = input(false, { transform: booleanAttribute });
@@ -206,32 +196,22 @@ export class AutocompleteComponent<T = unknown>
   });
   /** Shows a clear affordance once there is something to clear. */
   readonly clearable = input(false, { transform: booleanAttribute });
-  /** Placeholder while the field is being typed in, when a value is already
-   *  settled - `placeholder` is the empty-field caption and cannot be both.
-   *  Empty (the default) keeps `placeholder` doing both jobs. */
+  /** Placeholder while typing over a settled value; empty keeps `placeholder`. */
   readonly searchPlaceholder = input<string>('');
 
-  /** How the typed query narrows the list. Default: case-insensitive substring of `label`. Pass a predicate to match on anything else.
-   *  Pass `'none'` when the list arrives already filtered (server-side search): the query is reported through `filterChange`
-   *  and every option given is rendered. */
+  /** How the typed query narrows the list. Default: case-insensitive substring of `label`. `'none'` renders every option (server-side search). */
   readonly filterWith = input<
     ((option: AutocompleteOption<T>, query: string) => boolean) | 'none'
   >((option, query) => option.label.toLowerCase().includes(query));
-  /** The query the user typed, on every change. The input for a server-side search;
-   *  pair it with `filterWith="none"` so the list is not narrowed twice. */
+  /** The typed query, on every change; pair with `filterWith="none"` for server-side search. */
   readonly filterChange = output<string>();
-  /** Options are still being fetched. The panel shows a spinner instead of the
-   *  empty row - which would otherwise claim there are no matches - and the list
-   *  reports `aria-busy`. */
+  /** Options are still being fetched: the panel shows a spinner instead of the empty row and reports `aria-busy`. */
   readonly loading = input(false, { transform: booleanAttribute });
-  /** The panel opened. The moment to fetch options for a picker whose list is
-   *  loaded on demand. */
+  /** The panel opened. */
   readonly opened = output<void>();
   /** The panel closed, for any reason - a pick, Escape, an outside click, a scroll. */
   readonly closed = output<void>();
-  /** Scrolls the keyboard cursor's row into view. On by default: a list longer
-   *  than the panel otherwise walks the cursor out of sight. Set `false` only if
-   *  you are driving the scroll position yourself. */
+  /** Scrolls the keyboard cursor's row into view. Set `false` only when driving the scroll position yourself. */
   readonly scrollActiveIntoView = input(true, { transform: booleanAttribute });
   /** Marks the field required: a `*` beside the label and `aria-required` on the input. */
   readonly required = input(false, { transform: booleanAttribute });
@@ -668,8 +648,7 @@ export class AutocompleteComponent<T = unknown>
         }
         break;
       case 'Tab':
-        // Close the panel but let Tab move focus naturally (no preventDefault),
-        // else the open overlay panel lingers behind the moved focus.
+        // No preventDefault: the open panel would linger behind the moved focus.
         if (this.overlayRef) {
           this.close();
         }
@@ -755,9 +734,7 @@ export class AutocompleteComponent<T = unknown>
     this.markTouched();
   }
 
-  /**
-   * Empties the selected value and the typed text. Does NOT move focus: the caller may be navigating away.
-   */
+  /** Empties the selected value and the typed text. Does not move focus. */
   clear(): void {
     this.value.set(this.multiple() ? [] : null);
     this.query.set('');

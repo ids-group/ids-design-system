@@ -5,7 +5,6 @@
   --_status-dot-color: var(--ds-status-dot-color, var(--icon-muted));
   --_status-dot-size:  var(--ds-status-dot-size,  var(--status-dot-size));
 
-  // Explicit 1em height keeps the dot centred on the text line in any parent layout mode.
   display: inline-flex;
   align-items: center;
   justify-content: center;

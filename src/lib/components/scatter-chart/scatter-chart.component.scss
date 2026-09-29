@@ -65,8 +65,7 @@
   font-weight: var(--font-weight-bold);
 }
 
-// Semi-transparent so pile-ups show: at full opacity a cluster of forty and a cluster of four are
-// the same solid disc.
+// Semi-transparent so pile-ups show.
 .point {
   r: var(--_scatter-chart-dot-radius);
   fill: var(--_scatter-series-color);

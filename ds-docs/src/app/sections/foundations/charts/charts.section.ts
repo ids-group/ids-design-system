@@ -1,6 +1,8 @@
 import { Component, ViewEncapsulation, computed, signal } from '@angular/core';
 import { ColumnChartComponent } from 'ds/column-chart';
 import type { ColumnChartPoint } from 'ds/column-chart';
+import { LineChartComponent } from 'ds/line-chart';
+import type { LineChartSeries } from 'ds/line-chart';
 import { IconComponent } from 'ds/icons';
 import { SkeletonComponent } from 'ds/skeleton';
 import { DocsSectionComponent } from '../../../shared/docs-section.component';
@@ -164,6 +166,7 @@ function stackBarH(value: number): number {
     SkeletonComponent,
     DocsSectionComponent,
     ColumnChartComponent,
+    LineChartComponent,
   ],
   encapsulation: ViewEncapsulation.Emulated,
   templateUrl: './charts.section.html',
@@ -175,6 +178,14 @@ export class ChartsSection {
     { label: 'Feb', value: 2260 },
     { label: 'Mar', value: 2105 },
   ]);
+
+  protected readonly tooltipDemoMonths = ['Jan', 'Feb', 'Mar', 'Apr'];
+
+  protected readonly tooltipDemoSeries: readonly LineChartSeries[] = [
+    { id: 'north', label: 'North', data: [42, 48, 45, 53] },
+    { id: 'south', label: 'South', data: [35, 31, 38, 41] },
+    { id: 'east', label: 'East', data: [22, 27, 30, 28] },
+  ];
 
   protected readonly cats = CATEGORICAL;
   protected readonly seqs = SEQUENTIAL;
