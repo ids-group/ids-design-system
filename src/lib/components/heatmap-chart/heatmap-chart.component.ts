@@ -95,12 +95,16 @@ export class HeatmapChartComponent {
 
   /** Pins the floor of the colour scale. It only ever OPENS the scale further, so a floor above
    *  the data cannot push a reading off the ramp. Unset, the scale starts at the lowest reading. */
-  readonly min = input<number | null>(null);
+  readonly min = input<number | null>(null, {
+    transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
+  });
 
   /** Pins the ceiling of the colour scale, the same way `min` pins its floor. Set both to compare
    *  two heat maps by colour: unset, each one spans its own readings and the same hue means a
    *  different quantity on each. */
-  readonly max = input<number | null>(null);
+  readonly max = input<number | null>(null, {
+    transform: (raw: unknown) => (raw == null ? null : numberAttribute(raw)),
+  });
 
   /** Prints each cell's reading inside it. Off by default: a grid dense enough to be worth a heat
    *  map has no room for the numbers, which is why the annex table is always there. */
