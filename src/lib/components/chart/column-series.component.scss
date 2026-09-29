@@ -32,14 +32,6 @@
     var(--_column-chart-column-max-width)
   );
 
-  // The category's drawn band, not its whole step: the gap between two bands answers no pointer, so
-  // the empty ground between columns reads as empty.
-  --_column-hit-width: min(
-    var(--_column-chart-slot-band),
-    calc(
-      var(--_column-chart-column-max-width) + var(--_column-chart-column-gap)
-    )
-  );
   --_column-square-height: min(
     var(--_column-chart-cap-radius),
     calc(var(--_column-mark-height) / 2)
@@ -57,9 +49,16 @@
   );
 }
 
+// The slot's whole share of the category's step, measured from the category's centre rather than
+// from the column: the columns are spaced by their capped width, the strips by the step, and only
+// the strips tile the plot with no ground between two of them.
 .hit-area {
-  width: var(--_column-hit-width);
-  x: calc(var(--_column-hit-width) / -2);
+  --_column-hit-start: calc(
+    var(--_column-chart-slot-step) * (var(--_column-slot, 0) - var(--_column-slots, 1) / 2)
+  );
+
+  width: var(--_column-chart-slot-step);
+  x: calc(var(--_column-hit-start) - var(--_column-slot-offset));
   fill: transparent;
 }
 
