@@ -2,7 +2,7 @@
 
 ### Breaking
 
-- **`ds-pie-chart` drops the `staggerMs` input.** The input was accepted and did nothing: the ring
+- **`ds-pie-chart` (`PieChartComponent`) drops the `staggerMs` input.** The input was accepted and did nothing: the ring
   turns into place as one object. Remove the binding; a template that keeps it fails to compile.
   Nothing replaces it.
 

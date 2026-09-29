@@ -13,7 +13,11 @@
         "ds-pie-chart"
       ],
       "surface": "template",
-      "verify": "No ds-pie-chart element carries a staggerMs attribute or binding, and the app compiles."
+      "verify": "No ds-pie-chart element carries a staggerMs attribute or binding, and the app compiles.",
+      "detect": [
+        "extends PieChartComponent",
+        "staggerMs"
+      ]
     }
   ],
   "informational": [
